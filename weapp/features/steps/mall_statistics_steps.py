@@ -20,8 +20,8 @@ def step_impl(context, user, days):
 	response = context.client.get(url)
 	data = json.loads(response.content)['data']
 	dates = data['xAxis']['data']
-	product_counts = data['series'][0]['data']
-	money_list = data['series'][1]['data']
+	product_counts = data['series'][1]['data']
+	money_list = data['series'][0]['data']
 	date2info = {}
 	for i, date in enumerate(dates):
 		date2info[date] = {

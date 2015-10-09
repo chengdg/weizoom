@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export PATH=/usr/local/bin:$PATH
 # to be called minutely
 DATE="`date +%Y%m%d`"
 TIME="`date +%Y%m%d%H%M%S`"

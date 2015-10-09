@@ -16,7 +16,7 @@ from core.jsonresponse import create_response
 from weixin.mp_decorators import mp_required
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class Materials(resource.Resource):
 	"""
@@ -39,8 +39,9 @@ class Materials(resource.Resource):
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
 			'has_material': has_material
 		})
 

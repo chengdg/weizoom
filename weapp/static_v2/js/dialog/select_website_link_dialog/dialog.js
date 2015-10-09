@@ -85,6 +85,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
             this.table.paginationView.hide();
             // this.table.paginationView = false;
         }
+        this.$el.find('.xa-query').val("");
     },
 
     afterShow: function(options) {
@@ -113,14 +114,25 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
     },
 
     onSearch: function(event) {
-        var query = $.trim($('.xa-query').val());
-        var link = (this.selectedLinkTarget || "").replace(/\&/g, "%26");
+        var query = $.trim(this.$el.find('.xa-query').val());
         this.table.reload({
             menu_type: this.menuType,
-            selected_link_target: link,
+            selected_link_target: this.handleSelectedLinkTarget(this.selectedLinkTarget),
             type: this.itemType,
             query: query
         })
+    },
+
+    handleSelectedLinkTarget: function(strSelectLinkTarget) {
+        if (strSelectLinkTarget) {
+            var json = $.parseJSON(strSelectLinkTarget);
+            if (json && json.hasOwnProperty('data')) {
+                json['data'] = ""
+            }
+            strSelectLinkTarget = JSON.stringify(json)
+        }
+        var selectedLink = (strSelectLinkTarget || "").replace(/\&/g, "%26");
+        return selectedLink
     },
 
     setItemType: function(title, index){
@@ -139,7 +151,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
         var $el = $(event.currentTarget);
         this.itemType = $el.attr('data-nav');
         this.titleName = $el.text();
-        this.$('.xa-query').val();
+        this.$el.find('.xa-query').val();
 
         this.selectedItem = this.getItemByType(this.itemType);
         this.setAddBtuHtml();

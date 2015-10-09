@@ -18,7 +18,7 @@ def get_paid_orders(webapp_id, start_date, end_date):
 
 	@author victor
 	"""
-	orders = Order.objects.filter(webapp_id=webapp_id, \
+	orders = Order.by_webapp_id(webapp_id).filter(
 			created_at__range=(start_date, end_date), \
 			status__in=(ORDER_STATUS_PAYED_SUCCESSED, \
 				ORDER_STATUS_PAYED_NOT_SHIP, \

@@ -114,7 +114,7 @@ def get_order_by_pay_type(request):
 	date_items = get_month_range(6)
 
 	webapp_id = request.user.get_profile().webapp_id
-	orders = Order.objects.filter(webapp_id=webapp_id, created_at__gte=start_date, created_at__lte=end_date)
+	orders = Order.by_webapp_id(webapp_id).filter(created_at__gte=start_date, created_at__lte=end_date)
 
 	order_items = {}
 	for order in orders:
@@ -277,7 +277,7 @@ def get_order_by_source(request):
 	start_date, end_date = get_date_range(date_interval, 6)
 	date_items = get_month_range(6)
 	webapp_id = request.user.get_profile().webapp_id
-	orders = Order.objects.filter(webapp_id=webapp_id, created_at__gte=start_date, created_at__lte=end_date)
+	orders = Order.by_webapp_id(webapp_id).filter(created_at__gte=start_date, created_at__lte=end_date)
 
 	order_items = {}
 	for order in orders:
@@ -684,7 +684,7 @@ def get_user_static(request):
 
 	#处理订单信息
 	date2member_id = {}
-	for order in Order.objects.filter(webapp_id=webapp_id, status__gte=2):
+	for order in Order.by_webapp_id(webapp_id).filter(status__gte=2):
 		date = order.created_at.strftime('%Y-%m-%d')
 		if not date2member_id.has_key(date):
 			date2member_id[date] = {}

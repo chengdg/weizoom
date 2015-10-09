@@ -165,7 +165,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
 			"product_name": "商品2",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -220,7 +220,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"product_name": "商品2",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"logistics": "顺丰",
@@ -234,7 +234,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
 			"product_name": "商品2",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344",
 			"logistics": "顺丰",
@@ -273,7 +273,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "支付宝",
 			"sources": "商城",
 			"product_name": "商品1",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -319,7 +319,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "支付宝",
 			"sources": "商城",
 			"product_name": "商品1",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}, {
@@ -330,7 +330,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"product_name": "商品1",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]
@@ -367,7 +367,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "货到付款",
 			"sources": "商城",
 			"product_name": "商品1",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344"
 		}]
@@ -390,6 +390,7 @@ Scenario: 选择订单筛选条件
 		"""
 		{
 			"date_interval": "2014-10-07|2014-10-08",
+			"date_interval_type": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344"
 		}
@@ -428,7 +429,7 @@ Scenario: 选择订单筛选条件
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"product_name": "商品1",
-			"product_count": 1,
+			"count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
 		}]

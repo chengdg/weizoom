@@ -178,22 +178,22 @@
 	<div class="tx-total-box">
 		<ul>
 			<li class="xa-count {{if data.current_status_value==-1}}active{{/if}}" data-total-status-value="-1">
-				所有订单<!--(${data.order_total_count.total_count})-->
+				所有订单
 			</li>
 			<li  class="xa-count {{if data.current_status_value==0}}active{{/if}}" data-total-status-value="0">
-				待支付<!--(${data.order_total_count.status_not_count})-->
+				待支付
 			</li>
 			<li class="xa-count {{if data.current_status_value==3}}active{{/if}}" data-total-status-value="3">
-				待发货<!--(${data.order_total_count.status_payed_not_ship_total})-->
+				待发货
 			</li>
 			<li class="xa-count {{if data.current_status_value==4}}active{{/if}}" data-total-status-value="4">
-				已发货<!--(${data.order_total_count.status_payed_shiped_total})-->
+				已发货
 			</li>
 			<li class="xa-count {{if data.current_status_value==5}}active{{/if}}" data-total-status-value="5">
-				已完成<!--(${data.order_total_count.status_successed_count})-->
+				已完成
 			</li>
 			<li class="xa-count {{if data.current_status_value==1}}active{{/if}}" data-total-status-value="1">
-				已取消<!--(${data.order_total_count.status_cancel_count})-->
+				已取消
 			</li>
 		</ul>
 	</div>
@@ -265,7 +265,7 @@
 					<td class="nowrap w80 wbAll">
 						<div>
 							{{if order.member_id > 0}}
-								<a href="/member/member_detail/edit/?id=${order.member_id}">{{html order.buyer_name}}</a>
+								<a href="/member/detail/?id=${order.member_id}">{{html order.buyer_name}}</a>
 							{{else}}
 								{{html order.buyer_name}}
 							{{/if}}
@@ -442,34 +442,7 @@ $(document).ready(function() {
 			})
 		});
 
-	// 批量发货
-	$('#deliveryBtn').click(function(event){
-		W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
-		    success: function(data) {
-		    	console.log('aaaaa', data);
-        		W.getLoadingView().show();
 
-				W.getApi().call({
-					app: 'mall',
-					api: 'bulk_shipments',
-					method: 'post',
-					args: {
-						file_url: data
-					},
-					success: function(data) {
-						console.log('bulk_shipments/update', data);
-						W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
-						W.getLoadingView().hide();
-					},
-					error: function(resp) {
-						W.getLoadingView().hide();
-						W.getErrorHintView().show('处理失败，请稍后重试！');
-					}
-				})
-		    }
-		});
-
-	});	
 });
 </script>
 {% endblock %}

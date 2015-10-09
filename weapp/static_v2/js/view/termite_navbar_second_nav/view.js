@@ -26,7 +26,7 @@ W.view.termite.NavbarSecondNav = Backbone.View.extend({
 	render: function() {
         var _this = this;
 		var template = this.getTmpl('viewTmpl');
-		var html = template({});
+		var html = template({"navbarType":W.WEAPAGE_NAVBARTYPE});
         this.$el.html(html);
 
         var navsJson = JSON.parse(this.navsStr);

@@ -23,6 +23,11 @@ Feature: 会员列表-会员详情-基本信息
 	9、【好友数】："不可编辑"，本会员的好友数量
 	10、【备注】："可编辑"，本会员的备注信息
 	11、【查看聊天记录】:"不可编辑"，点击跳转到本会员的"消息详情"页
+
+	# __author__ : "王丽"
+	2015-9新增需求
+	1、会员分组默认有个分组："未分组"，不能修改（没有修改框）、不能删除（没有删除按钮）
+	2、新增会员和调整没有分组的会员，默认进入"未分组"
 """
 Background:
 
@@ -80,20 +85,20 @@ Background:
 
 	And bill关注jobs的公众号于'2015-05-20'
 
-@mall2 @member @memberList 
+@mall2 @member @memberList
 Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间）展示，修改基本信息项（姓名、会员等级、性别、绑定手机、备注）
 
 	#微信用户批量下订单
 		When 微信用户批量消费jobs的商品
-			| date         | consumer | type      |businessman|   product | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action       |  order_status   |
-			| 2015-06-01   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,支付         |  待发货         |
-			| 2015-06-02   | bill     |    购买   | jobs      | 商品2,2   | 未支付  | 支付宝         | 15      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,取消         |  已取消         |
-			| 2015-06-03   | bill     |    购买   | jobs      | 商品2,2   | 支付    | 支付宝         | 15      | 100      |          |        | 215         |              | 215    | 0      | 0    | jobs,发货         |  已发货         |
-			| 2015-06-04   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 微信支付       | 10      | 100      |          |        | 110         |              | 0      | 110    | 0    | jobs,完成         |  已完成         |
-			| 2015-07-01   | bill     |    购买   | jobs      | 商品1,1   | 未支付  | 微信支付       | 10      | 100      |          |        | 0           |              | 0      | 0      | 0    | jobs,无操作       |  未支付         |
-			| 2015-07-02   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 货到付款       | 10      | 100      |          |        | 110         |              | 0      | 0      | 110  | jobs,完成         |  已完成         |
-			| 2015-08-04   | bill     |    购买   | jobs      | 商品2,1   | 支付    | 微信支付       | 15      | 100      |          |        | 115         |              | 0      | 115    | 0    | jobs,退款         |  退款中         |
-			| 2015-08-05   | bill     |    购买   | jobs      | 商品1,1   | 支付    | 支付宝         | 10      | 100      |          |        | 110         |              | 110    | 0      | 0    | jobs,完成退款     |  退款完成       |
+			| order_id | date         | consumer |   product | payment | pay_type | postage*|   price* | paid_amount*| alipay*| wechat*| cash*|    action     | order_status*|
+			|   0001   | 2015-06-01   | bill     | 商品1,1   | 支付    | 支付宝   | 10      | 100      | 110         | 110    | 0      | 0    |               | 待发货       |
+			|   0002   | 2015-06-02   | bill     | 商品2,2   |         | 支付宝   | 15      | 100      | 0           | 0      | 0      | 0    | jobs,取消     | 已取消       |
+			|   0003   | 2015-06-03   | bill     | 商品2,2   | 支付    | 支付宝   | 15      | 100      | 215         | 215    | 0      | 0    | jobs,发货     | 已发货       |
+			|   0004   | 2015-06-04   | bill     | 商品1,1   | 支付    | 微信支付 | 10      | 100      | 110         | 0      | 110    | 0    | jobs,完成     | 已完成       |
+			|   0005   | 2015-07-01   | bill     | 商品1,1   |         | 微信支付 | 10      | 100      | 0           | 0      | 0      | 0    |               | 待支付       |
+			|   0006   | 2015-07-02   | bill     | 商品1,1   | 支付    | 货到付款 | 10      | 100      | 110         | 0      | 0      | 110  | jobs,完成     | 已完成       |
+			|   0007   | 2015-08-04   | bill     | 商品2,1   | 支付    | 微信支付 | 15      | 100      | 115         | 0      | 115    | 0    | jobs,退款     | 退款中       |
+			|   0008   | 2015-08-05   | bill     | 商品1,1   | 支付    | 支付宝   | 10      | 100      | 110         | 110    | 0      | 0    | jobs,完成退款 | 退款成功     |
 
 	Given jobs登录系统
 
@@ -108,7 +113,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"今天",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
@@ -134,7 +139,7 @@ Scenario:1 会员基本信息（会员昵称、关注时间、上次交易时间
 			"sex":"女",
 			"phone":"15934567895",
 			"last_buy_time":"今天",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":"会员备注信息"
@@ -157,7 +162,7 @@ Scenario:2 会员基本信息修改"所在分组"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
@@ -202,7 +207,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":0,
 			"remarks":""
@@ -225,7 +230,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral": -10,
 			"friend_count":0,
 			"remarks":""
@@ -249,7 +254,7 @@ Scenario:3 会员基本信息修改"调积分"
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral": 10,
 			"friend_count":0,
 			"remarks":""
@@ -306,7 +311,7 @@ Scenario:4 会员基本信息好友数验证
 			"sex":"未知",
 			"phone":"",
 			"last_buy_time":"",
-			"tags":[],
+			"tags": ["未分组"],
 			"integral":0,
 			"friend_count":1,
 			"remarks":""

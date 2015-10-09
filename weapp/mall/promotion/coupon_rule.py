@@ -21,7 +21,7 @@ from mall.promotion.utils import create_coupons
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
-FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
+FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 
 class CouponRuleInfo(resource.Resource):
@@ -59,8 +59,9 @@ class CouponRuleInfo(resource.Resource):
 
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
                 'coupon_rule': coupon_rule,
             })
             return render_to_response('mall/editor/promotion/select_coupon_rule.html', c)
@@ -79,8 +80,9 @@ class CouponRuleInfo(resource.Resource):
             promotion.end_date = datetime.strptime(promotion.end_date, "%Y-%m-%d %H:%M:%S")
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
                 'coupon_rule': coupon_rule,
                 'start_date': promotion.start_date.strftime("%Y-%m-%d %H:%M"),
                 'end_date': promotion.end_date.strftime("%Y-%m-%d %H:%M"),
@@ -94,8 +96,9 @@ class CouponRuleInfo(resource.Resource):
             c = RequestContext(request, {
                 'member_grades': member_grades,
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
             })
             return render_to_response('mall/editor/promotion/create_coupon_rule.html', c)
 
@@ -190,10 +193,16 @@ class CouponRuleList(resource.Resource):
         """
         优惠券规则列表页面
         """
+        endDate = request.GET.get('endDate', '')
+        if endDate:
+            endDate +=' 00:00'
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+            'endDate': endDate,
+            'promotion_status': request.GET.get('status', '-1')
         })
         return render_to_response('mall/editor/promotion/coupon_rules.html', c)
 

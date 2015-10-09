@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import
 import json
 import qrcode, os
 
@@ -8,13 +8,13 @@ from core.jsonresponse import create_response, JsonResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
-
-import termite2.models as termite_models
-from termite import pagestore as pagestore_manager
-
-from weixin.user.module_api import get_mp_qrcode_img
 from django.conf import settings
-from termite2 import pagecreater
+
+from termite import pagestore as pagestore_manager
+from weixin.user.module_api import get_mp_qrcode_img
+
+from . import models as termite_models
+from . import pagecreater
 
 class TermitePreview(resource.Resource):
     """

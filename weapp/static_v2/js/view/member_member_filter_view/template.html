@@ -21,9 +21,9 @@
 		<div class="xui-i-item">
 			<label>会员状态：</label>
 			<select id="status" name="status">
-				<option value="1">已关注</option>
-				<option value="-1">全部</option>
-				<option value="0">取消关注</option>
+				<option value="1" {{if status == "1"}}selected="selected"{{/if}}>已关注</option>
+				<option value="-1" {{if status == "-1"}}selected="selected"{{/if}}>全部</option>
+				<option value="0" {{if status == "0"}}selected="selected"{{/if}}>取消关注</option>
 				
 			</select>
 		</div>

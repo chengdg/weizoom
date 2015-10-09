@@ -16,12 +16,86 @@ from weixin2.models import *
 # __add_rule: 添加一个规则
 #######################################################################
 def __add_rule(context, rule):
+	rule_name = rule['rules_name']
+	posted = True
+	patterns = '['
+	for pattern in rule['keyword']:
+		if pattern['type'] == 'equal':
+			pattern_type = 0
+		else:
+			pattern_type = 1
+
+		if pattern['keyword'].strip() == '':
+			posted = False
+
+		patterns = patterns + '{"keyword":"%s","type":"%s"},' % (pattern['keyword'], pattern_type)
+	patterns = patterns[:-1] + ']'
+	answers = '['
+	for answer in rule['keyword_reply']:
+		content = answer['reply_content']
+		if answer['reply_type'] == 'text':
+			type = 'text'
+		else:
+			type = 'news'
+			news = News.objects.filter(material__owner_id=context.client.user.id, title=answer['reply_content'])[0]
+			material_id = news.material_id
+			content = material_id
+		if str(content).strip() == '':
+			posted = False
+		answers = answers + '{"content":"%s","type":"%s"},' % (content, type)
+	answers = answers[:-1] + ']'
+
 	rule_prototype = {
-		"patterns": "",
-		"answer": "answer"
+		"patterns": str(patterns),
+		"answer": str(answers),
+		"id": "new",
+		"rule_name": rule_name
 	}
-	rule_prototype.update(rule)
-	context.client.post('/new_weixin/api/keyword_rules/?_method=put', rule_prototype)
+	#rule_prototype.update(rule)
+	if posted:
+		context.client.post('/new_weixin/api/keyword_rules/?_method=put', rule_prototype)
+
+def __update_rule(context, rule, id):
+	rule_name = rule['rules_name']
+	posted = True
+	patterns = '['
+	for pattern in rule['keyword']:
+		if pattern['type'] == 'equal':
+			pattern_type = 0
+		else:
+			pattern_type = 1
+		if pattern['keyword'].strip() == '':
+			posted = False
+		patterns = patterns + '{"keyword":"%s","type":"%s"},' % (pattern['keyword'], pattern_type)
+	patterns = patterns[:-1] + ']'
+	answers = '['
+	for answer in rule['keyword_reply']:
+		content = answer['reply_content']
+		if answer['reply_type'] == 'text':
+			type = 'text'
+		else:
+			type = 'news'
+			try:
+				news = News.objects.filter(material__owner_id=context.client.user.id, title=answer['reply_content'])[0]
+				material_id = news.material_id
+				content = material_id
+			except:
+				content = ''
+
+		answers = answers + '{"content":"%s","type":"%s"},' % (content, type)
+		if str(content).strip() == '':
+			posted = False
+	answers = answers[:-1] + ']'
+
+	rule_prototype = {
+		"patterns": str(patterns),
+		"answer": str(answers),
+		"id": id,
+		"rule_name": rule_name
+	}
+	#rule_prototype.update(rule)
+	if posted:
+		context.client.post('/new_weixin/api/keyword_rules/?_method=post', rule_prototype)
 
 
 @given(u"{user}已添加关键词自动回复规则")
@@ -79,32 +153,94 @@ def step_impl(context, user, rule_patterns):
 	context.tc.assertEquals(0, Rule.objects.filter(owner=context.client.user, patterns=rule_patterns).count())
 
 
-@then(u"{user}能获取关键词自动回复规则列表")
+@then(u"{user}获得关键词自动回复列表")
 def step_impl(context, user):
 	if hasattr(context, 'client'):
 		context.client.logout()
 	context.client = bdd_util.login(user)
 	client = context.client
 
-	response = client.get('/new_weixin/keyword_rules/')
-	rules = response.context['rules']
-
+	url = '/new_weixin/api/keyword_rules/?'
+	if hasattr(context, 'count_per_page') and hasattr(context, 'cur_page'):
+		url += ('count_per_page=%s' % (str(context.count_per_page) + '&')) + 'page=%s' % context.cur_page
+	elif hasattr(context, 'keyword'):
+		url += 'count_per_page=100&query=%s' % context.keyword
+	else:
+		url += 'count_per_page=100&page=1'
+	response = context.client.get(bdd_util.nginx(url))
+	response_json = json.loads(response.content)
+	rules = response_json['data']['items']
 	actual = []
 	for rule in rules:
-		answers = rule['answer']
-		if len(answers) > 0:
-			rule['answer'] = answers[0]['content']
+		try:
+			current_dict = {}
+			current_dict['rules_name'] = rule['rule_name']
 
-		patterns = rule['patterns']
-		if len(patterns) > 0:
-			rule['patterns'] = patterns[0]['keyword']
+			patterns = []
+			for pattern in eval(rule['patterns'][0]['keyword']):
+				if pattern['type'] == '0':
+					type = 'equal'
+				else:
+					type = 'like'
+				patterns.append({
+					'type':type,
+					'keyword': pattern['keyword']
+					})
+			current_dict['keyword'] = patterns
 
-		actual.append({
-			"patterns": rule['patterns'],
-			"answer": rule['answer'],
-			"material_id": rule['material_id'],
-			"type": "news" if rule['type'] == NEWS_TYPE else 'text'
-		})
+			answers = []
+			for answer in eval(rule['answer'][0]['content']):
+				if answer['type'] != 'text':
+					material_id = answer['content']
+					#material = Material.objects.get(id=material_id)
+					new =  News.objects.filter(material_id=material_id)[0]
+					reply_content = new.title
+					reply_type = 'text_picture'
+				else:
+					reply_type = 'text'
+					reply_content = answer['content']
+				answers.append({
+					"reply_content":reply_content,
+					"reply_type":reply_type
+					})
+			current_dict['keyword_reply'] = answers
+
+			actual.append(current_dict)
+		except:
+			current_dict = {}
+			current_dict['rules_name'] = rule['rule_name']
+
+			patterns = []
+			for pattern in rule['patterns']:
+				if pattern['type'] == '0':
+					type = 'equal'
+				else:
+					type = 'like'
+				patterns.append({
+					'type':type,
+					'keyword': pattern['keyword']
+					})
+			current_dict['keyword'] = patterns
+
+			answers = []
+			for answer in rule['answer']:
+				if answer['type'] != 'text':
+					material_id = answer['content']
+					#material = Material.objects.get(id=material_id)
+					new =  News.objects.filter(material_id=material_id)[0]
+					reply_content = new.title
+					reply_type = 'text_picture'
+				else:
+					reply_type = 'text'
+					reply_content = answer['content']
+				answers.append({
+					"reply_content":reply_content,
+					"reply_type":reply_type
+					})
+			current_dict['keyword_reply'] = answers
+
+			actual.append(current_dict)
+
 
 	expected = json.loads(context.text)
 	bdd_util.assert_list(expected, actual)
@@ -122,7 +258,7 @@ def step_impl(context, user, rule_patterns):
 
 @when(u"{user}删除关键词自动回复规则'{rule_patterns}'")
 def step_impl(context, user, rule_patterns):
-	rule = Rule.objects.get(patterns=rule_patterns)
+	rule = Rule.objects.get(rule_name=rule_patterns)
 
 	url = '/new_weixin/api/keyword_rules/?_method=delete'
 	context.client.post(url, data={'id':rule.id}, HTTP_REFERER='/new_weixin/keyword_rules/')
@@ -168,11 +304,19 @@ def step_impl(context, user):
 @when(u"{user}添加关注自动回复规则")
 def step_impl(context, user):
 	client = context.client
-	rule = json.loads(context.text)
+	rule = json.loads(context.text)[0]
+	if rule == 'text_picture':
+		new_title = rule['reply_content']
+		news = News.objects.filter(material__owner_id=context.client.user.id, title=new_title)[0]
+		material_id = news.id
+		reply_content = rule['reply_content']
+	else:
+		material_id = 0
+		reply_content = rule['reply_content']
 
 	data = {
-		"material_id": "0",
-		"answer": rule['answer']
+		"material_id": material_id,
+		"answer": reply_content
 	}
 	print(context.client.post('/new_weixin/api/follow_rules/?_method=put', data))
 
@@ -320,3 +464,110 @@ def step_impl(context, user, active_type):
 	}
 	__process_unmatch_rule(data)
 	context.client.post('/new_weixin/api/unmatch_rules/?_method=post', data)
+
+@when(u"{user}添加小尾巴")
+def step_impl(context, user):
+	data_json = json.loads(context.text)[0]
+	if data_json['is_open'] == 'true':
+		is_active = 1
+	else:
+		is_active = 0
+
+	data = {
+		"tail": data_json['reply_content'],
+		"is_active": is_active
+	}
+	context.client.post('/new_weixin/api/message_tails/?_method=put', data)
+
+@when(u"{user}已添加消息托管")
+def step_impl(context, user):
+	#rule = Rule.objects.get(owner=context.client.user, type=UNMATCH_TYPE)
+	data_json = json.loads(context.text)[0]
+	start_hour = data_json['time_start']
+	end_hour = data_json['time_end']
+	answers = []
+	for answer in data_json['reply']:
+		answer_dict = {}
+		if answer['reply_type'] == 'text':
+			answer_dict['content']  = answer['reply_content']
+			answer_dict['type']  = 'text'
+		else:
+			new_title = answer['reply_content']
+			print '>>>>>>',context.client.user.id, new_title
+			news = News.objects.filter(material__owner_id=context.client.user.id, title=new_title)[0]
+			answer_dict['content']  = "%s" % news.id
+			answer_dict['type']  = 'news'
+		answers.append(answer_dict)
+
+	if data_json['is_open'] == 'true':
+		active_type = 1
+	else:
+		active_type = 0
+	date = {"Mon":False,"Tue":False,"Wed":False,"Thu":False,"Fri":False,"Sat":False,"Sun":False}
+	if data_json['Weeks'] == "Mon":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Tue":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Wed":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Thu":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Fri":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Sat":
+		date['Mon'] = True
+	if data_json['Weeks'] == "Sun":
+		date['Mon'] = True
+
+	data = {
+		"material_id": 0,
+		"active_days":str(date),
+		"answer": str(answers),
+		"active_type": active_type,
+		"start_hour": start_hour,
+		"end_hour": end_hour
+	}
+	__process_unmatch_rule(data)
+	context.client.post('/new_weixin/api/unmatch_rules/?_method=post', data)
+
+@when(u'{user}访问关键词自动回复规则列表')
+def step_impl(context, user):
+	url = "/new_weixin/api/keyword_rules/?count_per_page=%s" % context.count_per_page
+	print "context.count_per_page"
+	response = context.client.get(url)
+	context.response = response
+
+@then(u'{user}获得关键词自动回复规则列表显示共{page_count}页')
+def step_impl(context, user, page_count):
+	content = context.response.content
+	print json.loads(content)
+	max_page = json.loads(content)['data']['pageinfo']['max_page']
+	if int(page_count) != max_page:
+		raise
+
+@when(u'{user}访问关键词自动回复规则列表第{cur_page}页')
+def step_impl(context, user, cur_page):
+	context.cur_page = cur_page
+
+@when(u"{user}浏览'下一页'")
+def step_impl(context, user):
+	cur_page = int(context.cur_page)
+	context.cur_page = cur_page + 1
+
+@when(u"{user}浏览'上一页'")
+def step_impl(context, user):
+	cur_page = int(context.cur_page)
+	context.cur_page = cur_page - 1
+
+@when(u"{user}设置关键词搜索条件")
+def step_impl(context, user):
+	data = json.loads(context.text)
+	context.keyword = data['keyword']
+
+@when(u"{user}编辑关键词自动回复规则'{rule_name}'")
+def step_impl(context, user, rule_name):
+	current_rule = Rule.objects.get(rule_name=rule_name)
+	client = context.client
+	context.rules = json.loads(context.text)
+	#for rule in context.rules:
+	__update_rule(context, context.rules , current_rule.id)

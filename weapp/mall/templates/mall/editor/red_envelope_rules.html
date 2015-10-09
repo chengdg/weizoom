@@ -24,6 +24,7 @@
                 data-ui-role="advanced-table"
                 data-app="apps/promotion"
                 data-resource="red_envelope_rule_list"
+                data-args='{"endDate": "{{endDate}}", "promotionStatus": "{{promotion_status}}", "limitTime": "{{limit_time}}"}'
                 data-template-id="#red_envelope_rule_list_view"
                 data-enable-paginator="true"
                 data-enable-sort="false"
@@ -192,10 +193,17 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var coupon_rule = {{ coupon_rule_info|safe }};
+    var endDate = '{{endDate}}';
+    var startDate = '';
+    if(endDate){
+        startDate = '2014-01-01';
+    }
     var view = new W.view.mall.RedEnvelopeFilterView({
         el: '.xa-redEnvelopeFilterView',
         templateFilterName: 'mall-red-envelope-filter-view-tmpl-src',
-        coupon_rule: coupon_rule
+        coupon_rule: coupon_rule,
+        startDate: startDate,
+        endDate: endDate
     });
     view.render();
     if (!{{is_create}}){

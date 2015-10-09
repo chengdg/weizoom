@@ -5,7 +5,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 /**
  * 修改会员标签
- * 
+ *
  * author: bert
  */
 ensureNS('W.view.member');
@@ -14,7 +14,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         $('#member-update-tag-dialog-tmpl-src').template('member-update-tag-dialog-tmpl');
         return "member-update-tag-dialog-tmpl";
     },
-    
+
     getTagsTemplate: function() {
         $('#tags-tmpl-src').template('tags-tmpl');
         return "tags-tmpl";
@@ -24,7 +24,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         $('#grade-tmpl-src').template('grade-tmpl');
         return "grade-tmpl";
     },
-    
+
     events:{
         'click .xa-submit': 'onClickSubmit'
     },
@@ -36,10 +36,9 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         this.getTagsTemplate = this.getTagsTemplate();
         this.getGradeTemplate = this.getGradeTemplate();
     },
-    
+
     onClickSubmit: function(event) {
         var $el = $(event.currentTarget);
-        console.log(this.memberId);
         this.submitSendApi(this.isUpdateGrade,this.memberId)
     },
 
@@ -47,7 +46,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         var type = 'grade';
         if (!isUpdateGrade) {
             type = 'tag';
-        } 
+        }
         var check_value = [];
         var tag_values = [];
         $("input[name='tag_id']:checked").each(function () {
@@ -58,47 +57,41 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
             tag_values.push(dict);
 
         })
-        console.log(tag_values);
         args  = {checked_ids : check_value.join("_"), type : type, member_id : memberId}
         var _this = this;
-        if (this.isPostData){ 
-            W.getApi().call({
-                    app: 'member',
-                    api: 'tag/update',
-                    method: 'post',
-                    args: args,
-                    success: function(data) {
-                        //window.location.reload();
-                        _this.dataView.reload();
-                    },
-                    error: function() {
-                    }
-                })
+        if (this.isPostData){
+            W.resource.member.UpdateMemberTagOrGrade.post({
+                data: args,
+                success: function(data) {
+                    //window.location.reload();
+                    _this.dataView.reload();
+                },
+                error: function() {
+                }
+            });
         } else {
             $(".tag-group").text('');
             tag_values = tag_values.reverse();
-            $.each(tag_values, function(index, value) {   
+            $.each(tag_values, function(index, value) {
                 $(".tag-group").prepend('<span class="mr30">'+value["value"]+'</span>' );
                 $(".tag-group").prepend('<input name = "tag_id" class="tag_id" id = "tag_id" hidden = "hidden" value="'+value["id"]+'">  ');
-            }); 
+            });
         }
     },
-    
+
     validate: function() {
-     
+
     },
-    
+
     getTag: function(options) {
          console.log( options);
         this.isUpdateGrade = options.isUpdateGrade;
         this.memberId = options.memberId;
+        this.tagIds = options.tagIds;
         this.isPostData = options.isPostData;
         this.dataView = options.dataView;
 
-        console.log( this.isPostData);
-        W.getApi().call({
-            app: 'member',
-            api: 'tags/get',
+        W.resource.member.UpdateMemberTagOrGrade.get({
             scope: this,
             success: function(data) {
                 var tags = '';
@@ -107,25 +100,30 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
                     currentTemplate = this.getGradeTemplate;
                 } else {
                     tags = data['tags'];
+                    for(var i = 0; i < tags.length; i++){
+                        if($.inArray(tags[i].id, this.tagIds) > -1){
+                            tags[i].in_this_tag = true;
+                        }
+                    }
                     currentTemplate = this.getTagsTemplate;
                 }
                 var $tags = $.tmpl(currentTemplate, {
-                    'tags': tags, 
+                    'tags': tags,
                 });
                 $('.xa-drop-box-content .xa-i-content').empty().append($tags);
             },
             error: function(resp) {
             }
-        });
+        })
     },
-    
+
     render: function() {
         this.$content.html($.tmpl(this.getTemplate()));
     },
 
     onShow: function(options) {
     },
-    
+
     showPrivate: function(options) {
         this.getTag(options);
     },

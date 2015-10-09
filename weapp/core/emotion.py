@@ -216,6 +216,209 @@ TITLE2EMOTION = {
 	u'右太极': '105.gif'
 }
 
+NEWTITLE2EMOTION = {
+	u'微笑': '1.png',
+	u'::)': '1.png',
+	u'撇嘴': '2.png',
+	u'::~': '2.png',
+	u'色': '3.png',
+	u'::B': '3.png',
+	u'发呆': '4.png',
+	u'::|': '4.png',
+	u'得意': '5.png',
+	u':8-)': '5.png',
+	u'流泪': '6.png',
+	u'::<': '6.png',
+	u'害羞': '7.png',
+	u'::$': '7.png',
+	u'闭嘴': '8.png',
+	u'::X': '8.png',
+	u'睡': '9.png',
+	u'::Z': '9.png',
+	u'大哭': '10.png',
+	u"::'(": '10.png',
+	u'尴尬': '11.png',
+	u'::-|': '11.png',
+	u'发怒': '12.png',
+	u'::@': '12.png',
+	u'调皮': '13.png',
+	u'::P': '13.png',
+	u'呲牙': '14.png',
+	u'::D': '14.png',
+	u'惊讶': '15.png',
+	u'::O': '15.png',
+	u'难过': '16.png',
+	u'::(': '16.png',
+	u'酷': '17.png',
+	u'::+': '17.png',
+	u'冷汗': '18.png',
+	u':--b': '18.png',
+	u'抓狂': '19.png',
+	u'::Q': '19.png',
+	u'吐': '20.png',
+	u'::T': '20.png',
+	u'偷笑': '21.png',
+	u':,@P': '21.png',
+	u'可爱': '22.png',
+	u':,@-D': '22.png',
+	u'白眼': '23.png',
+	u'::d': '23.png',
+	u'傲慢': '24.png',
+	u':,@o': '24.png',
+	u'饥饿': '25.png',
+	u'::g': '25.png',
+	u'困': '26.png',
+	u':|-)': '26.png',
+	u'惊恐': '27.png',
+	u'::!': '27.png',
+	u'流汗': '28.png',
+	u'::L': '28.png',
+	u'憨笑': '29.png',
+	u'::>': '29.png',
+	u'大兵': '30.png',
+	u'::,@': '30.png',
+	u'奋斗': '31.png',
+	u':,@f': '31.png',
+	u'咒骂': '32.png',
+	u'::-S': '32.png',
+	u'疑问': '33.png',
+	u':?': '33.png',
+	u'嘘': '34.png',
+	u':,@x': '34.png',
+	u'晕': '35.png',
+	u':,@@': '35.png',
+	u'折磨': '36.png',
+	u'::8': '36.png',
+	u'衰': '37.png',
+	u':,@!': '37.png',
+	u'骷髅': '38.png',
+	u':!!!': '38.png',
+	u'敲打': '39.png',
+	u':xx': '39.png',
+	u'再见': '40.png',
+	u':bye': '40.png',
+	u'擦汗': '41.png',
+	u':wipe': '41.png',
+	u'抠鼻': '42.png',
+	u':dig': '42.png',
+	u'鼓掌': '43.png',
+	u':handclap': '43.png',
+	u'糗大了': '44.png',
+	u':&-(': '44.png',
+	u'坏笑': '45.png',
+	u':B-)': '45.png',
+	u'左哼哼': '46.png',
+	u':<@': '46.png',
+	u'右哼哼': '47.png',
+	u':@>': '47.png',
+	u'哈欠': '48.png',
+	u'::-O': '48.png',
+	u'鄙视': '49.png',
+	u':>-|': '49.png',
+	u'委屈': '50.png',
+	u':P-(': '50.png',
+	u'快哭了': '51.png',
+	u"::'|": '51.png',
+	u'阴险': '52.png',
+	u':X-)': '52.png',
+	u'亲亲': '53.png',
+	u'::*': '53.png',
+	u'吓': '54.png',
+	u':@x': '54.png',
+	u'可怜': '55.png',
+	u':8*': '55.png',
+	u'菜刀': '56.png',
+	u':pd': '56.png',
+	u'西瓜': '57.png',
+	u':<W>': '57.png',
+	u'啤酒': '58.png',
+	u':beer': '58.png',
+	u'篮球': '59.png',
+	u':basketb': '59.png',
+	u'乒乓': '60.png',
+	u':oo': '60.png',
+	u'咖啡': '61.png',
+	u':coffee': '61.png',
+	u'饭': '62.png',
+	u':eat': '62.png',
+	u'猪头': '63.png',
+	u':pig': '63.png',
+	u'玫瑰': '64.png',
+	u':rose': '64.png',
+	u'凋谢': '65.png',
+	u':fade': '65.png',
+	u'示爱': '66.png',
+	u':showlove': '66.png',
+	u'爱心': '67.png',
+	u':heart': '67.png',
+	u'心碎': '68.png',
+	u':break': '68.png',
+	u'蛋糕': '69.png',
+	u':cake': '69.png',
+	u'闪电': '70.png',
+	u':li': '70.png',
+	u'炸弹': '71.png',
+	u':bome': '71.png',
+	u'刀': '72.png',
+	u':kn': '72.png',
+	u'足球': '73.png',
+	u':footb': '73.png',
+	u'瓢虫': '74.png',
+	u':ladybug': '74.png',
+	u'便便': '75.png',
+	u':shit': '75.png',
+	u'月亮': '76.png',
+	u':moon': '76.png',
+	u'太阳': '77.png',
+	u':sun': '77.png',
+	u'礼物': '78.png',
+	u':gift': '78.png',
+	u'拥抱': '79.png',
+	u':hug': '79.png',
+	u'强': '80.png',
+	u':strong': '80.png',
+	u'弱': '81.png',
+	u':weak': '81.png',
+	u'握手': '82.png',
+	u':share': '82.png',
+	u'胜利': '83.png',
+	u':v': '83.png',
+	u'抱拳': '84.png',
+	u':@)': '84.png',
+	u'勾引': '85.png',
+	u':jj': '85.png',
+	u'拳头': '86.png',
+	u':@@': '86.png',
+	u'差劲': '87.png',
+	u':bad': '87.png',
+	u'爱你': '88.png',
+	u':lvu': '88.png',
+	u'NO': '89.png',
+	u':no': '89.png',
+	u'OK': '90.png',
+	u':ok': '90.png',
+	u'爱情': '91.png',
+	u':love': '91.png',
+	u'飞吻': '92.png',
+	u':<L>': '92.png',
+	u'跳跳': '93.png',
+	u':jump': '93.png',
+	u'发抖': '94.png',
+	u':shake': '94.png',
+	u'怄火': '95.png',
+	u':<O>': '95.png',
+	u'转圈': '96.png',
+	u':circle': '96.png',
+	u'磕头': '97.png',
+	u':kotow': '97.png',
+	u'回头': '98.png',
+	u':turn': '98.png',
+	u'跳绳': '99.png',
+	u':skip': '99.png',
+	u'挥手': '100.png',
+	u':oY': '100.png',
+}
+
 
 #############################################################################
 # change_emotion_to_img: 将内容中的表情转换为图片
@@ -284,7 +487,7 @@ def change_img_to_emotion(content):
 						emotion_name = u"/%s" % EMOTIONNAME2TITLE[src.split('/')[-1]].encode('utf-8')
 					except Exception, e:
 						emotion_name = u"/%s" % EMOTIONNAME2TITLE[src.split('/')[-1]]
-					
+
 					image_url = '<img src="%s"/>' % src
 					image_url_blank = '<img src="%s" />' % src
 					content = content.replace(image_url, emotion_name).replace(image_url_blank, emotion_name)
@@ -293,3 +496,34 @@ def change_img_to_emotion(content):
 	if content.find('<p>') > -1:
 		content = content.replace('<p>', '').replace('</p>', '')
 	return content
+
+#############################################################################
+# new_change_emotion_to_img:(mui版本适用) 将内容中的表情转换为图片
+#############################################################################
+from core.emojicons_util import encode_emojicons_for_html
+
+def new_change_emotion_to_img(content):
+	beg = 0
+	items = []
+	while True:
+		pos = content.find('/', beg)
+		if pos == -1:
+			break
+
+		found_emotion = False
+		for i in range(1, 10):
+			emotion_title = content[pos+1:pos+1+i]
+			if emotion_title in NEWTITLE2EMOTION:
+				emotion_png = '<img class="emoji_append" src="/static_v2/img/weixin/%s" />' % NEWTITLE2EMOTION[emotion_title]
+				items.append(content[:pos])
+				items.append(emotion_png)
+				content = content[pos+1+i:]
+				beg = 0
+				found_emotion = True
+				break
+		if not found_emotion:
+			beg = pos + 1
+
+	if content:
+		items.append(content)
+	return ''.join(items)

@@ -19,6 +19,9 @@
 				{%endif%}
 			</span>
 		</div>
+		{% if order.has_sub_order %}
+		<div class="xui-subOrderTip">亲，由于仓库不同，此订单将分开配送</div>
+		{%endif%}
 		<div class="xui-cuttingLineThick"></div>
 		<div class="xui-orderInfo">
 			<p> <b>订单编号：&nbsp;</b>
@@ -47,7 +50,7 @@
 				<span>查看订单</span>
 			</a>
 
-			<a href="./?woid={{request.webapp_owner_id}}&{%if request.webapp_owner_id == 216 %}project_id=4109{%else%}module=mall&model=products&action=list{%endif%}" class="xui-i-rightBox xt-productListLink">
+			<a href="./?woid={{request.webapp_owner_id}}&{%if is_weizoom_mall %}project_id=4109{%else%}module=mall&model=products&action=list{%endif%}" class="xui-i-rightBox xt-productListLink">
 				<div class="xui-otherPageImg">
 					<img src="/static_v2/img/webapp/mall/order_home.png">
 				</div>

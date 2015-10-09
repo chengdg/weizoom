@@ -179,6 +179,16 @@ def get_mpuser_access_token_by_appid(appid):
 	else:
 		return None
 
+def get_mpuser_access_token_by_userid(user_id):
+	if user_id is None:
+		return None
+
+	mpuser_access_tokens = WeixinMpUserAccessToken.objects.filter(mpuser__owner_id=user_id)
+	if mpuser_access_tokens.count() > 0:
+		return mpuser_access_tokens[0]
+	else:
+		return None
+
 #===============================================================================
 # get_token_for : 获得(webapp_id, weixin_user_name)对应的weizoom token
 #===============================================================================
@@ -356,3 +366,24 @@ class WoFuLog(models.Model):
 		db_table = 'wofu_log'
 		verbose_name = 'wofu_log'
 		verbose_name_plural = 'WoFu_log'	
+
+class SheDe(models.Model):
+	number =  models.CharField(max_length=255, db_index=True)
+	is_send = models.BooleanField(default=False)
+	integral = models.IntegerField(default=100)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'shede'
+		verbose_name = 'shede'
+		verbose_name_plural = 'shede'
+
+class SheDeLog(models.Model):
+	shede = models.ForeignKey(SheDe)
+	member_id = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'shede_log'
+		verbose_name = 'shede_log'
+		verbose_name_plural = 'shede_log'	

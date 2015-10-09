@@ -44,7 +44,7 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-	When jobs添加商品
+	When jobs已添加商品
 		"""
 		[{
 			"name": "商品1"
@@ -187,7 +187,7 @@ Background:
 	When bill6取消关注jobs的公众号
 	When bill7取消关注jobs的公众号
 
-@stats @stats.member @wip.member_rank
+@stats @stats.member @wip.member_rank @mall2
 Scenario: 1  会员概况：分享链接排行Top10
 	Given jobs登录系统
 	When jobs设置筛选日期

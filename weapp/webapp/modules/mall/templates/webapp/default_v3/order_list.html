@@ -67,7 +67,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                                 {% else %}
                                     {% for product in order.products %}
@@ -90,14 +90,7 @@
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                <!-- 积分商品 -->
-                                                {% if order.type == "integral" %}
-                                                    <span>{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                <!-- 普通商品 -->
-                                                {% else %}
-                                                    <span class="mr5">Ｘ{{ product.number }}</span>
-                                                {% endif %}
+                                                <span class="mr5">Ｘ{{ order.product_count }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -111,7 +104,7 @@
                                             <a href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=pay_interfaces&action=list&order_id={{order.id}}&ignore_template=1" class="xui-forPay-btn xui-topay tc">支付</a>
                                         {% endifequal %}
 
-                                        {% ifequal order.status 4 %}
+                                        {% if order.status == 4 and  not order.has_sub_order %}
                                             {% if order.express_number %}
                                                 <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
                                                 {% if order.session_data.has_comfire_button %}
@@ -120,7 +113,7 @@
                                             {% else %}
                                                 <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc" data-id="{{order.id}}">确认收货</a>
                                             {% endif %}
-                                        {% endifequal %}
+                                        {% endif %}
 
                                         {% if order.status == 5 and not is_weizoom_mall %}
                                            {%if order.review_is_finished%}
@@ -172,7 +165,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                                 {% else %}
                                     {% for product in order.products %}
@@ -194,18 +187,7 @@
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                {% if is_delivery_plan %}
-                                                    <span class="fl">￥{{order.final_price}}</span>
-                                                {% else %}
-                                                    <!-- 积分商品 -->
-                                                    {% if order.type == "integral" %}
-                                                        <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                    <!-- 普通商品 -->
-                                                    {% else %}
-                                                        <span class="fl">Ｘ{{ product.number }}</span>
-                                                    {% endif %}
-                                                {% endif %}
+                                                <span class="fl">Ｘ{{ order.product_count }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +239,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                             {% else %}
                                 {% for product in order.products %}
@@ -279,18 +261,7 @@
                                         </div>
                                         {% endif %}
                                         <div class="em9 clearfix c9 em65 xui-productNum">
-                                            {% if is_delivery_plan %}
-                                                <span class="fl">￥{{order.final_price}}</span>
-                                            {% else %}
-                                                <!-- 积分商品 -->
-                                                {% if order.type == "integral" %}
-                                                    <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                <!-- 普通商品 -->
-                                                {% else %}
-                                                    <span class="fl">Ｘ{{ product.number }}</span>
-                                                {% endif %}
-                                            {% endif %}
+                                            <span class="fl">Ｘ{{ order.product_count }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -339,7 +310,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                                 {% else %}
                                     {% for product in order.products %}
@@ -362,18 +333,7 @@
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                {% if is_delivery_plan %}
-                                                    <span class="fl">￥{{order.final_price}}</span>
-                                                {% else %}
-                                                    <!-- 积分商品 -->
-                                                    {% if order.type == "integral" %}
-                                                        <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                    <!-- 普通商品 -->
-                                                    {% else %}
-                                                        <span class="fl">Ｘ{{ product.number }}</span>
-                                                    {% endif %}
-                                                {% endif %}
+                                                        <span class="fl">Ｘ{{ order.product_count }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -381,9 +341,9 @@
                                 {% endif %}
                                  <div class="pr15 xui-bottomBtn tl">
                                     <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
+                                    {% if not order.has_sub_order %}
                                     <span class="xui-button">
                                         {% if order.express_number %}
-                                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
                                                 {% if order.session_data.has_comfire_button %}
                                                 <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc"  data-id="{{order.id}}">确认收货</a>
                                                 {% endif %}
@@ -392,6 +352,7 @@
                                         {% endif %}
 
                                     </span>
+                                    {% endif %}
                                 </div>
                             </a>
                         </li>

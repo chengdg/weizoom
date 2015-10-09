@@ -31,7 +31,7 @@ from core.wxapi import get_weixin_api
 
 #COUNT_PER_PAGE = 2
 COUNT_PER_PAGE = 50
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 #DEFAULT_CATEGORY_NAME=u"未分组"
 
@@ -47,8 +47,9 @@ class Qrcodes(resource.Resource):
 		"""
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 		})
 		return render_to_response('weixin/advance_manage/qrcodes.html', c)
 
@@ -135,8 +136,8 @@ def _get_qrcode_items(request):
 	webapp_users = member_model.WebAppUser.objects.filter(member_id__in=member_ids)
 	webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 	webapp_user_ids = set(webapp_user_id2member_id.keys())
-
-	orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids, status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
+	
+	orders = Order.by_webapp_user_id(webapp_user_ids).filter(status__in=(ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
 
 	member_id2total_final_price = {}
 	member_id2cash_money = {}
@@ -294,7 +295,14 @@ class Qrcode(resource.Resource):
 		answer_content = {}
 		webapp_id = request.user_profile.webapp_id
 		groups = MemberGrade.get_all_grades_list(webapp_id)
-		tags = MemberTag.get_member_tags(webapp_id)
+		member_tags = MemberTag.get_member_tags(webapp_id)
+		#调整排序，将为分组放在最前面
+		tags = []
+		for tag in member_tags:
+			if tag.name == '未分组':
+				tags = [tag] + tags
+			else:
+				tags.append(tag)
 		qrcode = None
 		from mall.promotion.models import CouponRule
 		if setting_id > 0:
@@ -352,8 +360,9 @@ class Qrcode(resource.Resource):
 			tag_id = qrcode.tag_id
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'webapp_id': webapp_id,
 			'qrcode': qrcode,
 			'groups': groups,
@@ -534,8 +543,9 @@ class QrcodeMember(resource.Resource):
 		setting_id = request.GET['setting_id']
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
 		})
 
@@ -624,8 +634,9 @@ class QrcodeOrder(resource.Resource):
 		setting_id = request.GET.get('setting_id', None)
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_QRCODE_NAV,
 			'setting_id': setting_id
 		})
 
@@ -679,14 +690,13 @@ class QrcodeOrder(resource.Resource):
 			old_member_order_ids = []
 			for webapp_user in old_webapp_users:
 				created_at = old_member_id2_create_at[webapp_user.member_id]
-				for order in Order.objects.filter(webapp_user_id=webapp_user.id, created_at__gte=created_at):
+				for order in Order.by_webapp_user_id(webapp_user.id).filter(created_at__gte=created_at):
 					old_member_order_ids.append(order.id)
 
 			if new_webapp_user_ids and old_member_order_ids:
-				orders = Order.objects.filter(Q(webapp_user_id__in=new_webapp_user_ids) | Q(id__in=old_member_order_ids)).filter(**filter_data_args).order_by('-created_at')
+				orders = Order.by_webapp_user_id(new_webapp_user_ids, order_id=old_member_order_ids).filter(**filter_data_args).order_by('-created_at')
 			elif new_webapp_user_ids:
-				filter_data_args['webapp_user_id__in'] = new_webapp_user_ids
-				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+				orders = Order.by_webapp_user_id(new_webapp_user_ids).filter(**filter_data_args).order_by('-created_at')
 			elif old_member_order_ids:
 				filter_data_args['id__in'] = old_member_order_ids
 				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
@@ -697,8 +707,7 @@ class QrcodeOrder(resource.Resource):
 			webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 			webapp_user_ids = set(webapp_user_id2member_id.keys())
 			if webapp_user_ids:
-				filter_data_args['webapp_user_id__in'] = webapp_user_ids
-				orders = Order.objects.filter(**filter_data_args).order_by('-created_at')
+				orders = Order.by_webapp_user_id(webapp_user_ids).filter(**filter_data_args).order_by('-created_at')
 			else:
 				orders = []
 

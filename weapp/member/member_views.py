@@ -37,12 +37,21 @@ def get_members(request):
 	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
 	#add by duhao 2015-07-13
 	status = request.GET.get('status' , '1')
+	member_tags = MemberTag.get_member_tags(webapp_id)
+	#调整排序，将为分组放在最前面
+	tags = []
+	for tag in member_tags:
+		if tag.name == '未分组':
+			tags = [tag] + tags
+		else:
+			tags.append(tag)
+	member_tags = tags
 	c = RequestContext(request, {
 		'first_nav_name': export.MEMBER_FIRST_NAV,
 		'second_navs': export.get_second_navs(request),
 		'second_nav_name': export.MEMBERS,
 		'should_show_authorize_cover' : get_should_show_authorize_cover(request),
-		'user_tags': MemberTag.get_member_tags(webapp_id),
+		'user_tags': member_tags,
 		'grades': MemberGrade.get_all_grades_list(webapp_id),
 		'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(),
 		'status': status
@@ -58,53 +67,74 @@ def get_should_show_authorize_cover(request):
 	else:
 		return False
 
-@view(app='member', resource='member_tags', action='get')
-@login_required
-def list_tags(request):
-	webapp_id = request.user_profile.webapp_id
-	member_tags = MemberTag.get_member_tags(webapp_id)
-	if request.method == "GET":
-		is_can_send = False
-		from weixin.user.models import WeixinMpUser
-		try:
-			mp_user = WeixinMpUser.objects.get(owner_id=request.user_profile.user_id)
-			if mp_user and mp_user.is_certified:
-				is_can_send = True
-		except:
-			pass
-
-
-		for member_tag in member_tags:
-			member_tag.count = MemberHasTag.get_tag_has_member_count(member_tag)
-		c = RequestContext(request, {
-			'first_nav_name': export.MEMBER_FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
-			'second_nav_name': export.MEMBER_TAG,
-			'member_tags': member_tags,
-			'should_show_authorize_cover': get_should_show_authorize_cover(request),
-			'success_count': UserSentMassMsgLog.success_count(webapp_id),
-			'is_can_send': is_can_send
-			#'pageinfo': json.dumps(paginator.to_dict(pageinfo))
-			})
-		return render_to_response('member/editor/member_tags.html', c)
-	else:
-		member_tag_ids = [member_tag.id for member_tag in member_tags]
-
-		id_values = {}
-		for key, value in request.POST.dict().items():
-			id = key.split('_')[2]
-			id_values[int(id)] = value
-
-		for id in id_values.keys():
-			value = id_values[id]
-
-			if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
-				MemberTag.objects.filter(id=id, webapp_id=webapp_id).update(name=value)
-			else:
-				MemberTag.objects.create(name=value, webapp_id=webapp_id)
-		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
-		MemberTag.objects.filter(id__in=delete_ids).delete()
-		return HttpResponseRedirect('/member/member_tags/get/')
+# @view(app='member', resource='member_tags', action='get')
+# @login_required
+# def list_tags(request):
+# 	webapp_id = request.user_profile.webapp_id
+# 	default_tag_id = MemberTag.get_default_tag(webapp_id).id
+# 	member_tags = MemberTag.get_member_tags(webapp_id)
+# 	#调整排序，将为分组放在最前面
+# 	tags = []
+# 	for tag in member_tags:
+# 		if tag.name == '未分组':
+# 			tags = [tag] + tags
+# 		else:
+# 			tags.append(tag)
+# 	member_tags = tags
+# 	if request.method == "GET":
+# 		is_can_send = False
+# 		from weixin.user.models import WeixinMpUser
+# 		try:
+# 			mp_user = WeixinMpUser.objects.get(owner_id=request.user_profile.user_id)
+# 			if mp_user and mp_user.is_certified:
+# 				is_can_send = True
+# 		except:
+# 			pass
+# 		ids = [str(tag.id) for tag in MemberTag.objects.filter(webapp_id=webapp_id)]
+# 		if ids:
+# 			ids = '_'.join(ids)
+# 		else:
+# 			ids = ''
+# 		for member_tag in member_tags:
+# 			member_tag.count = MemberHasTag.get_tag_has_member_count(member_tag)
+# 		c = RequestContext(request, {
+# 			'first_nav_name': export.MEMBER_FIRST_NAV,
+# 			'second_navs': export.get_second_navs(request),
+# 			'second_nav_name': export.MEMBER_TAG,
+# 			'member_tags': member_tags,
+# 			'should_show_authorize_cover': get_should_show_authorize_cover(request),
+# 			'success_count': UserSentMassMsgLog.success_count(webapp_id),
+# 			'is_can_send': is_can_send,
+# 			'ids':ids
+# 			#'pageinfo': json.dumps(paginator.to_dict(pageinfo))
+# 			})
+# 		return render_to_response('member/editor/member_tags.html', c)
+# 	else:
+# 		member_tag_ids = [member_tag.id for member_tag in member_tags]
+# 		id_values = {}
+# 		for key, value in request.POST.dict().items():
+# 			id = key.split('_')[2]
+# 			id_values[int(id)] = value
+# 		for id in id_values.keys():
+# 			value = id_values[id]
+# 			#不能添加和更新名为‘未分组’的组名
+# 			if value != '未分组':
+# 				if MemberTag.objects.filter(id=id, webapp_id=webapp_id).count() > 0:
+# 					MemberTag.objects.filter(id=id, webapp_id=webapp_id).update(name=value)
+# 				else:
+# 					if MemberTag.objects.filter(id=id).count() == 0:
+# 						MemberTag.objects.create(id=id, name=value, webapp_id=webapp_id)
+# 					else:
+# 						MemberTag.objects.create(name=value, webapp_id=webapp_id)
+# 		delete_ids = list(set(member_tag_ids).difference(set(id_values.keys())))
+# 		if default_tag_id in delete_ids:
+# 			delete_ids.remove(default_tag_id)
+# 		members = [m.member for m in MemberHasTag.objects.filter(member_tag_id__in=delete_ids)]
+# 		MemberTag.objects.filter(id__in=delete_ids).delete()
+# 		for m in members:
+# 			if MemberHasTag.objects.filter(member=m).count() == 0:
+# 				MemberHasTag.objects.create(member=m, member_tag_id=default_tag_id)
+# 		return HttpResponseRedirect('/member/member_tags/get/')
 
 
 ########################################################################
@@ -387,7 +417,7 @@ def __get_member_orders(member):
 	if member is None:
 		return None
 	webapp_user_ids = member.get_webapp_user_ids
-	return Order.objects.filter(webapp_user_id__in=webapp_user_ids).order_by("-created_at")
+	return Order.by_webapp_user_id(webapp_user_ids).order_by("-created_at")
 
 def __get_member_shared_urls(member):
 	return MemberSharedUrlInfo.objects.filter(member_id=member.id)

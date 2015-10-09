@@ -65,7 +65,7 @@ def _get_order_items(user, query, filter_value, sort_attr, query_string, count_p
 	# else:
 	# 	weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
 
-	weizoom_orders = Order.objects.filter(webapp_id=webapp_id,order_source=ORDER_SOURCE_WEISHOP)
+	weizoom_orders = Order.by_webapp_id(webapp_id).filter(order_source=ORDER_SOURCE_WEISHOP)
 	weizoom_mall_order_ids = [order.id for order in weizoom_orders]
 
 	order_id_list = []

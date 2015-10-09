@@ -14,6 +14,7 @@ from workbench.models import *
 from datetime import datetime
 from termite import pagestore as pagestore_manager
 from webapp.models import Project, GlobalNavbar
+from account.models import UserProfile
 
 register = template.Library()
 
@@ -85,8 +86,15 @@ def get_global_navs(request):
 		webapp_owner_id = request.webapp_owner_id
 		workspace = Workspace.objects.get(owner_id=webapp_owner_id, inner_name='home_page')
 		template_project_name = workspace.template_name
-		template_project = Project.objects.get(owner_id=webapp_owner_id, workspace=workspace, inner_name=template_project_name)
+		template_projects = Project.objects.filter(owner_id=webapp_owner_id, workspace=workspace, inner_name=template_project_name)
 
+		if template_projects.count() == 0:
+			return {
+				"is_standard_global_nav": False,
+				"navs": []
+			}
+
+		template_project = template_projects[0]
 		#在首页中寻找导航信息
 		navs = []
 		#获得首页
@@ -156,4 +164,22 @@ def get_static_nav(request, nav_name):
 @register.filter(name='to_json_str')
 def to_json_str(obj):
 	return obj
+
+
+@register.filter(name='get_back_homepage_url')
+def get_back_homepage_url(request, homepage_workspace_info):
+	"""
+	当启用新版微页面时，打开的微页面设置的首页，如果不是，返回删除列表页面
+
+	author: liupeiyu
+	"""
+	back_homepage_url = u'/workbench/jqm/preview/?woid={}&module=mall&model=products&action=list'.format(request.webapp_owner_id)
+
+	profiles = UserProfile.objects.filter(user_id=request.webapp_owner_id)
+	if profiles.count() > 0:
+		if profiles[0].is_use_wepage:
+		 	back_homepage_url = u'/termite2/webapp_page/?{}'.format(homepage_workspace_info)
+		 	print back_homepage_url
+
+	return back_homepage_url
 

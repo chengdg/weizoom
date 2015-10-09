@@ -88,7 +88,7 @@
                     <div class="hidden xa-sendMemberIds" data-send-member-ids={{member_ids_str}}></div>
                 {% else %}
                     {% for member in member_list %}
-                        <span class="xui-sendTargetNames xa-sendTargetNames ml5 fl" data-member-id={{member.id}}>{{member.name|safe}}</span>
+                        <span class="xui-sendTargetNames xa-sendTargetNames ml15 fl" data-member-id={{member.id}}>{{member.name|safe}}</span>
                     {% endfor %}
                 {% endif %}
                 <div class="cb"></div>
@@ -98,7 +98,7 @@
 
         <div class="xui-massageSendingGroup xa-changeSendNumber" data-send-number={{number}}>
             <span class="xa-changeSendText">准备向{{number}}人发送信息</span>
-            <a href="../../member/members/get/">重新筛选</a>
+            <a href="../../member/member_list/">重新筛选</a>
         </div>
     {% endif %}
 

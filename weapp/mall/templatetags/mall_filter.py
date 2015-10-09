@@ -76,7 +76,7 @@ ORDER_CANCEL_ACTION = {
 }
 ORDER_REFUNDIND_ACTION = {
 	'name': u'申请退款',
-	'action': 'refunding',
+	'action': 'return_pay',
 	'button_class': 'btn-danger'
 }
 ORDER_UPDATE_PRICE_ACTION = {
@@ -91,7 +91,7 @@ ORDER_UPDATE_EXPREDSS_ACTION = {
 }
 ORDER_REFUND_SUCCESS_ACTION = {
 	'name': u'退款成功',
-	'action': 'refund_success',
+	'action': 'return_success',
 	'button_class': 'btn-danger'
 }
 
@@ -101,19 +101,25 @@ def get_order_actions(order):
 	if hasattr(order, 'belong'):
 		belong = order.belong
 
-	if belong  == 'all':
+	if belong == 'all':
 		if order.status == ORDER_STATUS_NOT:
 			return [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
 		elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY] :
-				return [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+				if order.has_sub_order:
+					return [ORDER_REFUNDIND_ACTION]
+				else:
+					return [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
 			else:
-				return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+				if order.has_sub_order:
+					return [ORDER_CANCEL_ACTION]
+				else:
+					return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
 		elif order.status == ORDER_STATUS_PAYED_SHIPED:
 			actions = []
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
 				if order.express_company_name:
-					actions = [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+					actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
 				else:
 					actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
 			else:
@@ -121,11 +127,18 @@ def get_order_actions(order):
 					actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
 				else:
 					actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+			if order.has_sub_order and ORDER_UPDATE_EXPREDSS_ACTION in actions:
+				actions.remove(ORDER_UPDATE_EXPREDSS_ACTION)
+			if order.has_sub_order and ORDER_FINISH_ACTION in actions:
+				actions.remove(ORDER_FINISH_ACTION)
 			return actions
 		elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
 			if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
 				if order.express_company_name:
-					return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+					if order.has_sub_order:
+						return [ORDER_REFUNDIND_ACTION]
+					else:
+						return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
 				else:
 					return [ORDER_REFUNDIND_ACTION]
 			else:
@@ -180,3 +193,8 @@ def absolute(value):
         return abs(value)
     except (ValueError, TypeError):
         return ""
+
+# @register.filter(name='order_not_ship_count')
+# def order_not_ship_count(count, request):
+# 	return len(belong_to(request.manager.get_profile().webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP))
+

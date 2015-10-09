@@ -44,6 +44,7 @@ import mall.signal_handler
 from webapp import util as webapp_util
 
 from cache import webapp_cache
+from bs4 import BeautifulSoup
 
 page_title = u'微众商城'
 
@@ -159,6 +160,25 @@ def list_products(request):
 # 	})
 # 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
+def __is_forbidden_coupon(owner_id, product_id):
+	"""
+	判断商品是否被禁止使用全场优惠券
+	"""
+	forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(owner_id)
+	product_id = int(product_id)
+	return product_id in forbidden_coupon_product_ids
+
+def __get_product_hint(owner_id, product_id):
+	"""
+	获取显示在商品详情页的商品相关的提示信息
+	duhao 2015-09-08
+	"""
+	hint = ''
+	if __is_forbidden_coupon(owner_id, product_id):
+		hint = u'该商品不参与全场优惠券使用！'
+	
+	return hint
+
 
 ########################################################################
 # get_product: 显示“商品详情”页面
@@ -171,6 +191,9 @@ def get_product(request):
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
 	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
+	#duhao 2015-09-08
+	hint = __get_product_hint(request.webapp_owner_id, product_id)
+
 	# jz 2015-08-10
 	#product.fill_model()
 
@@ -234,7 +257,9 @@ def get_product(request):
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
 		'share_page_desc': product.name,
-		'share_img_url': product.thumbnails_url
+		'share_img_url': product.thumbnails_url,
+		#add by duhao 增加友情提示语
+		'hint': hint
 	})
 
 	if hasattr(request, 'is_return_context'):
@@ -292,41 +317,64 @@ def pay_order(request):
 			error_msg = u'pay_order:异常, cause:\n{}'.format(unicode_full_stack())
 			watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
 			raise Http404(u'订单不存在')
+
+	orders = []  #订单集合 duhao
+	has_sub_order = order.has_sub_order
+	order_status_info = order.status  #整单的订单状态显示，如果被拆单，则显示订单里最滞后的子订单状态
+	if has_sub_order:
+		sub_order_ids = order.get_sub_order_ids(order.id)
+		for sub_order_id in sub_order_ids:
+			sub_order = mall_api.get_order(webapp_user, sub_order_id, True, True)
+			orders.append(sub_order)
+			if sub_order.status < order_status_info:
+				order_status_info = sub_order.status
+	else:
+		orders.append(order)
+
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		order.red_envelope = red_envelope.id
 		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
 			order.red_envelope_created = True
 
-	# jz 2015-08-10
-	# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
-	# 	order.is_show_field = True
-	# else:
-	# 	order.is_show_field = False
-	#获取订单包含商品
-	# order_has_products = []
-	# try:
-	# 	# order_has_products = OrderHasProduct.objects.filter(order=order)
-	# 	order.products = mall_api.get_order_products(order)
-	# 	order.total_price = Order.get_order_has_price_number(order)
-	# except:
-	# 	error_msg = u'pay_order:获取订单包含商品异常, cause:\n{}'.format(unicode_full_stack())
-	# 	watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
-	# 	pass
+	for sub_order in orders:
+		# jz 2015-08-10
+		# if (order.postage and int(order.postage) !=0) or (order.integral) or (order.coupon_id):
+		# 	order.is_show_field = True
+		# else:
+		# 	order.is_show_field = False
+		#获取订单包含商品
+		# order_has_products = []
+		# try:
+		# 	# order_has_products = OrderHasProduct.objects.filter(order=order)
+		# 	order.products = mall_api.get_order_products(order)
+		# 	order.total_price = Order.get_order_has_price_number(order)
+		# except:
+		# 	error_msg = u'pay_order:获取订单包含商品异常, cause:\n{}'.format(unicode_full_stack())
+		# 	watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
+		# 	pass
 
-	if order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - order.update_at).days >= 3:
-		#订单发货后3天显示确认收货按钮
-		if not hasattr(order, 'session_data'):
-			order.session_data = dict()
-		order.session_data['has_comfire_button'] = '1'
+		if sub_order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - sub_order.update_at).days >= 3:
+			#订单发货后3天显示确认收货按钮
+			if not hasattr(sub_order, 'session_data'):
+				sub_order.session_data = dict()
+			sub_order.session_data['has_comfire_button'] = '1'
 
-	order.has_promotion_saved_money = order.promotion_saved_money > 0
+		sub_order.has_promotion_saved_money = sub_order.promotion_saved_money > 0
+
+		#add by duhao 20150914
+		sub_order.order_status_info = STATUS2TEXT[sub_order.status]
 
 	request.should_hide_footer = True
+	if len(orders) == 1:
+		order = orders[0]
+
 	c = RequestContext(request, {
 		'page_title': u'订单支付',
 		'order': order,
-		'order_status_info': STATUS2TEXT[order.status],
+		'has_sub_order': has_sub_order,
+		'orders': orders,
+		'order_status_info': STATUS2TEXT[order_status_info],
 		'pay_interface': PAYTYPE2NAME[order.pay_interface_type],
 		'error_msg': None,
 		'is_in_testing': settings.IS_IN_TESTING,
@@ -623,7 +671,7 @@ def show_shopping_cart(request):
 	request.should_hide_footer = True
 	jsons = [{
 		"name": "productGroups",
-		"content": __format_product_group_price_factor(product_groups)
+		"content": __format_product_group_price_factor(product_groups, request.webapp_owner_id)
 	}]
 
 	c = RequestContext(request, {
@@ -681,7 +729,7 @@ def edit_order(request):
 	integral_info['have_integral'] = (integral_info['count'] > 0)
 
 	#获取优惠券
-	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products)
+	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id)
 
 	#获取订单中用户的可用积分
 	order.usable_integral = mall_api.get_order_usable_integral(order, integral_info)
@@ -700,7 +748,7 @@ def edit_order(request):
 		"content": integral_info
 	}, {
 		"name": "productGroups",
-		"content": __format_product_group_price_factor(order.product_groups)
+		"content": __format_product_group_price_factor(order.product_groups, webapp_owner_id)
 	}]
 
 	c = RequestContext(request, {
@@ -723,7 +771,8 @@ def edit_order(request):
 		return c
 	return render_to_response('%s/edit_order.html' % request.template_dir, c)
 
-def __fill_coupons_for_edit_order(webapp_user, products):
+
+def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 	coupons = webapp_user.coupons
 	limit_coupons = []
 	result_coupons = []
@@ -731,14 +780,24 @@ def __fill_coupons_for_edit_order(webapp_user, products):
 
 	product_ids = []
 	total_price = 0
-	productIds2price = dict()
+	# productIds2price = dict()
+	productIds2original_price = dict()
+	is_forbidden_coupon = True
 	for product in products:
 		product_ids.append(product.id)
 		product_total_price = product.price * product.purchase_count
-		total_price += product_total_price
-		if not productIds2price.get(product.id):
-			productIds2price[product.id] = 0
-		productIds2price[product.id] += product_total_price
+		product_total_original_price = product.original_price * product.purchase_count
+		if not __is_forbidden_coupon(webapp_owner_id, product.id):
+			#不是被禁用全场优惠券的商品 duhao 20150908
+			total_price += product_total_price
+			is_forbidden_coupon = False
+		# if not productIds2price.get(product.id):
+		# 	productIds2price[product.id] = 0
+		# productIds2price[product.id] += product_total_price
+
+		if not productIds2original_price.get(product.id):
+			productIds2original_price[product.id] = 0
+		productIds2original_price[product.id] += product_total_original_price
 	for coupon in coupons:
 		valid = coupon.valid_restrictions
 		limit_id = coupon.limit_product_id
@@ -759,13 +818,29 @@ def __fill_coupons_for_edit_order(webapp_user, products):
 				# 过期状态
 				coupon.display_status = 'overdue'
 			limit_coupons.append(coupon)
-		elif coupon.limit_product_id > 0 and \
-			(product_ids.count(limit_id) == 0 or valid > productIds2price[limit_id]) or\
-			valid > total_price or\
-			coupon.provided_time >= today:
-			# 1.订单没有限定商品
-			# 2.订单金额不足阈值
-			# 3.优惠券活动尚未开启
+		# elif coupon.limit_product_id > 0 and \
+		# 	(product_ids.count(limit_id) == 0 or valid > productIds2price[limit_id]) or\
+		# 	valid > total_price or\
+		# 	coupon.provided_time >= today or is_forbidden_coupon:
+		# 	# 1.订单没有限定商品
+		# 	# 2.订单金额不足阈值
+		# 	# 3.优惠券活动尚未开启
+		# 	# 4.订单里面都是被禁用全场优惠券的商品 duhao
+		# 	coupon.display_status = 'disable'
+		# 	limit_coupons.append(coupon)
+
+		elif coupon.limit_product_id == 0 and (valid > total_price or coupon.provided_time >= today or is_forbidden_coupon):
+			#通用券
+			# 1.订单金额不足阈值
+			# 2.优惠券活动尚未开启
+			# 3.订单里面都是被禁用全场优惠券的商品 duhao
+			coupon.display_status = 'disable'
+			limit_coupons.append(coupon)
+
+		elif coupon.limit_product_id > 0 and (product_ids.count(limit_id) == 0 or valid > productIds2original_price[limit_id]or coupon.provided_time >= today):
+			# 单品卷
+			# 1.订单金额不足阈值
+			# 2.优惠券活动尚未开启
 			coupon.display_status = 'disable'
 			limit_coupons.append(coupon)
 		else:
@@ -773,11 +848,16 @@ def __fill_coupons_for_edit_order(webapp_user, products):
 
 	return result_coupons, limit_coupons
 
-def __format_product_group_price_factor(product_groups):
+def __format_product_group_price_factor(product_groups, webapp_owner_id):
+	forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(webapp_owner_id)
+
 	factors = []
 	for product_group in product_groups:
 		product_factors = []
 		for product in product_group['products']:
+			is_forbidden_coupon = False
+			if product.id in forbidden_coupon_product_ids:
+				is_forbidden_coupon = True
 			product_factors.append({
 				"id": product.id,
 				"model": product.model_name,
@@ -786,7 +866,8 @@ def __format_product_group_price_factor(product_groups):
 				"original_price": product.original_price,
 				"weight": product.weight,
 				"active_integral_sale_rule": getattr(product, 'active_integral_sale_rule', None),
-				"postageConfig": product.postage_config if hasattr(product, 'postage_config') else {}
+				"postageConfig": product.postage_config if hasattr(product, 'postage_config') else {},
+				"forbidden_coupon": is_forbidden_coupon
 			})
 
 		factor = {
@@ -874,7 +955,7 @@ def edit_shopping_cart_order(request):
 	integral_info['have_integral'] = (integral_info['count'] > 0)
 
 	#获取优惠券
-	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products)
+	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id)
 
 	#获取订单中用户的可用积分
 	order.usable_integral = mall_api.get_order_usable_integral(order, integral_info)
@@ -891,7 +972,7 @@ def edit_shopping_cart_order(request):
 		"content": integral_info
 	}, {
 		"name": "productGroups",
-		"content": __format_product_group_price_factor(order.product_groups)
+		"content": __format_product_group_price_factor(order.product_groups, webapp_owner_id)
 	}]
 
 	request.should_hide_footer = True
@@ -1182,6 +1263,9 @@ def get_express_detail(request):
 	request.should_hide_footer = True
 	order_id = request.GET.get('order_id', None)
 	order = mall_api.get_order_by_id(order_id)
+
+	order.get_express_details.reverse()
+
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'物流信息',
@@ -1223,7 +1307,7 @@ def _get_order_review_list(request,need_product_detail=False):
     # start
 
     # 得到会员的所有已完成的订单
-    orders = Order.objects.filter(webapp_user_id=webapp_user_id, status=5)
+    orders = Order.by_webapp_user_id(webapp_user_id).filter(status=5)
     orderIds = [order.id for order in orders]
     orderHasProducts = OrderHasProduct.objects.filter(order_id__in=orderIds)
     totalProductIds = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
@@ -1554,7 +1638,7 @@ def edit_refueling_order(request):
 	integral_info['have_integral'] = (integral_info['count'] > 0)
 
 	#获取优惠券
-	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products)
+	coupons, limit_coupons = __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id)
 
 	#获取订单中用户的可用积分
 	order.usable_integral = 0#mall_api.get_order_usable_integral(order, integral_info)
@@ -1577,7 +1661,7 @@ def edit_refueling_order(request):
 		"content": integral_info
 	}, {
 		"name": "productGroups",
-		"content": __format_product_group_price_factor(order.product_groups)
+		"content": __format_product_group_price_factor(order.product_groups, webapp_owner_id)
 	}]
 	refueling_order = '%s_79' % refueling_id
 	c = RequestContext(request, {

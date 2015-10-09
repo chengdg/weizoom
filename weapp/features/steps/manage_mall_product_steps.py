@@ -63,6 +63,11 @@ def step_product_add(context, user):
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
+        # 转换供货商
+        if 'supplier' in product:
+            response = context.client.get('/mall2/api/supplier_list/',data={"name":product['supplier']})
+            supplier = json.loads(response.content)['data']['items'][0]
+            product['supplier'] = supplier['id']
         context.client.post(url, product)
         is_be_for_sale = product.get('status', '') == u'待售'
         is_shelve = product['shelve_type'] == mall_models.PRODUCT_SHELVE_TYPE_OFF
@@ -82,7 +87,6 @@ def step_product_add(context, user):
 def step_get_products(context, user, product_name):
     expected = json.loads(context.text)
     actual = __get_product_from_web_page(context, product_name)
-    print("actual: {}".format(actual))
     bdd_util.assert_dict(expected, actual)
 
 
@@ -116,6 +120,7 @@ def step_update_product(context, user, product_name):
         product = json.loads(context.text)
     if 'name' not in product:
         product['name'] = existed_product.name
+    product['supplier'] = existed_product.supplier
     __process_product_data(product)
     product = __supplement_product(context.webapp_owner_id, product)
     print("POST DATA: {}".format(product))
@@ -172,6 +177,27 @@ def step_impl(context, user, type_name):
             expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
+@then(u"{user}能获取商品规格详情'{product_name}'")
+def get_product_model(context, user, product_name):
+    product = __get_product_from_web_page(context, product_name)
+    print product
+    expect_dict = {}
+    for row in context.table:
+        # | 颜色 | 价格(元) | 库存 | 商品编码 | 尺寸
+        if u'尺寸' in row.headings:
+
+            title = row[u'颜色'] + " "+ row[u'尺寸']
+        else:
+            title = row[u'颜色']
+        if u'库存' in row.headings and u'无限' == row['库存']:
+            expect_dict[title] = {'price':int(row['价格(元)']),'stock_type':row['库存']}
+        else:
+            expect_dict[title] = {'price':int(row['价格(元)']),'stocks':int(row['库存'])}
+        if row[u'商品编码'] != u'':
+            expect_dict[title]['user_code'] = row[u'商品编码']
+
+    print "zl-----------------",expect_dict
+    bdd_util.assert_dict(expect_dict,product['model']['models'])
 
 @when(u"{user}更新商品'{product_name}'的库存为")
 def step_impl(context, user, product_name):
@@ -283,7 +309,7 @@ def __update_prducts_by_name(context, product_name, action):
         for product_name in product_name:
             data['ids'].append(ProductFactory(name=product_name).id)
     else:
-        data['id'] = ProductFactory(name=product_name).id
+        data['ids'] = ProductFactory(name=product_name).id
 
     response = context.client.post('/mall2/api/product_list/?_method=post', data)
     bdd_util.assert_api_call_success(response)
@@ -356,7 +382,9 @@ def __get_product_from_web_page(context, product_name):
     """
     response = get_product_response_from_web_page(context, product_name)
     product = response.context['product']
-
+    supplier = None
+    if 'supplier' in response.context:
+        supplier = response.context['supplier']
     #处理category
     categories = response.context['categories']
     category_name = ''
@@ -385,19 +413,22 @@ def __get_product_from_web_page(context, product_name):
         'model': {},
         'postage': u'免运费',
         'pay_interfaces': [],
-        "is_member_product": 'on' if product.is_member_product else 'off'
+        "is_member_product": 'on' if product.is_member_product else 'off',
+        "supplier": 0 if not supplier else dict(supplier).get(product.supplier),
+        "purchase_price": product.purchase_price,
+        "promotion_title": product.promotion_title,
     }
 
     #填充运费
     print("product.postage_id={}".format(product.postage_id))
     if product.postage_id == 999 or product.postage_id <= 0:
-        # TODO: 999表示什么？
+        # TODO: 999表示什么？ 表示使用系统运费
         postage_config_info = response.context['postage_config_info']
         if postage_config_info['is_use_system_postage_config']:
             actual['postage'] = postage_config_info['system_postage_config'].name
         else:
-            # TODO: 如何处理?
-            actual['postage'] = postage_config_info['system_postage_config'].first_weight_price
+            # TODO: 如何处理? 显示商品统一运费金额
+            actual['postage'] = product.unified_postage_money
         #postage_config_info.system_postage_config.name
     elif product.postage_id>0:
         print("product.postage_id={}".format(product.postage_id))
@@ -427,7 +458,9 @@ def __get_product_from_web_page(context, product_name):
                     "weight": product_model['weight'],
                     "market_price": "" if product_model['market_price'] == 0 else product_model['market_price'],
                     "stock_type": u'无限' if product_model['stock_type'] == mall_models.PRODUCT_STOCK_TYPE_UNLIMIT else u'有限',
-                    "stocks": product_model['stocks']
+                    "stocks": product_model['stocks'],
+                    "user_code": product_model['user_code']
+
                 }
                 # 积分商品
                 if product.type == mall_models.PRODUCT_INTEGRAL_TYPE:
@@ -444,13 +477,16 @@ def __get_product_from_web_page(context, product_name):
                     "weight": product_model['weight'],
                     "market_price": "" if product_model['market_price'] == 0 else product_model['market_price'],
                     "stock_type": u'无限' if product_model['stock_type'] == mall_models.PRODUCT_STOCK_TYPE_UNLIMIT else u'有限',
-                    "stocks": product_model['stocks']
+                    "stocks": product_model['stocks'],
+                    "bar_code": product.bar_code
                 }
                 # 积分商品
                 if product.type == mall_models.PRODUCT_INTEGRAL_TYPE:
                     models['standard']["integral"] = product_model['price']
 
         actual['model']['models'] = models
+        actual['price'] = models['standard']['price']
+        actual['weight'] = models['standard']['weight']
 
     return actual
 
@@ -482,7 +518,7 @@ def __supplement_product(webapp_owner_id, product):
         "price": "11.0",
         "market_price": "11.0",
         "weight": "0",
-        "bar_code": "12321",
+        "bar_code": "12321" ,
         "thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
         "pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
         "introduction": u"product的简介",
@@ -564,6 +600,7 @@ def __supplement_product(webapp_owner_id, product):
                 "weight": standard_model.get('weight', 0.0),
                 "stock_type": standard_model.get('stock_type', mall_models.PRODUCT_STOCK_TYPE_UNLIMIT),
                 "stocks": standard_model.get('stocks', -1)
+
             })
         else:
             #对每一个model，构造诸如customModel^2:4_3:7^price的key

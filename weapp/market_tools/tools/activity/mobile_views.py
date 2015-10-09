@@ -302,7 +302,7 @@ def get_member_activites(request):
 		'page_title': u'我的活动列表',
 		'activities_items': sorted(activities_items, key=operator.itemgetter('participant_time'), reverse=True),
 		'lotteries_items': lotteries_items,
-		'is_hide_weixin_option_menu':False
+		'is_hide_weixin_option_menu':True
 	})
 	return render_to_response('activity/webapp/my_activities.html', c)
 

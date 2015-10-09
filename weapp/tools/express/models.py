@@ -36,6 +36,11 @@ class ExpressHasOrderPushStatus(models.Model):
 	send_count = models.IntegerField(default=0, verbose_name="发送订阅请求次数")
 	receive_count = models.IntegerField(default=0, verbose_name="接收推送请求次数")
 	created_at = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+	# 重新订阅的依据信息（当重推后，该两字段的信息，将被清空）
+	# abort_receive_at: 第一次接收 失败信息的时间
+	# abort_receive_message 第一次接收 "status":"abort"而且message中包含“3天”关键字的数据
+	abort_receive_at = models.DateTimeField(null=True, blank=True, verbose_name="接收信息时间")
+	abort_receive_message = models.TextField(verbose_name="接收的信息")
 
 	class Meta(object):
 		db_table = 'tool_express_has_order_push_status'
@@ -64,3 +69,6 @@ class ExpressHasOrderPushStatus(models.Model):
 # ALTER TABLE `tool_express_detail` ADD `express_id` integer default '-1';
 # ALTER TABLE `tool_express_has_order_push_status` ADD `send_count` integer default '0';
 # ALTER TABLE `tool_express_has_order_push_status` ADD `receive_count` integer default '0';
+# 
+# ALTER TABLE `tool_express_has_order_push_status` ADD `abort_receive_at` datetime;
+# ALTER TABLE `tool_express_has_order_push_status` ADD `abort_receive_message` longtext;

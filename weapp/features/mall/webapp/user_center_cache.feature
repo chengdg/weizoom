@@ -90,7 +90,7 @@ Scenario:1 bill增加订单数再访问个人中心
 	Then '个人中心'中'购物车'数为0
 
 
-@wip.cache
+@mall2 @wip.cache
 Scenario: 检查'个人中心'的市场工具数量
 
 	When bill访问jobs的webapp
@@ -98,11 +98,11 @@ Scenario: 检查'个人中心'的市场工具数量
 	Then '个人中心'中市场工具的数量为3
 
 
-@ignore
-Scenario: '个人中心'中'我的红包'、'我的优惠券'等项目有变化的情况
+#@ignore
+#Scenario: '个人中心'中'我的红包'、'我的优惠券'等项目有变化的情况
 
 
-@ignore
+@mall2
 Scenario: 添加订单
 	bill下单
 
@@ -121,10 +121,9 @@ Scenario: 添加订单
 	Then jobs可以看到订单列表
 		"""
 		[{
-			"status": "待支付",
+			"status": "待发货",
 			"price": 9.9,
 			"customer_message": "bill购买'商品1'",
-			"buyer": "bill",
 			"products":[{
 				"product_name": "商品1",
 				"count": 1,

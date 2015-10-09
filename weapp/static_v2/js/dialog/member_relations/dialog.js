@@ -171,13 +171,11 @@ W.member.Relations = W.ApiCollection.extend({
             onlyFans = 1;
         }
 
-        console.log('---------',_this.dataValue)
-
         if (_this.dataValue) {
-            return this.getApiUrl('follow_relations/get',{data_value:_this.dataValue,member_id:this.memberId});
+            return this.getApiUrl('follow_relations',{data_value:_this.dataValue,member_id:this.memberId});
         } else { 
-        //return this.getApiUrl('follow_relations/get/'+_this.memberId+'/'+onlyFans);
-            return this.getApiUrl('follow_relations/get',{member_id:this.memberId,only_fans:onlyFans});
+        //return this.getApiUrl('follow_relations/'+_this.memberId+'/'+onlyFans);
+            return this.getApiUrl('follow_relations',{member_id:this.memberId,only_fans:onlyFans});
         }
     },
 

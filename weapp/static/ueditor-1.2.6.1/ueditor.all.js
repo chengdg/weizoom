@@ -20137,7 +20137,7 @@ baidu.editor.ui = {};
     var iframeUrlMap = {
         'anchor':'~/dialogs/anchor/anchor.html',
         'insertimage':'~/dialogs/image/image.html',
-        'link':'~/dialogs/link/link.html',
+        'link':'~/dialogs/link/link.html?timestamp='+new Date().getTime(),
         'spechars':'~/dialogs/spechars/spechars.html',
         'searchreplace':'~/dialogs/searchreplace/searchreplace.html',
         'map':'~/dialogs/map/map.html',

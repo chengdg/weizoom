@@ -53,9 +53,10 @@ class IntegralSales(resource.Resource):
                     rule['member_grade_name'] = '全部等级'
 
             c = RequestContext(request, {
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_INTEGRAL_SALE_NAV,
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_INTEGRAL_SALE_NAV,
                 'promotion': promotion,
                 'jsons': jsons
             })
@@ -65,9 +66,10 @@ class IntegralSales(resource.Resource):
             member_grades = MemberGrade.get_all_grades_list(request.user_profile.webapp_id)
             c = RequestContext(request, {
                 'member_grades': member_grades,
-                'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_INTEGRAL_SALE_NAV,
+                'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_INTEGRAL_SALE_NAV,
             })
 
             return render_to_response('mall/editor/promotion/create_integral_sale.html', c)
@@ -146,12 +148,18 @@ class IntegralSaleList(resource.Resource):
     def get(request):
         """获得限时抢购列表.
         """
+        endDate = request.GET.get('endDate', '')
+        if endDate:
+            endDate +=' 00:00'
         integral_strategy = IntegralStrategySttings.objects.get(webapp_id=request.user_profile.webapp_id)
         c = RequestContext(request, {
-            'first_nav_name': export.MALL_PROMOTION_FIRST_NAV,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_INTEGRAL_SALE_NAV,
-            'is_order_integral_open': integral_strategy.use_ceiling > 0
+            'first_nav_name': export.MALL_PROMOTION_AND_APPS_FIRST_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_INTEGRAL_SALE_NAV,
+            'is_order_integral_open': integral_strategy.use_ceiling > 0,
+            'endDate': endDate,
+            'promotion_status': request.GET.get('status', '-1')
         })
 
         return render_to_response('mall/editor/promotion/integral_sales.html', c)

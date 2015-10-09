@@ -13,7 +13,14 @@ def get_news_url(news):
 			domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
 			return news.url.replace('./?', domain)
 
-		if news.url.find('/apps/') == 0:
+		if news.url.find('m/apps/') > 0 and not news.url.startswith('http') :
+			if news.url.startswith('/m'):
+				url = 'http://%s%s' % (settings.DOMAIN, news.url)
+			else:
+				url = 'http://%s/%s' % (settings.DOMAIN, news.url)
+			return url
+
+		if news.url.startswith('/apps/'): 
 			url = 'http://%s/m%s' % (settings.DOMAIN, news.url)
 			return url
 
@@ -62,13 +69,23 @@ def get_newses_object(newses, is_complement_url=False):
 
 def __get_absolute_url(orig_url, user_profile):
 	absolute_url = None
-	if orig_url.startswith('/'):
-		absolute_url = u'http://%s/workbench/jqm/preview%s' % (user_profile.host, orig_url)
+
+	path = 'workbench/jqm/preview'
+	if user_profile.is_use_wepage and 'home_page' in orig_url:
+		path = 'termite2/webapp_page'
+		
+	if orig_url.startswith('/apps/'):
+		path = 'm'
+
+	if orig_url.startswith('/m/'):
+		absolute_url = u'http://%s%s' % (user_profile.host, orig_url)
+	elif orig_url.startswith('/'):
+		absolute_url = u'http://%s/%s%s' % (user_profile.host, path, orig_url)
 	elif orig_url.startswith('.'):
-		absolute_url = u'http://%s/workbench/jqm/preview%s' % (user_profile.host, orig_url[1:])
+		absolute_url = u'http://%s/%s%s' % (user_profile.host, path, orig_url[1:])
 	else:
 		if not orig_url.startswith('http'):
-			absolute_url = u'http://%s/workbench/jqm/preview/%s' % (user_profile.host, orig_url)
+			absolute_url = u'http://%s/%s/%s' % (user_profile.host, path, orig_url)
 
 	return absolute_url if (absolute_url is not None) else orig_url
 

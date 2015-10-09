@@ -15,7 +15,7 @@ from core.dateutil import get_datetime_before_by_hour, get_datetime_from_timesta
 #from core.exceptionutil import unicode_full_stack
 
 from weixin.mp_decorators import mp_required
-from weixin.user.module_api import get_mp_head_img
+from weixin.user.module_api import get_mp_head_img, get_mp_nick_name
 from weixin2 import export
 from weixin2.models import *
 
@@ -23,7 +23,7 @@ from modules.member.models import *
 from account.social_account.models import SocialAccount
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
 
 class RealtimeMessagesDetail(resource.Resource):
@@ -32,7 +32,7 @@ class RealtimeMessagesDetail(resource.Resource):
     """
     app = 'new_weixin'
     resource = 'realtime_messages_detail'
-    
+
     @login_required
     def get(request):
         """
@@ -43,7 +43,7 @@ class RealtimeMessagesDetail(resource.Resource):
             could_replied = int(request.GET.get('replied', 0))
         except:
             could_replied = 0
-        
+
         try:
             session = Session.objects.get(id=session_id)
             session.unread_count = 0
@@ -57,23 +57,24 @@ class RealtimeMessagesDetail(resource.Resource):
                     could_replied = 1
                 webapp_id = request.user_profile.webapp_id
                 member = get_social_member(webapp_id, session.member_user_username)
-                if not member.is_subscribed:
+                if not member.get('is_subscribed',True):
                     could_replied = 0
         except:
             session = None
-        
+
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'session_id': session_id,
             'could_replied': could_replied,
             'session':session
         })
-        
+
         return render_to_response('weixin/message/realtime_messages_detail.html', c)
-    
+
     @login_required
     @mp_required
     def api_get(request):
@@ -99,7 +100,7 @@ class RealtimeMessagesDetail(resource.Resource):
         }
 
         return response.get_response()
-    
+
     @login_required
     def api_post(request):
         """
@@ -141,84 +142,84 @@ class RealtimeMessagesDetail(resource.Resource):
         except:
             response = create_response(500)
             response.errMsg = u'修改用户基本资料失败'
-        
+
         return response.get_response()
 
 
 def get_social_member(webapp_id, username):
     member = {}
-    #会员相关信息
+    #会员相关信息(获取is_subscribed的值)
     try:
         accounts = SocialAccount.objects.filter(webapp_id=webapp_id, openid=username)
         member_has_accounts = MemberHasSocialAccount.objects.filter(webapp_id=webapp_id, account=accounts[0])
         social_member = Member.objects.get(id=member_has_accounts[0].member_id)
-        try:
-            social_member_info = MemberInfo.objects.get(member=social_member)
-        except:
-            social_member_info = MemberInfo.objects.create(
-                member = social_member,
-                name = ''
-            )
-        member['member_info_id'] = social_member_info.id
-        member['remark_name'] = social_member_info.name
-        member['sex'] = social_member_info.sex
-        member['phone'] = social_member_info.phone_number
-        
-        fan_has_categories = FanHasCategory.objects.filter(fan=social_member)
-        categories = FanCategory.objects.filter(webapp_id=webapp_id)
-        
-        member_categories = []
-        member_category = {}
-        member_category['id'] = -1
-        member_category['name'] = u'请选择分组'
-        member_categories.append(member_category)
-        for category in categories:
-            member_category = {}
-            member_category['id'] = category.id
-            member_category['name'] = category.name
-            member_categories.append(member_category)
-            
-        member['categories'] = member_categories
-        if len(fan_has_categories) > 0:
-            member['category_id'] = fan_has_categories[0].category_id
-        
-        grades = MemberGrade.objects.filter(webapp_id=webapp_id)
-        member_grades = []
-        member_grade = {}
-        member_grade['id'] = -1
-        member_grade['name'] = u'请选择等级'
-        member_grades.append(member_grade)
-        for grade in grades:
-            member_grade = {}
-            member_grade['id'] = grade.id
-            member_grade['name'] = grade.name
-            member_grades.append(member_grade)
-        member['grades'] = member_grades
-        member['grade_id'] = social_member.grade_id
-        
-        member['id'] = social_member.id
-        
-        member['location'] = ''
-        if social_member.country:
-            member['location'] = social_member.country
-        if social_member.province:
-            member['location'] += ' ' + social_member.province
-        if social_member.city:
-            member['location'] += ' ' + social_member.city
-        if member['location']:
-            member['location'] = member['location'].strip()
-        member['integral'] = social_member.integral
-        
-        member['follow_created_at'] = social_member.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        member['last_buy_created_at'] = social_member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S')
-        member['buy_times'] = social_member.pay_times
-        member['average_price'] = social_member.unit_price
-        member['total_price'] = social_member.pay_money
-        member['openid'] = username
+        # try:
+        #     social_member_info = MemberInfo.objects.get(member=social_member)
+        # except:
+        #     social_member_info = MemberInfo.objects.create(
+        #         member = social_member,
+        #         name = ''
+        #     )
+        # member['member_info_id'] = social_member_info.member_id
+        # member['remark_name'] = social_member_info.name
+        # member['sex'] = social_member_info.sex
+        # member['phone'] = social_member_info.phone_number
+
+        # fan_has_categories = FanHasCategory.objects.filter(fan=social_member)
+        # categories = FanCategory.objects.filter(webapp_id=webapp_id)
+
+        # member_categories = []
+        # member_category = {}
+        # member_category['id'] = -1
+        # member_category['name'] = u'请选择分组'
+        # member_categories.append(member_category)
+        # for category in categories:
+        #     member_category = {}
+        #     member_category['id'] = category.id
+        #     member_category['name'] = category.name
+        #     member_categories.append(member_category)
+
+        # member['categories'] = member_categories
+        # if len(fan_has_categories) > 0:
+        #     member['category_id'] = fan_has_categories[0].category_id
+
+        # grades = MemberGrade.objects.filter(webapp_id=webapp_id)
+        # member_grades = []
+        # member_grade = {}
+        # member_grade['id'] = -1
+        # member_grade['name'] = u'请选择等级'
+        # member_grades.append(member_grade)
+        # for grade in grades:
+        #     member_grade = {}
+        #     member_grade['id'] = grade.id
+        #     member_grade['name'] = grade.name
+        #     member_grades.append(member_grade)
+        # member['grades'] = member_grades
+        # member['grade_id'] = social_member.grade_id
+
+        # member['id'] = social_member.id
+
+        # member['location'] = ''
+        # if social_member.country:
+        #     member['location'] = social_member.country
+        # if social_member.province:
+        #     member['location'] += ' ' + social_member.province
+        # if social_member.city:
+        #     member['location'] += ' ' + social_member.city
+        # if member['location']:
+        #     member['location'] = member['location'].strip()
+        # member['integral'] = social_member.integral
+
+        # member['follow_created_at'] = social_member.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        # member['last_buy_created_at'] = social_member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S')
+        # member['buy_times'] = social_member.pay_times
+        # member['average_price'] = social_member.unit_price
+        # member['total_price'] = social_member.pay_money
+        # member['openid'] = username
         member['is_subscribed'] = social_member.is_subscribed
     except:
         pass
-    
+
     return member
 
 
@@ -235,14 +236,14 @@ def get_social_member_dict(webapp_id, weixin_user_usernames):
         member_ids.append(member_id)
         if account2member.has_key(account_id):
            continue
-        account2member[account_id] = member_id 
+        account2member[account_id] = member_id
     members = Member.objects.filter(id__in=member_ids)
     id2member = {}
     for member in members:
         if id2member.has_key(member.id):
             continue
         id2member[member.id] = member
-    
+
     return username2weixin_account, account2member, id2member
 
 
@@ -254,7 +255,7 @@ def get_collect_message_dict(session_message_ids):
         if message2collect.has_key(message_id):
             return
         message2collect[message_id] = collect_message
-    
+
     return message2collect
 
 
@@ -263,10 +264,10 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
     mpuser = get_system_user_binded_mpuser(user)
     if mpuser is None:
         return []
-   
+
     messages = Message.objects.filter(mpuser=mpuser, session=session_id).order_by('-weixin_created_at', '-id')
     pageinfo, messages = paginator.paginate(messages, cur_page, count, query_string=query_string)
-    
+
     weixin_user_usernames = []
     for message in messages:
         weixin_user_usernames.append(message.from_weixin_user_username)
@@ -274,11 +275,11 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         break
     weixin_users = WeixinUser.objects.filter(username__in=weixin_user_usernames)
     username2weixin_user = dict([(u.username, u) for u in weixin_users])
-    
+
     #会员相关信息
     webapp_id = user_profile.webapp_id
     username2weixin_account, account2member, id2member = get_social_member_dict(webapp_id, weixin_user_usernames)
-    
+
     datetime_before = get_datetime_before_by_hour(DATETIME_BEFORE_HOURS)
 
     items = []
@@ -292,6 +293,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         one_message['session_id'] = message.session_id
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
+        one_message['is_reply'] = message.is_reply
         if not sender_username:
             if message.is_reply:
                 one_weixin_user = username2weixin_user[message.to_weixin_user_username]
@@ -303,24 +305,33 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         one_message['name'] = weixin_user.nickname_for_html
         if message.is_reply:
             head_img = get_mp_head_img(user.id)
+            mp_username = get_mp_nick_name(user.id)
+            #用户名字段长过5个的进行处理
+            #mp_username = unicode(mp_username, 'utf8')
+            if mp_username:
+                if len(mp_username) >5:
+                    mp_username = u'%s...' % mp_username[:5]
+            #用户名字段长过5个的进行处理
+            one_message['mp_username'] = mp_username
             if head_img:
                 one_message['user_icon'] = head_img
             else:
                 one_message['user_icon'] = DEFAULT_ICON
+
         else:
             if weixin_user.weixin_user_icon:
                 one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
             else:
                 one_message['user_icon'] =  DEFAULT_ICON
-        
-        one_message['text'] = emotion.change_emotion_to_img(message.content)
+
+        one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         from_index = one_message['text'].find('<a href=')
         if from_index > -1:
             from_text = one_message['text'][0:from_index]
-            
+
             middle_index = one_message['text'][from_index:].find('>')
             remain_text = one_message['text'][from_index:middle_index] + ' target="_blank"' + one_message['text'][middle_index:]
-            
+
             one_message['text'] = from_text + remain_text
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -352,32 +363,34 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
         one_message['material_id'] = message.material_id
 
         message_ids.append(message.id)
-        
+
         items.append(one_message)
-        
+
         try:
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
             member = id2member[member_id]
+            one_message['name'] = member.username_truncated
             if member:
                 one_message['member_id'] = member.id
         except:
             one_message['member_id'] = ''
-        
-    #会员相关信息
-    webapp_id = user_profile.webapp_id
-    member = get_social_member(webapp_id, sender_username)
-    member['name'] = name
-    member['could_replied'] = replied
-    
-    member_info = None
-    if member and member.has_key('id'):
-        member_id =  member['id']
-        from modules.member.module_api import get_member_info_by
-        member_info = get_member_info_by(member_id)
-    member["member_info"] = member_info
 
-    
+    #会员相关信息
+    # webapp_id = user_profile.webapp_id
+    # member = get_social_member(webapp_id, sender_username)
+    # member['name'] = name
+    member = {}
+    member['could_replied'] = replied
+    member['openid'] = sender_username
+    # member_info = None
+    # if member and member.has_key('id'):
+    #     member_id =  member['id']
+    #     from modules.member.module_api import get_member_info_by
+    #     member_info = get_member_info_by(member_id)
+    # member["member_info"] = member_info
+
+
     #星标消息
     message2collect = get_collect_message_dict(message_ids)
     for one_message in items:
@@ -389,7 +402,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
                 one_message['is_collected'] = False
         except:
             one_message['is_collected'] = False
- 
+
         try:
             msginfo = MessageRemarkMessage.objects.filter(status=1).all()
             for msg in msginfo:

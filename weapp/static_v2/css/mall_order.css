@@ -15,6 +15,9 @@
 .xui-refundOrderPage .xui-col:nth-child(2) label,.xui-allOrders .xui-col:nth-child(2) label,.xui-orderDetialPage .xui-col:nth-child(2) label ,.xui-auditOrderPage .xui-col:nth-child(2) label {
    width: 60px !important;
 }
+.xui-filterPanel .btn-primary{
+    border-radius: 0;
+}
 .xui-filterPanel {
     border: 1px solid #d7e0e7;
     background: #eaeef6;
@@ -59,6 +62,7 @@
     background: #f2f2f2;
     padding: 0 5px;
     color: #656565;
+    white-space: nowrap;
 }
 
 .xui-filterPanel .xui-col .xui-i-item  .xui-span{
@@ -115,7 +119,7 @@
     padding: 0;
 }
 
-.xui-table-orderDetail tr:nth-child(2) td {
+.xui-table-orderDetail tr:not(:first-child) < td {
     padding: 10px 0 !important;
 }
 
@@ -1033,7 +1037,8 @@
     width:100%;
     height:30px;
 }
-.ui-timepicker-div dl dt,dd{
+.ui-timepicker-div dl dt,
+.ui-timepicker-div dl dd{
     width:50px;
     height:15px;
     float:left;

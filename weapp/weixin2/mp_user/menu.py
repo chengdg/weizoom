@@ -21,7 +21,7 @@ from apps.models import CustomizedApp
 
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MPUSER_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class Menu(resource.Resource):
 	app = 'new_weixin'
@@ -49,8 +49,9 @@ class Menu(resource.Resource):
 			pass
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_mpuser_second_navs(request),
-			'second_nav_name': export.MPUSER_MENU_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_MPUSER_SECOND_NAV,
+			'third_nav_name': export.MPUSER_MENU_NAV,
 			'status': status,
 			'is_weizoom_mall': request.user.is_weizoom_mall,
 			'is_certified_service': is_certified_service,

@@ -95,7 +95,14 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 						result_info = weixin_api.upload_media_image(pic_url, True)
 						if new.url.startswith('./?'):
 							new.url = '%s/workbench/jqm/preview%s' % (user_profile.host, new.url[1:])
-						
+						elif new.url.startswith('/m/') or new.url.startswith('./m/') or new.url.startswith('m/'):
+							if new.url.startswith('/m/'):
+								new.url = '%s%s' % (user_profile.host, new.url)
+							elif new.url.startswith('./m/'):
+								new.url = '%s%s' % (user_profile.host, new.url)
+							else:
+								new.url = '%s/%s' % (user_profile.host, new.url)
+								
 						if len(new.text.strip()) != 0:
 							if new.text.find('static') :
 								content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))

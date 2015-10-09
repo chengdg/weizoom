@@ -284,6 +284,7 @@ OPTIMIZATION_MSG_HANDLER_CLASSES = (
     'weixin.message.impl_handlers.responsed_message_log.ResponseedMessageLogger',
     'weixin.message.message_handler.weixin_user_handler.WeixinUserHandler',
     'weixin.message.message_handler.wofu_handler.WoFuHandler',
+    'weixin.message.message_handler.shede_handler.SheDeHandler',
     'weixin.message.message_handler.member_handler.MemberHandler',
     'weixin.message.message_handler.sign_handler.SignHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
@@ -565,6 +566,7 @@ if 'develop' == MODE:
     # USE_MOCK_PAY_API = True
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
+    FAN_HOST = 'http://trident.weapp.weizzz.com'
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = False
 
@@ -584,6 +586,7 @@ elif 'test' == MODE:
     RECORD_SIMULATOR_MESSAGE = True
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
     USE_MOCK_PAY_API = False
+    FAN_HOST = 'http://trident.weapp.weizzz.com'
     CDN_HOST = ''
 
     WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
@@ -601,6 +604,7 @@ else:
     RECORD_SIMULATOR_MESSAGE = False
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 24 * 60 * 60
     USE_MOCK_PAY_API = False
+    FAN_HOST = 'http://fans.weizoom.com'
     CDN_HOST = 'http://weappstatic.b0.upaiyun.com'
     DEBUG_MERGED_JS = False
     USE_DEV_JS = False

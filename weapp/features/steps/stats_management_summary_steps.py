@@ -48,3 +48,52 @@ def step_impl(context):
 	real = context.data['items']
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, real)
+
+
+@then(u'{user}获得销售额趋势')
+def step_impl(context, user):
+	client = context.client
+	date_dict = context.date_dict[0]
+	begin_date = bdd_util.get_date(date_dict['begin_date'])
+	end_date = bdd_util.get_date(date_dict['end_date'])
+
+	url = u'/stats/api/saleroom_value/?start_date={}&end_date={}'.format(util_dateutil.date2string(begin_date), util_dateutil.date2string(end_date))
+	context.response = client.get(url)
+	bdd_util.assert_api_call_success(context.response)
+
+	data = json.loads(context.response.content)['data']
+	date_list = data['xAxis']['data']
+	value_list = data['series'][0]['data']
+	actual = {}
+	for i in range(len(date_list)):
+		actual[date_list[i]] = value_list[i]
+
+	expected = {}
+	for row in context.table:
+		expected[row['date']] = row['sales']
+
+	bdd_util.assert_dict(expected, actual)
+
+@then(u'{user}获得成交订单趋势')
+def step_impl(context, user):
+	client = context.client
+	date_dict = context.date_dict[0]
+	begin_date = bdd_util.get_date(date_dict['begin_date'])
+	end_date = bdd_util.get_date(date_dict['end_date'])
+
+	url = u'/stats/api/ordernum_value/?start_date={}&end_date={}'.format(util_dateutil.date2string(begin_date), util_dateutil.date2string(end_date))
+	context.response = client.get(url)
+	bdd_util.assert_api_call_success(context.response)
+
+	data = json.loads(context.response.content)['data']
+	date_list = data['xAxis']['data']
+	value_list = data['series'][0]['data']
+	actual = {}
+	for i in range(len(date_list)):
+		actual[date_list[i]] = value_list[i]
+
+	expected = {}
+	for row in context.table:
+		expected[row['date']] = row['order_quantity']
+
+	bdd_util.assert_dict(expected, actual)

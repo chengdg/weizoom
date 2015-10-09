@@ -25,7 +25,7 @@
 		data-ui-role="advanced-table"
 		data-app="mall2"
 		data-api="promotion_list"
-		data-args='{"type": "premium_sale"}'
+		data-args='{"type": "premium_sale", "endDate": "{{endDate}}", "promotionStatus": "{{promotion_status}}"}'
 		data-template-id="#promotions-view"
 		data-enable-paginator="true"
 		data-disable-header-select="true"
@@ -135,9 +135,17 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var endDate = '{{endDate}}';
+	var startDate = '';
+	if(endDate){
+		startDate = '2014-01-01';
+	}
 	var view = new W.view.mall.PromotionListView({
 		el: '.xui-promotionsPage',
-		promotionType: 'premium_sale'
+		promotionType: 'premium_sale',
+		startDate: startDate,
+		endDate: endDate,
+		promotionStatus: '{{promotion_status}}',
 	});
 	view.render();
 });

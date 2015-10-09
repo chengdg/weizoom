@@ -20,7 +20,7 @@ from mall.promotion.utils import create_coupons
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
-FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
+FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 
 class CouponList(resource.Resource):
@@ -136,8 +136,9 @@ class CouponList(resource.Resource):
 
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': export.get_promotion_second_navs(request),
-                'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
                 'rule_id': rule_id,
                 'can_add_coupon': can_add_coupon,
                 'is_max_page': is_max_page,
@@ -292,8 +293,9 @@ class CouponInfo(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_COUPON_NAV,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
             'rule': rules[0]
         })
         return render_to_response('mall/editor/promotion/create_coupon.html', c)

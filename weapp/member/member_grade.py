@@ -97,9 +97,14 @@ class MemberGradeList(resource.Resource):
             if default_grade.id in delete_ids:
                 delete_ids.remove(default_grade.id)
 
-            for member in Member.objects.filter(grade_id__in=delete_ids):
-                auto_update_grade(member=member, delete=True)
+            member_ids = [member.id for member in Member.objects.filter(grade_id__in=delete_ids)]
+            Member.objects.filter(id__in=member_ids).update(grade=default_grade)
+
             MemberGrade.objects.filter(id__in=delete_ids).delete()
+            for member_id in member_ids:
+                member = Member.objects.get(id=member_id)
+                auto_update_grade(member=member, delete=False)                
+
             mall.module_api.update_promotion_status_by_member_grade(delete_ids)
 
         response = create_response(200)
@@ -114,10 +119,13 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     :param kwargs:
     :return:是否改变了等级
     """
-
     is_change = False
     if webapp_user_id:
         member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+        if not isinstance(member, Member):
+            return
+    if not member:
+        return False
     if not member.grade.is_auto_upgrade and not delete:
         return is_change
 
@@ -126,7 +134,8 @@ def auto_update_grade(webapp_user_id=None, member=None, delete=False, **kwargs):
     webapp_user_ids = member.get_webapp_user_ids
 
     # 获取会员数据
-    paid_orders = Order.objects.filter(status=mall_models.ORDER_STATUS_SUCCESSED, webapp_user_id__in=webapp_user_ids)
+    paid_orders = Order.by_webapp_user_id(webapp_user_ids).filter(
+        status=mall_models.ORDER_STATUS_SUCCESSED, origin_order_id__lte=0)
     pay_times = paid_orders.count()
     bound = member.experience
     pay_money = 0

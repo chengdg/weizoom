@@ -13,7 +13,7 @@ from weixin.mp_decorators import mp_required
 from core.jsonresponse import create_response
 
 
-FIRST_NAV = export.MPUSER_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class DirectFollow(resource.Resource):
 	app = 'new_weixin'
@@ -33,8 +33,9 @@ class DirectFollow(resource.Resource):
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_mpuser_second_navs(request),
-			'second_nav_name': export.MPUSER_DIRECT_FOLLOW_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_MPUSER_SECOND_NAV,
+			'third_nav_name': export.MPUSER_DIRECT_FOLLOW_NAV,
 			'operation_settings': operation_settings,
 		})
 		return render_to_response('weixin/mp_user/direct_follow.html', c)

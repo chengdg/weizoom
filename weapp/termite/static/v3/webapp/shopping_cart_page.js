@@ -200,7 +200,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             $(this).data('view', view);
             _this.premiumSaleViews.push(view);
         });
-        
+
         this.onClickCheckAll();
     },
 
@@ -352,7 +352,6 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         var productGroupPriceInfo = this.productGroupPriceCalculator.calculate(this.productGroups)
         var totalPrice = productGroupPriceInfo.promotionedPrice;
         var totalCount = productGroupPriceInfo.totalCount;
-
         //更新页面元素
         $('.xa-totalPrice').text(totalPrice.toFixed(2));
         $('.xa-total-count').text(totalCount);
@@ -535,8 +534,8 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         $('[data-ui-role="counter"]').each(function() {
             var $counter = $(this);
             //var isCheckbox = true;
-            xlog($counter);
-            xlog($counter.parents('.xa-product').find('.xa-check').hasClass('xui-checkCart'));
+            // xlog($counter);
+            // xlog($counter.parents('.xa-product').find('.xa-check').hasClass('xui-checkCart'));
             var isCheckbox = $counter.parents('.xa-product').find('.xa-check').hasClass('xui-checkCart');
             if (isCheckbox) {
                 productIds.push($counter.attr('data-product-id'));
