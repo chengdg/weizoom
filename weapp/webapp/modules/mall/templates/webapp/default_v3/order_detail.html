@@ -240,6 +240,10 @@
             <span class="fl">商品金额</span>
             <span class="fr">￥<span class="xa-totalProductPrice">{{ order.product_price | floatformat:"2" }}</span></span>
         </p>
+        <p class="zoom">
+            <span class="fl">运费</span>
+            <span class="fr">+￥<span class="xa-postageElement">{{ order.postage | floatformat:"2" }}</span></span>
+        </p>
         {% if order.integral %}
         <p class="zoom">
             <span class="fl">积分抵扣</span>
@@ -276,10 +280,6 @@
             {% endif %}
         </p>
         {% endif %}
-        <p class="zoom">
-            <span class="fl">运费</span>
-            <span class="fr">+￥<span class="xa-postageElement">{{ order.postage | floatformat:"2" }}</span></span>
-        </p>
     </div>
     <div style="padding:10px 12px;" class="clearfix">
         <p class="tr em95">实付金额：<span class="xui-text-red em1">￥{{ order.final_price | floatformat:"2" }}</span></p>
