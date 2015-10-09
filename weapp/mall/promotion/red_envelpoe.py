@@ -569,11 +569,11 @@ class redParticipances_Export(resource.Resource):
                        new_coupon_ids.add(coupon.id)
                 datas = datas.filter(coupon_id__in=list(new_coupon_ids))
             if selected_ids:
-                member_ids = set()
+                data_ids = set()
                 for data in datas:
-                    if str(data.member.id) in selected_ids:
-                        member_ids.add(data.member_id)
-                datas = datas.filter(member__in=list(member_ids))
+                    if str(data.id) in selected_ids:
+                        data_ids.add(data.id)
+                datas = datas.filter(id__in=list(data_ids))
             fields_pure = []
             export_data = []
 
@@ -591,7 +591,7 @@ class redParticipances_Export(resource.Resource):
             #username(member_id)
             member_ids = [record['member_id'] for record in datas ]
             members = member_models.Member.objects.filter(id__in = member_ids)
-            member_id2name ={}
+            member_id2name = {}
             for member in members:
                 m_id = member.id
                 if member.is_subscribed == True:
@@ -602,24 +602,42 @@ class redParticipances_Export(resource.Resource):
                     member_id2name[m_id] = u_name
                 else:
                     member_id2name[m_id] = u_name
+
+            member_id2grade = {}
+            for member in members:
+                m_id = member.id
+                member_id2grade[m_id] = member.grade.name
+
+            coupon_ids = [record['coupon_id'] for record in datas ]
+            coupons = Coupon.objects.filter(id__in = list(coupon_ids))
+            coupon_id2status = {}
+            for coupon in coupons:
+                c_id = coupon.id
+                if coupon.status == 1:
+                    coupon.status = u'已使用'
+                else:
+                    coupon.status = u'未使用'
+                coupon_id2status[c_id] = coupon.status
             #processing data
             num = 0
             for record in datas:
                 export_record = []
                 num = num+1
                 name = member_id2name[record['member_id']]
+                grade_name = member_id2grade[record['member_id']]
                 created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                status = coupon_id2status[int(record['coupon_id'])]
                 # don't change the order
                 export_record.append(num)
                 export_record.append(name)
                 #TODO 显示正确数字
-                export_record.append('')
+                export_record.append(grade_name)
                 export_record.append('')
                 export_record.append('')
                 export_record.append('')
                 export_record.append('')
                 export_record.append(created_at)
-                export_record.append('')
+                export_record.append(status)
                 export_data.append(export_record)
 
             #workbook/sheet
