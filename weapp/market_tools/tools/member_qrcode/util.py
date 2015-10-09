@@ -144,67 +144,68 @@ def get_qcrod_url(ticket):
 #update_member_qrcode_log : 二维码推广日志
 ###########################################################
 def update_member_qrcode_log(user_profile, member, ticket):
-	try:
-		if MemberQrcode.objects.filter(ticket=ticket).count() > 0:
-			member_qrcode =  MemberQrcode.objects.filter(ticket=ticket)[0]
-			only_create_friend = False
-			if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
-				only_create_friend = True
-			if member and  member.is_new:
-				if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-					
-					if member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-						MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
-						_add_award_to_member(user_profile, member, member_qrcode)
-						#修改来源
-						if not only_create_friend:
-							_update_member_source(member)
-						#建立关系
-						_add_member_relation(member, member_qrcode.member, only_create_friend)
-			return True
-		else:
-			return False
-	except:
-		notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
-		watchdog_fatal(notify_msg)
+	#try:
+	if MemberQrcode.objects.filter(ticket=ticket).count() > 0:
+		member_qrcode =  MemberQrcode.objects.filter(ticket=ticket)[0]
+		only_create_friend = False
+		if hasattr(member, 'old_status') and member.old_status == NOT_SUBSCRIBED:
+			only_create_friend = True
+		if member and  member.is_new:
+			if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+				
+				if member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
+					MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
+					_add_award_to_member(user_profile, member, member_qrcode)
+					#修改来源
+					if not only_create_friend:
+						_update_member_source(member)
+					#建立关系
+					_add_member_relation(member, member_qrcode.member, only_create_friend)
 		return True
+	else:
+		return False
+	# except:
+	# 	notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_fatal(notify_msg)
+	# 	return True
 				
 
 def _add_award_to_member(user_profile, member, member_qrcode):
 	member_qrcode_setting = MemberQrcodeSettings.objects.filter(owner=user_profile.user)[0] if MemberQrcodeSettings.objects.filter(owner=user_profile.user).count() > 0 else None
 
-	try:
-		if member_qrcode_setting:
-			if member_qrcode_setting.award_member_type == AWARD_MEMBER_TYPE_ALL:
-				award_contents = MemberQrcodeAwardContent.objects.filter(member_qrcode_settings=member_qrcode_setting)
-				award_content = award_contents[0] if member_qrcode_setting.award_member_type == 1 and award_contents.count() > 0 else None
-				if award_content:
-					if award_content.award_type == AWARD_COUPON:
-						# create_coupons(user_profile.user, award_content.award_content, 1, member_qrcode.member.id)
-						consume_coupon(user_profile.user.id, award_content.award_content, member_qrcode.member.id)
-					elif award_content.award_type == AWARD_INTEGRAL:
-						try:
-							increase_member_integral(member_qrcode.member,award_content.award_content, BRING_NEW_CUSTOMER_VIA_QRCODE, member)
-						except:
-							notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
-							watchdog_fatal(notify_msg)
+	#try:
+	if member_qrcode_setting:
+		if member_qrcode_setting.award_member_type == AWARD_MEMBER_TYPE_ALL:
+			award_contents = MemberQrcodeAwardContent.objects.filter(member_qrcode_settings=member_qrcode_setting)
+			award_content = award_contents[0] if member_qrcode_setting.award_member_type == 1 and award_contents.count() > 0 else None
+			if award_content:
+				if award_content.award_type == AWARD_COUPON:
+					# create_coupons(user_profile.user, award_content.award_content, 1, member_qrcode.member.id)
+					x, y = consume_coupon(user_profile.user.id, award_content.award_content, member_qrcode.member.id)
+					print x,'=====xxyy=========',y
+				elif award_content.award_type == AWARD_INTEGRAL:
+					try:
+						increase_member_integral(member_qrcode.member,award_content.award_content, BRING_NEW_CUSTOMER_VIA_QRCODE, member)
+					except:
+						notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
+						watchdog_fatal(notify_msg)
 
-			elif member_qrcode_setting.award_member_type == AWARD_MEMBER_TYPE_LEVEL:
-				award_contents = MemberQrcodeAwardContent.objects.filter(member_qrcode_settings=member_qrcode_setting, member_level=member_qrcode.member.grade.id)
-				if award_contents.count() > 0:
-					award_content = award_contents[0]
-					if award_content.award_type == AWARD_COUPON:
-						# create_coupons(user_profile.user, award_content.award_content, 1, member_qrcode.member.id)
-						consume_coupon(user_profile.user.id, award_content.award_content, member_qrcode.member.id)
-					elif award_content.award_type == AWARD_INTEGRAL:
-						try:
-							increase_member_integral(member_qrcode.member,award_content.award_content, BRING_NEW_CUSTOMER_VIA_QRCODE, member)
-						except:
-							notify_msg = u"微信会员二维码扫描增加积分失败2 cause:\n{}".format(unicode_full_stack())
-							watchdog_fatal(notify_msg)
-	except:
-		notify_msg = u"微信会员二维_add_award_to_member cause:\n{}".format(unicode_full_stack())
-		watchdog_fatal(notify_msg)
+		elif member_qrcode_setting.award_member_type == AWARD_MEMBER_TYPE_LEVEL:
+			award_contents = MemberQrcodeAwardContent.objects.filter(member_qrcode_settings=member_qrcode_setting, member_level=member_qrcode.member.grade.id)
+			if award_contents.count() > 0:
+				award_content = award_contents[0]
+				if award_content.award_type == AWARD_COUPON:
+					# create_coupons(user_profile.user, award_content.award_content, 1, member_qrcode.member.id)
+					consume_coupon(user_profile.user.id, award_content.award_content, member_qrcode.member.id)
+				elif award_content.award_type == AWARD_INTEGRAL:
+					try:
+						increase_member_integral(member_qrcode.member,award_content.award_content, BRING_NEW_CUSTOMER_VIA_QRCODE, member)
+					except:
+						notify_msg = u"微信会员二维码扫描增加积分失败2 cause:\n{}".format(unicode_full_stack())
+						watchdog_fatal(notify_msg)
+	# except:
+	# 	notify_msg = u"微信会员二维_add_award_to_member cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_fatal(notify_msg)
 			
 def _update_member_source(member):
 	try:
