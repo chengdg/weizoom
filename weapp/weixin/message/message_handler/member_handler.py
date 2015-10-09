@@ -38,7 +38,7 @@ class MemberHandler(MessageHandler):
 		if message.is_optimization_message:
 			print 'only handle is_optimization_message == False', message.is_optimization_message
 			return None
-		
+		print '=================11111111111111111111111'
 		# if WeixinMessageTypes.TEXT != message.msgType and WeixinMessageTypes.VOICE != message.msgType and  WeixinMessageTypes.IMAGE != message.msgType:
 		# 	print 'only handle subscribed and unsubscribed event'
 		# 	return None
@@ -47,7 +47,7 @@ class MemberHandler(MessageHandler):
 		weixin_user = context.weixin_user
 		request = context.request
 		context.member = self._handle_member(user_profile, weixin_user, is_from_simulator, request)
-
+		print '=================11111111111111111111112'
 		return None
 
 	def _create_webapp_user(self, member):
@@ -71,6 +71,7 @@ class MemberHandler(MessageHandler):
 
 	def _handle_member(self, user_profile, weixin_user, is_from_simulator, request):
 		#是否已经存在会员信息，如果否则进行创建
+		print '=================1111111111111111111114444'
 		weixin_user_name = weixin_user.username
 		token = get_token_for(user_profile.webapp_id, weixin_user_name, is_from_simulator)
 		
@@ -82,11 +83,14 @@ class MemberHandler(MessageHandler):
 		else:
 			social_account = create_social_account(user_profile.webapp_id, weixin_user_name, token, SOCIAL_PLATFORM_WEIXIN, is_for_test)
 
+		default_tag = request.component_owner_info.default_tag
+		default_grade = request.component_owner_info.default_grade
+
 		member = get_member_by_binded_social_account(social_account)
 		if member is None:
 			#创建会员信息
 			try:
-				member = create_member_by_social_account(user_profile, social_account)
+				member = create_member_by_social_account(user_profile, social_account, default_member_grade=default_grade, default_member_tag=default_tag)
 				if is_from_simulator:
 					member.is_for_test = True
 					member.save()

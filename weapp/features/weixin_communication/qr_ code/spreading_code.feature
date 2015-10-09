@@ -20,21 +20,7 @@ Feature:推广扫码
 Background:
 	Given jobs登录系统
 
-	When jobs已添加关键词自动回复规则
-		"""
-		[{
-			"rules_name":"推广扫码",
-			"keyword": [{
-					"keyword": "我的推广码",
-					"type": "equal"
-				}],
-			"keyword_reply": [{
-					 "reply_content":"推广扫码链接",
-					 "reply_type":"text"
-				}]
-		}]
-		"""
-
+@mall2 @qr_code
 Scenario:1 无奖励
 
 	Given jobs登录系统
@@ -57,25 +43,21 @@ Scenario:1 无奖励
 	#推广扫码验证
 	When 清空浏览器
 	When bill关注jobs的公众号
-	When bill在微信中向jobs的公众号发送消息'我的推广码'
-	Then bill收到自动回复'推广扫码链接'
+	When bill访问jobs的webapp
+	When bill进入推广扫描链接
 
-	When bill进入链接'推广扫码链接'
-	Then bill获得'bill'的推广码
-		"""
-		{
-			"spreading_code":"bill的推广码",
-			"page_description":"无奖励，页面描述文本"
-		}
-		"""
+	When 清空浏览器
+	When tom扫描bill的推广二维码关注jobs公众号
 
-	When tom扫码'bill'的推广码关注jobs的公众号
-
+	When 清空浏览器
+	Given jobs登录系统
+	When jobs访问会员列表
 	Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
-			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |   今天            | 直接关注 |             |
-			| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |   今天            | 推广扫码 |             |
-
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
+		| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+		
+@mall2 @qr_code	
 Scenario:2 积分奖励
 
 	Given jobs登录系统
@@ -100,26 +82,18 @@ Scenario:2 积分奖励
 	#推广扫码验证
 	When 清空浏览器
 	When bill关注jobs的公众号
-	When bill在微信中向jobs的公众号发送消息'我的推广码'
-	Then bill收到自动回复'推广扫码链接'
+	When bill访问jobs的webapp
+	When bill进入推广扫描链接
+	When tom扫描bill的推广二维码关注jobs公众号
 
-	When bill进入链接'推广扫码链接'
-	Then bill获得'bill'的推广码
-		"""
-		{
-			"spreading_code":"bill的推广码",
-			"page_description":"积分奖励，页面描述文本"
-		}
-		"""
-
-	When tom扫码'bill'的推广码关注jobs的公众号
-
+	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
-			| bill  |   普通会员  |       1      |     10   |   0.00    |    0.00    |      0    |   今天            | 直接关注 |             |
-			| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |   今天            | 推广扫码 |             |
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
+		| bill  |   普通会员  |       1      |    10    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
 
+@mall2 @qr_code1
 Scenario:3 优惠券奖励
 
 	Given jobs登录系统
@@ -159,15 +133,15 @@ Scenario:3 优惠券奖励
 		"""
 		{
 			"prize_type":"优惠券",
-			"coupon":优惠券1,
+			"coupon":"优惠券1",
 			"page_description":"优惠券奖励，页面描述文本"
 		}
 		"""
 	Then jobs获得推广扫码
 		"""
 		{
-			"prize_type":"积分",
-			"coupon":优惠券1,
+			"prize_type":"优惠券",
+			"coupon": "优惠券1",
 			"page_description":"优惠券奖励，页面描述文本"
 		}
 		"""
@@ -175,25 +149,19 @@ Scenario:3 优惠券奖励
 	#推广扫码验证
 	When 清空浏览器
 	When bill关注jobs的公众号
-	When bill在微信中向jobs的公众号发送消息'我的推广码'
-	Then bill收到自动回复'推广扫码链接'
+	When bill访问jobs的webapp
+	When bill进入推广扫描链接
 
-	When bill进入链接'推广扫码链接'
-	Then bill获得'bill'的推广码
-		"""
-		{
-			"spreading_code":"bill的推广码",
-			"page_description":"优惠券奖励，页面描述文本"
-		}
-		"""
+	When 清空浏览器
+	When tom扫描bill的推广二维码关注jobs公众号
 
-	When tom扫码'bill'的推广码关注jobs的公众号
-
+	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
-			| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |   今天            | 直接关注 |             |
-			| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |   今天            | 推广扫码 |             |
+		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
+		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
+		| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+
 
 	Then jobs能获得优惠券'优惠券1'的码库
 		"""
