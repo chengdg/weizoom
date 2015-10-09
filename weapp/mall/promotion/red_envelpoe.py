@@ -302,7 +302,7 @@ class RedEnvelopeParticipances(resource.Resource):
         total_use_count = 300
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_customerized_apps(request),
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
             'second_nav_name': 'orderRedEnvelope',
             'has_data': has_data,
             'new_member_count': new_member_count,
