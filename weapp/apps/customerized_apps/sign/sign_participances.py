@@ -33,31 +33,18 @@ class SignParticipances(resource.Resource):
 			'second_nav_name': "signs",
 			'has_data': has_data,
 			'activity_id': request.GET['id']
-		});
+		})
 		
 		return render_to_response('sign/templates/editor/sign_participances.html', c)
 	
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('participant_name', '')
-		if name:
-			members = member_models.Member.get_by_username(name)
+		sort_attr = request.GET.get('sort_attr', 'id')
+		if 'total_integral' == sort_attr:
+			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
+			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=True)
 		else:
-			members = member_models.Member.get_members(request.user_profile.webapp_id)
-		member_ids = [member.id for member in members]
-		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
-		
-		params = {'belong_to':request.GET['id']}
-		if webapp_user_ids:
-			params['webapp_user_id__in'] = webapp_user_ids
-		if start_time:
-			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
-		datas = app_models.SignParticipance.objects(**params).order_by('-id')	
-		
+			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
@@ -70,21 +57,7 @@ class SignParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
-		# print '测试自动签到start=================='
-		# print request.GET
-		# signer = app_models.SignParticipance.objects(belong_to=request.GET['id'], member_id=1)
-		# if signer.count() == 0:
-		# 	signer = app_models.SignParticipance(
-		# 		belong_to=request.GET['id'],
-		# 		member_id=1,
-		# 		created_at=datetime.today()
-		# 	)
-		# 	signer.save()
-		# else:
-		# 	signer = signer[0]
-		# sign = app_models.Sign.objects.get(id=request.GET['id'])
-		# signer.do_signment(sign)
-		# print '测试自动签到end=================='
+		sort_attr = request.GET.get('sort_attr', 'id')
 		pageinfo, datas = SignParticipances.get_datas(request)
 		
 		webappuser2datas = {}
@@ -108,12 +81,18 @@ class SignParticipances(resource.Resource):
 				'id': str(data.id),
 				'participant_name': data.participant_name,
 				'participant_icon': data.participant_icon,
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M:%S"),
+				'latest_date': data.latest_date.strftime("%Y/%m/%d %H:%M:%S"),
+				'total_count': data.total_count,
+				'serial_count': data.serial_count,
+				'top_serial_count': data.top_serial_count,
+				'total_integral': data.prize['integral'],
+				'latest_coupon': data.prize['coupon'].split(',')[-1]
 			})
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': 'id',
+			'sortAttr': sort_attr,
 			'data': {}
 		}
 		response = create_response(200)

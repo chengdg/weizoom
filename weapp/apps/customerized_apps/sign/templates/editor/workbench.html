@@ -119,6 +119,23 @@
         .propertyGroup.xui-propertyView-app-ShareGroup .propertyGroup_property_label{
             margin-top: 10px;
         }
+        .xui-state-tag .icon-arrow-up {
+          background: url('/static_v2/img/weixin/storingUp.png') no-repeat;
+        }
+        .xui-state-tag .icon-arrow-down {
+           background: url('/static_v2/img/weixin/storing.png') no-repeat;
+        }
+        .xui-state-tag .xui-Blue {
+          color: #1262b7!important;
+        }
+        .xui-state-tag [class^="icon-"]{
+          display: inline-block;
+          width: 9px;
+          height: 14px;
+          margin-top: 1px;
+          line-height: 14px;
+          vertical-align: text-top;
+        }
 
     </style>
 {% endblock %}
@@ -179,7 +196,7 @@ ui-appPage-commonStyle">
 			data-args='{"id": "{{activity_id}}"}'
 			data-template-id="#table"
 			data-enable-paginator="true"
-			data-enable-sort="true"
+			data-enable-sort="false"
 			data-selectable="false"
 			data-disable-header-select="true"
 			data-item-count-per-page="10"
@@ -194,12 +211,12 @@ ui-appPage-commonStyle">
                 <thead>
                     <tr>
                         <th>会员</th>
-                        <th>第一次签到</th>
-                        <th>最后一次签到</th>
-                        <th>累计次数</th>
-                        <th>连续次数</th>
-                        <th>最高连续次数</th>
-                        <th>奖励总积分</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-init-sort="-created_at" data-sort-direction="up">第一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="up">最后一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="total_count" data-sort-direction="up">累计次数</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="serial_count" data-sort-direction="up">连续次数</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="total_integral" data-sort-direction="up">奖励总积分</th>
                         <th>优惠券奖励</th>
                     </tr>
                 </thead>

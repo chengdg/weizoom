@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 
 from modules.member import util as member_util
 from modules.member.models import Member
-from mall.promotion.models import CouponRule, Coupon, RedEnvelopeRule, RedEnvelopeToOrder, GetRedEnvelopeRecord
+from mall.promotion.models import CouponRule, Coupon, RedEnvelopeRule, RedEnvelopeToOrder, GetRedEnvelopeRecord, RedEnvelopeParticipences
 from mall.models import Order
 from market_tools.tools.coupon.util import consume_coupon
 from modules.member.models import Member
@@ -75,6 +75,10 @@ def get_share_red_envelope(request):
             return_data['qcode_img_url'] = qcode_img_url
             return_data['friends'] = friends
         else:
+            cookie_fmt = request.COOKIES.get('fmt', None)
+            followed_member_id = 0
+            if cookie_fmt:
+                followed_member_id = Member.objects.get(token=cookie_fmt).id
             if (coupon_rule.is_active
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()
@@ -87,6 +91,14 @@ def get_share_red_envelope(request):
                                 red_envelope_rule_id=red_envelope_rule_id,
                                 red_envelope_relation_id=relation[0].id,
                                 member=member,
+                        )
+                    if followed_member_id:
+                        RedEnvelopeParticipences.objects.create(
+                                    owner_id=request.webapp_owner_id,
+                                    red_envelope_rule_id=red_envelope_rule_id,
+                                    red_envelope_relation_id=relation[0].id,
+                                    member_id=member.id,
+                                    introduced_by=followed_member_id
                         )
                     if member.is_subscribed:
                         return_data['has_red_envelope'] = False

@@ -310,7 +310,6 @@ class RedEnvelopeParticipances(resource.Resource):
         })
         return render_to_response('mall/editor/red_envelope_participences.html', c)
 
-
     @login_required
     def api_get(request):
         """
@@ -318,17 +317,7 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         receive_method = request.GET.get('receive_method',0)
         pageinfo, items = get_datas(request)
-
-        #处理排序
         sort_attr = request.GET.get('sort_attr', 'id')
-        if '-' in sort_attr:
-            sort_attr = sort_attr.replace('-', '')
-            items = sorted(items, key=lambda x: x['id'], reverse=True)
-            items = sorted(items, key=lambda x: x[sort_attr], reverse=True)
-            sort_attr = '-' + sort_attr
-        else:
-            items = sorted(items, key=lambda x: x['id'])
-            items = sorted(items, key=lambda x: x[sort_attr])
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
@@ -380,11 +369,6 @@ def get_datas(request):
                 if coupon_status == str(coupon.status):
                    new_coupon_ids.add(coupon.id)
         datas = datas.filter(coupon_id__in=list(new_coupon_ids))
-
-    #进行分页
-    count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-    cur_page = int(request.GET.get('page', '1'))
-    pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     member2datas = {}
     member_ids = set()
@@ -444,6 +428,22 @@ def get_datas(request):
                     else:
                         grade_name = u'非会员'
                     data.grade = grade_name
+
+    #处理排序
+    sort_attr = request.GET.get('sort_attr', 'id')
+    if '-' in sort_attr:
+        sort_attr = sort_attr.replace('-', '')
+        datas = sorted(datas, key=lambda x: x['id'], reverse=True)
+        datas = sorted(datas, key=lambda x: x[sort_attr], reverse=True)
+        sort_attr = '-' + sort_attr
+    else:
+        datas = sorted(datas, key=lambda x: x['id'])
+        datas = sorted(datas, key=lambda x: x[sort_attr])
+
+    #进行分页
+    count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+    cur_page = int(request.GET.get('page', '1'))
+    pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     items = []
     for data in datas:
