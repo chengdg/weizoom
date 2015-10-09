@@ -1,6 +1,165 @@
 #_author_:师帅
 Feature:自定义模块——【基础模块】文本导航-页面
 
+<<<<<<< Updated upstream
+=======
+
+Scenario:1添加文本导航
+	Given jobs登录系统
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}
+	"""
+
+Scenario: 2编辑文本导航
+	Given jobs登录系统
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航2",
+					"navigation_link": "店铺主页"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员中心"
+				},{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":{
+				"values":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "微页面"
+				}]
+			}
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			}
+		}
+	"""
+
+
+@ui
+Scenario:文本导航模块，编辑、删除、字数校验
+>>>>>>> Stashed changes
 
 Scenario:1添加文本导航
 	When jobs登录系统

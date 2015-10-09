@@ -2,9 +2,15 @@
 
 Feature: 自定义模块-图片广告
 
+<<<<<<< Updated upstream
 Scenario:1 新建微页面
 	When jobs登录系统
 	And jobs创建微页面
+=======
+Background:
+	Given jobs登录系统
+	And jobs已创建微页面
+>>>>>>> Stashed changes
 	"""
 		[{
 			"title": {
@@ -29,6 +35,7 @@ Scenario:1 新建微页面
 		}]
 	"""
 	Then jobs能获取'微页面标题'
+<<<<<<< Updated upstream
 	"""
 		{
 			"title": {
@@ -58,13 +65,22 @@ Scenario: 2验证信息
 	And jobs创建微页面
 	"""
 		[{
+=======
+	"""
+		{
+>>>>>>> Stashed changes
 			"title": {
 				"name": "微页面标题"
 			},
 			"picture_ads":{
+<<<<<<< Updated upstream
 				"display_mode": "轮播图"
 				"values":[{
 					"picture_id": "",
+=======
+				"values":[{
+					"picture_id": "1",
+>>>>>>> Stashed changes
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
@@ -77,6 +93,7 @@ Scenario: 2验证信息
 					"link": "个人中心"
 				}]
 			}
+<<<<<<< Updated upstream
 		}]
 	"""
 	Then jobs提示'请添加一张图片'
@@ -94,6 +111,27 @@ Scenario: 2验证信息
 					"title": "标题2",
 					"link": "推广扫码"
 				},{
+=======
+		}
+	"""
+
+
+
+Scenario: （4）验证删除，添加
+	#验证删除后再添加图片信息，排序按照正序排列
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+>>>>>>> Stashed changes
 					"picture_id": "3",
 					"title": "标题3",
 					"link": "个人中心"
@@ -108,6 +146,7 @@ Scenario: 2验证信息
 				"name": "微页面标题"
 			},
 			"picture_ads":{
+<<<<<<< Updated upstream
 				"display_mode": "轮播图"
 				"values":[{
 					"picture_id": "1",
@@ -117,6 +156,11 @@ Scenario: 2验证信息
 					"picture_id": "2",
 					"title": "标题2",
 					"link": "推广扫码"
+=======
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
 				},{
 					"picture_id": "3",
 					"title": "标题3",
@@ -127,7 +171,58 @@ Scenario: 2验证信息
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+					"picture_id": "3",
+					"title": "标题3",
+					"link": "个人中心"
+				},{
+					"picture_id": "4",
+					"title": "标题4",
+					"link": "个人中心"
+				}]
+			}
+		}
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+>>>>>>> Stashed changes
+				},{
+					"picture_id": "3",
+					"title": "标题3",
+					"link": "个人中心"
+<<<<<<< Updated upstream
+=======
+				},{
+					"picture_id": "4",
+					"title": "标题4",
+					"link": "会员中心"
+>>>>>>> Stashed changes
+				}]
+			}
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
 		[{
+<<<<<<< Updated upstream
 			"picture_ads":{
 				"display_mode": "轮播图"
 				"values":[{
@@ -176,13 +271,35 @@ Scenario: 3删除
 		}]
 	"""
 	Then jobs能获取'微页面标题'
+=======
+			"title": {
+				"name": "微页面标题"
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			}
+		}
+	"""
+
+Scenario: （5）编辑图片广告信息
+	#编辑图片广告信息
+	When jobs编辑微页面'微页面标题'
+>>>>>>> Stashed changes
 	"""
 		{
 			"title": {
 				"name": "微页面标题"
 			},
 			"picture_ads":{
+<<<<<<< Updated upstream
 				"display_mode": "轮播图"
+=======
+>>>>>>> Stashed changes
 				"values":[{
 					"picture_id": "1",
 					"title": "标题1",
@@ -194,12 +311,19 @@ Scenario: 3删除
 				},{
 					"picture_id": "3",
 					"title": "标题3",
+<<<<<<< Updated upstream
 					"link": "个人中心"
+=======
+					"link": "问卷调查"
+>>>>>>> Stashed changes
 				}]
 			}
 		}
 	"""
+<<<<<<< Updated upstream
 	When jobs删除'标题1'
+=======
+>>>>>>> Stashed changes
 	Then jobs能获取'微页面标题'
 	"""
 		{
@@ -207,19 +331,32 @@ Scenario: 3删除
 				"name": "微页面标题"
 			},
 			"picture_ads":{
+<<<<<<< Updated upstream
 				"display_mode": "轮播图"
 				"values":[{
+=======
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+>>>>>>> Stashed changes
 					"picture_id": "2",
 					"title": "标题2",
 					"link": "推广扫码"
 				},{
 					"picture_id": "3",
 					"title": "标题3",
+<<<<<<< Updated upstream
 					"link": "个人中心"
+=======
+					"link": "问卷调查"
+>>>>>>> Stashed changes
 				}]
 			}
 		}
 	"""
+<<<<<<< Updated upstream
 	When jobs删除'图片广告'
 	Then jobs能获取'微页面标题'
 	"""
@@ -229,6 +366,8 @@ Scenario: 3删除
 			}
 		}
 	"""
+=======
+>>>>>>> Stashed changes
 
 
 @ui
