@@ -33,7 +33,6 @@ W.component.wepage.ImageNav = W.component.Component.extend({
                 type: 'select_link',
                 displayName: '链接到',
                 isUserProperty: true,
-                validate: 'data-validate="require-notempty::链接地址不能为空"',
                 triggerButton: '从微站选择'
             }]
         }
