@@ -13,7 +13,13 @@ W.component.wepage.Block = W.component.Component.extend({
             type: 'slider',
             displayName: '空白高度',
             isUserProperty: true,
-            default: '20'
+            default: '10'
+        },{
+            name: 'background_color',
+            type: 'color_picker',
+            displayName: '背景颜色',
+            isUserProperty: true,
+            default: ''
         }]
     }],
     propertyChangeHandlers: {
@@ -23,6 +29,9 @@ W.component.wepage.Block = W.component.Component.extend({
                 $node.find('.wa-inner-block').height(value);
                 W.Broadcaster.trigger('component:resize', this)
             }
+        },
+        background_color: function($node, model, value, $propertyViewNode){
+            $node.css('background-color', value);
         }
     }
 }, {
