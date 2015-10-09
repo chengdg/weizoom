@@ -227,12 +227,14 @@
         if(status){
             this.$title.text('签到成功！');
             if(data.integral){
-                this.$integral.text(data.integral).show();
-            }else if(data.coupon){
-                if(data.coupon.status){
-                    this.$coupon.text(data.coupon.content).show();
+                this.$integral.find('span').text(data.integral);
+                this.$integral.show();
+            }else if(data.coupon && data.coupon.count != -1){
+                if(data.coupon.count != 0){
+                    this.$coupon.find('span').text(data.coupon.name);
+                    this.$coupon.show();
                 }else{
-                    this.$entityContent.html('奖励已领完');
+                    this.$entityContent.html('奖励已领完,请联系客服补发');
                 }
             }
             this.$dialogContent.show();
@@ -271,7 +273,7 @@
                         prize_info = data;
                         status = '已签到';
                         fillPrizeInfo(prize_info);
-                        resultDialog.render(true, {});
+                        resultDialog.render(true, data.curr_prize);
                         $this.hide().siblings().show();
                     },
                     error: function(data) {
