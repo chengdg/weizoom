@@ -361,8 +361,12 @@ def get_datas(request):
         for data in datas:
             coupon_ids.add(data.coupon_id)
         for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
-            if coupon_status == str(coupon.status):
-               new_coupon_ids.add(coupon.id)
+            if coupon_status == '0':
+                if 1 != coupon.status:
+                    new_coupon_ids.add(coupon.id)
+            else:
+                if coupon_status == str(coupon.status):
+                   new_coupon_ids.add(coupon.id)
         datas = datas.filter(coupon_id__in=list(new_coupon_ids))
 
     #进行分页
@@ -411,12 +415,23 @@ def get_datas(request):
                 member_data = member2data[member]
                 if member_data['is_subscribed']:
                     data.participant_name = member_data['username_for_html']
-                    data.participant_icon = member_data['user_icon']
-                    data.grade = member_data['grade']
+                    data.participant_icon = member_data['user_icon'] if member_data['user_icon'] else '/static/img/user-1.jpg'
+                    if member_data['grade']:
+                        grade_name = member_data['grade']
+                    else:
+                        if receive_method:
+                            grade_name = u'会员'
+                        else:
+                            grade_name = u''
+                    data.grade = grade_name
                 else:
                     data.participant_name = u''
                     data.participant_icon = '/static/img/user-1.jpg'
-                    data.grade = u'非会员'
+                    if receive_method:
+                        grade_name = u'会员'
+                    else:
+                        grade_name = u'非会员'
+                    data.grade = grade_name
 
     items = []
     for data in datas:
@@ -483,9 +498,6 @@ class RedEnvelopeParticipancesFilter(resource.Resource):
         },{
             "id": 1,
             "name": u'已使用'
-        },{
-            "id": 2,
-            "name": u'已过期'
         }]
 
         grades = []

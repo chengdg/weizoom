@@ -144,7 +144,23 @@
   bottom: 0;
   padding-left: 15px;
 }
-
+.xui-redEnvelopeParticipances-page .icon-arrow-up {
+  background: url('/static_v2/img/weixin/storingUp.png') no-repeat;
+}
+.xui-redEnvelopeParticipances-page .icon-arrow-down {
+   background: url('/static_v2/img/weixin/storing.png') no-repeat;
+}
+.xui-redEnvelopeParticipances-page .xui-Blue {
+  color: #1262b7!important;
+}
+.xui-redEnvelopeParticipances-page [class^="icon-"]{
+  display: inline-block;
+  width: 9px;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 14px;
+  vertical-align: text-top;
+}
 /*红包分析弹窗样式*/
 .xui-appPage-commonStyle .xui-detail-tableBox {
     background-color: #E9EDF5;
