@@ -57,6 +57,29 @@ def step_impl(context, user, page_name):
 	_save_page(context, user, page)
 
 
+@Then(u"{user}能获取微页面列表")
+def step_impl(context, user):
+	user = context.client.user
+	response = context.client.get("/termite2/api/pages/")
+	data = json.loads(response.content)["data"]["items"]
+
+	actual_datas = []
+	for page in data:
+		if page['isActive']:
+			continue
+		actual_datas.append({
+			"name": page["siteTitle"],
+			"create_time": page['createdAt']
+		})
+
+	expected_datas = json.loads(context.text)
+	print '++++++++++++++++1'
+	print actual_datas
+	print '++++++++++++++++++++++2'
+	print expected_datas
+	bdd_util.assert_list(expected_datas, actual_datas)	
+
+
 #### 获取新的 project_id
 def _get_new_project_id(context):	
 	response = context.client.post("/termite2/api/project/?_method=put", {"source_template_id": -1})

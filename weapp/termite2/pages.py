@@ -55,18 +55,19 @@ class Pages(resource.Resource):
 		"""
 		微页面列表页
 		"""
-		projects = webapp_models.Project.objects.filter(owner=request.user, is_enable=True)
+		projects = webapp_models.Project.objects.filter(owner=request.user, is_enable=True).order_by('created_at')
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, projects = paginator.paginate(projects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
+		index = 0
 		items = []
 		for project in projects:
 			item = {
 				"id": project.id,
-				"index": project.id,
+				"index": index,
 				"siteTitle": project.site_title,
 				"createdAt": project.created_at.strftime("%Y-%m-%d %H:%M"),
 				"isActive": project.is_active,
@@ -74,7 +75,9 @@ class Pages(resource.Resource):
 			}
 			if project.is_active:
 				item['index'] = 99999999999
-
+			else:
+				index = index + 1
+				
 			items.append(item)
 
 		#首页置顶
