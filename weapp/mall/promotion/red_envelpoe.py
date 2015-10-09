@@ -3,7 +3,6 @@
 import json
 from datetime import datetime
 import os
-import operator
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -22,7 +21,6 @@ from modules.member.models import MemberTag, MemberGrade
 from string_util import byte_to_hex
 from modules.member import models as member_models
 from weapp import settings
-from . import utils
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
