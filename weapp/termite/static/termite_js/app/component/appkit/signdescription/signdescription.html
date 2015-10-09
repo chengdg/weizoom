@@ -151,7 +151,7 @@
     </div>
 
     <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr">今日可以领取<span class="daily_points wa-daily_points"></span>积分，<span class="daily_prizes wa-daily_prizes"></span></div>
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points">{{component.model.daily_points}}</span>积分, <span class="daily_prizes wa-daily_prizes">{{ component.model.daily_prizes.name }}</span>一张</div>
     </div>
 </div>
 {% endifequal %}

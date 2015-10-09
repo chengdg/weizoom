@@ -17,7 +17,7 @@ import models as app_models
 import export
 from apps import request_util
 from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api
+from mall.promotion import utils as mall_api, CouponRule
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -66,7 +66,51 @@ class SignParticipance(resource.Resource):
 			return_data = signer.do_signment(sign)
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
 				response = create_response(200)
+				response.data = {
+					'serial_count': return_data['serial_count'],
+					'daily_prize': {
+						'integral': return_data['daily_integral'],
+						'coupon': {
+							'id': return_data['daily_coupon_id'],
+							'name': return_data['daily_coupon_name'],
+						}
+					},
+					'curr_prize':{
+						'integral': return_data['curr_prize_integral'],
+						'coupon': {
+							'id': return_data['curr_prize_coupon_id'],
+							'name': return_data['curr_prize_coupon_name'],
+							'count': get_coupon_count(return_data['curr_prize_coupon_id'])
+						}
+					}
+				}
+				if return_data['next_serial_count'] != 0:
+					response.data['next_serial_prize'] = {
+						'count': return_data['next_serial_count'],
+						'prize': {
+							'integral': return_data['next_serial_integral'],
+							'coupon': {
+								'id': return_data['next_serial_coupon_id'],
+								'name': return_data['next_serial_coupon_name']
+							}
+						}
+					}
 			else:
 				response.errMsg = return_data['errMsg']
 		return response.get_response()
 
+
+def get_coupon_count(coupon_rule_id):
+	"""
+	通过优惠券id获取其库存量
+	:param coupon_rule_id: 优惠券ruleid
+	:return: 库存
+	"""
+	if not coupon_rule_id or int(coupon_rule_id) == 0:
+		return -1
+
+	try:
+		coupon = CouponRule.objects.get(id=coupon_rule_id)
+		return coupon.remained_count
+	except:
+		return -1

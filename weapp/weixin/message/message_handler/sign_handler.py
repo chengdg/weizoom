@@ -50,7 +50,7 @@ class SignHandler(KeywordHandler):
 		response_content = Sign.do_auto_signment(data)
 
 		if response_content:
-			response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, user_profile)
+			response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, context.user_profile)
 
 			try:
 				self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)
