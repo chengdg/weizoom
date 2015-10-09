@@ -84,6 +84,7 @@ def __process_activity_data(context, page):
 
 	__add_templet_title(page, page_json)
 	__add_notice_text(page, page_json)
+	__add_richtext(page, page_json)
 
 	data = {
 		"field": "page_content",
@@ -116,6 +117,47 @@ def __supplement_page(page):
 		
 	page_prototype.update(page)
 	return page_prototype
+
+
+def __actual_page(page_json):
+	actual = {
+		"title": {
+			"name": page_json['model']['site_title'],
+			"description": page_json['model']['site_description']
+		}
+	}
+
+	for component in page_json["components"]:
+		actual_component = {}
+		model = component['model']
+		# 标题
+		if component['type'] == "wepage.title":
+			actual_component = {
+				"templet_title": {
+					"title": model['title'],
+					"subtitle": model['subtitle'],
+					"time": model['time'],
+					"align": model['align'],
+					"background_color": model['background_color']
+				}
+			}
+
+		# 公告
+		if component['type'] == "wepage.notice":
+			default = u'默认显示公告，请填写内容，如果过长，将会在手机上滚动显示'
+			actual_component = {
+				"notice_text": model['title'] if model['title'] else default
+			}
+
+		# 富文本
+		if component['type'] == "wepage.richtext":
+			actual_component = {
+				"multy_text_content": model['content']
+			}
+
+		actual.update(actual_component)
+	return actual
+
 
 
 def __add_templet_title(page, page_json):
@@ -168,37 +210,25 @@ def __add_notice_text(page, page_json):
 		page_json['components'].append(wepage_notice)
 
 
-
-def __actual_page(page_json):
-	actual = {
-		"title": {
-			"name": page_json['model']['site_title'],
-			"description": page_json['model']['site_description']
+def __add_richtext(page, page_json):
+	pid = page_json['cid']
+	cid = page_json['components'][0]['cid']
+	if page.has_key("multy_text_content"):
+		cid = cid + 1
+		wepage_notice = {
+			"type":"wepage.richtext",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": u"富文本",
+			"model": { "id":"", "class":"", "name":"", "index":5,
+				"datasource":{"type":"api","api_name":""},
+				"content": page['multy_text_content']
+			}
 		}
-	}
-
-	for component in page_json["components"]:
-		actual_component = {}
-		model = component['model']
-		# 标题
-		if component['type'] == "wepage.title":
-			actual_component = {
-				"templet_title": {
-					"title": model['title'],
-					"subtitle": model['subtitle'],
-					"time": model['time'],
-					"align": model['align'],
-					"background_color": model['background_color']
-				}
-			}
-
-		# 公告
-		if component['type'] == "wepage.notice":
-			default = u'默认显示公告，请填写内容，如果过长，将会在手机上滚动显示'
-			actual_component = {
-				"notice_text": model['title'] if model['title'] else default
-			}
-
-		actual.update(actual_component)
-	return actual
-
+		page_json['components'].append(wepage_notice)
