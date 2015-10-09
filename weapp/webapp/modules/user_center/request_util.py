@@ -656,7 +656,7 @@ def get_mileke_page(request):
 		排序
 	"""
 	#milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
-	milekes = Mileke.objects.all().order_by('-count')
+	milekes = Mileke.objects.all().order_by('-current_count')
 	"""
 		获取当前用户位置
 	"""

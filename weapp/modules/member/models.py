@@ -1305,7 +1305,7 @@ class MemberRefuelingHasOrder(models.Model):
 
 class Mileke(models.Model):
 	member = models.ForeignKey(Member, db_index=True, unique=True)
-	count = models.IntegerField(default=0)
+	current_count = models.IntegerField(default=0)
 	created_at = models.DateTimeField(auto_now=True)
 
 	class Meta(object):
