@@ -47,9 +47,9 @@ class SignParticipance(models.Document):
 		if self.serial_count >= self.top_serial_count:
 			curr_serial_count = user_update_data['set__top_serial_count'] = int(self.serial_count) + 1
 		#更新prize
-		daily_integral = serial_integral = next_serial_integral = next_serial_count = 0
-		daily_coupon_id = serial_coupon_id = next_serial_coupon_id = ''
-		daily_coupon_name = serial_coupon_name = next_serial_coupon_name = ''
+		curr_prize_integral = daily_integral = serial_integral = next_serial_integral = next_serial_count = 0
+		curr_prize_coupon_id = daily_coupon_id = serial_coupon_id = next_serial_coupon_id = ''
+		curr_prize_coupon_name = daily_coupon_name = serial_coupon_name = next_serial_coupon_name = ''
 		#首先获取奖项配置
 		prize_settings = sign.prize_settings
 		bingo = 0
@@ -89,10 +89,18 @@ class SignParticipance(models.Document):
 		#若命中连续签到，则不奖励每日签到
 		if bingo == curr_serial_count:
 			user_prize['integral'] = int(user_prize['integral']) + serial_integral
-			temp_coupon_list.append(serial_coupon_name) if serial_coupon_name else None
+			if serial_coupon_name:
+				temp_coupon_list.append(serial_coupon_name)
+				curr_prize_coupon_id = serial_coupon_id
+				curr_prize_coupon_name = serial_coupon_name
+			curr_prize_integral = serial_integral
 		else:
 			user_prize['integral'] = int(user_prize['integral']) + daily_integral
-			temp_coupon_list.append(daily_coupon_name) if daily_coupon_name else None
+			if daily_coupon_name:
+				temp_coupon_list.append(daily_coupon_name)
+				curr_prize_coupon_id = daily_coupon_id
+				curr_prize_coupon_name = daily_coupon_name
+			curr_prize_integral = daily_integral
 
 		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
@@ -101,6 +109,9 @@ class SignParticipance(models.Document):
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
 
+		return_data['curr_prize_integral'] = curr_prize_integral
+		return_data['curr_prize_coupon_id'] = curr_prize_coupon_id
+		return_data['curr_prize_coupon_name'] = curr_prize_coupon_name
 		return_data['daily_integral'] = daily_integral
 		return_data['daily_coupon_id'] = daily_coupon_id
 		return_data['daily_coupon_name'] = daily_coupon_name
