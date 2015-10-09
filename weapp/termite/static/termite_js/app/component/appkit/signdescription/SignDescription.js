@@ -51,7 +51,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		fields:[{
 			name: 'image',
 			type: 'image_dialog_select',
-			displayName: '上传图片',
+			displayName: '分享图片',
 			isUserProperty: true,
 			isShowCloseButton: true,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
@@ -181,7 +181,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 
 		},
 		daily_prizes:function($node, model, value){
-			$node.find('.daily_prizes').text(value);
+			$node.find('.daily_prizes').text(value.name);
 		}
 
 	},

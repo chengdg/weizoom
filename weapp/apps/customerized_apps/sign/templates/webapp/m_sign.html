@@ -173,8 +173,8 @@
             </ol>
         </div>
         <div class="wui-rules-footer-div">
-            <div class="wui-rules-i-desc">备注:签到奖励可以到<a class="wui-rules-i-center">个人中心</a>查看</div>
-            <div class="wui-rules-i-btn"><button class="wui-btn wui-btn-back">返回签到</button></div>
+            <div class="wui-rules-i-desc">备注:签到奖励可以到<a class="wui-rules-i-center wa-rules-i-center">个人中心</a>查看</div>
+            <div class="wui-rules-i-btn"><div class="wui-btn wui-btn-back wa-btn-back" style="letter-spacing: 4px;margin-left: auto;margin-right: auto;">返回签到</div></div>
         </div>
     </div>
 {% endblock %}
@@ -227,12 +227,14 @@
         if(status){
             this.$title.text('签到成功！');
             if(data.integral){
-                this.$integral.text(data.integral).show();
-            }else if(data.coupon){
-                if(data.coupon.status){
-                    this.$coupon.text(data.coupon.content).show();
+                this.$integral.find('span').text(data.integral);
+                this.$integral.show();
+            }else if(data.coupon && data.coupon.count != -1){
+                if(data.coupon.count != 0){
+                    this.$coupon.find('span').text(data.coupon.name);
+                    this.$coupon.show();
                 }else{
-                    this.$entityContent.html('奖励已领完');
+                    this.$entityContent.html('奖励已领完,请联系客服补发');
                 }
             }
             this.$dialogContent.show();
@@ -254,6 +256,7 @@
         resultDialog = new ResultDialog();
         //绑定签到按钮点击事件
         $('.wa-sign-btn').on('click', function(){
+            var $this = $(this);
             if('未开始' === status){
                 resultDialog.render(false, {});
             }else{
@@ -267,7 +270,11 @@
                         id: W.appRecordId
                     },
                     success: function(data) {
-                        resultDialog.render(true, {});
+                        prize_info = data;
+                        status = '已签到';
+                        fillPrizeInfo(prize_info);
+                        resultDialog.render(true, data.curr_prize);
+                        $this.hide().siblings().show();
                     },
                     error: function(data) {
                         resultDialog.render(false, data);
@@ -281,35 +288,63 @@
         $('.wa-user-integral').html(member_info.user_integral);
         $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
         //填充签到奖励信息
-        $('.wa-daily_points').html(prize_info.daily_prize.integral || 0);
-        if (prize_info.daily_prize.coupon){
-            prize_html = '"'+prize_info.daily_prize.coupon.name+'"';
-            prize_html += '一张';
-        }else{
-            prize_html = ''
-        }
-        $('.wa-daily_prizes').html(prize_html);
+        fillPrizeInfo(prize_info);
         //绑定规则信息事件
+        //查看规则
         $('.wa-signPageDiv').find('.wa-rules').on('click', function(){
             $('.wa-signPageDiv').hide();
             $('.wa-rules-div').show();
         });
-{#        //从后台获取数据#}
-{#        W.getApi().call({#}
-{#            app: 'm/apps/sign',#}
-{#            resource: 'sign_participance',#}
-{#            method: 'get',#}
-{#            args: {#}
-{#                owner_id: W.webappOwnerId#}
-{#            },#}
-{#            success: function(data) {#}
-{#                alert('参与成功');#}
-{#            },#}
-{#            error: function(data) {#}
-{#                alert('参与失败');#}
-{#            }#}
-{#        });#}
+        //返回
+        $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function() {
+            $('.wa-rules-div').hide();
+            $('.wa-signPageDiv').show();
+        });
 	});
+
+    function fillPrizeInfo(prize_info){
+        if('已签到' != status){
+            var temp_integral,
+                temp_coupon;
+            if(!$.isEmptyObject(prize_info.serial_prize)) {
+                temp_integral = prize_info.serial_prize.prize.integral;
+                temp_coupon = prize_info.serial_prize.prize.coupon;
+            }else{
+                temp_integral = prize_info.daily_prize.integral;
+                temp_coupon = prize_info.daily_prize.coupon;
+            }
+            $('.wa-daily_points').html(temp_integral || 0);
+            if (temp_coupon.id != 0){
+                prize_html = '"'+temp_coupon.name+'"';
+                prize_html += '一张';
+            }else{
+                prize_html = ''
+            }
+            $('.wa-daily_prizes').html(prize_html);
+        }else{
+            $('.wa-sign-btn').hide();
+            var temp_prize = prize_info.next_serial_prize;
+            var str = [];
+            if(temp_prize){
+                $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count);
+                if(temp_prize.prize.integral != 0){
+                    str.push("连续签到"+temp_prize.count+"天可领取"+temp_prize.prize.integral+"积分");
+                }
+                if(temp_prize.prize.coupon.id != 0){
+                   str.push(" \""+temp_prize.prize.coupon.name+"\" 一张");
+                }
+            }else{
+                var tomorrow_prize = prize_info.daily_prize;
+                if(tomorrow_prize.integral != 0){
+                    str.push("明天可领取"+tomorrow_prize.integral+"积分");
+                }
+                if(tomorrow_prize.coupon.id != 0){
+                   str.push("\""+tomorrow_prize.coupon.name+"\" 一张");
+                }
+            }
+            $('.wa-prize-board').html(str.toString());
+        }
+    }
 </script>
 {% endblock %}
 

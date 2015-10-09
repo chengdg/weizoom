@@ -59,14 +59,9 @@ class MSign(resource.Resource):
 			activity_status = record.status_text
 
 			project_id = 'new_app:sign:%s' % record.related_page_id
-			id = record.id
-
-			if member:
-				signers = app_models.SignParticipance.objects(belong_to=id, member_id=member.id)
-				participance_data_count = signers.count()
-			if participance_data_count == 0 and request.webapp_user:
-				signers = app_models.SignParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id)
-				participance_data_count = signers.count()
+			record_id = record.id
+			signers = app_models.SignParticipance.objects(belong_to=str(record_id), member_id=member.id)
+			participance_data_count = signers.count()
 			signer = signers[0] if participance_data_count>0 else None
 			#检查当前用户签到情况
 			daily_prize = prize_settings['0']
@@ -75,26 +70,37 @@ class MSign(resource.Resource):
 			if signer:
 				#检查是否已签到
 				latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
-				nowDate = datetime.datetime.now().strftime('%Y-%m-%d')
+				nowDate = datetime.now().strftime('%Y-%m-%d')
+				print latest_sign_date, nowDate
 				if latest_sign_date == nowDate:
 					activity_status = u'已签到'
+					for name in sorted(prize_settings.keys()):
+						setting = prize_settings[name]
+						if int(name) > signer.serial_count:
+							next_serial_prize = {
+								'count': name,
+								'prize': setting
+							}
+							break
 				elif signer.serial_count >1:
 					flag = False
 					for name in sorted(prize_settings.keys()):
 						setting = prize_settings[name]
+						if flag or int(name)>signer.serial_count + 1:
+							next_serial_prize = {
+								'count': name,
+								'prize': setting
+							}
+							break
 						if int(name) == signer.serial_count + 1:
 							serial_prize = {
 								'count': name,
 								'prize':setting
 							}
 							flag = True
-						if flag:
-							next_serial_prize = {
-								'count': name,
-								'prize': setting
-							}
-							flag = False
+
 			prize_info = {
+				'serial_count': signer.serial_count if signer else 0,
 				'daily_prize': daily_prize,
 				'serial_prize': serial_prize,
 				'next_serial_prize': next_serial_prize
@@ -105,7 +111,7 @@ class MSign(resource.Resource):
 			request.GET._mutable = False
 			html = pagecreater.create_page(request, return_html_snippet=True)
 			c = RequestContext(request, {
-				'record_id': id,
+				'record_id': record_id,
 				'activity_status': activity_status,
 				'is_already_participanted': (participance_data_count > 0),
 				'page_title': u"签到",
