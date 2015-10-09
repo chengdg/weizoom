@@ -285,6 +285,7 @@ MALL_APPS_LOTTERY_NAV = 'lotteries'
 MALL_APPS_SURVEY_NAV = 'surveies'
 MALL_APPS_EVENT_NAV = 'events'
 MALL_APPS_VOTE_NAV = 'votes'
+MALL_APPS_SIGN_NAV = 'sign'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -401,6 +402,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'分享红包',
                     'url': '/apps/promotion/red_envelope_rule_list/',
                     'need_permissions': ['manage_order_red_envelope', ]
+                },
+                {
+                    'name': MALL_APPS_SIGN_NAV,
+                    'title': u'签到',
+                    'url': '/apps/sign/sign/',
+                    'need_permissions': []
                 }
             ]
         }

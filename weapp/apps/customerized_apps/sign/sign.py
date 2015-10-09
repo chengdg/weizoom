@@ -15,6 +15,7 @@ from core.jsonresponse import create_response
 
 import models as app_models
 import export
+from mall import export as mall_export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
@@ -43,7 +44,8 @@ class Sign(resource.Resource):
 			project_id = 'new_app:sign:0'
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+            'third_nav_name': mall_export.MALL_APPS_SIGN_NAV,
 			'second_nav_name': 'sign',
 			'sign': sign,
 			'is_create_new_data': is_create_new_data,
