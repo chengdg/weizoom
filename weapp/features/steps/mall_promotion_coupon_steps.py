@@ -12,7 +12,7 @@ from mall.models import Product
 from account.social_account.models import SocialAccount
 from modules.member.models import Member, MemberHasSocialAccount
 from mall.promotion.models import Promotion, Coupon, CouponRule
-
+import datetime
 
 # def __add_coupon_rule(context, webapp_owner_name):
 # 	coupon_rules = json.loads(context.text)
@@ -370,11 +370,15 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 
 	for info in infos:
 		coupon_rule = CouponRule.objects.get(owner_id=context.webapp_owner_id, name=info['name'])
-		for coupon_id in info['coupon_ids']:
+		for i, coupon_id in enumerate(info['coupon_ids']):
 			# url = '/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%s&project_id=0&rule_id=%d&coupon_id=%s' % (context.webapp_owner_id, coupon_rule.id, coupon_id)
 			url = '/webapp/api/project_api/call/?design_mode=0&project_id=market_tool:coupon:0'
 			response = context.client.post(bdd_util.nginx(url), {'target_api': 'coupon/consume', 'rule_id': coupon_rule.id, 'webapp_owner_id':context.webapp_owner_id}, follow=True)
-			time.sleep(1)
+
+			coupon = Coupon.objects.get(coupon_id=coupon_id)
+			coupon.provided_time += datetime.timedelta(hours=i)
+			coupon.save()
+
 			# response = context.client.post(bdd_util.nginx(url), {'target_api': 'coupon/consume', }, follow=True)
 			#bdd_util.assert_api_call_success(response)
 			#coupon = response.context['coupons'][0]

@@ -19,7 +19,6 @@ from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 
-FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
 class eventParticipance(resource.Resource):

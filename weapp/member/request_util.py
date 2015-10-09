@@ -60,8 +60,8 @@ def get_user_info(request):
 		shipInfo.area = get_str_value_by_string_ids(shipInfo.area)
 	
 	# 历史订单、待支付
-	member.history_order_count = Order.objects.filter(webapp_user_id=request.webapp_user.id).count()
-	member.not_payed_order_count = Order.objects.filter(webapp_user_id=request.webapp_user.id, status=ORDER_STATUS_NOT).count()
+	member.history_order_count = Order.by_webapp_user_id(request.webapp_user.id).count()
+	member.not_payed_order_count = Order.by_webapp_user_id(request.webapp_user.id).filter(status=ORDER_STATUS_NOT).count()
 
 	#购物车中商品数量
 	# product_counts = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).values_list('count', flat=True)

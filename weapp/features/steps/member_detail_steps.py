@@ -27,7 +27,7 @@ def _get_member_info(context, member):
     query_hex = byte_to_hex(member)
     member_id = Member.objects.get(webapp_id=context.webapp_id, username_hexstr=query_hex).id
     context.member_id = member_id
-    url = "/member/member_detail/edit/?id=%s" % str(member_id)
+    url = "/member/detail/?id=%s" % str(member_id)
     response = context.client.get(url)
     return response
 
@@ -100,12 +100,12 @@ def step_impl(context, user):
         'tag_ids': '_'.join(tag_ids)
     }
 
-    response = context.client.post('/member/api/member/update/', args)
+    response = context.client.post('/member/api/detail/', args)
     bdd_util.assert_api_call_success(response)
 
 @then(u"{user}获得'积分明细'列表")
 def step_impl(context, user):
-    url = '/member/api/member_logs/get/'
+    url = '/member/api/integral_logs/'
     response = context.client.get(url, {'member_id': context.member_id})
     expected = json.loads(context.text)
     for data in expected:
@@ -116,7 +116,6 @@ def step_impl(context, user):
     actual = json.loads(response.content)['data']['items']
     for data in actual:
         data['created_at'] = data['created_at'].split(" ")[0]
-        print data
     bdd_util.assert_list(actual, expected)
 
 @then(u"{user}获得'{member}'的收货信息")
@@ -173,7 +172,6 @@ def step_impl(context, webapp_user_name, share_member, webapp_owner_name):
 def step_impl(context, user, member):
     response = _get_member_info(context, member)
     expected = json.loads(context.text)
-    print expected
     shared_url_infos = response.context['shared_url_infos']
     shared_url_lead_number = response.context['shared_url_lead_number']
     qrcode_friends = response.context['qrcode_friends']
@@ -184,12 +182,32 @@ def step_impl(context, user, member):
     for info in shared_url_infos:
         share_detailed_data.append(
             dict(
-                share_link = info.title,
                 click_number = info.pv,
                 new_member = info.followers,
                 order = info.leadto_buy_count
             )
         )
     actual['share_detailed_data'] = share_detailed_data
-    print actual, "LLL"
+    print "actual:",actual
+    print "expected:",expected
+
     bdd_util.assert_dict(actual, expected)
+
+@then(u"{user}获得'{member}'的浏览轨迹")
+def step_impl(context, user, member):
+    response = _get_member_info(context, member)
+    expected = json.loads(context.text)
+
+    member_browse_records = response.context['member_browse_records']
+
+    actual = []
+    for record in member_browse_records:
+        actual.append(dict(
+            date_time = record.created_at.strftime("%Y-%m-%d"),
+            link = record.title
+        ))
+
+    for item in expected:
+        item['date_time'] = "{}".format(bdd_util.get_date_str(item['date_time']))
+
+    bdd_util.assert_list(actual, expected)

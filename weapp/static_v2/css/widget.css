@@ -49,9 +49,10 @@
     background: #fff;
 }
 .wui-confirmView{
-    padding:5px;
+    padding-left:20px;
 }
-.wui-confirmDelete div i,.wui-confirmView div i{
+.wui-confirmDelete div i,
+.wui-confirmView div i{
     display: block;
     width: 24px;
     height: 24px;
@@ -69,15 +70,18 @@
 .wui-confirmDelete dd,.wui-confirmView dd{
     display: table;
     width: 100%;
+    min-height:50px;
+    padding:10px 0;
 }
 .wui-confirmDelete dd div,.wui-confirmView dd div{
     display: table-cell;
     vertical-align: middle;
     text-align: center;
 }
-.wui-confirmDelete dd div span,.wui-confirmView dd div span{
+/*.wui-confirmDelete dd div span,
+.wui-confirmView dd div span{
     line-height: 24px;
-}
+}*/
 .wui-confirmDelete .xui-confirm, .wui-confirmView .xui-confirm{
     background: #1F7BBD;
     color: #fff;
@@ -92,10 +96,10 @@
 }
 .wui-confirmView .xui-cancel{
     margin-right: 24px;
-}
+}/*
 .wui-confirmView .xui-i-msg{
     padding-left: 19px;
-}
+}*/
 
 
 

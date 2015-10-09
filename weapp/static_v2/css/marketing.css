@@ -113,7 +113,8 @@
 	height: 50px;
 	
 }
-.xui-wepage-orderSummaryPage .xui-charWrap .xui-i-title{
+.xui-wepage-orderSummaryPage .xui-charWrap .xui-i-title,
+.xui-mall-outlinePage .xui-title{
 	background-color: #edf3f8;
 	width: 100%;
 	height: 42px;
@@ -131,7 +132,8 @@
 .xui-wepage-orderSummaryPage .xui-filter .xui-col:last-child {
 	margin-top: -5px;
 }
-.xui-wepage-orderSummaryPage .xui-charWrap .xui-i-block {
+.xui-wepage-orderSummaryPage .xui-charWrap .xui-i-block ,
+.xui-mall-outlinePage .xui-i-block{
 	height: 20px;
 	width: 5px;
 	background-color: #20a3ff;

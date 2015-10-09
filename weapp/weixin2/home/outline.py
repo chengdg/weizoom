@@ -18,7 +18,7 @@ from django.db.models import Sum
 from weixin.mp_decorators import mp_required
 from core import paginator
 
-FIRST_NAV = export.HOME_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class Outline(resource.Resource):
 	app = 'new_weixin'
@@ -37,11 +37,11 @@ class Outline(resource.Resource):
 
 		yesterday_added_count, yesterday_net_count = _get_yesterday_count(owner_id)
 
-		unread_message_count = _get_unread_message_count(request.user)
+		unread_message_count = get_unread_message_count(request.user)
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_home_second_navs(request),
-			'second_nav_name': export.HOME_OUTLINE_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_HOME_OUTLINE_NAV,
 			'member_count': member_count,
 			'yesterday_added_count': yesterday_added_count,
 			'yesterday_net_count': yesterday_net_count,
@@ -51,12 +51,17 @@ class Outline(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		unread_message_count = _get_unread_message_count(request.user)
+		unread_message_count = get_unread_message_count(request.user)
+
+		from mall.order.util import get_unship_order_count
+		unship_order_count = get_unship_order_count(request)
+
 		try:
 			response = create_response(200)
 			response.data = {
 				'unread_realtime_count': unread_message_count,
-				}
+				'unship_order_count': unship_order_count
+			}
 			#watchdog_debug("response.data={}".format(response.data))
 		except:
 			response = create_response(500)
@@ -74,7 +79,7 @@ def _get_yesterday_count(owner_id):
 
 	return yesterday_added_count, yesterday_net_count
 
-def _get_unread_message_count(user):
+def get_unread_message_count(user):
 	unread_message_count = 0
 	mpuser = get_system_user_binded_mpuser(user)
 	sessions = Session.objects.select_related().filter(mpuser=mpuser, is_show=True).exclude(member_latest_created_at="").aggregate(Sum("unread_count"))
@@ -96,7 +101,7 @@ class ReactTest(resource.Resource):
 		"""
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_home_second_navs(request),
+			'second_navs': export.get_weixin_second_navs(request),
 			'second_nav_name': export.HOME_NAV,
 		})
 		return render_to_response('weixin/home/react_test.html', c)
@@ -247,8 +252,8 @@ class FansAnalysis(resource.Resource):
 		会员分析
 		"""
 		webapp_id = request.user_profile.webapp_id
-		subscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, is_for_test=False).count()
-		unsubscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=False, is_for_test=False).count()
+		subscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=True, status=SUBSCRIBED,is_for_test=False).count()
+		unsubscribed_fans_count = Member.objects.filter(webapp_id=webapp_id, is_subscribed=False, is_for_test=False, status=CANCEL_SUBSCRIBED).count()
 
 		display_date_list = ['取消关注会员', '现有会员']
 		try:

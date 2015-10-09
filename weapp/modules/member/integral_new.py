@@ -28,7 +28,7 @@ from modules.member.tasks import update_member_integral, increase_intgral_for_be
 
 """
 def _is_buyed(member):
-	return True if Order.objects.filter(webapp_user_id__in=member.get_webapp_user_ids,status__gte=2).count() > 0 else False
+	return True if Order.by_webapp_user_id(member.get_webapp_user_ids).filter(status__gte=2).count() > 0 else False
 
 def _has_visit(request, member_id, uuid):
 	return has_visit(request, member_id, uuid)

@@ -16,7 +16,7 @@
 	<div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-			<li><a href="/member/members/get/">会员管理</a></li>
+			<li><a href="/member/member_list/">会员管理</a></li>
 			<li class="active">会员列表</li>
 		</ul>
 	</div>
@@ -90,7 +90,9 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);"  data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -100,8 +102,10 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" class="update-tag" data-id="{{tag.id}}" data-status="all">{{tag.name}}</a></li>
-						   		{% endfor %}
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
+							   	{% endfor %}
 						   	</ul>
 					    </li>
 					</ul>
@@ -128,7 +132,7 @@
 		<div
 			data-ui-role="advanced-table"
 			data-app="member"
-			data-api="members/get"
+			data-resource="member_list"
 			data-template-id="#members-view"
 			data-enable-paginator="true"
 			data-enable-sort="false"
@@ -137,7 +141,9 @@
 			class="panel-body"
 			data-args='{"status":"{{status}}"}'
 			data-disable-header-select="true"
+			data-user-webapp-id={{user.get_profile.webapp_id}}
 		></div>
+
 		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
 			<div >
 				<span class="checkbox" style="display:inline-block;margin:0 15px 0 13px;">
@@ -203,7 +209,9 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a href="javascript:void(0);" data-status="selected" class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+						   			{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="selected"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -213,7 +221,9 @@
 						   	</a>
 						   	<ul class="dropdown-menu xui-dropbox" style="{% if user_tags|length == 0 %} display:none; {% endif %} ">
 						   		{% for tag in user_tags %}
-						   		<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% if tag.name != '未分组' %}
+							   			<li><a  href="javascript:void(0);" data-status="all"  class="update-tag" data-id="{{tag.id}}">{{tag.name}}</a></li>
+							   		{% endif %}
 						   		{% endfor %}
 						   	</ul>
 					    </li>
@@ -294,14 +304,14 @@
 						已取消
 						</div>
 					{{/if}}
-					<a target="_blank" href="/member/member_detail/edit/?id=${ member.id }">
+					<a target="_blank" href="/member/detail/?id=${ member.id }">
 						<img src="{{if member.user_icon}}${ member.user_icon }{{else}}/static/img/user-1.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"/>
 					</a>
 				</div>
 				<div class="column_block">
 					<div>
+					<a class="xui-Blue" target="_blank" href="/member/detail/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 
-					<a class="xui-Blue" target="_blank" href="/member/member_detail/edit/?id=${ member.id }" style="display:block;width:80px;" >{{html member.username_truncated}}</a>
 
 				</div>
 			</td>
@@ -309,9 +319,14 @@
 				<div class="centerAlign">${ member.grade_name }</div>
 			</td>
 			<td>
-				<div class="centerAlign"><a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }</a>
-						</div>
-					</span>
+				<div class="centerAlign">
+					{{if member.friend_count==0}}
+						<span class="cursor-text">${ member.friend_count }</span>
+					{{else}}
+						<a class="relation-text" href="javascript:void(0);" style="" friend_count='${friend_count}' fans_count='${fans_count}' value='${ member.id }'>${ member.friend_count }
+						</a>
+					{{/if}}
+				</div>
 			</td>
 			<td>
 				<div class="centerAlign">${ member.integral }</div>
@@ -333,10 +348,10 @@
 				{{if member.source == 2}}<div class="xui-fromShare">会员分享</div>{{/if}}
 			</td>
 			<td>
-				<div class="centerAlign auto_wrap_no_flow" >
+				<div class="centerAlign auto_wrap_no_flow">
 					{{each(i,tag) tags}}
-			          ${tag.name}
-			         {{/each}}
+			           <span class="xa-tag-name" data-tag-id="${tag.id}">${tag.name}</span>
+			        {{/each}}
 			    </div>
 			</td>
 
@@ -381,6 +396,28 @@ $(document).ready(function() {
 
 	});
 
+	$('body').delegate('.xa-select', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var isChecked = $el.is(':checked');
+
+		if (isChecked == false) {
+			$('#xa-selectAll').attr('checked', false);	
+			$('#all').attr('checked', false);	
+		} else {
+			var all_checked = true;
+			$(".xa-select").each(function(index, e){
+			    var isChecked = $(this).is(':checked');
+			    if (isChecked == false) {
+			    	all_checked = false;
+			    }	
+			  });
+			if (all_checked){
+				$('#xa-selectAll').attr('checked', true);	
+				$('#all').attr('checked', true);	
+			}
+		}	
+	});
+	
 	$('.panel-heading').delegate('#xa-selectAll', 'click', function(event){
 
 		var $checkbox = $(event.currentTarget);
@@ -392,7 +429,7 @@ $(document).ready(function() {
 		el: '.xui-filterPanel',
 		dataView: $('[data-ui-role="advanced-table"]').data('view'),
 		userWebappId: {{user.get_profile.webapp_id}},
-		status:''
+		status:'{{status}}'
 	});
 	view.$el.bind('end_click', function(){
 		DATA_INTERVAL = '';
@@ -422,12 +459,20 @@ $(document).ready(function() {
 			dataView:dataView
 		})
         memberTagsUpdateView.render();
+		$('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 
 	});
 	// 修改分组
 	$('body').delegate('.xa-update-tag', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var member_id = $el.attr('data-id');
+		var tag_names = $($el).parents('tr').find('.xa-tag-name');
+		var tag_ids = []
+		for(var i = 0; i < tag_names.length; i++){
+			var id = $(tag_names[i]).data('tag-id');
+			tag_ids.push(id);
+		}
 		var dataView = $('[data-ui-role="advanced-table"]').data('view')
 		dataView.setPage(1);
 		dataView.args = view.getFilterValue();
@@ -442,11 +487,14 @@ $(document).ready(function() {
 			$action: $el,
 			isUpdateGrade: false,
 			memberId: member_id,
+			tagIds: tag_ids,
 			isPostData: true,
 			dataView:dataView
 
 		})
         memberTagsUpdateView.render();
+        $('#xa-selectAll').attr('checked', false);	
+		$('#all').attr('checked', false);	
 	});
 
 	// 修改等级
@@ -456,7 +504,6 @@ $(document).ready(function() {
 		var status = $(this).attr('data-status');
 
 	 	$('input.xa-select:checked').each(function(){
-    		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
   		});
 	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
@@ -473,19 +520,18 @@ $(document).ready(function() {
 			args = _.extend(args, dataArgs);
 		}
 	 	if (grade_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'grade/batch_update',
-	            args: args,
-	            success: function(data) {
-	                 dataView.reload();
+	 		W.resource.member.BatchUpdateMemberGrade.post({
+	 			data: args,
+	 			success: function(data) {
+	 				$('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
+	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}else{
 	 		W.getErrorHintView().show('请先选择会员！');
 	 	}
@@ -496,7 +542,6 @@ $(document).ready(function() {
 		var tag_id = $(this).attr('data-id');
 		var status = $(this).attr('data-status');
 	 	$('input.xa-select:checked').each(function(){
-    		console.log($(this).parent().parent().attr('data-id'))
     		post_ids.push($(this).parent().parent().attr('data-id'))
   			});
 	 	var dataView = $('[data-ui-role="advanced-table"]').data('view')
@@ -515,21 +560,20 @@ $(document).ready(function() {
 			}
 		}
 	 	if (tag_id && post_ids.length > 0 || status == 'all') {
-	 		W.getApi().call({
-	            method: 'post',
-	            app: 'member',
-	            api: 'tag/batch_update',
-	            args:args,
-	            success: function(data) {
+	 		W.resource.member.BatchUpdateMemberTag.post({
+	 			data: args,
+	 			success: function(data) {
 	                // window.location.reload();
 	                W.showHint('success', "添加分组成功");
+	                $('#xa-selectAll').attr('checked', false);	
+					$('#all').attr('checked', false);	
 	                dataView.reload();
 	            },
 	            error: function(response) {
 	                W.getErrorHintView().show('加载失败！请刷新页面重试！');
 	            },
 	            scope: this
-	        });
+	 		});
 	 	}
 	});
 
@@ -572,7 +616,7 @@ $(document).ready(function() {
 		var member_name = '';
 		$('input.xa-select:checked').each(function(){;
 			if($(this).parent().parent().data('status') == '1'){
-    			member_ids.push($(this).parent().parent().attr('data-id'));
+    			member_ids.push($(this).parent().parent().data('id'));
 			}
   		});
   		if(member_ids.length == 0){
@@ -594,11 +638,9 @@ $(document).ready(function() {
 	            'count_per_page':999999999999
 			};
 			var member_ids = [];
-			W.getApi().call({
-	            app: 'member' ,
-	            api: 'member_ids/get',
-	            args: args,
-	            success: function(data){
+			W.resource.member.MemberIds.get({
+				data: args,
+				success: function(data){
 	                member_ids = data.member_ids;
 	                if(member_ids.length == 0){
 	                	W.showHint('error', '请先选择会员！');
@@ -613,7 +655,7 @@ $(document).ready(function() {
 	            error: function(data){
 	            	W.showHint('error', '发放失败!');
 	            }
-	        });
+			});
 	    } else {
 	    	W.showHint('error', "没有可已发优惠券的用户！");
 	    }
@@ -692,7 +734,7 @@ $(document).ready(function() {
 
 	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
-		var url = '/member/members/export/';
+		var url = '/member/export/';
 		if (view.filter_value) {
 			url = url + '?filter_value='+view.filter_value;
 		}
@@ -706,7 +748,6 @@ $(document).ready(function() {
 	$('.panel').delegate('.relation-text', 'click', function(event) {
 					var _this = this;
 					var $el = $(event.currentTarget);
-					console.log($el);
 
 					var friend_count = $el.attr('friend_count');
 					var fans_count = $el.attr('fans_count');

@@ -201,7 +201,9 @@ def process_item_group_data(request, component):
 				"id": product.id,
 				"name": product.name,
 				"thumbnails_url": product.thumbnails_url,
-				"display_price": product.display_price
+				"display_price": product.display_price,
+				"is_member_product": product.is_member_product,
+				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			}
 
 
@@ -269,7 +271,9 @@ def process_item_list_data(request, component):
 				"name": product.name,
 				"thumbnails_url": product.thumbnails_url,
 				"display_price": product.display_price,
-				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, product.owner_id)
+				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, product.owner_id),
+				"is_member_product": product.is_member_product,
+				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			})
 
 		component['runtime_data'] = {

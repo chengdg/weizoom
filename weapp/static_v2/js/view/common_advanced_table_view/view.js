@@ -35,7 +35,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
         this.$el.html('<div class="xa-content xui-advancedTableContent"></div><div class="xa-advancedTablePaginator xui-advancedTablePaginator clearfix"></div>');
         this.template = this.getTemplate(options);
         this.$content = this.$('.xa-content');
-
         /*
         if (options.hasOwnProperty('sorted_attr')) {
             this.sortAttr = options.sorted_attr;
@@ -147,7 +146,9 @@ W.view.common.AdvancedTable = Backbone.View.extend({
         this.filterAttr = null;
         this.filterValue = null;
         this.sortAttr = this.options.initSort || null;
-        this.extraArgs = args;
+        if(args){
+            this.extraArgs = args;
+        }
         this.load(true, options);
     },
 

@@ -10,11 +10,14 @@
 {% block content-panel %}
 <div id='product_list_contain' data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
 
+    {% if global_navbar == None %}
+    <!-- 当启用底部导航时，不显示购物车 by liupeiyu-->
     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
         <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
     </a>
+    {% endif %}
 
-    {% if has_category %}
+    {% if has_category and global_navbar == None %}
     <ul data-ui-role="top-dropdown-nav" class="hidden" style="overflow-y:auto;">
         <li><a href='#'></a></li>
         <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" data-role="button">全部</a></li>
@@ -54,6 +57,34 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    // 计算列表页面价钱
+    $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
+        fmt: $('body').data('value'),
+        updateProductPrice: function(event, data){
+            var _this = this;
+            if(data.count != 0) {
+                $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                $('.xa-shopCarCount').text(data.count).show();
+            }
+
+            $(".xa-product").each(function(){
+                // 商品原价
+                var price = $(this).data('product-price').toFixed(2);
+                // 商品有促销
+                var productPromotion = $(this).data('product-promotion');
+                var isMemberProduct = $(this).hasClass('xa-member-product');
+                // 计算价钱                
+                price = _this.calculPrice({
+                    price: price,
+                    productPromotion: productPromotion,
+                    isMemberProduct: isMemberProduct
+                });
+                // 设置显示价格
+                $(this).find('.xt-productPrice').text('￥'+price);
+            });
+        }
+    });
+/*
     var fmt = $('body').data('value');
     var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
         if(promotion_member_grade_id == '0'){return true;}
@@ -79,6 +110,7 @@ $(document).ready(function() {
             var user_member_grade_id = data.member_grade_id;
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                $('.xa-shopCarCount').text(data.count).show();
             }
             $(".xa-product").each(function(){
                 // 商品原价
@@ -109,14 +141,19 @@ $(document).ready(function() {
 
         }
     });
+*/
     var $img = $('.xui-inner-img img');
     var imgHeight = $img.css('width');
     $img.css('height', imgHeight);
 
-    $( document.body ).highlight('ui-state-hover', '.xui-inner-li');
-    var wrapperHeight = window.document.body.clientHeight;
-    $('#xa-wrapper').css('height', wrapperHeight);
-    var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+    // 默认开启店铺导航app样式，加padding防止遮盖内容
+    var slideBar = $('.xui-globalSideBar');
+    if(slideBar.length > 0){
+        $('.xui-productsList-page').css({
+            'padding-bottom': '50px'
+        });
+    }
+
 });
 </script>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 __author__ = 'liupeiyu'
 
+from datetime import datetime
 from express_config import *
 from express_request_params import *
 from watchdog.utils import watchdog_error, watchdog_info
@@ -158,6 +159,19 @@ class ExpressCallbackHandle(object):
 		)
 		return orders
 
+	def is_abort_by_express(self, json):
+		state = json.get(self.express_params.STATUS, '')
+		message = json.get(self.express_params.MESSAGE, '')
+		if state == self.express_config.STATUS_ABORT and u'3天' in message:
+			return True
+		else:
+			return False
+
+	def save_abort_express_details(self, data):
+		data_string = json.dumps(data)
+		self.express.abort_receive_at = datetime.now()
+		self.express.abort_receive_message = data_string
+		self.express.save()
 
 	'''
 	1、解析json数据
@@ -171,6 +185,14 @@ class ExpressCallbackHandle(object):
 
 		# 解析参数
 		json = self.analytical_json()
+
+		# 是否status: abort 而且message中包含“3天”关键字
+		is_abort = self.is_abort_by_express(json)
+		if is_abort:
+			self.save_abort_express_details(json)
+			return self.error_json(u'该订单已关闭，需要重新推送！')
+
+		# 保存快递信息
 		is_success = self.save_express_details(json)
 		if is_success is False:
 			return self.error_json('保存快递信息失败！')

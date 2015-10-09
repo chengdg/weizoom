@@ -28,23 +28,31 @@ from termite2 import models as termite2_models
 
 from weixin2 import export as weixin_export
 from stats import export as stats_export
+from mall import export as mall_export
 
 def first_navs(request):
 	"""
 	根据request.path_info获取对应的first navs
 	"""
 	result = {}
-	if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info):
-		if '/unbind_account/' in request.path_info:
-			result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
-		else:
-			result['first_navs'] = weixin_export.FIRST_NAVS
-	elif '/stats/' in request.path_info:
-		result['first_navs'] = stats_export.FIRST_NAVS
+	# if ('/new_weixin/' in request.path_info) or ('/apps2/' in request.path_info):
+	# 	if '/unbind_account/' in request.path_info:
+	# 		result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
+	# 	else:
+	# 		result['first_navs'] = weixin_export.FIRST_NAVS
+	# elif '/stats/' in request.path_info:
+	# 	result['first_navs'] = stats_export.FIRST_NAVS
+	if '/unbind_account/' in request.path_info:
+		result['first_navs'] = weixin_export.UNBIND_ACCOUNT_FIRST_NAVS
+	else:
+		result['first_navs'] = mall_export.FIRST_NAVS
 	return result
 
 def cdn_host(request):
-	return {'cdn_host': settings.CDN_HOST}
+	return {
+		'cdn_host': settings.CDN_HOST,
+		'fans_host': settings.FAN_HOST
+	}
 
 
 def handlebar_component_templates(request):
@@ -608,14 +616,16 @@ def fetch_webapp_global_navbar(request):
 		if path_type is None:
 			return {'global_navbar': None}
 
-		from termite import pagestore as pagestore_manager
-		pagestore = pagestore_manager.get_pagestore('mongo')
-		project_id = 'fake:wepage:%s:navbar' % request.webapp_owner_id
-		page_id = 'navbar'
-		navbar_page = pagestore.get_page(project_id, page_id)
+		from termite2 import pagecreater
+		navbar_component = pagecreater.get_navbar_components(request.webapp_owner_id)
+		if navbar_component:
+			if path_type is 'product_list_page':
+				# 如果是商品列表页面 只有选择的‘APP导航模式’ 才显示底部
+				if navbar_component['model']['type'] == 'slide':
+					return {'global_navbar': navbar_component}
+				else:
+					return {'global_navbar': None}
 
-		if navbar_page:
-			navbar_component = navbar_page['component']['components'][0]
 			selected = navbar_component['model']['pages'][path_type]['select']
 			if selected:
 				return {'global_navbar': navbar_component}

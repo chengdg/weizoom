@@ -10,7 +10,7 @@
 	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 	 	<li>
-			<a href="/member/members/get/">会员管理</a>
+			<a href="/member/member_list/">会员管理</a>
 		</li>
 		<li class="active">推广扫码</li>				 
 	</ul>
@@ -52,7 +52,7 @@
 					{% else %}
 						style="display:none;" 
 					{% endif %} placeholder="请输入积分数值">
-					<div class="errorHint"></div>
+					<span class="errorHint"></span>
 				</fieldset>
 				<fieldset class="xui-info">
 					<label for="" class="star_show">页面描述：</label>
@@ -136,11 +136,11 @@ $(document).ready(function() {
         }
         W.getApi().call({
             app: 'member',
-            api: 'member_qrcode/edit',
             method: 'post',
+            resource: 'member_qrcode',
             args: args,
             success: function(data) {
-                window.location.href = '/member/member_qrcode/get/';
+                window.location.href = '/member/member_qrcode/';
             },
             error: function(resp) {
                 var msg = resp.errMsg || '保存失败';

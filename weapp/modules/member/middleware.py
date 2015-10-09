@@ -160,21 +160,21 @@ class MemberCacheMiddleware(object):
 		openid, webapp_id = cookie_openid_webapp_id.split('____')
 		if not request.user_profile:
 			return None
-		try:
-			if webapp_id == request.user_profile.webapp_id:
-				from cache import member_cache
-				webapp_user, social_account, member = member_cache.get_accounts(openid, webapp_id)
-				request.webapp_user = webapp_user
-				request.social_account = social_account
-				request.member = member
+		#try:
+		if webapp_id == request.user_profile.webapp_id:
+			from cache import member_cache
+			webapp_user, social_account, member = member_cache.get_accounts(openid, webapp_id)
+			request.webapp_user = webapp_user
+			request.social_account = social_account
+			request.member = member
 
-				request.webapp_user.member = request.member
-				request.webapp_user.webapp_owner_info = request.webapp_owner_info
-				request.found_member_in_cache = True
-			else:
-				pass
-		except:
+			request.webapp_user.member = request.member
+			request.webapp_user.webapp_owner_info = request.webapp_owner_info
+			request.found_member_in_cache = True
+		else:
 			pass
+		# except:
+		# 	pass
 
 
 class RedirectBySctMiddleware(object):
@@ -354,8 +354,8 @@ class RedirectByFmtMiddleware(object):
 	def process_fmt_in_url(self, request):
 		cookie_fmt = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
-		if cookie_fmt == url_fmt:
-			return None
+		# if cookie_fmt == url_fmt:
+		# 	return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
 		if (member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY in request.COOKIES):
 			if request.member:
@@ -1157,9 +1157,10 @@ class OAUTHMiddleware(object):
 		cookie_fmt = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		url_fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
 		self.process_shared_url(request,is_new_created_member)
-		if cookie_fmt == url_fmt:
-			return None
+		# if cookie_fmt == url_fmt:
+		# 	return None
 		#cookie_fmt != url_fmt 或者 cookie_fmt = None
+		print '===========',request.member.token, url_fmt, cookie_fmt
 		if request.member and url_fmt:
 			new_fmt = request.member.token
 			if new_fmt == url_fmt:
@@ -1574,6 +1575,20 @@ class RefuelingMiddleware(object):
 						response = HttpResponseRedirect(new_url)
 						response.set_cookie(member_settings.REFUELING_FID, request.member.id, max_age=60*60*24*365)
 						return response
+
+			if 'mileke_page' in  request.get_full_path() and request.member.is_subscribed:
+				url_fid = request.GET.get(member_settings.REFUELING_FID, None)
+				cookie_fid = request.COOKIES.get(member_settings.REFUELING_FID, None)
+				crmid = request.GET.get('crmid', None)
+				
+				
+				if not url_fid:
+					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), member_settings.REFUELING_FID, request.member.id)
+					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, 'crmid')
+					response = HttpResponseRedirect(new_url)
+					response.set_cookie(member_settings.REFUELING_FID, request.member.id, max_age=60*60*24*365)
+					return response
+
 		return None
 
 def _get_hexdigest_url(shared_url):

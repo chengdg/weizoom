@@ -271,7 +271,6 @@ W.view.member.memberFilterView = Backbone.View.extend({
             args.push('"filter_value":"'+filter_value+'"')
         }
 
-        console.log("filters----", filter_value, args);
         this.filter_value = filter_value;
         return args
     },
@@ -318,14 +317,16 @@ W.view.member.memberFilterView = Backbone.View.extend({
         var _this = this;
         var status = this.options.status || '';
         W.getApi().call({
-            method: 'post',
+            method: 'get',
             app: 'member',
-            api: 'members_filter_params/get',
+            resource: 'members_filter_params',
+            //api: 'members_filter_params/get',
             args:{status:status},
             success: function(data) {
                  var html = $.tmpl(this.getTemplate(), {
                     grades: data.grades,
-                    tags: data.tags
+                    tags: data.tags,
+                    status: status
                 });
                 /*var html = $.tmpl(this.getTemplate(), {
                     filters: _this.filterData,

@@ -413,18 +413,21 @@ Scenario: 安装完整测试数据
 			"name": "优惠券1",
 			"money": 1,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon1_id_"
 		}, {
 			"name": "优惠券2",
 			"money": 100,
 			"start_date": "今天",
-			"end_date": "1天后"
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon2_id_"
 		}, {
 			"name": "优惠券3",
 			"money": 1,
 			"start_date": "今天",
 			"end_date": "2天后",
-			"using_limit": "满5元可以使用"
+			"using_limit": "满5元可以使用",
+			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
 	When bill访问jobs的webapp
@@ -432,13 +435,13 @@ Scenario: 安装完整测试数据
 		"""
 		[{
 			"name": "优惠券1",
-			"coupon_ids": ["coupon_12", "coupon_11"]
+			"coupon_ids": ["coupon1_id_2", "coupon1_id_1"]
 		}, {
 			"name": "优惠券2",
-			"coupon_ids": ["coupon_22", "coupon_21"]
+			"coupon_ids": ["coupon2_id_2", "coupon2_id_1"]
 		}, {
 			"name": "优惠券3",
-			"coupon_ids": ["coupon_32", "coupon_31"]
+			"coupon_ids": ["coupon3_id_2", "coupon3_id_1"]
 		}]
 		"""
 	#bill收货地址
@@ -461,16 +464,41 @@ Scenario: 安装完整测试数据
 	And jobs已添加关键词自动回复规则
 		"""
 		[{
-			"patterns": "词1_1|词1_2",
-			"answer": "answer1"
-		}, {
-			"patterns": "keyword2_1",
-			"answer": "answer2"
-		}, {
-			"patterns": "keyword3",
-			"answer": "answer3"
-		}]	
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "词1_1",
+					"type": "like"
+				},{
+					 "keyword": "词1_2",
+					 "type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"answer1",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则2",
+			"keyword": [{
+					"keyword": "keyword2_1",
+					"type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"answer2",
+					 "reply_type":"text"
+				}]
+		},{
+			"rules_name":"规则3",
+			"keyword": [{
+					"keyword": "keyword3",
+					"type": "like"
+				}],
+			"keyword_reply": [{
+					 "reply_content":"answer3",
+					 "reply_type":"text"
+				}]
+		}]
 		"""
+		
 	When jobs创建分组
 		"""
 		[{

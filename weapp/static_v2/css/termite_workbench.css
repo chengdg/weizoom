@@ -693,6 +693,7 @@ button.xui-deleteImageButton{
 }
 .xui-propertyView-productGroup .propertyGroup_property:first-child .propertyGroup_property_label{
 	margin-top: -20px;
+	line-height: 73px!important;
 }
 /*选择按钮样式*/
 .xui-selectBtn{
@@ -1282,6 +1283,10 @@ button.xui-deleteImageButton{
 .xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control{
 	width: 378px;
 	padding-top: 10px;
+	padding-bottom: 5px;
+}
+.xui-propertyView-navbar-navs .propertyGroup_property_dynamicControlField_control .errorHint{
+	padding-left: 83px;
 	padding-bottom: 5px;
 }
 .xui-propertyView-navbar-navs .xui-link{

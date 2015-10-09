@@ -18,7 +18,7 @@ from market_tools.tools.lottery.models import Lottery, LotteryRecord
 import utils.dateutil as dateutil
 from market_tools.tools.lottery.models import STATUS2TEXT as LOTTERY_STATUS2TEXT
 
-FIRST_NAV = export.MARKETING_NAV
+FIRST_NAV = export.STATS_HOME_FIRST_NAV
 DEFAULT_COUNT_PER_PAGE = 20
 
 
@@ -39,8 +39,9 @@ class ActivityAnalysis(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'app_name': 'stats',
-			'second_navs': export.get_market_second_navs(request),
-			'second_nav_name': export.MARKETING_ACTIVITY_NAV,
+			'second_navs': export.get_stats_second_navs(request),
+			'second_nav_name': export.STATS_SALES_SECOND_NAV,
+			'third_nav_name': export.MARKETING_ACTIVITY_NAV,
 			'activity_type': activity_type
 		})
 		return render_to_response('marketing/activity_analysis.html', c)

@@ -106,6 +106,38 @@ class Object(object):
     def __init__(self):
         pass
 
+
+def __get_unship_order_count_from_db(key, webapp_id):
+    from mall.models import belong_to, ORDER_STATUS_PAYED_NOT_SHIP
+
+    def inner_func():
+        count = belong_to(webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+        return {
+            'keys': [key],
+            'value': count
+        }
+    return inner_func
+
+
+def update_unship_order_count(instance, **kwargs):
+    webapp_id = None
+    if isinstance(instance, mall_models.Order):
+        webapp_id = instance.webapp_id
+    else:
+        for order in instance:
+            webapp_id = order.webapp_id
+            break
+    if webapp_id:
+        key = 'webapp_unread_order_count_{wa:%s}' % webapp_id
+        cache_util.delete_cache(key)
+
+
+def get_unship_order_count_from_cache(webapp_id):
+    key = 'webapp_unread_order_count_{wa:%s}' % webapp_id
+    count = cache_util.get_from_cache(key, __get_unship_order_count_from_db(key, webapp_id))
+    return count
+
+
 def get_webapp_owner_info(webapp_owner_id):
     webapp_owner_info_key = 'webapp_owner_info_{wo:%s}' % webapp_owner_id
     red_envelope_key = 'red_envelope_{wo:%s}' % webapp_owner_id
@@ -189,6 +221,11 @@ signals.post_save.connect(
 post_update_signal.connect(update_webapp_owner_info_cache_with_login,
                            sender=AccountHasWeizoomCardPermissions,
                            dispatch_uid="accountwzcp.update")
+
+post_update_signal.connect(update_unship_order_count, sender=mall_models.Order,
+                           dispatch_uid="webapp_unread_order_count.update")
+signals.post_save.connect(update_unship_order_count, sender=mall_models.Order,
+                          dispatch_uid="webapp_unread_order_count.save")
 
 
 def get_red_envelope_for_cache(owner_id):

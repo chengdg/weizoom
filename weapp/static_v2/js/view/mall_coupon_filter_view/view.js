@@ -29,6 +29,7 @@ W.view.mall.CouponFilterView = Backbone.View.extend({
     onClickResetButton: function(){
         xlog('reset');
         $('#coupon_code').val('');
+        $('#member_name').val('');
         $('#use_status').val('all');
     },
 

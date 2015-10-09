@@ -29,7 +29,7 @@ class NoticeList(resource.Resource):
             notices = Paginator.page(paginator.num_pages)
         c = RequestContext(request, {
             'first_nav_name': export.MALL_HOME_FIRST_NAV,
-            'second_navs': export.get_home_second_navs(request),
+            'second_navs': export.get_mall_home_second_navs(request),
             'second_nav_name': export.MALL_HOME_NOTICES_NAV,
             'notice_list': notices,
         })
@@ -82,7 +82,7 @@ class Notice(resource.Resource):
             return Http404
         c = RequestContext(request, {
             'first_nav_name': export.MALL_HOME_FIRST_NAV,
-            'second_navs': export.get_home_second_navs(request),
+            'second_navs': export.get_mall_home_second_navs(request),
             'second_nav_name': export.MALL_HOME_NOTICES_NAV,
             'notice': notice,
         })

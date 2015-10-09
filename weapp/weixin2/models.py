@@ -11,11 +11,11 @@ from core import emotion
 
 from core.emojicons_util import encode_emojicons_for_html
 
-from modules.member.models import  Member 
+from modules.member.models import  Member
 
 DEFAULT_ICON = '/static/img/user-1.jpg'
 
-		
+
 #########################################################################
 # Material：素材
 #########################################################################
@@ -136,7 +136,7 @@ class Rule(models.Model):
 			start_hour, end_hour = _format_hour(self.start_hour, self.end_hour)
 			if end_hour == '24:00':
 				end_hour = '23:59'
-				
+
 			start_time = time.strptime(start_hour, "%H:%M")
 			end_time = time.strptime(end_hour, "%H:%M")
 
@@ -178,13 +178,13 @@ class Rule(models.Model):
 				keyword2type['keyword'] = keyword
 				keyword2type['type'] = 0
 				keyword_array.append(keyword2type)
-			
+
 			self.patterns = keyword_array
 
 		#处理老的图文回复
 		if self.is_news_type and self.answer == '':
 			self.answer = '[{"content":" ' + str(self.material_id) + '","type":"news"}]'
-			
+
 		try:
 			self.answer = json.loads(self.answer)
 			if type(self.answer) == int or type(self.answer) == long or type(self.answer) == float or type(self.answer) == dict:
@@ -204,14 +204,14 @@ class Rule(models.Model):
 						content2type['content'] = emotion.change_emotion_to_img(news_answer['content'])
 					except:
 						content2type['content'] = emotion.change_emotion_to_img(self.answer)
-					
+
 					content2type['type'] = 'text'
 
 					#answers_dict = json.loads(self.answer)
 					#content2type['content_content'] = emotion.change_emotion_to_img(answers_dict.content)
 
 				answer_array.append(content2type)
-				
+
 				if self.type == FOLLOW_TYPE:
 					#关注后自动回复只有一条回复内容，不需要用数组封装
 					self.answer = content2type
@@ -393,7 +393,7 @@ class WeixinUser(models.Model):
 
 
 from weixin.user.models import WeixinMpUserAccessToken, get_mpuser_access_token_for, get_system_user_binded_mpuser, WeixinMpUser
-	
+
 
 #########################################################################
 # RealTimeInfo：实时信息, 和所绑定的微信公众号关联
@@ -407,7 +407,7 @@ class RealTimeInfo(models.Model):
 		verbose_name = '微信消息实时状态信息'
 		verbose_name_plural = '微信消息实时状态信息'
 
-	
+
 #########################################################################
 # Session：会话抽象
 #########################################################################
@@ -445,8 +445,8 @@ def get_weixinuser_sessions(weixin_user_name):
 def get_opid_from_session(filter_args):
 	return [session.member_user_username for session in Session.objects.filter(**filter_args)]
 
-		
-		
+
+
 TEXT = 'text'
 IMAGE = 'image'
 VOICE = 'voice'
@@ -477,7 +477,7 @@ class Message(models.Model):
 	memo = models.CharField(max_length=255, default='') # 消息加备注
 	#add by duhao 2015-05-06
 	material_id = models.IntegerField(default=0) #素材id
- 
+
 	class Meta(object):
 		db_table = 'weixin_message_message'
 		ordering = ['-weixin_created_at']
@@ -580,7 +580,7 @@ class FanHasCategory(models.Model):
 		verbose_name_plural = '粉丝所属分组信息'
 		# 唯一性索引
 		unique_together = (('category', 'fan'),)
-		
+
 	@staticmethod
 	def get_fans_list_by_category_id(category_id):
 		if category_id:
@@ -636,8 +636,8 @@ class CustomerMenuStatus(models.Model):
 # 	phone_number = models.CharField(max_length=11, blank=True)
 # 	qq_number = models.CharField(max_length=13, blank=True)
 # 	weibo_nickname = models.CharField(max_length=16, verbose_name='微博昵称')
-# 	member_remarks = models.TextField(max_length=1024, blank=True) 
-# 	#new add by bert 
+# 	member_remarks = models.TextField(max_length=1024, blank=True)
+# 	#new add by bert
 # 	is_binded = models.BooleanField(default=False)
 # 	session_id = models.CharField(max_length=1024, blank=True)
 # 	captcha = models.CharField(max_length=11, blank=True) #验证码
@@ -667,7 +667,7 @@ class MessageAnalysis(models.Model):
 	interaction_count = models.IntegerField(default=0, verbose_name='互动次数')
 	created_at = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
 	date_time = models.DateField(verbose_name='日期') # 2014-12-07
-	
+
 	class Meta(object):
 		db_table = 'message_analysis'
 		verbose_name = '消息统计'
@@ -681,7 +681,7 @@ class KeywordHistory(models.Model):
 	owner = models.ForeignKey(User, related_name='owned_keyword_history')
 	keyword = models.CharField(max_length=30, default='', verbose_name='关键词')
 	date = models.DateField(verbose_name='日期') # 2014-12-07
-	
+
 	class Meta(object):
 		db_table = 'weixin_keyword_history'
 		verbose_name = '关键词历史记录'
@@ -696,7 +696,7 @@ class KeywordCount(models.Model):
 	keyword = models.CharField(max_length=30, default='', verbose_name='关键词')
 	count = models.IntegerField(default=0, verbose_name='关键词次数')
 	date = models.DateField(verbose_name='日期') # 2014-12-07
-	
+
 	class Meta(object):
 		db_table = 'weixin_keyword_count'
 		verbose_name = '关键词统计'

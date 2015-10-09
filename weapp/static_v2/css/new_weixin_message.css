@@ -18,13 +18,48 @@
     vertical-align: middle;
     width: 60px;
 }
+.xui-weixin-realtimeMessagePage .xui-listTable {
+    border-bottom: 1px solid #ddd;
+}
+.xui-weixin-realtimeMessagePage .xui-selectBox {
+    display:inline-block;
+    margin:5px 10px;
+}
+.xui-weixin-realtimeMessagePage .xui-selectAll {
+    margin-right: 10px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-menu {
+    border-radius: 5px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-submenu a {
+    padding: 8px 10px !important;
+    border-radius: 5px;
+    width: 190px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-submenu:first-child {
+    border-bottom: 1px solid #ddd;
+}
+.xui-weixin-realtimeMessagePage .dropdown-menu {
+    border: 1px solid #c5c5c5;
+    min-width: 96px;
+    left:98px;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable .xui-vmiddle {
+    vertical-align: middle!important;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable .xui-selectWrap {
+    height: 100%;
+    width: 40px;
+    background-color: red;
+    float: left;
+}
 
 .xui-weixin-realtimeMessagePage .xui-i-unreadMessageCount {
     background: #cf0404;
     color: white;
     height: 18px;
     position: absolute;
-    left: 65px;
+    left: 50px;
     margin-top: -10px;
     width: auto;
     padding: 1px 5px 0;
@@ -61,6 +96,107 @@
     text-align: left;
     word-break: break-all;
     cursor: pointer;
+}
+
+.xui-weixin-realtimeMessagePage .xui-messages {
+    background-color: #fff;
+    width: 100%;
+    padding: 20px 30px 0px 30px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-message-top{
+   margin-bottom: 5px;
+   color: #666;
+}
+.xui-weixin-realtimeMessagePage .xui-message {
+    border-radius:5px;
+    min-width: 250px;
+    min-height: 60px;
+    max-width: 440px;
+    width: auto;
+    border: 1px solid #ccc;
+    padding:10px 10px 0px 10px;
+    clear: both;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message span{
+    cursor: text;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-clock{
+    float: left;
+    position: absolute;
+    left: 110px;
+    top: 45px;
+    font-size: 12px;
+    color: #999;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
+    color: #f39800;
+    cursor: text !important;
+    position: relative;
+    top:5px;
+}
+.xui-weixin-realtimeMessagePage .xui-messageWrap {
+}
+.xui-weixin-realtimeMessagePage .xui-recieved {
+    float: left;
+}
+.xui-weixin-realtimeMessagePage .xui-send {
+    float: right;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft {
+   width: 160px;
+   float: left;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft  p {
+    line-height: 60px;
+    height: 60px;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
+    width: 440px;
+    float: right;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapLeft {
+   width: 440px;
+   float: left;
+
+}
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight {
+    width: 160px;
+    float: right;
+    line-height: 60px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight p{
+    width: 80px;
+    text-align: right;
+
+}
+
+.xui-weixin-realtimeMessagePage .xui-message-recieved {
+    float: left;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message-send {
+    float: right;
+    background-color: #f0f0f0;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-message-content {
+    font-size: 12px;
+    color: #333;
+    line-height: 20px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-edit-message-panel {
+    width:580px; 
+    z-index:500;
+    background: #eaeef6;
+    margin-top: 10px;
+    padding-left: 15px;
 }
 
 .xui-weixin-realtimeMessagePage .xui-i-newses {
@@ -110,7 +246,8 @@
 
 .xui-weixin-realtimeMessagePage .xui-i-sessionsImg img {
     border: 0 none;
-    height: auto;
+    width: 50px;
+    height: 50px;
     max-width: 100%;
     vertical-align: middle;
 }
@@ -126,7 +263,7 @@
 
 .xui-weixin-realtimeMessagePage .xui-i-voiceStop {
     background: url("/static_v2/img/weixin/voice_stop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    height: 23px;
+    height: 24px;
 }
 
 .xui-weixin-realtimeMessagePage .xui-i-voiceIco {
@@ -143,7 +280,6 @@
 
 .xui-weixin-realtimeMessagePage .xui-i-voicePlay {
     background: url("/static_v2/img/weixin/voice_play.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    margin-top: -1px;
 }
 
 .xui-weixin-realtimeMessagePage [class^="xui-i-sessionsIcon-"], [class*=" xui-i-sessionsIcon-"] {
@@ -171,6 +307,39 @@
 
 .xui-weixin-realtimeMessagePage .xui-i-sessionsIcon-remark {
     background: url("/static_v2/img/weixin/star.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.xui-weixin-realtimeMessagePage .xui-ellipsis-1{
+    width: 80px;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.xui-weixin-realtimeMessagePage .drop-box-arrow{
+    /*background: url(/static_v2/img/arrow.png) no-repeat;*/
+
+}
+.xui-weixin-realtimeMessagePage .drop-box-arrow-left{
+    background: url("/static_v2/img/weixin/dropArrow.png");
+    position: absolute;
+    width: 8px;
+    height: 9px;
+    transform: rotate(-360deg);
+    left: -8px;
+    /* background-size: 16px 38px; */
+    background-position: 0 -10px;
+}
+.xui-weixin-realtimeMessagePage .drop-box-arrow-right{
+    background: url("/static_v2/img/weixin/dropArrow.png");
+    position: absolute;
+    width: 8px;
+    height: 9px;
+    transform: rotate(-360deg);
+    right: -8px;
+    /* background-size: 16px 38px; */
+    background-position: 0 0;
 }
 
 .xui-weixin-realtimeMessagePage .xui-i-remarkIcon {
@@ -203,7 +372,7 @@
 }
 
 .xui-weixin-realtimeMessagePage .xui-i-not-reply {
-	color: #c09853;
+	color: #f39800;
 }
 
 .xui-weixin-realtimeMessagePage .nav-tabs {
@@ -384,8 +553,9 @@
 * 实时消息详情页面
 */
 .xui-weixin-realtimeMessagePage .xui-i-panel-body {
-    width: 600px;
+    width: 100%;
     background: #eaeef6;
+    padding-bottom: 0px;
 }
 
 .xui-weixin-user-detail {
@@ -440,7 +610,8 @@
 */
 .xui-weixin-messagePage{
     background: #eaeef6;
-    min-height: 880px;
+    min-height: 950px;
+    padding-bottom: 300px;
 }
 .xui-weixin-messagePage .xui-rule-name{
     padding-left: 29px;

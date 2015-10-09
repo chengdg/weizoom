@@ -55,7 +55,7 @@ def send_order_template_message(webapp_id, order_id, send_point):
 	user_profile = UserProfile.objects.get(webapp_id=webapp_id)
 	user = user_profile.user
 	template_message = get_template_message_by(user, send_point)
-	
+
 	from mall.models import Order
 	order =  Order.objects.get(id=order_id)
 
@@ -67,7 +67,7 @@ def send_order_template_message(webapp_id, order_id, send_point):
 
 				message = _get_order_send_message_dict(user_profile, template_message, order, send_point)
 				result = weixin_api.send_template_message(message, True)
-				_record_send_template_info(order, template_message.template_id, user)
+				#_record_send_template_info(order, template_message.template_id, user)
 				# if result.has_key('msg_id'):
 				# 	UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
 				return True
@@ -106,7 +106,7 @@ def _get_order_send_message_dict(user_profile, template_message, order, send_poi
 		else:
 			host = "http://%s/workbench/jqm/preview/" % user_profile.host
 
-		template_data['url'] = '%s?woid=%s&module=mall&model=order&action=pay&order_id=%s&workspace_id=mall&sct=%s' % (host, user_profile.user.id, order.order_id, social_account.token)
+		template_data['url'] = '%s?woid=%s&module=mall&model=order&action=pay&order_id=%s&workspace_id=mall&sct=%s' % (host, user_profile.user_id, order.order_id, social_account.token)
 
 		template_data['topcolor'] = "#FF0000"
 		detail_data = {}
@@ -120,28 +120,28 @@ def _get_order_send_message_dict(user_profile, template_message, order, send_poi
 				attribute_data = attribute_datas.split(':')
 				key = attribute_data[0].strip()
 				attr = attribute_data[1].strip()
-				if attr == 'final_price' and getattr(order, attr):	
+				if attr == 'final_price' and getattr(order, attr):
 					value = u'￥%s［实际付款］' % getattr(order, attr)
-					detail_data[key] = {"value" : value, "color" : "#173177"} 
+					detail_data[key] = {"value" : value, "color" : "#173177"}
 				elif hasattr(order, attr):
 					if attr == 'final_price':
 						value = u'￥%s［实际付款］' % getattr(order, attr)
-						detail_data[key] = {"value" : value, "color" : "#173177"} 
+						detail_data[key] = {"value" : value, "color" : "#173177"}
 					elif attr == 'payment_time':
 						dt = datetime.now()
 						payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
 						detail_data[key] = {"value" : payment_time, "color" : "#173177"}
 					else:
-						detail_data[key] = {"value" : getattr(order, attr), "color" : "#173177"} 
+						detail_data[key] = {"value" : getattr(order, attr), "color" : "#173177"}
 				else:
 					if 'number' == attr:
 						number = order.get_order_has_product_number(order)
-						detail_data[key] = {"value" : number, "color" : "#173177"} 
+						detail_data[key] = {"value" : number, "color" : "#173177"}
 
 					if 'product_name' == attr:
 						products = order.get_order_has_product(order)
 						product_names =','.join([p.name for p in products])
-						detail_data[key] = {"value" : product_names, "color" : "#173177"} 
+						detail_data[key] = {"value" : product_names, "color" : "#173177"}
 		template_data['data'] = detail_data
 	return template_data
 
@@ -153,3 +153,119 @@ def _record_send_template_info(order, template_id, user):
 			MarketToolsTemplateMessageSendRecord.objects.create(owner=user, template_id=template_id, member_id=member.id, order_id=order.order_id)
 
 
+
+########################################################################
+# send_weixin_template_message: 发送优惠劵模板消息
+# webapp_owner_id : 55
+# member_id: 2
+# send_point: COUPON_ARRIVAL_NOTIFY/COUPON_EXPIRED_REMIND
+#
+#  	发送优惠劵的model格式
+# model: {
+# 	"coupon_store": u'全部可用',
+# 	"coupon_rule": u'每笔订单满159元即可使用本卷' or u'不限'
+# }
+########################################################################
+def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
+	if _is_member_subscribed(member_id):
+		# 会员已经取消关注
+		return True
+
+	user_profile = UserProfile.objects.get(user_id=webapp_owner_id)
+	user = user_profile.user
+	template_message = get_template_message_by(user_profile.user, send_point)
+	if not template_message:
+		return False
+	template_message.send_point = send_point
+	# return _get_send_message_dict(user_profile, member_id, model, template_message)
+
+	if model and user_profile and template_message and template_message.template_id:
+		mpuser_access_token = _get_mpuser_access_token(user)
+		if mpuser_access_token:
+			try:
+				weixin_api = get_weixin_api(mpuser_access_token)
+
+				message = _get_send_message_dict(user_profile, member_id, model, template_message)
+				result = weixin_api.send_template_message(message, True)
+				#_record_send_template_info(order, template_message.template_id, user)
+				return True
+			except:
+				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+				watchdog_warning(notify_message)
+				return False
+		else:
+			return False
+
+	return True
+
+## 会员是否取消关注
+def _is_member_subscribed(member_id):
+	member = member_model_api.get_member_by_id(member_id)
+	if member and member.is_subscribed is True:
+		return False
+
+	return True
+
+
+def _get_host(user_profile):
+	if user_profile.host.find('http') > -1:
+		host = user_profile.host
+	else:
+		host = "http://%s" % user_profile.host
+	return host
+
+
+def _get_send_message_dict(user_profile, member_id, model, template_message):
+	template_data = dict()
+	social_account = member_model_api.get_social_account_by_member_id(member_id)
+
+	if social_account and social_account.openid:
+		template_data['touser'] = social_account.openid
+		template_data['template_id'] = template_message.template_id
+		template_data['topcolor'] = "#FF0000"
+		template_data['url'] = __get_template_url(template_message.send_point, user_profile, social_account, model)
+
+		detail_data = {}
+		detail_data["first"] = {"value" : template_message.first_text, "color" : "#000000"}
+		detail_data["remark"] = {"value" : template_message.remark_text, "color" : "#000000"}
+
+		customer_data = __get_detail_data_by_template(template_message.template_message, model)
+		detail_data = dict(detail_data, **customer_data)
+
+		template_data['data'] = detail_data
+	return template_data
+
+def __get_template_url(send_point, user_profile, social_account, model):
+	host = _get_host(user_profile)
+	if send_point == COUPON_ARRIVAL_NOTIFY or send_point == COUPON_EXPIRED_REMIND:
+		return u'{}/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id={}&project_id=0&sct={}'.format(host, user_profile.user.id, social_account.token)
+
+	return u''
+
+def __get_detail_data_by_template(template_message_detail, model):
+	detail_data = dict()
+	if template_message_detail.attribute:
+		if template_message_detail.send_point == COUPON_ARRIVAL_NOTIFY:
+			detail_data = __get_coupon_detail_data(template_message_detail.attribute, model)
+			detail_data['keyword2'] = {"value" : datetime.now().strftime('%Y%m%d'), "color" : "#173177"}
+			return detail_data
+			
+		elif template_message_detail.send_point == COUPON_EXPIRED_REMIND:
+			return __get_coupon_detail_data(template_message_detail.attribute, model)
+
+	return detail_data
+
+
+def __get_coupon_detail_data(attribute, model):
+	detail_data = dict()
+
+	attribute_data_list = attribute.split(',')
+	for attribute_datas in attribute_data_list:
+		attribute_data = attribute_datas.split(':')
+		key = attribute_data[0].strip()
+		attr = attribute_data[1].strip()
+
+		value = u'{}'.format(model.get(attr))
+		detail_data[key] = {"value" : value, "color" : "#173177"}
+
+	return detail_data

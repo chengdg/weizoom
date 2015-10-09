@@ -79,3 +79,12 @@ W.dialog.mall.SelectPromotionProductDialog = W.dialog.Dialog.extend({
         return data;
     }
 });
+
+W.dialog.mall.SelectForbiddenCouponProductDialog = W.dialog.mall.SelectPromotionProductDialog.extend({
+    events: _.extend({
+    }, W.dialog.mall.SelectPromotionProductDialog.prototype.events),
+    getTemplate: function() {        
+        $('#mall-select-forbiddenCoupon-product-dialog-tmpl-src').template('mall-select-forbiddenCoupon-product-dialog-tmpl');
+        return "mall-select-forbiddenCoupon-product-dialog-tmpl";
+    }
+});

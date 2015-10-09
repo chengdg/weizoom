@@ -37,7 +37,7 @@ SECOND_NAV_NAME = 'thanks_card'
 @login_required
 def get_thanks_cards(request):
 	webapp_id = request.user_profile.webapp_id
-	has_order = (Order.objects.filter(webapp_id = webapp_id, type=THANKS_CARD_ORDER).count() > 0)
+	has_order = (Order.by_webapp_id(webapp_id).filter(type=THANKS_CARD_ORDER).count() > 0)
 	c = RequestContext(request, {
 		'first_nav_name': MARKET_TOOLS_NAV,
 		'second_navs': export.get_second_navs(request),

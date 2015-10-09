@@ -10,7 +10,7 @@
         </ul>
     </div>
 	<!-- 回复框 -->
-	<div id="edit-message-panel" style="width:580px; z-index:500; background: #eaeef6; margin-top: 10px;"></div>
+	<div id="edit-message-panel" class="xui-edit-message-panel"></div>
 	<div
 		data-ui-role="advanced-table"
 		data-app="new_weixin"
@@ -31,6 +31,8 @@
 {% verbatim %}
 <script id="weixin-realtime-message-detail-view" type="text/x-jquery-tmpl">
 	<div id="multiline" name=".xui-i-member-username" class="hidden"></div>
+    <!--
+    //去除个人资料部分
 	<div class="xui-weixin-user-detail" data-member-id="${data.member.id}" data-member-info-id="${data.member.member_info_id}">
 		<div class="xui-i-user-top xui-bold"><span>${data.member.name}的基本资料</span></div>
 		<div class="xui-i-user-body">
@@ -79,76 +81,146 @@
 			<ul><li>购买总金额：</li><span>${data.member.total_price}</span></ul>
 		</div>
 	</div>
-	<table class="table table-condensed mb0 xui-tableHead">
+    //去除个人资料部分
+    -->
+	<div class="table table-condensed mb0 xui-tableHead">
 		<thead><label class="ml30 xui-bold">聊天记录</label><label class="xui-i-not-reply fn {{if data.member.could_replied == true}}hidden{{/if}}">（注：消息仅在48小时内回复有效！）</label></thead>
-		<tbody id='realtime_message_list' data-id="${data.session_id}" data-openid="${data.member.openid}">
+		<div id='realtime_message_list' data-id="${data.session_id}" data-openid="${data.member.openid}">
             {{if items.length}}
 	            {{each(i, message) items}}
-				<tr class="xui-i-realmessage-tr" data-id="${message.id}">
-					<td class="wui-advanced-table-sort-handler tl_important" width="185">
-						<div class="disT w mt5">
-							<div class="imgBox disTc pr xui-i-imgBox">
-								<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
+				<div class="xui-messages cb">
+                    {{if !message.is_reply}}
+					<div class="xui-messageWrap xui-recieved">
+						<div class="xui-i-wrapLeft">
+							<div class="imgBox disTc pr xui-i-imgBox fl">
+							<a href="{{if message.member_id}}/member/detail/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
 							</div>
-							<div class="pl15 disTc xui-i-name pa">
-								<div class="xui-i-member-username mb0 mt0" style="height:35px;">
-									<a href="{{if message.member_id}}/member/member_detail/edit/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}} class="mb0" style="line-height:16px;">{{html message.name}}</a>
+							<p class="pl10 mr20 xui-ellipsis-1"><a href="{{if message.member_id}}/member/detail/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}} class="mb0" style="line-height:16px;">{{html message.name}}</a></p>
+						</div>
+						<div class="xui-i-wrapRight">
+							<div class="xui-message pr xui-message-recieved ">
+				   				<div class="drop-box-arrow drop-box-arrow-left"></div>
+								<div class="xui-message-top">
+									<span class="mr50">${message.created_at}</span>
+                                    <!--
+									<a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" ></a>
+									<a href='javascript:void(0);'>
+										<img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png">
+									</a>
+                                    -->
+                                    {{if message.is_collected}}
+                                        <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" value = ${message.message_id} status="1"></a>
+                                    {{else}}
+                                        <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-star" title="收藏消息" value = ${message.message_id} status="0" ></a>
+                                    {{/if}}
+                                    <a href='javascript:void(0);'>
+                                        <img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png" data_message_id=${ message.message_id } data_message_value=${ message.remark }>
+                                    </a>
+								</div>
+								<div class="xui-message-content">
+									<p>
+                                        {{if message.message_type == 'text'}}
+                                            {{if message.is_news_type}}
+                                                <span>${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
+                                                <br/>
+                                            {{else}}
+                                                <span>{{html message.text}}</span>
+                                                <br/>
+                                            {{/if}}
+                                        {{/if}}
+                                        {{if message.message_type == 'image'}}
+                                            <a href="${pic_url}" target="_black" class="xui-i-sessionsImg">
+                                                <img src = "${pic_url}" />
+                                            </a>
+                                            <br/>
+                                        {{/if}}
+                                        {{if message.message_type == 'voice'}}
+                                            <div class="xui-i-voiceContainer">
+                                                <audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
+                                                <div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
+                                            	<span class="xui-clock xa-clock"></span>
+                                            </div>
+                                        {{/if}}
+										{{if message.remark}}
+	                                    <span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
+	                                    {{/if}}
+									</p>
 								</div>
 							</div>
 						</div>
-					</td>
-					<td width="700">
-						<div class="xui-i-text ml50">
-							<div>${message.created_at}</div>
-							{{if message.message_type == 'text'}}
-								{{if message.is_news_type}}
-									<span>${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
-								{{else}}
-									<span>{{html message.text}}</span>
-								{{/if}}
-							{{/if}}
-
-
-							<div class="xui-i-remark xa-i-remark {{if message.remark}} "" {{else}} xui-hidden {{/if}}">
-								{{if message.remark}}
-								备注：<span class="xui-i-remark-text xa-i-remark-text">${message.remark}</span>
-								{{/if}}
+					</div>      
+					<div class="cb"></div>
+                    {{else}}
+					<div class="xui-messageWrap xui-send">
+						<div class="xui-i-wrapLeft">
+							<div class="xui-message pr xui-message-send ">
+							<div class="drop-box-arrow drop-box-arrow-right"></div>
+								<div class="xui-message-top">
+									<span class="mr50">${message.created_at}</span>
+                                    <!--
+									<a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" ></a>
+									<a href='javascript:void(0);'>
+										<img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png">
+									</a>
+                                    -->
+                                    {{if message.is_collected}}
+                                    <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" value = ${message.message_id} status="1"></a>
+                                    {{else}}
+                                    <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-star" title="收藏消息" value = ${message.message_id} status="0" ></a>
+                                    {{/if}}
+                                    <a href='javascript:void(0);'>
+                                        <img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png" data_message_id=${ message.message_id } data_message_value=${ message.remark }>
+                                    </a>
+								</div>
+								<div class="xui-message-content">
+                                    <p>
+                                        {{if message.message_type == 'text'}}
+                                            {{if message.is_news_type}}
+                                                <span>${message.text} <span class="xui-i-newses">图文</span><a href="../../new_weixin/news_preview/?id=${message.material_id}" target="_blank">${message.news_title}</a></span>
+                                            {{else}}
+                                                <span>{{html message.text}}</span>
+                                            {{/if}}
+                                        {{/if}}
+                                        {{if message.message_type == 'image'}}
+                                            <a href="${pic_url}" target="_black" class="xui-i-sessionsImg">
+                                                <img src = "${pic_url}" />
+                                            </a>
+                                        {{/if}}
+                                        {{if message.message_type == 'voice'}}
+                                            <div class="xui-i-voiceContainer">
+                                                <audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
+                                                <div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
+                                            </div>
+                                        {{/if}}
+                                        {{if message.remark}}
+                                        <br/><span class="xui-i-remark-text xa-i-remark-text">备注：${message.remark}</span>
+                                        {{/if}}
+									</p>
+								</div>
 							</div>
-
-							{{if message.message_type == 'image'}}
-								<a href="${pic_url}" class="xui-i-sessionsImg">
-									<img src = "${pic_url}" />
-								</a>
-							{{/if}}
-							{{if message.message_type == 'voice'}}
-								<div class="xui-i-voiceContainer">
-									<audio id="media" class="hidden" src="${audio_url}" preload="auto" controls></audio>
-					    			<div class="xui-i-voiceContent xui-i-voiceStop cursorPointer"></div>
-					    		</div>
-							{{/if}}
-							<div class="xui-i-remark hidden">{{if message.remark}}备注：<span class="xui-i-remark-text">${message.remark}</span>{{/if}}</div>
 						</div>
-					</td>
-					<td width="90">
-						<div class="xui-i-operation" style="width:74px;">
-                            {{if message.is_collected}}
-                                <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-starActive" title="取消收藏" value = ${message.message_id} status="1"></a>
-                            {{else}}
-                                <a href="javascript:void(0);" class="wx_collect_message xui-i-session-btn xui-i-sessionsIcon-star" title="收藏消息" value = ${message.message_id} status="0" ></a>
-                            {{/if}}
-							<a href='javascript:void(0);'>
-								<img class="message_remark xui-i-remarkIcon"  title="添加备注"  src="/static_v2/img/weixin/pencil_01.png" data_message_id=${ message.message_id } data_message_value=${ message.remark }>
-							</a>
+						<div class="xui-i-wrapRight">
+							<p class="pl20 fl mr20 xui-ellipsis-1">{{html message.mp_username}}</p>
+							<div class="imgBox disTc pr xui-i-imgBox fr">
+							<a><img src="${message.user_icon}" width="60" height="60"/></a>
+							</div>
+							
 						</div>
-					</td>
-				</tr>
+					</div>      
+					<div class="cb"></div>
+                    {{/if}}
+				</div>
+				</div>
 				{{/each}}
+				<div class="h20" style="background:#fff"></div>
             {{else}}
-                <tr><td colspan='7'>还没有数据</td></tr>
+                
             {{/if}}
-		</tbody>
-	</table>
+		</div>
+	</div>
+	
 </script>
+
 {% endverbatim %}
 
 <script type="text/javascript">
@@ -241,8 +313,8 @@ $(document).ready(function() {
         }
     });
     */
-
-	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) {
+   
+	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) { 
         if ($(this).hasClass('xui-i-voicePlay')) {
         	$(this).siblings('#media')[0].pause();
         	$(this).removeClass('xui-i-voicePlay');
@@ -255,10 +327,15 @@ $(document).ready(function() {
 	        	console.log(12)
 	        	console.log($(this).siblings())
 	        	$(this).siblings().removeClass('xui-i-voicePlay');
-	        	$(this).siblings().addClass('xui-i-voiceStop');
+	        	$(this).siblings().not(".xa-clock").addClass('xui-i-voiceStop');
+			});
+			$(this).siblings('#media').bind('timeupdate', function() {
+				if(parseInt(this.duration)){
+					$(this).parent().find(".xa-clock").html(parseInt(this.duration)+'&nbsp;"');
+				}
 			});
 		}
-	});
+	});	
 
 	//start: 修改备注名
 	$('body').delegate('.xa-update-remark-name', 'click', function(event) {

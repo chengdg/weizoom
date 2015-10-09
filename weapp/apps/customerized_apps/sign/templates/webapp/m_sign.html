@@ -300,6 +300,10 @@
             $('.wa-rules-div').hide();
             $('.wa-signPageDiv').show();
         });
+        //个人中心
+        $('.wa-rules-i-center').on('click', function(){
+            window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
+        });
 	});
 
     function fillPrizeInfo(prize_info){

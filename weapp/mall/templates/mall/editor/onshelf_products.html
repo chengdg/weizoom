@@ -30,7 +30,7 @@
 		data-ui-role="advanced-table"
 		data-app="mall2"
 		data-resource="product_list"
-		data-args='{"type":"onshelf", "sort_attr":"-created_at"}'
+		data-args='{"type":"onshelf", "sort_attr":"-created_at", "highStocks": {{high_stocks}}}'
 		data-template-id="#products-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -84,8 +84,8 @@
 				<th width="100">分组</th>
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
-				<th width="78" class="tx_sortable" data-sort-attr="sales"><a href="javascript:;">总销量</a></th>
-				<th width="120" class="tx_sortable" data-sort-attr="created_at" data-init-sort="-created_at" data-sort-direction="up"><a href="javascript:;">创建时间</a></th>
+				<th width="78">总销量</th>
+				<th width="120">创建时间</th>
 				{{if data.data.owner_id != 216}}
 				<th width="58">排序</th>
 				{{/if}}
@@ -179,7 +179,9 @@
 $(document).ready(function() {
 	var view = new W.view.mall.ProductListView({
 		el: '.xui-productsPage',
-		type: 'onshelf'
+		type: 'onshelf', 
+		low_stocks: '{{high_stocks}}',  //支持从首页店铺提醒“库存不足商品”过来的请求，这过来的请求是0~0，所以这块就直接用high_stocks了 duhao 20150925
+		high_stocks: '{{high_stocks}}'
 	});
 	view.render();
 });

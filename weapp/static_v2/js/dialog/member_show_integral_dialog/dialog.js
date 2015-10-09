@@ -48,8 +48,9 @@ W.dialog.member.MemberIntegralDialog = W.dialog.Dialog.extend({
 
     reloadLogs: function(memberId){
         W.getApi().call({
+            method: 'get',
             app: 'member',
-            api: 'member_logs/get',
+            resource: 'integral_logs',
             args: {
                 member_id: memberId
             },

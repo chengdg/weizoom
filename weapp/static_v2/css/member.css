@@ -151,14 +151,21 @@
 .xui-members-page .td-discount .form-control{
 	display: inline-block;
 }
-.xui-members-page .errorHint{
+
+.xui-members-page .td-name .errorHint{
 	text-align: center;
 	width: 80px;
-	margin-left: 95px;
+	margin-left: 30px;
 	position: relative;
-	top:-3px;
+	top: 5px;
 }
-
+.xui-members-page .td-discount .errorHint{
+	text-align: center;
+	width: 100px;
+	margin-left: 45px;
+	position: relative;
+	top: 5px;
+}
 /*
 *会员列表页面
 */
@@ -269,7 +276,7 @@
 }
 .xui-memberListPage .xui-w218,
 .xui-memberListPage .xui-col .xui-i-item select{
-
+	white-space: nowrap;
 }
 .xui-memberListPage .xui-w100{
 	width:66px!important;
@@ -509,6 +516,7 @@
 .xui-page-memberDetail .xui-notify{
 	position: relative;
 	top:6px;
+	cursor: pointer;
 }
 .xui-page-memberDetail .xui-group {
 	padding-top: 6px;
@@ -518,20 +526,6 @@
   left:187px;
   top:-15px;
   font-weight: bold;
-}
-.xui-page-memberDetail .xui-unknow{
-    position: relative;
-    left:-30px;
-    background-color: #ccc;
-    border-radius: 9px;
-    height: 18px;
-    width: 18px;
-    border:none;
-    line-height: 20px;
-    color: #ffffff;
-    font-weight: bold;
-    margin-top: 3px;
-
 }
 .xui-page-memberDetail .xui-membername{
 	width: 105px;

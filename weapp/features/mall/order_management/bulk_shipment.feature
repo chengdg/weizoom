@@ -95,7 +95,7 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.order_filter @mall.order_filter.bulk_shipments
+@mall2 @mall.order_filter @mall.order_filter.bulk_shipments @order
 Scenario: 1 对多个订单同时进行发货
 	jobs填写多个订单号和快递信息进行发货
 	1.填写信息正确,发货成功
@@ -325,7 +325,7 @@ Scenario: 1 对多个订单同时进行发货
 		"""
 
 
-@mall2 @deliver
+@mall2 @deliver @order
 Scenario: 2 对多个订单同时进行发货失败
 	jobs填写多个订单号和快递信息进行发货
 	1.填写信息有误,发货失败
@@ -442,7 +442,7 @@ Scenario: 2 对多个订单同时进行发货失败
 		"""
 
 
-@deliver @mall2
+@deliver @mall2 @order
 Scenario: 3 对修改过价格的订单进行批量发货
 	jobs对修改过价格的订单进行批量发货
 	1.填写新的订单号也可以发货成功

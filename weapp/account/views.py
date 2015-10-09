@@ -89,11 +89,11 @@ def index(request):
 		user_profile = request.user_profile
 		if not user_profile.is_mp_registered:
 			return HttpResponseRedirect('/account/')
-		elif request.user.id != request.manager.id:
-			return HttpResponseRedirect('/mall2/outline/')
-		else:
-			#add by jiangzhe 20150706 直接跳转到微信互动页面
-			return HttpResponseRedirect('/new_weixin/outline/')
+		# elif request.user.id != request.manager.id:
+		return HttpResponseRedirect('/mall2/outline/')
+		# else:
+		# 	#add by jiangzhe 20150706 直接跳转到微信互动页面
+		# 	return HttpResponseRedirect('/new_weixin/outline/')
 
 		# 	#一般用户转入首页
 		# 	todos = []

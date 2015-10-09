@@ -573,7 +573,6 @@ ul{
 
 .wui-title{
     color: #333;
-    background:#fff;
     background-size: 100% 1px;
     background-position: left bottom;
     padding: 10px;
@@ -663,7 +662,7 @@ ul.wui-relatelink li h3{
 .wui-productlist .wui-inner-titleAndprice .xui-inner-title{
     font-size: 13px;
     padding: 6px 0px 0px;
-    height: 32px;
+    height: 33px;
     color: #333;
     overflow: hidden;
 }
@@ -843,10 +842,15 @@ ul.wui-relatelink li h3{
 
 /*====type1====*/
 .wui-product .wui-block-type1 .wui-inner-titleAndprice,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice{
-    font-size: 13px;
+    font-size: 15px;
+}
+.wui-product .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span,
+.wui-productlist .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span{
+    margin-right:2px; 
 }
 .wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child{
     margin-bottom: 6px;
+    line-height: 16px;
 }
 .wui-product .wui-block-type1,.wui-productlist .wui-block-type1{
     padding-left: 10px;
@@ -1106,7 +1110,6 @@ ul.wui-relatelink li h3{
 /*火狐浏览器有影响*/
 /*===========================图片导航=============================================*/
 .wui-imagenav{
-    background: #fff;
     overflow: hidden;
     padding: 5px;
 }
@@ -1131,19 +1134,19 @@ ul.wui-relatelink li h3{
 .wui-imagenav .wui-inner-pic{
     height: 75px;
     overflow: hidden;
-    border: 1px solid #e5e5e5;
+    border: 1px solid transparent;
     border-right: none;
     box-sizing:border-box;
 }
 .wui-imagenav li:last-child .wui-inner-pic{
-    border-right: 1px solid #e5e5e5;
+    border-right: 1px solid transparent;
 }
 /*================================橱窗=========================*/
 .wui-imagedisplay{
     width: 100%;
     /*height: 213px;*/
     overflow: hidden;
-    background: #fff;
+    /*background: #fff;*/
     box-sizing:border-box;
     padding-top: 1px;
 }
@@ -1722,13 +1725,23 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     padding: 0;
     font-size: 12px;
     max-width: 700px;
-    min-height: 45px;
+    /*min-height: 45px;*/
     background-color: #fff;
 }
-.dropdown-menu .wui-confirmView dd>div{
-    float: left;
+.dropdown-menu .wui-confirmView dd{
+    display: table;
+    width: 100%;
+    padding: 7px 0;
 }
-.dropdown-menu .wui-confirmView span{
+.dropdown-menu .wui-confirmView div{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+/*.dropdown-menu .wui-confirmView dd>div{
+    float: left;
+}*/
+/*.dropdown-menu .wui-confirmView span{
     box-sizing: border-box;
     color: rgb(51, 51, 51);
     display: inline;
@@ -1743,24 +1756,17 @@ div[data-type='wepage.specialTemplate_group'] .xui-designPage-actionPanel{
     width: auto;
     word-wrap: break-word;
     margin-left: 20px;
-}
+}*/
 .dropdown-menu .wui-confirmView .xui-confirm{
     background: #1F7BBD;
     color: #fff;
-    margin: 8px 10px 10px 20px;
-    width: 50px;
-    height: 30px;
-    text-align: center;
-    border: none;
-    border-radius: 2px;  
-    font-size: 12px;
-    margin-bottom: 0;
-    vertical-align: middle;
 }
 .dropdown-menu .wui-confirmView .xui-cancel{
     background: #eee;
-    color: #333;
-    margin: 8px;
+    color: #333;    
+}
+.dropdown-menu .wui-confirmView .xui-confirm,
+.dropdown-menu .wui-confirmView .xui-cancel{
     width: 50px;
     height: 30px;
     text-align: center;

@@ -8,17 +8,31 @@
 	<fieldset class="xui-section">
         <div class="clearfix xui-inner">
 			<div class="xt-status fl" style="white-space: nowrap;">
-                    {% ifequal order.status 0 %}
-						<span class="xui-text-red em1">{{order_status_info}}</span>
-					{% endifequal %}
-					{% ifnotequal order.status 0 %}
-                        {{order_status_info}}
-                    {% endifnotequal %}
+				<span class="xui-text-red em95">{{order_status_info}}</span>
 			</div>
             <div class="fr c9 em9">
                 订单号：{{ order.order_id }}
             </div>
 		</div>
+        {% if has_sub_order %}
+           <div class="xui-inner" style="padding:0 10px 10px 10px">
+                <h2 class="mb10">
+                    收货人：<span class="xt-shipName em1">{% if order %}{{ order.ship_name }}{% endif %}</span><span class="ml15 xt-shipTel">{% if order %}{{ order.ship_tel }}{% endif %}</span>
+                </h2>
+                <div class="c9 em9">
+                    {% if order %}
+                        <span class="xt-shipArea">{{ order.area }}</span>
+                        <span class="xt-shipAddress ml5">{{ order.ship_address }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% if order.customer_message %}
+            <div class="xui-inner" style="padding:0 10px 10px 10px">
+                <h2>买家留言</h2>
+                <p class="c9 em9 mt10">{{ order.customer_message }}</p>
+            </div>
+        {% endif %} 
+        {% else %}
         <div class="clearfix xui-inner pr pr20">
             <!-- 暂无物流信息 -->
             {% if order.get_express_detail_last %}
@@ -31,8 +45,10 @@
                 暂无物流信息
             {% endif %}
         </div>
+        {% endif %}
     </fieldset>
     <!-- 收货地址 -->
+    {% if not has_sub_order %}
     <fieldset class="xui-section xui-section-title ">
         <div class="xui-inner">
             <h2 class="mb10">
@@ -52,73 +68,150 @@
         </div>
         {% endif %}
     </fieldset>
+    {% endif %}
     <!-- 收货地址 -->
 
     <!-- 订单商品列表 -->
-    <fieldset class="zoom xui-section">
-        <div class="xui-selectedProductList">
-            <ul class="clearStyle" style="padding-left:12px;">
-                {% for product in order.products %}
-                <li class="xa-product disT w"
-                    data-product-id="{{product.id}}"
-                    data-product-count="{{product.purchase_count}}"
-                    data-product-model-name="{{product.model_name}}"
-                >
-                    <div class="disTc xui-productThumbNail pr">
-                        {% if product.promotion %}
-                        {% if product.promotion.type != 'premium_sale' %}
-                            <span class="xui-giftTag">
-                            {% if product.promotion.type == 'price_cut' %}满减{% endif %}
-                            {% if product.promotion.type == 'flash_sale' %}限时抢购{% endif %}
-                            {% if product.promotion.type == 'integral_sale' %}积分抵扣{% endif %}
-                            {% if product.promotion.type == 'premium_sale:premium_product' %}赠品{% endif %}
-                            </span>
-                        {% endif %}
-                        {% endif %}
-                        {% if product.grade_discounted_money %}<span class="xui-giftTag">会员优惠</span>{% endif %}
-                        {% if not product.id %}<span class="xui-giftTag">赠品</span>{% endif %}
-                        <img src="{{product.thumbnails_url}}"/>
-                    </div>
-                    <div class="disTc xui-productInfo vt pl10">
-                        <dl class="disT w em95">
-                            <dd class="disTc xui-ellipsis-2"><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}" style="color:#333;">{{ product.name }}</a></dd>
-                            <dd class="disTc vt tr">
-                                {% if product.promotion_result.promotioned_product_price %}
-                                <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.promotion_result.promotioned_product_price }}</span></span>
-                                {% else %}
-                                <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.price }}</span></span>
-                                {% endif %}
-                            </dd>
-                        </dl>
-                        <dl class="disT w em9 mt5 c9">
-                            <dd class="disTc vt xui-ellipsis-2">
-                                {% if product.custom_model_properties %}
-                                    规格:
-                                    {% for property in product.custom_model_properties %}
-                                    <span class="mr10">{{ property.property_value }}</span>
-                                    {% endfor %}
-                                {% endif %}
-                            </dd>
+    <!-- 拆单 -->
+    {% if has_sub_order %}
+        {% for order in orders %}
+        <fieldset class="xui-section"> 
+            <div class="xui-package clearfix"><i></i><span class="vm">包裹{{ forloop.counter }}</span><span class="fr {% ifnotequal order.status 5 %}xui-text-red{% endifnotequal %}">{{order.order_status_info}}</span></div>
+            <div class="xui-selectedProductList">
+                <ul class="clearStyle" style="padding-left:12px;">
+                    {% for product in order.products %}
+                    <li class="xa-product disT w"
+                            data-product-id="{{product.id}}"
+                            data-product-count="{{product.purchase_count}}"
+                            data-product-model-name="{{product.model_name}}"
+                        >
+                        <div class="disTc xui-productThumbNail pr">
+                            {% if product.promotion %}
+                            {% if product.promotion.type != 'premium_sale' %}
+                                <span class="xui-giftTag">
+                                {% if product.promotion.type == 'price_cut' %}满减{% endif %}
+                                {% if product.promotion.type == 'flash_sale' %}限时抢购{% endif %}
+                                {% if product.promotion.type == 'integral_sale' %}积分抵扣{% endif %}
+                                {% if product.promotion.type == 'premium_sale:premium_product' %}赠品{% endif %}
+                                </span>
+                            {% endif %}
+                            {% endif %}
+                            {% if product.grade_discounted_money %}<span class="xui-giftTag">会员优惠</span>{% endif %}
+                            {% if not product.id %}<span class="xui-giftTag">赠品</span>{% endif %}
+                            <img src="{{product.thumbnails_url}}"/>
+                        </div>
+                        <div class="disTc xui-productInfo vt pl10">
+                            <dl class="disT w em95">
+                                <dd class="disTc xui-ellipsis-2"><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}" style="color:#333;">{{ product.name }}</a></dd>
+                                <dd class="disTc vt tr">
+                                    {% if product.promotion_result.promotioned_product_price %}
+                                    <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.promotion_result.promotioned_product_price }}</span></span>
+                                    {% else %}
+                                    <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.price }}</span></span>
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                            <dl class="disT w em9 mt5 c9">
+                                <dd class="disTc vt xui-ellipsis-2">
+                                    {% if product.custom_model_properties%}
+                                        规格:
+                                        {% for property in product.custom_model_properties %}
+                                        <span class="mr10">{{ property.property_value }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </dd>
 
-                            <dd class="disTc vt tr">
-                               Ｘ<span class="xt-count xa-count">{{ product.count }}</span>
-                            </dd>
+                                <dd class="disTc vt tr">
+                                   Ｘ<span class="xt-count xa-count">{{ product.count }}</span>
+                                </dd>
 
-                        </dl>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+                            </dl>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="clearfix xui-inner pr pr20" style="border-top:1px solid #dbdbdb;">
+            <!-- 暂无物流信息 -->
+            {% if order.get_express_detail_last %}
+            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" >
+                <p class="em95 c6"{% if order.status == 5 %} style="color:#55a965;"{% endif %}>{{ order.get_express_detail_last.context }}</p>
+                <p class="em85 c9"{% if order.status == 5 %} style="color:#55a965;"{% endif %}>{{ order.get_express_detail_last.ftime }}</p>
+                <span class="xui-icon xui-icon-rightarrow" style="right:12px"></span>
+            </a>
+            {% else %}
+                暂无物流信息
+            {% endif %}
         </div>
+        </fieldset>
+        {% endfor %}
+    {% else %}
+        <!-- 普通 -->
+        <fieldset class="zoom xui-section">
+            <div class="xui-selectedProductList">
+                <ul class="clearStyle" style="padding-left:12px;">
+                    {% for product in order.products %}
+                    <li class="xa-product disT w"
+                        data-product-id="{{product.id}}"
+                        data-product-count="{{product.purchase_count}}"
+                        data-product-model-name="{{product.model_name}}"
+                    >
+                        <div class="disTc xui-productThumbNail pr">
+                            {% if product.promotion %}
+                            {% if product.promotion.type != 'premium_sale' %}
+                                <span class="xui-giftTag">
+                                {% if product.promotion.type == 'price_cut' %}满减{% endif %}
+                                {% if product.promotion.type == 'flash_sale' %}限时抢购{% endif %}
+                                {% if product.promotion.type == 'integral_sale' %}积分抵扣{% endif %}
+                                {% if product.promotion.type == 'premium_sale:premium_product' %}赠品{% endif %}
+                                </span>
+                            {% endif %}
+                            {% endif %}
+                            {% if product.grade_discounted_money %}<span class="xui-giftTag">会员优惠</span>{% endif %}
+                            {% if not product.id %}<span class="xui-giftTag">赠品</span>{% endif %}
+                            <img src="{{product.thumbnails_url}}"/>
+                        </div>
+                        <div class="disTc xui-productInfo vt pl10">
+                            <dl class="disT w em95">
+                                <dd class="disTc xui-ellipsis-2"><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}" style="color:#333;">{{ product.name }}</a></dd>
+                                <dd class="disTc vt tr">
+                                    {% if product.promotion_result.promotioned_product_price %}
+                                    <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.promotion_result.promotioned_product_price }}</span></span>
+                                    {% else %}
+                                    <span class="ml15">￥<span class="xa-product-price" style="white-space:nowrap;">{{ product.price }}</span></span>
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                            <dl class="disT w em9 mt5 c9">
+                                <dd class="disTc vt xui-ellipsis-2">
+                                    {% if product.custom_model_properties%}
+                                        规格:
+                                        {% for property in product.custom_model_properties %}
+                                        <span class="mr10">{{ property.property_value }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </dd>
+
+                                <dd class="disTc vt tr">
+                                   Ｘ<span class="xt-count xa-count">{{ product.count }}</span>
+                                </dd>
+
+                            </dl>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </fieldset>
+    {% endif %}
+    <!-- 订单商品列表 -->
+    <!--{% if order.red_envelope %}
+    <fieldset class="xui-section clearfix" style="padding:9px 12px;">
+        <a class="fr {% if order.red_envelope_created %}xui-gotRedBtn{% else %}xui-toGetRedBtn{% endif %}" href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}">
+        {% if order.red_envelope_created %}最近一次领取的红包
+        {% else %}未领取的红包{% endif %}</a>
     </fieldset>
-{#    <!-- 订单商品列表 -->#}
-{#    {% if order.red_envelope %}#}
-{#    <fieldset class="xui-section clearfix" style="padding:9px 12px;">#}
-{#        <a class="fr {% if order.red_envelope_created %}xui-gotRedBtn{% else %}xui-toGetRedBtn{% endif %}" href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}">#}
-{#        {% if order.red_envelope_created %}最近一次领取的红包#}
-{#        {% else %}未领取的红包{% endif %}</a>#}
-{#    </fieldset>#}
-{#    {% endif %}#}
+    {% endif %}-->
     <!--支付方式及发票-->
     <fieldset class="xui-section xui-section-title">
         <div class="xui-inner clearfix">
@@ -193,6 +286,16 @@
         </p>
     </div>
     </fieldset>
+    {% if not has_sub_order %}
+        {% if order.status == 0 or order.status == 4  %}
+        <div style="height:50px;"></div>
+        <div class="clearfix xui-stupidBar">
+            <div class="fr xui-btnOuter">
+                {% if order.status == 0 %}
+                <!-- 待支付 -->
+                <a href="javascript:void(0);" type="button" id="cancelOrderButton" class="xui-btn xui-btn-disable">取消订单</a>
+                <a href="javascript:void(0);" type="button" id="pay_order" class="xui-btn xui-btn-danger xa-pay">支付</a>
+                {% endif %}
 
     {% if order.status == 0 or order.status == 4 or  order.status == 3 or order.status == 5%}
     <div style="height:50px;"></div>
@@ -226,7 +329,7 @@
                    <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">返回商城首页</a>
                 {% endif %} -->
         </div>
-    </div>
+        {% endif %}
     {% endif %}
     <!-- 订单价格清单 -->
 
@@ -318,6 +421,7 @@
         <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}&v=2.0">测试物流v2</a>
         <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}&is_finish=success">测试快递已收货v1</a>
         <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}&v=2.0&is_finish=success">测试快递已收货v2</a>
+        <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}&v=2.0&is_finish=abort">测试已关闭</a>
     {% endif %}
 </div>
 

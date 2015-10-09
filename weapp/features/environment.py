@@ -24,12 +24,11 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'weapp.settings'
 
 import sys
 path = os.path.abspath(os.path.join('.', '..'))
-sys.path.insert(0, path)
+#sys.path.insert(0, path)
 
 import unittest
 #import time
 from pymongo import Connection
-
 from weapp import settings
 from django.contrib.auth.models import User
 #from django.core.management import call_command
@@ -171,6 +170,7 @@ def __clear_all_app_data():
 	promotion_models.PremiumSale.objects.all().delete()
 	promotion_models.IntegralSale.objects.all().delete()
 	promotion_models.RedEnvelopeRule.objects.all().delete()
+	promotion_models.ForbiddenCouponProduct.objects.all().delete()
 
 	#商城
 	mall_models.PayInterface.objects.all().delete()
@@ -201,6 +201,7 @@ def __clear_all_app_data():
 	mall_models.ProductReview.objects.all().delete()
 	mall_models.ProductReviewPicture.objects.all().delete()
 	AccountHasWeizoomCardPermissions.objects.all().delete()
+	mall_models.Supplier.objects.all().delete()
 
 	#权限
 	auth_models.UserHasPermission.objects.all().delete()
@@ -288,6 +289,12 @@ def __clear_all_app_data():
 	#统计方面的
 	stats_models.BrandValueHistory.objects.all().delete()
 
+	weixin2_models.Session.objects.all().delete()
+	weixin2_models.Message.objects.all().delete()
+	weixin2_models.CollectMessage.objects.all().delete()
+	weixin2_models.MessageRemarkMessage.objects.all().delete()
+
+	
 	# 缓存
 	cache.clear()
 

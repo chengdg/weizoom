@@ -18,7 +18,7 @@ from core.jsonresponse import create_response
 from util import *
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class KeywordRules(resource.Resource):
     app = 'new_weixin'
@@ -59,23 +59,14 @@ class KeywordRules(resource.Resource):
                 }],
             }]
 
-            
-        else:
-            rules = Rule.get_keyword_reply_rule(request.user)
-            items = []
-            for rule in rules:
-                items.append(rule.format_to_dict())
-
-        jsons = [{
-            "name": "rule", "content": items
-        }]
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_AUTO_REPLY_NAV,
-            'rules': items,
-            'jsons': jsons
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_AUTO_REPLY_NAV,
+            #'rules': items,
+            #'jsons': jsons
         })
         return render_to_response('weixin/message/keyword_rules.html', c)
 
@@ -138,7 +129,6 @@ class KeywordRules(resource.Resource):
             jsons = [{
                 "name": "rule", "content": rules
             }]
-
             response = create_response(200)
             response.data = {
                 'items': rules,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from mall.promotion import CouponRule
+from mall.promotion.models import CouponRule
 
 __author__ = 'liupeiyu'
 
@@ -23,7 +23,7 @@ import utils as webapp_link_utils
 
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 
 class WebappLinkMenus(resource.Resource):
@@ -65,6 +65,11 @@ class WebappItemLinks(resource.Resource):
 		selected_link_target = request.GET.get('selected_link_target', '')
 		order_by = request.GET.get('sort_attr', '-id')
 
+		selected_id = 0
+		# 根据link_target获取已选的id跟type
+		selected_id, is_selected_type = webapp_link_utils.get_selected_by_link_target(request, menu_type, link_type, selected_link_target)
+		request.selected_id = selected_id
+		
 		apps_dir = os.path.join(settings.PROJECT_HOME, '../apps/customerized_apps')
 		if os.path.isdir(os.path.join(apps_dir, link_type)):
 			#如果是app
@@ -88,10 +93,7 @@ class WebappItemLinks(resource.Resource):
 				return response.get_response()
 		else:
 			objects, menu_item = webapp_link_utils.get_webapp_link_objectes_for_type(request, link_type, query, order_by)
-			selected_id = 0
-			# 根据link_target获取已选的id跟type
-			selected_id, is_selected_type = webapp_link_utils.get_selected_by_link_target(request, menu_type, link_type, selected_link_target)
-
+			
 			if link_type == "shengjing_app":
 				items = []
 				for item in objects[0]['data']:

@@ -24,7 +24,6 @@ from weapp import settings
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
-# FIRST_NAV_NAME = export.MALL_PROMOTION_FIRST_NAV
 
 FIRST_NAV_NAME = 'apps'
 
@@ -95,14 +94,24 @@ class RedEnvelopeRuleList(resource.Resource):
                     "is_warring": is_warring,
                 }
                 items.append(data)
-
+        endDate = request.GET.get('endDate', '')
+        if endDate:
+            endDate +=' 00:00'
+        promotion_status = request.GET.get('status', '-1')
+        limit_time = 1
+        if int(promotion_status) > 0:
+            limit_time = 0
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_customerized_apps(request),
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
             'second_nav_name': 'orderRedEnvelope',
             "coupon_rule_info": json.dumps(coupon_rule_info),
             "items": items,
-            "is_create": is_create
+            'endDate': endDate,
+            "is_create": is_create,
+            'promotion_status': promotion_status,
+            'limit_time': limit_time
         })
         return render_to_response('mall/editor/red_envelope_rules.html', c)
 
@@ -119,7 +128,6 @@ class RedEnvelopeRuleList(resource.Resource):
 
         is_fetch_all_rules = (not name) and (not coupon_rule_id) and (not start_date) and (not end_date)
         rules = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, is_delete=False).order_by('-id')
-
         if coupon_rule_id:
             rules = rules.filter(coupon_rule_id=coupon_rule_id)
 
@@ -190,8 +198,9 @@ class RedEnvelopeRule(resource.Resource):
             coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule.coupon_rule_id)
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': export.get_customerized_apps(request),
-                'second_nav_name': 'orderRedEnvelope',
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_APPS_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
                 'coupon_rule': coupon_rule,
                 'red_envelope_rule': red_envelope_rule,
             })
@@ -201,8 +210,9 @@ class RedEnvelopeRule(resource.Resource):
                                                                       end_date__gt=datetime.now(), limit_counts=-1)
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
-                'second_navs': export.get_customerized_apps(request),
-                'second_nav_name': 'orderRedEnvelope',
+                'second_navs': export.get_promotion_and_apps_second_navs(request),
+                'second_nav_name': export.MALL_APPS_SECOND_NAV,
+                'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
                 'coupon_rules': coupon_rules
             })
             return render_to_response('mall/editor/create_red_envelope_rule.html', c)
@@ -471,10 +481,16 @@ RULE_FILTERS = {
             'comparator': lambda rule, filter_value: int(filter_value) == rule.coupon_rule_id,
             'query_string_field': 'coupon_rule_id'
         }, {
+            'comparator': lambda promotion, filter_value: (int(filter_value) == -1) or (int(filter_value) == promotion.status),
+            'query_string_field': 'promotionStatus'
+        }, {
+            'comparator': lambda promotion, filter_value: (int(filter_value) == -1) or (int(filter_value) == promotion.limit_time),
+            'query_string_field': 'limitTime'
+        }, {
             'comparator': lambda rule, filter_value: filter_value <= rule.start_time.strftime("%Y-%m-%d %H:%M"),
             'query_string_field': 'startDate'
         }, {
-            'comparator': lambda rule, filter_value: filter_value >= rule.end_time.strftime("%Y-%m-%d %H:%M"),
+            'comparator': lambda rule, filter_value: filter_value >= rule.end_time.strftime("%Y-%m-%d %H:%M") or filter_value == '',
             'query_string_field': 'endDate'
         }
     ]

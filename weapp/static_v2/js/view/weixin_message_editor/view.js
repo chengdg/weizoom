@@ -56,7 +56,8 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 			type: 'text',
 			maxCount: this.editorMaxCount,
 			width: width,
-			height: height
+			height: height,
+			autoHeight:false,
 		});
 		// this.editor.bind('contentchange', function() {
 		// 	this.textMessage.set('text', this.editor.getHtmlContent());

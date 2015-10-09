@@ -82,6 +82,7 @@ def get_product_response_from_web_page(context, product_name):
         owner_id=context.webapp_owner_id,
         name=product_name)
     response = context.client.get('/mall2/product/?id=%d' % existed_product.id)
+
     return response
 
 
@@ -120,7 +121,7 @@ def get_order_has_products(context):
 
 def get_latest_order():
     try:
-        return Order.objects.all().order_by('-id')[0]
+        return Order.objects.filter(origin_order_id__lte=0).order_by('-id')[0]
     except:
         return None
 

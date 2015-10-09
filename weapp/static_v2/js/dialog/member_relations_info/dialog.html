@@ -14,8 +14,9 @@
 				<div
 					data-ui-role="advanced-table"
 					data-app="member"
-					data-api="follow_relations/get"
+					data-resource="follow_relations"
 					data-template-id="#member-relation-tmpl-src"
+					data-args='{"sort_attr":"-created_at"}'
 					data-enable-paginator="true"
 					data-enable-sort="false"
 					data-selectable="false"
@@ -35,6 +36,20 @@
 	</div>
 </script>
 <script id="member-relation-tmpl-src" type="text/x-jquery-tmpl">
+		<!--增加计算follow_members的人数、下单人数、成交金额-->
+		{{if data.population}}
+			<div >
+				{{if data.only_fans==0}}
+					<div class="xui-fontGary fl cursor-text"><strong>好友数：${data.population}</strong></div>
+				{{else}}
+					<div class="xui-fontGary fl cursor-text"><strong>推荐人数：${data.population}</strong></div>
+				{{/if}}
+				<div class="ml50 xui-fontGary fl cursor-text"><strong>下单人数：${data.population_order}</strong></div>
+				<div class="ml50 xui-fontGary fl cursor-text"><strong>成交金额：￥${data.amount}</strong></div>
+			</div>
+		{{/if}}
+		<div class="cb mb5"></div>
+		<!--增加计算follow_members的人数、下单人数、成交金额-->
 		<table style="width:100%;border:1px solid #ddd" class="table xb-stripedTable xb-noBorder">
 				<thead style="background:#c8d2e5;">
 				<tr class="">
@@ -55,11 +70,11 @@
 							<tr data-id="${log.id}">
 								<td>
 									<div style="display:table ;line-height:42px;">
-										<a target="_blank" href="/member/member_detail/edit/?id=${id}" style="display: table-cell;vertical-align:top">
+										<a target="_blank" href="/member/detail/?id=${id}" style="display: table-cell;vertical-align:top">
 										<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 										</a>
 										<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">
-											<a target="_blank" href="/member/member_detail/edit/?id=${id}" >{{html username}}</a>
+											<a target="_blank" href="/member/detail/?id=${id}" >{{html username}}</a>
 											<div>${grade_name}</div>
 										</div>
 									</div>
@@ -86,7 +101,7 @@
 
 							    {{if data.only_fans==0}}
 									<td >
-										<a target="_blank" href="/member/member_detail/edit/?id=${log.father_id}" >{{html log.father_name}}</a>
+										<a target="_blank" href="/member/detail/?id=${log.father_id}" >{{html log.father_name}}</a>
 									</td>
 								{{/if}}
 							    <td >${log.created_at} </td>

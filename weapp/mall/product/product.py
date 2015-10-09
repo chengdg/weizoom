@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from mall.promotion import models as promotion_model
 from watchdog.utils import watchdog_warning
 
 from core import paginator
@@ -54,8 +55,9 @@ class ProductList(resource.Resource):
         c = RequestContext(
             request,
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
-             'second_navs': export.get_second_navs(request),
-             'has_product': has_product}
+             'second_navs': export.get_mall_product_second_navs(request),
+             'has_product': has_product,
+             'high_stocks': request.GET.get('high_stocks', '-1')}
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
             c.update({'second_nav_name': export.PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV})
@@ -276,6 +278,13 @@ class Product(resource.Resource):
 
             #获取商品分类信息
             categories = product.categories
+
+            # 限时抢购的商品不能修改起购数量
+            for promotion in [relation.promotion for relation in
+                              promotion_model.ProductHasPromotion.objects.filter(product_id=product.id)]:
+                if promotion.type == promotion_model.PROMOTION_TYPE_FLASH_SALE and promotion.status == promotion_model.PROMOTION_STATUS_STARTED:
+                    product.is_in_flash_sale = True
+                    break
         else:
             product = {}
             categories = models.ProductCategory.objects.filter(
@@ -321,16 +330,18 @@ class Product(resource.Resource):
             owner=request.manager)
 
         _type = request.GET.get('type', 'object')
+        supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
-            'second_navs': export.get_second_navs(request),
+            'second_navs': export.get_mall_product_second_navs(request),
             'second_nav_name': export.PRODUCT_ADD_PRODUCT_NAV,
             'product': product,
             'categories': categories,
             'postage': '',
             'pay_interface_config': pay_interface_config,
             'postage_config_info': postage_config_info,
-            'property_templates': property_templates
+            'property_templates': property_templates,
+            'supplier': supplier
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
@@ -360,6 +371,10 @@ class Product(resource.Resource):
         else:
             min_limit = float(min_limit)
 
+        purchase_price = request.POST.get("purchase_price", '')
+
+        if purchase_price == '':
+            purchase_price = 0
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -377,7 +392,9 @@ class Product(resource.Resource):
             unified_postage_money=unified_postage_money,
             weshop_sync=request.POST.get('weshop_sync', 0),
             stocks=min_limit,
-            is_member_product=request.POST.get("is_member_product", False) == 'on'
+            is_member_product=request.POST.get("is_member_product", False) == 'on',
+            supplier=request.POST.get("supplier", 0),
+            purchase_price=purchase_price
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -529,6 +546,9 @@ class Product(resource.Resource):
             min_limit = 0
         else:
             min_limit = float(min_limit)
+        purchase_price = request.POST.get("purchase_price", '')
+        if purchase_price == '':
+            purchase_price = 0
         if request.POST.get('weshop_sync', None):
             models.Product.objects.record_cache_args(
                 ids=[product_id]
@@ -550,7 +570,9 @@ class Product(resource.Resource):
                 postage_type=postage_type,
                 weshop_sync=request.POST.get('weshop_sync', None),
                 stocks=min_limit,
-                is_member_product=request.POST.get("is_member_product", False) == 'on'
+                is_member_product=request.POST.get("is_member_product", False) == 'on',
+                supplier=request.POST.get("supplier", 0),
+                purchase_price=purchase_price,
 
             )
         else:
@@ -573,7 +595,9 @@ class Product(resource.Resource):
                 unified_postage_money=unified_postage_money,
                 postage_type=postage_type,
                 stocks=min_limit,
-                is_member_product=request.POST.get("is_member_product", False) == 'on'
+                is_member_product=request.POST.get("is_member_product", False) == 'on',
+                supplier=request.POST.get("supplier", 0),
+                purchase_price=purchase_price,
             )
 
         # 处理商品排序
@@ -766,7 +790,7 @@ class Product(resource.Resource):
             url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_RECYCLED, )
             return HttpResponseRedirect(url)
 
-class ProductFilterParams(resource.Resource):
+class ProductPos(resource.Resource):
     app = 'mall2'
     resource = 'product_pos'
 

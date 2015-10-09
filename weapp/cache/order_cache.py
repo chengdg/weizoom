@@ -28,7 +28,7 @@ def get_count_of_unfinished_product_review_picture(webapp_user_id):
     '''
     count = 0
     # 得到用户所有已完成订单
-    orders = mall_models.Order.objects.filter(webapp_user_id=webapp_user_id, status=mall_models.ORDER_STATUS_SUCCESSED)
+    orders = mall_models.Order.by_webapp_user_id(webapp_user_id).filter(status=mall_models.ORDER_STATUS_SUCCESSED)
 
     # 得到用户所以已完成订单中的商品order_has_product.id列表
     orderIds = [order.id for order in orders]
@@ -55,10 +55,10 @@ def _get_order_stats_fromdb(cache_key, webapp_user_id):
 		try:
 			# TODO: 需要优化：一次SQL，获取全部数据
 			stats = {
-				"total_count": Order.objects.filter(webapp_user_id=webapp_user_id).count(),
-				"not_paid": Order.objects.filter(webapp_user_id=webapp_user_id, status=ORDER_STATUS_NOT).count(),
-				"not_ship_count": Order.objects.filter(webapp_user_id=webapp_user_id, status=ORDER_STATUS_PAYED_NOT_SHIP).count(),
-				"shiped_count": Order.objects.filter(webapp_user_id=webapp_user_id, status=ORDER_STATUS_PAYED_SHIPED).count(),
+				"total_count": Order.by_webapp_user_id(webapp_user_id).count(),
+				"not_paid": Order.by_webapp_user_id(webapp_user_id).filter(status=ORDER_STATUS_NOT).count(),
+				"not_ship_count": Order.by_webapp_user_id(webapp_user_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count(),
+				"shiped_count": Order.by_webapp_user_id(webapp_user_id).filter(status=ORDER_STATUS_PAYED_SHIPED).count(),
 				"review_count": get_count_of_unfinished_product_review_picture(webapp_user_id),
 			}
 			ret = {
@@ -105,13 +105,13 @@ def get_order_stats(webapp_user_id):
 		return (stats["total_count"], stats["not_paid"], stats["not_ship_count"], stats["shiped_count"], stats["review_count"])
 	else:
 		# 总订单数
-		history_order_count = Order.objects.filter(webapp_user_id=webapp_user_id).count()
+		history_order_count = Order.by_webapp_user_id(webapp_user_id).count()
 		# "待支付"订单数量
-		not_payed_order_count = Order.objects.filter(webapp_user_id=webapp_user_id, status=ORDER_STATUS_NOT).count()
+		not_payed_order_count = Order.by_webapp_user_id(webapp_user_id).filter(status=ORDER_STATUS_NOT).count()
 		# "待发货"订单数量
-		not_ship_order_count = Order.objects.filter(webapp_user_id=webapp_user_id, status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+		not_ship_order_count = Order.by_webapp_user_id(webapp_user_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
 		# "已发货"订单数量
-		shiped_order_count = Order.objects.filter(webapp_user_id=webapp_user_id, status=ORDER_STATUS_PAYED_SHIPED).count()
+		shiped_order_count = Order.by_webapp_user_id(webapp_user_id).filter(status=ORDER_STATUS_PAYED_SHIPED).count()
 		# "待评价" 订单数量
 		review_count = get_count_of_unfinished_product_review_picture(webapp_user_id)
 

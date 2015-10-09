@@ -70,6 +70,7 @@ def step_impl(context, user, message):
 		"weixin_user_fakeid": "	weizoom_default_fakeid",
 		"weixin_user_name": "weizoom"
 	}
+
 	response = client.post(url, data)
 	context.qa_result = json.loads(response.content)
 
@@ -79,12 +80,12 @@ def step_impl(context, user, mp_user_name, message):
 	if hasattr(context, 'client') and (context.client.user.username != user):
 		context.client.logout()
 	# 用user登录是为了在模拟器中辨识user身份
-	context.client = bdd_util.login(user)
+	context.client = bdd_util.login(mp_user_name)
 	client = context.client
 
 	mp_user = User.objects.get(username=mp_user_name)
 	profile = UserProfile.objects.get(user_id=mp_user.id)
-
+	time.sleep(1)
 	url = '/simulator/api/weixin/send/'
 	data = {
 		"content": message,
@@ -93,7 +94,7 @@ def step_impl(context, user, mp_user_name, message):
 		#"weixin_user_fakeid": "weizoom_default_fakeid",
 		"weixin_user_fakeid": "weizoom_fakeid_{}".format(user),
 		#"weixin_user_name": "weizoom"
-		"weixin_user_name": user
+		"weixin_user_name": "%s_%s" % (user,mp_user_name)
 	}
 	response = client.post(url, data)
 	context.qa_result = json.loads(response.content)
@@ -134,6 +135,11 @@ def step_impl(context, user, mp_user_name):
 	__fill_member_info(context, user, openid)
 	#把会员设置为真实用户 add by duhao 2015-07-29
 	Member.objects.update(is_for_test=False)
+	# if context.text:
+	# 	json_date = json.loads(context.text)
+	# 	if len(json_date) > 0:
+	# 		content = json_date[0]
+	# 		context.tc.assertEquals(True, content['reply_content'] in response_data['data'])
 
 
 @when(u"{user}关注{mp_user_name}的公众号于'{date}'")
@@ -197,15 +203,18 @@ def step_impl(context, user, mp_user_name):
 @then(u"{user}收到自动回复'{answer}'")
 def step_impl(context, user, answer):
 	result = context.qa_result["data"]
-	beg = result.find('<div class="content">') + len('<div class="content">')
-	end = result.find('</div>', beg)
-	actual = result[beg:end]
-
+	# beg = result.find('<div class="content">') + len('<div class="content">')
+	# end = result.find('</div>', beg)
+	# actual  = result[beg:end]
+	actual = result
+	if answer:
+		answer = answer.strip()
 	expected = answer
 	if expected == 'None':
 		expected = ''
-	context.tc.assertEquals(expected, actual)
 
+	# context.tc.assertEquals(expected, actual)
+	context.tc.assertEquals(True, expected in actual)
 
 @then(u"{user}收到自动回复")
 def step_impl(context, user):

@@ -30,11 +30,6 @@ def step_impl(context, webapp_user_name):
     actual = __sort(actual)
     expected = __sort(expected)
 
-    # print("*"*40, "get_webapp_coupon", "*"*40)
-    # from pprint(import pprint)
-    # pprint(expected)
-    # pprint(coupons)
-    # print("*"*100)
     bdd_util.assert_list(expected, actual)
 
 
