@@ -2094,12 +2094,13 @@ class PayInterface(models.Model):
 				webapp_owner_id,
 				order.order_id,
 				self.id)
-		elif PAY_INTERFACE_WEIZOOM_COIN == self.type:
-			return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(
-				webapp_owner_id,
-				PAY_INTERFACE_WEIZOOM_COIN,
-				self.id,
-				order.order_id)
+		# jz 2015-10-09
+		# elif PAY_INTERFACE_WEIZOOM_COIN == self.type:
+		# 	return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(
+		# 		webapp_owner_id,
+		# 		PAY_INTERFACE_WEIZOOM_COIN,
+		# 		self.id,
+		# 		order.order_id)
 		else:
 			return ''
 

@@ -272,7 +272,8 @@ def pay_order(request):
 		'is_in_testing': settings.IS_IN_TESTING,
 		'is_hide_weixin_option_menu': True,
 		'hide_non_member_cover': True,
-		'is_show_success': request.GET.get('isShowSuccess', False)
+		# jz 2015-10-09
+		# 'is_show_success': request.GET.get('isShowSuccess', False)
 	})
 	if hasattr(request, 'is_return_context'):
 		return c
@@ -837,36 +838,37 @@ def list_pay_interfaces(request):
 
 	request.should_hide_footer = True
 
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': True,
+		'page_title': u'支付列表',
+		'order_id': request.GET['order_id'],
+		'pay_interfaces': pay_interfaces,
+		'hide_non_member_cover': True
+	})
+	return render_to_response('%s/pay_interfaces.html' % request.template_dir, c)
+	# jz 2015-10-09
 	#add by bert at 17.0 针对微众商城的用户直接跳转到微众卡支付页面不显示支付列表
-	if request.user.is_weizoom_mall is False:
-		c = RequestContext(request, {
-			'is_hide_weixin_option_menu': True,
-			'page_title': u'支付列表',
-			'order_id': request.GET['order_id'],
-			'pay_interfaces': pay_interfaces,
-			'hide_non_member_cover': True
-		})
-		return render_to_response('%s/pay_interfaces.html' % request.template_dir, c)
-	else:
-		order_id = request.GET.get('order_id', -1)
+	# if request.user.is_weizoom_mall is False:
+	# else:
+	# 	order_id = request.GET.get('order_id', -1)
 
-		try:
-			order = Order.objects.get(id=order_id)
-		except:
-			raise Http404(u'订单%s不存在' % order_id)
+	# 	try:
+	# 		order = Order.objects.get(id=order_id)
+	# 	except:
+	# 		raise Http404(u'订单%s不存在' % order_id)
 
-		page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
-		c = RequestContext(request, {
-			'order_id': order.order_id,
-			'is_in_weixin': request.user.is_from_weixin,
-			'page_url': page_url,
-			'page_title': u'支付列表',
-			'is_hide_weixin_option_menu': True,
-			'hide_non_member_cover': True
-		})
+	# 	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
+	# 	c = RequestContext(request, {
+	# 		'order_id': order.order_id,
+	# 		'is_in_weixin': request.user.is_from_weixin,
+	# 		'page_url': page_url,
+	# 		'page_title': u'支付列表',
+	# 		'is_hide_weixin_option_menu': True,
+	# 		'hide_non_member_cover': True
+	# 	})
 
-		response = render_to_response('mall/templates/webapp/default/pay_weizoonpay_order.html', c)
-		return response
+	# 	response = render_to_response('mall/templates/webapp/default/pay_weizoonpay_order.html', c)
+	# 	return response
 
 
 ########################################################################
@@ -892,67 +894,62 @@ def pay_alipay_order(request):
 
 
 ########################################################################
+# jz 2015-10-10
 # pay_weizoompay_order: 处理微众卡支付
 ########################################################################
-def pay_weizoompay_order(request):
-	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
-	request.should_hide_footer = True
-	c = RequestContext(request, {
-		'order_id': request.GET['order_id'],
-		'is_in_weixin': request.user.is_from_weixin,
-		'page_url': page_url,
-		'is_hide_weixin_option_menu': True
-	})
+# def pay_weizoompay_order(request):
+# 	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
+# 	request.should_hide_footer = True
+# 	c = RequestContext(request, {
+# 		'order_id': request.GET['order_id'],
+# 		'is_in_weixin': request.user.is_from_weixin,
+# 		'page_url': page_url,
+# 		'is_hide_weixin_option_menu': True
+# 	})
+# 	response = render_to_response('%s/pay_weizoonpay_order.html' % request.template_dir, c)
+# 	return response
 
-	response = render_to_response('%s/pay_weizoonpay_order.html' % request.template_dir, c)
-	return response
 
-from core import core_setting
-def get_weizoompay_confirm(request):
-	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
-	request.should_hide_footer = True
-	auth_key = request.COOKIES.get(core_setting.WEIZOOM_CARD_AUTH_KEY, None)
-	order_id = request.GET.get('order_id','-1')
-	try:
-		order = Order.objects.get(order_id = order_id)
-	except:
-		raise Http404(u'订单%s不存在' % order_id)
-
-	card_id = request.GET.get('card_id', -1)
-
-	if weizoom_card_model.WeizoomCard.objects.filter(id=card_id).count() > 0 and weizoom_card_model.WeizoomCardUsedAuthKey.is_can_pay(auth_key, card_id):
-		weizoom_card =  weizoom_card_model.WeizoomCard.objects.get(id=card_id)
-	else:
-		c = RequestContext(request, {
-			'order_id': order.order_id,
-			'is_in_weixin': request.user.is_from_weixin,
-			'page_url': page_url
-			})
-		return render_to_response('%s/pay_weizoonpay_order.html' % request.template_dir, c)
-
-	is_can_pay = True if weizoom_card.money >= order.final_price else False
-
-	c = RequestContext(request, {
-		'is_in_weixin': request.user.is_from_weixin,
-		'page_url': page_url,
-		'weizoom_card': weizoom_card,
-		'order': order,
-		'is_can_pay':is_can_pay,
-		'is_hide_weixin_option_menu': True
-	})
-
-	response = render_to_response('%s/weizoonpay_order_confirm.html' % request.template_dir, c)
-
-	return response
-
-def get_weizoomcard_change_intr(request):
-	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
-	c = RequestContext(request, {
-		'is_in_weixin': request.user.is_from_weixin,
-		'page_url': page_url,
-		'is_hide_weixin_option_menu': False
-	})
-	return render_to_response('%s/weizoomcard_change_intr.html' % request.template_dir, c)
+# jz 2015-10-10
+# from core import core_setting
+# def get_weizoompay_confirm(request):
+# 	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
+# 	request.should_hide_footer = True
+# 	auth_key = request.COOKIES.get(core_setting.WEIZOOM_CARD_AUTH_KEY, None)
+# 	order_id = request.GET.get('order_id','-1')
+# 	try:
+# 		order = Order.objects.get(order_id = order_id)
+# 	except:
+# 		raise Http404(u'订单%s不存在' % order_id)
+# 	card_id = request.GET.get('card_id', -1)
+# 	if weizoom_card_model.WeizoomCard.objects.filter(id=card_id).count() > 0 and weizoom_card_model.WeizoomCardUsedAuthKey.is_can_pay(auth_key, card_id):
+# 		weizoom_card =  weizoom_card_model.WeizoomCard.objects.get(id=card_id)
+# 	else:
+# 		c = RequestContext(request, {
+# 			'order_id': order.order_id,
+# 			'is_in_weixin': request.user.is_from_weixin,
+# 			'page_url': page_url
+# 			})
+# 		return render_to_response('%s/pay_weizoonpay_order.html' % request.template_dir, c)
+# 	is_can_pay = True if weizoom_card.money >= order.final_price else False
+# 	c = RequestContext(request, {
+# 		'is_in_weixin': request.user.is_from_weixin,
+# 		'page_url': page_url,
+# 		'weizoom_card': weizoom_card,
+# 		'order': order,
+# 		'is_can_pay':is_can_pay,
+# 		'is_hide_weixin_option_menu': True
+# 	})
+# 	response = render_to_response('%s/weizoonpay_order_confirm.html' % request.template_dir, c)
+# 	return response
+# def get_weizoomcard_change_intr(request):
+# 	page_url = 'http://%s%s?%s' % (request.META['HTTP_HOST'], request.path, request.META['QUERY_STRING'])
+# 	c = RequestContext(request, {
+# 		'is_in_weixin': request.user.is_from_weixin,
+# 		'page_url': page_url,
+# 		'is_hide_weixin_option_menu': False
+# 	})
+# 	return render_to_response('%s/weizoomcard_change_intr.html' % request.template_dir, c)
 
 
 ########################################################################

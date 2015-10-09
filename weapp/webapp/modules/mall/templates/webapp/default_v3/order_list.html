@@ -22,9 +22,10 @@
                 <div class="xui-list xt-orderList">
                     <ul>
                         {% for order in orders %}
-                        <li>
+                        <li data-status="{{order.status}}">
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                                 <div class="clearfix xui-btLine xui-orderState  em95">
+                                    {# jz 2015-10-09 #}
                                     <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
                                     <div class="xt-status fl">
                                         {% ifequal order.status 0 %}
@@ -137,15 +138,16 @@
                 </div>
 
             </div>
-            <div class="wui-swiper-slide">
+            <div class="wui-swiper-slide" data-status="0">
                 <div class="xui-list xt-orderList">
-                    <ul>
+                    {# jz 2015-10-09 #}
+                    <!-- <ul>
                         {% for order in orders %}
                         {% ifequal order.status 0 %}
                         <li>
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                                 <div class="clearfix xui-btLine  xui-orderState  em95">
-                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="fl">订单号：{{ order.order_id }}</div>
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">待支付</span>
                                     </div>
@@ -204,22 +206,23 @@
                         </li>
                         {% endifequal %}
                         {% endfor %}
-                    </ul>
+                    </ul> -->
                 </div>
                 <div class="xa-emptyOrder hidden">
                     <div class="xui-errorInfo xa-errorInfo"></div>
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
                 </div>
             </div>
-            <div class="wui-swiper-slide">
+            <div class="wui-swiper-slide" data-status="3">
                 <div class="xui-list xt-orderList">
-                <ul>
+                {# jz 2015-10-09 #}
+                <!-- <ul>
                     {% for order in orders %}
                     {% ifequal order.status 3 %}
                     <li>
                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                             <div class="clearfix xui-btLine xui-orderState  em95">
-                                <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                <div class="fl">订单号：{{ order.order_id }}</div>
                                 <div class="xt-status fl">
                                     <span class="xui-text-red">待发货</span>
                                     {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
@@ -274,22 +277,23 @@
                     </li>
                     {% endifequal %}
                     {% endfor %}
-                </ul>
+                </ul> -->
                 </div>
                <div class="xa-emptyOrder hidden">
                     <div class="xui-errorInfo xa-errorInfo"></div>
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
                 </div>
             </div>
-            <div class="wui-swiper-slide">
+            <div class="wui-swiper-slide" data-status="4">
                 <div class="xui-list xt-orderList">
-                    <ul>
+                    {# jz 2015-10-09 #}
+                    <!-- <ul>
                     {% for order in orders %}
                         {% ifequal order.status 4 %}
                         <li>
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                                 <div class="clearfix xui-btLine xui-orderState  em95">
-                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="fl">订单号：{{ order.order_id }}</div>
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">已发货</span>
                                         {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
@@ -358,9 +362,9 @@
                         </li>
                         {% endifequal %}
                         {% endfor %}
-                    </ul>
+                    </ul> -->
                 </div>
-               <div class="xa-emptyOrder hidden">
+                <div class="xa-emptyOrder hidden">
                     <div class="xui-errorInfo xa-errorInfo"></div>
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
                 </div>
@@ -483,14 +487,33 @@ $(document).ready(function($) {
             });
         }
     });
+    var status2order = [];
+    $(".wui-swiper-slide").each(function(){
+        var $el = $(this);
+        if($el.data('status')){
+            status2order[$el.data('status')] = $('<ul/>');
+        }
+    });
+    $('li').each(function(){
+        var $el = $(this);
+        if(status2order[$el.data('status')]){
+            status2order[$el.data('status')].append($el.clone());
+        }
+    });
     /**
      * 是否为空的数据
      */
     $(".wui-swiper-slide").each(function(){
         var $el = $(this);
-        var length = $el.find('li').length;
+        if(status2order[$el.data('status')]){
+            length = status2order[$el.data('status')].find('li').length;
+        }else{
+            length = $el.find('li').length;
+        }
         if (length === 0) {
             $el.find('.xa-emptyOrder').show();
+        }else{
+            $el.find('.xt-orderList').append(status2order[$el.data('status')]);
         }
     })
     $('.update_order_cancel').click(function(event) {
