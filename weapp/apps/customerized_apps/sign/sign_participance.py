@@ -17,7 +17,7 @@ import models as app_models
 import export
 from apps import request_util
 from modules.member import integral as integral_api
-from mall.promotion import utils as mall_api, CouponRule
+from mall.promotion.models import CouponRule
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from mall.promotion import CouponRule
+from mall.promotion.models import CouponRule
 
 __author__ = 'liupeiyu'
 
