@@ -85,6 +85,7 @@ class SignParticipance(models.Document):
 						serial_coupon_name = value['name']
 		user_prize = self.prize
 		temp_coupon_list = user_prize['coupon'].split(',')
+		temp_coupon_list = [] if temp_coupon_list == [''] else temp_coupon_list #防止出现[''].append(x)再用join时出现前置逗号的问题
 		#若命中连续签到，则不奖励每日签到
 		if bingo == curr_serial_count:
 			user_prize['integral'] = int(user_prize['integral']) + serial_integral
