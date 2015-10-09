@@ -303,7 +303,8 @@ class RedEnvelopeParticipances(resource.Resource):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
-            'second_nav_name': 'orderRedEnvelope',
+            'second_nav_name': export.MALL_APPS_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
             'has_data': has_data,
             'new_member_count': new_member_count,
             'received_count': received_count,
