@@ -320,7 +320,7 @@ class RedEnvelopeParticipances(resource.Resource):
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': 'id',
+			'sortAttr': request.GET.get('sort_attr', 'id'),
 			'data': {}
 		}
         response = create_response(200)
