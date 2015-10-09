@@ -252,6 +252,7 @@ def build_follow_member_basic_json(follow_member, member_id):
 		'father_id': father_id
 	}
 
+
 class MemberList(resource.Resource):
 	app = 'member'
 	resource = 'member_list'
