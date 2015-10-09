@@ -4,7 +4,7 @@
 <div 
 	class="wa-page {{component.model.class}} {% if not component.model.background %}xui-default-background{% endif %}" 
     data-page-title="{{component.model.site_title}}"
-	{% if component.model.background %}style="background-image: url({{component.model.background}})"{% endif %}
+    style="background-color: {{component.model.background_color}}; {% if component.model.background %}background-image: url({{component.model.background}}){% endif %}"
 >
 {% if in_production_mode %}
     {% for sub_component in component.components %}
