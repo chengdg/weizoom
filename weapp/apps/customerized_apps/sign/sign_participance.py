@@ -66,6 +66,27 @@ class SignParticipance(resource.Resource):
 			return_data = signer.do_signment(sign)
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
 				response = create_response(200)
+				response.data = {
+					'serial_count': return_data['serial_count'],
+					'daily_prize': {
+						'integral': return_data['daily_integral'],
+						'coupon': {
+							'id': return_data['daily_coupon_id'],
+							'name': return_data['daily_coupon_name']
+						}
+					},
+				}
+				if return_data['next_serial_count'] != 0:
+					response.data['next_serial_prize'] = {
+						'count': return_data['next_serial_count'],
+						'prize': {
+							'integral': return_data['next_serial_integral'],
+							'coupon': {
+								'id': return_data['next_serial_coupon_id'],
+								'name': return_data['next_serial_coupon_name']
+							}
+						}
+					}
 			else:
 				response.errMsg = return_data['errMsg']
 		return response.get_response()

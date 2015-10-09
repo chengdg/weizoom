@@ -47,28 +47,39 @@ class SignParticipance(models.Document):
 		if self.serial_count >= self.top_serial_count:
 			curr_serial_count = user_update_data['set__top_serial_count'] = int(self.serial_count) + 1
 		#更新prize
-		daily_integral = serial_integral = 0
-		daily_coupon_id = serial_coupon_id = ''
-		daily_coupon_name = serial_coupon_name = ''
+		daily_integral = serial_integral = next_serial_integral = next_serial_count = 0
+		daily_coupon_id = serial_coupon_id = next_serial_coupon_id = ''
+		daily_coupon_name = serial_coupon_name = next_serial_coupon_name = ''
 		#首先获取奖项配置
 		prize_settings = sign.prize_settings
 		bingo = 0
+		flag = False
 		for name in sorted(prize_settings.keys()):
 			setting = prize_settings[name]
+			if flag or int(name)>curr_serial_count:
+				next_serial_count = name
+				for type, value in setting.items():
+					if type == 'integral':
+						next_serial_integral = value
+					elif type == 'coupon':
+						next_serial_coupon_id = value['id'] if value != '' else ''
+						next_serial_coupon_name = value['name']
+				break
 			if int(name) == 0:
 				#每日奖励和达到连续签到要求的奖励
 				for type, value in setting.items():
 					if type == 'integral':
-						daily_integral += int(value)
+						daily_integral = int(value)
 					elif type == 'coupon':
 						daily_coupon_id = value['id'] if value != '' else ''
 						daily_coupon_name = value['name']
 			if int(name) == curr_serial_count:
 				#达到连续签到要求的奖励
 				bingo = curr_serial_count
+				flag = True
 				for type, value in setting.items():
 					if type == 'integral':
-						serial_integral += int(value)
+						serial_integral = int(value)
 					elif type == 'coupon':
 						serial_coupon_id = value['id'] if value != '' else ''
 						serial_coupon_name = value['name']
@@ -76,11 +87,11 @@ class SignParticipance(models.Document):
 		temp_coupon_list = user_prize['coupon'].split(',')
 		#若命中连续签到，则不奖励每日签到
 		if bingo == curr_serial_count:
-			user_prize['integral'] = int(user_prize['integral']) + daily_integral
-			temp_coupon_list.append(daily_coupon_name)
-		else:
 			user_prize['integral'] = int(user_prize['integral']) + serial_integral
-			temp_coupon_list.append(serial_coupon_name)
+			temp_coupon_list.append(serial_coupon_name) if serial_coupon_name else None
+		else:
+			user_prize['integral'] = int(user_prize['integral']) + daily_integral
+			temp_coupon_list.append(daily_coupon_name) if daily_coupon_name else None
 
 		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
@@ -95,6 +106,10 @@ class SignParticipance(models.Document):
 		return_data['serial_integral'] = serial_integral
 		return_data['serial_coupon_id'] = serial_coupon_id
 		return_data['serial_coupon_name'] = serial_coupon_name
+		return_data['next_serial_count'] = next_serial_count
+		return_data['next_serial_integral'] = next_serial_integral
+		return_data['next_serial_coupon_id'] = next_serial_coupon_id
+		return_data['next_serial_coupon_name'] = next_serial_coupon_name
 		return_data['reply_content'] = sign.reply['content']
 		return_data['hit_serial_count'] = bingo
 		return_data['serial_count'] = self.serial_count
@@ -135,7 +150,6 @@ class Sign(models.Document):
 		:return: html片段
 		"""
 		return_html = []
-		1/0
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
 			if sign.status != 1:
