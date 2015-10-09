@@ -573,7 +573,6 @@ ul{
 
 .wui-title{
     color: #333;
-    background:#fff;
     background-size: 100% 1px;
     background-position: left bottom;
     padding: 10px;
@@ -1111,7 +1110,6 @@ ul.wui-relatelink li h3{
 /*火狐浏览器有影响*/
 /*===========================图片导航=============================================*/
 .wui-imagenav{
-    background: #fff;
     overflow: hidden;
     padding: 5px;
 }
@@ -1136,12 +1134,12 @@ ul.wui-relatelink li h3{
 .wui-imagenav .wui-inner-pic{
     height: 75px;
     overflow: hidden;
-    border: 1px solid #e5e5e5;
+    border: 1px solid transparent;
     border-right: none;
     box-sizing:border-box;
 }
 .wui-imagenav li:last-child .wui-inner-pic{
-    border-right: 1px solid #e5e5e5;
+    border-right: 1px solid transparent;
 }
 /*================================橱窗=========================*/
 .wui-imagedisplay{
