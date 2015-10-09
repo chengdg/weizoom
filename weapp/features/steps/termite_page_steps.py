@@ -56,6 +56,36 @@ def step_impl(context, user, page_name):
 	page = json.loads(context.text)
 	_save_page(context, user, page)
 
+@When(u"{user}删除微页面'{page_name}'")
+def step_impl(context, user, page_name):
+	user = context.client.user
+	project = webapp_models.Project.objects.get(owner=user, site_title=page_name)
+
+	context.client.post("/termite2/api/project/?_method=delete",{"id": project.id})
+
+
+@When(u"{user}修改微页面标题'{page_name}'")
+def step_impl(context, user, page_name):
+	user = context.client.user
+	project = webapp_models.Project.objects.get(owner=user, site_title=page_name)
+	new_name = json.loads(context.text)["name"]
+
+	data = {
+		"field": "site_title", 
+		"id": project.id,
+		"value": new_name
+	}
+	context.client.post("/termite2/api/project/", data)
+
+
+@When(u"{user}设置主页'{page_name}'")
+def step_impl(context, user, page_name):
+	user = context.client.user
+	project = webapp_models.Project.objects.get(owner=user, site_title=page_name)
+
+	data = {"id": project.id}
+	context.client.post("/termite2/api/active_project/?_method=put", data)
+
 
 @Then(u"{user}能获取微页面列表")
 def step_impl(context, user):
@@ -65,18 +95,17 @@ def step_impl(context, user):
 
 	actual_datas = []
 	for page in data:
-		if page['isActive']:
-			continue
-		actual_datas.append({
-			"name": page["siteTitle"],
-			"create_time": page['createdAt']
-		})
+		if page['siteTitle'] == u'空白页面':
+			actual_datas.append({
+				"name": page["siteTitle"]
+			})
+		else:
+			actual_datas.append({
+				"name": page["siteTitle"],
+				"create_time": page['createdAt']
+			})
 
 	expected_datas = json.loads(context.text)
-	print '++++++++++++++++1'
-	print actual_datas
-	print '++++++++++++++++++++++2'
-	print expected_datas
 	bdd_util.assert_list(expected_datas, actual_datas)	
 
 
