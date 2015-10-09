@@ -268,7 +268,7 @@
               <td class="xui-td-img"{% if product.noline %} style="border-top:none;"{% endif %}><img width="42" height="42" src="{{product.thumbnails_url}}"></td>
               <td class="xui-td-first"{% if product.noline %} style="border-top:none;"{% endif %}>
                 <div class="xui-a-productname">
-                  <a style="color:#333;">
+                  <span style="color:#333;">
                   {% if product.promotion.type == 'flash_sale' %}
                     [限时抢购]
                   {% elif product.promotion.type == 'premium_sale:premium_product' %}
@@ -278,7 +278,7 @@
                     [会员优惠]
                   {% endif %}
 
-                  {{product.name}}</a>
+                  {{product.name}}</span>
                 </div>
                 <p class="xui-colorsize">
                   <span>
