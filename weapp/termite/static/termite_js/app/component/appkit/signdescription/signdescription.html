@@ -110,7 +110,33 @@
             color: #555555;
             text-align: center;
         }
+        .wui-SignCircle.wa-sign-board{
+            background-color: #F0F0F0;
+            font-weight: bold;
 
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignSign{
+            background-color: #9AD2EB;
+            border: 5px solid #0B93D5;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr{
+            line-height: 40px;
+            font-size:1em;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Head{
+            margin-top: 24px;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Days{
+            line-height: 42px;
+            letter-spacing: 3px;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Days b{
+            font-size: 2.5em;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Tail{
+            color:#626262;
+            font-size: 0.9em;
+        }
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
@@ -142,16 +168,16 @@
             </div>
             <div class="wui-SignCircle wa-sign-board" style="display: none">
                 <div class="wui-SignSign">
-                    <p class="wui-SignChr">已连续签到</p>
-                    <p class="wui-SignChr wa-i-serial-count"><b></b>天</p>
-                    <p class="wui-SignChr">已签到</p>
+                    <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
+                    <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b></b>天</p>
+                    <p class="wui-SignChr wui-SignChr-Tail">已签到</p>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points">{{component.model.daily_points}}</span>积分, <span class="daily_prizes wa-daily_prizes">{{ component.model.daily_prizes.name }}</span>一张</div>
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points">{{component.model.daily_points}}</span>积分<span class="daily_prizes wa-daily_prizes">{{ component.model.daily_prizes.name }}</span>一张</div>
     </div>
 </div>
 {% endifequal %}
