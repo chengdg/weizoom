@@ -7,7 +7,7 @@
 				<h3 class="modal-title">
 				好友列表
 
-				<span style="margin-left: 220px;">好友：<font class="friend_count"></font> 
+				<span style="margin-left: 220px;">好友：<font class="friend_count"></font>
 				</span>
 				<span> 贡献：<font class="fans_count"></font></span>
 				<input type="checkbox" class="show_fans" name="show_fans" style="margin-right:5px;margin-top:2px;vertical-align: sub;">只看贡献
@@ -15,8 +15,8 @@
 			</div>
 			<div class="modal-body" style="height: 500px;overflow: auto;">
 			</div>
-			
-			
+
+
 	</div>
 	</div>
 	</div>
@@ -35,8 +35,8 @@
 			</div>
 			<div class="modal-body" style="height: 500px;overflow: auto;">
 			</div>
-			
-		
+
+
 	</div>
 	</div>
 	</div>
@@ -45,9 +45,16 @@
 <script id="member-relations-dialog-one-relation-tmpl-src" type="text/x-jquery-tmpl">
 	<div  data-id="${id}" style="overflow: hidden; margin-top:10px">
 		<div >
-			<a href="/member/detail/?id=${id}" style="float: left;margin-left: 25px">
-			<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
-			</a>
+			<div class="column_block xui-memberHeader pr">
+				{{if member.is_subscribed == 0}}
+					<div class="xui-cancelCover tc">
+					已取消
+					</div>
+				{{/if}}
+				<a href="/member/detail/?id=${id}" style="float: left;margin-left: 25px">
+				<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width: 60px;" />
+				</a>
+			</div>
 			<div style="float: left;  margin-left: 12px;margin-top: 1px;">
 			<a href="/member/detail/?id=${id}" class="xi-member-name">{{html username}}</a><br>
 			<div style="margin-top: 15px;">${grade_name}</span>&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
@@ -77,5 +84,5 @@
 			<span style="color:#808080;">${created_at}</span>
 		</div>
 	</div>
-	
+
 </script>

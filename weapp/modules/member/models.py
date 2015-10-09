@@ -822,7 +822,7 @@ class MemberFollowRelation(models.Model):
 		try:
 			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
-			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL)
+			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 		except:
 			return []
 
@@ -1323,4 +1323,3 @@ class MilekeLog(models.Model):
 		verbose_name_plural = 'mileke_log'
 
 		unique_together = (('mileke', 'member'),)
-		
