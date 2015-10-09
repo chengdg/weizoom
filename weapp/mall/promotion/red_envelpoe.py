@@ -3,6 +3,7 @@
 import json
 from datetime import datetime
 import os
+import operator
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -21,6 +22,7 @@ from modules.member.models import MemberTag, MemberGrade
 from string_util import byte_to_hex
 from modules.member import models as member_models
 from weapp import settings
+from . import utils
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
@@ -148,7 +150,6 @@ class RedEnvelopeRuleList(resource.Resource):
             else:
                 rule_id2count[record.red_envelope_rule_id] = 1
         for rule in rules:
-
             data = {
                 "id": rule.id,
                 "rule_name": rule.name,
@@ -317,10 +318,25 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         receive_method = request.GET.get('receive_method',0)
         pageinfo, items = get_datas(request)
+
+        #处理排序
+        sort_attr = request.GET.get('sort_attr', 'id')
+        # print 'sort_attr:'
+        # print sort_attr
+        # print 'items:'
+        # print items
+        # if '-' in sort_attr:
+        #     sort_attr = sort_attr.replace('-', '')
+        #     items = sorted(items, key=operator.attrgetter('id'), reverse=True)
+        #     items = sorted(items, key=operator.attrgetter(sort_attr), reverse=True)
+        #     sort_attr = '-' + sort_attr
+        # else:
+        #     items = sorted(items, key=operator.attrgetter('id'))
+        #     items = sorted(items, key=operator.attrgetter(sort_attr))
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': request.GET.get('sort_attr', 'id'),
+			'sortAttr': sort_attr,
 			'data': {}
 		}
         response = create_response(200)
