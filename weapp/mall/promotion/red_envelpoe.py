@@ -321,18 +321,14 @@ class RedEnvelopeParticipances(resource.Resource):
 
         #处理排序
         sort_attr = request.GET.get('sort_attr', 'id')
-        # print 'sort_attr:'
-        # print sort_attr
-        # print 'items:'
-        # print items
-        # if '-' in sort_attr:
-        #     sort_attr = sort_attr.replace('-', '')
-        #     items = sorted(items, key=operator.attrgetter('id'), reverse=True)
-        #     items = sorted(items, key=operator.attrgetter(sort_attr), reverse=True)
-        #     sort_attr = '-' + sort_attr
-        # else:
-        #     items = sorted(items, key=operator.attrgetter('id'))
-        #     items = sorted(items, key=operator.attrgetter(sort_attr))
+        if '-' in sort_attr:
+            sort_attr = sort_attr.replace('-', '')
+            items = sorted(items, key=lambda x: x['id'], reverse=True)
+            items = sorted(items, key=lambda x: x[sort_attr], reverse=True)
+            sort_attr = '-' + sort_attr
+        else:
+            items = sorted(items, key=lambda x: x['id'])
+            items = sorted(items, key=lambda x: x[sort_attr])
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
