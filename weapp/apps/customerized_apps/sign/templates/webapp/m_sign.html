@@ -128,7 +128,7 @@
         background: #0090D6 none repeat scroll 0% 0%;
         text-align: center;
         line-height: 50px;
-        border:0px;
+        border:0;
         border-radius: 3px;
         font-size: 1.2em;
         font-style: bold;
@@ -272,7 +272,7 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
-                        $this.addClass('front-face-active').siblings().addClass('back-face-active');
+                        $this.addClass('fadeOutUpBig animated once');
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function(){
                             resultDialog.render(true, data.curr_prize);
@@ -328,7 +328,7 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').addClass('front-face-active').siblings().addClass('back-face-active');
+            $('.wa-sign-btn').addClass('fadeOutUpBig animated once');
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){

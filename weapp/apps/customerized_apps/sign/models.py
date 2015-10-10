@@ -194,7 +194,7 @@ class Sign(models.Document):
 						return_html.append(u'<br><a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a><br>' % data['webapp_owner_id'])
 					return_html.append(u'签到说明：签到有礼！<br>')
 					return_html.append(return_data['reply_content'])
-				return_html.append(u'<br><a href="/m/apps/sign/m_sign/?webapp_owner_id=%s">>>点击查看详情</a>' % data['webapp_owner_id'])
+				return_html.append(u'<br><a href="/m/apps/sign/m_sign/?webapp_owner_id=%s"> >>点击查看详情</a>' % data['webapp_owner_id'])
 			else:
 				return None
 		except:
