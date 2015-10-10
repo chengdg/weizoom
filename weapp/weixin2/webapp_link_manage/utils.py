@@ -89,17 +89,16 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'survey',
 				'add_btn_title': '新建调研',
 				'add_link': '/apps/survey/survey'
-			},{
-				'name': '分享红包',
-				'type': 'red',
-				'add_btn_title': '新建分享红包',
-				'add_link': '/apps/promotion/red_envelope_rule/'
-			},
-				{
+			}, {
 				'name': '活动报名',
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
+			}, {
+				'name': '分享红包',
+				'type': 'red',
+				'add_btn_title': '新建分享红包',
+				'add_link': '/apps/promotion/red_envelope_rule/'
 			}]
 		},
 		'memberQrcode': {
