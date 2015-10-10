@@ -8,6 +8,9 @@ from webapp import models as webapp_models
 from test import bdd_util
 
 CONSTANT_CID = 0
+display2mode = {u"轮播图": "swipe", u"分开显示": "sequence"}
+display2name = {"swipe": u"轮播图", "sequence": u"分开显示"}
+
 
 @Given(u"{user}已添加微页面")
 def step_impl(context, user):
@@ -161,6 +164,7 @@ def __process_activity_data(context, page, user):
 	_add_richtext(page, page_json)
 	_add_textnav_group(page, page_json, user)
 	_add_imagenav_group(page, page_json, user)
+	_add_image_group(page, page_json, user)
 	print '3242342'
 
 	data = {
@@ -255,6 +259,22 @@ def __actual_page(page_json):
 					"link": json.loads(item['model']['target'])['data_item_name']
 				}
 				actual_component["picture_ids"].append(data)
+
+		# 图片广告
+		if component['type'] == "wepage.image_group":
+			actual_component = {
+				"picture_ads": {
+					"display_mode": display2name[component['model']['displayMode']],
+					"values": []
+				}
+			}
+			for item in component['components']:
+				data = {
+					"path": item['model']['image'],
+					"title": item['model']['title'],
+					"link": json.loads(item['model']['target'])['data_item_name']
+				}
+				actual_component["picture_ads"]["values"].append(data)
 
 		actual.update(actual_component)
 	return actual
@@ -462,3 +482,57 @@ def __get_imagenav_json(parent_json, imagenav_data, user):
 	}
 	return imagenav
 
+
+def _add_image_group(page, page_json, user):
+	cid, pid = __get_cid_and_pid(page_json)
+
+	if page.has_key("picture_ads"):
+		image_group = {
+			"type":"wepage.image_group",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": u"图片广告",
+			"model": { "id":"", "class":"", "name":"", "index":1,
+				"datasource":{"type":"api","api_name":""},
+				"displayMode": display2mode[page['picture_ads']['display_mode']],
+				"items":[]
+			},
+			"components":[]
+		}
+		for image in page.get("picture_ads").get("values", []):
+			image_json = __get_image_json(image_group, image, user)
+			# 加 文本导航的内部数据 
+			image_group["components"].append(image_json)
+			image_group["model"]["items"].append(image_json['cid'])
+
+		page_json['components'].append(image_group)
+
+def __get_image_json(parent_json, image_data, user):
+	cid, pid = __get_cid_and_pid(parent_json)
+	
+	image = {
+		"type":"wepage.imagegroup_image",
+		"cid": cid,
+		"pid": pid,
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": u"一个广告",
+		"model": { "id":"", "class":"", "name":"", "index":1,
+			"datasource":{"type":"api","api_name":""},
+			"title": image_data['title'],
+			"target": __get_target_link(image_data['link'], user),
+			"image": image_data['path']
+		},
+		"components":[]
+	}
+	return image
