@@ -13,17 +13,17 @@ Scenario: 1 创建微页面
 			"picture_ads":{
 				"display_mode": "轮播图",
 				"values":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}]
@@ -35,17 +35,17 @@ Scenario: 1 创建微页面
 				"name": "微页面标题"
 			},
 			"picture_ads":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -64,17 +64,17 @@ Scenario: （2）验证删除，添加
 			"picture_ads":{
 				"display_mode": "轮播图",
 				"values":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}]
@@ -86,17 +86,17 @@ Scenario: （2）验证删除，添加
 				"name": "微页面标题"
 			},
 			"picture_ads":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -111,13 +111,13 @@ Scenario: （2）验证删除，添加
 			"picture_ads":{
 				"display_mode": "轮播图"
 				"values":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -130,13 +130,13 @@ Scenario: （2）验证删除，添加
 			},
 			"picture_ads":{
 				"values":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -149,17 +149,17 @@ Scenario: （2）验证删除，添加
 				"name": "微页面标题"
 			},
 			"picture_ads":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				},{
-					"picture_id": "4",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题4",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -171,17 +171,17 @@ Scenario: （2）验证删除，添加
 				"name": "微页面标题"
 			},
 			"picture_ads":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				},{
-					"picture_id": "4",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题4",
-					"link": "会员中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -215,17 +215,17 @@ Scenario: （3）编辑图片广告信息
 			"picture_ads":{
 				"display_mode": "轮播图",
 				"values":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}]
@@ -237,17 +237,17 @@ Scenario: （3）编辑图片广告信息
 				"name": "微页面标题"
 			},
 			"picture_ads":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "个人中心"
+					"link": "会员主页"
 				}]
 			}
 		}
@@ -260,17 +260,17 @@ Scenario: （3）编辑图片广告信息
 				"name": "微页面标题"
 			},
 			"picture_ads":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
 					"link": "推广扫码"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "问卷调查"
+					"link": "店铺主页"
 				}]
 			}
 		}
@@ -281,19 +281,18 @@ Scenario: （3）编辑图片广告信息
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":{
-				"values":[{
-					"picture_id": "1",
+			"picture_ads":[{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
-					"link": "问卷调查"
+					"link": "店铺主页"
 				}]
 			}
 		}

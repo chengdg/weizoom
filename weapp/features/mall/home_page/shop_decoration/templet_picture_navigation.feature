@@ -10,19 +10,19 @@ Scenario: 1添加图片导航
 				"name": "微页面标题"
 			},
 			"picture_ids":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				}, {
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
 					"link": "会员主页"
 				}, {
-					"picture_id": "4",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",,
 					"title": "标题4",
 					"link": "会员主页"
 				}]
@@ -36,19 +36,19 @@ Scenario: 1添加图片导航
 				"name": "微页面标题"
 			},
 			"picture_ids":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				}, {
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
 					"link": "会员主页"
 				}, {
-					"picture_id": "4",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题4",
 					"link": "会员主页"
 				}]
@@ -61,19 +61,19 @@ Scenario: 1添加图片导航
 				"name": "微页面标题"
 			},
 			"picture_ids":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
 					"picture_id": "3",
 					"title": "标题3",
 					"link": "会员主页"
 				},{
-					"picture_id": "4",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题4",
 					"link": "我的订单"
 				}]
@@ -87,19 +87,19 @@ Scenario: 1添加图片导航
 				"name": "微页面标题"
 			},
 			"picture_ids":[{
-					"picture_id": "1",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
-					"picture_id": "2",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
-					"picture_id": "3",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
 					"link": "会员主页"
 				},{
-					"picture_id": "4",
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题44",
 					"link": "我的订单"
 				}]
