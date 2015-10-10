@@ -275,7 +275,6 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		if query and len(query) > 0:
 			kwargs[item['query_name']+'__contains'] = query
 		objects = item['class'].objects.filter(**kwargs).order_by(order_by)
-		print objects,"objects"
 
 		if type == 'webappPage':
 			objects = objects.order_by('-is_active', '-id')
@@ -286,6 +285,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	            'with_product': True,
 	            'with_concrete_promotion': True
         	})
+
 		if type == 'red':
 			objects_data = []
 			for object in objects:
@@ -318,7 +318,6 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	                    }
 						objects_data.append(data)
 			objects = objects_data
-
 	return objects, item
 
 
