@@ -153,49 +153,10 @@
             position: absolute;
             z-index: 0;
         }
-    @keyframes fadeOutUpBig{
-        0%{
-            opacity:1;
-            -webkit-transform:translate3d(0,0,0);
-            transform:translate3d(0,0,0)
-        }
-        100%{
-            opacity:0;
-            display: none;
-            -webkit-transform:translate3d(0,-40px,0);
-            transform:translate3d(0,-40px,0)
-        }
-    }
-    @-webkit-keyframes fadeOutUpBig{
-        0%{
-            opacity:1;
-            -webkit-transform:translate3d(0,0,0);
-            transform:translate3d(0,0,0)
-        }
-        100%{
-            opacity:0;
-            display: none;
-            -webkit-transform:translate3d(0,-40px,0);
-            transform:translate3d(0,-40px,0)
-        }
-    }
-    .fadeOutUpBig{
-        -webkit-animation-name:fadeOutUpBig;
-        animation-name:fadeOutUpBig;
-    }
-    .animated{
-        -webkit-animation-duration:1s;
-        animation-duration:1s;
-        -webkit-animation-fill-mode:both;
-        animation-fill-mode:both;
-    }
-    .animated.once{
-        -webkit-animation-iteration-count:1;
-        animation-iteration-count:1;
-    }
 
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/termite_static/v3/css/animate.min.css" rel="stylesheet">
 {% endblock %}
 
 {% ifequal component.type 'appkit.signdescription' %}
@@ -208,7 +169,7 @@
         </div>
         <div class="wui-UserName Chr wa-username"><p>用户名</p></div>
         <div class="wui-UserPointDiv">
-            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr wa-user-integral"></span></p>
+            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr wa-user-integral"></span><b class="wui-integral-adder"></b></p>
         </div>
         <div class="wui-Rules Border wa-rules">
             <div class="wui-Rules Chr">活动规则<span class="fa fa-chevron-circle-right"></span></div>

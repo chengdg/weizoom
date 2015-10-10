@@ -224,6 +224,12 @@
         if(status){
             this.$title.text('签到成功！');
             if(data.integral){
+                //添加积分增长特效
+                var adder = data.integral - parseInt($('.wui-UserPoint').find('span').text());
+                $('.wui-UserPoint').find('span').text(data.integral);
+                $('.wui-UserPoint').find('.wui-integral-adder').html('+'+adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function(){
+                    $(this).hide();
+                });
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
             }else if(data.coupon && data.coupon.count != -1){
@@ -276,7 +282,9 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
-                        $this.addClass('fadeOutUpBig animated once');
+                        $this.addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
+                            $(this).hide();
+                        });
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function(){
                             resultDialog.render(true, data.curr_prize);
@@ -352,7 +360,9 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').addClass('fadeOutUpBig animated once');
+            $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
+                $(this).hide();
+            });
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){
