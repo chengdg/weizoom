@@ -334,14 +334,17 @@ class RedEnvelopeParticipances(resource.Resource):
         return response.get_response()
 
 def get_datas(request):
-    receive_method = request.GET.get('receive_method','')
-    name = request.GET.get('participant_name', '')
     webapp_id = request.user_profile.webapp_id
-    if name:
-        hexstr = byte_to_hex(name)
+
+    receive_method = request.GET.get('receive_method','')
+    member_name = request.GET.get('member_name', '')
+    red_envelope_rule_id = request.GET['id']
+
+    if member_name:
+        hexstr = byte_to_hex(member_name)
         members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
 
-        if name.find(u'非')>=0:
+        if member_name.find(u'非')>=0:
             sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
             members = members|sub_members
     else:

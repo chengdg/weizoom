@@ -722,7 +722,8 @@ class RedEnvelopeToOrder(models.Model):
 	"""
 	owner = models.ForeignKey(User)
 	member_id = models.IntegerField(default=0)
-	order_id = models.IntegerField(default=0)
+	order_id = models.IntegerField(default=0) #订单领取记录订单id
+	material_id = models.IntegerField(default=0) #图文领取记录图文id
 	red_envelope_rule_id = models.IntegerField(default=0)
 	count = models.IntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)

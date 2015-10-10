@@ -29,7 +29,7 @@ def get_webapp_link_menu_objectes(request):
 	"""
 	webapp_owner_id = request.user.id
 	workspace_id = request.user_profile.homepage_workspace_id
-	menus = {		
+	menus = {
 		'webappPage': {
 			'id': 1,
 			'name': '微页面',
@@ -89,17 +89,16 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'survey',
 				'add_btn_title': '新建调研',
 				'add_link': '/apps/survey/survey'
-			},{
-				'name': '分享红包',
-				'type': 'red',
-				'add_btn_title': '新建分享红包',
-				'add_link': '/apps/promotion/red_envelope_rule/'
-			},
-				{
+			}, {
 				'name': '活动报名',
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
+			}, {
+				'name': '分享红包',
+				'type': 'red',
+				'add_btn_title': '新建分享红包',
+				'add_link': '/apps/promotion/red_envelope_rule/'
 			}]
 		},
 		'memberQrcode': {
@@ -112,7 +111,7 @@ def get_webapp_link_menu_objectes(request):
 			'name': '代言人二维码',
 			'link': get_channel_qrcode_webapp_link(request)
 		},
-		
+
 		'myOrder': {
 			'id': 8,
 			'name': '我的订单',
@@ -151,7 +150,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	today = datetime.today()
 	type2object = {
 		'webappPage': {
-			'class': Project, 
+			'class': Project,
 			'query_name': 'site_title',
 			'link_template': './?workspace_id=home_page&project_id={}&webapp_owner_id=%d' % webapp_owner_id,
 			'filter': {
@@ -159,7 +158,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'product': {
-			'class': Product, #is_deleted=False, 
+			'class': Product, #is_deleted=False,
 			'query_name': 'name',
 			'link_template': './?module=mall&model=product&action=get&rid={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id,
 			'filter':{
@@ -168,13 +167,13 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'category': {
-			'class': ProductCategory, 
+			'class': ProductCategory,
 			'query_name': 'name',
 			'link_template': './?module=mall&model=products&action=list&category_id={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id,
 			'filter':{}
 		},
 		'lottery': {
-			'class': Lottery, 
+			'class': Lottery,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:lottery&model=lottery&action=get&lottery_id={}&workspace_id=market_tool:lottery&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
@@ -185,14 +184,14 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'red': {
 			'class': RedEnvelopeRule,
 			'query_name': 'name',
-			'link_template': './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&order_id=2&red_envelope_rule_id={}&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
+			'link_template': './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id={}&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
 				"is_delete": False,
 				"receive_method": True,
 			}
 		},
 		'coupon': {
-			'class': Promotion, 
+			'class': Promotion,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%d&project_id=0&rule_id={}' % webapp_owner_id,
 			'filter': {
@@ -202,13 +201,13 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'vote': {
-			'class': Vote, 
+			'class': Vote,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:vote&model=vote&action=get&vote_id={}&workspace_id=market_tool:vote&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {}
 		},
 		'survey': {
-			'class': Research, 
+			'class': Research,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:research&model=research&action=get&research_id={}&workspace_id=market_tool:research&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
@@ -216,7 +215,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'activity': {
-			'class': Activity, 
+			'class': Activity,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:activity&model=activity&action=get&activity_id={}&workspace_id=market_tool:activity&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
@@ -224,19 +223,19 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 			}
 		},
 		'test_game': {
-			'class': TestGame, 
+			'class': TestGame,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:test_game&model=test_game&action=get&game_id={}&workspace_id=market_tool:test_game&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {}
 		},
 		'shengjing_app': {
-			'class': '', 
+			'class': '',
 			'query_name': 'name',
 			'link_template': './?module=market_tool:shengjing_app&model=shengjing_app&action=get&game_id={}&workspace_id=market_tool:shengjing_app&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {}
 		},
 		'shake': {
-			'class': Shake, 
+			'class': Shake,
 			'query_name': 'name',
 			'link_template': './?module=market_tool:shake&model=shake&action=get&shake_id={}&workspace_id=market_tool:shake&webapp_owner_id=%d&project_id=0' % webapp_owner_id,
 			'filter': {
@@ -248,11 +247,11 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	item = type2object[type]
 	if type == 'shengjing_app':
 		objects = get_shengjing_link_targets(request)
-	else:	
+	else:
 		kwargs = {
 			'owner': user
 		}
-		# 合并过滤条件	
+		# 合并过滤条件
 		kwargs.update(item.get('filter', {}))
 		if query and len(query) > 0:
 			kwargs[item['query_name']+'__contains'] = query
@@ -315,7 +314,7 @@ def get_menu_item_by_name(request, menu_type, link_type):
 
 
 def get_selected_by_link_target(request, menu_type, link_type, link_target_str):
-	if link_target_str and len(link_target_str) > 2:			
+	if link_target_str and len(link_target_str) > 2:
 		selected_link_target = json.loads(link_target_str)
 		selected_id = selected_link_target['workspace']
 		if selected_id == "custom":
