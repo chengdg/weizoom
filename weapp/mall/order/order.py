@@ -36,11 +36,9 @@ class OrderInfo(resource.Resource):
         """
         订单详情页
         """
-        belong = request.GET.get("belong", "all")
-        if belong == "all":
-            return util.get_detail_response(request)
-        else:
-            return util.get_detail_response(request, 'refund')
+
+        return util.get_detail_response(request)
+
 
     @login_required
     def api_post(request):
