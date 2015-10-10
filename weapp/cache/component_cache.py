@@ -22,13 +22,10 @@ def get_component_auth_for_cache(component, appid):
 		default_tag = member_models.MemberTag.get_default_tag(user_profile.webapp_id)
 		default_grade = member_models.MemberGrade.get_default_grade(user_profile.webapp_id)
 		try:
-			print '-======================in cache'
 			integral_strategy_settings = member_models.IntegralStrategySttings.objects.get(webapp_id=user_profile.webapp_id)
-			print '====================integral_strategy_settings', integral_strategy_settings
 		except:
 			error_msg = u"获得user('{}')对应的IntegralStrategySttings构建cache失败, cause:\n{}"\
 				.format(user_profile.user_id, unicode_full_stack())
-			print '====================error_msg',error_msg
 			watchdog_error(error_msg, user_id=user_profile.user_id, noraise=True)
 			integral_strategy_settings = None
 
@@ -63,7 +60,6 @@ def get_component_auth(component, appid):
 		obj.integral_strategy_settings = member_models.IntegralStrategySttings.from_dict(data['integral_strategy_settings'])
 	else:
 		obj.integral_strategy_settings = None
-	print '=a==============aa=a==a=a==log===',obj.integral_strategy_settings
 	obj.default_tag = member_models.MemberTag.from_dict(data['default_tag'])
 	obj.default_grade = member_models.MemberGrade.from_dict(data['default_grade'])
 	return obj
@@ -76,11 +72,11 @@ def delete_component_auth_cache(appid):
 	key = 'component_{appid:%s}' % appid
 	cache_util.delete(key)
 
-def update_component_cache(instance, **kwargs):
+def update_component_cache_for_auther_appid(instance, **kwargs):
 	"""
 	ComponentAuthedAppid.save时触发信号回调函数
 
-	@param instance Member的实例
+	@param instance ComponentAuthedAppid
 	@param kwargs   其他参数，包括'sender'、'created'、'signal'、'raw'、'using'
 
 
@@ -102,8 +98,42 @@ def update_component_cache(instance, **kwargs):
 				pass
 	return
 
-post_update_signal.connect(update_component_cache, sender=ComponentAuthedAppid, dispatch_uid = "ComponentInfo.update")
-signals.post_save.connect(update_component_cache, sender=member_models.IntegralStrategySttings, dispatch_uid = "member_models.IntegralStrategySttings")
+def update_component_cache_for_integral_settings(instance, **kwargs):
+	"""
+	IntegralStrategySttings.save or update时触发信号回调函数
+
+	@param instance IntegralStrategySttings
+	@param kwargs   其他参数，包括'sender'、'created'、'signal'、'raw'、'using'
+
+
+	"""
+	#print("in update_webapp_order_cache(), kwargs: %s" % kwargs)
+	if isinstance(instance, member_models.IntegralStrategySttings):
+		user_profile = UserProfile.objects.get(webapp_id=instance.webapp_id)
+		authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
+		try:
+			delete_component_auth_cache(authorizer_appid.authorizer_appid)
+			#get_accounts(openid, webapp_id)
+			print  '======delete ture'
+		except:
+			print  '======delete error'
+			pass
+	else:
+		instances = list(instance)
+		for integral_strategy_settings in instances:
+			user_profile = UserProfile.objects.get(webapp_id=integral_strategy_settings.webapp_id)
+			authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
+			try:
+				delete_component_auth_cache(authed_appid.authorizer_appid)
+				print  '======delete ture'
+			except:
+				print  '======delete error'
+				pass
+	return
+
+post_update_signal.connect(update_component_cache_for_auther_appid, sender=ComponentAuthedAppid, dispatch_uid = "ComponentInfo.update")
+signals.post_save.connect(update_component_cache_for_integral_settings, sender=member_models.IntegralStrategySttings, dispatch_uid = "member_models.IntegralStrategySttings.save")
+post_update_signal.connect(update_component_cache_for_integral_settings, sender=member_models.IntegralStrategySttings, dispatch_uid = "member_models.IntegralStrategySttings.update")
 #signals.post_save.connect(update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid = "product_category.save")
 #signals.post_save.connect(update_webapp_product_cache, sender=mall_models.CategoryHasProduct, dispatch_uid = "category_has_product.save")
 
