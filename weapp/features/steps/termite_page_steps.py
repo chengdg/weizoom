@@ -156,10 +156,12 @@ def __process_activity_data(context, page, user):
 	global CONSTANT_CID
 	CONSTANT_CID = page_json['cid']
 
-	__add_templet_title(page, page_json)
-	__add_notice_text(page, page_json)
-	__add_richtext(page, page_json)
-	__add_textnav_group(page, page_json, user)
+	_add_templet_title(page, page_json)
+	_add_notice_text(page, page_json)
+	_add_richtext(page, page_json)
+	_add_textnav_group(page, page_json, user)
+	_add_imagenav_group(page, page_json, user)
+	print '3242342'
 
 	data = {
 		"field": "page_content",
@@ -241,6 +243,19 @@ def __actual_page(page_json):
 				}
 				actual_component["navigation"].append(data)
 
+		# 图片导航
+		if component['type'] == "wepage.imagenav_group":
+			actual_component = {
+				"picture_ids": []
+			}
+			for item in component['components']:
+				data = {
+					"path": item['model']['image'],
+					"title": item['model']['title'],
+					"link": json.loads(item['model']['target'])['data_item_name']
+				}
+				actual_component["picture_ids"].append(data)
+
 		actual.update(actual_component)
 	return actual
 
@@ -254,7 +269,7 @@ def __get_cid_and_pid(parent_json):
 	return cid, pid
 
 
-def __add_templet_title(page, page_json):
+def _add_templet_title(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
 	if page.has_key("templet_title"):
@@ -279,7 +294,7 @@ def __add_templet_title(page, page_json):
 		page_json['components'].append(wepage_title)
 
 
-def __add_notice_text(page, page_json):
+def _add_notice_text(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
 	default = u'请填写内容，如果过长，将会在手机上滚动显示'
@@ -303,7 +318,7 @@ def __add_notice_text(page, page_json):
 		page_json['components'].append(wepage_notice)
 
 
-def __add_richtext(page, page_json):
+def _add_richtext(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
 	if page.has_key("multy_text_content"):
@@ -326,7 +341,7 @@ def __add_richtext(page, page_json):
 		page_json['components'].append(wepage_notice)
 
 
-def __add_textnav_group(page, page_json, user):	
+def _add_textnav_group(page, page_json, user):	
 	cid, pid = __get_cid_and_pid(page_json)
 
 	if page.has_key("navigation"):
@@ -359,14 +374,6 @@ def __add_textnav_group(page, page_json, user):
 def __get_textnav_json(parent_json, textnav_data, user):
 	cid, pid = __get_cid_and_pid(parent_json)
 	
-	home_page = {"workspace":3,"workspace_name":u"店铺主页","data_category":u"店铺主页","data_item_name":u"店铺主页","data_path":u"店铺主页","data":"./?workspace_id=home_page&webapp_owner_id={}&project_id=0".format(user.id)}
-	user_center = {"workspace":4,"workspace_name":u"会员主页","data_category":u"会员主页","data_item_name":u"会员主页","data_path":u"会员主页","data":"./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={}".format(user.id)}
-
-	links = {
-		u"店铺主页": json.dumps(home_page),
-		u"会员主页": json.dumps(user_center)
-	}
-
 	textnav = {
 		"type":"wepage.textnav",
 		"cid": cid,
@@ -381,9 +388,77 @@ def __get_textnav_json(parent_json, textnav_data, user):
 		"model": { "id":"", "class":"", "name":"", "index":1,
 			"datasource":{"type":"api","api_name":""},
 			"title": textnav_data['navigation_name'],
-			"target": links[textnav_data['navigation_link']],
+			"target": __get_target_link(textnav_data['navigation_link'], user),
 			"image": ""
 		},
 		"components":[]
 	}
 	return textnav
+
+def __get_target_link(name, user):
+	user_id = user.id
+	home_page = {"workspace":1,"workspace_name":u"店铺主页","data_category":u"店铺主页","data_item_name":u"店铺主页","data_path":u"店铺主页","data":"./?workspace_id=home_page&webapp_owner_id={}&project_id=0".format(user_id)}
+	user_center = {"workspace":2,"workspace_name":u"会员主页","data_category":u"会员主页","data_item_name":u"会员主页","data_path":u"会员主页","data":"./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={}".format(user_id)}
+	order_list = {"workspace":3,"workspace_name":u"我的订单","data_category":u"我的订单","data_item_name":u"我的订单","data_path":u"我的订单","data":"./?module=mall&model=order_list&action=get&workspace_id=mall&webapp_owner_id={}".format(user_id)}
+
+	links = {
+		u"店铺主页": json.dumps(home_page),
+		u"会员主页": json.dumps(user_center),
+		u"我的订单": json.dumps(order_list)
+	}
+	return links[name]
+
+
+def _add_imagenav_group(page, page_json, user):
+	cid, pid = __get_cid_and_pid(page_json)
+	
+	if page.has_key("picture_ids"):
+		imagenav_group = {
+			"type":"wepage.imagenav_group",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": u"图片导航",
+			"model": { "id":"", "class":"", "name":"", "index":1,
+				"datasource":{"type":"api","api_name":""},
+				"items":[]
+			},
+			"components":[]
+		}
+		for imagenav in page.get("picture_ids"):
+			imagenav_json = __get_imagenav_json(imagenav_group, imagenav, user)
+			# 加 文本导航的内部数据 
+			imagenav_group["components"].append(imagenav_json)
+			imagenav_group["model"]["items"].append(imagenav_json['cid'])
+
+		page_json['components'].append(imagenav_group)
+
+def __get_imagenav_json(parent_json, imagenav_data, user):
+	cid, pid = __get_cid_and_pid(parent_json)
+	
+	imagenav = {
+		"type":"wepage.image_nav",
+		"cid": cid,
+		"pid": pid,
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": u"图片导航",
+		"model": { "id":"", "class":"", "name":"", "index":1,
+			"datasource":{"type":"api","api_name":""},
+			"title": imagenav_data['title'],
+			"target": __get_target_link(imagenav_data['link'], user),
+			"image": imagenav_data['path']
+		},
+		"components":[]
+	}
+	return imagenav
+
