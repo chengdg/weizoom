@@ -2,9 +2,9 @@
 Feature: 自定义模块-图片广告
 
 
-Background:
+Scenario: 1 创建微页面
 	Given jobs登录系统
-	And jobs已创建微页面
+	When jobs创建微页面
 	"""
 		[{
 			"title": {
@@ -54,11 +54,35 @@ Background:
 
 
 
-Scenario: （4）验证删除，添加
-	#验证删除后再添加图片信息，排序按照正序排列
-	When jobs编辑微页面'微页面标题'
+Scenario: （2）验证删除，添加
+	Given jobs登录系统
+	When jobs创建微页面
 	"""
 		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"display_mode": "轮播图"
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+					"picture_id": "2",
+					"title": "标题2",
+					"link": "推广扫码"
+				},{
+					"picture_id": "3",
+					"title": "标题3",
+					"link": "个人中心"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
 			"title": {
 				"name": "微页面标题"
 			},
@@ -68,13 +92,18 @@ Scenario: （4）验证删除，添加
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
+					"picture_id": "2",
+					"title": "标题2",
+					"link": "推广扫码"
+				},{
 					"picture_id": "3",
 					"title": "标题3",
 					"link": "个人中心"
 				}]
 			}
-		}]
+		}
 	"""
+	When jobs删除'标题2'
 	Then jobs能获取'微页面标题'
 	"""
 		{
@@ -157,8 +186,56 @@ Scenario: （4）验证删除，添加
 		}
 	"""
 
-Scenario: （5）编辑图片广告信息
+Scenario: （3）编辑图片广告信息
 	#编辑图片广告信息
+	Given jobs登录系统
+	When jobs创建微页面
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"display_mode": "轮播图"
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+					"picture_id": "2",
+					"title": "标题2",
+					"link": "推广扫码"
+				},{
+					"picture_id": "3",
+					"title": "标题3",
+					"link": "个人中心"
+				}]
+			}
+		}]
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"values":[{
+					"picture_id": "1",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+					"picture_id": "2",
+					"title": "标题2",
+					"link": "推广扫码"
+				},{
+					"picture_id": "3",
+					"title": "标题3",
+					"link": "个人中心"
+				}]
+			}
+		}
+	"""
 	When jobs编辑微页面'微页面标题'
 	"""
 		{
