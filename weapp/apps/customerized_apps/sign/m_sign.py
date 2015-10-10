@@ -67,11 +67,11 @@ class MSign(resource.Resource):
 			daily_prize = prize_settings['0']
 			serial_prize = {}
 			next_serial_prize = {}
+			serial_integral = {}
 			if signer:
 				#检查是否已签到
 				latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
 				nowDate = datetime.now().strftime('%Y-%m-%d')
-				print latest_sign_date, nowDate
 				if latest_sign_date == nowDate:
 					activity_status = u'已签到'
 					for name in sorted(prize_settings.keys()):
@@ -98,12 +98,16 @@ class MSign(resource.Resource):
 								'prize':setting
 							}
 							flag = True
+				for name in sorted(prize_settings.keys()):
+					setting = prize_settings[name]
+					serial_integral[name]=setting['integral']
 
 			prize_info = {
 				'serial_count': signer.serial_count if signer else 0,
 				'daily_prize': daily_prize,
 				'serial_prize': serial_prize,
-				'next_serial_prize': next_serial_prize
+				'next_serial_prize': next_serial_prize,
+				'serial_integral':serial_integral
 			}
 
 			request.GET._mutable = True
