@@ -24,7 +24,7 @@ W.view.mall.redMemberFilterView = Backbone.View.extend({
 
         var name = $('#name').val().trim();
         if (name) {
-            args.push('"name":"'+name+'"');
+            args.push('"member_name":"'+name+'"');
         }
 
         var coupon_status = $('#coupon_status').val().trim();

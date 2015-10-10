@@ -12,12 +12,13 @@
         }
 
         .wui-TopPaneDiv {
-            height: 250px;
+            height: auto;
             background-image: url('/termite_static/img/component/sign/signdescription_left_bg.png');
             background-repeat: repeat-x;
-            background-size: 4.5% auto;
+            background-size: 5% auto;
             text-align: center;
             color: white;
+            padding-bottom: 10px;
         }
 
         .wui-UserPhotoDiv {
@@ -70,10 +71,13 @@
         .wui-Rules.Chr span{
             margin-left: 8px;
         }
+        .wui-BodyPaneDiv{
+            padding-top: 15px;
+        }
 
         .wui-SignCircle {
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
             padding: 2px;
             background: #9AD2EB;
             border-radius: 120px;
@@ -85,8 +89,8 @@
         }
 
         .wui-SignCircle .wui-SignSign {
-            width: 170px;
-            height: 170px;
+            width: 145px;
+            height: 145px;
             background: #0090D6;
             display: inline-block; /* circle wraps image */
             border-radius: 120px;
@@ -99,24 +103,20 @@
             position: absolute;
         }
 
-        .wui-SignCircle.wa-sign-btn{
-            margin-top: 30px;
-        }
         .wui-SignSign .wui-SignChr {
             color: white;
             font-size: 2.5em;
-            line-height: 170px;
+            line-height: 145px;
         }
 
         .wui-SignDescriptionDiv {
-            margin-top: 25px;
             color: #555555;
             text-align: center;
         }
         .wui-SignCircle.wa-sign-board{
             background-color: #F0F0F0;
             font-weight: bold;
-            margin-top: 30px;
+            margin-top: auto;
 
         }
         .wui-SignCircle.wa-sign-board .wui-SignSign{
@@ -128,7 +128,7 @@
             font-size:1em;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Head{
-            margin-top: 24px;
+            margin-top: 10px;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Days{
             line-height: 42px;
@@ -144,28 +144,56 @@
         /* 翻页动画 */
         .animate3d{
             height: 220px;
-            width: 200px;
+            width: 160px;
             margin: 0 auto;
-            perspective: 400px;
+            perspective: 100px;
+            -webkit-perspective: 100px;
         }
         .front-face, .back-face{
             position: absolute;
             z-index: 0;
-            transition-duration: 0.8s;
-            transform: rotate3d(0,1,0,180deg);
         }
-        .front-face{
-            z-index: 1;
-            transform: rotate3d(0,1,0,0deg);
+    @keyframes fadeOutUpBig{
+        0%{
+            opacity:1;
+            -webkit-transform:translate3d(0,0,0);
+            transform:translate3d(0,0,0)
         }
-        .front-face-active{
-            z-index: 0;
-            transform: rotate3d(0,1,0,-180deg);
+        100%{
+            opacity:0;
+            display: none;
+            -webkit-transform:translate3d(0,-40px,0);
+            transform:translate3d(0,-40px,0)
         }
-        .back-face-active{
-            z-index: 1;
-            transform: rotate3d(0,1,0,0deg);
+    }
+    @-webkit-keyframes fadeOutUpBig{
+        0%{
+            opacity:1;
+            -webkit-transform:translate3d(0,0,0);
+            transform:translate3d(0,0,0)
         }
+        100%{
+            opacity:0;
+            display: none;
+            -webkit-transform:translate3d(0,-40px,0);
+            transform:translate3d(0,-40px,0)
+        }
+    }
+    .fadeOutUpBig{
+        -webkit-animation-name:fadeOutUpBig;
+        animation-name:fadeOutUpBig;
+    }
+    .animated{
+        -webkit-animation-duration:1s;
+        animation-duration:1s;
+        -webkit-animation-fill-mode:both;
+        animation-fill-mode:both;
+    }
+    .animated.once{
+        -webkit-animation-iteration-count:1;
+        animation-iteration-count:1;
+    }
+
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
@@ -190,16 +218,16 @@
 
     <div class="wui-BodyPaneDiv">
         <div class="wui-SignDiv animate3d">
-            <div class="wui-SignCircle wa-sign-btn front-face">
-                <div class="wui-SignSign">
-                    <p class="wui-SignChr">签到</p>
-                </div>
-            </div>
             <div class="wui-SignCircle wa-sign-board back-face">
                 <div class="wui-SignSign">
                     <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
                     <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b></b>天</p>
                     <p class="wui-SignChr wui-SignChr-Tail">已签到</p>
+                </div>
+            </div>
+            <div class="wui-SignCircle wa-sign-btn front-face">
+                <div class="wui-SignSign">
+                    <p class="wui-SignChr">签到</p>
                 </div>
             </div>
         </div>
