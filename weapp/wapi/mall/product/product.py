@@ -2,9 +2,12 @@
 
 from core import api_resource
 from wapi.decorators import param_required
-from wapi.wapi_utils import create_json_response
+#from wapi.wapi_utils import create_json_response
 
-from mall import models as mall_models
+#from mall import models as mall_models
+from mall import module_api as mall_api
+from modules.member import models as member_models
+
 from utils import dateutil as utils_dateutil
 
 class Product(api_resource.ApiResource):
@@ -40,12 +43,18 @@ class Product(api_resource.ApiResource):
 			data['display_price'] = product.display_price
 		return data
 
-	@param_required(['id'])
+	@param_required(['id', 'woid', 'member_grade_id', 'wuid'])
 	def get(args):
 		"""
 		获取商品详情
 
 		@param id 商品ID
 		"""
-		product = mall_models.Product.objects.get(id=args['id'])
+		product_id = args['id']
+		webapp_owner_id = args['woid']
+		member_grade_id = args['member_grade_id']
+		webapp_user = member_models.WebAppUser.objects.get(id = args['wuid'])
+  
+		#product = mall_models.Product.objects.get(id=args['id'])
+		product = mall_api.get_product_detail(webapp_owner_id, product_id, webapp_user, member_grade_id)
 		return Product.to_dict(product)

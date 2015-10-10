@@ -135,9 +135,7 @@ def list_products(request):
 		'is_access_weizoom_mall': request.is_access_weizoom_mall
 		}) # 按类别取商品
 
-	# TODO: 改成用API方式
-	#product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
-	#print("product_categories: {}".format(product_categories))
+	# 用WAPI方式获取数据
 	product_categories = resource.get('mall', 'products_categories', {
 		'webapp_id': request.user_profile.webapp_id,
 		'oid': request.user_profile.user_id,
@@ -206,17 +204,36 @@ def __get_product_hint(owner_id, product_id):
 	return hint
 
 
-########################################################################
-# get_product: 显示“商品详情”页面
-########################################################################
 def get_product(request):
+	"""
+	显示“商品详情”页面
+
+	"""
+	#print("in get_product()")
 	product_id = request.GET['rid']
 	webapp_user = request.webapp_user
 
 	member_grade_id = request.member.grade_id if request.member else None
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
+	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
 	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
+	#print("product: {}".format(product))
+	"""
+	product: {'is_use_cod_pay_interface': True, 'is_support_make_thanks_card': False
+	, 'weight': 0.0, 'purchase_price': 0.0, 'stock_type': 0L, 'weshop_status': 0L, '
+	pic_url': u'/standard_static/test_resource_img/mian2.jpg', 'promotion_title': u'
+	', 'is_use_online_pay_interface': True, 'postage_type': u'unified_postage_type',
+	 'introduction': u'', 'detail': u'\u70ed\u5e72\u9762\u7684\u8be6\u60c5', 'displa
+	y_index': 0L, u'id': 9L, 'unified_postage_money': 0.0, 'supplier': 0L, 'type': u
+	'object', 'shelve_start_time': None, 'owner_id': 3L, 'update_time': datetime.dat
+	etime(2015, 10, 10, 19, 28, 30), 'bar_code': u'12321', 'price': 1.5, 'user_code'
+	: u'1', 'stocks': -1L, 'name': u'\u70ed\u5e72\u9762', 'remark': u'', 'is_deleted
+	': False, 'physical_unit': u'', 'is_member_product': False, 'created_at': dateti
+	me.datetime(2015, 10, 10, 19, 28, 30), 'postage_id': -1L, 'shelve_end_time': Non
+	e, 'shelve_type': 1L, 'thumbnails_url': u'/standard_static/test_resource_img/mia
+	n2.jpg', 'weshop_sync': 0L}	
+	"""
 	#duhao 2015-09-08
 	hint = __get_product_hint(request.webapp_owner_id, product_id)
 
