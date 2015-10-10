@@ -24,7 +24,6 @@
                 data-ui-role="advanced-table"
                 data-app="apps/promotion"
                 data-resource="red_envelope_rule_list"
-                data-args='{"endDate": "{{endDate}}", "promotionStatus": "{{promotion_status}}", "limitTime": "{{limit_time}}"}'
                 data-template-id="#red_envelope_rule_list_view"
                 data-enable-paginator="true"
                 data-enable-sort="false"
@@ -42,30 +41,23 @@
     {% endif %}
 {% endfor %}
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document" style="width:400px; margin-top: 16%;">
-    <div class="modal-content" style="height: 267px;" >
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">库存提示</h4>
-      </div>
-      <div class="modal-body" style="max-height: 90px; overflow:auto">
-      <ul class="list-group" style="margin-bottom: 0">
-      {% for rule in items %}
-        {% if rule.remained_count <= 20  %}
-            {% if rule.receive_method %}
-                {% if rule.is_timeout and not rule.limit_time %}
-                {% else %}
-                    <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 5px;">
-                        <div style="float: left;width: 85%">
-                            <div style="width: 90%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden; "><b>【图文领取】</b>{{ rule.rule_name }}</div>
-                        </div>
-                        <div style="float: left;color:#8c8c8c;">即将用完</div>
-                    <div style="clear: both"></div>
-                    </li>
-                {% endif %}
-            {% else %}
-                {% if rule.status %}
-                    {% if rule.is_timeout and not rule.limit_time %}
+    <div class="modal-dialog" role="document" style="width:400px; margin-top: 16%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">库存提示</h4>
+            </div>
+            <div class="modal-body" style="max-height: 98px; overflow:auto;padding-top:0;padding-bottom:0;">
+                <ul class="list-group" style="margin-bottom: 0">
+                {% for rule in items %}
+                    {% if rule.receive_method %}
+                        <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
+                            <div style="float: left;width: 85%">
+                                <div style="width: 90%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden; "><b>【图文领取】</b>{{ rule.rule_name }}</div>
+                            </div>
+                            <div style="float: left;color:#8c8c8c;">即将用完</div>
+                        <div style="clear: both"></div>
+                        </li>
                     {% else %}
                         <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
                             <div style="float: left;width: 85%">
@@ -75,20 +67,16 @@
                         <div style="clear: both"></div>
                         </li>
                     {% endif %}
-                {% endif %}
-            {% endif %}
-        {% endif %}
-      {% endfor %}
-      </ul>
-      </div>
-      <div class="modal-footer">
-          <div style="margin-top: 8px;height: 17px;line-height: 17px">请及时处理！</div>
-          <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
-          <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #8C8C8C;">确认</button>
-
-      </div>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer" style="height: 95px;">
+                <div style="margin-top: 8px;height: 17px;line-height: 17px">请及时处理！</div>
+                <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #8C8C8C;">确认</button>
+            </div>
+        </div>
     </div>
-  </div>
 {% endblock %}
 
 {% block js %}
