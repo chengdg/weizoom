@@ -1,5 +1,4 @@
 #author：师帅
-#_edit_：新新
 Feature: 自定义模块-图片导航
 
 Scenario: 1添加图片导航
@@ -54,7 +53,6 @@ Scenario: 1添加图片导航
 					"link": "会员中心"
 				}]
 			}
-		}
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
@@ -70,19 +68,18 @@ Scenario: 1添加图片导航
 					"picture_id": "2",
 					"title": "标题2",
 					"link": "推广扫码"
-				}, {
+				},{
 					"picture_id": "3",
 					"title": "标题3",
 					"link": "个人中心"
-				}, {
+				},{
 					"picture_id": "4",
-					"title": "标题44",
+					"title": "标题4",
 					"link": "我的订单"
 				}]
 			}
-			
-		}
 	"""
+
 	Then jobs能获取'微页面标题'
 	"""
 		{

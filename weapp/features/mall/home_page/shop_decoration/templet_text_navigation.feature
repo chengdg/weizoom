@@ -10,6 +10,7 @@ Feature:自定义模块——【基础模块】文本导航-页面
 	6、文本导航可以删除，最后必须保留一个，当只有一个文本导航的时候，该文本导航不能删除
 	7、文本导航的链接，“从微站选择”当选择的链接的名称过长时用省略号截取显示，保证链接名称、修改、图标在同一行，不折行
 
+@termite2
 Scenario:1添加文本导航
 	Given jobs登录系统
 	When jobs创建微页面
@@ -18,15 +19,13 @@ Scenario:1添加文本导航
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航",
-					"navigation_link": "会员中心"
-				},{
-					"navigation_name": "文本导航1",
-					"navigation_link": "店铺主页"
-				}]
-			}
+			"navigation": [{
+				"navigation_name": "文本导航",
+				"navigation_link": "会员主页"
+			},{
+				"navigation_name": "文本导航1",
+				"navigation_link": "店铺主页"
+			}]
 		}]
 	"""
 	Then jobs能获取'微页面标题'
@@ -35,18 +34,17 @@ Scenario:1添加文本导航
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航",
-					"navigation_link": "会员中心"
-				},{
-					"navigation_name": "文本导航1",
-					"navigation_link": "店铺主页"
-				}]
-			}
+			"navigation":[{
+				"navigation_name": "文本导航",
+				"navigation_link": "会员主页"
+			},{
+				"navigation_name": "文本导航1",
+				"navigation_link": "店铺主页"
+			}]
 		}
 	"""
 
+@termite2
 Scenario: 2编辑文本导航
 	Given jobs登录系统
 	When jobs创建微页面
@@ -55,15 +53,13 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航",
-					"navigation_link": "会员中心"
-				},{
-					"navigation_name": "文本导航1",
-					"navigation_link": "店铺主页"
-				}]
-			}
+			"navigation":[{
+				"navigation_name": "文本导航",
+				"navigation_link": "会员主页"
+			},{
+				"navigation_name": "文本导航1",
+				"navigation_link": "店铺主页"
+			}]
 		}]
 	"""
 	Then jobs能获取'微页面标题'
@@ -72,33 +68,29 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航",
-					"navigation_link": "会员中心"
-				},{
-					"navigation_name": "文本导航1",
-					"navigation_link": "店铺主页"
-				}]
-			}
+			"navigation":[{
+				"navigation_name": "文本导航",
+				"navigation_link": "会员主页"
+			},{
+				"navigation_name": "文本导航1",
+				"navigation_link": "店铺主页"
+			}]
 		}
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航",
-					"navigation_link": "会员中心"
-				},{
-					"navigation_name": "文本导航2",
-					"navigation_link": "店铺主页"
-				}]
-			}
-		}]
+			"navigation":[{
+				"navigation_name": "文本导航",
+				"navigation_link": "会员主页"
+			},{
+				"navigation_name": "文本导航2",
+				"navigation_link": "店铺主页"
+			}]
+		}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
@@ -106,30 +98,38 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航",
-					"navigation_link": "会员中心"
-				},{
-					"navigation_name": "文本导航2",
-					"navigation_link": "微页面"
-				}]
-			}
+			"navigation": [{
+				"navigation_name": "文本导航",
+				"navigation_link": "会员主页"
+			},{
+				"navigation_name": "文本导航2",
+				"navigation_link": "店铺主页"
+			}]
 		}
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航2",
-					"navigation_link": "微页面"
-				}]
-			}
-		}]
+			"navigation": [{
+				"navigation_name": "文本导航2",
+				"navigation_link": "店铺主页"
+			}]
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":[{
+				"navigation_name": "文本导航2",
+				"navigation_link": "店铺主页"
+			}]
+		}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
@@ -137,21 +137,19 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题"
 			},
-			"navigation":{
-				"values":[{
-					"navigation_name": "文本导航2",
-					"navigation_link": "微页面"
-				}]
-			}
+			"navigation": [{
+				"navigation_name": "文本导航2",
+				"navigation_link": "店铺主页"
+			}]
 		}
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
-		[{
+		{
 			"title": {
 				"name": "微页面标题"
 			}
-		}]
+		}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
