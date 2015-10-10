@@ -781,6 +781,54 @@ Scenario: 5编辑商品列表
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
+		{	"title":{
+				"name": "微页面标题"
+			},
+			"products_source": {
+				"items":[{
+					"products_source_name":"分组1",
+					"display_count":"6"
+				}],
+				"list_style1":"小图",
+				"list_style2":"简洁样式",
+				"price_show":"true"
+			}
+		}
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title":{
+				"name": "微页面标题"
+			},
+			"products_source":{
+				"items":[{
+					"name":"商品2可两行显示",
+					"price":"2.0"
+					},{
+					"name":"商品1可单行显示",
+					"price":"1.0"
+					},{
+					"name":"商品3不可两行显示...",
+					"price":"3.0"
+					},{
+					"name":"商品4",
+					"price":"4.0"
+					},{
+					"name":"商品5",
+					"price":"5.0"
+					},{
+					"name":"商品6",
+					"price":"6.0"
+				}],
+				"list_style1":"小图",
+				"list_style2":"简洁样式",
+				"show_price":"true"
+			}
+		}
+	"""
+	When jobs编辑微页面'微页面标题'
+	"""
 		[{	
 			"title":{
 				"name": "微页面标题"

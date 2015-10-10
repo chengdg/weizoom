@@ -582,6 +582,7 @@ Scenario:6 商品修改，删除
 			}
 		}
 	"""
+#删除一个商品
 	When jobs编辑微页面'微页面标题'
 	"""
 		{	
@@ -624,6 +625,48 @@ Scenario:6 商品修改，删除
 			}
 		}
 	"""
+#切换样式
+	When jobs编辑微页面'微页面标题'
+	"""
+		{	
+			"title": {
+				"name": 微页面标题"
+			},
+			"products": {
+				"items" [{
+				"name":"商品3不可两行显示......",
+				"create_time":"2015-05-03 9:00"
+				},{
+				"name":"商品2可两行显示",
+				"create_time":"2015-05-01 9:00"
+			}],
+			"list_style1":"小图",
+			"list_style2":"简洁样式",
+			"show_price":"true"
+			}
+		}
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{	
+			"title": {
+				"name": 微页面标题"
+			},
+			"products": {
+				"items" [{
+				"name":"商品3不可两行显示......",
+				"create_time":"2015-05-03 9:00"
+				},{
+				"name":"商品2可两行显示",
+				"create_time":"2015-05-01 9:00"
+			}],
+			"list_style1":"小图",
+			"list_style2":"简洁样式",
+			"show_price":"true"
+			}
+		}
+	"""
+#删除商品模块
 	When jobs编辑微页面'微页面标题'
 	"""
 		{	

@@ -312,3 +312,52 @@ Scenario: （3）编辑图片广告信息
 			}
 		}
 	"""
+#将轮播图修改为分开显示
+	When jobs编辑微页面'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"display_mode": "分开显示",
+				"values":[{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+					"title": "标题2",
+					"link": "我的订单"
+				},{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+					"title": "标题3",
+					"link": "店铺主页"
+				}]
+			}
+		}
+	"""
+	Then jobs能获取'微页面标题'
+	"""
+		{
+			"title": {
+				"name": "微页面标题"
+			},
+			"picture_ads":{
+				"display_mode": "分开显示",
+				"values":[{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+					"title": "标题1",
+					"link": "店铺主页"
+				},{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+					"title": "标题2",
+					"link": "我的订单"
+				},{
+					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+					"title": "标题3",
+					"link": "店铺主页"
+				}]
+			}
+		}
+	"""
