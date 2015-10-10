@@ -74,7 +74,14 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'lottery',
 				'add_btn_title': '新建抽奖',
 				'add_link': '/apps/lottery/lottery/'
-			}, {
+			},
+			# {
+			# 	'name': '红包',
+			# 	'type': 'red',
+			# 	'add_btn_title': '新建红包',
+			# 	'add_link': '/market_tools/red_envelope/edit/0/'
+			# },
+				{
 				'name': '优惠券',
 				'type': 'coupon',
 				'add_btn_title': '新建优惠券',
@@ -94,12 +101,24 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
-			}, {
+			},{
 				'name': '分享红包',
-				'type': 'red',
+				'type': 'red_envelope',
 				'add_btn_title': '新建分享红包',
-				'add_link': '/apps/promotion/red_envelope_rule/'
-			}]
+				'add_link': '/apps/red_envelope/red_envelope_rule/'
+			}
+			# {
+			# 	'name': '趣味测试',
+			# 	'type': 'test_game',
+			# 	'add_btn_title': '新建趣味测试',
+			# 	'add_link': '/market_tools/test_game/test_game/create/'
+			# }, {
+			# 	'name': '摇一摇',
+			# 	'type': 'shake',
+			# 	'add_btn_title': '新建摇一摇',
+			# 	'add_link': '/market_tools/shake/edit/0/'
+			# }
+			]
 		},
 		'memberQrcode': {
 			'id': 6,
@@ -267,38 +286,6 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	            'with_concrete_promotion': True
         	})
 
-		if type == 'red':
-			objects_data = []
-			for object in objects:
-				id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
-		                                   CouponRule.objects.filter(id=object.coupon_rule_id)])
-				if object.limit_time:
-					data = {
-						"id": object.id,
-	                    "name": object.name,
-						"limit_time": object.limit_time,
-	                    "start_time": object.start_time.strftime("%Y-%m-%d %H:%M"),
-	                    "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
-	                    "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
-	                    "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
-						'link': item['link_template'].format(object.id)
-	                }
-					objects_data.append(data)
-				else:
-					is_timeout = False if object.end_time > datetime.now() else True
-					if not is_timeout:
-						data = {
-							"id": object.id,
-		                    "name": object.name,
-							"limit_time": object.limit_time,
-		                    "start_time": object.start_time.strftime("%Y-%m-%d %H:%M"),
-		                    "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
-		                    "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
-		                    "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
-							'link': item['link_template'].format(object.id)
-	                    }
-						objects_data.append(data)
-			objects = objects_data
 	return objects, item
 
 

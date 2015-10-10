@@ -57,7 +57,7 @@ W.view.mall.redMemberFilterView = Backbone.View.extend({
         var _this = this;
         var status = this.options.status || '';
         W.getApi().call({
-            app: 'apps/promotion',
+            app: 'apps/red_envelope',
             resource: 'red_members_filter_params',
             method: 'get',
             args: {
