@@ -22,10 +22,13 @@ def get_component_auth_for_cache(component, appid):
 		default_tag = member_models.MemberTag.get_default_tag(user_profile.webapp_id)
 		default_grade = member_models.MemberGrade.get_default_grade(user_profile.webapp_id)
 		try:
+			print '-======================in cache'
 			integral_strategy_settings = member_models.IntegralStrategySttings.objects.get(webapp_id=user_profile.webapp_id)
+			print '====================integral_strategy_settings', integral_strategy_settings
 		except:
 			error_msg = u"获得user('{}')对应的IntegralStrategySttings构建cache失败, cause:\n{}"\
 				.format(user_profile.user_id, unicode_full_stack())
+			print '====================error_msg',error_msg
 			watchdog_error(error_msg, user_id=user_profile.user_id, noraise=True)
 			integral_strategy_settings = None
 
@@ -60,7 +63,7 @@ def get_component_auth(component, appid):
 		obj.integral_strategy_settings = member_models.IntegralStrategySttings.from_dict(data['integral_strategy_settings'])
 	else:
 		obj.integral_strategy_settings = None
-
+	print '=a==============aa=a==a=a==log===',obj.integral_strategy_settings
 	obj.default_tag = member_models.MemberTag.from_dict(data['default_tag'])
 	obj.default_grade = member_models.MemberGrade.from_dict(data['default_grade'])
 	return obj
