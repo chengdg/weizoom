@@ -59,21 +59,16 @@ class SignParticipances(resource.Resource):
 		"""
 		sort_attr = request.GET.get('sort_attr', 'id')
 		pageinfo, datas = SignParticipances.get_datas(request)
-		
-		webappuser2datas = {}
-		webapp_user_ids = set()
+
 		for data in datas:
-			webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-			webapp_user_ids.add(data.webapp_user_id)
-			data.participant_name = u'未知'
-			data.participant_icon = '/static/img/user-1.jpg'
-		
-		webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
-		if len(webappuser2member) > 0:
-			for webapp_user_id, member in webappuser2member.items():
-				for data in webappuser2datas.get(webapp_user_id, ()):
-					data.participant_name = member.username_for_html
-					data.participant_icon = member.user_icon
+			member_id = data.member_id
+			try:
+				member = member_models.Member.objects.get(id=member_id)
+				data.participant_name = member.username_for_html
+				data.participant_icon = member.user_icon
+			except:
+				data.participant_name = u'未知'
+				data.participant_icon = '/static/img/user-1.jpg'
 		
 		items = []
 		for data in datas:
