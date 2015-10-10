@@ -459,7 +459,7 @@ def get_datas(request):
             'member_id': data.member_id,
             'participant_name': data.participant_name,
             'participant_icon': data.participant_icon,
-            'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            'created_at': data.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': id2Coupon[data.coupon_id]['status_id'],
             'coupon_status': id2Coupon[data.coupon_id]['status_name'],
             'order_id': coupon_id2order_id[data.coupon_id]['order_id'] if coupon_id2order_id.has_key(data.coupon_id) else '',
@@ -648,7 +648,7 @@ class redParticipances_Export(resource.Resource):
                 num = num+1
                 name = member_id2name[record['member_id']]
                 grade_name = member_id2grade[record['member_id']]
-                created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                created_at = record['created_at'].strftime("%Y-%m-%d")
                 status = coupon_id2status[int(record['coupon_id'])]
                 # don't change the order
                 export_record.append(num)
