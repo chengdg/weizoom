@@ -70,7 +70,7 @@ def delete_component_auth_cache(appid):
 	date_str = datetime.today().strftime('%Y-%m-%d') 
 
 	key = 'component_{appid:%s}' % appid
-	cache_util.delete(key)
+	cache_util.delete_cache(key)
 
 def update_component_cache_for_auther_appid(instance, **kwargs):
 	"""
@@ -125,7 +125,7 @@ def update_component_cache_for_integral_settings(instance, **kwargs):
 				delete_component_auth_cache(authorizer_appid.authorizer_appid)
 				print  '======delete ture'
 			except:
-				print  '======delete error'unicode_full_stack()
+				print  '======delete error',unicode_full_stack()
 				pass
 	return
 
