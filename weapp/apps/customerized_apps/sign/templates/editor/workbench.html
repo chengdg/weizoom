@@ -5,6 +5,10 @@
 
 {% block css %}
     <style>
+        .tl img{
+            height: 60px;
+            width: 60px;
+        }
         .xui-i-tag{
             width: 150px;
         }
@@ -228,7 +232,6 @@ ui-appPage-commonStyle">
                     <tr data-id="${item.id}">
                         <td
                             class="tl pl25"
-                            style="width:250px; height:60px;"
                         >
                             <img src="${item.participant_icon}" />
                             {{html item.participant_name}}
