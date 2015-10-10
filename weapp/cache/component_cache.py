@@ -114,9 +114,7 @@ def update_component_cache_for_integral_settings(instance, **kwargs):
 		try:
 			delete_component_auth_cache(authorizer_appid.authorizer_appid)
 			#get_accounts(openid, webapp_id)
-			print  '======delete ture'
 		except:
-			print  '======delete error',unicode_full_stack
 			pass
 	else:
 		instances = list(instance)
@@ -124,10 +122,10 @@ def update_component_cache_for_integral_settings(instance, **kwargs):
 			user_profile = UserProfile.objects.get(webapp_id=integral_strategy_settings.webapp_id)
 			authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
 			try:
-				delete_component_auth_cache(authed_appid.authorizer_appid)
+				delete_component_auth_cache(authorizer_appid.authorizer_appid)
 				print  '======delete ture'
 			except:
-				print  '======delete error'
+				print  '======delete error'unicode_full_stack()
 				pass
 	return
 
