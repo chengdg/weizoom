@@ -7,6 +7,8 @@ from django.test.client import Client
 from webapp import models as webapp_models
 from test import bdd_util
 
+CONSTANT_CID = 0
+
 @Given(u"{user}已添加微页面")
 def step_impl(context, user):
 	user = context.client.user
@@ -127,7 +129,7 @@ def _get_page_json(context, project_id):
 #### 保存page
 def _save_page(context, user, page):
 	page = __supplement_page(page)
-	data = __process_activity_data(context, page)
+	data = __process_activity_data(context, page, user)
 
 	url = "/termite2/api/project/?project_id={}".format(context.project_id)
 	response = context.client.post(url, data)
@@ -140,8 +142,7 @@ def _save_page(context, user, page):
 	response = context.client.post(url, data)
 
 
-
-def __process_activity_data(context, page):
+def __process_activity_data(context, page, user):
 	project_id = context.project_id
 	page_json = _get_page_json(context, project_id)[0]
 
@@ -151,9 +152,14 @@ def __process_activity_data(context, page):
 
 	page_json['components'] = [page_json['components'][0]]
 
+	# 给global CONSTANT_CID赋值
+	global CONSTANT_CID
+	CONSTANT_CID = page_json['cid']
+
 	__add_templet_title(page, page_json)
 	__add_notice_text(page, page_json)
 	__add_richtext(page, page_json)
+	__add_textnav_group(page, page_json, user)
 
 	data = {
 		"field": "page_content",
@@ -223,16 +229,35 @@ def __actual_page(page_json):
 				"multy_text_content": model['content']
 			}
 
+		# 文本导航
+		if component['type'] == "wepage.textnav_group":
+			actual_component = {
+				"navigation": []
+			}
+			for item in component['components']:
+				data = {
+					"navigation_name": item['model']['title'],
+					"navigation_link": json.loads(item['model']['target'])['data_item_name']
+				}
+				actual_component["navigation"].append(data)
+
 		actual.update(actual_component)
 	return actual
 
 
+def __get_cid_and_pid(parent_json):	
+	global CONSTANT_CID
+	CONSTANT_CID = CONSTANT_CID + 1
+
+	pid = parent_json['cid']
+	cid = CONSTANT_CID
+	return cid, pid
+
 
 def __add_templet_title(page, page_json):
-	pid = page_json['cid']
-	cid = page_json['components'][0]['cid']
+	cid, pid = __get_cid_and_pid(page_json)
+
 	if page.has_key("templet_title"):
-		cid = cid + 1
 		wepage_title = {
 			"type":"wepage.title",
 			"cid": cid,
@@ -255,11 +280,10 @@ def __add_templet_title(page, page_json):
 
 
 def __add_notice_text(page, page_json):
-	pid = page_json['cid']
-	cid = page_json['components'][0]['cid']	
+	cid, pid = __get_cid_and_pid(page_json)
+
 	default = u'请填写内容，如果过长，将会在手机上滚动显示'
 	if page.has_key("notice_text"):
-		cid = cid + 1
 		wepage_notice = {
 			"type":"wepage.notice",
 			"cid": cid,
@@ -280,10 +304,9 @@ def __add_notice_text(page, page_json):
 
 
 def __add_richtext(page, page_json):
-	pid = page_json['cid']
-	cid = page_json['components'][0]['cid']
+	cid, pid = __get_cid_and_pid(page_json)
+
 	if page.has_key("multy_text_content"):
-		cid = cid + 1
 		wepage_notice = {
 			"type":"wepage.richtext",
 			"cid": cid,
@@ -301,3 +324,66 @@ def __add_richtext(page, page_json):
 			}
 		}
 		page_json['components'].append(wepage_notice)
+
+
+def __add_textnav_group(page, page_json, user):	
+	cid, pid = __get_cid_and_pid(page_json)
+
+	if page.has_key("navigation"):
+		textnav_group = {
+			"type":"wepage.textnav_group",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": u"文本导航",
+			"model": { "id":"", "class":"", "name":"", "index":6,
+				"datasource":{"type":"api","api_name":""},
+				"items":[]
+			},
+			"components":[]
+		}
+		for textnav in page.get("navigation"):
+			textnav_json = __get_textnav_json(textnav_group, textnav, user)
+			# 加 文本导航的内部数据 
+			textnav_group["components"].append(textnav_json)
+			textnav_group["model"]["items"].append(textnav_json['cid'])
+
+		page_json['components'].append(textnav_group)
+
+
+def __get_textnav_json(parent_json, textnav_data, user):
+	cid, pid = __get_cid_and_pid(parent_json)
+	
+	home_page = {"workspace":3,"workspace_name":u"店铺主页","data_category":u"店铺主页","data_item_name":u"店铺主页","data_path":u"店铺主页","data":"./?workspace_id=home_page&webapp_owner_id={}&project_id=0".format(user.id)}
+	user_center = {"workspace":4,"workspace_name":u"会员主页","data_category":u"会员主页","data_item_name":u"会员主页","data_path":u"会员主页","data":"./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={}".format(user.id)}
+
+	links = {
+		u"店铺主页": json.dumps(home_page),
+		u"会员主页": json.dumps(user_center)
+	}
+
+	textnav = {
+		"type":"wepage.textnav",
+		"cid": cid,
+		"pid": pid,
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": u"文本导航",
+		"model": { "id":"", "class":"", "name":"", "index":1,
+			"datasource":{"type":"api","api_name":""},
+			"title": textnav_data['navigation_name'],
+			"target": links[textnav_data['navigation_link']],
+			"image": ""
+		},
+		"components":[]
+	}
+	return textnav
