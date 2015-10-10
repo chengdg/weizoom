@@ -123,9 +123,7 @@ def update_component_cache_for_integral_settings(instance, **kwargs):
 			authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
 			try:
 				delete_component_auth_cache(authorizer_appid.authorizer_appid)
-				print  '======delete ture'
 			except:
-				print  '======delete error',unicode_full_stack()
 				pass
 	return
 
