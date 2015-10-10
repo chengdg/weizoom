@@ -109,6 +109,7 @@ def get_share_red_envelope(request):
                                     red_envelope_rule_id=red_envelope_rule_id,
                                     red_envelope_relation_id=relation[0].id,
                                     member_id=member.id,
+                                    is_new= False if member.is_subscribed else True,
                                     introduced_by=followed_member_id
                         )
                     if member.is_subscribed:
