@@ -3,7 +3,6 @@
 import json
 from datetime import datetime
 import os
-import operator
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -22,12 +21,11 @@ from modules.member.models import MemberTag, MemberGrade
 from string_util import byte_to_hex
 from modules.member import models as member_models
 from weapp import settings
-from . import utils
 
 COUNT_PER_PAGE = 20
 PROMOTION_TYPE_COUPON = 4
 
-FIRST_NAV_NAME = 'apps'
+FIRST_NAV_NAME  = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 
 class RedEnvelopeRuleList(resource.Resource):
     app = "apps/promotion"
@@ -106,8 +104,8 @@ class RedEnvelopeRuleList(resource.Resource):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_APPS_SECOND_NAV,
             'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
-            'second_nav_name': 'orderRedEnvelope',
             "coupon_rule_info": json.dumps(coupon_rule_info),
             "items": items,
             'endDate': endDate,
@@ -304,8 +302,9 @@ class RedEnvelopeParticipances(resource.Resource):
         total_use_count = 300
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_customerized_apps(request),
-            'second_nav_name': 'orderRedEnvelope',
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_APPS_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
             'has_data': has_data,
             'new_member_count': new_member_count,
             'received_count': received_count,
