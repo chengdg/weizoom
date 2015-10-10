@@ -22,7 +22,7 @@ def get_component_auth_for_cache(component, appid):
 		default_tag = member_models.MemberTag.get_default_tag(user_profile.webapp_id)
 		default_grade = member_models.MemberGrade.get_default_grade(user_profile.webapp_id)
 		try:
-			integral_strategy_settings = member_models.IntegralStrategySttings.objects.get(webapp_id=webapp_id)
+			integral_strategy_settings = member_models.IntegralStrategySttings.objects.get(webapp_id=user_profile.webapp_id)
 		except:
 			error_msg = u"获得user('{}')对应的IntegralStrategySttings构建cache失败, cause:\n{}"\
 				.format(user_profile.user_id, unicode_full_stack())
