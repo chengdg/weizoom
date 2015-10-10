@@ -272,9 +272,11 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
+                        $this.addClass('front-face-active').siblings().addClass('back-face-active');
                         fillPrizeInfo(prize_info);
-                        resultDialog.render(true, data.curr_prize);
-                        $this.hide().siblings().show();
+                        window.setTimeout(function(){
+                            resultDialog.render(true, data.curr_prize);
+                        }, 1000);
                     },
                     error: function(data) {
                         resultDialog.render(false, data);
@@ -326,7 +328,7 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').hide();
+            $('.wa-sign-btn').addClass('front-face-active').siblings().addClass('back-face-active');
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){

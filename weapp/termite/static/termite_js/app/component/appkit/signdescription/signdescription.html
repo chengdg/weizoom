@@ -141,6 +141,31 @@
             color:#626262;
             font-size: 0.9em;
         }
+        /* 翻页动画 */
+        .animate3d{
+            height: 220px;
+            width: 200px;
+            margin: 0 auto;
+            perspective: 400px;
+        }
+        .front-face, .back-face{
+            position: absolute;
+            z-index: 0;
+            transition-duration: 0.8s;
+            transform: rotate3d(0,1,0,180deg);
+        }
+        .front-face{
+            z-index: 1;
+            transform: rotate3d(0,1,0,0deg);
+        }
+        .front-face-active{
+            z-index: 0;
+            transform: rotate3d(0,1,0,-180deg);
+        }
+        .back-face-active{
+            z-index: 1;
+            transform: rotate3d(0,1,0,0deg);
+        }
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
@@ -165,12 +190,12 @@
 
     <div class="wui-BodyPaneDiv">
         <div class="wui-SignDiv animate3d">
-            <div class="wui-SignCircle wa-sign-btn">
+            <div class="wui-SignCircle wa-sign-btn front-face">
                 <div class="wui-SignSign">
                     <p class="wui-SignChr">签到</p>
                 </div>
             </div>
-            <div class="wui-SignCircle wa-sign-board" style="display: none">
+            <div class="wui-SignCircle wa-sign-board back-face">
                 <div class="wui-SignSign">
                     <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
                     <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b></b>天</p>
