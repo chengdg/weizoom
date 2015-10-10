@@ -35,9 +35,9 @@ class MSign(resource.Resource):
 		if record.count() > 0:
 			record = record[0]
 			member_info = {
-				'user_name': u'未知',
-				'user_icon': '/static/img/user-1.jpg',
-				'user_integral': 0
+				'user_name': member.username_for_html if member.username_for_html else u'未知',
+				'user_icon': member.user_icon if member.user_icon else '/static/img/user-1.jpg',
+				'user_integral': member.integral
 			}
 			prize_settings = record.prize_settings
 
@@ -49,13 +49,7 @@ class MSign(resource.Resource):
 					component_info = get_component_info_from(request)
 					auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=webapp_owner_id)[0]
 					auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
-				else:
-					print member.integral
-					member_info = {
-						'user_name': member.username_for_html if member.username_for_html else u'未知',
-						'user_icon': member.user_icon if member.user_icon else '/static/img/user-1.jpg',
-						'user_integral': member.integral
-					}
+
 			activity_status = record.status_text
 
 			project_id = 'new_app:sign:%s' % record.related_page_id
