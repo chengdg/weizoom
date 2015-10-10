@@ -139,7 +139,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
             displayName: '',
             type: 'dynamic-generated-control',
             isShowCloseButton: true,
-            minItemLength: 1,
+            minItemLength: 0,
 			maxItemLength: 10,
             isUserProperty: true,
             default: []
