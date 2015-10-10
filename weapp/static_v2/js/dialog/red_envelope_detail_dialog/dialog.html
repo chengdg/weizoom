@@ -71,7 +71,7 @@
 				</div>
 			</td>
 				<td>
-
+					${item.grade}
 				</td>
 				<td>
 
@@ -89,10 +89,17 @@
 					${item.created_at}
 				</td>
 				<td>
-
+					{{if item.coupon_status_id==1}}
+						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{else}}
+						<b>未使用</b>
+					{{/if}}
 				</td>
 				<td>
-					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>
+					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a><br>
+					{{if item.coupon_status_id==1}}
+						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
+					{{/if}}
 				</td>
 			</tr>
 			{{/each}}
