@@ -90,7 +90,7 @@ def get_webapp_link_menu_objectes(request):
 				'add_btn_title': '新建调研',
 				'add_link': '/apps/survey/survey'
 			}, {
-				'name': '活动报名',
+				'name': '报名',
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
