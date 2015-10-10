@@ -181,7 +181,8 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 
 		},
 		daily_prizes:function($node, model, value){
-			$node.find('.daily_prizes').text(value.name);
+			$node.find('span.wa-daily_prizes').show();
+			$node.find('.daily_prizes .wa-daily_prizes-i-name').text(value.name);
 		}
 
 	},

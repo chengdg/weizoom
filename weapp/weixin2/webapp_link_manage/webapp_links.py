@@ -116,6 +116,7 @@ class WebappItemLinks(resource.Resource):
 				items = []
 				for item in objects:
 					data = dict()
+					
 					if link_type == 'red':
 						items.append(item)
 					else:
