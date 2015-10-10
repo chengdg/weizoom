@@ -53,9 +53,9 @@ Scenario:1 无奖励
 	Given jobs登录系统
 	When jobs访问会员列表
 	Then jobs可以获得会员列表
-		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
-		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
-		| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+		| name  | member_rank | friend_count |   attention_time  |  source  |
+		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
+		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 		
 @mall2 @qr_code	
 Scenario:2 积分奖励
@@ -89,9 +89,9 @@ Scenario:2 积分奖励
 	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
-		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
-		| bill  |   普通会员  |       1      |    10    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+		| name  | member_rank | friend_count | integral |   attention_time  |  source  |
+		| tom   |   普通会员  |       1      |     0    |        今天       | 推广扫码 |
+		| bill  |   普通会员  |       1      |    10    |        今天       | 直接关注 |
 
 @mall2 @qr_code1
 Scenario:3 优惠券奖励
@@ -158,9 +158,9 @@ Scenario:3 优惠券奖励
 	When 清空浏览器
 	Given jobs登录系统
 	Then jobs可以获得会员列表
-		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times |   attention_time  |  source  |    tags     |
-		| tom   |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 推广扫码 | 未分组      |
-		| bill  |   普通会员  |       1      |     0    |   0.00    |    0.00    |      0    |        今天       | 直接关注 | 未分组      |
+		| name  | member_rank | friend_count |   attention_time  |  source  |
+		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
+		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 
 
 	Then jobs能获得优惠券'优惠券1'的码库
@@ -180,4 +180,3 @@ Scenario:3 优惠券奖励
 			}
 		}
 		"""
-	
