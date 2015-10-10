@@ -91,7 +91,6 @@ class Sign(resource.Resource):
 
 		data = export.get_sing_fields_to_save(request)
 		update_data = {}
-		print data
 		update_fields = set(['name', 'share', 'reply', 'prize_settings'])
 		for key, value in data.items():
 			if key in update_fields:

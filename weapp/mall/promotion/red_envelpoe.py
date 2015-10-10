@@ -322,7 +322,7 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         receive_method = request.GET.get('receive_method',0)
         pageinfo, items = get_datas(request)
-        sort_attr = request.GET.get('sort_attr', 'id')
+        sort_attr = request.GET.get('sort_attr', '-created_at')
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
@@ -387,6 +387,8 @@ def get_datas(request):
     id2Coupon = {}
     coupon_list = Coupon.objects.filter(id__in=list(coupon_ids))
     for coupon in coupon_list:
+        if coupon.status !=1 :
+            coupon.status = 0
         id2Coupon[str(coupon.id)] = {
             'status_id': coupon.status,
             'status_name': COUPONSTATUS[coupon.status]['name']
@@ -435,16 +437,15 @@ def get_datas(request):
                     data.grade = grade_name
 
     #处理排序
-    sort_attr = request.GET.get('sort_attr', 'id')
+    sort_attr = request.GET.get('sort_attr', '-created_at')
     if '-' in sort_attr:
         sort_attr = sort_attr.replace('-', '')
-        datas = sorted(datas, key=lambda x: x['id'], reverse=True)
+        # datas = sorted(datas, key=lambda x: x['id'], reverse=True)
         datas = sorted(datas, key=lambda x: x[sort_attr], reverse=True)
         sort_attr = '-' + sort_attr
     else:
-        datas = sorted(datas, key=lambda x: x['id'])
+        # datas = sorted(datas, key=lambda x: x['id'])
         datas = sorted(datas, key=lambda x: x[sort_attr])
-
     #进行分页
     count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
     cur_page = int(request.GET.get('page', '1'))
@@ -514,7 +515,6 @@ class RedEnvelopeParticipancesFilter(resource.Resource):
     @login_required
     def api_get(request):
         webapp_id = request.user_profile.webapp_id
-        print webapp_id
         coupon_status = [{
             "id": 0,
             "name": u'未使用'

@@ -144,16 +144,17 @@
   bottom: 0;
   padding-left: 15px;
 }
-.xui-redEnvelopeParticipances-page .icon-arrow-up {
+/*排序小箭头*/
+.xui-redEnvelopeParticipances-page .icon-arrow-up ,#red-envelope-dialog-detail-tmpl .icon-arrow-up{
   background: url('/static_v2/img/weixin/storingUp.png') no-repeat;
 }
-.xui-redEnvelopeParticipances-page .icon-arrow-down {
+.xui-redEnvelopeParticipances-page .icon-arrow-down ,#red-envelope-dialog-detail-tmpl .icon-arrow-down{
    background: url('/static_v2/img/weixin/storing.png') no-repeat;
 }
-.xui-redEnvelopeParticipances-page .xui-Blue {
+.xui-redEnvelopeParticipances-page .xui-Blue ,#red-envelope-dialog-detail-tmpl .xui-Blue{
   color: #1262b7!important;
 }
-.xui-redEnvelopeParticipances-page [class^="icon-"]{
+.xui-redEnvelopeParticipances-page [class^="icon-"],#red-envelope-dialog-detail-tmpl [class^="icon-"]{
   display: inline-block;
   width: 9px;
   height: 14px;
