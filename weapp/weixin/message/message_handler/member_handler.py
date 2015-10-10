@@ -38,7 +38,6 @@ class MemberHandler(MessageHandler):
 		if message.is_optimization_message:
 			print 'only handle is_optimization_message == False', message.is_optimization_message
 			return None
-		print '=================11111111111111111111111'
 		# if WeixinMessageTypes.TEXT != message.msgType and WeixinMessageTypes.VOICE != message.msgType and  WeixinMessageTypes.IMAGE != message.msgType:
 		# 	print 'only handle subscribed and unsubscribed event'
 		# 	return None
@@ -47,7 +46,6 @@ class MemberHandler(MessageHandler):
 		weixin_user = context.weixin_user
 		request = context.request
 		context.member = self._handle_member(user_profile, weixin_user, is_from_simulator, request)
-		print '=================11111111111111111111112'
 		return None
 
 	def _create_webapp_user(self, member):
@@ -71,7 +69,6 @@ class MemberHandler(MessageHandler):
 
 	def _handle_member(self, user_profile, weixin_user, is_from_simulator, request):
 		#是否已经存在会员信息，如果否则进行创建
-		print '=================1111111111111111111114444'
 		weixin_user_name = weixin_user.username
 		token = get_token_for(user_profile.webapp_id, weixin_user_name, is_from_simulator)
 		
@@ -91,9 +88,11 @@ class MemberHandler(MessageHandler):
 			#创建会员信息
 			try:
 				member = create_member_by_social_account(user_profile, social_account, default_member_grade=default_grade, default_member_tag=default_tag)
-				if is_from_simulator:
-					member.is_for_test = True
-					member.save()
+				if not member:
+					member = create_member_by_social_account(user_profile, social_account)
+				# if is_from_simulator:
+				# 	member.is_for_test = True
+				# 	member.save()
 				#之后创建对应的webappuser
 				# if MemberHasSocialAccount.objects.filter(account=social_account, member=member).count() == 0:
 				# 	MemberHasSocialAccount.objects.create(account=social_account, member=member, webapp_id=social_account.webapp_id)
@@ -132,7 +131,8 @@ class MemberHandler(MessageHandler):
 			更新头像放到celery里
 		"""
 		try:
-			if not member.user_icon or member.user_icon == '':
+			print '==============',is_from_simulator
+			if is_from_simulator is False and (not member.user_icon or member.user_icon == ''):
 				# member_basic_info_updater(request.user_profile, member)
 				# if not member.user_icon or member.user_icon == '':
 				print 'member_handler >>>>>> update member icon'

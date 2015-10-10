@@ -305,6 +305,7 @@ class MessagePipeline(object):
 		
 		if 'weizoom_test_data' in request.GET:
 			xml_message = self._get_raw_message(request)
+			is_from_simulator = True
 		else:
 			xml_message = self._get_raw_message(request).decode('utf-8')
 			wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)#"2950d602ffb613f47d7ec17d0a802b", "BPQSp7DFZSs1lz3EBEoIGe6RVCJCFTnGim2mzJw5W4I", "wx984abb2d00cc47b8")
