@@ -87,6 +87,8 @@ class MemberHandler(MessageHandler):
 			#创建会员信息
 			try:
 				member = create_member_by_social_account(user_profile, social_account)
+				if not member:
+					member = create_member_by_social_account(user_profile, social_account)
 				if is_from_simulator:
 					member.is_for_test = True
 					member.save()
@@ -129,7 +131,7 @@ class MemberHandler(MessageHandler):
 		"""
 
 		try:
-			if not member.user_icon or member.user_icon == '' and is_from_simulator is False:
+			if is_from_simulator is False and (not member.user_icon or member.user_icon == ''):
 				member_basic_info_updater(request.user_profile, member)
 				if not member.user_icon or member.user_icon == '':
 					member_basic_info_updater(request.user_profile, member)
