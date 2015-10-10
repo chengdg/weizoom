@@ -61,39 +61,39 @@ class RedEnvelopeRuleList(resource.Resource):
             id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
                                    promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids)])
             flag = True
+            is_warring = False
             for rule in rules:
-                if flag:
-                    if rule.limit_time and rule.status:
-                        if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
-                            flag = False
-                            is_warring = True
+                if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
+                    if rule.status:
+                        data ={}
+                        if rule.limit_time:
+                            if flag:
+                                flag = False
+                                is_warring = True
+                            else:
+                                is_warring = False
+                            data = {
+                                "id": rule.id,
+                                "rule_name": rule.name,
+                                "receive_method": rule.receive_method,
+                                "is_warring": is_warring
+                            }
                         else:
-                            is_warring = False
-                    else:
-                        is_timeout = False if rule.end_time > datetime.now() else True
+                            is_timeout = False if rule.end_time > datetime.now() else True
+                            if not is_timeout:
+                                if flag:
+                                    flag = False
+                                    is_warring = True
+                                else:
+                                    is_warring = False
+                                    data = {
+                                        "id": rule.id,
+                                        "rule_name": rule.name,
+                                        "receive_method": rule.receive_method,
+                                        "is_warring": is_warring
+                                    }
+                        items.append(data)
 
-                        if id2coupon_rule[rule.coupon_rule_id].remained_count<=20 and not is_timeout  :
-                            flag = False
-                            is_warring = True
-                        else:
-                            is_warring = False
-                else:
-                    is_warring = False
-                is_timeout = False if rule.end_time > datetime.now() else True
-                data = {
-                    "id": rule.id,
-                    "rule_name": rule.name,
-                    "limit_time": rule.limit_time,
-                    "start_time": rule.start_time.strftime("%Y/%m/%d %H:%M:%S"),
-                    "end_time": rule.end_time.strftime("%Y/%m/%d %H:%M:%S"),
-                    "coupon_rule_name": id2coupon_rule[rule.coupon_rule_id].name,
-                    "status": rule.status,
-                    "remained_count": id2coupon_rule[rule.coupon_rule_id].remained_count,
-                    "is_timeout": is_timeout,
-                    "receive_method": rule.receive_method,
-                    "is_warring": is_warring,
-                }
-                items.append(data)
         endDate = request.GET.get('endDate', '')
         if endDate:
             endDate +=' 00:00'
@@ -108,10 +108,7 @@ class RedEnvelopeRuleList(resource.Resource):
             'third_nav_name': export.MALL_PROMOTION_ORDER_RED_ENVELOPE,
             "coupon_rule_info": json.dumps(coupon_rule_info),
             "items": items,
-            'endDate': endDate,
             "is_create": is_create,
-            'promotion_status': promotion_status,
-            'limit_time': limit_time
         })
         return render_to_response('mall/editor/red_envelope_rules.html', c)
 
@@ -133,7 +130,6 @@ class RedEnvelopeRuleList(resource.Resource):
 
         if not is_fetch_all_rules:
             rules = _filter_rules(request, rules)
-
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, rules = paginator.paginate(rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -326,7 +322,7 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         receive_method = request.GET.get('receive_method',0)
         pageinfo, items = get_datas(request)
-        sort_attr = request.GET.get('sort_attr', 'id')
+        sort_attr = request.GET.get('sort_attr', '-created_at')
         response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
@@ -394,6 +390,8 @@ def get_datas(request):
     id2Coupon = {}
     coupon_list = Coupon.objects.filter(id__in=list(coupon_ids))
     for coupon in coupon_list:
+        if coupon.status !=1 :
+            coupon.status = 0
         id2Coupon[str(coupon.id)] = {
             'status_id': coupon.status,
             'status_name': COUPONSTATUS[coupon.status]['name']
@@ -442,16 +440,15 @@ def get_datas(request):
                     data.grade = grade_name
 
     #处理排序
-    sort_attr = request.GET.get('sort_attr', 'id')
+    sort_attr = request.GET.get('sort_attr', '-created_at')
     if '-' in sort_attr:
         sort_attr = sort_attr.replace('-', '')
-        datas = sorted(datas, key=lambda x: x['id'], reverse=True)
+        # datas = sorted(datas, key=lambda x: x['id'], reverse=True)
         datas = sorted(datas, key=lambda x: x[sort_attr], reverse=True)
         sort_attr = '-' + sort_attr
     else:
-        datas = sorted(datas, key=lambda x: x['id'])
+        # datas = sorted(datas, key=lambda x: x['id'])
         datas = sorted(datas, key=lambda x: x[sort_attr])
-
     #进行分页
     count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
     cur_page = int(request.GET.get('page', '1'))
@@ -465,7 +462,7 @@ def get_datas(request):
             'member_id': data.member_id,
             'participant_name': data.participant_name,
             'participant_icon': data.participant_icon,
-            'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            'created_at': data.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': id2Coupon[data.coupon_id]['status_id'],
             'coupon_status': id2Coupon[data.coupon_id]['status_name'],
             'order_id': coupon_id2order_id[data.coupon_id]['order_id'] if coupon_id2order_id.has_key(data.coupon_id) else '',
@@ -521,7 +518,6 @@ class RedEnvelopeParticipancesFilter(resource.Resource):
     @login_required
     def api_get(request):
         webapp_id = request.user_profile.webapp_id
-        print webapp_id
         coupon_status = [{
             "id": 0,
             "name": u'未使用'
@@ -655,7 +651,7 @@ class redParticipances_Export(resource.Resource):
                 num = num+1
                 name = member_id2name[record['member_id']]
                 grade_name = member_id2grade[record['member_id']]
-                created_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                created_at = record['created_at'].strftime("%Y-%m-%d")
                 status = coupon_id2status[int(record['coupon_id'])]
                 # don't change the order
                 export_record.append(num)

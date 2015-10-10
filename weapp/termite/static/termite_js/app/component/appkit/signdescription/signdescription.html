@@ -146,26 +146,54 @@
             height: 220px;
             width: 200px;
             margin: 0 auto;
-            perspective: 400px;
+            perspective: 100px;
+            -webkit-perspective: 100px;
         }
         .front-face, .back-face{
             position: absolute;
             z-index: 0;
-            transition-duration: 0.8s;
-            transform: rotate3d(0,1,0,180deg);
         }
-        .front-face{
-            z-index: 1;
-            transform: rotate3d(0,1,0,0deg);
+    @keyframes fadeOutUpBig{
+        0%{
+            opacity:1;
+            -webkit-transform:translate3d(0,0,0);
+            transform:translate3d(0,0,0)
         }
-        .front-face-active{
-            z-index: 0;
-            transform: rotate3d(0,1,0,-180deg);
+        100%{
+            opacity:0;
+            display: none;
+            -webkit-transform:translate3d(0,-40px,0);
+            transform:translate3d(0,-40px,0)
         }
-        .back-face-active{
-            z-index: 1;
-            transform: rotate3d(0,1,0,0deg);
+    }
+    @-webkit-keyframes fadeOutUpBig{
+        0%{
+            opacity:1;
+            -webkit-transform:translate3d(0,0,0);
+            transform:translate3d(0,0,0)
         }
+        100%{
+            opacity:0;
+            display: none;
+            -webkit-transform:translate3d(0,-40px,0);
+            transform:translate3d(0,-40px,0)
+        }
+    }
+    .fadeOutUpBig{
+        -webkit-animation-name:fadeOutUpBig;
+        animation-name:fadeOutUpBig;
+    }
+    .animated{
+        -webkit-animation-duration:1s;
+        animation-duration:1s;
+        -webkit-animation-fill-mode:both;
+        animation-fill-mode:both;
+    }
+    .animated.once{
+        -webkit-animation-iteration-count:1;
+        animation-iteration-count:1;
+    }
+
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
@@ -190,11 +218,6 @@
 
     <div class="wui-BodyPaneDiv">
         <div class="wui-SignDiv animate3d">
-            <div class="wui-SignCircle wa-sign-btn front-face">
-                <div class="wui-SignSign">
-                    <p class="wui-SignChr">签到</p>
-                </div>
-            </div>
             <div class="wui-SignCircle wa-sign-board back-face">
                 <div class="wui-SignSign">
                     <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
@@ -202,11 +225,16 @@
                     <p class="wui-SignChr wui-SignChr-Tail">已签到</p>
                 </div>
             </div>
+            <div class="wui-SignCircle wa-sign-btn front-face">
+                <div class="wui-SignSign">
+                    <p class="wui-SignChr">签到</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points">{{component.model.daily_points}}</span>积分，“<span class="daily_prizes wa-daily_prizes">{{ component.model.daily_prizes.name }}</span>”一张</div>
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %}</span>积分<span class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>,<span class="wa-daily_prizes-i-name">{{ component.model.daily_prizes.name }}</span>一张</span></div>
     </div>
 </div>
 {% endifequal %}

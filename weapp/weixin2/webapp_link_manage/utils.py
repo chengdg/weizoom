@@ -74,14 +74,7 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'lottery',
 				'add_btn_title': '新建抽奖',
 				'add_link': '/apps/lottery/lottery/'
-			},
-			# {
-			# 	'name': '红包',
-			# 	'type': 'red',
-			# 	'add_btn_title': '新建红包',
-			# 	'add_link': '/market_tools/red_envelope/edit/0/'
-			# },
-				{
+			}, {
 				'name': '优惠券',
 				'type': 'coupon',
 				'add_btn_title': '新建优惠券',
@@ -101,24 +94,12 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'event',
 				'add_btn_title': '新建活动报名',
 				'add_link': '/apps/event/event'
-			},{
+			}, {
 				'name': '分享红包',
 				'type': 'red',
 				'add_btn_title': '新建分享红包',
 				'add_link': '/apps/promotion/red_envelope_rule/'
-			}
-			# {
-			# 	'name': '趣味测试',
-			# 	'type': 'test_game',
-			# 	'add_btn_title': '新建趣味测试',
-			# 	'add_link': '/market_tools/test_game/test_game/create/'
-			# }, {
-			# 	'name': '摇一摇',
-			# 	'type': 'shake',
-			# 	'add_btn_title': '新建摇一摇',
-			# 	'add_link': '/market_tools/shake/edit/0/'
-			# }
-			]
+			}]
 		},
 		'memberQrcode': {
 			'id': 6,
@@ -275,7 +256,6 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		if query and len(query) > 0:
 			kwargs[item['query_name']+'__contains'] = query
 		objects = item['class'].objects.filter(**kwargs).order_by(order_by)
-		print objects,"objects"
 
 		if type == 'webappPage':
 			objects = objects.order_by('-is_active', '-id')
@@ -286,6 +266,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	            'with_product': True,
 	            'with_concrete_promotion': True
         	})
+
 		if type == 'red':
 			objects_data = []
 			for object in objects:
@@ -318,7 +299,6 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 	                    }
 						objects_data.append(data)
 			objects = objects_data
-
 	return objects, item
 
 

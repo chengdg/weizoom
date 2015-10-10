@@ -128,7 +128,7 @@
         background: #0090D6 none repeat scroll 0% 0%;
         text-align: center;
         line-height: 50px;
-        border:0px;
+        border:0;
         border-radius: 3px;
         font-size: 1.2em;
         font-style: bold;
@@ -257,6 +257,13 @@
         //绑定签到按钮点击事件
         $('.wa-sign-btn').on('click', function(){
             var $this = $(this);
+            //非会员需要关注
+            if (!W.isMember) {
+                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                        '</div><div></div>');
+                return false;
+            }
             if('未开始' === status){
                 resultDialog.render(false, {});
             }else{
@@ -272,7 +279,7 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
-                        $this.addClass('front-face-active').siblings().addClass('back-face-active');
+                        $this.addClass('fadeOutUpBig animated once');
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function(){
                             resultDialog.render(true, data.curr_prize);
@@ -328,11 +335,11 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').addClass('front-face-active').siblings().addClass('back-face-active');
+            $('.wa-sign-btn').addClass('fadeOutUpBig animated once');
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){
-                $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count);
+                $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count<10?('0'+prize_info.serial_count):prize_info.serial_count);
                 if(temp_prize.prize.integral != 0){
                     str.push("连续签到"+temp_prize.count+"天可领取"+temp_prize.prize.integral+"积分");
                 }

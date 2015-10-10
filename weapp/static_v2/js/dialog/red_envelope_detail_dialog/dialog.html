@@ -7,10 +7,10 @@
             <h3 class="modal-title">{{html member_name}}引入详情</h3>
         </div>
         <ul class="fans_data_ul xui-weixin-outlinePage">
-			<li>新关注人数<em>152</em>人</li>
-			<li>领取人数<em>3000</em>人</li>
-			<li>产生消费额<em>13000</em>人</li>
-			<li>使用人数<em>300</em>人</li>
+			<li style="font-weight: bold;margin-left: 10px;">新关注人数：<em>152</em>人</li>
+			<li style="font-weight: bold;">领取人数：<em>3000</em>人</li>
+			<li style="font-weight: bold;">产生消费额：<em>13000</em>人</li>
+			<li style="font-weight: bold;">使用人数：<em>300</em>人</li>
 		</ul>
         <div class="modal-body" style="min-height: 100px;overflow: auto;">
             <div
@@ -19,7 +19,7 @@
                 data-app="apps/promotion"
                 data-resource="red_envelope_participances"
                 data-args='{"id": "${red_id}"}'
-                data-template-id="#red_envelope_participances_view"
+                data-template-id="#red-envelope-dialog-detail-tmpl"
                 data-enable-paginator="true"
                 data-enable-sort="false"
                 data-selectable="true"
@@ -45,17 +45,17 @@
 </script>
 
 <script id="red-envelope-dialog-detail-tmpl" type="text/x-jquery-tmpl">
-<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 red-envelope-detail-dialog">
 		<thead>
 			<tr>
-				<th>下单会员</th>
-				<th>会员状态</th>
-				<th>引入领取人数</th>
-				<th>引入使用人数</th>
-				<th>引入新关注</th>
-				<th>引入消费额</th>
-				<th>领取时间</th>
-				<th>使用状态</th>
+				<th>分享会员</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='grade' data-sort-direction="up">会员状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='coupon_status' data-sort-direction="up">使用状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -71,7 +71,7 @@
 				</div>
 			</td>
 				<td>
-
+					${item.grade}
 				</td>
 				<td>
 
@@ -89,10 +89,16 @@
 					${item.created_at}
 				</td>
 				<td>
-
+					{{if item.coupon_status_id==1}}
+						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{else}}
+						<b>未使用</b>
+					{{/if}}
 				</td>
 				<td>
-					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a>
+					{{if item.coupon_status_id==1}}
+						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
+					{{/if}}
 				</td>
 			</tr>
 			{{/each}}
