@@ -158,7 +158,7 @@ ui-appPage-commonStyle">
     <div class="xui-tag-group xa-tag-group">
         <span class="xui-i-tag xui-i-tag-active" target="xa-setting">规则设置</span>
         <span class="xui-i-tag" target="xa-state">签到统计</span>
-        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/">复制链接</button>
+        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/?webapp_owner_id={{ request.user.id }}">复制链接</button>
     </div>
 
     <div class="clearfix xui-setting-tag xa-setting">
