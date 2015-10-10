@@ -187,3 +187,8 @@
 	background-color: #C8D1E4;
 }
 
+.xui-redEnvelopeParticipances-page .tc {
+  display: inline-block;
+  float: right;
+  margin-top: -15px;
+}
