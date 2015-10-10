@@ -106,6 +106,7 @@ def get_share_red_envelope(request):
                     if followed_member_id:
                         RedEnvelopeParticipences.objects.create(
                                     owner_id=request.webapp_owner_id,
+                                    coupon_id=coupon.id,
                                     red_envelope_rule_id=red_envelope_rule_id,
                                     red_envelope_relation_id=relation[0].id,
                                     member_id=member.id,
