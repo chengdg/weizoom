@@ -22,14 +22,22 @@ def get_share_red_envelope(request):
     领取分享红包
     """
     red_envelope_rule_id = request.GET.get('red_envelope_rule_id', 0)
-    order_id = request.GET.get('order_id', 0)
+    order_id = request.GET.get('order_id', 0) # 下单领取会带有order_id
+    material_id = request.GET.get('material_id', 0) # 图文领取会带有material_id
     user_id = request.GET.get('webapp_owner_id', 0)
-    #订单
-    order = Order.objects.get(id=order_id)
+    # 订单
+    # if order_id:
+    #     order = Order.objects.get(id=order_id)
 
     #会员
     member_id = request.member.id
     member = Member.objects.get(id=request.member.id)
+
+    #分享链接的会员id
+    cookie_fmt = request.COOKIES.get('fmt', None)
+    followed_member_id = 0
+    if cookie_fmt:
+        followed_member_id = Member.objects.get(token=cookie_fmt).id
 
     auth_appid = module_api.get_mp_info(user_id)
     qcode_img_url = ''
@@ -42,7 +50,14 @@ def get_share_red_envelope(request):
     coupon_rule_id = red_envelope_rule.coupon_rule_id
     coupon_rule = CouponRule.objects.get(id=coupon_rule_id)
 
-    relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
+    if order_id:
+        relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
+    if material_id:
+        if followed_member_id == member_id or not followed_member_id:
+            relation = RedEnvelopeToOrder.objects.filter(material_id=material_id, red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
+        else:
+            relation_ids = [record.red_envelope_relation_id for record in GetRedEnvelopeRecord.objects.filter(member_id=followed_member_id, red_envelope_rule_id=red_envelope_rule_id)]
+            relation = RedEnvelopeToOrder.objects.filter(id__in=relation_ids, material_id=material_id)
 
     return_data = {
         'red_envelope_rule': red_envelope_rule,
@@ -75,10 +90,6 @@ def get_share_red_envelope(request):
             return_data['qcode_img_url'] = qcode_img_url
             return_data['friends'] = friends
         else:
-            cookie_fmt = request.COOKIES.get('fmt', None)
-            followed_member_id = 0
-            if cookie_fmt:
-                followed_member_id = Member.objects.get(token=cookie_fmt).id
             if (coupon_rule.is_active
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()
@@ -126,6 +137,7 @@ def get_share_red_envelope(request):
                             owner_id=request.webapp_owner_id,
                             member_id=member_id,
                             order_id=order_id,
+                            material_id=material_id,
                             red_envelope_rule_id=red_envelope_rule_id,
                             count = 1
                     )

@@ -8,7 +8,9 @@ def get_news_url(news):
 	'''
 	获取一条图文的url
 	'''
-	if news.url:		
+	if news.url:
+		if 'model=share_red_envelope&action=get' in news.url:
+			news.url = '%s&material_id=%s' % (news.url, news.material_id)
 		if news.url.find('./') == 0:
 			domain = 'http://%s/workbench/jqm/preview/?' % settings.DOMAIN
 			return news.url.replace('./?', domain)
@@ -20,7 +22,7 @@ def get_news_url(news):
 				url = 'http://%s/%s' % (settings.DOMAIN, news.url)
 			return url
 
-		if news.url.startswith('/apps/'): 
+		if news.url.startswith('/apps/'):
 			url = 'http://%s/m%s' % (settings.DOMAIN, news.url)
 			return url
 
@@ -35,7 +37,7 @@ def get_newses_object(newses, is_complement_url=False):
 	"""
 	newses_object = []
 	news_count = len(newses)
-	
+
 
 	for news in newses:
 		one_news = {}
@@ -73,7 +75,7 @@ def __get_absolute_url(orig_url, user_profile):
 	path = 'workbench/jqm/preview'
 	if user_profile.is_use_wepage and 'home_page' in orig_url:
 		path = 'termite2/webapp_page'
-		
+
 	if orig_url.startswith('/apps/'):
 		path = 'm'
 
