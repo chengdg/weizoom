@@ -257,6 +257,13 @@
         //绑定签到按钮点击事件
         $('.wa-sign-btn').on('click', function(){
             var $this = $(this);
+            //非会员需要关注
+            if (!W.isMember) {
+                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                        '</div><div></div>');
+                return false;
+            }
             if('未开始' === status){
                 resultDialog.render(false, {});
             }else{
@@ -332,7 +339,7 @@
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){
-                $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count);
+                $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count<10?('0'+prize_info.serial_count):prize_info.serial_count);
                 if(temp_prize.prize.integral != 0){
                     str.push("连续签到"+temp_prize.count+"天可领取"+temp_prize.prize.integral+"积分");
                 }
