@@ -1,4 +1,4 @@
-#_author_:王丽
+#_author_:师帅
 
 Feature:自定义模块——【基础模块】橱窗-页面
 	1、	标题名：最多可输入15个字
@@ -25,13 +25,13 @@ Scenario:1 新建橱窗微页面
 						"display_mode":"默认",
 						"content_explain":"",
 						"value":[{
-							"pictrue1":"图片1",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"pictrue_link1":"会员主页"
 							},{
-							"picture2":"图片2",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"会员主页"
 							},{
-							"picture3":"图片3",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"店铺主页"
 							}]
 						}]
@@ -51,22 +51,23 @@ Scenario:1 新建橱窗微页面
 						"display_mode":"默认",
 						"content_explain":"",
 						"value":[{
-							"pictrue1":"图片1",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"pictrue_link1":"会员主页"
 							},{
-							"picture2":"图片2",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"会员主页"
 							},{
-							"picture3":"图片3",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"店铺主页"
 							}]
 						}]
 				}
 			}
 		"""
+#将会员主页修改为我的订单
 		When jobs编辑微页面'微页面标题'
 		"""
-			[{
+			{
 				"title":{
 					"name": "微页面标题"
 				},
@@ -77,18 +78,18 @@ Scenario:1 新建橱窗微页面
 						"display_mode":"默认",
 						"content_explain":"",
 						"value":[{
-							"pictrue1":"图片1",
-							"pictrue_link1":"微页面"
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
+							"pictrue_link1":"我的订单"
 							},{
-							"picture2":"图片2",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"会员主页"
 							},{
-							"picture3":"图片3",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"店铺主页"
 							}]
 						}]
 					}
-			}]
+			}
 		"""
 		Then jobs能获取'微页面标题'
 		"""
@@ -103,13 +104,13 @@ Scenario:1 新建橱窗微页面
 						"display_mode":"默认",
 						"content_explain":"",
 						"value":[{
-							"pictrue1":"图片1",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"pictrue_link1":"微页面"
 							},{
-							"picture2":"图片2",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"会员主页"
 							},{
-							"picture3":"图片3",
+							"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 							"picture_link2":"店铺主页"
 							}]
 						}]
@@ -119,29 +120,11 @@ Scenario:1 新建橱窗微页面
 #删除橱窗
 		When jobs编辑微页面'微页面标题'
 		"""
-			[{
+			{
 				"title":{
 					"name": "微页面标题"
-				},
-				"display_window":{
-					"items":[{
-						"display_window_title":"",
-						"content_title":"",
-						"display_mode":"默认",
-						"content_explain":"",
-						"value":[{
-							"pictrue1":"图片1",
-							"pictrue_link1":"微页面"
-							},{
-							"picture2":"图片2",
-							"picture_link2":"会员主页"
-							},{
-							"picture3":"图片3",
-							"picture_link2":"店铺主页"
-							}]
-						}]
-					}
-			}]
+				}
+			}
 		"""
 		Then jobs能获取'微页面标题'
 		"""
