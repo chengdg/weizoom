@@ -1,4 +1,4 @@
-author：师帅
+#author：师帅
 Feature: 自定义模块-图片广告
 
 
