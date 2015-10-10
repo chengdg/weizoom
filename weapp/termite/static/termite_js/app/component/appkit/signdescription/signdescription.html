@@ -12,12 +12,13 @@
         }
 
         .wui-TopPaneDiv {
-            height: 250px;
+            height: auto;
             background-image: url('/termite_static/img/component/sign/signdescription_left_bg.png');
             background-repeat: repeat-x;
-            background-size: 4.5% auto;
+            background-size: 5% auto;
             text-align: center;
             color: white;
+            padding-bottom: 10px;
         }
 
         .wui-UserPhotoDiv {
@@ -70,10 +71,13 @@
         .wui-Rules.Chr span{
             margin-left: 8px;
         }
+        .wui-BodyPaneDiv{
+            padding-top: 15px;
+        }
 
         .wui-SignCircle {
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
             padding: 2px;
             background: #9AD2EB;
             border-radius: 120px;
@@ -85,8 +89,8 @@
         }
 
         .wui-SignCircle .wui-SignSign {
-            width: 170px;
-            height: 170px;
+            width: 145px;
+            height: 145px;
             background: #0090D6;
             display: inline-block; /* circle wraps image */
             border-radius: 120px;
@@ -99,24 +103,20 @@
             position: absolute;
         }
 
-        .wui-SignCircle.wa-sign-btn{
-            margin-top: 30px;
-        }
         .wui-SignSign .wui-SignChr {
             color: white;
             font-size: 2.5em;
-            line-height: 170px;
+            line-height: 145px;
         }
 
         .wui-SignDescriptionDiv {
-            margin-top: 25px;
             color: #555555;
             text-align: center;
         }
         .wui-SignCircle.wa-sign-board{
             background-color: #F0F0F0;
             font-weight: bold;
-            margin-top: 30px;
+            margin-top: auto;
 
         }
         .wui-SignCircle.wa-sign-board .wui-SignSign{
@@ -128,7 +128,7 @@
             font-size:1em;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Head{
-            margin-top: 24px;
+            margin-top: 10px;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Days{
             line-height: 42px;
@@ -144,7 +144,7 @@
         /* 翻页动画 */
         .animate3d{
             height: 220px;
-            width: 200px;
+            width: 160px;
             margin: 0 auto;
             perspective: 100px;
             -webkit-perspective: 100px;
@@ -153,49 +153,10 @@
             position: absolute;
             z-index: 0;
         }
-    @keyframes fadeOutUpBig{
-        0%{
-            opacity:1;
-            -webkit-transform:translate3d(0,0,0);
-            transform:translate3d(0,0,0)
-        }
-        100%{
-            opacity:0;
-            display: none;
-            -webkit-transform:translate3d(0,-40px,0);
-            transform:translate3d(0,-40px,0)
-        }
-    }
-    @-webkit-keyframes fadeOutUpBig{
-        0%{
-            opacity:1;
-            -webkit-transform:translate3d(0,0,0);
-            transform:translate3d(0,0,0)
-        }
-        100%{
-            opacity:0;
-            display: none;
-            -webkit-transform:translate3d(0,-40px,0);
-            transform:translate3d(0,-40px,0)
-        }
-    }
-    .fadeOutUpBig{
-        -webkit-animation-name:fadeOutUpBig;
-        animation-name:fadeOutUpBig;
-    }
-    .animated{
-        -webkit-animation-duration:1s;
-        animation-duration:1s;
-        -webkit-animation-fill-mode:both;
-        animation-fill-mode:both;
-    }
-    .animated.once{
-        -webkit-animation-iteration-count:1;
-        animation-iteration-count:1;
-    }
 
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/termite_static/v3/css/animate.min.css" rel="stylesheet">
 {% endblock %}
 
 {% ifequal component.type 'appkit.signdescription' %}
@@ -208,7 +169,7 @@
         </div>
         <div class="wui-UserName Chr wa-username"><p>用户名</p></div>
         <div class="wui-UserPointDiv">
-            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr wa-user-integral"></span></p>
+            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr wa-user-integral"></span><b class="wui-integral-adder"></b></p>
         </div>
         <div class="wui-Rules Border wa-rules">
             <div class="wui-Rules Chr">活动规则<span class="fa fa-chevron-circle-right"></span></div>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from django.conf import settings
 
 import mongoengine as models
 from modules.member.module_api import get_member_by_openid
@@ -158,6 +159,7 @@ class Sign(models.Document):
 		:return: html片段
 		"""
 		return_html = []
+		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
 			print data['keyword'], sign.reply['keyword']
@@ -186,15 +188,15 @@ class Sign(models.Document):
 				if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 					return_html.append(u'亲，今天您已经签到过了哦，明天再来吧！\n')
 				if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
-					return_html.append(u'签到成功！<br>已连续签到%s天<br>本次签到获得以下奖励：' % return_data['serial_count'])
+					return_html.append(u'签到成功！\n已连续签到%s天\n本次签到获得以下奖励：' % return_data['serial_count'])
 					return_html.append(str(return_data['curr_prize_integral']))
 					return_html.append(u'积分\n')
 					if return_data['curr_prize_coupon_name'] != '':
 						return_html.append(return_data['curr_prize_coupon_name'])
-						return_html.append(u'\n<a href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>\n' % data['webapp_owner_id'])
+						return_html.append(u'\n<a href="%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>\n' % (host, data['webapp_owner_id']))
 					return_html.append(u'签到说明：签到有礼！\n')
 					return_html.append(return_data['reply_content'])
-				return_html.append(u'\n<a href="/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % data['webapp_owner_id'])
+				return_html.append(u'\n<a href="%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
 		except:

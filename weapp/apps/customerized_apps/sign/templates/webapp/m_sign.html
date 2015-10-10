@@ -94,7 +94,11 @@
         color:#6D6D6D;
     }
     .wui-rules-intro-div,.wui-rules-rules-div{
+        margin-top: 10%;
+    }
+    .wui-rules-i-content,.wui-rules-rules-div ol{
         margin-top: 10px;
+        line-height: 1.5em;
     }
     .wui-rules-i-title{
         font-size: 1.2em;
@@ -110,10 +114,10 @@
         margin-left: auto;
         margin-right: auto;
         text-align: center;
-        margin-top: 35px;
+        padding-top: 40%;
     }
     .wui-rules-i-desc{
-        font-style: bold;
+        font-weight: bold;
     }
     .wui-rules-footer-div .wui-rules-i-center{
         color:red;
@@ -131,7 +135,7 @@
         border:0;
         border-radius: 3px;
         font-size: 1.2em;
-        font-style: bold;
+        font-weight: bold;
     }
 </style>
 {% endblock %}
@@ -165,12 +169,7 @@
         </div>
         <div class="wui-rules-rules-div">
             <p class="wui-rules-i-title">活动规则</p>
-            <ol class="wui-rules-i-content">
-                <li>1.每日签到获得20积分</li>
-                <li>1.每日签到获得20积分</li>
-                <li>1.每日签到获得20积分</li>
-                <li>1.每日签到获得20积分</li>
-            </ol>
+            <ol class="wui-rules-i-content wa-rules-i-content"></ol>
         </div>
         <div class="wui-rules-footer-div">
             <div class="wui-rules-i-desc">备注:签到奖励可以到<a class="wui-rules-i-center wa-rules-i-center">个人中心</a>查看</div>
@@ -183,9 +182,7 @@
 <script type="text/javascript">
 	W.pageId = "{{request.GET.page_id}}";
     var member_info = JSON.parse('{{ member_info|safe }}');
-    console.log(member_info);
     var prize_info = JSON.parse('{{ prize_info|safe}}');
-    console.log(prize_info);
     var status = "{{ activity_status }}";
     var resultDialog;
 
@@ -227,6 +224,12 @@
         if(status){
             this.$title.text('签到成功！');
             if(data.integral){
+                //添加积分增长特效
+                var adder = data.integral - parseInt($('.wui-UserPoint').find('span').text());
+                $('.wui-UserPoint').find('span').text(data.integral);
+                $('.wui-UserPoint').find('.wui-integral-adder').html('+'+adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function(){
+                    $(this).hide();
+                });
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
             }else if(data.coupon && data.coupon.count != -1){
@@ -279,7 +282,9 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
-                        $this.addClass('fadeOutUpBig animated once');
+                        $this.addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
+                            $(this).hide();
+                        });
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function(){
                             resultDialog.render(true, data.curr_prize);
@@ -304,6 +309,26 @@
             $('.wa-signPageDiv').hide();
             $('.wa-rules-div').show();
         });
+        //积分数据
+        $all_integral = prize_info.serial_integral;
+        $int_arr =[];
+        $int_html="";
+        for(var each in $all_integral){
+          $int_arr.push(each);
+        }
+        $int_arr = $int_arr.sort();
+        for(var i=0;i<$int_arr.length;i++){
+            var j=i+1;
+            var day_num = $int_arr[i];
+            var points = $all_integral[$int_arr[i]];
+            if(day_num=='0'){
+                $int_html += "<li>1.每日签到,获得"+points+"积分奖励</li>";
+            }else{
+                $int_html += "<li>"+j+".连续签到至"+day_num+"天,获得"+points+"积分奖励</li>";
+            }
+        }
+        $('.wa-rules-div').find('.wa-rules-i-content').html($int_html);
+
         //返回
         $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function() {
             $('.wa-rules-div').hide();
@@ -335,7 +360,9 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').addClass('fadeOutUpBig animated once');
+            $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
+                $(this).hide();
+            });
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){
