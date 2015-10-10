@@ -119,6 +119,18 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
+	When jobs编辑微页面'微页面标题'
+	"""
+		[{
+			"title": {
+				"name": "微页面标题"
+			},
+			"navigation":[{
+				"navigation_name": "文本导航2",
+				"navigation_link": "微页面"
+			}]
+		}]
+	"""
 	Then jobs能获取'微页面标题'
 	"""
 		{
