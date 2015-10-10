@@ -34,7 +34,9 @@ Scenario: 1 创建微页面
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -85,7 +87,9 @@ Scenario: （2）验证删除，添加
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -109,7 +113,7 @@ Scenario: （2）验证删除，添加
 				"name": "微页面标题"
 			},
 			"picture_ads":{
-				"display_mode": "轮播图"
+				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
@@ -129,6 +133,7 @@ Scenario: （2）验证删除，添加
 				"name": "微页面标题"
 			},
 			"picture_ads":{
+				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
@@ -148,7 +153,9 @@ Scenario: （2）验证删除，添加
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -170,7 +177,9 @@ Scenario: （2）验证删除，添加
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -236,7 +245,9 @@ Scenario: （3）编辑图片广告信息
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -259,14 +270,16 @@ Scenario: （3）编辑图片广告信息
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
 				},{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题2",
-					"link": "推广扫码"
+					"link": "我的订单"
 				},{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题3",
@@ -281,7 +294,9 @@ Scenario: （3）编辑图片广告信息
 			"title": {
 				"name": "微页面标题"
 			},
-			"picture_ads":[{
+			"picture_ads":{
+				"display_mode": "轮播图",
+				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
