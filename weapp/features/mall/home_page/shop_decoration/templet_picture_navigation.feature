@@ -10,8 +10,7 @@ Scenario: 1添加图片导航
 			"title":{
 				"name": "微页面标题"
 			},
-			"picture_ids":{
-				"values":[{
+			"picture_ids":[{
 					"picture_id": "1",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -37,8 +36,7 @@ Scenario: 1添加图片导航
 			"title":{
 				"name": "微页面标题"
 			},
-			"picture_ids":{
-				"values":[{
+			"picture_ids":[{
 					"picture_id": "1",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -60,12 +58,11 @@ Scenario: 1添加图片导航
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
-		[{
+		{
 			"title":{
 				"name": "微页面标题"
 			},
-			"picture_ids":{
-				"values":[{
+			"picture_ids":[{
 					"picture_id": "1",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -84,7 +81,7 @@ Scenario: 1添加图片导航
 				}]
 			}
 			
-		}]
+		}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
@@ -92,8 +89,7 @@ Scenario: 1添加图片导航
 			"title":{
 				"name": "微页面标题"
 			},
-			"picture_ids":{
-				"values":[{
+			"picture_ids":[{
 					"picture_id": "1",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -115,11 +111,11 @@ Scenario: 1添加图片导航
 	"""
 	When jobs编辑微页面'微页面标题'
 	"""
-		[{
+		{
 			"title":{
 				"name": "微页面标题"
 			}
-		}]
+		}
 	"""
 	Then jobs能获取'微页面标题'
 	"""
