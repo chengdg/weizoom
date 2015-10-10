@@ -129,7 +129,7 @@ class MemberHandler(MessageHandler):
 		"""
 
 		try:
-			if not member.user_icon or member.user_icon == '':
+			if not member.user_icon or member.user_icon == '' and is_from_simulator is False:
 				member_basic_info_updater(request.user_profile, member)
 				if not member.user_icon or member.user_icon == '':
 					member_basic_info_updater(request.user_profile, member)
