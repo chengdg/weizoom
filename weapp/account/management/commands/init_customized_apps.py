@@ -15,7 +15,7 @@ class Command(BaseCommand):
 	
 	def handle(self, **options):
 		admin = User.objects.get(username='admin')
-		module_list = ['lottery', 'survey', 'event', 'vote', 'sign']
+		module_list = ['lottery', 'survey', 'event', 'vote', 'sign','red_envelope']
 		for module_name in module_list:
 			try:
 				import_module("{}.{}".format('apps.customerized_apps', module_name))
