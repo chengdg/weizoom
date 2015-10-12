@@ -340,23 +340,36 @@ def get_datas(request):
     member_name = request.GET.get('member_name', '')
     grade_id = request.GET.get('grade_id', '')
     coupon_status = request.GET.get('coupon_status', '')
-    red_envelope_rule_id = request.GET['id']
+    red_envelope_rule_id = request.GET.get('id','')
+    introduced_by = int(request.GET.get('introduced_by',0))
+    relation_id = int(request.GET.get('relation_id',0))
+    print introduced_by,"introduced_by"
+    print relation_id,"relation_id"
 
-    all_relations = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id)
+    if introduced_by:
+        all_relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+            red_envelope_relation_id=relation_id,
+            introduced_by=introduced_by)
+        print all_relations,"all_relations"
+    else:
+        all_relations = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id)
 
     all_member_ids = [relation.member_id for relation in all_relations]
     all_members = member_models.Member.objects.filter(id__in=all_member_ids)
-    #筛选会员
-    if member_name:
-        hexstr = byte_to_hex(member_name)
-        members = all_members.filter(username_hexstr__contains=hexstr)
-        all_members = members
-    elif grade_id:
-        members = all_members.filter(grade_id=grade_id)
+
+    #筛选处理
+    if introduced_by:
+        #筛选会员
+        if member_name:
+            hexstr = byte_to_hex(member_name)
+            members = all_members.filter(username_hexstr__contains=hexstr)
+            all_members = members
+        elif grade_id:
+            members = all_members.filter(grade_id=grade_id)
+        else:
+            members = all_members
     else:
         members = all_members
-
-
     member_ids = []
     member_id2member = {}
     for member in members:
@@ -364,7 +377,11 @@ def get_datas(request):
         member_id2member[member.id] = member
 
     relations = all_relations.filter(member_id__in=member_ids)
-    relations_ids = [relation.id for relation in relations]
+    if introduced_by:
+        relations_ids = [relation.red_envelope_relation_id for relation in relations]
+    else:
+        relations_ids = [relation.id for relation in relations]
+
 
     records = promotion_models.GetRedEnvelopeRecord.objects.filter(member_id__in=member_ids, red_envelope_relation_id__in=relations_ids)
     coupon_ids = []
@@ -382,72 +399,48 @@ def get_datas(request):
         for coupon in coupons:
             sub_relation_ids.append(coupon_id2record[coupon.id].red_envelope_relation_id)
             coupon_id2coupon[coupon.id] = coupon
-        relations = relations.filter(id__in=sub_relation_ids)
+        if introduced_by:
+            relations = relations.filter(red_envelope_relation_id__in=sub_relation_ids)
+        else:
+            relations = relations.filter(id__in=sub_relation_ids)
     else:
         coupons = Coupon.objects.filter(id__in=coupon_ids)
         for coupon in coupons:
             coupon_id2coupon[coupon.id] = coupon
+    if introduced_by:
+        relations_ids = [relation.red_envelope_relation_id for relation in relations]
+    else:
+        relations_ids = [relation.id for relation in relations]
 
-    relations_ids = [relation.id for relation in relations]
-    print relations_ids,"relations_ids"
-    print member_ids,"member_ids"
     #处理引入领取人数，引入使用人数，引入新关注
-    relation_id2bring_members_count = {}
-    relation_id2use_coupon_count = {}
-    relation_id2new_member_count = {}
-    print promotion_models.RedEnvelopeParticipences.objects.all()
 
-    ppp = promotion_models.RedEnvelopeParticipences.objects.filter(
+    red_participences = promotion_models.RedEnvelopeParticipences.objects.filter(
         red_envelope_relation_id__in=relations_ids,
         member_id__in=member_ids
     )
-    print ppp,"ppp"
 
     relation_id2Participences = {}
-    for p in ppp:
-        relation_id2Participences[p.member_id] = {
+    for p in red_participences:
+        member_relation_id = str(p.member_id) + str(p.red_envelope_relation_id)
+        relation_id2Participences[member_relation_id] = {
             "introduce_new_member": p.introduce_new_member, #引入新关注
             "introduce_used_number": p.introduce_used_number, #引入使用人数
             "introduce_received_number": p.introduce_received_number, #引入领取人数
             "introduce_sales_number": p.introduce_sales_number #引入消费额
         }
     print relation_id2Participences,"relation_id2Participences"
-
-    # send_coupon_ids = [p.coupon_id for p in ppp]
-    # send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
-
-    # for p in ppp:
-    #     if relation_id2bring_members_count.has_key(p.red_envelope_relation_id):
-    #         relation_id2bring_members_count[p.red_envelope_relation_id] += 1
-    #     else:
-    #         relation_id2bring_members_count[p.red_envelope_relation_id] = 1
-    #     if p.coupon.status == 1: #已经使用
-    #         if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
-    #             relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
-    #         else:
-    #             relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
-    #     if p.is_new:
-    #         if relation_id2new_member_count.has_key(p.red_envelope_relation_id):
-    #             relation_id2new_member_count[p.red_envelope_relation_id] += 1
-    #         else:
-    #             relation_id2new_member_count[p.red_envelope_relation_id] = 1
-        # if send_coupon_id2coupon[p.coupon_id].status == 1: #已经使用
-        #     if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
-        #         relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
-        #     else:
-        #         relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
-
     items = []
     for relation in relations:
         member_id = relation.member_id
+        member_relation_id = str(member_id) + str(relation.id)
         items.append({
             'id': relation.id,
             'member_id': member_id,
             'participant_name': member_id2member[member_id].username_for_html,
             'participant_icon': member_id2member[member_id].user_icon,
-            'bring_members_count': relation_id2Participences[member_id]["introduce_received_number"], #领取人数
-            'use_coupon_count': relation_id2Participences[member_id]["introduce_used_number"], #使用人数
-            'new_member_count': relation_id2Participences[member_id]["introduce_new_member"], #引入关注人数
+            'bring_members_count': relation_id2Participences[member_relation_id]["introduce_received_number"], #领取人数
+            'use_coupon_count': relation_id2Participences[member_relation_id]["introduce_used_number"], #使用人数
+            'new_member_count': relation_id2Participences[member_relation_id]["introduce_new_member"], #引入关注人数
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status,
             'coupon_status': COUPONSTATUS[coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status]['name'],
