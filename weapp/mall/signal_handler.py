@@ -7,7 +7,7 @@ from django.conf import settings
 from django.dispatch import Signal
 from django.dispatch.dispatcher import receiver
 from django.db.models import signals as django_model_signals
-from django.db.models import Q
+from django.db.models import Q, F
 
 from mall import signals as mall_signals
 from mall import postage_calculator as mall_postage_calculator
@@ -425,8 +425,11 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
     coupon_rule.update(use_count=F('use_count') + 1)
 
     #更新红包优惠券分析数据 by Eugene
+    print "11111111111111==========================", coupon[0].id
     if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
+        print "22222222222222222222=========================="
         red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
+        print "333333333333333333", red_envelope2member
         promotion_models.RedEnvelopeParticipences.objects.filter(
                     red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
                     red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
