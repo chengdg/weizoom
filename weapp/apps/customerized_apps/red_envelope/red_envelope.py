@@ -440,9 +440,9 @@ def get_datas(request):
             'member_id': member_id,
             'participant_name': member_id2member[member_id].username_for_html,
             'participant_icon': member_id2member[member_id].user_icon,
-            'bring_members_count': relation_id2Participences[int(member_id)]["introduce_received_number"], #领取人数
-            'use_coupon_count': relation_id2Participences[int(member_id)]["introduce_used_number"], #使用人数
-            'new_member_count': relation_id2Participences[int(member_id)]["introduce_new_member"], #引入关注人数
+            'bring_members_count': relation_id2Participences[member_id]["introduce_received_number"], #领取人数
+            'use_coupon_count': relation_id2Participences[member_id]["introduce_used_number"], #使用人数
+            'new_member_count': relation_id2Participences[member_id]["introduce_new_member"], #引入关注人数
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status,
             'coupon_status': COUPONSTATUS[coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status]['name'],
