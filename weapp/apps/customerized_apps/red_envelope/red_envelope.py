@@ -408,7 +408,7 @@ def get_datas(request):
     pageinfo, relations = paginator.paginate(relations, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     red_envelope_relation_ids = [relation.red_envelope_relation_id for relation in relations]
-    red_envelope_relations = promotion_models.RedEnvelopeToOrder.filter(id__in=red_envelope_relation_ids)
+    red_envelope_relations = promotion_models.RedEnvelopeToOrder.objects.filter(id__in=red_envelope_relation_ids)
     red_envelope_relation_id2order_id = dict([(red_envelope_relation.id, red_envelope_relation.order_id) for red_envelope_relation in red_envelope_relations])
 
     items = []
@@ -424,8 +424,8 @@ def get_datas(request):
             'introduce_used_number_count': relation.introduce_used_number,
             'introduce_sales_number': relation.introduce_sales_number,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
-            'coupon_status_id': relation.status,
-            'coupon_status': COUPONSTATUS[relation.status]['name'],
+            'coupon_status_id': relation.coupon.status,
+            'coupon_status': COUPONSTATUS[relation.coupon.status]['name'],
             'order_id': red_envelope_relation_id2order_id[relation.red_envelope_relation_id],
             'grade': relation.member.grade.name
         })
