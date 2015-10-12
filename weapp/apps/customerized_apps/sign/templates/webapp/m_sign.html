@@ -280,8 +280,9 @@
                             $(this).hide();
                         });
                         //添加积分增长特效
-                        var adder = data.curr_prize.integral - parseInt($('.wui-UserPoint').find('span').text());
-                        $('.wui-UserPoint').find('span').text(data.curr_prize.integral);
+                        var adder = data.curr_prize.integral;
+                        var ori_integral = $('.wui-UserPoint').find('span').text();
+                        $('.wui-UserPoint').find('span').text(parseInt(ori_integral) + adder);
                         $('.wui-UserPoint').find('.wui-integral-adder').html('+'+adder).addClass('animated fadeOutUp');
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function(){
