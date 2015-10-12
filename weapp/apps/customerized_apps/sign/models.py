@@ -5,6 +5,8 @@ from django.conf import settings
 
 import mongoengine as models
 from modules.member.module_api import get_member_by_openid
+from market_tools.tools.coupon.util import consume_coupon
+from modules.member import models as member_models
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -109,6 +111,12 @@ class SignParticipance(models.Document):
 		self.reload()
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
+
+		#发放奖励 积分&优惠券
+		member = member_models.Member.objects.get(id=self.member_id)
+		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
+		if curr_prize_coupon_id != '':
+			consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
 
 		return_data['curr_prize_integral'] = curr_prize_integral
 		return_data['curr_prize_coupon_id'] = curr_prize_coupon_id
