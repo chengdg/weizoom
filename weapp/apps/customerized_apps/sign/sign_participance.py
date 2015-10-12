@@ -48,8 +48,11 @@ class SignParticipance(resource.Resource):
 		activity_id = request.POST['id']
 		response = create_response(500)
 		if member_id:
-			signer = app_models.SignParticipance.objects(belong_to=activity_id, member_id=member_id)
 			sign = app_models.Sign.objects.get(id=activity_id)
+			if sign.status != 1:
+				response.errMsg = u'签到活动未开始！'
+				return response.get_response()
+			signer = app_models.SignParticipance.objects(belong_to=activity_id, member_id=member_id)
 			if signer.count() > 0:
 				signer = signer.first()
 			else:
