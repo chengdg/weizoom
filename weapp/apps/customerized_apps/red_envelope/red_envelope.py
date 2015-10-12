@@ -389,6 +389,15 @@ def get_datas(request):
             coupon_id2coupon[coupon.id] = coupon
 
     #处理排序
+    sort_attr = request.GET.get('sort_attr', '-created_at')
+    if '-' in sort_attr:
+        sort_attr = sort_attr.replace('-', '')
+        relations = sorted(relations, key=lambda x: x['id'], reverse=True)
+        relations = sorted(relations, key=lambda x: x[sort_attr], reverse=True)
+        sort_attr = '-' + sort_attr
+    else:
+        relations = sorted(relations, key=lambda x: x['id'])
+        relations = sorted(relations, key=lambda x: x[sort_attr])
     #进行分页
     count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
     cur_page = int(request.GET.get('page', '1'))
