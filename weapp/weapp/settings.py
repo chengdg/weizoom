@@ -2,7 +2,7 @@
 # Django settings for weapp project.
 
 import os
-
+import logging
 VERSION = 2
 
 DEBUG = True
@@ -72,6 +72,25 @@ DATABASES = {
         'CONN_MAX_AGE': 100
     }
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+    }
+}
+
 
 if MODE == 'develop' or MODE == 'test':
     WATCHDOG_DB = 'default'

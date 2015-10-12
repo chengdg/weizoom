@@ -45,7 +45,7 @@ Background:
 		}]
 		"""
 
-@mall2 @message @automaticReply 
+@mall2 @message @automaticReply @gyccc
 Scenario: 1 关注后自动回复,文本类型
 	When jobs添加关注自动回复规则
 		"""
