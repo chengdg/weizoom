@@ -389,14 +389,19 @@ def get_datas(request):
             coupon_id2coupon[coupon.id] = coupon
 
     relations_ids = [relation.id for relation in relations]
+    print relations_ids,"relations_ids"
+    print member_ids,"member_ids"
     #处理引入领取人数，引入使用人数，引入新关注
     relation_id2bring_members_count = {}
     relation_id2use_coupon_count = {}
     relation_id2new_member_count = {}
+    print promotion_models.RedEnvelopeParticipences.objects.all()
+
     ppp = promotion_models.RedEnvelopeParticipences.objects.filter(
         red_envelope_relation_id__in=relations_ids,
-        introduced_by__in=member_ids
+        member_id__in=member_ids
     )
+    print ppp,"ppp"
 
     relation_id2Participences = {}
     for p in ppp:
@@ -406,7 +411,7 @@ def get_datas(request):
             "introduce_received_number": p.introduce_received_number, #引入领取人数
             "introduce_sales_number": p.introduce_sales_number #引入消费额
         }
-
+    print relation_id2Participences,"relation_id2Participences"
 
     # send_coupon_ids = [p.coupon_id for p in ppp]
     # send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
