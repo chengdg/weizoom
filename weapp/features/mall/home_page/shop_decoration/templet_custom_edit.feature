@@ -7,26 +7,18 @@ Background:
 	"""
 			[{
 				"name": "商品1可单行显示",
-				"path": "/standard_static/test_resource_img/hangzhou1.jpg",
-				"create_time":"2015-05-02 9:00",
 				"shelve_type":"上架",
 				"price": 1.0
 			},{
 				"name": "商品2可两行显示",
-				"path": "/standard_static/test_resource_img/hangzhou1.jpg",
-				"create_time":"2015-05-01 9:00",
 				"shelve_type":"上架",
 				"price": 2.0
 			},{
 				"name": "商品3不可两行显示......",
-				"path": "/standard_static/test_resource_img/hangzhou1.jpg",
-				"create_time":"2015-05-03 9:00",
 				"shelve_type":"上架",
 				"price": 3.0
 			},{
 				"name": "商品4",
-				"path": "/standard_static/test_resource_img/hangzhou1.jpg",
-				"create_time":"2015-05-04 9:00",
 				"shelve_type":"下架",
 				"price": 4.0
 			}]
@@ -34,14 +26,11 @@ Background:
 	Then jobs获取'在售'商品选择列表
 	"""
 		{
-			"name":"商品3不可两行显示...",
-			"create_time":"2015-05-03 9:00"
+			"name":"商品3不可两行显示..."
 		},{
-			"name":"商品1可单行显示",
-			"create_time":"2015-05-02 9:00"
+			"name":"商品2可两行显示"
 		},{
-			"name":"商品2可两行显示",
-			"create_time":"2015-05-01 9:00"
+			"name":"商品1可单行显示"
 		}
 	"""
 
