@@ -398,24 +398,34 @@ def get_datas(request):
         introduced_by__in=member_ids
     )
 
+    relation_id2Participences = {}
+    for p in ppp:
+        relation_id2Participences[p.member_id] = {
+            "introduce_new_member": p.introduce_new_member, #引入新关注
+            "introduce_used_number": p.introduce_used_number, #引入使用人数
+            "introduce_received_number": p.introduce_received_number, #引入领取人数
+            "introduce_sales_number": p.introduce_sales_number #引入消费额
+        }
+
+
     # send_coupon_ids = [p.coupon_id for p in ppp]
     # send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
 
-    for p in ppp:
-        if relation_id2bring_members_count.has_key(p.red_envelope_relation_id):
-            relation_id2bring_members_count[p.red_envelope_relation_id] += 1
-        else:
-            relation_id2bring_members_count[p.red_envelope_relation_id] = 1
-        if p.coupon.status == 1: #已经使用
-            if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
-                relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
-            else:
-                relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
-        if p.is_new:
-            if relation_id2new_member_count.has_key(p.red_envelope_relation_id):
-                relation_id2new_member_count[p.red_envelope_relation_id] += 1
-            else:
-                relation_id2new_member_count[p.red_envelope_relation_id] = 1
+    # for p in ppp:
+    #     if relation_id2bring_members_count.has_key(p.red_envelope_relation_id):
+    #         relation_id2bring_members_count[p.red_envelope_relation_id] += 1
+    #     else:
+    #         relation_id2bring_members_count[p.red_envelope_relation_id] = 1
+    #     if p.coupon.status == 1: #已经使用
+    #         if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
+    #             relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
+    #         else:
+    #             relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
+    #     if p.is_new:
+    #         if relation_id2new_member_count.has_key(p.red_envelope_relation_id):
+    #             relation_id2new_member_count[p.red_envelope_relation_id] += 1
+    #         else:
+    #             relation_id2new_member_count[p.red_envelope_relation_id] = 1
         # if send_coupon_id2coupon[p.coupon_id].status == 1: #已经使用
         #     if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
         #         relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
@@ -424,19 +434,20 @@ def get_datas(request):
 
     items = []
     for relation in relations:
+        member_id = relation.member_id
         items.append({
             'id': relation.id,
-            'member_id': relation.member_id,
-            'participant_name': member_id2member[relation.member_id].username_for_html,
-            'participant_icon': member_id2member[relation.member_id].user_icon,
-            'bring_members_count': relation_id2bring_members_count[relation.id] if relation_id2bring_members_count.has_key(relation.id) else 0,
-            'use_coupon_count': relation_id2use_coupon_count[relation.id] if relation_id2use_coupon_count.has_key(relation.id) else 0,
-            'new_member_count': relation_id2new_member_count[relation.id] if relation_id2new_member_count.has_key(relation.id) else 0,
+            'member_id': member_id,
+            'participant_name': member_id2member[member_id].username_for_html,
+            'participant_icon': member_id2member[member_id].user_icon,
+            'bring_members_count': relation_id2Participences[int(member_id)]["introduce_received_number"], #领取人数
+            'use_coupon_count': relation_id2Participences[int(member_id)]["introduce_used_number"], #使用人数
+            'new_member_count': relation_id2Participences[int(member_id)]["introduce_new_member"], #引入关注人数
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status,
             'coupon_status': COUPONSTATUS[coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status]['name'],
             'order_id': relation.order_id if relation.order_id else '',
-            'grade': member_id2member[relation.member_id].grade.name
+            'grade': member_id2member[member_id].grade.name
         })
 
     #处理排序
