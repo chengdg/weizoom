@@ -2235,7 +2235,7 @@ def update_order_status(user, action, order, request=None):
 		actions = action.split('-')
 		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
 		#更新红包引入消费金额的数据 by Eugene
-		if order.coupon_id and promotion_models.RedEnvelopeParticipences.filter(coupon_id=order.coupon_id).count() > 0:
+		if order.coupon_id and promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=order.coupon_id).count() > 0:
 			red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=order.coupon_id)
 			relation = promotion_models.RedEnvelopeParticipences.objects.filter(
 				red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
