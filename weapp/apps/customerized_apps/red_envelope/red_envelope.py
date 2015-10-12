@@ -353,7 +353,7 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
             is_new=True
         )
         for sub_relation in sub_relations:
-            if sub_relation.member.is_subscribed:
+            if sub_relation.member.is_subscribed and sub_relation.is_new:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
