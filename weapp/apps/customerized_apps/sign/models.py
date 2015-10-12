@@ -193,10 +193,10 @@ class Sign(models.Document):
 					return_html.append(u'积分\n')
 					if return_data['curr_prize_coupon_name'] != '':
 						return_html.append(return_data['curr_prize_coupon_name'])
-						return_html.append(u'\n<a href="%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>\n' % (host, data['webapp_owner_id']))
+						return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>\n' % (host, data['webapp_owner_id']))
 					return_html.append(u'签到说明：签到有礼！\n')
 					return_html.append(return_data['reply_content'])
-				return_html.append(u'\n<a href="%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
+				return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
 		except:
