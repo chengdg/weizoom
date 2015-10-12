@@ -14,7 +14,7 @@ Background:
 				"shelve_type":"上架",
 				"price": 2.0
 			},{
-				"name": "商品3不可两行显示......",
+				"name": "商品3不可两行显示",
 				"shelve_type":"上架",
 				"price": 3.0
 			},{
@@ -26,7 +26,7 @@ Background:
 	Then jobs在微页面获取'在售'商品选择列表
 	"""
 		[{
-			"name":"商品3不可两行显示..."
+			"name":"商品3不可两行显示"
 		},{
 			"name":"商品2可两行显示"
 		},{
@@ -94,7 +94,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					},{
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -120,7 +120,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -163,7 +163,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -224,7 +224,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -266,7 +266,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -309,7 +309,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -350,7 +350,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -392,7 +392,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
@@ -434,7 +434,7 @@ Scenario: 添加模块
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 					}, {
-					"product_name":"商品3不可两行显示...",
+					"product_name":"商品3不可两行显示",
 					"price":"3.0"
 					}],
 				"list_style1":"大图",
