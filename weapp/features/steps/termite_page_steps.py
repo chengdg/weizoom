@@ -5,6 +5,7 @@ import json
 from behave import *
 from django.test.client import Client
 from webapp import models as webapp_models
+from mall import models as mall_models
 from test import bdd_util
 
 CONSTANT_CID = 0
@@ -13,6 +14,9 @@ display2name = {"swipe": u"轮播图", "sequence": u"分开显示"}
 
 image_display2mode = {u"默认": "default", u"3列": "three"}
 image_display2name = {"default": u"默认", "three": u"3列"}
+
+product_modes = [u"大图", u"小图", u"一大两小", u"列表"]
+product_types = [u"默认样式", u"简洁样式"]
 
 
 @Given(u"{user}已添加微页面")
@@ -169,6 +173,7 @@ def __process_activity_data(context, page, user):
 	_add_imagenav_group(page, page_json, user)
 	_add_image_group(page, page_json, user)
 	_add_image_display(page, page_json, user)
+	_add_product_group(page, page_json, user)
 	print '3242342'
 
 	data = {
@@ -296,6 +301,25 @@ def __actual_page(page_json):
 				data = {
 					"path": item['model']['image'],
 					"picture_link": json.loads(item['model']['target'])['data_item_name']
+				}
+				actual_component["display_window"]["values"].append(data)
+
+		# 商品
+		if component['type'] == "wepage.item_group":
+			model = component['model']
+			actual_component = {
+				"products": {
+					"list_style1": product_modes[int(model['type'])],
+					"list_style2": product_types[int(model['card_type'])],
+					"show_product_name": model['itemname'],
+					"show_price": model['price'],
+					"items": []
+				}
+			}
+			for item in component['components']:
+				product_id = json.loads(item['model']['target'])['meta']['id']
+				data = {
+					"name": ""
 				}
 				actual_component["display_window"]["values"].append(data)
 
@@ -468,7 +492,7 @@ def _add_imagenav_group(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"图片导航",
-			"model": { "id":"", "class":"", "name":"", "index":1,
+			"model": { "id":"", "class":"", "name":"", "index":7,
 				"datasource":{"type":"api","api_name":""},
 				"items":[]
 			},
@@ -523,7 +547,7 @@ def _add_image_group(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"图片广告",
-			"model": { "id":"", "class":"", "name":"", "index":1,
+			"model": { "id":"", "class":"", "name":"", "index":8,
 				"datasource":{"type":"api","api_name":""},
 				"displayMode": display2mode[page['picture_ads']['display_mode']],
 				"items":[]
@@ -579,7 +603,7 @@ def _add_image_display(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"橱窗",
-			"model": { "id":"", "class":"", "name":"", "index":1,
+			"model": { "id":"", "class":"", "name":"", "index":9,
 				"datasource":{"type":"api","api_name":""},
 				"title": display_window['display_window_title'],
 				"displayMode": image_display2mode[display_window['display_mode']],
@@ -620,6 +644,76 @@ def __get_imagedisplay_json(parent_json, imagedisplay_data, user):
 	}
 	return imagedisplay
 
+# 商品
+def _add_product_group(page, page_json, user):
+	cid, pid = __get_cid_and_pid(page_json)
+
+	if page.has_key("products"):
+		products = page['products']
+		
+		product_group = {
+			"type":"wepage.item_group",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "yes",
+			"is_new_created": True,
+			"property_view_title": u"商品",
+			"model": { "id":"", "class":"", "name":"", "index":10,
+				"datasource":{"type":"api","api_name":""},
+				"type": product_modes.index(products['list_style1']),
+				"card_type": product_types.index(products['list_style2']),
+				"itemname": True if products['show_product_name'] == "true" else False,
+				"price": True if products['show_price'] == "true" else False,
+				"items":[],
+				"container":""
+			},
+			"components":[]
+		}
+		for product in products.get("items", []):
+			product_json = __get_product_json(product_group, product, user)
+			# 加 橱窗的内部数据 
+			product_group["components"].append(product_json)
+			product_group["model"]["items"].append(product_json['cid'])
+
+		page_json['components'].append(product_group)
+
+def __get_product_json(parent_json, product_data, user):
+	cid, pid = __get_cid_and_pid(parent_json)
+
+	product = mall_models.Product.objects.get(name=product_data['name'])
+
+	target = {
+		"meta": {
+			"id": product.id
+		},
+		"data": "./?module=mall&model=product&action=get&rid={}&workspace_id=mall&webapp_owner_id={}".format(product.id, user.id)
+	}
+
+	product_json = {
+		"type":"wepage.item",
+		"cid": cid,
+		"pid": pid,
+		"auto_select": False,
+		"selectable": "no",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": u"一个商品",
+		"model": { "id":"", "class":"", "name":"", "index":1,
+			"datasource":{"type":"api","api_name":""},
+			"title": u"选择商品",
+			"target": json.dumps(target),
+			"components":[]
+		}
+	}
+	return product_json
+
+
 
 
 @When(u"{user}按商品名称搜索")
@@ -651,14 +745,8 @@ def step_impl(context, user):
 		actual_datas.append({
 			"name": product["name"]
 		})
-	print '+++++++++++'
-	print actual_datas
-	print context.page
 	expected_datas = json.loads(context.text)
-	print expected_datas
-	print '6666666666666666666'
-	bdd_util.assert_list(expected_datas, actual_datas)	
-
+	bdd_util.assert_list(expected_datas, actual_datas)
 
 @Then(u"{user}商品模块商品选择列表显示'{page_count}'页")
 def step_impl(context, user, page_count):
@@ -668,8 +756,20 @@ def step_impl(context, user, page_count):
 	expected = {"page_count": page_count}
 	bdd_util.assert_dict(expected, actual)
 
-
 @When(u"{user}访问商品选择列表第'{page}'页")
 def step_impl(context, user, page):
 	user = context.client.user
 	context.page = page
+
+@When(u"{user}在微页面浏览'{page_type}'商品")
+def step_impl(context, user, page_type):
+	user = context.client.user
+	context.page = int(context.page if hasattr(context, "page") else 1)
+
+	if page_type == u'上一页':
+		context.page = context.page - 1
+	elif page_type == u'下一页':
+		context.page = context.page + 1
+
+	context.page = 1 if context.page<= 0 else context.page
+
