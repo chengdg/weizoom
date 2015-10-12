@@ -7,6 +7,7 @@ import json
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
+from django.db.models import Q, F
 
 from modules.member import util as member_util
 from modules.member.models import Member
