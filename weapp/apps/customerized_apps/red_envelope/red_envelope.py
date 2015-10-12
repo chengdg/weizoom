@@ -373,9 +373,9 @@ def get_datas(request):
     )
 
     #排序
-
     all_member_ids = [relation.member_id for relation in relations]
     all_members = member_models.Member.objects.filter(id__in=all_member_ids)
+
     #筛选会员
     if member_name:
         hexstr = byte_to_hex(member_name)
@@ -385,8 +385,6 @@ def get_datas(request):
         members = all_members.filter(grade_id=grade_id)
     else:
         members = all_members
-
-
     member_ids = []
     member_id2member = {}
     for member in members:
@@ -414,6 +412,7 @@ def get_datas(request):
     items = []
     for relation in relations:
         member_id = relation.member_id
+        member_relation_id = str(member_id) + str(relation.id)
         items.append({
             'id': relation.id,
             'member_id': relation.member_id,

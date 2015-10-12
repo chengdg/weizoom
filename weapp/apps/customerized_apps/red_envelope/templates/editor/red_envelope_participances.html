@@ -109,7 +109,7 @@
                     ${item.introduce_used_number_count}
 				</td>
 				<td>
-
+                    ${item.introduce_sales_number}
 				</td>
 				<td>
 					${item.created_at}
@@ -122,7 +122,17 @@
 					{{/if}}
 				</td>
 				<td>
-					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}" data-introduced_by="${item.member_id}">查看引入详情</a><br>
+					<a
+						class="xa-detail"
+						href="javascript:void(0);"
+						data-member-name="${item.participant_name}"
+						data-introduced-by="${item.member_id}"
+						data-reation-id="${item.id}"
+						data-bring-members-count="${item.bring_members_count}"
+						data-use-coupon-count="${item.use_coupon_count}"
+						data-new-member-count="${item.new_member_count}"
+
+					>查看引入详情</a><br>
 					{{if item.coupon_status_id==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
@@ -151,13 +161,18 @@ $(document).ready(function() {
     });
 	$('.panel-body').delegate('.xa-detail', 'click', function(event){
 		var member_name = $(event.currentTarget).data('member-name');
-		var introduced_by = $(event.currentTarget).data('introduced_by');
-		console.log(member_name);
+		var introduced_by = $(event.currentTarget).data('introduced-by');
+		var reation_id = $(event.currentTarget).data('reation-id');
+		var bring_members_count = $(event.currentTarget).data('bring-members-count');
+		var use_coupon_count = $(event.currentTarget).data('use-coupon-count');
+		var new_member_count = $(event.currentTarget).data('new-member-count');
 		var dialog = W.dialog.showDialog('W.dialog.mall.RedEnvelopeDetailDialog',{
 			member_name: member_name,
-			member_count: 1,
-			red_id: {{red_envelope_id}},
+			relation_id: reation_id,
 			introduced_by: introduced_by,
+			bring_members_count:bring_members_count,
+			use_coupon_count: use_coupon_count,
+			new_member_count: new_member_count,
 			success: function(data){
 
 			},
