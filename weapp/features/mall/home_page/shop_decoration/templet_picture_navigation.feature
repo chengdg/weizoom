@@ -1,7 +1,7 @@
 #author：师帅
 Feature: 自定义模块-图片导航
 
-@termite2 @ss
+@termite2
 Scenario: 1添加图片导航
 	Given jobs登录系统
 	When jobs创建微页面

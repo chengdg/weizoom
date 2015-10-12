@@ -132,7 +132,7 @@ Scenario: （2）验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
-				"display_mode": "轮播图1",
+				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou3.jpg",
 					"title": "标题1",
