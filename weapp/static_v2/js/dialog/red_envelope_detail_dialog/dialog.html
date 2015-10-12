@@ -7,10 +7,10 @@
             <h3 class="modal-title">{{html member_name}}引入详情</h3>
         </div>
         <ul class="fans_data_ul xui-weixin-outlinePage">
-			<li style="font-weight: bold;margin-left: 10px;">新关注人数：<em>${new_member_count}</em>人</li>
-			<li style="font-weight: bold;">领取人数：<em>${bring_members_count}</em>人</li>
-			<li style="font-weight: bold;">产生消费额：<em>2000</em>人</li>
-			<li style="font-weight: bold;">使用人数：<em>${use_coupon_count}</em>人</li>
+			<li style="font-weight: bold;margin-left: 10px;">新关注人数：<em>${introduce_new_member}</em>人</li>
+			<li style="font-weight: bold;">领取人数：<em>${introduce_received_number}</em>人</li>
+			<li style="font-weight: bold;">产生消费额：<em>${introduce_sales_number}</em>人</li>
+			<li style="font-weight: bold;">使用人数：<em>${introduce_used_number}</em>人</li>
 		</ul>
         <div class="modal-body" style="min-height: 100px;overflow: auto;">
             <div
@@ -18,7 +18,7 @@
                 data-ui-role="advanced-table"
                 data-app="apps/red_envelope"
                 data-resource="red_envelope_participances"
-                data-args='{"relation_id": "${relation_id}","introduced_by": "${introduced_by}"}'
+                data-args='{"rule_id": "${rule_id}","relation_id": "${relation_id}","introduced_by": "${introduced_by}"}'
                 data-template-id="#red-envelope-dialog-detail-tmpl"
                 data-enable-paginator="true"
                 data-enable-sort="false"

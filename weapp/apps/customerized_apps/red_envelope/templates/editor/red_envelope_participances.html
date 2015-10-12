@@ -24,7 +24,11 @@
 	<div class="xa-redMemberFilterView xui-filterPanel pb10 mb15"></div>
     <div class="panel panel-default xui-tableBox">
 		<div class="fans_data_title"><div class="fans_data_name ml10 mt10 mr5">{{ red_envelope_name }}分析</div>
-			<div class="fans_data_date">({{ red_envelope_start_time }}至{{ red_envelope_end_time }})</div>
+			{%if limit_time %}
+				(永久)
+			{%else%}
+				<div class="fans_data_date">({{ red_envelope_start_time }}至{{ red_envelope_end_time }})</div>
+			{%endif%}
 		</div>
 		<ul class="fans_data_ul xui-weixin-outlinePage ml10 mt10">
 			<li><em>{{ new_member_count }}</em><br>新关注人数</li>
@@ -76,9 +80,9 @@
 			<tr>
 				<th>下单会员</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='grade' data-sort-direction="up">会员状态</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='bring_members_count' data-sort-direction="up">引入领取人数</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='use_coupon_count' data-sort-direction="up">引入使用人数</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='new_member_count' data-sort-direction="up">引入新关注</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='coupon_status' data-sort-direction="up">使用状态</th>
@@ -106,7 +110,7 @@
                     ${item.introduce_used_number_count}
 				</td>
 				<td>
-                    ${item.introduce_used_number_count}
+                    ${item.introduce_new_member_count}
 				</td>
 				<td>
                     ${item.introduce_sales_number}
@@ -128,10 +132,10 @@
 						data-member-name="${item.participant_name}"
 						data-introduced-by="${item.member_id}"
 						data-reation-id="${item.id}"
-						data-bring-members-count="${item.bring_members_count}"
-						data-use-coupon-count="${item.use_coupon_count}"
-						data-new-member-count="${item.new_member_count}"
-
+						data-introduce-received-number="${item.introduce_received_number_count}"
+						data-introduce-used-number="${item.introduce_used_number_count}"
+						data-introduce-new-member="${item.introduce_new_member_count}"
+						data-introduce-sales-number="${item.introduce_sales_number}"
 					>查看引入详情</a><br>
 					{{if item.coupon_status_id==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
@@ -154,6 +158,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var export_id =window.location.search.split('?id=')[1];
 	var view = new W.view.mall.redMemberFilterView({
         el: '.xa-redMemberFilterView',
 		dataView: $('[data-ui-role="advanced-table"]').data('view'),
@@ -163,16 +168,20 @@ $(document).ready(function() {
 		var member_name = $(event.currentTarget).data('member-name');
 		var introduced_by = $(event.currentTarget).data('introduced-by');
 		var reation_id = $(event.currentTarget).data('reation-id');
-		var bring_members_count = $(event.currentTarget).data('bring-members-count');
-		var use_coupon_count = $(event.currentTarget).data('use-coupon-count');
-		var new_member_count = $(event.currentTarget).data('new-member-count');
+		var introduce_received_number = $(event.currentTarget).data('introduce-received-number');
+		var introduce_used_number = $(event.currentTarget).data('introduce-used-number');
+		var introduce_new_member = $(event.currentTarget).data('introduce-new-member');
+		var introduce_sales_number = $(event.currentTarget).data('introduce-sales-number');
+		console.log(export_id);
 		var dialog = W.dialog.showDialog('W.dialog.mall.RedEnvelopeDetailDialog',{
 			member_name: member_name,
 			relation_id: reation_id,
+			rule_id: export_id,
 			introduced_by: introduced_by,
-			bring_members_count:bring_members_count,
-			use_coupon_count: use_coupon_count,
-			new_member_count: new_member_count,
+			introduce_received_number: introduce_received_number,
+			introduce_used_number: introduce_used_number,
+			introduce_new_member: introduce_new_member,
+			introduce_sales_number: introduce_sales_number,
 			success: function(data){
 
 			},
@@ -183,7 +192,6 @@ $(document).ready(function() {
 	});
 
 	var name,grade_id,coupon_status;
-	var export_id =window.location.search.split('?id=')[1];
 	var selected_ids = [];
     //导出选中
 	$('.xa-export-selected').click(function(event) {
