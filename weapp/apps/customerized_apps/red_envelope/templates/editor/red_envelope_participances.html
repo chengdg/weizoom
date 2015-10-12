@@ -192,6 +192,12 @@ $(document).ready(function() {
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
 		coupon_status = $.trim($('[name="coupon_status"]').val());
+		if (grade_id == -1){
+			grade_id = '';
+		}
+		if (coupon_status == -1){
+			coupon_status = '';
+		}
         $('tbody .xa-select').each(function() {
             var $checkbox = $(this);
             if ($checkbox.is(":checked")) {
@@ -212,6 +218,12 @@ $(document).ready(function() {
 		name = $.trim($('[name="name"]').val());
 		grade_id = $.trim($('[name="grade"]').val());
 		coupon_status = $.trim($('[name="coupon_status"]').val());
+		if (grade_id == -1){
+			grade_id = '';
+		}
+		if (coupon_status == -1){
+			coupon_status = '';
+		}
         exportItem();
     });
 	//全选js
@@ -228,8 +240,9 @@ $(document).ready(function() {
 			app: 'apps/red_envelope',
 			resource: 'red_participances_export',
 			args: {
-				'export_id':export_id,
-				'name': name,
+				'is_export': 1,
+				'id':export_id,
+				'member_name': name,
 				'grade_id': grade_id,
 				'coupon_status': coupon_status,
 				'selected_ids': selected_ids

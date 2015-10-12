@@ -60,22 +60,18 @@ class SignParticipances(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', 'id')
 		pageinfo, datas = SignParticipances.get_datas(request)
 
+		member_ids = []
 		for data in datas:
-			member_id = data.member_id
-			try:
-				member = member_models.Member.objects.get(id=member_id)
-				data.participant_name = member.username_for_html
-				data.participant_icon = member.user_icon
-			except:
-				data.participant_name = u'未知'
-				data.participant_icon = '/static/img/user-1.jpg'
-		
+			member_ids.append(data.member_id)
+		members = member_models.Member.objects.filter(id__in=member_ids)
+		member_id2member = {member.id: member for member in members}
+
 		items = []
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
+				'participant_name': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
+				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M:%S"),
 				'latest_date': data.latest_date.strftime("%Y/%m/%d %H:%M:%S"),
 				'total_count': data.total_count,

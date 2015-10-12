@@ -82,7 +82,6 @@ class Sign(resource.Resource):
 		"""
 		响应POST
 		"""
-		print request.POST
 		if request.POST.get('status', None):
 			status = 1 if request.POST['status'] == 'on' else 0
 			app_models.Sign.objects(id=request.POST['signId']).update(set__status=status)
