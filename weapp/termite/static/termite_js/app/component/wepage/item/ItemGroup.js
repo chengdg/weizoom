@@ -25,7 +25,7 @@ W.component.wepage.ItemGroup = W.component.Component.extend({
         groupClass: 'xui-propertyView-productGroup',
         fields: [{
             name: 'items',
-            displayName: '选择图片',
+            displayName: '选择商品',
             type: 'dynamic-generated-control',
             isShowCloseButton: true,
             minItemLength: 0,
