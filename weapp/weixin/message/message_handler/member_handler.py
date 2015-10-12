@@ -132,11 +132,9 @@ class MemberHandler(MessageHandler):
 			更新头像放到celery里
 		"""
 		try:
-			print '==============',is_from_simulator
 			if is_from_simulator is False and (not member.user_icon or member.user_icon == ''):
 				# member_basic_info_updater(request.user_profile, member)
 				# if not member.user_icon or member.user_icon == '':
-				print 'member_handler >>>>>> update member icon'
 				member_tasks.task_member_base_info_update.delay(member.id)
 		except:
 			notify_message = u"关注时,更新会员头像会员失败,id:{}, cause:\n{}".format(
