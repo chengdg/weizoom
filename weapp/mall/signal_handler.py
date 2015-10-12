@@ -409,8 +409,10 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         coupon_rule.update(remained_count=F('remained_count') - 1)
     coupon.update(status=promotion_models.COUPON_STATUS_USED)
     coupon_rule.update(use_count=F('use_count') + 1)
-    if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon.id).count() > 0:
-        red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon.id)
+
+    #更新红包优惠券分析数据
+    if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
+        red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
         promotion_models.RedEnvelopeParticipences.objects.filter(
                     red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
                     red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
