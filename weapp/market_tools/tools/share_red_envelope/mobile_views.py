@@ -7,6 +7,7 @@ import json
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import Context, RequestContext
 from django.shortcuts import render_to_response
+from django.db.models import Q, F
 
 from modules.member import util as member_util
 from modules.member.models import Member
@@ -113,6 +114,13 @@ def get_share_red_envelope(request):
                                     is_new= False if member.is_subscribed else True,
                                     introduced_by=followed_member_id
                         )
+                        RedEnvelopeParticipences.objects.filter(
+                                    owner_id=request.webapp_owner_id,
+                                    red_envelope_rule_id=red_envelope_rule_id,
+                                    red_envelope_relation_id=relation[0].id,
+                                    member_id=followed_member_id,
+                                    introduced_by=0
+                        ).update(introduce_received_number = F('introduce_received_number') + 1)
                     if member.is_subscribed:
                         return_data['has_red_envelope'] = False
                         return_data['coupon_rule'] = coupon_rule
@@ -150,6 +158,15 @@ def get_share_red_envelope(request):
                             red_envelope_relation_id=relation.id,
                             member_id=member.id
                     )
+
+                RedEnvelopeParticipences.objects.create(
+                            owner_id=request.webapp_owner_id,
+                            coupon_id=coupon.id,
+                            red_envelope_rule_id=red_envelope_rule_id,
+                            red_envelope_relation_id=relation.id,
+                            member_id=member.id,
+                            is_new= False if member.is_subscribed else True
+                )
 
                 return_data['has_red_envelope'] = False
                 return_data['coupon_rule'] = coupon_rule

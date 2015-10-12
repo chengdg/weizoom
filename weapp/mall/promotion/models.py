@@ -733,6 +733,9 @@ class RedEnvelopeToOrder(models.Model):
 		verbose_name = '红包关联订单记录'
 		verbose_name_plural = '红包关联订单记录'
 
+	def __getitem__(self, name):
+		return getattr(self, name, None)
+
 class GetRedEnvelopeRecord(models.Model):
 	"""
 	红包领用记录
@@ -750,9 +753,6 @@ class GetRedEnvelopeRecord(models.Model):
 		db_table = 'mall_red_envelope_record'
 		verbose_name = '红包领用记录'
 		verbose_name_plural = '红包领用记录'
-
-	def __getitem__(self, name):
-		return getattr(self, name, None)
 
 class RedEnvelopeParticipences(models.Model):
 	"""

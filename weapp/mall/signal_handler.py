@@ -11,7 +11,7 @@ from django.db.models import Q
 
 from mall import signals as mall_signals
 from mall import postage_calculator as mall_postage_calculator
-from mall.promotion.models import Coupon
+from mall.promotion.models import Coupon, RedEnvelopeParticipences
 from models import *
 from webapp.models import Workspace
 from account.models import UserProfile
@@ -409,6 +409,15 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         coupon_rule.update(remained_count=F('remained_count') - 1)
     coupon.update(status=promotion_models.COUPON_STATUS_USED)
     coupon_rule.update(use_count=F('use_count') + 1)
+    if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon.id).count() > 0:
+        red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon.id)
+        promotion_models.RedEnvelopeParticipences.objects.filter(
+                    red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+                    red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+                    member_id=red_envelope2member.introduced_by,
+                    introduced_by=0
+        ).update(introduce_used_number = F('introduce_used_number') + 1)
+
 
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
