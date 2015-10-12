@@ -397,24 +397,35 @@ def get_datas(request):
     #处理引入领取人数，引入使用人数，引入新关注
     relation_id2bing_members_count = {}
     relation_id2use_coupon_count = {}
+    relation_id2new_member_count = {}
     ppp = promotion_models.RedEnvelopeParticipences.objects.filter(
         red_envelope_relation_id__in=relations_ids,
         introduced_by__in=member_ids
     )
 
-    send_coupon_ids = [p.coupon_id for p in ppp]
-    send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
+    # send_coupon_ids = [p.coupon_id for p in ppp]
+    # send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
 
     for p in ppp:
         if relation_id2bing_members_count.has_key(p.red_envelope_relation_id):
             relation_id2bing_members_count[p.red_envelope_relation_id] += 1
         else:
             relation_id2bing_members_count[p.red_envelope_relation_id] = 1
-        if send_coupon_id2coupon[p.coupon_id].status == 1: #已经使用
+        if p.coupon.status == 1: #已经使用
             if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
                 relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
             else:
                 relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
+        if p.is_new:
+            if relation_id2new_member_count.has_key(p.red_envelope_relation_id):
+                relation_id2new_member_count[p.red_envelope_relation_id] += 1
+            else:
+                relation_id2new_member_count[p.red_envelope_relation_id] = 1
+        # if send_coupon_id2coupon[p.coupon_id].status == 1: #已经使用
+        #     if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
+        #         relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
+        #     else:
+        #         relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
 
     items = []
     for relation in relations:
@@ -423,8 +434,9 @@ def get_datas(request):
             'member_id': relation.member_id,
             'participant_name': member_id2member[relation.member_id].username_for_html,
             'participant_icon': member_id2member[relation.member_id].user_icon,
-            'bing_members_count': relation_id2bing_members_count.has_key[relation.id] if relation_id2bing_members_count.has_key(relation.id) else 0,
+            'bing_members_count': relation_id2bing_members_count[relation.id] if relation_id2bing_members_count.has_key(relation.id) else 0,
             'use_coupon_count': relation_id2use_coupon_count[relation.id] if relation_id2use_coupon_count.has_key(relation.id) else 0,
+            'new_member_count': relation_id2new_member_count[relation.id] if relation_id2new_member_count.has_key(relation.id) else 0,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status,
             'coupon_status': COUPONSTATUS[coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status]['name'],
