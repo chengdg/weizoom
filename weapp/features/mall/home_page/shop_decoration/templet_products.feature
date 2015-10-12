@@ -210,7 +210,7 @@ Scenario:3 一个商品可以被重复选择
 	"""
 		[{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products":{
 				"items": [{
@@ -231,7 +231,7 @@ Scenario:3 一个商品可以被重复选择
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products":{
 				"items": [{
@@ -252,7 +252,7 @@ Scenario:3 一个商品可以被重复选择
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products":{
 				"items"{
@@ -274,24 +274,19 @@ Scenario:3 一个商品可以被重复选择
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items" [{
-					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"name":"商品3不可两行显示"
 				},{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 				},{
-					"name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品2可两行显示"
 				},{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 				},{
-					"name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品2可两行显示"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -306,7 +301,7 @@ Scenario:4 商品管理'下架'、'删除'商品
 	"""
 		[{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items":[{
@@ -327,18 +322,15 @@ Scenario:4 商品管理'下架'、'删除'商品
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items" [{
-					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"name":"商品3不可两行显示"
 					},{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 					},{
-					"name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品2可两行显示"
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -352,15 +344,13 @@ Scenario:4 商品管理'下架'、'删除'商品
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 					},{
-					"name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品2可两行显示"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -375,12 +365,11 @@ Scenario:4 商品管理'下架'、'删除'商品
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 					}],
 					"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -395,7 +384,7 @@ Scenario:5 商品管理'修改'商品
 	"""
 		[{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -416,18 +405,15 @@ Scenario:5 商品管理'修改'商品
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"name":"商品3不可两行显示"
 					},{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 					},{
-					"name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品2可两行显示"
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -448,18 +434,15 @@ Scenario:5 商品管理'修改'商品
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"name":"商品3不可两行显示"
 					},{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 					},{
-					"name":"修改后——商品2可两行显示",
-					"price":"20.0"
+					"name":"修改后——商品2可两行显示"
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -474,7 +457,7 @@ Scenario:6 商品修改，删除
 	"""
 		[{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -495,18 +478,15 @@ Scenario:6 商品修改，删除
 	"""
 		{
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"name":"商品3不可两行显示"
 					},{
-					"name":"商品1可单行显示",
-					"price":"1.0"
+					"name":"商品1可单行显示"
 					},{
-					"name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品2可两行显示"
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
@@ -520,7 +500,7 @@ Scenario:6 商品修改，删除
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -539,7 +519,7 @@ Scenario:6 商品修改，删除
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -559,7 +539,7 @@ Scenario:6 商品修改，删除
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -577,7 +557,7 @@ Scenario:6 商品修改，删除
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -596,7 +576,7 @@ Scenario:6 商品修改，删除
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}
 		}
 	"""
@@ -604,7 +584,7 @@ Scenario:6 商品修改，删除
 	"""
 		{	
 			"title": {
-				"name": 微页面标题1"
+				"name": "微页面标题1"
 			}
 		}
 	"""
