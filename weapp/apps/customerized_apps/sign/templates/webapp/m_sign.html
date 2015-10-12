@@ -224,12 +224,6 @@
         if(status){
             this.$title.text('签到成功！');
             if(data.integral){
-                //添加积分增长特效
-                var adder = data.integral - parseInt($('.wui-UserPoint').find('span').text());
-                $('.wui-UserPoint').find('span').text(data.integral);
-                $('.wui-UserPoint').find('.wui-integral-adder').html('+'+adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function(){
-                    $(this).hide();
-                });
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
             }else if(data.coupon && data.coupon.count != -1){
@@ -242,7 +236,7 @@
             }
             this.$dialogContent.show();
         }else{
-            this.$title.text(data.errMsg);
+            this.$title.text(data);
             this.$dialogContent.hide();
         }
         this.$mask.show();
@@ -268,7 +262,7 @@
                 return false;
             }
             if('未开始' === status){
-                resultDialog.render(false, {});
+                resultDialog.render(false, '签到活动未开始！');
             }else{
                 //发起签到请求
                 W.getApi().call({
@@ -282,16 +276,20 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
-                        $this.addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
+                        $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
                             $(this).hide();
                         });
+                        //添加积分增长特效
+                        var adder = data.curr_prize.integral - parseInt($('.wui-UserPoint').find('span').text());
+                        $('.wui-UserPoint').find('span').text(data.curr_prize.integral);
+                        $('.wui-UserPoint').find('.wui-integral-adder').html('+'+adder).addClass('animated fadeOutUp');
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function(){
                             resultDialog.render(true, data.curr_prize);
-                        }, 1000);
+                        }, 1500);
                     },
                     error: function(data) {
-                        resultDialog.render(false, data);
+                        resultDialog.render(false, '签到失败~');
                     }
                 });
 
@@ -360,9 +358,7 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
-                $(this).hide();
-            });
+            $('.wa-sign-btn').hide();
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){
