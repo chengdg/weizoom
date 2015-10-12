@@ -522,7 +522,7 @@ class redParticipances_Export(resource.Resource):
         try:
             import xlwt
             name = request.GET.get('name', '')
-            selected_ids = request.GET.get('selected_ids', '')
+            selected_ids = list(request.GET.get('selected_ids', ''))
             grade_id = request.GET.get('grade_id', '')
             coupon_status = request.GET.get('coupon_status', '')
             all_relations = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=export_id)
@@ -573,6 +573,9 @@ class redParticipances_Export(resource.Resource):
                 coupons = Coupon.objects.filter(id__in=coupon_ids)
                 for coupon in coupons:
                     coupon_id2coupon[coupon.id] = coupon
+            # 单个导出
+            if selected_ids:
+                relations = relations.filter(id__in=selected_ids)
 
             relations_ids = [relation.id for relation in relations]
             print relations_ids,"relations_ids"
