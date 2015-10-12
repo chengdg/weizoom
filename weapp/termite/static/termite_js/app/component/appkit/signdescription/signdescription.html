@@ -5,6 +5,10 @@
             font-family: STHeiti;
         }
 
+        .Chr.Num{
+            font-family: Arial;
+        }
+
         .wui-SignPageDiv {
             width: 100%;
             height: 560px;
@@ -23,6 +27,7 @@
 
         .wui-UserPhotoDiv {
             padding-top: 20px;
+            padding-bottom: 5px;
         }
 
         .wui-UserPhotoCircle {
@@ -63,16 +68,18 @@
 
         .wui-Rules.Border {
             border: 1px solid white;
-            margin-left: 30%;
-            margin-right: 30%;
+            width: 118px;
+            margin-left: auto;
+            margin-right: auto;
             border-radius: 16px;
-            padding: 2px 0 2px 0;
+            padding: 4px 0 4px 0;
         }
         .wui-Rules.Chr span{
             margin-left: 8px;
+            margin-right: -13px;
         }
         .wui-BodyPaneDiv{
-            padding-top: 15px;
+            padding-top: 10%;
         }
 
         .wui-SignCircle {
@@ -112,6 +119,7 @@
         .wui-SignDescriptionDiv {
             color: #555555;
             text-align: center;
+            margin-top: 10%;
         }
         .wui-SignCircle.wa-sign-board{
             background-color: #F0F0F0;
@@ -124,22 +132,25 @@
             border: 5px solid #0B93D5;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr{
-            line-height: 40px;
+            line-height: 30px;
             font-size:1em;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Head{
             margin-top: 10px;
+            font-size: 0.8em;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Days{
-            line-height: 42px;
             letter-spacing: 3px;
+            margin-top: 7px;
+            font-size: 1.3em;
+            padding-top: 10px;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Days b{
-            font-size: 2.5em;
+            font-size: 3em;
         }
         .wui-SignCircle.wa-sign-board .wui-SignChr-Tail{
             color:#626262;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
         .wui-integral-adder{
             position: absolute;
@@ -147,7 +158,7 @@
         }
         /* 翻页动画 */
         .animate3d{
-            height: 220px;
+            height: 160px;
             width: 160px;
             margin: 0 auto;
             perspective: 100px;
@@ -173,10 +184,10 @@
         </div>
         <div class="wui-UserName Chr wa-username"><p>用户名</p></div>
         <div class="wui-UserPointDiv">
-            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr wa-user-integral"></span><b class="wui-integral-adder"></b></p>
+            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr Num wa-user-integral"></span><b class="wui-integral-adder"></b></p>
         </div>
         <div class="wui-Rules Border wa-rules">
-            <div class="wui-Rules Chr">活动规则<span class="fa fa-chevron-circle-right"></span></div>
+            <div class="wui-Rules Chr">活动规则<span class="fa fa-play-circle"></span></div>
 
         </div>
     </div>
@@ -186,7 +197,7 @@
             <div class="wui-SignCircle wa-sign-board back-face">
                 <div class="wui-SignSign">
                     <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
-                    <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b></b>天</p>
+                    <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b class="Chr Num"></b>天</p>
                     <p class="wui-SignChr wui-SignChr-Tail">已签到</p>
                 </div>
             </div>
@@ -199,7 +210,7 @@
     </div>
 
     <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %}</span>积分<span class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>,<span class="wa-daily_prizes-i-name">{{ component.model.daily_prizes.name }}</span>一张</span></div>
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %}</span>积分<span class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>,<span class="wa-daily_prizes-i-name">{{ component.model.daily_prizes.name }}</span>一张</span></div>
     </div>
 </div>
 {% endifequal %}
