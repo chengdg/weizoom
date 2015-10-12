@@ -433,7 +433,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
                     member_id=red_envelope2member.introduced_by,
                     introduced_by=0
         )
-        for_udpate.introduce_used_number = F('introduce_used_number') + 1)
+        for_udpate.introduce_used_number = F('introduce_used_number') + 1
         for_udpate.save()
         print '===========a',for_udpate.introduce_used_number
 
