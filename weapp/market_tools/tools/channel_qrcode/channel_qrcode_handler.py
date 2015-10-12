@@ -62,6 +62,7 @@ class ChannelQrcodeHandler(MessageHandler):
 			member.is_new = False
 
 		#优化处理
+		print '>>>>>>>>>>>context.is_member_qrcode',context.is_member_qrcode
 		if hasattr(context, 'is_member_qrcode') and context.is_member_qrcode is False:
 			return None
 

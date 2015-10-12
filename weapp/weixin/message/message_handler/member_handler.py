@@ -148,7 +148,6 @@ class MemberHandler(MessageHandler):
 			integral_strategy_settings = request.component_owner_info.integral_strategy_settings
 		except:
 			integral_strategy_settings = None
-		print 'member_handler >>>>>integral_strategy_settings from cache',integral_strategy_settings
 		try:
 			increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 		except:
