@@ -176,14 +176,14 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 			"name":"商品2可两行显示"
 		}]
 	"""
-	When jobs浏览'下一页'
+	When jobs在微页面浏览'下一页'商品
 	Then jobs在微页面获取'在售'商品选择列表
 	"""
 		[{
 			"name":"商品1可单行显示"
 		}]
 	"""
-	When jobs浏览'上一页'
+	When jobs在微页面浏览'上一页'商品
 	Then jobs在微页面获取'在售'商品选择列表
 	"""
 		[{
@@ -210,7 +210,7 @@ Scenario:3 一个商品可以被重复选择
 	"""
 		[{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products":{
 				"items": [{
@@ -227,11 +227,11 @@ Scenario:3 一个商品可以被重复选择
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products":{
 				"items": [{
@@ -248,11 +248,11 @@ Scenario:3 一个商品可以被重复选择
 			}
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products":{
 				"items"{
@@ -270,11 +270,11 @@ Scenario:3 一个商品可以被重复选择
 		}
 	"""
 
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items" [{
@@ -306,7 +306,7 @@ Scenario:4 商品管理'下架'、'删除'商品
 	"""
 		[{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items":[{
@@ -323,11 +323,11 @@ Scenario:4 商品管理'下架'、'删除'商品
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items" [{
@@ -348,11 +348,11 @@ Scenario:4 商品管理'下架'、'删除'商品
 		}
 	"""
 	When jobs下架商品'商品3不可两行显示'
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items": [{
@@ -371,11 +371,11 @@ Scenario:4 商品管理'下架'、'删除'商品
 	"""
 
 	When jobs删除商品'商品2可两行显示'
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items": [{
@@ -395,7 +395,7 @@ Scenario:5 商品管理'修改'商品
 	"""
 		[{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -412,11 +412,11 @@ Scenario:5 商品管理'修改'商品
 			}
 		}]	
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items": [{
@@ -444,11 +444,11 @@ Scenario:5 商品管理'修改'商品
 			"price":"20.0"
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items": [{
@@ -474,7 +474,7 @@ Scenario:6 商品修改，删除
 	"""
 		[{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -491,11 +491,11 @@ Scenario:6 商品修改，删除
 			}
 		}]	
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}, 
 			"products": {
 				"items": [{
@@ -516,11 +516,11 @@ Scenario:6 商品修改，删除
 		}
 	"""
 #删除一个商品
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -535,11 +535,11 @@ Scenario:6 商品修改，删除
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -555,11 +555,11 @@ Scenario:6 商品修改，删除
 		}
 	"""
 #切换样式
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -573,11 +573,11 @@ Scenario:6 商品修改，删除
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			},
 			"products": {
 				"items" [{
@@ -592,19 +592,19 @@ Scenario:6 商品修改，删除
 		}
 	"""
 #删除商品模块
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{	
 			"title": {
-				"name": 微页面标题"
+				"name": 微页面标题1"
 			}
 		}
 	"""

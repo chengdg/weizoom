@@ -8,7 +8,7 @@ Scenario: 1 创建微页面
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -28,11 +28,11 @@ Scenario: 1 创建微页面
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -60,7 +60,7 @@ Scenario: （2）验证删除，添加
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -80,11 +80,11 @@ Scenario: （2）验证删除，添加
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -105,11 +105,11 @@ Scenario: （2）验证删除，添加
 		}
 	"""
 #删除'标题2
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -125,14 +125,14 @@ Scenario: （2）验证删除，添加
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
-				"display_mode": "轮播图",
+				"display_mode": "轮播图1",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou3.jpg",
 					"title": "标题1",
@@ -146,11 +146,11 @@ Scenario: （2）验证删除，添加
 		}
 	"""
 #添加一个图片广告
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -170,11 +170,11 @@ Scenario: （2）验证删除，添加
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -194,19 +194,19 @@ Scenario: （2）验证删除，添加
 			}
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
@@ -219,7 +219,7 @@ Scenario: （3）编辑图片广告信息
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -239,11 +239,11 @@ Scenario: （3）编辑图片广告信息
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -264,11 +264,11 @@ Scenario: （3）编辑图片广告信息
 		}
 	"""
 #修改'标题3'
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -288,11 +288,11 @@ Scenario: （3）编辑图片广告信息
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "轮播图",
@@ -313,11 +313,11 @@ Scenario: （3）编辑图片广告信息
 		}
 	"""
 #将轮播图修改为分开显示
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "分开显示",
@@ -337,11 +337,11 @@ Scenario: （3）编辑图片广告信息
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ads":{
 				"display_mode": "分开显示",

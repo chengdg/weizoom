@@ -39,26 +39,26 @@ Scenario: 添加模块
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}, 
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"	
 		}
 	"""
 
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}, 
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
@@ -79,11 +79,11 @@ Scenario: 添加模块
 				}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}, 
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
@@ -105,11 +105,11 @@ Scenario: 添加模块
 		}
 	"""
 
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
@@ -148,11 +148,11 @@ Scenario: 添加模块
 			}
 	"""
 
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
@@ -192,11 +192,11 @@ Scenario: 添加模块
 	"""
 
 #拖拽调整模块顺序
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"picture_ids":[{
@@ -234,11 +234,11 @@ Scenario: 添加模块
 			}
 			}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"picture_ids":[{
@@ -278,11 +278,11 @@ Scenario: 添加模块
 	"""
 
 #删除后不留空白区，下一个模块自动顶替被删除的模块
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -319,11 +319,11 @@ Scenario: 添加模块
 			}
 			}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -361,11 +361,11 @@ Scenario: 添加模块
 			}
 	"""
 
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -403,11 +403,11 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
 			}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -446,11 +446,11 @@ Scenario: 添加模块
 			}
 	"""
 
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -472,11 +472,11 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
 			}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -499,11 +499,11 @@ Scenario: 添加模块
 			}
 	"""
 #修改标题4
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -525,11 +525,11 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
 			}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面列表"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",

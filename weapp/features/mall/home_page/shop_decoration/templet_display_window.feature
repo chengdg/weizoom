@@ -13,7 +13,7 @@ Scenario:1 新建橱窗微页面
 	"""
 		[{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"display_window":{
 				"display_window_title":"",
@@ -33,11 +33,11 @@ Scenario:1 新建橱窗微页面
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"display_window":{
 				"display_window_title":"",
@@ -58,11 +58,11 @@ Scenario:1 新建橱窗微页面
 		}
 	"""
 #将会员主页修改为我的订单
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"display_window":{
 				"display_window_title":"",
@@ -82,11 +82,11 @@ Scenario:1 新建橱窗微页面
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"display_window":{
 				"display_window_title":"",
@@ -107,19 +107,19 @@ Scenario:1 新建橱窗微页面
 		}
 	"""
 #删除橱窗
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""

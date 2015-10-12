@@ -17,7 +17,7 @@ Scenario:1添加文本导航
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation": [{
 				"navigation_name": "文本导航",
@@ -28,11 +28,11 @@ Scenario:1添加文本导航
 			}]
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation":[{
 				"navigation_name": "文本导航",
@@ -51,7 +51,7 @@ Scenario: 2编辑文本导航
 	"""
 		[{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation":[{
 				"navigation_name": "文本导航",
@@ -62,11 +62,11 @@ Scenario: 2编辑文本导航
 			}]
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation":[{
 				"navigation_name": "文本导航",
@@ -77,11 +77,11 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation":[{
 				"navigation_name": "文本导航",
@@ -92,11 +92,11 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation": [{
 				"navigation_name": "文本导航",
@@ -107,11 +107,11 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation": [{
 				"navigation_name": "文本导航2",
@@ -119,11 +119,11 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation":[{
 				"navigation_name": "文本导航2",
@@ -131,11 +131,11 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"navigation": [{
 				"navigation_name": "文本导航2",
@@ -143,19 +143,19 @@ Scenario: 2编辑文本导航
 			}]
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title": {
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""

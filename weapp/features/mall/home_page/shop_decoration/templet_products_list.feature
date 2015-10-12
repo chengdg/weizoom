@@ -262,14 +262,14 @@ Scenario:1 商品分组选择列表分页
 			"name": "分类8",
 		}]
 	"""
-	When jobs浏览'第2页'
+	When jobs在微页面浏览'下一页'商品分组
 	Then jobs获取商品分组选择列表
 	"""
 		[{
 			"name": "分类9",
 		}]
 	"""
-	When jobs浏览'上一页'
+	When jobs在微页面浏览'上一页'商品分组
 	Then jobs获取商品分组列表
 	"""
 		[{
@@ -297,7 +297,7 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 		When jobs创建微页面
 		"""
 			[{	"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source": {
 					"items":[{
@@ -309,11 +309,11 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 				}
 			}]
 		"""
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 			{
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source":{
 					"items":[{
@@ -343,11 +343,11 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 
 	#下架商品'1'
 		When jobs下架商品'商品1可单行显示'
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 			{
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source":{
 					"items":[{
@@ -376,11 +376,11 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 		"""
 	#删除商品'2'
 		When jobs删除商品'商品2可两行显示'
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 			{
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source":{
 					"items":[{
@@ -410,16 +410,15 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 			[{
 				"name": "商品10",
 				"category": "分类1,分类2,分类3",
-				"create_time":"2015-05-12 9:00",
 				"shelve_type":"上架",
 				"price": 10.0
 			}]
 		"""
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"products_source":{
 				"items":[{
@@ -455,11 +454,11 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 				"price":"30.0"
 			}
 		"""
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"products_source":{
 				"items":[{
@@ -494,7 +493,7 @@ Scenario:3 商品管理，删除商品分组
 		"""
 			[{	
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source": {
 					"items":[{
@@ -506,11 +505,11 @@ Scenario:3 商品管理，删除商品分组
 				}
 			}]
 		"""
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 			{
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source":{
 					"items":[{
@@ -539,11 +538,11 @@ Scenario:3 商品管理，删除商品分组
 		"""
 	#删除商品分组
 		When jobs删除分组'分组1'
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 			{
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				}
 			}
 		"""
@@ -554,7 +553,7 @@ Scenario:4 分组管理修改商品名，商品列表中使用该分组的商品
 		When jobs创建微页面
 		"""
 			[{	"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source": {
 					"items":[{
@@ -566,11 +565,11 @@ Scenario:4 分组管理修改商品名，商品列表中使用该分组的商品
 				}
 			}]
 		"""
-		Then jobs能获取'微页面标题'
+		Then jobs能获取'微页面标题1'
 		"""
 			{
 				"title":{
-					"name": "微页面标题"
+					"name": "微页面标题1"
 				},
 				"products_source":{
 					"items":[{
@@ -630,7 +629,7 @@ Scenario: 5编辑商品列表
 	When jobs创建微页面
 	"""
 		[{	"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"products_source": {
 				"items":[{
@@ -642,11 +641,11 @@ Scenario: 5编辑商品列表
 			}
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"products_source":{
 				"items":[{
@@ -673,10 +672,10 @@ Scenario: 5编辑商品列表
 			}
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{	"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"products_source": {
 				"items":[{
@@ -689,11 +688,11 @@ Scenario: 5编辑商品列表
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"products_source":{
 				"items":[{
@@ -721,19 +720,19 @@ Scenario: 5编辑商品列表
 			}
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{	
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{	
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""

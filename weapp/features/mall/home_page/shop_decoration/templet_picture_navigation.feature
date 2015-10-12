@@ -1,14 +1,14 @@
 #author：师帅
 Feature: 自定义模块-图片导航
 
-@termite2
+@termite2 @ss
 Scenario: 1添加图片导航
 	Given jobs登录系统
 	When jobs创建微页面
 	"""
 		[{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 				"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -29,11 +29,11 @@ Scenario: 1添加图片导航
 			}]
 		}]
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 				"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -54,11 +54,11 @@ Scenario: 1添加图片导航
 			}]
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 				"path": "/standard_static/test_resource_img/hangzhou2.jpg",
@@ -80,11 +80,11 @@ Scenario: 1添加图片导航
 		}
 	"""
 
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			},
 			"picture_ids":[{
 				"path": "/standard_static/test_resource_img/hangzhou2.jpg",
@@ -105,19 +105,19 @@ Scenario: 1添加图片导航
 			}]
 		}
 	"""
-	When jobs编辑微页面'微页面标题'
+	When jobs编辑微页面'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
-	Then jobs能获取'微页面标题'
+	Then jobs能获取'微页面标题1'
 	"""
 		{
 			"title":{
-				"name": "微页面标题"
+				"name": "微页面标题1"
 			}
 		}
 	"""
