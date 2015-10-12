@@ -436,7 +436,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
                     introduced_by=0)
         current_update_p.introduce_used_number = F('introduce_used_number') + 1
         current_update_p.save()
-        print '-===========================44444444444' current_update_p.introduce_used_number
+        print '-===========================44444444444', current_update_p.introduce_used_number
 
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
