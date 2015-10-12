@@ -425,22 +425,17 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
     coupon_rule.update(use_count=F('use_count') + 1)
 
     #更新红包优惠券分析数据 by Eugene
-    print "11111111111111==========================", coupon[0].id
     if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
-        print "22222222222222222222=========================="
         red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
-        print "333333333333333333", promotion_models.RedEnvelopeParticipences.objects.filter(
+        for_udpate = promotion_models.RedEnvelopeParticipences.objects.get(
                     red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
                     red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
                     member_id=red_envelope2member.introduced_by,
                     introduced_by=0
         )
-        promotion_models.RedEnvelopeParticipences.objects.filter(
-                    red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
-                    red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
-                    member_id=red_envelope2member.introduced_by,
-                    introduced_by=0
-        ).update(introduce_used_number = F('introduce_used_number') + 1)
+        for_udpate.introduce_used_number = F('introduce_used_number') + 1
+        for_udpate.save()
+        print '===========a',for_udpate.introduce_used_number
 
 
 

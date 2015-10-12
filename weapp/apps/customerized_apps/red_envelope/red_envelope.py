@@ -334,7 +334,7 @@ class RedEnvelopeParticipances(resource.Resource):
         response.data = response_data
         return response.get_response()
 
-def _update_member_bing_new_member_count(red_envelope_rule_id=None):
+def _update_member_bring_new_member_count(red_envelope_rule_id=None):
     """
     更新红包引入新会员的数量
     """
@@ -354,9 +354,9 @@ def _update_member_bing_new_member_count(red_envelope_rule_id=None):
             is_new=True
         )
         for sub_relation in sub_relations:
-            if sub_relation.member.is_subscribed:
+            if sub_relation.member.is_subscribed and sub_relation.is_new:
                 count += 1
-        relation.introduce_used_number = count
+        relation.introduce_new_member = count
         relation.save()
 
 def get_datas(request):
@@ -375,7 +375,7 @@ def get_datas(request):
     selected_ids = request.GET.get('selected_ids',0)
     #排序
     sort_attr = request.GET.get('sort_attr', '-created_at')
-    _update_member_bing_new_member_count(red_envelope_rule_id)
+    _update_member_bring_new_member_count(red_envelope_rule_id)
 
     if is_export:
         selected_ids = selected_ids.split(",")
