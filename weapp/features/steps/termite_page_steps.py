@@ -599,7 +599,7 @@ def _add_image_display(page, page_json, user):
 
 def __get_imagedisplay_json(parent_json, imagedisplay_data, user):
 	cid, pid = __get_cid_and_pid(parent_json)
-	
+
 	imagedisplay = {
 		"type":"wepage.imagedisplay_image",
 		"cid": cid,
@@ -619,3 +619,53 @@ def __get_imagedisplay_json(parent_json, imagedisplay_data, user):
 		"components":[]
 	}
 	return imagedisplay
+
+
+
+@When(u"{user}按商品名称搜索")
+def step_impl(context, user):
+	user = context.client.user
+	context.search = json.loads(context.text).get('search', "")
+
+def __get_products(context):	
+	context.page = context.page if hasattr(context, "page") else 1
+	context.search = context.search if hasattr(context, "search") else ""
+
+	data = {
+		"type": "product",
+		"count_per_page": "8",
+		"query": context.search,
+		"page": context.page
+	}
+	response = context.client.get("/termite2/api/webapp_datas/",data)
+	return json.loads(response.content)
+
+@Then(u"{user}在微页面获取'在售'商品选择列表")
+def step_impl(context, user):
+	user = context.client.user
+
+	data = __get_products(context)["data"]["items"]
+
+	actual_datas = []
+	for product in data:
+		actual_datas.append({
+			"name": product["name"]
+		})
+
+	expected_datas = json.loads(context.text)
+	bdd_util.assert_list(expected_datas, actual_datas)	
+
+
+@Then(u"{user}商品模块商品选择列表显示'{page_count}'页")
+def step_impl(context, user, page_count):
+	user = context.client.user
+	max_page = __get_products(context)["data"]["pageinfo"]["max_page"]	
+	actual = {"page_count": max_page}
+	expected = {"page_count": page_count}
+	bdd_util.assert_dict(expected, actual)
+
+
+@When(u"{user}访问商品选择列表第'{page}'页")
+def step_impl(context, user, page):
+	user = context.client.user
+	context.page = page
