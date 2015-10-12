@@ -86,7 +86,10 @@
     /* 是否页面验证 */
     W.isUserPageWalidate = true;
     /* 自动选中cid，当页面进来的时候 */
-    W.autoSelectCid = 2
+    W.autoSelectCid = 2;
+
+    //阻止删除第一个组件
+    W.preventFirstComponentDelected = true;
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
