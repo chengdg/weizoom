@@ -400,7 +400,6 @@ def get_datas(request):
         for relation in relations:
             if relation.coupon.status == coupon_status:
                 final_relations.append(relation)
-
         relations = final_relations
 
     #进行分页
@@ -414,6 +413,7 @@ def get_datas(request):
 
     items = []
     for relation in relations:
+        member_id = relation.member_id
         items.append({
             'id': relation.id,
             'member_id': relation.member_id,
@@ -524,44 +524,86 @@ class redParticipances_Export(resource.Resource):
             import xlwt
             name = request.GET.get('name', '')
             selected_ids = request.GET.get('selected_ids', '')
-            webapp_id = request.user_profile.webapp_id
-            if name:
-                hexstr = byte_to_hex(name)
-                members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-                if name.find(u'非')>=0:
-                    sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-                    members = members|sub_members
-            else:
-                members = member_models.Member.objects.filter(webapp_id=webapp_id)
-            member_ids = [member.id for member in members]
             grade_id = request.GET.get('grade_id', '')
             coupon_status = request.GET.get('coupon_status', '')
-            params = {'red_envelope_rule_id':export_id}
-            datas = promotion_models.GetRedEnvelopeRecord.objects.filter(**params).order_by('-id')
-            if member_ids:
-                params['member__in'] = member_ids
-                datas = datas.filter(**params)
-            if grade_id != '-1':
-                member_ids = set()
-                for data in datas:
-                    if grade_id == str(data.member.grade.id):
-                        member_ids.add(data.member_id)
-                datas = datas.filter(member__in=list(member_ids))
-            if coupon_status != '-1':
-                coupon_ids = set()
-                new_coupon_ids = set()
-                for data in datas:
-                    coupon_ids.add(data.coupon_id)
-                for coupon in Coupon.objects.filter(id__in=list(coupon_ids)):
-                    if coupon_status == str(coupon.status):
-                       new_coupon_ids.add(coupon.id)
-                datas = datas.filter(coupon_id__in=list(new_coupon_ids))
-            if selected_ids:
-                data_ids = set()
-                for data in datas:
-                    if str(data.id) in selected_ids:
-                        data_ids.add(data.id)
-                datas = datas.filter(id__in=list(data_ids))
+            all_relations = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=export_id)
+            all_member_ids = [relation.member_id for relation in all_relations]
+            all_members = member_models.Member.objects.filter(id__in=all_member_ids)
+
+            #筛选会员
+            if name:
+                hexstr = byte_to_hex(name)
+                members = all_members.filter(username_hexstr__contains=hexstr)
+                all_members = members
+            elif grade_id:
+                members = all_members.filter(grade_id=grade_id)
+            else:
+                members = all_members
+            member_ids = []
+            member_id2member = {}
+            for member in members:
+                member_ids.append(member.id)
+                member_id2member[member.id] = member
+
+            relations = all_relations.filter(member_id__in=member_ids)
+            relations_ids = [relation.id for relation in relations]
+
+            records = promotion_models.GetRedEnvelopeRecord.objects.filter(member_id__in=member_ids, red_envelope_relation_id__in=relations_ids)
+            coupon_ids = []
+            coupon_id2record = {}
+            coupon_id2coupon = {}
+            relations_id2coupon_id = {}
+            for record in records:
+                coupon_ids.append(record.coupon_id)
+                coupon_id2record[record.coupon_id] = record
+                relations_id2coupon_id[record.red_envelope_relation_id] = record.coupon_id
+            #处理优惠券
+            if coupon_status:
+                coupons = Coupon.objects.filter(id__in=coupon_ids, status=coupon_status)
+                sub_relation_ids = []
+                for coupon in coupons:
+                    sub_relation_ids.append(coupon_id2record[coupon.id].red_envelope_relation_id)
+                    coupon_id2coupon[coupon.id] = coupon
+                relations = relations.filter(id__in=sub_relation_ids)
+            else:
+                coupons = Coupon.objects.filter(id__in=coupon_ids)
+                for coupon in coupons:
+                    coupon_id2coupon[coupon.id] = coupon
+
+            relations_ids = [relation.id for relation in relations]
+            #处理引入领取人数，引入使用人数，引入新关注
+            relation_id2bring_members_count = {}
+            relation_id2use_coupon_count = {}
+            relation_id2new_member_count = {}
+            ppp = promotion_models.RedEnvelopeParticipences.objects.filter(
+                red_envelope_relation_id__in=relations_ids,
+                introduced_by__in=member_ids
+            )
+
+            # send_coupon_ids = [p.coupon_id for p in ppp]
+            # send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
+
+            for p in ppp:
+                if relation_id2bring_members_count.has_key(p.red_envelope_relation_id):
+                    relation_id2bring_members_count[p.red_envelope_relation_id] += 1
+                else:
+                    relation_id2bring_members_count[p.red_envelope_relation_id] = 1
+                if p.coupon.status == 1: #已经使用
+                    if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
+                        relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
+                    else:
+                        relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
+                if p.is_new:
+                    if relation_id2new_member_count.has_key(p.red_envelope_relation_id):
+                        relation_id2new_member_count[p.red_envelope_relation_id] += 1
+                    else:
+                        relation_id2new_member_count[p.red_envelope_relation_id] = 1
+                # if send_coupon_id2coupon[p.coupon_id].status == 1: #已经使用
+                #     if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
+                #         relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
+                #     else:
+                #         relation_id2use_coupon_count[p.red_envelope_relation_id] = 1
+
             fields_pure = []
             export_data = []
 
@@ -576,53 +618,26 @@ class redParticipances_Export(resource.Resource):
             fields_pure.append(u'领取时间')
             fields_pure.append(u'使用状态')
 
-            #username(member_id)
-            member_ids = [record['member_id'] for record in datas ]
-            members = member_models.Member.objects.filter(id__in = member_ids)
-            member_id2name = {}
-            for member in members:
-                m_id = member.id
-                if member.is_subscribed == True:
-                    u_name = member.username
-                else:
-                    u_name = u'非会员'
-                if m_id not in member_id2name:
-                    member_id2name[m_id] = u_name
-                else:
-                    member_id2name[m_id] = u_name
-
-            member_id2grade = {}
-            for member in members:
-                m_id = member.id
-                member_id2grade[m_id] = member.grade.name
-
-            coupon_ids = [record['coupon_id'] for record in datas ]
-            coupons = Coupon.objects.filter(id__in = list(coupon_ids))
-            coupon_id2status = {}
-            for coupon in coupons:
-                c_id = coupon.id
-                if coupon.status == 1:
-                    coupon.status = u'已使用'
-                else:
-                    coupon.status = u'未使用'
-                coupon_id2status[c_id] = coupon.status
             #processing data
             num = 0
-            for record in datas:
+            for relation in relations:
                 export_record = []
                 num = num+1
-                name = member_id2name[record['member_id']]
-                grade_name = member_id2grade[record['member_id']]
-                created_at = record['created_at'].strftime("%Y-%m-%d")
-                status = coupon_id2status[int(record['coupon_id'])]
+                name = member_id2member[relation.member_id].username_for_html
+                grade_name = member_id2member[relation.member_id].grade.name
+                bring_members_count = relation_id2bring_members_count[relation.id] if relation_id2bring_members_count.has_key(relation.id) else 0
+                use_coupon_count = relation_id2use_coupon_count[relation.id] if relation_id2use_coupon_count.has_key(relation.id) else 0
+                new_member_count = relation_id2new_member_count[relation.id] if relation_id2new_member_count.has_key(relation.id) else 0
+                created_at = relation.created_at.strftime("%Y-%m-%d")
+                status = COUPONSTATUS[coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status]['name']
                 # don't change the order
                 export_record.append(num)
                 export_record.append(name)
                 #TODO 显示正确数字
                 export_record.append(grade_name)
-                export_record.append('')
-                export_record.append('')
-                export_record.append('')
+                export_record.append(bring_members_count)
+                export_record.append(use_coupon_count)
+                export_record.append(new_member_count)
                 export_record.append('')
                 export_record.append(created_at)
                 export_record.append(status)
