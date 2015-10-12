@@ -423,7 +423,7 @@ def get_datas(request):
             'member_id': relation.member_id,
             'participant_name': member_id2member[relation.member_id].username_for_html,
             'participant_icon': member_id2member[relation.member_id].user_icon,
-            'bing_members_count': relation_id2bing_members_count[relation.id],
+            'bing_members_count': relation_id2bing_members_count.has_key[relation.id] if relation_id2bing_members_count.has_key(relation.id) else 0,
             'use_coupon_count': relation_id2use_coupon_count[relation.id] if relation_id2use_coupon_count.has_key(relation.id) else 0,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status_id': coupon_id2coupon[int(relations_id2coupon_id[relation.id])].status,
