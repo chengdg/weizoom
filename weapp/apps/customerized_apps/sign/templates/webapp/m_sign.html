@@ -278,9 +278,6 @@
                     success: function(data) {
                         prize_info = data;
                         status = '已签到';
-                        $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
-                            $(this).hide();
-                        });
                         //添加积分增长特效
                         var adder = data.curr_prize.integral;
                         var ori_integral = $('.wui-UserPoint').find('span').text();
@@ -361,7 +358,9 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         }else{
-            $('.wa-sign-btn').hide();
+             $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function(){
+                $(this).hide();
+            });
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if(temp_prize){
