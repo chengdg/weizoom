@@ -98,6 +98,9 @@
 							if (parent.W.autoSelectCid && parent.W.autoSelectCid > 0) {
                             	$('.xa-designPage').find("div[data-cid='"+parent.W.autoSelectCid+"']").get(0).click();
 							}
+                            if(parent.W.hideActionPanel){
+                                $('.xa-actionPanel').hide();
+                            }
 						}, 10);							
 					} else {
 						//parent没有准备好，准备下一次检测
