@@ -284,6 +284,20 @@ def cancel_order_handler(order, **kwargs):
             if len(coupons) > 0:
                 coupons.update(status = promotion_models.COUPON_STATUS_UNUSED)
                 promotion_models.CouponRule.objects.filter(id = coupons[0].coupon_rule_id).update(use_count = F('use_count') - 1)
+
+                #更新红包优惠券分析数据 by Eugene
+                if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupons[0].id).count() > 0:
+                    red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupons[0].id)
+                    relation = promotion_models.RedEnvelopeParticipences.objects.filter(
+                                red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+                                red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+                                member_id=red_envelope2member.introduced_by,
+                                introduced_by=0
+                    )
+                    relation.update(introduce_used_number = F('introduce_used_number') - 1)
+                    #订单完成,更新红包消费金额
+                    if order.status == ORDER_STATUS_SUCCESSED:
+                        relation.update(introduce_sales_number = F('introduce_sales_number') - order.product_price - order.postage)
     except:
         alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         watchdog_fatal(alert_message, type='WEB')
@@ -410,9 +424,8 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
     coupon.update(status=promotion_models.COUPON_STATUS_USED)
     coupon_rule.update(use_count=F('use_count') + 1)
 
-    #更新红包优惠券分析数据
+    #更新红包优惠券分析数据 by Eugene
     if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
-        print "FFFFFFFFFFFF"
         red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
         promotion_models.RedEnvelopeParticipences.objects.filter(
                     red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
