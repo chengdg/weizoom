@@ -240,39 +240,6 @@ input,textarea{
     bottom: -9px;
     right: 15px
 }
-
-
-/* 购物车按钮 */
-.xui-productsList-page .xui-shoppingCartBtn{
-    background-image: url("/webapp_static/default/imgs/ico_shopping_cart1.png");
-    background-repeat: no-repeat;
-    background-color:rgba(46, 94, 134, 0.6);
-    background-size:58%;
-    background-position:8px center; 
-    border-radius: 20px;
-    bottom: 65px;
-    height: 40px;
-    left: 5px;
-    padding: 0;
-    position: fixed;
-    width: 40px;
-    z-index: 99;
-}
-.xui-productsList-page .xui-shoppingCartBtn .xui-inner-count{
-    display:inline-block;
-    width:16px;
-    text-align: center;
-    height:16px;
-    background:#D84738;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    color:#fff;
-    margin:2px 0 0 24px;
-    font-size:0.9em;
-    line-height:16px;
-    font-family:arial;
-}
 /* 购物车按钮样式 */
 .xui-tab-fixed{
     position:fixed;
@@ -790,23 +757,122 @@ input.ui-input-text, textarea.ui-input-text {
 /*
  * product-original list页面样式
  */
+.xui-productsList-page .xui-header,.xui-productsList-page .xui-sidePanel .xui-mainMenu .xui-innerHeader{
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+    background: #f0f0f0;
+}
+.xui-productsList-page .xui-header .xui-title,.xui-productsList-page .xui-header .xui-i-title{
+    text-align: center;
+    width: 100%;
+    float: left;
+    display: inline;
+}
+.xui-productsList-page .xui-header .xui-classification,.xui-productsList-page .xui-i-classification{
+    left: 10px;
+    font-size: 14px;
+    z-index: 1;
+    width: 44px;
+}
+.xui-productsList-page .xui-header .xui-classification .xui-down{
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-bottom: 0 none;
+    border-top: 5px solid #656565;
+    position: absolute;
+    top:17px;
+    left: 30px;
+}
+.xui-productsList-page .xui-header .xui-classification .xui-reversal{
+    -webkit-transform:rotate(180deg);
+}
+.xui-productsList-page .xui-header .xui-shoppingCartBtn{
+    display: block;
+    right: 14px;
+    top:10px;
+    width: 44px;
+}
+.xui-productsList-page .xui-header .xui-shoppingCartBtn div{
+    width: 20px;
+    height: 20px;
+    background: url(/static_v2/img/termite2/shoppingCar.png);
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    position: absolute;
+    right: 0;
+}
+.xui-productsList-page .xui-header .xui-shoppingCartBtn .xui-inner-count{
+    font-size: 9px;
+    color: #fff;
+    background: #E94141;
+    border-radius: 8px;
+    padding: 0 3px;
+    height: 12px;
+    line-height: 12px;
+    text-align: center;
+    min-width: 6px;
+    position: absolute;
+    top:-6px;
+    right: -7px;
+}
+.xui-productsList-page .xui-sidePanel{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 1001;
+    font-size: 14px;
+    overflow: auto;
+    display: none;
+}
+.xui-productsList-page .xui-sidePanel li a.xui-categoryLink{
+    color: #333;
+    width: 100%;
+    display: block;
+    padding-left: 24px;
+    padding-right: 24px;
+    line-height: 48px;
+    height: 48px;
+    border-bottom: 1px solid #CBCBCB;
+    box-sizing:border-box;
+}
+/*.xui-productsList-page .xui-sidePanel .xui-mainMenu li{
+    background: #fff;
+    min-height: 48px;
+}*/
+.xui-productsList-page .xui-sidePanel .xui-mainMenu  i.xui-leftArrow{
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #B4B4B4;
+    border-bottom: 0 none;
+    transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);    /* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+    display: inline-block;
+    float: right;
+    margin-top: 21px;
+}
 .xui-products-original ul{
-    margin: 4px;
-    padding: 0;
+    padding-top: 10px;
+    padding-left: 10px;
     overflow:hidden;
 }
 .xui-products-original .xui-inner-li{
     position: relative;
-    padding: 5px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    box-sizing:border-box;
 }
 .xui-products-original .xui-inner-li a{
     padding: 5px;
     display: block;
     background-color: #FFF;
     overflow:hidden;
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+    border:1px solid #e5e5e5;
 }
 .xui-products-original .xui-inner-img img{
     float: left;
@@ -814,13 +880,14 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-products-original .xui-inner-li h3{
     color: #312D29;
-    margin: 2px 0px 0px 0px;
     padding: 5px 0px;
+    margin: 0;
     font-weight:normal;
-    font-size: 1em;
+    font-size: 13px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    height: 26px;
+    line-height: 14px;
+    border-bottom: 1px dashed #D2D2D2;
 }
 .xui-products-original h3 .badge {
     background-color: #5587A9;
@@ -832,11 +899,10 @@ input.ui-input-text, textarea.ui-input-text {
 }
 
 .xui-products-original .xui-inner-li p{
-    color: #D10000;
-    font-size: 1em;
-    margin: 0px;
-    padding: 0 0 3px;
-    bottom:10px;
+    color: #FF6500;
+    font-size: 15px;
+    height: 36px;
+    line-height: 36px;
 }
 .xui-products-original .ui-listview .ui-li > .ui-btn-text{
     height: 240px;
@@ -4442,5 +4508,23 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     }
     .xui-userCenter-header .xui-i-box{
         margin-top:48px;
+    }
+
+    /*默认列表页*/
+    .xui-productsList-page .xui-header,.xui-productsList-page .xui-sidePanel .xui-mainMenu .xui-innerHeader{
+        font-size: 18px;
+        line-height: 43px;
+        height: 42px;
+    }
+    .xui-productsList-page .xui-header .xui-classification,.xui-productsList-page .xui-i-classification{
+        left: 10px;
+        font-size: 15px;
+    }
+    .xui-productsList-page .xui-header .xui-classification .xui-down{
+        top:19px;
+        left: 32px;
+    }
+    .xui-productsList-page .xui-header .xui-shoppingCartBtn{
+       top:12px; 
     }
 }
