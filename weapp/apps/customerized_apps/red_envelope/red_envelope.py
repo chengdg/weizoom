@@ -388,23 +388,9 @@ def get_datas(request):
         for coupon in coupons:
             coupon_id2coupon[coupon.id] = coupon
 
-    #处理排序
-    sort_attr = request.GET.get('sort_attr', '-created_at')
-    if '-' in sort_attr:
-        sort_attr = sort_attr.replace('-', '')
-        relations = sorted(relations, key=lambda x: x['id'], reverse=True)
-        relations = sorted(relations, key=lambda x: x[sort_attr], reverse=True)
-        sort_attr = '-' + sort_attr
-    else:
-        relations = sorted(relations, key=lambda x: x['id'])
-        relations = sorted(relations, key=lambda x: x[sort_attr])
-    #进行分页
-    count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-    cur_page = int(request.GET.get('page', '1'))
-    pageinfo, relations = paginator.paginate(relations, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
     relations_ids = [relation.id for relation in relations]
     #处理引入领取人数，引入使用人数，引入新关注
-    relation_id2bing_members_count = {}
+    relation_id2bring_members_count = {}
     relation_id2use_coupon_count = {}
     relation_id2new_member_count = {}
     ppp = promotion_models.RedEnvelopeParticipences.objects.filter(
@@ -416,10 +402,10 @@ def get_datas(request):
     # send_coupon_id2coupon = dict([(coupon.id, coupon) for coupon in Coupon.objects.filter(id__in=send_coupon_ids)])
 
     for p in ppp:
-        if relation_id2bing_members_count.has_key(p.red_envelope_relation_id):
-            relation_id2bing_members_count[p.red_envelope_relation_id] += 1
+        if relation_id2bring_members_count.has_key(p.red_envelope_relation_id):
+            relation_id2bring_members_count[p.red_envelope_relation_id] += 1
         else:
-            relation_id2bing_members_count[p.red_envelope_relation_id] = 1
+            relation_id2bring_members_count[p.red_envelope_relation_id] = 1
         if p.coupon.status == 1: #已经使用
             if relation_id2use_coupon_count.has_key(p.red_envelope_relation_id):
                 relation_id2use_coupon_count[p.red_envelope_relation_id] += 1
@@ -443,7 +429,7 @@ def get_datas(request):
             'member_id': relation.member_id,
             'participant_name': member_id2member[relation.member_id].username_for_html,
             'participant_icon': member_id2member[relation.member_id].user_icon,
-            'bing_members_count': relation_id2bing_members_count[relation.id] if relation_id2bing_members_count.has_key(relation.id) else 0,
+            'bring_members_count': relation_id2bring_members_count[relation.id] if relation_id2bring_members_count.has_key(relation.id) else 0,
             'use_coupon_count': relation_id2use_coupon_count[relation.id] if relation_id2use_coupon_count.has_key(relation.id) else 0,
             'new_member_count': relation_id2new_member_count[relation.id] if relation_id2new_member_count.has_key(relation.id) else 0,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
@@ -453,6 +439,21 @@ def get_datas(request):
             'grade': member_id2member[relation.member_id].grade.name
         })
 
+    #处理排序
+    sort_attr = request.GET.get('sort_attr', '-created_at')
+    if '-' in sort_attr:
+        sort_attr = sort_attr.replace('-', '')
+        items = sorted(items, key=lambda x: x['id'], reverse=True)
+        items = sorted(items, key=lambda x: x[sort_attr], reverse=True)
+        sort_attr = '-' + sort_attr
+    else:
+        items = sorted(items, key=lambda x: x['id'])
+        items = sorted(items, key=lambda x: x[sort_attr])
+
+    #进行分页
+    count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+    cur_page = int(request.GET.get('page', '1'))
+    pageinfo, relations = paginator.paginate(relations, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
     return pageinfo, items
 
     # if member_name:
