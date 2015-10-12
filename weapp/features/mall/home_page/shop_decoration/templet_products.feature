@@ -221,7 +221,7 @@ Scenario:3 一个商品可以被重复选择
 					"name":"商品1可单行显示"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
+				"list_style2":"默认样式",
 				"show_product_name":"ture",
 				"show_price":"true"
 			}
@@ -242,7 +242,7 @@ Scenario:3 一个商品可以被重复选择
 					"name":"商品1可单行显示"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
+				"list_style2":"默认样式",
 				"show_product_name":"ture",
 				"show_price":"true"
 			}
@@ -262,7 +262,7 @@ Scenario:3 一个商品可以被重复选择
 					"name":"商品1可单行显示"
 					}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
+				"list_style2":"默认样式",
 				"show_product_name":"ture",
 				"show_price":"true"
 				}
@@ -294,7 +294,7 @@ Scenario:3 一个商品可以被重复选择
 					"price":"2.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
+				"list_style2":"默认样式",
 				"show_product_name":"ture",
 				"show_price":"true"
 			}
