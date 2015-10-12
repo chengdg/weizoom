@@ -11,6 +11,9 @@ CONSTANT_CID = 0
 display2mode = {u"轮播图": "swipe", u"分开显示": "sequence"}
 display2name = {"swipe": u"轮播图", "sequence": u"分开显示"}
 
+image_display2mode = {u"默认": "default", u"3列": "three"}
+image_display2name = {"default": u"默认", "three": u"3列"}
+
 
 @Given(u"{user}已添加微页面")
 def step_impl(context, user):
@@ -165,6 +168,7 @@ def __process_activity_data(context, page, user):
 	_add_textnav_group(page, page_json, user)
 	_add_imagenav_group(page, page_json, user)
 	_add_image_group(page, page_json, user)
+	_add_image_display(page, page_json, user)
 	print '3242342'
 
 	data = {
@@ -276,6 +280,25 @@ def __actual_page(page_json):
 				}
 				actual_component["picture_ads"]["values"].append(data)
 
+		# 橱窗
+		if component['type'] == "wepage.image_display":
+			model = component['model']
+			actual_component = {
+				"display_window": {
+					"display_window_title": model['title'],
+					"content_title": model['contentTitle'],
+					"display_mode": image_display2name[model['displayMode']],
+					"content_explain": model['content'],
+					"values": []
+				}
+			}
+			for item in component['components']:
+				data = {
+					"path": item['model']['image'],
+					"picture_link": json.loads(item['model']['target'])['data_item_name']
+				}
+				actual_component["display_window"]["values"].append(data)
+
 		actual.update(actual_component)
 	return actual
 
@@ -288,7 +311,7 @@ def __get_cid_and_pid(parent_json):
 	cid = CONSTANT_CID
 	return cid, pid
 
-
+# 标题
 def _add_templet_title(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
@@ -314,6 +337,7 @@ def _add_templet_title(page, page_json):
 		page_json['components'].append(wepage_title)
 
 
+# 公告
 def _add_notice_text(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
@@ -337,7 +361,7 @@ def _add_notice_text(page, page_json):
 		}
 		page_json['components'].append(wepage_notice)
 
-
+# 富文本
 def _add_richtext(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
@@ -360,7 +384,7 @@ def _add_richtext(page, page_json):
 		}
 		page_json['components'].append(wepage_notice)
 
-
+# 文本导航
 def _add_textnav_group(page, page_json, user):	
 	cid, pid = __get_cid_and_pid(page_json)
 
@@ -390,7 +414,7 @@ def _add_textnav_group(page, page_json, user):
 
 		page_json['components'].append(textnav_group)
 
-
+# 文本导航 二级
 def __get_textnav_json(parent_json, textnav_data, user):
 	cid, pid = __get_cid_and_pid(parent_json)
 	
@@ -428,7 +452,7 @@ def __get_target_link(name, user):
 	}
 	return links[name]
 
-
+# 图片导航
 def _add_imagenav_group(page, page_json, user):
 	cid, pid = __get_cid_and_pid(page_json)
 	
@@ -452,7 +476,7 @@ def _add_imagenav_group(page, page_json, user):
 		}
 		for imagenav in page.get("picture_ids"):
 			imagenav_json = __get_imagenav_json(imagenav_group, imagenav, user)
-			# 加 文本导航的内部数据 
+			# 加 图片导航的内部数据 
 			imagenav_group["components"].append(imagenav_json)
 			imagenav_group["model"]["items"].append(imagenav_json['cid'])
 
@@ -483,6 +507,7 @@ def __get_imagenav_json(parent_json, imagenav_data, user):
 	return imagenav
 
 
+# 图片广告
 def _add_image_group(page, page_json, user):
 	cid, pid = __get_cid_and_pid(page_json)
 
@@ -507,7 +532,7 @@ def _add_image_group(page, page_json, user):
 		}
 		for image in page.get("picture_ads").get("values", []):
 			image_json = __get_image_json(image_group, image, user)
-			# 加 文本导航的内部数据 
+			# 加 图片广告的内部数据 
 			image_group["components"].append(image_json)
 			image_group["model"]["items"].append(image_json['cid'])
 
@@ -536,3 +561,61 @@ def __get_image_json(parent_json, image_data, user):
 		"components":[]
 	}
 	return image
+
+# 橱窗
+def _add_image_display(page, page_json, user):
+	cid, pid = __get_cid_and_pid(page_json)
+
+	if page.has_key("display_window"):
+		display_window = page['display_window']
+		imagedisplay_group = {
+			"type":"wepage.image_display",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": u"橱窗",
+			"model": { "id":"", "class":"", "name":"", "index":1,
+				"datasource":{"type":"api","api_name":""},
+				"title": display_window['display_window_title'],
+				"displayMode": image_display2mode[display_window['display_mode']],
+				"contentTitle": display_window['content_title'],
+				"content": display_window['content_explain'],
+				"items":[]
+			},
+			"components":[]
+		}
+		for imagedisplay in display_window.get("values", []):
+			imagedisplay_json = __get_imagedisplay_json(imagedisplay_group, imagedisplay, user)
+			# 加 橱窗的内部数据 
+			imagedisplay_group["components"].append(imagedisplay_json)
+			imagedisplay_group["model"]["items"].append(imagedisplay_json['cid'])
+
+		page_json['components'].append(imagedisplay_group)
+
+def __get_imagedisplay_json(parent_json, imagedisplay_data, user):
+	cid, pid = __get_cid_and_pid(parent_json)
+	
+	imagedisplay = {
+		"type":"wepage.imagedisplay_image",
+		"cid": cid,
+		"pid": pid,
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": u"一个橱窗",
+		"model": { "id":"", "class":"", "name":"", "index":1,
+			"datasource":{"type":"api","api_name":""},
+			"target": __get_target_link(imagedisplay_data['picture_link'], user),
+			"image": imagedisplay_data['path']
+		},
+		"components":[]
+	}
+	return imagedisplay
