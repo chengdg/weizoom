@@ -395,7 +395,7 @@ def get_datas(request):
 
     #优惠券查找
     relations = relations.filter(member_id__in=member_ids)
-    if coupon_status
+    if coupon_status:
         final_relations = []
         for relation in relations:
             if relation.coupon.status == coupon_status:
