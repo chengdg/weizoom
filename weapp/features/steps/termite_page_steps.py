@@ -651,8 +651,12 @@ def step_impl(context, user):
 		actual_datas.append({
 			"name": product["name"]
 		})
-
+	print '+++++++++++'
+	print actual_datas
+	print context.page
 	expected_datas = json.loads(context.text)
+	print expected_datas
+	print '6666666666666666666'
 	bdd_util.assert_list(expected_datas, actual_datas)	
 
 
