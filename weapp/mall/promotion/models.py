@@ -759,10 +759,10 @@ class RedEnvelopeParticipences(models.Model):
 	红包领用记录
 	"""
 	owner = models.ForeignKey(User)
-	coupon_id = models.CharField(max_length=50)
+	coupon = models.ForeignKey(Coupon)
 	red_envelope_rule_id = models.IntegerField(default=0)
 	red_envelope_relation_id = models.IntegerField(default=0)
-	member_id = models.IntegerField(default=0)
+	member = models.ForeignKey(Member)
 	is_new = models.BooleanField(default=False)
 	introduced_by = models.IntegerField(default=0)  #由谁引入
 	introduce_new_member = models.IntegerField(default=0) #引入新关注
