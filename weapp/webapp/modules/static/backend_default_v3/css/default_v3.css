@@ -767,8 +767,13 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-productsList-page .xui-header .xui-title,.xui-productsList-page .xui-header .xui-i-title{
     text-align: center;
     width: 100%;
-    float: left;
-    display: inline;
+}
+.xui-productsList-page .xui-header .xui-title span{
+    display: inline-block;
+    width: 65%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
 }
 .xui-productsList-page .xui-header .xui-classification,.xui-productsList-page .xui-i-classification{
     left: 10px;
