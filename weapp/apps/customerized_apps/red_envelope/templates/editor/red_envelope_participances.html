@@ -90,7 +90,7 @@
 			<tr data-id="${item.id}" class="xa-selectTr">
 			<td style="position:relative;" >
 				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="/member/member_detail/edit/?id=${item.member_id}">
+					<a target="_blank" href="/member/detail/?id=${item.member_id}">
 						<img width="41" height="41" src="${item.participant_icon}" /><br>
 						{{html item.participant_name}}
 					</a>
@@ -122,7 +122,7 @@
 					{{/if}}
 				</td>
 				<td>
-					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}">查看引入详情</a><br>
+					<a class="xa-detail" href="javascript:void(0);" data-member-name="${item.participant_name}" data-introduced_by="${item.member_id}">查看引入详情</a><br>
 					{{if item.coupon_status_id==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
@@ -151,11 +151,13 @@ $(document).ready(function() {
     });
 	$('.panel-body').delegate('.xa-detail', 'click', function(event){
 		var member_name = $(event.currentTarget).data('member-name');
+		var introduced_by = $(event.currentTarget).data('introduced_by');
 		console.log(member_name);
 		var dialog = W.dialog.showDialog('W.dialog.mall.RedEnvelopeDetailDialog',{
 			member_name: member_name,
 			member_count: 1,
 			red_id: {{red_envelope_id}},
+			introduced_by: introduced_by,
 			success: function(data){
 
 			},
