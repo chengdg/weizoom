@@ -576,19 +576,20 @@ class redParticipances_Export(resource.Resource):
                 num = num+1
                 name = relation["participant_name"]
                 grade_name = relation["grade"]
-                bring_members_count = relation["introduce_received_number_count"]
-                use_coupon_count = relation["introduce_used_number_count"]
-                new_member_count = relation["introduce_new_member_count"]
+                introduce_received_number_count = relation["introduce_received_number_count"]
+                introduce_used_number_count = relation["introduce_used_number_count"]
+                introduce_new_member_count = relation["introduce_new_member_count"]
+                introduce_sales_number = relation["introduce_sales_number"]
                 created_at = relation["created_at"]
-                status = relation["coupon_status"]
+                status = '已使用' if relation["coupon_status"] == 1 else '未使用'
                 # don't change the order
                 export_record.append(num)
                 export_record.append(name)
                 export_record.append(grade_name)
-                export_record.append(bring_members_count)
-                export_record.append(use_coupon_count)
-                export_record.append(new_member_count)
-                export_record.append('')
+                export_record.append(introduce_received_number_count)
+                export_record.append(introduce_used_number_count)
+                export_record.append(introduce_new_member_count)
+                export_record.append(introduce_sales_number)
                 export_record.append(created_at)
                 export_record.append(status)
                 export_data.append(export_record)
