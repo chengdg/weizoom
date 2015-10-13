@@ -6,7 +6,7 @@ Feature: 会员列表-会员详情-浏览轨迹
 	1、【时间】：浏览网页的时间
 	2、【链接】：浏览的网页的名称
 """
-@mall2 @member @memberList
+@mall2 @member @memberList @gy
 Scenario:1 会员详情-浏览轨迹
 
 	Given jobs登录系统
@@ -73,7 +73,7 @@ Scenario:1 会员详情-浏览轨迹
 		"""
 		[{
 			"date_time":"今天",
-			"link":"商品列表(全部)"
+			"link":"商品列表"
 		}]
 		"""
 
