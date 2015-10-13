@@ -253,10 +253,10 @@ def _add_weixin_pay_config(request):
             owner=request.manager,
             app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
-            app_secret=request.POST.get('app_secret', ''),
+            app_secret=request.POST.get('app_secret', '').strip(),
             partner_id=request.POST.get('mch_id', '').strip(),
             partner_key=request.POST.get('api_key', '').strip(),
-            paysign_key=request.POST.get('paysign_key', '').strip(),
+            paysign_key=request.POST.get('paysign_key', ''),
         )
 
     return config.id
@@ -292,10 +292,10 @@ def _update_weixin_pay_config(request, pay_interface):
         UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
             app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
-            app_secret=request.POST.get('app_secret', ''),
+            app_secret=request.POST.get('app_secret', '').strip(),
             partner_id=request.POST.get('mch_id', '').strip(),
             partner_key=request.POST.get('api_key', '').strip(),
-            paysign_key=request.POST.get('paysign_key', '').strip(),
+            paysign_key=request.POST.get('paysign_key', ''),
         )
 
 
