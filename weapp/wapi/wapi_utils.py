@@ -12,10 +12,11 @@ def wapi_log(app, resource, method, params, status=0):
 	记录WAPI信息，保存到mongo中
 	"""
 	global _wapi_logger
-	if _wapi_logger is None:
-		_wapi_logger = MongoAPILogger()
+	#if _wapi_logger is None:
+	#	_wapi_logger = MongoAPILogger()
 	print("called WAPI: {} {}/{}, param: {}".format(method, app, resource, params))
-	return _wapi_logger.log(app, resource, method, params, status)
+	#return _wapi_logger.log(app, resource, method, params, status)
+	return
 
 
 def create_json_response(code, data):
