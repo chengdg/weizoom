@@ -400,8 +400,6 @@ def get_datas(request):
                 red_envelope_rule_id=red_envelope_rule_id,
                 introduced_by=0
             )
-    #处理排序,需要放在分页之前
-    relations = relations.order_by(sort_attr)
 
     all_member_ids = [relation.member_id for relation in relations]
     all_members = member_models.Member.objects.filter(id__in=all_member_ids)
@@ -430,6 +428,9 @@ def get_datas(request):
                 final_relations.append(relation)
         relations = final_relations
 
+    #处理排序,需要放在分页之前
+    relations = relations.order_by(sort_attr)
+
     if not is_export:
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -452,8 +453,8 @@ def get_datas(request):
             'introduce_used_number_count': relation.introduce_used_number,
             'introduce_sales_number': relation.introduce_sales_number,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
-            'coupon_status_id': relation.coupon.status,
-            'coupon_status': COUPONSTATUS[relation.coupon.status]['name'],
+            'coupon_status': relation.coupon.status,
+            'coupon_status_name': COUPONSTATUS[relation.coupon.status]['name'],
             'order_id': red_envelope_relation_id2order_id[relation.red_envelope_relation_id],
             'grade': relation.member.grade.name
         })
