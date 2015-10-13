@@ -299,11 +299,14 @@ class RedEnvelopeParticipances(resource.Resource):
         received_count = has_data      #领取人数
         total_use_count = relations.filter(coupon__status=1).count()     #使用人数
 
-        #求该红包下，所有下过订单的总额
-        if redEnvelope2Order_data:
-            for i in redEnvelope2Order_data:
-                final_price = Order.objects.get(id=i.order_id).final_price
-                consumption_sum += final_price
+        if rule_data.receive_method :
+            consumption_sum = 0
+        else:
+            #求该红包规则下的总消费额
+            if redEnvelope2Order_data:
+                for i in redEnvelope2Order_data:
+                    final_price = Order.objects.get(id=i.order_id).final_price
+                    consumption_sum += final_price
         #加上引入的数字
         for relation in relations:
             new_member_count += relation.introduce_new_member
