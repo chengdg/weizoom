@@ -321,7 +321,6 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         获取advanced table
         """
-        receive_method = request.GET.get('receive_method',0)
         pageinfo, items = get_datas(request)
         sort_attr = request.GET.get('sort_attr', '-created_at')
         response_data = {
@@ -361,7 +360,6 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
 
 def get_datas(request):
     webapp_id = request.user_profile.webapp_id
-    receive_method = request.GET.get('receive_method','')
     member_name = request.GET.get('member_name', '')
     grade_id = request.GET.get('grade_id', '')
     coupon_status = request.GET.get('coupon_status', '')
@@ -378,12 +376,18 @@ def get_datas(request):
     _update_member_bring_new_member_count(red_envelope_rule_id)
 
     if is_export:
-        selected_ids = selected_ids.split(",")
-        relations = promotion_models.RedEnvelopeParticipences.objects.filter(
-            red_envelope_rule_id=red_envelope_rule_id,
-            red_envelope_relation_id__in=selected_ids,
-            introduced_by=0
-        )
+        if selected_ids:
+            selected_ids = selected_ids.split(",")
+            relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+                red_envelope_rule_id=red_envelope_rule_id,
+                red_envelope_relation_id__in=selected_ids,
+                introduced_by=0
+            )
+        else:
+            relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+                red_envelope_rule_id=red_envelope_rule_id,
+                introduced_by=0
+            )
     else:
         if introduced_by:
             relations = promotion_models.RedEnvelopeParticipences.objects.filter(
@@ -393,12 +397,11 @@ def get_datas(request):
             )
         else:
             relations = promotion_models.RedEnvelopeParticipences.objects.filter(
-                    red_envelope_rule_id=red_envelope_rule_id,
-                    introduced_by=0
+                red_envelope_rule_id=red_envelope_rule_id,
+                introduced_by=0
             )
-    #处理排序
+    #处理排序,需要放在分页之前
     relations = relations.order_by(sort_attr)
-
 
     all_member_ids = [relation.member_id for relation in relations]
     all_members = member_models.Member.objects.filter(id__in=all_member_ids)
@@ -550,6 +553,7 @@ class redParticipances_Export(resource.Resource):
         try:
             import xlwt
             relations = get_datas(request)
+            print relations
             fields_pure = []
             export_data = []
 
@@ -579,7 +583,6 @@ class redParticipances_Export(resource.Resource):
                 # don't change the order
                 export_record.append(num)
                 export_record.append(name)
-                #TODO 显示正确数字
                 export_record.append(grade_name)
                 export_record.append(bring_members_count)
                 export_record.append(use_coupon_count)
