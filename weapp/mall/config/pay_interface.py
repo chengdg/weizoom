@@ -241,22 +241,22 @@ def _add_weixin_pay_config(request):
     if int(request.POST.get('pay_version', 0)) == 0:
         config = UserWeixinPayOrderConfig.objects.create(
             owner=request.manager,
-            app_id=request.POST.get('app_id', ''),
+            app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
             app_secret=request.POST.get('app_secret', ''),
-            partner_id=request.POST.get('partner_id', ''),
-            partner_key=request.POST.get('partner_key', ''),
-            paysign_key=request.POST.get('paysign_key', ''),
+            partner_id=request.POST.get('partner_id', '').strip(),
+            partner_key=request.POST.get('partner_key', '').strip(),
+            paysign_key=request.POST.get('paysign_key', '').strip(),
         )
     else:
         config = UserWeixinPayOrderConfig.objects.create(
             owner=request.manager,
-            app_id=request.POST.get('app_id', ''),
+            app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
             app_secret=request.POST.get('app_secret', ''),
-            partner_id=request.POST.get('mch_id', ''),
-            partner_key=request.POST.get('api_key', ''),
-            paysign_key=request.POST.get('paysign_key', ''),
+            partner_id=request.POST.get('mch_id', '').strip(),
+            partner_key=request.POST.get('api_key', '').strip(),
+            paysign_key=request.POST.get('paysign_key', '').strip(),
         )
 
     return config.id
@@ -281,21 +281,21 @@ def _update_weixin_pay_config(request, pay_interface):
     """
     if int(request.POST.get('pay_version', 0)) == 0:
         UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
-            app_id=request.POST.get('app_id', ''),
+            app_id=request.POST.get('app_id', '').strip(),
             app_secret=request.POST.get('app_secret', ''),
             pay_version=request.POST.get('pay_version', 0),
-            partner_id=request.POST.get('partner_id', ''),
-            partner_key=request.POST.get('partner_key', ''),
-            paysign_key=request.POST.get('paysign_key', '')
+            partner_id=request.POST.get('partner_id', '').strip(),
+            partner_key=request.POST.get('partner_key', '').strip(),
+            paysign_key=request.POST.get('paysign_key', '').strip()
         )
     else:
         UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
-            app_id=request.POST.get('app_id', ''),
+            app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
             app_secret=request.POST.get('app_secret', ''),
-            partner_id=request.POST.get('mch_id', ''),
-            partner_key=request.POST.get('api_key', ''),
-            paysign_key=request.POST.get('paysign_key', ''),
+            partner_id=request.POST.get('mch_id', '').strip(),
+            partner_key=request.POST.get('api_key', '').strip(),
+            paysign_key=request.POST.get('paysign_key', '').strip(),
         )
 
 

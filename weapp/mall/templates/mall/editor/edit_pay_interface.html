@@ -60,7 +60,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="partner_key">合作商户密钥：</label>
 						<div class="col-sm-4">
-							<input type="text" class="form-control" id="partner_key" name="partner_key" value="{% if weixin_pay_config.pay_version == 0 %}{{ weixin_pay_config.partner_key }}{% endif %}" data-validate="require-notempty"  />
+							<input type="text" class="form-control" id="partner_key" name="partner_key" value="{% if weixin_pay_config.pay_version == 0 %}{{ weixin_pay_config.partner_key }}{% endif %}" data-validate="require-length" strlength="32"/>
 							<div class="errorHint"></div>
 						</div>
 					</div>
