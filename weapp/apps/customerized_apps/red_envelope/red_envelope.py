@@ -428,11 +428,15 @@ def get_datas(request):
     #优惠券查找
     relations = relations.filter(member_id__in=member_ids)
     if coupon_status:
-        final_relations = []
+        final_relations_ids = []
         for relation in relations:
-            if relation.coupon.status == coupon_status:
-                final_relations.append(relation)
-        relations = final_relations
+            if str(coupon_status) == '1':
+                if relation.coupon.status == int(coupon_status):
+                    final_relations_ids.append(relation.id)
+            else:
+                if relation.coupon.status !=1:
+                    final_relations_ids.append(relation.id)
+        relations = relations.filter(id__in=final_relations_ids)
 
     #处理排序,需要放在分页之前
     relations = relations.order_by(sort_attr)
