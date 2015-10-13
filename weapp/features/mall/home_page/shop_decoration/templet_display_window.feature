@@ -8,7 +8,7 @@ Feature:自定义模块——【基础模块】橱窗-页面
    	2、链接，“从微站选择”当选择的链接的名称过长时用省略号截取显示，保证链接名称、修改、图标在同一行，不折行
    	"""
 
-@termite2 @wxr
+@mall2 @termite2 
 Scenario:1 新建橱窗微页面
 	Given jobs登录系统
 	When jobs创建微页面
@@ -69,7 +69,7 @@ Scenario:1 新建橱窗微页面
 			"display_window":{
 				"display_window_title":"",
 				"content_title":"",
-				"display_mode":"三列",
+				"display_mode":"3列",
 				"content_explain":"",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -93,7 +93,7 @@ Scenario:1 新建橱窗微页面
 			"display_window":{
 				"display_window_title":"",
 				"content_title":"",
-				"display_mode":"三列",
+				"display_mode":"3列",
 				"content_explain":"",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
