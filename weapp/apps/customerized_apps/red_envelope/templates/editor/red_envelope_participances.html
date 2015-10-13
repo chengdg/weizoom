@@ -79,7 +79,7 @@
 		<thead>
 			<tr>
 				<th>
-					{{if items[0].receive_method}}
+					{{if items[0].receive_method == "True"}}
 						领取会员
 					{{else}}
 						下单会员
@@ -182,10 +182,7 @@ $(document).ready(function() {
 		var introduce_used_number = $(event.currentTarget).data('introduce-used-number');
 		var introduce_new_member = $(event.currentTarget).data('introduce-new-member');
 		var introduce_sales_number = $(event.currentTarget).data('introduce-sales-number');
-		var receive_method = 0;
-		if("{{receive_method}}" == "True"){
-			receive_method = 1;
-		}
+		var receive_method = "{{receive_method}}";
 		var dialog = W.dialog.RedShowDialog('W.dialog.mall.RedEnvelopeDetailDialog.'+reation_id+"'",{
 			receive_method: receive_method,
 			member_name: member_name,
