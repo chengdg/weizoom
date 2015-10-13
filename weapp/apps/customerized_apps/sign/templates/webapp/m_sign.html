@@ -365,10 +365,10 @@
             $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function () {
                 $(this).hide();
             });
+            $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
-            if (temp_prize) {
-                $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
+            if (!$.isEmptyObject(temp_prize)) {
                 if (temp_prize.prize.integral != 0) {
                     str.push("连续签到" + temp_prize.count + "天可领取" + temp_prize.prize.integral + "积分");
                 }

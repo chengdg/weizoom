@@ -218,8 +218,8 @@ ui-appPage-commonStyle">
                 <thead>
                     <tr>
                         <th>会员</th>
-                        <th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-init-sort="-created_at" data-sort-direction="up">第一次签到</th>
-                        <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="up">最后一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-sort-direction="up">第一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="down" data-init-sort="-latest_date">最后一次签到</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="total_count" data-sort-direction="up">累计次数</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="serial_count" data-sort-direction="up">连续次数</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>
@@ -233,8 +233,10 @@ ui-appPage-commonStyle">
                         <td
                             class="tl pl25"
                         >
-                            <img src="${item.participant_icon}" />
-                            {{html item.participant_name}}
+                            <a href="/member/detail/?id=${ item.member_id }" target="_blank">
+                                <img src="${item.participant_icon}" />
+                                {{html item.participant_name}}
+                            </a>
                         </td>
                         <td>
                             ${item.created_at}
@@ -275,21 +277,8 @@ ui-appPage-commonStyle">
 
 {% block global_elements %}
 <div class="xui-bottomActionBar">
-  {% if not sign %}
     <button class="xa-save btn btn-primary">保存</button>
     <button class="xa-preview btn btn-default ml20">预览</button>
-  {% else %}
-    {% if sign.status_text == "未开始" %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-    {% endif %}
-    {% if sign.status_text == "进行中" %}
-    进行中，不可更改
-    {% endif %}
-    {% if sign.status_text == "已结束" %}
-    已结束，不可更改
-    {% endif %}
-  {% endif %}
 </div>
 {% endblock %}
 
@@ -555,10 +544,8 @@ ui-appPage-commonStyle">
         var innerHtml,actionHtml;
         if(act == 'on'){
             innerHtml = '<button type="button" class="btn btn-danger fr" style="margin-top: -35px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>';
-            actionHtml = '进行中，不可更改';
         }else{
             innerHtml = '<button type="button" class="btn btn-primary fr" style="margin-top: -35px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
-            actionHtml = '<button class="xa-save btn btn-primary">保存</button><button class="xa-preview btn btn-default ml20">预览</button>';
         }
         if(isCreateNewData){
             signStatus = act;
@@ -575,7 +562,6 @@ ui-appPage-commonStyle">
                 success: function(data) {
                     W.showHint('success', '更新状态成功');
                     $('.xa-status-control>span').html(innerHtml);
-                    $('.xui-bottomActionBar').html(actionHtml);
                 },
                 error: function(resp) {
                   W.showHint('error', '更新状态失败!');
