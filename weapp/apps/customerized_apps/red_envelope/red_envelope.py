@@ -291,11 +291,17 @@ class RedEnvelopeParticipances(resource.Resource):
         has_data = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=rule_id).count()
         rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
         coupon_rule = promotion_models.CouponRule.objects.get(id=rule_data.coupon_rule_id)
-        #TODO 传递正确的数字
-        new_member_count = 152
-        received_count = 3000
-        consumption_sum = 13000.00
-        total_use_count = 300
+        relations = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
+
+        new_member_count = 0    #新关注人数
+        received_count = 0      #领取人数
+        consumption_sum = 0     #产生消费额
+        total_use_count = 0     #使用人数
+        for relation in relations:
+            new_member_count += relation.introduce_new_member
+            received_count += relation.introduce_received_number
+            consumption_sum += relation.introduce_sales_number
+            total_use_count += relation.introduce_used_number
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
