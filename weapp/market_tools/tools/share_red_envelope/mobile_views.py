@@ -133,16 +133,26 @@ def get_share_red_envelope(request):
                         return_data['friends'] = friends
 
     else:
+        print "111111111111111111111111++++++++++++"
         #用户订单获取
         # if not order.webapp_user_id == member_id:
         #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
         member.member_name = member.username_for_html
+        print red_envelope_rule.id
+        print coupon_rule.is_active
+        print coupon_rule.end_date, datetime.now()
+        print red_envelope_rule.status
+        print red_envelope_rule.end_time, datetime.now()
+        print red_envelope_rule.limit_time
+        print "============================================="
         if (coupon_rule.is_active
             and coupon_rule.remained_count
             and coupon_rule.end_date > datetime.now()
             and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
             coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
+            print "222222222222222222++++++++++++++++++++++"
             if coupon:
+                print "33333333333333333+++++++++++++++++++"
                 relation = RedEnvelopeToOrder.objects.create(
                             owner_id=request.webapp_owner_id,
                             member_id=member_id,
