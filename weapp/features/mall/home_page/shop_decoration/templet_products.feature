@@ -1,7 +1,7 @@
 #_author_:师帅 15/10/12
 
 
-Feature:自定义模块——【基础模块】商品-页面
+Featrue:自定义模块——【基础模块】商品-页面
         设置一个列表样式的商品展示区，只能选择到上架的商品设置商品列表展示区
         1、选择商品窗体规则
         	（1）可以选择'在售'的所有商品
@@ -214,15 +214,18 @@ Scenario:3 一个商品可以被重复选择
 			},
 			"products":{
 				"items": [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 				},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 				},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}]
@@ -235,15 +238,18 @@ Scenario:3 一个商品可以被重复选择
 			},
 			"products":{
 				"items": [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 				},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 				},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -257,13 +263,15 @@ Scenario:3 一个商品可以被重复选择
 			"products":{
 				"items"{
 					[{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 					},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 				}
 				}
@@ -278,19 +286,24 @@ Scenario:3 一个商品可以被重复选择
 			}, 
 			"products": {
 				"items" [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 				},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 				},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 				},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 				},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -305,15 +318,18 @@ Scenario:4 商品管理'下架'、'删除'商品
 			},
 			"products": {
 				"items":[{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 					},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}]
@@ -326,15 +342,18 @@ Scenario:4 商品管理'下架'、'删除'商品
 			}, 
 			"products": {
 				"items" [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 					},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -348,13 +367,15 @@ Scenario:4 商品管理'下架'、'删除'商品
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -369,11 +390,12 @@ Scenario:4 商品管理'下架'、'删除'商品
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					}],
 					"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 				}
 		}
@@ -388,15 +410,18 @@ Scenario:5 商品管理'修改'商品
 			},
 			"products": {
 				"items" [{
-				"name":"商品3不可两行显示"
+				"name":"商品3不可两行显示",
+				"price": 3.0
 				},{
-				"name":"商品1可单行显示"
+				"name":"商品1可单行显示",
+				"price": 1.0
 				},{
-				"name":"商品2可两行显示"
+				"name":"商品2可两行显示",
+				"price": 2.0
 			}],
 			"list_style1":"大图",
 			"list_style2":"默认样式",
-			"show_product_name":"ture",
+			"show_product_name":"true",
 			"show_price":"true"
 			}
 		}]	
@@ -409,15 +434,18 @@ Scenario:5 商品管理'修改'商品
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 					},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -438,15 +466,18 @@ Scenario:5 商品管理'修改'商品
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 					},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					},{
-					"name":"修改后——商品2可两行显示"
+					"name":"修改后——商品2可两行显示",
+					"price": 20.0
 				}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 				}
 		}
@@ -461,15 +492,18 @@ Scenario:6 商品修改，删除
 			},
 			"products": {
 				"items" [{
-				"name":"商品3不可两行显示"
+				"name":"商品3不可两行显示",
+				"price": 3.0
 				},{
-				"name":"商品1可单行显示"
+				"name":"商品1可单行显示",
+				"price": 1.0
 				},{
-				"name":"商品2可两行显示"
+				"name":"商品2可两行显示",
+				"price": 2.0
 			}],
 			"list_style1":"大图",
 			"list_style2":"默认样式",
-			"show_product_name":"ture",
+			"show_product_name":"true",
 			"show_price":"true"
 			}
 		}]	
@@ -482,15 +516,18 @@ Scenario:6 商品修改，删除
 			}, 
 			"products": {
 				"items": [{
-					"name":"商品3不可两行显示"
+					"name":"商品3不可两行显示",
+					"price": 3.0
 					},{
-					"name":"商品1可单行显示"
+					"name":"商品1可单行显示",
+					"price": 1.0
 					},{
-					"name":"商品2可两行显示"
+					"name":"商品2可两行显示",
+					"price": 2.0
 					}],
 				"list_style1":"大图",
 				"list_style2":"默认样式",
-				"show_product_name":"ture",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -504,13 +541,15 @@ Scenario:6 商品修改，删除
 			},
 			"products": {
 				"items" [{
-				"name":"商品3不可两行显示"
+				"name":"商品3不可两行显示",
+				"price": 3.0
 				},{
-				"name":"商品2可两行显示"
+				"name":"商品2可两行显示",
+				"price": 2.0
 			}],
 			"list_style1":"大图",
 			"list_style2":"默认样式",
-			"show_product_name":"ture",
+			"show_product_name":"true",
 			"show_price":"true"
 			}
 		}
@@ -523,13 +562,15 @@ Scenario:6 商品修改，删除
 			},
 			"products": {
 				"items" [{
-				"name":"商品3不可两行显示"
+				"name":"商品3不可两行显示",
+				"price": 3.0
 				},{
-				"name":"商品2可两行显示"
+				"name":"商品2可两行显示",
+				"price": 2.0
 			}],
 			"list_style1":"大图",
 			"list_style2":"默认样式",
-			"show_product_name":"ture",
+			"show_product_name":"true",
 			"show_price":"true"
 			}
 		}
@@ -543,9 +584,11 @@ Scenario:6 商品修改，删除
 			},
 			"products": {
 				"items" [{
-				"name":"商品3不可两行显示"
+				"name":"商品3不可两行显示",
+				"price": 3.0
 				},{
-				"name":"商品2可两行显示"
+				"name":"商品2可两行显示",
+				"price": 2.0
 			}],
 			"list_style1":"小图",
 			"list_style2":"简洁样式",
@@ -561,9 +604,11 @@ Scenario:6 商品修改，删除
 			},
 			"products": {
 				"items" [{
-				"name":"商品3不可两行显示"
+				"name":"商品3不可两行显示",
+				"price": 3.0
 				},{
-				"name":"商品2可两行显示"
+				"name":"商品2可两行显示",
+				"price": 2.0
 			}],
 			"list_style1":"小图",
 			"list_style2":"简洁样式",

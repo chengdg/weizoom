@@ -318,22 +318,22 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 				"products_source":{
 					"items":[{
 						"name":"商品2可两行显示",
-						"price":"2.0"
+						"price": 2.0
 					},{
 						"name":"商品1可单行显示",
-						"price":"1.0"
+						"price": 1.0
 					},{
 						"name":"商品3不可两行显示",
-						"price":"3.0"
+						"price": 3.0
 					},{
 						"name":"商品4",
-						"price":"4.0"
+						"price": 4.0
 					},{
 						"name":"商品5",
-						"price":"5.0"
+						"price": 5.0
 					},{
 						"name":"商品6",
-						"price":"6.0"
+						"price": 6.0
 					}],
 					"list_style1":"列表",
 					"list_style2":"默认样式"
@@ -352,22 +352,22 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 				"products_source":{
 					"items":[{
 						"name":"商品2可两行显示",
-						"price":"2.0"
+						"price": 2.0
 						},{
 						"name":"商品3不可两行显示",
-						"price":"3.0",
+						"price": 3.0
 						},{
 						"name":"商品4",
-						"price":"4.0"
+						"price": 4.0
 						},{
 						"name":"商品5",
-						"price":"5.0",
+						"price": 5.0
 						},{
 						"name":"商品6",
-						"price":"6.0",
+						"price": 6.0
 						},{
 						"name":"商品7",
-						"price":"7.0"
+						"price": 7.0
 					}],
 					"list_style1":"列表",
 					"list_style2":"默认样式"
@@ -385,19 +385,19 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 				"products_source":{
 					"items":[{
 						"name":"商品3不可两行显示",
-						"price":"3.0"
+						"price": 3.0
 						},{
 						"name":"商品4",
-						"price":"4.0"
+						"price": 4.0
 						},{
 						"name":"商品5",
-						"price":"5.0"
+						"price": 5.0
 						},{
 						"name":"商品6",
-						"price":"6.0"
+						"price": 6.0
 						},{
 						"name":"商品7",
-						"price":"7.0"
+						"price": 7.0
 					}],
 					"list_style1":"列表",
 					"list_style2":"默认样式"
@@ -423,22 +423,22 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 			"products_source":{
 				"items":[{
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price": 3.0
 					},{
 					"name":"商品4",
-					"price":"4.0"
+					"price": 4.0
 					},{
 					"name":"商品5",
-					"price":"5.0"
+					"price": 5.0
 					},{
 					"name":"商品6",
-					"price":"6.0"
+					"price": 6.0
 					},{
 					"name":"商品7",
-					"price":"7.0"
+					"price": 7.0
 					},{
 					"name":"商品10",
-					"price":"10.0"
+					"price": 10.0
 				}],
 				"list_style1":"列表",
 				"list_style2":"默认样式"
@@ -449,7 +449,6 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 		When jobs修改商品'商品3不可两行显示'
 		"""
 			{
-				"product_picture_id":"3",
 				"name":"修改后商品3不可两行显示",
 				"price":"30.0"
 			}
@@ -463,22 +462,22 @@ Scenario:2 商品管理'下架'、'删除'、'添加'、'修改'分组中的商�
 			"products_source":{
 				"items":[{
 					"name":"修改后商品3不可两行显示",
-					"price":"30.0"
+					"price": 3.0
 					},{
 					"name":"商品4",
-					"price":"4.0"
+					"price": 4.0
 					},{
 					"name":"商品5",
-					"price":"5.0"
+					"price": 5.0
 					},{
 					"name":"商品6",
-					"price":"6.0"
+					"price": 6.0
 					},{
 					"name":"商品7",
-					"price":"7.0"
+					"price": 7.0
 					},{
 					"name":"商品10",
-					"price":"10.0"
+					"price": 10.0
 				}],
 				"list_style1":"列表",
 				"list_style2":"默认样式"
@@ -514,22 +513,22 @@ Scenario:3 商品管理，删除商品分组
 				"products_source":{
 					"items":[{
 						"name":"商品2可两行显示",
-						"price":"2.0"
+						"price": 2.0
 						},{
 						"name":"商品1可单行显示",
-						"price":"1.0"
+						"price": 1.0
 						},{
 						"name":"商品3不可两行显示",
-						"price":"3.0"
+						"price": 3.0
 						},{
 						"name":"商品4",
-						"price":"4.0"
+						"price": 4.0
 						},{
 						"name":"商品5",
-						"price":"5.0"
+						"price": 5.0
 						},{
 						"name":"商品6",
-						"price":"6.0"
+						"price": 6.0
 					}],
 					"list_style1":"列表",
 					"list_style2":"默认样式"
@@ -574,22 +573,22 @@ Scenario:4 分组管理修改商品名，商品列表中使用该分组的商品
 				"products_source":{
 					"items":[{
 						"name":"商品2可两行显示",
-						"price":"2.0"
+						"price": 2.0
 						},{
 						"name":"商品1可单行显示",
-						"price":"1.0"
+						"price": 1.0
 						},{
 						"name":"商品3不可两行显示",
-						"price":"3.0"
+						"price": 3.0
 						},{
 						"name":"商品4",
-						"price":"4.0"
+						"price": 4.0
 						},{
 						"name":"商品5",
-						"price":"5.0"
+						"price": 5.0
 						},{
 						"name":"商品6",
-						"price":"6.0"
+						"price": 6.0
 					}],
 					"list_style1":"列表",
 					"list_style2":"默认样式"
@@ -650,22 +649,22 @@ Scenario: 5编辑商品列表
 			"products_source":{
 				"items":[{
 					"name":"商品2可两行显示",
-					"price":"2.0"
+					"price": 2.0
 					},{
 					"name":"商品1可单行显示",
-					"price":"1.0"
+					"price": 1.0
 					},{
 					"name":"商品3不可两行显示",
-					"price":"3.0"
+					"price": 3.0
 					},{
 					"name":"商品4",
-					"price":"4.0"
+					"price": 4.0
 					},{
 					"name":"商品5",
-					"price":"5.0"
+					"price": 5.0
 					},{
 					"name":"商品6",
-					"price":"6.0"
+					"price": 6.0
 				}],
 				"list_style1":"列表",
 				"list_style2":"默认样式"
