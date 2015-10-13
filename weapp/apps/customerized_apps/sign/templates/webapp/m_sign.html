@@ -373,7 +373,7 @@
         });
     });
 
-    function fillPrizeInfo(prize_info) {
+    function fillPrizeInfo(prize_info, flag) {
         if ('已签到' != status) {
             var temp_integral,
                     temp_coupon;
@@ -393,9 +393,13 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         } else {
-            $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function () {
-                $(this).hide();
-            });
+            if(flag){
+                $('.wa-sign-btn').hide();
+            }else{
+                $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function () {
+                    $(this).hide();
+                });
+            }
             $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
             var str = [];

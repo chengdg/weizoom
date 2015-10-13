@@ -7,6 +7,7 @@ import mongoengine as models
 from modules.member.module_api import get_member_by_openid
 from market_tools.tools.coupon.util import consume_coupon
 from modules.member import models as member_models
+from mall.promotion.models import CouponRule
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -115,10 +116,14 @@ class SignParticipance(models.Document):
 		#发放奖励 积分&优惠券
 		member = member_models.Member.objects.get(id=self.member_id)
 		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
+		curr_prize_coupon_count = 0
 		if curr_prize_coupon_id != '':
-			consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
+			curr_prize_coupon_count = get_coupon_count(curr_prize_coupon_id)
+			if curr_prize_coupon_count > 0:
+				consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
 
 		return_data['curr_prize_integral'] = curr_prize_integral
+		return_data['curr_prize_coupon_count'] = curr_prize_coupon_count
 		return_data['curr_prize_coupon_id'] = curr_prize_coupon_id
 		return_data['curr_prize_coupon_name'] = curr_prize_coupon_name
 		return_data['daily_integral'] = daily_integral
@@ -226,4 +231,18 @@ class Sign(models.Document):
 			return False
 
 
-	
+def get_coupon_count(coupon_rule_id):
+	"""
+	通过优惠券id获取其库存量
+	:param coupon_rule_id: 优惠券ruleid
+	:return: 库存
+	"""
+	if not coupon_rule_id or int(coupon_rule_id) == 0:
+		return -1
+
+	try:
+		coupon = CouponRule.objects.get(id=coupon_rule_id)
+		return coupon.remained_count
+	except:
+		return -1
+
