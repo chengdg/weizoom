@@ -321,7 +321,6 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         获取advanced table
         """
-        receive_method = request.GET.get('receive_method',0)
         pageinfo, items = get_datas(request)
         sort_attr = request.GET.get('sort_attr', '-created_at')
         response_data = {
@@ -361,7 +360,6 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
 
 def get_datas(request):
     webapp_id = request.user_profile.webapp_id
-    receive_method = request.GET.get('receive_method','')
     member_name = request.GET.get('member_name', '')
     grade_id = request.GET.get('grade_id', '')
     coupon_status = request.GET.get('coupon_status', '')
