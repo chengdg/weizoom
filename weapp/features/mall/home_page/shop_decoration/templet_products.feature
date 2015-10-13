@@ -124,7 +124,7 @@ Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商
 			}]
 		"""
 
-@termite22
+@termite21
 Scenario:2 商品选择列表分页,每页显示8个商品
 	Given jobs已添加商品
 	"""
@@ -205,6 +205,7 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 		}]
 	"""
 
+@termite22
 Scenario:3 一个商品可以被重复选择
 	When jobs创建微页面
 	"""
