@@ -246,7 +246,7 @@ def pay_order(request):
 			order.red_envelope_created = True
 
 	for sub_order in orders:
-		if sub_order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - sub_order.update_at).days >= 3:
+		if sub_order.status == ORDER_STATUS_PAYED_SHIPED and ((datetime.today() - sub_order.update_at).days >= 3 or not order.express_number):
 			#订单发货后3天显示确认收货按钮
 			if not hasattr(sub_order, 'session_data'):
 				sub_order.session_data = dict()
