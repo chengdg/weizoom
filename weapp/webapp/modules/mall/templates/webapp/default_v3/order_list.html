@@ -446,9 +446,38 @@ $(document).ready(function($) {
         $(this).addClass('wui-inner-active');
         tabsSwiper.swipeTo($(this).index());
     });
-    /* 点击确认收货 */
+    var status2order = [];
+    $(".wui-swiper-slide").each(function(){
+        var $el = $(this);
+        if($el.data('status')){
+            status2order[$el.data('status')] = $('<ul/>');
+        }
+    });
+    $('li').each(function(){
+        var $el = $(this);
+        if(status2order[$el.data('status')]){
+            status2order[$el.data('status')].append($el.clone());
+        }
+    });
+    /**
+     * 是否为空的数据
+     */
+    $(".wui-swiper-slide").each(function(){
+        var $el = $(this);
+        if(status2order[$el.data('status')]){
+            length = status2order[$el.data('status')].find('li').length;
+        }else{
+            length = $el.find('li').length;
+        }
+        if (length === 0) {
+            $el.find('.xa-emptyOrder').show();
+        }else{
+            $el.find('.xt-orderList').append(status2order[$el.data('status')]);
+        }
+    });
 
-    $('.xa-receipt').click(function(event) {
+    /* 点击确认收货 */
+    $('body').delegate('.xa-receipt', 'click', function(event){
         var $target = $(event.target);
         var sign = $target.data('sign');
         if(sign == 1){
@@ -487,37 +516,9 @@ $(document).ready(function($) {
                 }
             });
         }
-    });
-    var status2order = [];
-    $(".wui-swiper-slide").each(function(){
-        var $el = $(this);
-        if($el.data('status')){
-            status2order[$el.data('status')] = $('<ul/>');
-        }
-    });
-    $('li').each(function(){
-        var $el = $(this);
-        if(status2order[$el.data('status')]){
-            status2order[$el.data('status')].append($el.clone());
-        }
-    });
-    /**
-     * 是否为空的数据
-     */
-    $(".wui-swiper-slide").each(function(){
-        var $el = $(this);
-        if(status2order[$el.data('status')]){
-            length = status2order[$el.data('status')].find('li').length;
-        }else{
-            length = $el.find('li').length;
-        }
-        if (length === 0) {
-            $el.find('.xa-emptyOrder').show();
-        }else{
-            $el.find('.xt-orderList').append(status2order[$el.data('status')]);
-        }
-    })
-    $('.update_order_cancel').click(function(event) {
+	});
+
+    $('body').delegate('.update_order_cancel', 'click', function(event){
         var $target = $(event.target);
         var sign = $target.data('sign');
         if(sign == 1){
