@@ -5,7 +5,7 @@ Feature:自定义模块——【基础模块】商品列表-页面
 
 Background:
 	Given jobs登录系统
-	And jobs已添加分组
+	And jobs已添加商品分类
 		"""
 		[{
 			"name": "分组1"
