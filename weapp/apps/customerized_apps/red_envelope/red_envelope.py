@@ -370,7 +370,7 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
             is_new=True
         )
         for sub_relation in sub_relations:
-            if sub_relation.member.is_subscribed and sub_relation.is_new:
+            if sub_relation.member.is_subscribed and sub_relation.is_new and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
@@ -381,7 +381,7 @@ def get_datas(request):
     grade_id = request.GET.get('grade_id', '')
     coupon_status = request.GET.get('coupon_status', '')
     red_envelope_rule_id = request.GET.get('id',0)
-    receive_method = request.GET.get('receive_method',0)
+    receive_method = request.GET.get('receive_method','')
     #引入
     introduced_by = request.GET.get('introduced_by',0)
     relation_id = request.GET.get('relation_id',0)
@@ -469,7 +469,9 @@ def get_datas(request):
 
     items = []
     for relation in relations:
-        if not receive_method:
+        if receive_method == 'True':
+            grade = relation.member.grade.name
+        else:
             if relation.is_new:
                 grade = u"新会员"
             else:
@@ -477,8 +479,6 @@ def get_datas(request):
                     grade = relation.member.grade.name
                 else:
                     grade = u"非会员"
-        else:
-            grade = relation.member.grade.name
         items.append({
             'id': relation.red_envelope_relation_id,
             'member_id': relation.member_id,
