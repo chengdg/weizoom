@@ -294,9 +294,9 @@ class RedEnvelopeParticipances(resource.Resource):
         relations = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
 
         new_member_count = 0    #新关注人数
-        received_count = 0      #领取人数
+        received_count = has_data      #领取人数
         consumption_sum = 0     #产生消费额
-        total_use_count = 0     #使用人数
+        total_use_count = relations.filter(coupon__status=1).count()     #使用人数
         for relation in relations:
             new_member_count += relation.introduce_new_member
             received_count += relation.introduce_received_number
