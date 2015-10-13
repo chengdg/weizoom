@@ -20,7 +20,7 @@
                         {{/if}}
 
                         {{if property_group.groupHelp.tip }}
-                            <span type="button" class="glyphicon glyphicon-question-sign groupHelp_tip" data-toggle="tooltip" data-placement="bottom" title="${property_group.groupHelp.tip.text}"></span>
+                            <a role="button" tabindex="0" class="groupHelp_tip" data-container="body" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="${property_group.groupHelp.tip.text}">&#63;</a>
                         {{/if}}
                         </span>
                     {{/if}}

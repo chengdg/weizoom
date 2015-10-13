@@ -374,7 +374,7 @@ ui-appPage-commonStyle">
         onlyShowUserProperty: true//!W.isSystemManager
       });
       propertyView.render();
-      
+
       var synchronizer = new W.workbench.PageSynchronizer();
       synchronizer.run();
       W.Synchronizer = synchronizer;
@@ -472,7 +472,7 @@ ui-appPage-commonStyle">
       });
       
       $('[data-toggle="tooltip"]').tooltip();
-      
+
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
         
@@ -537,6 +537,11 @@ ui-appPage-commonStyle">
         });
         client.on('complete', function(client, args) {
             W.showHint('success', '已经将链接复制到剪贴板');
+        });
+
+        W.Broadcaster.on('selectwidget:assert', function(cid){
+            //初始化弹出层
+            $('[data-toggle="popover"]').popover();
         });
     });
 
