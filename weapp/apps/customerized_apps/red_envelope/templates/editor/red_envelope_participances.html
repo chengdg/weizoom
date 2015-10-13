@@ -137,7 +137,7 @@
 						data-introduce-new-member="${item.introduce_new_member_count}"
 						data-introduce-sales-number="${item.introduce_sales_number}"
 					>查看引入详情</a><br>
-					{{if item.coupon_status_id==1}}
+					{{if item.coupon_status==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
 				</td>
