@@ -311,29 +311,31 @@ def get_product(request):
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 
-########################################################################
-# get_order_list: 获取订单列表
-########################################################################
 def get_order_list(request):
-    type = int(request.GET.get('type', -1))
-    orders = mall_api.get_orders(request)
+	"""
+	获取订单列表
+	"""
+	type = int(request.GET.get('type', -1))
+	orders = mall_api.get_orders(request)
 
-    status = {
-        -1: u'全部订单列表',
-        0: u'待支付',
-        3: u'待发货',
-        4: u'待收货',
-        5: u'待评价',
-    }
+	status = {
+			-1: u'全部订单列表',
+			0: u'待支付',
+			3: u'待发货',
+			4: u'待收货',
+			5: u'待评价',
+	}
 
-    c = RequestContext(request, {
-        'is_hide_weixin_option_menu': True,
-        'page_title': status[type],
-        'orders': orders,
-        'hide_non_member_cover': True,
-        'status_type': type
-    })
-    return render_to_response('%s/order_list.html' % request.template_dir, c)
+	c = RequestContext(request, {
+			'is_hide_weixin_option_menu': True,
+			'page_title': status[type],
+			'orders': orders,
+			'hide_non_member_cover': True,
+			'status_type': type
+	})
+	return render_to_response('%s/order_list.html' % request.template_dir, c)
+
+
 
 
 ########################################################################
@@ -702,8 +704,9 @@ def get_pay_notify_result(request):
 
 
 def show_shopping_cart(request):
-	'''显示购物车详情
-	'''
+	"""
+	显示购物车详情
+	"""
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -929,7 +932,8 @@ def __format_product_group_price_factor(product_groups, webapp_owner_id):
 
 
 def get_member_discount(request):
-	"""返回与会员等级相关的折扣
+	"""
+	返回与会员等级相关的折扣
 
 	Return:
 	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回1.00
@@ -946,7 +950,8 @@ def get_member_discount(request):
 
 
 def get_member_discount_percentage(request):
-	"""返回与会员等级相关的折扣
+	"""
+	返回与会员等级相关的折扣
 
 	Return:
 	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回100
