@@ -42,6 +42,9 @@ class SignParticipances(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', 'id')
 		if 'total_integral' == sort_attr:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
+			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=False)
+		elif '-total_integral' == sort_attr:
+			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
 			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=True)
 		else:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
@@ -70,6 +73,7 @@ class SignParticipances(resource.Resource):
 		for data in datas:
 			items.append({
 				'id': str(data.id),
+				'member_id': data.member_id,
 				'participant_name': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M:%S"),
