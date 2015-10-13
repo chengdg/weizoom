@@ -28,16 +28,16 @@ class BrandValue(api_resource.ApiResource):
 	resource = 'brand_value'
 
 	@param_required(['wid', 'dates'])
-	def get(request):
+	def get(args):
 		"""
 		获取微品牌价值
 
 		@param wid webapp_id
 		@param dates 日期列表，多日期用逗号(,)分隔。默认是当天。
 		"""
-		webapp_id = request.REQUEST.get('wid')
+		webapp_id = args.get('wid')
 		#print("webapp_id: {}".format(webapp_id))
-		dates = request.REQUEST.get('dates')
+		dates = args.get('dates')
 		if dates is None or len(dates)<1:
 			dates = [ utils_dateutil.date2string(utils_dateutil.now()) ]
 		else:
