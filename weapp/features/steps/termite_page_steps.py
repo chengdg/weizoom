@@ -677,8 +677,8 @@ def _add_product_group(page, page_json, user):
 				"datasource":{"type":"api","api_name":""},
 				"type": product_modes.index(products['list_style1']),
 				"card_type": product_types.index(products['list_style2']),
-				"itemname": True if products['show_product_name'] == "true" else False,
-				"price": True if products['show_price'] == "true" else False,
+				"itemname": True if products.get('show_product_name',"false") == "true" else False,
+				"price": True if products.get('show_price',"false") == "true" else False,
 				"items":[],
 				"container":""
 			},
