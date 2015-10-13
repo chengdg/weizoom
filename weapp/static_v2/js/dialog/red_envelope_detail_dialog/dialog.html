@@ -89,14 +89,14 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if item.coupon_status_id==1}}
-						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{if item.coupon_status==1}}
+						<b style="color:#5D8F17">${item.coupon_status_name}</b>
 					{{else}}
 						<b>未使用</b>
 					{{/if}}
 				</td>
 				<td>
-					{{if item.coupon_status_id==1}}
+					{{if item.coupon_status==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
 				</td>
