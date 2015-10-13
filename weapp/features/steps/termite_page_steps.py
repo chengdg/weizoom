@@ -7,6 +7,7 @@ from django.test.client import Client
 from webapp import models as webapp_models
 from mall import models as mall_models
 from test import bdd_util
+from termite2 import pagerender
 
 CONSTANT_CID = 0
 display2mode = {u"轮播图": "swipe", u"分开显示": "sequence"}
@@ -18,6 +19,10 @@ image_display2name = {"default": u"默认", "three": u"3列"}
 product_modes = [u"大图", u"小图", u"一大两小", u"列表"]
 product_types = [u"默认样式", u"简洁样式"]
 
+class Request(object):
+	def __init__(self, user):
+		self.in_design_mode = True
+		self.user_profile = user.get_profile()
 
 @Given(u"{user}已添加微页面")
 def step_impl(context, user):
@@ -54,7 +59,7 @@ def step_impl(context, user, page_name):
 
 	page_json = _get_page_json(context, project_id)[0]
 
-	actual = __actual_page(page_json)
+	actual = __actual_page(page_json, user)
 	expected = json.loads(context.text)
 	bdd_util.assert_dict(expected, actual)
 
@@ -209,7 +214,7 @@ def __supplement_page(page):
 	return page_prototype
 
 
-def __actual_page(page_json):
+def __actual_page(page_json, user):
 	actual = {
 		"title": {
 			"name": page_json['model']['site_title'],
@@ -311,18 +316,24 @@ def __actual_page(page_json):
 				"products": {
 					"list_style1": product_modes[int(model['type'])],
 					"list_style2": product_types[int(model['card_type'])],
-					"show_product_name": model['itemname'],
-					"show_price": model['price'],
+					"show_product_name": 'true' if model['itemname'] else 'false',
+					"show_price": 'true' if model['price'] else 'false',
 					"items": []
 				}
 			}
-			for item in component['components']:
-				product_id = json.loads(item['model']['target'])['meta']['id']
-				data = {
-					"name": ""
-				}
-				actual_component["display_window"]["values"].append(data)
 
+			request = Request(user)
+			pagerender.process_item_group_data(request, component)
+			for item in component['components']:
+				product = item['runtime_data'].get('product', None)
+				if product:
+					data = {
+						"name": product['name'],
+						"price": product['display_price']
+					}
+					actual_component["products"]["items"].append(data)
+			print actual_component
+			print '444444444444444'
 		actual.update(actual_component)
 	return actual
 
@@ -650,7 +661,7 @@ def _add_product_group(page, page_json, user):
 
 	if page.has_key("products"):
 		products = page['products']
-		
+
 		product_group = {
 			"type":"wepage.item_group",
 			"cid": cid,
