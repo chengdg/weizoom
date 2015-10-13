@@ -138,6 +138,7 @@ def get_share_red_envelope(request):
         # if not order.webapp_user_id == member_id:
         #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
         member.member_name = member.username_for_html
+        print red_envelope_rule.id
         print coupon_rule.is_active
         print coupon_rule.end_date, datetime.now()
         print red_envelope_rule.status
