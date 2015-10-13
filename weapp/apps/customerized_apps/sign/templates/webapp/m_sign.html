@@ -312,24 +312,24 @@
             $('.wa-rules-div').show();
         });
         //积分数据
-        $all_integral = prize_info.serial_integral;
-        $int_arr = [];
-        $int_html = "";
-        for (var each in $all_integral) {
-            $int_arr.push(each);
+        var all_integral = prize_info.serial_integral;
+        var int_arr = [];
+        var int_html = "";
+        for (var item in all_integral) {
+            int_arr.push(item);
         }
-        $int_arr = $int_arr.sort();
-        for (var i = 0; i < $int_arr.length; i++) {
+        int_arr = int_arr.sort();
+        for (var i = 0; i < int_arr.length; i++) {
             var j = i + 1;
-            var day_num = $int_arr[i];
-            var points = $all_integral[$int_arr[i]];
+            var day_num = int_arr[i];
+            var points = all_integral[int_arr[i]];
             if (day_num == '0') {
-                $int_html += "<li>1.每日签到,获得" + points + "积分奖励</li>";
+                int_html += "<li>1.每日签到,获得" + points + "积分奖励</li>";
             } else {
-                $int_html += "<li>" + j + ".连续签到至" + day_num + "天,获得" + points + "积分奖励</li>";
+                int_html += "<li>" + j + ".连续签到至" + day_num + "天,获得" + points + "积分奖励</li>";
             }
         }
-        $('.wa-rules-div').find('.wa-rules-i-content').html($int_html);
+        $('.wa-rules-div').find('.wa-rules-i-content').html(int_html);
 
         //返回
         $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function () {
