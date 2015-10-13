@@ -229,7 +229,7 @@
             if (data.integral) {
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
-            } else if (data.coupon && data.coupon.count != -1) {
+            } else if (data.coupon && data.coupon.count >= 0) {
                 if (data.coupon.count != 0) {
                     this.$coupon.find('span').text(data.coupon.name);
                     this.$coupon.show();

@@ -200,18 +200,19 @@ class Sign(models.Document):
 					else:
 						signer = signer[0]
 					return_data = signer.do_signment(sign)
+					return_html.append('<div style="text-align:center;">')
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
-						return_html.append(u'亲，今天您已经签到过了哦，明天再来吧！\n')
+						return_html.append(u'<p>亲，今天您已经签到过了哦，</p><p>明天再来吧！</p>')
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
-						return_html.append(u'签到成功！\n已连续签到%s天\n本次签到获得以下奖励：' % return_data['serial_count'])
-						return_html.append(str(return_data['curr_prize_integral']))
-						return_html.append(u'积分\n')
+						return_html.append(u'<p>签到成功！</p><p>已连续签到%s天。</p><p>本次签到获得以下奖励:</p>' % return_data['serial_count'])
+						return_html.append('<p>'+str(return_data['curr_prize_integral']))
+						return_html.append(u'积分</p>')
 						if return_data['curr_prize_coupon_name'] != '':
-							return_html.append(return_data['curr_prize_coupon_name'])
-							return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>\n' % (host, data['webapp_owner_id']))
-						return_html.append(u'签到说明：签到有礼！\n')
-						return_html.append(return_data['reply_content'])
-					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
+							return_html.append('<p>'+str(return_data['curr_prize_coupon_name']))
+							return_html.append(u'</p><p><a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a></p><p>' % (host, data['webapp_owner_id']))
+						return_html.append(u'签到说明：签到有礼！</p><p>')
+						return_html.append(str(return_data['reply_content'])+'</p>')
+					return_html.append(u'<p><a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a></p>' % (host, data['webapp_owner_id']))
 			else:
 				return None
 		except:
@@ -238,11 +239,11 @@ def get_coupon_count(coupon_rule_id):
 	:return: 库存
 	"""
 	if not coupon_rule_id or int(coupon_rule_id) == 0:
-		return -1
+		return 0
 
 	try:
 		coupon = CouponRule.objects.get(id=coupon_rule_id)
 		return coupon.remained_count
 	except:
-		return -1
+		return 0
 
