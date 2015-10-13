@@ -76,29 +76,26 @@
         </div>
       </div>
     </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
+    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
     </div>
+      <div class="xui-bottomActionBar xa-stickyBar">
+          {% if not lottery %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+          {% else %}
+            {% if lottery.status_text == "未开始" %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+            {% endif %}
+            {% if lottery.status_text == "进行中" %}
+            进行中，不可更改
+            {% endif %}
+            {% if lottery.status_text == "已结束" %}
+            已结束，不可更改
+            {% endif %}
+          {% endif %}
+        </div>
   </div>
-</div>
-{% endblock %}
-
-{% block global_elements %}
-<div class="xui-bottomActionBar">
-  {% if not lottery %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-  {% else %}
-    {% if lottery.status_text == "未开始" %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-    {% endif %}
-    {% if lottery.status_text == "进行中" %}
-    进行中，不可更改
-    {% endif %}
-    {% if lottery.status_text == "已结束" %}
-    已结束，不可更改
-    {% endif %}
-  {% endif %}
 </div>
 {% endblock %}
 
@@ -360,6 +357,22 @@
                 return "lottery-chance-dialog-tmpl";
             }
         });
+        // 滚动浮动在底部
+          var stickyMenu = function(){
+              var winScrollTop = $(window).scrollTop();
+          　　var scrollHeight = $(document).height();
+          　　var windowHeight = $(window).height();
+              var gap = scrollHeight - winScrollTop - windowHeight;
+              if( gap < 44 ){
+                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+              }else{
+                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+              }
+          };
+          stickyMenu();
+          $(window).bind('scroll resize',(function() {
+              stickyMenu();
+          }));
     });
   </script>
 <script id="lottery-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">

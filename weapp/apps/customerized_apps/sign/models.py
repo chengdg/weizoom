@@ -170,10 +170,12 @@ class Sign(models.Document):
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
-			if data['keyword'] == sign.reply['keyword']:
+			if sign.reply['keyword'] in data['keyword']:
 				if sign.status != 1:
 					return_html.append(u'签到活动未开始')
 				else:
+					if 'accurate' == sign.reply['mode'] and sign.reply['keyword'] != data['keyword']:
+						return None
 					# add by bert  增加获取会员代码
 					member = get_member_by_openid(data['openid'], data['webapp_id'])
 					if not member:
