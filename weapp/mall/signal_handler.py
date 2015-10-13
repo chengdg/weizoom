@@ -286,7 +286,7 @@ def cancel_order_handler(order, **kwargs):
                 promotion_models.CouponRule.objects.filter(id = coupons[0].coupon_rule_id).update(use_count = F('use_count') - 1)
 
                 #更新红包优惠券分析数据 by Eugene
-                if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupons[0].id).count() > 0:
+                if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupons[0].id, introduced_by_gt=0).count() > 0:
                     red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupons[0].id)
                     relation = promotion_models.RedEnvelopeParticipences.objects.filter(
                                 red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
@@ -430,8 +430,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         for_udpate = promotion_models.RedEnvelopeParticipences.objects.get(
                     red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
                     red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
-                    member_id=red_envelope2member.introduced_by,
-                    introduced_by=0
+                    member_id=red_envelope2member.introduced_by
         )
         for_udpate.introduce_used_number = F('introduce_used_number') + 1
         for_udpate.save()
