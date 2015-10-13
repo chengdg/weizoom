@@ -109,20 +109,28 @@ def update_component_cache_for_integral_settings(instance, **kwargs):
 	"""
 	#print("in update_webapp_order_cache(), kwargs: %s" % kwargs)
 	if isinstance(instance, member_models.IntegralStrategySttings):
-		user_profile = UserProfile.objects.get(webapp_id=instance.webapp_id)
-		authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
 		try:
-			delete_component_auth_cache(authorizer_appid.authorizer_appid)
-			#get_accounts(openid, webapp_id)
-		except:
-			pass
-	else:
-		instances = list(instance)
-		for integral_strategy_settings in instances:
-			user_profile = UserProfile.objects.get(webapp_id=integral_strategy_settings.webapp_id)
+			user_profile = UserProfile.objects.get(webapp_id=instance.webapp_id)
 			authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
 			try:
 				delete_component_auth_cache(authorizer_appid.authorizer_appid)
+				#get_accounts(openid, webapp_id)
+			except:
+				pass
+		except:
+			pass
+
+		
+	else:
+		instances = list(instance)
+		for integral_strategy_settings in instances:
+			try:
+				user_profile = UserProfile.objects.get(webapp_id=integral_strategy_settings.webapp_id)
+				authorizer_appid = ComponentAuthedAppid.objects.get(user_id=user_profile.user_id)
+				try:
+					delete_component_auth_cache(authorizer_appid.authorizer_appid)
+				except:
+					pass
 			except:
 				pass
 	return

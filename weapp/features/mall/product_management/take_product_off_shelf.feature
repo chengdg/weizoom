@@ -51,7 +51,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 		"""
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -80,7 +80,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 	#bill在webapp中不能看到商品2
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -113,7 +113,7 @@ Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 	#bill在webapp中不能看到商品2
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -138,7 +138,7 @@ Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 		"""
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{

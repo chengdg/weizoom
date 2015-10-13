@@ -327,7 +327,7 @@ Scenario: 2 浏览商品列表
 	And bill浏览jobs的webapp的'全部'商品列表页
 	#有会员价的会员获取商品列表时是会员价
 	#享受限时抢购的会员获取商品列表是限时抢购价
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -343,7 +343,7 @@ Scenario: 2 浏览商品列表
 		"""
 	When tom访问jobs的webapp
 	And tom浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And tom获得webapp商品列表
 		"""
 		[{
@@ -362,12 +362,12 @@ Scenario: 2 浏览商品列表
 @product @ui
 Scenario: 3 浏览商品分类
 	jobs添加商品后
-	1. bill获得webapp商品列表(分类1)，商品按添加顺序倒序排序
-	2. tom获得webapp商品列表(分类1)，商品按添加顺序倒序排序
+	1. bill获得webapp商品列表，商品按添加顺序倒序排序
+	2. tom获得webapp商品列表，商品按添加顺序倒序排序
 
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'分类1'商品列表页
-	Then webapp页面标题为'商品列表(分类1)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -380,7 +380,7 @@ Scenario: 3 浏览商品分类
 		"""
 	When tom访问jobs的webapp
 	And tom浏览jobs的webapp的'分类1'商品列表页
-	Then webapp页面标题为'商品列表(分类1)'
+	Then webapp页面标题为'商品列表'
 	And tom获得webapp商品列表
 		"""
 		[{
