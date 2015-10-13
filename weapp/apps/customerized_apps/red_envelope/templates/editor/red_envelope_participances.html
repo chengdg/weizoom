@@ -78,7 +78,13 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>下单会员</th>
+				<th>
+					{{if items[0].receive_method}}
+						领取会员
+					{{else}}
+						下单会员
+					{{/if}}
+				</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='member__grade' data-sort-direction="up">会员状态</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
@@ -101,7 +107,11 @@
 				</div>
 			</td>
 				<td>
-					${item.grade}
+					{{if item.grade == "新会员"}}
+						<span style="color:#da0909">${item.grade}</span>
+					{{else}}
+						${item.grade}
+					{{/if}}
 				</td>
 				<td>
                     ${item.introduce_received_number_count}
@@ -172,7 +182,12 @@ $(document).ready(function() {
 		var introduce_used_number = $(event.currentTarget).data('introduce-used-number');
 		var introduce_new_member = $(event.currentTarget).data('introduce-new-member');
 		var introduce_sales_number = $(event.currentTarget).data('introduce-sales-number');
+		var receive_method = 0;
+		if("{{receive_method}}" == "True"){
+			receive_method = 1;
+		}
 		var dialog = W.dialog.RedShowDialog('W.dialog.mall.RedEnvelopeDetailDialog.'+reation_id+"'",{
+			receive_method: receive_method,
 			member_name: member_name,
 			relation_id: reation_id,
 			rule_id: export_id,
