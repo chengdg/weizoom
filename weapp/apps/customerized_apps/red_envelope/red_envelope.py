@@ -288,15 +288,23 @@ class RedEnvelopeParticipances(resource.Resource):
         红包分析页面
         """
         rule_id = request.GET.get('id', None)
-        has_data = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=rule_id).count()
+        redEnvelope2Order_data = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=rule_id)
+        has_data = redEnvelope2Order_data.count()
         rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
         coupon_rule = promotion_models.CouponRule.objects.get(id=rule_data.coupon_rule_id)
         relations = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
 
-        new_member_count = 0    #新关注人数
+        new_member_count = 0         #新关注人数
+        consumption_sum = 0          #产生消费额
         received_count = has_data      #领取人数
-        consumption_sum = 0     #产生消费额
         total_use_count = relations.filter(coupon__status=1).count()     #使用人数
+
+        #求该红包下，所有下过订单的总额
+        if redEnvelope2Order_data:
+            for i in redEnvelope2Order_data:
+                final_price = Order.objects.get(id=i.order_id).final_price
+                consumption_sum += final_price
+        #加上引入的数字
         for relation in relations:
             new_member_count += relation.introduce_new_member
             received_count += relation.introduce_received_number
