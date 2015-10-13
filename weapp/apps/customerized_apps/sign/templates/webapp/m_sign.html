@@ -312,24 +312,55 @@
             $('.wa-rules-div').show();
         });
         //积分数据
-        var all_integral = prize_info.serial_integral;
-        var int_arr = [];
-        var int_html = "";
-        for (var item in all_integral) {
-            int_arr.push(item);
+        var prize_rules = prize_info.prize_rules;
+
+        console.log(prize_rules);
+
+        var rule_arr = [];
+        var rule_html ="";
+
+        for(var item in prize_rules){
+          console.log(item);
+          rule_arr.push(item);
         }
-        int_arr = int_arr.sort();
-        for (var i = 0; i < int_arr.length; i++) {
-            var j = i + 1;
-            var day_num = int_arr[i];
-            var points = all_integral[int_arr[i]];
-            if (day_num == '0') {
-                int_html += "<li>1.每日签到,获得" + points + "积分奖励</li>";
-            } else {
-                int_html += "<li>" + j + ".连续签到至" + day_num + "天,获得" + points + "积分奖励</li>";
-            }
+
+        console.log(rule_arr);
+
+        rule_arr = rule_arr.sort();
+
+        for(var i=0;i<rule_arr.length;i++){
+          var j = i+1;
+          var day_num = rule_arr[i];
+          var day_integral = prize_rules[rule_arr[i]]['integral'];
+          var day_coupon = prize_rules[rule_arr[i]]['coupon'];
+          console.log('###');
+          console.log(day_num);
+          console.log(day_integral);
+            var str_int ="";
+            var str_coupon ="";
+
+          if(day_num=='0'){
+              if(day_num){
+                  str_int =  "1.每日签到,获得"+day_integral+"积分奖励";
+              }
+              if(day_coupon){
+                  str_coupon = ",“"+day_coupon+"”一张";
+              }
+
+              rule_html += "<li>"+str_int+str_coupon+"。</li>";
+
+          }else{
+              if(day_num){
+                  str_int =  ""+j+".连续签到至"+ day_num + "天,获得" + day_integral + "积分奖励";
+              }
+              if(day_coupon){
+                  str_coupon = ",“"+day_coupon+"”一张";
+              }
+
+              rule_html += "<li>"+str_int+str_coupon+"。</li>";
+          }
         }
-        $('.wa-rules-div').find('.wa-rules-i-content').html(int_html);
+        $('.wa-rules-div').find('.wa-rules-i-content').html(rule_html);
 
         //返回
         $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function () {
