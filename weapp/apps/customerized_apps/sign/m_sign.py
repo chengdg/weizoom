@@ -27,7 +27,7 @@ class MSign(resource.Resource):
 		"""
 		响应GET
 		"""
-		p_id = request.GET['id']
+		p_id = request.GET.get('id','id')
 		member = request.member
 		isPC = request.GET.get('isPC',0)
 		isMember = member and member.status == 1
