@@ -42,10 +42,10 @@ class SignParticipances(resource.Resource):
 		sort_attr = request.GET.get('sort_attr', '-latest_date')
 		if 'total_integral' == sort_attr:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
-			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=False)
+			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=False)
 		elif '-total_integral' == sort_attr:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
-			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=True)
+			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True)
 		else:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
 		#进行分页
