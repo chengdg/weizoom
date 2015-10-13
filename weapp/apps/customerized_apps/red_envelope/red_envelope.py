@@ -288,14 +288,31 @@ class RedEnvelopeParticipances(resource.Resource):
         红包分析页面
         """
         rule_id = request.GET.get('id', None)
-        has_data = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=rule_id).count()
+        redEnvelope2Order_data = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=rule_id)
+        has_data = redEnvelope2Order_data.count()
         rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
         coupon_rule = promotion_models.CouponRule.objects.get(id=rule_data.coupon_rule_id)
-        #TODO 传递正确的数字
-        new_member_count = 152
-        received_count = 3000
-        consumption_sum = 13000.00
-        total_use_count = 300
+        relations = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
+
+        new_member_count = 0         #新关注人数
+        consumption_sum = 0          #产生消费额
+        received_count = has_data      #领取人数
+        total_use_count = relations.filter(coupon__status=1).count()     #使用人数
+
+        if rule_data.receive_method :
+            consumption_sum = 0
+        else:
+            #求该红包规则下的总消费额
+            if redEnvelope2Order_data:
+                for i in redEnvelope2Order_data:
+                    final_price = Order.objects.get(id=i.order_id).final_price
+                    consumption_sum += final_price
+        #加上引入的数字
+        for relation in relations:
+            new_member_count += relation.introduce_new_member
+            received_count += relation.introduce_received_number
+            consumption_sum += relation.introduce_sales_number
+            total_use_count += relation.introduce_used_number
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -422,11 +439,15 @@ def get_datas(request):
     #优惠券查找
     relations = relations.filter(member_id__in=member_ids)
     if coupon_status:
-        final_relations = []
+        final_relations_ids = []
         for relation in relations:
-            if relation.coupon.status == coupon_status:
-                final_relations.append(relation)
-        relations = final_relations
+            if str(coupon_status) == '1':
+                if relation.coupon.status == int(coupon_status):
+                    final_relations_ids.append(relation.id)
+            else:
+                if relation.coupon.status !=1:
+                    final_relations_ids.append(relation.id)
+        relations = relations.filter(id__in=final_relations_ids)
 
     #处理排序,需要放在分页之前
     relations = relations.order_by(sort_attr)

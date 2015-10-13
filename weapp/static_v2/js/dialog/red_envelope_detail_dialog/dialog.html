@@ -9,7 +9,7 @@
         <ul class="fans_data_ul xui-weixin-outlinePage">
 			<li style="font-weight: bold;margin-left: 10px;">新关注人数：<em>${introduce_new_member}</em>人</li>
 			<li style="font-weight: bold;">领取人数：<em>${introduce_received_number}</em>人</li>
-			<li style="font-weight: bold;">产生消费额：<em>${introduce_sales_number}</em>人</li>
+			<li style="font-weight: bold;">产生消费额：<em>${introduce_sales_number}</em>元</li>
 			<li style="font-weight: bold;">使用人数：<em>${introduce_used_number}</em>人</li>
 		</ul>
         <div class="modal-body" style="min-height: 100px;overflow: auto;">
@@ -64,8 +64,8 @@
 			<tr data-id="${item.id}" class="xa-selectTr">
 			<td style="position:relative;" >
 				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="">
-						<img width="41" height="41" src="${item.participant_icon}" />
+					<a target="_blank" href="/member/detail/?id=${item.member_id}">
+						<img width="41" height="41" src="${item.participant_icon}" /><br>
 						{{html item.participant_name}}
 					</a>
 				</div>
@@ -74,29 +74,29 @@
 					${item.grade}
 				</td>
 				<td>
-					${item.bring_members_count}
+					${item.introduce_received_number_count}
 				</td>
 				<td>
-                    ${item.use_coupon_count}
+                    ${item.introduce_used_number_count}
 				</td>
 				<td>
-                    ${item.new_member_count}
+                    ${item.introduce_new_member_count}
 				</td>
 				<td>
-
+					${item.introduce_sales_number}
 				</td>
 				<td>
 					${item.created_at}
 				</td>
 				<td>
-					{{if item.coupon_status_id==1}}
-						<b style="color:#5D8F17">${item.coupon_status}</b>
+					{{if item.coupon_status==1}}
+						<b style="color:#5D8F17">${item.coupon_status_name}</b>
 					{{else}}
 						<b>未使用</b>
 					{{/if}}
 				</td>
 				<td>
-					{{if item.coupon_status_id==1}}
+					{{if item.coupon_status==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
 				</td>

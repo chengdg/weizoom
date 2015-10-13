@@ -39,10 +39,13 @@ class SignParticipances(resource.Resource):
 	
 	@staticmethod
 	def get_datas(request):
-		sort_attr = request.GET.get('sort_attr', 'id')
+		sort_attr = request.GET.get('sort_attr', '-latest_date')
 		if 'total_integral' == sort_attr:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
-			datas = sorted(datas, lambda x: x['prize']['integral'], reverse=True)
+			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=False)
+		elif '-total_integral' == sort_attr:
+			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
+			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True)
 		else:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
 		#进行分页
@@ -57,7 +60,8 @@ class SignParticipances(resource.Resource):
 		"""
 		响应API GET
 		"""
-		sort_attr = request.GET.get('sort_attr', 'id')
+		sort_attr = request.GET.get('sort_attr', '-latest_date')
+		print
 		pageinfo, datas = SignParticipances.get_datas(request)
 
 		member_ids = []
@@ -70,6 +74,7 @@ class SignParticipances(resource.Resource):
 		for data in datas:
 			items.append({
 				'id': str(data.id),
+				'member_id': data.member_id,
 				'participant_name': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M:%S"),

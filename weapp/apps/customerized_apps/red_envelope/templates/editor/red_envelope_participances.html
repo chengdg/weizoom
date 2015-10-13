@@ -137,7 +137,7 @@
 						data-introduce-new-member="${item.introduce_new_member_count}"
 						data-introduce-sales-number="${item.introduce_sales_number}"
 					>查看引入详情</a><br>
-					{{if item.coupon_status_id==1}}
+					{{if item.coupon_status==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
 				</td>
@@ -172,8 +172,7 @@ $(document).ready(function() {
 		var introduce_used_number = $(event.currentTarget).data('introduce-used-number');
 		var introduce_new_member = $(event.currentTarget).data('introduce-new-member');
 		var introduce_sales_number = $(event.currentTarget).data('introduce-sales-number');
-		console.log(export_id);
-		var dialog = W.dialog.showDialog('W.dialog.mall.RedEnvelopeDetailDialog',{
+		var dialog = W.dialog.RedShowDialog('W.dialog.mall.RedEnvelopeDetailDialog.'+reation_id+"'",{
 			member_name: member_name,
 			relation_id: reation_id,
 			rule_id: export_id,
@@ -183,7 +182,6 @@ $(document).ready(function() {
 			introduce_new_member: introduce_new_member,
 			introduce_sales_number: introduce_sales_number,
 			success: function(data){
-
 			},
 			error: function(data){
 				W.showHint('error', '发放失败!');
