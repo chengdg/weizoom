@@ -64,7 +64,7 @@ def list_products(request):
 	if len(product_categories) > 0:
 		has_category = True
 	c = RequestContext(request, {
-		'page_title': u'商品列表(%s)' % (category.name if hasattr(category, 'name') else category['name']),
+		'page_title': u'商品列表',
 		'products': products,
 		'category': category,
 		'is_deleted_data': category.is_deleted if hasattr(category, 'is_deleted') else False,
