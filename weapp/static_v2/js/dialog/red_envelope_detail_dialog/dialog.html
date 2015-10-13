@@ -18,7 +18,7 @@
                 data-ui-role="advanced-table"
                 data-app="apps/red_envelope"
                 data-resource="red_envelope_participances"
-                data-args='{"rule_id": "${rule_id}","relation_id": "${relation_id}","introduced_by": "${introduced_by}"}'
+                data-args='{"rule_id": "${rule_id}","relation_id": "${relation_id}","introduced_by": "${introduced_by}","receive_method": "${receive_method}"}'
                 data-template-id="#red-envelope-dialog-detail-tmpl"
                 data-enable-paginator="true"
                 data-enable-sort="false"
@@ -71,7 +71,11 @@
 				</div>
 			</td>
 				<td>
-					${item.grade}
+					{{if item.grade == "新会员"}}
+						<span style="color:#da0909">${item.grade}</span>
+					{{else}}
+						${item.grade}
+					{{/if}}
 				</td>
 				<td>
 					${item.introduce_received_number_count}
