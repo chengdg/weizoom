@@ -595,7 +595,8 @@ ui-appPage-commonStyle">
             W.showHint('success', '已经将链接复制到剪贴板');
         });
         var flag = true;
-        var add_keyword_btn;
+        var add_keyword_btn,
+            prize_keyword_view;
         W.Broadcaster.on('selectwidget:assert', function(cid){
             //初始化弹出层
             if(flag && cid==2){
@@ -604,10 +605,10 @@ ui-appPage-commonStyle">
                 //自动回复 xxxxx
                 add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
                 add_keyword_btn.click(function(){
-                var prize_keyword_view = new W.view.apps.PrizeKeyword({
+                    prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
                     el:'.xa-keywordBoxDiv',
                     add_btn:'.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input'
-                });
+                }));
             });
 
             flag = false;
