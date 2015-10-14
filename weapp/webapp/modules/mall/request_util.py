@@ -288,10 +288,12 @@ def get_product(request):
 		#add by duhao 增加友情提示语
 		'hint': hint
 	})
+	#print("request.template_dir : {}".format(request.template_dir))
 
 	if hasattr(request, 'is_return_context'):
 		return c, product
 	else:
+		# 默认目录: default_v3
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 

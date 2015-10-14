@@ -69,8 +69,9 @@ class Product(api_resource.ApiResource):
 
 			'models': product.models,
 
-			'promotion': product.promotion,
-			'product_model_properties': product.product_model_properties
+			'product_model_properties': product.product_model_properties,
+			
+			'swipe_images_json': product.swipe_images_json
 		}
 		if hasattr(product, 'promotion'):
 			data['promotion'] = product.promotion

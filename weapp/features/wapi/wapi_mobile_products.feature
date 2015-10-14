@@ -267,7 +267,7 @@ Scenario: 测试按类别获得商品列表的API
 		"""
 
 
-@wip.wapi
+@wapi @wip.wapi
 Scenario: 测试获取商品的API
 
 	When 访问WAPI:mall/product
@@ -343,4 +343,3 @@ Scenario: 测试商品分类的接口
 			"name": "分类2"
 		}
 		"""
-
