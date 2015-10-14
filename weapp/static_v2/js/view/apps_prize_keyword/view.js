@@ -19,9 +19,9 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	initialize: function(options) {
-        this.md = "精确匹配";
+        this.md = "精确";
         this.type = 0;
-        this.template = Handlebars.compile($("#addkey-view-tmpl-src").html());
+        this.template = Handlebars.compile($("#apps-addkey-view-tmpl-src").html());
 		this.$keyword_div = $(options.keyword_div);
 		this.render();
 	},
@@ -82,127 +82,57 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	onClickMistinessRadio: function() {
-		this.md = "模糊匹配";
+		this.md = "模糊";
 		this.type = 1;
 	},
 
 	onClickExactRadio: function() {
-		this.md = "精确匹配";
+		this.md = "精确";
 		this.type = 0;
 	},
 
 	onClickSubmit: function(){
 
-			var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
-			if(keyword == '') {
-				W.showHint('error','关键字不能为空！');
-				return;
-			}
+		var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
+		if(keyword == '') {
+			W.showHint('error','关键字不能为空！');
+			return;
+		}
 
-			if(keyword.length > 5) {
-				W.showHint('error','单个关键词字数不能超过5个字');
-				return;
-			}
+		if(keyword.length > 5) {
+			W.showHint('error','单个关键词字数不能超过5个字');
+			return;
+		}
 
-			var keywords = [];
-			$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
-				keywords.push($(this).text().trim());
-			});
-			this.$el.find($('.data-keyword')).each(function(){
-				keywords.push($(this).text().trim());
-			});
+		var keywords = [];
+		$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
+			keywords.push($(this).text().trim());
+		});
+		this.$el.find($('.data-keyword')).each(function(){
+			keywords.push($(this).text().trim());
+		});
 
-			//判断关键词个数是否超过4个
-			if (keywords.length > (4 - 1)) {
-				W.showHint('error', '关键词个数不能超过4个');
-				return;
-			}
+		//判断关键词个数是否超过4个
+		if (keywords.length > (4 - 1)) {
+			W.showHint('error', '关键词个数不能超过4个');
+			return;
+		}
 
-			var args = {
-				keyword: keyword,
-				keywords: JSON.stringify(keywords)
-			};
+		var args = {
+			keyword: keyword,
+			keywords: JSON.stringify(keywords)
+		};
 
-            var _this = this;
-			var pattern = {
-						keyword: _this.$('.xa-app-add').val(),
-						mode: _this.md,
-						type: _this.type
-					};
-			//$('.xa-keywords').append(_this.template(pattern));
-			this.$keyword_div.append(_this.template(pattern));
-			_this.$('.xa-app-add').val("");
-			this.hide();
-
-        //this.$('.xa-errorHint').html('');
-        ////替换相邻多个空格为一个
-        //var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
-        //
-        //if(keyword == '') {
-			//var temp = this.$el.find('.xa-keywords').html();
-			//$('#' + this.id).find('.xa-patternapend').append(temp);
-			//if(this.$el.find('.data-keyword').length == 0) {
-			//	W.showHint('error', '关键词不能为空');
-			//	return;
-			//}
-			//$('#' + this.id).find('.xa-hint').hide();
-			//this.hide();
-			//return;
-        //}
-        //
-        //if(keyword.length > 15) {
-			//W.showHint('error', '单个关键词字数不能超过15个字');
-			//return;
-        //}
-        //
-        //var keywords = [];
-        //$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
-			//keywords.push($(this).text().trim());
-        //});
-        //this.$el.find($('.data-keyword')).each(function(){
-			//keywords.push($(this).text().trim());
-        //});
-        //
-        ////判断关键词个数是否超过10个
-        //if (keywords.length > (10 - 1)) {
-			//W.showHint('error', '关键词个数不能超过10个');
-			//return;
-        //}
-        //
-        //var args = {
-			//keyword: keyword,
-			//keywords: JSON.stringify(keywords)
-        //};
-	    //var _this = this;
-		//W.getApi().call({
-		//	app: 'new_weixin',
-		//	resource: 'keyword_rules',
-		//	method: 'get',
-		//	args: args,
-		//	success: function(data) {
-		//		var pattern = {
-		//			keyword: _this.$('.xa-app-add').val(),
-		//			mode: _this.md,
-		//			type: _this.type
-		//		};
-		//		if(data.msg == null) {
-		//			_this.$('.xa-keywords').append(_this.template(pattern));
-		//			var temp = _this.$el.find('.xa-keywords').html();
-		//			$('#' + _this.id).find('.xa-hint').hide();
-		//			$('#' + _this.id).find('.xa-patternapend').append(temp);
-		//			_this.hide();
-		//		}
-		//		else{
-		//			_this.$('.xa-errorHint').html(data.msg);
-		//			_this.$('.xa-errorHint').show();
-		//			_this.$('.xa-app-add').attr("value","");
-		//		}
-		//		_this.$el.find($('.xa-app-add')).val('');
-		//	},
-		//	error: function(resp) {
-		//		_this.$el.find($('.xa-app-add')).val('');
-		//	}
-		//})
+		var _this = this;
+		var pattern = {
+					keyword: _this.$('.xa-app-add').val(),
+					mode: _this.md,
+					type: _this.type
+				};
+		//$('.xa-keywords').append(_this.template(pattern));
+		this.$keyword_div.append(_this.template(pattern));
+		_this.$('.xa-app-add').val("");
+		this.hide();
 	},
 
 	onClickClose: function() {

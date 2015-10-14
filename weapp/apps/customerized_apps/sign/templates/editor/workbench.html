@@ -201,6 +201,12 @@
             width: 100px;
             font-weight: bold;
         }
+        #add_keyword_div .xui-close{
+            height: 16px;
+            position: relative;
+            right: 1px;
+            top: -9px;
+        }
 
     </style>
 {% endblock %}
@@ -609,6 +615,7 @@ ui-appPage-commonStyle">
                 add_keyword_div.attr('id','add_keyword_div');
                 add_keyword_btn.attr('id','add_keyword_btn');
 
+
                 var xx = add_keyword_btn.position().top+50;
 			    var yy = add_keyword_btn.position().left;
                 var offset={top:xx,left:yy};
@@ -620,6 +627,10 @@ ui-appPage-commonStyle">
                      }));
                     prize_keyword_view.setPos(offset);
                     prize_keyword_view.render();
+                    $('.xa-data-patterns .xa-mode .xa-close').bind('click',function(){
+                        console.log('HHHHHHHHHHH');
+{#                    $(this).parent().find('.xa-data-patterns').remove();#}
+                    });
                 });
 
                 flag = false;
