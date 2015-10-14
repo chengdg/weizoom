@@ -53,6 +53,7 @@ def get_share_red_envelope(request):
 
     if order_id:
         relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
+    member_coupon_record_count = 0
     if material_id:
         print "1111111111++++++++++", 'followed_member_id=',followed_member_id, "member_id=", member_id
         if followed_member_id == member_id or not followed_member_id:
@@ -61,6 +62,8 @@ def get_share_red_envelope(request):
         else:
             print "333333333333333333333333+++++++++++++++++++++++++"
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
+
+        member_coupon_record_count = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id).count()
 
     return_data = {
         'red_envelope_rule': red_envelope_rule,
@@ -71,7 +74,7 @@ def get_share_red_envelope(request):
     }
 
     print relation.count(), "444444444444444444444444444444++++++++++++++++++++"
-    if relation.count() > 0:
+    if relation.count() > 0 or member_coupon_record_count > 0:
         #分享获取红包
         records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
         friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")[:4]
