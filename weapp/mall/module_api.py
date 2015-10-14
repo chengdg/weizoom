@@ -2242,7 +2242,7 @@ def update_order_status(user, action, order, request=None):
 				red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
 				member_id=red_envelope2member.introduced_by
 			)
-			relation.update(introduce_sales_number = F('introduce_sales_number') + order.product_price + order.postage)
+			relation.update(introduce_sales_number = F('introduce_sales_number') + order.final_price + order.postage)
 
 	elif action == 'return_pay':
 		action_msg = '退款'
