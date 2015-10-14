@@ -365,7 +365,11 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
     sub_member_ids = []
     for sub_relation in sub_relations:
         sub_member_ids.append(sub_relation.member_id)
+
+    #获取关注关系l
     member_follow_relation = MemberFollowRelation.objects.filter(member_id__in=sub_member_ids)
+
+    #只保存新会员的最后一条记录l
     member_id2follower_member_id ={}
     for member in member_follow_relation:
         member_id2follower_member_id[member.member_id] = member.follower_member_id
@@ -374,9 +378,9 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
         count = 0
         for sub_relation in sub_relations:
             if sub_relation.member.is_subscribed \
-                and sub_relation.is_new \
-                and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id \
-                and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id]:
+                    and sub_relation.is_new \
+                    and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id \
+                    and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id]:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
