@@ -179,6 +179,6 @@ def get_share_red_envelope(request):
                 return_data['member'] = member if member.is_subscribed else ""
                 return_data['qcode_img_url'] = qcode_img_url
 
-
+    request.META['should_remove_shared_url_session'] = True
     c = RequestContext(request, return_data)
     return render_to_response('shareRedEnvelope/webapp/share_red_envelope.html', c)

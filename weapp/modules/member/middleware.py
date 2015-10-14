@@ -970,9 +970,6 @@ class OAUTHMiddleware(object):
 			#cookie_webapp_id = request.COOKIES.get('webapp_id', None)
 			#1 如果cookie中没有 cookie_open_id or cookie_opeqqqn_id 则进行授权
 			#print '================middleware cookie :', request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
-			if 'share_red_envelope' in request.get_full_path():
-				request.META[RemoveSharedInfoMiddleware.SHOULD_REMOVE_SHARED_URL_SESSION_FLAG] = True
-
 			if (cookie_openid_webapp_id is None) or (not request_fmt):
 				is_oauth = True
 			else:
