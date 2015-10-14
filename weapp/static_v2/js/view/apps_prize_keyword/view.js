@@ -8,7 +8,6 @@
 ensureNS('W.view.apps');
 W.view.apps.PrizeKeyword = Backbone.View.extend({
 	el: '',
-	add_btn:'',
 
 	events: {
 		'keypress .xa-app-add': 'onPressEnter',
@@ -24,26 +23,15 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
         this.template = Handlebars.compile($("#addkey-view-tmpl-src").html());
 		this.prize_keypress_num = 0;
 		this.prize_keypress_arr =[];
-		this.$add_keyword_btn = $(options.add_btn);
+		//this.$add_keyword_btn = $(options.add_btn);
 		this.render();
 	},
-
-	//setPos: function (offset) {
-	//	this.$el.css('top', offset.top + 'px');
-	//	this.$el.css('left', offset.left + 'px');
-	//},
-
 	render: function() {
 		if (this.$('.xui-newKeyView').length === 0) {
 			this.$el.append($('#apps-prize-keyword-tmpl-src').html());
 		} else {
-			var xx = this.$add_keyword_btn.position().top+50+'px';
-			var yy = this.$add_keyword_btn.position().left+'px';
-			//var offset ={'top':xx,'left':yy};
-			//this.setPos(offset);
-			$('.xui-keywordBoxDiv').css({'position':'absolute','top':xx,'left':yy});
+			$('.xui-keywordBoxDiv').css({'position':'absolute'});
 			this.$el.find('.xa-keywords').empty();
-
 			this.$el.show();
 		}
 	},
@@ -199,6 +187,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	setPos: function (offset) {
+		this.$el.css('position','absolute');
 		this.$el.css('top', offset.top + 'px');
 		this.$el.css('left', offset.left + 'px');
 	},
