@@ -229,17 +229,24 @@
 
     ResultDialog.prototype.render = function (status, data) {
         if (status) {
+            var i_flag = c_flag = true;
             this.$title.text('签到成功！');
-            if (data.integral) {
+            if (data.integral && data.integral != 0) {
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
-            } else if (data.coupon) {
+                i_flag = false;
+            }
+            if (data.coupon) {
                 if (data.coupon.count > 0) {
                     this.$coupon.find('span').text(data.coupon.name);
-                    this.$coupon.show();
                 } else {
-                    this.$entityContent.html('奖励已领完,请联系客服补发');
+                    this.$coupon.html('优惠券奖励已领完,请联系客服补发');
                 }
+                this.$coupon.show();
+                c_flag = false;
+            }
+            if(i_flag && c_flag){
+                this.$contentHeader.hide();
             }
             this.$dialogContent.show();
         } else {

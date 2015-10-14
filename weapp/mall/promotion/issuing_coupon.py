@@ -401,6 +401,21 @@ class IssuingCouponsFilter(resource.Resource):
             response.data.pageinfo = paginator.to_dict(pageinfo)
             return response.get_response()
 
+        elif filter_type == "coupon_count":
+            """
+            获取优惠券库存
+            add by aix using in 百宝箱签到
+            """
+            coupon_id = request.GET.get("coupon_id", None)
+            response = create_response(200)
+            if coupon_id:
+                coupon = CouponRule.objects.get(id=coupon_id)
+                response.data = coupon.remained_count
+            else:
+                response = create_response(500)
+                response.errMsg = u'不存在该优惠券'
+            return response.get_response()
+
 
 ######################
 

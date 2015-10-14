@@ -248,4 +248,3 @@ def get_coupon_count(coupon_rule_id):
 		return coupon.remained_count
 	except:
 		return 0
-

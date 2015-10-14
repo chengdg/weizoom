@@ -12,8 +12,8 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 	
 	initialize: function(options) {
 		this.$el = $(options.el);
-		
-		this.options = options || {};		
+
+		this.options = options || {};
 		this.prize = options.prize || {id:0, name:''};
 		//this.trigger('change-prize', _.deepClone(this.prize));//keep
 	},
@@ -60,14 +60,38 @@ W.view.apps.PrizeSelectorV4 = Backbone.View.extend({
 W.registerUIRole('[data-ui-role="apps-prize-selector-v4"]', function() {
     var $el = $(this);
 	var prize = $el.data('prize');
-	console.log('!!!!!!!!!!!!!!');
-	console.log(prize);
-    var view = new W.view.apps.PrizeSelectorV4({
-        el: $el.get(0),
-		prize: prize
-    });
-    view.render();
-
-    //缓存view
-    $el.data('view', view);
+	var view;
+	//获取最新的优惠券库存
+	if(prize && prize.id && prize.id != 0){
+		W.getApi().call({
+			app: 'mall2',
+			resource: 'issuing_coupons_filter',
+			method: 'get',
+			async: false,
+			args: {
+				"filter_type": "coupon_count",
+				"coupon_id": prize.id
+			},
+			success: function(data){
+				prize.count = data;
+				view = new W.view.apps.PrizeSelectorV4({
+					el: $el.get(0),
+					prize: prize
+				});
+				$el.data('view', view);
+				view.render();
+			},
+			error: function(error){
+				W.showHint('error', '获取优惠券库存失败~');
+			}
+		});
+	}else{
+		view = new W.view.apps.PrizeSelectorV4({
+			el: $el.get(0),
+			prize: prize
+		});
+		view.render();
+		//缓存view
+		$el.data('view', view);
+	}
 });
