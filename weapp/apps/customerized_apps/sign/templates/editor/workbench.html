@@ -189,6 +189,7 @@
             margin-right: 20px;
         }
 
+
     </style>
 {% endblock %}
 
@@ -584,27 +585,19 @@ ui-appPage-commonStyle">
         client.on('complete', function(client, args) {
             W.showHint('success', '已经将链接复制到剪贴板');
         });
-
+        var view_flag = true,add_keyword_btn;
         W.Broadcaster.on('selectwidget:assert', function(cid){
             //初始化弹出层
             $('[data-toggle="popover"]').popover();
             //自动回复xxxxxxx
-            var prize_keyword_view = new W.view.apps.PrizeKeyword({
-                el:'.xa-keywordBoxDiv'
-            });
-            prize_keyword_view.hide();
-            prize_keyword_view.render();
 
-
-            var add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
+            add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
             add_keyword_btn.click(function(){
-                var xx = add_keyword_btn.position().top+30+'px';
-                var yy = add_keyword_btn.position().left+'px';
-                $('.xui-keywordBoxDiv').css({'position':'absolute','top':'1200px','left':'200px'}).show();
+                var prize_keyword_view = new W.view.apps.PrizeKeyword({
+                    el:'.xa-keywordBoxDiv',
+                    add_btn:'.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input'
+                });
             });
-
-
-
         });
     });
 
