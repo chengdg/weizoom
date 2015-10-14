@@ -179,6 +179,7 @@ def __process_activity_data(context, page, user):
 	_add_image_group(page, page_json, user)
 	_add_image_display(page, page_json, user)
 	_add_product_group(page, page_json, user)
+	_add_category(page, page_json, user)
 	print '3242342'
 
 	data = {
@@ -332,8 +333,33 @@ def __actual_page(page_json, user):
 						"price": product['display_price']
 					}
 					actual_component["products"]["items"].append(data)
-			print actual_component
-			print '444444444444444'
+
+		# 商品列表
+		if component['type'] == "wepage.item_list":
+			model = component['model']
+			actual_component = {
+				"products_source": {
+					"list_style1": product_modes[int(model['type'])],
+					"list_style2": product_types[int(model['card_type'])],
+					"show_product_name": 'true' if model['itemname'] else 'false',
+					"show_price": 'true' if model['price'] else 'false',
+					"display_count": model['count'],
+					"items": []
+				}
+			}
+
+			request = Request(user)
+			pagerender.process_item_list_data(request, component)
+			products = component['runtime_data'].get('products', None)
+			if products:
+				for product in products:
+					data = {
+						"name": product['name'],
+						"price": product['display_price']
+					}
+					actual_component["products_source"]["items"].append(data)
+
+
 		actual.update(actual_component)
 	return actual
 
@@ -725,8 +751,54 @@ def __get_product_json(parent_json, product_data, user):
 	return product_json
 
 
+# 商品分组
+def _add_category(page, page_json, user):
+	cid, pid = __get_cid_and_pid(page_json)
+
+	if page.has_key("products_source"):
+		category = page['products_source']
+
+		category_group = {
+			"type":"wepage.item_list",
+			"cid": cid,
+			"pid": pid,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "yes",
+			"is_new_created": True,
+			"property_view_title": u"商品列表",
+			"model": { "id":"", "class":"", "name":"", "index":11,
+				"datasource":{"type":"api","api_name":""},
+				"category": __get_category_json(category['items'], user),
+				"count": category['display_count'],
+				"type": product_modes.index(category['list_style1']),
+				"card_type": product_types.index(category['list_style2']),
+				"itemname": True if category.get('itemname',"true") == "true" else False,
+				"price": True if category.get('price',"true") == "true" else False,
+				"container":""
+			},
+			"components":[]
+		}
+		page_json['components'].append(category_group)
+
+def __get_category_json(items, user):
+	category_data = []
+	for item in items:
+		category = mall_models.ProductCategory.objects.get(name=item['products_source_name'])
+		category_data.append({
+			"id": category.id,
+			"title": category.name,
+			"link": './?module=mall&model=products&action=list&category_id={}&workspace_id=mall&webapp_owner_id={}'.format(category.id, user.id),
+		})
+
+	return json.dumps(category_data)
 
 
+
+
+# 商品弹窗验证
 @When(u"{user}按商品名称搜索")
 def step_impl(context, user):
 	user = context.client.user
@@ -743,6 +815,8 @@ def __get_products(context):
 		"page": context.page
 	}
 	response = context.client.get("/termite2/api/webapp_datas/",data)
+	context.search = ""	
+	context.page = 1
 	return json.loads(response.content)
 
 @Then(u"{user}在微页面获取'在售'商品选择列表")
@@ -784,3 +858,66 @@ def step_impl(context, user, page_type):
 
 	context.page = 1 if context.page<= 0 else context.page
 
+
+
+
+# 商品分类弹窗验证
+@When(u"{user}按商品分类名称搜索")
+def step_impl(context, user):
+	user = context.client.user
+	context.category_search = json.loads(context.text)[0].get('search', "")
+
+def __get_product_categorys(context):	
+	context.page = context.page if hasattr(context, "page") else 1
+	context.category_search = context.category_search if hasattr(context, "category_search") else ""
+
+	data = {
+		"type": "category",
+		"count_per_page": "8",
+		"query": context.category_search,
+		"page": context.page
+	}
+	response = context.client.get("/termite2/api/webapp_datas/",data)
+	context.category_search = ""
+	context.page = 1
+	return json.loads(response.content)
+
+@Then(u"{user}在微页面获得商品分类列表")
+def step_impl(context, user):
+	user = context.client.user
+
+	data = __get_product_categorys(context)["data"]["items"]
+
+	actual_datas = []
+	for category in data:
+		actual_datas.append({
+			"name": category["name"]
+		})
+	expected_datas = json.loads(context.text)
+
+	bdd_util.assert_list(expected_datas, actual_datas)
+
+@Then(u"{user}获取商品列表模块商品分类选择列表显示共'{page_count}'页")
+def step_impl(context, user, page_count):
+	user = context.client.user
+	max_page = __get_product_categorys(context)["data"]["pageinfo"]["max_page"]	
+	actual = {"page_count": max_page}
+	expected = {"page_count": page_count}
+	bdd_util.assert_dict(expected, actual)
+
+@When(u"{user}访问商品分类列表第'{page}'页")
+def step_impl(context, user, page):
+	user = context.client.user
+	context.page = page
+
+@When(u"{user}在微页面浏览'{page_type}'商品分类")
+def step_impl(context, user, page_type):
+	user = context.client.user
+	context.page = int(context.page if hasattr(context, "page") else 1)
+
+	if page_type == u'上一页':
+		context.page = context.page - 1
+	elif page_type == u'下一页':
+		context.page = context.page + 1
+
+	context.page = 1 if context.page<= 0 else context.page

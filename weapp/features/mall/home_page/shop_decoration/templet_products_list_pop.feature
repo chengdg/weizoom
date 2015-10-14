@@ -68,6 +68,7 @@ Background:
 		}]
 		"""
 
+@termite2
 Scenario:1选择商品分类窗体：商品分类列表搜索、添加新商品分类
 	#选择商品分类名称的搜索
 	#模糊匹配
@@ -159,8 +160,9 @@ Scenario:1选择商品分类窗体：商品分类列表搜索、添加新商品�
 		}]
 		"""
 
+@termite2
 Scenario:2 商品分类选择列表分页
-	When jobs获取商品分类选择列表
+	Then jobs在微页面获得商品分类列表
 		"""
 		[{
 			"name": "分类9"
@@ -180,9 +182,9 @@ Scenario:2 商品分类选择列表分页
 			"name": "分组2"
 		}]
 		"""
-	Then jobs获取商品列表模块商品分类选择列表显示共2页
-	When jobs访问商品分类列表第1页
-	Then jobs获取商品分类选择列表
+	Then jobs获取商品列表模块商品分类选择列表显示共'2'页
+	When jobs访问商品分类列表第'1'页
+	Then jobs在微页面获得商品分类列表
 		"""
 		[{
 			"name": "分类9"
@@ -203,14 +205,14 @@ Scenario:2 商品分类选择列表分页
 		}]
 		"""
 	When jobs在微页面浏览'下一页'商品分类
-	Then jobs获取商品分类选择列表
+	Then jobs在微页面获得商品分类列表
 		"""
 		[{
 			"name": "分组1"
 		}]
 		"""
 	When jobs在微页面浏览'上一页'商品分类
-	Then jobs获取商品分类列表
+	Then jobs在微页面获得商品分类列表
 		"""
 		[{
 			"name": "分类9"
@@ -231,6 +233,7 @@ Scenario:2 商品分类选择列表分页
 		}]
 		"""
 
+@termite2
 Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品来源，也应该同步修改
 
 	#商品列表模块显示个数'9','详细列表'样式,'默认样式'
@@ -241,11 +244,11 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 			},
 			"products_source": {
 				"items":[{
-					"products_source_name":"分组2"
+					"products_source_name": "分组2"
 				}],
-				"display_count":"9",
-				"list_style1":"列表",
-				"list_style2":"默认样式"
+				"display_count": "9",
+				"list_style1": "列表",
+				"list_style2": "默认样式"
 			}
 		}]
 		"""
@@ -257,23 +260,26 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 			},
 			"products_source":{
 				"items":[{
-					"name":"商品1可单行显示",
-					"price": 1.0
-					},{
-					"name":"商品2可两行显示",
-					"price": 2.0
-					},{
-					"name":"商品3不可两行显示",
-					"price": 3.0
-					},{
-					"name":"商品4",
-					"price": 4.0
-					},{
-					"name":"商品5",
-					"price": 5.0
-					},{
+					"name":"商品7",
+					"price": 7.0
+				},{
 					"name":"商品6",
 					"price": 6.0
+				},{
+					"name":"商品5",
+					"price": 5.0
+				},{
+					"name":"商品4",
+					"price": 4.0
+				},{
+					"name":"商品3不可两行显示",
+					"price": 3.0
+				},{
+					"name":"商品2可两行显示",
+					"price": 2.0
+				},{
+					"name":"商品1可单行显示",
+					"price": 1.0
 				}],
 				"list_style1":"列表",
 				"list_style2":"默认样式"
@@ -312,7 +318,7 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 	Then jobs在微页面获得商品分类列表
 		"""
 		[{
-			"name": "分类9"0
+			"name": "分类9"
 		},{
 			"name": "分类8"
 		},{
