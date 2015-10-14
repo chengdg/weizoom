@@ -297,7 +297,7 @@ def cancel_order_handler(order, **kwargs):
                     relation.update(introduce_used_number = F('introduce_used_number') - 1)
                     #订单完成,更新红包消费金额
                     if order.status == ORDER_STATUS_SUCCESSED:
-                        relation.update(introduce_sales_number = F('introduce_sales_number') - order.product_price - order.postage)
+                        relation.update(introduce_sales_number = F('introduce_sales_number') - order.final_price - order.postage)
     except:
         alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         watchdog_fatal(alert_message, type='WEB')
