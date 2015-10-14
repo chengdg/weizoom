@@ -143,6 +143,51 @@
         .xui-propertyView-app-ShareGroup Button.xui-removeImageButton{
             display: none;
         }
+        .xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input span{
+            color:#0D5F87 !important;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView {
+            width: 360px;
+            border:1px solid #ccc;
+            background-color: #fff;
+
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-key {
+            width: 100%;
+            height: 100px;
+            padding-top: 20px;
+            border-bottom: 1px solid #ccc;
+            line-height: 30px;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-key input {
+            vertical-align: sub;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-show {
+            width: 100%;
+        }
+        .xui-keywordBoxDiv .btn {
+            border-radius: 0px !important;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-i-left {
+            text-align: right;
+            width: 76px;
+            clear: both;
+            float: left;
+
+        }.xui-keywordBoxDiv .xui-newKeyView .xui-i-right {
+            text-align: left;
+            right: 90px;
+
+        }
+
+        .xui-keywordBoxDiv .xui-save{
+            background: none repeat scroll 0 0 #1E8F19;
+            border: 1px solid #1E8F19;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView.pa{
+            margin-left: 10px;
+            margin-right: 20px;
+        }
         .xui-link-copy{
             margin-top: 3px;
         }
@@ -156,6 +201,7 @@
             width: 100px;
             font-weight: bold;
         }
+
     </style>
 {% endblock %}
 
@@ -289,6 +335,7 @@ ui-appPage-commonStyle">
             <br>
         </script>
     {% endverbatim %}
+    <div class="xui-keywordBoxDiv xa-keywordBoxDiv"></div>
 {% endblock %}
 
 {% block base_js %}
@@ -349,7 +396,7 @@ ui-appPage-commonStyle">
           alert('Failed to load pages in JSON. Please check it.');
         }
       });
-    }
+    };
     
     $(document).ready(function() {
         table = $('[data-ui-role="advanced-table"]').data('view');
@@ -547,15 +594,25 @@ ui-appPage-commonStyle">
         client.on('complete', function(client, args) {
             W.showHint('success', '已经将链接复制到剪贴板');
         });
-
-        var flag = true,num = 0;
+        var flag = true;
+        var add_keyword_btn,
+            prize_keyword_view;
         W.Broadcaster.on('selectwidget:assert', function(cid){
             //初始化弹出层
             if(flag && cid==2){
                 $('[data-toggle="popover"]').popover();
-                flag = false;
-            }
 
+                //自动回复 xxxxx
+                add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
+                add_keyword_btn.click(function(){
+                    prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
+                    el:'.xa-keywordBoxDiv',
+                    add_btn:'.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input'
+                }));
+            });
+
+            flag = false;
+            }
         });
         // 滚动浮动在底部
           var stickyMenu = function(){
