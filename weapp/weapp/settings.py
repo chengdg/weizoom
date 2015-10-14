@@ -757,9 +757,15 @@ RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
 
 
 # settings for WAPI Logger
-WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
-WAPI_LOGGER_SERVER_PORT = 27017
-WAPI_LOGGER_DB = 'wapi'
+if MODE == 'develop' or MODE == 'test':
+    WAPI_LOGGER_ENABLED = True
+    WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
+    WAPI_LOGGER_SERVER_PORT = 27017
+    WAPI_LOGGER_DB = 'wapi'
+else:
+    # 证实环境暂时关闭
+    WAPI_LOGGER_ENABLED = False
+
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)

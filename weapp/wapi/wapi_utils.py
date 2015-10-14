@@ -4,6 +4,8 @@ from core.jsonresponse import create_response
 from django.contrib.auth.models import User
 from account.models import UserProfile
 from wapi.logger.mongo_logger import MongoAPILogger
+from django.conf import settings
+
 
 _wapi_logger = None
 
@@ -11,11 +13,12 @@ def wapi_log(app, resource, method, params, status=0):
 	"""
 	记录WAPI信息，保存到mongo中
 	"""
-	global _wapi_logger
-	#if _wapi_logger is None:
-	#	_wapi_logger = MongoAPILogger()
-	print("called WAPI: {} {}/{}, param: {}".format(method, app, resource, params))
-	#return _wapi_logger.log(app, resource, method, params, status)
+	if settings.WAPI_LOGGER_ENABLED:
+		global _wapi_logger
+		if _wapi_logger is None:
+			_wapi_logger = MongoAPILogger()
+		print("called WAPI: {} {}/{}, param: {}".format(method, app, resource, params))
+		return _wapi_logger.log(app, resource, method, params, status)
 	return
 
 

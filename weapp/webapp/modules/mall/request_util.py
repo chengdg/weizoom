@@ -217,46 +217,30 @@ def get_product(request):
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
 	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	#print("product: {}".format(product))
-	"""
-	product: {'is_use_cod_pay_interface': True, 'is_support_make_thanks_card': False
-	, 'weight': 0.0, 'purchase_price': 0.0, 'stock_type': 0L, 'weshop_status': 0L, '
-	pic_url': u'/standard_static/test_resource_img/mian2.jpg', 'promotion_title': u'
-	', 'is_use_online_pay_interface': True, 'postage_type': u'unified_postage_type',
-	 'introduction': u'', 'detail': u'\u70ed\u5e72\u9762\u7684\u8be6\u60c5', 'displa
-	y_index': 0L, u'id': 9L, 'unified_postage_money': 0.0, 'supplier': 0L, 'type': u
-	'object', 'shelve_start_time': None, 'owner_id': 3L, 'update_time': datetime.dat
-	etime(2015, 10, 10, 19, 28, 30), 'bar_code': u'12321', 'price': 1.5, 'user_code'
-	: u'1', 'stocks': -1L, 'name': u'\u70ed\u5e72\u9762', 'remark': u'', 'is_deleted
-	': False, 'physical_unit': u'', 'is_member_product': False, 'created_at': dateti
-	me.datetime(2015, 10, 10, 19, 28, 30), 'postage_id': -1L, 'shelve_end_time': Non
-	e, 'shelve_type': 1L, 'thumbnails_url': u'/standard_static/test_resource_img/mia
-	n2.jpg', 'weshop_sync': 0L}	
-	"""
+	product0 = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
 	#duhao 2015-09-08
 	hint = __get_product_hint(request.webapp_owner_id, product_id)
 
 	# jz 2015-08-10
 	#product.fill_model()
 
-	if product.is_deleted:
+	if product['is_deleted']:
 		c = RequestContext(request, {
 			'is_deleted_data': True
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-	if product.promotion:
-		product.promotion['is_active'] = product.promotion_model.is_active
+	if product.get('promotion'):
+		product['promotion']['is_active'] = product['promotion_model'].is_active
 	jsons = [{
 		"name": "models",
-		"content": product.models
+		"content": product.get('models')
 	}, {
 		'name': 'priceInfo',
-		'content': product.price_info
+		'content': product.get('price_info')
 	}, {
 		'name': 'promotion',
-		'content': product.promotion
+		'content': product.get('promotion')
 	}]
 	#获得运费计算因子
 	# jz 2015-08-10
@@ -265,8 +249,8 @@ def get_product(request):
 	###################################################
 	non_member_followurl = None
 	if request.user.is_weizoom_mall:
-		product.is_can_buy_by_product(request)
-		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
+		product0.is_can_buy_by_product(request)
+		otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
 		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
 		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
 			non_member_followurl = otherSettings.weshop_followurl
@@ -282,25 +266,25 @@ def get_product(request):
 	is_non_member = True if request.member else False
 
 	c = RequestContext(request, {
-		'page_title': product.name,
+		'page_title': product['name'],
 		'product': product,
 		'jsons': jsons,
-		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
+		'is_deleted_data': product.get('is_deleted', False),
 		# jz 2015-08-10
 		# 'is_enable_get_coupons': settings.IS_IN_TESTING,
-		'model_property_size': len(product.product_model_properties),
+		'model_property_size': len(product.get('product_model_properties',[])),
 		# jz 2015-08-10
 		# 'postage_factor': json.dumps(product.postage_factor),
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
-		'price_info': product.price_info,
+		'price_info': product['price_info'],
 		'usable_integral': usable_integral,
 		'use_integral': use_integral,
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
-		'share_page_desc': product.name,
-		'share_img_url': product.thumbnails_url,
+		'share_page_desc': product['name'],
+		'share_img_url': product['thumbnails_url'],
 		#add by duhao 增加友情提示语
 		'hint': hint
 	})
