@@ -78,7 +78,13 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>下单会员</th>
+				<th>
+					{{if items[0].receive_method == "True"}}
+						领取会员
+					{{else}}
+						下单会员
+					{{/if}}
+				</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='member__grade' data-sort-direction="up">会员状态</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
@@ -92,16 +98,20 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-			<td style="position:relative;" >
-				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="/member/detail/?id=${item.member_id}">
-						<img width="41" height="41" src="${item.participant_icon}" /><br>
-						{{html item.participant_name}}
-					</a>
-				</div>
-			</td>
+				<td style="position:relative;" >
+					<div class="column_block xui-memberHeader pr">
+						<a target="_blank" href="/member/detail/?id=${item.member_id}">
+							<img width="41" height="41" src="${item.participant_icon}" /><br>
+							{{html item.participant_name}}
+						</a>
+					</div>
+				</td>
 				<td>
-					${item.grade}
+					{{if item.grade == "新会员"}}
+						<span style="color:#da0909">${item.grade}</span>
+					{{else}}
+						${item.grade}
+					{{/if}}
 				</td>
 				<td>
                     ${item.introduce_received_number_count}
@@ -137,7 +147,7 @@
 						data-introduce-new-member="${item.introduce_new_member_count}"
 						data-introduce-sales-number="${item.introduce_sales_number}"
 					>查看引入详情</a><br>
-					{{if item.coupon_status_id==1}}
+					{{if item.coupon_status==1}}
 						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
 					{{/if}}
 				</td>
@@ -172,7 +182,9 @@ $(document).ready(function() {
 		var introduce_used_number = $(event.currentTarget).data('introduce-used-number');
 		var introduce_new_member = $(event.currentTarget).data('introduce-new-member');
 		var introduce_sales_number = $(event.currentTarget).data('introduce-sales-number');
+		var receive_method = "{{receive_method}}";
 		var dialog = W.dialog.RedShowDialog('W.dialog.mall.RedEnvelopeDetailDialog.'+reation_id+"'",{
+			receive_method: receive_method,
 			member_name: member_name,
 			relation_id: reation_id,
 			rule_id: export_id,

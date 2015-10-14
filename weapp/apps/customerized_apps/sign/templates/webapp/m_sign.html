@@ -99,6 +99,7 @@
     .wui-rules-i-content,.wui-rules-rules-div ol{
         margin-top: 10px;
         line-height: 1.5em;
+        text-decoration: none;
     }
     .wui-rules-i-title{
         font-size: 1.2em;
@@ -107,6 +108,9 @@
     }
     .wui-rules-i-content{
         margin-left: 20%;
+    }
+    ol li{
+        list-style: outside none decimal !important;
     }
 
     .wui-rules-footer-div{
@@ -225,17 +229,24 @@
 
     ResultDialog.prototype.render = function (status, data) {
         if (status) {
+            var i_flag = c_flag = true;
             this.$title.text('签到成功！');
-            if (data.integral) {
+            if (data.integral && data.integral != 0) {
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
-            } else if (data.coupon && data.coupon.count != -1) {
-                if (data.coupon.count != 0) {
+                i_flag = false;
+            }
+            if (data.coupon) {
+                if (data.coupon.count > 0) {
                     this.$coupon.find('span').text(data.coupon.name);
-                    this.$coupon.show();
                 } else {
-                    this.$entityContent.html('奖励已领完,请联系客服补发');
+                    this.$coupon.html('优惠券奖励已领完,请联系客服补发');
                 }
+                this.$coupon.show();
+                c_flag = false;
+            }
+            if(i_flag && c_flag){
+                this.$contentHeader.hide();
             }
             this.$dialogContent.show();
         } else {
@@ -304,7 +315,7 @@
         $('.wa-user-integral').html(member_info.user_integral);
         $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
         //填充签到奖励信息
-        fillPrizeInfo(prize_info);
+        fillPrizeInfo(prize_info, true);
         //绑定规则信息事件
         //查看规则
         $('.wa-signPageDiv').find('.wa-rules').on('click', function () {
@@ -314,44 +325,33 @@
         //积分数据
         var prize_rules = prize_info.prize_rules;
 
-        console.log(prize_rules);
-
         var rule_arr = [];
         var rule_html ="";
 
         for(var item in prize_rules){
-          console.log(item);
           rule_arr.push(item);
         }
-
-        console.log(rule_arr);
 
         rule_arr = rule_arr.sort();
 
         for(var i=0;i<rule_arr.length;i++){
-          var j = i+1;
           var day_num = rule_arr[i];
           var day_integral = prize_rules[rule_arr[i]]['integral'];
           var day_coupon = prize_rules[rule_arr[i]]['coupon'];
-          console.log('###');
-          console.log(day_num);
-          console.log(day_integral);
-            var str_int ="";
-            var str_coupon ="";
+          var str_int ="";
+          var str_coupon ="";
 
           if(day_num=='0'){
               if(day_num){
-                  str_int =  "1.每日签到,获得"+day_integral+"积分奖励";
+                  str_int =  "每日签到,获得"+day_integral+"积分奖励";
               }
               if(day_coupon){
                   str_coupon = ",“"+day_coupon+"”一张";
               }
-
               rule_html += "<li>"+str_int+str_coupon+"。</li>";
-
           }else{
               if(day_num){
-                  str_int =  ""+j+".连续签到至"+ day_num + "天,获得" + day_integral + "积分奖励";
+                  str_int =  "连续签到至"+ day_num + "天,获得" + day_integral + "积分奖励";
               }
               if(day_coupon){
                   str_coupon = ",“"+day_coupon+"”一张";
@@ -373,7 +373,7 @@
         });
     });
 
-    function fillPrizeInfo(prize_info) {
+    function fillPrizeInfo(prize_info, flag) {
         if ('已签到' != status) {
             var temp_integral,
                     temp_coupon;
@@ -393,9 +393,13 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         } else {
-            $('.wa-sign-btn').addClass('animated rotateOutUpRight').one('webkitAnimationEnd animationend', function () {
-                $(this).hide();
-            });
+            if(flag){
+                $('.wa-sign-btn').hide();
+            }else{
+                $('.wa-sign-btn').addClass('animated flipOutY').one('webkitAnimationEnd animationend', function () {
+                    $(this).hide();
+                });
+            }
             $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
             var str = [];

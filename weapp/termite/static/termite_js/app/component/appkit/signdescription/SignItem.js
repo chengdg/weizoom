@@ -19,7 +19,7 @@ W.component.appkit.SignItem = W.component.Component.extend({
 			maxLength: 5,
 			size: '70px',
 			annotation: '天',
-			//validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
+			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
@@ -30,8 +30,6 @@ W.component.appkit.SignItem = W.component.Component.extend({
 			maxLength: 5,
 			size: '70px',
 			annotation: '积分',
-			//validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
-			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
 			name: 'serial_count_prizes',

@@ -9,7 +9,7 @@
         <ul class="fans_data_ul xui-weixin-outlinePage">
 			<li style="font-weight: bold;margin-left: 10px;">新关注人数：<em>${introduce_new_member}</em>人</li>
 			<li style="font-weight: bold;">领取人数：<em>${introduce_received_number}</em>人</li>
-			<li style="font-weight: bold;">产生消费额：<em>${introduce_sales_number}</em>人</li>
+			<li style="font-weight: bold;">产生消费额：<em>${introduce_sales_number}</em>元</li>
 			<li style="font-weight: bold;">使用人数：<em>${introduce_used_number}</em>人</li>
 		</ul>
         <div class="modal-body" style="min-height: 100px;overflow: auto;">
@@ -18,7 +18,7 @@
                 data-ui-role="advanced-table"
                 data-app="apps/red_envelope"
                 data-resource="red_envelope_participances"
-                data-args='{"rule_id": "${rule_id}","relation_id": "${relation_id}","introduced_by": "${introduced_by}"}'
+                data-args='{"rule_id": "${rule_id}","relation_id": "${relation_id}","introduced_by": "${introduced_by}","receive_method": "${receive_method}"}'
                 data-template-id="#red-envelope-dialog-detail-tmpl"
                 data-enable-paginator="true"
                 data-enable-sort="false"
@@ -28,16 +28,15 @@
                 data-selecttable-tr='xa-selectTr'
                 data-item-count-per-page="10"
                 ></div>
-            <div class="dropdown xui-operation update_dropdown pa"  style="bottom: 5px;left: 33px;">
-			<div >
-				<span class="checkbox">
-					<label class="xa-selectAll" for="all">
-							<input type="checkbox" style="top: -3px;" id="all">
-							全选
-					</label>
-				</span>
+            <div class="dropdown xui-operation update_dropdown pa red-envelope-dialog"  style="bottom: 5px;left: 33px;">
+				<div>
+					<span class="checkbox">
+						<label class="xa-selectAll" for="all">
+								<input type="checkbox" style="top: -3px;" id="all">全选
+						</label>
+					</span>
 				</div>
-				</div>
+			</div>
         </div>
     </div>
     </div>
@@ -49,29 +48,33 @@
 		<thead>
 			<tr>
 				<th>分享会员</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='grade' data-sort-direction="up">会员状态</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='bring_members_count' data-sort-direction="up">引入领取人数</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='use_coupon_count' data-sort-direction="up">引入使用人数</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='new_member_count' data-sort-direction="up">引入新关注</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='member__grade' data-sort-direction="up">会员状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
-				<th class="tx_sortable xui-Blue" data-sort-attr='coupon_status' data-sort-direction="up">使用状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='coupon__status' data-sort-direction="up">使用状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody class="red-envelope-dialog">
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-			<td style="position:relative;" >
-				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="/member/detail/?id=${item.member_id}">
-						<img width="41" height="41" src="${item.participant_icon}" /><br>
-						{{html item.participant_name}}
-					</a>
-				</div>
-			</td>
+				<td style="position:relative;" >
+					<div class="column_block xui-memberHeader pr">
+						<a target="_blank" href="/member/detail/?id=${item.member_id}">
+							<img width="41" height="41" src="${item.participant_icon}" /><br>
+							{{html item.participant_name}}
+						</a>
+					</div>
+				</td>
 				<td>
-					${item.grade}
+					{{if item.grade == "新会员"}}
+						<span style="color:#da0909">${item.grade}</span>
+					{{else}}
+						${item.grade}
+					{{/if}}
 				</td>
 				<td>
 					${item.introduce_received_number_count}

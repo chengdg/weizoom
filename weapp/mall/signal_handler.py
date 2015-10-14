@@ -277,7 +277,6 @@ def cancel_order_handler(order, **kwargs):
     try:
         # 返还微众卡
         weizoom_card_module_api.return_weizoom_card_money(order)
-
         # 返还优惠券
         if order.coupon_id and order.coupon_id > 0:
             coupons = promotion_models.Coupon.objects.filter(id = order.coupon_id)
@@ -286,18 +285,17 @@ def cancel_order_handler(order, **kwargs):
                 promotion_models.CouponRule.objects.filter(id = coupons[0].coupon_rule_id).update(use_count = F('use_count') - 1)
 
                 #更新红包优惠券分析数据 by Eugene
-                if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupons[0].id, introduced_by_gt=0).count() > 0:
+                if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupons[0].id, introduced_by__gt=0).count() > 0:
                     red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupons[0].id)
                     relation = promotion_models.RedEnvelopeParticipences.objects.filter(
                                 red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
                                 red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
-                                member_id=red_envelope2member.introduced_by,
-                                introduced_by=0
+                                member_id=red_envelope2member.introduced_by
                     )
                     relation.update(introduce_used_number = F('introduce_used_number') - 1)
                     #订单完成,更新红包消费金额
-                    if order.status == ORDER_STATUS_SUCCESSED:
-                        relation.update(introduce_sales_number = F('introduce_sales_number') - order.product_price - order.postage)
+                    if order.status >= ORDER_STATUS_SUCCESSED:
+                        relation.update(introduce_sales_number = F('introduce_sales_number') - order.final_price - order.postage)
     except:
         alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         watchdog_fatal(alert_message, type='WEB')
@@ -434,6 +432,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         )
         for_udpate.introduce_used_number = F('introduce_used_number') + 1
         for_udpate.save()
+        print for_udpate.introduce_used_number, "{+(*)+}" * 10
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
 def check_coupon_for_order(pre_order, args, request, **kwargs):

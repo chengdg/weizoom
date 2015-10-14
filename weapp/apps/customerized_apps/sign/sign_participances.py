@@ -40,12 +40,9 @@ class SignParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		sort_attr = request.GET.get('sort_attr', '-latest_date')
-		if 'total_integral' == sort_attr:
+		if 'total_integral' in sort_attr:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
-			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=False)
-		elif '-total_integral' == sort_attr:
-			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
-			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True)
+			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True if '-' in sort_attr else False)
 		else:
 			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
 		#进行分页
@@ -61,7 +58,6 @@ class SignParticipances(resource.Resource):
 		响应API GET
 		"""
 		sort_attr = request.GET.get('sort_attr', '-latest_date')
-		print
 		pageinfo, datas = SignParticipances.get_datas(request)
 
 		member_ids = []

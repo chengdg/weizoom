@@ -4,16 +4,27 @@ W.dialog.mall.RedEnvelopeDetailDialog = W.dialog.Dialog.extend({
     events: _.extend({
         'click .xa-selectCoupon': 'onSelectCoupon',
         'click .xa-up': 'upCounter',
-        'click .xa-down': 'downCounter'
+        'click .xa-down': 'downCounter',
+        'click .xa-selectAll': 'onClickSelectAll'
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
         $('#red-envelope-detail-dialog-tmpl-src').template('red-envelope-detail-dialog-tmpl');
         return "red-envelope-detail-dialog-tmpl";
+    },
+    /**
+     * onClickSelectAll: ç‚¹å‡»â€œå…¨é€‰â€å¤é€‰æ¡†çš„å“åº”å‡½æ•°
+     */
+    onClickSelectAll: function(event) {
+        var $checkbox = $(event.target);
+        var isChecked = $checkbox.is(':checked');
+        console.log(isChecked);
+        $('.red-envelope-dialog .xa-select').prop('checked', isChecked);
+        $('.red-envelope-dialog .xa-selectAll').prop('checked', isChecked);
     }
 });
 /**
- * RedShowDialog: ÏÔÊ¾dialogNameÖ¸¶¨µÄdialog
+ * RedShowDialog: ï¿½ï¿½Ê¾dialogNameÖ¸ï¿½ï¿½ï¿½ï¿½dialog
  */
 W.dialog.RedShowDialog = function(dialogName, options) {
     var dialog = W.dialog.NAME2DIALOG[dialogName];
@@ -22,12 +33,12 @@ W.dialog.RedShowDialog = function(dialogName, options) {
         return;
     }
 
-    //Ã»ÓĞdialog£¬´´½¨Ö®
+    //Ã»ï¿½ï¿½dialogï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®
     xlog('create new dialog: ' + dialogName);
     var obj = window;
     var items = dialogName.split('.');
     var itemCount = items.length-1;
-    // ¶¨Î»¶ÔÏó?
+    // ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½?
     for (var i = 0; i < itemCount; ++i) {
         var item = items[i];
         if (obj.hasOwnProperty(item)) {
@@ -46,4 +57,4 @@ W.dialog.RedShowDialog = function(dialogName, options) {
         W.dialog.NAME2DIALOG[dialogName] = dialog;
         dialog.show(options);
     }
-}
+};

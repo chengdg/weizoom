@@ -17,7 +17,6 @@ import models as app_models
 import export
 from apps import request_util
 from modules.member import integral as integral_api
-from mall.promotion.models import CouponRule
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -50,7 +49,7 @@ class SignParticipance(resource.Resource):
 		if member_id:
 			sign = app_models.Sign.objects.get(id=activity_id)
 			if sign.status != 1:
-				response.errMsg = u'签到活动未开始！'
+				response.errMsg = u'签到活动未开始'
 				return response.get_response()
 			signer = app_models.SignParticipance.objects(belong_to=activity_id, member_id=member_id)
 			if signer.count() > 0:
@@ -83,7 +82,7 @@ class SignParticipance(resource.Resource):
 						'coupon': {
 							'id': return_data['curr_prize_coupon_id'],
 							'name': return_data['curr_prize_coupon_name'],
-							'count': get_coupon_count(return_data['curr_prize_coupon_id'])
+							'count': return_data['curr_prize_coupon_count']
 						}
 					}
 				}
@@ -101,19 +100,3 @@ class SignParticipance(resource.Resource):
 			else:
 				response.errMsg = return_data['errMsg']
 		return response.get_response()
-
-
-def get_coupon_count(coupon_rule_id):
-	"""
-	通过优惠券id获取其库存量
-	:param coupon_rule_id: 优惠券ruleid
-	:return: 库存
-	"""
-	if not coupon_rule_id or int(coupon_rule_id) == 0:
-		return -1
-
-	try:
-		coupon = CouponRule.objects.get(id=coupon_rule_id)
-		return coupon.remained_count
-	except:
-		return -1
