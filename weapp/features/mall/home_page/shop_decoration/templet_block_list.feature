@@ -1,5 +1,6 @@
 #author：师帅
-@func:termite2.views.custom_module
+#editor 新新 2015.10.13
+
 Feature: 微页面列表
 
 Background:
@@ -21,26 +22,9 @@ Background:
 			"create_time": "2015-09-27 15:00"
 		}]
 		"""
-	Then jobs能获取微页面列表
-		"""
-		[{
-			"name": "空白页面"
-		},{
-			"name": "微页面1",
-			"create_time": "2015-09-28 17:00"
-		},{
-			"name": "微页面2",
-			"create_time": "2015-09-28 08:00"
-		},{
-			"name": "微页面4",
-			"create_time": "2015-09-27 15:00"
-		},{
-			"name": "微页面3",
-			"create_time": "2015-09-27 08:00"
-		}]
-		"""
 
-@mall2  @termite2
+
+@mall2 @termite2 
 Scenario:1已有模块新建模块
 	#已有模块,新建模块后,列表中显示(名称 最近应用在 操作列)
 	Given jobs登录系统
@@ -74,7 +58,6 @@ Scenario:1已有模块新建模块
 		"""
 
 
-
 @mall2  @termite2
 Scenario:2删除
 	#删除提示并且被删除的模块消息一列消失
@@ -96,7 +79,8 @@ Scenario:2删除
 		"""
 
 	
-@mall2  @termite2
+
+@mall2  @termite2 
 Scenario:3改名
 	#改名后,成功显示修改后的名称
 	When jobs修改微页面标题'微页面1'
