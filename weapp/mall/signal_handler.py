@@ -432,7 +432,6 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         )
         for_udpate.introduce_used_number = F('introduce_used_number') + 1
         for_udpate.save()
-        print for_udpate.introduce_used_number, "{+(*)+}" * 10
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
 def check_coupon_for_order(pre_order, args, request, **kwargs):
