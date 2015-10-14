@@ -125,8 +125,7 @@ def get_share_red_envelope(request):
                                     owner_id=request.webapp_owner_id,
                                     red_envelope_rule_id=red_envelope_rule_id,
                                     red_envelope_relation_id=relation[0].id,
-                                    member_id=followed_member_id,
-                                    introduced_by=0
+                                    member_id=followed_member_id
                         ).update(introduce_received_number = F('introduce_received_number') + 1)
                     if member.is_subscribed:
                         return_data['has_red_envelope'] = False
