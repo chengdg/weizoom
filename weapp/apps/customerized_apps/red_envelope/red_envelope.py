@@ -460,9 +460,16 @@ def get_datas(request):
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, relations = paginator.paginate(relations, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-    red_envelope_relation_ids = [relation.red_envelope_relation_id for relation in relations]
-    red_envelope_relations = promotion_models.RedEnvelopeToOrder.objects.filter(id__in=red_envelope_relation_ids)
-    red_envelope_relation_id2order_id = dict([(red_envelope_relation.id, red_envelope_relation.order_id) for red_envelope_relation in red_envelope_relations])
+    # 获取被使用的优惠券对应订单信息
+    coupon_ids = [c.coupon_id for c in relations if c.coupon.status == COUPON_STATUS_USED]
+    orders = Order.get_orders_by_coupon_ids(coupon_ids)
+    if orders:
+        coupon_id2order_id = dict([(o.coupon_id, \
+                                    o.id) \
+                                   for o in orders])
+    else:
+        coupon_id2order_id = {}
+
 
     items = []
     for relation in relations:
@@ -488,7 +495,7 @@ def get_datas(request):
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status': relation.coupon.status,
             'coupon_status_name': COUPONSTATUS[relation.coupon.status]['name'],
-            'order_id': red_envelope_relation_id2order_id[relation.red_envelope_relation_id],
+            'order_id': coupon_id2order_id[relation.coupon_id] if coupon_id2order_id.has_key(relation.coupon_id) else '',
             'grade': grade,
             'receive_method': receive_method
         })
