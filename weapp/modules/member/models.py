@@ -903,16 +903,16 @@ class IntegralStrategySttings(models.Model):
 #===============================================================================
 # create_webapp_member_integral_strategy_sttings : 自动创建webapp会员积分策略配置
 #===============================================================================
-def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
-	if created:
-		webapp_id = instance.webapp_id.strip()
-		if len(webapp_id) == 0:
-			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
+# def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
+# 	if created:
+# 		webapp_id = instance.webapp_id.strip()
+# 		if len(webapp_id) == 0:
+# 			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
 
-		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
-			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
+# 		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
+# 			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
 
-signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
+# signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
 
 FIRST_SUBSCRIBE = u'首次关注'
 #FOLLOWER_CLICK_SHARED_URL = u'好友奖励'

@@ -18,8 +18,8 @@ from webapp.models import WebApp, GlobalNavbar
 from webapp.modules.cms.models import SpecialArticle
 
 from weixin.user.models import get_system_user_binded_mpuser
-from watchdog.utils import watchdog_fatal
-
+from watchdog.utils import watchdog_fatal, watchdog_error
+from core.exceptionutil import unicode_full_stack
 from market_tools.module_api import enable_market_tool_authority_for, disable_market_tool_authority_for
 
 
@@ -360,8 +360,55 @@ def create_profile(instance, created, **kwargs):
 		if instance.username.find('001@') > -1 or instance.username.find('002@') > -1 or instance.username.find('003@') > -1:
 			return 
 
+		from mall.models import PostageConfig, MallConfig
+		from market_tools.models import MarketToolAuthority
+		try:
+			if PostageConfig.objects.filter(owner=instance).count() == 0:
+				#创建默认的“免运费”配置
+				PostageConfig.objects.create(
+					owner = instance,
+					name = u'免运费',
+					added_weight = "0.0",
+					is_enable_added_weight = False,
+					is_enable_special_config = False,
+					is_enable_free_config = False,
+					is_used = True,
+					is_system_level_config = True
+				)
+		except:
+			notify_msg = u"创建user:{}运费配置时异常, cause:\n{}".format(instance.id, unicode_full_stack())
+			watchdog_error(notify_msg)
+		
+		try:
+			if MallConfig.objects.filter(owner=instance).count() == 0:
+				MallConfig.objects.create(
+					owner = instance
+				)
+		except:
+			notify_msg = u"创建user:{} MallConfig时异常, cause:\n{}".format(instance.id, unicode_full_stack())
+			watchdog_error(notify_msg)
+
+		try:
+			if MarketToolAuthority.objects.filter(owner=instance).count() == 0:
+				MarketToolAuthority.objects.create(
+					owner = instance,
+					is_enable_market_tool = False
+				)
+		except:
+			notify_msg = u"创建user:{} MarketToolAuthority时异常, cause:\n{}".format(instance.id, unicode_full_stack())
+			watchdog_error(notify_msg)
+
+		try:
+			from webapp.modules.cms.models import SpecialArticle
+			if SpecialArticle.objects.filter(owner=instance).count() == 0:
+				__create_special_article(instance, 'not_from_weixin', u'非微信访问页面')
+				__create_special_article(instance, 'integral_guide', u'积分指南')
+		except:
+			notify_msg = u"创建user:{} SpecialArticle时异常, cause:\n{}".format(instance.id, unicode_full_stack())
+			watchdog_error(notify_msg)
+
 		if UserProfile.objects.filter(user=instance).count() == 0:
-			profile = UserProfile.objects.create(user = instance)
+			profile = UserProfile.objects.create(user = instance, backend_template_name = 'default_v3', manager_id = instance.id, expire_date_day = dateutil.yearsafter(1))
 			webapp_id = settings.MIXUP_FACTOR + profile.id
 			mp_url = 'http://%s/weixin/%d/' % (settings.DOMAIN, webapp_id)
 
@@ -371,47 +418,18 @@ def create_profile(instance, created, **kwargs):
 			profile.webapp_id = '%d' % webapp_id
 			profile.mp_url = mp_url
 			profile.mp_token = mp_token
-			profile.expire_date_day = dateutil.yearsafter(1)
-			profile.backend_template_name = 'default_v3'
-			profile.manager_id = instance.id
+			
 			profile.save()
-
+			
 			#创建WebApp
 			WebApp.objects.create(
 				appid = '%s'%webapp_id,
 				owner = instance,
 			)
 
-		from mall.models import PostageConfig, MallConfig
-		from market_tools.models import MarketToolAuthority
-		if PostageConfig.objects.filter(owner=instance).count() == 0:
-			#创建默认的“免运费”配置
-			PostageConfig.objects.create(
-				owner = instance,
-				name = u'免运费',
-				added_weight = "0.0",
-				is_enable_added_weight = False,
-				is_enable_special_config = False,
-				is_enable_free_config = False,
-				is_used = True,
-				is_system_level_config = True
-			)
+			if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
+				IntegralStrategySttings.objects.create(webapp_id=webapp_id)
 
-		if MallConfig.objects.filter(owner=instance).count() == 0:
-			MallConfig.objects.create(
-				owner = instance
-			)
-
-		if MarketToolAuthority.objects.filter(owner=instance).count() == 0:
-			MarketToolAuthority.objects.create(
-				owner = instance,
-				is_enable_market_tool = False
-			)
-
-		from webapp.modules.cms.models import SpecialArticle
-		if SpecialArticle.objects.filter(owner=instance).count() == 0:
-			__create_special_article(instance, 'not_from_weixin', u'非微信访问页面')
-			__create_special_article(instance, 'integral_guide', u'积分指南')
 
 
 signals.post_save.connect(create_profile, sender=User, dispatch_uid = "account.create_profile")

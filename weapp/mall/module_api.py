@@ -560,7 +560,11 @@ def get_product_model_properties_for_cache(webapp_owner_id):
 #################################################################################
 def get_mall_config_for_cache(webapp_owner_id):
 	def inner_func():
-		mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+		#update by bert at 20151014  for new account can't vs webapp
+		try:
+			mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+		except:
+			mall_config = MallConfig.objects.create(owner_id=webapp_owner_id)
 		return {
 			'value': mall_config.to_dict()
 		}
