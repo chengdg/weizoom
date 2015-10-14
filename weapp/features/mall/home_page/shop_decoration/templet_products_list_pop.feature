@@ -68,7 +68,7 @@ Background:
 		}]
 		"""
 
-@termite2
+@mall2 @termite2 
 Scenario:1选择商品分类窗体：商品分类列表搜索、添加新商品分类
 	#选择商品分类名称的搜索
 	#模糊匹配
@@ -160,7 +160,7 @@ Scenario:1选择商品分类窗体：商品分类列表搜索、添加新商品�
 		}]
 		"""
 
-@termite2
+@mall2 @termite2 
 Scenario:2 商品分类选择列表分页
 	Then jobs在微页面获得商品分类列表
 		"""
@@ -233,7 +233,7 @@ Scenario:2 商品分类选择列表分页
 		}]
 		"""
 
-@termite2
+@mall2 @termite2 
 Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品来源，也应该同步修改
 
 	#商品列表模块显示个数'9','详细列表'样式,'默认样式'
