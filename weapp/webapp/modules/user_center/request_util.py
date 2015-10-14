@@ -296,7 +296,7 @@ def _get_current_log_info(member_integral_log):
 			friend_member = Member.objects.get(token=member_integral_log.follower_member_token)
 			if friend_member.user_icon and friend_member.user_icon != '':
 				member_integral_log.pic = friend_member.user_icon
-				member_integral_log.name = friend_member.username_custom_size[10]
+				member_integral_log.name = friend_member.username_size_ten
 			else:
 				member_integral_log.pic = SCAN_REWARDES_IMGE
 				member_integral_log.name = ''
