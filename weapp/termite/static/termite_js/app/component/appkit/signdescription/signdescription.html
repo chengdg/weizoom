@@ -216,7 +216,12 @@
             -webkit-animation-name:flipOutYToFront;
             animation-name:flipOutYToFront
         }
+        
+        @-webkit-keyframes fadeOutUp{0%{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)}100%{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}}
 
+        @keyframes fadeOutUp{0%{opacity:1;-webkit-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0)}100%{opacity:0;-webkit-transform:translateY(-20px);-ms-transform:translateY(-20px);transform:translateY(-20px)}}
+
+        .fadeOutUp{-webkit-animation-name:fadeOutUp;animation-name:fadeOutUp}
 
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -258,7 +263,10 @@
     </div>
 
     <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %}</span>积分<span class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>,<span class="wa-daily_prizes-i-name">{{ component.model.daily_prizes.name }}</span>一张</span></div>
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取
+            <p class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %}</p>积分
+            <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}><span class="wa-daily_prizes-i-name">{{ component.model.daily_prizes.name }}</span>一张</p>
+        </div>
     </div>
 </div>
 {% endifequal %}

@@ -44,7 +44,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			className:'xui-propertyView-app-ShareGroup-helper',
 			id:'propertyView-app-ShareGroup-helper',
 			tip:{
-				text:'此分析图片和描述用户分享到朋友圈、微信群、微信好友'
+				text:'此分享图片和描述用户分享到朋友圈、微信群、微信好友'
 			}
 		},
 
