@@ -54,7 +54,7 @@ def get_share_red_envelope(request):
     if order_id:
         relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
     if material_id:
-        print "1111111111++++++++++"
+        print "1111111111++++++++++", 'followed_member_id=',followed_member_id, "member_id=", member_id
         if followed_member_id == member_id or not followed_member_id:
             print "2222222222222222222222+++++++++++++++++++"
             relation = RedEnvelopeToOrder.objects.filter(material_id=material_id, red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
