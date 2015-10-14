@@ -23,7 +23,9 @@
 				</div>
 			</div>
 		</div>
-
+		{{if helptext}}
+   			<p style="  color: red;font-size: 14px;white-space: nowrap;margin-top: 5px;">${helptext}</p>
+   		{{/if}}
 		<div id="weixin-editor-btn" class="mt5 tl">
 			<a href="javascript:void(0);" class="xa-submit btn btn-success xui-weixinMessageBtn">确&nbsp;&nbsp;定</a>
 			<a href="javascript:void(0);" class="xa-cancel btn btn-default ml20">取&nbsp;&nbsp;消</a>
