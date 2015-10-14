@@ -24,7 +24,7 @@ Background:
 		}]
 		"""
 
-
+@termite21
 Scenario: 添加模块
 	When jobs创建微页面
 		"""
@@ -54,22 +54,23 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
 				"items": [{
-					"product_name":"商品可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				},{
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				},{
-					"product_name":"商品2不可两行显示...",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}],
-				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
-				"show_price":"true"
+				"list_style1": "大图",
+				"list_style2": "默认样式",
+				"show_product_name": "true",
+				"show_price": "true"
 			}
 		}
 		"""
+
 	Then jobs能获取'微页面标题1'
 		"""
 		{
@@ -79,19 +80,19 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
-					"price":"2.0"
+					"name":"商品3不可两行显示",
+					"price":"3.0"
 				},{
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				},{
-					"product_name":"商品3不可两行显示",
-					"price":"3.0"
+					"name":"商品2可两行显示",
+					"price":"2.0"
 				}],
-				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
-				"show_price":"true"
+				"list_style1": "大图",
+				"list_style2": "默认样式",
+				"show_product_name": "true",
+				"show_price": "true"
 			}
 		}
 		"""
@@ -105,18 +106,18 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			},
 			"picture_ids":[{
@@ -148,18 +149,18 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			},
 			"picture_ids":[{
@@ -209,18 +210,18 @@ Scenario: 添加模块
 				}],
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -251,18 +252,18 @@ Scenario: 添加模块
 				}],
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -294,18 +295,18 @@ Scenario: 添加模块
 				}],
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -335,18 +336,18 @@ Scenario: 添加模块
 				}],
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			}
 		}
@@ -377,18 +378,18 @@ Scenario: 添加模块
 				}],
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
@@ -419,18 +420,18 @@ Scenario: 添加模块
 				}],
 			"products": {
 				"items": [{
-					"product_name":"商品2可两行显示",
+					"name":"商品2可两行显示",
 					"price":"2.0"
 				}, {
-					"product_name":"商品1可单行显示",
+					"name":"商品1可单行显示",
 					"price":"1.0"
 				}, {
-					"product_name":"商品3不可两行显示",
+					"name":"商品3不可两行显示",
 					"price":"3.0"
 				}],
 				"list_style1":"大图",
-				"list_style2":"卡片样式",
-				"show_product_name":"ture",
+				"list_style2":"默认样式",
+				"show_product_name":"true",
 				"show_price":"true"
 			},
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
