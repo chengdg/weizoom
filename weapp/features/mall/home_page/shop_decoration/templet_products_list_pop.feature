@@ -32,37 +32,37 @@ Background:
 		"""
 		[{
 			"name": "商品1可单行显示",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"上架",
 			"price": 1.0
 		},{
 			"name": "商品2可两行显示",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"上架",
 			"price": 2.0
 		},{
 			"name": "商品3不可两行显示",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"上架",
 			"price": 3.0
 		},{
 			"name": "商品4",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"上架",
 			"price": 4.0
 		},{
 			"name": "商品5",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"上架",
 			"price": 5.0
 		},{
 			"name": "商品6",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"上架",
 			"price": 6.0
 		},{
 			"name": "商品7",
-			"category": "分组1,分组2,分组3",
+			"categories": "分组1,分组2,分组3",
 			"status":"下架",
 			"price": 7.0
 		}]
@@ -312,7 +312,7 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 	Then jobs在微页面获得商品分类列表
 		"""
 		[{
-			"name": "分类9"
+			"name": "分类9"0
 		},{
 			"name": "分类8"
 		},{
