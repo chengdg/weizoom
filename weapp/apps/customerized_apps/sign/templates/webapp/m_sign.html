@@ -315,7 +315,7 @@
         $('.wa-user-integral').html(member_info.user_integral);
         $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
         //填充签到奖励信息
-        fillPrizeInfo(prize_info);
+        fillPrizeInfo(prize_info, true);
         //绑定规则信息事件
         //查看规则
         $('.wa-signPageDiv').find('.wa-rules').on('click', function () {
