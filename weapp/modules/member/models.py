@@ -527,6 +527,43 @@ class Member(models.Model):
 		except:
 			return self.username_for_html[:5]
 
+	@cached_property
+	def username_custom_size(self, size=5):
+		try:
+			username = unicode(self.username_for_html, 'utf8')
+			_username = re.sub('<[^<]+?><[^<]+?>', ' ', username)
+			if len(_username) <= 5:
+				return username
+			else:
+				name_str = username
+				span_list = re.findall(r'<[^<]+?><[^<]+?>', name_str) #保存表情符
+
+				output_str = ""
+				count = 0
+
+				if not span_list:
+					return u'%s' % name_str[:5]
+
+				for span in span_list:
+				    length = len(span)
+				    while not span == name_str[:length]:
+				        output_str += name_str[0]
+				        count += 1
+				        name_str = name_str[1:]
+				        if count == 5:
+				            break
+				    else:
+				        output_str += span
+				        count += 1
+				        name_str = name_str[length:]
+				        if count == 5:
+				            break
+				    if count == 5:
+				        break
+				return u'%s' % output_str
+		except:
+			return self.username_for_html[:5]
+
 	@property
 	def friends(self):
 		if hasattr(self, '_friends'):
