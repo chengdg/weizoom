@@ -88,7 +88,7 @@ W.view.weixin.MenuEditor = Backbone.View.extend({
 		//this. $('.xa-menu-content').html('点击左侧编辑');
 		//this.$('.xa-menu-content').addClass('pr').append('<div style="position:absolute;z-index:1000;width:100%;height:100%;top:0;left:0;background:rgba(0,0,0,0)"></div>');
 
-		$('.xa-no-panel').addClass('xui-editCover').html('使用二级菜单后主回复已失效');
+		$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
 		//$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
     },
     
