@@ -293,12 +293,10 @@ class RedEnvelopeParticipances(resource.Resource):
         rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
         coupon_rule = promotion_models.CouponRule.objects.get(id=rule_data.coupon_rule_id)
         relations = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
-
         new_member_count = 0         #新关注人数
         consumption_sum = 0          #产生消费额
         received_count = has_data      #领取人数
-        total_use_count = relations.filter(coupon__status=1).count()     #使用人数
-
+        total_use_count = relations.filter(coupon__status=COUPON_STATUS_USED).count()     #使用人数
         if rule_data.receive_method :
             consumption_sum = 0
         else:
@@ -312,7 +310,6 @@ class RedEnvelopeParticipances(resource.Resource):
             new_member_count += relation.introduce_new_member
             received_count += relation.introduce_received_number
             consumption_sum += relation.introduce_sales_number
-            total_use_count += relation.introduce_used_number
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -370,17 +367,18 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
             is_new=True
         )
         for sub_relation in sub_relations:
-            if sub_relation.member.is_subscribed and sub_relation.is_new:
+            if sub_relation.member.is_subscribed and sub_relation.is_new and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
 
 def get_datas(request):
-    webapp_id = request.user_profile.webapp_id
+    owner_id = request.user_profile.user_id
     member_name = request.GET.get('member_name', '')
     grade_id = request.GET.get('grade_id', '')
     coupon_status = request.GET.get('coupon_status', '')
     red_envelope_rule_id = request.GET.get('id',0)
+    receive_method = request.GET.get('receive_method','')
     #引入
     introduced_by = request.GET.get('introduced_by',0)
     relation_id = request.GET.get('relation_id',0)
@@ -396,24 +394,28 @@ def get_datas(request):
         if selected_ids:
             selected_ids = selected_ids.split(",")
             relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+                owner_id = owner_id,
                 red_envelope_rule_id=red_envelope_rule_id,
                 red_envelope_relation_id__in=selected_ids,
                 introduced_by=0
             )
         else:
             relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+                owner_id = owner_id,
                 red_envelope_rule_id=red_envelope_rule_id,
                 introduced_by=0
             )
     else:
         if introduced_by:
             relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+                owner_id = owner_id,
                 red_envelope_rule_id=rule_id,
                 red_envelope_relation_id=relation_id,
                 introduced_by=introduced_by
             )
         else:
             relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+                owner_id = owner_id,
                 red_envelope_rule_id=red_envelope_rule_id,
                 introduced_by=0
             )
@@ -464,6 +466,16 @@ def get_datas(request):
 
     items = []
     for relation in relations:
+        if receive_method == 'True':
+            grade = relation.member.grade.name
+        else:
+            if relation.is_new:
+                grade = u"新会员"
+            else:
+                if relation.member.is_subscribed:
+                    grade = relation.member.grade.name
+                else:
+                    grade = u"非会员"
         items.append({
             'id': relation.red_envelope_relation_id,
             'member_id': relation.member_id,
@@ -477,7 +489,8 @@ def get_datas(request):
             'coupon_status': relation.coupon.status,
             'coupon_status_name': COUPONSTATUS[relation.coupon.status]['name'],
             'order_id': red_envelope_relation_id2order_id[relation.red_envelope_relation_id],
-            'grade': relation.member.grade.name
+            'grade': grade,
+            'receive_method': receive_method
         })
 
     if is_export:

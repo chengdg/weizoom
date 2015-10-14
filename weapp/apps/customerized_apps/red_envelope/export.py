@@ -46,7 +46,7 @@ def get_link_targets(request):
 	query = request.GET.get('query', None)
 	count_per_page = int(request.GET.get('count_per_page', '10'))
 	cur_page = int(request.GET.get('page', '1'))
-	params = {'receive_method':1}
+	params = {'receive_method':1,'is_delete':False}
 	if query:
 		params['name__contains'] = query
 	objects = promotion_models.RedEnvelopeRule.objects.filter(**params).order_by('-id')

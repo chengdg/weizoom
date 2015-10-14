@@ -7,6 +7,7 @@ import mongoengine as models
 from modules.member.module_api import get_member_by_openid
 from market_tools.tools.coupon.util import consume_coupon
 from modules.member import models as member_models
+from mall.promotion.models import CouponRule
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -115,10 +116,14 @@ class SignParticipance(models.Document):
 		#发放奖励 积分&优惠券
 		member = member_models.Member.objects.get(id=self.member_id)
 		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
+		curr_prize_coupon_count = 0
 		if curr_prize_coupon_id != '':
-			consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
+			curr_prize_coupon_count = get_coupon_count(curr_prize_coupon_id)
+			if curr_prize_coupon_count > 0:
+				consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
 
 		return_data['curr_prize_integral'] = curr_prize_integral
+		return_data['curr_prize_coupon_count'] = curr_prize_coupon_count
 		return_data['curr_prize_coupon_id'] = curr_prize_coupon_id
 		return_data['curr_prize_coupon_name'] = curr_prize_coupon_name
 		return_data['daily_integral'] = daily_integral
@@ -170,10 +175,12 @@ class Sign(models.Document):
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
-			if data['keyword'] == sign.reply['keyword']:
+			if sign.reply['keyword'] in data['keyword']:
 				if sign.status != 1:
 					return_html.append(u'签到活动未开始')
 				else:
+					# if 'accurate' == sign.reply['mode'] and sign.reply['keyword'] != data['keyword']:
+					# 	return None
 					# add by bert  增加获取会员代码
 					member = get_member_by_openid(data['openid'], data['webapp_id'])
 					if not member:
@@ -194,16 +201,19 @@ class Sign(models.Document):
 						signer = signer[0]
 					return_data = signer.do_signment(sign)
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
-						return_html.append(u'亲，今天您已经签到过了哦，明天再来吧！\n')
+						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
-						return_html.append(u'签到成功！\n已连续签到%s天\n本次签到获得以下奖励：' % return_data['serial_count'])
+						return_html.append(u'签到成功！\n已连续签到%s天。\n本次签到获得以下奖励:\n' % return_data['serial_count'])
 						return_html.append(str(return_data['curr_prize_integral']))
 						return_html.append(u'积分\n')
-						if return_data['curr_prize_coupon_name'] != '':
-							return_html.append(return_data['curr_prize_coupon_name'])
-							return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>\n' % (host, data['webapp_owner_id']))
-						return_html.append(u'签到说明：签到有礼！\n')
-						return_html.append(return_data['reply_content'])
+						if return_data['curr_prize_coupon_name'] != '' and return_data['curr_prize_coupon_count'] >= 0:
+							if return_data['curr_prize_coupon_count']>0:
+								return_html.append(str(return_data['curr_prize_coupon_name']))
+								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>' % (host, data['webapp_owner_id']))
+							else:
+								return_html.append(u'\n奖励已领完,请联系客服补发')
+						return_html.append(u'\n签到说明：签到有礼！\n')
+						return_html.append(str(return_data['reply_content']))
 					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
@@ -224,4 +234,18 @@ class Sign(models.Document):
 			return False
 
 
-	
+def get_coupon_count(coupon_rule_id):
+	"""
+	通过优惠券id获取其库存量
+	:param coupon_rule_id: 优惠券ruleid
+	:return: 库存
+	"""
+	if not coupon_rule_id or int(coupon_rule_id) == 0:
+		return 0
+
+	try:
+		coupon = CouponRule.objects.get(id=coupon_rule_id)
+		return coupon.remained_count
+	except:
+		return 0
+

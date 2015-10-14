@@ -34,11 +34,11 @@
         .xui-status-control{
             background: white;
             margin: 15px 10px;
-            padding: 20px 30px;
+            padding: 10px 30px;
         }
-        .btn-danger {
+        .btn-danger, .btn-primary {
             border-radius: 3px;
-            margin: 10px;
+            margin-right: 50px;
         }
         .ml5.fb{
             margin-bottom: 12px;
@@ -143,7 +143,19 @@
         .xui-propertyView-app-ShareGroup Button.xui-removeImageButton{
             display: none;
         }
-
+        .xui-link-copy{
+            margin-top: 3px;
+        }
+        .xui-i-triggerButton{
+            position: absolute;
+            margin-top: -23px !important;
+            background: rgba(0,0,0,0.6);
+            color: white !important;
+            font-size: 15px;
+            text-align: center !important;
+            width: 100px;
+            font-weight: bold;
+        }
     </style>
 {% endblock %}
 
@@ -167,12 +179,12 @@ ui-appPage-commonStyle">
 
     <div class="clearfix xui-setting-tag xa-setting">
         <div class="xui-status-control xa-status-control">
-            <p><b>签到设置</b><br>请设置成功后开启签到功能！</p>
+            <p style="line-height: 25px;"><b>签到设置</b><br>请设置成功后开启签到功能！</p>
             <span>
                 {% if sign and sign.status_text == '进行中' %}
-                    <button type="button" class="btn btn-danger fr" style="margin-top: -35px;" onclick="changeStatus('off');">关&nbsp;&nbsp;闭</button>
+                    <button type="button" class="btn btn-danger fr" style="margin-top: -45px;" onclick="changeStatus('off');">关&nbsp;&nbsp;闭</button>
                 {% else %}
-                    <button type="button" class="btn btn-primary fr" style="margin-top: -35px;" onclick="changeStatus('on');">开&nbsp;&nbsp;启</button>
+                    <button type="button" class="btn btn-primary fr" style="margin-top: -45px;" onclick="changeStatus('on');">开&nbsp;&nbsp;启</button>
                 {% endif %}
             </span>
 
@@ -191,7 +203,11 @@ ui-appPage-commonStyle">
         </div>
       </div>
     </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
+    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
+    </div>
+    <div class="xui-bottomActionBar xa-stickyBar">
+      <button class="xa-save btn btn-primary">保存</button>
+      <button class="xa-preview btn btn-default ml20">预览</button>
     </div>
   </div>
     <div class="xui-state-tag xa-state" style="display: none">
@@ -273,13 +289,6 @@ ui-appPage-commonStyle">
             <br>
         </script>
     {% endverbatim %}
-{% endblock %}
-
-{% block global_elements %}
-<div class="xui-bottomActionBar">
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-</div>
 {% endblock %}
 
 {% block base_js %}
@@ -543,14 +552,30 @@ ui-appPage-commonStyle">
             //初始化弹出层
             $('[data-toggle="popover"]').popover();
         });
+        // 滚动浮动在底部
+          var stickyMenu = function(){
+              var winScrollTop = $(window).scrollTop();
+          　　var scrollHeight = $(document).height();
+          　　var windowHeight = $(window).height();
+              var gap = scrollHeight - winScrollTop - windowHeight;
+              if( gap < 44 ){
+                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+              }else{
+                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+              }
+          };
+          stickyMenu();
+          $(window).bind('scroll resize',(function() {
+              stickyMenu();
+          }));
     });
 
     function changeStatus(act){
         var innerHtml,actionHtml;
         if(act == 'on'){
-            innerHtml = '<button type="button" class="btn btn-danger fr" style="margin-top: -35px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>';
+            innerHtml = '<button type="button" class="btn btn-danger fr" style="margin-top: -45px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>';
         }else{
-            innerHtml = '<button type="button" class="btn btn-primary fr" style="margin-top: -35px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
+            innerHtml = '<button type="button" class="btn btn-primary fr" style="margin-top: -45px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
         }
         if(isCreateNewData){
             signStatus = act;
