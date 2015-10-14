@@ -54,14 +54,14 @@ Scenario: 添加模块
 			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格",
 			"products": {
 				"items": [{
-					"product_name":"商品可两行显示",
-					"price":"3.0"
+					"product_name":"商品2可两行显示",
+					"price":"2.0"
 				},{
 					"product_name":"商品1可单行显示",
 					"price":"1.0"
 				},{
-					"product_name":"商品2不可两行显示...",
-					"price":"2.0"
+					"product_name":"商品3不可两行显示",
+					"price":"3.0"
 				}],
 				"list_style1":"大图",
 				"list_style2":"卡片样式",
