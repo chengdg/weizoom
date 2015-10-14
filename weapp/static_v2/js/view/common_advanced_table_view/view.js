@@ -599,7 +599,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
         //xlog("isChecked: " + isChecked);
         var isAllChecked = true;
         var unCheckedCount = 0;
-        var isAnyUnChecked = false;
         this.$('tbody .xa-select').each(function() {
             var $select = $(this);
             //xlog($select.parents('tr').attr("data-id"));
