@@ -166,20 +166,60 @@
             height: 160px;
             width: 160px;
             margin: 0 auto;
-            perspective: 100px;
-            -webkit-perspective: 100px;
         }
         .front-face, .back-face{
             position: absolute;
             z-index: 0;
         }
-    .wui-i-dialog-btn.wui-i-closeDialog{
-        border-radius: 35px;
-    }
+        .wui-i-dialog-btn.wui-i-closeDialog{
+            border-radius: 35px;
+        }
+
+        .animated{
+            -webkit-animation-duration:0.6s;
+            animation-duration:0.6s;
+            -webkit-animation-fill-mode:forwards;
+            animation-fill-mode:forwards
+        }
+
+        @-webkit-keyframes flipOutYToBack{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg);opacity: 1}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,90deg);transform:perspective(400px) rotate3d(0,1,0,90deg);opacity: 0}
+            100%{opacity: 0}
+        }
+
+        @keyframes flipOutYToBack{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg);opacity: 1}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,90deg);transform:perspective(400px) rotate3d(0,1,0,90deg);opacity: 0}
+            100%{opacity: 0}
+        }
+        .flipOutYToBack{
+            -webkit-backface-visibility:visible!important;
+            backface-visibility:visible!important;
+            -webkit-animation-name:flipOutYToBack;
+            animation-name:flipOutYToBack
+        }
+        @-webkit-keyframes flipOutYToFront{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,-90deg);transform:perspective(400px) rotate3d(0,1,0,-90deg)}
+            100%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+        }
+
+        @keyframes flipOutYToFront{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,-90deg);transform:perspective(400px) rotate3d(0,1,0,-90deg)}
+            100%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+        }
+        .flipOutYToFront{
+            -webkit-backface-visibility:visible!important;
+            backface-visibility:visible!important;
+            -webkit-animation-name:flipOutYToFront;
+            animation-name:flipOutYToFront
+        }
+
 
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/termite_static/v3/css/animate.min.css" rel="stylesheet">
 {% endblock %}
 
 {% ifequal component.type 'appkit.signdescription' %}

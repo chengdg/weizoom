@@ -393,14 +393,15 @@
             }
             $('.wa-daily_prizes').html(prize_html);
         } else {
-            if(flag){
-                $('.wa-sign-btn').hide();
-            }else{
-                $('.wa-sign-btn').addClass('animated flipOutY').one('webkitAnimationEnd animationend', function () {
+{#            if(flag){#}
+{#                $('.wa-sign-btn').hide();#}
+{#            }else{#}
+                $('.wa-sign-board').addClass('animated flipOutYToFront');
+                $('.wa-sign-btn').addClass('animated flipOutYToBack').one('webkitAnimationEnd animationend', function () {
                     $(this).hide();
                 });
-            }
-            $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
+{#            }#}
+            $('.wa-sign-board').find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if (!$.isEmptyObject(temp_prize)) {
