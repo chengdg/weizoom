@@ -426,7 +426,7 @@ def create_profile(instance, created, **kwargs):
 				appid = '%s'%webapp_id,
 				owner = instance,
 			)
-
+			from modules.member.models import IntegralStrategySttings
 			if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
 				IntegralStrategySttings.objects.create(webapp_id=webapp_id)
 
