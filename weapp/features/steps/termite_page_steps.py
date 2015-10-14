@@ -180,7 +180,6 @@ def __process_activity_data(context, page, user):
 	_add_image_display(page, page_json, user)
 	_add_product_group(page, page_json, user)
 	_add_category(page, page_json, user)
-	print '3242342'
 
 	data = {
 		"field": "page_content",
