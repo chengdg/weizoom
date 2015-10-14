@@ -16,7 +16,7 @@ from core import paginator
 from core import search_util
 from mall.models import Order
 from mall.promotion.models import Coupon,COUPONSTATUS,COUPON_STATUS_USED
-from modules.member.models import MemberTag, MemberGrade
+from modules.member.models import MemberTag, MemberGrade, MemberFollowRelation
 
 from utils.string_util import hex_to_byte, byte_to_hex
 from modules.member import models as member_models
@@ -358,16 +358,29 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
             red_envelope_rule_id=red_envelope_rule_id,
             introduced_by=0
         )
+    member_ids = []
+    for relation in relations:
+        member_ids.append(relation.member.id)
+
+    sub_relations = promotion_models.RedEnvelopeParticipences.objects.filter(
+        red_envelope_rule_id=red_envelope_rule_id,
+        introduced_by__in=member_ids,
+        is_new=True
+    )
+    sub_member_ids = []
+    for sub_relation in sub_relations:
+        sub_member_ids.append(sub_relation.member_id)
+    member_follow_relation = MemberFollowRelation.objects.filter(member_id__in=sub_member_ids)
+    member_id2follower_member_id ={}
+    for member in member_follow_relation:
+        member_id2follower_member_id[member.member_id] = member.follower_member_id
     for relation in relations:
         count = 0
-        member_id = relation.member.id
-        sub_relations = promotion_models.RedEnvelopeParticipences.objects.filter(
-            red_envelope_rule_id=red_envelope_rule_id,
-            introduced_by=member_id,
-            is_new=True
-        )
         for sub_relation in sub_relations:
-            if sub_relation.member.is_subscribed and sub_relation.is_new and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id:
+            if sub_relation.member.is_subscribed \
+                and sub_relation.is_new \
+                and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id \
+                and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id]:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
