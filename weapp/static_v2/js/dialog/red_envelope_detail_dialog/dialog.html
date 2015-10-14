@@ -28,16 +28,15 @@
                 data-selecttable-tr='xa-selectTr'
                 data-item-count-per-page="10"
                 ></div>
-            <div class="dropdown xui-operation update_dropdown pa"  style="bottom: 5px;left: 33px;">
-			<div >
-				<span class="checkbox">
-					<label class="xa-selectAll" for="all">
-							<input type="checkbox" style="top: -3px;" id="all">
-							全选
-					</label>
-				</span>
+            <div class="dropdown xui-operation update_dropdown pa red-envelope-dialog"  style="bottom: 5px;left: 33px;">
+				<div>
+					<span class="checkbox">
+						<label class="xa-selectAll" for="all">
+								<input type="checkbox" style="top: -3px;" id="all">全选
+						</label>
+					</span>
 				</div>
-				</div>
+			</div>
         </div>
     </div>
     </div>
@@ -59,17 +58,17 @@
 				<th>操作</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody class="red-envelope-dialog">
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-			<td style="position:relative;" >
-				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="/member/detail/?id=${item.member_id}">
-						<img width="41" height="41" src="${item.participant_icon}" /><br>
-						{{html item.participant_name}}
-					</a>
-				</div>
-			</td>
+				<td style="position:relative;" >
+					<div class="column_block xui-memberHeader pr">
+						<a target="_blank" href="/member/detail/?id=${item.member_id}">
+							<img width="41" height="41" src="${item.participant_icon}" /><br>
+							{{html item.participant_name}}
+						</a>
+					</div>
+				</td>
 				<td>
 					{{if item.grade == "新会员"}}
 						<span style="color:#da0909">${item.grade}</span>

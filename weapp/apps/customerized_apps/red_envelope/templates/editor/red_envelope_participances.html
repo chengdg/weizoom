@@ -98,14 +98,14 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-			<td style="position:relative;" >
-				<div class="column_block xui-memberHeader pr">
-					<a target="_blank" href="/member/detail/?id=${item.member_id}">
-						<img width="41" height="41" src="${item.participant_icon}" /><br>
-						{{html item.participant_name}}
-					</a>
-				</div>
-			</td>
+				<td style="position:relative;" >
+					<div class="column_block xui-memberHeader pr">
+						<a target="_blank" href="/member/detail/?id=${item.member_id}">
+							<img width="41" height="41" src="${item.participant_icon}" /><br>
+							{{html item.participant_name}}
+						</a>
+					</div>
+				</td>
 				<td>
 					{{if item.grade == "新会员"}}
 						<span style="color:#da0909">${item.grade}</span>
