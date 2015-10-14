@@ -417,6 +417,8 @@ W.view.common.AdvancedTable = Backbone.View.extend({
             var $checkbox = $(this);
             $checkbox.prop('checked', isSelect);
         })
+        $('.xa-selectAll').prop('checked', isSelect);
+
     },
 
     /**
