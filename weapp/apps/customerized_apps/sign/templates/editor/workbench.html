@@ -548,9 +548,14 @@ ui-appPage-commonStyle">
             W.showHint('success', '已经将链接复制到剪贴板');
         });
 
+        var flag = true,num = 0;
         W.Broadcaster.on('selectwidget:assert', function(cid){
             //初始化弹出层
-            $('[data-toggle="popover"]').popover();
+            if(flag && cid==2){
+                $('[data-toggle="popover"]').popover();
+                flag = false;
+            }
+
         });
         // 滚动浮动在底部
           var stickyMenu = function(){
