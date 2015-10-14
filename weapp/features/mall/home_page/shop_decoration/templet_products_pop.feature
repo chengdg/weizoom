@@ -54,7 +54,7 @@ Background:
 		}]
 		"""
 
-@termite2
+@mall2  @termite2
 Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商品
 	
 	#搜索功能,按商品名称搜索
@@ -125,7 +125,7 @@ Scenario:1 选择在售商品窗体：在售商品列表、搜索、添加新商
 		}]
 		"""
 
-@termite2
+@mall2  @termite2
 Scenario:2 商品选择列表分页,每页显示8个商品
 	Given jobs已添加商品
 		"""
@@ -206,7 +206,7 @@ Scenario:2 商品选择列表分页,每页显示8个商品
 		}]
 		"""
 
-@termite2
+@mall2  @termite2
 Scenario:3 一个商品可以被重复选择
 	When jobs创建微页面
 		"""

@@ -46,7 +46,7 @@ Background:
 		"""
 
 
-@termite2
+@mall2  @termite2
 Scenario:4 商品管理'下架'、'删除'商品
 	When jobs创建微页面
 		"""
@@ -139,7 +139,7 @@ Scenario:4 商品管理'下架'、'删除'商品
 		}
 		"""
 
-@termite2
+@mall2  @termite2
 Scenario:5 商品管理'修改'商品
 	When jobs创建微页面
 		"""
@@ -222,7 +222,7 @@ Scenario:5 商品管理'修改'商品
 		}
 		"""
 
-@termite2
+@mall2  @termite2
 Scenario:6 商品修改，删除
 	When jobs创建微页面
 		"""
