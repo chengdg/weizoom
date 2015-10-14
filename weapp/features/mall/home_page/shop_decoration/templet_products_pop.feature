@@ -1,5 +1,5 @@
 #_author_:师帅 15/10/13
-
+#editor 新新 2015.10.14
 
 Feature:自定义模块——【基础模块】商品-页面
 	"""
@@ -41,16 +41,6 @@ Background:
 			"name": "商品4",
 			"shelve_type":"下架",
 			"price": 4.0
-		}]
-		"""
-	Then jobs在微页面获取'在售'商品选择列表
-		"""
-		[{
-			"name":"商品3不可两行显示"
-		},{
-			"name":"商品2可两行显示"
-		},{
-			"name":"商品1可单行显示"
 		}]
 		"""
 
@@ -279,8 +269,8 @@ Scenario:3 一个商品可以被重复选择
 					"name":"商品2可两行显示",
 					"price": 2.0
 				}],
-				"list_style1":"大图",
-				"list_style2":"默认样式",
+				"list_style1":"小图",
+				"list_style2":"简洁样式",
 				"show_product_name":"true",
 				"show_price":"true"
 			}
@@ -310,9 +300,8 @@ Scenario:3 一个商品可以被重复选择
 					"name":"商品2可两行显示",
 					"price": 2.0
 				}],
-				"list_style1":"大图",
-				"list_style2":"默认样式",
-				"show_product_name":"true",
+				"list_style1":"小图",
+				"list_style2":"简洁样式",
 				"show_price":"true"
 			}
 		}
