@@ -3,7 +3,7 @@
 Feature:自定义模块——【基础模块】公告-页面
 
 @mall2 @termite2
-Scenario:添加公告
+Scenario: 1 添加公告
 	Given jobs登录系统
 	When jobs创建微页面
 		"""

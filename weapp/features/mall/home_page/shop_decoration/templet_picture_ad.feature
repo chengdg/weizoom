@@ -54,7 +54,7 @@ Scenario: 1 创建微页面
 		"""
 
 @mall2  @termite2
-Scenario: （2）验证删除，添加
+Scenario: 2 验证删除，添加
 	Given jobs登录系统
 	When jobs创建微页面
 		"""
@@ -212,7 +212,7 @@ Scenario: （2）验证删除，添加
 		"""
 
 @mall2 @termite2
-Scenario: （3）编辑图片广告信息
+Scenario: 3 编辑图片广告信息
 	#编辑图片广告信息
 	Given jobs登录系统
 	When jobs创建微页面
