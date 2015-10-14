@@ -74,6 +74,10 @@
 
 		<script type="text/javascript">
 			window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
+            function logout(){
+                localStorage.removeItem('message_count')
+                location.href = "/logout/";
+            }
 		</script>
 		<!-- *start_prunt_task* -->
 		<!-- [prunt_task] 

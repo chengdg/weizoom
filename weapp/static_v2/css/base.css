@@ -687,6 +687,7 @@ select{
 .xui-header .xui-headerActionBar a{
 	color: #fff;
 	margin-right: 20px;
+	position: relative;	
 }
 .xui-header .xui-toolIcon{
 	display: inline-block;
@@ -1072,6 +1073,14 @@ button.xui-close{
 }
 .xui-allOrders .xui-noticyTip{/*所有订单待发货提示*/
 	right:13px;
+}
+.xui-header .xui-headerActionBar .xui-noticyTip{
+	-moz-transform: scale(.7);
+	-webkit-transform: scale(.7);
+	transform: scale(.7);
+    right: -17px;
+    top: -6px;
+    line-height: 16px;
 }
 /*
 .wui-rightNav a:nth-child(2){
