@@ -39,12 +39,6 @@ def get_share_red_envelope(request):
     followed_member_id = 0
     if cookie_fmt and cookie_fmt != 'None':
         followed_member_id = Member.objects.get(token=cookie_fmt).id
-    print 'cookie_fmt:'
-    print cookie_fmt
-    print 'followed_member_id:'
-    print followed_member_id
-    print 'member_id:'
-    print member_id
 
     auth_appid = module_api.get_mp_info(user_id)
     qcode_img_url = ''
@@ -129,9 +123,6 @@ def get_share_red_envelope(request):
                                 member=member,
                         )
                     if followed_member_id:
-                        print "###################################################################"
-                        print "followed_member_id!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                        print "###################################################################"
                         RedEnvelopeParticipences.objects.create(
                                     owner_id=request.webapp_owner_id,
                                     coupon_id=coupon.id,
@@ -159,9 +150,6 @@ def get_share_red_envelope(request):
                         return_data['friends'] = friends
 
     else:
-        print "###################################################################"
-        print "订单获取!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        print "###################################################################"
         #用户订单获取
         # if not order.webapp_user_id == member_id:
         #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
