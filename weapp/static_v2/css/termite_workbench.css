@@ -1434,4 +1434,87 @@ button.xui-deleteImageButton{
 }
 
 /* 自动回复关键字组件  */
+.xui-keywordBoxDiv-v2 {
+	width: 360px;
+	border:1px solid #ccc;
+	background-color: #fff;
 
+}
+.xui-keywordBoxDiv-v2 .xui-key {
+	width: 100%;
+	height: 100px;
+	padding-top: 20px;
+	border-bottom: 1px solid #ccc;
+	line-height: 30px;
+}
+.xui-keywordBoxDiv-v2 .xui-key input {
+	vertical-align: sub;
+}
+.xui-keywordBoxDiv-v2 .xui-show {
+	width: 100%;
+}
+.xui-keywordBoxDiv-v2 .btn {
+	border-radius: 0 !important;
+}
+.xui-keywordBoxDiv-v2 .xui-i-left {
+	text-align: right;
+	width: 76px;
+	clear: both;
+	float: left;
+
+}.xui-keywordBoxDiv-v2 .xui-i-right {
+	text-align: left;
+	right: 90px;
+
+}
+
+.xui-keywordBoxDiv-v2 .xui-save{
+	background: none repeat scroll 0 0 #1E8F19;
+	border: 1px solid #1E8F19;
+}
+.pa{
+	margin-left: 10px;
+	margin-right: 20px;
+}
+.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField{
+	margin-top: 10px;
+}
+.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input{
+	width:360px;
+	padding-bottom: 10px;
+}
+.fr.xui-close.xui-remove-btn{
+	height: 16px;
+	position: relative;
+    top: -22px;
+    left: 10px;
+}
+
+.xui-keywordBoxDiv-v2 .xui-delete{
+	position: relative;
+	top: 8px;
+}
+.xui-patterns{
+	color:#333333;
+	position: relative;
+	top:-5px;
+	border: 1px solid #DDDDDD;
+	background-color: #FFFFFF;
+	text-align: center;
+	/* padding-left: 13px; */
+	padding: 13px 2px 2px 15px;
+	line-height: 10px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+}
+.xui-add-keyword-btn{
+	color:#1461B9 !important;
+	width: 55px;
+	position: relative;
+	top:5px;
+	text-align: center;
+	padding: 13px 2px 2px 15px;
+	line-height: 10px;
+	display: inline-block;
+	cursor: pointer;
+}

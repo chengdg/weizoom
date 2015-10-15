@@ -73,7 +73,7 @@ class Sign(resource.Resource):
 			keywords = {}
 
 		response = create_response(200)
-		response.data = keywords#{'keyword1':'blur','keyword2':'accurate'}
+		response.data = keywords #{'keyword1':'blur','keyword2':'accurate'}
 		return response.get_response()
 
 

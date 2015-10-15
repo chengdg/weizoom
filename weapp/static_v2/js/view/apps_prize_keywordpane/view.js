@@ -8,7 +8,6 @@
 ensureNS('W.view.apps');
 W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 	el: '',
-	add_keyword_div:'',
 	add_keyword_btn:'',
 	page_keywords:'',
 
@@ -19,22 +18,34 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 		'click .xa-cancel': 'onClickClose'
 	},
 
+	templates: {
+		viewTmpl: "#apps-prize-keywordpane-src",
+		badgeTmpl: "#apps-prize-badge-src"
+	},
+
 	initialize: function(options) {
-		this.template = Handlebars.compile($("#apps-prize-keywordpane-src").html());
-		$('body').append(this.template);
+		$('body').append(this.renderTmpl('viewTmpl', {}));
 		this.$el = $(options.el);
+		this.$component_el = options.component_el;
         this.type = "accurate";
 
 		this.$add_keyword_btn = $(options.add_keyword_btn);
-		this.add_keyword_btn = options.add_keyword_btn;
 		this.xx= 0;
 		this.yy= 0;
-		this.keywords_obj = {};
-
+		this.keywords_obj = options.keywords || {};
 		this.render();
+		var that = this;
+		this.$component_el.delegate('.xa-close', 'click', function(){
+			var need_removed_key = $(this).parent().siblings().find('.data-keyword').attr('data-keyword');
+			$(this).parent().parent().remove();
+			delete that.keywords_obj[need_removed_key];
+			this.trigger('add_keywords', that.keywords_obj);
+		});
 	},
 	render: function() {
-
+		var badgeHtml = this.renderTmpl('badgeTmpl', {keywords: this.keywords_obj});
+		this.$add_keyword_btn.siblings().remove();
+		$(badgeHtml).insertBefore(this.$add_keyword_btn);
 	},
 
 	onPressEnter: function (e) {
@@ -50,7 +61,7 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 				return;
 			}
 			//替换相邻多个空格为一个
-			var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');//关键字
+			var keyword = this.$('.xa-app-add').val();
 			if(keyword == '') {
 				W.showHint('error','关键字不能为空！');
 				return;
@@ -73,12 +84,8 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 			this.keywords_obj[_this.$('.xa-app-add').val()] = _this.type;
 
 			this.trigger('add_keywords', this.keywords_obj);
-
-			//this.xx = this.$add_keyword_btn.offset().top;
-			//this.yy = this.$add_keyword_btn.offset().left;
-			//var offset ={top:this.xx,left:this.yy};
-			//_this.setPos(offset);
-
+			this.$('.xa-app-add').val('');
+			this.render();
 		}
 
 	},
@@ -95,17 +102,11 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 		this.hide();
 	},
 
-	setPos: function (offset) {
-
-
-	},
-
 	show: function() {
-		this.xx = this.$add_keyword_btn.offset().top;
-		this.yy = this.$add_keyword_btn.offset().left;
+		var offset = this.$add_keyword_btn.offset();
 		this.$el.css('position','absolute');
-		this.$el.css('top', this.xx + 'px');
-		this.$el.css('left', this.yy + 'px');
+		this.$el.css('top', offset.top+50 + 'px');
+		this.$el.css('left', offset.left+100 + 'px');
 		this.$el.show();
 	},
 
@@ -117,29 +118,30 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 
 W.registerUIRole('[data-ui-role="apps-prize-keyword-pane"]', function() {
     var $el = $(this);
-	var view = new W.view.apps.PrizeKeywordPane({
-		el:'.xa-keywordBoxDiv-v2',
-		add_keyword_btn:'.xa-add-keyword-btn'
-	});
-	$el.data('view', view);
-
+	var view = $el.data('view') || void 0;
+	if(view) return;
+	W.getApi().call({
+        app: 'apps/sign',
+        resource: 'sign',
+        method: 'get',
+		async: false,
+        args: {},
+        success: function(data){
+			view = new W.view.apps.PrizeKeywordPane({
+				el:'.xa-keywordBoxDiv-v2',
+				add_keyword_btn:'.xa-add-keyword-btn',
+				keywords: data,
+				component_el: $el
+			});
+			$el.data('view', view);
+        },
+        error: function(error){
+            W.showHint('error', '获取关键字配置失败~');
+        }
+    });
 
 	$(this).delegate('.xa-add-keyword-btn', 'click', function(){
 		view.show();
 	});
-    //W.getApi().call({
-    //    app: 'apps/sign',
-    //    resource: 'sign',
-    //    method: 'get',
-    //    args: {},
-    //    success: function(data){
-    //        view =
-    //        view.trigger('get_keywords', data);
-    //        $el.data('view', view);
-    //        view.render();
-    //    },
-    //    error: function(error){
-    //        W.showHint('error', '获取优惠券库存失败~');
-    //    }
-    //});
+
 });
