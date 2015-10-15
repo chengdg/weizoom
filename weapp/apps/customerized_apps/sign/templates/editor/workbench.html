@@ -380,7 +380,6 @@ ui-appPage-commonStyle">
         </script>
     {% endverbatim %}
     <div class="xui-keywordBoxDiv xa-keywordBoxDiv"></div>
-    <div id = "keywords-args" ><div>
 {% endblock %}
 
 {% block base_js %}
@@ -494,7 +493,14 @@ ui-appPage-commonStyle">
             var share_desc =descriptionModel.get('share_description');
             var share = {"img":share_img,"desc":share_desc};
 
-            var reply_keyword = descriptionModel.get('reply_keyword');
+            var reply_keyword =[];
+            $('#add_keyword_div').find('.xa-data-patterns').each(function(){
+                var d = {};
+                var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+                var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+                d[key_tmp] = mo_tmp;
+                reply_keyword.push(d);
+            });
             var reply_content = descriptionModel.get('reply_content');
             var reply ={"keyword":reply_keyword,"content":reply_content};
 
