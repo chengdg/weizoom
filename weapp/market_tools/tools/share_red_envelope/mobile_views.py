@@ -112,7 +112,7 @@ def get_share_red_envelope(request):
                                 red_envelope_relation_id=relation[0].id,
                                 member=member,
                         )
-                    if followed_member_id:
+                    if followed_member_id !=0:
                         RedEnvelopeParticipences.objects.create(
                                     owner_id=request.webapp_owner_id,
                                     coupon_id=coupon.id,
