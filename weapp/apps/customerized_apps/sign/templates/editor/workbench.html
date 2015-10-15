@@ -482,6 +482,7 @@ ui-appPage-commonStyle">
       
       loadPages(pageManagerView);
 
+
       $('.xui-bottomActionBar').delegate('.xa-save', 'click', function() {
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
@@ -672,6 +673,11 @@ ui-appPage-commonStyle">
                 });
 
                 flag = false;
+
+                $('#add_keyword_div').delegate('.xa-close','click',function(){
+                    $(this).parent().parent().remove();
+                });
+
             }
         });
         // 滚动浮动在底部
