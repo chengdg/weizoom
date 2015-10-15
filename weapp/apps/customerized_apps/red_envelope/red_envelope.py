@@ -128,6 +128,7 @@ class RedEnvelopeRuleList(resource.Resource):
         if not is_fetch_all_rules:
             rules = _filter_rules(request, rules)
 
+        #处理过期排序
         for rule in rules:
             is_timeout = False if rule.end_time > datetime.now() else True
             if is_timeout and not rule.limit_time:
@@ -138,7 +139,7 @@ class RedEnvelopeRuleList(resource.Resource):
                         rule.order_index = -1
                 rule.save()
         rules = rules.order_by("-order_index", "-id")
-        
+
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, rules = paginator.paginate(rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -311,11 +312,10 @@ class RedEnvelopeParticipances(resource.Resource):
 
         participences = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
         for participence in participences:
-            coupon_id = participence.coupon_id
-            print coupon_id
-            if promotion_models.Coupon.objects.get(id=coupon_id).status == 1:
-                final_price = Order.objects.get(coupon_id=coupon_id).final_price
-                consumption_sum += final_price
+            if participence.coupon.status == 1:
+                order = Order.objects.filter(coupon_id=participence.coupon.id, status=5)
+                if order.count() > 0:
+                    consumption_sum = consumption_sum + order[0].final_price + order[0].postage
 
         #加上引入的数字
         for relation in relations:
@@ -330,7 +330,7 @@ class RedEnvelopeParticipances(resource.Resource):
             'has_data': has_data,
             'new_member_count': new_member_count,
             'received_count': received_count,
-            'consumption_sum': consumption_sum,
+            'consumption_sum': '%.2f' % consumption_sum,
             'total_use_count': total_use_count,
             'red_envelope_id': rule_id,
             'red_envelope_name': rule_data.name,
@@ -548,7 +548,7 @@ def get_datas(request):
             'introduce_received_number_count': relation.introduce_received_number,
             'introduce_new_member_count': relation.introduce_new_member,
             'introduce_used_number_count': relation.introduce_used_number,
-            'introduce_sales_number': relation.introduce_sales_number,
+            'introduce_sales_number': '%.2f' %  relation.introduce_sales_number,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status': relation.coupon.status,
             'coupon_status_name': COUPONSTATUS[relation.coupon.status]['name'],

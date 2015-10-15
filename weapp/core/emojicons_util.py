@@ -136,7 +136,6 @@ def encode_emojicons_for_html(unicode_or_utf8str_with_decoded_emojicons, is_hex_
             return utf8str_with_decoded_emojicons
 
     max_index = len(hex_str)
-
     parts = []
 
     part_start_index = 0
@@ -149,7 +148,6 @@ def encode_emojicons_for_html(unicode_or_utf8str_with_decoded_emojicons, is_hex_
             maybe_prefix = hex_str[index:index+2]
         else:
             maybe_prefix = hex_str[emojicon_utf8_part_index:index+2]
-
         if not ALL_EMOJICONS_UTF8_PRREFIX_SET.has_key(maybe_prefix):
             if index > 2 and emojicon_utf8_part_index >= 0:
                 maybe_emojiconutf8 = hex_str[emojicon_utf8_part_index:index]
@@ -170,6 +168,12 @@ def encode_emojicons_for_html(unicode_or_utf8str_with_decoded_emojicons, is_hex_
                             part_start_index = index - sub_index
                             index = part_start_index - 2
                             emojicon_utf8_part_index = -1
+                            break
+                    else:
+                        parts.append(hex_to_byte(hex_str[part_start_index:index]))
+                        part_start_index = index
+                        emojicon_utf8_part_index = -1
+                        index -= 2
         else:
             if emojicon_utf8_part_index == -1:
                 emojicon_utf8_part_index = index
