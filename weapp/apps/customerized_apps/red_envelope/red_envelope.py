@@ -312,11 +312,10 @@ class RedEnvelopeParticipances(resource.Resource):
 
         participences = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
         for participence in participences:
-            if participence.coupon.status == 1:
+            if participence.coupon.status == 1 and participence.introduced_by == 0:
                 order = Order.objects.filter(coupon_id=participence.coupon.id, status=5)
                 if order.count() > 0:
                     consumption_sum = consumption_sum + order[0].final_price + order[0].postage
-
         #加上引入的数字
         for relation in relations:
             new_member_count += relation.introduce_new_member
