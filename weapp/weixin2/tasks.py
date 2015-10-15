@@ -41,7 +41,7 @@ def task_send_mass_message(self, webapp_id, log_id, message_type, content, is_fr
 	if message_type == MESSAGE_TYPE_TEXT:
 		result = send_mass_text_message_with_openid_list(user_profile, openid_list, content, log_id)
 	else:
-		result = send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, log_id)
+		result = send_mass_news_message_with_openid_list(user_profile, openid_list, content, log_id)
 
 	if result is False:
 		raise self.retry()
