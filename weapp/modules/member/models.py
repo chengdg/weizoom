@@ -630,10 +630,9 @@ class Member(models.Model):
 
 	@property
 	def member_open_id(self):
-		member_has_social_accounts = MemberHasSocialAccount.objects.filter(member=self)
-		if member_has_social_accounts.count() > 0:
-			return member_has_social_accounts[0].account.openid
-		else:
+		try:
+			return MemberHasSocialAccount.objects.filter(member=self)[0].account.openid
+		except:
 			return None
 
 	@staticmethod
@@ -1135,6 +1134,12 @@ class MemberHasTag(models.Model):
 				if MemberHasTag.objects.filter(member_tag_id=tag_id, member_id=member_id).count() == 0:
 					MemberHasTag.objects.create(member_id=member_id, member_tag_id=tag_id)
 
+	@staticmethod
+	def get_tag_has_sub_member_count(tag):
+		if isinstance(tag, MemberTag):
+			return MemberHasTag.objects.filter(member_tag=tag, member__status=SUBSCRIBED).count()
+		else:
+			return MemberHasTag.objects.filter(member_tag_id=tag, member__status=SUBSCRIBED).count()
 
 MESSAGE_TYPE_TEXT = 0
 MESSAGE_TYPE_NEWS = 1
@@ -1171,7 +1176,7 @@ class UserSentMassMsgLog(models.Model):
 
 	@staticmethod
 	def create(webapp_id, msg_id, message_type, message_content):
-		UserSentMassMsgLog.objects.create(
+		return UserSentMassMsgLog.objects.create(
 								webapp_id=webapp_id,
 								msg_id=msg_id,
 								message_type=message_type,

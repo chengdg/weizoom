@@ -36,7 +36,7 @@ def send_mass_text_message(user_profile, group_id, content):
 ##################################################################################
 # send_mass_text_message_with_openid_list: 直接使用已给的openid_list发送文本消息
 ##################################################################################
-def send_mass_text_message_with_openid_list(user_profile, openid_list, content):
+def send_mass_text_message_with_openid_list(user_profile, openid_list, content, log_id=None):
 	user = user_profile.user
 	if len(openid_list) > 0 and content != None and content != '' and user:
 		mpuser_access_token = _get_mpuser_access_token(user)
@@ -46,7 +46,10 @@ def send_mass_text_message_with_openid_list(user_profile, openid_list, content):
 			try:
 				result = weixin_api.send_mass_message(mesage, True)
 				if result.has_key('msg_id'):
-					UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
+					if log_id:
+						UserSentMassMsgLog.objects.filter(id=log_id).update(result['msg_id'], MESSAGE_TYPE_TEXT, content)
+					else:
+						UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
 				return True
 			except:
 				notify_message = u"群发文本消息异常send_mass_message, cause:\n{}".format(unicode_full_stack())
@@ -74,7 +77,7 @@ def send_mass_new_message(user_profile, group_id, material_id):
 ####################################################################################
 # send_mass_news_message_with_openid_list: 直接使用已给的openid_list发送图文消息
 ####################################################################################
-def send_mass_news_message_with_openid_list(user_profile, openid_list, material_id):
+def send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, log_id=None):
 	user = user_profile.user
 	if len(openid_list) > 0 and material_id != None and material_id != '' and user:
 		news = News.get_news_by_material_id(material_id)
@@ -116,7 +119,10 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				message = NewsMessage(openid_list, result['media_id'])
 				result = weixin_api.send_mass_message(message, True)
 				if result.has_key('msg_id'):
-					UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_NEWS, material_id)
+					if log_id:
+						UserSentMassMsgLog.objects.filter(id=log_id).update(result['msg_id'], MESSAGE_TYPE_NEWS, material_id)
+					else:
+						UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_NEWS, material_id)
 				return True
 			except:
 				notify_message = u"群发图文消息异常send_mass_message, cause:\n{}".format(unicode_full_stack())
