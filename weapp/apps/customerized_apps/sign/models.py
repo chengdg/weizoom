@@ -216,7 +216,7 @@ class Sign(models.Document):
 								return_html.append(u'\n奖励已领完,请联系客服补发')
 						return_html.append(u'\n签到说明：签到有礼！\n')
 						return_html.append(str(return_data['reply_content']))
-					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
+					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> >>点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
 		except Exception,e:
