@@ -175,7 +175,6 @@ class Sign(models.Document):
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
-			print sign.reply['keyword'], data['keyword']
 			checking_result = check_matched_keyword(data['keyword'], sign.reply['keyword'])
 			if checking_result:
 				if sign.status != 1:
@@ -205,10 +204,10 @@ class Sign(models.Document):
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
 						return_html.append(u'签到成功！\n已连续签到%s天。\n本次签到获得以下奖励:\n' % return_data['serial_count'])
 						return_html.append(str(return_data['curr_prize_integral']))
-						return_html.append(u'积分\n')
+						return_html.append(u'积分')
 						if return_data['curr_prize_coupon_name'] != '' and return_data['curr_prize_coupon_count'] >= 0:
 							if return_data['curr_prize_coupon_count']>0:
-								return_html.append(str(return_data['curr_prize_coupon_name']))
+								return_html.append('\n'+str(return_data['curr_prize_coupon_name']))
 								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>' % (host, data['webapp_owner_id']))
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
@@ -217,7 +216,8 @@ class Sign(models.Document):
 					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
-		except:
+		except Exception,e:
+			print e
 			return None
 		return ''.join(return_html)
 
@@ -257,7 +257,7 @@ def check_matched_keyword(remote_keyword, setting_keywords_dict):
 	:return: 是否命中
 	"""
 	result = False
-	for key, mode in setting_keywords_dict:
+	for key, mode in setting_keywords_dict.items():
 		if 'accurate' == mode and remote_keyword == key:
 			result = True
 			break
