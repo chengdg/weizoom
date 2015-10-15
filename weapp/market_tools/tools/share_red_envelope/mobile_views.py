@@ -39,12 +39,6 @@ def get_share_red_envelope(request):
     followed_member_id = 0
     if cookie_fmt and cookie_fmt != 'None':
         followed_member_id = Member.objects.get(token=cookie_fmt).id
-    print 'cookie_fmt:'
-    print cookie_fmt
-    print 'followed_member_id:'
-    print followed_member_id
-    print 'member_id:'
-    print member_id
 
     auth_appid = module_api.get_mp_info(user_id)
     qcode_img_url = ''
@@ -64,13 +58,11 @@ def get_share_red_envelope(request):
         if followed_member_id == member_id or not followed_member_id:
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
         else:
-            relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
-            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            print "red_envelope_rule_id=red_envelope_rule_id", red_envelope_rule_id, "member_id=followed_member_id", followed_member_id
-            print relation,"relation"
-
+            member_get_red_envelope_records = GetRedEnvelopeRecord.objects.filter(member_id=followed_member_id, red_envelope_rule_id=red_envelope_rule_id)
+            if member_get_red_envelope_records.count() > 0:
+                relation = RedEnvelopeToOrder.objects.filter(id=member_get_red_envelope_records[0].red_envelope_relation_id)
+            else:
+                relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
         member_coupon_record_count = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id).count()
 
     return_data = {

@@ -324,7 +324,7 @@ ui-appPage-commonStyle">
                     <tr>
                         <th>会员</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-sort-direction="up">第一次签到</th>
-                        <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="down" data-init-sort="-latest_date">最后一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="up" data-init-sort="-latest_date">最后一次签到</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="total_count" data-sort-direction="up">累计次数</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="serial_count" data-sort-direction="up">连续次数</th>
                         <th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>
@@ -362,7 +362,7 @@ ui-appPage-commonStyle">
                             ${item.total_integral}
                         </td>
                         <td>
-                            ${item.latest_coupon}
+                            {{html item.latest_coupon }}
                         </td>
                     </tr>
                     {{/each}}

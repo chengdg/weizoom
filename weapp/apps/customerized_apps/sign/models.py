@@ -44,14 +44,15 @@ class SignParticipance(models.Document):
 		#判断是否连续签到，否则重置为1
 		if latest_date and latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
 			user_update_data['inc__serial_count'] = 1
-			temp_curr_serial_count = int(self.serial_count) + 1
+			curr_serial_count = temp_curr_serial_count = int(self.serial_count) + 1
 		else:
 			user_update_data['set__serial_count'] = 1
 			temp_curr_serial_count = 0
+			curr_serial_count = 1
 		#如果当前连续签到大于等于最高连续签到，则更新最高连续签到
-		curr_serial_count = 1
+
 		if temp_curr_serial_count > int(self.top_serial_count):
-			curr_serial_count = user_update_data['set__top_serial_count'] = temp_curr_serial_count
+			user_update_data['set__top_serial_count'] = temp_curr_serial_count
 		#更新prize
 		curr_prize_integral = daily_integral = serial_integral = next_serial_integral = next_serial_count = 0
 		curr_prize_coupon_id = daily_coupon_id = serial_coupon_id = next_serial_coupon_id = ''
@@ -215,7 +216,7 @@ class Sign(models.Document):
 								return_html.append(u'\n奖励已领完,请联系客服补发')
 						return_html.append(u'\n签到说明：签到有礼！\n')
 						return_html.append(str(return_data['reply_content']))
-					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
+					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> >>点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
 		except Exception,e:
