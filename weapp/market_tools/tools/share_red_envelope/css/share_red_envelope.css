@@ -322,15 +322,14 @@ html,body{
 	background-size: 7rem 3.45rem;
 }
 .xui-cover .xui-close-btn{
-	width:6.1rem;
-	height: 2rem;
-	background-image: url(/markettools_static/share_red_envelope/img/known.png);
-	background-color: #c04949;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 3.9rem .9rem;
-	border-radius: .2rem;
-	top:7.85rem;
-	left:50%;
-	margin-left:-3.05rem;
+	 background-image: url(/markettools_static/share_red_envelope/img/red_envelope_close.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 1.5rem 1.5rem;
+    border-radius: 0.2rem;
+    height: 3rem;
+    left: 50%;
+    margin-left: -3.05rem;
+    top: 9.85rem;
+    width: 6.2rem;
 }
