@@ -61,9 +61,9 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 				keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
 			});
 
-			//判断关键词个数是否超过4个
-			if (keywords.length > (4 - 1)) {
-				W.showHint('error', '关键词个数不能超过4个');
+			//判断关键词个数是否超过8个
+			if (keywords.length > (8 - 1)) {
+				W.showHint('error', '关键词个数不能超过8个');
 				return;
 			}
 			//关键字重复检查
@@ -83,7 +83,12 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 						id:_this.num
 					};
 
-			_this.$keyword_div.append(_this.template(pattern));
+			//_this.$keyword_div.append(_this.template(pattern));
+			$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
+			var xx = $('#add_keyword_btn').position().top+50;
+			var offset={top:xx};
+			console.log(_this.$el);
+			_this.setPos(offset);
 			_this.$('.xa-app-add').val("");
 		}
 
@@ -123,8 +128,8 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
 		});
 
-		//判断关键词个数是否超过4个
-		if (keywords.length > (4 - 1)) {
+		//判断关键词个数是否超过8个
+		if (keywords.length > (8 - 1)) {
 			W.showHint('error', '关键词个数不能超过4个');
 			return;
 		}
@@ -144,8 +149,15 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 					id:_this.num
 				};
 
-		_this.$keyword_div.append(_this.template(pattern));
+		$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
+		var xx = $('#add_keyword_btn').position().top+50;
+		var offset={top:xx};
+		console.log(_this.$el);
+		_this.setPos(offset);
 		_this.$('.xa-app-add').val("");
+
+		//关闭
+		_this.hide();
 
 		//数据收集
 		var args = [];
