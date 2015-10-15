@@ -69,16 +69,12 @@
           }
       };
 
-      alert(W.sharePageTitle);
-      alert(W.sharePageDesc);
       if (window.location.href.indexOf('share_red_envelope') > 0){
-          alert("FFFFFFFFFFFFFFFFFFFFFFF");
-          alert(W.sharePageDesc);
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
               "link" : window.location.href,
-              "desc" : "FFFFFFFFFFFF",
-              "title" : "FFFFFFFFFFFFFFFFFFFFFF",
+              "desc" : W.sharePageDesc,
+              "title" : W.sharePageDesc,
               // 点击分享按钮
               trigger: function (res) {
                  //alert('用户点击分享按钮'+res);
@@ -119,8 +115,7 @@
             'onMenuShareQQ',
             'previewImage',
             'hideOptionMenu',
-            'showOptionMenu',
-            'previewImage'
+            'showOptionMenu'
           ],
           success: function (res) {
             if(!W.wxShareData)
@@ -129,7 +124,7 @@
             if(res.onMenuShareAppMessage)
               wx.onMenuShareAppMessage(W.wxShareData);
             if(res.onMenuShareTimeline)
-              wx.onMenuShareTimeline(W.wxShareData);
+              wx.onMenuShareTimeline(W.wxShareTimelineData);
             if(res.onMenuShareQQ)
               wx.onMenuShareQQ(W.wxShareData);
             if(res.previewImage)
@@ -141,21 +136,5 @@
           }
         });
       });
-
-    function show_previewImage(current_image, images){
-      if (current_image){
-          var current = current_image;
-          var urls = images;
-          wx.previewImage({
-            current: current,
-            urls: images
-          });
-      }
-    }
-    //show_previewImage('http://img5.douban.com/view/photo/photo/public/p1353993776.jpg', [
-    //        'http://img3.douban.com/view/photo/photo/public/p2152117150.jpg',
-    //        'http://img5.douban.com/view/photo/photo/public/p1353993776.jpg',
-    //        'http://img3.douban.com/view/photo/photo/public/p2152134700.jpg'
-    //      ])
 </script>
 {% endblock %}
