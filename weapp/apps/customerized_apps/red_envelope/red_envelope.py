@@ -16,7 +16,7 @@ from core import paginator
 from core import search_util
 from mall.models import Order
 from mall.promotion.models import Coupon,COUPONSTATUS,COUPON_STATUS_USED
-from modules.member.models import MemberTag, MemberGrade, MemberFollowRelation
+from modules.member.models import MemberTag, MemberGrade, MemberFollowRelation, Member
 
 from utils.string_util import hex_to_byte, byte_to_hex
 from modules.member import models as member_models
@@ -485,39 +485,50 @@ def get_datas(request):
         coupon_id2order_id = {}
 
 
-    sub_member_ids = []
+    member_ids = []
     for sub_relation in relations:
-        sub_member_ids.append(sub_relation.member_id)
+        member_ids.append(sub_relation.member_id)
 
     #获取关注关系l
-    member_follow_relation = MemberFollowRelation.objects.filter(member_id__in=sub_member_ids)
+    member_follow_relation = MemberFollowRelation.objects.filter(member_id__in=member_ids)
 
     #只保存新会员的最后一条记录l
     member_id2follower_member_id ={}
     for member in member_follow_relation:
         member_id2follower_member_id[member.member_id] = member.follower_member_id
+
+    members = Member.objects.filter(id__in=member_ids)
+    member_id2member = dict([(m.id, m) for m in members])
+
+    grade_ids = [m.grade_id for m in members]
+    grades = MemberGrade.objects.filter(id__in=grade_ids)
+    grade_id2grade = dict([(g.id, g.name) for g in grades])
+
     items = []
     for relation in relations:
+        cur_member = member_id2member[relation.member_id]
+        cur_grade_id = cur_member.grade_id
         if receive_method == 'True':
-            if relation.member.is_subscribed and relation.member.grade:
-                grade = relation.member.grade.name
+            if cur_member.is_subscribed and cur_grade_id:
+                grade = grade_id2grade[cur_grade_id]
             else:
                 grade = u"会员"
         else:
-            if relation.member.is_subscribed:
+            if cur_member.is_subscribed:
                 if relation.is_new:
                     if member_id2follower_member_id[relation.member_id] == relation.introduced_by:
                         grade = u"新会员"
                     else:
                         grade = u"非会员"
                 else:
-                    grade = relation.member.grade.name
+                    grade = grade_id2grade[cur_grade_id]
             else:
                 grade = u"非会员"
         items.append({
             'id': relation.red_envelope_relation_id,
             'member_id': relation.member_id,
-            'participant_name': relation.member.username_for_html,
+            'username': cur_member.username_for_title,
+		    'username_truncated': cur_member.username_truncated,
             'participant_icon': relation.member.user_icon,
             'introduce_received_number_count': relation.introduce_received_number,
             'introduce_new_member_count': relation.introduce_new_member,

@@ -1,15 +1,15 @@
 {% extends "content_base_v2.html" %}
 {% load apps_filter %}
 {% block css %}
-    <style>
-    .tl.pl10 img{
-    	height: 60px;
-    	width: 60px;
-    }
-	input.xa-select {
-	  margin-left: 10px;
-	}
-    </style>
+<style>
+.tl.pl10 img{
+	height: 60px;
+	width: 60px;
+}
+input.xa-select {
+  margin-left: 10px;
+}
+</style>
 {% endblock %}
 {% block content-panel %}
 <div class="xui-redEnvelopeParticipances-page xui-appPage-commonStyle">
@@ -84,7 +84,7 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>
+				<th width="80" style="text-align:left">
 					{{if items[0].receive_method == "True"}}
 						领取会员
 					{{else}}
@@ -104,12 +104,15 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-				<td style="position:relative;" >
-					<div class="column_block xui-memberHeader pr">
+				<td style="position:relative;" title='{{html item.username}}'>
+					<div style="text-align:left">
 						<a target="_blank" href="/member/detail/?id=${item.member_id}">
-							<img width="41" height="41" src="${item.participant_icon}" /><br>
-							{{html item.participant_name}}
+							<img width="41" src="${item.participant_icon}" onerror="this.src='/static/img/user-1.jpg'"/>
 						</a>
+					</div>
+					<div style="text-align:left">
+						<div>
+						<a class="xui-Blue" target="_blank" href="/member/detail/?id=${item.member_id}" style="display:block;width:80px;" >{{html item.username_truncated}}</a>
 					</div>
 				</td>
 				<td>
@@ -145,7 +148,7 @@
 					<a
 						class="xa-detail"
 						href="javascript:void(0);"
-						data-member-name="${item.participant_name}"
+						data-member-name="${item.username}"
 						data-introduced-by="${item.member_id}"
 						data-reation-id="${item.id}"
 						data-introduce-received-number="${item.introduce_received_number_count}"

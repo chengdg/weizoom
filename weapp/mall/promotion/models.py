@@ -768,7 +768,7 @@ class RedEnvelopeParticipences(models.Model):
 	introduce_new_member = models.IntegerField(default=0) #引入新关注
 	introduce_used_number = models.IntegerField(default=0) #引入使用人数
 	introduce_received_number = models.IntegerField(default=0) #引入领取人数
-	introduce_sales_number = models.IntegerField(default=0) #引入消费额
+	introduce_sales_number = models.FloatField(default=0.0) #引入消费额
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
