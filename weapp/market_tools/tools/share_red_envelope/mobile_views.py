@@ -36,7 +36,7 @@ def get_share_red_envelope(request):
 
     #分享链接的会员id
     cookie_fmt = request.COOKIES.get('fmt', None)
-    followed_member_id = 0
+    followed_member_id = None
     if cookie_fmt and cookie_fmt != 'None':
         followed_member_id = Member.objects.get(token=cookie_fmt).id
 
