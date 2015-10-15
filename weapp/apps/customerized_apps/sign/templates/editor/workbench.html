@@ -622,15 +622,15 @@ ui-appPage-commonStyle">
                 add_keyword_btn.click(function(){
                     prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
                         el:'.xa-keywordBoxDiv',
-                        keyword_div:add_keyword_div,
+                        keyword_div:add_keyword_div
 
                      }));
                     prize_keyword_view.setPos(offset);
                     prize_keyword_view.render();
-                    $('.xa-data-patterns .xa-mode .xa-close').bind('click',function(){
-                        console.log('HHHHHHHHHHH');
+{#                    $('.xa-data-patterns .xa-mode .xa-close').bind('click',function(){#}
+{#                        console.log('HHHHHHHHHHH');#}
 {#                    $(this).parent().find('.xa-data-patterns').remove();#}
-                    });
+{#                    });#}
                 });
 
                 flag = false;
