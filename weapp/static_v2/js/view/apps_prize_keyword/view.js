@@ -87,7 +87,6 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
 			var xx = $('#add_keyword_btn').position().top+50;
 			var offset={top:xx};
-			console.log(_this.$el);
 			_this.setPos(offset);
 			_this.$('.xa-app-add').val("");
 		}
@@ -152,7 +151,6 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 		$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
 		var xx = $('#add_keyword_btn').position().top+50;
 		var offset={top:xx};
-		console.log(_this.$el);
 		_this.setPos(offset);
 		_this.$('.xa-app-add').val("");
 
