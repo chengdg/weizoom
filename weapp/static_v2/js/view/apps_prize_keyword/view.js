@@ -8,7 +8,8 @@
 ensureNS('W.view.apps');
 W.view.apps.PrizeKeyword = Backbone.View.extend({
 	el: '',
-	keyword_div:'',
+	add_keyword_div:'',
+	add_keyword_btn:'',
 	page_keywords:'',
 
 	events: {
@@ -23,35 +24,45 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
         this.md = "精确匹配";
         this.type = "accurate";
         this.template = Handlebars.compile($("#apps-addkey-view-tmpl-src").html());
-		this.$keyword_div = $(options.keyword_div);
-		this.render();
+
+		this.add_keyword_div = options.add_keyword_div ;
+		this.$add_keyword_div = $(options.add_keyword_div);
+
+		this.$add_keyword_btn = $(options.add_keyword_btn);
+		this.add_keyword_btn = options.add_keyword_btn;
 		this.num = 0;
 	},
 	render: function() {
 		if (this.$('.xui-newKeyView').length === 0) {
 			this.$el.append($('#apps-prize-keyword-tmpl-src').html());
 		} else {
-			$('.xui-keywordBoxDiv').css({'position':'absolute'});
+			this.$el.css({'position':'absolute'});
+			var xx = this.$add_keyword_btn.position().top+50;
+			var yy = this.$add_keyword_btn.position().left;
+			var offset ={top:xx,left:yy};
+			this.setPos(offset);
 			this.$el.find('.xa-keywords').empty();
 			this.$el.show();
 		}
 	},
 	render_keywords: function(page_keywords){
 		//只渲染关键字区域
-		var keywords = JSON.parse(page_keywords);
-		for(var i in keywords){
-			var mod = "";
-			if(keywords[i]=='accurate'){
-				mod = "精确匹配";
-			}else{
-				mod = "部分匹配";
+		var keywords = page_keywords==""?{}:JSON.parse(page_keywords);
+		if(keywords){
+			for(var i in keywords){
+				var mod = "";
+				if(keywords[i]=='accurate'){
+					mod = "精确匹配";
+				}else{
+					mod = "部分匹配";
+				}
+				var pattern = {
+					keyword: i,
+					mode: mod,
+					type: keywords[i]
+				};
+				$(this.template(pattern)).insertBefore(this.$add_keyword_btn);
 			}
-			var pattern = {
-				keyword: i,
-				mode: mod,
-				type: keywords[i]
-			};
-			$(this.template(pattern)).insertBefore($('#add_keyword_btn'));
 		}
 	},
 
@@ -72,12 +83,11 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			//关键字·组_检查
 			var keywords = [];//关键字组
 			var keywords_obj = [];//关键字组对象
-			$('#add_keyword_div').find('.xa-data-patterns').each(function(){
-				var key_id = $(this).attr('id');
+			this.$add_keyword_div.find('.xa-data-patterns').each(function(){
 				var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
 				var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
 				keywords.push(key_tmp);
-				keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+				keywords_obj.push({'keyword':key_tmp,'mode':mode_tmp});
 			});
 
 			//判断关键词个数是否超过8个
@@ -101,11 +111,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 						type: _this.type
 					};
 
-			//_this.$keyword_div.append(_this.template(pattern));
-			$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
-			var xx = $('#add_keyword_btn').position().top+50;
-			var offset={top:xx};
-			_this.setPos(offset);
+			$(_this.template(pattern)).insertBefore(_this.$add_keyword_btn);
 			_this.$('.xa-app-add').val("");
 		}
 
@@ -137,12 +143,12 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 		//关键字_组_检查
 		var keywords = [];//关键字组
 		var keywords_obj = [];//关键字组对象
-		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+		this.$add_keyword_div.find('.xa-data-patterns').each(function(){
 			var key_id = $(this).attr('id');
 			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
 			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
 			keywords.push(key_tmp);
-			keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+			keywords_obj.push({'keyword':key_tmp,'mode':mode_tmp});
 		});
 
 		//判断关键词个数是否超过8个
@@ -162,13 +168,10 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 		var pattern = {
 					keyword: _this.$('.xa-app-add').val(),
 					mode: _this.md,
-					type: _this.type,
+					type: _this.type
 				};
 
-		$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
-		var xx = $('#add_keyword_btn').position().top+50;
-		var offset={top:xx};
-		_this.setPos(offset);
+		$(_this.template(pattern)).insertBefore(this.$add_keyword_btn);
 		_this.$('.xa-app-add').val("");
 
 		//关闭

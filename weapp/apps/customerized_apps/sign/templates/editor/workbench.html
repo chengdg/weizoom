@@ -498,8 +498,6 @@ ui-appPage-commonStyle">
                 var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
                 reply_keyword[key_tmp] = mo_tmp;
             });
-                    console.log(">>>>>>>>>>>>>> keyword <<<<<<<<<<<<？？？？？？？");
-                    console.log(reply_keyword);
             var reply_content = descriptionModel.get('reply_content');
             var reply ={"keyword":reply_keyword,"content":reply_content};
 
@@ -654,27 +652,20 @@ ui-appPage-commonStyle">
             //初始化弹出层
             if(flag && cid==2){
                 $('[data-toggle="popover"]').popover();
-
-                prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
-                    el:'.xa-keywordBoxDiv',
-                    keyword_div:add_keyword_div
-
-                 }));
-                prize_keyword_view.hide();
-
-
-                //自动回复 xxxxx
+                //自动回复
                 add_keyword_div = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
                 add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input span');
                 add_keyword_div.attr('id','add_keyword_div');
                 add_keyword_btn.attr('id','add_keyword_btn');
 
+                 prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
+                    el:'.xa-keywordBoxDiv',
+                    add_keyword_div:'#add_keyword_div',
+                    add_keyword_btn:'#add_keyword_btn'
+                 }));
+
                 //显示框并且动态定位
-			    var yy = add_keyword_btn.position().left;
                 add_keyword_btn.click(function(){
-                    var xx = add_keyword_btn.position().top+50;
-                    var offset={top:xx,left:yy};
-                    prize_keyword_view.setPos(offset);
                     prize_keyword_view.render();
                 });
 
