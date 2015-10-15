@@ -1075,12 +1075,12 @@ button.xui-close{
 	right:13px;
 }
 .xui-header .xui-headerActionBar .xui-noticyTip{
-	-moz-transform: scale(.7);
-	-webkit-transform: scale(.7);
-	transform: scale(.7);
+	-moz-transform: scale(.8);
+	-webkit-transform: scale(.8);
+	transform: scale(.8);
     right: -17px;
     top: -6px;
-    line-height: 16px;
+    line-height: 18px;
 }
 /*
 .wui-rightNav a:nth-child(2){
