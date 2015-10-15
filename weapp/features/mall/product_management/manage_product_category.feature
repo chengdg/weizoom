@@ -1,14 +1,17 @@
 # __author__ : "冯雪静"
+#editor:王丽 2015.10.14
 @func:webapp.modules.mall.views.update_productcategory
-Feature: Manage Product Category
+Feature: 管理商品分组列表
+"""
+	Manage Product Category
 	Jobs能通过管理系统管理商城中的"商品分类列表"
-	"""
 	1.更新已存在的商品分类
 	2.删除已存在的商品分类
 	3.从分类中删除商品
 	4.向分类中添加商品
 	5.向分类中添加商品排序
-	"""
+"""
+
 Background:
 	Given jobs登录系统
 	When jobs已添加商品分类
@@ -63,8 +66,8 @@ Background:
 		}]
 		"""
 
-@mall @mall.product_category @mall2
-Scenario: Jobs更新已存在的商品分类
+@mall2 @product @group   @mall @mall.product_category
+Scenario:1 Jobs更新已存在的商品分类
 	When jobs更新商品分类'分类1'为
 		"""
 		{
@@ -82,8 +85,8 @@ Scenario: Jobs更新已存在的商品分类
 		}]
 		"""
 
-@mall @mall.product_category @mall2
-Scenario: Jobs删除已存在的商品分类
+@mall2 @product @group   @mall @mall.product_category
+Scenario:2 Jobs删除已存在的商品分类
 	When jobs删除商品分类'分类2'
 	Then jobs能获取商品分类列表
 		"""
@@ -94,8 +97,8 @@ Scenario: Jobs删除已存在的商品分类
 		}]
 		"""
 
-@mall.product_category @mall @mall2
-Scenario: 从分类中删除商品
+@mall2 @product @group   @mall.product_category @mall
+Scenario:3 从分类中删除商品
 
 	Given jobs登录系统
 	Then jobs能获取商品分类列表
@@ -136,9 +139,8 @@ Scenario: 从分类中删除商品
 		}]
 		"""
 
-
-@mall.product_category @mall @mall2
-Scenario: 向分类中添加商品
+@mall2 @product @group   @mall.product_category @mall
+Scenario:4 向分类中添加商品
 
 	Given jobs登录系统
 	Then jobs能获取商品分类列表
@@ -198,11 +200,17 @@ Scenario: 向分类中添加商品
 		"""
 	When jobs向商品分类'分类3'中添加商品
 		"""
-		["东坡肘子", "叫花鸡", "水晶虾仁"]
+		[
+			"东坡肘子",
+			"叫花鸡",
+			"水晶虾仁"
+		]
 		"""
 	When jobs向商品分类'分类2'中添加商品
 		"""
-		["水晶虾仁"]
+		[
+			"水晶虾仁"
+		]
 		"""
 	Then jobs能获得商品分类'分类3'的可选商品集合为
 		"""
@@ -225,8 +233,8 @@ Scenario: 向分类中添加商品
 		}]
 		"""
 
-@mall.product_category @mall2 @group @product
-Scenario: 5 向分类中添加商品排序
+@mall2 @product @group   @mall.product_category @mall
+Scenario:5 向分类中添加商品排序
 	jobs向分类中添加商品，可以进行排序
 	1.在分类里，将待售商品放在最下面，只给在售商品排序，待售商品在排序列里没有输入框
 
@@ -257,23 +265,22 @@ Scenario: 5 向分类中添加商品排序
 		"""
 	When jobs向商品分类'分类3'中添加商品
 		"""
-		["东坡肘子", "叫花鸡", "水晶虾仁"]
+		[
+			"东坡肘子",
+			"叫花鸡",
+			"水晶虾仁"
+		]
 		"""
 	And jobs向商品分类'分类3'中添加商品
 		"""
-		["商品1", "商品2", "商品3", "商品4", "商品5"]
+		[
+			"商品1",
+			"商品2",
+			"商品3",
+			"商品4",
+			"商品5"
+		]
 		"""
-	#待售商品在排序列里没有输入框
-	#Then jobs能获得'分类3'商品列表
-	#	|   name   | price | status | display_index | sales | actions |
-	#	|  商品5   | 13.0  |  在售  |       0       |   0   |  删除   |
-	#	|  商品4   | 11.0  |  在售  |       0       |   0   |  删除   |
-	#	|  商品3   | 9.99  |  在售  |       0       |   0   |  删除   |
-	#	|  商品2   |  9.9  |  在售  |       0       |   0   |  删除   |
-	#	|  商品1   |  9.0  |  在售  |       0       |   0   |  删除   |
-	#	| 水晶虾仁 |  3.0  |  待售  |               |   0   |  删除   |
-	#	|  叫花鸡  | 12.0  |  待售  |               |   0   |  删除   |
-	#	| 东坡肘子 | 11.12 |  待售  |               |   0   |  删除   |
 	Then jobs能获取商品分类列表
 		"""
 		[{
@@ -342,28 +349,8 @@ Scenario: 5 向分类中添加商品排序
 	When jobs更新分类'分类3'中商品'商品3'商品排序2
 	And jobs更新分类'分类3'中商品'商品2'商品排序3
 	And jobs更新分类'分类3'中商品'商品1'商品排序1
-	#When jobs更新分类'分类3'商品排序
-	#	|   name   | price | status | display_index | sales | actions |
-	#	|  商品5   | 13.0  |  在售  |       0       |   0   |  删除   |
-	#	|  商品4   | 11.0  |  在售  |       0       |   0   |  删除   |
-	#	|  商品3   | 9.99  |  在售  |       2       |   0   |  删除   |
-	#	|  商品2   |  9.9  |  在售  |       3       |   0   |  删除   |
-	#	|  商品1   |  9.0  |  在售  |       1       |   0   |  删除   |
-	#	| 水晶虾仁 |  3.0  |  待售  |               |   0   |  删除   |
-	#	|  叫花鸡  | 12.0  |  待售  |               |   0   |  删除   |
-	#	| 东坡肘子 | 11.12 |  待售  |               |   0   |  删除   |
 
 	#排序大于0，按照正序排列如：1,2,3,排序等于0按照加入分类时间排序
-	#Then jobs能获取商品分类列表
-	#	|   name   | price | status | display_index | sales | actions |
-	#	|  商品1   | 9.99  |  在售  |       1       |   0   |  删除   |
-	#	|  商品3   |  9.9  |  在售  |       2       |   0   |  删除   |
-	#	|  商品2   |  9.0  |  在售  |       3       |   0   |  删除   |
-	#	|  商品5   | 13.0  |  在售  |       0       |   0   |  删除   |
-	#	|  商品4   | 11.0  |  在售  |       0       |   0   |  删除   |
-	#	| 水晶虾仁 |  3.0  |  待售  |               |   0   |  删除   |
-	#	|  叫花鸡  | 12.0  |  待售  |               |   0   |  删除   |
-	#	| 东坡肘子 | 11.12 |  待售  |               |   0   |  删除   |
 	Then jobs能获取商品分类列表
 		"""
 		[{

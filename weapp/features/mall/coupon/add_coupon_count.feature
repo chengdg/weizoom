@@ -1,4 +1,5 @@
-# __author__ : "冯雪静"
+#author : 冯雪静
+
 Feature: 优惠券添加库存
 	Jobs能通过管理系统添加"优惠券库存"
 
@@ -89,7 +90,7 @@ Background:
 		}
 		"""
 
-@mall2 @add_coupon @eugene
+@mall2 @promotion @promotionCoupon   @add_coupon @eugene
 Scenario: 1 给有效优惠券规则增加库存
 	jobs添加"优惠券规则"后，优惠券有效
 	1. 可以给优惠券码库添加库存
@@ -145,7 +146,7 @@ Scenario: 1 给有效优惠券规则增加库存
 		}
 		"""
 
-@mall2 @add_coupon @eugene
+@mall2 @promotion @promotionCoupon   @add_coupon @eugene
 Scenario: 2 给已过期优惠券规则增加库存
 	jobs添加"优惠券规则"后，优惠券已过期
 	1. 给已过期的优惠券码库添加库存，码库不变
@@ -188,7 +189,7 @@ Scenario: 2 给已过期优惠券规则增加库存
 		}
 		"""
 
-@mall2 @add_coupon @eugeneZ
+@mall2 @promotion @promotionCoupon   @add_coupon @eugene
 Scenario: 3 给已失效优惠券规则增加库存
 	jobs添加"优惠券规则"后，优惠券已失效
 	1. 给已失效的优惠券码库添加库存，码库不变

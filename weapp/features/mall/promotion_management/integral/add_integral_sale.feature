@@ -1,4 +1,5 @@
 # __author__ : "张三香"
+#editor:雪静 2015.10.15
 Feature: 创建积分应用活动
 		Jobs能通过管理系统在商城中添加'积分应用'活动
 
@@ -190,25 +191,6 @@ Background:
 			"name": "金牌会员",
 			"upgrade": "手动升级",
 			"discount": "7"
-		}]
-		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"discount": "10.0"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9.0"
-		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8.0"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7.0"
 		}]
 		"""
 	Given jobs设定会员积分策略

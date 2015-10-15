@@ -1,5 +1,10 @@
-Feature: 管理待售商品
-	Jobs能通过管理系统管理商城中的"待售商品列表"
+#editor：王丽 2015.10.14
+
+Feature: 管理商品回收站商品
+"""
+
+	Jobs能通过管理系统管理商城中的"商品回收站列表"
+"""
 
 Background:
 	Given jobs登录系统
@@ -87,12 +92,16 @@ Background:
 		}]	
 		"""
 
-@mall @mall.product_category @mall2
-Scenario: 浏览回收站商品
+@mall2 @product @productRecycle   @mall @mall.product_category
+Scenario:1 浏览回收站商品
 	Given jobs登录系统
 	When jobs将商品批量放入回收站
 		"""
-		["东坡肘子", "水晶虾仁", "叫花鸡"]
+		[
+			"东坡肘子", 
+			"水晶虾仁", 
+			"叫花鸡"
+		]
 		"""
 	Then jobs能获得'回收站'商品列表
 		"""
@@ -144,10 +153,9 @@ Scenario: 浏览回收站商品
 			}
 		}]
 		"""
-	
 
-@mall @mall.product_category @mall2
-Scenario: 永久删除商品
+@mall2 @product @productRecycle   @mall @mall.product_category
+Scenario:2 永久删除商品
 	jobs进行'批量永久删除'或'单个永久删除'后
 	1. jobs的回收站商品列表发生变化
 	2. jobs的在售商品列表无变化
@@ -156,7 +164,11 @@ Scenario: 永久删除商品
 	Given jobs登录系统
 	When jobs将商品批量放入回收站
 		"""
-		["东坡肘子", "水晶虾仁", "叫花鸡"]
+		[
+			"东坡肘子", 
+			"水晶虾仁", 
+			"叫花鸡"
+		]
 		"""
 	Then jobs能获得'回收站'商品列表
 		"""
@@ -187,7 +199,10 @@ Scenario: 永久删除商品
 		"""
 	When jobs批量永久删除商品
 		"""
-		["水晶虾仁", "叫花鸡"]
+		[
+			"水晶虾仁", 
+			"叫花鸡"
+		]
 		"""
 	Then jobs能获得'待售'商品列表
 		"""
