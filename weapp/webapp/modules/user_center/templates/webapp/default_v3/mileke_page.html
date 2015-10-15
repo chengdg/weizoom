@@ -286,10 +286,9 @@
             <div class="xui-gameover xa-gameover">活动结束</div>
         {% else %}
             {% if self_visit %}
-                <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">斑马斑马</span>拉票</div>
                 <div class="xui-participationBtn xa-participationBtn"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
             {% else %}
-                <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>拉票</div>
+                <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>助力</div>
                 <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
             {% endif %}
         {% endif %}
