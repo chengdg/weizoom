@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime
+import datetime as dt_datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
@@ -86,6 +87,11 @@ class MSign(resource.Resource):
 					#检查是否已签到
 					latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
 					nowDate = datetime.now().strftime('%Y-%m-%d')
+					#首先检查是否断掉了连续签到条件，状态重置serial_count为1
+					if latest_sign_date == (datetime.now() - dt_datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
+						temp_serial_count = signer.serial_count
+					else:
+						temp_serial_count = 0
 					if latest_sign_date == nowDate:
 						activity_status = u'已签到'
 						for name in sorted(prize_settings.keys()):
@@ -96,7 +102,7 @@ class MSign(resource.Resource):
 									'prize': setting
 								}
 								break
-					elif signer.serial_count >=1:
+					elif temp_serial_count >=1:
 						flag = False
 						for name in sorted(prize_settings.keys()):
 							setting = prize_settings[name]

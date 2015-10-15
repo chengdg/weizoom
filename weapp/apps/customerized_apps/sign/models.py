@@ -44,12 +44,14 @@ class SignParticipance(models.Document):
 		#判断是否连续签到，否则重置为1
 		if latest_date and latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
 			user_update_data['inc__serial_count'] = 1
+			temp_curr_serial_count = int(self.serial_count) + 1
 		else:
 			user_update_data['set__serial_count'] = 1
+			temp_curr_serial_count = 0
 		#如果当前连续签到大于等于最高连续签到，则更新最高连续签到
 		curr_serial_count = 1
-		if self.serial_count >= self.top_serial_count:
-			curr_serial_count = user_update_data['set__top_serial_count'] = int(self.serial_count) + 1
+		if temp_curr_serial_count > int(self.top_serial_count):
+			curr_serial_count = user_update_data['set__top_serial_count'] = temp_curr_serial_count
 		#更新prize
 		curr_prize_integral = daily_integral = serial_integral = next_serial_integral = next_serial_count = 0
 		curr_prize_coupon_id = daily_coupon_id = serial_coupon_id = next_serial_coupon_id = ''
