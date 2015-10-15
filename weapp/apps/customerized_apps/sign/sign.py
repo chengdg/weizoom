@@ -58,7 +58,25 @@ class Sign(resource.Resource):
 		})
 		
 		return render_to_response('sign/templates/editor/workbench.html', c)
-	
+
+	@login_required
+	def api_get(request):
+		"""
+		响应Api_GET
+		"""
+		owner_id = request.user.id
+		sign = app_models.Sign.objects(owner_id=owner_id)
+		if sign.count()>0:
+			sign = sign[0]
+			keywords = sign.reply['keyword']
+		else:
+			keywords = {}
+
+		response = create_response(200)
+		response.data = keywords#{'keyword1':'blur','keyword2':'accurate'}
+		return response.get_response()
+
+
 	@login_required
 	def api_put(request):
 		"""

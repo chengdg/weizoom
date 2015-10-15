@@ -244,7 +244,6 @@
         margin-left: 3px;
     }
 
-
     </style>
 {% endblock %}
 
@@ -378,7 +377,6 @@ ui-appPage-commonStyle">
             <br>
         </script>
     {% endverbatim %}
-    <div class="xui-keywordBoxDiv xa-keywordBoxDiv"></div>
 {% endblock %}
 
 {% block base_js %}
@@ -493,11 +491,11 @@ ui-appPage-commonStyle">
             var share = {"img":share_img,"desc":share_desc};
 
             var reply_keyword ={};
-            $('#add_keyword_div').find('.xa-data-patterns').each(function(){
-                var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
-                var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
-                reply_keyword[key_tmp] = mo_tmp;
-            });
+            //$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+                //var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+               // var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+                //reply_keyword[key_tmp] = mo_tmp;
+            //});
             var reply_content = descriptionModel.get('reply_content');
             var reply ={"keyword":reply_keyword,"content":reply_content};
 
@@ -645,40 +643,11 @@ ui-appPage-commonStyle">
             W.showHint('success', '已经将链接复制到剪贴板');
         });
         var flag = true;
-        var add_keyword_div,
-            add_keyword_btn,
-            prize_keyword_view;
         W.Broadcaster.on('selectwidget:assert', function(cid){
             //初始化弹出层
             if(flag && cid==2){
                 $('[data-toggle="popover"]').popover();
-                //自动回复
-                add_keyword_div = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
-                add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input span');
-                add_keyword_div.attr('id','add_keyword_div');
-                add_keyword_btn.attr('id','add_keyword_btn');
-
-                 prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
-                    el:'.xa-keywordBoxDiv',
-                    add_keyword_div:'#add_keyword_div',
-                    add_keyword_btn:'#add_keyword_btn'
-                 }));
-
-                //显示框并且动态定位
-                add_keyword_btn.click(function(){
-                    prize_keyword_view.render();
-                });
-
                 flag = false;
-                //删除绑定
-                $('#add_keyword_div').delegate('.xa-close','click',function(){
-                    $(this).parent().parent().remove();
-                });
-
-                //恢复关键字
-                var page_keywords = '{{ keywords|safe }}';
-                prize_keyword_view && prize_keyword_view.render_keywords(page_keywords);
-
             }
 
 

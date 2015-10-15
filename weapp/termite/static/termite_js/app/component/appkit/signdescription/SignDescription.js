@@ -75,8 +75,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			type: 'badge',
 			displayName: '关键字',
 			isUserProperty: true,
-			annotation:'+ 添加',
-			default: ''
+			default: {'a': 12}
 
 		},{
 			name: 'reply_content',
