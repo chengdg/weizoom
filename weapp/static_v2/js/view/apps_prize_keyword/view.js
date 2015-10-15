@@ -9,6 +9,7 @@ ensureNS('W.view.apps');
 W.view.apps.PrizeKeyword = Backbone.View.extend({
 	el: '',
 	keyword_div:'',
+	page_keywords:'',
 
 	events: {
 		'keypress .xa-app-add': 'onPressEnter',
@@ -33,6 +34,24 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			$('.xui-keywordBoxDiv').css({'position':'absolute'});
 			this.$el.find('.xa-keywords').empty();
 			this.$el.show();
+		}
+	},
+	render_keywords: function(page_keywords){
+		//只渲染关键字区域
+		var keywords = JSON.parse(page_keywords);
+		for(var i in keywords){
+			var mod = "";
+			if(keywords[i]=='accurate'){
+				mod = "精确匹配";
+			}else{
+				mod = "部分匹配";
+			}
+			var pattern = {
+				keyword: i,
+				mode: mod,
+				type: keywords[i]
+			};
+			$(this.template(pattern)).insertBefore($('#add_keyword_btn'));
 		}
 	},
 
@@ -79,8 +98,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			var pattern = {
 						keyword: _this.$('.xa-app-add').val(),
 						mode: _this.md,
-						type: _this.type,
-						id:_this.num
+						type: _this.type
 					};
 
 			//_this.$keyword_div.append(_this.template(pattern));
@@ -94,7 +112,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	onClickMistinessRadio: function() {
-		this.md = "模糊匹配";
+		this.md = "部分匹配";
 		this.type = "blur";
 	},
 
@@ -145,7 +163,6 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 					keyword: _this.$('.xa-app-add').val(),
 					mode: _this.md,
 					type: _this.type,
-					id:_this.num
 				};
 
 		$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
