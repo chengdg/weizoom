@@ -42,7 +42,7 @@ class SignParticipance(models.Document):
 			return_data['errMsg'] = u'今日已签到'
 			return return_data
 		#判断是否连续签到，否则重置为1
-		if latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
+		if latest_date and latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
 			user_update_data['inc__serial_count'] = 1
 		else:
 			user_update_data['set__serial_count'] = 1
@@ -175,6 +175,7 @@ class Sign(models.Document):
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
+			print sign.reply['keyword'], data['keyword']
 			if sign.reply['keyword'] in data['keyword']:
 				if sign.status != 1:
 					return_html.append(u'签到活动未开始')
