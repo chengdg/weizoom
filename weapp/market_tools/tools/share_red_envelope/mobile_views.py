@@ -70,6 +70,7 @@ def get_share_red_envelope(request):
         'red_envelope_rule': red_envelope_rule,
         'shop_name': shop_name,
         'page_title': "优惠大放送",
+        'share_page_title': "优惠大放送",
         'share_page_desc': red_envelope_rule.share_title,
         'share_img_url': red_envelope_rule.share_pic
     }
