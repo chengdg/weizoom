@@ -6,8 +6,6 @@
 
       W.sharePageTitle =  {% if share_page_title %}
                               "{{ share_page_title }}"
-                              alert({{ share_page_title }});
-                              alert("+++");
                           {% else %}
                               "{{ page_title }}"
                           {% endif %};
@@ -74,11 +72,11 @@
               });
           }
       };
-
+      alert({{share_page_title}});
+      alert(W.sharePageDesc);
+      alert("test???");
+      alert(W.sharePageTitle);
       if (window.location.href.indexOf('share_red_envelope') > 0){
-          alert(W.sharePageDesc);
-          alert("test???");
-          alert("W.sharePageTitle");
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
               "link" : window.location.href,
