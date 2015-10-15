@@ -113,6 +113,9 @@ def get_share_red_envelope(request):
                                 member=member,
                         )
                     if followed_member_id:
+                        print "###################################################################"
+                        print "followed_member_id!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                        print "###################################################################"
                         RedEnvelopeParticipences.objects.create(
                                     owner_id=request.webapp_owner_id,
                                     coupon_id=coupon.id,
@@ -140,6 +143,9 @@ def get_share_red_envelope(request):
                         return_data['friends'] = friends
 
     else:
+        print "###################################################################"
+        print "订单获取!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        print "###################################################################"
         #用户订单获取
         # if not order.webapp_user_id == member_id:
         #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
