@@ -10,6 +10,8 @@ from test import bdd_util
 from termite2 import pagerender
 
 CONSTANT_CID = 0
+INDEX = 1
+
 display2mode = {u"轮播图": "swipe", u"分开显示": "sequence"}
 display2name = {"swipe": u"轮播图", "sequence": u"分开显示"}
 
@@ -229,6 +231,7 @@ def __actual_page(page_json, user):
 		if component['type'] == "wepage.title":
 			actual_component = {
 				"templet_title": {
+					"index": model['index'],
 					"title": model['title'],
 					"subtitle": model['subtitle'],
 					"time": model['time'],
@@ -246,7 +249,10 @@ def __actual_page(page_json, user):
 		# 富文本
 		if component['type'] == "wepage.richtext":
 			actual_component = {
-				"multy_text_content": model['content']
+				"multy_text_content":{
+					"text": model['content'],
+					"index": model['index']
+				} 
 			}
 
 		# 文本导航
@@ -264,7 +270,10 @@ def __actual_page(page_json, user):
 		# 图片导航
 		if component['type'] == "wepage.imagenav_group":
 			actual_component = {
-				"picture_ids": []
+				"picture_ids": {
+					"items": [],
+					"index": model['index']
+				}
 			}
 			for item in component['components']:
 				data = {
@@ -272,12 +281,13 @@ def __actual_page(page_json, user):
 					"title": item['model']['title'],
 					"link": json.loads(item['model']['target'])['data_item_name']
 				}
-				actual_component["picture_ids"].append(data)
+				actual_component["picture_ids"]["items"].append(data)
 
 		# 图片广告
 		if component['type'] == "wepage.image_group":
 			actual_component = {
 				"picture_ads": {
+					"index": model['index'],
 					"display_mode": display2name[component['model']['displayMode']],
 					"values": []
 				}
@@ -295,6 +305,7 @@ def __actual_page(page_json, user):
 			model = component['model']
 			actual_component = {
 				"display_window": {
+					"index": model['index'],
 					"display_window_title": model['title'],
 					"content_title": model['contentTitle'],
 					"display_mode": image_display2name[model['displayMode']],
@@ -314,6 +325,7 @@ def __actual_page(page_json, user):
 			model = component['model']
 			actual_component = {
 				"products": {
+					"index": model['index'],
 					"list_style1": product_modes[int(model['type'])],
 					"list_style2": product_types[int(model['card_type'])],
 					"show_product_name": 'true' if model['itemname'] else 'false',
@@ -371,10 +383,24 @@ def __get_cid_and_pid(parent_json):
 	cid = CONSTANT_CID
 	return cid, pid
 
+def __get_index(component):	
+	global INDEX
+
+	if component.get('index'):
+		INDEX = component.get('index')
+	else:
+		INDEX = INDEX + 1
+
+	print '+++++++++++++++'
+	print component.get('index')
+
+	return INDEX
+
+
 # 标题
 def _add_templet_title(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
-
+	print 
 	if page.has_key("templet_title"):
 		wepage_title = {
 			"type":"wepage.title",
@@ -387,7 +413,7 @@ def _add_templet_title(page, page_json):
 			"need_server_process_component_data":"no",
 			"is_new_created": True,
 			"property_view_title": u"标题",
-			"model": { "id":"","class":"","name":"","index":3,
+			"model": { "id":"","class":"","name":"","index": __get_index(page['templet_title']),
 				"datasource":{"type":"api","api_name":""},
 				"title": "","subtitle":"","time":"2015-10-08 00:00",
 				"align":"left","background_color": u"#FFF"},
@@ -403,6 +429,7 @@ def _add_notice_text(page, page_json):
 
 	default = u'请填写内容，如果过长，将会在手机上滚动显示'
 	if page.has_key("notice_text"):
+		notice = page['notice_text']
 		wepage_notice = {
 			"type":"wepage.notice",
 			"cid": cid,
@@ -414,9 +441,9 @@ def _add_notice_text(page, page_json):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"公告",
-			"model": { "id":"", "class":"", "name":"", "index":4,
+			"model": { "id":"", "class":"", "name":"", "index":__get_index(notice),
 				"datasource":{"type":"api","api_name":""},
-				"title": page['notice_text'] if page['notice_text'] else default
+				"title": notice['text'] if notice['text'] else default
 			}
 		}
 		page_json['components'].append(wepage_notice)
@@ -426,6 +453,7 @@ def _add_richtext(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
 
 	if page.has_key("multy_text_content"):
+		richtext_json = page['multy_text_content']
 		wepage_notice = {
 			"type":"wepage.richtext",
 			"cid": cid,
@@ -437,9 +465,9 @@ def _add_richtext(page, page_json):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"富文本",
-			"model": { "id":"", "class":"", "name":"", "index":5,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(richtext_json),
 				"datasource":{"type":"api","api_name":""},
-				"content": page['multy_text_content']
+				"content": richtext_json['text']
 			}
 		}
 		page_json['components'].append(wepage_notice)
@@ -517,6 +545,7 @@ def _add_imagenav_group(page, page_json, user):
 	cid, pid = __get_cid_and_pid(page_json)
 	
 	if page.has_key("picture_ids"):
+		picture_ids = page.get("picture_ids")
 		imagenav_group = {
 			"type":"wepage.imagenav_group",
 			"cid": cid,
@@ -528,13 +557,13 @@ def _add_imagenav_group(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"图片导航",
-			"model": { "id":"", "class":"", "name":"", "index":7,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(picture_ids),
 				"datasource":{"type":"api","api_name":""},
 				"items":[]
 			},
 			"components":[]
 		}
-		for imagenav in page.get("picture_ids"):
+		for imagenav in picture_ids.get("items"):
 			imagenav_json = __get_imagenav_json(imagenav_group, imagenav, user)
 			# 加 图片导航的内部数据 
 			imagenav_group["components"].append(imagenav_json)
@@ -698,7 +727,7 @@ def _add_product_group(page, page_json, user):
 			"need_server_process_component_data": "yes",
 			"is_new_created": True,
 			"property_view_title": u"商品",
-			"model": { "id":"", "class":"", "name":"", "index":10,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(products),
 				"datasource":{"type":"api","api_name":""},
 				"type": product_modes.index(products['list_style1']),
 				"card_type": product_types.index(products['list_style2']),
