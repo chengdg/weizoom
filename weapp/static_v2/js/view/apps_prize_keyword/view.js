@@ -74,14 +74,6 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 				}
 			}
 
-			console.log('PPPPPPPPPP');
-			console.log(keyword);
-			console.log(keywords);
-			var args = {
-				keyword: keyword,
-				keywords: JSON.stringify(keywords)
-			};
-
 			//插入模板
             var _this = this;
 			var pattern = {
@@ -108,24 +100,27 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	onClickSubmit: function(){
-
-		var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
+		this.num += 1;
+		//替换相邻多个空格为一个
+		var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');//关键字
 		if(keyword == '') {
 			W.showHint('error','关键字不能为空！');
 			return;
 		}
-
 		if(keyword.length > 5) {
 			W.showHint('error','单个关键词字数不能超过5个字');
 			return;
 		}
 
-		var keywords = [];
-		$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
-			keywords.push($(this).text().trim());
-		});
-		this.$el.find($('.data-keyword')).each(function(){
-			keywords.push($(this).text().trim());
+		//关键字_组_检查
+		var keywords = [];//关键字组
+		var keywords_obj = [];//关键字组对象
+		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+			var key_id = $(this).attr('id');
+			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+			keywords.push(key_tmp);
+			keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
 		});
 
 		//判断关键词个数是否超过4个
@@ -133,26 +128,47 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			W.showHint('error', '关键词个数不能超过4个');
 			return;
 		}
-
-		var args = {
-			keyword: keyword,
-			keywords: JSON.stringify(keywords)
-		};
-
+		//关键字重复检查
+		for(var i=0;i<keywords.length;i++){
+			if(keyword==keywords[i]){
+				W.showHint('error','关键字不能重复！');
+				return;
+			}
+		}
+		//插入模板
 		var _this = this;
 		var pattern = {
 					keyword: _this.$('.xa-app-add').val(),
 					mode: _this.md,
-					type: _this.type
+					type: _this.type,
+					id:_this.num
 				};
-		//$('.xa-keywords').append(_this.template(pattern));
+
 		_this.$keyword_div.append(_this.template(pattern));
 		_this.$('.xa-app-add').val("");
-		_this.hide();
+
+		//数据收集
+		var args = [];
+		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+			var key_id = $(this).attr('id');
+			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+			args.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+		});
+
+
 	},
 
 	onClickClose: function() {
 		this.hide();
+		//数据收集
+		var args = [];
+		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+			var key_id = $(this).attr('id');
+			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+			args.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+		});
 	},
 
 	setId: function (id) {
