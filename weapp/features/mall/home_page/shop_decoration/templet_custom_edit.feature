@@ -1,7 +1,7 @@
 #author：师帅
 Feature: 编辑自定义模块-编辑
 
-@termite2
+@termite21
 Scenario:1编辑自定义模块
 	Given jobs登录系统
 	When jobs创建微页面
@@ -336,7 +336,9 @@ Scenario:2 编辑自定义模块-删除
 			"title": {
 				"name": "微页面标题1"
 			},
-			"picture_ids":[{
+			"picture_ids":{
+				"index": 1,
+				"items": [{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -352,8 +354,10 @@ Scenario:2 编辑自定义模块-删除
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题4",
 					"link": "会员主页"
-				}],
+				}]
+			},
 			"products": {
+				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
 					"price":"2.0"
@@ -369,7 +373,10 @@ Scenario:2 编辑自定义模块-删除
 				"show_product_name":"true",
 				"show_price":"true"
 			},
-			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
+			"multy_text_content": {
+				"index": 3
+				"text": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
+			}
 		}
 		"""
 	Then jobs能获取'微页面标题1'
@@ -378,7 +385,9 @@ Scenario:2 编辑自定义模块-删除
 			"title": {
 				"name": "微页面标题1"
 			},
-			"picture_ids":[{
+			"picture_ids":{
+				"index": 1,
+				"items": [{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题1",
 					"link": "店铺主页"
@@ -394,8 +403,10 @@ Scenario:2 编辑自定义模块-删除
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
 					"title": "标题4",
 					"link": "会员主页"
-				}],
+				}]
+			},
 			"products": {
+				"index": 2,
 				"items": [{
 					"name":"商品2可两行显示",
 					"price":"2.0"
@@ -411,7 +422,10 @@ Scenario:2 编辑自定义模块-删除
 				"show_product_name":"true",
 				"show_price":"true"
 			},
-			"multy_text_content": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
+			"multy_text_content": {
+				"index": 3,
+				"text": "富文本标题文字，换行显示图片，换行显示3行3列的表格"
+			}
 		}
 		"""
 	#删除商品模块
