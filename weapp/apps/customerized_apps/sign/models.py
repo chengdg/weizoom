@@ -261,7 +261,7 @@ def check_matched_keyword(remote_keyword, setting_keywords_dict):
 		if 'accurate' == mode and remote_keyword == key:
 			result = True
 			break
-		elif 'blur' == mode and remote_keyword in key:
+		elif 'blur' == mode and key in remote_keyword:
 			result = True
 			break
 	return result
