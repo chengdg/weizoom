@@ -1,8 +1,9 @@
 #_author_:师帅
+#editor 新新 2015.10.15
 
 Feature:自定义模块——【基础模块】公告-页面
 
-@mall2 @termite2 @wxr
+@mall2 @termite2 
 Scenario: 1 添加公告
 	Given jobs登录系统
 	When jobs创建微页面
