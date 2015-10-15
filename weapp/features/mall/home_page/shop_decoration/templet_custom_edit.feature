@@ -4,7 +4,7 @@
 
 Feature: 编辑自定义模块-编辑
 
-@mall2 @termite21
+@mall2 @termite2
 Scenario:1编辑自定义模块
 	Given jobs登录系统
 	When jobs创建微页面
@@ -171,7 +171,7 @@ Scenario:1编辑自定义模块
 		}
 		"""
 
-@mall2 @termite21
+@mall2 @termite2
 Scenario:2 编辑自定义模块-删除
 	Given jobs登录系统
 	And jobs已添加商品
@@ -549,7 +549,7 @@ Scenario:2 编辑自定义模块-删除
 		}
 		"""	
 
-@mall2 @termite21
+@mall2 @termite2
 Scenario: 添加模块
 	Given jobs登录系统
 	And jobs已添加商品
