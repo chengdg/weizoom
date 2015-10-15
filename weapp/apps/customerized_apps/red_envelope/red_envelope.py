@@ -657,7 +657,7 @@ class redParticipances_Export(resource.Resource):
             for relation in relations:
                 export_record = []
                 num = num+1
-                name = relation["participant_name"]
+                name = relation["username"]
                 grade_name = relation["grade"]
                 introduce_received_number_count = relation["introduce_received_number_count"]
                 introduce_used_number_count = relation["introduce_used_number_count"]
