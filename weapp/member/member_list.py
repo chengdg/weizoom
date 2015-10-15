@@ -719,8 +719,8 @@ class MemberFriends(resource.Resource):
 
 		return_follow_members_json_array = []
 
-		if data_value:
-			follow_members = filter_date_follow_members
+		# if data_value:
+		# 	follow_members = filter_date_follow_members
 
 		for follow_member in follow_members:
 			return_follow_members_json_array.append(build_follow_member_basic_json(follow_member, member_id))

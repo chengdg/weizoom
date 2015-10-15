@@ -74,7 +74,7 @@ W.member.dialog.UserCenterRelationsDialog = W.dialog.Dialog.extend({
     }
 });
 
-
+/*
 ensureNS('W.member.dialog.MemberDetailRelationsDialog');
 W.member.dialog.MemberDetailRelationsDialog = W.dialog.Dialog.extend({
     events: _.extend({
@@ -135,6 +135,80 @@ W.member.dialog.MemberDetailRelationsDialog = W.dialog.Dialog.extend({
 
     }
 });
+*/
+
+
+ensureNS('W.member.dialog.MemberDetailRelationsDialog');
+W.member.dialog.MemberDetailRelationsDialog = W.dialog.Dialog.extend({
+    events: _.extend({
+        'change select': 'onChangeProjectType',
+        'click .show_fans': 'onClickShowFansCheckbox'
+    }, W.dialog.Dialog.prototype.events),
+
+    getTemplate: function() {
+        $('#member-detail-relations-dialog-tmpl-src').template('member-detail-relations-dialog-tmpl');
+        return "member-detail-relations-dialog-tmpl";
+    },
+/*
+    getOneRelationTemplate: function() {
+        $('#member-relations-dialog-one-relation-tmpl-src').template('member-relations-dialog-one-relation-tmpl');
+        return 'member-relations-dialog-one-relation-tmpl';
+    },
+*/
+    onInitialize: function(options) {
+        this.getTemplate();
+        this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
+        options = options || {};
+        this.typeTextCount = 300;
+        this.appName = options.appName;
+        this.memberId = options.memberId;
+        this.dataValue = options.dataValue;
+        console.log(this.dataValue)
+    },
+/*
+    onAdd: function(relation){
+        this.$('.modal-body').prepend($.tmpl(this.getOneRelationTemplate(), relation.toJSON()));
+    },
+*/
+    onShow: function(options) {
+        this.friendCount = options.friendCount;
+        this.fansCount = options.fansCount;
+        this.dataValue = options.dataValue;
+        this.memberId = options.memberId;
+        /*
+        this.relations = new W.member.Relations();
+        */
+        // this.relations.memberId = this.memberId;
+        // this.relations.dataValue = this.dataValue;
+        // this.relations.bind('add', this.onAdd, this);
+        // this.relations.fetch();
+        // this.$dialog.find('.modal-body').html($.tmpl(this.tmplName, options));
+        var _this = this;
+        if (!_this.table) {
+            this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
+        }
+        if (options.isReload == true && _this.table) {
+            _this.table.curPage = 1;
+        }
+        $('#member-relations-tmpl-src').html('');
+        _this.table.reload({data_value:_this.dataValue,member_id:this.memberId});
+    },
+
+    //bert add
+    onClickShowFansCheckbox: function(event){
+        var $currentTarget = $(event.currentTarget);   
+        var is_checked = $currentTarget.is(':checked');
+
+        if (is_checked){
+            this.onlyFans = true;
+        }else{
+            this.onlyFans = false;
+        }
+        this.onShow(this);
+
+    }
+});
+
 
 
 /*
