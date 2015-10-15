@@ -542,7 +542,7 @@ class Member(models.Model):
 				count = 0
 
 				if not span_list:
-					return u'%s' % name_str[:10]
+					return u'%s...' % name_str[:10]
 
 				for span in span_list:
 				    length = len(span)
@@ -560,7 +560,7 @@ class Member(models.Model):
 				            break
 				    if count == 10:
 				        break
-				return u'%s' % output_str
+				return u'%s...' % output_str
 		except:
 			return self.username_for_html[:10]
 
