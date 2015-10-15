@@ -185,12 +185,12 @@ W.member.dialog.MemberDetailRelationsDialog = W.dialog.Dialog.extend({
         // this.$dialog.find('.modal-body').html($.tmpl(this.tmplName, options));
         var _this = this;
         if (!_this.table) {
-            this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
+            _this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
         }
         if (options.isReload == true && _this.table) {
             _this.table.curPage = 1;
         }
-        $('#member-relations-tmpl-src').html('');
+        $('#member-detail-relations-dialog-tmpl-src').html('');
         _this.table.reload({data_value:_this.dataValue,member_id:this.memberId});
     },
 
