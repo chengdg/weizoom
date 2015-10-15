@@ -68,6 +68,7 @@ def get_share_red_envelope(request):
             print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+            print "red_envelope_rule_id=red_envelope_rule_id", red_envelope_rule_id, "member_id=followed_member_id", followed_member_id
             print relation,"relation"
 
         member_coupon_record_count = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id).count()
