@@ -59,10 +59,6 @@ def get_share_red_envelope(request):
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
         else:
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
-            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            print relation,"relation"
 
         member_coupon_record_count = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id).count()
 
@@ -118,9 +114,6 @@ def get_share_red_envelope(request):
                                 member=member,
                         )
                     if followed_member_id:
-                        print "###################################################################"
-                        print "followed_member_id!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                        print "###################################################################"
                         RedEnvelopeParticipences.objects.create(
                                     owner_id=request.webapp_owner_id,
                                     coupon_id=coupon.id,
@@ -148,9 +141,6 @@ def get_share_red_envelope(request):
                         return_data['friends'] = friends
 
     else:
-        print "###################################################################"
-        print "订单获取!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        print "###################################################################"
         #用户订单获取
         # if not order.webapp_user_id == member_id:
         #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
