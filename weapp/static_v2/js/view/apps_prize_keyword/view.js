@@ -57,7 +57,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 				if(keywords[i]=='accurate'){
 					mod = "精确匹配";
 				}else{
-					mod = "部分匹配";
+					mod = "模糊匹配";
 				}
 				var pattern = {
 					keyword: i,
@@ -127,7 +127,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	onClickMistinessRadio: function() {
-		this.md = "部分匹配";
+		this.md = "模糊匹配";
 		this.type = "blur";
 	},
 
