@@ -47,7 +47,7 @@
 <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 red-envelope-detail-dialog">
 		<thead>
 			<tr>
-				<th>分享会员</th>
+				<th width="80" style="text-align:left">分享会员</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='member__grade' data-sort-direction="up">会员状态</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
 				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
@@ -61,12 +61,15 @@
 		<tbody class="red-envelope-dialog">
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr">
-				<td style="position:relative;" >
-					<div class="column_block xui-memberHeader pr">
+				<td style="position:relative;" title='{{html item.username}}'>
+					<div style="text-align:left">
 						<a target="_blank" href="/member/detail/?id=${item.member_id}">
-							<img width="41" height="41" src="${item.participant_icon}" /><br>
-							{{html item.participant_name}}
+							<img width="41" src="${item.participant_icon}" onerror="this.src='/static/img/user-1.jpg'"/>
 						</a>
+					</div>
+					<div style="text-align:left">
+						<div>
+						<a class="xui-Blue" target="_blank" href="/member/detail/?id=${item.member_id}" style="display:block;width:80px;" >{{html item.username_truncated}}</a>
 					</div>
 				</td>
 				<td>
