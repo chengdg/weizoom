@@ -1,5 +1,5 @@
 #_author_:师帅 15/10/12
-
+#_author_:新新 15.10.15
 
 Feature:自定义模块——【基础模块】商品-页面
 	"""
@@ -46,7 +46,7 @@ Background:
 		"""
 
 
-@mall2  @termite2
+@mall2  @termite2 
 Scenario:1 商品管理'下架'、'删除'商品
 	When jobs创建微页面
 		"""
@@ -55,6 +55,7 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items":[{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -79,6 +80,7 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -104,6 +106,7 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品1可单行显示",
 					"price": 1.0
@@ -127,6 +130,7 @@ Scenario:1 商品管理'下架'、'删除'商品
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品1可单行显示",
 					"price": 1.0
@@ -148,6 +152,7 @@ Scenario:2 商品管理'修改'商品
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -172,6 +177,7 @@ Scenario:2 商品管理'修改'商品
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -204,6 +210,7 @@ Scenario:2 商品管理'修改'商品
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -231,6 +238,7 @@ Scenario:3 商品修改，删除
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -255,6 +263,7 @@ Scenario:3 商品修改，删除
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -280,6 +289,7 @@ Scenario:3 商品修改，删除
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -301,6 +311,7 @@ Scenario:3 商品修改，删除
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -323,6 +334,7 @@ Scenario:3 商品修改，删除
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -343,6 +355,7 @@ Scenario:3 商品修改，删除
 				"name": "微页面标题1"
 			},
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
