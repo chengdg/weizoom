@@ -297,7 +297,9 @@
                         var adder = data.curr_prize.integral;
                         var ori_integral = $('.wui-UserPoint').find('span').text();
                         $('.wui-UserPoint').find('span').text(parseInt(ori_integral) + adder);
-                        $('.wui-UserPoint').find('.wui-integral-adder').html('+' + adder).addClass('animated fadeOutUp');
+                        $('.wui-UserPoint').find('.wui-integral-adder').html('+' + adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function () {
+                            $(this).hide();
+                        });
                         fillPrizeInfo(prize_info);
                         window.setTimeout(function () {
                             resultDialog.render(true, data.curr_prize);

@@ -176,12 +176,11 @@ class Sign(models.Document):
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
 			print sign.reply['keyword'], data['keyword']
-			if sign.reply['keyword'] in data['keyword']:
+			checking_result = check_matched_keyword(data['keyword'], sign.reply['keyword'])
+			if checking_result:
 				if sign.status != 1:
 					return_html.append(u'签到活动未开始')
 				else:
-					# if 'accurate' == sign.reply['mode'] and sign.reply['keyword'] != data['keyword']:
-					# 	return None
 					# add by bert  增加获取会员代码
 					member = get_member_by_openid(data['openid'], data['webapp_id'])
 					if not member:
@@ -249,3 +248,20 @@ def get_coupon_count(coupon_rule_id):
 		return coupon.remained_count
 	except:
 		return 0
+
+def check_matched_keyword(remote_keyword, setting_keywords_dict):
+	"""
+	匹配关键字 ，精确匹配和模糊匹配
+	:param remote_keyword: 微信端传递的关键字
+	:param setting_keywords_dict: 系统配置的关键字集合
+	:return: 是否命中
+	"""
+	result = False
+	for key, mode in setting_keywords_dict:
+		if 'accurate' == mode and remote_keyword == key:
+			result = True
+			break
+		elif 'blur' == mode and remote_keyword in key:
+			result = True
+			break
+	return result
