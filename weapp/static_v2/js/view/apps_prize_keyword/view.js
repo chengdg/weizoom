@@ -9,6 +9,7 @@ ensureNS('W.view.apps');
 W.view.apps.PrizeKeyword = Backbone.View.extend({
 	el: '',
 	keyword_div:'',
+	page_keywords:'',
 
 	events: {
 		'keypress .xa-app-add': 'onPressEnter',
@@ -20,10 +21,11 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 
 	initialize: function(options) {
         this.md = "精确匹配";
-        this.type = 0;
-        this.template = Handlebars.compile($("#addkey-view-tmpl-src").html());
+        this.type = "accurate";
+        this.template = Handlebars.compile($("#apps-addkey-view-tmpl-src").html());
 		this.$keyword_div = $(options.keyword_div);
 		this.render();
+		this.num = 0;
 	},
 	render: function() {
 		if (this.$('.xui-newKeyView').length === 0) {
@@ -34,175 +36,143 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 			this.$el.show();
 		}
 	},
+	render_keywords: function(page_keywords){
+		//只渲染关键字区域
+		var keywords = JSON.parse(page_keywords);
+		for(var i in keywords){
+			var mod = "";
+			if(keywords[i]=='accurate'){
+				mod = "精确匹配";
+			}else{
+				mod = "部分匹配";
+			}
+			var pattern = {
+				keyword: i,
+				mode: mod,
+				type: keywords[i]
+			};
+			$(this.template(pattern)).insertBefore($('#add_keyword_btn'));
+		}
+	},
 
 	onPressEnter: function (e) {
 		if (e.keyCode == 13) {
+			this.num += 1;
 			//替换相邻多个空格为一个
-			var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
+			var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');//关键字
 			if(keyword == '') {
 				W.showHint('error','关键字不能为空！');
 				return;
 			}
-
 			if(keyword.length > 5) {
 				W.showHint('error','单个关键词字数不能超过5个字');
 				return;
 			}
 
-			var keywords = [];
-			$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
-				keywords.push($(this).text().trim());
-			});
-			this.$el.find($('.data-keyword')).each(function(){
-				keywords.push($(this).text().trim());
+			//关键字·组_检查
+			var keywords = [];//关键字组
+			var keywords_obj = [];//关键字组对象
+			$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+				var key_id = $(this).attr('id');
+				var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+				var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+				keywords.push(key_tmp);
+				keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
 			});
 
-			//判断关键词个数是否超过4个
-			if (keywords.length > (4 - 1)) {
-				W.showHint('error', '关键词个数不能超过4个');
+			//判断关键词个数是否超过8个
+			if (keywords.length > (8 - 1)) {
+				W.showHint('error', '关键词个数不能超过8个');
 				return;
 			}
+			//关键字重复检查
+			for(var i=0;i<keywords.length;i++){
+				if(keyword==keywords[i]){
+					W.showHint('error','关键字不能重复！');
+					return;
+				}
+			}
 
-			var args = {
-				keyword: keyword,
-				keywords: JSON.stringify(keywords)
-			};
-
+			//插入模板
             var _this = this;
 			var pattern = {
 						keyword: _this.$('.xa-app-add').val(),
 						mode: _this.md,
 						type: _this.type
 					};
-			//$('.xa-keywords').append(_this.template(pattern));
-			this.$keyword_div.append(_this.template(pattern));
+
+			//_this.$keyword_div.append(_this.template(pattern));
+			$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
+			var xx = $('#add_keyword_btn').position().top+50;
+			var offset={top:xx};
+			_this.setPos(offset);
 			_this.$('.xa-app-add').val("");
 		}
 
 	},
 
 	onClickMistinessRadio: function() {
-		this.md = "模糊匹配";
-		this.type = 1;
+		this.md = "部分匹配";
+		this.type = "blur";
 	},
 
 	onClickExactRadio: function() {
 		this.md = "精确匹配";
-		this.type = 0;
+		this.type = "accurate";
 	},
 
 	onClickSubmit: function(){
+		this.num += 1;
+		//替换相邻多个空格为一个
+		var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');//关键字
+		if(keyword == '') {
+			W.showHint('error','关键字不能为空！');
+			return;
+		}
+		if(keyword.length > 5) {
+			W.showHint('error','单个关键词字数不能超过5个字');
+			return;
+		}
 
-			var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
-			if(keyword == '') {
-				W.showHint('error','关键字不能为空！');
+		//关键字_组_检查
+		var keywords = [];//关键字组
+		var keywords_obj = [];//关键字组对象
+		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+			var key_id = $(this).attr('id');
+			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+			keywords.push(key_tmp);
+			keywords_obj.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+		});
+
+		//判断关键词个数是否超过8个
+		if (keywords.length > (8 - 1)) {
+			W.showHint('error', '关键词个数不能超过4个');
+			return;
+		}
+		//关键字重复检查
+		for(var i=0;i<keywords.length;i++){
+			if(keyword==keywords[i]){
+				W.showHint('error','关键字不能重复！');
 				return;
 			}
+		}
+		//插入模板
+		var _this = this;
+		var pattern = {
+					keyword: _this.$('.xa-app-add').val(),
+					mode: _this.md,
+					type: _this.type,
+				};
 
-			if(keyword.length > 5) {
-				W.showHint('error','单个关键词字数不能超过5个字');
-				return;
-			}
+		$(_this.template(pattern)).insertBefore($('#add_keyword_btn'));
+		var xx = $('#add_keyword_btn').position().top+50;
+		var offset={top:xx};
+		_this.setPos(offset);
+		_this.$('.xa-app-add').val("");
 
-			var keywords = [];
-			$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
-				keywords.push($(this).text().trim());
-			});
-			this.$el.find($('.data-keyword')).each(function(){
-				keywords.push($(this).text().trim());
-			});
-
-			//判断关键词个数是否超过4个
-			if (keywords.length > (4 - 1)) {
-				W.showHint('error', '关键词个数不能超过4个');
-				return;
-			}
-
-			var args = {
-				keyword: keyword,
-				keywords: JSON.stringify(keywords)
-			};
-
-            var _this = this;
-			var pattern = {
-						keyword: _this.$('.xa-app-add').val(),
-						mode: _this.md,
-						type: _this.type
-					};
-			//$('.xa-keywords').append(_this.template(pattern));
-			this.$keyword_div.append(_this.template(pattern));
-			_this.$('.xa-app-add').val("");
-			this.hide();
-
-        //this.$('.xa-errorHint').html('');
-        ////替换相邻多个空格为一个
-        //var keyword = this.$('.xa-app-add').val().trim().replace(/\s+/g, ' ');
-        //
-        //if(keyword == '') {
-			//var temp = this.$el.find('.xa-keywords').html();
-			//$('#' + this.id).find('.xa-patternapend').append(temp);
-			//if(this.$el.find('.data-keyword').length == 0) {
-			//	W.showHint('error', '关键词不能为空');
-			//	return;
-			//}
-			//$('#' + this.id).find('.xa-hint').hide();
-			//this.hide();
-			//return;
-        //}
-        //
-        //if(keyword.length > 15) {
-			//W.showHint('error', '单个关键词字数不能超过15个字');
-			//return;
-        //}
-        //
-        //var keywords = [];
-        //$('#' + this.id).find($('.xa-editeTable .data-keyword')).each(function(){
-			//keywords.push($(this).text().trim());
-        //});
-        //this.$el.find($('.data-keyword')).each(function(){
-			//keywords.push($(this).text().trim());
-        //});
-        //
-        ////判断关键词个数是否超过10个
-        //if (keywords.length > (10 - 1)) {
-			//W.showHint('error', '关键词个数不能超过10个');
-			//return;
-        //}
-        //
-        //var args = {
-			//keyword: keyword,
-			//keywords: JSON.stringify(keywords)
-        //};
-	    //var _this = this;
-		//W.getApi().call({
-		//	app: 'new_weixin',
-		//	resource: 'keyword_rules',
-		//	method: 'get',
-		//	args: args,
-		//	success: function(data) {
-		//		var pattern = {
-		//			keyword: _this.$('.xa-app-add').val(),
-		//			mode: _this.md,
-		//			type: _this.type
-		//		};
-		//		if(data.msg == null) {
-		//			_this.$('.xa-keywords').append(_this.template(pattern));
-		//			var temp = _this.$el.find('.xa-keywords').html();
-		//			$('#' + _this.id).find('.xa-hint').hide();
-		//			$('#' + _this.id).find('.xa-patternapend').append(temp);
-		//			_this.hide();
-		//		}
-		//		else{
-		//			_this.$('.xa-errorHint').html(data.msg);
-		//			_this.$('.xa-errorHint').show();
-		//			_this.$('.xa-app-add').attr("value","");
-		//		}
-		//		_this.$el.find($('.xa-app-add')).val('');
-		//	},
-		//	error: function(resp) {
-		//		_this.$el.find($('.xa-app-add')).val('');
-		//	}
-		//})
+		//关闭
+		_this.hide();
 	},
 
 	onClickClose: function() {

@@ -42,7 +42,7 @@ class SignParticipance(models.Document):
 			return_data['errMsg'] = u'今日已签到'
 			return return_data
 		#判断是否连续签到，否则重置为1
-		if latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
+		if latest_date and latest_date.strftime('%Y-%m-%d') == (nowDate - datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
 			user_update_data['inc__serial_count'] = 1
 		else:
 			user_update_data['set__serial_count'] = 1
@@ -175,12 +175,11 @@ class Sign(models.Document):
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
-			if sign.reply['keyword'] in data['keyword']:
+			checking_result = check_matched_keyword(data['keyword'], sign.reply['keyword'])
+			if checking_result:
 				if sign.status != 1:
 					return_html.append(u'签到活动未开始')
 				else:
-					# if 'accurate' == sign.reply['mode'] and sign.reply['keyword'] != data['keyword']:
-					# 	return None
 					# add by bert  增加获取会员代码
 					member = get_member_by_openid(data['openid'], data['webapp_id'])
 					if not member:
@@ -205,10 +204,10 @@ class Sign(models.Document):
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
 						return_html.append(u'签到成功！\n已连续签到%s天。\n本次签到获得以下奖励:\n' % return_data['serial_count'])
 						return_html.append(str(return_data['curr_prize_integral']))
-						return_html.append(u'积分\n')
+						return_html.append(u'积分')
 						if return_data['curr_prize_coupon_name'] != '' and return_data['curr_prize_coupon_count'] >= 0:
 							if return_data['curr_prize_coupon_count']>0:
-								return_html.append(str(return_data['curr_prize_coupon_name']))
+								return_html.append('\n'+str(return_data['curr_prize_coupon_name']))
 								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>' % (host, data['webapp_owner_id']))
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
@@ -217,7 +216,8 @@ class Sign(models.Document):
 					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> 点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
-		except:
+		except Exception,e:
+			print e
 			return None
 		return ''.join(return_html)
 
@@ -248,3 +248,20 @@ def get_coupon_count(coupon_rule_id):
 		return coupon.remained_count
 	except:
 		return 0
+
+def check_matched_keyword(remote_keyword, setting_keywords_dict):
+	"""
+	匹配关键字 ，精确匹配和模糊匹配
+	:param remote_keyword: 微信端传递的关键字
+	:param setting_keywords_dict: 系统配置的关键字集合
+	:return: 是否命中
+	"""
+	result = False
+	for key, mode in setting_keywords_dict.items():
+		if 'accurate' == mode and remote_keyword == key:
+			result = True
+			break
+		elif 'blur' == mode and key in remote_keyword:
+			result = True
+			break
+	return result

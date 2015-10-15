@@ -30,8 +30,6 @@ W.component.appkit.SignItem = W.component.Component.extend({
 			maxLength: 5,
 			size: '70px',
 			annotation: '积分',
-			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
-			validateIgnoreDefaultValue: true,
 			default: '0'
 		},{
 			name: 'serial_count_prizes',
@@ -46,7 +44,7 @@ W.component.appkit.SignItem = W.component.Component.extend({
 		serial_count_points:function($node, model, value, $propertyViewNode){
 			console.log(value);
 			if(value == ''){
-				console.log($propertyViewNode[0]);
+				model.set('serial_count_points', 0);
 				$propertyViewNode.find('input[data-field="serial_count_points"]').val('0');
 			}
 		}

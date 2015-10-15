@@ -38,10 +38,13 @@ class Sign(resource.Resource):
 			sign = sign[0]
 			is_create_new_data = False
 			project_id = 'new_app:sign:%s' % sign.related_page_id
+			keywords = sign.reply['keyword']
 		else:
 			sign = None
 			is_create_new_data = True
 			project_id = 'new_app:sign:0'
+			keywords = {}
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
@@ -51,6 +54,7 @@ class Sign(resource.Resource):
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
 			'webapp_owner_id': owner_id,
+			'keywords': json.dumps(keywords)
 		})
 		
 		return render_to_response('sign/templates/editor/workbench.html', c)

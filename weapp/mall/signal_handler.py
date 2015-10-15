@@ -425,13 +425,14 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
     #更新红包优惠券分析数据 by Eugene
     if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
         red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
-        for_udpate = promotion_models.RedEnvelopeParticipences.objects.get(
-                    red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
-                    red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
-                    member_id=red_envelope2member.introduced_by
-        )
-        for_udpate.introduce_used_number = F('introduce_used_number') + 1
-        for_udpate.save()
+        if red_envelope2member.introduced_by != 0:
+            for_udpate = promotion_models.RedEnvelopeParticipences.objects.get(
+                        red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+                        red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+                        member_id=red_envelope2member.introduced_by
+            )
+            for_udpate.introduce_used_number = F('introduce_used_number') + 1
+            for_udpate.save()
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
 def check_coupon_for_order(pre_order, args, request, **kwargs):

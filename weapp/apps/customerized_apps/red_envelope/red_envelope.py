@@ -484,15 +484,19 @@ def get_datas(request):
     items = []
     for relation in relations:
         if receive_method == 'True':
-            grade = relation.member.grade.name
-        else:
-            if relation.is_new:
-                grade = u"新会员"
-            else:
-                if relation.member.is_subscribed:
+            if relation.member.is_subscribed and relation.member.grade:
+                if relation.member.grade:
                     grade = relation.member.grade.name
+            else:
+                grade = u"会员"
+        else:
+            if relation.member.is_subscribed:
+                if relation.is_new:
+                    grade = u"新会员"
                 else:
-                    grade = u"非会员"
+                    grade = relation.member.grade.name
+            else:
+                grade = u"非会员"
         items.append({
             'id': relation.red_envelope_relation_id,
             'member_id': relation.member_id,
