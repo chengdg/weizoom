@@ -8,12 +8,12 @@
 		<input style="width:0;background:#F9F9F9;border:0" type="text" data-validate="require-notempty::请选择一张优惠券" />
 		<div class="errorHint" style="margin-left: 58%;width: 100px;"></div>
 	</div>
-	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#if prize.name}}{{else}}xui-hide{{/if}}">
-		<div class="pr xui-i-selectedBox">
+	<div class="xui-inline xa-selectedCoupon xa-optionTarget {{#if prize.name}}{{else}}xui-hide{{/if}}">
+		<div class="pr xui-i-selectedBox" style="margin-left:0;">
 			<span class="xui-i-selected-title xa-couponName" coupon-id="{{ prize.id }}">{{prize.name}}</span>
 			<button class="close xui-close xa-removeCoupon" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
 			<a href="javascript:void(0);" class="xa-selectCoupon ml5">修改</a>
-			<span style="color:#666666">剩余库存: <span class="xa-couponCount">{{#if prize.count}}{{prize.count}}{{ else }} 0 {{/if}}</span> 件</span>
+			<span style="color:#666666">剩余库存: <span class="xa-couponCount">{{#if prize.count}}{{prize.count}}{{ else }} 0 {{/if}}</span>&nbsp;&nbsp;</span>
 			<span><a href="/mall2/coupon_rule_list/" target="_blank" class="xa-changeCouponCount" >追加库存</a></span>
 		</div>
 

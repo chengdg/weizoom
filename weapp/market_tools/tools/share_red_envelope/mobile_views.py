@@ -55,12 +55,9 @@ def get_share_red_envelope(request):
         relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
     member_coupon_record_count = 0
     if material_id:
-        print "1111111111++++++++++", 'followed_member_id=',followed_member_id, "member_id=", member_id
         if followed_member_id == member_id or not followed_member_id:
-            print "2222222222222222222222+++++++++++++++++++"
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
         else:
-            print "333333333333333333333333+++++++++++++++++++++++++"
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
 
         member_coupon_record_count = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id).count()
@@ -73,11 +70,16 @@ def get_share_red_envelope(request):
         'share_img_url': red_envelope_rule.share_pic
     }
 
-    print relation.count(), "444444444444444444444444444444++++++++++++++++++++"
     if relation.count() > 0 or member_coupon_record_count > 0:
         #分享获取红包
-        records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
-        friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")[:4]
+        if member_coupon_record_count:
+            records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+            p = RedEnvelopeParticipences.objects.get(coupon_id=records[0].coupon_id) #获取领取关系的记录
+            relation = RedEnvelopeToOrder.objects.filter(id=p.red_envelope_relation_id)
+            friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=records[0].red_envelope_relation_id).order_by("-id")[:4]
+        else:
+            records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+            friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")[:4]
 
         for friend in friends:
             friend.member_name = friend.member.username
@@ -86,20 +88,17 @@ def get_share_red_envelope(request):
         member_red_envelope_relation = RedEnvelopeToOrder.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
 
         red_envelope_relation_ids = [record.red_envelope_relation_id for record in records]
-        print relation[0].id, red_envelope_relation_ids, "55555555555555555555555555++++++++++++++++"
 
         if (records.count() > 0
             and ((relation[0].id in red_envelope_relation_ids)
-            or records.count() > member_red_envelope_relation.count())):
+            or records.count() > member_red_envelope_relation.count()) or member_coupon_record_count):
             #会员已经领了
-            print "66666666666666666666666+++++++++++"
             return_data['has_red_envelope'] = True
             return_data['coupon_rule'] = coupon_rule
             return_data['member'] = member if member.is_subscribed else ""
             return_data['qcode_img_url'] = qcode_img_url
             return_data['friends'] = friends
         else:
-            print "77777777777777777777+++++++++="
             if (coupon_rule.is_active
                     and coupon_rule.remained_count
                     and coupon_rule.end_date > datetime.now()

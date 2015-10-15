@@ -166,20 +166,65 @@
             height: 160px;
             width: 160px;
             margin: 0 auto;
-            perspective: 100px;
-            -webkit-perspective: 100px;
         }
         .front-face, .back-face{
             position: absolute;
             z-index: 0;
         }
-    .wui-i-dialog-btn.wui-i-closeDialog{
-        border-radius: 35px;
-    }
+        .wui-i-dialog-btn.wui-i-closeDialog{
+            border-radius: 35px;
+        }
+
+        .animated{
+            -webkit-animation-duration:0.6s;
+            animation-duration:0.6s;
+            -webkit-animation-fill-mode:forwards;
+            animation-fill-mode:forwards
+        }
+
+        @-webkit-keyframes flipOutYToBack{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg);opacity: 1}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,90deg);transform:perspective(400px) rotate3d(0,1,0,90deg);opacity: 0}
+            100%{opacity: 0}
+        }
+
+        @keyframes flipOutYToBack{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg);opacity: 1}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,90deg);transform:perspective(400px) rotate3d(0,1,0,90deg);opacity: 0}
+            100%{opacity: 0}
+        }
+        .flipOutYToBack{
+            -webkit-backface-visibility:visible!important;
+            backface-visibility:visible!important;
+            -webkit-animation-name:flipOutYToBack;
+            animation-name:flipOutYToBack
+        }
+        @-webkit-keyframes flipOutYToFront{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,-90deg);transform:perspective(400px) rotate3d(0,1,0,-90deg)}
+            100%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+        }
+
+        @keyframes flipOutYToFront{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,-90deg);transform:perspective(400px) rotate3d(0,1,0,-90deg)}
+            100%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+        }
+        .flipOutYToFront{
+            -webkit-backface-visibility:visible!important;
+            backface-visibility:visible!important;
+            -webkit-animation-name:flipOutYToFront;
+            animation-name:flipOutYToFront
+        }
+
+        @-webkit-keyframes fadeOutUp{0%{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)}100%{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}}
+
+        @keyframes fadeOutUp{0%{opacity:1;-webkit-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0)}100%{opacity:0;-webkit-transform:translateY(-20px);-ms-transform:translateY(-20px);transform:translateY(-20px)}}
+
+        .fadeOutUp{-webkit-animation-name:fadeOutUp;animation-name:fadeOutUp}
 
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/termite_static/v3/css/animate.min.css" rel="stylesheet">
 {% endblock %}
 
 {% ifequal component.type 'appkit.signdescription' %}
@@ -218,7 +263,11 @@
     </div>
 
     <div class="wui-SignDescriptionDiv">
-        <div class="wui-SignDescriptionDiv Chr wa-prize-board">今日可以领取<span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %}</span>积分<span class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>,<span class="wa-daily_prizes-i-name">{{ component.model.daily_prizes.name }}</span>一张</span></div>
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">
+            <p class="wa-daily_title">今日可以领取以下奖励:</p>
+            <p class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</p>
+            <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>{{ component.model.daily_prizes.name }} 一张</p>
+        </div>
     </div>
 </div>
 {% endifequal %}

@@ -99,7 +99,6 @@
     .wui-rules-i-content,.wui-rules-rules-div ol{
         margin-top: 10px;
         line-height: 1.5em;
-        text-decoration: none;
     }
     .wui-rules-i-title{
         font-size: 1.2em;
@@ -108,9 +107,6 @@
     }
     .wui-rules-i-content{
         margin-left: 20%;
-    }
-    ol li{
-        list-style: outside none decimal !important;
     }
 
     .wui-rules-footer-div{
@@ -235,8 +231,10 @@
                 this.$integral.find('span').text(data.integral);
                 this.$integral.show();
                 i_flag = false;
+            }else{
+                this.$integral.hide();
             }
-            if (data.coupon) {
+            if (data.coupon && data.coupon.name != '') {
                 if (data.coupon.count > 0) {
                     this.$coupon.find('span').text(data.coupon.name);
                 } else {
@@ -244,6 +242,8 @@
                 }
                 this.$coupon.show();
                 c_flag = false;
+            }else{
+                this.$coupon.hide();
             }
             if(i_flag && c_flag){
                 this.$contentHeader.hide();
@@ -321,6 +321,7 @@
         $('.wa-signPageDiv').find('.wa-rules').on('click', function () {
             $('.wa-signPageDiv').hide();
             $('.wa-rules-div').show();
+            $('title').html('活动规则');
         });
         //积分数据
         var prize_rules = prize_info.prize_rules;
@@ -335,6 +336,7 @@
         rule_arr = rule_arr.sort();
 
         for(var i=0;i<rule_arr.length;i++){
+          var j=i+1;
           var day_num = rule_arr[i];
           var day_integral = prize_rules[rule_arr[i]]['integral'];
           var day_coupon = prize_rules[rule_arr[i]]['coupon'];
@@ -342,19 +344,28 @@
           var str_coupon ="";
 
           if(day_num=='0'){
-              if(day_num){
-                  str_int =  "每日签到,获得"+day_integral+"积分奖励";
+              str_int ="1.每日签到, 获得";
+              if(day_integral > 0){
+                  str_int +=  day_integral+"积分奖励";
               }
               if(day_coupon){
-                  str_coupon = ",“"+day_coupon+"”一张";
+                  str_coupon = " “"+day_coupon+"”一张";
               }
-              rule_html += "<li>"+str_int+str_coupon+"。</li>";
+              if(day_integral <= 0 && !day_coupon){
+                  rule_html += "<li>1、每日签到，没有奖励</li>";
+              }else{
+                  rule_html += "<li>"+str_int+str_coupon+"。</li>";
+              }
           }else{
-              if(day_num){
-                  str_int =  "连续签到至"+ day_num + "天,获得" + day_integral + "积分奖励";
+              if(day_integral <= 0 && !day_coupon){
+                    continue;
+                }
+              str_int = j + ".连续签到至" + day_num + "天, 获得";
+              if(day_integral > 0){
+                  str_int +=  day_integral + "积分奖励";
               }
               if(day_coupon){
-                  str_coupon = ",“"+day_coupon+"”一张";
+                  str_coupon = " “"+day_coupon+"”一张";
               }
 
               rule_html += "<li>"+str_int+str_coupon+"。</li>";
@@ -366,6 +377,7 @@
         $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function () {
             $('.wa-rules-div').hide();
             $('.wa-signPageDiv').show();
+            $('title').html('签到');
         });
         //个人中心
         $('.wa-rules-i-center').on('click', function () {
@@ -384,42 +396,54 @@
                 temp_integral = prize_info.daily_prize.integral;
                 temp_coupon = prize_info.daily_prize.coupon;
             }
-            $('.wa-daily_points').html(temp_integral || 0);
+            $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'  积分')).show();
             if (temp_coupon.id != 0) {
                 prize_html = '"' + temp_coupon.name + '"';
                 prize_html += '一张';
             } else {
                 prize_html = ''
             }
-            $('.wa-daily_prizes').html(prize_html);
+            $('.wa-daily_prizes').html(prize_html).show();
         } else {
             if(flag){
                 $('.wa-sign-btn').hide();
             }else{
-                $('.wa-sign-btn').addClass('animated flipOutY').one('webkitAnimationEnd animationend', function () {
+                $('.wa-sign-board').addClass('animated flipOutYToFront').one('webkitAnimationEnd animationend', function () {
+                    $(this).removeClass('animated flipOutYToFront');
+                });
+                $('.wa-sign-btn').addClass('animated flipOutYToBack').one('webkitAnimationEnd animationend', function () {
                     $(this).hide();
                 });
             }
-            $('.wa-sign-board').show().find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
+            $('.wa-sign-board').find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if (!$.isEmptyObject(temp_prize)) {
+                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取以下奖励:");
                 if (temp_prize.prize.integral != 0) {
-                    str.push("连续签到" + temp_prize.count + "天可领取" + temp_prize.prize.integral + "积分");
+                    $('.wa-prize-board').find('.daily_points').html(temp_prize.prize.integral + "  积分").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_points').hide();
                 }
                 if (temp_prize.prize.coupon.id != 0) {
-                    str.push(" \"" + temp_prize.prize.coupon.name + "\" 一张");
+                    $('.wa-prize-board').find('.daily_prizes').html("\"" + temp_prize.prize.coupon.name + "\" 一张").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_prizes').hide();
                 }
             } else {
+                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取以下奖励:");
                 var tomorrow_prize = prize_info.daily_prize;
                 if (tomorrow_prize.integral != 0) {
-                    str.push("明天可领取" + tomorrow_prize.integral + "积分");
+                    $('.wa-prize-board').find('.daily_points').html(tomorrow_prize.integral + "  积分").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_points').hide();
                 }
                 if (tomorrow_prize.coupon.id != 0) {
-                    str.push("\"" + tomorrow_prize.coupon.name + "\" 一张");
+                    $('.wa-prize-board').find('.daily_prizes').html("“" + tomorrow_prize.coupon.name + "” 一张").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_prizes')
                 }
             }
-            $('.wa-prize-board').html(str.toString());
         }
     }
 </script>

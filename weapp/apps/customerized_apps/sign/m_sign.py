@@ -76,7 +76,7 @@ class MSign(resource.Resource):
 					if setting['integral']:
 						p_integral = setting['integral']
 					else:
-						p_integral = ""
+						p_integral = 0
 					if setting['coupon']['name']:
 						p_coupon = setting['coupon']['name']
 					else:
@@ -96,7 +96,7 @@ class MSign(resource.Resource):
 									'prize': setting
 								}
 								break
-					elif signer.serial_count >1:
+					elif signer.serial_count >=1:
 						flag = False
 						for name in sorted(prize_settings.keys()):
 							setting = prize_settings[name]
