@@ -491,6 +491,7 @@ INSTALLED_TASKS = [
     'weixin.statistics',
     'weixin.message.message_handler',
     'market_tools.tools.shake',
+    'weixin2',
 
     # for services
     'services.example_service',
