@@ -4,11 +4,7 @@
 
       W.currentPageName = "{{current_page_name}}";
 
-      W.sharePageTitle =  {% if share_page_title %}
-                              "{{ share_page_title }}"
-                          {% else %}
-                              "{{ page_title }}"
-                          {% endif %};
+      W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
@@ -72,10 +68,7 @@
               });
           }
       };
-      alert({{share_page_title}});
-      alert(W.sharePageDesc);
-      alert("test???");
-      alert(W.sharePageTitle);
+
       if (window.location.href.indexOf('share_red_envelope') > 0){
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
@@ -98,7 +91,7 @@
                           module: 'user_center',
                           target_api: 'shared_url/record',
                           link: window.location.href,
-                          title: W.sharePageTitle
+                          title:W.sharePageTitle
                       }),
                       success: function(data) {
                           alert("分享链接成功")
@@ -122,7 +115,8 @@
             'onMenuShareQQ',
             'previewImage',
             'hideOptionMenu',
-            'showOptionMenu'
+            'showOptionMenu',
+            'previewImage'
           ],
           success: function (res) {
             if(!W.wxShareData)
@@ -143,5 +137,21 @@
           }
         });
       });
+
+    function show_previewImage(current_image, images){
+      if (current_image){
+          var current = current_image;
+          var urls = images;
+          wx.previewImage({
+            current: current,
+            urls: images
+          });
+      }
+    }
+    //show_previewImage('http://img5.douban.com/view/photo/photo/public/p1353993776.jpg', [
+    //        'http://img3.douban.com/view/photo/photo/public/p2152117150.jpg',
+    //        'http://img5.douban.com/view/photo/photo/public/p1353993776.jpg',
+    //        'http://img3.douban.com/view/photo/photo/public/p2152134700.jpg'
+    //      ])
 </script>
 {% endblock %}
