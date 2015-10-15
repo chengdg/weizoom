@@ -123,8 +123,8 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			maxLength: 5,
 			size: '70px',
 			annotation: '积分',
-			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
-			validateIgnoreDefaultValue: true,
+			//validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
+			//validateIgnoreDefaultValue: true,
 			default: '0'
 		},{
 			name: 'daily_prizes',
@@ -180,9 +180,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
             this.refresh($node, {resize:true, refreshPropertyView:true});
         },
 		daily_points:function($node, model, value, $propertyViewNode){
-			console.log(value);
+			console.log('==============');
+			console.log(model);
 			if(value == ''){
-				console.log($propertyViewNode[0]);
+				model.set('daily_points', 0);
 				$propertyViewNode.find('.xa-dayly-setting').find('input[data-field="daily_points"]').val('0');
 			}
 			if(value != '' && value != 0){
