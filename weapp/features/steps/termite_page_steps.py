@@ -261,14 +261,17 @@ def __actual_page(page_json, user):
 		# 文本导航
 		if component['type'] == "wepage.textnav_group":
 			actual_component = {
-				"navigation": []
+				"navigation": {
+					"index": model['index'],
+					"items": []
+				}
 			}
 			for item in component['components']:
 				data = {
 					"navigation_name": item['model']['title'],
 					"navigation_link": json.loads(item['model']['target'])['data_item_name']
 				}
-				actual_component["navigation"].append(data)
+				actual_component["navigation"]["items"].append(data)
 
 		# 图片导航
 		if component['type'] == "wepage.imagenav_group":
@@ -353,6 +356,7 @@ def __actual_page(page_json, user):
 			model = component['model']
 			actual_component = {
 				"products_source": {
+					"index": model['index'],
 					"list_style1": product_modes[int(model['type'])],
 					"list_style2": product_types[int(model['card_type'])],
 					"show_product_name": 'true' if model['itemname'] else 'false',
@@ -480,6 +484,7 @@ def _add_textnav_group(page, page_json, user):
 	cid, pid = __get_cid_and_pid(page_json)
 
 	if page.has_key("navigation"):
+		navigation = page.get("navigation")
 		textnav_group = {
 			"type":"wepage.textnav_group",
 			"cid": cid,
@@ -491,13 +496,13 @@ def _add_textnav_group(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"文本导航",
-			"model": { "id":"", "class":"", "name":"", "index":6,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(navigation),
 				"datasource":{"type":"api","api_name":""},
 				"items":[]
 			},
 			"components":[]
 		}
-		for textnav in page.get("navigation"):
+		for textnav in navigation.get("items"):
 			textnav_json = __get_textnav_json(textnav_group, textnav, user)
 			# 加 文本导航的内部数据 
 			textnav_group["components"].append(textnav_json)
@@ -604,6 +609,7 @@ def _add_image_group(page, page_json, user):
 	cid, pid = __get_cid_and_pid(page_json)
 
 	if page.has_key("picture_ads"):
+		picture_ads = page.get("picture_ads")
 		image_group = {
 			"type":"wepage.image_group",
 			"cid": cid,
@@ -615,14 +621,14 @@ def _add_image_group(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"图片广告",
-			"model": { "id":"", "class":"", "name":"", "index":8,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(picture_ads),
 				"datasource":{"type":"api","api_name":""},
-				"displayMode": display2mode[page['picture_ads']['display_mode']],
+				"displayMode": display2mode[picture_ads['display_mode']],
 				"items":[]
 			},
 			"components":[]
 		}
-		for image in page.get("picture_ads").get("values", []):
+		for image in picture_ads.get("values", []):
 			image_json = __get_image_json(image_group, image, user)
 			# 加 图片广告的内部数据 
 			image_group["components"].append(image_json)
@@ -800,7 +806,7 @@ def _add_category(page, page_json, user):
 			"need_server_process_component_data": "yes",
 			"is_new_created": True,
 			"property_view_title": u"商品列表",
-			"model": { "id":"", "class":"", "name":"", "index":11,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(category),
 				"datasource":{"type":"api","api_name":""},
 				"category": __get_category_json(category['items'], user),
 				"count": category['display_count'],
