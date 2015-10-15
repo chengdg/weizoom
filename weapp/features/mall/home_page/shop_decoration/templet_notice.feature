@@ -2,7 +2,7 @@
 
 Feature:自定义模块——【基础模块】公告-页面
 
-@mall2 @termite2
+@mall2 @termite2 @wxr
 Scenario: 1 添加公告
 	Given jobs登录系统
 	When jobs创建微页面
@@ -11,7 +11,10 @@ Scenario: 1 添加公告
 			"title": {
 				"name": "微页面标题1"
 			},
-			"notice_text": "自定义模块公告单屏可显示"
+			"notice_text": {
+				"index": 1,
+				"text": "自定义模块公告单屏可显示"
+			}
 		}]
 		"""
 	Then jobs能获取'微页面标题1'
@@ -20,7 +23,10 @@ Scenario: 1 添加公告
 			"title": {
 				"name": "微页面标题1"
 			},
-			"notice_text": "自定义模块公告单屏可显示"
+			"notice_text": {
+				"index": 1,
+				"text": "自定义模块公告单屏可显示"
+			}
 		}
 		"""
 
@@ -31,7 +37,10 @@ Scenario: 1 添加公告
 			"title": {
 				"name": "微页面标题1"
 			},
-			"notice_text":""
+			"notice_text": {
+				"index": 1,
+				"text": ""
+			}
 		}
 		"""
 	Then jobs能获取'微页面标题1'
@@ -40,7 +49,10 @@ Scenario: 1 添加公告
 			"title": {
 				"name": "微页面标题1"
 			},
-			"notice_text":"请填写内容，如果过长，将会在手机上滚动显示"
+			"notice_text": {
+				"index": 1,
+				"text": "请填写内容，如果过长，将会在手机上滚动显示"
+			}
 		}
 		"""
 	#删除公告
