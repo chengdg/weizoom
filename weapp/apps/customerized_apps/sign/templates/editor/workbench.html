@@ -150,9 +150,6 @@
             width:360px;
             padding-bottom: 10px;
         }
-        .xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input span{
-            color:#0D5F87 !important;
-        }
         .xui-keywordBoxDiv .xui-newKeyView {
             width: 360px;
             border:1px solid #ccc;
@@ -215,6 +212,7 @@
             top: -21px;
         }
         .xui-patterns{
+            color:#333333;
             position: relative;
             top:-13px;
             border: 1px solid #DDDDDD;
@@ -227,6 +225,7 @@
             margin-bottom: 5px;
         }
         #add_keyword_btn{
+            color:#1461B9 !important;
             width: 69px;
             height: 12px;
             position: relative;
@@ -237,7 +236,7 @@
             line-height: 10px;
             margin-right: 10px;
             margin-bottom: 5px;
-            display: inline-block;
+            display: block;
         }
     .xui-i-type span{
         border-left:1px solid ;
@@ -380,7 +379,6 @@ ui-appPage-commonStyle">
         </script>
     {% endverbatim %}
     <div class="xui-keywordBoxDiv xa-keywordBoxDiv"></div>
-    <div class="hehe">{{ keywords }}</div>
 {% endblock %}
 
 {% block base_js %}
@@ -657,6 +655,14 @@ ui-appPage-commonStyle">
             if(flag && cid==2){
                 $('[data-toggle="popover"]').popover();
 
+                prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
+                    el:'.xa-keywordBoxDiv',
+                    keyword_div:add_keyword_div
+
+                 }));
+                prize_keyword_view.hide();
+
+
                 //自动回复 xxxxx
                 add_keyword_div = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input');
                 add_keyword_btn = $('.xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input span');
@@ -666,17 +672,10 @@ ui-appPage-commonStyle">
                 //显示框并且动态定位
 			    var yy = add_keyword_btn.position().left;
                 add_keyword_btn.click(function(){
-
-                    prize_keyword_view || (prize_keyword_view = new W.view.apps.PrizeKeyword({
-                        el:'.xa-keywordBoxDiv',
-                        keyword_div:add_keyword_div
-
-                     }));
                     var xx = add_keyword_btn.position().top+50;
                     var offset={top:xx,left:yy};
                     prize_keyword_view.setPos(offset);
                     prize_keyword_view.render();
-
                 });
 
                 flag = false;
@@ -687,9 +686,13 @@ ui-appPage-commonStyle">
 
             }
 
-            //回复关键字
-            var kk = '{{ keywords|safe }}';
-            console.log(kk);
+            //恢复关键字
+            //{"3333": "blur", "111": "accurate", "222": "blur"}
+            var page_keywords = '{{ keywords|safe }}';
+            prize_keyword_view && prize_keyword_view.render_keywords(page_keywords);
+
+            console.log(page_keywords);
+            console.log('**********8for 888888888888');
         });
         // 滚动浮动在底部
           var stickyMenu = function(){
