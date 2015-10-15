@@ -2238,6 +2238,16 @@ def update_order_status(user, action, order, request=None):
 		target_status = ORDER_STATUS_SUCCESSED
 		actions = action.split('-')
 		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
+		#更新红包引入消费金额的数据 by Eugene
+		if order.coupon_id and promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=order.coupon_id, introduced_by__gt=0).count() > 0:
+			red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=order.coupon_id)
+			relation = promotion_models.RedEnvelopeParticipences.objects.filter(
+				red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+				red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+				member_id=red_envelope2member.introduced_by
+			)
+			relation.update(introduce_sales_number = F('introduce_sales_number') + order.final_price + order.postage)
+
 	elif action == 'return_pay':
 		action_msg = '退款'
 		target_status = ORDER_STATUS_REFUNDING
@@ -3236,7 +3246,7 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
 
 def update_user_paymoney(id):
 	"""
-	add by houtingfei 
+	add by houtingfei
 	reason：取消订单修改会员消息信息
 	"""
 	#更新会员的消费、消费次数、消费单价
@@ -3264,10 +3274,10 @@ def create_mall_order_from_shared(request,order_id):
 	member = get_member(request)
 	followed_member_token = get_followed_member_token_from_cookie(request)
 	if (member and member.token == followed_member_token) or not followed_member_token:
-		return 
+		return
 
 	MallOrderFromSharedRecord.objects.create(order_id=order_id, fmt=followed_member_token)
 	# try:
-		
+
 	# except Exception, e:
 	# 	raise e

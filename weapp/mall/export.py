@@ -277,7 +277,6 @@ MALL_PROMOTION_PRICE_CUT_NAV = 'fullReduction'
 MALL_PROMOTION_COUPON_NAV = 'Coupon'
 MALL_PROMOTION_INTEGRAL_SALE_NAV = 'integralYingyon'
 MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
-MALL_PROMOTION_ORDER_RED_ENVELOPE = 'orderRedEnvelope'
 MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV = 'forbiddenCouponProduct'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
@@ -285,6 +284,8 @@ MALL_APPS_LOTTERY_NAV = 'lotteries'
 MALL_APPS_SURVEY_NAV = 'surveies'
 MALL_APPS_EVENT_NAV = 'events'
 MALL_APPS_VOTE_NAV = 'votes'
+MALL_APPS_SIGN_NAV = 'sign'
+MALL_APPS_RED_ENVELOPE_NAV = 'red_envelopes'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -397,10 +398,16 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'need_permissions': []
                 },
                 {
-                    'name': MALL_PROMOTION_ORDER_RED_ENVELOPE,
+                    'name': MALL_APPS_RED_ENVELOPE_NAV,
                     'title': u'分享红包',
-                    'url': '/apps/promotion/red_envelope_rule_list/',
-                    'need_permissions': ['manage_order_red_envelope', ]
+                    'url': '/apps/red_envelope/red_envelope_rule_list/',
+                    'need_permissions': []
+                },
+                {
+                    'name': MALL_APPS_SIGN_NAV,
+                    'title': u'签到',
+                    'url': '/apps/sign/sign/',
+                    'need_permissions': []
                 }
             ]
         }
@@ -478,4 +485,3 @@ def get_config_second_navs(request):
             second_navs = [CONFIG_NAV]
 
     return second_navs
-

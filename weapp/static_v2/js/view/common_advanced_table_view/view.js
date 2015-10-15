@@ -64,7 +64,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
             this.args = $.parseJSON(this.options.args);
         }
         if (this.args['page']) {
-            this.curPage = parseInt(this.args['page']) || 1;
+            this.curPage = this.args['page'] || 1;
         }
         this.enableSelect = options.enableSelect || false;
         this.disableHeaderSelect = options.disableHeaderSelect || false;
@@ -663,7 +663,7 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
     var sortApi = $div.attr('data-sort-api');
     var itemCountPerPage = $div.attr('data-item-count-per-page');
     var userWebappId = $div.attr('data-user-webapp-id');
-    var outerSelecter = $div.attr('data-outer-selecter');    
+    var outerSelecter = $div.attr('data-outer-selecter');
 
     var autoLoad = $div.data('autoLoad');
     if (autoLoad !== false) {

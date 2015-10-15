@@ -122,6 +122,12 @@ class CouponList(resource.Resource):
             return ExcelResponse(coupons, output_name=u'优惠券详情'.encode('utf8'), force_csv=False)
         else:
             rule_id = request.GET.get('id', '0')
+            #是否显示最后一页
+            is_max_page = int(request.GET.get('is_max_page', 0))
+            if is_max_page:
+                page = "true"
+            else:
+                page = 1
             can_add_coupon = 1
             if rule_id:
                 coupon_rule = CouponRule.objects.get(id=rule_id)
@@ -134,7 +140,9 @@ class CouponList(resource.Resource):
                 'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
                 'third_nav_name': export.MALL_PROMOTION_COUPON_NAV,
                 'rule_id': rule_id,
-                'can_add_coupon': can_add_coupon
+                'can_add_coupon': can_add_coupon,
+                'is_max_page': is_max_page,
+                'page': page
             })
             return render_to_response('mall/editor/promotion/coupons.html', c)
 
@@ -146,6 +154,8 @@ class CouponList(resource.Resource):
         coupon_code = request.GET.get('couponCode', '')
         use_status = request.GET.get('useStatus', '')
         member_name = request.GET.get('memberName', '')
+        #是否显示最后一页
+        is_max_page = int(request.GET.get('is_max_page', 0))
 
         is_fetch_all_coupon = (not coupon_code) and (use_status == 'all') and (not member_name)
         # 处理排序
@@ -164,11 +174,24 @@ class CouponList(resource.Resource):
             pageinfo, coupons = paginator.paginate(coupons, cur_page, count_per_page,
                                                    query_string=request.META['QUERY_STRING'])
         else:
-            coupons = _filter_reviews(request, coupons)
+            coupons_data = _filter_reviews(request, coupons)
             count_per_page = int(request.GET.get('count_per_page', 15))
-            cur_page = int(request.GET.get('page', '1'))
-            pageinfo, coupons = paginator.paginate(coupons, cur_page, count_per_page,
+            cur_page = request.GET.get('page', '1')
+            t_max_page = False
+            if cur_page == "true":
+                t_max_page = True
+                cur_page = 1
+            pageinfo, coupons = paginator.paginate(coupons_data, cur_page, count_per_page,
                                                    query_string=request.META['QUERY_STRING'])
+
+            ##是否从最后一页开始显示
+            if is_max_page:
+                max_page = int(pageinfo.max_page)
+                if max_page != cur_page and t_max_page:
+                    cur_page = max_page
+                pageinfo, coupons = paginator.paginate(coupons_data, cur_page, count_per_page,
+                                                   query_string=request.META['QUERY_STRING'])
+
 
 
         # 避免便利整个优惠券列表

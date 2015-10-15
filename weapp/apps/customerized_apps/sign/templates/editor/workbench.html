@@ -1,0 +1,739 @@
+{% extends "content_base_v2.html" %}
+
+{% load workbench_filter %}
+{% load apps_filter %}
+
+{% block css %}
+    <style>
+        .tl img{
+            height: 60px;
+            width: 60px;
+        }
+        .xui-i-tag{
+            width: 150px;
+        }
+        .xui-i-tag-active{
+            border-bottom: 3px solid #1F7DBD;
+        }
+        .xui-tag-group, .xui-setting-tag, .xui-state-tag{
+           background-color: #EAEEF7;
+        }
+        .xui-tag-group{
+            border-bottom: 1px solid rgba(51, 51, 51, 0.13);
+            height: 40px;
+            padding: 5px 10px 5px 0;
+        }
+        .xui-tag-group .xui-i-tag{
+            font-size: 18px;
+            padding: 5px 20px 0 20px;
+            display: inline-block;
+            width: 150px;
+            height: 35px;
+            text-align: center;
+        }
+        .xui-status-control{
+            background: white;
+            margin: 15px 10px;
+            padding: 10px 30px;
+        }
+        .btn-danger, .btn-primary {
+            border-radius: 3px;
+            margin-right: 50px;
+        }
+        .ml5.fb{
+            margin-bottom: 12px;
+        }
+        .xui-propertyView-app-ShareGroup,.xui-propertyView-app-ReplyGroup,.xui-propertyView-app-SignSettingGroupName{
+            border-top: 1px solid #DDDDDD;
+            padding-top: 15px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        .xui-propertyView-app-ShareGroup:first-child,.xui-propertyView-app-ReplyGroup:first-child,.xui-propertyView-app-SignSettingGroupName:first-child{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .xui-propertyView-app-SignSettingGroup{
+            border:1px solid #DDDDDD;
+            background-color: #FFFFFF;
+            padding-bottom: 5px;
+            padding-top: 5px;
+        }
+        .propertyGroup_property_dynamicControlField_content{
+            width: 100%;
+            border:1px solid #DDDDDD;
+            background-color: #FFFFFF;
+            padding-bottom: 5px;
+            padding-top: 5px;
+
+        }
+        .xui-outerFunctionTrigger,.groupHelp_tip{
+            margin-left: 5px;
+        }
+        .propertyGroup_property_horizontalField .propertyGroup_property_label{
+            width:90px;
+        }
+        .propertyGroup.xui-propertyView-app-SignSettingGroup{
+            width:480px;
+            padding-left: 32px;
+        }
+        .propertyGroup_property_dynamicControlField_control,.propertyGroup_property_dynamicControlField_content.xui-text{
+            width:480px;
+            height:129px;
+        }
+        .propertyGroup_property_dynamicControlField_content.xui-text{
+            padding-left: 34px;
+        }
+        .mr5.xa-addDynamicComponent.xui-addDynamicComponent{
+            width:480px;
+        }
+        .propertyGroup_property_textareaField{
+            margin-left: 40px;
+        }
+        .propertyGroup_property_textareaField .propertyGroup_property_label{
+            width:60px;
+        }
+        .propertyGroup.xui-propertyView-app-SignNameGroup .input-small.xui-propertyGroup-input,.propertyGroup.xui-propertyView-app-ReplyGroup .input-small.xui-propertyGroup-input{
+            width:310px !important;
+        }
+        .propertyGroup_property_input.pl5{
+            width: 330px !important;
+            margin: 5px auto !important;
+            margin-top: -16px !important;
+        }
+        .propertyGroup_property_dynamicControlField_content.xui-text{
+         padding-top: 16px;
+        }
+        .xui-removeImageButton span,.close.xui-close{
+            height: 20px;
+            width: 20px;
+            background-color: rgb(141, 141, 141);
+            line-height: 19px;
+            border-radius: 15px;
+        }
+        .close.xui-close{
+            position: absolute;
+            right: -24px;
+        }
+        .xui-removeImageButton{
+            position: absolute !important;
+            top: -13px !important;
+            right: -9px !important;
+        }
+        .propertyGroup.xui-propertyView-app-ShareGroup .propertyGroup_property_label{
+            margin-top: 10px;
+        }
+        .xui-state-tag .icon-arrow-up {
+          background: url('/static_v2/img/weixin/storingUp.png') no-repeat;
+        }
+        .xui-state-tag .icon-arrow-down {
+           background: url('/static_v2/img/weixin/storing.png') no-repeat;
+        }
+        .xui-state-tag .xui-Blue {
+          color: #1262b7!important;
+        }
+        .xui-state-tag [class^="icon-"]{
+          display: inline-block;
+          width: 9px;
+          height: 14px;
+          margin-top: 1px;
+          line-height: 14px;
+          vertical-align: text-top;
+        }
+        .xui-propertyView-app-ShareGroup Button.xui-removeImageButton{
+            display: none;
+        }
+        .xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField{
+            margin-top: 10px;
+        }
+        .xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input{
+            width:360px;
+            padding-bottom: 10px;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView {
+            width: 360px;
+            border:1px solid #ccc;
+            background-color: #fff;
+
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-key {
+            width: 100%;
+            height: 100px;
+            padding-top: 20px;
+            border-bottom: 1px solid #ccc;
+            line-height: 30px;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-key input {
+            vertical-align: sub;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-show {
+            width: 100%;
+        }
+        .xui-keywordBoxDiv .btn {
+            border-radius: 0px !important;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView .xui-i-left {
+            text-align: right;
+            width: 76px;
+            clear: both;
+            float: left;
+
+        }.xui-keywordBoxDiv .xui-newKeyView .xui-i-right {
+            text-align: left;
+            right: 90px;
+
+        }
+
+        .xui-keywordBoxDiv .xui-save{
+            background: none repeat scroll 0 0 #1E8F19;
+            border: 1px solid #1E8F19;
+        }
+        .xui-keywordBoxDiv .xui-newKeyView.pa{
+            margin-left: 10px;
+            margin-right: 20px;
+        }
+        .xui-link-copy{
+            margin-top: 3px;
+        }
+        .xui-i-triggerButton{
+            position: absolute;
+            margin-top: -23px !important;
+            background: rgba(0,0,0,0.6);
+            color: white !important;
+            font-size: 15px;
+            text-align: center !important;
+            width: 100px;
+            font-weight: bold;
+        }
+        #add_keyword_div .xui-close{
+            height: 16px;
+            position: relative;
+            right: -9px;
+            top: -21px;
+        }
+        .xui-patterns{
+            color:#333333;
+            position: relative;
+            top:-13px;
+            border: 1px solid #DDDDDD;
+            background-color: #FFFFFF;
+            text-align: center;
+            /* padding-left: 13px; */
+            padding: 13px 2px 2px 15px;
+            line-height: 10px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+        #add_keyword_btn{
+            color:#1461B9 !important;
+            width: 69px;
+            height: 12px;
+            position: relative;
+            top:-13px;
+            text-align: center;
+            /* padding-left: 13px; */
+            padding: 13px 2px 2px 15px;
+            line-height: 10px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            display: block;
+        }
+    .xui-i-type span{
+        border-left:1px solid ;
+        padding-left: 2px;
+        margin-left: 3px;
+    }
+
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<div id="workbench" class="xui-wepage-workbenchPage clearfix pr x
+
+ui-appPage-commonStyle">
+  <div class="relative">
+    <ul class="breadcrumb">
+      <li>您当前所在位置</li>
+      <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+      <li class="active">新建</li>
+    </ul>
+  </div>
+
+    <div class="xui-tag-group xa-tag-group">
+        <span class="xui-i-tag xui-i-tag-active" target="xa-setting">规则设置</span>
+        <span class="xui-i-tag" target="xa-state">签到统计</span>
+        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/?webapp_owner_id={{ request.user.id }}">复制链接</button>
+    </div>
+
+    <div class="clearfix xui-setting-tag xa-setting">
+        <div class="xui-status-control xa-status-control">
+            <p style="line-height: 25px;"><b>签到设置</b><br>请设置成功后开启签到功能！</p>
+            <span>
+                {% if sign and sign.status_text == '进行中' %}
+                    <button type="button" class="btn btn-danger fr" style="margin-top: -45px;" onclick="changeStatus('off');">关&nbsp;&nbsp;闭</button>
+                {% else %}
+                    <button type="button" class="btn btn-primary fr" style="margin-top: -45px;" onclick="changeStatus('on');">开&nbsp;&nbsp;启</button>
+                {% endif %}
+            </span>
+
+        </div>
+    <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
+    </div>
+    
+    <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
+      <div id="phone" class="xui-phone ">
+          <div id="phoneSkin" class="xui-i-skin">
+            <div class="xui-i-title">
+              <span class="xa-title">微页面标题</span>
+            </div>
+            <iframe name="phoneFrame" id="phoneIFrame" src="/termite2/webapp_design_page/?project_id={{project_id}}&design_mode=1" height="100%" border="none"></iframe>
+          <div id="phoneSkinCover" class="hide xui-i-skinCover"></div>
+        </div>
+      </div>
+    </div>
+    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
+    </div>
+    <div class="xui-bottomActionBar xa-stickyBar">
+      <button class="xa-save btn btn-primary">保存</button>
+      <button class="xa-preview btn btn-default ml20">预览</button>
+    </div>
+  </div>
+    <div class="xui-state-tag xa-state" style="display: none">
+        <div
+			class="panel-body panel-table p0 mt10"
+			data-ui-role="advanced-table"
+			data-app="apps/sign"
+			data-resource="sign_participances"
+			data-args='{"id": "{{activity_id}}"}'
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
+		>
+		</div>
+    </div>
+</div>
+    {% verbatim %}
+        <script id="table" type="text/x-jquery-tmpl">
+            {{if items!='' }}
+            <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+                <thead>
+                    <tr>
+                        <th>会员</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="created_at" data-sort-direction="up">第一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="latest_date" data-sort-direction="up" data-init-sort="-latest_date">最后一次签到</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="total_count" data-sort-direction="up">累计次数</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="serial_count" data-sort-direction="up">连续次数</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="top_serial_count" data-sort-direction="up">最高连续次数</th>
+                        <th class="tx_sortable xui-Blue" data-sort-attr="total_integral" data-sort-direction="up">奖励总积分</th>
+                        <th>优惠券奖励</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {{each(i, item) items}}
+                    <tr data-id="${item.id}">
+                        <td
+                            class="tl pl25"
+                        >
+                            <a href="/member/detail/?id=${ item.member_id }" target="_blank">
+                                <img src="${item.participant_icon}" />
+                                {{html item.participant_name}}
+                            </a>
+                        </td>
+                        <td>
+                            ${item.created_at}
+                        </td>
+                        <td>
+                            ${item.latest_date}
+                        </td>
+                        <td>
+                            ${item.total_count}
+                        </td>
+                        <td>
+                            ${item.serial_count}
+                        </td>
+                        <td>
+                            ${item.top_serial_count}
+                        </td>
+                        <td>
+                            ${item.total_integral}
+                        </td>
+                        <td>
+                            {{html item.latest_coupon }}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+                <div class="cb"></div>
+            </table>
+            {{else}}
+                <div class="xui-emptyBox m10">
+                    <img src="/static_v2/img/editor/empty.png">
+                    <span class="ml20">您还没有相关数据！</span>
+                </div>
+            {{/if}}
+            <br>
+        </script>
+    {% endverbatim %}
+{% endblock %}
+
+{% block base_js %}
+  <!-- *start_prunt_task* -->
+    <!-- [prunt_task] 
+      {
+        "task": "weizoom-load-termite-components"
+      }
+    --> 
+  {{ '["appkit.page", "appkit.componentadder", "appkit.signdescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  <!-- *end_prunt_task* -->
+  
+  <script type="text/javascript">
+    var signStatus = "off";
+    W.uid = {{ user.id }};
+    W.projectId = "{{project_id}}";
+    W.activityId = "{{sign.id}}";
+    W.host = "{{request.META.HTTP_HOST}}";
+    W.API_VERSION = 1;
+    var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
+    W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
+    var bottomDistance = 110;
+    /* 自动选中cid，当页面进来的时候 */
+    W.autoSelectCid = 2;
+
+    //是否隐藏组件控制面板
+    W.hideActionPanel = true;
+
+    var table;
+    
+    var loadPages = function(pageManagerView) {
+      W.getApi().call({
+        app: 'apps',
+        api: 'dynamic_pages/get',
+        args: {
+          project_id: W.projectId
+        },
+        showLoading: false,
+        success: function(data) {
+          var pages = data;
+          var firstPage = null;
+          for (var i = 0; i < pages.length; ++i) {
+            //xlog("pages[i]:");xlog(pages[i]);
+            var page = W.component.Component.parseJSON(pages[i]);
+            if (isCreateNewData) {
+              page.isNewCreated = true;
+            }
+            pageManagerView.addPage(page.getModel().get('title'), page, {silent: true});
+            if (!firstPage) {
+                firstPage = page;
+            }
+          }
+          if (firstPage) {
+            pageManagerView.activePage(page);
+          }
+        },
+        error: function(resp) {
+          alert('Failed to load pages in JSON. Please check it.');
+        }
+      });
+    };
+    
+    $(document).ready(function() {
+        table = $('[data-ui-role="advanced-table"]').data('view');
+      var windowHeight = $(window).height();
+      var height = windowHeight - 350;
+      
+      $('#leftPanel').css('min-height' ,height+ 'px');
+      $('#workbench').css('min-height' ,height+ 'px');
+      $(window).bind('beforeunload', function() {
+        if (isDirtyWorkbenchIndicatorVisible) {
+          return '您对页面的编辑还没保存，请先保存页面'
+        } else {
+        }
+      });
+      
+      var pageManagerView = new W.workbench.PageManagerView({
+        el: '#leftPanel',
+        isSystemManager: W.isSystemManager
+      });
+      pageManagerView.render();
+      
+      var phoneView = new W.workbench.PhoneView({
+        el: '#phonePanel'
+      });
+      phoneView.render();
+      
+      var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
+      var propertyView = new W.workbench.PropertyView({
+        el: '#rightPanel',
+        left: propertyViewLeft,
+        onlyShowUserProperty: true//!W.isSystemManager
+      });
+      propertyView.render();
+
+      var synchronizer = new W.workbench.PageSynchronizer();
+      synchronizer.run();
+      W.Synchronizer = synchronizer;
+      
+      loadPages(pageManagerView);
+
+
+      $('.xui-bottomActionBar').delegate('.xa-save', 'click', function() {
+        // 保存model
+        W.Synchronizer.manualSync(function(page, data) {
+        var descriptionModel = page.components[0].model;
+        var dynamicComponents = page.components[0].components;
+            var name = descriptionModel.get('title');
+
+            var share_img =descriptionModel.get('image');
+            var share_desc =descriptionModel.get('share_description');
+            var share = {"img":share_img,"desc":share_desc};
+
+            var reply_keyword ={};
+            //$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+                //var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+               // var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+                //reply_keyword[key_tmp] = mo_tmp;
+            //});
+            var reply_content = descriptionModel.get('reply_content');
+            var reply ={"keyword":reply_keyword,"content":reply_content};
+
+            var daily_points = descriptionModel.get('daily_points');
+            var daily_prizes = descriptionModel.get('daily_prizes');
+            var prize_setings = {
+                '0':{
+                        'integral':daily_points,
+                        'coupon':daily_prizes ? daily_prizes : {
+                            "id": 0,
+                            "name": ""
+                        }
+                    }
+                };
+            for(var i=0;i<dynamicComponents.length;i++){
+                var index = dynamicComponents[i].model.get('serial_count');
+                var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
+                prize_setings[index]={
+                    'integral':dynamicComponents[i].model.get('serial_count_points'),
+                    'coupon':serial_prizes? serial_prizes: {
+                            "id": 0,
+                            "name": ""
+                        }
+                }
+            }
+
+            var args ={
+                'name':name,
+                'share':JSON.stringify(share),
+                'reply':JSON.stringify(reply),
+                'prize_settings':JSON.stringify(prize_setings)
+            };
+
+
+          if (isCreateNewData) {
+            var method = 'put';
+            args['related_page_id'] = data['project_id'];
+              args['status'] = signStatus;
+          } else {
+            var method = 'post';
+            args['id'] = W.activityId;
+            args['signId'] = W.activityId;
+          }
+          W.getApi().call({
+            app: 'apps/sign',
+            resource: 'sign',
+            method: method,
+            args: args,
+            success: function(data) {
+              W.showHint('success', '保存成功');
+                isCreateNewData = false;
+                if(data && data.id){
+                    W.activityId = data.id;
+                    $('.xa-link-copy').removeClass('xui-hide');
+                }
+            },
+            error: function(resp) {
+              W.showHint('error', '保存失败!');
+            }
+          });
+        }
+
+        );
+      });
+      
+      W.isReady = true;
+      
+      W.Broadcaster.on('designpage:reach_scroll_boundary', function(direction) {
+        var $window = $(window);
+        var scrollTop = $window.scrollTop();
+        if (direction === 'down') {
+          var newScrollTop = scrollTop + 20;
+        } else {
+          var newScrollTop = scrollTop - 20;
+        }
+        $window.scrollTop(newScrollTop);
+      });
+      
+      $('[data-toggle="tooltip"]').tooltip();
+
+      $('.xa-preview').click(function(event){
+        var page = pageManagerView.getCurrentActivePage();
+        
+        // 验证
+        if (!W.isSystemManager) {
+            if(!page.validate()) {
+                return;
+            }
+        }
+
+        // 预览
+        var pageJson = JSON.stringify(page.toJSON());
+        projectId = W.projectId.split(':')[2];
+        W.resource.termite2.TermitePreview.put({
+          data: {
+            project_id: projectId,
+            page_json: pageJson
+          },
+          success: function(data) {
+            var previewUrl = '/m/apps/sign/m_sign/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
+            window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
+          },
+          error: function(resp) {
+          }
+        });
+      });
+
+      //说明
+      $(document).click(function(event) {
+      // 点击空白处，触发事件
+
+      //签到奖励说明
+      if(event.target.id == 'outerFunctionTrigger'){
+            W.dialog.showDialog('W.dialog.sign.InstructionDialog',{
+                success: function(data){}
+            });
+      }
+
+        W.Broadcaster.trigger('designpage:cancel_delete');
+      });
+
+
+        //绑定标签页切换事件
+        $('.xa-tag-group').delegate('.xui-i-tag', 'click', function(){
+            var target = $(this).attr('target');
+            var $this = $(this);
+            if('xa-setting' == target){
+                $('.xa-setting').show().siblings('.xa-state').hide();
+            }else if('xa-state' == target){
+                $('.xa-state').show().siblings('.xa-setting').hide();
+                table && table.reload({
+                    id: W.activityId
+                }, {
+                    emptyDataHint: '没有符合条件的数据'
+                });
+            }
+            $this.addClass('xui-i-tag-active').siblings().removeClass('xui-i-tag-active');
+        });
+
+        //初始化复制链接到剪贴板
+        var client = new ZeroClipboard( $(".xa-link-copy") , {
+          moviePath: "/static_v2/zero_clipboard.swf"
+        });
+        client.on('complete', function(client, args) {
+            W.showHint('success', '已经将链接复制到剪贴板');
+        });
+        var flag = true;
+        W.Broadcaster.on('selectwidget:assert', function(cid){
+            //初始化弹出层
+            if(flag && cid==2){
+                $('[data-toggle="popover"]').popover();
+                flag = false;
+            }
+
+
+        });
+        // 滚动浮动在底部
+          var stickyMenu = function(){
+              var winScrollTop = $(window).scrollTop();
+          　　var scrollHeight = $(document).height();
+          　　var windowHeight = $(window).height();
+              var gap = scrollHeight - winScrollTop - windowHeight;
+              if( gap < 44 ){
+                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+              }else{
+                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+              }
+          };
+          stickyMenu();
+          $(window).bind('scroll resize',(function() {
+              stickyMenu();
+          }));
+    });
+
+    function changeStatus(act){
+        var innerHtml,actionHtml;
+        if(act == 'on'){
+            innerHtml = '<button type="button" class="btn btn-danger fr" style="margin-top: -45px;" onclick="changeStatus(\'off\');">关&nbsp;&nbsp;闭</button>';
+        }else{
+            innerHtml = '<button type="button" class="btn btn-primary fr" style="margin-top: -45px;" onclick="changeStatus(\'on\');">开&nbsp;&nbsp;启</button>';
+        }
+        if(isCreateNewData){
+            signStatus = act;
+            $('.xa-status-control>span').html(innerHtml);
+        }else{
+            W.getApi().call({
+                app: 'apps/sign',
+                resource: 'sign',
+                method: 'post',
+                args: {
+                    signId: W.activityId,
+                    status: act
+                },
+                success: function(data) {
+                    W.showHint('success', '更新状态成功');
+                    $('.xa-status-control>span').html(innerHtml);
+                },
+                error: function(resp) {
+                  W.showHint('error', '更新状态失败!');
+                }
+            });
+        }
+    }
+  </script>
+{% block js %}
+<script id="sign-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">签到奖励说明</h3>
+            </div>
+
+            <div class="modal-body ml15">
+                <div>
+                    <p>1、每日签到奖励：用户每天签到的奖励</p>
+                    <p class="pl20"> 例如：设置为5积分，则用户每次签到都可获得5积分。</p>
+                </div>
+                <div>
+                    <p>2、连续签到至X天：用户连续签到至X天的奖励</p>
+                    <p class="pl20">例如：设置连续签到10，奖励为100积分，则用户连续签到至第10天可获得100积分。</p>
+
+                </div>
+                <div>
+                    <p>3、周期：连续签到天数最高设置为30天，则用户签到至30天后，连续签到天数变为0，重新开始签到规则。</p>
+                </div>
+                <div>
+                    <p>4、当签到奖励设置为优惠劵，且优惠券库存不足时，用户签到时会提示：奖品已领完，请联系客服补发！</p>
+                </div>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endblock %}
+{% endblock %}

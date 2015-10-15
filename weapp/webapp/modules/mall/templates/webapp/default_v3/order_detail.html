@@ -31,7 +31,7 @@
                 <h2>买家留言</h2>
                 <p class="c9 em9 mt10">{{ order.customer_message }}</p>
             </div>
-        {% endif %} 
+            {% endif %}
         {% else %}
         <div class="clearfix xui-inner pr pr20">
             <!-- 暂无物流信息 -->
@@ -205,13 +205,13 @@
         </fieldset>
     {% endif %}
     <!-- 订单商品列表 -->
-    {% if order.red_envelope %}
+    <!--{% if order.red_envelope %}
     <fieldset class="xui-section clearfix" style="padding:9px 12px;">
         <a class="fr {% if order.red_envelope_created %}xui-gotRedBtn{% else %}xui-toGetRedBtn{% endif %}" href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}">
         {% if order.red_envelope_created %}最近一次领取的红包
         {% else %}未领取的红包{% endif %}</a>
     </fieldset>
-    {% endif %}
+    {% endif %}-->
     <!--支付方式及发票-->
     <fieldset class="xui-section xui-section-title">
         <div class="xui-inner clearfix">
@@ -289,31 +289,39 @@
     </div>
     </fieldset>
     {% if not has_sub_order %}
-        {% if order.status == 0 or order.status == 4  %}
-        <div style="height:50px;"></div>
-        <div class="clearfix xui-stupidBar">
-            <div class="fr xui-btnOuter">
-                {% if order.status == 0 %}
-                <!-- 待支付 -->
-                <a href="javascript:void(0);" type="button" id="cancelOrderButton" class="xui-btn xui-btn-disable">取消订单</a>
-                <a href="javascript:void(0);" type="button" id="pay_order" class="xui-btn xui-btn-danger xa-pay">支付</a>
-                {% endif %}
-
-                {% if order.status == 4 %}
-                <!-- 已发货 -->
-                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" type="button" class="xui-btn xui-btn-disable">查看物流</a>
-                {% if order.session_data.has_comfire_button %}
-                <a href="javascript:void(0);" type="button" class="xui-btn xui-btn-danger xa-receipt">确认收货</a>
-                {% endif %}
-                {% endif %}
-                {# jz 2015-10-09 #}
-                    <!-- {% if request.user.is_weizoom_mall %}
-                        <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}">返回商城首页</a>
-                    {% else %}
-                       <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">返回商城首页</a>
-                    {% endif %} -->
+        {% if order.status == 0 or order.status == 4 or  order.status == 3 or order.status == 5%}
+            <div style="height:50px;"></div>
+            <div class="clearfix xui-stupidBar">
+                <div class="fr xui-btnOuter">
+                    {% if order.status == 0 %}
+                    <!-- 待支付 -->
+                    <a href="javascript:void(0);" type="button" id="cancelOrderButton" class="xui-btn xui-btn-disable">取消订单</a>
+                    <a href="javascript:void(0);" type="button" id="pay_order" class="xui-btn xui-btn-danger xa-pay">支付</a>
+                    {% endif %}
+                    <!-- 红包 -->
+                    {% if order.red_envelope %}
+                        <a href="/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id={{request.webapp_owner_id}}&order_id={{order.id}}&red_envelope_rule_id={{order.red_envelope}}&is_share={{order.red_envelope_created}}" class="xui-btn" type="button" style="background: #F39A00;color: #ffffff;">
+                            {% if order.red_envelope_created %}
+                                分享红包
+                            {% else %}
+                                领取红包
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    {% if order.status == 4 %}
+                        <!-- 已发货 -->
+                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" type="button" class="xui-btn xui-btn-disable">查看物流</a>
+                        {% if order.session_data.has_comfire_button %}
+                        <a href="javascript:void(0);" type="button" class="xui-btn xui-btn-danger xa-receipt">确认收货</a>
+                        {% endif %}
+                    {% endif %}
+                        <!-- {% if request.user.is_weizoom_mall %}
+                            <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}">返回商城首页</a>
+                        {% else %}
+                           <a data-role="button" class="xui-btn xui-btn-success btn-back" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">返回商城首页</a>
+                        {% endif %} -->
+                </div>
             </div>
-        </div>
         {% endif %}
     {% endif %}
     <!-- 订单价格清单 -->
@@ -388,7 +396,7 @@
     <div class="xui-cover xa-cover">
         <div class="xui-inner-container pr">
             <div class="xui-popBg pa">
-            <!-- 订单状态为'优惠抵扣'或'货到付款'时，显示'下单成功' -->
+            <!--订单状态为'优惠抵扣'或'货到付款'时，显示'下单成功'-->
             {% if order.pay_interface_type == 9 or order.pay_interface_type == 10 or order.type == 'integral'%}
                 <p>下单成功</p>
                 <p class="xui-doneInfo xt-coverInfo">下单成功</p>
@@ -401,6 +409,7 @@
         </div>
     </div>
     {% endif %} -->
+
 
     {% if under_develop %}
         <a href="/tools/api/express/test_analog_push_data/?order_id={{order.id}}">测试物流v1</a>

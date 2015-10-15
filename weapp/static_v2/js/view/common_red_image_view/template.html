@@ -1,0 +1,31 @@
+<script id="red-image-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="imageView-imgZone" name="imageView-imgZone" class="imgBox pt0 {{if !picUrl}}xui-hide{{/if}} imageView-imgZone"
+	     style="width:${width}px;position:relative;">
+		<div class="imageView-imgContainer" style="clear: right;">
+			{{if picUrl}}
+				<img src="${picUrl}" width="${width}px" height="${height}px" style="width:${width}px; height:${height}px"/>
+			{{/if}}
+		</div>
+	</div>
+	<div id="imageView-uploadZone" class="imageView-uploadZone">
+		<input id="imageView-fileUploader" name="imageView-fileUploader" type="file" multi="true"/>
+	</div>
+</script>
+
+<script id="multi-image-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div id="imageView-uploadZone" class="imageView-uploadZone {{if picUrl}}xui-hide{{/if}}" >
+		<input id="imageView-fileUploader" name="imageView-fileUploader" type="file" class="xui-hide"/>
+	</div>
+	<div class="multi-image-zome">
+	</div>
+</script>
+
+<script id="one-image-view-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="imageView-imgZone imgBox pt0 mt5" name="imageView-imgZone" style="width:${width}px" data-img-url="${picUrl}">
+		<div class="imageView-imgContainer">
+			{{if picUrl}}
+				<img src="${picUrl}" width="${width}px" height="${height}px" style="width:${width}px; height:${height}px"/>
+			{{/if}}
+		</div>
+	</div>
+</script>

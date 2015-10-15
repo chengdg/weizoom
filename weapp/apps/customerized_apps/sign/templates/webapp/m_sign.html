@@ -1,0 +1,453 @@
+{% extends "webapp_content_base_v4.html" %}
+
+{% block css %}
+<style type="text/css">
+	h1 {
+		color: #00F;
+	}
+
+	.xui-record .xui-inner-content {
+		color: #8F8F8F;
+	}
+
+    .wui-mask{
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: none;
+        opacity: 0.8 !important;
+        background: black;
+        height: 100%;
+        width: 100%;
+    }
+
+    .wui-resultDialog{
+        background: white;
+        display: none;
+        position: fixed;
+        top: 20%;
+        left: 5%;
+        width: 90%;
+        border-radius: 5px;
+        z-index: 2;
+    }
+    .wui-resultDialog>.wui-i-header>.wui-i-title{
+        margin-top: 30px;
+        margin-left: 25px;
+        font-size: 1.5em;
+        font-weight: 200;
+        overflow: visible;
+        color: #0090d6;
+    }
+    .wui-resultDialog>.wui-i-close{
+        background: white;
+        color: dimgrey;
+        border-radius: 30px;
+        height: 30px;
+        width: 30px;
+        float: right;
+        margin-top: -10px;
+        margin-right: -10px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 33px;
+        font-size: 1.2rem;
+    }
+    .wui-resultDialog>.wui-i-header, .wui-resultDialog>.wui-i-body, .wui-resultDialog>.wui-i-bottom{
+        width: 100%;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .wui-resultDialog>.wui-i-body, .wui-resultDialog .integral, .wui-resultDialog .coupon{
+        display: none;
+    }
+    .wui-resultDialog .wui-i-dialog-btn{
+        height: 35px;
+        background: #d81c26;
+        border: 0;
+        font-size: 1rem;
+        font-weight: bolder;
+        border-radius: 3px;
+        width: 170px;
+        display: block;
+        margin: 10px auto;
+    }
+    .wui-resultDialog>.wui-i-bottom>.wui-i-closeDialog{
+        color: white;
+        background: #0090D6;
+    }
+    .wui-resultDialog .wui-i-contentHeader{
+        font-size: 1.2rem;
+        color: #454545;
+        margin: 5px 25px;
+    }
+    .wui-resultDialog .wui-i-content button{
+        width: 70px;
+        color: white;
+        background: #d81c26;
+    }
+    .wui-rules-div{
+        display: none;
+        margin-left: 10%;
+        margin-right: 10%;
+        font-family: STHeiti;
+        color:#6D6D6D;
+    }
+    .wui-rules-intro-div,.wui-rules-rules-div{
+        margin-top: 10%;
+    }
+    .wui-rules-i-content,.wui-rules-rules-div ol{
+        margin-top: 10px;
+        line-height: 1.5em;
+    }
+    .wui-rules-i-title{
+        font-size: 1.2em;
+        font-weight: bold;
+        color:#4E4E4E;
+    }
+    .wui-rules-i-content{
+        margin-left: 20%;
+    }
+
+    .wui-rules-footer-div{
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        padding-top: 25%;
+    }
+    .wui-rules-i-desc{
+        font-weight: bold;
+    }
+    .wui-rules-footer-div .wui-rules-i-center{
+        color:red;
+    }
+    .wui-rules-i-btn{
+        margin-top: 10px;
+    }
+    .wui-btn.wui-btn-back{
+        height: 50px;
+        width: 155px;
+        color: #FFF;
+        background: #0090D6 none repeat scroll 0% 0%;
+        text-align: center;
+        line-height: 50px;
+        border:0;
+        border-radius: 3px;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 20%;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+    <div id="resultDialog" class="wui-resultDialog">
+        <b class="wui-i-close xa-closeDialog">&#10005</b>
+        <div class="wui-i-header">
+            <h2 class="wui-i-title xa-dialog-title">签到活动未开始！</h2>
+        </div>
+        <div class="wui-i-body xa-dialog-content">
+            <div class="wui-i-contentHeader xa-dialog-contentHeader">本次签到奖励</div>
+            <div class="wui-i-content xa-entity-content">
+                <p class="integral">
+                    积分：<span></span>
+                </p>
+                <p class="coupon">
+                    优惠券：<span></span>
+                </p>
+            </div>
+        </div>
+        <div class="wui-i-bottom xa-dialog-bottom">
+            <button type="button" class="wui-i-dialog-btn wui-i-closeDialog xa-closeDialog xa-closeBtn">知道了</button>
+        </div>
+    </div>
+    <div class="wui-rules-div wa-rules-div">
+        <div class="wui-rules-intro-div">
+            <p class="wui-rules-i-title">签到说明</p>
+            <p class="wui-rules-i-content">签到有礼！</p>
+        </div>
+        <div class="wui-rules-rules-div">
+            <p class="wui-rules-i-title">活动规则</p>
+            <ol class="wui-rules-i-content wa-rules-i-content"></ol>
+        </div>
+        <div class="wui-rules-footer-div">
+            <div class="wui-rules-i-desc">备注:签到奖励可以到<a class="wui-rules-i-center wa-rules-i-center">个人中心</a>查看</div>
+            <div class="wui-rules-i-btn"><div class="wui-btn wui-btn-back wa-btn-back" style="letter-spacing: 4px;margin-left: auto;margin-right: auto;">返回签到</div></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    W.pageId = "{{request.GET.page_id}}";
+    var member_info = JSON.parse('{{ member_info|safe }}');
+    var prize_info = JSON.parse('{{ prize_info|safe}}');
+    var status = "{{ activity_status }}";
+    var resultDialog;
+
+    function ResultDialog(selector) {
+        var that = this;
+        this.$el = $(selector || '#resultDialog');
+        this.$title = this.$el.find('.xa-dialog-title');
+        this.$dialogContent = this.$el.find('.xa-dialog-content');
+        this.$contentHeader = this.$el.find('.xa-dialog-contentHeader');
+        this.$entityContent = this.$el.find('.xa-entity-content');
+        this.$userCenter = this.$el.find('.xa-userCenter');
+        this.$closeBtn = this.$el.find('.xa-closeBtn');
+        this.$integral = this.$el.find('.integral');
+        this.$coupon = this.$el.find('.coupon');
+
+
+        this.$userCenter.on('click', function () {
+            if (!W.isMember) {
+                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                        '</div><div></div>');
+            }
+            else {
+                window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
+            }
+
+        });
+        //初始化result dialog
+        this.$mask = $('<div class="wui-mask"></div>');
+        this.$mask.on('click', function () {
+            that.close();
+        });
+        $('body').append(this.$mask);
+        this.$el.find('.xa-closeDialog').on('click', function () {
+            that.close();
+        });
+    }
+
+    ResultDialog.prototype.render = function (status, data) {
+        if (status) {
+            var i_flag = c_flag = true;
+            this.$title.text('签到成功！');
+            if (data.integral && data.integral != 0) {
+                this.$integral.find('span').text(data.integral);
+                this.$integral.show();
+                i_flag = false;
+            }else{
+                this.$integral.hide();
+            }
+            if (data.coupon && data.coupon.name != '') {
+                if (data.coupon.count > 0) {
+                    this.$coupon.find('span').text(data.coupon.name);
+                } else {
+                    this.$coupon.html('优惠券奖励已领完,请联系客服补发');
+                }
+                this.$coupon.show();
+                c_flag = false;
+            }else{
+                this.$coupon.hide();
+            }
+            if(i_flag && c_flag){
+                this.$contentHeader.hide();
+            }
+            this.$dialogContent.show();
+        } else {
+            this.$title.text(data);
+            this.$dialogContent.hide();
+        }
+        this.$mask.show();
+        this.$el.show();
+    };
+    ResultDialog.prototype.close = function () {
+        this.$mask.hide();
+        this.$el.hide();
+    };
+
+    $(function () {
+        //隐藏参与活动按钮
+        $('.xa-submitButtonContainer').hide();
+        if(W.isPC){
+            return false;
+        }
+        resultDialog = new ResultDialog();
+        //绑定签到按钮点击事件
+        $('.wa-sign-btn').on('click', function () {
+            var $this = $(this);
+            //非会员需要关注
+            if (!W.isMember) {
+                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                        '</div><div></div>');
+                return false;
+            }
+            if ('未开始' === status) {
+                resultDialog.render(false, '签到活动未开始！');
+            } else {
+                //发起签到请求
+                W.getApi().call({
+                    app: 'm/apps/sign',
+                    resource: 'sign_participance',
+                    method: 'put',
+                    args: {
+                        webapp_owner_id: W.webappOwnerId,
+                        id: W.appRecordId
+                    },
+                    success: function (data) {
+                        prize_info = data;
+                        status = '已签到';
+                        //添加积分增长特效
+                        var adder = data.curr_prize.integral;
+                        var ori_integral = $('.wui-UserPoint').find('span').text();
+                        $('.wui-UserPoint').find('span').text(parseInt(ori_integral) + adder);
+                        $('.wui-UserPoint').find('.wui-integral-adder').html('+' + adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function () {
+                            $(this).hide();
+                        });
+                        fillPrizeInfo(prize_info);
+                        window.setTimeout(function () {
+                            resultDialog.render(true, data.curr_prize);
+                        }, 1500);
+                    },
+                    error: function (data) {
+                        resultDialog.render(false, '签到失败~');
+                    }
+                });
+
+            }
+        });
+        //填充用户信息
+        $('.wa-username').find('p').html(member_info.user_name);
+        $('.wa-user-integral').html(member_info.user_integral);
+        $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
+        //填充签到奖励信息
+        fillPrizeInfo(prize_info, true);
+        //绑定规则信息事件
+        //查看规则
+        $('.wa-signPageDiv').find('.wa-rules').on('click', function () {
+            $('.wa-signPageDiv').hide();
+            $('.wa-rules-div').show();
+            $('title').html('活动规则');
+        });
+        //积分数据
+        var prize_rules = prize_info.prize_rules;
+
+        var rule_arr = [];
+        var rule_html ="";
+
+        for(var item in prize_rules){
+          rule_arr.push(item);
+        }
+
+        rule_arr = rule_arr.sort();
+
+        for(var i=0;i<rule_arr.length;i++){
+          var j=i+1;
+          var day_num = rule_arr[i];
+          var day_integral = prize_rules[rule_arr[i]]['integral'];
+          var day_coupon = prize_rules[rule_arr[i]]['coupon'];
+          var str_int ="";
+          var str_coupon ="";
+
+          if(day_num=='0'){
+              str_int ="1.每日签到, 获得";
+              if(day_integral > 0){
+                  str_int +=  day_integral+"积分奖励";
+              }
+              if(day_coupon){
+                  str_coupon = " “"+day_coupon+"”一张";
+              }
+              if(day_integral <= 0 && !day_coupon){
+                  rule_html += "<li>1.每日签到，没有奖励</li>";
+              }else{
+                  rule_html += "<li>"+str_int+str_coupon+"。</li>";
+              }
+          }else{
+              if(day_integral <= 0 && !day_coupon){
+                    continue;
+                }
+              str_int = j + ".连续签到至" + day_num + "天, 获得";
+              if(day_integral > 0){
+                  str_int +=  day_integral + "积分奖励";
+              }
+              if(day_coupon){
+                  str_coupon = " “"+day_coupon+"”一张";
+              }
+
+              rule_html += "<li>"+str_int+str_coupon+"。</li>";
+          }
+        }
+        $('.wa-rules-div').find('.wa-rules-i-content').html(rule_html);
+
+        //返回
+        $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function () {
+            $('.wa-rules-div').hide();
+            $('.wa-signPageDiv').show();
+            $('title').html('签到');
+        });
+        //个人中心
+        $('.wa-rules-i-center').on('click', function () {
+            window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
+        });
+    });
+
+    function fillPrizeInfo(prize_info, flag) {
+        if ('已签到' != status) {
+            var temp_integral,
+                    temp_coupon;
+            if (!$.isEmptyObject(prize_info.serial_prize)) {
+                temp_integral = prize_info.serial_prize.prize.integral;
+                temp_coupon = prize_info.serial_prize.prize.coupon;
+            } else {
+                temp_integral = prize_info.daily_prize.integral;
+                temp_coupon = prize_info.daily_prize.coupon;
+            }
+            $('.wa-daily_points').html((temp_integral == '' || temp_integral == 0) ? '' : (temp_integral+'  积分')).show();
+            if (temp_coupon.id != 0) {
+                prize_html = '"' + temp_coupon.name + '"';
+                prize_html += '一张';
+            } else {
+                prize_html = ''
+            }
+            $('.wa-daily_prizes').html(prize_html).show();
+        } else {
+            if(flag){
+                $('.wa-sign-btn').hide();
+            }else{
+                $('.wa-sign-board').addClass('animated flipOutYToFront').one('webkitAnimationEnd animationend', function () {
+                    $(this).removeClass('animated flipOutYToFront');
+                });
+                $('.wa-sign-btn').addClass('animated flipOutYToBack').one('webkitAnimationEnd animationend', function () {
+                    $(this).hide();
+                });
+            }
+            $('.wa-sign-board').find('.wa-i-serial-count b').html(prize_info.serial_count < 10 ? ('0' + prize_info.serial_count) : prize_info.serial_count);
+            var temp_prize = prize_info.next_serial_prize;
+            var str = [];
+            if (!$.isEmptyObject(temp_prize)) {
+                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取以下奖励:");
+                if (temp_prize.prize.integral != 0) {
+                    $('.wa-prize-board').find('.daily_points').html(temp_prize.prize.integral + "  积分").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_points').hide();
+                }
+                if (temp_prize.prize.coupon.id != 0) {
+                    $('.wa-prize-board').find('.daily_prizes').html("\"" + temp_prize.prize.coupon.name + "\" 一张").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_prizes').hide();
+                }
+            } else {
+                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取以下奖励:");
+                var tomorrow_prize = prize_info.daily_prize;
+                if (tomorrow_prize.integral != 0) {
+                    $('.wa-prize-board').find('.daily_points').html(tomorrow_prize.integral + "  积分").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_points').hide();
+                }
+                if (tomorrow_prize.coupon.id != 0) {
+                    $('.wa-prize-board').find('.daily_prizes').html("“" + tomorrow_prize.coupon.name + "” 一张").show();
+                }else{
+                    $('.wa-prize-board').find('.daily_prizes')
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
+

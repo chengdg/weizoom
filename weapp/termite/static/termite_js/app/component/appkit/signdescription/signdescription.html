@@ -1,0 +1,273 @@
+{% load workbench_filter %}
+{% block css %}
+    <style>
+        .Chr, p {
+            font-family: STHeiti;
+        }
+
+        .Chr.Num{
+            font-family: Arial;
+        }
+
+        .wui-SignPageDiv {
+            width: 100%;
+            height: 560px;
+            background-color: #F0F0F0;
+        }
+
+        .wui-TopPaneDiv {
+            height: 33%;
+            background-image: url('/termite_static/img/component/sign/signdescription_left_bg.png');
+            background-repeat: repeat-x;
+            background-size: 5% auto;
+            text-align: center;
+            color: white;
+            padding-bottom: 15px;
+        }
+
+        .wui-UserPhotoDiv {
+            padding-top: 20px;
+            padding-bottom: 5px;
+        }
+
+        .wui-UserPhotoCircle {
+            width: 70px;
+            height: 70px;
+            padding: 2px;
+            background: #FFFEFF;
+            border-radius: 40px;
+            box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
+            -moz-border-radius: 40px;
+            -webkit-border-radius: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wui-UserPhotoCircle img {
+            width: 70px;
+            height: 70px;
+            line-height: 0; /* remove line-height */
+            display: inline-block; /* circle wraps image */
+            border-radius: 50%; /* relative value */
+            -moz-border-radius: 40px;
+            -webkit-border-radius: 50%;
+            transition: linear 0.25s;
+        }
+
+        .wui-UserName {
+            padding-top: 4px;
+        }
+
+        .wui-UserPointDiv {
+            margin: 4px 0 8px 0;
+        }
+
+        .wui-TotalPoints {
+            color: #FFFD32;
+            margin-left: 10px;
+        }
+
+        .wui-Rules.Border {
+            border: 1px solid white;
+            width: 118px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 16px;
+            padding: 4px 0 4px 0;
+        }
+        .wui-Rules.Chr span{
+            margin-left: 8px;
+            margin-right: -13px;
+        }
+        .wui-BodyPaneDiv{
+            margin-top: 10%;
+            margin-bottom: 10%;
+        }
+
+        .wui-SignCircle {
+            width: 160px;
+            height: 160px;
+            padding: 2px;
+            background: #9AD2EB;
+            border-radius: 120px;
+            -webkit-border-radius: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .wui-SignCircle .wui-SignSign {
+            width: 145px;
+            height: 145px;
+            background: #0090D6;
+            display: inline-block; /* circle wraps image */
+            border-radius: 120px;
+            -webkit-border-radius: 50%;
+            margin: auto;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            right: 0px;
+            position: absolute;
+        }
+
+        .wui-SignSign .wui-SignChr {
+            color: white;
+            font-size: 2.5em;
+            line-height: 145px;
+        }
+
+        .wui-SignDescriptionDiv {
+            color: #555555;
+            text-align: center;
+            height:10%;
+            margin-top: 15%;
+            margin-bottom: 15%;
+        }
+        .wui-SignCircle.wa-sign-board{
+            background-color: #F0F0F0;
+            font-weight: bold;
+            margin-top: auto;
+
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignSign{
+            background-color: #9AD2EB;
+            border: 5px solid #0B93D5;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr{
+            line-height: 30px;
+            font-size:1em;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Head{
+            margin-top: 10px;
+            font-size: 0.8em;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Days{
+            letter-spacing: 3px;
+            margin-top: 7px;
+            font-size: 1.3em;
+            padding-top: 10px;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Days b{
+            font-size: 3em;
+        }
+        .wui-SignCircle.wa-sign-board .wui-SignChr-Tail{
+            color:#626262;
+            font-size: 0.8em;
+        }
+        .wui-integral-adder{
+            position: absolute;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+        /* 翻页动画 */
+        .animate3d{
+            height: 160px;
+            width: 160px;
+            margin: 0 auto;
+        }
+        .front-face, .back-face{
+            position: absolute;
+            z-index: 0;
+        }
+        .wui-i-dialog-btn.wui-i-closeDialog{
+            border-radius: 35px;
+        }
+
+        .animated{
+            -webkit-animation-duration:0.6s;
+            animation-duration:0.6s;
+            -webkit-animation-fill-mode:forwards;
+            animation-fill-mode:forwards
+        }
+
+        @-webkit-keyframes flipOutYToBack{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg);opacity: 1}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,90deg);transform:perspective(400px) rotate3d(0,1,0,90deg);opacity: 0}
+            100%{opacity: 0}
+        }
+
+        @keyframes flipOutYToBack{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg);opacity: 1}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,90deg);transform:perspective(400px) rotate3d(0,1,0,90deg);opacity: 0}
+            100%{opacity: 0}
+        }
+        .flipOutYToBack{
+            -webkit-backface-visibility:visible!important;
+            backface-visibility:visible!important;
+            -webkit-animation-name:flipOutYToBack;
+            animation-name:flipOutYToBack
+        }
+        @-webkit-keyframes flipOutYToFront{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,-90deg);transform:perspective(400px) rotate3d(0,1,0,-90deg)}
+            100%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+        }
+
+        @keyframes flipOutYToFront{
+            0%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+            10%{-webkit-transform:perspective(400px) rotate3d(0,1,0,-90deg);transform:perspective(400px) rotate3d(0,1,0,-90deg)}
+            100%{-webkit-transform:perspective(400px) rotate3d(0,1,0,0deg);transform:perspective(400px) rotate3d(0,1,0,0deg)}
+        }
+        .flipOutYToFront{
+            -webkit-backface-visibility:visible!important;
+            backface-visibility:visible!important;
+            -webkit-animation-name:flipOutYToFront;
+            animation-name:flipOutYToFront
+        }
+
+        @-webkit-keyframes fadeOutUp{0%{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)}100%{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)}}
+
+        @keyframes fadeOutUp{0%{opacity:1;-webkit-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0)}100%{opacity:0;-webkit-transform:translateY(-20px);-ms-transform:translateY(-20px);transform:translateY(-20px)}}
+
+        .fadeOutUp{-webkit-animation-name:fadeOutUp;animation-name:fadeOutUp}
+
+    </style>
+    <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
+
+{% ifequal component.type 'appkit.signdescription' %}
+<div class="wui-SignPageDiv wa-signPageDiv">
+    <div class="wui-TopPaneDiv">
+        <div class="wui-UserPhotoDiv">
+            <div class="wui-UserPhotoCircle wa-user-icon">
+                <img src="/static/img/user-1.jpg">
+            </div>
+        </div>
+        <div class="wui-UserName Chr wa-username"><p>用户名</p></div>
+        <div class="wui-UserPointDiv">
+            <p class="wui-UserPoint Chr">积分:<span class="wui-TotalPoints Chr Num wa-user-integral"></span><b class="wui-integral-adder"></b></p>
+        </div>
+        <div class="wui-Rules Border wa-rules">
+            <div class="wui-Rules Chr">活动规则<span class="fa fa-play-circle"></span></div>
+
+        </div>
+    </div>
+
+    <div class="wui-BodyPaneDiv">
+        <div class="wui-SignDiv animate3d">
+            <div class="wui-SignCircle wa-sign-board back-face">
+                <div class="wui-SignSign">
+                    <p class="wui-SignChr wui-SignChr-Head">已连续签到</p>
+                    <p class="wui-SignChr wui-SignChr-Days wa-i-serial-count"><b class="Chr Num"></b>天</p>
+                    <p class="wui-SignChr wui-SignChr-Tail">已签到</p>
+                </div>
+            </div>
+            <div class="wui-SignCircle wa-sign-btn front-face">
+                <div class="wui-SignSign">
+                    <p class="wui-SignChr">签到</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wui-SignDescriptionDiv">
+        <div class="wui-SignDescriptionDiv Chr wa-prize-board">
+            <p class="wa-daily_title">今日可以领取以下奖励:</p>
+            <p class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</p>
+            <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>{{ component.model.daily_prizes.name }} 一张</p>
+        </div>
+    </div>
+</div>
+{% endifequal %}

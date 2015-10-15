@@ -1,0 +1,115 @@
+<script id="red-envelope-detail-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade ">
+    <div class="modal-dialog modal-lg xui-appPage-commonStyle" style="width: 1000px;">
+    <div class="modal-content xui-detail-tableBox">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">{{html member_name}}引入详情</h3>
+        </div>
+        <ul class="fans_data_ul xui-weixin-outlinePage">
+			<li style="font-weight: bold;margin-left: 10px;">新关注人数：<em>${introduce_new_member}</em>人</li>
+			<li style="font-weight: bold;">领取人数：<em>${introduce_received_number}</em>人</li>
+			<li style="font-weight: bold;">产生消费额：<em>${introduce_sales_number}</em>元</li>
+			<li style="font-weight: bold;">使用人数：<em>${introduce_used_number}</em>人</li>
+		</ul>
+        <div class="modal-body" style="min-height: 100px;">
+            <div
+                class="panel-body panel-table p0 mt10"
+                data-ui-role="advanced-table"
+                data-app="apps/red_envelope"
+                data-resource="red_envelope_participances"
+                data-args='{"rule_id": "${rule_id}","relation_id": "${relation_id}","introduced_by": "${introduced_by}","receive_method": "${receive_method}"}'
+                data-template-id="#red-envelope-dialog-detail-tmpl"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-selectable="true"
+                data-disable-header-select="true"
+                data-outer-selecter='.xa-selectAll'
+                data-selecttable-tr='xa-selectTr'
+                data-item-count-per-page="10"
+                ></div>
+            <div class="dropdown xui-operation update_dropdown pa red-envelope-dialog"  style="bottom: 5px;left: 33px;">
+				<div>
+					<span class="checkbox">
+						<label class="xa-selectAll" for="all">
+								<input type="checkbox" style="top: -3px;" id="all">全选
+						</label>
+					</span>
+				</div>
+			</div>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
+
+<script id="red-envelope-dialog-detail-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 red-envelope-detail-dialog">
+		<thead>
+			<tr>
+				<th width="80" style="text-align:left">分享会员</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='member__grade' data-sort-direction="up">会员状态</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_received_number' data-sort-direction="up">引入领取人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_used_number' data-sort-direction="up">引入使用人数</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_new_member' data-sort-direction="up">引入新关注</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='introduce_sales_number' data-sort-direction="up">引入消费额</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='created_at' data-init-sort="-created_at" data-sort-direction="up">领取时间</th>
+				<th class="tx_sortable xui-Blue" data-sort-attr='coupon__status' data-sort-direction="up">使用状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody class="red-envelope-dialog">
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}" class="xa-selectTr">
+				<td style="position:relative;" title='{{html item.username}}'>
+					<div style="text-align:left">
+						<a target="_blank" href="/member/detail/?id=${item.member_id}">
+							<img width="41" src="${item.participant_icon}" onerror="this.src='/static/img/user-1.jpg'"/>
+						</a>
+					</div>
+					<div style="text-align:left">
+						<div>
+						<a class="xui-Blue" target="_blank" href="/member/detail/?id=${item.member_id}" style="display:block;width:80px;" >{{html item.username_truncated}}</a>
+					</div>
+				</td>
+				<td>
+					{{if item.grade == "新会员"}}
+						<span style="color:#da0909">${item.grade}</span>
+					{{else}}
+						${item.grade}
+					{{/if}}
+				</td>
+				<td>
+					${item.introduce_received_number_count}
+				</td>
+				<td>
+                    ${item.introduce_used_number_count}
+				</td>
+				<td>
+                    ${item.introduce_new_member_count}
+				</td>
+				<td>
+					${item.introduce_sales_number}
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>
+					{{if item.coupon_status==1}}
+						<b style="color:#5D8F17">${item.coupon_status_name}</b>
+					{{else}}
+						<b>未使用</b>
+					{{/if}}
+				</td>
+				<td>
+					{{if item.coupon_status==1}}
+						<a href="/mall2/order/?order_id=${item.order_id}" target="_blank">查看使用订单</a>
+					{{/if}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	<br>
+</script>

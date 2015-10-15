@@ -69,3 +69,5 @@ weapp/.idea/*
 #self
 .gitignore
 
+/.gitignore
+weapp/.idea/

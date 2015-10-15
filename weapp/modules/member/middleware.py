@@ -368,12 +368,14 @@ class RedirectByFmtMiddleware(object):
 					new_url = url_helper.remove_querystr_filed_from_request_url(request, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD)
 					new_url = url_helper.add_query_part_to_request_url(new_url, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, new_fmt)
 					response = HttpResponseRedirect(new_url)
-					response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
+					if url_fmt:
+						response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
 					return response
 		else:
 			new_url = url_helper.remove_querystr_filed_from_request_url(request, member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD)
 			response = HttpResponseRedirect(new_url)
-			response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
+			if url_fmt:
+				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, url_fmt, max_age=60*60*24*365)
 			return response
 
 		return None
@@ -1148,7 +1150,8 @@ class OAUTHMiddleware(object):
 		response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, "%s____%s" % (social_account.openid, request.user_profile.webapp_id), max_age=60*60*24*365)
 		response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
 		if fmt != member.token:
-			response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
+			if fmt:
+				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
 			shared_url_digest = _get_hexdigest_url(request.get_full_path())
 			response.set_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, shared_url_digest, max_age=60*60)
 		return response
@@ -1580,8 +1583,8 @@ class RefuelingMiddleware(object):
 				url_fid = request.GET.get(member_settings.REFUELING_FID, None)
 				cookie_fid = request.COOKIES.get(member_settings.REFUELING_FID, None)
 				crmid = request.GET.get('crmid', None)
-				
-				
+
+
 				if not url_fid:
 					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), member_settings.REFUELING_FID, request.member.id)
 					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, 'crmid')

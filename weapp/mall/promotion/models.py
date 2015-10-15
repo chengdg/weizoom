@@ -677,7 +677,9 @@ class RedEnvelopeRule(models.Model):
 	share_title = models.CharField(max_length=256)
 	share_pic = models.CharField(max_length=256)
 	is_delete = models.BooleanField(default=False)
-	status = models.BooleanField(default=False) #状态默认开启
+	status = models.BooleanField(default=False) #状态默认关闭
+	receive_method = models.BooleanField(default=False) #领取方式默认为下单领取
+	order_index = models.IntegerField(default=0) #记录排序，置后为-1
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
@@ -721,7 +723,8 @@ class RedEnvelopeToOrder(models.Model):
 	"""
 	owner = models.ForeignKey(User)
 	member_id = models.IntegerField(default=0)
-	order_id = models.IntegerField(default=0)
+	order_id = models.IntegerField(default=0) #订单领取记录订单id
+	material_id = models.IntegerField(default=0) #图文领取记录图文id
 	red_envelope_rule_id = models.IntegerField(default=0)
 	count = models.IntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)
@@ -730,6 +733,9 @@ class RedEnvelopeToOrder(models.Model):
 		db_table = 'mall_red_envelope_to_order'
 		verbose_name = '红包关联订单记录'
 		verbose_name_plural = '红包关联订单记录'
+
+	def __getitem__(self, name):
+		return getattr(self, name, None)
 
 class GetRedEnvelopeRecord(models.Model):
 	"""
@@ -748,3 +754,25 @@ class GetRedEnvelopeRecord(models.Model):
 		db_table = 'mall_red_envelope_record'
 		verbose_name = '红包领用记录'
 		verbose_name_plural = '红包领用记录'
+
+class RedEnvelopeParticipences(models.Model):
+	"""
+	红包领用记录
+	"""
+	owner = models.ForeignKey(User)
+	coupon = models.ForeignKey(Coupon)
+	red_envelope_rule_id = models.IntegerField(default=0)
+	red_envelope_relation_id = models.IntegerField(default=0)
+	member = models.ForeignKey(Member)
+	is_new = models.BooleanField(default=False)
+	introduced_by = models.IntegerField(default=0)  #由谁引入
+	introduce_new_member = models.IntegerField(default=0) #引入新关注
+	introduce_used_number = models.IntegerField(default=0) #引入使用人数
+	introduce_received_number = models.IntegerField(default=0) #引入领取人数
+	introduce_sales_number = models.FloatField(default=0.0) #引入消费额
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta(object):
+		db_table = 'mall_red_envelope_participences'
+		verbose_name = '红包领用分析'
+		verbose_name_plural = '红包领用分析'

@@ -1,0 +1,39 @@
+<script id="mall-red-member-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label class="">会员名称：</label>
+			<input type="text" class="form-control " id="name" name="name" value="" />
+		</div>
+	</div>
+
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>会员状态：</label>
+			<select id="grade" name="grade">
+				<option value="-1">全部</option>
+				{{each(i, grade) grades}}
+				<option value="${grade.id}" name="grade">${grade.name}</option>
+				{{/each}}
+			</select>
+		</div>
+	</div>
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>使用状态：</label>
+			<select id="coupon_status" name="coupon_status">
+				<option value="-1">全部</option>
+				{{each(i, coupon) coupon_status}}
+				<option value="${coupon.id}" name="tag">${coupon.name}</option>
+				{{/each}}
+			</select>
+		</div>
+	</div>
+	<div class="tc">
+		<a class="btn btn-primary ml20 mr10 xa-search xui-fontBold" href="javascript:void(0);">查询</a>
+		<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重置</a>
+		<!--<a class="btn btn-default xa-more-filter" href="javascript:void(0);">高级查询</a>-->
+	</div>
+</div>
+
+</script>

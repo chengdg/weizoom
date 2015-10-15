@@ -1418,3 +1418,20 @@ button.xui-deleteImageButton{
 .xui-wepage-globalNavPage .xui-workbench-phonePanel .xui-i-title {
 	display: none;
 }
+
+#propertyEditor .groupHelp_tip{
+	margin-left: 5px;
+	width: 20px;
+	height: 20px;
+	background-color: gray;
+	display: inline-block;
+	border-radius: 20px;
+	color: white;
+	text-align: center;
+	padding-top: 3px;
+	font-size: 13px;
+	text-decoration: none;
+}
+
+/* 自动回复关键字组件  */
+

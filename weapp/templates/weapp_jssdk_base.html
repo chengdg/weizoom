@@ -21,7 +21,7 @@
       }
        var hm = document.createElement("script");
        hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
-       var s = document.getElementsByTagName("script")[0]; 
+       var s = document.getElementsByTagName("script")[0];
        s.parentNode.insertBefore(hm, s);
       /*
        * 微信分享按钮事件
@@ -124,7 +124,7 @@
             if(res.onMenuShareAppMessage)
               wx.onMenuShareAppMessage(W.wxShareData);
             if(res.onMenuShareTimeline)
-              wx.onMenuShareTimeline(W.wxShareData);
+              wx.onMenuShareTimeline(W.wxShareTimelineData);
             if(res.onMenuShareQQ)
               wx.onMenuShareQQ(W.wxShareData);
             if(res.previewImage)
