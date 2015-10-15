@@ -423,8 +423,6 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
     coupon_rule.update(use_count=F('use_count') + 1)
 
     #更新红包优惠券分析数据 by Eugene
-    print "dfsdfsdf##############################"
-    print coupon[0].id
     if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
         red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
         if red_envelope2member.introduced_by != 0:
