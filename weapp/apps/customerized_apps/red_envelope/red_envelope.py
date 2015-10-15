@@ -483,17 +483,18 @@ def get_datas(request):
 
     items = []
     for relation in relations:
-        if receive_method == 'False':
+        if receive_method == 'True':
             if relation.member.is_subscribed and relation.member.grade:
-                grade = relation.member.grade.name
+                if relation.member.grade:
+                    grade = relation.member.grade.name
             else:
                 grade = u"会员"
         else:
-            if relation.is_new:
-                grade = u"新会员"
+            if relation.member.is_subscribed:
+                grade = relation.member.grade.name
             else:
-                if relation.member.is_subscribed:
-                    grade = relation.member.grade.name
+                if relation.is_new:
+                    grade = u"新会员"
                 else:
                     grade = u"非会员"
         items.append({
