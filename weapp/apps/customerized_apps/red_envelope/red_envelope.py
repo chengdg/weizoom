@@ -481,18 +481,32 @@ def get_datas(request):
     else:
         coupon_id2order_id = {}
 
+
+    sub_member_ids = []
+    for sub_relation in relations:
+        sub_member_ids.append(sub_relation.member_id)
+
+    #获取关注关系l
+    member_follow_relation = MemberFollowRelation.objects.filter(member_id__in=sub_member_ids)
+
+    #只保存新会员的最后一条记录l
+    member_id2follower_member_id ={}
+    for member in member_follow_relation:
+        member_id2follower_member_id[member.member_id] = member.follower_member_id
     items = []
     for relation in relations:
         if receive_method == 'True':
             if relation.member.is_subscribed and relation.member.grade:
-                if relation.member.grade:
-                    grade = relation.member.grade.name
+                grade = relation.member.grade.name
             else:
                 grade = u"会员"
         else:
             if relation.member.is_subscribed:
                 if relation.is_new:
-                    grade = u"新会员"
+                    if member_id2follower_member_id[relation.member_id] == relation.introduced_by:
+                        grade = u"新会员"
+                    else:
+                        grade = u"非会员"
                 else:
                     grade = relation.member.grade.name
             else:

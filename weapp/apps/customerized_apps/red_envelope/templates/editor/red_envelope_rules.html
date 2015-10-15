@@ -109,18 +109,22 @@
             </td>
             <td width="154">
                 {{if rule.limit_time}}
-                永久
+                    {{if rule.is_timeout && !rule.limit_time }}
+                        <span style="color:#cf0404;">已过期</span>
+                    {{else}}
+                        永久
+                    {{/if}}
                 {{else}}
-                    <span style="display:inline-block;width:70px">${ rule.start_time }</span>-<span style="display:inline-block;width:70px">${ rule.end_time }</span>
+                    {{if rule.is_timeout && !rule.limit_time }}
+                        <span style="color:#cf0404;">已过期</span>
+                    {{else}}
+                        <span style="display:inline-block;width:70px">${ rule.start_time }</span>-<span style="display:inline-block;width:70px">${ rule.end_time }</span>
+                    {{/if}}
                 {{/if}}
             </td>
             <td width="132">${ rule.coupon_rule_name }</td>
             <td>
-                {{if rule.is_timeout && !rule.limit_time }}
-                    <span style="color:#cf0404;">已过期</span>
-                {{else}}
-                    {{if rule.status }}开启{{else}}关闭{{/if}}
-                {{/if}}
+                {{if rule.status }}开启{{else}}关闭{{/if}}
             </td>
             <td>${ rule.get_count }
             </td>
