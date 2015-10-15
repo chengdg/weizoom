@@ -47,7 +47,7 @@ def send_mass_text_message_with_openid_list(user_profile, openid_list, content, 
 				result = weixin_api.send_mass_message(mesage, True)
 				if result.has_key('msg_id'):
 					if log_id:
-						UserSentMassMsgLog.objects.filter(id=log_id).update(result['msg_id'], MESSAGE_TYPE_TEXT, content)
+						UserSentMassMsgLog.objects.filter(id=log_id).update(msg_id=result['msg_id'], message_type=MESSAGE_TYPE_TEXT, message_content=content)
 					else:
 						UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
 				return True
@@ -120,7 +120,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				result = weixin_api.send_mass_message(message, True)
 				if result.has_key('msg_id'):
 					if log_id:
-						UserSentMassMsgLog.objects.filter(id=log_id).update(result['msg_id'], MESSAGE_TYPE_NEWS, material_id)
+						UserSentMassMsgLog.objects.filter(id=log_id).update(msg_id=result['msg_id'], message_type=MESSAGE_TYPE_NEWS, message_content=material_id)
 					else:
 						UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_NEWS, material_id)
 				return True
