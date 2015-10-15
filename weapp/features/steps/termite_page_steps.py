@@ -243,7 +243,10 @@ def __actual_page(page_json, user):
 		# 公告
 		if component['type'] == "wepage.notice":
 			actual_component = {
-				"notice_text": model['title']
+				"notice_text": {
+					"index": model['index'],
+					"text": model['title']
+				}
 			}
 
 		# 富文本
@@ -668,7 +671,7 @@ def _add_image_display(page, page_json, user):
 			"need_server_process_component_data": "no",
 			"is_new_created": True,
 			"property_view_title": u"橱窗",
-			"model": { "id":"", "class":"", "name":"", "index":9,
+			"model": { "id":"", "class":"", "name":"", "index": __get_index(display_window),
 				"datasource":{"type":"api","api_name":""},
 				"title": display_window['display_window_title'],
 				"displayMode": image_display2mode[display_window['display_mode']],
