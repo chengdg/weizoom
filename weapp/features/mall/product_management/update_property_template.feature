@@ -1,5 +1,8 @@
 Feature: 更新属性模板
+"""
+
 	Jobs通过管理系统在商城中更新属性模板
+"""
 
 Background:
 	Given jobs登录系统
@@ -43,8 +46,8 @@ Background:
 		}]
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 更新属性模板
+@mall2 @product @property   @mall @mall.product @mall.product_model
+Scenario:1 更新属性模板
 	jobs更新属性模板的名称和属性后
 	1. job的属性模板更新
 	2. bill的属性模板不受影响

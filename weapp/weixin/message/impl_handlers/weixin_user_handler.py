@@ -25,6 +25,8 @@ class WeixinUserHandler(MessageHandler):
 
 	def _handle_weixin_user(self, user_profile, weixin_user_name, is_from_simulator):
 		weixin_account_token = get_token_for(user_profile.webapp_id, weixin_user_name, is_from_simulator)
+		
+
 		existed_weixin_users = WeixinUser.objects.filter(username=weixin_user_name)
 
 		if existed_weixin_users.count() == 0: #不存在时创建

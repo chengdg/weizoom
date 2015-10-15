@@ -248,7 +248,7 @@ W.view.weixin.MenuItem = Backbone.View.extend({
     	var length = $oneMenuItemDiv.find('.form-control').length;
 
     	if (length > 0) {
-			$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
+			$('.xa-no-panel').addClass('xui-editCover').html('使用二级菜单后主回复已失效');
 			
 			//$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
 		} else {

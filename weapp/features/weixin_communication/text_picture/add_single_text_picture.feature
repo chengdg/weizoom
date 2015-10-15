@@ -1,6 +1,6 @@
 Feature: 需求1290新建单条图文 jobs在系统中新建单条图文
 
-@mall2 @senior @textPicture 
+@mall2 @senior @textPicture
 Scenario: 1 添加单条图文
 	Jobs添加单条图文后，能获取他添加单条图文
 	标题30字以内，摘要120字以内，正文2万字以内，插入一张图片
@@ -60,7 +60,6 @@ Scenario: 1 添加单条图文
 			"content":"单条图文2文本内容"
 		}
 		"""
-
 	And jobs能获取图文'图文3'
 		"""
 		{
@@ -74,6 +73,7 @@ Scenario: 1 添加单条图文
 			"jump_url":"www.baidu.com"
 		}
 		"""
+
 	Given bill登录系统
 	Then bill能获取图文管理列表
 		"""

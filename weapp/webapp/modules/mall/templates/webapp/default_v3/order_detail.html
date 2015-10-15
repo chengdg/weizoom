@@ -240,18 +240,24 @@
             <span class="fl">商品金额</span>
             <span class="fr">￥<span class="xa-totalProductPrice">{{ order.product_price | floatformat:"2" }}</span></span>
         </p>
+        <p class="zoom">
+            <span class="fl">运费</span>
+            <span class="fr">+￥<span class="xa-postageElement">{{ order.postage | floatformat:"2" }}</span></span>
+        </p>
         {% if order.integral %}
         <p class="zoom">
             <span class="fl">积分抵扣</span>
             <span class="fr">-￥<span class="xa-integralMoney">{{ order.integral_money | floatformat:"2"}}</span></span>
         </p>
         {% endif %}
+{# jz 2015-10-09 #}
 {#        {% if order.has_promotion_saved_money %}#}
 {#        <p class="zoom">#}
 {#            <span class="fl">促销优惠</span>#}
 {#            <span class="fr">-￥<span class="">{{ order.promotion_saved_money | floatformat:"2"}}</span></span>#}
 {#        </p>#}
 {#        {% endif %}#}
+
         {% if order.coupon_id %}
         <p class="zoom">
             <span class="fl">优惠劵</span>
@@ -274,10 +280,6 @@
             {% endif %}
         </p>
         {% endif %}
-        <p class="zoom">
-            <span class="fl">运费</span>
-            <span class="fr">+￥<span class="xa-postageElement">{{ order.postage | floatformat:"2" }}</span></span>
-        </p>
     </div>
     <div style="padding:10px 12px;" class="clearfix">
         <p class="tr em95">实付金额：<span class="xui-text-red em1">￥{{ order.final_price | floatformat:"2" }}</span></p>
@@ -324,6 +326,7 @@
     {% endif %}
     <!-- 订单价格清单 -->
 
+{# jz 2015-10-09 #}
     <!-- 感恩卡
     {% if is_support_thanks_card %}
     <fieldset class="xui-section pr">
@@ -352,7 +355,6 @@
     </fieldset>
     {% endif %} -->
     <!-- 感恩卡 -->
-
     <!-- 配送套餐
     {% if is_delivery_plan %}
     <div class="xui-expressPage clearfix mt20 pr">
@@ -389,6 +391,7 @@
     </div>
     {% endif %} -->
 
+{# jz 2015-10-09 #}
     <!-- {% if is_show_success %}
     <div class="xui-cover xa-cover">
         <div class="xui-inner-container pr">

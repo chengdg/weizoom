@@ -99,8 +99,8 @@ def update_member_basic_info(user_profile, member, oauth_create=False):
 member_basic_info_updater = update_member_basic_info
 
 #TODO 考虑数据库操作事务？
-def create_member_by_social_account(user_profile, social_account, oauth_create=False):
-	return member_info_util.create_member_by_social_account(user_profile, social_account, oauth_create)
+def create_member_by_social_account(user_profile, social_account, oauth_create=False, default_member_grade=None, default_member_tag=None):
+	return member_info_util.create_member_by_social_account(user_profile, social_account, oauth_create, default_member_grade, default_member_tag)
 
 def get_all_group(user_profile):
 	return member_info_util.get_all_group(user_profile)

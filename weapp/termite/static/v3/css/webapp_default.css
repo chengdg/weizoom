@@ -221,9 +221,11 @@ body.ui-overlay-x .ui-page{
 /* horizontal listview 样式 */
 /*listView-x*/
 .xui-hlist{
-    max-width:480px;
+    /*max-width:480px;*/
+    width: 100%;
     overflow:hidden;
     margin:0px auto;
+    background: #fff;
 }
 .xui-hlist ul{
     margin:0;

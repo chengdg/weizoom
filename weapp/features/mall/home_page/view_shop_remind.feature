@@ -1,7 +1,7 @@
 #_author_:张三香
+#editor:王丽 2015.10.13
 
 Feature:查看店铺提醒
-
 	"""
 		1、商品管理：
 			在售商品(x):
@@ -34,7 +34,6 @@ Feature:查看店铺提醒
 				x为24小时内要结束的分享红包活动;
 				点击链接,打开新页面跳转到'分享红包'页面,将快结束的活动展示出来
 	"""
-
 
 Background:
 	Given jobs登录系统
@@ -110,52 +109,52 @@ Background:
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
 
-@homePage @statistics @mall2
-Scenario: 1 查看商品管理 
+@mall2 @homePage @statistics
+Scenario: 1 查看商品管理
 	Given jobs登录系统
 	Then jobs能获取店铺提醒信息
 		"""
-			{
-				"onshelf_product_count":4,
-				"sellout_product_count":2
-			}
+		{
+			"onshelf_product_count":4,
+			"sellout_product_count":2
+		}
 		"""
 
 	#上架或下架对'商品管理-出售中的商品'的影响
 		When jobs-上架商品'商品1'
 		Then jobs能获取店铺提醒信息
 			"""
-				{
-					"onshelf_product_count":5,
-					"sellout_product_count":3
-				}
+			{
+				"onshelf_product_count":5,
+				"sellout_product_count":3
+			}
 			"""
 		When jobs-下架商品'商品4'
 		Then jobs能获取店铺提醒信息
 			"""
-				{
-					"onshelf_product_count":4,
-					"sellout_product_count":3
-				}
+			{
+				"onshelf_product_count":4,
+				"sellout_product_count":3
+			}
 			"""
 
 	#库存修改对'商品管理-库存不足的商品'的影响
 		When jobs更新商品'商品2'
 			"""
-				{
-					"name": "商品2",
-					"price": 100.00,
-					"stock_type": "有限",
-					"stocks":2,
-					"status":"在售"
-				}
+			{
+				"name": "商品2",
+				"price": 100.00,
+				"stock_type": "有限",
+				"stocks":2,
+				"status":"在售"
+			}
 			"""
 		Then jobs能获取店铺提醒信息
 			"""
-				{
-					"onshelf_product_count":4,
-					"sellout_product_count":2
-				}
+			{
+				"onshelf_product_count":4,
+				"sellout_product_count":2
+			}
 			"""
 
 		When bill访问jobs的webapp
@@ -171,13 +170,13 @@ Scenario: 1 查看商品管理
 		Given jobs登录系统
 		Then jobs能获取店铺提醒信息
 			"""
-				{
-					"onshelf_product_count":4,
-					"sellout_product_count":3
-				}
+			{
+				"onshelf_product_count":4,
+				"sellout_product_count":3
+			}
 			"""
 
-@homePage @statistics @mall2
+@mall2 @homePage @statistics
 Scenario: 2 查看订单管理
 
 	When 微信用户批量消费jobs的商品
@@ -195,10 +194,10 @@ Scenario: 2 查看订单管理
 	Given jobs登录系统
 	Then jobs能获取店铺提醒信息
 		"""
-			{
-				"to_be_shipped_order_count":3,
-				"refunding_order_count":2
-			}
+		{
+			"to_be_shipped_order_count":3,
+			"refunding_order_count":2
+		}
 		"""
 
 	#购买或进行发货操作影响'待发货'订单数
@@ -206,35 +205,35 @@ Scenario: 2 查看订单管理
 			When bill访问jobs的webapp
 			When bill购买jobs的商品
 				"""
-					{
-						"order_id": "00011",
-						"products": [{
-							"name": "商品4",
-							"count": 1
-						}]
+				{
+					"order_id": "00011",
+					"products": [{
+						"name": "商品4",
+						"count": 1
+					}]
 
-					}
+				}
 				"""
 			And bill使用支付方式'货到付款'进行支付
 			When tom访问jobs的webapp
 			When tom购买jobs的商品
 				"""
-					{
-						"order_id": "00012",
-						"products": [{
-							"name": "商品4",
-							"count": 1
-						}]
-					}
+				{
+					"order_id": "00012",
+					"products": [{
+						"name": "商品4",
+						"count": 1
+					}]
+				}
 				"""
 			And bill使用支付方式'微信支付'进行支付
 			Given jobs登录系统
 			Then jobs能获取店铺提醒信息
 				"""
-					{
-						"to_be_shipped_order_count":5,
-						"refunding_order_count":2
-					}
+				{
+					"to_be_shipped_order_count":5,
+					"refunding_order_count":2
+				}
 				"""
 		#进行发货操作
 			Given jobs登录系统
@@ -249,26 +248,26 @@ Scenario: 2 查看订单管理
 				"""
 			Then jobs能获取店铺提醒信息
 				"""
-					{
-						"to_be_shipped_order_count":4,
-						"refunding_order_count":2
-					}
+				{
+					"to_be_shipped_order_count":4,
+					"refunding_order_count":2
+				}
 				"""
 	#申请退款或完成退款影响'退款中'订单数
 		Given jobs登录系统
 		When jobs'申请退款'订单'00005'
 		Then jobs能获取店铺提醒信息
-				"""
-					{
-						"to_be_shipped_order_count":4,
-						"refunding_order_count":3
-					}
-				"""
+			"""
+			{
+				"to_be_shipped_order_count":4,
+				"refunding_order_count":3
+			}
+			"""
 		When jobs通过财务审核'退款成功'订单'00005'
 		Then jobs能获取店铺提醒信息
-				"""
-					{
-						"to_be_shipped_order_count":4,
-						"refunding_order_count":2
-					}
-				"""
+			"""
+			{
+				"to_be_shipped_order_count":4,
+				"refunding_order_count":2
+			}
+			"""

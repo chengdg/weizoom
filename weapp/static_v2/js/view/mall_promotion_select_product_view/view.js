@@ -16,6 +16,7 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		'click .xa-delete': 'onClickDeleteProduct',
 		'click .xa-showAllModels': 'onClickShowAllModelsButton',
 		'click .xa-selectAll': 'onClickSelectAll',
+		'click .xa-select': 'onClickSelect',
 		'click .xa-outSelectAll':'onClickSelectAll',
 		'click .xa-batchDelete':'onClickBatchDelete'
 	},
@@ -226,7 +227,21 @@ W.view.mall.PromotionSelectProductView = Backbone.View.extend({
 		var isChecked = $checkbox.is(':checked');
 		this.$('tbody .xa-select').prop('checked', isChecked);
 	},
-
+	onClickSelect:function(envent){
+		var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        var isAllChecked = true;
+        this.$('tbody .xa-select').each(function() {
+            var isChecked = $(this).is(':checked');
+            if (!isChecked) {
+                isAllChecked = false;
+                $('.xa-selectAll').attr('checked', false);
+            }
+        });
+        if (isAllChecked) {
+            $('.xa-selectAll').attr('checked', true);
+        }
+	},
 	/**
 	 * onClickShowAllModelsButton: 鼠标点击“查看规格”区域的响应函数
 	 */

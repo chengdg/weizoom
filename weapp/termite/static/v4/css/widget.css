@@ -1265,15 +1265,17 @@ ul.wui-relatelink li h3{
     font-size: 14px;
 }
 .wui-richtext table{
+    width: 100%;
     margin-top: 8px;
     margin-bottom: 18px;
 }
 .wui-richtext table td{
     width: 98px;
     height: 22px;
-    border: 1px solid #666;
+    border: 1px solid #d0d0d0;
     text-align: center;
     line-height: 22px;
+    vertical-align: middle;
 }
 .wui-richtext em{
     font-style: italic;

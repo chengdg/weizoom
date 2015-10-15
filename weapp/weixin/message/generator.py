@@ -46,8 +46,20 @@ def get_unsubscribe_event(to_user, from_user='weizoom'):
 	timestamp = int(time.time())
 	return REQUEST_SUBSCRIBE_EVENT_TMPL % (to_user, from_user, timestamp, 'unsubscribe')
 
+REQUEST_QRCODE_EVET_TMPL = u"""
+<xml>
+	<ToUserName><![CDATA[%s]]></ToUserName>
+	<FromUserName><![CDATA[%s]]></FromUserName>
+	<CreateTime>%s</CreateTime>
+	<MsgType><![CDATA[event]]></MsgType>
+	<Event><![CDATA[%s]]></Event>
+	<EventKey><![CDATA[qrscene_123123]]></EventKey>
+	<Ticket><![CDATA[%s]]></Ticket>
+</xml>"""
 
-
+def get_qrcode_subscribe_event(to_user, ticket, from_user='weizoom'):
+	timestamp = int(time.time())
+	return REQUEST_QRCODE_EVET_TMPL % (to_user, from_user, timestamp, 'subscribe', ticket)
 
 
 NEWS_BEG_TMPL = u"""

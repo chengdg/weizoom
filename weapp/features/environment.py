@@ -154,6 +154,7 @@ def __clear_all_app_data():
 	member_models.ShipInfo.objects.all().delete()
 	webapp_models.PageVisitLog.objects.all().delete()
 	webapp_models.PageVisitDailyStatistics.objects.all().delete()
+	webapp_models.Project.objects.filter(type="wepage", is_active=False).delete()
 
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
@@ -278,6 +279,7 @@ def __clear_all_app_data():
 	# 会员扫码
 	member_qrcode_models.MemberQrcode.objects.all().delete()
 	member_qrcode_models.MemberQrcodeLog.objects.all().delete()
+	member_qrcode_models.MemberQrcodeSettings.objects.all().delete()
 	modules_member_models.MemberMarketUrl.objects.all().delete()
 
 	# 店铺装修
@@ -294,7 +296,8 @@ def __clear_all_app_data():
 	weixin2_models.CollectMessage.objects.all().delete()
 	weixin2_models.MessageRemarkMessage.objects.all().delete()
 
-	
+	# weixin_user_models.ComponentInfo.objects.all().delete()
+	# weixin_user_models.ComponentAuthedAppid.objects.all().delete()
 	# 缓存
 	cache.clear()
 
@@ -305,6 +308,20 @@ def __binding_wexin_mp_account(user=None):
 	绑定公众号
 	"""
 	account_models.UserProfile.objects.all().update(is_mp_registered=True)
+
+	if weixin_user_models.ComponentInfo.objects.filter(is_active=True).count() == 0:
+		component_info = weixin_user_models.ComponentInfo.objects.create(
+			app_id="wx8209f1f63f0b1d26",
+			app_secret="component_secret",
+			component_verify_ticket="",
+			token="",
+			ase_key="",
+			component_access_token="",
+			is_active=True
+			)
+	else:
+		component_info = weixin_user_models.ComponentInfo.objects.filter(is_active=True)[0]
+
 
 	if user:
 		count = weixin_user_models.WeixinMpUser.objects.filter(owner=user).count()
@@ -320,9 +337,11 @@ def __binding_wexin_mp_account(user=None):
 	
 			weixin_user_models.WeixinMpUserAccessToken.objects.create(mpuser=mpuser, is_active=True,app_id=user.id, app_secret='app_secret',  access_token='access_token')
 			weixin_user_models.MpuserPreviewInfo.objects.create(mpuser=mpuser, name=mpuser.username)
+			weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
 		else:
 			weixin_user_models.WeixinMpUser.objects.filter(owner=user).update(is_certified=True, is_service=True, is_active=True)
-
+			if weixin_user_models.ComponentAuthedAppid.objects.filter(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True).count() == 0:
+				weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
 
 def __sync_workspace():
 	"""

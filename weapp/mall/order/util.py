@@ -500,7 +500,7 @@ def handle_member_nickname(name):
         return u''
 
 
-def get_detail_response(request, belong='all'):
+def get_detail_response(request):
     # 没有订单号参数直接返回订单列表页
     if not request.GET.get('order_id', None):
         return HttpResponseRedirect('/mall2/order_list/')
@@ -553,12 +553,12 @@ def get_detail_response(request, belong='all'):
                     break
 
         order.area = regional_util.get_str_value_by_string_ids(order.area)
-        order.belong = belong
         order.pay_interface_name = PAYTYPE2NAME.get(order.pay_interface_type, u'')
         order.total_price = mall.models.Order.get_order_has_price_number(order)
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
+        order.actions = get_order_actions(order, is_detail_page=True)
 
         if order.order_source:
             order.source = u'商城'
@@ -567,12 +567,6 @@ def get_detail_response(request, belong='all'):
             order.source = u'本店'
             order.come = 'mine_mall'
 
-        if belong == 'audit':
-            second_nav_name = export.ORDER_AUDIT
-        elif belong == 'refund':
-            second_nav_name = export.ORDER_REFUND
-        else:
-            second_nav_name = export.ORDER_ALL
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -618,16 +612,16 @@ def get_detail_response(request, belong='all'):
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
-            'second_nav_name': second_nav_name,
+            'second_nav_name': export.ORDER_ALL,
             'order': order,
             'child_orders': child_orders,
-            'suppliers':suppliers,
+            'suppliers': suppliers,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
             'coupon': coupon,
             'order_operation_logs': order_operation_logs,
             'order_status_logs': order_status_logs,
             'log_count': log_count,
-            'order_has_delivery_times': OrderHasDeliveryTime.objects.filter(order=order),
+            'order_has_delivery_times': OrderHasDeliveryTime.objects.filter(order=order), # todo 貌似没用
             'show_first': show_first
         })
 
@@ -723,7 +717,8 @@ def check_order_status_filter(order,action):
             检查订单的状态是否允许跳转
         """
         flag = False
-        actions = get_order_actions(order)
+        is_refund = True if action == 'return_success' else False
+        actions = get_order_actions(order, is_refund=is_refund)
         for ac in actions:
             if action == ac['action']:
                 flag = True
@@ -831,7 +826,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     items = []
     for order in orders:
         products = mall_api.get_order_products(order)
-
+        order.is_refund = is_refund
         # 用于微众精选拆单
         groups = []
         if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
@@ -848,6 +843,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                     'express_company_name': fackorder.express_company_name,
                     'express_number': fackorder.express_number,
                     'leader_name': fackorder.leader_name,
+                    'actions': get_order_actions(fackorder, is_refund=is_refund)
                 }
                 group = {
                     "id": fackorder.supplier,
@@ -863,6 +859,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
+                'actions': get_order_actions(order, is_refund=is_refund)
             }
 
             group_id = order.supplier
@@ -872,7 +869,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 "products": products
             }
             groups.append(group)
-
+        if len(groups) > 1:
+            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True)
+        else:
+            parent_action = None
         items.append({
             'id': order.id,
             'order_id': order.order_id,
@@ -909,7 +909,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
+            'parent_action': parent_action
         })
+
     return items, pageinfo, order_return_count
 
 
@@ -1093,184 +1095,135 @@ def get_channel_qrcode_payed_orders(request):
     return response.get_response()
 
 
-def get_order_actions(order):
+ORDER_PAY_ACTION = {
+    'name': u'支付',
+    'action': 'pay',
+    'class_name': 'xa-pay',
+    'button_class': 'btn-success'
+}
+ORDER_SHIP_ACTION = {
+    'name': u'发货',
+    'action': 'ship',
+    'class_name': 'xa-order-delivery',
+    'button_class': 'btn-danger'
+}
+ORDER_FINISH_ACTION = {
+    'name': u'标记完成',
+    'action': 'finish',
+    'class_name': 'xa-finish',
+    'button_class': 'btn-success'
+}
+ORDER_CANCEL_ACTION = {
+    'name': u'取消订单',
+    'action': 'cancel',
+    'class_name': 'xa-cancelOrder',
+    'button_class': 'btn-danger'
+}
+ORDER_REFUNDIND_ACTION = {
+    'name': u'申请退款',
+    'action': 'return_pay',
+    'class_name': 'xa-refund',
+    'button_class': 'btn-danger'
+}
+ORDER_UPDATE_PRICE_ACTION = {
+    'name': u'修改价格',
+    'action': 'update_price',
+    'class_name': 'xa-update-price',
+    'button_class': 'btn-danger'
+}
+ORDER_UPDATE_EXPREDSS_ACTION = {
+    'name': u'修改物流',
+    'action': 'update_express',
+    'class_name': 'xa-order-delivery',
+    'button_class': 'btn-danger'
+}
+ORDER_REFUND_SUCCESS_ACTION = {
+    'name': u'退款成功',
+    'action': 'return_success',
+    'class_name': 'xa-refundSuccess',
+    'button_class': 'btn-danger'
+}
 
-	if order.status == ORDER_STATUS_NOT:
-		return [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY] :
-			if order.has_sub_order:
-				return [ORDER_REFUNDIND_ACTION]
-			else:
-				return [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
-		else:
-			if order.has_sub_order:
-				return [ORDER_CANCEL_ACTION]
-			else:
-				return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_PAYED_SHIPED:
-		actions = []
-		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
-			if order.express_company_name:
-				actions = [ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
-			else:
-				actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
-		else:
-			if order.express_company_name:
-				actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
-			else:
-				actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
-		if order.has_sub_order and ORDER_UPDATE_EXPREDSS_ACTION in actions:
-			actions.remove(ORDER_UPDATE_EXPREDSS_ACTION)
-        # 删除掉了东西
-		return actions
-	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
-			if order.express_company_name:
-				if order.has_sub_order:
-					return [ORDER_REFUNDIND_ACTION]
-				else:
-					return [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
-			else:
-				return [ORDER_REFUNDIND_ACTION]
-		else:
-			return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_SUCCESSED:
-		if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY, PAY_INTERFACE_COD]:
-			return [ORDER_REFUNDIND_ACTION]
-		else:
-			return [ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_REFUNDING:
-		return [ORDER_REFUND_SUCCESS_ACTION]
-	return []
 
-    # #===============================================================================
-    # # get_thanks_card_orders : 获得感恩贺卡类型的订单列表
-    # #===============================================================================
-    # def get_thanks_card_orders(request):
-    # 	webapp_id = request.manager.get_profile().webapp_id
-    #
-    # 	orders = None
-    # 	secret = request.GET.get('secret')
-    # 	if secret:
-    # 		filter_ids = []
-    # 		thanks_card_orders = ThanksCardOrder.objects.filter(thanks_secret=secret)
-    # 		for thanks_card_order in thanks_card_orders:
-    # 			filter_ids.append(thanks_card_order.order_id)
-    # 		orders = Order.objects.filter(webapp_id=webapp_id, type=THANKS_CARD_ORDER, id__in=filter_ids)
-    # 	else:
-    # 		orders = Order.objects.filter(webapp_id=webapp_id, type=THANKS_CARD_ORDER)
-    #
-    # 	#处理搜索
-    # 	query = request.GET.get('query', None)
-    # 	if query:
-    # 		orders = orders.filter(order_id=query)
-    # 	#处理过滤
-    # 	filter_attr = request.GET.get('filter_attr', None)
-    # 	filter_value = int(request.GET.get('filter_value', -1))
-    # 	if filter_attr and (filter_value != -1):
-    # 		params = {filter_attr: filter_value}
-    # 		orders = orders.filter(**params)
-    # 	#处理排序
-    # 	sort_attr = request.GET.get('sort_attr', 'created_at');
-    # 	if sort_attr != 'created_at':
-    # 		orders = orders.order_by(sort_attr)
-    #
-    # 	#进行分页
-    # 	count_per_page = int(request.GET.get('count_per_page', 15))
-    # 	cur_page = int(request.GET.get('page', '1'))
-    # 	pageinfo, orders = paginator.paginate(orders, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-    #
-    # 	#构造返回的order数据
-    # 	items = []
-    # 	today = datetime.today()
-    # 	for order in  orders:
-    # 		payment_time = None
-    # 		if order.payment_time is None:
-    # 			payment_time = ''
-    # 		elif datetime.strftime(order.payment_time, '%Y-%m-%d %H:%M:%S') == DEFAULT_CREATE_TIME:
-    # 			payment_time = ''
-    # 		else:
-    # 			payment_time = datetime.strftime(order.payment_time, '%m-%d %H:%M')
-    #
-    # 		#感恩贺卡信息
-    # 		thanks_secret_count = 0 	#感恩密码数量
-    # 		card_count = 0 	#贺卡生成个数
-    # 		listen_count = 0 	#贺卡收听次数
-    # 		thanks_card_orders = ThanksCardOrder.objects.filter(order_id=order.id)
-    # 		for thanks_card_order in thanks_card_orders:
-    # 			if thanks_card_order.thanks_secret is not '':
-    # 				thanks_secret_count += 1
-    # 			card_count += thanks_card_order.card_count
-    # 			listen_count += thanks_card_order.listen_count
-    #
-    # 		items.append({
-    # 			'id': order.id,
-    # 			'order_id': order.order_id,
-    # 			'status': get_order_status_text(order.status),
-    # 			'payment_time': payment_time,
-    # 			'thanks_secret_count': thanks_secret_count,
-    # 			'card_count': card_count,
-    # 			'listen_count': listen_count
-    # 		})
-    #
-    # 	response = create_response(200)
-    # 	response.data = {
-    # 		'items': items,
-    # 		'pageinfo': paginator.to_dict(pageinfo),
-    # 		'sortAttr': sort_attr
-    # 	}
-    # 	return response.get_response()
-    # #######################
-    #
-    # ########################################################################
-    # # # _get_order_products: 获得订单中的商品列表
-    # # # 疑似废弃
-    # # ########################################################################
-    # # def _get_order_products(order_id):
-    # # 	relations = list(OrderHasProduct.objects.filter(order_id=order_id))
-    # # 	product_ids = [r.product_id for r in relations]
-    # # 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
-    # #
-    # # 	products = []
-    # # 	for relation in OrderHasProduct.objects.filter(order_id=order_id):
-    # # 		product = copy.copy(id2product[relation.product_id])
-    # # 		product.fill_specific_model(relation.product_model_name)
-    # # 		products.append({
-    # # 			'name': product.name,
-    # # 			'thumbnails_url': product.thumbnails_url,
-    # # 			'count': relation.number,
-    # # 			'total_price': '%.2f' % relation.total_price,
-    # # 			'custom_model_properties': product.custom_model_properties
-    # # 		})
-    # #
-    # # 	return products
-    # #
-    # # # 疑似废弃
-    # # def _get_status_value(filter_value):
-    # # 	if filter_value == '-1':
-    # # 		return -1
-    # # 	try:
-    # # 		for item in filter_value.split('|'):
-    # # 			if item.split(':')[0] == 'status':
-    # # 				return int(item.split(':')[1])
-    # # 		return -1
-    # # 	except:
-    # # 		return -1
-    #
-    #
-    # # ########################################################################
-    # # # add_express_info: 增加物流信息
-    # # # 疑似废弃
-    # # ########################################################################
-    # # @login_required
-    # # def add_express_info(request):
-    # # 	order_id = request.GET['order_id']
-    # # 	express_company_name = request.GET['express_company_name']
-    # # 	express_number = request.GET['express_number']
-    # # 	leader_name = request.GET['leader_name']
-    # # 	is_update_express = request.GET['is_update_express']
-    # # 	is_update_express = True if is_update_express == 'true' else False
-    # # 	mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username, leader_name=leader_name, is_update_express=is_update_express)
-    # #
-    # # 	return HttpResponseRedirect('/mall/editor/order/get/?order_id=%s' %order_id)
+
+
+
+def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False):
+
+    """
+    :param order:
+    :param is_refund:
+    :param is_detail_page:
+    :return:
+    所有action:
+    ORDER_PAY_ACTION
+    ORDER_SHIP_ACTION
+    ORDER_FINISH_ACTION
+    ORDER_CANCEL_ACTION
+    ORDER_REFUNDIND_ACTION
+    ORDER_UPDATE_PRICE_ACTION
+    ORDER_UPDATE_EXPREDSS_ACTION
+    ORDER_REFUND_SUCCESS_ACTION
+    """
+
+    result = []
+    if not is_refund:
+        if order.status == ORDER_STATUS_NOT:
+            result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+        elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                    result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+            else:
+                    result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+        elif order.status == ORDER_STATUS_PAYED_SHIPED:
+            actions = []
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                if order.express_company_name:
+                    actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
+                else:
+                    actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+            else:
+                if order.express_company_name:
+                    actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
+                else:
+                    actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+            result = actions
+        elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                if order.express_company_name:
+                    result = [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+                else:
+                    result = [ORDER_REFUNDIND_ACTION]
+            else:
+                result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+        elif order.status == ORDER_STATUS_SUCCESSED:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY,
+                                            PAY_INTERFACE_COD]:
+                result = [ORDER_REFUNDIND_ACTION]
+            else:
+                result = [ORDER_CANCEL_ACTION]
+    elif is_refund:
+        if order.status == ORDER_STATUS_REFUNDING:
+            result = [ORDER_REFUND_SUCCESS_ACTION]
+
+    # 订单列表页子订单
+    able_actions_for_sub_order = [ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
+
+    # 订单详情页有子订单
+    able_actions_for_detail_order_has_sub = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION,
+                                             ORDER_UPDATE_PRICE_ACTION]
+
+    # 订单列表页有子订单的父母订单
+    able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
+
+    # print(order.order_id, order.is_sub_order, order.origin_order_id)
+    # print(result)
+    if order.is_sub_order:
+        result = filter(lambda x: x in able_actions_for_sub_order, result)
+
+    if order.has_sub_order and is_detail_page:
+        result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
+
+    if is_list_parent:
+        result = filter(lambda x: x in able_actions_for_list_parent, result)
+    return result

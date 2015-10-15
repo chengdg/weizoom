@@ -45,15 +45,16 @@ W.view.mall.MallOrderShipView = W.view.common.DropBox.extend({
             var logisticsOtherExpressName = $('input[name="logistics_other_express_name"]').val();
     		$el.bottonLoading({status: 'show'});
 
-            // 是否需要物流
+            
             var isNeedLogistics = $('[name="is_need_logistics"]:checked').val();
+            var is_100 = true;
             if(isNeedLogistics === '0'){
+                // 不需要物流
                 logistics = '';
                 logisticsOrderId = '';
-            }
-            var is_100 = true;
-            // 如果是其他 则修改为用户自己填写的快递
-            if('other' == logistics){
+                is_100 = false;
+            } else if('other' == logistics){
+                // 如果是其他 则修改为用户自己填写的快递
                 logistics = logisticsOtherExpressName;
                 is_100 = false;
             }

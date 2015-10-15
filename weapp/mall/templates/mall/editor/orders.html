@@ -149,17 +149,10 @@
 						<p class="fl" style="width:90px;text-align:center;margin-left:4px;">
 					    {{html formatOrderStatus(order.status)}}
 					    </p>
-					    <p class="fl ml20 mr20">
-					    {{if order.order_status == 3||order.order_status == 4||order.order_status ==5}}
-                                {{if order.total_price > 0 }}
-                                    <a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
-                                {{else}}
-                                    <a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
-                                {{/if}}
-					    {{/if}}
-					    {{if order.order_status == 6&&data.is_refund}}
-					    	<a href ="javascript:void(0);" class ='xa-refundSuccess'>退款成功</a>
-					    {{/if}}
+					    <p class="fl ml20 mr20 xa-actions" data-order-id="${order.id}">
+                            {{each(i,x) order.parent_action}}
+                                <a href='javascript:void(0);' class="${x.class_name}">${x.name}</a>
+                            {{/each}}
 					    </p>
 					{{/if}}
 					</div>
@@ -262,57 +255,18 @@
 						{{/if}}
 					</td>
 					<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 6 || order.order_status == 7)}}style="border-top:0;"{{/if}} >
-							{{if group.fackorder.order_status == 0 }}
-								<a href='javascript:void(0);' class="xa-order-pay">支付</a>
-
-								<a href='javascript:void(0);' class="xa-order-update-price">修改价格</a>
-								<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
-							{{/if}}
-							{{if group.fackorder.order_status == 3 }}
-								<a href='javascript:void(0);' class="xa-order-delivery" data-order-id="${group.fackorder.id}">发货</a>
-								{{if order.groups.length == 1}}
-									{{if order.total_price > 0 }}
-										<a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
-									{{else}}
-										<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
-									{{/if}}
-								{{/if}}
-							{{/if}}
-							{{if group.fackorder.order_status == 4 }}
-								<a href='javascript:void(0);' class="xa-markFinish">标记完成</a>
-								{{if order.groups.length == 1}}
-									{{if order.total_price > 0 }}
-										<a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
-									{{else}}
-										<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
-									{{/if}}
-								{{/if}}
-								{{if group.fackorder.express_company_name != ''}}
-									<a href='javascript:void(0);' class="xa-order-delivery"
-									 data-order-id="${group.fackorder.id}"
-									 data-is-update=true
-									 data-express-company-name="${group.fackorder.express_company_name}"
-									 data-express-number="${group.fackorder.express_number}"
-									 data-leader-name="${group.fackorder.leader_name}">修改物流</a>
-								{{/if}}
-							{{/if}}
-							{{if group.fackorder.order_status == 5 }}
-								{{if order.groups.length == 1}}
-									{{if order.total_price > 0 }}
-										<a href='javascript:void(0);' class="xa-applyRefund">申请退款</a>
-									{{else}}
-										<a href='javascript:void(0);' class="xa-cancelOrder">取消订单</a>
-									{{/if}}
-								{{/if}}
-							{{/if}}
-
-							{{if group.fackorder.order_status == 6 && data.is_refund}}
-								{{if order.groups.length == 1}}
-									<a class="xa-refundSuccess" href='javascript:void(0);'>退款成功</a>
-								{{/if}}
-							{{/if}}
-
-
+						<div class="xa-actions" data-order-id="${group.fackorder.id}">
+						{{each(i,a) group.fackorder.actions}}
+						    <a href='javascript:void(0);' class="${a.class_name}"
+						    {{if a.action=="update_express"}}
+						        data-is-update=true
+						        data-express-company-name="${group.fackorder.express_company_name}"
+						        data-express-number="${group.fackorder.express_number}"
+								data-leader-name="${group.fackorder.leader_name}"
+						    {{/if}}
+						    >${a.name}</a>
+						{{/each}}
+                        </div>
 					</td>
 				</tr>
 				{{/each}}
@@ -403,6 +357,11 @@ $(document).ready(function() {
 		DATA_INTERVAL = '';
 	});
 
+
+    var orderAction = new W.view.mall.OrderAction({
+        pageType:"order_list"
+    });
+
 	// 订单状态栏，点击事件
 	$('body').delegate('.xa-count', 'click', function(event){
 		var $el = $(event.currentTarget);
@@ -465,59 +424,9 @@ $(document).ready(function() {
 	// 	template:'<div class="popover" role="tooltip"><div class="popover-content"></div></div>'
 	// 	});
 	// });
-	// 发货
-	// todo
-	$('body').delegate('.xa-order-delivery', 'click', function(event){
-		var $el = $(event.currentTarget);
-		var orderId = $el.data('order-id');
-		var expressCompanyValue = $el.data('express-company-name');
-		var expressNumber = $el.data('express-number');
-		var leaderName = $el.data('leader-name');
-		// 点击发货，不是点击修改
-		if($el.data('is-update') !== true){
-			expressCompanyValue = -1;
-			expressNumber = '';
-			leaderName = '';
-		}
-		var mallOrderShipView = W.getMallOrderShipView({
-			width: 318,
-			title: '发货',
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-shipDropBox xa-shipDropBox'
-		});
-		mallOrderShipView.show({
-			$action: $el,
-			orderId: orderId,
-			expressCompanyValue: expressCompanyValue,
-			expressNumber: expressNumber,
-			leaderName: leaderName
-		})
 
-	});
 
-	// 备注
-	$('body').delegate('.xa-order-remark', 'click', function(event){
-		var $el = $(event.currentTarget);
-		var orderId = $el.data('order-id');
-		var message = $el.data('order-value');
 
-		var mallOrderRemarkView = W.getMallOrderRemarkView({
-			width: 574,
-			height: 62,
-			title: '备注',
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-remarkDropBox xa-remarkDropBox'
-
-		});
-		mallOrderRemarkView.show({
-			$action: $el,
-			orderId: orderId,
-			message: message
-		})
-
-	});
 
 	//买家留言
 	$('body').delegate('.xa-costomerMessage', 'mouseenter', function(event){
@@ -548,203 +457,13 @@ $(document).ready(function() {
 		mallOrderCostomerMessageView.hide();
 	})
 
-	//支付
-	$('body').delegate('.xa-order-pay', 'click', function(event){
-		var $el = $(event.currentTarget);
-		var orderId = $el.parents('tr').data('order-id');
-
-		W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
-			orderId: orderId,
-			success: function(data) {
-				var args = {
-					'order_id': orderId,
-					'action' : 'pay'
-				}
-				W.getApi().call({
-					method: 'post',
-					app: 'mall2',
-					resource: 'order',
-					args: args,
-					success: function(data) {
-						$('[data-ui-role="advanced-table"]').data('view').reload();
-					},
-					error: function() {
-						}
-				})
-			}
-
-		});
-
-	});
-
-	// 修改价格
-	$('body').delegate('.xa-order-update-price', 'click', function(event){
-		var $el = $(event.currentTarget);
-		var orderId = $el.parents('tr').data('order-id');
-
-		W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
-			orderId: orderId,
-			isUpdatePrice: true,
-			success: function(data) {
-				console.log(data);
-				W.getApi().call({
-					app: 'mall2',
-					resource: 'order',
-					method: 'post',
-					args: {
-						order_id: orderId,
-						postage: data.postage,
-						final_price: data.finalPrice
-					},
-					success: function(data) {
-						$('[data-ui-role="advanced-table"]').data('view').reload();
-					},
-					error: function(resp) {
-
-					}
-				})
-			}
-		});
-
-	});
-	//标记完成
-	$('body').delegate('.xa-markFinish', 'click', function(event) {
-		event.stopPropagation();
-		event.preventDefault();
-		var $el = $(event.currentTarget);
-		var orderId = $el.parents('tr').data('order-id');
-		W.requireConfirm({
-			$el: $(this),
-			width:445,
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-orderConfirmPop',
-			msg:'确定将该订单标记为完成？',
-			confirm:function(){
-				var args = {
-					'order_id': orderId,
-					'action' : 'finish'
-				}
-				W.getApi().call({
-					method: 'post',
-					app: 'mall2',
-					resource: 'order',
-					args: args,
-					success: function(data) {
-						$('[data-ui-role="advanced-table"]').data('view').reload();
-					},
-					error: function() {
-						}
-				})
-
-			}
-		})
-	});
-	//取消订单
-	$('body').delegate('.xa-cancelOrder', 'click', function(event) {
-		event.stopPropagation();
-		event.preventDefault();
-		var $el = $(event.currentTarget);
-		var orderId = $el.parents('li').data('order-id');
-		W.requireConfirm({
-			$el: $(this),
-			viewName: 'order-list-confirm',
-			width:380,
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-orderConfirmPop',
-			msg:'确定取消订单？',
-
-			confirm:function(){
-				var args = {
-					'order_id': orderId,
-					'action' : 'cancel'
-				}
-				W.getApi().call({
-					method: 'post',
-					app: 'mall2',
-					resource: 'order',
-					args: args,
-					success: function(data) {
-						$('[data-ui-role="advanced-table"]').data('view').reload();
-                        // common_interval_check_func();
-					},
-					error: function() {
-						}
-				})
-
-			}
-		})
-	});
-	//申请退款
-	$('body').delegate('.xa-applyRefund', 'click', function(event) {
-		event.stopPropagation();
-		event.preventDefault();
-		var $el = $(event.currentTarget);
-		var orderId = $el.parents('li').data('order-id');
-		W.requireConfirm({
-			$el: $(this),
-			width:380,
-			position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-orderConfirmPop',
-			msg:'确定申请退款？',
-			confirm:function(){
-				var args = {
-					'order_id': orderId,
-					'action' : 'return_pay'
-				}
-				W.getApi().call({
-					method: 'post',
-					app: 'mall2',
-					resource: 'order',
-					args: args,
-					success: function(data) {
-						$('[data-ui-role="advanced-table"]').data('view').reload();
-                        // common_interval_check_func();
-					},
-					error: function() {
-						}
-				})
-			}
-		})
-
-	});
 
 
-    //退款完成
-	$('body').delegate('.xa-refundSuccess', 'click', function(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        var $el = $(event.currentTarget);
-        var href = $el.attr('href');
-        var orderId = $el.parents('li').attr('data-order-id');
-        W.requireConfirm({
-        	$el: $(this),
-        	width:442,
-        	position:'top',
-			isTitle: false,
-			privateContainerClass:'xui-orderAuditConfirmPop',
-        	msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
-        	confirm:function(){
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'return_success'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-                        $('[data-ui-role="advanced-table"]').data('view').reload();
-                    },
-                    error: function() {
-                        }
-                })
-        	}
-        })
-    });
+
+
+
+
+
 
 
 

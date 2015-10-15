@@ -489,7 +489,7 @@ class ForbiddenCouponProduct(models.Model):
 
 	@property
 	def is_active(self):
-		if self.is_permanant_active:
+		if self.is_permanant_active and self.status != FORBIDDEN_STATUS_FINISHED:
 			return True
 
 		if self.status == FORBIDDEN_STATUS_FINISHED:
@@ -497,18 +497,18 @@ class ForbiddenCouponProduct(models.Model):
 
 		self.__update_status_if_necessary()
 
-		if self.status == FORBIDDEN_STATUS_NOT_START:
+		if self.status == FORBIDDEN_STATUS_NOT_START or self.status == FORBIDDEN_STATUS_FINISHED:
 			return False
 
 		return True
 
 	@property
 	def is_overdue(self):
-		if self.is_permanant_active:
-			return False
-
 		if self.status == FORBIDDEN_STATUS_FINISHED:
 			return True
+
+		if self.is_permanant_active:
+			return False
 
 		self.__update_status_if_necessary()
 

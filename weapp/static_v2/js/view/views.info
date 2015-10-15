@@ -21,6 +21,7 @@ mall_product_list_view
 mall_promotion_filter_view
 mall_promotion_list_view
 mall_product_postage_config_editor
+mall_order_action
 mall_order_filter_view
 mall_order_ship
 mall_order_remark

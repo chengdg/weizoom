@@ -189,6 +189,16 @@ def record_mileke_log(request):
 	current_member = request.member
 	data = dict()
 	response = create_response(200)
+
+	now_time = time.localtime()
+	date_time = time.strptime('2015-10-09 18:00', "%Y-%m-%d %H:%M")
+
+	if now_time > date_time:
+		response = create_response(502)
+		data['msg'] = u'活动已结束'
+		response.data = data
+		return response.get_response()
+
 	if fid and str(fid) !=  str(current_member.id):
 		member = Member.objects.get(id=fid) 
 		if Mileke.objects.filter(member=member).count() > 0:

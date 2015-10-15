@@ -15,6 +15,9 @@ import steps_db_util
 ###############################
 
 
+def get_order_action_set(actions):
+    return set([action['name'] for action in actions])
+
 ORDER_ACTION_NAME2ACTION = {
     u'支付': 'pay',
     u'完成': 'finish',
@@ -223,9 +226,11 @@ def step_impl(context, user):
         actual_order['save_money'] = order_item['save_money']
         if 'edit_money' in order_item and order_item['edit_money']:
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.', '').replace('-', '')
-        from mall.templatetags import mall_filter
-        actions = mall_filter.get_order_actions(Order.from_dict(order_item))
-        actual_order['actions'] = dict([(action['name'], 1) for action in actions])
+        if order_item['parent_action']:
+            actual_order['actions'] = get_order_action_set(order_item['parent_action'])
+        else:
+            actual_order['actions'] = get_order_action_set(order_item['groups'][0]['fackorder']['actions'])
+
         # order_list的接口数据返回格式已经更新，上面的代码可以改为如下代码：
         buy_product_results = []
         for group in order_item['groups']:
@@ -241,8 +246,8 @@ def step_impl(context, user):
                 buy_product_result['promotion'] = buy_product['promotion']
                 if 'supplier_name' in buy_product:
                     buy_product_result['supplier'] = buy_product['supplier_name']
-                from mall.templatetags import mall_filter
                 buy_product_result['status'] = group['fackorder']['status']
+                buy_product_result['actions'] = get_order_action_set(group['fackorder']['actions'])
                 buy_product_results.append(buy_product_result)
         actual_order['products'] = buy_product_results
         actual_order['products_count'] = len(buy_product_results)
@@ -251,12 +256,12 @@ def step_impl(context, user):
     expected = json.loads(context.text)
     for order in expected:
         if 'actions' in order:
-            del order['actions']
+            order['actions'] = set(order['actions'])    # 暂时不验证顺序
         for pro in order.get('products', []):
             if 'supplier' in pro and order.get('status', None) == u'待支付':
                 del pro['supplier']
             if 'actions' in pro:
-                del pro['actions']
+                pro['actions'] = set(pro['actions'])
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -272,14 +277,8 @@ def step_impl(context, user):
     order.order_type = ORDER_TYPE2TEXT[order.type]
     order.total_price = float(order.final_price)
     order.ship_area = order.area # + ' ' + order.ship_address
-    from mall.templatetags import mall_filter
 
-    actions = mall_filter.get_order_actions(order)
-    order.actions = dict([(action['name'], 1) for action in actions])
-    if order.status == ORDER_STATUS_PAYED_SHIPED or order.status == ORDER_STATUS_SUCCESSED:
-        order.actions[u'修改物流'] = 1
-    if order.status == ORDER_STATUS_NOT:
-        order.actions[u'修改价格'] = 1
+    order.actions = get_order_action_set(order.actions)
     for product in order.products:
         product['price'] = float(product['price'])
     order.status = STATUS2TEXT[order.status]
@@ -292,8 +291,8 @@ def step_impl(context, user):
     actual.reason = order.reason
 
     expected = json.loads(context.text)
-    actions = expected['actions']
-    expected['actions'] = dict([(action, 1) for action in actions])
+    if 'actions' in expected:
+        expected['actions'] = set(expected['actions'])
     bdd_util.assert_dict(expected, actual)
 
 
@@ -562,8 +561,7 @@ def step_impl(context, user, order_id):
     response = context.client.get('/mall2/order/?order_id=%d' % real_id)
     actual_order = response.context['order']
 
-    from mall.templatetags import mall_filter
-    actual_order.actions = set([action['name'] for action in mall_filter.get_order_actions(actual_order)])
+    actual_order.actions = get_order_action_set(actual_order.actions)
 
     source_dict = {0: u'本店', 1: u'商城'}
     actual_order.order_no = actual_order.order_id
@@ -658,31 +656,6 @@ def __get_actual_orders(json_items, context):
             })
 
     return actual_orders
-
-# jz 2015-08-26
-# def _pay_weizoom_card(context, data, order):
-#     url = '/webapp/api/project_api/call/'
-#     card = json.loads(context.text)
-
-#     # 1.根据卡号密码获取id
-#     data['target_api'] = 'weizoom_card/check'
-#     data['name'] = card['id']
-#     data['password'] = card['password']
-#     response = context.client.post(url, data)
-#     response_json = json.loads(response.content)
-#     if response_json['code'] == 200:
-#         card_id = response_json['data']['id']
-#     else:
-#         return False
-
-#     # 2.确认支付
-#     data['target_api'] = 'weizoom_card/pay'
-#     data['card_id'] = card_id
-#     data['order_id'] = order.order_id
-#     del data['name']
-#     del data['password']
-#     response = context.client.post(url, data)
-#     response_json = json.loads(response.content)
 
 
 @then(u'{user}能获得订单"{order_id}"操作日志')

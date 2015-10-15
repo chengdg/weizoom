@@ -11,6 +11,14 @@ Feature:促销管理-新建活动页面的商品查询
 			#同一商品只能参与一个促销活动（限时抢购、买赠、单品券）
 			#使失效的单品券，只有过期后才能创建其他促销活动
 			#积分应用活动与其他活动不互斥
+		#c.补充（新增需求-4917）：
+			1.单商品支持添加多个单品优惠券
+			2.商品下架、修改后对优惠券无影响，各个模块均可选择该优惠券且优惠券管理处优惠券不为失效状态，添加劵码可继续使用。
+			3.禁止优惠券商品与创建单品券无关
+			4.单品优惠券选择商品时,'已参与促销'字段显示规则：
+				a.此商品参与了促销活动，那么显示促销的活动名称
+				b.此商品被设置了单品优惠券，不管设置了多少单品优惠券，已参与促销的地方都显示'单品券'三个字
+
 
 Background:
 	Given jobs登录系统
@@ -101,24 +109,38 @@ Background:
 	And jobs添加优惠券规则
 		"""
 		[{
-			"name": "单品券活动",
+			"name": "单品券01",
 			"money": 1,
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"coupon_id_prefix": "coupon1_id_",
+			"coupon_product": "单品券"
+		},{
+			"name": "单品券02",
+			"money": 5,
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon1_id_",
+			"coupon_id_prefix": "coupon2_id_",
+			"coupon_product": "单品券"
+		},{
+			"name": "单品券03",
+			"money": 10,
+			"start_date": "今天",
+			"end_date": "2天后",
+			"coupon_id_prefix": "coupon3_id_",
 			"coupon_product": "单品券"
 		},{
 			"name": "单品失效活动",
 			"money": 1,
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon2_id_",
+			"coupon_id_prefix": "coupon4_id_",
 			"coupon_product": "单品失效"
 		}]
 		"""
 	When jobs失效优惠券'单品失效活动'
 
-@promotion @promotionFlash @mall2 
+@mall2 @promotion @promotionFlash
 Scenario: 1 限时抢购-新建活动页面的商品查询
 	Given jobs登录系统
 	#起购数量大于1的商品不在在售列表中（不能参与限时抢购）
@@ -141,12 +163,12 @@ Scenario: 1 限时抢购-新建活动页面的商品查询
 		| name     | price | stocks | have_promotion | actions |
 		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
 		| 买赠     |100.00 | 20     | 买赠活动       |         |
-		| 单品券   |100.00 | 无限   | 单品券活动     |         |
+		| 单品券   |100.00 | 无限   | 单品券         |         |
 		| 赠品     |100.00 | 无限   |                | 选取    |
 		| 积分应用 |100.00 | 无限   |                | 选取    |
-		| 单品失效 |100.00 | 无限   | 单品失效活动   |         |
+		| 单品失效 |100.00 | 无限   | 单品券         |         |
 
-@promotion @promotionPremium @mall2
+@mall2 @promotion @promotionPremium
 Scenario: 2 买赠-新建活动页面的商品查询
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
@@ -159,12 +181,12 @@ Scenario: 2 买赠-新建活动页面的商品查询
 		| 商品0    |100.00 | 无限   |                | 选取    |
 		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
 		| 买赠     |100.00 | 20     | 买赠活动       |         |
-		| 单品券   |100.00 | 无限   | 单品券活动     |         |
+		| 单品券   |100.00 | 无限   | 单品券         |         |
 		| 赠品     |100.00 | 无限   |                | 选取    |
 		| 积分应用 |100.00 | 无限   |                | 选取    |
-		| 单品失效 |100.00 | 无限   | 单品失效活动   |         |
+		| 单品失效 |100.00 | 无限   | 单品券         |         |
 
-@promotion @promotionIntegral @mall2
+@mall2 @promotion @promotionIntegral
 Scenario: 3 积分应用-新建活动页面的商品查询
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
@@ -182,7 +204,7 @@ Scenario: 3 积分应用-新建活动页面的商品查询
 		| 积分应用 |100.00 | 无限   | 积分应用活动   |         |
 		| 单品失效 |100.00 | 无限   |                | 选取    |
 
-@promotion @promotionCoupon @mall2
+@mall2 @promotion @promotionCoupon
 Scenario: 4 单品券-新建活动页面的商品查询
 	Given jobs登录系统
 	Then jobs新建单品券活动时能获得已上架商品列表
@@ -190,7 +212,7 @@ Scenario: 4 单品券-新建活动页面的商品查询
 		| 商品0    |100.00 | 无限   |                | 选取    |
 		| 限时抢购 |100.00 | 无限   | 限时抢购活动   |         |
 		| 买赠     |100.00 | 20     | 买赠活动       |         |
-		| 单品券   |100.00 | 无限   | 单品券活动     |         |
+		| 单品券   |100.00 | 无限   | 单品券         | 选取    |
 		| 赠品     |100.00 | 无限   |                | 选取    |
 		| 积分应用 |100.00 | 无限   |                | 选取    |
-		| 单品失效 |100.00 | 无限   | 单品失效活动   |         |
+		| 单品失效 |100.00 | 无限   | 单品券         | 选取    |

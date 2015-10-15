@@ -19,7 +19,11 @@ gmu.define('BottomNav', {
 
 		var _this = this;
 		$(document).delegate('.xa-menu', 'click', function(event){
-			_this.clickShowSubmenu(event);
+			var $subMenuContainer = $(this).siblings('.xui-subMenuContainer');
+			$subMenuContainer.toggleClass('xui-show');
+			if( $subMenuContainer.hasClass('xui-show')){
+				_this.clickShowSubmenu(event);
+			}
 		});
 
 		// 点击别的地方，二级菜单消失，但是可能有问题
@@ -27,7 +31,10 @@ gmu.define('BottomNav', {
 	    	if(!$(event.target).parent().is('.xa-menu')){
 	            $('.xui-subMenuContainer').removeClass('xui-show');
 	        }
-	    })
+	    });
+	    $('.xui-subMenuContainer').click(function(){
+
+	    });
 	},
 	
 

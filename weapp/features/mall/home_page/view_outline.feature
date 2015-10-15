@@ -1,9 +1,9 @@
-
 #_edit_:张三香
+#editor:王丽 2015.10.13
 
 Feature: 获得店铺首页的经营概况和购买趋势信息
+"""
 	jobs通过管理系统能获得首页经营概况和购买趋势信息
-	"""
 		#2015-9-23:云商通整合,微商城'首页-统计概况'需求变动:
 			1、经营概况
 				未读消息:统计微信实时消息的未读消息列表中未读消息的总和;点击链接跳转到微信实时消息的未读消息列表页面
@@ -12,7 +12,7 @@ Feature: 获得店铺首页的经营概况和购买趋势信息
 				昨日成交额:该店铺已支付订单和货到付款提交成功订单的总金额
 				关注会员:当前关注的会员总数
 			2、购买趋势:图表形式展现订单数和销售额
-	"""
+"""
 
 Background:
 	Given jobs登录系统
@@ -22,8 +22,6 @@ Background:
 			"name": "分类1"
 		}, {
 			"name": "分类2"
-		}, {
-			"name": "分类3"
 		}]
 		"""
 	When jobs已添加商品
@@ -39,7 +37,7 @@ Background:
 					}
 				}
 			}
-		}, {
+		},{
 			"name": "叫花鸡",
 			"category": "分类1",
 			"model": {
@@ -51,7 +49,7 @@ Background:
 					}
 				}
 			}
-		}, {
+		},{
 			"name": "水晶虾",
 			"category": "",
 			"model": {
@@ -74,14 +72,7 @@ Background:
 		}]
 		"""
 	Given bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill获得jobs的800会员积分
-	Then bill在jobs的webapp中拥有800会员积分
-
-	Given tom关注jobs的公众号
-	When tom访问jobs的webapp
-	When tom获得jobs的800会员积分
-	Then tom在jobs的webapp中拥有800会员积分
+	And tom关注jobs的公众号
 
 	Given nokia登录系统
 	When nokia已添加商品
@@ -109,9 +100,8 @@ Background:
 		}]
 		"""
 	Given bill关注nokia的公众号
-	When bill访问nokia的webapp
 
-@homePage @statistics @mall2
+@mall2 @homePage @statistics
 Scenario:1 获得店铺首页经营概况的未读消息信息
 	Given jobs登录系统
 	When jobs已添加单图文
@@ -175,14 +165,14 @@ Scenario:1 获得店铺首页经营概况的未读消息信息
 		}
 		"""
 
-@mall2 @mall.outline
+@mall2 @homePage @statistics  @mall.outline
 Scenario:2 获得商铺首页经营概况的订单数量信息
 	jobs的用户购买商品后，jobs能获得正确的待发货订单列表
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date  | consumer |product   | payment | action    |
 		| 0001     | 3天前 | tom      |东坡肘,1  | 支付    |           |
-		| 0002     | 1天前 | -nokia   |东坡肘,1  | 支付    |           |
+		| 0002     | 1天前 | -lili    |东坡肘,1  | 支付    |           |
 		| 0003     | 1天前 | tom      |东坡肘,1  | 支付    |           |
 		| 0004     | 1天前 | bill     |东坡肘,1  |         |           |
 		| 0005     | 1天前 | tom      |东坡肘,1  |         |           |
@@ -205,7 +195,7 @@ Scenario:2 获得商铺首页经营概况的订单数量信息
 		}
 		"""
 
-@homePage @statistics @mall2
+@mall2 @homePage @statistics
 Scenario:3 获得商铺首页经营概况的会员数量信息
 	When bill取消关注jobs的公众号
 	When tom取消关注jobs的公众号
@@ -230,7 +220,7 @@ Scenario:4 获得店铺首页的购买趋势
 
 	When 微信用户批量消费jobs的商品
 		| order_id| date  | consumer | product   | payment | action    |
-		| 0001    | 7天前 | -nokia   | 东坡肘,1  | 支付    |           |
+		| 0001    | 7天前 | -lili    | 东坡肘,1  | 支付    |           |
 		| 0002    | 7天前 | bill     | 叫花鸡,1  | 支付    |           |
 		| 0003    | 7天前 | tom      | 水晶虾,2  | 支付    |           |
 		| 0004    | 7天前 | bill     | 东坡肘,1  |         | jobs,取消 |
@@ -247,7 +237,7 @@ Scenario:4 获得店铺首页的购买趋势
 		| 0015    | 3天前 | tom      | 东坡肘,1  |         |           |
 		| 0016    | 3天前 | tom      | 东坡肘,1  | 支付    |           |
 		| 0017    | 3天前 | tom      | 东坡肘,1  | 支付    |           |
-		| 0018    | 1天前 | -nokia   | 东坡肘,1  | 支付    |           |
+		| 0018    | 1天前 | -lili    | 东坡肘,1  | 支付    |           |
 		| 0019    | 1天前 | tom      | 东坡肘,1  |         |           |
 		| 0020    | 1天前 | tom      | 东坡肘,1  | 支付    |           |
 		| 0021    | 1天前 | bill     | 东坡肘,1  | 支付    |           |
