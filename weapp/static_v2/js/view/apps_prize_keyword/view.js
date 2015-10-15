@@ -31,11 +31,13 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 		this.$add_keyword_btn = $(options.add_keyword_btn);
 		this.add_keyword_btn = options.add_keyword_btn;
 		this.num = 0;
+		this.xx= 0;
+		this.yy= 0;
 	},
 	render: function() {
-		var xx = this.$add_keyword_btn.position().top+50;
-		var yy = this.$add_keyword_btn.position().left;
-		var offset ={top:xx,left:yy};
+		this.xx = this.$add_keyword_btn.offset().top;
+		this.yy = this.$add_keyword_btn.offset().left;
+		var offset ={top:this.xx,left:this.yy};
 
 		if (this.$('.xui-newKeyView').length === 0) {
 			this.$el.append($('#apps-prize-keyword-tmpl-src').html());
@@ -55,7 +57,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 				if(keywords[i]=='accurate'){
 					mod = "精确匹配";
 				}else{
-					mod = "部分匹配";
+					mod = "模糊匹配";
 				}
 				var pattern = {
 					keyword: i,
@@ -114,9 +116,10 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 
 			$(_this.template(pattern)).insertBefore(_this.$add_keyword_btn);
 			_this.$('.xa-app-add').val("");
-			var xx = $('#add_keyword_btn').position().top+50;
-			var yy = $('#add_keyword_btn').position().left;
-			var offset ={top:xx,left:yy};
+
+			this.xx = this.$add_keyword_btn.offset().top;
+			this.yy = this.$add_keyword_btn.offset().left;
+			var offset ={top:this.xx,left:this.yy};
 			_this.setPos(offset);
 
 		}
@@ -124,7 +127,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 	},
 
 	onClickMistinessRadio: function() {
-		this.md = "部分匹配";
+		this.md = "模糊匹配";
 		this.type = "blur";
 	},
 
@@ -194,8 +197,10 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 
 	setPos: function (offset) {
 		this.$el.css('position','absolute');
-		this.$el.css('top', offset.top + 'px');
-		this.$el.css('left', offset.left + 'px');
+		this.$el.css('top', offset.top-25 + 'px');
+		this.$el.css('left', offset.left-438 + 'px');
+		console.log('GGGGGGGGGGGGGGGGG----=============');
+		console.log(offset);
 	},
 
 	show: function() {
