@@ -38,15 +38,13 @@ class Sign(resource.Resource):
 			sign = sign[0]
 			is_create_new_data = False
 			project_id = 'new_app:sign:%s' % sign.related_page_id
+			keywords = sign.reply['keyword']
 		else:
 			sign = None
 			is_create_new_data = True
 			project_id = 'new_app:sign:0'
-
-		if sign.reply['keyword']:
-			keywords = sign.reply['keyword']
-		else:
 			keywords = {}
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
