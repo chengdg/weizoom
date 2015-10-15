@@ -120,12 +120,16 @@
     doc.addEventListener('DOMContentLoaded', recalc, false);
 })(document, window);
 $(document).ready(function() {
-  $('.xa-share').click(function(event) {
-    $('.xa-cover').removeClass('hidden');
-  });
-  $('.xa-close').click(function(event) {
-    $('.xa-cover').addClass('hidden');
-  });
+    var is_share = {% if is_share %}true{% else %}false{% endif %};
+    if(is_share){
+        $('.xa-cover').removeClass('hidden');
+    }
+    $('.xa-share').click(function(event) {
+        $('.xa-cover').removeClass('hidden');
+    });
+    $('.xa-close').click(function(event) {
+        $('.xa-cover').addClass('hidden');
+    });
 });
 </script>
 {% endblock %}

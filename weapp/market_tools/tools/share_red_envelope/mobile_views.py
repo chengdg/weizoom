@@ -26,6 +26,7 @@ def get_share_red_envelope(request):
     order_id = request.GET.get('order_id', 0) # 下单领取会带有order_id
     material_id = request.GET.get('material_id', 0) # 图文领取会带有material_id
     user_id = request.GET.get('webapp_owner_id', 0)
+    is_share = request.GET.get('is_share', 0)
     # 订单
     # if order_id:
     #     order = Order.objects.get(id=order_id)
@@ -71,7 +72,8 @@ def get_share_red_envelope(request):
         'page_title': "优惠大放送",
         'share_page_title': "优惠大放送",
         'share_page_desc': red_envelope_rule.share_title,
-        'share_img_url': red_envelope_rule.share_pic
+        'share_img_url': red_envelope_rule.share_pic,
+        'is_share': is_share
     }
 
     if relation.count() > 0 or member_coupon_record_count > 0:
