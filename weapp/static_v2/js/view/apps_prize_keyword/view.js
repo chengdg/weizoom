@@ -20,7 +20,7 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 
 	initialize: function(options) {
         this.md = "精确匹配";
-        this.type = 0;
+        this.type = "accurate";
         this.template = Handlebars.compile($("#apps-addkey-view-tmpl-src").html());
 		this.$keyword_div = $(options.keyword_div);
 		this.render();
@@ -95,12 +95,12 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 
 	onClickMistinessRadio: function() {
 		this.md = "模糊匹配";
-		this.type = 1;
+		this.type = "blur";
 	},
 
 	onClickExactRadio: function() {
 		this.md = "精确匹配";
-		this.type = 0;
+		this.type = "accurate";
 	},
 
 	onClickSubmit: function(){
