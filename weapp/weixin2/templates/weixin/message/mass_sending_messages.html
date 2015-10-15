@@ -145,7 +145,7 @@ var MassSendingMessagePage = Backbone.View.extend({
                 });
             },
             error: function(resp) {
-                alert('获取分组列表失败!');
+                alert('获取分组列表失败! ');
             }
         });
     },
@@ -164,7 +164,8 @@ $(document).ready(function() {
     var editor = new W.view.weixin.MessageEditor({
         el: '#edit-message-panel',
         richTextEditorWidth: '600',
-        submitBtnText: '群&nbsp;&nbsp;发'
+        submitBtnText: '群&nbsp;&nbsp;发',
+        help:"注：群发时，图文若设置了“链接地址”，手机端会先显示正文内容，然后点击左下角的“阅读原文”可跳转至该链接页面！"
     });
 
     editor.bind("finish-edit", function(message){
