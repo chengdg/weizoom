@@ -243,6 +243,7 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 				"name": "微页面标题1"
 			},
 			"products_source": {
+				"index": 1,
 				"items":[{
 					"products_source_name": "分组2"
 				}],
@@ -259,6 +260,7 @@ Scenario:3 分类管理修改商品名，商品列表中使用该分类的商品
 				"name": "微页面标题1"
 			},
 			"products_source":{
+				"index": 1,
 				"items":[{
 					"name":"商品7",
 					"price": 7.0
