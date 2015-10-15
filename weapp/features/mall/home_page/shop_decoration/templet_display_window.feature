@@ -19,7 +19,6 @@ Scenario:1 新建橱窗微页面
 			},
 			"display_window":{
 				"index": 1,
-				"items": {
 				"display_window_title":"",
 				"content_title":"",
 				"display_mode":"默认",
@@ -35,7 +34,6 @@ Scenario:1 新建橱窗微页面
 					"picture_link":"店铺主页"
 				}]
 			}
-		}
 		}]
 		"""
 	Then jobs能获取'微页面标题1'
@@ -46,7 +44,6 @@ Scenario:1 新建橱窗微页面
 			},
 			"display_window":{
 				"index": 1,
-				"items": {
 				"display_window_title":"",
 				"content_title":"",
 				"display_mode":"默认",
@@ -62,7 +59,6 @@ Scenario:1 新建橱窗微页面
 					"picture_link":"店铺主页"
 				}]
 			}
-		}
 		}
 		"""
 	#将会员主页修改为我的订单
@@ -74,7 +70,6 @@ Scenario:1 新建橱窗微页面
 			},
 			"display_window":{
 				"index": 1,
-				"items": {
 				"display_window_title":"",
 				"content_title":"",
 				"display_mode":"3列",
@@ -90,7 +85,6 @@ Scenario:1 新建橱窗微页面
 					"picture_link":"店铺主页"
 				}]
 			}
-		}
 		}
 		"""
 	Then jobs能获取'微页面标题1'
@@ -101,7 +95,6 @@ Scenario:1 新建橱窗微页面
 			},
 			"display_window":{
 				"index": 1,
-				"items": {
 				"display_window_title":"",
 				"content_title":"",
 				"display_mode":"3列",
@@ -117,7 +110,6 @@ Scenario:1 新建橱窗微页面
 					"picture_link":"店铺主页"
 				}]
 			}
-		}
 		}
 		"""
 	#删除橱窗
