@@ -127,6 +127,18 @@ class RedEnvelopeRuleList(resource.Resource):
 
         if not is_fetch_all_rules:
             rules = _filter_rules(request, rules)
+
+        for rule in rules:
+            is_timeout = False if rule.end_time > datetime.now() else True
+            if is_timeout and not rule.limit_time:
+                if rule.receive_method:
+                    rule.order_index = -1
+                else:
+                    if not rule.status:
+                        rule.order_index = -1
+                rule.save()
+        rules = rules.order_by("-order_index", "-id")
+        
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, rules = paginator.paginate(rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -148,6 +160,7 @@ class RedEnvelopeRuleList(resource.Resource):
                 rule_id2count[record.red_envelope_rule_id] += 1
             else:
                 rule_id2count[record.red_envelope_rule_id] = 1
+
         for rule in rules:
             data = {
                 "id": rule.id,
