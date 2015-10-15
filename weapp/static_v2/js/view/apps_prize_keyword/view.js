@@ -33,13 +33,14 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 		this.num = 0;
 	},
 	render: function() {
+		var xx = this.$add_keyword_btn.position().top+50;
+		var yy = this.$add_keyword_btn.position().left;
+		var offset ={top:xx,left:yy};
+
 		if (this.$('.xui-newKeyView').length === 0) {
 			this.$el.append($('#apps-prize-keyword-tmpl-src').html());
+			this.setPos(offset);
 		} else {
-			this.$el.css({'position':'absolute'});
-			var xx = this.$add_keyword_btn.position().top+50;
-			var yy = this.$add_keyword_btn.position().left;
-			var offset ={top:xx,left:yy};
 			this.setPos(offset);
 			this.$el.find('.xa-keywords').empty();
 			this.$el.show();
