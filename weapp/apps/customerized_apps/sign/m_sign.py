@@ -92,7 +92,7 @@ class MSign(resource.Resource):
 						temp_serial_count = signer.serial_count
 					else:
 						temp_serial_count = 0
-					if latest_sign_date == nowDate and temp_serial_count != 0:
+					if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
 						activity_status = u'已签到'
 						for name in sorted(prize_settings.keys()):
 							setting = prize_settings[name]

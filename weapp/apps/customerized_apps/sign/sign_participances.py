@@ -80,7 +80,7 @@ class SignParticipances(resource.Resource):
 				'serial_count': data.serial_count,
 				'top_serial_count': data.top_serial_count,
 				'total_integral': data.prize['integral'],
-				'latest_coupon': "%s<br>%s<br>%s" % (temp_list[-1], temp_list[-2], temp_list[-3])
+				'latest_coupon': "<br>".join(temp_list[::-1][:3])
 			})
 		response_data = {
 			'items': items,
