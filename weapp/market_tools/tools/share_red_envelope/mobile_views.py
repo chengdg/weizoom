@@ -39,6 +39,10 @@ def get_share_red_envelope(request):
     followed_member_id = 0
     if cookie_fmt and cookie_fmt != 'None':
         followed_member_id = Member.objects.get(token=cookie_fmt).id
+    print 'cookie_fmt:'
+    print cookie_fmt
+    print 'followed_member_id:'
+    print followed_member_id
 
     auth_appid = module_api.get_mp_info(user_id)
     qcode_img_url = ''
