@@ -138,7 +138,7 @@ class RedEnvelopeRuleList(resource.Resource):
                         rule.order_index = -1
                 rule.save()
         rules = rules.order_by("-order_index", "-id")
-        
+
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
         pageinfo, rules = paginator.paginate(rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -311,11 +311,10 @@ class RedEnvelopeParticipances(resource.Resource):
 
         participences = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
         for participence in participences:
-            coupon_id = participence.coupon_id
-            print coupon_id
-            if promotion_models.Coupon.objects.get(id=coupon_id).status == 1:
-                final_price = Order.objects.get(coupon_id=coupon_id).final_price
-                consumption_sum += final_price
+            if participence.coupon.status == 1:
+                order = Order.objects.filter(coupon_id=participence.coupon.id, status=5)
+                if order.count() > 0:
+                    consumption_sum = consumption_sum + order[0].final_price + order[0].postage
 
         #加上引入的数字
         for relation in relations:
