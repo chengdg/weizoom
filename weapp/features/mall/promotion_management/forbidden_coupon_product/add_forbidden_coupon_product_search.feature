@@ -1,6 +1,5 @@
-
 #_author_:张三香
-
+#editor:雪静 2015.10.15
 Feature:添加禁用优惠券商品时商品查询弹窗信息校验
 	"""
 		1、商品查询弹窗中字段包括：商品条码、商品名称、商品价格（元）、商品库存、禁用状态和操作
@@ -64,7 +63,7 @@ Background:
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
+@mall2 @promotion @promotionForbiddenCoupon
 Scenario: 1 添加禁用商品时商品查询弹框信息校验
 	Given jobs登录系统
 	When jobs添加禁用优惠券商品
@@ -149,9 +148,7 @@ Scenario: 1 添加禁用商品时商品查询弹框信息校验
 		"""
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
-		{
-			"name":""
-		}
+		{}
 		"""
 	Then jobs新建禁用优惠券商品活动时能获得已上架商品列表
 		| name       | price | stocks | status | actions |

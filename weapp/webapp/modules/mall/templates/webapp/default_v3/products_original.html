@@ -25,7 +25,7 @@
                                 <div class="">分类</div>
                                 <i class="xui-down xui-reversal"></i>   
                             </div>
-                            <div class="xui-i-title">{{ category.name }}{% if category.name == "全部" %}商品{% endif %}</div>
+                            <div class="xui-i-title"><span>{{ category.name }}{% if category.name == "全部" %}商品{% endif %}</span></div>
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn pa" data-role="button">
                                 <div>
                                     <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
@@ -60,7 +60,7 @@
                         <div class="xui-inner-img">
                             <img src="{{ product.thumbnails_url }}">
                         </div>
-                        <h3 class="xt-productName">{{ product.name|truncatechars:16 }}</h3>
+                        <h3 class="xt-productName">{{ product.name }}</h3>
                         <p class="xt-productPrice">￥{{ product.display_price | floatformat:2}}</p>
 
                     </a>

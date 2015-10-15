@@ -59,7 +59,7 @@ Background:
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture @mall2 
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 1 正常添加关键词自动回复
 	Jobs正常添加关键词自动回复 ，能获取他关键词自动回复
 
@@ -156,7 +156,7 @@ Scenario: 1 正常添加关键词自动回复
 		[]
 		"""
 
-@message @automaticReply @senior @textPicture @mall2
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 2 发送关键词，可以获得正确的回复
 	
 	Given jobs登录系统

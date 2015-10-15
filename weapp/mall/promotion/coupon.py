@@ -97,9 +97,9 @@ class CouponList(resource.Resource):
                         if member:
                             coupon.consumer_name = member.username_for_html
                         else:
-                            consumer.consumer_name = '未知'
+                            coupon.consumer_name = '未知'
                     else:
-                        consumer.consumer_name = '未知'
+                        coupon.consumer_name = '未知'
 
                     coupon.status = COUPONSTATUS.get(coupon.status)['name']
                 elif coupon.expired_time <= now:

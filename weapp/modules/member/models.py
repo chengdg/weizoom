@@ -765,7 +765,7 @@ class MemberFollowRelation(models.Model):
 		try:
 			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
-			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL)
+			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 		except:
 			return []
 
@@ -903,16 +903,16 @@ class IntegralStrategySttings(models.Model):
 #===============================================================================
 # create_webapp_member_integral_strategy_sttings : 自动创建webapp会员积分策略配置
 #===============================================================================
-def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
-	if created:
-		webapp_id = instance.webapp_id.strip()
-		if len(webapp_id) == 0:
-			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
+# def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
+# 	if created:
+# 		webapp_id = instance.webapp_id.strip()
+# 		if len(webapp_id) == 0:
+# 			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
 
-		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
-			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
+# 		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
+# 			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
 
-signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
+# signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
 
 FIRST_SUBSCRIBE = u'首次关注'
 #FOLLOWER_CLICK_SHARED_URL = u'好友奖励'
@@ -1267,4 +1267,3 @@ class MilekeLog(models.Model):
 		verbose_name_plural = 'mileke_log'
 
 		unique_together = (('mileke', 'member'),)
-		

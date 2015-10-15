@@ -70,7 +70,10 @@
 							<tr data-id="${log.id}">
 								<td>
 									<div style="display:table ;line-height:42px;">
-										<a target="_blank" href="/member/detail/?id=${id}" style="display: table-cell;vertical-align:top">
+										<a target="_blank" href="/member/detail/?id=${id}" class="pr" style="display: table-cell;vertical-align:top">
+										{{if is_subscribed == 0}}
+										<div class="xui-cancelCover tc">已取消</div>
+										{{/if}}
 										<img src="{{if user_icon}}${user_icon}{{else}}/static/aa.jpg{{/if}}" onerror="this.src='/static/img/user-1.jpg'"style="width:42px;" />
 										</a>
 										<div style="display: table-cell;vertical-align:top;padding-left:8px; line-height:21px;text-align:left;">

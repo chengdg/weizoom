@@ -31,8 +31,8 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.product
-Scenario: 删除商品
+@mall2 @product @group @saleingProduct   @mall.product
+Scenario:1 删除商品
 	Jobs添加一组商品后，能删除单个商品。
 	删除后：
 		1. 排序不会被破坏
@@ -40,27 +40,37 @@ Scenario: 删除商品
 
 	Then jobs能获取商品列表
 		"""
-		[{"name":"商品4"}, {"name":"商品3"}, {"name":"商品2"}, {"name":"商品1"}]
+		[{
+			"name":"商品4"
+		}, {
+			"name":"商品3"
+		}, {
+			"name":"商品2"
+		}, {
+			"name":"商品1"
+		}]
 		"""
 	And jobs能获取商品分类列表
 		"""
-		[
-		{
+		[{
 			"name":"分类1",
-			"products":
-			[
-				{"name": "商品3"},
-				{"name": "商品2"},
-				{"name": "商品1"}
-			]
-		}, {
+			"products":[{
+				"name": "商品3"
+			},{
+				"name": "商品2"
+			},{
+				"name": "商品1"
+			}]
+		},{
 			"name":"分类2",
-			"products": [
-				{"name": "商品4"},
-				{"name": "商品2"},
-				{"name": "商品1"}
-			]
-		}, {
+			"products": [{
+				"name": "商品4"
+			},{
+				"name": "商品2"
+			},{
+				"name": "商品1"
+			}]
+		},{
 			"name":"分类3",
 			"products":[]
 		}]
@@ -68,54 +78,61 @@ Scenario: 删除商品
 	When jobs-永久删除商品'商品3'
 	Then jobs能获取商品列表
 		"""
-		[{"name":"商品4"}, {"name":"商品2"}, {"name":"商品1"}]
+		[{
+			"name":"商品4"
+		},{
+			"name":"商品2"
+		},{
+			"name":"商品1"
+		}]
 		"""
 	And jobs能获取商品分类列表
 		"""
-		[
-			{
-				"name":"分类1",
-				"products":[
-					{"name": "商品2"},
-					{"name": "商品1"}
-				]
-			},
-			{
-				"name":"分类2",
-				"products": [
-					{"name": "商品4"},
-					{"name": "商品2"},
-					{"name": "商品1"}
-				]
-			},
-			{
-				"name":"分类3",
-				"products": []
-			}
-		]
+		[{
+			"name":"分类1",
+			"products":[{
+				"name": "商品2"
+			},{
+				"name": "商品1"
+			}]
+		},{
+			"name":"分类2",
+			"products": [{
+				"name": "商品4"
+			},{
+				"name": "商品2"
+			},{
+				"name": "商品1"
+			}]
+		},{
+			"name":"分类3",
+			"products": []
+		}]
 		"""
 	When jobs-永久删除商品'商品2'
 	Then jobs能获取商品列表
 		"""
-		[{"name":"商品4"}, {"name":"商品1"}]
+		[{
+			"name":"商品4"
+		},{
+			"name":"商品1"
+		}]
 		"""
 	And jobs能获取商品分类列表
 		"""
-		[
-		{
+		[{
 			"name":"分类1",
-			"products":[
-					{"name": "商品1"}
-				]
-		},
-		{
+			"products":[{
+				"name": "商品1"
+			}]
+		},{
 			"name":"分类2",
-			"products": [
-					{"name": "商品4"},
-					{"name": "商品1"}
-				]
-		},
-		{
+			"products": [{
+				"name": "商品4"
+			},{
+				"name": "商品1"
+			}]
+		},{
 			"name":"分类3",
 			"products": []
 		}]
@@ -131,12 +148,10 @@ Scenario: 删除商品
 		[{
 			"name":"分类1",
 			"products": []
-		},
-		{
+		},{
 			"name":"分类2",
 			"products": []
-		},
-		{
+		},{
 			"name":"分类3",
 			"products": []
 		}]

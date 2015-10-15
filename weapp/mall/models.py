@@ -1452,6 +1452,10 @@ class Order(models.Model):
 		"""
 		return self.origin_order_id == -1 and self.status > 0 #未支付的订单按未拆单显示
 
+	@property
+	def is_sub_order(self):
+		return self.origin_order_id > 0
+
 	@staticmethod
 	def get_sub_order_ids(origin_order_id):
 		orders = Order.objects.filter(origin_order_id=origin_order_id)

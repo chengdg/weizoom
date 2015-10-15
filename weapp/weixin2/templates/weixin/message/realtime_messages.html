@@ -262,6 +262,23 @@ $(document).ready(function() {
         var isChecked = $checkbox.is(':checked');
         $('tbody .xa-select').prop('checked', isChecked);
 	});
+
+	$('.xa-content').delegate('.xa-select', 'click', function(event){
+		var all=true;
+		$('.xa-select').each(function(){
+			var isChecked = $(this).is(':checked');
+			if(!isChecked){
+				all=false;
+				$('#xa-selectAll').attr('checked', false);
+				return;
+			}
+		})
+		if(all){
+			$('#xa-selectAll').attr('checked', true);
+		}
+		
+	});
+
 	$('body').delegate('div.xui-i-voiceContent', 'click', function(event) {
 		event.stopPropagation();
 		event.preventDefault();

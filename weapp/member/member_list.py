@@ -244,12 +244,14 @@ def build_follow_member_basic_json(follow_member, member_id):
 		'grade_name': follow_member.grade.name,
 		'created_at': datetime.strftime(follow_member.created_at, '%Y-%m-%d'),
 		'source':  follow_member.source,
+		'is_subscribed': follow_member.is_subscribed,
 		'is_fans': MemberFollowRelation.is_fan(member_id, follow_member.id),
 		'is_father': MemberFollowRelation.is_father(member_id, follow_member.id),
 		'pay_money': '%.2f' % follow_member.pay_money,
 		'father_name': father_name,
 		'father_id': father_id
 	}
+
 
 class MemberList(resource.Resource):
 	app = 'member'
@@ -643,7 +645,7 @@ class Integral(resource.Resource):
 	resource='integral'
 	@login_required
 	def api_post(request):
-		
+
 		member_id = request.POST.get('member_id', None)
 		integral = request.POST.get('integral', 0)
 		reason = request.POST.get('reason', '').strip()

@@ -1,6 +1,11 @@
+#editor：王丽 2015.10.14
+
 @func:webapp.modules.mall.views.list_products
-Feature: Add Product
+Feature: 添加新商品
+"""
+	Add Product
 	Jobs能通过管理系统在商城中添加"商品"
+"""
 
 Background:
 	Given jobs登录系统
@@ -28,20 +33,14 @@ Background:
 			"weixin_partner_id": "22345",
 			"weixin_partner_key": "32345",
 			"weixin_sign": "42345"
-		}]
-		"""
-	When jobs开通使用微众卡权限
-	When jobs添加支付方式
-		"""
-		[{
-			"type": "微众卡支付",
-			"description": "我的微众卡支付",
+		},{
+			"type": "支付宝",
 			"is_active": "启用"
 		}]
 		"""
 
-@mall2 @mall.product @after_rebuild @zy_ap01
-Scenario: 添加商品
+@mall2 @product @addProduct   @mall.product @after_rebuild @zy_ap01
+Scenario:1 添加商品
 	Jobs添加商品后，能获取他添加的商品
 
 	Given jobs登录系统
@@ -90,17 +89,6 @@ Scenario: 添加商品
 			}
 		}]
 		"""
-	When jobs添加邮费配置
-		"""
-		[{
-			"name":"顺丰",
-			"first_weight":1,
-			"first_weight_price":15.00,
-			"added_weight":1,
-			"added_weight_price":5.00
-		}]
-		"""
-	#When jobs选择'顺丰'运费配置
 	Then jobs能获取商品'东坡肘子'
 		"""
 		{
@@ -158,9 +146,8 @@ Scenario: 添加商品
 		[]
 		"""
 
-
-@mall2 @mall.product @zy_ap02
-Scenario: 添加'免运费'配置的商品
+@mall2 @product @addProduct   @mall.product @zy_ap02
+Scenario:2 添加'免运费'配置的商品
 	Jobs添加商品后，能获取他添加的商品
 
 	Given jobs登录系统
@@ -225,8 +212,8 @@ Scenario: 添加'免运费'配置的商品
 		}
 		"""
 
-@mall2 @mall.product @zy_ap03
-Scenario: 添加商品按倒序排列
+@mall2 @product @addProduct   @mall.product @zy_ap03
+Scenario:3 添加商品按倒序排列
 	Jobs添加多个商品后，"商品列表"会按照添加的顺序倒序排列
 
 	Given jobs已添加商品

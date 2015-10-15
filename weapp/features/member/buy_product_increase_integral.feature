@@ -524,7 +524,7 @@ Scenario:4 每次购买给邀请者增加积分
 		{
 			"order_type": "普通订单",
 			"status": "待支付",
-			"actions": ["取消订单", "支付"],
+			"actions": ["取消订单", "支付", "修改价格"],
 			"total_price": 100.0,
 			"ship_name": "tom",
 			"ship_tel": "13811223344",
@@ -620,7 +620,7 @@ Scenario:5 购买商品返积分 基础积分设为0，额外积分奖励不为�
 		{
 			"order_type": "普通订单",
 			"status": "待支付",
-			"actions": ["取消订单", "支付"],
+			"actions": ["取消订单", "支付","修改价格"],
 			"total_price": 150.0,
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
@@ -710,7 +710,7 @@ Scenario:6 基础积分不为0，额外积分奖励，小数部分直接舍掉�
 		{
 			"order_type": "普通订单",
 			"status": "待支付",
-			"actions": ["取消订单", "支付"],
+			"actions": ["取消订单", "支付","修改价格"],
 			"total_price": 50.0,
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
@@ -757,7 +757,7 @@ Scenario:6 基础积分不为0，额外积分奖励，小数部分直接舍掉�
 		}]
 		"""
 
-@member @member.shared_integral @mall2
+@member @member.shared_integral @mall2 @jz
 Scenario:7 推荐关注的好友购买奖励 基础积分设为0，额外积分奖励不为零，此项整体积分奖励没有
 	1.bill是tom的邀请者
 	2.tom每次购买jobs的商品，给bill增加积分
@@ -814,7 +814,7 @@ Scenario:7 推荐关注的好友购买奖励 基础积分设为0，额外积分�
 		{
 			"order_type": "普通订单",
 			"status": "待支付",
-			"actions": ["取消订单", "支付"],
+			"actions": ["取消订单", "支付", "修改价格"],
 			"total_price": 100.0,
 			"ship_name": "tom",
 			"ship_tel": "13811223344",

@@ -1,11 +1,16 @@
+#editor:王丽 2015.10.14
+
 Feature: 添加图片分组
+"""
+
 	Jobs通过管理系统在商城中添加图片及图片分组
+"""
 
 Background:
 	Given jobs登录系统
 
-@mall @mall.product @mall.image_group @mall2
-Scenario: 添加图片分组 
+@mall2 @product @picture   @mall @mall.product @mall.image_group
+Scenario:1 添加图片分组
 	Jobs添加图片分组后
 	1. jobs能获取图片分组
 	2. bill不能获取图片分组
@@ -82,7 +87,7 @@ Scenario: 添加图片分组
 		}
 		"""
 	Given bill登录系统
-	Then bill能获取图片分组列表                        
+	Then bill能获取图片分组列表
 		"""
 		[]
 		"""

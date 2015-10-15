@@ -41,7 +41,7 @@ Scenario: 浏览全部商品列表
 		"""
 	When bill访问jobs的webapp:ui
 	And bill浏览jobs的webapp的'全部'商品列表页:ui
-	Then webapp页面标题为'商品列表(全部)':ui
+	Then webapp页面标题为'商品列表':ui
 	And webapp页面上'能'选择商品分类:ui
 	And bill获得webapp商品列表:ui
 		"""
@@ -145,7 +145,7 @@ Scenario: 按分类浏览商品
 		"""
 	When bill访问jobs的webapp:ui
 	And bill浏览jobs的webapp的'分类1'商品列表页:ui
-	Then webapp页面标题为'商品列表(分类1)':ui
+	Then webapp页面标题为'商品列表':ui
 	And bill获得webapp商品列表:ui
 		"""
 		[{
@@ -155,7 +155,7 @@ Scenario: 按分类浏览商品
 		}]
 		"""
 	When bill浏览jobs的webapp的'分类2'商品列表页:ui
-	Then webapp页面标题为'商品列表(分类2)':ui
+	Then webapp页面标题为'商品列表':ui
 	And bill获得webapp商品列表:ui
 		"""
 		[{
@@ -189,5 +189,5 @@ Scenario: 浏览全部商品列表，无分类时，不能选择分类
 		"""
 	When bill访问jobs的webapp:ui
 	And bill浏览jobs的webapp的'全部'商品列表页:ui
-	Then webapp页面标题为'商品列表(全部)':ui
+	Then webapp页面标题为'商品列表':ui
 	And webapp页面上'不能'选择商品分类:ui

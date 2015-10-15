@@ -768,7 +768,7 @@ input.ui-input-text, textarea.ui-input-text {
     text-align: center;
     width: 100%;
 }
-.xui-productsList-page .xui-header .xui-title span{
+.xui-productsList-page .xui-header .xui-title span,.xui-productsList-page .xui-header .xui-i-title span{
     display: inline-block;
     width: 65%;
     overflow: hidden;

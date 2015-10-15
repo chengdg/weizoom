@@ -2,7 +2,7 @@
 # Django settings for weapp project.
 
 import os
-
+import logging
 VERSION = 2
 
 DEBUG = True
@@ -14,6 +14,8 @@ IS_UNDER_CODE_GENERATION = False
 WEIZOOM_CARD_ADMIN_USERS = ('card_admin',)
 
 MODE = 'develop'
+# 如果FAN_HOST不为空，退出后会跳转到 FAN_HOST/login/
+FAN_HOST = 'http://fans.dev.com'
 
 DEBUG_MERGED_JS = True
 USE_DEV_JS = True
@@ -72,6 +74,25 @@ DATABASES = {
         'CONN_MAX_AGE': 100
     }
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+    }
+}
+
 
 if MODE == 'develop' or MODE == 'test':
     WATCHDOG_DB = 'default'
@@ -564,7 +585,6 @@ if 'develop' == MODE:
     # USE_MOCK_PAY_API = True
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
-    FAN_HOST = 'http://trident.weapp.weizzz.com'
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = False
 
@@ -584,7 +604,6 @@ elif 'test' == MODE:
     RECORD_SIMULATOR_MESSAGE = True
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
     USE_MOCK_PAY_API = False
-    FAN_HOST = 'http://trident.weapp.weizzz.com'
     CDN_HOST = ''
 
     WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
@@ -602,7 +621,6 @@ else:
     RECORD_SIMULATOR_MESSAGE = False
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 24 * 60 * 60
     USE_MOCK_PAY_API = False
-    FAN_HOST = 'http://fans.weizoom.com'
     CDN_HOST = 'http://weappstatic.b0.upaiyun.com'
     DEBUG_MERGED_JS = False
     USE_DEV_JS = False

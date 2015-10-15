@@ -262,7 +262,7 @@ class RedirectBySctMiddleware(object):
 						response.delete_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 						return response
 			except:
-				notify_message = u"处理cookie sct失败，cookie_sct={}, cause:\n{}".format(cookie_sct, unicode_full_stack())
+				notify_message = u"处理cookie sct失败，cookie_sct={}, cause:\n{}, request_url:{}".format(cookie_sct, unicode_full_stack(), request.get_full_path())
 				watchdog_error(notify_message)
 			finally:
 				request.social_account = social_account

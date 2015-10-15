@@ -1,5 +1,8 @@
 Feature: 删除属性模板
+"""
+
 	Jobs通过管理系统在商城中删除属性模板
+"""
 
 Background:
 	Given jobs登录系统
@@ -43,8 +46,8 @@ Background:
 		}]
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 删除属性模板
+@mall2 @product @property   @mall @mall.product @mall.product_model
+Scenario:1 删除属性模板
 	jobs删除属性模板后
 	1. jobs的属性模板发生变化
 	2. bill的属性模板不变
