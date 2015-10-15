@@ -157,28 +157,31 @@ W.view.apps.PrizeKeyword = Backbone.View.extend({
 		//关闭
 		_this.hide();
 
-		//数据收集
+		//数据收集,可以搬迁到同步函数
 		var args = [];
 		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
 			var key_id = $(this).attr('id');
 			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
 			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
 			args.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+
 		});
 
+		$('#keywords-args').text(JSON.stringify(args));
 
 	},
 
 	onClickClose: function() {
 		this.hide();
 		//数据收集
-		var args = [];
-		$('#add_keyword_div').find('.xa-data-patterns').each(function(){
-			var key_id = $(this).attr('id');
-			var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
-			var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
-			args.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
-		});
+		//var args = [];
+		//$('#add_keyword_div').find('.xa-data-patterns').each(function(){
+		//	var key_id = $(this).attr('id');
+		//	var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
+		//	var mode_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
+		//	args.push({'id':key_id,'keyword':key_tmp,'mode':mode_tmp});
+		//});
+		//$('#keywords-args').text(JSON.stringify(args));
 	},
 
 	setId: function (id) {

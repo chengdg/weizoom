@@ -227,6 +227,8 @@
             margin-bottom: 5px;
         }
         #add_keyword_btn{
+            width: 69px;
+            height: 12px;
             position: relative;
             top:-13px;
             text-align: center;
@@ -378,6 +380,7 @@ ui-appPage-commonStyle">
         </script>
     {% endverbatim %}
     <div class="xui-keywordBoxDiv xa-keywordBoxDiv"></div>
+    <div id = "keywords-args" ><div>
 {% endblock %}
 
 {% block base_js %}
@@ -597,6 +600,7 @@ ui-appPage-commonStyle">
           }
         });
       });
+
       //说明
       $(document).click(function(event) {
       // 点击空白处，触发事件
@@ -755,4 +759,3 @@ ui-appPage-commonStyle">
 </script>
 {% endblock %}
 {% endblock %}
-
