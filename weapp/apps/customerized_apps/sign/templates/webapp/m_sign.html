@@ -392,7 +392,7 @@
                 temp_integral = prize_info.daily_prize.integral;
                 temp_coupon = prize_info.daily_prize.coupon;
             }
-            $('.wa-daily_points').html(temp_integral || 0);
+            $('.wa-daily_points').html(temp_integral+'  积分' || '');
             if (temp_coupon.id != 0) {
                 prize_html = '"' + temp_coupon.name + '"';
                 prize_html += '一张';
@@ -415,22 +415,23 @@
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if (!$.isEmptyObject(temp_prize)) {
+                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取以下奖励:");
                 if (temp_prize.prize.integral != 0) {
-                    str.push("连续签到" + temp_prize.count + "天可领取" + temp_prize.prize.integral + "积分");
+                    $('.wa-prize-board').find('.daily_points').html(temp_prize.prize.integral + "  积分");
                 }
                 if (temp_prize.prize.coupon.id != 0) {
-                    str.push(" \"" + temp_prize.prize.coupon.name + "\" 一张");
+                    $('.wa-prize-board').find('.daily_prizes').html("\"" + temp_prize.prize.coupon.name + "\" 一张");
                 }
             } else {
+                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取以下奖励:");
                 var tomorrow_prize = prize_info.daily_prize;
                 if (tomorrow_prize.integral != 0) {
-                    str.push("明天可领取" + tomorrow_prize.integral + "积分");
+                    $('.wa-prize-board').find('.daily_points').html(tomorrow_prize.integral + "  积分");
                 }
                 if (tomorrow_prize.coupon.id != 0) {
-                    str.push("\"" + tomorrow_prize.coupon.name + "\" 一张");
+                    $('.wa-prize-board').find('.daily_prizes').html("“" + tomorrow_prize.coupon.name + "” 一张");
                 }
             }
-            $('.wa-prize-board').html(str.toString());
         }
     }
 </script>

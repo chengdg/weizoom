@@ -10,7 +10,7 @@ W.component.appkit.SignItem = W.component.Component.extend({
 
 	properties: [{
 		group: '',
-		groupClass: '',
+		groupClass: 'xa-serial-points-settings',
 		fields: [{
 			name: 'serial_count',
 			type: 'text_with_annotation_v2',
@@ -30,7 +30,9 @@ W.component.appkit.SignItem = W.component.Component.extend({
 			maxLength: 5,
 			size: '70px',
 			annotation: '积分',
-			default: ''
+			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
+			validateIgnoreDefaultValue: true,
+			default: '0'
 		},{
 			name: 'serial_count_prizes',
 			type: 'prize_selector_v4',
@@ -41,6 +43,12 @@ W.component.appkit.SignItem = W.component.Component.extend({
 	}],
 
 	propertyChangeHandlers: {
-
+		serial_count_points:function($node, model, value, $propertyViewNode){
+			console.log(value);
+			if(value == ''){
+				console.log($propertyViewNode[0]);
+				$propertyViewNode.find('input[data-field="serial_count_points"]').val('0');
+			}
+		}
 	}
 });
