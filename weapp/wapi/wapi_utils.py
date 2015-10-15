@@ -9,7 +9,7 @@ from django.conf import settings
 
 _wapi_logger = None
 
-def wapi_log(app, resource, method, params, status=0):
+def wapi_log(app, resource, method, params, time_in_s, status=0):
 	"""
 	记录WAPI信息，保存到mongo中
 	"""
@@ -17,8 +17,8 @@ def wapi_log(app, resource, method, params, status=0):
 		global _wapi_logger
 		if _wapi_logger is None:
 			_wapi_logger = MongoAPILogger()
-		print("called WAPI: {} {}/{}, param: {}".format(method, app, resource, params))
-		return _wapi_logger.log(app, resource, method, params, status)
+		print("called WAPI (in {} s): {} {}/{}, param: {}".format(time_in_s, method, app, resource, params))
+		return _wapi_logger.log(app, resource, method, params, time_in_s, status)
 	return
 
 

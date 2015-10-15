@@ -184,24 +184,7 @@ def list_products(request):
 # 	})
 # 	return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-def __is_forbidden_coupon(owner_id, product_id):
-	"""
-	判断商品是否被禁止使用全场优惠券
-	"""
-	forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(owner_id)
-	product_id = int(product_id)
-	return product_id in forbidden_coupon_product_ids
 
-def __get_product_hint(owner_id, product_id):
-	"""
-	获取显示在商品详情页的商品相关的提示信息
-	duhao 2015-09-08
-	"""
-	hint = ''
-	if __is_forbidden_coupon(owner_id, product_id):
-		hint = u'该商品不参与全场优惠券使用！'
-	
-	return hint
 
 
 def get_product(request):
@@ -219,7 +202,8 @@ def get_product(request):
 	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
 	product0 = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
 	#duhao 2015-09-08
-	hint = __get_product_hint(request.webapp_owner_id, product_id)
+	#hint = __get_product_hint(request.webapp_owner_id, product_id)
+	hint = resource.get('mall', 'product_hint', {'woid': request.webapp_owner_id, 'id': product_id}).get('hint', '')
 
 	# jz 2015-08-10
 	#product.fill_model()
@@ -249,6 +233,7 @@ def get_product(request):
 	###################################################
 	non_member_followurl = None
 	if request.user.is_weizoom_mall:
+		# TODO: is_can_buy_by_product做什么？
 		product0.is_can_buy_by_product(request)
 		otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
 		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)

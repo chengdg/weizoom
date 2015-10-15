@@ -48,7 +48,7 @@ class MongoAPILogger(object):
 			str = '{}'.format(params)
 		return str
 
-	def log(self, app, resource, method, params, status=0):
+	def log(self, app, resource, method, params, time_in_s, status=0):
 		"""
 		记录WAPI的信息
 		"""
@@ -59,6 +59,7 @@ class MongoAPILogger(object):
 			#'params': '{}'.format(params),
 			'params': self.params_to_str(params),
 			'at': now,
+			'time_s': time_in_s,
 			'status': status
 		}
 		self.db.log.insert(record)
