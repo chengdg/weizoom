@@ -1,7 +1,8 @@
 #author：师帅
+#_author_:新新 15.10.15
 Feature: 自定义模块-图片广告
 
-@mall2 @termite2
+@mall2 @termite2 
 Scenario: 1 创建微页面
 	Given jobs登录系统
 	When jobs创建微页面
@@ -11,6 +12,7 @@ Scenario: 1 创建微页面
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -35,6 +37,7 @@ Scenario: 1 创建微页面
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -63,6 +66,7 @@ Scenario: 2 验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -87,6 +91,7 @@ Scenario: 2 验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -112,6 +117,7 @@ Scenario: 2 验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou3.jpg",
@@ -132,6 +138,7 @@ Scenario: 2 验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou3.jpg",
@@ -153,6 +160,7 @@ Scenario: 2 验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou2.jpg",
@@ -177,6 +185,7 @@ Scenario: 2 验证删除，添加
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou2.jpg",
@@ -222,6 +231,7 @@ Scenario: 3 编辑图片广告信息
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -246,6 +256,7 @@ Scenario: 3 编辑图片广告信息
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -271,6 +282,7 @@ Scenario: 3 编辑图片广告信息
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou3.jpg",
@@ -295,6 +307,7 @@ Scenario: 3 编辑图片广告信息
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "轮播图",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou3.jpg",
@@ -320,6 +333,7 @@ Scenario: 3 编辑图片广告信息
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "分开显示",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
@@ -344,6 +358,7 @@ Scenario: 3 编辑图片广告信息
 				"name": "微页面标题1"
 			},
 			"picture_ads":{
+				"index": 1,
 				"display_mode": "分开显示",
 				"values":[{
 					"path": "/standard_static/test_resource_img/hangzhou1.jpg",
