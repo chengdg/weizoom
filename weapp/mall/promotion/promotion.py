@@ -32,6 +32,7 @@ class Promotion(resource.Resource):
             barCode = request.GET.get("barCode", "")
             filter_type = request.GET.get('filter_type', "all")
             selectedProductIds = request.GET.get("selectedProductIds", "").split('_')
+
             products = models.Product.objects.filter(
                 owner=request.manager,
                 shelve_type=PRODUCT_SHELVE_TYPE_ON,
@@ -108,7 +109,11 @@ class Promotion(resource.Resource):
                     continue
                 promotion = id2promotion.get(relation.promotion_id, None)
                 if promotion:
-                    product_data['promotion_name'] = promotion.name
+                    # 单品券是否可选更具促销名，弹窗模板使用mall_select_coupon_product_dialog
+                    if promotion.type == models.PROMOTION_TYPE_COUPON:
+                        product_data['promotion_name'] = u'单品券'
+                    else:
+                        product_data['promotion_name'] = promotion.name
 
                 #避免禁用优惠券商品列表里面收到促销活动的影响 duhao 20150908
                 if not filter_type == 'forbidden_coupon':
