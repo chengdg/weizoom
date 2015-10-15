@@ -4,7 +4,13 @@
 
       W.currentPageName = "{{current_page_name}}";
 
-      W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
+      W.sharePageTitle =  {% if share_page_title %}
+                              "{{ share_page_title }}"
+                              alert({{ share_page_title }});
+                              alert("{{(+++)}}");
+                          {% else %}
+                              "{{ page_title }}"
+                          {% endif %};
       W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
@@ -21,7 +27,7 @@
       }
        var hm = document.createElement("script");
        hm.src = "/weixin/js/config/?path="+encodeURIComponent(location.href);
-       var s = document.getElementsByTagName("script")[0]; 
+       var s = document.getElementsByTagName("script")[0];
        s.parentNode.insertBefore(hm, s);
       /*
        * 微信分享按钮事件
@@ -70,6 +76,9 @@
       };
 
       if (window.location.href.indexOf('share_red_envelope') > 0){
+          alert(W.sharePageDesc);
+          alert("test???");
+          alert("W.sharePageTitle");
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
               "link" : window.location.href,
@@ -91,7 +100,7 @@
                           module: 'user_center',
                           target_api: 'shared_url/record',
                           link: window.location.href,
-                          title:W.sharePageTitle
+                          title: W.sharePageTitle
                       }),
                       success: function(data) {
                           alert("分享链接成功")
