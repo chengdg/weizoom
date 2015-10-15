@@ -64,7 +64,11 @@ def get_share_red_envelope(request):
         if followed_member_id == member_id or not followed_member_id:
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
         else:
-            relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
+            member_get_red_envelope_records = GetRedEnvelopeRecord.objects.filter(member_id=followed_member_id, red_envelope_rule_id=red_envelope_rule_id)
+            if member_get_red_envelope_records.count() > 0:
+                relation = RedEnvelopeToOrder.objects.filter(id=member_get_red_envelope_records[0].red_envelope_relation_id)
+            else:
+                relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
             print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
             print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
