@@ -72,13 +72,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		groupClass:'xui-propertyView-app-ReplyGroup',
 		fields:[{
 			name: 'reply_keyword',
-			type: 'title_with_annotation',
+			type: 'badge',
 			displayName: '关键字',
 			isUserProperty: true,
-			//maxLength: 10,
-			//validate: 'data-validate="require-notempty::页面标题不能为空,,require-word"',
-			//validateIgnoreDefaultValue: true,
-			annotation:'+添加',
+			annotation:'+ 添加',
 			default: ''
 
 		},{

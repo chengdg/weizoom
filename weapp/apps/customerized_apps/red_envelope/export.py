@@ -26,7 +26,7 @@ def get_second_navs(request):
 	else:
 		# webapp_module_views.get_modules_page_second_navs(request)
 		second_navs = [NAV]
-	
+
 	return second_navs
 
 
@@ -64,7 +64,7 @@ def get_link_targets(request):
                 "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
                 "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
                 "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
-				"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&order_id=2&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
+				"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
             }
 			link_targets.append(data)
 		else:
@@ -78,7 +78,7 @@ def get_link_targets(request):
                     "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
                     "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
                     "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
-					"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&order_id=2&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
+					"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
                 }
 				link_targets.append(data)
 	return pageinfo, link_targets

@@ -79,7 +79,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
             "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
-            "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this)
+            "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this),
+            "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this)
         };
 
 
@@ -853,6 +854,16 @@ W.workbench.PropertyView = Backbone.View.extend({
         view.on('change-prize', function(prize) {
             var attr = $el.attr('data-field');
             _this.getTargetComponent($el).model.set(attr, prize);
+        });
+    },
+    initPrizeKeywordPane: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-keyword-pane"]').data('view');
+        var _this = this;
+        view.on('add_keywords', function(keywords) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, keywords);
         });
     },
     initProductsView: function($el){
