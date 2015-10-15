@@ -1,6 +1,7 @@
 #_author_:王丽
 #_edit_:benchi
 #_edit_:新新
+#editor 新新 2015.10.15
 
 Feature:自定义模块——【基础模块】标题-页面
 	"""
@@ -17,11 +18,14 @@ Scenario: 1编辑标题
 				"title": {
 					"name": "微页面标题1"
 				},
-				"templet_title":{
-					"title": "标题",
-					"subtitle": "副标题",
-					"time": "2015-5-13 10:13",
-					"background_color": "#0000ff"
+				"templet_title": {
+				"index": 1,
+				"items": {
+						"title": "标题",
+						"subtitle": "副标题",
+						"time": "2015-5-13 10:13",
+						"background_color": "#0000ff"
+					}
 				}
 			}]
 		"""
@@ -31,11 +35,14 @@ Scenario: 1编辑标题
 				"title": {
 					"name": "微页面标题1"
 				},
-				"templet_title":{
-					"title": "标题",
-					"subtitle": "副标题",
-					"time": "2015-5-13 10:13",
-					"background_color": "#0000ff"
+				"templet_title": {
+				"index": 1,
+				"items": {
+						"title": "标题",
+						"subtitle": "副标题",
+						"time": "2015-5-13 10:13",
+						"background_color": "#0000ff"
+					}
 				}
 			}
 		"""
@@ -45,11 +52,14 @@ Scenario: 1编辑标题
 				"title": {
 					"name": "微页面标题1"
 				},
-				"templet_title":{
-					"title": "标题1111",
-					"subtitle": "副标题",
-					"time": "2015-5-13 10:13",
-					"background_color": "#ff0000"
+				"templet_title": {
+				"index": 1,
+				"items": {
+						"title": "标题1111",
+						"subtitle": "副标题",
+						"time": "2015-5-13 10:13",
+						"background_color": "#ff0000"
+					}
 				}
 			}
 		"""
@@ -59,11 +69,14 @@ Scenario: 1编辑标题
 				"title": {
 					"name": "微页面标题1"
 				},
-				"templet_title":{
-					"title": "标题1111",
-					"subtitle": "副标题",
-					"time": "2015-5-13 10:13",
-					"background_color": "#ff0000"
+				"templet_title": {
+				"index": 1,
+				"items": {
+						"title": "标题1111",
+						"subtitle": "副标题",
+						"time": "2015-5-13 10:13",
+						"background_color": "#ff0000"
+					}
 				}
 			}
 		"""

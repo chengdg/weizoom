@@ -205,6 +205,7 @@ Scenario:3 一个商品可以被重复选择
 				"name": "微页面标题1"
 			},
 			"products":{
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -229,6 +230,7 @@ Scenario:3 一个商品可以被重复选择
 				"name": "微页面标题1"
 			},
 			"products":{
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -253,6 +255,7 @@ Scenario:3 一个商品可以被重复选择
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0
@@ -284,6 +287,7 @@ Scenario:3 一个商品可以被重复选择
 				"name": "微页面标题1"
 			}, 
 			"products": {
+				"index": 1,
 				"items": [{
 					"name":"商品3不可两行显示",
 					"price": 3.0

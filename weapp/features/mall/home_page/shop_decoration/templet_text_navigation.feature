@@ -19,13 +19,16 @@ Scenario:1添加文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation": [{
+			"navigation": {
+				"index": 1,
+				"items": [{
 				"navigation_name": "文本导航",
 				"navigation_link": "会员主页"
 			},{
 				"navigation_name": "文本导航1",
 				"navigation_link": "店铺主页"
 			}]
+		}
 		}]
 		"""
 	Then jobs能获取'微页面标题1'
@@ -34,13 +37,16 @@ Scenario:1添加文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation":[{
-				"navigation_name": "文本导航",
-				"navigation_link": "会员主页"
-			},{
-				"navigation_name": "文本导航1",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员主页"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 
@@ -53,13 +59,16 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation":[{
-				"navigation_name": "文本导航",
-				"navigation_link": "会员主页"
-			},{
-				"navigation_name": "文本导航1",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员主页"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}]
 		"""
 	Then jobs能获取'微页面标题1'
@@ -68,13 +77,16 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation":[{
-				"navigation_name": "文本导航",
-				"navigation_link": "会员主页"
-			},{
-				"navigation_name": "文本导航1",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员主页"
+				},{
+					"navigation_name": "文本导航1",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 	When jobs编辑微页面'微页面标题1'
@@ -83,13 +95,16 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation":[{
-				"navigation_name": "文本导航",
-				"navigation_link": "会员主页"
-			},{
-				"navigation_name": "文本导航2",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items":[{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员主页"
+				},{
+					"navigation_name": "文本导航2",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 	Then jobs能获取'微页面标题1'
@@ -98,13 +113,16 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation": [{
-				"navigation_name": "文本导航",
-				"navigation_link": "会员主页"
-			},{
-				"navigation_name": "文本导航2",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items": [{
+					"navigation_name": "文本导航",
+					"navigation_link": "会员主页"
+				},{
+					"navigation_name": "文本导航2",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 	When jobs编辑微页面'微页面标题1'
@@ -113,10 +131,13 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation": [{
-				"navigation_name": "文本导航2",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items": [{
+					"navigation_name": "文本导航2",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 	When jobs编辑微页面'微页面标题1'
@@ -125,10 +146,13 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation":[{
-				"navigation_name": "文本导航2",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 	Then jobs能获取'微页面标题1'
@@ -137,10 +161,13 @@ Scenario: 2编辑文本导航
 			"title": {
 				"name": "微页面标题1"
 			},
-			"navigation": [{
-				"navigation_name": "文本导航2",
-				"navigation_link": "店铺主页"
-			}]
+			"navigation": {
+				"index": 1,
+				"items":[{
+					"navigation_name": "文本导航2",
+					"navigation_link": "店铺主页"
+				}]
+			}
 		}
 		"""
 	When jobs编辑微页面'微页面标题1'
