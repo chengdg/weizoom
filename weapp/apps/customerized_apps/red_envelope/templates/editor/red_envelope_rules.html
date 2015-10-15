@@ -109,11 +109,7 @@
             </td>
             <td width="154">
                 {{if rule.limit_time}}
-                    {{if rule.is_timeout && !rule.limit_time }}
-                        <span style="color:#cf0404;">已过期</span>
-                    {{else}}
                         永久
-                    {{/if}}
                 {{else}}
                     {{if rule.is_timeout && !rule.limit_time }}
                         <span style="color:#cf0404;">已过期</span>

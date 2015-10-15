@@ -27,7 +27,13 @@
 			{%if limit_time %}
 				(永久)
 			{%else%}
-				<div class="fans_data_date">({{ red_envelope_start_time }}至{{ red_envelope_end_time }})</div>
+				<div class="fans_data_date">(
+					{%if is_timeout and  not limit_time %}
+                        <span style="color:#cf0404;">{{ red_envelope_start_time }}至{{ red_envelope_end_time }}</span>
+                    {% else %}
+						{{ red_envelope_start_time }}至{{ red_envelope_end_time }}
+					{% endif %}
+					)</div>
 			{%endif%}
 		</div>
 		<ul class="fans_data_ul xui-weixin-outlinePage ml10 mt10">

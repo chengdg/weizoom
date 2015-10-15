@@ -80,8 +80,10 @@ class RedEnvelopeRuleList(resource.Resource):
                                 "receive_method": rule.receive_method,
                                 "is_warring": is_warring
                             }
+                            items.append(data)
                         else:
                             is_timeout = False if rule.end_time > datetime.now() else True
+                            print is_timeout,"is_timeout"
                             if not is_timeout:
                                 if flag:
                                     flag = False
@@ -94,7 +96,7 @@ class RedEnvelopeRuleList(resource.Resource):
                                     "receive_method": rule.receive_method,
                                     "is_warring": is_warring
                                 }
-                        items.append(data)
+                                items.append(data)
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
@@ -320,6 +322,7 @@ class RedEnvelopeParticipances(resource.Resource):
             'red_envelope_start_time': rule_data.start_time.strftime("%Y-%m-%d"),
             'red_envelope_end_time': rule_data.end_time.strftime("%Y-%m-%d"),
             'limit_time': rule_data.limit_time,
+            'is_timeout': False if rule_data.end_time > datetime.now() else True,
             'receive_method': rule_data.receive_method,
             'coupon_rule_id': coupon_rule.id
         })
