@@ -19,13 +19,11 @@ Scenario: 1编辑标题
 					"name": "微页面标题1"
 				},
 				"templet_title": {
-				"index": 1,
-				"items": {
-						"title": "标题",
-						"subtitle": "副标题",
-						"time": "2015-5-13 10:13",
-						"background_color": "#0000ff"
-					}
+					"index": 1,
+					"title": "标题",
+					"subtitle": "副标题",
+					"time": "2015-5-13 10:13",
+					"background_color": "#0000ff"
 				}
 			}]
 		"""
@@ -36,13 +34,11 @@ Scenario: 1编辑标题
 					"name": "微页面标题1"
 				},
 				"templet_title": {
-				"index": 1,
-				"items": {
-						"title": "标题",
-						"subtitle": "副标题",
-						"time": "2015-5-13 10:13",
-						"background_color": "#0000ff"
-					}
+					"index": 1,
+					"title": "标题",
+					"subtitle": "副标题",
+					"time": "2015-5-13 10:13",
+					"background_color": "#0000ff"
 				}
 			}
 		"""
@@ -53,13 +49,11 @@ Scenario: 1编辑标题
 					"name": "微页面标题1"
 				},
 				"templet_title": {
-				"index": 1,
-				"items": {
-						"title": "标题1111",
-						"subtitle": "副标题",
-						"time": "2015-5-13 10:13",
-						"background_color": "#ff0000"
-					}
+					"index": 1,
+					"title": "标题1111",
+					"subtitle": "副标题",
+					"time": "2015-5-13 10:13",
+					"background_color": "#ff0000"
 				}
 			}
 		"""
@@ -70,13 +64,11 @@ Scenario: 1编辑标题
 					"name": "微页面标题1"
 				},
 				"templet_title": {
-				"index": 1,
-				"items": {
-						"title": "标题1111",
-						"subtitle": "副标题",
-						"time": "2015-5-13 10:13",
-						"background_color": "#ff0000"
-					}
+					"index": 1,
+					"title": "标题1111",
+					"subtitle": "副标题",
+					"time": "2015-5-13 10:13",
+					"background_color": "#ff0000"
 				}
 			}
 		"""
