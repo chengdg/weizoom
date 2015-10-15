@@ -675,11 +675,13 @@ ui-appPage-commonStyle">
                     $(this).parent().parent().remove();
                 });
 
+                //恢复关键字
+                var page_keywords = '{{ keywords|safe }}';
+                prize_keyword_view && prize_keyword_view.render_keywords(page_keywords);
+
+
             }
 
-            //恢复关键字
-            var page_keywords = '{{ keywords|safe }}';
-            prize_keyword_view && prize_keyword_view.render_keywords(page_keywords);
 
         });
         // 滚动浮动在底部
