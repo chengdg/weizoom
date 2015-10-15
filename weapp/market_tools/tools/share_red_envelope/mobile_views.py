@@ -59,6 +59,10 @@ def get_share_red_envelope(request):
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
         else:
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=followed_member_id)
+            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+            print "asdasd$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+            print relation,"relation"
 
         member_coupon_record_count = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id).count()
 
@@ -66,6 +70,7 @@ def get_share_red_envelope(request):
         'red_envelope_rule': red_envelope_rule,
         'shop_name': shop_name,
         'page_title': "优惠大放送",
+        'share_page_title': "优惠大放送",
         'share_page_desc': red_envelope_rule.share_title,
         'share_img_url': red_envelope_rule.share_pic
     }
