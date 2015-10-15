@@ -60,10 +60,12 @@ class RedEnvelopeRuleList(resource.Resource):
 
             id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
                                    promotion_models.CouponRule.objects.filter(id__in=coupon_rule_ids)])
+
+            #库存不足20时获取规则数据
             flag = True
             is_warring = False
             for rule in rules:
-                if id2coupon_rule[rule.coupon_rule_id].remained_count<=20:
+                if id2coupon_rule[rule.coupon_rule_id].remained_count <= 20:
                     if rule.status:
                         data ={}
                         if rule.limit_time:
@@ -86,21 +88,14 @@ class RedEnvelopeRuleList(resource.Resource):
                                     is_warring = True
                                 else:
                                     is_warring = False
-                                    data = {
-                                        "id": rule.id,
-                                        "rule_name": rule.name,
-                                        "receive_method": rule.receive_method,
-                                        "is_warring": is_warring
-                                    }
+                                data = {
+                                    "id": rule.id,
+                                    "rule_name": rule.name,
+                                    "receive_method": rule.receive_method,
+                                    "is_warring": is_warring
+                                }
                         items.append(data)
 
-        endDate = request.GET.get('endDate', '')
-        if endDate:
-            endDate +=' 00:00'
-        promotion_status = request.GET.get('status', '-1')
-        limit_time = 1
-        if int(promotion_status) > 0:
-            limit_time = 0
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -370,17 +365,22 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
     sub_member_ids = []
     for sub_relation in sub_relations:
         sub_member_ids.append(sub_relation.member_id)
+
+    #获取关注关系l
     member_follow_relation = MemberFollowRelation.objects.filter(member_id__in=sub_member_ids)
+
+    #只保存新会员的最后一条记录l
     member_id2follower_member_id ={}
     for member in member_follow_relation:
         member_id2follower_member_id[member.member_id] = member.follower_member_id
+
     for relation in relations:
         count = 0
         for sub_relation in sub_relations:
             if sub_relation.member.is_subscribed \
-                and sub_relation.is_new \
-                and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id \
-                and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id]:
+                    and sub_relation.is_new \
+                    and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id \
+                    and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id]:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
@@ -477,12 +477,9 @@ def get_datas(request):
     coupon_ids = [c.coupon_id for c in relations if c.coupon.status == COUPON_STATUS_USED]
     orders = Order.get_orders_by_coupon_ids(coupon_ids)
     if orders:
-        coupon_id2order_id = dict([(o.coupon_id, \
-                                    o.id) \
-                                   for o in orders])
+        coupon_id2order_id = dict([(o.coupon_id, o.id) for o in orders])
     else:
         coupon_id2order_id = {}
-
 
     items = []
     for relation in relations:

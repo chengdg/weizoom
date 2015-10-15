@@ -44,7 +44,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			className:'xui-propertyView-app-ShareGroup-helper',
 			id:'propertyView-app-ShareGroup-helper',
 			tip:{
-				text:'此分析图片和描述用户分享到朋友圈、微信群、微信好友'
+				text:'此分享图片和描述用户分享到朋友圈、微信群、微信好友'
 			}
 		},
 
@@ -53,13 +53,13 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			type: 'image_dialog_select',
 			displayName: '分享图片',
 			isUserProperty: true,
-			isShowCloseButton: true,
+			isShowCloseButton: false,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '注:不上传则使用默认图片,建议尺寸90*90，仅支持jpg/png',
-			default: ''
+			default: "/termite_static/img/component/sign/default_gift.png"
 		},{
 			name: 'share_description',
 			type: 'textarea',
@@ -108,7 +108,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			}]
 		},{
 		group:"",
-		groupClass:'xui-propertyView-app-SignSettingGroup',
+		groupClass:'xui-propertyView-app-SignSettingGroup xa-dayly-setting',
 		fields:[{
 			name:'daily_group',
 			displayName:'每日签到',
@@ -125,7 +125,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			annotation: '积分',
 			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
 			validateIgnoreDefaultValue: true,
-			default: ''
+			default: '0'
 		},{
 			name: 'daily_prizes',
 			type: 'prize_selector_v4',
@@ -149,6 +149,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 	}],
 	propertyChangeHandlers: {
 		image: function($node, model, value, $propertyViewNode) {
+			console.log(value);
 			var image = {url:''};
 			var data = {type:null};
 			if (value !== '') {
@@ -178,15 +179,26 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		items: function($node, model, value) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
         },
-		daily_points:function($node, model, value){
-			$node.find('.daily_points').text(value);
-
+		daily_points:function($node, model, value, $propertyViewNode){
+			console.log(value);
+			if(value == ''){
+				console.log($propertyViewNode[0]);
+				$propertyViewNode.find('.xa-dayly-setting').find('input[data-field="daily_points"]').val('0');
+			}
+			if(value != '' && value != 0){
+				$node.find('.daily_points').text(value+'  积分').show();
+			}else{
+				$node.find('.daily_points').hide();
+			}
 		},
 		daily_prizes:function($node, model, value){
-			$node.find('span.wa-daily_prizes').show();
-			$node.find('.daily_prizes .wa-daily_prizes-i-name').text(value.name);
+			if(value && value.name != ''){
+				$node.find('.daily_prizes').show();
+				$node.find('.daily_prizes').text("“"+value.name+"”"+"一张");
+			}else{
+				$node.find('.daily_prizes').hide();
+			}
 		}
-
 	},
 
 	initialize: function(obj) {
