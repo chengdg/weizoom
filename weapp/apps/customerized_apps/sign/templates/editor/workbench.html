@@ -380,6 +380,7 @@ ui-appPage-commonStyle">
         </script>
     {% endverbatim %}
     <div class="xui-keywordBoxDiv xa-keywordBoxDiv"></div>
+    <div class="hehe">{{ keywords }}</div>
 {% endblock %}
 
 {% block base_js %}
@@ -493,13 +494,11 @@ ui-appPage-commonStyle">
             var share_desc =descriptionModel.get('share_description');
             var share = {"img":share_img,"desc":share_desc};
 
-            var reply_keyword =[];
+            var reply_keyword ={};
             $('#add_keyword_div').find('.xa-data-patterns').each(function(){
-                var d = {};
                 var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
                 var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
-                d[key_tmp] = mo_tmp;
-                reply_keyword.push(d);
+                reply_keyword[key_tmp] = mo_tmp;
             });
                     console.log(">>>>>>>>>>>>>> keyword <<<<<<<<<<<<？？？？？？？");
                     console.log(reply_keyword);
@@ -681,12 +680,16 @@ ui-appPage-commonStyle">
                 });
 
                 flag = false;
-
+                //删除绑定
                 $('#add_keyword_div').delegate('.xa-close','click',function(){
                     $(this).parent().parent().remove();
                 });
 
             }
+
+            //回复关键字
+            var kk = '{{ keywords|safe }}';
+            console.log(kk);
         });
         // 滚动浮动在底部
           var stickyMenu = function(){
