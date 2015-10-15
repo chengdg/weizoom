@@ -128,6 +128,7 @@ class RedEnvelopeRuleList(resource.Resource):
         if not is_fetch_all_rules:
             rules = _filter_rules(request, rules)
 
+        #处理过期排序
         for rule in rules:
             is_timeout = False if rule.end_time > datetime.now() else True
             if is_timeout and not rule.limit_time:
@@ -328,7 +329,7 @@ class RedEnvelopeParticipances(resource.Resource):
             'has_data': has_data,
             'new_member_count': new_member_count,
             'received_count': received_count,
-            'consumption_sum': consumption_sum,
+            'consumption_sum': '%.2f' % consumption_sum,
             'total_use_count': total_use_count,
             'red_envelope_id': rule_id,
             'red_envelope_name': rule_data.name,
@@ -546,7 +547,7 @@ def get_datas(request):
             'introduce_received_number_count': relation.introduce_received_number,
             'introduce_new_member_count': relation.introduce_new_member,
             'introduce_used_number_count': relation.introduce_used_number,
-            'introduce_sales_number': relation.introduce_sales_number,
+            'introduce_sales_number': '%.2f' %  relation.introduce_sales_number,
             'created_at': relation.created_at.strftime("%Y-%m-%d"),
             'coupon_status': relation.coupon.status,
             'coupon_status_name': COUPONSTATUS[relation.coupon.status]['name'],
