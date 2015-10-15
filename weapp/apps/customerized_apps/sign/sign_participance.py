@@ -65,6 +65,7 @@ class SignParticipance(resource.Resource):
 					created_at= datetime.today()
 				)
 				signer.save()
+
 			return_data = signer.do_signment(sign)
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
 				response = create_response(200)

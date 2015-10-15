@@ -37,7 +37,7 @@ class SignParticipance(models.Document):
 		}
 		latest_date = self.latest_date
 		#判断是否已签到
-		if latest_date and latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d'):
+		if latest_date and latest_date.strftime('%Y-%m-%d') == nowDate.strftime('%Y-%m-%d') and self.serial_count != 0:
 			return_data['status_code'] = RETURN_STATUS_CODE['ALREADY']
 			return_data['errMsg'] = u'今日已签到'
 			return return_data
