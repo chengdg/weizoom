@@ -63,16 +63,15 @@ class Product(api_resource.ApiResource):
 			'user_code': product.user_code,
 			'is_deleted': product.is_deleted,
 			'weshop_sync': product.weshop_sync,
-
-
-			'price_info': product.price_info,
-
-			'models': product.models,
-
-			'product_model_properties': product.product_model_properties,
-			
-			'swipe_images_json': product.swipe_images_json
 		}
+		if hasattr(product, 'price_info'):
+			data['price_info'] = product.price_info
+		if hasattr(product, 'models'):
+			data['models'] = product.models
+		if hasattr(product, 'product_model_properties'):
+			data['product_model_properties'] = product.product_model_properties
+		if hasattr(product, 'swipe_images_json'):
+			data['swipe_images_json'] = product.swipe_images_json
 		if hasattr(product, 'promotion'):
 			data['promotion'] = product.promotion
 			data['promotion_title'] = product.promotion_title
