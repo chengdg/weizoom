@@ -42,8 +42,7 @@ Background:
 	Given jobs设定会员积分策略
 		"""
 		{
-			"integral_each_yuan": 2,
-			"use_ceiling": -1
+			"integral_each_yuan": 2
 		}
 		"""
 	Given bill关注jobs的公众号
@@ -143,7 +142,7 @@ Scenario: 1 购买单个禁用优惠券商品,该商品无单品券
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2 
+@promotion @promotionForbiddenCoupon @mall2 @ss
 Scenario: 2 购买单个禁用优惠券商品,该商品有单品券
 	#购买商品2,数量2,全体券1不可使用,单品券2可以使用
 	When bill访问jobs的webapp
