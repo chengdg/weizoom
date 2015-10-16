@@ -671,7 +671,7 @@ def get_mileke_page(request):
 	milekes = milekes[:100]
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
-		'page_title': u'免费领取儿童安全坐垫 ',
+		'page_title': u'限额免费抢收小斑马特供有机蔬菜！',
 		'milekes': milekes,
 		'joined': joined,
 		'current_count': current_count,
@@ -682,7 +682,8 @@ def get_mileke_page(request):
 		'hide_non_member_cover': True,
 		'game_over': game_over,
 		'current_index': current_index,
-		'member':member
+		'member':member,
+		'share_img_url':'http://weappstatic.b0.upaiyun.com/static_v2/img/shucai.jpg'
 	})
 	return render_to_response('%s/mileke_page.html' % request.template_dir, c)
 
