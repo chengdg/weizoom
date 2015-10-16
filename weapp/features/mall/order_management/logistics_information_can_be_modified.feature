@@ -26,7 +26,7 @@ Background:
 	And jobs登录系统
 
 @mall2 @order @mall.update_express_info @pyliu
-Scenario:jobs修改'0000001'的物流信息
+Scenario:1 jobs修改'0000001'的物流信息
 	When jobs通过后台管理系统对'0000001'的物流信息进行修改
 		"""
 		{
