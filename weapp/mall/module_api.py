@@ -2215,7 +2215,11 @@ def update_order_status(user, action, order, request=None):
 	'action' : 'rship' 发货
 	"""
 	order_id = order.id
-	operation_name = user.username
+	# 快递100签收发送的finsh动作不记录日志，没有user
+	if user:
+		operation_name = user.username
+	else:
+		operation_name = None
 	action_msg = None
 	if action == 'pay':
 		action_msg = '支付'
@@ -2237,7 +2241,8 @@ def update_order_status(user, action, order, request=None):
 		action_msg = '完成'
 		target_status = ORDER_STATUS_SUCCESSED
 		actions = action.split('-')
-		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
+		if operation_name:
+			operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
 		#更新红包引入消费金额的数据 by Eugene
 		if order.coupon_id and promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=order.coupon_id, introduced_by__gt=0).count() > 0:
 			red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=order.coupon_id)
@@ -2306,8 +2311,9 @@ def update_order_status(user, action, order, request=None):
 		else:
 			Order.objects.filter(id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
-		record_status_log(order.order_id, operation_name, order.status, target_status)
-		record_operation_log(order.order_id, operation_name, action_msg, order)
+		if operation_name:
+			record_status_log(order.order_id, operation_name, order.status, target_status)
+			record_operation_log(order.order_id, operation_name, action_msg, order)
 
 	try:
 		# TODO 返还用户积分
