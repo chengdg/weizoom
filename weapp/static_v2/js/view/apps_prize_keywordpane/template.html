@@ -10,7 +10,7 @@
              </div>
              <div class="xui-i-left"><span class="xui-colorRed">*</span> 关键词：</div>
              <div class="xui-i-right">
-                <input type="text"  maxlength=15  data-validate="require-string" data-maxlength="15" data-minlength="1" class="xa-app-add lh24 w198" placeHolder="输入回车可添加多个关键词"/>
+                <input type="text"  maxlength=15  data-validate="require-string" data-maxlength="15" data-minlength="1" class="xa-app-add lh24 w198"/>
              </div>
         </div>
 
@@ -23,7 +23,7 @@
 
 <script id="apps-prize-badge-src" type="text/x-handlebar-tmpl">
     {{#each keywords}}
-        <div  class="xui-patterns xa-data-patterns fl mt10 ">
+        <div  class="xui-patterns xui-keywordpane-patterns xa-data-patterns fl mt10 ">
             <div class="xui-i-key fl ">
                 <span class="data-keyword" data-keyword="{{@key}}">{{@key}}</span>
             </div>

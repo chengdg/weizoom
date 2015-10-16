@@ -1495,7 +1495,7 @@ button.xui-deleteImageButton{
 	position: relative;
 	top: 8px;
 }
-.xui-patterns{
+.xui-keywordpane-patterns.xui-patterns{
 	color:#333333;
 	position: relative;
 	top:-5px;

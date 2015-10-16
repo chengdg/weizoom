@@ -91,12 +91,29 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 			W.showHint('error','关键字不能重复');
 			return false;
 		}
-		this.keywords_obj[keyword] = _this.type;
-
-		W.weixinKeywordObj = this.keywords_obj;
-		this.$el.find('.xa-app-add').val('');
-		this.render();
-
+		//检查关键字是否重复 has_duplicate_pattern
+		W.getApi().call({
+			app: 'new_weixin',
+			resource: 'keyword_rules',
+			method: 'get',
+			args: {
+				keyword: keyword
+			},
+			success: function(data){
+				var msg = data.msg;
+				if(msg && !$.isEmptyObject(msg)){
+					W.showHint('error', msg);
+				}else{
+					_this.keywords_obj[keyword] = _this.type;
+					W.weixinKeywordObj = _this.keywords_obj;
+					_this.$el.find('.xa-app-add').val('');
+					_this.render();
+				}
+			},
+			error: function(error){
+				W.showHint('error', '关键字重复性检查失败~');
+			}
+		});
 	},
 
 	onClickMistinessRadio: function() {
