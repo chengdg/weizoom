@@ -1,4 +1,5 @@
-#_author_:王丽
+#author: 王丽
+#editor: 张三香 2015.10.16
 
 Feature:推广扫码
 """
@@ -16,9 +17,6 @@ Feature:推广扫码
 						添加链接的列表：微页面、商品及分组、店铺主页、会员主页、
 										营销推广、推广扫码、我的订单
 """
-
-Background:
-	Given jobs登录系统
 
 @mall2 @qr_code
 Scenario:1 无奖励
@@ -57,11 +55,10 @@ Scenario:1 无奖励
 		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
 		
-@mall2 @qr_code	
+@mall2 @qr_code
 Scenario:2 积分奖励
 
 	Given jobs登录系统
-
 	When jobs创建推广扫码
 		"""
 		{
@@ -93,11 +90,10 @@ Scenario:2 积分奖励
 		| tom   |   普通会员  |       1      |     0    |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |    10    |        今天       | 直接关注 |
 
-@mall2 @qr_code1
+@mall2 @qr_code
 Scenario:3 优惠券奖励
 
 	Given jobs登录系统
-
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -161,7 +157,6 @@ Scenario:3 优惠券奖励
 		| name  | member_rank | friend_count |   attention_time  |  source  |
 		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
 		| bill  |   普通会员  |       1      |        今天       | 直接关注 |
-
 
 	Then jobs能获得优惠券'优惠券1'的码库
 		"""
