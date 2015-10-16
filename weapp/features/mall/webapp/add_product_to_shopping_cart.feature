@@ -1,4 +1,5 @@
 # __edit__ : "benchi"
+#_edit_:"师帅"
 @func:webapp.modules.mall.views.list_products
 Feature: 添加商品到购物车中
 	bill能在webapp中将jobs添加的"商品"放入购物车
@@ -251,24 +252,7 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 			}]
 		}
 		"""
-	Given jobs登录系统
-	When jobs将商品'商品2'放入回收站
-	When bill访问jobs的webapp
-	Then bill能获得购物车
-		"""
-		{
-			"product_groups": [],
-			"invalid_products": [{
-				"name": "商品1",
-				"price": 3,
-				"count": 1
-			}, {
-				"name": "商品2",
-				"price": 5,
-				"count": 1
-			}]
-		}
-		"""
+
 	Given jobs登录系统
 	When jobs-上架商品'商品1'
 	When bill访问jobs的webapp
@@ -280,15 +264,15 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 					"name": "商品1",
 					"price": 3,
 					"count": 1
+				}, {
+					"name": "商品2",
+					"price": 5,
+					"count": 1
 				}]
 			}],
-			"invalid_products": [{
-				"name": "商品2",
-				"price": 5,
-				"count": 1
-			}]
+			"invalid_products": []
 		}
-		"""	
+		"""
 
 
 @mall2 @mall.webapp @mall.webapp.shopping_cart 
