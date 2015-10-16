@@ -1,11 +1,13 @@
 # __author__ : "冯雪静"
 
 Feature: 物流选择其他
+"""
 	jobs通过管理系统能为用户发货选择其他物流
-	"""
+
 	1.对待发货订单进行发货选择其他物流
 	2.对选择其他物流的订单进行修改物流信息
-	"""
+"""
+
 Background:
 	Given jobs登录系统
 	And jobs已添加商品
@@ -47,8 +49,7 @@ Background:
 		}]
 		"""
 
-
-@logistics @order @mall2
+@mall2 @order @logistics
 Scenario: 1 对待发货订单进行发货选择其他物流
 	jobs对待发货订单进行发货选择'其他'
 	1.不填写发货人
@@ -145,8 +146,7 @@ Scenario: 1 对待发货订单进行发货选择其他物流
 		}
 		"""
 
-
-@logistics @order  @mall2
+@mall2 @order @logistics 
 Scenario: 2 对选择其他物流的订单进行修改物流信息
 	jobs对待发货订单进行发货选择'其他'后
 	1.对该订单进行修改物流信息
