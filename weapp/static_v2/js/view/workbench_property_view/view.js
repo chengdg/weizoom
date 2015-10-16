@@ -860,6 +860,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         W.createWidgets($el);
 
         var view = $el.find('[data-ui-role="apps-prize-keyword-pane"]').data('view');
+        console.log(view);
         var _this = this;
         view.on('add_keywords', function(keywords) {
             var attr = $el.attr('data-field');
