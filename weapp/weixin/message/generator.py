@@ -118,7 +118,7 @@ def __get_absolute_url(orig_url, user_profile, material_id=None):
 	else:
 		if not orig_url.startswith('http'):
 			absolute_url = u'http://%s/%s/%s' % (user_profile.host, path, orig_url)
-	if material_id and ('model=share_red_envelope&action=get' in absolute_url):
+	if absolute_url and material_id and ('model=share_red_envelope&action=get' in absolute_url):
 		absolute_url = '%s&material_id=%s' % (absolute_url, material_id)
 	return absolute_url if (absolute_url is not None) else orig_url
 
