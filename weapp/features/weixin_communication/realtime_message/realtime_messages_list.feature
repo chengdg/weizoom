@@ -1,4 +1,5 @@
 # __author__ : "王丽"
+#editor 新新 2015.10.16
 
 Feature:实时消息列表
 """
@@ -110,7 +111,7 @@ Scenario:1 获取"所有消息"选项卡列表
 		}]
 		"""
 
-@mall2 @weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage 
 Scenario:2 获取"未读信息"选项卡列表
 
 	Given jobs登录系统
@@ -129,7 +130,7 @@ Scenario:2 获取"未读信息"选项卡列表
 		}]
 		"""
 
-@mall2 @weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage 
 Scenario:3 获取"未回复"选项卡列表
 
 	Given jobs登录系统
@@ -153,7 +154,7 @@ Scenario:3 获取"未回复"选项卡列表
 		}]
 		"""
 
-@mall2 @weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage 
 Scenario:4 实时消息列表查询
 
 	Given jobs登录系统
@@ -205,7 +206,7 @@ Scenario:4 实时消息列表查询
 	When jobs更新"tom"的会员等级
 		"""
 		{
-			"name": "bill",
+			"name": "tom",
 			"member_rank": "银牌会员"
 		}
 		"""
@@ -394,7 +395,7 @@ Scenario:4 实时消息列表查询
 		"""
 
 
-@mall2 @weixin @message @realtimeMessage
+@mall2 @weixin @message @realtimeMessage 
 Scenario:5 实时消息"所有消息"列表分页
 
 	Given jobs登录系统
