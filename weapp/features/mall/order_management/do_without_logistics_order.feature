@@ -1,7 +1,10 @@
 # __author__ : "冯雪静"
 
 Feature: 不需要物流的订单
+"""
+
 	jobs通过管理系统能为用户发货不需要物流
+"""
 
 Background:
 	Given jobs登录系统
@@ -47,8 +50,7 @@ Background:
 		}]
 		"""
 
-
-@logistics @order @mall2
+@mall2 @order @logistics
 Scenario: 1 对待发货订单进行发货不需要物流
 	jobs对不需要物流的订单进行发货
 	1.不填写发货人
