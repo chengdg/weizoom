@@ -7,7 +7,8 @@
       W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
       W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
-
+      alert('W.sharePageTitle:'+W.sharePageTitle);
+      alert('W.sharePageDesc:'+W.sharePageDesc);
       if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
       W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
 
