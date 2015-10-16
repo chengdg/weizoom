@@ -1,6 +1,6 @@
 # __author__ : "师帅"
 # __edite__ : "benchi"
-
+#editor:雪静 2015.10.1
 Feature: 优惠券与促销活动互斥问题
 """
 	1.给商品1建单品券，并发送给jobs，jobs领取后，使单品券失效（但是单品券没有过有效期，仍可使用）
@@ -60,7 +60,7 @@ Background:
 		"""
 
 @mall2 @promotion @promotionCoupon @promotionFlash
-Scenario: 1先建优惠券，不能参加促销活动
+Scenario: 1 先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -75,20 +75,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 			"coupon_product": "商品2"
 		}]
 		"""
-	
-	Then jobs能获得优惠券规则列表
-		"""
-		[{
-			"name": "优惠券4",
-			"type": "单品券",
-			"money": 10.00,
-			"remained_count": 5,
-			"limit_counts": 1,
-			"use_count": 0,
-			"start_date": "今天",
-			"end_date": "2天后"
-		}]
-		"""
+
 	Then jobs获取上架商品查询列表
 		"""
 		[{
@@ -168,7 +155,7 @@ Scenario: 1先建优惠券，不能参加促销活动
 
 
 @mall2 @wip.cp2 @promotion @promotionCoupon @promotionFlash
-Scenario: 2先建优惠券，不能参加促销活动
+Scenario: 2 先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -181,38 +168,6 @@ Scenario: 2先建优惠券，不能参加促销活动
 			"using_limit": "满50元可以使用",
 			"coupon_id_prefix": "coupon4_id_",
 			"coupon_product": "商品2"
-		}]
-		"""
-	Then jobs能获得优惠券规则列表
-		"""
-		[{
-			"name": "优惠券4",
-			"type": "单品券",
-			"money": 10.00,
-			"remained_count": 5,
-			"limit_counts": 1,
-			"use_count": 0,
-			"start_date": "今天",
-			"end_date": "2天后"
-		}]
-		"""
-	And jobs获取上架商品查询列表
-		"""
-		[{
-			"name": "商品1",
-			"stock_type": "无限",
-			"operate": false,
-			"price": 200.00
-		}, {
-			"name": "商品2",
-			"stock_type": "无限",
-			"operate": false,
-			"price": 200.00
-		}, {
-			"name": "商品3",
-			"stock_type": "无限",
-			"operate": true,
-			"price": 200.00
 		}]
 		"""
 	#优惠券在有效期内，手动失效，不能建立优惠券，需要等过有效期才能建立
@@ -237,60 +192,10 @@ Scenario: 2先建优惠券，不能参加促销活动
 		}]
 		"""
 
-@mall2 @wip.cp3 @promotion @promotionCoupon @promotion.promotionFlash
-Scenario: 3先建立限时抢购活动，不能建立该商品的单品券
-	When jobs创建限时抢购活动
-		"""
-		[{
-			"name": "商品2限时抢购",
-			"product_name": "商品2",
-			"start_date": "今天",
-			"end_date": "1天后",
-			"member_grade": "全部",
-			"count_per_purchase": 2,
-			"promotion_price": 11.5
-		}]
-		"""
-	Then jobs获取限时抢购活动列表
-		"""
-		[{
-			"name": "商品2限时抢购",
-			"product_name": "商品2",
-			"product_price": 200,
-			"start_date": "今天",
-			"end_date": "1天后",
-			"promotion_price": 11.5
-		}, {
-			"name": "商品1限时抢购",
-			"product_name": "商品1",
-			"product_price": 200,
-			"start_date": "今天",
-			"end_date": "1天后",
-			"promotion_price": 180
-		}]
-		"""
-	And jobs获取上架商品查询列表
-		"""
-		[{
-			"name": "商品1",
-			"stock_type": "无限",
-			"operate": false,
-			"price": 200.00
-		}, {
-			"name": "商品2",
-			"stock_type": "无限",
-			"operate": false,
-			"price": 200.00
-		}, {
-			"name": "商品3",
-			"stock_type": "无限",
-			"operate": true,
-			"price": 200.00
-		}]
-		"""
+
 
 @mall2 @wip.cp4 @promotion.promotionCoupon @promotion.promotionPremium
-Scenario: 4先建立买赠活动，不能建立该商品的单品券
+Scenario: 3 先建立买赠活动，不能建立该商品的单品券
 	When jobs创建买赠活动
 		"""
 		[{
@@ -299,7 +204,7 @@ Scenario: 4先建立买赠活动，不能建立该商品的单品券
 			"start_date": "今天",
 			"end_date": "1天后",
 			"premium_products": [{
-				"name": "商品3",
+				"name": "商品2",
 				"count": 1
 			}],
 			"count": 1,
