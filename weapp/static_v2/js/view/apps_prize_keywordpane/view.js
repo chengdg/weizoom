@@ -106,7 +106,7 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 		var offset = this.$add_keyword_btn.offset();
 		this.$el.css('position','absolute');
 		this.$el.css('top', offset.top+50 + 'px');
-		this.$el.css('left', offset.left+100 + 'px');
+		this.$el.css('left', offset.left+50 + 'px');
 		this.$el.show();
 	},
 
