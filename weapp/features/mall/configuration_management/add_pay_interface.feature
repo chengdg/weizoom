@@ -47,7 +47,6 @@ Scenario:2 添加支付方式:支付宝支付
 		"""
 		[{
 			"type": "支付宝",
-			"description": "我的支付宝",
 			"is_active": "启用",
 			"partner": "11",
 			"key": "21",
@@ -60,7 +59,6 @@ Scenario:2 添加支付方式:支付宝支付
 		"""
 		{
 			"type": "支付宝",
-			"description": "我的支付宝",
 			"is_active": "启用",
 			"partner": "11",
 			"key": "21",
