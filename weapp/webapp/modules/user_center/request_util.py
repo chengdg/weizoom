@@ -604,7 +604,7 @@ def get_refueling_page(request):
 def get_mileke_page(request):
 	game_over = False
 	now_time = time.localtime()
-	date = time.strptime('2015-10-09 18:00', "%Y-%m-%d %H:%M")
+	date = time.strptime('2015-10-22 10:00', "%Y-%m-%d %H:%M")
 
 	if now_time > date:
 		game_over = True
@@ -645,18 +645,20 @@ def get_mileke_page(request):
 	"""
 		投票总数
 	"""
-	# milekes = Mileke.objects.all().order_by('-count')
-	# member_mileke = None
-	# for mileke in milekes:
-	# 	mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
-	# 	if joined and mileke.member == member:
-	# 		member_mileke = mileke
+	member_mileke = None
+	if game_over is False:
+		milekes = Mileke.objects.all()#.order_by('-count')
+		for mileke in milekes:
+			mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
+			if joined and mileke.member == member:
+				member_mileke = mileke
 
-	"""
-		排序
-	"""
-	#milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
-	milekes = Mileke.objects.all().order_by('-current_count')
+		"""
+			排序
+		"""
+		milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
+	else:
+		milekes = Mileke.objects.all().order_by('-current_count')
 	"""
 		获取当前用户位置
 	"""
@@ -666,7 +668,7 @@ def get_mileke_page(request):
 		current_index = list(milekes).index(member_mileke) + 1
 	else:
 		current_index = 0
-
+	milekes = milekes[:100]
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
 		'page_title': u'免费领取儿童安全坐垫 ',
