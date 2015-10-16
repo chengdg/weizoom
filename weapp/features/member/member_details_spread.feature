@@ -282,7 +282,7 @@ Scenario:2 会员详情-传播能力(分享链接引流会员列表)
 	When 清空浏览器
 	Given jobs登录系统
 
-	When jobs设置分页查询参数
+	Given jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":2
