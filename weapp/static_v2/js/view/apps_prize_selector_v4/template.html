@@ -14,7 +14,7 @@
 			<button class="close xui-close xa-removeCoupon" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
 			<a href="javascript:void(0);" class="xa-selectCoupon ml5">修改</a>
 			<span style="color:#666666">剩余库存: <span class="xa-couponCount">{{#if prize.count}}{{prize.count}}{{ else }} 0 {{/if}}</span>&nbsp;&nbsp;</span>
-			<span><a href="/mall2/coupon_rule_list/" target="_blank" class="xa-changeCouponCount" >追加库存</a></span>
+			<span><a href="/mall2/coupon_list/?id={{ prize.id }}" target="_blank" class="xa-changeCouponCount" >追加库存</a></span>
 		</div>
 
 	</div>
