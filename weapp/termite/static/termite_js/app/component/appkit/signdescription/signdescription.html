@@ -266,8 +266,8 @@
 
     <div class="wui-SignDescriptionDiv">
         <div class="wui-SignDescriptionDiv Chr wa-prize-board">
-            <p class="wa-daily_title">今日可以领取以下奖励:</p>
-            <p class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</p>
+            <span class="wa-daily_title">今日可以领取 </span>
+            <span class="daily_points wa-daily_points Num">{% if component.model.daily_points %}{{component.model.daily_points}}{% else %}0{% endif %} 积分</span>
             <p class="daily_prizes wa-daily_prizes" {% if not component.model.daily_prizes.name %}style="display: none"{% endif %}>{{ component.model.daily_prizes.name }} 一张</p>
         </div>
     </div>
