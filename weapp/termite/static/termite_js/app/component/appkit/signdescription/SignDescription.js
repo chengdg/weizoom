@@ -75,7 +75,7 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			type: 'badge',
 			displayName: '关键字',
 			isUserProperty: true,
-			default: {'a': 12}
+			default: {}
 
 		},{
 			name: 'reply_content',
@@ -145,6 +145,9 @@ W.component.appkit.SignDescription = W.component.Component.extend({
         }]
 	}],
 	propertyChangeHandlers: {
+		reply_keyword: function($node, model, value, $propertyViewNode) {
+			this.refresh($node, {resize:true, refreshPropertyView:true});
+		},
 		image: function($node, model, value, $propertyViewNode) {
 			console.log(value);
 			var image = {url:''};
@@ -175,10 +178,10 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 		},
 		items: function($node, model, value) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
+		 	var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
+			view && view.render(W.weixinKeywordObj);
         },
 		daily_points:function($node, model, value, $propertyViewNode){
-			console.log('==============');
-			console.log(model);
 			if(value == ''){
 				model.set('daily_points', 0);
 				$propertyViewNode.find('.xa-dayly-setting').find('input[data-field="daily_points"]').val('0');

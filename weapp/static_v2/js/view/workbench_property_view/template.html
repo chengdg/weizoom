@@ -137,28 +137,13 @@
 					<div class="propertyGroup_property_sliderField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}：</div>
 						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="apps_prize_keywordpane" data-field="${field.name}">
-							<div data-ui-role="apps-prize-keyword-pane">
-							    {{each(keyword, mode) component.model.get(field.name)}}
-                                    <div  class="xui-patterns xa-data-patterns fl mt10 ">
-                                        <div class="xui-i-key fl ">
-                                            <span class="data-keyword" data-keyword="${ keyword }"> ${ keyword }</span>
-                                        </div>
-                                        <div class="xui-i-type fl  xa-mode">
-                                            <span class="xa-data-type" data-type="${ type }">
-                                                {{if mode == 'accurate'}}精确匹配{{/if}}
-                                                {{if mode  == 'blur'}}模糊匹配{{/if}}
-                                            </span>
-                                            <img  class="fr xui-close xa-close" src="/static_v2/img/editor/icon_delete.png" />
-                                        </div>
-                                    </div>
-                                {{/each}}
-                                <div class="xa-add-keyword-btn">+ 添加</div>
+							<div data-ui-role="apps-prize-keyword-pane" >
+                                <div class="xa-add-keyword-btn xui-add-keyword-btn">+ 添加</div>
 						    </div>
+
 						</div>
 					</div>
 					{{/if}}
-
-
 
 					{{if (field.type == 'date_range_selector')}}
 					<div class="propertyGroup_property_dateRangeSelectorField propertyGroup_property_horizontalField">

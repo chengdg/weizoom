@@ -1,5 +1,5 @@
 <script id="apps-prize-keywordpane-src" type="text/x-handlebar-tmpl">
-    <div class="xui-newKeyView pa xa-keywordBoxDiv-v2">
+    <div class="xui-newKeyView pa xa-keywordBoxDiv-v2 xui-keywordBoxDiv-v2 xui-hide">
         <div class="xui-key">
              <div class="xui-i-left"><span class="xui-colorRed">*</span> 规则：</div>
              <div class="xui-i-right">
@@ -15,9 +15,27 @@
         </div>
 
         <div class="tc pb20 cb">
-            <span class="btn btn-default xa-cancel xui-delete ml20 ">完&nbsp;&nbsp;成</span>
+            <span class="btn btn-success xa-add-single-keyword ml20 xui-delete">添&nbsp;&nbsp;加</span>
+            <span class="btn btn-default xa-cancel xui-delete ml20 ">取&nbsp;&nbsp;消</span>
         </div>
     </div>
+</script>
+
+<script id="apps-prize-badge-src" type="text/x-handlebar-tmpl">
+    {{#each keywords}}
+        <div  class="xui-patterns xa-data-patterns fl mt10 ">
+            <div class="xui-i-key fl ">
+                <span class="data-keyword" data-keyword="{{@key}}">{{@key}}</span>
+            </div>
+            <div class="xui-i-type fl  xa-mode">
+                <span class="xa-data-type" data-type="{{this}}">
+                    {{#ifCond this '==' 'accurate'}}精确匹配{{/ifCond}}
+                    {{#ifCond this  '==' 'blur'}}模糊匹配{{/ifCond}}
+                </span>
+                <img  class="fr xui-close xa-close xui-remove-btn" src="/static_v2/img/editor/icon_delete.png" />
+            </div>
+        </div>
+    {{/each}}
 </script>
 
 

@@ -191,7 +191,7 @@ def record_mileke_log(request):
 	response = create_response(200)
 
 	now_time = time.localtime()
-	date_time = time.strptime('2015-10-09 18:00', "%Y-%m-%d %H:%M")
+	date_time = time.strptime('2015-10-22 10:00', "%Y-%m-%d %H:%M")
 
 	if now_time > date_time:
 		response = create_response(502)
