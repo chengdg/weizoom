@@ -550,7 +550,7 @@ Scenario:2 编辑自定义模块-删除
 		"""	
 
 @mall2 @termite2
-Scenario: 添加模块
+Scenario: 3 添加模块
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
