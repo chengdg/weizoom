@@ -150,6 +150,7 @@ class MSign(resource.Resource):
 			'member_info':json.dumps(member_info),
 			'prize_info': json.dumps(prize_info),
 			'auth_appid_info': auth_appid_info,
+			'share_page_title': u"签到",
 			'share_img_url': record.share['img'] if record else '',
 			'share_page_desc': record.share['desc'] if record else ''
 
