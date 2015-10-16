@@ -143,55 +143,6 @@
         .xui-propertyView-app-ShareGroup Button.xui-removeImageButton{
             display: none;
         }
-        .xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField{
-            margin-top: 10px;
-        }
-        .xui-propertyView-app-ReplyGroup .propertyGroup_property_horizontalField .propertyGroup_property_input{
-            width:360px;
-            padding-bottom: 10px;
-        }
-        .xui-keywordBoxDiv .xui-newKeyView {
-            width: 360px;
-            border:1px solid #ccc;
-            background-color: #fff;
-
-        }
-        .xui-keywordBoxDiv .xui-newKeyView .xui-key {
-            width: 100%;
-            height: 100px;
-            padding-top: 20px;
-            border-bottom: 1px solid #ccc;
-            line-height: 30px;
-        }
-        .xui-keywordBoxDiv .xui-newKeyView .xui-key input {
-            vertical-align: sub;
-        }
-        .xui-keywordBoxDiv .xui-newKeyView .xui-show {
-            width: 100%;
-        }
-        .xui-keywordBoxDiv .btn {
-            border-radius: 0px !important;
-        }
-        .xui-keywordBoxDiv .xui-newKeyView .xui-i-left {
-            text-align: right;
-            width: 76px;
-            clear: both;
-            float: left;
-
-        }.xui-keywordBoxDiv .xui-newKeyView .xui-i-right {
-            text-align: left;
-            right: 90px;
-
-        }
-
-        .xui-keywordBoxDiv .xui-save{
-            background: none repeat scroll 0 0 #1E8F19;
-            border: 1px solid #1E8F19;
-        }
-        .xui-keywordBoxDiv .xui-newKeyView.pa{
-            margin-left: 10px;
-            margin-right: 20px;
-        }
         .xui-link-copy{
             margin-top: 3px;
         }
@@ -204,39 +155,6 @@
             text-align: center !important;
             width: 100px;
             font-weight: bold;
-        }
-        #add_keyword_div .xui-close{
-            height: 16px;
-            position: relative;
-            right: -9px;
-            top: -21px;
-        }
-        .xui-patterns{
-            color:#333333;
-            position: relative;
-            top:-13px;
-            border: 1px solid #DDDDDD;
-            background-color: #FFFFFF;
-            text-align: center;
-            /* padding-left: 13px; */
-            padding: 13px 2px 2px 15px;
-            line-height: 10px;
-            margin-right: 10px;
-            margin-bottom: 5px;
-        }
-        #add_keyword_btn{
-            color:#1461B9 !important;
-            width: 69px;
-            height: 12px;
-            position: relative;
-            top:-13px;
-            text-align: center;
-            /* padding-left: 13px; */
-            padding: 13px 2px 2px 15px;
-            line-height: 10px;
-            margin-right: 10px;
-            margin-bottom: 5px;
-            display: block;
         }
     .xui-i-type span{
         border-left:1px solid ;
@@ -486,16 +404,11 @@ ui-appPage-commonStyle">
         var dynamicComponents = page.components[0].components;
             var name = descriptionModel.get('title');
 
-            var share_img =descriptionModel.get('image');
-            var share_desc =descriptionModel.get('share_description');
+            var share_img = descriptionModel.get('image');
+            var share_desc = descriptionModel.get('share_description');
             var share = {"img":share_img,"desc":share_desc};
 
-            var reply_keyword ={};
-            //$('#add_keyword_div').find('.xa-data-patterns').each(function(){
-                //var key_tmp = $(this).find('.data-keyword').text().replace(/\n/g,'').replace(/\r/g,'').replace(/\r\n/g,'').replace(/\s+/g, '').trim();
-               // var mo_tmp = $(this).find('.xa-data-type').attr('data-type').trim();
-                //reply_keyword[key_tmp] = mo_tmp;
-            //});
+            var reply_keyword = descriptionModel.get('reply_keyword');
             var reply_content = descriptionModel.get('reply_content');
             var reply ={"keyword":reply_keyword,"content":reply_content};
 
