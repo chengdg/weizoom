@@ -89,7 +89,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @mall.promotion @mall.webapp.promotion  
+@mall2 @mall.promotion @mall.webapp.promotion
 Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
 
 	When bill访问jobs的webapp
@@ -97,7 +97,8 @@ Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
 	Then bill在jobs的webapp中拥有50会员积分
 	When bill购买jobs的商品
 		"""
-		{	"integral_money":25.00,
+		{	
+			"integral_money":25.00,
 			"integral":50.00,
 			"products": [{
 				"name": "商品1",
@@ -111,11 +112,8 @@ Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
 			"status": "待支付",
 			"final_price": 75.0,
 			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
 			"integral_money":25.00,
 			"integral":50.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -147,11 +145,8 @@ Scenario: 2 购买单种多个商品，积分金额等于最大折扣金额
 			"status": "待支付",
 			"final_price": 200.0,
 			"product_price": 400.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
 			"integral_money":200.00,
 			"integral":400,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品2",
 				"count": 2
@@ -186,11 +181,8 @@ Scenario:  3 购买多个商品，已有总积分金额大于最大折扣金额
 			"status": "待支付",
 			"final_price": 75.0,
 			"product_price": 150.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
 			"integral_money":75.00,
 			"integral":150.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -287,10 +279,8 @@ Scenario: 5 购买单个限时抢购商品，同时使用积分购买
 			"final_price": 5.0,
 			"product_price": 10.00,
 			"promotion_saved_money":90.00,
-			"postage": 0.00,
 			"integral_money":5.00,
 			"integral":10.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
 				"count": 1,
@@ -354,10 +344,8 @@ Scenario: 6 购买单个限时抢购商品， 买赠商品，同时使用积分�
 			"final_price": 205.0,
 			"product_price": 410.00,
 			"promotion_saved_money":90.00,
-			"postage": 0.00,
 			"integral_money":205.00,
 			"integral":410.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品1",
 				"count": 1,
@@ -460,7 +448,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"member_rank": "普通会员"
 		}]
 		"""
-#701会员tom1购买商品10，使用积分抵扣最高：50元，订单金额：50元
+	#701会员tom1购买商品10，使用积分抵扣最高：50元，订单金额：50元
 	When tom1访问jobs的webapp
 	When tom1获得jobs的100会员积分
 	Then tom1在jobs的webapp中拥有100会员积分
@@ -481,11 +469,8 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
 			"integral_money":50.00,
 			"integral":100.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品10",
 				"count": 1
@@ -494,7 +479,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 		"""
 	Then tom1在jobs的webapp中拥有0会员积分
 
-#702会员tom2购买商品10，使用积分抵扣最高：45元，订单金额：45元
+	#702会员tom2购买商品10，使用积分抵扣最高：45元，订单金额：45元
 	When tom2访问jobs的webapp
 	When tom2获得jobs的200会员积分
 	Then tom2在jobs的webapp中拥有200会员积分
@@ -514,11 +499,8 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"status": "待支付",
 			"final_price": 45.0,
 			"product_price": 90.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
 			"integral_money":45.00,
 			"integral":90.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品10",
 				"count": 1
@@ -527,7 +509,7 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 		"""
 	Then tom2在jobs的webapp中拥有110会员积分
 
-#703会员tom4购买商品10+商品11，使用积分抵扣最高：70元，订单金额：70元
+	#703会员tom4购买商品10+商品11，使用积分抵扣最高：70元，订单金额：70元
 	When tom4访问jobs的webapp
 	When tom4获得jobs的400会员积分
 	Then tom4在jobs的webapp中拥有400会员积分
@@ -550,11 +532,8 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"status": "待支付",
 			"final_price": 70.0,
 			"product_price": 140.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
 			"integral_money":70.00,
 			"integral":140.00,
-			"coupon_money":0.00,
 			"products": [{
 				"name": "商品10",
 				"count": 1
