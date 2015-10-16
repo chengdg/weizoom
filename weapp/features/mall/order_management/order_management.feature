@@ -935,7 +935,7 @@ Scenario: 5 设置未付款订单过期时间
 
 	Given jobs登录系统
 	#订单过期时间是按照小时计算
-	When jobs设置未付款订单过期时间1小时
+	When jobs设置未付款订单过期时间24小时
 	When bill访问jobs的webapp
 	And bill领取jobs的优惠券
 		"""
