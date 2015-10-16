@@ -1,4 +1,5 @@
-# __author__ : "王丽"
+#author: 王丽
+#editor: 张三香 2015.10.16
 
 Feature: 会员列表-会员详情-浏览轨迹
 """
@@ -6,11 +7,10 @@ Feature: 会员列表-会员详情-浏览轨迹
 	1、【时间】：浏览网页的时间
 	2、【链接】：浏览的网页的名称
 """
-@mall2 @member @memberList @gy
+@mall2 @member @memberList @gy 
 Scenario:1 会员详情-浏览轨迹
 
 	Given jobs登录系统
-
 	#添加相关基础数据
 		When jobs已添加商品
 			"""
@@ -62,11 +62,6 @@ Scenario:1 会员详情-浏览轨迹
 					"shipper": ""
 				}
 				"""
-
-	#When bill访问jobs的微站链接'个人中心'于'2015-08-27 18:34:15'
-	#When bill访问jobs的微站链接'商品列表'于'2015-08-27 18:34:18'
-	#When bill访问jobs的微站链接'商品2'于'2015-08-27 18:34:21'
-	#When bill访问jobs的微站链接'编辑订单'于'2015-08-27 18:34:23'
 
 	Given jobs登录系统
 	Then jobs获得'bill'的浏览轨迹
