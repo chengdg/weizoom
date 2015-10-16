@@ -421,7 +421,7 @@
             var temp_prize = prize_info.next_serial_prize;
             var str = [];
             if (!$.isEmptyObject(temp_prize)) {
-                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取以下奖励:");
+                 $('.wa-prize-board').find('.wa-daily_title').html("连续签到" + temp_prize.count + "天可领取 ");
                 if (temp_prize.prize.integral != 0) {
                     $('.wa-prize-board').find('.daily_points').html(temp_prize.prize.integral + "  积分").show();
                 }else{
@@ -433,7 +433,7 @@
                     $('.wa-prize-board').find('.daily_prizes').hide();
                 }
             } else {
-                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取以下奖励:");
+                $('.wa-prize-board').find('.wa-daily_title').html("明天可领取 ");
                 var tomorrow_prize = prize_info.daily_prize;
                 if (tomorrow_prize.integral != 0) {
                     $('.wa-prize-board').find('.daily_points').html(tomorrow_prize.integral + "  积分").show();

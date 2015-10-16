@@ -211,7 +211,7 @@ class Sign(models.Document):
 						if return_data['curr_prize_coupon_name'] != '' and return_data['curr_prize_coupon_count'] >= 0:
 							if return_data['curr_prize_coupon_count']>0:
 								return_html.append('\n'+str(return_data['curr_prize_coupon_name']))
-								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=%s">点击查看</a>' % (host, data['webapp_owner_id']))
+								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%s&project_id=0">点击查看</a>' % (host, data['webapp_owner_id']))
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
 						return_html.append(u'\n签到说明：签到有礼！\n')
