@@ -1,6 +1,9 @@
 # __author__ : "冯雪静"
 Feature:订单筛选
+"""
+
 	Jobs能通过管理系统为管理用户订单
+"""
 
 Background:
 	Given jobs登录系统
@@ -128,7 +131,7 @@ Background:
 		"""
 
 @mall2 @order @allOrder
-Scenario: 选择订单筛选条件
+Scenario:1 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,可以看到订单列表
 	2. jobs选择多个条件时,可以看到订单列表
