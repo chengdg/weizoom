@@ -1,7 +1,10 @@
 # __author__ : "冯雪静"
 @func:webapp.modules.mall.views.update_express_info
 Feature:订单的物流信息可以修改
+"""
+	
 	jobs能通过管理系统对订单的物流信息修改
+"""
 
 Background:
 	Given jobs登录系统
