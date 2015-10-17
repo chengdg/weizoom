@@ -5,3 +5,4 @@ import products_by_category
 import products_categories
 
 import product_hint
+import orders

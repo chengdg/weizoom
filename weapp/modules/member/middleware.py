@@ -20,7 +20,7 @@ import visit_session_util
 
 from utils.url_helper import remove_querystr_filed_from_request_url, add_query_part_to_request_url
 from account.url_util import (get_webappid_from_request, is_request_for_editor,
-								is_request_for_api, is_request_for_webapp, is_request_for_pcmall)
+								is_request_for_api, is_wapi_request, is_request_for_webapp, is_request_for_pcmall)
 from account.social_account.models import SocialAccount, SOCIAL_PLATFORM_WEIXIN
 
 from util import *
@@ -57,7 +57,7 @@ class CleanUpCookieMiddleware(object):
 	def process_request(self, request):
 
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -134,7 +134,7 @@ class MemberCacheMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -304,7 +304,7 @@ class RedirectBySctMiddleware(object):
 
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -381,7 +381,7 @@ class RedirectByFmtMiddleware(object):
 
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -465,7 +465,7 @@ class RequestSocialAccountMiddleware(object):
 
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -566,7 +566,7 @@ class MemberMiddleware(object):
 
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -736,7 +736,7 @@ class WebAppUserMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -859,7 +859,7 @@ class AddUuidSessionMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by slzhu
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
 
 		#对于支付请求，不处理
@@ -922,7 +922,7 @@ class OAUTHMiddleware(object):
 
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -1524,7 +1524,7 @@ class RefuelingMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu

@@ -235,6 +235,7 @@ def get_product(request):
 	if request.user.is_weizoom_mall:
 		# TODO: is_can_buy_by_product做什么？
 		product0.is_can_buy_by_product(request)
+		# TODO: API化
 		otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
 		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
 		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
@@ -281,25 +282,26 @@ def get_product(request):
 		# 默认目录: default_v3
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
+PAGE_TITLE_TYPE = {
+	-1: u'全部订单列表',
+	0: u'待支付',
+	3: u'待发货',
+	4: u'待收货',
+	5: u'待评价',
+}
 
 def get_order_list(request):
 	"""
 	获取订单列表
 	"""
 	type = int(request.GET.get('type', -1))
-	orders = mall_api.get_orders(request)
 
-	status = {
-			-1: u'全部订单列表',
-			0: u'待支付',
-			3: u'待发货',
-			4: u'待收货',
-			5: u'待评价',
-	}
+	orders = resource.get('mall', 'orders', {'woid': 0})
+	#orders = mall_api.get_orders(request)
 
 	c = RequestContext(request, {
 			'is_hide_weixin_option_menu': True,
-			'page_title': status[type],
+			'page_title': PAGE_TITLE_TYPE[type],
 			'orders': orders,
 			'hide_non_member_cover': True,
 			'status_type': type
