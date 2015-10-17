@@ -14,12 +14,22 @@ from mall.promotion import models as promotion_models
 
 from dummy_utils import DummyRequest, DummyUserProfile, DummyModel
 
+from product import Product
+
 class Orders(api_resource.ApiResource):
 	"""
 	订单列表
 	"""
 	app = 'mall'
 	resource = 'orders'
+
+
+	@staticmethod
+	def products_to_dict(products):
+		data = []
+		for product in products:
+			data.append(Product.to_dict(product))
+		return data
 
 	@staticmethod
 	def to_dict(order):
@@ -67,9 +77,11 @@ class Orders(api_resource.ApiResource):
 			'edit_money': order.edit_money,
 			'created_at': utils_dateutil.datetime2string(order.created_at),
 		}
+		if hasattr(order, 'products'):
+			data['products'] = Orders.products_to_dict(order.products)
 		return data
 
-	@param_required(['wuid'])
+	@param_required(['wuid', 'member_id', 'woid'])
 	def get(args):
 		"""
 		获取订单列表
@@ -90,7 +102,6 @@ class Orders(api_resource.ApiResource):
 		#request.webapp_owner_info.red_envelope = args['red_envelop']
 		request.webapp_owner_id = args['woid']
 		orders = mall_api.get_orders(request)
-		print("orders: {}".format(orders))
 		result = []
 		for order in orders:
 			result.append(Orders.to_dict(order))

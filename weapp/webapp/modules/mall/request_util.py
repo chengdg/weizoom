@@ -46,6 +46,7 @@ from webapp import util as webapp_util
 from cache import webapp_cache
 
 import wapi as resource
+from utils import dateutil as utils_dateutil
 
 # TODO: 待删除
 from wapi.mall.product.product_hint import ProductHint
@@ -293,16 +294,13 @@ PAGE_TITLE_TYPE = {
 	5: u'待评价',
 }
 
+
 def get_order_list(request):
 	"""
 	获取订单列表
 	"""
 	type = int(request.GET.get('type', -1))
 
-	"""
-	called WAPI (in 0.125 s): get mall/orders, param: 
-	{'red_envelop': <RedEnvelopeRule: {'use_info': u'', 'status': False, 'name': u'', 'is_delete': False, 'limit_order_money': 0.0, 'share_title': u'', 'start_time': datetime.datetime(2000, 1, 1, 0, 0), u'id': None, 'coupon_rule_id': 0, 'end_time': datetime.datetime(2000, 1, 1, 0, 0), 'created_at': None, 'share_pic': u'', 'limit_time': False, 'owner_id': None}>, 'wuid': 5L, 'woid': 13, 'member_id': 5L}
-	"""
 	orders = resource.get('mall', 'orders', {
 		'wuid': request.webapp_user.id,
 		'member_id': request.member.id,
@@ -310,7 +308,10 @@ def get_order_list(request):
 		'red_envelop_rule_id': request.webapp_owner_info.red_envelope.id,
 		'woid': request.webapp_owner_id
 		})
-	orders = mall_api.get_orders(request)
+	#orders = mall_api.get_orders(request)
+	for order in orders:
+		order['created_at'] = utils_dateutil.parse_datetime(order['created_at'])
+	print("orders: {}".format(orders))
 
 	c = RequestContext(request, {
 			'is_hide_weixin_option_menu': True,
