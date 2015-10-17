@@ -8,7 +8,7 @@ from wapi.decorators import param_required
 
 #from mall import models as mall_models
 #from product_category import ProductCategory
-from products_by_category import DummyUserProfile
+from dummy_utils import DummyUserProfile
 from cache import webapp_cache
 from wapi import wapi_utils
 

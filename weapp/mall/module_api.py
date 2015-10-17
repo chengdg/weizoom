@@ -1267,9 +1267,9 @@ def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=Fa
 
 
 def get_orders(request):
-	"""用户中心 获取webapp_user的订单列表
 	"""
-
+	用户中心 获取webapp_user的订单列表
+	"""
 	orders = Order.by_webapp_user_id(request.webapp_user.id).order_by('-id')
 
 	orderIds = [order.id for order in orders]
@@ -1284,6 +1284,7 @@ def get_orders(request):
 			old_count = order2count[order_id]
 		order2count[order_id] = old_count + order_product_relation.number
 
+	# red_envelope有可能为空
 	red_envelope = request.webapp_owner_info.red_envelope
 	red_envelope_orderIds = []
 	for order in orders:

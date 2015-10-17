@@ -12,16 +12,8 @@ from wapi import wapi_utils
 from product import Product
 from cache import webapp_cache
 
+from dummy_utils import DummyUserProfile
 #from utils import dateutil as utils_dateutil
-
-class DummyUserProfile:
-	"""
-	模拟webapp_owner_user_profile，用于cache调用
-	"""
-	def __init__(self, webapp_id, user_id):
-		self.webapp_id = webapp_id
-		self.user_id = user_id
-
 
 
 class ProductsByCategory(api_resource.ApiResource):

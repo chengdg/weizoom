@@ -47,6 +47,9 @@ from cache import webapp_cache
 
 import wapi as resource
 
+# TODO: 待删除
+from wapi.mall.product.product_hint import ProductHint
+
 page_title = u'微众商城'
 
 
@@ -296,8 +299,18 @@ def get_order_list(request):
 	"""
 	type = int(request.GET.get('type', -1))
 
-	orders = resource.get('mall', 'orders', {'woid': 0})
-	#orders = mall_api.get_orders(request)
+	"""
+	called WAPI (in 0.125 s): get mall/orders, param: 
+	{'red_envelop': <RedEnvelopeRule: {'use_info': u'', 'status': False, 'name': u'', 'is_delete': False, 'limit_order_money': 0.0, 'share_title': u'', 'start_time': datetime.datetime(2000, 1, 1, 0, 0), u'id': None, 'coupon_rule_id': 0, 'end_time': datetime.datetime(2000, 1, 1, 0, 0), 'created_at': None, 'share_pic': u'', 'limit_time': False, 'owner_id': None}>, 'wuid': 5L, 'woid': 13, 'member_id': 5L}
+	"""
+	orders = resource.get('mall', 'orders', {
+		'wuid': request.webapp_user.id,
+		'member_id': request.member.id,
+		# red_envelop_rule_id参数可以为None
+		'red_envelop_rule_id': request.webapp_owner_info.red_envelope.id,
+		'woid': request.webapp_owner_id
+		})
+	orders = mall_api.get_orders(request)
 
 	c = RequestContext(request, {
 			'is_hide_weixin_option_menu': True,
@@ -806,7 +819,8 @@ def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 		product_ids.append(product.id)
 		product_total_price = product.price * product.purchase_count
 		product_total_original_price = product.original_price * product.purchase_count
-		if not __is_forbidden_coupon(webapp_owner_id, product.id):
+		# TODO: 去掉ProductHint的直接调用
+		if not ProductHint.is_forbidden_coupon(webapp_owner_id, product.id):
 			#不是被禁用全场优惠券的商品 duhao 20150908
 			total_price += product_total_price
 			is_forbidden_coupon = False
