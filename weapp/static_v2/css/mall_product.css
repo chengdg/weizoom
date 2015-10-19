@@ -361,26 +361,31 @@
  	font-size: 1.2em; 
  	text-align:center;
  }
-
- .xui-productList tbody tr{
+.xui-productList tbody tr{
  	padding-top: 5px;
  	padding-bottom: 5px;
  	height: 80px;
 
  }
-  .xui-productList tr td:first-child{
+.xui-productList tr td:first-child{
     width: 50px;
  }
-   .xui-productList tr td{
+.xui-productList tr td{
    padding-left:0px;
  }
-  .xui-productList tr td .xui-poductorIntroduction{
+.xui-productList tr td .xui-poductorIntroduction{
   	text-align:left;
     height: 60px;
     line-height:15px;
     padding-top: 5px;
   }
-
+.xui-productList tr td .xui-poductorIntroduction p{
+	display:-webkit-box;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	-webkit-line-clamp:2;
+}
 
 
 
