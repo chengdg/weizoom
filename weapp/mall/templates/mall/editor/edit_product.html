@@ -301,9 +301,9 @@
 			</select>
 			{% endif %}
 		</header>
-		<input type="hidden" name="properties" />
-		<div class="xa-properties mt10">
-          <div class="xui-i-templateProperties">
+		<input type="hidden" name="properties"/>
+		<div class="xa-properties mt10" data-validate="require-custom-function" data-validate-function="checkProperties">
+          <div class="xui-i-templateProperties clearfix">
               <div class='xa-customProperties'>
                 <ul class="xui-clearListStyle clearfix">
                     {% for property in product.properties %}
@@ -313,11 +313,11 @@
                         <a class="xa-deleteProperty">删除</a>
                     </li>
                     {% endfor %}
-                    <div class="errorHint"></div>
                 </ul>
               </div>
               <div class="xa-instantProperties">
                 <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>
+	    		<div class="errorHint pt0 ml10 fl" date-error-Hint="不能为空"></div>
               </div>
 	      </div>
 		</div>
@@ -471,6 +471,21 @@ function validatePay($el){
     return {
         isValidate: isValidate,
         errorHint: "请至少选择一种支付方式"
+    }
+}
+function checkProperties($el){
+	var isValidate = true;
+    $('.xa-property').each(function() {
+		var $property = $(this);
+		var name = $.trim($property.find('.xa-name').val());
+		var value = $.trim($property.find('.xa-value').val());
+		if(name == "" || value == ""){
+    		isValidate = false;
+		}
+	});
+	return {
+        isValidate: isValidate,
+        errorHint: "不能为空"
     }
 }
 
