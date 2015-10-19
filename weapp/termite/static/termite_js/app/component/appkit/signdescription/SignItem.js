@@ -41,7 +41,7 @@ W.component.appkit.SignItem = W.component.Component.extend({
 	}],
 
 	propertyChangeHandlers: {
-		serial_count_points:function($node, model, value, $propertyViewNode){
+		serial_count_points: function($node, model, value, $propertyViewNode){
 			console.log(value);
 			if(value == ''){
 				model.set('serial_count_points', 0);

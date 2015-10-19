@@ -120,14 +120,17 @@ class RedEnvelopeRuleList(resource.Resource):
         start_date = request.GET.get('startDate', '')
         end_date = request.GET.get('endDate', '')
 
-        is_fetch_all_rules = (not name) and (not coupon_rule_id) and (not start_date) and (not end_date)
         rules = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, is_delete=False).order_by('-id')
+
+        #处理筛选
+        if name:
+            rules = rules.filter(name__contains=name)
         if coupon_rule_id:
             rules = rules.filter(coupon_rule_id=coupon_rule_id)
-
-        if not is_fetch_all_rules:
-            rules = _filter_rules(request, rules)
-
+        if start_date:
+             rules = rules.filter(start_time__gt=start_date)
+        if end_date:
+            rules = rules.filter(end_time__lt=end_date)
         #处理过期排序
         for rule in rules:
             is_timeout = False if rule.end_time > datetime.now() else True
@@ -651,7 +654,6 @@ class redParticipances_Export(resource.Resource):
         try:
             import xlwt
             relations = get_datas(request)
-            print relations
             fields_pure = []
             export_data = []
 
