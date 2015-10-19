@@ -34,8 +34,8 @@ Background:
 			"name": "全体券1",
 			"money": 1.00,
 			"limit_counts": "无限",
-			"start_date": "2天前",
-			"end_date": "1天前",
+			"start_date": "今天",
+			"end_date": "2天后",
 			"coupon_id_prefix": "coupon1_id_"
 		}, {
 			"name": "单品券2",
@@ -79,36 +79,36 @@ Scenario: 1 添加分享红包
 		[{
 			"name": "红包1",
 			"prize_info": "全体券3",
-			"is_permanant_active": false,
-			"start_date": "今天",
-			"end_date": "2天后",
-			"get_type": "下单领取"
-			"limit_money": 200,
-			"desc": "活动说明",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_text": "分享有礼"
+			"limit_time": false,
+			"start_time": "今天",
+			"end_time": "2天后",
+			"receive_method": "下单领取",
+			"limit_order_money": 200,
+			"use_info": "活动说明",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title": "分享有礼"
 
 		}, {
 			"name": "红包2",
 			"prize_info": "单品券4",
-			"is_permanant_active": true,
-			"start_date": "",
-			"end_date": "",
-			"get_type": "图文领取"
-			"desc": "活动说明",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_text": "分享有礼"
+			"limit_time": true,
+			"start_time": "",
+			"end_time": "",
+			"receive_method": "图文领取",
+			"use_info": "活动说明",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title": "分享有礼"
 		}, {
 			"name": "红包3",
 			"prize_info": "全体券1",
-			"is_permanant_active": false,
-			"start_date": "今天",
-			"end_date": "2天后",
-			"get_type": "下单领取"
-			"limit_money": 无限制,
-			"desc": "活动说明",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_text": "分享有礼"
+			"limit_time": false,
+			"start_time": "今天",
+			"end_time": "2天后",
+			"receive_method": "下单领取",
+			"limit_order_money": 无限制,
+			"use_info": "活动说明",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title": "分享有礼"
 		}]
 		"""
 	Then jobs能获取分享红包列表
@@ -116,23 +116,23 @@ Scenario: 1 添加分享红包
 		[{
 			"name": "红包3",
 			"status": "关闭",
-			"is_permanant_active": false,
-			"start_date": "",
-			"end_date": "",
+			"limit_time": false,
+			"start_time": "",
+			"end_time": "",
 			"actions": ["分析","开启","删除","查看"]
 		}, {
-			"name": "【图文领取】红包1",
+			"name": "【图文领取】红包2",
 			"status": "开启",
-			"is_permanant_active": true,
-			"start_date": "",
-			"end_date": "",
+			"limit_time": true,
+			"start_time": "",
+			"end_time": "",
 			"actions": ["分析","删除","查看"]
 		}, {
 			"name": "红包1",
 			"status": "关闭",
-			"is_permanant_active": false,
-			"start_date": "今天",
-			"end_date": "2天后",
+			"limit_time": false,
+			"start_time": "今天",
+			"end_time": "2天后",
 			"actions": ["分析","开启","删除","查看"]
 
 		}]
