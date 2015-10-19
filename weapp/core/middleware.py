@@ -625,9 +625,14 @@ class UserManagerMiddleware(object):
 		if is_pay_request(request) or request.is_access_webapp or request.is_access_webapp_api:
 			return None
 		if isinstance(request.user, User):
-			departmentUser = auth_models.DepartmentHasUser.objects.filter(user=request.user)
-			if len(departmentUser) == 1:
-				manager = User.objects.get(id=departmentUser[0].owner_id)
+			#更改manager获取方式 duhao 20151016
+			profile = user.get_profile()
+			if profile.manager_id != user.id:
+				manager = User.objects.get(id=profile.manager_id)
+
+			# departmentUser = auth_models.DepartmentHasUser.objects.filter(user=request.user)
+			# if len(departmentUser) == 1:
+			# 	manager = User.objects.get(id=departmentUser[0].owner_id)
 			request.manager = manager
 		return None
 
