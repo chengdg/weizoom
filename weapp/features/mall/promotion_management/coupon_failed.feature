@@ -1,6 +1,7 @@
 # __author__ : "师帅"
 # __edite__ : "benchi"
 #editor:雪静 2015.10.16
+#editor:雪静 2015.10.19
 Feature: 优惠券与促销活动互斥问题
 """
 	1.给商品1建单品券，并发送给jobs，jobs领取后，使单品券失效（但是单品券没有过有效期，仍可使用）
@@ -39,27 +40,9 @@ Background:
 			"promotion_price": 180.00
 		}]
 		"""
-	Then jobs能获取上架商品查询列表
-		"""
-		[{
-			"name": "商品1",
-			"stock_type": "无限",
-			"operate": false,
-			"price": 200.00
-		}, {
-			"name": "商品2",
-			"stock_type": "无限",
-			"operate": true,
-			"price": 200.00
-		}, {
-			"name": "商品3",
-			"stock_type": "无限",
-			"operate": true,
-			"price": 200.00
-		}]
-		"""
 
-@mall2 @promotion @promotionCoupon @promotionFlash
+
+@mall2 @promotion @promotionCoupon @promotionFlash 
 Scenario: 1 先建优惠券，不能参加促销活动
 	When jobs添加优惠券规则
 		"""

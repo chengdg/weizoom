@@ -1,6 +1,6 @@
 # __edit__ : "benchi"
 #editor: 新新 2015.10.19
-@wxr
+
 Feature: 在webapp中购买参与买赠活动的商品
 """
 	用户能在webapp中购买"参与买赠活动的商品"
