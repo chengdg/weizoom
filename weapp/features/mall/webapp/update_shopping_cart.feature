@@ -1,5 +1,7 @@
-# __edit__ : "benchi"
+#editor: benchi
+#editor: 张三香 2015.10.19
 @func:webapp.modules.mall.views.list_products
+
 Feature: 调整购物车中
 	bill能调整购物车
 
@@ -10,10 +12,10 @@ Background:
 		[{
 			"name": "商品1",
 			"price": 3
-		}, {
+		},{
 			"name": "商品2",
 			"price": 5
-		}]	
+		}]
 		"""
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -27,8 +29,6 @@ Background:
 			"count": 2
 		}]
 		"""
-	
-
 
 	Given tom关注jobs的公众号
 	When tom访问jobs的webapp
@@ -43,8 +43,7 @@ Background:
 		}]
 		"""
 
-
-@mall2 @mall @mall.webapp @mall.webapp.shopping_cart @bb1
+@mall2 @app @buy @cart   @mall @mall.webapp @mall.webapp.shopping_cart @bb1
 Scenario:1 从购物车中删除商品
 	bill在购物车中删除商品后
 	1. bill能获得更新后的购物车
@@ -88,12 +87,9 @@ Scenario:1 从购物车中删除商品
 		"""
 	Then bill能获得购物车
 		"""
-		{
-			"product_groups": [],
-			"invalid_products": []
-		}
+		[]
 		"""
-	
+
 	When tom访问jobs的webapp
 	Then tom能获得购物车
 		"""
