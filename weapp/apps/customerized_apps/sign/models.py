@@ -61,9 +61,9 @@ class SignParticipance(models.Document):
 		prize_settings = sign.prize_settings
 		bingo = 0
 		flag = False
-		for name in sorted(prize_settings.keys()):
-			setting = prize_settings[name]
-			name = int(name)
+		for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+			setting = prize_settings[name[1]]
+			name = int(name[0])
 			if flag or name>curr_serial_count:
 				next_serial_count = name
 				for type, value in setting.items():

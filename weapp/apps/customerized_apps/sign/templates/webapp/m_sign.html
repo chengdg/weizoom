@@ -332,14 +332,16 @@
         var rule_html ="";
 
         for(var item in prize_rules){
-          rule_arr.push(item);
+          rule_arr.push(parseInt(item));
         }
 
-        rule_arr = rule_arr.sort();
+        rule_arr = rule_arr.sort(function(a, b){
+            return a - b;
+        });
 
         for(var i=0;i<rule_arr.length;i++){
           var j=i+1;
-          var day_num = parseInt(rule_arr[i]);
+          var day_num = rule_arr[i];
           var day_integral = prize_rules[rule_arr[i]]['integral'];
           var day_coupon = prize_rules[rule_arr[i]]['coupon'];
           var str_int ="";
