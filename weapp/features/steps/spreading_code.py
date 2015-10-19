@@ -193,3 +193,5 @@ def step_impl(context, ticket_user, user, mp_user_name):
 	__fill_member_info(context, ticket_user, openid)
 	#把会员设置为真实用户 add by duhao 2015-07-29
 	Member.objects.update(is_for_test=False)
+	time.sleep(1)
+	

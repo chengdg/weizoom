@@ -135,6 +135,7 @@ def step_impl(context, user, mp_user_name):
 	__fill_member_info(context, user, openid)
 	#把会员设置为真实用户 add by duhao 2015-07-29
 	Member.objects.update(is_for_test=False)
+	time.sleep(1)
 	# if context.text:
 	# 	json_date = json.loads(context.text)
 	# 	if len(json_date) > 0:
