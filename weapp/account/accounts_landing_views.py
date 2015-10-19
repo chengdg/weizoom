@@ -29,6 +29,15 @@ def login(request):
     """
     登录首页
     """
+    #只允许card_admin账号从weapp页面登录，其他账号跳转到fans登录
+    #从weapp页面登录时需要携带show参数，如：http://weapp.dev.com/login/?show=1
+    #duhao 20151019
+    if not request.GET.get('show', None):
+        redirect_url = '/login/'
+        if settings.FAN_HOST:
+            redirect_url = '%s%s' % (settings.FAN_HOST, redirect_url)
+        return HttpResponseRedirect(redirect_url)
+
     next_url = request.REQUEST.get('next', '/')
     if request.POST:
         username = request.POST['username']
