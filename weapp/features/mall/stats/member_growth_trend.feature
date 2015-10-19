@@ -60,9 +60,9 @@ Background:
 		"""
 		[{
 			"name": "商品1"
-		}, {
+		},{
 			"name": "商品2"
-		}, {
+		},{
 			"name": "商品3"
 		}]	
 		"""
@@ -117,7 +117,7 @@ Background:
 		|  0010    | 2015-05-07 | -lili     | 商品2,1  | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货       |
 		|  0011    | 2015-06-01 | bill8     | 商品2,2  | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货       |
 
-@stats @stats.member @mall2
+@mall2 @bi @memberAnalysis   @stats @stats.member
 Scenario: 1  会员概况：会员增长趋势
 	Given jobs登录系统
 	When jobs设置筛选日期
