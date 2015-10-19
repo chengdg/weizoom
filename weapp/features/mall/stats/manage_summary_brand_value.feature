@@ -1,3 +1,5 @@
+#editor:王丽  2015.10.19
+
 Feature: 测试 经营报告->经营概况->微品牌价值
 
 Background:
