@@ -82,7 +82,7 @@ Scenario: 1 添加分享红包
 			"limit_time": false,
 			"start_time": "今天",
 			"end_time": "2天后",
-			"receive_method": "下单领取"
+			"receive_method": "下单领取",
 			"limit_order_money": 200,
 			"use_info": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
@@ -94,7 +94,7 @@ Scenario: 1 添加分享红包
 			"limit_time": true,
 			"start_time": "",
 			"end_time": "",
-			"receive_method": "图文领取"
+			"receive_method": "图文领取",
 			"use_info": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
 			"share_title": "分享有礼"
@@ -104,7 +104,7 @@ Scenario: 1 添加分享红包
 			"limit_time": false,
 			"start_time": "今天",
 			"end_time": "2天后",
-			"receive_method": "下单领取"
+			"receive_method": "下单领取",
 			"limit_order_money": 无限制,
 			"use_info": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
