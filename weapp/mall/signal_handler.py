@@ -1154,9 +1154,9 @@ def send_request_to_kuaidi(order, **kwargs):
     """
     向快递100发送订阅请求
     """
-    if settings.IS_UNDER_BDD:
-        # BDD 暂时不测试快递100信息
-        return
+    # if settings.IS_UNDER_BDD:
+    #     # BDD 暂时不测试快递100信息
+    #     return
     from tools.express.express_poll import ExpressPoll
     print u'------------ send_request_to_kuaidi order.status:{}'.format(order.status)
     # if order.status == ORDER_STATUS_PAYED_SHIPED:
