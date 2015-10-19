@@ -34,7 +34,7 @@ Background:
 			"each_limit": "不限",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"coupon_id_prefix": "coupon2_id_",
+			"coupon_id_prefix": "coupon2_id_"
 		},{
 			"name": "全体券3",
 			"money": 30.00,
@@ -42,7 +42,7 @@ Background:
 			"each_limit": "不限",
 			"start_date": "今天",
 			"end_date": "3天后",
-			"coupon_id_prefix": "coupon3_id_",
+			"coupon_id_prefix": "coupon3_id_"
 		}]
 		"""
 	When jobs添加分享红包
