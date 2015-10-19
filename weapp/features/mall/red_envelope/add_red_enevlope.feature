@@ -34,8 +34,8 @@ Background:
 			"name": "全体券1",
 			"money": 1.00,
 			"limit_counts": "无限",
-			"start_date": "2天前",
-			"end_date": "1天前",
+			"start_date": "今天",
+			"end_date": "2天后",
 			"coupon_id_prefix": "coupon1_id_"
 		}, {
 			"name": "单品券2",
@@ -121,7 +121,7 @@ Scenario: 1 添加分享红包
 			"end_time": "",
 			"actions": ["分析","开启","删除","查看"]
 		}, {
-			"name": "【图文领取】红包1",
+			"name": "【图文领取】红包2",
 			"status": "开启",
 			"limit_time": true,
 			"start_time": "",
