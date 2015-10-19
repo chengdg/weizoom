@@ -46,8 +46,20 @@ def get_unsubscribe_event(to_user, from_user='weizoom'):
 	timestamp = int(time.time())
 	return REQUEST_SUBSCRIBE_EVENT_TMPL % (to_user, from_user, timestamp, 'unsubscribe')
 
+REQUEST_QRCODE_EVET_TMPL = u"""
+<xml>
+	<ToUserName><![CDATA[%s]]></ToUserName>
+	<FromUserName><![CDATA[%s]]></FromUserName>
+	<CreateTime>%s</CreateTime>
+	<MsgType><![CDATA[event]]></MsgType>
+	<Event><![CDATA[%s]]></Event>
+	<EventKey><![CDATA[qrscene_123123]]></EventKey>
+	<Ticket><![CDATA[%s]]></Ticket>
+</xml>"""
 
-
+def get_qrcode_subscribe_event(to_user, ticket, from_user='weizoom'):
+	timestamp = int(time.time())
+	return REQUEST_QRCODE_EVET_TMPL % (to_user, from_user, timestamp, 'subscribe', ticket)
 
 
 NEWS_BEG_TMPL = u"""
@@ -87,13 +99,13 @@ def __get_default_news_url(news):
 	user_profile = news.user.get_profile()
 	return u'http://%s/weixin/message/material/news_detail/mshow/%d/' % (user_profile.host, news.id)
 
-def __get_absolute_url(orig_url, user_profile):
+def __get_absolute_url(orig_url, user_profile, material_id=None):
 	absolute_url = None
 
 	path = 'workbench/jqm/preview'
 	if user_profile.is_use_wepage and 'home_page' in orig_url:
 		path = 'termite2/webapp_page'
-		
+
 	if orig_url.startswith('/apps/'):
 		path = 'm'
 
@@ -106,12 +118,13 @@ def __get_absolute_url(orig_url, user_profile):
 	else:
 		if not orig_url.startswith('http'):
 			absolute_url = u'http://%s/%s/%s' % (user_profile.host, path, orig_url)
-
+	if absolute_url and material_id and ('model=share_red_envelope&action=get' in absolute_url):
+		absolute_url = '%s&material_id=%s' % (absolute_url, material_id)
 	return absolute_url if (absolute_url is not None) else orig_url
 
 def add_token_to_url(orig_url, token, user_profile):
 	"""
-		去掉opid sct  不再需要他们 
+		去掉opid sct  不再需要他们
 	"""
 	return orig_url
 
@@ -126,13 +139,13 @@ def add_token_to_url(orig_url, token, user_profile):
 		return orig_url
 
 	if orig_url.endswith('/'):
-		new_url = u'%s?%s=%s' % (orig_url, 
+		new_url = u'%s?%s=%s' % (orig_url,
 			member_settings.MESSAGE_URL_QUERY_FIELD, token)
 	elif orig_url.find('?') > 0:
-		new_url = u'%s&%s=%s' % (orig_url, 
+		new_url = u'%s&%s=%s' % (orig_url,
 			member_settings.MESSAGE_URL_QUERY_FIELD, token)
 	else:
-		new_url = u'%s/?%s=%s' % (orig_url, 
+		new_url = u'%s/?%s=%s' % (orig_url,
 			member_settings.MESSAGE_URL_QUERY_FIELD, token)
 
 	return new_url
@@ -150,7 +163,7 @@ def get_news_response(from_user_name, to_user_name, newses, token):
 		if user_profile is None:
 			user_profile = news.user.get_profile()
 
-		absolute_news_url = __get_absolute_url(news.url, user_profile)
+		absolute_news_url = __get_absolute_url(news.url, user_profile, news.material_id)
 		if token:
 			url = add_token_to_url(absolute_news_url, token, user_profile)
 		else:
@@ -215,7 +228,7 @@ RESPONSE_CUSTOMER_SERVICE_TMPL = u"""
 def get_text_response(from_user_name, to_user_name, content, token, user_profile):
 	if len(content.strip()) == 0:
 		return None
-		
+
 	timestamp = int(time.time())
 
 	#向链接中添加sct

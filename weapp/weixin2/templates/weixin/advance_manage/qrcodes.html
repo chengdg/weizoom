@@ -26,7 +26,7 @@
 		background: #fff;
 		left:25px;
 		display: none;
-		z-index: 10;
+		z-index: 1000;
 		padding:15px 10px;
 		width: 225px;
 		-webkit-box-sizing: border-box;
@@ -128,7 +128,7 @@
 								<td class="pr">
 									<div style="width:100px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
 									{{if qrcode.bing_member_id}}
-										<a href="/member/member_detail/edit/?id=${qrcode.bing_member_id}" class="xa-showData">
+										<a href="/member/detail/?id=${qrcode.bing_member_id}" class="xa-showData">
 											{{html qrcode.bing_member_name }}
 										</a>
 										<div class='xui-userData xa-data'>

@@ -8,22 +8,46 @@
 </style>
 {% endblock %}
 {% block content-panel %}
-<div id='product_list_contain' data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-page xui-productsList-page">
+<div id='product_list_contain' data-role="page" data-theme="x" data-title="商品列表" class="xui-page xui-productsList-page">
 
-    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn" data-role="button">
-        <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
-    </a>
-
-    {% if has_category %}
-    <ul data-ui-role="top-dropdown-nav" class="hidden" style="overflow-y:auto;">
-        <li><a href='#'></a></li>
-        <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" data-role="button">全部</a></li>
-        {% for product_category in product_categories %}
-        <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list&category_id={{product_category.id}}" data-role="button">{{product_category.name}}</a></li>
-        {% endfor %}
-    </ul>
+    
+    {% if global_navbar == None %}
+    <!-- 当启用底部导航时，不显示头部-->
+    <div class="xui-header pr">
+        <div class="xui-classification pa" data-disable-switch="false" data-ui-role="sideNav" data-disable-switch="true">
+            <div class="xa-category">分类</div>
+            <i class="xui-down"></i>
+            {% if has_category and global_navbar == None %}
+                <div class="xui-sidePanel xa-sidePanel" id="xa-sidePanel" style="display:none;">
+                    <ul  class="xui-mainMenu" style="overflow-y:auto;">
+                        <li class="xui-innerHeader">
+                            <div class="xui-i-classification xa-i-classification pa">
+                                <div class="">分类</div>
+                                <i class="xui-down xui-reversal"></i>   
+                            </div>
+                            <div class="xui-i-title"><span>{{ category.name }}{% if category.name == "全部" %}商品{% endif %}</span></div>
+                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn pa" data-role="button">
+                                <div>
+                                    <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
+                                </div>
+                            </a>
+                        </li>
+                        <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" data-role="button" class="xui-categoryLink xa-categoryLink">全部商品<i class="xui-leftArrow"></i></a></li>
+                        {% for product_category in product_categories %}
+                        <li><a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list&category_id={{product_category.id}}" data-role="button" class="xui-categoryLink xa-categoryLink">{{product_category.name}}<i class="xui-leftArrow"></i></a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+        </div>
+        <div class="xui-title"><span>{{ category.name }}{% if category.name == "全部" %}商品{% endif %}</span></div>
+        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xt-shoppingCartBtn pa" data-role="button">
+            <div>
+                <span class="xui-inner-count xa-shoppingCartCount hidden"></span>
+            </div>
+        </a>
+    </div>
     {% endif %}
-
     <div data-role="content" data-theme="x">
         <div class="xui-hlist xui-hlist-cell-2 xui-products-original" id="xa-wrapper">
             {% if products %}
@@ -36,7 +60,7 @@
                         <div class="xui-inner-img">
                             <img src="{{ product.thumbnails_url }}">
                         </div>
-                        <h3 class="xt-productName">{{ product.name|truncatechars:16 }}</h3>
+                        <h3 class="xt-productName">{{ product.name }}</h3>
                         <p class="xt-productPrice">￥{{ product.display_price | floatformat:2}}</p>
 
                     </a>
@@ -54,6 +78,34 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    // 计算列表页面价钱
+    $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
+        fmt: $('body').data('value'),
+        updateProductPrice: function(event, data){
+            var _this = this;
+            if(data.count != 0) {
+                $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                $('.xa-shopCarCount').text(data.count).show();
+            }
+
+            $(".xa-product").each(function(){
+                // 商品原价
+                var price = $(this).data('product-price').toFixed(2);
+                // 商品有促销
+                var productPromotion = $(this).data('product-promotion');
+                var isMemberProduct = $(this).hasClass('xa-member-product');
+                // 计算价钱                
+                price = _this.calculPrice({
+                    price: price,
+                    productPromotion: productPromotion,
+                    isMemberProduct: isMemberProduct
+                });
+                // 设置显示价格
+                $(this).find('.xt-productPrice').text('￥'+price);
+            });
+        }
+    });
+/*
     var fmt = $('body').data('value');
     var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
         if(promotion_member_grade_id == '0'){return true;}
@@ -79,6 +131,7 @@ $(document).ready(function() {
             var user_member_grade_id = data.member_grade_id;
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                $('.xa-shopCarCount').text(data.count).show();
             }
             $(".xa-product").each(function(){
                 // 商品原价
@@ -109,9 +162,28 @@ $(document).ready(function() {
 
         }
     });
+*/
     var $img = $('.xui-inner-img img');
     var imgHeight = $img.css('width');
     $img.css('height', imgHeight);
+
+    // 默认开启店铺导航app样式，加padding防止遮盖内容
+    var slideBar = $('.xui-globalSideBar');
+    if(slideBar.length > 0){
+        $('.xui-productsList-page').css({
+            'padding-bottom': '50px'
+        });
+    }
+
+    // 默认列表页无底部导航
+    var $classification = $('.xa-i-classification');
+    var $sidePanel = $('.xa-sidePanel');
+    if($classification.length > 0) {
+        $classification.click(function(){
+            $sidePanel.hide();
+        });
+    }
+
 });
 </script>
 {% endblock %}

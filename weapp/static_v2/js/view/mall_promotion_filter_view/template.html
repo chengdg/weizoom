@@ -29,7 +29,7 @@
 			<select class="" id="promotion_status" name="promotion_status">
 				<option value="-1">全部</option>
 				<option value="1">未开始</option>
-				<option value="2">进行中</option>
+				<option value="2" {{if (promotionStatus == '2')}} selected="selected" {{/if}}>进行中</option>
 				<option value="3">已结束</option>
 			</select>
 		</div>
@@ -45,7 +45,7 @@
 				id="start_date"
 				name="start_date"
 				style=""
-			    value=""
+			    value="${startDate}"
 			    readonly="readonly"
 				data-enable-select-time="true"
 				data-validate="require-notempty"
@@ -57,7 +57,7 @@
 				class="form-control xui-datePicker"
 				id="end_date"
 				name="end_date"
-			    value=""
+			    value="${endDate}"
 			    readonly="readonly"
 			    data-enable-select-time="true"
 				data-validate="require-notempty"
@@ -102,7 +102,7 @@
 			<select class="" id="promotion_status" name="promotion_status">
 				<option value="-1">全部</option>
 				<option value="1">未开始</option>
-				<option value="2">进行中</option>
+				<option value="2" {{if (promotionStatus == '2')}} selected="selected" {{/if}}>进行中</option>
 				<option value="3">已过期</option>
 				<option value="5">已失效</option>
 			</select>
@@ -118,7 +118,7 @@
 				id="start_date"
 				name="start_date"
 				style=""
-			    value=""
+			    value="${startDate}"
 			    readonly="readonly"
 				data-enable-select-time="true"
 				data-validate="require-notempty"
@@ -130,7 +130,7 @@
 				class="form-control xui-datePicker"
 				id="end_date"
 				name="end_date"
-			    value=""
+			    value="${endDate}"
 			    readonly="readonly"
 			    data-enable-select-time="true"
 				data-validate="require-notempty"
@@ -157,7 +157,7 @@
 			<select class="" id="promotion_status" name="promotion_status">
 				<option value="-1">全部</option>
 				<option value="1">未开始</option>
-				<option value="2">进行中</option>
+				<option value="2" {{if (promotionStatus == '2')}} selected="selected" {{/if}}>进行中</option>
 			</select>
 		</div>
 	</div>
@@ -177,7 +177,7 @@
 				id="start_date"
 				name="start_date"
 				style=""
-			    value=""
+			    value="${startDate}"
 			    readonly="readonly"
 				data-enable-select-time="true"
 				data-validate="require-notempty"
@@ -189,7 +189,7 @@
 				class="form-control xui-datePicker"
 				id="end_date"
 				name="end_date"
-			    value=""
+			    value="${endDate}"
 			    readonly="readonly"
 			    data-enable-select-time="true"
 				data-validate="require-notempty"

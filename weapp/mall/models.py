@@ -511,7 +511,7 @@ class Product(models.Model):
 			products,
 			product_ids,
 			only_selected_category=False):
-		categories = list(ProductCategory.objects.filter(owner=webapp_owner))
+		categories = list(ProductCategory.objects.filter(owner=webapp_owner).order_by('id'))
 
 		# 获取product关联的category集合
 		id2product = dict([(product.id, product) for product in products])
@@ -531,7 +531,7 @@ class Product(models.Model):
 
 		category_ids = [category.id for category in categories]
 		id2category = dict([(category.id, category) for category in categories])
-		for relation in CategoryHasProduct.objects.filter(product_id__in=product_ids):
+		for relation in CategoryHasProduct.objects.filter(product_id__in=product_ids).order_by('id'):
 			category_id = relation.category_id
 			product_id = relation.product_id
 			if not category_id in id2category:
@@ -1438,6 +1438,7 @@ class Order(models.Model):
 	origin_order_id = models.IntegerField(default=0) # 原始订单id，用于微众精选拆单
 	# origin_order_id=-1表示有子订单，>0表示有父母订单，=0为默认数据
 	supplier = models.IntegerField(default=0) # 订单供货商，用于微众精选拆单
+	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1450,6 +1451,10 @@ class Order(models.Model):
 		判断该订单是否有子订单
 		"""
 		return self.origin_order_id == -1 and self.status > 0 #未支付的订单按未拆单显示
+
+	@property
+	def is_sub_order(self):
+		return self.origin_order_id > 0
 
 	@staticmethod
 	def get_sub_order_ids(origin_order_id):
@@ -1776,6 +1781,7 @@ class OrderHasDeliveryTime(models.Model):
 	status = models.IntegerField(default=UNSHIPED)
 	delivery_date = models.DateField(default=DEFAULT_DATETIME)  # 配送日期
 
+
 	class Meta(object):
 		db_table = 'mall_order_has_delivery_time'
 		verbose_name = '配送时间'
@@ -2092,12 +2098,13 @@ class PayInterface(models.Model):
 				webapp_owner_id,
 				order.order_id,
 				self.id)
-		elif PAY_INTERFACE_WEIZOOM_COIN == self.type:
-			return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(
-				webapp_owner_id,
-				PAY_INTERFACE_WEIZOOM_COIN,
-				self.id,
-				order.order_id)
+		# jz 2015-10-09
+		# elif PAY_INTERFACE_WEIZOOM_COIN == self.type:
+		# 	return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(
+		# 		webapp_owner_id,
+		# 		PAY_INTERFACE_WEIZOOM_COIN,
+		# 		self.id,
+		# 		order.order_id)
 		else:
 			return ''
 

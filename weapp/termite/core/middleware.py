@@ -344,7 +344,11 @@ class ProjectMiddleware(object):
 					#request.webapp_owner_id_from_project_middleware = webapp_owner_id
 					request.project = None
 				else:
-					request.project = Project.objects.get(id=project_id)
+					# request.project = Project.objects.get(id=project_id)
+					
+					projects = Project.objects.filter(id=project_id)
+					if projects.count() > 0:
+						request.project = projects[0]
 			else:
 				workspace_id = request.GET.get('workspace_id', '')
 				if 'market_tool' in workspace_id:
@@ -362,7 +366,7 @@ class ProjectMiddleware(object):
 #==================================================================================================
 class ModifyStaticMiddleware(object):
 	def process_response(self, request, response):
-		if '/termite/' in request.path:
+		if '/termite/' in request.path or '/termite2/webapp_page/' in request.path:
 			if '/termite/workbench/viper/' in request.path:
 				pass
 			else:

@@ -15,6 +15,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
     initialize: function(options) {
         this.$el = $(this.el);
+        this.options = options || {};
         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
         this.modelInfoTemplate = this.getModelInfoTemplate();
         this.type = options.type || 'onshelf';
@@ -44,7 +45,9 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
     render: function() {
         this.filterView = new W.view.mall.ProductFilterView({
-            el: '.xa-productFilterView'
+            el: '.xa-productFilterView',
+            low_stocks: this.options.low_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+            high_stocks: this.options.high_stocks || ''  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
         });
         this.filterView.on('search', _.bind(this.onSearch, this));
         this.filterView.render();

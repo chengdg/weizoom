@@ -39,6 +39,7 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			type: 'image_dialog_select',
 			displayName: '上传图片',
 			isUserProperty: true,
+			isShowCloseButton: true,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
@@ -88,7 +89,6 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 					}
 				})
 			}
-
 			var currCid = $propertyViewNode.attr('data-dynamic-cid');
 			var targetClass,alt;
 			switch (currCid){
@@ -109,13 +109,16 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 					alt = '一等奖';
 					break;
 			}
+
 			var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
+			console.log($target[0]);
 			if (value) {
 				//更新propertyView中的图片
 				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
 				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
 				//更新phoneView中的图片
-				$target.html("<img style='height:50px;width:50px;vertical-align:middle;' src='"+image.url+"' alt='"+alt+"'>");
+				//$target.html("<img style='height:50px;width:50px;vertical-align:middle;' src='"+image.url+"' alt='"+alt+"'>");
+				$target.html("<img src='"+image.url+"'>");
 			}
 		},
 		prize: function($node, model, value, $propertyViewNode) {

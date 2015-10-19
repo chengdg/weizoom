@@ -3,6 +3,14 @@
 {% load workbench_filter %}
 {% load apps_filter %}
 
+{% block css %}
+    <style>
+        .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
 {% block content-panel %}
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
   <div class="relative">
@@ -29,29 +37,26 @@
         </div>
       </div>
     </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
+    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
     </div>
+      <div class="xui-bottomActionBar xa-stickyBar">
+          {% if not vote %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+          {% else %}
+            {% if vote.status_text == "未开始" %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+            {% endif %}
+            {% if vote.status_text == "进行中" %}
+            进行中，不可更改
+            {% endif %}
+            {% if vote.status_text == "已结束" %}
+            已结束，不可更改
+            {% endif %}
+          {% endif %}
+        </div>
   </div>
-</div>
-{% endblock %}
-
-{% block global_elements %}
-<div class="xui-bottomActionBar">
-  {% if not vote %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-  {% else %}
-    {% if vote.status_text == "未开始" %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-    {% endif %}
-    {% if vote.status_text == "进行中" %}
-    进行中，不可更改
-    {% endif %}
-    {% if vote.status_text == "已结束" %}
-    已结束，不可更改
-    {% endif %}
-  {% endif %}
 </div>
 {% endblock %}
 
@@ -62,7 +67,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->  
-  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.selection", "appkit.shortcuts", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.selection", "appkit.textlist", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
   
   <script type="text/javascript">
@@ -78,7 +83,10 @@
     /* 是否页面验证 */
     W.isUserPageWalidate = true;
     /* 自动选中cid，当页面进来的时候 */
-    W.autoSelectCid = 2
+    W.autoSelectCid = 2;
+
+    //阻止删除第一个组件
+    W.preventFirstComponentDelected = true;
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -235,6 +243,22 @@
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
+        // 滚动浮动在底部
+          var stickyMenu = function(){
+              var winScrollTop = $(window).scrollTop();
+          　　var scrollHeight = $(document).height();
+          　　var windowHeight = $(window).height();
+              var gap = scrollHeight - winScrollTop - windowHeight;
+              if( gap < 44 ){
+                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+              }else{
+                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+              }
+          };
+          stickyMenu();
+          $(window).bind('scroll resize',(function() {
+              stickyMenu();
+          }));
     });
   </script>
 {% block js %}{% endblock %}

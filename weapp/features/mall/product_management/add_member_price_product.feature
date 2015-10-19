@@ -1,7 +1,11 @@
 # __author__ : "冯雪静"
-Feature: 添加有会员折扣的商品
-	Jobs能通过管理系统在商城中添加有"会员折扣的商品"
+#editor:王丽 2015.10.15
 
+Feature: 添加有会员折扣的商品
+"""
+
+	Jobs能通过管理系统在商城中添加有"会员折扣的商品"
+"""
 
 Background:
 	Given jobs登录系统
@@ -17,6 +21,8 @@ Background:
 			}]
 		}]
 		"""
+	#系统默认一个会员等级"普通会员"、"自动升级"、
+	#"所有关注过您的公众号的用户"、"购物折扣：10.0"
 	When jobs添加会员等级
 		"""
 		[{
@@ -33,45 +39,9 @@ Background:
 			"discount": "7"
 		}]
 		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"upgrade": "自动升级",
-			"discount": "10"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7"
-		}]
-		"""
-	When jobs已添加支付方式
-		"""
-		[{
-			"type": "货到付款",
-			"description": "我的货到付款",
-			"is_active": "启用"
-		},{
-			"type": "微信支付",
-			"description": "我的微信支付",
-			"is_active": "启用",
-			"weixin_appid": "12345",
-			"weixin_partner_id": "22345",
-			"weixin_partner_key": "32345",
-			"weixin_sign": "42345"
-		}]
-		"""
 
-@mall2
-Scenario: 添加有会员折扣的商品
+@mall2 @product @addProduct
+Scenario:1 添加有会员折扣的商品
 	jobs添加会员折扣的商品后，能获取他添加的商品
 
 	#添加的商品使用了会员等级折扣
@@ -125,7 +95,6 @@ Scenario: 添加有会员折扣的商品
 			}
 		}
 		"""
-		#	"price": 100.00,
 	Then jobs能获取商品'商品2'
 		"""
 		{

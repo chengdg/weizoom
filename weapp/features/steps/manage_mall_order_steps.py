@@ -15,6 +15,9 @@ import steps_db_util
 ###############################
 
 
+def get_order_action_set(actions):
+    return set([action['name'] for action in actions])
+
 ORDER_ACTION_NAME2ACTION = {
     u'支付': 'pay',
     u'完成': 'finish',
@@ -42,24 +45,28 @@ def step_impl(context, user, order_code):
     post_data = json.loads(context.text)
     order_real_id = bdd_util.get_order_by_order_no(order_code).id
     post_data['order_id'] = order_real_id
-    context.client.post(url, post_data)
+    response = context.client.post(url, post_data)
+    bdd_util.assert_api_call_success(response)
 
 
 @when(u"{user}'{action}'订单'{order_code}'")
 def step_impl(context, action, user, order_code):
     url = '/mall2/api/order/'
+    order_id = bdd_util.get_order_by_order_no(order_code).id
 
     data = {
-        'order_id': bdd_util.get_order_by_order_no(order_code).id,
-        'action': ORDER_ACTION_NAME2ACTION[action]
+            'order_id': order_id,
+            'action': ORDER_ACTION_NAME2ACTION[action]
     }
     response = context.client.post(url, data)
+    bdd_util.assert_api_call_success(response)
 
-@when(u"{user}设置订单过期时间{order_expired_day}天")
-def step_impl(context, user, order_expired_day):
+# @when(u"{user}设置订单过期时间{order_expired_day}天")
+@when(u"{user}设置未付款订单过期时间{order_expired_hour}小时")
+def step_impl(context, user, order_expired_hour):
     url = '/mall2/expired_time/'
     data = {
-        "order_expired_day": order_expired_day
+        "order_expired_day": order_expired_hour
     }
     context.client.post(url, data)
 
@@ -85,12 +92,14 @@ def step_impl(context, user, order_id):
     order = json.loads(context.text)
     express_value = express_util.get_value_by_name(order['logistics'])
     data_order_id = __get_order(context, order['order_no']).id
+    if 'name' in order:
+        express_value = order['name']
     url = '/mall2/api/delivery/'
     data = {
         'order_id': data_order_id,
         'express_company_name': express_value,
         'express_number': order['number'],
-        'leader_name': 'aa',
+        'leader_name': 'aa' if 'shipper' not in order else order['shipper'],
         'is_update_express': 'true'
     }
     response = context.client.post(url, data)
@@ -217,9 +226,11 @@ def step_impl(context, user):
         actual_order['save_money'] = order_item['save_money']
         if 'edit_money' in order_item and order_item['edit_money']:
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.', '').replace('-', '')
-        from mall.templatetags import mall_filter
-        actions = mall_filter.get_order_actions(Order.from_dict(order_item))
-        actual_order['actions'] = dict([(action['name'], 1) for action in actions])
+        if order_item['parent_action']:
+            actual_order['actions'] = get_order_action_set(order_item['parent_action'])
+        else:
+            actual_order['actions'] = get_order_action_set(order_item['groups'][0]['fackorder']['actions'])
+
         # order_list的接口数据返回格式已经更新，上面的代码可以改为如下代码：
         buy_product_results = []
         for group in order_item['groups']:
@@ -235,8 +246,8 @@ def step_impl(context, user):
                 buy_product_result['promotion'] = buy_product['promotion']
                 if 'supplier_name' in buy_product:
                     buy_product_result['supplier'] = buy_product['supplier_name']
-                from mall.templatetags import mall_filter
                 buy_product_result['status'] = group['fackorder']['status']
+                buy_product_result['actions'] = get_order_action_set(group['fackorder']['actions'])
                 buy_product_results.append(buy_product_result)
         actual_order['products'] = buy_product_results
         actual_order['products_count'] = len(buy_product_results)
@@ -245,12 +256,12 @@ def step_impl(context, user):
     expected = json.loads(context.text)
     for order in expected:
         if 'actions' in order:
-            del order['actions']
+            order['actions'] = set(order['actions'])    # 暂时不验证顺序
         for pro in order.get('products', []):
             if 'supplier' in pro and order.get('status', None) == u'待支付':
                 del pro['supplier']
             if 'actions' in pro:
-                del pro['actions']
+                pro['actions'] = set(pro['actions'])
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -266,14 +277,8 @@ def step_impl(context, user):
     order.order_type = ORDER_TYPE2TEXT[order.type]
     order.total_price = float(order.final_price)
     order.ship_area = order.area # + ' ' + order.ship_address
-    from mall.templatetags import mall_filter
 
-    actions = mall_filter.get_order_actions(order)
-    order.actions = dict([(action['name'], 1) for action in actions])
-    if order.status == ORDER_STATUS_PAYED_SHIPED or order.status == ORDER_STATUS_SUCCESSED:
-        order.actions[u'修改物流'] = 1
-    if order.status == ORDER_STATUS_NOT:
-        order.actions[u'修改价格'] = 1
+    order.actions = get_order_action_set(order.actions)
     for product in order.products:
         product['price'] = float(product['price'])
     order.status = STATUS2TEXT[order.status]
@@ -286,8 +291,8 @@ def step_impl(context, user):
     actual.reason = order.reason
 
     expected = json.loads(context.text)
-    actions = expected['actions']
-    expected['actions'] = dict([(action, 1) for action in actions])
+    if 'actions' in expected:
+        expected['actions'] = set(expected['actions'])
     bdd_util.assert_dict(expected, actual)
 
 
@@ -360,7 +365,8 @@ def step_look_for_order(context, user):
         "ship_name":         # 收货人姓名          e.g.:
         "ship_tel":          # 收货人电话          e.g.:
         "product_name":      # 商品名称            e.g.:
-        "date_interval":     # 下单时间            e.g.:
+        "date_interval":     # 查询时间段          e.g.: 今天 3天前  or  "2014-10-07|2014-10-08",
+        "date_interval_type":# 时间类型            e.g.: 1 下单时间 2 付款时间 3 发货时间
         "pay_type":          # 支付方式            e.g.:
         "express_number":    # 物流单号            e.g.:
         "order_source":      # 订单来源            e.g.:
@@ -372,7 +378,10 @@ def step_look_for_order(context, user):
         'pay_type': u'全部',
         'order_source': u'全部',
         'order_status': u'全部',
-        'belong': 'all'
+        'belong': 'all',
+        "date_interval":"",
+        "date_interval_type":1,
+        "product_name":"",
     }
 
     query_params_c = json.loads(context.text)
@@ -380,6 +389,9 @@ def step_look_for_order(context, user):
     if query_params.get('order_no'):
         query_params['query'] = query_params['order_no']
         query_params.pop('order_no')
+
+    if query_params.get('date_interval'):
+        query_params['date_interval']
 
     query_params['pay_type'] = PAYNAME2ID[query_params['pay_type']]
     if query_params['pay_type'] == -1:
@@ -392,17 +404,42 @@ def step_look_for_order(context, user):
     query_params['order_status'] = ORDER_STATUS2ID[query_params['order_status']]
     if query_params['order_status'] == -1:
         query_params.pop('order_status')
+    if query_params.get('date'):
+        query_params['date_interval_type'] = 1
+        query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('date'))
+    if query_params.get('payment_time'):
+        query_params['date_interval_type'] = 2
+        query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('payment_time'))
+    if query_params.get('delivery_time'):
+        query_params['date_interval_type'] = 3
+        query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('delivery_time'))
 
     context.query_params = query_params
-    # url = '/mall2/api/order_list/'
-    # response = context.client.get(url, query_params)
-    # context.response = response
 
 @then(u"{user}导出订单获取订单统计信息")
 def step_get_all_info_of_order(context, user):
+    filter_value = dict()
+    if hasattr(context, 'query_params'):
+        filter_value = context.query_params
+        print "filter_value---------------",filter_value
+    from cStringIO import StringIO
+    import csv
+
+    url = '/mall2/order_export/'
+    response = context.client.get(url, filter_value)
+    reader = csv.reader(StringIO(response.content))
+    # 去掉表头信息
+    csv_items = [row for row in reader]
+    context.last_csv_order_info = csv_items[-1]
     all_info = context.last_csv_order_info
     expect_info = json.loads(context.text)
-    bdd_util.assert_dict(expect_info,all_info)
+    actual = dict([(info.split(':')[0].encode('utf-8'),info.split(':')[1]) for info in all_info[1:]])
+    actual_encode = {}
+    for x,y in actual.items():
+        x = x.encode('utf-8')
+        actual_encode[unicode(x)] = y
+
+    bdd_util.assert_list(expect_info,[actual_encode])
 
 
 @then(u"{user}导出订单获取订单信息")
@@ -420,8 +457,8 @@ def step_get_specify_order(context, user):
     response = context.client.get(url, filter_value)
     reader = csv.reader(StringIO(response.content))
     # 去掉表头信息
-    header = reader.next()
-    header = [
+    csv_items = [row for row in reader]
+    csv_items[0] = [
         'order_no',
         'order_time',
         'pay_time',
@@ -429,6 +466,7 @@ def step_get_specify_order(context, user):
         'model',
         'product_unit_price',
         'count',
+        'sales_money',
         'weight',
         'methods_of_payment',
         'money_total',
@@ -445,25 +483,30 @@ def step_get_specify_order(context, user):
         'ship_province',
         'ship_address',
         'shipper',
-        'remark',
+        'leader_remark',
         'sources',
         'logistics',
         'number',
         'delivery_time',
-        'purchase_price'
+        'remark',
+        'customer_message',
+        'purchase_price',
+        'purchase_costs'
+
     ]
     actual = []
-    for row in reader:
-        item = dict(map(None, header, [str(r).decode('utf8') for r in row]))
+    for row in csv_items[1:]:
+        # if reader.line_num :
+        item = dict(map(None, csv_items[0], [str(r).decode('utf8') for r in row]))
         item['ship_address'] = '' if not item.get('ship_address') else item.get('ship_address').replace(' ', ',')
         if '' != item.get('pay_time') and '已完成' not in item.get('pay_time').encode('utf-8'):
             data = datetime.strptime(item['pay_time'],'%Y-%m-%d %H:%M')
             item['pay_time'] = '%s 00:00' % data.strftime('%Y-%m-%d')
-        if  None != item.get('delivery_time') and '' != item.get('delivery_time'):
+        if None != item.get('delivery_time') and '' != item.get('delivery_time'):
             data = datetime.strptime(item['delivery_time'],'%Y-%m-%d %H:%M')
             item['delivery_time'] = '%s 00:00' % data.strftime('%Y-%m-%d')
         actual.append(item)
-    context.last_csv_order_info = actual[-1]
+    context.last_csv_order_info = csv_items[-1]
     # remove statistical information
     actual.pop()
     expected_order = []
@@ -488,12 +531,25 @@ def step_get_specify_order(context, user):
                 else:
                     del order['delivery_time']
             if '-' in order['order_no']:
+
                 order_no_info = order['order_no'].split('-')
-                order['order_no'] = '%s^%s' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
-            del order['methods_of_payment']
+                if len(order_no_info) > 2:
+                    order['order_no'] = '%s^%s-%s' % (order_no_info[0], Supplier.objects.get(name=order_no_info[1]).id,order_no_info[2])
+                else:
+                    order_no_info = order['order_no'].split('-')
+                    if u'' != order['edit_money']:
+                        order['order_no'] = '%s-%s' % (order_no_info[0], order_no_info[1])
+                    else:
+                        order['order_no'] = '%s^%s' % (order_no_info[0], Supplier.objects.get(name=order_no_info[1]).id)
+
             expected_order.append(order)
+        for row in expected_order:
+            if 'edit_money' in row:
+                del row['edit_money']  # 不校验该字段，无效字段，只用来判断order_no的格式
     else:
+
         expected_order = json.loads(context.text)
+
     bdd_util.assert_list(expected_order, actual)
     del StringIO
     del csv
@@ -505,13 +561,15 @@ def step_impl(context, user, order_id):
     response = context.client.get('/mall2/order/?order_id=%d' % real_id)
     actual_order = response.context['order']
 
-    from mall.templatetags import mall_filter
-    actual_order.actions = set([action['name'] for action in mall_filter.get_order_actions(actual_order)])
+    actual_order.actions = get_order_action_set(actual_order.actions)
 
     source_dict = {0: u'本店', 1: u'商城'}
     actual_order.order_no = actual_order.order_id
     # actual_order.member = actual_order.buyer_name
-    actual_order.shipper = actual_order.leader_name
+    leader_name_and_remark = actual_order.leader_name.split('|')
+    actual_order.shipper = leader_name_and_remark[0]
+    if len(leader_name_and_remark) > 1:
+        actual_order.leader_remark = leader_name_and_remark[1]
     actual_order.order_time = str(actual_order.created_at)
     actual_order.methods_of_payment = actual_order.pay_interface_name
     actual_order.sources = source_dict[actual_order.order_source]
@@ -526,13 +584,19 @@ def step_impl(context, user, order_id):
             expected.append(order.as_dict())
     else:
         expected = json.loads(context.text)
-
+    if "logistics" in expected:
+        express_value = express_util.get_value_by_name(expected['logistics'])
+        expected['logistics'] = express_value
     if "actions" in expected:
         expected["actions"] = set(expected["actions"])
 
     # 会员详情页无会员信息
     if "member" in expected:
         del expected["member"]
+    if actual_order.express_company_name:
+        actual_order.logistics = actual_order.express_company_name
+    # 字段名称不匹配，order中有number属性
+    actual_order.number = actual_order.express_number
     bdd_util.assert_dict(expected, actual_order)
 
 
@@ -547,16 +611,6 @@ def step_impl(context, user, order_id):
 
 
 def __get_order(context, order_id):
-    # url = '/mall2/api/order_list/'
-    # query_params = {
-    #     'query': order_id
-    # }
-    # response = context.client.get(url, query_params)
-    # content = json.loads(response.content)
-    # items = content['data']['items']
-    # order = {}
-    # if len(items) > 0:
-    #     order = items[0]
 
     if '-' in order_id:
         order_no_info = order_id.split('-')
@@ -602,31 +656,6 @@ def __get_actual_orders(json_items, context):
             })
 
     return actual_orders
-
-# jz 2015-08-26
-# def _pay_weizoom_card(context, data, order):
-#     url = '/webapp/api/project_api/call/'
-#     card = json.loads(context.text)
-
-#     # 1.根据卡号密码获取id
-#     data['target_api'] = 'weizoom_card/check'
-#     data['name'] = card['id']
-#     data['password'] = card['password']
-#     response = context.client.post(url, data)
-#     response_json = json.loads(response.content)
-#     if response_json['code'] == 200:
-#         card_id = response_json['data']['id']
-#     else:
-#         return False
-
-#     # 2.确认支付
-#     data['target_api'] = 'weizoom_card/pay'
-#     data['card_id'] = card_id
-#     data['order_id'] = order.order_id
-#     del data['name']
-#     del data['password']
-#     response = context.client.post(url, data)
-#     response_json = json.loads(response.content)
 
 
 @then(u'{user}能获得订单"{order_id}"操作日志')

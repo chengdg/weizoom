@@ -5,7 +5,7 @@
  * News编辑器
  * @class
  */
-ensureNS('W.view.weixin')
+ensureNS('W.view.weixin');
 W.view.weixin.NewKeywordView = Backbone.View.extend({
 	el: '',
 

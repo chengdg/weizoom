@@ -177,6 +177,27 @@ def step_impl(context, user, type_name):
             expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual)
 
+@then(u"{user}能获取商品规格详情'{product_name}'")
+def get_product_model(context, user, product_name):
+    product = __get_product_from_web_page(context, product_name)
+    print product
+    expect_dict = {}
+    for row in context.table:
+        # | 颜色 | 价格(元) | 库存 | 商品编码 | 尺寸
+        if u'尺寸' in row.headings:
+
+            title = row[u'颜色'] + " "+ row[u'尺寸']
+        else:
+            title = row[u'颜色']
+        if u'库存' in row.headings and u'无限' == row['库存']:
+            expect_dict[title] = {'price':int(row['价格(元)']),'stock_type':row['库存']}
+        else:
+            expect_dict[title] = {'price':int(row['价格(元)']),'stocks':int(row['库存'])}
+        if row[u'商品编码'] != u'':
+            expect_dict[title]['user_code'] = row[u'商品编码']
+
+    print "zl-----------------",expect_dict
+    bdd_util.assert_dict(expect_dict,product['model']['models'])
 
 @when(u"{user}更新商品'{product_name}'的库存为")
 def step_impl(context, user, product_name):
@@ -261,11 +282,12 @@ def step_impl(context,user):
     query_param = json.loads(context.text)
     webapp_id = bdd_util.get_webapp_id_for(user)
     owner = WebApp.objects.get(appid=webapp_id)
-    category_name = query_param['category']
-    if category_name == u'全部' or category_name == u'全部分类':
-        query_param['category'] = -1
-    else:
-        query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
+    category_name = query_param.get('category', None)
+    if category_name:
+        if category_name == u'全部' or category_name == u'全部分类':
+            query_param['category'] = -1
+        else:
+            query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
     context.query_param = query_param
 
 
@@ -437,7 +459,9 @@ def __get_product_from_web_page(context, product_name):
                     "weight": product_model['weight'],
                     "market_price": "" if product_model['market_price'] == 0 else product_model['market_price'],
                     "stock_type": u'无限' if product_model['stock_type'] == mall_models.PRODUCT_STOCK_TYPE_UNLIMIT else u'有限',
-                    "stocks": product_model['stocks']
+                    "stocks": product_model['stocks'],
+                    "user_code": product_model['user_code']
+
                 }
                 # 积分商品
                 if product.type == mall_models.PRODUCT_INTEGRAL_TYPE:
@@ -454,7 +478,8 @@ def __get_product_from_web_page(context, product_name):
                     "weight": product_model['weight'],
                     "market_price": "" if product_model['market_price'] == 0 else product_model['market_price'],
                     "stock_type": u'无限' if product_model['stock_type'] == mall_models.PRODUCT_STOCK_TYPE_UNLIMIT else u'有限',
-                    "stocks": product_model['stocks']
+                    "stocks": product_model['stocks'],
+                    "bar_code": product.bar_code
                 }
                 # 积分商品
                 if product.type == mall_models.PRODUCT_INTEGRAL_TYPE:
@@ -494,7 +519,7 @@ def __supplement_product(webapp_owner_id, product):
         "price": "11.0",
         "market_price": "11.0",
         "weight": "0",
-        "bar_code": "12321",
+        "bar_code": "12321" ,
         "thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
         "pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
         "introduction": u"product的简介",
@@ -576,6 +601,7 @@ def __supplement_product(webapp_owner_id, product):
                 "weight": standard_model.get('weight', 0.0),
                 "stock_type": standard_model.get('stock_type', mall_models.PRODUCT_STOCK_TYPE_UNLIMIT),
                 "stocks": standard_model.get('stocks', -1)
+
             })
         else:
             #对每一个model，构造诸如customModel^2:4_3:7^price的key

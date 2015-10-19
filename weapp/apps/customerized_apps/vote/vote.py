@@ -19,7 +19,7 @@ from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class vote(resource.Resource):
@@ -42,8 +42,9 @@ class vote(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_customerized_apps(request),
-			'second_nav_name': 'votes',
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': export.MALL_APPS_VOTE_NAV,
 			'vote': vote,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,

@@ -1,4 +1,5 @@
-@func:webapp.modules.mall.views.update_product
+#editor: 张三香 2015.10.14
+
 Feature: 添加商品规格
 	Jobs通过管理系统在商城中添加"商品"时，能指定"商品规格"
 
@@ -27,9 +28,8 @@ Background:
 		}]
 		"""
 
-
-@mall2 @mall.product @mall.product_model
-Scenario: 添加拥有单属性商品规格的商品
+@mall2 @product @addProduct @module   @mall.product @mall.product_model
+Scenario:1 添加拥有单属性商品规格的商品
 	Jobs添加拥有商品规格的商品后，能获取的商品信息中包含商品规格
 	
 	Given jobs登录系统
@@ -67,9 +67,8 @@ Scenario: 添加拥有单属性商品规格的商品
 		}
 		"""
 
-
-@mall2 @mall.product @mall.product_model
-Scenario: 添加拥有复合属性商品规格的商品
+@mall2 @product @addProduct @module   @mall.product @mall.product_model
+Scenario:2 添加拥有复合属性商品规格的商品
 	Jobs添加拥有商品规格的商品后，能获取的商品信息中包含商品规格
 	
 	Given jobs登录系统

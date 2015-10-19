@@ -151,4 +151,8 @@ def record_shared_url(request):
 	return request_api_util.record_shared_url(request)	
 
 def record_refueling_log(request):
-	return request_api_util.record_refueling_log(request)	
+	return request_api_util.record_refueling_log(request)
+
+def record_mileke_log(request):
+	return request_api_util.record_mileke_log(request)
+

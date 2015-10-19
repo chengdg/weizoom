@@ -224,10 +224,12 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	
 	onClickOneMenuItemText: function(event) {
 		var $current = $(event.currentTarget);
-		$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
-		//this.$('.xa-no-panel').removeClass('xui-editCover')
+
+		this.$('.xa-no-panel').removeClass('xui-editCover')
+		this.$('.xa-no-panel').html('');
 		$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
 		if ($current.attr('readonly')) {
+			$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
 			$('input').attr('readonly', 'readonly');
 	    	this.$('.xui-menu-left-item div.active').removeClass('active');
 			
@@ -242,10 +244,20 @@ W.view.weixin.MenuItem = Backbone.View.extend({
 	onClickOneMenuText: function(event) {
 		var _this = this;
 		var $current = $(event.currentTarget);
-		$('.xa-no-panel').addClass('xui-editCover').html('点击左侧编辑');
-		//_this.$('.xa-no-panel').removeClass('xui-editCover')
-		$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
+    	var $oneMenuItemDiv = this.$('.xui-one-menu-item');
+    	var length = $oneMenuItemDiv.find('.form-control').length;
+
+    	if (length > 0) {
+			$('.xa-no-panel').addClass('xui-editCover').html('使用二级菜单后主回复已失效');
+			
+			//$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
+		} else {
+			$('.xa-no-panel').removeClass('xui-editCover')
+			$('.xa-no-panel').text('')
+		}
+		//$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');
 		if ($current.attr('readonly')) {
+			//$('.xa-menu-content').html('<label class="xui-i-unvalid">点击左侧编辑</label>')
 			$('input').attr('readonly', 'readonly');
 	    	_this.$('.xui-menu-left-item div.active').removeClass('active');
 			//$current.parents('.xui-i-menu-item').find('.xa-no-panel').removeClass('xui-editCover');

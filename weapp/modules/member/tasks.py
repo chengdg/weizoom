@@ -206,3 +206,20 @@ def record_member_pv(self, member_id, url, page_title=''):
 		notify_message = u"record_member_pv,member_id:{} cause:\n{}".format(member_id, unicode_full_stack())
 		watchdog_error(notify_message)
 		raise self.retry()
+
+
+@task(bind=True)
+def task_member_base_info_update(self, member_id):
+	try:
+		"""
+		task 更新会员头像信息
+		"""
+		member = Member.objects.get(id=member_id)
+		user_profile =  account_models.UserProfile.objects.get(webapp_id=member.webapp_id)
+		member_util.member_basic_info_updater(user_profile, member)
+		if not member.user_icon or member.user_icon == '':
+			member_util.member_basic_info_updater(user_profile, member)
+	except:
+		notify_message = u"task 更新会员头像信息,member_id:{} cause:\n{}".format(member_id, unicode_full_stack())
+		watchdog_error(notify_message)
+		raise self.retry()

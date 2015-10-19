@@ -95,3 +95,30 @@ class MessageHandler(object):
 					response = generator.get_text_response(from_weixin_user.username, message.toUserName, response_rule.answer, token, user_profile)
 		
 		return response
+
+
+	def _process_recorde_message(self, context, response_rule, from_weixin_user, is_from_simulator):
+		new_context = {}
+		new_context['member_id'] = context.member.id if context.member else -1
+		new_context['message'] = context.message.__dict__ if context.message else None
+		new_context['user_profile_id'] = context.user_profile.id if context.user_profile else None
+		
+		request = context.request
+		post = {}
+		post.update(request.POST)
+		current_request_dict = {
+			"POST":post
+		}
+
+		new_context['response_rule_id'] = response_rule.id if response_rule else -1
+		#new_context['from_weixin_user_id'] = from_weixin_user.id if from_weixin_user else -1
+		new_context['from_user_name'] = context.message.fromUserName
+		
+		new_context['is_from_simulator'] = is_from_simulator
+		new_context['request'] = current_request_dict
+
+		from weixin.message.message_handler.tasks import recorde_message, _recorde_message
+		# if settings.TASKQUEUE_ENABLED:
+		#增加response_rule参数，duhao 2015-04-30
+		new_context['response_rule'] = response_rule.format_to_dict() if response_rule else None
+		recorde_message.delay(new_context)

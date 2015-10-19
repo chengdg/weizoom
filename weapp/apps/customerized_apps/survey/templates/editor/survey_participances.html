@@ -6,6 +6,49 @@
     	height: 60px;
     	width: 60px;
     }
+    .modal-body .table.table-bordered img{
+    	height: 75px;
+    	width: 60px;
+        margin: 2px;
+    }
+    .xa-uploadimg_box{
+        display: none;
+        position: absolute;
+        width: 500px;
+        height: auto;
+        overflow: auto;
+        margin: auto;
+        top: 25%; left: 0;right: 0;
+        text-align: center;
+        background-color: #DDDDDD;
+        z-index: 1000000;
+        overflow-y: hidden;
+    }
+    .xa-uploadimg_box .xa-close_btn{
+        position: absolute;
+        top: 5px; right: 5px;
+        z-index: 1000000;
+    }
+    .xa-uploadimg_box .xa-uploadimg{
+        max-width: 100%;
+        border: 2px solid #DDDDDD;
+    }
+    .xa-arr{
+        position: absolute;
+        top:40%;
+        height: 97px;
+        width: 38px;
+        background: url("/static_v2/img/arrow_lr.png");
+        background-repeat: no-repeat;
+        z-index: 1000001;
+    }
+    .xa-arr.xa-arr_left{
+        left: 3px;
+    }
+    .xa-arr.xa-arr_right{
+        right: 2px;
+        background-position: -91px;
+    }
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -115,7 +158,7 @@
 					style="width:250px; height:60px;" 
 				>
 					<img src="${item.participant_icon}" />
-					${item.participant_name}
+					{{html item.participant_name}}
 				</td>
 				<td>
 					${item.created_at}
@@ -198,6 +241,7 @@ $(document).ready(function() {
         });
     });
 });
+
 </script>
 {% endblock %}
 

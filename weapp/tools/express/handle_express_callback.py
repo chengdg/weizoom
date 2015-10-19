@@ -13,6 +13,8 @@ from django.conf import settings
 from models import *
 from mall import models as mall_models
 
+import mall.module_api as mall_api
+
 
 class ExpressCallbackHandle(object):
 	'''
@@ -139,8 +141,9 @@ class ExpressCallbackHandle(object):
 			# 将状态改为 已完成
 			for order in orders:
 				if int(status) == self.express_config.STATE_SIGNED and order.status == 4:
-					order.status = 5
-					order.save()
+					mall_api.update_order_status(user=None, action='finish', order=order)
+					# order.status = 5
+					# order.save()
 
 			return True
 		except:

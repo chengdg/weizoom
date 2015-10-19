@@ -1,6 +1,8 @@
-# __author__ : "崔帅帅"
-# __author__ : "王丽"
+#author: 崔帅帅
+#author : 王丽
+#editor: 张三香 2015.10.15
 @func:webapp.modules.user_center.views.list_tags
+
 Feature: 删除会员分组
 """
 	Jobs能删除会员分组
@@ -19,18 +21,19 @@ Background:
 			"tag_id_1": "分组1",
 			"tag_id_2": "分组2",
 			"tag_id_3": "分组3"
-		}	
+		}
 		"""
 
-@mall2 @member @member.tag @member.delete_tag
-Scenario: Jobs删除已存在的会员分组
+@mall2 @member @meberGroup   @member.tag @member.delete_tag @eugeneXX
+Scenario:1 Jobs删除已存在的会员分组
+	#数组中保留的是删除后保留的分组，并不是要删除的分组
 	When jobs删除会员分组
 		"""
 		{
 			"tag_id_0": "未分组",
 			"tag_id_1": "分组1",
 			"tag_id_3": "分组3"
-		}	
+		}
 		"""
 	Then jobs能获取会员分组列表
 		"""

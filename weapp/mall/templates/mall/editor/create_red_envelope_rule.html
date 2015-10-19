@@ -7,8 +7,16 @@
   .xui-editProductPage .control-label{
     margin-left: 10px;
   }
+  .xui-create-redEnvelope-page .imageView-uploadZone{
+      position: relative;
+      top: -30px;
+  }
   .xui-create-redEnvelope-page .uploadify{
-    height:90px!important;
+    height:30px!important;
+    margin-bottom: 0!important;
+  }
+  .xui-create-redEnvelope-page .swfupload{
+    height:30px!important;
     margin-bottom: 0!important;
   }
   .xui-create-redEnvelope-page .uploadify-button{
@@ -16,31 +24,15 @@
     border: 1px dashed #e5e5e5;
     background-size: 91px 91px;
     width:90px!important;
-    height:90px!important;
+    height:30px!important;
     box-shadow: none;
   }
-  .xui-create-redEnvelope-page .uploadify-button:after,
-  .xui-create-redEnvelope-page .uploadify-button:before{
-    content:"";
-    display: inline-block;
-    background: #e5e5e5;
-    position: absolute;
-  }
-  .xui-create-redEnvelope-page .uploadify-button:after{
-    left:24px;
-    top:45px;
-    width:45px;
-    height:3px;
-
-  }
-  .xui-create-redEnvelope-page .uploadify-button:before{
-    left:45px;
-    top:25px;
-    width:3px;
-    height:45px;
+  .xui-create-redEnvelope-page .uploadify-button{
+      border: 0;
+      background-color:rgba(0,0,0,0.5);
   }
   .xui-create-redEnvelope-page .uploadify-button-text{
-    color:transparent;
+    color:#fff;
   }
   .xui-imgTips{
     position: absolute;
@@ -120,7 +112,8 @@
           </select>
           &nbsp;&nbsp;<span class="hidden"><a href="">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#969a9d;">库存：</span></span>
            <p class="xa-couponTip xui-couponTip hidden">当库存为0时用户将无法获取优惠券</p>
-          <div class="errorHint" data-error-hint="请选择奖励" style="margin-left:120px;"></div>
+          <div class="errorHint" data-error-hint="请选择奖励" style="display: inline-block;"></div>
+          <div class="xui-i-help pt5 xa-couponHelp" style="margin-left: 120px;">只能选择"每人限领"为"不限"的优惠券</div>
         {% endif %}
       </div>
     </div>
@@ -174,9 +167,18 @@
             <div class="errorHint ml120" data-error-hint="请选择奖励时间"></div>
         </div>
     </div>
-
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110 star_show">领取方式</label>
+        <div class="controls xa-errorHintContainer">
+            <div class="receive-method" style="margin-left: 120px;">
+                <input type="radio" name="receive-method-order" class="xa-receive-method-order" {%if not red_envelope_rule.receive_method %}checked{% endif%}>下单领取
+                <input type="radio" name="receive-method-pic" class="xa-receive-method-pic" {%if red_envelope_rule.receive_method %}checked{% endif%}>图文领取
+            </div>
+            <div class="errorHint ml120" data-error-hint="请选择领取方式"></div>
+        </div>
+    </div>
     <div class="form-group h40">
-        <label class="control-label col-sm-2 col-sm-offset-1 w110" style="color:#000;">奖励条件</label>
+        <label class="control-label col-sm-2 col-sm-offset-1 w110">奖励条件</label>
         订单<span style="color:#cf0404;">满</span>
         <input type="text" class="form-control w70" id="limit_money" name="limit_money" value="{{red_envelope_rule.limit_order_money}}" data-validate="norequire,,require-positive-int"/>元
         <span class="xui-i-help ml5">注：空为不限制</span>
@@ -187,7 +189,8 @@
       <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110">活动说明</label>
       <div class="controls">
           <div style="margin-left:120px;">
-            <textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="150" data-width="420">
+            <div class="xui-i-help">(上传图片要求宽度在480~620之间，高度小于等于960，大小不超过500k)</div>
+            <textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor-red" data-maxCount="1000" data-type="full" data-height="150" data-width="420">
                 {% if red_envelope_rule %}{{ red_envelope_rule.use_info|format_emotion|safe }}{% endif %}
             </textarea>
           </div>
@@ -202,7 +205,7 @@
             <label for="" class="control-label col-sm-2 col-sm-offset-1 pt0 w110">分享图片</label>
             <p class="xui-imgTips">注：不上传为使用默认图片<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;推荐尺寸:90*90，仅支持jpg,png&nbsp;&nbsp;<i class="xa-tips">?</i></p>
             <input type="hidden" name="share_pic" id="share_pic" value="{% if red_envelope_rule.share_pic %}{{red_envelope_rule.share_pic }}{% else %}/static_v2/img/editor/redEnv.jpg{% endif %}" data-ui-role="image-selector" data-width="90" data-height="90"/>
-            <div data-ui-role="image-selector-view" auto-show-help="false" style="margin-left: 120px;">
+            <div data-ui-role="red-image-selector-view" auto-show-help="false" style="margin-left: 120px;">
             </div>
             <div class="errorHint"></div>
         </div>
@@ -229,6 +232,26 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
+W.registerUIRole('textarea[data-ui-role="richtext-editor-red"]', function() {
+    var $textarea = $(this);
+    var type = $textarea.attr('data-type');
+    var height = parseInt($textarea.attr('data-height'));
+    var width = parseInt($textarea.attr('data-width'));
+    var maxCount = parseInt($textarea.attr('data-maxCount'));
+    var editor = new W.view.common.RichTextEditor({
+        el: $textarea.get(),
+        type: type,
+        width: width,
+        height:height,
+        autoHeight:false,
+        imgSuffix: "uid="+W.uid,
+        wordCount: true,
+        maxCount: maxCount
+    });
+    editor.render();
+
+    $textarea.data('view', editor);
+});
 $(document).ready(function(){
   // $('#coupon_rule').change()
   $('.uploadify object').attr('height','90');
@@ -248,15 +271,40 @@ $(document).ready(function(){
           $('.xa-errorHintContainer .errorHint').text("");
       }
   });
+    //下单领取
+  $('.xa-receive-method-order').on('click', function(e){
+      var $input = $(e.target);
+      if($input.prop('checked')){
+          $input.siblings().prop("checked", false);
+          var $limit_money = $('input[name="limit_money"]');
+          $limit_money.parent().removeClass('xui-i-help');
+          $limit_money.prev().css('color','#cf0404');
+          $limit_money.removeAttr('disabled');
+      }
+  });
+    //图文领取
+  $('.xa-receive-method-pic').on('click', function(e){
+      var $input = $(e.target);
+      if($input.prop('checked')){
+          $input.siblings().prop("checked", false);
+          var $limit_money = $('input[name="limit_money"]');
+          $limit_money.parent().addClass('xui-i-help');
+          $limit_money.prev().css('color','#8F8F8F');
+          $limit_money.attr('disabled', 'disabled');
+          $limit_money.val('');
+      }
+  });
 
   $('#coupon_rule').change(function(event){
       var coupon_rule_id = $('#coupon_rule').val();
       if (coupon_rule_id == "-1") {
           $('#coupon_rule').next().addClass('hidden');
           $('.xa-couponTip').addClass('hidden');
+          $('.xa-couponHelp').removeClass('hidden');
       }else {
           var count = $('option[value="'+coupon_rule_id+'"]').data('remained-count');
           $('.xa-couponTip').removeClass('hidden');
+          $('.xa-couponHelp').addClass('hidden');
           $('#coupon_rule').siblings('.errorHint').text('');
           $('#coupon_rule').next().removeClass('hidden').children('a').attr('href', '/mall2/coupon/?rule_id='+coupon_rule_id);
           $('#coupon_rule').next().children('span').text("库存："+count+"份");
@@ -290,7 +338,7 @@ $(document).ready(function(){
       success: function() {
         W.showHint('success', '创建红包成功！');
         _.delay(function() {
-          window.location.href = '/apps/promotion/red_envelope_rule_list/';
+          window.location.href = '/apps/promotion/red_envelope_rule_list/?is_create=1';
         }, 500)
       },
       error: function() {

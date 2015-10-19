@@ -296,7 +296,7 @@ def _get_current_log_info(member_integral_log):
 			friend_member = Member.objects.get(token=member_integral_log.follower_member_token)
 			if friend_member.user_icon and friend_member.user_icon != '':
 				member_integral_log.pic = friend_member.user_icon
-				member_integral_log.name = friend_member.username_for_html
+				member_integral_log.name = friend_member.username_size_ten
 			else:
 				member_integral_log.pic = SCAN_REWARDES_IMGE
 				member_integral_log.name = ''
@@ -580,43 +580,6 @@ def get_refueling_page(request):
 			"""
 			refuelinged = True if MemberRefuelingInfo.objects.filter(member_refueling=member_refueling, follow_member=member).count() > 0 else False
 
-	# if member_refuelings.count() > 0:
-	# 	"""
-	# 		已经分享活动
-	# 	"""
-	# 	member_refueling = member_refuelings[0]
-	# 	member_refueling_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling)
-	# 	if member_refueling_infos.count() >= 15:
-	# 		"""
-	# 			已经符合活动要求
-	# 		"""
-
-	# 		can_buy = True
-	# 		for member_refueling_has_order in MemberRefuelingHasOrder.objects.filter(member_refueling=member_refueling):
-	# 			if member_refueling_has_order.order_id and Order.objects.get(id=member_refueling_has_order.order_id):
-	# 				can_buy = False
-	# 				break
-	# 	else:
-	# 		pass
-	# else:
-	# 	"""
-	# 		未分享活动
-	# 	"""
-	# 	pass
-	# if fid:
-	# 	"""
-	# 	点击好友分享链接而来：显示集赞新
-	# 	"""
-	# 	member_fid = Member.objects.get(id=fid)
-	# 	member_refueling_fms = MemberRefueling.objects.filter(member=member_fid)
-	# 	if member_refueling_fms.count() > 0:
-	# 		member_refueling_fm_infos = MemberRefuelingInfo.objects.filter(member_refueling=member_refueling_fms[0])
-	# else:
-	# 	"""
-	# 	不是通过链接而来 显示普通活动
-	# 	"""
-	# 	pass
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
 		'page_title': u'找小伙伴帮你加油',
@@ -636,4 +599,91 @@ def get_refueling_page(request):
 		'refuelinged': refuelinged
 	})
 	return render_to_response('%s/refueling_page.html' % request.template_dir, c)
+
+
+def get_mileke_page(request):
+	game_over = False
+	now_time = time.localtime()
+	date = time.strptime('2015-10-22 10:00', "%Y-%m-%d %H:%M")
+
+	if now_time > date:
+		game_over = True
+
+	member = Member.objects.get(id=request.member.id)
+	webapp_user = request.webapp_user
+	member_kilekes = Mileke.objects.filter(member_id=member.id)
+	cookie_fid = request.COOKIES.get('fid', '')
+	url_fid = request.GET.get('fid', None)
+	current_count = 0
+	vote_member = None
+	if member_kilekes.count() == 0:
+		"""
+		进入我要参加页面：从图文进入未参加活动
+		"""
+		joined = False
+	else:
+		joined = True
+		member_ids = [log.member_id  for log in MilekeLog.objects.filter(mileke=member_kilekes[0])]
+		current_count = MilekeLog.objects.filter(mileke=member_kilekes[0], member__is_subscribed=True).count()
+
+	if url_fid is None or str(url_fid) == str(member.id):
+		self_visit = True
+		member_voted = False
+	else:
+		self_visit = False
+		"""
+			是否给该 url_fid 投过票
+		"""
+		vote_member = Member.objects.get(id=url_fid)
+		if Mileke.objects.filter(member=vote_member).count() == 0:
+			Mileke.objects.create(member=vote_member)
+		if member.is_subscribed:
+			member_voted = MilekeLog.objects.filter(mileke__member__id=url_fid, member_id=member.id).count() > 0
+		else:
+			member_voted = False
+
+	"""
+		投票总数
+	"""
+	member_mileke = None
+	if game_over is False:
+		milekes = Mileke.objects.all()#.order_by('-count')
+		for mileke in milekes:
+			mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
+			if joined and mileke.member == member:
+				member_mileke = mileke
+
+		"""
+			排序
+		"""
+		milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
+	else:
+		milekes = Mileke.objects.all().order_by('-current_count')
+	"""
+		获取当前用户位置
+	"""
+	member_milekes = Mileke.objects.filter(member=member)
+	if member_milekes.count() > 0:
+		member_mileke = member_milekes[0]
+		current_index = list(milekes).index(member_mileke) + 1
+	else:
+		current_index = 0
+	milekes = milekes[:100]
+	c = RequestContext(request, {
+		'is_hide_weixin_option_menu': False,
+		'page_title': u'限额免费抢收小斑马特供有机蔬菜！',
+		'milekes': milekes,
+		'joined': joined,
+		'current_count': current_count,
+		'self_visit': self_visit,
+		'member_voted': member_voted,
+		'url_fid': url_fid,
+		'vote_member': vote_member,
+		'hide_non_member_cover': True,
+		'game_over': game_over,
+		'current_index': current_index,
+		'member':member,
+		'share_img_url':'http://weappstatic.b0.upaiyun.com/static_v2/img/shucai.jpg'
+	})
+	return render_to_response('%s/mileke_page.html' % request.template_dir, c)
 

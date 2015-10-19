@@ -36,11 +36,9 @@ class OrderInfo(resource.Resource):
         """
         订单详情页
         """
-        belong = request.GET.get("belong", "all")
-        if belong == "all":
-            return util.get_detail_response(request)
-        else:
-            return util.get_detail_response(request, 'refund')
+
+        return util.get_detail_response(request)
+
 
     @login_required
     def api_post(request):
@@ -52,42 +50,48 @@ class OrderInfo(resource.Resource):
         order_status = request.POST.get('order_status', None)
         bill_type = int(request.POST.get('bill_type', ORDER_BILL_TYPE_NONE))
         # postage = request.POST.get('postage', None)
-        final_price = request.POST.get('final_price', None)
         ship_name = request.POST.get('ship_name', None)
         ship_tel = request.POST.get('ship_tel', None)
         ship_address = request.POST.get('ship_address', None)
         remark = request.POST.get('remark', None)
+        # 待支付状态下 修改价格  最终价格
+        final_price = request.POST.get('final_price', None)
 
         order = Order.objects.get(id=order_id)
-
         if action:
-            mall_api.update_order_status(request.user, action, order, request)
+            # 检查order的状态是否可以跳转，如果是非法跳转则报错
 
+            flag = util.check_order_status_filter(order,action)
+            if not flag:
+                response = create_response(500)
+                response.data = {'msg':"非法操作，订单状态不允许进行该操作"}
+                return response.get_response()
+            mall_api.update_order_status(request.user, action, order, request)
         else:
             operate_log = ''
-            expired_status = order.status
-            if order_status:
-                if order.status != int(order_status):
-                    operate_log = u' 修改状态'
-                    mall_api.record_status_log(order.order_id, order.status, order_status, request.manager.username)
-                    order.status = order_status
+            # expired_status = order.status
+            # if order_status:
+            #     if order.status != int(order_status):
+            #         operate_log = u' 修改状态'
+            #         mall_api.record_status_log(order.order_id, order.status, order_status, request.manager.username)
+            #         order.status = order_status
+            #
+            #         try:
+            #             if expired_status < ORDER_STATUS_SUCCESSED and int(
+            #                     order_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
+            #                 integral.increase_father_member_integral_by_child_member_buyed(order, order.webapp_id)
+            #                 # integral.increase_for_self_buy(order.webapp_user_id, order.webapp_id, order.final_price)
+            #         except:
+            #             notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
+            #             watchdog_error(notify_message)
 
-                    try:
-                        if expired_status < ORDER_STATUS_SUCCESSED and int(
-                                order_status) == ORDER_STATUS_SUCCESSED and expired_status != ORDER_STATUS_CANCEL:
-                            integral.increase_father_member_integral_by_child_member_buyed(order, order.webapp_id)
-                            # integral.increase_for_self_buy(order.webapp_user_id, order.webapp_id, order.final_price)
-                    except:
-                        notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
-                        watchdog_error(notify_message)
-
-            if bill_type:
-                bill = request.POST.get('bill', '')
-                # 允许发票信息随意修改
-                # if order.bill_type != bill_type:
-                operate_log = operate_log + u' 修改发票'
-                order.bill_type = bill_type
-                order.bill = bill
+            # if bill_type:
+            #     bill = request.POST.get('bill', '')
+            #     # 允许发票信息随意修改
+            #     # if order.bill_type != bill_type:
+            #     operate_log = operate_log + u' 修改发票'
+            #     order.bill_type = bill_type
+            #     order.bill = bill
 
             # if postage:
             # if float(order.postage) != float(postage):
@@ -95,34 +99,35 @@ class OrderInfo(resource.Resource):
             # 		order.final_price = order.final_price - order.postage + float(postage) #更新最终价格
             # 		order.postage = postage
 
-            if ship_name:
-                if order.ship_name != ship_name:
-                    operate_log = operate_log + u' 修改收货人'
-                    order.ship_name = ship_name
+            # if ship_name:
+            #     if order.ship_name != ship_name:
+            #         operate_log = operate_log + u' 修改收货人'
+            #         order.ship_name = ship_name
+            #
+            # if ship_tel:
+            #     if order.ship_tel != ship_tel:
+            #         operate_log = operate_log + u' 修改收货人电话号'
+            #         order.ship_tel = ship_tel
+            #
+            # if ship_address:
+            #     if order.ship_address != ship_address:
+            #         operate_log = operate_log + u' 修改收货人地址'
+            #         order.ship_address = ship_address
 
-            if ship_tel:
-                if order.ship_tel != ship_tel:
-                    operate_log = operate_log + u' 修改收货人电话号'
-                    order.ship_tel = ship_tel
-
-            if ship_address:
-                if order.ship_address != ship_address:
-                    operate_log = operate_log + u' 修改收货人地址'
-                    order.ship_address = ship_address
-
-            if not remark is None:
+            if 'remark' in request.POST:
                 remark = remark.strip()
                 if order.remark != remark:
                     operate_log = operate_log + u' 修改订单备注'
                     order.remark = remark
 
-            if final_price is not None:
-                if float(order.final_price) != float(final_price):
+            if final_price:
+                # 只有价格不相等 以及待支付的时候 才可以进行订单价格的修改
+                if float(order.final_price) != float(final_price) and order.status == ORDER_STATUS_NOT:
                     operate_log = operate_log + u' 修改订单金额'
                     order.final_price = float(final_price)
                     order.edit_money = (order.product_price + order.postage) - (
                         order.coupon_money + order.integral_money + order.weizoom_card_money + order.promotion_saved_money) - order.final_price
-                    # TODO 临时解决方案，需要数据清理
+                    # 限时抢购
                     promotions = OrderHasPromotion.objects.filter(order_id=order.id)
                     for promotion in promotions:
                         if promotion.promotion_type == 'flash_sale':
@@ -135,7 +140,6 @@ class OrderInfo(resource.Resource):
 
         response = create_response(200)
         return response.get_response()
-
 
 class OrderList(resource.Resource):
     """
@@ -151,6 +155,9 @@ class OrderList(resource.Resource):
 
         """
         belong = request.GET.get("belong", "all")
+        #处理来自“微商城-首页-待发货订单-更多”过来的查看待发货订单的请求
+        #add by duhao 2015-09-17
+        order_status = request.GET.get('order_status' , '-1')
 
         if belong == 'audit':
             second_nav_name = export.ORDER_AUDIT
@@ -162,10 +169,11 @@ class OrderList(resource.Resource):
             page_type =u"所有订单"
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': second_nav_name,
             'has_order': has_order,
-            'page_type': page_type
+            'page_type': page_type,
+            'order_status': order_status
         })
         return render_to_response('mall/editor/orders.html', c)
 
@@ -359,24 +367,4 @@ class ChannelQrcodePayedOrder(resource.Resource):
             'pageinfo': paginator.to_dict(pageinfo),
         }
         return response.get_response()
-
-
-# class UnShipOrderCount(resource.Resource):
-#     app = "mall2"
-#     resource = "un_ship_order_count"
-#
-#     def api_get(request):
-#         # print(request.manager.get_profile().webapp_id)
-#         # count = len(belong_to(request.manager.get_profile().webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP))
-#         from cache.webapp_owner_cache import get_unship_order_count_from_cache
-#
-#         count = get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
-#
-#         print("count:", count)
-#
-#         response = create_response(200)
-#         response.data = {
-#             'count': count
-#         }
-#         return response.get_response()
 

@@ -199,6 +199,27 @@ W.ValidaterClass = function() {
                 }
             },
             errorHint: '请选择一份文件'
+        },
+        'require-length': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                var trimedValue = $.trim(element.val());
+
+                // 支持contenteditable jz
+                if(element.attr('contenteditable') == 'true'){
+                    trimedValue = element.attr('value');
+                }
+                var strLength = parseInt(element.attr('strlength')) || parseInt(element.attr('str-length'));
+                var actualLength = trimedValue.length;
+                if (actualLength !== strLength) {
+                    this.errorHint = '请输入长度为'+strLength+'的字符串';
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            errorHint: ''
         }
 	};
 

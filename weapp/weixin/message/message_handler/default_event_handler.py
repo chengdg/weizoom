@@ -138,6 +138,7 @@ class DefaultEventHandler(EventMessageHandler):
 	def __handle_member_unsubscribe_event(self, context):
 		if context.member is not None:
 			context.member.is_subscribed = False
+			context.member.status = 0
 			context.member.save()
 
 	# def __remove_member_info(self, context, from_weixin_username):

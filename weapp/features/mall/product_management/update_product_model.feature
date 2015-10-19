@@ -1,4 +1,6 @@
 @func:webapp.modules.mall.views.list_mall_settings
+#editor:张三香 2015.10.14
+
 Feature: 更新商品规格
 	Jobs通过管理系统在商城中更新供商品使用的"商品规格"
 
@@ -50,8 +52,8 @@ Background:
 		}]
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 更新商品规格信息
+@mall2 @product @module   @mall @mall.product @mall.product_model
+Scenario:1 更新商品规格信息
 	Jobs更新商品规格后, 更新包括：
 		1.增加规格属性值
 		2.删除规格属性值
@@ -127,10 +129,8 @@ Scenario: 更新商品规格信息
 		}]
 		"""
 
-
-
-@mall @mall.product @mall.product_model @mall2
-Scenario: 删除商品规格值影响商品
+@mall2 @product @module   @mall @mall.product @mall.product_model
+Scenario:2 删除商品规格值影响商品
 	Jobs删除一条商品规格值后
 	1. 删除后商品中规格不为空，直接去除这条规格值的组合规格
 	2. 删除后商品中规格为空，商品转为“下架”状态

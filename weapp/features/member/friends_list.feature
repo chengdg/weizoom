@@ -228,15 +228,15 @@ Background:
 
 
 	When 微信用户批量消费jobs的商品
-		| date | consumer | type  |businessman| product | payment | payment_method | freight |   price  | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash |      action     |  order_status   |
-		| 今天 | bill01   | 购买  | jobs      | 商品1,1 | 支付    | 支付宝         | 10      |    100   | 		   |        | 110         |              | 110    | 0      | 0    | jobs,支付       |  待发货         |
-		| 今天 | bill01   | 购买  | jobs      | 商品1,1 | 支付    | 微信支付       | 10      |    100   | 		   |        | 110         |              | 0      | 110    | 0    | jobs,发货       |  已发货         |
-		| 今天 | bill01   | 购买  | jobs      | 商品1,1 | 支付    | 货到付款       | 10      |    100   | 		   |        | 110         |              | 0      | 0      | 110  | jobs,完成       |  已完成         |
-		| 今天 | bill01   | 购买  | jobs      | 商品1,1 | 支付    | 货到付款       | 10      |    100   | 		   |        | 110         |              | 0      | 0      | 110  | jobs,取消       |  已取消         |
-		| 今天 | bill13   | 购买  | jobs      | 商品1,1 | 未支付  | 微信支付       | 10      |    100   | 		   |        | 110         |              | 0      | 0      | 0    | jobs,无操作     |  待支付         |
-		| 今天 | bill13   | 购买  | jobs      | 商品1,1 | 支付    | 微信支付       | 10      |    100   | 		   |        | 110         |              | 0      | 110    | 0    | jobs,发货       |  已发货         |
-		| 今天 | bill13   | 购买  | jobs      | 商品1,1 | 支付    | 支付宝         | 10      |    100   | 		   |        | 110         |              | 110    | 0      | 0    | jobs,退款       |  退款中         |
-		| 今天 | bill13   | 购买  | jobs      | 商品1,1 | 支付    | 货到付款       | 10      |    100   | 		   |        | 110         |              | 0      | 0      | 110  | jobs,完成退款   |  退款成功       |
+		| order_id | date | consumer | product | payment | pay_type | postage*| price* | paid_amount*| alipay*| wechat*| cash*|    action    | order_status*|
+		|   0001   | 今天 | bill01   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    |              | 待发货       |
+		|   0002   | 今天 | bill01   | 商品1,1 | 支付    | 微信支付 | 10      |  100   | 110         | 0      | 110    | 0    | jobs,发货    | 已发货       |
+		|   0003   | 今天 | bill01   | 商品1,1 | 支付    | 货到付款 | 10      |  100   | 110         | 0      | 0      | 110  | jobs,完成    | 已完成       |
+		|   0004   | 今天 | bill01   | 商品1,1 | 支付    | 货到付款 | 10      |  100   | 110         | 0      | 0      | 110  | jobs,取消    | 已取消       |
+		|   0005   | 今天 | bill13   | 商品1,1 |         | 微信支付 | 10      |  100   | 110         | 0      | 0      | 0    |              | 待支付       |
+		|   0006   | 今天 | bill13   | 商品1,1 | 支付    | 微信支付 | 10      |  100   | 110         | 0      | 110    | 0    | jobs,发货    | 已发货       |
+		|   0007   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,退款    | 退款中       |
+		|   0008   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成退款| 退款成功     |
 
 @mall2 @member @memberList
 Scenario:1 会员的好友列表和推荐关注列表

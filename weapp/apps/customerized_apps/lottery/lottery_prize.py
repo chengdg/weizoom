@@ -24,7 +24,7 @@ from market_tools.tools.coupon.util import consume_coupon
 from termite import pagestore as pagestore_manager
 from modules.member.models import Member as member_models
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 
@@ -133,7 +133,8 @@ class lottery_prize(resource.Resource):
 			lottery_participance.save()
 
 		#如果当前可玩次数为0，则直接返回
-		if lottery_participance.can_play_count == 0:
+		#增加lottery_participance.can_play_count != -1 条件限制，修复可玩次数在异常情况下突破-1后无限抽奖的问题
+		if lottery_participance.can_play_count <= 0 and lottery_participance.can_play_count != -1:
 			response = create_response(500)
 			response.errMsg = u'您今天的抽奖机会已经用完~'
 			return response.get_response()
@@ -197,7 +198,6 @@ class lottery_prize(resource.Resource):
 					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
 					coupon_limit = coupon_rule.limit_counts
 					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, prize_type='coupon', prize_data=str(couponRule_id)).count()
-					print coupon_limit, '====================', has_coupon_count
 					if coupon_limit != -1 and has_coupon_count >= coupon_limit:
 						result = u'谢谢参与'
 						lottery_prize_type = 'no_prize'
@@ -250,6 +250,10 @@ class lottery_prize(resource.Resource):
 		#根据抽奖次数限制，更新可抽奖次数
 		if limitation != -1:
 			lottery_participance.update(dec__can_play_count=1)
+
+		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
+		lottery_participance.update(set__lottery_date=now_datetime)
+		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----end
 		lottery_participance.reload()
 		#调整参与数量和中奖人数
 		newRecord = {}

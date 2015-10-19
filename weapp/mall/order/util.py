@@ -23,6 +23,7 @@ from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissi
 from core.restful_url_route import api
 from watchdog.utils import watchdog_info
 import re
+from mall.templatetags.mall_filter import *
 
 COUNT_PER_PAGE = 20
 
@@ -57,8 +58,6 @@ def export_orders_json(request):
         '10': u'优惠抵扣'
     }
 
-    # type = ORDER_TYPE2TEXT
-
     source_list = {
         'mine_mall': u'本店',
         'weizoom_mall': u'商城'
@@ -66,16 +65,12 @@ def export_orders_json(request):
 
     orders = [
         [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
-         u'商品单价', u'商品数量', u'商品总重量（斤）', u'支付方式', u'支付金额', u'现金支付金额', u'微众卡支付金额',
+         u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额', u'现金支付金额', u'微众卡支付金额',
          u'运费', u'积分抵扣金额', u'优惠券金额', u'优惠券名称', u'订单状态', u'购买人',
-         u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'备注', u'来源' ,u'物流公司', u'快递单号', u'发货时间']
+         u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号', u'发货时间',u'商家备注',u'用户备注']
     ]
 
-    order_list = None
-    # 购买数量
-    # number = 0
-
-    # order_send_count = 0
+    # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
     webapp_id = request.user_profile.webapp_id
     order_list = Order.objects.belong_to(webapp_id).order_by('-id')
     status_type = request.GET.get('status', None)
@@ -86,16 +81,13 @@ def export_orders_json(request):
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
     #####################################
-    # 订单除去 积分订单
-    exclude_order_list = order_list.exclude(type=PRODUCT_INTEGRAL_TYPE)
-
-    # 获取查询条件字典和时间筛选条件
-    query_dict, date_interval = __get_select_params(request)
+    query_dict, date_interval,date_interval_type = __get_select_params(request)
     product_name = ''
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
-    order_list = __get_orders_by_params(query_dict, date_interval, order_list)
+    order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list)
+
     if product_name:
         # 订单总量
         order_count = len(order_list)
@@ -105,32 +97,24 @@ def export_orders_json(request):
                 finished_order_count += 1
     else:
         order_count = order_list.count()
-        finished_order_count = exclude_order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
+        finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
         order_list = list(order_list.all())
-
+    # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
     # 商品总额：
     total_product_money = 0.0
-    # 订单金额
-    # total_order_money = 0.0
     # 支付金额
     final_total_order_money = 0.0
     # 微众卡支付金额
     weizoom_card_total_order_money = 0.0
-    # 积分总和
-    # use_integral_count = 0
     # 积分抵扣总金额
     use_integral_money = 0.0
     # 赠品总数
     total_premium_product = 0
     # 优惠劵价值总和
     coupon_money_count = 0
-    # 直降总金额
-    # save_money_count = 0
-    #
     #####################################
 
     # print 'begin step 1 order_list - '+str(time.time() - begin_time)
-    # order_list = list(order_list.all())
     order_ids = []
     order_order_ids = []
     coupon_ids = []
@@ -139,13 +123,21 @@ def export_orders_json(request):
         order_order_ids.append(o.order_id)
         if o.coupon_id:
             coupon_ids.append(o.coupon_id)
+    coupon2role = {}
+    role_ids = []
+    from mall.promotion.models import Coupon, CouponRule
+
+    for coupon in Coupon.objects.filter(id__in=coupon_ids):
+        coupon2role[coupon.id] = coupon.coupon_rule_id
+        if role_ids.count(coupon.coupon_rule_id) == 0:
+            role_ids.append(coupon.coupon_rule_id)
+    role_id2role = dict([(role.id, role) for role in CouponRule.objects.filter(id__in=role_ids)])
 
     # print 'begin step 2 relations - '+str(time.time() - begin_time)
     relations = {}
     product_ids = []
     promotion_ids = []
     model_value_ids = []
-
     # print 'begin step 2.5 order_list - '+str(time.time() - begin_time)
     # product_ids =
     for relation in OrderHasProduct.objects.filter(order__id__in=order_ids):
@@ -170,15 +162,6 @@ def export_orders_json(request):
     # print 'begin step 3 products - '+str(time.time() - begin_time)
     id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
     # print 'begin step 4 coupons - '+str(time.time() - begin_time)
-    coupon2role = {}
-    role_ids = []
-    from mall.promotion.models import Coupon, CouponRule
-
-    for coupon in Coupon.objects.filter(id__in=coupon_ids):
-        coupon2role[coupon.id] = coupon.coupon_rule_id
-        if role_ids.count(coupon.coupon_rule_id) == 0:
-            role_ids.append(coupon.coupon_rule_id)
-    role_id2role = dict([(role.id, role) for role in CouponRule.objects.filter(id__in=role_ids)])
 
     # print 'begin step 5 models - '+str(time.time() - begin_time)
     id2modelname = dict(
@@ -215,7 +198,6 @@ def export_orders_json(request):
                 })
                 premium_product_ids.append(premium_product['id'])
         order2premium_product[order_id] = {}
-
         order2premium_product[order_id][promotion['promotion_id']] = temp_premium_products
 
     # 获取商品对应的重量
@@ -228,7 +210,6 @@ def export_orders_json(request):
 
     # 获取order对应的供货商
 
-    # order2supplier2fackorders = {'5':[{'2': order3},{'3':order3}]}
     order2supplier2fackorders = {}
     # 取出所有的子订单
 
@@ -240,8 +221,7 @@ def export_orders_json(request):
         order_order_ids.append(order.order_id)
     # 获取order对应的发货时间
     order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
-                               OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
-    supplier_ids = set([order.supplier for order in list(order_list) + fackorders])
+                        OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
 
     order2supplier = dict([(supplier.id,supplier) for supplier in Supplier.objects.filter(owner=request.manager)])
     # 判断是否有供货商，如果有则显示该字段
@@ -253,13 +233,12 @@ def export_orders_json(request):
 
     if has_supplier:
         orders[0].append(u'采购价')
+        orders[0].append(u'采购成本')
     # print 'end step 8 order - '+str(time.time() - begin_time)
     # 获取order对应的收货地区
-    # area = get_str_value_by_string_ids(order.area)
     temp_premium_id = None
     temp_premium_products = []
     for order in order_list:
-
         # 获取order对应的member的显示名
         member = webappuser2member.get(order.webapp_user_id, None)
         if member:
@@ -271,35 +250,24 @@ def export_orders_json(request):
         # 计算总和
         final_price = 0.0
         weizoom_card_money = 0.0
-        if order.type == PAY_INTERFACE_COD:
-            if order.status == ORDER_STATUS_SUCCESSED:
-                final_price = order.final_price
-                weizoom_card_money = order.weizoom_card_money
-                final_total_order_money += order.final_price
-                try:
-                    coupon_money_count += order.coupon_money
-                    weizoom_card_total_order_money += order.weizoom_card_money
-                    use_integral_money += order.integral_money
-                except:
-                    pass
-        else:
-            if order.status in [1, 2, 3, 4, 5, 6]:
-                final_price = order.final_price
-                weizoom_card_money = order.weizoom_card_money
-                final_total_order_money += order.final_price
-                try:
-                    coupon_money_count += order.coupon_money
-                    weizoom_card_total_order_money += order.weizoom_card_money
-                    use_integral_money += order.integral_money
-                except:
-                    pass
+        if order.status in [2, 3, 4, 5, 6]:
+            final_price = order.final_price
+            weizoom_card_money = order.weizoom_card_money
+            final_total_order_money += order.final_price
+            try:
+                coupon_money_count += order.coupon_money
+                weizoom_card_total_order_money += order.weizoom_card_money
+                use_integral_money += order.integral_money
+            except:
+                pass
 
         area = get_str_value_by_string_ids_new(order.area)
         if area:
-            addr = '%s %s' % (area, order.ship_address)
+            province = area.split(' ')[0]
+            address = '%s %s' % (area, order.ship_address)
         else:
-            addr = '%s' % (order.ship_address)
-        # pay_type = PAYTYPE2NAME.get(order.pay_interface_type, '')
+            province = u''
+            address = '%s' % (order.ship_address)
 
         if order.order_source:
             order.come = 'weizoom_mall'
@@ -313,12 +281,10 @@ def export_orders_json(request):
             else:
                 source = u'微众商城'
 
+        i = 0 # 判断是否订单第一件商品
         orderRelations = relations.get(order.id, [])
-        # product_ids = [r.product_id for r in orderRelations]
-
-        i = 0
-        for relation in sorted(orderRelations,key=lambda o:o.id):
-            if temp_premium_id and relation.promotion_id != temp_premium_id:
+        for relation in sorted(orderRelations, key=lambda o:o.id):
+            if temp_premium_id and '%s_%s' % (order.id, relation.promotion_id) != temp_premium_id:
                 # 添加赠品信息
                 orders.extend(temp_premium_products)
                 temp_premium_products = []
@@ -331,18 +297,16 @@ def export_orders_json(request):
                     model_value += '-' + id2modelname.get(mod[mod_i:], '')
                 else:
                     model_value = '-'
-            # models_name = ''
-            coupon_name = ''
-            coupon_money = ''
-            # promotion_name = ''
-            promotion_type = ''
 
             # 付款时间
-            if order.status > ORDER_STATUS_CANCEL and order.payment_time:
+            if order.payment_time and DEFAULT_CREATE_TIME != order.payment_time.__str__():
                 payment_time = order.payment_time.strftime('%Y-%m-%d %H:%M').encode('utf8')
             else:
                 payment_time = ''
 
+            # 优惠券和金额
+            coupon_name = ''
+            coupon_money = ''
             if order.coupon_id:
                 role_id = coupon2role.get(order.coupon_id, None)
                 if role_id:
@@ -351,8 +315,10 @@ def export_orders_json(request):
                             coupon_name = role_id2role[role_id].name + "（单品券）"
                     elif i == 0:
                         coupon_name = role_id2role[role_id].name + "（通用券）"
+                if not role_id or coupon_name and order.coupon_money > 0:
+                    coupon_money = order.coupon_money
 
-            fackorder_sons = order2supplier2fackorders.get(order.id, None)  # [{1L:order},{2L:order}]
+            fackorder_sons = order2supplier2fackorders.get(order.id, None)
             fackorder = None
             if fackorder_sons:
                 fackorder = fackorder_sons.get(product.supplier, None)
@@ -367,23 +333,16 @@ def export_orders_json(request):
                 source = order2supplier[fackorder.supplier].name.encode("utf-8")
             elif fackorder == None and 0 != order.supplier:
                 source = order2supplier[order.supplier].name.encode("utf-8")
+
             if i == 0:
-
-                if coupon_name:
-                    coupon_money = order.coupon_money
-
-                if area:
-                    province = area.split(' ')[0]
-                else:
-                    province = u''
-
-                temp_leader_names = order.leader_name.split('|')
-                remark = ''
+                # 发货人处填写的备注
+                temp_leader_names = (order.leader_name if not fackorder else fackorder.leader_name).split('|')
+                leader_remark = ''
                 j = 1
                 while j < len(temp_leader_names):
-                    remark += temp_leader_names[j]
+                    leader_remark += temp_leader_names[j]
                     j += 1
-                order.leader_name = temp_leader_names[0]
+
                 tmp_order = [
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -392,36 +351,39 @@ def export_orders_json(request):
                     model_value[1:].encode('utf8'),
                     relation.price,
                     relation.number,
+                    relation.price*relation.number,
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
                     final_price + weizoom_card_money,
                     final_price,
-                    weizoom_card_money,
+                    u'' if order.status == 0 else weizoom_card_money,
                     order.postage,
-                    order.integral_money,
-                    coupon_money,
-                    coupon_name,
+                    u'' if order.status == 0 else order.integral_money,
+                    u'' if order.status == 1 else coupon_money,
+                    u'' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8'),
                     order.ship_name.encode('utf8'),
                     order.ship_tel.encode('utf8'),
                     province.encode('utf8'),
-                    addr.encode('utf8'),
-                    order.leader_name.encode('utf8'),
-                    remark.encode('utf8'),
+                    address.encode('utf8'),
+                    temp_leader_names[0].encode('utf8'),
+                    leader_remark.encode('utf8'),
                     source.encode('utf8'),
                     express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
                     (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                    postage_time
+                    postage_time,
+                    order.remark.encode('utf8'),
+                    u'' if order.customer_message == '' else order.customer_message.encode('utf-8')
+
                 ]
                 if has_supplier:
                     tmp_order.append( u'' if 0.0 == product.purchase_price else product.purchase_price)
+                    tmp_order.append(u''  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
             else:
-                if coupon_name:
-                    coupon_money = order.coupon_money
                 tmp_order=[
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -430,6 +392,7 @@ def export_orders_json(request):
                     model_value[1:],
                     relation.price,
                     relation.number,
+                    relation.price*relation.number,
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
@@ -438,29 +401,35 @@ def export_orders_json(request):
                     u'',
                     u'',
                     u'',
-                    coupon_money,
-                    coupon_name,
+                    u'' if order.status == 1 else coupon_money,
+                    u'' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8'),
                     order.ship_name.encode('utf8'),
                     order.ship_tel.encode('utf8'),
                     province.encode('utf8'),
-                    addr.encode('utf8'),
-                    order.leader_name.encode('utf8'),
-                    remark.encode('utf8'),
+                    address.encode('utf8'),
+                    temp_leader_names[0].encode('utf8'),
+                    leader_remark.encode('utf8'),
                     source.encode('utf8'),
                     express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
                     (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                    postage_time
+                    postage_time,
+                    u'',
+                    u''
+
                 ]
                 if has_supplier:
-                    tmp_order.append( u'' if 0.0 == product.purchase_price else product.purchase_price)
+                    tmp_order.append(u'' if 0.0 == product.purchase_price else product.purchase_price)
+                    tmp_order.append(u'' if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
-            i = i + 1
+            i += 1
             if order.id in order2premium_product and not temp_premium_id:
                 premium_products = order2premium_product[order.id].get(relation.promotion_id, [])
-                total_premium_product += len(premium_products)
+                # 已取消订单不累计赠品数量
+                if order_status != STATUS2TEXT[1] and order_status != STATUS2TEXT[7]:
+                    total_premium_product += len(premium_products)
                 for premium_product in premium_products:
                     tmp_order = [
                         order_id,
@@ -470,6 +439,7 @@ def export_orders_json(request):
                         u'',
                         premium_product['price'],
                         premium_product['count'],
+                        0.0,
                         premium_product_id2weight[premium_product['id']] * 2 * relation.number,
                         payment_type[str(int(order.pay_interface_type))],
                         u'',
@@ -484,20 +454,21 @@ def export_orders_json(request):
                         order.ship_name.encode('utf8'),
                         order.ship_tel.encode('utf8'),
                         province.encode('utf8'),
-                        addr.encode('utf8'),
-                        order.leader_name.encode('utf8'),
-                        remark.encode('utf8'),
+                        address.encode('utf8'),
+                        temp_leader_names[0].encode('utf8'),
+                        leader_remark.encode('utf8'),
                         source.encode('utf8'),
                         express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
                         (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                        postage_time
+                        postage_time,
+                        u'',
+                        u''
                     ]
                     if has_supplier:
                         tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
-                    # orders.append(tmp_order)
+                        tmp_order.append(u'' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
                     temp_premium_products.append(tmp_order)
-                    temp_premium_id = relation.promotion_id
-                    total_product_money += premium_product['price'] * premium_product['count']
+                    temp_premium_id = '%s_%s' % (order.id, relation.promotion_id)
                 # if test_index % pre_page == pre_page-1:
                 # 	print str(test_index)+' - '+str(time.time() - test_begin_time)+'-'+str(time.time() - begin_time)
     if temp_premium_id:
@@ -513,7 +484,7 @@ def export_orders_json(request):
         u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
-        u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),  # u'直降金额总额:'+str(save_money_count).encode('utf8'),
+        u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
     ])
     # print 'end - '+str(time.time() - begin_time)
 
@@ -529,18 +500,12 @@ def handle_member_nickname(name):
         return u''
 
 
-def get_detail_response(request, belong='all'):
+def get_detail_response(request):
     # 没有订单号参数直接返回订单列表页
     if not request.GET.get('order_id', None):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
-    # #如果定单是微众卡支付显示微众卡号
-    # try:
-    # 	order.used_weizoom_card_id, order.used_weizoom_card_number = order.get_used_weizoom_card_id()
-    # except:
-    # 	order.used_weizoom_card_id = None
-    # 	order.used_weizoom_card_number = None
 
     if request.method == 'GET':
         order_has_products = OrderHasProduct.objects.filter(order=order)
@@ -550,19 +515,6 @@ def get_detail_response(request, belong='all'):
             number += order_has_product.number
         order.number = number
 
-        # 处理订单关联的优惠券
-        coupon = order.get_coupon()
-        if coupon:
-            coupon_rule = CouponRule.objects.get(id=coupon.coupon_rule_id)
-            promotion = Promotion.objects.get(detail_id=coupon_rule.id, type=PROMOTION_TYPE_COUPON)
-            relation = ProductHasPromotion.objects.filter(promotion_id=promotion.id)
-            if len(relation) > 0:
-                coupon.product_id = relation[0].product_id
-        '''
-        coupons = OrderHasCoupon.objects.filter(order_id=order.order_id)
-        if coupons.count() > 0:
-            coupon =  coupons[0]
-        '''
         if order.status in [ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED]:
             order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED)
             if order_has_delivery_times.count() > 0:
@@ -578,13 +530,35 @@ def get_detail_response(request, belong='all'):
 
         order.products = mall_api.get_order_products(order)
 
+        # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
+        for product in order.products:
+            if 'integral_count' in product and product['integral_count'] > 0:
+                order.integral = None
+
+        # 处理订单关联的优惠券
+        coupon = order.get_coupon()
+        if coupon:
+            coupon_rule = CouponRule.objects.get(id=coupon.coupon_rule_id)
+            promotion = Promotion.objects.get(detail_id=coupon_rule.id, type=PROMOTION_TYPE_COUPON)
+            relation = ProductHasPromotion.objects.filter(promotion_id=promotion.id)
+            if len(relation) > 0:
+                coupon.product_id = relation[0].product_id
+            else:
+                coupon.product_id = -1  # 通用券标志
+
+            for product in order.products:
+                if coupon.product_id == product['id']:
+                    product['has_coupon'] = True
+                    print(product['id'], product['has_coupon'])
+                    break
+
         order.area = regional_util.get_str_value_by_string_ids(order.area)
-        order.belong = belong
         order.pay_interface_name = PAYTYPE2NAME.get(order.pay_interface_type, u'')
         order.total_price = mall.models.Order.get_order_has_price_number(order)
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
+        order.actions = get_order_actions(order, is_detail_page=True)
 
         if order.order_source:
             order.source = u'商城'
@@ -593,12 +567,6 @@ def get_detail_response(request, belong='all'):
             order.source = u'本店'
             order.come = 'mine_mall'
 
-        if belong == 'audit':
-            second_nav_name = export.ORDER_AUDIT
-        elif belong == 'refund':
-            second_nav_name = export.ORDER_REFUND
-        else:
-            second_nav_name = export.ORDER_ALL
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -643,17 +611,17 @@ def get_detail_response(request, belong='all'):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
-            'second_nav_name': second_nav_name,
+            'second_navs': export.get_mall_order_second_navs(request),
+            'second_nav_name': export.ORDER_ALL,
             'order': order,
             'child_orders': child_orders,
-            'suppliers':suppliers,
+            'suppliers': suppliers,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
             'coupon': coupon,
             'order_operation_logs': order_operation_logs,
             'order_status_logs': order_status_logs,
             'log_count': log_count,
-            'order_has_delivery_times': OrderHasDeliveryTime.objects.filter(order=order),
+            'order_has_delivery_times': OrderHasDeliveryTime.objects.filter(order=order), # todo 貌似没用
             'show_first': show_first
         })
 
@@ -687,8 +655,9 @@ def get_orders_response(request, is_refund=False):
         is_weizoom_mall_partner = False
 
     # 获取查询条件字典和时间筛选条件
-    query_dict, date_interval = __get_select_params(request)
-    watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval)
+    query_dict, date_interval, date_interval_type = __get_select_params(request)
+    watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval) + ",date_type" \
+                       + str(date_interval_type)
     # 处理排序
     sort_attr = request.GET.get('sort_attr', '-id')
     if sort_attr == 'created_at':
@@ -704,32 +673,26 @@ def get_orders_response(request, is_refund=False):
     user = request.manager
     query_string = request.META['QUERY_STRING']
     watchdog_message += ",webapp_id:" + str(request.manager.get_profile().webapp_id)
-    items, pageinfo, order_total_count, order_return_count = __get_order_items(user, query_dict, sort_attr,
+    items, pageinfo, order_return_count = __get_order_items(user, query_dict, sort_attr,
+                                                                               date_interval_type,
                                                                                query_string,
                                                                                count_per_page, cur_page,
                                                                                date_interval=date_interval,
                                                                                is_refund=is_refund)
-
     # 获取该用户下的所有支付方式
     existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
-
+    # 是否是合作伙伴，是的话 和微众精选类似都显示来源
     if is_weizoom_mall_partner or request.manager.is_weizoom_mall:
         is_show_source = True
     else:
         is_show_source = False
 
-    response = create_response(200)
-    if sort_attr == 'id':
-        sort_attr = 'created_at'
-    if sort_attr == '-id':
-        sort_attr = '-created_at'
-
-    supplier = dict((s.id, s.name) for s in Supplier.objects.filter(owner=request.manager))
+    supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
     if len(supplier.keys()) > 0:
         is_show_source = True
 
     show_supplier = Supplier.objects.filter(owner=request.manager, is_delete=False).count() > 0
-
+    response = create_response(200)
     response.data = {
         'items': items,
         'pageinfo': paginator.to_dict(pageinfo),
@@ -737,7 +700,6 @@ def get_orders_response(request, is_refund=False):
         'sortAttr': sort_attr,
         'is_show_source': is_show_source,
         'existed_pay_interfaces': existed_pay_interfaces,
-        'order_total_count': order_total_count,
         'order_return_count': order_return_count,
         'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
         'is_refund': is_refund,
@@ -750,13 +712,24 @@ def get_orders_response(request, is_refund=False):
     return response.get_response()
 
 
+def check_order_status_filter(order,action):
+        """
+            检查订单的状态是否允许跳转
+        """
+        flag = False
+        is_refund = True if action == 'return_success' else False
+        actions = get_order_actions(order, is_refund=is_refund)
+        for ac in actions:
+            if action == ac['action']:
+                flag = True
+        return flag
+
+
 def get_order_status_text(status):
     return STATUS2TEXT[status]
 
-
 def set_children_order_status(origin_order, status):
     Order.objects.filter(origin_order_id=origin_order.id).update(status=status)
-
 
 # 页脚未读订单数统计
 def get_unship_order_count(request):
@@ -765,7 +738,7 @@ def get_unship_order_count(request):
 
 
 # get_orders_response调用
-def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=15, cur_page=1, date_interval=None,
+def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     webapp_id = user.get_profile().webapp_id
     orders = belong_to(webapp_id)
@@ -773,28 +746,11 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
-    # 统计订单总数
-    count = orders.count()
-    status_not_count = orders.filter(status=ORDER_STATUS_NOT).count()
-    status_payed_not_ship_total = orders.filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
-    status_payed_shiped_total = orders.filter(status=ORDER_STATUS_PAYED_SHIPED).count()
-    status_cancel_count = orders.filter(status=ORDER_STATUS_CANCEL).count()
-    status_successed_count = orders.filter(status=ORDER_STATUS_SUCCESSED).count()
-
-    order_total_count = {
-        'total_count': count,
-        'status_not_count': status_not_count,
-        'status_payed_not_ship_total': status_payed_not_ship_total,
-        'status_payed_shiped_total': status_payed_shiped_total,
-        'status_cancel_count': status_cancel_count,
-        'status_successed_count': status_successed_count
-    }
-
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
 
-    orders = __get_orders_by_params(query_dict, date_interval, orders)
+    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
 
     # 返回订单的数目
     order_return_count = orders.count()
@@ -833,7 +789,6 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
         order2fackorders[origin_order_id].append(order)
 
     # 构造返回的order数据
-    items = []
     for order in orders:
         # 获取order对应的member的显示名
         member = webappuser2member.get(order.webapp_user_id, None)
@@ -869,10 +824,9 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
 
             # 构造返回的order数据
     items = []
-
     for order in orders:
         products = mall_api.get_order_products(order)
-
+        order.is_refund = is_refund
         # 用于微众精选拆单
         groups = []
         if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
@@ -889,6 +843,7 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
                     'express_company_name': fackorder.express_company_name,
                     'express_number': fackorder.express_number,
                     'leader_name': fackorder.leader_name,
+                    'actions': get_order_actions(fackorder, is_refund=is_refund)
                 }
                 group = {
                     "id": fackorder.supplier,
@@ -904,6 +859,7 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
+                'actions': get_order_actions(order, is_refund=is_refund)
             }
 
             group_id = order.supplier
@@ -913,7 +869,10 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
                 "products": products
             }
             groups.append(group)
-
+        if len(groups) > 1:
+            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True)
+        else:
+            parent_action = None
         items.append({
             'id': order.id,
             'order_id': order.order_id,
@@ -950,8 +909,10 @@ def __get_order_items(user, query_dict, sort_attr, query_string, count_per_page=
             'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
+            'parent_action': parent_action
         })
-    return items, pageinfo, order_total_count, order_return_count
+
+    return items, pageinfo, order_return_count
 
 
 def __get_select_params(request):
@@ -967,6 +928,7 @@ def __get_select_params(request):
     order_source = request.GET.get('order_source', '').strip()
     order_status = request.GET.get('order_status', '').strip()
     isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
+    date_interval_type = request.GET.get('date_interval_type', '')
 
     # 填充query
     query_dict = dict()
@@ -984,13 +946,12 @@ def __get_select_params(request):
         query_dict['pay_interface_type'] = int(pay_type)
     if len(order_source):
         query_dict['order_source'] = int(order_source)
-    if len(order_status):
+    if len(order_status) and order_status != '-1':
         query_dict['status'] = int(order_status)
     if isUseWeizoomCard:
         query_dict['isUseWeizoomCard'] = isUseWeizoomCard
 
-
-    # 时间区间
+     # 时间区间
     try:
         date_interval = request.GET.get('date_interval', '')
         if date_interval:
@@ -1009,10 +970,9 @@ def __get_select_params(request):
     except:
         date_interval = None
 
-    return query_dict, date_interval
+    return query_dict, date_interval, date_interval_type
 
-
-def __get_orders_by_params(query_dict, date_interval, orders):
+def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders):
     """
     按照查询条件筛选符合条件的订单
     """
@@ -1036,20 +996,27 @@ def __get_orders_by_params(query_dict, date_interval, orders):
                     order_ids.append(orderHasPromotion.order_id)
 
         orders = orders.filter(id__in=order_ids)
-
         # 处理搜索
+
+    if query_dict.get("isUseWeizoomCard"):
+        query_dict.pop("isUseWeizoomCard")
+        orders = orders.exclude(weizoom_card_money=0)
     if len(query_dict):
-        if query_dict.get("isUseWeizoomCard"):
-            query_dict.pop("isUseWeizoomCard")
-            orders = orders.exclude(weizoom_card_money=0)
         orders = orders.filter(**query_dict)
 
-        # 处理 时间区间筛选
+    # 处理 时间区间筛选
     if date_interval:
         start_time = date_interval[0]
         end_time = date_interval[1]
-        orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
-
+        # 1 下单时间，2 付款时间， 3 发货时间
+        if '1' == date_interval_type:
+            orders = orders.filter(created_at__gte=start_time, created_at__lt=end_time)
+        elif '2' == date_interval_type:
+            orders = orders.filter(payment_time__gte=start_time, payment_time__lt=end_time)
+        elif '3' == date_interval_type:
+            order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
+            order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
+            orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
     return orders
 
 
@@ -1127,133 +1094,136 @@ def get_channel_qrcode_payed_orders(request):
     }
     return response.get_response()
 
-    # #===============================================================================
-    # # get_thanks_card_orders : 获得感恩贺卡类型的订单列表
-    # #===============================================================================
-    # def get_thanks_card_orders(request):
-    # 	webapp_id = request.manager.get_profile().webapp_id
-    #
-    # 	orders = None
-    # 	secret = request.GET.get('secret')
-    # 	if secret:
-    # 		filter_ids = []
-    # 		thanks_card_orders = ThanksCardOrder.objects.filter(thanks_secret=secret)
-    # 		for thanks_card_order in thanks_card_orders:
-    # 			filter_ids.append(thanks_card_order.order_id)
-    # 		orders = Order.objects.filter(webapp_id=webapp_id, type=THANKS_CARD_ORDER, id__in=filter_ids)
-    # 	else:
-    # 		orders = Order.objects.filter(webapp_id=webapp_id, type=THANKS_CARD_ORDER)
-    #
-    # 	#处理搜索
-    # 	query = request.GET.get('query', None)
-    # 	if query:
-    # 		orders = orders.filter(order_id=query)
-    # 	#处理过滤
-    # 	filter_attr = request.GET.get('filter_attr', None)
-    # 	filter_value = int(request.GET.get('filter_value', -1))
-    # 	if filter_attr and (filter_value != -1):
-    # 		params = {filter_attr: filter_value}
-    # 		orders = orders.filter(**params)
-    # 	#处理排序
-    # 	sort_attr = request.GET.get('sort_attr', 'created_at');
-    # 	if sort_attr != 'created_at':
-    # 		orders = orders.order_by(sort_attr)
-    #
-    # 	#进行分页
-    # 	count_per_page = int(request.GET.get('count_per_page', 15))
-    # 	cur_page = int(request.GET.get('page', '1'))
-    # 	pageinfo, orders = paginator.paginate(orders, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-    #
-    # 	#构造返回的order数据
-    # 	items = []
-    # 	today = datetime.today()
-    # 	for order in  orders:
-    # 		payment_time = None
-    # 		if order.payment_time is None:
-    # 			payment_time = ''
-    # 		elif datetime.strftime(order.payment_time, '%Y-%m-%d %H:%M:%S') == DEFAULT_CREATE_TIME:
-    # 			payment_time = ''
-    # 		else:
-    # 			payment_time = datetime.strftime(order.payment_time, '%m-%d %H:%M')
-    #
-    # 		#感恩贺卡信息
-    # 		thanks_secret_count = 0 	#感恩密码数量
-    # 		card_count = 0 	#贺卡生成个数
-    # 		listen_count = 0 	#贺卡收听次数
-    # 		thanks_card_orders = ThanksCardOrder.objects.filter(order_id=order.id)
-    # 		for thanks_card_order in thanks_card_orders:
-    # 			if thanks_card_order.thanks_secret is not '':
-    # 				thanks_secret_count += 1
-    # 			card_count += thanks_card_order.card_count
-    # 			listen_count += thanks_card_order.listen_count
-    #
-    # 		items.append({
-    # 			'id': order.id,
-    # 			'order_id': order.order_id,
-    # 			'status': get_order_status_text(order.status),
-    # 			'payment_time': payment_time,
-    # 			'thanks_secret_count': thanks_secret_count,
-    # 			'card_count': card_count,
-    # 			'listen_count': listen_count
-    # 		})
-    #
-    # 	response = create_response(200)
-    # 	response.data = {
-    # 		'items': items,
-    # 		'pageinfo': paginator.to_dict(pageinfo),
-    # 		'sortAttr': sort_attr
-    # 	}
-    # 	return response.get_response()
-    # #######################
-    #
-    # ########################################################################
-    # # # _get_order_products: 获得订单中的商品列表
-    # # # 疑似废弃
-    # # ########################################################################
-    # # def _get_order_products(order_id):
-    # # 	relations = list(OrderHasProduct.objects.filter(order_id=order_id))
-    # # 	product_ids = [r.product_id for r in relations]
-    # # 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
-    # #
-    # # 	products = []
-    # # 	for relation in OrderHasProduct.objects.filter(order_id=order_id):
-    # # 		product = copy.copy(id2product[relation.product_id])
-    # # 		product.fill_specific_model(relation.product_model_name)
-    # # 		products.append({
-    # # 			'name': product.name,
-    # # 			'thumbnails_url': product.thumbnails_url,
-    # # 			'count': relation.number,
-    # # 			'total_price': '%.2f' % relation.total_price,
-    # # 			'custom_model_properties': product.custom_model_properties
-    # # 		})
-    # #
-    # # 	return products
-    # #
-    # # # 疑似废弃
-    # # def _get_status_value(filter_value):
-    # # 	if filter_value == '-1':
-    # # 		return -1
-    # # 	try:
-    # # 		for item in filter_value.split('|'):
-    # # 			if item.split(':')[0] == 'status':
-    # # 				return int(item.split(':')[1])
-    # # 		return -1
-    # # 	except:
-    # # 		return -1
-    #
-    #
-    # # ########################################################################
-    # # # add_express_info: 增加物流信息
-    # # # 疑似废弃
-    # # ########################################################################
-    # # @login_required
-    # # def add_express_info(request):
-    # # 	order_id = request.GET['order_id']
-    # # 	express_company_name = request.GET['express_company_name']
-    # # 	express_number = request.GET['express_number']
-    # # 	leader_name = request.GET['leader_name']
-    # # 	is_update_express = request.GET['is_update_express']
-    # # 	is_update_express = True if is_update_express == 'true' else False
-    # # 	mall_api.ship_order(order_id, express_company_name, express_number, request.manager.username, leader_name=leader_name, is_update_express=is_update_express)
-    # #
-    # # 	return HttpResponseRedirect('/mall/editor/order/get/?order_id=%s' %order_id)
+
+ORDER_PAY_ACTION = {
+    'name': u'支付',
+    'action': 'pay',
+    'class_name': 'xa-pay',
+    'button_class': 'btn-success'
+}
+ORDER_SHIP_ACTION = {
+    'name': u'发货',
+    'action': 'ship',
+    'class_name': 'xa-order-delivery',
+    'button_class': 'btn-danger'
+}
+ORDER_FINISH_ACTION = {
+    'name': u'标记完成',
+    'action': 'finish',
+    'class_name': 'xa-finish',
+    'button_class': 'btn-success'
+}
+ORDER_CANCEL_ACTION = {
+    'name': u'取消订单',
+    'action': 'cancel',
+    'class_name': 'xa-cancelOrder',
+    'button_class': 'btn-danger'
+}
+ORDER_REFUNDIND_ACTION = {
+    'name': u'申请退款',
+    'action': 'return_pay',
+    'class_name': 'xa-refund',
+    'button_class': 'btn-danger'
+}
+ORDER_UPDATE_PRICE_ACTION = {
+    'name': u'修改价格',
+    'action': 'update_price',
+    'class_name': 'xa-update-price',
+    'button_class': 'btn-danger'
+}
+ORDER_UPDATE_EXPREDSS_ACTION = {
+    'name': u'修改物流',
+    'action': 'update_express',
+    'class_name': 'xa-order-delivery',
+    'button_class': 'btn-danger'
+}
+ORDER_REFUND_SUCCESS_ACTION = {
+    'name': u'退款成功',
+    'action': 'return_success',
+    'class_name': 'xa-refundSuccess',
+    'button_class': 'btn-danger'
+}
+
+
+
+
+
+def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False):
+
+    """
+    :param order:
+    :param is_refund:
+    :param is_detail_page:
+    :return:
+    所有action:
+    ORDER_PAY_ACTION
+    ORDER_SHIP_ACTION
+    ORDER_FINISH_ACTION
+    ORDER_CANCEL_ACTION
+    ORDER_REFUNDIND_ACTION
+    ORDER_UPDATE_PRICE_ACTION
+    ORDER_UPDATE_EXPREDSS_ACTION
+    ORDER_REFUND_SUCCESS_ACTION
+    """
+
+    result = []
+    if not is_refund:
+        if order.status == ORDER_STATUS_NOT:
+            result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
+        elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                    result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+            else:
+                    result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+        elif order.status == ORDER_STATUS_PAYED_SHIPED:
+            actions = []
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                if order.express_company_name:
+                    actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_REFUNDIND_ACTION]
+                else:
+                    actions = [ORDER_FINISH_ACTION, ORDER_REFUNDIND_ACTION]
+            else:
+                if order.express_company_name:
+                    actions = [ORDER_FINISH_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_CANCEL_ACTION]
+                else:
+                    actions = [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+            result = actions
+        elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
+                if order.express_company_name:
+                    result = [ORDER_REFUNDIND_ACTION, ORDER_UPDATE_EXPREDSS_ACTION]
+                else:
+                    result = [ORDER_REFUNDIND_ACTION]
+            else:
+                result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+        elif order.status == ORDER_STATUS_SUCCESSED:
+            if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY,
+                                            PAY_INTERFACE_COD]:
+                result = [ORDER_REFUNDIND_ACTION]
+            else:
+                result = [ORDER_CANCEL_ACTION]
+    elif is_refund:
+        if order.status == ORDER_STATUS_REFUNDING:
+            result = [ORDER_REFUND_SUCCESS_ACTION]
+
+    # 订单列表页子订单
+    able_actions_for_sub_order = [ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
+
+    # 订单详情页有子订单
+    able_actions_for_detail_order_has_sub = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION,
+                                             ORDER_UPDATE_PRICE_ACTION]
+
+    # 订单列表页有子订单的父母订单
+    able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
+
+    # print(order.order_id, order.is_sub_order, order.origin_order_id)
+    # print(result)
+    if order.is_sub_order:
+        result = filter(lambda x: x in able_actions_for_sub_order, result)
+
+    if order.has_sub_order and is_detail_page:
+        result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
+
+    if is_list_parent:
+        result = filter(lambda x: x in able_actions_for_list_parent, result)
+    return result

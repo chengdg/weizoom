@@ -32,6 +32,12 @@ W.component.wepage.Page = W.component.Component.extend({
                 isUserProperty: true,
                 default: '',
                 placeholder: '通过微信分享时，会显示该描述'
+            },{
+                name: 'background_color',
+                type: 'color_picker',
+                displayName: '背景颜色',
+                isUserProperty: true,
+                default: ''
             }]
         }, 
         {
@@ -58,6 +64,9 @@ W.component.wepage.Page = W.component.Component.extend({
         background: function($node, model, value) {
             var url = 'url(' + value + ')';
             $node.find('.wa-page').css('background-image', url);
+        },
+        background_color: function($node, model, value, $propertyViewNode){
+            $node.find('.wa-page').css('background-color', value);
         },
         site_title: function($node, model, value) {
             value = this.getDisplayValue(value, 'site_title');

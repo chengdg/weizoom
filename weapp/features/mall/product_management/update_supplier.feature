@@ -1,13 +1,13 @@
 # __author__ : "冯雪静"
 #微众精选：修改供货商影响商品
 Feature: 修改供货商影响商品
+"""
 	Jobs能通过管理系统修改"供货商"
-	"""
 	1.修改供货商影响商品
 		修改供货商名称和修改供货商内容
 	2.删除供货商影响商品
 		删除关联在售商品的供货商和删除关联待售商品的供货商
-	"""
+"""
 
 
 Background:
@@ -59,7 +59,7 @@ Background:
 		}]
 		"""
 
-@supplier @product @mall2
+@mall2 @product @supplier
 Scenario: 1 修改供货商影响商品
 	jobs修改已被商品使用的供货商名字
 	1.jobs获取商品
@@ -160,8 +160,7 @@ Scenario: 1 修改供货商影响商品
 		}]
 		"""
 
-
-@supplier @product @mall2
+@mall2 @product @supplier
 Scenario: 2 删除供货商影响商品
 	jobs删除已被商品使用的供货商名字
 	1.jobs获取商品

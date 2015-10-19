@@ -22,7 +22,8 @@ COUNT_PER_PAGE = 50
 REVIEW_FILTERS = {
     'review': [
         {
-            'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == review.status),
+            'comparator': lambda review, filter_value: (filter_value == 'all') or (filter_value == review.status) or (
+                filter_value == '1' and review.status == '2'),
             'query_string_field': 'reviewStatus'
         }, {
             'comparator': lambda review, filter_value: (filter_value == 'all') or (
@@ -82,14 +83,19 @@ class ProductReviewInfo(resource.Resource):
         product_review_id = int(request.GET.get('id'))
         product_review = ProductReview.objects.get(id=product_review_id)
         product_review.product_name = Product.objects.get(id=product_review.product_id).name
-        product_review.member_name = Member.objects.get(id=product_review.member_id).username_for_html
+        member = Member.objects.filter(id=product_review.member_id)
+        if len(member):
+            member_name = member[0].username_for_html
+        else:
+            member_name = '已经跑路'
+        product_review.member_name = member_name
         product_review.pictures = [picture.att_url for picture in
                                    ProductReviewPicture.objects.filter(product_review_id=product_review.id)]
 
         c = RequestContext(request,
                            {
                                'first_nav_name': FIRST_NAV_NAME,
-                               'second_navs': export.get_second_navs(request),
+                               'second_navs': export.get_mall_product_second_navs(request),
                                'second_nav_name': export.PRODUCT_REVIEW_NAV,
                                'product_review': product_review,
                            })
@@ -115,8 +121,9 @@ class ProductReviewInfo(resource.Resource):
                         settings = member_models.IntegralStrategySttings.objects.get(
                             webapp_id=request.user_profile.webapp_id)
                         if settings.review_increase > 0:
-                            member = member_models.Member.objects.get(id=review[0].member_id)
-                            increase_member_integral(member, settings.review_increase, '商品评价奖励')
+                            member = member_models.Member.objects.filter(id=review[0].member_id)
+                            if len(member):
+                                increase_member_integral(member[0], settings.review_increase, '商品评价奖励')
 
                 if status == '2':
                     product_review = mall_models.ProductReview.objects.get(id=product_review_id)
@@ -191,7 +198,7 @@ class ProductReviewList(resource.Resource):
         c = RequestContext(request,
                            {
                                'first_nav_name': FIRST_NAV_NAME,
-                               'second_navs': export.get_second_navs(request),
+                               'second_navs': export.get_mall_product_second_navs(request),
                                'second_nav_name': export.PRODUCT_REVIEW_NAV,
                            })
 
@@ -275,7 +282,7 @@ class ProductReviewList(resource.Resource):
                 'id': review.id,
                 'product_user_code': review.product_user_code,
                 'product_name': id2product[review.product_id].name,
-                'user_name': member_id2member_name[review.member_id],
+                'user_name': member_id2member_name.get(review.member_id, '已经跑路'),
                 'created_at': review.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'content': review.review_detail,
                 'product_id': review.product_id,

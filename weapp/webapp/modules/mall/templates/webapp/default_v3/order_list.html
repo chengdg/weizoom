@@ -22,9 +22,10 @@
                 <div class="xui-list xt-orderList">
                     <ul>
                         {% for order in orders %}
-                        <li>
+                        <li data-status="{{order.status}}">
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                                 <div class="clearfix xui-btLine xui-orderState  em95">
+                                    {# jz 2015-10-09 #}
                                     <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
                                     <div class="xt-status fl">
                                         {% ifequal order.status 0 %}
@@ -67,7 +68,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                                 {% else %}
                                     {% for product in order.products %}
@@ -90,14 +91,7 @@
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                <!-- 积分商品 -->
-                                                {% if order.type == "integral" %}
-                                                    <span>{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                <!-- 普通商品 -->
-                                                {% else %}
-                                                    <span class="mr5">Ｘ{{ product.number }}</span>
-                                                {% endif %}
+                                                <span class="mr5">Ｘ{{ order.product_count }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -144,15 +138,16 @@
                 </div>
 
             </div>
-            <div class="wui-swiper-slide">
+            <div class="wui-swiper-slide" data-status="0">
                 <div class="xui-list xt-orderList">
-                    <ul>
+                    {# jz 2015-10-09 #}
+                    <!-- <ul>
                         {% for order in orders %}
                         {% ifequal order.status 0 %}
                         <li>
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                                 <div class="clearfix xui-btLine  xui-orderState  em95">
-                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="fl">订单号：{{ order.order_id }}</div>
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">待支付</span>
                                     </div>
@@ -172,7 +167,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                                 {% else %}
                                     {% for product in order.products %}
@@ -194,18 +189,7 @@
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                {% if is_delivery_plan %}
-                                                    <span class="fl">￥{{order.final_price}}</span>
-                                                {% else %}
-                                                    <!-- 积分商品 -->
-                                                    {% if order.type == "integral" %}
-                                                        <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                    <!-- 普通商品 -->
-                                                    {% else %}
-                                                        <span class="fl">Ｘ{{ product.number }}</span>
-                                                    {% endif %}
-                                                {% endif %}
+                                                <span class="fl">Ｘ{{ order.product_count }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -222,22 +206,23 @@
                         </li>
                         {% endifequal %}
                         {% endfor %}
-                    </ul>
+                    </ul> -->
                 </div>
                 <div class="xa-emptyOrder hidden">
                     <div class="xui-errorInfo xa-errorInfo"></div>
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
                 </div>
             </div>
-            <div class="wui-swiper-slide">
+            <div class="wui-swiper-slide" data-status="3">
                 <div class="xui-list xt-orderList">
-                <ul>
+                {# jz 2015-10-09 #}
+                <!-- <ul>
                     {% for order in orders %}
                     {% ifequal order.status 3 %}
                     <li>
                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                             <div class="clearfix xui-btLine xui-orderState  em95">
-                                <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                <div class="fl">订单号：{{ order.order_id }}</div>
                                 <div class="xt-status fl">
                                     <span class="xui-text-red">待发货</span>
                                     {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
@@ -257,7 +242,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                             {% else %}
                                 {% for product in order.products %}
@@ -279,18 +264,7 @@
                                         </div>
                                         {% endif %}
                                         <div class="em9 clearfix c9 em65 xui-productNum">
-                                            {% if is_delivery_plan %}
-                                                <span class="fl">￥{{order.final_price}}</span>
-                                            {% else %}
-                                                <!-- 积分商品 -->
-                                                {% if order.type == "integral" %}
-                                                    <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                <!-- 普通商品 -->
-                                                {% else %}
-                                                    <span class="fl">Ｘ{{ product.number }}</span>
-                                                {% endif %}
-                                            {% endif %}
+                                            <span class="fl">Ｘ{{ order.product_count }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -303,22 +277,23 @@
                     </li>
                     {% endifequal %}
                     {% endfor %}
-                </ul>
+                </ul> -->
                 </div>
                <div class="xa-emptyOrder hidden">
                     <div class="xui-errorInfo xa-errorInfo"></div>
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
                 </div>
             </div>
-            <div class="wui-swiper-slide">
+            <div class="wui-swiper-slide" data-status="4">
                 <div class="xui-list xt-orderList">
-                    <ul>
+                    {# jz 2015-10-09 #}
+                    <!-- <ul>
                     {% for order in orders %}
                         {% ifequal order.status 4 %}
                         <li>
                             <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=pay&order_id={{order.order_id}}&workspace_id=mall">
                                 <div class="clearfix xui-btLine xui-orderState  em95">
-                                    <!-- <div class="fl">订单号：{{ order.order_id }}</div> -->
+                                    <div class="fl">订单号：{{ order.order_id }}</div>
                                     <div class="xt-status fl">
                                         <span class="xui-text-red">已发货</span>
                                         {% if order.red_envelope %}<i class="xui-getRedTip"></i>{% endif %}
@@ -339,7 +314,7 @@
                                          </div>
                                          {% endfor %}
                                     </div>
-                                    <span class="c9 em75 fr">共{{order.products|length}}件</span>
+                                    <span class="c9 em75 fr">共{{order.product_count}}件</span>
                                 </div>
                                 {% else %}
                                     {% for product in order.products %}
@@ -362,18 +337,7 @@
                                             </div>
                                             {% endif %}
                                             <div class="em9 clearfix c9 em65 xui-productNum">
-                                                {% if is_delivery_plan %}
-                                                    <span class="fl">￥{{order.final_price}}</span>
-                                                {% else %}
-                                                    <!-- 积分商品 -->
-                                                    {% if order.type == "integral" %}
-                                                        <span class="fl">{{ product.price }}积分Ｘ{{ product.number }}</span>
-
-                                                    <!-- 普通商品 -->
-                                                    {% else %}
-                                                        <span class="fl">Ｘ{{ product.number }}</span>
-                                                    {% endif %}
-                                                {% endif %}
+                                                        <span class="fl">Ｘ{{ order.product_count }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -384,9 +348,10 @@
                                     {% if not order.has_sub_order %}
                                     <span class="xui-button">
                                         {% if order.express_number %}
-                                                {% if order.session_data.has_comfire_button %}
-                                                <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc"  data-id="{{order.id}}">确认收货</a>
-                                                {% endif %}
+                                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}" class="xui-forPay-btn xui-logistics tc" data-id="{{order.id}}">查看物流</a>
+                                            {% if order.session_data.has_comfire_button %}
+                                            <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc"  data-id="{{order.id}}">确认收货</a>
+                                            {% endif %}
                                         {% else %}
                                             <a href="javascript:void(0);" class="xui-forPay-btn xui-receipt xa-receipt tc"  data-id="{{order.id}}">确认收货</a>
                                         {% endif %}
@@ -398,9 +363,9 @@
                         </li>
                         {% endifequal %}
                         {% endfor %}
-                    </ul>
+                    </ul> -->
                 </div>
-               <div class="xa-emptyOrder hidden">
+                <div class="xa-emptyOrder hidden">
                     <div class="xui-errorInfo xa-errorInfo"></div>
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" class="xui-browse">去逛逛</a>
                 </div>
@@ -481,9 +446,38 @@ $(document).ready(function($) {
         $(this).addClass('wui-inner-active');
         tabsSwiper.swipeTo($(this).index());
     });
-    /* 点击确认收货 */
+    var status2order = [];
+    $(".wui-swiper-slide").each(function(){
+        var $el = $(this);
+        if($el.data('status')){
+            status2order[$el.data('status')] = $('<ul/>');
+        }
+    });
+    $('li').each(function(){
+        var $el = $(this);
+        if(status2order[$el.data('status')]){
+            status2order[$el.data('status')].append($el.clone());
+        }
+    });
+    /**
+     * 是否为空的数据
+     */
+    $(".wui-swiper-slide").each(function(){
+        var $el = $(this);
+        if(status2order[$el.data('status')]){
+            length = status2order[$el.data('status')].find('li').length;
+        }else{
+            length = $el.find('li').length;
+        }
+        if (length === 0) {
+            $el.find('.xa-emptyOrder').show();
+        }else{
+            $el.find('.xt-orderList').append(status2order[$el.data('status')]);
+        }
+    });
 
-    $('.xa-receipt').click(function(event) {
+    /* 点击确认收货 */
+    $('body').delegate('.xa-receipt', 'click', function(event){
         var $target = $(event.target);
         var sign = $target.data('sign');
         if(sign == 1){
@@ -522,18 +516,9 @@ $(document).ready(function($) {
                 }
             });
         }
-    });
-    /**
-     * 是否为空的数据
-     */
-    $(".wui-swiper-slide").each(function(){
-        var $el = $(this);
-        var length = $el.find('li').length;
-        if (length === 0) {
-            $el.find('.xa-emptyOrder').show();
-        }
-    })
-    $('.update_order_cancel').click(function(event) {
+	});
+
+    $('body').delegate('.update_order_cancel', 'click', function(event){
         var $target = $(event.target);
         var sign = $target.data('sign');
         if(sign == 1){

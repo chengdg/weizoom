@@ -12,7 +12,19 @@
 			<div class="${property_group.groupClass}-topGap propertyGroup-topGap"></div>
 			<div class="propertyGroup ${property_group.groupClass}" {{if property_group.groupName }}name="${property_group.groupName}"{{/if}}>
 				{{if i > 0}}
-				<div class="ml5 fb">${property_group.group}</div>
+				<div class="ml5 fb">${property_group.group}
+                    {{if property_group.groupHelp }}
+                        <span id="${property_group.groupHelp.id}" class="${property_group.groupHelp.className}">
+                        {{if property_group.groupHelp.link }}
+                        <a id="${property_group.groupHelp.link.id}" class="${property_group.groupHelp.link.className}" data-func="${property_group.groupHelp.link.handler}" >${property_group.groupHelp.link.text}</a>
+                        {{/if}}
+
+                        {{if property_group.groupHelp.tip }}
+                            <a role="button" tabindex="0" class="groupHelp_tip" data-container="body" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="${property_group.groupHelp.tip.text}">&#63;</a>
+                        {{/if}}
+                        </span>
+                    {{/if}}
+				</div>
 				{{/if}}
 
 				{{each(j, field) property_group.fields}}
@@ -63,6 +75,27 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'text_with_annotation_v2')}}
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div class="propertyGroup_property_input">
+							<input
+								type="text"
+								style="width:${field.size};"
+								class="input-small xui-propertyGroup-input"
+								data-field="${field.name}"
+								value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}"
+								placeholder="${field.placeholder}"
+								{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
+								{{if field.validate}}{{html field.validate}}{{/if}} />
+							{{if field.annotation}}
+								{{html field.annotation}}
+							{{/if}}
+							<div class="errorHint"></div>
+						</div>
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'title_with_annotation')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label">${field.displayName}</div>
@@ -96,6 +129,18 @@
 						<div class="propertyGroup_property_input xui-progress-bar mr15">
 							<input type="text" class="input-small xui-propertyGroup-input xa-progress-bar" data-field="${field.name}" value="${model.get(field.name)}" placeholder="${field.placeholder}" {{if field.validate}}data-validate="${field.validate}"{{/if}} />
 							<div class="errorHint"></div>
+						</div>
+					</div>
+					{{/if}}
+
+					{{if (field.type == 'badge')}}
+					<div class="propertyGroup_property_sliderField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}：</div>
+						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="apps_prize_keywordpane" data-field="${field.name}">
+							<div data-ui-role="apps-prize-keyword-pane" >
+                                <div class="xa-add-keyword-btn xui-add-keyword-btn">+ 添加</div>
+						    </div>
+
 						</div>
 					</div>
 					{{/if}}
@@ -165,7 +210,7 @@
 						<div class="propertyGroup_property_label">${field.displayName}</div>
 						{{/if}}
 						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
-							<textarea class="" style="height: 100px; width: 95%;" data-field="${field.name}" {{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
+							<textarea class="" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}} style="height: 100px; width: 95%;" data-field="${field.name}" {{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
 							{{if field.help}}
 							<div style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
@@ -344,7 +389,33 @@
 					</div>
 					{{/if}}
 
-					
+                    {{if (field.type == 'image_dialog_select')}}
+                    <div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+                        <div class="propertyGroup_property_input" style="position:relative;">
+                            {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
+                            <input data-field="${field.name}" name="${field.name}" type="hidden" />
+                                <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}">
+                                    {{if component.model.get(field.name)}}
+                                        ${field.triggerButton.hasdata}
+                                    {{else}}
+                                        ${field.triggerButton.nodata}
+                                    {{/if}}
+                                </button>
+
+                            {{if field.help}}
+                            <div style="color: #666;">
+                                {{html field.help.replace(/\n/g, "<br/>")}}
+                            </div>
+                            {{/if}}
+
+                            {{if field.isShowCloseButton}}
+                                <button type="button" class="deleteImage xa-deleteImageButton xui-deleteImageButton" style="display:none;"><span>&times;</span></button>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+
 					{{if (field.type == 'rich_text')}}
 					<div class="propertyGroup_property_richTextField propertyGroup_property_horizontalField">
 						{{if (field.displayName)}}
@@ -414,6 +485,23 @@
 					</div>
 					{{/if}}
 
+                    {{if (field.type == 'prize_selector_v4')}}
+                    <div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label">${field.displayName}</div>
+                        <div class="propertyGroup_property_input xa-thirdPartyPlugin" data-plugin="prize_selector_v4" data-field="${field.name}">
+                            <div
+                                data-ui-role="apps-prize-selector-v4"
+                                data-prize='${JSON.stringify(component.model.get(field.name))}'
+                            ></div>
+                        {{if field.help}}
+                        <div style="color: #888;">
+                            {{html field.help.replace(/\n/g, "<br/>")}}
+                        </div>
+                        {{/if}}
+                        </div>
+
+                    </div>
+                    {{/if}}
 
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
@@ -495,6 +583,27 @@
                                 </div>
                                 {{/if}}
 
+								{{if (dynamicComponentField.type == 'text_with_annotation_v2')}}
+                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+                                    <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
+                                    <div class="propertyGroup_property_input">
+                                        <input
+                                            type="text"
+                                            style="width:${dynamicComponentField.size};"
+                                            class="input-small xui-propertyGroup-input"
+                                            data-field="${dynamicComponentField.name}"
+                                            value="{{if dynamicComponentField.placeholder != dynamicComponent.model.get(dynamicComponentField.name)}}${dynamicComponent.model.get(dynamicComponentField.name)}{{/if}}"
+                                            placeholder="${dynamicComponentField.placeholder}"
+                                            {{if dynamicComponentField.maxLength}}maxlength="${dynamicComponentField.maxLength}"{{/if}}
+                                            {{if dynamicComponentField.validate}}{{html dynamicComponentField.validate}}{{/if}} />
+                                        {{if dynamicComponentField.annotation}}
+                                            {{html dynamicComponentField.annotation}}
+                                        {{/if}}
+                                        <div class="errorHint"></div>
+                                    </div>
+                                </div>
+                                {{/if}}
+
 								{{if (dynamicComponentField.type == 'boolean')}}
 								<div class="propertyGroup_property_booleanField propertyGroup_property_horizontalField">
 									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
@@ -525,6 +634,24 @@
                                             data-ui-role="apps-prize-selector-v3"
                                             data-prize='${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}'
                                         ></div>
+                                    </div>
+                                </div>
+                                {{/if}}
+
+                                {{if (dynamicComponentField.type == 'prize_selector_v4')}}
+                                <div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
+                                    <div class="propertyGroup_property_label">${dynamicComponentField.displayName}</div>
+                                    <div class="propertyGroup_property_input xa-thirdPartyPlugin" data-plugin="prize_selector_v4" data-field="${dynamicComponentField.name}">
+                                        <div
+                                            data-ui-role="apps-prize-selector-v4"
+                                            data-prize='${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}'
+                                        >
+                                        </div>
+                                    {{if dynamicComponentField.help}}
+                                    <div>
+                                        {{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
+                                    </div>
+                                    {{/if}}
                                     </div>
                                 </div>
                                 {{/if}}
@@ -589,28 +716,22 @@
                                     <div class="propertyGroup_property_input" style="position:relative;">
                                         {{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
                                         <input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden" />
-
-                                        {{if dynamicComponent.model.get(dynamicComponentField.name) && dynamicComponentField.selectedButton}}
-                                            <button class="btn btn-small" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">${dynamicComponentField.selectedButton}</button>
-                                        {{else}}
-
                                             <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">
-                                                {{if triggerButton.nodata}}
-                                                    {{if dynamicComponent.model.get(dynamicComponentField.name)}}
-                                                        ${dynamicComponentField.triggerButton.hasdata}
-                                                    {{else}}
-                                                        ${dynamicComponentField.triggerButton.nodata}
-                                                    {{/if}}
+                                                {{if dynamicComponent.model.get(dynamicComponentField.name)}}
+                                                    ${dynamicComponentField.triggerButton.hasdata}
                                                 {{else}}
-                                                    ${dynamicComponentField.triggerButton}
+                                                    ${dynamicComponentField.triggerButton.nodata}
                                                 {{/if}}
                                             </button>
-                                        {{/if}}
 
                                         {{if dynamicComponentField.help}}
                                         <div style="color: #666;">
                                             {{html dynamicComponentField.help.replace(/\n/g, "<br/>")}}
                                         </div>
+                                        {{/if}}
+
+                                        {{if dynamicComponentField.isShowCloseButton}}
+                                            <button type="button" class="deleteImage xa-deleteImageButton xui-deleteImageButton" style="display:none;"><span>&times;</span></button>
                                         {{/if}}
                                     </div>
                                 </div>

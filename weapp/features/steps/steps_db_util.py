@@ -82,6 +82,7 @@ def get_product_response_from_web_page(context, product_name):
         owner_id=context.webapp_owner_id,
         name=product_name)
     response = context.client.get('/mall2/product/?id=%d' % existed_product.id)
+
     return response
 
 

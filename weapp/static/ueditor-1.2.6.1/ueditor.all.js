@@ -4519,7 +4519,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                 return  node.tagName == 'DIV' && node.getAttribute('cdata_tag');
             }
             //给文本或者inline节点套p标签
-            if (me.options.enterTag == 'p') {
+            if (false) {
 
                 var child = this.body.firstChild, tmpNode;
                 if (!child || child.nodeType == 1 &&
@@ -20137,7 +20137,7 @@ baidu.editor.ui = {};
     var iframeUrlMap = {
         'anchor':'~/dialogs/anchor/anchor.html',
         'insertimage':'~/dialogs/image/image.html',
-        'link':'~/dialogs/link/link.html',
+        'link':'~/dialogs/link/link.html?timestamp='+new Date().getTime(),
         'spechars':'~/dialogs/spechars/spechars.html',
         'searchreplace':'~/dialogs/searchreplace/searchreplace.html',
         'map':'~/dialogs/map/map.html',

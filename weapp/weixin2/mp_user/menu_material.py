@@ -26,7 +26,7 @@ from weixin.message.material.models import *
 from webapp.models import *
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MPUSER_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MenuMaterial(resource.Resource):
 	app = 'new_weixin'

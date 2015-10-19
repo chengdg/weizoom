@@ -13,9 +13,16 @@ import settings_api_views
 import accounts_landing_views
 
 urlpatterns = patterns('',
-	(r'^$', views.show_account_info),
-
-	(r'mp/$', views.edit_weixin_mp_user),
+	# jz 2015-10-10
+	# (r'^$', views.show_account_info),
+	# (r'mp/$', views.edit_weixin_mp_user),
+	# (r'preview_info/$', views.edit_preview_info),
+	# (r'api/preview_info/get/$', api_views.get_preview_info),
+	
+	#Sub account
+	(r'sub_users/$', views.list_sub_accounts),
+	(r'sub_user/create/$', views.create_sub_user),
+	(r'sub_user/delete/$', views.delete_sub_user),
 
 	#debug api url
 	(r'logapi/log_api_error/$', debug_api_views.log_api_error),
@@ -23,7 +30,6 @@ urlpatterns = patterns('',
 
 	(r'api/weixin_mp_user_temp_message/create/$', api_views.create_weixin_mp_user_temp_message),
 	(r'api/weixin_mp_user_temp_messages/get/$', api_views.get_weixin_mp_user_temp_messages),
-	(r'api/preview_info/get/$', api_views.get_preview_info),
 	(r'api/sessionid/get/$', api_views.get_session_id),
 	(r'api/social_account_token/get/$', api_views.get_social_account_token),
 
@@ -43,7 +49,6 @@ urlpatterns = patterns('',
 	(r'upload_video/$', views.upload_video),
 	(r'upload_richtexteditor_picture/$', views.upload_richtexteditor_picture),
 	(r'upload_head_image/$', views.upload_head_image),
-	(r'preview_info/$', views.edit_preview_info),
 
 	(r'statistics/daily_new_weixin_user_trend/get/', statistics_views.get_new_weixin_user_daily_trend),
 
@@ -73,8 +78,4 @@ urlpatterns = patterns('',
 	(r'help_center/$', accounts_landing_views.help_center),
 	(r'notice_list/$', accounts_landing_views.notice_list),
 
-	#Sub account
-	(r'sub_users/$', views.list_sub_accounts),
-	(r'sub_user/create/$', views.create_sub_user),
-	(r'sub_user/delete/$', views.delete_sub_user),
 )

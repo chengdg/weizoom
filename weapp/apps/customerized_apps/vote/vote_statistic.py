@@ -12,7 +12,7 @@ from core.jsonresponse import create_response
 import models as app_models
 from mall import export
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class voteStatistic(resource.Resource):
@@ -85,8 +85,9 @@ class voteStatistic(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_customerized_apps(request),
-			'second_nav_name': 'votes',
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': export.MALL_APPS_EVENT_NAV,
 			'titles': titles_list,
 			'total_count': total_count,
 			'project_id': project_id,
@@ -111,7 +112,8 @@ class voteStatistic_Export(resource.Resource):
 
 		# app_name = voteStatistic_Export.app
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信投票统计.xls'
+		excel_file_name = 'vote_statistic.xls'
+		download_excel_file_name = u'微信投票统计.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -153,6 +155,7 @@ class voteStatistic_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
+					print s_list
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -160,7 +163,6 @@ class voteStatistic_Export(resource.Resource):
 			if select_static:
 				ws = wb.add_sheet(u'选择题')
 				header_style = xlwt.XFStyle()
-				s_dic = {0:u'A.',1:u'B.',2:u'C.',3:u'D.',4:u'E',5:u'F',6:u'G',7:u'H',8:u'I',9:u'J',10:u'K',11:u'L',12:u'M',13:u'N',14:u'O'}
 				select_num = 0
 				row = col =0
 				for s in select_static:
@@ -168,11 +170,16 @@ class voteStatistic_Export(resource.Resource):
 					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'%total)
 					ws.write(row,col+1,u'参与人数/百分百')
 					row += 1
+					all_select_num = 0
 					s_i_num = 0
 					for s_i in select_static[s]:
-						ws.write(row,col,s_dic[s_i_num]+s_i.split('_')[1])
 						s_num = select_static[s][s_i]
-						per = s_num*1.0/total*100
+						if s_num :
+							all_select_num += s_num
+					for s_i in select_static[s]:
+						s_num = select_static[s][s_i]
+						ws.write(row,col,s_i.split('_')[1])
+						per = s_num*1.0/all_select_num*100
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
@@ -207,7 +214,7 @@ class voteStatistic_Export(resource.Resource):
 				print '/static/upload/%s'%excel_file_name
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 

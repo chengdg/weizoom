@@ -5,7 +5,7 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-@mall2 @crm @member @member.status_flow
+@mall2 @crm @member @member.status_flow @gycc
 Scenario:1 直接关注单个公众号
 	bill关注jobs的公众号
 

@@ -26,7 +26,6 @@ Feature: 会员管理-批量修改等级
 
 Background:
 	Given jobs登录系统
-
 	And jobs添加会员等级
 		"""
 		[{
@@ -100,12 +99,10 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人修改等级"
 			| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
 			| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 | 未分组      |
 			| bill3 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |
-
 		When jobs选择会员
 			| member_name  | member_rank |
 			| bill1        |   普通会员  |
 			| bill3        |   普通会员  |
-
 		When jobs批量修改等级
 			"""
 			[{
@@ -445,7 +442,7 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 
 	Given jobs登录系统
 	#设置分页
-		Given jobs设置分页查询参数
+	Given jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":3
@@ -481,7 +478,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 		"""
 
 	#修改会员等级
-
 		When jobs更新"bill"的会员等级
 			"""
 			{
@@ -497,10 +493,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			And bill购买jobs的商品
 				"""
 				{
-					"ship_name": "bill",
-					"ship_tel": "12345678911",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -510,11 +502,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			Then bill成功创建订单
 				"""
 				{
-					"status": "待支付",
-					"ship_name": "bill",
-					"ship_tel": "12345678911",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦",
 					"final_price": 70.00,
 					"products": [{
 						"name": "商品8",
@@ -529,10 +516,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			And bill3购买jobs的商品
 				"""
 				{
-					"ship_name": "bill3",
-					"ship_tel": "12345678912",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦2",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -542,11 +525,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			Then bill3成功创建订单
 				"""
 				{
-					"status": "待支付",
-					"ship_name": "bill3",
-					"ship_tel": "12345678912",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦2",
 					"final_price": 100.00,
 					"products": [{
 						"name": "商品8",
@@ -579,13 +557,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				}]
 				"""
 
-			When jobs访问会员列表第3页
-			Then jobs可以获得会员列表
-				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
-				| bill1 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
-				| bill2 |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-05    | 推广扫码 | 未分组      |
-				| bill3 |   银牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |
-
 	#修改会员等级后购买会员价商品，按照修改后的等级价购买
 
 		#会员bill3购买商品，银牌会员，按照80%价格购买
@@ -593,10 +564,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			And bill3购买jobs的商品
 				"""
 				{
-					"ship_name": "bill3",
-					"ship_tel": "12345678913",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦3",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -606,11 +573,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			Then bill3成功创建订单
 				"""
 				{
-					"status": "待支付",
-					"ship_name": "bill3",
-					"ship_tel": "12345678913",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦3",
 					"final_price": 80.00,
 					"products": [{
 						"name": "商品8",
@@ -647,13 +609,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				}]
 				"""
 
-			When jobs访问会员列表第1页
-			Then jobs可以获得会员列表
-				| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags     |
-				| bill  |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-09-05    | 直接关注 | 未分组      |
-				| bill1 |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-06    | 直接关注 | 未分组      |
-				| bill3 |   铜牌会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-06-04    | 直接关注 | 未分组      |
-
 	#修改会员等级后购买会员价商品，按照修改后的等级价购买
 
 		#会员bill购买商品，铜牌会员，按照90%价格购买
@@ -661,10 +616,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			And bill购买jobs的商品
 				"""
 				{
-					"ship_name": "bill",
-					"ship_tel": "12345678911",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -674,11 +625,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			Then bill成功创建订单
 				"""
 				{
-					"status": "待支付",
-					"ship_name": "bill",
-					"ship_tel": "12345678911",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦",
 					"final_price": 90.00,
 					"products": [{
 						"name": "商品8",
@@ -693,10 +639,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 			And bill3购买jobs的商品
 				"""
 				{
-					"ship_name": "bill3",
-					"ship_tel": "12345678913",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦3",
 					"products": [{
 						"name": "商品8",
 						"count": 1
@@ -707,10 +649,6 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 				"""
 				{
 					"status": "待支付",
-					"ship_name": "bill3",
-					"ship_tel": "12345678913",
-					"ship_area": "北京市 北京市 海淀区",
-					"ship_address": "泰兴大厦3",
 					"final_price": 90.00,
 					"products": [{
 						"name": "商品8",

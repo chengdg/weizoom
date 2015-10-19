@@ -5,7 +5,6 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 
-from stats import export
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -20,8 +19,6 @@ from django.conf import settings
 
 from core.exceptionutil import unicode_full_stack
 
-
-FIRST_NAV = export.MANAGEMENT_NAV
 DEFAULT_COUNT_PER_PAGE = 20
 
 # EChart上显示点的个数

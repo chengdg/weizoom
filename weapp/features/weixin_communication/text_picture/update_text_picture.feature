@@ -1,5 +1,5 @@
 Feature: 需求1298编辑图文消息 jobs在系统中编辑图文消息
-	
+
 Background:
 	Given jobs登录系统
 	When jobs已添加单图文
@@ -22,7 +22,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"单条图文2文本摘要",
 			"content":"单条图文2文本内容"
 		},{
 			"title":"sub图文1",
@@ -30,7 +29,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容"
 		},{
 			"title":"sub图文2",
@@ -38,7 +36,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容"
 		},{
 			"title":"sub图文3",
@@ -46,7 +43,6 @@ Background:
 				"url": "/standard_static/test_resource_img/wufan1.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文3文本摘要",
 			"jump_url":"www.baidu.com",
 			"content":"sub单条图文3文本内容"
 		}]
@@ -54,7 +50,7 @@ Background:
 
 @mall2 @senior @textPicture 
 Scenario: 1 编辑多图文 
-	
+
 	Given jobs登录系统
 	When jobs已编辑图文'图文2'
 		"""
@@ -64,7 +60,6 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
-			"summary":"单条图文2文本摘要",
 			"content":"单条图文2文本内容修改"
 		},{
 			"title":"sub图文1",
@@ -72,7 +67,6 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容修改"
 		},{
 			"title":"sub图文2",
@@ -80,7 +74,6 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容修改"
 		},{
 			"title":"sub图文3",
@@ -89,7 +82,6 @@ Scenario: 1 编辑多图文
 				}],
 			"cover_in_the_text":"false",
 			"jump_url":"www.sohu.com",
-			"summary":"sub单条图文3文本摘要",
 			"content":"sub单条图文3文本内容修改"
 		}]
 		"""
@@ -102,7 +94,6 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
-			"summary":"单条图文2文本摘要",
 			"content":"单条图文2文本内容修改"
 		},{
 			"title":"sub图文1",
@@ -110,7 +101,6 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容修改"
 		},{
 			"title":"sub图文2",
@@ -118,7 +108,6 @@ Scenario: 1 编辑多图文
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容修改"
 		},{
 			"title":"sub图文3",
@@ -127,7 +116,6 @@ Scenario: 1 编辑多图文
 				}],
 			"cover_in_the_text":"false",
 			"jump_url":"www.sohu.com",
-			"summary":"sub单条图文3文本摘要",
 			"content":"sub单条图文3文本内容修改"
 		}]
 		"""

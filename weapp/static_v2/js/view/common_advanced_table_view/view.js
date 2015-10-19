@@ -64,7 +64,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
             this.args = $.parseJSON(this.options.args);
         }
         if (this.args['page']) {
-            this.curPage = parseInt(this.args['page']) || 1;
+            this.curPage = this.args['page'] || 1;
         }
         this.enableSelect = options.enableSelect || false;
         this.disableHeaderSelect = options.disableHeaderSelect || false;
@@ -417,6 +417,8 @@ W.view.common.AdvancedTable = Backbone.View.extend({
             var $checkbox = $(this);
             $checkbox.prop('checked', isSelect);
         })
+        $('.xa-selectAll').prop('checked', isSelect);
+
     },
 
     /**
@@ -597,7 +599,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
         //xlog("isChecked: " + isChecked);
         var isAllChecked = true;
         var unCheckedCount = 0;
-        var isAnyUnChecked = false;
         this.$('tbody .xa-select').each(function() {
             var $select = $(this);
             //xlog($select.parents('tr').attr("data-id"));
@@ -662,7 +663,7 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
     var sortApi = $div.attr('data-sort-api');
     var itemCountPerPage = $div.attr('data-item-count-per-page');
     var userWebappId = $div.attr('data-user-webapp-id');
-    var outerSelecter = $div.attr('data-outer-selecter');    
+    var outerSelecter = $div.attr('data-outer-selecter');
 
     var autoLoad = $div.data('autoLoad');
     if (autoLoad !== false) {

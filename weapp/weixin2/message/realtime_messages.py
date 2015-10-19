@@ -21,7 +21,7 @@ from core.wxapi.custom_message import TextCustomMessage, NewsCustomMessage
 from core.exceptionutil import unicode_full_stack
 
 from weixin.mp_decorators import mp_required
-from weixin.user.module_api import get_mp_head_img
+from weixin.user.module_api import get_mp_head_img,get_mp_nick_name
 from weixin2 import export
 from weixin2.models import *
 
@@ -32,7 +32,7 @@ from watchdog.utils import *
 from utils.string_util import byte_to_hex
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
 
 STATUS_ALL = -1
@@ -75,8 +75,9 @@ class RealtimeMessages(resource.Resource):
         status = request.GET.get('status', -1)
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_REALTIME_MESSAGE_NAV,
             'status': status
         })
 
@@ -88,7 +89,7 @@ class RealtimeMessages(resource.Resource):
         """
                         获取实时消息集合json数据
         """
-        
+
         #获取当前页数
         cur_page = int(request.GET.get('page', '1'))
         #获取每页个数
@@ -317,7 +318,7 @@ def get_weixin_user_names_from(webapp_id, weixin_user_usernames, tag_id, grade_i
     if nick_name:
         query_hex = byte_to_hex(nick_name)
         filter_data['member__username_hexstr__icontains'] = query_hex
-    
+
     member_has_accounts = MemberHasSocialAccount.objects.filter(**filter_data)
     now_weixin_user_usernames = [member_has_account.account.openid for member_has_account in member_has_accounts]
     return now_weixin_user_usernames
@@ -417,9 +418,12 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             account = username2weixin_account[webapp_id + '_' + weixin_user.username]
             member_id = account2member[account.id]
             member = id2member[member_id]
+            one_session['user_icon'] =  DEFAULT_ICON
             if member:
                 one_session['member_id'] = member.id
                 one_session['is_subscribed'] = member.is_subscribed
+                one_session['user_icon'] =  member.user_icon if  member.user_icon and len(member.user_icon.strip()) > 0 else DEFAULT_ICON
+                one_session['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_session['could_replied'] = 0
         except:
@@ -561,7 +565,10 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         one_message['message_id'] = message.id
         one_message['sender_username'] = weixin_user.username
         one_message['name'] = weixin_user.nickname_for_html
-
+        if weixin_user.weixin_user_icon:
+            one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
+        else:
+            one_message['user_icon'] =  DEFAULT_ICON
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -581,6 +588,11 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             one_message['message_type'] = 'text'
             one_message['pic_url'] = ''
             one_message['audio_url'] = ''
+
+        try:
+            one_message['fast_reply'] = message.is_reply
+        except:
+            one_message['fast_reply'] = True
 
         if msgid2remark.has_key(message.id):
             one_message['remark'] = msgid2remark[message.id]
@@ -604,8 +616,10 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
         try:
             reply_message = Message.objects.filter(session=message.session_id, is_reply=True).order_by('-id')[0]
             one_message['latest_reply_at'] = reply_message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
+
         except:
             one_message['latest_reply_at'] = ''
+
         message_ids.append(message.id)
 
         try:
@@ -616,7 +630,8 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             if member:
                 one_message['member_id'] = member.id
                 one_message['is_subscribed'] = member.is_subscribed
-                one_message['user_icon'] =  member.user_icon
+                one_message['user_icon'] = member.user_icon if member.user_icon and len(member.user_icon.strip()) > 0 else DEFAULT_ICON
+                one_message['name'] =  member.username_for_html
                 if not member.is_subscribed:
                     one_message['could_replied'] = 0
         except:
@@ -628,6 +643,9 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
                 one_message['user_icon'] = head_img
             else:
                 one_message['user_icon'] = DEFAULT_ICON
+
+            mp_username = get_mp_nick_name(user.id)
+            one_message['mp_username'] = mp_username
 
         items.append(one_message)
 

@@ -44,5 +44,11 @@ def get_mp_info(user_id):
 	else:
 		return None	
 
+def authed_appid(user_id):
+	try:
+		return ComponentAuthedAppid.objects.get(user_id=user_id)
+	except :
+		return None
+
 
 

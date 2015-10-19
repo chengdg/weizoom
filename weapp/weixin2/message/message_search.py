@@ -6,7 +6,7 @@ from core import resource
 from core.jsonresponse import create_response
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MessageSearch(resource.Resource):
     """

@@ -14,12 +14,12 @@ from core import paginator
 from core.jsonresponse import create_response
 
 import models as app_models
-import export
+from mall import export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class lotteryParticipance(resource.Resource):

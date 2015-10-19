@@ -59,6 +59,7 @@
 			var $link = $(event.currentTarget);
 			var id = $link.attr('data-id');
 			var tel = $.trim($('[name="tel"]').val());
+
 			W.getApi().call({
 				app: 'm/apps/survey',
 				resource: 'survey_participance',

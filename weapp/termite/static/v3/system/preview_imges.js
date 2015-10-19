@@ -28,7 +28,12 @@ W.ImagePreview = function(Api) {
     };
 
     this.unifyUrl = function(el) {
-        var url = $(el).attr('full-src');
+        var url ="";
+        if($(el).data('url')){
+            url = $(el).data('url');
+        }else{
+            url = $(el).attr('full-src');
+        }
         if(!url)
             url = $(el).attr('src');
         if (url.startsWith('http://')) {
@@ -45,13 +50,13 @@ W.ImagePreview = function(Api) {
     this.cannotClickedImageLinks = [];
 
     var _this = this;
-
     $("img").each(function(index, element) {
         if ((!_this.isCanClickImgEle(element)) && _this.isAllowAutoPlay(element)) {
             var absoluteUrl = _this.unifyUrl(element);
-            _this.cannotClickedImageLinks.push(absoluteUrl);
+            _this.cannotClickedImageLinks.push(absoluteUrl); 
         }
     });
+            
     $('body').undelegate('img','click');
     $('body').delegate('img', 'click', function(event) {
         var targetEle = event.currentTarget;
@@ -63,4 +68,4 @@ W.ImagePreview = function(Api) {
             });
         }
     });
-}
+}  

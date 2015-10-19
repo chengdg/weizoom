@@ -7,37 +7,76 @@
 {% endblock %}
 {% block content-panel %}
 <div class="xui-redEnvelope-page xui-commonPromotionStyle">
-
-<div class="relative">
-    <ul class="breadcrumb">
-        <li>您当前所在位置</li>
-        <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-        <li class="active">分享红包</li>
-    </ul>
-</div>
-
-<div class="xa-redEnvelopeFilterView xui-filterPanel"></div>
-
-<div class="panel panel-default mt20 xui-bigBoxbg">
-<div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
-    <div class="panel-heading xui-headStyle clearfix">
-        <a href="/apps/promotion/red_envelope_rule/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+            <li class="active">分享红包</li>
+        </ul>
     </div>
-    <div
-        data-ui-role="advanced-table"
-        data-app="apps/promotion"
-        data-resource="red_envelope_rule_list"
-        data-template-id="#red_envelope_rule_list_view"
-        data-enable-paginator="true"
-        data-enable-sort="false"
-        data-disable-header-select="true"
-        data-item-count-per-page="10"
-        class="xui-redEnvelopeList pb0"
-        id="redEnvelopeList"
-    ></div>
+    <div class="xa-redEnvelopeFilterView xui-filterPanel"></div>
+    <div class="panel panel-default mt20 xui-bigBoxbg">
+        <div class="panel panel-default ml10 mr10 mb50 xui-wrapBox">
+            <div class="panel-heading xui-headStyle clearfix">
+                <a href="/apps/promotion/red_envelope_rule/" class="btn btn-success ml10 fr xui-btnSetting"><span class="xui-add-btn-icon">+</span>新建分享红包</a>
+            </div>
+            <div
+                data-ui-role="advanced-table"
+                data-app="apps/promotion"
+                data-resource="red_envelope_rule_list"
+                data-template-id="#red_envelope_rule_list_view"
+                data-enable-paginator="true"
+                data-enable-sort="false"
+                data-disable-header-select="true"
+                data-item-count-per-page="10"
+                class="xui-redEnvelopeList pb0"
+                id="redEnvelopeList"
+            ></div>
+        </div>
+    </div>
 </div>
-</div>
-</div>
+{% for rule in items %}
+    {% if rule.is_warring %}
+        <button id="is_warring" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="display:none">库存提示</button>
+    {% endif %}
+{% endfor %}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:400px; margin-top: 16%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">库存提示</h4>
+            </div>
+            <div class="modal-body" style="max-height: 98px; overflow:auto;padding-top:0;padding-bottom:0;">
+                <ul class="list-group" style="margin-bottom: 0">
+                {% for rule in items %}
+                    {% if rule.receive_method %}
+                        <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
+                            <div style="float: left;width: 85%">
+                                <div style="width: 90%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden; "><b>【图文领取】</b>{{ rule.rule_name }}</div>
+                            </div>
+                            <div style="float: left;color:#8c8c8c;">即将用完</div>
+                        <div style="clear: both"></div>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item" style="border: 0;padding-bottom: 0;padding-top: 8px;">
+                            <div style="float: left;width: 85%">
+                                <div style="width: 90%;white-space:nowrap;text-overflow:ellipsis;-o-text-overflow:ellipsis;overflow: hidden;">&nbsp;&nbsp;{{ rule.rule_name }}</div>
+                            </div>
+                            <div style="float: left;color: #8c8c8c;">即将用完</div>
+                        <div style="clear: both"></div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer" style="height: 95px;">
+                <div style="margin-top: 8px;height: 17px;line-height: 17px">请及时处理！</div>
+                <a href="/mall2/coupon_rule_list/" target="_blank" class="btn btn-primary" >修改库存</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="border: 1px solid #8C8C8C;">确认</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -53,13 +92,21 @@
             <th>活动状态</th>
             <th>领取人数</th>
             <th>优惠券剩余</th>
-            <th>操作</th>
+            <th width="150">操作</th>
         </tr>
     </thead>
     <tbody>
         {{each(i, rule) items}}
         <tr class="h80" data-id="${ rule.id }">
-            <td class="tl pl20" ><a href="/apps/promotion/red_envelope_rule/?id=${ rule.id }">${ rule.rule_name }</a></td>
+            <td class="tl pl20" >
+                <a href="/apps/promotion/red_envelope_rule/?id=${ rule.id }">
+                    {{if receive_method}}
+                        <b>【图文领取】</b>${ rule.rule_name }
+                    {{else}}
+                        &nbsp;&nbsp;${ rule.rule_name }
+                    {{/if}}
+                </a>
+            </td>
             <td width="154">
                 {{if rule.limit_time}}
                 永久
@@ -77,16 +124,39 @@
             </td>
             <td>${ rule.get_count }
             </td>
-            <td>${ rule.remained_count }
-            </td>
-            <td class="tl xui-operation">
-                {{if rule.status }}
-                    <a href="javascript:void(0);" class="xa-update" data-status="over">关闭</a>
-                {{else}}
-                    {{if !rule.is_timeout || rule.limit_time}}
-                        <a href="javascript:void(0);" class="xa-update" data-status="start">开启</a>
+            <td class="remained_count">
+                ${ rule.remained_count }
+                {{if rule.remained_count <= 20}}
+                    {{if receive_method}}
+                        {{if rule.is_timeout && !rule.limit_time }}
+                        {{else}}
+                            <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                        {{/if}}
+                    {{else}}
+                        {{if rule.status }}
+                            {{if rule.is_timeout && !rule.limit_time }}
+                            {{else}}
+                                <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
+                            {{/if}}
+                        {{/if}}
                     {{/if}}
+                {{/if}}
+
+            </td>
+            <td class="tl xui-operation" width="150">
+                <a href="/apps/promotion/red_envelope_participances/?id=${ rule.id }">分析</a>
+                {{if receive_method}}
+                    <span style="display:inline-block;width:29px;"></span>
                     <a href="javascript:void(0);" class="xa-delete">删除</a>
+                {{else}}
+                    {{if rule.status }}
+                        <a href="javascript:void(0);" class="xa-update" data-status="over">关闭</a>
+                    {{else}}
+                        {{if !rule.is_timeout || rule.limit_time}}
+                            <a href="javascript:void(0);" class="xa-update" data-status="start">开启</a>
+                        {{/if}}
+                        <a href="javascript:void(0);" class="xa-delete">删除</a>
+                    {{/if}}
                 {{/if}}
                 <a href="/apps/promotion/red_envelope_rule/?id=${ rule.id }">查看</a>
             </td>
@@ -111,12 +181,22 @@
 <script type="text/javascript">
 $(document).ready(function() {
     var coupon_rule = {{ coupon_rule_info|safe }};
+    var endDate = '{{endDate}}';
+    var startDate = '';
+    if(endDate){
+        startDate = '2014-01-01';
+    }
     var view = new W.view.mall.RedEnvelopeFilterView({
         el: '.xa-redEnvelopeFilterView',
         templateFilterName: 'mall-red-envelope-filter-view-tmpl-src',
-        coupon_rule: coupon_rule
+        coupon_rule: coupon_rule,
+        startDate: startDate,
+        endDate: endDate
     });
     view.render();
+    if (!{{is_create}}){
+        $('#is_warring').click();
+    }
 
     $("#redEnvelopeList").delegate(".xa-update", "click",
         function(event){
@@ -144,7 +224,7 @@ $(document).ready(function() {
                 }
             });
         }
-    )
+    );
 
     $("#redEnvelopeList").delegate(".xa-delete", "click",
         function(event){
@@ -182,6 +262,7 @@ $(document).ready(function() {
             }
         });
     }
+
 });
 </script>
 {% endblock %}

@@ -515,16 +515,11 @@ def get_forbidden_coupon_product_ids_for_cache(webapp_owner_id):
             status__in=(promotion_models.FORBIDDEN_STATUS_NOT_START, promotion_models.FORBIDDEN_STATUS_STARTED)
         )
 
-        product_ids = []
-        for product in forbidden_coupon_products:
-            if product.is_active:
-                product_ids.append(product.product_id)
-
         return {
                 'keys': [
-                    'forbidden_coupon_product_ids_%s' % (webapp_owner_id)
+                    'forbidden_coupon_products_%s' % (webapp_owner_id)
                 ],
-                'value': product_ids
+                'value': forbidden_coupon_products
             }
     return inner_func
 
@@ -532,15 +527,19 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
     """
     获取商家的禁用全场优惠券的商品id列表 duhao
     """
-    key = 'forbidden_coupon_product_ids_%s' % (webapp_owner_id)
+    key = 'forbidden_coupon_products_%s' % (webapp_owner_id)
 
-    product_ids = cache_util.get_from_cache(key, get_forbidden_coupon_product_ids_for_cache(webapp_owner_id))
+    forbidden_coupon_products = cache_util.get_from_cache(key, get_forbidden_coupon_product_ids_for_cache(webapp_owner_id))
+    product_ids = []
+    for product in forbidden_coupon_products:
+        if product.is_active:
+            product_ids.append(product.product_id)
     return product_ids
 
 def update_forbidden_coupon_product_ids(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
         webapp_owner_id = cache.request.user_profile.user_id
-        key = 'forbidden_coupon_product_ids_%s' % webapp_owner_id
+        key = 'forbidden_coupon_products_%s' % webapp_owner_id
         cache_util.delete_cache(key)
 
 post_update_signal.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.update")

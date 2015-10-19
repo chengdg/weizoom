@@ -17,7 +17,7 @@ from core.jsonresponse import create_response
 from apps.models import CustomizedApp
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class SingleNews(resource.Resource):
 	"""
@@ -40,8 +40,9 @@ class SingleNews(resource.Resource):
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
 			'material_id': material_id,
 			'newses': json.dumps(newses_object)
 		})
@@ -148,8 +149,9 @@ class MultiNews(resource.Resource):
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_advance_manage_second_navs(request),
-			'second_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
+			'second_navs': export.get_weixin_second_navs(request),
+			'second_nav_name': export.WEIXIN_ADVANCE_SECOND_NAV,
+			'third_nav_name': export.ADVANCE_MANAGE_MATERIAL_NAV,
 			'material_id': material_id,
 			'newses': json.dumps(newses_object)
 		})

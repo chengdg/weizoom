@@ -16,7 +16,7 @@ def adict_addNews(addNews):
     adict['type'] = 'news'
     adict['display_index'] = 1
     adict['title'] = addNews['title']
-    adict['summary'] = addNews['summary']
+    adict['summary'] = ''
     adict['text'] = addNews.get('content','')
     adict['pic_url'] = addNews['cover'][0]['url']
     adict['is_show_cover_pic'] = addNews['cover_in_the_text']

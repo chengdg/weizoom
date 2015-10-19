@@ -44,6 +44,9 @@
         .propertyGroup_property_horizontalField .propertyGroup_property_label {
             width: 67px;
         }
+        .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+            cursor: pointer;
+        }
     </style>
 {% endblock %}
 
@@ -73,29 +76,26 @@
         </div>
       </div>
     </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
+    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
     </div>
+      <div class="xui-bottomActionBar xa-stickyBar">
+          {% if not lottery %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+          {% else %}
+            {% if lottery.status_text == "未开始" %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+            {% endif %}
+            {% if lottery.status_text == "进行中" %}
+            进行中，不可更改
+            {% endif %}
+            {% if lottery.status_text == "已结束" %}
+            已结束，不可更改
+            {% endif %}
+          {% endif %}
+        </div>
   </div>
-</div>
-{% endblock %}
-
-{% block global_elements %}
-<div class="xui-bottomActionBar">
-  {% if not lottery %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-  {% else %}
-    {% if lottery.status_text == "未开始" %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-    {% endif %}
-    {% if lottery.status_text == "进行中" %}
-    进行中，不可更改
-    {% endif %}
-    {% if lottery.status_text == "已结束" %}
-    已结束，不可更改
-    {% endif %}
-  {% endif %}
 </div>
 {% endblock %}
 
@@ -123,7 +123,10 @@
     W.isUserPageWalidate = true;
     
     /* 自动选中cid，当页面进来的时候 */
-    W.autoSelectCid = 2
+    W.autoSelectCid = 2;
+
+    //是否隐藏组件控制面板
+    W.hideActionPanel = true;
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -150,6 +153,33 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
+
+            W.Broadcaster.on("image_dialog_select:deleteImage", function(cid){
+				var comp = W.component.CID2COMPONENT[cid],
+					targetClass;
+				switch (cid){
+					case '4':
+						targetClass = '.xa-lottery-first';
+						break;
+					case '5':
+						targetClass = '.xa-lottery-second';
+						break;
+					case '6':
+						targetClass = '.xa-lottery-third';
+						break;
+					default:
+						targetClass = '.xa-lottery-first';
+						break;
+				}
+
+				var $target = $('#phoneIFrame').contents().find(targetClass);//找到子frame中的相应元素
+				var defaultPosition = $target.attr('defaultPosition');
+				$target.html("<span style='background-position:"+ defaultPosition + ";'></span>");
+
+				comp.model.set({
+					image: ''
+				}, {silent: true});
+			});
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');
@@ -327,6 +357,22 @@
                 return "lottery-chance-dialog-tmpl";
             }
         });
+        // 滚动浮动在底部
+          var stickyMenu = function(){
+              var winScrollTop = $(window).scrollTop();
+          　　var scrollHeight = $(document).height();
+          　　var windowHeight = $(window).height();
+              var gap = scrollHeight - winScrollTop - windowHeight;
+              if( gap < 44 ){
+                  $('.xa-stickyBar').css({ 'position': 'absolute'}).removeClass('fxd');
+              }else{
+                  $('.xa-stickyBar').css({ 'position': 'fixed' }).addClass('fxd');
+              }
+          };
+          stickyMenu();
+          $(window).bind('scroll resize',(function() {
+              stickyMenu();
+          }));
     });
   </script>
 <script id="lottery-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">

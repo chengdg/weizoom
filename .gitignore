@@ -62,5 +62,12 @@ site/
 weapp/error.html
 weapp/static/upload
 
-# PyCharm
-.idea/
+#pycharm
+.idea/*
+weapp/.idea/*
+
+#self
+.gitignore
+
+/.gitignore
+weapp/.idea/

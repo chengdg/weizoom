@@ -45,35 +45,8 @@ from modules.member.module_api import get_member_by_id_list
 from webapp.models import WebApp
 from member.member_grade import auto_update_grade
 random.seed(time.time())
-
+from bs4 import BeautifulSoup
 # NO_PROMOTION_ID = -1
-
-
-# def _get_promotion_name(product):
-# 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
-
-# 	Args:
-# 	  product -
-
-# 	Return:
-# 	  False - 商品没有促销
-# 	  'int_str' - 商品有促销
-# 	"""
-
-# 	if not product.promotion:
-# 		return None
-# 	else:
-# 		promotion = product.promotion
-# 		now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-# 		# 已过期或未开始活动的商品，做为 普通商品
-# 		if promotion['start_date'] > now or promotion['end_date'] < now:
-# 			name = '%d_%s' % (promotion['id'], product.model['name'])
-# 		elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT or promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-# 			name = promotion['id']
-# 		else:
-# 			name = '%d_%s' % (promotion['id'], product.model['name'])
-# 	return name
-
 
 def __get_promotion_name(product):
 	"""判断商品是否促销， 没有返回None, 有返回促销ID与商品的规格名.
@@ -129,7 +102,7 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 				merged_rule['product_model_names'].append(product_model_name)
 				product.active_integral_sale_rule = rule
 				merged_rule['rule'] = rule
-
+		merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
 	if len(merged_rule['product_model_names']) > 0:
 		return merged_rule
 	else:
@@ -463,6 +436,8 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					if member_id2member.has_key(review.member_id):
 						review.member_name = member_id2member[review.member_id].username_for_html
 						review.user_icon = member_id2member[review.member_id].user_icon
+					else:
+						review.member_name = '*'
 			#获取促销活动和积分折扣信息
 			promotion_ids = map(lambda x: x.promotion_id, promotion_models.ProductHasPromotion.objects.filter(product=product))
 			# Todo: 促销已经结束， 但数据库状态未更改
@@ -520,6 +495,19 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				#返回"被删除"商品
 				product = Product()
 				product.is_deleted = True
+
+		# 商品详情图片lazyload
+		soup = BeautifulSoup(product.detail)
+		for img in soup.find_all('img'):
+			try:
+				img['data-url'] = img['src']
+				del img['src']
+				del img['title']
+			except:
+				pass
+		product.detail = str(soup)
+
+		# product.mark = str(product.id) + '-' + product.model_name
 		data = product.to_dict(
 								'min_limit',
 								'swipe_images_json',
@@ -572,7 +560,11 @@ def get_product_model_properties_for_cache(webapp_owner_id):
 #################################################################################
 def get_mall_config_for_cache(webapp_owner_id):
 	def inner_func():
-		mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+		#update by bert at 20151014  for new account can't vs webapp
+		try:
+			mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+		except:
+			mall_config = MallConfig.objects.create(owner_id=webapp_owner_id)
 		return {
 			'value': mall_config.to_dict()
 		}
@@ -1143,8 +1135,19 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	#建立<order, promotion>的关系
 	for product_group in product_groups:
 		promotion_result = product_group.get('promotion_result', None)
-		if promotion_result:
-			promotion_id = product_group['promotion']['id']
+		if promotion_result or product_group.get('integral_sale_rule', None):
+			try:
+				promotion_id = product_group['promotion']['id']
+				promotion_type = product_group['promotion_type']
+			except:
+				promotion_id = 0
+				promotion_type = 'integral_sale'
+			try:
+				if not promotion_result:
+					promotion_result = dict()
+				promotion_result['integral_product_info'] = product_group['integral_sale_rule']['integral_product_info']
+			except:
+				pass
 			integral_money = 0
 			integral_count = 0
 			if product_group['integral_sale_rule'] and product_group['integral_sale_rule'].get('result'):
@@ -1154,7 +1157,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 				order=order,
 				webapp_user_id=webapp_user.id,
 				promotion_id=promotion_id,
-				promotion_type=product_group['promotion_type'],
+				promotion_type=promotion_type,
 				promotion_result_json=json.dumps(promotion_result),
 				integral_money=integral_money,
 				integral_count=integral_count,
@@ -1274,9 +1277,10 @@ def get_orders(request):
 
 	orderIds = [order.id for order in orders]
 	order2count = {}
-	orderId2order = dict()
+	orderId2order = dict([(order.id,order) for order in orders])
 
 	orderHasProducts = OrderHasProduct.objects.filter(order_id__in=orderIds)
+	"""
 	for order_product_relation in orderHasProducts:
 		order_id = order_product_relation.order_id
 		old_count = 0
@@ -1309,9 +1313,9 @@ def get_orders(request):
 	for i in user_product_review:
 		key = "%s_%s" % (i.order_id, i.product_id)
 		order_product_has_review[key] = True
+	"""
 
 	totalProductIds = [orderHasProduct.product_id for orderHasProduct in orderHasProducts]
-	productId2products = dict([(product.id, product) for product in Product.objects.filter(id__in=totalProductIds)])
 	orderId2productIds = dict()
 
 	from cache import webapp_cache
@@ -1324,20 +1328,45 @@ def get_orders(request):
 		orderId2productIds.get(orderHasProduct.order_id).append(orderHasProduct.product_id)
 		if not hasattr(orderId2order[orderHasProduct.order_id], 'products'):
 			orderId2order[orderHasProduct.order_id].products = []
-		product = productId2products[orderHasProduct.product_id]
-		product.price = orderHasProduct.price
-		product.number = orderHasProduct.number
+		product = copy.copy(cache_productId2cache_products[orderHasProduct.product_id])
 		product.properties = product.fill_specific_model(orderHasProduct.product_model_name, cache_productId2cache_products[product.id].models)
 		orderId2order[orderHasProduct.order_id].products.append(product)
 
-	exist_red_envelope_orderIds = [relation.order_id for relation in
-		promotion_models.RedEnvelopeToOrder.objects.filter(order_id__in=red_envelope_orderIds)]
+		order_id = orderHasProduct.order_id
+		old_count = 0
+		if order_id in order2count:
+			old_count = order2count[order_id]
+		order2count[order_id] = old_count + orderHasProduct.number
+
+	red_envelope = request.webapp_owner_info.red_envelope
+	red_envelope_orderIds = []
+
+	order_product_has_review = dict([(str(review.order_id) + "_" + str(review.product_id), True) for review in mall_models.ProductReview.objects.filter(member_id=request.member.id)])
+
 	for order in orders:
+		order.product_count = order2count.get(order.id, 0)
+
 		is_finished = True
 		for productId in orderId2productIds.get(order.id, []):
 			key = "%s_%s" % (order.id, productId)
 			is_finished = is_finished & order_product_has_review.get(key, False)
 		order.review_is_finished = is_finished
+
+		if order.status == ORDER_STATUS_PAYED_SHIPED and (datetime.today() - order.update_at).days >= 3:
+			#订单发货后3天显示确认收货按钮
+			if not hasattr(order, 'session_data'):
+				order.session_data = dict()
+			order.session_data['has_comfire_button'] = '1'
+		if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
+			# 订单满足红包条件
+			order.red_envelope = True
+			red_envelope_orderIds.append(order.id)
+		else:
+			order.red_envelope = False
+
+	exist_red_envelope_orderIds = [relation.order_id for relation in
+		promotion_models.RedEnvelopeToOrder.objects.filter(order_id__in=red_envelope_orderIds)]
+	for order in orders:
 		if order.red_envelope and order.id in exist_red_envelope_orderIds:
 			# 订单已经访问过领取红包页面，不显示红包标识
 			order.red_envelope = False
@@ -1363,6 +1392,7 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		pay_result = True
 		Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
+		# 修改子订单的订单状态，该处有逻辑状态的校验
 		origin_order_id = Order.objects.get(order_id=order_id).id
 		Order.objects.filter(origin_order_id=origin_order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
@@ -1417,7 +1447,7 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 # 如果订单id、快递公司名称或运单号任一为None，直接返回False
 ########################################################################
 def ship_order(order_id, express_company_name,
-	express_number, operator_name=u'我', leader_name=u'', is_update_express=False):
+	express_number, operator_name=u'我', leader_name=u'', is_update_express=False, is_100 = True):
 	"""
 	进行订单的发货处理：
 		order_id: 需要处理的订单号
@@ -1456,32 +1486,29 @@ def ship_order(order_id, express_company_name,
 		order_params['express_company_name'] = express_company_name
 		order_params['express_number'] = express_number
 		order_params['leader_name'] = leader_name
-
-		order_has_delivery_params = dict()
-		order_has_delivery_params['express_company_name'] = express_company_name
-		order_has_delivery_params['express_number'] = express_number
-		order_has_delivery_params['leader_name'] = leader_name
-
-		order_has_delivery_id = 0
+		order_params['status'] = target_status
+		order_params['is_100'] = is_100
 		order = Order.objects.get(id=order_id)
-
-		# 即修改物流信息，也修改状态, 需要加上状态条件
-		if not is_update_express:
-			order_params['status'] = target_status
-			if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-				order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
-				if order_has_delivery_times.count() > 0:
-					order_has_delivery_id = order_has_delivery_times[0].id
-					order_has_delivery_params['status'] = SHIPED
-		else:
-			if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-				order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=SHIPED).order_by('-delivery_date')
-				if order_has_delivery_times.count() > 0:
-					order_has_delivery_id = order_has_delivery_times[0].id
-					order_has_delivery_params['status'] = order_has_delivery_times[0].status
-		OrderHasDeliveryTime.objects.filter(id=order_has_delivery_id).update(**order_has_delivery_params)
 		Order.objects.filter(id=order_id).update(**order_params)
-
+		# order_has_delivery_params = dict()
+		# order_has_delivery_params['express_company_name'] = express_company_name
+		# order_has_delivery_params['express_number'] = express_number
+		# order_has_delivery_params['leader_name'] = leader_name
+		# order_has_delivery_id = 0
+		# 即修改物流信息，也修改状态, 需要加上状态条件
+		# if not is_update_express:
+		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
+		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
+		# 		if order_has_delivery_times.count() > 0:
+		# 			order_has_delivery_id = order_has_delivery_times[0].id
+		# 			order_has_delivery_params['status'] = SHIPED
+		# else:
+		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
+		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=SHIPED).order_by('-delivery_date')
+		# 		if order_has_delivery_times.count() > 0:
+		# 			order_has_delivery_id = order_has_delivery_times[0].id
+		# 			order_has_delivery_params['status'] = order_has_delivery_times[0].status
+		# OrderHasDeliveryTime.objects.filter(id=order_has_delivery_id).update(**order_has_delivery_params)
 		#发送模板消息
 		# current_final_price = order.final_price
 		# if order.type == PRODUCT_INTEGRAL_TYPE:
@@ -1511,6 +1538,7 @@ def ship_order(order_id, express_company_name,
 		record_status_log(order.order_id, operator_name, order.status, target_status)
 
 		if order.origin_order_id > 0:
+			# 修改子订单状态，上面只修改物流信息
 			set_origin_order_status(order, operator_name, 'ship')
 
 	record_operation_log(order.order_id, operator_name, action, order)
@@ -1519,7 +1547,9 @@ def ship_order(order_id, express_company_name,
 	#mall_signals.post_ship_order.send(sender=Order, order=order)
 
 	#send post_ship_send_request_to_kuaidi signal
-	mall_signals.post_ship_send_request_to_kuaidi.send(sender=Order, order=order)
+	# 是快递100的才进行发送
+	if is_100:
+		mall_signals.post_ship_send_request_to_kuaidi.send(sender=Order, order=order)
 
 	try:
 		mall_util.email_order(order=Order.objects.get(id=order_id))
@@ -1539,7 +1569,7 @@ def __get_supplier_name(supplier_id):
 
 ########################################################################
 # add_product_to_shopping_cart: 向购物车中添加商品
-########################################################################
+######################################################################## c
 def add_product_to_shopping_cart(webapp_user, product_id, product_model_name, count):
 	try:
 		shopping_cart_item = ShoppingCart.objects.get(
@@ -2032,7 +2062,9 @@ def get_order_products(order):
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
 
 	order_promotion_relations = list(OrderHasPromotion.objects.filter(order_id=order_id))
-	id2promotion = dict([(relation.promotion_id, relation) for relation in order_promotion_relations])
+	id2promotion = dict([(promotion.promotion_id, promotion) for promotion in order_promotion_relations])
+	product2integral = dict([(promotion.promotion_result.get('integral_product_info'), promotion) for promotion in order_promotion_relations])
+
 
 	products = []
 	pricecut_id = None
@@ -2062,6 +2094,15 @@ def get_order_products(order):
 			'supplier': product.supplier
 		}
 
+
+		try:
+			integral_product_info = str(product.id) + '-' + product.model_name
+			product_info['integral_money'] = product2integral[integral_product_info].integral_money
+			product_info['integral_count'] = product2integral[integral_product_info].integral_count
+		except:
+			product_info['integral_money'] = 0
+			product_info['integral_count'] = 0
+
 		suppliers.append(product.supplier)
 
 		try:
@@ -2074,8 +2115,7 @@ def get_order_products(order):
 			# 有促销信息
 			promotion_result = promotion_relation.promotion_result
 			product_info['promotion'] = promotion_result
-			product_info['integral_money'] = promotion_relation.integral_money
-			product_info['integral_count'] = promotion_relation.integral_count
+
 
 			# 处理订单详情页跨行的问题
 			if current_promotion_id != relation.promotion_id:
@@ -2202,13 +2242,18 @@ def update_order_status(user, action, order, request=None):
 	services/cancel_not_pay_order_service/tasks.py
 
 	已知action:
-	'action' : 'pay'
-	'action' : 'finish'
-	'action' : 'cancel'
-	'action' : 'return_pay'
+	'action' : 'pay' 支付
+	'action' : 'finish' 完成
+	'action' : 'cancel' 取消
+	'action' : 'return_pay' 退款
+	'action' : 'rship' 发货
 	"""
 	order_id = order.id
-	operation_name = user.username
+	# 快递100签收发送的finsh动作不记录日志，没有user
+	if user:
+		operation_name = user.username
+	else:
+		operation_name = None
 	action_msg = None
 	if action == 'pay':
 		action_msg = '支付'
@@ -2230,7 +2275,18 @@ def update_order_status(user, action, order, request=None):
 		action_msg = '完成'
 		target_status = ORDER_STATUS_SUCCESSED
 		actions = action.split('-')
-		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
+		if operation_name:
+			operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
+		#更新红包引入消费金额的数据 by Eugene
+		if order.coupon_id and promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=order.coupon_id, introduced_by__gt=0).count() > 0:
+			red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=order.coupon_id)
+			relation = promotion_models.RedEnvelopeParticipences.objects.filter(
+				red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+				red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+				member_id=red_envelope2member.introduced_by
+			)
+			relation.update(introduce_sales_number = F('introduce_sales_number') + order.final_price + order.postage)
+
 	elif action == 'return_pay':
 		action_msg = '退款'
 		target_status = ORDER_STATUS_REFUNDING
@@ -2289,8 +2345,9 @@ def update_order_status(user, action, order, request=None):
 		else:
 			Order.objects.filter(id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
-		record_status_log(order.order_id, operation_name, order.status, target_status)
-		record_operation_log(order.order_id, operation_name, action_msg, order)
+		if operation_name:
+			record_status_log(order.order_id, operation_name, order.status, target_status)
+			record_operation_log(order.order_id, operation_name, action_msg, order)
 
 	try:
 		# TODO 返还用户积分
@@ -2326,8 +2383,6 @@ def update_order_status(user, action, order, request=None):
 		set_children_order_status(order, target_status)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
-
-
 
 def __restore_product_stock_by_order(order):
 	"""
@@ -2780,6 +2835,7 @@ def batch_handle_order(json_data, user):
 			if not express_number:
 				raise
 			if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+				# 批量发货
 				if ship_order(order.id, express_company_value, express_number, user.username, u''):
 					success_data.append(item)
 				else:
@@ -3153,9 +3209,12 @@ def get_product_review(request):
 		else:
 			review.pictures = []
 
-		member = member_id2member[review.member_id]
-		review.member_name = member.username_for_html
-		review.user_icon = member.user_icon
+		member = member_id2member.get(review.member_id, None)
+		if member:
+			review.member_name = member.username_for_html
+			review.user_icon = member.user_icon
+		else:
+			review.member_name = '*'
 
 	return product_review_list
 
@@ -3227,7 +3286,7 @@ def has_promotion(user_member_grade_id=None, promotion_member_grade_id=0):
 
 def update_user_paymoney(id):
 	"""
-	add by houtingfei 
+	add by houtingfei
 	reason：取消订单修改会员消息信息
 	"""
 	#更新会员的消费、消费次数、消费单价
@@ -3255,10 +3314,10 @@ def create_mall_order_from_shared(request,order_id):
 	member = get_member(request)
 	followed_member_token = get_followed_member_token_from_cookie(request)
 	if (member and member.token == followed_member_token) or not followed_member_token:
-		return 
+		return
 
 	MallOrderFromSharedRecord.objects.create(order_id=order_id, fmt=followed_member_token)
 	# try:
-		
+
 	# except Exception, e:
 	# 	raise e

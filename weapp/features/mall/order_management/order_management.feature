@@ -82,7 +82,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no": "001",
+			"order_id": "001",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -94,7 +94,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no":"002",
+			"order_id":"002",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -107,7 +107,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no":"003",
+			"order_id":"003",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -120,7 +120,7 @@ Background:
 	And bill购买jobs的商品
 		"""
 		{
-			"order_no":"004",
+			"order_id":"004",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -940,7 +940,7 @@ Scenario: 5 设置未付款订单过期时间
 
 	Given jobs登录系统
 	#订单过期时间是按照小时计算
-	When jobs设置订单过期时间1天
+	When jobs设置未付款订单过期时间1小时
 	When bill访问jobs的webapp
 	And bill领取jobs的优惠券
 		"""
@@ -975,7 +975,7 @@ Scenario: 5 设置未付款订单过期时间
 		"""
 	#jobs1天后查看最新订单，状态为已取消
 	Given jobs登录系统
-  	When jobs触发订单超时取消任务
+	When jobs触发订单超时取消任务
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -1009,7 +1009,7 @@ Scenario: 5 设置未付款订单过期时间
 		}
 		"""
 	#jobs设置订单过期时间为空
-	When jobs设置订单过期时间0天
+	When jobs设置未付款订单过期时间0小时
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""

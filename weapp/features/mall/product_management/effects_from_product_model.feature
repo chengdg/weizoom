@@ -1,7 +1,8 @@
-#_author_:张三香
+#author: 张三香
+#editor: 张三香 2015.10.14
 
 Feature:删除规格或规格值对商品的影响
-"""
+	"""
 	#说明：
 		#针对线上"bug3741"和"bug4257"补充feature
 		#删除规格或规格值会导致使用该规格或规格值的商品下架(待售商品列表中：价格变为0,库存变为0)
@@ -12,7 +13,7 @@ Feature:删除规格或规格值对商品的影响
 			#商品3：黑M  白M
 			#商品4: 白S
 			#商品5：黑M 黑S 白M 白S
-"""
+	"""
 
 Background:
 	Given jobs登录系统
@@ -141,8 +142,8 @@ Background:
 		}]
 		"""
 
-@wip.ob1 @product @property @toSaleProduct @online_bug @mall2
-Scenario: 1 删除商品规格值'S'
+@mall2 @product @module   @wip.ob1 @toSaleProduct @online_bug
+Scenario:1 删除商品规格值'S'
 	Given jobs登录系统
 	When jobs删除商品规格'尺寸'的值'S'
 	Then jobs能获取商品'商品1'
@@ -204,8 +205,8 @@ Scenario: 1 删除商品规格值'S'
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug @mall2
-Scenario: 2 删除商品规格'颜色'
+@mall2 @product @module   @toSaleProduct @online_bug
+Scenario:2 删除商品规格'颜色'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
 	Then jobs能获取商品'商品2'
@@ -281,8 +282,8 @@ Scenario: 2 删除商品规格'颜色'
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug @mall2
-Scenario: 3 删除商品规格值 '黑'和 'M'
+@mall2 @product @module   @toSaleProduct @online_bug
+Scenario:3 删除商品规格值 '黑'和 'M'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'的值'黑色'
 	When jobs删除商品规格'尺寸'的值'M'
@@ -339,8 +340,8 @@ Scenario: 3 删除商品规格值 '黑'和 'M'
 			}
 		"""
 
-@product @property @toSaleProduct @online_bug @mall2
-Scenario: 4 删除商品规格'颜色'和'尺寸'
+@mall2 @product @module   @product @property @toSaleProduct @online_bug
+Scenario:4 删除商品规格'颜色'和'尺寸'
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
 	And jobs删除商品规格'尺寸'
@@ -435,10 +436,11 @@ Scenario: 4 删除商品规格'颜色'和'尺寸'
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug @mall2
-Scenario: 5 无规格商品修改成多规格后,再删除商品规格
+@mall2 @product @module   @product @property @toSaleProduct @online_bug
+Scenario:5 无规格商品修改成多规格后,再删除商品规格
 	#无规格商品修改成多规格后，删除商品规格会导致:
-		#商品下架,库存变为0,会保留无规格时的价格和重量
+	#商品下架,库存变为0,会保留无规格时的价格和重量
+
 	Given jobs登录系统
 	When jobs更新商品'无规格'
 		"""
@@ -503,10 +505,11 @@ Scenario: 5 无规格商品修改成多规格后,再删除商品规格
 		}
 		"""
 
-@product @property @toSaleProduct @online_bug @mall2
-Scenario: 6 无规格商品修改成多规格后,再删除商品规格值
+@mall2 @product @module   @product @property @toSaleProduct @online_bug
+Scenario:6 无规格商品修改成多规格后,再删除商品规格值
 	#无规格商品修改成多规格后,再删除商品规格值会导致:
-		##商品下架,库存变为0,会保留无规格时的价格和重量
+	#商品下架,库存变为0,会保留无规格时的价格和重量
+
 	Given jobs登录系统
 	When jobs更新商品'无规格'
 		"""

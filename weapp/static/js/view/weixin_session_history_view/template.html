@@ -34,10 +34,10 @@
 	{{else}}
 	<div id="${id}"></div>
 	<div class="messageLog_oneMessage" >
-		<span class="messageLog_userImg fl mr30"><a href="/member/member_detail/edit/?id=${ member_id }"><img width="64" height="64px" src="${sender_icon}"></a></span>
+		<span class="messageLog_userImg fl mr30"><a href="/member/detail/?id=${ member_id }"><img width="64" height="64px" src="${sender_icon}"></a></span>
 	    <div class="messageLog_messageContent fl">
 	    	<div class="clearfix">
-	    		<p class="messageLog_messageContentTop fl"><em><a href="/member/member_detail/edit/?id=${ member_id }">{{html sender_name}}</a></em>
+	    		<p class="messageLog_messageContentTop fl"><em><a href="/member/detail/?id=${ member_id }">{{html sender_name}}</a></em>
 	    		<p class="messageLog_messageContentDown fr">
 		        	${weixin_created_at}
 		        </p>

@@ -162,7 +162,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	"""最近修改: yanzhao
 	e.g.:
 		{
-			"order_no": "" # 订单号
+			"order_id": "" # 订单号
 			"ship_area": "",
 			"ship_name": "bill",
 			"ship_address": "",
@@ -334,25 +334,25 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 	response_json = json.loads(context.response.content)
 
 	# raise '----------------debug test----------------------'
-
 	if response_json['code'] == 200:
 		# context.created_order_id为订单ID
 		context.created_order_id = response_json['data']['order_id']
 	else:
 		context.created_order_id = -1
 		context.server_error_msg = response_json['data']['msg']
+		print "buy_error----------------------------",context.server_error_msg,response
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=bdd_util.get_datetime_str(args['date']))
-		if 'order_no' in args:
+		if 'order_id' in args:
 			db_order = Order.objects.get(order_id=context.created_order_id)
-			db_order.order_id=args['order_no']
+			db_order.order_id=args['order_id']
 			db_order.save()
 			if db_order.origin_order_id <0:
 				for order in Order.objects.filter(origin_order_id=db_order.id):
-					order.order_id = '%s^%s' % (args['order_no'], order.supplier)
+					order.order_id = '%s^%s' % (args['order_id'], order.supplier)
 					order.save()
-			context.created_order_id = args['order_no']
+			context.created_order_id = args['order_id']
 
 	context.product_ids = product_ids
 	context.product_counts = product_counts
@@ -399,9 +399,9 @@ def step_impl(context, webapp_owner_name):
 			data.update(context.ship_address)
 
 		# TODO 统计BDD使用，需要删掉
-		purchase_type = u'测试购买' if row['type'] == u'测试' else None
-		if purchase_type:
-			data['type'] = purchase_type
+		# purchase_type = u'测试购买' if row['type'] == u'测试' else None
+		# if purchase_type:
+		# 	data['type'] = purchase_type
 		# TODO 统计BDD使用，需要删掉
 		# data['ship_name'] = webapp_user_name
 		if row.get('product_integral', None):
@@ -411,11 +411,12 @@ def step_impl(context, webapp_owner_name):
 			except:
 				pass
 
-			if tmp > 0:
+			# if tmp > 0:
+			if tmp > 0 and row.get('integral', None):  #duhao 20150929 消费积分不能依赖于现获取积分,让integral列可以不填
 				# 先为会员赋予积分,再使用积分
 				# TODO 修改成jobs修改bill积分
 				context.execute_steps(u"When %s获得%s的%s会员积分" % (webapp_user_name, webapp_owner_name, row['integral']))
-				data['products'][0]['integral'] = tmp
+			data['products'][0]['integral'] = tmp
 
 		if row.get('coupon', '') != '':
 			if ',' in row['coupon']:
@@ -442,28 +443,64 @@ def step_impl(context, webapp_owner_name):
 		if row.get('date') != '':
 			data['date'] = row.get('date')
 		if row.get('order_id', '') != '':
-			data['order_no'] = row.get('order_id')
+			data['order_id'] = row.get('order_id')
+
+
 		if row.get('pay_type', '') != '':
 			data['pay_type'] = row.get('pay_type')
+
 
 		print("SUB STEP: to buy products, param: {}".format(data))
 		context.caller_step_purchase_info = data
 		context.execute_steps(u"when %s购买%s的商品" % (webapp_user_name, webapp_owner_name))
-
 		order = Order.objects.all().order_by('-id')[0]
 		#支付订单
+
 		if row.get('payment_time', '') != '' or row.get('payment', '') == u'支付':
 			pay_type = row.get('pay_type', u'货到付款')
 			if pay_type != '' != u'优惠抵扣':
+				if 'order_id' in data:
+					context.created_order_id = data['order_id']
 				context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name, pay_type))
 			if row.get('payment_time', '') != '':
 				Order.objects.filter(id=order.id).update(
 					payment_time=bdd_util.get_datetime_str(row['payment_time']))
+
 		# 操作订单
 		action = row['action'].strip()
 		if action:
 			actor, operation = action.split(',')
 			context.execute_steps(u"given %s登录系统" % actor)
+			if row.get('delivery_time') or operation == u'完成':
+				step_id = OPERATION2STEPID.get(u'发货', None)
+				context.latest_order_id = order.id
+				context.execute_steps(step_id % actor)
+			if row.get('delivery_time'):
+				log = OrderOperationLog.objects.filter(
+				order_id=order.order_id, action='订单发货').get()
+				log.created_at =  bdd_util.get_date(row.get('delivery_time'))
+				log.save()
+			# if operation == u'取消' or operation == u'退款' or operation == u'完成退款':
+			if operation == u'完成退款':  # 完成退款的前提是要进行退款操作
+				step_id = OPERATION2STEPID.get(u'发货', None)
+				context.latest_order_id = order.id
+				context.execute_steps(step_id % actor)
+
+				step_id = OPERATION2STEPID.get(u'完成', None)
+				context.latest_order_id = order.id
+				context.execute_steps(step_id % actor)
+				step_id = OPERATION2STEPID.get(u'退款', None)
+				context.latest_order_id = order.id
+				context.execute_steps(step_id % actor)
+			# if operation == u'退款':  # 完成退款的前提是要进行发货和完成操作
+			# 	step_id = OPERATION2STEPID.get(u'发货', None)
+			# 	context.latest_order_id = order.id
+			# 	context.execute_steps(step_id % actor)
+
+			# 	step_id = OPERATION2STEPID.get(u'完成', None)
+			# 	context.latest_order_id = order.id
+			# 	context.execute_steps(step_id % actor)
+
 			step_id = OPERATION2STEPID.get(operation, None)
 			if step_id:
 				context.latest_order_id = order.id
@@ -501,11 +538,7 @@ def step_impl(context, webapp_owner_name):
 	#进行统计
 	from services.daily_page_visit_statistic_service.tasks import daily_page_visit_statistic_service
 	for date in dates:
-		# print('>>>>>>>>>>>>>>>>>>>')
-		# print(date)
-		# print(daily_page_visit_statistic_service)
 		result = daily_page_visit_statistic_service.delay(None, date)
-		# print(result)
 
 
 # 获取规格ids, 根据名称

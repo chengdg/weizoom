@@ -17,7 +17,7 @@
     <ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li>
-			<a href="/member/members/get/">会员列表</a>
+			<a href="/member/member_list/">会员列表</a>
 		</li>
 		<li class="active">会员详情</li>
 	</ul>
@@ -277,7 +277,7 @@
 		        	</div>
 
 		        </div>
-		        <table class="xui-tab-memberifo">
+		        <table class="xui-tab-memberifo ">
 		        	<thead>
 		        		<tr>
 
@@ -332,7 +332,7 @@
 		        	</thead>
 		        </table>
 				<div style="height:225px; overflow-y:scroll;">
-				<table class="xui-tab-memberifo">
+				<table class="xui-tab-memberifo" style="border-top:none">
 		        	<tbody>
 		        		{% for member_browse_record in member_browse_records %}
 		        		<tr>
@@ -479,7 +479,7 @@
 			W.getApi().call({
 				method: 'post',
 				app: 'member',
-				api: 'member/update',
+				resource:'detail',
 				args: {
 					member_id: memberId,
 					grade_id: gradeId,

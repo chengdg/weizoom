@@ -17,7 +17,7 @@ gmu.define('GlobalNav', {
 		if (is_member == 'true') {
 			var $globalLink = $('<div class="wui-globalLink em75">'
 								+'<ul class="disF">'
-									+'<li><a href="./?woid='+W.webappOwnerId+'&module=mall&model=products&action=list" class="wui-globalHome"><span class="disBl">返回首页</span></a></li>'
+									+'<li><a href="'+W.backHomePageUrl+'" class="wui-globalHome"><span class="disBl">返回首页</span></a></li>'
 									+'<li><a class="wui-userCenter" href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId+'"><span class="disBl">个人中心</span></a></li>'
 									+'<li><a href="./?woid='+W.webappOwnerId+'&module=mall&model=shopping_cart&action=show" class="wui-shoppingCart"><span class="disBl">购物车</span></a></li>'
 								+'</ul>'
@@ -25,7 +25,7 @@ gmu.define('GlobalNav', {
 		} else {
 			var $globalLink = $('<div class="wui-globalLink em75">'
 								+'<ul class="disF">'
-									+'<li><a href="./?woid='+W.webappOwnerId+'&module=mall&model=products&action=list" class="wui-globalHome"><span class="disBl">返回首页</span></a></li>'
+									+'<li><a href="'+W.backHomePageUrl+'" class="wui-globalHome"><span class="disBl">返回首页</span></a></li>'
 									+'<li><a href="./?woid='+W.webappOwnerId+'&module=mall&model=shopping_cart&action=show" class="wui-shoppingCart"><span class="disBl">购物车</span></a></li>'
 									+'</ul>'
 							+'</div>');
