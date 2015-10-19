@@ -211,13 +211,13 @@
 		for(var index in firstNavs) {
 			var firstNav = firstNavs[index];
 			if(firstNav.permission === "" || $.inArray(firstNav.permission, permissions) >= 0){
+				//设置浏览无权限页面时自动跳转到的页面
+				if(indexPage === "/") {
+					indexPage = firstNav.url;
+				}
+				
 				if(firstNavName === firstNav.name) {
 					hasPermission = true;
-
-					//设置浏览无权限页面时自动跳转到的页面
-					if(indexPage === "/") {
-						indexPage = firstNav.url;
-					}
 
 					$('.xa-first-navs').append('<li class="pr"><a' + 
 						' class="active"' + 
@@ -292,7 +292,7 @@
 		}
 
 		if(!hasPermission) {  //没权限时跳转到指定页面
-			location.href = indexPage;
+			window.location.href = "http://" + location.host + indexPage;
 		} else {
 			//在菜单没渲染完之前先把正文隐藏掉，不然会先出正文然后才出菜单，很难看
 			$('.xa-first-navs').removeClass('hidden');
