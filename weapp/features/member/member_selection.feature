@@ -284,8 +284,7 @@ Scenario:2 过滤条件"会员名称"
 		Then jobs可以获得会员列表
 			"""
 			[{
-				"name":"toms5",
-				"member_rank":"金牌会员"
+				"name":"toms5"
 			}]
 			"""
 
