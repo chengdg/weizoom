@@ -42,25 +42,29 @@ class SignHandler(KeywordHandler):
 		response_rule = None
 		response_content = None
 		data = {}
-		data['webapp_owner_id'] = context.user_profile.user_id
-		data['keyword'] = message.content
-		data['openid'] = message.fromUserName
-		data['webapp_id'] = context.user_profile.webapp_id
+		try:
+			data['webapp_owner_id'] = context.user_profile.user_id
+			data['keyword'] = message.content
+			data['openid'] = message.fromUserName
+			data['webapp_id'] = context.user_profile.webapp_id
 
-		response_content = Sign.do_auto_signment(data)
+			response_content = Sign.do_auto_signment(data)
 
-		if response_content:
-			response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, context.user_profile)
+			if response_content:
+				response = generator.get_text_response(message.fromUserName, message.toUserName, response_content, message.fromUserName, context.user_profile)
 
-			try:
-				self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)
-			except:
-				notify_message = u"_process_recorde_message, cause:\n{}".format(unicode_full_stack())
-				message_tail = '\nanswer:%s,patterns:%s,owner_id:%d,id:%d' % (response_rule.answer, response_rule.patterns, response_rule.owner_id, response_rule.id)
-				notify_message += message_tail
-				watchdog_error(notify_message)
+				try:
+					self._process_recorde_message(context, response_rule, from_weixin_user, is_from_simulator)
+				except:
+					notify_message = u"_process_recorde_message, cause:\n{}".format(unicode_full_stack())
+					message_tail = '\nanswer:%s,patterns:%s,owner_id:%d,id:%d' % (response_rule.answer, response_rule.patterns, response_rule.owner_id, response_rule.id)
+					notify_message += message_tail
+					watchdog_error(notify_message)
+			
+			return response
+		except:
+			return None
 		
-		return response
 
 	def _process_recorde_message(self, context, response_rule, from_weixin_user, is_from_simulator):
 		new_context = {}
