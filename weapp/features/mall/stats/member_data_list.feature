@@ -89,79 +89,20 @@ Background:
 		}]
 		"""
 
-	When jobs添加邮费配置
-		"""
-		[{
-			"name":"顺丰",
-			"first_weight":1,
-			"first_weight_price":15.00,
-			"added_weight":1,
-			"added_weight_price":5.00
-		}]
-		"""
-	And jobs选择'顺丰'运费配置
-	
 	When jobs已添加商品
 		"""
 		[{
 			"name": "商品1",
-			"detail": "商品1的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 11.0,
-						"weight": 5,
-						"stock_type": "无限"
-					}
-				}
-			},
-			"postage": "顺丰"
-		}, {
+			"price": 100.0,
+			"weight": 5,
+			"postage": 10.0,
+			"stock_type": "无限"
+		},{
 			"name": "商品2",
-			"detail": "商品2的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 12.0,
-						"weight": 5,
-						"stock_type": "无限",
-						"stocks": 3
-					}
-				}
-			},
-			"pay_interfaces":[{
-				"type": "在线支付"
-			}],
-			"postage": 10.0
-		}, {
-			"name": "商品3",
-			"detail": "商品3的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 12.0,
-						"weight": 5,
-						"stock_type": "无限",
-						"stocks": 3
-					}
-				}
-			},
-			"pay_interfaces":[{
-				"type": "在线支付"
-			}],
-			"postage": 10.0
+			"price": 100.0,
+			"weight": 5,
+			"postage": 15.0,
+			"stock_type": "无限"
 		}]
 		"""	
 
@@ -201,8 +142,8 @@ Background:
 		|   0006   | 今天   | tom1     | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 110    |    0   | 0    | jobs,完成     |    已完成     |
 		|   0007   | 今天   | tom1     | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
 		|   0008   | 今天   | -lilei   | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
-		|   0009   | 今天   | mary     | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 195         | 195    |    0   | 0    | jobs,发货     |    已发货     |
-		|   0010   | 今天   | -lisi    | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 195         | 195    |    0   | 0    | jobs,发货     |    已发货     |
+		|   0009   | 今天   | mary     | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
+		|   0010   | 今天   | -lisi    | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
 
 @mall2 @bi @memberAnalysis   @stats @wip.member1
 Scenario: 1  会员概况：会员详细数据
