@@ -852,25 +852,25 @@ class SubUserMiddleware(object):
 			
 		return None
 
-
-class PermissionMiddleware(object):
-	"""
-	填充request.user的权限数据，用于支持request.user.has_perm操作
-	"""
-	def process_request(self, request):
-		if is_request_for_webapp(request) or is_request_for_webapp_api(request):
-			return None
-		if not request.user.is_authenticated():
-			return None
+#duhao 20151019注释
+# class PermissionMiddleware(object):
+# 	"""
+# 	填充request.user的权限数据，用于支持request.user.has_perm操作
+# 	"""
+# 	def process_request(self, request):
+# 		if is_request_for_webapp(request) or is_request_for_webapp_api(request):
+# 			return None
+# 		if not request.user.is_authenticated():
+# 			return None
 			
-		group_ids = [relation.group_id for relation in auth_models.UserHasGroup.objects.filter(user=request.user)]
-		permission_ids = [relation.permission_id for relation in auth_models.GroupHasPermission.objects.filter(group_id__in=group_ids)]
-		user_permission_ids = [relation.permission_id for relation in auth_models.UserHasPermission.objects.filter(user=request.user)]
+# 		group_ids = [relation.group_id for relation in auth_models.UserHasGroup.objects.filter(user=request.user)]
+# 		permission_ids = [relation.permission_id for relation in auth_models.GroupHasPermission.objects.filter(group_id__in=group_ids)]
+# 		user_permission_ids = [relation.permission_id for relation in auth_models.UserHasPermission.objects.filter(user=request.user)]
 
-		permission_ids.extend(user_permission_ids)
-		permission_ids = set(permission_ids)
-		auth_api.fill_parent_permissions(permission_ids)
+# 		permission_ids.extend(user_permission_ids)
+# 		permission_ids = set(permission_ids)
+# 		auth_api.fill_parent_permissions(permission_ids)
 
-		permission_set = set([permission.code_name for permission in auth_models.Permission.objects.filter(id__in=permission_ids)])
+# 		permission_set = set([permission.code_name for permission in auth_models.Permission.objects.filter(id__in=permission_ids)])
 
-		request.user.permission_set = permission_set
+# 		request.user.permission_set = permission_set
