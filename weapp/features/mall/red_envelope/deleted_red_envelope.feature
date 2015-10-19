@@ -52,33 +52,37 @@ Background:
 			"prize_info": "单品券1",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"receive_method":'下单领取',
-			"limit_money": 100,
-			"share_title": "下订单领红包1",
-			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"receive_method":"下单领取",
+			"limit_order_money": 100,
+			"use_info": "下订单领红包1",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title":"分享描述1"
 		},{
 			"name": "红包2",
 			"prize_info": "全体券2",
-			"is_permanant_active": true,
-			"receive_method":'图文领取',
-			"share_title": "图文领取领红包2",
-			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"limit_time": true,
+			"receive_method":"图文领取",
+			"use_info": "图文领取领红包2",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title":"分享描述2"
 		},{
 			"name": "红包3",
 			"prize_info": "全体券3",
-			"is_permanant_active": true,
-			"limit_money": "无限制",
-			"receive_method":'下单领取',
-			"share_title": "下订单领红包3",
-			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"limit_time": true,
+			"limit_order_money": "无限制",
+			"receive_method":"下单领取",
+			"use_info": "下订单领红包3",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title":"分享描述3"
 		},{
 			"name": "红包4",
 			"prize_info": "全体券3",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"receive_method":'图文领取',
-			"share_title": "图文领取红包4",
-			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"receive_method":"图文领取",
+			"use_info": "图文领取红包4",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"share_title":"分享描述4"
 		}]
 		"""
 
@@ -198,8 +202,8 @@ Scenario:4 在查询"奖励时间"结果中删除分享红包
 		"""
 		{
 			"prize_info": "所有奖励",
-			"start_date": "今天",
-			"end_date": "2天后"
+			"start_time": "今天",
+			"end_time": "2天后"
 		}
 		"""
 	Then jobs能获取分享红包列表

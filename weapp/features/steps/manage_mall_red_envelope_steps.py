@@ -42,24 +42,28 @@ def step_impl(context, user):
 def step_add_red_envelope_rule(context, user):
     rules = json.loads(context.text)
     for rule in rules:
-        limit_money = rule.get('limit_money', 0)
-        if limit_money == u'无限制':
-            limit_money = 0
-        if rule('receive_method', '') == u'下单领取':
-            receive_method = 0
+        limit_order_money = rule.get('limit_order_money', 0)
+        if limit_order_money == u'无限制':
+            limit_order_money = 0
+        receive_method = rule.get('receive_method', 0)
+        if receive_method == u'下单领取':
+            receive_method = False #下单领取
+            status = False
         else:
-            receive_method = 1
+            receive_method = True #图文领取
+            status = True #图文领取-状态默认开启
         params = {
             'owner': context.client.user,
             'name': rule.get('name', ''),
-            'coupon_rule': __get_coupon_rule_id(rule.get('prize_info', '')),
-            'start_date': __get_date(rule.get('start_date', default_date)),
-            'end_date': __get_date(rule.get('end_date', default_date)),
+            'coupon_rule_id': __get_coupon_rule_id(rule.get('prize_info', '')),
+            'start_time': __get_date(rule.get('start_time', default_date)),
+            'end_time': __get_date(rule.get('end_time', default_date)),
             'receive_method': receive_method,
-            'limit_money': limit_money,
-            'detail': rule.get('detail', ''),
-            'share_pic': rule.get('logo_url', ''),
-            'remark': rule.get('desc', '')
+            'status': status,
+            'limit_order_money': limit_order_money,
+            'use_info': rule.get('use_info', ''),
+            'share_pic': rule.get('share_pic', ''),
+            'share_title': rule.get('share_title', '')
         }
         response = context.client.post('/apps/red_envelope/api/red_envelope_rule/?_method=put', params)
         bdd_util.assert_api_call_success(response)
