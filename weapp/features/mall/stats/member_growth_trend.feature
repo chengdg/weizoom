@@ -59,12 +59,18 @@ Background:
 	When jobs已添加商品
 		"""
 		[{
-			"name": "商品1"
-		}, {
-			"name": "商品2"
-		}, {
-			"name": "商品3"
-		}]	
+			"name": "商品1",
+			"price": 100.0,
+			"weight": 5,
+			"postage": 10.0,
+			"stock_type": "无限"
+		},{
+			"name": "商品2",
+			"price": 100.0,
+			"weight": 5,
+			"postage": 15.0,
+			"stock_type": "无限"
+		}]
 		"""
 	And jobs已添加支付方式
 		"""
@@ -117,7 +123,7 @@ Background:
 		|  0010    | 2015-05-07 | -lili     | 商品2,1  | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货       |
 		|  0011    | 2015-06-01 | bill8     | 商品2,2  | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货       |
 
-@stats @stats.member @mall2
+@mall2 @bi @memberAnalysis   @stats @stats.member
 Scenario: 1  会员概况：会员增长趋势
 	Given jobs登录系统
 	When jobs设置筛选日期
