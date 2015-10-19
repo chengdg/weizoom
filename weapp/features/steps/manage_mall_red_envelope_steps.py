@@ -45,18 +45,23 @@ def step_add_red_envelope_rule(context, user):
         limit_money = rule.get('limit_money', 0)
         if limit_money == u'无限制':
             limit_money = 0
+        if rule('receive_method', '') == u'下单领取':
+            receive_method = 0
+        else:
+            receive_method = 1
         params = {
             'owner': context.client.user,
             'name': rule.get('name', ''),
             'coupon_rule': __get_coupon_rule_id(rule.get('prize_info', '')),
             'start_date': __get_date(rule.get('start_date', default_date)),
             'end_date': __get_date(rule.get('end_date', default_date)),
+            'receive_method': receive_method,
             'limit_money': limit_money,
             'detail': rule.get('detail', ''),
             'share_pic': rule.get('logo_url', ''),
             'remark': rule.get('desc', '')
         }
-        response = context.client.post('/apps/promotion/api/red_envelope_rule/?_method=put', params)
+        response = context.client.post('/apps/red_envelope/api/red_envelope_rule/?_method=put', params)
         bdd_util.assert_api_call_success(response)
 
 def __to_date(str):
@@ -90,7 +95,7 @@ def step_impl(context, user):
             param['endDate'] = ''
         #param.update(context.query_param)
 
-    response = context.client.get('/apps/promotion/api/red_envelope_rule_list/', param)
+    response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/', param)
     rules = json.loads(response.content)['data']['items']
 
     status2name = {
@@ -140,7 +145,7 @@ def step_impl(context, user, action, red_envelope_rule_name):
         'status': action2code[action]
     }
 
-    response = context.client.post('/apps/promotion/api/red_envelope_rule/?_method=post', params)
+    response = context.client.post('/apps/red_envelope/api/red_envelope_rule/?_method=post', params)
     api_code = json.loads(response.content)['code']
 
     if api_code == 500:
