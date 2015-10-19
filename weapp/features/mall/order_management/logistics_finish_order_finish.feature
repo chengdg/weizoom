@@ -11,7 +11,7 @@ Background:
 	And jobs设定会员积分策略
 		"""
 		{
-			"buy_award_count_for_buyer":10
+			"buy_award_count_for_buyer":10,
 			"order_money_percentage_for_each_buy":0.1
 		}
 		"""
@@ -32,7 +32,7 @@ Background:
 	And bill关注jobs的公众号
 
 
-@logistics @order
+@logistics @order @mall2 @ztq
 Scenario: 1 签收快件促使订单完成获得购物返利积分
 	jobs发货后，快件被签收，促使订单完成
 
@@ -40,6 +40,7 @@ Scenario: 1 签收快件促使订单完成获得购物返利积分
 	When bill购买jobs的商品
 		"""
 		{
+			"order_id": "001",
 			"products": [{
 				"name": "商品1",
 				"count": 1
@@ -65,7 +66,7 @@ Scenario: 1 签收快件促使订单完成获得购物返利积分
 	When jobs对订单进行发货
 		"""
 		{
-			"order_id": "001",
+			"order_no": "001",
 			"logistics": "申通快递",
 			"number": "229388967650",
 			"shipper": "jobs"
@@ -80,7 +81,6 @@ Scenario: 1 签收快件促使订单完成获得购物返利积分
 			"actions": ["申请退款"],
 			"shipper": "jobs",
 			"methods_of_payment": "货到付款",
-			"logistics": "申通快递",
 			"number": "229388967650"
 		}
 		"""
@@ -90,6 +90,9 @@ Scenario: 1 签收快件促使订单完成获得购物返利积分
 		"""
 		[{
 			"content":"购物返利",
-			"integral":20
+			"integral":10
+		},{
+			"content":"购物返利",
+			"integral":10
 		}]
 		"""
