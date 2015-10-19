@@ -121,7 +121,7 @@ MALL_HOME_SECOND_NAV = {
             'name': MALL_HOME_GLOBAL_NAVBAR_NAV,
             'title': u'店铺导航',
             'url': '/termite2/global_navbar/',
-            'permission': 'manage_wepage'
+            'permission': 'manage_wepage_navbar'
         }
     ]
 }
@@ -442,31 +442,31 @@ CONFIG_NAV = {
             'name': MALL_CONFIG_POSTAGE_NAV,
             'title': u'运费模板',
             'url': '/mall2/postage_list/',
-            'permission': ['manage_postage_template', ]
+            'permission': 'manage_postage_template'
         },
         {
             'name': MALL_CONFIG_EXPRESS_COMOANY_NAV,
             'title': u'物流名称管理',
             'url': '/mall2/express_delivery_list/',
-            'permission': ['manage_express', ]
+            'permission': 'manage_express'
         },
         {
             'name': MALL_CONFIG_PAYINTERFACE_NAV,
             'title': u'支付方式',
             'url': '/mall2/pay_interface_list/',
-            'permission': ['manage_pay_interface', ]
+            'permission': 'manage_pay_interface'
         },
         {
             'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
             'title': u'运营邮件通知',
             'url': '/mall2/email_notify_list/',
-            'permission': ['manage_config_mail', ]
+            'permission': 'manage_config_mail'
         },
         {
             'name': MAIL_CONFIG_SUPPLIER_NAV,
             'title': u'供货商',
             'url': '/mall2/supplier_list/',
-            'permission': ['manage_supplier', ]
+            'permission': 'manage_supplier'
         },
     ]
 }

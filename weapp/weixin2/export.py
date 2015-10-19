@@ -59,81 +59,81 @@ WEIXIN_SECOND_NAV = {
             'name': WEIXIN_HOME_OUTLINE_NAV,
             'title': u'微信概况',
             'url': '/new_weixin/outline/',
-            'need_permissions': []
+            'permission': 'weixin_outline'
         }, {
             'name': WEIXIN_MESSAGE_SECOND_NAV,
             'title': u'消息互动',
             'url': '/new_weixin/realtime_messages/',
-            'need_permissions': [], 
+            'permission': 'realtime_messages', 
             'third_navs': [
                 {
                     'name': MESSAGE_REALTIME_MESSAGE_NAV,
                     'title': u'实时消息',
                     'url': '/new_weixin/realtime_messages/',
-                    'need_permissions': [],
+                    'permission': '',
                     'class_name': 'xa-msgTip'
                 },
                 {
                     'name': MESSAGE_MASS_SENDING_NAV,
                     'title': u'群发消息',
                     'url': '/new_weixin/mass_sending_messages/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': MESSAGE_AUTO_REPLY_NAV,
                     'title': u'自动回复',
                     'url': '/new_weixin/keyword_rules/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': MESSAGE_TEMPLATE_MESSAGE_NAV,
                     'title': u'模板消息',
                     'url': '/new_weixin/template_messages/',
-                    'need_permissions': []
+                    'permission': ''
                 }
             ]
         }, {
             'name': ADVANCE_MANAGE_MATERIAL_NAV,
             'title': u'高级管理',
             'url': '/new_weixin/materials/',
-            'need_permissions': [], 
+            'permission': 'materials', 
             'third_navs': [
                 {
                     'name': ADVANCE_MANAGE_MATERIAL_NAV,
                     'title': u'图文管理',
                     'url': '/new_weixin/materials/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': ADVANCE_MANAGE_QRCODE_NAV,
                     'title': u'带参数二维码',
                     'url': '/new_weixin/qrcodes/',
-                    'need_permissions': []
+                    'permission': ''
                 }
             ]
         }, {
             'name': MPUSER_MENU_NAV,
             'title': u'公众号设置',
             'url': '/new_weixin/menu/',
-            'need_permissions': [], 
+            'permission': 'mpuser_menu', 
             'third_navs': [
                 {
                     'name': MPUSER_MENU_NAV,
                     'title': u'自定义菜单',
                     'url': '/new_weixin/menu/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': MPUSER_DIRECT_FOLLOW_NAV,
                     'title': u'快速关注',
                     'url': '/new_weixin/direct_follow/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                  {
                     'name': MPUSER_BINDING_NAV,
                     'title': u'公众号绑定',
                     'url': '/new_weixin/mp_user/',
-                    'need_permissions': []
+                    'permission': ''
                 }
             ]
         }
