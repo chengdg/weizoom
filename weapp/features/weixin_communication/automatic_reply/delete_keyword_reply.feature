@@ -17,7 +17,7 @@ Background:
 			"content":"单条图文1文本内容"
 		}]
 		"""
-	and jobs已添加多图文
+	And jobs已添加多图文
 		"""
 		[{
 			"title":"图文4",
@@ -26,7 +26,6 @@ Background:
 			}],
 			"cover_in_the_text":"true",
 			"jump_url":"www.baidu.com",
-			"summary":"单条图文4文本摘要",
 			"content":"单条图文4文本内容"
 		},{
 			"title":"sub图文1",
@@ -34,7 +33,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容"
 		},{
 			"title":"sub图文2",
@@ -42,7 +40,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容"
 		},{
 			"title":"sub图文3",
@@ -50,7 +47,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou4.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文3文本摘要",
 			"content":"sub单条图文3文本内容",
 			"jump_url":"www.baidu.com"
 		}]
@@ -96,14 +92,14 @@ Background:
 		}]
 		"""
 	
-@message @automaticReply @senior @textPicture @mall2
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 1 删除单个关键字或删除单个回复
 	至少要保留一个关键字，或一个关键字回复，否则无法成功
 	
 	#删除关键词自动回复规则中的关键词
 	Given jobs登录系统
 	When jobs编辑关键词自动回复规则'规则2'
-	"""
+		"""
 		{
 			"rules_name":"规则2",
 			"keyword": [{
@@ -115,8 +111,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 				 "reply_content":"图文4"
 				 }]
 		}
-	"""
-	#When jobs删除关键词'关键字21'
+		"""
 	Then jobs获得关键词自动回复列表
 		"""
 		[{
@@ -156,7 +151,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 
 	#删除关键词自动回复规则中的回复内容	
 	When jobs编辑关键词自动回复规则'规则1'
-	"""
+		"""
 		{
 			"rules_name":"规则1",
 			"keyword": [{
@@ -177,7 +172,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 					"reply_type":"text"
 				}]
 		}
-	"""
+		"""
 	#When jobs删除回复内容'图文1'
 	Then jobs获得关键词自动回复列表
 		"""
@@ -215,7 +210,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 	
 	#删除关键词自动回复规则中的唯一关键词，删除失败
 	When jobs编辑关键词自动回复规则'规则2'
-	"""
+		"""
 		{
 			"rules_name":"规则2",
 			"keyword": [{
@@ -227,7 +222,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 				"reply_content":"图文4"
 				}]
 		}
-	"""
+		"""
 	Then jobs获得关键词自动回复列表
 		"""
 		[{
@@ -264,7 +259,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 	
 	#删除关键词自动回复规则中的唯一回复内容，删除失败
 	When jobs编辑关键词自动回复规则'规则2'
-	"""
+		"""
 		{
 			"rules_name":"规则2",
 			"keyword": [{
@@ -276,7 +271,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 				"reply_content":""
 				}]
 		}
-	"""	
+		"""	
 	Then jobs获得关键词自动回复列表
 		"""
 		[{
@@ -311,7 +306,7 @@ Scenario: 1 删除单个关键字或删除单个回复
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture @mall2
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 2 删除整条规则
 	
 	When jobs删除关键词自动回复规则'规则1'

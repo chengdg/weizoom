@@ -36,7 +36,7 @@ class WebappDatas(resource.Resource):
 		type2info = {
 			'product': {
 				'class': mall_models.Product, 
-				'filter': {'shelve_type': mall_models.PRODUCT_SHELVE_TYPE_ON},
+				'filter': {'shelve_type': mall_models.PRODUCT_SHELVE_TYPE_ON, "is_deleted": False},
 				'query_name': 'name',
 				'link_template': './?module=mall&model=product&action=get&rid={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id
 			},

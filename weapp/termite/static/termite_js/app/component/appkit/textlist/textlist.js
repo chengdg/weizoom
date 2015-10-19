@@ -14,7 +14,7 @@ W.component.appkit.TextList = W.component.Component.extend({
     }],
 
 	properties: [{
-		group: '文本调研项',
+		group: '快捷模块',
 		groupClass: 'xui-propertyView-app-TextList',
 		fields: [{
 			name: 'title',
@@ -79,7 +79,7 @@ W.component.appkit.TextList = W.component.Component.extend({
 	}
 }, {
 	indicator: {
-		name: '文本调研',
+		name: '快捷模块',
 		imgClass: 'componentList_component_textlist' // 控件icon
 	}
 });

@@ -70,23 +70,21 @@
 		<button class="btn xui-btn xui-btnfh">发&nbsp;&nbsp;&nbsp;货</button>
 		<button class="btn xui-btn">申请退款</button> -->
     </div>
-     <div class="xui-btngroup">
-        {% for action in order|get_order_actions %}
-          <button data-order-id="{{order.id}}" class="btn xui-btn  {{action.button_class}}
-          {% ifequal action.action 'cancel' %}xa-cancelOrder{% endifequal %}
-          {% ifequal action.action 'ship' %} xa-order-delivery{% endifequal %}
-          {% ifequal action.action 'pay' %} xa-pay{% endifequal %}
-          {% ifequal action.action 'update_express' %} xa-order-delivery{% endifequal %}
-          {% ifequal action.action 'update_price' %} xa-update-price{% endifequal %}
-          {% ifequal action.action 'finish' %} xa-finish{% endifequal %}
-          {% ifequal action.action 'refunding' %} xa-refund{% endifequal %}
-          {% ifequal action.action 'refund_success' %} xa-refundSuccess{% endifequal %}
+     <div class="xui-btngroup xa-actions" data-order-id="{{order.id}}">
+        {% for action in order.actions %}
+          <button class="btn xui-btn  {{action.button_class}}
+          {{ action.class_name }}
           "
           href="javascript:void(0);"
-          {% if action.action == 'update_express' %}data-is-update="true"{%endif%}
-          >{{action.name}}</a>
+          {% if action.action == 'update_express' %}
+                  data-is-update="true"
+                  data-express-company-name="{{order.express_company_name}}"
+                  data-express-number="{{order.express_number}}"
+                  data-leader-name="{{order.fackorder.leader_name}}"
+          {%endif%}
+          >{{action.name}}</a></button>
         {% endfor %}
-        </div>
+     </div>
 </div>
 
 <div class="xui-orderstate " >
@@ -168,7 +166,13 @@
                   物流公司名称：{% if child_order.express_company_name %} {{ child_order.express_company_name|get_company_name_by_value }}   {% endif %}
                 </p>
                 <p>
-                  运单号：{% if child_order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{child_order.express_company_name}}&nu={{ child_order.express_number }}">{{ child_order.express_number }}</a>{% endif %}
+                  运单号：{% if child_order.express_company_name %}
+                            {% if child_order.is_100 %}
+                                <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{child_order.express_company_name}}&nu={{ child_order.express_number }}">{{ child_order.express_number }}</a>
+                            {% else %}
+                                {{child_order.express_number  }}
+                            {% endif %}
+                        {% endif %}
                 </p>
                 <p>
                   {% for detail in child_order.get_express_details %}
@@ -187,7 +191,13 @@
               物流公司名称：{% if order.express_company_name %} {{ order.express_company_name|get_company_name_by_value }}   {% endif %}
             </p>
             <p>
-              运单号：{% if order.express_company_name %} <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ child_order.express_number }}</a>{% endif %}
+              运单号：{% if order.express_company_name %}
+                        {% if order.is_100 %}
+                            <a target="_blank" href="http://www.kuaidi100.com/chaxun?com={{order.express_company_name}}&nu={{ order.express_number }}">{{ order.express_number }}</a>
+                        {% else %}
+                            {{order.express_number  }}
+                        {% endif %}
+                    {% endif %}
             </p>
             <p>
               {% for detail in order.get_express_details %}
@@ -256,7 +266,7 @@
               <td class="xui-td-img"{% if product.noline %} style="border-top:none;"{% endif %}><img width="42" height="42" src="{{product.thumbnails_url}}"></td>
               <td class="xui-td-first"{% if product.noline %} style="border-top:none;"{% endif %}>
                 <div class="xui-a-productname">
-                  <a style="color:#333;">
+                  <span style="color:#333;">
                   {% if product.promotion.type == 'flash_sale' %}
                     [限时抢购]
                   {% elif product.promotion.type == 'premium_sale:premium_product' %}
@@ -266,7 +276,7 @@
                     [会员优惠]
                   {% endif %}
 
-                  {{product.name}}</a>
+                  {{product.name}}</span>
                 </div>
                 <p class="xui-colorsize">
                   <span>
@@ -291,7 +301,7 @@
                 {% if product.promotion.type == 'flash_sale' %}
                 直降{{product.promotion.promotion_saved_money|floatformat:"2" }}元
                 {% endif %}
-                {% if coupon.product_id == product.id %}
+                {% if product.has_coupon %}
                   <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
                 {% if product.integral_count %}
@@ -310,7 +320,7 @@
 
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
-                {% if order.coupon_id and coupon.product_id != product.id%}
+                {% if order.coupon_id and coupon.product_id == -1 %}
                 <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
                 {% endif %}
                 {% if order.integral %}
@@ -348,6 +358,8 @@
         		商品金额：
         	</p>
         	<p class="xui-value">￥{{order.total_price|floatformat:"2"}}</p>
+          <p class="xui-field">运费：</p>
+          <p class="xui-value">+￥{{order.postage|floatformat:"2"}}</p>
           {% if order.save_money > 0 %}
         	<p class="xui-field">优惠金额：</p>
           <p class="xui-value">-￥{{order.save_money|floatformat:"2"}}</p>
@@ -355,8 +367,6 @@
           <p class="xui-field">优惠金额：</p>
           <p class="xui-value">+￥{{order.save_money|floatformat:"2"|cut:'-'}}</p>
           {% endif %}
-        	<p class="xui-field">运费：</p>
-        	<p class="xui-value">+￥{{order.postage|floatformat:"2"}}</p>
           <div class="xui-line-long"></div>
           <p class="xui-field ml38" style="width:350px;">
             <span class="pull-left">
@@ -388,6 +398,13 @@
          return;
          }
          });*/
+
+        var orderAction = new W.view.mall.OrderAction({
+            el:".xa-actions",
+            pageType:"order_detail"
+        });
+
+
         $('#myTab a:last').tab('show');//初始化显示哪个tab
 
         $('#myTab a').click(function (e) {
@@ -411,251 +428,6 @@
           }
         });
 
-        // 发货
-        $('.xa-order-delivery').click(function (event) {
-            event.stopPropagation();
-            event.preventDefault();
-            var $el = $(event.currentTarget);
-            var expressCompanyValue = {% if order.express_company_name %}
-            '{{ order.express_company_name }}'
-            {% else %}
-            -1
-            {% endif %};
-            var expressNumber = '{{ order.express_number }}';
-            var leaderName = '{% if order.leader_name %}{{ order.leader_name }}{% endif %}';
-            // 点击发货，不是点击修改
-            if ($el.attr('data-is-update') !== 'true') {
-                expressCompanyValue = -1;
-                expressNumber = '';
-                leaderName = '';
-            }
-            var mallOrderShipView = W.getMallOrderShipView({
-                width: 318,
-                title: '发货',
-                position:'top',
-                isTitle: false,
-                privateContainerClass:'xui-shipDropBox'
-            });
-            mallOrderShipView.show({
-                $action: $el,
-                orderId: '{{order.id}}',
-                expressCompanyValue: expressCompanyValue,
-                expressNumber: expressNumber,
-                leaderName: leaderName
-            });
-        })
-
-        // 取消
-        $('.xa-cancelOrder').click(function (event) {
-
-            event.stopPropagation();
-            event.preventDefault();
-            var $el = $(event.currentTarget);
-            var orderId = $el.attr('data-order-id');
-            W.requireConfirm({
-              $el: $(this),
-              viewName: 'order-list-confirm',
-              width:380,
-              position:'top',
-              isTitle: false,
-              privateContainerClass:'xui-orderConfirmPop',
-                  msg:'确定取消订单？',
-                confirm:function(){
-                    var args = {
-                        'order_id': orderId,
-                        'action' : 'cancel'
-                    }
-                    W.getApi().call({
-                        method: 'post',
-                        app: 'mall2',
-                        resource: 'order',
-                        args: args,
-                        success: function(data) {
-                            window.location.reload();
-                        },
-                        error: function() {
-                            }
-                    })
-
-                }
-            })
-        })
-        //标记完成
-        $('.xa-finish').click(function (event) {
-          event.stopPropagation();
-          event.preventDefault();
-          var $el = $(event.currentTarget);
-          var orderId = $el.attr('data-order-id');
-          W.requireConfirm({
-            $el: $(this),
-            viewName: 'order-list-confirm',
-            width:445,
-            position:'top',
-            isTitle: false,
-            privateContainerClass:'xui-orderConfirmPop',
-                msg:'确定将该订单标记为完成？',
-                confirm:function(){
-                    var args = {
-                        'order_id': orderId,
-                        'action' : 'finish'
-                    }
-                    W.getApi().call({
-                        method: 'post',
-                        app: 'mall2',
-                        resource: 'order',
-                        args: args,
-                        success: function(data) {
-                            window.location.reload();
-                        },
-                        error: function() {
-                            }
-                    })
-
-                }
-          })
-        });
-        // 申请退款
-        $('.xa-refund').click(function (event) {
-          event.stopPropagation();
-          event.preventDefault();
-          var $el = $(event.currentTarget);
-          var orderId = $el.attr('data-order-id');
-          W.requireConfirm({
-            $el: $(this),
-            viewName: 'order-list-confirm',
-            width:380,
-            position:'top',
-            isTitle: false,
-            privateContainerClass:'xui-orderConfirmPop',
-                msg:'确定申请退款？',
-        	confirm:function(){
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'return_pay'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-                        window.location.reload();
-                    },
-                    error: function() {
-                        }
-                })
-        	}
-          })
-        });
-        //退款完成
-        $('body').delegate('.xa-refundSuccess', 'click', function(event) {
-              event.stopPropagation();
-              event.preventDefault();
-              var $el = $(event.currentTarget);
-              var orderId = $el.attr('data-order-id');
-              W.requireConfirm({
-                $el: $(this),
-                width:356,
-                position:'top',
-                isTitle: false,
-                privateContainerClass:'xui-orderAuditConfirmPop',
-                msg:'请您与买家私下协商退款且退款成功后，再使用该功能哦!',
-                confirm:function(){
-                    var args = {
-                        'order_id': orderId,
-                        'action' : 'return_success'
-                    }
-                    W.getApi().call({
-                        method: 'post',
-                        app: 'mall2',
-                        resource: 'order',
-                        args: args,
-                        success: function(data) {
-                            window.location.reload();
-                        },
-                        error: function() {
-                            }
-                    })
-                }
-              })
-          });
-        // 备注
-        $('.xa-order-remark').click(function(event){
-          var $el = $(event.currentTarget);
-          var orderId = $el.attr('data-order-id');
-          var message = $el.attr('data-order-value');
-
-          var mallOrderRemarkView = W.getMallOrderRemarkView({
-            width: 574,
-            height: 62,
-            title: '备注',
-            position:'top',
-            isTitle: false,
-            privateContainerClass:'xui-remarkDropBox xa-remarkDropBox'
-          });
-          mallOrderRemarkView.show({
-            $action: $el,
-            orderId: orderId,
-            message: message
-          })
-        });
-
-        // 支付
-        $('.xa-pay').click(function(event){
-          event.stopPropagation();
-          event.preventDefault();
-          var orderId = {{order.id}};
-          W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
-              orderId: orderId,
-              success: function(data) {
-                var args = {
-                    'order_id': orderId,
-                    'action' : 'pay'
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
-                        window.location.reload();
-                    },
-                    error: function() {
-                        }
-                })
-		    }
-          });
-        });
-
-
-        // 修改价格
-        $('.xa-update-price').click(function(event){
-          event.stopPropagation();
-          event.preventDefault();
-          var orderId = {{order.id}};
-          W.dialog.showDialog('W.dialog.mall.UpdateOrderDialog', {
-              orderId: orderId,
-              isUpdatePrice: true,
-              success: function(data) {
-                W.getApi().call({
-                  app: 'mall2',
-                  resource: 'order',
-                  method: 'post',
-                  args: {
-                    order_id: orderId,
-                    postage: data.postage,
-                    final_price: data.finalPrice
-                  },
-                  success: function(data) {
-                    window.location.reload();
-                  },
-                  error: function(resp) {
-
-                  }
-                })
-              }
-          });
-        });
 
         $('#bill_type').change(function () {
             var $select = $(this);

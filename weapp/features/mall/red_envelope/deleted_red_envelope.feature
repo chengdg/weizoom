@@ -86,7 +86,7 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.red_envelop
+  @mall.red_envelop
 Scenario: 1 开启分享红包
 	jobs成功创建红包后，是关闭状态，可以进行开启操作
 	1.分享红包列表中只允许一个红包是开启状态
@@ -128,7 +128,7 @@ Scenario: 1 开启分享红包
 		}]
 		"""
 	
-@mall2 @mall.red_envelop
+  @mall.red_envelop
 Scenario: 2 删除分享红包
 	jobs成功创建红包后，是关闭状态，可以进行删除操作
 	1.开启红包后不可以进行删除操作
@@ -188,7 +188,7 @@ Scenario: 2 删除分享红包
 		"""
 
 # __author__ : "王丽" 补充在查询结果中删除活动
-@mall2 @mall.red_envelop @wip.re3
+  @mall.red_envelop @wip.re3
 Scenario: 3 在查询"活动名称"结果中删除分享红包
 
 	When jobs设置查询条件
@@ -217,7 +217,7 @@ Scenario: 3 在查询"活动名称"结果中删除分享红包
 		[]
 		"""
 
-@mall2 @mall.red_envelope
+  @mall.red_envelope
 Scenario: 4 在查询"奖励"结果中删除分享红包
 
 	When jobs设置查询条件
@@ -254,7 +254,7 @@ Scenario: 4 在查询"奖励"结果中删除分享红包
 		}]
 		"""
 
-@mall2 @mall.red_envelope @wip.re5
+  @mall.red_envelope @wip.re5
 Scenario: 5 在查询"奖励时间"结果中删除分享红包
 
 	When jobs设置查询条件

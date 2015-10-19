@@ -17,7 +17,7 @@ import models as app_models
 from mall import export
 from utils.string_util import hex_to_byte, byte_to_hex
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class surveyParticipances(resource.Resource):
@@ -33,8 +33,9 @@ class surveyParticipances(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_customerized_apps(request),
-			'second_nav_name': "surveies",
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+            'third_nav_name': export.MALL_APPS_SURVEY_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id'],
 		});
@@ -132,11 +133,12 @@ class surveyParticipances_Export(resource.Resource):
 		字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
 		export_id = request.GET.get('export_id')
-		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话'}
+		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话',u'qq':u'QQ号',u'job':u'职位',u'addr':u'地址'}
 
 		# app_name = surveyParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'用户调研详情.xls'
+		excel_file_name = 'survey_details.xls'
+		download_excel_file_name = u'用户调研详情.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -176,11 +178,12 @@ class surveyParticipances_Export(resource.Resource):
 
 				fields_selec = []
 				fields_qa= []
-				fields_shortcuts = []
+				fields_textlist = []
+				fields_uploadimg = []
 
 				sample_tm = sample['termite_data']
 
-				for item in sample_tm:
+				for item in sorted(sample_tm.keys()):
 					if sample_tm[item]['type']=='appkit.qa':
 						if item in fields_qa:
 							pass
@@ -191,12 +194,17 @@ class surveyParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_selec.append(item)
-					if sample_tm[item]['type']=='appkit.shortcuts':
-						if item in fields_shortcuts:
+					if sample_tm[item]['type'] in['appkit.textlist', 'appkit.shortcuts']:
+						if item in fields_textlist:
 							pass
 						else:
-							fields_shortcuts.append(item)
-				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+							fields_textlist.append(item)
+					if sample_tm[item]['type']=='appkit.uploadimg':
+						if item in fields_uploadimg:
+							pass
+						else:
+							fields_uploadimg.append(item)
+				fields_raw = fields_raw + fields_selec + fields_qa + fields_textlist + fields_uploadimg
 
 
 			for field in fields_raw:
@@ -229,6 +237,7 @@ class surveyParticipances_Export(resource.Resource):
 				selec =[]
 				qa = []
 				shortcuts =[]
+				uploadimg = []
 				export_record = []
 
 				num = num+1
@@ -236,7 +245,6 @@ class surveyParticipances_Export(resource.Resource):
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
-					selec_v =[]
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:
@@ -244,20 +252,32 @@ class surveyParticipances_Export(resource.Resource):
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
-				for s in fields_shortcuts:
-					s_v = record[u'termite_data'][s][u'value']
-					shortcuts.append(s_v)
+				for s in fields_textlist:
+					s_t = record[u'termite_data'][s][u'value']
+					shortcuts.append(s_t)
+				for s in fields_uploadimg:
+					upload_v = []
+					u_v = record[u'termite_data'][s][u'value']
+					for i in u_v:
+						upload_v.append(i)
+					uploadimg.append(upload_v)
 
 				# don't change the order
 				export_record.append(num)
 				export_record.append(name)
 				export_record.append(create_at)
 
+				multi_selec = []
 				for item in selec:
-					export_record.append(item)
+					multi_selec.append(item)
+				multi_selec = ','.join(multi_selec)
+				export_record.append(multi_selec)
+
 				for item in qa:
 					export_record.append(item)
 				for item in shortcuts:
+					export_record.append(item)
+				for item in uploadimg:
 					export_record.append(item)
 
 				export_data.append(export_record)
@@ -275,23 +295,35 @@ class surveyParticipances_Export(resource.Resource):
 
 			##write data
 			if export_data:
-				row = 0
+				row = 1
 				lens = len(export_data[0])
 				for record in export_data:
-					row +=1
+					row_l = []
 					for col in range(lens):
-						ws.write(row,col,record[col])
+						record_col= record[col]
+						if type(record_col)==list:
+							row_l.append(len(record_col))
+							for n in range(len(record_col)):
+								data = record_col[n]
+								ws.write(row+n,col,data)
+						else:
+							ws.write(row,col,record[col])
+					if row_l:
+						row = row + max(row_l)
+					else:
+						row += 1
 				try:
 					wb.save(export_file_path)
-				except:
+				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
 					print '/static/upload/%s'%excel_file_name
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 

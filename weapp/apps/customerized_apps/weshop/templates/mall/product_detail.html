@@ -246,43 +246,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 
 {% block js %}
 <script type="text/javascript">
-    // var postageFactor = $.parseJSON('{{postage_factor|safe}}');
-
-    // function getPostageForWeight(weight) {
-    //     if (weight <= postageFactor.firstWeight) {
-    //         return postageFactor.firstWeightPrice;
-    //     }
-
-    //     if (!postageFactor.isEnableAddedWeight) {
-    //         return postageFactor.firstWeightPrice;
-    //     }
-
-    //     weight = weight - postageFactor.firstWeight;
-    //     var price = postageFactor.firstWeightPrice;
-    //     var addedWeight = parseFloat(postageFactor.addedWeight);
-
-    //     //added by chuter
-    //     if (addedWeight == 0) {
-    //         return price;
-    //     }
-        
-    //     var addedCount = 1;
-    //     while (true) {
-    //         weight = weight - addedWeight;
-    //         if (weight <= 0) {
-    //             break;
-    //         } else {
-    //             addedCount += 1;
-    //         }
-    //     }
-    //     var addedPrice = addedCount * postageFactor.addedWeightPrice;
-    //     return price + addedPrice;
-    // }
-
     //弹出商品信息
-        $('.xa-apply').bind('click',function(event) {
-            // $('.xa-cover').removeClass('hidden');
-            $('.xui-applyBox').slideDown(500);
+    $('.xa-apply').bind('click',function(event) {
+        $('.xui-applyBox').slideDown(500);
     });
     
     $('.xa-cover').bind('click',function(event) {
@@ -298,21 +264,12 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     //轮播图
     W.BUY_COUNT = 1;
     var productId = '{{product.id}}';
-    //var isRefreshByPriceChange = {% if is_refresh_by_price_change %}true{% else %}false{% endif %};
     $(document).ready(function() {
-        // 电话卡商品限购逻辑
-        // add by liupeiyu at 17.1
-        // var isCanBuy = '{{ product.is_can_buy_by_product }}';
-        // var textShow = '小微密透：话费让路好产品，仅一次充值机会哦~';
-        // var restrictionId = ['821', '1143'];
-        // if (restrictionId.indexOf(productId) >= 0) {
-        //     $('.select-count-div').hide();
-        //     if (isCanBuy === 'False') {
-        //         $('.btn-div').find('.tc').hide();
-        //         $('.btn-div').html('<div class="tc pb0 pt15 xui-section-normalItemText">'
-        //             + textShow + '</div>');
-        //     };                     
-        // };
+        $('img').each(function(i,n){
+            if($(n).data('url')){
+                $(n).attr('src', $(n).data('url'));
+            }
+        })
 
         //购买按钮组粘性导航
         var wxTab= document.querySelector('.xa-tab');
@@ -352,13 +309,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             var singleWeight = $('.xt-single-weight').text();
             var weight = (productCount*singleWeight).toFixed(2);
             $('.xt-weight').text(weight);
-
-            //更新邮费
-            // if ($('.xt-postage')) {
-            //     var postage = getPostageForWeight(weight);
-            //     $('.xt-postage').text(postage.toFixed(1));
-            // }
-
             //更新价钱
             var price = $('.xa-fixed-price').text();
             price = parseFloat(price).toFixed(2);

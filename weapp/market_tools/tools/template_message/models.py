@@ -79,8 +79,10 @@ class MarketToolsIndustry(models.Model):
 ########################################################################
 # TemplateMessage: 模版消息  模版消息不同类型的行业模版格式不同 
 ########################################################################
-PAY_ORDER_SUCCESS = 0 #订单支付成功
-PAY_DELIVER_NOTIFY = 1 #发货通知
+PAY_ORDER_SUCCESS = 0 		#订单支付成功
+PAY_DELIVER_NOTIFY = 1 		#发货通知
+COUPON_ARRIVAL_NOTIFY = 2 	#优惠劵到账通知
+COUPON_EXPIRED_REMIND = 3 	#优惠劵过期提醒
 class MarketToolsTemplateMessage(models.Model):
 	industry = models.IntegerField(default=INDUSTR_IT)
 	title = models.CharField(max_length=256) #标题

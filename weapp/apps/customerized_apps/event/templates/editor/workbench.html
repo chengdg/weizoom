@@ -2,6 +2,14 @@
 {% load workbench_filter %}
 {% load apps_filter %}
 
+{% block css %}
+    <style>
+        .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
 {% block content-panel %}
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
   <div class="relative">
@@ -28,32 +36,28 @@
         </div>
       </div>
     </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide mb30">
+    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
+    </div>
+      <div class="xui-bottomActionBar xa-stickyBar">
+        {% if not event %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+          {% else %}
+            {% if event.status_text == "未开始" %}
+            <button class="xa-save btn btn-primary">保存</button>
+            <button class="xa-preview btn btn-default ml20">预览</button>
+            {% endif %}
+            {% if event.status_text == "进行中" %}
+            进行中，不可更改
+            {% endif %}
+            {% if event.status_text == "已结束" %}
+            已结束，不可更改
+            {% endif %}
+          {% endif %}
     </div>
   </div>
 </div>
 {% endblock %}
-
-{% block global_elements %}
-<div class="xui-bottomActionBar">
-  {% if not event %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-  {% else %}
-    {% if event.status_text == "未开始" %}
-    <button class="xa-save btn btn-primary">保存</button>
-    <button class="xa-preview btn btn-default ml20">预览</button>
-    {% endif %}
-    {% if event.status_text == "进行中" %}
-    进行中，不可更改
-    {% endif %}
-    {% if event.status_text == "已结束" %}
-    已结束，不可更改
-    {% endif %}
-  {% endif %}
-</div>
-{% endblock %}
-
 
 {% block base_js %}
   <!-- *start_prunt_task* -->
@@ -234,6 +238,7 @@
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
+
     });
   </script>
 {% block js %}{% endblock %}

@@ -103,3 +103,93 @@
 	max-width: 134px;
 	vertical-align: middle;
 }
+
+/*红包分析页面样式*/
+.fans_data_title > div {
+  display: inline-block;
+}
+.fans_data_name {
+  font-size: 14px;
+  font-weight: bold;
+}
+.xui-tableBox .fans_data_ul
+{
+	background: #fff;
+	padding: 20px 0;
+	font-size: 12px;
+	color: #333;
+	height: 82px;
+}
+.xui-tableBox .fans_data_ul li
+{
+	width: 20%;
+	float: left;
+	border-right: 1px solid #ddd;
+	text-align: center;
+}
+.xui-tableBox .fans_data_ul li em
+{
+	font-size: 18px;
+	font-weight: bold;
+	color: #da0909;
+}
+.xui-tableBox .fans_data_ul li:last-child
+{
+	border-right: none;
+}
+.xui-redEnvelopeParticipances-page .xui-batchbtn {
+  position: absolute;
+  height: 50px;
+  line-height: 50px;
+  bottom: 0;
+  padding-left: 15px;
+}
+/*排序小箭头*/
+.xui-redEnvelopeParticipances-page .icon-arrow-up ,.red-envelope-detail-dialog .icon-arrow-up{
+  background: url('/static_v2/img/weixin/storingUp.png') no-repeat;
+}
+.xui-redEnvelopeParticipances-page .icon-arrow-down ,.red-envelope-detail-dialog .icon-arrow-down{
+   background: url('/static_v2/img/weixin/storing.png') no-repeat;
+}
+.xui-redEnvelopeParticipances-page .xui-Blue ,.red-envelope-detail-dialog .xui-Blue{
+  color: #1262b7!important;
+}
+.xui-redEnvelopeParticipances-page [class^="icon-"],.red-envelope-detail-dialog [class^="icon-"]{
+  display: inline-block;
+  width: 9px;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 14px;
+  vertical-align: text-top;
+}
+/*红包分析弹窗样式*/
+.xui-appPage-commonStyle .xui-detail-tableBox {
+    background-color: #E9EDF5;
+}
+.xui-detail-tableBox .fans_data_ul {
+	font-size: 12px;
+	color: #333;
+	height: 17px;
+}
+.xui-detail-tableBox .fans_data_ul li {
+	width: 13%;
+	float: left;
+	text-align: center;
+}
+.xui-detail-tableBox .fans_data_ul li em {
+	font-size: 12px;
+	font-weight: bold;
+	color: #da0909;
+}
+.xui-detail-tableBox .fans_data_ul li:last-child {
+	border-right: none;
+}
+.xui-detail-tableBox .modal-body .panel-table table >thead >tr >th{
+	background-color: #C8D1E4;
+}
+
+.xui-redEnvelopeParticipances-page .tc {
+  display: inline-block;
+  float: right;
+  margin-top: -15px;
+}

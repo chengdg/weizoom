@@ -19,7 +19,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"单条图文1文本摘要",
 			"content":"单条图文1文本内容"
 		},{
 			"title":"sub图文1",
@@ -27,7 +26,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容"
 		},{
 			"title":"sub图文2",
@@ -35,7 +33,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容"
 		},{
 			"title":"sub图文3",
@@ -43,13 +40,12 @@ Background:
 				"url": "/standard_static/test_resource_img/wufan1.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文3文本摘要",
 			"jump_url":"www.baidu.com",
 			"content":"sub单条图文3文本内容"
 		}]
 		"""
 
-@mall2 @message @automaticReply 
+@mall2 @message @automaticReply @gyccc
 Scenario: 1 关注后自动回复,文本类型
 	When jobs添加关注自动回复规则
 		"""
@@ -62,7 +58,8 @@ Scenario: 1 关注后自动回复,文本类型
 	Then bill收到自动回复'关注后自动回复内容1'
 
 @mall2 @message @automaticReply 
-Scenario: 2 关注后自动回复,图文类型；会员关注后，获得自动回复，取消关注，再关注，仍然可以获得自动回复
+Scenario: 2 关注后自动回复,图文类型；
+	会员关注后，获得自动回复，取消关注，再关注，仍然可以获得自动回复
 	When jobs添加关注自动回复规则
 		"""
 		[{ 

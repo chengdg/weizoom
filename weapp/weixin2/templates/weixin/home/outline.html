@@ -7,7 +7,6 @@
     <div class="relative">
         <ul class="breadcrumb">
             <li>您当前所在位置</li>
-            <li><a href="/new_weixin/outline/">首页</a></li>
             <li class="active">微信概况</li>
         </ul>
     </div>
@@ -17,7 +16,7 @@
             <li><em><a href="/new_weixin/realtime_messages/?status=0" class="xui-i-count">{{ unread_message_count }}</a></em><br>未读消息</li>
             <li><em>{{ yesterday_added_count }}</em><br>昨日新增会员</li>
             <li><em>{{ yesterday_net_count }}</em><br>昨日取消关注会员</li>
-            <li><em><a href="/member/members/get/" class="xui-i-count" target="_blank">{{ member_count }}</a></em><br>总会员</li>
+            <li><em><a href="/member/member_list/?status=-1" class="xui-i-count" target="_blank">{{ member_count }}</a></em><br>总会员</li>
         </ul>
         <!-- <div class="xui-ChartContent">
             <div class="panel-heading xui-bold">用户分析</div>

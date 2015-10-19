@@ -9,84 +9,84 @@
 	>
         {% if component.model.modules.name.select %}
         <li class="wui-i-item">
-            <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">姓名</label>
-            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="name" data-control-type="appkit.shortcuts">
+            <label class="wui-i-label xui-mandatory">姓名</label>
+            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="name" data-control-type="appkit.textlist">
                 <input
                     class="wui-i-input"
                     type="text"
                     name="name"
                     placeholder="请输入姓名"
-                    {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::请输入姓名"{% endif %}
+                    data-validate="require-notempty::请输入姓名"
                 />
             </div>
         </li>
         {% endif %}
         {% if component.model.modules.phone.select %}
         <li class="wui-i-item">
-            <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">手机</label>
-            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="phone" data-control-type="appkit.shortcuts">
+            <label class="wui-i-label xui-mandatory">手机</label>
+            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="phone" data-control-type="appkit.textlist">
                 <input
                     class="wui-i-input"
                     type="text"
                     name="phone"
                     placeholder="请输入手机号"
-                    {% if component.model.is_mandatory == 'true' %}data-validate="require-mobile-phone::请输入正确的手机号"{% endif %}
+                    data-validate="require-mobile-phone::请输入正确的手机号"
                 />
             </div>
         </li>
         {% endif %}
         {% if component.model.modules.email.select %}
         <li class="wui-i-item">
-            <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">邮箱</label>
-            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="email" data-control-type="appkit.shortcuts">
+            <label class="wui-i-label xui-mandatory">邮箱</label>
+            <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="email" data-control-type="appkit.textlist">
                 <input
                     class="wui-i-input"
                     type="text"
                     name="email"
                     placeholder="请输入邮箱"
-                    {% if component.model.is_mandatory == 'true' %}data-validate="require-email::请输入正确的邮箱"{% endif %}
+                    data-validate="require-email::请输入正确的邮箱"
                 />
             </div>
         </li>
         {% endif %}
         {% if component.model.modules.qq.select %}
             <li class="wui-i-item">
-                <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">QQ</label>
-                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="qq" data-control-type="appkit.shortcuts">
+                <label class="wui-i-label xui-mandatory">QQ</label>
+                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="qq" data-control-type="appkit.textlist">
                     <input
                         class="wui-i-input"
                         type="text"
                         name="qq"
                         placeholder="请输入QQ号"
-                        {% if component.model.is_mandatory == 'true' %}data-validate="require-positive-int::请输入正确的QQ号"{% endif %}
+                        data-validate="require-positive-int::请输入正确的QQ号"
                     />
                 </div>
             </li>
         {% endif %}
         {% if component.model.modules.job.select %}
             <li class="wui-i-item">
-                <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">职位</label>
-                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="job" data-control-type="appkit.shortcuts">
+                <label class="wui-i-label xui-mandatory">职位</label>
+                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="job" data-control-type="appkit.textlist">
                     <input
                         class="wui-i-input"
                         type="text"
                         name="job"
                         placeholder="请输入职位"
-                        {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::内容不能为空"{% endif %}
+                        data-validate="require-notempty::内容不能为空"
                     />
                 </div>
             </li>
         {% endif %}
         {% if component.model.modules.addr.select %}
             <li class="wui-i-item">
-                <label class="wui-i-label {% if component.model.is_mandatory == 'true' %}xui-mandatory{% endif %}">地址</label>
-                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="addr" data-control-type="appkit.shortcuts">
+                <label class="wui-i-label xui-mandatory">地址</label>
+                <div class="wui-i-inputContainer xa-inputControl" data-input-type="text" data-input-name="addr" data-control-type="appkit.textlist">
                     <input
                         class="wui-i-input"
                         type="text"
                         name="addr"
                         placeholder="请输入地址"
-                        {% if component.model.is_mandatory == 'true' %}data-validate="require-notempty::内容不能为空"{% endif %}
+                        data-validate="require-notempty::内容不能为空"
                     />
                 </div>
             </li>

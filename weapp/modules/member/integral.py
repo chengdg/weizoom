@@ -351,16 +351,19 @@ class IntegralCaculator(object):
 					self.increase_member_integral(member, \
 						integral_strategy.buy_award_count_for_buyer, BUY_AWARD)
 
-					if order and order.final_price > 0:
-						order_money_percentage_for_each_buy = float(integral_strategy.order_money_percentage_for_each_buy)
-						increase_count_integral = int(order_money_percentage_for_each_buy * float(order.final_price))
-						if increase_count_integral > 0:
-							self.increase_member_integral(member, increase_count_integral, BUY_AWARD)
+				#购物返利 按订单比例增加
+				if order and order.final_price > 0:
+					order_money_percentage_for_each_buy = float(integral_strategy.order_money_percentage_for_each_buy)
+					increase_count_integral = int(order_money_percentage_for_each_buy * float(order.final_price))
+					if increase_count_integral > 0:
+						self.increase_member_integral(member, increase_count_integral, BUY_AWARD)
 
 				if member:
 					father_member = MemberFollowRelation.get_father_member(member.id)
-					if father_member and integral_strategy.buy_via_offline_increase_count_for_author > 0:
-						self.increase_member_integral(father_member, integral_strategy.buy_via_offline_increase_count_for_author, BUY_INCREST_COUNT_FOR_FATHER)
+					if father_member:
+						if integral_strategy.buy_via_offline_increase_count_for_author > 0:
+							self.increase_member_integral(father_member, integral_strategy.buy_via_offline_increase_count_for_author, BUY_INCREST_COUNT_FOR_FATHER)
+
 						if order.final_price > 0 and integral_strategy.buy_via_offline_increase_count_percentage_for_author:
 							try:
 								buy_via_offline_increase_count_percentage_for_author = float(integral_strategy.buy_via_offline_increase_count_percentage_for_author)

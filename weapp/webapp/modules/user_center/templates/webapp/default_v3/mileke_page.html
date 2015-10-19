@@ -1,0 +1,428 @@
+{% extends "webapp_content_base.html" %}
+{% load mall_filter %}
+
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/loading.css">
+<style>
+    .xui-mlkActivityPage{
+        width: 100%;
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/bg.jpg') #80c621 no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        box-sizing:border-box;
+    }
+    .xui-name{
+        max-width: 73px;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .xui-voteBtn .xui-name{
+        max-width: 97px;
+    }
+    .xui-rankingList .xui-name{
+        position: relative;
+        top:3px;
+    }
+    .xui-blackPlaceholder{
+        height: 417px;
+    }
+    .xui-activeBtn{
+        width: 68.75%;
+        position: relative;
+        left: 50%;
+        margin-left: -35.375%;
+        top: 0px;
+    }
+    .xui-activeBtn div{
+        width: 100%;
+        height: 31px;
+        line-height: 32px;
+        background: #F47E00;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 0 #c76700;
+        display: -webkit-box;
+        -webkit-box-pack:center;
+        -webkit-box-align:center;
+        
+    }
+    .xui-activeBtn .xui-gameover{
+        background: #b3b2b1;
+        box-shadow: 0 2px 0 #cfccc9;
+        color:#efefef;
+    }
+    .xui-hint{
+        color: #4D8500;
+        text-align: center;
+        margin-bottom: 17px;
+    }
+    .xui-activityTitle{
+        width: 100%;
+        height: 18px;
+        line-height: 18px;
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/cutLine.jpg') no-repeat center;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        text-align: center;
+        color: #325800;
+        margin-bottom: 10px;
+    }
+    .xui-spritebg{
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/mlkSprite.png') no-repeat;
+        -webkit-background-size: 82px 81px; 
+        background-size: 82px 81px;
+    }
+    .xui-i-title{
+        color: #4C8500;
+        width: 64px;
+        height: 20px;
+        padding-left: 5px;
+        line-height: 20px;
+        background-position: 0 -27px; 
+        margin-bottom: 9px;
+    }
+    .xui-content{
+        color: #3D6B00;
+        margin-bottom: 5px;
+        line-height: 20px;
+    }
+    .xui-participationWay,.xui-activityTime,.xui-otherState,.xui-i-list{
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+    .xui-ways i{
+        font-style: normal;
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #F57F00;
+        color: #fff;
+        text-align: center;
+        line-height: 14px;
+        margin-right: 5px;
+        margin-top: 3px;
+        float: left;
+    }
+    .xui-ways span{
+        display: table-cell;
+    }
+    .xui-rankingList li{
+        height: 56px;
+        line-height: 56px;
+        border-bottom: 1px dashed #579502;
+        /*position: relative;*/
+    }
+    .xui-rankingList li:last-child{
+        border: none;
+        height: 40px;
+    }
+    .xui-rankingList li i{
+        font-style: normal;
+        display: block;
+        width: 26px;
+        height: 27px;
+        text-align: center;
+        line-height: 28px;
+        margin-right: 10px;
+        margin-top: 18px;
+    }
+    .xui-rankingList li:first-child i,.xui-rankingList li:nth-child(2) i,.xui-rankingList li:nth-child(3) i{
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/mlkSprite.png') no-repeat;
+        -webkit-background-size: 82px 81px; 
+        background-size: 82px 81px;
+    }
+    .xui-rankingList li:nth-child(2) i{
+        background-position: -27px 0;
+    }
+    .xui-rankingList li:nth-child(3) i{
+        background-position: -55px 0;
+    }
+    .xui-imgBox{
+        border: 2px solid #fff;
+        width: 32px;
+        height: 32px;
+        border-radius: 18px;
+        float: left;
+        position: relative;
+        top: 12px;
+        margin-right: 4px;
+    }
+    .xui-img{
+        width: 32px;
+        height: 32px;
+        border-radius: 18px;
+        display: block;
+    }
+    .xui-rankingList .xui-name{
+        color: #437400;
+    }
+    .xui-num{
+        color: #FF4D00;
+    }
+    .xui-ticketNum{
+        position: relative;
+        top:3px;
+    }
+    .xui-myRanking{
+        width: 100%;
+        padding-left: 4%;
+        padding-right: 4%;
+        height: 40px;
+        line-height: 40px;
+        box-sizing:border-box;
+        border-top:1px solid #ccc;
+        background: rgba(255,255,255,0.85);
+        position: fixed;
+        bottom: 0;
+    }
+    .xui-myNum{
+        color: #fd5b0e;
+    }
+    .mask{
+        background: rgba(0,0,0,0.8)!important;
+        position: fixed!important;
+    }
+    .xui-voteSucceed{
+        width: 81.25%;
+        height: 113px;
+        line-height: 113px;
+        background: #fff;
+        text-align: center;
+        color: #4a4a4a;
+        position: fixed;
+        top:50%;
+        margin-top: -56px;
+        left: 50%;
+        margin-left: -40.625%;
+        z-index: 10001;
+        border-radius: 4px;
+        display: none;
+    }
+    .xui-successHint::before{
+        content:'';
+        width: 31px;
+        height: 31px;
+        display: inline-block;
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/mlkSprite.png') no-repeat;
+        -webkit-background-size: 82px 81px; 
+        background-size: 82px 81px;
+        background-position: 0 -49px;
+        position: relative;
+        top:8px;
+        margin-right: 11px;
+    }
+    .xui-attention .xui-twoDimensionBox{
+        width: 260px;
+        height: 286px;
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/attention.png') no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        position: fixed;
+        top:50%;
+        margin-top: -155px;
+        left:50%;
+        margin-left: -130px;
+        z-index: 10001;
+    }
+    .xui-attention .xui-twoDimension{
+        width: 150px;
+        height: 150px;
+        display: block;
+        position: absolute;
+        top:60px;
+        left: 53px;
+    }
+    .xui-closeBtn{
+        width: 30px;
+        height: 30px;
+        /*background: #000;*/
+        position: absolute;
+        top:0;
+        right: 0;
+    }
+    .xui-share{
+        position: fixed;
+        top:0;
+        width: 100%;
+        height: 74%;
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/share.png') no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        z-index: 10001;
+
+    }
+    .xui-colseButton{
+        width: 35px;
+        height: 35px;
+        position: absolute;
+        top:85%;
+        left: 50%;
+        margin-left: -25px;
+        background-position: -32px -49px;
+    }
+    @media (min-width:321px) and (max-width:375px) {
+        .xui-blackPlaceholder{
+            height: 484px;
+        }
+    }
+    @media (min-width:376px) and (max-width:414px) {
+        .xui-blackPlaceholder{
+            height: 532px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-mlkActivityPage">
+    <div class="xui-blackPlaceholder"></div>
+    <div class="xui-activeBtn f16">
+        {% if game_over %}
+            <div class="xui-gameover xa-gameover">活动结束</div>
+        {% else %}
+            {% if self_visit %}
+                <div class="xui-participationBtn xa-participationBtn"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+            {% else %}
+                <div class="xui-voteBtn {% if member_voted %}{% else %}xa-voteBtn{% endif %}">{% if member_voted %}已{% endif %}帮<span class="xui-name">{{vote_member.username_truncated|safe}}</span>助力</div>
+                <div class="xui-participationBtn  {% if joined %}{% else %}xa-participationBtn{% endif %}"> {% if joined %}您已参加活动{% else %}我也要参加{% endif %}</div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+    <div class="xui-hint f12">收集积分进入前60名，即可获得一箱有机蔬菜</div>
+    <div class="xui-activityRules">
+        <div class="xui-activityTitle f16">活动规则</div>
+        <div class="xui-participationWay disT">
+           <div class="xui-i-title f12 xui-spritebg">参与方式</div>
+           <div class="xui-ways f12 xui-content">
+                <i>1</i>
+                <span>手机微信 关注“斑马来了”亲子活动平台。</span>
+            </div>
+           <div class="xui-ways f12 xui-content">
+                <i>2</i>
+                <span>
+                   点击我要参加，长按二维码进入公众号，回复“收菜”即 可参与抢有机蔬菜活动。  
+               </span>
+           </div>
+           <div class="xui-ways f12 xui-content">
+                <i>3</i>
+                <span>将你的活动链接转发给你的好友帮你助力。</span>
+            </div>
+            <div class="xui-ways f12 xui-content">
+                <i>4</i>
+                <span>每邀请1位好友助力可以增加1积分。</span>
+            </div>
+        </div> 
+        <div class="xui-activityTime">
+            <div class="xui-i-title f12 xui-spritebg mt10">活动时间</div>
+            <div class="xui-content f12">
+                <div class="">开始时间：2015年10月16日20时</div>
+                <div class="">结束时间：2015年10月22日10时</div>
+                <div class="">名单公布时间：2015年10月23号18时</div>
+            </div>
+        </div> 
+        <div class="xui-otherState">
+            <div class="xui-i-title f12 xui-spritebg mt10">其他说明</div>
+            <div class="xui-content f12">
+                <div>  “斑马来了”后台统计参与抢物品票数最多的前60名，公布在“斑马来了”微信公众账号最新活动内。请您于3个工作日内（10月26日—10月28日）与斑马客服联系并告知您的收货地址。</div>
+                <div style="color:#FDEF00;font-weight:bold;">（蔬菜配送地址，仅限北京六环内）</div>
+                <div>客服电话：王老师 <b>13488651517</b> 小智老师 <b>13643515192</b> </div>
+            </div>
+        </div>          
+    </div>
+    <div class="xui-rankingList">
+        <div class="xui-activityTitle f16 mb0 mt15">助力积分榜</div>
+        <ul class="xui-i-list">
+            {% for mileke in milekes %}
+            <li>
+                <i class="f12 fl">{{ forloop.counter }}</i>
+                <div class="xui-imgBox">
+                    <img src="{{ mileke.member.user_icon }}" alt="" class="xui-img">
+                </div>
+                <span class="xui-name f12 fl">{{ mileke.member.username_truncated|safe }}</span>
+                <span class="xui-ticketNum fr f12 c3"><span class="xui-num">{{mileke.current_count}}</span>积分</span>
+            </li>
+            {% endfor %}
+            <li></li>
+        </ul>
+    </div>
+        <div class="xui-myRanking f13 {% if not joined %} none {% endif %}">
+        <div class="fl">我的排名：第<span class="xui-myNum">{{current_index}}</span>名</div>
+        <div class="fr"><span class="xui-myNum">{{current_count}}</span>积分</div>
+    </div>
+</div>
+<div data-ui-role="swipemask" class="mask"></div>
+<div class="xui-voteSucceed">
+    <div class="f15 xui-successHint">助力成功!</div>
+</div>
+<div class="xui-attention xa-attention none">
+    <div class="xui-twoDimensionBox">
+        <img src="http://weappstatic.b0.upaiyun.com/static_v2/img/mileke.jpg" alt="" class="xui-twoDimension">
+        <div class="xui-closeBtn xa-closeBtn"></div>
+    </div>
+</div>
+<div class="xui-share xa-share none">
+    <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var self_visit = "{{self_visit}}";
+    var is_sub = "{{member.is_subscribed}}";
+    $(document).ready(function(){
+        // $('body').swipeMask('show');
+
+        $('.xa-voteBtn').click(function(){
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'get',
+                args: {
+                    woid: W.webappOwnerId,
+                    module: 'user_center',
+                    target_api: 'mileke_log/record',
+                    fid: '{{url_fid}}'
+                },
+                success: function(data) {                  
+                   setTimeout(function() {
+                      $('body').swipeMask('show');
+                      $('.xa-attention').removeClass('none');
+                   }, 1000);
+                },
+                error: function(data) {
+                      $('body').swipeMask('show');
+                      $('.xa-attention').removeClass('none');                
+                }
+            });
+
+        });
+        // $('.mask').click(function(){
+        //     $('body').swipeMask('hide');
+        // });
+        $('.xa-closeBtn').click(function(){
+            $('.xa-attention').addClass('none');
+            $('body').swipeMask('hide');
+        });
+        $('.xa-colseButton').click(function(){
+            $('.xa-share').addClass('none');
+            $('body').swipeMask('hide');
+        });
+
+        $('.xa-participationBtn').click(function(){
+            if (self_visit == 'True' && is_sub == 'True'){
+                $('.xa-share').removeClass('none');
+                $('body').swipeMask('show');
+            } else {
+                $('.xa-attention').removeClass('none');
+                $('body').swipeMask('show');
+            }
+        });
+    });
+</script>
+{% endblock %}

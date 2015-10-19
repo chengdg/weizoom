@@ -113,7 +113,7 @@
                 picHeight:100,     // 单张预览图片的高度
                 uploadDataFieldName:editor.options.imageFieldName,    // POST请求中图片数据的key
                 picDescFieldName:'pictitle',      // POST请求中图片描述的key
-                maxSize:4,                         // 文件的最大体积,单位M
+                maxSize:0.5,                         // 文件的最大体积,单位M
                 compressSize:2,                   // 上传前如果图片体积超过该值，会先压缩,单位M
                 maxNum:32,                         // 单次最大可上传多少个文件
                 compressSide:editor.options.compressSide,                 //等比压缩的基准，0为按照最长边，1为按照宽度，2为按照高度
@@ -123,12 +123,19 @@
             var callbacks = {
                 // 选择文件的回调
                 selectFileCallback: function(selectFiles){
+                    var has_error = false;
                     utils.each(selectFiles,function(file){
                         var tmp = {};
                         tmp.id = file.index;
                         tmp.data = {};
                         postConfig.push(tmp);
+                        if(file.size/1024/1024>flashOptions.maxSize){
+                            has_error = true;
+                        }
                     });
+                    if(has_error && parent && parent.W && parent.W.showHint){
+                        parent.W.showHint('error', '有文件过大');
+                    }
                     selectedImageCount += selectFiles.length;
                     if(selectedImageCount) baidu.g("upload").style.display = "";
                     dialog.buttons[0].setDisabled(true); //初始化时置灰确定按钮

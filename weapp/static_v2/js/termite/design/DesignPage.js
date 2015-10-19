@@ -174,6 +174,7 @@ W.design.DesignPage = Backbone.View.extend({
 	 */
 	onSelectPage: function(component, respond_to_event) {
 		xlog('[design page]: receive component:select with argument as page');
+		W.Broadcaster.trigger('selectwidget:assert', component.cid);
 		if (component.isRootPage()) {
 			this.page = component;
 			this.coverManager.setPage(this.page);

@@ -21,12 +21,11 @@
 		<a href="javascript:void(0);" class="btn btn-default xa-batchDelete">删&nbsp;&nbsp;&nbsp;&nbsp;除</a>
 		<a href="/mall2/flash_sale/?type=create" class="btn btn-success ml10 fr xui-btnSetting"><img src="/static_v2/img/editor/plusOpcity.png" alt="">&nbsp;&nbsp;&nbsp;&nbsp;新建活动</a>
 	</div>
-
 	<div
 		data-ui-role="advanced-table"
 		data-app="mall2"
 		data-api="promotion_list"
-		data-args='{"type": "flash_sale"}'
+		data-args='{"type": "flash_sale", "endDate": "{{endDate}}", "promotionStatus": "{{promotion_status}}"}'
 		data-template-id="#promotions-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -62,7 +61,7 @@
 				<th width="120">商品价格（元）</th>
 				<th width="100">促销价</th>
 				<th width="80">状态</th>
-				<th width="180">起止时间</th>
+				<th width="190">起止时间</th>
 				<th width="120">操作</th>
 			</tr>
 		</thead>
@@ -145,9 +144,17 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var endDate = '{{endDate}}';
+	var startDate = '';
+	if(endDate){
+		startDate = '2014-01-01';
+	}
 	var view = new W.view.mall.PromotionListView({
 		el: '.xui-promotionsPage',
-		promotionType: 'flash_sale'
+		promotionType: 'flash_sale',
+		startDate: startDate,
+		endDate: endDate,
+		promotionStatus: '{{promotion_status}}',
 	});
 	view.render();
 });

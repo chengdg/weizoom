@@ -45,7 +45,7 @@ W.component.wepage.Title = W.component.Component.extend({
                 type: 'color_picker',
                 displayName: '背景颜色',
                 isUserProperty: true,
-                default: '#FFF'
+                default: ''
             }]
         }
     ],

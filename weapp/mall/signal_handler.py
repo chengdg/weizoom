@@ -7,11 +7,11 @@ from django.conf import settings
 from django.dispatch import Signal
 from django.dispatch.dispatcher import receiver
 from django.db.models import signals as django_model_signals
-from django.db.models import Q
+from django.db.models import Q, F
 
 from mall import signals as mall_signals
 from mall import postage_calculator as mall_postage_calculator
-from mall.promotion.models import Coupon
+from mall.promotion.models import Coupon, RedEnvelopeParticipences
 from models import *
 from webapp.models import Workspace
 from account.models import UserProfile
@@ -277,13 +277,25 @@ def cancel_order_handler(order, **kwargs):
     try:
         # 返还微众卡
         weizoom_card_module_api.return_weizoom_card_money(order)
-
         # 返还优惠券
         if order.coupon_id and order.coupon_id > 0:
             coupons = promotion_models.Coupon.objects.filter(id = order.coupon_id)
             if len(coupons) > 0:
                 coupons.update(status = promotion_models.COUPON_STATUS_UNUSED)
                 promotion_models.CouponRule.objects.filter(id = coupons[0].coupon_rule_id).update(use_count = F('use_count') - 1)
+
+                #更新红包优惠券分析数据 by Eugene
+                if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupons[0].id, introduced_by__gt=0).count() > 0:
+                    red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupons[0].id)
+                    relation = promotion_models.RedEnvelopeParticipences.objects.filter(
+                                red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+                                red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+                                member_id=red_envelope2member.introduced_by
+                    )
+                    relation.update(introduce_used_number = F('introduce_used_number') - 1)
+                    #订单完成,更新红包消费金额
+                    if order.status >= ORDER_STATUS_SUCCESSED:
+                        relation.update(introduce_sales_number = F('introduce_sales_number') - order.final_price - order.postage)
     except:
         alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         watchdog_fatal(alert_message, type='WEB')
@@ -390,7 +402,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
         forbidden_coupon_product_ids = webapp_cache.get_forbidden_coupon_product_ids(owner_id)
         for product in products:
             if product.id in forbidden_coupon_product_ids:
-                forbidden_coupon_product_price += product.total_price
+                forbidden_coupon_product_price += float(product.price)*product.purchase_count
 
     order.final_price -= forbidden_coupon_product_price  #先去除被禁止使用全场优惠券的商品价格
     if order.final_price - order.postage < coupon.money:
@@ -410,6 +422,17 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
     coupon.update(status=promotion_models.COUPON_STATUS_USED)
     coupon_rule.update(use_count=F('use_count') + 1)
 
+    #更新红包优惠券分析数据 by Eugene
+    if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
+        red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
+        if red_envelope2member.introduced_by != 0:
+            for_udpate = promotion_models.RedEnvelopeParticipences.objects.get(
+                        red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,
+                        red_envelope_relation_id=red_envelope2member.red_envelope_relation_id,
+                        member_id=red_envelope2member.introduced_by
+            )
+            for_udpate.introduce_used_number = F('introduce_used_number') + 1
+            for_udpate.save()
 
 @receiver(mall_signals.check_order_related_resource, sender=mall_signals)
 def check_coupon_for_order(pre_order, args, request, **kwargs):

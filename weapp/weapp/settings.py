@@ -2,7 +2,7 @@
 # Django settings for weapp project.
 
 import os
-
+import logging
 VERSION = 2
 
 DEBUG = True
@@ -14,6 +14,8 @@ IS_UNDER_CODE_GENERATION = False
 WEIZOOM_CARD_ADMIN_USERS = ('card_admin',)
 
 MODE = 'develop'
+# 如果FAN_HOST不为空，退出后会跳转到 FAN_HOST/login/
+FAN_HOST = 'http://fans.dev.com'
 
 DEBUG_MERGED_JS = True
 USE_DEV_JS = True
@@ -72,6 +74,25 @@ DATABASES = {
         'CONN_MAX_AGE': 100
     }
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level':'DEBUG',
+        },
+    }
+}
+
 
 if MODE == 'develop' or MODE == 'test':
     WATCHDOG_DB = 'default'
@@ -269,6 +290,7 @@ DEFAULT_MSG_HANDLER_CLASSES = (
     'weixin.message.impl_handlers.responsed_message_log.ResponseedMessageLogger',
     'weixin.message.impl_handlers.weixin_user_handler.WeixinUserHandler',
     'weixin.message.impl_handlers.member_handler.MemberHandler',
+    'weixin.message.message_handler.sign_handler.SignHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
     'market_tools.tools.channel_qrcode.channel_qrcode_handler.ChannelQrcodeHandler',
     'modules.member.send_mass_msg_result_handler.SendMassMessageResultHandler',
@@ -286,6 +308,7 @@ OPTIMIZATION_MSG_HANDLER_CLASSES = (
     'weixin.message.message_handler.wofu_handler.WoFuHandler',
     'weixin.message.message_handler.shede_handler.SheDeHandler',
     'weixin.message.message_handler.member_handler.MemberHandler',
+    'weixin.message.message_handler.sign_handler.SignHandler',
     'market_tools.tools.member_qrcode.ticket_messge_handler.QrcodeHandler',
     'market_tools.tools.channel_qrcode.channel_qrcode_handler.ChannelQrcodeHandler',
     'modules.member.send_mass_msg_result_handler.SendMassMessageResultHandler',
@@ -471,6 +494,7 @@ INSTALLED_TASKS = [
     'weixin.statistics',
     'weixin.message.message_handler',
     'market_tools.tools.shake',
+    'weixin2',
 
     # for services
     'services.example_service',

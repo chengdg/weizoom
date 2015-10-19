@@ -18,7 +18,7 @@ from mall import export
 import re
 from utils.string_util import hex_to_byte, byte_to_hex
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 ITEM_FOR_DISPLAY = {
@@ -43,8 +43,9 @@ class eventParticipances(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_customerized_apps(request),
-			'second_nav_name': "events",
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+            'third_nav_name': export.MALL_APPS_EVENT_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		});
@@ -161,7 +162,8 @@ class eventParticipances_Export(resource.Resource):
 
 		# app_name = eventParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'活动报名详情.xls'
+		download_excel_file_name = u'活动报名详情.xls'
+		excel_file_name = 'event_details.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
@@ -202,10 +204,10 @@ class eventParticipances_Export(resource.Resource):
 				sample = data[0]
 				fields_selec = []
 				fields_qa= []
-				fields_shortcuts = []
+				fields_textlist = []
 
 				sample_tm = sample['termite_data']
-				for item in sample_tm:
+				for item in sorted(sample_tm.keys()):
 					if sample_tm[item]['type']=='appkit.qa':
 						if item in fields_qa:
 							pass
@@ -216,12 +218,12 @@ class eventParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_selec.append(item)
-					if sample_tm[item]['type']=='appkit.shortcuts':
-						if item in fields_shortcuts:
+					if sample_tm[item]['type'] in['appkit.textlist', 'appkit.shortcuts']:
+						if item in fields_textlist:
 							pass
 						else:
-							fields_shortcuts.append(item)
-				fields_raw = fields_raw + fields_selec + fields_qa + fields_shortcuts
+							fields_textlist.append(item)
+				fields_raw = fields_raw + fields_selec + fields_qa + fields_textlist
 
 
 			for field in fields_raw:
@@ -268,7 +270,7 @@ class eventParticipances_Export(resource.Resource):
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
-				for s in fields_shortcuts:
+				for s in fields_textlist:
 					s_v = record[u'termite_data'][s][u'value']
 					shortcuts.append(s_v)
 
@@ -303,18 +305,22 @@ class eventParticipances_Export(resource.Resource):
 				lens = len(export_data[0])
 				for record in export_data:
 					row +=1
-					for col in range(lens):
-						ws.write(row,col,record[col])
+					try:
+						for col in range(lens):
+							ws.write(row,col,record[col])
+					except Exception, e:
+						print e
 				try:
 					wb.save(export_file_path)
-				except:
+				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
 					print '/static/upload/%s'%excel_file_name
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 

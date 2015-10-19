@@ -46,90 +46,188 @@ Feature:商品概况-概况数据
 	        
 	        '？'说明窗提示:当前所选时段内所有成交订单内商品总件数
 Background:
-	Given jobs登录系统
-	And 开启手动清除cookie模式
+    Given jobs登录系统
+    And jobs设定会员积分策略
+        """
+        {
+            "integral_each_yuan":10
+        }
+        """
 
-	When jobs已添加商品
-	  """
-		 [{
-				"name": "商品1"
-		 }, {
-				"name": "商品2"
-		 }]	
-	 """
-	
-	And jobs已添加支付方式
-	 """
-	 [{
-	     "type": "货到付款",
-	     "is_active": "启用"
-	 },{
-		"type": "微信支付",
-		"is_active": "启用"
-	 },{
-		"type": "支付宝",
-		"is_active": "启用"
-	 }]
-	 """
- 
-     When 清空浏览器
-	 When bill1关注jobs的公众号于'2015-05-31'
-	 When bill2关注jobs的公众号于'2015-05-31'
+    When jobs添加支付方式
+        """
+        [{
+            "type": "货到付款",
+            "description": "我的货到付款",
+            "is_active": "启用"
+        },{
+            "type": "微信支付",
+            "description": "我的微信支付",
+            "is_active": "启用",
+            "weixin_appid": "12345", 
+            "weixin_partner_id": "22345", 
+            "weixin_partner_key": "32345", 
+            "weixin_sign": "42345"
+        },{
+            "type": "支付宝",
+            "description": "我的支付宝支付",
+            "is_active": "启用"
+        }]
+        """
+    And jobs开通使用微众卡权限
+    And jobs添加支付方式
+        """
+        [{
+            "type": "微众卡支付",
+            "description": "我的微众卡支付",
+            "is_active": "启用"
+        }]
+        """
+    Given jobs已创建微众卡
+        """
+        {
+            "cards":[{
+                "id":"0000001",
+                "password":"1234567",
+                "status":"未使用",
+                "price":110.00
+            },{
+                "id":"0000002",
+                "password":"1234567",
+                "status":"未使用",
+                "price":90.00
+            }]
+        }
+        """
+    
+    When jobs添加商品规格
+        """
+        [{
+            "name": "颜色",
+            "type": "文字",
+            "values": [{
+                "name": "黑色"
+            },{
+                "name": "白色"
+            }]
+        }]
+        """
+    And jobs已添加商品
+        """
+        [{
+            "name": "商品1",
+            "promotion_title": "促销商品1",
+            "category": "分类1",
+            "postage": 10,
+            "detail": "商品1详情",
+            "swipe_images": [{
+                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
+            }],
+            "model": {
+                "models": {
+                    "standard": {
+                        "price": 100.00,
+                        "weight": 5.0,
+                        "stock_type": "无限"
+                    }
+                }
+            },
+            "synchronized_mall":"是"
+        }, {
+            "name": "商品2",
+            "promotion_title": "促销商品2",
+            "category": "分类1",
+            "postage": 15,
+            "detail": "商品2详情",
+            "swipe_images": [{
+                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
+            }],
+            "is_enable_model": "启用规格",
+            "model": {
+                "models": {
+                    "黑色": {
+                        "price": 100.00,
+                        "weight": 5.0,
+                        "stock_type": "无限"
+                    },
+                    "白色": {
+                        "price": 100.00,
+                        "weight": 5.0,
+                        "stock_type": "无限"
+                    }
+                }
+            },
+            "synchronized_mall":"是"
+        }]
+        """
 
-	 When bill2取消关注jobs的公众号
+    And jobs创建积分应用活动
+        """
+        [{
+            "name": "商品1积分应用",
+            "start_date": "2014-08-01",
+            "end_date": "10天后",
+            "product_name": "商品1",
+            "is_permanant_active": "true",
+            "rules": [{
+                "member_grade": "全部会员",
+                "discount": 70,
+                "discount_money": 70.00
+            }]
+        }, {
+            "name": "商品2积分应用",
+            "start_date": "2014-08-01",
+            "end_date": "10天后",
+            "product_name": "商品2",
+            "is_permanant_active": "true",
+            "rules": [{
+                "member_grade": "全部会员",
+                "discount": 70,
+                "discount_money": 70.00
+            }]
+        }]
+        """
 
+    And jobs添加优惠券规则
+        """
+        [{
+            "name": "全体券1",
+            "money": 10,
+            "start_date": "2014-08-01",
+            "end_date": "10天后",
+            "coupon_id_prefix": "coupon1_id_"
+        }]
+        """
 
-	 When 微信用户批量消费jobs的商品
-	     | date       | consumer | type |businessman| product | payment | payment_method | freight | price | integral | coupon | paid_amount | weizoom_card | alipay | wechat | cash | action    |  order_status   |buy_source  |    
-	     | 2015-05-31 | bill1    | 购买 | jobs      | 商品1,2 | 支付    |   支付宝       | 10      | 100   |  0       |        | 210         | 0            | 210    |    0   | 0    |           |    已完成       |            |
-         | 2015-06-01 | bill1    | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 110          | 0      |    0   | 0    |           |    已发货       |            |
-         | 2015-06-03 | bill1    | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 110         | 0            | 0      |    0   | 110  |           |    待发货       |            |
-         | 2015-06-10 | bill2    | 购买 | jobs      | 商品1,3 | 支付    |   货到付款     | 10      | 100   |  0       |        | 310         | 0            | 0      |    0   | 310  |           |    待发货       |            |
-         | 2015-06-13 | bill1    | 购买 | jobs      | 商品1,2 | 支付    |   货到付款     | 10      | 100   |  0       |        | 210         | 0            | 0      |    0   | 210  |           |    已发货       |bill分享链接|
-         | 2015-06-15 | -bill6   | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 110         | 0            | 0      |    0   | 210  |           |    已发货       |bill分享链接|
-         | 2015-06-15 | -bill7   | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 110         | 0            | 0      |    0   | 210  |           |    已发货       |tom分享链接 |
-         | 2015-06-16 | bill2    | 测试 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    |           |    已发货       |bill分享链接|
-         |    今天    | bill1    | 购买 | jobs      | 商品1,2 | 支付    |   支付宝       | 10      | 100   |  0       |        | 210         | 0            | 210    |    0   | 0    |           |    已发货       |            |
-	     |    今天    | bill2    | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    |           |    已完成       |            |
-	     |    今天    | -bill3   | 购买 | jobs      | 商品2,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 110         | 0            | 0      |    0   | 110  |           |    待发货       |bill分享链接|
-	     |    今天    | -bill3   | 购买 | jobs      | 商品2,1 | 支付    |   支付宝       | 10      | 100   |  0       |        | 110         | 0            | 110    |    0   | 0    |           |    待发货       |tom分享链接 |
-         |    今天    | -bill4   | 购买 | jobs      | 商品1,3 | 支付    |   支付宝       | 10      | 100   |  0       |        | 310         | 0            | 310    |    0   | 0    |           |    待发货       |tom分享链接 |
-         |    今天    | -bill4   | 购买 | jobs      | 商品1,1 | 支付    |   支付宝       | 10      | 100   |  0       |        | 110         | 0            | 110    |    0   | 0    |           |    待发货       |bill分享链接|
-         |    今天    | -bill5   | 购买 | jobs      | 商品1,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    |           |    待发货       |tom分享链接 |
-         |    今天    | bill1    | 购买 | jobs      | 商品2,1 | 支付    |   支付宝       | 10      | 100   |  0       |        | 110         | 0            | 110    |    0   | 0    |           |    已发货       |tom分享链接 |
-	     |    今天    | bill1    | 购买 | jobs      | 商品1,1 |         |   支付宝       | 10      | 100   |  0       |        |  0          | 0            | 0      |    0   | 0    |           |    未支付       |            |
-	     |    今天    | bill1    | 测试 | jobs      | 商品2,1 | 支付    |   微信支付     | 10      | 100   |  0       |        | 110         | 0            | 0      |    110 | 0    | jobs,取消 |    已取消       |            |
-	     |    今天    | bill2    | 购买 | jobs      | 商品1,1 | 支付    |   货到付款     | 10      | 100   |  0       |        | 0           | 0            | 0      |    0   | 110  | jobs,退款 |    退款中       |            |
+    When jack关注jobs的公众号于'2014-07-01'
+    When tom关注jobs的公众号于'2014-07-02'
+    When marry关注jobs的公众号于'2014-07-03'
+
+    When 微信用户批量消费jobs的商品
+        | order_id |    date    | consumer |    product   | payment | pay_type |postage*|price*|integral | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
+        |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10   | 100  |  300    |       200        |                      |     90       |                   |    0    |    0    |   0   |               |    待支付     |
+        |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,取消    |    已取消     |
+        |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_1 |     205      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
+        |   0004   | 3天前      |   tom    | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,完成    |    已完成     |
+        |   0005   | 2天前      |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,退款    |    退款中     |
+        |   0006   | 今天       |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,完成退款|   退款成功    |
+        |   0007   | 今天       |   -tom3  | 商品1,1      |   支付  | 货到付款 |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+        |   0008   | 今天       |   -tom4  | 商品1,1      |   支付  | 支付宝   |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
        
 @stats @stats.product @mall2
 Scenario: 1 商品概况数据
 
- 	#商品概况数据
-     Given jobs登录系统
-     When  jobs设置筛选日期
-      """
-	     {
-	         "start_date":"今天",
-		     "end_date":"今天"
-	     }
-		     
-	  """
-	 Then jobs获得商品概况数据
-		 |    item           | quantity |
-		 |   购买总人数      |    7     |
-		 |   下单单量        |    8     |
-		 |   总成交件数      |    11    |
-
-
-	 When jobs设置筛选日期
-	 """
-	   {
-		  "start_date":"2015-06-01",
-		  "end_date":"2015-06-15"
-	   }
-	 """
-	 Then jobs获得商品概况数据 
-	     |item               | quantity |
-	     |   购买总人数      |    4     |
-	     |   下单单量        |    6     |
-		 |   总成交件数      |    9     |
+	#商品概况数据
+	Given jobs登录系统
+	When  jobs设置筛选日期
+		"""
+		{
+			"start_date":"5天前",
+			"end_date":"今天"
+		}
+		"""
+	Then jobs获得商品概况数据
+		|    item           | quantity |
+		|   购买总人数      |    3     |
+		|   下单单量        |    4     |
+		|   总成交件数      |    5     |

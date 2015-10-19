@@ -451,7 +451,7 @@ select{
 }
 .xui-mainPanel .xui-container{
 	background:#fff;
-    min-height: 880px;
+    min-height: 866px;
     width:auto;
     padding-right:0;
 }
@@ -480,7 +480,7 @@ select{
     top: 0;
     width: 190px;
 }
-.xui-mainPanel .xui-sideBar-votes,
+/*.xui-mainPanel .xui-sideBar-votes,
 .xui-mainPanel .xui-sideBar-events,
 .xui-mainPanel .xui-sideBar-surveies,
 .xui-mainPanel .xui-sideBar-feedbacks,
@@ -488,171 +488,107 @@ select{
 .xui-mainPanel .xui-sideBar-orderRedEnvelope{
 	background-image: url('/static_v2/img/editor/icon_sideBar2.png');
 	background-repeat: no-repeat;
-}
-.xui-mainPanel .xui-sideBar-votes{
-	background-position: 17px -85px;
-}
-.xui-mainPanel .xui-sideBar-events{
-	background-position: 17px 2px;
-}
-.xui-mainPanel .xui-sideBar-surveies{
-	background-position: 17px -19px;
-}
-.xui-mainPanel .xui-sideBar-feedbacks{
-	background-position: 17px -63px;
-}
-.xui-mainPanel .xui-sideBar-lotteries{
-	background-position: 17px -42px;
-}
-.xui-mainPanel .xui-sideBar-orderRedEnvelope{
-	background-position: 17px -110px;
-}
-.xui-mainPanel .xui-sideBar-realtime_messages{
-	background-position: -48px -141px;
-}
-.xui-mainPanel .xui-sideBar-mass_sending{
-	background-position: -48px -113px;
-}
-.xui-mainPanel .xui-sideBar-auto_reply{
-	background-position: -48px -164px;
-}
-.xui-mainPanel .xui-sideBar-template_message{
-	background-position: -48px -85px;
-}
-.xui-mainPanel .xui-sideBar-material{
-	background-position: -48px 0;
-}
-.xui-mainPanel .xui-sideBar-fans{
-	background-position: -48px -30px;
-}
-.xui-mainPanel .xui-sideBar-binding{
-	background-position: -48px -191px;
-}
-.xui-mainPanel .xui-sideBar-menu{
-	background-position: -48px -222px;
-}
-.xui-mainPanel .xui-sideBar-fast_follow{
-	background-position: -48px -250px;
-}
-.xui-mainPanel .xui-sideBar-outline{
-	background-position: -48px -274px;
-}
-.xui-mainPanel .xui-sideBar-reviewManagement{
-	background-position: -48px -300px;
-}
-.xui-mainPanel .xui-sideBar-selling{
-	background-position: 0 0;
-}
-.xui-mainPanel .xui-sideBar-addnew{
-	background-position: 0 -20px;
-}
-.xui-mainPanel .xui-sideBar-toSell{
-	background-position: 0 -40px;
-}
-.xui-mainPanel .xui-sideBar-recycleBin{
-	background-position: 0 -60px;
-}
-.xui-mainPanel .xui-sideBar-pictureManagement{
-	background-position: 0 -80px;
-}
-.xui-mainPanel .xui-sideBar-groupManagement{
-	background-position: 0 -100px;
-}
-.xui-mainPanel .xui-sideBar-attrModelManagement{
-	background-position: 0 -120px;
-}
-.xui-mainPanel .xui-sideBar-allOrder{
-	background-position: 0 -140px;
-}
-.xui-mainPanel .xui-sideBar-refundOrder{
-	background-position: 0 -160px;
-}
-.xui-mainPanel .xui-sideBar-orderBatchDelivery{
-	background-position: 0 -180px;
-}
-.xui-mainPanel .xui-sideBar-orderExpiration{
-	background-position: 0 -200px;
-}
-.xui-mainPanel .xui-sideBar-financialCheck{
-	background-position: 0 -220px;
-}
-.xui-mainPanel .xui-sideBar-postageManagement{
-	background-position: 0 -240px;
-}
-.xui-mainPanel .xui-sideBar-expressManagement{
-	background-position: 0 -260px;
-}
-.xui-mainPanel .xui-sideBar-payInterfaces{
-	background-position: 0 -280px;
-}
-.xui-mainPanel .xui-sideBar-promotionQuery{
-	background-position: 0 -300px;
-}
-.xui-mainPanel .xui-sideBar-flashSale{
-	background-position: 0 -320px;
-}
-.xui-mainPanel .xui-sideBar-buyGifts{
-	background-position: 0 -340px;
-}
-.xui-mainPanel .xui-sideBar-fullReduction{
-	background-position: 0 -360px;
-}
-.xui-mainPanel .xui-sideBar-Coupon{
-	background-position: 0 -380px;
-}
-.xui-mainPanel .xui-sideBar-integralYingyon{
-	background-position: 0 -400px;
-}
-.xui-mainPanel .xui-sideBar-members{
-	background-position: 0 -420px;
-}
-.xui-mainPanel .xui-sideBar-memberTag{
-	background-position: 0 -440px;
-}
-.xui-mainPanel .xui-sideBar-memberGrade{
-	background-position: 0 -460px;
-}
-.xui-mainPanel .xui-sideBar-memberQrcode{
-	background-position: 0 -480px;
-}
-.xui-mainPanel .xui-sideBar-accountToHelp{
-	background-position: 0 -500px;
-}
-.xui-mainPanel .xui-sideBar-roleManagement{
-	background-position: 0 -520px;
-}
-.xui-mainPanel .xui-sideBar-employeeManagement{
-	background-position: 0 -540px;
-}
+}*/
 .xui-mainPanel .xui-sideBar-census{
-	background-position: 0 -560px;
+	/*background-position: 17px -85px;*/
 }
 .xui-mainPanel .xui-sideBar-integralRule{
-	background-position: 0 -580px;
+	background-position: 0 -20px;
 }
-.xui-mainPanel .xui-sideBar-issuingCoupon{
-	background-position: 0 -600px;
+.xui-mainPanel .xui-sideBar-wepage,
+.xui-mainPanel .xui-sideBar-sales{
+	background-position: 0 -40px;
+}
+.xui-mainPanel .xui-sideBar-globalNavbar,
+.xui-mainPanel .xui-sideBar-selling{
+	background-position: 0 -60px;
+}
+.xui-mainPanel .xui-sideBar-weixin_outline{
+	background-position: 0 -80px;
+}
+.xui-mainPanel .xui-sideBar-realtime_messages{
+	background-position: 0 -100px;
+}
+.xui-mainPanel .xui-sideBar-material{
+	background-position: 0 -120px;
+}
+.xui-mainPanel .xui-sideBar-menu{
+	background-position: 0 -140px;
+}
+.xui-mainPanel .xui-sideBar-addnew{
+	background-position: 0 -160px;
+}
+.xui-mainPanel .xui-sideBar-toSell{
+	background-position: 0 -180px;
+}
+.xui-mainPanel .xui-sideBar-pictureManagement{
+	background-position: 0 -200px;
+}
+.xui-mainPanel .xui-sideBar-groupManagement{
+	background-position: -48px 0;
+}
+.xui-mainPanel .xui-sideBar-attrModelManagement{
+	background-position: -48px -20px;
+}
+.xui-mainPanel .xui-sideBar-reviewManagement{
+	background-position: -48px -40px;
+}
+.xui-mainPanel .xui-sideBar-allOrder{
+	background-position: -48px -60px;
+}
+.xui-mainPanel .xui-sideBar-orderExpiration{
+	background-position: -48px -80px;
+}
+.xui-mainPanel .xui-sideBar-financialCheck{
+	background-position: -48px -100px;
+}
+.xui-mainPanel .xui-sideBar-orderBatchDelivery{
+	background-position: -48px -120px;
+}
+.xui-mainPanel .xui-sideBar-flashSale{
+	background-position: -48px -140px;
+}
+.xui-mainPanel .xui-sideBar-lotteries{
+	background-position: -48px -160px;
+}
+.xui-mainPanel .xui-sideBar-members{
+	background-position: -48px -180px;
+}
+.xui-mainPanel .xui-sideBar-memberTag{
+	background-position: -48px -200px;
+}
+.xui-mainPanel .xui-sideBar-memberGrade{
+	background-position: -96px 0;
+}
+.xui-mainPanel .xui-sideBar-memberQrcode{
+	background-position: -96px -20px;
+}
+.xui-mainPanel .xui-sideBar-manage_summary{
+	background-position: -96px -40px;
+}
+.xui-mainPanel .xui-sideBar-member{
+	background-position: -96px -60px;
+}
+.xui-mainPanel .xui-sideBar-postageManagement{
+	background-position: -96px -80px;
+}
+.xui-mainPanel .xui-sideBar-expressManagement{
+	background-position: -96px -100px;
+}
+.xui-mainPanel .xui-sideBar-payInterfaces{
+	background-position: -96px -120px;
 }
 .xui-mainPanel .xui-sideBar-emailNotify{
-	background-position: -48px -340px;
+	background-position: -96px -140px;
 }
-.xui-mainPanel .xui-sideBar-order_summary{
-	background-position: 50px -380px;
+.xui-mainPanel .xui-sideBar-accountToHelp{
+	background-position: -144px 0;
 }
-.xui-mainPanel .xui-sideBar-order_list {
-	background-position: 50px -402px;
+.xui-mainPanel .xui-sideBar-roleManagement{
+	background-position: -144px -20px;
 }
-.xui-mainPanel  .xui-sideBar-qrcode{
-	background-position: -48px -480px;
-}
-.xui-mainPanel .xui-sideBar-wepage {
-	background-position:-49px -402px;
-}
-.xui-mainPanel .xui-sideBar-forbiddenCouponProduct{
-	background-position:-48px -520px;
-}
-.xui-mainPanel .xui-sideBar-supplier{
-	background-position:-48px -500px;
+.xui-mainPanel .xui-sideBar-employeeManagement{
+	background-position: -144px -40px;
 }
 .xui-mainPanel .xui-sideBar > ul{
 	margin-top:10px;
@@ -732,22 +668,80 @@ select{
 }
 .xui-header .xui-logo{
 	padding:10px 15px;
+	height:65px;
 	display:inline-block;
+	cursor: pointer;
 }
-.xui-header .xui-logo .xui-i-logoHref{
+/*.xui-header .xui-logo .xui-i-logoHref{
 	position: absolute;
 	height: 45px;
 	width: 170px;
 	cursor: pointer;
-}
+}*/
 .xui-header .xui-headerActionBar{
-	bottom: -28px;
+	top:15px;
     position: absolute;
-    right: 3px;
+    right: 0;
     color: #fff;
 }
 .xui-header .xui-headerActionBar a{
 	color: #fff;
+	margin-right: 20px;
+	position: relative;	
+}
+.xui-header .xui-toolIcon{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	margin-right: 5px;
+	margin-top: -5px;
+	background:url('/static_v2/img/editor/icon_sideBar.png') no-repeat;
+}
+.xui-header a:first-child .xui-toolIcon{
+	background-position:-112px -160px;
+}
+.xui-header a:nth-child(2) .xui-toolIcon{
+	background-position:-96px -179px;
+}
+.xui-header a:nth-child(3) .xui-toolIcon{
+	background-position:-112px -179px;
+}
+.xui-header a:nth-child(4) .xui-toolIcon{
+	background-position: -96px -160px; 
+}
+.xui-header .popover{
+	background: #f8f8f8;
+}
+.xui-header .popover.bottom>.arrow::after{
+	border-bottom-color: #f8f8f8;
+}
+.xui-header .popover-content .control-label{
+	color: #666;
+}
+.xui-header .popover-content .btn-default{
+	border-radius:3px;
+}
+.xui-header .popover-content .controls input{
+	border: 1px solid #e5e5e5;
+    height: 24px;
+    margin-top: 10px;
+    width: 151px;
+}
+.xui-header .popover-content .edit_password {
+    color: red;
+    display: none;
+    margin:8px 0 0 60px;
+}
+.xui-header .popover-content{
+	background: #f8f8f8 none repeat scroll 0 0;
+    border: medium none #e5e5e5;
+    color: #333;
+    min-height: 172px;
+    padding: 9px 24px;
+    position: relative;
+    width: 267px;
+    font-family: 'Microsoft YaHei',Helvitica;
 }
 .xui-header .xui-systemName{
 	position: absolute;
@@ -786,6 +780,9 @@ select{
 	list-style: none;
 	background: #0B559F;
 }
+.xui-navBar .xui-i ul li:last-child{
+	float: right;
+}
 .xui-header .xui-navBar .xui-i ul li a{
 	color: #fff;
     display: inline-block;
@@ -811,15 +808,27 @@ select{
 *footer
 */
 .xui-footer{
-	margin-top:30px;
+	width: 920px;
+	margin:30px auto 0 auto;
 	font-family:'Microsoft YaHei';
+	border-top:1px solid #eaeaea;
+}
+.xui-footer .xui-content{
+	display: table;
+	margin:0 auto;
+	padding:20px 0;
+	width:660px;
+}
+.xui-footer .xui-i:first-child{
+	text-align: center;
+	widows: 518px;
+}
+.xui-footer .xui-i:last-child{
+	text-align: left;
 }
 .xui-footer .xui-i{
-	width:920px;
-	margin:0 auto;
-	border-top:1px solid #eaeaea;
-	padding: 25px 0 77px;
-	text-align:center;
+	display:table-cell;
+	vertical-align: middle;
 }
 
 
@@ -1019,7 +1028,7 @@ button.xui-close{
 	padding-top: 0px;
 	font-size: 12px;
 	font-weight: normal;
-}
+}/*
 .wui-rightNav{
 	position: fixed;
 	right:0;
@@ -1038,16 +1047,13 @@ button.xui-close{
 	left: -6px;
 	top: -6px;
 
-}
-.xui-orderTip{
-	right:7px;
+}*/
+.xui-noticyTip{/*导航提示*/
+	right:22px;
 	top:2px;
 	font-style: normal;
 	font-size: 12px;
 	font-family: Arial;
-}
-.wui-rightNav .xui-noticyNum,
-.xui-orderTip{
 	display: none;
 	background-color: #da0909;
 	color: #fff;
@@ -1062,6 +1068,21 @@ button.xui-close{
 	box-sizing: border-box;
 	padding: 0 3px;
 }
+.xui-sideBar-third .xui-noticyTip{/*左侧边栏实时消息提示*/
+	right: 56px;
+}
+.xui-allOrders .xui-noticyTip{/*所有订单待发货提示*/
+	right:13px;
+}
+.xui-header .xui-headerActionBar .xui-noticyTip{
+	-moz-transform: scale(.8);
+	-webkit-transform: scale(.8);
+	transform: scale(.8);
+    right: -17px;
+    top: -6px;
+    line-height: 18px;
+}
+/*
 .wui-rightNav a:nth-child(2){
 	background-position: -40px 0;
 }
@@ -1074,7 +1095,7 @@ button.xui-close{
 .wui-rightNav a:last-child{
 	position: relative;
 	background-position: -160px 0;
-}
+}*/
 
 /**
  * 对话框通用样式

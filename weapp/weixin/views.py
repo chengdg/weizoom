@@ -333,6 +333,7 @@ def component_handle(request, appid):
 	# 		webapp_id = request.user_profile.webapp_id
 	# 		user_profile = request.user_profile
 
+
  	try:
 		content = message_pipeline.handle_component(request, appid)
 	except:

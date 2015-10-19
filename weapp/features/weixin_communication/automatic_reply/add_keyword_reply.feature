@@ -24,7 +24,7 @@ Background:
 			"content":"单条图文2文本内容"
 		}]
 		"""
-	and jobs已添加多图文
+	And jobs已添加多图文
 		"""
 		[{
 			"title":"图文4",
@@ -33,7 +33,6 @@ Background:
 			}],
 			"cover_in_the_text":"true",
 			"jump_url":"www.baidu.com",
-			"summary":"单条图文4文本摘要",
 			"content":"单条图文4文本内容"
 		},{
 			"title":"sub图文1",
@@ -41,7 +40,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 				}],
 			"cover_in_the_text":"true",
-			"summary":"sub单条图文1文本摘要",
 			"content":"sub单条图文1文本内容"
 		},{
 			"title":"sub图文2",
@@ -49,7 +47,6 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文2文本摘要",
 			"content":"sub单条图文2文本内容"
 		},{
 			"title":"sub图文3",
@@ -57,13 +54,12 @@ Background:
 				"url": "/standard_static/test_resource_img/hangzhou4.jpg"
 				}],
 			"cover_in_the_text":"false",
-			"summary":"sub单条图文3文本摘要",
 			"content":"sub单条图文3文本内容",
 			"jump_url":"www.baidu.com"
 		}]
 		"""
 
-@message @automaticReply @senior @textPicture @mall2 
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 1 正常添加关键词自动回复
 	Jobs正常添加关键词自动回复 ，能获取他关键词自动回复
 
@@ -160,7 +156,7 @@ Scenario: 1 正常添加关键词自动回复
 		[]
 		"""
 
-@message @automaticReply @senior @textPicture @mall2
+@mall2 @message @automaticReply @senior @textPicture
 Scenario: 2 发送关键词，可以获得正确的回复
 	
 	Given jobs登录系统

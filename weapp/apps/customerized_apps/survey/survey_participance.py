@@ -26,7 +26,10 @@ COUNT_PER_PAGE = 20
 TEXT_NAME={
 	'phone': U'手机',
 	'email': U'邮箱',
-	'name': u'姓名'
+	'name': u'姓名',
+	'qq':u'QQ号',
+	'job':u'职位',
+	'addr':u'地址'
 }
 
 class surveyParticipance(resource.Resource):
@@ -50,18 +53,28 @@ class surveyParticipance(resource.Resource):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
 				item_data = {}
-				if v['type'] == 'appkit.shortcuts':
-					item_data['item_name'] = TEXT_NAME[pureName]
+				if v['type'] in['appkit.textlist', 'appkit.shortcuts']:
+					item_data['type'] = v['type']
+					if pureName in TEXT_NAME:#判断是否是自定义的填写项
+						item_data['item_name'] = TEXT_NAME[pureName]
+					else:
+						item_data['item_name'] = pureName
 					item_data['item_value'] = v['value']
 				elif v['type'] == 'appkit.qa':
+					item_data['type'] = v['type']
 					item_data['item_name'] = pureName
 					item_data['item_value'] = v['value']
 				elif v['type'] == 'appkit.selection':
+					item_data['type'] = v['type']
 					item_data['item_name'] = pureName
 					item_data['item_value'] = []
 					for sub_k, sub_v in sorted(v['value'].items()):
 						if sub_v['isSelect']:
 							item_data['item_value'].append(sub_k.split('_')[1])
+				elif v['type'] == 'appkit.uploadimg':
+					item_data['type'] = []
+					item_data['item_name'] = pureName
+					item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 		else:
 			webapp_user_name = ''
@@ -69,7 +82,7 @@ class surveyParticipance(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'webapp_user_name': webapp_user_name,
-			'items': item_data_list
+			'items': item_data_list,
 		}
 		return response.get_response()
 	

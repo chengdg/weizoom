@@ -40,7 +40,12 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .propertyGroup_property_dynamicControlField_control': 'onMouseoverField',
         'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
 
-        'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger'
+        'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger',
+        'click .xa-outerFunctionTrigger': 'onClickOuterFunctionTrigger',
+
+        //image_dialog_select 类型
+        'click .xa-deleteImageButton': 'onClickDeleteImage',
+        'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage'
 	},
 
     getTemplate: function() {
@@ -73,7 +78,9 @@ W.workbench.PropertyView = Backbone.View.extend({
             "richtext": _.bind(this.initRichTextView, this),
             "daterange": _.bind(this.initDateRange, this),
             "prize_selector": _.bind(this.initPrizeSelector, this),
-            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this)
+            "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
+            "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this),
+            "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this)
         };
 
 
@@ -601,7 +608,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var options = {
             success: _.bind(function(data) {
                         if ($button.hasClass('xa-addDynamicComponentTrigger')) {
-                            var event = {currentTarget: $button.get(0)}
+                            var event = {currentTarget: $button.get(0)};
                             var datas = data;
                             _.each(datas, function(data) {
                                 this.onClickAddDynamicComponentButton(event, data);
@@ -617,7 +624,7 @@ W.workbench.PropertyView = Backbone.View.extend({
                     }, this),
             component: this.component,
             $button: $button
-        }
+        };
 
         if (parameter) {
             _.extend(options, parameter);
@@ -766,7 +773,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             var $item = $(item);
             var value = $item.val();
             $item.slider({
-                min: 20,
+                min: 10,
                 max: 100,
                 step: 1,
                 value: parseInt(value),
@@ -839,7 +846,27 @@ W.workbench.PropertyView = Backbone.View.extend({
             _this.getTargetComponent($el).model.set(attr, prize);
         });
     },
+    initPrizeSelectorV4: function($el){
+        W.createWidgets($el);
 
+        var view = $el.find('[data-ui-role="apps-prize-selector-v4"]').data('view');
+        var _this = this;
+        view.on('change-prize', function(prize) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, prize);
+        });
+    },
+    initPrizeKeywordPane: function($el){
+        W.createWidgets($el);
+
+        var view = $el.find('[data-ui-role="apps-prize-keyword-pane"]').data('view');
+        console.log(view);
+        var _this = this;
+        view.on('add_keywords', function(keywords) {
+            var attr = $el.attr('data-field');
+            _this.getTargetComponent($el).model.set(attr, keywords);
+        });
+    },
     initProductsView: function($el){
         var type = $el.find('[name="type"]:checked').val();
         var cardType = $el.find('[name="card_type"]:checked').val();
@@ -948,9 +975,33 @@ W.workbench.PropertyView = Backbone.View.extend({
         $el.find('.close').show();
     },
 
-    onClickColorPickerTrigger: function(event){
+    onClickDeleteImage: function(event){
         var $el = $(event.currentTarget);
+        console.log(event.currentTarget);
+        $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
+        $el.siblings('input[data-field="image"]').val('');
+        $el.siblings('.xui-i-triggerButton').text('选择图片');
+        $el.hide();
+        //广播删除事件，以便删除phoneView中的对应图片
+        var cid = $el.parents('.propertyGroup_property_dynamicControlField_control').attr('data-dynamic-cid');
+        W.Broadcaster.trigger("image_dialog_select:deleteImage", cid);
+    },
+
+    onMouseoverImage: function(event){
+        var $el = $(event.target);
+        $el.parent().siblings('.deleteImage').show();
+    },
+
+    onClickColorPickerTrigger: function(event){
+        console.log(['===========']);
+        console.log(event);
+        var $el = $(event.target);
         var $input = $el.parents('.propertyGroup_property_input').find('.xa-valueInput');
         $input.trigger('click');
+    },
+    onClickOuterFunctionTrigger:function(event){
+        var $data_func = $(event.target).attr('data-func');
+        W.data.getData($data_func);
+
     }
 });

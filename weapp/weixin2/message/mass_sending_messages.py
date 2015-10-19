@@ -19,10 +19,11 @@ from datetime import timedelta, datetime, date
 from member.util import *
 from .util import *
 from weixin2.advance_manage.util import get_members, new_get_members
-from modules.member.models import Member
+from modules.member.models import Member, MemberHasTag, UserSentMassMsgLog, MESSAGE_TYPE_NEWS, MESSAGE_TYPE_TEXT
+from weixin2.tasks import task_send_mass_message
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class MassSendingMessages(resource.Resource):
     """
@@ -49,8 +50,9 @@ class MassSendingMessages(resource.Resource):
         groups = tags
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_MASS_SENDING_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_MASS_SENDING_NAV,
             'sent_count': sent_count,
             'groups': groups,
             'mode': 'mass_sending'
@@ -152,8 +154,9 @@ class MassSendingMessages(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_MASS_SENDING_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_MASS_SENDING_NAV,
             'sent_count': sent_count,
             'category': category,
             'status': status,
@@ -216,6 +219,9 @@ class MassSendingMessages(resource.Resource):
             response.errMsg = u'发送类型不能为空'
             return response.get_response()
 
+        user_profile = request.user_profile
+        group_id = None
+        is_more_than_two = True
         is_from_fans_list = False
         id_array = []
         result = None
@@ -241,9 +247,10 @@ class MassSendingMessages(resource.Resource):
                 print u'群发消息异常，mass_sending_messages:', e
 
         if is_from_fans_list:
-            members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
-            for member in members:
-                openid_list.append(member.member_open_id)
+            is_more_than_two = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array).count() >= 2
+            #members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
+            # for member in members:
+            #     openid_list.append(member.member_open_id)
         else:  #从群发消息页面过来的群发请求
             group_id = request.POST.get('group_id')
             group_type = request.POST.get('group_type')
@@ -255,37 +262,33 @@ class MassSendingMessages(resource.Resource):
             if group_type == 'member':
                 #商城会员
                 if group_id == -1:
+                    is_more_than_two = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False).count() >= 2
                     #当group_id等于-1时发送给全部会员
-                    openid_list = get_openid_list_by_webapp_id(webapp_id)
+                    #openid_list = get_openid_list_by_webapp_id(webapp_id)
                 else:
-                    openid_list = get_openid_list(group_id)
-            else:
-                #微信粉丝
-                members = None
-                if group_id == -1:
-                    members = Member.get_members(webapp_id)
-                else:
-                    id_array = FanHasCategory.get_fan_id_list_by_category_id(group_id)
-                    members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
+                    is_more_than_two = MemberHasTag.get_tag_has_sub_member_count(group_id) >= 2
+                    #openid_list = get_openid_list(group_id)
+            # else:
+            #     #微信粉丝
+            #     members = None
+            #     if group_id == -1:
+            #         members = Member.get_members(webapp_id)
+            #     else:
+            #         id_array = FanHasCategory.get_fan_id_list_by_category_id(group_id)
+            #         members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
 
-                for member in members:
-                    openid_list.append(member.member_open_id)
-
-        if len(openid_list) < 2:
+            #     for member in members:
+            #         openid_list.append(member.member_open_id)
+        if is_more_than_two is False:
             response = create_response(405)
             response.errMsg = u'群发目标用户数量不能少于2个'
             return response.get_response()
-
         if send_type != 'news':
-            result = send_mass_text_message_with_openid_list(request.user_profile, openid_list, content)
+            message_type = MESSAGE_TYPE_TEXT
         else:
-            material_id = int(content)
-            result = send_mass_news_message_with_openid_list(request.user_profile, openid_list, material_id)
-
-        if result:
-            response = create_response(200)
-        else:
-            response = create_response(404)
-            response.errMsg = u'群发失败，请检查token'
-
+            content = int(content)
+            message_type = MESSAGE_TYPE_NEWS
+        msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content)
+        task_send_mass_message.delay(user_profile.webapp_id,msg_log.id, message_type, content, is_from_fans_list, group_id, id_array)        
+        response = create_response(200)
         return response.get_response()

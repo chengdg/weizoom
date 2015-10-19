@@ -14,7 +14,7 @@ from util import *
 import json
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 class FollowRules(resource.Resource):
     app = 'new_weixin'
@@ -66,8 +66,9 @@ class FollowRules(resource.Resource):
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_message_second_navs(request),
-            'second_nav_name': export.MESSAGE_AUTO_REPLY_NAV,
+            'second_navs': export.get_weixin_second_navs(request),
+            'second_nav_name': export.WEIXIN_MESSAGE_SECOND_NAV,
+            'third_nav_name': export.MESSAGE_AUTO_REPLY_NAV,
             'rule': rule,
             'jsons': jsons
         })

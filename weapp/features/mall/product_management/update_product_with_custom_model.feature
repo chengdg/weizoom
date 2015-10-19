@@ -1,4 +1,6 @@
 @func:webapp.modules.mall.views.update_product
+#editor:张三香 2015.10.14
+
 Feature: 更新商品规格
 	Jobs通过管理系统在商城中添加"商品"后，能修改"商品规格"
 
@@ -30,8 +32,8 @@ Background:
 		}]
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 重新添加商品规格
+@mall2 @product @mall @mall.product @mall.product_model
+Scenario:1 重新添加商品规格
 	Jobs添加无商品规格的商品后，能再次添加商品规格
 
 	Given jobs已添加商品
@@ -98,9 +100,8 @@ Scenario: 重新添加商品规格
 		}
 		"""
 
-
-@mall @mall.product @mall.product_model @mall2
-Scenario: 更新已有商品规格
+@mall2 @product@mall @mall.product @mall.product_model
+Scenario:2 更新已有商品规格
 	Jobs添加有商品规格的商品后，能更新商品规格
 
 	Given jobs已添加商品
@@ -186,8 +187,8 @@ Scenario: 更新已有商品规格
 		}
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 修改商品的商品规格
+@mall2 @product @mall @mall.product @mall.product_model
+Scenario:3 修改商品的商品规格
 	Jobs修改已添加的商品的商品规格
 
 	Given jobs已添加商品

@@ -64,7 +64,7 @@ def step_impl(context, user):
 def step_impl(context, user):
 	Member.objects.all().update(is_for_test=False)
 	if not hasattr(context, 'url'):
-		context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&enable_paginate=1'
+		context.url = '/member/api/member_list/?design_mode=0&version=1&status=1&enable_paginate=1'
 		if hasattr(context, 'count_per_page'):
 			context.url += '&count_per_page=' + str(context.count_per_page)
 		else:
@@ -103,7 +103,7 @@ def step_impl(context, user):
 	elif context.table:
 		grades_dict = {}
 		tags_dict = {}
-		response = context.client.get('/member/api/members_filter_params/get/')
+		response = context.client.get('/member/api/members_filter_params/')
 		for item in json.loads(response.content)['data']['grades']:
 			grades_dict[item['name']] = item['id']
 		for item in json.loads(response.content)['data']['tags']:
@@ -112,19 +112,29 @@ def step_impl(context, user):
 		actual_data = []
 		for row in context.table:
 			adict = {}
-			adict['name'] = row[0]
-			adict['member_grade'] = row[1]
-			adict['friend_count'] = int(row[2])
-			adict['integral'] = int(row[3])
-			adict['pay_money'] = row[4]
-			adict['unit_price'] = row[5]
-			adict['pay_times'] = int(row[6])
-			if row[7] == u'今天':
-				adict['attention_time'] = time.strftime('%Y-%m-%d')
-			else:
-				adict['attention_time'] = row[7]
-			adict['source'] = row[8]
-			adict['tags'] = row[9]
+			if hasattr(row, 'name'):
+				adict['name'] = row['name']
+			if hasattr(row, 'member_rank'):
+				adict['member_grade'] = row['member_rank']
+			if hasattr(row, 'friend_count'):
+				adict['friend_count'] = int(row['friend_count'])
+			if hasattr(row, 'integral'):
+				adict['integral'] = int(row['integral'])
+			if hasattr(row, 'pay_money'):
+				adict['pay_money'] = row['pay_money']
+			if hasattr(row, 'unit_price'):
+				adict['unit_price'] = row['unit_price']
+			if hasattr(row, 'pay_times'):
+				adict['pay_times'] = int(row['pay_times'])
+			if hasattr(row, 'attention_time'):
+				if row['attention_time'] == u'今天':
+					adict['attention_time'] = time.strftime('%Y-%m-%d')
+				else:
+					adict['attention_time'] = row['attention_time']
+			if hasattr(row, 'source'):
+				adict['source'] = row['source']
+			if hasattr(row, 'tags'):
+				adict['tags'] = row['tags']
 			json_data.append(adict)
 		for row in actual_members:
 			adict = {}
@@ -151,13 +161,13 @@ def step_impl(context, webapp_owner_name, webapp_user_name, grade_name):
 	user = context.client.user
 	member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
 	db_grade = MemberGrade.objects.get(name=grade_name, webapp_id=user.get_profile().webapp_id)
-	context.client.post('/member/api/tag/update/', {
+	context.client.post('/member/api/update_member_tag_or_grade/', {
 		'checked_ids':	db_grade.id, 'member_id': member.id, 'type': 'grade'})
 
 @then(u'{webapp_owner_name}能获得{webapp_user_name}的积分日志')
 def step_impl(context, webapp_owner_name, webapp_user_name):
 	webapp_user_member = bdd_util.get_member_for(webapp_user_name, context.webapp_id)
-	url = '/member/api/member_logs/get/?design_mode=0&version=1&member_id=%d&count_per_page=10&page=1&enable_paginate=1' % webapp_user_member.id
+	url = '/member/api/integral_logs/?design_mode=0&version=1&member_id=%d&count_per_page=10&page=1&enable_paginate=1' % webapp_user_member.id
 	response = context.client.get(url)
 	member_logs = json.loads(response.content)['data']['items']
 	actual = [{"content":log['event_type'], "integral":log['integral_count']} for log in member_logs]
@@ -171,22 +181,19 @@ def step_impl(context, member_a, user):
 	# if hasattr(context, 'client'):
 	# 	context.client.logout()
 	# context.client = bdd_util.login(user)
-	# client = context.client
+	client = context.client
 	user = UserFactory(username=user)
 	# user = context.client.user
 	user_profile = user.get_profile()
 	openid = '%s_%s' % (member_a, user)
-	post_data = """
-				<xml><ToUserName><![CDATA[weizoom]]></ToUserName>
-				<FromUserName><![CDATA[%s]]></FromUserName>
-				<CreateTime>1405079048</CreateTime>
-				<MsgType><![CDATA[event]]></MsgType>
-				<Event><![CDATA[unsubscribe]]></Event>
-				<EventKey><![CDATA[]]></EventKey>
-				</xml>
-	""" % openid
-	url = '/weixin/%s/'% user_profile.webapp_id
-	context.client.post(url, post_data, "text/xml; charset=\"UTF-8\"")
+	url = '/simulator/api/mp_user/unsubscribe/?version=2'
+	data = {
+		"timestamp": "1402211023857",
+		"webapp_id": user_profile.webapp_id,
+		"from_user": openid
+	}
+	response = client.post(url, data)
+
 
 @when(u'{username}访问会员列表第{page_count}页')
 def step_impl(context, username, page_count):

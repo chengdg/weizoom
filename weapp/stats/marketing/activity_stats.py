@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 #from django.shortcuts import render_to_response
 #from django.db.models import F
 
-from stats import export
 from core import resource
 #from core import paginator
 from core.jsonresponse import create_response
@@ -22,7 +21,6 @@ from mall.models import Order, QUALIFIED_ORDER_STATUS
 from modules.member.models import MemberMarketUrl
 
 
-FIRST_NAV = export.MARKETING_NAV
 DEFAULT_COUNT_PER_PAGE = 20
 
 def __is_new_member(relation, existed_member_map):

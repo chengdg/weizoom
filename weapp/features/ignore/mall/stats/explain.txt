@@ -1,0 +1,6 @@
+1 现在已经没有此业务
+	operating_survey_browse_quantity_sales_volume.feature
+	order_detail_analysis.feature
+2 营销分析的数据源模块的feature暂时没有实现，无法模拟建数据源数据
+	marketing_activity_analysis_channel_code.feature
+	marketing_activity_analysis_wechat_draw.feature

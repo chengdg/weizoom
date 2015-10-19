@@ -24,12 +24,12 @@ class ExpiredTime(resource.Resource):
     @login_required
     def get(request):
         if MallConfig.objects.filter(owner=request.manager).count() == 0:
-            MallConfig.objects.create(owner=request.use, order_expired_day=24)
+            MallConfig.objects.create(owner=request.user, order_expired_day=24)
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_EXPIRED_TIME,
             'mall_config': mall_config,
         })
@@ -44,12 +44,12 @@ class ExpiredTime(resource.Resource):
         if MallConfig.objects.filter(owner=request.manager).count() > 0:
             MallConfig.objects.filter(owner=request.manager).update(order_expired_day=order_expired_day)
         else:
-            MallConfig.objects.create(owner=request.use, order_expired_day=24)
+            MallConfig.objects.create(owner=request.user, order_expired_day=24)
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
-            'second_navs': export.get_orders_second_navs(request),
+            'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_EXPIRED_TIME,
             'mall_config': mall_config,
         })

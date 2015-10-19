@@ -22,7 +22,7 @@ def handtime(atime):
 # @Then(u'{user}访问所有会员')
 # def step_impl(context, user):
 #     ###访问会员详情页：访问会员详情页会使购买信息自动调整正确
-#     url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value=status:-1&page=1&count_per_page=50&enable_paginate=1'
+#     url = '/member/api/member_list/get/?design_mode=0&version=1&status=1&filter_value=status:-1&page=1&count_per_page=50&enable_paginate=1'
 #     response = context.client.get(bdd_util.nginx(url))
 #     items = json.loads(response.content)['data']['items']
 #     for member_item in items:
@@ -53,7 +53,7 @@ def step_impl(context, user):
 
 @then(u'{user}获得会员列表默认查询条件')
 def step_impl(context, user):
-    context.url = '/member/api/members/get/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
+    context.url = '/member/api/member_list/?design_mode=0&version=1&status=1&count_per_page=50&page=1&enable_paginate=1'
 
 @Then(u'{user}获得刷选结果人数')
 def step_impl(context, user):
@@ -71,7 +71,7 @@ def step_impl(context, user):
     sources_dict = {u'全部':'-1',u'直接关注':'0',u'推广扫码':'1',u'会员分享':'2'}
     grades_dict = {}
     tags_dict = {}
-    members_filter_params = context.client.get('/member/api/members_filter_params/get/')
+    members_filter_params = context.client.get('/member/api/members_filter_params/')
     for item in json.loads(members_filter_params.content)['data']['grades']:
         grades_dict[item['name']] = item['id']
     for item in json.loads(members_filter_params.content)['data']['tags']:
@@ -83,7 +83,7 @@ def step_impl(context, user):
             options[key] = time.strftime('%Y-%m-%d')
     ###
     options_url = []
-    init_url = '/member/api/members/get/?design_mode=0&version=1&status=1&filter_value='
+    init_url = '/member/api/member_list/?design_mode=0&version=1&status=1&filter_value='
     if options.has_key('pay_money_start') and options.has_key('pay_money_end') :
         if options['pay_money_start'] and options['pay_money_end']:
             options_url.append('pay_money:%s--%s' %(options['pay_money_start'],options['pay_money_end']))

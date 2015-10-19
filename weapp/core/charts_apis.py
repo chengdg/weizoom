@@ -108,7 +108,8 @@ class MyEcharts(object):
 			y_unit_label,
 			x_values,
 			y_values_list,
-			color_list = None
+			color_list = None, 
+			use_double_y_lable = False
 		):
 		option = copy.deepcopy(self.COMMON_OPTION)
 		option[self.LEGEND_OPTION_NAME]['data'] = []
@@ -127,16 +128,30 @@ class MyEcharts(object):
 			},
 			"data" : x_values
 		}
-
-		option['yAxis'] = {
-			"type" : 'value',
-			"axisLabel" : {
-				"formatter": '{value}%s' % (y_unit_label)
+		
+		if use_double_y_lable:
+			option['yAxis'] = [{
+				"type" : 'value',
+				"axisLabel" : {
+					"formatter": '{value}%s' % (y_unit_label)
+				}
+			}, {
+				"type" : 'value',
+				"axisLabel" : {
+					"formatter": '{value}%s' % (y_unit_label)
+				}
+			}]
+		else:
+			option['yAxis'] = {
+				"type" : 'value',
+				"axisLabel" : {
+					"formatter": '{value}%s' % (y_unit_label)
+				}
 			}
-		}
 
 		lagend_data_arr = option[self.LEGEND_OPTION_NAME]['data']
 		series_options = option[self.SERIES_OPTION_NAME]
+		index = 0
 		for y_values in y_values_list:
 			name = y_values['name']
 			values = y_values['values']
@@ -146,6 +161,10 @@ class MyEcharts(object):
 			one_series_options['type'] = 'line'
 			one_series_options['smooth'] = True
 			one_series_options['data'] = values
+			if use_double_y_lable:
+				one_series_options['yAxisIndex'] = index
+				index = (index + 1) % 2
+
 			if y_values.has_key('tooltip'):
 				one_series_options['tooltip'] = y_values['tooltip']
 
@@ -329,7 +348,9 @@ def create_line_chart_response(
 		y_unit_label,
 		x_values,
 		y_values_list,
-		color_list = None
+		color_list = None,
+		use_double_y_lable = False,
+		get_json=False
 	):
 	"""
 	创建折线图数据的response
@@ -355,9 +376,11 @@ def create_line_chart_response(
 		   y_unit_label,
 		   x_values,
 		   y_values_list,
-		   color_list 
+		   color_list, 
+		   use_double_y_lable
 		)
-
+	if get_json:
+		return map_charts_jsondata
 	response = create_response(200)
 	response.data = map_charts_jsondata
 	

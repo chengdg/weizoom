@@ -131,7 +131,7 @@ W.Api = function() {
 				if (showLoading && W.getLoadingView) {
 					W.getLoadingView().hide();
 				}
-				if (!(_options.app == 'new_weixin' && _options.resource == 'outline') && W.isRequireConfirmViewDisplayed) {
+				if (!(_options.app == 'new_weixin' && _options.resource == 'outline')) {
 					W.finishConfirm();
 				}
 				if (resp.code !== 200) {
@@ -168,7 +168,7 @@ W.Api = function() {
 				if (showLoading && W.getLoadingView) {
 					W.getLoadingView().hide();
 				}
-				if (!(_options.app == 'new_weixin' && _options.resource == 'outline') && W.isRequireConfirmViewDisplayed) {
+				if (!(_options.app == 'new_weixin' && _options.resource == 'outline')) {
 					W.finishConfirm();
 				}
 				_this.reportError(url, xhr.responseText);

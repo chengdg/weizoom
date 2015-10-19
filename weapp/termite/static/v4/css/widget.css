@@ -573,7 +573,6 @@ ul{
 
 .wui-title{
     color: #333;
-    background:#fff;
     background-size: 100% 1px;
     background-position: left bottom;
     padding: 10px;
@@ -663,7 +662,7 @@ ul.wui-relatelink li h3{
 .wui-productlist .wui-inner-titleAndprice .xui-inner-title{
     font-size: 13px;
     padding: 6px 0px 0px;
-    height: 32px;
+    height: 33px;
     color: #333;
     overflow: hidden;
 }
@@ -843,10 +842,19 @@ ul.wui-relatelink li h3{
 
 /*====type1====*/
 .wui-product .wui-block-type1 .wui-inner-titleAndprice,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice{
-    font-size: 13px;
+    font-size: 15px;
+}
+.wui-product .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span,
+.wui-productlist .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span{
+    margin-right:2px; 
 }
 .wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child{
     margin-bottom: 6px;
+    line-height: 16px;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .wui-product .wui-block-type1,.wui-productlist .wui-block-type1{
     padding-left: 10px;
@@ -1106,7 +1114,6 @@ ul.wui-relatelink li h3{
 /*火狐浏览器有影响*/
 /*===========================图片导航=============================================*/
 .wui-imagenav{
-    background: #fff;
     overflow: hidden;
     padding: 5px;
 }
@@ -1131,19 +1138,19 @@ ul.wui-relatelink li h3{
 .wui-imagenav .wui-inner-pic{
     height: 75px;
     overflow: hidden;
-    border: 1px solid #e5e5e5;
+    border: 1px solid transparent;
     border-right: none;
     box-sizing:border-box;
 }
 .wui-imagenav li:last-child .wui-inner-pic{
-    border-right: 1px solid #e5e5e5;
+    border-right: 1px solid transparent;
 }
 /*================================橱窗=========================*/
 .wui-imagedisplay{
     width: 100%;
     /*height: 213px;*/
     overflow: hidden;
-    background: #fff;
+    /*background: #fff;*/
     box-sizing:border-box;
     padding-top: 1px;
 }
@@ -1262,15 +1269,17 @@ ul.wui-relatelink li h3{
     font-size: 14px;
 }
 .wui-richtext table{
+    width: 100%;
     margin-top: 8px;
     margin-bottom: 18px;
 }
 .wui-richtext table td{
     width: 98px;
     height: 22px;
-    border: 1px solid #666;
+    border: 1px solid #d0d0d0;
     text-align: center;
     line-height: 22px;
+    vertical-align: middle;
 }
 .wui-richtext em{
     font-style: italic;

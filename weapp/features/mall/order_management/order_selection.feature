@@ -127,7 +127,7 @@ Background:
 		}]
 		"""
 
-@mall2 @order @allOrder @zhaolei_o
+@mall2 @order @allOrder
 Scenario: 选择订单筛选条件
 	jobs选择订单筛选条件后
 	1. jobs选择一个条件时,可以看到订单列表
@@ -390,6 +390,7 @@ Scenario: 选择订单筛选条件
 		"""
 		{
 			"date_interval": "2014-10-07|2014-10-08",
+			"date_interval_type": 1,
 			"ship_name": "tom",
 			"ship_tel": "13711223344"
 		}

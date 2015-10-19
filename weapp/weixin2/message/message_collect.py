@@ -20,7 +20,7 @@ from weixin2 import export
 from weixin2.models import get_system_user_binded_mpuser, WeixinUser, DEFAULT_ICON, Message, CollectMessage
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.MESSAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 CUT_STRING_LEN = 20
 DATETIME_BEFORE_HOURS = 48
 

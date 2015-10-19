@@ -61,6 +61,51 @@
         .xb-pagination-component {
             height: 33px;
         }
+        td .xui-uploadimg{
+          width: 60px;
+          height: 75px;
+          float: left;
+          margin-left: 20px;
+        }
+        .xa-uploadimg_box{
+            display: none;
+            position: absolute;
+            width: 500px;
+            height: auto;
+            overflow: auto;
+            margin: auto;
+            top: 25%; left: 0;right: 0;
+            text-align: center;
+            background-color: #DDDDDD;
+            z-index: 1000000;
+            overflow-y: hidden;
+        }
+        .xa-uploadimg_box .xa-close_btn{
+            position: absolute;
+            top: 5px; right: 5px;
+            z-index: 1000000;
+        }
+        .xa-uploadimg_box .xa-uploadimg{
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #DDDDDD;
+        }
+        .xa-arr{
+            position: absolute;
+            top:40%;
+            height: 97px;
+            width: 38px;
+            background: url("/static_v2/img/arrow_lr.png");
+            background-repeat: no-repeat;
+            z-index: 1000001;
+        }
+        .xa-arr.xa-arr_left{
+            left: 3px;
+        }
+        .xa-arr.xa-arr_right{
+            right: 2px;
+            background-position: -91px;
+        }
     </style>
 {% endblock %}
 
@@ -75,10 +120,11 @@
 	
     <div class="panel panel-default xui-tableBox">
         <div class="panel-header clearfix">
-            <b class="xui-i-totalcount fr">总参与人数: {{ total_count }} 人</b>
-            <a class="btn btn-default xui-fontBold fr xui-i-exportBtn xa-i-exportBtn" href="javascript:void(0);">批量导出</a>
+            <b class="xui-i-totalcount fr">总参与人数: {{ total_participance }} 人</b>
+            {% if titles %}<a class="btn btn-default xui-fontBold fr xui-i-exportBtn xa-i-exportBtn" href="javascript:void(0);">批量导出</a>{% endif %}
             <a id="export_href" style="display: none ">DownloadXLS</a>
         </div>
+        {% if titles %}
         {% for title in titles %}
             <div class="xui-i-tableHeader">
                 <span>{{ forloop.counter }}、{{ title.title }}（{{ title.title_type }}）</span>
@@ -123,6 +169,12 @@
                 </div>
             {% endifequal %}
         {% endfor %}
+        {% else %}
+            <div class="xui-emptyBox m10">
+                <img src="/static_v2/img/editor/empty.png">
+                <span class="ml20">该调研活动没有填写项！</span>
+            </div>
+        {% endif %}
     </div>
 
 </div>
@@ -140,12 +192,17 @@
             <tbody>
                 {{each(i, item) items}}
                     <tr>
-                        <td style="text-align:left;padding-left: 30px;"><div style="width:100%;word-break:break-all; overflow:auto;">${ item.content }</div></td>
-                        <td>${ item.created_at }</td>
+                        {{if (item.type === 'uploadimg') }}
+                            <td>{{html item.content}}</td>
+                        {{else}}
+                            <td style="text-align:left;padding-left: 30px;"><div style="width:100%;word-break:break-all; overflow:auto;">${ item.content }</div></td>
+                        {{/if}}
+                            <td>${ item.created_at }</td>
                     </tr>
                 {{/each}}
             </tbody>
         </table>
+        <div class="xa-uploadimg_box inactive"></div>
     </script>
 {% endverbatim %}
     <script>
@@ -172,6 +229,47 @@
                 console.log('导出失败');
             }
         });
+    });
+
+    //click_img
+    var click_count = 1;
+    $('body').delegate('.xa-uploadimg', 'click', function(event) {
+        if(click_count ===1) {
+            var curr_hight = $(document).scrollTop();
+            $('.xa-uploadimg_box').css('top',curr_hight+'px');
+
+            click_count = click_count + 1;
+            var that = this;
+            var img_len = $(that).parent().find('img').length;
+            var img_arr = $(that).parent().find('img').clone(true);
+            var img_id_index = parseInt($(that).attr('id').split('-')[1]);
+
+            $('.xa-uploadimg_box').append("<div class='xa-uploadimg_div'></div><div><img class='xa-close_btn' src='/static_v2/img/close_btn.png'></div><div class='xa-arr xa-arr_left'></div><div class='xa-arr xa-arr_right'></div>").fadeIn('fast');
+            $('.xa-uploadimg_div').append($(that).clone(true));
+            if(img_len==1){
+                $('.xa-arr').css('display','none');
+            }
+
+            $('.xa-close_btn').click(function(){
+                    $('.xa-uploadimg_box').fadeOut('fast');
+                    $('.xa-uploadimg_box').empty();
+                    click_count = 1;
+                });
+            $('.xa-arr_left').click(function(){
+                img_id_index = img_id_index - 1;
+                if (img_id_index < 0){
+                    img_id_index = img_len - 1;
+                }
+                $('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);
+            });
+            $('.xa-arr_right').click(function () {
+                img_id_index = img_id_index + 1;
+                if (img_id_index > img_len-1){
+                    img_id_index = 0;
+                }
+                $('.xa-uploadimg_div').empty().append(img_arr[img_id_index]);
+            });
+        }
     });
     </script>
 {% endblock %}

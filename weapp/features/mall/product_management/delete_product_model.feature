@@ -1,4 +1,6 @@
 @func:webapp.modules.mall.views.list_mall_settings
+#editor: 张三香 2015.10.14
+
 Feature: 删除商品规格
 	Jobs通过管理系统在商城中删除供商品使用的"商品规格"
 
@@ -50,55 +52,35 @@ Background:
 		}]	
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 删除商品规格
+@mall2 @product @module   @mall @mall.product @mall.product_model
+Scenario:1 删除商品规格
 	Jobs更新商品规格后
 	1. jobs不能能获得删除后的商品规格
 	2. jobs能获得更新后的商品规格列表
-	
+
 	Given jobs登录系统
 	When jobs删除商品规格'颜色'
 	Then jobs能获取商品规格列表
 		"""
 		[{
-			"name": "尺寸",
-			"type": "文字",
-			"values": [{
-				"name": "M"
-			}, {
-				"name": "S"
-			}]
-		}]	
+			"name": "尺寸"
+		}]
 		"""
 	Given bill登录系统
 	Then bill能获取商品规格列表
 		"""
 		[{
-			"name": "颜色",
-			"type": "图片",
-			"values": [{
-				"name": "黑色",
-				"image": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}, {
-				"name": "白色",
-				"image": "/standard_static/test_resource_img/hangzhou2.jpg"
-			}]
-		}, {
-			"name": "尺寸",
-			"type": "文字",
-			"values": [{
-				"name": "M"
-			}, {
-				"name": "S"
-			}]
-		}]	
+			"name": "颜色"
+		},{
+			"name": "尺寸"
+		}]
 		"""
 
-@mall @mall.product @mall.product_model @mall2
-Scenario: 删除商品规格影响商品
+@mall2 @product @module   @mall @mall.product @mall.product_model
+Scenario:2 删除商品规格影响商品
 	Jobs删除一条商品规格后
 	2. 使用该商品规格的商品转为“下架”状态
-	
+
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
@@ -129,7 +111,7 @@ Scenario: 删除商品规格影响商品
 					"S": {}
 				}
 			}
-		}]	
+		}]
 		"""
 	When jobs删除商品规格'颜色'
 	Then jobs能获取商品'商品1'
@@ -138,7 +120,7 @@ Scenario: 删除商品规格影响商品
 			"name": "商品1",
 			"is_enable_model": "不启用规格",
 			"shelve_type": "下架"
-		}	
+		}
 		"""
 	And jobs能获取商品'商品2'
 		"""
@@ -146,7 +128,7 @@ Scenario: 删除商品规格影响商品
 			"name": "商品2",
 			"is_enable_model": "不启用规格",
 			"shelve_type": "下架"
-		}	
+		}
 		"""
 	And jobs能获取商品'商品3'
 		"""

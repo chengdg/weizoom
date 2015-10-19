@@ -17,11 +17,23 @@
     <span style="font-size:16px;font-weight:bold;">"{{webapp_user_name}}"填写的内容</span>
     <table class="table table-bordered">
         {{#each items}}
-            <tr>
-                <td style="width: 50%;">{{item_name}}：</td>
-                <td>{{item_value}}</td>
-            </tr>
+        	{{#if type}}
+        		<tr>
+					<td style="width: 50%;">{{item_name}}：</td>
+					<td>{{item_value}}</td>
+				</tr>
+            {{else}}
+				<tr>
+					<td style="width: 50%;">{{item_name}}：</td>
+					<td>
+						{{#each item_value}}
+							<img class="xa-uploadimg" id="uploadimg-{{@index}}" src="{{this}}" />
+						{{/each}}
+					</td>
+				</tr>
+            {{/if}}
         {{/each}}
     </table>
+    <div class="xa-uploadimg_box inactive"></div>
 </script>
 

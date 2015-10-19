@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from mall.promotion.models import CouponRule
+
 __author__ = 'liupeiyu'
 
 import os
@@ -20,7 +23,7 @@ import utils as webapp_link_utils
 
 
 COUNT_PER_PAGE = 20
-FIRST_NAV = export.ADVANCE_MANAGE_FIRST_NAV
+FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 
 
 class WebappLinkMenus(resource.Resource):
@@ -113,34 +116,36 @@ class WebappItemLinks(resource.Resource):
 				items = []
 				for item in objects:
 					data = dict()
-					data['id'] = item.id
-					data['created_at'] = item.created_at if isinstance(item.created_at, str) else item.created_at.strftime('%Y-%m-%d %H:%M:%S')
-					data['name'] = item.name
-					data['link'] = menu_item['link_template'].format(item.id)
-					data['isChecked'] = True if is_selected_type and item.id == selected_id else False
-					if link_type == 'webappPage':
-						# 微页面
-						data['name'] = item.site_title
-						
-					if link_type == 'lottery':
-						# 抽奖
-						data['type'] = WebappItemLinks.LOTTER_TYPE[item.type]
-						data['valid'] = u'{} 至 {}'.format(item.start_at.strftime("%Y-%m-%d"), item.end_at.strftime("%Y-%m-%d"))
+					if link_type == 'red':
+						items.append(item)
+					else:
+						data['id'] = item.id
+						data['created_at'] = item.created_at if isinstance(item.created_at, str) else item.created_at.strftime('%Y-%m-%d %H:%M:%S')
+						data['name'] = item.name
+						data['link'] = menu_item['link_template'].format(item.id)
+						data['isChecked'] = True if is_selected_type and item.id == selected_id else False
+						if link_type == 'webappPage':
+							# 微页面
+							data['name'] = item.site_title
 
-					if link_type == 'coupon':
-						# 优惠券
-						data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
-						data['end_date'] = item.end_date if isinstance(item.end_date, str) else item.end_date.strftime('%Y-%m-%d %H:%M')
-						data['created_at'] = data['created_at'][:16] if len(data['created_at']) > 16 else data['created_at']
-						data['end_date'] = data['end_date'][:16] if len(data['end_date']) > 16 else data['end_date']
-						data['valid'] = u'{} 至 {}'.format(data['created_at'], data['end_date'])
-						data['link'] = menu_item['link_template'].format(item.detail['id'])
+						if link_type == 'lottery':
+							# 抽奖
+							data['type'] = WebappItemLinks.LOTTER_TYPE[item.type]
+							data['valid'] = u'{} 至 {}'.format(item.start_at.strftime("%Y-%m-%d"), item.end_at.strftime("%Y-%m-%d"))
 
-					if link_type == 'activity':
-						# 活动
-						data['valid'] = u'{} 至 {}'.format(item.start_date, item.end_date)				
+						if link_type == 'coupon':
+							# 优惠券
+							data['type'] = '部分商品' if item.detail['limit_product'] else '全店通用'
+							data['end_date'] = item.end_date if isinstance(item.end_date, str) else item.end_date.strftime('%Y-%m-%d %H:%M')
+							data['created_at'] = data['created_at'][:16] if len(data['created_at']) > 16 else data['created_at']
+							data['end_date'] = data['end_date'][:16] if len(data['end_date']) > 16 else data['end_date']
+							data['valid'] = u'{} 至 {}'.format(data['created_at'], data['end_date'])
+							data['link'] = menu_item['link_template'].format(item.detail['id'])
 
-					items.append(data)
+						if link_type == 'activity':
+							# 活动
+							data['valid'] = u'{} 至 {}'.format(item.start_date, item.end_date)
+						items.append(data)
 
 				response = create_response(200)
 				response.data = {

@@ -20,6 +20,7 @@ from mall import models as mall_models
 from cache import webapp_cache
 from mall import module_api as mall_api
 from weixin.user import module_api as weixin_api
+from weixin.user.models import set_share_img
 
 
 type2template = {}
@@ -201,7 +202,9 @@ def process_item_group_data(request, component):
 				"id": product.id,
 				"name": product.name,
 				"thumbnails_url": product.thumbnails_url,
-				"display_price": product.display_price
+				"display_price": product.display_price,
+				"is_member_product": product.is_member_product,
+				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			}
 
 
@@ -269,7 +272,9 @@ def process_item_list_data(request, component):
 				"name": product.name,
 				"thumbnails_url": product.thumbnails_url,
 				"display_price": product.display_price,
-				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, product.owner_id)
+				"url": './?module=mall&model=product&action=get&rid=%d&webapp_owner_id=%d&workspace_id=mall' % (product.id, product.owner_id),
+				"is_member_product": product.is_member_product,
+				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			})
 
 		component['runtime_data'] = {
@@ -323,13 +328,16 @@ def __render_component(request, page, component, project):
 		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
 		
 	# 二维码
-	webapp_owner_id = request.GET.get('webapp_owner_id',None)
-	woid = request.GET.get('woid', None)
-	user_id = woid if webapp_owner_id is None else webapp_owner_id
-	current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
+	current_auth_qrcode_img = None
+	if hasattr(request, "webapp_owner_id") and request.webapp_owner_id:
+		current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(request.webapp_owner_id)
+
 	if current_auth_qrcode_img is None:
 		current_auth_qrcode_img = '/static/img/user-1.jpg'
-		
+
+	#设置分享图片为默认头像
+	set_share_img(request)
+
 	#渲染component自身
 	context = Context({
 		'request': request,

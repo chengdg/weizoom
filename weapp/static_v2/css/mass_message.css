@@ -18,9 +18,11 @@
 .xui-massSendingMessage{
 	background:#E9EDF5;
 	min-height: 687px;
-
 }
-
+.xui-massSendingMessage select{
+	white-space: nowrap;
+}
+  
 .xui-massSendingMessage .xui-massageSendingCount{
 	width: 185px;
 	height: 32px;
@@ -174,8 +176,16 @@
 .xui-massSentPage .wui-newses .wui-i-title{
 	margin-left: 0px;
 	line-height: 25px;
-	width: 90%;
+	width: 80%;
 }
+.xui-massSentPage .wui-newses {
+	width: 600px;
+}
+.xui-massSentPage .wui-newses a{
+	white-space: normal;
+}
+ 
+
 
 .xui-massSentPage .xui-messageNav{
 	border-bottom: 1px solid #ccc;

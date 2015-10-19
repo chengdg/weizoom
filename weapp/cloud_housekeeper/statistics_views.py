@@ -38,7 +38,7 @@ class CloudHome(resource.Resource):
         # 关注会员
         subscribed_member_count = stats_util.get_subscribed_member_count(webapp_id)
         # 未读消息数
-        unread_message_count = outline._get_unread_message_count(owner_user)
+        unread_message_count = outline.get_unread_message_count(owner_user)
 
         # 总成交额, 总成交订单
         total_transaction_money, total_order_count = get_transaction_count(webapp_id, 'total')

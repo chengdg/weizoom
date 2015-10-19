@@ -1071,7 +1071,7 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 		var couponProductId = 0;
 		var couponId = this.$('[name="coupon_id"]').val();
 		if (couponId) {
-			couponMoney = $('[name="coupon_id"]').data('money') || 0;
+			couponMoney = parseFloat($('[name="coupon_id"]').data('money')) || 0;
 			couponProductId = $('[name="coupon_id"]').data('productid');
 			var maxCouponMoney = 0;
 			if (couponProductId > 0) {// 单品券
@@ -1306,7 +1306,9 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 				var final_price = parseFloat(data['final_price']);
 				xlog(data)
 				if(final_price <= 0 || !args['xa-choseInterfaces']){
-					window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall&isShowSuccess=true";
+					window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall";
+					// jz 2015-10-09
+					// &isShowSuccess=true";
 				}else if(data['pay_url']){
 					window.location.href = data['pay_url'];
 				}else{

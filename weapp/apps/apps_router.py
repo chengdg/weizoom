@@ -108,11 +108,7 @@ def process_resource(request, app_name, app_module=None):
 	try:
 		target_app = CustomizedApp.objects.get(name=app_name)
 	except:
-		if app_name == 'promotion':
-			func = resolve(request, app_name, request.path)
-			return func(request)
-		else:
-			raise Http404(u"不存在该定制化APP")
+		raise Http404(u"不存在该定制化APP")
 
 	#检查app的当前状态
 	if CustomizedappStatus.INACTIVE == target_app.status or \

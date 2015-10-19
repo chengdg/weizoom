@@ -1,16 +1,15 @@
 # __author__ : "冯雪静"
 
 Feature: 管理供货商
+"""
 	jobs通过管理系统管理供货商
-	"""
 	1.添加供货商
 	2.删除供货商
 	3.修改供货商
 	4.导出供货商,查询供货商,根据查询条件导出,模糊查询和精确查询
-	"""
+"""
 
-
-@supplier @add_supplier @mall2 @test_zl
+@mall2 @configuration @supplier @add_supplier
 Scenario: 1 添加供货商
 	jobs添加供货商后
 	1.按时间倒序排列
@@ -69,8 +68,7 @@ Scenario: 1 添加供货商
 		}]
 		"""
 
-
-@supplier @del_supplier @mall2 @test_zl
+@mall2 @configuration @supplier @del_supplier
 Scenario: 2 删除供货商
 	jobs添加供货商后
 	1.可进行删除
@@ -134,8 +132,7 @@ Scenario: 2 删除供货商
 		}]
 		"""
 
-
-@supplier @mod_supplier @mall2 @test_zl
+@mall2 @configuration @supplier @mod_supplier
 Scenario: 3 修改供货商
 	jobs添加供货商后
 	1.可进行修改
@@ -246,8 +243,7 @@ Scenario: 3 修改供货商
 		}]
 		"""
 
-
-@supplier @mall2 @ex_supplier
+@mall2 @configuration @supplier @ex_supplier
 Scenario: 4 导出供货商
 	jobs添加供货商后
 	1.导出全部供货商

@@ -85,6 +85,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
             this.table.paginationView.hide();
             // this.table.paginationView = false;
         }
+        this.$el.find('.xa-query').val("");
     },
 
     afterShow: function(options) {
@@ -113,7 +114,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
     },
 
     onSearch: function(event) {
-        var query = $.trim($('.xa-query').val());
+        var query = $.trim(this.$el.find('.xa-query').val());
         this.table.reload({
             menu_type: this.menuType,
             selected_link_target: this.handleSelectedLinkTarget(this.selectedLinkTarget),
@@ -150,7 +151,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
         var $el = $(event.currentTarget);
         this.itemType = $el.attr('data-nav');
         this.titleName = $el.text();
-        this.$('.xa-query').val();
+        this.$el.find('.xa-query').val();
 
         this.selectedItem = this.getItemByType(this.itemType);
         this.setAddBtuHtml();

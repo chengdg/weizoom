@@ -1,5 +1,9 @@
+#editor:王丽 2015.10.13
+
 Feature: 管理在售商品
-	Jobs能通过管理系统管理商城中的"在售商品列表"
+	"""
+		Jobs能通过管理系统管理商城中的"在售商品列表"
+	"""
 
 Background:
 	Given jobs登录系统
@@ -84,8 +88,8 @@ Background:
 		}]	
 		"""
 
-@mall @mall.product_category @mall2
-Scenario: 浏览在售商品
+@mall2 @product @saleingProduct   @mall @mall.product_category
+Scenario:1 浏览在售商品
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
 		"""
@@ -138,9 +142,8 @@ Scenario: 浏览在售商品
 		}]
 		"""
 	
-
-@mall @mall.product_category @mall2
-Scenario: 下架商品
+@mall2 @product @saleingProduct   @mall @mall.product_category
+Scenario:2 下架商品
 	jobs进行'批量下架'或'单个下架'后
 	1. jobs的待售商品列表发生变化
 	2. jobs的在售商品列表发生变化
@@ -163,7 +166,10 @@ Scenario: 下架商品
 		"""
 	When jobs批量下架商品
 		"""
-		["水晶虾仁", "叫花鸡"]
+		[
+			"水晶虾仁", 
+			"叫花鸡"
+		]
 		"""
 	Then jobs能获得'在售'商品列表
 		"""

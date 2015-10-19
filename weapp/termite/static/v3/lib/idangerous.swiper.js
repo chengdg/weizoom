@@ -1754,8 +1754,8 @@ var Swiper = function (selector, params) {
 
         par.innerHTML = outerHtml;
         child = par.firstChild;
-        child.className += ' ' + klass;
-
+        $('img', child).attr('data-allow-autoplay', 'false');
+        child.className += ' ' + klass ;
         return child.outerHTML;
     }
 
@@ -2321,28 +2321,14 @@ var Swiper = function (selector, params) {
                 @author        Tomaz Lovrec <tomaz.lovrec@blanc-noir.at>
         */
         var numSlides = _this.slides.length;
-        var fullSlideSets = Math.floor(_this.loopedSlides / numSlides);
-        var remainderSlides = _this.loopedSlides % numSlides;
-        // assemble full sets of slides
-        for (i = 0; i < (fullSlideSets * numSlides); i++) {
-            var j = i;
-            if (i >= numSlides) {
-                var over = Math.floor(i / numSlides);
-                j = i - (numSlides * over);
-            }
-            slidesSetFullHTML += _this.slides[j].outerHTML;
-        }
+
         // assemble remainder slides
         // assemble remainder appended to existing slides
-        for (i = 0; i < remainderSlides;i++) {
-            slideLastHTML += addClassToHtmlString(params.slideDuplicateClass, _this.slides[i].outerHTML);
-        }
+        slideLastHTML = addClassToHtmlString(params.slideDuplicateClass, _this.slides[0].outerHTML);
         // assemble slides that get preppended to existing slides
-        for (i = numSlides - remainderSlides; i < numSlides;i++) {
-            slideFirstHTML += addClassToHtmlString(params.slideDuplicateClass, _this.slides[i].outerHTML);
-        }
+        slideFirstHTML = addClassToHtmlString(params.slideDuplicateClass, _this.slides[numSlides-1].outerHTML);
         // assemble all slides
-        var slides = slideFirstHTML + slidesSetFullHTML + wrapper.innerHTML + slidesSetFullHTML + slideLastHTML;
+        var slides = slideFirstHTML + wrapper.innerHTML + slideLastHTML;
         // set the slides
         wrapper.innerHTML = slides;
 

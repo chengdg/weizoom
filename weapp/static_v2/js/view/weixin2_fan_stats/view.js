@@ -42,6 +42,7 @@ W.view.common.WeixinECharts = Backbone.View.extend({
         this.startDateView.on('select-date', onSelectDate);
         this.endDateView = this.$('[name="end_date"]').data('view');
         this.endDateView.on('select-date', onSelectDate);
+        this.updateDateField(6);  //设置筛选日期框的值  duhao 20150917
         this.load();
     },
 
@@ -130,7 +131,43 @@ W.view.common.WeixinECharts = Backbone.View.extend({
         this.$('[name="end_date"]').val('');
         this.$('.wui-i-activeLink').removeClass('wui-i-activeLink');
         $(event.target).addClass('wui-i-activeLink');
+        this.updateDateField($(event.target).data('value'));  //设置筛选日期框的值  duhao 20150917
         this.load();
+    },
+
+    updateDateField: function(days) {
+        var now = new Date();
+        var target_date_str = this.getPastDateStr(now, days);
+        this.$('[name="start_date"]').val(target_date_str);
+        if (days == 1) {
+            this.$('[name="end_date"]').val(target_date_str);
+        } else {
+            this.$('[name="end_date"]').val(this.getDateStr(now));
+        }
+    },
+
+    getDateStr: function(date) {
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var date = date.getDate();
+
+        var result = year + "-";
+        if (month < 10) result += "0";
+        result += month + "-";
+        if (date < 10) result += "0";
+        result += date;
+
+        return result;
+    },
+
+    getPastDateStr: function(now, days) {
+        if (days < 0) {
+            return "2014-01-01";
+        }
+
+        var now_time = now.getTime();
+        var target_time = now_time - (days * 24 * 60 * 60 * 1000);
+        return this.getDateStr(new Date(target_time));
     },
 
     onMouseoverTips: function(event){

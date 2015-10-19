@@ -199,27 +199,6 @@ class WebAppUser(models.Model):
 			from market_tools.tools.coupon.util import get_my_coupons
 			return get_my_coupons(self.member_id)
 
-	#############################################################################
-	# use_coupon: 使用优惠券 jz 2015-08-10
-	#############################################################################
-	# def use_coupon(self, coupon_id, price=0):
-	# 	if coupon_id > 0:
-	# 		try:
-	# 			coupon = coupon_model.Coupon.objects.get(id=coupon_id, status=coupon_model.COUPON_STATUS_UNUSED)
-	# 		except:
-	# 			raise IOError
-	# 		coupon.money = float(coupon.money)
-	# 		coupon_role = coupon_model.CouponRule.objects.get(id=coupon.coupon_rule_id)
-	# 		coupon.valid_restrictions = coupon_role.valid_restrictions
-	# 		if coupon.valid_restrictions > price and coupon.valid_restrictions != -1:
-	# 			raise ValueError
-	# 		coupon_model.Coupon.objects.filter(id=coupon_id).update(status=coupon_model.COUPON_STATUS_USED)
-	# 	else:
-	# 		coupon = coupon_model.Coupon()
-	# 		coupon.money = 0.0
-	# 		coupon.id = coupon_id
-
-	# 	return coupon
 
 	#############################################################################
 	# use_coupon_by_coupon_id: 使用优惠券通过优惠券号
@@ -258,42 +237,6 @@ class WebAppUser(models.Model):
 		from modules.member.util import  process_payment_with_shared_info
 		process_payment_with_shared_info(request)
 
-	#############################################################################
-	# get_discount: 获取折扣信息 jz 2015-08-10
-	#############################################################################
-	# def get_discount(self):
-	# 	if not hasattr(self, '_grade'):
-	# 		if not self.is_member:
-	# 			self._grade = {'grade':'', 'discount':100}
-	# 		else:
-	# 			target_grade_id = self.member.grade_id
-	# 			target_member_grade = self.webapp_owner_info.member2grade.get(target_grade_id, None)
-
-	# 			if not target_member_grade:
-	# 				self._grade = {'grade':'', 'discount':100}
-	# 			else:
-	# 				self._grade = {'grade':target_member_grade.name, 'discount':target_member_grade.shop_discount}
-	# 	return self._grade
-
-	#############################################################################
-	# jz 2015-08-10
-	# get_discounted_money: 获取折扣后的金额
-	# product_type: 商品类型
-	# 1、如果折扣为100% 或者 商品类型为积分商品，返回当前的价格
-	# 2、折扣不为100% 并且不是积分商品，计算折扣
-	#############################################################################
-	# def get_discounted_money(self, money, product_type=PRODUCT_DEFAULT_TYPE):
-	# 	return money, 0
-		'''
-		grade_discount = self.get_discount()
-		if grade_discount['discount'] == 100 or product_type == PRODUCT_INTEGRAL_TYPE:
-			return money, 0
-		else:
-			discount = grade_discount['discount'] / 100.0
-			discounted_money = float('%.2f' % (money * discount))
-			delta = money - discounted_money
-			return discounted_money, delta
-		'''
 
 	#############################################################################
 	# set_purchased: 设置已购买标识
@@ -584,6 +527,43 @@ class Member(models.Model):
 		except:
 			return self.username_for_html[:5]
 
+	@cached_property
+	def username_size_ten(self):
+		try:
+			username = unicode(self.username_for_html, 'utf8')
+			_username = re.sub('<[^<]+?><[^<]+?>', ' ', username)
+			if len(_username) <= 10:
+				return username
+			else:
+				name_str = username
+				span_list = re.findall(r'<[^<]+?><[^<]+?>', name_str) #保存表情符
+
+				output_str = ""
+				count = 0
+
+				if not span_list:
+					return u'%s...' % name_str[:10]
+
+				for span in span_list:
+				    length = len(span)
+				    while not span == name_str[:length]:
+				        output_str += name_str[0]
+				        count += 1
+				        name_str = name_str[1:]
+				        if count == 10:
+				            break
+				    else:
+				        output_str += span
+				        count += 1
+				        name_str = name_str[length:]
+				        if count == 10:
+				            break
+				    if count == 10:
+				        break
+				return u'%s...' % output_str
+		except:
+			return self.username_for_html[:10]
+
 	@property
 	def friends(self):
 		if hasattr(self, '_friends'):
@@ -650,10 +630,9 @@ class Member(models.Model):
 
 	@property
 	def member_open_id(self):
-		member_has_social_accounts = MemberHasSocialAccount.objects.filter(member=self)
-		if member_has_social_accounts.count() > 0:
-			return member_has_social_accounts[0].account.openid
-		else:
+		try:
+			return MemberHasSocialAccount.objects.filter(member=self)[0].account.openid
+		except:
 			return None
 
 	@staticmethod
@@ -822,7 +801,7 @@ class MemberFollowRelation(models.Model):
 		try:
 			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
-			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL)
+			return Member.objects.filter(id__in=follow_member_ids, source=SOURCE_BY_URL, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED])
 		except:
 			return []
 
@@ -960,16 +939,16 @@ class IntegralStrategySttings(models.Model):
 #===============================================================================
 # create_webapp_member_integral_strategy_sttings : 自动创建webapp会员积分策略配置
 #===============================================================================
-def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
-	if created:
-		webapp_id = instance.webapp_id.strip()
-		if len(webapp_id) == 0:
-			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
+# def create_webapp_member_integral_strategy_sttings(instance, created, **kwargs):
+# 	if created:
+# 		webapp_id = instance.webapp_id.strip()
+# 		if len(webapp_id) == 0:
+# 			webapp_id = '%d' % (settings.MIXUP_FACTOR + instance.id)
 
-		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
-			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
+# 		if IntegralStrategySttings.objects.filter(webapp_id=webapp_id).count() == 0:
+# 			IntegralStrategySttings.objects.create(webapp_id=webapp_id)
 
-signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
+# signals.post_save.connect(create_webapp_member_integral_strategy_sttings, sender=UserProfile, dispatch_uid = "member.create_webapp_member_integral_strategy_sttings")
 
 FIRST_SUBSCRIBE = u'首次关注'
 #FOLLOWER_CLICK_SHARED_URL = u'好友奖励'
@@ -1155,6 +1134,12 @@ class MemberHasTag(models.Model):
 				if MemberHasTag.objects.filter(member_tag_id=tag_id, member_id=member_id).count() == 0:
 					MemberHasTag.objects.create(member_id=member_id, member_tag_id=tag_id)
 
+	@staticmethod
+	def get_tag_has_sub_member_count(tag):
+		if isinstance(tag, MemberTag):
+			return MemberHasTag.objects.filter(member_tag=tag, member__status=SUBSCRIBED).count()
+		else:
+			return MemberHasTag.objects.filter(member_tag_id=tag, member__status=SUBSCRIBED).count()
 
 MESSAGE_TYPE_TEXT = 0
 MESSAGE_TYPE_NEWS = 1
@@ -1191,7 +1176,7 @@ class UserSentMassMsgLog(models.Model):
 
 	@staticmethod
 	def create(webapp_id, msg_id, message_type, message_content):
-		UserSentMassMsgLog.objects.create(
+		return UserSentMassMsgLog.objects.create(
 								webapp_id=webapp_id,
 								msg_id=msg_id,
 								message_type=message_type,
@@ -1301,3 +1286,26 @@ class MemberRefuelingHasOrder(models.Model):
 		db_table = 'member_refueling_has_order'
 		verbose_name = '加油分享活动下单记录'
 		verbose_name_plural = '加油分享活动下单记录'
+
+
+class Mileke(models.Model):
+	member = models.ForeignKey(Member, db_index=True, unique=True)
+	current_count = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'mileke'
+		verbose_name = 'mileke'
+		verbose_name_plural = 'mileke'
+
+class MilekeLog(models.Model):
+	mileke = models.ForeignKey(Mileke,db_index=True)
+	member = models.ForeignKey(Member,db_index=True)
+	created_at = models.DateTimeField(auto_now=True)
+
+	class Meta(object):
+		db_table = 'mileke_log'
+		verbose_name = 'mileke_log'
+		verbose_name_plural = 'mileke_log'
+
+		unique_together = (('mileke', 'member'),)

@@ -13,7 +13,7 @@ from core.charts_apis import create_bar_chart_response
 import stats.util as stats_util
 from django.conf import settings
 
-FIRST_NAV = export.SALES_NAV
+FIRST_NAV = export.STATS_HOME_FIRST_NAV
 
 
 class ProductSummary(resource.Resource):
@@ -36,8 +36,9 @@ class ProductSummary(resource.Resource):
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 	            'app_name': 'stats',
-			'second_navs': export.get_sales_second_navs(request),
-			'second_nav_name': export.PRODUCT_SUMMARY_NAV,
+			'second_navs': export.get_stats_second_navs(request),
+			'second_nav_name': export.STATS_SALES_SECOND_NAV,
+			'third_nav_name': export.PRODUCT_SUMMARY_NAV,
 			'start_date': start_date,
 			'end_date': end_date,
 		})

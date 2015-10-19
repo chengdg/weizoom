@@ -80,7 +80,7 @@ def step_impl(context, user, mp_user_name, message):
 	if hasattr(context, 'client') and (context.client.user.username != user):
 		context.client.logout()
 	# 用user登录是为了在模拟器中辨识user身份
-	context.client = bdd_util.login(user)
+	context.client = bdd_util.login(mp_user_name)
 	client = context.client
 
 	mp_user = User.objects.get(username=mp_user_name)
@@ -225,3 +225,4 @@ def step_impl(context, user):
 @when("清空浏览器")
 def step_impl(context):
 	context.client.reset()
+
