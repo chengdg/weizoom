@@ -232,7 +232,7 @@ MALL_ORDER_SECOND_NAV = {
             'name': ORDER_ALL,
             'title': u'所有订单',
             'url': '/mall2/order_list/',
-            'need_permissions': ['manage_order_all', ]
+            'permission': 'manage_order_all'
         },
         {
             'name': ORDER_EXPIRED_TIME,

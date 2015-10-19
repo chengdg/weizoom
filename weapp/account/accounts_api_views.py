@@ -98,6 +98,7 @@ def create_new_user_by_agent(request):
 	host_name = request.POST.get('hn', '')
 	product_id = int(request.POST.get('pid', -1))
 	company_name = request.POST.get('cn', None)
+	manager_name = request.POST.get('mn', None)
 	
 	exist_users = User.objects.filter(username=username)
 	if exist_users.count() > 0:
@@ -117,6 +118,19 @@ def create_new_user_by_agent(request):
 		profile.expire_date_day = dateutil.yearsafter(use_year)
 		profile.system_version = weapp_product_api.get_product_name(product_id)
 		profile.host_name = host_name
+
+		#add by duhao 20151016
+		#从fans创建子账号时，需要设置manager账号的id
+		print '11111username:',username
+		print '11111manager_name:',manager_name
+		if manager_name:
+			try:
+				manager_id = User.objects.get(username=manager_name).id
+				profile.manager_id = manager_id
+			except:
+				pass
+
+			
 		if system_name is not None:
 			profile.system_name = system_name
 

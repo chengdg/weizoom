@@ -63,15 +63,13 @@
 		</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
-			<ul class="xui-navBar-box clearStyle">
+			<ul class="xui-navBar-box clearStyle xa-first-navs hidden">
 				{% if first_navs %}
 					{% for nav in first_navs %}
-						{% if nav.inner_name|satisfy_permission:request %}
 						<li class="pr">
 							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title='{{nav.name}}'>{{nav.name}}</a>
 							{% if nav.class_name %}<i class="xui-noticyTip {{nav.class_name}}"></i>{% endif %}
 						</li>
-						{% endif %}
 					{% endfor %}
 				{% endif %}
 			</ul>
@@ -83,23 +81,17 @@
 <div id="" class="xui-mainPanel">
 	<div class="xui-container pr">
 		<!-- 左侧垂直方向二级导航 -->
-		<!-- <div class="row"> -->
-			{% if second_navs %}
-			<div id="" class="xui-sideBar xa-sideBar pa {% if second_navs %}xui-sideBarBg{% endif %}">
+		{% if second_navs %}
+			<div id="" class="xui-sideBar xa-sideBar pa hidden">
 				<ul class="nav">
 				{% for second_nav in second_navs %}
-					<!-- {% if second_nav.section %}
-					<li><span>1111{{ second_nav.section }}</span></li>
-					{% endif %} -->
 					{% for nav in second_nav.navs %}
-					{% if nav|satisfy_permission:request %}
-						{% if not forloop.last %}
 						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-						<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-						<i class="xui-icon-arrow"></i>
-						</a>
-					   </li>
+							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+								<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+								<i class="xui-icon-arrow"></i>
+							</a>
+						</li>
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
@@ -107,49 +99,20 @@
 									<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
 										&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
 										<i class="xui-icon-arrow"></i>
-										{% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
 									</a>
 								</li>
 							{% endfor %}
 						{% endif %}
-					{% else %}
-						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-						<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-						{% if nav.name != 'orderBatchDelivery' %}
-						<i class="xui-icon-arrow"></i>
-						{% endif %}
-						</a>
-					   </li>
-							<!-- 三级导航 -->
-							{% if nav.third_navs %}
-								{% for third_nav in nav.third_navs %}
-									<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
-										<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
-											&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
-											<i class="xui-icon-arrow"></i>
-										</a>
-									</li>
-								{% endfor %}
-							{% endif %}
-						{% endif %}
-
-					{% endif %}
 					{% endfor %}
 				{% endfor %}
 				</ul>
 			</div>
-			<!-- 内容 start -->
-			<div class="span9 pr xui-content" style="">
-				{% block content-panel %}{% endblock %}
-			</div>
-			<!-- 内容 end -->
-			{% else %}
-				<!-- 内容 start -->
-				{% block single-content-panel %}{% endblock %}
-				<!-- 内容 end -->
-			{% endif %}
-		<!-- </div> -->
+		{% endif %}
+		<!-- 内容 start -->
+		<div class="span9 pr xui-content xa-content hidden" style="">
+			{% block content-panel %}{% endblock %}
+		</div>
+		<!-- 内容 end -->
 	</div>
 </div>
 
@@ -195,144 +158,342 @@
 	{% endif %}
 
 </script>
- <script type="text/javascript">
+<script type="text/javascript">
+	/**
+		子账号权限控制相关函数------------------------------------------
+	*/
+	//提供给fans系统的回调函数，用于在localStorage中设置用户的权限信息
+	var callback = function() {
+		var userPermissions = window.frames[0].localStorage.getItem('userPermissions');
+		render(userPermissions);
+	}
 
-    document.addEventListener("visibilitychange", common_interval_check_func, false);
+	function connectFans(){
+		document.domain = location.host.replace('fans.', '').replace('weapp.', '');
+		var hm = document.createElement("iframe");
+		hm.src = "{{ fans_host }}/static/crossdomain.html";
+		hm.style.display = 'none'
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hm, s);
+	}
 
-    function common_interval_check_func(){
-        if(document.visibilityState != 'visible'){
-        	return
-        }
-        W.getApi().call({
-          app:'new_weixin',
-          resource:'outline',
-          showLoading: false,
-          args:{},
-          success: function (data) {
-            //待发货订单计数
-            var unship_order_count = data.unship_order_count;
-            var orderTipItem = $('.xa-orderTip');
-            if(unship_order_count>0){
-                orderTipItem.show();
-                if(unship_order_count>99){
-                   orderTipItem.text(99);
-                }
-                else{
-                   orderTipItem.text(unship_order_count);
-                }
-            }
-            else{
-              orderTipItem.hide();
-              orderTipItem.text(0);
-            }
+	function renderNavs() {
+		//去fans系统获取用户权限信息
+		connectFans();
+	}
 
-            //微信未读消息计数
-            var unreadRealtimeCount = data.unread_realtime_count;
-            var msgTip = $('.xa-msgTip');
-            if (unreadRealtimeCount > 0){
-                msgTip.show();
-                if (parseInt(unreadRealtimeCount) > 99){
-                    unreadRealtimeCount = '99+'
-                }
-                msgTip.text(unreadRealtimeCount);
-            } else {
-                msgTip.hide();
-            }
-	    },error: function(resp) {
-	        //TODO 进行错误通知
-	    }
-      })
-    }
+	//渲染菜单
+	function render(userPermissions) {
+		if(!userPermissions || userPermissions === 'error') {
+			alert("获取您的权限信息失败，请联系客服！" + userPermissions);
+			return;
+		}
+		if(userPermissions === '') {
+			alert("您没有权限浏览任何页面，请联系您的管理员！");
+			return;
+		}
+
+		//先清空原有的菜单列表
+		$('.xa-first-navs').empty();
+		$('.xa-sideBar').empty();
+
+		var navTree = getNavTree();
+		var indexPage = "/";  //没有权限浏览此页面时跳转到的页面地址
+		var hasPermission = false;  //标记是否有权限查看此页面
+		var firstNavName = "{{first_nav_name}}";
+		var permissions = JSON.parse(userPermissions);
+
+		var firstNavs = navTree.firstNavs;
+		var secondNavs = navTree.secondNavs;
+
+		//渲染一级导航
+		for(var index in firstNavs) {
+			var firstNav = firstNavs[index];
+			if(firstNav.permission === "" || $.inArray(firstNav.permission, permissions) >= 0){
+				if(firstNavName === firstNav.name) {
+					hasPermission = true;
+
+					//设置浏览无权限页面时自动跳转到的页面
+					if(indexPage === "/") {
+						indexPage = firstNav.url;
+					}
+
+					$('.xa-first-navs').append('<li class="pr"><a' + 
+						' class="active"' + 
+						' href="' + firstNav.url + 
+						'" title="' + firstNav.title + '">' + 
+						firstNav.title + '</a></li>');
+				} else {
+					$('.xa-first-navs').append('<li class="pr"><a' + 
+						' href="' + firstNav.url + 
+						'" title="' + firstNav.title + '">' + 
+						firstNav.title + '</a></li>');
+				}
+			}
+		}
+
+		//渲染左侧导航
+		var secondNavName = "{{second_nav_name}}";
+		var thirdNavName = "{{third_nav_name}}";
+		
+		//二级导航
+		if(secondNavName.length > 0 && secondNavs.length > 0) {
+			hasPermission = false;  //如果有二级导航的话也要满足权限
+
+			$('.xa-sideBar').addClass('xui-sideBarBg');
+			$('.xa-sideBar').append('<ul class="nav xa-second-navs"></ul>');
+
+			for(var index in secondNavs) {
+				var secondNav = secondNavs[index];
+				if(secondNav.permission === "" || $.inArray(secondNav.permission, permissions) >= 0){
+					if(secondNavName === secondNav.name) {
+						hasPermission = true;
+						$('.xa-second-navs').append('<li class="active">' + 
+							'<a href="' + secondNav.url + 
+							'" title="' + secondNav.title + 
+							'" name="' + secondNav.name + '">' + 
+							'<i class="xui-icon-sideBar xui-sideBar-' + secondNav.name + '"></i>' + 
+							secondNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+					} else {
+						$('.xa-second-navs').append('<li>' + 
+							'<a href="' + secondNav.url + 
+							'" title="' + secondNav.title + 
+							'" name="' + secondNav.name + '">' + 
+							'<i class="xui-icon-sideBar xui-sideBar-' + secondNav.name + '"></i>' + 
+							secondNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+					}
+
+					//三级导航
+					var thirdNavs = null;
+					if(secondNav.hasOwnProperty('thirdNavs')) {
+						thirdNavs = secondNav.thirdNavs;
+					}
+					if(thirdNavs) {
+						for(var _index in thirdNavs) {
+							var thirdNav = thirdNavs[_index];
+							if(thirdNavName === thirdNav.name) {
+								$('.xa-second-navs').append('<li class="xui-sideBar-third active_third">' + 
+									'<a href="' + thirdNav.url + 
+									'" title="' + thirdNav.title + 
+									'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
+									thirdNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+							} else {
+								$('.xa-second-navs').append('<li class="xui-sideBar-third">' + 
+									'<a href="' + thirdNav.url + 
+									'" title="' + thirdNav.title + 
+									'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
+									thirdNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if(!hasPermission) {  //没权限时跳转到指定页面
+			location.href = indexPage;
+		} else {
+			//在菜单没渲染完之前先把正文隐藏掉，不然会先出正文然后才出菜单，很难看
+			$('.xa-first-navs').removeClass('hidden');
+			$('.xa-sideBar').removeClass('hidden');
+			$('.xa-content').removeClass('hidden');
+		}
+	}
+
+	//判断是否是子账号，如果是的话需要判断权限
+	function isSubUser() {
+		var userId = "{{request.user.id}}";
+		var managerId = "{{request.manager.id}}";
+		return userId !== managerId;
+	}
+
+	//获取导航标签的树状结构
+	function getNavTree() {
+		var navTree = {
+			'firstNavs': [],
+			'secondNavs': []
+		};
+		{% if first_navs %}
+			{% for nav in first_navs %}
+				navTree.firstNavs.push({
+					'name': '{{nav.inner_name}}',
+					'title': '{{nav.name}}',
+					'url': '{{nav.url}}',
+					'permission': '{{nav.permission}}'
+				});
+			{% endfor %}
+		{% endif %}
+
+		{% if second_navs %}
+			{% for second_nav in second_navs %}
+				{% for nav in second_nav.navs %}
+					var secondNav = {
+						'name': '{{nav.name}}',
+						'title': '{{nav.title}}',
+						'url': '{{nav.url}}',
+						'permission': '{{nav.permission}}'
+					};
+					{% if nav.third_navs %}
+						secondNav['thirdNavs'] = [];
+						{% for third_nav in nav.third_navs %}
+							secondNav['thirdNavs'].push({
+								'name': '{{third_nav.name}}',
+								'title': '{{third_nav.title}}',
+								'url': '{{third_nav.url}}',
+								'permission': '{{third_nav.permission}}'
+							});
+						{% endfor %}
+					{% endif %}
+					navTree.secondNavs.push(secondNav);
+				{% endfor %}
+			{% endfor %}
+		{% endif %}
+		
+		return navTree;
+	}
+	/**
+		子账号权限控制相关函数结束----------------------------------------------------------
+	*/
+
+
+	document.addEventListener("visibilitychange", common_interval_check_func, false);
+
+	function common_interval_check_func(){
+		if(document.visibilityState != 'visible'){
+			return
+		}
+		W.getApi().call({
+			app:'new_weixin',
+			resource:'outline',
+			showLoading: false,
+			args:{},
+			success: function (data) {
+				//待发货订单计数
+				var unship_order_count = data.unship_order_count;
+				var orderTipItem = $('.xa-orderTip');
+				if(unship_order_count>0){
+					orderTipItem.show();
+					if(unship_order_count>99){
+						orderTipItem.text(99);
+					}
+					else{
+						orderTipItem.text(unship_order_count);
+					}
+				}
+				else{
+					orderTipItem.hide();
+					orderTipItem.text(0);
+				}
+
+				//微信未读消息计数
+				var unreadRealtimeCount = data.unread_realtime_count;
+				var msgTip = $('.xa-msgTip');
+				if (unreadRealtimeCount > 0){
+					msgTip.show();
+					if (parseInt(unreadRealtimeCount) > 99){
+						unreadRealtimeCount = '99+'
+					}
+					msgTip.text(unreadRealtimeCount);
+				} else {
+					msgTip.hide();
+				}
+			},error: function(resp) {
+				//TODO 进行错误通知
+			}
+		});
+	}
+
+	
 
 	$(document).ready(function($) {
-		// if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
-		// 	location.href = $('.xui-navBar-box a:first').attr('href');
-		// }else if($('.xa-sideBar .active').length==0 && $('.xa-sideBar a').length){
-		// 	location.href = $('.xa-sideBar a:first').attr('href');
-		// }
+		if(isSubUser()) {
+			//如果是子账号则进入权限控制模块
+			xlog('in sub user mode');
+			renderNavs();
+		} else {
+			//如果是manager账号则直接显示菜单和数据
+			$('.xa-first-navs').removeClass('hidden');
+			$('.xa-sideBar').removeClass('hidden');
+			$('.xa-content').removeClass('hidden');
+		}
 
-        common_interval_check_func();
-        {% if not under_develop %}
-        var common_interval_check = setInterval(common_interval_check_func, 10000);
-        {% endif %}
+		common_interval_check_func();
+		{% if not under_develop %}
+		var common_interval_check = setInterval(common_interval_check_func, 10000);
+		{% endif %}
 
-        // 批量发货
-        $('a[name="orderBatchDelivery"]').click(function(event){
+		// 批量发货
+		$('a[name="orderBatchDelivery"]').click(function(event){
+			W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
+				success: function(data) {
+					// W.getLoadingView().show();
 
-            W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
-                success: function(data) {
-                    // W.getLoadingView().show();
+					W.getApi().call({
+						app: 'mall2',
+						resource: 'bulk_shipment',
+						method: 'post',
+						args: {
+							file_url: data
+						},
+						success: function(data) {
+							console.log('bulk_shipments/update', data.error_count);
+							if (data.error_count == 0) {
+								W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
+								W.getLoadingView().hide();
+							} else {
+								W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
+										data: data,
+										success: function(data) {},
+										error: function(data) {}
+									});
+							}
+							if (data.success_count>0){
+								common_interval_check_func();
+							}
 
-                    W.getApi().call({
-                        app: 'mall2',
-                        resource: 'bulk_shipment',
-                        method: 'post',
-                        args: {
-                            file_url: data
-                        },
-                        success: function(data) {
-                            console.log('bulk_shipments/update', data.error_count);
-                            if (data.error_count == 0) {
-                                W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
-                                W.getLoadingView().hide();
-                            } else {
-                                W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
-                                        data: data,
-                                        success: function(data) {},
-                                        error: function(data) {}
-                                    });
-                            }
-                            if (data.success_count>0){
-                                common_interval_check_func();
-                            }
-
-                        },
-                        error: function(resp) {
-                            W.getLoadingView().hide();
-                            W.getErrorHintView().show('处理失败，请稍后重试！66666');
-                        }
-                    })
-                }
-            });
-
-
-        });
+						},
+						error: function(resp) {
+							W.getLoadingView().hide();
+							W.getErrorHintView().show('处理失败，请稍后重试！66666');
+						}
+					})
+				}
+			});
+		});
 		var tmpl = getPopoverContent();
 		$('#mf').popover({
-		    html: true,
-		    trigger: "click",
-		    content: tmpl,
-		    container: '.xui-headerActionBar',
-		    animation: false,
-		    placement: "bottom",
-		    template: '<div class="popover" role="tooltip" id="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
-  		});
-  		$('#mf').on('shown.bs.popover',initSubmit);
-  		function getPopoverContent(){
+			html: true,
+			trigger: "click",
+			content: tmpl,
+			container: '.xui-headerActionBar',
+			animation: false,
+			placement: "bottom",
+			template: '<div class="popover" role="tooltip" id="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
+		});
+		$('#mf').on('shown.bs.popover',initSubmit);
+		function getPopoverContent(){
 			var result = $('#popover_tmpl').html();
 			$('#popover_tmpl').remove();
 			return result;
 		}
-        //获取message_count
-        if(localStorage.getItem('message_count') ==null){
-            $.ajax({
-                url:'{{fans_host}}/count/message_count/',
-                type:'post',
-                dataType:'jsonp',
-                success:function(response) {
-                    if (response.code == 200) {
-                        localStorage.message_count=response.data.message_count;
-                        $("#message_count").html(localStorage.message_count);
-                        $("#message_count").css('display','inline');
-                    }else{
-                        xlog("获取message_count失败");
-                    }
-                }
-            });
-        }else{
-            $("#message_count").html(localStorage.message_count);
-            $("#message_count").css('display','inline');
-        }
+		//获取message_count
+		if(localStorage.getItem('message_count') ==null){
+			$.ajax({
+			url:'{{fans_host}}/count/message_count/',
+			type:'post',
+			dataType:'jsonp',
+			success:function(response) {
+				if (response.code == 200) {
+					localStorage.message_count=response.data.message_count;
+					$("#message_count").html(localStorage.message_count)
+				}else{
+					xlog("获取message_count失败")
+				}
+			}
+		});
+		}else{
+			$("#message_count").html(localStorage.message_count)
+		}
 
 		function initSubmit(){
 			$('#old_password').val('');
@@ -340,7 +501,7 @@
 				$('#mf').popover('hide');
 			});
 			$('.xa-submit').on('click',function(){
-	  			var oldPassword = $('#old_password').val();
+				var oldPassword = $('#old_password').val();
 				var newPassword = $('#new_password').val();
 				var confirmPassword = $('#confirm_password').val();
 			
@@ -394,26 +555,9 @@
 				return false;
 			});
 		}
-// 	var scrollLeft = $(this).scrollLeft();
-// 	if(scrollLeft != 0){
-// 		$('.xa-sideBar').css('position', 'absolute');
-// 	}else{
-// 		$('.xa-sideBar').css('position', 'fixed');
-// 	}
-// 	if($('.xa-sideBar').length !== 0){
-// 		$(document).scroll(function(event) {
-// 			var scrollLeft = $(this).scrollLeft();
-// 			if(scrollLeft != 0){
-// 				$订单概况('.xa-sideBar').css('position', 'absolute');
-// 			}else{
-// 				$('.xa-sideBar').css('position', 'fixed');
-// 			}
-// 		});
-// 	}
+
 		// 导航右边线选中无
 		$('.xui-navBar a.active').parent('li').prev().children('a').addClass('xui-rightBorder');
-
-
 	});
 
 </script>
