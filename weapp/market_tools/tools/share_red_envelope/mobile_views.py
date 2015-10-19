@@ -116,7 +116,6 @@ def get_share_red_envelope(request):
                                     red_envelope_rule_id=red_envelope_rule_id,
                                     red_envelope_relation_id=relation[0].id,
                                     member_id=member.id).count()
-                    print this_received_count,'this_received_count 1'
                     if this_received_count > 0:
                         pass
                     else:
@@ -171,7 +170,6 @@ def get_share_red_envelope(request):
                                                                             member_id=member.id,
                                                                             red_envelope_rule_id=red_envelope_rule_id).count()
                 if this_received_count > 0:
-                    print 'this_received_count 2',this_received_count
                     pass
                 else:
                     relation = RedEnvelopeToOrder.objects.create(
