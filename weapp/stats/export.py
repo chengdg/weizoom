@@ -26,7 +26,7 @@ STATS_SECOND_NAV = {
             'name': STATS_MANAGEMENT_SECOND_NAV,
             'title': u'经营报告',
             'url': '/stats/manage_summary/',
-            'need_permissions': []
+            'permission': 'manage_summary'
         }, {
             'name': STATS_SALES_SECOND_NAV,
             'title': u'销售分析',
