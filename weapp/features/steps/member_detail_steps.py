@@ -213,8 +213,9 @@ def step_impl(context, user, member):
     bdd_util.assert_list(actual, expected)
 
 
-@When(u"{user}访问'{webapp_user}'分享链接引流会员好友列表")
-def step_impl(context, user, webapp_user):
+@When(u"{user}访问'{webapp_user}'{spreadPath}引流会员好友列表")
+def step_impl(context, user, webapp_user, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
     url = '/member/api/member_list/?design_mode=0&version=1&status=1&enable_paginate=1'
     response = context.client.get(bdd_util.nginx(url))
     items = json.loads(response.content)['data']['items']
@@ -225,25 +226,27 @@ def step_impl(context, user, webapp_user):
     if hasattr(context, 'user_id'):
         context.page = 1
         context.url = '/member/api/follow_relations/?design_mode=0&'\
-        'version=1&data_value=shared&member_id=%s&count_per_page=%s&page=%s'\
-        '&enable_paginate=1' %(context.user_id, context.count_per_page, context.page)
+        'version=1&data_value=%s&member_id=%s&count_per_page=%s&page=%s'\
+        '&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
 
-@Then(u"{user}获得分享链接引流会员好友列表显示共{page_total}页")
-def step_impl(context, user, page_total):
+@Then(u"{user}获得{spreadPath}引流会员好友列表显示共{page_total}页")
+def step_impl(context, user, page_total, spreadPath):
+    #spreadPath = spreadMethod(spreadPath)
     response = context.client.get(bdd_util.nginx(context.url))
     actual_total = int(json.loads(response.content)['data']['pageinfo']['max_page'])
     page_total = int(page_total)
     assert(page_total, actual_total)
 
-@When(u"{user}浏览分享链接引流会员好友列表'第{page}页'")
-def step_impl(context, user, page):
+@When(u"{user}浏览{spreadPath}引流会员好友列表'第{page}页'")
+def step_impl(context, user, page, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
     context.page = page
     context.url = '/member/api/follow_relations/?design_mode=0&'\
-        'version=1&data_value=shared&member_id=%s&count_per_page=%s&'\
-        'page=%s&enable_paginate=1' %(context.user_id, context.count_per_page, context.page)
+        'version=1&data_value=%s&member_id=%s&count_per_page=%s&'\
+        'page=%s&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
 
-@Then(u'{user}获得分享链接引流会员好友列表')
-def step_impl(context, user):
+@Then(u'{user}获得{spreadPath}引流会员好友列表')
+def step_impl(context, user, spreadPath):
     source_dict = {0:u'直接关注', 1:u'推广扫码', 2:u'会员分享'}
     response = context.client.get(bdd_util.nginx(context.url))
     items = json.loads(response.content)['data']['items']
@@ -264,18 +267,26 @@ def step_impl(context, user):
             tmp['attention_time'] = time.strftime('%Y-%m-%d')
     bdd_util.assert_list(expected_data, actual_data)
 
-@When(u"{user}浏览分享链接引流会员好友列表'下一页'")
-def step_impl(context, user):
+@When(u"{user}浏览{spreadPath}引流会员好友列表'下一页'")
+def step_impl(context, user, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
     context.page = int(context.page) + 1
     context.url = '/member/api/follow_relations/?design_mode=0&'\
-        'version=1&data_value=shared&member_id=%s&count_per_page=%s&'\
-        'page=%s&enable_paginate=1' %(context.user_id, context.count_per_page, context.page)
+        'version=1&data_value=%s&member_id=%s&count_per_page=%s&'\
+        'page=%s&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
 
-@When(u"{user}浏览分享链接引流会员好友列表'上一页'")
-def step_impl(context, user):
+@When(u"{user}浏览{spreadPath}引流会员好友列表'上一页'")
+def step_impl(context, user, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
     if int(context.page) > 1:
         context.page = int(context.page) - 1
     context.url = '/member/api/follow_relations/?design_mode=0&'\
-        'version=1&data_value=shared&member_id=%s&count_per_page=%s&'\
-        'page=%s&enable_paginate=1' %(context.user_id, context.count_per_page, context.page)
+        'version=1&data_value=%s&member_id=%s&count_per_page=%s&'\
+        'page=%s&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
 
+
+def spreadMethod(sMethod):
+    if u'分享链接' == sMethod:
+        return 'shared'
+    elif u'二维码' == sMethod:
+        return 'qrcode'
