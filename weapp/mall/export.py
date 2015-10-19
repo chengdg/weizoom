@@ -41,7 +41,7 @@ FIRST_NAVS = [{
     'name': u'应用和营销',
     'url': '/mall2/flash_sale_list/',
     'inner_name': MALL_PROMOTION_AND_APPS_FIRST_NAV,
-    'permission': 'manage_promotion'
+    'permission': 'manage_promotion_all'
 }, {
     'name': u'会员',
     'url': '/member/member_list/',
@@ -51,7 +51,7 @@ FIRST_NAVS = [{
     'name': u'数据罗盘',
     'url': '/stats/manage_summary/',
     'inner_name': STATS_HOME_FIRST_NAV,
-    'permission': 'static'
+    'permission': 'stats'
 }, {
     'name': u'配置',
     'url': '/mall2/pay_interface_list/',
@@ -82,7 +82,7 @@ def get_first_navs(user):
     for nav in FIRST_NAVS:
         if user.has_perm(nav['permission']):
             for s_nav in eval(nav['permission'])['navs']:
-                if user.has_perm(s_nav['need_permissions']):
+                if user.has_perm(s_nav['permission']):
                     if not nav.get('children', None):
                         nav['children'] = []
                         nav['url'] = s_nav['url']
@@ -106,22 +106,22 @@ MALL_HOME_SECOND_NAV = {
             'name': MALL_HOME_OUTLINE_NAV,
             'title': u'统计概况',
             'url': '/mall2/outline/',
-            'need_permissions': ['manage_index_outline', ]
+            'permission': 'manage_index_outline'
         }, {
             'name': MALL_HOME_INTEGRAL_NAV,
             'title': u'积分规则',
             'url': '/mall2/integral_strategy/',
-            'need_permissions': ['manage_index_integral', ]
+            'permission': 'manage_index_integral'
         }, {
             'name': MALL_HOME_WEPAGE_NAV,
             'title': u'店铺装修',
             'url': '/termite2/pages/',
-            'need_permissions': ['manage_wepage'],
+            'permission': 'manage_wepage'
         }, {
             'name': MALL_HOME_GLOBAL_NAVBAR_NAV,
             'title': u'店铺导航',
             'url': '/termite2/global_navbar/',
-            'need_permissions': ['manage_wepage'],
+            'permission': 'manage_wepage'
         }
     ]
 }
@@ -157,50 +157,50 @@ MALL_PRODUCT_SECOND_NAV = {
             'name': PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV,
             'title': u'在售商品管理',
             'url': '/mall2/product_list/?shelve_type=1',
-            'need_permissions': ['manage_product_onshelf', ]
+            'permission': 'manage_product_onshelf'
         },
 
         {
             'name': PRODUCT_ADD_PRODUCT_NAV,
             'title': u'添加新商品',
             'url': '/mall2/product/',
-            'need_permissions': ['manage_product_add', ]
+            'permission': 'manage_product_add'
         },
         {
             'name': PRODUCT_MANAGE_OFF_SHELF_PRODUCT_NAV,
             'title': u'待售商品管理',
             'url': '/mall2/product_list/?shelve_type=0',
-            'need_permissions': ['manage_product_offshelf', ]
+            'permission': 'manage_product_offshelf'
         },
         # {
         #     'name': PRODUCT_MANAGE_RECYCLED_PRODUCT_NAV,
         #     'title': u'商品回收站',
         #     'url': '/mall2/product_list/?shelve_type=2',
-        #     'need_permissions': ['manage_product_deleted', ]
+        #     'permission': 'manage_product_deleted'
         # },
         {
             'name': PRODUCT_MANAGE_IMAGE_NAV,
             'title': u'图片管理',
             'url': '/mall2/image_group_list/',
-            'need_permissions': ['manage_product_image', ]
+            'permission': 'manage_product_image'
         },
         {
             'name': PRODUCT_MANAGE_CATEGORY_NAV,
             'title': u'分组管理',
             'url': '/mall2/category_list/',
-            'need_permissions': ['manage_product_category', ]
+            'permission': 'manage_product_category'
         },
         {
             'name': PRODUCT_MANAGE_MODEL_NAV,
             'title': u'属性规格管理',
             'url': '/mall2/model_property_list/',
-            'need_permissions': ['manage_product_property_and_model_property', ]
+            'permission': 'manage_product_property_and_model_property'
         },
         {
             'name': PRODUCT_REVIEW_NAV,
             'title': u'评价管理',
             'url': '/mall2/product_review_list/',
-            'need_permissions': ['manage_product_review', ],
+            'permission': 'manage_product_review'
         },
     ]
 }
@@ -238,19 +238,19 @@ MALL_ORDER_SECOND_NAV = {
             'name': ORDER_EXPIRED_TIME,
             'title': u'订单设置',
             'url': '/mall2/expired_time/',
-            'need_permissions': ['manage_order_expired_time', ]
+            'permission': 'manage_order_expired_time'
         },
         {
             'name': ORDER_AUDIT,
             'title': u'财务审核',
             'url': '/mall2/order_list/?belong=audit',
-            'need_permissions': ['manage_order_audit', ]
+            'permission': 'manage_order_audit'
         },
         {
             'name': ORDER_BATCH_DELIVERY,
             'title': u'批量发货',
             'url': 'javascript:void(0);',
-            'need_permissions': ['manage_order_batch_delivery', ]
+            'permission': 'manage_order_batch_delivery'
         }
     ]
 }
@@ -302,62 +302,62 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'name': MALL_PROMOTION_SECOND_NAV,
             'title': u'促销管理',
             'url': '/mall2/flash_sale_list/',
-            'need_permissions': ['manage_order_all', ], 
+            'permission': 'manage_promotion',
             'third_navs': [
                 # 商品管理
                 # {
                 #     'name': MALL_PROMOTION_PROMOTIONS_NAV,
                 #     'title': u'促销查询',
                 #     'url': '/mall2/promotion_list/',
-                #     'need_permissions': ['search_promotion', ]
+                #     'permission': ['search_promotion', ]
                 # },
                 {
                     'name': MALL_PROMOTION_FLASH_SALE_NAV,
                     'title': u'限时抢购',
                     'url': '/mall2/flash_sale_list/',
-                    'need_permissions': ['manage_flash_sale', ]
+                    'permission': 'manage_flash_sale'
                 },
                 {
                     'name': MALL_PROMOTION_PREMIUM_SALE_NAV,
                     'title': u'买赠',
                     'url': '/mall2/premium_sale_list/',
-                    'need_permissions': ['manage_premium_sale', ]
+                    'permission': 'manage_premium_sale'
                 },
                 # {
                 #     'name': MALL_PROMOTION_PRICE_CUT_NAV,
                 #     'title': u'满减',
                 #     'url': '/mall2/price_cut_list/',
-                #     'need_permissions': ['manage_price_cut', ]
+                #     'permission': ['manage_price_cut', ]
                 # },
                 {
                     'name': MALL_PROMOTION_INTEGRAL_SALE_NAV,
                     'title': u'积分应用',
                     'url': '/mall2/integral_sales_list/',
-                    'need_permissions': ['manage_integral_sale', ]
+                    'permission': 'manage_integral_sale'
                 },
                 {
                     'name': MALL_PROMOTION_COUPON_NAV,
                     'title': u'优惠券',
                     'url': '/mall2/coupon_rule_list/',
-                    'need_permissions': ['manage_coupon', ]
+                    'permission': 'manage_coupon'
                 },
                 {
                     'name': MALL_PROMOTION_ISSUING_COUPONS_NAV,
                     'title': u'发优惠券',
                     'url': '/mall2/issuing_coupons_record_list/',
-                    'need_permissions': ['manage_send_coupon', ]
+                    'permission': 'manage_send_coupon'
                 },
                 # {
                 #     'name': MALL_PROMOTION_ORDER_RED_ENVELOPE,
                 #     'title': u'分享红包',
                 #     'url': '/mall2/red_envelope_rule_list/',
-                #     'need_permissions': ['manage_order_red_envelope', ]
+                #     'permission': ['manage_order_red_envelope', ]
                 # }
                 {
                     'name': MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV,
                     'title': u'禁用优惠券商品',
                     'url': '/mall2/forbidden_coupon_product/',
-                    'need_permissions': ['forbidden_coupon_product', ]
+                    'permission': 'forbidden_coupon_product'
                 }
             ]
         },
@@ -365,49 +365,49 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'name': MALL_APPS_SECOND_NAV,
             'title': u'百宝箱',
             'url': '/apps/lottery/lotteries/',
-            'need_permissions': [], 
+            'permission': 'manage_apps', 
             'third_navs': [
                 {
                     'name': MALL_APPS_LOTTERY_NAV,
                     'title': "微信抽奖",
                     'url': '/apps/lottery/lotteries/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 # {
                     # 'name': MALL_APPS_FEEDBACK_NAV,
                     # 'title': "用户反馈",
                     # 'url': '/apps/feedback/feedbacks/',
-                    # 'need_permissions': []
+                    # 'permission': []
                 # },
                  {
                     'name': MALL_APPS_SURVEY_NAV,
                     'title': "用户调研",
                     'url': '/apps/survey/surveies/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': MALL_APPS_EVENT_NAV,
                     'title': "活动报名",
                     'url': '/apps/event/events/',
-                    'need_permissions': []
+                    'permission': []
                 },
                 {
                     'name': MALL_APPS_VOTE_NAV,
                     'title': "微信投票",
                     'url': '/apps/vote/votes/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': MALL_APPS_RED_ENVELOPE_NAV,
                     'title': u'分享红包',
                     'url': '/apps/red_envelope/red_envelope_rule_list/',
-                    'need_permissions': []
+                    'permission': ''
                 },
                 {
                     'name': MALL_APPS_SIGN_NAV,
                     'title': u'签到',
                     'url': '/apps/sign/sign/',
-                    'need_permissions': []
+                    'permission': ''
                 }
             ]
         }
@@ -442,31 +442,31 @@ CONFIG_NAV = {
             'name': MALL_CONFIG_POSTAGE_NAV,
             'title': u'运费模板',
             'url': '/mall2/postage_list/',
-            'need_permissions': ['manage_postage_template', ]
+            'permission': ['manage_postage_template', ]
         },
         {
             'name': MALL_CONFIG_EXPRESS_COMOANY_NAV,
             'title': u'物流名称管理',
             'url': '/mall2/express_delivery_list/',
-            'need_permissions': ['manage_express', ]
+            'permission': ['manage_express', ]
         },
         {
             'name': MALL_CONFIG_PAYINTERFACE_NAV,
             'title': u'支付方式',
             'url': '/mall2/pay_interface_list/',
-            'need_permissions': ['manage_pay_interface', ]
+            'permission': ['manage_pay_interface', ]
         },
         {
             'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
             'title': u'运营邮件通知',
             'url': '/mall2/email_notify_list/',
-            'need_permissions': ['manage_config_mail', ]
+            'permission': ['manage_config_mail', ]
         },
         {
             'name': MAIL_CONFIG_SUPPLIER_NAV,
             'title': u'供货商',
             'url': '/mall2/supplier_list/',
-            'need_permissions': ['manage_supplier', ]
+            'permission': ['manage_supplier', ]
         },
     ]
 }
