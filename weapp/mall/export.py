@@ -66,7 +66,7 @@ FIRST_NAVS = [{
 }]
 
 def get_first_navs(user):
-    from auth.export import NAV as AUTH_NAV
+    # from auth.export import NAV as AUTH_NAV
     from member.export import MEMBER_NAV
     manage_index=MALL_HOME_SECOND_NAV
     manage_product=MALL_PRODUCT_SECOND_NAV
