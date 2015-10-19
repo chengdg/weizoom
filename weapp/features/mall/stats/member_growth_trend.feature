@@ -59,10 +59,18 @@ Background:
 	When jobs已添加商品
 		"""
 		[{
-			"name": "商品1"
+			"name": "商品1",
+			"price": 100.0,
+			"weight": 5,
+			"postage": 10.0,
+			"stock_type": "无限"
 		},{
-			"name": "商品2"
-		}]	
+			"name": "商品2",
+			"price": 100.0,
+			"weight": 5,
+			"postage": 15.0,
+			"stock_type": "无限"
+		}]
 		"""
 	And jobs已添加支付方式
 		"""
