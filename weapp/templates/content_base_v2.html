@@ -61,6 +61,7 @@
 			</span>
 				
 		</div>
+	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
 			<ul class="xui-navBar-box clearStyle xa-first-navs hidden">
@@ -82,7 +83,7 @@
 	<div class="xui-container pr">
 		<!-- 左侧垂直方向二级导航 -->
 		{% if second_navs %}
-			<div id="" class="xui-sideBar xa-sideBar pa hidden">
+			<div id="" class="xui-sideBar xa-sideBar pa xui-sideBarBg hidden">
 				<ul class="nav">
 				{% for second_nav in second_navs %}
 					{% for nav in second_nav.navs %}
@@ -240,7 +241,7 @@
 		if(secondNavName.length > 0 && secondNavs.length > 0) {
 			hasPermission = false;  //如果有二级导航的话也要满足权限
 
-			$('.xa-sideBar').addClass('xui-sideBarBg');
+			// $('.xa-sideBar').addClass('xui-sideBarBg');
 			$('.xa-sideBar').append('<ul class="nav xa-second-navs"></ul>');
 
 			for(var index in secondNavs) {
