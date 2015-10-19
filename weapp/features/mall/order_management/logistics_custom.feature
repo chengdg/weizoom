@@ -146,7 +146,7 @@ Scenario: 1 对待发货订单进行发货选择其他物流
 		}
 		"""
 
-@mall2 @order @logistics 
+@mall2 @order @logistics
 Scenario: 2 对选择其他物流的订单进行修改物流信息
 	jobs对待发货订单进行发货选择'其他'后
 	1.对该订单进行修改物流信息
