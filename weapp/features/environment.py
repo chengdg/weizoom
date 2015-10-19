@@ -68,7 +68,7 @@ from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissi
 from weixin2 import models as weixin2_models
 from stats import models as stats_models
 from modules.member import models as modules_member_models
-
+from tools.express import models as express_model
 from selenium import webdriver
 from test.pageobject.page_frame import PageFrame
 #from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
@@ -203,6 +203,9 @@ def __clear_all_app_data():
 	mall_models.ProductReviewPicture.objects.all().delete()
 	AccountHasWeizoomCardPermissions.objects.all().delete()
 	mall_models.Supplier.objects.all().delete()
+
+	# 快递数据
+	express_model.ExpressHasOrderPushStatus.objects.all().delete()
 
 	#权限
 	auth_models.UserHasPermission.objects.all().delete()
