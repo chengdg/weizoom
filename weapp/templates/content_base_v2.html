@@ -486,6 +486,7 @@
 				if (response.code == 200) {
 					localStorage.message_count=response.data.message_count;
 					$("#message_count").html(localStorage.message_count)
+					$("#message_count").css('display','inline');
 				}else{
 					xlog("获取message_count失败")
 				}
@@ -493,6 +494,7 @@
 		});
 		}else{
 			$("#message_count").html(localStorage.message_count)
+			$("#message_count").css('display','inline');
 		}
 
 		function initSubmit(){
