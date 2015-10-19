@@ -52,7 +52,7 @@ Background:
 			"prize_info": "单品券1",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"get_type":'下单领取',
+			"receive_method":'下单领取',
 			"limit_money": 100,
 			"desc": "下订单领红包1",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
@@ -60,7 +60,7 @@ Background:
 			"name": "红包2",
 			"prize_info": "全体券2",
 			"is_permanant_active": true,
-			"get_type":'图文领取',
+			"receive_method":'图文领取',
 			"desc": "图文领取领红包2",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		},{
@@ -68,7 +68,7 @@ Background:
 			"prize_info": "全体券3",
 			"is_permanant_active": true,
 			"limit_money": "无限制",
-			"get_type":'下单领取',
+			"receive_method":'下单领取',
 			"desc": "下订单领红包3",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		},{
@@ -76,7 +76,7 @@ Background:
 			"prize_info": "全体券3",
 			"start_date": "今天",
 			"end_date": "2天后",
-			"get_type":'图文领取',
+			"receive_method":'图文领取',
 			"desc": "图文领取红包4",
 			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
 		}]
