@@ -124,7 +124,7 @@ Background:
 		}]
 		"""
 
-@mall2 @order @supplier 
+@mall2 @order @supplier
 Scenario: 1 不同供货商订单导出
 	jobs可以导出订单
 
