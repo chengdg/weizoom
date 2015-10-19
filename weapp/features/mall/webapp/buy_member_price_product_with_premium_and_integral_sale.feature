@@ -71,7 +71,7 @@ Background:
 		"""
 
 
-@mall2 
+@mall2
 Scenario: 1 购买会员价，买赠（全部会员）和积分抵扣（分级设置）活动的商品
 	Given jobs登录系统
 	When jobs创建买赠活动
@@ -134,9 +134,6 @@ Scenario: 1 购买会员价，买赠（全部会员）和积分抵扣（分级�
 			"status": "待发货",
 			"final_price": 0.00,
 			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
 			"integral_money":100.00,
 			"integral":200,
 			"products": [{
@@ -207,9 +204,6 @@ Scenario: 2 购买会员价，买赠（全部会员）和积分抵扣（统一�
 			"status": "待支付",
 			"final_price": 50.00,
 			"product_price": 100.00,
-			"promotion_saved_money": 0.00,
-			"postage": 0.00,
-			"coupon_money":0.00,
 			"integral_money":50.00,
 			"integral":100,
 			"products": [{
@@ -290,9 +284,6 @@ Scenario: 3 购买会员价，买赠（某一等级）和积分抵扣（分级�
 				"status": "待支付",
 				"final_price": 10.00,
 				"product_price": 100.00,
-				"promotion_saved_money": 0.00,
-				"postage": 0.00,
-				"coupon_money":0.00,
 				"integral_money":90.00,
 				"integral":180,
 				"products": [{
@@ -329,9 +320,6 @@ Scenario: 3 购买会员价，买赠（某一等级）和积分抵扣（分级�
 				"status": "待支付",
 				"final_price": 16.00,
 				"product_price": 80.00,
-				"promotion_saved_money": 0.00,
-				"postage": 0.00,
-				"coupon_money":0.00,
 				"integral_money":64.00,
 				"integral":128,
 				"products": [{
@@ -400,9 +388,6 @@ Scenario: 4 购买会员价，买赠（某一等级）和积分抵扣（统一�
 				"status": "待支付",
 				"final_price": 50.00,
 				"product_price": 100.00,
-				"promotion_saved_money": 0.00,
-				"postage": 0.00,
-				"coupon_money":0.00,
 				"integral_money":50.00,
 				"integral":100,
 				"products": [{
@@ -439,9 +424,6 @@ Scenario: 4 购买会员价，买赠（某一等级）和积分抵扣（统一�
 				"status": "待支付",
 				"final_price": 40.00,
 				"product_price": 80.00,
-				"promotion_saved_money": 0.00,
-				"postage": 0.00,
-				"coupon_money":0.00,
 				"integral_money":40.00,
 				"integral":80,
 				"products": [{
