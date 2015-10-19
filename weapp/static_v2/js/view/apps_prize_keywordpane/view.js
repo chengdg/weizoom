@@ -66,7 +66,6 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 	},
 
 	onAddKeyword: function () {
-		console.log('888', this.$el);
 		var _this = this;
 		//判断关键词个数是否超过8个
 		var i_length=0;
@@ -131,7 +130,7 @@ W.view.apps.PrizeKeywordPane = Backbone.View.extend({
 	show: function() {
 		this.$add_keyword_btn = $(this.keyword_btn);
 		var offset = this.$add_keyword_btn.offset();
-		this.$el.css('position','absolute');
+		//this.$el.css('position','absolute');
 		this.$el.css('top', offset.top+50 + 'px');
 		this.$el.css('left', offset.left+50 + 'px');
 		this.$el.css('display', 'block');
