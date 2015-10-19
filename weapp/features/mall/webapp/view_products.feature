@@ -36,7 +36,6 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
 @mall2 @mall @mall.webapp
 Scenario:1 浏览全部商品列表
 	jobs添加商品后
