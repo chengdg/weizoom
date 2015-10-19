@@ -82,7 +82,7 @@ class MSign(resource.Resource):
 						p_coupon = setting['coupon']['name']
 					else:
 						p_coupon = ""
-					prize_rules[int(name)] = {'integral': p_integral,'coupon': p_coupon}
+					prize_rules[name] = {'integral': p_integral,'coupon': p_coupon}
 				if signer:
 					#检查是否已签到
 					latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
