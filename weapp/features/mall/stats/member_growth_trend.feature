@@ -62,8 +62,6 @@ Background:
 			"name": "商品1"
 		},{
 			"name": "商品2"
-		},{
-			"name": "商品3"
 		}]	
 		"""
 	And jobs已添加支付方式
