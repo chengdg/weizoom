@@ -21,7 +21,7 @@ Background:
 			"name": "单品券1",
 			"money": 5.00,
 			"count": 10,
-			"each_limit": "不限",
+			"limit_counts": "无限",
 			"using_limit": "满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
@@ -31,7 +31,7 @@ Background:
 			"name": "全体券2",
 			"money": 20.00,
 			"count": 5,
-			"each_limit": "不限",
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "2天后",
 			"coupon_id_prefix": "coupon2_id_"
@@ -39,7 +39,7 @@ Background:
 			"name": "全体券3",
 			"money": 30.00,
 			"count": 5,
-			"each_limit": "不限",
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "3天后",
 			"coupon_id_prefix": "coupon3_id_"
@@ -54,31 +54,31 @@ Background:
 			"end_date": "2天后",
 			"receive_method":'下单领取',
 			"limit_money": 100,
-			"desc": "下订单领红包1",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"share_title": "下订单领红包1",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
 		},{
 			"name": "红包2",
 			"prize_info": "全体券2",
 			"is_permanant_active": true,
 			"receive_method":'图文领取',
-			"desc": "图文领取领红包2",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"share_title": "图文领取领红包2",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
 		},{
 			"name": "红包3",
 			"prize_info": "全体券3",
 			"is_permanant_active": true,
 			"limit_money": "无限制",
 			"receive_method":'下单领取',
-			"desc": "下订单领红包3",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"share_title": "下订单领红包3",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
 		},{
 			"name": "红包4",
 			"prize_info": "全体券3",
 			"start_date": "今天",
 			"end_date": "2天后",
 			"receive_method":'图文领取',
-			"desc": "图文领取红包4",
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"share_title": "图文领取红包4",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg"
 		}]
 		"""
 
