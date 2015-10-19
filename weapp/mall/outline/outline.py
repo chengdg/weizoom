@@ -34,23 +34,23 @@ class Outline(resource.Resource):
 
         webapp_id = request.user_profile.webapp_id
         if not settings.IS_UNDER_BDD:
-            if request.manager.id != request.user.id:
-                # duhao 20151019 注释
-                # # 子账号
-                # if len(request.user.permission_set) == 0:
-                #     # 没有权限页面
-                #     return render_to_response(
-                #         'mall/editor/outline_no_permission.html',
-                #         RequestContext(request, {
-                #             'first_nav_name': export.MALL_HOME_FIRST_NAV,
-                #             'second_navs': export.get_mall_home_second_navs(request),
-                #             'second_nav_name': export.MALL_HOME_INTEGRAL_NAV
-                #         }))
-                # else:
-                first_url = export.get_first_navs(request.user)[0]['url']
-                if first_url.find('/mall2/outline/') < 0:
-                    # 第一个有权限的一面，不是首页
-                    return HttpResponseRedirect(first_url)
+            # duhao 20151019 注释
+            # if request.manager.id != request.user.id:
+            #     # 子账号
+            #     if len(request.user.permission_set) == 0:
+            #         # 没有权限页面
+            #         return render_to_response(
+            #             'mall/editor/outline_no_permission.html',
+            #             RequestContext(request, {
+            #                 'first_nav_name': export.MALL_HOME_FIRST_NAV,
+            #                 'second_navs': export.get_mall_home_second_navs(request),
+            #                 'second_nav_name': export.MALL_HOME_INTEGRAL_NAV
+            #             }))
+            #     else:
+            #         first_url = export.get_first_navs(request.user)[0]['url']
+            #         if first_url.find('/mall2/outline/') < 0:
+            #             # 第一个有权限的一面，不是首页
+            #             return HttpResponseRedirect(first_url)
             integral_strategy = member_models.IntegralStrategySttings.objects.get(
                 webapp_id=webapp_id)
             if integral_strategy.use_ceiling == -1:
