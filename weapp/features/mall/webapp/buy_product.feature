@@ -565,3 +565,70 @@ Scenario: 10 会员购买的商品同时参加多个活动，然后下架商品
 	Given jobs登录系统
 	When jobs-下架商品'商品2'
 	Then bill获得错误提示'该订单内商品状态发生变化！商品2已下架<br/>返回修改<br/>移除以上商品'
+
+
+
+@mall.webapp
+Scenario: 11 会员购买的商品同时参加多个活动，然后删除商品
+	bill购买商品时，jobs删除此商品，bill获得错误提示信息
+
+	Given jobs登录系统
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品1限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 9.00
+		}, {
+			"name": "商品2限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品2",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 8.0
+		}]
+		"""
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Given jobs登录系统
+	When jobs删除商品'商品1'
+	Then bill获得错误提示'该订单内商品状态发生变化！商品1已删除<br/>返回修改'
+
+	When bill访问jobs的webapp
+	When bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品2",
+			"count": 1
+		}, {
+			"name": "商品6",
+			"count": 1
+		}]
+		"""
+	When bill从购物车发起购买操作
+		"""
+		{
+			"action": "click",
+			"context": [{
+				"name": "商品2"
+			}, {
+				"name": "商品6"
+			}]
+		}
+		"""
+	Given jobs登录系统
+	When jobs删除商品'商品2'
+	Then bill获得错误提示'该订单内商品状态发生变化！商品2已删除<br/>返回修改<br/>移除以上商品'
