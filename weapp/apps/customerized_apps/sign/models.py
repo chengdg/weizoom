@@ -63,7 +63,8 @@ class SignParticipance(models.Document):
 		flag = False
 		for name in sorted(prize_settings.keys()):
 			setting = prize_settings[name]
-			if flag or int(name)>curr_serial_count:
+			name = int(name)
+			if flag or name>curr_serial_count:
 				next_serial_count = name
 				for type, value in setting.items():
 					if type == 'integral':
@@ -72,7 +73,7 @@ class SignParticipance(models.Document):
 						next_serial_coupon_id = value['id'] if value != '' else ''
 						next_serial_coupon_name = value['name']
 				break
-			if int(name) == 0:
+			if name == 0:
 				#每日奖励和达到连续签到要求的奖励
 				for type, value in setting.items():
 					if type == 'integral':
@@ -80,7 +81,7 @@ class SignParticipance(models.Document):
 					elif type == 'coupon':
 						daily_coupon_id = value['id'] if value != '' else ''
 						daily_coupon_name = value['name']
-			if int(name) == curr_serial_count:
+			if name == curr_serial_count:
 				#达到连续签到要求的奖励
 				bingo = curr_serial_count
 				flag = True
@@ -137,7 +138,7 @@ class SignParticipance(models.Document):
 		return_data['next_serial_coupon_id'] = next_serial_coupon_id
 		return_data['next_serial_coupon_name'] = next_serial_coupon_name
 		return_data['reply_content'] = sign.reply['content']
-		return_data['serial_count'] = self.serial_count
+		return_data['serial_count'] = int(self.serial_count)
 
 		return return_data
 
