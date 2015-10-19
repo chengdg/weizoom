@@ -11,8 +11,8 @@ Background:
 	And jobs设定会员积分策略
 		"""
 		{
-			"buy_via_offline_increase_count_for_author": 10,
-			"buy_via_offline_increase_count_percentage_for_author": 0.1
+			"buy_award_count_for_buyer":10
+			"order_money_percentage_for_each_buy":0.1
 		}
 		"""
 	And jobs已添加支付方式
