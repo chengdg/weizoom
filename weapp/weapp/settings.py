@@ -722,7 +722,7 @@ MIDDLEWARE_CLASSES.extend([
     'core.debug_middleware.DumpContextMiddleware',
     'core.middleware.PageIdMiddleware',
     'core.middleware.ManagerDetectMiddleware',
-    'core.middleware.PermissionMiddleware',
+    # 'core.middleware.PermissionMiddleware',
     # 'modules.member.middleware.MemberBrowseRecordMiddleware', #TODO: change to service
     'core.middleware.WeizoomMallMiddleware',
     'core.middleware.WebAppPageVisitMiddleware',

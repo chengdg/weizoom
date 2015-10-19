@@ -205,12 +205,13 @@ def __clear_all_app_data():
 	mall_models.Supplier.objects.all().delete()
 
 	#权限
-	auth_models.UserHasPermission.objects.all().delete()
-	auth_models.UserHasGroup.objects.all().delete()
-	auth_models.GroupHasPermission.objects.all().delete()
-	auth_models.SystemGroup.objects.all().delete()
-	auth_models.DepartmentHasUser.objects.all().delete()
-	auth_models.Department.objects.all().delete()
+	#duhao 20151019注释
+	# auth_models.UserHasPermission.objects.all().delete()
+	# auth_models.UserHasGroup.objects.all().delete()
+	# auth_models.GroupHasPermission.objects.all().delete()
+	# auth_models.SystemGroup.objects.all().delete()
+	# auth_models.DepartmentHasUser.objects.all().delete()
+	# auth_models.Department.objects.all().delete()
 
 	#会员
 	#member_models.MemberGrade.objects.all().update(usable_integral_percentage_in_order=100)
