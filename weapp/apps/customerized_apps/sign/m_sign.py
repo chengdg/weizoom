@@ -72,8 +72,9 @@ class MSign(resource.Resource):
 				serial_prize = {}
 				next_serial_prize = {}
 				prize_rules = {}
-				for name in sorted(prize_settings.keys()):
-					setting = prize_settings[name]
+				for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+					setting = prize_settings[name[1]]
+					name = name[0]
 					if setting['integral']:
 						p_integral = setting['integral']
 					else:
@@ -94,8 +95,9 @@ class MSign(resource.Resource):
 						temp_serial_count = 0
 					if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
 						activity_status = u'已签到'
-						for name in sorted(prize_settings.keys()):
-							setting = prize_settings[name]
+						for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+							setting = prize_settings[name[1]]
+							name = name[0]
 							if int(name) > signer.serial_count:
 								next_serial_prize = {
 									'count': int(name),
@@ -104,9 +106,9 @@ class MSign(resource.Resource):
 								break
 					elif temp_serial_count >=1:
 						flag = False
-						for name in sorted(prize_settings.keys()):
-							setting = prize_settings[name]
-							name = int(name)
+						for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+							setting = prize_settings[name[1]]
+							name = int(name[0])
 							if flag or name>signer.serial_count + 1:
 								next_serial_prize = {
 									'count': name,
