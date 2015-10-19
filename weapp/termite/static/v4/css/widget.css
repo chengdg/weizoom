@@ -851,6 +851,10 @@ ul.wui-relatelink li h3{
 .wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child{
     margin-bottom: 6px;
     line-height: 16px;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .wui-product .wui-block-type1,.wui-productlist .wui-block-type1{
     padding-left: 10px;
