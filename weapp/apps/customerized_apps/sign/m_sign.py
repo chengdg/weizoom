@@ -98,7 +98,7 @@ class MSign(resource.Resource):
 							setting = prize_settings[name]
 							if int(name) > signer.serial_count:
 								next_serial_prize = {
-									'count': name,
+									'count': int(name),
 									'prize': setting
 								}
 								break
@@ -106,13 +106,14 @@ class MSign(resource.Resource):
 						flag = False
 						for name in sorted(prize_settings.keys()):
 							setting = prize_settings[name]
-							if flag or int(name)>signer.serial_count + 1:
+							name = int(name)
+							if flag or name>signer.serial_count + 1:
 								next_serial_prize = {
 									'count': name,
 									'prize': setting
 								}
 								break
-							if int(name) == signer.serial_count + 1:
+							if name == signer.serial_count + 1:
 								serial_prize = {
 									'count': name,
 									'prize':setting
