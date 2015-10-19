@@ -77,19 +77,20 @@ def format_json(obj):
 	return content
 
 
-@register.filter(name="satisfy_permission")
-def satisfy_permission(permission_or_nav, request):
-	"""
-	检查request.user是否拥有nav.need_permissions中需要的权限
-	"""
-	# return True
-	if request.user.id == request.manager.id:
-		# return request.user.no_permission
-		return True
-	else:
-		if 'need_permissions' in permission_or_nav:
-			if len(permission_or_nav['need_permissions']) == 0:
-				return True
-			return request.user.has_perm(permission_or_nav['need_permissions'])
-		else:
-			return request.user.has_perm(permission_or_nav)
+#duhao 20151019 注释
+# @register.filter(name="satisfy_permission")
+# def satisfy_permission(permission_or_nav, request):
+# 	"""
+# 	检查request.user是否拥有nav.need_permissions中需要的权限
+# 	"""
+# 	# return True
+# 	if request.user.id == request.manager.id:
+# 		# return request.user.no_permission
+# 		return True
+# 	else:
+# 		if 'need_permissions' in permission_or_nav:
+# 			if len(permission_or_nav['need_permissions']) == 0:
+# 				return True
+# 			return request.user.has_perm(permission_or_nav['need_permissions'])
+# 		else:
+# 			return request.user.has_perm(permission_or_nav)
