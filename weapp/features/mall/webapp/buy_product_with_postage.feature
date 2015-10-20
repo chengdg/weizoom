@@ -3,7 +3,9 @@
 #editor: 新新 2015.10.19
 
 Feature: 在webapp中购买有运费的商品
+"""
 	用户能在webapp中购买"有运费的商品"
+"""
 
 Background:
 	Given jobs登录系统
@@ -138,7 +140,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @mall.postage @mall.webapp  
+@mall2 @mall.postage @mall.webapp
 Scenario:1 购买单个商品，使用系统运费模板，满足续重
 	
 	When bill访问jobs的webapp
@@ -162,7 +164,7 @@ Scenario:1 购买单个商品，使用系统运费模板，满足续重
 		}
 		"""
 
-@mall2 @mall.postage @mall.webapp  
+@mall2 @mall.postage @mall.webapp
 Scenario:2 购买单个商品，使用统一运费商品
 	
 	When bill访问jobs的webapp
@@ -204,7 +206,7 @@ Scenario:2 购买单个商品，使用统一运费商品
 		}
 		"""
 
-@mall2 @mall.postage @mall.webapp 
+@mall2 @mall.postage @mall.webapp
 Scenario:3 购买单个商品，使用系统运费模板，满足金额包邮条件
 	
 	When bill访问jobs的webapp
@@ -227,7 +229,6 @@ Scenario:3 购买单个商品，使用系统运费模板，满足金额包邮条
 			"postage": 0.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp 
 Scenario:4 购买单个商品，使用系统运费模板，满足数量包邮条件
@@ -252,7 +253,6 @@ Scenario:4 购买单个商品，使用系统运费模板，满足数量包邮条
 			"postage": 0.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp 
 Scenario:5 购买多种商品，使用统一运费
@@ -330,7 +330,6 @@ Scenario:6 购买多种商品，使用系统运费模板，满足普通续重
 		}
 		"""
 
-
 @mall2 @mall.postage @mall.webapp 
 Scenario:7 购买多种商品，使用系统运费模板，满足特殊地区续重
 	顺丰，北京，1.6公斤，运费30元
@@ -358,7 +357,6 @@ Scenario:7 购买多种商品，使用系统运费模板，满足特殊地区续
 			"postage": 30.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:8 购买多种商品，使用系统运费模板，合起来满足数量包邮
@@ -388,7 +386,6 @@ Scenario:8 购买多种商品，使用系统运费模板，合起来满足数量
 		}
 		"""
 
-
 @mall2 @mall.postage @mall.webapp
 Scenario:9 购买多种商品，使用系统运费模板，合起来满足金额包邮
 	顺丰，北京，商品金额200元，包邮
@@ -417,7 +414,6 @@ Scenario:9 购买多种商品，使用系统运费模板，合起来满足金额
 		}
 		"""
 
-
 @mall2 @mall.postage @mall.webapp
 Scenario:10 购买多种商品，使用统一运费+系统运费模板，普通运费
 	
@@ -444,7 +440,6 @@ Scenario:10 购买多种商品，使用统一运费+系统运费模板，普通�
 			"postage": 28.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:11 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
@@ -473,7 +468,6 @@ Scenario:11 购买多种商品，使用统一运费+系统运费模板，特殊�
 			"postage": 45.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:12 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
@@ -505,7 +499,6 @@ Scenario:12 购买多种商品，使用统一运费+系统运费模板，特殊�
 			"postage": 15.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:13 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
@@ -567,7 +560,7 @@ Scenario:14 购买多规格商品，使用系统运费模板，特殊地区，�
 		}
 		"""
 
-@mall2 @mall.postage @mall.webapp 
+@mall2 @mall.postage @mall.webapp
 Scenario:15 购买两个多规格商品
 	1 商品7使用系统运费模板，特殊地区，满足续重
 	2 商品8使用统一运费10元
@@ -633,8 +626,7 @@ Scenario:16 jobs选择'免运费'运费配置
 		}
 		"""
 
-
-@mall2 @mall.postage @mall.webapp 
+@mall2 @mall.postage @mall.webapp
 Scenario:17 更新邮费配置后进行购买
 	jobs更改邮费配置后bill进行购买
 	1.去掉特殊地区和指定地区
@@ -808,4 +800,3 @@ Scenario:18 不同等级的会员购买有会员价同时有运费配置
 		}
 		"""
 
-	
