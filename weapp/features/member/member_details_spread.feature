@@ -227,7 +227,7 @@ Scenario:1 会员详情-传播能力(分享链接引流)
 			"""
 
 #author:王丽 2015.10.14
-@member @memberList
+@mall2 @member @memberList
 Scenario:2 会员详情-传播能力(分享链接引流会员列表)
 	#1 分享链接引流会员列表展示会员分享链接带来的会员的,按关注时间倒叙排列
 	#	会员名称、会员头像、会员等级、会员积分、会员来源、关注时间
@@ -247,36 +247,43 @@ Scenario:2 会员详情-传播能力(分享链接引流会员列表)
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom把jobs的微站链接分享到朋友圈
+	When 休眠1秒
 
 	When 清空浏览器
 	When bill点击tom分享链接
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
+	When 休眠1秒
 
 	When 清空浏览器
 	When marry点击tom分享链接
 	When marry关注jobs的公众号
 	When marry访问jobs的webapp
+	When 休眠1秒
 
 	When 清空浏览器
 	When jack关注jobs的公众号
 	When jack点击tom分享链接
 	When jack访问jobs的webapp
+	When 休眠1秒
 
 	When 清空浏览器
 	When nokia关注jobs的公众号
 	When nokia点击tom分享链接
 	When nokia访问jobs的webapp
+	When 休眠1秒
 
 	When 清空浏览器
 	When tom1点击tom分享链接
 	When tom1关注jobs的公众号
 	When tom1访问jobs的webapp
+	When 休眠1秒
 
 	When 清空浏览器
 	When tom2关注jobs的公众号
 	When tom2访问jobs的webapp
 	When tom2点击tom分享链接
+	When 休眠1秒
 
 	When 清空浏览器
 	Given jobs登录系统
@@ -359,7 +366,7 @@ Scenario:2 会员详情-传播能力(分享链接引流会员列表)
 		"""
 
 #author:王丽 2015.10.19
-@member @memberList
+@mall2 @member @memberList
 Scenario:3 会员详情-传播能力(二维码引流会员列表)
 	#1 二维码引流会员列表展示会员推广扫码带来的会员,按关注时间倒叙排列
 	#	会员名称、会员头像、会员等级、会员积分、会员来源、关注时间
@@ -395,18 +402,23 @@ Scenario:3 会员详情-传播能力(二维码引流会员列表)
 
 	When 清空浏览器
 	When marry扫描bill的推广二维码关注jobs公众号
+	When 休眠1秒
 
 	When 清空浏览器
 	When jack扫描bill的推广二维码关注jobs公众号
+	When 休眠1秒
 
 	When 清空浏览器
 	When nokia扫描bill的推广二维码关注jobs公众号
+	When 休眠1秒
 
 	When 清空浏览器
 	When tom扫描bill的推广二维码关注jobs公众号
+	When 休眠1秒
 
 	When 清空浏览器
 	When tom1扫描bill的推广二维码关注jobs公众号
+	When 休眠1秒
 
 	When 清空浏览器
 	Given jobs登录系统

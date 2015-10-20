@@ -290,3 +290,6 @@ def spreadMethod(sMethod):
         return 'shared'
     elif u'二维码' == sMethod:
         return 'qrcode'
+@When(u"休眠1秒")
+def step_impl(context):
+    time.sleep(1)
