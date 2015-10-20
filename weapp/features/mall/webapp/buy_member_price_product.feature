@@ -1,5 +1,6 @@
-# __author__ : "冯雪静"
-#editer:师帅
+#author: 冯雪静
+#editor: 师帅 2015.10.19
+
 Feature: 在webapp中购买有会员折扣的商品
 	bill能在webapp中购买jobs添加的"会员价的商品"
 	"""
@@ -312,7 +313,6 @@ Scenario: 2 购买多个会员价商品
 		}
 		"""
 
-
 @mall2 @member_product
 Scenario: 3 购买多个商品包括会员价商品
 	jobs添加商品后
@@ -390,7 +390,7 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 
-@meberGrade @mall2
+@mall2 @meberGrade
 Scenario: 4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后

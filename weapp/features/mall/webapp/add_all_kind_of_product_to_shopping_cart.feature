@@ -1,6 +1,7 @@
-#  "benchi"
-#editer:师帅
+#author: benchi
+#editor: 师帅 2015.10.19
 @func:webapp.modules.mall.views.list_products
+
 Feature: 添加普通商品，促销商品到购物车中
 	bill能在webapp中将jobs添加的"普通商品，促销商品"放入购物车
 
@@ -77,15 +78,13 @@ Background:
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
 
-
 @mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢购活动，商品2是买赠活动，商品3是多规格商品，没有参加任何活动
 	jobs添加商品后
 	1. bill能在webapp中将jobs添加的商品放入购物车
 	2. tom的购物车不受bill操作的影响
-
 	注意：总价和总商品数量是在前台计算，对它们的测试放到ui测试中，这里无法测试
-	
+
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -115,7 +114,6 @@ Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢
 			}
 		}]
 		"""
-	
 	Then bill能获得购物车
 		"""
 		{
@@ -164,7 +162,7 @@ Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢
 			"invalid_products": []
 		}
 		"""
-	
+
 	When tom访问jobs的webapp
 	Then tom能获得购物车
 		"""
@@ -173,5 +171,4 @@ Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢
 			"invalid_products": []
 		}
 		"""
-	
-	
+

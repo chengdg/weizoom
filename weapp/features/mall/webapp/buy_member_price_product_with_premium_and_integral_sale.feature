@@ -70,7 +70,6 @@ Background:
 		}]
 		"""
 
-
 @mall2
 Scenario: 1 购买会员价，买赠（全部会员）和积分抵扣（分级设置）活动的商品
 	Given jobs登录系统
