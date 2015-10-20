@@ -120,6 +120,7 @@ Background:
 
 		}]
 		"""
+
 @promotion @promotionRedbag
 Scenario:1 自动回复获取图文领取分享红包
 	#自动回复单图文领取分享红包
