@@ -323,7 +323,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
                 one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
             else:
                 one_message['user_icon'] =  DEFAULT_ICON
-
+        message.content = _translate_special_characters(message.content)
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         from_index = one_message['text'].find('<a href=')
         if from_index > -1:
@@ -412,3 +412,13 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
             one_message['remark'] = False
 
     return pageinfo, items, member
+
+def _translate_special_characters(message_text):
+    a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
+    all_a_html = a_pattern.findall(message_text)
+    for html in all_a_html:
+        message_text = message_text.replace(html, "%s")
+    message_text = message_text.replace('<', "&lt;")
+    message_text = message_text.replace('>', "&gt;")
+    message_text = message_text % tuple(all_a_html)
+    return message_text
