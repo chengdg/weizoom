@@ -169,29 +169,8 @@
 			/**
 				子账号权限控制相关函数------------------------------------------
 			*/
-			//提供给fans系统的回调函数，用于在localStorage中设置用户的权限信息
-			// var callback = function() {
-			// 	var userPermissions = window.frames[0].localStorage.getItem('userPermissions');
-			// 	render(userPermissions);
-			// }
-
-			// function connectFans(){
-			// 	if(location.host.indexOf('weizzz.com') > 0) {
-			// 		document.domain = location.host.replace('fans.', '').replace('red.', '').replace('docker.', '');
-			// 	} else {
-			// 		document.domain = location.host.replace('fans.', '').replace('weapp.', '');
-			// 	}
-				
-			// 	var hm = document.createElement("iframe");
-			// 	hm.src = "{{ fans_host }}/static/crossdomain.html";
-			// 	hm.style.display = 'none'
-			// 	var s = document.getElementsByTagName("script")[0];
-			// 	s.parentNode.insertBefore(hm, s);
-			// }
-
 			function renderNavs() {
 				//去fans系统获取用户权限信息
-				// connectFans();
 				var userPermissions = "";
 				$.ajax({
 					url:'{{fans_host}}/auth/api/permission_set/',
@@ -199,8 +178,7 @@
 					dataType:'jsonp',
 					success:function(response) {
 						if (response.code == 200) {
-							userPermissions=response.data;
-							xlog(userPermissions);
+							userPermissions = response.data;
 							render(userPermissions);
 						} else {
 							render(userPermissions);
