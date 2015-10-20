@@ -48,6 +48,20 @@ def save_order(request):
 def save_address(request):
 	return request_api_util.save_address(request)
 
+########################################################################
+# list_address: 获取订单收货地址列表  zhaolei
+########################################################################
+@mobile_api(resource='address_b', action='list')
+def list_address(request):
+	return request_api_util.list_address(request)
+
+########################################################################
+# list_address: 更新订单收货地址列表  zhaolei
+########################################################################
+@mobile_api(resource='address_b', action='edit')
+def list_address(request):
+	return request_api_util.list_address(request)
+
 
 ########################################################################
 # add_shopping_cart: 将商品加入购物车

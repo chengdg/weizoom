@@ -620,6 +620,49 @@ def save_address(request):
 	response.data = data
 	return response.get_response()
 
+########################################################################
+# list_address: 获取收货地址列表
+########################################################################
+def list_address(request):
+	webapp_user = request.webapp_user
+	response = create_response(200)
+	webapp_owner_id = request.webapp_owner_id
+	#隐藏底部导航条#
+	request.should_hide_footer = True
+	data = dict()
+	data['ship_infos'] = webapp_user.ship_infos
+	data['is_hide_weixin_option_menu'] = True
+	data['page_title'] = u'编辑收货地址'
+	data['redirect_url_query_string'] = request.redirect_url_query_string
+	response.data = data
+	return response.get_response()
+
+########################################################################
+# edit_address: 编辑收货地址信息
+########################################################################
+def edit_address(request):
+	webapp_user = request.webapp_user
+	webapp_owner_id = request.webapp_owner_id
+	#隐藏底部导航条#
+	request.should_hide_footer = True
+	data = dict()
+	ship_info_id = request.GET.get('id', 0)
+	if request.action == 'add':
+		ship_info = None
+	elif ship_info_id > 0:
+		try:
+			ship_info = ShipInfo.objects.get(id=ship_info_id)
+		except:
+			ship_info = None
+	else:
+		ship_info = webapp_user.ship_info
+
+	data['ship_infos'] = webapp_user.ship_infos
+	data['is_hide_weixin_option_menu'] = True
+	data['page_title'] = u'编辑收货地址'
+	data['redirect_url_query_string'] = request.redirect_url_query_string
+	response.data = data
+	return response.get_response()
 
 ########################################################################
 # select_address: 选择地址
