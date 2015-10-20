@@ -112,6 +112,12 @@ def step_impl(context, user):
     for rule in rules:
         actual.append({
             'name': rule['rule_name'],
+            'status': status2name[rule['status']],
+            'limit_time': rule['limit_time'],
+            'actions': __get_actions(rule),
+            'start_time': __to_date(rule['start_time']),
+            'end_time': __to_date(rule['end_time']),
+            'prize_info': [ rule['coupon_rule_name'] ]
         })
     print("actual_data: {}".format(actual))
 
