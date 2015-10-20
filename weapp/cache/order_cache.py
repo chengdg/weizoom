@@ -129,10 +129,11 @@ def update_webapp_order_cache(instance, **kwargs):
 	如果instance是有效的Order，则取将Order.webapp_user_id对应用户的订单数据缓存删除。
 
 	"""
-	#print("in update_webapp_order_cache(), kwargs: %s" % kwargs)
-	if isinstance(instance, Order):
+	if kwargs.get('created'):
 		webapp_user_id = instance.webapp_user_id
-	else:
+		key = get_order_stats_cache_key(webapp_user_id)
+		cache_util.delete_cache(key)
+	elif not isinstance(instance, Order):
 		from itertools import chain
 		instances = chain(instance)
 		for order in instances:

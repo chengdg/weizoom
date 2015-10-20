@@ -138,3 +138,16 @@ def is_js_config(request):
 def is_request_for_cloud_housekeeper(request):
 	url = __get_request_url(request)
 	return url.find('/cloud_housekeeper/') >= 0
+
+def is_varnish_url(request):
+	if hasattr(request, 'GET'):
+		model = request.GET.get('model')
+		action = request.GET.get('action')
+		if model == 'products' and action == 'list' or model == 'product':
+			return True
+	return False
+
+def is_varnish_fetch(request):
+	fmt = request.META.get('HTTP_FMT')
+	cookie_fmt = request.META.get('HTTP_COOKIEFMT')
+	return fmt and fmt == cookie_fmt

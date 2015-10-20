@@ -20,8 +20,9 @@ from django.template import RequestContext, Context
 #from django.conf import settings
 
 #from utils.url_helper import remove_querystr_filed_from_request_url
-from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper, is_product_stocks_request
 from account.url_util import is_wapi_request
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper, is_product_stocks_request, is_varnish_url
+
 from account.models import WEBAPP_TYPE_WEIZOOM_MALL
 
 #from core import dateutil
@@ -481,7 +482,8 @@ class WebAppPageVisitMiddleware(object):
 
 		from webapp.handlers import event_handler_util
 		request.event_data = event_handler_util.extract_data(request)
-		event_handler_util.handle(request, 'page_visit')
+		if not is_varnish_url(request):
+			event_handler_util.handle(request, 'page_visit')
 		return None
 		
 	def process_response(self, request, response):
@@ -551,6 +553,9 @@ class BrowserSourceDetectMiddleware(object):
 			return None
 
 		if is_request_for_api(request):
+			return None
+		# jz test for varnish
+		if is_varnish_url(request):
 			return None
 
 
@@ -739,9 +744,10 @@ class AuthorizedUserMiddleware(object):
 		return HttpResponseRedirect(path_info)
 
 
-from utils.uuid import uniqueid
-import core_setting
-class WeizoomCardUseAuthKeyMiddleware(object):
+# jz 2015-10-20
+# from utils.uuid import uniqueid
+# import core_setting
+# class WeizoomCardUseAuthKeyMiddleware(object):
 	"""
 	增加微众卡支付时的安全key
 
@@ -749,12 +755,13 @@ class WeizoomCardUseAuthKeyMiddleware(object):
 
 	@TODO 会员重构完成后统一曾成uuid
 	"""
-	def process_response(self, request, response):
-		weizoom_card_auth_key = request.COOKIES.get(core_setting.WEIZOOM_CARD_AUTH_KEY, None)
-		if weizoom_card_auth_key is None:
-			response.set_cookie(core_setting.WEIZOOM_CARD_AUTH_KEY, uniqueid(), max_age=60*60*24*365)
+	# def process_response(self, request, response):
+		# pass
+		# weizoom_card_auth_key = request.COOKIES.get(core_setting.WEIZOOM_CARD_AUTH_KEY, None)
+		# if weizoom_card_auth_key is None:
+		# 	response.set_cookie(core_setting.WEIZOOM_CARD_AUTH_KEY, uniqueid(), max_age=60*60*24*365)
 
-		return response
+		# return response
 
 
 from mall.models import WeizoomMall
@@ -821,7 +828,7 @@ class SubUserMiddleware(object):
 		if is_pay_request(request) or is_wapi_request(request):
 			return None
 		
-		if request.is_access_webapp:
+		if request.is_access_webapp or is_varnish_url(request):
 			return None
 
 		if  hasattr(request, 'sub_user') and request.sub_user and User.objects.filter(id=id).count() == 0: 
