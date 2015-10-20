@@ -160,7 +160,7 @@ class MSign(resource.Resource):
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': isPC,
 			'isMember': isMember,
-			'member_info':json.dumps(member_info),
+			'member_info':member_info,
 			'prize_info': json.dumps(prize_info),
 			'auth_appid_info': auth_appid_info,
 			'share_page_title': record.share['desc'] if record else '',
