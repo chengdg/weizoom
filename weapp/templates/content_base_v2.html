@@ -194,7 +194,7 @@
 			alert("获取您的权限信息失败，请联系客服！" + userPermissions);
 			return;
 		}
-		if(userPermissions === '') {
+		if(userPermissions === '' || userPermissions === '[]') {
 			alert("您没有权限浏览任何页面，请联系您的管理员！");
 			return;
 		}
