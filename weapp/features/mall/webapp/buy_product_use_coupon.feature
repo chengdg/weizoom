@@ -279,7 +279,6 @@ Scenario: 1 使用少于商品价格的优惠券金额进行购买
 		}
 		"""
 
-
 @mall2 @mall.webapp @mall.coupon
 Scenario: 2 使用多于商品价格的优惠券金额进行购买
 	bill购买jobs的商品时，能使用多于商品价格的优惠券
@@ -343,8 +342,7 @@ Scenario: 2 使用多于商品价格的优惠券金额进行购买
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 3 使用等于商品价格的优惠券金额进行购买
 	bill购买jobs的商品时，能使用等于商品价格的优惠券
 	1. 订单状态直接变为'等待发货'
@@ -389,8 +387,7 @@ Scenario: 3 使用等于商品价格的优惠券金额进行购买
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 4 输入错误的优惠券码进行购买
 	bill购买jobs的商品时，输入错误的优惠券码
 	1. 创建订单失败
@@ -443,8 +440,7 @@ Scenario: 4 输入错误的优惠券码进行购买
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 5 输入未领取的可用优惠券码进行购买，bill创建订单成功，优惠券状态变为已使用
 	
 	When bill访问jobs的webapp
@@ -514,8 +510,7 @@ Scenario: 5 输入未领取的可用优惠券码进行购买，bill创建订单�
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 6 输入已过期的优惠券码进行购买
 	bill购买jobs的商品时，使用已过期的优惠券进行购买
 	1. 购物失败
@@ -551,8 +546,7 @@ Scenario: 6 输入已过期的优惠券码进行购买
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 7 输入别人的优惠券码进行购买
 	bill购买jobs的商品时，能使用tom的优惠券进行购买
 	1. 购物失败
@@ -586,8 +580,7 @@ Scenario: 7 输入别人的优惠券码进行购买
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.coupon 
+@mall2 @mall.webapp @mall.coupon
 Scenario: 8 使用满金额条件的优惠券，购买小于金额条件的商品
 	bill购买jobs的商品时，商品金额小于优惠券使用金额
 	1. 购物失败
@@ -626,7 +619,6 @@ Scenario: 8 使用满金额条件的优惠券，购买小于金额条件的商�
 			}
 		}
 		"""
-
 
 @mall2 @mall.webapp @mall.coupon
 Scenario: 9 使用满金额条件的优惠券，购买等于金额条件的商品
@@ -676,7 +668,7 @@ Scenario: 9 使用满金额条件的优惠券，购买等于金额条件的商�
 		}
 		"""
 
-@mall2 @mall.webapp @mall.coupon  
+@mall2 @mall.webapp @mall.coupon
 Scenario: 10 使用满金额条件的优惠券，购买大于金额条件的商品
 	bill购买jobs的商品时，商品金额大于优惠券使用金额
 	
