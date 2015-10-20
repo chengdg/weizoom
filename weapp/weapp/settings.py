@@ -710,11 +710,10 @@ MIDDLEWARE_CLASSES.extend([
     'core.middleware.ForceLogoutMiddleware',
     'core.middleware.RequestWebAppMiddleware',
 
-    'core.middleware.WeizoomCardUseAuthKeyMiddleware',
     'core.middleware.SubUserMiddleware',
-
+    # jz 2015-10-20
+    # 'core.middleware.WeizoomCardUseAuthKeyMiddleware',
     #'modules.member.middleware.AddSocialAccountInfoForPcBrowserMiddleware',
-
     #'modules.member.middleware.RequestSocialAccountMiddleware',
     #'modules.member.middleware.MemberSessionMiddleware',
     #'modules.member.middleware.WebAppUserMiddleware',
@@ -722,13 +721,13 @@ MIDDLEWARE_CLASSES.extend([
     # 'modules.member.middleware.MemberRelationMiddleware', #DONE: move to page_visit service
     # 'modules.member.middleware.MemberSouceMiddleware', #DONE: move to page_visit service
     #'modules.member.middleware.SharedPageVisitSessionMiddleWare',
+    # 'modules.member.middleware.MemberBrowseRecordMiddleware', #TODO: change to service
+    # 'core.middleware.PermissionMiddleware',
     'modules.member.middleware.RemoveSharedInfoMiddleware',
     'core.debug_middleware.DisplayImportantObjectMiddleware',
     'core.debug_middleware.DumpContextMiddleware',
     'core.middleware.PageIdMiddleware',
     'core.middleware.ManagerDetectMiddleware',
-    # 'core.middleware.PermissionMiddleware',
-    # 'modules.member.middleware.MemberBrowseRecordMiddleware', #TODO: change to service
     'core.middleware.WeizoomMallMiddleware',
     'core.middleware.WebAppPageVisitMiddleware',
     'core.middleware.LocalCacheMiddleware',
