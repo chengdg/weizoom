@@ -1,20 +1,12 @@
 # __author__ : "冯雪静"
+#editor 新新 2015.10.20
 
 Feature: 在webapp中收藏商品
 	bill能在webapp中收藏jobs添加的"商品"
 
 Background:
 	Given jobs登录系统
-	And jobs已添加商品分类
-		"""
-		[{
-			"name": "分类1"
-		}, {
-			"name": "分类2"
-		}, {
-			"name": "分类3"
-		}]
-		"""
+	
 	And jobs已添加商品规格
 		"""
 		[{
