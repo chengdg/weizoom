@@ -1,4 +1,6 @@
 # __edit__ : "benchi"
+#editor:王丽 2015.10.20
+
 #超出限购数量的验证是在前端进行的，故在ui的feathure进行实现
 @func:webapp.modules.mall.views.list_products
 Feature: 添加限时抢购商品到购物车中
@@ -98,8 +100,6 @@ Background:
 		}]
 		"""
 	And bill关注jobs的公众号
-	And tom关注jobs的公众号
-
 
 @mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario: 1 放入多个商品到购物车，商品的限时抢购活动为进行中
