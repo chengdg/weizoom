@@ -41,9 +41,9 @@
         </a>
     </div>
     {% endif %}
+    {% if products %}
     <div data-role="content" data-theme="x">
         <div class="xui-hlist xui-hlist-cell-2 xui-products-original" id="xa-wrapper">
-            {% if products %}
             <ul data-role="listview" data-theme="x" data-icon="false">
                 {% for product in products %}
                 <li id="{{product.id}}" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
@@ -60,11 +60,13 @@
                 </li>
                 {% endfor %}
             </ul>
-            {% else %}
-            <h2>没有相关商品</h2>
-            {% endif %}
+            
         </div>
     </div>
+    {% else %}
+        <div class="xui-empty-box"><img src="/static_v2/img/webapp/mall/none.jpg" alt=""></div>
+        <a class="xui-goShopping-btn" href='/workbench/jqm/preview/?{{homepage_workspace_info|safe}}'>去逛逛</a>
+    {% endif %}
 </div>
 {% endblock %}
 
