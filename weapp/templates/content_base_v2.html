@@ -170,7 +170,7 @@
 	}
 
 	function connectFans(){
-		document.domain = location.host.replace('fans.', '').replace('weapp.', '');
+		document.domain = location.host.replace('fans.weapp.', '').replace('red.weapp.', '').replace('fans.', '').replace('weapp.', '');
 		var hm = document.createElement("iframe");
 		hm.src = "{{ fans_host }}/static/crossdomain.html";
 		hm.style.display = 'none'
