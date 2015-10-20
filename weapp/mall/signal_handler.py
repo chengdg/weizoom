@@ -22,6 +22,8 @@ from core.common_util import ignore_exception
 from tools.express.express_poll import ExpressPoll
 #from webapp.modules.mall.utils import get_product_member_discount
 
+UnSalesInfo = '已下架'
+
 #############################################################################################
 # post_update_product_model_property_handler: post_update_product_model_property的handler
 #############################################################################################
@@ -599,6 +601,7 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
             'redirect_url': '/workbench/jqm/preview/?module=mall&model=shopping_cart&action=show&workspace_id=mall&woid=%s' % request.user_profile.user_id
         }
     }
+
     data_detail = []
     """
     促销不可接受数据
@@ -739,58 +742,7 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
             }
             #用抢购价替换商品价格
             product.price = detail['promotion_price']
-        # elif promotion['type'] == promotion_models.PROMOTION_TYPE_INTEGRAL_SALE:
-        #     # 积分应用
-        #     product = product_group['products'][0]
-        #     #由于冒号':'不是一个有效的dom selector，所以在前端，':'被替换成了'-'
-        #     _product_model_name = product.model['name'].replace(':', '-')
-        #     is_use_integral = request.POST.get('is_use_integral_%s_%s' % (product.id, _product_model_name), None)
-        #     if is_use_integral and is_use_integral == 'on':
-        #         # 用户页面勾选积分
-        #         use_integral = int(request.POST.get('integral_%s_%s' % (product.id, _product_model_name), 0))
-        #         if use_integral > 0:
-        #             if not promotion['detail']['is_permanant_active']:
-        #                 # 积分不是永久有效，需要验证积分活动开始结束时间
-        #                 if promotion['status'] == promotion_models.PROMOTION_STATUS_NOT_START or\
-        #                     datetime.strptime(promotion['start_date'], '%Y-%m-%d %H:%M:%S') > today:
-        #                     for product in product_group['products']:
-        #                         data_detail.append({
-        #                                 'id': product.id,
-        #                                 'model_name': product.model_name,
-        #                                 'msg': '该活动尚未开始',
-        #                                 'short_msg': '尚未开始'
-        #                             })
-        #                     continue
-        #                 if promotion['status'] > promotion_models.PROMOTION_STATUS_STARTED or\
-        #                     datetime.strptime(promotion['end_date'], '%Y-%m-%d %H:%M:%S') < today:
-        #                     for product in product_group['products']:
-        #                         data_detail.append({
-        #                                 'id': product.id,
-        #                                 'model_name': product.model_name,
-        #                                 'msg': '该活动已经过期',
-        #                                 'short_msg': '已经过期',
-        #                                 'inner_step': 4
-        #                             })
-        #                     continue
-        #             # 用户页面计算积分大于零
-        #             count_per_yuan = request.webapp_user.integral_info['count_per_yuan']
-        #             limit_count = product.total_price * ((detail['discount']+0.0) / 100) * count_per_yuan
-        #             if limit_count >= use_integral:
-        #                 integral_money = round(1.0 * use_integral / count_per_yuan, 2)
-        #                 product_group['promotion_result'] = {
-        #                     'final_saved_money': integral_money,
-        #                     'promotion_saved_money': integral_money,
-        #                     'use_integral': use_integral
-        #                 }
-        #             else:
-        #                 fail_msg['data']['msg'] = '使用积分不能大于促销限额'
-        #                 data_detail.append({
-        #                     'id': product.id,
-        #                     'model_name': product.model_name,
-        #                     'msg': fail_msg['data']['msg'],
-        #                     'short_msg': '积分应用',
-        #                 })
-        #                 # return fail_msg
+
         elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT:
             total_price = 0.0
             for product in product_group['products']:
@@ -1010,8 +962,9 @@ def check_shelve_type_for_pre_order(pre_order, args, request, **kwargs):
                     'id': off_shelve_product.id,
                     'msg': '商品已下架, 请重新下单',
                     'model_name': product.model_name,
-                    'short_msg': '已下架'
+                    'short_msg': UnSalesInfo
                 })
+
         if len(off_shelve_products) == len(products):
             #所有商品下架，返回商品列表页
             return {
@@ -1031,6 +984,7 @@ def check_shelve_type_for_pre_order(pre_order, args, request, **kwargs):
                     'detail': data_detail
                 }
             }
+
     else:
         return {
             'success': True

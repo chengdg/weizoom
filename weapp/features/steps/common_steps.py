@@ -17,6 +17,9 @@ from selenium.webdriver.chrome.options import Options
 
 from test.helper import WAIT_SHORT_TIME
 from webapp.models import Project
+from features.testenv.model_factory import (
+    ProductCategoryFactory, ProductFactory
+)
 
 @when(u"清空浏览器")
 def step_impl(context):
@@ -82,3 +85,11 @@ def step_impl(context):
 @then(u"{user}获得错误提示'{error}'")
 def step_impl(context, user, error):
 	context.tc.assertEquals(error, context.server_error_msg)
+
+@then(u"{user}获得'{product_name}'错误提示'{error}'")
+def step_impl(context, user, product_name ,error):
+	print "zl--------------------",context.response_json
+	detail = context.response_json['data']['detail']
+	context.tc.assertEquals(error, detail[0]['short_msg'])
+	pro_id = ProductFactory(name=product_name).id
+	context.tc.assertEquals(pro_id, detail[0]['id'])

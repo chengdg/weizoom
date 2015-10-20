@@ -24,7 +24,13 @@ def check_failed_signal_response(signal_responses):
 		for data in failed_signal_responses:
 			if data['data'].has_key('detail'):
 				for detail in data['data']['detail']:
-					data_detail.append(detail)
+					from mall.signal_handler import UnSalesInfo
+					if detail['short_msg'] == UnSalesInfo:
+						data_detail = []
+						data_detail.append(detail)
+						break
+					else:
+						data_detail.append(detail)
 
 		failed_signal_response['data']['detail'] = data_detail
 		response = create_response(500)
