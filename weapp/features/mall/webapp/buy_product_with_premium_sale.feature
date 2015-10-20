@@ -27,8 +27,7 @@ Feature: 在webapp中购买参与买赠活动的商品
 			达到买赠条件：商品原价购买，有赠品
 			未达到买赠条件：商品会员价购买，无赠品
 
-	3、设置了“限时抢购”的商品，不能再设置“买赠”“优惠券活动”，三个活动是互斥的，只要设置了其中的一个活动，就不能再设置其他两个活动
-			
+	3、设置了“限时抢购”的商品，不能再设置“买赠”“优惠券活动”，三个活动是互斥的，只要设置了其中的一个活动，就不能再设置其他两个活动		
 """
 
 Background:
@@ -146,14 +145,12 @@ Background:
 		}]
 		"""
 	Given bill关注jobs的公众号
-	And tom关注jobs的公众号
 	And marry1关注jobs的公众号
 	And marry2关注jobs的公众号
 	And marry3关注jobs的公众号
 	And marry4关注jobs的公众号
 
-
-@mall2 @promotion @mall.promotion @mall.webapp.promotion 
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 1 购买买赠商品，不满足买赠基数
 
 	When bill访问jobs的webapp
@@ -178,7 +175,6 @@ Scenario: 1 购买买赠商品，不满足买赠基数
 			}]
 		}
 		"""
-
 
 @mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 2 购买买赠活动商品，满足买赠基数
@@ -219,7 +215,6 @@ Scenario: 2 购买买赠活动商品，满足买赠基数
 			}]
 		}
 		"""
-
 
 @mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 3 购买多个买赠活动商品，满足买赠基数，并满足循环买赠
@@ -278,7 +273,6 @@ Scenario: 3 购买多个买赠活动商品，满足买赠基数，并满足循�
 		}
 		"""
 
-
 @mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 4 购买单个买赠商品，超出库存限制
 	第一次购买2个，成功；第二次购买4个，超出商品库存，确保缓存更新
@@ -320,7 +314,6 @@ Scenario: 4 购买单个买赠商品，超出库存限制
 		}
 		"""
 
-
 @mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 5 购买单个买赠商品，赠品数量超出库存限制
 
@@ -344,7 +337,6 @@ Scenario: 5 购买单个买赠商品，赠品数量超出库存限制
 			}]
 		}
 		"""
-
 
 @mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 6 购买多个 有规格的参与买赠的商品
@@ -397,7 +389,7 @@ Scenario: 6 购买多个 有规格的参与买赠的商品
 Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规格的参与买赠的商品 赠品只赠送一次
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品6",
 			"is_enable_model": "启用规格",
@@ -415,9 +407,9 @@ Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规�
 				}
 			}
 		}]
-	"""
+		"""
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品6买一赠一",
 			"start_date": "今天",
@@ -430,7 +422,7 @@ Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规�
 			"count": 1,
 			"is_enable_cycle_mode": false
 		}]
-	"""
+		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
@@ -474,11 +466,12 @@ Scenario: 7  创建多规格商品 非循环买赠活动，购买多个 有规�
 			}]
 		}
 		"""
+
 @mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 8  多规格商品，买2赠1 循环买赠
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品8",
 			"is_enable_model": "启用规格",
@@ -496,10 +489,10 @@ Scenario: 8  多规格商品，买2赠1 循环买赠
 				}
 			}
 		}]
-	"""
+		"""
 
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品8买二赠一",
 			"start_date": "今天",
@@ -512,7 +505,7 @@ Scenario: 8  多规格商品，买2赠1 循环买赠
 			"count": 2,
 			"is_enable_cycle_mode": true
 		}]
-	"""
+		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
@@ -561,14 +554,14 @@ Scenario: 8  多规格商品，买2赠1 循环买赠
 Scenario: 9  创建买赠活动，但活动时间没开始，按原有商品销售，不进行赠送
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品9",
 			"price": 200.00
 		}]
-	"""
+		"""
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品9买1赠1",
 			"start_date": "1天后",
@@ -581,7 +574,7 @@ Scenario: 9  创建买赠活动，但活动时间没开始，按原有商品销�
 			"count": 1,
 			"is_enable_cycle_mode": true
 		}]
-	"""
+		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
@@ -608,14 +601,14 @@ Scenario: 9  创建买赠活动，但活动时间没开始，按原有商品销�
 Scenario: 10  创建买赠活动，但活动时间没开始，按原有商品销售，不进行赠送
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品9",
 			"price": 200.00
 		}]
-	"""
+		"""
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品9买1赠1",
 			"start_date": "1天后",
@@ -628,7 +621,7 @@ Scenario: 10  创建买赠活动，但活动时间没开始，按原有商品销
 			"count": 1,
 			"is_enable_cycle_mode": true
 		}]
-	"""
+		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
@@ -655,14 +648,14 @@ Scenario: 10  创建买赠活动，但活动时间没开始，按原有商品销
 Scenario: 11  创建买赠活动，选择商品时，活动进行中，但去付款时，活动已经结束了，系统提示：该活动已经过期
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品10",
 			"price": 200.00
 		}]
-	"""
+		"""
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品10买1赠1",
 			"start_date": "2天前",
@@ -675,7 +668,7 @@ Scenario: 11  创建买赠活动，选择商品时，活动进行中，但去付
 			"count": 1,
 			"is_enable_cycle_mode": true
 		}]
-	"""
+		"""
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
@@ -702,14 +695,14 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 
 	Given jobs登录系统
 	And jobs已添加商品
-	"""
+		"""
 		[{
 			"name": "商品10",
 			"price": 200.00
 		}]
-	"""
+		"""
 	When jobs创建买赠活动
-	"""
+		"""
 		[{
 			"name": "商品10买1赠1",
 			"start_date": "1天前",
@@ -722,7 +715,7 @@ Scenario: 12 购买单个买赠活动商品，购买时活动进行中，提交�
 			"count": 1,
 			"is_enable_cycle_mode": true
 		}]
-	"""
+		"""
 	Given jobs登录系统
 	When jobs"结束"促销活动"商品10买1赠1"
 	When bill访问jobs的webapp
@@ -861,9 +854,6 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 			"name":"marry1",
 			"member_rank":"普通会员"
 		}, {
-			"name":"tom",
-			"member_rank":"普通会员"
-		}, {
 			"name":"bill",
 			"member_rank":"普通会员"
 		}]
@@ -981,7 +971,7 @@ Scenario: 13 不同等级的会员购买会员价，同时有会员等级买赠�
 				"count": 1
 			}]
 		}
-	"""
+		"""
 
 	#购买有单会员等级买赠活动，有会员价商品"商品6"
 	#铜牌会员等级的会员marry2,购买金牌会员等级买赠活动商品"商品6"，按照会员价购买，无赠品
