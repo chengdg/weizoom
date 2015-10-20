@@ -53,12 +53,6 @@ W.weapp.dialog.LoginDialog = W.dialog.Dialog.extend({
 			return false;
 		}
 
-		//限制只有card_admin账号可以从weapp.weizoom.com登录 duhao 20151019
-		if (username !== 'card_admin') {
-			alert('请在http://fans.weizoom.com页面登录您的账号');
-			return false;
-		}
-
 		var $checkbox = $('[name=remember_password]');
 		var remember_password = $checkbox[0].checked;
 		var _this = this;
