@@ -64,7 +64,7 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
- 
+@promotion @promotionRedbag1
 Scenario: 1 添加分享红包
 	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
 	1.bill能获取红包列表
@@ -80,35 +80,34 @@ Scenario: 1 添加分享红包
 			"name": "红包1",
 			"prize_info": "全体券3",
 			"limit_time": false,
-			"start_time": "今天",
-			"end_time": "2天后",
+			"start_date": "今天",
+			"end_date": "2天后",
 			"receive_method": "下单领取",
-			"limit_order_money": 200,
-			"use_info": "活动说明",
+			"limit_money": 200,
+			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title": "分享有礼"
-
+			"remark": "分享有礼"
 		}, {
 			"name": "红包2",
 			"prize_info": "单品券4",
 			"limit_time": true,
-			"start_time": "",
-			"end_time": "",
+			"start_date": "",
+			"end_date": "",
 			"receive_method": "图文领取",
-			"use_info": "活动说明",
+			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title": "分享有礼"
+			"remark": "分享有礼"
 		}, {
 			"name": "红包3",
 			"prize_info": "全体券1",
 			"limit_time": false,
-			"start_time": "今天",
-			"end_time": "2天后",
+			"start_date": "今天",
+			"end_date": "2天后",
 			"receive_method": "下单领取",
-			"limit_order_money": 无限制,
-			"use_info": "活动说明",
+			"limit_money": 无限制,
+			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title": "分享有礼"
+			"remark": "分享有礼"
 		}]
 		"""
 	Then jobs能获取分享红包列表
@@ -117,23 +116,22 @@ Scenario: 1 添加分享红包
 			"name": "红包3",
 			"status": "关闭",
 			"limit_time": false,
-			"start_time": "",
-			"end_time": "",
+			"start_date": "",
+			"end_date": "",
 			"actions": ["分析","开启","删除","查看"]
 		}, {
 			"name": "【图文领取】红包2",
 			"status": "开启",
 			"limit_time": true,
-			"start_time": "",
-			"end_time": "",
+			"start_date": "",
+			"end_date": "",
 			"actions": ["分析","删除","查看"]
 		}, {
 			"name": "红包1",
 			"status": "关闭",
 			"limit_time": false,
-			"start_time": "今天",
-			"end_time": "2天后",
+			"start_date": "今天",
+			"end_date": "2天后",
 			"actions": ["分析","开启","删除","查看"]
-
 		}]
 		"""

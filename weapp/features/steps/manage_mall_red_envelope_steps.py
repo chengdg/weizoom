@@ -27,11 +27,11 @@ def __get_date(date):
 def __get_actions(rule):
     actions = []
     if rule['is_timeout'] and not rule['limit_time']:
-        actions = [u'删除', u'查看']
+        actions = [u'分析', u'删除', u'查看']
     elif not rule['status']:
-        actions = [u"开启", u"删除", u"查看"]
+        actions = [u'分析', u'开启', u'删除', u'查看']
     elif rule['status']:
-        actions = [u"关闭", u"查看"]
+        actions = [u'分析', u'关闭', u'查看']
     return actions
 
 @given(u'{user}已添加分享红包')
@@ -40,11 +40,12 @@ def step_impl(context, user):
 
 @when(u'{user}添加分享红包')
 def step_add_red_envelope_rule(context, user):
+    print("context.text: {}".format(context.text))
     rules = json.loads(context.text)
     for rule in rules:
-        limit_order_money = rule.get('limit_order_money', 0)
-        if limit_order_money == u'无限制':
-            limit_order_money = 0
+        limit_money = rule.get('limit_money', 0)
+        if limit_money == u'无限制':
+            limit_money = 0
         receive_method = rule.get('receive_method', 0)
         if receive_method == u'下单领取':
             receive_method = False #下单领取
@@ -55,15 +56,15 @@ def step_add_red_envelope_rule(context, user):
         params = {
             'owner': context.client.user,
             'name': rule.get('name', ''),
-            'coupon_rule_id': __get_coupon_rule_id(rule.get('prize_info', '')),
-            'start_time': __get_date(rule.get('start_time', default_date)),
-            'end_time': __get_date(rule.get('end_time', default_date)),
+            'coupon_rule': __get_coupon_rule_id(rule.get('prize_info', '')),
+            'start_date': __get_date(rule.get('start_date', default_date)),
+            'end_date': __get_date(rule.get('end_date', default_date)),
             'receive_method': receive_method,
             'status': status,
-            'limit_order_money': limit_order_money,
-            'use_info': rule.get('use_info', ''),
+            'limit_money': limit_money,
+            'detail': rule.get('detail', ''),
             'share_pic': rule.get('share_pic', ''),
-            'share_title': rule.get('share_title', '')
+            'remark': rule.get('remark', '')
         }
         response = context.client.post('/apps/red_envelope/api/red_envelope_rule/?_method=put', params)
         bdd_util.assert_api_call_success(response)
@@ -87,19 +88,19 @@ def step_impl(context, user):
             owner_id = bdd_util.get_user_id_for(user)
             coupon_rule = CouponRule.objects.get(owner_id=owner_id, name=coupon_name)
             param['couponRule'] = coupon_rule.id
-        start_time = query_param.get('start_time', '')
-        if len(start_time)>0:
-            param['startDate'] = bdd_util.get_date(query_param['start_time']).strftime('%Y-%m-%d 00:00')
+        start_date = query_param.get('start_date', '')
+        if len(start_date)>0:
+            param['startDate'] = bdd_util.get_date(query_param['start_date']).strftime('%Y-%m-%d 00:00')
         else:
             param['startDate'] = ''
-        end_date = query_param.get('end_time', '')
+        end_date = query_param.get('end_date', '')
         if len(end_date)>0:
-            param['endDate'] = bdd_util.get_date(query_param['end_time']).strftime('%Y-%m-%d 00:00')
+            param['endDate'] = bdd_util.get_date(query_param['end_date']).strftime('%Y-%m-%d 00:00')
         else:
             param['endDate'] = ''
         #param.update(context.query_param)
 
-    response = context.client.get('/apps/red_envelope/red_envelope_rule_list/', param)
+    response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/', param)
     rules = json.loads(response.content)['data']['items']
 
     status2name = {
@@ -115,8 +116,8 @@ def step_impl(context, user):
             'status': status2name[rule['status']],
             'limit_time': rule['limit_time'],
             'actions': __get_actions(rule),
-            'start_time': __to_date(rule['start_time']),
-            'end_time': __to_date(rule['end_time']),
+            'start_date': __to_date(rule['start_date']),
+            'end_date': __to_date(rule['end_date']),
             'prize_info': [ rule['coupon_rule_name'] ]
         })
     print("actual_data: {}".format(actual))
@@ -124,9 +125,9 @@ def step_impl(context, user):
     expected = json.loads(context.text)
     for expect in expected:
         if 'start_date' in expect:
-            expect['start_date'] = bdd_util.get_date_str(expect['start_time'])
+            expect['start_date'] = bdd_util.get_date_str(expect['start_date'])
         if 'end_date' in expect:
-            expect['end_date'] = bdd_util.get_date_str(expect['end_time'])
+            expect['end_date'] = bdd_util.get_date_str(expect['end_date'])
     print("expected: {}".format(expected))
 
     bdd_util.assert_list(expected, actual)
