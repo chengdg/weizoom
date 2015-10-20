@@ -212,7 +212,7 @@ class MessageMemo(resource.Resource):
 			status = request.POST.get('status')
 			if session_id == '':
 				if MessageRemarkMessage.objects.filter(message_id=message_id).count() == 0:
-					MessageRemarkMessage.objects.create(message_id=message_id, owner_id=request.user.id,message_remark=message_remark,status=status)
+					MessageRemarkMessage.objects.create(message_id=message_id, owner_id=request.manager.id,message_remark=message_remark,status=status)
 				else:
 					MessageRemarkMessage.objects.filter(message_id=message_id).update(message_remark=message_remark,status=status)
 			else:
@@ -220,7 +220,7 @@ class MessageMemo(resource.Resource):
 				session.unread_count = 0
 				session.save()
 				if MessageRemarkMessage.objects.filter(message_id=message_id).count() == 0:
-					MessageRemarkMessage.objects.create(message_id=message_id, owner_id=request.user.id,message_remark=message_remark,status=status)
+					MessageRemarkMessage.objects.create(message_id=message_id, owner_id=request.manager.id,message_remark=message_remark,status=status)
 				else:
 					MessageRemarkMessage.objects.filter(message_id=message_id).update(message_remark=message_remark,status=status)
 		except BaseException as e:
