@@ -199,7 +199,8 @@
 		$('.xa-sideBar').empty();
 
 		var navTree = getNavTree();
-		var indexPage = "/";  //没有权限浏览此页面时跳转到的页面地址
+		var indexPage = "/";  //没有权限浏览此一级目录时跳转到的页面地址
+		var redirectToSecondPage = false;  //没有权限时是否跳转到本一级目录内的其他二级目录
 		var hasPermission = false;  //标记是否有权限查看此页面
 		var firstNavName = "{{first_nav_name}}";
 		var permissions = JSON.parse(userPermissions);
@@ -247,6 +248,10 @@
 			for(var index in secondNavs) {
 				var secondNav = secondNavs[index];
 				if(secondNav.permission === "" || $.inArray(secondNav.permission, permissions) >= 0){
+					if(!redirectToSecondPage) {
+						indexPage = secondNav.url;
+						redirectToSecondPage = true;
+					}
 					if(secondNavName === secondNav.name) {
 						hasPermission = true;
 						$('.xa-second-navs').append('<li class="active">' + 
