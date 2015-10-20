@@ -307,11 +307,12 @@ def __get_file_name(file_name, extended_name=None):
 		suffix = ''
 	else:
 		suffix = file_name[pos:]
-	print '>>>>>>>>>>>>>>>>>>>>>ss', suffix
-	if extended_name:
-		return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), '.webp')
-	else:
-		return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
+		
+	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
+	# if extended_name:
+	# 	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), '.webp')
+	# else:
+	# 	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
 
 
 ########################################################################
@@ -402,11 +403,11 @@ def upload_picture(request):
 	print >> dst_file, ''.join(content)
 	dst_file.close()
 
-	try:
-		webp_path, webp_file_name = __get_webp_image(dir_path, file_path, file_name)
-	except:
-		webp_path, webp_file_name = None, None
-
+	# try:
+	# 	webp_path, webp_file_name = __get_webp_image(dir_path, file_path, file_name)
+	# except:
+	# 	webp_path, webp_file_name = None, None
+	webp_path, webp_file_name = None, None
 	is_valid_image, width, height = __check_image(file_path)
 	if is_valid_image:
 		if settings.MODE == 'deploy':
