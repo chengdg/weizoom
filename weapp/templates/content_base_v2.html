@@ -64,7 +64,7 @@
 	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
-			<ul class="xui-navBar-box clearStyle xa-first-navs hidden">
+			<ul class="xui-navBar-box clearStyle xa-first-navs" style="visibility:hidden;">
 				{% if first_navs %}
 					{% for nav in first_navs %}
 						<li class="pr {% ifequal nav.name '大数据挖掘' %}xui-i-bigDataTab{% endifequal %}">
@@ -83,7 +83,7 @@
 	<div class="xui-container pr">
 		<!-- 左侧垂直方向二级导航 -->
 		{% if second_navs %}
-			<div id="" class="xui-sideBar xa-sideBar pa xui-sideBarBg hidden">
+			<div id="" class="xui-sideBar xa-sideBar pa xui-sideBarBg" style="visibility:hidden;">
 				<ul class="nav">
 				{% for second_nav in second_navs %}
 					{% for nav in second_nav.navs %}
@@ -100,6 +100,7 @@
 									<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
 										&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
 										<i class="xui-icon-arrow"></i>
+										{% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
 									</a>
 								</li>
 							{% endfor %}
@@ -222,6 +223,11 @@
 					indexPage = firstNav.url;
 				}
 
+				var className = "";
+				if(firstNav.className) {
+					className = '<i class="xui-noticyTip ' + firstNav.className + '"></i>';
+				}
+
 				if(firstNavName === firstNav.name) {
 					hasPermission = true;
 
@@ -229,12 +235,12 @@
 						' class="active"' + 
 						' href="' + firstNav.url + 
 						'" title="' + firstNav.title + '">' + 
-						firstNav.title + '</a></li>');
+						firstNav.title + '</a>'+ className + '</li>');
 				} else {
 					$('.xa-first-navs').append('<li class="pr"><a' + 
 						' href="' + firstNav.url + 
 						'" title="' + firstNav.title + '">' + 
-						firstNav.title + '</a></li>');
+						firstNav.title + '</a>' + className + '</li>');
 				}
 			}
 		}
@@ -282,18 +288,24 @@
 					if(thirdNavs) {
 						for(var _index in thirdNavs) {
 							var thirdNav = thirdNavs[_index];
+							var className = "";
+							if(thirdNav.className) {
+								className = '<i class="xui-noticyTip ' + thirdNav.className + '"></i>';
+							}
 							if(thirdNavName === thirdNav.name) {
 								$('.xa-second-navs').append('<li class="xui-sideBar-third active_third">' + 
 									'<a href="' + thirdNav.url + 
 									'" title="' + thirdNav.title + 
 									'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
-									thirdNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+									thirdNav.title + '<i class="xui-icon-arrow"></i>' + 
+									className + '</a></li>');
 							} else {
 								$('.xa-second-navs').append('<li class="xui-sideBar-third">' + 
 									'<a href="' + thirdNav.url + 
 									'" title="' + thirdNav.title + 
 									'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
-									thirdNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+									thirdNav.title + '<i class="xui-icon-arrow"></i>' + 
+									className +'</a></li>');
 							}
 						}
 					}
@@ -305,8 +317,8 @@
 			window.location.href = "http://" + location.host + indexPage;
 		} else {
 			//在菜单没渲染完之前先把正文隐藏掉，不然会先出正文然后才出菜单，很难看
-			$('.xa-first-navs').removeClass('hidden');
-			$('.xa-sideBar').removeClass('hidden');
+			$('.xa-first-navs').css('visibility','visible');
+			$('.xa-sideBar').css('visibility','visible');
 			$('.xa-content').css('visibility','visible');
 		}
 	}
@@ -330,7 +342,8 @@
 					'name': '{{nav.inner_name}}',
 					'title': '{{nav.name}}',
 					'url': '{{nav.url}}',
-					'permission': '{{nav.permission}}'
+					'permission': '{{nav.permission}}',
+					'className': '{{nav.class_name}}'
 				});
 			{% endfor %}
 		{% endif %}
@@ -351,7 +364,8 @@
 								'name': '{{third_nav.name}}',
 								'title': '{{third_nav.title}}',
 								'url': '{{third_nav.url}}',
-								'permission': '{{third_nav.permission}}'
+								'permission': '{{third_nav.permission}}',
+								'className': '{{third_nav.class_name}}'
 							});
 						{% endfor %}
 					{% endif %}
@@ -399,6 +413,7 @@
 				//微信未读消息计数
 				var unreadRealtimeCount = data.unread_realtime_count;
 				var msgTip = $('.xa-msgTip');
+				xlog('msgTip:',msgTip.html());
 				if (unreadRealtimeCount > 0){
 					msgTip.show();
 					if (parseInt(unreadRealtimeCount) > 99){
@@ -423,15 +438,17 @@
 			renderNavs();
 		} else {
 			//如果是manager账号则直接显示菜单和数据
-			$('.xa-first-navs').removeClass('hidden');
-			$('.xa-sideBar').removeClass('hidden');
+			$('.xa-first-navs').css('visibility','visible');
+			$('.xa-sideBar').css('visibility','visible');
 			$('.xa-content').css('visibility','visible');
 		}
 
-		common_interval_check_func();
-		{% if not under_develop %}
-		var common_interval_check = setInterval(common_interval_check_func, 10000);
-		{% endif %}
+		setTimeout(function(){
+			common_interval_check_func();
+			{% if not under_develop %}
+				var common_interval_check = setInterval(common_interval_check_func, 10000);
+			{% endif %}
+		}, 2000);
 
 		// 批量发货
 		$('a[name="orderBatchDelivery"]').click(function(event){
