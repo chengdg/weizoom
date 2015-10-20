@@ -411,7 +411,6 @@
 				//微信未读消息计数
 				var unreadRealtimeCount = data.unread_realtime_count;
 				var msgTip = $('.xa-msgTip');
-				xlog('msgTip:',msgTip.html());
 				if (unreadRealtimeCount > 0){
 					msgTip.show();
 					if (parseInt(unreadRealtimeCount) > 99){
