@@ -17,9 +17,7 @@
 		<span class="xui-systemName"></span>
 		<div class="xui-headerActionBar">
 			{% if request.user.id == request.manager.id %}
-				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
 					<a href="{{ fans_host }}/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
-				{% endif %}
 					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
 				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
 					<a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:inline" id ="message_count"></i></a>
