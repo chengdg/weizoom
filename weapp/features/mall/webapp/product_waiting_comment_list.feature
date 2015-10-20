@@ -1,5 +1,6 @@
 #author: benchi
 #editor: 张三香 2015.10.19
+#editor: 新新  2015.10.20
 
 Feature: bill在webapp中进入到待评价列表，对已到货的商品进行评价,评价完成后，商品不在该列表中显示
 
@@ -150,40 +151,32 @@ Background:
         """
         [{
             "order_no": "1",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品1"
-                }
-            ]
+                }]
         },{
             "order_no": "5",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品1"
-                }
-            ]
+                }]
         },{
             "order_no": "2",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品2"
-                }
-            ]
+                }]
         },{
             "order_no": "4",
-            "products": [
-                {
+            "products": [{
                     "product_name": "商品4",
                     "product_model_name": "M"
                 },{
                     "product_name": "商品4",
                     "product_model_name": "S"
-                }
-            ]
+                }]
         }]
         """
 
-@mall2 @product @review   @mall.webapp.comment.ee
+@mall2 @person @productReview @product @review   @mall.webapp.comment.ee
 Scenario:1 bill 进入待评价列表，该列表中显示的是订单状态为"已完成"的订单，可以对商品进行评价
     1)在"待评价"中显示的是订单状态为"已完成"的订单；
     2）对订单中的商品评价完后（包括，文字，晒图），那么下次进入"待评价"中，则不会看到该商品
@@ -228,13 +221,13 @@ Scenario:1 bill 进入待评价列表，该列表中显示的是订单状态为"
     #3）只提供文字评价后，下次进入"待评价"中，则会看到该商品 下，显示"追加晒图",添加完图片之后，该商品则不会显示在"待评价"列表中
     When bill完成订单'2'中'商品2'的评价包括'文字'
         """
-            {
-                "product_score": "4",
-                "review_detail": "商品2不太好！！！！！",
-                "serve_score": "4",
-                "deliver_score": "4",
-                "process_score": "4"
-            }
+        {
+            "product_score": "4",
+            "review_detail": "商品2不太好！！！！！",
+            "serve_score": "4",
+            "deliver_score": "4",
+            "process_score": "4"
+        }
         """
     Then bill成功获取个人中心的'待评价'列表
         """
@@ -290,7 +283,7 @@ Scenario:1 bill 进入待评价列表，该列表中显示的是订单状态为"
         }]
         """
 
-@mall2 @product @review   @mall.webapp.comment.ee
+@mall2 @person @productReview @product @review   @mall.webapp.comment.ee
 Scenario:2 同一商品，下过两个订单，不同订单对同一商品的评价不会相互影响
     例如：订单1，购买商品1，订单2，购买商品1，那么对订单1内的商品1评价完后，再次进入，还可以看到订单2的商品1，对其进行评价
 
@@ -329,7 +322,7 @@ Scenario:2 同一商品，下过两个订单，不同订单对同一商品的评
         }]
         """
 
-@mall2 @product @review   @mall.webapp.comment.ee
+@mall2 @person @productReview @product @review   @mall.webapp.comment.ee
 Scenario:3 同一商品，不同规格进行评价，不会互相影响
     When bill关注jobs的公众号
     And bill访问jobs的webapp

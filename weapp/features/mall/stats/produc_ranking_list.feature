@@ -1,5 +1,6 @@
 #_author_:张三香
 #editor:王丽  2015.10.19
+#editor:新新  2015.10.20
 
 Feature:商品概况-排行数据
 """
@@ -59,18 +60,18 @@ Background:
     And 开启手动清除cookie模式
 
 	And jobs已添加支付方式
-	     """
-	     [{
-	         "type": "货到付款",
-	         "is_active": "启用"
-	     },{
-		     "type": "微信支付",
-		     "is_active": "启用"
-	      },{
-		     "type": "支付宝",
-		     "is_active": "启用"
-	      }]
-	     """
+        """
+        [{
+            "type": "货到付款",
+            "is_active": "启用"
+        },{
+            "type": "微信支付",
+            "is_active": "启用"
+        },{
+            "type": "支付宝",
+            "is_active": "启用"
+        }]
+        """
     And jobs已添加商品
         """
         [{
@@ -114,17 +115,17 @@ Background:
          |   0011   | 今天   | bill     | 商品2,3 |         | 微信支付 | 15      | 100      | 315         | 0      |    0   | 0    | jobs,取消     |   已取消     |
          |   0012   | 今天   | tom      | 商品1,4 | 支付    | 微信支付 | 10      | 100      | 410         | 0      |    0   | 0    | jobs,退款     |   退款中     |
 
-@mall2 @bi @salesAnalysis   @stats @stats.product
+@mall2 @bi @salesAnalysis   @stats @stats.product 
 Scenario: 1 商品排行（下单单量、被分享次数）
      Given jobs登录系统
      When  jobs设置筛选日期
-      """
-         {
+        """
+        {
              "start_date":"6天前",
              "end_date":"今天"
-         }
+        }
              
-      """
+        """
      #下单单量排行top10
      Then jobs获得下单单量排行top10
          | ranking | name  | count |  
