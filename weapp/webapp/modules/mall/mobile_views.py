@@ -14,9 +14,10 @@ TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 def list_products(request):
 	"""显示"商品列表"页面
 	"""
-	if request.user.is_weizoom_mall:
-		# 微众商城跳至微众商城首页
-		return __weshop_index(request)
+	# 2015-10-20
+	# if request.user.is_weizoom_mall:
+	# 	# 微众商城跳至微众商城首页
+	# 	return __weshop_index(request)
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.list_products(request)
 

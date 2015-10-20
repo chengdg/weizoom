@@ -1306,11 +1306,12 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 				var final_price = parseFloat(data['final_price']);
 				xlog(data)
 				if(final_price <= 0 || !args['xa-choseInterfaces']){
-					window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall";
+					window.location.href = "./?woid="+ W.webappOwnerId+"&module=mall&model=pay_result_success&action=get&order_id="+order_id+"&workspace_id=mall&fmt="+W.curRequestMemberToken;
 					// jz 2015-10-09
 					// &isShowSuccess=true";
 				}else if(data['pay_url']){
-					window.location.href = data['pay_url'];
+					alert(data['pay_url']+"&fmt="+W.curRequestMemberToken)
+					window.location.href = data['pay_url']+"&fmt="+W.curRequestMemberToken;
 				}else{
 					// _this.payOrder(orderId);
 					xerror('save order not return pay_url data:'+data)
@@ -1625,4 +1626,3 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 	}
 });
 })(W);
-

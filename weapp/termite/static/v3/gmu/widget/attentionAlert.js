@@ -10,13 +10,13 @@ Copyright (c) 2011-2012 Weizoom Inc
 	gmu.define('AttentionAlert', {
         setting: {
             isShowButton: function(_this) {
-                return _this.$el.attr('data-is-show-button') ? true : false;
+                return _this.$el.data('is-show-button') ? true : false;
             },
             isShowCover: function(_this) {
-                return _this.$el.attr('data-is-show-cover') ? true : false;
+                return _this.$el.data('is-show-cover') ? true : false;
             },
             getDataId: function(_this) {
-                var id = _this.$el.attr('data-id');
+                var id = _this.$el.data('id');
                 return id;
             },
             getQrcodeImage: function(_this) {
