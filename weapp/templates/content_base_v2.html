@@ -110,7 +110,7 @@
 			</div>
 		{% endif %}
 		<!-- 内容 start -->
-		<div class="span9 pr xui-content xa-content hidden" style="">
+		<div class="span9 pr xui-content xa-content" style="visibility:hidden;">
 			{% block content-panel %}{% endblock %}
 		</div>
 		<!-- 内容 end -->
@@ -307,7 +307,7 @@
 			//在菜单没渲染完之前先把正文隐藏掉，不然会先出正文然后才出菜单，很难看
 			$('.xa-first-navs').removeClass('hidden');
 			$('.xa-sideBar').removeClass('hidden');
-			$('.xa-content').removeClass('hidden');
+			$('.xa-content').css('visibility','visible');
 		}
 	}
 
@@ -425,7 +425,7 @@
 			//如果是manager账号则直接显示菜单和数据
 			$('.xa-first-navs').removeClass('hidden');
 			$('.xa-sideBar').removeClass('hidden');
-			$('.xa-content').removeClass('hidden');
+			$('.xa-content').css('visibility','visible');
 		}
 
 		common_interval_check_func();
