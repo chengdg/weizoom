@@ -10,7 +10,8 @@ def mp_required(function=None, redirect_to=None):
 			if hasattr(request, 'user') and request.user:
 				redirect_to = _view.redirect_to
 
-				user_profile = request.user.get_profile()
+				# user_profile = request.user.get_profile()
+				user_profile = request.manager.get_profile()
 				if user_profile and user_profile.is_mp_registered is False:
 					redirect_to= '/new_weixin/mp_user/'
 				# if redirect_to is None:

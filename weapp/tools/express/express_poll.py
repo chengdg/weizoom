@@ -103,9 +103,16 @@ class ExpressPoll(object):
 			# print '-------------------------------------------'
 			# print param_data
 
-			request = urllib2.Request(self.express_config.get_api_url(), param_data)
-			response = urllib2.urlopen(request)
-			verified_result = response.read()
+			if settings.IS_UNDER_BDD:
+				from test.bdd_util import WeappClient
+				bdd_client = WeappClient()
+				response = bdd_client.post('/tools/api/express/test_kuaidi_poll/?code=1', param_json_data)
+				verified_result = response.content
+
+			else:
+				request = urllib2.Request(self.express_config.get_api_url(), param_data)
+				response = urllib2.urlopen(request)
+				verified_result = response.read()
 
 			watchdog_info(u"发送快递100 订阅请求 url: {},/n param_data: {}, /n response: {}".format(
 				self.express_config.get_api_url(), 

@@ -43,7 +43,7 @@ class MessageTails(resource.Resource):
         else:
             tail = None
             try:
-                tail = Tail.objects.get(owner=request.user)
+                tail = Tail.objects.get(owner=request.manager)
             except:
                 pass
 
@@ -66,14 +66,14 @@ class MessageTails(resource.Resource):
         tail = request.POST.get('tail', '')
         is_active = int(request.POST.get('is_active', 1))
 
-        if Tail.objects.filter(owner=request.user).count() < 1:
+        if Tail.objects.filter(owner=request.manager).count() < 1:
             Tail.objects.create(
-                owner = request.user,
+                owner = request.manager,
                 tail = tail,
                 is_active = is_active,
             )
         else:
-            Tail.objects.filter(owner=request.user).update(is_active=is_active,tail=tail)
+            Tail.objects.filter(owner=request.manager).update(is_active=is_active,tail=tail)
 
         response = create_response(200)
         response.data = {
@@ -97,7 +97,7 @@ class MessageTails(resource.Resource):
             is_active = int(request.POST.get('is_active', 1))
 
             Tail.objects.filter(id=tail_id).update(
-                owner = request.user,
+                owner = request.manager,
                 tail = tail,
                 is_active = is_active,
             )

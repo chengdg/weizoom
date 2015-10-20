@@ -32,25 +32,25 @@ MEMBER_NAV = {
 			'name': MEMBERS,
 			'title': u'会员列表',
 			'url': '/member/member_list/',
-            'need_permissions': ['manage_member_list', ]
+            'permission': 'manage_member_list'
 		},
 		{
 			'name': MEMBER_TAG,
 			'title': u'会员分组',
 			'url': '/member/member_tags/',
-            'need_permissions': ['manage_member_tag', ]
+            'permission': 'manage_member_tag'
 		},
 		{
 			'name': MEMBER_GRADE,
 			'title': u'会员等级',
 			'url': '/mall2/member_grade_list/',
-            'need_permissions': ['manage_member_grade', ]
+            'permission': 'manage_member_grade'
 		},
 		{
 			'name': MEMBER_QRCODE,
 			'title': u'推广扫码',
 			'url': '/member/member_qrcode/',
-            'need_permissions': ['manage_member_qrcode', ]
+            'permission': 'manage_member_qrcode'
 		}
 	]
 }

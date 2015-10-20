@@ -780,7 +780,7 @@ select{
 	list-style: none;
 	background: #0B559F;
 }
-.xui-navBar .xui-i ul li:last-child{
+.xui-navBar .xui-i .xui-i-bigDataTab{
 	float: right;
 }
 .xui-header .xui-navBar .xui-i ul li a{

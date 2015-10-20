@@ -8,6 +8,7 @@ from features.testenv.model_factory import *
 import steps_db_util
 from mall import module_api as mall_api
 from mall.models import Order, OrderOperationLog, Supplier
+from tools.express.models import ExpressHasOrderPushStatus
 
 
 def _handle_fahuo_data(orders):
@@ -142,3 +143,57 @@ def step_impl(context, user):
         info['failure_reasons'] = info['error_info']
 
     bdd_util.assert_list(expected, actual)
+
+
+@when(u'快递100发送物流单号"{express_number}"完成的信息')
+def step_impl(context, express_number):
+    """
+    参考test_analog_push_data（tools/express/views.py）
+    """
+    express_id = ExpressHasOrderPushStatus.objects.get(express_number=express_number).id
+
+    # domain = 'red.weapp.weizzz.com'
+
+    url = "/tools/api/express/kuaidi/callback/?callbackid=%s&version=2.0" % express_id
+    # 快递信息
+    param_json = {
+        "status": "shutdown",
+        "lastResult": {
+            "state": "0",
+            "ischeck": "0",
+            "com": "yuantong",
+            "nu": "V030344422",
+            "data": [{
+                "context": "张三香派送（之前吃了鸭翅膀）",
+                "time": "2012-08-30 09:09:36",
+                "ftime": "2012-08-30 09:09:36"
+            }, {
+                "context": "北京烤鸭（五仁味的）到北京",
+                "time": "2012-08-29 10:23:04",
+                "ftime": "2012-08-29 10:23:04"
+            }, {
+                "context": "王丽/装件入车扫描（扫掉了鸭锁骨） ",
+                "time": "2012-08-28 16:33:19",
+                "ftime": "2012-08-28 16:33:19"
+            }, {
+                "context": "师帅/下车扫描（偷吃了左边的鸭腿）",
+                "time": "2012-08-27 23:22:42",
+                "ftime": "2012-08-27 23:22:42",
+            }, {
+                "context": "王新蕊收件北京烤鸭并吃掉了右边的鸭腿",
+                "time": "2012-08-27 18:22:42",
+                "ftime": "2012-08-27 18:22:42",
+            }]
+        }
+    }
+    param_json['lastResult']['state'] = "3"
+    param_json['lastResult']['data'].insert(0, {"context": "冯雪静已签收了鸭骨架", "time": "2012-08-30 16:52:02",
+                                                "ftime": "2012-08-30 16:52:02"})
+
+    # 将PARAMETERS的json转换为字符串
+    param_str = json.dumps(param_json)
+    json_data = {
+        "param": param_str
+    }
+    context.client.post(url, json_data)
+

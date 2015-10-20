@@ -26,40 +26,40 @@ STATS_SECOND_NAV = {
             'name': STATS_MANAGEMENT_SECOND_NAV,
             'title': u'经营报告',
             'url': '/stats/manage_summary/',
-            'need_permissions': []
+            'permission': 'manage_summary'
         }, {
             'name': STATS_SALES_SECOND_NAV,
             'title': u'销售分析',
             'url': '/stats/order_summary/',
-            'need_permissions': [], 
+            'permission': 'order_summary', 
             'third_navs': [
                 {
                     'name': SALES_ORDER_SUMMARY_NAV,
                     'title': u'订单概况分析',
                     'url': '/stats/order_summary/',
-                    'need_permissions': []
+                    'permission': ''
                 }, {
                     'name': PRODUCT_SUMMARY_NAV,
                     'title': u'商品概况分析',
                     'url': '/stats/product_summary/',
-                    'need_permissions': []
+                    'permission': ''
                 }, {
                     'name': MARKETING_ACTIVITY_NAV,
                     'title': u'营销传播分析',
                     'url': '/stats/activity_analysis/',
-                    'need_permissions': []
+                    'permission': ''
                 }#, {
                 #     'name': SALES_ORDER_LIST_NAV,
                 #     'title': u'订单明细分析',
                 #     'url': '/stats/order_list/',
-                #     'need_permissions': []
+                #     'permission': ''
                 # },
             ]
         }, {
             'name': STATS_MEMBER_SECOND_NAV,
             'title': u'会员分析',
             'url': '/stats/member_summary/',
-            'need_permissions': []
+            'permission': 'member_summary'
         }
     ]
 }

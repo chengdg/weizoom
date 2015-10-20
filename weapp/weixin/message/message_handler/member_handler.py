@@ -69,6 +69,7 @@ class MemberHandler(MessageHandler):
 
 	def _handle_member(self, user_profile, weixin_user, is_from_simulator, request):
 		#是否已经存在会员信息，如果否则进行创建
+		print '=================1111111111111111111114444'
 		weixin_user_name = weixin_user.username
 		token = get_token_for(user_profile.webapp_id, weixin_user_name, is_from_simulator)
 		
@@ -148,6 +149,7 @@ class MemberHandler(MessageHandler):
 			integral_strategy_settings = request.component_owner_info.integral_strategy_settings
 		except:
 			integral_strategy_settings = None
+		print 'member_handler >>>>>integral_strategy_settings from cache',integral_strategy_settings
 		try:
 			increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 		except:

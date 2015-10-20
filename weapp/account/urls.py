@@ -72,6 +72,7 @@ urlpatterns = patterns('',
 	(r'api/user/update/$', accounts_api_views.update_new_user),
 
 	(r'api/user_by_agent/create/$', accounts_api_views.create_new_user_by_agent),
+	(r'api/user_by_agent/delete/$', accounts_api_views.delete_user_by_agent),  #add by duhao 20151020
 	
 	#landing page urls
 	# (r'index/$', accounts_landing_views.landing_index),

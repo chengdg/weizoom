@@ -53,7 +53,7 @@ def check_duplicate_patterns(request):
     """
     patterns = request.POST['patterns']
     ignore_rule_id = request.POST.get('id', None)
-    has_duplicate, duplicate_patterns = has_duplicate_pattern(request.user, patterns, ignore_rule_id)
+    has_duplicate, duplicate_patterns = has_duplicate_pattern(request.manager, patterns, ignore_rule_id)
 
     if has_duplicate:
         response = create_response(601)
