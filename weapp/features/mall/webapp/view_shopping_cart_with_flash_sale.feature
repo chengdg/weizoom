@@ -5,7 +5,6 @@ Feature: 添加限时抢购商品到购物车中
 """
 	bill能在webapp中将jobs添加的"商品"放入购物车
 """
-	
 
 Background:
 	Given jobs登录系统
@@ -34,12 +33,12 @@ Background:
 			"is_enable_model": "启用规格",
 			"model": {
 				"models":{
-					"M": {
+					"M":{
 						"price": 7,
 						"stock_type": "有限",
 						"stocks": 2
 					},
-					"S": {
+					"S":{
 						"price": 8,
 						"stock_type": "无限"
 					}
@@ -48,9 +47,9 @@ Background:
 		}, {
 			"name": "商品4",
 			"is_enable_model": "启用规格",
-			"model": {
+			"model":{
 				"models":{
-					"M": {
+					"M":{
 						"price": 9,
 						"stock_type": "无限"
 					}
@@ -59,9 +58,9 @@ Background:
 		}, {
 			"name": "商品5",
 			"is_enable_model": "启用规格",
-			"model": {
+			"model":{
 				"models":{
-					"S": {
+					"S":{
 						"price": 10,
 						"stock_type": "无限"
 					}
@@ -102,7 +101,7 @@ Background:
 	And tom关注jobs的公众号
 
 
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario: 1 放入多个商品到购物车，商品的限时抢购活动为进行中
 	bill将商品放入到购物车后
 	1. bill能看到购物车中商品的详情
@@ -182,8 +181,7 @@ Scenario: 1 放入多个商品到购物车，商品的限时抢购活动为进�
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario:2 放入多个商品到购物车，商品的限时抢购活动为进行中
 	bill将商品放入到购物车后
 	1. bill能看到购物车中商品的详情
@@ -244,8 +242,7 @@ Scenario:2 放入多个商品到购物车，商品的限时抢购活动为进行
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario:3 放入多规格商品到购物车，无限购
 
 	Given jobs登录系统
