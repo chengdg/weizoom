@@ -313,6 +313,7 @@
             }
         });
         //填充用户信息
+        alert('{{ member_info.user_name|safe }}');
         $('.wa-username').find('p').html('{{ member_info.user_name|safe }}');
         $('.wa-user-integral').html('{{ member_info.user_integral }}');
         $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
