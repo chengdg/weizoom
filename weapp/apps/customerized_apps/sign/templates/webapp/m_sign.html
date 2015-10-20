@@ -1,4 +1,5 @@
 {% extends "webapp_content_base_v4.html" %}
+{% load project_filter %}
 
 {% block css %}
 <style type="text/css">
@@ -183,8 +184,8 @@
 {% block js %}
 <script type="text/javascript">
     W.pageId = "{{request.GET.page_id}}";
-    var member_info = JSON.parse('{{ member_info|format_json|safe }}');
-    var prize_info = JSON.parse('{{ prize_info|format_json|safe}}');
+    var member_info = JSON.parse({{ member_info|format_json|safe }});
+    var prize_info = JSON.parse('{{ prize_info|safe}}');
     var status = "{{ activity_status }}";
     var resultDialog;
 
