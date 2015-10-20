@@ -87,19 +87,19 @@ def step_impl(context, user):
             owner_id = bdd_util.get_user_id_for(user)
             coupon_rule = CouponRule.objects.get(owner_id=owner_id, name=coupon_name)
             param['couponRule'] = coupon_rule.id
-        start_date = query_param.get('start_date', '')
-        if len(start_date)>0:
-            param['startDate'] = bdd_util.get_date(query_param['start_date']).strftime('%Y-%m-%d 00:00')
+        start_time = query_param.get('start_time', '')
+        if len(start_time)>0:
+            param['startDate'] = bdd_util.get_date(query_param['start_time']).strftime('%Y-%m-%d 00:00')
         else:
             param['startDate'] = ''
-        end_date = query_param.get('end_date', '')
+        end_date = query_param.get('end_time', '')
         if len(end_date)>0:
-            param['endDate'] = bdd_util.get_date(query_param['end_date']).strftime('%Y-%m-%d 00:00')
+            param['endDate'] = bdd_util.get_date(query_param['end_time']).strftime('%Y-%m-%d 00:00')
         else:
             param['endDate'] = ''
         #param.update(context.query_param)
 
-    response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/', param)
+    response = context.client.get('/apps/red_envelope/red_envelope_rule_list/', param)
     rules = json.loads(response.content)['data']['items']
 
     status2name = {
@@ -112,11 +112,6 @@ def step_impl(context, user):
     for rule in rules:
         actual.append({
             'name': rule['rule_name'],
-            'status': status2name[rule['status']], 
-            'actions': __get_actions(rule),
-            'start_date': __to_date(rule['start_time']),
-            'end_date': __to_date(rule['end_time']),
-            'prize_info': [ rule['coupon_rule_name'] ]
         })
     print("actual_data: {}".format(actual))
 
