@@ -14,6 +14,7 @@ from weixin2 import export
 import weixin2.models as weixin_models
 from core import resource
 from core import paginator
+from core import emotion
 from core.jsonresponse import create_response
 from util import *
 
@@ -200,6 +201,12 @@ class KeywordRules(resource.Resource):
                 return response.get_response()
 
             answer = request.POST.get('answer', '')
+            #将answer中的表情img标签转化为文字符号 by Eugene
+            answers = json.loads(answer)
+            for data in answers:
+                if data['type'] == "text":
+                    data['content'] = emotion.change_img_to_emotion(data['content'])
+            answer = json.dumps(answers)
             material_id = int(request.POST.get('material_id', 0))
 
             if material_id == 0:
