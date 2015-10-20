@@ -26,7 +26,12 @@ def step_impl(context, user):
         adict['pic_url'] = addNews['cover'][0]['url']
         adict['is_show_cover_pic'] = addNews['cover_in_the_text']
         adict['url'] = addNews.get('jump_url','')
-        adict['link_target'] = addNews.get('link_target','')
+        if adict['url']:
+            adict['link_target'] = '{"workspace":"custom","workspace_name":"外部链接",'\
+            '"data_category":"外部链接","data_item_name":"外部链接","data_path":"%s",'\
+            '"data":"%s"}' %(adict['url'], adict['url'])
+        else:
+            adict['link_target'] = ''
         data.append(adict)
         url = '/new_weixin/api/single_news/?_method=put'
         response = context.client.post(url, {'data': json.dumps(data)})
