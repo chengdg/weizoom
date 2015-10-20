@@ -146,6 +146,10 @@
             W.webappOwnerId = "{{request.webapp_owner_id}}";
             W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
             W.curRequestMemberToken = "{{ cur_request_member.token }}";
+            var token = $.cookie('current_token');
+            if(token){
+                W.curRequestMemberToken = token.split('____')[1];
+            }
             W.visitHistory = "{{ visit_histroy_url }}";
             W.urlTitle = "{{ visit_histroy_url_title }}";
             if (W.urlTitle == ''){
@@ -153,7 +157,8 @@
             }
             W.pageTitle = "{{page_title}}";
             W.errorMessage = null;
-
+            localStorage.setItem('woid',W.webappOwnerId);
+            localStorage.setItem('fmt',W.curRequestMemberToken);
 
             {% if messages %}
             {% for message in messages %}
