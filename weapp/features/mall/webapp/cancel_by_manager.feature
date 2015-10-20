@@ -1,4 +1,6 @@
 # __author__ : "刘海鹏"
+#editor 新新 2015.10.20
+
 Feature: 后台取消订单,后台可获取订单状态,取消原因
 		bill可以获取订单状态为'已取消'
 
@@ -22,7 +24,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall2 @mall.manager_cancel_status
+@mall2 @mall.manager_cancel_status 
 Scenario:1 取消订单后,手机端订单状态为'已取消'
 	1.jobs取消订单,bill可以获取订单状态为'已取消'
 	2.bill可获取'取消原因'
@@ -80,11 +82,7 @@ Scenario:1 取消订单后,手机端订单状态为'已取消'
 		}
 		"""
 	When jobs'取消'最新订单
-	#	"""
-	#	{
-	#		"reason":"不想要了"
-	#	}
-	#	"""
+
 	Then jobs可以获得最新订单详情
 		"""
 		{
@@ -93,7 +91,7 @@ Scenario:1 取消订单后,手机端订单状态为'已取消'
 			"actions": []
 		}
 		"""
-	#	,"reason":"不想要了"
+
 	When bill访问jobs的webapp
 	Then bill成功创建订单
 		"""
@@ -110,5 +108,5 @@ Scenario:1 取消订单后,手机端订单状态为'已取消'
 			}]
 		}
 		"""
-	#		"reason":"不想要了",
+
 
