@@ -301,13 +301,17 @@ def logout(request):
 # 		return None
 
 
-def __get_file_name(file_name):
+def __get_file_name(file_name, extended_name=None):
 	pos = file_name.rfind('.')
 	if pos == -1:
 		suffix = ''
 	else:
 		suffix = file_name[pos:]
-	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
+	print '>>>>>>>>>>>>>>>>>>>>>ss', suffix
+	if extended_name:
+		return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), '.webp')
+	else:
+		return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
 
 
 ########################################################################
@@ -354,6 +358,15 @@ def __check_image(path):
 		else:
 			return False, 0, 0
 
+def __get_webp_image(dir_path, file_path, file_name):
+	"""
+		将图片文件转换成webp格式
+	"""
+	im =Image.open(file_path).convert("RGB")
+	webp_file_name = file_name[:file_name.find('.')] + '.webp'
+	webp_path = os.path.join(dir_path, webp_file_name)
+	im.save(webp_path, "WEBP")
+	return webp_path, webp_file_name
 
 ########################################################################
 # upload_picture: 上传图片
@@ -389,12 +402,26 @@ def upload_picture(request):
 	print >> dst_file, ''.join(content)
 	dst_file.close()
 
+	try:
+		webp_path, webp_file_name = __get_webp_image(dir_path, file_path, file_name)
+	except:
+		webp_path, webp_file_name = None, None
+
 	is_valid_image, width, height = __check_image(file_path)
 	if is_valid_image:
 		if settings.MODE == 'deploy':
-			image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
+			try:
+				if webp_path and webp_file_name:
+					image_path = upload_image_to_upyun(webp_path,'/upload/%s/%s' % (dir_path_suffix, webp_file_name))	
+				else:
+					image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))	
+			except:
+				image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
 		else:
-			image_path = '/static/upload/%s/%s' % (dir_path_suffix, file_name)
+			if webp_path and webp_file_name:
+				image_path = '/static/upload/%s/%s' % (dir_path_suffix, webp_file_name)
+			else:
+				image_path = '/static/upload/%s/%s' % (dir_path_suffix, file_name)
 
 		if 'is_need_size' in request.REQUEST:
 			return HttpResponse('%d:%d:%s' % (width, height, image_path))
