@@ -42,7 +42,12 @@
 <body>
 	<div class="content">
         <div class="xui-empty-box"><img src="none.jpg" alt=""></div>
-        <a class="xui-goShopping-btn" href='#'>去逛逛</a>
+        <a class="xui-goShopping-btn" id="url">去逛逛</a>
     </div>	
 </body>
+<script>
+	var homePageUrl = localStorage.getItem("homepage_url");
+	var url = '/workbench/jqm/preview/?'+ homePageUrl;
+	document.getElementById('url').setAttribute("href",url);
+</script>
 </html>
