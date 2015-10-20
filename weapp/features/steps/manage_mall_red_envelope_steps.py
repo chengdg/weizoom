@@ -118,9 +118,9 @@ def step_impl(context, user):
     expected = json.loads(context.text)
     for expect in expected:
         if 'start_date' in expect:
-            expect['start_date'] = bdd_util.get_date_str(expect['start_date'])
+            expect['start_date'] = bdd_util.get_date_str(expect['start_time'])
         if 'end_date' in expect:
-            expect['end_date'] = bdd_util.get_date_str(expect['end_date'])
+            expect['end_date'] = bdd_util.get_date_str(expect['end_time'])
     print("expected: {}".format(expected))
 
     bdd_util.assert_list(expected, actual)
