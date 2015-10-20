@@ -89,7 +89,7 @@ Scenario:1 放入多个商品（商品1,2,3）到购物车，商品1是限时抢
 	And bill加入jobs的商品到购物车
 		"""
 		[{
-			"name": "商品1",
+			"name": "商品1",sssdeeddd
 			"count": 1
 		},{
 			"name": "商品2",
