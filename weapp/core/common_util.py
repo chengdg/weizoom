@@ -29,6 +29,10 @@ def check_failed_signal_response(signal_responses):
 						data_detail = []
 						data_detail.append(detail)
 						break
+					elif detail['short_msg'] == '已删除':
+						data_detail = []
+						data_detail.append(detail)
+						break
 					else:
 						data_detail.append(detail)
 
