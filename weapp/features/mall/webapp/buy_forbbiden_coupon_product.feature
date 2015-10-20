@@ -1,5 +1,3 @@
-
-
 #_author_:张三香
 
 Feature:在webapp中购买禁用优惠券商品
@@ -115,8 +113,8 @@ Background:
 		}]
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 1 购买单个禁用优惠券商品,该商品无单品券
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:1 购买单个禁用优惠券商品,该商品无单品券
 	#购买商品1,数量2,全体券1不可使用
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -142,8 +140,8 @@ Scenario: 1 购买单个禁用优惠券商品,该商品无单品券
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2 @ss
-Scenario: 2 购买单个禁用优惠券商品,该商品有单品券
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:2 购买单个禁用优惠券商品,该商品有单品券
 	#购买商品2,数量2,全体券1不可使用,单品券2可以使用
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -187,8 +185,8 @@ Scenario: 2 购买单个禁用优惠券商品,该商品有单品券
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2 
-Scenario: 3 购买多个商品,包含禁用优惠券商品,不满足全体券使用条件
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:3 购买多个商品,包含禁用优惠券商品,不满足全体券使用条件
 	#购买商品1和商品3,全体券1不可使用
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -262,8 +260,8 @@ Scenario: 3 购买多个商品,包含禁用优惠券商品,不满足全体券使
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2 
-Scenario: 4 购买多个商品,包含禁用优惠券商品,满足全体券使用条件
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:4 购买多个商品,包含禁用优惠券商品,满足全体券使用条件
 	#购买商品1,1+商品2,1+商品3,2(单品券2可以使用,全体券1可使用,但二者只能选择一张使用)
 	#选择使用全体券1
 		When bill访问jobs的webapp
@@ -363,8 +361,8 @@ Scenario: 4 购买多个商品,包含禁用优惠券商品,满足全体券使用
 			}
 			"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 5 购买多个商品,包含禁用优惠券商品,全体券使用金额无限制
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:5 购买多个商品,包含禁用优惠券商品,全体券使用金额无限制
 	#购买商品1和商品3,200元通用券只能抵扣商品3的100元
 	Given tom关注jobs的公众号
 	Given jobs登录系统
@@ -423,8 +421,8 @@ Scenario: 5 购买多个商品,包含禁用优惠券商品,全体券使用金额
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 6 购买禁用优惠券商品,该商品同时参与会员折扣
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:6 购买禁用优惠券商品,该商品同时参与会员折扣
 	Given jobs登录系统
 	When jobs更新商品'商品1'
 		"""
@@ -466,8 +464,8 @@ Scenario: 6 购买禁用优惠券商品,该商品同时参与会员折扣
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 7 购买禁用优惠券商品,该商品同时参与限时抢购
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:7 购买禁用优惠券商品,该商品同时参与限时抢购
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
@@ -513,8 +511,8 @@ Scenario: 7 购买禁用优惠券商品,该商品同时参与限时抢购
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 8 购买禁用优惠券商品,该商品同时参与买赠
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:8 购买禁用优惠券商品,该商品同时参与买赠
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
@@ -558,8 +556,8 @@ Scenario: 8 购买禁用优惠券商品,该商品同时参与买赠
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 9 购买禁用优惠券商品,该商品同时参与积分应用
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:9 购买禁用优惠券商品,该商品同时参与积分应用
 	Given jobs登录系统
 	When jobs创建积分应用活动
 		"""
@@ -644,8 +642,8 @@ Scenario: 9 购买禁用优惠券商品,该商品同时参与积分应用
 		}
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2 
-Scenario: 10 购买禁用优惠券多规格商品,一个商品的2个规格,总价格满足单品券使用
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:10 购买禁用优惠券多规格商品,一个商品的2个规格,总价格满足单品券使用
 	Given jobs登录系统
 	And jobs已添加商品规格
 		"""

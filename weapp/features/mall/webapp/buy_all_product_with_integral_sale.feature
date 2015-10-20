@@ -1,10 +1,11 @@
-#  "benchi"
-#editer:师帅
+#author: benchi
+#editor: 师帅 2015.10.19
+
 Feature: 在webapp中购买参与积分应用活动的商品
 	jobs 设置 use_ceiling 后 用户能在webapp中能够对所有商品使用积分购买
+
 Background:
 	Given jobs登录系统
-
 	And jobs已添加商品规格
 		"""
 		[{
@@ -65,7 +66,6 @@ Background:
 			}
 		}]
 		"""
-
 	Given jobs设定会员积分策略
 		"""
 		{
@@ -85,20 +85,17 @@ Background:
 		}]
 		"""
 
-
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
 
-
 @mall2 @mall.promotion @mall.webapp.promotion
-Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
-
+Scenario:1 购买单种一个商品，积分金额小于最大折扣金额
 	When bill访问jobs的webapp
 	When bill获得jobs的50会员积分
 	Then bill在jobs的webapp中拥有50会员积分
 	When bill购买jobs的商品
 		"""
-		{	
+		{
 			"integral_money":25.00,
 			"integral":50.00,
 			"products": [{
@@ -123,9 +120,8 @@ Scenario: 1 购买单种一个商品，积分金额小于最大折扣金额
 		"""
 	Then bill在jobs的webapp中拥有0会员积分
 
-@mall2 @mall.promotion @mall.webapp.promotion 
-Scenario: 2 购买单种多个商品，积分金额等于最大折扣金额
-
+@mall2 @mall.promotion @mall.webapp.promotion
+Scenario:2 购买单种多个商品，积分金额等于最大折扣金额
 	When bill访问jobs的webapp
 	When bill获得jobs的400会员积分
 	Then bill在jobs的webapp中拥有400会员积分
@@ -156,9 +152,8 @@ Scenario: 2 购买单种多个商品，积分金额等于最大折扣金额
 		"""
 	Then bill在jobs的webapp中拥有0会员积分
 
-@mall2 @mall.promotion @mall.webapp.promotion 
-Scenario:  3 购买多个商品，已有总积分金额大于最大折扣金额
-
+@mall2 @mall.promotion @mall.webapp.promotion
+Scenario:3 购买多个商品，已有总积分金额大于最大折扣金额
 	When bill访问jobs的webapp
 	When bill获得jobs的160会员积分
 	Then bill在jobs的webapp中拥有160会员积分
@@ -195,10 +190,8 @@ Scenario:  3 购买多个商品，已有总积分金额大于最大折扣金额
 		"""
 	Then bill在jobs的webapp中拥有10会员积分
 
-@mall2 @mall.promotion @mall.webapp.promotion 
-Scenario: 4 购买单个多规格商品+一个普通商品
-
-
+@mall2 @mall.promotion @mall.webapp.promotion
+Scenario:4 购买单个多规格商品+一个普通商品
 	When bill访问jobs的webapp
 	When bill获得jobs的150会员积分
 	Then bill在jobs的webapp中拥有150会员积分
@@ -246,8 +239,7 @@ Scenario: 4 购买单个多规格商品+一个普通商品
 	Then bill在jobs的webapp中拥有20会员积分
 
 @mall2 @mall.promotion @mall.webapp.promotion
-Scenario: 5 购买单个限时抢购商品，同时使用积分购买
-	
+Scenario:5 购买单个限时抢购商品，同时使用积分购买
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
@@ -292,8 +284,7 @@ Scenario: 5 购买单个限时抢购商品，同时使用积分购买
 	Then bill在jobs的webapp中拥有40会员积分
 
 @mall2 @mall.promotion @mall.webapp.promotion
-Scenario: 6 购买单个限时抢购商品， 买赠商品，同时使用积分购买
-	
+Scenario:6 购买单个限时抢购商品， 买赠商品，同时使用积分购买
 	Given jobs登录系统
 	When jobs创建限时抢购活动
 		"""
@@ -370,7 +361,7 @@ Scenario: 6 购买单个限时抢购商品， 买赠商品，同时使用积分�
 #补充：张三香 "雪静"
 @mall2 @integral @meberGrade
 Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50%的商品
-#会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
+	#会员价和积分抵扣可以同时使用，会员价后再算积分抵扣的比例
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
