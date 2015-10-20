@@ -249,7 +249,7 @@ class RealtimeMessages(resource.Resource):
         response = create_response(200)
         data = {}
         data['created_at'] = latest_contact_created_at.strftime('%Y-%m-%d %H:%M:%S')
-
+        content = _translate_special_characters(content)
         data['text'] = emotion.new_change_emotion_to_img(content)
         from_index = data['text'].find('<a href=')
         if from_index > -1:
@@ -384,6 +384,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             one_session['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
         else:
             one_session['user_icon'] =  DEFAULT_ICON
+        session.latest_contact_content = _translate_special_characters(session.latest_contact_content)
         one_session['text'] = emotion.new_change_emotion_to_img(session.latest_contact_content)
         from_index = one_session['text'].find('<a href=')
         if from_index > -1:
@@ -569,6 +570,8 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
         else:
             one_message['user_icon'] =  DEFAULT_ICON
+
+        message.content = _translate_special_characters(message.content)
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -669,3 +672,14 @@ def _send_custom_message(mpuser, send_to, custom_message):
     mpuser_access_token = get_mpuser_access_token_for(mpuser)
     wxapi = get_weixin_api(mpuser_access_token)
     wxapi.send_custom_msg(send_to, custom_message)
+
+#处理消息中的特殊字符
+def _translate_special_characters(message_text):
+    a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
+    all_a_html = a_pattern.findall(message_text)
+    for html in all_a_html:
+        message_text = message_text.replace(html, "%s")
+    message_text = message_text.replace('<', "&lt;")
+    message_text = message_text.replace('>', "&gt;")
+    message_text = message_text % tuple(all_a_html)
+    return message_text
