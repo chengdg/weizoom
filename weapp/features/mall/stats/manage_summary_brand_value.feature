@@ -1,4 +1,5 @@
 #editor:王丽  2015.10.19
+#editor: 新新 2015.10.16
 
 Feature: 测试 经营报告->经营概况->微品牌价值
 
@@ -15,11 +16,7 @@ Background:
 		},{
 			"type": "微信支付",
 			"description": "我的微信支付",
-			"is_active": "启用",
-			"weixin_appid": "12345", 
-			"weixin_partner_id": "22345", 
-			"weixin_partner_key": "32345", 
-			"weixin_sign": "42345"
+			"is_active": "启用"
 		}]
 		"""
 	When jobs已添加商品
@@ -73,7 +70,7 @@ Background:
 		# tom4 => kate
 		And kate关注jobs的公众号
 
-@mall2 @bi @operateReport   @stats @wip.brand_value
+@mall2 @bi @operateReport   @stats @wip.brand_value 
 Scenario:1 测试只有1个消费用户、1个商品的品牌价值
 	When 微信用户批量消费jobs的商品
 		# consumer前有'-'表示清空浏览器
@@ -131,7 +128,7 @@ Scenario:1 测试只有1个消费用户、1个商品的品牌价值
 		}]
 		"""
 
-@mall2 @bi @operateReport   @stats @wip.brand_value2
+@mall2 @bi @operateReport   @stats @wip.brand_value2 
 Scenario:2 测试2个消费用户、2个商品的品牌价值
 	品牌价值会参考用户1年(365天)内购买金额和数量。
 
