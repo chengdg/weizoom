@@ -885,18 +885,21 @@ input.ui-input-text, textarea.ui-input-text {
 }
 .xui-products-original .xui-inner-li h3{
     color: #312D29;
-    padding: 5px 0px;
+    padding: 5px 0 0;
     margin: 0;
+    margin-bottom: 5px;
     font-weight:normal;
     font-size: 13px;
     overflow: hidden;
-    height: 26px;
-    line-height: 16px;
-    border-bottom: 1px dashed #D2D2D2;
+    height: 32px;
+    line-height: 16px; 
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+.xui-products-original .xui-inner-li h3~p{
+    border-top: 1px dashed #D2D2D2;
 }
 .xui-products-original h3 .badge {
     background-color: #5587A9;
