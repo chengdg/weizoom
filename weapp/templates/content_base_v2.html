@@ -67,7 +67,7 @@
 			<ul class="xui-navBar-box clearStyle xa-first-navs hidden">
 				{% if first_navs %}
 					{% for nav in first_navs %}
-						<li class="pr">
+						<li class="pr {% ifequal nav.name '大数据挖掘' %}xui-i-bigDataTab{% endifequal %}">
 							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title='{{nav.name}}'>{{nav.name}}</a>
 							{% if nav.class_name %}<i class="xui-noticyTip {{nav.class_name}}"></i>{% endif %}
 						</li>
