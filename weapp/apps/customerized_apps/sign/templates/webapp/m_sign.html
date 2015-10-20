@@ -184,7 +184,6 @@
 {% block js %}
 <script type="text/javascript">
     W.pageId = "{{request.GET.page_id}}";
-    var member_info = JSON.parse({{ member_info|format_json|safe }});
     var prize_info = JSON.parse('{{ prize_info|safe}}');
     var status = "{{ activity_status }}";
     var resultDialog;
@@ -314,9 +313,9 @@
             }
         });
         //填充用户信息
-        $('.wa-username').find('p').html(member_info.user_name);
-        $('.wa-user-integral').html(member_info.user_integral);
-        $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
+        $('.wa-username').find('p').html('{{ member_info.user_name }}');
+        $('.wa-user-integral').html('{{ member_info.user_integral }}');
+        $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
         //填充签到奖励信息
         fillPrizeInfo(prize_info, true);
         //绑定规则信息事件
