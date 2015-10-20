@@ -1,4 +1,5 @@
 # __edit__ : "benchi"
+#editer: 师帅
 Feature:使用微众卡购买商品
 	用户能通过webapp使用微众卡购买jobs的商品
 	feathure里要加一个  "weizoom_card_money":50.00,的字段
@@ -92,10 +93,6 @@ Scenario:1 微众卡金额大于订单金额时进行支付
 			"status": "待发货",
 			"final_price": 0.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":50.00,
 			"products":[{
 				"name":"商品1",
@@ -142,10 +139,6 @@ Scenario:2 微众卡金额等于订单金额时进行支付
 			"status": "待发货",
 			"final_price": 0.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":50.00,
 			"products":[{
 				"name":"商品1",
@@ -192,10 +185,6 @@ Scenario:3微众卡金额小于订单金额时进行支付
 			"status": "待支付",
 			"final_price": 20.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":30.00,
 			"products":[{
 				"name":"商品1",
@@ -254,10 +243,6 @@ Scenario:4 用微众卡购买商品时，输入错误的卡号密码
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -301,10 +286,6 @@ Scenario:5 用已用完的微众卡购买商品时
 			"status": "待支付",
 			"final_price": 20.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -360,10 +341,6 @@ Scenario:6用未激活的微众卡购买商品时
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -419,10 +396,6 @@ Scenario:7 用已过期的微众卡购买商品时
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -466,10 +439,6 @@ Scenario:8用已使用过的微众卡购买商品时
 			"status": "待发货",
 			"final_price": 0.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":50.00,
 			"products":[{
 				"name":"商品1",
@@ -602,10 +571,6 @@ Scenario:9用10张微众卡共同支付
 			"status": "待支付",
 			"final_price": 40.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":10.00,
 			"products":[{
 				"name":"商品1",
@@ -913,10 +878,6 @@ Scenario:12 用已用完的微众卡购买商品时
 		"status": "待支付",
 		"final_price": 50.0,
 		"product_price": 50.0,
-		"coupon_money": 0.0,
-		"promotion_saved_money": 0.0,
-		"postage": 0.00,
-		"integral_money":0.00,
 		"products":[{
 			"name":"商品1",
 			"price":50.00,
