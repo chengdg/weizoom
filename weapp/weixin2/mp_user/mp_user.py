@@ -32,7 +32,8 @@ class MpUser(resource.Resource):
 		获得公众号详情
 		"""
 		user_profile = request.user_profile
-		request_user = request.user
+		# request_user = request.user
+		request_user = request.manager #duhao 20151020
 		user_profile = account_models.UserProfile.objects.get(id=user_profile.id)
 
 		if user_profile.is_mp_registered:
