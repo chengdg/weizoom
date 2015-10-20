@@ -91,8 +91,6 @@ Scenario: 1 添加分享红包
 			"name": "红包2",
 			"prize_info": "单品券4",
 			"is_permanant_active": true,
-			"start_date": "",
-			"end_date": "",
 			"receive_method": "图文领取",
 			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
@@ -116,8 +114,8 @@ Scenario: 1 添加分享红包
 			"name": "红包3",
 			"status": "关闭",
 			"is_permanant_active": false,
-			"start_date": "",
-			"end_date": "",
+			"start_date": "今天",
+			"end_date": "2天后",
 			"actions": ["分析","开启","删除","查看"]
 		}, {
 			"name": "【图文领取】红包2",

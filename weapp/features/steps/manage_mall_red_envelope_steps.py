@@ -30,10 +30,17 @@ def __get_actions(rule):
         actions = [u'分析', u'删除', u'查看']
     elif not rule['status']:
         actions = [u'分析', u'开启', u'删除', u'查看']
-    elif rule['status']:
+    elif rule['status'] and not rule['receive_method']:
         actions = [u'分析', u'关闭', u'查看']
+    elif rule['receive_method']:#图文领取
+        actions = [u'分析', u'删除', u'查看']
     return actions
 
+def __get_name(rule):
+    if rule['receive_method']:
+        return u'【图文领取】'+rule['rule_name']
+    else:
+        return rule['rule_name']
 @given(u'{user}已添加分享红包')
 def step_impl(context, user):
     step_add_red_envelope_rule(context, user)
@@ -108,9 +115,9 @@ def step_impl(context, user):
     actual = []
     for rule in rules:
         actual.append({
-            'name': rule['rule_name'],
+            'name': __get_name(rule),
             'status': status2name[rule['status']],
-            'limit_time': rule['limit_time'],
+            'is_permanant_active': rule['limit_time'],
             'actions': __get_actions(rule),
             'start_date': __to_date(rule['start_time']),
             'end_date': __to_date(rule['end_time']),
@@ -121,9 +128,15 @@ def step_impl(context, user):
     expected = json.loads(context.text)
     for expect in expected:
         if 'start_date' in expect:
-            expect['start_date'] = bdd_util.get_date_str(expect['start_date'])
+            if expect['start_date'] == '':
+                expect['start_date'] = default_date
+            else:
+                expect['start_date'] = bdd_util.get_date_str(expect['start_date'])
         if 'end_date' in expect:
-            expect['end_date'] = bdd_util.get_date_str(expect['end_date'])
+            if expect['end_date'] == '':
+                expect['end_date'] = default_date
+            else:
+                expect['end_date'] = bdd_util.get_date_str(expect['end_date'])
     print("expected: {}".format(expected))
 
     bdd_util.assert_list(expected, actual)
