@@ -40,7 +40,6 @@ def step_impl(context, user):
 
 @when(u'{user}添加分享红包')
 def step_add_red_envelope_rule(context, user):
-    print("context.text: {}".format(context.text))
     rules = json.loads(context.text)
     for rule in rules:
         limit_money = rule.get('limit_money', 0)
@@ -49,18 +48,15 @@ def step_add_red_envelope_rule(context, user):
         receive_method = rule.get('receive_method', 0)
         if receive_method == u'下单领取':
             receive_method = False #下单领取
-            status = False
         else:
-            receive_method = True #图文领取
-            status = True #图文领取-状态默认开启
+            receive_method = '' #图文领取,receive-method-order为空
         params = {
             'owner': context.client.user,
             'name': rule.get('name', ''),
             'coupon_rule': __get_coupon_rule_id(rule.get('prize_info', '')),
             'start_date': __get_date(rule.get('start_date', default_date)),
             'end_date': __get_date(rule.get('end_date', default_date)),
-            'receive_method': receive_method,
-            'status': status,
+            'receive-method-order': receive_method,
             'limit_money': limit_money,
             'detail': rule.get('detail', ''),
             'share_pic': rule.get('share_pic', ''),
@@ -100,7 +96,7 @@ def step_impl(context, user):
             param['endDate'] = ''
         #param.update(context.query_param)
 
-    response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/', param)
+    response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/?_method=get', param)
     rules = json.loads(response.content)['data']['items']
 
     status2name = {
@@ -116,8 +112,8 @@ def step_impl(context, user):
             'status': status2name[rule['status']],
             'limit_time': rule['limit_time'],
             'actions': __get_actions(rule),
-            'start_date': __to_date(rule['start_date']),
-            'end_date': __to_date(rule['end_date']),
+            'start_date': __to_date(rule['start_time']),
+            'end_date': __to_date(rule['end_time']),
             'prize_info': [ rule['coupon_rule_name'] ]
         })
     print("actual_data: {}".format(actual))
