@@ -50,7 +50,7 @@ class MessageCollect(resource.Resource):
                     if CollectMessage.objects.filter(message_id=message_id).count() > 0:
                         CollectMessage.objects.filter(message_id=message_id).update(status=int(status))
                     else:
-                        CollectMessage.objects.create(message_id=message_id, status=int(status), owner=request.user)
+                        CollectMessage.objects.create(message_id=message_id, status=int(status), owner=request.manager)
                     response = create_response(200)
 
             return response.get_response()

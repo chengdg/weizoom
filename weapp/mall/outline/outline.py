@@ -92,7 +92,7 @@ class Outline(resource.Resource):
             'first_nav_name': export.MALL_HOME_FIRST_NAV,
             'second_navs': export.get_mall_home_second_navs(request),
             'second_nav_name': export.MALL_HOME_OUTLINE_NAV,
-            'unread_message_count': get_unread_message_count(request.user),
+            'unread_message_count': get_unread_message_count(request.manager),
             'new_member_count': new_member_count,
             'order_count': len(orders), 
             'order_money': order_money,
