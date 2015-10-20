@@ -313,7 +313,7 @@
             }
         });
         //填充用户信息
-        $('.wa-username').find('p').html('{{ member_info.user_name }}');
+        $('.wa-username').find('p').html('{{ member_info.user_name|safe }}');
         $('.wa-user-integral').html('{{ member_info.user_integral }}');
         $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
         //填充签到奖励信息
