@@ -2,6 +2,7 @@
 {% load project_filter %}
 
 {% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
 <style type="text/css">
 	h1 {
 		color: #00F;
@@ -313,7 +314,6 @@
             }
         });
         //填充用户信息
-        alert('{{ member_info.user_name|safe }}');
         $('.wa-username').find('p').html('{{ member_info.user_name|safe }}');
         $('.wa-user-integral').html('{{ member_info.user_integral }}');
         $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
