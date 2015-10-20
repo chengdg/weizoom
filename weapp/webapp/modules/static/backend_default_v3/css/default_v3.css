@@ -4519,6 +4519,13 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     .xui-shoppingCartPage .xui-productName,.xui-shoppingCartPage .xui-productCustomModel{
         width:115px!important;
     }
+    
+}
+@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+    .xui-productsList-page .xui-empty-box{
+        width:50%;
+        margin:10% auto;
+    }
 }
  /*iphone6*/
  @media only screen 
