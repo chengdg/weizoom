@@ -124,7 +124,6 @@ def step_impl(context, user):
     print("actual_data: {}".format(actual))
 
     expected = json.loads(context.text)
-    print("actual_data: {}".format(actual))
     for expect in expected:
         if 'start_date' in expect:
             if expect['start_date'] == '':
