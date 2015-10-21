@@ -1,0 +1,22 @@
+<script id="weixin-mpuser-rehit-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+    <div class="modal fade xui-weixinMpuserRehitDialog" id="weixinMpuserRehitDialog">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button"><span class="xui-closeColor">&times;</span></button>
+            <h3 class="modal-title">
+                重新授权
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            必须使用当前绑定的公众号进行授权，否则将可能导致某些重要数据丢失或其他异常情况。
+        </div>
+
+        <div class="modal-footer modal-footerBg">
+            <a href="https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid={{app_id}}&pre_auth_code={{pre_auth_code}}&redirect_uri=http://{{request_host}}/weixin/component/receiveauthcode/" target="_blank"><button class="btn btn-success">我知道了，继续</button> </a>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
