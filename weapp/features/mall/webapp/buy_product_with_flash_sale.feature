@@ -1,10 +1,10 @@
-# __edit__ : "benchi"
+#editor: benchi
 #editor: 师帅 2010.10.20
 
 Feature: 在webapp中购买参与限时抢购活动的商品
 	"""
 		用户能在webapp中购买"参与限时抢购活动的商品"
-		# __edit__ : 王丽
+		#editor: 王丽
 		1、限时抢购活动的设置规则
 			1）【限购广告语】：在商品名称后红字显示
 			2）【活动时间】：开始结束时间只能选择今天及其之后的时间，结束时间必须在开始时间之后
@@ -19,12 +19,10 @@ Feature: 在webapp中购买参与限时抢购活动的商品
 			3）会员既具有会员等级价又具有会员限时抢购权限的，限时抢购活动优先于会员等级价，会员看到的商品的价格是"限时抢购价格"，按照限时抢购的价格形成订单
 
 		3、设置了“限时抢购”的商品，不能再设置“买赠”“优惠券活动”，三个活动是互斥的，只要设置了其中的一个活动，就不能再设置其他两个活动
-
 	"""
 
 Background:
 	Given jobs登录系统
-
 	And jobs已添加商品规格
 		"""
 		[{
@@ -37,7 +35,6 @@ Background:
 			}]
 		}]
 		"""
-
 	And jobs已添加商品
 		"""
 		[{
@@ -180,7 +177,7 @@ Background:
 			}]
 		"""
 
-@mall2 @promotion @mall.promotion @mall.webapp.promotion 
+@mall2 @promotion @mall.promotion @mall.webapp.promotion
 Scenario: 1 购买单个限时抢购商品，限时抢购进行中
 	没有设置限购周期，可以连续购买
 
@@ -231,7 +228,7 @@ Scenario: 1 购买单个限时抢购商品，限时抢购进行中
 		}
 		"""
 
-@mall2 @promotion @mall.promotion @mall.webapp.promotion @zy_fs02 
+@mall2 @promotion @mall.promotion @mall.webapp.promotion @zy_fs02
 Scenario:2 购买单个限时抢购商品，限时抢购已过期（在购物车中是限时抢购商品，但，去提交订单时已经不是限时抢购商品）
 
 	When bill访问jobs的webapp
