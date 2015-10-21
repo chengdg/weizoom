@@ -455,6 +455,7 @@ $(document).ready(function($) {
     });
     $('li').each(function(){
         var $el = $(this);
+        console.log('this:',this);
         if(status2order[$el.data('status')]){
             status2order[$el.data('status')].append($el.clone());
         }
