@@ -38,7 +38,7 @@ Copyright (c) 2011-2012 Weizoom Inc
             if(this.setting.isShowButton(this)) {
                 this.render();
             }
-            $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="'+qrcode_image+'"/></div></div>');
+            $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
             $('.xui-mask').css({
                 height: height,
                 width: '100%',

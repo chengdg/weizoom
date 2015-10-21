@@ -94,7 +94,7 @@
             </div>
         {% else %}
             <div data-ui-role="attentionAlert" class="xui-attentionAlert"
-				{% if not cur_request_member %}
+				{% if not request.member.is_subscribed %}
                     data-is-show-button="true"
 				{% endif %}
                 {% if not hide_non_member_cover %}
