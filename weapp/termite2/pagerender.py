@@ -223,6 +223,7 @@ def process_item_list_data(request, component):
 	if len(category) == 0:
 		if request.in_design_mode:
 			#分类信息为空，构造占位数据
+			count = 4
 			product_datas = []
 			for i in range(count):
 				product_datas.append({
@@ -241,6 +242,7 @@ def process_item_list_data(request, component):
 	if len(category) == 0:
 		if request.in_design_mode:
 			#分类信息为空，构造占位数据
+			count = 4
 			product_datas = []
 			for i in range(count):
 				product_datas.append({

@@ -28,7 +28,7 @@ W.component.wepage.ItemList = W.component.Component.extend({
                 displayName: '显示方式',
                 isUserProperty: false,
                 source: [{name:'大图', value:'0'},{name:'小图', value:'1'},{name:'一大两小', value:'2'},{name:'列表', value:'3'}],
-                default: '0'
+                default: '2'
             },{
                 name: 'itemname',
                 type: 'checkbox',
