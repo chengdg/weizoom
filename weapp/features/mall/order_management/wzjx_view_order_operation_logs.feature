@@ -71,7 +71,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@order @mall2
+@mall2 @order
 Scenario: 1 查看多供货商多商品订单的操作日志
 	#bill购买商品后，使用微信支付
 	#1. 能在不同状态下执行各种操作
@@ -113,6 +113,8 @@ Scenario: 1 查看多供货商多商品订单的操作日志
 		And bill填写收货信息
 			"""
 			{
+				"ship_name": "AAA",
+				"ship_tel": "13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦"
 			}
@@ -129,6 +131,8 @@ Scenario: 1 查看多供货商多商品订单的操作日志
 			{
 				"order_no": "001",
 				"status": "待支付",
+				"ship_name": "AAA",
+				"ship_tel": "13811223344",
 				"ship_area": "北京市 北京市 海淀区",
 				"ship_address": "泰兴大厦",
 				"final_price": 400.00,
@@ -159,51 +163,51 @@ Scenario: 1 查看多供货商多商品订单的操作日志
 	#发货-土小宝
 		Given jobs登录系统
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no":"001-土小宝",
-			"logistics":"顺丰速运",
-			"number":"123456789",
-			"shipper":"jobs"
-		}
-		"""
+			"""
+			{
+				"order_no":"001-土小宝",
+				"logistics":"顺丰速运",
+				"number":"123456789",
+				"shipper":"jobs"
+			}
+			"""
 	#发货-米奇尔
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no":"001-米奇尔",
-			"logistics":"顺丰速运",
-			"number":"123456789",
-			"shipper":"jobs|备注"
-		}
-		"""
+			"""
+			{
+				"order_no":"001-米奇尔",
+				"logistics":"顺丰速运",
+				"number":"123456789",
+				"shipper":"jobs|备注"
+			}
+			"""
 	#发货-丹江湖
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no":"001-丹江湖",
-			"logistics":"顺丰速运",
-			"number":"123456789",
-			"shipper":"jobs|备注"
-		}
-		"""
+			"""
+			{
+				"order_no":"001-丹江湖",
+				"logistics":"顺丰速运",
+				"number":"123456789",
+				"shipper":"jobs|备注"
+			}
+			"""
 	#修改物流-米奇尔
 		When jobs通过后台管理系统对'001'的物流信息进行修改
-		"""
-		{
-			"order_no":"001-米奇尔",
-			"logistics":"申通快递",
-			"number":"987654321",
-			"status":"已发货"
-		}
-		"""
+			"""
+			{
+				"order_no":"001-米奇尔",
+				"logistics":"申通快递",
+				"number":"987654321",
+				"status":"已发货"
+			}
+			"""
 	#标记完成-土小宝
 		When jobs完成订单"001-土小宝"
-		"""
-		{
-			"order_no":"001-土小宝"
-		}
-		"""
+			"""
+			{
+				"order_no":"001-土小宝"
+			}
+			"""
 	#校验各个操作的日志信息
 		Then jobs能获得订单"001"操作日志
 			| action                  | operator |

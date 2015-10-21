@@ -1,5 +1,6 @@
-#_author_:张三香
-#editor:雪静 2015.10.15
+#author: 张三香
+#editor: 雪静 2015.10.15
+
 Feature:结束禁用优惠券商品
 
 """

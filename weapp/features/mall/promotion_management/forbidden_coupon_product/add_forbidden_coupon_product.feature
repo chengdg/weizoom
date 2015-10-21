@@ -1,7 +1,6 @@
-#_author_:张三香
+#author: 张三香
 
 Feature:添加禁用优惠券商品
-
 	"""
 	说明：
 		1、促销管理模块添加'禁用优惠券商品'功能
@@ -45,16 +44,9 @@ Background:
 			"discount": "8"
 		}]
 		"""
-	Given jobs设定会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2,
-			"use_ceiling": -1
-		}
-		"""
 
 @mall2 @promotion @promotionForbiddenCoupon
-Scenario: 1 选取普通无规格商品,起止时间非永久有效,添加禁用优惠券
+Scenario:1 选取普通无规格商品,起止时间非永久有效,添加禁用优惠券
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
@@ -97,7 +89,7 @@ Scenario: 1 选取普通无规格商品,起止时间非永久有效,添加禁用
 		"""
 
 @mall2 @promotion @promotionForbiddenCoupon
-Scenario: 2 选取多规格商品,起止时间为永久有效,添加禁用优惠券
+Scenario:2 选取多规格商品,起止时间为永久有效,添加禁用优惠券
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
@@ -153,7 +145,7 @@ Scenario: 2 选取多规格商品,起止时间为永久有效,添加禁用优惠
 		"""
 
 @mall2 @promotion @promotionForbiddenCoupon
-Scenario: 3 选取多个参与促销活动的商品,添加禁用优惠券
+Scenario:3 选取多个参与促销活动的商品,添加禁用优惠券
 	Given jobs登录系统
 	And jobs已添加商品
 		"""

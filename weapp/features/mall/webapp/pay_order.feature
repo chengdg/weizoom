@@ -4,6 +4,17 @@ Feature: 在webapp中支付订单
 
 Background:
 	Given jobs登录系统
+	And jobs已添加支付方式
+		"""
+		[{
+			"type": "微信支付",
+			"version": 2,
+			"description": "我的微信支付V2",
+			"is_active": "启用"
+		},{
+			"type": "货到付款"
+		}]
+		"""
 	And jobs已添加商品
 		"""
 		[{
@@ -16,22 +27,12 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
 @mall2 @mall @mall.webapp @mall.pay_order
 Scenario:1 使用货到付款支付
-	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
-	1. bill的订单中变为已支付
-	2. jobs在后台看到订单变为已支付
+	bill在下单购买jobs的商品后，能使用货到付款进行支付，支付后
+	1. bill的订单中变为"待发货"
+	2. jobs在后台看到订单变为"待发货"
 	
-	Given jobs登录系统
-	And jobs已添加了支付方式
-		"""
-		[{
-			"type": "货到付款",
-			"description": "我的货到付款",
-			"is_active": "启用"
-		}]
-		"""
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -68,23 +69,12 @@ Scenario:1 使用货到付款支付
 		}
 		"""
 	
-
 @mall2 @mall @mall.webapp @mall.pay_order
 Scenario:2 使用V2版微信支付进行同步支付
-	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
-	1. bill的订单中变为已支付
-	2. jobs在后台看到订单变为已支付
+	bill在下单购买jobs的商品后，能使用微信支付进行支付，支付后
+	1. bill的订单中变为"待发货"
+	2. jobs在后台看到订单变为"待发货"
 	
-	Given jobs登录系统
-	And jobs已添加了支付方式
-		"""
-		[{
-			"type": "微信支付",
-			"version": 2,
-			"description": "我的微信支付V2",
-			"is_active": "启用"
-		}]
-		"""
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -126,23 +116,12 @@ Scenario:2 使用V2版微信支付进行同步支付
 		}
 		"""
 
-
 @mall2 @mall @mall.webapp @mall.pay_order
 Scenario:3 使用V2版微信支付进行异步支付
-	bill在下单购买jobs的商品后，能使用活到付款进行支付，支付后
-	1. bill的订单中变为已支付
-	2. jobs在后台看到订单变为已支付
+	bill在下单购买jobs的商品后，能使用微信支付进行支付，支付后
+	1. bill的订单中变为"待发货"
+	2. jobs在后台看到订单变为"待发货"
 	
-	Given jobs登录系统
-	And jobs已添加了支付方式
-		"""
-		[{
-			"type": "微信支付",
-			"version": 2,
-			"description": "我的微信支付V2",
-			"is_active": "启用"
-		}]
-		"""
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""

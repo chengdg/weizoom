@@ -1,5 +1,7 @@
-# __edit__ : "benchi"
+#author: benchi
+#editor: 师帅 2015.10.19
 @func:webapp.modules.mall.views.list_products
+
 Feature: 添加商品到购物车中
 	bill能在webapp中将jobs添加的"商品"放入购物车
 
@@ -68,16 +70,14 @@ Background:
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario:1 放入单个商品到购物车
 	jobs添加商品后
 	1. bill能在webapp中将jobs添加的商品放入购物车
 	2. 每放入一次，该商品在购物车中的数量增加一个
 	3. tom的购物车不受bill操作的影响
-
 	注意：总价和总商品数量是在前台计算，对它们的测试放到ui测试中，这里无法测试
-	
+
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -86,7 +86,6 @@ Scenario:1 放入单个商品到购物车
 			"count": 1
 		}]
 		"""
-	
 	Then bill能获得购物车
 		"""
 		{
@@ -131,6 +130,7 @@ Scenario:1 放入单个商品到购物车
 			"invalid_products": []
 		}
 		"""
+
 	When tom访问jobs的webapp
 	Then tom能获得购物车
 		"""
@@ -139,14 +139,13 @@ Scenario:1 放入单个商品到购物车
 			"invalid_products": []
 		}
 		"""
-	
-	
+
 @mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario:2 放入多个商品到购物车
 	jobs添加商品后
 	1. bill能在webapp中将jobs添加的商品放入购物车
 	2. 多次放入不同商品会增加购物车中商品的条数
-	
+
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -251,24 +250,7 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 			}]
 		}
 		"""
-	Given jobs登录系统
-	When jobs将商品'商品2'放入回收站
-	When bill访问jobs的webapp
-	Then bill能获得购物车
-		"""
-		{
-			"product_groups": [],
-			"invalid_products": [{
-				"name": "商品1",
-				"price": 3,
-				"count": 1
-			}, {
-				"name": "商品2",
-				"price": 5,
-				"count": 1
-			}]
-		}
-		"""
+
 	Given jobs登录系统
 	When jobs-上架商品'商品1'
 	When bill访问jobs的webapp
@@ -280,18 +262,17 @@ Scenario:3 商品添加到购物车后，后台对商品进行上下架管理
 					"name": "商品1",
 					"price": 3,
 					"count": 1
+				}, {
+					"name": "商品2",
+					"price": 5,
+					"count": 1
 				}]
 			}],
-			"invalid_products": [{
-				"name": "商品2",
-				"price": 5,
-				"count": 1
-			}]
+			"invalid_products": []
 		}
-		"""	
+		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 	bill在webapp中将jobs的商品加入到购物车后，jobs将此商品的商品规格进行修改
 	1.bill查看jobs的webapp购物车，此商品已无效
@@ -600,9 +581,8 @@ Scenario:4 商品添加到购物车后，后台对商品规格进行修改
 			}]
 		}
 		"""
-	
 
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @mall.webapp @mall.webapp.shopping_cart
 Scenario: 5 商品添加到购物车后，进行删除
 	bill加入jobs的商品到购物车后
 	1.可以对购物车的商品进行删除

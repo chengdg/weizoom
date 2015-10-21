@@ -1,4 +1,5 @@
 #_author_:王丽
+#editor:王丽  2015.10.19
 
 Feature: 会员分析-会员概况-基础数据、会员来源
 """
@@ -120,7 +121,6 @@ Feature: 会员分析-会员概况-基础数据、会员来源
 			"？"说明弹窗：时间段内，发起推荐会员数/会员总数x100%
 """
 
-
 Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
@@ -128,12 +128,18 @@ Background:
 	When jobs已添加商品
 		"""
 		[{
-			"name": "商品1"
-		}, {
-			"name": "商品2"
-		}, {
-			"name": "商品3"
-		}]	
+			"name": "商品1",
+			"price": 100.0,
+			"weight": 5,
+			"postage": 10.0,
+			"stock_type": "无限"
+		},{
+			"name": "商品2",
+			"price": 100.0,
+			"weight": 5,
+			"postage": 15.0,
+			"stock_type": "无限"
+		}]
 		"""
 	And jobs已添加支付方式
 		"""
@@ -148,9 +154,6 @@ Background:
 			"is_active": "启用"
 		}]
 		"""
-
-	#备注：1）关注时间：会员关注公众账号的时间，第一次关注和取消之后再关注的时间不同
-	#      2）加入时间：会员第一次关注公众账号，注册成会员的时间，一个系统会员只有一个唯一的加入时间
 
 	When 清空浏览器
 	When bill1关注jobs的公众号
@@ -177,7 +180,6 @@ Background:
 	When bill6取消关注jobs的公众号
 	When bill7取消关注jobs的公众号
 
-	
 	When 微信用户批量消费jobs的商品
 		| order_id | date | consumer | product  | payment | pay_type | postage*| price*   | paid_amount*| alipay*| wechat*| cash*|    action     |  order_status*  |
 		|  0001    | 昨天 | bill1    | 商品1,1  | 支付    | 微信支付 | 10      | 100      | 110         | 0      |  110   | 0    | jobs,完成     |    已完成       |
@@ -189,7 +191,7 @@ Background:
 		|  0007    | 今天 | bill1    | 商品2,1  | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,完成     |    已完成       |
 		|  0008    | 今天 | -lili    | 商品2,2  | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货       |
 
-@stats @stats.member @mall2
+@mall2 @bi @memberAnalysis   @stats @stats.membe
 Scenario: 1  会员概况：基础数据和会员来源数据
 	Given jobs登录系统
 	When jobs设置筛选日期
@@ -200,18 +202,17 @@ Scenario: 1  会员概况：基础数据和会员来源数据
 		}
 		"""
 
-	#发起扫码会员：bill;发起分享链接会员：tom mary jack;
 	Then jobs能获得基础数据和会员来源数据
-		| item              | quantity|
-		| 会员总数          |    7    |
-		| 关注会员          |    5    |
-		| 新增会员          |    7    |
-		| 手机绑定会员      |    0    |
-		| 下单会员          |    3    |
-		| 会员复购率        |   33.33%|
-		| 发起扫码会员      |    0    |
-		| 发起分享链接会员  |    2    |
-		| 扫码新增会员      |    0    |
-		| 直接关注          |    5    |
-		| 分享链接新增会员  |    2    |
-		| 会员推荐率        |   28.57%|
+		| item              | quantity |
+		| 会员总数          |    7     |
+		| 关注会员          |    5     |
+		| 新增会员          |    7     |
+		| 手机绑定会员      |    0     |
+		| 下单会员          |    3     |
+		| 会员复购率        |   33.33% |
+		| 发起扫码会员      |    0     |
+		| 发起分享链接会员  |    2     |
+		| 扫码新增会员      |    0     |
+		| 直接关注          |    5     |
+		| 分享链接新增会员  |    2     |
+		| 会员推荐率        |   28.57% |

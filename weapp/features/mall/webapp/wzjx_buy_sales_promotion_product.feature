@@ -1,4 +1,6 @@
 # __author__ : "冯雪静"
+#editor:王丽 2015.10.20
+
 #微众精选：购买促销商品
 Feature: 购买促销商品
 	"""
@@ -77,31 +79,9 @@ Background:
 			"discount": "7"
 		}]
 		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"discount": "10.0"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9.0"
-		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8.0"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7.0"
-		}]
-		"""
 	Given bill关注jobs的公众号
 
-
-
-
-@mall2 @supplier
+@mall2 @buy   @supplier 
 Scenario: 1 不同供货商的商品进行促销
 	设置促销活动进行购买
 
@@ -283,8 +263,7 @@ Scenario: 1 不同供货商的商品进行促销
 		}]
 		"""
 
-
-@mall2 @supplier
+@mall2 @buy   @supplier
 Scenario: 2 不同供货商的商品进行会员价购买
 	设置会员等级价的商品进行购买
 
@@ -297,17 +276,6 @@ Scenario: 2 不同供货商的商品进行会员价购买
 			"is_member_product": "on"
 		}
 		"""
-#	And jobs添加优惠券规则
-#		"""
-#		[{
-#			"name": "单品券1",
-#			"money": 50.00,
-#			"start_date": "今天",
-#			"end_date": "1天后",
-#			"coupon_id_prefix": "coupon1_id_",
-#			"coupon_product": "商品2"
-#		}]
-#		"""
 	And jobs更新"bill"的会员等级
 		"""
 		{
@@ -430,8 +398,7 @@ Scenario: 2 不同供货商的商品进行会员价购买
 		}]
 		"""
 
-
-@mall2 @supplier
+@mall2 @buy   @supplier
 Scenario: 3 使用积分购买不同供货商的商品
 	使用积分进行购买
 
