@@ -34,7 +34,6 @@ Copyright (c) 2011-2012 Weizoom Inc
 			// this.$el = this.element;
             // this.url = this.setting.getUrl(this);
             this.qrcode_image = this.setting.getQrcodeImage(this);
-            alert(this.qrcode_image);
             var height = window.screen.height;
             if(this.setting.isShowButton(this)) {
                 this.render();
