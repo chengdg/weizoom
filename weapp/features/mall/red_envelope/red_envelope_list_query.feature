@@ -97,7 +97,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag2
+@promotion @promotionRedbag1
 Scenario:1 分享红包列表查询
 	Given jobs登录系统
 	#默认条件查询
