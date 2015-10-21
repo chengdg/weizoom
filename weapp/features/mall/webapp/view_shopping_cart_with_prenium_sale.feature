@@ -1,4 +1,6 @@
 # __edit__ : "benchi"
+#editor:王丽 2015.10.20
+
 Feature: 添加参与买赠活动的商品到购物车中
 
 Background:
@@ -120,10 +122,8 @@ Background:
 		}]
 		"""
 	And bill关注jobs的公众号
-	And tom关注jobs的公众号
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario: 1 放入1个商品到购物车，商品不满足买赠的购买基数
 	bill将商品放入到购物车后
 	1. bill能看到购物车中商品的详情
@@ -152,8 +152,7 @@ Scenario: 1 放入1个商品到购物车，商品不满足买赠的购买基数
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario: 2 放入1个商品到购物车，商品数量等于买赠的购买基数
 	bill将商品放入到购物车后
 	1. bill能看到购物车中商品的详情
@@ -193,8 +192,7 @@ Scenario: 2 放入1个商品到购物车，商品数量等于买赠的购买基�
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
 Scenario: 3 放入多个商品到购物车，商品数量大于买赠的购买基数，并满足循环买赠
 	bill将商品放入到购物车后
 	1. bill能看到购物车中商品的详情
@@ -234,12 +232,10 @@ Scenario: 3 放入多个商品到购物车，商品数量大于买赠的购买�
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart 
 Scenario: 4 放入多个商品到购物车，商品数量大于买赠的购买基数，但循环买赠没启用
 	bill将商品放入到购物车后
 	1. bill能看到购物车中商品的详情
-	
 	
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
@@ -273,9 +269,8 @@ Scenario: 4 放入多个商品到购物车，商品数量大于买赠的购买�
 		}
 		"""
 
-
-@mall2 @mall.webapp @mall.webapp.shopping_cart 
-Scenario: 5放入多规格商品到购物车
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart 
+Scenario: 5 放入多规格商品到购物车
 	
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
@@ -330,8 +325,8 @@ Scenario: 5放入多规格商品到购物车
 		}
 		"""
 
-@mall2 @mall.webapp @mall.webapp.shopping_cart @bb
-Scenario: 6新建买赠活动，买一赠一，买商品6赠 商品6，循环买赠
+@mall2 @buy @cart   @mall.webapp @mall.webapp.shopping_cart
+Scenario: 6 新建买赠活动，买一赠一，买商品6赠 商品6，循环买赠
 	
 	Given jobs登录系统
 	And jobs已添加商品
