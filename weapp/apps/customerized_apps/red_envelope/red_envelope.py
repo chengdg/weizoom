@@ -125,13 +125,14 @@ class RedEnvelopeRuleList(resource.Resource):
         status = request.GET.get('status', '')
 
         rules = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, is_delete=False).order_by('-id')
+
         #处理筛选
         if name:
             rules = rules.filter(name__contains=name)
         if coupon_rule_id:
             rules = rules.filter(coupon_rule_id=coupon_rule_id)
         if start_date:
-            rules = rules.filter(start_time__gte=start_date)
+             rules = rules.filter(start_time__gte=start_date)
         if end_date:
             rules = rules.filter(end_time__lte=end_date)
         if status:
@@ -147,10 +148,20 @@ class RedEnvelopeRuleList(resource.Resource):
                         rule.order_index = -1
                 rule.save()
         rules = rules.order_by("-order_index", "-id")
+        cur_rules = []
+        if status:
+            for rule in rules:
+                is_timeout = False if rule.end_time > datetime.now() else True
+                if not is_timeout:
+                    cur_rules.append(rule)
 
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
-        pageinfo, rules = paginator.paginate(rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+        #从首页的即将到期的
+        if status:
+            pageinfo, rules = paginator.paginate(cur_rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+        else:
+            pageinfo, rules = paginator.paginate(rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
         items = []
         coupon_rule_ids = []
@@ -171,10 +182,6 @@ class RedEnvelopeRuleList(resource.Resource):
                 rule_id2count[record.red_envelope_rule_id] = 1
 
         for rule in rules:
-            is_timeout = False if rule.end_time > datetime.now() else True
-            if status:
-                if is_timeout:
-                    break
             data = {
                 "id": rule.id,
                 "rule_name": rule.name,
@@ -185,7 +192,7 @@ class RedEnvelopeRuleList(resource.Resource):
                 "status": rule.status,
                 "get_count": rule_id2count[rule.id] if rule_id2count.has_key(rule.id) else 0,
                 "remained_count": id2coupon_rule[rule.coupon_rule_id].remained_count,
-                "is_timeout": is_timeout,
+                "is_timeout": False if rule.end_time > datetime.now() else True,
                 "receive_method": rule.receive_method,
             }
             items.append(data)
@@ -195,7 +202,6 @@ class RedEnvelopeRuleList(resource.Resource):
             'sortAttr': 'id',
             'data': {}
         }
-
         response = create_response(200)
         response.data = data
         return response.get_response()

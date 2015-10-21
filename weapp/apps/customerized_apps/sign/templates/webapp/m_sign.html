@@ -188,6 +188,7 @@
     var prize_info = JSON.parse('{{ prize_info|safe}}');
     var status = "{{ activity_status }}";
     var resultDialog;
+    W.isMember = {% if request.member.is_subscribed %}true{% else %}false{% endif %};
 
     function ResultDialog(selector) {
         var that = this;
