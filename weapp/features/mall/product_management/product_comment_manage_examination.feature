@@ -370,7 +370,7 @@ Scenario:1 审核通过 屏蔽处理 通过并置顶
         }]
         """
 
-@mall2 @product @review   @mall.webapp.comment @prm5
+@mall2 @product @review @mall.webapp.comment @prm5
 Scenario:2 同款商品，3个置顶操作，最后置顶的，排在最上面
     Given jobs登录系统
     When jobs已完成对商品的评价信息审核
