@@ -310,6 +310,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 
 		products_0 = products.filter(display_index=0)
 		products_not_0 = products.exclude(display_index=0)
+		# TODO: need to be optimized
 		products = list(itertools.chain(products_not_0, products_0))
 
 		category = ProductCategory()

@@ -49,7 +49,7 @@ class ProductsByCategory(api_resource.ApiResource):
 		data = [Product.to_dict(product) for product in products]
 		return data
 
-	@param_required(['oid', 'category_id'])
+	@param_required(['oid', 'category_id', 'wid'])
 	def get(args):
 		"""
 		获取商品详情
@@ -59,7 +59,8 @@ class ProductsByCategory(api_resource.ApiResource):
 		#webapp_id = args['webapp_id']
 		owner_id = args['oid']
 		category_id = args['category_id']
-		webapp_id = wapi_utils.get_webapp_id_via_oid(owner_id)
+		webapp_id = args['wid']
+		#webapp_id = wapi_utils.get_webapp_id_via_oid(owner_id)
 		is_access_weizoom_mall = args.get('is_access_weizoom_mall', False)
 		print("args: {}".format(args))
 

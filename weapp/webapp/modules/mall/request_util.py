@@ -73,14 +73,14 @@ def list_products(request):
 
 	products = resource.get('mall', 'products_by_category', {
 		'category_id': category_id,
-		'webapp_id': request.user_profile.webapp_id,
+		'wid': request.user_profile.webapp_id,
 		'oid': request.user_profile.user_id,
 		'is_access_weizoom_mall': request.is_access_weizoom_mall
 		}) # 按类别取商品
 
 	# 用WAPI方式获取数据
 	product_categories = resource.get('mall', 'products_categories', {
-		'webapp_id': request.user_profile.webapp_id,
+		'wid': request.user_profile.webapp_id,
 		'oid': request.user_profile.user_id,
 		'is_access_weizoom_mall': request.is_access_weizoom_mall
 		})

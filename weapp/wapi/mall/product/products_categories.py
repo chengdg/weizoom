@@ -21,7 +21,7 @@ class ProductsCategories(api_resource.ApiResource):
 	app = 'mall'
 	resource = 'products_categories'
 
-	@param_required(['oid'])
+	@param_required(['oid', 'wid'])
 	def get(args):
 		"""
 		获取指定webapp_id的全部商品的分类列表
@@ -47,12 +47,9 @@ class ProductsCategories(api_resource.ApiResource):
 		```
 		"""
 		owner_id = args['oid']
-		if 'webapp_id' in args:
-			webapp_id = args['webapp_id']
-		else:
-			webapp_id = wapi_utils.get_webapp_id_via_oid(owner_id)
+		webapp_id = args['wid']
+		#webapp_id = wapi_utils.get_webapp_id_via_oid(owner_id)
 		is_access_weizoom_mall = args.get('is_access_weizoom_mall', False)
-		#print("args: {}".format(args))
 
 		# 伪造一个UserProfile，便于传递参数
 		user_profile = DummyUserProfile(webapp_id, owner_id)
