@@ -28,6 +28,15 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     target_api: 'address/save'
                 }),
                 success: function(data) {
+                    console.log('ship_info:',args);
+                    if(localStorage.ships){
+                        ships = localStorage.ships
+                    }
+                    else{
+                        ships =
+                        ships = JSON.stringify(args);
+                    }
+                    localStorage.ship_info = JSON.stringify(args);
                     var shipName = data['ship_name'];
                     if (data['msg'] != null) {
                         $('body').alert({
