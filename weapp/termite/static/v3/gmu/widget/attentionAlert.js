@@ -62,7 +62,6 @@ Copyright (c) 2011-2012 Weizoom Inc
         },
 
         render: function() {
-            var url = this.url;
             var height;
             this.$button = $('<a class="xa-guideAttention">关注我们可查看账户积分、红包、优惠券等！</a>');
             this.$el.html(this.$button);
