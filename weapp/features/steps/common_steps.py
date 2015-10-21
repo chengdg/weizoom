@@ -88,7 +88,6 @@ def step_impl(context, user, error):
 
 @then(u"{user}获得'{product_name}'错误提示'{error}'")
 def step_impl(context, user, product_name ,error):
-	print "zl--------------------",context.response_json
 	detail = context.response_json['data']['detail']
 	context.tc.assertEquals(error, detail[0]['short_msg'])
 	pro_id = ProductFactory(name=product_name).id

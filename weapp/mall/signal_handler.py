@@ -620,189 +620,190 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
     id2flashsale = dict()
     for product_group in product_groups:
         promotion = product_group['promotion']
-        if not promotion:
+        if 0 != len(promotion):
+            if not promotion:
+                first_product = product_group['products'][0]
+                if hasattr(first_product, 'used_promotion_id') and int(getattr(first_product, 'used_promotion_id')) != 0:
+                    for product in product_group['products']:
+                        data_detail.append({
+                            'id': product.id,
+                            'msg': '该活动已经过期',
+                            'model_name': product.model_name,
+                            'short_msg': '已经过期',
+                            'inner_step': 1
+                        })
+                    __fill_promotion_failed_reason(product_group, "promotion == null and first_product.used_promotion_id, 活动过期0")
+                    continue
+                else:
+                    __fill_promotion_failed_reason(product_group, 'no promotion')
+                    continue
+
             first_product = product_group['products'][0]
-            if hasattr(first_product, 'used_promotion_id') and int(getattr(first_product, 'used_promotion_id')) != 0:
+            if first_product.used_promotion_id == 0:
+                __fill_promotion_failed_reason(product_group, 'first_product.used_promotion_id == 0')
+                #不使用促销
+                continue
+
+            if promotion['type'] == promotion_models.PROMOTION_TYPE_COUPON:
+                __fill_promotion_failed_reason(product_group, 'promotion is coupon')
+                # 优惠券不检查
+                continue
+
+            if promotion['id'] != first_product.used_promotion_id:
+                #商品携带的“促销活动”与商品当前关联的促销活动不一致，意味着商品携带的促销活动已结束
                 for product in product_group['products']:
                     data_detail.append({
                         'id': product.id,
                         'msg': '该活动已经过期',
                         'model_name': product.model_name,
                         'short_msg': '已经过期',
-                        'inner_step': 1
+                        'inner_step': 2
                     })
-                __fill_promotion_failed_reason(product_group, "promotion == null and first_product.used_promotion_id, 活动过期0")
-                continue
-            else:
-                __fill_promotion_failed_reason(product_group, 'no promotion')
+                __fill_promotion_failed_reason(product_group, "promotion['id'] != first_product.used_promotion_id, 活动过期1")
                 continue
 
-        first_product = product_group['products'][0]
-        if first_product.used_promotion_id == 0:
-            __fill_promotion_failed_reason(product_group, 'first_product.used_promotion_id == 0')
-            #不使用促销
-            continue
-
-        if promotion['type'] == promotion_models.PROMOTION_TYPE_COUPON:
-            __fill_promotion_failed_reason(product_group, 'promotion is coupon')
-            # 优惠券不检查
-            continue
-
-        if promotion['id'] != first_product.used_promotion_id:
-            #商品携带的“促销活动”与商品当前关联的促销活动不一致，意味着商品携带的促销活动已结束
-            for product in product_group['products']:
-                data_detail.append({
-                    'id': product.id,
-                    'msg': '该活动已经过期',
-                    'model_name': product.model_name,
-                    'short_msg': '已经过期',
-                    'inner_step': 2
-                })
-            __fill_promotion_failed_reason(product_group, "promotion['id'] != first_product.used_promotion_id, 活动过期1")
-            continue
-
-        if promotion['status'] == promotion_models.PROMOTION_STATUS_NOT_START or\
-            datetime.strptime(promotion['start_date'], '%Y-%m-%d %H:%M:%S') > today:
-            for product in product_group['products']:
-                data_detail.append({
-                        'id': product.id,
-                        'model_name': product.model_name,
-                        'msg': '该活动尚未开始',
-                        'short_msg': '尚未开始'
-                    })
-            __fill_promotion_failed_reason(product_group, "活动未开始")
-            continue
-
-        if promotion['status'] > promotion_models.PROMOTION_STATUS_STARTED or\
-            datetime.strptime(promotion['end_date'], '%Y-%m-%d %H:%M:%S') < today:
-            for product in product_group['products']:
-                data_detail.append({
-                        'id': product.id,
-                        'model_name': product.model_name,
-                        'msg': '该活动已经过期',
-                        'short_msg': '已经过期',
-                        'inner_step': 3
-                    })
-            __fill_promotion_failed_reason(product_group, "活动过期2")
-            continue
-        if promotion['member_grade_id'] > 0 and promotion['member_grade_id'] != request.member.grade_id:
-            for product in product_group['products']:
-                data_detail.append({
-                        'id': product.id,
-                        'msg': '您的会员等级不满足促销条件',
-                        'model_name': product.model_name,
-                        'short_msg': '活动等级'
-                    })
-            __fill_promotion_failed_reason(product_group, "会员等级不满足促销条件")
-            continue
-
-        detail = promotion['detail']
-
-        if promotion['type'] == promotion_models.PROMOTION_TYPE_FLASH_SALE:
-            # 限时抢购
-            product = product_group['products'][0]
-            promotion_id = promotion['id']
-
-            #检查是否超过了限购周期的限制
-            if int(detail['limit_period']) in (-1, 0):
-                pass
-            else:
-                delta = datetime.today() - timedelta(days=detail['limit_period'])
-                purchase_records = OrderHasPromotion.objects.filter(
-                    Q(webapp_user_id=request.webapp_user.id) &
-                    Q(promotion_id=promotion_id) &
-                    Q(created_at__gte=delta) &
-                    ~Q(order__status=ORDER_STATUS_CANCEL)
-                )
-                # 限购周期内已购买过商品
-                if purchase_records.count() > 0:  #
+            if promotion['status'] == promotion_models.PROMOTION_STATUS_NOT_START or\
+                datetime.strptime(promotion['start_date'], '%Y-%m-%d %H:%M:%S') > today:
+                for product in product_group['products']:
                     data_detail.append({
-                        'id': product.id,
-                        'model_name': product.model_name,
-                        'msg': '在限购周期内不能多次购买',
-                        'short_msg': '限制购买'
-                    })
+                            'id': product.id,
+                            'model_name': product.model_name,
+                            'msg': '该活动尚未开始',
+                            'short_msg': '尚未开始'
+                        })
+                __fill_promotion_failed_reason(product_group, "活动未开始")
+                continue
+
+            if promotion['status'] > promotion_models.PROMOTION_STATUS_STARTED or\
+                datetime.strptime(promotion['end_date'], '%Y-%m-%d %H:%M:%S') < today:
+                for product in product_group['products']:
+                    data_detail.append({
+                            'id': product.id,
+                            'model_name': product.model_name,
+                            'msg': '该活动已经过期',
+                            'short_msg': '已经过期',
+                            'inner_step': 3
+                        })
+                __fill_promotion_failed_reason(product_group, "活动过期2")
+                continue
+            if promotion['member_grade_id'] > 0 and promotion['member_grade_id'] != request.member.grade_id:
+                for product in product_group['products']:
+                    data_detail.append({
+                            'id': product.id,
+                            'msg': '您的会员等级不满足促销条件',
+                            'model_name': product.model_name,
+                            'short_msg': '活动等级'
+                        })
+                __fill_promotion_failed_reason(product_group, "会员等级不满足促销条件")
+                continue
+
+            detail = promotion['detail']
+
+            if promotion['type'] == promotion_models.PROMOTION_TYPE_FLASH_SALE:
+                # 限时抢购
+                product = product_group['products'][0]
+                promotion_id = promotion['id']
+
+                #检查是否超过了限购周期的限制
+                if int(detail['limit_period']) in (-1, 0):
+                    pass
+                else:
+                    delta = datetime.today() - timedelta(days=detail['limit_period'])
+                    purchase_records = OrderHasPromotion.objects.filter(
+                        Q(webapp_user_id=request.webapp_user.id) &
+                        Q(promotion_id=promotion_id) &
+                        Q(created_at__gte=delta) &
+                        ~Q(order__status=ORDER_STATUS_CANCEL)
+                    )
+                    # 限购周期内已购买过商品
+                    if purchase_records.count() > 0:  #
+                        data_detail.append({
+                            'id': product.id,
+                            'model_name': product.model_name,
+                            'msg': '在限购周期内不能多次购买',
+                            'short_msg': '限制购买'
+                        })
+                        continue
+
+                if promotion_id in id2flashsale:
+                    flash_sale = id2flashsale[promotion_id]
+                    flash_sale['total_count'] = flash_sale['total_count'] + product.purchase_count
+                    flash_sale['product'].append(product)
+                else:
+                    id2flashsale[promotion_id] = {
+                        'count_per_purchase': promotion['detail']['count_per_purchase'],
+                        'total_count': product.purchase_count,
+                        'product': [product]
+                    }
+
+                product_group['promotion_result'] = {
+                    # 'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
+                    'promotion_saved_money': (product.original_price - detail['promotion_price']) * product.purchase_count,
+                    'promotioned_product_price': detail['promotion_price']
+                }
+                #用抢购价替换商品价格
+                product.price = detail['promotion_price']
+
+            elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT:
+                total_price = 0.0
+                for product in product_group['products']:
+                    total_price += product.price * product.purchase_count
+
+                if total_price < detail['price_threshold']:
+                    #订单金额小于满减阈值
                     continue
 
-            if promotion_id in id2flashsale:
-                flash_sale = id2flashsale[promotion_id]
-                flash_sale['total_count'] = flash_sale['total_count'] + product.purchase_count
-                flash_sale['product'].append(product)
-            else:
-                id2flashsale[promotion_id] = {
-                    'count_per_purchase': promotion['detail']['count_per_purchase'],
-                    'total_count': product.purchase_count,
-                    'product': [product]
-                }
-
-            product_group['promotion_result'] = {
-                # 'promotion_saved_money': (product.price - detail['promotion_price']) * product.purchase_count,
-                'promotion_saved_money': (product.original_price - detail['promotion_price']) * product.purchase_count,
-                'promotioned_product_price': detail['promotion_price']
-            }
-            #用抢购价替换商品价格
-            product.price = detail['promotion_price']
-
-        elif promotion['type'] == promotion_models.PROMOTION_TYPE_PRICE_CUT:
-            total_price = 0.0
-            for product in product_group['products']:
-                total_price += product.price * product.purchase_count
-
-            if total_price < detail['price_threshold']:
-                #订单金额小于满减阈值
-                continue
-
-            if detail['is_enable_cycle_mode']:
-                # 循环满减
-                count = int(total_price / float(detail['price_threshold']))
-                final_saved_money = count * float(detail['cut_money'])
-            else:
-                final_saved_money = float(detail['cut_money'])
-
-            product_group['promotion_result']['final_saved_money'] = final_saved_money
-            product_group['promotion_result']['promotion_saved_money'] = final_saved_money
-        elif promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
-            # 买赠
-            total_purchase_count = 0
-            for product in product_group['products']:
-                total_purchase_count += product.purchase_count
-
-            detail = product_group['promotion']['detail']
-            if total_purchase_count >= detail['count']:
-                #确定赠送轮数
                 if detail['is_enable_cycle_mode']:
-                    premium_round_count = total_purchase_count / detail['count']
+                    # 循环满减
+                    count = int(total_price / float(detail['price_threshold']))
+                    final_saved_money = count * float(detail['cut_money'])
                 else:
-                    premium_round_count = 1
+                    final_saved_money = float(detail['cut_money'])
 
-                premium_products = []
-                # for i in range(premium_count):
-                for premium_product in detail['premium_products']:
-                    premium_products.append({
-                        "id": premium_product['id'],
-                        "name": premium_product['name'],
-                        "bar_code": premium_product['id'],
-                        "price": premium_product['current_used_model'].get('price', 0),
-                        "count": premium_product['premium_count'],
-                        "thumbnails_url": premium_product['thumbnails_url'],
-                        "forcing_submit": request.POST.get("forcing_submit", None),
-                    })
-                    if premium_product['current_used_model'].get('price', 0) <= 0:
-                        watchdog_alert("premium_product['current_used_model'].get('price', 0) <= 0, premium_product:"
-                            +str(premium_product), type='WEB')
+                product_group['promotion_result']['final_saved_money'] = final_saved_money
+                product_group['promotion_result']['promotion_saved_money'] = final_saved_money
+            elif promotion['type'] == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
+                # 买赠
+                total_purchase_count = 0
+                for product in product_group['products']:
+                    total_purchase_count += product.purchase_count
 
-                    # 检查赠品库存
-                    if request.POST.get("forcing_submit", None):
-                        continue
-                    if id2premium_count.has_key(premium_product['id']):
-                        id2premium_count[premium_product['id']] += premium_product['premium_count']
+                detail = product_group['promotion']['detail']
+                if total_purchase_count >= detail['count']:
+                    #确定赠送轮数
+                    if detail['is_enable_cycle_mode']:
+                        premium_round_count = total_purchase_count / detail['count']
                     else:
-                        id2premium_count[premium_product['id']] = premium_product['premium_count']
-                product_group['promotion_result'] = {
-                    'premium_products': premium_products
-                }
-            else:
-                product_group['promotion_result'] = None
+                        premium_round_count = 1
+
+                    premium_products = []
+                    # for i in range(premium_count):
+                    for premium_product in detail['premium_products']:
+                        premium_products.append({
+                            "id": premium_product['id'],
+                            "name": premium_product['name'],
+                            "bar_code": premium_product['id'],
+                            "price": premium_product['current_used_model'].get('price', 0),
+                            "count": premium_product['premium_count'],
+                            "thumbnails_url": premium_product['thumbnails_url'],
+                            "forcing_submit": request.POST.get("forcing_submit", None),
+                        })
+                        if premium_product['current_used_model'].get('price', 0) <= 0:
+                            watchdog_alert("premium_product['current_used_model'].get('price', 0) <= 0, premium_product:"
+                                +str(premium_product), type='WEB')
+
+                        # 检查赠品库存
+                        if request.POST.get("forcing_submit", None):
+                            continue
+                        if id2premium_count.has_key(premium_product['id']):
+                            id2premium_count[premium_product['id']] += premium_product['premium_count']
+                        else:
+                            id2premium_count[premium_product['id']] = premium_product['premium_count']
+                    product_group['promotion_result'] = {
+                        'premium_products': premium_products
+                    }
+                else:
+                    product_group['promotion_result'] = None
 
     # 检查赠品库存
     if len(id2premium_count) > 0:

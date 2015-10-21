@@ -216,7 +216,6 @@ def save_order(request):
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:
-		# print http_response
 		return http_response
 
 	order = None

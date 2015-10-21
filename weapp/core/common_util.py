@@ -29,6 +29,8 @@ def check_failed_signal_response(signal_responses):
 
 		products_ids = [detail['id'] for detail in data_detail]
 		products_ids = list(set(products_ids))
+		print "products_ids----------------",products_ids
+		print "data_detail----------------",data_detail
 		for id in products_ids:
 			flag,index = _check_pro_id_in_detail_list(data_detail,id)
 			if flag:
@@ -36,6 +38,8 @@ def check_failed_signal_response(signal_responses):
 				continue
 			else:
 				for detail in data_detail:
+					print "id----------------",detail['id'],id
+					print "detail----------------",detail
 					if detail['id'] == id:
 						real_data_detail.append(detail)
 		print real_data_detail
