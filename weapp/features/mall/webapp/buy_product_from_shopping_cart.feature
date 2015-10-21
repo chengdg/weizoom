@@ -323,10 +323,10 @@ Scenario:2 从购物车购买全部商品
 @mall2 @mall @zy_wsc03 @mall.webapp @mall.webapp.shopping_cart
 Scenario:3 从购物车购买部分商品
 	bill将jobs的多个商品加入购物车后
-	1. bill能从购物车中下单,购买部分商品
-	2. bill的订单中的信息正确
-	3. bill的购物车已下单的商品被清除
-	4. tom的购物车不受影响
+	1.bill能从购物车中下单,购买部分商品
+	2.bill的订单中的信息正确
+	3.bill的购物车已下单的商品被清除
+	4.tom的购物车不受影响
 
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -394,9 +394,9 @@ Scenario:3 从购物车购买部分商品
 	And bill在购物车订单编辑中点击提交订单
 		"""
 		{
-	    "pay_type": "货到付款"
-	  	}
-	  	"""
+			"pay_type": "货到付款"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -435,18 +435,18 @@ Scenario:3 从购物车购买部分商品
 	Then tom能获得购物车
 		"""
 		{
-      	"product_groups": [{
-        "promotion": null,
-        "can_use_promotion": false,
-        "products": [{
-        	"name": "商品1",
-        	"count": 1
-        }, {
-        	"name": "商品2",
-        	"count": 2
-        }]
-      	}],
-     	"invalid_products": []
+			"product_groups": [{
+			"promotion": null,
+			"can_use_promotion": false,
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			},{
+				"name": "商品2",
+				"count": 2
+			}]
+			}],
+			"invalid_products": []
 		}
 		"""
 
@@ -550,8 +550,8 @@ Scenario:4 从购物车购买空商品
 @mall2 @mall @zy_wsc05 @mall.webapp @mall.webapp.shopping_cart
 Scenario:5 从购物车购买商品时有商品下架
 	bill将jobs的多个商品加入购物车，并进入订单编辑后，jobs将其中某个商品下架
-	1. bill下单失败
-	2. bill的购物车不受影响
+	1.bill下单失败
+	2.bill的购物车不受影响
 
 	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -589,38 +589,35 @@ Scenario:5 从购物车购买商品时有商品下架
 		}
 		"""
 
-
-
 	When bill从购物车发起购买操作
 		"""
 		{
-	    	"action": "pay",
-	    	"context": [{
-	      	"name": "商品1"
-	    	},{
-	      	"name": "商品2"
-	   		}]
-	  	}
-	  	"""
-  	And bill填写收货信息
-	 	"""
-	  	{
-	    "ship_name": "bill",
-	    "ship_tel": "13811223344",
-	    "area": "北京市 北京市 海淀区",
-	    "ship_address": "泰兴大厦"
-	 	}
-	  	"""
+			"action": "pay",
+			"context": [{
+			"name": "商品1"
+			},{
+			"name": "商品2"
+			}]
+		}
+		"""
+	And bill填写收货信息
+		"""
+		{
+		"ship_name": "bill",
+		"ship_tel": "13811223344",
+		"area": "北京市 北京市 海淀区",
+		"ship_address": "泰兴大厦"
+		}
+		"""
 	Given jobs登录系统
 	When jobs-下架商品'商品1'
 	When bill访问jobs的webapp
 	When bill在购物车订单编辑中点击提交订单
 		"""
 		{
-	    "pay_type": "货到付款"
-	  	}
-	  	"""
-
+		"pay_type": "货到付款"
+		}
+		"""
 	Then bill获得错误提示'有商品已下架<br/>2秒后返回购物车<br/>请重新下单'
 
 @mall2 @mall @zy_wsc06 @mall.webapp @mall.webapp.shopping_cart
@@ -688,18 +685,18 @@ Scenario:6 从购物车同时购买"有运费和无运费"的商品，并且商�
 	And bill填写收货信息
 		"""
 		{
-	    	"ship_name": "bill",
-	      	"ship_tel": "13811223344",
-	      	"area": "北京市 北京市 海淀区",
-	      	"ship_address": "泰兴大厦"
-	  	}
-	  	"""
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
 	And bill在购物车订单编辑中点击提交订单
 		"""
 		{
-	    "pay_type": "货到付款"
-	  	}
-	  	"""
+		"pay_type": "货到付款"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -722,7 +719,7 @@ Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商�
 		[{
 			"name": "商品5",
 			"count": 1
-		}, {
+		},{
 			"name": "商品6",
 			"count": 1
 		}]
@@ -733,7 +730,7 @@ Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商�
 			"action": "click",
 			"context": [{
 				"name": "商品5"
-			}, {
+			},{
 				"name": "商品6"
 			}]
 		}
@@ -744,7 +741,7 @@ Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商�
 			"products": [{
 				"name": "商品5",
 				"count": 1
-			}, {
+			},{
 				"name": "商品6",
 				"count": 1
 			}]
@@ -756,7 +753,7 @@ Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商�
 			"action": "pay",
 			"context": [{
 				"name": "商品5"
-			}, {
+			},{
 				"name": "商品6"
 			}]
 		}
@@ -770,12 +767,12 @@ Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商�
 			"ship_address": "泰兴大厦"
 		}
 		"""
-  	And bill在购物车订单编辑中点击提交订单
+	And bill在购物车订单编辑中点击提交订单
 		"""
-	 	{
-	    	"pay_type": "货到付款"
-	  	}
-	  	"""
+		{
+			"pay_type": "货到付款"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -852,9 +849,9 @@ Scenario:8 从购物车购买多个"有特殊运费"的商品
 	And bill在购物车订单编辑中点击提交订单
 		"""
 		{
-	    	"pay_type": "货到付款"
-	  	}
-	 	"""
+			"pay_type": "货到付款"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{

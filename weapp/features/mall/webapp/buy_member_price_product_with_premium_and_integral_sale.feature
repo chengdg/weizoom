@@ -1,5 +1,5 @@
 
-#_author_:张三香
+#author: 张三香
 
 Feature:手机端购买同时参与会员折扣,买赠和单品积分抵扣活动的商品
 	#针对线上bug4305补充feature
@@ -71,7 +71,7 @@ Background:
 		"""
 
 @mall2
-Scenario: 1 购买会员价，买赠（全部会员）和积分抵扣（分级设置）活动的商品
+Scenario:1 购买会员价，买赠（全部会员）和积分抵扣（分级设置）活动的商品
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
@@ -150,7 +150,7 @@ Scenario: 1 购买会员价，买赠（全部会员）和积分抵扣（分级�
 	Then bill在jobs的webapp中拥有0会员积分
 
 @mall2
-Scenario: 2 购买会员价，买赠（全部会员）和积分抵扣（统一设置）活动的商品
+Scenario:2 购买会员价，买赠（全部会员）和积分抵扣（统一设置）活动的商品
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
@@ -220,7 +220,7 @@ Scenario: 2 购买会员价，买赠（全部会员）和积分抵扣（统一�
 	Then bill2在jobs的webapp中拥有100会员积分
 
 @mall2
-Scenario: 3 购买会员价，买赠（某一等级）和积分抵扣（分级设置）活动的商品
+Scenario:3 购买会员价，买赠（某一等级）和积分抵扣（分级设置）活动的商品
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
@@ -332,7 +332,7 @@ Scenario: 3 购买会员价，买赠（某一等级）和积分抵扣（分级�
 		Then bill3在jobs的webapp中拥有72会员积分
 
 @mall2
-Scenario: 4 购买会员价，买赠（某一等级）和积分抵扣（统一设置）活动的商品
+Scenario:4 购买会员价，买赠（某一等级）和积分抵扣（统一设置）活动的商品
 	Given jobs登录系统
 	When jobs创建买赠活动
 		"""
