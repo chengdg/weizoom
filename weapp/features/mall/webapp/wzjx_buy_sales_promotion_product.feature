@@ -81,7 +81,7 @@ Background:
 		"""
 	Given bill关注jobs的公众号
 
-@mall2 @buy   @supplier
+@mall2 @buy   @supplier 
 Scenario: 1 不同供货商的商品进行促销
 	设置促销活动进行购买
 
