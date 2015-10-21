@@ -48,22 +48,46 @@ from wapi.mall.product.product_hint import ProductHint
 # page_title = u'微众商城'
 
 
-########################################################################
-# list_products: 显示"商品列表"页面
-########################################################################
 def list_products(request):
+	"""
+	移动端显示"商品列表"页面
+	"""
 	# jz 2015-10-09
 	# 得到会员对应的折扣
 	# discount = get_member_discount(member)
 
 	category_id = int(request.GET.get('category_id', 0))
+	owner_id = request.user_profile.user_id
 
-	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
-	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
+	# TODO: 改用API获取商品、分类
+
+	# 改造如下的语句
+	#category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
+	if category_id == 0:
+		# category_id=0 表示全部商品
+		# 获取全部分类
+		#categories = resource.get('mall', 'product_categories', {'uid': owner_id})
+		category = {"id": category_id, "name": u"全部"}
+	else:
+		category = resource.get('mall', 'product_category', {'id': category_id})
+
+	products = resource.get('mall', 'products_by_category', {
+		'category_id': category_id,
+		'webapp_id': request.user_profile.webapp_id,
+		'oid': request.user_profile.user_id,
+		'is_access_weizoom_mall': request.is_access_weizoom_mall
+		}) # 按类别取商品
+
+	# 用WAPI方式获取数据
+	product_categories = resource.get('mall', 'products_categories', {
+		'webapp_id': request.user_profile.webapp_id,
+		'oid': request.user_profile.user_id,
+		'is_access_weizoom_mall': request.is_access_weizoom_mall
+		})
 
 	for p in products:
-		if p.promotion:
-			p.promotion_js = json.dumps(p.promotion)
+		if p['promotion']:
+			p['promotion_js'] = json.dumps(p['promotion'])
 
 	has_category = False
 	if len(product_categories) > 0:
@@ -96,16 +120,6 @@ def __is_forbidden_coupon(owner_id, product_id):
 	product_id = int(product_id)
 	return product_id in forbidden_coupon_product_ids
 
-def __get_product_hint(owner_id, product_id):
-	"""
-	获取显示在商品详情页的商品相关的提示信息
-	duhao 2015-09-08
-	"""
-	hint = ''
-	if __is_forbidden_coupon(owner_id, product_id):
-		hint = u'该商品不参与全场优惠券使用！'
-	
-	return hint
 
 
 def get_product(request):
@@ -191,30 +205,43 @@ def get_product(request):
 		# 默认目录: default_v3
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
+PAGE_TITLE_TYPE = {
+	-1: u'全部订单列表',
+	0: u'待支付',
+	3: u'待发货',
+	4: u'待收货',
+	5: u'待评价',
+}
 
-########################################################################
-# get_order_list: 获取订单列表
-########################################################################
+
 def get_order_list(request):
-    type = int(request.GET.get('type', -1))
-    orders = mall_api.get_orders(request)
+	"""
+	获取订单列表
+	"""
+	type = int(request.GET.get('type', -1))
 
-    status = {
-        -1: u'全部订单列表',
-        0: u'待支付',
-        3: u'待发货',
-        4: u'待收货',
-        5: u'待评价',
-    }
+	orders = resource.get('mall', 'orders', {
+		'wuid': request.webapp_user.id,
+		'member_id': request.member.id,
+		# red_envelop_rule_id参数可以为None
+		'red_envelop_rule_id': request.webapp_owner_info.red_envelope.id,
+		'woid': request.webapp_owner_id
+		})
+	#orders = mall_api.get_orders(request)
+	for order in orders:
+		order['created_at'] = utils_dateutil.parse_datetime(order['created_at'])
+	print("orders: {}".format(orders))
 
-    c = RequestContext(request, {
-        'is_hide_weixin_option_menu': True,
-        'page_title': status[type],
-        'orders': orders,
-        'hide_non_member_cover': True,
-        'status_type': type
-    })
-    return render_to_response('%s/order_list.html' % request.template_dir, c)
+	c = RequestContext(request, {
+			'is_hide_weixin_option_menu': True,
+			'page_title': PAGE_TITLE_TYPE[type],
+			'orders': orders,
+			'hide_non_member_cover': True,
+			'status_type': type
+	})
+	return render_to_response('%s/order_list.html' % request.template_dir, c)
+
+
 
 
 ########################################################################
@@ -511,8 +538,9 @@ def get_pay_notify_result(request):
 
 
 def show_shopping_cart(request):
-	'''显示购物车详情
-	'''
+	"""
+	显示购物车详情
+	"""
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -627,7 +655,8 @@ def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 		product_ids.append(product.id)
 		product_total_price = product.price * product.purchase_count
 		product_total_original_price = product.original_price * product.purchase_count
-		if not __is_forbidden_coupon(webapp_owner_id, product.id):
+		# TODO: 去掉ProductHint的直接调用
+		if not ProductHint.is_forbidden_coupon(webapp_owner_id, product.id):
 			#不是被禁用全场优惠券的商品 duhao 20150908
 			total_price += product_total_price
 			is_forbidden_coupon = False
@@ -728,7 +757,8 @@ def __format_product_group_price_factor(product_groups, webapp_owner_id):
 
 
 def get_member_discount(request):
-	"""返回与会员等级相关的折扣
+	"""
+	返回与会员等级相关的折扣
 
 	Return:
 	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回1.00
@@ -745,7 +775,8 @@ def get_member_discount(request):
 
 
 def get_member_discount_percentage(request):
-	"""返回与会员等级相关的折扣
+	"""
+	返回与会员等级相关的折扣
 
 	Return:
 	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回100
