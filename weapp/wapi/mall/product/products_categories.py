@@ -14,7 +14,7 @@ from wapi import wapi_utils
 
 class ProductsCategories(api_resource.ApiResource):
 	"""
-	获取商品列表和分类列表
+	获取商品分类列表
 
 	举例：`http://dev.weapp.com/wapi/mall/products_categories/?webapp_id=3211&uid=33&is_access_weizoom_mall=false`
 	"""
