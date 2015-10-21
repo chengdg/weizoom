@@ -24,16 +24,21 @@ Copyright (c) 2011-2012 Weizoom Inc
             getDataId: function(_this) {
                 var id = _this.$el.attr('data-id');
                 return id;
+            },
+            getQrcodeImage: function(_this) {
+                var qrcode_image = _this.$el.attr('data-qrcode-image');
+                return qrcode_image;
             }
         },
 		_create : function() {
 			// this.$el = this.element;
             // this.url = this.setting.getUrl(this);
+            this.qrcode_image = this.setting.getQrcodeImage(this);
             var height = window.screen.height;
             if(this.setting.isShowButton(this)) {
                 this.render();
             }
-            $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="/static_v2/img/webapp/mall/sprite0506.png"/></div></div>');
+            $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="'+qrcode_image+'"/></div></div>');
             $('.xui-mask').css({
                 height: height,
                 width: '100%',
@@ -62,7 +67,7 @@ Copyright (c) 2011-2012 Weizoom Inc
                 left:42
             });
         },
-        
+
         render: function() {
             var url = this.url;
             var height;
@@ -93,10 +98,10 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 		_bind : function() {
 		},
-		
+
 		_unbind : function() {
 		},
-		
+
 		destroy : function() {
 			// Unbind any events that were bound at _create
 			this._unbind();
