@@ -545,6 +545,7 @@ def show_shopping_cart(request):
 	"""
 	显示购物车详情
 	"""
+
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -566,7 +567,9 @@ def show_shopping_cart(request):
 		'jsons': jsons,
 		'discount': get_member_discount_percentage(request)
 	})
-	return render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+	response = render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+
+	return response
 
 
 def _sorted_product_groups_by_promotioin(product_groups):
@@ -813,7 +816,10 @@ def edit_shopping_cart_order(request):
 
 	# 没有选择商品，跳转回购物车
 	if len(products) == 0:
-		url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		if settings.IS_UNDER_BDD:
+			url = request.META.get('HTTP_REFERER', '/termite/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		else:
+			url = request.META.get('HTTP_REFERER', '/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
 		return HttpResponseRedirect(url)
 
 	order = mall_api.create_shopping_cart_order(webapp_owner_id, webapp_user, products)
@@ -1003,29 +1009,11 @@ def pay_alipay_order(request):
 # edit_address: 编辑收货地址信息
 ########################################################################
 def edit_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
-	#隐藏底部导航条#
-	request.should_hide_footer = True
-	ship_info_id = request.GET.get('id', 0)
-	if request.action == 'add':
-		ship_info = None
-	elif ship_info_id > 0:
-		try:
-			ship_info = ShipInfo.objects.get(id=ship_info_id)
-		except:
-			ship_info = None
-	else:
-		ship_info = webapp_user.ship_info
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'ship_info': ship_info,
-		'redirect_url_query_string': request.redirect_url_query_string
+
 	})
-	if hasattr(request, 'is_return_context'):
-		return c
 	return render_to_response('%s/order_address.html' % request.template_dir, c)
 
 
@@ -1054,15 +1042,10 @@ def show_concern_shop_url(request):
 # list_address: 收货地址信息列表
 ########################################################################
 def list_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
 	#隐藏底部导航条#
-	request.should_hide_footer = True
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'redirect_url_query_string': request.redirect_url_query_string,
-		'ship_infos': webapp_user.ship_infos,
 	})
 	return render_to_response('%s/list_address.html' % request.template_dir, c)
 
@@ -1071,36 +1054,11 @@ def list_address(request):
 # add_address: 添加收货地址信息
 ########################################################################
 def add_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
-	#隐藏底部导航条#
-	request.should_hide_footer = True
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'redirect_url_query_string': request.redirect_url_query_string
 	})
 	return render_to_response('%s/order_address.html' % request.template_dir, c)
-
-
-########################################################################
-# delete_address: 删除收货地址信息
-########################################################################
-def delete_address(request):
-	ship_info_id = request.GET.get('id', 0)
-	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
-
-	# 默认选中
-	ship_infos = request.webapp_user.ship_infos
-	selected_ships_count = ship_infos.filter(is_selected=True).count()
-	if ship_infos.count() > 0 and selected_ships_count == 0:
-		ship_info = ship_infos[0]
-		ship_info.is_selected = True
-		ship_info.save()
-
-	# 显示地址列表
-	return list_address(request)
 
 
 ########################################################################
