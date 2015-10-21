@@ -26,7 +26,7 @@ Background:
 			"using_limit": "满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon2_id_",
+			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "商品1"
 		},{
 			"name": "全体券2",
@@ -59,45 +59,45 @@ Background:
 		[{
 			"name": "分享红包1",
 			"prize_info": "单品券1",
-			"limit_time": false,
-			"start_time": "今天",
-			"end_time": "2天后",
+			"is_permanant_active": false,
+			"start_date": "今天",
+			"end_date": "2天后",
 			"receive_method":"下单领取",
-			"limit_order_money": 100,
-			"use_info": "下订单领红包1",
+			"limit_money": 100,
+			"detail": "下订单领红包1",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述1"
+			"remark":"分享描述1"
 		},{
 			"name": "红包2",
 			"prize_info": "全体券2",
-			"limit_time": true,
+			"is_permanant_active": true,
 			"receive_method":"图文领取",
-			"use_info": "图文领取领红包2",
+			"detail": "图文领取领红包2",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述2"
+			"remark":"分享描述2"
 		},{
 			"name": "红包3",
 			"prize_info": "全体券3",
-			"limit_time": true,
-			"limit_order_money": "无限制",
+			"is_permanant_active": true,
+			"limit_money": "无限制",
 			"receive_method":"下单领取",
-			"use_info": "下订单领红包3",
+			"detail": "下订单领红包3",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述3"
+			"remark":"分享描述3"
 		},{
 			"name": "红包4",
 			"prize_info": "全体券3",
-			"limit_time": false,
-			"start_time": "今天",
-			"end_time": "3天后",
+			"is_permanant_active": false,
+			"start_date": "今天",
+			"end_date": "3天后",
 			"receive_method":"图文领取",
-			"use_info": "图文领取红包4",
+			"detail": "图文领取红包4",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述4"
+			"remark":"分享描述4"
 		}]
 		"""
 
-@promotion @promotionRedbag
+@promotion @promotionRedbag2
 Scenario:1 分享红包列表查询
 	Given jobs登录系统
 	#默认条件查询
@@ -123,7 +123,7 @@ Scenario:1 分享红包列表查询
 		When jobs设置查询条件
 			"""
 			{
-				"name":"红包"
+				"name": "红包"
 			}
 			"""
 		Then jobs能获取分享红包列表
