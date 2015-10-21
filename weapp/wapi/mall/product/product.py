@@ -77,6 +77,8 @@ class Product(api_resource.ApiResource):
 			data['promotion_title'] = product.promotion_title
 		if hasattr(product, 'display_price'):
 			data['display_price'] = product.display_price
+		if hasattr(product, 'product_review'):
+			data['product_review'] = product.product_review
 		return data
 
 	@param_required(['id', 'woid', 'member_grade_id', 'wuid'])
