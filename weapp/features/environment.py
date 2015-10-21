@@ -499,7 +499,9 @@ def __update_template_to_v3():
 	account_models.UserProfile.objects.all().update(backend_template_name='default_v3')
 
 def __init_red_envelope_app():
-	customized.CustomizedApp.objects.filter(name='red_envelope').delete()
+	if customized.CustomizedApp.objects.filter(name='red_envelope'):
+		customized.CustomizedApp.objects.filter(name='red_envelope').delete()
+		customized.CustomizedAppInfo.objects.filter(app_name='red_envelope').delete()
 	user = User.objects.get(username='jobs')
 	app = customized.CustomizedApp.objects.create(owner=user, name='red_envelope', display_name='red_envelope', status=3, last_version=1, updated_time=datetime.now(), created_at=datetime.now())
 	customized.CustomizedAppInfo.objects.create(
