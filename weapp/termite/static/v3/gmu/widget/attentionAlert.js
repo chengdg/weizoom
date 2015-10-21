@@ -15,12 +15,6 @@ Copyright (c) 2011-2012 Weizoom Inc
             isShowCover: function(_this) {
                 return _this.$el.attr('data-is-show-cover') ? true : false;
             },
-            // 快速关注配置去掉
-            /*getUrl: function(_this) {
-                var url = _this.$el.data('url');
-                url = url.replace(/(^\s*)|(\s*$)/g,'');
-                return url;
-            },*/
             getDataId: function(_this) {
                 var id = _this.$el.attr('data-id');
                 return id;
@@ -32,7 +26,6 @@ Copyright (c) 2011-2012 Weizoom Inc
         },
 		_create : function() {
 			// this.$el = this.element;
-            // this.url = this.setting.getUrl(this);
             this.qrcode_image = this.setting.getQrcodeImage(this);
             var height = window.screen.height;
             if(this.setting.isShowButton(this)) {
@@ -71,12 +64,7 @@ Copyright (c) 2011-2012 Weizoom Inc
         render: function() {
             var url = this.url;
             var height;
-            // if(this.url) {
-                // if (this.setting.getDataId(this) == '124') {
-                //     this.$button = $('<a href="'+url+'">点击此处关注未来广场官方微信哦<i class="xui-icon xui-icon-rightarrow"></i></a>');
-                // } else {
             this.$button = $('<a class="xa-guideAttention">关注我们可查看账户积分、红包、优惠券等！</a>');
-                // }
             this.$el.html(this.$button);
             if($('.xa-page')){
                 $('.xa-page').css('padding-top','40px');
@@ -86,9 +74,6 @@ Copyright (c) 2011-2012 Weizoom Inc
                 $('#wrapper').css('top','40px');
             }
             height = this.setting.isShowCover(this) ? '100%' : '40px';
-            // }else {
-            //     height = this.setting.isShowCover(this) ? '100%' : '0px';
-            // }
             this.$el.css('height', height);
         },
 
