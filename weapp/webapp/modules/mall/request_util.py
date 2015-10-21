@@ -39,6 +39,11 @@ from webapp import util as webapp_util
 from cache import webapp_cache
 from bs4 import BeautifulSoup
 
+import wapi as resource
+from utils import dateutil as utils_dateutil
+
+# TODO: 待删除
+from wapi.mall.product.product_hint import ProductHint
 # jz 2015-10-09
 # page_title = u'微众商城'
 
@@ -103,43 +108,49 @@ def __get_product_hint(owner_id, product_id):
 	return hint
 
 
-########################################################################
-# get_product: 显示“商品详情”页面
-########################################################################
 def get_product(request):
+	"""
+	显示“商品详情”页面
+
+	"""
+	#print("in get_product()")
 	product_id = request.GET['rid']
 	webapp_user = request.webapp_user
 
 	member_grade_id = request.member.grade_id if request.member else None
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	#duhao 2015-09-08
-	hint = __get_product_hint(request.webapp_owner_id, product_id)
+	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
+	#product0 = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
+	#hint = __get_product_hint(request.webapp_owner_id, product_id)
+	hint = resource.get('mall', 'product_hint', {'woid': request.webapp_owner_id, 'id': product_id}).get('hint', '')
 
-	if product.is_deleted:
+	if product['is_deleted']:
+	#if product.is_deleted:
 		c = RequestContext(request, {
 			'is_deleted_data': True
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-	if product.promotion:
-		product.promotion['is_active'] = product.promotion_model.is_active
+	#if product.get('promotion'):
+	#	product['promotion']['is_active'] = product['promotion_model'].is_active
 	jsons = [{
 		"name": "models",
-		"content": product.models
+		"content": product.get('models')
 	}, {
 		'name': 'priceInfo',
-		'content': product.price_info
+		'content': product.get('price_info')
 	}, {
 		'name': 'promotion',
-		'content': product.promotion
+		'content': product.get('promotion')
 	}]
 
 	non_member_followurl = None
 	if request.user.is_weizoom_mall:
-		product.is_can_buy_by_product(request)
-		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
+		# TODO: is_can_buy_by_product做什么？To be deprecated.
+		#product0.is_can_buy_by_product(request)
+		# TODO: API化
+		otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
 		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
 		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
 			non_member_followurl = otherSettings.weshop_followurl
@@ -155,21 +166,21 @@ def get_product(request):
 	is_non_member = True if request.member else False
 
 	c = RequestContext(request, {
-		'page_title': product.name,
+		'page_title': product['name'],
 		'product': product,
 		'jsons': jsons,
-		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
-		'model_property_size': len(product.product_model_properties),
+		'is_deleted_data': product.get('is_deleted', False),
+		'model_property_size': len(product.get('product_model_properties',[])),
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
-		'price_info': product.price_info,
+		'price_info': product['price_info'],
 		'usable_integral': usable_integral,
 		'use_integral': use_integral,
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
-		'share_page_desc': product.name,
-		'share_img_url': product.thumbnails_url,
+		'share_page_desc': product['name'],
+		'share_img_url': product['thumbnails_url'],
 		#add by duhao 增加友情提示语
 		'hint': hint
 	})
@@ -177,6 +188,7 @@ def get_product(request):
 	if hasattr(request, 'is_return_context'):
 		return c, product
 	else:
+		# 默认目录: default_v3
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
 
