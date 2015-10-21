@@ -622,18 +622,15 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
     for product_group in product_groups:
         promotion = product_group['promotion']
         if not promotion :
-            first_product = product_group['products'][0]
-            if hasattr(first_product, 'used_promotion_id') and int(getattr(first_product, 'used_promotion_id')) != 0:
-                for product in product_group['products']:
-                    prohaspromotion = promotion_models.ProductHasPromotion.objects.filter(product=product)
-                    if prohaspromotion:
-                        data_detail.append({
-                            'id': product.id,
-                            'msg': '该活动已经过期',
-                            'model_name': product.model_name,
-                            'short_msg': '已经过期',
-                            'inner_step': 1
-                        })
+            for product in product_group['products']:
+                if product.used_promotion_id != 0:
+                    data_detail.append({
+                        'id': product.id,
+                        'msg': '该活动已经过期',
+                        'model_name': product.model_name,
+                        'short_msg': '已经过期',
+                        'inner_step': 1
+                    })
                 __fill_promotion_failed_reason(product_group, "promotion == null and first_product.used_promotion_id, 活动过期0")
                 continue
             else:
@@ -654,56 +651,50 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
         if promotion['id'] != first_product.used_promotion_id:
             #商品携带的“促销活动”与商品当前关联的促销活动不一致，意味着商品携带的促销活动已结束
             for product in product_group['products']:
-                prohaspromotion = promotion_models.ProductHasPromotion.objects.filter(product=product).get()
-                if prohaspromotion:
-                    data_detail.append({
-                        'id': product.id,
-                        'msg': '该活动已经过期',
-                        'model_name': product.model_name,
-                        'short_msg': '已经过期',
-                        'inner_step': 2
-                    })
+                data_detail.append({
+                    'id': product.id,
+                    'msg': '该活动已经过期',
+                    'model_name': product.model_name,
+                    'short_msg': '已经过期',
+                    'inner_step': 2
+                })
             __fill_promotion_failed_reason(product_group, "promotion['id'] != first_product.used_promotion_id, 活动过期1")
             continue
 
         if promotion['status'] == promotion_models.PROMOTION_STATUS_NOT_START or\
             datetime.strptime(promotion['start_date'], '%Y-%m-%d %H:%M:%S') > today:
             for product in product_group['products']:
-                prohaspromotion = promotion_models.ProductHasPromotion.objects.filter(product=product).get()
-                if prohaspromotion:
-                    data_detail.append({
-                            'id': product.id,
-                            'model_name': product.model_name,
-                            'msg': '该活动尚未开始',
-                            'short_msg': '尚未开始'
-                        })
+                data_detail.append({
+                        'id': product.id,
+                        'model_name': product.model_name,
+                        'msg': '该活动尚未开始',
+                        'short_msg': '尚未开始'
+                    })
             __fill_promotion_failed_reason(product_group, "活动未开始")
             continue
 
         if promotion['status'] > promotion_models.PROMOTION_STATUS_STARTED or\
             datetime.strptime(promotion['end_date'], '%Y-%m-%d %H:%M:%S') < today:
             for product in product_group['products']:
-                prohaspromotion = promotion_models.ProductHasPromotion.objects.filter(product=product).get()
-                if prohaspromotion:
-                    data_detail.append({
-                            'id': product.id,
-                            'model_name': product.model_name,
-                            'msg': '该活动已经过期',
-                            'short_msg': '已经过期',
-                            'inner_step': 3
-                        })
+
+                data_detail.append({
+                        'id': product.id,
+                        'model_name': product.model_name,
+                        'msg': '该活动已经过期',
+                        'short_msg': '已经过期',
+                        'inner_step': 3
+                    })
             __fill_promotion_failed_reason(product_group, "活动过期2")
             continue
         if promotion['member_grade_id'] > 0 and promotion['member_grade_id'] != request.member.grade_id:
             for product in product_group['products']:
-                prohaspromotion = promotion_models.ProductHasPromotion.objects.filter(product=product).get()
-                if prohaspromotion:
-                    data_detail.append({
-                            'id': product.id,
-                            'msg': '您的会员等级不满足促销条件',
-                            'model_name': product.model_name,
-                            'short_msg': '活动等级'
-                        })
+
+                data_detail.append({
+                        'id': product.id,
+                        'msg': '您的会员等级不满足促销条件',
+                        'model_name': product.model_name,
+                        'short_msg': '活动等级'
+                    })
             __fill_promotion_failed_reason(product_group, "会员等级不满足促销条件")
             continue
 
@@ -875,7 +866,6 @@ def check_promotions_for_pre_order(pre_order, args, request, **kwargs):
         'success': True
     }
 mall_signals.check_order_related_resource.connect(check_promotions_for_pre_order, sender=mall_signals, dispatch_uid = "check_order_related_resource:check_promotions_for_pre_order")
-
 
 @receiver(mall_signals.check_pre_order_related_resource, sender=mall_signals)
 def check_stocks_for_pre_order(pre_order, args, request, **kwargs):

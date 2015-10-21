@@ -105,7 +105,6 @@ def step_click_check_out(context, webapp_user_name):
 
     order = context.response.context['order']
     argument_request = get_prodcut_ids_info(order)
-    print 'jz------3', argument_request
     url = '/webapp/api/project_api/call/'
     data = {
         'module': 'mall',
