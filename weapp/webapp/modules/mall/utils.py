@@ -387,7 +387,6 @@ def get_products(request):
     '''
     member_discount = get_vip_discount(request)
     product_ids, promotion_ids, product_counts, product_model_names = get_product_param(request)
-
     #id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
     products = []
     product_infos = []
@@ -438,7 +437,6 @@ def get_product_param(request):
         query_string = get_query_string_dict_to_str(request.redirect_url_query_string)
     else:
         query_string = request.REQUEST
-
     if 'product_ids' in query_string:
         product_ids = query_string.get('product_ids', None)
         if product_ids:

@@ -152,7 +152,7 @@ def group_product_by_promotion(request, products):
 		default_products = {"group_id": group_id, "products": []}
 		promotion_name = __get_promotion_name(product)
 		promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
-
+		print "-----------------------",promotion2products
 	now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 	items = promotion2products.items()
 	items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))

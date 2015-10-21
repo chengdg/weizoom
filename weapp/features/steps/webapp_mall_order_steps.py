@@ -111,7 +111,6 @@ def step_click_check_out(context, webapp_user_name):
 
     order = context.response.context['order']
     argument_request = get_prodcut_ids_info(order)
-
     url = '/webapp/api/project_api/call/'
     data = {
         'module': 'mall',
@@ -139,13 +138,13 @@ def step_click_check_out(context, webapp_user_name):
             'money': argument['integral_money']
         })
     response = context.client.post(url, data)
-    content = json.loads(response.content)
-    msg = content["data"].get("msg", "")
-    match_str = u"有商品已下架<br/>2秒后返回购物车<br/>请重新下单"
-    if match_str == msg:
+    response_json = json.loads(response.content)
+    msg = response_json["data"].get("msg", None)
+    if msg:
         context.server_error_msg = msg
+        context.response_json = response_json
     else:
-        context.created_order_id = content['data']['order_id']
+        context.created_order_id = response_json['data']['order_id']
         context.response = response
         if argument.get('order_no', None):
             db_order = Order.objects.get(order_id=context.created_order_id)

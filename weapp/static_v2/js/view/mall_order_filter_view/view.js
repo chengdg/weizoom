@@ -31,10 +31,13 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
 
         var dataView = this.options.dataView;
         var args = this.getFilterValue();
-        dataView.options.args = this.getFilterValueByDict(args);
-        dataView.setPage(1);
-        console.log('dataView.options.args', dataView.options.args)
-        dataView.reload();
+        if(dataView){
+            dataView.options.args = this.getFilterValueByDict(args);
+            dataView.setPage(1);
+            dataView.reload();
+
+        }
+
         this.$el.trigger('end_click');
         this.setStatusActive();
     },
