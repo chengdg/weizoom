@@ -4,7 +4,7 @@ __author__ = 'liupeiyu'
 
 from cloud_user_util import *
 from models import *
-from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_js_config
+from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_js_config, is_wapi_request
 
 #===============================================================================
 # CloudSessionMiddleware : 获取当前请求的用户信息
@@ -13,7 +13,7 @@ from account.url_util import get_webappid_from_request, is_request_for_api, is_r
 class CloudSessionMiddleware(object):
 	NEED_REMOVE_CLOUD_USER_SESSION_FLAG = 'need_remove_cloud_user_session'
 	def process_request(self, request):
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
 
 		#对于支付请求，不处理
