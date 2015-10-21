@@ -35,18 +35,24 @@ ORDER_CANCEL_ACTION = {
 
 # 临时，未保证全部数据准确
 def get_order_actions_for_mobile_bdd(order):
-	if order.pay_interface_type == PAY_INTERFACE_COD and order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-		return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
-	if order.status == ORDER_STATUS_NOT:
-		return [ORDER_CANCEL_ACTION, ORDER_PAY_ACTION]
-	elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-		return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_PAYED_SHIPED:
-		return [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_SUCCESSED:
-		return [ORDER_CANCEL_ACTION]
-	elif order.status == ORDER_STATUS_CANCEL:
-		return []
+        if isinstance(order, dict):
+            pay_interface_type = order['pay_interface_type']
+            status = order['status']
+        else:
+            pay_interface_type = order.pay_interface_type
+            status = order.status
+        if pay_interface_type == PAY_INTERFACE_COD and status == ORDER_STATUS_PAYED_NOT_SHIP:
+        	return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+        if status == ORDER_STATUS_NOT:
+        	return [ORDER_CANCEL_ACTION, ORDER_PAY_ACTION]
+        elif status == ORDER_STATUS_PAYED_NOT_SHIP:
+        	return [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+        elif status == ORDER_STATUS_PAYED_SHIPED:
+        	return [ORDER_FINISH_ACTION, ORDER_CANCEL_ACTION]
+        elif status == ORDER_STATUS_SUCCESSED:
+        	return [ORDER_CANCEL_ACTION]
+        elif status == ORDER_STATUS_CANCEL:
+        	return []
 
 
 def get_prodcut_ids_info(order):
@@ -393,22 +399,22 @@ def step_visit_personal_orders(context, webapp_user_name):
     import datetime
     for actual_order in orders:
         order = {}
-        order['final_price'] = actual_order.final_price
+        order['final_price'] = actual_order['final_price']
         order['products'] = []
-        order['counts'] = actual_order.product_count
-        order['status'] = ORDERSTATUS2MOBILETEXT[actual_order.status]
-        order['created_at'] = actual_order.created_at
+        order['counts'] = actual_order['product_count']
+        order['status'] = ORDERSTATUS2MOBILETEXT[actual_order['status']]
+        order['created_at'] = actual_order['created_at']
         order['actions'] = [action['name'] for action in get_order_actions_for_mobile_bdd(actual_order)]
         # BBD中购买的时间再未指定购买时间的情况下只能为今天
-        if actual_order.created_at.date() == datetime.date.today():
+        if actual_order['created_at'].date() == datetime.date.today():
             order['created_at'] = u'今天'
 
-        for i, product in enumerate(actual_order.products):
+        for i, product in enumerate(actual_order['products']):
             # 列表页面最多显示3个商品
             if i > 2:
                 break
             a_product = {}
-            a_product['name'] = product.name
+            a_product['name'] = product['name']
             # a_product['price'] = product.total_price
             order['products'].append(a_product)
         actual.append(order)

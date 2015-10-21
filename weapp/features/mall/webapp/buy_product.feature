@@ -411,7 +411,7 @@ Scenario:9 购买库存为零的商品
 		"""
 	Then bill获得错误提示'有商品库存不足<br/>2秒后返回购物车<br/>请重新下单'
 
-@mall2 @allOrder
+@mall2 @allOrder10
 Scenario:10 会员购买商品后，获取订单列表
 	bill成功创建订单多个订单后，获取订单列表
 

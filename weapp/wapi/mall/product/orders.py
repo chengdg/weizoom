@@ -79,6 +79,10 @@ class Orders(api_resource.ApiResource):
 		}
 		if hasattr(order, 'products'):
 			data['products'] = Orders.products_to_dict(order.products)
+		if hasattr(order, 'product_count'):
+			data['product_count'] = order.product_count
+		if hasattr(order, 'status'):
+			data['status'] = order.status
 		return data
 
 	@param_required(['wuid', 'member_id', 'woid'])
