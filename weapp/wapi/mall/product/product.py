@@ -91,7 +91,6 @@ class Product(api_resource.ApiResource):
 		member_grade_id = args['member_grade_id']
 		webapp_user = member_models.WebAppUser.objects.get(id = args['wuid'])
   
-		#product = mall_models.Product.objects.get(id=args['id'])
 		product = mall_api.get_product_detail(webapp_owner_id, product_id, webapp_user, member_grade_id)
-		print("{}".format(product))
+		#print("{}".format(product))
 		return Product.to_dict(product)
