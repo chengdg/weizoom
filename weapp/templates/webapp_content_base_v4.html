@@ -68,6 +68,7 @@
         <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/weixinapi.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/attentionAlert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script>
@@ -92,17 +93,15 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-            <!--
-            <div data-ui-role="attentionAlert" 
-                {% if not cur_request_member %}
+            <div data-ui-role="attentionAlert" class="xui-attentionAlert"
+				{% if not cur_request_member %}
                     data-is-show-button="true" 
-                {% endif %}
+				{% endif %}
                 {% if not hide_non_member_cover %}
                     data-is-show-cover="true"
                 {% endif %}
-                data-url="{% if operation_settings %}{{ operation_settings.non_member_followurl }}{% endif %}">
+                data-id="{{request.webapp_owner_id}}">
             </div>
-            -->
 
             {% block content-panel %}{% endblock %}
         {% endif %}
