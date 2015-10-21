@@ -58,6 +58,7 @@ Background:
             }]
         }]
         """
+
 @mall2 @mall.webapp.comment.aa
 Scenario: 1 评价包括文字与晒图
     # bill没有进行购买评价，访问商品评价时，无评价信息
@@ -84,8 +85,8 @@ Scenario: 1 评价包括文字与晒图
     Then bill成功获取'商品评价'列表
         """
         [{
-        "review_detail": "商品1还不错！！！！！",
-        "product_name": "商品1"
+            "review_detail": "商品1还不错！！！！！",
+            "product_name": "商品1"
         }]
         """
 
