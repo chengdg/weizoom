@@ -187,8 +187,8 @@ Scenario:1 分享红包列表查询
 		When jobs设置查询条件
 			"""
 			{
-				"start_time": "今天",
-				"end_time": "5天后"
+				"start_date": "今天",
+				"end_date": "5天后"
 			}
 			"""
 		Then jobs能获取分享红包列表
@@ -204,8 +204,8 @@ Scenario:1 分享红包列表查询
 		When jobs设置查询条件
 			"""
 			{
-				"start_time": "昨天",
-				"end_time": "今天"
+				"start_date": "昨天",
+				"end_date": "今天"
 			}
 			"""
 		Then jobs能获取分享红包列表

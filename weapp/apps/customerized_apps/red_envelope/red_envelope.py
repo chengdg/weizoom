@@ -125,16 +125,15 @@ class RedEnvelopeRuleList(resource.Resource):
         status = request.GET.get('status', '')
 
         rules = promotion_models.RedEnvelopeRule.objects.filter(owner=request.manager, is_delete=False).order_by('-id')
-
         #处理筛选
         if name:
             rules = rules.filter(name__contains=name)
         if coupon_rule_id:
             rules = rules.filter(coupon_rule_id=coupon_rule_id)
         if start_date:
-             rules = rules.filter(start_time__gt=start_date)
+            rules = rules.filter(start_time__gte=start_date)
         if end_date:
-            rules = rules.filter(end_time__lt=end_date)
+            rules = rules.filter(end_time__lte=end_date)
         if status:
             rules = rules.filter(limit_time=False,status=status)
         #处理过期排序
