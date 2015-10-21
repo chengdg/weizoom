@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from termite import pagestore as pagestore_manager
 
 from core import resource
 from core import paginator
@@ -35,15 +36,19 @@ class MSign(resource.Resource):
 		webapp_owner_id = request.GET.get('webapp_owner_id', None)
 		participance_data_count = 0
 		auth_appid_info = None
+
+
 		if 'new_app' in p_id:
 			project_id = p_id
 			activity_status = u"未开始"
 			record_id = 0
 			member_info = {}
 			prize_info = {}
+			sign_description = ""
 			record = None
 		else:
 			record = app_models.Sign.objects(owner_id=webapp_owner_id)
+
 			if record.count() > 0:
 				record = record[0]
 				member_info = {
@@ -52,6 +57,10 @@ class MSign(resource.Resource):
 					'user_integral': member.integral if member else 0
 				}
 				prize_settings = record.prize_settings
+
+				pagestore = pagestore_manager.get_pagestore('mongo')
+				page = pagestore.get_page(record.related_page_id, 1)
+				sign_description = page['component']['components'][0]['model']['description']
 
 				if not isPC:
 					if not isMember:
@@ -72,8 +81,9 @@ class MSign(resource.Resource):
 				serial_prize = {}
 				next_serial_prize = {}
 				prize_rules = {}
-				for name in sorted(prize_settings.keys()):
-					setting = prize_settings[name]
+				for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+					setting = prize_settings[name[1]]
+					name = name[0]
 					if setting['integral']:
 						p_integral = setting['integral']
 					else:
@@ -94,25 +104,27 @@ class MSign(resource.Resource):
 						temp_serial_count = 0
 					if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
 						activity_status = u'已签到'
-						for name in sorted(prize_settings.keys()):
-							setting = prize_settings[name]
+						for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+							setting = prize_settings[name[1]]
+							name = name[0]
 							if int(name) > signer.serial_count:
 								next_serial_prize = {
-									'count': name,
+									'count': int(name),
 									'prize': setting
 								}
 								break
 					elif temp_serial_count >=1:
 						flag = False
-						for name in sorted(prize_settings.keys()):
-							setting = prize_settings[name]
-							if flag or int(name)>signer.serial_count + 1:
+						for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+							setting = prize_settings[name[1]]
+							name = int(name[0])
+							if flag or name>signer.serial_count + 1:
 								next_serial_prize = {
 									'count': name,
 									'prize': setting
 								}
 								break
-							if int(name) == signer.serial_count + 1:
+							if name == signer.serial_count + 1:
 								serial_prize = {
 									'count': name,
 									'prize':setting
@@ -126,6 +138,7 @@ class MSign(resource.Resource):
 					'next_serial_prize': next_serial_prize,
 					'prize_rules':prize_rules
 				}
+
 			else:
 				c = RequestContext(request, {
 					'is_deleted_data': True
@@ -147,12 +160,13 @@ class MSign(resource.Resource):
 			'hide_non_member_cover': True, #非会员也可使用该页面
 			'isPC': isPC,
 			'isMember': isMember,
-			'member_info':json.dumps(member_info),
+			'member_info':member_info,
 			'prize_info': json.dumps(prize_info),
 			'auth_appid_info': auth_appid_info,
 			'share_page_title': record.share['desc'] if record else '',
 			'share_img_url': record.share['img'] if record else '',
 			'share_page_desc': u"签到",
+			'sign_description':sign_description,
 
 		})
 		return render_to_response('sign/templates/webapp/m_sign.html', c)

@@ -8,6 +8,7 @@ from modules.member.module_api import get_member_by_openid
 from market_tools.tools.coupon.util import consume_coupon
 from modules.member import models as member_models
 from mall.promotion.models import CouponRule
+from termite import pagestore as pagestore_manager
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -61,9 +62,10 @@ class SignParticipance(models.Document):
 		prize_settings = sign.prize_settings
 		bingo = 0
 		flag = False
-		for name in sorted(prize_settings.keys()):
-			setting = prize_settings[name]
-			if flag or int(name)>curr_serial_count:
+		for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+			setting = prize_settings[name[1]]
+			name = int(name[0])
+			if flag or name>curr_serial_count:
 				next_serial_count = name
 				for type, value in setting.items():
 					if type == 'integral':
@@ -72,7 +74,7 @@ class SignParticipance(models.Document):
 						next_serial_coupon_id = value['id'] if value != '' else ''
 						next_serial_coupon_name = value['name']
 				break
-			if int(name) == 0:
+			if name == 0:
 				#每日奖励和达到连续签到要求的奖励
 				for type, value in setting.items():
 					if type == 'integral':
@@ -80,7 +82,7 @@ class SignParticipance(models.Document):
 					elif type == 'coupon':
 						daily_coupon_id = value['id'] if value != '' else ''
 						daily_coupon_name = value['name']
-			if int(name) == curr_serial_count:
+			if name == curr_serial_count:
 				#达到连续签到要求的奖励
 				bingo = curr_serial_count
 				flag = True
@@ -137,7 +139,7 @@ class SignParticipance(models.Document):
 		return_data['next_serial_coupon_id'] = next_serial_coupon_id
 		return_data['next_serial_coupon_name'] = next_serial_coupon_name
 		return_data['reply_content'] = sign.reply['content']
-		return_data['serial_count'] = self.serial_count
+		return_data['serial_count'] = int(self.serial_count)
 
 		return return_data
 
@@ -175,6 +177,7 @@ class Sign(models.Document):
 		:return: html片段
 		"""
 		return_html = []
+		sign_description=""
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
@@ -201,6 +204,11 @@ class Sign(models.Document):
 						signer.save()
 					else:
 						signer = signer[0]
+
+					pagestore = pagestore_manager.get_pagestore('mongo')
+					page = pagestore.get_page(sign.related_page_id, 1)
+					sign_description = page['component']['components'][0]['model']['description']
+
 					return_data = signer.do_signment(sign)
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
@@ -214,7 +222,7 @@ class Sign(models.Document):
 								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%s&project_id=0">点击查看</a>' % (host, data['webapp_owner_id']))
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
-						return_html.append(u'\n签到说明：签到有礼！\n')
+						return_html.append(u'\n签到说明：%s\n'%sign_description)
 						return_html.append(str(return_data['reply_content']))
 					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> >>点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:

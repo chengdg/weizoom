@@ -427,7 +427,10 @@ ui-appPage-commonStyle">
                     }
                 };
             for(var i=0;i<dynamicComponents.length;i++){
-                var index = dynamicComponents[i].model.get('serial_count');
+                var index = parseInt(dynamicComponents[i].model.get('serial_count'));
+                if(index && index != 0 && index < 10){
+                    index = '0'+index;
+                }
                 var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
                 prize_setings[index]={
                     'integral':dynamicComponents[i].model.get('serial_count_points'),
