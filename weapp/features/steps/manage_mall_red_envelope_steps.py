@@ -124,6 +124,7 @@ def step_impl(context, user):
     print("actual_data: {}".format(actual))
 
     expected = json.loads(context.text)
+    print("actual_data: {}".format(actual))
     for expect in expected:
         if 'start_date' in expect:
             if expect['start_date'] == '':
@@ -141,7 +142,12 @@ def step_impl(context, user):
 
 
 def __get_red_envelope_rule_id(red_envelope_rule_name):
-    red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(name=red_envelope_rule_name)
+    if red_envelope_rule_name.rfind("【图文领取】")>=0:
+        red_envelope_rule_name = red_envelope_rule_name.split("【图文领取】")[1]
+        receive_method = 1
+    else:
+        receive_method = 0
+    red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(name=red_envelope_rule_name,receive_method=receive_method)
     return red_envelope_rule.id
 
 action2code = {

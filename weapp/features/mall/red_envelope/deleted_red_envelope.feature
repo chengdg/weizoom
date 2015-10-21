@@ -25,7 +25,7 @@ Background:
 			"using_limit": "满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"coupon_id_prefix": "coupon2_id_",
+			"coupon_id_prefix": "coupon1_id_",
 			"coupon_product": "商品1"
 		},{
 			"name": "全体券2",
@@ -53,43 +53,43 @@ Background:
 			"start_date": "今天",
 			"end_date": "2天后",
 			"receive_method":"下单领取",
-			"limit_order_money": 100,
-			"use_info": "下订单领红包1",
+			"limit_money": 100,
+			"detail": "下订单领红包1",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述1"
+			"remark":"分享描述1"
 		},{
 			"name": "红包2",
 			"prize_info": "全体券2",
-			"limit_time": true,
+			"is_permanant_active": true,
 			"receive_method":"图文领取",
-			"use_info": "图文领取领红包2",
+			"detail": "图文领取领红包2",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述2"
+			"remark":"分享描述2"
 		},{
 			"name": "红包3",
 			"prize_info": "全体券3",
-			"limit_time": true,
-			"limit_order_money": "无限制",
+			"is_permanant_active": true,
+			"limit_money": "无限制",
 			"receive_method":"下单领取",
-			"use_info": "下订单领红包3",
+			"detail": "下订单领红包3",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述3"
+			"remark":"分享描述3"
 		},{
 			"name": "红包4",
 			"prize_info": "全体券3",
 			"start_date": "今天",
 			"end_date": "2天后",
 			"receive_method":"图文领取",
-			"use_info": "图文领取红包4",
+			"detail": "图文领取红包4",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述4"
+			"remark":"分享描述4"
 		}]
 		"""
 
-@promotion @promotionRedbag 
+@promotion @promotionRedbag
 Scenario:1 删除分享红包
 	Given jobs登录系统
-	When jobs开启分享红包'红包1'
+	When jobs-开启分享红包"红包1"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -111,7 +111,7 @@ Scenario:1 删除分享红包
 		}]
 		"""
 	#删除'图文领取'方式的分享红包
-	When jobs删除分享红包"【图文领取】红包4"
+	When jobs-删除分享红包"【图文领取】红包4"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -129,7 +129,7 @@ Scenario:1 删除分享红包
 		}]
 		"""
 	#删除'下单领取'方式的分享红包（状态必须为'关闭'）
-	When jobs删除分享红包"红包3"
+	When jobs-删除分享红包"红包3"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -160,7 +160,7 @@ Scenario:2 在查询"活动名称"结果中删除分享红包
 			"actions": ["分析","删除","查看"]
 		}]
 		"""
-	When jobs删除分享红包"【图文领取】红包4"
+	When jobs-删除分享红包"【图文领取】红包4"
 	Then jobs能获取分享红包列表
 		"""
 		[]
@@ -186,7 +186,7 @@ Scenario:3 在查询"奖励"结果中删除分享红包
 			"actions": ["分析","开启","删除","查看"]
 		}]
 		"""
-	When jobs删除分享红包"红包3"
+	When jobs-删除分享红包"红包3"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -202,8 +202,8 @@ Scenario:4 在查询"奖励时间"结果中删除分享红包
 		"""
 		{
 			"prize_info": "所有奖励",
-			"start_time": "今天",
-			"end_time": "2天后"
+			"start_date": "今天",
+			"end_date": "2天后"
 		}
 		"""
 	Then jobs能获取分享红包列表
@@ -218,7 +218,7 @@ Scenario:4 在查询"奖励时间"结果中删除分享红包
 			"actions": ["分析","开启","删除","查看"]
 		}]
 		"""
-	When jobs删除分享红包"红包1"
+	When jobs-删除分享红包"红包1"
 	Then jobs能获取分享红包列表
 		"""
 		[{

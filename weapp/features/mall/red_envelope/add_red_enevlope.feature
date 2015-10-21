@@ -64,7 +64,7 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
-@mall2 @promotion @promotionRedbag1
+@mall2 @promotion @promotionRedbag
 Scenario: 1 添加分享红包
 	jobs添加"分享红包"后，"红包"列表会按照添加的倒序排列
 	1.bill能获取红包列表
