@@ -21,17 +21,46 @@ def check_failed_signal_response(signal_responses):
 	if failed_signal_responses:
 		failed_signal_response = failed_signal_responses[0]
 		data_detail = []
+		real_data_detail = []
 		for data in failed_signal_responses:
 			if data['data'].has_key('detail'):
 				for detail in data['data']['detail']:
 					data_detail.append(detail)
 
-		failed_signal_response['data']['detail'] = data_detail
+		products_ids = [detail['id'] for detail in data_detail]
+		products_ids = list(set(products_ids))
+		print "products_ids----------------",products_ids
+		print "data_detail----------------",data_detail
+		for id in products_ids:
+			flag,index = _check_pro_id_in_detail_list(data_detail,id)
+			if flag:
+				real_data_detail.append(data_detail[index])
+				continue
+			else:
+				for detail in data_detail:
+					print "id----------------",detail['id'],id
+					print "detail----------------",detail
+					if detail['id'] == id:
+						real_data_detail.append(detail)
+		print real_data_detail
+		failed_signal_response['data']['detail'] = real_data_detail
 		response = create_response(500)
 		response.data = failed_signal_response['data']
 		return response.get_response()
 	return None
 
+def _check_pro_id_in_detail_list(datadetail,pro_id):
+	from mall.signal_handler import UnSalesInfo
+	flag,index = False,0
+	for index,data in enumerate (datadetail):
+		if data['id'] == pro_id and data['short_msg'] == '已删除':
+			flag,index = True,index # 存在，以及索引
+			break
+		elif data['id'] == pro_id and data['short_msg'] == UnSalesInfo:
+		    flag,index = True,index # 存在，以及索引
+		else:
+			flag,index = False,index # 存在，以及索引
+	return flag,index
 
 ##################################################################################
 # register_signal_handlers: 注册signal handler
