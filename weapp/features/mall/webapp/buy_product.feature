@@ -100,8 +100,8 @@ Background:
 @mall2 @mall.webapp @zy_bp01
 Scenario:1 购买单个商品
 	jobs添加商品后
-	1. bill能在webapp中购买jobs添加的商品
-	1. bill的订单中的信息正确
+	1.bill能在webapp中购买jobs添加的商品
+	1.bill的订单中的信息正确
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -137,8 +137,8 @@ Scenario:1 购买单个商品
 @mall2 @mall.webapp @zy_bp02
 Scenario:2 购买商品时，使用订单备注
 	bill在购买jobs添加的商品时
-	1. 添加了"订单备注"，则jobs能在管理系统中看到该"订单备注"
-	2. 不添加'订单备注', 则jobs能在管理系统中看到"订单备注"为空字符串
+	1.添加了"订单备注"，则jobs能在管理系统中看到该"订单备注"
+	2.不添加'订单备注', 则jobs能在管理系统中看到"订单备注"为空字符串
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -188,8 +188,8 @@ Scenario:2 购买商品时，使用订单备注
 @mall2 @mall.webapp @zy_bp03
 Scenario:3 购买有规格的商品
 	jobs添加商品后
-	1. bill能在webapp中购买jobs添加的商品
-	2. bill的订单中的信息正确
+	1.bill能在webapp中购买jobs添加的商品
+	2.bill的订单中的信息正确
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -228,11 +228,10 @@ Scenario:3 购买有规格的商品
 @mall2 @mall.webapp @zy_bp04
 Scenario:4 购买已经下架的商品
 	bill可能会在以下情景下购买已下架的商品A：
-	1. bill打开商品A的详情页面
-	2. bill点击“购买”，进入商品A的订单编辑页面
-	3. jobs在后台将商品A下架
-	4. bill点击“支付”，完成订单
-
+	1.bill打开商品A的详情页面
+	2.bill点击“购买”，进入商品A的订单编辑页面
+	3.jobs在后台将商品A下架
+	4.bill点击“支付”，完成订单
 	这时，系统应该通知bill：商品已下架
 
 	When bill访问jobs的webapp
@@ -250,9 +249,9 @@ Scenario:4 购买已经下架的商品
 @mall2 @mall.webapp @zy_bp05
 Scenario:5 购买的商品数量等于库存数量
 	jobs添加有限商品后
-	1. bill能在webapp中购买jobs添加的商品
-	2. bill的订单中的信息正确
-	3. jobs查看库存
+	1.bill能在webapp中购买jobs添加的商品
+	2.bill的订单中的信息正确
+	3.jobs查看库存
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -296,11 +295,11 @@ Scenario:5 购买的商品数量等于库存数量
 @mall2 @mall.webapp @zy_bp06
 Scenario:6 购买库存不足的商品
 	bill可能会在以下情景下购买库存不足的商品A：
-	1. bill打开商品A的详情页面
-	2. bill调整数量为3个点击“购买”，进入商品A的订单编辑页面
-	3. jobs在后台将商品A的库存调整为2个
-	4. bill点击“支付”，完成订单
-	5. jobs查看库存
+	1.bill打开商品A的详情页面
+	2.bill调整数量为3个点击“购买”，进入商品A的订单编辑页面
+	3.jobs在后台将商品A的库存调整为2个
+	4.bill点击“支付”，完成订单
+	5.jobs查看库存
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -372,11 +371,11 @@ Scenario:8 没有货到付款的商品只有一种支付方式
 @mall2 @mall.webapp @zy_bp09
 Scenario:9 购买库存为零的商品
 	bill可能会在以下情景下购买库存不足的商品A：
-	1. bill打开商品A的详情页面
-	2. bill调整数量为2个点击“购买”，进入商品A的订单编辑页面
-	3. bill点击“支付”，完成订单
-	4. bill再次购买商品A
-	5. jobs查看库存
+	1.bill打开商品A的详情页面
+	2.bill调整数量为2个点击“购买”，进入商品A的订单编辑页面
+	3.bill点击“支付”，完成订单
+	4.bill再次购买商品A
+	5.jobs查看库存
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -415,7 +414,6 @@ Scenario:9 购买库存为零的商品
 @mall2 @allOrder
 Scenario:10 会员购买商品后，获取订单列表
 	bill成功创建订单多个订单后，获取订单列表
-
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
