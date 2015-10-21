@@ -86,7 +86,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag 
 Scenario:1 删除分享红包
 	Given jobs登录系统
 	When jobs-开启分享红包"红包1"
@@ -143,7 +143,7 @@ Scenario:1 删除分享红包
 		}]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag 
 Scenario:2 在查询"活动名称"结果中删除分享红包
 	When jobs设置查询条件
 		"""
@@ -166,7 +166,7 @@ Scenario:2 在查询"活动名称"结果中删除分享红包
 		[]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag 
 Scenario:3 在查询"奖励"结果中删除分享红包
 	When jobs设置查询条件
 		"""
@@ -196,7 +196,7 @@ Scenario:3 在查询"奖励"结果中删除分享红包
 		}]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag 
 Scenario:4 在查询"奖励时间"结果中删除分享红包
 	When jobs设置查询条件
 		"""
