@@ -81,10 +81,10 @@ def step_impl(context, user):
     param = {}
     if hasattr(context, 'query_param'):
         # 如果给定了query_param，则模拟按条件查询
-        #print("query_param: {}".format(context.query_param))
+        # print("query_param: {}".format(context.query_param))
         query_param = context.query_param
-        param['name'] = query_param['name']
-        coupon_name = query_param['prize_info'] 
+        param['name'] = query_param.get('name', '')
+        coupon_name = query_param.get('prize_info', u"所有奖励")
         if coupon_name  == u"所有奖励":
             param['couponRule'] = 0
         else:
@@ -102,10 +102,12 @@ def step_impl(context, user):
         else:
             param['endDate'] = ''
         #param.update(context.query_param)
-
+    print('param:111111111111111')
+    print(param)
     response = context.client.get('/apps/red_envelope/api/red_envelope_rule_list/?_method=get', param)
     rules = json.loads(response.content)['data']['items']
-
+    print('rules:111111111111111')
+    print(rules)
     status2name = {
         True: u'开启',
         False: u'关闭'
