@@ -32,7 +32,7 @@ class MSign(resource.Resource):
 		p_id = request.GET.get('id','id')
 		member = request.member
 		isPC = request.GET.get('isPC',0)
-		isMember = member and member.status == 1
+		isMember = member.is_subscribed
 		webapp_owner_id = request.GET.get('webapp_owner_id', None)
 		participance_data_count = 0
 		auth_appid_info = None
