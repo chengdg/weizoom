@@ -137,13 +137,13 @@ class RealtimeMessages(resource.Resource):
                 pass
         if content or (start_time and end_time) or nick_name or grade_id != '-1' or tag_id != '-1':
             status = STATUS_ALL
-            pageinfo, realtime_messages = get_messages_from_messages(request.user, request.user_profile, cur_page, count_per_page, content, start_time, end_time, filter_value_items,request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_messages(request.manager, request.user_profile, cur_page, count_per_page, content, start_time, end_time, filter_value_items,request.META['QUERY_STRING'])
         elif status == STATUS_COLLECT:
-            pageinfo, realtime_messages = get_messages_from_collected(request.user, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_collected(request.manager, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
         elif status == STATUS_REMARK:
-            pageinfo, realtime_messages = get_messages_from_remarked(request.user, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_remarked(request.manager, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
         else:
-            pageinfo, realtime_messages = get_sessions(request.user, request.user_profile, cur_page, count_per_page, status, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_sessions(request.manager, request.user_profile, cur_page, count_per_page, status, request.META['QUERY_STRING'])
 
         response = create_response(200)
         response.data = {
@@ -170,7 +170,7 @@ class RealtimeMessages(resource.Resource):
         type = request.POST['type']
         openid_sendto = request.POST['openid']
 
-        mpuser = get_system_user_binded_mpuser(request.user)
+        mpuser = get_system_user_binded_mpuser(request.manager)
         if mpuser is None:
             response = create_response(500)
             response.errMsg = u'请先进行公众号的绑定'
@@ -229,7 +229,7 @@ class RealtimeMessages(resource.Resource):
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
 
-        mpuser = get_system_user_binded_mpuser(request.user)
+        mpuser = get_system_user_binded_mpuser(request.manager)
         if mpuser is None:
             response = create_response(500)
             response.errMsg = u'请先进行公众号的绑定'

@@ -54,7 +54,7 @@ class SingleNews(resource.Resource):
 		创建新的图文
 		"""
 		newses = json.loads(request.POST['data'])
-		material = weixin_models.Material.objects.create(owner=request.user, type=weixin_models.SINGLE_NEWS_TYPE)
+		material = weixin_models.Material.objects.create(owner=request.manager, type=weixin_models.SINGLE_NEWS_TYPE)
 
 		for news in newses:
 			weixin_models.News.objects.create(
@@ -124,7 +124,7 @@ class SingleNews(resource.Resource):
 		"""
 		删除商品
 		"""
-		weixin_models.Material.objects.filter(owner=request.user, id=request.POST['id']).update(is_deleted=True)
+		weixin_models.Material.objects.filter(owner=request.manager, id=request.POST['id']).update(is_deleted=True)
 		return create_response(200).get_response()
 
 
@@ -163,7 +163,7 @@ class MultiNews(resource.Resource):
 		创建新的图文
 		"""
 		newses = json.loads(request.POST['data'])
-		material = weixin_models.Material.objects.create(owner=request.user, type=weixin_models.MULTI_NEWS_TYPE)
+		material = weixin_models.Material.objects.create(owner=request.manager, type=weixin_models.MULTI_NEWS_TYPE)
 
 		for news in newses:
 			weixin_models.News.objects.create(
@@ -240,6 +240,6 @@ class MultiNews(resource.Resource):
 		"""
 		删除商品
 		"""
-		weixin_models.Material.objects.filter(owner=request.user, id=request.POST['id']).update(is_deleted=True)
+		weixin_models.Material.objects.filter(owner=request.manager, id=request.POST['id']).update(is_deleted=True)
 		return create_response(200).get_response()
 

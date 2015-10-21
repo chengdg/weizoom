@@ -176,6 +176,7 @@ def process_item_group_data(request, component):
 			sub_component['__is_valid'] = False
 
 	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
+	valid_product_count = 0
 	if len(product_ids) == 0:
 		component['_has_data'] = False
 	else:
@@ -198,6 +199,7 @@ def process_item_group_data(request, component):
 				sub_component['__is_valid'] = False
 				continue
 
+			valid_product_count = valid_product_count + 1
 			runtime_data['product'] = {
 				"id": product.id,
 				"name": product.name,
@@ -206,6 +208,11 @@ def process_item_group_data(request, component):
 				"is_member_product": product.is_member_product,
 				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			}
+	
+	if valid_product_count == 0 and request.in_design_mode:
+		valid_product_count = -1
+	component['valid_product_count'] = valid_product_count
+
 
 
 def process_item_list_data(request, component):

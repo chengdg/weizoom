@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import urllib
+import urllib2
 
 from behave import when, then, given
 
@@ -10,13 +12,16 @@ from features.testenv.model_factory import timedelta, json, ORDER_STATUS_NOT
 from mall.promotion.models import datetime
 import steps_db_util
 
+
 ###############################
 # when steps
 ###############################
+from tools.express.models import ExpressHasOrderPushStatus
 
 
 def get_order_action_set(actions):
     return set([action['name'] for action in actions])
+
 
 ORDER_ACTION_NAME2ACTION = {
     u'支付': 'pay',
@@ -55,11 +60,12 @@ def step_impl(context, action, user, order_code):
     order_id = bdd_util.get_order_by_order_no(order_code).id
 
     data = {
-            'order_id': order_id,
-            'action': ORDER_ACTION_NAME2ACTION[action]
+        'order_id': order_id,
+        'action': ORDER_ACTION_NAME2ACTION[action]
     }
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
+
 
 # @when(u"{user}设置订单过期时间{order_expired_day}天")
 @when(u"{user}设置未付款订单过期时间{order_expired_hour}小时")
@@ -70,10 +76,12 @@ def step_impl(context, user, order_expired_hour):
     }
     context.client.post(url, data)
 
+
 @when(u"{user}触发订单超时取消任务")
 def step_impl(context, user):
     from services.cancel_not_pay_order_service.tasks import cancel_not_pay_order_timeout
     cancel_not_pay_order_timeout('', '')
+
 
 ######
 
@@ -225,7 +233,9 @@ def step_impl(context, user):
         actual_order['postage'] = order_item['postage']
         actual_order['save_money'] = order_item['save_money']
         if 'edit_money' in order_item and order_item['edit_money']:
-            actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.', '').replace('-', '')
+            actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.',
+                                                                                                              '').replace(
+                '-', '')
         if order_item['parent_action']:
             actual_order['actions'] = get_order_action_set(order_item['parent_action'])
         else:
@@ -235,7 +245,8 @@ def step_impl(context, user):
         buy_product_results = []
         for group in order_item['groups']:
             for buy_product in group['products']:
-                total_price = buy_product.get('total_price', round(float(buy_product.get('price'))*buy_product.get('count'), 2))
+                total_price = buy_product.get('total_price',
+                                              round(float(buy_product.get('price')) * buy_product.get('count'), 2))
                 buy_product_result = {}
                 buy_product_result['product_name'] = buy_product['name']
                 buy_product_result['name'] = buy_product['name']
@@ -256,7 +267,7 @@ def step_impl(context, user):
     expected = json.loads(context.text)
     for order in expected:
         if 'actions' in order:
-            order['actions'] = set(order['actions'])    # 暂时不验证顺序
+            order['actions'] = set(order['actions'])  # 暂时不验证顺序
         for pro in order.get('products', []):
             if 'supplier' in pro and order.get('status', None) == u'待支付':
                 del pro['supplier']
@@ -276,7 +287,7 @@ def step_impl(context, user):
     order.order_no = order.order_id
     order.order_type = ORDER_TYPE2TEXT[order.type]
     order.total_price = float(order.final_price)
-    order.ship_area = order.area # + ' ' + order.ship_address
+    order.ship_area = order.area  # + ' ' + order.ship_address
 
     order.actions = get_order_action_set(order.actions)
     for product in order.products:
@@ -379,9 +390,9 @@ def step_look_for_order(context, user):
         'order_source': u'全部',
         'order_status': u'全部',
         'belong': 'all',
-        "date_interval":"",
-        "date_interval_type":1,
-        "product_name":"",
+        "date_interval": "",
+        "date_interval_type": 1,
+        "product_name": "",
     }
 
     query_params_c = json.loads(context.text)
@@ -500,10 +511,10 @@ def step_get_specify_order(context, user):
         item = dict(map(None, csv_items[0], [str(r).decode('utf8') for r in row]))
         item['ship_address'] = '' if not item.get('ship_address') else item.get('ship_address').replace(' ', ',')
         if '' != item.get('pay_time') and '已完成' not in item.get('pay_time').encode('utf-8'):
-            data = datetime.strptime(item['pay_time'],'%Y-%m-%d %H:%M')
+            data = datetime.strptime(item['pay_time'], '%Y-%m-%d %H:%M')
             item['pay_time'] = '%s 00:00' % data.strftime('%Y-%m-%d')
         if None != item.get('delivery_time') and '' != item.get('delivery_time'):
-            data = datetime.strptime(item['delivery_time'],'%Y-%m-%d %H:%M')
+            data = datetime.strptime(item['delivery_time'], '%Y-%m-%d %H:%M')
             item['delivery_time'] = '%s 00:00' % data.strftime('%Y-%m-%d')
         actual.append(item)
     context.last_csv_order_info = csv_items[-1]
@@ -534,7 +545,8 @@ def step_get_specify_order(context, user):
 
                 order_no_info = order['order_no'].split('-')
                 if len(order_no_info) > 2:
-                    order['order_no'] = '%s^%s-%s' % (order_no_info[0], Supplier.objects.get(name=order_no_info[1]).id,order_no_info[2])
+                    order['order_no'] = '%s^%s-%s' % (
+                    order_no_info[0], Supplier.objects.get(name=order_no_info[1]).id, order_no_info[2])
                 else:
                     order_no_info = order['order_no'].split('-')
                     if u'' != order['edit_money']:
@@ -611,10 +623,9 @@ def step_impl(context, user, order_id):
 
 
 def __get_order(context, order_id):
-
     if '-' in order_id:
         order_no_info = order_id.split('-')
-        order_id = '%s^%s' % (order_no_info[0], Supplier.objects.get(name = order_no_info[1]).id)
+        order_id = '%s^%s' % (order_no_info[0], Supplier.objects.get(name=order_no_info[1]).id)
 
     return Order.objects.get(order_id=order_id)
 
@@ -679,3 +690,6 @@ def step_impl(context, user, order_id):
         })
 
     bdd_util.assert_list(expected, actual)
+
+
+

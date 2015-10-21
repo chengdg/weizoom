@@ -35,7 +35,7 @@ class Menu(resource.Resource):
 		"""
 		status = STATUS_OPEN
 		try:
-			menu_status = CustomerMenuStatus.objects.get(owner=request.user)
+			menu_status = CustomerMenuStatus.objects.get(owner=request.manager)
 			status = menu_status.status
 			
 		except:
@@ -43,7 +43,7 @@ class Menu(resource.Resource):
 		
 		is_certified_service = False
 		try:
-			mpuser = get_system_user_binded_mpuser(request.user)
+			mpuser = get_system_user_binded_mpuser(request.manager)
 			is_certified_service = (mpuser.is_certified and mpuser.is_service)
 		except:
 			pass
@@ -53,7 +53,7 @@ class Menu(resource.Resource):
 			'second_nav_name': export.WEIXIN_MPUSER_SECOND_NAV,
 			'third_nav_name': export.MPUSER_MENU_NAV,
 			'status': status,
-			'is_weizoom_mall': request.user.is_weizoom_mall,
+			'is_weizoom_mall': request.manager.is_weizoom_mall,
 			'is_certified_service': is_certified_service,
 		})
 		return render_to_response('weixin/mp_user/menu.html', c)
@@ -63,8 +63,8 @@ class Menu(resource.Resource):
 		"""
 		获取自定义菜单项json数据
 		"""
-		if request.user.is_authenticated():
-			user = request.user
+		if request.manager.is_authenticated():
+			user = request.manager
 		else:
 			webapp_id = request.GET.get('webapp_id', None)
 			if not webapp_id:
@@ -87,7 +87,7 @@ class Menu(resource.Resource):
 		更新本地存储的自定义菜单项
 		"""
 		try:
-			owner = request.user
+			owner = request.manager
 			menus = json.loads(request.POST['menus'])
 			ids = set()
 			for menu in menus:
@@ -148,16 +148,16 @@ class Menu(resource.Resource):
 							display_index = menu_item['index']
 						)
 			#删除需要删除的菜单
-			menu_util.delete_rules(request.user, need_delete_ids)
+			menu_util.delete_rules(request.manager, need_delete_ids)
 			CustomerMenuItem.objects.filter(id__in=need_delete_ids).delete()
 			#调用微信api
-			menu_json_obj = menu_util.get_menus_json_for_weixin(request.user)
+			menu_json_obj = menu_util.get_menus_json_for_weixin(request.manager)
 			if menu_json_obj.has_key('button') and len(menu_json_obj['button']) > 0:
 
 				post = {
 					'menu_json': json.dumps(menu_json_obj, ensure_ascii=False)
 					}
-				fake_request = menu_util.get_fake_request(request.user, post)
+				fake_request = menu_util.get_fake_request(request.manager, post)
 				response = menu_tool.update_customerized_menu(fake_request)
 # 			
 		except:

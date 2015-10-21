@@ -31,7 +31,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     <div class="xui-productInfoBox">
                         <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}</h2>
                         {% if product.promotion_title %}
-                        <div class="xui-text-red em9">{{ product.promotion_title|safe }}</div>
+                        <div class="xui-text-red em9" style="padding-top:2px;">{{ product.promotion_title|safe }}</div>
                         {% endif %}
                     </div>
                     <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa" data-is-collect="false">收藏</a>

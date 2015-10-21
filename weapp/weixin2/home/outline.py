@@ -30,14 +30,14 @@ class Outline(resource.Resource):
 		"""
 		微信概况
 		"""
-		owner_id = request.user.id
+		owner_id = request.manager.id
 		webapp_id = request.user_profile.webapp_id
 
 		member_count = Member.count(webapp_id)
 
 		yesterday_added_count, yesterday_net_count = _get_yesterday_count(owner_id)
 
-		unread_message_count = get_unread_message_count(request.user)
+		unread_message_count = get_unread_message_count(request.manager)
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_weixin_second_navs(request),
@@ -51,7 +51,7 @@ class Outline(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		unread_message_count = get_unread_message_count(request.user)
+		unread_message_count = get_unread_message_count(request.manager)
 
 		from mall.order.util import get_unship_order_count
 		unship_order_count = get_unship_order_count(request)
@@ -118,7 +118,7 @@ class UserAnalysis(resource.Resource):
 		"""
 		days = request.GET.get('days', 7)
 		try:
-			owner_id = request.user.id
+			owner_id = request.manager.id
 			total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
 			date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 			display_date_list = [date.strftime("%m.%d") for date in dateutil.get_date_range_list(low_date, high_date)]
@@ -186,7 +186,7 @@ class PageTrackAnalysis(resource.Resource):
 		"""
 		days = request.GET.get('days', 7)
 		try:
-			owner_id = request.user.id
+			owner_id = request.manager.id
 			total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
 			date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 			display_date_list = [date.strftime("%m.%d") for date in dateutil.get_date_range_list(low_date, high_date)]
@@ -335,7 +335,7 @@ class KeywordAnalysis(resource.Resource):
 		days = request.GET.get('days', '7')
 		keyword = request.GET.get('keyword', '')
 
-		owner_id = request.user.id
+		owner_id = request.manager.id
 		total_days, low_date, cur_date, high_date = dateutil.get_date_range(dateutil.get_today(), days, 0)
 		date_list = [date.strftime("%Y-%m-%d") for date in dateutil.get_date_range_list(low_date, high_date)]
 		display_date_list = [date.strftime("%m.%d") for date in dateutil.get_date_range_list(low_date, high_date)]

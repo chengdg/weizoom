@@ -1,6 +1,8 @@
 {% extends "webapp_content_base_v4.html" %}
+{% load project_filter %}
 
 {% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
 <style type="text/css">
 	h1 {
 		color: #00F;
@@ -167,7 +169,7 @@
     <div class="wui-rules-div wa-rules-div">
         <div class="wui-rules-intro-div">
             <p class="wui-rules-i-title">签到说明</p>
-            <p class="wui-rules-i-content">签到有礼！</p>
+            <p class="wui-rules-i-content">{{ sign_description }}</p>
         </div>
         <div class="wui-rules-rules-div">
             <p class="wui-rules-i-title">活动规则</p>
@@ -183,7 +185,6 @@
 {% block js %}
 <script type="text/javascript">
     W.pageId = "{{request.GET.page_id}}";
-    var member_info = JSON.parse('{{ member_info|safe }}');
     var prize_info = JSON.parse('{{ prize_info|safe}}');
     var status = "{{ activity_status }}";
     var resultDialog;
@@ -313,9 +314,9 @@
             }
         });
         //填充用户信息
-        $('.wa-username').find('p').html(member_info.user_name);
-        $('.wa-user-integral').html(member_info.user_integral);
-        $('.wa-user-icon').find('img').attr('src', member_info.user_icon);
+        $('.wa-username').find('p').html('{{ member_info.user_name|safe }}');
+        $('.wa-user-integral').html('{{ member_info.user_integral }}');
+        $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
         //填充签到奖励信息
         fillPrizeInfo(prize_info, true);
         //绑定规则信息事件

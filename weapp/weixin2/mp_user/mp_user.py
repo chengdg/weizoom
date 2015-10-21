@@ -32,7 +32,8 @@ class MpUser(resource.Resource):
 		获得公众号详情
 		"""
 		user_profile = request.user_profile
-		request_user = request.user
+		# request_user = request.user
+		request_user = request.manager #duhao 20151020
 		user_profile = account_models.UserProfile.objects.get(id=user_profile.id)
 
 		if user_profile.is_mp_registered:
@@ -63,9 +64,9 @@ class MpUser(resource.Resource):
 				else:
 					watchdog_error(result)
 
-			if weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).count() == 0:
-				weixin_models.ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id)
-			auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id)[0]
+			if weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.manager.id).count() == 0:
+				weixin_models.ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.manager.id)
+			auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.manager.id)[0]
 
 			if weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid).count() > 0:
 				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]

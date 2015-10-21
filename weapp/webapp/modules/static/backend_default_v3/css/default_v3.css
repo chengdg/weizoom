@@ -896,8 +896,12 @@ input.ui-input-text, textarea.ui-input-text {
     font-size: 13px;
     overflow: hidden;
     height: 26px;
-    line-height: 15px;
+    line-height: 16px;
     border-bottom: 1px dashed #D2D2D2;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .xui-products-original h3 .badge {
     background-color: #5587A9;

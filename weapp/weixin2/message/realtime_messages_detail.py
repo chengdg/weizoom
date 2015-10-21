@@ -89,7 +89,7 @@ class RealtimeMessagesDetail(resource.Resource):
         session_id = request.GET.get('session_id', '')
         replied = int(request.GET.get('replied', 0))
 
-        pageinfo, realtime_messages, member = get_messages(request.user, request.user_profile, session_id, replied, cur_page, count_per_page, request.META['QUERY_STRING'])
+        pageinfo, realtime_messages, member = get_messages(request.manager, request.user_profile, session_id, replied, cur_page, count_per_page, request.META['QUERY_STRING'])
 
         response = create_response(200)
         response.data = {

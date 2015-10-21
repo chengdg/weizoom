@@ -8,6 +8,7 @@ from modules.member.module_api import get_member_by_openid
 from market_tools.tools.coupon.util import consume_coupon
 from modules.member import models as member_models
 from mall.promotion.models import CouponRule
+from termite import pagestore as pagestore_manager
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
@@ -176,6 +177,7 @@ class Sign(models.Document):
 		:return: html片段
 		"""
 		return_html = []
+		sign_description=""
 		host = settings.DOMAIN
 		try:
 			sign = Sign.objects.get(owner_id=data['webapp_owner_id'])
@@ -202,6 +204,11 @@ class Sign(models.Document):
 						signer.save()
 					else:
 						signer = signer[0]
+
+					pagestore = pagestore_manager.get_pagestore('mongo')
+					page = pagestore.get_page(sign.related_page_id, 1)
+					sign_description = page['component']['components'][0]['model']['description']
+
 					return_data = signer.do_signment(sign)
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
@@ -215,7 +222,7 @@ class Sign(models.Document):
 								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%s&project_id=0">点击查看</a>' % (host, data['webapp_owner_id']))
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
-						return_html.append(u'\n签到说明：签到有礼！\n')
+						return_html.append(u'\n签到说明：%s\n'%sign_description)
 						return_html.append(str(return_data['reply_content']))
 					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> >>点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:

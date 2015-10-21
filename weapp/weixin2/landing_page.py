@@ -25,7 +25,7 @@ class LandingPage(resource.Resource):
 		1. 如果已经绑定，进入微信首页
 		2. 如果没有绑定，进入一键绑定页面
 		"""
-		user_profile = request.user.get_profile()
+		user_profile = request.manager.get_profile()
 		if not user_profile.is_mp_registered:
 			return HttpResponseRedirect('/new_weixin/unbind_account/')
 		else:

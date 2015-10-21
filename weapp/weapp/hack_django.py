@@ -188,27 +188,28 @@ def hackModelManager():
 	Manager.clear_cache_args = clear_cache_args
 
 
-def hackUser():
-	def has_perm(self, perms):
-		if self.is_superuser:
-			return True
-		if self.get_profile().is_manager:
-			#根账号拥有所有权限
-			return True
+#duhao 20151019 注释
+# def hackUser():
+# 	def has_perm(self, perms):
+# 		if self.is_superuser:
+# 			return True
+# 		if self.get_profile().is_manager:
+# 			#根账号拥有所有权限
+# 			return True
 
-		permission_set = getattr(self, 'permission_set', None)
-		if not permission_set:
-			return False
+# 		permission_set = getattr(self, 'permission_set', None)
+# 		if not permission_set:
+# 			return False
 
-		if isinstance(perms, unicode) or isinstance(perms, str):
-			return perms in permission_set
-		else:
-			for perm in perms:
-				if perm in permission_set:
-					return True
+# 		if isinstance(perms, unicode) or isinstance(perms, str):
+# 			return perms in permission_set
+# 		else:
+# 			for perm in perms:
+# 				if perm in permission_set:
+# 					return True
 
-		return False
-	User.has_perm = has_perm
+# 		return False
+# 	User.has_perm = has_perm
 
 
 def hack(params):
@@ -219,4 +220,4 @@ def hack(params):
 	hackModel()
 	hackRenderToResponse()
 	hackModelManager()
-	hackUser()
+	# hackUser() duhao 20151019 注释

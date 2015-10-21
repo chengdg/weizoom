@@ -49,10 +49,10 @@ class UnmatchRules(resource.Resource):
             }]
         else:
             try:
-                raw_rule = Rule.objects.get(owner=request.user, type=UNMATCH_TYPE)
+                raw_rule = Rule.objects.get(owner=request.manager, type=UNMATCH_TYPE)
                 if not raw_rule.answer or raw_rule.answer == '':
                     #当内容为空时删除该条记录
-                    Rule.objects.filter(owner=request.user, type=UNMATCH_TYPE).delete()
+                    Rule.objects.filter(owner=request.manager, type=UNMATCH_TYPE).delete()
                 else:
                     rule = raw_rule.format_to_dict()
             except:
@@ -89,9 +89,9 @@ class UnmatchRules(resource.Resource):
         rule = None
 
         if is_valid_time(start_hour) and is_valid_time(end_hour):
-            if Rule.objects.filter(owner=request.user, type=UNMATCH_TYPE).count() < 1:
+            if Rule.objects.filter(owner=request.manager, type=UNMATCH_TYPE).count() < 1:
                 rule = Rule.objects.create(
-                    owner = request.user,
+                    owner = request.manager,
                     active_type = active_type,
                     active_days = active_days,
                     start_hour = start_hour,

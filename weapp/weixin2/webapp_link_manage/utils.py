@@ -27,7 +27,7 @@ def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
 	"""
-	webapp_owner_id = request.user.id
+	webapp_owner_id = request.manager.id
 	workspace_id = request.user_profile.homepage_workspace_id
 	menus = {
 		'webappPage': {
@@ -134,12 +134,12 @@ def get_webapp_link_menu_objectes(request):
 		'myOrder': {
 			'id': 8,
 			'name': '我的订单',
-			'link': './?module=mall&model=order_list&action=get&workspace_id=mall&webapp_owner_id=%d' % request.user.id
+			'link': './?module=mall&model=order_list&action=get&workspace_id=mall&webapp_owner_id=%d' % request.manager.id
 		},
 		# 'complain': {
 		# 	'id': 7,
 		# 	'name': '用户反馈',
-		# 	'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.user.id
+		# 	'link': '/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
 		# },
 		'shengjingCustom': {
 			'id': 9,
@@ -153,7 +153,7 @@ def get_webapp_link_menu_objectes(request):
 		'sign': {
 			'id': 10,
 			'name': '签到',
-			'link': '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.user.id
+			'link': '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.manager.id
 		}
 	}
 

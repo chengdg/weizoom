@@ -451,6 +451,7 @@
 	border:1px solid #ccc;
 	padding: 5px;
 	padding-bottom: 4px;
+	cursor:pointer;
 }
 .xui-editProductPage .xui-i-images {
 }
@@ -481,14 +482,15 @@
 .xui-editProductPage .xui-i-templateProperty {
 	float: left;
 	width: 50%;	
-	margin-top: 8px;
+	/*margin-top: 8px;*/
+	padding-bottom: 5px;
 }
 /*.xui-editProductPage .xui-i-templateProperty:first-child{
 	margin-top: 15px;
-}*/
+}
 .xui-editProductPage .xui-i-templateProperty:last-child{
 	margin-bottom: 15px;
-}
+}*/
 .xui-editProductPage .xui-i-propertyName {
 	display: block;
 	background-color: #EFEFEF;
