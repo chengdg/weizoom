@@ -171,6 +171,9 @@ def __clear_all_app_data():
 	promotion_models.PremiumSale.objects.all().delete()
 	promotion_models.IntegralSale.objects.all().delete()
 	promotion_models.RedEnvelopeRule.objects.all().delete()
+	promotion_models.RedEnvelopeToOrder.objects.all().delete()
+	promotion_models.GetRedEnvelopeRecord.objects.all().delete()
+	promotion_models.RedEnvelopeParticipences.objects.all().delete()
 	promotion_models.ForbiddenCouponProduct.objects.all().delete()
 
 	#商城
@@ -301,7 +304,8 @@ def __clear_all_app_data():
 	# 缓存
 	cache.clear()
 
-
+	# 定制APP
+	customized.CustomizedApp.objects.all().delete()
 
 def __binding_wexin_mp_account(user=None):
 	"""
