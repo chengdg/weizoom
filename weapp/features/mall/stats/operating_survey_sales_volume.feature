@@ -1,4 +1,5 @@
 #_author_:王丽
+#editor:王丽  2015.10.19
 
 Feature: 经营报告-经营概况——流量
 """
@@ -42,14 +43,6 @@ Feature: 经营报告-经营概况——流量
 
 Background:
     Given jobs登录系统
-
-	And jobs设定会员积分策略
-        """
-        {
-            "integral_each_yuan": 10
-        }
-        """
-
 	When jobs已添加商品
         """
         [{
@@ -90,7 +83,6 @@ Background:
             "synchronized_mall":"是"
         }]
         """
-
 	And jobs已添加支付方式
         """
         [{
@@ -105,53 +97,18 @@ Background:
         }]
         """
 
-	And jobs开通使用微众卡权限
-	And jobs添加支付方式
-        """
-        [{
-            "type": "微众卡支付",
-            "description": "我的微众卡支付",
-            "is_active": "启用"
-        }]
-        """
-
-	And jobs创建积分应用活动
-        """
-        [{
-            "name": "商品1积分应用",
-            "start_date": "2014-8-1",
-            "end_date": "10天后",
-            "product_name": "商品1",
-            "is_permanant_active": false,
-            "discount": 70,
-            "discount_money": 70.0
-        }]
-        """
-
-	And jobs添加优惠券规则
-		"""
-		[{
-			"name": "商品2优惠券",
-			"money": 10.00,
-			"start_date": "今天",
-			"end_date": "10天后",
-			"coupon_id_prefix": "coupon1_id_"
-		}]
-		"""
-
 	When bill关注jobs的公众号于'2015-05-01'
 	When tom关注jobs的公众号于'2015-05-02'
 	When mary关注jobs的公众号于'2015-05-02'
-	When bill3关注jobs的公众号于'2015-05-03'
 	When zhangsan关注jobs的公众号于'2015-05-03'
 	When zhangsan取消关注jobs的公众号
 
-@stats @mall2
+@mall2 @bi @salesAnalysis   @stats
 Scenario:1  经营概况：销售额和成交订单
 	
 	When 微信用户批量消费jobs的商品
 		| order_id |   date     | consumer | product | payment | pay_type | postage* | price* | paid_amount* | action       | order_status* |
-		|   001    | 2015-04-04 | mary     | 商品1,1 | 支付    | 微信支付 | 10       |  100   | 100          | jobs,完成    |    已完成     |
+		|   001    | 2015-04-04 | mary     | 商品1,1 | 支付    | 微信支付 | 10       |  100   | 110          | jobs,完成    |    已完成     |
 		|   002    | 2015-05-02 | bill     | 商品1,1 |         | 支付宝   | 10       |  100   | 110          | jobs,取消    |    已取消     |
 		|   003    | 2015-05-03 | tom      | 商品2,1 | 支付    | 微信支付 | 15       |  100   | 115          | jobs,完成    |    已完成     |
 		|   004    | 2015-05-05 | bill     | 商品1,1 | 支付    | 货到付款 | 10       |  100   | 110          |              |    待发货     |
@@ -160,9 +117,9 @@ Scenario:1  经营概况：销售额和成交订单
 		|   007    | 2015-05-08 | bill     | 商品2,1 | 支付    | 微信支付 | 15       |  100   | 115          | jobs,完成退款|    退款成功   |
 		|   008    | 2015-05-10 | mary     | 商品2,2 | 支付    | 支付宝   | 15       |  100   | 215          | jobs,发货    |    已发货     |
 		|   009    | 2015-05-10 | tom      | 商品2,2 | 支付    | 支付宝   | 15       |  100   | 215          | jobs,发货    |    已发货     |
-		|   010    | 今天       | mary     | 商品2,2 |         | 支付宝   | 15       |  100   | 0            |              |    待支付     |
-		|   011    | 今天       | -duhao   | 商品2,5 |         | 支付宝   | 15       |  100   | 0            |              |    待支付     |
-		|   012    | 今天       | zhangsan | 商品2,5 |         | 支付宝   | 15       |  100   | 0            |              |    待支付     |
+		|   010    | 今天       | mary     | 商品2,2 |         | 支付宝   | 15       |  100   | 215          |              |    待支付     |
+		|   011    | 今天       | -duhao   | 商品2,5 |         | 支付宝   | 15       |  100   | 515          |              |    待支付     |
+		|   012    | 今天       | zhangsan | 商品2,5 |         | 支付宝   | 15       |  100   | 515          |              |    待支付     |
  
 	Given jobs登录系统
 	When jobs设置筛选日期

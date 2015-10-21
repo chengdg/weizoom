@@ -36,8 +36,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
-@mall2 @mall @mall.webapp
+@mall2 @buy @productList   @mall @mall.webapp
 Scenario:1 浏览全部商品列表
 	jobs添加商品后
 	1. bill能在webapp中看到jobs添加的商品列表
@@ -60,7 +59,7 @@ Scenario:1 浏览全部商品列表
 		}]
 		"""
 
-@mall2 @mall.webapp
+@mall2 @buy @productList   @mall.webapp
 Scenario:2 按分类浏览商品
 	jobs添加多个商品后
 	1. bill能在webapp中按分类浏览商品
@@ -105,3 +104,4 @@ Scenario:2 按分类浏览商品
 		"""
 		[]
 		"""
+	

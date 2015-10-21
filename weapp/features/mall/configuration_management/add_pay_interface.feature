@@ -1,8 +1,11 @@
 @func:webapp.modules.mall.views.list_mall_settings
+#editor:张三香 2015.10.16
+
 Feature:添加支付方式
 	Jobs能通过管理系统添加"支付方式"
-@mall @mall.pay_interface @mall2
-Scenario: 添加支付方式:微信支付
+
+@mall2 @configuration @pay   @mall @mall.pay_interface
+Scenario:1 添加支付方式:微信支付
 	Jobs添加"微信支付"后
 	1. jobs能获取添加的微信支付
 	2. bill不能获取jobs添加的微信支付
@@ -33,9 +36,8 @@ Scenario: 添加支付方式:微信支付
 	Given bill登录系统
 	Then bill无法获得支付方式'微信支付'
 
-
-@mall @mall.pay_interface @mall2
-Scenario: 添加支付方式:支付宝支付
+@mall2 @configuration @pay   @mall @mall.pay_interface
+Scenario:2 添加支付方式:支付宝支付
 	Jobs添加"支付宝支付"后
 	1. jobs能获取添加的支付宝支付
 	2. bill不能获取jobs添加的支付宝支付
@@ -45,7 +47,6 @@ Scenario: 添加支付方式:支付宝支付
 		"""
 		[{
 			"type": "支付宝",
-			"description": "我的支付宝",
 			"is_active": "启用",
 			"partner": "11",
 			"key": "21",
@@ -58,7 +59,6 @@ Scenario: 添加支付方式:支付宝支付
 		"""
 		{
 			"type": "支付宝",
-			"description": "我的支付宝",
 			"is_active": "启用",
 			"partner": "11",
 			"key": "21",
@@ -70,9 +70,8 @@ Scenario: 添加支付方式:支付宝支付
 	Given bill登录系统
 	Then bill无法获得支付方式'支付宝'
 
-
-@mall @mall.pay_interface @mall2
-Scenario: 添加支付方式:货到付款
+@mall2 @configuration @pay   @mall @mall.pay_interface
+Scenario:3 添加支付方式:货到付款
 	Jobs添加"支付方式"后
 	1. jobs能获取添加的支付方式
 	2. bill不能获取jobs添加的支付方式
@@ -101,9 +100,8 @@ Scenario: 添加支付方式:货到付款
 		}
 		"""
 
-
-@mall @mall.pay_interface @mall2
-Scenario: 添加多个支付方式
+@mall2 @configuration @pay   @mall @mall.pay_interface
+Scenario:4 添加多个支付方式
 	Jobs添加多个"支付方式"后
 	1. jobs能获取添加的支付方式列表
 	2. 列表按添加顺序排列

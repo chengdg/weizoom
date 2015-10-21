@@ -1,3 +1,5 @@
+#editor:王丽  2015.10.19
+#editor: 新新 2015.10.16
 
 Feature: 测试 经营报告->经营概况->微品牌价值
 
@@ -5,13 +7,6 @@ Background:
 	#说明：jobs代表商户
 	Given jobs登录系统
 	When jobs设置未付款订单过期时间24小时
-	Given jobs设定会员积分策略
-		# 即: "integral_each_yuan": 10	
-		"""
-		{
-			"integral_each_yuan": 10
-		}
-		"""
 	When jobs已添加支付方式
 		"""
 		[{
@@ -21,19 +16,6 @@ Background:
 		},{
 			"type": "微信支付",
 			"description": "我的微信支付",
-			"is_active": "启用",
-			"weixin_appid": "12345", 
-			"weixin_partner_id": "22345", 
-			"weixin_partner_key": "32345", 
-			"weixin_sign": "42345"
-		}]
-		"""
-	And jobs开通使用微众卡权限
-	And jobs添加支付方式
-		"""
-		[{
-			"type": "微众卡支付",
-			"description": "我的微众卡支付",
 			"is_active": "启用"
 		}]
 		"""
@@ -88,127 +70,126 @@ Background:
 		# tom4 => kate
 		And kate关注jobs的公众号
 
-
-@mall2 @stats @wip.brand_value
-Scenario: 测试只有1个消费用户、1个商品的品牌价值
+@mall2 @bi @operateReport   @stats @wip.brand_value 
+Scenario:1 测试只有1个消费用户、1个商品的品牌价值
 	When 微信用户批量消费jobs的商品
 		# consumer前有'-'表示清空浏览器
-		| date       | consumer | type |businessman|product   | payment | action    |
-		| 30天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 60天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 366天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 365天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 今天          | bill | 购买 | jobs      |商品1,1  | 支付    |           |
+		| date    | consumer | product | payment | action |
+		| 30天前  | bill     | 商品1,1 | 支付    |        |
+		| 60天前  | bill     | 商品1,1 | 支付    |        |
+		| 366天前 | bill     | 商品1,1 | 支付    |        |
+		| 365天前 | bill     | 商品1,1 | 支付    |        |
+		| 今天    | bill     | 商品1,1 | 支付    |        |
 	Given jobs登录系统
 	When jobs查看微品牌页面
+	# 按日期顺序的品牌价值
 	Then 微品牌的数据为
-		# 按日期顺序的品牌价值
 		"""
 		[{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 40
-			},{
+		},{
 			"value": 30
-			},{
+		},{
 			"value": 20
-			},{
+		},{
 			"value": 20
-			},{
+		},{
 			"value": 20
-			},{
+		},{
 			"value": 20
-			},{
+		},{
 			"value": 20
-			},{
+		},{
 			"value": 30
 		}]
 		"""
 
-
-@mall2 @stats @wip.brand_value2
-Scenario: 测试2个消费用户、2个商品的品牌价值
+@mall2 @bi @operateReport   @stats @wip.brand_value2 
+Scenario:2 测试2个消费用户、2个商品的品牌价值
 	品牌价值会参考用户1年(365天)内购买金额和数量。
 
-	When 微信用户批量消费jobs的商品
-		# consumer前有'-'表示清空浏览器
-		| date       | consumer | type |businessman| product   | payment | action    |
-		| 30天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 60天前      | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 366天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 365天前    | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 今天          | bill | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 367天前     | tom | 购买 | jobs      |商品2,1  | 支付    |           |
-		| 2天前        | tom | 购买 | jobs      |商品1,1  | 支付    |           |
-		| 1天前        | tom | 购买 | jobs      |商品2,1  | 支付    |           |
-		| 今天          | tom | 购买 | jobs      |商品1,1  | 未支付    |           |
-		| 今天          | tom | 购买 | jobs      |商品2,1  | 支付    |           |
+	# consumer前有'-'表示清空浏览器
+	When 微信用户批量消费jobs的商品	
+		| date    | consumer | product | payment | action |
+		| 30天前  | bill     | 商品1,1 | 支付    |        |
+		| 60天前  | bill     | 商品1,1 | 支付    |        |
+		| 366天前 | bill     | 商品1,1 | 支付    |        |
+		| 365天前 | bill     | 商品1,1 | 支付    |        |
+		| 今天    | bill     | 商品1,1 | 支付    |        |
+		| 367天前 | tom      | 商品2,1 | 支付    |        |
+		| 2天前   | tom      | 商品1,1 | 支付    |        |
+		| 1天前   | tom      | 商品2,1 | 支付    |        |
+		| 今天    | tom      | 商品1,1 | 未支付  |        |
+		| 今天    | tom      | 商品2,1 | 支付    |        |
+
 	Given jobs登录系统
 	When jobs查看微品牌页面
+	# 按日期顺序的品牌价值
 	Then 微品牌的数据为
-		# 按日期顺序的品牌价值
 		"""
 		[{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 140
-		}, {
+		},{
 		    "value": 40
-		}, {
+		},{
 		    "value": 30
-		}, {
+		},{
 		    "value": 20
-		}, {
+		},{
 		    "value": 20
-		}, {
+		},{
 		    "value": 20
-		}, {
+		},{
 		    "value": 40
-		}, {
+		},{
 		    "value": 220
-		}, {
+		},{
 		    "value": 240
 		}]
 		"""

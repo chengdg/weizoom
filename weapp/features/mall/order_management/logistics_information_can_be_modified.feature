@@ -1,7 +1,10 @@
 # __author__ : "冯雪静"
 @func:webapp.modules.mall.views.update_express_info
 Feature:订单的物流信息可以修改
+"""
+	
 	jobs能通过管理系统对订单的物流信息修改
+"""
 
 Background:
 	Given jobs登录系统
@@ -25,8 +28,8 @@ Background:
 		"""
 	And jobs登录系统
 
-@mall2 @mall.update_express_info @pyliu @order
-Scenario:jobs修改'0000001'的物流信息
+@mall2 @order @mall.update_express_info @pyliu
+Scenario:1 jobs修改'0000001'的物流信息
 	When jobs通过后台管理系统对'0000001'的物流信息进行修改
 		"""
 		{

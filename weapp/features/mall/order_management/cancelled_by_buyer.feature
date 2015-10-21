@@ -86,8 +86,8 @@ Background:
 		}
 		"""
 
-@mall2 @mall.order_cancel_status @mall.order_cancel_status.member @order
-Scenario:bill取消订单
+@mall2 @order @allOrder   @mall.order_cancel_status @mall.order_cancel_status.member
+Scenario:1 bill取消订单
 	bill取消订单'001'
 	1. bill手机端订单状态改变为'已取消'
 	2. jobs后端订单状态改变为'已取消'
@@ -117,8 +117,8 @@ Scenario:bill取消订单
 		}
 		"""
 
-@mall2 @mall.order_cancel_status @mall.order_cancel_status.coupon_member @pyliu @order
-Scenario:bill取消使用了优惠券的订单
+@mall2 @order @allOrder   @mall.order_cancel_status @mall.order_cancel_status.coupon_member @pyliu
+Scenario:2 bill取消使用了优惠券的订单
 	bill取消订单'002'
 	1. bill手机端订单状态改变为'已取消'
 	2. jobs后端订单状态改变为'已取消'
@@ -156,8 +156,8 @@ Scenario:bill取消使用了优惠券的订单
 		}
 		"""
 
-@mall2 @mall.order_cancel_status @mall.order_cancel_status.integral_member @pyliu02 @order
-Scenario:bill取消使用了积分的订单
+@mall2 @order @allOrder   @mall.order_cancel_status @mall.order_cancel_status.integral_member @pyliu02
+Scenario:3 bill取消使用了积分的订单
 	bill取消订单'003'
 	1. bill手机端订单状态改变为'已取消'
 	2. jobs后端订单状态改变为'已取消'
@@ -194,8 +194,8 @@ Scenario:bill取消使用了积分的订单
 		}
 		"""
 
-@mall2 @mall.order_cancel_status @mall.order_cancel_status.integral_and_coupon_member @pyliu @order
-Scenario:bill取消使用积分和优惠券的订单
+@mall2 @order @allOrder   @mall.order_cancel_status @mall.order_cancel_status.integral_and_coupon_member @pyliu
+Scenario:4 bill取消使用积分和优惠券的订单
 	bill取消订单'004'
 	1. bill手机端订单状态改变为'已取消'
 	2. jobs后端订单状态改变为'已取消'

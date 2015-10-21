@@ -1,11 +1,13 @@
 # __author__ : "冯雪静"
+#editor:王丽 2015.10.16
 Feature: 批量发货
+"""
 	jobs能为用户批量发货
-	"""
 	1.对多个订单同时进行发货
 	2.对多个订单同时进行发货失败
 	3.对修改过价格的订单进行批量发货
-	"""
+"""
+
 Background:
 	Given jobs登录系统
 	And jobs已添加商品
@@ -95,7 +97,7 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.order_filter @mall.order_filter.bulk_shipments @order
+@mall2 @order @deliver   @mall.order_filter @mall.order_filter.bulk_shipments
 Scenario: 1 对多个订单同时进行发货
 	jobs填写多个订单号和快递信息进行发货
 	1.填写信息正确,发货成功
@@ -207,6 +209,8 @@ Scenario: 1 对多个订单同时进行发货
 			"ship_tel":"13811223344"
 		}]
 		"""
+	#批量发货会校验快递名称，只有快递名称完全匹配上才能发货成功
+	#订单00006、00008的快递名称不完全匹配，不能发货成功
 	When jobs填写订单信息
 		"""
 		[{
@@ -231,10 +235,10 @@ Scenario: 1 对多个订单同时进行发货
 			"number":"147258362"
 		}]
 		"""
-#	When jobs选择条件为
-#		"""
-#		{}
-#		"""
+	When jobs根据给定条件查询订单
+		"""
+		{}
+		"""
 	Then jobs可以看到订单列表
 		"""
 		[{
@@ -324,8 +328,7 @@ Scenario: 1 对多个订单同时进行发货
 		}]
 		"""
 
-
-@mall2 @deliver @order
+@mall2 @order @deliver
 Scenario: 2 对多个订单同时进行发货失败
 	jobs填写多个订单号和快递信息进行发货
 	1.填写信息有误,发货失败
@@ -441,8 +444,7 @@ Scenario: 2 对多个订单同时进行发货失败
 		}]
 		"""
 
-
-@deliver @mall2 @order
+@mall2 @order @deliver
 Scenario: 3 对修改过价格的订单进行批量发货
 	jobs对修改过价格的订单进行批量发货
 	1.填写新的订单号也可以发货成功

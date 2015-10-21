@@ -1,8 +1,8 @@
 #bc
+#editor 新新 2015.10.20
+
 @func:webapp.modules.mall.views.list_products
 Feature: 在webapp中管理订单
-
-
 Background:
 	Given jobs登录系统
 	And jobs已添加商品
@@ -31,14 +31,13 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
 @mall2 @mall.webapp @mall.pay_order @p1
 Scenario: 1 bill在下单购买jobs的商品后，使用货到付款进行支付，支付后
-	1. bill的订单中变为 已支付
-	2. jobs在后台看到订单变为已支付
-	3 jobs对该订单进行发货，
-		bill在weapp端看到订单状态为"已发货"
-		jobs在后台看到的订单信息为"已发货"
+	1. bill的订单中变为 待发货
+	2. jobs在后台看到订单变为待发货
+	3. jobs对该订单进行发货
+		bill在weapp端看到订单状态为"已发货";
+		jobs在后台看到的订单信息为"已发货";
 
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -123,8 +122,8 @@ Scenario: 1 bill在下单购买jobs的商品后，使用货到付款进行支付
 			}]
 		}]
 		"""
-	Given bill关注jobs的公众号
-	And jobs已有的订单
+
+	Given jobs已有的订单
 	    """
 	    [{
 	        "order_no":"20150423161112",
@@ -214,9 +213,7 @@ Scenario: 1 bill在下单购买jobs的商品后，使用货到付款进行支付
 		}]
 		"""
 
-
-
-@mall2 @mall.webapp @mall.pay_order @p2
+@mall2 @mall.webapp @mall.pay_order @p2 
 Scenario: 2 bill在下单购买jobs的商品后，又取消订单
 	1. bill的订单中变为已取消
 	2. jobs在后台看到订单变为已取消
@@ -234,7 +231,6 @@ Scenario: 2 bill在下单购买jobs的商品后，又取消订单
 	Then bill成功创建订单
 		"""
 		{
-
 			"status": "待支付",
 			"final_price": 10.00,
 			"products": [{
@@ -258,8 +254,7 @@ Scenario: 2 bill在下单购买jobs的商品后，又取消订单
 		}]
 		"""
 
-	Given bill关注jobs的公众号
-	And jobs已有的订单
+	Given jobs已有的订单
 	    """
 	    [{
 	        "order_no":"20150423161112",
@@ -281,8 +276,6 @@ Scenario: 2 bill在下单购买jobs的商品后，又取消订单
 	        }]
 	    }]
 	    """
-
-
 
 	When bill取消订单'20150423161112'
 	Then jobs可以看到订单列表
@@ -325,9 +318,8 @@ Scenario: 2 bill在下单购买jobs的商品后，又取消订单
 		}]
 		"""
 
-
 @mall2 @mall.webapp @mall.pay_order @p3
-Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要物流"，bill的订单状态变为"已完成"
+Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要物流"，bill的订单状态变为"已发货"
 
 	When bill访问jobs的webapp
 	When bill购买jobs的商品
@@ -392,13 +384,11 @@ Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要�
 		}]
 		"""
 
-	Given bill关注jobs的公众号
-	And jobs已有的订单
+	Given jobs已有的订单
 	    """
 	    [{
 	        "order_no":"20150423161112",
 	        "member":"bill",
-	        "type":"普通订单",
 	        "status":"待发货",
 	        "sources":"本店",
 	        "order_price":30.00,
@@ -419,8 +409,6 @@ Scenario: 3 bill在下单购买jobs的商品后，jobs发货方式为"不需要�
 	        }]
 	    }]
 	    """
-
-
 	When jobs填写发货信息
 		"""
 		[{

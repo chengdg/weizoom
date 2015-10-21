@@ -39,7 +39,7 @@ Background:
 			}
 		}]	
 		"""
-	
+
 	And jobs已添加支付方式
 		"""
 		[{
@@ -48,7 +48,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@wip.cache @mall2
+@mall2 @wip.cache 
 Scenario:1 bill增加订单数再访问个人中心
 	bill下单(影响订单数)之后会影响订单数。检查个人中心订单数是否正确。
 
@@ -89,21 +89,15 @@ Scenario:1 bill增加订单数再访问个人中心
 	Then '个人中心'中'待支付'数为1
 	Then '个人中心'中'购物车'数为0
 
-
 @mall2 @wip.cache
-Scenario: 检查'个人中心'的市场工具数量
+Scenario:2 检查'个人中心'的市场工具数量
 
 	When bill访问jobs的webapp
 	And bill访问个人中心
 	Then '个人中心'中市场工具的数量为3
 
-
-#@ignore
-#Scenario: '个人中心'中'我的红包'、'我的优惠券'等项目有变化的情况
-
-
 @mall2
-Scenario: 添加订单
+Scenario:3 添加订单
 	bill下单
 
 	When bill购买jobs的商品

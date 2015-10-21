@@ -1,5 +1,6 @@
-# __author__ : "崔帅帅"
-# __author__ : "王丽"
+#author: 崔帅帅
+#author: 王丽
+#editor: 张三香 2015.10.16
 
 Feature: 微信用户关注公众号成为系统会员
 """
@@ -45,7 +46,7 @@ Background:
 			"price":100.00
 		}]
 		"""
-	And jobs已添加了支付方式
+	When jobs添加支付方式
 		"""
 		[{
 			"type": "货到付款",
@@ -54,8 +55,8 @@ Background:
 		}]
 		"""
 
-@mall2 @crm @member
-Scenario: 微信用户关注公众号成为会员
+@mall2 @member @memberList   @crm
+Scenario:1 微信用户关注公众号成为会员
 	微信用户关注jobs公众号成为jobs的会员
 	1.bill直接关注jobs的公众号,生成会员列表
 	2.tom通过bill分享的链接关注jobs的公众号,生成会员列表
@@ -273,9 +274,9 @@ Scenario: 微信用户关注公众号成为会员
 			}]
 		}
 		"""
-  	When bill使用支付方式'货到付款'进行支付
+	When bill使用支付方式'货到付款'进行支付
 	Given jobs登录系统
-  	When jobs对最新订单进行发货
+	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 	Then jobs可以获得会员列表
 		"""
@@ -336,9 +337,9 @@ Scenario: 微信用户关注公众号成为会员
 			}]
 		}
 		"""
-  	When tom1使用支付方式'货到付款'进行支付
+	When tom1使用支付方式'货到付款'进行支付
 	Given jobs登录系统
-  	When jobs对最新订单进行发货
+	When jobs对最新订单进行发货
 	When jobs'完成'最新订单
 	Then jobs可以获得会员列表
 		"""
