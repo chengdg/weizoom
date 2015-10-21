@@ -13,7 +13,7 @@ def get_component_info_from(request):
 		component_info = ComponentInfo.objects.filter(app_id='wx984abb2d00cc47b8')[0]
 	elif request_host == 'weixin.weapp.weizzz.com':
 		component_info = ComponentInfo.objects.filter(app_id='wxba6fccbdcccbea49')[0]
-	elif request_host == 'docker.test.weizzz.com':
+	elif request_host == 'docker.test.weizzz.com' or request_host == 'w10':
 		component_info = ComponentInfo.objects.filter(app_id='wx9b89fe19768a02d2')[0]
 	elif request_host == 'red.weapp.weizzz.com':
 		component_info = ComponentInfo.objects.filter(app_id='wxa823309fb403f661')[0]
