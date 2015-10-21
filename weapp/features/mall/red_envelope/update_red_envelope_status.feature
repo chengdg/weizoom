@@ -73,7 +73,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag1
+@mall2 @promotion @promotionRedbag 
 Scenario:1 更新分享红包状态
 	Given jobs登录系统
 	Then jobs能获取分享红包列表
