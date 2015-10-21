@@ -139,7 +139,7 @@ def step_click_check_out(context, webapp_user_name):
         context.server_error_msg = msg
         context.response_json = response_json
     else:
-        context.created_order_id = content['data']['order_id']
+        context.created_order_id = response_json['data']['order_id']
         context.response = response
         if argument.get('order_no', None):
             db_order = Order.objects.get(order_id=context.created_order_id)

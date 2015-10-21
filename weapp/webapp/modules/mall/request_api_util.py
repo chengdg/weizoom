@@ -213,8 +213,11 @@ def save_order(request):
 	fake_order = common_util.Object("order")
 	fake_order.products = products
 	fake_order.product_groups = mall_api.group_product_by_promotion(request, products)
+	print "zlllllllllllllllllllllllllllllllllllllllllll--",fake_order.product_groups
 	signal_responses = mall_signals.check_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
+	print "signal_responses-------------------------",signal_responses
 	http_response = common_util.check_failed_signal_response(signal_responses)
+	print "http-res--------------------------------",http_response
 	if http_response:
 		return http_response
 
@@ -655,6 +658,7 @@ def check_shopping_cart_products(request):
 	fake_order = common_util.Object("order")
 	fake_order.products = products
 	fake_order.product_groups = mall_api.group_product_by_promotion(request, products)
+	print "zl+++++++++++++++++++++++pro",fake_order.product_groups
 	signal_responses = mall_signals.check_pre_order_related_resource.send(sender=mall_signals, pre_order=fake_order, args=request.REQUEST, request=request)
 	http_response = common_util.check_failed_signal_response(signal_responses)
 	if http_response:
