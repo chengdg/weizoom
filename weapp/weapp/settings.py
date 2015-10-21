@@ -273,7 +273,7 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.RedirectBySctMiddleware',
     'modules.member.middleware.RequestSocialAccountMiddleware',
     'modules.member.middleware.MemberMiddleware',
-    'modules.member.middleware.WebAppUserMiddleware',
+    #'modules.member.middleware.WebAppUserMiddleware',
     'modules.member.middleware.RedirectByFmtMiddleware',
     'modules.member.middleware.RefuelingMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
