@@ -21,14 +21,28 @@
 			{% endif %}
 		</div>
 		<span class="xui-systemName"></span>
-		
+		<!-- <div class="xui-headerActionBar" style="bottom:40px">
+			<span class="mr10">
+				<span class="">帮助中心</span>
+				<span class=" ml5">|</span>
+				<span class=" ml5">服务热线</span>
+				<span class=" ml5">400-688-6929</span>
+		</div> -->
+		<div class="xui-headerActionBar">
+			<span class="mr10">
+				<span class="">{{ request.user.username }}</span>
+				<span class=" ml5">-</span>
+				<span title="{{ request.user.username }}" class="xui-i-userName ml5">
+				<a href="/logout/">退出</a>
+			</span>
+		</div>
 	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
 			<ul class="xui-navBar-box clearStyle">
 				{% if first_navs %}
 					{% for nav in first_navs %}
-					<li>
+					<li {% ifequal nav.name '大数据挖掘' %}class="xui-i-bigDataTab"{% endifequal %}>
 						<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href='{{nav.url}}' title='{{nav.name}}'>{{nav.name}}</a>
 					</li>
 					{% endfor %}
@@ -38,21 +52,7 @@
 					</li>
 				{% endif %}
 			</ul>
-			<div class="xui-headerActionBar" style="bottom:40px">
-				<span class="mr10">
-					<span class="">帮助中心</span>
-					<span class=" ml5">|</span>
-					<span class=" ml5">服务热线</span>
-					<span class=" ml5">400-688-6929</span>
-			</div>
-			<div class="xui-headerActionBar">
-				<span class="mr10">
-					<span class="">{{ request.user.username }}</span>
-					<span class=" ml5">-</span>
-					<span title="{{ request.user.username }}" class="xui-i-userName ml5">
-					<a href="/logout/">退出</a>
-				</span>
-			</div>
+			
 		</div>
 	</div>
 </div>
@@ -69,7 +69,6 @@
 					<li><span>1111{{ second_nav.section }}</span></li>
 					{% endif %} -->
 					{% for nav in second_nav.navs %}
-					{% if nav|satisfy_permission:request %}
 						{% if not forloop.last %} 
 						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
 					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
@@ -87,27 +86,6 @@
 									</a>
 								</li>
 							{% endfor %}
-						{% endif %}
-					{% else %}
-					    <li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-						{% if nav.name != 'orderBatchDelivery' %}
-						<i class="xui-icon-arrow"></i>
-						{% endif %}
-						</a>
-					   </li>
-							<!-- 三级导航 -->
-							{% if nav.third_navs and second_nav_name == nav.name %}
-								{% for third_nav in nav.third_navs %}
-									<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
-										<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
-											&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
-											<i class="xui-icon-arrow"></i>
-										</a>
-									</li>
-								{% endfor %}
-							{% endif %}
 						{% endif %}
 					
 					{% endif %}

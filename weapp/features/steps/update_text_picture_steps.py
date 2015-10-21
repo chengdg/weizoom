@@ -26,7 +26,6 @@ def step_impl(context, user, news_title):
     #获取编辑图文的内容
     post_data = json.loads(context.text)
     data = []
-    print 'justing',post_info['newses']
     for index,addNews in enumerate(post_data):
         adict = adict_addNews(addNews)
         adict['summary'] = addNews.get('summary','')
