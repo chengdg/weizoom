@@ -17,7 +17,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         xlog(options);
         this.postageFactor = options.postageFactor;
         this.usableIntegral = options.usableIntegral;
-        this.enableTestBuy = options.enableTestBuy;
+        // jz 2015-10-20
+        // this.enableTestBuy = options.enableTestBuy;
 
         // 限购数量
         this.countPerPurchase = options.countPerPurchase;
@@ -51,6 +52,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var _this = this;
         this.stockInterval = setInterval(this.getProductStock, 60*1000, _this);
 
+        // jz 2015-10-20
         //设置规格选择区域的最大高度
         // var boxHeight = window.document.body.clientHeight * 0.75;
         // var buttonTop = $('.xui-productInfo-box').height();
@@ -62,13 +64,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         // }else{
         //     $('.xa-closeModelSelection').css({'position':'fixed','bottom':boxHeight-28});
         // }
-
         // this.initStickyActionBar();
-
         //启用"测试购买"的情况下，增加"价格区域"的padding-bottom
-        if (this.enableTestBuy) {
-            $('.xa-priceSection').css('padding-bottom', '115px');
-        }
+        // if (this.enableTestBuy) {
+        //     $('.xa-priceSection').css('padding-bottom', '115px');
+        // }
 
         //绑定counter widget的count-changed事件
         $('input[data-ui-role="counter"]').bind(

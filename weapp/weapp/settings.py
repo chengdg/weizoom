@@ -252,7 +252,7 @@ MIDDLEWARE_CLASSES = [
     'core.resource_middleware.ResourceJsMiddleware',
 
     # Uncomment this middleware to get POST api call's sql sequence
-    # 'core.debug_middleware.JsonToHtmlMiddleware',
+    'core.debug_middleware.JsonToHtmlMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',

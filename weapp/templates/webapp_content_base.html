@@ -88,7 +88,7 @@
         <script type="text/javascript" src="/termite_static/v3/system/md5.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
+        <!--script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *end_prunt_task* -->
 
 
@@ -118,6 +118,7 @@
                 {% endif %}
                 data-url="{% if operation_settings %}{{ operation_settings.non_member_followurl }}{% endif %}"
                 data-id="{{request.webapp_owner_id}}"
+                data-varnish="{{is_varnish_url}}"
                 >
             </div>
             {% block content-panel %}{% endblock %}

@@ -17,7 +17,7 @@ from account.models import OperationSettings
 #from market_tools.models import MarketToolAuthority
 from product import module_api as weapp_product_api
 
-from account.url_util import is_request_for_webapp
+from account.url_util import is_request_for_webapp, is_varnish_url
 from utils import component_template_util
 from termite2 import models as termite2_models
 
@@ -51,7 +51,8 @@ def first_navs(request):
 def cdn_host(request):
 	return {
 		'cdn_host': settings.CDN_HOST,
-		'fans_host': settings.FAN_HOST
+		'fans_host': settings.FAN_HOST,
+		'is_varnish_url': is_varnish_url(request)
 	}
 
 

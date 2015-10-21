@@ -743,9 +743,10 @@ class AuthorizedUserMiddleware(object):
 		return HttpResponseRedirect(path_info)
 
 
-from utils.uuid import uniqueid
-import core_setting
-class WeizoomCardUseAuthKeyMiddleware(object):
+# jz 2015-10-20
+# from utils.uuid import uniqueid
+# import core_setting
+# class WeizoomCardUseAuthKeyMiddleware(object):
 	"""
 	增加微众卡支付时的安全key
 
@@ -753,9 +754,8 @@ class WeizoomCardUseAuthKeyMiddleware(object):
 
 	@TODO 会员重构完成后统一曾成uuid
 	"""
-	def process_response(self, request, response):
-		# jz 2015-10-20
-		pass
+	# def process_response(self, request, response):
+		# pass
 		# weizoom_card_auth_key = request.COOKIES.get(core_setting.WEIZOOM_CARD_AUTH_KEY, None)
 		# if weizoom_card_auth_key is None:
 		# 	response.set_cookie(core_setting.WEIZOOM_CARD_AUTH_KEY, uniqueid(), max_age=60*60*24*365)

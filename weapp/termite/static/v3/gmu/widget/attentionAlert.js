@@ -10,10 +10,10 @@ Copyright (c) 2011-2012 Weizoom Inc
 	gmu.define('AttentionAlert', {
         setting: {
             isShowButton: function(_this) {
-                return _this.$el.attr('data-is-show-button') ? true : false;
+                return _this.$el.data('is-show-button') ? true : false;
             },
             isShowCover: function(_this) {
-                return _this.$el.attr('data-is-show-cover') ? true : false;
+                return _this.$el.data('is-show-cover') ? true : false;
             },
             getUrl: function(_this) {
                 var url = _this.$el.data('url');
@@ -21,7 +21,7 @@ Copyright (c) 2011-2012 Weizoom Inc
                 return url;
             },
             getDataId: function(_this) {
-                var id = _this.$el.attr('data-id');
+                var id = _this.$el.data('id');
                 return id;
             }
         },
@@ -31,12 +31,13 @@ Copyright (c) 2011-2012 Weizoom Inc
             if(this.setting.isShowButton(this)) {
                 this.render();
             }
+            this.$el.data('view', this);
         },
         
         render: function() {
             var url = this.url;
             var height;
-            if(this.url) {
+            if(this.url && !this.$el.data('varnish')) {
                 if (this.setting.getDataId(this) == '124') {
                     this.$button = $('<a href="'+url+'">点击此处关注未来广场官方微信哦<i class="xui-icon xui-icon-rightarrow"></i></a>');
                 } else {
