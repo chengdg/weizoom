@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.http import HttpResponseRedirect
 from django.conf import settings
@@ -256,13 +256,18 @@ def _get_shop_hint_data(request):
     #即将到期的优惠券活动数
     coupon_count = _get_expiring_promotion_count(request, promotion_models.PROMOTION_TYPE_COUPON)
     #即将到期的分享红包活动数
-    red_envelope_count = promotion_models.RedEnvelopeRule.objects.filter(
+    red_envelopes = promotion_models.RedEnvelopeRule.objects.filter(
         owner=request.manager, 
         status=True, 
         limit_time=False,
         is_delete=False, 
         end_time__lte=dateutil.get_tomorrow_str('today')
-    ).count()
+    )
+    red_envelope_ids = []
+    for red in red_envelopes:
+        is_timeout = False if red.end_time > datetime.now() else True
+        if not is_timeout:
+            red_envelope_ids.append(red.id)
 
     return {
         'onshelf_product_count': onshelf_product_count,
@@ -273,7 +278,7 @@ def _get_shop_hint_data(request):
         'premium_sale_count': premium_sale_count,
         'integral_sale_count': integral_sale_count,
         'coupon_count': coupon_count,
-        'red_envelope_count': red_envelope_count
+        'red_envelope_count': len(red_envelope_ids)
     }
 
 
