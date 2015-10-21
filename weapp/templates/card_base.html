@@ -21,7 +21,21 @@
 			{% endif %}
 		</div>
 		<span class="xui-systemName"></span>
-		
+		<!-- <div class="xui-headerActionBar" style="bottom:40px">
+			<span class="mr10">
+				<span class="">帮助中心</span>
+				<span class=" ml5">|</span>
+				<span class=" ml5">服务热线</span>
+				<span class=" ml5">400-688-6929</span>
+		</div> -->
+		<div class="xui-headerActionBar">
+			<span class="mr10">
+				<span class="">{{ request.user.username }}</span>
+				<span class=" ml5">-</span>
+				<span title="{{ request.user.username }}" class="xui-i-userName ml5">
+				<a href="/logout/">退出</a>
+			</span>
+		</div>
 	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
@@ -38,21 +52,7 @@
 					</li>
 				{% endif %}
 			</ul>
-			<div class="xui-headerActionBar" style="bottom:40px">
-				<span class="mr10">
-					<span class="">帮助中心</span>
-					<span class=" ml5">|</span>
-					<span class=" ml5">服务热线</span>
-					<span class=" ml5">400-688-6929</span>
-			</div>
-			<div class="xui-headerActionBar">
-				<span class="mr10">
-					<span class="">{{ request.user.username }}</span>
-					<span class=" ml5">-</span>
-					<span title="{{ request.user.username }}" class="xui-i-userName ml5">
-					<a href="/logout/">退出</a>
-				</span>
-			</div>
+			
 		</div>
 	</div>
 </div>
