@@ -3057,14 +3057,10 @@ def check_product_in_wishlist(request):
 	return response.get_response()
 
 
-def get_member_product_info(request):
-	'''
-	获取购物车的数量和检查商品是否已被收藏
-	'''
-	response = create_response(200)
-	# try:
+def get_member_product_info_dict(request):
+	result_data = dict()
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
-	response.data.count = shopping_cart_count
+	result_data['count'] = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
 	product_id = request.GET.get('product_id', "")
 	if request.member:
@@ -3077,19 +3073,25 @@ def get_member_product_info(request):
 				is_collect=True
 			)
 			if collect.count() > 0:
-				response.data.is_collect = 'true'
+				result_data['is_collect'] = 'true'
 			else:
-				response.data.is_collect = 'false'
+				result_data['is_collect'] = 'false'
 		member_grade_id, discount = get_member_discount(request)
-		response.data.member_grade_id = member_grade_id
-		response.data.discount = discount
+		result_data['member_grade_id'] = member_grade_id
+		result_data['discount'] = discount
 	else:
 		if product_id:
-			response.data.is_collect = 'false'
-		response.data.member_grade_id = -1
-		response.data.discount = 100
-	# except:
-	# 	return create_response(500).get_response()
+			result_data['is_collect'] = 'false'
+		result_data['member_grade_id'] = -1
+		result_data['discount'] = 100
+	return result_data
+
+def get_member_product_info(request):
+	'''
+	获取购物车的数量和检查商品是否已被收藏
+	'''
+	response = create_response(200)
+	response.data = get_member_product_info_dict(request)
 	return response.get_response()
 
 
