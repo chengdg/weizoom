@@ -302,9 +302,9 @@ def cancel_order_handler(order, **kwargs):
     except:
         alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         watchdog_fatal(alert_message, type='WEB')
-
+    # jz 2015-10-20
     # 2、删除订单统计表中的数据
-    PurchaseDailyStatistics.objects.filter(order_id=order.order_id).delete()
+    # PurchaseDailyStatistics.objects.filter(order_id=order.order_id).delete()
 
 
 #############################################################################################

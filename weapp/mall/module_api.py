@@ -1360,26 +1360,28 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		pay_result = True
 		Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
+		# jz 2015-10-20
 		# 修改子订单的订单状态，该处有逻辑状态的校验
-		origin_order_id = Order.objects.get(order_id=order_id).id
-		Order.objects.filter(origin_order_id=origin_order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
+		# origin_order_id = Order.objects.get(order_id=order_id).id
+		# Order.objects.filter()
+		if order.origin_order_id < 0:
+			Order.objects.filter(origin_order_id=order.id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
-		Order.objects.filter()
 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		order.pay_interface_type = pay_interface_type
 
 		#记录日志
 		record_operation_log(order_id, u'客户', u'支付')
 		record_status_log(order_id, u'客户', ORDER_STATUS_NOT, ORDER_STATUS_PAYED_NOT_SHIP)
-
+		# jz 2015-10-20
 		#记录购买统计项
-		PurchaseDailyStatistics.objects.create(
-			webapp_id = webapp_id,
-			webapp_user_id = webapp_user.id,
-			order_id = order_id,
-			order_price = order.final_price,
-			date = dateutil.get_today()
-		)
+		# PurchaseDailyStatistics.objects.create(
+		# 	webapp_id = webapp_id,
+		# 	webapp_user_id = webapp_user.id,
+		# 	order_id = order_id,
+		# 	order_price = order.final_price,
+		# 	date = dateutil.get_today()
+		# )
 
 		#更新webapp_user的has_purchased字段
 		webapp_user.set_purchased()
@@ -2226,15 +2228,15 @@ def update_order_status(user, action, order, request=None):
 	if action == 'pay':
 		action_msg = '支付'
 		target_status = ORDER_STATUS_PAYED_NOT_SHIP
-
+		# jz 2015-10-20
 		#记录购买统计项
-		PurchaseDailyStatistics.objects.create(
-			webapp_id = order.webapp_id,
-			webapp_user_id = order.webapp_user_id,
-			order_id = order.order_id,
-			order_price = order.final_price,
-			date = dateutil.get_today()
-		)
+		# PurchaseDailyStatistics.objects.create(
+		# 	webapp_id = order.webapp_id,
+		# 	webapp_user_id = order.webapp_user_id,
+		# 	order_id = order.order_id,
+		# 	order_price = order.final_price,
+		# 	date = dateutil.get_today()
+		# )
 		mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 	elif action == 'ship':
 		action_msg = '发货'
