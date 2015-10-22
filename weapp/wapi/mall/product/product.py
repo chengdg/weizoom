@@ -68,6 +68,8 @@ class Product(api_resource.ApiResource):
 			data['price_info'] = product.price_info
 		if hasattr(product, 'models'):
 			data['models'] = product.models
+		if hasattr(product, 'properties'):
+			data['properties'] = product.properties
 		if hasattr(product, 'product_model_properties'):
 			data['product_model_properties'] = product.product_model_properties
 		if hasattr(product, 'swipe_images_json'):
