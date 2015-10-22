@@ -131,9 +131,15 @@ def hackQuerySetFilterForShow():
 	def new_filter(self,  *args, **kwargs):
 		import modules.member.models as member_models
 		import stats.models as stats_models
+		import mall.models as mall_models
 		try:
 			if 'owner' in kwargs and kwargs['owner'].id == self_id:
 				owner = kwargs.pop('owner')
+
+				#商品列表只显示一家的
+				if self.model == mall_models.Product:
+					return old_filter(self, **kwargs).filter(owner_id=target_id)
+
 				return old_filter(self, **kwargs).filter(owner_id__in=owner_ids)
 
 			if 'owner_id' in kwargs and kwargs['owner_id'] == self_id:
