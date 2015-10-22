@@ -191,7 +191,7 @@ def step_impl(context, user, member):
     print "actual:",actual
     print "expected:",expected
 
-    bdd_util.assert_dict(actual, expected)
+    bdd_util.assert_dict(expected, actual)
 
 @then(u"{user}获得'{member}'的浏览轨迹")
 def step_impl(context, user, member):
