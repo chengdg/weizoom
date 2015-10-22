@@ -120,10 +120,10 @@ W.Api = function() {
 					}
 					if (onSuccess) {
                         if (scope) {
-                            xlog('apply to scope');
+                            //xlog('apply to scope');
                             onSuccess.call(scope, resp.data);
                         } else {
-                            xlog('not apply');
+                            //xlog('not apply');
     						onSuccess(resp.data);
                         }
 					}

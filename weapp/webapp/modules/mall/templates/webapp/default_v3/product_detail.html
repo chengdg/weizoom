@@ -43,11 +43,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
                 {% endif %}
                 <p class="xui-section-boldItemText xui-text-red xa-priceSection">
-                    {% if product.promotion and product.promotion.type == 1 %}
-                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price }}</span></span>
-                    {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price }}</span></span>
-                    {% endif %}
+                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price|format_float}}</span></span>
                 </p>
             </div>
         </div>
@@ -285,9 +281,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <!-- 普通商品 -->
                 {% elif product.type == 'object' %}
                     {% if cur_request_member %}
-                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price|format_float }}</span></span>
                     {% else %}
-                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price |format_float}}</span></span>
                     {% endif %}
                 {% endif %}
                 </p>
@@ -417,117 +413,6 @@ var is_member_product = '{{product.is_member_product}}'
 var promotion = W.loadJSON('promotion');
 
 $(document).ready(function() {
-    var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
-        if(promotion_member_grade_id == '0'){return true;}
-        if(promotion_member_grade_id == user_member_grade_id){
-            return true;
-        }else{
-            return false;
-        }
-
-    };
-    //检查此商品是否被收藏和显示购物车的数量
-    W.getApi().call({
-        app: 'webapp',
-        api: 'project_api/call',
-        method: 'get',
-        args: {
-            woid: W.webappOwnerId,
-            module: 'mall',
-            target_api: 'member_product_info/get',
-            product_id: productId,
-        },
-        success: function(data) {
-            var user_member_grade_id = data.member_grade_id;
-            if(data.is_collect == 'true'){
-                $('.xa-collectProduct').addClass('faved').text('已收藏');
-                $('.xa-collectProduct').attr('data-is-collect', 'true');
-            }
-            if(data.count != 0) {
-                $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
-            }
-            // 优惠信息标签
-            var msg = '';
-            // 商品原价
-            var price = view.priceInfo.min_price;
-
-            // 存储商品会员价与促销的状态
-            view.member_or_promotion = '';
-            // 商品有促销
-            var product_promotion = view.promotion;
-            is_product_promotion = !($.isEmptyObject(product_promotion));
-            var is_user_has_promotion = false;
-            if(is_product_promotion){
-                // 促销是否对此用户开发
-                is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
-                // 限时抢购
-                if(is_user_has_promotion && product_promotion.detail.promotion_price){
-                    price = (product_promotion.detail.promotion_price).toFixed(2);
-                    msg = true;
-                    view.member_or_promotion = 'promotion';
-                }
-                if(!is_user_has_promotion){
-
-                    view.promotion.isFlashSalePromotion = false;
-                    // 促销bu对此用户开发
-                    var next_promotions = $('.xa-display-promotion').next('div');
-                    if(next_promotions.length==0){
-                        // mei ji fen ying yong
-                        $('.xa-promotionSection').remove();
-                    }else if(next_promotions.length == 1){
-                        // you ji fen ying yong
-                        $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
-                        next_promotions.remove();
-                    }
-                    // // 对于不开放的促销，不显示广告语
-                    // var span = $('.xa-productName').find('span');
-                    // if(span){
-                    //     span.remove();
-                    // }
-                }
-            // 商品无促销
-            }
-            if(!is_user_has_promotion){
-                // 商品是否折扣
-                has_discount = is_member_product;
-                if(has_discount === "True" && data.discount < 100){
-                    //促销与会员价格处理
-                    view.discount = data.discount;
-                    if(view.isStandardModelProduct){
-                        view.initForStandardModelProduct()
-                    }else{
-                        view.initForCustomModelProduct()
-                    }
-                    price = ((price * data.discount / 100).toFixed(2));
-                    msg = '会员价';
-                    view.member_or_promotion = 'member';
-
-                }
-                // 对于不开放的促销，不显示广告语
-                var span = $('.xa-productName').find('span');
-                if(span){
-
-                    span.html('<span class="xui-text-red">'+view.priceInfo.promotion_title+'</span>');
-                }
-            }
-            // 处理会员价
-            if (msg === true){
-                var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span>';
-                $('.xa-priceSection').html(temp);
-
-            }else if(msg === '会员价'){
-                var orPrice = (view.priceInfo.min_price).toFixed(2);
-                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
-                $('.xa-priceSection').html(temp);
-            }
-        },
-        error: function(data) {
-
-        }
-    });
-    // setTimeout(function(){
-    //     $('.xui-applyBox').removeClass('hidden');
-    // },200);
     view = new W.page.BuyProductPage({
         el: '.xui-page',
         postageFactor: postageFactor,
@@ -552,64 +437,6 @@ $(document).ready(function() {
         effect : "fadeIn",
         placeholder:"{{cdn_host}}/static_v2/img/webapp/mall/info_placeholder.png"
     });
-    // if($('.xa-production').length > 0){
-    //     var $wrapper = $('.xa-content');
-    //     $wrapper.css('height',window.document.body.clientHeight - 42).refresh({
-    //         statechange: function (e, $elem, state, dir) {
-    //             var refreshInfo = this._options.refreshInfo[dir];
-    //             switch (state) {
-    //                 case 'loading':
-    //                     refreshInfo['$label'].html('详情加载中...');
-    //                     break;
-    //             }
-    //         },
-    //         load: function (dir, type) {
-    //             var me = this;
-    //             var data = $('.xa-productDetail-content').data('detail');
-    //             $('.xa-productDetail-content').html(data);
-    //             var $img = $('.xa-productDetail-content').find('img');
-    //             // $img.lazyload({
-    //             //     container: $(".xa-productDetail-content"),
-    //             //     data_attribute:"url"
-    //             // });
-    //             $img.imglazyload({
-    //                 container:$('.xa-content'),
-    //                 innerScroll: true
-    //             }).on('loadcomplete', function () {
-    //                 $wrapper.iScroll('refresh');
-    //             });
-    //             if($img.length > 0){
-    //                 var a = setInterval(function(){
-    //                     var flag = true;
-    //                     $img.each(function(i,n){
-    //                         if(!n.complete)
-    //                             flag = false;
-    //                     })
-    //                     if(flag){
-    //                         $('.xa-production').removeClass('hidden');
-    //                         me.afterDataLoading(dir);
-    //                         clearInterval(a)
-    //                         me.disable(dir,true);
-    //                     }
-    //                 });
-    //             }else{
-    //                 $('.xa-production').removeClass('hidden');
-    //                 me.afterDataLoading(dir);
-    //                 me.disable(dir,true);
-    //             }
-                
-
-    //         }
-    //     });
-    //     // $('.ui-refresh-icon').hide();
-    //     isPhone6pinches = (window.screen.height==736);
-    //     if(isPhone6pinches){
-    //         $('.ui-refresh-label').text("点击加载商品详情");
-    //     }else{
-    //         $('.ui-refresh-label').text("↑ 上拉加载商品详情");
-    //     }
-    // }
-
     //处理会员名称
     var spanMemberName = $(".xa-memberName");
     for(var i = 0; i < spanMemberName.length; i++) {
