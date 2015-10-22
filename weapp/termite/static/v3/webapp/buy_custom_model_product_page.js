@@ -314,7 +314,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             isInit = 1;
             _this = this;
         }
-
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -327,6 +326,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 need_member_info:isInit
             },
             success: function(data){
+
+                //处理规格库存
                 $.each(_this.models, function(i, n){
                     if(!data[n.id])
                         return;
@@ -337,19 +338,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     }
                 });
                 if (_this.isStandardModelProduct) {
-                    // _this.models[0].stock_type = data.stock_type;
-                    // _this.models[0].stocks = data.stocks;
                     _this.targetModel = _this.models[0];
                     _this.initForStandardModelProduct();
-                    // _this.getMaxCount(_this.models[0]); 多余操作 initForStandardModelProduct 已经执行过
                 } else {
-                    // for(var i = 0; i < _this.models.length; i++){
-                    //     _this.models[i].stock_type = data[_this.models[i].id].stock_type;
-                    //     _this.models[i].stocks = data[_this.models[i].id].stocks;
-                    //     if(!isInit){
-                    //         _this.updateProductInfo(_this.models[i]);
-                    //     }
-                    // }
                     if (isInit){
                         _this.initForCustomModelProduct();
                     }
@@ -454,6 +445,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             }
         })
     },
+
     /**
      * initStickyActionBar: 初始化粘性action bar
      */
