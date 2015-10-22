@@ -9,8 +9,6 @@
       W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
       if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
       W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-      alert(W.sharePageTitle);
-      alert(W.sharePageDesc);
 
       var link = window.location.href;
       if (link.indexOf('fmt') === -1){
@@ -70,10 +68,10 @@
           }
       };
 
-      if (window.location.href.indexOf('share_red_envelope') > 0 || window.location.href.indexOf('webapp_page') > 0){
+      if (window.location.href.indexOf('share_red_envelope') > 0){
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
-              "link" : link,
+              "link" : window.location.href,
               "desc" : W.sharePageDesc,
               "title" : W.sharePageDesc,
               // 点击分享按钮
@@ -91,7 +89,7 @@
                           project_id: W.projectId,
                           module: 'user_center',
                           target_api: 'shared_url/record',
-                          link: link,
+                          link: window.location.href,
                           title:W.sharePageTitle
                       }),
                       success: function(data) {
