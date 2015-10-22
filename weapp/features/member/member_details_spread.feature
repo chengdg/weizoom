@@ -219,6 +219,7 @@ Scenario:1 会员详情-传播能力(分享链接引流)
 			}
 			"""
 
+#author:王丽 2015.10.22
 @mall2 @member @memberList
 Scenario:2 会员详情-传播能力(二维码引流)
 	Given jobs登录系统
