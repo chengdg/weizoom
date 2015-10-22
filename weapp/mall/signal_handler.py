@@ -1135,7 +1135,7 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
     target_promotion_ids = []
     promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
         product_id__in=product_ids)]
-    for promotion in promotion_models.Promotion.objects.filter(id__in=promotionIds):
+    for promotion in promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED)):
         if promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
             target_promotion_ids.append(str(promotion.id))
         elif disable_coupon:
