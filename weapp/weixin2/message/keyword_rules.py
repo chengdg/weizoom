@@ -201,7 +201,7 @@ class KeywordRules(resource.Resource):
                 return response.get_response()
 
             answer = request.POST.get('answer', '')
-            #将answer中的表情img标签转化为文字符号 by Eugene
+            #将answer中的表情img标签转化为文字符号 by Eugene.
             answers = json.loads(answer)
             for data in answers:
                 if data['type'] == "text":
