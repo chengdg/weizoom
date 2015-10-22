@@ -44,34 +44,32 @@ Background:
 			"coupon_product": "商品2"
 		}]
 		"""
-	And jobs添加分享红包
+	When jobs添加分享红包
 		"""
 		[{
 			"name": "红包1",
 			"prize_info": "全体券3",
-			"limit_time": false,
-			"start_time": "今天",
-			"end_time": "2天后",
+			"is_permanant_active": false,
+			"start_date": "今天",
+			"end_date": "2天后",
 			"receive_method": "下单领取",
-			"limit_order_money": 200,
-			"use_info": "活动说明",
+			"limit_money": 200,
+			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title": "分享有礼"
+			"remark": "分享有礼"
 
 		}, {
 			"name": "红包2",
 			"prize_info": "单品券4",
-			"limit_time": true,
-			"start_time": "",
-			"end_time": "",
+			"is_permanant_active": true,
 			"receive_method": "图文领取",
-			"use_info": "活动说明",
+			"detail": "活动说明",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title": "分享有礼"
+			"remark": "分享有礼"
 		}]
 		""" 
 
-
+@mall2 @promotion @promotionRedbag
 Scenario: 1 分享红包列表提示
 	jobs在获取红包列表为'开启'状态,优惠券剩余一列小于等于20有“库存告急”提示
 	1.切换红包状态,显示相应'库存告急'提示
@@ -97,11 +95,10 @@ Scenario: 1 分享红包列表提示
 				"surplus_text":""
 			},
 			"actions": ["分析","开启","删除","查看"]
-
 		}]
 		"""
 	#调整'红包1'状态为'开启'显示库存告急提示
-	When jobs调整'红包1'状态为'开启'
+	When jobs-开启分享红包"红包1"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -119,12 +116,11 @@ Scenario: 1 分享红包列表提示
 				"surplus_count":10,
 				"surplus_text":"库存告急"
 			},
-			"actions": ["分析","关闭","删除","查看"]
-
+			"actions": ["分析","关闭","查看"]
 		}]
 		"""
 	#调整'红包1'状态为'关闭'不显示库存告急提示
-	When jobs调整'红包1'状态为'关闭'
+	When jobs-关闭分享红包"红包1"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -143,7 +139,6 @@ Scenario: 1 分享红包列表提示
 				"surplus_text":""
 			},
 			"actions": ["分析","开启","删除","查看"]
-
 		}]
 		"""
 
@@ -173,10 +168,10 @@ Scenario: 1 分享红包列表提示
 				"surplus_text":""
 			},
 			"actions": ["分析","开启","删除","查看"]
-
 		}]
 		"""
 
+@mall2 @promotion @promotionRedbag
 Scenario: 2 获取库存提示弹窗
 	jobs在获取红包列表为'开启'状态,弹窗中“库存告急”提示
 	1.切换红包状态,显示相应'库存告急'提示
@@ -189,28 +184,26 @@ Scenario: 2 获取库存提示弹窗
 		"""
 		[{
 			"name": "【图文领取】红包2",
-			"surplus_text":"即将用完",
+			"surplus_text":"即将用完"
 		}]
 		"""
-	When jobs调整'红包1'状态为'开启'
-	When jobs刷新'分享红包'页面
+	When jobs-开启分享红包"红包1"
 	Then jobs获取库存提示弹窗
 		"""
 		[{
 			"name": "【图文领取】红包2",
-			"surplus_text":"即将用完",
+			"surplus_text":"即将用完"
 		}, {
 			"name": "红包1",
-			"surplus_text":"即将用完",
+			"surplus_text":"即将用完"
 		}]
 		"""
-	When jobs调整'红包1'状态为'关闭'
-	When jobs刷新'分享红包'页面
+	When jobs-关闭分享红包"红包1"
 	Then jobs获取库存提示弹窗
 		"""
 		[{
 			"name": "【图文领取】红包2",
-			"surplus_text":"即将用完",
+			"surplus_text":"即将用完"
 		}]
 		"""
 	#添加库存,分享红包提示
@@ -221,7 +214,6 @@ Scenario: 2 获取库存提示弹窗
 			"coupon_id_prefix": "coupon4_id_"
 		}
 		"""
-	When jobs刷新'分享红包'页面
 	#无提示弹窗
 	Then jobs获取库存提示弹窗
 		"""

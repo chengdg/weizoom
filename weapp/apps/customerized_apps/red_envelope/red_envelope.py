@@ -182,6 +182,23 @@ class RedEnvelopeRuleList(resource.Resource):
                 rule_id2count[record.red_envelope_rule_id] = 1
 
         for rule in rules:
+            remained_count = id2coupon_rule[rule.coupon_rule_id].remained_count
+            is_timeout = False if rule.end_time > datetime.now() else True
+            is_warring = False
+            if remained_count <= 20:
+                if rule.receive_method:
+                    if rule.limit_time:
+                        is_warring = True
+                    else:
+                        if not is_timeout:
+                            is_warring = True
+                else:
+                    if rule.status:
+                        if rule.limit_time:
+                            is_warring = True
+                        else:
+                            if not is_timeout:
+                                is_warring = True
             data = {
                 "id": rule.id,
                 "rule_name": rule.name,
@@ -191,9 +208,10 @@ class RedEnvelopeRuleList(resource.Resource):
                 "coupon_rule_name": id2coupon_rule[rule.coupon_rule_id].name,
                 "status": rule.status,
                 "get_count": rule_id2count[rule.id] if rule_id2count.has_key(rule.id) else 0,
-                "remained_count": id2coupon_rule[rule.coupon_rule_id].remained_count,
-                "is_timeout": False if rule.end_time > datetime.now() else True,
+                "remained_count": remained_count,
+                "is_timeout": is_timeout,
                 "receive_method": rule.receive_method,
+                "is_warring": is_warring
             }
             items.append(data)
         data = {

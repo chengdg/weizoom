@@ -165,7 +165,7 @@ Background:
 		}
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario: 1 会员通过成功创建订单获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -324,7 +324,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 		}
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -434,7 +434,7 @@ Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 		"""
 
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario: 3 非会员通过会员成功创建订单分享红包后获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -532,7 +532,7 @@ Scenario: 3 非会员通过会员成功创建订单分享红包后获取红包
 		}
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加库存后,能获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -699,7 +699,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 		}
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario: 5 会员通过分享链接领取红包时红包规则被删除，领取红包失败
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -763,7 +763,7 @@ Scenario: 5 会员通过分享链接领取红包时红包规则被删除，领�
 
 
 # _edit_ : "新新" "雪静"
-@promotionRedbag  @meberGrade
+@mall2 @promotionRedbag  @meberGrade
 Scenario: 6 不同等级的会员购买有会员价同时有分享红包设置的商品
 #分享红包:金额条件取会员价
 	Given jobs登录系统

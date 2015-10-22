@@ -82,6 +82,10 @@ def step_add_red_envelope_rule(context, user):
 def __to_date(str):
     return dt.datetime.strptime(str, '%Y/%m/%d %H:%M:%S').strftime('%Y-%m-%d')
 
+is_warring2text = {
+    True: u'库存告急',
+    False: u''
+}
 @then(u'{user}能获取分享红包列表')
 def step_impl(context, user):
     # context.query_param由When...指定
@@ -126,7 +130,11 @@ def step_impl(context, user):
             'actions': __get_actions(rule),
             'start_date': __to_date(rule['start_time']),
             'end_date': __to_date(rule['end_time']),
-            'prize_info': [ rule['coupon_rule_name'] ]
+            'prize_info': [ rule['coupon_rule_name'] ],
+            'surplus': {
+                'surplus_count': rule['remained_count'],
+                'surplus_text': is_warring2text[rule['is_warring']]
+            }
         })
     print("actual_data: {}".format(actual))
 
@@ -228,6 +236,7 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
         print('[info] not redirect')
         context.last_url = context.shared_url
 
+
 @When(u'{webapp_user_name}点击图文"{title}"')
 def step_impl(context, webapp_user_name, title):
     webapp_owner_id = context.webapp_owner_id
@@ -240,3 +249,25 @@ def step_impl(context, webapp_user_name, title):
     print(context)
     response = context.client.get(url)
     bdd_util.assert_api_call_success(response)
+
+warring2text = {
+
+}
+@then(u'{user}获取库存提示弹窗')
+def step_impl(context, user):
+    response = context.client.get('/apps/red_envelope/red_envelope_rule_list/')
+    rules = response.context['items']
+    # 构造实际数据
+    actual = []
+    for rule in rules:
+        actual.append({
+            'name': __get_name(rule),
+            'surplus_text': u'即将用完'
+        })
+    print("actual_data: {}".format(actual))
+
+    expected = json.loads(context.text)
+    print("expected: {}".format(expected))
+
+    bdd_util.assert_list(expected, actual)
+
