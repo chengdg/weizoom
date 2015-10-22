@@ -65,6 +65,9 @@ class Product(api_resource.ApiResource):
 			'weshop_sync': product.weshop_sync,
 			'is_member_product': product.is_member_product,
 		}
+		
+		if hasattr(product, 'min_limit'):
+			data['min_limit'] = product.min_limit
 		if hasattr(product, 'price_info'):
 			data['price_info'] = product.price_info
 		if hasattr(product, 'models'):

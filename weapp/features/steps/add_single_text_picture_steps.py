@@ -69,8 +69,6 @@ def step_impl(context, user):
     for news_info in newses_info:
         actual_data.append({'title':news_info['newses'][0]['title']})
     expected_data = json.loads(context.text)
-    #actual_data.reverse()
-    print 'justing',expected_data,'\n',actual_data
     bdd_util.assert_list(expected_data, actual_data)
 
 
