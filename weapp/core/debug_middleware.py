@@ -271,7 +271,7 @@ class SqlMonitorMiddleware(object):
 		for cache in cache_util.CACHE_QUERIES:
 			print 'jz----cache', cache['time'], cache['sql'], cache.get('stack')
 		for sql in connections['default'].queries:
-			print 'jz----sql', sql['time'], sql['sql'], query.get('stack')
+			print 'jz----sql', sql['time'], sql['sql'], sql.get('stack')
 		if is_sql or is_allsql:
 			sqls = []
 			for query in connections['default'].queries:
