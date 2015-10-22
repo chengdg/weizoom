@@ -13,6 +13,7 @@ from mall.models import *
 from modules.member.models import *
 from mall.promotion.models import CouponRule
 from utils.string_util import byte_to_hex, hex_to_byte
+from tools.regional import views as regional_util
 
 @when(u"{user}访问'{member}'会员详情")
 def step_impl(context, user, member):
@@ -290,6 +291,22 @@ def spreadMethod(sMethod):
         return 'shared'
     elif u'二维码' == sMethod:
         return 'qrcode'
+
 @When(u"休眠1秒")
 def step_impl(context):
     time.sleep(1)
+
+@Then(u"{user}获得'{member}'的收货信息列表")
+def step_impl(context, user, member):
+    expected = json.loads(context.text)
+    response = _get_member_info(context, member)
+    actual = []
+    for ship_info in response.context['ship_infos']:
+        ship = {}
+        ship['area'] = regional_util.get_str_value_by_string_ids(ship_info.area)
+        ship['area'] = ','.join(ship['area'].split())
+        ship['ship_address'] = ship_info.ship_address
+        ship['ship_name'] = ship_info.ship_name
+        ship['ship_tel'] = ship_info.ship_tel
+        actual.append(ship)
+    bdd_util.assert_list(actual, expected)
