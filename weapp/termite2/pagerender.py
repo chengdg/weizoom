@@ -259,7 +259,7 @@ def process_item_list_data(request, component):
 	products = products[:count]
 	if len(products) == 0:
 		_set_empty_product_list(request, component)
-		return
+
 	else:
 		#webapp_owner_id = products[0].owner_id
 		#mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
