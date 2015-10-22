@@ -623,7 +623,7 @@ class UserManagerMiddleware(object):
 			return None
 		if isinstance(request.user, User):
 			#更改manager获取方式 duhao 20151016
-			if not user.is_superuser
+			if not user.is_superuser:
 				profile = user.get_profile()
 				if profile.manager_id != user.id and profile.manager_id > 2:
 					manager = User.objects.get(id=profile.manager_id)
