@@ -116,6 +116,45 @@ def hackQuerySetFilter():
 		return old_filter(self, *args, **kwargs)
 	QuerySet.filter = new_filter
 
+self_id = 6
+target_id = 3
+owner_ids = (target_id, self_id)
+
+self_webapp_id = '3184'
+target_webapp_id = '3181'
+webapp_ids = (target_webapp_id, self_webapp_id)
+def hackQuerySetFilterForShow():
+	"""
+	丰富用于为客户演示的账号的数据
+	"""
+	old_filter = QuerySet.filter
+	def new_filter(self,  *args, **kwargs):
+		import modules.member.models as member_models
+		try:
+			if 'owner' in kwargs and kwargs['owner'].id == self_id:
+				owner = kwargs.pop('owner')
+				return old_filter(self, **kwargs).filter(owner_id__in=owner_ids)
+
+			if 'owner_id' in kwargs and kwargs['owner_id'] == self_id:
+				owner_id = kwargs.pop('owner_id')
+				return old_filter(self, **kwargs).filter(owner_id__in=owner_ids)
+
+			if 'webapp_id' in kwargs and kwargs['webapp_id'] == self_webapp_id:
+				webapp_id = kwargs.pop('webapp_id')
+				if self.model == member_models.IntegralStrategySttings:
+					return old_filter(self, **kwargs).filter(webapp_id=target_webapp_id)
+				else:
+					return old_filter(self, **kwargs).filter(webapp_id__in=webapp_ids)
+
+			if 'webapp_source_id' in kwargs and kwargs['webapp_source_id'] == self_webapp_id:
+				webapp_source_id = kwargs.pop('webapp_source_id')
+				return old_filter(self, **kwargs).filter(webapp_source_id__in=webapp_ids)
+		except:
+			pass
+
+		return old_filter(self, *args, **kwargs)
+	QuerySet.filter = new_filter
+
 
 def hackModel():
 	"""
@@ -221,3 +260,4 @@ def hack(params):
 	hackRenderToResponse()
 	hackModelManager()
 	# hackUser() duhao 20151019 注释
+	hackQuerySetFilterForShow()
