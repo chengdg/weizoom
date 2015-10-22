@@ -116,13 +116,13 @@ def hackQuerySetFilter():
 		return old_filter(self, *args, **kwargs)
 	QuerySet.filter = new_filter
 
-self_id = 6
-target_id = 3
-owner_ids = (target_id, self_id)
+self_id = 582
+target_id = 570
+owner_ids = (target_id, self_id, 102, 443)
 
-self_webapp_id = '3184'
-target_webapp_id = '3181'
-webapp_ids = (target_webapp_id, self_webapp_id)
+self_webapp_id = '3716'
+target_webapp_id = '3704'
+webapp_ids = (target_webapp_id, self_webapp_id, '3211', '3595')
 def hackQuerySetFilterForShow():
 	"""
 	丰富用于为客户演示的账号的数据
