@@ -39,20 +39,23 @@ Background:
 		[{
 			"name": "红包1",
 			"prize_info": "单品券1",
-			"limit_time": true,
+			"is_permanant_active": true,
+			"limit_money": "无限制",
 			"receive_method":"图文领取",
-			"use_info": "图文领取领红包1",
+			"detail": "图文领取领红包1",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述1"
+			"remark":"分享描述1"
 		},{
 			"name": "红包2",
 			"prize_info": "全体券2",
+			"is_permanant_active": false,
 			"start_date": "今天",
 			"end_date": "2天后",
+			"limit_money": "无限制",
 			"receive_method":"图文领取",
-			"use_info": "图文领取红包2",
+			"detail": "图文领取红包2",
 			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
-			"share_title":"分享描述2"
+			"remark":"分享描述2"
 		}]
 		"""
 
@@ -121,14 +124,14 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag
+@promotion @promotionRedbag @kuki
 Scenario:1 自动回复获取图文领取分享红包
 	#自动回复单图文领取分享红包
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击'红包1单图文'
+	When bill点击图文'红包1单图文'
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -140,7 +143,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#自动回复多图文领取分享红包
 	When bill在微信中向jobs的公众号发送消息'红包2'
 	Then bill收到自动回复'多图文'
-	When bill点击'sub红包2图文'
+    When bill点击图文'sub红包2图文'
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -157,7 +160,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#同一个图文领取分享红包，只能领一次
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击'红包1单图文'
+	When bill点击图文'红包1单图文'
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -177,7 +180,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击'红包1单图文'
+	When bill点击图文'红包1单图文'
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -240,7 +243,7 @@ Scenario:3 优惠券库存为0,红包领取失败
 		"""
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击'红包1单图文'
+	When bill点击图文'红包1单图文'
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -308,12 +311,12 @@ Scenario:4 删除分享红包,红包领取失败
 			"actions": ["分析","删除","查看"]
 		}]
 		"""
-	When jobs删除分享红包'【图文领取】红包1'
+  	When jobs-删除分享红包"【图文领取】红包1"
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击'红包1单图文'
+	When bill点击图文'红包1单图文'
 	#页面展示'很遗憾，红包已经领完了'
 	Then bill能获得webapp优惠券列表
 		"""

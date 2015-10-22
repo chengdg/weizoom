@@ -12,6 +12,7 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 from mall.promotion.models import CouponRule
+from weixin.message.material import models as material_models
 
 def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
@@ -41,6 +42,12 @@ def __get_name(rule):
         return u'【图文领取】'+rule['rule_name']
     else:
         return rule['rule_name']
+
+def __get_coupon_rule_name(title):
+    material_url = material_models.News.objects.get(title=title).url
+    coupon_rule_name = material_url.split('-')[1]
+    return coupon_rule_name
+
 @given(u'{user}已添加分享红包')
 def step_impl(context, user):
     step_add_red_envelope_rule(context, user)
@@ -207,7 +214,6 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
     openid = "%s_%s" % (webapp_user_name, user.username)
     member = member_api.get_member_by_openid(openid, context.webapp_id)
 
-
     if member:
         new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
         context.shared_url = "%s&fmt=%s" % (new_url, member.token)
@@ -221,3 +227,16 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
     else:
         print('[info] not redirect')
         context.last_url = context.shared_url
+
+@When(u'{webapp_user_name}点击图文"{title}"')
+def step_impl(context, webapp_user_name, title):
+    webapp_owner_id = context.webapp_owner_id
+    red_envelope_rule_name = __get_coupon_rule_name(title)
+    red_envelope_rule_id = __get_red_envelope_rule_id(red_envelope_rule_name)
+    url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (red_envelope_rule_id,webapp_owner_id)
+    url = bdd_util.nginx(url)
+    context.red_envelope_url = url
+    print('11111111111111111111111111111context')
+    print(context)
+    response = context.client.get(url)
+    bdd_util.assert_api_call_success(response)
