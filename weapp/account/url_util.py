@@ -60,9 +60,11 @@ def get_webappid_from_request(request):
 def __get_request_url(request):
 	return request.get_full_path()
 
+
 def is_product_stocks_request(request):
 	url = __get_request_url(request)
-	return ('target_api=product_stocks' in url)
+	return ('target_api=product_stocks' in url) and not ('need_member_info=1' in url)
+
 
 def is_pay_request(request):
 	url = __get_request_url(request)
