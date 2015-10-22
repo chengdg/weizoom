@@ -2000,7 +2000,7 @@ def __hack_product_id_for_show(relations):
 	为演示账号修改订单中的商品id duhao 20151022
 	"""
 	products = list(Product.objects.filter(owner_id = 570))
-	length = len(products) - 1
+	length = len(products)
 	for r in relations:
 		r.product_id = products[r.product_id % length].id
 
