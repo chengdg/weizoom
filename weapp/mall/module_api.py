@@ -1747,8 +1747,9 @@ def record_operation_log(order_id, operator_name, action, order=None):
 	except:
 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(error_msg)
+	# jz 2015-10-22
 	# 修改订单修改时间
-	update_order_time(order_id)
+	# update_order_time(order_id)
 
 ########################################################################
 # get_order_status_logs: 获得订单的状态日志
@@ -1946,16 +1947,16 @@ def record_status_log(order_id, operator_name, from_status, to_status):
 		error_msg = u"增加订单({})状态更改记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(error_msg)
 
-
+# jz 2015-10-22
 ########################################################################
 # update_order_time: 更新订单修改时间
 ########################################################################
-def update_order_time(order_id):
-	try:
-		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())
-	except:
-		error_msg = u"更新订单({})修改时间记录失败, cause:\n{}".format(order_id, unicode_full_stack())
-		watchdog_error(error_msg)
+# def update_order_time(order_id):
+# 	try:
+# 		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())
+# 	except:
+# 		error_msg = u"更新订单({})修改时间记录失败, cause:\n{}".format(order_id, unicode_full_stack())
+# 		watchdog_error(error_msg)
 
 
 ########################################################################

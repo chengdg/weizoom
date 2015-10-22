@@ -121,8 +121,9 @@ def post_pay_order_handler(order, request, **kwargs):
             request.webapp_user.complete_payment(request, order)
         #更新order的payment_time字段
         dt = datetime.now()
-        payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-        Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
+        # jz 2015-10-22
+        # payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+        # Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
         #发送模板消息
         try:
             from market_tools.tools.template_message.module_api import send_order_template_message
@@ -136,7 +137,7 @@ def post_pay_order_handler(order, request, **kwargs):
                 增加异步消息：修改会员消费次数和金额,平均客单价
             """
             from modules.member.tasks import update_member_pay_info
-            order.payment_time = payment_time
+            # order.payment_time = payment_time
             update_member_pay_info(order)
         except:
             alert_message = u"post_pay_order_handler 修改会员消费次数和金额,平均客单价, cause:\n{}".format(unicode_full_stack())
