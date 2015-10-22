@@ -50,7 +50,7 @@ Copyright (c) 2011-2012 Weizoom Inc
                 top:'50%',
                 left:'50%',
                 'margin-top':'-135px',
-                'margin-left':'-115px',
+                'margin-left':'-115px'
             });
             $('.xui-twoDimensionImg').css({
                 width: 148,
