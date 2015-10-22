@@ -1370,6 +1370,7 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		order.pay_interface_type = pay_interface_type
 		order.payment_time = datetime.now()
+		order.save()
 
 		#记录日志
 		record_operation_log(order_id, u'客户', u'支付')
