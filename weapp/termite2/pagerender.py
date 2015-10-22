@@ -214,6 +214,22 @@ def process_item_group_data(request, component):
 	component['valid_product_count'] = valid_product_count
 
 
+def _set_empty_product_list(request, component):
+	if request.in_design_mode:
+		#分类信息为空，构造占位数据
+		count = 4
+		product_datas = []
+		for i in range(count):
+			product_datas.append({
+				"id": -1,
+				"name": "",
+			})
+		component['runtime_data'] = {
+			"products": product_datas
+		}
+	else:
+		component['_has_data'] = False
+
 
 def process_item_list_data(request, component):
 	component['_has_data'] = True
@@ -221,41 +237,13 @@ def process_item_list_data(request, component):
 
 	category = component["model"].get("category", '')
 	if len(category) == 0:
-		if request.in_design_mode:
-			#分类信息为空，构造占位数据
-			count = 4
-			product_datas = []
-			for i in range(count):
-				product_datas.append({
-					"id": -1,
-					"name": "",
-				})
-			component['runtime_data'] = {
-				"products": product_datas
-			}
-			return
-		else:
-			component['_has_data'] = False
-			return
+		_set_empty_product_list(request, component)
+		return
 	
 	category = json.loads(category)
 	if len(category) == 0:
-		if request.in_design_mode:
-			#分类信息为空，构造占位数据
-			count = 4
-			product_datas = []
-			for i in range(count):
-				product_datas.append({
-					"id": -1,
-					"name": "",
-				})
-			component['runtime_data'] = {
-				"products": product_datas
-			}
-			return
-		else:
-			component['_has_data'] = False
-			return
+		_set_empty_product_list(request, component)
+		return
 
 	category_id = category[0]["id"]
 	categories = mall_models.ProductCategory.objects.filter(id=category_id)
@@ -270,7 +258,8 @@ def process_item_list_data(request, component):
 	# products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	products = products[:count]
 	if len(products) == 0:
-		component['_has_data'] = False
+		_set_empty_product_list(request, component)
+		return
 	else:
 		#webapp_owner_id = products[0].owner_id
 		#mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
