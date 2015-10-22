@@ -48,7 +48,7 @@ W.component.wepage.ItemGroup = W.component.Component.extend({
                 name: '列表',
                 value: '3'
             }],
-            default: '0'
+            default: '2'
         }, {
             name: 'card_type',
             type: 'radio',
