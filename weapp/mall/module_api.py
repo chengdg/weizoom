@@ -1999,7 +1999,7 @@ def __hack_product_id_for_show(relations):
 	"""
 	为演示账号修改订单中的商品id duhao 20151022
 	"""
-	products = list(Product.objects.filter(owner_id = 570))
+	products = list(Product.objects.filter(owner_id = settings.TARGET_ID))
 	length = len(products)
 	for r in relations:
 		r.product_id = products[r.product_id % length].id
@@ -2035,7 +2035,7 @@ def get_order_products(order):
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
 
 	#为演示账号修改订单中的商品id duhao 20151022
-	if order.webapp_id in ('3595', '3211'):
+	if order.webapp_id in (settings.ASSISTANT_WEBAPP_ID1, settings.ASSISTANT_WEBAPP_ID2):
 		relations = __hack_product_id_for_show(relations)
 		
 	product_ids = [r.product_id for r in relations]

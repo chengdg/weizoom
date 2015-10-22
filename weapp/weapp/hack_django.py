@@ -118,13 +118,7 @@ def hackQuerySetFilter():
 
 
 
-self_id = 582
-target_id = 570
-owner_ids = (target_id, self_id, 102, 443)
 
-self_webapp_id = '3716'
-target_webapp_id = '3704'
-webapp_ids = (target_webapp_id, self_webapp_id, '3211', '3595')
 def hackQuerySetFilterForShow():
 	"""
 	丰富用于为客户演示的账号的数据 duhao 20151022
@@ -135,33 +129,39 @@ def hackQuerySetFilterForShow():
 		import stats.models as stats_models
 		import mall.models as mall_models
 		try:
-			if 'owner' in kwargs and kwargs['owner'].id == self_id:
+			if 'owner' in kwargs and kwargs['owner'].id == settings.SELF_ID:
 				owner = kwargs.pop('owner')
 
-				#商品列表只显示一家的
-				if self.model == mall_models.Product:
-					return old_filter(self, **kwargs).filter(owner_id=target_id)
+				if self.model in (member_models.Member, mall_models.Order):
+					return old_filter(self, **kwargs).filter(owner_id__in=settings.OWNER_IDS)
 
-				return old_filter(self, **kwargs).filter(owner_id__in=owner_ids)
+				return old_filter(self, **kwargs).filter(owner_id=settings.TARGET_ID)
 
-			if 'owner_id' in kwargs and kwargs['owner_id'] == self_id:
+			if 'owner_id' in kwargs and kwargs['owner_id'] == settings.SELF_ID and self.model in (member_models.Member, mall_models.Order):
 				owner_id = kwargs.pop('owner_id')
-				return old_filter(self, **kwargs).filter(owner_id__in=owner_ids)
+				return old_filter(self, **kwargs).filter(owner_id__in=settings.OWNER_IDS)
 
-			if 'webapp_id' in kwargs and kwargs['webapp_id'] == self_webapp_id:
+			if 'webapp_id' in kwargs and kwargs['webapp_id'] == settings.SELF_WEBAPP_ID:
 				webapp_id = kwargs.pop('webapp_id')
 				if self.model == member_models.IntegralStrategySttings:
-					return old_filter(self, **kwargs).filter(webapp_id=target_webapp_id)
+					return old_filter(self, **kwargs).filter(webapp_id=settings.TARGET_WEBAPP_ID)
 
 				if self.model == stats_models.BrandValueHistory:
-					kwargs['webapp_id'] = self_webapp_id
+					kwargs['webapp_id'] = settings.SELF_WEBAPP_ID
 					return old_filter(self, **kwargs)
 				
-				return old_filter(self, **kwargs).filter(webapp_id__in=webapp_ids)
+				if self.model in (member_models.Member, mall_models.Order):
+					return old_filter(self, **kwargs).filter(webapp_id__in=settings.WEBAPP_IDS)
 
-			if 'webapp_source_id' in kwargs and kwargs['webapp_source_id'] == self_webapp_id:
+				return old_filter(self, **kwargs).filter(webapp_id=settings.TARGET_WEBAPP_ID)
+
+			if 'webapp_source_id' in kwargs and kwargs['webapp_source_id'] == settings.SELF_WEBAPP_ID:
 				webapp_source_id = kwargs.pop('webapp_source_id')
-				return old_filter(self, **kwargs).filter(webapp_source_id__in=webapp_ids)
+
+				if self.model in (member_models.Member,  mall_models.Order):
+					return old_filter(self, **kwargs).filter(webapp_source_id__in=settings.WEBAPP_IDS)
+
+				return old_filter(self, **kwargs).filter(webapp_source_id=settings.TARGET_WEBAPP_ID)
 		except:
 			pass
 
