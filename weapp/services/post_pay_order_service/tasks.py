@@ -35,23 +35,23 @@ def serve(request, args):
 	order = mall_models.Order.objects.get(order_id=order_order_id)
 
 	#记录购买统计项
-	try:
-		mall_models.PurchaseDailyStatistics.objects.create(
-			webapp_id = webapp_id,
-			webapp_user_id = webapp_user.id,
-			order_id = order.order_id,
-			order_price = order.final_price,
-			date = dateutil.get_today()
-		)
+	# try:
+	# 	mall_models.PurchaseDailyStatistics.objects.create(
+	# 		webapp_id = webapp_id,
+	# 		webapp_user_id = webapp_user.id,
+	# 		order_id = order.order_id,
+	# 		order_price = order.final_price,
+	# 		date = dateutil.get_today()
+	# 	)
 
-		#更新webapp_user的has_purchased字段
-		webapp_user.set_purchased()
-	except:
-		alert_message = u"post_pay_order service: 调用webapp_user.complete_payment失败, cause:\n{}".format(unicode_full_stack())
-		if hasattr(request, 'user'):
-			watchdog_alert(alert_message, type='WEB', user_id=str(request.user.id))
-		else:
-			watchdog_alert(alert_message, type='WEB')
+	# 	#更新webapp_user的has_purchased字段
+	# 	webapp_user.set_purchased()
+	# except:
+	# 	alert_message = u"post_pay_order service: 调用webapp_user.complete_payment失败, cause:\n{}".format(unicode_full_stack())
+	# 	if hasattr(request, 'user'):
+	# 		watchdog_alert(alert_message, type='WEB', user_id=str(request.user.id))
+	# 	else:
+	# 		watchdog_alert(alert_message, type='WEB')
 
 	#支付完成之后的webapp_user操作
 	try:

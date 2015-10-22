@@ -7,32 +7,31 @@ from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error, watchdog_notice, watchdog_info
 from core.sendmail import sendmail
 
-def notify_order_create(order, user):
-	try:
-		user_order_notify_setting =	UserOrderNotifySettings.objects.get(user=user)
-	except:
-		watchdog_error('UserOrderNotifySettings is none ')
-		return None
-	user_profile = UserProfile.objects.get(user=user)
-	content_described, order_status_href = _get_order_status_url_and_content_described(order, user_profile)
-
-	if content_described and order_status_href:
-		_send_email(order, user_order_notify_setting, content_described, order_status_href, user_profile)
-	else:
-		return None
-
-def notify_order_pay(order, user):
-	try:
-		user_order_notify_setting =	UserOrderNotifySettings.objects.get(user=user)
-	except:
-		watchdog_error('UserOrderNotifySettings is none ')
-		return None
-	user_profile = UserProfile.objects.get(user=user)
-	content_described, order_status_href = _get_order_status_url_and_content_described(order, user_profile, True)
-	if content_described and order_status_href:
-		_send_email(order, user_order_notify_setting, content_described, order_status_href, user_profile, True)
-	else:
-		return None
+# jz 2015-10-22
+# def notify_order_create(order, user):
+# 	try:
+# 		user_order_notify_setting =	UserOrderNotifySettings.objects.get(user=user)
+# 	except:
+# 		watchdog_error('UserOrderNotifySettings is none ')
+# 		return None
+# 	user_profile = UserProfile.objects.get(user=user)
+# 	content_described, order_status_href = _get_order_status_url_and_content_described(order, user_profile)
+# 	if content_described and order_status_href:
+# 		_send_email(order, user_order_notify_setting, content_described, order_status_href, user_profile)
+# 	else:
+# 		return None
+# def notify_order_pay(order, user):
+# 	try:
+# 		user_order_notify_setting =	UserOrderNotifySettings.objects.get(user=user)
+# 	except:
+# 		watchdog_error('UserOrderNotifySettings is none ')
+# 		return None
+# 	user_profile = UserProfile.objects.get(user=user)
+# 	content_described, order_status_href = _get_order_status_url_and_content_described(order, user_profile, True)
+# 	if content_described and order_status_href:
+# 		_send_email(order, user_order_notify_setting, content_described, order_status_href, user_profile, True)
+# 	else:
+# 		return None
 
 def _get_order_status_url_and_content_described(order, user_profile, is_pay=False):
 	try:
