@@ -8,7 +8,7 @@
     <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}}">
         {% with component.runtime_data.products as products %}
             {% for product in products %}
-            <li>
+            <li{% if not product.name %} class="xui-not-product"{% endif %}>
                 <a class="wui-inner-box{% cycle '1' '2' '3' %}{% if product.is_member_product %} xa-member-product{% endif %} wa-item-product" 
                     href="{{product.url}}"
                     data-product-promotion='{{product.promotion_js}}'

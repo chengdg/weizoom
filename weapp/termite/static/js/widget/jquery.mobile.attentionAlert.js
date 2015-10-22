@@ -43,7 +43,7 @@
                 position:'fixed',
                 top:0,
                 left:0,
-                'z-index':10001
+                'z-index':10003
             });
             $('.xui-attentionBox').css({
                 width: 233,

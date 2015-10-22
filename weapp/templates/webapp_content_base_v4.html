@@ -93,16 +93,19 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-            <div data-ui-role="attentionAlert" class="xui-attentionAlert"
-				{% if not request.member.is_subscribed %}
+            
+        
+            <div data-ui-role="attentionAlert" class="xui-attentionAlert {% if in_design_mode %}none{% endif %}" 
+                {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
-				{% endif %}
+                {% endif %}
                 {% if not hide_non_member_cover %}
                     data-is-show-cover="true"
                 {% endif %}
                 data-id="{{request.webapp_owner_id}}"
                 data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}">
             </div>
+        
 
             {% block content-panel %}{% endblock %}
         {% endif %}

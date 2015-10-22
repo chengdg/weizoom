@@ -127,20 +127,8 @@
             </td>
             <td class="remained_count">
                 ${ rule.remained_count }
-                {{if rule.remained_count <= 20}}
-                    {{if receive_method}}
-                        {{if rule.is_timeout && !rule.limit_time }}
-                        {{else}}
-                            <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
-                        {{/if}}
-                    {{else}}
-                        {{if rule.status }}
-                            {{if rule.is_timeout && !rule.limit_time }}
-                            {{else}}
-                                <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
-                            {{/if}}
-                        {{/if}}
-                    {{/if}}
+                {{if rule.is_warring}}
+                    <div class="count_warring" style="color:#cf0404;">(库存告急)</div>
                 {{/if}}
 
             </td>
