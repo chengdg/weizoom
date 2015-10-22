@@ -1176,10 +1176,11 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 ########################################################################
 # get_order: 获取订单
 ########################################################################
-def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=False):
+def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=False, is_need_area=True):
 	order = Order.objects.get(order_id=order_id)
 	try:
-		order.area = regional_util.get_str_value_by_string_ids(order.area)
+		if is_need_area:
+			order.area = regional_util.get_str_value_by_string_ids(order.area)
 		order.display_express_company_name = express_util.get_name_by_value(order.express_company_name)
 	except:
 		pass
@@ -1346,7 +1347,7 @@ def get_orders(request):
 ########################################################################
 def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 	try:
-		order = get_order(webapp_user, order_id)
+		order = get_order(webapp_user, order_id, is_need_area=False)
 	except:
 		watchdog_fatal(u"本地获取订单信息失败：order_id:{}, cause:\n{}".format(order_id, unicode_full_stack()))
 		return None, False
