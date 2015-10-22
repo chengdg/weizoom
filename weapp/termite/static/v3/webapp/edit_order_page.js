@@ -1310,7 +1310,6 @@ W.page.EditOrderPage = W.page.InputablePage.extend({
 					// jz 2015-10-09
 					// &isShowSuccess=true";
 				}else if(data['pay_url']){
-					alert(data['pay_url']+"&fmt="+W.curRequestMemberToken)
 					window.location.href = data['pay_url']+"&fmt="+W.curRequestMemberToken;
 				}else{
 					// _this.payOrder(orderId);

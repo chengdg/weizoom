@@ -8,8 +8,9 @@ import debug_api_views
 import statistics_views
 import accounts_views
 import accounts_api_views
-import settings_views
-import settings_api_views
+# jz 2015-10-22
+# import settings_views
+# import settings_api_views
 import accounts_landing_views
 
 urlpatterns = patterns('',
@@ -53,13 +54,14 @@ urlpatterns = patterns('',
 	(r'statistics/daily_new_weixin_user_trend/get/', statistics_views.get_new_weixin_user_daily_trend),
 
 	#settings
-	url(r'api/operation_settings/update', settings_api_views.update_operation_settings),
-	url(r'api/settings/update', settings_api_views.update_settings),
-	url(r'settings/', settings_views.index),
-	url(r'setting/edit_email_setting/(\d+)/$', settings_views.edit_email_setting),
-	url(r'setting/integral_detail/$', settings_views.edit_integral_detail),
+	# jz 2015-10-22
+	# url(r'api/operation_settings/update', settings_api_views.update_operation_settings),
+	# url(r'api/settings/update', settings_api_views.update_settings),
+	# url(r'settings/', settings_views.index),
+	# url(r'setting/edit_email_setting/(\d+)/$', settings_views.edit_email_setting),
+	# url(r'setting/integral_detail/$', settings_views.edit_integral_detail),
 
-	url(r'setting/notify/update/(\d+)/$', settings_views.update_email_status),
+	# url(r'setting/notify/update/(\d+)/$', settings_views.update_email_status),
 
 	#icon api url
 	url(r'user_icons/get/$', api_views.get_user_icons),	
