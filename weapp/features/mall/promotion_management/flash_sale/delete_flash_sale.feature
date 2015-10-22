@@ -212,3 +212,54 @@ Scenario: 6 在按"活动时间"查询的查询结果下删除限时抢购活动
 			"name": "商品0抢购"
 		}]
 		"""
+
+
+#根据bug_5507后续补充.雪静
+@promotion @promotionFlash
+Scenario: 7 删除参加活动的商品时，此商品参加的活动结束
+	1.jobs删除商品0参加的活动"商品0抢购"
+	2.jobs使用商品0创建活动"商品00抢购"
+	3.jobs删除商品0，获得活动列表
+
+	Given jobs登录系统
+	When jobs设置查询条件
+		"""
+		{
+			"status":"已结束"
+		}
+		"""
+	#批量删除已结束的活动
+	When jobs批量'删除'促销活动
+		"""
+		[{
+			"name": "商品1抢购"
+		},{
+			"name": "商品0抢购"
+		}]
+		"""
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品00抢购",
+			"product_name":"商品0",
+			"member_grade": "全部会员",
+			"status":"未开始",
+			"start_date": "明天",
+			"end_date": "2天后",
+			"actions": ["详情","删除"]
+		}]
+		"""
+	When jobs-永久删除商品'商品0'
+	Then jobs获取限时抢购活动列表
+		"""
+		[{
+			"name": "商品00抢购",
+			"status":"已结束"
+		},{
+			"name": "商品3抢购",
+			"status":"未开始"
+		},{
+			"name": "商品2抢购",
+			"status":"进行中"
+		}]
+		"""
