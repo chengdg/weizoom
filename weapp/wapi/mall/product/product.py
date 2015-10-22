@@ -75,14 +75,16 @@ class Product(api_resource.ApiResource):
 		if hasattr(product, 'promotion'):
 			data['promotion'] = product.promotion
 			data['promotion_title'] = product.promotion_title
-			data['promotion_model'] = product.promotion_model
+			if hasattr(product, 'promotion_model'):
+				data['promotion_model'] = product.promotion_model
 		if hasattr(product, 'display_price'):
 			data['display_price'] = product.display_price
 		if hasattr(product, 'product_review'):
 			data['product_review'] = product.product_review
 		if hasattr(product, 'integral_sale'):
 			data['integral_sale'] = product.integral_sale
-			data['integral_sale_model'] = product.integral_sale_model
+			if hasattr(product, 'integral_sale_model'):
+				data['integral_sale_model'] = product.integral_sale_model
 		return data
 
 	@param_required(['id', 'woid', 'member_grade_id', 'wuid'])
