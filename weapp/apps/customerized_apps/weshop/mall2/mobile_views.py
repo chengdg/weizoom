@@ -33,10 +33,10 @@ def list_products(request):
 	request.is_return_context = True
 	context = request_util.list_products(request)
 	for product in context.get('products'):
-		if product.weshop_sync == 2:
-			product.display_price = round(product.display_price * 1.1, 2)
+		if product.get('weshop_sync') == 2:
+			product['display_price'] = round(product['display_price'] * 1.1, 2)
 	# 按商品价格由低到高排序
-	context.get('products').sort(lambda x,y: cmp(x.display_price, y.display_price))
+	context.get('products').sort(lambda x,y: cmp(x['display_price'], y['display_price']))
 	return render_to_response('%s/products.html' % request.template_dir, context)	
 
 
@@ -52,9 +52,9 @@ def _get_product_response(request):
 	request.template_dir = TEMPLATE_DIR
 	request.is_return_context = True
 	context, product = request_util.get_product(request)
-	op_settings = OperationSettings.objects.get(owner_id = product.owner_id)
+	op_settings = OperationSettings.objects.get(owner_id = product['owner_id'])
 	if not op_settings.weshop_followurl or not op_settings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
 		context['non_member_followurl'] = None
-	if product.is_use_custom_model:
+	if product.get('is_use_custom_model', None):
 		return render_to_response('%s/custom_model_product_detail.html' % request.template_dir, context)
 	return render_to_response('%s/product_detail.html' % request.template_dir, context)
