@@ -35,6 +35,7 @@ def product_stocks(request):
 	"""
 	product_id = request.GET.get('product_id', None)
 	model_ids = request.GET.get('model_ids', None)
+	need_member_info = request.GET.get('need_member_info', False)
 
 	#改为从缓存读取库存数据 duhao 2015-08-13
 	# response = create_response(200)
@@ -58,21 +59,20 @@ def product_stocks(request):
 		models = []
 
 	response = create_response(200)
-	# if len(models) == 1 and models[0].is_standard:
-	# 	model_data = dict()
-	# 	model_data["stocks"] = models[0].stocks
-	# 	model_data["stock_type"] = models[0].stock_type
-	# 	response.data = model_data
-	# if len(models) > 0:
+
 	for model in models:
 		model_data = dict()
 		model_data["stocks"] = model.stocks
 		model_data["stock_type"] = model.stock_type
 		result_data[model.id] = model_data
-	response.data = result_data
-	# else:
-	# 	return create_response(500).get_response()
 
+	# 代码来自 get_member_product_info(request) mall/module_api.py
+	if need_member_info == '1':
+		member_info_data = mall_api.get_member_product_info_dict(request)
+		result_data = dict(result_data, **member_info_data)
+
+
+	response.data = result_data
 	return response.get_response()
 
 
