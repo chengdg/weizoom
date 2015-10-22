@@ -42,9 +42,15 @@
 						<div style="margin-top: 20px;  margin-left: 101px">您的店铺已经获得该公众号的所有接口权限，可以正常对接
 						微信
 						</div>
+						<!--
 						<div style="margin-top: 20px;  margin-left: 101px">
 						如果使用中发现接口有异常，请点击 <a href="https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid={{component_info.app_id}}&pre_auth_code={{pre_auth_code}}&redirect_uri=http://{{request_host}}/weixin/component/receiveauthcode/" target="_blank">重新授权</a> 试试
 						</div>
+						-->
+						<div style="margin-top: 20px;  margin-left: 101px">
+						如果使用中发现接口有异常，请点击 <a href="javascript:void(0)" class="xa-rehit" >重新授权</a> 试试
+						</div>
+
 						{% endif %}
 
 					</div>
@@ -137,6 +143,19 @@ $(document).ready(function() {
 				}
 			});
 		})
+		//重新授权
+		$(document).delegate('.xa-rehit', 'click', function(event) {
+        W.dialog.showDialog('W.dialog.weixin.MpuserRehitDialog', {
+            app_id: '{{component_info.app_id}}',
+            pre_auth_code: '{{pre_auth_code}}',
+            request_host: '{{request_host}}',
+            success: function(data) {
+                xlog(data);
+            }
+        });
+    });
+
+		//重新授权
 
 });
 </script>

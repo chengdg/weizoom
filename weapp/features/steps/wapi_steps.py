@@ -10,6 +10,7 @@ from test import bdd_util
 from mall import models as mall_models
 #from utils import mall_api
 import wapi as wapi_resource
+from wapi import wapi_utils
 from utils import dateutil as utils_dateutil
 
 PATTERN_VARIABLE = re.compile(r'^\$([A-Za-z_]+)\((.*?)\)\$$')
@@ -32,12 +33,18 @@ def _profunc_today_date(param):
 	# 返回今天日期YYYY-MM-DD
 	return utils_dateutil.date2string(utils_dateutil.now())
 
+def _profunc_webapp_id(param):
+	# 由用户名(比如jobs)获取webapp_id
+	owner_id = bdd_util.get_user_id_for(param)
+	return wapi_utils.get_webapp_id_via_oid(owner_id)
+
 
 _PROCESS_FUNC_DICT = {
 	'owner_id': _profunc_owner_id,
 	'category_id': _profunc_category_id,
 	'today_date': _profunc_today_date,
-	'product_id': _profunc_product_id
+	'product_id': _profunc_product_id,
+	'webapp_id': _profunc_webapp_id
 }
 
 

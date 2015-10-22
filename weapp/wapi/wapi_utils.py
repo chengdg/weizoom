@@ -17,7 +17,8 @@ def wapi_log(app, resource, method, params, time_in_s, status=0):
 		global _wapi_logger
 		if _wapi_logger is None:
 			_wapi_logger = MongoAPILogger()
-		print("called WAPI (in {} s): {} {}/{}, param: {}".format(time_in_s, method, app, resource, params))
+		if settings.MODE == 'develop' or settings.MODE == 'test':
+			print("called WAPI (in {} s): {} {}/{}, param: {}".format(time_in_s, method, app, resource, params))
 		return _wapi_logger.log(app, resource, method, params, time_in_s, status)
 	return
 
@@ -36,7 +37,7 @@ def get_webapp_id_via_oid(owner_id):
 	#print("owner_id: {}".format(owner_id))
 	user = User.objects.get(id=owner_id)
 	profile = UserProfile.objects.get(user=user)
-	print("webapp_id: {}".format(profile.webapp_id))
+	#print("webapp_id: {}".format(profile.webapp_id))
 	return profile.webapp_id
 
 

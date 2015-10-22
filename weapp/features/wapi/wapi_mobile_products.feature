@@ -221,7 +221,7 @@ Background: 安装完整测试数据
 				"url": "/standard_static/test_resource_img/mian1.jpg"
 			}],
 			"model": {
-				"models": {
+			"models": {
 					"standard": {
 						"price": 2.0
 					}
@@ -257,7 +257,8 @@ Scenario: 测试按类别获得商品列表的API
 		{
 			"oid": "$owner_id(jobs)$",
 			"category_id": "$category_id(分类1)$",
-			"is_access_weizoom_mall": false
+			"is_access_weizoom_mall": false,
+			"wid": "$webapp_id(jobs)$"
 		}
 		"""
 	Then 获得WAPI结果
@@ -293,7 +294,8 @@ Scenario: 测试商品分类的接口
 		"""
 		{
 			"oid": "$owner_id(jobs)$",
-			"is_access_weizoom_mall": false
+			"is_access_weizoom_mall": false,
+			"wid": "$webapp_id(jobs)$"			
 		}
 		"""
 	Then 获得WAPI列表结果
