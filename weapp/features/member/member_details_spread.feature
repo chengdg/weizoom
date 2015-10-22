@@ -219,9 +219,58 @@ Scenario:1 会员详情-传播能力(分享链接引流)
 			}
 			"""
 
+@mall2 @member @memberList
+Scenario:2 会员详情-传播能力(二维码引流)
+	Given jobs登录系统
+	When jobs创建推广扫码
+		"""
+		{
+			"prize_type":"无",
+			"page_description":"无奖励，页面描述文本"
+		}
+		"""
+	Then jobs获得推广扫码
+		"""
+		{
+			"prize_type":"无",
+			"page_description":"无奖励，页面描述文本"
+		}
+		"""
+		
+	#bill带来的传播能力数据创建
+	When 清空浏览器
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill进入推广扫描链接
+
+	When 清空浏览器
+	When marry扫描bill的推广二维码关注jobs公众号
+
+	When 清空浏览器
+	When jack扫描bill的推广二维码关注jobs公众号
+
+	When 清空浏览器
+	When nokia扫描bill的推广二维码关注jobs公众号
+
+	When 清空浏览器
+	When tom扫描bill的推广二维码关注jobs公众号
+
+	When 清空浏览器
+	When tom1扫描bill的推广二维码关注jobs公众号
+
+	#校验bill的传播能力
+	When 清空浏览器
+	Given jobs登录系统
+	Then jobs获得'bill'的传播能力
+		"""
+		{
+			"scan_qrcode_new_member": 5
+		}
+		"""
+
 #author:王丽 2015.10.14
 @mall2 @member @memberList
-Scenario:2 会员详情-传播能力(分享链接引流会员列表)
+Scenario:3 会员详情-传播能力(分享链接引流会员列表)
 	#1 分享链接引流会员列表展示会员分享链接带来的会员的,按关注时间倒叙排列
 	#	会员名称、会员头像、会员等级、会员积分、会员来源、关注时间
 	#2 分享链接引流会员列表分页显示，每页显示6条记录，不显示滚动条
@@ -360,7 +409,7 @@ Scenario:2 会员详情-传播能力(分享链接引流会员列表)
 
 #author:王丽 2015.10.19
 @mall2 @member @memberList
-Scenario:3 会员详情-传播能力(二维码引流会员列表)
+Scenario:4 会员详情-传播能力(二维码引流会员列表)
 	#1 二维码引流会员列表展示会员推广扫码带来的会员,按关注时间倒叙排列
 	#	会员名称、会员头像、会员等级、会员积分、会员来源、关注时间
 	#2 二维码引流会员列表分页显示，每页显示6条记录，不显示滚动条
