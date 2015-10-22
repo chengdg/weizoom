@@ -277,4 +277,4 @@ Scenario:12 同一个会员在不同设备上访问同一个公众号
 	When bill点击tom分享链接'tom_jobs_shared_url'
 	When bill访问jobs的webapp
 	Then 浏览器cookie包含"[sct]"
-	Then bill在jobs公众号中有2个webapp_user
+	
