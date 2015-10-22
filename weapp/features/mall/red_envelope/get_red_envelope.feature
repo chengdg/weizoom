@@ -663,7 +663,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 	Then tom能获得webapp优惠券列表
 		"""
 		[{
-			"coupon_id": "coupon2_id_5",
+			"coupon_id": "coupon2_id_6",
 			"money": 100.00,
 			"status": "未使用"
 		}]
@@ -698,15 +698,15 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 			},
 			"coupon2_id_5": {
 				"money": 100.00,
-				"status": "未使用",
-				"consumer": "",
-				"target": "tom"
-			},
-			"coupon2_id_6": {
-				"money": 100.00,
 				"status": "未领取",
 				"consumer": "",
 				"target": ""
+			},
+			"coupon2_id_6": {
+				"money": 100.00,
+				"status": "未使用",
+				"consumer": "",
+				"target": "tom"
 			}
 		}
 		"""
