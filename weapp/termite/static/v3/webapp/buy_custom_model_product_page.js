@@ -323,7 +323,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 module: 'mall',
                 target_api: 'product_stocks/get',
                 product_id: this.productId,
+<<<<<<< cbddab9e1b037fe0f6e3ee857eece5c48f0f68ee
                 need_member_info: isInit
+=======
+                need_member_info:isInit
+>>>>>>> [f_mall_5485][lei]解决需求 5485，合并商品详情页获取商品和库存api
             },
             success: function(data){
                 if(isInit){
@@ -430,6 +434,103 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         _this.initForCustomModelProduct();
                     }
                 }
+<<<<<<< cbddab9e1b037fe0f6e3ee857eece5c48f0f68ee
+=======
+                if(isInit){
+                    var user_member_grade_id = data.member_grade_id;
+                    if(data.is_collect == 'true'){
+                        $('.xa-collectProduct').addClass('faved').text('已收藏');
+                        $('.xa-collectProduct').attr('data-is-collect', 'true');
+                    }
+                    if(data.count != 0) {
+                        $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                    }
+                    // 优惠信息标签
+                    var msg = '';
+                    // 商品原价
+                    var price = _this.priceInfo.min_price;
+                    // 存储商品会员价与促销的状态
+                    _this.member_or_promotion = '';
+                    // 商品有促销
+                    var product_promotion = _this.promotion;
+                    is_product_promotion = !($.isEmptyObject(product_promotion));
+                    var is_user_has_promotion = false;
+                    if(is_product_promotion){
+                        // 促销是否对此用户开发
+                        is_user_has_promotion = _this.user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+
+                        // 限时抢购
+                        if(is_user_has_promotion && product_promotion.detail.promotion_price){
+                            price = (product_promotion.detail.promotion_price).toFixed(2);
+                            msg = true;
+                            _this.member_or_promotion = 'promotion';
+
+                        }
+                        if(!is_user_has_promotion){
+
+                            _this.promotion.isFlashSalePromotion = false;
+                            // 促销bu对此用户开发
+                            var next_promotions = $('.xa-display-promotion').next('div');
+                            if(next_promotions.length==0){
+                                // mei ji fen ying yong
+                                $('.xa-promotionSection').remove();
+                            }else if(next_promotions.length == 1){
+                                // you ji fen ying yong
+                                $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
+                                next_promotions.remove();
+                            }
+                            // // 对于不开放的促销，不显示广告语
+                            // var span = $('.xa-productName').find('span');
+                            // if(span){
+                            //     span.remove();
+                            // }
+                        }
+                    // 商品无促销
+                    }
+                    if(!is_user_has_promotion){
+                        // 商品是否折扣
+                        has_discount = _this.is_member_product;
+                        console.log(has_discount,"___");
+                        if(has_discount && data.discount < 100){
+                            //促销与会员价格处理
+                            _this.discount = data.discount;
+                            if(_this.isStandardModelProduct){
+                                _this.initForStandardModelProduct()
+                            }else{
+                                _this.initForCustomModelProduct()
+                            }
+                            price = ((price * data.discount / 100).toFixed(2));
+                            msg = '会员价';
+                            _this.member_or_promotion = 'member';
+
+                        }
+                        // 对于不开放的促销，不显示广告语
+                        var span = $('.xa-productName').find('span');
+                        if(span){
+
+                            span.html('<span class="xui-text-red">'+_this.priceInfo.promotion_title+'</span>');
+                        }
+                    }
+                    // 处理会员价
+                    if (msg === true){
+                        var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span>';
+                        $('.xa-priceSection').html(temp);
+
+                    }else if(msg === '会员价'){
+                        var orPrice = (_this.priceInfo.min_price).toFixed(2);
+                        var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
+                        $('.xa-priceSection').html(temp);
+                    }
+
+
+
+                }
+
+                // var counter = $('input[data-ui-role="counter"]').data('view');
+                // if(counter.count > 1){
+                //     counter.changeCountTo(counter.count);
+                // }
+>>>>>>> [f_mall_5485][lei]解决需求 5485，合并商品详情页获取商品和库存api
             },
             error: function(){
                 console.log("error");
@@ -502,6 +603,15 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             this.isSideSlideOpen = false;
             // $('[data-ui-role="counter"]').data('view').setMaxCount(0);
         }
+    },
+    user_has_promotion: function(user_member_grade_id, promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){return true;}
+        if(promotion_member_grade_id == user_member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
     },
     /**
      * onClickPropertyPanel: 点击详情参数按钮的响应函数
@@ -618,8 +728,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      */
     updateWeightPostage: function(productCount) {
         //更新重量
-        var weight = (productCount*this.targetModel.weight).toFixed(2);
-        $('.xt-weight').text(weight);
+        //var weight = (productCount*this.targetModel.weight).toFixed(2);
+        //$('.xt-weight').text(weight);
 
         //更新邮费
         // if ($('.xt-postage')) {
