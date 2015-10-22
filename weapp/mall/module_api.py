@@ -2002,7 +2002,7 @@ def __hack_product_id_for_show(relations):
 	products = list(Product.objects.filter(owner_id = 570))
 	length = len(products) - 1
 	for r in relations:
-		r.product_id = products[random.randint(0, length)].id
+		r.product_id = products[r.product_id % length].id
 
 	return relations
 def get_order_products(order):
