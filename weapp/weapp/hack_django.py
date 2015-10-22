@@ -130,6 +130,7 @@ def hackQuerySetFilterForShow():
 	old_filter = QuerySet.filter
 	def new_filter(self,  *args, **kwargs):
 		import modules.member.models as member_models
+		import stats.models as stats_models
 		try:
 			if 'owner' in kwargs and kwargs['owner'].id == self_id:
 				owner = kwargs.pop('owner')
@@ -143,8 +144,12 @@ def hackQuerySetFilterForShow():
 				webapp_id = kwargs.pop('webapp_id')
 				if self.model == member_models.IntegralStrategySttings:
 					return old_filter(self, **kwargs).filter(webapp_id=target_webapp_id)
-				else:
-					return old_filter(self, **kwargs).filter(webapp_id__in=webapp_ids)
+
+				if self.model == stats_models.BrandValueHistory:
+					kwargs['webapp_id'] = self_webapp_id
+					return old_filter(self, **kwargs)
+				
+				return old_filter(self, **kwargs).filter(webapp_id__in=webapp_ids)
 
 			if 'webapp_source_id' in kwargs and kwargs['webapp_source_id'] == self_webapp_id:
 				webapp_source_id = kwargs.pop('webapp_source_id')
