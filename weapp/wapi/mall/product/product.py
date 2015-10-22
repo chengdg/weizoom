@@ -63,6 +63,7 @@ class Product(api_resource.ApiResource):
 			'user_code': product.user_code,
 			'is_deleted': product.is_deleted,
 			'weshop_sync': product.weshop_sync,
+			'is_member_product': product.is_member_product,
 		}
 		if hasattr(product, 'price_info'):
 			data['price_info'] = product.price_info
