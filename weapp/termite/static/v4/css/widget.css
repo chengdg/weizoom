@@ -949,6 +949,14 @@ ul.wui-relatelink li h3{
     max-width: 100%;
     max-width: 100%;
 }
+
+/* 没有商品时不显示第四个 */
+.wui-productlist .wui-block-type0 li.xui-not-product:nth-child(n+4), 
+.wui-productlist .wui-block-type2 li.xui-not-product:nth-child(n+4), 
+.wui-productlist .wui-block-type3 li.xui-not-product:nth-child(n+4) {
+    display: none;
+}
+
 /*=================================*/
 /*.wui-product .ui-link .wui-inner-titleAndprice p{
     color: #ff6600;
