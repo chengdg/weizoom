@@ -72,7 +72,7 @@
 								<a {{if !message.fast_reply}}href="{{if message.member_id}}/member/detail/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" {{if message.member_id}}target="_blank"{{/if}} {{/if}}><img src="${message.user_icon}" width="60" height="60"/></a>
 							</div>
 							<div class="pl15 disTc xui-i-name pa">
-								<div class="xui-i-member-username pr30" class="mb0 mt0" style="height:35px;">
+								<div class="xui-i-member-username pr30" class="mb0 mt0 "  style="height:35px;">
 									{{if !message.fast_reply}}
 										<a href="{{if message.member_id}}/member/detail/?id=${message.member_id}{{else}}javascript:void(0);{{/if}}" class="mb0" {{if message.member_id}}target="_blank"{{/if}} style="line-height:16px;">{{html message.name}}</a>
 									{{else}}
