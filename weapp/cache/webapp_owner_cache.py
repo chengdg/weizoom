@@ -14,7 +14,7 @@ from termite2 import models as termite2_models
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error, watchdog_warning
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
-
+from weixin.user.module_api import get_mp_qrcode_img
 
 local_cache = {}
 
@@ -80,6 +80,8 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
         # 微众卡权限
         has_permission = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(webapp_owner_id)
 
+        # 公众号二维码
+        qrcode_img = get_mp_qrcode_img(webapp_owner_id)
         try:
             operation_settings = account_models.OperationSettings.get_settings_for_user(webapp_owner_id)
         except:
@@ -105,7 +107,8 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
                 'pay_interfaces': pay_interfaces,
                 'has_permission': has_permission,
                 'operation_settings':  operation_settings.to_dict(),
-                'global_navbar': global_navbar.to_dict()
+                'global_navbar': global_navbar.to_dict(),
+                'qrcode_img': qrcode_img
             }
         }
     return inner_func
@@ -179,6 +182,7 @@ def get_webapp_owner_info(webapp_owner_id):
     obj.member2grade = dict([(grade.id, grade) for grade in obj.member_grades])
     obj.pay_interfaces = mall_models.PayInterface.from_list(data['pay_interfaces'])
     obj.is_weizoom_card_permission = data['has_permission']
+    obj.qrcode_img = data['qrcode_img']
     obj.operation_settings = account_models.OperationSettings.from_dict(data['operation_settings'])
     obj.red_envelope = red_envelope
     obj.global_navbar = termite2_models.TemplateGlobalNavbar.from_dict(data['global_navbar'])

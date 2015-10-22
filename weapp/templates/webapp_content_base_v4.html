@@ -8,16 +8,16 @@
         {% if request.enable_sql_monitor %}
         <link type="text/css" rel="stylesheet" media="all" href="/static/bootstrap/css/bootstrap.css">
         {% endif %}
-        
-        
+
+
         <!-- *start_prunt_task* -->
-        <!-- [prunt_task] 
+        <!-- [prunt_task]
             {
                 "task": "weizoom-merge",
                 "args": {
                     "dest":"cdn/standard_static/css/webapp_v4_all.css",
                     "path_map": {
-                        "termite_static": "termite/static"   
+                        "termite_static": "termite/static"
                     }
                 }
             }
@@ -27,23 +27,23 @@
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">
-        <link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">        
-        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">  
-        <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">        
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">
+        <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">
         <!-- *end_prunt_task* -->
 
 
         {% block css %}{% endblock %}
 
-        
+
         <!-- *start_prunt_task* -->
-        <!-- [prunt_task] 
+        <!-- [prunt_task]
             {
                 "task": "weizoom-merge",
                 "args": {
                     "dest":"cdn/standard_static/js/webapp_v4_all.js",
                     "path_map": {
-                        "termite_static": "termite/static"   
+                        "termite_static": "termite/static"
                     }
                 }
             }
@@ -68,6 +68,7 @@
         <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/weixinapi.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/attentionAlert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script>
@@ -84,7 +85,7 @@
     <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative;">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
-        
+
         <div id="homePageUrlZone" style="display: none;">/workbench/jqm/preview/?{{homepage_workspace_info|safe}}</div>
         {% if is_deleted_data %}
             <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
@@ -92,21 +93,20 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-            <!--
-            <div data-ui-role="attentionAlert" 
-                {% if not cur_request_member %}
-                    data-is-show-button="true" 
-                {% endif %}
+            <div data-ui-role="attentionAlert" class="xui-attentionAlert"
+				{% if not request.member.is_subscribed %}
+                    data-is-show-button="true"
+				{% endif %}
                 {% if not hide_non_member_cover %}
                     data-is-show-cover="true"
                 {% endif %}
-                data-url="{% if operation_settings %}{{ operation_settings.non_member_followurl }}{% endif %}">
+                data-id="{{request.webapp_owner_id}}"
+                data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}">
             </div>
-            -->
 
             {% block content-panel %}{% endblock %}
         {% endif %}
-        
+
         <div id="jsons" style="display: none;">
             {% for json in jsons %}
             <div id="__json-{{json.name}}">
@@ -126,7 +126,7 @@
                         nowleftList[i] = nowleftList[i] -1;
                     }
                     $content.css('left',nowleftList[i]);
-                },15)  
+                },15)
             };
 
             var nowleftList = [];            // 向左移动的距离
@@ -149,7 +149,7 @@
         </script>
         <!-- 获取屏幕宽度给高赋值 -->
         <script type="text/javascript">
-            // 定义全局变量处理 
+            // 定义全局变量处理
             W.onloadHandlers = [];
             window.onload = function(){
                 for(var i = 0; i < W.onloadHandlers.length; i++){
@@ -157,7 +157,7 @@
                     W.onloadHandlers[i]();
                 }
             }
-            
+
             $(document).ready(function() {
                 var $product = $('.wui-product');
                 var $productList = $('.wui-productlist');
@@ -167,8 +167,8 @@
 
                 var screenWidth = $(this).width()-2;   //获取屏幕宽度，减去2px外边距
                 var defalutWidth = $(this).width()-1;  //默认一大两小宽度
-                var averageWidth = screenWidth/3;             
-                var width = defalutWidth/3;             
+                var averageWidth = screenWidth/3;
+                var width = defalutWidth/3;
 
                 var $swiperWrapper = $swiperImg.parent('.wui-swiper-wrapper');
                 var $imgs = $swiperWrapper.find('img');
@@ -215,7 +215,7 @@
                         $(this).height(width);
                         // 不能在此对图片父级进行高度赋值，会影响到商品
                     });
-                } 
+                }
         });
 
         $(document).ready(function() {
@@ -227,7 +227,7 @@
             }
             var $twoDimension = $('.xui-two-dimension');
 
-            var showSwiper = function(){                
+            var showSwiper = function(){
                 $('body').swipeMask('show');
                 $('.mask').css({
                     height: height,
@@ -238,7 +238,7 @@
                     top: height/2,
                     'margin-top': -185,
                     display:'block'
-                });   
+                });
             };
 
             var isUserCenterLink = function(url){
@@ -267,7 +267,7 @@
                     }
                 }
             });
-            
+
             $('.mask').click(function(){
                 $('body').swipeMask('hide');
                 $('.xui-two-dimension').hide();
@@ -333,7 +333,7 @@
                     $("body").alert({
                         isShow: true,
                         info: W.errorMessage,
-                        speed: 3000                
+                        speed: 3000
                     });
                 }
 
@@ -523,7 +523,7 @@
                         // 商品有促销
                         var productPromotion = $(this).data('product-promotion');
                         var isMemberProduct = $(this).hasClass('xa-member-product');
-                        // 计算价钱                
+                        // 计算价钱
                         price = _this.calculPrice({
                             price: price,
                             productPromotion: productPromotion,
