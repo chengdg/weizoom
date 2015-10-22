@@ -249,7 +249,7 @@ def process_item_list_data(request, component):
 	categories = mall_models.ProductCategory.objects.filter(id=category_id)
 	if categories.count() == 0:
 		#分类已被删除，直接返回
-		component['_has_data'] = False
+		_set_empty_product_list(request, component)
 		return
 
 	category, products = webapp_cache.get_webapp_products(request.user_profile, False, int(category_id))
