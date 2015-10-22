@@ -41,6 +41,8 @@ W.view.common.ImageView = Backbone.View.extend({
         this.isNeedSizeInfo = options.isNeedSizeInfo || false; //是否需要server端返回size信息
         this.help = options.help || null;
 
+        this.showDelete = options.showDelete || false;//是否可以删除
+
         this.computeWidthAndHeight();
 
         if (options.hasOwnProperty('autoShowImage')) {
@@ -113,9 +115,15 @@ W.view.common.ImageView = Backbone.View.extend({
 		    width: this.width,
 		    height: this.height
 	    }));
-
         this.initImageUploader();
+        if (this.showDelete){
+            this.$el.find('.close').css('display','block');
+        }else{
+            this.$el.find('#imageView-uploadZone').removeClass('xui-hide');
+        }
+
         this.$el.find('.uploadify-button-text').text(this.buttonText);
+
     },
 
     /**
@@ -340,7 +348,7 @@ W.view.common.ImageView = Backbone.View.extend({
 
 W.registerUIRole('input[data-ui-role="image-selector"]', function() {
     var $imageInput = $(this);
-    var width = parseInt($imageInput.attr('data-width'))
+    var width = parseInt($imageInput.attr('data-width'));
     var height = parseInt($imageInput.attr('data-height'));
     var sizeLimit = parseInt($imageInput.attr('data-size-limit'));
     var $imageView = $imageInput.siblings('div[data-ui-role="image-selector-view"]').eq(0);
@@ -350,6 +358,14 @@ W.registerUIRole('input[data-ui-role="image-selector"]', function() {
     if (autoShowHelpStr == "false") {
         autoShowHelp = false;
     }
+
+    var showDeleteStr =  $imageInput.attr("data-show-delete");
+    var showDelete = true;
+    if (showDeleteStr == "false") {
+        showDelete = false;
+    }
+    var format =  $imageInput.attr("data-format");
+    var buttonText = $imageInput.attr("data-button-text");
     var url = $imageInput.val();
     var view = new W.view.common.ImageView({
         el: $imageView.get(),
@@ -357,7 +373,10 @@ W.registerUIRole('input[data-ui-role="image-selector"]', function() {
         height: height,
         width: width,
         sizeLimit: sizeLimit,
-        autoShowHelp: autoShowHelp
+        autoShowHelp: autoShowHelp,
+        showDelete: showDelete,
+        format: format,
+        buttonText: buttonText
     });
     view.bind('upload-image-success', function(path) {
         $imageInput.val(path);
