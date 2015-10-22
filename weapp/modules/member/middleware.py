@@ -770,6 +770,9 @@ class WebAppUserMiddleware(object):
 		#为会员后能够关联成为会员前所进行的所有操作
 		webapp_user = None
 
+		if hasattr(request, 'webapp_user') and request.webapp_user:
+			return None
+			
 		uuid = request.COOKIES.get(member_settings.UUID_SESSION_KEY, None)
 
 		if (uuid is not None) and (request.member is not None):

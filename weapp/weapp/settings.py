@@ -242,8 +242,7 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
-    # webapp home_page middleware
-    'core.termite_middleware.WebappPageHomePageMiddleware',
+   
 
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
@@ -266,6 +265,9 @@ MIDDLEWARE_CLASSES = [
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
+     # webapp home_page middleware
+    'core.termite_middleware.WebappPageHomePageMiddleware',
+    
     'modules.member.middleware.CleanUpCookieMiddleware',
     'modules.member.middleware.MemberCacheMiddleware',
     'modules.member.middleware.ProcessOpenidMiddleware',

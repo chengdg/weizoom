@@ -63,11 +63,14 @@ class Product(api_resource.ApiResource):
 			'user_code': product.user_code,
 			'is_deleted': product.is_deleted,
 			'weshop_sync': product.weshop_sync,
+			'is_member_product': product.is_member_product,
 		}
 		if hasattr(product, 'price_info'):
 			data['price_info'] = product.price_info
 		if hasattr(product, 'models'):
 			data['models'] = product.models
+		if hasattr(product, 'properties'):
+			data['properties'] = product.properties
 		if hasattr(product, 'product_model_properties'):
 			data['product_model_properties'] = product.product_model_properties
 		if hasattr(product, 'swipe_images_json'):
@@ -75,10 +78,16 @@ class Product(api_resource.ApiResource):
 		if hasattr(product, 'promotion'):
 			data['promotion'] = product.promotion
 			data['promotion_title'] = product.promotion_title
+			if hasattr(product, 'promotion_model'):
+				data['promotion_model'] = product.promotion_model
 		if hasattr(product, 'display_price'):
 			data['display_price'] = product.display_price
 		if hasattr(product, 'product_review'):
 			data['product_review'] = product.product_review
+		if hasattr(product, 'integral_sale'):
+			data['integral_sale'] = product.integral_sale
+			if hasattr(product, 'integral_sale_model'):
+				data['integral_sale_model'] = product.integral_sale_model
 		return data
 
 	@param_required(['id', 'woid', 'member_grade_id', 'wuid'])

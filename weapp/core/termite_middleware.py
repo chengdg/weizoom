@@ -81,13 +81,17 @@ class WebappPageHomePageMiddleware(object):
 		if webapp_owner_id == 0:
 			return None
 
-		user_profiles = account_models.UserProfile.objects.filter(user_id=webapp_owner_id)
-		if user_profiles.count() == 0:
-			return None
+		if hasattr(request, 'user_profile') and hasattr(request.user_profile, 'is_use_wepage'):
+			if not request.user_profile.is_use_wepage:
+				return None
+		else:
+			user_profiles = account_models.UserProfile.objects.filter(user_id=webapp_owner_id)
+			if user_profiles.count() == 0:
+				return None
 
-		user_profile = user_profiles[0]
-		if not user_profile.is_use_wepage:
-			return None
+			user_profile = user_profiles[0]
+			if not user_profile.is_use_wepage:
+				return None
 
 		orig_path = request.path
 		if orig_path != '/termite/workbench/jqm/preview/':
