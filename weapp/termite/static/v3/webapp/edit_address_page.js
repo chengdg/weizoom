@@ -28,7 +28,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     target_api: 'address/save'
                 }),
                 success: function(data) {
-                    console.log('ship_info:',args);
+                    console.log('ship_info:',args,typeof(args));
                     if(localStorage.ships){
                         ships = localStorage.ships
                     }
