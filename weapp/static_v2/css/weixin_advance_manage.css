@@ -1181,3 +1181,13 @@
     z-index: 10;
 
 }
+
+
+/*xui-weixin-unbindAccountPage*/
+.xui-weixinMpuserRehitDialog  .xui-text{
+	color:red; 
+	text-align:center; 
+	font-size:12px; 
+	padding-top:25px; 
+	line-height:1.6;
+}

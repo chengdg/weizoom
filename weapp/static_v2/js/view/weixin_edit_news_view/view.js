@@ -179,7 +179,7 @@ W.view.weixin.EditNewsPanel = Backbone.View.extend({
         // if (!W.validate()) {
         //     return false;
         // }
-
+        $("#submit-btn").attr("disabled", "disabled"); 
         var newses = this.phone.getNewCreatedNewses();
         // 多图文时判断是否添加了两条
         var isAllRight = this.isAllRightNewses(newses);

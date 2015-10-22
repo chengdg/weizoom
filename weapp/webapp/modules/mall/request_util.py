@@ -170,7 +170,7 @@ def get_product(request):
 			non_member_followurl = otherSettings.weshop_followurl
 
 			# liupeiyu 记录点击关注信息
-			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product.id, product.owner.id)
+			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product['id'], product['owner_id'])
 
 	request.should_hide_footer = True
 

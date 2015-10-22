@@ -64,7 +64,7 @@ WEIXIN_SECOND_NAV = {
             'name': WEIXIN_MESSAGE_SECOND_NAV,
             'title': u'消息互动',
             'url': '/new_weixin/realtime_messages/',
-            'permission': 'realtime_messages', 
+            'permission': 'realtime_messages',
             'third_navs': [
                 {
                     'name': MESSAGE_REALTIME_MESSAGE_NAV,
@@ -96,7 +96,7 @@ WEIXIN_SECOND_NAV = {
             'name': ADVANCE_MANAGE_MATERIAL_NAV,
             'title': u'高级管理',
             'url': '/new_weixin/materials/',
-            'permission': 'materials', 
+            'permission': 'materials',
             'third_navs': [
                 {
                     'name': ADVANCE_MANAGE_MATERIAL_NAV,
@@ -115,18 +115,12 @@ WEIXIN_SECOND_NAV = {
             'name': MPUSER_MENU_NAV,
             'title': u'公众号设置',
             'url': '/new_weixin/menu/',
-            'permission': 'mpuser_menu', 
+            'permission': 'mpuser_menu',
             'third_navs': [
                 {
                     'name': MPUSER_MENU_NAV,
                     'title': u'自定义菜单',
                     'url': '/new_weixin/menu/',
-                    'permission': ''
-                },
-                {
-                    'name': MPUSER_DIRECT_FOLLOW_NAV,
-                    'title': u'快速关注',
-                    'url': '/new_weixin/direct_follow/',
                     'permission': ''
                 },
                  {

@@ -204,9 +204,12 @@
 	margin-left: -250px;
 	margin-top: -215px;
 }
+.xui-mallSelectProvinceDialog .modal-header{
+	margin-bottom: 0;
+}
 .xui-mallSelectProvinceDialog .modal-body{
-	margin-top: -20px;
-	padding-left: 22px;
+	/*margin-top: -20px;*/
+	padding:0 0 0 22px;
 }						
 .xui-mallSelectProvinceDialog table{
 	border-left: 1px solid #D8DBDD;
@@ -215,10 +218,12 @@
 .xui-mallSelectProvinceDialog table td{
 	width: 65px;
 	height: 44px;
-	text-align: center;
+	/*text-align: center;*/
 }
 .xui-mallSelectProvinceDialog table td:first-child{
 	font-weight: bold;
+	padding-left: 10px;
+    width: 90px;
 }
 
 /*
