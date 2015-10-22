@@ -213,9 +213,8 @@ Scenario: 6 在按"活动时间"查询的查询结果下删除限时抢购活动
 		}]
 		"""
 
-
 #根据bug_5507后续补充.雪静
-@promotion @promotionFlash
+@mall2 @promotion @promotionFlash
 Scenario: 7 删除参加活动的商品时，此商品参加的活动结束
 	1.jobs删除商品0参加的活动"商品0抢购"
 	2.jobs使用商品0创建活动"商品00抢购"
@@ -250,6 +249,12 @@ Scenario: 7 删除参加活动的商品时，此商品参加的活动结束
 		}]
 		"""
 	When jobs-永久删除商品'商品0'
+  	When jobs设置查询条件
+		"""
+		{
+			"status":"全部"
+		}
+		"""
 	Then jobs获取限时抢购活动列表
 		"""
 		[{
