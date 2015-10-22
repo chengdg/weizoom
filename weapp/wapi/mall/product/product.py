@@ -69,7 +69,8 @@ class Product(api_resource.ApiResource):
 			'stocks': product.stocks if product.stock_type else '无限',
 			'sales': getattr(product, 'sales', 0)
 		}
-		
+		if hasattr(product, 'is_sellout'):
+			data['is_sellout'] = product.is_sellout
 		if hasattr(product, 'min_limit'):
 			data['min_limit'] = product.min_limit
 		if hasattr(product, 'price_info'):
