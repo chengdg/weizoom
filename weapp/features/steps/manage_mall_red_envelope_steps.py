@@ -231,9 +231,6 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
         print('[info] not redirect')
         context.last_url = context.shared_url
 
-warring2text = {
-
-}
 @then(u'{user}获取库存提示弹窗')
 def step_impl(context, user):
     response = context.client.get('/apps/red_envelope/red_envelope_rule_list/')
@@ -251,3 +248,97 @@ def step_impl(context, user):
     print("expected: {}".format(expected))
 
     bdd_util.assert_list(expected, actual)
+
+@then(u'{user}能获得分享红包"{red_envelope_rule_name}"的分析统计')
+def step_impl(context, user, red_envelope_rule_name):
+    id = __get_red_envelope_rule_id(red_envelope_rule_name)
+    params = {
+        'id': id
+    }
+    response = context.client.get('/apps/red_envelope/red_envelope_participances/', params)
+    participances = response.context
+    actual = {
+        u'新关注人数': participances['new_member_count'],
+        u'领取人数': participances['received_count'],
+        u'产生消费': participances['consumption_sum'],
+	    u'使用人数': participances['total_use_count']
+    }
+    print("actual_data: {}".format(actual))
+
+    expected = json.loads(context.text)
+    print("expected: {}".format(expected))
+
+    bdd_util.assert_list(expected, actual)
+
+@then(u'{user}能获得分享红包"{red_envelope_rule_name}"的分析详情')
+def step_impl(context, user, red_envelope_rule_name):
+    id = __get_red_envelope_rule_id(red_envelope_rule_name)
+    params = {
+        'id': id
+    }
+    response = context.client.post('/apps/red_envelope/api/red_envelope_participances/?_method=get', params)
+    participances = json.loads(response.content)['data']['items']
+    actual = []
+    for p in participances:
+        actual.append({
+            u"下单会员": p['username'],
+            u"会员状态": p['grade'],
+            u"引入领取人数": p['introduce_received_number_count'],
+            u"引入使用人数": p['introduce_used_number_count'],
+            u"引入新关注": p['introduce_new_member_count'],
+            u"引入消费额": p['introduce_sales_number'],
+            u"领取时间": p['created_at'],
+            u"使用状态": p['coupon_status_name'],
+            u"操作": u'查看引入详情'
+
+        })
+    print("actual_data: {}".format(actual))
+    expected = []
+    if context.table:
+        for row in context.table:
+            cur_p = row.as_dict()
+            if '领取时间' in cur_p:
+                cur_p[u'领取时间'] = bdd_util.get_date_str(cur_p[u'领取时间'])
+            expected.append(cur_p)
+    else:
+        expected = json.loads(context.text)
+    print("expected: {}".format(expected))
+
+    bdd_util.assert_list(expected, actual)
+
+@then(u'{user}能获得分享红包"{red_envelope_rule_name}-{member}"的引入详情')
+def step_impl(context, user, red_envelope_rule_name,member):
+    id = __get_red_envelope_rule_id(red_envelope_rule_name)
+    params = {
+        'id': id
+    }
+    response = context.client.post('/apps/red_envelope/api/red_envelope_participances/?_method=get', params)
+    participances = json.loads(response.content)['data']['items']
+    actual = []
+    for p in participances:
+        actual.append({
+            u"分享会员": p['username'],
+            u"会员状态": p['grade'],
+            u"引入领取人数": p['introduce_received_number_count'],
+            u"引入使用人数": p['introduce_used_number_count'],
+            u"引入新关注": p['introduce_new_member_count'],
+            u"引入消费额": p['introduce_sales_number'],
+            u"领取时间": p['created_at'],
+            u"使用状态": p['coupon_status_name'],
+            u"操作": u'查看引入详情'
+
+        })
+    print("actual_data: {}".format(actual))
+    expected = []
+    if context.table:
+        for row in context.table:
+            cur_p = row.as_dict()
+            if '领取时间' in cur_p:
+                cur_p[u'领取时间'] = bdd_util.get_date_str(cur_p[u'领取时间'])
+            expected.append(cur_p)
+    else:
+        expected = json.loads(context.text)
+    print("expected: {}".format(expected))
+
+    bdd_util.assert_list(expected, actual)
+
