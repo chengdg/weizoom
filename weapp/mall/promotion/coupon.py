@@ -229,14 +229,14 @@ class CouponList(resource.Resource):
             # has_active_coupon = True
             if member_id in member_id2member:
                 member = member_id2member[member_id]
-                cur_member.username_for_html = member.username_for_html
+                cur_member.username_truncated = member.username_truncated
             else:
                 member = ''
-                cur_member.username_for_html = ''
+                cur_member.username_truncated = ''
             cur_member.id = member_id
 
             consumer = JsonResponse()
-            consumer.username_for_html = ''
+            consumer.username_truncated = ''
             if coupon.status == COUPON_STATUS_USED:
                 if coupon.id in coupon_id2webapp_user_id:
                     order = coupon_id2webapp_user_id[coupon.id]
@@ -246,12 +246,12 @@ class CouponList(resource.Resource):
                     webapp_user_id = order['user']
                     member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
                     if member:
-                        consumer.username_for_html = member.username_for_html
+                        consumer.username_truncated = member.username_truncated
                         consumer.id = member.id
                     else:
-                        consumer.username_for_html = '未知'
+                        consumer.username_truncated = '未知'
                 else:
-                    consumer.username_for_html = '未知'
+                    consumer.username_truncated = '未知'
                 cur_coupon.status = COUPONSTATUS.get(coupon.status)['name']
             elif coupon.expired_time <= now:
                 cur_coupon.status = COUPONSTATUS.get(COUPON_STATUS_EXPIRED)['name']
