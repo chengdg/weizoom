@@ -95,7 +95,7 @@ def step_webapp_user_get_product_review(context, webapp_user, product_name):
     expected = json.loads(context.text)
     url = "/workbench/jqm/preview/?woid=%d&module=mall&model=product&rid=%d" % (context.webapp_owner_id, product.id)
     response = context.client.get(bdd_util.nginx(url), follow=True)
-    product_review_list = response.context['product'].product_review
+    product_review_list = response.context['product']['product_review']
     actual = []
     if product_review_list:
         for i in product_review_list:

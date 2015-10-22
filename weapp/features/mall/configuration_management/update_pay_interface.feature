@@ -1,5 +1,7 @@
-# __author__ : "冯雪静"
+#author: 冯雪静
+#editor: 张三香 2015.10.16
 @func:webapp.modules.mall.views.list_mall_settings
+
 Feature:更新支付方式
 	Jobs能通过管理系统更新"支付方式"
 	"""
@@ -9,8 +11,8 @@ Feature:更新支付方式
 	4.切换启用/停用状态
 	"""
 
-@mall2 @mall.pay_interface @wip.pi1
-Scenario: 1 更新支付方式:微信支付
+@mall2 @configuration @pay   @mall.pay_interface @wip.pi1
+Scenario:1 更新支付方式:微信支付
 	Jobs更新"微信支付"后
 	1. jobs能获取更新后的微信支付
 	2. nokia的微信支付不受影响
@@ -91,8 +93,8 @@ Scenario: 1 更新支付方式:微信支付
 		}
 		"""
 
-@mall2 @mall.pay_interface
-Scenario: 2 更新支付方式:货到付款
+@mall2 @configuration @pay   @mall.pay_interface
+Scenario:2 更新支付方式:货到付款
 	Jobs更新"货到付款"后
 	1. jobs能获取更新后的货到付款
 	2. nokia的货到付款不受影响
@@ -138,9 +140,8 @@ Scenario: 2 更新支付方式:货到付款
 		}
 		"""
 
-
-@mall2 @mall @mall.pay_interface
-Scenario: 3 更新支付方式:支付宝
+@mall2 @configuration @pay   @mall @mall.pay_interface
+Scenario:3 更新支付方式:支付宝
 	Jobs更新"支付宝"后
 	1. jobs能获取更新后的支付宝
 	2. nokia的支付宝不受影响
@@ -221,9 +222,8 @@ Scenario: 3 更新支付方式:支付宝
 		}
 		"""
 
-
-@mall2 @mall @mall.pay_interface
-Scenario: 4 切换启用/停用状态
+@mall2 @configuration @pay   @mall @mall.pay_interface
+Scenario:4 切换启用/停用状态
 	jobs切换支付方式的启用/停用状态后，会影响webapp中"支付方式列表页面"的显示
 
 	Given jobs登录系统

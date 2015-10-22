@@ -1,12 +1,12 @@
 # __author__ : "冯雪静"
 
 Feature:订单筛选添加时间段筛选
+"""
 	jobs可以对订单进行"时间段筛选"
-	"""
 	1.根据下单时间，填写时间段查询订单
 	2.根据支付时间，填写时间段查询订单
 	3.根据发货时间，填写时间段查询订单
-	"""
+"""
 
 Background:
 	Given jobs登录系统
@@ -163,12 +163,11 @@ Background:
 		}
 		"""
 
-@mall2 @order
+@mall2 @order @allOrder
 Scenario: 1 选择时间段查询订单
 	jobs选择时间段确认后
 	1.jobs选择时间段时,可以看到订单列表列表
 
-	
 	When 微信用户批量消费jobs的商品
 		| order_id | date  | payment_time | consumer |      product   | payment   | pay_type   | price* | integral |    coupon           | weizoom_card | paid_amount*|  action      | order_status* | delivery_time |
 		|  000001  | 3天前 |    3天前     | bill     | 商品1,红色 L,1 |   支付    |  微信支付  |  100   |          |                     |              |    110      |              |   待发货      |               |
@@ -287,7 +286,6 @@ Scenario: 1 选择时间段查询订单
 		{
 			"delivery_time":"2天前-1天前"
 		}
-
 		"""
   # TODO 需要去完善，这个地方的发货是存在问题的
 	Then jobs可以看到订单列表
@@ -307,8 +305,7 @@ Scenario: 1 选择时间段查询订单
 		"""
 	Then jobs可以看到订单列表
 		"""
-		[
-		{
+		[{
 			"order_no":"000012"
 		},{
 			"order_no":"000010"
@@ -327,9 +324,7 @@ Scenario: 1 选择时间段查询订单
 		"""
 	Then jobs可以看到订单列表
 		"""
-		[
-		{
+		[{
 			"order_no":"000012"
-		}
-		]
+		}]
 		"""

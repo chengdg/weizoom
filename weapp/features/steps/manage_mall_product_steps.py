@@ -196,7 +196,6 @@ def get_product_model(context, user, product_name):
         if row[u'商品编码'] != u'':
             expect_dict[title]['user_code'] = row[u'商品编码']
 
-    print "zl-----------------",expect_dict
     bdd_util.assert_dict(expect_dict,product['model']['models'])
 
 @when(u"{user}更新商品'{product_name}'的库存为")

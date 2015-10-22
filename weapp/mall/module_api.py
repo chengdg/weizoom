@@ -152,7 +152,7 @@ def group_product_by_promotion(request, products):
 		default_products = {"group_id": group_id, "products": []}
 		promotion_name = __get_promotion_name(product)
 		promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
-
+		print "-----------------------",promotion2products
 	now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 	items = promotion2products.items()
 	items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
@@ -310,6 +310,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 
 		products_0 = products.filter(display_index=0)
 		products_not_0 = products.exclude(display_index=0)
+		# TODO: need to be optimized
 		products = list(itertools.chain(products_not_0, products_0))
 
 		category = ProductCategory()

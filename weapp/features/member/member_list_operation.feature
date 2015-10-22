@@ -1,4 +1,5 @@
-# __author__ : "王丽"
+#author: 王丽
+#editor: 张三香 2015.10.16
 
 Feature: 筛选会员列表-操作
 """
@@ -19,9 +20,7 @@ Feature: 筛选会员列表-操作
 """
 
 Background:
-
 	Given jobs登录系统
-
 	And jobs设定会员积分策略
 		"""
 		{
@@ -82,8 +81,6 @@ Background:
 			| tom2 			| 2014-08-05 00:00:00  |    推广扫码   |
 			| tom3	 	    | 2014-08-05 08:00:00  |    会员分享   |
 
-		#And tom2取消关注jobs的公众号
-
 	#获取会员积分
 		When 清空浏览器
 		When tom1访问jobs的webapp
@@ -106,10 +103,10 @@ Scenario:1 调分组
 			]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |未分组      |
-			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |未分组      |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |分组1,分组3 |
+			| name  | member_rank | integral |    tags    |
+			| tom3  |   普通会员  |     0    |未分组      |
+			| tom2  |   普通会员  |     100  |未分组      |
+			| tom1  |   普通会员  |     50   |分组1,分组3 |
 
 	#给有分组的人设置分组
 		When jobs给"tom1"调分组
@@ -117,10 +114,10 @@ Scenario:1 调分组
 			["分组2"]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 |   未分组   |
-			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 |   未分组   |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 |   分组2    |
+			| name  | member_rank | integral |    tags    |
+			| tom3  |   普通会员  |     0    |   未分组   |
+			| tom2  |   普通会员  |     100  |   未分组   |
+			| tom1  |   普通会员  |     50   |   分组2    |
 
 	#给有分组的人设置成分组为空
 		When jobs给"tom1"调分组
@@ -128,10 +125,10 @@ Scenario:1 调分组
 			[]
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 | 未分组     |
-			| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 | 未分组     |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 | 未分组     |
+			| name  | member_rank | integral |    tags    |
+			| tom3  |   普通会员  |     0    | 未分组     |
+			| tom2  |   普通会员  |     100  | 未分组     |
+			| tom1  |   普通会员  |     50   | 未分组     |
 
 @mall2 @member @memberList
 Scenario:2 设等级
@@ -145,10 +142,10 @@ Scenario:2 设等级
 			}
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 | 未分组     |
-			| tom2  |   金牌会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 | 未分组     |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 | 未分组     |
+			| name  | member_rank | integral |
+			| tom3  |   普通会员  |     0    |
+			| tom2  |   金牌会员  |     100  |
+			| tom1  |   普通会员  |     50   |
 
 	#给当前会员设置现在的等级
 
@@ -159,10 +156,10 @@ Scenario:2 设等级
 			}
 			"""
 		Then jobs可以获得会员列表
-			| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-			| tom3  |   普通会员  |       0      |     0    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 | 未分组     |
-			| tom2  |   金牌会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 | 未分组     |
-			| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 | 未分组     |
+			| name  | member_rank | integral |
+			| tom3  |   普通会员  |     0    |
+			| tom2  |   金牌会员  |     100  |
+			| tom1  |   普通会员  |     50   |
 
 @mall2 @member @memberList
 Scenario:3 发优惠券
@@ -487,11 +484,10 @@ Scenario:4 加积分
 			}
 			"""
 		Then jobs可以获得会员列表
-		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-		| tom3  |   普通会员  |       0      |   -10    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 | 未分组     |
-		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 | 未分组     |
-		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 | 未分组     |
-
+		| name  | member_rank | integral |
+		| tom3  |   普通会员  |   -10    |
+		| tom2  |   普通会员  |     100  |
+		| tom1  |   普通会员  |     50   |
 
 	#给当前会员积分为零时加积分正数
 		When jobs给"tom3"加积分
@@ -502,10 +498,10 @@ Scenario:4 加积分
 			}
 			"""
 		Then jobs可以获得会员列表
-		| name  | member_rank | friend_count | integral | pay_money | unit_price | pay_times | attention_time  |  source  |    tags    |
-		| tom3  |   普通会员  |       0      |    10    |   0.00    |    0.00    |      0    |   2014-08-05    | 会员分享 | 未分组     |
-		| tom2  |   普通会员  |       0      |     100  |   0.00    |    0.00    |      0    |   2014-08-05    | 推广扫码 | 未分组     |
-		| tom1  |   普通会员  |       0      |     50   |   0.00    |    0.00    |      0    |   2014-08-04    | 直接关注 | 未分组     |
+		| name  | member_rank | integral |
+		| tom3  |   普通会员  |    10    |
+		| tom2  |   普通会员  |     100  |
+		| tom1  |   普通会员  |     50   |
 
 
 

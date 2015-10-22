@@ -9,6 +9,7 @@ from modules.member import models as member_models
 from weixin.user import models as weixin_user_models
 from webapp import models as webapp_models
 from account import models as account_models
+from termite2 import models as termite2_models
 
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error, watchdog_warning
@@ -85,7 +86,13 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
             error_msg = u"获得user('{}')对应的OperationSettings构建cache失败, cause:\n{}"\
                     .format(webapp_owner_id, unicode_full_stack())
             watchdog_error(error_msg, user_id=webapp_owner_id, noraise=True)
-            operation_settings = {}
+            operation_settings = account_models.OperationSettings()
+        #全局导航 ad by bert
+        try:
+            global_navbar = termite2_models.TemplateGlobalNavbar.get_object(webapp_owner_id)
+        except:
+            global_navbar = termite2_models.TemplateGlobalNavbar
+        
         return {
             'value': {
                 'weixin_mp_user_access_token': weixin_mp_user_access_token.to_dict(),
@@ -97,7 +104,8 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
                 'member_grades': member_grades,
                 'pay_interfaces': pay_interfaces,
                 'has_permission': has_permission,
-                'operation_settings': operation_settings.to_dict(),
+                'operation_settings':  operation_settings.to_dict(),
+                'global_navbar': global_navbar.to_dict()
             }
         }
     return inner_func
@@ -173,6 +181,7 @@ def get_webapp_owner_info(webapp_owner_id):
     obj.is_weizoom_card_permission = data['has_permission']
     obj.operation_settings = account_models.OperationSettings.from_dict(data['operation_settings'])
     obj.red_envelope = red_envelope
+    obj.global_navbar = termite2_models.TemplateGlobalNavbar.from_dict(data['global_navbar'])
     return obj
 
 
@@ -226,6 +235,11 @@ post_update_signal.connect(update_unship_order_count, sender=mall_models.Order,
                            dispatch_uid="webapp_unread_order_count.update")
 signals.post_save.connect(update_unship_order_count, sender=mall_models.Order,
                           dispatch_uid="webapp_unread_order_count.save")
+
+post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=termite2_models.TemplateGlobalNavbar,
+                           dispatch_uid="termite2_models.TemplateGlobalNavbar.update")
+signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=termite2_models.TemplateGlobalNavbar,
+                          dispatch_uid="termite2_models.TemplateGlobalNavbar.save")
 
 
 def get_red_envelope_for_cache(owner_id):

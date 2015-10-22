@@ -1,4 +1,5 @@
 #_author_:王丽
+#editor:王丽  2015.10.19
 
 Feature: 会员分析-会员概况-会员详细数据
 """
@@ -76,7 +77,7 @@ Background:
 			"weixin_partner_id": "22345",
 			"weixin_partner_key": "32345",
 			"weixin_sign": "42345"
-		}, {
+		},{
 			"type": "支付宝",
 			"description": "我的支付宝",
 			"is_active": "启用",
@@ -87,118 +88,23 @@ Background:
 			"seller_email": "a@a.com"
 		}]
 		"""
-	When jobs开通使用微众卡权限
-	When jobs添加支付方式
-		"""
-		[{
-			"type": "微众卡支付",
-			"description": "我的微众卡支付",
-			"is_active": "启用"
-		}]
-		"""
 
-	When jobs添加邮费配置
-		"""
-		[{
-			"name":"顺丰",
-			"first_weight":1,
-			"first_weight_price":15.00,
-			"added_weight":1,
-			"added_weight_price":5.00
-		}, {
-			"name" : "圆通",
-			"first_weight":1,
-			"first_weight_price":10.00
-		}]
-		"""
-	And jobs选择'顺丰'运费配置
-	
 	When jobs已添加商品
 		"""
 		[{
 			"name": "商品1",
-			"categories": "",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"introduction": "商品1的简介",
-			"detail": "商品1的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 11.0,
-						"weight": 5,
-						"stock_type": "无限"
-					}
-				}
-			},
-			"postage": "顺丰"
-		}, {
+			"price": 100.0,
+			"weight": 5,
+			"postage": 10.0,
+			"stock_type": "无限"
+		},{
 			"name": "商品2",
-			"categories": "",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "商品2的简介",
-			"detail": "商品2的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 12.0,
-						"weight": 5,
-						"stock_type": "无限",
-						"stocks": 3
-					}
-				}
-			},
-			"pay_interfaces":[{
-				"type": "在线支付"
-			}],
-			"postage": 10.0
-		}, {
-			"name": "商品3",
-			"categories": "",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"introduction": "商品3的简介",
-			"detail": "商品3的详情",
-			"shelve_type": "上架",
-			"swipe_images": [{
-				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-			}],
-			"model": {
-				"models": {
-					"standard": {
-						"price": 12.0,
-						"weight": 5,
-						"stock_type": "无限",
-						"stocks": 3
-					}
-				}
-			},
-			"pay_interfaces":[{
-				"type": "在线支付"
-			}],
-			"postage": 10.0
+			"price": 100.0,
+			"weight": 5,
+			"postage": 15.0,
+			"stock_type": "无限"
 		}]
-		"""
-	Then jobs能获取商品列表
-		"""
-		[{
-			"name": "商品3"
-		}, {
-			"name": "商品2"
-		}, {
-			"name": "商品1"
-		}]
-		"""		
-
+		"""	
 
 	##微信用户批量关注jobs成为会员
 	When bill关注jobs的公众号于'2天前'
@@ -227,19 +133,19 @@ Background:
 	When jack把jobs的微站链接分享到朋友圈
 
 	When 微信用户批量消费jobs的商品
-	| order_id |  date  | consumer | product | payment | pay_type | postage*|  price*  | paid_amount*| alipay*| wechat*| cash*|      action   |  order_status*|
-	|   0001   | 2天前  | bill2    | 商品1,1 | 支付    | 微信支付 | 10      | 100      | 110         | 0      |   110  | 0    | jobs,完成退款 |    退款成功   |
-	|   0002   | 2天前  | bill     | 商品1,1 |         |          | 10      | 100      | 110         | 0      |    0   | 0    |               |    待支付     |
-	|   0003   | 1天前  | tom      | 商品2,1 |         |          | 15      | 100      | 115         | 0      |    0   | 0    | jobs,取消     |    已取消     |
-	|   0004   | 1天前  | bill     | 商品1,1 | 支付    | 货到付款 | 10      | 100      | 110         | 0      |    0   | 110  |               |    待发货     |
-	|   0005   | 今天   | tom      | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 0      |    0   | 110  | jobs,退款     |    退款中     |
-	|   0006   | 今天   | tom1     | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 110    |    0   | 0    | jobs,完成     |    已完成     |
-	|   0007   | 今天   | tom1     | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
-	|   0008   | 今天   | -lilei   | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
-	|   0009   | 今天   | mary     | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 195         | 195    |    0   | 0    | jobs,发货     |    已发货     |
-	|   0010   | 今天   | -lisi    | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 195         | 195    |    0   | 0    | jobs,发货     |    已发货     |
+		| order_id |  date  | consumer | product | payment | pay_type | postage*|  price*  | paid_amount*| alipay*| wechat*| cash*|      action   |  order_status*|
+		|   0001   | 2天前  | bill2    | 商品1,1 | 支付    | 微信支付 | 10      | 100      | 110         | 0      |   110  | 0    | jobs,完成退款 |    退款成功   |
+		|   0002   | 2天前  | bill     | 商品1,1 |         |          | 10      | 100      | 110         | 0      |    0   | 0    |               |    待支付     |
+		|   0003   | 1天前  | tom      | 商品2,1 |         |          | 15      | 100      | 115         | 0      |    0   | 0    | jobs,取消     |    已取消     |
+		|   0004   | 1天前  | bill     | 商品1,1 | 支付    | 货到付款 | 10      | 100      | 110         | 0      |    0   | 110  |               |    待发货     |
+		|   0005   | 今天   | tom      | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 0      |    0   | 110  | jobs,退款     |    退款中     |
+		|   0006   | 今天   | tom1     | 商品1,1 | 支付    | 支付宝   | 10      | 100      | 110         | 110    |    0   | 0    | jobs,完成     |    已完成     |
+		|   0007   | 今天   | tom1     | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
+		|   0008   | 今天   | -lilei   | 商品2,1 | 支付    | 微信支付 | 15      | 100      | 115         | 0      |   115  | 0    | jobs,发货     |    已发货     |
+		|   0009   | 今天   | mary     | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
+		|   0010   | 今天   | -lisi    | 商品2,2 | 支付    | 支付宝   | 15      | 100      | 215         | 215    |    0   | 0    | jobs,发货     |    已发货     |
 
-@mall2 @stats @wip.member1
+@mall2 @bi @memberAnalysis   @stats @wip.member1
 Scenario: 1  会员概况：会员详细数据
 	Given jobs登录系统
 	When jobs设置筛选日期

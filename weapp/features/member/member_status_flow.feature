@@ -25,7 +25,6 @@ Scenario:1 直接关注单个公众号
 		"""
 	And bill在jobs中的social_account与member已关联
 
-
 @mall2 @crm @member @member.status_flow
 Scenario:2 关注多个公众号，访问多个公众号的微站
 	bill先关注jobs的公众号，再关注tom的公众号
@@ -63,7 +62,7 @@ Scenario:2 关注多个公众号，访问多个公众号的微站
 		"""
 		{"sct":"sct_to_tom_in_db", "uuid":"uuid_to_tom_in_db"}
 		"""
-	
+
 @mall2 @crm @member @member.status_flow
 Scenario:3 会员向朋友圈分享链接
 	bill关注jobs的公众号
@@ -77,7 +76,6 @@ Scenario:3 会员向朋友圈分享链接
 	When bill访问tom的webapp
 	When bill把tom的微站链接分享到朋友圈
 	Then bill分享的链接中的fmt为bill在tom中的mt
-
 
 @mall2 @crm @member @member.status_flow
 Scenario:4 bill分享，tom关注，tom点击，tom访问webapp
@@ -108,8 +106,6 @@ Scenario:4 bill分享，tom关注，tom点击，tom访问webapp
 	When tom把jobs的微站链接分享到朋友圈
 	Then tom分享的链接中的fmt为tom在jobs中的mt
 
-
-
 @mall2 @crm @member @member.status_flow
 Scenario:5 bill分享，tom关注，tom访问webapp，tom点击
 	bill关注jobs的公众号
@@ -131,7 +127,6 @@ Scenario:5 bill分享，tom关注，tom访问webapp，tom点击
 		"""
 		{"fmt":"mt_{bill_jobs}", "uuid":"uuid_{tom_jobs}_in_db", "sct":"sct_{tom_jobs}_in_db"}
 		"""
-
 
 @mall2 @crm @member @member.status_flow
 Scenario:6 bill分享，-tom点击，tom关注, tom访问webapp
@@ -161,7 +156,6 @@ Scenario:6 bill分享，-tom点击，tom关注, tom访问webapp
 		"""
 	Then tom在jobs公众号中有mt对应的webapp_user
 
-
 @mall2 @crm @member @member.status_flow
 Scenario:7 bill分享，-tom点击并分享，nokia关注, nokia访问webapp, nokia点击
 	bill关注jobs的公众号
@@ -183,7 +177,6 @@ Scenario:7 bill分享，-tom点击并分享，nokia关注, nokia访问webapp, no
 	Then 浏览器cookie包含"[sct]"
 	When nokia点击tom分享链接
 	Then nokia当前链接中的fmt为nokia在jobs中的mt
-
 
 @mall2 @crm @member @member.status_flow
 Scenario:8 bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访问webapp
@@ -208,7 +201,6 @@ Scenario:8 bill分享，-tom点击并分享，nokia关注, nokia点击, nokia访
 	Then 浏览器cookie包含"[sct, uuid]"
 	Then nokia当前链接中的fmt为nokia在jobs中的mt
 
-
 @mall2 @crm @member @member.status_flow
 Scenario:9 bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访问webapp
 	bill关注jobs的公众号
@@ -231,7 +223,6 @@ Scenario:9 bill分享，-tom点击并分享，nokia点击, nokia关注, nokia访
 	When nokia访问jobs的webapp
 	Then 浏览器cookie包含"[sct, uuid]"
 	Then nokia当前链接中的fmt为nokia在jobs中的mt
-
 
 @mall2 @crm @member @member.status_flow
 Scenario:10 在多个会员分享公众号的链接中切换
@@ -260,7 +251,6 @@ Scenario:10 在多个会员分享公众号的链接中切换
 		{"fmt":"mt_{tom_guo}"}
 		"""
 
-
 @mall2 @crm @member @member.status_flow
 Scenario:11 同一个会员在不同设备上访问同一个公众号
 	When 清空浏览器
@@ -271,7 +261,6 @@ Scenario:11 同一个会员在不同设备上访问同一个公众号
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs公众号中有1个webapp_user
-
 
 @mall2 @crm @member @member.status_flow
 Scenario:12 同一个会员在不同设备上访问同一个公众号
@@ -289,4 +278,3 @@ Scenario:12 同一个会员在不同设备上访问同一个公众号
 	When bill访问jobs的webapp
 	Then 浏览器cookie包含"[sct]"
 	Then bill在jobs公众号中有2个webapp_user
-	

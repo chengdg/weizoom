@@ -1,4 +1,5 @@
 #_author_:王丽
+#editor:王丽  2015.10.19
 
 Feature: 经营报告-经营概况——概况数据
 """
@@ -92,7 +93,6 @@ Feature: 经营报告-经营概况——概况数据
                     备注：在查询区间内通过分享链接新增的会员数
 
                     "？"说明弹窗：通过分享链接新关注的会员数
-
 """
 
 Background:
@@ -100,6 +100,7 @@ Background:
     And jobs设定会员积分策略
         """
         {
+            "be_member_increase_count":500,
             "integral_each_yuan":10
         }
         """
@@ -183,7 +184,7 @@ Background:
                 }
             },
             "synchronized_mall":"是"
-        }, {
+        },{
             "name": "商品2",
             "promotion_title": "促销商品2",
             "category": "分类1",
@@ -221,10 +222,10 @@ Background:
             "is_permanant_active": "true",
             "rules": [{
                 "member_grade": "全部会员",
-                "discount": 70,
-                "discount_money": 70.00
+                "discount": 20,
+                "discount_money": 20.00
             }]
-        }, {
+        },{
             "name": "商品2积分应用",
             "start_date": "2014-08-01",
             "end_date": "10天后",
@@ -232,8 +233,8 @@ Background:
             "is_permanant_active": "true",
             "rules": [{
                 "member_grade": "全部会员",
-                "discount": 70,
-                "discount_money": 70.00
+                "discount": 20,
+                "discount_money": 20.00
             }]
         }]
         """
@@ -253,19 +254,19 @@ Background:
     When tom关注jobs的公众号于'2014-07-02'
     When marry关注jobs的公众号于'2014-07-03'
 
-@mall2 @stats
-Scenario:3  经营概况：店铺经营概况
+@mall2 @bi @salesAnalysis   @stats
+Scenario:1  经营概况：店铺经营概况
 
     When 微信用户批量消费jobs的商品
-        | order_id |    date    | consumer |    product   | payment | pay_type |postage*|price*|integral | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
-        |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10   | 100  |  300    |       200        |                      |     90       |                   |    0    |    0    |   0   |               |    待支付     |
-        |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,取消    |    已取消     |
-        |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_1 |     205      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
-        |   0004   | 3天前      |   tom    | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,完成    |    已完成     |
-        |   0005   | 2天前      |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,退款    |    退款中     |
-        |   0006   | 今天       |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,完成退款|   退款成功    |
-        |   0007   | 今天       |   -tom3  | 商品1,1      |   支付  | 货到付款 |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
-        |   0008   | 今天       |   -tom4  | 商品1,1      |   支付  | 支付宝   |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+        | order_id |    date    | consumer |    product   | payment | pay_type |postage*|price*| product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
+        |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |   90    |    0    |   0   |               |    待支付     |
+        |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,取消    |    已取消     |
+        |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |        0         | 全体券1,coupon1_id_1 |     205      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
+        |   0004   | 3天前      |   tom    | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,完成    |    已完成     |
+        |   0005   | 2天前      |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,退款    |    退款中     |
+        |   0006   | 今天       |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,完成退款|   退款成功    |
+        |   0007   | 今天       |   -tom3  | 商品1,1      |   支付  | 货到付款 |   10   | 100  |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+        |   0008   | 今天       |   -tom4  | 商品1,1      |   支付  | 支付宝   |   10   | 100  |        0         |                      |     110      |                   |   110   |    0    |   0   |               |    待发货     |
 
     Given jobs登录系统
     When jobs设置筛选日期

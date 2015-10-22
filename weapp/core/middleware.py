@@ -21,6 +21,7 @@ from django.template import RequestContext, Context
 
 #from utils.url_helper import remove_querystr_filed_from_request_url
 from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper, is_product_stocks_request
+from account.url_util import is_wapi_request
 from account.models import WEBAPP_TYPE_WEIZOOM_MALL
 
 #from core import dateutil
@@ -166,7 +167,7 @@ class RequestUserSourceDetectMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -252,10 +253,10 @@ class UserProfileMiddleware(object):
 		if is_product_stocks_request(request):
 			return None
 
-		#added by slzhu
-		if is_pay_request(request):
+		# 如果是支付、WAPI等场景，则跳过
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
-		
+
 		#根据module判断访问的页面类型
 		module = request.GET.get('module', None)
 		if not module:
@@ -370,7 +371,7 @@ class ForceLogoutMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 
 		#added by slzhu
@@ -393,14 +394,9 @@ class RequestWebAppMiddleware(object):
 	获得当前请求的WebApp
 	"""
 	def process_request(self, request):
-		#added by duhao
-		if is_product_stocks_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request) or is_pay_request(request):
 			return None
 
-		#added by slzhu
-		if is_pay_request(request):
-			return None
-		
 		if request.user.is_superuser:
 			request.app = None
 			return None
@@ -436,6 +432,8 @@ class ProfilerMiddleware(object):
 	获得系统运行的profile信息
 	"""
 	def process_view(self, request, callback, callback_args, callback_kwargs):
+		if is_wapi_request(request):
+			return None
 		hobbit_setting = HobbitSetting.objects.all()[0]
 		request.is_profiling_enabled = False
 		if hobbit_setting and hobbit_setting.enable_profiling:
@@ -462,8 +460,7 @@ class WebAppPageVisitMiddleware(object):
 	记录webapp中页面的pv, 必须在 RequestUserSourceDetectMiddleware 和 RequestWebAppMiddleware 之后。
 	"""
 	def process_request(self, request):
-		#added by slzhu
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
 		
 		if (not request.is_access_webapp):
@@ -488,7 +485,7 @@ class WebAppPageVisitMiddleware(object):
 		return None
 		
 	def process_response(self, request, response):
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return response
 			
 		if 'api' in request.get_full_path() or 'resource_js' in request.get_full_path():
@@ -622,7 +619,7 @@ class UserManagerMiddleware(object):
 	def process_request(self, request):
 		user = request.user
 		manager = user
-		if is_pay_request(request) or request.is_access_webapp or request.is_access_webapp_api:
+		if is_pay_request(request) or is_wapi_request(request) or request.is_access_webapp or request.is_access_webapp_api:
 			return None
 		if isinstance(request.user, User):
 			#更改manager获取方式 duhao 20151016
@@ -682,8 +679,7 @@ class MarketToolsMiddleware(object):
 	检查模块权限
 	"""
 	def process_request(self, request):
-		#added by slzhu
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
 		
 		if self.__is_request_for_webapp_market_tools_page(request):
@@ -768,11 +764,7 @@ class WeizoomMallMiddleware(object):
 
 	def process_request(self, request):
 		#added by duhao
-		if is_product_stocks_request(request):
-			return None
-
-		#added by slzhu
-		if is_pay_request(request):
+		if is_product_stocks_request(request) or is_wapi_request(request) or is_pay_request(request):
 			return None
 		
 		if request.user_profile:
@@ -793,7 +785,7 @@ class GetRequestInfoMiddleware(object):
 	"""
 	def process_request(self, request):
 		#added by slzhu
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
 			
 		#获取访问目标
@@ -825,8 +817,7 @@ class SubUserMiddleware(object):
 
 	"""
 	def process_request(self, request):
-		#added by slzhu
-		if is_pay_request(request):
+		if is_pay_request(request) or is_wapi_request(request):
 			return None
 		
 		if request.is_access_webapp:

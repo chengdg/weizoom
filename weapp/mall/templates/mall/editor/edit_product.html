@@ -14,7 +14,7 @@
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
 
-	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
+	<form id="editProduct" class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
   >
@@ -342,7 +342,7 @@
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
                     {% if request.manager.id == product.owner.id or not product %}
-					<input type="submit" class="btn btn-primary mr40" id="submitBtn" value="保存" />
+					<input type="submit" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
 					<input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />
@@ -361,6 +361,14 @@
 </div>
 {% endblock %}
 {% block js %}
+{#防止连续点击保存#}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#editProduct').submit(function() {
+            $('.xa-submit').attr('disabled','disabled');
+		});
+	});
+</script>
 <!--    运费验证实现    -->
 <script type="text/javascript">
 var origin_supplier = $('#supplier').data('origin');

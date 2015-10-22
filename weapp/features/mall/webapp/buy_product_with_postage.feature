@@ -1,7 +1,11 @@
 # _edit_ : "benchi"
 # _edit_ : "新新"
+#editor: 新新 2015.10.19
+
 Feature: 在webapp中购买有运费的商品
+"""
 	用户能在webapp中购买"有运费的商品"
+"""
 
 Background:
 	Given jobs登录系统
@@ -156,9 +160,7 @@ Scenario:1 购买单个商品，使用系统运费模板，满足续重
 		{
 			"status": "待支付",
 			"final_price": 218.00,
-			"postage": 18.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 18.00
 		}
 		"""
 
@@ -182,9 +184,7 @@ Scenario:2 购买单个商品，使用统一运费商品
 			"status": "待支付",
 			"final_price": 35.00,
 			"product_price": 20.00,
-			"postage": 15.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 15.00
 		}
 		"""
 	When bill购买jobs的商品
@@ -202,9 +202,7 @@ Scenario:2 购买单个商品，使用统一运费商品
 		{
 			"status": "待支付",
 			"final_price": 20.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 0.00
 		}
 		"""
 
@@ -228,14 +226,11 @@ Scenario:3 购买单个商品，使用系统运费模板，满足金额包邮条
 			"status": "待支付",
 			"final_price": 200.00,
 			"product_price": 200.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 0.00
 		}
 		"""
 
-
-@mall2 @mall.postage @mall.webapp
+@mall2 @mall.postage @mall.webapp 
 Scenario:4 购买单个商品，使用系统运费模板，满足数量包邮条件
 	
 	When bill访问jobs的webapp
@@ -255,14 +250,11 @@ Scenario:4 购买单个商品，使用系统运费模板，满足数量包邮条
 			"status": "待支付",
 			"final_price": 60.00,
 			"product_price": 60.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 0.00
 		}
 		"""
 
-
-@mall2 @mall.postage @mall.webapp
+@mall2 @mall.postage @mall.webapp 
 Scenario:5 购买多种商品，使用统一运费
 	
 	When bill访问jobs的webapp
@@ -285,9 +277,7 @@ Scenario:5 购买多种商品，使用统一运费
 			"status": "待支付",
 			"final_price": 35.00,
 			"product_price": 20.00,
-			"postage": 15.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 15.00
 		}
 		"""
 	When bill购买jobs的商品
@@ -308,13 +298,11 @@ Scenario:5 购买多种商品，使用统一运费
 		{
 			"status": "待支付",
 			"final_price": 45.00,
-			"postage": 25.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 25.00
 		}
 		"""
 
-@mall2 @mall.postage @mall.webapp
+@mall2 @mall.postage @mall.webapp 
 Scenario:6 购买多种商品，使用系统运费模板，满足普通续重
 	顺丰，河北，2公斤，运费18元
 	
@@ -338,14 +326,11 @@ Scenario:6 购买多种商品，使用系统运费模板，满足普通续重
 			"status": "待支付",
 			"final_price": 218.00,
 			"product_price": 200.00,
-			"postage": 18.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 18.00
 		}
 		"""
 
-
-@mall2 @mall.postage @mall.webapp
+@mall2 @mall.postage @mall.webapp 
 Scenario:7 购买多种商品，使用系统运费模板，满足特殊地区续重
 	顺丰，北京，1.6公斤，运费30元
 	
@@ -369,12 +354,9 @@ Scenario:7 购买多种商品，使用系统运费模板，满足特殊地区续
 			"status": "待支付",
 			"final_price": 150.00,
 			"product_price": 120.00,
-			"postage": 30.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 30.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:8 购买多种商品，使用系统运费模板，合起来满足数量包邮
@@ -400,12 +382,9 @@ Scenario:8 购买多种商品，使用系统运费模板，合起来满足数量
 			"status": "待支付",
 			"final_price": 140.00,
 			"product_price": 140.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 0.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:9 购买多种商品，使用系统运费模板，合起来满足金额包邮
@@ -431,12 +410,9 @@ Scenario:9 购买多种商品，使用系统运费模板，合起来满足金额
 			"status": "待支付",
 			"final_price": 200.00,
 			"product_price": 200.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 0.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:10 购买多种商品，使用统一运费+系统运费模板，普通运费
@@ -461,12 +437,9 @@ Scenario:10 购买多种商品，使用统一运费+系统运费模板，普通�
 			"status": "待支付",
 			"final_price": 138.00,
 			"product_price": 110.00,
-			"postage": 28.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 28.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:11 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
@@ -492,12 +465,9 @@ Scenario:11 购买多种商品，使用统一运费+系统运费模板，特殊�
 			"status": "待支付",
 			"final_price": 105.00,
 			"product_price": 60.00,
-			"postage": 45.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 45.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:12 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
@@ -526,12 +496,9 @@ Scenario:12 购买多种商品，使用统一运费+系统运费模板，特殊�
 			"status": "待支付",
 			"final_price": 165.00,
 			"product_price": 150.00,
-			"postage": 15.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 15.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:13 购买多种商品，使用统一运费+系统运费模板，特殊地区运费
@@ -560,9 +527,7 @@ Scenario:13 购买多种商品，使用统一运费+系统运费模板，特殊�
 			"status": "待支付",
 			"final_price": 225.00,
 			"product_price": 210.00,
-			"postage": 15.00,
-			"integral_money": 0.00,
-			"coupon_money": 0.00
+			"postage": 15.00
 		}
 		"""
 
@@ -591,13 +556,11 @@ Scenario:14 购买多规格商品，使用系统运费模板，特殊地区，�
 			"status": "待支付",
 			"final_price": 130.00,
 			"product_price": 100.00,
-			"postage": 30.00,
-			"integral_money": 0.00,
-			"coupon_money": 0.00
+			"postage": 30.00
 		}
 		"""
 
-@mall2 @mall.postage @mall.webapp 
+@mall2 @mall.postage @mall.webapp
 Scenario:15 购买两个多规格商品
 	1 商品7使用系统运费模板，特殊地区，满足续重
 	2 商品8使用统一运费10元
@@ -633,9 +596,7 @@ Scenario:15 购买两个多规格商品
 			"status": "待支付",
 			"final_price": 240.00,
 			"product_price": 200.00,
-			"postage": 40.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 40.00
 		}
 		"""
 
@@ -661,12 +622,9 @@ Scenario:16 jobs选择'免运费'运费配置
 			"status": "待支付",
 			"final_price": 200.00,
 			"product_price": 200.00,
-			"postage": 0.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 0.00
 		}
 		"""
-
 
 @mall2 @mall.postage @mall.webapp
 Scenario:17 更新邮费配置后进行购买
@@ -713,9 +671,7 @@ Scenario:17 更新邮费配置后进行购买
 		{
 			"status": "待支付",
 			"final_price": 113.00,
-			"postage": 13.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 13.00
 		}
 		"""
 	When bill购买jobs的商品
@@ -734,122 +690,113 @@ Scenario:17 更新邮费配置后进行购买
 		{
 			"status": "待支付",
 			"final_price": 323.00,
-			"postage": 23.00,
-			"integral_money":0.00,
-			"coupon_money":0.00
+			"postage": 23.00
 		}
 		"""
 # _edit_ : "新新"
-@mall2
+@mall2 
 Scenario:18 不同等级的会员购买有会员价同时有运费配置
 	#包邮条件:金额取商品原价的金额
-		Given jobs登录系统
-		And jobs已添加商品
-			"""
-			[{
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品14",
+			"price": 100.00,
+			"member_price": true,
+			"weight": 1,
+			"postage": "系统",
+			"is_member_product": "on"
+		}]
+		"""
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	And jobs更新"bill"的会员等级
+		"""
+		{
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}
+		"""
+	Then jobs能获取会员等级列表
+		"""
+		[{
+			"name": "普通会员",
+			"upgrade": "自动升级",
+			"discount": "10"
+		}, {
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}]
+		"""
+	And jobs可以获得会员列表
+		"""
+		[{
+			"name": "tom",
+			"member_rank": "普通会员"
+		}, {
+			"name": "bill",
+			"member_rank": "铜牌会员"
+		}]
+		"""
+	###tom购买,订单金额
+	When tom访问jobs的webapp
+	When tom购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品14",
+				"count": 2
+			}],
+			"ship_area":"北京市",
+			"ship_address":"呱呱"
+		}
+		"""
+	Then tom成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 200.00,
+			"postage": 0.00,
+			"products": [{
 				"name": "商品14",
 				"price": 100.00,
-				"member_price": true,
-				"weight": 1,
-				"postage": "系统",
-				"is_member_product": "on"
+				"count": 2
 			}]
-			"""
-		When jobs添加会员等级
-			"""
-			[{
-				"name": "铜牌会员",
-				"upgrade": "手动升级",
-				"discount": "9"
-			}]
-			"""
-		And jobs更新"bill"的会员等级
-			"""
-			{
-				"name": "bill",
-				"member_rank": "铜牌会员"
-			}
-			"""
-		Then jobs能获取会员等级列表
-			"""
-			[{
-				"name": "普通会员",
-				"upgrade": "自动升级",
-				"discount": "10"
-			}, {
-				"name": "铜牌会员",
-				"upgrade": "手动升级",
-				"discount": "9"
-			}]
-			"""
-		And jobs可以获得会员列表
-			"""
-			[{
-				"name": "tom",
-				"member_rank": "普通会员"
-			}, {
-				"name": "bill",
-				"member_rank": "铜牌会员"
-			}]
-			"""
-	###tom购买,订单金额
-		When tom访问jobs的webapp
-		When tom购买jobs的商品
-			"""
-			{
-				"products": [{
-					"name": "商品14",
-					"count": 2
-				}],
-				"ship_area":"北京市",
-				"ship_address":"呱呱"
-			}
-			"""
-		Then tom成功创建订单
-			"""
-			{
-				"status": "待支付",
-				"final_price": 200.00,
-				"postage": 0.00,
-				"integral_money":0.00,
-				"coupon_money":0.00,
-				"products": [{
-					"name": "商品14",
-					"price": 100.00,
-					"count": 2
-				}]
-			}
-			"""
-			# "members_money": 0,
-				
+		}
+		"""
+			
 	###bill购买,订单金额
-		When bill访问jobs的webapp
-		When bill购买jobs的商品
-			"""
-			{
-				"products": [{
-					"name": "商品14",
-					"count": 2
-				}],
-				"ship_area":"北京市",
-				"ship_address":"呱呱"
-			}
-			"""
-		Then bill成功创建订单
-			"""
-			{
-				"status": "待支付",
-				"final_price": 180.00,
-				"postage": 0.00,
-				"integral_money":0.00,
-				"coupon_money":0.00,
-				"products": [{
-					"name": "商品14",
-					"price": 90.00,
-					"count": 2
-				}]
-			}
-			"""
-			# "members_money":20,
-			#		"type": "members",
-	
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品14",
+				"count": 2
+			}],
+			"ship_area":"北京市",
+			"ship_address":"呱呱"
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 180.00,
+			"postage": 0.00,
+			"products": [{
+				"name": "商品14",
+				"price": 90.00,
+				"count": 2
+			}]
+		}
+		"""
+

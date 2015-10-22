@@ -1,4 +1,5 @@
-# __author__ : "冯雪静"
+#author: 冯雪静
+#editot: 张三香 2015.10.16
 
 Feature:模板消息
 	jobs可以添加\修改模板消息内容,修改模板消息(启用、停用)状态
@@ -38,7 +39,7 @@ Background:
 		}]
 		"""
 
-@mall2 @market_tools @market_tools.template_message.test.operate 
+@mall2 @message @templateMessage   @market_tools @market_tools.template_message.test.operate
 Scenario:1 添加\修改模板消息内容
 	jobs可以添加\修改模板消息内容
 	1.jobs给template_id为"muban03"的模板消息添加内容
@@ -93,7 +94,7 @@ Scenario:1 添加\修改模板消息内容
 		}
 		"""
 
-@mall2 @market_tools @market_tools.template_message.test.operate 
+@mall2 @message @templateMessage   @market_tools @market_tools.template_message.test.operate
 Scenario:2 修改模板消息(启用、停用)状态
 	jobs可以修改模板消息状态
 	1.jobs查看模板消息列表

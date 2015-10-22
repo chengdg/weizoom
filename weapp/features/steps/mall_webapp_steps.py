@@ -339,6 +339,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		context.created_order_id = response_json['data']['order_id']
 	else:
 		context.created_order_id = -1
+		context.response_json = response_json
 		context.server_error_msg = response_json['data']['msg']
 		print "buy_error----------------------------",context.server_error_msg,response
 	if context.created_order_id != -1:
@@ -1067,6 +1068,7 @@ def step_add_address_info(context, webapp_user_name):
 	if page_title == u'编辑收货地址':
 		address_info = json.loads(context.text)
 		redirect_url = unquote(context.response.context['redirect_url_query_string'])
+		print 'jz------2', redirect_url
 		response = _create_address(context, address_info)
 		bdd_util.assert_api_call_success(response)
 		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)

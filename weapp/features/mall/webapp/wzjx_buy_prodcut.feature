@@ -98,8 +98,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
-@mall2 @supplier
+@mall2 @buy   @supplier
 Scenario: 1 购买单个商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs添加的商品
@@ -156,14 +155,13 @@ Scenario: 1 购买单个商品
 		}
 		"""
 
-
-@mall2 @supplier 
+@mall2 @buy   @supplier
 Scenario: 2 购买一个供货商的多个商品
 	bill购买商品后
 	1. 能看到订单详情
 	2. 能在不同状态下执行各种操作
 
-	#买多个不满足包邮条件，同一个供货商
+	#买多个满足包邮条件，同一个供货商
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -268,8 +266,7 @@ Scenario: 2 购买一个供货商的多个商品
 		}]
 		"""
 
-
-@mall2 @supplier
+@mall2 @buy   @supplier
 Scenario: 3 购买多个供货商的多个商品,使用微信支付
 	bill购买商品后，使用微信支付
 	1. 能看到订单详情
@@ -311,12 +308,12 @@ Scenario: 3 购买多个供货商的多个商品,使用微信支付
 		}
 		"""
 	And bill在购物车订单编辑中点击提交订单
-	  """
-	  {
-		  "pay_type": "货到付款",
-		  "order_no": "001"
-	  }
-	  """
+		"""
+		{
+			"pay_type": "货到付款",
+			"order_no": "001"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -625,8 +622,7 @@ Scenario: 3 购买多个供货商的多个商品,使用微信支付
 		}]
 		"""
 
-
-@mall2 @supplier 
+@mall2 @buy   @supplier
 Scenario: 4 购买多个供货商的多个商品,使用货到付款
 	bill购买商品后，使用货到付款
 	1. 能看到订单详情
@@ -680,12 +676,12 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}
 		"""
 	And bill在购物车订单编辑中点击提交订单
-	  """
-	  {
-		  "pay_type": "货到付款",
-		  "order_no": "001"
-	  }
-	  """
+		"""
+		{
+			"pay_type": "货到付款",
+			"order_no": "001"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{

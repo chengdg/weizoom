@@ -242,8 +242,7 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
-    # webapp home_page middleware
-    'core.termite_middleware.WebappPageHomePageMiddleware',
+   
 
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
@@ -261,11 +260,14 @@ MIDDLEWARE_CLASSES = [
     'core.middleware.GetRequestInfoMiddleware',
     'core.middleware.RequestUserSourceDetectMiddleware',
     # profiling的中间件
-    'core.profiling_middleware.ProfileMiddleware',
+    #'core.profiling_middleware.ProfileMiddleware',
 
     'modules.member.middleware.AddUuidSessionMiddleware',
     'core.middleware.UserManagerMiddleware',
     'core.middleware.UserProfileMiddleware',
+     # webapp home_page middleware
+    'core.termite_middleware.WebappPageHomePageMiddleware',
+    
     'modules.member.middleware.CleanUpCookieMiddleware',
     'modules.member.middleware.MemberCacheMiddleware',
     'modules.member.middleware.ProcessOpenidMiddleware',
@@ -591,7 +593,9 @@ if 'develop' == MODE:
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = False
 
-    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://dev.weapp.com'
 
     import logging
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
@@ -609,7 +613,9 @@ elif 'test' == MODE:
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
 
-    WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
+    WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://dev.weapp.com'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
@@ -629,6 +635,7 @@ else:
     USE_DEV_JS = False
 
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
+    WAPI_HOST = 'http://api.weizzz.com'
 
 
 IN_DEVELOP_MODE = (MODE == 'develop')
@@ -772,6 +779,21 @@ DJANGO_HACK_PARAMS = {
 
 RESOURCE_LOADED = False
 RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
+
+
+# settings for WAPI Logger
+if MODE == 'develop' or MODE == 'test':
+    WAPI_LOGGER_ENABLED = True
+    WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
+    WAPI_LOGGER_SERVER_PORT = 27017
+    WAPI_LOGGER_DB = 'wapi'
+else:
+    # 真实环境暂时关闭
+    #WAPI_LOGGER_ENABLED = False
+    WAPI_LOGGER_ENABLED = True
+    WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
+    WAPI_LOGGER_SERVER_PORT = 27017
+    WAPI_LOGGER_DB = 'wapi'
 
 
 from weapp import hack_django
