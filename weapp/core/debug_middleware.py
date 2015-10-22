@@ -269,9 +269,9 @@ class SqlMonitorMiddleware(object):
 			return response
 		from utils import cache_util
 		for cache in cache_util.CACHE_QUERIES:
-			print 'jz----cache', cache['time'], cache['sql'], request.META.get('PATH_INFO')
+			print 'jz----cache', cache['time'], cache['sql'], cache.get('stack')
 		for sql in connections['default'].queries:
-			print 'jz----sql', sql['time'], sql['sql'], request.META.get('PATH_INFO')
+			print 'jz----sql', sql['time'], sql['sql'], query.get('stack')
 		if is_sql or is_allsql:
 			sqls = []
 			for query in connections['default'].queries:
