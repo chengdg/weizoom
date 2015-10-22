@@ -214,6 +214,7 @@ class SqlMonitorMiddleware(object):
 		#清空上一次的cache queries
 		from utils import cache_util
 		cache_util.CACHE_QUERIES= []
+		request.enable_sql_monitor = True
 
 		if not 'HTTP_USER_AGENT' in request.META:
 			return None
@@ -225,7 +226,7 @@ class SqlMonitorMiddleware(object):
 			settings.DEBUG = True
 			request.enable_sql_monitor = True
 		else:
-			request.enable_sql_monitor = False
+			request.enable_sql_monitor = True
 		return None
 
 	def process_response(self, request, response):
@@ -239,7 +240,7 @@ class SqlMonitorMiddleware(object):
 			settings.DEBUG = True
 			request.enable_sql_monitor = True
 		else:
-			request.enable_sql_monitor = False
+			request.enable_sql_monitor = True
 			
 		if not request.enable_sql_monitor:
 			return response
@@ -266,8 +267,11 @@ class SqlMonitorMiddleware(object):
 				response.delete_cookie('w-dbg-allsql')
 
 			return response
-
-
+		from utils import cache_util
+		for cache in cache_util.CACHE_QUERIES:
+			print 'jz----cache', cache['time'], cache['sql'], request.META.get('PATH_INFO')
+		for sql in connections['default'].queries:
+			print 'jz----sql', sql['time'], sql['sql'], request.META.get('PATH_INFO')
 		if is_sql or is_allsql:
 			sqls = []
 			for query in connections['default'].queries:
