@@ -172,6 +172,7 @@ textarea{resize:none}
 .pt15{padding-top:15px !important;}
 .pt20{padding-top:20px !important;}
 .pt30{padding-top:30px !important;}
+.pt40{padding-top:40px !important;}
 .pt50{padding-top:50px !important;}
 .pt100{padding-top:100px !important;}
 .pb0{padding-bottom:0px !important;}
@@ -341,7 +342,7 @@ span.head-img img{
 .wui-rightNav{
 	position: fixed;
 	right:0;
-	bottom:350px; 
+	bottom:350px;
 }
 .wui-rightNav a{
 	display: block;

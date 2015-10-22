@@ -8,7 +8,7 @@
 			<li><a href="/new_weixin/menu/">公众号设置</a></li>
 			<li class="active">公众号绑定</li>
 		</ul>
-		<div class="xa-fansFilterView xui-filterPanel  pr">
+		<div class="xa-fansFilterView xui-filterPanel  pr pl45 pt40">
 			<div class="xui-form disT">
 				<div class="xui-col disTc w470">
 					<div class="xui-i-item fl">
@@ -22,7 +22,7 @@
 				<div class="xui-col disTc w470">
 					<div class="xui-i-item fl">
 						<label class="">绑定状态：</label>
-						{% if user_profile.is_mp_registered %} 
+						{% if user_profile.is_mp_registered %}
 						已绑定
 						{% else %}
 						未绑定
@@ -37,8 +37,8 @@
 						<label class="">微信账户类型：</label>
 						{% if mpuser.is_certified %}已认证{% else %}未认证{% endif %}
 						{% if mpuser.is_service %}服务号{% else %}订阅号{% endif %}<br>
-						{% if user_profile.is_mp_registered %} 
-						
+						{% if user_profile.is_mp_registered %}
+
 						<div style="margin-top: 20px;  margin-left: 101px">您的店铺已经获得该公众号的所有接口权限，可以正常对接
 						微信
 						</div>
@@ -52,7 +52,7 @@
 						</div>
 
 						{% endif %}
-					
+
 					</div>
 				</div>
 			</div>
@@ -60,32 +60,37 @@
 			<div class="xui-form disT">
 				<div class="xui-col disTc w470">
 					<div class="xui-i-item fl">
-						<label class="" >头像：</label>
-						<span class="xui-color-mark 
-						ml5">（图片建议尺寸：50X50像素）</span>
 						<div class="controls">
 							<input type="hidden" name="pic_url" id="pic_url" value="{% if preview_user.image_path %}{{ preview_user.image_path }}{% else %}/static/img/user-1.jpg{% endif %}" data-validate="require-image" data-ui-role="image-selector" data-width="50" data-height="50"/>
 			                <div  data-ui-role="image-selector-view" auto-show-help="false" style="margin-left: 120px;margin-top: 27px;"></div>
 			                <div class="errorHint"></div>
 			            </div>
-			            <div style="margin-top: 20px;margin-left: 101px;">
-			            	<font color="red">注：此图片将会作为略缩图展示在每条分享出去的微站链接中</font>
-			            </div>
 					</div>
 				</div>
 			</div>
-			<div class="xui-form disT" style="position: absolute;right: 20px;top: 25px;">
+			<div class="xui-form disT" style="position: absolute;right: 20px;top: 40px;">
 				<div class="xui-col disTc w470">
 					<div class="xui-i-item fl" style="margin-left: 69px">
 					<label class="" >微信二维码：</label>
-					<div style="margin-left: 94px;margin-top: 12px;">
-						<img height="205px" width="205px" src="{% if auth_appid_info %}{{auth_appid_info.qrcode_url}}{% else %}/static/img/user-1.jpg{% endif %}">
+					<div style="margin-left: 65px;margin-top: 12px;">
+						<img height="170px" width="170px" src="{% if auth_appid_info %}{{auth_appid_info.qrcode_url}}{% else %}/static/img/user-1.jpg{% endif %}">
 					</div>
 					</div>
 				</div>
 			</div>
-			<div class="xui-btn-group tc">
-					<input type="submit" class="btn btn-primary save-image" id="submitBtn" value="保&nbsp;&nbsp;&nbsp;&nbsp;存" />
+
+			<div style="border-bottom: 1px solid #9d9d9d; margin: -20px 46px 42px 10px;"></div>
+
+			<div class="xui-form disT">
+				<div class="xui-col disTc">
+					<div class="xui-i-item fl">
+						<label class="">微众商城引流：</label>
+						<input name="weshop_followurl" class="follow-input" type="text" value="{{operation_settings.weshop_followurl}}" style="width: 360px; height: 32px; background-color: #fefefe; border: 1px solid #ddd;" placeholder="请输入微信公众号平台的图文素材地址"/>
+					</div>
+					<div class="fl" style="margin: -10px 0 0 152px;">
+						<input type="submit" class="btn btn-primary save-image" id="submitBtn" value="保&nbsp;&nbsp;&nbsp;&nbsp;存" />
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -95,33 +100,44 @@
 
 
 {% block js %}
-<script type="text/javascript">	
+<script type="text/javascript">
 
 var mp_user_id  = "{{mpuser.id}}";
 $(document).ready(function() {
 		$('.save-image').click(function(event) {
-			//if (!W.validate()) {
-		     //  return false;
-		     //  }
-			W.getLoadingView().show();	
-				var resource = 'mp_user';
-				var pic_url = $("#pic_url").val();
-				W.getApi().call({
-					method: 'post',
-					app: 'new_weixin',
-					resource: resource,
-					args: {
-						mp_user_id: mp_user_id,
-						pic_url:pic_url
-					},
-					success: function(data) {
-						 window.location.reload();
-					},
-					error: function(response) {
-						alert('操作失败');
-						W.getLoadingView().hide();
-					}
-				});
+				var check_url = function(sel){
+		        var url = $(sel).val();
+		        if (!url) {
+		            return '';
+		        }
+		        if(url.indexOf('http://') === -1) {
+		            url = 'http://' + url;
+		            $(sel).val(url);
+		        }
+		        return url;
+		    };
+			var weshop_followurl = check_url('input[name="weshop_followurl"]');
+
+			W.getLoadingView().show();
+			var resource = 'mp_user';
+			var pic_url = $("#pic_url").val();
+			W.getApi().call({
+				method: 'post',
+				app: 'new_weixin',
+				resource: resource,
+				args: {
+					mp_user_id: mp_user_id,
+					pic_url:pic_url,
+					weshop_followurl: weshop_followurl
+				},
+				success: function(data) {
+					 window.location.reload();
+				},
+				error: function(response) {
+					alert('操作失败');
+					W.getLoadingView().hide();
+				}
+			});
 		})
 		//重新授权
 		$(document).delegate('.xa-rehit', 'click', function(event) {
