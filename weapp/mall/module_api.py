@@ -1355,12 +1355,12 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 	pay_result = False
 
 	if is_success and order.status == ORDER_STATUS_NOT: #支付成功
-		#order.status = ORDER_STATUS_PAYED_SUCCESSED
-		#order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		pay_result = True
-		Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
 		# jz 2015-10-20
+		# Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
+		#order.status = ORDER_STATUS_PAYED_SUCCESSED
+		#order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		# 修改子订单的订单状态，该处有逻辑状态的校验
 		# origin_order_id = Order.objects.get(order_id=order_id).id
 		# Order.objects.filter()
@@ -1369,6 +1369,7 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 
 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		order.pay_interface_type = pay_interface_type
+		order.payment_time = datetime.now()
 
 		#记录日志
 		record_operation_log(order_id, u'客户', u'支付')
