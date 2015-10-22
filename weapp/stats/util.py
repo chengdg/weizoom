@@ -693,6 +693,18 @@ def get_deal_product_count(webapp_id, low_date, high_date):
 		deal_product_count += product.number
 	return deal_product_count
 
+def __hack_product_id_for_show(relations):
+	"""
+	为演示账号修改订单中的商品id duhao 20151022
+	"""
+	from django.conf import settings
+	products = list(Product.objects.filter(owner_id = settings.TARGET_ID))
+	length = len(products)
+	for r in relations:
+		r.product_id = products[r.product_id % length].id
+
+	return relations
+
 def get_top10_product(webapp_id, low_date, high_date):
 	"""
 	获取下单单量排行前10的商品
@@ -705,6 +717,14 @@ def get_top10_product(webapp_id, low_date, high_date):
 	products = OrderHasProduct.objects.filter(
 		order_id__in=order_ids
 	)
+
+	#为演示账号修改订单中的商品id duhao 20151022
+	from django.conf import settings
+	if len(orders) > 0:
+		for order in orders:
+			if order.webapp_id in (settings.ASSISTANT_WEBAPP_ID1, settings.ASSISTANT_WEBAPP_ID2):
+				products = __hack_product_id_for_show(products)
+				break
 
 	product_id2num = {}
 	for product in products:
