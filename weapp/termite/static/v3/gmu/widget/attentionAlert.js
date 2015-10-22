@@ -68,6 +68,9 @@ Copyright (c) 2011-2012 Weizoom Inc
             if($('.xa-page')){
                 $('.xa-page').css('padding-top','40px');
             }
+            if($('.wa-page')){
+                $('.wa-page').css('padding-top','40px');
+            }
             //编辑订单页的布局因为配合iscroll滚动所以使用了绝对定位脱离了page，因而单独处理
             if($('xa-editOrderPage')){
                 $('#wrapper').css('top','40px');
