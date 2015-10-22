@@ -324,7 +324,7 @@ body.ui-overlay-x .ui-page{
     -webkit-box-sizing:boredr-box;
     padding:0 10px;
     line-height: 40px;
-    text-align: left;
+    text-align: center;
     display: block;
     background: rgba(255,243,145,0.9);
     color: #F95901;

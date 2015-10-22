@@ -49,7 +49,7 @@
                 width: 233,
                 height: 270,
                 'background':'url(/static_v2/img/termite2/two-dimension.png)',
-                'background-size':'100%;',
+                'background-size':'100%',
                 position:'fixed',
                 top:'50%',
                 left:'50%',
