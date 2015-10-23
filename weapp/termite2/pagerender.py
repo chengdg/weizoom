@@ -320,11 +320,11 @@ def __render_component(request, page, component, project):
 		if not sub_component_type in component:
 			component[sub_component_type] = sub_component
 
-	# 购物车数量
-	shopping_cart_product_count = 0
-	if hasattr(request, 'member') and request.member:
-		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
-		
+	
+	if hasattr(request, 'shopping_cart_product_count'):
+		shopping_cart_product_count = request.shopping_cart_product_count
+	else:
+		shopping_cart_product_count = _get_shopping_cart_product_nums(request)
 	# 二维码
 	current_auth_qrcode_img = None
 	if hasattr(request, "webapp_owner_info") and request.webapp_owner_info:
@@ -433,9 +433,20 @@ def create_mobile_page_html_content(request, page, page_component, project=None)
 		if len(type2template) == 0:
 			__load_templates()
 
+	# 购物车数量
+	shopping_cart_product_count = _get_shopping_cart_product_nums(request)
+	request.shopping_cart_product_count = shopping_cart_product_count
 	htmls = []
 	htmls.append(__render_component(request, page, page_component, project))
 
 	return '\n'.join(htmls)
+
+
+def _get_shopping_cart_product_nums(request):
+	shopping_cart_product_count = 0
+	if hasattr(request, 'member') and request.member:
+		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
+
+	return shopping_cart_product_count
 
 	
