@@ -401,8 +401,10 @@ ui-appPage-commonStyle">
 
 
       $('.xui-bottomActionBar').delegate('.xa-save', 'click', function() {
+          var that = this;
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
+        that.disabled = true;
         var descriptionModel = page.components[0].model;
         var dynamicComponents = page.components[0].components;
             var name = descriptionModel.get('title');
@@ -470,9 +472,11 @@ ui-appPage-commonStyle">
                     W.activityId = data.id;
                     $('.xa-link-copy').removeClass('xui-hide');
                 }
+                that.disabled = false;
             },
             error: function(resp) {
               W.showHint('error', '保存失败!');
+                that.disabled = false;
             }
           });
         }
