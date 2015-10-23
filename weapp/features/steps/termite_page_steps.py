@@ -372,8 +372,8 @@ def __actual_page(page_json, user):
 			if products:
 				for product in products:
 					data = {
-						"name": product['name'],
-						"price": product['display_price']
+						"name": product.get('name'),
+						"price": product.get('display_price')
 					}
 					actual_component["products_source"]["items"].append(data)
 

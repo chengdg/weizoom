@@ -326,7 +326,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 need_member_info:isInit
             },
             success: function(data){
-
                 //处理规格库存
                 $.each(_this.models, function(i, n){
                     if(!data[n.id])
@@ -345,6 +344,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         _this.initForCustomModelProduct();
                     }
                 }
+
                 if(isInit){
                     var user_member_grade_id = data.member_grade_id;
                     if(data.is_collect == 'true'){
@@ -439,13 +439,13 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 // if(counter.count > 1){
                 //     counter.changeCountTo(counter.count);
                 // }
+
             },
             error: function(){
                 console.log("error");
             }
         })
     },
-
     /**
      * initStickyActionBar: 初始化粘性action bar
      */
