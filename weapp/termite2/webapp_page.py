@@ -54,7 +54,7 @@ class WebappPage(resource.Resource):
 				project = webapp_models.Project.objects.get(id=project_id)
 			else:
 				workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
-				project = webapp_models.Project.objects.get(workspace=workspace, type='wepage', is_active=True)
+				project = webapp_models.Project.objects.get(workspace_id=workspace.id, type='wepage', is_active=True)
 				project_id = project.id
 
 		project.app_name = ''
