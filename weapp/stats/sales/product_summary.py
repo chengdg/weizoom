@@ -89,7 +89,8 @@ class DealOrderRankBarChart(resource.Resource):
 		low_date, high_date, date_range = stats_util.get_date_range(request)
 		webapp_id = request.user_profile.webapp_id
 
-		top10_product_list = stats_util.get_top10_product(webapp_id, low_date, high_date)
+		#duhao 20151023添加了一个request.user参数
+		top10_product_list = stats_util.get_top10_product(webapp_id, low_date, high_date, request.user)
 
 		x_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		y_values = []
