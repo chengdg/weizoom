@@ -13,7 +13,6 @@ from core import api_resource
 from wapi.decorators import param_required
 #from mall import models as mall_models
 
-#from wapi.decorators import wapi_access_required
 from wapi.wapi_utils import create_json_response
 
 from stats.manage.brand_value_utils import get_brand_value
