@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>	</title>
+	<style>
+		body {
+		    margin: 0;
+		    padding: 0;
+		    background: #f0f0f0;
+		}
+		.xui-empty-box{
+		    width:50%;
+		    margin:23% auto;
+		}
+		.xui-empty-box img{
+			max-width: 100%;
+		}
+		.xui-goShopping-btn{
+			display: block;
+			text-align: center;
+			margin:0 auto;
+			width: 94%;
+			background: #CF0305;
+			color: #fff;
+			height: 45px;
+			line-height: 45px;
+			border-radius:2px;
+			text-decoration: none;
+			font-family: Arial,Tahoma,"Helvetica Neue","Heiti SC","Microsoft Yahei";
+		}
+		@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+		    .xui-empty-box{
+		        width:50%;
+		        margin:13% auto;
+		    }
+		}
+	</style>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+</head>
+
+<body>
+	<div class="content">
+        <div class="xui-empty-box"><img src="none.jpg" alt=""></div>
+        <a class="xui-goShopping-btn" id="url">去逛逛</a>
+    </div>	
+</body>
+<script>
+	var homePageUrl = localStorage.getItem("homepage_url");
+	var url = '/workbench/jqm/preview/?'+ homePageUrl;
+	document.getElementById('url').setAttribute("href",url);
+</script>
+</html>
