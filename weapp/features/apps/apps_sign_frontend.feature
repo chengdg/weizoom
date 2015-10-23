@@ -1,187 +1,384 @@
-# __author__ : 张雪、许韦
+# __author__ : "许韦"
 
-Feature: 用户进行签到
-"""
-	用户通过jobs签到成功，活动签到奖励
-	1、【活动名称】：不能为空
-	2、【签到设置】：每日和连续签到天数获得奖励
-	3、【奖励条件】:每日签到获得？奖励；连续？天获得？奖励
-	4、【领取方式】：通过回复关键字和快捷按钮签到
-	Scenario bill浏览签到页面
-	Scenario bill通过快捷按钮签到
-	Scenario bill通过回复关键字签到
-	Scenario bill一天内两次签到
-	Scenario bill两天内连续签到
-	Scenario bill间隔一天后签到
-	Scenario bill在签到结束后进行签到
-	Scenario 优惠券在签到结束前过期
-	Scenario -bill进行签到
-	Scenario 签到和其他活动同时进行，签到获得优先级获取图文链接
+Feature: Sign
+	用户进行签到
 
-"""
 Background:
 	Given jobs登录系统
-	When jobs添加抽奖活动
-	"""
-		[{
-			"name": "抽奖活动1",
-			"key_word":12
-
-	When jobs添加优惠券
+	When jobs添加"签到活动1"
 	"""
 		[{
 			"name": "优惠券1",
-			"money": 1,
-			"start_date": "今天",
-			"end_date": "1天后",
-			"coupon_id_prefix": "coupon1_id_"
-			},{
-			"name": "优惠券2",
-			"money": 1,
-			"start_date": "一天前",
-			"end_date": "昨天",
-			"coupon_id_prefix": "coupon1_id_"
-
-			}
+			"money": 1.00,
+			"limit_counts": "无限",
+			"start_date": "2天前",
+			"end_date": "1天前",
+			"coupon_id": "优惠券1"
+		},{
+			"name":"优惠券2",
+			"money":2.00,
+			"limit_counts":"无限",
+			"start_date":"今天",
+			"end_data":"今天",
+			"coupon_id":"优惠券2"
 		}]
-		"""
-	When jobs添加签到活动"签到活动1"
 	"""
+	When jobs添加"签到活动1"
+		"""
 		[{
-			"name": "签到活动1",
-			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
-			"share_pic":"C:\Users\Administrator\Desktop\截图微众"
-			"key_words": {
-				"rule": "精确",
-				"key_word": "78"
-				"rule": "精确",
-				"key_word": "12"
-				"rule":"模糊"
-				"key_word": "123456"
+			"sign_id":"签到活动1",
+			"sign_illustration":"签到赚积分！",
+			"share_pic": [{
+				"url": "/weappimg.b0.upaiyun.com/upload/119_20150707/1436273979099_278.jpg"
+			}],
 
-			},
-			"share_describe": "签到获得奖励"
-			"sign_setting":{
-				items:[{
-					"sign_in": "1",
-					"integral": "100",
-					"send_coupon": "优惠券1"
+			"share_describe":"签到送好礼！",
+			"key_word": [{
+					"keyword": "12",
+					"type": "equal"
 				},{
-					"sign_in": "3",
-					"integral": "300",
-					"send_coupon": "优惠券1"
+					"keyword": "123",
+					"type": "like"
+				}],
+			"key_word_reply": {
+					"reply_content":"
+					每日签到活动2积分和优惠券1一张
+					连续签到3天获得5积分和优惠券1一张
+					连续签到5天获得7积分和优惠券1一张",
+					"reply_type":"text"
+				},
+			"prize":[{
+					"serial_count":"1",
+					"integral":"2",
+					"coupon_id":[优惠券1]
 				},{
-					"sign_in": "5",
-					"integral": "500",
-					"send_coupon": "优惠券1"
+					"serial_count":"2",
+					"integral":"5",
+					"coupon_id":[优惠券1]
+				},{
+					"serial_count":"3",
+					"integral":"7",
+					"coupon_id":[优惠券1]
 				}]
-			}
 		}]
+		"""
+	Then jobs能获取签到活动配置内容
+		"""
+		{
+			"name": "签到活动1",
+			"status": "关闭"
+		}
+		"""
+	And jobs开启"签到活动1"
+		"""
+		{
+			"name":"签到活动1",
+			"status":"开启"
+		}
+		"""
+
+
+
+Scenario: 1 用户浏览"签到活动1"
+	Given jobs登录系统
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill的会员积分0
+	When bill进入jobs的签到页面
+	Then bill获取"签到活动1"内容
+	"""
+	[{
+		"user_name":"bill",
+		"integral_account":"0"
+		"integral_num":"2",
+		"coupon_id":"优惠券1"
+		"sign_item":[{
+			"title1":"签到说明",
+			"sign_illustration":"签到赚积分！"
+		},{
+			"title2":"活动规则",
+			"rule":"
+			1.每日签到，获得2积分奖励"优惠券1"一张。
+			2.连续签到至3天，获得5积分奖励"优惠券1"一张。
+			3.连续签到至5天，获得7积分奖励"优惠券1"一张。
+			"
+		}]
+	}]
 	"""
 
-	And jobs开启签到活动"签到活动1"
-	
-@sign
-Scenario: bill浏览签到页面
-	Given bill关注jobs的公众号
-	When bill访问jobs的weapp
-	When bill获得jobs的50会员积分
-	When bill回复关键字"78"
-	Then bill获得系统回复的消息"回复的文字内容"
-	When bill访问系统返回的签到结果链接
-	Then bill获得签到页面
 
-	
 
-Scenario: 通过回复精确关键字签到
+Scenario: 2 用户回复精确关键字签到
 	Given jobs登录系统
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的50会员积分
-	When bill回复关键字"78"
-	Then bill获得系统回复的消息"回复的文字内容"
-	When bill访问系统返回的签到结果链接
-	Then bill获得签到结果
-		"""
-		{
-			"integral": 100,
-			"send_coupon":"优惠券1"
-		}
-		"""
-	Then bill在jobs的webapp中拥有150会员积分
-	When bill回复关键字"7"
-	Then bill在jobs的webapp中拥有150会员积分
-	When bill回复关键字"8"
-	Then bill没有获得系统回复的消息
-	Then bill在jobs的webapp中拥有150会员积分
-	When bill回复关键字"789"
-	Then bill没有获得系统回复的消息
-
-Scenario: 通过回复模糊关键字签到
-	Given jobs登录系统
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill获得jobs的50会员积分
-	When bill回复关键字"123456"
-	Then bill获得系统回复的消息"回复的文字内容"
-	When bill访问系统返回的签到结果链接
-	Then bill获得签到结果
-		"""
-		{
-			"integral": 100,
-			"send_coupon":"优惠券1"
-		}
-		"""
-	Then bill在jobs的webapp中拥有150会员积分
-	When bill回复关键字"1234567"
-	Then bill获得系统回复的消息"回复的文字内容"
-	When bill回复关键字"12345"
-	Then bill没有获得系统回复的消息
-
-
-
-
-
-Scenario:签到和其他活动同时进行，签到获得优先级获取图文链接
-	Given jobs登录系统
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill获得jobs的50会员积分
+	When bill的会员积分0
 	When bill回复关键字"12"
 	Then bill获得系统回复的消息
-		"""
-		"回复的文字内容"
+	"""
+	[{	
+		"prize_item":{
+			"serial_count":"1",
+			"integral":"2",
+			"coupon_id":[优惠券1],
+			"name":"点击查看详情",
+			"url_id_1":url1
+	},{
+		"sign_item":{
+			"title1":"签到说明:",
+			"sign_illustration":"签到赚积分！",
+			"rule":"
+			1.每日签到，获得2积分奖励"优惠券1"一张。
+			2.连续签到至3天，获得5积分奖励"优惠券1"一张。
+			3.连续签到至5天，获得7积分奖励"优惠券1"一张。",
+			"name":"点击查看详情",
+			"url_id_2":"url2"
+	}]
+	"""
+	When bill访问系统回复的"url1"
+	Then bill获得"优惠券1"
+	"""
+	{
+		"name": "优惠券1",
+		"money": 1.00,
+		"limit_counts": "无限",
+		"start_date": "2天前",
+		"end_date": "1天前",
+		"coupon_id": "优惠券1"
+	}
+	"""
+	When bill访问系统回复的"url2"
+	Then bill获取"签到活动1"内容
+	"""
+	{
+		"integral_account":"2"
+		"integral_num":"2",
+		"coupon_id":"优惠券1"
+	}
+	"""
 
-		"""
-	When bill访问系统返回的签到结果链接
-	Then bill获得签到结果
-		"""
-		{
-			"integral": 100,
-			"send_coupon":"优惠券1"
-		}
-		"""
 
 
+Scenario: 3 用户回复完全匹配模糊关键字签到
+	Given jobs登录系统
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill的会员积分0
+	When bill回复关键字"123"
+	Then bill获得系统回复的消息
+	"""
+	[{	
+		"prize_item":{
+			"serial_count":"1",
+			"integral":"2",
+			"coupon_id":[优惠券1],
+			"name":"点击查看详情",
+			"url_id_1":url1
+	},{
+		"sign_item":{
+			"title1":"签到说明:",
+			"sign_illustration":"签到赚积分！",
+			"rule":"
+			1.每日签到，获得2积分奖励"优惠券1"一张。
+			2.连续签到至3天，获得5积分奖励"优惠券1"一张。
+			3.连续签到至5天，获得7积分奖励"优惠券1"一张。",
+			"name":"点击查看详情",
+			"url_id_2":"url2"
+	}]
+	"""
+
+
+
+Scenario: 4 用户回复不完全匹配模糊关键字签到
+	Given jobs登录系统
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill的会员积分0
+	When bill回复关键字"1234"
+	Then bill获得系统回复的消息
+	"""
+	[{	
+		"prize_item":{
+			"serial_count":"1",
+			"integral":"2",
+			"coupon_id":[优惠券1],
+			"name":"点击查看详情",
+			"url_id_1":url1
+	},{
+		"sign_item":{
+			"title1":"签到说明:",
+			"sign_illustration":"签到赚积分！",
+			"rule":"
+			1.每日签到，获得2积分奖励"优惠券1"一张。
+			2.连续签到至3天，获得5积分奖励"优惠券1"一张。
+			3.连续签到至5天，获得7积分奖励"优惠券1"一张。",
+			"name":"点击查看详情",
+			"url_id_2":"url2"
+	}]
+	"""
+
+
+
+Scenario: 5 用户回复不匹配关键字签到
+	Given jobs登录系统
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill的会员积分0
+	When bill回复关键字"1"
+	Then bill没有获得系统回复的消息
 
 	
 
-Scenario: 优惠券在签到结束前过期
-Given jobs登录系统
+Scenario: 6 签到活动结束后用户回复精确关键字签到
+	Given jobs登录系统
+	And jobs更改"签到活动1"状态
+	"""
+	{
+		"name":"签到活动1",
+		"status":"关闭"
+	}
+	"""
+	When bill关注jobs的公众号
+	When bill访问jobs的weapp
+	When bill的会员积分0
+	When bill回复关键字"12"
+	Then bill获得系统自动回复的消息"签到活动还未开始。"
+
+	
+
+Scenario: 7 签到活动结束后用户回复完全匹配模糊关键字签到
+	Given jobs登录系统
+	And jobs更改"签到活动1"状态
+	"""
+	{
+		"name":"签到活动1",
+		"status":"关闭"
+	}
+	"""
+	When bill关注jobs的公众号
+	When bill访问jobs的weapp
+	When bill的会员积分0
+	When bill回复关键字"123"
+	Then bill获得系统自动回复的消息"签到活动还未开始。"
+
+
+
+Scenario: 8 签到活动结束后用户回复不完全匹配模糊关键字签到
+	Given jobs登录系统
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill获得jobs的50会员积分
-	When bill回复关键字"78"
-	Then bill获得系统回复的消息
-		"""
-		"优惠券已经领完，请联系客服补发 "
+	When bill的会员积分0
+	When bill回复关键字"1234"
+	Then bill获得系统自动回复的消息"签到活动还未开始。"
 
-		"""
-	When bill访问系统返回的签到结果链接
-	Then bill获得签到结果
-		"""
-		{
-			"integral": 100,
-			"send_coupon":"优惠券1"
-		}
-		"""
+
+
+Scenario: 9 签到活动结束后用户回复不匹配关键字签到
+	Given jobs登录系统
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill的会员积分0
+	When bill回复关键字"1"
+	Then bill没有获得系统回复的消息
+
+
+
+Scenario: 10 用户一天内连续两次签到
+	Given jobs登录系统
+	When bill关注jobs的公众号
+	When bill访问jobs的weapp
+	When bill的会员积分0
+	When bill回复有效关键字签到
+	Then bill获得系统回复的消息
+	"""
+	[{	
+		"prize_item":{
+			"serial_count":"1",
+			"integral":"2",
+			"coupon_id":[优惠券1],
+			"name":"点击查看详情",
+			"url_id_1":url1
+	},{
+		"sign_item":{
+			"title1":"签到说明:",
+			"sign_illustration":"签到赚积分！",
+			"rule":"
+			1.每日签到，获得2积分奖励"优惠券1"一张。
+			2.连续签到至3天，获得5积分奖励"优惠券1"一张。
+			3.连续签到至5天，获得7积分奖励"优惠券1"一张。",
+			"name":"点击查看详情",
+			"url_id_2":"url2"
+	}]
+	"""
+	When bill访问系统回复的"url1"
+	Then bill获得"优惠券1"
+	"""
+	{
+		"name": "优惠券1",
+		"money": 1.00,
+		"limit_counts": "无限",
+		"start_date": "2天前",
+		"end_date": "1天前",
+		"coupon_id": "优惠券1"
+	}
+	"""
+	When bill访问系统回复的"url2"
+	Then bill获取"签到活动1"内容
+	"""
+	{
+		"user_name":"bill",
+		"integral_account":"2"
+		"integral_num":"2",
+		"coupon_id":"优惠券1"
+	}
+	"""
+	When bill退出jobs的weapp
+	When bill再次访问jobs的weapp
+	When bill回复有效关键字签到
+	Then bill获得系统回复的消息
+	"""
+	{
+		"reply":"
+		亲，今天您已经签到过了哦，
+		明天再来吧！",
+		"url_id_2":"url2"
+	}
+	"""
+	When bill访问系统回复的"url2"
+	Then bill获取"签到活动1"内容
+	"""
+	{
+		"user_name":"bill",
+		"integral_account":"2"
+		"integral_num":"2",
+		"coupon_id":"优惠券1"
+	}
+	"""
+
+
+Scenario: 11 优惠券数量为0,用户进行签到
+	Given jobs登录系统
+	And "优惠券1"数量为0
+	When bill关注jobs的公众号
+	When bill访问jobs的weapp
+	When bill的会员积分0
+	When bill回复有效关键字签到
+	Then bill获得系统回复的消息
+	"""
+	[{	
+		"prize_item":{
+			"serial_count":"1",
+			"integral":"2",
+			"reply":"奖励已发完，请联系客服补发。"
+	},{
+		"sign_item":{
+			"title1":"签到说明:",
+			"sign_illustration":"签到赚积分！",
+			"rule":"
+			1.每日签到，获得2积分奖励"优惠券1"一张。
+			2.连续签到至3天，获得5积分奖励"优惠券1"一张。
+			3.连续签到至5天，获得7积分奖励"优惠券1"一张。",
+			"name":"点击查看详情",
+			"url_id_2":"url2"
+	}]
+	"""
