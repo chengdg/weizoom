@@ -34,27 +34,30 @@ def __get_display_info(request):
 		return __get_fake_project_display_info(request)
 
 	#获取project
-	project = None
-	project_id = request.REQUEST.get('project_id')
-	is_app_project = False
-	app_name = ''
-	if project_id.startswith('new_app:'):
-		_, app_name, project_id = project_id.split(':')
-		is_app_project = True
-	else:
-		project_id = int(request.REQUEST.get('project_id', 0))
+	project = request.project
+	app_name = request.project.app_name
+	is_app_project = request.is_app_project
+	# project = None
+	# project_id = request.REQUEST.get('project_id')
+	# is_app_project = False
+	# app_name = ''
+	# if project_id.startswith('new_app:'):
+	# 	_, app_name, project_id = project_id.split(':')
+	# 	is_app_project = True
+	# else:
+	# 	project_id = int(request.REQUEST.get('project_id', 0))
 
-	if is_app_project:
-		project = webapp_models.Project()
-		project.id = project_id
-		project.type = 'appkit'
-	else:
-		if project_id != 0:
-			project = webapp_models.Project.objects.get(id=project_id)
-		else:
-			workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
-			project = webapp_models.Project.objects.get(workspace=workspace, type='wepage', is_active=True)
-			project_id = project.id
+	# if is_app_project:
+	# 	project = webapp_models.Project()
+	# 	project.id = project_id
+	# 	project.type = 'appkit'
+	# else:
+	# 	if project_id != 0:
+	# 		project = webapp_models.Project.objects.get(id=project_id)
+	# 	else:
+			# workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
+			# project = webapp_models.Project.objects.get(workspace=workspace, type='wepage', is_active=True)
+			# project_id = project.id
 
 	if request.in_design_mode and request.POST:
 		page_component = json.loads(request.POST['page'])
