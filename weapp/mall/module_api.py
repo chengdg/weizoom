@@ -2037,7 +2037,7 @@ def get_order_products(order, user=None):
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
 
 	#为演示账号修改订单中的商品id duhao 20151022
-	if user and user.id == settings.SELF_ID:
+	if user and hasattr(settings, 'SELF_ID') and user.id == settings.SELF_ID:
 		relations = __hack_product_id_for_show(relations)
 		
 	product_ids = [r.product_id for r in relations]

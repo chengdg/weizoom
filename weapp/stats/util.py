@@ -720,7 +720,7 @@ def get_top10_product(webapp_id, low_date, high_date, user=None):
 
 	#为演示账号修改订单中的商品id duhao 20151022
 	from django.conf import settings
-	if user and user.id == settings.SELF_ID:
+	if user and hasattr(settings,'SELF_ID') and user.id == settings.SELF_ID:
 		products = __hack_product_id_for_show(products)
 
 	product_id2num = {}
