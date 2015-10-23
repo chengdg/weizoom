@@ -35,7 +35,7 @@ def __get_display_info(request):
 
 	#获取project
 	project = request.project
-
+	is_app_project = False
 	if hasattr(project, 'app_name'):
 		app_name = request.project.app_name
 	if hasattr(project,'is_app_project'):
