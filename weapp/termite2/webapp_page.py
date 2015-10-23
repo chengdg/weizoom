@@ -53,12 +53,15 @@ class WebappPage(resource.Resource):
 		else:
 			# 微页面
 			current_page_name = 'page'
+		# 是否是预览状态
+		is_preview = True if request.GET.get('page_id', '') == 'preview' else False
 
 		c = RequestContext(request, {
 			'page_title': page_title,
 			'page_html_content': html,
 			'share_page_desc': site_description,
 			'current_page_name': current_page_name,
+			'is_preview': is_preview,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 
