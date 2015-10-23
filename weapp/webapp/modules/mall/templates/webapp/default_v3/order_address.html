@@ -24,7 +24,7 @@
           <div class="xui-form-cell pr xa-clearBtnContainer">
             <div class="xui-clearBtn pa hidden"></div>
             <div class="xui-inner-input-container">
-              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text" value="{% if ship_info %}{{ ship_info.ship_name }}{% endif %}" class="ui-input-text" placeholder="姓名"></div>
+              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text" value="{% if ship_info %}{{ ship_info.ship_name }}{% endif %}" class="ui-input-text xa-name" placeholder="姓名"></div>
           </div>
         </div>
         <div class="xui-cuttingLine"></div>
@@ -33,7 +33,7 @@
           <div class="xui-form-cell pr xa-clearBtnContainer">
             <div class="xui-clearBtn pa hidden"></div>
             <div class="xui-inner-input-container">
-              <input id="ship_tel" name="ship_tel" style="color:#878787"  type="tel" data-validate="require-mobile-phone::请输入正确的手机号" value="{% if ship_info %}{{ ship_info.ship_tel }}{% endif %}" class="ui-input-text" placeholder="11位手机号"></div>
+              <input id="ship_tel" name="ship_tel" style="color:#878787"  type="tel" data-validate="require-mobile-phone::请输入正确的手机号" value="{% if ship_info %}{{ ship_info.shipTel }}{% endif %}" class="ui-input-text xa-shipTel" placeholder="11位手机号"></div>
           </div>
         </div>
         <div class="xui-cuttingLine"></div>
@@ -54,7 +54,7 @@
           -->
           <div class="xui-clearBtn pa hidden"></div>
           <div class="xui-inner-input-container">
-            <textarea id="ship_address" style="font-size:0.9em;color:#878787;" name="ship_address" data-validate="require-notempty::地址不能为空" type="text" class="ui-input-text" placeholder="街道门牌信息" cols="5" rows="2" >{% if ship_info %}{{ ship_info.ship_address }}{% endif %}</textarea></div>
+            <textarea id="ship_address" style="font-size:0.9em;color:#878787;" name="ship_address" data-validate="require-notempty::地址不能为空" type="text" class="ui-input-text xa-ship-address" placeholder="街道门牌信息" cols="5" rows="2" >{% if ship_info %}{{ ship_info.ship_address }}{% endif %}</textarea></div>
         </div>
       </div>
     </fieldset>
@@ -129,7 +129,15 @@
     var ship_id = getParam('id');
     if (action == 'edit'){
         ship_infos = JSON.parse(localStorage.ship_infos2);
-        ship_info = ship_infos[ship_id];
+        ship_info = JSON.parse(ship_infos[ship_id]);
+        console.log(ship_info);
+        console.log(typeof(ship_info));
+        console.log(ship_info.ship_name);
+        $('.xa-name').val(ship_info.ship_name);
+        $('.xa-shipTel').val(ship_info.ship_tel);
+        $('.xa-areaInput').val(ship_info.area);
+        $('.xa-areaInput').attr('data-area-str','北京');
+        $('.xa-shipAddress').val(ship_info.ship_address);
 {#        console.log('------------------------------------');#}
 {#        var ship_key = 'ship_id_'+ship_id;#}
 {#        console.log(ship_infos.ship_id_1);#}
