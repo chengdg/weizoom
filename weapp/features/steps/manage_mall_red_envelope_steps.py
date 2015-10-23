@@ -242,16 +242,13 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 
 @When(u'{webapp_user_name}点击图文"{title}"')
 def step_impl(context, webapp_user_name, title):
-    print('context2111111111111111')
-    print(context.member)
     red_envelope_rule_name = __get_red_envelope_rule_name(title)
     red_envelope_rule_id = __get_red_envelope_rule_id(red_envelope_rule_name)
     material_id = __get_material_id(title)
     url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id=%s&material_id=%s&red_envelope_rule_id=%s&fmt=%s' % (context.webapp_owner_id, material_id, red_envelope_rule_id, context.member.token)
     url = bdd_util.nginx(url)
     context.red_envelope_url = url
-    # webapp_owner_id = context.webapp_owner_id
-    # user = User.objects.get(id=webapp_owner_id)
+    # user = User.objects.get(id=context.webapp_owner_id)
     # openid = "%s_%s" % (webapp_user_name, user.username)
     # member = member_api.get_member_by_openid(openid, context.webapp_id)
     # context.client.request_member = member

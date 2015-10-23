@@ -131,7 +131,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -143,7 +143,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#自动回复多图文领取分享红包
 	When bill在微信中向jobs的公众号发送消息'红包2'
 	Then bill收到自动回复'多图文'
-    When bill点击图文'sub红包2图文'
+    When bill点击图文"sub红包2图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -160,7 +160,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#同一个图文领取分享红包，只能领一次
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -180,7 +180,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -243,7 +243,7 @@ Scenario:3 优惠券库存为0,红包领取失败
 		"""
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -316,7 +316,7 @@ Scenario:4 删除分享红包,红包领取失败
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	#页面展示'很遗憾，红包已经领完了'
 	Then bill能获得webapp优惠券列表
 		"""
