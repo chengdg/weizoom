@@ -18,6 +18,8 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
         var $form = $('form');
         if (W.validate($form)) {
             var args = $form.serializeObject();
+            var ship_info = deepCopyJSON(args);
+            console.log('arg_type:',args,typeof(args));
             W.getApi().call({
                 app: 'webapp',
                 api: 'project_api/call',
@@ -28,16 +30,21 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     target_api: 'address/save'
                 }),
                 success: function(data) {
-                    console.log('ship_info:',args,typeof(args));
-                    if(localStorage.ships){
-                        ships = localStorage.ships
+                    var ship_id = data['ship_id'];
+                    var ship_infos;
+                    if(localStorage.ship_infos){
+                        ship_infos = JSON.parse(localStorage.ship_infos);
+
                     }
                     else{
-                        ships =
-                        ships = JSON.stringify(args);
+                        ship_infos = JSON.constructor();
                     }
-                    localStorage.ship_info = JSON.stringify(args);
-                    var shipName = data['ship_name'];
+
+                    ship_infos[ship_id] = JSON.stringify(ship_info);
+                    setCreatedAt(ship_infos);
+                    localStorage.ship_infos = JSON.stringify(ship_infos);
+
+
                     if (data['msg'] != null) {
                         $('body').alert({
                             isShow: true,

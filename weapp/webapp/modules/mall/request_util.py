@@ -1013,7 +1013,7 @@ def edit_address(request):
 			ship_info = None
 	else:
 		ship_info = webapp_user.ship_info
-
+	print(ship_info)
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',

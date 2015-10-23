@@ -13,18 +13,16 @@
         <input id="ship_id" name="ship_id" type="hidden" value="{% if ship_info %}{{ ship_info.id }}{%else%}0{% endif %}">
         <div class="xui-form-controls xui-form-controls-first xui-addressTitle">
           <label class="xui-form-cell">您的收货信息:</label>
-            {% if ship_info %}
-              <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=delete&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}"class="xui-delete">
+              <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=delete&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" class="xui-delete xa-delete" style="display: none">
                 删除
                 <a>
-              {% endif %}
         </div>
         <div class="xui-form-controls xui-topBorder xui-info">
           <label class="xui-form-cell">收货人</label>
           <div class="xui-form-cell pr xa-clearBtnContainer">
             <div class="xui-clearBtn pa hidden"></div>
             <div class="xui-inner-input-container">
-              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text" value="{% if ship_info %}{{ ship_info.ship_name }}{% endif %}" class="ui-input-text" placeholder="姓名"></div>
+              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text"  class="ui-input-text xa-name" placeholder="姓名"></div>
           </div>
         </div>
         <div class="xui-cuttingLine"></div>
@@ -33,7 +31,7 @@
           <div class="xui-form-cell pr xa-clearBtnContainer">
             <div class="xui-clearBtn pa hidden"></div>
             <div class="xui-inner-input-container">
-              <input id="ship_tel" name="ship_tel" style="color:#878787"  type="tel" data-validate="require-mobile-phone::请输入正确的手机号" value="{% if ship_info %}{{ ship_info.ship_tel }}{% endif %}" class="ui-input-text" placeholder="11位手机号"></div>
+              <input id="ship_tel" name="ship_tel" style="color:#878787"  type="tel" data-validate="require-mobile-phone::请输入正确的手机号"  class="ui-input-text xa-shipTel" placeholder="11位手机号"></div>
           </div>
         </div>
         <div class="xui-cuttingLine"></div>
@@ -54,16 +52,11 @@
           -->
           <div class="xui-clearBtn pa hidden"></div>
           <div class="xui-inner-input-container">
-            <textarea id="ship_address" style="font-size:0.9em;color:#878787;" name="ship_address" data-validate="require-notempty::地址不能为空" type="text" class="ui-input-text" placeholder="街道门牌信息" cols="5" rows="2" >{% if ship_info %}{{ ship_info.ship_address }}{% endif %}</textarea></div>
+            <textarea id="ship_address" style="font-size:0.9em;color:#878787;" name="ship_address" data-validate="require-notempty::地址不能为空" type="text" class="ui-input-text xa-shipAddress" placeholder="街道门牌信息" cols="5" rows="2" ></textarea></div>
         </div>
       </div>
     </fieldset>
   </form>
-<!--   {% if ship_info %}
-  <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=delete&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" class="xui-section disBl" style="padding:15px;border-radius: 0;margin: 15px 0;color:#e44445;">
-    删除收货地址
-    <a>
-      {% endif %} -->
       <div class="xui-btnBox">
         <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger xa-submit">保存并使用</a>
       </div>
@@ -128,8 +121,26 @@
     var action = getParam('action');
     var ship_id = getParam('id');
     if (action == 'edit'){
-        ship_infos = JSON.parse(localStorage.ship_infos2);
-        ship_info = ship_infos[ship_id];
+        ship_infos = JSON.parse(localStorage.ship_infos);
+        ship_info = JSON.parse(ship_infos[ship_id]);
+        // 处理删除按钮
+
+        woid = getWoid();
+        console.log(woid);
+        // href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=delete&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}
+        var redirect_url_query_string = '';
+        var deleteUrl = "./?woid=" +woid + "&module=mall&model=address&action=delete&id=" +ship_info.ship_id+"&redirect_url_query_string=" + redirect_url_query_string
+        $('.xa-delete').show();
+
+        console.log(ship_info);
+        console.log(typeof(ship_info));
+        console.log(ship_info.ship_name);
+        $('.xa-name').val(ship_info.ship_name);
+        $('.xa-shipTel').val(ship_info.ship_tel);
+        $areaElement = $('.xa-areaInput')
+        $areaElement.val(ship_info.area);
+        $areaElement.attr('data-area-str','北京');
+        $('.xa-shipAddress').val(ship_info.ship_address);
 {#        console.log('------------------------------------');#}
 {#        var ship_key = 'ship_id_'+ship_id;#}
 {#        console.log(ship_infos.ship_id_1);#}
