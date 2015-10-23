@@ -119,7 +119,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     initForStandardModelProduct: function() {
         this.updateWeightPostage(1);
         var maxCount = this.getMaxCount(this.targetModel);//调用getMaxCount，判断不同条件，得到可买的最大数量
-        xlog('set max count to ' + maxCount);
         //库存
         if (this.targetModel.stock_type === 1) {//判断商品是否设置了库存
             $('.xa-stockCount').text(this.targetModel.stocks);
@@ -756,7 +755,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var maxCount = this.getMaxCount(model);
         counter.setMaxCount(maxCount);
         //}
-        if(counter.maxCount<1 || counter.maxCount>counter.minCount){
+        if(counter.maxCount < counter.count && counter.maxCount >= 0){
             $('.xa-disabledBuyLinks').show();
             $('.xa-enabledBuyLinks').hide();
         }else{
@@ -875,7 +874,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     onSelectModelPropertyValue: function(event) {
         var $propertyValue = $(event.currentTarget);
         if ($propertyValue.hasClass('xui-unSelectable')) {
-            xlog('can not select');
             return;
         }
 
