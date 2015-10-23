@@ -43,7 +43,8 @@ Background:
 		}]
 
 		"""
-
+@sign
+Scenario:配置后台所有数据，优惠券数量足，没有过期
 	When jobs添加签到活动"签到活动1"
 	"""
 		[{
@@ -101,7 +102,7 @@ Background:
 
 	"""
 
-
+Scenario:配置后台所有数据，优惠券数量足，过期
 	When jobs添加签到活动"签到活动2"
 	"""
 	[{
@@ -144,7 +145,7 @@ Background:
 
 	"""
 
-
+Scenario:配置后台所有数据，优惠券数量为0，没有过期
 	When jobs添加签到活动"签到活动3"
 	"""
 	[{
