@@ -4,6 +4,7 @@
 
 Feature: jobs在后台对已有评价进行审核
 """
+    [商品详情页的验证]
     1.审核通过：用户评价内容将显示在商品详情页；
     2.屏蔽处理：该评价将不被允许显示在商品详情页；
     3.通过并置顶：是指审核通过该评论，并且置顶显示该评价；
@@ -310,7 +311,7 @@ Background:
         }
         """
 
-@mall2 @product @review   @mall.webapp.comment @prm1
+@mall2 @product @review   @mall.webapp.comment @prm1 @ProductDetail
 Scenario:1 审核通过 屏蔽处理 通过并置顶
     1.审核通过:用户评价内容将显示在商品详情页
     2.屏蔽处理：该评价将不被允许显示在商品详情页
@@ -370,7 +371,7 @@ Scenario:1 审核通过 屏蔽处理 通过并置顶
         }]
         """
 
-@mall2 @product @review @mall.webapp.comment @prm5
+@mall2 @product @review @mall.webapp.comment @prm5 @ProductDetail
 Scenario:2 同款商品，3个置顶操作，最后置顶的，排在最上面
     Given jobs登录系统
     When jobs已完成对商品的评价信息审核
@@ -446,7 +447,7 @@ Scenario:2 同款商品，3个置顶操作，最后置顶的，排在最上面
         }]
         """
 
-@mall2 @product @review   @mall.webapp.comment @prm6
+@mall2 @product @review   @mall.webapp.comment @prm6 @ProductDetail
 Scenario:3 同款商品，最多可置顶3条评价信息
     第4条置顶时，第一条置顶信息失去优先级，按原有时间顺序排列
 
