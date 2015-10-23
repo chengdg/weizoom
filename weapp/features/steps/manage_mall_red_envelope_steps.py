@@ -224,12 +224,11 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
     user = User.objects.get(id=webapp_owner_id)
     openid = "%s_%s" % (webapp_user_name, user.username)
     member = member_api.get_member_by_openid(openid, context.webapp_id)
-
     if member:
         new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
-        context.shared_url = "%s&fmt=%s" % (new_url, member.token)
+        new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'opid')
+        context.shared_url = "%s&fmt=%s&opid=%s" % (new_url, member.token,openid)
     response = context.client.get(context.shared_url)
-
     if response.status_code == 302:
         print('[info] redirect by change fmt in shared_url')
         redirect_url = bdd_util.nginx(response['Location'])
@@ -242,16 +241,14 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 
 @When(u'{webapp_user_name}点击图文"{title}"')
 def step_impl(context, webapp_user_name, title):
+    user = User.objects.get(id=context.webapp_owner_id)
+    openid = "%s_%s" % (webapp_user_name, user.username)
     red_envelope_rule_name = __get_red_envelope_rule_name(title)
     red_envelope_rule_id = __get_red_envelope_rule_id(red_envelope_rule_name)
     material_id = __get_material_id(title)
-    url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id=%s&material_id=%s&red_envelope_rule_id=%s&fmt=%s' % (context.webapp_owner_id, material_id, red_envelope_rule_id, context.member.token)
+    url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id=%s&material_id=%s&red_envelope_rule_id=%s&fmt=%s&opid=%s' % (context.webapp_owner_id, material_id, red_envelope_rule_id, context.member.token,openid)
     url = bdd_util.nginx(url)
     context.red_envelope_url = url
-    # user = User.objects.get(id=context.webapp_owner_id)
-    # openid = "%s_%s" % (webapp_user_name, user.username)
-    # member = member_api.get_member_by_openid(openid, context.webapp_id)
-    # context.client.request_member = member
     response = context.client.get(url)
     response = context.client.get(bdd_util.nginx(response['Location']))
 

@@ -124,7 +124,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag @kuki
+@promotion @promotionRedbag
 Scenario:1 自动回复获取图文领取分享红包
 	#自动回复单图文领取分享红包
 	When 清空浏览器
@@ -204,7 +204,10 @@ Scenario:2 通过好友分享获取图文领取分享红包
 		}]
 		"""
 
-	#非会员通过分享链接领取分享红包
+    #非会员通过分享链接领取分享红包
+  	#暂时用先关注再取消关注的方式来模拟非会员的情况，需要改进
+	When tom2关注jobs的公众号
+	And tom2取消关注jobs的公众号
 	When tom2点击bill分享红包链接
 	Then tom2能获得webapp优惠券列表
 		"""
