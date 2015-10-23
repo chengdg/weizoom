@@ -43,10 +43,23 @@ def __get_name(rule):
     else:
         return rule['rule_name']
 
-def __get_coupon_rule_name(title):
+def __get_red_envelope_rule_name(title):
     material_url = material_models.News.objects.get(title=title).url
-    coupon_rule_name = material_url.split('-')[1]
-    return coupon_rule_name
+    red_envelope_rule_name = '【图文领取】'+material_url.split('-')[1]
+    return red_envelope_rule_name
+
+def __get_material_id(title):
+    material_id = material_models.News.objects.get(title=title).material_id
+    return material_id
+
+def __get_red_envelope_rule_id(red_envelope_rule_name):
+    if red_envelope_rule_name.rfind("【图文领取】")>=0:
+        red_envelope_rule_name = red_envelope_rule_name.split("【图文领取】")[1]
+        receive_method = 1
+    else:
+        receive_method = 0
+    red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(name=red_envelope_rule_name,receive_method=receive_method)
+    return red_envelope_rule.id
 
 @given(u'{user}已添加分享红包')
 def step_impl(context, user):
@@ -154,16 +167,6 @@ def step_impl(context, user):
 
     bdd_util.assert_list(expected, actual)
 
-
-def __get_red_envelope_rule_id(red_envelope_rule_name):
-    if red_envelope_rule_name.rfind("【图文领取】")>=0:
-        red_envelope_rule_name = red_envelope_rule_name.split("【图文领取】")[1]
-        receive_method = 1
-    else:
-        receive_method = 0
-    red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(name=red_envelope_rule_name,receive_method=receive_method)
-    return red_envelope_rule.id
-
 action2code = {
     u'开启': 'start',
     u'关闭': 'over', 
@@ -239,16 +242,21 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 
 @When(u'{webapp_user_name}点击图文"{title}"')
 def step_impl(context, webapp_user_name, title):
-    webapp_owner_id = context.webapp_owner_id
-    red_envelope_rule_name = __get_coupon_rule_name(title)
+    print('context2111111111111111')
+    print(context.member)
+    red_envelope_rule_name = __get_red_envelope_rule_name(title)
     red_envelope_rule_id = __get_red_envelope_rule_id(red_envelope_rule_name)
-    url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (red_envelope_rule_id,webapp_owner_id)
+    material_id = __get_material_id(title)
+    url = '/workbench/jqm/preview/?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&webapp_owner_id=%s&material_id=%s&red_envelope_rule_id=%s&fmt=%s' % (context.webapp_owner_id, material_id, red_envelope_rule_id, context.member.token)
     url = bdd_util.nginx(url)
     context.red_envelope_url = url
-    print('11111111111111111111111111111context')
-    print(context)
+    # webapp_owner_id = context.webapp_owner_id
+    # user = User.objects.get(id=webapp_owner_id)
+    # openid = "%s_%s" % (webapp_user_name, user.username)
+    # member = member_api.get_member_by_openid(openid, context.webapp_id)
+    # context.client.request_member = member
     response = context.client.get(url)
-    bdd_util.assert_api_call_success(response)
+    response = context.client.get(bdd_util.nginx(response['Location']))
 
 warring2text = {
 
