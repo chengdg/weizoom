@@ -705,7 +705,7 @@ def __hack_product_id_for_show(relations):
 
 	return relations
 
-def get_top10_product(webapp_id, low_date, high_date):
+def get_top10_product(webapp_id, low_date, high_date, user=None):
 	"""
 	获取下单单量排行前10的商品
 	"""
@@ -720,11 +720,8 @@ def get_top10_product(webapp_id, low_date, high_date):
 
 	#为演示账号修改订单中的商品id duhao 20151022
 	from django.conf import settings
-	if len(orders) > 0:
-		for order in orders:
-			if order.webapp_id in (settings.ASSISTANT_WEBAPP_ID1, settings.ASSISTANT_WEBAPP_ID2):
-				products = __hack_product_id_for_show(products)
-				break
+	if user and user.id == settings.SELF_ID:
+		products = __hack_product_id_for_show(products)
 
 	product_id2num = {}
 	for product in products:
