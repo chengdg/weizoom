@@ -32,7 +32,8 @@ def step_impl(context,user):
 	context.client - bdd_util.login(user,password="test",context=context)
 
 @when(u'{user}参加抽奖活动')
-
+def step_impl(context,user):
+	pass
 
 #问题
 #1.引号的数据是期望数据，还是填入数据，when，given，then
