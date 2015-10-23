@@ -801,13 +801,13 @@ hack_django.hack(DJANGO_HACK_PARAMS)
 
 
 #为客户演示数据的假账号相关变量
-SELF_ID = 775  #wofu
+SELF_ID = 779  #tuxiaobao
 TARGET_ID = 220  #主账号id  wubao
 ASSISTANT_ID1 = 474
 ASSISTANT_ID2 = 570
 OWNER_IDS = (TARGET_ID, SELF_ID, ASSISTANT_ID1, ASSISTANT_ID2)  #副账号  annicoffee   guangruishipin
 
-SELF_WEBAPP_ID = '3905'  #wofu webapp_id
+SELF_WEBAPP_ID = '3909'  #wofu webapp_id
 TARGET_WEBAPP_ID = '3398'  #主账号webapp_id
 
 ASSISTANT_WEBAPP_ID1 = '3615'
