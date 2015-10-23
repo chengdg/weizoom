@@ -327,8 +327,9 @@ def __render_component(request, page, component, project):
 		
 	# 二维码
 	current_auth_qrcode_img = None
-	if hasattr(request, "webapp_owner_id") and request.webapp_owner_id:
-		current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(request.webapp_owner_id)
+	if hasattr(request, "webapp_owner_info") and request.webapp_owner_info:
+		current_auth_qrcode_img = request.webapp_owner_info.qrcode_img
+		#current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(request.webapp_owner_id)
 
 	if current_auth_qrcode_img is None:
 		current_auth_qrcode_img = '/static/img/user-1.jpg'
