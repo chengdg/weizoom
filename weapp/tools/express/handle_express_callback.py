@@ -136,23 +136,22 @@ class ExpressCallbackHandle(object):
 
 	def update_order_status(self, json, orders):
 		status = json.get(self.express_params.LAST_RESULT, {}).get(self.express_params.STATE)
-		try:
-			# 状态为 3已签收，并且order的状态为 已发货
-			# 将状态改为 已完成
-			for order in orders:
+		# 状态为 3已签收，并且order的状态为 已发货
+		# 将状态改为 已完成
+		for order in orders:
+			try:
 				if int(status) == self.express_config.STATE_SIGNED and order.status == 4:
 					mall_api.update_order_status(user=None, action='finish', order=order)
 					# order.status = 5
 					# order.save()
+			except:
+				watchdog_error(u'修改订单状态失败，该订单已签收，order_id:{}, 原因:{}'.format(
+						order.id,
+						unicode_full_stack()
+					), self.express_config.watchdog_type
+				)
 
-			return True
-		except:
-			watchdog_error(u'修改订单状态失败，该订单已签收，order_id:{}, 原因:{}'.format(
-					self.order_id,
-					unicode_full_stack()
-				), self.express_config.watchdog_type
-			)
-			return False
+		return True
 
 	def get_orders(self):
 		orders = mall_models.Order.objects.filter(

@@ -65,30 +65,24 @@
 			<div id="" class="xui-sideBar xa-sideBar pa {% if second_navs %}xui-sideBarBg{% endif %}">
 				<ul class="nav">
 				{% for second_nav in second_navs %}
-					<!-- {% if second_nav.section %}
-					<li><span>1111{{ second_nav.section }}</span></li>
-					{% endif %} -->
 					{% for nav in second_nav.navs %}
-						{% if not forloop.last %} 
-						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-					    <a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-						<i class="xui-icon-arrow"></i>
-						</a>
-					   </li>
-						<!-- 三级导航 -->
-						{% if nav.third_navs and second_nav_name == nav.name %}
-							{% for third_nav in nav.third_navs %}
-								<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
-									<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
-										&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
-										<i class="xui-icon-arrow"></i>
-									</a>
-								</li>
-							{% endfor %}
-						{% endif %}
-					
-					{% endif %}
+							<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+							<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+							<i class="xui-icon-arrow"></i>
+							</a>
+							</li>
+							<!-- 三级导航 -->
+							{% if nav.third_navs and second_nav_name == nav.name %}
+								{% for third_nav in nav.third_navs %}
+									<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
+										<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
+											&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
+											<i class="xui-icon-arrow"></i>
+										</a>
+									</li>
+								{% endfor %}
+							{% endif %}
 					{% endfor %}
 				{% endfor %}
 				</ul>
