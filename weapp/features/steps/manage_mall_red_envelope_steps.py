@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 
 from behave import *
+from mall.models import Order
+from modules.member.models import Member
 
 from test import bdd_util
 from features.testenv.model_factory import *
@@ -11,7 +14,8 @@ from mall.promotion import models as  promotion_models
 from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
-from mall.promotion.models import CouponRule
+from mall.promotion.models import CouponRule, RedEnvelopeToOrder
+from utils.string_util import byte_to_hex
 from weixin.message.material import models as material_models
 
 def __get_coupon_rule_id(coupon_rule_name):
@@ -222,9 +226,11 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
     openid = "%s_%s" % (webapp_user_name, user.username)
     member = member_api.get_member_by_openid(openid, context.webapp_id)
 
+    followed_member = Member.objects.get(username_hexstr=byte_to_hex(shared_webapp_user_name))
+
     if member:
         new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
-        context.shared_url = "%s&fmt=%s" % (new_url, member.token)
+        context.shared_url = "%s&fmt=%s" % (new_url, followed_member.token)
     response = context.client.get(context.shared_url)
 
     if response.status_code == 302:
@@ -275,12 +281,12 @@ def step_impl(context, user, red_envelope_rule_name):
     }
     response = context.client.get('/apps/red_envelope/red_envelope_participances/', params)
     participances = response.context
-    actual = {
-        u'新关注人数': participances['new_member_count'],
-        u'领取人数': participances['received_count'],
-        u'产生消费': participances['consumption_sum'],
-	    u'使用人数': participances['total_use_count']
-    }
+    actual = [{
+        u"新关注人数": participances['new_member_count'],
+        u"领取人数": participances['received_count'],
+        u"产生消费": participances['consumption_sum'],
+	    u"使用人数": participances['total_use_count']
+    }]
     print("actual_data: {}".format(actual))
 
     expected = json.loads(context.text)
@@ -294,28 +300,27 @@ def step_impl(context, user, red_envelope_rule_name):
     params = {
         'id': id
     }
-    response = context.client.post('/apps/red_envelope/api/red_envelope_participances/?_method=get', params)
+    response = context.client.get('/apps/red_envelope/api/red_envelope_participances/?_method=get', params)
     participances = json.loads(response.content)['data']['items']
     actual = []
     for p in participances:
-        actual.append({
-            u"下单会员": p['username'],
-            u"会员状态": p['grade'],
-            u"引入领取人数": p['introduce_received_number_count'],
-            u"引入使用人数": p['introduce_used_number_count'],
-            u"引入新关注": p['introduce_new_member_count'],
-            u"引入消费额": p['introduce_sales_number'],
-            u"领取时间": p['created_at'],
-            u"使用状态": p['coupon_status_name'],
-            u"操作": u'查看引入详情'
-
-        })
+        p_dict = OrderedDict()
+        p_dict[u"下单会员"] = p['username_truncated']
+        p_dict[u"会员状态"] = p['grade']
+        p_dict[u"引入领取人数"] = p['introduce_received_number_count']
+        p_dict[u"引入使用人数"] = p['introduce_used_number_count']
+        p_dict[u"引入新关注"] = p['introduce_new_member_count']
+        p_dict[u"引入消费额"] = p['introduce_sales_number']
+        p_dict[u"领取时间"] = p['created_at']
+        p_dict[u"使用状态"] = p['coupon_status_name']
+        p_dict[u"操作"] = [u'查看引入详情',u'查看使用订单'] if p['coupon_status'] ==1 else u'查看引入详情'
+        actual.append((p_dict))
     print("actual_data: {}".format(actual))
     expected = []
     if context.table:
         for row in context.table:
             cur_p = row.as_dict()
-            if '领取时间' in cur_p:
+            if u'领取时间' in cur_p:
                 cur_p[u'领取时间'] = bdd_util.get_date_str(cur_p[u'领取时间'])
             expected.append(cur_p)
     else:
@@ -324,34 +329,40 @@ def step_impl(context, user, red_envelope_rule_name):
 
     bdd_util.assert_list(expected, actual)
 
-@then(u'{user}能获得分享红包"{red_envelope_rule_name}-{member}"的引入详情')
-def step_impl(context, user, red_envelope_rule_name,member):
+@then(u'{user}能获得分享红包"{red_envelope_rule_name}-{share_member}"订单号"{order_no}"的引入详情')
+def step_impl(context, user, red_envelope_rule_name,share_member,order_no):
     id = __get_red_envelope_rule_id(red_envelope_rule_name)
+
+    followed_member = Member.objects.get(username_hexstr=byte_to_hex(share_member))
+
+    order_id = Order.objects.get(order_id=order_no).id
+    relation_id = RedEnvelopeToOrder.objects.get(red_envelope_rule_id=id,order_id=order_id).id
     params = {
-        'id': id
+        'rule_id': id,
+        'introduced_by': followed_member.id,
+        'relation_id': relation_id
     }
-    response = context.client.post('/apps/red_envelope/api/red_envelope_participances/?_method=get', params)
+    response = context.client.get('/apps/red_envelope/api/red_envelope_participances/?_method=get', params)
     participances = json.loads(response.content)['data']['items']
     actual = []
     for p in participances:
-        actual.append({
-            u"分享会员": p['username'],
-            u"会员状态": p['grade'],
-            u"引入领取人数": p['introduce_received_number_count'],
-            u"引入使用人数": p['introduce_used_number_count'],
-            u"引入新关注": p['introduce_new_member_count'],
-            u"引入消费额": p['introduce_sales_number'],
-            u"领取时间": p['created_at'],
-            u"使用状态": p['coupon_status_name'],
-            u"操作": u'查看引入详情'
-
-        })
+        p_dict = OrderedDict()
+        p_dict[u"分享会员"] = p['username_truncated']
+        p_dict[u"会员状态"] = p['grade']
+        p_dict[u"引入领取人数"] = p['introduce_received_number_count']
+        p_dict[u"引入使用人数"] = p['introduce_used_number_count']
+        p_dict[u"引入新关注"] = p['introduce_new_member_count']
+        p_dict[u"引入消费额"] = p['introduce_sales_number']
+        p_dict[u"领取时间"] = p['created_at']
+        p_dict[u"使用状态"] = p['coupon_status_name']
+        p_dict[u"操作"] = u'查看使用订单' if p['coupon_status'] ==1 else ""
+        actual.append((p_dict))
     print("actual_data: {}".format(actual))
     expected = []
     if context.table:
         for row in context.table:
             cur_p = row.as_dict()
-            if '领取时间' in cur_p:
+            if u'领取时间' in cur_p:
                 cur_p[u'领取时间'] = bdd_util.get_date_str(cur_p[u'领取时间'])
             expected.append(cur_p)
     else:
