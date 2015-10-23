@@ -847,7 +847,8 @@ ul.wui-relatelink li h3{
 .wui-productlist .wui-block-type1 .wui-inner-titleAndprice .xui-inner-price span{
     margin-right:2px; 
 }
-.wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child{
+.wui-product .wui-block-type1 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type1 .wui-inner-titleAndprice p:first-child,
+.wui-product .wui-block-type2 .wui-inner-titleAndprice p:first-child,.wui-productlist .wui-block-type2 .wui-inner-titleAndprice p:first-child{
     margin-bottom: 6px;
     min-height: 31px;
     line-height: 16px;
