@@ -43,11 +43,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
                 {% endif %}
                 <p class="xui-section-boldItemText xui-text-red xa-priceSection">
-                    {% if product.promotion and product.promotion.type == 1 %}
-                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price }}</span></span>
-                    {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price }}</span></span>
-                    {% endif %}
+                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price|format_float}}</span></span>
                 </p>
             </div>
         </div>
@@ -285,9 +281,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <!-- 普通商品 -->
                 {% elif product.type == 'object' %}
                     {% if cur_request_member %}
-                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price|format_float }}</span></span>
                     {% else %}
-                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
+                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price |format_float}}</span></span>
                     {% endif %}
                 {% endif %}
                 </p>
