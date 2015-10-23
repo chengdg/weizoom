@@ -673,10 +673,18 @@ ul.wui-relatelink li h3{
 .wui-productlist .wui-block-type2 .wui-inner-titleAndprice .xui-inner-title{
     width: 100%;
 }
+.wui-product .wui-block-type2 .wui-inner-titleAndprice .xui-inner-title,
+.wui-productlist .wui-block-type2 .wui-inner-titleAndprice .xui-inner-title{
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
 .wui-product .wui-block-type0 .wui-inner-titleAndprice .xui-inner-title,
 .wui-productlist .wui-block-type0 .wui-inner-titleAndprice .xui-inner-title,
 .wui-product .wui-block-type2 li:nth-child(3n+1) .wui-inner-titleAndprice .xui-inner-title,
 .wui-productlist .wui-block-type2 li:nth-child(3n+1) .wui-inner-titleAndprice .xui-inner-title{
+    display: block;
     line-height: 32px;
     text-overflow: ellipsis;
     white-space:nowrap;
