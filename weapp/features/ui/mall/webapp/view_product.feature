@@ -169,7 +169,7 @@ Background:
 		"""
 
 
-@product @ui
+@product @ui @ProductDetail
 Scenario: 1 浏览商品
 	jobs添加商品后
 	1. bill能在webapp中看到jobs添加的商品
@@ -317,7 +317,7 @@ Scenario: 1 浏览商品
 		"""
 
 
-@product @ui
+@product @ui @ProductList
 Scenario: 2 浏览商品列表
 	jobs添加商品后
 	1. bill获得webapp商品列表，商品按添加顺序倒序排序
@@ -359,7 +359,7 @@ Scenario: 2 浏览商品列表
 		"""
 
 
-@product @ui
+@product @ui @ProductList
 Scenario: 3 浏览商品分类
 	jobs添加商品后
 	1. bill获得webapp商品列表，商品按添加顺序倒序排序
