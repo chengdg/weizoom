@@ -341,11 +341,37 @@ def __binding_wexin_mp_account(user=None):
 	
 			weixin_user_models.WeixinMpUserAccessToken.objects.create(mpuser=mpuser, is_active=True,app_id=user.id, app_secret='app_secret',  access_token='access_token')
 			weixin_user_models.MpuserPreviewInfo.objects.create(mpuser=mpuser, name=mpuser.username)
-			weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+			auth_appid = weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+
+			weixin_user_models.ComponentAuthedAppidInfo.objects.create(
+						auth_appid=auth_appid,
+						nick_name='',
+						head_img='',
+						service_type_info=2,
+						verify_type_info=0,
+						user_name='',
+						alias='',
+						qrcode_url='',
+						appid=user.id,
+						func_info=''
+						)
+
 		else:
 			weixin_user_models.WeixinMpUser.objects.filter(owner=user).update(is_certified=True, is_service=True, is_active=True)
 			if weixin_user_models.ComponentAuthedAppid.objects.filter(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True).count() == 0:
-				weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+				auth_appid = weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+				weixin_user_models.ComponentAuthedAppidInfo.objects.create(
+						auth_appid=auth_appid,
+						nick_name='',
+						head_img='',
+						service_type_info=2,
+						verify_type_info=0,
+						user_name='',
+						alias='',
+						qrcode_url='',
+						appid=user.id,
+						func_info=''
+						)
 
 def __sync_workspace():
 	"""

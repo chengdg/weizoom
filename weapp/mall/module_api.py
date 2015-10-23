@@ -2002,7 +2002,7 @@ def __hack_product_id_for_show(relations):
 	length = len(products)
 	for r in relations:
 		r.product_id = products[r.product_id % length].id
-
+		r.product_model_name = 'standard'
 	return relations
 def get_order_products(order, user=None):
 	"""

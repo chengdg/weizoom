@@ -4,8 +4,8 @@ Feature: 在webapp中浏览商品列表
 	bill能在webapp中看到jobs添加的"商品列表"
 
 # _edit_ : "新新8.24"
-@ui @ui-mall @ui-mall.webapp
-Scenario: 浏览全部商品列表
+@ui @ui-mall @ui-mall.webapp @ProductList
+Scenario: 1 浏览全部商品列表
 	jobs添加商品后
 	1. bill能在webapp中看到jobs添加的商品列表
 	2. 商品按添加顺序倒序排序
@@ -59,8 +59,8 @@ Scenario: 浏览全部商品列表
 		}]
 		"""
 # _edit_ : "新新8.24"
-@ui @ui-mall @ui-mall.webapp
-Scenario: 商品上下架影响商品列表
+@ui @ui-mall @ui-mall.webapp @ProductList
+Scenario: 2 商品上下架影响商品列表
 	jobs添加商品后
 	1. 下架的商品不能出现在商品列表中
 	2. 重新上架后的商品出现在商品列表中
@@ -116,8 +116,8 @@ Scenario: 商品上下架影响商品列表
 		"""
 
 # _edit_ : "新新8.24"
-@ui @ui-mall @ui-mall.webapp
-Scenario: 按分类浏览商品
+@ui @ui-mall @ui-mall.webapp @ProductList
+Scenario: 3 按分类浏览商品
 	jobs添加多个商品后
 	1. bill能在webapp中按分类浏览商品
 	2. 每个分类中"商品列表"会按照添加的顺序倒序排列
@@ -195,8 +195,8 @@ Scenario: 按分类浏览商品
 		"""
 
 # _edit_ : "新新8.24"
-@ui @ui-mall @ui-mall.webapp
-Scenario: 浏览全部商品列表，无分类时，不能选择分类
+@ui @ui-mall @ui-mall.webapp @ProductList
+Scenario: 4 浏览全部商品列表，无分类时，不能选择分类
 	jobs没有创建分类，添加商品后
 	1. 不能选择分类
 	
@@ -220,7 +220,8 @@ Scenario: 浏览全部商品列表，无分类时，不能选择分类
 	And webapp页面上'不能'选择商品分类:ui
 
 # _inert_ : "新新8.24"		
-Scenario: 浏览会员价的商品列表
+@ProductList
+Scenario: 5 浏览会员价的商品列表
 	Given jobs登录系统
 	When jobs添加会员等级
 		"""
