@@ -14,7 +14,16 @@ def __sort(dict_array):
 @then(u"{webapp_user_name}能获得webapp优惠券列表")
 def step_impl(context, webapp_user_name):
     url = '/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%d&project_id=0&fmt=%s' % (context.webapp_owner_id, context.member.token)
-    response = context.client.get(bdd_util.nginx(url))
+    url = bdd_util.nginx(url)
+    response = context.client.get(url)
+    if response.status_code == 302:
+        print('[info] redirect by change fmt in shared_url')
+        redirect_url = bdd_util.nginx(response['Location'])
+        response = context.client.get(bdd_util.nginx(redirect_url))
+        print('response!!!!!!!!!!!!!!!!!!!!!')
+        print(response)
+    else:
+        print('[info] not redirect')
     coupons = response.context['coupons']
     actual = []
     for coupon in coupons:

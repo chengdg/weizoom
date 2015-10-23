@@ -124,14 +124,14 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag @kuki
+@promotion @promotionRedbag
 Scenario:1 自动回复获取图文领取分享红包
 	#自动回复单图文领取分享红包
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -143,7 +143,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#自动回复多图文领取分享红包
 	When bill在微信中向jobs的公众号发送消息'红包2'
 	Then bill收到自动回复'多图文'
-    When bill点击图文'sub红包2图文'
+    When bill点击图文"sub红包2图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -160,7 +160,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#同一个图文领取分享红包，只能领一次
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -180,7 +180,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -204,7 +204,10 @@ Scenario:2 通过好友分享获取图文领取分享红包
 		}]
 		"""
 
-	#非会员通过分享链接领取分享红包
+    #非会员通过分享链接领取分享红包
+  	#暂时用先关注再取消关注的方式来模拟非会员的情况，需要改进
+	When tom2关注jobs的公众号
+	And tom2取消关注jobs的公众号
 	When tom2点击bill分享红包链接
 	Then tom2能获得webapp优惠券列表
 		"""
@@ -227,7 +230,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
 		}]
 		"""
 
-@promotion @promotionRedbag
+@promotion @promotionRedbaga
 Scenario:3 优惠券库存为0,红包领取失败
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
@@ -243,7 +246,7 @@ Scenario:3 优惠券库存为0,红包领取失败
 		"""
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -281,7 +284,7 @@ Scenario:3 优惠券库存为0,红包领取失败
 	When jobs为优惠券'单品券1'添加库存
 		"""
 		{
-			"count": 2,
+			"count": 1,
 			"coupon_id_prefix": "coupon1_id_"
 		}
 		"""
@@ -316,7 +319,7 @@ Scenario:4 删除分享红包,红包领取失败
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'
 	Then bill收到自动回复'红包1单图文'
-	When bill点击图文'红包1单图文'
+	When bill点击图文"红包1单图文"
 	#页面展示'很遗憾，红包已经领完了'
 	Then bill能获得webapp优惠券列表
 		"""
