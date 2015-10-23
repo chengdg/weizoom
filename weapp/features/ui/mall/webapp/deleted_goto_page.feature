@@ -60,7 +60,7 @@ Scenario: 1 删除分组
 		|  分类3   |
 	
 	Given jobs登录系统
-	When jobs删除商品分类'分类1':ui
+	When jobs删除商品分类'分类1'
 	When bill访问jobs的webapp:ui
 	When bill浏览jobs的webapp的'分类1'商品列表页:ui
 	Then bill获得webapp商品列表'404页面':ui
