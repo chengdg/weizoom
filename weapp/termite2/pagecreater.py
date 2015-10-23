@@ -38,7 +38,7 @@ def __get_display_info(request):
 
 	if hasattr(project, 'app_name'):
 		app_name = request.project.app_name
-	if hasattr(project,'is_app_project')
+	if hasattr(project,'is_app_project'):
 		is_app_project = request.project.is_app_project
 	project_id = project.id
 	# project = None
