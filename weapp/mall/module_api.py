@@ -2005,8 +2005,10 @@ def __hack_product_id_for_show(relations):
 		r.product_id = products[r.product_id % length].id
 
 	return relations
-def get_order_products(order):
+def get_order_products(order, user=None):
 	"""
+	user参数由duhao在20151023添加，为了使客户演示账号的订单商品不露馅
+
 	获得订单中的商品集合
 
 	返回dict对象
@@ -2035,7 +2037,7 @@ def get_order_products(order):
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
 
 	#为演示账号修改订单中的商品id duhao 20151022
-	if order.webapp_id in (settings.ASSISTANT_WEBAPP_ID1, settings.ASSISTANT_WEBAPP_ID2):
+	if user and user.id == settings.SELF_ID:
 		relations = __hack_product_id_for_show(relations)
 		
 	product_ids = [r.product_id for r in relations]
