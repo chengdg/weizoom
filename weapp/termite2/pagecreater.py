@@ -37,6 +37,7 @@ def __get_display_info(request):
 	project = request.project
 	app_name = request.project.app_name
 	is_app_project = request.project.is_app_project
+	project_id = project.id
 	# project = None
 	# project_id = request.REQUEST.get('project_id')
 	# is_app_project = False
