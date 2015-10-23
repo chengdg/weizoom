@@ -52,8 +52,8 @@ Background:
 Scenario: 1 删除分组
 
 	#bill在删除的分组页面,显示'404页面'
-	Then bill访问jobs的webapp
-	Then bill浏览jobs的webapp的'全部'商品分类
+	When bill访问jobs的webapp:ui
+	Then bill浏览jobs的webapp的'全部'商品分类:ui
 		|   name   |
 		|  分类1   |
 		|  分类2   |
@@ -61,47 +61,47 @@ Scenario: 1 删除分组
 	
 	Given jobs登录系统
 	When jobs删除商品分类'分类1'
-	Then bill访问jobs的webapp
-	Then bill浏览jobs的webapp的'分类1'商品列表页
-	Then bill获得webapp商品列表'404页面'
+	When bill访问jobs的webapp:ui
+	When bill浏览jobs的webapp的'分类1'商品列表页:ui
+	Then bill获得webapp商品列表'404页面':ui
 
 
 Scenario: 2 分组下的商品全部下架
 	#bill在分组下的商品全部下架,显示'无商品页面'
 	Given jobs登录系统
 	When jobs-下架商品'商品1'
-	Then bill访问jobs的webapp
-	Then bill浏览jobs的webapp的'分类2'商品列表页
-	Then bill获得webapp商品列表'无商品页面'
+	When bill访问jobs的webapp:ui
+	When bill浏览jobs的webapp的'分类2'商品列表页:ui
+	Then bill获得webapp商品列表'无商品页面':ui
 
 
 	#bill在空的分组页面,显示'无商品页面'
-	When bill浏览jobs的webapp的'分类3'商品列表页
-	Then bill获得webapp商品列表'无商品页面'
+	When bill浏览jobs的webapp的'分类3'商品列表页:ui
+	Then bill获得webapp商品列表'无商品页面':ui
 
 Scenario: 3 分组下的商品删除
 	#bill在分组下的商品全部删除,显示'无商品页面'
 
 	When jobs-永久删除商品'商品2'
-	Then bill浏览jobs的webapp的'分类1'商品列表页
-	Then bill获得webapp商品列表
+	When bill浏览jobs的webapp的'分类1'商品列表页:ui
+	Then bill获得webapp商品列表:ui
 		|   name   |
 		|  商品3   |
 	
 	When jobs-永久删除商品'商品3'
-	Then bill访问jobs的webapp
-	Then bill浏览jobs的webapp的'分类1'商品列表页
-	Then bill获得webapp商品列表'无商品页面'
+	When bill访问jobs的webapp:ui
+	When bill浏览jobs的webapp的'分类1'商品列表页:ui
+	Then bill获得webapp商品列表'无商品页面':ui
 
 Scenario: 4 删除商品
 	#bill在删除商品页面,显示'404页面'
-	Then bill访问jobs的webapp
-	Then bill浏览jobs的webapp的'分类2'商品列表页
-	Then bill获得webapp商品列表
+	When bill访问jobs的webapp:ui
+	When bill浏览jobs的webapp的'分类2'商品列表页:ui
+	Then bill获得webapp商品列表:ui
 		|   name   |
 		|  商品1   |
 	Given jobs登录系统
 	When jobs-永久删除商品'商品1'
-	Then bill访问jobs的webapp
-	Then bill获得webapp商品列表'404页面'
+	When bill访问jobs的webapp:ui
+	Then bill获得webapp商品列表'404页面':ui
 
