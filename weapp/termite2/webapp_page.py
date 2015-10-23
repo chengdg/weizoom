@@ -35,31 +35,31 @@ class WebappPage(resource.Resource):
 		
 
 		#获取project
-		project = None
-		#project_id = request.REQUEST.get('project_id')
-		is_app_project = False
-		app_name = ''
-		if project_id.startswith('new_app:'):
-			_, app_name, project_id = project_id.split(':')
-			is_app_project = True
-		else:
-			project_id = int(request.REQUEST.get('project_id', 0))
+		# project = None
+		# #project_id = request.REQUEST.get('project_id')
+		# is_app_project = False
+		# app_name = ''
+		# if project_id.startswith('new_app:'):
+		# 	_, app_name, project_id = project_id.split(':')
+		# 	is_app_project = True
+		# else:
+		# 	project_id = int(request.REQUEST.get('project_id', 0))
 
-		if is_app_project:
-			project = webapp_models.Project()
-			project.id = project_id
-			project.type = 'appkit'
-		else:
-			if project_id != 0:
-				project = webapp_models.Project.objects.get(id=project_id)
-			else:
-				workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
-				project = webapp_models.Project.objects.get(workspace_id=workspace.id, type='wepage', is_active=True)
-				project_id = project.id
+		# if is_app_project:
+		# 	project = webapp_models.Project()
+		# 	project.id = project_id
+		# 	project.type = 'appkit'
+		# else:
+		# 	if project_id != 0:
+		# 		project = webapp_models.Project.objects.get(id=project_id)
+		# 	else:
+		# 		workspace = webapp_models.Workspace.objects.get(owner=request.webapp_owner_id, inner_name='home_page')
+		# 		project = webapp_models.Project.objects.get(workspace_id=workspace.id, type='wepage', is_active=True)
+		# 		project_id = project.id
 
-		project.app_name = ''
-		project.is_app_project = is_app_project
-		request.project = project
+		# project.app_name = ''
+		# project.is_app_project = is_app_project
+		# request.project = project
 
 		html = pagecreater.create_page(request, return_html_snippet=True)
 
