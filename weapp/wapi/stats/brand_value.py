@@ -17,7 +17,6 @@ from wapi.decorators import param_required
 from wapi.wapi_utils import create_json_response
 
 from stats.manage.brand_value_utils import get_brand_value
-
 from utils import dateutil as utils_dateutil
 
 class BrandValue(api_resource.ApiResource):
