@@ -208,6 +208,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
   	#暂时用先关注再取消关注的方式来模拟非会员的情况，需要改进
 	When tom2关注jobs的公众号
 	And tom2取消关注jobs的公众号
+  	When tom2访问jobs的webapp
 	When tom2点击bill分享红包链接
 	Then tom2能获得webapp优惠券列表
 		"""
@@ -230,7 +231,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
 		}]
 		"""
 
-@promotion @promotionRedbaga
+@promotion @promotionRedbag
 Scenario:3 优惠券库存为0,红包领取失败
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
@@ -274,8 +275,9 @@ Scenario:3 优惠券库存为0,红包领取失败
 	When bill把jobs的分享红包链接分享到朋友圈
 
 	#tom点击bill分享链接页面展示'很遗憾，红包已经领完了'
-	When tom访问jobs的webapp
+
 	When tom点击bill分享红包链接
+  	When tom访问jobs的webapp
 	Then tom能获得webapp优惠券列表
 		"""
 		[]
@@ -288,7 +290,9 @@ Scenario:3 优惠券库存为0,红包领取失败
 			"coupon_id_prefix": "coupon1_id_"
 		}
 		"""
-	When tom访问jobs的webapp
+  	When bill访问jobs的webapp
+  	When bill把jobs的分享红包链接分享到朋友圈
+  	When tom访问jobs的webapp
 	When tom点击bill分享红包链接
 	Then tom能获得webapp优惠券列表
 		"""

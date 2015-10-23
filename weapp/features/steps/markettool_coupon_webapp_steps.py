@@ -20,8 +20,6 @@ def step_impl(context, webapp_user_name):
         print('[info] redirect by change fmt in shared_url')
         redirect_url = bdd_util.nginx(response['Location'])
         response = context.client.get(bdd_util.nginx(redirect_url))
-        print('response!!!!!!!!!!!!!!!!!!!!!')
-        print(response)
     else:
         print('[info] not redirect')
     coupons = response.context['coupons']

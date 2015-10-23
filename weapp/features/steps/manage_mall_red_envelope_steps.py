@@ -230,16 +230,11 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
     member = member_api.get_member_by_openid(openid, context.webapp_id)
 
     followed_member = Member.objects.get(username_hexstr=byte_to_hex(shared_webapp_user_name))
-
-#     if member:
-#         new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
-#         context.shared_url = "%s&fmt=%s" % (new_url, followed_member.token)
-# =======
     if member:
         new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
-        # new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'opid')
+        new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'opid')
         context.shared_url = "%s&fmt=%s" % (new_url, followed_member.token)
-# >>>>>>> f0e4f8e67a6bb60110bea2c1bc376e2e78baba82
+
     response = context.client.get(context.shared_url)
     if response.status_code == 302:
         print('[info] redirect by change fmt in shared_url')
