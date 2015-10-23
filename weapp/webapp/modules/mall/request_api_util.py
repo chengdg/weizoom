@@ -598,7 +598,7 @@ def save_address(request):
 		area = request.POST.get('area', '')
 
 		#更新收货地址信息
-		webapp_user.update_ship_info(
+		ship_id = webapp_user.update_ship_info(
 			ship_id = ship_id,
 			ship_name=ship_name,
 			ship_address=ship_address,
@@ -616,6 +616,7 @@ def save_address(request):
 			data['exception'] = stack
 
 	data['ship_name'] = ship_name
+	data['ship_id'] = ship_id
 	response.data = data
 	return response.get_response()
 

@@ -106,6 +106,49 @@
     var height = screen.height;
     var width = screen.width;
 
+
+{#    var getParam = function (name) {#}
+{#        var search = document.location.search;#}
+{#        var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");#}
+{#        var matcher = pattern.exec(search);#}
+{#        var items = null;#}
+{#        if (null != matcher) {#}
+{#            try {#}
+{#                items = decodeURIComponent(decodeURIComponent(matcher[1]));#}
+{#            } catch (e) {#}
+{#                try {#}
+{#                    items = decodeURIComponent(matcher[1]);#}
+{#                } catch (e) {#}
+{#                    items = matcher[1];#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#        return items;#}
+{#    };#}
+    var action = getParam('action');
+    var ship_id = getParam('id');
+    if (action == 'edit'){
+        ship_infos = JSON.parse(localStorage.ship_infos2);
+        ship_info = ship_infos[ship_id];
+{#        console.log('------------------------------------');#}
+{#        var ship_key = 'ship_id_'+ship_id;#}
+{#        console.log(ship_infos.ship_id_1);#}
+{#        console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');#}
+{##}
+{#        console.log(ship_infos['ship_id_'+ ship_id]);#}
+{#        xlog(('ship_id:')+ ship_id);#}
+{#        console.log('ship_id:',typeof(ship_id),ship_id.length);#}
+{#        console.log('------------------------------------');#}
+{#        console.log('------------------------------------');#}
+{#        console.log(typeof(ship_infos[ship_id]));#}
+{#        console.log(JSON.parse(ship_info));#}
+{#        console.log('------------------------------------');#}
+
+
+    }
+
+    console.log('action:-----------',getParam('action'));
+
     //var $iscrollUl = this.$el.find(".xui-popAddress");
     //$('.xui-page').css({
     //    width: width,
@@ -190,11 +233,11 @@
 //             if($(this).val() !== ""){
 //                 $clearBtn.show();
 //             }else{
-//                 $clearBtn.hide();        
+//                 $clearBtn.hide();
 //             }
 //         });
 //         $(this).blur(function(event){
-//            $clearBtn.fadeOut(300);     
+//            $clearBtn.fadeOut(300);
 //         });
 //        $(this).on('input',function(){
 //             if($(this).val() === ""){
@@ -219,7 +262,7 @@
 //         });
 //         console.log('ddddd')
 //         var args = _.extend($('form').serializeObject(), getProductsInfo());
-//         submitAddress(args); 
+//         submitAddress(args);
 //     });
 //});
     </script>
