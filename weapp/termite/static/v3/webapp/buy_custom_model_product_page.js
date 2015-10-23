@@ -49,12 +49,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.getProductStock();//更新库存信息
 
         var _this = this;
-        this.stockInterval = setInterval(this.getProductStock, 60*1000, _this);
+        this.stockInterval = setInterval(this.getProductStock, 2000, _this);
 
         //设置规格选择区域的最大高度
         // var boxHeight = window.document.body.clientHeight * 0.75;
         // var buttonTop = $('.xui-productInfo-box').height();
-        // console.log($('.xui-productInfo').height(),111)
         // $('.xui-productInfo-box').css('max-height', boxHeight);
         // 关闭按钮兼容不同手机定位
         // if (/ipad|iphone|mac/i.test(navigator.userAgent)){
@@ -200,7 +199,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.maxCount = maxCount;
         // 修改提示信息
         $('.xa-understock').text(message);
-        // console.log('getMaxCount', maxCount, message);
         return maxCount;
     },
 
@@ -236,7 +234,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      */
     initForCustomModelProduct: function() {
         $('input[data-ui-role="counter"]').data('view').setMaxCount(0).disable();
-        //console.log($('.xa-wrapper'));
         var stocks = $('.xa-stock');
         var checkResult = {};
         for (var i = 0; i < this.models.length; i++) {
@@ -326,16 +323,24 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 need_member_info:isInit
             },
             success: function(data){
+                //var aa =function(a, b){
+                //    return a.price < b.price;
+                //}
                 //处理规格库存
                 $.each(_this.models, function(i, n){
                     if(!data[n.id])
                         return;
                     n.stock_type = data[n.id].stock_type;
                     n.stocks = data[n.id].stocks;
-                    if(!isInit){
-                        _this.updateProductInfo(_this.models[i]);
+                    if(!isInit && _this.targetModel && _this.targetModel.id == n.id){
+                        //更新库存
+                        _this.updateProductStock(n);
+                        //var maxCount = _this.getMaxCount(n);
+                        //counter.setMaxCount(maxCount);
                     }
                 });
+
+                if(isInit){
                 if (_this.isStandardModelProduct) {
                     _this.targetModel = _this.models[0];
                     _this.initForStandardModelProduct();
@@ -344,8 +349,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         _this.initForCustomModelProduct();
                     }
                 }
-
-                if(isInit){
                     var user_member_grade_id = data.member_grade_id;
                     if(data.is_collect == 'true'){
                         $('.xa-collectProduct').addClass('faved').text('已收藏');
@@ -399,7 +402,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     if(!is_user_has_promotion){
                         // 商品是否折扣
                         has_discount = _this.is_member_product;
-                        console.log(has_discount,"___");
                         if(has_discount && data.discount < 100){
                             //促销与会员价格处理
                             _this.discount = data.discount;
@@ -659,7 +661,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
     updateProductInfo: function(model) {//更新DOM，使用在选中和释放规格值时
         if (!model) {
-            $('.xa-variablePrice').text(this.priceInfo['min_price']);
+            // jz 2015-10-23
+            //$('.xa-variablePrice').text(this.priceInfo['min_price'].toFixed(2));
+            //运费
+            //$('.xa-postage').hide();
+            //$('.xa-stock').hide();
             if (this.promotion && this.promotion.isFlashSalePromotion) {
                 //do nothing
             } else {
@@ -674,8 +680,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-enabledBuyLinks').hide();
             $('.xa-disabledBuyLinks').show();
             $('.xa-disabledIntegralBuyLinks').hide();
-            //运费
-            //$('.xa-postage').hide();
             var items = [];
             items.push('重量：<span class="xt-weight"> - </span><span class="xt-single-weight" style="display: none"> - </span></span>&nbsp;&nbsp;');
             items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
@@ -685,7 +689,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
             //库存
             $('[data-ui-role="counter"]').data('view').setMaxCount(0);
-            $('.xa-stock').hide();
         } else {
             var change_price = 0;
             if (this.promotion && this.promotion.isFlashSalePromotion) {
@@ -705,9 +708,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 change_price = (change_price * this.discount / 100).toFixed(2);
             }
             $('.xa-singlePrice').text(change_price);
-            // 是不是没有用 @洪大师
-            $('.xa-variablePrice').text(model.price);
 
+            // jz 2015-10-23 是不是没有用 @洪大师
+            //$('.xa-variablePrice').text(model.price);
             // $('.xa-market-price').text(model.market_price);
             // if ('object' == '{{product.type}}'){
             //     $('.xa-disabledBuyLinks').hide();
@@ -717,39 +720,48 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             //     $('.xa-disabledBuyLinks').hide();
             //     $('.xa-enabledBuyLinks').hide();
             // }else{
-            var counter = $('[data-ui-role="counter"]').data('view');
             // }
-            //运费
-            var items = [];
-            if (model.weight !== 0) {
-                items.push('重量：<span class="xt-weight">'+model.weight.toFixed(2)+'</span><span class="xt-single-weight" style="display: none">' + model.weight.toFixed(2) + '</span>公斤</span>&nbsp;&nbsp;');
-            }
-            items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
-            if (model.postage >0) {
-                items.push(':￥<span class="xt-postage">'+model.postage.toFixed(2)+'</span>');
-            }
-            $('.xa-postageContent').html(items.join(''));
-            $('.xa-postage').show();
-            if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0){
-                if(this.targetModel){
-                    //库存
-                    var maxCount = this.getMaxCount(this.targetModel);
-                    counter.setMaxCount(maxCount);
-                }
-                if (model.stock_type === 1) {
-                    $('.xa-stockCount').text(model.stocks);
-                    $('.xa-stock').show();
-                } else {
-                    $('.xa-stock').hide();
-                }
-            }
-            if(counter.maxCount>0 && counter.maxCount<counter.minCount){
-                $('.xa-disabledBuyLinks').show();
-                $('.xa-enabledBuyLinks').hide();
-            }else{
-                $('.xa-disabledBuyLinks').hide();
-                $('.xa-enabledBuyLinks').show();
-            }
+            // 运费
+            //var items = [];
+            //if (model.weight !== 0) {
+            //    items.push('重量：<span class="xt-weight">'+model.weight.toFixed(2)+'</span><span class="xt-single-weight" style="display: none">' + model.weight.toFixed(2) + '</span>公斤</span>&nbsp;&nbsp;');
+            //}
+            //items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
+            //if (model.postage >0) {
+            //    items.push(':￥<span class="xt-postage">'+model.postage.toFixed(2)+'</span>');
+            //}
+            //$('.xa-postageContent').html(items.join(''));
+            //$('.xa-postage').show();
+            //if (model.stock_type === 1) {
+            //    $('.xa-stockCount').text(model.stocks);
+            //    $('.xa-stock').show();
+            //} else {
+            //    $('.xa-stock').hide();
+            //}
+            this.updateProductStock(model);
+        }
+    },
+    /**
+     * 只对targetModel执行
+     * @param model
+     */
+    updateProductStock: function(model){
+        if (!this.targetModel) {
+            // 如果没有选中规格，则不处理
+            return;
+        }
+        var counter = $('[data-ui-role="counter"]').data('view');
+        //if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0) {
+        //库存
+        var maxCount = this.getMaxCount(model);
+        counter.setMaxCount(maxCount);
+        //}
+        if(counter.maxCount<1 || counter.maxCount>counter.minCount){
+            $('.xa-disabledBuyLinks').show();
+            $('.xa-enabledBuyLinks').hide();
+        }else{
+            $('.xa-disabledBuyLinks').hide();
+            $('.xa-enabledBuyLinks').show();
         }
     },
 

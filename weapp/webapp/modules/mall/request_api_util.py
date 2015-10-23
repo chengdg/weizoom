@@ -51,10 +51,10 @@ def product_stocks(request):
 	result_data = dict()
 
 	if product_id:
-		models = ProductModel.objects.filter(product_id=product_id)
+		models = ProductModel.objects.filter(product_id=product_id, is_deleted=False)
 	elif model_ids:
 		model_ids = model_ids.split(",")
-		models = ProductModel.objects.filter(id__in=model_ids)
+		models = ProductModel.objects.filter(id__in=model_ids, is_deleted=False)
 	else:
 		models = []
 
