@@ -15,7 +15,7 @@ from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error, watchdog_warning
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
-
+from webapp import models as webapp_models
 local_cache = {}
 
 
@@ -99,6 +99,7 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
             auth_appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
         except:
             auth_appid_info = ComponentAuthedAppidInfo()
+
             
         
         return {
