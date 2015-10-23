@@ -99,7 +99,11 @@ def __get_display_info(request):
 底部导航总开关
 '''
 def __get_is_enable_navbar(request):
-	navbar = termite2_models.TemplateGlobalNavbar.get_object(request.webapp_owner_id)
+	#update by bert at 20151023
+	if hasattr(request, 'webapp_owner_info') and hasattr(request.webapp_owner_info, 'global_navbar') and hasattr(request.webapp_owner_info.global_navbar, 'is_enable'):
+		navbar = request.webapp_owner_info.global_navbar
+	else:
+		navbar = termite2_models.TemplateGlobalNavbar.get_object(request.webapp_owner_id)
 	return navbar.is_enable
 
 def is_home_page(request):
