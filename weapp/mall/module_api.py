@@ -1018,15 +1018,19 @@ def create_order(webapp_owner_id, webapp_user, product):
 
 
 ########################################################################
-# __create_random_order_id: 生成订单
+# __create_random_order_id: 生成订单号并保存订单，避免订单号重复报错
 ########################################################################
-def __create_random_order_id():
+def __create_random_order_id(order):
 	order_id = time.strftime("%Y%m%d%H%M%S", time.localtime())
 	order_id = '%s%03d' % (order_id, random.randint(1, 999))
 	if Order.objects.filter(order_id=order_id).count() > 0:
-		return __create_random_order_id()
+		__create_random_order_id(order)
 	else:
-		return order_id
+		try:
+			order.order_id = order_id
+			order.save()
+		except:
+			__create_random_order_id(order)
 
 
 def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None):
@@ -1047,7 +1051,6 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	order.type = order_info['type']
 	order.pay_interface_type = order_info['pay_interface']
 
-	order.order_id = __create_random_order_id()
 	order.status = ORDER_STATUS_NOT
 	order.webapp_id = webapp_id
 	order.webapp_user_id = webapp_user.id
@@ -1086,7 +1089,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
 		order.order_source = ORDER_SOURCE_WEISHOP
 
-	order.save()
+	__create_random_order_id(order)
 
 	#更新库存
 	for product in products:
@@ -1118,6 +1121,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	if len(supplierIds) > 1:
 		# 进行拆单，生成子订单
 		order.origin_order_id = -1 # 标记有子订单
+		order.save()
 		for supplier in supplierIds:
 			fack_order = copy.copy(order)
 			fack_order.id = None
@@ -1127,7 +1131,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			fack_order.save()
 	elif supplierIds[0] != 0:
 		order.supplier = supplierIds[0]
-	order.save()
+		order.save()
 
 	# 注意强制提交时这里可能会修改赠品数量，所以要在建立促销结果之前运行
 	mall_signals.post_save_order.send(sender=mall_signals, order=order, webapp_user=webapp_user, product_groups=product_groups)
