@@ -4,21 +4,14 @@ import os
 
 import re
 import shutil
-import sys
 
-project_home = os.path.split(os.path.realpath(__file__))[0].split('.git')[0]
-
+if '.git' in os.path.split(os.path.realpath(__file__))[0]:
+    project_home = os.path.split(os.path.realpath(__file__))[0].split('.git')[0]
+else:
+    project_home = os.path.abspath('../')
 config_path = os.path.join(project_home, '.git/hooks/config.ini')
-
-
-# 清除记事本自动添加的BOM
-with open(config_path) as f:
-    content = f.read()
-content = re.sub(r"\xfe\xff", "", content)
-content = re.sub(r"\xff\xfe", "", content)
-content = re.sub(r"\xef\xbb\xbf", "", content)
-with open(config_path, 'w') as f:
-    f.write(content)
+src_path = os.path.join(project_home, 'git_hooks_go')
+hooks_path = os.path.join(project_home, '.git/hooks')
 
 
 def copytree2(src, dst, symlinks=False, ignore=None):
@@ -63,15 +56,24 @@ def copytree2(src, dst, symlinks=False, ignore=None):
 
 
 def get_config():
+    # 清除Windows记事本自动添加的BOM
+    with open(config_path) as f:
+        content = f.read()
+    content = re.sub(r"\xfe\xff", "", content)
+    content = re.sub(r"\xff\xfe", "", content)
+    content = re.sub(r"\xef\xbb\xbf", "", content)
+    with open(config_path, 'w') as f:
+        f.write(content)
+
     try:
         config = ConfigParser.ConfigParser()
         config.read(config_path)
         auto_update = config.get('config', 'auto_update').strip()
         update_config = config.get('config', 'update_config').strip()
-        return auto_update, update_config
+        able = config.get('config', 'able').strip()
+        return able, auto_update, update_config
     except BaseException as e:
-        print(e)
-        return None, None
+        return None, None, None
 
 
 def get_selected_scripts(script_type):
@@ -81,7 +83,6 @@ def get_selected_scripts(script_type):
         scripts = config.get('selected_scripts', script_type).split(',')
         return scripts
     except BaseException as e:
-        print(e)
         return []
 
 
@@ -90,13 +91,8 @@ def run_scripts(script_type, scripts):
         execfile('.git/hooks/%s-scripts/%s.py' % (script_type, script))
 
 
-src_path = os.path.join(project_home, 'git_hooks_go')
-hooks_path = os.path.join(project_home, '.git/hooks')
-
-
-def update_git_hooks_go():
-    auto_update, update_config = get_config()
-    if auto_update == '1':
+def update_git_hooks_go(auto_update, update_config):
+    if auto_update == '1' and os.path.isdir(src_path):
         if update_config == '1':
             copytree2(src_path, hooks_path)
         else:
@@ -104,9 +100,11 @@ def update_git_hooks_go():
 
 
 def go(script_type):
-    print('git-hooks-go has run.')
+    able, auto_update, update_config = get_config()
+    if not able == '1':
+        return
     if script_type in ['post-merge', 'post-checkout', 'post-rewrite']:
-        update_git_hooks_go()
+        update_git_hooks_go(auto_update, update_config)
     scripts = get_selected_scripts(script_type)
 
     run_scripts(script_type, scripts)
