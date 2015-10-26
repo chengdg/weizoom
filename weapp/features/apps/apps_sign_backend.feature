@@ -17,7 +17,6 @@ Feature: 后台配置数据
 """
 
 
-@apps_sign @apps_sign_backend
 Background:
 	Given jobs登录系统
 	When jobs添加优惠券规则

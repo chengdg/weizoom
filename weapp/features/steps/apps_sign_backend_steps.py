@@ -42,12 +42,13 @@ def step_impl(context,user,coupon):
     #334
     pass
 
-@when(u'{user}开启签到活动"{sign}"')
-def step_impl(context,user,sign):
+@when(u'{user}开启签到活动"{sign_name}"')
+def step_impl(context,user,sign_name):
     #338
     pass
-@then(u'{user}能获得签到活动"{sign}"的状态为"{status}"')
-def step_impl(context,user,sign):
-    #345
-    pass
 
+
+@then(u'{user}能获得签到活动{sign_name}的状态为{sign_tag}')
+def step_impl(context,user,sign_name,sign_tag):
+    #348
+    pass
