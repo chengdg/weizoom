@@ -25,7 +25,7 @@ gmu.define('BottomNav', {
 		});
 		// 点击别的地方，二级菜单消失，但是可能有问题
 	    $(document).on('click',function(event){
-	    	if(!$(event.target).parent().is('.xa-menu')){
+	    	if($(event.target).parents('.xa-menu').length == 0){
 	            $('.xui-subMenuContainer').removeClass('xui-up').addClass('xui-down');
 
 	        }
@@ -46,6 +46,7 @@ gmu.define('BottomNav', {
         
     	if( $subLink.length == 0){
     		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
+    		$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
 			return;
 		}else{
 	        if($subMenuContainer.hasClass('xui-up')){
