@@ -16,39 +16,38 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 
 
-def __get_coupon_rule_id(coupon_rule_name):
-    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-    return coupon_rule.id
-
-default_date = '2000-01-01'
-def __get_date(date):
-    date = bdd_util.get_date_str(date)
-    if date == default_date:
-        date = ''
-    return date
-
-@give(u'{user}登录系统')
+@when(u'{user}添加积分')
 def step_impl(context,user):
-	context.client - bdd_util.login(user,password="test",context=context)
+    #:24
+    pass
 
-@when(u'{user}参加抽奖活动')
-def step_impl(context,user):
-	pass
+@when(u'{user}添加签到活动"{sign_name}"')
+def step_impl(context,user,sign_name):
+    #:48
+    pass
 
-#问题
-#1.引号的数据是期望数据，还是填入数据，when，given，then
-#2.steps是如何找到feature的，神奇的，怎么关联的，weapp里面是不是有一个东西勾住了
-#3.steps通过import来导入系统操作与否
-#4.每个函数就是来，判断结果是否正确
-#5.content是全局变量传递么
+@then(u'{user}获得签到活动"{sign_name}"')
+def step_impl(context,user,sign_name):
+    #:88
+    pass
 
-#6.print和打断点
 
-#7.多feathure一个steps？？
+@when(u'{user1}进入{user2}签到后台配置页面')
+def step_impl(context,user1,user2):
+    #341
+    pass
 
-#8.同样是登录系统，别人实现过了，我要重写么，不写？彻底全局？？given不写了？
-#9.函数的名字，一定是step_impl么，参数有限制么？
+@then(u'{user}获得优惠券列表，没有"{coupon}"')
+def step_impl(context,user,coupon):
+    #334
+    pass
 
-#10.完成自己的就行
+@when(u'{user}开启签到活动"{sign}"')
+def step_impl(context,user,sign):
+    #338
+    pass
+@then(u'{user}能获得签到活动"{sign}"的状态为"{status}"')
+def step_impl(context,user,sign):
+    #345
+    pass
 
-#11.weapp里面，大量的哪地方是全局，上下文怎么着
