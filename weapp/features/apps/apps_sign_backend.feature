@@ -102,92 +102,38 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 
 	"""
 
-Scenario:配置后台所有数据，优惠券数量足，过期
-	When jobs添加签到活动"签到活动2"
-	"""
-	[{
-			"name": "签到活动1",
-			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
-			"share_pic":"C:\Users\Administrator\Desktop\截图微众"
-			"key_words": {
-				"rule": "精确",
-				"key_word": "78"
-				"rule": "精确",
-				"key_word": "12"
-				"rule":"模糊"
-				"key_word": "123456"
 
-			},
-			"share_describe": "签到获得奖励"
-			"sign_settings":{
-				items:[{
-					"sign_in": "1",
-					"integral": "100",
-					"send_coupon": "优惠券2"
-				}]
-			}
-		}]
-	"""
-	Then jobs获得签到活动"签到活动2"
-	"""
-		"name":"签到活动2",
-		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
-		"key_word":12
-		"key_word":123456
-		"key_word":78
-		"share_pic":"C:\Users\Administrator\Desktop\截图微众"
-		"sign_settings"
-			items:[{
-					"sign_in": "1",
-					"integral": "100",
-					"send_coupon": "优惠券2"
-				 ]}
 
-	"""
+Scenario:一条奖励下，不添加优惠券，有积分
+Scenario:一条奖励下，添加优惠券，不添加积分
 
-Scenario:配置后台所有数据，优惠券数量为0，没有过期
-	When jobs添加签到活动"签到活动3"
-	"""
-	[{
-			"name": "签到活动3",
-			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
-			"share_pic":"C:\Users\Administrator\Desktop\截图微众"
-			"key_words": {
-				"rule": "精确",
-				"key_word": "78"
-				"rule": "精确",
-				"key_word": "12"
-				"rule":"模糊"
-				"key_word": "123456"
+Scenario:一条奖励下，添加优惠券，添加积分
+Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
 
-			},
-			"share_describe": "签到获得奖励"
-			"sign_settings":{
-				items:[{
-					"sign_in": "1",
-					"integral": "100",
-					"send_coupon": "优惠券3"
-				}]
-			}
-		}]
-	"""
-	Then jobs获得签到活动"签到活动3"
-	"""
-		"name":"签到活动3",
-		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
-		"key_word":12
-		"key_word":123456
-		"key_word":78
-		"share_pic":"C:\Users\Administrator\Desktop\截图微众"
-		"sign_settings"
-			items:[{
-					"sign_in": "1",
-					"integral": "100",
-					"send_coupon": "优惠券3"
-				 ]}
 
-	"""
-	And jobs保存签到活动"签到活动1"
-	And jobs开启签到活动"签到活动1"
 
-	
+Scenario: 保存后开启签到活动
+  When jobs创建签到活动
+  	"""
+  	{
+  		"name": "xxx",
+  		"enable": false,
+  		...
+  	}
+  	"""
+  Then jobs能获得签到活动"xxx"的状态为"未开启"
+  When jobs开启签到活动"xxx"
+  Then jobs能获得签到活动"xxx"的状态为"已开启"
+
+
+Scenario: 保存的同时开启签到活动
+  When jobs创建签到活动
+  	"""
+  	{
+  		"name": "xxx",
+  		"enable": true,
+  		...
+  	}
+  	"""
+  Then jobs能获得签到活动"xxx"的状态为"已开启"
+
