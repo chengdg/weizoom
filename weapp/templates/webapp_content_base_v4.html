@@ -93,8 +93,7 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-            
-           {% if user.is_from_weixin %}
+            {% if user.is_from_weixin %}
             <div data-ui-role="attentionAlert" class="xui-attentionAlert {% if in_design_mode %}none{% endif %}" 
                 {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
