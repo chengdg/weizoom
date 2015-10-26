@@ -135,7 +135,7 @@ Background:
 		}
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario: 1 分享红包分析
 	1.jobs能获取分享红包分析统计
 	2.jobs能获取分享红包分析详情
