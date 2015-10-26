@@ -115,5 +115,7 @@ class Orders(api_resource.ApiResource):
 		orders = mall_api.get_orders(request)
 		result = []
 		for order in orders:
-			result.append(Orders.to_dict(order))
+			cur_order = Orders.to_dict(order)
+			cur_order['red_envelope'] = order.red_envelope
+			result.append(cur_order)
 		return result
