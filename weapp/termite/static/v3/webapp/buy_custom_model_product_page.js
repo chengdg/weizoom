@@ -49,7 +49,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.getProductStock();//更新库存信息
 
         var _this = this;
-        this.stockInterval = setInterval(this.getProductStock, 2000, _this);
+        this.stockInterval = setInterval(this.getProductStock, 60*1000, _this);
 
         //设置规格选择区域的最大高度
         // var boxHeight = window.document.body.clientHeight * 0.75;
@@ -755,7 +755,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var maxCount = this.getMaxCount(model);
         counter.setMaxCount(maxCount);
         //}
-        if(counter.maxCount < counter.count && counter.maxCount >= 0){
+        if(counter.maxCount < counter.count && counter.maxCount >= 0 || counter.maxCount == counter.count && counter.count==0){
             $('.xa-disabledBuyLinks').show();
             $('.xa-enabledBuyLinks').hide();
         }else{
@@ -944,7 +944,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     onClickCanNotBuyButton: function(event) {
         var counter = $('input[data-ui-role="counter"]').data('view');
         var msg = '';
-        if(counter.maxCount>0 && counter.maxCount<counter.minCount){
+        if(counter.maxCount>=0 && counter.maxCount<counter.minCount){
             msg = '库存不足';
         }else if(!this.isSideSlideOpen){
             this.selectionSlide();
