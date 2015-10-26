@@ -20,10 +20,9 @@ from weixin.message.material import models as material_models
 def step_impl(context,user):
     #:24
     pass
-
-@when(u'{user}添加签到活动"{sign_name}"')
+@when(u'{user}添加签到活动"{sign_name}"，并且保存')
 def step_impl(context,user,sign_name):
-    #:48
+    #40
     pass
 
 @then(u'{user}获得签到活动"{sign_name}"')
@@ -31,6 +30,11 @@ def step_impl(context,user,sign_name):
     #:88
     pass
 
+
+@when(u'选择优惠券')
+def step_impl(context):
+    #331
+    pass
 
 @when(u'{user1}进入{user2}签到后台配置页面')
 def step_impl(context,user1,user2):

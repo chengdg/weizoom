@@ -7,13 +7,13 @@ Feature: 后台配置数据
 	2、【签到设置】：每日和连续签到天数获得奖励
 	3、【奖励条件】:每日签到获得？奖励；连续？天获得？奖励
 	4、【领取方式】：通过回复关键字和快捷按钮签到
-	Scenario 配置后台所有数据，优惠券数量足，没有过期
-	Scenario:一条奖励下，不添加优惠券，有积分
-	Scenario:一条奖励下，添加优惠券，不添加积分
-	Scenario:一条奖励下，添加优惠券，添加积分
-	Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
-	Scenario:优惠券数量为0，无法添加优惠券
-	Scenario: 保存后开启签到活动
+	场景 配置后台所有数据，优惠券数量足，没有过期
+	场景:一条奖励下，不添加优惠券，有积分
+	场景:一条奖励下，添加优惠券，不添加积分
+	场景:一条奖励下，添加优惠券，添加积分
+	场景:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
+	场景:优惠券数量为0，无法添加优惠券
+	场景: 保存后开启签到活动
 """
 
 
@@ -26,13 +26,13 @@ Background:
 				"limit_money"：1,
 				"counts":50,
 				"start_date": "今天",
-				"end_date": "1天后",
+				"end_date": "1天后"
 			},{
 				"name": "优惠券2",
 				"limit_money": 1,
 				"counts":0,
 				"start_date": "今天",
-				"end_date": "1天后",
+				"end_date": "1天后"
 			}]
 
 		"""
@@ -55,27 +55,26 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 			},{
 				"rule":"模糊",
 				"key_word": "123456"
-
 			}],
 
 			"share_describe": "签到获得奖励",
 			"sign_settings":
-			[{
-				"sign_in": "1",
-				"integral": "100",
-				"send_coupon": "优惠券1",
-				"prize_counts":50
-			},{
-				"sign_in": "3",
-				"integral": "300",
-				"send_coupon": "优惠券1",
-				"prize_counts":50
-			},{
-				"sign_in": "5",
-				"integral": "500",
-				"send_coupon": "优惠券1",
-				"prize_counts":50
-			}]
+				[{
+					"sign_in": "1",
+					"integral": "100",
+					"send_coupon": "优惠券1",
+					"prize_counts":50
+				},{
+					"sign_in": "3",
+					"integral": "300",
+					"send_coupon": "优惠券1",
+					"prize_counts":50
+				},{
+					"sign_in": "5",
+					"integral": "500",
+					"send_coupon": "优惠券1",
+					"prize_counts":50
+				}]
 		}
 
 		"""
