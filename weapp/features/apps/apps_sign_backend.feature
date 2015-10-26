@@ -32,11 +32,6 @@ Background:
 			},{
 			"name": "优惠券2",
 			"money": 1,
-			"counts":50,
-			"start_date": "一天前",
-			"end_date": "今天",
-			"name": "优惠券3",
-			"money": 1,
 			"counts":0,
 			"start_date": "今天",
 			"end_date": "1天后",
@@ -47,22 +42,26 @@ Background:
 Scenario:配置后台所有数据，优惠券数量足，没有过期
 	When jobs添加签到活动"签到活动1"
 	"""
-		[{
+		{
 			"name": "签到活动1",
 			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
-			"share_pic":"C:\Users\Administrator\Desktop\截图微众"
-			"key_words": {
+			"share_pic":"1.jpg",
+			"key_words": 
+			[{
 				"rule": "精确",
 				"key_word": "78"
+			},{
 				"rule": "精确",
 				"key_word": "12"
-				"rule":"模糊"
+			},{
+				"rule":"模糊",
 				"key_word": "123456"
 
-			},
-			"share_describe": "签到获得奖励"
-			"sign_settings":{
-				items:[{
+			}],
+
+			"share_describe": "签到获得奖励",
+			"sign_settings":
+				[{
 					"sign_in": "1",
 					"integral": "100",
 					"send_coupon": "优惠券1"
@@ -74,7 +73,8 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 					"sign_in": "5",
 					"integral": "500",
 					"send_coupon": "优惠券1"
-					]}
+				}]
+		}
 
 	"""
 	Then jobs获得签到活动"签到活动1"
@@ -84,7 +84,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 		"key_word":12
 		"key_word":123456
 		"key_word":78
-		"share_pic":"C:\Users\Administrator\Desktop\截图微众"
+		"share_pic":"1.jpg"
 		"sign_settings"
 			items:[{
 					"sign_in": "1",
