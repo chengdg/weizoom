@@ -69,7 +69,10 @@ def list_products(request):
 		#categories = resource.get('mall', 'product_categories', {'uid': owner_id})
 		category = {"id": category_id, "name": u"全部"}
 	else:
-		category = resource.get('mall', 'product_category', {'id': category_id})
+		try:
+			category = resource.get('mall', 'product_category', {'id': category_id})
+		except ObjectDoesNotExist:
+			return HttpResponseRedirect('/static/error-page/404.html')
 
 	products = resource.get('mall', 'products_by_category', {
 		'category_id': category_id,
@@ -92,13 +95,13 @@ def list_products(request):
 	has_category = False
 	if len(product_categories) > 0:
 		has_category = True
+	if hasattr(category, 'is_deleted') and category.is_deleted:
+		return HttpResponseRedirect('/static/error-page/404.html')
 	c = RequestContext(request, {
 		'page_title': u'商品列表',
 		'products': products,
 		'category': category,
 		'is_deleted_data': category.is_deleted if hasattr(category, 'is_deleted') else False,
-		# jz 2015-10-09
-		#'shopping_cart_product_nums': mall_api.get_shopping_cart_product_nums(request.webapp_user),
 		'product_categories': product_categories,
 		'has_category': has_category,
 		'hide_non_member_cover': True
@@ -141,10 +144,9 @@ def get_product(request):
 
 	if product['is_deleted']:
 	#if product.is_deleted:
-		c = RequestContext(request, {
-			'is_deleted_data': True
-		})
-		return render_to_response('%s/product_detail.html' % request.template_dir, c)
+		# url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		return HttpResponseRedirect('/static/error-page/404.html')
+		# return render_to_response()
 
 	#if product.get('promotion'):
 	#	product['promotion']['is_active'] = product['promotion_model'].is_active
@@ -178,7 +180,10 @@ def get_product(request):
 	use_integral = request.member.integral if request.member else 0
 
 	is_non_member = True if request.member else False
-
+	print "zl--------------222"
+	if product.get('is_deleted',False):
+		print "zl--------------"
+		return HttpResponseRedirect('/static/error-page/404.html')
 	c = RequestContext(request, {
 		'page_title': product['name'],
 		'product': product,

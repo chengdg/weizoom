@@ -36,6 +36,8 @@ class ProductCategory(api_resource.ApiResource):
 		@param id 分类ID
 		"""
 		category = mall_models.ProductCategory.objects.get(id=args['id'])
+		if not category:
+			return None
 		return ProductCategory.category_to_dict(category)
 
 
