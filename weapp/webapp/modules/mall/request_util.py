@@ -224,7 +224,7 @@ def get_order_list(request):
 		'wuid': request.webapp_user.id,
 		'member_id': request.member.id,
 		# red_envelop_rule_id参数可以为None
-		'red_envelop_rule_id': request.webapp_owner_info.red_envelope.id,
+		'red_envelop_rule_id': request.webapp_owner_info.red_envelope['id'] if request.webapp_owner_info.red_envelope else '',
 		'woid': request.webapp_owner_id
 		})
 	#orders = mall_api.get_orders(request)
@@ -280,7 +280,7 @@ def pay_order(request):
 
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
-		order.red_envelope = red_envelope.id
+		order.red_envelope = red_envelope['id']
 		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
 			order.red_envelope_created = True
 
@@ -417,7 +417,7 @@ def get_pay_result(request):
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
 		is_show_red_envelope = True
-		red_envelope_rule_id = red_envelope.id
+		red_envelope_rule_id = red_envelope['id']
 
 	#获取订单包含商品
 	order_has_products = OrderHasProduct.objects.filter(order=order)
