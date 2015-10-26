@@ -30,6 +30,8 @@ class Command(BaseCommand):
         webapp_id2expired_time = {}
         for user in users:
             user_id = user.id
+            if user_id not in user2webapp_id.keys():
+                continue
             webapp_id = user2webapp_id[user]
             expired_hour = user2order_expired_hour[user_id]
             if expired_hour:
