@@ -18,35 +18,44 @@ gmu.define('BottomNav', {
 		$('.wa-shopBottomNavPage').css('padding-bottom',25);
 
 		var _this = this;
+        var flag = false;
+
 		$(document).delegate('.xa-menu', 'click', function(event){
 			_this.clickShowSubmenu(event);
 		});
-
 		// 点击别的地方，二级菜单消失，但是可能有问题
 	    $(document).on('click',function(event){
 	    	if(!$(event.target).parent().is('.xa-menu')){
-	            $('.xui-subMenuContainer').removeClass('xui-show');
+	            $('.xui-subMenuContainer').removeClass('xui-up').addClass('xui-down');
+
 	        }
 	    })
 	},
 	
-
 	clickShowSubmenu:function(event){
 		var $target = $(event.currentTarget);
 		var $menu = $('.xa-menu'); 
+
 		var menuWidth = $menu.eq(0).width();
+		
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
 		var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenu li');
         var $otherSubMenuContainer = $target.parents('.xui-globalBottomBar').find('.xui-subMenuContainer');
         var width = $subMenuContainer.width();
-        $otherSubMenuContainer.removeClass('xui-show');
-         if( $subLink.length>0){
-         	$subMenuContainer.toggleClass('xui-show');
-         	width = $subMenuContainer.width();
-         }
-         if($menu.length == 1){
+        
+    	if( $subLink.length = 0){
+			return;
+		}else{
+	        if($subMenuContainer.hasClass('xui-up')){
+	        	$subMenuContainer.removeClass('xui-up').addClass('xui-down');
+	        }else{
+	        	$subMenuContainer.addClass('xui-up').removeClass('xui-down');
+	        	$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
+	        }
+        }
+        if($menu.length == 1){
            $subMenuContainer.css('margin-left',-width/2);
-         }else if($menu.length == 2){
+        }else if($menu.length == 2){
          	$subMenuContainer.css('margin-left',-width/2- menuWidth/2);
          	$otherSubMenuContainer.eq(1).css({
          		'right':8,
@@ -54,7 +63,7 @@ gmu.define('BottomNav', {
 				'margin-left':0
 			});
 
-         }else {
+        }else {
          	$subMenuContainer.css('margin-left',-width/2 - menuWidth);
          	$otherSubMenuContainer.eq(1).css('margin-left',-width/2);
          	$otherSubMenuContainer.eq(2).css({
@@ -63,7 +72,6 @@ gmu.define('BottomNav', {
 				'margin-left':0
 			});
 			if($otherSubMenuContainer.eq(2).width() > 92){
-				console.log($otherSubMenuContainer.eq(2),'5555555')
 				$otherSubMenuContainer.eq(2).find('.xui-menuArrow').css({
 					'right':40,
 					'left':'auto',
@@ -75,7 +83,7 @@ gmu.define('BottomNav', {
 					'margin-left':0
 				});
 			}
-         }
+        }
 	}
 });
 
