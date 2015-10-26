@@ -80,6 +80,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 		"""
 	Then jobs获得签到活动"签到活动1"
 		"""
+		{
 			"name":"签到活动1",
 			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
 			"keyword_reply":
@@ -111,6 +112,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 					"send_coupon": "优惠券1",
 					"prize_counts":50
 				]}
+		}
 
 		"""
 @apps_sign @apps_sign_backend
@@ -145,6 +147,7 @@ Scenario:一条奖励下，不添加优惠券，有积分
 		"""
 	Then jobs获得签到活动"签到活动2"
 		"""
+		{
 			"name":"签到活动2",
 			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
 			"keyword_reply":
@@ -164,6 +167,7 @@ Scenario:一条奖励下，不添加优惠券，有积分
 					"sign_in": "1",
 					"integral": "100"
 				}
+		}
 
 		"""
 @apps_sign @apps_sign_backend
@@ -192,6 +196,7 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 		"""
 	Then jobs获得签到活动"签到活动3"
 		"""
+		{
 			"name":"签到活动3",
 			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
 			"share_pic":"3.jpg",
@@ -206,7 +211,7 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 					"sign_in": "1",
 					"send_coupon": "优惠券1"
 				}
-
+		}
 		"""
 @apps_sign @apps_sign_backend
 Scenario:一条奖励下，添加优惠券，添加积分
@@ -235,6 +240,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 		"""
 	Then jobs获得签到活动"签到活动4"
 		"""
+		{
 			"name":"签到活动4",
 			"share_pic":"4.jpg",
 			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
@@ -251,6 +257,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 					"send_coupon": "优惠券1",
 					"prize_counts":50
 				}
+		}
 
 		"""
 @apps_sign @apps_sign_backend
@@ -294,6 +301,7 @@ Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加�
 		"""
 	Then jobs获得签到活动"签到活动5"
 		"""
+		{
 			"name":"签到活动5",
 			"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
 			"keyword_reply":
@@ -322,7 +330,7 @@ Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加�
 					"send_coupon": "优惠券1",
 					"prize_counts":50
 				]}
-
+		}
 		"""
 @apps_sign @apps_sign_backend
 Scenario:优惠券数量为0，无法添加优惠券
