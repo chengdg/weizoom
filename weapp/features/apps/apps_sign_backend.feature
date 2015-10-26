@@ -17,7 +17,7 @@ Feature: 后台配置数据
 
 Scenario: 保存后开启签到活动
 
-	
+
 """
 Background:
 	Given jobs登录系统
@@ -51,7 +51,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 		"name": "签到活动1",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"1.jpg",
-		"key_words": 
+		"key_words":
 		[{
 			"rule": "精确",
 			"key_word": "78"
@@ -127,7 +127,7 @@ Scenario:一条奖励下，不添加优惠券，有积分
 		"name": "签到活动2",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"2.jpg",
-		"key_words": 
+		"key_words":
 		[{
 			"rule": "精确",
 			"key_word": "78"
@@ -192,7 +192,7 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 		"name": "签到活动3",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"3.jpg",
-		"key_words": 
+		"key_words":
 		{
 			"rule": "精确",
 			"key_word": "78"
@@ -247,7 +247,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 		"name": "签到活动4",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"4.jpg",
-		"key_words": 
+		"key_words":
 		{
 			"rule":"模糊",
 			"key_word": "123456"
@@ -308,7 +308,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
 
 
- 
+
 Scenario: 保存后开启签到活动
   When jobs创建签到活动
   	"""
