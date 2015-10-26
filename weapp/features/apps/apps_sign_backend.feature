@@ -12,7 +12,7 @@ Feature: 后台配置数据
 	Scenario:一条奖励下，添加优惠券，不添加积分
 	Scenario:一条奖励下，添加优惠券，添加积分
 	Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
-
+	Scenario:优惠券数量为0，无法添加优惠券
 
 
 Scenario: 保存后开启签到活动
@@ -51,7 +51,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 		"name": "签到活动1",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"1.jpg",
-		"key_words": 
+		"keyword_reply": 
 		[{
 			"rule": "精确",
 			"key_word": "78"
@@ -89,7 +89,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 	"""
 		"name":"签到活动1",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
-		"key_words":
+		"keyword_reply":
 		[{
 			"rule": "精确",
 			"key_word":"78"
@@ -127,7 +127,7 @@ Scenario:一条奖励下，不添加优惠券，有积分
 		"name": "签到活动2",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"2.jpg",
-		"key_words": 
+		"keyword_reply": 
 		[{
 			"rule": "精确",
 			"key_word": "78"
@@ -159,7 +159,7 @@ Scenario:一条奖励下，不添加优惠券，有积分
 	"""
 		"name":"签到活动2",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
-		"key_words":
+		"keyword_reply":
 		[{
 			"rule": "精确",
 			"key_word":"78"
@@ -192,7 +192,7 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 		"name": "签到活动3",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"3.jpg",
-		"key_words": 
+		"keyword_reply": 
 		{
 			"rule": "精确",
 			"key_word": "78"
@@ -221,7 +221,7 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 		"name":"签到活动3",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
 		"share_pic":"3.jpg",
-		"key_words":
+		"keyword_reply":
 		{
 			"rule": "精确",
 			"key_word":"78"
@@ -247,7 +247,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 		"name": "签到活动4",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
 		"share_pic":"4.jpg",
-		"key_words": 
+		"keyword_reply": 
 		{
 			"rule":"模糊",
 			"key_word": "123456"
@@ -279,7 +279,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 		"name":"签到活动4",
 		"share_pic":"4.jpg",
 		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
-		"key_words":
+		"keyword_reply":
 		{
 			"rule":"模糊",
 			"key_word":"123456"
@@ -306,8 +306,79 @@ Scenario:一条奖励下，添加优惠券，添加积分
 	"""
 
 Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
+		When jobs添加签到活动"签到活动5"
+	"""
+	{
+		"name": "签到活动5",
+		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦",
+		"share_pic":"5.jpg",
+		"keyword_reply": 
+		[{
+			"rule": "精确",
+			"key_word": "78"
+		},{
+			"rule": "精确",
+			"key_word": "12"
+		},{
+			"rule":"模糊",
+			"key_word": "123456"
 
+		}],
 
+		"share_describe": "签到获得奖励",
+		"sign_settings":
+		[{
+			"sign_in": "1",
+			"send_coupon": "优惠券1",
+			"prize_counts":50
+		},{
+			"sign_in": "3",
+			"integral": "300"
+		},{
+			"sign_in": "5",
+			"integral": "500",
+			"send_coupon": "优惠券1",
+			"prize_counts":50
+		}]
+	}
+
+	"""
+	Then jobs获得签到活动"签到活动5"
+	"""
+		"name":"签到活动5",
+		"sign_illustration":"签到即可获得积分，连续签到奖励更大哦"
+		"keyword_reply":
+		[{
+			"rule": "精确",
+			"key_word":"78"
+		},{
+			"rule": "精确",
+			"key_word":"12"
+		},{
+			"rule":"模糊",
+			"key_word":"123456"
+		}],
+		"share_pic":"1.jpg"
+		"sign_settings"：
+			[{
+				"sign_in": "1",
+				"send_coupon": "优惠券1",
+				"prize_counts":50
+			},{
+				"sign_in": "3",
+				"integral": "300"
+			},{
+				"sign_in": "5",
+				"integral": "500",
+				"send_coupon": "优惠券1",
+				"prize_counts":50
+			]}
+
+	"""
+Scenario:优惠券数量为0，无法添加优惠券
+	When bill进入jobs签到后台配置页面
+	And 选择优惠券
+	Then bill获得优惠券列表，没有优惠券2
  
 Scenario: 保存后开启签到活动
   When jobs创建签到活动
