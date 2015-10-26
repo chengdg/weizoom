@@ -116,7 +116,7 @@ class WebappItemLinks(resource.Resource):
 				items = []
 				for item in objects:
 					data = dict()
-					if link_type == 'red':
+					if link_type == 'red_envelope':
 						items.append(item)
 					else:
 						data['id'] = item.id

@@ -44,7 +44,7 @@
 	<table id="pageTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition m0">
 		<thead style="background:#c8d2e5;">
 			<tr>
-			{{if data.type == 'red'}}
+			{{if data.type == 'red_envelope'}}
 				<th>活动名称</th>
 				<th>奖励</th>
 			{{else}}
@@ -58,7 +58,7 @@
 				{{if data.type == 'lottery' || data.type == 'coupon' || data.type == 'activity'}}
 					<th width="230">有效期</th>
 				{{else}}
-					{{if data.type == 'red'}}
+					{{if data.type == 'red_envelope'}}
 						<th width="230">奖励时间</th>
 					{{else}}
 						<th width="200">创建时间</th>
@@ -71,7 +71,7 @@
 		<tbody>
             {{each(i, item) items}}
 			<tr class="xb-stripedTable" data-id="${item.id}">
-			{{if data.type == 'red'}}
+			{{if data.type == 'red_envelope'}}
 				<td>
 					${item.name}
 				</td>
@@ -95,7 +95,7 @@
 					</td>
 				{{else}}
 					{{if data.type != 'shengjing_app'}}
-						{{if data.type == 'red'}}
+						{{if data.type == 'red_envelope'}}
 							<td>
 							{{if  item.limit_time}}
 								永久
