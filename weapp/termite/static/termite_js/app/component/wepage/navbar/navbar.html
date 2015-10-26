@@ -17,7 +17,12 @@
             {% for component in component.components %}
             <div class="xui-menuBox xui-flex-{{component.parent_component.sub_component_count}}">
                 <div data-component-cid="{{component.cid}}" class="xa-wepage-navbar-link xui-flex  xui-menu xa-menu f14">
-                    <a href="javascript:void(0);" data-link="{% if component.model.second_navs %}{% else %}{{ component.model.target|extract_target_data:request|safe }}{% endif %}" class="wa-inner-link"><img src="/static_v2/img/termite2/menu-icon.png"/>{{ component.model.title }}</a>   
+                    <a href="javascript:void(0);" data-link="{% if component.model.second_navs %}{% else %}{{ component.model.target|extract_target_data:request|safe }}{% endif %}">
+                        {% if component.model.second_navs %}
+                        <img src="/static_v2/img/termite2/menu-icon.png"/>
+                        {% endif %}
+                        <span class="wa-inner-link">{{ component.model.title }}</span>
+                    </a>   
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
