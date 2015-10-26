@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from operator import attrgetter
+import urllib2
 from django.conf import settings
 from django.db.models import signals
 
@@ -271,6 +272,12 @@ def update_webapp_product_detail_cache(**kwargs):
                 key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
                     webapp_owner_id, product_id)
                 cache_util.delete_cache(key)
+                url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
+                    (settings.DOMAIN, webapp_owner_id, product_id)
+                if not settings.IS_UNDER_BDD:
+                    request = urllib2.Request(url)
+                    request.get_method = lambda: 'PURGE'
+                    urllib2.urlopen(request)
                 # 更新微众商城缓存
                 # TODO 更好的设计微众商城
                 if webapp_owner_id != 216:
