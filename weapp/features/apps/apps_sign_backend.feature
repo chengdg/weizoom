@@ -21,11 +21,7 @@ Scenario: 保存后开启签到活动
 """
 Background:
 	Given jobs登录系统
-	When jobs添加积分
-	"""
-		"integral":0
-	"""
-	When jobs添加优惠券
+	When jobs添加优惠券规则
 	"""
 		[{
 			"name": "优惠券1",
@@ -45,7 +41,7 @@ Background:
 
 @apps_sign @apps_sign_backend
 Scenario:配置后台所有数据，优惠券数量足，没有过期
-	When jobs添加签到活动"签到活动1"
+	When jobs添加签到活动"签到活动1"，并保存
 	"""
 	{
 		"name": "签到活动1",
@@ -201,19 +197,11 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 
 		"share_describe": "签到获得奖励",
 		"sign_settings":
-		[{
+		{
 			"sign_in": "1",
 			"send_coupon": "优惠券1",
 			"counts":50
-		},{
-			"sign_in": "3",
-			"send_coupon": "优惠券1",
-			"counts":50
-		},{
-			"sign_in": "5",
-			"send_coupon": "优惠券1",
-			"counts":50
-		}]
+		}
 	}
 
 	"""
@@ -229,16 +217,10 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 		},
 		"share_pic":"1.jpg"
 		"sign_settings"：
-			[{
+			{
 				"sign_in": "1",
 				"send_coupon": "优惠券1"
-			},{
-				"sign_in": "3",
-				"send_coupon": "优惠券1"
-			},{
-				"sign_in": "5",
-				"send_coupon": "优惠券1"
-			]}
+			}
 
 	"""
 @apps_sign @apps_sign_backend
@@ -256,22 +238,12 @@ Scenario:一条奖励下，添加优惠券，添加积分
 
 		"share_describe": "签到获得奖励",
 		"sign_settings":
-		[{
+		{
 			"sign_in": "1",
 			"integral": "100",
 			"send_coupon": "优惠券1",
 			"prize_counts":50
-		},{
-			"sign_in": "3",
-			"integral": "300",
-			"send_coupon": "优惠券1",
-			"prize_counts":50
-		},{
-			"sign_in": "5",
-			"integral": "500",
-			"send_coupon": "优惠券1",
-			"prize_counts":50
-		}]
+		}
 	}
 
 	"""
@@ -287,22 +259,12 @@ Scenario:一条奖励下，添加优惠券，添加积分
 		},
 		"share_pic":"1.jpg"
 		"sign_settings"：
-			[{
+			{
 				"sign_in": "1",
 				"integral": "100",
 				"send_coupon": "优惠券1",
 				"prize_counts":50
-			},{
-				"sign_in": "3",
-				"integral": "300",
-				"send_coupon": "优惠券1",
-				"prize_counts":50
-			},{
-				"sign_in": "5",
-				"integral": "500",
-				"send_coupon": "优惠券1",
-				"prize_counts":50
-			]}
+			}
 
 	"""
 @apps_sign @apps_sign_backend
