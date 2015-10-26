@@ -423,6 +423,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
                         $('.xa-priceSection').html(temp);
                     }
+                    var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+                    if(data.member_grade_id < 0 && alertView){
+                        alertView.render();
+                        $($('.xa-globalNav li')[1]).hide();
+                    }
                 }
                 // jz 2015-10-24
                 // var counter = $('input[data-ui-role="counter"]').data('view');
