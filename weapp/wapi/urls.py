@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import authorization
-import brand_value
+import mall
+import stats
 
-urlpatterns = [
-]
+import views
+from django.conf.urls import *
+
+urlpatterns = patterns('',
+	(r'^(.+)/(.+)/', views.api_wrapper),
+)

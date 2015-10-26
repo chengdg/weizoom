@@ -109,7 +109,7 @@ def step_coupon_delete(context, user_name, coupon_rule_name):
     # ~Q(status=0)
     #                       ).delete()
 
-
+# 和@then(u'{user_name}能获得优惠券规则列表')重复
 @then(u"{user_name}获得优惠券规则列表")
 def step_impl(context, user_name):
     """

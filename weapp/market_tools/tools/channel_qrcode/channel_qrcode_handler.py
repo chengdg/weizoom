@@ -61,8 +61,9 @@ class ChannelQrcodeHandler(MessageHandler):
 		if member and (hasattr(member, 'is_new') is False):
 			member.is_new = False
 
-		# if hasattr(context, 'is_member_qrcode') and context.is_member_qrcode is False:
-		# 	return None
+		#优化处理
+		if hasattr(context, 'is_member_qrcode') and (context.is_member_qrcode is True):
+			return None
 
 		if user_profile.user_id in [467,154] and \
 			check_new_channel_qrcode_ticket(ticket, user_profile):
@@ -75,7 +76,7 @@ class ChannelQrcodeHandler(MessageHandler):
 			create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, context.member, ticket, member.is_new)
 			msg_type, detail = get_response_msg_info_restructure(channel_qrcode, user_profile)
 			if msg_type != None:
-				from_weixin_user = self._get_from_weixin_user(message)
+				#from_weixin_user = self._get_from_weixin_user(message)
 				#token = self._get_token_for_weixin_user(user_profile, from_weixin_user, is_from_simulator)
 				if msg_type == 'text' and detail:
 					if is_from_simulator:

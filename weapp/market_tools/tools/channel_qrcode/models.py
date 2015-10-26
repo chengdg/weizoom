@@ -26,7 +26,7 @@ class ChannelQrcodeSettings(models.Model):
 	reply_detail = models.TextField(verbose_name=u'回复文字', default='') #reply_type为1时有效
 	reply_material_id = models.IntegerField(default=0) #素材id，reply_type为2时有效
 	remark = models.CharField(max_length=500, verbose_name=u'备注')
-	ticket = models.TextField() #获取的ticket值
+	ticket = models.CharField(default='', max_length=256)
 	grade_id = models.IntegerField(default=-1) #关注后等级id
 	tag_id = models.IntegerField(default=-1) #关注后将会员添加到指定分组
 	re_old_member = models.IntegerField(default=0) #是否关联已关注会员
@@ -119,7 +119,7 @@ class MemberChannelQrcode(models.Model):
 	owner = models.ForeignKey(User)
 	member_channel_qrcode_setting = models.ForeignKey(MemberChannelQrcodeSettings)
 	member = models.ForeignKey(Member, db_index=True, unique=True)
-	ticket = models.TextField()
+	ticket = models.CharField(default='', max_length=256)
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
 
 	class Meta(object):

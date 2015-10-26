@@ -294,3 +294,30 @@ body.ui-overlay-x .ui-page{
     -moz-border-radius: 0px;
     border-radius: 0px;
 }
+
+/*非会员页面黄色提示框*/
+.xui-attentionAlert{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+.xui-attentionAlert a{
+    box-sizing:boredr-box;
+    padding:0 10px;
+    line-height: 40px;
+    text-align: center;
+    display: block;
+    background: rgba(255,243,145,0.9);
+    color: #F95901;
+    font-size: 0.85rem;
+}
+.xui-attentionAlert .xui-icon-rightarrow{
+    border-color: #f95901;
+    border-width: 1px;
+    top: 22px;
+    right: 10px;
+    width: 6px;
+    height: 6px;
+}

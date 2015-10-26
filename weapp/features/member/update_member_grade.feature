@@ -1,5 +1,7 @@
-# __author__ : "冯雪静"
-# __edite__ : "benchi" 加标签
+#author: 冯雪静
+#editor: benchi 加标签
+#editor: 张三香 2015.10.15
+
 Feature: 更新会员等级
 	Jobs能管理会员管理中的会员等级列表
 
@@ -31,7 +33,7 @@ Background:
 		"""
 
 @mall2 @member @meberGrade
-Scenario: 1 更新已存在的会员等级
+Scenario:1 更新已存在的会员等级
 	jobs添加会员等级后，可以更新等级
 
 	Given jobs登录系统
@@ -65,7 +67,7 @@ Scenario: 1 更新已存在的会员等级
 		"""
 
 @mall2 @member @meberGrade
-Scenario: 2 更新手动升级会员等级为自动升级会员等级
+Scenario:2 更新手动升级会员等级为自动升级会员等级
 	jobs添加手动升级的会员等级后，可以更新为自动升级的会员等级
 
 	Given jobs登录系统
@@ -83,7 +85,6 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 1000.00,
 			"pay_times": 20,
-			"upgrade_lower_bound": 10000,
 			"discount": "9"
 		}
 		"""
@@ -94,7 +95,6 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
-			"upgrade_lower_bound": 30000,
 			"discount": "8"
 		}
 		"""
@@ -105,7 +105,6 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 5000.00,
 			"pay_times": 50,
-			"upgrade_lower_bound": 50000,
 			"discount": "7"
 		}
 		"""
@@ -120,27 +119,24 @@ Scenario: 2 更新手动升级会员等级为自动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 1000.00,
 			"pay_times": 20,
-			"upgrade_lower_bound": 10000,
 			"discount": "9"
 		}, {
 			"name": "银牌会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
-			"upgrade_lower_bound": 30000,
 			"discount": "8"
 		}, {
 			"name": "金牌会员",
 			"upgrade": "自动升级",
 			"pay_money": 5000.00,
 			"pay_times": 50,
-			"upgrade_lower_bound": 50000,
 			"discount": "7"
 		}]
 		"""
 
 @mall2 @member @meberGrade
-Scenario: 3 更新自动升级会员等级为手动升级会员等级
+Scenario:3 更新自动升级会员等级为手动升级会员等级
 	jobs添加自动升级的会员等级后，可以更新为自动升级的会员等级
 
 	Given jobs登录系统
@@ -158,21 +154,18 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 1000.00,
 			"pay_times": 20,
-			"upgrade_lower_bound": 10000,
 			"discount": "6"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
-			"upgrade_lower_bound": 30000,
 			"discount": "5"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 5000.00,
 			"pay_times": 50,
-			"upgrade_lower_bound": 50000,
 			"discount": "4"
 		}]
 		"""
@@ -199,21 +192,18 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 1000.00,
 			"pay_times": 20,
-			"upgrade_lower_bound": 10000,
 			"discount": "6"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
-			"upgrade_lower_bound": 30000,
 			"discount": "5"
 		}, {
 			"name": "红钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 5000.00,
 			"pay_times": 50,
-			"upgrade_lower_bound": 50000,
 			"discount": "4"
 		}]
 		"""
@@ -248,14 +238,12 @@ Scenario: 3 更新自动升级会员等级为手动升级会员等级
 			"upgrade": "自动升级",
 			"pay_money": 1000.00,
 			"pay_times": 20,
-			"upgrade_lower_bound": 10000,
 			"discount": "6"
 		}, {
 			"name": "黄钻会员",
 			"upgrade": "自动升级",
 			"pay_money": 3000.00,
 			"pay_times": 30,
-			"upgrade_lower_bound": 30000,
 			"discount": "5"
 		}, {
 			"name": "红钻会员",

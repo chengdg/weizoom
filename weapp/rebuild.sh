@@ -9,6 +9,5 @@ cd ..
 
 python manage.py markettool2app
 python manage.py init_customized_apps
-python manage.py init_permissions
 
 redis-cli -n 1 -h redis.weapp.com flushdb

@@ -21,6 +21,7 @@ from weixin2.models import *
 
 from modules.member.models import *
 from account.social_account.models import SocialAccount
+from util import translate_special_characters
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
@@ -89,7 +90,7 @@ class RealtimeMessagesDetail(resource.Resource):
         session_id = request.GET.get('session_id', '')
         replied = int(request.GET.get('replied', 0))
 
-        pageinfo, realtime_messages, member = get_messages(request.user, request.user_profile, session_id, replied, cur_page, count_per_page, request.META['QUERY_STRING'])
+        pageinfo, realtime_messages, member = get_messages(request.manager, request.user_profile, session_id, replied, cur_page, count_per_page, request.META['QUERY_STRING'])
 
         response = create_response(200)
         response.data = {
@@ -323,7 +324,7 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
                 one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
             else:
                 one_message['user_icon'] =  DEFAULT_ICON
-
+        message.content = translate_special_characters(message.content)
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         from_index = one_message['text'].find('<a href=')
         if from_index > -1:
@@ -412,3 +413,5 @@ def get_messages(user, user_profile, session_id, replied, cur_page, count, query
             one_message['remark'] = False
 
     return pageinfo, items, member
+
+

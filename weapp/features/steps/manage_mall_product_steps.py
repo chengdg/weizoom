@@ -196,7 +196,6 @@ def get_product_model(context, user, product_name):
         if row[u'商品编码'] != u'':
             expect_dict[title]['user_code'] = row[u'商品编码']
 
-    print "zl-----------------",expect_dict
     bdd_util.assert_dict(expect_dict,product['model']['models'])
 
 @when(u"{user}更新商品'{product_name}'的库存为")
@@ -282,11 +281,12 @@ def step_impl(context,user):
     query_param = json.loads(context.text)
     webapp_id = bdd_util.get_webapp_id_for(user)
     owner = WebApp.objects.get(appid=webapp_id)
-    category_name = query_param['category']
-    if category_name == u'全部' or category_name == u'全部分类':
-        query_param['category'] = -1
-    else:
-        query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
+    category_name = query_param.get('category', None)
+    if category_name:
+        if category_name == u'全部' or category_name == u'全部分类':
+            query_param['category'] = -1
+        else:
+            query_param['category'] = ProductCategory.objects.get(name=query_param['category']).id
     context.query_param = query_param
 
 

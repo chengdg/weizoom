@@ -33,6 +33,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
 		this.submitBtnText = options.submitBtnText;
 		this.cancelBtnText = options.cancelBtnText;
 		this.editorMaxCount = options.editorMaxCount || 600;
+		this.helptext = options.help || '';
 
 		this.materialId = options.materialId || 0;
 		this.material = options.material || null;
@@ -96,7 +97,7 @@ W.view.weixin.MessageEditor = Backbone.View.extend({
     },
 
 	render: function() {
-		this.$el.html($.tmpl(this.template, {}));
+		this.$el.html($.tmpl(this.template, {helptext: this.helptext}));
 		return this;
 	},
 

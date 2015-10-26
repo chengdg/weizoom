@@ -1452,6 +1452,10 @@ class Order(models.Model):
 		"""
 		return self.origin_order_id == -1 and self.status > 0 #未支付的订单按未拆单显示
 
+	@property
+	def is_sub_order(self):
+		return self.origin_order_id > 0
+
 	@staticmethod
 	def get_sub_order_ids(origin_order_id):
 		orders = Order.objects.filter(origin_order_id=origin_order_id)
@@ -2094,12 +2098,13 @@ class PayInterface(models.Model):
 				webapp_owner_id,
 				order.order_id,
 				self.id)
-		elif PAY_INTERFACE_WEIZOOM_COIN == self.type:
-			return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(
-				webapp_owner_id,
-				PAY_INTERFACE_WEIZOOM_COIN,
-				self.id,
-				order.order_id)
+		# jz 2015-10-09
+		# elif PAY_INTERFACE_WEIZOOM_COIN == self.type:
+		# 	return './?woid={}&module=mall&model=weizoompay_order&action=pay&pay_interface_type={}&pay_interface_id={}&order_id={}'.format(
+		# 		webapp_owner_id,
+		# 		PAY_INTERFACE_WEIZOOM_COIN,
+		# 		self.id,
+		# 		order.order_id)
 		else:
 			return ''
 

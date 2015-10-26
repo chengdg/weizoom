@@ -25,17 +25,17 @@ class MenuStatus(resource.Resource):
 		"""
 		更新自定义菜单项状态
 		"""
-		owner = request.user
+		owner = request.manager
 		status= int(request.POST['status'])
 		
 		#开启自定义菜单
 		if status == STATUS_OPEN:
 			#调用微信api
-			menu_json_obj = menu_util.get_menus_json_for_weixin(request.user)
+			menu_json_obj = menu_util.get_menus_json_for_weixin(request.manager)
 			post = {
 				'menu_json': json.dumps(menu_json_obj, ensure_ascii=False)
 			}
-			fake_request = menu_util.get_fake_request(request.user, post)
+			fake_request = menu_util.get_fake_request(request.manager, post)
 			response = menu_tool.update_customerized_menu(fake_request)
 		#禁用自定义菜单
 		if status == STATUS_STOP:

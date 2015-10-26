@@ -98,9 +98,9 @@ def _get_qrcode_items(request):
 		created_at = sort_attr
 
 	if query:
-		settings = ChannelQrcodeSettings.objects.filter(owner=request.user, name__contains=query).order_by(created_at)
+		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, name__contains=query).order_by(created_at)
 	else:
-		settings = ChannelQrcodeSettings.objects.filter(owner=request.user).order_by(created_at)
+		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager).order_by(created_at)
 
 	setting_ids = []
 	bing_member_ids = []
@@ -177,7 +177,7 @@ def _get_qrcode_items(request):
 	#response.data.items = []
 	items = []
 
-	mp_user = get_binding_weixin_mpuser(request.user)
+	mp_user = get_binding_weixin_mpuser(request.manager)
 	mpuser_access_token = get_mpuser_accesstoken(mp_user)
 
 	for setting in settings:
@@ -307,7 +307,7 @@ class Qrcode(resource.Resource):
 		from mall.promotion.models import CouponRule
 		if setting_id > 0:
 			try:
-				qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.user)
+				qrcode = ChannelQrcodeSettings.objects.get(id=setting_id, owner=request.manager)
 			except Exception, e:
 				print 'get qrcode failed,id:',setting_id
 
@@ -347,7 +347,7 @@ class Qrcode(resource.Resource):
 					bing_member = get_member_by_id(int(qrcode.bing_member_id))
 					qrcode.bing_member_name = bing_member.username_for_html
 
-		settings = ChannelQrcodeSettings.objects.filter(owner=request.user, bing_member_id__gt=0)
+		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, bing_member_id__gt=0)
 		selectedMemberIds = [setting.bing_member_id for setting in settings]
 
 		jsons = [{
@@ -409,7 +409,7 @@ class Qrcode(resource.Resource):
 			reply_detail = ''
 
 		cur_setting = ChannelQrcodeSettings.objects.create(
-			owner=request.user,
+			owner=request.manager,
 			name=name,
 			award_prize_info=award_prize_info,
 			reply_type=reply_type,
@@ -431,7 +431,7 @@ class Qrcode(resource.Resource):
 				member_id=bing_member_id
 			)
 
-		mp_user = get_binding_weixin_mpuser(request.user)
+		mp_user = get_binding_weixin_mpuser(request.manager)
 		mpuser_access_token = get_mpuser_accesstoken(mp_user)
 		weixin_api = get_weixin_api(mpuser_access_token)
 
@@ -488,7 +488,7 @@ class Qrcode(resource.Resource):
 		elif reply_type == 2:
 			reply_detail = ''
 
-		setting = ChannelQrcodeSettings.objects.filter(owner=request.user, id=setting_id)
+		setting = ChannelQrcodeSettings.objects.filter(owner=request.manager, id=setting_id)
 		if setting[0].bing_member_id and is_bing_member == 'false':
 			#取消关联
 			setting.update(

@@ -424,8 +424,27 @@
 /*
 *会员详情页面
 */
- .xui-memberOrderPayDialog .modal-content {
-	width: 550px;
+.xui-firendlistdialog .xui-cancelCover {
+  width: 100%;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  line-height: 20px;
+}
+.xui-memberOrderPayDialog .xui-cancelCover {
+  width: 100%;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  line-height: 20px;
+}
+.xui-memberOrderPayDialog .xui-advancedTablePaginator {
+	padding-right: 20px;
+	padding-top: 10px;
 }
 .xui-memberOrderPayDialog .modal-body{
 	padding:0px;

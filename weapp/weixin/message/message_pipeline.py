@@ -283,18 +283,25 @@ class MessagePipeline(object):
 			"""
 				如果缓存异常走非缓存代码
 			"""
-			try:
-				from cache import component_cache
-				user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
-				webapp_id = user_profile.webapp_id
-				request.user_profile = user_profile
-				request.webapp_owner_id = authed_appid.user_id
-			except:
-				authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
-				user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
-				request.user_profile = user_profile
-				request.webapp_owner_id = authed_appid.user_id
-				webapp_id = user_profile.webapp_id
+			# try:
+			# 	from cache import component_cache
+			# 	user_profile,authed_appid =  component_cache.get_component_auth(component_info, appid)
+			# 	webapp_id = user_profile.webapp_id
+			# 	request.user_profile = user_profile
+			# 	request.webapp_owner_id = authed_appid.user_id
+			# except:
+			# 	authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
+			# 	user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
+			# 	request.user_profile = user_profile
+			# 	request.webapp_owner_id = authed_appid.user_id
+			# 	webapp_id = user_profile.webapp_id
+			from cache import component_cache
+			component_cache_obj =  component_cache.get_component_auth(component_info, appid)
+			user_profile = component_cache_obj.user_profile
+			webapp_id = user_profile.webapp_id
+			request.user_profile = user_profile
+			request.webapp_owner_id = component_cache_obj.component_authed_appid.user_id
+			request.component_owner_info = component_cache_obj
 			# try:
 			# 	authed_appid = ComponentAuthedAppid.objects.filter(component_info=component_info, authorizer_appid=appid, is_active=True)[0]
 			# 	user_profile = UserProfile.objects.get(user_id= authed_appid.user_id)
@@ -312,11 +319,12 @@ class MessagePipeline(object):
 		
 		if 'weizoom_test_data' in request.GET:
 			xml_message = self._get_raw_message(request)
+			is_from_simulator = True
 		else:
 			xml_message = self._get_raw_message(request).decode('utf-8')
 			wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)#"2950d602ffb613f47d7ec17d0a802b", "BPQSp7DFZSs1lz3EBEoIGe6RVCJCFTnGim2mzJw5W4I", "wx984abb2d00cc47b8")
 			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
-		
+
 		if xml_message is None or len(xml_message) == 0:
 			return None
 		

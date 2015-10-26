@@ -248,28 +248,29 @@ def create_mpuser_access_token(request):
 	return response.get_response()
 
 ########################################################################
+# jz 2015-10-10
 # get_preview_info: 获得预览信息
 ########################################################################
-@login_required
-def get_preview_info(request):
-	try:
-		info = PreviewInfo.objects.get(owner=request.user)
-		response = create_response(200)
-		data = {}
-		if len(info.name) > 6:
-			data['name'] = u'%s...' % info.name[:6]
-		else:
-			data['name'] = info.name
-		data['image_path'] = info.image_path
-		response.data = data;
-		return response.get_response()
-	except:
-		response = create_response(200)
-		data = {}
-		data['name'] = ''
-		data['image_path'] = DEFAULT_ICON
-		response.data = data;
-		return response.get_response()
+# @login_required
+# def get_preview_info(request):
+# 	try:
+# 		info = PreviewInfo.objects.get(owner=request.user)
+# 		response = create_response(200)
+# 		data = {}
+# 		if len(info.name) > 6:
+# 			data['name'] = u'%s...' % info.name[:6]
+# 		else:
+# 			data['name'] = info.name
+# 		data['image_path'] = info.image_path
+# 		response.data = data;
+# 		return response.get_response()
+# 	except:
+# 		response = create_response(200)
+# 		data = {}
+# 		data['name'] = ''
+# 		data['image_path'] = DEFAULT_ICON
+# 		response.data = data;
+# 		return response.get_response()
 
 
 ########################################################################

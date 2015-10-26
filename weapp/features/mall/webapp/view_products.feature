@@ -36,8 +36,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
-@mall2 @mall @mall.webapp
+@mall2 @buy @productList   @mall @mall.webapp
 Scenario:1 浏览全部商品列表
 	jobs添加商品后
 	1. bill能在webapp中看到jobs添加的商品列表
@@ -46,7 +45,7 @@ Scenario:1 浏览全部商品列表
 	
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -60,7 +59,7 @@ Scenario:1 浏览全部商品列表
 		}]
 		"""
 
-@mall2 @mall.webapp
+@mall2 @buy @productList   @mall.webapp
 Scenario:2 按分类浏览商品
 	jobs添加多个商品后
 	1. bill能在webapp中按分类浏览商品
@@ -68,7 +67,7 @@ Scenario:2 按分类浏览商品
 	
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'分类1'商品列表页
-	Then webapp页面标题为'商品列表(分类1)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -78,7 +77,7 @@ Scenario:2 按分类浏览商品
 		}]
 		"""
 	When bill浏览jobs的webapp的'分类2'商品列表页
-	Then webapp页面标题为'商品列表(分类2)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -90,7 +89,7 @@ Scenario:2 按分类浏览商品
 		}]
 		"""
 	When bill浏览jobs的webapp的'分类3'商品列表页
-	Then webapp页面标题为'商品列表(分类3)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -100,8 +99,9 @@ Scenario:2 按分类浏览商品
 		}]
 		"""
 	When bill浏览jobs的webapp的'分类4'商品列表页
-	Then webapp页面标题为'商品列表(分类4)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[]
 		"""
+	

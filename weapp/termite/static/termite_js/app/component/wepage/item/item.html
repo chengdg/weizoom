@@ -8,9 +8,56 @@
 >
     <ul class="wui-block-type{{component.model.type}} wui-card-type-{{component.model.card_type}} ">
         {% if component.components %}
-            {% for sub_component in component.components %}
-            {{ sub_component.html|safe }}
-            {% endfor %}
+            {% if component.valid_product_count >= 0 %}
+                {% for sub_component in component.components %}
+                {{ sub_component.html|safe }}
+                {% endfor %}
+            {% else %}                
+                <li class="">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第一个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice ">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第二个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第三个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="wui-inner-defalut-box4">
+                    <a class="wui-inner-box1" >
+                        <div class="wui-inner-pic">
+                            <p class="xui-productTitle">第四个商品</p>
+                        </div>
+                         <div class="wui-inner-titleAndprice">
+                            <p class="wa-inner-title xui-inner-title">在此处显示商品名称</p>
+                            <p class="wa-inner-price xui-inner-price">￥100.00</p>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
         {% else %}
             <li class="">
                 <a class="wui-inner-box1" >

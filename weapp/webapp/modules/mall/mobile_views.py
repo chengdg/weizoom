@@ -11,17 +11,6 @@ template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 
 
-########################################################################
-#      PAGE FOR TESTING - 测试用页面
-#
-# list_coupons: 显示"优惠券"页面
-########################################################################
-# jz 2015-08-10
-# def list_coupons(request):
-# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-# 	return request_util.list_coupons(request)
-
-
 def list_products(request):
 	"""显示"商品列表"页面
 	"""
@@ -137,18 +126,18 @@ def edit_shopping_cart_order(request):
 		request.action = 'add'
 		return request_util.edit_address(request)
 
+# jz 2015-10-09
+# def pay_weizoompay_order(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.pay_weizoompay_order(request)
 
-def pay_weizoompay_order(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.pay_weizoompay_order(request)
-
-def get_weizoompay_confirm(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.get_weizoompay_confirm(request)
-
-def get_weizoomcard_change_intr(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	return request_util.get_weizoomcard_change_intr(request)
+# jz 2015-10-09
+# def get_weizoompay_confirm(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.get_weizoompay_confirm(request)
+# def get_weizoomcard_change_intr(request):
+# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+# 	return request_util.get_weizoomcard_change_intr(request)
 
 def _get_redirect_url_query_string(request):
 	# 入口是图文

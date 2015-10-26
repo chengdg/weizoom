@@ -8,33 +8,12 @@ import json
 
 from django.shortcuts import render_to_response
 from webapp.modules.mall import request_util
-# from apps.customerized_apps.shihuazhiye.mall import request_util
 from mall.models import *
 from apps.register import mobile_view_func
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 TEMPLATE_DIR = 'webapp/mall'
-
-
-########################################################################
-#      PAGE FOR TESTING - 测试用页面
-#
-# list_coupons: 显示"优惠券"页面
-########################################################################
-# jz 2015-08-10
-# def list_coupons(request):
-# 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-# 	return request_util.list_coupons(request)
-
-
-########################################################################
-# get_productcategory: 显示“商品分类”页面
-########################################################################
-# jz 2015-08-10
-# def get_productcategory(request):
-# 	request.template_dir = TEMPLATE_DIR
-# 	return request_util.get_productcategory(request)
 
 
 ########################################################################
@@ -49,7 +28,6 @@ def list_products(request):
 		'page_title': context.get('page_title','商品').replace(u'商品',u'课程')
 		})
 	return render_to_response('%s/products_original.html' % request.template_dir, context)
-	#return request_util.list_products(request)
 
 
 ########################################################################
@@ -60,6 +38,7 @@ def get_product(request):
 	request.template_dir = TEMPLATE_DIR
 	return request_util.get_product(request)
 
+
 ########################################################################
 # get_order_list: 获取订单列表
 ########################################################################
@@ -67,9 +46,6 @@ def get_product(request):
 def get_order_list(request):
 	request.template_dir = TEMPLATE_DIR
 	return request_util.get_order_list(request)
-	
-
-
 
 
 ########################################################################
@@ -95,6 +71,7 @@ def edit_order(request):
 			})
 		return render_to_response('%s/order_address.html' % request.template_dir, context)
 
+
 ########################################################################
 # edit_address: 编辑收货地址信息
 ########################################################################
@@ -117,6 +94,7 @@ def edit_address(request):
 		})
 	return render_to_response('%s/order_address.html' % request.template_dir, context)
 
+
 ########################################################################
 # list_address: 显示收货地址列表
 ########################################################################
@@ -137,12 +115,14 @@ def add_address(request):
 	request.action = 'add'
 	return request_util.edit_address(request)
 
+
 ########################################################################
 # show_coupon: 显示优惠价
 ########################################################################
 def show_coupon(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.show_coupon(request)
+
 
 def _get_redirect_url_query_string(request):
 	# 参数中包含
@@ -160,6 +140,7 @@ def _get_redirect_url_query_string(request):
 		return strs[1]
 
 	return '#'
+
 
 ########################################################################
 # pay_order: 支付订单页面
@@ -193,6 +174,7 @@ def _update_status(context):
 	except:
 		pass
 
+
 ########################################################################
 # get_pay_result: 支付结果，在支付宝完成支付后支付宝访问
 # 携带的参数中主要使用：
@@ -205,7 +187,6 @@ def get_pay_result(request):
 	context = request_util.get_pay_result(request)
 	_update_status(context)
 	return render_to_response('%s/order_payment.html' % request.template_dir, context)
-
 
 
 ########################################################################
@@ -234,15 +215,18 @@ def edit_shopping_cart_order(request):
 	request.template_dir = TEMPLATE_DIR
 	return request_util.edit_shopping_cart_order(request)
 
+
 @mobile_view_func(resource='weizoompay_order', action='pay')
 def pay_weizoompay_order(request):
 	request.template_dir = TEMPLATE_DIR
 	return request_util.pay_weizoompay_order(request)
 
+
 @mobile_view_func(resource='weizoompay_confirm', action='pay')
 def get_weizoompay_confirm(request):
 	request.template_dir = TEMPLATE_DIR
 	return request_util.get_weizoompay_confirm(request)
+	
 	
 @mobile_view_func(resource='weizoomcard_change_intr', action='pay')
 def get_weizoomcard_change_intr(request):

@@ -17,7 +17,7 @@ from modules.member.models import *
 from modules.member.integral import increase_for_be_member_first
 from modules.member.util import (get_member_by_binded_social_account, 
 	create_member_by_social_account, create_social_account,member_basic_info_updater)
-
+from modules.member import tasks as member_tasks
 from watchdog.utils import watchdog_error, watchdog_fatal
 import datetime
 
@@ -38,7 +38,6 @@ class MemberHandler(MessageHandler):
 		if message.is_optimization_message:
 			print 'only handle is_optimization_message == False', message.is_optimization_message
 			return None
-		
 		# if WeixinMessageTypes.TEXT != message.msgType and WeixinMessageTypes.VOICE != message.msgType and  WeixinMessageTypes.IMAGE != message.msgType:
 		# 	print 'only handle subscribed and unsubscribed event'
 		# 	return None
@@ -47,7 +46,6 @@ class MemberHandler(MessageHandler):
 		weixin_user = context.weixin_user
 		request = context.request
 		context.member = self._handle_member(user_profile, weixin_user, is_from_simulator, request)
-
 		return None
 
 	def _create_webapp_user(self, member):
@@ -82,11 +80,17 @@ class MemberHandler(MessageHandler):
 		else:
 			social_account = create_social_account(user_profile.webapp_id, weixin_user_name, token, SOCIAL_PLATFORM_WEIXIN, is_for_test)
 
+		default_tag = request.component_owner_info.default_tag
+		default_grade = request.component_owner_info.default_grade
+
 		member = get_member_by_binded_social_account(social_account)
 		if member is None:
 			#创建会员信息
 			try:
-				member = create_member_by_social_account(user_profile, social_account)
+
+				member = create_member_by_social_account(user_profile, social_account, default_member_grade=default_grade, default_member_tag=default_tag)
+				if not member:
+					member = create_member_by_social_account(user_profile, social_account)
 				if is_from_simulator:
 					member.is_for_test = True
 					member.save()
@@ -127,12 +131,11 @@ class MemberHandler(MessageHandler):
 		"""
 			更新头像放到celery里
 		"""
-
 		try:
-			if not member.user_icon or member.user_icon == '':
-				member_basic_info_updater(request.user_profile, member)
-				if not member.user_icon or member.user_icon == '':
-					member_basic_info_updater(request.user_profile, member)
+			if is_from_simulator is False and (not member.user_icon or member.user_icon == ''):
+				# member_basic_info_updater(request.user_profile, member)
+				# if not member.user_icon or member.user_icon == '':
+				member_tasks.task_member_base_info_update.delay(member.id)
 		except:
 			notify_message = u"关注时,更新会员头像会员失败,id:{}, cause:\n{}".format(
 							member.id, unicode_full_stack())
@@ -142,9 +145,10 @@ class MemberHandler(MessageHandler):
 
 	def increase_for_be_member(self, request, user_profile, member):
 		try:
-			integral_strategy_settings = request.webapp_owner_info.integral_strategy_settings
+			integral_strategy_settings = request.component_owner_info.integral_strategy_settings
 		except:
 			integral_strategy_settings = None
+		print 'member_handler >>>>>integral_strategy_settings from cache',integral_strategy_settings
 		try:
 			increase_for_be_member_first(user_profile, member, integral_strategy_settings)
 		except:

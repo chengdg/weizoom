@@ -20,6 +20,7 @@ from mall import models as mall_models
 from cache import webapp_cache
 from mall import module_api as mall_api
 from weixin.user import module_api as weixin_api
+from weixin.user.models import set_share_img
 
 
 type2template = {}
@@ -175,6 +176,7 @@ def process_item_group_data(request, component):
 			sub_component['__is_valid'] = False
 
 	#products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
+	valid_product_count = 0
 	if len(product_ids) == 0:
 		component['_has_data'] = False
 	else:
@@ -197,6 +199,7 @@ def process_item_group_data(request, component):
 				sub_component['__is_valid'] = False
 				continue
 
+			valid_product_count = valid_product_count + 1
 			runtime_data['product'] = {
 				"id": product.id,
 				"name": product.name,
@@ -205,6 +208,27 @@ def process_item_group_data(request, component):
 				"is_member_product": product.is_member_product,
 				"promotion_js": json.dumps(product.promotion) if product.promotion else ""
 			}
+	
+	if valid_product_count == 0 and request.in_design_mode:
+		valid_product_count = -1
+	component['valid_product_count'] = valid_product_count
+
+
+def _set_empty_product_list(request, component):
+	if request.in_design_mode:
+		#分类信息为空，构造占位数据
+		count = 4
+		product_datas = []
+		for i in range(count):
+			product_datas.append({
+				"id": -1,
+				"name": "",
+			})
+		component['runtime_data'] = {
+			"products": product_datas
+		}
+	else:
+		component['_has_data'] = False
 
 
 def process_item_list_data(request, component):
@@ -213,45 +237,19 @@ def process_item_list_data(request, component):
 
 	category = component["model"].get("category", '')
 	if len(category) == 0:
-		if request.in_design_mode:
-			#分类信息为空，构造占位数据
-			product_datas = []
-			for i in range(count):
-				product_datas.append({
-					"id": -1,
-					"name": "",
-				})
-			component['runtime_data'] = {
-				"products": product_datas
-			}
-			return
-		else:
-			component['_has_data'] = False
-			return
+		_set_empty_product_list(request, component)
+		return
 	
 	category = json.loads(category)
 	if len(category) == 0:
-		if request.in_design_mode:
-			#分类信息为空，构造占位数据
-			product_datas = []
-			for i in range(count):
-				product_datas.append({
-					"id": -1,
-					"name": "",
-				})
-			component['runtime_data'] = {
-				"products": product_datas
-			}
-			return
-		else:
-			component['_has_data'] = False
-			return
+		_set_empty_product_list(request, component)
+		return
 
 	category_id = category[0]["id"]
 	categories = mall_models.ProductCategory.objects.filter(id=category_id)
 	if categories.count() == 0:
 		#分类已被删除，直接返回
-		component['_has_data'] = False
+		_set_empty_product_list(request, component)
 		return
 
 	category, products = webapp_cache.get_webapp_products(request.user_profile, False, int(category_id))
@@ -260,7 +258,8 @@ def process_item_list_data(request, component):
 	# products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
 	products = products[:count]
 	if len(products) == 0:
-		component['_has_data'] = False
+		_set_empty_product_list(request, component)
+
 	else:
 		#webapp_owner_id = products[0].owner_id
 		#mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
@@ -321,19 +320,23 @@ def __render_component(request, page, component, project):
 		if not sub_component_type in component:
 			component[sub_component_type] = sub_component
 
-	# 购物车数量
-	shopping_cart_product_count = 0
-	if hasattr(request, 'member') and request.member:
-		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
-		
+	
+	if hasattr(request, 'shopping_cart_product_count'):
+		shopping_cart_product_count = request.shopping_cart_product_count
+	else:
+		shopping_cart_product_count = _get_shopping_cart_product_nums(request)
 	# 二维码
-	webapp_owner_id = request.GET.get('webapp_owner_id',None)
-	woid = request.GET.get('woid', None)
-	user_id = woid if webapp_owner_id is None else webapp_owner_id
-	current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(user_id)
+	current_auth_qrcode_img = None
+	if hasattr(request, "webapp_owner_info") and request.webapp_owner_info:
+		current_auth_qrcode_img = request.webapp_owner_info.qrcode_img
+		#current_auth_qrcode_img = weixin_api.get_mp_qrcode_img(request.webapp_owner_id)
+
 	if current_auth_qrcode_img is None:
 		current_auth_qrcode_img = '/static/img/user-1.jpg'
-		
+
+	#设置分享图片为默认头像
+	set_share_img(request)
+
 	#渲染component自身
 	context = Context({
 		'request': request,
@@ -430,9 +433,20 @@ def create_mobile_page_html_content(request, page, page_component, project=None)
 		if len(type2template) == 0:
 			__load_templates()
 
+	# 购物车数量
+	shopping_cart_product_count = _get_shopping_cart_product_nums(request)
+	request.shopping_cart_product_count = shopping_cart_product_count
 	htmls = []
 	htmls.append(__render_component(request, page, page_component, project))
 
 	return '\n'.join(htmls)
+
+
+def _get_shopping_cart_product_nums(request):
+	shopping_cart_product_count = 0
+	if hasattr(request, 'member') and request.member:
+		shopping_cart_product_count = mall_api.get_shopping_cart_product_nums(request.webapp_user)
+
+	return shopping_cart_product_count
 
 	

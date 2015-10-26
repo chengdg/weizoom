@@ -773,7 +773,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             var $item = $(item);
             var value = $item.val();
             $item.slider({
-                min: 20,
+                min: 10,
                 max: 100,
                 step: 1,
                 value: parseInt(value),

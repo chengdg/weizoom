@@ -141,52 +141,53 @@ def get_postage_for_all_models(webapp_owner_id, product, postage_config=None):
 
 
 ########################################################################
+# jz 2015-10-09
 # get_postage_factor: 获得运费计算因子
 # 1、当该商品为 积分商品时， 免运费
 # 2、普通商品 计算运费
 ########################################################################
-def get_postage_factor(webapp_owner_id, product=None):
-	if product and (product.type == PRODUCT_INTEGRAL_TYPE or product.postage_id < 0):
-		# 1、积分商品 免运费
-		postage_configs = PostageConfig.objects.filter(owner_id=webapp_owner_id, is_system_level_config=True)
-	else:
-		# 2、普通商品
-		#_update_default_postage_config(webapp_owner_id)
-		postage_configs = PostageConfig.objects.filter(owner_id=webapp_owner_id, is_used=True)
+# def get_postage_factor(webapp_owner_id, product=None):
+# 	if product and (product.type == PRODUCT_INTEGRAL_TYPE or product.postage_id < 0):
+# 		# 1、积分商品 免运费
+# 		postage_configs = PostageConfig.objects.filter(owner_id=webapp_owner_id, is_system_level_config=True)
+# 	else:
+# 		# 2、普通商品
+# 		#_update_default_postage_config(webapp_owner_id)
+# 		postage_configs = PostageConfig.objects.filter(owner_id=webapp_owner_id, is_used=True)
 
-	if postage_configs.count() > 0:
-		postage_config = postage_configs[0]
-		factor = {
-			'firstWeight': postage_config.first_weight,
-			'firstWeightPrice': postage_config.first_weight_price,
-			'isEnableAddedWeight': postage_config.is_enable_added_weight,
-		}
+# 	if postage_configs.count() > 0:
+# 		postage_config = postage_configs[0]
+# 		factor = {
+# 			'firstWeight': postage_config.first_weight,
+# 			'firstWeightPrice': postage_config.first_weight_price,
+# 			'isEnableAddedWeight': postage_config.is_enable_added_weight,
+# 		}
 
-		if postage_config.is_enable_added_weight:
-			factor['addedWeight'] = float(postage_config.added_weight)
-			if postage_config.added_weight_price:
-				factor['addedWeightPrice'] = float(postage_config.added_weight_price)
-			else:
-				factor['addedWeightPrice'] = 0
+# 		if postage_config.is_enable_added_weight:
+# 			factor['addedWeight'] = float(postage_config.added_weight)
+# 			if postage_config.added_weight_price:
+# 				factor['addedWeightPrice'] = float(postage_config.added_weight_price)
+# 			else:
+# 				factor['addedWeightPrice'] = 0
 
-		# 特殊运费配置
-		special_factor = dict()
-		for special_config in postage_config.get_special_configs():
-			for has_province in special_config.get_special_has_provinces():
-				s_factor = {
-					'firstWeight': postage_config.first_weight,
-					'firstWeightPrice': special_config.first_weight_price,
-					'isEnableAddedWeight': postage_config.is_enable_added_weight,
-					'addedWeight': float(postage_config.added_weight),
-					'addedWeightPrice': float(special_config.added_weight_price)
-				}
+# 		# 特殊运费配置
+# 		special_factor = dict()
+# 		for special_config in postage_config.get_special_configs():
+# 			for has_province in special_config.get_special_has_provinces():
+# 				s_factor = {
+# 					'firstWeight': postage_config.first_weight,
+# 					'firstWeightPrice': special_config.first_weight_price,
+# 					'isEnableAddedWeight': postage_config.is_enable_added_weight,
+# 					'addedWeight': float(postage_config.added_weight),
+# 					'addedWeightPrice': float(special_config.added_weight_price)
+# 				}
 
-				special_factor['province_{}'.format(has_province.province.id)] = s_factor
+# 				special_factor['province_{}'.format(has_province.province.id)] = s_factor
 
-		factor['special_factor'] = special_factor
-		return factor
-	else:
-		return {}
+# 		factor['special_factor'] = special_factor
+# 		return factor
+# 	else:
+# 		return {}
 
 
 ########################################################################

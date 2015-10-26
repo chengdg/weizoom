@@ -68,10 +68,10 @@
           }
       };
 
-      if (window.location.href.indexOf('share_red_envelope') > 0){
+      if (window.location.href.indexOf('share_red_envelope') > 0 || window.location.href.indexOf('webapp_page') > 0){
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
-              "link" : window.location.href,
+              "link" : link,
               "desc" : W.sharePageDesc,
               "title" : W.sharePageDesc,
               // 点击分享按钮
@@ -89,7 +89,7 @@
                           project_id: W.projectId,
                           module: 'user_center',
                           target_api: 'shared_url/record',
-                          link: window.location.href,
+                          link: link,
                           title:W.sharePageTitle
                       }),
                       success: function(data) {

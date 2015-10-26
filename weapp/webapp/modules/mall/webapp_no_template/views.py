@@ -27,6 +27,7 @@ def pay_product_order(request):
 	request.template_dir = TEMPLATE_DIR
 	return request_util.pay_alipay_order(request)
 
-def pay_weizoompay_order(request):
-	request.template_dir = TEMPLATE_DIR
-	return request_util.pay_weizoompay_order(request)
+# jz 2015-10-09
+# def pay_weizoompay_order(request):
+# 	request.template_dir = TEMPLATE_DIR
+# 	return request_util.pay_weizoompay_order(request)

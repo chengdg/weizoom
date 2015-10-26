@@ -575,9 +575,14 @@ navbar_support_page = {
 	'user_center': ['model=user_info', 'module=user_center', 'action=get'],
 	'product_list_page': ['module=mall', 'model=products', 'action=list']
 }
-def __match_navbar_path(webapp_owner_id, path):
+def __match_navbar_path(request, path):
+	webapp_owner_id = request.webapp_owner_id
 	# 全局是否启用
-	is_enable = termite2_models.TemplateGlobalNavbar.get_object(webapp_owner_id).is_enable
+
+	if hasattr(request, 'webapp_owner_info') and hasattr(request.webapp_owner_info, 'global_navbar') and hasattr(request.webapp_owner_info.global_navbar, 'is_enable'):
+		is_enable = request.webapp_owner_info.global_navbar.is_enable
+	else:
+		is_enable = termite2_models.TemplateGlobalNavbar.get_object(webapp_owner_id).is_enable
 	if is_enable is False:
 		return None
 
@@ -612,7 +617,7 @@ def fetch_webapp_global_navbar(request):
 			return {}
 
 		# 判断是否是需要显示的页面
-		path_type = __match_navbar_path(request.webapp_owner_id, path)
+		path_type = __match_navbar_path(request, path)
 		if path_type is None:
 			return {'global_navbar': None}
 

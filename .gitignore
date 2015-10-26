@@ -64,6 +64,7 @@ weapp/static/upload
 
 #pycharm
 .idea/*
+weapp/.idea/*
 
 #self
 .gitignore

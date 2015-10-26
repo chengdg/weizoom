@@ -14,7 +14,7 @@
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
 
-	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
+	<form id="editProduct" class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
   >
@@ -35,12 +35,12 @@
                            placeholder=""
                            value="{% if product %}{{ product.name }}{% endif %}"
                            data-validate="require-notempty"
-                           maxlength="20"/>
-					<div class="errorHint" data-error-hint="请输入商品名称， 不超过20个汉字"></div>
+                           maxlength="30"/>
+					<div class="errorHint" data-error-hint="请输入商品名称， 不超过30个汉字"></div>
 				</div>
 				<p>
 					还可以输入
-					<span class="xa-product-name-tip" style="color:#1F9200;">20</span>
+					<span class="xa-product-name-tip" style="color:#1F9200;">30</span>
 					个字
 				</p>
 			</div>
@@ -301,23 +301,23 @@
 			</select>
 			{% endif %}
 		</header>
-		<input type="hidden" name="properties" />
-		<div class="xa-properties mt10">
-          <div class="xui-i-templateProperties">
+		<input type="hidden" name="properties"/>
+		<div class="xa-properties mt10" data-validate="require-custom-function" data-validate-function="checkProperties">
+          <div class="xui-i-templateProperties clearfix">
               <div class='xa-customProperties'>
                 <ul class="xui-clearListStyle clearfix">
                     {% for property in product.properties %}
-                    <li class="xui-i-templateProperty xa-property pb10" data-property-id="{{property.id}}">
+                    <li class="xui-i-templateProperty xa-property" data-property-id="{{property.id}}">
                         <input class="xui-i-propertyName xui-propertyNameBtn xa-name" readonly=true value='{{property.name}}' maxlength="15">
                         <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255">
-                        <a class="xa-deleteProperty">删除</a>
+                        <a class="xa-deleteProperty xui-deleteProperty">删除</a>
                     </li>
                     {% endfor %}
-                    <div class="errorHint"></div>
                 </ul>
               </div>
               <div class="xa-instantProperties">
                 <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>
+	    		<div class="errorHint pt0 ml10 fl" date-error-Hint="不能为空"></div>
               </div>
 	      </div>
 		</div>
@@ -342,7 +342,7 @@
 				<div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
 				<div>
                     {% if request.manager.id == product.owner.id or not product %}
-					<input type="submit" class="btn btn-primary mr40" id="submitBtn" value="保存" />
+					<input type="submit" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
 					{% else %}
 					{% if request.GET.source == 'onshelf' %}
 					<input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />
@@ -361,6 +361,14 @@
 </div>
 {% endblock %}
 {% block js %}
+{#防止连续点击保存#}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#editProduct').submit(function() {
+            $('.xa-submit').attr('disabled','disabled');
+		});
+	});
+</script>
 <!--    运费验证实现    -->
 <script type="text/javascript">
 var origin_supplier = $('#supplier').data('origin');
@@ -473,6 +481,21 @@ function validatePay($el){
         errorHint: "请至少选择一种支付方式"
     }
 }
+function checkProperties($el){
+	var isValidate = true;
+    $('.xa-property').each(function() {
+		var $property = $(this);
+		var name = $.trim($property.find('.xa-name').val());
+		var value = $.trim($property.find('.xa-value').val());
+		if(name == "" || value == ""){
+    		isValidate = false;
+		}
+	});
+	return {
+        isValidate: isValidate,
+        errorHint: "不能为空"
+    }
+}
 
 </script>
 
@@ -515,7 +538,7 @@ function validateUserCode($el){
 <script type="text/javascript">
 
 $(".xa-product-name").on('input',function(event){
-    var limited = 20;
+    var limited = 30;
     var curLength = $('.xa-product-name').val().length;
     $('.xa-product-name-tip').text(limited-curLength);
 });

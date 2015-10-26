@@ -330,13 +330,16 @@ def _generate_member_token(member, social_account):
 		(''.join(random.sample(string.ascii_letters + string.digits, 6))) + str(member.id))
 
 #TODO 考虑数据库操作事务？
-def create_member_by_social_account(user_profile, social_account, oauth_create=True):
+def create_member_by_social_account(user_profile, social_account, oauth_create=True, default_member_grade=None, default_member_tag=None):
 	#print '==========================1'
 	#if is_checked:
 	if MemberHasSocialAccount.objects.filter(webapp_id=user_profile.webapp_id, account=social_account).count() >  0:
 		return MemberHasSocialAccount.objects.filter(webapp_id=user_profile.webapp_id, account=social_account)[0].member
+	if not default_member_grade:
+		member_grade = MemberGrade.get_default_grade(social_account.webapp_id)
+	else:
+		member_grade = default_member_grade
 
-	member_grade = MemberGrade.get_default_grade(social_account.webapp_id)
 	temporary_token = _create_random()
 	is_new = False
 	if oauth_create:
@@ -426,8 +429,10 @@ def create_member_by_social_account(user_profile, social_account, oauth_create=T
 	member.is_new = is_new
 	#添加默认分组
 	try:
-		default_tag = MemberTag.get_default_tag(user_profile.webapp_id)
-		MemberHasTag.add_tag_member_relation(member, [default_tag.id])
+		if not default_member_tag:
+			default_member_tag = MemberTag.get_default_tag(user_profile.webapp_id)
+		
+		MemberHasTag.add_tag_member_relation(member, [default_member_tag.id])
 	except:
 		notify_message = u"add member to default tag error: cause:\n{}".format(unicode_full_stack())
 		watchdog_warning(notify_message)

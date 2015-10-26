@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-#modified by chuter
-
 import time
 from datetime import datetime
 import urllib
@@ -33,16 +31,17 @@ NAV_NAME = 'homepage'
 
 HOME_SECOND_NAVS = [{
 	'navs': [
-	# {
-	# 	'name': 'dashboard',
-	# 	'title': u'统计概况',
-	# 	'url': '/',
-	# },
 	{
 		'name': 'account_info',
 		'title': u'账号信息',
 		'url': '/account',
 	},
+	# jz 2015-10-10
+	# {
+	# 	'name': 'dashboard',
+	# 	'title': u'统计概况',
+	# 	'url': '/',
+	# },
 	# {
 	# 	'name': 'system_settings',
 	# 	'title': u'系统配置',
@@ -71,37 +70,38 @@ def show_loading_page(request):
 #===============================================================================
 # index : 用户首页
 #===============================================================================
-@login_required
+@login_required(login_url='/login/')
 def index(request):
-	#return HttpResponseRedirect('/shop/editor/categories/')
 	if request.user.is_superuser:
 		return render_to_response('account/login.html', {})
 	if request.user.username in settings.WEIZOOM_CARD_ADMIN_USERS:
 		return HttpResponseRedirect('/card/cards/get/')
+	# jz 2015-10-10
+	# if request.user.username == 'operator':
+	# 	#operator用户转入反馈意见列表
+	# 	return HttpResponseRedirect('/operation/editor/feedbacks/')
+	# elif request.user.username == 'manager':
+	# 	# manager用户直接跳账户列表
+	# 	return HttpResponseRedirect('/account/accounts/')
+	# else:
 
-	if request.user.username == 'operator':
-		#operator用户转入反馈意见列表
-		return HttpResponseRedirect('/operation/editor/feedbacks/')
-	elif request.user.username == 'manager':
-		# manager用户直接跳账户列表
-		return HttpResponseRedirect('/account/accounts/')
-	else:
-		user_profile = request.user_profile
-		if not user_profile.is_mp_registered:
-			return HttpResponseRedirect('/account/')
+	# 询问玉成是否可以去掉
+	user_profile = request.user_profile
+	if not user_profile.is_mp_registered:
+		return HttpResponseRedirect('/new_weixin/mp_user/')
+
+	return HttpResponseRedirect('/mall2/outline/')
+		# jz 2015-10-10
 		# elif request.user.id != request.manager.id:
-		return HttpResponseRedirect('/mall2/outline/')
 		# else:
 		# 	#add by jiangzhe 20150706 直接跳转到微信互动页面
 		# 	return HttpResponseRedirect('/new_weixin/outline/')
-
 		# 	#一般用户转入首页
 		# 	todos = []
 		# 	#待处理消息
 		# 	profile = request.user.get_profile()
 		# 	if profile.new_message_count > 0:
 		# 		todos.append({'text': u'收到%d条新消息' % profile.new_message_count, 'url': '/message/'})
-
 		# 	c = RequestContext(request, {
 		# 		'first_nav_name': FIRST_NAV_NAME,
 		# 		'second_navs': HOME_SECOND_NAVS,
@@ -110,25 +110,21 @@ def index(request):
 		# 		'todo_count': len(todos),
 		# 		'todos': todos
 		# 	})
-
 		# return render_to_response('account/index.html', c)
-
 #from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 
-@login_required
-def show_account_info(request):
-	#add by jiangzhe 20150706 直接跳转到微信互动页面
-	return HttpResponseRedirect('/new_weixin/outline/')
+# jz 2015-10-10
+# @login_required
+# def show_account_info(request):
+# 	return HttpResponseRedirect('/mall2/outline/')
 	# user_profile = request.user_profile
 	# request_user = request.user
-
 	# if user_profile.is_mp_registered:
 	# 	try:
 	# 		mpuser = get_system_user_binded_mpuser(request_user)
 	# 		mpuser_preview_info = MpuserPreviewInfo.objects.get(mpuser=mpuser)
 	# 	except:
 	# 		user_profile.is_mp_registered = False
-
 	# pre_auth_code = None
 	# if ComponentInfo.objects.all().count() > 0:
 	# 	from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
@@ -145,16 +141,12 @@ def show_account_info(request):
 	# 		else:
 	# 			watchdog_error(result)
 	# 	print '------------------', result
-
 	# 	if ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).count() == 0:
 	# 		ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id)
-
 	# else:
 	# 	component_info = None
-
 	# if user_profile.is_mp_registered:
 	# 	mpuser_access_token = get_mpuser_access_token_for(mpuser)
-
 	# 	c = RequestContext(request, {
 	# 		'first_nav_name': FIRST_NAV_NAME,
 	# 		'second_navs': HOME_SECOND_NAVS,
@@ -181,14 +173,11 @@ def show_account_info(request):
 	# 		'component_info': component_info,
 	# 		'is_mp_registered':user_profile.is_mp_registered
 	# 	})
-
 	# return render_to_response('account/account_info.html', c)
-
 # from django import forms
 # from captcha.fields import CaptchaField
 # from captcha.helpers import captcha_image_url
 # from captcha.models import CaptchaStore
-
 # class CaptchaForm(forms.Form):
 #     captcha = CaptchaField()
 
@@ -196,26 +185,58 @@ def show_account_info(request):
 # 以下是登录退出功能
 #===============================================================================
 def login(request):
+	auth.logout(request)
+	c = RequestContext(request, {})
+	# jz 2015-10-10
+	# 'form' : form,
+	# })
+	return render_to_response('account/login.html', c)
+
+
+def logout(request):
+	auth.logout(request)
+
+	redirect_url = '/login/'
+	# http_host = request.META['HTTP_HOST']
+	# http_referer = request.META.get('HTTP_REFERER', '')
+	if settings.FAN_HOST:
+		redirect_url = '%s%s' % (settings.FAN_HOST, redirect_url)
+	return HttpResponseRedirect(redirect_url)
+	#add by bert at 5.5
+	# if 'weapp.weizoom.com' == request.get_host():
+	# 	return HttpResponseRedirect('http://fans.weizoom.com/login/')
+
+	# if 'weixin.weizoom.com' == request.get_host():
+	# 	return HttpResponseRedirect('http://fans.weizoom.com/login/')
+
+	# logined_user_profile = request.user_profile
+	# request_host = request.get_host()
+	# if (logined_user_profile is not None) and \
+	# 	(logined_user_profile.logout_redirect_to is not None) and \
+	# 	request_host == settings.DOMAIN and \
+	# 	len(logined_user_profile.logout_redirect_to.strip()) > 0:
+		#如果当前所请求的域名和本系统服务使用的域名相同，
+		#如果该用户配置了登出的跳转地址那么跳转到所配置的地址
+	# 	return HttpResponseRedirect(logined_user_profile.logout_redirect_to)
+	# else:
+	# return HttpResponseRedirect('/login/')
+	# jz 2015-10-10
 	# if request.GET.get('newsn') == '1':
 	# 	csn = CaptchaStore.generate_key()
 	# 	cimageurl = captcha_image_url(csn)
 	# 	return HttpResponse(cimageurl)
-
 	# human = False
 	# if request.POST:
 	# 	# form = CaptchaForm(request.POST)
 	# 	# if form.is_valid():
 	# 	# 	human = True
-
 	# 	# if not human:
 	# 	# 	form = CaptchaForm()
-
 	# 	# 	c = RequestContext(request, {
 	# 	# 		'captchaError' : True,
 	# 	# 		'form' : form,
 	# 	# 		})
 	# 	# 	return render_to_response('account/login.html', c)
-
 	# 	username = request.POST['username']
 	# 	password = request.POST['password']
 	# 	user = auth.authenticate(username=username, password=password)
@@ -229,7 +250,6 @@ def login(request):
 	# 			request.session['sub_user_id'] = request.sub_user.id
 	# 		else:
 	# 			request.session['sub_user_id'] = None
-
 	# 		auth.login(request, user)
 	# 		return HttpResponseRedirect('/')
 	# 	else:
@@ -243,82 +263,56 @@ def login(request):
 	# 				#用户过期
 	# 				auth.login(request, user)
 	# 				return HttpResponseRedirect('/')
-
 	# 		#用户名密码错误，再次显示登录页面
 	# 		# form = CaptchaForm()
 	# 		c = RequestContext(request, {
 	# 			'error': True,
 	# 			# 'form' : form,
 	# 		})
-
 	# 		return render_to_response(__get_login_tmpl(request), c)
 	# else:
-	c = RequestContext(request, {
-		# 'form' : form,
-		})
-	return render_to_response(__get_login_tmpl(request), c)
+	# c = RequestContext(request, {
+	# 	# 'form' : form,
+	# 	})
+	# return render_to_response('account/login.html', c)
+
+# jz 2015-10-10
+# def __get_login_tmpl(request):
+# 	#首先判断是不是访问用户定制化的首页
+# 	is_request_for_custermized_page = False
+# 	request_host = request.META['HTTP_HOST']
+# 	if request_host != settings.DOMAIN:
+# 		#如果请求的域名和系统设定的自身域名不同，则认为是访问定制化首页
+# 		is_request_for_custermized_page = True
+# 	custermized_login_tmpl = None
+# 	if is_request_for_custermized_page:
+# 		custermized_login_tmpl = __get_customized_login_tmpl(request_host)
+# 	login_tmpl = 'account/login.html'
+# 	if custermized_login_tmpl is not None:
+# 		login_tmpl = custermized_login_tmpl
+# 	return login_tmpl
+# def __get_customized_login_tmpl(request_host):
+# 	target_login_file_root_dir_name = request_host.replace('.', '_')
+# 	target_login_file_root = os.path.join(settings.CUSTOMERIZED_TEMPLATES_DIR, target_login_file_root_dir_name)
+# 	target_login_file_path = os.path.join(target_login_file_root, 'login.html')
+# 	if os.path.exists(target_login_file_path):
+# 		return "{}/login.html".format(target_login_file_root_dir_name)
+# 	else:
+# 		return None
 
 
-def __get_login_tmpl(request):
-	#首先判断是不是访问用户定制化的首页
-	is_request_for_custermized_page = False
-	request_host = request.META['HTTP_HOST']
-
-	if request_host != settings.DOMAIN:
-		#如果请求的域名和系统设定的自身域名不同，则认为是访问定制化首页
-		is_request_for_custermized_page = True
-
-	custermized_login_tmpl = None
-	if is_request_for_custermized_page:
-		custermized_login_tmpl = __get_customized_login_tmpl(request_host)
-
-	login_tmpl = 'account/login.html'
-	if custermized_login_tmpl is not None:
-		login_tmpl = custermized_login_tmpl
-
-	return login_tmpl
-
-def __get_customized_login_tmpl(request_host):
-	target_login_file_root_dir_name = request_host.replace('.', '_')
-	target_login_file_root = os.path.join(settings.CUSTOMERIZED_TEMPLATES_DIR, target_login_file_root_dir_name)
-	target_login_file_path = os.path.join(target_login_file_root, 'login.html')
-
-	if os.path.exists(target_login_file_path):
-		return "{}/login.html".format(target_login_file_root_dir_name)
-	else:
-		return None
-
-@login_required
-def logout(request):
-	logined_user_profile = request.user_profile
-	request_host = request.get_host()
-	auth.logout(request)
-
-	#add by bert at 5.5
-	if 'weapp.weizoom.com' == request.get_host():
-		return HttpResponseRedirect('http://fans.weizoom.com/login/')
-
-	if 'weixin.weizoom.com' == request.get_host():
-		return HttpResponseRedirect('http://fans.weizoom.com/login/')
-
-	if (logined_user_profile is not None) and \
-		(logined_user_profile.logout_redirect_to is not None) and \
-		request_host == settings.DOMAIN and \
-		len(logined_user_profile.logout_redirect_to.strip()) > 0:
-		#如果当前所请求的域名和本系统服务使用的域名相同，
-		#如果该用户配置了登出的跳转地址那么跳转到所配置的地址
-		return HttpResponseRedirect(logined_user_profile.logout_redirect_to)
-	else:
-		return HttpResponseRedirect('/login/')
-
-
-def __get_file_name(file_name):
+def __get_file_name(file_name, extended_name=None):
 	pos = file_name.rfind('.')
 	if pos == -1:
 		suffix = ''
 	else:
 		suffix = file_name[pos:]
+		
 	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
+	# if extended_name:
+	# 	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), '.webp')
+	# else:
+	# 	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
 
 
 ########################################################################
@@ -365,6 +359,15 @@ def __check_image(path):
 		else:
 			return False, 0, 0
 
+def __get_webp_image(dir_path, file_path, file_name):
+	"""
+		将图片文件转换成webp格式
+	"""
+	im =Image.open(file_path).convert("RGB")
+	webp_file_name = file_name[:file_name.find('.')] + '.webp'
+	webp_path = os.path.join(dir_path, webp_file_name)
+	im.save(webp_path, "WEBP")
+	return webp_path, webp_file_name
 
 ########################################################################
 # upload_picture: 上传图片
@@ -400,12 +403,26 @@ def upload_picture(request):
 	print >> dst_file, ''.join(content)
 	dst_file.close()
 
+	# try:
+	# 	webp_path, webp_file_name = __get_webp_image(dir_path, file_path, file_name)
+	# except:
+	# 	webp_path, webp_file_name = None, None
+	webp_path, webp_file_name = None, None
 	is_valid_image, width, height = __check_image(file_path)
 	if is_valid_image:
 		if settings.MODE == 'deploy':
-			image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
+			try:
+				if webp_path and webp_file_name:
+					image_path = upload_image_to_upyun(webp_path,'/upload/%s/%s' % (dir_path_suffix, webp_file_name))	
+				else:
+					image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))	
+			except:
+				image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
 		else:
-			image_path = '/static/upload/%s/%s' % (dir_path_suffix, file_name)
+			if webp_path and webp_file_name:
+				image_path = '/static/upload/%s/%s' % (dir_path_suffix, webp_file_name)
+			else:
+				image_path = '/static/upload/%s/%s' % (dir_path_suffix, file_name)
 
 		if 'is_need_size' in request.REQUEST:
 			return HttpResponse('%d:%d:%s' % (width, height, image_path))
@@ -801,47 +818,46 @@ def save_head_img_local(file_name, content):
 # edit_weixin_mp_user: 绑定微信公众号
 ########################################################################
 @login_required
-def edit_weixin_mp_user(request):
-	try:
-		mp_user = WeixinMpUser.objects.get(owner=request.user)
-	except:
-		mp_user = None
+# def edit_weixin_mp_user(request):
+# 	try:
+# 		mp_user = WeixinMpUser.objects.get(owner=request.user)
+# 	except:
+# 		mp_user = None
 
-	if mp_user:
-		return HttpResponseRedirect('/account/preview_info/')
-	else:
-		c = RequestContext(request, {
-		'nav_name': 'account-mp',
-		'mp_user': mp_user
-		})
-		return render_to_response('account/edit_mp_user.html', c)
+# 	if mp_user:
+# 		return HttpResponseRedirect('/account/preview_info/')
+# 	else:
+# 		c = RequestContext(request, {
+# 		'nav_name': 'account-mp',
+# 		'mp_user': mp_user
+# 		})
+# 		return render_to_response('account/edit_mp_user.html', c)
 
 
 ########################################################################
+# jz 2015-10-10
 # edit_preview_info: 绑定预览显示信息
 ########################################################################
-@login_required
-def edit_preview_info(request):
-	mpuser = get_system_user_binded_mpuser(request.user)
-
-	if mpuser is None:
-		mpuser_preview_info = None
-	else:
-		try:
-			mpuser_preview_info = MpuserPreviewInfo.objects.get(mpuser=mpuser)
-		except:
-			mpuser_preview_info = MpuserPreviewInfo.objects.create(
-				mpuser=mpuser,
-				name = mpuser.username,
-				image_path = DEFAULT_ICON
-			)
-
-	c = RequestContext(request, {
-		'nav_name': 'account-mp',
-		'preview_user': mpuser_preview_info,
-	    'default_icon': DEFAULT_ICON
-	})
-	return render_to_response('account/edit_preview_user.html', c)
+# @login_required
+# def edit_preview_info(request):
+# 	mpuser = get_system_user_binded_mpuser(request.user)
+# 	if mpuser is None:
+# 		mpuser_preview_info = None
+# 	else:
+# 		try:
+# 			mpuser_preview_info = MpuserPreviewInfo.objects.get(mpuser=mpuser)
+# 		except:
+# 			mpuser_preview_info = MpuserPreviewInfo.objects.create(
+# 				mpuser=mpuser,
+# 				name = mpuser.username,
+# 				image_path = DEFAULT_ICON
+# 			)
+# 	c = RequestContext(request, {
+# 		'nav_name': 'account-mp',
+# 		'preview_user': mpuser_preview_info,
+# 	    'default_icon': DEFAULT_ICON
+# 	})
+# 	return render_to_response('account/edit_preview_user.html', c)
 
 
 #===============================================================================

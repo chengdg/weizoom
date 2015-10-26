@@ -1,8 +1,10 @@
-
 #_edit_:张三香
+#editor:王丽 2015.10.13
 
 Feature: 上下架管理
-	Jobs能通过管理系统对商品进行上下架管理
+	"""
+		Jobs能通过管理系统对商品进行上下架管理
+	"""
 
 Background:
 	Given jobs登录系统
@@ -30,7 +32,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall.product @mall2
+@mall2 @product @saleingProduct @toSaleProduct   @mall.product
 Scenario: 1 下架商品对后台及手机端商品列表的影响
 	Jobs下架商品后
 	1. jobs不能获取含有该商品的商品列表
@@ -42,7 +44,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 		[{
 			"name": "商品2"
 		},{
-			"name":"商品1"
+			"name": "商品1"
 		}]
 		"""
 	And jobs能获得'待售'商品列表
@@ -51,7 +53,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 		"""
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -67,7 +69,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 	Then jobs能获得'在售'商品列表
 		"""
 		[{
-			"name":"商品1"
+			"name": "商品1"
 		}]
 		"""
 	And jobs能获得'待售'商品列表
@@ -80,7 +82,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 	#bill在webapp中不能看到商品2
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -88,8 +90,7 @@ Scenario: 1 下架商品对后台及手机端商品列表的影响
 		}]
 		"""
 
-
-@mall.product @mall2
+@mall2 @product @saleingProduct @toSaleProduct   @mall.product
 Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 	Jobs下架商品，并再次上架后
 	1. jobs能获取含有该商品的商品列表
@@ -100,7 +101,7 @@ Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 	Then jobs能获得'在售'商品列表
 		"""
 		[{
-			"name":"商品1"
+			"name": "商品1"
 		}]
 		"""
 	And jobs能获得'待售'商品列表
@@ -113,7 +114,7 @@ Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 	#bill在webapp中不能看到商品2
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{
@@ -127,9 +128,9 @@ Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 	Then jobs能获得'在售'商品列表
 		"""
 		[{
-			"name":"商品2"
+			"name": "商品2"
 		},{
-			"name":"商品1"
+			"name": "商品1"
 		}]
 		"""
 	And jobs能获得'待售'商品列表
@@ -138,7 +139,7 @@ Scenario: 2 下架后再上架商品对后台及手机端商品列表的影响
 		"""
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'全部'商品列表页
-	Then webapp页面标题为'商品列表(全部)'
+	Then webapp页面标题为'商品列表'
 	And bill获得webapp商品列表
 		"""
 		[{

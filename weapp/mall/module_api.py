@@ -152,7 +152,6 @@ def group_product_by_promotion(request, products):
 		default_products = {"group_id": group_id, "products": []}
 		promotion_name = __get_promotion_name(product)
 		promotion2products.setdefault(promotion_name, default_products)['products'].append(product)
-
 	now = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 	items = promotion2products.items()
 	items.sort(lambda x, y: cmp(x[1]['group_id'], y[1]['group_id']))
@@ -310,6 +309,7 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 
 		products_0 = products.filter(display_index=0)
 		products_not_0 = products.exclude(display_index=0)
+		# TODO: need to be optimized
 		products = list(itertools.chain(products_not_0, products_0))
 
 		category = ProductCategory()
@@ -560,7 +560,11 @@ def get_product_model_properties_for_cache(webapp_owner_id):
 #################################################################################
 def get_mall_config_for_cache(webapp_owner_id):
 	def inner_func():
-		mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+		#update by bert at 20151014  for new account can't vs webapp
+		try:
+			mall_config = MallConfig.objects.get(owner_id=webapp_owner_id)
+		except:
+			mall_config = MallConfig.objects.create(owner_id=webapp_owner_id)
 		return {
 			'value': mall_config.to_dict()
 		}
@@ -1990,9 +1994,21 @@ def get_order_usable_integral(order, integral_info):
 	else:
 		return int(user_integral)
 
-
-def get_order_products(order):
+def __hack_product_id_for_show(relations):
 	"""
+	为演示账号修改订单中的商品id duhao 20151022
+	"""
+	products = list(Product.objects.filter(owner_id = settings.TARGET_ID))
+	length = len(products)
+	for r in relations:
+		r.product_id = products[r.product_id % length].id
+		r.product_model_name = 'standard'
+
+	return relations
+def get_order_products(order, user=None):
+	"""
+	user参数由duhao在20151023添加，为了使客户演示账号的订单商品不露馅
+
 	获得订单中的商品集合
 
 	返回dict对象
@@ -2019,6 +2035,11 @@ def get_order_products(order):
 	order.session_data = dict()
 	order_id = order.id
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
+
+	#为演示账号修改订单中的商品id duhao 20151022
+	if user and hasattr(settings, 'SELF_ID') and user.id == settings.SELF_ID:
+		relations = __hack_product_id_for_show(relations)
+		
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
@@ -2211,7 +2232,11 @@ def update_order_status(user, action, order, request=None):
 	'action' : 'rship' 发货
 	"""
 	order_id = order.id
-	operation_name = user.username
+	# 快递100签收发送的finsh动作不记录日志，没有user
+	if user:
+		operation_name = user.username
+	else:
+		operation_name = None
 	action_msg = None
 	if action == 'pay':
 		action_msg = '支付'
@@ -2233,7 +2258,8 @@ def update_order_status(user, action, order, request=None):
 		action_msg = '完成'
 		target_status = ORDER_STATUS_SUCCESSED
 		actions = action.split('-')
-		operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
+		if operation_name:
+			operation_name = u'{} {}'.format(operation_name, (actions[1] if len(actions) > 1 else ''))
 		#更新红包引入消费金额的数据 by Eugene
 		if order.coupon_id and promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=order.coupon_id, introduced_by__gt=0).count() > 0:
 			red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=order.coupon_id)
@@ -2302,8 +2328,9 @@ def update_order_status(user, action, order, request=None):
 		else:
 			Order.objects.filter(id=order_id).update(status=target_status)
 		operate_log = u' 修改状态'
-		record_status_log(order.order_id, operation_name, order.status, target_status)
-		record_operation_log(order.order_id, operation_name, action_msg, order)
+		if operation_name:
+			record_status_log(order.order_id, operation_name, order.status, target_status)
+			record_operation_log(order.order_id, operation_name, action_msg, order)
 
 	try:
 		# TODO 返还用户积分

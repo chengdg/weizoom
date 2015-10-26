@@ -1,3 +1,4 @@
+# __author__ : "冯雪静"
 @func:webapp.modules.mall.views.list_products
 Feature: 在webapp中购买商品
 	bill能在webapp中购买jobs添加的"商品"
@@ -416,8 +417,6 @@ Scenario:8 购买库存为零的商品
 		"""
 	Then bill获得错误提示'有商品库存不足<br/>2秒后返回购物车<br/>请重新下单'
 
-
-
 @allOrder @mall2
 Scenario: 9 会员购买商品后，获取订单列表
 	bill成功创建订单多个订单后，获取订单列表
@@ -496,3 +495,172 @@ Scenario: 9 会员购买商品后，获取订单列表
 			"actions": ["取消订单", "支付"]
 		}]
 		"""
+
+
+
+#根据需求4985新增场景
+@mall.webapp @mall2
+Scenario: 10 会员购买的商品同时参加多个活动，然后下架商品
+	bill购买商品时，jobs下架此商品，bill获得错误提示信息
+
+	Given jobs登录系统
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品1限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 9.00
+		}, {
+			"name": "商品2限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品2",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 8.0
+		}]
+		"""
+	Given jobs登录系统
+	When jobs-下架商品'商品1'
+    When bill访问jobs的webapp
+    When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+	Then bill获得'商品1'错误提示'已下架'
+
+	When bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品2",
+			"count": 1
+		}, {
+			"name": "商品6",
+			"count": 1
+		}]
+		"""
+
+	Given jobs登录系统
+	When jobs-下架商品'商品2'
+    When bill访问jobs的webapp
+  	When bill从购物车发起购买操作
+		"""
+		{
+			"action": "pay",
+			"context": [{
+				"name": "商品2"
+			}, {
+				"name": "商品6"
+			}]
+		}
+		"""
+	And bill填写收货信息
+	"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And bill在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "货到付款"
+	}
+	"""
+    Then bill获得'商品2'错误提示'已下架'
+
+
+
+@mall.webapp @mall2
+Scenario: 11 会员购买的商品同时参加多个活动，然后删除商品
+	bill购买商品时，jobs删除此商品，bill获得错误提示信息
+
+	Given jobs登录系统
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "商品1限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品1",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 9.00
+		}, {
+			"name": "商品2限时抢购",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "商品2",
+			"member_grade": "全部",
+			"count_per_purchase": 2,
+			"promotion_price": 8.0
+		}]
+		"""
+	When jobs-永久删除商品'商品1'
+  	When bill访问jobs的webapp
+
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品1",
+				"count": 1
+			}]
+		}
+		"""
+
+	Then bill获得'商品1'错误提示'已删除'
+
+	When bill访问jobs的webapp
+	When bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品2",
+			"count": 1
+		}, {
+			"name": "商品6",
+			"count": 1
+		}]
+		"""
+  	Given jobs登录系统
+  	When jobs-永久删除商品'商品2'
+	When bill从购物车发起购买操作
+		"""
+		{
+			"action": "pay",
+			"context": [{
+				"name": "商品2"
+			}, {
+				"name": "商品6"
+			}]
+		}
+		"""
+  	And bill填写收货信息
+	"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦"
+		}
+	"""
+	And bill在购物车订单编辑中点击提交订单
+	"""
+	{
+		"pay_type": "货到付款"
+	}
+	"""
+	Given jobs登录系统
+
+	Then bill获得'商品2'错误提示'已删除'

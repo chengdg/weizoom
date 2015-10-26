@@ -1,7 +1,8 @@
 #_author_:张三香
+#editor:王丽  2015.10.19
 
 Feature:商品概况-概况数据
-
+"""
 	#对店铺的商品进行不同维度的分析
 
 	一、查询条件
@@ -45,11 +46,14 @@ Feature:商品概况-概况数据
 										and (订单.来源='本店')]
 	        
 	        '？'说明窗提示:当前所选时段内所有成交订单内商品总件数
+"""
+
 Background:
     Given jobs登录系统
     And jobs设定会员积分策略
         """
         {
+            "be_member_increase_count":500,
             "integral_each_yuan":10
         }
         """
@@ -87,11 +91,6 @@ Background:
         """
         {
             "cards":[{
-                "id":"0000001",
-                "password":"1234567",
-                "status":"未使用",
-                "price":110.00
-            },{
                 "id":"0000002",
                 "password":"1234567",
                 "status":"未使用",
@@ -116,32 +115,14 @@ Background:
         """
         [{
             "name": "商品1",
-            "promotion_title": "促销商品1",
-            "category": "分类1",
             "postage": 10,
-            "detail": "商品1详情",
-            "swipe_images": [{
-                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
-            }],
-            "model": {
-                "models": {
-                    "standard": {
-                        "price": 100.00,
-                        "weight": 5.0,
-                        "stock_type": "无限"
-                    }
-                }
-            },
+            "price": 100.00,
+            "weight": 5.0,
+            "stock_type": "无限",
             "synchronized_mall":"是"
         }, {
             "name": "商品2",
-            "promotion_title": "促销商品2",
-            "category": "分类1",
             "postage": 15,
-            "detail": "商品2详情",
-            "swipe_images": [{
-                "url": "/standard_static/test_resource_img/hangzhou1.jpg"
-            }],
             "is_enable_model": "启用规格",
             "model": {
                 "models": {
@@ -171,8 +152,8 @@ Background:
             "is_permanant_active": "true",
             "rules": [{
                 "member_grade": "全部会员",
-                "discount": 70,
-                "discount_money": 70.00
+                "discount": 20,
+                "discount_money": 20.00
             }]
         }, {
             "name": "商品2积分应用",
@@ -182,8 +163,8 @@ Background:
             "is_permanant_active": "true",
             "rules": [{
                 "member_grade": "全部会员",
-                "discount": 70,
-                "discount_money": 70.00
+                "discount": 20,
+                "discount_money": 20.00
             }]
         }]
         """
@@ -204,17 +185,17 @@ Background:
     When marry关注jobs的公众号于'2014-07-03'
 
     When 微信用户批量消费jobs的商品
-        | order_id |    date    | consumer |    product   | payment | pay_type |postage*|price*|integral | product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
-        |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10   | 100  |  300    |       200        |                      |     90       |                   |    0    |    0    |   0   |               |    待支付     |
-        |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,取消    |    已取消     |
-        |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_1 |     205      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
-        |   0004   | 3天前      |   tom    | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |   0     |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,完成    |    已完成     |
-        |   0005   | 2天前      |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,退款    |    退款中     |
-        |   0006   | 今天       |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |  200    |       200        |                      |     90       |                   |    0    |    0    |   0   |  jobs,完成退款|   退款成功    |
-        |   0007   | 今天       |   -tom3  | 商品1,1      |   支付  | 货到付款 |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
-        |   0008   | 今天       |   -tom4  | 商品1,1      |   支付  | 支付宝   |   10   | 100  |   0     |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+        | order_id |    date    | consumer |    product   | payment | pay_type |postage*|price*| product_integral |       coupon         | paid_amount* |  weizoom_card     | alipay* | wechat* | cash* |   action      | order_status* |
+        |   0001   | 2014-08-05 |   jack   | 商品1,1      |         | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |   90    |    0    |   0   |               |    待支付     |
+        |   0002   | 5天前      |   tom    | 商品1,1      |         | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,取消    |    已取消     |
+        |   0003   | 4天前      |   tom    | 商品2,黑色,2 |   支付  | 微信支付 |   15   | 100  |        0         | 全体券1,coupon1_id_1 |     205      |                   |    0    |   205   |   0   |  jobs,发货    |    已发货     |
+        |   0004   | 3天前      |   tom    | 商品2,白色,1 |   支付  | 货到付款 |   15   | 100  |        0         | 全体券1,coupon1_id_2 |     105      |  0000002,1234567  |    0    |    0    |   15  |  jobs,完成    |    已完成     |
+        |   0005   | 2天前      |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,退款    |    退款中     |
+        |   0006   | 今天       |  marry   | 商品1,1      |   支付  | 支付宝   |   10   | 100  |       200        |                      |     90       |                   |   90    |    0    |   0   |  jobs,完成退款|   退款成功    |
+        |   0007   | 今天       |   -tom3  | 商品1,1      |   支付  | 货到付款 |   10   | 100  |        0         |                      |     110      |                   |    0    |    0    |   110 |               |    待发货     |
+        |   0008   | 今天       |   -tom4  | 商品1,1      |   支付  | 支付宝   |   10   | 100  |        0         |                      |     110      |                   |   110   |    0    |   0   |               |    待发货     |
        
-@stats @stats.product @mall2
+@mall2 @bi @salesAnalysis   @stats @stats.product
 Scenario: 1 商品概况数据
 
 	#商品概况数据

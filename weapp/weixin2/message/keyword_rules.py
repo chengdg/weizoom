@@ -14,6 +14,7 @@ from weixin2 import export
 import weixin2.models as weixin_models
 from core import resource
 from core import paginator
+from core import emotion
 from core.jsonresponse import create_response
 from util import *
 
@@ -84,12 +85,12 @@ class KeywordRules(resource.Resource):
                 if keyword in words:
                     msg = u'关键词“%s”已经存在' % keyword
                 else:
-                    has_duplicate, duplicate_patterns = has_duplicate_pattern(request.user, keyword)
+                    has_duplicate, duplicate_patterns = has_duplicate_pattern(request.manager, keyword)
                     if has_duplicate:
                         msg = u'关键词“%s”已经存在' % keyword
             except:
                 print 'invalid keywords:',keywords
-                has_duplicate, duplicate_patterns = has_duplicate_pattern(request.user, keyword)
+                has_duplicate, duplicate_patterns = has_duplicate_pattern(request.manager, keyword)
                 if has_duplicate:
                     msg = u'关键词“%s”已经存在' % keyword
 
@@ -103,7 +104,7 @@ class KeywordRules(resource.Resource):
             #获取每页个数
             count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 
-            raw_rules = Rule.get_keyword_reply_rule(request.user)
+            raw_rules = Rule.get_keyword_reply_rule(request.manager)
             rules = []
 
             is_search =False
@@ -161,7 +162,7 @@ class KeywordRules(resource.Resource):
             type = NEWS_TYPE
 
         rule = Rule.objects.create(
-            owner = request.user,
+            owner = request.manager,
             type = type,
             rule_name = rule_name,
             patterns = patterns,
@@ -192,7 +193,7 @@ class KeywordRules(resource.Resource):
             if not patterns:
                 raise Http404('invalid keywords')
 
-            has_duplicate, duplicate_patterns = has_duplicate_pattern(request.user, patterns, id)
+            has_duplicate, duplicate_patterns = has_duplicate_pattern(request.manager, patterns, id)
 
             if has_duplicate:
                 response = create_response(601)
@@ -200,6 +201,12 @@ class KeywordRules(resource.Resource):
                 return response.get_response()
 
             answer = request.POST.get('answer', '')
+            #将answer中的表情img标签转化为文字符号 by Eugene
+            answers = json.loads(answer)
+            for data in answers:
+                if data['type'] == "text":
+                    data['content'] = emotion.change_img_to_emotion(data['content'])
+            answer = json.dumps(answers)
             material_id = int(request.POST.get('material_id', 0))
 
             if material_id == 0:
@@ -226,5 +233,5 @@ class KeywordRules(resource.Resource):
         删除关键词自动回复规则
         """
         id = int(request.POST.get('id', -1))
-        Rule.objects.filter(owner=request.user, id=id).delete()
+        Rule.objects.filter(owner=request.manager, id=id).delete()
         return create_response(200).get_response()

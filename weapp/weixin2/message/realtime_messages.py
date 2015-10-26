@@ -31,6 +31,7 @@ from watchdog.utils import *
 
 from utils.string_util import byte_to_hex
 
+from util import translate_special_characters
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
 DATETIME_BEFORE_HOURS = 48
@@ -137,13 +138,13 @@ class RealtimeMessages(resource.Resource):
                 pass
         if content or (start_time and end_time) or nick_name or grade_id != '-1' or tag_id != '-1':
             status = STATUS_ALL
-            pageinfo, realtime_messages = get_messages_from_messages(request.user, request.user_profile, cur_page, count_per_page, content, start_time, end_time, filter_value_items,request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_messages(request.manager, request.user_profile, cur_page, count_per_page, content, start_time, end_time, filter_value_items,request.META['QUERY_STRING'])
         elif status == STATUS_COLLECT:
-            pageinfo, realtime_messages = get_messages_from_collected(request.user, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_collected(request.manager, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
         elif status == STATUS_REMARK:
-            pageinfo, realtime_messages = get_messages_from_remarked(request.user, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_messages_from_remarked(request.manager, request.user_profile, cur_page, count_per_page, request.META['QUERY_STRING'])
         else:
-            pageinfo, realtime_messages = get_sessions(request.user, request.user_profile, cur_page, count_per_page, status, request.META['QUERY_STRING'])
+            pageinfo, realtime_messages = get_sessions(request.manager, request.user_profile, cur_page, count_per_page, status, request.META['QUERY_STRING'])
 
         response = create_response(200)
         response.data = {
@@ -170,7 +171,7 @@ class RealtimeMessages(resource.Resource):
         type = request.POST['type']
         openid_sendto = request.POST['openid']
 
-        mpuser = get_system_user_binded_mpuser(request.user)
+        mpuser = get_system_user_binded_mpuser(request.manager)
         if mpuser is None:
             response = create_response(500)
             response.errMsg = u'请先进行公众号的绑定'
@@ -229,7 +230,7 @@ class RealtimeMessages(resource.Resource):
         receiver_username = request.POST['receiver_username']
         material_id = request.POST['material_id']
 
-        mpuser = get_system_user_binded_mpuser(request.user)
+        mpuser = get_system_user_binded_mpuser(request.manager)
         if mpuser is None:
             response = create_response(500)
             response.errMsg = u'请先进行公众号的绑定'
@@ -249,7 +250,7 @@ class RealtimeMessages(resource.Resource):
         response = create_response(200)
         data = {}
         data['created_at'] = latest_contact_created_at.strftime('%Y-%m-%d %H:%M:%S')
-
+        content = translate_special_characters(content)
         data['text'] = emotion.new_change_emotion_to_img(content)
         from_index = data['text'].find('<a href=')
         if from_index > -1:
@@ -384,6 +385,7 @@ def get_sessions(user, user_profile, cur_page, count, status=STATUS_ALL, query_s
             one_session['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
         else:
             one_session['user_icon'] =  DEFAULT_ICON
+        session.latest_contact_content = translate_special_characters(session.latest_contact_content)
         one_session['text'] = emotion.new_change_emotion_to_img(session.latest_contact_content)
         from_index = one_session['text'].find('<a href=')
         if from_index > -1:
@@ -569,6 +571,8 @@ def get_message_detail_items(user, webapp_id, messages, filter_items=None):
             one_message['user_icon'] = weixin_user.weixin_user_icon if len(weixin_user.weixin_user_icon.strip()) > 0 else DEFAULT_ICON
         else:
             one_message['user_icon'] =  DEFAULT_ICON
+
+        message.content = translate_special_characters(message.content)
         one_message['text'] = emotion.new_change_emotion_to_img(message.content)
         try:
             one_message['created_at'] = message.weixin_created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -669,3 +673,4 @@ def _send_custom_message(mpuser, send_to, custom_message):
     mpuser_access_token = get_mpuser_access_token_for(mpuser)
     wxapi = get_weixin_api(mpuser_access_token)
     wxapi.send_custom_msg(send_to, custom_message)
+

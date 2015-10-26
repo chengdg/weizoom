@@ -74,6 +74,10 @@
 
 		<script type="text/javascript">
 			window.UEDITOR_HOME_URL = '/static/ueditor-1.2.6.1/'
+            function logout(){
+                localStorage.removeItem('message_count')
+                location.href = "/logout/";
+            }
 		</script>
 		<!-- *start_prunt_task* -->
 		<!-- [prunt_task] 
@@ -161,6 +165,233 @@
 
 		<script type="text/javascript" src="/resource_js/"></script>
 		{% block base_js %}{% endblock %}
+		<script type="text/javascript">
+			/**
+				子账号权限控制相关函数------------------------------------------
+			*/
+			function renderNavs() {
+				//去fans系统获取用户权限信息
+				var userPermissions = "";
+				$.ajax({
+					url:'{{fans_host}}/auth/api/permission_set/',
+					type:'get',
+					dataType:'jsonp',
+					success:function(response) {
+						if (response.code == 200) {
+							userPermissions = response.data;
+							render(userPermissions);
+						} else {
+							render(userPermissions);
+						}
+					}
+				});
+
+			}
+
+			//渲染菜单
+			function render(userPermissions) {
+				if(!userPermissions || userPermissions === 'error') {
+					alert("获取您的权限信息失败，请联系客服！" + userPermissions);
+					return;
+				}
+				if(userPermissions === '' || userPermissions === '[]') {
+					alert("您没有权限浏览任何页面，请联系您的管理员！");
+					return;
+				}
+
+				//先清空原有的菜单列表
+				$('.xa-first-navs').empty();
+				$('.xa-sideBar').empty();
+
+				var navTree = getNavTree();
+				var indexPage = "/";  //没有权限浏览此一级目录时跳转到的页面地址
+				var redirectToSecondPage = false;  //没有权限时是否跳转到本一级目录内的其他二级目录
+				var hasPermission = false;  //标记是否有权限查看此页面
+				var firstNavName = "{{first_nav_name}}";
+				var permissions = JSON.parse(userPermissions);
+
+				var firstNavs = navTree.firstNavs;
+				var secondNavs = navTree.secondNavs;
+
+				//渲染一级导航
+				for(var index in firstNavs) {
+					var firstNav = firstNavs[index];
+					if(firstNav.permission === "" || $.inArray(firstNav.permission, permissions) >= 0){
+						//设置浏览无权限页面时自动跳转到的页面
+						if(indexPage === "/") {
+							indexPage = firstNav.url;
+						}
+
+						var className = "";
+						if(firstNav.className) {
+							className = '<i class="xui-noticyTip ' + firstNav.className + '"></i>';
+						}
+
+						if(firstNavName === firstNav.name) {
+							hasPermission = true;
+
+							$('.xa-first-navs').append('<li class="pr"><a' + 
+								' class="active"' + 
+								' href="' + firstNav.url + 
+								'" title="' + firstNav.title + '">' + 
+								firstNav.title + '</a>'+ className + '</li>');
+						} else {
+							$('.xa-first-navs').append('<li class="pr"><a' + 
+								' href="' + firstNav.url + 
+								'" title="' + firstNav.title + '">' + 
+								firstNav.title + '</a>' + className + '</li>');
+						}
+					}
+				}
+
+				//渲染左侧导航
+				var secondNavName = "{{second_nav_name}}";
+				var thirdNavName = "{{third_nav_name}}";
+				
+				//二级导航
+				if(secondNavName.length > 0 && secondNavs.length > 0) {
+					hasPermission = false;  //如果有二级导航的话也要满足权限
+
+					// $('.xa-sideBar').addClass('xui-sideBarBg');
+					$('.xa-sideBar').append('<ul class="nav xa-second-navs"></ul>');
+
+					for(var index in secondNavs) {
+						var secondNav = secondNavs[index];
+						if(secondNav.permission === "" || $.inArray(secondNav.permission, permissions) >= 0){
+							if(!redirectToSecondPage) {
+								indexPage = secondNav.url;
+								redirectToSecondPage = true;
+							}
+							if(secondNavName === secondNav.name) {
+								hasPermission = true;
+								$('.xa-second-navs').append('<li class="active">' + 
+									'<a href="' + secondNav.url + 
+									'" title="' + secondNav.title + 
+									'" name="' + secondNav.name + '">' + 
+									'<i class="xui-icon-sideBar xui-sideBar-' + secondNav.name + '"></i>' + 
+									secondNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+							} else {
+								$('.xa-second-navs').append('<li>' + 
+									'<a href="' + secondNav.url + 
+									'" title="' + secondNav.title + 
+									'" name="' + secondNav.name + '">' + 
+									'<i class="xui-icon-sideBar xui-sideBar-' + secondNav.name + '"></i>' + 
+									secondNav.title + '<i class="xui-icon-arrow"></i></a></li>');
+							}
+
+							//三级导航
+							var thirdNavs = null;
+							if(secondNav.hasOwnProperty('thirdNavs')) {
+								thirdNavs = secondNav.thirdNavs;
+							}
+							if(thirdNavs) {
+								for(var _index in thirdNavs) {
+									var thirdNav = thirdNavs[_index];
+									var className = "";
+									if(thirdNav.className) {
+										className = '<i class="xui-noticyTip ' + thirdNav.className + '"></i>';
+									}
+									if(thirdNavName === thirdNav.name) {
+										$('.xa-second-navs').append('<li class="xui-sideBar-third active_third">' + 
+											'<a href="' + thirdNav.url + 
+											'" title="' + thirdNav.title + 
+											'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
+											thirdNav.title + '<i class="xui-icon-arrow"></i>' + 
+											className + '</a></li>');
+									} else {
+										$('.xa-second-navs').append('<li class="xui-sideBar-third">' + 
+											'<a href="' + thirdNav.url + 
+											'" title="' + thirdNav.title + 
+											'" name="' + thirdNav.name + '">&nbsp;&nbsp;&nbsp;&nbsp;' + 
+											thirdNav.title + '<i class="xui-icon-arrow"></i>' + 
+											className +'</a></li>');
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if(!hasPermission) {  //没权限时跳转到指定页面
+					window.location.href = "http://" + location.host + indexPage;
+				} else {
+					//在菜单没渲染完之前先把正文隐藏掉，不然会先出正文然后才出菜单，很难看
+					$('.xa-first-navs').css('visibility','visible');
+					$('.xa-sideBar').css('visibility','visible');
+					$('.xa-content').css('visibility','visible');
+				}
+			}
+
+			//判断是否是子账号，如果是的话需要判断权限
+			function isSubUser() {
+				var userId = "{{request.user.id}}";
+				var managerId = "{{request.manager.id}}";
+				return userId !== managerId;
+			}
+
+			//获取导航标签的树状结构
+			function getNavTree() {
+				var navTree = {
+					'firstNavs': [],
+					'secondNavs': []
+				};
+				{% if first_navs %}
+					{% for nav in first_navs %}
+						navTree.firstNavs.push({
+							'name': '{{nav.inner_name}}',
+							'title': '{{nav.name}}',
+							'url': '{{nav.url}}',
+							'permission': '{{nav.permission}}',
+							'className': '{{nav.class_name}}'
+						});
+					{% endfor %}
+				{% endif %}
+
+				{% if second_navs %}
+					{% for second_nav in second_navs %}
+						{% for nav in second_nav.navs %}
+							var secondNav = {
+								'name': '{{nav.name}}',
+								'title': '{{nav.title}}',
+								'url': '{{nav.url}}',
+								'permission': '{{nav.permission}}'
+							};
+							{% if nav.third_navs %}
+								secondNav['thirdNavs'] = [];
+								{% for third_nav in nav.third_navs %}
+									secondNav['thirdNavs'].push({
+										'name': '{{third_nav.name}}',
+										'title': '{{third_nav.title}}',
+										'url': '{{third_nav.url}}',
+										'permission': '{{third_nav.permission}}',
+										'className': '{{third_nav.class_name}}'
+									});
+								{% endfor %}
+							{% endif %}
+							navTree.secondNavs.push(secondNav);
+						{% endfor %}
+					{% endfor %}
+				{% endif %}
+				
+				return navTree;
+			}
+			/**
+				子账号权限控制相关函数结束----------------------------------------------------------
+			*/
+
+			$(document).ready(function($) {
+				if(isSubUser()) {
+					//如果是子账号则进入权限控制模块
+					xlog('in sub user mode');
+					renderNavs();
+				} else {
+					//如果是manager账号则直接显示菜单和数据
+					$('.xa-first-navs').css('visibility','visible');
+					$('.xa-sideBar').css('visibility','visible');
+					$('.xa-content').css('visibility','visible');
+				}
+			});
+		</script>
 		<!-- <div class="wui-rightNav">
 			<a title="数据挖掘" href="http://data.weizoom.com/?token={{token}}"></a>
 			<a title="粉丝沟通" href="http://weibo.weizoom.com/?token={{token}}"></a>

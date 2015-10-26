@@ -68,6 +68,10 @@ def is_pay_request(request):
 	url = __get_request_url(request)
 	return ('/webapp/wxpay/' in url) or ('/webapp/alipay/' in url) or ('/pay/' in url)
 
+def is_wapi_request(request):
+	url = __get_request_url(request)
+	return ('/wapi/' in url)
+
 def is_pay_callback_request(request):
 	url = __get_request_url(request)
 	return ('/alipay/mall/pay_result/' in url)

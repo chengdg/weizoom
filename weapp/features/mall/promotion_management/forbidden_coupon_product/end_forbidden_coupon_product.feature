@@ -1,4 +1,5 @@
-#_author_:张三香
+#author: 张三香
+#editor: 雪静 2015.10.15
 
 Feature:结束禁用优惠券商品
 
@@ -56,7 +57,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
+@mall2 @promotion @promotionForbiddenCoupon
 Scenario: 1 手动结束单个禁用优惠券商品
 	Given jobs登录系统
 	Then jobs能获取禁用优惠券商品列表
@@ -85,17 +86,9 @@ Scenario: 1 手动结束单个禁用优惠券商品
 	Then jobs能获取禁用优惠券商品列表
 		"""
 		[{
-			"product_name": "商品2",
-			"product_price": 100.0,
-			"status": "进行中",
-			"start_date": "今天",
-			"end_date": "1天后"
+			"product_name": "商品2"
 		},{
-			"product_name": "商品1",
-			"product_price": 100.0,
-			"status": "未开始",
-			"start_date": "明天",
-			"end_date": "2天后"
+			"product_name": "商品1"
 		}]
 		"""
 	#结束'进行中'的禁用优惠券商品
@@ -103,21 +96,17 @@ Scenario: 1 手动结束单个禁用优惠券商品
 	Then jobs能获取禁用优惠券商品列表
 		"""
 		[{
-			"product_name": "商品1",
-			"product_price": 100.0,
-			"status": "未开始",
-			"start_date": "明天",
-			"end_date": "2天后"
+			"product_name": "商品1"
 		}]
 		"""
 	#结束'未开始'的禁用优惠券商品
 	When jobs结束单个禁用优惠券商品'商品1'
 	Then jobs能获取禁用优惠券商品列表
 		"""
-		{ }
+		[]
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2
+@mall2 @promotion @promotionForbiddenCoupon
 Scenario: 2 批量结束多个禁用优惠券商品
 	Given jobs登录系统
 	Then jobs能获取禁用优惠券商品列表
@@ -154,47 +143,47 @@ Scenario: 2 批量结束多个禁用优惠券商品
 		"""
 	Then jobs能获取禁用优惠券商品列表
 		"""
-		{ }
+		[]
 		"""
 
-@promotion @promotionForbiddenCoupon @mall2 
+@mall2 @promotion @promotionForbiddenCoupon
 Scenario: 3 在查询结果中, 结束禁用优惠券商品
 	#在'商品名称'的查询结果中,进行'结束'操作
-		Given jobs登录系统
-		When jobs设置查询条件
-			"""
-			{
-				"product_name":"商品3"
-			}
-			"""
-		Then jobs能获取禁用优惠券商品列表
-			"""
-			[{
-				"product_name": "商品3"
-			}]
-			"""
-		When jobs结束单个禁用优惠券商品'商品3'
-		Then jobs能获取禁用优惠券商品列表
-			"""
-			{ }
-			"""
+	Given jobs登录系统
+	When jobs设置查询条件
+		"""
+		{
+			"product_name":"商品3"
+		}
+		"""
+	Then jobs能获取禁用优惠券商品列表
+		"""
+		[{
+			"product_name": "商品3"
+		}]
+		"""
+	When jobs结束单个禁用优惠券商品'商品3'
+	Then jobs能获取禁用优惠券商品列表
+		"""
+		[]
+		"""
 
 	#在'商品编码'的查询结果中,进行'结束'操作
-		When jobs设置查询条件
-			"""
-			{
-				"bar_code":"1234561"
-			}
-			"""
-		Then jobs能获取禁用优惠券商品列表
-			"""
-			[{
-				"product_name": "商品1"
-			}]
-			"""
-		When jobs结束单个禁用优惠券商品'商品1'
-		Then jobs能获取禁用优惠券商品列表
-			"""
-			{ }
-			"""
+	When jobs设置查询条件
+		"""
+		{
+			"bar_code":"1234561"
+		}
+		"""
+	Then jobs能获取禁用优惠券商品列表
+		"""
+		[{
+			"product_name": "商品1"
+		}]
+		"""
+	When jobs结束单个禁用优惠券商品'商品1'
+	Then jobs能获取禁用优惠券商品列表
+		"""
+		[]
+		"""
 

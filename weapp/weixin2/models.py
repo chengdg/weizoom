@@ -256,6 +256,7 @@ class Rule(models.Model):
 		}
 
 def _fill_answer_dict(answer_dict):
+	import re
 	if answer_dict['type'] == 'news':
 		answer_dict['newses'] = []
 		#获取图文标题
@@ -267,6 +268,15 @@ def _fill_answer_dict(answer_dict):
 			news_dict['title'] = news.title
 			answer_dict['newses'].append(news_dict)
 	else:
+		#把除a表情外的html字符<,>转化成html对应的编码 by Eugene
+		a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
+		all_a_html = a_pattern.findall(answer_dict['content'])
+		for html in all_a_html:
+			answer_dict['content'] = answer_dict['content'].replace(html, "%s")
+		answer_dict['content'] = answer_dict['content'].replace('<', "&lt;")
+		answer_dict['content'] = answer_dict['content'].replace('>', "&gt;")
+		answer_dict['content'] = answer_dict['content'] % tuple(all_a_html)
+		#处理表情
 		answer_dict['content'] = emotion.change_emotion_to_img(answer_dict['content'])
 
 def _format_hour(start_hour, end_hour):

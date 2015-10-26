@@ -1,3 +1,5 @@
+#editor:王丽 2015.10.15
+
 @func:webapp.modules.mall.views.update_product
 Feature: Update Product
 	Jobs能通过管理系统更新商品
@@ -59,10 +61,6 @@ Background:
 		[{
 			"name": "商品1",
 			"categories": "分类1,分类2,分类3",
-			"physical_unit": "包",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"introduction": "商品1的简介",
 			"detail": "商品1的详情",
 			"shelve_type": "上架",
 			"swipe_images": [{
@@ -85,7 +83,6 @@ Background:
 		}, {
 			"name": "商品2",
 			"categories": "",
-			"physical_unit": "盘",
 			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"introduction": "商品2的简介",
@@ -117,8 +114,8 @@ Background:
 		}]
 		"""
 
-@mall2 @mall.product
-Scenario: 更新商品
+@mall2 @product @saleingProduct @toSaleProduct   @mall.product
+Scenario:1 更新商品
 	Jobs添加一组商品后，能更改单个商品的所有字段的属性
 
 	When jobs更新商品'商品1'
@@ -153,17 +150,11 @@ Scenario: 更新商品
 			"name": "商品11"
 		}]
 		"""
-	#Then jobs找不到商品'商品1'
 	And jobs能获取商品'商品11'
-		#	"introduction": "商品1的简介",
 		"""
 		{
 			"name": "商品11",
 			"category": "分类2,分类3",
-			"physical_unit": "",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou3.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou1.jpg",
-			"detail": "商品1的详情",
 			"remark": "",
 			"shelve_type": "上架",
 			"swipe_images": [{
@@ -190,8 +181,7 @@ Scenario: 更新商品
 		"""
 		{
 			"name": "商品2",
-			"category": "",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"categories": "",
 			"detail": "商品2的详情",
 			"shelve_type": "上架",
 			"swipe_images": [{
@@ -226,8 +216,6 @@ Scenario: 更新商品
 		{
 			"name": "商品2",
 			"category": "",
-			"thumbnails_url": "/standard_static/test_resource_img/hangzhou2.jpg",
-			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
 			"detail": "商品2的详情",
 			"shelve_type": "下架",
 			"swipe_images": [{
@@ -267,8 +255,8 @@ Scenario: 更新商品
 		}
 		"""
 
-@mall2 @mall.product
-Scenario: 切换邮费配置
+@mall2 @product @saleingProduct @toSaleProduct   @mall.product
+Scenario:2 切换邮费配置
 	jobs把运费配置更改为'圆通'
 	jobs查看商品详情
 

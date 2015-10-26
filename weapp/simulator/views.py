@@ -23,6 +23,7 @@ from django.contrib import auth
 from django.test import Client
 
 from account.models import UserProfile
+from weixin.user import module_api
 from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, get_system_user_binded_mpuser
 from weixin.message import generator
 from weixin.manage.customerized_menu import util as menu_util
@@ -221,8 +222,10 @@ def send_from_simulator(request):
 		params['is_user_logined'] = 1
 
 	#模拟POST，获得response
+	authed_appid_info = module_api.authed_appid(profile.user_id)
+	appid = authed_appid_info.authorizer_appid
 	client = Client()
-	html_response = client.post('/weixin/%s/?weizoom_test_data=1' % webapp_id, params)
+	html_response = client.post('/weixin/appid/%s/?weizoom_test_data=1' % appid, params)
 
 	#从response中抽取返回的文本
 	xml_response = html_response.content.decode('utf-8')
@@ -253,10 +256,12 @@ def get_menu_event_response(request):
 	content = request.POST['content']
 	webapp_id = request.POST['webapp_id']
 	from_user = request.POST.get('from_user', 'weizoom')
-
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
 	#模拟POST，获得response
+	authed_appid_info = module_api.authed_appid(profile.user_id)
+	appid = authed_appid_info.authorizer_appid
 	client = Client()
-	html_response = client.post('/weixin/%s/?weizoom_test_data=1' % webapp_id, {
+	html_response = client.post('/weixin/appid/%s/?weizoom_test_data=1' % appid, {
 		'weizoom_test_data': generator.get_text_test_event_request(webapp_id, from_user, content)
 	})
 
@@ -287,10 +292,12 @@ def get_menu_event_response(request):
 def subscribe(request):
 	webapp_id = request.POST['webapp_id']
 	from_user = request.POST.get('from_user', 'weizoom')
-
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
 	#模拟POST，获得response
+	authed_appid_info = module_api.authed_appid(profile.user_id)
+	appid = authed_appid_info.authorizer_appid
 	client = Client()
-	html_response = client.post('/weixin/%s/?weizoom_test_data=1' % webapp_id, {
+	html_response = client.post('/weixin/appid/%s/?weizoom_test_data=1' % appid, {
 		'weizoom_test_data': generator.get_subscribe_event(webapp_id, from_user)
 	})
 
@@ -321,13 +328,50 @@ def subscribe(request):
 def unsubscribe(request):
 	webapp_id = request.POST['webapp_id']
 	from_user = request.POST.get('from_user', 'weizoom')
-
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
 	#模拟POST，获得response
+	authed_appid_info = module_api.authed_appid(profile.user_id)
+	appid = authed_appid_info.authorizer_appid
 	client = Client()
-	html_response = client.post('/weixin/%s/?weizoom_test_data=1' % webapp_id, {
+	html_response = client.post('/weixin/appid/%s/?weizoom_test_data=1' % appid, {
 		'weizoom_test_data': generator.get_unsubscribe_event(webapp_id, from_user)
 	})
 
+	#从response中抽取返回的文本
+	xml_response = html_response.content.decode('utf-8')
+	if settings.DUMP_DEBUG_MSG:
+		print '========== start xml response =========='
+		if settings.IS_UNDER_BDD:
+			print xml_response.replace('<', '{').replace('>', '}')
+		else:
+			print xml_response
+		print '========== finish xml response =========='
+	if '<MsgType><![CDATA[text]]></MsgType>' in xml_response:
+		return_content = render_text_response(xml_response)
+	elif '<MsgType><![CDATA[news]]></MsgType>' in xml_response:
+		return_content = render_news_response(html_response)
+	else:
+		return_content = 'unknown_type'
+
+	response = create_response(200)
+	response.data = return_content
+	return response.get_response()
+
+########################################################################
+# subscribe: 关注公众账号
+########################################################################
+def qr_subscribe(request):
+	webapp_id = request.POST['webapp_id']
+	ticket = request.POST['ticket']
+	from_user = request.POST.get('from_user', 'weizoom')
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
+	#模拟POST，获得response
+	authed_appid_info = module_api.authed_appid(profile.user_id)
+	appid = authed_appid_info.authorizer_appid
+	client = Client()
+	html_response = client.post('/weixin/appid/%s/?weizoom_test_data=1' % appid, {
+		'weizoom_test_data': generator.get_qrcode_subscribe_event(webapp_id, ticket, from_user)
+	})
 	#从response中抽取返回的文本
 	xml_response = html_response.content.decode('utf-8')
 	if settings.DUMP_DEBUG_MSG:

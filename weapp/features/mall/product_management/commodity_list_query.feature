@@ -1,5 +1,6 @@
 #_author_:王丽
 #_edit_:张三香
+#editor:王丽 2015.10.13
 
 
 Feature: 微商城管理-商品管理-在售商品管理 -“查询”
@@ -12,13 +13,13 @@ Feature: 微商城管理-商品管理-在售商品管理 -“查询”
 			商品价格、商品库存和商品销量的查询支持只输入最低值或只输入最高值
 			商品库存只输入库存最低值时，能把库存为无限的商品查询出来
 	(5)数据准备：
-				|  name        |  barCode  |   categories     | price         |  stocks  |  sales  |  created_at       |
-				|  商品复合规格|           |                  |  10.5 ~ 40.0  |          |    4    |  2015-07-02 10:20 |
-				|  商品单规格  |           |                  |  10.0 ~ 20.0  |          |    2    |  2015-07-02 10:20 |
-				|  商品5       |  1234562  |                  |   0           |  100000  |    0    |  2015-08-01 05:36 |
-				|  商品3       |  1234562  | 分类1,分类2,分类3|   1           |   98     |    1    |  2015-07-02 10:20 |
-				|  商品2       |  1234561  | 分类1,分类2      |   10          |    0     |    0    |  2015-04-03 00:00 |
-				|  商品1       |           | 分类1            |  0.01         |   无限   |    5    |  2015-04-02 23:59 |
+		|  name        |  barCode  |   categories     | price         |  stocks  |  sales  |  created_at       |
+		|  商品复合规格|           |                  |  10.5 ~ 40.0  |          |    4    |  2015-07-02 10:20 |
+		|  商品单规格  |           |                  |  10.0 ~ 20.0  |          |    2    |  2015-07-02 10:20 |
+		|  商品5       |  1234562  |                  |   0           |  100000  |    0    |  2015-08-01 05:36 |
+		|  商品3       |  1234562  | 分类1,分类2,分类3|   1           |   98     |    1    |  2015-07-02 10:20 |
+		|  商品2       |  1234561  | 分类1,分类2      |   10          |    0     |    0    |  2015-04-03 00:00 |
+		|  商品1       |           | 分类1            |  0.01         |   无限   |    5    |  2015-04-02 23:59 |
 """
 
 Background:
@@ -96,27 +97,15 @@ Background:
 		|0006    | 2015-07-04 | tom      | 商品3,1   | 支付    | 支付宝   |   1      |    1        |  1      | 0      | 0     | jobs,发货     |  已发货         |  2015-07-03 |  2015-07-03  |
 		|0007    | 2015-07-01 | -tom2    | 商品1,1   | 支付    | 支付宝   |   0.01   |    0.01     |  0.01   | 0      | 0     | jobs,发货     |  已发货         |  2015-07-01 |  2015-07-01  |
 		|0008    | 2015-07-10 | tom      | 商品3,1   |         | 微信支付 |   1      |    1        |  0      | 1      | 0     |               |  待支付         |             |              |
-		|0009    | 2015-07-02 | tom      | 商品3,1   | 未支付  | 微信支付 |   1      |    1        |  0      | 0      | 0     | jobs,完成退款 |  退款成功       |  2015-07-02 |  2015-07-02  |
+		|0009    | 2015-07-02 | tom      | 商品3,1   |         | 微信支付 |   1      |    1        |  0      | 0      | 0     | jobs,完成退款 |  退款成功       |  2015-07-02 |  2015-07-02  |
 
-@mall2
-Scenario:1. 在售商品列表查询
+@mall2 @product @saleingProduct
+Scenario:1 在售商品列表查询
 
 	#空查询、默认查询（空查询）
 		When jobs设置商品查询条件
 			"""
-			{
-				"name":"",
-				"barCode":"",
-				"lowPrice":"",
-				"highPrice":"",
-				"lowStocks":"",
-				"highStocks":"",
-				"lowSales":"",
-				"highSales":"",
-				"category":"全部",
-				"startDate":"",
-				"endDate":""
-			}
+			{}
 			"""
 		Then jobs能获得'在售'商品列表
 			|  name  |  barCode  |   categories     | price |  stocks  |  sales  |  created_at       |
@@ -131,17 +120,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"商品2",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"name":"商品2"
 				}
 				"""
 
@@ -153,17 +132,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"商品",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"name":"商品"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -178,17 +147,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"商  2",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"name":"商  2"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -201,17 +160,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"1234562",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"barCode":"1234562"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -223,17 +172,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"123456",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"barCode":"123456"
 				}
 				"""
 
@@ -245,17 +184,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"0",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":""
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -269,17 +199,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"",
-					"highPrice":"1",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"1"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -292,17 +213,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"0.01",
-					"highPrice":"10",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"10"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -311,45 +223,23 @@ Scenario:1. 在售商品列表查询
 				|  商品2 |  1234561  | 分类1,分类2      |   10  |    0     |    0    |  2015-04-03 00:00 |
 				|  商品1 |           | 分类1            |  0.01 |   无限   |    5    |  2015-04-02 23:59 |
 
-
-
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"0",
-					"highPrice":"0",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"0"
 				}
 				"""
-
-
 			Then jobs能获得'在售'商品列表
-				|  name  |  barCode |      categories      |  price  |  stocks  |  sales  |  created_at    |
-				|  商品5 |  1234562  |                    |  0      |  100000  |    0    |  2015-08-01 05:36     |
+				|  name  |  barCode | categories |  price  |  stocks  |  sales  | created_at       |
+				|  商品5 |  1234562 |            |  0      |  100000  |    0    | 2015-08-01 05:36 |
 
 		#查询结果为空
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"10.01",
-					"highPrice":"100",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"100"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -360,17 +250,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"98",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":""
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -383,17 +264,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"",
-					"highStocks":"100000",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":"100000"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -406,17 +278,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"0",
-					"highStocks":"98",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":"98"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -427,17 +290,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"100000",
-					"highStocks":"100000",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":"100000"
 				}
 				"""
 
@@ -449,17 +303,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"10",
-					"highStocks":"20",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":"20"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -470,17 +315,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"0",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":""
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -494,17 +330,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"",
-					"highSales":"1",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"1"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -517,17 +344,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"0",
-					"highSales":"4",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"4"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -539,17 +357,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"1",
-					"highSales":"1",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"1"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -560,17 +369,8 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"6",
-					"highSales":"10",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"10"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -582,17 +382,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"分类1",
-					"startDate":"",
-					"endDate":""
+					"category":"分类1"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -604,17 +394,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"分类3",
-					"startDate":"",
-					"endDate":""
+					"category":"分类3"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -625,17 +405,7 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"分类4",
-					"startDate":"",
-					"endDate":""
+					"category":"分类4"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -646,15 +416,6 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
 					"startDate":"2015-04-01 00:00",
 					"endDate":"2015-04-03 00:00"
 				}
@@ -668,15 +429,6 @@ Scenario:1. 在售商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
 					"startDate":"2015-7-10 00:00",
 					"endDate":"2015-07-20 00:00"
 				}
@@ -706,8 +458,8 @@ Scenario:1. 在售商品列表查询
 			|  name  |  barCode  |      categories      |  price  |  stocks  |  sales  |  created_at       |
 			|  商品3 |  1234562  |  分类1,分类2,分类3   |  1      |   98     |    1    |  2015-07-02 10:20 |
 
-@mall2
-Scenario:2. 在售多规格商品列表查询
+@mall2 @product @saleingProduct
+Scenario:2 在售多规格商品列表查询
 
 	Given jobs已添加商品规格
 		"""
@@ -828,17 +580,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"10",
-					"highPrice":"10",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"10"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -850,17 +593,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"60",
-					"highPrice":"70",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"70"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -870,17 +604,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"10",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":""
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -893,17 +618,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
 					"lowPrice":"",
-					"highPrice":"10",
-					"lowStocks":"",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highPrice":"10"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -920,17 +636,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"1",
-					"highStocks":"",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":""
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -945,17 +652,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"",
-					"highStocks":"1",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":"1"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -967,17 +665,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
 					"lowStocks":"700",
-					"highStocks":"1000",
-					"lowSales":"",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highStocks":"1000"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -988,17 +677,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
 					"highStocks":"",
-					"lowSales":"4",
-					"highSales":"",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"lowSales":"4"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -1010,17 +690,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"",
-					"highSales":"3",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"3"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -1035,17 +706,8 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"2",
-					"highSales":"3",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"3"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
@@ -1055,39 +717,20 @@ Scenario:2. 在售多规格商品列表查询
 			When jobs设置商品查询条件
 				"""
 				{
-					"name":"",
-					"barCode":"",
-					"lowPrice":"",
-					"highPrice":"",
-					"lowStocks":"",
-					"highStocks":"",
 					"lowSales":"4",
-					"highSales":"4",
-					"category":"全部",
-					"startDate":"",
-					"endDate":""
+					"highSales":"4"
 				}
 				"""
 			Then jobs能获得'在售'商品列表
 				|     name     |  barCode  |      categories      |   price        |  stocks  |  sales  |  created_at       |
 				|  商品复合规格|           |                      |  10.5 ~ 40.0   |          |    4    |  2015-07-02 10:20 |
 
-@mall2 
+@mall2 @product @saleingProduct
 Scenario:3. 针对线上BUG3669按商品名称查询时，查询结果的商品库存是正确的
 		When jobs设置商品查询条件
 			"""
 			{
-				"name":"商品2",
-				"barCode":"",
-				"lowPrice":"",
-				"highPrice":"",
-				"lowStocks":"",
-				"highStocks":"",
-				"lowSales":"",
-				"highSales":"",
-				"category":"全部",
-				"startDate":"",
-				"endDate":""
+				"name":"商品2"
 			}
 			"""
 		Then jobs能获得'在售'商品列表

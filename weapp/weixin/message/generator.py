@@ -46,8 +46,20 @@ def get_unsubscribe_event(to_user, from_user='weizoom'):
 	timestamp = int(time.time())
 	return REQUEST_SUBSCRIBE_EVENT_TMPL % (to_user, from_user, timestamp, 'unsubscribe')
 
+REQUEST_QRCODE_EVET_TMPL = u"""
+<xml>
+	<ToUserName><![CDATA[%s]]></ToUserName>
+	<FromUserName><![CDATA[%s]]></FromUserName>
+	<CreateTime>%s</CreateTime>
+	<MsgType><![CDATA[event]]></MsgType>
+	<Event><![CDATA[%s]]></Event>
+	<EventKey><![CDATA[qrscene_123123]]></EventKey>
+	<Ticket><![CDATA[%s]]></Ticket>
+</xml>"""
 
-
+def get_qrcode_subscribe_event(to_user, ticket, from_user='weizoom'):
+	timestamp = int(time.time())
+	return REQUEST_QRCODE_EVET_TMPL % (to_user, from_user, timestamp, 'subscribe', ticket)
 
 
 NEWS_BEG_TMPL = u"""
@@ -106,7 +118,7 @@ def __get_absolute_url(orig_url, user_profile, material_id=None):
 	else:
 		if not orig_url.startswith('http'):
 			absolute_url = u'http://%s/%s/%s' % (user_profile.host, path, orig_url)
-	if material_id and ('model=share_red_envelope&action=get' in absolute_url):
+	if absolute_url and material_id and ('model=share_red_envelope&action=get' in absolute_url):
 		absolute_url = '%s&material_id=%s' % (absolute_url, material_id)
 	return absolute_url if (absolute_url is not None) else orig_url
 

@@ -1,5 +1,5 @@
-
-#_author_:张三香
+#author:张三香
+#editor:雪静 2015.10.15
 
 Feature:添加禁用优惠券商品时商品查询弹窗信息校验
 	"""
@@ -56,16 +56,9 @@ Background:
 			"discount": "8"
 		}]
 		"""
-	Given jobs设定会员积分策略
-		"""
-		{
-			"integral_each_yuan": 2,
-			"use_ceiling": -1
-		}
-		"""
 
-@promotion @promotionForbiddenCoupon @mall2
-Scenario: 1 添加禁用商品时商品查询弹框信息校验
+@mall2 @promotion @promotionForbiddenCoupon
+Scenario:1 添加禁用商品时商品查询弹框信息校验
 	Given jobs登录系统
 	When jobs添加禁用优惠券商品
 		"""
@@ -149,9 +142,7 @@ Scenario: 1 添加禁用商品时商品查询弹框信息校验
 		"""
 	When jobs新建活动时设置参与活动的商品查询条件
 		"""
-		{
-			"name":""
-		}
+		{}
 		"""
 	Then jobs新建禁用优惠券商品活动时能获得已上架商品列表
 		| name       | price | stocks | status | actions |

@@ -1,4 +1,5 @@
 #_author_:张三香
+#editor:王丽 2015.10.13
 
 Feature:商品销量与订单量的比较
 """
@@ -80,14 +81,14 @@ Scenario: 1 订单量等于商品销量
 		When bill访问jobs的webapp
 		And bill购买jobs的商品
 			"""
-				{
-  					"order_id": "001",
-					"products": [{
-						"name": "商品1",
-						"model": "M",
-						"count": 1
-					}]
-				}
+			{
+				"order_id": "001",
+				"products": [{
+					"name": "商品1",
+					"model": "M",
+					"count": 1
+				}]
+			}
 			"""
 		When bill使用支付方式'货到付款'进行支付
 
@@ -95,52 +96,53 @@ Scenario: 1 订单量等于商品销量
 		When tom访问jobs的webapp
 		And tom购买jobs的商品
 			"""
-				{
-					"order_id": "002",
-					"products": [{
-						"name": "商品1",
-						"model": "S",
-						"count": 1
-					}]
-				}
+			{
+				"order_id": "002",
+				"products": [{
+					"name": "商品1",
+					"model": "S",
+					"count": 1
+				}]
+			}
 			"""
 		When tom使用支付方式'微信支付'进行支付
 		Given jobs登录系统
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no": "002"
-		}
-		"""
+			"""
+			{
+				"order_no": "002"
+			}
+			"""
 
 	#已完成订单（marry购买商品1,数量1）
 		When marry访问jobs的webapp
 		And marry购买jobs的商品
 			"""
-				{
-					"order_id": "003",
-					"products": [{
-						"name": "商品1",
-						"model": "M",
-						"count": 1
-					}]
-				}
+			{
+				"order_id": "003",
+				"products": [{
+					"name": "商品1",
+					"model": "M",
+					"count": 1
+				}]
+			}
 			"""
 		When marry使用支付方式'支付宝'进行支付
 		Given jobs登录系统
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no": "003"
-		}
-		"""
+			"""
+			{
+				"order_no": "003"
+			}
+			"""
 		When jobs'完成'订单'003'
+
 	Then jobs能获取商品'商品1'
 		"""
-			{
-				"name":"商品1",
-				"sales":3
-			}
+		{
+			"name":"商品1",
+			"sales":3
+		}
 		"""
 	When jobs根据给定条件查询订单
 		"""
@@ -158,12 +160,6 @@ Scenario: 1 订单量等于商品销量
 			"order_no": "001"
 		}]
 		"""
-#	Then jobs能获得筛选结果
-#		"""
-#			{
-#				"results": 3
-#			}
-#		"""
 
 @mall2 @product @sales @online_bug
 Scenario: 2 订单量小于商品销量
@@ -172,81 +168,82 @@ Scenario: 2 订单量小于商品销量
 		When bill访问jobs的webapp
 		And bill购买jobs的商品
 			"""
-				{
-					"order_id": "001",
-					"products": [{
-						"name": "商品1",
-						"model": "M",
-						"count": 1
-					}]
-				}
+			{
+				"order_id": "001",
+				"products": [{
+					"name": "商品1",
+					"model": "M",
+					"count": 1
+				}]
+			}
 			"""
 		When bill使用支付方式'货到付款'进行支付
 		Given jobs登录系统
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no": "001"
-		}
-		"""
+			"""
+			{
+				"order_no": "001"
+			}
+			"""
 		When jobs'完成'订单'001'
 	#tom只购买商品1,数量2
 		When tom访问jobs的webapp
 		And tom购买jobs的商品
 			"""
-				{
-					"order_id": "002",
-					"products": [{
-						"name": "商品1",
-						"model": "M",
-						"count": 1
-					},{
-						"name": "商品1",
-						"model": "S",
-						"count": 1
-					}]
-				}
+			{
+				"order_id": "002",
+				"products": [{
+					"name": "商品1",
+					"model": "M",
+					"count": 1
+				},{
+					"name": "商品1",
+					"model": "S",
+					"count": 1
+				}]
+			}
 			"""
 		When tom使用支付方式'微信支付'进行支付
 		Given jobs登录系统
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no": "002"
-		}
-		"""
+			"""
+			{
+				"order_no": "002"
+			}
+			"""
 		When jobs'完成'订单'002'
 	#marry购买2种商品（商品1,2 商品2,1）
 		When marry访问jobs的webapp
 		And marry购买jobs的商品
 			"""
-				{
-					"order_id": "003",
-					"products": [{
-						"name": "商品1",
-						"model": "M",
-						"count": 2
-					},{
-						"name": "商品2",
-						"count": 1
-					}]
-				}
+			{
+				"order_id": "003",
+				"products": [{
+					"name": "商品1",
+					"model": "M",
+					"count": 2
+				},{
+					"name": "商品2",
+					"count": 1
+				}]
+			}
 			"""
 		When marry使用支付方式'微信支付'进行支付
 		Given jobs登录系统
 		When jobs对订单进行发货
-		"""
-		{
-			"order_no": "003"
-		}
-		"""
+			"""
+			{
+				"order_no": "003"
+			}
+			"""
 		When jobs'完成'订单'003'
+
 	Then jobs能获取商品'商品1'
 		"""
-			{
-				"name":"商品1",
-				"sales":5
-			}
+		{
+			"name":"商品1",
+			"sales":5
+		}
 		"""
 	When jobs根据给定条件查询订单
 		"""
@@ -265,12 +262,7 @@ Scenario: 2 订单量小于商品销量
 			"order_no": "001"
 		}]
 		"""
-#	Then jobs能获得筛选结果
-#		"""
-#			{
-#				"results": 3
-#			}
-#		"""
+
 
 
 

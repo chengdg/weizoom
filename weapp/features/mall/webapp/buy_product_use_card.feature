@@ -1,8 +1,9 @@
-# __edit__ : "benchi"
+#editor: benchi
+#editor: 师帅 2015.10.20
+
 Feature:使用微众卡购买商品
 	用户能通过webapp使用微众卡购买jobs的商品
 	feathure里要加一个  "weizoom_card_money":50.00,的字段
-
 
 Background:
 	Given jobs登录系统
@@ -92,10 +93,6 @@ Scenario:1 微众卡金额大于订单金额时进行支付
 			"status": "待发货",
 			"final_price": 0.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":50.00,
 			"products":[{
 				"name":"商品1",
@@ -142,10 +139,6 @@ Scenario:2 微众卡金额等于订单金额时进行支付
 			"status": "待发货",
 			"final_price": 0.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":50.00,
 			"products":[{
 				"name":"商品1",
@@ -164,7 +157,7 @@ Scenario:2 微众卡金额等于订单金额时进行支付
 		"""
 
 @mall2 @mall.pay_weizoom_card
-Scenario:3微众卡金额小于订单金额时进行支付
+Scenario:3 微众卡金额小于订单金额时进行支付
 	bill用微众卡购买jobs的商品时,微众卡金额小于订单金额
 	1.创建订单成功，订单状态为“等待支付”
 	2.微众卡金额不变,状态为“未使用”
@@ -192,10 +185,6 @@ Scenario:3微众卡金额小于订单金额时进行支付
 			"status": "待支付",
 			"final_price": 20.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":30.00,
 			"products":[{
 				"name":"商品1",
@@ -254,10 +243,6 @@ Scenario:4 用微众卡购买商品时，输入错误的卡号密码
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -273,6 +258,7 @@ Scenario:4 用微众卡购买商品时，输入错误的卡号密码
 			"price":100.00
 		}
 		"""
+
 @mall2 @mall.pay_weizoom_card
 Scenario:5 用已用完的微众卡购买商品时
 	bill用已用完的微众卡购买jobs的商品时
@@ -301,10 +287,6 @@ Scenario:5 用已用完的微众卡购买商品时
 			"status": "待支付",
 			"final_price": 20.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -322,7 +304,7 @@ Scenario:5 用已用完的微众卡购买商品时
 		"""
 
 @mall2 @mall.pay_weizoom_card
-Scenario:6用未激活的微众卡购买商品时
+Scenario:6 用未激活的微众卡购买商品时
 	bill用未激活的微众卡购买jobs的商品时
 	1.创建订单失败，提示"微众卡未激活"
 	2.微众卡金额不变,状态为“未激活”
@@ -360,10 +342,6 @@ Scenario:6用未激活的微众卡购买商品时
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -419,10 +397,6 @@ Scenario:7 用已过期的微众卡购买商品时
 			"status": "待支付",
 			"final_price": 50.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"products":[{
 				"name":"商品1",
 				"price":50.00,
@@ -440,7 +414,7 @@ Scenario:7 用已过期的微众卡购买商品时
 		"""
 
 @mall2 @mall.pay_weizoom_card
-Scenario:8用已使用过的微众卡购买商品时
+Scenario:8 用已使用过的微众卡购买商品时
 	1.创建订单成功，订单状态为“待发货”
 	2.扣除微众卡金额,状态为“已用完”
 
@@ -466,10 +440,6 @@ Scenario:8用已使用过的微众卡购买商品时
 			"status": "待发货",
 			"final_price": 0.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":50.00,
 			"products":[{
 				"name":"商品1",
@@ -486,8 +456,9 @@ Scenario:8用已使用过的微众卡购买商品时
 			"price":0.00
 		}
 		"""
+
 @mall2 @mall.pay_weizoom_card
-Scenario:9用10张微众卡共同支付
+Scenario:9 用10张微众卡共同支付
 	1.创建订单成功，订单状态为“待支付”
 	2.扣除微众卡金额,状态为“已用完”
 	Given jobs登录系统
@@ -602,10 +573,6 @@ Scenario:9用10张微众卡共同支付
 			"status": "待支付",
 			"final_price": 40.0,
 			"product_price": 50.0,
-			"coupon_money": 0.0,
-			"promotion_saved_money": 0.0,
-			"postage": 0.00,
-			"integral_money":0.00,
 			"weizoom_card_money":10.00,
 			"products":[{
 				"name":"商品1",
@@ -849,6 +816,7 @@ Scenario:10 用11张微众卡共同支付
 			"price":1.00
 		}]
 		"""
+
 @mall2 @mall.pay_weizoom_card
 Scenario:11 用微众卡购买商品时，输入两张同样的卡号密码
 	bill用微众卡购买jobs的商品时,输入错误的卡号密码
@@ -885,6 +853,7 @@ Scenario:11 用微众卡购买商品时，输入两张同样的卡号密码
 			"price":100.00
 		}
 		"""
+
 @mall2 @mall @mall.pay_weizoom_card
 Scenario:12 用已用完的微众卡购买商品时
 	bill用已用完的微众卡购买jobs的商品时
@@ -913,10 +882,6 @@ Scenario:12 用已用完的微众卡购买商品时
 		"status": "待支付",
 		"final_price": 50.0,
 		"product_price": 50.0,
-		"coupon_money": 0.0,
-		"promotion_saved_money": 0.0,
-		"postage": 0.00,
-		"integral_money":0.00,
 		"products":[{
 			"name":"商品1",
 			"price":50.00,

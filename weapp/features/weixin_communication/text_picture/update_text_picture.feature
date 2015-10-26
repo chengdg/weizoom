@@ -1,5 +1,5 @@
 Feature: 需求1298编辑图文消息 jobs在系统中编辑图文消息
-	
+
 Background:
 	Given jobs登录系统
 	When jobs已添加单图文
@@ -50,7 +50,7 @@ Background:
 
 @mall2 @senior @textPicture 
 Scenario: 1 编辑多图文 
-	
+
 	Given jobs登录系统
 	When jobs已编辑图文'图文2'
 		"""

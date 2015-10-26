@@ -296,7 +296,7 @@ def _get_current_log_info(member_integral_log):
 			friend_member = Member.objects.get(token=member_integral_log.follower_member_token)
 			if friend_member.user_icon and friend_member.user_icon != '':
 				member_integral_log.pic = friend_member.user_icon
-				member_integral_log.name = friend_member.username_for_html
+				member_integral_log.name = friend_member.username_size_ten
 			else:
 				member_integral_log.pic = SCAN_REWARDES_IMGE
 				member_integral_log.name = ''
@@ -604,7 +604,7 @@ def get_refueling_page(request):
 def get_mileke_page(request):
 	game_over = False
 	now_time = time.localtime()
-	date = time.strptime('2015-10-09 18:00', "%Y-%m-%d %H:%M")
+	date = time.strptime('2015-10-22 10:00', "%Y-%m-%d %H:%M")
 
 	if now_time > date:
 		game_over = True
@@ -645,18 +645,20 @@ def get_mileke_page(request):
 	"""
 		投票总数
 	"""
-	# milekes = Mileke.objects.all().order_by('-count')
-	# member_mileke = None
-	# for mileke in milekes:
-	# 	mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
-	# 	if joined and mileke.member == member:
-	# 		member_mileke = mileke
+	member_mileke = None
+	if game_over is False:
+		milekes = Mileke.objects.all()#.order_by('-count')
+		for mileke in milekes:
+			mileke.current_count = MilekeLog.objects.filter(mileke=mileke, member__is_subscribed=True).count()
+			if joined and mileke.member == member:
+				member_mileke = mileke
 
-	"""
-		排序
-	"""
-	#milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
-	milekes = Mileke.objects.all().order_by('-current_count')
+		"""
+			排序
+		"""
+		milekes = sorted(milekes, key=lambda x:x.current_count,reverse=True)
+	else:
+		milekes = Mileke.objects.all().order_by('-current_count')
 	"""
 		获取当前用户位置
 	"""
@@ -666,10 +668,10 @@ def get_mileke_page(request):
 		current_index = list(milekes).index(member_mileke) + 1
 	else:
 		current_index = 0
-
+	milekes = milekes[:100]
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': False,
-		'page_title': u'免费领取儿童安全坐垫 ',
+		'page_title': u'限额免费抢收小斑马特供有机蔬菜！',
 		'milekes': milekes,
 		'joined': joined,
 		'current_count': current_count,
@@ -680,7 +682,8 @@ def get_mileke_page(request):
 		'hide_non_member_cover': True,
 		'game_over': game_over,
 		'current_index': current_index,
-		'member':member
+		'member':member,
+		'share_img_url':'http://weappstatic.b0.upaiyun.com/static_v2/img/shucai.jpg'
 	})
 	return render_to_response('%s/mileke_page.html' % request.template_dir, c)
 

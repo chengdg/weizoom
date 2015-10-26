@@ -25,9 +25,9 @@ class DirectFollow(resource.Resource):
 		"""
 		快速关注页面
 		"""
-		operation_settings_objs = OperationSettings.objects.filter(owner=request.user)
+		operation_settings_objs = OperationSettings.objects.filter(owner=request.manager)
 		if operation_settings_objs.count() == 0:
-			operation_settings = OperationSettings.objects.create(owner=request.user)
+			operation_settings = OperationSettings.objects.create(owner=request.manager)
 		else:
 			operation_settings = operation_settings_objs[0]
 
@@ -49,7 +49,7 @@ class DirectFollow(resource.Resource):
 		non_member_followurl = request.POST.get('non_member_followurl', '')
 		weshop_followurl = request.POST.get('weshop_followurl', '')
 
-		OperationSettings.objects.filter(owner=request.user).update(
+		OperationSettings.objects.filter(owner=request.manager).update(
 			non_member_followurl = non_member_followurl,
 			weshop_followurl = weshop_followurl
 		)
