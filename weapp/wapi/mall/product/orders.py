@@ -99,9 +99,16 @@ class Orders(api_resource.ApiResource):
 		request.webapp_owner_info = DummyModel()
 
 		if args.get('red_envelop_rule_id'):
-			request.webapp_owner_info.red_envelope = promotion_models.RedEnvelopeRule.objects.get(id=args.get('red_envelop_rule_id') )
+			red = promotion_models.RedEnvelopeRule.objects.get(id=args.get('red_envelop_rule_id') )
+			coupon_rule = promotion_models.CouponRule.objects.filter(id=red.coupon_rule_id)
+			if len(coupon_rule) and coupon_rule[0].remained_count > 0:
+				red.coupon_rule = {'end_date': coupon_rule[0].end_date}
+			else:
+				red.coupon_rule = None
+			result = red.to_dict('coupon_rule')
+			request.webapp_owner_info.red_envelope = result
 		else:
-			request.webapp_owner_info.red_envelope = promotion_models.RedEnvelopeRule()
+			request.webapp_owner_info.red_envelope = promotion_models.RedEnvelopeRule().to_dict()
 
 		#request.webapp_owner_info.red_envelope = args['red_envelop']
 		request.webapp_owner_id = args['woid']

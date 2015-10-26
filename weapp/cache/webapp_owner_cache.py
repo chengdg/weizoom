@@ -9,13 +9,12 @@ from modules.member import models as member_models
 from weixin.user import models as weixin_user_models
 from webapp import models as webapp_models
 from account import models as account_models
-from termite2 import models as termite2_models
 
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import watchdog_error, watchdog_warning
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
-from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
-from webapp import models as webapp_models
+
+
 local_cache = {}
 
 
@@ -80,28 +79,13 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
         # 微众卡权限
         has_permission = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(webapp_owner_id)
 
-        # 公众号二维码
         try:
             operation_settings = account_models.OperationSettings.get_settings_for_user(webapp_owner_id)
         except:
             error_msg = u"获得user('{}')对应的OperationSettings构建cache失败, cause:\n{}"\
                     .format(webapp_owner_id, unicode_full_stack())
             watchdog_error(error_msg, user_id=webapp_owner_id, noraise=True)
-            operation_settings = account_models.OperationSettings()
-        #全局导航 ad by bert
-        try:
-            global_navbar = termite2_models.TemplateGlobalNavbar.get_object(webapp_owner_id)
-        except:
-            global_navbar = termite2_models.TemplateGlobalNavbar
-
-        try:
-            auth_appid = ComponentAuthedAppid.objects.filter(user_id=webapp_owner_id)[0]
-            auth_appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
-        except:
-            auth_appid_info = ComponentAuthedAppidInfo()
-
-            
-        
+            operation_settings = {}
         return {
             'value': {
                 'weixin_mp_user_access_token': weixin_mp_user_access_token.to_dict(),
@@ -113,9 +97,7 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
                 'member_grades': member_grades,
                 'pay_interfaces': pay_interfaces,
                 'has_permission': has_permission,
-                'operation_settings':  operation_settings.to_dict(),
-                'global_navbar': global_navbar.to_dict(),
-                'auth_appid_info': auth_appid_info.to_dict()
+                'operation_settings': operation_settings.to_dict(),
             }
         }
     return inner_func
@@ -169,12 +151,13 @@ def get_webapp_owner_info(webapp_owner_id):
     }]
     data = cache_util.get_many_from_cache(key_infos)
     red_envelope = data[red_envelope_key]
-    if red_envelope != '1':
-        red_envelope = promotion_models.RedEnvelopeRule.from_dict(red_envelope)
+    # if red_envelope != '1':
+    #     red_envelope = promotion_models.RedEnvelopeRule.from_dict(red_envelope)
         # coupon_rule = red_envelope.coupon_rule
         # if coupon_rule:
         #     red_envelope.coupon_rule = promotion_models.CouponRule.from_dict(coupon_rule)
     data = data[webapp_owner_info_key]
+    # data = cache_util.get_from_cache(key, get_webapp_owner_info_from_db(webapp_owner_id))
 
     obj = Object()
     obj.mpuser_preview_info = weixin_user_models.MpuserPreviewInfo.from_dict(data['mpuser_preview_info'])
@@ -190,12 +173,6 @@ def get_webapp_owner_info(webapp_owner_id):
     obj.is_weizoom_card_permission = data['has_permission']
     obj.operation_settings = account_models.OperationSettings.from_dict(data['operation_settings'])
     obj.red_envelope = red_envelope
-    obj.global_navbar = termite2_models.TemplateGlobalNavbar.from_dict(data['global_navbar'])
-    obj.auth_appid_info = ComponentAuthedAppidInfo.from_dict(data['auth_appid_info'])
-    if  obj.auth_appid_info:
-        obj.qrcode_img = obj.auth_appid_info.qrcode_url
-    else:
-        obj.qrcode_img = ''
     return obj
 
 
@@ -249,11 +226,6 @@ post_update_signal.connect(update_unship_order_count, sender=mall_models.Order,
                            dispatch_uid="webapp_unread_order_count.update")
 signals.post_save.connect(update_unship_order_count, sender=mall_models.Order,
                           dispatch_uid="webapp_unread_order_count.save")
-
-post_update_signal.connect(update_webapp_owner_info_cache_with_login, sender=termite2_models.TemplateGlobalNavbar,
-                           dispatch_uid="termite2_models.TemplateGlobalNavbar.update")
-signals.post_save.connect(update_webapp_owner_info_cache_with_login, sender=termite2_models.TemplateGlobalNavbar,
-                          dispatch_uid="termite2_models.TemplateGlobalNavbar.save")
 
 
 def get_red_envelope_for_cache(owner_id):
