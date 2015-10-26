@@ -417,7 +417,7 @@ def get_pay_result(request):
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
 		is_show_red_envelope = True
-		red_envelope_rule_id = red_envelope.id
+		red_envelope_rule_id = red_envelope['id']
 
 	#获取订单包含商品
 	order_has_products = OrderHasProduct.objects.filter(order=order)
