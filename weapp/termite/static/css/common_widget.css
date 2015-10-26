@@ -11,7 +11,7 @@
     background: #fff;
     border-top: 1px solid #CBCBCB;
     position: fixed;
-    bottom: 0;
+    bottom: -1px;
     display: box;
     display: -webkit-box;
     display: -moz-box;
@@ -35,14 +35,16 @@
     height: 21px;
     background-position: -112px 0;
 }
-.wui-template-globalNavbar .xui-flex{
-    text-align: center;
-    line-height: 48px;
-}
-.wui-template-globalNavbar .xui-flex a{
+.wui-template-globalNavbar .xui-menu a{
     width: 100%;
     height: 100%;
     display: inline-block;
+}
+.wui-template-globalNavbar .xui-menu a img{
+    width: 8px;
+    height: 9px;
+    margin-right: 5px;
+   
 }
 .wui-template-globalNavbar .xui-calc{
     width: calc(100% - 51px);
@@ -67,16 +69,34 @@
 .wui-template-globalNavbar .xui-menuBox:last-child .xui-flex{
     border-right: none;
 }
+.wui-template-globalNavbar .xui-menu{
+    background-color: #fff;
+    text-align: center;
+    line-height: 48px;
+}/*
+.wui-template-globalNavbar .xui-menuBox{
+    position: relative;
+}*/
 .wui-template-globalNavbar .xui-subMenuContainer{
+    /*width: 100%;*/
     position: absolute;
-    bottom: 55px;
+    bottom: 48px;
     left: 50%;
     margin-left: -35px;
     /*margin-left要换算*/
-    display: none;
+    z-index: -1;
+    /*display: none;*/
+    transform:translateY(100%);
+    transition:all .15s ease-in-out; 
 }
-.wui-template-globalNavbar .xui-subMenuContainer.xui-show{
-    display: block;
+    
+.wui-template-globalNavbar .xui-subMenuContainer.xui-up{
+    transform:translateY(-8px);
+
+}
+.wui-template-globalNavbar .xui-subMenuContainer.xui-down{
+    transform:translateY(100%);
+
 }
 .wui-template-globalNavbar .xui-menuArrow,.wui-template-globalNavbar .xui-menuArrowBorder{
     position: absolute;
@@ -85,13 +105,20 @@
     border-left: 6px solid transparent;
     border-bottom: 0 none;
     border-top: 6px solid #fff;
-    bottom: -5px;
+    /*bottom: 1px;
+    left: 50%;
+    margin-left: -6px;*/
     left: 50%;
     margin-left: -6px;
+
+}
+
+.wui-template-globalNavbar .xui-menuArrow{
+    bottom: -4px;
 }
 .wui-template-globalNavbar .xui-menuArrowBorder{
     border-top: 6px solid #CBCBCB;
-    bottom: -6px;
+    bottom: -5px;
     z-index: 10;
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu{
