@@ -24,11 +24,8 @@ class PurchaseTrend(api_resource.ApiResource):
 		username = args.get('un')
 		start_date = args.get('sd', None)
 		end_date = args.get('ed', None)
-		print '============',username,start_date,end_date
 
 		webapp_id = get_webapp_id_via_username(username)
-		print '----------------webapp_id:',webapp_id
 		purchase_trend_data = utils.get_purchase_trend(webapp_id, start_date, end_date)
-		print '==========purchase_trend_data:',purchase_trend_data
 		
 		return purchase_trend_data
