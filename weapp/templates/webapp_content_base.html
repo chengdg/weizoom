@@ -106,7 +106,7 @@
         {% if is_deleted_data %}
             <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
                 <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
-                <a data-theme="x" href="{{request|get_back_homepage_url:homepage_workspace_info}}" data-role="button" class="xui-btn mt20">返回首页</a>
+                <a data-theme="x" href="{{request|get_back_homepage_url:homepage_workspace_info}}" data-role="button" class="xui-btn mt20">返回首页</a> 
             </div>
         {% else %}
              <div data-ui-role="attentionAlert" class="xui-attentionAlert"
