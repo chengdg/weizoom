@@ -94,7 +94,7 @@
             </div>
         {% else %}
             
-        
+           {% if user.is_from_weixin %}
             <div data-ui-role="attentionAlert" class="xui-attentionAlert {% if in_design_mode %}none{% endif %}" 
                 {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
@@ -105,7 +105,7 @@
                 data-id="{{request.webapp_owner_id}}"
                 data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}">
             </div>
-        
+            {% endif %}
 
             {% block content-panel %}{% endblock %}
         {% endif %}

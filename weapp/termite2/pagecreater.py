@@ -34,6 +34,13 @@ def __get_display_info(request):
 		return __get_fake_project_display_info(request)
 
 	#获取project
+	# project = request.project
+	# is_app_project = False
+	# if hasattr(project, 'app_name'):
+	# 	app_name = request.project.app_name
+	# if hasattr(project,'is_app_project'):
+	# 	is_app_project = request.project.is_app_project
+	# project_id = project.id
 	project = None
 	project_id = request.REQUEST.get('project_id')
 	is_app_project = False
