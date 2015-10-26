@@ -40,7 +40,7 @@
 				<div class="xui-i-col" style="display:block;">
 				<div class="xui-i-item">
 					<label class="">广告语：</label>
-					<input type="text" class="form-control" id="promotion_title" name="promotion_title" value="{% if promotion %}{{promotion.promotion_title}}{% endif %}"data-validate="norequire,,require-string" maxLength="20" minLength="4" />
+					<input type="text" class="form-control" id="promotion_title" name="promotion_title" value="{% if promotion %}{{promotion.promotion_title}}{% endif %}"data-validate="norequire,,require-string" maxlength="20"/>
 					<div class="errorHint ml110 mt5"  data-error-hint='广告语允许4-20个汉字、字母或数字'></div>
 				</div>
 				<!--
