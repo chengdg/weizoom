@@ -71,7 +71,7 @@
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/attentionAlert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script> 
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *end_prunt_task* -->
@@ -93,8 +93,7 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-            
-           {% if user.is_from_weixin %}
+            {% if user.is_from_weixin %}
             <div data-ui-role="attentionAlert" class="xui-attentionAlert {% if in_design_mode %}none{% endif %}" 
                 {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
