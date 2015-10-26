@@ -482,8 +482,8 @@ class WebAppPageVisitMiddleware(object):
 
 		from webapp.handlers import event_handler_util
 		request.event_data = event_handler_util.extract_data(request)
-		if not is_varnish_url(request):
-			event_handler_util.handle(request, 'page_visit')
+		#if not is_varnish_url(request):
+		event_handler_util.handle(request, 'page_visit')
 		return None
 		
 	def process_response(self, request, response):

@@ -118,6 +118,8 @@ class CleanUpCookieMiddleware(object):
 			response = HttpResponseRedirect(new_url)
 			response.delete_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 			response.delete_cookie(member_settings.OPENID_WEBAPP_ID_KEY)
+			response.delete_cookie(member_settings.CURRENT_TOKEN)
+			
 			if webapp_id != request.user_profile.webapp_id:
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
@@ -1150,6 +1152,7 @@ class OAUTHMiddleware(object):
 		response = HttpResponseRedirect(new_url)
 		response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, "%s____%s" % (social_account.openid, request.user_profile.webapp_id), max_age=60*60*24*365)
 		response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
+		response.set_cookie(member_settings.CURRENT_TOKEN, "%s____%s" %  (request.user_profile.user_id, member.token), max_age=60*60*24*365)
 		if fmt != member.token:
 			if fmt:
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
@@ -1450,6 +1453,7 @@ class ProcessOpenidMiddleware(object):
 				response.set_cookie(member_settings.OPENID_WEBAPP_ID_KEY, social_account.openid+"____"+social_account.webapp_id, max_age=60*60*24*365)
 				response.set_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY, social_account.token, max_age=60*60*24*365)
 				response.set_cookie(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, fmt, max_age=60*60*24*365)
+				response.set_cookie(member_settings.CURRENT_TOKEN, "%s____%s" %  (request.user_profile.user_id, member.token), max_age=60*60*24*365)
 				return response
 			else:
 				new_url = str(request.get_full_path())
@@ -1460,6 +1464,7 @@ class ProcessOpenidMiddleware(object):
 				response.delete_cookie(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY)
 				response.delete_cookie(member_settings.SOCIAL_ACCOUNT_TOKEN_SESSION_KEY)
 				response.delete_cookie(member_settings.OPENID_WEBAPP_ID_KEY)
+				response.delete_cookie(member_settings.CURRENT_TOKEN)
 				return response
 		return None
 
