@@ -41,7 +41,7 @@ Background:
 
 @apps_sign @apps_sign_backend
 Scenario:配置后台所有数据，优惠券数量足，没有过期
-	When jobs添加签到活动"签到活动1"，并保存
+	When jobs添加签到活动"签到活动1"，并且保存
 	"""
 	{
 		"name": "签到活动1",
@@ -118,7 +118,7 @@ Scenario:配置后台所有数据，优惠券数量足，没有过期
 	"""
 @apps_sign @apps_sign_backend
 Scenario:一条奖励下，不添加优惠券，有积分
-	When jobs添加签到活动"签到活动2"
+	When jobs添加签到活动"签到活动2"，并且保存
 	"""
 	{
 		"name": "签到活动2",
@@ -139,16 +139,10 @@ Scenario:一条奖励下，不添加优惠券，有积分
 
 		"share_describe": "签到获得奖励",
 		"sign_settings":
-		[{
+		{
 			"sign_in": "1",
 			"integral": "100"
-		},{
-			"sign_in": "3",
-			"integral": "300"
-		},{
-			"sign_in": "5",
-			"integral": "500"
-		}]
+		}
 	}
 
 	"""
@@ -169,21 +163,15 @@ Scenario:一条奖励下，不添加优惠券，有积分
 		}],
 		"share_pic":"2.jpg"
 		"sign_settings"：
-			[{
+			{
 				"sign_in": "1",
 				"integral": "100"
-			},{
-				"sign_in": "3",
-				"integral": "300"
-			},{
-				"sign_in": "5",
-				"integral": "500"
-			]}
+			}
 
 	"""
 @apps_sign @apps_sign_backend
 Scenario:一条奖励下，添加优惠券，不添加积分
-		When jobs添加签到活动"签到活动3"
+	When jobs添加签到活动"签到活动3"，并且保存
 	"""
 	{
 		"name": "签到活动3",
@@ -225,6 +213,7 @@ Scenario:一条奖励下，添加优惠券，不添加积分
 	"""
 @apps_sign @apps_sign_backend
 Scenario:一条奖励下，添加优惠券，添加积分
+	When jobs添加签到活动"签到活动4"，并且保存
 """
 	{
 		"name": "签到活动4",
@@ -269,7 +258,7 @@ Scenario:一条奖励下，添加优惠券，添加积分
 	"""
 @apps_sign @apps_sign_backend
 Scenario:三条奖励下，一条优惠券，一条积分，一条优惠券加积分
-		When jobs添加签到活动"签到活动5"
+		When jobs添加签到活动"签到活动5"，并且保存
 	"""
 	{
 		"name": "签到活动5",
@@ -346,26 +335,24 @@ Scenario:优惠券数量为0，无法添加优惠券
 
 @apps_sign @apps_sign_backend
 Scenario: 保存后开启签到活动
-  When jobs创建签到活动
+  When jobs创建签到活动"签到活动7"
   	"""
   	{
-  		"name": "xxx",
-  		"enable": false,
-  		...
+  		"name": "签到活动7",
+  		"enable": false
   	}
   	"""
-  Then jobs能获得签到活动"xxx"的状态为"未开启"
-  When jobs开启签到活动"xxx"
-  Then jobs能获得签到活动"xxx"的状态为"已开启"
+  Then jobs能获得签到活动"签到活动7"的状态为"未开启"
+  When jobs开启签到活动"签到活动7"
+  Then jobs能获得签到活动"签到活动7"的状态为"已开启"
 
 @apps_sign @apps_sign_backend
 Scenario: 保存的同时开启签到活动
-  When jobs创建签到活动
+  When jobs创建签到活动"签到活动8"
   	"""
   	{
-  		"name": "xxx",
-  		"enable": true,
-  		...
+  		"name": "签到活动7,
+  		"enable": true
   	}
   	"""
   Then jobs能获得签到活动"xxx"的状态为"已开启"
