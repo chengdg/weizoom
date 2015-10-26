@@ -8,7 +8,7 @@ import modules.member.models as member_models
 
 class Fans(api_resource.ApiResource):
 	"""
-	获取购买趋势的接口
+	为大数据系统提供粉丝相关数据
 	"""
 	app = 'stats'
 	resource = 'fans'
@@ -19,12 +19,8 @@ class Fans(api_resource.ApiResource):
 		为大数据系统提供粉丝相关数据
 
 		@param un username
-		@param sd 起始日期(可选参数)
-		@param ed 结束日期(可选参数)
 		"""
 		username = args.get('un')
-		start_date = args.get('sd', None)
-		end_date = args.get('ed', None)
 
 		webapp_id = get_webapp_id_via_username(username)
 
