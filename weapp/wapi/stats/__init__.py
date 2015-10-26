@@ -2,3 +2,4 @@
 
 import brand_value
 import brand_value_series
+import purchase_trend
