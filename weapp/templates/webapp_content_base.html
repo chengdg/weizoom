@@ -152,7 +152,7 @@
             W.errorMessage = null;
 
             /* 返回首页链接地址 */
-            W.backHomePageUrl = "{{request|get_back_homepage_url:homepage_workspace_info}}";
+            W.backHomePageUrl = "{{request|get_back_homepage_url:homepage_workspace_info|safe}}";
             localStorage.setItem('homepage_url',W.backHomePageUrl);
             {% if messages %}
             {% for message in messages %}

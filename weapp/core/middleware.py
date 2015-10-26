@@ -97,7 +97,6 @@ class LocalCacheMiddleware(object):
 		webapp_cache.local_cache = {}
 		return response
 
-
 # #===============================================================================
 # # WebappOwnerCacheMiddleware : 管理webapp owner相关信息的中间件
 # #===============================================================================
