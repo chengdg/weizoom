@@ -37,13 +37,15 @@ gmu.define('BottomNav', {
 		var $menu = $('.xa-menu'); 
 
 		var menuWidth = $menu.eq(0).width();
-		
+
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
-		var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenu li');
+		var $subLink=$target.parent().find('.xui-subMenu li');
+		//var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenuContainer .xui-subMenu li');
         var $otherSubMenuContainer = $target.parents('.xui-globalBottomBar').find('.xui-subMenuContainer');
         var width = $subMenuContainer.width();
         
-    	if( $subLink.length = 0){
+    	if( $subLink.length == 0){
+    		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
 			return;
 		}else{
 	        if($subMenuContainer.hasClass('xui-up')){

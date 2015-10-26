@@ -24,6 +24,7 @@
 
 }
 .wui-template-globalNavbar .xui-globalBottomBar .xui-home{
+    background-color: #fff;
     width: 50px;
     border-right: 1px solid #CBCBCB;
     text-align: center;
