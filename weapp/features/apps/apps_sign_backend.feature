@@ -335,7 +335,7 @@ Scenario:优惠券数量为0，无法添加优惠券
 
 @apps_sign @apps_sign_backend
 Scenario: 保存后开启签到活动
-  When jobs创建签到活动"签到活动7"
+  When jobs开启签到活动"签到活动7"
   	"""
   	{
   		"name": "签到活动7",
@@ -348,12 +348,12 @@ Scenario: 保存后开启签到活动
 
 @apps_sign @apps_sign_backend
 Scenario: 保存的同时开启签到活动
-  When jobs创建签到活动"签到活动8"
+  When jobs开启签到活动"签到活动8"
   	"""
   	{
-  		"name": "签到活动7,
+  		"name": "签到活动7",
   		"enable": true
   	}
   	"""
-  Then jobs能获得签到活动"xxx"的状态为"已开启"
+  Then jobs能获得签到活动"签到活动7"的状态为"已开启"
 
