@@ -1237,6 +1237,10 @@ button.xui-deleteImageButton{
 .xui-propertyView-specialTemplateGroup .errorHint{
 	margin-left: 87px!important;
 }
+.xui-propertyView-specialTemplateGroup .propertyGroup_property_dialogSelectField .errorHint{
+	padding-top: 19px;
+	margin-bottom: -15px;
+}
 .xui-propertyView-specialTemplateGroup .propertyGroup_property_dynamicControlField_control .xui-dynamicComponentControlImgBox .xui-removeImageButton{
 	display: none!important;
 }
