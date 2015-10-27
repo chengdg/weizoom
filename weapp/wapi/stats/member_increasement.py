@@ -27,7 +27,7 @@ class MemberIncreasement(api_resource.ApiResource):
 		username = args.get('un')
 		start_date = args.get('sd', None)
 		end_date = args.get('ed', None)
-		
+
 		date_fmt = "%Y-%m-%d"
 		if type(start_date) == unicode:
 			start_date = datetime.strptime(start_date, date_fmt)
@@ -98,7 +98,6 @@ class MemberIncreasement(api_resource.ApiResource):
 			}
 		]
 		response = create_line_chart_response('', '', x_values, y_values)
-		print response.content
 		data = json.loads(response.content)['data']
 
 		return data
