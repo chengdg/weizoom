@@ -52,21 +52,24 @@ def get_template_message_by(owner, send_point):
 # send_template_message: 发送模板消息
 ########################################################################
 def send_order_template_message(webapp_id, order_id, send_point):
+	print '-------------------template_messag1'
 	user_profile = UserProfile.objects.get(webapp_id=webapp_id)
 	user = user_profile.user
 	template_message = get_template_message_by(user, send_point)
-
+	print '-------------------template_messag2'
 	from mall.models import Order
 	order =  Order.objects.get(id=order_id)
-
+	print '-------------------template_messag3'
 	if order and user_profile and template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
 		if mpuser_access_token:
 			try:
+				print '-------------------template_messag4'
 				weixin_api = get_weixin_api(mpuser_access_token)
 
 				message = _get_order_send_message_dict(user_profile, template_message, order, send_point)
 				result = weixin_api.send_template_message(message, True)
+				print '-------------------template_messag5'
 				#_record_send_template_info(order, template_message.template_id, user)
 				# if result.has_key('msg_id'):
 				# 	UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
