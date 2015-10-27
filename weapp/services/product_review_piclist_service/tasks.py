@@ -14,7 +14,7 @@ from mall.promotion import models as promotion_models
 from mall import models as mall_models
 import json
 from celery import task
-from account.views import save_base64_img_file_local_for_webapp
+from account.views import save_base64_img_file_local_for_webapp,save_and_zip_base64_img_file_for_mobileApp
 
 @task
 def upload_pic_list(request, data_dict,product_review,order_has_product_id):
@@ -24,7 +24,7 @@ def upload_pic_list(request, data_dict,product_review,order_has_product_id):
         picture_model_list = []
 
         for picture in picture_list:
-            att_url=save_base64_img_file_local_for_webapp(request, picture)
+            att_url=save_and_zip_base64_img_file_for_mobileApp(request, picture)
             mall_models.ProductReviewPicture(
                 product_review=product_review,
                 order_has_product_id=order_has_product_id,
