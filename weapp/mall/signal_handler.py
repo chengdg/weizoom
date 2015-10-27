@@ -115,14 +115,15 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 
 @receiver(mall_signals.post_pay_order, sender=Order)
 def post_pay_order_handler(order, request, **kwargs):
+    print '00000000000000000000000000000000000'
     try:
 
         from modules.member.tasks import post_pay_tasks
         post_pay_tasks(request, order)
-        
+
         #支付完成之后的webapp_user操作
         # if hasattr(request, 'webapp_user'):
-        #     request.webapp_user.complete_payment(request, order)
+        #    request.webapp_user.complete_payment(request, order)
 
         #更新order的payment_time字段
         #dt = datetime.now()
