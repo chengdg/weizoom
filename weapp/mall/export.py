@@ -413,7 +413,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                 {
                     'name': MALL_APPS_POWERME_NAV,
                     'title': u'微助力',
-                    'url': '/apps/powerme/powerme/',
+                    'url': '/apps/powerme/powermes/',
                     'permission': ''
                 }
             ]

@@ -9,10 +9,10 @@ from core import resource
 from core import paginator
 from core.jsonresponse import create_response
 import models as app_models
-import export
+from mall import export
 from datetime import datetime
 
-FIRST_NAV = 'apps'
+FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class PowerMes(resource.Resource):
@@ -28,8 +28,9 @@ class PowerMes(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
-			'second_nav_name': "powermes",
+			'second_navs': export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': export.MALL_APPS_SECOND_NAV,
+            'third_nav_name': export.MALL_APPS_POWERME_NAV,
 			'has_data': has_data
 		});
 		
