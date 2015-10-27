@@ -274,9 +274,10 @@ def update_webapp_product_detail_cache(**kwargs):
                 cache_util.delete_cache(key)
                 url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
                     (settings.DOMAIN, webapp_owner_id, product_id)
-                request = urllib2.Request(url)
-                request.get_method = lambda: 'PURGE'
-                urllib2.urlopen(request)
+                if not settings.IS_UNDER_BDD:
+                    request = urllib2.Request(url)
+                    request.get_method = lambda: 'PURGE'
+                    urllib2.urlopen(request)
                 # 更新微众商城缓存
                 # TODO 更好的设计微众商城
                 if webapp_owner_id != 216:
