@@ -24,7 +24,8 @@ gmu.define('BottomNav', {
         // 判断是否有touchstart，如果有bind，如果没有绑定click事件
         var clickEventType=((document.ontouchstart!==null)?'click':'touchstart');
 		$(document).delegate('.xa-menu', clickEventType, function(event){
-			_this.clickShowSubmenu(event);
+			event.preventDefault();
+			_this.clickShowSubmenu(event, clickEventType);
 		});
 
 
@@ -44,7 +45,7 @@ gmu.define('BottomNav', {
 	    });
 	},
 	
-	clickShowSubmenu:function(event){
+	clickShowSubmenu:function(event, clickEventType){
 		var $target = $(event.currentTarget);
 
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
@@ -53,7 +54,15 @@ gmu.define('BottomNav', {
         this.computePosition($target, $subMenuContainer);
 
         // 显示
-        this.updateState($target, $subMenuContainer);   	
+        if (clickEventType == 'click') {
+        	// 兼容pc端，删除或添加一级菜单后，需要重新计算位置
+        	var _this = this;
+        	setTimeout(function(){
+				_this.updateState($target, $subMenuContainer);
+        	}, 150);
+        } else {
+        	this.updateState($target, $subMenuContainer);   	
+        }	
 	},
 
 	updateState: function($target, $subMenuContainer){

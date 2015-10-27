@@ -255,7 +255,7 @@
             };
 
             $('.xa-wepage-navbar-link').click(function(event){
-                var url = $(event.currentTarget).find('a').attr('data-link');
+                var url = $(event.currentTarget).find('a').attr('data-link') || "";
                 if (url.length == 0 || url.indexOf('javascript:') >= 0) {
                     return;
                 }
