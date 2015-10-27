@@ -38,6 +38,7 @@ gmu.define('BottomNav', {
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
         
   		// 计算位置
+
         this.computePosition($target, $subMenuContainer);
         // 显示
         this.updateState($target, $subMenuContainer);
@@ -61,7 +62,7 @@ gmu.define('BottomNav', {
 		        	$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
 		        }
 	        }
-        } , 100)
+        } , 300)
 
 	},
 
