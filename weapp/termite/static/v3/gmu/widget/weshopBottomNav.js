@@ -34,20 +34,18 @@ gmu.define('BottomNav', {
 	
 	clickShowSubmenu:function(event){
 		var $target = $(event.currentTarget);
-		var $menu = $('.xa-menu'); 
-
-		var menuWidth = $menu.eq(0).width();
 
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
 		var $subLink=$target.parent().find('.xui-subMenu li');
-		//var $subLink = $target.siblings('.xui-subMenuContainer').find('.xui-subMenuContainer .xui-subMenu li');
-        var $otherSubMenuContainer = $target.parents('.xui-globalBottomBar').find('.xui-subMenuContainer');
-        var width = $subMenuContainer.width();
         
-    	if( $subLink.length == 0){
+        // 计算位置
+        this.computePosition($target, $subMenuContainer);
+
+        // 显示
+    	if($subLink.length == 0){
     		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
     		$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
-			return;
+
 		}else{
 	        if($subMenuContainer.hasClass('xui-up')){
 	        	$subMenuContainer.removeClass('xui-up').addClass('xui-down');
@@ -56,8 +54,18 @@ gmu.define('BottomNav', {
 	        	$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
 	        }
         }
+
+	},
+
+	computePosition: function($target, $subMenuContainer){
+		var $menu = $('.xa-menu'); 
+        var width = $subMenuContainer.width();			
+		var menuWidth = $menu.eq(0).width();
+        var $otherSubMenuContainer = $target.parents('.xui-globalBottomBar').find('.xui-subMenuContainer');
+
         if($menu.length == 1){
            $subMenuContainer.css('margin-left',-width/2);
+
         }else if($menu.length == 2){
          	$subMenuContainer.css('margin-left',-width/2- menuWidth/2);
          	$otherSubMenuContainer.eq(1).css({
