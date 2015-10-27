@@ -150,6 +150,6 @@ def is_varnish_url(request):
 	return False
 
 def is_varnish_fetch(request):
-	fmt = request.MEAT.get('HTTP_FMT')
-	cookie_fmt = request.MEAT.get('HTTP_COOKIEFMT')
+	fmt = request.META.get('HTTP_FMT')
+	cookie_fmt = request.META.get('HTTP_COOKIEFMT')
 	return fmt and fmt == cookie_fmt
