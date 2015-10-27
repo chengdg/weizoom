@@ -115,28 +115,24 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 
 @receiver(mall_signals.post_pay_order, sender=Order)
 def post_pay_order_handler(order, request, **kwargs):
-    print '00000000000000000000000000000000000'
     try:
-
         from modules.member.tasks import post_pay_tasks
         post_pay_tasks(request, order)
-
-        #支付完成之后的webapp_user操作
-        # if hasattr(request, 'webapp_user'):
-        #    request.webapp_user.complete_payment(request, order)
-
-        #更新order的payment_time字段
-        #dt = datetime.now()
-        # jz 2015-10-22
-        # payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-        # Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
-        #发送模板消息
-
         """
             将模版消息加人celery
         """
         from modules.member.tasks import send_order_template_message
         send_order_template_message.delay(order.webapp_id, order.id, 0)
+        #支付完成之后的webapp_user操作
+        # if hasattr(request, 'webapp_user'):
+        #    request.webapp_user.complete_payment(request, order)
+
+        #更新order的payment_time字段
+        # dt = datetime.now()
+        # # jz 2015-10-22
+        # payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+        # Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
+        #发送模板消息
 
         # try:
         #     from market_tools.tools.template_message.module_api import send_order_template_message
