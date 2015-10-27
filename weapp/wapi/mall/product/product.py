@@ -43,7 +43,6 @@ class Product(api_resource.ApiResource):
 			'is_support_make_thanks_card': product.is_support_make_thanks_card,
 
 			'stock_type': product.stock_type,
-			'stocks': product.stocks,
 
 			'weshop_status': product.weshop_status,
 			'promotion_title': product.promotion_title,
@@ -64,17 +63,29 @@ class Product(api_resource.ApiResource):
 			'is_deleted': product.is_deleted,
 			'weshop_sync': product.weshop_sync,
 			'is_member_product': product.is_member_product,
-			'is_use_custom_model': product.is_use_custom_model
+			'is_use_custom_model': product.is_use_custom_model,
+
+			'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
+			'categories': getattr(product, 'categories', []),
+			'properties': getattr(product, 'properties', []),
+			'display_price_range': product.display_price_range,
+			'stocks': product.stocks if product.stock_type else '无限',
+			'sales': getattr(product, 'sales', 0),
+			'models': product.models[1:],
+			'total_stocks': product.total_stocks,
+			'is_sellout': product.is_sellout,
+			'standard_model': product.standard_model,
+			'current_used_model': product.current_used_model
 		}
 		
 		if hasattr(product, 'min_limit'):
 			data['min_limit'] = product.min_limit
 		if hasattr(product, 'price_info'):
 			data['price_info'] = product.price_info
-		if hasattr(product, 'models'):
-			data['models'] = product.models
-		if hasattr(product, 'properties'):
-			data['properties'] = product.properties
+		# if hasattr(product, 'models'):
+		# 	data['models'] = product.models
+		# if hasattr(product, 'properties'):
+		# 	data['properties'] = product.properties
 		if hasattr(product, 'product_model_properties'):
 			data['product_model_properties'] = product.product_model_properties
 		if hasattr(product, 'swipe_images_json'):
