@@ -38,14 +38,12 @@ gmu.define('BottomNav', {
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
 		var $subLink=$target.parent().find('.xui-subMenu li');
         
-        // 计算位置
-        this.computePosition($target, $subMenuContainer);
 
         // 显示
     	if($subLink.length == 0){
     		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
     		$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
-
+    		return
 		}else{
 	        if($subMenuContainer.hasClass('xui-up')){
 	        	$subMenuContainer.removeClass('xui-up').addClass('xui-down');
@@ -55,6 +53,8 @@ gmu.define('BottomNav', {
 	        }
         }
 
+        // 计算位置
+        this.computePosition($target, $subMenuContainer);
 	},
 
 	computePosition: function($target, $subMenuContainer){
