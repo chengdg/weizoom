@@ -242,11 +242,11 @@ def post_pay_tasks(request, order):
 	from middleware import RemoveSharedInfoMiddleware
 	request.META[RemoveSharedInfoMiddleware.SHOULD_REMOVE_SHARED_URL_SESSION_FLAG] = True
 
-	# """
+	"""
 		
-	# 	更新会员购买信息
-	# """
-	# update_member_pay_info_task.delay(order.id)
+		更新会员购买信息
+	"""
+	update_member_pay_info_task.delay(order.id)
 
 
 @task(bind=True,max_retries=3)
@@ -262,25 +262,21 @@ def process_payment_with_shared_info(self, member_id, follow_member_token, share
 		raise self.retry()
 
 
-# @task(bind=True)
-# def update_member_pay_info_task(order_id):
-# 	#
-# 	dt = datetime.now()
-# 	# jz 2015-10-22
-# 	payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-# 	from mall.models import Order
-# 	order = Order.objects.get(id=order_id)
-# 	Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
-# 	webapp_user_id = order.webapp_user_id
-# 	member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
-# 	if member:
-# 		#try:
-# 		unit_price = (member.pay_money + order.final_price)/(member.pay_times + 1)
-# 		Member.objects.filter(id=member.id).update(pay_money=F('pay_money')+order.final_price, pay_times=F('pay_times')+1, unit_price=unit_price, last_pay_time=order.payment_time)
-# 		# except:
-# 		# 	notify_message = u"update_member_pay_info member_id:{}, cause:\n{}".format(webapp_user_id, unicode_full_stack())
-# 		# 	watchdog_error(notify_message)
-# 		# 	raise self.retry()
+@task(bind=True, max_retries=3)
+def update_member_pay_info_task(self, order_id):
+	from mall.models import Order
+	order = Order.objects.get(id = order_id)
+	webapp_user_id = order.webapp_user_id
+	member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+	if member:
+		try:
+			unit_price = (member.pay_money + order.final_price)/(member.pay_times + 1)
+			Member.objects.filter(id=member.id).update(pay_money=F('pay_money')+order.final_price, pay_times=F('pay_times')+1, unit_price=unit_price, last_pay_time=order.payment_time)
+		except:
+			notify_message = u"update_member_pay_info member_id:{}, cause:\n{}".format(webapp_user_id, unicode_full_stack())
+			watchdog_error(notify_message)
+			raise self.retry()
+
 @task(bind=True, max_retries=3)
 def send_order_template_message(self, webapp_id, order_id, send_point):
 	try:
