@@ -279,12 +279,9 @@ def update_member_pay_info_task(self, order_id):
 
 @task(bind=True, max_retries=3)
 def send_order_template_message(self, webapp_id, order_id, send_point):
-	print '----------------------------------------------1'
 	try:
 		from market_tools.tools.template_message.module_api import send_order_template_message
-		print '----------------------------------------------2'
 		send_order_template_message(webapp_id, order_id, send_point)
-		print '----------------------------------------------end'
 	except:
 		alert_message = u"post_pay_order_handler 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
 		watchdog_warning(alert_message)		

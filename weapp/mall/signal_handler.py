@@ -116,18 +116,13 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 @receiver(mall_signals.post_pay_order, sender=Order)
 def post_pay_order_handler(order, request, **kwargs):
     try:
-        print '================post_pay_order_handler=====1'
         from modules.member.tasks import post_pay_tasks
-        print '================post_pay_order_handler=====2'
         post_pay_tasks(request, order)
         """
             将模版消息加人celery
         """
-        print '================post_pay_order_handler=====3'
         from modules.member.tasks import send_order_template_message
-        print '================post_pay_order_handler=====4'
         send_order_template_message.delay(order.webapp_id, order.id, 0)
-        print '================post_pay_order_handler=====5'
         #支付完成之后的webapp_user操作
         # if hasattr(request, 'webapp_user'):
         #    request.webapp_user.complete_payment(request, order)
