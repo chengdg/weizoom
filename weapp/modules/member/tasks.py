@@ -31,6 +31,7 @@ import util as member_util
 from account.social_account.account_info import get_social_account_info
 from utils.string_util import byte_to_hex, hex_to_byte
 from member.member_grade import auto_update_grade
+import member_settings
 # @task
 # def process_error_openid(openid, user_profile):
 # 	print 'call process_error_openid start'
@@ -234,10 +235,9 @@ def post_pay_tasks(request, order):
 		follow_member_token  = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
 		shared_url_digest = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, None)
 		if member and follow_member_token and member.token != follow_member_token and shared_url_digest:
-			
 			process_payment_with_shared_info.delay(member.id, follow_member_token, shared_url_digest)
 	except:
-		pass
+	 	pass
 
 	from middleware import RemoveSharedInfoMiddleware
 	request.META[RemoveSharedInfoMiddleware.SHOULD_REMOVE_SHARED_URL_SESSION_FLAG] = True
@@ -250,13 +250,12 @@ def post_pay_tasks(request, order):
 
 
 @task(bind=True,max_retries=3)
-def process_payment_with_shared_info(member_id, follow_member_token, shared_url_digest):
+def process_payment_with_shared_info(self, member_id, follow_member_token, shared_url_digest):
 	try:
 		member = Member.objects.get(id=member_id)
 		follow_member = Member.objects.get(token = follow_member_token)
-
-		if member != follow_member_token and member.webapp_id == follow_member_token.webapp_id:
-			MemberSharedUrlInfo.objects.filter(member=followed_member, shared_url_digest=shared_url_digest).update(leadto_buy_count=F('leadto_buy_count')+1)
+		if member != follow_member and member.webapp_id == follow_member.webapp_id:
+			MemberSharedUrlInfo.objects.filter(member=follow_member, shared_url_digest=shared_url_digest).update(leadto_buy_count=F('leadto_buy_count')+1)
 	except:
 		notify_message = u"process_payment_with_shared_info member_id:{}, cause:\n{}".format(member_id, unicode_full_stack())
 		watchdog_error(notify_message)
