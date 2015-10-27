@@ -44,9 +44,13 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 	When jobs添加签到活动"签到活动1",并且保存
 		"""
 		{
+			"status":"off",
 			"name": "签到活动1",
 			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			
 			"share_pic":"1.jpg",
+			"share_describe": "签到获得奖励",
+			
 			"keyword_reply": 
 				[{
 					"rule": "精确",
@@ -58,7 +62,7 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 					"rule":"模糊",
 					"key_word": "123456"
 				}],
-			"share_describe": "签到获得奖励",
+
 			"sign_settings":
 				[{
 					"sign_in": "1",

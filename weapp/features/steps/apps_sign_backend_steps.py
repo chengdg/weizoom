@@ -15,11 +15,69 @@ import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 
+def __get_coupon_rule_id(coupon_rule_name):
+    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    return coupon_rule.id
 
+#1.status,related_page_id如何获得
+#2.应该区分添加活动，和更新活动的区别put，post真不同
+#3.如何模拟点击动作？》
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
-    #40
-    pass
+    sign_json = json.loads(context.text)
+
+    name = sign_json['name']
+    share = {
+        "img":sign_json["share_pic"],
+        "desc":sign_json["share_describe"]
+    }
+
+    reply = {}
+    keyword ={}
+    keyword_reply = sign_json["keyword_reply"]
+    for item in keyword_reply:
+        rule = ""
+        if item['rule']=="精确":
+            rule = "accurate"
+        elif item['rule']=="模糊":
+            rule = "blur"
+        keyword[item["key_word"]] = rule
+    reply ={
+        "keyword":keyword,
+        "content":sign_json["share_describe"]
+    }
+
+
+    prize_settins = {}
+    sign_settings = sign_json["sign_settings"]
+    for item in sign_settings:
+        prize_settins[item["sign_in"]]={
+            "integral":item["integral"],
+            "coupon":{
+                "count":item["prize_counts"],
+                "id":__get_coupon_rule_id(item["send_coupon"]),
+                "name":item["send_coupon"]
+            }
+        }
+
+
+    params = {
+        "name":name,
+        "prize_settins":prize_settins,
+        "reply":reply,
+        "share":share,
+        "status":"off"
+     }
+
+    response = context.client.put("/apps/sign/api/sign/?_method=put",params)
+    bdd_util.assert_api_call_success(response)
+
+    print '+++++++++++++++++++++++++++++++++++++++='
+    print sign_json["status"]
+    print '+++++++++++++++++++++++++++XXXXX++++++++++'
+
+
+
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
