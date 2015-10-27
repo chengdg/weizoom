@@ -148,3 +148,8 @@ def is_varnish_url(request):
 		if model == 'products' and action == 'list' or model == 'product':
 			return True
 	return False
+
+def is_varnish_fetch(request):
+	fmt = request.META.get('HTTP_FMT')
+	cookie_fmt = request.META.get('HTTP_COOKIEFMT')
+	return fmt and fmt == cookie_fmt
