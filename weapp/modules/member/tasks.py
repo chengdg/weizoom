@@ -255,7 +255,6 @@ def process_payment_with_shared_info(self, member_id, follow_member_token, share
 		member = Member.objects.get(id=member_id)
 		follow_member = Member.objects.get(token = follow_member_token)
 		if member != follow_member and member.webapp_id == follow_member.webapp_id:
-			print MemberSharedUrlInfo.objects.filter(member=follow_member, shared_url_digest=shared_url_digest),'--------------aaaaaa'
 			MemberSharedUrlInfo.objects.filter(member=follow_member, shared_url_digest=shared_url_digest).update(leadto_buy_count=F('leadto_buy_count')+1)
 	except:
 		notify_message = u"process_payment_with_shared_info member_id:{}, cause:\n{}".format(member_id, unicode_full_stack())
