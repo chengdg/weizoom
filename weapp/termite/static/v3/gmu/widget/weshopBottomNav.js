@@ -23,6 +23,7 @@ gmu.define('BottomNav', {
 		$(document).delegate('.xa-menu', 'click', function(event){
 			_this.clickShowSubmenu(event);
 		});
+
 		// 点击别的地方，二级菜单消失，但是可能有问题
 	    $(document).on('click',function(event){
 	    	if($(event.target).parents('.xa-menu').length == 0){
@@ -30,6 +31,13 @@ gmu.define('BottomNav', {
 
 	        }
 	    })
+
+	    $(document).ready(function($) {
+			// 初始位置 计算
+			var $target = $('.xa-menu');
+			var $subMenuContainer = $target.siblings('.xui-subMenuContainer');     
+			_this.computePosition($target, $subMenuContainer);
+	    });
 	},
 	
 	clickShowSubmenu:function(event){
@@ -38,32 +46,27 @@ gmu.define('BottomNav', {
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
         
   		// 计算位置
+        // this.computePosition($target, $subMenuContainer);
 
-        this.computePosition($target, $subMenuContainer);
         // 显示
-        this.updateState($target, $subMenuContainer);
-    	
-      
+        this.updateState($target, $subMenuContainer);   	
 	},
 
 	updateState: function($target, $subMenuContainer){
 		var $subLink=$target.parent().find('.xui-subMenu li');
 
-        setTimeout(function(){
-	        if($subLink.length == 0){
-	    		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
-	    		$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
-	    		return
+		if($subLink.length == 0){
+			$subMenuContainer.removeClass('xui-up').addClass('xui-down');
+			$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
+			return
+		}else{
+			if($subMenuContainer.hasClass('xui-up')){
+				$subMenuContainer.removeClass('xui-up').addClass('xui-down');
 			}else{
-		        if($subMenuContainer.hasClass('xui-up')){
-		        	$subMenuContainer.removeClass('xui-up').addClass('xui-down');
-		        }else{
-		        	$subMenuContainer.addClass('xui-up').removeClass('xui-down');
-		        	$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
-		        }
-	        }
-        } ,1)
-
+				$subMenuContainer.addClass('xui-up').removeClass('xui-down');
+				$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
+			}
+		}
 	},
 
 	computePosition: function($target, $subMenuContainer){
