@@ -64,6 +64,7 @@ class Product(api_resource.ApiResource):
 			'is_deleted': product.is_deleted,
 			'weshop_sync': product.weshop_sync,
 			'is_member_product': product.is_member_product,
+			'is_use_custom_model': product.is_use_custom_model
 		}
 		
 		if hasattr(product, 'min_limit'):
