@@ -1,10 +1,9 @@
 # __author__ : "冯雪静"
+#editor 新新 2015.10.19
 
 Feature: 获取分享红包
 """
 	Jobs下的会员能通过管理系统获取红包 
-
-	# __author__ : 王丽
 	1、会员购买店铺的商品，提交订单后满足分享红包活动规则，在"提交订单付款"后会获得一个红包，领取红包即领取了红包对应的优惠券，
 	优惠券的使用和普通的优惠券使用规则相同
 		1）奖励条件：订单满（X）元
@@ -85,18 +84,23 @@ Background:
 		[{
 			"name": "红包1",
 			"prize_info": "全体券1",
+			"is_permanant_active": false,
 			"start_date": "今天",
 			"end_date": "2天后",
 			"limit_money": "200",
-			"desc": "下订单领红包",	
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"receive_method": "下单领取",
+			"detail": "活动说明",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"remark": "分享有礼"
 		}, {
 			"name": "红包2",
 			"prize_info": "单品券2",
 			"is_permanant_active": true,
 			"limit_money": "无限制",
-			"desc": "下订单领红包",	
-			"logo_url": "/static/upload/6_20140710/1404981209095_5.jpg"
+			"receive_method": "下单领取",
+			"detail": "活动说明",
+			"share_pic": "/static/upload/6_20140710/1404981209095_5.jpg",
+			"remark": "分享有礼"
 		}]
 		"""
 	And bill关注jobs的公众号
@@ -160,10 +164,8 @@ Background:
 			}
 		}
 		"""
-	
 
- 
- 
+@mall2 @promotion @promotionRedbag
 Scenario: 1 会员通过成功创建订单获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -322,7 +324,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 		}
 		"""
 
- 
+@mall2 @promotion @promotionRedbag
 Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -432,7 +434,7 @@ Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 		"""
 
 
- 
+@mall2 @promotion @promotionRedbag
 Scenario: 3 非会员通过会员成功创建订单分享红包后获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -530,7 +532,7 @@ Scenario: 3 非会员通过会员成功创建订单分享红包后获取红包
 		}
 		"""
 
- 
+@mall2 @promotion @promotionRedbag
 Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加库存后,能获取红包
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -610,7 +612,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 	When jobs为优惠券'单品券2'添加库存
 		"""
 		{
-			"count": 2,
+			"count": 1,
 			"coupon_id_prefix": "coupon2_id_"
 		}
 		"""
@@ -646,12 +648,6 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 				"status": "未领取",
 				"consumer": "",
 				"target": ""
-			},
-			"coupon2_id_6": {
-				"money": 100.00,
-				"status": "未领取",
-				"consumer": "",
-				"target": ""
 			}
 		}
 		"""
@@ -661,7 +657,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 	Then tom能获得webapp优惠券列表
 		"""
 		[{
-			"coupon_id": "coupon2_id_6",
+			"coupon_id": "coupon2_id_5",
 			"money": 100.00,
 			"status": "未使用"
 		}]
@@ -696,12 +692,6 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 			},
 			"coupon2_id_5": {
 				"money": 100.00,
-				"status": "未领取",
-				"consumer": "",
-				"target": ""
-			},
-			"coupon2_id_6": {
-				"money": 100.00,
 				"status": "未使用",
 				"consumer": "",
 				"target": "tom"
@@ -709,7 +699,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 		}
 		"""
 
- 
+@mall2 @promotion @promotionRedbag
 Scenario: 5 会员通过分享链接领取红包时红包规则被删除，领取红包失败
 	Jobs添加"分享红包"开启后，会员可通过成功创建订单获取红包后分享红包
 	1. bill创建的订单满足条件，能获得jobs的分享红包
@@ -773,7 +763,7 @@ Scenario: 5 会员通过分享链接领取红包时红包规则被删除，领�
 
 
 # _edit_ : "新新" "雪静"
-@promotionRedbag  @meberGrade  
+@mall2 @promotionRedbag  @meberGrade
 Scenario: 6 不同等级的会员购买有会员价同时有分享红包设置的商品
 #分享红包:金额条件取会员价
 	Given jobs登录系统
