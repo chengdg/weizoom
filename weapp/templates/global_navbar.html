@@ -51,8 +51,8 @@
                             </i>
                         </a>
                     </li>
-                    <li class="xa-outLink" data-page="usercenter">
-                        <a href="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
+                    <li class="xa-outLink xa-wepage-navbar-link" data-page="usercenter">
+                        <a href="javascript:void(0);" data-link="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
                     </li>
                 </ul>
             </div>
@@ -82,5 +82,9 @@
         </div>
     </div>    
     {% endif %}
+    <div data-ui-role="swipemask" class="mask"></div>
+    <div class="xui-two-dimension">
+        <img src="{{ current_auth_qrcode_img }}" alt="">
+    </div>
 </div>
 {% endwith %}
