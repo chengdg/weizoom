@@ -36,25 +36,33 @@ gmu.define('BottomNav', {
 		var $target = $(event.currentTarget);
 
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
-		var $subLink=$target.parent().find('.xui-subMenu li');
         
-
-        // 显示
-    	if($subLink.length == 0){
-    		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
-    		$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
-    		return
-		}else{
-	        if($subMenuContainer.hasClass('xui-up')){
-	        	$subMenuContainer.removeClass('xui-up').addClass('xui-down');
-	        }else{
-	        	$subMenuContainer.addClass('xui-up').removeClass('xui-down');
-	        	$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
-	        }
-        }
-
-        // 计算位置
+  		// 计算位置
         this.computePosition($target, $subMenuContainer);
+        // 显示
+        this.updateState($target, $subMenuContainer);
+    	
+      
+	},
+
+	updateState: function($target, $subMenuContainer){
+		var $subLink=$target.parent().find('.xui-subMenu li');
+
+        setTimeout(function(){
+	        if($subLink.length == 0){
+	    		$subMenuContainer.removeClass('xui-up').addClass('xui-down');
+	    		$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
+	    		return
+			}else{
+		        if($subMenuContainer.hasClass('xui-up')){
+		        	$subMenuContainer.removeClass('xui-up').addClass('xui-down');
+		        }else{
+		        	$subMenuContainer.addClass('xui-up').removeClass('xui-down');
+		        	$target.parent().siblings('.xui-menuBox').find('.xui-subMenuContainer').addClass("xui-down").removeClass('xui-up');
+		        }
+	        }
+        } , 100)
+
 	},
 
 	computePosition: function($target, $subMenuContainer){
@@ -76,7 +84,7 @@ gmu.define('BottomNav', {
 
         }else {
          	$subMenuContainer.css('margin-left',-width/2 - menuWidth);
-         	$otherSubMenuContainer.eq(1).css('margin-left',-width/2);
+         	$otherSubMenuContainer.eq(1).css('margin-left',-$otherSubMenuContainer.eq(1).width()/2);
          	$otherSubMenuContainer.eq(2).css({
          		'right':8,
          		'left':'auto',
