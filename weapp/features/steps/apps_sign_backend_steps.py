@@ -15,40 +15,98 @@ import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 
-
 def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.id
 
-default_date = '2000-01-01'
-def __get_date(date):
-    date = bdd_util.get_date_str(date)
-    if date == default_date:
-        date = ''
-    return date
+#1.status,related_page_id如何获得
+#2.应该区分添加活动，和更新活动的区别put，post真不同
+#3.如何模拟点击动作？》
+@when(u'{user}添加签到活动"{sign_name}",并且保存')
+def step_impl(context,user,sign_name):
+    sign_json = json.loads(context.text)
 
-@give(u'{user}登录系统')
-def step_impl(context,user):
-	context.client - bdd_util.login(user,password="test",context=context)
+    name = sign_json['name']
+    share = {
+        "img":sign_json["share_pic"],
+        "desc":sign_json["share_describe"]
+    }
 
-@when(u'{user}参加抽奖活动')
-def step_impl(context,user):
-	pass
+    reply = {}
+    keyword ={}
+    keyword_reply = sign_json["keyword_reply"]
+    for item in keyword_reply:
+        rule = ""
+        if item['rule']=="精确":
+            rule = "accurate"
+        elif item['rule']=="模糊":
+            rule = "blur"
+        keyword[item["key_word"]] = rule
+    reply ={
+        "keyword":keyword,
+        "content":sign_json["share_describe"]
+    }
 
-#问题
-#1.引号的数据是期望数据，还是填入数据，when，given，then
-#2.steps是如何找到feature的，神奇的，怎么关联的，weapp里面是不是有一个东西勾住了
-#3.steps通过import来导入系统操作与否
-#4.每个函数就是来，判断结果是否正确
-#5.content是全局变量传递么
 
-#6.print和打断点
+    prize_settins = {}
+    sign_settings = sign_json["sign_settings"]
+    for item in sign_settings:
+        prize_settins[item["sign_in"]]={
+            "integral":item["integral"],
+            "coupon":{
+                "count":item["prize_counts"],
+                "id":__get_coupon_rule_id(item["send_coupon"]),
+                "name":item["send_coupon"]
+            }
+        }
 
-#7.多feathure一个steps？？
 
-#8.同样是登录系统，别人实现过了，我要重写么，不写？彻底全局？？given不写了？
-#9.函数的名字，一定是step_impl么，参数有限制么？
+    params = {
+        "name":name,
+        "prize_settins":prize_settins,
+        "reply":reply,
+        "share":share,
+        "status":"off"
+     }
 
-#10.完成自己的就行
+    response = context.client.put("/apps/sign/api/sign/?_method=put",params)
+    bdd_util.assert_api_call_success(response)
 
-#11.weapp里面，大量的哪地方是全局，上下文怎么着
+    print '+++++++++++++++++++++++++++++++++++++++='
+    print sign_json["status"]
+    print '+++++++++++++++++++++++++++XXXXX++++++++++'
+
+
+
+
+@then(u'{user}获得签到活动"{sign_name}"')
+def step_impl(context,user,sign_name):
+    #:88
+    pass
+
+
+@when(u'选择优惠券')
+def step_impl(context):
+    #331
+    pass
+
+@when(u'{user1}进入{user2}签到后台配置页面')
+def step_impl(context,user1,user2):
+    #341
+    pass
+
+@then(u'{user}获得优惠券列表,没有"{coupon}"')
+def step_impl(context,user,coupon):
+    #334
+    pass
+
+@when(u'{user}开启签到活动"{sign_name}"')
+def step_impl(context,user,sign_name):
+    #338
+    pass
+
+
+@then(u'{user}能获得签到活动{sign_name}的状态为{sign_tag}')
+def step_impl(context,user,sign_name,sign_tag):
+    #348
+    pass
