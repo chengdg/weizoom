@@ -23,21 +23,23 @@ Background:
 		"""
 			[{
 				"name": "优惠券1",
-				"limit_money":1,
-				"counts":50,
+				"money":1.00,
+				"limit_counts":50,
 				"start_date": "今天",
-				"end_date": "1天后"
+				"end_date": "1天后",
+				"coupon_id_prefix": "coupon1_id_"
 			},{
 				"name": "优惠券2",
-				"limit_money": 1,
+				"money":1.00,
 				"counts":0,
 				"start_date": "今天",
-				"end_date": "1天后"
+				"end_date": "1天后",
+				"coupon_id_prefix": "coupon2_id_"
 			}]
 
 		"""
 
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku
 Scenario:配置后台所有数据,优惠券数量足,没有过期
 	When jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -46,17 +48,16 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"1.jpg",
 			"keyword_reply": 
-			[{
-				"rule": "精确",
-				"key_word": "78"
-			},{
-				"rule": "精确",
-				"key_word": "12"
-			},{
-				"rule":"模糊",
-				"key_word": "123456"
-			}],
-
+				[{
+					"rule": "精确",
+					"key_word": "78"
+				},{
+					"rule": "精确",
+					"key_word": "12"
+				},{
+					"rule":"模糊",
+					"key_word": "123456"
+				}],
 			"share_describe": "签到获得奖励",
 			"sign_settings":
 				[{

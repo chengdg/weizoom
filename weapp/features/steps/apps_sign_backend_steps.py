@@ -16,10 +16,6 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 
 
-@when(u'{user}添加积分')
-def step_impl(context,user):
-    #:24
-    pass
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
     #40
