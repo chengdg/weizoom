@@ -20,6 +20,7 @@ from mall import module_api as mall_api
 from mall import signals as mall_signals
 from account.models import *
 from account.views import save_base64_img_file_local_for_webapp
+from services.product_review_piclist_service.tasks import upload_pic_list
 from . import request_util
 from . import utils
 from core.send_order_email_code import *
@@ -782,22 +783,24 @@ def create_product_review(request):
 			review_detail=review_detail
 		)
 
-		# 创建商品评价图片
-		picture_list = data_dict.get('picture_list', None)
-		if picture_list:
-			picture_list = json.loads(picture_list)
-			picture_model_list = []
+		# 创建商品评价图片，可以用celery来进行处理
+		# made by zhaolei 2015-10-27
+		# picture_list = data_dict.get('picture_list', None)
+		# if picture_list:
+		# 	picture_list = json.loads(picture_list)
+		# 	picture_model_list = []
+		#
+		# 	for picture in picture_list:
+		# 		att_url=save_base64_img_file_local_for_webapp(request, picture)
+		# 		mall_models.ProductReviewPicture(
+		# 			product_review=product_review,
+		# 			order_has_product_id=order_has_product_id,
+		# 			att_url=att_url
+		# 		).save()
+		# 		watchdog_info(u"create_product_review after save img  %s" %\
+		# 			(att_url), type="mall", user_id=owner_id)
 
-			for picture in picture_list:
-				att_url=save_base64_img_file_local_for_webapp(request, picture)
-				mall_models.ProductReviewPicture(
-					product_review=product_review,
-					order_has_product_id=order_has_product_id,
-					att_url=att_url
-				).save()
-				watchdog_info(u"create_product_review after save img  %s" %\
-					(att_url), type="mall", user_id=owner_id)
-
+		upload_pic_list.delay(request, data_dict,product_review,order_has_product_id)
 		response = create_response(200)
 		response.data = get_review_status(request)
 		watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
@@ -805,6 +808,35 @@ def create_product_review(request):
 		return response.get_response()
 	elif request.method == 'GET':
 		return create_response(500).get_response()
+
+def create_product_review2(request):
+	response = create_response(200)
+	file = request.FILES.get('imagefile', None)
+	content = []
+	if file:
+		for chunk in file.chunks():
+			content.append(chunk)
+
+	dir_path = os.path.join(settings.UPLOAD_DIR, 'user_icon', str(1))
+	if not os.path.exists(dir_path):
+		os.makedirs(dir_path)
+	file_path = os.path.join(dir_path, "123121.jpeg")
+
+	print 'write icon to ', file_path
+	dst_file = open(file_path, 'wb')
+	print >> dst_file, ''.join(content)
+	dst_file.close()
+	return response.get_response()
+
+def __get_file_name(file_name, extended_name=None):
+	import random
+	pos = file_name.rfind('.')
+	if pos == -1:
+		suffix = ''
+	else:
+		suffix = file_name[pos:]
+
+	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
 
 
 def update_product_review_picture(request):
