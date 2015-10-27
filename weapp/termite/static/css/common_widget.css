@@ -87,16 +87,21 @@
     /*margin-left要换算*/
     z-index: -1;
     /*display: none;*/
-    transform:translateY(100%);
+
+    -webkit-transform:translate3d(0,100%,0);
+    transform:translate3d(0,100%,0);
+    -webkit-transition:all .15s ease-in-out; 
     transition:all .15s ease-in-out; 
 }
     
 .wui-template-globalNavbar .xui-subMenuContainer.xui-up{
-    transform:translateY(-8px);
+    -webkit-transform:translate3d(0,-8px,0);
+    transform:translate3d(0,-8px,0);
 
 }
 .wui-template-globalNavbar .xui-subMenuContainer.xui-down{
-    transform:translateY(100%);
+    -webkit-transform:translate3d(0,100%,0);
+    transform:translate3d(0,100%,0);
 
 }
 .wui-template-globalNavbar .xui-menuArrow,.wui-template-globalNavbar .xui-menuArrowBorder{
