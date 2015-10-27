@@ -1,5 +1,5 @@
 /**
- * @class W.component.appkit.SignDescription
+ * @class W.component.appkit.PowerMeDescription
  * 
  */
 ensureNS('W.component.appkit');

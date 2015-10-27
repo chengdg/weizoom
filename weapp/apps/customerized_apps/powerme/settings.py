@@ -63,7 +63,7 @@ NEW_PAGE_JSON = """
             "index": 1,
             "name": "",
             "title": "index",
-            "site_title": "用户调研",
+            "site_title": "微助力",
             "uploadWidth": "320",
             "uploadHeight": "568",
             "class": "",
