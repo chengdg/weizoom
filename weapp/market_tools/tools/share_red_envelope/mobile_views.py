@@ -24,7 +24,7 @@ def get_share_red_envelope(request):
     """
     red_envelope_rule_id = request.GET.get('red_envelope_rule_id', 0)
     order_id = request.GET.get('order_id', 0) # 下单领取会带有order_id
-    material_id = request.GET.get('red_envelope_rule_id', 0) #
+    material_id = request.GET.get('red_envelope_rule_id', 0) #除下单领取记录rule_id作为material_id
     user_id = request.GET.get('webapp_owner_id', 0)
     is_share = request.GET.get('is_share', 0)
     # 订单
