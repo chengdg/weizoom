@@ -16,10 +16,11 @@ from core.jsonresponse import create_response
 import models as app_models
 import export
 from apps import request_util
+from mall import export as mall_export
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 
-FIRST_NAV = 'apps'
+FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class PowerMe(resource.Resource):
@@ -42,8 +43,9 @@ class PowerMe(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
-			'second_nav_name': 'powermes',
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': mall_export.MALL_APPS_POWERME_NAV,
 			'powerme': powerme,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
