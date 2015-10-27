@@ -20,7 +20,7 @@ gmu.define('BottomNav', {
 		var _this = this;
         var flag = false;
 
-		$(document).delegate('.xa-menu', 'click', function(event){
+		$(document).delegate('.xa-menu', 'touchstart', function(event){
 			_this.clickShowSubmenu(event);
 		});
 
