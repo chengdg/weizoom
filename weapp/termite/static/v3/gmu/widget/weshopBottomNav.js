@@ -13,6 +13,7 @@ gmu.define('BottomNav', {
 	},
 	
 	_create: function() {
+
 		var $el = this.$el;
 		$('.wa-page').css('padding-bottom',60);
 		$('.wa-shopBottomNavPage').css('padding-bottom',25);
@@ -20,9 +21,12 @@ gmu.define('BottomNav', {
 		var _this = this;
         var flag = false;
 
-		$(document).delegate('.xa-menu', 'touchstart', function(event){
+        // 判断是否有touchstart，如果有bind，如果没有绑定click事件
+        var clickEventType=((document.ontouchstart!==null)?'click':'touchstart');
+		$(document).delegate('.xa-menu', clickEventType, function(event){
 			_this.clickShowSubmenu(event);
 		});
+
 
 		// 点击别的地方，二级菜单消失，但是可能有问题
 	    $(document).on('click',function(event){
