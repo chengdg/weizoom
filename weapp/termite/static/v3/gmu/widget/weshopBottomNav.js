@@ -49,8 +49,8 @@ gmu.define('BottomNav', {
 
 		var $subMenuContainer = $target.siblings('.xui-subMenuContainer');
         
-  		// 计算位置
-        // this.computePosition($target, $subMenuContainer);
+  		//  计算位置
+        this.computePosition($target, $subMenuContainer);
 
         // 显示
         this.updateState($target, $subMenuContainer);   	
