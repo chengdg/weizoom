@@ -21,7 +21,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
             var args = $form.serializeObject();
             var ship_info = deepCopyJSON(args);
             ship_info['area_str'] = $('.xa-openSelect').text();
-            console.log('arg_type:',args,typeof(args));
+
             W.getApi().call({
                 app: 'webapp',
                 api: 'project_api/call',
@@ -105,14 +105,14 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                 },
                 success: function(data) {
                     var selected_id=data.selected_id;
-                    console.log('selected_id..:',selected_id);
+
                     var ship_infos = JSON.parse(localStorage.ship_infos);
                     delete ship_infos[ship_id];
                     if(selected_id){
                         ship_infos[selected_id]['is_selected'] = true;
                     }
                     localStorage.ship_infos = JSON.stringify(ship_infos);
-                    window.location.href = "./?"+this.redirectUrlQueryString;
+                    window.location.href = './?woid=' + woid + '&module=mall&model=address&action=list&redirect_url_query_string='+ urlFilter(redirectUrlQueryString);
 
                 },
                 error: function(resp) {
