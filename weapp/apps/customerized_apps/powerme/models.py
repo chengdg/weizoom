@@ -8,10 +8,10 @@ class PowerMeParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	tel = models.StringField(default="", max_length=100)
-	termite_data = models.DynamicField(default="") #termite数据
-	prize = models.DynamicField(default="") #活动奖励
 	created_at = models.DateTimeField() #创建时间
+	has_join = models.BooleanField(default=False) #是否已参与微助力
+	power = models.IntField(default=0) #助力值
+	powered_member_id = models.ListField(default=[]) #已助力的会员id list
 
 	meta = {
 		'collection': 'powerme_powerme_participance'
