@@ -140,6 +140,12 @@ def list_address(request):
 	return request_api_util.list_address(request)
 
 ########################################################################
+# delete_address: 删除收获地址
+########################################################################
+def delete_address(request):
+	return request_api_util.delete_address(request)
+
+########################################################################
 # check_shopping_cart_products: 检查购物车商品有效性
 ########################################################################
 def check_shopping_cart_products(request):

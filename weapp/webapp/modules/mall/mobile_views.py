@@ -198,16 +198,6 @@ def edit_address(request):
 	return request_util.edit_address(request)
 
 
-
-########################################################################
-# delete_address: 删除收获地址
-########################################################################
-def delete_address(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
-	return request_util.delete_address(request)
-
-
 ########################################################################
 # success_alert: 成功提示页
 ########################################################################
