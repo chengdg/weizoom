@@ -24,6 +24,7 @@ gmu.define('BottomNav', {
         // 判断是否有touchstart，如果有bind，如果没有绑定click事件
         var clickEventType=((document.ontouchstart!==null)?'click':'touchstart');
 		$(document).delegate('.xa-menu', clickEventType, function(event){
+			event.preventDefault();
 			_this.clickShowSubmenu(event, clickEventType);
 		});
 
