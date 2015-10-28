@@ -301,7 +301,7 @@ def update_webapp_product_model_cache(**kwargs):
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
             model.owner_id, model.product_id)
         cache_util.delete_cache(key)
-        __update_varnish_product(webapp_owner_id, p.product_id)
+        __update_varnish_product(model.owner_id, model.product_id)
 
         if model.owner_id != 216:
             key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
@@ -331,12 +331,10 @@ def update_webapp_product_detail_by_review_cache(**kwargs):
         instance = kwargs.get('instance', None)
         if instance:
             product_id = instance[0].product_id
-
-        if product_id:
             key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
                 webapp_owner_id, product_id)
             cache_util.delete_cache(key)
-            __update_varnish_product(webapp_owner_id, p.product_id)
+            __update_varnish_product(webapp_owner_id, product_id)
 
 post_update_signal.connect(update_webapp_product_detail_by_review_cache,
                            sender=mall_models.ProductReview, dispatch_uid="product_review.update")
