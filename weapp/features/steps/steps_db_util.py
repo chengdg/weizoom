@@ -4,7 +4,7 @@ from mall.models import (
     PostageConfig, ProductModelProperty, ProductModelPropertyValue,
     OrderHasProduct, Order, Product, PAYTYPE2NAME, ORDER_TYPE2TEXT,
     STATUS2TEXT, ORDER_SOURCE_WEISHOP, ProductModel, express_util,
-    OrderHasDeliveryTime, PRODUCT_MODEL_PROPERTY_TYPE_IMAGE, PayInterface
+     PRODUCT_MODEL_PROPERTY_TYPE_IMAGE, PayInterface
 )
 
 from test import bdd_util
@@ -128,11 +128,11 @@ def get_latest_order():
 #########################
 
 
-def get_order_has_delivery_times_by_order_id(order_id):
-    try:
-        return OrderHasDeliveryTime.objects.filter(order_id=order_id)
-    except:
-        return None
+# def get_order_has_delivery_times_by_order_id(order_id):
+#     try:
+#         return OrderHasDeliveryTime.objects.filter(order_id=order_id)
+#     except:
+#         return None
 
 def set_order_dict(order, profile):
     """
