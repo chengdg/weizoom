@@ -140,6 +140,11 @@
     padding-right: 10px;
     text-align: center;
 }
+.wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li:last-child {    
+    line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+}
 .wui-template-globalNavbar .xui-globalBottomBar .xui-subMenu li a{
     color: #333;
     display: block;
