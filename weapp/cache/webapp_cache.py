@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from operator import attrgetter
+import time
 import urllib2
 from django.conf import settings
 from django.db.models import signals
@@ -272,12 +273,7 @@ def update_webapp_product_detail_cache(**kwargs):
                 key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
                     webapp_owner_id, product_id)
                 cache_util.delete_cache(key)
-                url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
-                    (settings.DOMAIN, webapp_owner_id, product_id)
-                if not settings.IS_UNDER_BDD:
-                    request = urllib2.Request(url)
-                    request.get_method = lambda: 'PURGE'
-                    urllib2.urlopen(request)
+                __update_varnish_product(webapp_owner_id, product_id)
                 # 更新微众商城缓存
                 # TODO 更好的设计微众商城
                 if webapp_owner_id != 216:
@@ -305,6 +301,7 @@ def update_webapp_product_model_cache(**kwargs):
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
             model.owner_id, model.product_id)
         cache_util.delete_cache(key)
+        __update_varnish_product(webapp_owner_id, p.product_id)
 
         if model.owner_id != 216:
             key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
@@ -339,6 +336,7 @@ def update_webapp_product_detail_by_review_cache(**kwargs):
             key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
                 webapp_owner_id, product_id)
             cache_util.delete_cache(key)
+            __update_varnish_product(webapp_owner_id, p.product_id)
 
 post_update_signal.connect(update_webapp_product_detail_by_review_cache,
                            sender=mall_models.ProductReview, dispatch_uid="product_review.update")
@@ -361,6 +359,7 @@ def update_webapp_product_detail_cache_by_promotion(instance, **kwargs):
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
             webapp_owner_id, p.product_id)
         cache_util.delete_cache(key)
+        __update_varnish_product(webapp_owner_id, p.product_id)
 
 
 post_update_signal.connect(update_webapp_product_detail_cache_by_promotion,
@@ -545,3 +544,23 @@ def update_forbidden_coupon_product_ids(**kwargs):
 
 post_update_signal.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.update")
 signals.post_save.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.save")
+
+def __update_varnish_product(webapp_owner_id, product_id):
+    if not settings.IS_UNDER_BDD:
+        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
+            (settings.DOMAIN, webapp_owner_id, product_id)
+        request = urllib2.Request(url)
+        request.get_method = lambda: 'PURGE'
+        urllib2.urlopen(request)
+        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
+            (settings.DOMAIN, webapp_owner_id)
+        request = urllib2.Request(url)
+        request.get_method = lambda: 'PURGE'
+        urllib2.urlopen(request)
+        # for catHasProduct in mall_models.CategoryHasProduct.objects.filter(product_id=product_id):
+        #     url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+        #         (settings.DOMAIN, webapp_owner_id, catHasProduct.category_id)
+        #     request = urllib2.Request(url)
+        #     request.get_method = lambda: 'PURGE'
+        #     print 'jz----4', time.time(), url
+        #     urllib2.urlopen(request)
