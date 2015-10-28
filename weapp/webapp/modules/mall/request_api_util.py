@@ -812,20 +812,26 @@ def create_product_review(request):
 def create_product_review2(request):
 	response = create_response(200)
 	file = request.FILES.get('imagefile', None)
+	# print "zl--------------------0",request.POST["file_type"]
+	# print "zl---------------------",request.user_profile.user_id,file
+	date = time.strftime('%Y%m%d')
+	dir_path_suffix = 'webapp/%d_%s' % (request.user_profile.user_id, date)
+
 	content = []
 	if file:
 		for chunk in file.chunks():
 			content.append(chunk)
 
-	dir_path = os.path.join(settings.UPLOAD_DIR, 'user_icon', str(1))
+	dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 	if not os.path.exists(dir_path):
 		os.makedirs(dir_path)
-	file_path = os.path.join(dir_path, "123121.jpeg")
+	file_name = '%s.%s' % (datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f"), request.POST["file_type"].split('/')[1])
+	file_path = os.path.join(dir_path, file_name)
 
-	print 'write icon to ', file_path
 	dst_file = open(file_path, 'wb')
-	print >> dst_file, ''.join(content)
+	# print >> dst_file, ''.join(content)
 	dst_file.close()
+	response.path = "/static/upload/%s/%s" %(dir_path_suffix,file_name)
 	return response.get_response()
 
 def __get_file_name(file_name, extended_name=None):
