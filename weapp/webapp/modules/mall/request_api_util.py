@@ -902,9 +902,33 @@ def list_address(request):
 			pass
 		data_dict['is_selected'] = ship_info.is_selected
 		items.append(data_dict)
-
+	print(items)
 	response = create_response(200)
 	data = dict()
 	data['ship_infos'] = items
+	response.data = data
+	return response.get_response()
+
+
+def delete_address(request):
+	print('hereeee')
+	ship_info_id = request.POST.get('id', 0)
+	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
+
+	# 默认选中
+	ship_infos = request.webapp_user.ship_infos
+	selected_ships_count = ship_infos.filter(is_selected=True).count()
+	if ship_infos.count() > 0 and selected_ships_count == 0:
+		ship_info = ship_infos[0]
+		ship_info.is_selected = True
+		ship_info.save()
+		selected_id = ship_info.id
+	else:
+		selected_id = 0
+	print('selected_id...:', selected_id)
+	# 显示地址列表
+	response = create_response(200)
+	data = dict()
+	data['selected_id'] = selected_id
 	response.data = data
 	return response.get_response()

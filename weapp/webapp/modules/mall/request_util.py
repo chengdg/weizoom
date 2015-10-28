@@ -1053,25 +1053,6 @@ def add_address(request):
 
 
 ########################################################################
-# delete_address: 删除收货地址信息
-########################################################################
-def delete_address(request):
-	ship_info_id = request.GET.get('id', 0)
-	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
-
-	# 默认选中
-	ship_infos = request.webapp_user.ship_infos
-	selected_ships_count = ship_infos.filter(is_selected=True).count()
-	if ship_infos.count() > 0 and selected_ships_count == 0:
-		ship_info = ship_infos[0]
-		ship_info.is_selected = True
-		ship_info.save()
-
-	# 显示地址列表
-	return list_address(request)
-
-
-########################################################################
 # success_alert: 成功提示页面
 ########################################################################
 def success_alert(request):

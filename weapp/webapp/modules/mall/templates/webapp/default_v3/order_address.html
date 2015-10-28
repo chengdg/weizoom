@@ -117,25 +117,12 @@
         $areaElement.attr('data-area-str',ship_info.area_str);
         $('.xa-shipAddress').val(ship_info.ship_address);
         var UrlDelete = "./?woid=" +woid + "&module=mall&model=address&action=delete&id=" +ship_info.ship_id+"&redirect_url_query_string=" + urlFilter(redirectUrlQueryString);
-        $deleteElem.attr('href',UrlDelete);
+{#        $deleteElem.attr('href',UrlDelete);#}
 
     }
     else{
         $('.xa-shipId').val(0);
     }
-
-
-    $('body').delegate('.xa-delete', 'click', function(event){
-
-        var ship_infos = JSON.parse(localStorage.ship_infos);
-        var ship_id = getParam('id');
-
-        delete ship_infos[ship_id];
-        localStorage.ship_infos = JSON.stringify(ship_infos);
-
-
-	});
-
 
 
     </script>
