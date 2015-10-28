@@ -11,8 +11,9 @@ from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 import export
+from mall import export as mall_export
 
-FIRST_NAV = 'apps'
+FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
 class PowerMeParticipances(resource.Resource):
@@ -28,8 +29,9 @@ class PowerMeParticipances(resource.Resource):
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
-			'second_nav_name': "powermes",
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': mall_export.MALL_APPS_POWERME_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		});
