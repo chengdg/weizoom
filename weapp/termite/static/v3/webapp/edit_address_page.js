@@ -18,6 +18,9 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
         var $form = $('form');
         if (W.validate($form)) {
             var args = $form.serializeObject();
+            var ship_info = deepCopyJSON(args);
+            ship_info['area_str'] = $('.xa-openSelect').text();
+            console.log('arg_type:',args,typeof(args));
             W.getApi().call({
                 app: 'webapp',
                 api: 'project_api/call',
@@ -28,7 +31,29 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     target_api: 'address/save'
                 }),
                 success: function(data) {
-                    var shipName = data['ship_name'];
+                    var ship_id = data['ship_id'];
+                    ship_info['ship_id'] = ship_id;
+                    ship_info['is_selected'] = true;
+                    var ship_infos;
+                    if(localStorage.ship_infos){
+                        ship_infos = JSON.parse(localStorage.ship_infos);
+
+                    }
+                    else{
+                        ship_infos = JSON.constructor();
+                    }
+
+                    for(var i in ship_infos){
+                        if(i!=ship_id){
+                            ship_infos[i].is_selected = false;
+
+                        }
+                    }
+                    ship_infos[ship_id] = ship_info;
+
+                    localStorage.ship_infos = JSON.stringify(ship_infos);
+
+
                     if (data['msg'] != null) {
                         $('body').alert({
                             isShow: true,

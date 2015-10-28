@@ -178,7 +178,6 @@ def show_concern_shop_url(request):
 ########################################################################
 def list_address(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	return request_util.list_address(request)
 
 
@@ -187,8 +186,6 @@ def list_address(request):
 ########################################################################
 def add_address(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
-	request.action = 'add'
 	return request_util.edit_address(request)
 
 
@@ -197,7 +194,6 @@ def add_address(request):
 ########################################################################
 def edit_address(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	request.action = 'edit'
 	return request_util.edit_address(request)
 

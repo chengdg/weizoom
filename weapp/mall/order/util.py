@@ -515,7 +515,9 @@ def get_detail_response(request):
             number += order_has_product.number
         order.number = number
 
+
         # if order.status in [ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED]:
+
             # order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED)
             # if order_has_delivery_times.count() > 0:
             #     tmp_time = order_has_delivery_times[0].delivery_date

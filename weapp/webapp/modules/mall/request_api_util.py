@@ -4,7 +4,7 @@ import time
 import urllib
 import urllib2
 import json
-
+import datetime
 from django.conf import settings
 
 from core.jsonresponse import create_response
@@ -598,7 +598,7 @@ def save_address(request):
 		area = request.POST.get('area', '')
 
 		#更新收货地址信息
-		webapp_user.update_ship_info(
+		ship_id = webapp_user.update_ship_info(
 			ship_id = ship_id,
 			ship_name=ship_name,
 			ship_address=ship_address,
@@ -616,6 +616,7 @@ def save_address(request):
 			data['exception'] = stack
 
 	data['ship_name'] = ship_name
+	data['ship_id'] = ship_id
 	response.data = data
 	return response.get_response()
 
@@ -845,3 +846,27 @@ def update_product_review_picture(request):
 		response = create_response(200)
 		response.data = get_review_status(request)
 		return response.get_response()
+
+
+def list_address(request):
+	ship_infos = list(request.webapp_user.ship_infos)
+	items = []
+	for ship_info in ship_infos:
+		data_dict = dict()
+		data_dict['ship_id'] = ship_info.id
+		data_dict['ship_name'] = ship_info.ship_name
+		data_dict['ship_tel'] = ship_info.ship_tel
+		data_dict['ship_address'] = ship_info.ship_address
+		data_dict['area'] = ship_info.area
+		try:
+			data_dict['area_str'] = ship_info.get_str_area
+		except:
+			pass
+		data_dict['is_selected'] = ship_info.is_selected
+		items.append(data_dict)
+
+	response = create_response(200)
+	data = dict()
+	data['ship_infos'] = items
+	response.data = data
+	return response.get_response()
