@@ -864,7 +864,7 @@ def list_address(request):
 			pass
 		data_dict['is_selected'] = ship_info.is_selected
 		items.append(data_dict)
-
+	print(items)
 	response = create_response(200)
 	data = dict()
 	data['ship_infos'] = items
@@ -873,6 +873,7 @@ def list_address(request):
 
 
 def delete_address(request):
+	print('hereeee')
 	ship_info_id = request.POST.get('id', 0)
 	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
 
@@ -883,13 +884,13 @@ def delete_address(request):
 		ship_info = ship_infos[0]
 		ship_info.is_selected = True
 		ship_info.save()
-		ship_id = ship_info.id
+		selected_id = ship_info.id
 	else:
-		ship_id = 0
-
+		selected_id = 0
+	print('selected_id...:', selected_id)
 	# 显示地址列表
 	response = create_response(200)
 	data = dict()
-	data['selected_id'] = ship_id
+	data['selected_id'] = selected_id
 	response.data = data
 	return response.get_response()

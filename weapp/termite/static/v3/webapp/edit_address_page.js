@@ -100,15 +100,17 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                 args: {
                     woid: W.webappOwnerId,
                     module: 'mall',
-                    target_api: 'address/save',
+                    target_api: 'address/delete',
                     id: ship_id
                 },
                 success: function(data) {
                     var selected_id=data.selected_id;
+                    console.log('selected_id..:',selected_id);
                     var ship_infos = JSON.parse(localStorage.ship_infos);
-                    console.log('selected_id..:',selected_id)
                     delete ship_infos[ship_id];
-                    ship_infos[selected_id]['is_selected'] = true;
+                    if(selected_id){
+                        ship_infos[selected_id]['is_selected'] = true;
+                    }
                     localStorage.ship_infos = JSON.stringify(ship_infos);
 
                 },
