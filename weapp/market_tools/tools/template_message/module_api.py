@@ -55,10 +55,8 @@ def send_order_template_message(webapp_id, order_id, send_point):
 	user_profile = UserProfile.objects.get(webapp_id=webapp_id)
 	user = user_profile.user
 	template_message = get_template_message_by(user, send_point)
-
 	from mall.models import Order
 	order =  Order.objects.get(id=order_id)
-
 	if order and user_profile and template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
 		if mpuser_access_token:

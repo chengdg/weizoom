@@ -31,3 +31,4 @@ URL_OPENID = 'opid'
 
 REFUELING_FID = 'fid'
 
+CURRENT_TOKEN = 'current_token' #'owner____member_token'

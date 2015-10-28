@@ -31,6 +31,7 @@ import util as member_util
 from account.social_account.account_info import get_social_account_info
 from utils.string_util import byte_to_hex, hex_to_byte
 from member.member_grade import auto_update_grade
+import member_settings
 # @task
 # def process_error_openid(openid, user_profile):
 # 	print 'call process_error_openid start'
@@ -222,4 +223,66 @@ def task_member_base_info_update(self, member_id):
 	except:
 		notify_message = u"task 更新会员头像信息,member_id:{} cause:\n{}".format(member_id, unicode_full_stack())
 		watchdog_error(notify_message)
+		raise self.retry()
+
+
+def post_pay_tasks(request, order):
+	"""
+		处理分享链接
+	"""
+	try:
+		member = request.member
+		follow_member_token  = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_TOKEN_SESSION_KEY, None)
+		shared_url_digest = request.COOKIES.get(member_settings.FOLLOWED_MEMBER_SHARED_URL_SESSION_KEY, None)
+		if member and follow_member_token and member.token != follow_member_token and shared_url_digest:
+			process_payment_with_shared_info.delay(member.id, follow_member_token, shared_url_digest)
+	except:
+	 	pass
+
+	from middleware import RemoveSharedInfoMiddleware
+	request.META[RemoveSharedInfoMiddleware.SHOULD_REMOVE_SHARED_URL_SESSION_FLAG] = True
+
+	"""
+		
+		更新会员购买信息
+	"""
+	update_member_pay_info_task.delay(order.id)
+
+
+@task(bind=True,max_retries=3)
+def process_payment_with_shared_info(self, member_id, follow_member_token, shared_url_digest):
+	try:
+		member = Member.objects.get(id=member_id)
+		follow_member = Member.objects.get(token = follow_member_token)
+		if member != follow_member and member.webapp_id == follow_member.webapp_id:
+			MemberSharedUrlInfo.objects.filter(member=follow_member, shared_url_digest=shared_url_digest).update(leadto_buy_count=F('leadto_buy_count')+1)
+	except:
+		notify_message = u"process_payment_with_shared_info member_id:{}, cause:\n{}".format(member_id, unicode_full_stack())
+		watchdog_error(notify_message)
+		raise self.retry()
+
+
+@task(bind=True, max_retries=3)
+def update_member_pay_info_task(self, order_id):
+	from mall.models import Order
+	order = Order.objects.get(id = order_id)
+	webapp_user_id = order.webapp_user_id
+	member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
+	if member:
+		try:
+			unit_price = (member.pay_money + order.final_price)/(member.pay_times + 1)
+			Member.objects.filter(id=member.id).update(pay_money=F('pay_money')+order.final_price, pay_times=F('pay_times')+1, unit_price=unit_price, last_pay_time=order.payment_time)
+		except:
+			notify_message = u"update_member_pay_info member_id:{}, cause:\n{}".format(webapp_user_id, unicode_full_stack())
+			watchdog_error(notify_message)
+			raise self.retry()
+
+@task(bind=True, max_retries=3)
+def send_order_template_message(self, webapp_id, order_id, send_point):
+	try:
+		from market_tools.tools.template_message.module_api import send_order_template_message
+		send_order_template_message(webapp_id, order_id, send_point)
+	except:
+		alert_message = u"post_pay_order_handler 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
+		watchdog_warning(alert_message)		
 		raise self.retry()

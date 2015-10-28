@@ -515,7 +515,7 @@ class JsonToHtmlMiddleware(object):
 	将json转化为html，主要是为了获取api调用时的SQL查询信息时使用
 	"""
 	def process_request(self, request):
-		if not request.META.get('HTTP_REFERER') and ('/api/' in request.path) and ('POST' == request.method):
+		if not request.META.get('HTTP_REFERER') and ('/api/' in request.path) and not settings.IS_UNDER_BDD:
 			request.enable_json2html = True
 
 	def process_response(self, request, response):

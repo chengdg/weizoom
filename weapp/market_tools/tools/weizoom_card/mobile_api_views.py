@@ -61,8 +61,9 @@ def change_weizoom_card_to_integral(request):
 
 		if weizoom_card and weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
 			data['msg'] = u'微众卡未激活'
-
-		if weizoom_card and WeizoomCardUsedAuthKey.is_can_pay(request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY], card_id) and weizoom_card.status != WEIZOOM_CARD_STATUS_INACTIVE:
+		# jz 2015-10-20
+		# and WeizoomCardUsedAuthKey.is_can_pay(request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY], card_id) \
+		if weizoom_card and weizoom_card.status != WEIZOOM_CARD_STATUS_INACTIVE:
 			integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 			if integral_each_yuan:
 				expired_money = weizoom_card.money
@@ -86,8 +87,9 @@ def change_weizoom_card_to_integral(request):
 						expired_money,
 						log.id if log else 0
 					)
+					# jz 2015-10-20
 					#登录安全
-					WeizoomCardUsedAuthKey.objects.filter(auth_key=request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY], weizoom_card_id=card_id).delete()
+					# WeizoomCardUsedAuthKey.objects.filter(auth_key=request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY], weizoom_card_id=card_id).delete()
 				except:
 					notify_message = u"微众卡兑换积分, cause:\n{}".format(unicode_full_stack())
 					watchdog_error(notify_message)
