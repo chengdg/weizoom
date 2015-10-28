@@ -234,7 +234,9 @@ def create_product_review(request):
     request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
     return request_util.create_product_review(request)
 
-
+def create_product_review2(request):
+    request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
+    return request_util.create_product_review2(request)
 ########################################################################
 # get_product_review_successful_page: 创建商品评论
 ########################################################################

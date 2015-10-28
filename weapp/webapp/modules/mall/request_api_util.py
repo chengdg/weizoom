@@ -809,6 +809,35 @@ def create_product_review(request):
 	elif request.method == 'GET':
 		return create_response(500).get_response()
 
+def create_product_review2(request):
+	response = create_response(200)
+	file = request.FILES.get('imagefile', None)
+	content = []
+	if file:
+		for chunk in file.chunks():
+			content.append(chunk)
+
+	dir_path = os.path.join(settings.UPLOAD_DIR, 'user_icon', str(1))
+	if not os.path.exists(dir_path):
+		os.makedirs(dir_path)
+	file_path = os.path.join(dir_path, "123121.jpeg")
+
+	print 'write icon to ', file_path
+	dst_file = open(file_path, 'wb')
+	print >> dst_file, ''.join(content)
+	dst_file.close()
+	return response.get_response()
+
+def __get_file_name(file_name, extended_name=None):
+	import random
+	pos = file_name.rfind('.')
+	if pos == -1:
+		suffix = ''
+	else:
+		suffix = file_name[pos:]
+
+	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
+
 
 def update_product_review_picture(request):
 	'''
