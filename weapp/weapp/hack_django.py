@@ -128,6 +128,7 @@ def hackQuerySetFilterForShow():
 		import modules.member.models as member_models
 		import stats.models as stats_models
 		import mall.models as mall_models
+		import market_tools.tools.member_qrcode.models as tools_models
 		try:
 			if 'owner' in kwargs and kwargs['owner'].id == settings.SELF_ID:
 				owner = kwargs.pop('owner')
@@ -150,7 +151,7 @@ def hackQuerySetFilterForShow():
 					kwargs['webapp_id'] = settings.SELF_WEBAPP_ID
 					return old_filter(self, **kwargs)
 				
-				if self.model in (member_models.Member, mall_models.Order):
+				if self.model in (member_models.Member, mall_models.Order, tools_models.MemberQrcode, member_models.MemberSharedUrlInfo):
 					return old_filter(self, **kwargs).filter(webapp_id__in=settings.WEBAPP_IDS)
 
 				return old_filter(self, **kwargs).filter(webapp_id=settings.TARGET_WEBAPP_ID)
