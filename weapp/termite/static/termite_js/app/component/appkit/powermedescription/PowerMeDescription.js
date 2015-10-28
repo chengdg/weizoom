@@ -12,15 +12,16 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 
 	properties: [{
 		group: '活动名称',
-		groupClass: 'xui-propertyView-app-SignNameGroup',
+		groupClass: 'xui-propertyView-app-PowerMeGroup',
 		fields: [{
 			name: 'title',
 			type: 'text',
 			displayName: '活动名称',
 			isUserProperty: true,
-			maxLength: 10,
+			maxLength: 30,
 			validate: 'data-validate="require-notempty::活动不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
+			annotation: '将作为活动的标题使用',
 			default: ''
 		},{
 			name: 'start_time',
@@ -44,15 +45,22 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			default: ''
 		},{
 			name: 'description',
-			type: 'textarea',
-			displayName: '签到说明',
-			maxLength: 200,
+			type: 'text',
+			displayName: '活动描述',
+			maxLength: 30,
 			isUserProperty: true,
+			annotation: '将显示在页面按钮的下方位置',
 			default: ''
 		},{
-			name: 'image',
+			name: 'reply_content',
+			type: 'text',
+			displayName: '参与活动回复语',
+			isUserProperty: true,
+			default: '触发获取图文信息，如：抢礼物'
+		},{
+			name: 'material_image',
 			type: 'image_dialog_select',
-			displayName: '链接图文',
+			displayName: '链接图文小图',
 			isUserProperty: true,
 			isShowCloseButton: false,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
@@ -62,9 +70,9 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			help: '提示：建议图片长宽20px*20px，正方形图片',
 			default: ""
 		},{
-			name: 'image',
+			name: 'background_image',
 			type: 'image_dialog_select',
-			displayName: '顶部图片',
+			displayName: '顶部背景图',
 			isUserProperty: true,
 			isShowCloseButton: false,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
@@ -74,15 +82,55 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			help: '提示:图片格式jpg/png, 图片宽度640px, 高度自定义, 请上传风格与背景配色协调的图片',
 			default: ""
 		},{
-			name: 'share_description',
+			name: 'rules',
 			type: 'textarea',
-			displayName: '分享描述',
+			displayName: '活动规则',
 			maxLength: 200,
 			isUserProperty: true,
-			default: '签到赚积分啦！'
+			default: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。'
 		}]}],
 	propertyChangeHandlers: {
+		title: function($node, model, value, $propertyViewNode) {
+			$node.find('.xa-title').text(value);
+		},
+		start_time: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-start_time').text(value);
+		},
+		end_time: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-end_time').text(value);
+		},
+		description: function($node, model, value, $propertyViewNode) {
+			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
+			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
+		},
+		image: function($node, model, value, $propertyViewNode) {
+			console.log(value);
+			var image = {url:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				image = data.images[0];
+			}
+			model.set({
+				image: image.url
+			}, {silent: true});
 
+			if (data.type === 'newImage') {
+				W.resource.termite2.Image.put({
+					data: image,
+					success: function(data) {
+					},
+					error: function(resp) {
+					}
+				})
+			}
+
+			if (value) {
+				//更新propertyView中的图片
+				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
+		},
 	},
 
 	initialize: function(obj) {

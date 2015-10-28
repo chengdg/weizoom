@@ -1523,3 +1523,15 @@ button.xui-deleteImageButton{
 	display: inline-block;
 	cursor: pointer;
 }
+
+/*微助力CSS*/
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_dialogSelectField .xui-i-triggerButton {
+    background: none;
+    color: #1262b7;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_horizontalField .propertyGroup_property_label{
+	width: 90px !important;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input {
+    width: 76%;
+}
