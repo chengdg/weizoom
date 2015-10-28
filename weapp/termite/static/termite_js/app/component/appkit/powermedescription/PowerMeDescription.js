@@ -120,13 +120,16 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		}]}],
 	propertyChangeHandlers: {
 		title: function($node, model, value, $propertyViewNode) {
-			$node.find('.xa-title').text(value);
+			//$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-start_time').text(value);
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-end_time').text(value);
+		},
+		timing: function($node, model, value, $propertyViewNode) {
+			$node.find('.wui-i-timing').toggle();
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
@@ -181,11 +184,18 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			}
 			if (value) {
 				//更新propertyView中的图片
+				var $phone_target = $('#phoneIFrame').contents().find('.wui-i-background-image');
 				var $target = $propertyViewNode.find($('[data-field-anchor="background_image"]'));
 				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+				console.log($phone_target);
+				$phone_target.html("<img src='"+image.url+"'>");
 			}
 		},
+		rules: function($node, model, value, $propertyViewNode) {
+			model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
+			$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
+		}
 	},
 
 	initialize: function(obj) {

@@ -13,9 +13,7 @@
             width: 100%;
             height: auto;
             text-align: center;
-            font-family: "微软雅黑";
-        }
-        .wui-powerme-container div{
+            font-family: "微软雅黑" !important;
             text-align: center;
         }
         .wui-powerme-container>.wui-i-top{
@@ -114,12 +112,19 @@
             min-width: 45px;
             display: inline-block;
         }
+        .wui-powerme-container .wui-i-background-image {
+            margin-bottom: -4px;
+        }
+        .wui-powerme-container .wui-i-rules-content {
+            text-align: left !important;
+            margin-left: 10px;
+        }
     </style>
 {% endblock %}
 
 {% ifequal component.type 'appkit.powermedescription' %}
     <div class="wui-powerme-container">
-        <div class="wui-i-top">
+        <div class="wui-i-background-image">
             <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
         </div>
         <div class="wui-i-body">
@@ -135,11 +140,16 @@
                 <button class="wui-i-btn-notready">活动尚未开启,敬请期待</button>
                 <button class="wui-i-btn-using">我也要参加</button>
             </div>
-            <div class="wui-i-description">
-                收集票数进入前50名，即可获得儿童专用坐垫
+            <div class="wui-i-description xa-description cl">
+                <div class="wui-i-description-content">
+                    {{component.model.description|safe}}
+                </div>
             </div>
-            <div class="wui-i-rules">
+            <div class="wui-i-rules xa-rules">
                 <div class="wui-i-title"><hr><i class="wui-i-star"></i><b>活动规则</b><i class="wui-i-star"></i><hr></div>
+                <div class="wui-i-rules-content">
+                    {{component.model.rules|safe}}
+                </div>
             </div>
             <div class="wui-i-states">
                 <div class="wui-i-title"><hr><i class="wui-i-star"></i><b>助力值TOP100</b><i class="wui-i-star"></i><hr></div>
