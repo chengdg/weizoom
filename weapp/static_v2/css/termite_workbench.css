@@ -1576,3 +1576,6 @@ button.xui-deleteImageButton{
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_checkboxField .propertyGroup_property_label{
 	display: none;
 }
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_dateRangeSelectorField {
+    width: 83%;
+}

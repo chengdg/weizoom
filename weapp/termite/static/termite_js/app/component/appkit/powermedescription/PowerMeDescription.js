@@ -67,8 +67,8 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			type: 'text',
 			displayName: '参与活动回复语',
 			isUserProperty: true,
-			default: "",
-			placeholder: '触发获取图文信息，如：抢礼物'
+			placeholder: '触发获取图文信息，如：抢礼物',
+			default: ""
 		},{
 			name: 'material_image',
 			type: 'image_dialog_select',
