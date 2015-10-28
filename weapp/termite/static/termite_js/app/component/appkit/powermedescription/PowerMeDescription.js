@@ -56,7 +56,8 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			type: 'text',
 			displayName: '参与活动回复语',
 			isUserProperty: true,
-			default: '触发获取图文信息，如：抢礼物'
+			default: "",
+			placeholder: '触发获取图文信息，如：抢礼物'
 		},{
 			name: 'material_image',
 			type: 'image_dialog_select',
@@ -87,7 +88,8 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			displayName: '活动规则',
 			maxLength: 200,
 			isUserProperty: true,
-			default: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。'
+			placeholder: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。',
+			default: ""
 		}]}],
 	propertyChangeHandlers: {
 		title: function($node, model, value, $propertyViewNode) {
@@ -103,8 +105,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
 		},
-		image: function($node, model, value, $propertyViewNode) {
-			console.log(value);
+		material_image: function($node, model, value, $propertyViewNode) {
 			var image = {url:''};
 			var data = {type:null};
 			if (value !== '') {
@@ -124,11 +125,38 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 					}
 				})
 			}
-
 			if (value) {
 				//更新propertyView中的图片
-				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-				$propertyViewNode.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+				var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
+		},
+		background_image: function($node, model, value, $propertyViewNode) {
+			var image = {url:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				image = data.images[0];
+			}
+			model.set({
+				image: image.url
+			}, {silent: true});
+
+			if (data.type === 'newImage') {
+				W.resource.termite2.Image.put({
+					data: image,
+					success: function(data) {
+					},
+					error: function(resp) {
+					}
+				})
+			}
+			if (value) {
+				//更新propertyView中的图片
+				var $target = $propertyViewNode.find($('[data-field-anchor="background_image"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
 			}
 		},
 	},
