@@ -86,6 +86,10 @@
 {% block js %}
   <script type="text/javascript">
     var redirectUrlQueryString = getRedirectUrlQueryString();
+    if(redirectUrlQueryString.indexOf('/?')>0){
+        redirectUrlQueryString = redirectUrlQueryString.split("/?")[1];
+    }
+
     var $deleteElem = $('.xa-delete');
     var woid = getWoid();
     // $(function() {
@@ -99,12 +103,10 @@
     var height = screen.height;
     var width = screen.width;
 
-    var action = getParam('action');
     var ship_id = getParam('id');
-    if (action == 'edit'){
+    if (getParam('model') == 'address' && getParam('action') == 'edit'){
         var ship_infos = JSON.parse(localStorage.ship_infos);
         var ship_info = ship_infos[ship_id];
-
 
         $deleteElem.show();
         $('.xa-shipId').val(ship_info['ship_id']);

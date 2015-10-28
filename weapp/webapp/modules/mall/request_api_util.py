@@ -849,11 +849,7 @@ def update_product_review_picture(request):
 
 
 def list_address(request):
-	# print '==============',type(request.webapp_user.ship_infos)
 	ship_infos = list(request.webapp_user.ship_infos)
-	ship_info = ship_infos[0]
-	print(ship_info)
-
 	items = []
 	for ship_info in ship_infos:
 		data_dict = dict()
