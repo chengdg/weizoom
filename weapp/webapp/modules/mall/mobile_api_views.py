@@ -173,6 +173,8 @@ def check_product_in_wishlist(request):
 def create_product_review(request):
     return request_api_util.create_product_review(request)
 
+def create_product_review2(request):
+    return request_api_util.create_product_review2(request)
 
 def update_product_review_picture(request):
     '''
