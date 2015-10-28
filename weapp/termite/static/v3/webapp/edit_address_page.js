@@ -112,6 +112,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                         ship_infos[selected_id]['is_selected'] = true;
                     }
                     localStorage.ship_infos = JSON.stringify(ship_infos);
+                    window.location.href = "./?"+this.redirectUrlQueryString;
 
                 },
                 error: function(resp) {
