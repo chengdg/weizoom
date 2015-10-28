@@ -1,125 +1,9 @@
 {% load workbench_filter %}
 {% block css %}
-    <style>
-        hr{
-            display: inline-block;
-            width: 60px;
-            vertical-align: middle;
-        }
-        .wui-hide{
-            display: none;
-        }
-        .wui-powerme-container{
-            width: 100%;
-            height: auto;
-            text-align: center;
-            font-family: "微软雅黑" !important;
-            text-align: center;
-        }
-        .wui-powerme-container>.wui-i-top{
-            width: 100%;
-            height: auto;
-            background: white;
-        }
-        .wui-powerme-container .wui-i-top>img{
-            width: 100%;
-            height: 300px;
-            margin: 0;
-            border: none;
-        }
-        .wui-powerme-container .wui-i-body{
-            background: #FEF6C5;
-            padding: 10px 0;
-        }
-        .wui-powerme-container .wui-i-body div{
-            margin-top: 15px;
-        }
-        .wui-powerme-container .wui-i-body .wui-i-btngroup button{
-            width: 80%;
-            height: 35px;
-            border-radius: 2px;
-            border: none;
-            color: white;
-            font-size: 20px;
-            margin: 5px 0;
-        }
-        .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
-            background: #B5B5B5;
-        }
-        .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
-            background: #666666;
-        }
-        .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using{
-            background: #FD5C0E;
-        }
-        .wui-powerme-container .wui-i-body .wui-i-rules .wui-i-title{
-
-        }
-        .wui-powerme-container .wui-i-timing{
-            color: black;
-        }
-        .wui-powerme-container .wui-i-timing i{
-            background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
-            background-position: -49px 0;
-            background-size: 940% 220%;
-            width: 33px;
-            height: 33px;
-            display: inline-block;
-            margin-bottom: -12px;
-        }
-        .wui-powerme-container .wui-i-timing b{
-            width: 20px;
-            height: 100%;
-            background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
-            background-position: -170px -12px;
-            font-size: 14px;
-            padding: 7px 5px;
-            color: white;
-            border-radius: 2px;
-        }
-        .wui-powerme-container .wui-i-masterinfo{
-            position: static;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30px;
-            padding: 10px 0;
-            font-size: 12px;
-            line-height: 30px;
-            background-color: white;
-            border-top: 1px solid gainsboro;
-        }
-        .wui-powerme-container .wui-i-masterinfo b{
-            color: lightsalmon;
-            font-size: 15px;
-        }
-        .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
-            background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
-            background-position: 9px 3px;
-            background-size: 940% 420%;
-            width: 33px;
-            height: 17px;
-            display: inline-block;
-        }
-        .wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b{
-            color: #6F2F0C;
-        }
-        .wui-powerme-container .wui-i-states ul li{
-            text-align: left;
-            margin: 0 10px;
-        }
-        .wui-powerme-container .wui-i-states ul li:nth-child(1) span{
-            min-width: 45px;
-            display: inline-block;
-        }
-        .wui-powerme-container .wui-i-background-image {
-            margin-bottom: -4px;
-        }
-        .wui-powerme-container .wui-i-rules-content {
-            text-align: left !important;
-            margin-left: 10px;
-        }
-    </style>
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme.css">
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_yellow.css" id="css_yellow">
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_red.css" id="css_red" disabled=" true">
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_orange.css" id="css_orange" disabled=" true">
 {% endblock %}
 
 {% ifequal component.type 'appkit.powermedescription' %}
@@ -146,13 +30,22 @@
                 </div>
             </div>
             <div class="wui-i-rules xa-rules">
-                <div class="wui-i-title"><hr><i class="wui-i-star"></i><b>活动规则</b><i class="wui-i-star"></i><hr></div>
+                <div class="wui-i-title">
+                    <div class="wui-i-line"></div>
+                    <div class="wui-i-title-content">
+                        <i class="wui-i-star"></i><b>活动规则</b><i class="wui-i-star"></i>
+                    </div>
+                </div>
                 <div class="wui-i-rules-content">
                     {{component.model.rules|safe}}
                 </div>
             </div>
             <div class="wui-i-states">
-                <div class="wui-i-title"><hr><i class="wui-i-star"></i><b>助力值TOP100</b><i class="wui-i-star"></i><hr></div>
+                <div class="wui-i-title">
+                    <div class="wui-i-line"></div>
+                    <div class="wui-i-title-content">
+                        <i class="wui-i-star"></i><b>助力值TOP100</b><i class="wui-i-star"></i></div>
+                    </div>
                 <ul>
                     <li>
                         <span>排名</span>
