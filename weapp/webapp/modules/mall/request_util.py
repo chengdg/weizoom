@@ -1000,29 +1000,11 @@ def pay_alipay_order(request):
 # edit_address: 编辑收货地址信息
 ########################################################################
 def edit_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
-	#隐藏底部导航条#
-	request.should_hide_footer = True
-	ship_info_id = request.GET.get('id', 0)
-	if request.action == 'add':
-		ship_info = None
-	elif ship_info_id > 0:
-		try:
-			ship_info = ShipInfo.objects.get(id=ship_info_id)
-		except:
-			ship_info = None
-	else:
-		ship_info = webapp_user.ship_info
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'ship_info': ship_info,
-		'redirect_url_query_string': request.redirect_url_query_string
+
 	})
-	if hasattr(request, 'is_return_context'):
-		return c
 	return render_to_response('%s/order_address.html' % request.template_dir, c)
 
 
@@ -1051,15 +1033,10 @@ def show_concern_shop_url(request):
 # list_address: 收货地址信息列表
 ########################################################################
 def list_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
 	#隐藏底部导航条#
-	request.should_hide_footer = True
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'redirect_url_query_string': request.redirect_url_query_string,
-		'ship_infos': webapp_user.ship_infos,
 	})
 	return render_to_response('%s/list_address.html' % request.template_dir, c)
 
@@ -1068,15 +1045,9 @@ def list_address(request):
 # add_address: 添加收货地址信息
 ########################################################################
 def add_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
-	#隐藏底部导航条#
-	request.should_hide_footer = True
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'redirect_url_query_string': request.redirect_url_query_string
 	})
 	return render_to_response('%s/order_address.html' % request.template_dir, c)
 
