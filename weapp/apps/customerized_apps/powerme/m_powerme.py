@@ -10,7 +10,6 @@ from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
 from core import resource
-from core import paginator
 from core.jsonresponse import create_response
 
 import models as app_models
@@ -18,6 +17,8 @@ import export
 from apps import request_util
 from termite2 import pagecreater
 import weixin.user.models as weixin_models
+from weixin.user.module_api import get_mp_qrcode_img
+from modules.member.models import Member
 
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
@@ -28,24 +29,31 @@ class MPowerMe(resource.Resource):
 		响应GET
 		"""
 		if 'id' in request.GET:
-			id = request.GET['id']
+			record_id = request.GET['id']
 			isPC = request.GET.get('isPC',0)
-			participance_data_count = 0
+			project_id = record_id
+			member_id = request.member.id
 			isMember = False
-			auth_appid_info = None
+			qrcode_url = ''
+			timing = 0
 			if not isPC:
-				isMember = request.member and request.member.is_subscribed
+				isMember =request.member.is_subscribed
 				if not isMember:
-					from weixin.user.util import get_component_info_from
-					component_info = get_component_info_from(request)
-					auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-					auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
-			if 'new_app:' in id:
-				project_id = id
+					qrcode_url = get_mp_qrcode_img(request.user.id)
+
+			record = app_models.PowerMe.objects(id=record_id)
+			if 'new_app:' in record_id or record.count() == 0:
 				activity_status = u"未开启"
+				c = RequestContext(request, {
+					'activity_status': activity_status,
+					'qrcode_url': qrcode_url,
+					'isPC': isPC
+				})
+				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
 			else:
 				#termite类型数据
-				record = app_models.PowerMe.objects.get(id=id)
+				record = record.first()
+				record_id = record.id
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -59,37 +67,53 @@ class MPowerMe(resource.Resource):
 					activity_status = u'已结束'
 				
 				project_id = 'new_app:powerme:%s' % record.related_page_id
-				
-				if request.member:
-					participance_data_count = app_models.PowerMeParticipance.objects(belong_to=id, member_id=request.member.id).count()
-				if participance_data_count == 0 and request.webapp_user:
-					participance_data_count = app_models.PowerMeParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
-			
+
+				is_already_participanted = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
+				if is_already_participanted.count() > 0:
+					is_already_participanted = is_already_participanted.first().has_join
+				else:
+					is_already_participanted = False
+				participances = app_models.PowerMeParticipance.objects(belong_to=record_id).order_by('-power')
+				member_ids = [p.member_id for p in participances]
+				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+
+				participances_list = [{
+					'id': p.id,
+					'member_id': p.member_id,
+					'user_icon': member_id2member[p.member_id].user_icon,
+					'user_name': member_id2member[p.member_id].username_for_html,
+					'power': p.power
+				} for p in participances]
+
 			request.GET._mutable = True
 			request.GET.update({"project_id": project_id})
 			request.GET._mutable = False
 			html = pagecreater.create_page(request, return_html_snippet=True)
-			
+			if u"进行中" != activity_status:
+				timing = (record.end_time - datetime.today()).seconds
 			c = RequestContext(request, {
-				'record_id': id,
+				'record_id': record_id,
 				'activity_status': activity_status,
-				'is_already_participanted': (participance_data_count > 0),
-				'page_title': "微助力",
+				'is_already_participanted': is_already_participanted,
+				'page_title': u"签到",
 				'page_html_content': html,
 				'app_name': "powerme",
 				'resource': "powerme",
 				'hide_non_member_cover': True, #非会员也可使用该页面
 				'isPC': isPC,
 				'isMember': isMember,
-				'auth_appid_info': auth_appid_info
+				'participances_list': json.dumps(participances_list),
+				'share_page_title': u"微助力",
+				'share_img_url': record.material_image,
+				'share_page_desc': u"微助力",
+				'qrcode_url': qrcode_url,
+				'timing': timing
 			})
-			
-			return render_to_response('workbench/wepage_webapp_page.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {
-				'record': record
-			});
+				'is_deleted_data': True
+			})
 			
-			return render_to_response('powerme/templates/webapp/m_powerme.html', c)
+		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
 

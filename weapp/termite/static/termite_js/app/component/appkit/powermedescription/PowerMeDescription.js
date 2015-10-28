@@ -129,7 +129,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			$node.find('.wui-i-end_time').text(value);
 		},
 		timing: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-timing').toggle();
+			$node.find('.wa-timing').toggle();
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
