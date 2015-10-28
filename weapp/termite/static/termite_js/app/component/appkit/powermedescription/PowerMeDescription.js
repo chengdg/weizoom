@@ -15,7 +15,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		groupClass: 'xui-propertyView-app-PowerMeGroup',
 		fields: [{
 			name: 'title',
-			type: 'text',
+			type: 'text_with_annotation',
 			displayName: '活动名称',
 			isUserProperty: true,
 			maxLength: 30,
@@ -35,7 +35,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			displayName: '结束时间',
 			isUserProperty: false,
 			default: ''
-		}, {
+		},{
 			name: 'valid_time',
 			type: 'date_range_selector',
 			displayName: '活动时间',
@@ -44,8 +44,19 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
+			name: 'countdown',
+			type: 'checkbox-group',
+			displayName: '',
+			isUserProperty: true,
+			source: [{
+				name: '显示倒计时',
+				value: 'countdown',
+				columnName: 'countdown'
+			}],
+			default: {countdown:{select:true}}
+		},{
 			name: 'description',
-			type: 'text',
+			type: 'text_with_annotation',
 			displayName: '活动描述',
 			maxLength: 30,
 			isUserProperty: true,
@@ -82,6 +93,22 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			dialogParameter: '{"multiSelection": false}',
 			help: '提示:图片格式jpg/png, 图片宽度640px, 高度自定义, 请上传风格与背景配色协调的图片',
 			default: ""
+		},{
+			name: 'color',
+			type: 'radio',
+			displayName: '背景配色',
+			isUserProperty: true,
+			source: [{
+				name: '冬日暖阳',
+				value: 'yellow'
+			}, {
+				name: '玫瑰茜红',
+				value: 'red'
+			}, {
+				name: '热带橙色',
+				value: 'orange'
+			}],
+			default: 'yellow'
 		},{
 			name: 'rules',
 			type: 'textarea',
