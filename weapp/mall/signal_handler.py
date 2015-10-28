@@ -180,38 +180,6 @@ def post_pay_order_handler(order, request, **kwargs):
             else:
                 watchdog_alert(alert_message, type='WEB')
 
-    # try:
-    #     order_has_products = OrderHasProduct.objects.filter(order_id=order.id)
-    #     is_thanks_card_order = False
-    #     for order_has_product in order_has_products:
-    #         product = Product.objects.get(id = order_has_product.product_id)
-    #         if product.is_support_make_thanks_card:
-    #             is_thanks_card_order = True
-    #             for i in range(order_has_product.number):    #购买几个商品创建几个密码
-    #                 secret = __gen_thanks_card_secret()
-    #                 member_id = 0    #bdd测试不支持request.member
-    #                 if request.member:
-    #                     member_id = request.member.id
-    #                 ThanksCardOrder.objects.create(
-    #                     order_id= order.id,
-    #                     thanks_secret= secret,
-    #                     card_count= 0,
-    #                     listen_count= 0,
-    #                     is_used= False,
-    #                     title='',
-    #                     content='',
-    #                     type=IMG_TYPE,
-    #                     att_url='',
-    #                     member_id=member_id)
-    #         if is_thanks_card_order:
-    #             Order.objects.filter(order_id=order.order_id).update(type = THANKS_CARD_ORDER)
-    # except:
-    #     alert_message = u"post_pay_order_handler 生成感恩密码失败, cause:\n{}".format(unicode_full_stack())
-    #     if hasattr(request, 'user'):
-    #         watchdog_alert(alert_message, type='WEB', user_id=str(request.user.id))
-    #     else:
-    #         watchdog_alert(alert_message, type='WEB')
-
 #############################################################################################
 # create_delivery_product_handler: 创建一个与DeliveryPlan关联的product一模一样的product,
 # 并将deliveryPlan关联新创建的product
@@ -272,12 +240,13 @@ def create_delivery_product_handler(delivery_plan, **keyword):
 ########################################################################
 # __gen_thanks_card_secret: 生成感恩密码
 ########################################################################
-def __gen_thanks_card_secret():
-    secret = random.randint(1000000, 9999999)
-    if ThanksCardOrder.objects.filter(thanks_secret=secret).count() > 0:
-        return __gen_thanks_card_secret()
-    else:
-        return secret
+# made by zhaolei 2015-10-28
+# def __gen_thanks_card_secret():
+#     secret = random.randint(1000000, 9999999)
+#     if ThanksCardOrder.objects.filter(thanks_secret=secret).count() > 0:
+#         return __gen_thanks_card_secret()
+#     else:
+#         return secret
 
 #############################################################################################
 # cancel_order_handler: 取消订单后触发的动作
