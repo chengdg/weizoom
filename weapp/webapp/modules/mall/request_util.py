@@ -1411,8 +1411,12 @@ def create_product_review(request):
         '%s/product_review_create.html' % request.template_dir, c)
 
 def create_product_review2(request):
-
-    return render_to_response('%s/test_upload.html' % request.template_dir, {})
+	c = RequestContext(request,
+		{
+		'woid':request.webapp_owner_id,
+		'fmt':request.member.token
+		})
+	return render_to_response('%s/test_upload.html' % request.template_dir, c)
 
 def update_product_review_picture(request):
     '''

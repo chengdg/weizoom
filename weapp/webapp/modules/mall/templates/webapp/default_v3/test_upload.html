@@ -93,6 +93,7 @@
                 var result = this.result;
                 var img = new Image();
                 console.info(result)
+                console.info(file.type)
                 img.src = result;
 
                 $(li).css("background-image", "url(" + result + ")");
@@ -102,7 +103,7 @@
                 if (result.length <= maxsize) {
                     img = null;
 
-                    upload(result, file.type, $(li));
+                    upload(result, file, $(li));
 
                     return;
                 }
@@ -117,7 +118,7 @@
                 function callback() {
                     var data = compress(img);
 
-                    upload(data, file.type, $(li));
+                    upload(data, file, $(li));
 
                     img = null;
                 }
@@ -187,29 +188,28 @@
     }
 
     //    图片上传，将base64的图片转成二进制对象，塞进formdata上传
-    function upload(basestr, type, $li) {
-        var text = window.atob(basestr.split(",")[1]);
-        var buffer = new Uint8Array(text.length);
+    function upload(basestr, file, $li) {
+
         var pecent = 0 , loop = null;
 
-        for (var i = 0; i < text.length; i++) {
-            buffer[i] = text.charCodeAt(i);
-        }
 
-        var blob = getBlob(buffer, type);
 
+        var blob = base64toBlob(basestr, file.type);
+        console.info("blob",blob)
         var xhr = new XMLHttpRequest();
 
         var formdata = new FormData();
-        console.info(blob)
         formdata.append('imagefile', blob);
+        console.info("zl--------",file.type)
+        formdata.append('file_type', file.type);
         //xhr.open('post', '/product_review/create');
-        xhr.open('post', '/webapp/api/project_api/call/?design_mode=0&version=2&woid=3&module=mall&target_api=product_review2/create&timestamp=1445997344377&_=1445997344379&fmt=3181020151028D7IJOj1');
+        xhr.open('post', '/webapp/api/project_api/call/?design_mode=0&version=2&woid='+'{{woid}}'+'&module=mall&target_api=product_review2/create&timestamp=1445997344377&_=1445997344379&fmt='+ '{{ fmt }}');
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
+                console.info("xhr.responseText--" + xhr.responseText)
                 var jsonData = JSON.parse(xhr.responseText);
-                console.log('上传成功：' + jsonData[0].path);
+                console.log('上传成功：' + jsonData.path);
 
                 clearInterval(loop);
 
@@ -218,7 +218,7 @@
                     $(this).html("上传成功");
                 });
 
-                $(".pic-list").append('<a href="' + jsonData[0].path + '">' +jsonData[0].path + '（' + jsonData[0].size+'）<img src="' + jsonData[0].path + '" /></a>');
+                $(".pic-list").append('<a href="' + jsonData.path + '">' +jsonData.path +  '<img src="' + jsonData.path + '" /></a>');
             }
         };
 
@@ -262,6 +262,38 @@
             return new window.Blob([ buffer ], {type: format});
         }
     }
+     function base64toBlob(b64Data, contentType, sliceSize) {
+          var BlobBuilder, blob, byteArray, byteCharacters, byteNumbers, charCodeFromCharacter, err, posIndex;
+
+          if (contentType == null) {
+            contentType = '';
+          }
+          if (sliceSize == null) {
+            sliceSize = 1024;
+          }
+          posIndex = b64Data.indexOf('base64,');
+          if (posIndex !== -1) {
+            b64Data = b64Data.substring(posIndex + 7);
+          }
+          charCodeFromCharacter = function(c) {
+            return c.charCodeAt(0);
+          };
+          byteCharacters = atob(b64Data.replace(/\s/g, ''));
+          byteNumbers = Array.prototype.map.call(byteCharacters, charCodeFromCharacter);
+          byteArray = new Uint8Array(byteNumbers);
+          try {
+            blob = new Blob([byteArray.buffer], {
+              type: contentType
+            });
+            return blob;
+          } catch (_error) {
+            err = _error;
+            BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+            blob = new BlobBuilder();
+            blob.append(byteArray.buffer);
+            return blob.getBlob(contentType);
+          }
+}
 </script>
 </body>
 </html>
