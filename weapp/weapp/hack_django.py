@@ -151,10 +151,15 @@ def hackQuerySetFilterForShow():
 					kwargs['webapp_id'] = settings.SELF_WEBAPP_ID
 					return old_filter(self, **kwargs)
 				
-				if self.model in (member_models.Member, mall_models.Order, tools_models.MemberQrcode, member_models.MemberSharedUrlInfo):
+				if self.model in (member_models.Member, mall_models.Order):
 					return old_filter(self, **kwargs).filter(webapp_id__in=settings.WEBAPP_IDS)
 
 				return old_filter(self, **kwargs).filter(webapp_id=settings.TARGET_WEBAPP_ID)
+
+			if self.model in (tools_models.MemberQrcode, member_models.MemberSharedUrlInfo):
+				if 'member__webapp_id' in kwargs and kwargs['member__webapp_id'] == settings.SELF_WEBAPP_ID:
+					webapp_id = kwargs.pop('member__webapp_id')
+					return old_filter(self, **kwargs).filter(member__webapp_id__in=settings.WEBAPP_IDS)
 
 			if 'webapp_source_id' in kwargs and kwargs['webapp_source_id'] == settings.SELF_WEBAPP_ID:
 				webapp_source_id = kwargs.pop('webapp_source_id')
