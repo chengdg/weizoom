@@ -159,6 +159,8 @@ Scenario: 1 分享红包分析
 	When bill把jobs的分享红包链接分享到朋友圈
 	When tom访问jobs的webapp
 	When tom点击bill分享红包链接
+  	#避免时间太短无法排序
+  	When 休眠1秒
 	#nokia是非会员
 	#暂时用先关注再取消关注的方式来模拟非会员的情况，需要改进
 	When nokia关注jobs的公众号
