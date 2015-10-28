@@ -86,6 +86,7 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 	Then jobs获得签到活动"签到活动1"
 		"""
 		{
+			"status":"off",
 			"name":"签到活动1",
 			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
 			"keyword_reply":
@@ -118,7 +119,6 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 					"prize_counts":50
 				}]
 		}
-
 		"""
 @apps_sign @apps_sign_backend
 Scenario:一条奖励下,不添加优惠券,有积分

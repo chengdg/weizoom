@@ -14,24 +14,24 @@ from utils import url_helper
 import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
+import json
 
 def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.id
 
-#1.status,related_page_id如何获得
-#2.应该区分添加活动，和更新活动的区别put，post真不同
-#3.如何模拟点击动作？》
+
+
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
     sign_json = json.loads(context.text)
 
+    status = sign_json['status']
     name = sign_json['name']
     share = {
         "img":sign_json["share_pic"],
         "desc":sign_json["share_describe"]
     }
-
     reply = {}
     keyword ={}
     keyword_reply = sign_json["keyword_reply"]
@@ -48,10 +48,10 @@ def step_impl(context,user,sign_name):
     }
 
 
-    prize_settins = {}
+    prize_settings = {}
     sign_settings = sign_json["sign_settings"]
     for item in sign_settings:
-        prize_settins[item["sign_in"]]={
+        prize_settings[item["sign_in"]]={
             "integral":item["integral"],
             "coupon":{
                 "count":item["prize_counts"],
@@ -60,21 +60,46 @@ def step_impl(context,user,sign_name):
             }
         }
 
+    #模拟登陆Sign页面
+    sign_page_response = context.client.get("/apps/sign/sign/").context
+
+    sign  = sign_page_response['sign']
+    is_create_new_data = sign_page_response['is_create_new_data']
+    project_id = sign_page_response['project_id']
+    webapp_owner_id = sign_page_response['webapp_owner_id']
+    keywords = sign_page_response['keywords']
+    
+    activityId = ""
+    if sign and sign.id:
+        activityId = sign.id
 
     params = {
+        "related_page_id":project_id,
+        "status":status,
+        
         "name":name,
-        "prize_settins":prize_settins,
-        "reply":reply,
-        "share":share,
-        "status":"off"
+        "prize_settings":json.dumps(prize_settings),
+        "reply":json.dumps(reply),
+        "share":json.dumps(share)
      }
 
-    response = context.client.put("/apps/sign/api/sign/?_method=put",params)
-    bdd_util.assert_api_call_success(response)
+    loadPages_response = context.client.get("/apps/api/dynamic_pages/get/",{'project_id': project_id})
 
-    print '+++++++++++++++++++++++++++++++++++++++='
-    print sign_json["status"]
-    print '+++++++++++++++++++++++++++XXXXX++++++++++'
+    # if is_create_new_data:
+    #     response = context.client.post("/apps/sign/api/sign/?_method=put",params)
+    # else:
+    #     params['id'] = activityId
+    #     params['signId'] = activityId
+    #     response = context.client.post("/apps/sign/api/sign/?_method=post",params)
+
+    # bdd_util.assert_api_call_success(response)
+    bdd_util.assert_api_call_success(loadPages_response)
+
+    print '+++++++++++++++++++++++++++++++++++++++==========START++++'
+    print loadPages_response.context
+    print '+++++++++++++++++++++++++++XXXXX++++++++++++++END+++++++++'
+
+
 
 
 
