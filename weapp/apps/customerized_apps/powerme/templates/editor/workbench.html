@@ -164,16 +164,25 @@
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
           var relatedPageId = data['project_id'];
+            var timing = descriptionModel.get('timing');
+            var desc = descriptionModel.get('description');
+            var reply_content = descriptionModel.get('reply_content');
+            var material_image = descriptionModel.get('material_image');
           var args = {
             "name": name,
             "start_time": startTime,
-            "end_time": endTime
+            "end_time": endTime,
+              "timing": timing,
+              "desc": desc,
+              "reply_content": reply_content,
+              "material_image": material_image
           };
+            var method;
           if (isCreateNewData) {
-            var method = 'put';
+            method = 'put';
             args['related_page_id'] = relatedPageId;
           } else {
-            var method = 'post';
+            method = 'post';
             args['id'] = W.activityId;
           }
           W.getApi().call({

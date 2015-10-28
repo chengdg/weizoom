@@ -78,7 +78,7 @@ class PowerMe(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
+		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'desc', 'reply_content', 'material_image'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value

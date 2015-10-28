@@ -27,56 +27,18 @@
 {% endblock %}
 
 {% block content-panel %}
-<div>
-	<h1 class="tc">Powerme({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
-</div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
-	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/powerme',
-				resource: 'powerme_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
-		});
-	});
+    $(function(){
+        //隐藏参与活动按钮
+        $('.xa-submitButtonContainer').hide();
+        if(W.isPC){
+            return false;
+        }
+    });
+
 </script>
 {% endblock %}
 
