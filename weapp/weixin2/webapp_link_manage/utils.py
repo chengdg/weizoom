@@ -106,6 +106,11 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'red_envelope',
 				'add_btn_title': '新建分享红包',
 				'add_link': '/apps/red_envelope/red_envelope_rule/'
+			},{
+				'name': '微助力',
+				'type': 'powerme',
+				'add_btn_title': '新建微助力',
+				'add_link': '/apps/powerme/powerme/'
 			}
 			# {
 			# 	'name': '趣味测试',

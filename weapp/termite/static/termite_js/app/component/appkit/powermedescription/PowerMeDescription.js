@@ -44,16 +44,16 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
-			name: 'countdown',
+			name: 'timing',
 			type: 'checkbox-group',
 			displayName: '',
 			isUserProperty: true,
 			source: [{
 				name: '显示倒计时',
-				value: 'countdown',
-				columnName: 'countdown'
+				value: 'timing',
+				columnName: 'timing'
 			}],
-			default: {countdown:{select:true}}
+			default: {timing:{select:true}}
 		},{
 			name: 'description',
 			type: 'text_with_annotation',
