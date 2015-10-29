@@ -58,7 +58,6 @@
                 if(imgLength > 5){
                     _this._alert('最多同时可上传5张');
                     files.splice(5 - hasImgLength, imgLength - 5);
-                    //todo隐藏添加图片按钮
                 }
                 var $files = $(files);
                 $files.each(function(i, file) {
@@ -237,17 +236,12 @@
         },
 
         removeImgFun:function(event){
-        //     var _this = this;
-        //     var $uploadImage = $('.xui-uploadImage');
-        //     $(event.target).siblings('.xa-remove').click(function(){
-        //         $(this).parent().remove();
-        //         if($uploadImage.length == 2){
-        //             $('.xa-finishEdit').hide();
-        //             $('.xui-addPhoto').show();
-        //             $('.xui-addPhoto').find('.xa-remove').hide();
-        //             $('.xa-text').show();
-        //         }
-        //     });
+            $(event.target).click(function(){
+                $(this).parents('li').remove();
+            });
+            $('.xa-text').show();
+            $('.xa-finishEdit').hide();
+
 
         }
 
