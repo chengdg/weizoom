@@ -130,12 +130,12 @@
             <p style="margin-left: 8px;margin-top: 32px;">1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
             <p style="color: orangered;margin-top:167px;margin-left:10px">2、关注公共号后即可为好友助力值+1</p>
-            <p style="margin-left:10px;margin-top:10px;">3、回复：“</p><p style="color: orangered">{{ reply_content }}</p><p>”，即可参加活动</p>
+            <p style="margin-left:10px;margin-top:10px;">3、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
     </div>
     <div class="xui-share xa-share none">
-        <div style="margin-top: 45%"><p>好的事物、一起分享</p><p>邀请好友或者分享到朋友圈，</p><p>发动小伙伴帮{% if is_self_page %}你{% else %}{{ page_owner_name }}{% endif %}赢大奖！</p></div>
+        <div style="margin-top: 45%"><p>好的事物、一起分享</p><p>邀请好友或者分享到朋友圈，</p><p>发动小伙伴帮{% if is_self_page %}你{% else %}{{ page_owner_name|safe }}{% endif %}赢大奖！</p></div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
 {% endblock %}
