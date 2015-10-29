@@ -44,20 +44,22 @@ class PowerMeParticipance(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request)
-		powerme_participance = app_models.PowerMeParticipance(**data)
-		powerme_participance.save()
-		error_msg = None
-		
-		#调整参与数量
-		app_models.PowerMe.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
-		
+		try:
+			member_id = request.member.id
+			power_id = request.POST['id']
+			fid = request.POST['fid']
+			#更新当前member的参与信息
+			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
+			updated_powered_member_ids = curr_member_power_info.powered_member_id.append(fid)
+			curr_member_power_info.update(set__powered_member_id=updated_powered_member_ids)
 
-		data = json.loads(powerme_participance.to_json())
-		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
-		response = create_response(200)
-		response.data = data
+			#更新被助力者信息
+			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid))
+			powered_member_info.update(inc__power=1)
+
+			response = create_response(200)
+		except Exception,e:
+			response = create_response(500)
+			response.errMsg = e
 		return response.get_response()
 

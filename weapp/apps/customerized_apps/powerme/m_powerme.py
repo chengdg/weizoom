@@ -51,18 +51,7 @@ class MPowerMe(resource.Resource):
 				})
 				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
 			else:
-				#判断分享页是否自己的主页
-				self_page = False
-				is_powered = False
-				fid = request.GET.get('fid', None)
-				if fid is None or str(fid) == str(member_id):
-					self_page = True
-					page_owner_name = request.member.username_for_html
-					page_owner_member_id = member_id
-				else:
-					page_owner_name = Member.objects.get(id=fid).username_for_html
-					page_owner_member_id = fid
-
+				#获取、更新活动信息
 				record = record.first()
 				record_id = record.id
 				activity_status = record.status_text
@@ -79,14 +68,37 @@ class MPowerMe(resource.Resource):
 				
 				project_id = 'new_app:powerme:%s' % record.related_page_id
 
-				participance_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
-				if participance_info.count() > 0:
-					participance_info = participance_info.first()
-					is_powered = fid in participance_info.powered_member_id
-					is_already_participanted = participance_info.has_join
+				#判断分享页是否自己的主页
+				self_page = False
+				is_powered = False
+				is_already_participanted = False
+				fid = request.GET.get('fid', None)
+				#增加/更新当前member的参与信息
+				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
+				if curr_member_power_info.count()> 0:
+					curr_member_power_info = curr_member_power_info.first()
 				else:
-					is_already_participanted = False
-				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power')
+					curr_member_power_info = app_models.PowerMeParticipance(
+						belong_to = str(record_id),
+						member_id = member_id
+					)
+					curr_member_power_info.save()
+				if fid is None or str(fid) == str(member_id):
+					self_page = True
+					page_owner_name = request.member.username_for_html
+					page_owner_member_id = member_id
+					curr_member_power_info.update(set__has_join=True)
+					curr_member_power_info.reload()
+					#调整参与数量
+					app_models.PowerMe.objects(id=record_id).update(**{"inc__participant_count":1})
+
+					is_powered = fid in curr_member_power_info.powered_member_id
+					is_already_participanted = True
+				else:
+					page_owner_name = Member.objects.get(id=fid).username_for_html
+					page_owner_member_id = fid
+
+				participances = app_models.PowerMeParticipance.objects(belong_to=str(record_id), has_join=True).order_by('-power')
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
@@ -99,7 +111,6 @@ class MPowerMe(resource.Resource):
 				for p in participances:
 					rank += 1
 					participances_list.append({
-						'id': p.id,
 						'rank': rank,
 						'member_id': p.member_id,
 						'user_icon': member_id2member[p.member_id].user_icon,
