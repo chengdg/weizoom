@@ -13,9 +13,12 @@
         </div>
         <div class="xui-calc">
             {% for sub_component in component.components %}
-            <div class="">
+            <div class="xui-menuBox">
                 <div data-component-cid="{{sub_component.cid}}" class="xui-flex xui-flex-{{component.components|length}} xui-menu xa-menu f14">
-                    <a href="{% if sub_component.model.second_navs %}javascript:void(0);{% else %}{{ sub_component.model.target|extract_target_data:request|safe }}{% endif %}" class="wa-inner-link">{{ sub_component.model.title }}</a>
+                    <a href="{% if sub_component.model.second_navs %}javascript:void(0);{% else %}{{ sub_component.model.target|extract_target_data:request|safe }}{% endif %}">
+                        {% if sub_component.model.second_navs %}
+                        <img src="/static_v2/img/termite2/menu-icon.png"/>{% endif %}<span class="wa-inner-link">{{ sub_component.model.title }}</span>
+                    </a>
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
