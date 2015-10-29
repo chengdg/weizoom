@@ -369,18 +369,19 @@ def update_webapp_product_model_properties_cache(**kwargs):
     """
     更新product model缓存
     """
-    if cache.request.user_profile:
-        webapp_owner_id = cache.request.user_profile.user_id
-        key = 'webapp_product_model_properties_{wo:%s}' % webapp_owner_id
-        cache_util.delete_cache(key)
+    if hasattr(cache, 'request') and cache.request.user_profile:
+        if cache.request.user_profile:
+            webapp_owner_id = cache.request.user_profile.user_id
+            key = 'webapp_product_model_properties_{wo:%s}' % webapp_owner_id
+            cache_util.delete_cache(key)
 
-        for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
-            user_profile = UserProfile.objects.filter(
-                webapp_id=weizoom_mall.webapp_id)
-            if user_profile.count() == 1:
-                key = 'webapp_product_model_properties_{wo:%s}' % user_profile[
-                    0].user_id
-                cache_util.delete_cache(key)
+            for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
+                user_profile = UserProfile.objects.filter(
+                    webapp_id=weizoom_mall.webapp_id)
+                if user_profile.count() == 1:
+                    key = 'webapp_product_model_properties_{wo:%s}' % user_profile[
+                        0].user_id
+                    cache_util.delete_cache(key)
 
 
 post_update_signal.connect(update_webapp_product_model_properties_cache,
