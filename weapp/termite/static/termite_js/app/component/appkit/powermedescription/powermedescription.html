@@ -9,7 +9,11 @@
 {% ifequal component.type 'appkit.powermedescription' %}
     <div class="wui-powerme-container">
         <div class="wui-i-background-image">
-            <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
+            {% if component.model.background_image %}
+                <img src="{{ component.model.image }}">
+            {% else %}
+                <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
+            {% endif %}
         </div>
         <div class="wui-i-body">
             <div style="display: none" class="wui-i-start_time">{{component.model.start_time}}</div>
@@ -25,6 +29,7 @@
                 <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
                 <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
                 <button class="wui-i-btn-using wa-using wui-hide">我也要参加</button>
+                <button class="wui-i-btn-power wa-power wui-hide">帮助力</button>
             </div>
             <div class="wui-i-description xa-description cl">
                 <div class="wui-i-description-content">
@@ -56,11 +61,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="wui-i-masterinfo">
-            <span class="wa-myrange">我的排名: <b>124</b></span>
-            <span class="wa-mypower">我的助力值: <b>12343</b></span>
-            <span class="wa-totalcount">参与人数: <b>7231</b></span>
         </div>
     </div>
 {% endifequal %}

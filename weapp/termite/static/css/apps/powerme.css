@@ -10,7 +10,7 @@ hr{
     width: 100%;
     height: auto;
     text-align: center;
-    font-family: "΢���ź�" !important;
+    font-family: "微软雅黑" !important;
     text-align: center;
 }
 .wui-powerme-container>.wui-i-top{
@@ -26,6 +26,7 @@ hr{
 }
 .wui-powerme-container .wui-i-body div{
     margin-top: 15px;
+    font-family: "微软雅黑";
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup button{
     width: 80%;
@@ -45,7 +46,6 @@ hr{
     border-radius: 5px;
 }
 .wui-powerme-container .wui-i-timing{
-    color: #666666;
     font-weight: bold;
     min-height: 33px;
     font-size: 18px;
@@ -60,22 +60,6 @@ hr{
     color: white;
     border-radius: 2px;
 }
-.wui-powerme-container .wui-i-masterinfo{
-    position: static;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 30px;
-    padding: 10px 0;
-    font-size: 12px;
-    line-height: 30px;
-    background-color: white;
-    border-top: 1px solid gainsboro;
-     filter:alpha(opacity=50);
-      -moz-opacity:0.5;
-      -khtml-opacity: 0.5;
-      opacity: 0.5;
-}
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
     margin: 0 10px;
@@ -89,5 +73,32 @@ hr{
 }
 .wui-powerme-container .wui-i-rules-content {
     text-align: left !important;
-    margin-left: 10px;
+    margin: 0 10px 0 15px;
+}
+.wui-powerme-container .wui-i-description-content {
+    margin: 0 10px 0 10px;
+}
+.wui-powerme-container .wui-i-line{
+    margin-bottom: -26px;
+    width: 90%;
+    margin-left: 14px;
+}
+.wui-powerme-container .wui-i-title-content {
+    width: 57%;
+    margin-left: 22%;
+}
+.wui-powerme-container .wui-i-timing i{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 940% 220%;
+    width: 33px;
+    height: 33px;
+    display: inline-block;
+    margin-bottom: -12px;
+}
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 940% 420%;
+    width: 33px;
+    height: 17px;
+    display: inline-block;
 }

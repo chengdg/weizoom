@@ -167,7 +167,8 @@
           var timing = descriptionModel.get('timing');
           var desc = descriptionModel.get('description');
           var reply_content = descriptionModel.get('reply_content');
-          var material_image = descriptionModel.get('material_image');
+          var material_image = JSON.parse(descriptionModel.get('material_image')).images[0].url;
+
           var args = {
             "name": name,
             "start_time": startTime,
