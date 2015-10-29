@@ -123,10 +123,19 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			//$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
+			var end_time_text = $node.find('.wui-i-end_time').text();
 			$node.find('.wui-i-start_time').text(value);
+			if (end_time_text != ""){
+				getDateTime($node,value,end_time_text);
+			}
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
+			var start_time_text = $node.find('.wui-i-start_time').text();
 			$node.find('.wui-i-end_time').text(value);
+			if (start_time_text != ""){
+				getDateTime($node,start_time_text,value);
+			}
+
 		},
 		timing: function($node, model, value, $propertyViewNode) {
 			$node.find('.wui-i-timing').toggle();
@@ -203,3 +212,21 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 
 	}
 });
+var getDateTime = function($node,start_time_text,end_time_text){
+	var start_date = new Date(start_time_text.toString()).getTime();
+	var end_date = new Date(end_time_text.toString()).getTime();
+
+	var dif_time = end_date - start_date;
+
+	var day = Math.floor(dif_time / (1000 * 60 * 60 * 24)); //天数
+	var h_time = dif_time % (1000 * 60 * 60 * 24);
+	var hour = Math.floor(h_time / (1000 * 60 * 60));//小时
+	var m_time = h_time % (1000 * 60 * 60);
+	var minute = Math.floor(m_time / (1000 * 60));//分钟
+	var second = Math.floor((m_time % (1000 * 60))/1000); //秒
+	console.log(minute.length);
+	$node.find('.wui-i-timing .xa-day').text(day.toString().length == 2 ? day : '0'+day);
+	$node.find('.wui-i-timing .xa-hour').text(hour.toString().length == 2 ? hour : '0'+hour);
+	$node.find('.wui-i-timing .xa-minute').text(minute.toString().length == 2 ? minute : '0'+minute);
+	$node.find('.wui-i-timing .xa-second').text(second.toString().length == 2 ? second : '0'+second);
+};
