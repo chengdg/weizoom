@@ -100,7 +100,7 @@ hr{
     display: inline-block;
     margin-bottom: -12px;
 }
-.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star,.wui-i-top100-range{
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-size: 940% 420%;
     width: 33px;
@@ -121,24 +121,34 @@ hr{
     float: right;
     margin-right: 5px;
 }
+.wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 17px;
+    width: 33px;
+}
 .wa-top100 li:nth-child(2) .wui-i-top100-range {
-  background-position: -202px -1px !important;
-  height: 32px !important;
-  margin-left: -1px;
+  background-position: -191px 2px;
+  height: 35px;
+  margin-left: -11px;
   text-align: center;
-  width: 41px !important;
+  width: 61px;
 }
 .wa-top100 li:nth-child(3) .wui-i-top100-range {
-  background-position: -273px -1px !important;
-  height: 32px !important;
-  margin-left: -1px;
+  background-position: -260px 2px;
+  height: 35px;
+  margin-left: -11px;
   text-align: center;
-  width: 41px !important;
+  width: 61px;
 }
 .wa-top100 li:nth-child(4) .wui-i-top100-range {
-  background-position: -341px -1px !important;
-  height: 32px !important;
-  margin-left: -1px;
+  background-position: -329px 2px;
+  height: 35px;
+  margin-left: -11px;
   text-align: center;
-  width: 41px !important;
+  width: 61px;
+}
+.wui-powerme-container .wui-i-top100-name img {
+  margin: 0 5px 0 0;
+  width: 40px;
 }
