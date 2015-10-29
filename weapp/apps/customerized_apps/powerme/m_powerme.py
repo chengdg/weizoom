@@ -65,8 +65,14 @@ class MPowerMe(resource.Resource):
 				#获取、更新活动信息
 				record = record.first()
 				record_id = str(record.id)
-				owner_id = record.owner_id
-				mpUserPreviewName = MpuserPreviewInfo.objects.get(id=owner_id).name
+				user_profile = request.user_profile
+				if user_profile.is_mp_registered:
+					try:
+						mpuser = weixin_models.get_system_user_binded_mpuser(request.manager)
+						mpuser_preview_info = weixin_models.MpuserPreviewInfo.objects.get(mpuser=mpuser)
+						mpUserPreviewName = mpuser_preview_info.name
+					except:
+						pass
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
