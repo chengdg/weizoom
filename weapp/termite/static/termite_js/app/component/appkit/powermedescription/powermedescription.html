@@ -9,7 +9,11 @@
 {% ifequal component.type 'appkit.powermedescription' %}
     <div class="wui-powerme-container">
         <div class="wui-i-background-image">
-            <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
+            {% if component.model.background_image %}
+                <img src="{{ component.model.image }}">
+            {% else %}
+                <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
+            {% endif %}
         </div>
         <div class="wui-i-body">
             <div style="display: none" class="wui-i-start_time"></div>
