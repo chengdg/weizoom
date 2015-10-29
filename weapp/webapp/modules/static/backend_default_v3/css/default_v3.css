@@ -3753,13 +3753,13 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     margin-right: 0;
 }
-.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto span.xui-i-box,
+.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     display: inline-block;
     width:46px;
     height:45px;
     background: url(/static_v2/img/webapp/mall/photoBtn.png);
-    -webkit-background-size: 92px 45px;s
+    -webkit-background-size: 92px 45px;
     background-size: 92px 45px;
     background-position: -46px 0;
 }
