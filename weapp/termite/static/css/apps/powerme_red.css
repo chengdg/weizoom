@@ -30,9 +30,12 @@
 .wui-powerme-container .wui-i-line{
     border-bottom: 1px solid #6f2e0e;
 }
-.wui-powerme-container .wui-i-title-content {
+.wui-powerme-container .wui-i-rules-title-content,.wui-powerme-container .wui-i-helper-title-content {
     background: #e63041;
 }
 .wui-powerme-container .wui-i-timing{
     color: #fff;
+}
+.wa-top100 li{
+    color: #6F0510;
 }
