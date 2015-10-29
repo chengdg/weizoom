@@ -73,17 +73,30 @@ class MPowerMe(resource.Resource):
 					is_already_participanted = is_already_participanted.first().has_join
 				else:
 					is_already_participanted = False
-				participances = app_models.PowerMeParticipance.objects(belong_to=record_id).order_by('-power')
+				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power')
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
-				participances_list = [{
-					'id': p.id,
-					'member_id': p.member_id,
-					'user_icon': member_id2member[p.member_id].user_icon,
-					'user_name': member_id2member[p.member_id].username_for_html,
-					'power': p.power
-				} for p in participances]
+				#检查是否有当前member的排名信息
+				current_member_rank_info = None
+				participances_list = []
+				rank = 0 #排名
+
+				for p in participances:
+					rank += 1
+					participances_list.append({
+						'id': p.id,
+						'rank': rank,
+						'member_id': p.member_id,
+						'user_icon': member_id2member[p.member_id].user_icon,
+						'user_name': member_id2member[p.member_id].username_for_html,
+						'power': p.power
+					})
+					if member_id == p.member_id:
+						current_member_rank_info = {
+							'rank': rank,
+							'power': p.power
+						}
 
 			request.GET._mutable = True
 			request.GET.update({"project_id": project_id})
@@ -107,7 +120,9 @@ class MPowerMe(resource.Resource):
 				'share_img_url': record.material_image,
 				'share_page_desc': u"微助力",
 				'qrcode_url': qrcode_url,
-				'timing': timing
+				'timing': timing,
+				'current_member_rank_info': current_member_rank_info, #我的排名
+				'total_participant_count': participances.count() #总参与人数
 			})
 		else:
 			record = None
