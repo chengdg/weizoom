@@ -53,7 +53,7 @@ class MPowerMe(resource.Resource):
 			else:
 				#获取、更新活动信息
 				record = record.first()
-				record_id = record.id
+				record_id = str(record.id)
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -79,10 +79,13 @@ class MPowerMe(resource.Resource):
 					curr_member_power_info = curr_member_power_info.first()
 				else:
 					curr_member_power_info = app_models.PowerMeParticipance(
-						belong_to = str(record_id),
+						belong_to = record_id,
 						member_id = member_id
 					)
 					curr_member_power_info.save()
+				print '================='
+				print fid
+				print '================='
 				if fid is None or str(fid) == str(member_id):
 					self_page = True
 					page_owner_name = request.member.username_for_html
@@ -98,7 +101,8 @@ class MPowerMe(resource.Resource):
 					page_owner_name = Member.objects.get(id=fid).username_for_html
 					page_owner_member_id = fid
 
-				participances = app_models.PowerMeParticipance.objects(belong_to=str(record_id), has_join=True).order_by('-power')
+				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power')
+				total_participant_count = participances.count()
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
@@ -127,8 +131,8 @@ class MPowerMe(resource.Resource):
 			request.GET.update({"project_id": project_id})
 			request.GET._mutable = False
 			html = pagecreater.create_page(request, return_html_snippet=True)
-			if u"进行中" != activity_status:
-				timing = (record.end_time - datetime.today()).seconds
+			if u"进行中" == activity_status:
+				timing = (record.end_time - datetime.today()).total_seconds()
 			c = RequestContext(request, {
 				'record_id': record_id,
 				'activity_status': activity_status,
@@ -149,7 +153,7 @@ class MPowerMe(resource.Resource):
 				'qrcode_url': qrcode_url,
 				'timing': timing,
 				'current_member_rank_info': current_member_rank_info, #我的排名
-				'total_participant_count': participances.count(), #总参与人数
+				'total_participant_count': total_participant_count, #总参与人数
 				'page_owner_name': page_owner_name,
 				'page_owner_member_id': page_owner_member_id
 			})

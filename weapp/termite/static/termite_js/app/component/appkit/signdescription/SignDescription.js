@@ -199,6 +199,9 @@ W.component.appkit.SignDescription = W.component.Component.extend({
 			}else{
 				$node.find('.daily_prizes').hide();
 			}
+		},
+		share_description: function($node, model, value){
+			model.set({share_description:value.replace(/\n/g,'')},{silent: true});
 		}
 	},
 

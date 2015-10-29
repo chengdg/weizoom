@@ -209,6 +209,13 @@
 
     function renderTime(seconds){
         seconds = parseInt(seconds);
+        var formatTime = function(data){
+            data = parseInt(data);
+            if(data<10){
+                return '0'+data;
+            }
+            return data;
+        };
         var $s = $('.xa-second');
         var $m = $('.xa-minute');
         var $h = $('.xa-hour');
@@ -218,16 +225,16 @@
                 window.clearInterval(timer);
                 return false;
             }
-            var left_seconds = seconds%60;
-            var left_minites = seconds/60%60;
-            var left_hours = seconds/60/60%24;
-            var left_days = seconds/60/60/24;
+            var left_seconds = formatTime(seconds%60);
+            var left_minites = formatTime(seconds/60%60);
+            var left_hours = formatTime(seconds/60/60%24);
+            var left_days = formatTime(seconds/60/60/24);
             $s.text(left_seconds);
             $m.text(left_minites);
             $h.text(left_hours);
             $d.text(left_days);
             seconds--;
-        },900);
+        },950);
     }
 
     function showMyRank(){
