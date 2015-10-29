@@ -9,11 +9,7 @@
 {% ifequal component.type 'appkit.powermedescription' %}
     <div class="wui-powerme-container">
         <div class="wui-i-background-image">
-            {% if component.model.background_image %}
-                <img src="{{ component.model.image }}">
-            {% else %}
-                <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
-            {% endif %}
+            <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
         </div>
         <div class="wui-i-body">
             <div style="display: none" class="wui-i-start_time"></div>
@@ -60,11 +56,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="wui-i-masterinfo">
-            <span class="wa-myrange">我的排名: <b>124</b></span>
-            <span class="wa-mypower">我的助力值: <b>123</b></span>
-            <span class="wa-totalcount">参与人数: <b>72</b></span>
         </div>
     </div>
 {% endifequal %}
