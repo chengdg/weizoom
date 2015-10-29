@@ -5,7 +5,6 @@ from datetime import datetime
 import mongoengine as models
 
 class PowerMeParticipance(models.Document):
-	webapp_user_id= models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	created_at = models.DateTimeField() #创建时间

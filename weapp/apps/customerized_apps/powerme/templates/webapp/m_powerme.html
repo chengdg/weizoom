@@ -43,7 +43,7 @@
 
 {% block js %}
 <script type="text/javascript">
-    var participances = {% if participances_list %} {{ participances_list }} {% else %}false{% endif %};
+    var participances = {% if participances_list %} {{ participances_list|safe }} {% else %}false{% endif %};
     var is_powered = {% if is_powered %}true{% else %}false{% endif %};
     var is_self_page = {% if is_self_page %}true{% else %}false{% endif %};
     var page_owner_name = '{{ page_owner_name }}';
@@ -87,9 +87,7 @@
                     openGuideMask();
                 }).show();
             }else{
-                $('.wa-power').text('帮'+page_owner_name+'助力').one('click', function(){
-                    powerYou();
-                }).show();
+                $('.wa-power').text('帮'+page_owner_name+'助力').one('click', powerYou).show();
             }
 
 
