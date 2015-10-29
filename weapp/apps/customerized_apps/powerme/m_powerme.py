@@ -16,6 +16,7 @@ import models as app_models
 import export
 from apps import request_util
 from termite2 import pagecreater
+from utils import url_helper
 import weixin.user.models as weixin_models
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
@@ -40,6 +41,15 @@ class MPowerMe(resource.Resource):
 				isMember =request.member.is_subscribed
 				if not isMember:
 					qrcode_url = get_mp_qrcode_img(request.user.id)
+				fid = request.GET.get('fid', None)
+
+
+				if not fid:
+					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
+					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, 'crmid')
+					response = HttpResponseRedirect(new_url)
+					response.set_cookie('fid', member_id, max_age=60*60*24*365)
+					return response
 
 			record = app_models.PowerMe.objects(id=record_id)
 			if 'new_app:' in record_id or record.count() == 0:
@@ -72,7 +82,6 @@ class MPowerMe(resource.Resource):
 				self_page = False
 				is_powered = False
 				is_already_participanted = False
-				fid = request.GET.get('fid', None)
 				#增加/更新当前member的参与信息
 				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_power_info.count()> 0:
