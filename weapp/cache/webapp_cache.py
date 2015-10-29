@@ -320,9 +320,12 @@ post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_
 def update_webapp_product_detail_by_review_cache(**kwargs):
     if hasattr(cache, 'request'):
         webapp_owner_id = cache.request.user_profile.user_id
-        product_id = None
         instance = kwargs.get('instance', None)
         if instance:
+            if isinstance(instance, mall_models.ProductReview):
+                product_id = instance.product_id
+            else:
+                product_id = instance[0].product_id
             update_product_cache(webapp_owner_id, product_id)
 
 post_update_signal.connect(update_webapp_product_detail_by_review_cache,
