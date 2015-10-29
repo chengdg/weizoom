@@ -50,9 +50,8 @@ class MPowerMe(resource.Resource):
 					response = HttpResponseRedirect(new_url)
 					response.set_cookie('fid', member_id, max_age=60*60*24*365)
 					return response
-
 			record = app_models.PowerMe.objects(id=record_id)
-			owner_id = record.owner_id
+			owner_id = request.GET['webapp_owner_id']
 			mpUserPreviewName = MpuserPreviewInfo.objects.get(id=owner_id).name
 			if 'new_app:' in record_id or record.count() == 0:
 				activity_status = u"未开启"
@@ -67,7 +66,6 @@ class MPowerMe(resource.Resource):
 				record = record.first()
 				record_id = str(record.id)
 				activity_status = record.status_text
-				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')

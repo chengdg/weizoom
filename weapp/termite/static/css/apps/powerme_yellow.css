@@ -29,9 +29,12 @@
 .wui-powerme-container .wui-i-line{
     border-bottom: 1px solid #6d2e0d;
 }
-.wui-powerme-container .wui-i-title-content {
+.wui-powerme-container .wui-i-rules-title-content,.wui-powerme-container .wui-i-helper-title-content {
     background: #FEF6C5;
 }
 .wui-powerme-container .wui-i-timing{
     color: #666666;
+}
+.wa-top100 li{
+    color: #444444;
 }
