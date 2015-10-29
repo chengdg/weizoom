@@ -616,11 +616,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         counter.setMaxCount(maxCount);
 
         if(counter.maxCount >= 0 && (counter.maxCount < counter.count || counter.maxCount < counter.minCount)){
-            counter.changeCountTo(0)
+            this.showUnderStock();
             $('.xa-disabledBuyLinks').show();
             $('.xa-enabledBuyLinks').hide();
         }else{
-            counter.changeCountTo(counter.minCount)
+            this.hideUnderStock();
             $('.xa-disabledBuyLinks').hide();
             $('.xa-enabledBuyLinks').show();
         }

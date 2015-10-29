@@ -293,8 +293,9 @@ signals.post_save.connect(update_webapp_product_detail_cache,
 def update_webapp_product_model_cache(**kwargs):
     model = kwargs.get('instance', None)
     if model and model[0].stocks < 1 and model[0].stock_type == mall_models.PRODUCT_STOCK_TYPE_LIMIT:
+        # 库存发生变化
         model = model[0]
-        update_product_cache(model.owner_id, model.product_id, deleteVarnish=False)
+        # update_product_cache(model.owner_id, model.product_id, deleteVarnish=False)
 
         if model.owner_id != 216:
             key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
