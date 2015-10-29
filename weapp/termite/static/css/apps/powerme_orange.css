@@ -1,4 +1,4 @@
-.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using{
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
     background: #ec352d;
     border-radius: 5px;
     border-bottom: 3px solid #c70800;
@@ -6,7 +6,6 @@
 .wui-powerme-container .wui-i-body{
     background: #ff7d42;
     padding: 10px 0;
-    margin-bottom: 40px;
 }
 .wui-powerme-container .wui-i-timing i{
     background-position: -49px -40px;
@@ -36,6 +35,12 @@
 .wui-powerme-container .wui-i-timing{
     color: #fff;
 }
-.wa-top100 li{
+.wui-powerme-container .wui-i-top100-title{
     color: #642100;
+}
+.wui-i-top100-name {
+    color: #9b2f00;
+}
+.wui-i-top100-power {
+    color: #fff;
 }

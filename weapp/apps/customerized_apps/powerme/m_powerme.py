@@ -39,10 +39,10 @@ class MPowerMe(resource.Resource):
 			qrcode_url = ''
 			timing = 0
 			mpUserPreviewName = ''
+			fid = None
 			if not isPC:
 				isMember =request.member.is_subscribed
-				if not isMember:
-					qrcode_url = get_mp_qrcode_img(request.user.id)
+				qrcode_url = get_mp_qrcode_img(request.user.id)
 				fid = request.GET.get('fid', None)
 
 				if not fid:
@@ -65,8 +65,12 @@ class MPowerMe(resource.Resource):
 				#获取、更新活动信息
 				record = record.first()
 				record_id = str(record.id)
-				owner_id = record.owner_id
-				mpUserPreviewName = MpuserPreviewInfo.objects.get(id=owner_id).name
+				try:
+					mpuser = weixin_models.get_system_user_binded_mpuser(request.manager)
+					mpuser_preview_info = weixin_models.MpuserPreviewInfo.objects.get(mpuser=mpuser)
+					mpUserPreviewName = mpuser_preview_info.name
+				except:
+					pass
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -92,9 +96,14 @@ class MPowerMe(resource.Resource):
 				else:
 					curr_member_power_info = app_models.PowerMeParticipance(
 						belong_to = record_id,
-						member_id = member_id
+						member_id = member_id,
+						created_at = datetime.now()
 					)
 					curr_member_power_info.save()
+
+				#如果当前member不是会员，则清空其助力值
+				if not isMember:
+					curr_member_power_info.update(set__power=0)
 
 				if fid is None or str(fid) == str(member_id):
 					self_page = True
@@ -129,7 +138,7 @@ class MPowerMe(resource.Resource):
 						'rank': rank,
 						'member_id': p.member_id,
 						'user_icon': member_id2member[p.member_id].user_icon,
-						'user_name': member_id2member[p.member_id].username_for_html,
+						'username': member_id2member[p.member_id].username_for_html,
 						'power': p.power
 					})
 					if member_id == p.member_id:

@@ -45,21 +45,28 @@ class PowerMeParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
+			print 333333
+			response = create_response(200)
 			member_id = request.member.id
 			power_id = request.POST['id']
 			fid = request.POST['fid']
 			#更新当前member的参与信息
+			print fid
 			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
-			updated_powered_member_ids = curr_member_power_info.powered_member_id.append(fid)
-			curr_member_power_info.update(set__powered_member_id=updated_powered_member_ids)
-
+			ids_tmp = curr_member_power_info.powered_member_id
+			if '' == ids_tmp:
+				ids_tmp = fid
+			else:
+				ids_tmp.split(',').append(fid)
+				ids_tmp = ','.join(ids_tmp)
+			curr_member_power_info.update(set__powered_member_id=ids_tmp)
+			print 22222
 			#更新被助力者信息
 			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid))
 			powered_member_info.update(inc__power=1)
-
-			response = create_response(200)
+			print 11111
 		except Exception,e:
+			print e
 			response = create_response(500)
-			response.errMsg = e
 		return response.get_response()
 

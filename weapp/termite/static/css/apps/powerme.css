@@ -63,6 +63,7 @@ hr{
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
     margin: 0 10px;
+    line-height: 50px;
 }
 .wui-powerme-container .wui-i-states ul li:nth-child(1) span{
     min-width: 45px;
@@ -84,12 +85,12 @@ hr{
     margin-left: 14px;
 }
 .wui-powerme-container .wui-i-rules-title-content {
-    width: 41%;
-    margin-left: 30%;
+    margin-left: 28%;
+    width: 45%;
 }
 .wui-powerme-container .wui-i-helper-title-content {
-    width: 51%;
-    margin-left: 26%;
+    margin-left: 22%;
+    width: 56%;
 }
 .wui-powerme-container .wui-i-timing i{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
@@ -108,7 +109,46 @@ hr{
 }
 .wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b {
     font-weight: normal;
+    font-size: 18px;
 }
-.wa-top100 li{
+.wui-powerme-container .wui-i-top100-title{
     font-weight: bold;
+}
+.wui-powerme-container .wui-i-top100-name {
+    margin-left: 15px;
+}
+.wui-i-top100-power {
+    float: right;
+    margin-right: 5px;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 17px;
+    width: 33px;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range {
+  background-position: -191px 2px;
+  height: 35px;
+  margin-left: -11px;
+  text-align: center;
+  width: 61px;
+}
+.wa-top100 li:nth-child(3) .wui-i-top100-range {
+  background-position: -260px 2px;
+  height: 35px;
+  margin-left: -11px;
+  text-align: center;
+  width: 61px;
+}
+.wa-top100 li:nth-child(4) .wui-i-top100-range {
+  background-position: -329px 2px;
+  height: 35px;
+  margin-left: -11px;
+  text-align: center;
+  width: 61px;
+}
+.wui-powerme-container .wui-i-top100-name img {
+  margin: 0 5px 0 0;
+  width: 40px;
 }
