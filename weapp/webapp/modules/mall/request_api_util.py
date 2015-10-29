@@ -813,8 +813,8 @@ def create_product_review(request):
 def create_product_review2(request):
 	response = create_response(200)
 	file = request.FILES.get('imagefile', None)
-	# print "zl--------------------0",request.POST["file_type"]
-	# print "zl---------------------",request.user_profile.user_id,file
+	print "zl--------------------0",request.POST["file_type"]
+	print "zl---------------------",request.user_profile.user_id,file
 	date = time.strftime('%Y%m%d')
 	dir_path_suffix = 'webapp/%d_%s' % (request.user_profile.user_id, date)
 
@@ -830,7 +830,7 @@ def create_product_review2(request):
 	file_path = os.path.join(dir_path, file_name)
 
 	dst_file = open(file_path, 'wb')
-	# print >> dst_file, ''.join(content)
+	print >> dst_file, ''.join(content)
 	dst_file.close()
 	response.path = "/static/upload/%s/%s" %(dir_path_suffix,file_name)
 	return response.get_response()
