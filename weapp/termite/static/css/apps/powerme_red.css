@@ -8,25 +8,13 @@
     padding: 10px 0;
 }
 .wui-powerme-container .wui-i-timing i{
-    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-position: -49px -40px;
-    background-size: 940% 220%;
-    width: 33px;
-    height: 33px;
-    display: inline-block;
-    margin-bottom: -12px;
 }
 .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
-    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-position: 9px -36px;
-    background-size: 940% 420%;
-    width: 33px;
-    height: 17px;
-    display: inline-block;
 }
 .wui-i-description-content {
     color: #a00211;
-    font-size: 18px;
 }
 .wui-powerme-container .wui-i-masterinfo b{
     color: #e63041;
@@ -37,16 +25,10 @@
 }
 .wui-i-rules-content {
     color: #fff;
-    font-size: 18px;
 }
 .wui-powerme-container .wui-i-line{
     border-bottom: 1px solid #6f2e0e;
-    margin-bottom: -26px;
-    width: 90%;
-    margin-left: 14px;
 }
 .wui-powerme-container .wui-i-title-content {
-    width: 54%;
-    margin-left: 24%;
     background: #e63041;
 }
