@@ -19,6 +19,7 @@ from termite2 import pagecreater
 import weixin.user.models as weixin_models
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
+from weixin.user.models import MpuserPreviewInfo
 
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
@@ -36,12 +37,15 @@ class MPowerMe(resource.Resource):
 			isMember = False
 			qrcode_url = ''
 			timing = 0
+			mpUserPreviewName = ''
 			if not isPC:
 				isMember =request.member.is_subscribed
 				if not isMember:
 					qrcode_url = get_mp_qrcode_img(request.user.id)
 
 			record = app_models.PowerMe.objects(id=record_id)
+			owner_id = record.owner_id
+			mpUserPreviewName = MpuserPreviewInfo.objects.get(id=owner_id).name
 			if 'new_app:' in record_id or record.count() == 0:
 				activity_status = u"未开启"
 				c = RequestContext(request, {
@@ -155,7 +159,9 @@ class MPowerMe(resource.Resource):
 				'current_member_rank_info': current_member_rank_info, #我的排名
 				'total_participant_count': total_participant_count, #总参与人数
 				'page_owner_name': page_owner_name,
-				'page_owner_member_id': page_owner_member_id
+				'page_owner_member_id': page_owner_member_id,
+				'reply_content': record.reply_content,
+				'mpUserPreviewName': mpUserPreviewName
 			})
 		else:
 			record = None
