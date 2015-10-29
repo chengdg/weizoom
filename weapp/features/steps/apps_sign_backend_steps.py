@@ -20,6 +20,36 @@ def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.id
 
+#### 获取新的 project_id
+def _get_new_project_id(context):   
+    response = context.client.post("/termite2/api/project/?_method=put", {"source_template_id": -1})
+    data = json.loads(response.content)["data"]
+    return data['project_id']
+
+
+#### 获取 project_id 对应的json数据
+def _get_page_json(context, project_id):
+    url = "/termite2/api/pages_json/?project_id={}".format(project_id)
+    response = context.client.get(url)
+    data = json.loads(response.content)["data"]
+    return json.loads(data)
+
+
+#### 保存page
+def _save_page(context, user, page):
+    page = __supplement_page(page)
+    data = __process_activity_data(context, page, user)
+
+    url = "/termite2/api/project/?project_id={}".format(context.project_id)
+    response = context.client.post(url, data)
+
+    url = "/termite2/api/project/?project_id={}".format(context.project_id)
+    data = {
+        "field": 'is_enable',
+        "id": context.project_id
+    }
+    response = context.client.post(url, data)
+
 
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
@@ -61,7 +91,8 @@ def step_impl(context,user,sign_name):
         }
 
     #模拟登陆Sign页面
-    sign_page_response = context.client.get("/apps/sign/sign/").context
+    sign_response = context.client.get("/apps/sign/sign/")
+    sign_page_response = sign_response.context
 
     sign  = sign_page_response['sign']
     is_create_new_data = sign_page_response['is_create_new_data']
@@ -83,20 +114,23 @@ def step_impl(context,user,sign_name):
         "share":json.dumps(share)
      }
 
-    loadPages_response = context.client.get("/apps/api/dynamic_pages/get/",{'project_id': project_id})
 
-    # if is_create_new_data:
-    #     response = context.client.post("/apps/sign/api/sign/?_method=put",params)
-    # else:
-    #     params['id'] = activityId
-    #     params['signId'] = activityId
-    #     response = context.client.post("/apps/sign/api/sign/?_method=post",params)
+    #没有储存page，所以没有related_page_id
+    # loadPages_response = context.client.get("/apps/api/dynamic_pages/get/",{'project_id': project_id})
 
-    # bdd_util.assert_api_call_success(response)
-    bdd_util.assert_api_call_success(loadPages_response)
+    if is_create_new_data:
+        response = context.client.post("/apps/sign/api/sign/?_method=put",params)
+    else:
+        params['id'] = activityId
+        params['signId'] = activityId
+        response = context.client.post("/apps/sign/api/sign/?_method=post",params)
+
+    bdd_util.assert_api_call_success(response)
+    # bdd_util.assert_api_call_success(loadPages_response)
 
     print '+++++++++++++++++++++++++++++++++++++++==========START++++'
-    print loadPages_response.context
+    # print project_id
+    print sign_response
     print '+++++++++++++++++++++++++++XXXXX++++++++++++++END+++++++++'
 
 
