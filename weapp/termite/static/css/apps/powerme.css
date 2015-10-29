@@ -63,6 +63,7 @@ hr{
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
     margin: 0 10px;
+    line-height: 50px;
 }
 .wui-powerme-container .wui-i-states ul li:nth-child(1) span{
     min-width: 45px;
@@ -84,12 +85,12 @@ hr{
     margin-left: 14px;
 }
 .wui-powerme-container .wui-i-rules-title-content {
-    width: 41%;
-    margin-left: 30%;
+    margin-left: 28%;
+    width: 45%;
 }
 .wui-powerme-container .wui-i-helper-title-content {
-    width: 51%;
-    margin-left: 26%;
+    margin-left: 22%;
+    width: 56%;
 }
 .wui-powerme-container .wui-i-timing i{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
@@ -99,7 +100,7 @@ hr{
     display: inline-block;
     margin-bottom: -12px;
 }
-.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star,.wui-i-top100-range{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-size: 940% 420%;
     width: 33px;
@@ -108,7 +109,36 @@ hr{
 }
 .wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b {
     font-weight: normal;
+    font-size: 18px;
 }
-.wa-top100 li{
+.wui-powerme-container .wui-i-top100-title{
     font-weight: bold;
+}
+.wui-powerme-container .wui-i-top100-name {
+    margin-left: 15px;
+}
+.wui-i-top100-power {
+    float: right;
+    margin-right: 5px;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range {
+  background-position: -202px -1px !important;
+  height: 32px !important;
+  margin-left: -1px;
+  text-align: center;
+  width: 41px !important;
+}
+.wa-top100 li:nth-child(3) .wui-i-top100-range {
+  background-position: -273px -1px !important;
+  height: 32px !important;
+  margin-left: -1px;
+  text-align: center;
+  width: 41px !important;
+}
+.wa-top100 li:nth-child(4) .wui-i-top100-range {
+  background-position: -341px -1px !important;
+  height: 32px !important;
+  margin-left: -1px;
+  text-align: center;
+  width: 41px !important;
 }

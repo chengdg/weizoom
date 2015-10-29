@@ -35,6 +35,12 @@
 .wui-powerme-container .wui-i-timing{
     color: #fff;
 }
-.wa-top100 li{
+.wui-powerme-container .wui-i-top100-title{
     color: #642100;
+}
+.wui-i-top100-name {
+    color: #9b2f00;
+}
+.wui-i-top100-power {
+    color: #fff;
 }
