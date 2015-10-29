@@ -195,9 +195,7 @@
             }else{
                 using_msg = '我也要参加';
             }
-            $('.wa-using').text(using_msg).on('click', function(){
-                openGuideMask();
-            }).show();
+            $('.wa-using').text(using_msg).on('click', openQrMask).show();
         }
 
     }
@@ -257,11 +255,11 @@
         $('body').swipeMask('show');
         $('.xa-share').removeClass('none');
     }
-    function showPowerSuccess(){
+    function openSuccessWin(){
         $('body').swipeMask('show');
         $('.xui-powerSucceed').removeClass('none');
     }
-    function showtwoDimensionBox(){
+    function openQrMask(){
         $('body').swipeMask('show');
         $('.xa-attention').removeClass('none');
     }
@@ -277,6 +275,10 @@
             },
             success: function(data) {
                 console.log(data);
+                openSuccessWin();
+                $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', function(){
+                    openGuideMask();
+                }).show();
             },
             error: function(data) {
                 console.error(data.errMsg);

@@ -58,7 +58,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			name: 'timing_value',
 			type: 'hidden',
 			displayName: '倒计时',
-			isUserProperty: false,
+			isUserProperty: true,
 			default: {
 				day:'00',
 				hour:'00',
@@ -134,7 +134,6 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			//$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
-			console.log("dsssssss");
 			var end_time_text = $node.find('.wui-i-end_time').text();
 			$node.find('.wui-i-start_time').text(value);
 			if (end_time_text != ""){
@@ -153,7 +152,6 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			$node.find('.wa-timing').toggle();
 		},
 		timing_value:function($node, model, value, $propertyViewNode){
-
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
@@ -257,7 +255,6 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 	}
 });
 var getDateTime = function($node,start_time_text,end_time_text,model){
-	console.log("getDateTime");
 	var start_date = new Date(start_time_text.toString()).getTime();
 	var end_date = new Date(end_time_text.toString()).getTime();
 
