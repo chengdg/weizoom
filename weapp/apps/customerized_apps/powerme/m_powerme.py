@@ -43,10 +43,8 @@ class MPowerMe(resource.Resource):
 					qrcode_url = get_mp_qrcode_img(request.user.id)
 				fid = request.GET.get('fid', None)
 
-
 				if not fid:
 					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
-					new_url = url_helper.remove_querystr_filed_from_request_url(new_url, 'crmid')
 					response = HttpResponseRedirect(new_url)
 					response.set_cookie('fid', member_id, max_age=60*60*24*365)
 					return response
@@ -92,9 +90,7 @@ class MPowerMe(resource.Resource):
 						member_id = member_id
 					)
 					curr_member_power_info.save()
-				print '================='
-				print fid
-				print '================='
+
 				if fid is None or str(fid) == str(member_id):
 					self_page = True
 					page_owner_name = request.member.username_for_html
@@ -121,6 +117,7 @@ class MPowerMe(resource.Resource):
 				rank = 0 #排名
 
 				participances = participances[:100]
+
 				for p in participances:
 					rank += 1
 					participances_list.append({
@@ -135,6 +132,9 @@ class MPowerMe(resource.Resource):
 							'rank': rank,
 							'power': p.power
 						}
+				print '================='
+				print participances_list
+				print '================='
 
 			request.GET._mutable = True
 			request.GET.update({"project_id": project_id})
