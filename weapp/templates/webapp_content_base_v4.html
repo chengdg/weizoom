@@ -312,7 +312,7 @@
             W.activityStatus = "{{activity_status}}";
             W.isPC = {% if isPC %}true{% else %}false{% endif %};
             W.isMember = {% if isMember %}true{% else %}false{% endif %};
-            W.qrcodeUrl = "{{ auth_appid_info.qrcode_url }}";
+            W.qrcodeUrl = "{{ qrcode_url }}";
             W.permission = "{{ permission }}";
   //          if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
   //          W.sharePageImg = "http://"+window.location.host+W.sharePageImg;

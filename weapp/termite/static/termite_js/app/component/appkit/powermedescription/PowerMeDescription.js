@@ -138,7 +138,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 
 		},
 		timing: function($node, model, value, $propertyViewNode) {
-			$node.find('.wui-i-timing').toggle();
+			$node.find('.wa-timing').toggle();
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
@@ -201,6 +201,37 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				$phone_target.html("<img src='"+image.url+"'>");
 			}
 		},
+		color: function($node, model, value, $propertyViewNode) {
+			switch (value){
+				case 'yellow':
+					value = '0';
+					break;
+				case 'red':
+					value = '1';
+					break;
+				case 'orange':
+					value = '2';
+					break;
+				default :
+					value = '0';
+					break;
+			}
+			if(value == '0'){
+				$node.find("#css_yellow")[0].disabled = false;
+				$node.find("#css_red")[0].disabled = true;
+				$node.find("#css_orange")[0].disabled = true;
+			}else{
+				if(value == '1'){
+					$node.find("#css_yellow")[0].disabled = true;
+					$node.find("#css_red")[0].disabled = false;
+					$node.find("#css_orange")[0].disabled = true;
+				}else{
+					$node.find("#css_yellow")[0].disabled = true;
+					$node.find("#css_red")[0].disabled = true;
+					$node.find("#css_orange")[0].disabled = false;
+				}
+			}
+		},
 		rules: function($node, model, value, $propertyViewNode) {
 			model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
@@ -209,7 +240,6 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 
 	initialize: function(obj) {
 		this.super('initialize', obj);
-
 	}
 });
 var getDateTime = function($node,start_time_text,end_time_text){

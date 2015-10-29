@@ -1,0 +1,93 @@
+hr{
+    display: inline-block;
+    width: 60px;
+    vertical-align: middle;
+}
+.wui-hide{
+    display: none;
+}
+.wui-powerme-container{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-family: "Î¢ÈíÑÅºÚ" !important;
+    text-align: center;
+}
+.wui-powerme-container>.wui-i-top{
+    width: 100%;
+    height: auto;
+    background: white;
+}
+.wui-powerme-container .wui-i-top>img{
+    width: 100%;
+    height: 300px;
+    margin: 0;
+    border: none;
+}
+.wui-powerme-container .wui-i-body div{
+    margin-top: 15px;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup button{
+    width: 80%;
+    height: 35px;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    font-size: 20px;
+    margin: 5px 0;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
+    background: #B5B5B5;
+    border-radius: 5px;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
+    background: #666666;
+    border-radius: 5px;
+}
+.wui-powerme-container .wui-i-timing{
+    color: #666666;
+    font-weight: bold;
+    min-height: 33px;
+    font-size: 18px;
+}
+.wui-powerme-container .wui-i-timing b{
+    width: 20px;
+    height: 100%;
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-position: -170px -12px;
+    font-size: 14px;
+    padding: 7px 5px;
+    color: white;
+    border-radius: 2px;
+}
+.wui-powerme-container .wui-i-masterinfo{
+    position: static;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    padding: 10px 0;
+    font-size: 12px;
+    line-height: 30px;
+    background-color: white;
+    border-top: 1px solid gainsboro;
+     filter:alpha(opacity=50);
+      -moz-opacity:0.5;
+      -khtml-opacity: 0.5;
+      opacity: 0.5;
+}
+.wui-powerme-container .wui-i-states ul li{
+    text-align: left;
+    margin: 0 10px;
+}
+.wui-powerme-container .wui-i-states ul li:nth-child(1) span{
+    min-width: 45px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-background-image {
+    margin-bottom: -4px;
+}
+.wui-powerme-container .wui-i-rules-content {
+    text-align: left !important;
+    margin-left: 10px;
+}
