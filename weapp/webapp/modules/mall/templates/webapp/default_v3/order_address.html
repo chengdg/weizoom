@@ -86,10 +86,9 @@
 {% block js %}
   <script type="text/javascript">
     var redirectUrlQueryString = getRedirectUrlQueryString();
-    if(redirectUrlQueryString.indexOf('/?')>0){
-        redirectUrlQueryString = redirectUrlQueryString.split("/?")[1];
+    if(redirectUrlQueryString.indexOf('?')>=0){
+        redirectUrlQueryString = redirectUrlQueryString.split("?")[1];
     }
-
     var $deleteElem = $('.xa-delete');
     var woid = getWoid();
     // $(function() {
