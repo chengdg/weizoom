@@ -64,6 +64,7 @@ class Product(api_resource.ApiResource):
 			'weshop_sync': product.weshop_sync,
 			'is_member_product': product.is_member_product,
 			'is_use_custom_model': product.is_use_custom_model,
+			'promotion_title': product.promotion_title,
 
 			'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
 			'stocks': product.stocks if product.stock_type else '无限',
@@ -88,7 +89,8 @@ class Product(api_resource.ApiResource):
 			data['swipe_images_json'] = product.swipe_images_json
 		if hasattr(product, 'promotion'):
 			data['promotion'] = product.promotion
-			data['promotion_title'] = product.promotion_title
+			if hasattr(product, 'master_promotion_title'):
+				data['master_promotion_title'] = product.master_promotion_title
 			if hasattr(product, 'promotion_model'):
 				data['promotion_model'] = product.promotion_model
 		if hasattr(product, 'display_price'):
@@ -99,6 +101,8 @@ class Product(api_resource.ApiResource):
 			data['integral_sale'] = product.integral_sale
 			if hasattr(product, 'integral_sale_model'):
 				data['integral_sale_model'] = product.integral_sale_model
+			if hasattr(product, 'integral_sale_promotion_title'):
+				data['integral_sale_promotion_title'] = product.integral_sale_promotion_title
 
 		if hasattr(product, 'display_price_range'):
 			data['display_price_range'] = product.display_price_range

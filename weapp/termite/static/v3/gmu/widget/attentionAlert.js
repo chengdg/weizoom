@@ -12,9 +12,9 @@ Copyright (c) 2011-2012 Weizoom Inc
             isShowButton: function(_this) {
                 return _this.$el.data('is-show-button') ? true : false;
             },
-            isShowCover: function(_this) {
-                return _this.$el.data('is-show-cover') ? true : false;
-            },
+            // isShowCover: function(_this) {
+            //     return _this.$el.data('is-show-cover') ? true : false;
+            // },
             getDataId: function(_this) {
                 var id = _this.$el.data('id');
                 return id;
@@ -48,18 +48,19 @@ Copyright (c) 2011-2012 Weizoom Inc
             if($('xa-editOrderPage')){
                 $('#wrapper').css('top','40px');
             }
-            height = this.setting.isShowCover(this) ? '100%' : '40px';
             this.$el.css('height', height);
             $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
             $('.xui-mask').css({
-                height: height,
+                height: '100%',
                 width: '100%',
                 background:'rgba(0,0,0,0.5)',
                 position:'fixed',
                 top:0,
                 left:0,
                 'z-index':10003
-            });
+            }).click(function(){
+                $(this).addClass('none');
+            });;
             $('.xui-attentionBox').css({
                 width: 233,
                 height: 270,
@@ -106,9 +107,6 @@ Copyright (c) 2011-2012 Weizoom Inc
     	});
         $('.xui-attentionAlert').click(function(){
             $(this).attentionAlert('clickGuideAttention');
-        });
-        $('.xa-mask').click(function(){
-            $(this).addClass('none');
         });
 
 	})
