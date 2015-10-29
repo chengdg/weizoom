@@ -454,6 +454,16 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				# RFC
 				elif one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
 					promotion = one_promotion
+			#填充积分折扣信息
+			if integral_sale:
+				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
+				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
+				product.promotion_title = integral_sale.promotion_title
+				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
+			else:
+				product.integral_sale = None
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
@@ -474,15 +484,6 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			else:
 				product.original_promotion_title = product.promotion_title
 				product.promotion = None
-			#填充积分折扣信息
-			if integral_sale:
-				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
-				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
-				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
-				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
-				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
-			else:
-				product.integral_sale = None
 
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
@@ -3101,11 +3102,15 @@ def get_member_product_info_dict(request):
 		member_grade_id, discount = get_member_discount(request)
 		result_data['member_grade_id'] = member_grade_id
 		result_data['discount'] = discount
+		result_data['usable_integral'] = request.member.integral
+		result_data['is_subscribed'] = request.member.is_subscribed
 	else:
 		if product_id:
 			result_data['is_collect'] = 'false'
 		result_data['member_grade_id'] = -1
 		result_data['discount'] = 100
+		result_data['usable_integral'] = 0
+		result_data['is_subscribed'] = False
 	return result_data
 
 def get_member_product_info(request):

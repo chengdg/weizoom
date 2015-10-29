@@ -392,6 +392,14 @@ $(document).ready(function() {
                                 understock_msg = '';
                             }
                         }
+                        var $product = $(this).parents('.xa-product');
+                        var $check = $product.find('.xa-check');
+                        if($(this).data('view').count > maxCount){
+                            $product.find('.xui-understock').show();
+                            $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+                        }else{
+                            $check.removeClass('xui-disabled-radio').addClass('xui-checkCart');
+                        }
                         $(this).parents('.xa-product').find('.xui-understock').html(understock_msg);
                         $(this).data('view').setMaxCount(maxCount);
                     });
