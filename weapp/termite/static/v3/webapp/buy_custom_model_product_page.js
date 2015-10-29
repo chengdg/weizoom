@@ -275,6 +275,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     if(!data[n.id])
                         return;
                     n.stock_type = data[n.id].stock_type;
+                    n.stocks = data[n.id].stocks;
                     if(n.stock_type == 0){
                         stock_all = 999999;//无限库存
                     }else{
@@ -287,7 +288,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         $('.xa-not_selloutAlert').show();
                         $('.xa-selloutAlert').hide();
                     }
-                    n.stocks = data[n.id].stocks;
                     if(_this.targetModel && _this.targetModel.id == n.id){
                         //更新库存
                         _this.updateProductStock(n);
@@ -863,7 +863,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 is_collect: is_collect
             },
             success: function(data) {
-                if(is_collect == 'true'){
+                if(is_collect){
                     $('.xa-collectProduct').removeClass('faved').text('收藏');
                     $('.xa-collectProduct').attr('data-is-collect','false');
                 }else{

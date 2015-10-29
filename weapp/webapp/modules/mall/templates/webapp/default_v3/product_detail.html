@@ -226,7 +226,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         </a>
         <!-- 已售罄 -->
         {% if product.shelve_type == 1 %}
-             <div class="xa-selloutAlert clearfix" style="padding:3px 0;">
+             <div class="xa-selloutAlert clearfix xui-hide" style="padding:3px 0;">
                 <div class="xui-selloutAlert">商品已售罄，非常抱歉</div>
                 <div style="padding:3px 0;">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xui-addCartBtn-disable" data-type='shoppingCart'>加入购物车</a>
@@ -234,7 +234,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
              </div>
             <!-- 普通商品 -->
-            <div class="xa-not_selloutAlert clearfix" style="padding:3px 0;">
+            <div class="xa-not_selloutAlert clearfix xui-hide" style="padding:3px 0;">
                 <div class="xa-disabledBuyLinks xui-inlineblock clearfix" style="padding:3px 0;">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton" data-type='shoppingCart'>加入购物车</a>
                     <a href="javascript:void(0);" class="xui-btn xui-buyBtn xa-canNotBuyButton" data-type='buy'>立即购买</a>
