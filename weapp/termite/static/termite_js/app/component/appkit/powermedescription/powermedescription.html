@@ -20,10 +20,10 @@
             <div style="display: none" class="wui-i-end_time">{{component.model.end_time}}</div>
             <div class="wui-i-timing wa-timing">
                 <i></i>:
-                <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}00{% endif %}</b>天
-                <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}00{% endif %}</b>时
-                <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}00{% endif %}</b>分
-                <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}00{% endif %}</b>秒
+                <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
+                <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
+                <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
+                <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
             </div>
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
@@ -39,7 +39,7 @@
             <div class="wui-i-rules xa-rules">
                 <div class="wui-i-title">
                     <div class="wui-i-line"></div>
-                    <div class="wui-i-title-content">
+                    <div class="wui-i-rules-title-content">
                         <i class="wui-i-star"></i><b>活动规则</b><i class="wui-i-star"></i>
                     </div>
                 </div>
@@ -50,10 +50,10 @@
             <div class="wui-i-states">
                 <div class="wui-i-title">
                     <div class="wui-i-line"></div>
-                    <div class="wui-i-title-content">
+                    <div class="wui-i-helper-title-content">
                         <i class="wui-i-star"></i><b>助力值TOP100</b><i class="wui-i-star"></i></div>
                     </div>
-                <ul>
+                <ul class="wa-top100">
                     <li>
                         <span>排名</span>
                         <span>会员</span>

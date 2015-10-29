@@ -16,9 +16,11 @@ import models as app_models
 import export
 from apps import request_util
 from termite2 import pagecreater
+from utils import url_helper
 import weixin.user.models as weixin_models
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
+from weixin.user.models import MpuserPreviewInfo
 
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
@@ -36,12 +38,21 @@ class MPowerMe(resource.Resource):
 			isMember = False
 			qrcode_url = ''
 			timing = 0
+			mpUserPreviewName = ''
 			if not isPC:
 				isMember =request.member.is_subscribed
 				if not isMember:
 					qrcode_url = get_mp_qrcode_img(request.user.id)
+				fid = request.GET.get('fid', None)
+
+				if not fid:
+					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
+					response = HttpResponseRedirect(new_url)
+					response.set_cookie('fid', member_id, max_age=60*60*24*365)
+					return response
 
 			record = app_models.PowerMe.objects(id=record_id)
+
 			if 'new_app:' in record_id or record.count() == 0:
 				activity_status = u"未开启"
 				c = RequestContext(request, {
@@ -54,6 +65,8 @@ class MPowerMe(resource.Resource):
 				#获取、更新活动信息
 				record = record.first()
 				record_id = str(record.id)
+				owner_id = record.owner_id
+				mpUserPreviewName = MpuserPreviewInfo.objects.get(id=owner_id).name
 				activity_status = record.status_text
 				
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -72,7 +85,6 @@ class MPowerMe(resource.Resource):
 				self_page = False
 				is_powered = False
 				is_already_participanted = False
-				fid = request.GET.get('fid', None)
 				#增加/更新当前member的参与信息
 				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_power_info.count()> 0:
@@ -83,9 +95,7 @@ class MPowerMe(resource.Resource):
 						member_id = member_id
 					)
 					curr_member_power_info.save()
-				print '================='
-				print fid
-				print '================='
+
 				if fid is None or str(fid) == str(member_id):
 					self_page = True
 					page_owner_name = request.member.username_for_html
@@ -112,6 +122,7 @@ class MPowerMe(resource.Resource):
 				rank = 0 #排名
 
 				participances = participances[:100]
+
 				for p in participances:
 					rank += 1
 					participances_list.append({
@@ -155,7 +166,9 @@ class MPowerMe(resource.Resource):
 				'current_member_rank_info': current_member_rank_info, #我的排名
 				'total_participant_count': total_participant_count, #总参与人数
 				'page_owner_name': page_owner_name,
-				'page_owner_member_id': page_owner_member_id
+				'page_owner_member_id': page_owner_member_id,
+				'reply_content': record.reply_content,
+				'mpUserPreviewName': mpUserPreviewName
 			})
 		else:
 			record = None
