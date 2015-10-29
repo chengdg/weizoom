@@ -520,19 +520,23 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
             product_ids.append(product.product_id)
     return product_ids
 
-def update_forbidden_coupon_product_ids(**kwargs):
-    if hasattr(cache, 'request') and cache.request.user_profile:
+def update_forbidden_coupon_product_ids(instance, **kwargs):
+    if hasattr(cache, 'request') and cache.request.user_profile and not kwargs.get('created', False):
         webapp_owner_id = cache.request.user_profile.user_id
-        product_ids = get_forbidden_coupon_product_ids(webapp_owner_id)
-        for product_id in product_ids:
-            update_product_cache(webapp_owner_id, product_id, False)
         key = 'forbidden_coupon_products_%s' % webapp_owner_id
         cache_util.delete_cache(key)
+
+        if isinstance(instance, promotion_models.ForbiddenCouponProduct):
+            product_id = instance.product_id
+        else:
+            product_id = instance[0].product_id
+
+        update_product_cache(webapp_owner_id, product_id, False, deleteVarnishList=False)
 
 post_update_signal.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.update")
 signals.post_save.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.save")
 
-def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVarnish=True):
+def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVarnish=True, deleteVarnishList=True):
     if deleteRedis:
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
         cache_util.delete_cache(key)
@@ -542,6 +546,7 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         request = urllib2.Request(url)
         request.get_method = lambda: 'PURGE'
         urllib2.urlopen(request)
+    if not settings.IS_UNDER_BDD and deleteVarnishList:
         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
             (settings.DOMAIN, webapp_owner_id)
         request = urllib2.Request(url)
@@ -552,5 +557,4 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         #         (settings.DOMAIN, webapp_owner_id, catHasProduct.category_id)
         #     request = urllib2.Request(url)
         #     request.get_method = lambda: 'PURGE'
-        #     print 'jz----4', time.time(), url
         #     urllib2.urlopen(request)
