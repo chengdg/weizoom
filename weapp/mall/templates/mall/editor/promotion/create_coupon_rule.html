@@ -99,9 +99,9 @@
     <div class="form-group h40">
       <label class="control-label col-sm-2 col-sm-offset-1 pt0 w110">发放总量：</label>
       <div class="controls">
-          <input type="text" class="input-xlarge" id="count" name="count" style="width: 67px" value="{{ coupon_rule.count }}" data-validate="require-positive-int" {% if coupon_rule %}disabled="disabled"{% endif %}/>
+          <input type="text" class="input-xlarge xa-CouponCount" id="count" name="count" style="width: 67px" value="{{ coupon_rule.count }}" data-validate="require-custom-function" data-validate-function="checkCouponCount" {% if coupon_rule %}disabled="disabled"{% endif %}/>
           <span class="add-on">张</span>
-        <div class="errorHint" style="margin-left:210px;" data-error-hint="请输入正整数"></div>
+        <div class="errorHint" style="margin-left:210px;" data-error-hint=""></div>
       </div>
     </div>
     <div class="form-group h40">
@@ -314,7 +314,31 @@ window.checkLimitProduct=function($el){
   return {
     isValidate: true
   }
-}
+};
+
+window.checkCouponCount = function ($el) {
+    var countStr = $('.xa-CouponCount').val();
+    var count = parseInt(countStr);
+    if (parseInt(countStr) != count || count <= 0) {
+        return {
+            isValidate: false,
+            errorHint: '请输入正整数'
+        }
+    }
+    else if (count > 5000) {
+        return {
+            isValidate: false,
+            errorHint: '每次最多生成5000张，你可以创建成功后补充码库！'
+        }
+    }
+    else {
+        return {
+            isValidate: true
+        }
+    }
+
+};
+
 $(function(){
   $('select').each(function(i,n){
     var origin = $(n).data('origin');
