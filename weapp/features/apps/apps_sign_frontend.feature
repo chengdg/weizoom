@@ -27,7 +27,7 @@ Background:
 		"limit_counts": "无限",
 		"start_date": "2天前",
 		"end_date": "2天后",
-		"coupon_id_prefix": "coupon1_id_"
+		"coupon_id_prefix": "coupon2_id_"
 	}
 	}]
 	"""
