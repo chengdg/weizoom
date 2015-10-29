@@ -54,6 +54,17 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				columnName: 'timing'
 			}],
 			default: {timing:{select:true}}
+		}, {
+			name: 'timing_value',
+			type: 'hidden',
+			displayName: '倒计时',
+			isUserProperty: false,
+			default: {
+				day:'00',
+				hour:'00',
+				minute:'00',
+				second:'00'
+			}
 		},{
 			name: 'description',
 			type: 'text_with_annotation',
@@ -123,22 +134,26 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			//$node.find('.xa-title').text(value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
+			console.log("dsssssss");
 			var end_time_text = $node.find('.wui-i-end_time').text();
 			$node.find('.wui-i-start_time').text(value);
 			if (end_time_text != ""){
-				getDateTime($node,value,end_time_text);
+				getDateTime($node,value,end_time_text,model);
 			}
 		},
 		end_time: function($node, model, value, $propertyViewNode) {
 			var start_time_text = $node.find('.wui-i-start_time').text();
 			$node.find('.wui-i-end_time').text(value);
 			if (start_time_text != ""){
-				getDateTime($node,start_time_text,value);
+				getDateTime($node,start_time_text,value,model);
 			}
 
 		},
 		timing: function($node, model, value, $propertyViewNode) {
 			$node.find('.wa-timing').toggle();
+		},
+		timing_value:function($node, model, value, $propertyViewNode){
+
 		},
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
@@ -242,7 +257,8 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		this.super('initialize', obj);
 	}
 });
-var getDateTime = function($node,start_time_text,end_time_text){
+var getDateTime = function($node,start_time_text,end_time_text,model){
+	console.log("getDateTime");
 	var start_date = new Date(start_time_text.toString()).getTime();
 	var end_date = new Date(end_time_text.toString()).getTime();
 
@@ -259,4 +275,10 @@ var getDateTime = function($node,start_time_text,end_time_text){
 	$node.find('.wui-i-timing .xa-hour').text(hour.toString().length == 2 ? hour : '0'+hour);
 	$node.find('.wui-i-timing .xa-minute').text(minute.toString().length == 2 ? minute : '0'+minute);
 	$node.find('.wui-i-timing .xa-second').text(second.toString().length == 2 ? second : '0'+second);
+	model.attributes.timing_value=({
+		day: $node.find('.wui-i-timing .xa-day').text(),
+		hour: $node.find('.wui-i-timing .xa-hour').text(),
+		minute: $node.find('.wui-i-timing .xa-minute').text(),
+		second: $node.find('.wui-i-timing .xa-second').text()
+	});
 };
