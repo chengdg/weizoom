@@ -214,15 +214,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             </div>
         </div>
         {% endif %}
-        <!-- <div class="ui-refresh-down"></div> -->
     </div>
     <!-- 购物车、加入购物车、购买按钮组Start -->
     <div class="tc xui-tab-fixed">
-        {# jz 2015-10-24 #}
-        {# % if is_weizoom_mall % #}
-        {# % else % #}
-        {# % endif % #}
-        {# jz 2015-10-24 #}
         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xui-btn">
 
                 <i class="xui-inner-icon pr">
@@ -231,23 +225,25 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         </a>
         <!-- 已售罄 -->
         {% if product.shelve_type == 1 %}
-            {% if product.is_sellout %}
+             <div class="xa-selloutAlert clearfix" style="padding:3px 0;">
                 <div class="xui-selloutAlert">商品已售罄，非常抱歉</div>
                 <div style="padding:3px 0;">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xui-addCartBtn-disable" data-type='shoppingCart'>加入购物车</a>
                     <a href="javascript:void(0);" class="xui-btn xui-buyBtn xui-buyBtn-disable" data-type='buy'>立即购买</a>
                 </div>
+             </div>
             <!-- 普通商品 -->
-            {% else %}
-            <div class="xa-disabledBuyLinks xui-inlineblock clearfix" style="padding:3px 0;">
-                <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton" data-type='shoppingCart'>加入购物车</a>
-                <a href="javascript:void(0);" class="xui-btn xui-buyBtn xa-canNotBuyButton" data-type='buy'>立即购买</a>
+            <div class="xa-not_selloutAlert clearfix" style="padding:3px 0;">
+                <div class="xa-disabledBuyLinks xui-inlineblock clearfix" style="padding:3px 0;">
+                    <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton" data-type='shoppingCart'>加入购物车</a>
+                    <a href="javascript:void(0);" class="xui-btn xui-buyBtn xa-canNotBuyButton" data-type='buy'>立即购买</a>
+                </div>
+                <div class="xa-enabledBuyLinks xui-inlineblock xui-hide clearfix" style="padding:3px 0;">
+                    <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-addShoppingCartBtn" data-type='shoppingCart'>加入购物车</a>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
+                </div>
             </div>
-            <div class="xa-enabledBuyLinks xui-inlineblock xui-hide clearfix" style="padding:3px 0;">
-                <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-addShoppingCartBtn" data-type='shoppingCart'>加入购物车</a>
-                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
-            </div>
-            {% endif %}
+
         {% else %}
             <div class="xui-selloutAlert">商品已下架，非常抱歉</div>
             <div style="padding:3px 0;">
@@ -265,27 +261,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             </div>
             <div class="" style="padding-left:103px;min-height: 75px;">
                 <p class="pt5 em95 xui-text-red xa-priceSection">
-                {# jz 2015-10-20 #}
-                <!-- 积分商品 -->
-                {# % if product.type == 'integral' % #}
-                {#% if cur_request_member %#}
-                {#% if price_info.price == price_info.original_price %#}
-                <!--span class="xt-price xa-price xui-vipPrice-num">{{ price_info.min_price }}</span-->
-                {#% else %#}
-                <!--span class="xt-price xui-vipPrice-num">{{ price_info.min_price }}</span-->
-                {#% endif %#}
-                {#% else %#}
-                <!--span class="xt-originalPrice xui-vipPrice-num xa-price xa-fixed-price">{{ price_info.min_price }}</span--><!-- <span class="xui-vipPrice ml20">会员价？积分</span> -->
-                {#% endif % #}
-                {#% if cur_request_member % #}
-                <!--span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price|format_float }}</span></span-->
-                <!-- <p class="mt10 xa-stock">(库存<span class="xa-stockCount">{{product.physical_unit}}</span>)</p> -->
-                {#% else %#}
-                {#% endif % #}
-                {# jz 2015-10-20 #}
-                <!-- 普通商品 -->
-                {#% if product.type == 'object' %#}
-                {#% endif %#}
                 <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price |format_float}}</span></span>
                 </p>
                 <p class="c6 em8 mt5">{{ product.name }}</p>
@@ -371,11 +346,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     </div>
     <div class="xui-coverV2 xa-coverV2 hidden"></div>
     {% endif %}
-
-    {# jz 2015-10-24 #}
-    {# % if not is_weizoom_mall % #}
-    {# % endif % #}
-    {# jz 2015-10-24 #}
     <!-- 全局导航 -->
     <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="true">
     </div>
