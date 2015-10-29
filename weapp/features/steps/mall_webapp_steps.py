@@ -1043,15 +1043,6 @@ def _create_address(context, address_info):
 	return response
 
 
-def _update_address(context, address_info):
-	"""
-	"""
-	edit_shoping_cart_url = context.pay_url
-	url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=address&action=add&%s' % (context.webapp_owner_id, edit_shoping_cart_url)
-	context.client.get(url)
-	return _create_address(context, address_info)
-
-
 @when(u"{webapp_user_name}填写收货信息")
 def step_add_address_info(context, webapp_user_name):
 	"""
@@ -1067,40 +1058,9 @@ def step_add_address_info(context, webapp_user_name):
 	page_title = context.response.context['page_title']
 	if page_title == u'编辑收货地址':
 		address_info = json.loads(context.text)
-		redirect_url = unquote(context.response.context['redirect_url_query_string'])
-		print 'jz------2', redirect_url
 		response = _create_address(context, address_info)
 		bdd_util.assert_api_call_success(response)
-		response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
-		assert response.status_code == 200
-		context.response = response
 
-
-@when(u"{webapp_user_name}更新收货信息")
-def step_create_or_update_address_info(context, webapp_user_name):
-	"""
-	如果没有地址就创建， 有则更新
-	e.g.:
-		{
-			"ship_name": "你大爷",         # 收货人
-			"ship_tel":  "18612456555",   # 手机号码
-			"area": "北京市 北京市 海淀区",  # 地区
-			"ship_address": "泰兴大厦"     # 详细地址
-		}
-	"""
-	page_title = context.response.context['page_title']
-	address_info = json.loads(context.text)
-	redirect_url = context.pay_url
-
-	if page_title == u'编辑收货地址':
-		# create_address
-		response = _create_address(context, address_info)
-	elif page_title == u"购物车订单编辑":
-		response = _update_address(context, address_info)
-
-	bdd_util.assert_api_call_success(response)
-	response = context.client.get('/termite/workbench/jqm/preview/?'+redirect_url)
-	context.response = response
 
 
 def get_prodcut_ids_info(order):

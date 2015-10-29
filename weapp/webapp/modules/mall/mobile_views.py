@@ -42,7 +42,6 @@ def get_order_list(request):
 ########################################################################
 def edit_order(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
 		return request_util.edit_order(request)
 	else:
