@@ -480,11 +480,11 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					promotion.promotion_title = '已优惠%s元' % gapPrice
 				else:
 					promotion.promotion_title = ''
+				product.original_promotion_title = product.promotion_title
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
 				product.original_promotion_title = product.promotion_title
 				product.promotion = None
-
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
 			if settings.DEBUG:

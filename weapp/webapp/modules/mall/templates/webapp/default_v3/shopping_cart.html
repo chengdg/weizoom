@@ -394,13 +394,14 @@ $(document).ready(function() {
                         }
                         var $product = $(this).parents('.xa-product');
                         var $check = $product.find('.xa-check');
-                        if($(this).data('view').count > maxCount){
+                        if(maxCount > 0 && $(this).data('view').count > maxCount){
                             $product.find('.xui-understock').show();
                             $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
                         }else{
+                            $product.find('.xui-understock').hide();
                             $check.removeClass('xui-disabled-radio').addClass('xui-checkCart');
                         }
-                        $(this).parents('.xa-product').find('.xui-understock').html(understock_msg);
+                        $product.find('.xui-understock').html(understock_msg);
                         $(this).data('view').setMaxCount(maxCount);
                     });
                     view.initCounter();
