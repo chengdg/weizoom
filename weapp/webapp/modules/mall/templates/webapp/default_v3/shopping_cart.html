@@ -179,19 +179,6 @@
                                             data-product-model-id="{{product.model.id}}"
                                             data-product-count-per-purchase="{{product.promotion.detail.count_per_purchase}}"
                                             data-minlimit="{{product.min_limit}}"
-                                            {% if product.stock_type == 1 %}
-                                                {% if product.promotion.detail.count_per_purchase and product.promotion.detail.count_per_purchase < product.stocks %}
-                                                    data-max-count="{{product.promotion.detail.count_per_purchase}}"
-                                                {% else %}
-                                                    data-max-count="{{product.stocks}}"
-                                                {% endif %}
-                                            {% else %}
-                                                {% if product.promotion.detail.count_per_purchase > 0 %}
-                                                    data-max-count="{{product.promotion.detail.count_per_purchase}}"
-                                                {% else %}
-                                                    data-max-count="-99999"
-                                                {% endif %}
-                                            {% endif %}
                                             data-product-id="{{product.id}}"
                                             data-product-model-name="{{product.model_name}}"
                                             type="hidden"
@@ -200,19 +187,6 @@
                                             value="{{product.count}}"
                                         >
                                         <span class="em7 cRed hidden xui-understock">
-                                            {% if product.stock_type == 1 %}
-                                                {% if product.promotion.detail.count_per_purchase and product.promotion.detail.count_per_purchase < product.stocks %}
-                                                    限购{{product.promotion.detail.count_per_purchase}}件
-                                                {% else %}
-                                                    库存不足
-                                                {% endif %}
-                                            {% else %}
-                                                {% if product.promotion.detail.count_per_purchase > 0 %}
-                                                    限购{{product.promotion.detail.count_per_purchase}}件
-                                                {% else %}
-                                                    无限
-                                                {% endif %}
-                                            {% endif %}
                                         </span>
                                         <span class="xui-deleteBtn xa-deleteBtn pa">
                                             <img src="/static_v2/img/webapp/mall/trash.png" data-allow-autoplay=false>
@@ -403,17 +377,22 @@ $(document).ready(function() {
                             $(this).parents('.xa-product').data('stocks', data[model_id].stocks);
                             if (count_per_purchase > 0 && count_per_purchase < data[model_id].stocks){
                                 maxCount = count_per_purchase;
+                                understock_msg = '限购'+count_per_purchase+'件';
                             }else{
                                 maxCount = data[model_id].stocks;
+                                understock_msg = '库存不足';
                             }
                             // alert(maxCount)
                         }else {
                             if (count_per_purchase > 0){
                                 maxCount = count_per_purchase;
+                                understock_msg = '限购'+count_per_purchase+'件';
                             }else{
                                 maxCount = -99999;
+                                understock_msg = '';
                             }
                         }
+                        $(this).parents('.xa-product').find('.xui-understock').html(understock_msg);
                         $(this).data('view').setMaxCount(maxCount);
                     });
                     view.initCounter();
@@ -447,21 +426,6 @@ $(document).ready(function() {
                 $('#checkbox-cart-all').removeClass('xui-checkCart');
             }
         });
-        // $cutDown.bind('click',function(){
-        //     var count = parseInt($el.find('.wui-counterText').text()) -1;
-        //     // $el.find('.xui-understock').hide();
-        //     // 不可用选框，全选框
-        //     if(stocks != null && stocks != -99999){
-        //         //库存无限的时候 
-        //         if( $check.hasClass('xui-disabled-radio')){
-        //             if( stocks >= count){
-        //                 $check.removeClass('xui-disabled-radio');
-        //                 $('#checkbox-cart-all').removeClass('xui-checkCart');
-        //             }
-        //         } 
-        //     }
-        // });
-
     });
 });
 </script>

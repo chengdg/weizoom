@@ -603,6 +603,8 @@
 
 {% block js %}
 <script type="text/javascript">
+initShipInofs();
+
 if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     $('#wrapper').addClass('xui-wrapper');
     // $('.xa-bottom-actionPanel').css('position','absolute');
@@ -623,7 +625,6 @@ $(document).ready(function() {
     //绑定初始化数据
     _.delay(function() {
         var postageFactor = W.loadJSON('postageFactor');
-        console.log('postageFactor', postageFactor)
         var integralInfo = W.loadJSON('integralInfo');
         var productGroups = W.loadJSON('productGroups');
         view = new W.page.EditOrderPage({

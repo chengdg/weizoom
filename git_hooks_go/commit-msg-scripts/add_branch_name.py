@@ -6,14 +6,8 @@ import subprocess
 
 commit_msg_filepath = '.git/COMMIT_EDITMSG'
 
-branch = subprocess.check_output('git symbolic-ref HEAD', universal_newlines=True).strip()
-try:
-    if 'refs/heads' in branch:
-        branch_name = branch.split('/')[-1]
-    else:
-        branch_name = None
-except:
-    branch_name = None
+branch_name = subprocess.check_output('git symbolic-ref --short HEAD').strip()
+
 
 with open(commit_msg_filepath, 'r') as f:
     raw_msg = f.read()

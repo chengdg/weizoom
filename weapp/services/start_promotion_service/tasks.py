@@ -45,9 +45,8 @@ def start_promotion(request0, args):
 	
 	product_ids = [r.product_id for r in promotion_models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
 	products = list(mall_models.Product.objects.filter(id__in=product_ids))
+	from cache.webapp_cache import update_product_cache
 	for product in products:
-		key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (product.owner_id, product.id)
-		print 'delete redis key %s' % key
-		cache_util.delete_cache(key)
+		update_product_cache(product.owner_id, product.id)
 		
 	return "OK"

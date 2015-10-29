@@ -43,7 +43,6 @@ class Product(api_resource.ApiResource):
 			'is_support_make_thanks_card': product.is_support_make_thanks_card,
 
 			'stock_type': product.stock_type,
-			'stocks': product.stocks,
 
 			'weshop_status': product.weshop_status,
 			'promotion_title': product.promotion_title,
@@ -64,14 +63,23 @@ class Product(api_resource.ApiResource):
 			'is_deleted': product.is_deleted,
 			'weshop_sync': product.weshop_sync,
 			'is_member_product': product.is_member_product,
+			'is_use_custom_model': product.is_use_custom_model,
+
+			'detail_link': '/mall2/product/?id=%d&source=onshelf' % product.id,
+			'stocks': product.stocks if product.stock_type else '无限',
+			'sales': getattr(product, 'sales', 0)
 		}
-		
+		if hasattr(product, 'is_sellout'):
+			data['is_sellout'] = product.is_sellout
 		if hasattr(product, 'min_limit'):
 			data['min_limit'] = product.min_limit
 		if hasattr(product, 'price_info'):
 			data['price_info'] = product.price_info
 		if hasattr(product, 'models'):
-			data['models'] = product.models
+			if len(product.models) > 1:
+				data['models'] = product.models[1:]
+			else:
+				data['models'] = product.models
 		if hasattr(product, 'properties'):
 			data['properties'] = product.properties
 		if hasattr(product, 'product_model_properties'):
@@ -91,6 +99,20 @@ class Product(api_resource.ApiResource):
 			data['integral_sale'] = product.integral_sale
 			if hasattr(product, 'integral_sale_model'):
 				data['integral_sale_model'] = product.integral_sale_model
+
+		if hasattr(product, 'display_price_range'):
+			data['display_price_range'] = product.display_price_range
+		if hasattr(product, 'categories'):
+			data['categories'] = product.categories
+		if hasattr(product, 'total_stocks'):
+			data['total_stocks'] = product.total_stocks
+		if hasattr(product, 'is_sellout'):
+			data['is_sellout'] = product.is_sellout
+		if hasattr(product, 'standard_model'):
+			data['standard_model'] = product.standard_model
+		if hasattr(product, 'current_used_model'):
+			data['current_used_model'] = product.current_used_model
+
 		return data
 
 	@param_required(['id', 'woid', 'member_grade_id', 'wuid'])

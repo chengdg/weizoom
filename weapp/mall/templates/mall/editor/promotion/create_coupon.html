@@ -33,8 +33,8 @@
     <div class="form-group">
       <label class="control-label col-sm-2 col-sm-offset-1 pt0">追加数量：</label>
       <div class="controls xui-i-item">
-        <input type="text" class="input-xlarge" id="count" name="count" style="width: 67px" data-validate="require-positive-int::发放总量必须大于1"/> &nbsp;&nbsp;张
-        <div class="errorHint ml150"></div>
+        <input type="text" class="input-xlarge xa-CouponCount" id="count" name="count" style="width: 67px" data-validate="require-custom-function" data-validate-function="checkCouponCount"/> &nbsp;&nbsp;张
+        <div class="errorHint ml200"></div>
       </div>
     </div>
   </fieldset>
@@ -64,6 +64,31 @@
 // $('#editForm').on('submit',function(){
 //   return W.validate();
 // });
+
+window.checkCouponCount = function ($el) {
+    var countStr = $('.xa-CouponCount').val();
+    var count = parseInt(countStr);
+    if (parseInt(countStr) != count || count <= 0) {
+        return {
+            isValidate: false,
+            errorHint: '发放总量必须大于1'
+        }
+    }
+    else if (count > 5000) {
+        return {
+            isValidate: false,
+            errorHint: '每次最多生成5000张，你可以添加成功后继续补充！'
+        }
+    }
+    else {
+        return {
+            isValidate: true
+        }
+    }
+
+};
+
+
 $(function(){
   $('.xa-submit').click(function(event) {
     if(!W.validate()) {

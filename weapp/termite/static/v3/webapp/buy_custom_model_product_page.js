@@ -17,7 +17,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         xlog(options);
         this.postageFactor = options.postageFactor;
         this.usableIntegral = options.usableIntegral;
-        this.enableTestBuy = options.enableTestBuy;
+        // jz 2015-10-20
+        // this.enableTestBuy = options.enableTestBuy;
 
         // 限购数量
         this.countPerPurchase = options.countPerPurchase;
@@ -49,12 +50,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.getProductStock();//更新库存信息
 
         var _this = this;
-        this.stockInterval = setInterval(this.getProductStock, 60*1000, _this);
+        this.stockInterval = setInterval(this.getProductStock, 30*1000, _this);
 
-        //设置规格选择区域的最大高度
+        // jz 2015-10-24
         // var boxHeight = window.document.body.clientHeight * 0.75;
         // var buttonTop = $('.xui-productInfo-box').height();
-        // console.log($('.xui-productInfo').height(),111)
         // $('.xui-productInfo-box').css('max-height', boxHeight);
         // 关闭按钮兼容不同手机定位
         // if (/ipad|iphone|mac/i.test(navigator.userAgent)){
@@ -62,13 +62,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         // }else{
         //     $('.xa-closeModelSelection').css({'position':'fixed','bottom':boxHeight-28});
         // }
-
         // this.initStickyActionBar();
-
         //启用"测试购买"的情况下，增加"价格区域"的padding-bottom
-        if (this.enableTestBuy) {
-            $('.xa-priceSection').css('padding-bottom', '115px');
-        }
+        // if (this.enableTestBuy) {
+        //     $('.xa-priceSection').css('padding-bottom', '115px');
+        // }
 
         //绑定counter widget的count-changed事件
         $('input[data-ui-role="counter"]').bind(
@@ -85,9 +83,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if(counter.minCount>1)this.updateCountInByLink(counter.minCount)
         this.disableUnselectableModelPropertyValue();
 
+        // jz 2015-10-24
         //隐藏商品信息区域
         // var screenHeight = screen.height;
-
         // $('.xui-applyBox').css({
         //     top: screenHeight
         // });
@@ -120,7 +118,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     initForStandardModelProduct: function() {
         this.updateWeightPostage(1);
         var maxCount = this.getMaxCount(this.targetModel);//调用getMaxCount，判断不同条件，得到可买的最大数量
-        xlog('set max count to ' + maxCount);
         //库存
         if (this.targetModel.stock_type === 1) {//判断商品是否设置了库存
             $('.xa-stockCount').text(this.targetModel.stocks);
@@ -200,7 +197,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.maxCount = maxCount;
         // 修改提示信息
         $('.xa-understock').text(message);
-        // console.log('getMaxCount', maxCount, message);
         return maxCount;
     },
 
@@ -215,6 +211,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             }
         }
 
+        // jz 2015-10-24
         // 第一个有库存的 规格商品
         // if ((model.stock_type === 0 || model.stocks > 0) && this.firstStockModelName == '') {
         //     this.firstStockModelName = model.name;
@@ -236,7 +233,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      */
     initForCustomModelProduct: function() {
         $('input[data-ui-role="counter"]').data('view').setMaxCount(0).disable();
-        //console.log($('.xa-wrapper'));
         var stocks = $('.xa-stock');
         var checkResult = {};
         for (var i = 0; i < this.models.length; i++) {
@@ -255,6 +251,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             stocks.hide();
         }
 
+        // jz 2015-10-24
         // 默认选中第一个有效规格
         // var modelNames = this.firstStockModelName.split('_');
         // for (var i = 0; i < modelNames.length; i++) {
@@ -309,12 +306,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     */
     getProductStock: function(_this) {
         var isInit = 0;
-        if (_this) {
-        }else {
+        if (!_this) {
             isInit = 1;
             _this = this;
         }
-
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -324,35 +319,117 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 module: 'mall',
                 target_api: 'product_stocks/get',
                 product_id: this.productId,
+                need_member_info: isInit
             },
             success: function(data){
+                //处理规格库存
                 $.each(_this.models, function(i, n){
                     if(!data[n.id])
                         return;
                     n.stock_type = data[n.id].stock_type;
                     n.stocks = data[n.id].stocks;
-                    if(!isInit){
-                        _this.updateProductInfo(_this.models[i]);
+                    if(_this.targetModel && _this.targetModel.id == n.id){
+                        //更新库存
+                        _this.updateProductStock(n);
                     }
                 });
-                if (_this.isStandardModelProduct) {
-                    // _this.models[0].stock_type = data.stock_type;
-                    // _this.models[0].stocks = data.stocks;
-                    _this.targetModel = _this.models[0];
-                    _this.initForStandardModelProduct();
-                    // _this.getMaxCount(_this.models[0]); 多余操作 initForStandardModelProduct 已经执行过
-                } else {
-                    // for(var i = 0; i < _this.models.length; i++){
-                    //     _this.models[i].stock_type = data[_this.models[i].id].stock_type;
-                    //     _this.models[i].stocks = data[_this.models[i].id].stocks;
-                    //     if(!isInit){
-                    //         _this.updateProductInfo(_this.models[i]);
-                    //     }
-                    // }
-                    if (isInit){
+
+                if(isInit){
+                    if (_this.isStandardModelProduct) {
+                        _this.targetModel = _this.models[0];
+                        _this.initForStandardModelProduct();
+                    } else {
                         _this.initForCustomModelProduct();
                     }
+                    var user_member_grade_id = data.member_grade_id;
+                    if(data.is_collect == 'true'){
+                        $('.xa-collectProduct').addClass('faved').text('已收藏');
+                        $('.xa-collectProduct').attr('data-is-collect', 'true');
+                    }
+                    if(data.count != 0) {
+                        $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
+                    }
+                    // 优惠信息标签
+                    var msg = '';
+                    // 商品原价
+                    var price = _this.priceInfo.min_price;
+                    // 存储商品会员价与促销的状态
+                    _this.member_or_promotion = '';
+                    // 商品有促销
+                    var product_promotion = _this.promotion;
+                    is_product_promotion = !($.isEmptyObject(product_promotion));
+                    var is_user_has_promotion = false;
+                    if(is_product_promotion){
+                        // 促销是否对此用户开发
+                        is_user_has_promotion = _this.user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+
+                        // 限时抢购
+                        if(is_user_has_promotion && product_promotion.detail.promotion_price){
+                            price = (product_promotion.detail.promotion_price).toFixed(2);
+                            msg = true;
+                            _this.member_or_promotion = 'promotion';
+                        }
+                        if(!is_user_has_promotion){
+                            _this.promotion.isFlashSalePromotion = false;
+                            // 促销不对此用户开发
+                            var next_promotions = $('.xa-display-promotion').next('div');
+                            if(next_promotions.length==0){
+                                // 没有积分应用
+                                $('.xa-promotionSection').remove();
+                            }else if(next_promotions.length == 1){
+                                // 有积分应用
+                                $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
+                                next_promotions.remove();
+                            }
+                            // jz 2015-10-24
+                            // // 对于不开放的促销，不显示广告语
+                            // var span = $('.xa-productName').find('span');
+                            // if(span){
+                            //     span.remove();
+                            // }
+                        }
+                    // 商品无促销
+                    }
+                    if(!is_user_has_promotion){
+                        // 商品是否折扣
+                        has_discount = _this.is_member_product;
+                        if(has_discount && data.discount < 100){
+                            //促销与会员价格处理
+                            _this.discount = data.discount;
+                            if(_this.isStandardModelProduct){
+                                _this.initForStandardModelProduct()
+                            }else{
+                                _this.initForCustomModelProduct()
+                            }
+                            price = ((price * data.discount / 100).toFixed(2));
+                            msg = '会员价';
+                            _this.member_or_promotion = 'member';
+
+                        }
+                        // 对于不开放的促销，不显示广告语
+                        var span = $('.xa-productName').find('span');
+                        if(span){
+
+                            span.html('<span class="xui-text-red">'+_this.priceInfo.promotion_title+'</span>');
+                        }
+                    }
+                    // 处理会员价
+                    if (msg === true){
+                        var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span>';
+                        $('.xa-priceSection').html(temp);
+
+                    }else if(msg === '会员价'){
+                        var orPrice = (_this.priceInfo.min_price).toFixed(2);
+                        var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
+                        $('.xa-priceSection').html(temp);
+                    }
+                    var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+                    if(data.member_grade_id < 0 && alertView){
+                        alertView.render();
+                        $($('.xa-globalNav li')[1]).hide();
+                    }
                 }
+                // jz 2015-10-24
                 // var counter = $('input[data-ui-role="counter"]').data('view');
                 // if(counter.count > 1){
                 //     counter.changeCountTo(counter.count);
@@ -363,10 +440,20 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             }
         })
     },
+    user_has_promotion:function(user_member_grade_id, promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){return true;}
+        if(promotion_member_grade_id == user_member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
+    },
+    // jz 2015-10-24
     /**
      * initStickyActionBar: 初始化粘性action bar
      */
-    initStickyActionBar: function() {
+    // initStickyActionBar: function() {
         // var $wxTab= $('.xa-tab');
         // var wxTab = $wxTab[0];
         // var wxTabOffsetTop = wxTab.offsetTop;
@@ -384,7 +471,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         //         }
         //     }
         // });
-    },
+    // },
 
     /**
      * selectionSlide: 规格触发器弹出效果
@@ -406,6 +493,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 'transform':'translateY(110%)'
             });
             $('.xa-coverV2').addClass('hidden');
+            this.isSideSlideOpen = false;
+
+            // jz 2015-10-24
             //释放选中规格
             // if (this.isStandardModelProduct == false) {
             //     var _this = this;
@@ -417,9 +507,17 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             //     })
             //     _this.updateProductInfo();
             // };
-            this.isSideSlideOpen = false;
             // $('[data-ui-role="counter"]').data('view').setMaxCount(0);
         }
+    },
+    user_has_promotion: function(user_member_grade_id, promotion_member_grade_id){
+        if(promotion_member_grade_id == '0'){return true;}
+        if(promotion_member_grade_id == user_member_grade_id){
+            return true;
+        }else{
+            return false;
+        }
+
     },
     /**
      * onClickPropertyPanel: 点击详情参数按钮的响应函数
@@ -452,6 +550,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-buyButton').hide();
         }
 
+        // jz 2015-10-24
         // if (/ipad|iphone|mac/i.test(navigator.userAgent)){
         //     $('.xa-closeModelSelection').css({'position':'absolute','top':5});
         // }else{
@@ -535,10 +634,14 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      *updateWeightPostage: 更新重量和邮费
      */
     updateWeightPostage: function(productCount) {
-        //更新重量
-        var weight = (productCount*this.targetModel.weight).toFixed(2);
-        $('.xt-weight').text(weight);
+        //更新价钱
+        var totalPrice = (this.targetModel.price*productCount).toFixed(2);
+        $('.xa-variablePrice').text(totalPrice);
 
+        // jz 2015-10-24
+        //更新重量
+        //var weight = (productCount*this.targetModel.weight).toFixed(2);
+        //$('.xt-weight').text(weight);
         //更新邮费
         // if ($('.xt-postage')) {
         //     var postage = this.getPostageForWeight(weight);
@@ -548,10 +651,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         //         $('.xt-postage').text(postage.toFixed(2));
         //     }
         // }
-
-        //更新价钱
-        var totalPrice = (this.targetModel.price*productCount).toFixed(2);
-        $('.xa-variablePrice').text(totalPrice);
         // if('integral' == this.productType){
         //     if (totalPrice > this.usableIntegral) {
         //         $('.xa-disabledIntegralBuyLinks').show();
@@ -567,7 +666,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
     updateProductInfo: function(model) {//更新DOM，使用在选中和释放规格值时
         if (!model) {
-            $('.xa-variablePrice').text(this.priceInfo['min_price']);
+            // jz 2015-10-23
+            //$('.xa-variablePrice').text(this.priceInfo['min_price'].toFixed(2));
+            //运费
+            //$('.xa-postage').hide();
+            //$('.xa-stock').hide();
             if (this.promotion && this.promotion.isFlashSalePromotion) {
                 //do nothing
             } else {
@@ -582,8 +685,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-enabledBuyLinks').hide();
             $('.xa-disabledBuyLinks').show();
             $('.xa-disabledIntegralBuyLinks').hide();
-            //运费
-            //$('.xa-postage').hide();
             var items = [];
             items.push('重量：<span class="xt-weight"> - </span><span class="xt-single-weight" style="display: none"> - </span></span>&nbsp;&nbsp;');
             items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
@@ -593,7 +694,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
             //库存
             $('[data-ui-role="counter"]').data('view').setMaxCount(0);
-            $('.xa-stock').hide();
         } else {
             var change_price = 0;
             if (this.promotion && this.promotion.isFlashSalePromotion) {
@@ -613,9 +713,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 change_price = (change_price * this.discount / 100).toFixed(2);
             }
             $('.xa-singlePrice').text(change_price);
-            // 是不是没有用 @洪大师
-            $('.xa-variablePrice').text(model.price);
 
+            // jz 2015-10-23 是不是没有用 @洪大师
+            //$('.xa-variablePrice').text(model.price);
             // $('.xa-market-price').text(model.market_price);
             // if ('object' == '{{product.type}}'){
             //     $('.xa-disabledBuyLinks').hide();
@@ -625,39 +725,50 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             //     $('.xa-disabledBuyLinks').hide();
             //     $('.xa-enabledBuyLinks').hide();
             // }else{
-            var counter = $('[data-ui-role="counter"]').data('view');
             // }
-            //运费
-            var items = [];
-            if (model.weight !== 0) {
-                items.push('重量：<span class="xt-weight">'+model.weight.toFixed(2)+'</span><span class="xt-single-weight" style="display: none">' + model.weight.toFixed(2) + '</span>公斤</span>&nbsp;&nbsp;');
-            }
-            items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
-            if (model.postage >0) {
-                items.push(':￥<span class="xt-postage">'+model.postage.toFixed(2)+'</span>');
-            }
-            $('.xa-postageContent').html(items.join(''));
-            $('.xa-postage').show();
-            if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0){
-                if(this.targetModel){
-                    //库存
-                    var maxCount = this.getMaxCount(this.targetModel);
-                    counter.setMaxCount(maxCount);
-                }
-                if (model.stock_type === 1) {
-                    $('.xa-stockCount').text(model.stocks);
-                    $('.xa-stock').show();
-                } else {
-                    $('.xa-stock').hide();
-                }
-            }
-            if(counter.maxCount>0 && counter.maxCount<counter.minCount){
-                $('.xa-disabledBuyLinks').show();
-                $('.xa-enabledBuyLinks').hide();
-            }else{
-                $('.xa-disabledBuyLinks').hide();
-                $('.xa-enabledBuyLinks').show();
-            }
+            // 运费
+            //var items = [];
+            //if (model.weight !== 0) {
+            //    items.push('重量：<span class="xt-weight">'+model.weight.toFixed(2)+'</span><span class="xt-single-weight" style="display: none">' + model.weight.toFixed(2) + '</span>公斤</span>&nbsp;&nbsp;');
+            //}
+            //items.push('<span class="xt-postageConfigName ml20">'+this.postageConfigName+'</span>');
+            //if (model.postage >0) {
+            //    items.push(':￥<span class="xt-postage">'+model.postage.toFixed(2)+'</span>');
+            //}
+            //$('.xa-postageContent').html(items.join(''));
+            //$('.xa-postage').show();
+            //if (model.stock_type === 1) {
+            //    $('.xa-stockCount').text(model.stocks);
+            //    $('.xa-stock').show();
+            //} else {
+            //    $('.xa-stock').hide();
+            //}
+            this.updateProductStock(model);
+        }
+    },
+    /**
+     * 只对targetModel执行
+     * @param model
+     */
+    updateProductStock: function(model){
+        if (!this.targetModel) {
+            // 如果没有选中规格，则不处理
+            return;
+        }
+        var counter = $('[data-ui-role="counter"]').data('view');
+        // jz 2015-10-24
+        //if((model.stock_type === 1 && model.stocks > 0)||model.stock_type === 0) {
+        //}
+        //库存
+        var maxCount = this.getMaxCount(model);
+        counter.setMaxCount(maxCount);
+
+        if(counter.maxCount < counter.count && counter.maxCount >= 0){
+            $('.xa-disabledBuyLinks').show();
+            $('.xa-enabledBuyLinks').hide();
+        }else{
+            $('.xa-disabledBuyLinks').hide();
+            $('.xa-enabledBuyLinks').show();
         }
     },
 
@@ -694,6 +805,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      * disableUnselectableModelPropertyValue: 禁用不可使用的规格属性值
      */
     disableUnselectableModelPropertyValue: function() {
+        // jz 2015-10-24
         // if (currentModelPropertyValue) {
         //     var items = currentModelPropertyValue.split(':');
         //     var currentPropertyId = items[0];
@@ -771,7 +883,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     onSelectModelPropertyValue: function(event) {
         var $propertyValue = $(event.currentTarget);
         if ($propertyValue.hasClass('xui-unSelectable')) {
-            xlog('can not select');
             return;
         }
 
@@ -786,19 +897,25 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var isSelectPropertyValue = true;
         if ($propertyValue.hasClass('xui-inner-selected-tag')) {
             $propertyValue.removeClass('xui-inner-selected-tag');
-            // $propertyValue.find('.xui-selectedIcon').removeClass('hidden');
             isSelectPropertyValue = false;
+
+            // jz 2015-10-24
+            // $propertyValue.find('.xui-selectedIcon').removeClass('hidden');
             // if ($selectModelHint.text() === '选中') {
             //     $('.xa-selectedModelPropertyValueName').hide();
             //     $selectModelHint.text('请选择');
             // }
+
             $modelValueText.text($modelValueText.attr('data-property-name')).removeClass('xui-text-red').show();
         } else {
             $propertyValue.parents('.xui-i-customModel').find('.xui-inner-selected-tag').removeClass('xui-inner-selected-tag');
             $propertyValue.toggleClass('xui-inner-selected-tag');
+
+            // jz 2015-10-24
             // $propertyValue.find('.xa-selectedIcon').toggleClass('xui-selectedIcon');
             // $propertyValue.siblings().find('.xui-selectedIcon').addClass('hidden');
             // console.log($propertyValue,890)
+
             $modelValueText.text(currentModelPropertyValueName);
         }
 
@@ -815,7 +932,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             this.updateProductInfo(this.targetModel);
             this.updateModelInBuyLink(this.targetModel);
             //显示选中的规格值
-            // $selectModelHint.text('选中');
             $('.xa-selectedModelPropertyValueName').show();
             counter.reset();
         } else {
