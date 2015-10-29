@@ -378,10 +378,15 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
                         $('.xa-priceSection').html(temp);
                     }
-                    var alertView = $('[data-ui-role="attentionAlert"]').data('view');
-                    if(data.member_grade_id < 0 && alertView){
-                        alertView.render();
+                    if(data.member_grade_id < 0){// 非会员
+                        var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+                        if(alertView){
+                            alertView.render();
+                        }
+                        $('.xui-productInfoBox').css('margin-right', 0)
                         $($('.xa-globalNav li')[1]).hide();
+                    }else{
+                        $('.xa-collectProduct').show();
                     }
                 }
 
@@ -845,7 +850,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
     onClickCollectProductButton: function(event) {
         var _this = this;
-        var is_collect = $('.xa-collectProduct').attr('data-is-collect');
+        var is_collect = $('.xa-collectProduct').data('is-collect');
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
