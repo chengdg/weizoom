@@ -197,7 +197,6 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				var $target = $propertyViewNode.find($('[data-field-anchor="background_image"]'));
 				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
-				console.log($phone_target);
 				$phone_target.html("<img src='"+image.url+"'>");
 			}
 		},
