@@ -146,7 +146,7 @@ class MPowerMe(resource.Resource):
 				'record_id': record_id,
 				'activity_status': activity_status,
 				'is_already_participanted': is_already_participanted,
-				'page_title': u"签到",
+				'page_title': u"微助力",
 				'page_html_content': html,
 				'app_name': "powerme",
 				'resource': "powerme",
