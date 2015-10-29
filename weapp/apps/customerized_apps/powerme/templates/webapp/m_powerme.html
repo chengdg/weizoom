@@ -16,10 +16,23 @@
         opacity: 0.9;
         text-align: center;
     }
+    .wui-mask{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(181, 181, 181, 0.3);
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
+    <div class="wui-mask wui-hide"></div>
+    <div class="wui-win wui-power-win wui-hide"></div>
+    <div class="wui-win wui-qrimg-win wui-hide"></div>
+    <div class="wui-win wui-guide-win wui-hide"></div>
     {{ page_html_content|safe }}
     <div class="wui-masterinfo wa-masterinfo wui-hide">
         <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
@@ -70,13 +83,15 @@
         }else{
             var power_other_msg, using_msg;
             if(is_powered){
-                power_other_msg = '已帮'+page_owner_name+'助力'
+                $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', function(){
+                    openGuideMask();
+                }).show();
             }else{
-                power_other_msg = '帮'+page_owner_name+'助力'
+                $('.wa-power').text('帮'+page_owner_name+'助力').one('click', function(){
+                    powerYou();
+                }).show();
             }
-            $('.wa-power').text(power_other_msg).on('click', function(){
-                openGuideMask();
-            }).show();
+
 
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
@@ -128,11 +143,35 @@
         $('body').swipeUp(function(){
             console.log('show my rank....');
             $('.wa-masterinfo').show();
+        }).swipeDown(function(){
+            if($(this).scrollTop() <=0){
+               console.log('hide my rank....');
+                $('.wa-masterinfo').hide();
+            }
         });
     }
 
     function openGuideMask(){
 
+    }
+
+    function powerYou(){
+        W.getApi().call({
+            app: 'm/apps/powerme',
+            resource: 'powerme_participance',
+            method: 'put',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid:'{{ page_owner_member_id }}'
+            },
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(data) {
+                console.error(data.errMsg);
+            }
+        });
     }
 </script>
 {% endblock %}

@@ -58,8 +58,10 @@ class MPowerMe(resource.Resource):
 				if fid is None or str(fid) == str(member_id):
 					self_page = True
 					page_owner_name = request.member.username_for_html
+					page_owner_member_id = member_id
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html
+					page_owner_member_id = fid
 
 				record = record.first()
 				record_id = record.id
@@ -137,7 +139,8 @@ class MPowerMe(resource.Resource):
 				'timing': timing,
 				'current_member_rank_info': current_member_rank_info, #我的排名
 				'total_participant_count': participances.count(), #总参与人数
-				'page_owner_name': page_owner_name
+				'page_owner_name': page_owner_name,
+				'page_owner_member_id': page_owner_member_id
 			})
 		else:
 			record = None
