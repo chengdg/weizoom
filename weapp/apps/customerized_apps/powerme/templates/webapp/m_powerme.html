@@ -207,7 +207,7 @@
             var li_content = '';
             for(var i in participances){
                 var p = participances[i];
-                li_content += "<li><span>"+(i+1)+"</span><span><img src='"+ p.user_icon+"'>"+ p.username+"</span><span>"+ p.power+"</span>";
+                li_content += "<li><span class='wui-i-top100-range'>"+(i+1)+"</span><span class='wui-i-top100-name'><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
             }
             $('.wa-top100').append($(li_content));
         }
