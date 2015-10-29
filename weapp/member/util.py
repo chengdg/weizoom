@@ -3,6 +3,7 @@
 __author__ = 'bert'
 
 import os
+import re
 from django.conf import settings
 
 from core.wxapi.weixin_api import *
@@ -108,7 +109,13 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 								
 						if len(new.text.strip()) != 0:
 							if new.text.find('static') :
-								content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
+								#content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
+								if new.text.find('.jpg') :
+									content = re.sub(r'src=[\"\'](?P<img_url>/static/.+?\.jpg)[\"\']',
+										weixin_api.upload_content_media_image(pic_re, True)["url"],new.text)
+								if new.text.find('.png') :
+									content = re.sub(r'src=[\"\'](?P<img_url>/static/.+?\.png)[\"\']',
+										weixin_api.upload_content_media_image(pic_re, True)["url"],new.text)
 							else:
 								content = new.text
 						else:
@@ -191,3 +198,12 @@ def _get_mpuser_access_token(user):
 		return mpuser_access_token
 	else:
 		return None
+
+def pic_re(matched):
+	pic_astr = matched.group("img_url")
+	if pic_astr.startswith('/') and pic_astr.find('http') == -1:
+		pic_astr = pic_astr[1:]
+		pic_url = os.path.join(settings.PROJECT_HOME, '../', pic_astr)
+	else:
+		pic_url = pic_astr
+	return pic_url
