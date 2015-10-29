@@ -44,9 +44,7 @@
 </div>
 
 <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
-<script type="text/javascript" src="/termite_static/v3/gmu/debug.min.js"></script>
 <script>
-    debug.success("11")
     var filechooser = document.getElementById("choose");
 
     //    用于压缩图片的canvas
@@ -56,7 +54,7 @@
     //    瓦片canvas
     var tCanvas = document.createElement("canvas");
     var tctx = tCanvas.getContext("2d");
-    debug.success("22")
+
     var maxsize = 100 * 1024*2;
 
     $("#upload").on("click", function () {
@@ -130,7 +128,7 @@
             reader.readAsDataURL(file);
         })
     };
-    debug.success("33")
+
     //    使用canvas对大图片进行压缩
     function compress(img) {
         var initSize = img.src.length;
@@ -191,22 +189,17 @@
 
     //    图片上传，将base64的图片转成二进制对象，塞进formdata上传
     function upload(basestr, file, $li) {
-        var text = window.atob(basestr.split(",")[1]);
-        var buffer = new Uint8Array(text.length);
+
         var pecent = 0 , loop = null;
 
-        for (var i = 0; i < text.length; i++) {
-            buffer[i] = text.charCodeAt(i);
-        }
 
-        var blob = getBlob(buffer, file.type);
+
+        var blob = base64toBlob(basestr, file.type);
         console.info("blob",blob)
         var xhr = new XMLHttpRequest();
 
         var formdata = new FormData();
         formdata.append('imagefile', blob);
-        debug.success(blob)
-        debug.success("44")
         console.info("zl--------",file.type)
         formdata.append('file_type', file.type);
         //xhr.open('post', '/product_review/create');
@@ -269,6 +262,38 @@
             return new window.Blob([ buffer ], {type: format});
         }
     }
+     function base64toBlob(b64Data, contentType, sliceSize) {
+          var BlobBuilder, blob, byteArray, byteCharacters, byteNumbers, charCodeFromCharacter, err, posIndex;
+
+          if (contentType == null) {
+            contentType = '';
+          }
+          if (sliceSize == null) {
+            sliceSize = 1024;
+          }
+          posIndex = b64Data.indexOf('base64,');
+          if (posIndex !== -1) {
+            b64Data = b64Data.substring(posIndex + 7);
+          }
+          charCodeFromCharacter = function(c) {
+            return c.charCodeAt(0);
+          };
+          byteCharacters = atob(b64Data.replace(/\s/g, ''));
+          byteNumbers = Array.prototype.map.call(byteCharacters, charCodeFromCharacter);
+          byteArray = new Uint8Array(byteNumbers);
+          try {
+            blob = new Blob([byteArray.buffer], {
+              type: contentType
+            });
+            return blob;
+          } catch (_error) {
+            err = _error;
+            BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+            blob = new BlobBuilder();
+            blob.append(byteArray.buffer);
+            return blob.getBlob(contentType);
+          }
+}
 </script>
 </body>
 </html>
