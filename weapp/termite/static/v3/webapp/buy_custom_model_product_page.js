@@ -615,10 +615,12 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var maxCount = this.getMaxCount(model);
         counter.setMaxCount(maxCount);
 
-        if(counter.maxCount < counter.count && counter.maxCount >= 0 ||counter.maxCount ==counter.count&&counter.count==0&&counter.maxCount<counter.minCount){
+        if(counter.maxCount >= 0 && (counter.maxCount < counter.count || counter.maxCount < counter.minCount)){
+            counter.changeCountTo(0)
             $('.xa-disabledBuyLinks').show();
             $('.xa-enabledBuyLinks').hide();
         }else{
+            counter.changeCountTo(counter.minCount)
             $('.xa-disabledBuyLinks').hide();
             $('.xa-enabledBuyLinks').show();
         }
