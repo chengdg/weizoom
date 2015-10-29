@@ -50,7 +50,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.getProductStock();//更新库存信息
 
         var _this = this;
-
         this.stockInterval = setInterval(this.getProductStock, 30*1000, _this);
 
         //绑定counter widget的count-changed事件

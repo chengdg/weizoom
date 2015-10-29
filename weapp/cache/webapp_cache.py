@@ -520,6 +520,7 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
             product_ids.append(product.product_id)
     return product_ids
 
+
 def update_forbidden_coupon_product_ids(instance, **kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile and not kwargs.get('created', False):
         webapp_owner_id = cache.request.user_profile.user_id
