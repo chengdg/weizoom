@@ -320,7 +320,7 @@ Scenario:2 从购物车购买全部商品
 		}
 		"""
 
-@mall2 @mall @zy_wsc03 @mall.webapp @mall.webapp.shopping_cart
+@mall2 @mall @zy_wsc03 @mall.webapp @mall.webapp.shopping_cart @ztq
 Scenario:3 从购物车购买部分商品
 	bill将jobs的多个商品加入购物车后
 	1.bill能从购物车中下单,购买部分商品
