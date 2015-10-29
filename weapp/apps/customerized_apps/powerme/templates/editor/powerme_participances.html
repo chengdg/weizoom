@@ -99,26 +99,25 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>用户名</th>
+			    <th width='50'>排名</th>
+				<th class="tl pl25">用户名</th>
+				<th>助力值</th>
 				<th>参与时间</th>
-				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
-				<td 
-					class="tl pl25"
-					style="width:250px; height:60px;" 
-				>
-					<img src="${item.participant_icon}" />
+			    <td>${i + 1}</td>
+				<td class="tl pl25" style="width:250px; height:60px;">
+					<img width=60 height=60 src="${item.participant_icon}" />
 					${item.participant_name}
 				</td>
 				<td>
-					${item.created_at}
+				    ${item.power}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData">查看结果</a>
+{#					${item.created_at}#}
 				</td>
 			</tr>
 			{{/each}}
