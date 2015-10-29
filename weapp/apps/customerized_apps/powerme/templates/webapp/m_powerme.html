@@ -25,6 +25,82 @@
         height: 100%;
         width: 100%;
     }
+    .mask{
+        background: rgba(0,0,0,0.8)!important;
+        position: fixed!important;
+    }
+    .xui-share {
+          background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll right top / 53% auto rgba(0, 0, 0, 0);
+          height: 75%;
+          position: fixed;
+          right: 7%;
+          top: 5%;
+          width: 100%;
+          z-index: 10001;
+    }
+    .xui-share.xa-share > div p {
+      color: #fff;
+      margin-left: 10%;
+      text-align: center;
+      width: 100%;
+    }
+    .xui-spritebg{
+        background: url("/termite_static/img/component/powerme/Sprite.png") no-repeat scroll 0 0 / 150% auto rgba(0, 0, 0, 0)
+    }
+    {#    分享的closeButton#}
+    .xui-colseButton {
+      background-position: -42px 0;
+      height: 55px;
+      left: 50%;
+      margin-left: 11px;
+      position: absolute;
+      top: 75%;
+      width: 58px;
+    }
+    {#    二维码的closeBtn#}
+    .xui-closeBtn{
+        width: 30px;
+        height: 30px;
+        /*background: #000;*/
+        position: absolute;
+        top:0;
+        right: 0;
+    }
+    .xui-successHint {
+      background: none repeat scroll 0 0 #fff;
+      border-radius: 16px;
+      padding:  45px 40px 45px 35px;
+      position: absolute;
+      right: 21%;
+      top: 20%;
+      z-index: 11111;
+    }
+    .xui-spritebg.xui-successHint-img {
+      display: inline-block;
+      height: 33px;
+      width: 46px;
+    }
+    .xui-attention .xui-twoDimensionBox{
+        width: 260px;
+        height: 286px;
+        background: url('http://weappstatic.b0.upaiyun.com/static_v2/img/attention.png') no-repeat;
+        -webkit-background-size: 100%;
+        background-size: 100%;
+        position: fixed;
+        top:50%;
+        margin-top: -155px;
+        left:50%;
+        margin-left: -130px;
+        z-index: 10001;
+    }
+    .xui-attention .xui-twoDimension{
+        width: 150px;
+        height: 150px;
+        display: block;
+        position: absolute;
+        top:60px;
+        left: 53px;
+    }
 </style>
 {% endblock %}
 
@@ -38,6 +114,23 @@
         <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
         <span class="wa-mypower">我的助力值: <b>{% if current_member_rank_info %}{{ current_member_rank_info.power }}{% else %}0{% endif %}</b></span>
         <span class="wa-totalcount">参与人数: <b>{{ total_participant_count }}</b></span>
+    </div>
+    <div data-ui-role="swipemask" class="mask"></div>
+    <div class="xui-powerSucceed none">
+        <div class="f15 xui-successHint xui-spritebg">
+            <div class="xui-spritebg xui-successHint-img"></div>
+            <div style="display: inline-block;color: #333;"><p>成功帮{{ page_owner_name }}助力值+1</p><p>关系好就是任性！</p></div>
+        </div>
+    </div>
+    <div class="xui-attention xa-attention none">
+        <div class="xui-twoDimensionBox">
+            <img src="http://weappstatic.b0.upaiyun.com/static_v2/img/mileke.jpg" alt="" class="xui-twoDimension">
+            <div class="xui-closeBtn xa-closeBtn"></div>
+        </div>
+    </div>
+    <div class="xui-share xa-share none">
+        <div style="margin-top: 45%"><p>好的事物、一起分享</p><p>邀请好友或者分享到朋友圈，</p><p>发动小伙伴帮{% if is_self_page %}你{% else %}{{ page_owner_name }}{% endif %}赢大奖！</p></div>
+        <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
 {% endblock %}
 
@@ -79,7 +172,8 @@
         }
         //如果是自己的主页
         if(is_self_page){
-            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
+            $('.wa-using').text('立即分享召唤小伙伴').on('click', showtwoDimensionBox).show();
+{#            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();#}
         }else{
             var power_other_msg, using_msg;
             if(is_powered){
@@ -150,9 +244,17 @@
     }
 
     function openGuideMask(){
-
+        $('body').swipeMask('show');
+        $('.xa-share').removeClass('none');
     }
-
+    function showPowerSuccess(){
+        $('body').swipeMask('show');
+        $('.xui-powerSucceed').removeClass('none');
+    }
+    function showtwoDimensionBox(){
+        $('body').swipeMask('show');
+        $('.xa-attention').removeClass('none');
+    }
     function powerYou(){
         W.getApi().call({
             app: 'm/apps/powerme',
@@ -171,6 +273,21 @@
             }
         });
     }
+    {#    隐藏所有#}
+    $('.mask').click(function(){
+        $('body').swipeMask('hide');
+        $('.xui-powerSucceed').addClass('none');
+        $('.xa-attention').addClass('none');
+        $('.xa-share').addClass('none');
+    });
+    $('.xa-closeBtn').click(function(){
+        $('.xa-attention').addClass('none');
+        $('body').swipeMask('hide');
+    });
+    $('.xa-colseButton').click(function(){
+        $('.xa-share').addClass('none');
+        $('body').swipeMask('hide');
+    });
 </script>
 {% endblock %}
 
