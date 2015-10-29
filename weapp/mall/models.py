@@ -220,6 +220,8 @@ class Product(models.Model):
 
 		self.display_index = pos
 		self.save()
+		from cache.webapp_cache import update_product_cache
+		update_product_cache(self.owner_id, self.id, False, False, True)
 
 	# 填充标准商品规格信息
 	def fill_standard_model(self):
