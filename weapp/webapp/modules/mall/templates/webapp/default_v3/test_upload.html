@@ -44,7 +44,9 @@
 </div>
 
 <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
+<script type="text/javascript" src="/termite_static/v3/gmu/debug.min.js"></script>
 <script>
+    debug.success("11")
     var filechooser = document.getElementById("choose");
 
     //    用于压缩图片的canvas
@@ -54,7 +56,7 @@
     //    瓦片canvas
     var tCanvas = document.createElement("canvas");
     var tctx = tCanvas.getContext("2d");
-
+    debug.success("22")
     var maxsize = 100 * 1024*2;
 
     $("#upload").on("click", function () {
@@ -128,7 +130,7 @@
             reader.readAsDataURL(file);
         })
     };
-
+    debug.success("33")
     //    使用canvas对大图片进行压缩
     function compress(img) {
         var initSize = img.src.length;
@@ -203,6 +205,8 @@
 
         var formdata = new FormData();
         formdata.append('imagefile', blob);
+        debug.success(blob)
+        debug.success("44")
         console.info("zl--------",file.type)
         formdata.append('file_type', file.type);
         //xhr.open('post', '/product_review/create');
