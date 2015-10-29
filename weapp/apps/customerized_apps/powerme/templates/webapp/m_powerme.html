@@ -160,7 +160,7 @@
         updateBtnStatus();
 
         //启动倒计时
-{#        renderTime({{ timing }});#}
+        renderTime({{ timing }});
 
         //展示与隐藏我的排名面板
         showMyRank();
@@ -244,15 +244,13 @@
     }
 
     function showMyRank(){
-        $('body').swipeUp(function(){
-            console.log('show my rank....');
-            $('.wa-masterinfo').show();
-        }).swipeDown(function(){
-            if($(this).scrollTop() <=0){
-               console.log('hide my rank....');
+        window.onscroll = function(){
+            if($(window).scrollTop() - $('.wa-top100').offset().top + $('.wa-top100').height() > 0){
+                $('.wa-masterinfo').show();
+            }else{
                 $('.wa-masterinfo').hide();
             }
-        });
+        };
     }
 
     function openGuideMask(){
@@ -285,7 +283,7 @@
             }
         });
     }
-    {#    隐藏所有#}
+    //隐藏所有
     $('.mask').click(function(){
         $('body').swipeMask('hide');
         $('.xui-powerSucceed').addClass('none');
