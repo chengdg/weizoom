@@ -213,11 +213,7 @@ class KeywordRules(resource.Resource):
                 if data['type'] == "text":
                     data['content'] = emotion.change_img_to_emotion(data['content'])
                 # 校验回复消息为图文时content不能为0 by Eugene
-<<<<<<< HEAD
                 if data['type'] == "news" and (data['content'] == "0" or not data["content"]):
-=======
-                if data['type'] == "news" and data['content'] == "0":
->>>>>>> origin/wechat_3.0
                     response = create_response(500)
                     return response.get_response()
             answer = json.dumps(answers)
