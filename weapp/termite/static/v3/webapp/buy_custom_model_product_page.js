@@ -16,7 +16,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     initialize: function(options) {
         xlog(options);
         this.postageFactor = options.postageFactor;
-        this.usableIntegral = options.usableIntegral;
+        // this.usableIntegral = options.usableIntegral;
         // jz 2015-10-20
         // this.enableTestBuy = options.enableTestBuy;
 
@@ -295,6 +295,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 });
 
                 if(isInit){
+                    this.usable_integral = data.usable_integral
                     if (_this.isStandardModelProduct) {
                         _this.targetModel = _this.models[0];
                         _this.initForStandardModelProduct();
@@ -378,15 +379,15 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
                         $('.xa-priceSection').html(temp);
                     }
-                    if(data.member_grade_id < 0){// 非会员
+                    if(data.is_subscribed){
+                        $('.xa-collectProduct').show();
+                    }else{// 非会员
                         var alertView = $('[data-ui-role="attentionAlert"]').data('view');
                         if(alertView){
                             alertView.render();
                         }
                         $('.xui-productInfoBox').css('margin-right', 0)
                         $($('.xa-globalNav li')[1]).hide();
-                    }else{
-                        $('.xa-collectProduct').show();
                     }
                 }
 

@@ -362,9 +362,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 
 //运费计算因子
 var postageFactor = {};
-//可用积分
-var usableIntegral = {{usable_integral}};
 // jz 2015-10-20
+//可用积分
+// var usableIntegral = {{usable_integral}};
 //是否启用"测试购买"
 // var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
 //商品id
@@ -388,8 +388,8 @@ $(document).ready(function() {
     view = new W.page.BuyProductPage({
         el: '.xui-page',
         postageFactor: postageFactor,
-        usableIntegral: usableIntegral,
         // jz 2015-10-20
+        // usableIntegral: usableIntegral,
         // enableTestBuy: enableTestBuy,
         productId: productId,
         productType: productType,
