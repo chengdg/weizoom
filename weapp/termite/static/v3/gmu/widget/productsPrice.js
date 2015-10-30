@@ -56,7 +56,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 				success: function(data) {
 					_this.memberInfoData = data;
 					var alertView = $('[data-ui-role="attentionAlert"]').data('view');
-					if(data.member_grade_id < 0 && alertView){
+					if(!data.is_subscribed){
 						alertView.render();
 					}
 					_this.trigger('updateProductPrice', data);
@@ -71,7 +71,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 			if(promotion_member_grade_id == '0'){
 				return true;
 			}
-			if(promotion_member_grade_id == this.memberInfoData.user_member_grade_id){
+			if(promotion_member_grade_id == this.memberInfoData.member_grade_id){
 				return true;
 			}else{
 				return false;
