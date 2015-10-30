@@ -4,7 +4,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 
 /**
- * 微众卡追加对话框
+ * 微众卡规则追加时间对话框
  */
 ensureNS('W.weapp.dialog.AppendWeizoomCardTimeDialog');
 W.weapp.dialog.AppendWeizoomCardTimeDialog = W.dialog.Dialog.extend({
@@ -76,10 +76,7 @@ W.weapp.dialog.AppendWeizoomCardTimeDialog = W.dialog.Dialog.extend({
     },
 
     onShow: function(options) {
-        var task = new W.DelayedTask(function() {
-            this.$dialog.find('input[type="text"]').eq(0).val('').focus();    
-        }, this);
-        task.delay(300);
+        $('#valid_time_append').val('');
     },
 
     /**
@@ -88,7 +85,7 @@ W.weapp.dialog.AppendWeizoomCardTimeDialog = W.dialog.Dialog.extend({
     onGetData: function(event) {
         var card_append_time = $.trim(this.$dialog.find('input[name="valid_time_append"]').val());
         if (card_append_time.length == 0) {
-            alert('请选择延期时间');
+            W.showHint('error','请选择延期时间');
             return false;
         }
         data = {

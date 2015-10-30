@@ -348,35 +348,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     */
                 }
                 // 扩展advanced_table.load方法
-                this.afterload();
-                $('#appendTime').each(function(){
-                    $(this).click(function(event){
-                        rule_id = $(this).attr('rule-id');
-                        W.dialog.showDialog('W.weapp.dialog.AppendWeizoomCardTimeDialog', {
-                            success: function(data) {
-                                data.rule_id = rule_id
-                                W.getLoadingView().show();
-                                W.getApi().call({
-                                    app: 'card',
-                                    api: 'card_expired_time/append',
-                                    method: 'post',
-                                    args: data,
-                                    success: function(){
-                                        $('div[data-ui-role="advanced-table"]').data('view').reload();
-                                    },
-                                    error: function(resp) {
-                                        console.log(resp);
-                                        if(resp.code==500){
-                                            W.showHint('error','有效期结束时间不能小于开始时间！');
-                                        }else{
-                                            W.showHint('error','卡延期失败！');
-                                        }    
-                                    }
-                                })
-                            }
-                        })
-                    })
-                });               
+                this.afterload();               
             },
             error: function(resp) {
                 // W.getLoadingView().show();

@@ -76,7 +76,7 @@
                         <td>${card_rule.remark}</td>
                         <td>
                             <a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a>
-                            <a id="appendTime" class=".appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a>
+                            <a id="appendTime" class="appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a>
                         </td>
                     </tr>
                     {{/each}}
@@ -98,7 +98,151 @@
             window.open(url);
         }
         var CardRule = W.view.common.AdvancedTable.extend({
-            
+            load: function(from_goto, options) {
+                //构造传递给后台api的参数
+                var args = {};
+
+                // 解决BUG 002900: 微站-订单管理-创建筛选标签可以创建但是创建好的点击没有效果
+                // 去掉注释部分
+                _.extend(args, this.args, args);
+                if (this.options.args) {
+                    _.extend(args, $.parseJSON(this.options.args));
+                }
+                if (this.frozenArgs) {
+                    _.extend(args, this.frozenArgs);
+                }
+                if (this.extraArgs) {
+                    _.extend(args, this.extraArgs);
+                }
+
+                if (this.sortAttr) {
+                    args['sort_attr'] = this.sortAttr;
+                }
+                if (this.searchQuery) {
+                    args['query_attr'] = this.searchAttr;
+                    args['query'] = this.searchQuery;
+                }
+                if (this.filterAttr) {
+                    args['filter_attr'] = this.filterAttr;
+                    args['filter_value'] = this.filterValue;
+                }
+
+                if (this.itemCountPerPage) {
+                    args['count_per_page'] = this.itemCountPerPage;
+                    args['page'] = this.curPage;
+                    args['enable_paginate'] = 1
+                }
+
+                if (this.enableSort) {
+                    if (from_goto) {
+                        //来自翻页的load，保持排序行为
+                    } else {
+                        this.enableSort = false;
+                    }
+                }
+                var _this = this;
+                //W.getLoadingView().show();
+                W.getApi().call({
+                    app: this.options.app,
+                    api: this.options.api,
+                    args: args,
+                    method: this.options.apiMethod,
+                    scope: this,
+                    success: function(data) {
+                        _this.rawData = data;
+                        if (data.items.length == 0) {
+                            if (options && options.emptyDataHint) {
+                                W.showHint('error', options.emptyDataHint);
+                            }
+                        }
+                        _this.items = new Backbone.Collection(data.items);
+                        var $node = $.tmpl(this.template, {
+                            items: data.items,
+                            data: data,
+                            categories: data.categories,
+                            'userWebappId': _this.userWebappId
+                        });
+                        
+                        ($node.find('#appendTime')).each(function(){
+                            $(this).click(function(event){
+                                rule_id = $(this).attr('rule-id');
+                                W.dialog.showDialog('W.weapp.dialog.AppendWeizoomCardTimeDialog', {
+                                    success: function(data) {
+                                        data.rule_id = rule_id
+                                        W.getLoadingView().show();
+                                        W.getApi().call({
+                                            app: 'card',
+                                            api: 'card_expired_time/append',
+                                            method: 'post',
+                                            args: data,
+                                            success: function(){
+                                                $('div[data-ui-role="advanced-table-card-rule"]').data('view').reload();
+                                            },
+                                            error: function(resp) {
+                                                console.log(resp);
+                                                if(resp.code==500){
+                                                    W.showHint('error','有效期结束时间不能小于开始时间！');
+                                                }else{
+                                                    W.showHint('error','卡延期失败！');
+                                                }    
+                                            }
+                                        })
+                                    }
+                                })
+                            })
+                        });
+                        if (this.enableSelect) {
+                            if (this.disableHeaderSelect) {
+                                $node.find('thead tr').prepend('<th width="30"></th>');
+                            } else {
+                                $node.find('thead tr').prepend('<th width="30"><input type="checkbox" class="xa-selectAll" /></th>');
+                            }
+                            if (this.selectableTrSelector) {
+                                $node.find('tbody tr').each(function() {
+                                    var $tr = $(this);
+                                    
+                                    if ($tr.hasClass(_this.selectableTrSelector)) {
+                                        $tr.prepend('<td width="30"><input type="checkbox" class="xa-select" /></td>');
+                                    } else {
+                                        $tr.prepend('<td width="30"></td>');
+                                    }
+                                });
+                            } else {
+                                $node.find('tbody tr').each(function() {
+                                    var $tr = $(this);
+                                    $tr.prepend('<td><input type="checkbox" class="xa-select" /></td>');
+                                });
+                            }
+                        }
+
+                        //table不存在
+                        xwarn(this.$content);
+                        this.$content.html($node);
+                        
+                        var multilineClass = this.$content.find('#multiline').attr('name');
+                        if (multilineClass) {
+                            this.$content.find(multilineClass).dotdotdot();
+                        }
+
+                        //处理翻页
+                        if (this.paginationView) {
+                            this.paginationView.setPageInfo(data.pageinfo);
+                            if (this.paginationView && data.pageinfo.object_count != 0) {
+                                this.paginationView.show();
+                            } else {
+                                this.paginationView.hide();
+                            }
+                        }
+
+                        this.afterload();               
+                    },
+                    error: function(resp) {
+                        // W.getLoadingView().show();
+                        // alert('加载分类失败!');
+                        return false;
+                    }
+                });
+            },
             // console.log($('.appendTime'));
         });
         $('.card_rule_list').delegate('.exportCard','click',function(e){
