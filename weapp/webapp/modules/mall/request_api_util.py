@@ -762,7 +762,8 @@ def create_product_review(request):
 		serve_score = data_dict.get('serve_score', None)
 		deliver_score = data_dict.get('deliver_score', None)
 		process_score = data_dict.get('process_score', None)
-
+		picture_list = data_dict.get('picture_list', None)
+		print "zl-------------",picture_list
 		#创建订单评论
 		order_review, created = mall_models.OrderReview.objects.get_or_create(
 			order_id=order_id,
@@ -783,7 +784,14 @@ def create_product_review(request):
 			product_score=product_score,
 			review_detail=review_detail
 		)
-		upload_pic_list.delay(request, data_dict,product_review,order_has_product_id)
+		for picture in list(eval(picture_list)):
+			mall_models.ProductReviewPicture(
+				product_review=product_review,
+				order_has_product_id=order_has_product_id,
+				att_url=picture
+			).save()
+			watchdog_info(u"create_product_review after save img  %s" %\
+				(picture), type="mall", user_id=request.webapp_owner_id)
 		response = create_response(200)
 		response.data = get_review_status(request)
 		watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
