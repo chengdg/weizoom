@@ -194,7 +194,7 @@ class MPowerMe(resource.Resource):
 			'is_powered': is_powered, #是否已为该member助力
 			'is_self_page': self_page, #是否自己主页
 			'participances_list': json.dumps(participances_list),
-			'share_page_title': record.name if record else u"微助力",
+			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"微助力",
 			'qrcode_url': qrcode_url,
