@@ -18,13 +18,25 @@
         <div class="wui-i-body">
             <div style="display: none" class="wui-i-start_time">{{component.model.start_time}}</div>
             <div style="display: none" class="wui-i-end_time">{{component.model.end_time}}</div>
-            <div class="wui-i-timing wa-timing">
-                <i></i>:
-                <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
-                <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
-                <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
-                <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
-            </div>
+            {% if component.model.timing.timing %}
+                {% if component.model.timing.timing.select %}
+                    <div class="wui-i-timing wa-timing">
+                        <i></i>:
+                        <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
+                        <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
+                        <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
+                        <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
+                    </div>
+                {% endif %}
+                {% else %}
+                    <div class="wui-i-timing wa-timing">
+                        <i></i>:
+                        <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
+                        <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
+                        <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
+                        <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
+                    </div>
+            {% endif %}
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
                 <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
