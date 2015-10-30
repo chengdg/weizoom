@@ -42,7 +42,10 @@ class MPowerMe(resource.Resource):
 			fid = None
 			if not isPC:
 				isMember =request.member.is_subscribed
-				qrcode_url = get_mp_qrcode_img(request.user.id)
+				qrcode_url = get_mp_qrcode_img(request.manager.id)
+				print '========qrcode_url============'
+				print qrcode_url
+				print '==========qrcode_url=========='
 				fid = request.GET.get('fid', None)
 
 				if not fid:
@@ -115,6 +118,9 @@ class MPowerMe(resource.Resource):
 					app_models.PowerMe.objects(id=record_id).update(**{"inc__participant_count":1})
 
 					is_powered = fid in curr_member_power_info.powered_member_id
+					print '========is_powered============'
+					print is_powered
+					print '==========is_powered=========='
 					is_already_participanted = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html

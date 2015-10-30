@@ -180,7 +180,7 @@
         if(is_self_page){
             $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
         }else{
-            var power_other_msg, using_msg;
+            var using_msg;
             if(is_powered){
                 $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', function(){
                     openGuideMask();
@@ -205,7 +205,7 @@
             var li_content = '';
             for(var i in participances){
                 var p = participances[i];
-                li_content += "<li><span class='wui-i-top100-range'>"+(i+1)+"</span><span class='wui-i-top100-name'><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+                li_content += "<li><span class='wui-i-top100-range'>"+(i+1)+"</span><span class='wui-i-top100-name'><img src='" + p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
             }
             $('.wa-top100').append($(li_content));
         }
