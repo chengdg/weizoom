@@ -68,10 +68,13 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
-                    console.log("_______>>>>>",file.type);
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
                     var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png)$/));
-                    if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
+                    var a = /\/(?:jpeg|png|gif)/i.test(file.type);
+                    console.log(isErrorByType, "_______>>>>>",isErrorByName,"_____>>>>>>>",a);
+
+                    // if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
+                    if(!/\/(?:jpeg|png|gif)/i.test(file.type)) {
                         _this._alert('图片格式不正确');
                         return;
                     }
