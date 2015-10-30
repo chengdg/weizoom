@@ -160,6 +160,44 @@ def get_cards(request):
    
     return response.get_response()
 
+@api(app='card', resource='managers', action='get')
+@login_required 
+def get_managers(request):
+    count_per_page = int(request.GET.get('count_per_page', '1'))
+    cur_page = int(request.GET.get('page', '1'))
+    card_managers=WeiZoomCardManager.objects.all()
+    pageinfo, card_managers = paginator.paginate(card_managers, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+    weizoomcardpermissions=WeiZoomCardPermission.objects.all()
+    card_manager2weizoomcardpermission={}
+    for weizoomcardpermission in weizoomcardpermissions:
+        card_manager2weizoomcardpermission[weizoomcardpermission.user_id]=weizoomcardpermission
+    cur_card_managers=[]
+    for card_manager in card_managers:
+        cur_card_manager=JsonResponse()
+        cur_card_manager.id=card_manager.id
+        cur_card_manager.user_id=card_manager.user_id
+        cur_card_manager.username=card_manager.username
+        cur_card_manager.nickname=card_manager.nickname
+        
+        try:
+            cur_card_manager.can_create_card=card_manager2weizoomcardpermission[card_manager.user_id].can_create_card
+            cur_card_manager.can_export_batch_card=card_manager2weizoomcardpermission[card_manager.user_id].can_export_batch_card
+            cur_card_manager.can_add_card=card_manager2weizoomcardpermission[card_manager.user_id].can_add_card
+            cur_card_manager.can_batch_stop_card=card_manager2weizoomcardpermission[card_manager.user_id].can_batch_stop_card
+            cur_card_manager.can_batch_active_card=card_manager2weizoomcardpermission[card_manager.user_id].can_batch_active_card
+            cur_card_manager.can_view_card_details=card_manager2weizoomcardpermission[card_manager.user_id].can_view_card_details
+            cur_card_manager.can_stop_card=card_manager2weizoomcardpermission[card_manager.user_id].can_stop_card
+            cur_card_manager.can_active_card=card_manager2weizoomcardpermission[card_manager.user_id].can_active_card
+            cur_card_manager.can_change_shop_config=card_manager2weizoomcardpermission[card_manager.user_id].can_change_shop_config
+            cur_card_manager.can_view_statistical_details=card_manager2weizoomcardpermission[card_manager.user_id].can_view_statistical_details
+            cur_card_manager.can_export_statistical_details=card_manager2weizoomcardpermission[card_manager.user_id].can_export_statistical_details
+        except:
+            pass
+        cur_card_managers.append(cur_card_manager)
+    response = create_response(200)
+    response.data.items = cur_card_managers 
+    response.data.pageinfo = paginator.to_dict(pageinfo)  
+    return response.get_response()
 
 @api(app='card', resource='card_filter_params', action='get')
 @login_required

@@ -207,3 +207,33 @@ class WeizoomCardHasAccount(models.Model):
 			return WeizoomCardHasAccount.objects.get(owner=request.user, account_id=user_id).account_name
 		except:
 			return None
+
+
+class WeiZoomCardManager(models.Model):
+	user = models.ForeignKey(User)
+	username = models.CharField(max_length=100) #
+	nickname = models.CharField(max_length=100) #实名
+
+	class Meta(object):
+		db_table = 'market_tool_weizoom_card_manager'
+		verbose_name = '微众卡管理员'
+		verbose_name_plural = '微众卡管理员'
+
+
+class WeiZoomCardPermission(models.Model):
+	user = models.ForeignKey(User)  
+	can_create_card = models.BooleanField(default=False)#能否创建卡
+	can_export_batch_card = models.BooleanField(default=False)#能否批量导出
+	can_add_card = models.BooleanField(default=False)#能否追加卡库
+	can_batch_stop_card = models.BooleanField(default=False)#能否批量停用
+	can_batch_active_card = models.BooleanField(default=False)#能否批量激活
+	can_view_card_details = models.BooleanField(default=False)#能否显示微众卡使用详情
+	can_stop_card = models.BooleanField(default=False)#能否创停用
+	can_active_card = models.BooleanField(default=False)#能否创激活
+	can_change_shop_config = models.BooleanField(default=False)#能否开启关闭
+	can_view_statistical_details = models.BooleanField(default=False)#能否查看数据统计使用详情
+	can_export_statistical_details= models.BooleanField(default=False)#能否批量导出统计
+
+
+	class Meta(object):
+		db_table = 'market_tool_weizoom_card_permission'
