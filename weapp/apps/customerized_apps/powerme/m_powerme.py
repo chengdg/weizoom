@@ -48,6 +48,8 @@ class MPowerMe(resource.Resource):
 				print '==========qrcode_url=========='
 				fid = request.GET.get('fid', None)
 
+				qrcode_url = qrcode_url if qrcode_url is not None else ''
+
 				if not fid:
 					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
 					response = HttpResponseRedirect(new_url)
