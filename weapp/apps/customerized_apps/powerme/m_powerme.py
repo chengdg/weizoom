@@ -42,7 +42,11 @@ class MPowerMe(resource.Resource):
 			fid = None
 			if not isPC:
 				isMember =request.member.is_subscribed
-				qrcode_url = get_mp_qrcode_img(request.user.id)
+				if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
+					qrcode_url = request.webapp_owner_info.qrcode_img
+				else:
+					qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
+
 				print '========qrcode_url============'
 				print qrcode_url
 				print '==========qrcode_url=========='
@@ -119,14 +123,14 @@ class MPowerMe(resource.Resource):
 					#调整参与数量
 					app_models.PowerMe.objects(id=record_id).update(**{"inc__participant_count":1})
 
-					is_powered = fid in curr_member_power_info.powered_member_id.split(',')
-					print '========is_powered============'
-					print is_powered
-					print '==========is_powered=========='
 					is_already_participanted = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html
 					page_owner_member_id = fid
+					is_powered = fid in curr_member_power_info.powered_member_id.split(',')
+					print '========is_powered============'
+					print is_powered
+					print '==========is_powered=========='
 
 				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power')
 				total_participant_count = participances.count()
