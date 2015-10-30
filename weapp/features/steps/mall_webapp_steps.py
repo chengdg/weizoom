@@ -1055,11 +1055,9 @@ def step_add_address_info(context, webapp_user_name):
 		}
 	"""
 	# 判断是否需要填写收货信息
-	page_title = context.response.context['page_title']
-	if page_title == u'编辑收货地址':
-		address_info = json.loads(context.text)
-		response = _create_address(context, address_info)
-		bdd_util.assert_api_call_success(response)
+	address_info = json.loads(context.text)
+	response = _create_address(context, address_info)
+	bdd_util.assert_api_call_success(response)
 
 
 
