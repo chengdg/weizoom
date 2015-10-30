@@ -27,11 +27,11 @@
         </a>
     </div>
 
-<div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+<div class="panel panel-default mt20 pr card_rule_list" style="background-color:#EAEEF6">
     <div class="panel-heading" style="height:40px">
     </div>
     <div 
-        data-ui-role="advanced-table" 
+        data-ui-role="advanced-table-card-rule" 
         data-enable-paginator="true" 
         data-app="card" 
         data-api="cards/get" 
@@ -76,6 +76,7 @@
                         <td>${card_rule.remark}</td>
                         <td>
                             <a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a>
+                            <a id="appendTime" class=".appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a>
                         </td>
                     </tr>
                     {{/each}}
@@ -83,20 +84,90 @@
             </table>
         </script>
     {% endverbatim %}
-
     <script type="text/javascript">
         $(document).ready(function() {
             var filterBox = new W.view.card.cards.cardFilter({
                 el: ".xa-cardFilterView",
-                dataView: $('[data-ui-role="advanced-table"]').data('view'),
+                dataView: $('[data-ui-role="advanced-table-card-rule"]').data('view'),
                 userWebappId: {{user.get_profile.webapp_id}},
                 status:''
             });
         });
-
         function export_card_list(card_id) {
             var url = '/card/weizoom_cards/export/?card_id='+card_id;
             window.open(url);
         }
+        var CardRule = W.view.common.AdvancedTable.extend({
+            
+            // console.log($('.appendTime'));
+        });
+        $('.card_rule_list').delegate('.exportCard','click',function(e){
+            var targ;
+            if (e.target) {
+                targ = e.target;
+            }else if (e.srcElement) {   
+                targ = e.srcElement;
+            }
+        });
+        W.registerUIRole('div[data-ui-role="advanced-table-card-rule"]', function() {
+            xlog("registed advance-table");
+            var $div = $(this);
+            var app = $div.attr('data-app');
+            var api = $div.attr('data-api');
+            var resource = $div.attr('data-resource');    
+            if (resource) {
+                api = resource;
+            }
+
+            var apiMethod = $div.attr('data-method') || 'get';
+            var args = $div.attr('data-args');
+            var template = $div.attr('data-template-id');
+            var initSort = $div.attr('data-init-sort');
+            var enablePaginator = $div.data('enablePaginator');
+            var enableSort = !!($div.attr('data-enable-sort') === 'true');
+            var enableSelect = !!($div.attr('data-selectable') === 'true');
+            var disableHeaderSelect = !!($div.attr('data-disable-header-select') === 'true');
+            var selectableTrSelector = $div.data('selecttableTr');
+            //var onlyShowFrontSelect = !!($div.attr('data-only-show-front-select') === 'true');
+            var sortApi = $div.attr('data-sort-api');
+            var itemCountPerPage = $div.attr('data-item-count-per-page');
+            var userWebappId = $div.attr('data-user-webapp-id');
+            var outerSelecter = $div.attr('data-outer-selecter');
+
+            var autoLoad = $div.data('autoLoad');
+            if (autoLoad !== false) {
+                autoLoad = true;
+            }
+
+            if (itemCountPerPage) {
+                itemCountPerPage = parseInt(itemCountPerPage);
+            } else {
+                itemCountPerPage = 15;
+            }
+
+            var advancedTable = new CardRule({
+                el: $div[0],
+                template: template,
+                app: app,
+                api: api,
+                args: args,
+                apiMethod: apiMethod,
+                initSort: initSort,
+                itemCountPerPage: itemCountPerPage,
+                enablePaginator: enablePaginator,
+                enableSort: enableSort,
+                enableSelect: enableSelect,
+                disableHeaderSelect: disableHeaderSelect,
+                //onlyShowFrontSelect: onlyShowFrontSelect,
+                selectableTrSelector: selectableTrSelector,
+                sortApi: sortApi,
+                userWebappId: userWebappId,
+                autoLoad: autoLoad,
+                outerSelecter: outerSelecter
+            });
+            advancedTable.render();
+
+            $div.data('view', advancedTable);
+        });
     </script>
 {% endblock %}
