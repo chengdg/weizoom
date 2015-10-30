@@ -30,6 +30,12 @@
             // this.$parent = this.$input.parent();
             this.$parents = this.$input.parents('.xui-productPhoto');
             this.$parents.prepend('<ul class="xui-imgList xa-imgList"></ul>');
+            this.canvas = document.createElement("canvas");
+            this.ctx = this.canvas.getContext('2d');
+
+            //    瓦片canvas
+            this.tCanvas = document.createElement("canvas");
+            this.tctx = this.tCanvas.getContext("2d");
             // this.$parent.addClass(this._uploadImageClassName);
             // this.$img = $('<img class="xui-uploadImg pa" name="file_img" file_name="'+this.$input.attr('name')+'" src="" style="display:none;width:45px;height:45px;top:0;left:0;" data-allow-autoplay="false">');
             // this.$parent.append('<span class="pa xa-remove xui-remove" style=""><i class="pa"></i></span>')
@@ -39,7 +45,7 @@
             this._bind();
         }, 
         addImg:function(imgSrc){
-            var li = "<li class='xui-addPhoto mb10 fl pr'><img src='" + imgSrc +"' data-allow-autoplay = 'true'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>";            
+            var li = "<li class='xa-img'><img src='" + imgSrc +"' data-allow-autoplay = 'true'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>";            
             $('.xa-imgList').append(li);
             if($('.xa-imgList').children('li').length == 5){
                 $('.xa-addPhoto').hide();
@@ -62,6 +68,7 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
+                    console.log("_______>>>>>",file.type);
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
                     var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png)$/));
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
@@ -72,10 +79,11 @@
                     reader.onload = function() {
                         var result = this.result;
                         var img = new Image();
+                        img.src = result;
                         imgSrc = result;
                         //图片显示在页面上
                         _this.addImg(imgSrc);
-
+                        console.log("<<<<<<<",result);
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
@@ -91,8 +99,8 @@
                         }
 
                         function callback() {
-                            var data = compress(img);
-                            
+                            var data = _this.compress(img);
+                            console.log("____",data);
                             //_this.upload(data, file, $(li));
 
                             img = null;
@@ -101,10 +109,10 @@
                     reader.readAsDataURL(file);
                     
                 });
-                // var hasImgLength = $('.xa-imgList').children('li').length;
-                
-                //todo图片出现再出现删除按钮
+
                 _this.showDelete();
+                _this.finishEdit();
+                _this.removeImgFun();
                 //读取图片信息,预览图片
                 // var reader = new FileReader();
                 // reader.onload = function() {
@@ -115,8 +123,7 @@
                 //     _this.$parent.removeClass(_this._loadingClassName);
                 //     _this.addedImgFun(event);
                 //     // _this.showDelete();
-                _this.finishEdit();
-                _this.removeImgFun(event);
+                
                 // }
                 // reader.onerror=function(){
                 //     _this._alert('手机不支持图片预览');
@@ -126,7 +133,7 @@
             });
         },
         
-        upload: function() {
+        upload: function(basestr) {
             
         },
         compress:function(img){
@@ -144,44 +151,44 @@
                 ratio = 1;
             }
 
-            canvas.width = width;
-            canvas.height = height;
+            this.canvas.width = width;
+            this.canvas.height = height;
 
-    //        铺底色
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            //铺底色
+            this.ctx.fillStyle = "#fff";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
             //如果图片像素大于100万则使用瓦片绘制
             var count;
             if ((count = width * height / 1000000) > 1) {
                 count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
 
-    //            计算每块瓦片的宽和高
+            //计算每块瓦片的宽和高
                 var nw = ~~(width / count);
                 var nh = ~~(height / count);
 
-                tCanvas.width = nw;
-                tCanvas.height = nh;
+                this.tCanvas.width = nw;
+                this.tCanvas.height = nh;
 
                 for (var i = 0; i < count; i++) {
                     for (var j = 0; j < count; j++) {
-                        tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+                        this.tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
 
-                        ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+                        this.ctx.drawImage(this.tCanvas, i * nw, j * nh, nw, nh);
                     }
                 }
             } else {
-                ctx.drawImage(img, 0, 0, width, height);
+                this.ctx.drawImage(img, 0, 0, width, height);
             }
 
             //进行最小压缩
-            var ndata = canvas.toDataURL('image/jpeg', 0.3);
+            var ndata = this.canvas.toDataURL('image/jpeg', 0.3);
 
             console.log('压缩前：' + initSize);
             console.log('压缩后：' + ndata.length);
             console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
 
-            tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+            this.tCanvas.width = this.tCanvas.height = this.canvas.width = this.canvas.height = 0;
 
             return ndata;
         },
@@ -196,56 +203,34 @@
             this.options = null;
         },
 
-        // addedImgFun: function(event) {
-        //     var $uploadImage = $('.xui-uploadImage');
-        //     if($uploadImage.length < 6){
-        //         var imgLength = this.$img[0].src.length;
-        //         if(imgLength >0){
-        //             this.$parent.parent('.xui-productPhoto').find('.xa-deletePhoto').before('<div class="xui-addPhoto fl pr">'
-        //                                                                                         +'<span class="xui-i-box"></span>'
-        //                                                                                         +'<input id="" name="imgFile'+imgLength+'"  data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa">'
-        //                                                                                     +'</div>');
-               
-        //             $('[name="imgFile'+imgLength+'"]').uploadImage();
-        //             $('.xa-text').hide();
-        //             $($('.xui-uploadImage img')[$uploadImage.length-1]).data('allow-autoplay','true')
-        //             W.ImagePreview(wx)
-        //         }
-        //     };
-        //     this.showDelete();
-        //     if($uploadImage.length == 5){
-        //         $uploadImage.parent().children('*:nth-child(6)').css('display','none');
-        //     }
-        // },
-
         showDelete:function(){
             $('.xa-deletePhoto').show().unbind('click').click(function(){
-                $('.xa-remove').show();
-                $('.xa-addPhoto').hide();
-                $('.xa-deletePhoto').hide();
-                $('.xa-finishEdit').show();
+                $('.xa-remove, .xa-finishEdit').show();
+                $('.xa-addPhoto, .xa-deletePhoto').hide();
             });
         },
 
         finishEdit:function(){
             $('.xa-finishEdit').click(function(event) {
-               $('.xa-remove').hide();
+               $('.xa-remove,.xa-finishEdit').hide();
                $('.xa-deletePhoto').show();
-               $('.xa-finishEdit').hide();
+               var length = $('.xa-imgList').children('li').length;
+               if(length < 5){
+                    $('.xa-addPhoto').show();
+                    $('.xa-finishEdit').hide();
+                }
             });
         },
-
-        removeImgFun:function(event){
-            $(event.target).click(function(){
-                $(this).parents('li').remove();
+        removeImgFun:function(){
+            $('body').delegate($('.xa-remove'), 'click', function(event) {
+                $(event.target).parents('li').remove();
+                var length = $('.xa-imgList').children('li').length;
+                if(length == 0){
+                    $('.xa-addPhoto,.xa-text').show();
+                    $('.xa-finishEdit').hide();
+                }
             });
-            $('.xa-text').show();
-            $('.xa-finishEdit').hide();
-
-
         }
-
-
     });
     
 
