@@ -101,16 +101,7 @@ Background:
 		}]
 		"""
 	Given bill关注jobs的公众号
-	When bill访问jobs的webapp
-	And bill设置jobs的webapp的收货地址
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市,北京市,海淀区",
-			"ship_address": "泰兴大厦"
-		}
-		"""
+
 
 @mall2 @mall @zy_wsc01 @mall.webapp @mall.webapp.shopping_cart
 Scenario:1 从购物车购买单个商品
@@ -431,7 +422,7 @@ Scenario:3 从购物车购买部分商品
 		}
 		"""
 
-@mall2 @mall @zy_wsc04 @mall.webapp @mall.webapp.shopping_cart
+@mall2 @mall @zy_wsc04 @mall.webapp @mall.webapp.shopping_cart @dz
 Scenario:4 从购物车购买空商品
 	bill将jobs的多个商品加入购物车后
 	1. bill不选中商品去下单
