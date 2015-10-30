@@ -42,7 +42,7 @@ class MPowerMe(resource.Resource):
 			fid = None
 			if not isPC:
 				isMember =request.member.is_subscribed
-				qrcode_url = get_mp_qrcode_img(request.manager.id)
+				qrcode_url = get_mp_qrcode_img(request.user.id)
 				print '========qrcode_url============'
 				print qrcode_url
 				print '==========qrcode_url=========='
@@ -69,7 +69,7 @@ class MPowerMe(resource.Resource):
 				record = record.first()
 				record_id = str(record.id)
 				try:
-					mpuser = weixin_models.get_system_user_binded_mpuser(request.manager)
+					mpuser = weixin_models.get_system_user_binded_mpuser(request.user)
 					mpuser_preview_info = weixin_models.MpuserPreviewInfo.objects.get(mpuser=mpuser)
 					mpUserPreviewName = mpuser_preview_info.name
 				except:
