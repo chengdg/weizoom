@@ -300,9 +300,6 @@
             {% endfor %}
             {% endif %}
 
-//            W.sharePageTitle = {% if share_page_title %}"{{ share_page_title }}"{% else %}"{{ page_title }}"{% endif %};
-  //          W.sharePageDesc = {% if share_page_desc %}"{{ share_page_desc }}"{% else %}"{{ page_title }}"{% endif %};
-//            W.sharePageImg = {% if share_img_url %}"{{ share_img_url }}"{% else %}"{{ request.share_img_url }}"{% endif %};
 
             W.appRecordId = "{{ record_id }}";
             W.appName = "{{ app_name }}";
@@ -312,7 +309,7 @@
             W.activityStatus = "{{activity_status}}";
             W.isPC = {% if isPC %}true{% else %}false{% endif %};
             W.isMember = {% if isMember %}true{% else %}false{% endif %};
-            W.qrcodeUrl = "{{ auth_appid_info.qrcode_url }}";
+            W.qrcodeUrl = "{{ qrcode_url }}";
             W.permission = "{{ permission }}";
   //          if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
   //          W.sharePageImg = "http://"+window.location.host+W.sharePageImg;

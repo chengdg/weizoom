@@ -251,7 +251,7 @@ class WebAppUser(models.Model):
 			return None
 
 		try:
-			return WebAppUser.objects.get(member_id=member.id, father_id=0, webapp_id=member.webapp_id)
+			return WebAppUser.objects.filter(member_id=member.id, father_id=0, webapp_id=member.webapp_id)[0]
 		except WebAppUser.DoesNotExist:
 			return None
 

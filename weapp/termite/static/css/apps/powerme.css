@@ -1,0 +1,156 @@
+hr{
+    display: inline-block;
+    width: 60px;
+    vertical-align: middle;
+}
+.wui-hide{
+    display: none;
+}
+.wui-powerme-container{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-family: "黑体" !important;
+    text-align: center;
+}
+.wui-powerme-container>.wui-i-top{
+    width: 100%;
+    height: auto;
+    background: white;
+}
+.wui-powerme-container .wui-i-top>img{
+    width: 100%;
+    height: 300px;
+    margin: 0;
+    border: none;
+}
+.wui-powerme-container .wui-i-body div{
+    margin-top: 15px;
+    font-family: "黑体";
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup button{
+    width: 80%;
+    height: 35px;
+    border-radius: 2px;
+    border: none;
+    color: white;
+    font-size: 20px;
+    margin: 5px 0;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
+    background: #B5B5B5;
+    border-radius: 5px;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
+    background: #666666;
+    border-radius: 5px;
+}
+.wui-powerme-container .wui-i-timing{
+    font-weight: bold;
+    min-height: 33px;
+    font-size: 18px;
+}
+.wui-powerme-container .wui-i-timing b{
+    width: 20px;
+    height: 100%;
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-position: -170px -12px;
+    font-size: 14px;
+    padding: 7px 5px;
+    color: white;
+    border-radius: 2px;
+    font-family: '微软雅黑';
+}
+.wui-powerme-container .wui-i-states ul li{
+    text-align: left;
+    line-height: 50px;
+    margin: 5px 16px 0;
+}
+.wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #ffffff;
+}
+.wui-powerme-container .wui-i-states ul li:nth-child(1) span{
+    min-width: 45px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-background-image {
+    margin-bottom: -4px;
+}
+.wui-powerme-container .wui-i-rules-content {
+    text-align: left !important;
+    margin: 0 10px 0 15px;
+}
+.wui-powerme-container .wui-i-description-content {
+    margin: 0 10px 0 10px;
+}
+.wui-powerme-container .wui-i-line{
+    margin-bottom: -26px;
+    width: 90%;
+    margin-left: 14px;
+}
+.wui-powerme-container .wui-i-rules-title-content {
+    margin-left: 28%;
+    width: 45%;
+}
+.wui-powerme-container .wui-i-helper-title-content {
+    margin-left: 23%;
+    width: 54%;
+}
+.wui-powerme-container .wui-i-timing i{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 940% 220%;
+    display: inline-block;
+    height: 35px;
+    margin-bottom: -12px;
+    width: 33px;
+}
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 940% 420%;
+    width: 30px;
+    height: 17px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b {
+    font-weight: normal;
+    font-size: 18px;
+}
+.wui-powerme-container .wui-i-top100-title{
+    font-weight: bold;
+}
+.wui-powerme-container .wui-i-top100-name {
+    margin-left: 15px;
+}
+.wui-i-top100-power {
+    float: right;
+    margin-right: 5px;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 35px;
+    width: 50px;
+    margin-left: -8px;
+    text-align: center;
+    padding-right: 0;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range {
+  background-position: -156px 7px;
+}
+.wa-top100 li:nth-child(3) .wui-i-top100-range {
+  background-position: -214px 7px;
+}
+.wa-top100 li:nth-child(4) .wui-i-top100-range {
+  background-position: -269px 7px;
+}
+.wui-i-top100-range{
+    margin-left: 12px;
+    padding-right: 21px;
+}
+.wui-powerme-container .wui-i-top100-name img {
+  border: 2px solid #ffffff;
+  border-radius: 30px;
+  margin-bottom: -13px;
+  margin-right: 5px;
+  width: 40px;
+}
