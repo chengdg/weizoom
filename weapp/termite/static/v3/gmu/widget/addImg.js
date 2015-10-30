@@ -27,66 +27,59 @@
 
         _create : function() {
             this.$input = this.$el;
-            // this.$parent = this.$input.parent();
             this.$parents = this.$input.parents('.xui-productPhoto');
             this.$parents.prepend('<ul class="xui-imgList xa-imgList"></ul>');
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext('2d');
 
-            //    瓦片canvas
+            //瓦片canvas
             this.tCanvas = document.createElement("canvas");
             this.tctx = this.tCanvas.getContext("2d");
-            // this.$parent.addClass(this._uploadImageClassName);
-            // this.$img = $('<img class="xui-uploadImg pa" name="file_img" file_name="'+this.$input.attr('name')+'" src="" style="display:none;width:45px;height:45px;top:0;left:0;" data-allow-autoplay="false">');
-            // this.$parent.append('<span class="pa xa-remove xui-remove" style=""><i class="pa"></i></span>')
-            // this.$parent.append('<input type="hidden" id="storeSrc_'+this.$input.attr('name')+'" name="storeSrc_'+this.$input.attr('name')+'"')
-            // this.$parent.append(this.$img);
-            // this.$parent.find('.xa-remove').hide();
             this._bind();
-        }, 
-        addImg:function(imgSrc){
-            var li = "<li class='xa-img'><img src='" + imgSrc +"' data-allow-autoplay = 'true'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>";            
-            $('.xa-imgList').append(li);
-            if($('.xa-imgList').children('li').length == 5){
-                $('.xa-addPhoto').hide();
-            }
-            $('.xa-text').hide();
-            W.ImagePreview(wx)
         },
         _bind : function() {
             var _this = this;
             var maxsize = 200 * 1024;
             this.$input.bind('change', function(event) {
                 if(!this.files.length) return;
+                $('.xa-text').hide();
                 var files = Array.prototype.slice.call(this.files);
                 var hasImgLength = $('.xa-imgList').children('li').length;
-                var imgLength = hasImgLength + files.length;
-                if(imgLength > 5){
-                    _this._alert('最多同时可上传5张');
-                    files.splice(5 - hasImgLength, imgLength - 5);
+                var preLength = hasImgLength + files.length;
+                if(preLength >= 5){
+                    $('.xa-addPhoto').hide();
+                }
+                if(preLength > 5){
+                    _this._alert('最多可上传5张图片');
+                    files.splice(5 - hasImgLength, preLength - 5);
                 }
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
-                    var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
-                    var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png)$/));
+                    console.log("_______>>>>>",file.type);
+                    var name = file.name.toLowerCase();
+                    var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
                         _this._alert('图片格式不正确');
                         return;
                     }
                     var reader = new FileReader();
+                    var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>");
+                    $('.xa-imgList').append($li);
+
+                    var imglength = $('.xa-imgList').children('li').length;
                     reader.onload = function() {
                         var result = this.result;
                         var img = new Image();
-                        imgSrc = result;
-                        //图片显示在页面上
-                        _this.addImg(imgSrc);
-                        console.log(result,"<<<<<<<")
+                        img.src = result;
+
+                        var innerHtml = "<img src="+ result +" data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><div class='xui-progress xa-progress'><span></span></div>";
+                        $li.append(innerHtml);
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
 
-                            // _this.upload(result, file, $(li));
+                            _this.upload(result, imglength,$li);
 
                             return;
                         }
@@ -98,8 +91,7 @@
 
                         function callback() {
                             var data = _this.compress(img);
-                            
-                            //_this.upload(data, file, $(li));
+                            _this.upload(data, imglength,$li);
 
                             img = null;
                         }
@@ -111,28 +103,42 @@
                 _this.showDelete();
                 _this.finishEdit();
                 _this.removeImgFun();
-                //读取图片信息,预览图片
-                // var reader = new FileReader();
-                // reader.onload = function() {
-                //     var content = this.result.replace('data:base64,', 'data:'+file.type+';base64,');
-                //     _this.$img[0].src = content;
-                //     $('#storeSrc_'+_this.$input.attr('name')).val(content);
-                //     _this.$img[0].style.display = '';
-                //     _this.$parent.removeClass(_this._loadingClassName);
-                //     _this.addedImgFun(event);
-                //     // _this.showDelete();
-                
-                // }
-                // reader.onerror=function(){
-                //     _this._alert('手机不支持图片预览');
-                //     _this.$parent.removeClass(_this._loadingClassName);
-                // }
-                // reader.readAsDataURL(file);
             });
         },
-        
-        upload: function() {
-            
+
+        upload: function(basestr,imglength,$li) {
+            var $bar = $li.find('.xa-progress span');
+            var percent = 0;
+            var loop = setInterval(function () {
+                percent++;
+                $bar.css('width', percent + "%");
+                if (percent == 99) {
+                    clearInterval(loop);
+                }
+            },100);
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    target_api: 'product_review_pic/create',
+                    module: 'mall',
+                    woid: W.webappOwnerId,
+                    basestr: JSON.stringify(basestr)
+                }),
+                success: function (data) {
+                    $("#pro_reivew"+imglength).attr('data-src',data.path)
+                    clearInterval(loop);
+                    $bar.css('width',"100%");
+                    setTimeout(function(){
+                        $bar.parent().css('opacity','0');
+                    },300)                
+                },
+                error: function (data) {
+                    alert('没有可连接的网络');
+                    return;
+                }
+            });
         },
         compress:function(img){
             var initSize = img.src.length;
@@ -149,12 +155,12 @@
                 ratio = 1;
             }
 
-            canvas.width = width;
-            canvas.height = height;
+            this.canvas.width = width;
+            this.canvas.height = height;
 
             //铺底色
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            this.ctx.fillStyle = "#fff";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
             //如果图片像素大于100万则使用瓦片绘制
             var count;
@@ -165,28 +171,28 @@
                 var nw = ~~(width / count);
                 var nh = ~~(height / count);
 
-                tCanvas.width = nw;
-                tCanvas.height = nh;
+                this.tCanvas.width = nw;
+                this.tCanvas.height = nh;
 
                 for (var i = 0; i < count; i++) {
                     for (var j = 0; j < count; j++) {
-                        tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+                        this.tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
 
-                        ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+                        this.ctx.drawImage(this.tCanvas, i * nw, j * nh, nw, nh);
                     }
                 }
             } else {
-                ctx.drawImage(img, 0, 0, width, height);
+                this.ctx.drawImage(img, 0, 0, width, height);
             }
 
             //进行最小压缩
-            var ndata = canvas.toDataURL('image/jpeg', 0.3);
+            var ndata = this.canvas.toDataURL('image/jpeg', 0.3);
 
             console.log('压缩前：' + initSize);
             console.log('压缩后：' + ndata.length);
             console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
 
-            tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+            this.tCanvas.width = this.tCanvas.height = this.canvas.width = this.canvas.height = 0;
 
             return ndata;
         },
@@ -204,7 +210,7 @@
         showDelete:function(){
             $('.xa-deletePhoto').show().unbind('click').click(function(){
                 $('.xa-remove, .xa-finishEdit').show();
-                $('.xa-addPhoto, .xa-deletePhoto').hide();
+                $('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
             });
         },
 

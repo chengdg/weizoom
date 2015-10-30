@@ -211,8 +211,8 @@ $(document).ready(function(){
         var process_score = $('#dj_process_score').data('value');
         var picture_list = [];
         var webapp_owner_id = $('#dj_request_owner_id').data('value');
-        $('.xui-uploadImage img').each(function(){
-                  if($(this).attr('src').indexOf('data:image') != -1){picture_list.push($(this).attr('src'))}
+        $('.xui-imgList img').each(function(){
+                  picture_list.push($(this).attr('data-src'))
         });
         if(!created){
             if (!slag){return;}
@@ -258,9 +258,9 @@ $(document).ready(function(){
                 },
             });
         }else{
-            var $img = $('.xui-addPhoto');
-            if( $img.length ==1 ){
-                if( $img.find('img').attr('src').indexOf('data:image') == -1){
+            var $img = $('.xui-imgList img');
+            if( $img.length ==0 ){
+
                     $('body').alert({
                         isShow: true,
                         info: '请添加图片',
@@ -270,7 +270,6 @@ $(document).ready(function(){
                         }
                     });
                     return false;
-                }
             }
             if (!slag){return;}
             slag = false;
