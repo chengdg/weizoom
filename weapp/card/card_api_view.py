@@ -422,7 +422,12 @@ def update_status(request):
         id = request.POST.get('card_id','')
         card_remark = request.POST.get('card_remark','')
         activated_to = request.POST.get('activated_to','')
-        status = int(request.POST['status'])
+        operate_style = request.POST.get('operate_style','')
+        if operate_style == 'active':
+            status = 0
+        else:
+            status = 3
+            # status = int(request.POST['status'])
         event_type = WEIZOOM_CARD_LOG_TYPE_DISABLE
         weizoom_card = WeizoomCard.objects.get(id=id)
         if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
@@ -486,11 +491,13 @@ def update_onbatch_status(request):
     批量停用微众卡
     """
     card_ids = request.POST.get('card_id', '')
+    card_remark = request.POST['card_remark']
+    activated_to = request.POST['activated_to']
     if card_ids:
         card_ids = card_ids.split(',')
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
-        cards.update(status=3, activated_at=activated_at)
+        cards.update(status=3, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
 
         # 创建激活日志
         for card in cards:
@@ -527,6 +534,24 @@ def append_weizoom_cards(request):
     response.data.count = rule.count
     return response.get_response()
 
+
+@api(app='card', resource='card_expired_time', action='append')
+@login_required
+def append_card_expired_time(request):
+    """
+    追加微众卡
+    """
+    rule_id = request.POST.get('rule_id', '')
+    card_append_time = request.POST.get('card_append_time', '')
+    rule = WeizoomCardRule.objects.get(id=rule_id)
+    valid_time_from = datetime.strftime(rule.valid_time_from, '%Y-%m-%d %H:%M:%S')
+    if valid_time_from >('%s' %card_append_time):
+        response = create_response(500)
+    else:
+        rule.valid_time_to = card_append_time
+        rule.save()
+        response = create_response(200)
+    return response.get_response()
 
 def _get_status_value(filter_value):
     if filter_value == '-1':
