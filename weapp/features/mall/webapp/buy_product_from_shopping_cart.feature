@@ -101,6 +101,17 @@ Background:
 		}]
 		"""
 	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
+
 
 
 @mall2 @mall @zy_wsc01 @mall.webapp @mall.webapp.shopping_cart
