@@ -49,15 +49,6 @@ Background:
 		}]
 		"""
 	And jobs选择'顺丰'运费配置
-	And bill设置jobs的webapp的收货地址
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市,北京市,海淀区",
-			"ship_address": "泰兴大厦"
-		}
-		"""
 	And jobs已添加商品
 		"""
 		[{
@@ -109,6 +100,17 @@ Background:
 			"count": 2
 		}]
 		"""
+	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
 
 @mall2 @mall @zy_wsc01 @mall.webapp @mall.webapp.shopping_cart
 Scenario:1 从购物车购买单个商品
@@ -118,7 +120,6 @@ Scenario:1 从购物车购买单个商品
 	3. bill的购物车被清空
 	4. tom的购物车不受影响
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -211,7 +212,6 @@ Scenario:2 从购物车购买全部商品
 	3. bill的购物车被清空
 	4. tom的购物车不受影响
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -318,7 +318,6 @@ Scenario:3 从购物车购买部分商品
 	3.bill的购物车已下单的商品被清除
 	4.tom的购物车不受影响
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -440,7 +439,6 @@ Scenario:4 从购物车购买空商品
 	3. bill的购物车没有变化
 	4. tom的购物车不受影响
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -535,7 +533,6 @@ Scenario:5 从购物车购买商品时有商品下架
 	1.bill下单失败
 	2.bill的购物车不受影响
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -599,7 +596,6 @@ Scenario:6 从购物车同时购买"有运费和无运费"的商品，并且商�
 	1. bill能从购物车中下单,购买商品
 	2. bill的订单中的信息正确
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -676,7 +672,6 @@ Scenario:7 从购物车同时购买"有运费和无运费"的商品，并且商�
 	1. bill能从购物车中下单,购买商品
 	2. bill的订单中的信息正确
 
-	Given bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill加入jobs的商品到购物车
 		"""
@@ -746,7 +741,6 @@ Scenario:8 从购物车购买多个"有特殊运费"的商品
 
 	Given jobs登录系统
 	When jobs选择'EMS'运费配置
-	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	And bill设置jobs的webapp的收货地址
 		"""
