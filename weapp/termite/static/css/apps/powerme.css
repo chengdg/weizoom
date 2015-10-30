@@ -64,7 +64,7 @@ hr{
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
     line-height: 50px;
-    margin: 5px 10px 0;
+    margin: 5px 16px 0;
 }
 .wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
     border-bottom: 1px dotted #ffffff;
@@ -99,10 +99,10 @@ hr{
 .wui-powerme-container .wui-i-timing i{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-size: 940% 220%;
-    width: 33px;
-    height: 33px;
     display: inline-block;
+    height: 35px;
     margin-bottom: -12px;
+    width: 33px;
 }
 .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
