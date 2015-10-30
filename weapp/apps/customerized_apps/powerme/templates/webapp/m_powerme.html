@@ -94,12 +94,13 @@
         z-index: 10001;
     }
     .xui-attention .xui-twoDimension{
-        width: 150px;
-        height: 150px;
         display: block;
-        position: absolute;
-        top:60px;
-        left: 78px;
+        height: 150px;
+        left: 72px;
+        position: relative;
+        width: 150px;
+        margin-bottom: 10px;
+        margin-top: 10px;
     }
     .xui-twoDimensionBox > p {
         display: inline-block;
@@ -130,7 +131,7 @@
             <p style="margin-left: 8px;margin-top: 32px;">1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
             <p></p>
-            <p style="margin-left:10px;margin-top:175px;">2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+            <p style="margin-left:10px;">2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
     </div>
@@ -178,7 +179,7 @@
         }
         //如果是自己的主页
         if(is_self_page){
-            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
+            $('.wa-using').text('立即分享召唤小伙伴').on('click', openQrMask).show();
         }else{
             var using_msg;
             if(is_powered){
