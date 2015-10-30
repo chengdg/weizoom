@@ -68,10 +68,12 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
-                    console.log("_______>>>>>",file.type);
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
+
                     var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png|jpeg)$/));
+
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
+
                         _this._alert('图片格式不正确');
                         return;
                     }
@@ -142,10 +144,11 @@
                      target_api: 'product_review2/create',
                      module: 'mall',
                      woid: W.webappOwnerId,
-                     basestr: JSON.stringify(basestr),
+                     basestr: JSON.stringify(basestr)
                  }),
                  success: function (data) {
-                    console.info()
+                    //var jsonData = JSON.parse(data)
+                    console.info("zl---------------"+data.path)
                  },
                  error: function (data) {
                      alert('没有可连接的网络');

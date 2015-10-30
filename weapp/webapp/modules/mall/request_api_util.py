@@ -798,7 +798,7 @@ def create_product_review2(request):
 	print "zl---------------------",path
 	if path:
 		response = create_response(200)
-		response.path = path
+		response.data.path = path
 		return response.get_response()
 	else:
 		return create_response(500).get_response()
