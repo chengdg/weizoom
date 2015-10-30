@@ -60,6 +60,7 @@
 			<div class="ml80">
 				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
 				<a class="btn btn-default xui-fontBold xa-export" href="javascript:void(0);">批量导出</a>
+                <a id="export_href" style="display: none ">DownloadXLS</a>
 			</div>
 		</div>
 	</div>
@@ -100,7 +101,7 @@
 		<thead>
 			<tr>
 			    <th width='50'>排名</th>
-				<th class="tl pl25">用户名</th>
+				<th>用户名</th>
 				<th>助力值</th>
 				<th>参与时间</th>
 			</tr>
@@ -109,9 +110,9 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
 			    <td>${i + 1}</td>
-				<td class="tl pl25" style="width:250px; height:60px;">
+				<td class="tl pl25">
 					<img width=60 height=60 src="${item.participant_icon}" />
-					${item.participant_name}
+					{{html item.participant_name}}
 				</td>
 				<td>
 				    ${item.power}

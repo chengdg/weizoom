@@ -69,9 +69,9 @@
     .xui-successHint {
       background: none repeat scroll 0 0 #fff;
       border-radius: 16px;
-      padding:  45px 40px 45px 35px;
-      position: absolute;
-      right: 21%;
+      left: 12%;
+      padding: 16% 10% 16% 9%;
+      position: fixed;
       top: 20%;
       z-index: 11111;
     }
@@ -82,7 +82,7 @@
     }
     .xui-attention .xui-twoDimensionBox{
         width: 300px;
-        height: 286px;
+        height: 300px;
         background: url('/termite_static/img/component/powerme/attention.png') no-repeat;
         -webkit-background-size: 100%;
         background-size: 100%;
@@ -205,7 +205,7 @@
             var li_content = '';
             for(var i in participances){
                 var p = participances[i];
-                li_content += "<li><span class='wui-i-top100-range'>"+(i+1)+"</span><span class='wui-i-top100-name'><img src='" + p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+                li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
             }
             $('.wa-top100').append($(li_content));
         }

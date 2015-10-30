@@ -72,17 +72,18 @@ class PowerMeParticipances(resource.Resource):
 			cur_page = int(request.GET.get('page', '1'))
 			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-		member_ids = []
+		tmp_member_ids = []
 		for data in datas:
-			member_ids.append(data.member_id)
-		members = member_models.Member.objects.filter(id__in=member_ids)
+			tmp_member_ids.append(data.member_id)
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
 		member_id2member = {member.id: member for member in members}
 
 		items = []
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
+				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				'username': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'power': data.power,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -142,7 +143,7 @@ class PowerMeParticipances_Export(resource.Resource):
 			for data in datas:
 				export_record = []
 				num = num+1
-				participant_name = data["participant_name"]
+				participant_name = data["username"]
 				power = data["power"]
 				created_at = data["created_at"]
 
