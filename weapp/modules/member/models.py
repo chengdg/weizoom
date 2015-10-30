@@ -282,6 +282,8 @@ class MemberGrade(models.Model):
 	pay_money = models.FloatField(default=0.00)
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
+	#add by duhao 20151030
+	created_at = models.DateTimeField(auto_now_add=True)
 
 	# @staticmethod
 	# def is_auto_grade(id):
