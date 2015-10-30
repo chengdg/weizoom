@@ -141,16 +141,17 @@ class MPowerMe(resource.Resource):
 					if curr_member_power_info.powered_member_id:
 						is_powered = fid in curr_member_power_info.powered_member_id
 
-				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power')
+				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', '-created_at')
 				total_participant_count = participances.count()
+				# 取前100位
+				participances = participances[:100]
+
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 
 				#检查是否有当前member的排名信息
 				current_member_rank_info = None
 				rank = 0 #排名
-				# 取前100位
-				participances = participances[:100]
 
 				for p in participances:
 					rank += 1

@@ -119,6 +119,7 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
+            W.Broadcaster.trigger('powerme:change:title', '{{ title_name }}');
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');

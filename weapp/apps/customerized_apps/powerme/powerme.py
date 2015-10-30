@@ -36,10 +36,12 @@ class PowerMe(resource.Resource):
 			powerme = app_models.PowerMe.objects.get(id=request.GET['id'])
 			is_create_new_data = False
 			project_id = 'new_app:powerme:%s' % request.GET.get('related_page_id', 0)
+			name = powerme.name
 		else:
 			powerme = None
 			is_create_new_data = True
 			project_id = 'new_app:powerme:0'
+			name = u'微助力'
 		
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -47,9 +49,10 @@ class PowerMe(resource.Resource):
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': mall_export.MALL_APPS_POWERME_NAV,
 			'powerme': powerme,
+			'title_name': name,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
-		});
+		})
 		
 		return render_to_response('powerme/templates/editor/workbench.html', c)
 	

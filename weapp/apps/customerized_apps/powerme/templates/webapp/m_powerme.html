@@ -144,7 +144,12 @@
         </div>
     </div>
     <div class="xui-share xa-share none">
-        <div style="margin-top: 49%"><p>好的事物、一起分享</p><p>邀请好友或者分享到朋友圈，</p><p>发动小伙伴帮{% if is_self_page %}你{% else %}{{ page_owner_name|safe }}{% endif %}赢大奖！</p></div>
+        <div style="margin-top: 49%">
+            <p>好的事物，一起分享</p><p>邀请好友或者分享到朋友圈，</p>
+            <div style="display: inline">
+                <p style="display: inline">发动小伙伴帮{% if is_self_page %}你{% else %}<p style="color: yellow;display: inline">{{ page_owner_name|safe }}{% endif %}</p><p style="display: inline">赢大奖！</p>
+            </div>
+        </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
 {% endblock %}
