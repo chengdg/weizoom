@@ -104,6 +104,7 @@ class MPowerMe(resource.Resource):
 						created_at = datetime.now()
 					)
 					curr_member_power_info.save()
+				is_already_participanted = curr_member_power_info.has_join
 
 				#如果当前member不是会员，则清空其助力值
 				if not isMember:
@@ -112,7 +113,7 @@ class MPowerMe(resource.Resource):
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					#调整参与数量(首先检测是否已参与)
-					if not curr_member_power_info.has_join:
+					if not is_already_participanted:
 						app_models.PowerMe.objects(id=record_id).update(inc__participant_count=1)
 						curr_member_power_info.update(set__has_join=True)
 						curr_member_power_info.reload()
@@ -121,7 +122,6 @@ class MPowerMe(resource.Resource):
 					page_owner_member_id = member_id
 
 					self_page = True
-					is_already_participanted = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html
 					page_owner_member_id = fid

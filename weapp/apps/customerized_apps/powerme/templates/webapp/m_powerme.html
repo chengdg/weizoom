@@ -16,6 +16,10 @@
         opacity: 0.9;
         text-align: center;
     }
+    .wui-masterinfo span{
+        margin: 0 10px;
+        font-size: 16px;
+    }
     .wui-mask{
         position: absolute;
         top: 0;
@@ -129,8 +133,7 @@
         <div class="xui-twoDimensionBox">
             <p style="margin-left: 8px;margin-top: 32px;">1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
-            <p style="color: orangered;margin-top:167px;margin-left:10px">2、关注公共号后即可为好友助力值+1</p>
-            <p style="margin-left:10px;margin-top:10px;">3、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+            <p style="margin-left:10px;margin-top:10px;">2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
     </div>
