@@ -267,7 +267,7 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 	var minute = Math.floor(m_time / (1000 * 60));//分钟
 	var second = Math.floor((m_time % (1000 * 60))/1000); //秒
 	console.log(minute.length);
-	$node.find('.wui-i-timing .xa-day').text(day.toString().length == 2 ? day : '0'+day);
+	$node.find('.wui-i-timing .xa-day').text(day.toString().length != 1 ? day : '0'+day);
 	$node.find('.wui-i-timing .xa-hour').text(hour.toString().length == 2 ? hour : '0'+hour);
 	$node.find('.wui-i-timing .xa-minute').text(minute.toString().length == 2 ? minute : '0'+minute);
 	$node.find('.wui-i-timing .xa-second').text(second.toString().length == 2 ? second : '0'+second);
