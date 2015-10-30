@@ -542,6 +542,8 @@ def show_shopping_cart(request):
 	"""
 	显示购物车详情
 	"""
+	print("here222222222222222222222222222")
+
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -563,7 +565,13 @@ def show_shopping_cart(request):
 		'jsons': jsons,
 		'discount': get_member_discount_percentage(request)
 	})
-	return render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+	# except BaseException as e:
+	# 	print('==============================')
+	# 	print(e)
+	# 	print('==============================')
+	response = render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+	print('333333333333333', response.status_code)
+	return response
 
 
 def _sorted_product_groups_by_promotioin(product_groups):
@@ -810,7 +818,10 @@ def edit_shopping_cart_order(request):
 
 	# 没有选择商品，跳转回购物车
 	if len(products) == 0:
-		url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		if settings.IS_UNDER_BDD:
+			url = request.META.get('HTTP_REFERER', '/termite/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		else:
+			url = request.META.get('HTTP_REFERER', '/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
 		return HttpResponseRedirect(url)
 
 	order = mall_api.create_shopping_cart_order(webapp_owner_id, webapp_user, products)
