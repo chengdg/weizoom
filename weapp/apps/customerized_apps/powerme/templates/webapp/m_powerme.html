@@ -18,7 +18,7 @@
     }
     .wui-masterinfo span{
         margin: 0 10px;
-        font-size: 1em;
+        font-size: 16px;
     }
     .wui-mask{
         position: absolute;
@@ -159,7 +159,7 @@
     var participances = JSON.parse(JSON.stringify({{ participances_list|safe }}));
     var is_powered = {% if is_powered %}true{% else %}false{% endif %};
     var is_self_page = {% if is_self_page %}true{% else %}false{% endif %};
-    var page_owner_name = '{{ page_owner_name }}';
+    var page_owner_name = '{{ page_owner_name|safe }}';
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -196,11 +196,11 @@
         }else{
             var using_msg;
             if(is_powered){
-                $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', function(){
+                $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
                     openGuideMask();
                 }).show();
             }else{
-                $('.wa-power').text('帮'+page_owner_name+'助力').one('click', powerYou).show();
+                $('.wa-power').html('帮'+page_owner_name+'助力').one('click', powerYou).show();
             }
 
 
