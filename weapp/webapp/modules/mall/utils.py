@@ -554,3 +554,4 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
         return merged_rule
     else:
         return None
+
