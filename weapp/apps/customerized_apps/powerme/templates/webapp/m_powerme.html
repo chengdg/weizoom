@@ -34,68 +34,64 @@
         position: fixed!important;
     }
     .xui-share {
-          background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll right top / 53% auto rgba(0, 0, 0, 0);
-          height: 75%;
-          position: fixed;
-          right: 7%;
-          top: 5%;
-          width: 100%;
-          z-index: 10001;
+        background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll 82% 10px / 53% auto rgba(0, 0, 0, 0);
+        height: 75%;
+        position: fixed;
+        text-align: center;
+        top: 5%;
+        width: 100%;
+        z-index: 10001;
     }
     .xui-share.xa-share > div p {
-      color: #fff;
-      margin-left: 10%;
-      text-align: center;
-      width: 100%;
+        color: #fff;
+        text-align: center;
+        width: 100%;
     }
     .xui-spritebg{
         background: url("/termite_static/img/component/powerme/Sprite.png") no-repeat scroll 0 0 / 150% auto rgba(0, 0, 0, 0)
     }
-    {#    分享的closeButton#}
+    /* 分享的closeButton */
     .xui-colseButton {
-      background-position: -42px 0;
-      height: 55px;
-      left: 50%;
-      margin-left: 11px;
-      position: absolute;
-      top: 75%;
-      width: 58px;
+        background-position: -36px 0;
+        height: 47px;
+        left: 40%;
+        margin-left: 11px;
+        position: absolute;
+        top: 60%;
+        width: 50px;
     }
-    {#    二维码的closeBtn#}
+    /* 二维码的closeBtn */
     .xui-closeBtn{
         width: 30px;
         height: 30px;
-        /*background: #000;*/
         position: absolute;
         top:0;
         right: 0;
     }
     .xui-successHint {
-      background: none repeat scroll 0 0 #fff;
-      border-radius: 16px;
-      left: 12%;
-      padding: 16% 10% 16% 9%;
-      position: fixed;
-      top: 20%;
-      z-index: 11111;
+        background: none repeat scroll 0 0 #fff;
+        border-radius: 16px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 20%;
+        z-index: 11111;
     }
     .xui-spritebg.xui-successHint-img {
-      display: inline-block;
-      height: 33px;
-      width: 46px;
+        display: inline-block;
+        height: 33px;
+        width: 46px;
     }
-    .xui-attention .xui-twoDimensionBox{
-        width: 300px;
-        height: 300px;
-        background: url('/termite_static/img/component/powerme/attention.png') no-repeat;
-        -webkit-background-size: 100%;
-        background-size: 100%;
-        position: fixed;
-        top:12%;
-        left:50%;
-        margin-left: -143px;
-        z-index: 10001;
+    .xui-attention .xui-twoDimensionBox {
+        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto rgba(0, 0, 0, 0);
         border-radius: 8px;
+        height: 285px;
+        left: 50%;
+        margin-left: -143px;
+        position: fixed;
+        top: 12%;
+        width: 285px;
+        z-index: 10001;
     }
     .xui-attention .xui-twoDimension{
         width: 150px;
@@ -132,13 +128,14 @@
     <div class="xui-attention xa-attention none">
         <div class="xui-twoDimensionBox">
             <p style="margin-left: 8px;margin-top: 32px;">1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
-            <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension"><br>
-            <p style="margin-left:10px;margin-top:167px;">2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+            <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
+            <p></p>
+            <p style="margin-left:10px;margin-top:175px;">2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
     </div>
     <div class="xui-share xa-share none">
-        <div style="margin-top: 45%"><p>好的事物、一起分享</p><p>邀请好友或者分享到朋友圈，</p><p>发动小伙伴帮{% if is_self_page %}你{% else %}{{ page_owner_name|safe }}{% endif %}赢大奖！</p></div>
+        <div style="margin-top: 49%"><p>好的事物、一起分享</p><p>邀请好友或者分享到朋友圈，</p><p>发动小伙伴帮{% if is_self_page %}你{% else %}{{ page_owner_name|safe }}{% endif %}赢大奖！</p></div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
 {% endblock %}
