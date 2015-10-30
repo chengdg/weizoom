@@ -98,7 +98,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             if(this.discount){
                 price = price * this.discount / 100;
             }
-            cut_price = (price * discount).toFixed(2);
+            cut_price = (price * discount / 100).toFixed(2);
             use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
             if(this.usableIntegral < use_integral){
@@ -231,7 +231,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             if(this.discount){
                 price = price * this.discount / 100;
             }
-            cut_price = (price * discount).toFixed(2);
+            cut_price = (price * discount / 100).toFixed(2);
             use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
             if(this.usableIntegral < use_integral){
