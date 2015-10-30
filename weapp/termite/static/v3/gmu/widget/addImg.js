@@ -68,6 +68,7 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
+                    console.log("_______>>>>>",file.type);
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
                     var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png)$/));
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
@@ -78,10 +79,11 @@
                     reader.onload = function() {
                         var result = this.result;
                         var img = new Image();
+                        img.src = result;
                         imgSrc = result;
                         //图片显示在页面上
                         _this.addImg(imgSrc);
-                        console.log(result,"<<<<<<<")
+                        console.log("<<<<<<<",result);
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
@@ -98,7 +100,7 @@
 
                         function callback() {
                             var data = _this.compress(img);
-                            
+                            console.log("____",data);
                             //_this.upload(data, file, $(li));
 
                             img = null;
@@ -131,7 +133,7 @@
             });
         },
         
-        upload: function() {
+        upload: function(basestr) {
             
         },
         compress:function(img){
@@ -149,12 +151,12 @@
                 ratio = 1;
             }
 
-            canvas.width = width;
-            canvas.height = height;
+            this.canvas.width = width;
+            this.canvas.height = height;
 
             //铺底色
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            this.ctx.fillStyle = "#fff";
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
             //如果图片像素大于100万则使用瓦片绘制
             var count;
@@ -165,28 +167,28 @@
                 var nw = ~~(width / count);
                 var nh = ~~(height / count);
 
-                tCanvas.width = nw;
-                tCanvas.height = nh;
+                this.tCanvas.width = nw;
+                this.tCanvas.height = nh;
 
                 for (var i = 0; i < count; i++) {
                     for (var j = 0; j < count; j++) {
-                        tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+                        this.tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
 
-                        ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+                        this.ctx.drawImage(this.tCanvas, i * nw, j * nh, nw, nh);
                     }
                 }
             } else {
-                ctx.drawImage(img, 0, 0, width, height);
+                this.ctx.drawImage(img, 0, 0, width, height);
             }
 
             //进行最小压缩
-            var ndata = canvas.toDataURL('image/jpeg', 0.3);
+            var ndata = this.canvas.toDataURL('image/jpeg', 0.3);
 
             console.log('压缩前：' + initSize);
             console.log('压缩后：' + ndata.length);
             console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
 
-            tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+            this.tCanvas.width = this.tCanvas.height = this.canvas.width = this.canvas.height = 0;
 
             return ndata;
         },
