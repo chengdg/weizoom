@@ -344,6 +344,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         }
                         if(!is_user_has_promotion){
                             _this.promotion.isFlashSalePromotion = false;
+                            $('.xt-masterPromotionTile').remove()
                             // 促销不对此用户开发
                             var next_promotions = $('.xa-display-promotion').next('div');
                             if(next_promotions.length==0){
@@ -358,6 +359,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         }
                     // 商品无促销
                     }
+                    $('.xt-promotionTile:first').show();
                     if(!is_user_has_promotion){
                         // 商品是否折扣
                         has_discount = _this.is_member_product;

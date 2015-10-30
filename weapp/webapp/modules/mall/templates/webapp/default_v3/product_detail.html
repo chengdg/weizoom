@@ -29,11 +29,17 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <div class="pr">
                     <div class="xui-productInfoBox">
                         <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}</h2>
+                        {% if product.master_promotion_title %}
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile xt-masterPromotionTile" style="padding-top:2px;">{{ product.master_promotion_title }}</div>
+                        {% endif %}
+                        {% if product.integral_sale_promotion_title %}
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile" style="padding-top:2px;">{{ product.integral_sale_promotion_title }}</div>
+                        {% endif %}
                         {% if product.promotion_title %}
-                        <div class="xui-text-red em9" style="padding-top:2px;">{{ product.promotion_title|safe }}</div>
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile" style="padding-top:2px;">{{ product.promotion_title }}</div>
                         {% endif %}
                     </div>
-                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa hide" data-is-collect="false">收藏</a>
+                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa xui-hide" data-is-collect="false">收藏</a>
                 </div>
                 {# jz 2015-10-29 #}
                 {#% if cur_request_member %#}
