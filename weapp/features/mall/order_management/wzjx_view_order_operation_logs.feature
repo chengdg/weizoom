@@ -71,7 +71,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall2 @order @ztq
+@mall2 @order
 Scenario: 1 查看多供货商多商品订单的操作日志
 	#bill购买商品后，使用微信支付
 	#1. 能在不同状态下执行各种操作
