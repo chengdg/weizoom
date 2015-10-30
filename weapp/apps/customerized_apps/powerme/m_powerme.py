@@ -117,7 +117,7 @@ class MPowerMe(resource.Resource):
 					#调整参与数量
 					app_models.PowerMe.objects(id=record_id).update(**{"inc__participant_count":1})
 
-					is_powered = fid in curr_member_power_info.powered_member_id
+					is_powered = fid in curr_member_power_info.powered_member_id.split(',')
 					print '========is_powered============'
 					print is_powered
 					print '==========is_powered=========='
