@@ -83,11 +83,11 @@
         width: 46px;
     }
     .xui-attention .xui-twoDimensionBox {
-        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto rgba(0, 0, 0, 0);
+        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
         border-radius: 8px;
-        height: 285px;
         left: 50%;
         margin-left: -143px;
+        padding-bottom: 20px;
         position: fixed;
         top: 12%;
         width: 285px;
@@ -102,7 +102,7 @@
         margin-bottom: 10px;
         margin-top: 10px;
     }
-    .xui-twoDimensionBox > p {
+    .xui-twoDimensionBox p {
         display: inline-block;
     }
 </style>
@@ -128,10 +128,14 @@
     </div>
     <div class="xui-attention xa-attention none">
         <div class="xui-twoDimensionBox">
-            <p style="margin-left: 8px;margin-top: 32px;">1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
+            <div style="margin-left: 8px;margin-top: 32px;">
+                <p>1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
+            </div>
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
             <p></p>
-            <p style="margin-left:10px;">2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+            <div style="margin-left:8px;">
+                <p>2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+            </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
     </div>
