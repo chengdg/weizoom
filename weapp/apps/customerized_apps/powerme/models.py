@@ -10,7 +10,7 @@ class PowerMeParticipance(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	has_join = models.BooleanField(default=False) #是否已参与微助力
 	power = models.IntField(default=0) #助力值
-	powered_member_id = models.StringField(default="",max_length=4096) #已助力的会员id list
+	powered_member_id = models.DynamicField() #已助力的会员id list
 
 	meta = {
 		'collection': 'powerme_powerme_participance'

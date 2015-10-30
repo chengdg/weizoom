@@ -125,7 +125,8 @@ class MPowerMe(resource.Resource):
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html
 					page_owner_member_id = fid
-					is_powered = fid in curr_member_power_info.powered_member_id.split(',')
+					if curr_member_power_info.powered_member_id:
+						is_powered = fid in curr_member_power_info.powered_member_id
 					print '========is_powered============'
 					print is_powered
 					print '==========is_powered=========='

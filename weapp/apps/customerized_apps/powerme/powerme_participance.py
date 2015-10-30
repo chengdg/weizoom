@@ -54,11 +54,10 @@ class PowerMeParticipance(resource.Resource):
 			print fid
 			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
 			ids_tmp = curr_member_power_info.powered_member_id
-			if '' == ids_tmp:
-				ids_tmp = fid
+			if not ids_tmp:
+				ids_tmp = [fid]
 			else:
-				ids_tmp.split(',').append(fid)
-				ids_tmp = ','.join(ids_tmp)
+				ids_tmp.append(fid)
 			curr_member_power_info.update(set__powered_member_id=ids_tmp)
 			print 22222
 			#更新被助力者信息
