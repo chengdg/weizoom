@@ -1,5 +1,5 @@
 #editor: 师帅 2015.10.20
-@func:webapp.modules.mall.views.list_products
+@func:webapp.modules.mall.views.list_products @Sherry
 
 Feature: 在webapp中从购物车中购买商品
 	bill能在webapp中从购物车中购买商品
@@ -101,6 +101,17 @@ Background:
 		}]
 		"""
 	Given bill关注jobs的公众号
+	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
+
 
 
 @mall2 @mall @zy_wsc01 @mall.webapp @mall.webapp.shopping_cart
