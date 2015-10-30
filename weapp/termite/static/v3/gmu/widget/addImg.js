@@ -69,12 +69,11 @@
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
-                    var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png)$/));
-                    var a = /\/(?:jpeg|png|gif)/i.test(file.type);
-                    console.log(isErrorByType, "_______>>>>>",isErrorByName,"_____>>>>>>>",a);
 
-                    // if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
-                    if(!/\/(?:jpeg|png|gif)/i.test(file.type)) {
+                    var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png|jpeg)$/));
+
+                    if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
+
                         _this._alert('图片格式不正确');
                         return;
                     }
@@ -91,7 +90,7 @@
                         if (result.length <= maxsize) {
                             img = null;
 
-                            // _this.upload(result, file, $(li));
+                            _this.upload(result);
 
                             return;
                         }
@@ -104,7 +103,7 @@
                         function callback() {
                             var data = _this.compress(img);
                             console.log("____",data);
-                            //_this.upload(data, file, $(li));
+                            _this.upload(data);
 
                             img = null;
                         }
@@ -137,7 +136,25 @@
         },
         
         upload: function(basestr) {
-            
+                W.getApi().call({
+                 app: 'webapp',
+                 api: 'project_api/call',
+                 method: 'post',
+                 args: _.extend({
+                     target_api: 'product_review2/create',
+                     module: 'mall',
+                     woid: W.webappOwnerId,
+                     basestr: JSON.stringify(basestr)
+                 }),
+                 success: function (data) {
+                    //var jsonData = JSON.parse(data)
+                    console.info("zl---------------"+data.path)
+                 },
+                 error: function (data) {
+                     alert('没有可连接的网络');
+                     return;
+                 }
+             });
         },
         compress:function(img){
             var initSize = img.src.length;

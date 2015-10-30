@@ -783,24 +783,6 @@ def create_product_review(request):
 			product_score=product_score,
 			review_detail=review_detail
 		)
-
-		# 创建商品评价图片，可以用celery来进行处理
-		# made by zhaolei 2015-10-27
-		# picture_list = data_dict.get('picture_list', None)
-		# if picture_list:
-		# 	picture_list = json.loads(picture_list)
-		# 	picture_model_list = []
-		#
-		# 	for picture in picture_list:
-		# 		att_url=save_base64_img_file_local_for_webapp(request, picture)
-		# 		mall_models.ProductReviewPicture(
-		# 			product_review=product_review,
-		# 			order_has_product_id=order_has_product_id,
-		# 			att_url=att_url
-		# 		).save()
-		# 		watchdog_info(u"create_product_review after save img  %s" %\
-		# 			(att_url), type="mall", user_id=owner_id)
-
 		upload_pic_list.delay(request, data_dict,product_review,order_has_product_id)
 		response = create_response(200)
 		response.data = get_review_status(request)
@@ -811,29 +793,16 @@ def create_product_review(request):
 		return create_response(500).get_response()
 
 def create_product_review2(request):
-	response = create_response(200)
-	file = request.FILES.get('imagefile', None)
-	print "zl--------------------0",request.POST["file_type"]
-	print "zl---------------------",request.user_profile.user_id,file
-	date = time.strftime('%Y%m%d')
-	dir_path_suffix = 'webapp/%d_%s' % (request.user_profile.user_id, date)
 
-	content = []
-	if file:
-		for chunk in file.chunks():
-			content.append(chunk)
-
-	dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
-	if not os.path.exists(dir_path):
-		os.makedirs(dir_path)
-	file_name = '%s.%s' % (datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f"), request.POST["file_type"].split('/')[1])
-	file_path = os.path.join(dir_path, file_name)
-
-	dst_file = open(file_path, 'wb')
-	print >> dst_file, ''.join(content)
-	dst_file.close()
-	response.path = "/static/upload/%s/%s" %(dir_path_suffix,file_name)
-	return response.get_response()
+	basestr = request.POST.get('basestr', None)
+	path = save_base64_img_file_local_for_webapp(request,basestr)
+	print "zl---------------------",path
+	if path:
+		response = create_response(200)
+		response.data.path = path
+		return response.get_response()
+	else:
+		return create_response(500).get_response()
 
 def __get_file_name(file_name, extended_name=None):
 	import random
