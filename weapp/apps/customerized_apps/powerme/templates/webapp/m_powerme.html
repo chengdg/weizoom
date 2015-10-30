@@ -18,7 +18,7 @@
     }
     .wui-masterinfo span{
         margin: 0 10px;
-        font-size: 1em;
+        font-size: 16px;
     }
     .wui-mask{
         position: absolute;
@@ -127,7 +127,7 @@
     <div class="xui-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
             <div class="xui-spritebg xui-successHint-img"></div>
-            <div style="display: inline-block;color: #333;"><p>成功帮{{html page_owner_name }}助力值+1</p><p>关系好就是任性！</p></div>
+            <div style="display: inline-block;color: #333;"><p>成功帮{{ page_owner_name }}助力值+1</p><p>关系好就是任性！</p></div>
         </div>
     </div>
     <div class="xui-attention xa-attention none">
@@ -147,7 +147,7 @@
         <div style="margin-top: 49%">
             <p>好的事物，一起分享</p><p>邀请好友或者分享到朋友圈，</p>
             <div style="display: inline">
-                <p style="display: inline">发动小伙伴帮{% if is_self_page %}你{% else %}<p style="color: yellow;display: inline">{{html page_owner_name }}{% endif %}</p><p style="display: inline">赢大奖！</p>
+                <p style="display: inline">发动小伙伴帮{% if is_self_page %}你{% else %}<p style="color: yellow;display: inline">{{ page_owner_name|safe }}{% endif %}</p><p style="display: inline">赢大奖！</p>
             </div>
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
