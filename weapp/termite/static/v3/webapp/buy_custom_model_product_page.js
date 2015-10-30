@@ -89,7 +89,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         counter.setMaxCount(maxCount);
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
-            var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+            var discount = $('.xa-promotion').data('discount-1');
+            if(!discount){
+                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            }
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
             var price = this.targetModel.price;
             if(this.discount){
@@ -107,7 +110,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if(this.promotion){
             if($('.xa-promotion').data('type')==5 && this.promotion.isFlashSalePromotion){
                 var prodcutPrice = this.promotion.detail.promotion_price;
-                var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+                var discount = $('.xa-promotion').data('discount-1');
+                if(!discount){
+                    discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+                }
                 var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
                 cut_price = (prodcutPrice * discount).toFixed(2);
                 use_integral = parseInt(cut_price * perYuanOfPerIntegral);
@@ -216,7 +222,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         }
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
-            var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+            var discount = $('.xa-promotion').data('discount-1');
+            if(!discount){
+                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            }
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
             var price = this.priceInfo.min_price;
             if(this.discount){
@@ -234,7 +243,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if(this.promotion){
             if($('.xa-promotion').data('type')==5 && this.promotion.isFlashSalePromotion){
                 var prodcutPrice = this.promotion.detail.promotion_price;
-                var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+                var discount = $('.xa-promotion').data('discount-1');
+                if(!discount){
+                    discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+                }
                 var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
                 cut_price = (prodcutPrice * discount).toFixed(2);
                 use_integral = parseInt(cut_price * perYuanOfPerIntegral);
@@ -295,7 +307,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 });
 
                 if(isInit){
-                    this.usable_integral = data.usable_integral
+                    _this.usableIntegral = data.usable_integral
+                    _this.memberGradeId = data.member_grade_id
                     if (_this.isStandardModelProduct) {
                         _this.targetModel = _this.models[0];
                         _this.initForStandardModelProduct();
@@ -388,6 +401,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         }
                         $('.xui-productInfoBox').css('margin-right', 0)
                         $($('.xa-globalNav li')[1]).hide();
+                        $('.xa-collectProduct').remove();
                     }
                 }
 
