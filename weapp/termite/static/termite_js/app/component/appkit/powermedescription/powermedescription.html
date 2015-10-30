@@ -1,16 +1,16 @@
 {% load workbench_filter %}
 {% block css %}
 <link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme.css">
-<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_yellow.css" id="css_yellow" {% if component.model.color %}{% if component.model.color == 'yellow' %}{% else %}disabled=" true"{% endif %}{% endif %}>
 <link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_red.css" id="css_red" {% if component.model.color == 'red' %}{% else %}disabled=" true"{% endif %}>
 <link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_orange.css" id="css_orange" {% if component.model.color == 'orange' %}{% else %}disabled=" true"{% endif %}>
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_yellow.css" id="css_yellow" {% if component.model.color %}{% if component.model.color == 'yellow' %}{% else %}disabled=" true"{% endif %}{% endif %}>
 {% endblock %}
 
 {% ifequal component.type 'appkit.powermedescription' %}
     <div class="wui-powerme-container">
         <div class="wui-i-background-image">
             {% if component.model.background_image %}
-                <img src="{{ component.model.background_image.images.0.url }}">
+                <img src="{{ component.model.image }}">
             {% else %}
                 <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
             {% endif %}
