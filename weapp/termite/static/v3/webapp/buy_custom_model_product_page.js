@@ -115,7 +115,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     discount = $('.xa-promotion').data('discount'+this.memberGradeId)
                 }
                 var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-                cut_price = (prodcutPrice * discount).toFixed(2);
+                cut_price = (prodcutPrice * discount / 100).toFixed(2);
                 use_integral = parseInt(cut_price * perYuanOfPerIntegral);
                 cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
                 if(this.usableIntegral < use_integral){
@@ -331,11 +331,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     _this.member_or_promotion = '';
                     // 商品有促销
                     var product_promotion = _this.promotion;
-                    is_product_promotion = !($.isEmptyObject(product_promotion));
                     var is_user_has_promotion = false;
-                    if(is_product_promotion){
-                        // 促销是否对此用户开发
-                        is_user_has_promotion = _this.user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
+                    if(!($.isEmptyObject(product_promotion))){
+                        // 促销是否对此用户开放
+                        is_user_has_promotion = product_promotion.member_grade_id == 0 || product_promotion.member_grade_id == user_member_grade_id;
 
                         // 限时抢购
                         if(is_user_has_promotion && product_promotion.detail.promotion_price){
@@ -411,15 +410,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             }
         })
     },
-    user_has_promotion:function(user_member_grade_id, promotion_member_grade_id){
-        if(promotion_member_grade_id == '0'){return true;}
-        if(promotion_member_grade_id == user_member_grade_id){
-            return true;
-        }else{
-            return false;
-        }
-
-    },
 
     /**
      * selectionSlide: 规格触发器弹出效果
@@ -444,15 +434,6 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             this.isSideSlideOpen = false;
 
         }
-    },
-    user_has_promotion: function(user_member_grade_id, promotion_member_grade_id){
-        if(promotion_member_grade_id == '0'){return true;}
-        if(promotion_member_grade_id == user_member_grade_id){
-            return true;
-        }else{
-            return false;
-        }
-
     },
     /**
      * onClickPropertyPanel: 点击详情参数按钮的响应函数
