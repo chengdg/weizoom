@@ -19,7 +19,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			displayName: '活动名称',
 			isUserProperty: true,
 			maxLength: 30,
-			validate: 'data-validate="require-notempty::活动不能为空,,require-word"',
+			validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
 			validateIgnoreDefaultValue: true,
 			annotation: '将作为活动的标题使用',
 			default: ''
@@ -91,6 +91,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '提示：建议图片长宽20px*20px，正方形图片',
+			validate: 'data-validate="require-notempty::请添加一张图片"',
 			default: ""
 		},{
 			name: 'background_image',
@@ -103,6 +104,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '提示:图片格式jpg/png, 图片宽度640px, 高度自定义, 请上传风格与背景配色协调的图片',
+			validate: 'data-validate="require-notempty::请添加一张图片"',
 			default: ""
 		},{
 			name: 'color',
