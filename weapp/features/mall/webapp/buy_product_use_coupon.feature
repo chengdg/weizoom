@@ -1032,15 +1032,15 @@ Scenario:13 不同等级的会员购买有会员价同时使用全体券的商�
 		"""
 		#购买多种会员价使用全体券
 	When nokia访问jobs的webapp
-  	And nokia设置jobs的webapp的收货地址
-	"""
+	And nokia设置jobs的webapp的收货地址
+		"""
 		{
 			"ship_name": "nokia",
 			"ship_tel": "13811223344",
 			"area": "北京市 北京市 海淀区",
 			"ship_address": "泰兴大厦"
 		}
-	"""
+		"""
 	When nokia加入jobs的商品到购物车
 		"""
 		[{
@@ -1081,11 +1081,11 @@ Scenario:13 不同等级的会员购买有会员价同时使用全体券的商�
 		}
 		"""
 	And nokia在购物车订单编辑中点击提交订单
-	"""
-	{
-		"pay_type": "微信付款"
-	}
-	"""
+		"""
+		{
+			"pay_type": "微信付款"
+		}
+		"""
 	Then nokia成功创建订单
 		"""
 		{
