@@ -127,29 +127,19 @@ hr{
 .wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
     display: inline-block;
-    height: 17px;
-    width: 33px;
+    height: 35px;
+    width: 50px;
+    margin-left: -8px;
+    text-align: center;
 }
 .wa-top100 li:nth-child(2) .wui-i-top100-range {
-  background-position: -191px 2px;
-  height: 35px;
-  margin-left: -11px;
-  text-align: center;
-  width: 61px;
+  background-position: -156px 7px;
 }
 .wa-top100 li:nth-child(3) .wui-i-top100-range {
-  background-position: -260px 2px;
-  height: 35px;
-  margin-left: -11px;
-  text-align: center;
-  width: 61px;
+  background-position: -214px 7px;
 }
 .wa-top100 li:nth-child(4) .wui-i-top100-range {
-  background-position: -329px 2px;
-  height: 35px;
-  margin-left: -11px;
-  text-align: center;
-  width: 61px;
+  background-position: -269px 7px;
 }
 .wa-top100 #4{
   margin-left: 10px;
