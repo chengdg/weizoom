@@ -126,7 +126,7 @@
                  api: 'project_api/call',
                  method: 'post',
                  args: _.extend({
-                     target_api: 'product_review2/create',
+                     target_api: 'product_review_pic/create',
                      module: 'mall',
                      woid: W.webappOwnerId,
                      basestr: JSON.stringify(basestr)
