@@ -422,7 +422,7 @@ Scenario:3 从购物车购买部分商品
 		}
 		"""
 
-@mall2 @mall @zy_wsc04 @mall.webapp @mall.webapp.shopping_cart @dz
+@mall2 @mall @zy_wsc04 @mall.webapp @mall.webapp.shopping_cart
 Scenario:4 从购物车购买空商品
 	bill将jobs的多个商品加入购物车后
 	1. bill不选中商品去下单
@@ -470,6 +470,13 @@ Scenario:4 从购物车购买空商品
 				"name": "商品3",
 				"count": 2
 			}]
+		}
+		"""
+	When bill从购物车发起购买操作
+		"""
+		{
+			"action": "pay",
+			"context": []
 		}
 		"""
 	When bill从购物车发起购买操作
