@@ -25,6 +25,7 @@ from core.jsonresponse import create_response, JsonResponse
 from core.exceptionutil import unicode_full_stack
 from core.upyun_util import upload_image_to_upyun
 from watchdog.utils import watchdog_alert,watchdog_error,watchdog_debug
+from market_tools.tools.weizoom_card.models import *
 import module_api
 FIRST_NAV_NAME = 'home'
 NAV_NAME = 'homepage'
@@ -72,9 +73,14 @@ def show_loading_page(request):
 #===============================================================================
 @login_required(login_url='/login/')
 def index(request):
+	managers = WeiZoomCardManager.objects.all()
+	manager_ids = []
+	for manager in managers:
+		manager_ids.append(manager.user_id)
+
 	if request.user.is_superuser:
 		return render_to_response('account/login.html', {})
-	if request.user.username in settings.WEIZOOM_CARD_ADMIN_USERS:
+	if request.user.id in manager_ids:
 		return HttpResponseRedirect('/card/cards/get/')
 	# jz 2015-10-10
 	# if request.user.username == 'operator':
