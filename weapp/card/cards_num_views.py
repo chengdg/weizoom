@@ -42,6 +42,7 @@ def get_card_num_details(request):
     start_date = request.GET.get('start_date','')
     end_date = request.GET.get('end_date','')
     card = WeizoomCard.objects.get(weizoom_card_id=card_id)
+    active_card_user_id = card.active_card_user_id
     IS_CARD_RULE = request.GET.get('IS_CARD_RULE','')
 
     # if not start_date:
@@ -50,13 +51,19 @@ def get_card_num_details(request):
     #     end_date = str(end_date) + ' 23:59:59'
     if card:
         status_str = u''
+        password_is_show = False
         if card.is_expired:
             status_str = u'己过期'
+            password_is_show = True
         else:
             if card.status==WEIZOOM_CARD_STATUS_UNUSED:
                 status_str = u'未使用'
+                if active_card_user_id == request.user.id:
+                    password_is_show = True
             if card.status==WEIZOOM_CARD_STATUS_USED:
                 status_str = u'使用中'
+                if active_card_user_id == request.user.id:
+                    password_is_show = True
             if card.status == WEIZOOM_CARD_STATUS_INACTIVE:
                 status_str = u'未激活'
             if card.status==WEIZOOM_CARD_STATUS_EMPTY:
@@ -89,7 +96,8 @@ def get_card_num_details(request):
                 'weizoom_card_rule_id': weizoom_card_rule_id,
                 'card': card,
                 'card_orders': card_orders,
-                'IS_CARD_RULE': True
+                'IS_CARD_RULE': True,
+                'password_is_show':password_is_show
             })
         else:
             c = RequestContext(request, {
