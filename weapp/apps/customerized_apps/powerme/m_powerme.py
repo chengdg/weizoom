@@ -3,24 +3,17 @@
 import json
 from datetime import datetime
 
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import F
-from django.contrib.auth.decorators import login_required
 
 from core import resource
-from core.jsonresponse import create_response
 
 import models as app_models
-import export
-from apps import request_util
 from termite2 import pagecreater
 from utils import url_helper
-import weixin.user.models as weixin_models
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
-from weixin.user.models import MpuserPreviewInfo
 
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
@@ -51,28 +44,48 @@ class MPowerMe(resource.Resource):
 			project_id = record_id
 			record_id = 0
 			record = None
+		elif isPC:
+			record = app_models.PowerMe.objects(id=record_id)
+			if record.count() >0:
+				record = record.first()
+
+				#获取活动状态
+				activity_status = record.status_text
+
+				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
+				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
+				if data_start_time <= now_time and now_time < data_end_time:
+					record.update(set__status=app_models.STATUS_RUNNING)
+					activity_status = u'进行中'
+				elif now_time >= data_end_time:
+					record.update(set__status=app_models.STATUS_STOPED)
+					activity_status = u'已结束'
+
+				project_id = 'new_app:powerme:%s' % record.related_page_id
+			else:
+				c = RequestContext(request, {
+					'is_deleted_data': True
+				})
+				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
 		else:
 			member = request.member
 			member_id = member.id
-			if not isPC:
-				isMember =request.member.is_subscribed
-				if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
-					qrcode_url = request.webapp_owner_info.qrcode_img
-				else:
-					qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
+			isMember =request.member.is_subscribed
+			if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
+				qrcode_url = request.webapp_owner_info.qrcode_img
+			else:
+				qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
 
-				print '========qrcode_url============'
-				print qrcode_url
-				print '==========qrcode_url=========='
-				fid = request.GET.get('fid', None)
+			fid = request.GET.get('fid', None)
 
-				qrcode_url = qrcode_url if qrcode_url is not None else ''
+			qrcode_url = qrcode_url if qrcode_url is not None else ''
 
-				if not fid:
-					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
-					response = HttpResponseRedirect(new_url)
-					response.set_cookie('fid', member_id, max_age=60*60*24*365)
-					return response
+			if not fid:
+				new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
+				response = HttpResponseRedirect(new_url)
+				response.set_cookie('fid', member_id, max_age=60*60*24*365)
+				return response
 			record = app_models.PowerMe.objects(id=record_id)
 			if record.count() >0:
 				record = record.first()
@@ -127,9 +140,6 @@ class MPowerMe(resource.Resource):
 					page_owner_member_id = fid
 					if curr_member_power_info.powered_member_id:
 						is_powered = fid in curr_member_power_info.powered_member_id
-					print '========is_powered============'
-					print is_powered
-					print '==========is_powered=========='
 
 				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power')
 				total_participant_count = participances.count()
@@ -174,7 +184,7 @@ class MPowerMe(resource.Resource):
 			'record_id': record_id,
 			'activity_status': activity_status,
 			'is_already_participanted': is_already_participanted,
-			'page_title': u"微助力",
+			'page_title': record.name if record else u"微助力",
 			'page_html_content': html,
 			'app_name': "powerme",
 			'resource': "powerme",
@@ -184,7 +194,7 @@ class MPowerMe(resource.Resource):
 			'is_powered': is_powered, #是否已为该member助力
 			'is_self_page': self_page, #是否自己主页
 			'participances_list': json.dumps(participances_list),
-			'share_page_title': record.name if record else u"微助力",
+			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"微助力",
 			'qrcode_url': qrcode_url,

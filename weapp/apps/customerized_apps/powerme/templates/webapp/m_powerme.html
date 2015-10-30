@@ -281,11 +281,8 @@
                 fid:'{{ page_owner_member_id }}'
             },
             success: function(data) {
-                console.log(data);
                 openSuccessWin();
-                $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', function(){
-                    openGuideMask();
-                }).show();
+                $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', openGuideMask).show();
             },
             error: function(data) {
                 console.error(data.errMsg);
