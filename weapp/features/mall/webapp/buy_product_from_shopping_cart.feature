@@ -1,5 +1,5 @@
 #editor: 师帅 2015.10.20
-@func:webapp.modules.mall.views.list_products @Sherry
+@func:webapp.modules.mall.views.list_products
 
 Feature: 在webapp中从购物车中购买商品
 	bill能在webapp中从购物车中购买商品
