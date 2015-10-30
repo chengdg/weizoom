@@ -32,7 +32,6 @@ class MPowerMe(resource.Resource):
 		"""
 		record_id = request.GET.get('id','id')
 		isPC = request.GET.get('isPC',0)
-		webapp_owner_id = request.GET['webapp_owner_id']
 		isMember = False
 		qrcode_url = ''
 		timing = 0
@@ -184,8 +183,8 @@ class MPowerMe(resource.Resource):
 			'is_powered': is_powered, #是否已为该member助力
 			'is_self_page': self_page, #是否自己主页
 			'participances_list': json.dumps(participances_list),
-			'share_page_title': record.name,
-			'share_img_url': record.material_image,
+			'share_page_title': record.name if record else '',
+			'share_img_url': record.material_image if record else '',
 			'share_page_desc': u"微助力",
 			'qrcode_url': qrcode_url,
 			'timing': timing,
@@ -193,7 +192,7 @@ class MPowerMe(resource.Resource):
 			'total_participant_count': total_participant_count, #总参与人数
 			'page_owner_name': page_owner_name,
 			'page_owner_member_id': page_owner_member_id,
-			'reply_content': record.reply_content,
+			'reply_content': record.reply_content if record else '',
 			'mpUserPreviewName': mpUserPreviewName
 		})
 		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
