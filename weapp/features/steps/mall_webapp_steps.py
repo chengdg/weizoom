@@ -1045,22 +1045,22 @@ def _create_address(context, address_info):
 	response = context.client.post(url, data)
 	return response
 
-
-@when(u"{webapp_user_name}填写收货信息")
-def step_add_address_info(context, webapp_user_name):
-	"""
-		e.g.:
-		{
-			"ship_name": "你大爷",         # 收货人
-			"ship_tel":  "18612456555",   # 手机号码
-			"area": "北京市 北京市 海淀区",  # 地区
-			"ship_address": "泰兴大厦"     # 详细地址
-		}
-	"""
-	# 判断是否需要填写收货信息
-	address_info = json.loads(context.text)
-	response = _create_address(context, address_info)
-	bdd_util.assert_api_call_success(response)
+# 停止使用
+# @when(u"{webapp_user_name}填写收货信息")
+# def step_add_address_info(context, webapp_user_name):
+# 	"""
+# 		e.g.:
+# 		{
+# 			"ship_name": "你大爷",         # 收货人
+# 			"ship_tel":  "18612456555",   # 手机号码
+# 			"area": "北京市 北京市 海淀区",  # 地区
+# 			"ship_address": "泰兴大厦"     # 详细地址
+# 		}
+# 	"""
+# 	# 判断是否需要填写收货信息
+# 	address_info = json.loads(context.text)
+# 	response = _create_address(context, address_info)
+# 	bdd_util.assert_api_call_success(response)
 
 
 
