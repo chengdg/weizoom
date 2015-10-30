@@ -32,7 +32,8 @@
                     <div class="xui-i-description">面值：{{card.rule_money}}</div>
                 </div>
                 <div style="float:left;width:25%">
-                    <div class="xui-i-description">密码：{{card.password}}</div>
+                    <div class="xui-i-description">
+                    密码：{% if password_is_show %}{{card.password}}{% else %}*******{% endif %}</div>
                     <div class="xui-i-description">状态：{{card.status_str}}</div>
                 </div>
                 
