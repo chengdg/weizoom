@@ -173,9 +173,9 @@ def get_product(request):
 			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product['id'], product['owner_id'])
 
 	request.should_hide_footer = True
-
-	usable_integral = request.member.integral if request.member else 0
-	use_integral = request.member.integral if request.member else 0
+	# jz 2015-10-29
+	# usable_integral = request.member.integral if request.member else 0
+	# use_integral = request.member.integral if request.member else 0
 
 	is_non_member = True if request.member else False
 
@@ -188,8 +188,9 @@ def get_product(request):
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
 		'price_info': product['price_info'],
-		'usable_integral': usable_integral,
-		'use_integral': use_integral,
+		# jz 2015-10-29
+		# 'usable_integral': usable_integral,
+		# 'use_integral': use_integral,
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
@@ -448,13 +449,15 @@ def get_pay_result(request):
 	# if hasattr(request, 'is_return_context'):
 	# 	return c
 	# else:
-	if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-		return render_to_response('%s/success.html' % request.template_dir, c)
-	else:
-		#获取订单包含商品
-		order_has_products = OrderHasProduct.objects.filter(order=order)
-		c.update('order_has_products', order_has_products)
-		return render_to_response('%s/order_detail.html' % request.template_dir, c)
+	# if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+	# else:
+	# 	#获取订单包含商品
+	# 	order_has_products = OrderHasProduct.objects.filter(order=order)
+	# 	c['order_has_products'] = order_has_products
+	# 	c.update()
+	# 	return render_to_response('%s/order_detail.html' % request.template_dir, c)
+	
+	return render_to_response('%s/success.html' % request.template_dir, c)
 
 
 ########################################################################

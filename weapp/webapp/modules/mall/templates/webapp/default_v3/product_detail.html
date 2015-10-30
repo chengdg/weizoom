@@ -26,7 +26,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         <i data-ui-role="goBack"></i>
         <div id="product" class="xui-section pt5 pb5" style="padding-right:0;">
             <div class="xui-section-title xui-section-item xui-pl0">
-                {% if cur_request_member %}
                 <div class="pr">
                     <div class="xui-productInfoBox">
                         <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}</h2>
@@ -34,14 +33,16 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         <div class="xui-text-red em9" style="padding-top:2px;">{{ product.promotion_title|safe }}</div>
                         {% endif %}
                     </div>
-                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa" data-is-collect="false">收藏</a>
+                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa hide" data-is-collect="false">收藏</a>
                 </div>
-                {% else %}
-                <div class="disF">
+                {# jz 2015-10-29 #}
+                {#% if cur_request_member %#}
+                {#% else %#}
+                <!--div class="disF">
                     <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
                     <span class="xui-text-red">{{ product.promotion_title }}</span>{% endif %}</h2>
-                </div>
-                {% endif %}
+                </div-->
+                {#% endif %#}
                 <p class="xui-section-boldItemText xui-text-red xa-priceSection">
                     <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price|format_float}}</span></span>
                 </p>
@@ -80,7 +81,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     优惠：
                 {% endif %}</div>
                 <div class="disTc em85 pr" style="width:3.1rem;top:-2px;">
-                    <span class="xui-promotionName xa-promotion" data-type="5" data-discount="{{product.integral_sale.detail.discount}}" data-per-yuan="{{per_yuan}}">积分抵扣</span>
+                    <span class="xui-promotionName xa-promotion" data-type="5"{% for rule in product.integral_sale.detail.rules %} data-discount{{rule.member_grade_id}}="{{rule.discount}}"{% endfor %} data-per-yuan="{{per_yuan}}">积分抵扣</span>
                 </div>
                 <div class="disTc c6 em8 pl5">
                     <span class="xa-intergralInfo"></span>
@@ -225,7 +226,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         </a>
         <!-- 已售罄 -->
         {% if product.shelve_type == 1 %}
-             <div class="xa-selloutAlert clearfix" style="padding:3px 0;">
+             <div class="xa-selloutAlert clearfix xui-hide" style="padding:3px 0;">
                 <div class="xui-selloutAlert">商品已售罄，非常抱歉</div>
                 <div style="padding:3px 0;">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xui-addCartBtn-disable" data-type='shoppingCart'>加入购物车</a>
@@ -233,7 +234,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
              </div>
             <!-- 普通商品 -->
-            <div class="xa-not_selloutAlert clearfix" style="padding:3px 0;">
+            <div class="xa-not_selloutAlert clearfix xui-hide" style="padding:3px 0;">
                 <div class="xa-disabledBuyLinks xui-inlineblock clearfix" style="padding:3px 0;">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton" data-type='shoppingCart'>加入购物车</a>
                     <a href="javascript:void(0);" class="xui-btn xui-buyBtn xa-canNotBuyButton" data-type='buy'>立即购买</a>
@@ -361,9 +362,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 
 //运费计算因子
 var postageFactor = {};
-//可用积分
-var usableIntegral = {{usable_integral}};
 // jz 2015-10-20
+//可用积分
+// var usableIntegral = {{usable_integral}};
 //是否启用"测试购买"
 // var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
 //商品id
@@ -387,8 +388,8 @@ $(document).ready(function() {
     view = new W.page.BuyProductPage({
         el: '.xui-page',
         postageFactor: postageFactor,
-        usableIntegral: usableIntegral,
         // jz 2015-10-20
+        // usableIntegral: usableIntegral,
         // enableTestBuy: enableTestBuy,
         productId: productId,
         productType: productType,

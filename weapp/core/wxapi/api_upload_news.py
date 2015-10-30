@@ -62,6 +62,7 @@ class Articles(object):
 	CONTENT_SOURCE_URL = 'content_source_url'
 	AUTHOR = 'author'
 	DIGEST = 'digest'
+	SHOW_COVER_PIC = 'show_cover_pic'
 
 	def __init__(self):
 		self.articles = []
@@ -90,6 +91,7 @@ class Articles(object):
 		if digest:
 			article_dict[self.DIGEST] = digest
 
+		article_dict[self.SHOW_COVER_PIC] = 0
 		self.articles.append(article_dict)
 
 	def get_article_json_str(self):
