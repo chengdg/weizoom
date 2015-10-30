@@ -130,8 +130,8 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			default: ""
 		}]}],
 	propertyChangeHandlers: {
-		title: function($node, model, value, $propertyViewNode) {
-			//$node.find('.xa-title').text(value);
+		title: function($node, model, value) {
+			parent.W.Broadcaster.trigger('powerme:change:title', value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
 			var end_time_text = $node.find('.wui-i-end_time').text();

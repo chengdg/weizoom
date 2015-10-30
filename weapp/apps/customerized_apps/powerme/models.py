@@ -29,7 +29,6 @@ class PowerMe(models.Document):
 	participant_count = models.IntField(default=0) #参与者数量
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	timing = models.BooleanField(default=True) #是否显示倒计时
-	desc = models.StringField(default="", max_length=50) #按钮下方的活动描述
 	reply_content = models.StringField(default="", max_length=50) #参与活动回复语
 	material_image = models.StringField(default="", max_length=1024) #分享的图片链接
 	created_at = models.DateTimeField() #创建时间

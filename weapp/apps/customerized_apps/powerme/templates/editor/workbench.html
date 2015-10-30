@@ -165,7 +165,6 @@
           var endTime = descriptionModel.get('end_time')+":00";
           var relatedPageId = data['project_id'];
           var timing = descriptionModel.get('timing');
-          var desc = descriptionModel.get('description');
           var reply_content = descriptionModel.get('reply_content');
           var material_image = JSON.parse(descriptionModel.get('material_image')).images[0].url;
 
@@ -174,7 +173,6 @@
             "start_time": startTime,
             "end_time": endTime,
             "timing": timing,
-            "desc": desc,
             "reply_content": reply_content,
             "material_image": material_image
           };
@@ -268,6 +266,9 @@
               stickyMenu();
           }));
     });
+  W.Broadcaster.on('powerme:change:title', function(value){
+      $('.xa-title').text(value);
+  });
   </script>
 {% block js %}{% endblock %}
 {% endblock %}

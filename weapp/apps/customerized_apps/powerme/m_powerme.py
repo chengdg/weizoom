@@ -32,7 +32,6 @@ class MPowerMe(resource.Resource):
 		"""
 		record_id = request.GET.get('id','id')
 		isPC = request.GET.get('isPC',0)
-		webapp_owner_id = request.GET['webapp_owner_id']
 		isMember = False
 		qrcode_url = ''
 		timing = 0
@@ -105,6 +104,7 @@ class MPowerMe(resource.Resource):
 						created_at = datetime.now()
 					)
 					curr_member_power_info.save()
+				is_already_participanted = curr_member_power_info.has_join
 
 				#如果当前member不是会员，则清空其助力值
 				if not isMember:
@@ -113,7 +113,7 @@ class MPowerMe(resource.Resource):
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					#调整参与数量(首先检测是否已参与)
-					if not curr_member_power_info.has_join:
+					if not is_already_participanted:
 						app_models.PowerMe.objects(id=record_id).update(inc__participant_count=1)
 						curr_member_power_info.update(set__has_join=True)
 						curr_member_power_info.reload()
@@ -122,7 +122,6 @@ class MPowerMe(resource.Resource):
 					page_owner_member_id = member_id
 
 					self_page = True
-					is_already_participanted = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html
 					page_owner_member_id = fid
@@ -184,16 +183,16 @@ class MPowerMe(resource.Resource):
 			'is_powered': is_powered, #是否已为该member助力
 			'is_self_page': self_page, #是否自己主页
 			'participances_list': json.dumps(participances_list),
-			'share_page_title': record.name,
-			'share_img_url': record.material_image,
-			'share_page_desc': u"微助力",
+			'share_page_title': record.name if record else u"微助力",
+			'share_img_url': record.material_image if record else '',
+			'share_page_desc': record.name if record else u"微助力",
 			'qrcode_url': qrcode_url,
 			'timing': timing,
 			'current_member_rank_info': current_member_rank_info, #我的排名
 			'total_participant_count': total_participant_count, #总参与人数
 			'page_owner_name': page_owner_name,
 			'page_owner_member_id': page_owner_member_id,
-			'reply_content': record.reply_content,
+			'reply_content': record.reply_content if record else '',
 			'mpUserPreviewName': mpUserPreviewName
 		})
 		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
