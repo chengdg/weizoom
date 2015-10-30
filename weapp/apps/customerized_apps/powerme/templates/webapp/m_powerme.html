@@ -291,7 +291,7 @@
             },
             success: function(data) {
                 openSuccessWin();
-                $('.wa-power').text('已帮'+page_owner_name+'助力').on('click', openGuideMask).show();
+                $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', openGuideMask).show();
             },
             error: function(data) {
                 console.error(data.errMsg);
