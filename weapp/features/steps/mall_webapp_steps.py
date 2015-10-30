@@ -907,6 +907,9 @@ def step_impl(context, webapp_user_name):
 			]
 		}
 	"""
+	# 设置默认收货地址
+	if ShipInfo.objects.all().count() == 0:
+		context.execute_steps(u"When %s设置%s的webapp的默认收货地址" % (webapp_user_name, 'jobs'))
 	__i = json.loads(context.text)
 	if __i.get("action") == u"pay":
 		argument = __i.get('context')
