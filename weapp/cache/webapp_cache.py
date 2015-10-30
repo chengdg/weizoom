@@ -293,8 +293,9 @@ signals.post_save.connect(update_webapp_product_detail_cache,
 def update_webapp_product_model_cache(**kwargs):
     model = kwargs.get('instance', None)
     if model and model[0].stocks < 1 and model[0].stock_type == mall_models.PRODUCT_STOCK_TYPE_LIMIT:
+        # 库存发生变化
         model = model[0]
-        update_product_cache(model.owner_id, model.product_id, deleteVarnish=False)
+        # update_product_cache(model.owner_id, model.product_id, deleteVarnish=False)
 
         if model.owner_id != 216:
             key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
@@ -320,9 +321,12 @@ post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_
 def update_webapp_product_detail_by_review_cache(**kwargs):
     if hasattr(cache, 'request'):
         webapp_owner_id = cache.request.user_profile.user_id
-        product_id = None
         instance = kwargs.get('instance', None)
         if instance:
+            if isinstance(instance, mall_models.ProductReview):
+                product_id = instance.product_id
+            else:
+                product_id = instance[0].product_id
             update_product_cache(webapp_owner_id, product_id)
 
 post_update_signal.connect(update_webapp_product_detail_by_review_cache,
@@ -369,18 +373,19 @@ def update_webapp_product_model_properties_cache(**kwargs):
     """
     更新product model缓存
     """
-    if cache.request.user_profile:
-        webapp_owner_id = cache.request.user_profile.user_id
-        key = 'webapp_product_model_properties_{wo:%s}' % webapp_owner_id
-        cache_util.delete_cache(key)
+    if hasattr(cache, 'request') and cache.request.user_profile:
+        if cache.request.user_profile:
+            webapp_owner_id = cache.request.user_profile.user_id
+            key = 'webapp_product_model_properties_{wo:%s}' % webapp_owner_id
+            cache_util.delete_cache(key)
 
-        for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
-            user_profile = UserProfile.objects.filter(
-                webapp_id=weizoom_mall.webapp_id)
-            if user_profile.count() == 1:
-                key = 'webapp_product_model_properties_{wo:%s}' % user_profile[
-                    0].user_id
-                cache_util.delete_cache(key)
+            for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
+                user_profile = UserProfile.objects.filter(
+                    webapp_id=weizoom_mall.webapp_id)
+                if user_profile.count() == 1:
+                    key = 'webapp_product_model_properties_{wo:%s}' % user_profile[
+                        0].user_id
+                    cache_util.delete_cache(key)
 
 
 post_update_signal.connect(update_webapp_product_model_properties_cache,
@@ -519,7 +524,6 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
         if product.is_active:
             product_ids.append(product.product_id)
     return product_ids
-
 
 def update_forbidden_coupon_product_ids(instance, **kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile and not kwargs.get('created', False):

@@ -16,7 +16,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
     initialize: function(options) {
         xlog(options);
         this.postageFactor = options.postageFactor;
-        this.usableIntegral = options.usableIntegral;
+        // this.usableIntegral = options.usableIntegral;
         // jz 2015-10-20
         // this.enableTestBuy = options.enableTestBuy;
 
@@ -50,6 +50,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.getProductStock();//更新库存信息
 
         var _this = this;
+
         this.stockInterval = setInterval(this.getProductStock, 30*1000, _this);
 
         //绑定counter widget的count-changed事件
@@ -88,7 +89,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         counter.setMaxCount(maxCount);
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
-            var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+            var discount = $('.xa-promotion').data('discount-1');
+            if(!discount){
+                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            }
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
             var price = this.targetModel.price;
             if(this.discount){
@@ -106,7 +110,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if(this.promotion){
             if($('.xa-promotion').data('type')==5 && this.promotion.isFlashSalePromotion){
                 var prodcutPrice = this.promotion.detail.promotion_price;
-                var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+                var discount = $('.xa-promotion').data('discount-1');
+                if(!discount){
+                    discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+                }
                 var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
                 cut_price = (prodcutPrice * discount).toFixed(2);
                 use_integral = parseInt(cut_price * perYuanOfPerIntegral);
@@ -215,7 +222,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         }
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
-            var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+            var discount = $('.xa-promotion').data('discount-1');
+            if(!discount){
+                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            }
             var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
             var price = this.priceInfo.min_price;
             if(this.discount){
@@ -233,7 +243,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         if(this.promotion){
             if($('.xa-promotion').data('type')==5 && this.promotion.isFlashSalePromotion){
                 var prodcutPrice = this.promotion.detail.promotion_price;
-                var discount = $('.xa-promotion').data('discount').replace('%', '')/ 100;
+                var discount = $('.xa-promotion').data('discount-1');
+                if(!discount){
+                    discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+                }
                 var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
                 cut_price = (prodcutPrice * discount).toFixed(2);
                 use_integral = parseInt(cut_price * perYuanOfPerIntegral);
@@ -287,6 +300,18 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         $('.xa-selloutAlert').hide();
                     }
                     n.stocks = data[n.id].stocks;
+                    if(n.stock_type == 0){
+                        stock_all = 999999;//无限库存
+                    }else{
+                        stock_all += n.stocks
+                    }
+                    if(stock_all==0){
+                        $('.xa-selloutAlert').show();
+                        $('.xa-not_selloutAlert').hide();
+                    }else{
+                        $('.xa-not_selloutAlert').show();
+                        $('.xa-selloutAlert').hide();
+                    }
                     if(_this.targetModel && _this.targetModel.id == n.id){
                         //更新库存
                         _this.updateProductStock(n);
@@ -294,6 +319,8 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 });
 
                 if(isInit){
+                    _this.usableIntegral = data.usable_integral
+                    _this.memberGradeId = data.member_grade_id
                     if (_this.isStandardModelProduct) {
                         _this.targetModel = _this.models[0];
                         _this.initForStandardModelProduct();
@@ -377,10 +404,16 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
                         $('.xa-priceSection').html(temp);
                     }
-                    var alertView = $('[data-ui-role="attentionAlert"]').data('view');
-                    if(data.member_grade_id < 0 && alertView){
-                        alertView.render();
+                    if(data.is_subscribed){
+                        $('.xa-collectProduct').show();
+                    }else{// 非会员
+                        var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+                        if(alertView){
+                            alertView.render();
+                        }
+                        $('.xui-productInfoBox').css('margin-right', 0)
                         $($('.xa-globalNav li')[1]).hide();
+                        $('.xa-collectProduct').remove();
                     }
                 }
 
@@ -608,10 +641,12 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var maxCount = this.getMaxCount(model);
         counter.setMaxCount(maxCount);
 
-        if(counter.maxCount < counter.count && counter.maxCount >= 0 ||counter.maxCount ==counter.count&&counter.count==0&&counter.maxCount<counter.minCount){
+        if(counter.maxCount >= 0 && (counter.maxCount < counter.count || counter.maxCount < counter.minCount)){
+            this.showUnderStock();
             $('.xa-disabledBuyLinks').show();
             $('.xa-enabledBuyLinks').hide();
         }else{
+            this.hideUnderStock();
             $('.xa-disabledBuyLinks').hide();
             $('.xa-enabledBuyLinks').show();
         }
@@ -844,7 +879,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
     onClickCollectProductButton: function(event) {
         var _this = this;
-        var is_collect = $('.xa-collectProduct').attr('data-is-collect');
+        var is_collect = $('.xa-collectProduct').data('is-collect');
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -857,7 +892,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 is_collect: is_collect
             },
             success: function(data) {
-                if(is_collect == 'true'){
+                if(is_collect){
                     $('.xa-collectProduct').removeClass('faved').text('收藏');
                     $('.xa-collectProduct').attr('data-is-collect','false');
                 }else{
