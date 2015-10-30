@@ -348,7 +348,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     */
                 }
                 // 扩展advanced_table.load方法
-                this.afterload();
+                this.afterload();               
             },
             error: function(resp) {
                 // W.getLoadingView().show();

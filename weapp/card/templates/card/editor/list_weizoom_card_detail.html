@@ -20,8 +20,8 @@
     <div class="xa-cardListFilterView xui-filterPanel"></div>
 
     <div class="panel-heading" style="position: absolute;clear: both;margin-top: 22px;z-index: 10;left: -4px;">
-        <a class="btn btn-success xa-batch-active fr mt5 ml10" href="javascript:void(0)">批量激活</a>
-        <a class="btn btn-success xa-batch-inactive fr mt5" href="javascript:void(0)">批量停用</a>
+        <a class="btn btn-success xa-batch-active fr mt5 ml10" operate_style="active" href="javascript:void(0)">批量激活</a>
+        <a class="btn btn-success xa-batch-inactive fr mt5" operate_style="inactive" href="javascript:void(0)">批量停用</a>
     </div>
 
     <div class=" " style="position: absolute;clear: both;margin-top: 27px;right:0px;z-index: 10;">
@@ -136,10 +136,10 @@
                 <td>
                     {{if !card.is_expired}}
                         {{if card.status==3}}
-                        <a class="btn btn-success xa-active" href="javascript:void(0)">激活</a>   
+                        <a class="btn btn-success xa-active" operate_style="active" href="javascript:void(0)">激活</a>   
                         {{else}}
                         {{if card.status!=2}}
-                        <a class="btn btn-danger xa-inactive" href="javascript:void(0)">停用</a>
+                        <a class="btn btn-danger xa-active" operate_style="inactive" href="javascript:void(0)">停用</a>
                         {{/if}} 
                         {{/if}}
                     {{/if}}
@@ -178,13 +178,13 @@ $(document).ready(function() {
             'click .xa-cancel2': 'close'
         },
         getTemplate: function() {
-            var template ='<dl class="itemDeleteView2 wui-confirmView" style="margin: 0px 16px 5px 6px;">'
+            var template ='<dl class="itemDeleteView2 wui-confirmView" style="margin: 10px 16px 5px 6px;">'
                     +'<div class="activated_to" style="margin-left: 4px;">'
-                    +'<label for="activated_to">领用人</label>'
+                    +'<label for="activated_to" class="star_show">领用人</label>'
                     +'<input type="text" id="activated_to" style="width: 100px;margin-left: 8px;">'
                     +'</div>'
                     +'<div class="card_remark" style="margin-top: 10px;margin-left: 4px;">'
-                    +'<label for="card_remark" style="vertical-align: top;">备&nbsp;&nbsp;注</label>'
+                    +'<label for="card_remark" class="star_show" style="vertical-align: top;">备&nbsp;&nbsp;注</label>'
                     +'<textarea type="text" id="card_remark" style="height: 52px;width:164px;margin-left: 14px;"></textarea>'
                     +'</div>'
                     +'<button type="button" class="xa-confirm btn btn-success" style="background-color:#207CBE;margin: 8px 47px;width:60px;">确定</button> '
@@ -243,6 +243,7 @@ $(document).ready(function() {
 
     $('.xa-listView').delegate('.xa-active', 'click', function(event) {
         var id = $(this).parents('tr').attr('tr-id');
+        var operate_style = $(this).attr('operate_style');
         var $el = $(event.currentTarget);
         W.getApi().call({
             app: 'card',
@@ -289,7 +290,8 @@ $(document).ready(function() {
                         card_id: id,
                         status: '0',
                         card_remark: card_remark,
-                        activated_to: activated_to
+                        activated_to: activated_to,
+                        operate_style: operate_style
                     },
                     success: function(data) {
                         W.finishConfirm2();
@@ -306,6 +308,7 @@ $(document).ready(function() {
     
     $('.xa-batch-active').click(function(event) {
         var $el = $(event.currentTarget);
+        var operate_style= $(this).attr('operate_style');
         var card_ids =[],flag = false;
         $('input[name="select-one"]:checked').parents('tr').each(function(){
             card_status= $(this).children('.card_status').attr('td-status');
@@ -354,7 +357,7 @@ $(document).ready(function() {
                         card_id: card_ids.toString(),
                         status: '0',
                         card_remark: card_remark,
-                        activated_to: activated_to
+                        activated_to: activated_to,
                     },
                     success: function(data) {
                         W.finishConfirm2();
@@ -391,22 +394,42 @@ $(document).ready(function() {
             W.showHint('error','请先选择要停用的微众卡！');
             return;
         }
-
-        W.requireConfirm({
+        $("#card_remark").val("");
+        $("#activated_to").val("");
+        W.requireConfirm2({
             $el: $el,
             msg : '确定停用么?',
             isTitle: false,
             confirm: function(){
+                var card_remark = $("#card_remark").val().trim();
+                var activated_to =$("#activated_to").val().trim();
+                if (activated_to.length<= 0){
+                    W.showHint('error','请输入领用人');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                if (card_remark.length<= 0){
+                    W.showHint('error','请输入备注');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
+                if (activated_to.length>20 || card_remark.length> 20) {
+                    W.showHint('error','该内容最多输入20个字符');
+                    $('.xa-submit').bottonLoading({status:'hide'});
+                    return;
+                }
                 W.getApi().call({
                     app: 'card',
                     api: 'onbatch_status/update',
                     method: 'post',
                     args: {
                         card_id: card_ids.toString(),
+                        card_remark: card_remark,
+                        activated_to: activated_to,
                         status: '3'
                     },
                     success: function(data) {
-                        W.finishConfirm();
+                        W.finishConfirm2();
                         $('div[data-ui-role="advanced-table"]').data('view').reload();
                     },
                     error: function(resp) {
@@ -426,7 +449,7 @@ $(document).ready(function() {
         var id = $(this).parents('tr').attr('tr-id');
         var $el = $(event.currentTarget);
 
-        W.requireConfirm({
+        W.requireConfirm2({
             $el: $el,
             msg : '确定停用么?',
             isTitle: false,
