@@ -30,16 +30,31 @@ class MPowerMe(resource.Resource):
 		"""
 		响应GET
 		"""
-		if 'id' in request.GET:
-			record_id = request.GET['id']
-			isPC = request.GET.get('isPC',0)
+		record_id = request.GET.get('id','id')
+		isPC = request.GET.get('isPC',0)
+		webapp_owner_id = request.GET['webapp_owner_id']
+		isMember = False
+		qrcode_url = ''
+		timing = 0
+		mpUserPreviewName = ''
+		is_already_participanted = False
+		is_powered = False
+		self_page = False
+		fid = None
+		current_member_rank_info = None
+		participances_list = []
+		total_participant_count = 0
+		page_owner_name = ''
+		page_owner_member_id = 0
+		activity_status = u"未开始"
+
+		if 'new_app:' in record_id:
 			project_id = record_id
-			member_id = request.member.id
-			isMember = False
-			qrcode_url = ''
-			timing = 0
-			mpUserPreviewName = ''
-			fid = None
+			record_id = 0
+			record = None
+		else:
+			member = request.member
+			member_id = member.id
 			if not isPC:
 				isMember =request.member.is_subscribed
 				if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
@@ -59,29 +74,14 @@ class MPowerMe(resource.Resource):
 					response = HttpResponseRedirect(new_url)
 					response.set_cookie('fid', member_id, max_age=60*60*24*365)
 					return response
-
 			record = app_models.PowerMe.objects(id=record_id)
-
-			if 'new_app:' in record_id or record.count() == 0:
-				activity_status = u"未开启"
-				c = RequestContext(request, {
-					'activity_status': activity_status,
-					'qrcode_url': qrcode_url,
-					'isPC': isPC
-				})
-				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
-			else:
-				#获取、更新活动信息
+			if record.count() >0:
 				record = record.first()
-				record_id = str(record.id)
-				try:
-					mpuser = weixin_models.get_system_user_binded_mpuser(request.user)
-					mpuser_preview_info = weixin_models.MpuserPreviewInfo.objects.get(mpuser=mpuser)
-					mpUserPreviewName = mpuser_preview_info.name
-				except:
-					pass
+				#获取公众号昵称
+				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
+				#获取活动状态
 				activity_status = record.status_text
-				
+
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -91,13 +91,9 @@ class MPowerMe(resource.Resource):
 				elif now_time >= data_end_time:
 					record.update(set__status=app_models.STATUS_STOPED)
 					activity_status = u'已结束'
-				
+
 				project_id = 'new_app:powerme:%s' % record.related_page_id
 
-				#判断分享页是否自己的主页
-				self_page = False
-				is_powered = False
-				is_already_participanted = False
 				#增加/更新当前member的参与信息
 				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_power_info.count()> 0:
@@ -114,15 +110,18 @@ class MPowerMe(resource.Resource):
 				if not isMember:
 					curr_member_power_info.update(set__power=0)
 
+				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
-					self_page = True
+					#调整参与数量(首先检测是否已参与)
+					if not curr_member_power_info.has_join:
+						app_models.PowerMe.objects(id=record_id).update(inc__participant_count=1)
+						curr_member_power_info.update(set__has_join=True)
+						curr_member_power_info.reload()
+
 					page_owner_name = request.member.username_for_html
 					page_owner_member_id = member_id
-					curr_member_power_info.update(set__has_join=True)
-					curr_member_power_info.reload()
-					#调整参与数量
-					app_models.PowerMe.objects(id=record_id).update(**{"inc__participant_count":1})
 
+					self_page = True
 					is_already_participanted = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_for_html
@@ -139,9 +138,8 @@ class MPowerMe(resource.Resource):
 
 				#检查是否有当前member的排名信息
 				current_member_rank_info = None
-				participances_list = []
 				rank = 0 #排名
-
+				# 取前100位
 				participances = participances[:100]
 
 				for p in participances:
@@ -159,43 +157,43 @@ class MPowerMe(resource.Resource):
 							'power': p.power
 						}
 
-			request.GET._mutable = True
-			request.GET.update({"project_id": project_id})
-			request.GET._mutable = False
-			html = pagecreater.create_page(request, return_html_snippet=True)
-			if u"进行中" == activity_status:
-				timing = (record.end_time - datetime.today()).total_seconds()
-			c = RequestContext(request, {
-				'record_id': record_id,
-				'activity_status': activity_status,
-				'is_already_participanted': is_already_participanted,
-				'page_title': u"微助力",
-				'page_html_content': html,
-				'app_name': "powerme",
-				'resource': "powerme",
-				'hide_non_member_cover': True, #非会员也可使用该页面
-				'isPC': isPC,
-				'isMember': isMember,
-				'is_powered': is_powered, #是否已为该member助力
-				'is_self_page': self_page, #是否自己主页
-				'participances_list': json.dumps(participances_list),
-				'share_page_title': record.name,
-				'share_img_url': record.material_image,
-				'share_page_desc': u"微助力",
-				'qrcode_url': qrcode_url,
-				'timing': timing,
-				'current_member_rank_info': current_member_rank_info, #我的排名
-				'total_participant_count': total_participant_count, #总参与人数
-				'page_owner_name': page_owner_name,
-				'page_owner_member_id': page_owner_member_id,
-				'reply_content': record.reply_content,
-				'mpUserPreviewName': mpUserPreviewName
-			})
-		else:
-			record = None
-			c = RequestContext(request, {
-				'is_deleted_data': True
-			})
-			
-		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
+			else:
+				c = RequestContext(request, {
+					'is_deleted_data': True
+				})
+				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
+		request.GET._mutable = True
+		request.GET.update({"project_id": project_id})
+		request.GET._mutable = False
+		html = pagecreater.create_page(request, return_html_snippet=True)
 
+		if u"进行中" == activity_status:
+			timing = (record.end_time - datetime.today()).total_seconds()
+
+		c = RequestContext(request, {
+			'record_id': record_id,
+			'activity_status': activity_status,
+			'is_already_participanted': is_already_participanted,
+			'page_title': u"微助力",
+			'page_html_content': html,
+			'app_name': "powerme",
+			'resource': "powerme",
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'isPC': isPC,
+			'isMember': isMember,
+			'is_powered': is_powered, #是否已为该member助力
+			'is_self_page': self_page, #是否自己主页
+			'participances_list': json.dumps(participances_list),
+			'share_page_title': record.name,
+			'share_img_url': record.material_image,
+			'share_page_desc': u"微助力",
+			'qrcode_url': qrcode_url,
+			'timing': timing,
+			'current_member_rank_info': current_member_rank_info, #我的排名
+			'total_participant_count': total_participant_count, #总参与人数
+			'page_owner_name': page_owner_name,
+			'page_owner_member_id': page_owner_member_id,
+			'reply_content': record.reply_content,
+			'mpUserPreviewName': mpUserPreviewName
+		})
+		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
