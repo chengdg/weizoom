@@ -570,7 +570,7 @@ def show_shopping_cart(request):
 	# 	print(e)
 	# 	print('==============================')
 	response = render_to_response('%s/shopping_cart.html' % request.template_dir, c)
-	print('333333333333333', response.status_code)
+
 	return response
 
 
