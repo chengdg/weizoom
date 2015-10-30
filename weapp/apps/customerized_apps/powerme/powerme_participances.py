@@ -57,7 +57,7 @@ class PowerMeParticipances(resource.Resource):
 			belong_to = id
 		else:
 			belong_to = export_id
-		params = {'belong_to': belong_to}
+		params = {'belong_to': belong_to,'has_join': True}
 		if member_ids:
 			params['member_id__in'] = member_ids
 		if start_time:
