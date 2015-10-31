@@ -131,13 +131,13 @@ class MPowerMe(resource.Resource):
 						curr_member_power_info.update(set__has_join=True)
 						curr_member_power_info.reload()
 
-					page_owner_name = request.member.username_for_html
+					page_owner_name = request.member.username_size_ten
 
 					page_owner_member_id = member_id
 
 					self_page = True
 				else:
-					page_owner_name = Member.objects.get(id=fid).username_for_html
+					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
 					if curr_member_power_info.powered_member_id:
 						is_powered = fid in curr_member_power_info.powered_member_id
