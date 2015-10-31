@@ -160,7 +160,7 @@ class MPowerMe(resource.Resource):
 						'rank': rank,
 						'member_id': p.member_id,
 						'user_icon': member_id2member[p.member_id].user_icon,
-						'username': member_id2member[p.member_id].username_for_html,
+						'username': member_id2member[p.member_id].username_size_ten,
 						'power': p.power
 					})
 					if member_id == p.member_id:
