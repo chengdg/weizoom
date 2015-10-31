@@ -88,7 +88,12 @@ class Sign(resource.Resource):
 		"""
 		if request.POST.get('status', None):
 			status = 1 if request.POST['status'] == 'on' else 0
-			app_models.Sign.objects(id=request.POST['signId']).update(set__status=status)
+			sign = app_models.Sign.objects(id=request.POST['signId'])
+			sign.update(set__status=status)
+			if status == 1 and sign.count() >0:
+				#将所有已签到用户的签到状态重置，作为一个新的签到
+				sign = sign[0]
+				app_models.SignParticipance.objects(belong_to=str(sign.id)).update(set__serial_count=0)
 			response = create_response(200)
 			return response.get_response()
 
