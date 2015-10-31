@@ -68,6 +68,7 @@ class SignParticipances(resource.Resource):
 
 		items = []
 		for data in datas:
+			temp_list = data.prize['coupon'].split(',')
 			items.append({
 				'id': str(data.id),
 				'member_id': data.member_id,
@@ -79,7 +80,7 @@ class SignParticipances(resource.Resource):
 				'serial_count': data.serial_count,
 				'top_serial_count': data.top_serial_count,
 				'total_integral': data.prize['integral'],
-				'latest_coupon': data.prize['coupon'].split(',')[-1]
+				'latest_coupon': "%s<br>%s<br>%s" % (temp_list[-1], temp_list[-2], temp_list[-3])
 			})
 		response_data = {
 			'items': items,
