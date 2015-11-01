@@ -561,17 +561,6 @@ def save_and_zip_base64_img_file_for_mobileApp(request, ajax_file):
 	else:
 		return None
 
-########################################################################
-# upload_mobile_pic: 处理移动端上传图片
-########################################################################
-def save_upload_mobile_pic(request,basestr):
-	path = save_base64_img_file_local_for_webapp(request,basestr)
-	if path:
-		response = create_response(200)
-		response.data.path = path
-		return response.get_response()
-	else:
-		return create_response(500).get_response()
 
 ########################################################################
 # save_and_zip_img_file_for_muiApp: 上传图片_mui应用
