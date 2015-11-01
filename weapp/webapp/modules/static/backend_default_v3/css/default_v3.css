@@ -3739,7 +3739,12 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     float: left;
     margin-bottom: 10px;
     width: 45px;
+    height: 45px;
     margin-right: 2px;
+}
+.xui-productReviewCreatePage .xui-imgList li img{
+    width: 45px;
+    height: 45px;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
@@ -3798,6 +3803,24 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     display: inline-block;
     top:10px;
     left: 10px;
+}
+.xui-productReviewCreatePage .xui-progress{
+    position:absolute;
+    width:100%;
+    height:4px;
+    background:rgba(0,0,0,.6);
+    left:0;
+    bottom:0;
+    -webkit-transition:all linear .4s;
+    transition:all linear .4s;
+}
+.xui-productReviewCreatePage .xui-progress span{
+    display: block;
+    height:4px;
+    width: 0;
+    background:#4AB700;
+    -webkit-transition:all linear .6s;
+    transition:all linear .6s;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto .xui-i-box i{
     margin-left: -3px;

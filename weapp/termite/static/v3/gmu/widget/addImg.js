@@ -27,52 +27,35 @@
 
         _create : function() {
             this.$input = this.$el;
-            // this.$parent = this.$input.parent();
             this.$parents = this.$input.parents('.xui-productPhoto');
             this.$parents.prepend('<ul class="xui-imgList xa-imgList"></ul>');
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext('2d');
 
-            //    瓦片canvas
+            //瓦片canvas
             this.tCanvas = document.createElement("canvas");
             this.tctx = this.tCanvas.getContext("2d");
-            // this.$parent.addClass(this._uploadImageClassName);
-            // this.$img = $('<img class="xui-uploadImg pa" name="file_img" file_name="'+this.$input.attr('name')+'" src="" style="display:none;width:45px;height:45px;top:0;left:0;" data-allow-autoplay="false">');
-            // this.$parent.append('<span class="pa xa-remove xui-remove" style=""><i class="pa"></i></span>')
-            // this.$parent.append('<input type="hidden" id="storeSrc_'+this.$input.attr('name')+'" name="storeSrc_'+this.$input.attr('name')+'"')
-            // this.$parent.append(this.$img);
-            // this.$parent.find('.xa-remove').hide();
             this._bind();
-        }, 
-        addImg:function(imgSrc){
-            imglength = $('.xa-imgList').children('li').length
-            var li = "<li class='xa-img'><img src='" + imgSrc +"' data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>";
-            $('.xa-imgList').append(li);
-            if(imglength == 5){
-                $('.xa-addPhoto').hide();
-            }
-            $('.xa-text').hide();
-            W.ImagePreview(wx)
-            return imglength
         },
         _bind : function() {
             var _this = this;
             var maxsize = 200 * 1024;
             this.$input.bind('change', function(event) {
                 if(!this.files.length) return;
+                $('.xa-text').hide();
                 var files = Array.prototype.slice.call(this.files);
                 var hasImgLength = $('.xa-imgList').children('li').length;
-                var imgLength = hasImgLength + files.length;
-                if(imgLength > 5){
+                var preLength = hasImgLength + files.length;
+                if(preLength > 5){
                     _this._alert('最多同时可上传5张');
-                    files.splice(5 - hasImgLength, imgLength - 5);
+                    files.splice(5 - hasImgLength, preLength - 5);
                 }
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
-
-                    var isErrorByName = (file && file.name && !file.name.match(/\.(jpg|gif|png|jpeg)$/));
+                    var name = file.name.toLowerCase();
+                    var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
 
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
 
@@ -80,19 +63,22 @@
                         return;
                     }
                     var reader = new FileReader();
+                    var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>");
+                    $('.xa-imgList').append($li);
+
+                    var imglength = $('.xa-imgList').children('li').length;
                     reader.onload = function() {
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
-                        imgSrc = result;
-                        //图片显示在页面上
-                        imglength = _this.addImg(imgSrc);//替换掉src的内容，将其内容替换为链接
-                        console.log("<<<<<<<",result);
+
+                        var innerHtml = "<img src="+ result +" data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><div class='xui-progress xa-progress'><span></span></div>";
+                        $li.append(innerHtml);
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
 
-                            _this.upload(result,imglength);
+                            _this.upload(result, imglength,$li);
 
                             return;
                         }
@@ -104,8 +90,7 @@
 
                         function callback() {
                             var data = _this.compress(img);
-                            console.log("____",data);
-                            _this.upload(data,imglength);
+                            _this.upload(data, imglength,$li);
 
                             img = null;
                         }
@@ -119,27 +104,39 @@
                 _this.removeImgFun();
             });
         },
-        
-        upload: function(basestr,imglength) {
-                W.getApi().call({
-                 app: 'webapp',
-                 api: 'project_api/call',
-                 method: 'post',
-                 args: _.extend({
-                     target_api: 'product_review_pic/create',
-                     module: 'mall',
-                     woid: W.webappOwnerId,
-                     basestr: JSON.stringify(basestr)
-                 }),
-                 success: function (data) {
+        upload: function(basestr,imglength,$li) {
+            var $bar = $li.find('.xa-progress span');
+            var percent = 0;
+            var loop = setInterval(function () {
+                percent++;
+                $bar.css('width', percent + "%");
+                if (percent == 99) {
+                    clearInterval(loop);
+                }
+            },100);
+            W.getApi().call({
+                app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    target_api: 'product_review_pic/create',
+                    module: 'mall',
+                    woid: W.webappOwnerId,
+                    basestr: JSON.stringify(basestr)
+                }),
+                success: function (data) {
                     $("#pro_reivew"+imglength).attr('data-src',data.path)
-                    console.info("zl---------------"+data.path)
-                 },
-                 error: function (data) {
-                     alert('没有可连接的网络');
-                     return;
-                 }
-             });
+                    clearInterval(loop);
+                    $bar.css('width',"100%");
+                    setTimeout(function(){
+                        $bar.parent().css('opacity','0');
+                    },300)                
+                },
+                error: function (data) {
+                    alert('没有可连接的网络');
+                    return;
+                }
+            });
         },
         compress:function(img){
             var initSize = img.src.length;
@@ -211,7 +208,7 @@
         showDelete:function(){
             $('.xa-deletePhoto').show().unbind('click').click(function(){
                 $('.xa-remove, .xa-finishEdit').show();
-                $('.xa-addPhoto, .xa-deletePhoto').hide();
+                $('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
             });
         },
 
