@@ -167,7 +167,7 @@ class MPowerMe(resource.Resource):
 							'power': p.power
 						}
 				# 取前100位
-				participances = participances[:100]
+				participances_list = participances_list[:100]
 
 			else:
 				c = RequestContext(request, {
