@@ -144,8 +144,6 @@ class MPowerMe(resource.Resource):
 
 				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
 				total_participant_count = participances.count()
-				# 取前100位
-				participances = participances[:100]
 
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
@@ -168,6 +166,8 @@ class MPowerMe(resource.Resource):
 							'rank': rank,
 							'power': p.power
 						}
+				# 取前100位
+				participances = participances[:100]
 
 			else:
 				c = RequestContext(request, {
