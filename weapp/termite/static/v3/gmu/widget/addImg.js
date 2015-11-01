@@ -27,40 +27,22 @@
 
         _create : function() {
             this.$input = this.$el;
-            // this.$parent = this.$input.parent();
             this.$parents = this.$input.parents('.xui-productPhoto');
             this.$parents.prepend('<ul class="xui-imgList xa-imgList"></ul>');
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext('2d');
 
-            //    瓦片canvas
+            //瓦片canvas
             this.tCanvas = document.createElement("canvas");
             this.tctx = this.tCanvas.getContext("2d");
-            // this.$parent.addClass(this._uploadImageClassName);
-            // this.$img = $('<img class="xui-uploadImg pa" name="file_img" file_name="'+this.$input.attr('name')+'" src="" style="display:none;width:45px;height:45px;top:0;left:0;" data-allow-autoplay="false">');
-            // this.$parent.append('<span class="pa xa-remove xui-remove" style=""><i class="pa"></i></span>')
-            // this.$parent.append('<input type="hidden" id="storeSrc_'+this.$input.attr('name')+'" name="storeSrc_'+this.$input.attr('name')+'"')
-            // this.$parent.append(this.$img);
-            // this.$parent.find('.xa-remove').hide();
             this._bind();
-        }, 
-        addImg:function(imgSrc){
-            imglength = $('.xa-imgList').children('li').length + 1;
-            var li = "<li class='xa-img'><img data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress'><span></span></div></li>";
-            $('.xa-imgList').append(li);
-             $("#pro_reivew"+imglength).attr('src',imgSrc);
-            if(imglength == 5){
-                $('.xa-addPhoto').hide();
-            }
-            $('.xa-text').hide();
-            W.ImagePreview(wx);
-            return imglength
         },
         _bind : function() {
             var _this = this;
             var maxsize = 200 * 1024;
             this.$input.bind('change', function(event) {
                 if(!this.files.length) return;
+                $('.xa-text').hide();
                 var files = Array.prototype.slice.call(this.files);
                 var hasImgLength = $('.xa-imgList').children('li').length;
                 var preLength = hasImgLength + files.length;
@@ -89,8 +71,6 @@
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
-                        //图片显示在页面上
-                        // imglength = _this.addImg(result);//替换掉src的内容，将其内容替换为链接
 
                         var innerHtml = "<img src="+ result +" data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
@@ -110,7 +90,6 @@
 
                         function callback() {
                             var data = _this.compress(img);
-                            console.log("____",data);
                             _this.upload(data, imglength,$li);
 
                             img = null;
@@ -125,7 +104,6 @@
                 _this.removeImgFun();
             });
         },
-        
         upload: function(basestr,imglength,$li) {
             var $bar = $li.find('.xa-progress span');
             var percent = 0;
@@ -141,7 +119,7 @@
                 api: 'project_api/call',
                 method: 'post',
                 args: _.extend({
-                    target_api: 'product_review2/create',
+                    target_api: 'product_review_pic/create',
                     module: 'mall',
                     woid: W.webappOwnerId,
                     basestr: JSON.stringify(basestr)
@@ -152,9 +130,7 @@
                     $bar.css('width',"100%");
                     setTimeout(function(){
                         $bar.parent().css('opacity','0');
-                    },300)
-
-                    
+                    },300)                
                 },
                 error: function (data) {
                     alert('没有可连接的网络');
@@ -232,7 +208,7 @@
         showDelete:function(){
             $('.xa-deletePhoto').show().unbind('click').click(function(){
                 $('.xa-remove, .xa-finishEdit').show();
-                $('.xa-addPhoto, .xa-deletePhoto').hide();
+                $('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
             });
         },
 
