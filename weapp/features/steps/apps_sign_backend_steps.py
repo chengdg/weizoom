@@ -21,7 +21,7 @@ def __get_coupon_rule_id(coupon_rule_name):
     return coupon_rule.id
 
 #### 获取新的 project_id
-def _get_new_project_id(context):   
+def _get_new_project_id(context):
     response = context.client.post("/termite2/api/project/?_method=put", {"source_template_id": -1})
     data = json.loads(response.content)["data"]
     return data['project_id']
@@ -54,6 +54,7 @@ def _save_page(context, user, page):
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
+    #测试数据处理
     sign_json = json.loads(context.text)
 
     status = sign_json['status']
@@ -76,8 +77,6 @@ def step_impl(context,user,sign_name):
         "keyword":keyword,
         "content":sign_json["share_describe"]
     }
-
-
     prize_settings = {}
     sign_settings = sign_json["sign_settings"]
     for item in sign_settings:
@@ -90,7 +89,7 @@ def step_impl(context,user,sign_name):
             }
         }
 
-    #模拟登陆Sign页面
+    ###Step1模拟登陆Sign页面 Fin ########################################
     sign_response = context.client.get("/apps/sign/sign/")
     sign_page_response = sign_response.context
 
@@ -99,39 +98,54 @@ def step_impl(context,user,sign_name):
     project_id = sign_page_response['project_id']
     webapp_owner_id = sign_page_response['webapp_owner_id']
     keywords = sign_page_response['keywords']
-    
-    activityId = ""
-    if sign and sign.id:
-        activityId = sign.id
 
-    params = {
-        "related_page_id":project_id,
-        "status":status,
-        
-        "name":name,
-        "prize_settings":json.dumps(prize_settings),
-        "reply":json.dumps(reply),
-        "share":json.dumps(share)
-     }
+    # print "sign_response",sign_response
+    # print "sign",sign
+    # print "is_create_new_data",is_create_new_data
+    # print "project_id",project_id
+    # print "webapp_owner_id",webapp_owner_id
+    # print "keywords",keywords
+
+    ##上面获得全部参数
 
 
-    #没有储存page，所以没有related_page_id
-    # loadPages_response = context.client.get("/apps/api/dynamic_pages/get/",{'project_id': project_id})
+    ###step1 end##################
 
-    if is_create_new_data:
-        response = context.client.post("/apps/sign/api/sign/?_method=put",params)
-    else:
-        params['id'] = activityId
-        params['signId'] = activityId
-        response = context.client.post("/apps/sign/api/sign/?_method=post",params)
 
-    bdd_util.assert_api_call_success(response)
-    # bdd_util.assert_api_call_success(loadPages_response)
+    ##step2  访问后台Phone页面##No
+    # termite_response = context.client.get('/termite2/webapp_design_page/?project_id=%s&design_mode=%d'%("new_app:sign:0",0))
+    # bdd_util.assert_api_call_success(termite_response)
+    ##step2 end
 
-    print '+++++++++++++++++++++++++++++++++++++++==========START++++'
-    # print project_id
-    print sign_response
-    print '+++++++++++++++++++++++++++XXXXX++++++++++++++END+++++++++'
+
+    # ##step3 Page右边个人配置JSON的数据块OK
+    dynamicPage_response = context.client.get('/apps/api/dynamic_pages/get/',{'project_id':project_id,"design_mode":0,"version":1})
+    bdd_util.assert_api_call_success(dynamicPage_response)
+    # ##step3 end
+
+    # ##step4 获得关键字OK
+    keyword_response = context.client.get('/apps/sign/api/sign/')
+    bdd_util.assert_api_call_success(keyword_response)
+    # #end step4
+
+    # #step5 POST请求no
+    # # var pageJson = JSON.stringify(page.toJSON());
+    termite_post_args={
+        "field":"page_content",
+        "id":project_id,
+        "page_id":"1"
+        "page_json":page_json,
+    }
+    termite_post_response = context.client.post('/termite2/api/project/',{})
+    # bdd_util.assert_api_call_success(termite_post_response)
+    print project_id
+
+    # print '+++++++++++++++++++++++++++++++++++++++==========START++++'
+    # if sign and sign.id:
+    #     print sign.id
+    # #page_json: pageJson
+    # # print termite_post_response
+    # print '+++++++++++++++++++++++++++XXXXX++++++++++++++END+++++++++'
 
 
 
@@ -169,3 +183,37 @@ def step_impl(context,user,sign_name):
 def step_impl(context,user,sign_name,sign_tag):
     #348
     pass
+
+
+########### 堆栈
+    # activityId = ""
+    # if sign and sign.id:
+    #     activityId = sign.id
+
+    # params = {
+    #     "related_page_id":project_id,#这个不对，得生一个Page获得
+    #     "status":status,
+
+    #     "name":name,
+    #     "prize_settings":json.dumps(prize_settings),
+    #     "reply":json.dumps(reply),
+    #     "share":json.dumps(share)
+    #  }
+
+
+    # if is_create_new_data:
+    #     response = context.client.post("/apps/sign/api/sign/?_method=put",params)
+    # else:
+    #     params['id'] = activityId
+    #     params['signId'] = activityId
+    #     response = context.client.post("/apps/sign/api/sign/?_method=post",params)
+
+    # bdd_util.assert_api_call_success(response)
+
+
+
+#提交Page
+#http://dev.weapp.com/termite2/api/project/?design_mode=0&project_id=new_app:sign:56331b5ff44ad90d64ba88b3&version=1
+
+#提交 JSON数据
+#http://dev.weapp.com/apps/sign/api/sign/?design_mode=0&project_id=new_app:sign:56331b5ff44ad90d64ba88b3&version=1
