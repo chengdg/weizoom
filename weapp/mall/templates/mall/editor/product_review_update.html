@@ -45,11 +45,7 @@
                 <ul class="clearfix">
                     {% for picture in product_review.pictures %}
                         <li class="fl mr10">
-            {% ifequal picture|truncatechars:18 'http://weappimg...'%}
-                            <img src="{{ picture }}!60" width="80" height="80">
-            {% else %}
                             <img src="{{ picture }}" width="80" height="80">
-            {% endifequal%}
                         </li>
                     {% endfor %}
                 </ul>
