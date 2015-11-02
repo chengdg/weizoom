@@ -56,7 +56,6 @@ def get_card_detail(request):
     can_batch_stop_card=weizoomcardpermission[0].can_batch_stop_card
     can_add_card=weizoomcardpermission[0].can_add_card
     can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
-    
     rule_id = request.GET.get('id','')
     if rule_id:
         rule = WeizoomCardRule.objects.get(id=rule_id)
@@ -67,9 +66,8 @@ def get_card_detail(request):
             'weizoom_card_rule': rule,
             'can_batch_active_card': can_batch_active_card,
             'can_batch_stop_card': can_batch_stop_card,
-            'can_add_card': can_add_card,
-            
-
+            'can_add_card': can_add_card,      
+            'can_export_batch_card': can_export_batch_card 
         })
         return render_to_response('card/editor/list_weizoom_card_detail.html', c)
 
