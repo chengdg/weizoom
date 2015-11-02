@@ -37,7 +37,7 @@ def get_link_targets(request):
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/apps/sign/m_sign/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
+			"link": '/m/apps/sign/m_sign/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
 			"isChecked": False,
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})

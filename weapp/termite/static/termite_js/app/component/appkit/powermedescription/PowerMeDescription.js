@@ -257,26 +257,33 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 	}
 });
 var getDateTime = function($node,start_time_text,end_time_text,model){
-	var start_date = new Date(start_time_text.toString()).getTime();
-	var end_date = new Date(end_time_text.toString()).getTime();
+	var s_date =start_time_text.replace(" ","-").replace(/-/g,"/").split(/\/|\:|\ /);
+	var e_date =end_time_text.replace(" ","-").replace(/-/g,"/").split(/\/|\:|\ /);
+
+	var start_date = new Date(s_date[0], s_date[1] - 1, s_date[2], s_date[3], s_date[4]).getTime();
+	var end_date = new Date(e_date[0], e_date[1] - 1, e_date[2], e_date[3], e_date[4]).getTime();
 
 	var dif_time = end_date - start_date;
-
 	var day = Math.floor(dif_time / (1000 * 60 * 60 * 24)); //天数
 	var h_time = dif_time % (1000 * 60 * 60 * 24);
 	var hour = Math.floor(h_time / (1000 * 60 * 60));//小时
 	var m_time = h_time % (1000 * 60 * 60);
 	var minute = Math.floor(m_time / (1000 * 60));//分钟
 	var second = Math.floor((m_time % (1000 * 60))/1000); //秒
-	console.log(minute.length);
-	$node.find('.wui-i-timing .xa-day').text(day.toString().length != 1 ? day : '0'+day);
-	$node.find('.wui-i-timing .xa-hour').text(hour.toString().length == 2 ? hour : '0'+hour);
-	$node.find('.wui-i-timing .xa-minute').text(minute.toString().length == 2 ? minute : '0'+minute);
-	$node.find('.wui-i-timing .xa-second').text(second.toString().length == 2 ? second : '0'+second);
+
+	var text_day = day.toString().length != 1 ?day : '0'+day;
+	var text_hour = hour.toString().length != 1 ?hour : '0'+hour;
+	var text_minute = minute.toString().length != 1 ?minute : '0'+minute;
+	var text_second = second.toString().length != 1 ?second : '0'+second;
+
+	$node.find('.wui-i-timing .xa-day').text(text_day);
+	$node.find('.wui-i-timing .xa-hour').text(text_hour);
+	$node.find('.wui-i-timing .xa-minute').text(text_minute);
+	$node.find('.wui-i-timing .xa-second').text(text_second);
 	model.attributes.timing_value=({
-		day: $node.find('.wui-i-timing .xa-day').text(),
-		hour: $node.find('.wui-i-timing .xa-hour').text(),
-		minute: $node.find('.wui-i-timing .xa-minute').text(),
-		second: $node.find('.wui-i-timing .xa-second').text()
+		day: text_day,
+		hour: text_hour,
+		minute: text_minute,
+		second: text_second
 	});
 };
