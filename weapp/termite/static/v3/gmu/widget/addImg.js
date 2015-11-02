@@ -59,9 +59,7 @@
                     var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
                     var name = file.name.toLowerCase();
                     var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
-
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
-
                         _this._alert('图片格式不正确');
                         return;
                     }
@@ -74,7 +72,6 @@
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
-
                         var innerHtml = "<img src="+ result +" id='pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
                         $li.children('img').data('allow-autoplay','true');
@@ -92,11 +89,9 @@
                         } else {
                             img.onload = callback;
                         }
-
                         function callback() {
                             var data = _this.compress(img);
                             _this.upload(data, imglength,$li);
-
                             img = null;
                         }
                     }
