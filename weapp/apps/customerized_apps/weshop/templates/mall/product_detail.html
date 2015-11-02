@@ -315,7 +315,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             var total_price = (price*productCount).toFixed(2);
             $('.xa-variable-price').text(total_price);
             console.log(price, productCount, (price*productCount).toFixed(2))
-            if('integral' == '{{product.type}}'){                
+            /*if('integral' == '{{product.type}}'){                
                 if (total_price > {{use_integral}}) {
                     $('.xt-integral-buy-Btn').addClass("xui-btn-disable");
                     $('.xt-integral-buy-Btn').attr('href', 'javascript:void(0);');
@@ -323,7 +323,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     $('.xt-integral-buy-Btn').removeClass("xui-btn-disable");
                     $('.xt-integral-buy-Btn').attr('href', $('.xt-integral-buy-Btn').attr('data-url'));
                 }
-            }
+            }*/
         };
 
         $('input[data-ui-role="counter"]').bind('count-changed', function(event, value) {
