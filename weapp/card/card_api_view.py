@@ -152,7 +152,7 @@ def get_cards(request):
         else:
             cur_weizoom_card_rule.card_type = TYPE2NAME['WEIZOOM_CARD_GIFT']
         cur_weizoom_card_rules.append(cur_weizoom_card_rule)
-        
+       
     response = create_response(200)
     response.data.items = cur_weizoom_card_rules
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
@@ -177,8 +177,7 @@ def get_managers(request):
         cur_card_manager.id=card_manager.id
         cur_card_manager.user_id=card_manager.user_id
         cur_card_manager.username=card_manager.username
-        cur_card_manager.nickname=card_manager.nickname
-        
+        cur_card_manager.nickname=card_manager.nickname        
         try:
             cur_card_manager.can_create_card=card_manager2weizoomcardpermission[card_manager.user_id].can_create_card
             cur_card_manager.can_export_batch_card=card_manager2weizoomcardpermission[card_manager.user_id].can_export_batch_card
@@ -197,6 +196,135 @@ def get_managers(request):
     response = create_response(200)
     response.data.items = cur_card_managers 
     response.data.pageinfo = paginator.to_dict(pageinfo)  
+    return response.get_response()
+
+
+@api(app='card', resource='weizoomcard_permission_own', action='get')
+@login_required 
+def get_weizoomcard_permission_own(request):
+    post = request.POST
+    user_id =int(post.get('user_id',''))
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=user_id)
+    cur_weizoomcardpermission=[]
+    if weizoomcardpermission:
+        cur_weizoomcardpermission=JsonResponse()
+        cur_weizoomcardpermission.can_create_card=weizoomcardpermission[0].can_create_card
+        cur_weizoomcardpermission.can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
+        cur_weizoomcardpermission.can_add_card=weizoomcardpermission[0].can_add_card
+        cur_weizoomcardpermission.can_batch_stop_card=weizoomcardpermission[0].can_batch_stop_card
+        cur_weizoomcardpermission.can_batch_active_card=weizoomcardpermission[0].can_batch_active_card
+        cur_weizoomcardpermission.can_view_card_details=weizoomcardpermission[0].can_view_card_details
+        cur_weizoomcardpermission.can_stop_card=weizoomcardpermission[0].can_stop_card
+        cur_weizoomcardpermission.can_active_card=weizoomcardpermission[0].can_active_card
+        cur_weizoomcardpermission.can_change_shop_config=weizoomcardpermission[0].can_change_shop_config
+        cur_weizoomcardpermission.can_view_statistical_details=weizoomcardpermission[0].can_view_statistical_details
+        cur_weizoomcardpermission.can_export_statistical_details=weizoomcardpermission[0].can_export_statistical_details
+    response = create_response(200)
+    response.data.items = cur_weizoomcardpermission  
+    return response.get_response()
+
+
+@api(app='card', resource='weizoomcard_permission', action='get')
+@login_required 
+def get_weizoomcard_permission(request):
+    post = request.POST
+    user_id =int(post.get('user_id',''))
+    can_create_card = post.get('can_create_card','')
+    if can_create_card =='false':
+        can_create_card=0
+    else:
+        can_create_card=1
+    can_export_batch_card = post.get('can_export_batch_card','')
+    if can_export_batch_card =='false':
+        can_export_batch_card=0
+    else:
+        can_export_batch_card=1
+    can_add_card = post.get('can_add_card','')
+    if can_add_card =='false':
+        can_add_card=0
+    else:
+        can_add_card=1
+    can_batch_stop_card = post.get('can_batch_stop_card','')
+    if can_batch_stop_card =='false':
+        can_batch_stop_card=0
+    else:
+        can_batch_stop_card=1
+    can_batch_active_card = post.get('can_batch_active_card','')
+    if can_batch_active_card =='false':
+        can_batch_active_card=0
+    else:
+        can_batch_active_card=1
+    can_stop_card = post.get('can_stop_card','')
+    if can_stop_card =='false':
+        can_stop_card=0
+    else:
+        can_stop_card=1
+    can_active_card = post.get('can_active_card','')
+    if can_active_card =='false':
+        can_active_card=0
+    else:
+        can_active_card=1
+    can_view_card_details = post.get('can_view_card_details','')
+    if can_view_card_details =='false':
+        can_view_card_details=0
+    else:
+        can_view_card_details=1
+    can_change_shop_config = post.get('can_change_shop_config','')
+    if can_change_shop_config =='false':
+        can_change_shop_config=0
+    else:
+        can_change_shop_config=1
+    can_view_statistical_details = post.get('can_view_statistical_details','')
+    if can_view_statistical_details =='false':
+        can_view_statistical_details=0
+    else:
+        can_view_statistical_details=1
+    can_export_statistical_details = post.get('can_export_statistical_details','')
+    if can_export_statistical_details =='false':
+        can_export_statistical_details=0
+    else:
+        can_export_statistical_details=1
+    managers = WeiZoomCardPermission.objects.all()
+    manager_ids = []
+    for manager in managers:
+        manager_ids.append(manager.user_id)
+    print manager_ids
+    print user_id
+    if user_id in manager_ids:
+        weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=user_id)
+        weizoomcardpermission.update(can_create_card=can_create_card,
+        can_export_batch_card=can_export_batch_card,
+        can_add_card=can_add_card,
+        can_batch_stop_card=can_batch_stop_card,
+        can_batch_active_card=can_batch_active_card,
+        can_stop_card=can_stop_card,
+        can_active_card=can_active_card,
+        can_view_card_details=can_view_card_details,
+        can_change_shop_config=can_change_shop_config,
+        can_view_statistical_details=can_view_statistical_details,
+        can_export_statistical_details=can_export_statistical_details)
+        response = create_response(200)
+    else:
+        try:   
+            print '+------+' 
+            WeiZoomCardPermission.objects.create(
+                user_id=user_id,
+                can_create_card=can_create_card,
+                can_export_batch_card=can_export_batch_card,
+                can_add_card=can_add_card,
+                can_batch_stop_card=can_batch_stop_card,
+                can_batch_active_card=can_batch_active_card,
+                can_stop_card=can_stop_card,
+                can_active_card=can_active_card,
+                can_view_card_details=can_view_card_details,
+                can_change_shop_config=can_change_shop_config,
+                can_view_statistical_details=can_view_statistical_details,
+                can_export_statistical_details=can_export_statistical_details
+                )
+            response = create_response(200)
+        except:
+            response = create_response(500)
+            response.errMsg = u'error'
     return response.get_response()
 
 @api(app='card', resource='card_filter_params', action='get')

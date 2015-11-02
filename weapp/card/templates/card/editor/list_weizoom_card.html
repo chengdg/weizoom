@@ -17,17 +17,20 @@
     <div class="xa-cardFilterView xui-filterPanel"></div>
 
     <div class="panel-heading" style="position: absolute;left: 720px;;margin-top:24px;z-index:10;" id="u62">
-        <a href="/card/card_create/get/" class="btn btn-success xui-addProductBtn xa-addProduct fr" style="position: absolute;">
-            <span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>
-            创建新卡
-        </a>
-
+        {% if can_create_card %}
+            <a href="/card/card_create/get/" class="btn btn-success xui-addProductBtn xa-addProduct fr" style="position: absolute;">
+                <span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>
+                创建新卡
+            </a>
+        {% endif %}
         <a href="/card/permissions/get/" class="btn btn-success xui-addProductBtn xa-addProduct fr" style="position: absolute; left: 140px;">
             商户权限管理
         </a>
-        <a href="/card/cardmanager/get/" class="btn btn-success fr" style="position: absolute; left: -112px;">
-            用户权限管理
-        </a>
+        {% if request.user.username == 'card_admin' %}
+            <a href="/card/cardmanager/get/" class="btn btn-success xui-addProductBtn fr" style="position: absolute; left: -112px;">
+                用户权限管理 
+            </a>
+        {% endif %}
     </div>
 
 <div class="panel panel-default mt20 pr card_rule_list" style="background-color:#EAEEF6">

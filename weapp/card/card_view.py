@@ -19,10 +19,13 @@ def get_cards(request):
     """
     显示卡规则列表
     """
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
+    can_create_card=weizoomcardpermission[0].can_create_card
     c = RequestContext(request, {
         'first_nav_name': export.MALL_CARD_FIRST_NAV,
         'second_navs': export.get_card_second_navs(request),
         'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'can_create_card': can_create_card,
     })
 
     return render_to_response('card/editor/list_weizoom_card.html', c)
