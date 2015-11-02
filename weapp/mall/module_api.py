@@ -2002,18 +2002,7 @@ def get_order_usable_integral(order, integral_info):
 	else:
 		return int(user_integral)
 
-def __hack_product_id_for_show(relations):
-	"""
-	为演示账号修改订单中的商品id duhao 20151022
-	"""
-	products = list(Product.objects.filter(owner_id = settings.TARGET_ID))
-	length = len(products)
-	for r in relations:
-		r.product_id = products[r.product_id % length].id
-		r.product_model_name = 'standard'
-
-	return relations
-def get_order_products(order, user=None):
+def get_order_products(order):
 	"""
 	user参数由duhao在20151023添加，为了使客户演示账号的订单商品不露馅
 
@@ -2043,10 +2032,6 @@ def get_order_products(order, user=None):
 	order.session_data = dict()
 	order_id = order.id
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
-
-	#为演示账号修改订单中的商品id duhao 20151022
-	if user and hasattr(settings, 'SELF_ID') and user.id == settings.SELF_ID:
-		relations = __hack_product_id_for_show(relations)
 		
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
