@@ -1498,3 +1498,26 @@ def edit_refueling_order(request):
 	if hasattr(request, 'is_return_context'):
 		return c
 	return render_to_response('%s/edit_order.html' % request.template_dir, c)
+
+
+# 商城首页链接，./?woid={{request.webapp_owner_id}}&module=mall&model=homepage&action=get
+def get_homepage(request):
+    homepage_url = u'/workbench/jqm/preview/?woid={}&module=mall&model=products&action=list'.format(
+        request.webapp_owner_id)
+
+    if hasattr(request, 'user_profile') and request.user_profile:
+        profile = request.user_profile
+    else:
+        profiles = UserProfile.objects.filter(user_id=request.webapp_owner_id)
+        if profiles.count() > 0:
+            profile = profiles[0]
+        else:
+            profile = None
+
+    if profile and profile.is_use_wepage:
+        homepage_url = u'/termite2/webapp_page/?{}'.format(
+            'workspace_id=home_page&webapp_owner_id=%s&workspace_id=%s&project_id=0' % (
+            request.webapp_owner_id, request.user_profile.homepage_workspace_id))
+        print homepage_url
+
+    return HttpResponseRedirect(homepage_url)
