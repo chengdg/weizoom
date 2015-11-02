@@ -182,6 +182,18 @@ class WeizoomCardHasOrder(models.Model):
 
 
 #########################################################################
+# WeizoomCardHasOrder : 微众卡记录操作日志
+#########################################################################
+class WeizoomCardOperationLog(models.Model):
+	card = models.ForeignKey(WeizoomCard, related_name='market_tool_weizoom_card')
+	operater = models.ForeignKey(User, related_name='auth_user')
+	operater_name = models.CharField(max_length=64)
+	operate_log = models.CharField(max_length=64, verbose_name='事件类型')
+	created_at = models.DateTimeField(auto_now_add=True)
+	class Meta(object):
+		db_table = 'market_tool_weizoom_card_operation_log'
+
+#########################################################################
 # WeizoomCardHasAccount ：微众卡账号管理
 #########################################################################
 class WeizoomCardHasAccount(models.Model):
