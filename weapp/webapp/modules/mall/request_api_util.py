@@ -19,8 +19,7 @@ from mall import models as mall_models
 from mall import module_api as mall_api
 from mall import signals as mall_signals
 from account.models import *
-from account.views import save_base64_img_file_local_for_webapp
-from services.product_review_piclist_service.tasks import upload_pic_list
+from account.views import save_base64_img_file_local_for_webapp,save_upload_mobile_pic
 from . import request_util
 from . import utils
 from core.send_order_email_code import *
@@ -194,7 +193,6 @@ def save_order(request):
 
 	# 获取地址信息
 	area = request.POST.get('area', '')
-
 	# 获取发票信息
 	if 'is_use_bill' in request.POST:
 		bill_type = request.POST.get('bill_type', ORDER_BILL_TYPE_NONE)
@@ -762,7 +760,6 @@ def create_product_review(request):
 		deliver_score = data_dict.get('deliver_score', None)
 		process_score = data_dict.get('process_score', None)
 		picture_list = data_dict.get('picture_list', None)
-		print "zl-------------",picture_list
 		#创建订单评论
 		order_review, created = mall_models.OrderReview.objects.get_or_create(
 			order_id=order_id,
@@ -799,28 +796,9 @@ def create_product_review(request):
 	elif request.method == 'GET':
 		return create_response(500).get_response()
 
-def create_product_review2(request):
-
-	basestr = request.POST.get('basestr', None)
-	path = save_base64_img_file_local_for_webapp(request,basestr)
-	print "zl---------------------",path
-	if path:
-		response = create_response(200)
-		response.data.path = path
-		return response.get_response()
-	else:
-		return create_response(500).get_response()
-
-def __get_file_name(file_name, extended_name=None):
-	import random
-	pos = file_name.rfind('.')
-	if pos == -1:
-		suffix = ''
-	else:
-		suffix = file_name[pos:]
-
-	return '%s_%d%s' % (str(time.time()).replace('.', '0'), random.randint(1, 1000), suffix)
-
+def create_mobile_pic(request):
+	basestr=request.POST.get('basestr',None)
+	return save_upload_mobile_pic(request,basestr)
 
 def update_product_review_picture(request):
 	'''
@@ -845,14 +823,11 @@ def update_product_review_picture(request):
 	picture_list = request.POST.get('picture_list', None)
 	# 为此商品评论创建贴图
 	if picture_list:
-		picture_list = json.loads(picture_list)
-		picture_model_list = []
-
-		for picture in picture_list:
+		for picture in list(eval(picture_list)):
 			mall_models.ProductReviewPicture(
 				product_review_id=product_review_id,
 				order_has_product_id=order_has_product_id,
-				att_url=save_base64_img_file_local_for_webapp(request, picture)
+				att_url=picture
 			).save()
 		# TODO 更好的实现，能触发缓存更新
 		# mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)

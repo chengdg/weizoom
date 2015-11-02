@@ -104,6 +104,7 @@
                 _this.removeImgFun();
             });
         },
+
         upload: function(basestr,imglength,$li) {
             var $bar = $li.find('.xa-progress span');
             var percent = 0;
