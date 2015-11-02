@@ -56,7 +56,7 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
-                    console.log("_______>>>>>",file.type);
+                    var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
                     var name = file.name.toLowerCase();
                     var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
                     if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
@@ -73,8 +73,10 @@
                         var img = new Image();
                         img.src = result;
 
-                        var innerHtml = "<img src="+ result +" data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><div class='xui-progress xa-progress'><span></span></div>";
+                        var innerHtml = "<img src="+ result +" id='pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
+                        $li.children('img').data('allow-autoplay','true');
+                        W.ImagePreview(wx);
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
@@ -102,7 +104,6 @@
 
                 _this.showDelete();
                 _this.finishEdit();
-                _this.removeImgFun();
             });
         },
 
@@ -135,7 +136,8 @@
                     },300)                
                 },
                 error: function (data) {
-                    alert('没有可连接的网络');
+                    _this._alert('上传失败');
+                    clearInterval(loop);
                     return;
                 }
             });
@@ -208,9 +210,11 @@
         },
 
         showDelete:function(){
+            var _this = this;
             $('.xa-deletePhoto').show().unbind('click').click(function(){
                 $('.xa-remove, .xa-finishEdit').show();
                 $('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
+                _this.removeImgFun();
             });
         },
 
@@ -223,10 +227,12 @@
                     $('.xa-addPhoto').show();
                     $('.xa-finishEdit').hide();
                 }
+                $('.xa-remove').unbind('click');
             });
         },
         removeImgFun:function(){
-            $('body').delegate($('.xa-remove'), 'click', function(event) {
+            $('.xa-remove').click( function(event) {
+            // $('body').delegate($('.xa-remove'), 'click', function(event) {
                 $(event.target).parents('li').remove();
                 var length = $('.xa-imgList').children('li').length;
                 if(length == 0){
