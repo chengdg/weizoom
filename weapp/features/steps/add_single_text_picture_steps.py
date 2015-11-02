@@ -9,30 +9,14 @@ from test import bdd_util
 from features.testenv.model_factory import *
 
 from django.test.client import Client
-
+from add_multy_text_picture_steps import adict_addNews
 
 @when(u"{user}已添加单图文")
 def step_impl(context, user):
     addNewses = json.loads(context.text)
     for addNews in addNewses:
         data = []
-        adict = {}
-        adict['id'] = -99 #
-        adict['type'] = 'news'
-        adict['display_index'] = 1
-        adict['title'] = addNews['title']
-        adict['summary'] = addNews['summary']
-        adict['text'] = addNews['content']
-        adict['pic_url'] = addNews['cover'][0]['url']
-        adict['is_show_cover_pic'] = addNews['cover_in_the_text']
-        adict['url'] = addNews.get('jump_url','')
-        if adict['url']:
-            adict['link_target'] = '{"workspace":"custom","workspace_name":"外部链接",'\
-            '"data_category":"外部链接","data_item_name":"外部链接","data_path":"%s",'\
-            '"data":"%s"}' %(adict['url'], adict['url'])
-        else:
-            adict['link_target'] = ''
-        data.append(adict)
+        data.append(adict_addNews(addNews))
         url = '/new_weixin/api/single_news/?_method=put'
         response = context.client.post(url, {'data': json.dumps(data)})
         time.sleep(1)
@@ -55,7 +39,8 @@ def step_impl(context, user, news_title):
     actual_data['jump_url'] = actual_data.get('url', '')
     expected_data = json.loads(context.text)
     expected_data['cover_in_the_text'] = True if (expected_data.get('cover_in_the_text', True) in ('true', 'yes', 'True', 'Yes', True)) else False
-
+    if expected_data.get('jump_url',''):
+        expected_data['jump_url'] = 'http://' + expected_data['jump_url'].strip()
     bdd_util.assert_dict(expected_data, actual_data)
 
 

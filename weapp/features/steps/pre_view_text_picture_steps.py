@@ -36,4 +36,6 @@ def step_impl(context, user, news_title):
         actual_data['jump_url'] = actual_data.get('url', '')
     for expected_data in expected_datas:
         expected_data['cover_in_the_text'] = True if (expected_data.get('cover_in_the_text', True) in ('true', 'yes', 'True', 'Yes', True)) else False
+        if expected_data.get('jump_url',''):
+            expected_data['jump_url'] = 'http://' + expected_data['jump_url'].strip()
     bdd_util.assert_list(expected_datas, actual_datas)

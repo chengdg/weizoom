@@ -4,7 +4,7 @@ import time
 import urllib
 import urllib2
 import json
-
+import datetime
 from django.conf import settings
 
 from core.jsonresponse import create_response
@@ -35,6 +35,7 @@ def product_stocks(request):
 	"""
 	product_id = request.GET.get('product_id', None)
 	model_ids = request.GET.get('model_ids', None)
+	need_member_info = request.GET.get('need_member_info', False)
 
 	#改为从缓存读取库存数据 duhao 2015-08-13
 	# response = create_response(200)
@@ -50,29 +51,28 @@ def product_stocks(request):
 	result_data = dict()
 
 	if product_id:
-		models = ProductModel.objects.filter(product_id=product_id)
+		models = ProductModel.objects.filter(product_id=product_id, is_deleted=False)
 	elif model_ids:
 		model_ids = model_ids.split(",")
-		models = ProductModel.objects.filter(id__in=model_ids)
+		models = ProductModel.objects.filter(id__in=model_ids, is_deleted=False)
 	else:
 		models = []
 
 	response = create_response(200)
-	# if len(models) == 1 and models[0].is_standard:
-	# 	model_data = dict()
-	# 	model_data["stocks"] = models[0].stocks
-	# 	model_data["stock_type"] = models[0].stock_type
-	# 	response.data = model_data
-	# if len(models) > 0:
+
 	for model in models:
 		model_data = dict()
 		model_data["stocks"] = model.stocks
 		model_data["stock_type"] = model.stock_type
 		result_data[model.id] = model_data
-	response.data = result_data
-	# else:
-	# 	return create_response(500).get_response()
 
+	# 代码来自 get_member_product_info(request) mall/module_api.py
+	if need_member_info == '1':
+		member_info_data = mall_api.get_member_product_info_dict(request)
+		result_data = dict(result_data, **member_info_data)
+
+
+	response.data = result_data
 	return response.get_response()
 
 
@@ -597,7 +597,7 @@ def save_address(request):
 		area = request.POST.get('area', '')
 
 		#更新收货地址信息
-		webapp_user.update_ship_info(
+		ship_id = webapp_user.update_ship_info(
 			ship_id = ship_id,
 			ship_name=ship_name,
 			ship_address=ship_address,
@@ -615,6 +615,7 @@ def save_address(request):
 			data['exception'] = stack
 
 	data['ship_name'] = ship_name
+	data['ship_id'] = ship_id
 	response.data = data
 	return response.get_response()
 
@@ -835,3 +836,51 @@ def update_product_review_picture(request):
 		response = create_response(200)
 		response.data = get_review_status(request)
 		return response.get_response()
+
+
+def list_address(request):
+	ship_infos = list(request.webapp_user.ship_infos)
+	items = []
+	for ship_info in ship_infos:
+		data_dict = dict()
+		data_dict['ship_id'] = ship_info.id
+		data_dict['ship_name'] = ship_info.ship_name
+		data_dict['ship_tel'] = ship_info.ship_tel
+		data_dict['ship_address'] = ship_info.ship_address
+		data_dict['area'] = ship_info.area
+		try:
+			data_dict['area_str'] = ship_info.get_str_area
+		except:
+			pass
+		data_dict['is_selected'] = ship_info.is_selected
+		items.append(data_dict)
+	print(items)
+	response = create_response(200)
+	data = dict()
+	data['ship_infos'] = items
+	response.data = data
+	return response.get_response()
+
+
+def delete_address(request):
+	print('hereeee')
+	ship_info_id = request.POST.get('id', 0)
+	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
+
+	# 默认选中
+	ship_infos = request.webapp_user.ship_infos
+	selected_ships_count = ship_infos.filter(is_selected=True).count()
+	if ship_infos.count() > 0 and selected_ships_count == 0:
+		ship_info = ship_infos[0]
+		ship_info.is_selected = True
+		ship_info.save()
+		selected_id = ship_info.id
+	else:
+		selected_id = 0
+	print('selected_id...:', selected_id)
+	# 显示地址列表
+	response = create_response(200)
+	data = dict()
+	data['selected_id'] = selected_id
+	response.data = data
+	return response.get_response()

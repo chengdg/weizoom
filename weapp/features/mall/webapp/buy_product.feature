@@ -46,8 +46,6 @@ Background:
 			}]
 		}]
 		"""
-
-
 	And jobs已添加商品
 		"""
 		[{
@@ -526,8 +524,17 @@ Scenario: 10 会员购买的商品同时参加多个活动，然后下架商品
 		"""
 	Given jobs登录系统
 	When jobs-下架商品'商品1'
-    When bill访问jobs的webapp
-    When bill购买jobs的商品
+	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
+	When bill购买jobs的商品
 		"""
 		{
 			"products": [{
@@ -537,7 +544,6 @@ Scenario: 10 会员购买的商品同时参加多个活动，然后下架商品
 		}
 		"""
 	Then bill获得'商品1'错误提示'已下架'
-
 	When bill加入jobs的商品到购物车
 		"""
 		[{
@@ -551,8 +557,8 @@ Scenario: 10 会员购买的商品同时参加多个活动，然后下架商品
 
 	Given jobs登录系统
 	When jobs-下架商品'商品2'
-    When bill访问jobs的webapp
-  	When bill从购物车发起购买操作
+	When bill访问jobs的webapp
+	When bill从购物车发起购买操作
 		"""
 		{
 			"action": "pay",
@@ -563,22 +569,13 @@ Scenario: 10 会员购买的商品同时参加多个活动，然后下架商品
 			}]
 		}
 		"""
-	And bill填写收货信息
-	"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦"
-		}
-	"""
 	And bill在购物车订单编辑中点击提交订单
-	"""
-	{
-		"pay_type": "货到付款"
-	}
-	"""
-    Then bill获得'商品2'错误提示'已下架'
+		"""
+		{
+			"pay_type": "货到付款"
+		}
+		"""
+	Then bill获得'商品2'错误提示'已下架'
 
 
 
@@ -608,8 +605,7 @@ Scenario: 11 会员购买的商品同时参加多个活动，然后删除商品
 		}]
 		"""
 	When jobs-永久删除商品'商品1'
-  	When bill访问jobs的webapp
-
+	When bill访问jobs的webapp
 	When bill购买jobs的商品
 		"""
 		{
@@ -621,8 +617,16 @@ Scenario: 11 会员购买的商品同时参加多个活动，然后删除商品
 		"""
 
 	Then bill获得'商品1'错误提示'已删除'
-
 	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
 	When bill加入jobs的商品到购物车
 		"""
 		[{
@@ -633,8 +637,9 @@ Scenario: 11 会员购买的商品同时参加多个活动，然后删除商品
 			"count": 1
 		}]
 		"""
-  	Given jobs登录系统
-  	When jobs-永久删除商品'商品2'
+	Given jobs登录系统
+	When jobs-永久删除商品'商品2'
+	When bill访问jobs的webapp
 	When bill从购物车发起购买操作
 		"""
 		{
@@ -646,21 +651,10 @@ Scenario: 11 会员购买的商品同时参加多个活动，然后删除商品
 			}]
 		}
 		"""
-  	And bill填写收货信息
-	"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦"
-		}
-	"""
 	And bill在购物车订单编辑中点击提交订单
-	"""
-	{
-		"pay_type": "货到付款"
-	}
-	"""
-	Given jobs登录系统
-
+		"""
+		{
+			"pay_type": "货到付款"
+		}
+		"""
 	Then bill获得'商品2'错误提示'已删除'

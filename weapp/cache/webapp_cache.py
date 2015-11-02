@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 from operator import attrgetter
+import time
+import urllib2
 from django.conf import settings
 from django.db.models import signals
 
@@ -250,7 +252,8 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
             integral_sale_data)
     else:
         product.integral_sale_model = None
-    product.original_promotion_title = data['original_promotion_title']
+    product.master_promotion_title = data.get('master_promotion_title', None)
+    product.integral_sale_promotion_title = data.get('integral_sale_promotion_title', None)
 
     return product
 
@@ -268,14 +271,11 @@ def update_webapp_product_detail_cache(**kwargs):
 
         if product_ids and len(product_ids) > 0:
             for product_id in product_ids:
-                key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-                    webapp_owner_id, product_id)
-                cache_util.delete_cache(key)
+                update_product_cache(webapp_owner_id, product_id)
                 # 更新微众商城缓存
                 # TODO 更好的设计微众商城
                 if webapp_owner_id != 216:
-                    key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-                        216, product_id)
+                    key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (product_id)
                     cache_util.delete_cache(key)
             if webapp_owner_id != 216:
                 cache_util.delete_cache('webapp_products_categories_{wo:216}')
@@ -293,11 +293,10 @@ signals.post_save.connect(update_webapp_product_detail_cache,
 #这部分代码已经转移到webapp_cache.util中  duhao 2015-08-13
 def update_webapp_product_model_cache(**kwargs):
     model = kwargs.get('instance', None)
-    if model and model[0].stocks < 1:
+    if model and model[0].stocks < 1 and model[0].stock_type == mall_models.PRODUCT_STOCK_TYPE_LIMIT:
+        # 库存发生变化
         model = model[0]
-        key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-            model.owner_id, model.product_id)
-        cache_util.delete_cache(key)
+        # update_product_cache(model.owner_id, model.product_id, deleteVarnish=False)
 
         if model.owner_id != 216:
             key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
@@ -323,15 +322,13 @@ post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_
 def update_webapp_product_detail_by_review_cache(**kwargs):
     if hasattr(cache, 'request'):
         webapp_owner_id = cache.request.user_profile.user_id
-        product_id = None
         instance = kwargs.get('instance', None)
         if instance:
-            product_id = instance[0].product_id
-
-        if product_id:
-            key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-                webapp_owner_id, product_id)
-            cache_util.delete_cache(key)
+            if isinstance(instance, mall_models.ProductReview):
+                product_id = instance.product_id
+            else:
+                product_id = instance[0].product_id
+            update_product_cache(webapp_owner_id, product_id)
 
 post_update_signal.connect(update_webapp_product_detail_by_review_cache,
                            sender=mall_models.ProductReview, dispatch_uid="product_review.update")
@@ -351,9 +348,7 @@ def update_webapp_product_detail_cache_by_promotion(instance, **kwargs):
     else:
         promotion_ids = [promotion.id for promotion in instance]
     for p in promotion_models.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids):
-        key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (
-            webapp_owner_id, p.product_id)
-        cache_util.delete_cache(key)
+        update_product_cache(webapp_owner_id, p.product_id)
 
 
 post_update_signal.connect(update_webapp_product_detail_cache_by_promotion,
@@ -379,18 +374,19 @@ def update_webapp_product_model_properties_cache(**kwargs):
     """
     更新product model缓存
     """
-    if cache.request.user_profile:
-        webapp_owner_id = cache.request.user_profile.user_id
-        key = 'webapp_product_model_properties_{wo:%s}' % webapp_owner_id
-        cache_util.delete_cache(key)
+    if hasattr(cache, 'request') and cache.request.user_profile:
+        if cache.request.user_profile:
+            webapp_owner_id = cache.request.user_profile.user_id
+            key = 'webapp_product_model_properties_{wo:%s}' % webapp_owner_id
+            cache_util.delete_cache(key)
 
-        for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
-            user_profile = UserProfile.objects.filter(
-                webapp_id=weizoom_mall.webapp_id)
-            if user_profile.count() == 1:
-                key = 'webapp_product_model_properties_{wo:%s}' % user_profile[
-                    0].user_id
-                cache_util.delete_cache(key)
+            for weizoom_mall in WeizoomMall.objects.filter(is_active=True):
+                user_profile = UserProfile.objects.filter(
+                    webapp_id=weizoom_mall.webapp_id)
+                if user_profile.count() == 1:
+                    key = 'webapp_product_model_properties_{wo:%s}' % user_profile[
+                        0].user_id
+                    cache_util.delete_cache(key)
 
 
 post_update_signal.connect(update_webapp_product_model_properties_cache,
@@ -530,11 +526,41 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
             product_ids.append(product.product_id)
     return product_ids
 
-def update_forbidden_coupon_product_ids(**kwargs):
-    if hasattr(cache, 'request') and cache.request.user_profile:
+def update_forbidden_coupon_product_ids(instance, **kwargs):
+    if hasattr(cache, 'request') and cache.request.user_profile and not kwargs.get('created', False):
         webapp_owner_id = cache.request.user_profile.user_id
         key = 'forbidden_coupon_products_%s' % webapp_owner_id
         cache_util.delete_cache(key)
 
+        if isinstance(instance, promotion_models.ForbiddenCouponProduct):
+            product_id = instance.product_id
+        else:
+            product_id = instance[0].product_id
+
+        update_product_cache(webapp_owner_id, product_id, False, deleteVarnishList=False)
+
 post_update_signal.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.update")
 signals.post_save.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.save")
+
+def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVarnish=True, deleteVarnishList=True):
+    if deleteRedis:
+        key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
+        cache_util.delete_cache(key)
+    if not settings.IS_UNDER_BDD and deleteVarnish:
+        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
+            (settings.DOMAIN, webapp_owner_id, product_id)
+        request = urllib2.Request(url)
+        request.get_method = lambda: 'PURGE'
+        urllib2.urlopen(request)
+    if not settings.IS_UNDER_BDD and deleteVarnishList:
+        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
+            (settings.DOMAIN, webapp_owner_id)
+        request = urllib2.Request(url)
+        request.get_method = lambda: 'PURGE'
+        urllib2.urlopen(request)
+        # for catHasProduct in mall_models.CategoryHasProduct.objects.filter(product_id=product_id):
+        #     url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+        #         (settings.DOMAIN, webapp_owner_id, catHasProduct.category_id)
+        #     request = urllib2.Request(url)
+        #     request.get_method = lambda: 'PURGE'
+        #     urllib2.urlopen(request)

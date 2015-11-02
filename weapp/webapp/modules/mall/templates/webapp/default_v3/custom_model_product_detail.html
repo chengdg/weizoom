@@ -307,8 +307,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 var postageFactor = $.parseJSON('{{postage_factor|safe}}');
 //可用积分
 var usableIntegral = {{use_integral}};
+// jz 2015-10-20
 //是否启用"测试购买"
-var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
+// var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
 //商品id
 var productId = '{{product.id}}';
 //商品类型
@@ -326,7 +327,8 @@ $(document).ready(function() {
         el: '.xui-page',
         postageFactor: postageFactor,
         usableIntegral: usableIntegral,
-        enableTestBuy: enableTestBuy,
+        // jz 2015-10-20
+        // enableTestBuy: enableTestBuy,
         productId: productId,
         productType: productType,
         models: models,

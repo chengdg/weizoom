@@ -454,12 +454,22 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				# RFC
 				elif one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
 					promotion = one_promotion
+			#填充积分折扣信息
+			if integral_sale:
+				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
+				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
+				if integral_sale.promotion_title:
+					product.integral_sale_promotion_title = integral_sale.promotion_title
+				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
+			else:
+				product.integral_sale = None
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
-				product.original_promotion_title = product.promotion_title
 				if promotion.promotion_title:
-					product.promotion_title = promotion.promotion_title
+					product.master_promotion_title = promotion.promotion_title
 				if promotion.type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 					promotion.promotion_title = '满%s减%s' % (promotion.detail['price_threshold'], promotion.detail['cut_money'])
 				elif promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
@@ -472,18 +482,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					promotion.promotion_title = ''
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
-				product.original_promotion_title = product.promotion_title
 				product.promotion = None
-			#填充积分折扣信息
-			if integral_sale:
-				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
-				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
-				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
-				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
-				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
-			else:
-				product.integral_sale = None
-
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
 			if settings.DEBUG:
@@ -518,9 +517,10 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 								'promotion',
 								'integral_sale',
 								'properties',
-								'product_review'
+								'product_review',
+								'master_promotion_title',
+								'integral_sale_promotion_title'
 		)
-		data['original_promotion_title'] = product.original_promotion_title
 
 		return {'value': data}
 
@@ -895,7 +895,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_market_price': str("%.2f" % product_model['market_price']),
 					'min_price': product_model['price'],
 					'max_price': product_model['price'],
-					'promotion_title': product.original_promotion_title
 				}
 			else:
 				#有多个custom model，显示custom model集合组合后的价格信息
@@ -937,7 +936,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_market_price': market_price_range,
 					'min_price': min_price,
 					'max_price': max_price,
-					'promotion_title': product.original_promotion_title
 				}
 		else:
 			standard_model = product.models[0]
@@ -947,7 +945,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				'display_market_price': str("%.2f" % standard_model['market_price']),
 				'min_price': standard_model['price'],
 				'max_price': standard_model['price'],
-				'promotion_title': product.original_promotion_title
 			}
 
 	except:
@@ -962,12 +959,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 			product.is_deleted = True
 	return product
 
-
-# def str("%.2f" % price):
-# 	if p_type == PRODUCT_INTEGRAL_TYPE:
-# 		return int(price)
-# 	else:
-# 		return str("%.2f" % price)
 
 def create_order(webapp_owner_id, webapp_user, product):
 	"""
@@ -1175,10 +1166,11 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 ########################################################################
 # get_order: 获取订单
 ########################################################################
-def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=False):
+def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=False, is_need_area=True):
 	order = Order.objects.get(order_id=order_id)
 	try:
-		order.area = regional_util.get_str_value_by_string_ids(order.area)
+		if is_need_area:
+			order.area = regional_util.get_str_value_by_string_ids(order.area)
 		order.display_express_company_name = express_util.get_name_by_value(order.express_company_name)
 	except:
 		pass
@@ -1345,7 +1337,7 @@ def get_orders(request):
 ########################################################################
 def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 	try:
-		order = get_order(webapp_user, order_id)
+		order = get_order(webapp_user, order_id, is_need_area=False)
 	except:
 		watchdog_fatal(u"本地获取订单信息失败：order_id:{}, cause:\n{}".format(order_id, unicode_full_stack()))
 		return None, False
@@ -1353,31 +1345,35 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 	pay_result = False
 
 	if is_success and order.status == ORDER_STATUS_NOT: #支付成功
+		pay_result = True
+
+		# jz 2015-10-20
+		# Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 		#order.status = ORDER_STATUS_PAYED_SUCCESSED
 		#order.status = ORDER_STATUS_PAYED_NOT_SHIP
-		pay_result = True
-		Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
-
 		# 修改子订单的订单状态，该处有逻辑状态的校验
-		origin_order_id = Order.objects.get(order_id=order_id).id
-		Order.objects.filter(origin_order_id=origin_order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
+		# origin_order_id = Order.objects.get(order_id=order_id).id
+		# Order.objects.filter()
+		if order.origin_order_id < 0:
+			Order.objects.filter(origin_order_id=order.id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
-		Order.objects.filter()
 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		order.pay_interface_type = pay_interface_type
+		order.payment_time = datetime.now()
+		order.save()
 
 		#记录日志
 		record_operation_log(order_id, u'客户', u'支付')
 		record_status_log(order_id, u'客户', ORDER_STATUS_NOT, ORDER_STATUS_PAYED_NOT_SHIP)
-
+		# jz 2015-10-20
 		#记录购买统计项
-		PurchaseDailyStatistics.objects.create(
-			webapp_id = webapp_id,
-			webapp_user_id = webapp_user.id,
-			order_id = order_id,
-			order_price = order.final_price,
-			date = dateutil.get_today()
-		)
+		# PurchaseDailyStatistics.objects.create(
+		# 	webapp_id = webapp_id,
+		# 	webapp_user_id = webapp_user.id,
+		# 	order_id = order_id,
+		# 	order_price = order.final_price,
+		# 	date = dateutil.get_today()
+		# )
 
 		#更新webapp_user的has_purchased字段
 		webapp_user.set_purchased()
@@ -1742,8 +1738,9 @@ def record_operation_log(order_id, operator_name, action, order=None):
 	except:
 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(error_msg)
+	# jz 2015-10-22
 	# 修改订单修改时间
-	update_order_time(order_id)
+	# update_order_time(order_id)
 
 ########################################################################
 # get_order_status_logs: 获得订单的状态日志
@@ -1941,16 +1938,16 @@ def record_status_log(order_id, operator_name, from_status, to_status):
 		error_msg = u"增加订单({})状态更改记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(error_msg)
 
-
+# jz 2015-10-22
 ########################################################################
 # update_order_time: 更新订单修改时间
 ########################################################################
-def update_order_time(order_id):
-	try:
-		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())
-	except:
-		error_msg = u"更新订单({})修改时间记录失败, cause:\n{}".format(order_id, unicode_full_stack())
-		watchdog_error(error_msg)
+# def update_order_time(order_id):
+# 	try:
+# 		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())
+# 	except:
+# 		error_msg = u"更新订单({})修改时间记录失败, cause:\n{}".format(order_id, unicode_full_stack())
+# 		watchdog_error(error_msg)
 
 
 ########################################################################
@@ -2241,15 +2238,15 @@ def update_order_status(user, action, order, request=None):
 	if action == 'pay':
 		action_msg = '支付'
 		target_status = ORDER_STATUS_PAYED_NOT_SHIP
-
+		# jz 2015-10-20
 		#记录购买统计项
-		PurchaseDailyStatistics.objects.create(
-			webapp_id = order.webapp_id,
-			webapp_user_id = order.webapp_user_id,
-			order_id = order.order_id,
-			order_price = order.final_price,
-			date = dateutil.get_today()
-		)
+		# PurchaseDailyStatistics.objects.create(
+		# 	webapp_id = order.webapp_id,
+		# 	webapp_user_id = order.webapp_user_id,
+		# 	order_id = order.order_id,
+		# 	order_price = order.final_price,
+		# 	date = dateutil.get_today()
+		# )
 		mall_signals.post_pay_order.send(sender=Order, order=order, request=request)
 	elif action == 'ship':
 		action_msg = '发货'
@@ -3073,14 +3070,10 @@ def check_product_in_wishlist(request):
 	return response.get_response()
 
 
-def get_member_product_info(request):
-	'''
-	获取购物车的数量和检查商品是否已被收藏
-	'''
-	response = create_response(200)
-	# try:
+def get_member_product_info_dict(request):
+	result_data = dict()
 	shopping_cart_count = ShoppingCart.objects.filter(webapp_user_id=request.webapp_user.id).count()
-	response.data.count = shopping_cart_count
+	result_data['count'] = shopping_cart_count
 	webapp_owner_id = request.webapp_owner_id
 	product_id = request.GET.get('product_id', "")
 	if request.member:
@@ -3093,19 +3086,29 @@ def get_member_product_info(request):
 				is_collect=True
 			)
 			if collect.count() > 0:
-				response.data.is_collect = 'true'
+				result_data['is_collect'] = 'true'
 			else:
-				response.data.is_collect = 'false'
+				result_data['is_collect'] = 'false'
 		member_grade_id, discount = get_member_discount(request)
-		response.data.member_grade_id = member_grade_id
-		response.data.discount = discount
+		result_data['member_grade_id'] = member_grade_id
+		result_data['discount'] = discount
+		result_data['usable_integral'] = request.member.integral
+		result_data['is_subscribed'] = request.member.is_subscribed
 	else:
 		if product_id:
-			response.data.is_collect = 'false'
-		response.data.member_grade_id = -1
-		response.data.discount = 100
-	# except:
-	# 	return create_response(500).get_response()
+			result_data['is_collect'] = 'false'
+		result_data['member_grade_id'] = -1
+		result_data['discount'] = 100
+		result_data['usable_integral'] = 0
+		result_data['is_subscribed'] = False
+	return result_data
+
+def get_member_product_info(request):
+	'''
+	获取购物车的数量和检查商品是否已被收藏
+	'''
+	response = create_response(200)
+	response.data = get_member_product_info_dict(request)
 	return response.get_response()
 
 
