@@ -26,7 +26,7 @@ COUNT_PER_PAGE = 20
 class Sign(resource.Resource):
 	app = 'apps/sign'
 	resource = 'sign'
-	
+
 	@login_required
 	def get(request):
 		"""

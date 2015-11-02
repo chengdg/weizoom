@@ -1523,3 +1523,59 @@ button.xui-deleteImageButton{
 	display: inline-block;
 	cursor: pointer;
 }
+
+/*微助力CSS*/
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_dialogSelectField .xui-i-triggerButton {
+    background: none;
+    color: #1262b7;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_horizontalField .propertyGroup_property_label{
+	width: 90px !important;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input {
+    width: 76%;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_dialogSelectField {
+    margin-top: 10px;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_textareaField .propertyGroup_property_input {
+    width: 80% !important;
+	display: inline-block;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_label {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 7px;
+    line-height: 24px;
+    text-align: right;
+    width: 88px;
+}
+/*配色选择*/
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input .xui-selectBtn {
+	padding: 20px 10px;
+	color: #333;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input .xui-selectBtn:nth-child(1) {
+	background:#FEF6C5;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input .xui-selectBtn:nth-child(2) {
+	background:#E62F41;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input .xui-selectBtn:nth-child(3) {
+	background:#FF7D43;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_dialogSelectField,.xui-propertyView-app-PowerMeGroup .propertyGroup_property_textareaField,.xui-propertyView-app-PowerMeGroup .propertyGroup_property_radioField {
+    margin-top: 10px;
+}
+/*倒计时checkbox*/
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_checkboxField {
+    width: 85px;
+    float: right;
+    margin-top: -40px;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_checkboxField .propertyGroup_property_label{
+	display: none;
+}
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_dateRangeSelectorField {
+    width: 83%;
+}

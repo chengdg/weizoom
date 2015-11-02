@@ -530,8 +530,7 @@ def get_detail_response(request):
             #         order.status = ORDER_STATUS_PAYED_NOT_SHIP
             #         order.save()
 
-        #duhao 20151023添加了一个request.user参数
-        order.products = mall_api.get_order_products(order, request.user)
+        order.products = mall_api.get_order_products(order)
 
         # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
         for product in order.products:
@@ -828,8 +827,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             # 构造返回的order数据
     items = []
     for order in orders:
-        #duhao 20151023添加了一个user参数
-        products = mall_api.get_order_products(order, user)
+        products = mall_api.get_order_products(order)
         order.is_refund = is_refund
         # 用于微众精选拆单
         groups = []
