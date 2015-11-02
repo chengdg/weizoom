@@ -257,13 +257,23 @@
 
     function showMyRank(){
         var $win = $(window);
-        var h = $('body').height() - $('.wa-top100').offset().top;
-        window.onscroll = function(){
-            if($win.scrollTop() - h > 0){
+        var $top = $('.wa-top100');
+        var rect;
+
+        var djage = function(){
+            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top + $top.height()>=0)
+        };
+        var toggle_show = function(){
+            rect = $top[0].getBoundingClientRect();
+            if(rect && djage()){
                 $('.wa-masterinfo').show();
             }else{
                 $('.wa-masterinfo').hide();
             }
+        };
+
+        window.onscroll = function(){
+            toggle_show();
         };
     }
 

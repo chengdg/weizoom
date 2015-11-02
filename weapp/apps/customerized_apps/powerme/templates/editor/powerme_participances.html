@@ -109,7 +109,7 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
-			    <td>${i + 1}</td>
+			    <td>${item.ranking}</td>
 				<td class="tl pl25">
 					<img width=60 height=60 src="${item.participant_icon}" />
 					{{html item.participant_name}}

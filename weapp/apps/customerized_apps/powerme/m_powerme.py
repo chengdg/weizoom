@@ -131,20 +131,19 @@ class MPowerMe(resource.Resource):
 						curr_member_power_info.update(set__has_join=True)
 						curr_member_power_info.reload()
 
-					page_owner_name = request.member.username_for_html
+					page_owner_name = request.member.username_size_ten
+
 					page_owner_member_id = member_id
 
 					self_page = True
 				else:
-					page_owner_name = Member.objects.get(id=fid).username_for_html
+					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
 					if curr_member_power_info.powered_member_id:
 						is_powered = fid in curr_member_power_info.powered_member_id
 
-				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', '-created_at')
+				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
 				total_participant_count = participances.count()
-				# 取前100位
-				participances = participances[:100]
 
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
@@ -159,7 +158,7 @@ class MPowerMe(resource.Resource):
 						'rank': rank,
 						'member_id': p.member_id,
 						'user_icon': member_id2member[p.member_id].user_icon,
-						'username': member_id2member[p.member_id].username_for_html,
+						'username': member_id2member[p.member_id].username_size_ten,
 						'power': p.power
 					})
 					if member_id == p.member_id:
@@ -167,6 +166,8 @@ class MPowerMe(resource.Resource):
 							'rank': rank,
 							'power': p.power
 						}
+				# 取前100位
+				participances_list = participances_list[:100]
 
 			else:
 				c = RequestContext(request, {
