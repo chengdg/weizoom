@@ -19,8 +19,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         this.is_member_product = options.is_member_product == 'True';
         this.promotion = options.promotion || null;
         // 限购数量
-        if (this.promotion && this.promotion.detail.count_per_purchase){
+        if (this.promotion && this.promotion.type == 1){
             this.countPerPurchase = this.promotion.detail.count_per_purchase;
+            this.isFlashSale = true;
         }else{
             this.countPerPurchase = -1;
         }
@@ -78,45 +79,44 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-disabledBuyLinks').hide();
             $('.xa-enabledBuyLinks').show();
         }
-        // 用于处理显示限时抢购信息
-        if(this.promotion && this.promotion.type==1){
-            var promotionPrice = this.promotion.detail.promotion_price;
-            var gapPrice = (this.minPrice - promotionPrice).toFixed(2);
-            $('.xa-promotionNormal-info').text('已优惠' + gapPrice + '元')
-        }
-        this.updateIntergralInfo();
+        // 用于处理更新促销信息
+        this.updatePromotionInfo();
     },
     /**
      * 更新积分广告语
      */
-    updateIntergralInfo: function(){
-        if($('.xa-promotion').data('type')!=5)return
-        var price = 0;
+    updatePromotionInfo: function(){
+        var price, oPrice = 0;
+        if(this.targetModel){
+            oPrice = this.targetModel.price;
+        }else{
+            oPrice = this.minPrice;
+        }
         if(this.isFlashSale){
             price = this.promotion.detail.promotion_price;
+        }else if(this.discount){// 会员价
+            price = oPrice * this.discount / 100;
         }else{
-            if(this.targetModel){
-                price = this.targetModel.price;
-            }else{
-                price = this.minPrice;
-            }
-            if(this.discount){
-                price = price * this.discount / 100;
-            }
+            price = oPrice;
         }
-        var discount = $('.xa-promotion').data('discount-1');
-        if(!discount){
-            discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+        if(this.isFlashSale){// 有限时抢购
+            $('.xa-promotionNormal-info').text('已优惠' + (oPrice - price).toFixed(2) + '元');
         }
-        var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-        cut_price = (price * discount / 100).toFixed(2);
-        use_integral = parseInt(cut_price * perYuanOfPerIntegral);
-        cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-        if(this.usableIntegral < use_integral){
-            use_integral = this.usableIntegral;
+        if($('.xa-promotion').data('type')==5){// 有积分优惠
+            var discount = $('.xa-promotion').data('discount-1');
+            if(!discount){
+                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            }
+            var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
+            cut_price = (price * discount / 100).toFixed(2);
+            use_integral = parseInt(cut_price * perYuanOfPerIntegral);
             cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+            if(this.usableIntegral < use_integral){
+                use_integral = this.usableIntegral;
+                cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+            }
+            $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
         }
-        $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
     },
     /**
      * getMaxCount 获取指定规格最大购买数量
@@ -207,27 +207,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     }
                     _this.usableIntegral = data.usable_integral
                     _this.memberGradeId = data.member_grade_id
-                    var msg = '';
-                    // 商品原价
-                    var price = _this.minPrice;
-                    // 存储商品会员价与促销的状态
-                    _this.member_or_promotion = '';
-                    // 商品有促销
-                    var is_user_has_promotion = false;
-                    if(!($.isEmptyObject(_this.promotion))){
-                        // 促销是否对此用户开放
-                        is_user_has_promotion = _this.promotion.member_grade_id == 0 || _this.promotion.member_grade_id == _this.memberGradeId;
-
-                        // 限时抢购
-                        if(is_user_has_promotion && _this.promotion.detail.promotion_price){
-                            price = (_this.promotion.detail.promotion_price).toFixed(2);
-                            msg = true;
-                            _this.member_or_promotion = 'promotion';
-                        }
-                        if(!is_user_has_promotion){
-                            _this.isFlashSale = false;
+                    
+                    if(_this.promotion){// 商品有促销
+                        if(_this.promotion.member_grade_id != 0 && _this.promotion.member_grade_id != _this.memberGradeId){
+                            // 促销不对此用户等级开放
                             $('.xt-masterPromotionTile').remove()
-                            // 促销不对此用户开发
                             var next_promotions = $('.xa-display-promotion').next('div');
                             if(next_promotions.length==0){
                                 // 没有积分应用
@@ -237,39 +221,27 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                                 $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
                                 next_promotions.remove();
                             }
-
+                            if(_this.isFlashSale){
+                                _this.isFlashSale = false;
+                            }
                         }
-                    // 商品无促销
                     }
                     $('.xt-promotionTile:first').show();
-                    if(!is_user_has_promotion){
-                        // 商品是否折扣
-                        has_discount = _this.is_member_product;
-                        if(has_discount && data.discount < 100){
-                            //促销与会员价格处理
-                            _this.discount = data.discount;
-                            price = ((price * data.discount / 100).toFixed(2));
-                            msg = '会员价';
-                            _this.member_or_promotion = 'member';
-
-                        }
+                    if(!_this.isFlashSale && _this.is_member_product && data.discount < 100){
+                        // 会员价处理
+                        _this.discount = data.discount;
+                        $('.xa-singlePrice').html((_this.minPrice * data.discount / 100).toFixed(2)).parent().before('<span class="xui-memberPriceTag">会员价</span>');
+                        $('.xa-singlePrice').after('<span class="xui-orPrice">原价￥<span class="xa-orPrice">'+_this.minPrice.toFixed(2)+'</span>');
                     }
                     if (_this.isStandardModelProduct) {
                         _this.targetModel = _this.models[0];
                         var maxCount=_this.getMaxCount(_this.targetModel);
                         _this.initProductModel(maxCount);
+                        _this.updateProductInfo(_this.targetModel);
                     } else {
                         _this.initProductModel(0);
                     }
-                    // 处理会员价
-                    if (msg === true){
-                        var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span>';
-                        $('.xa-priceSection').html(temp);
-                    }else if(msg === '会员价'){
-                        var orPrice = (_this.minPrice).toFixed(2);
-                        var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
-                        $('.xa-priceSection').html(temp);
-                    }
+                    
                     if(data.is_subscribed){
                         $('.xa-collectProduct').show();
                     }else{// 非会员
@@ -381,14 +353,16 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             this.counter.setMaxCount(0);
         } else {
             var change_price = 0;
-            if (this.promotion && this.isFlashSale) {
-                if (this.promotion.type == 1 && this.member_or_promotion === 'promotion') {
-                    change_price = this.promotion.detail.promotion_price.toFixed(2); //无规格时，显示抢购的价钱
-                }else if (this.promotion.type == 1 && this.member_or_promotion === 'member') {
-                    change_price = model.price.toFixed(2); //无规格时，显示抢购的价钱
-                }else{
-                    change_price = model.price.toFixed(2);//无规格时，显示抢购的价钱
-                }
+            // if (this.promotion && this.isFlashSale) {
+            //     if (this.promotion.type == 1 && this.member_or_promotion === 'promotion') {
+            //         change_price = this.promotion.detail.promotion_price.toFixed(2); //无规格时，显示抢购的价钱
+            //     }else if (this.promotion.type == 1 && this.member_or_promotion === 'member') {
+            //         change_price = model.price.toFixed(2); //无规格时，显示抢购的价钱
+            //     }else{
+            //         change_price = model.price.toFixed(2);//无规格时，显示抢购的价钱
+            //     }
+            if(this.isFlashSale){
+                change_price = this.promotion.detail.promotion_price.toFixed(2); //无规格时，显示抢购的价钱
             } else {
                 change_price = model.price.toFixed(2);
             }
@@ -547,7 +521,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var currentModelPropertyValue = $propertyValue.attr('name');
 
         this.targetModel = this.getSelectedModel();
-        this.updateIntergralInfo();
+        this.updatePromotionInfo();
         if (this.targetModel) {
             //启用counter
             this.counter.enable();
