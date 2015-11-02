@@ -1372,7 +1372,6 @@ def create_product_review(request):
     return render_to_response(
         '%s/product_review_create.html' % request.template_dir, c)
 
-
 def update_product_review_picture(request):
     '''
 
