@@ -90,40 +90,43 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         counter.setMaxCount(maxCount);
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
-            var discount = $('.xa-promotion').data('discount-1');
-            if(!discount){
-                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
-            }
-            var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
             var price = this.targetModel.price;
             if(this.discount){
                 price = price * this.discount / 100;
             }
-            cut_price = (price * discount / 100).toFixed(2);
-            use_integral = parseInt(cut_price * perYuanOfPerIntegral);
-            cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-            if(this.usableIntegral < use_integral){
-                use_integral = this.usableIntegral;
-                cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-            }
-            $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
+            this.updateIntergralInfo(price);
+            // var discount = $('.xa-promotion').data('discount-1');
+            // if(!discount){
+            //     discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            // }
+            // var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
+            // cut_price = (price * discount / 100).toFixed(2);
+            // use_integral = parseInt(cut_price * perYuanOfPerIntegral);
+            // cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+            // if(this.usableIntegral < use_integral){
+            //     use_integral = this.usableIntegral;
+            //     cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+            // }
+            // $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
         }
         if(this.promotion){
             if($('.xa-promotion').data('type')==5 && this.isFlashSale){
                 var prodcutPrice = this.promotion.detail.promotion_price;
-                var discount = $('.xa-promotion').data('discount-1');
-                if(!discount){
-                    discount = $('.xa-promotion').data('discount'+this.memberGradeId)
-                }
-                var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-                cut_price = (prodcutPrice * discount / 100).toFixed(2);
-                use_integral = parseInt(cut_price * perYuanOfPerIntegral);
-                cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-                if(this.usableIntegral < use_integral){
-                    use_integral = this.usableIntegral;
-                    cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-                }
-                $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
+
+                this.updateIntergralInfo(prodcutPrice);
+                // var discount = $('.xa-promotion').data('discount-1');
+                // if(!discount){
+                //     discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+                // }
+                // var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
+                // cut_price = (prodcutPrice * discount / 100).toFixed(2);
+                // use_integral = parseInt(cut_price * perYuanOfPerIntegral);
+                // cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+                // if(this.usableIntegral < use_integral){
+                //     use_integral = this.usableIntegral;
+                //     cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+                // }
+                // $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
             }
         }
         // end用于处理显示积分抵扣信息 提出单独的方法
@@ -131,6 +134,22 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             $('.xa-disabledBuyLinks').hide();
             $('.xa-enabledBuyLinks').show();
         }
+    },
+
+    updateIntergralInfo: function(price){
+        var discount = $('.xa-promotion').data('discount-1');
+        if(!discount){
+            discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+        }
+        var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
+        cut_price = (price * discount / 100).toFixed(2);
+        use_integral = parseInt(cut_price * perYuanOfPerIntegral);
+        cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+        if(this.usableIntegral < use_integral){
+            use_integral = this.usableIntegral;
+            cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+        }
+        $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
     },
 
     /**
@@ -216,47 +235,48 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
         // 用于处理显示限时抢购信息
         if($('.xa-promotionNormal').data('type')==1){
-            var minPrice = this.minPrice;
             var promotionPrice = this.promotion.detail.promotion_price;
-            var gapPrice = (minPrice - promotionPrice).toFixed(2);
+            var gapPrice = (this.minPrice - promotionPrice).toFixed(2);
             $('.xa-promotionNormal-info').text('已优惠' + gapPrice + '元')
         }
         // 用于处理显示积分抵扣信息 提出单独的方法
         if($('.xa-promotion').data('type')==5){
-            var discount = $('.xa-promotion').data('discount-1');
-            if(!discount){
-                discount = $('.xa-promotion').data('discount'+this.memberGradeId)
-            }
-            var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
             var price = this.minPrice;
             if(this.discount){
                 price = price * this.discount / 100;
             }
-            cut_price = (price * discount / 100).toFixed(2);
-            use_integral = parseInt(cut_price * perYuanOfPerIntegral);
-            cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-            if(this.usableIntegral < use_integral){
-                use_integral = this.usableIntegral;
-                cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-            }
-            $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
+            this.updateIntergralInfo(price);
+            // var discount = $('.xa-promotion').data('discount-1');
+            // if(!discount){
+            //     discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+            // }
+            // var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
+            // cut_price = (price * discount / 100).toFixed(2);
+            // use_integral = parseInt(cut_price * perYuanOfPerIntegral);
+            // cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+            // if(this.usableIntegral < use_integral){
+            //     use_integral = this.usableIntegral;
+            //     cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+            // }
+            // $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
         }
         if(this.promotion){
             if($('.xa-promotion').data('type')==5 && this.isFlashSale){
                 var prodcutPrice = this.promotion.detail.promotion_price;
-                var discount = $('.xa-promotion').data('discount-1');
-                if(!discount){
-                    discount = $('.xa-promotion').data('discount'+this.memberGradeId)
-                }
-                var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
-                cut_price = (prodcutPrice * discount).toFixed(2);
-                use_integral = parseInt(cut_price * perYuanOfPerIntegral);
-                cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-                if(this.usableIntegral < use_integral){
-                    use_integral = this.usableIntegral;
-                    cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
-                }
-                $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
+                this.updateIntergralInfo(prodcutPrice);
+                // var discount = $('.xa-promotion').data('discount-1');
+                // if(!discount){
+                //     discount = $('.xa-promotion').data('discount'+this.memberGradeId)
+                // }
+                // var perYuanOfPerIntegral = $('.xa-promotion').data('per-yuan');
+                // cut_price = (prodcutPrice * discount / 100).toFixed(2);
+                // use_integral = parseInt(cut_price * perYuanOfPerIntegral);
+                // cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+                // if(this.usableIntegral < use_integral){
+                //     use_integral = this.usableIntegral;
+                //     cut_price = (use_integral / perYuanOfPerIntegral).toFixed(2);
+                // }
+                // $('.xa-promotion').parents('.xa-promotionSection').find('.xa-intergralInfo').text('最多可使用'+ use_integral +'积分，抵扣'+ cut_price +'元');
             }
         }
         // end用于处理显示积分抵扣信息 提出单独的方法
