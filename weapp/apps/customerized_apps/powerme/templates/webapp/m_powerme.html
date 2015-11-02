@@ -261,16 +261,20 @@
         var rect;
 
         var djage = function(){
-            return rect.top >= 0 && ($win.height()-rect.top + $top.height()>=0)
+            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top + $top.height()>=0)
         };
-
-        window.onscroll = function(){
+        var toggle_show = function(){
             rect = $top[0].getBoundingClientRect();
             if(rect && djage()){
                 $('.wa-masterinfo').show();
             }else{
                 $('.wa-masterinfo').hide();
             }
+        };
+        toggle_show();
+
+        window.onscroll = function(){
+            toggle_show();
         };
     }
 
