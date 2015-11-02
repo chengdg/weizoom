@@ -228,8 +228,8 @@ class WeiZoomCardPermission(models.Model):
 	can_batch_stop_card = models.BooleanField(default=False)#能否批量停用
 	can_batch_active_card = models.BooleanField(default=False)#能否批量激活
 	can_view_card_details = models.BooleanField(default=False)#能否显示微众卡使用详情
-	can_stop_card = models.BooleanField(default=False)#能否创停用
-	can_active_card = models.BooleanField(default=False)#能否创激活
+	can_stop_card = models.BooleanField(default=False)#能否停用
+	can_active_card = models.BooleanField(default=False)#能否激活
 	can_change_shop_config = models.BooleanField(default=False)#能否开启关闭
 	can_view_statistical_details = models.BooleanField(default=False)#能否查看数据统计使用详情
 	can_export_statistical_details= models.BooleanField(default=False)#能否批量导出统计
