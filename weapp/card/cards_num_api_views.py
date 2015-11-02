@@ -82,10 +82,18 @@ def get_card_num_operations(request):
     """
     微众卡操作记录页面
     """
+    card_id = request.GET.get('card_id','')
+    card_operations = WeizoomCardOperationLog.objects.filter(card_id=card_id)
+    cur_card_operations = []
+    for cur_card_operation in card_operations:
+        cur_weizoom_card = JsonResponse()
+        cur_weizoom_card.operater_name = cur_card_operation.operater_name
+        cur_weizoom_card.operate_log = cur_card_operation.operate_log
+        cur_weizoom_card.created_at = cur_card_operation.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        cur_card_operations.append(cur_weizoom_card)
     print 11111111111111111
     response = create_response(200)
-    response.data.asd='123'
-    response.data.items=['123']
+    response.data.items=cur_card_operations
     return response.get_response()
 
 
