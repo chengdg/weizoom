@@ -85,7 +85,7 @@
         float: left;
     }
     .xui-attention .xui-twoDimensionBox {
-        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto #fff;
         border-radius: 8px;
         left: 50%;
         margin-left: -143px;
@@ -140,7 +140,7 @@
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
             <p></p>
             <div style="margin-left:8px;">
-                <p>2.回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+                <p>2.回复：“</p><div style="color: orangered;display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
