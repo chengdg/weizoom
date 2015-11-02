@@ -13,7 +13,7 @@
         line-height: 30px;
         background-color: white;
         border-top: 1px solid gainsboro;
-        opacity: 0.9;
+        opacity: 0;
         text-align: center;
     }
     .wui-masterinfo span{
@@ -114,7 +114,7 @@
     <div class="wui-win wui-qrimg-win wui-hide"></div>
     <div class="wui-win wui-guide-win wui-hide"></div>
     {{ page_html_content|safe }}
-    <div class="wui-masterinfo wa-masterinfo wui-hide">
+    <div class="wui-masterinfo wa-masterinfo">
         <div style="float: left;">
             <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
         <span class="wa-mypower">我的助力值: <b>{% if current_member_rank_info %}{{ current_member_rank_info.power }}{% else %}0{% endif %}</b></span>
@@ -133,12 +133,12 @@
     <div class="xui-attention xa-attention none">
         <div class="xui-twoDimensionBox">
             <div style="margin-left: 8px;margin-top: 32px;">
-                <p>1、长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
+                <p>1.长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
             </div>
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
             <p></p>
             <div style="margin-left:8px;">
-                <p>2、回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
+                <p>2.回复：“</p><p style="color: orangered">{{ reply_content|safe }}</p><p>”，即可参加活动</p>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
@@ -266,9 +266,9 @@
         var toggle_show = function(){
             rect = $top[0].getBoundingClientRect();
             if(rect && djage()){
-                $('.wa-masterinfo').show();
+                $('.wa-masterinfo').css('opacity',0.8);
             }else{
-                $('.wa-masterinfo').hide();
+                $('.wa-masterinfo').css('opacity',0);
             }
         };
 
