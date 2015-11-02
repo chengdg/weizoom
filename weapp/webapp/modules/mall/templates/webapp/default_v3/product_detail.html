@@ -29,11 +29,17 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <div class="pr">
                     <div class="xui-productInfoBox">
                         <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}</h2>
+                        {% if product.master_promotion_title %}
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile xt-masterPromotionTile" style="padding-top:2px;">{{ product.master_promotion_title }}</div>
+                        {% endif %}
+                        {% if product.integral_sale_promotion_title %}
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile" style="padding-top:2px;">{{ product.integral_sale_promotion_title }}</div>
+                        {% endif %}
                         {% if product.promotion_title %}
-                        <div class="xui-text-red em9" style="padding-top:2px;">{{ product.promotion_title|safe }}</div>
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile" style="padding-top:2px;">{{ product.promotion_title }}</div>
                         {% endif %}
                     </div>
-                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa hide" data-is-collect="false">收藏</a>
+                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa xui-hide" data-is-collect="false">收藏</a>
                 </div>
                 {# jz 2015-10-29 #}
                 {#% if cur_request_member %#}
@@ -81,7 +87,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     优惠：
                 {% endif %}</div>
                 <div class="disTc em85 pr" style="width:3.1rem;top:-2px;">
-                    <span class="xui-promotionName xa-promotion" data-type="5" data-discount="{{product.integral_sale.detail.discount}}" data-per-yuan="{{per_yuan}}">积分抵扣</span>
+                    <span class="xui-promotionName xa-promotion" data-type="5"{% for rule in product.integral_sale.detail.rules %} data-discount{{rule.member_grade_id}}="{{rule.discount}}"{% endfor %} data-per-yuan="{{per_yuan}}">积分抵扣</span>
                 </div>
                 <div class="disTc c6 em8 pl5">
                     <span class="xa-intergralInfo"></span>
@@ -360,25 +366,25 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% if not is_deleted_data %}
 <script type="text/javascript">
 
-//运费计算因子
-var postageFactor = {};
 // jz 2015-10-20
+//运费计算因子
+// var postageFactor = {};
 //可用积分
 // var usableIntegral = {{usable_integral}};
 //是否启用"测试购买"
 // var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
+//运费配置名称
+// var postageConfigName = "{{product.postage_config.name}}";
 //商品id
 var productId = '{{product.id}}';
 //商品类型
-var productType = "{{product.type}}";
+// var productType = "{{product.type}}";
 //商品规格值
 var models = W.loadJSON('models');
 //商品价格信息
 var priceInfo = W.loadJSON('priceInfo');
-//运费配置名称
-var postageConfigName = "{{product.postage_config.name}}";
 // 限购数量
-var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
+// var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
 // 是否会员商品
 var is_member_product = '{{product.is_member_product}}'
 // 促销信息
@@ -387,16 +393,16 @@ var promotion = W.loadJSON('promotion');
 $(document).ready(function() {
     view = new W.page.BuyProductPage({
         el: '.xui-page',
-        postageFactor: postageFactor,
         // jz 2015-10-20
         // usableIntegral: usableIntegral,
         // enableTestBuy: enableTestBuy,
+        // postageFactor: postageFactor,
+        // postageConfigName: postageConfigName,
         productId: productId,
-        productType: productType,
+        // productType: productType,
         models: models,
         priceInfo: priceInfo,
-        postageConfigName: postageConfigName,
-        countPerPurchase: countPerPurchase,
+        // countPerPurchase: countPerPurchase,
         promotion: promotion,
         is_member_product: is_member_product,
     });
