@@ -41,14 +41,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     </div>
                     <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa xui-hide" data-is-collect="false">收藏</a>
                 </div>
-                {# jz 2015-10-29 #}
-                {#% if cur_request_member %#}
-                {#% else %#}
-                <!--div class="disF">
-                    <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
-                    <span class="xui-text-red">{{ product.promotion_title }}</span>{% endif %}</h2>
-                </div-->
-                {#% endif %#}
                 <p class="xui-section-boldItemText xui-text-red xa-priceSection">
                     <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price|format_float}}</span></span>
                 </p>
@@ -74,12 +66,11 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     {% endfor %}
                 </span>
                 {% else %}
-                <span class="ml5 xa-promotionNormal-info">{{ product.promotion.promotion_title }}</span>
+                <span class="ml5 xa-promotionNormal-info"></span>
                 {% endif %}
                 </div>
             </div>
             {% endif %}
-            
             {% if product.integral_sale %}
             <div class="disT w" style="margin-top:4px;">
                 <div class="disTc em85 c6" style="width:3rem;">
@@ -94,7 +85,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
             </div>
             {% endif %}
-        
             {% if hint %}
             <div class="disT w">
                 <div class="disTc em85 c6" style="width:3rem;">
@@ -118,12 +108,10 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <div class="xui-section-item xui-section-title">
                     <a href="javascript:void(0);" class="pt10 pb10 block xa-slidePanelShow">
                         <label for="" class="pr10">请选择</label>
-                        <!-- <span class="xa-selectedModelHint">请选择</span> -->
                         {% for property in product.product_model_properties %}
                         <span class="xa-selectedModelPropertyValueName pr5" data-property-id="{{property.id}}" data-property-name="{{property.name}}">{{property.name}}</span>
                         {% endfor %}
                         <span class="xa-purchaseCount">数量</span>
-                        <!-- <span class="">{{product.physical_unit}}</span> -->
                         <span class="xui-icon xui-icon-rightarrow"></span>
                     </a>
                 </div>
@@ -225,10 +213,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     <!-- 购物车、加入购物车、购买按钮组Start -->
     <div class="tc xui-tab-fixed">
         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xui-btn">
-
-                <i class="xui-inner-icon pr">
-                    <span class="xui-inner-count pa hidden xa-shoppingCartCount"></span>
-                </i>
+            <i class="xui-inner-icon pr">
+                <span class="xui-inner-count pa hidden xa-shoppingCartCount"></span>
+            </i>
         </a>
         <!-- 已售罄 -->
         {% if product.shelve_type == 1 %}
@@ -250,7 +237,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
                 </div>
             </div>
-
         {% else %}
             <div class="xui-selloutAlert">商品已下架，非常抱歉</div>
             <div style="padding:3px 0;">
@@ -365,26 +351,12 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 {% if not is_deleted_data %}
 <script type="text/javascript">
-
-// jz 2015-10-20
-//运费计算因子
-// var postageFactor = {};
-//可用积分
-// var usableIntegral = {{usable_integral}};
-//是否启用"测试购买"
-// var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
-//运费配置名称
-// var postageConfigName = "{{product.postage_config.name}}";
 //商品id
 var productId = '{{product.id}}';
-//商品类型
-// var productType = "{{product.type}}";
 //商品规格值
 var models = W.loadJSON('models');
 //商品价格信息
 var priceInfo = W.loadJSON('priceInfo');
-// 限购数量
-// var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
 // 是否会员商品
 var is_member_product = '{{product.is_member_product}}'
 // 促销信息
@@ -393,36 +365,27 @@ var promotion = W.loadJSON('promotion');
 $(document).ready(function() {
     view = new W.page.BuyProductPage({
         el: '.xui-page',
-        // jz 2015-10-20
-        // usableIntegral: usableIntegral,
-        // enableTestBuy: enableTestBuy,
-        // postageFactor: postageFactor,
-        // postageConfigName: postageConfigName,
         productId: productId,
-        // productType: productType,
         models: models,
         priceInfo: priceInfo,
-        // countPerPurchase: countPerPurchase,
         promotion: promotion,
         is_member_product: is_member_product,
+        cdn_host: '{{cdn_host}}'
     });
 
-    if(models.length > 1){
-        var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
-    }
-    var $img = $('.xa-productDetail-content img');
-    $img.lazyload({
-        data_attribute:"url",
-        effect : "fadeIn",
-        placeholder:"{{cdn_host}}/static_v2/img/webapp/mall/info_placeholder.png"
-    });
+    // var $img = $('.xa-productDetail-content img');
+    // $('[data-url]').lazyload({
+    //     data_attribute:"url",
+    //     effect : "fadeIn",
+    //     placeholder:"/static_v2/img/webapp/mall/info_placeholder.png"
+    // });
     //处理会员名称
-    var spanMemberName = $(".xa-memberName");
-    for(var i = 0; i < spanMemberName.length; i++) {
-        var str = $(spanMemberName[i]).text().trim();
-        var str_name = str.substring(0,1)+"**"+str[str.length-1];
-        $(spanMemberName[i]).html(str_name)
-    }
+    // var spanMemberName = $(".xa-memberName");
+    // for(var i = 0; i < spanMemberName.length; i++) {
+    //     var str = $(spanMemberName[i]).text().trim();
+    //     var str_name = str.substring(0,1)+"**"+str[str.length-1];
+    //     $(spanMemberName[i]).html(str_name)
+    // }
 });
 //无刷新页面重置数量信息
 if (document.getElementById('total_count')) {
