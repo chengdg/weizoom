@@ -1,0 +1,297 @@
+{% extends "card_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% load mall_filter %}
+{% block css %}
+    <style>
+	.modal-width{
+        width: 750px;
+        min-height: 900px
+        background-color:#000;
+    }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+    <li>您当前所在位置</li>
+    <li>
+        <a href="/card/cards/get/">微众卡管理</a>
+    </li>
+    <li>
+        <a href="/card/cards/get/">制卡管理</a>
+    </li>
+    <li class="active">设置管理人员权限</li>
+</ul>
+<div class="panel panel-default mt20 pr" style="background-color:#EAEEF6">
+    <div class="panel-heading" style="height:40px">
+    </div>
+    <div 
+        data-ui-role="advanced-table" 
+        data-enable-paginator="true" 
+        data-app="card" 
+        data-api="managers/get" 
+        data-template-id="#card_manager_list_view" 
+        data-init-sort="-created_at" 
+        data-item-count-per-page="15"
+        data-auto-load="true"
+        class="panel-body">
+    </div>
+</div>
+<div class="modal fade" id="card_manager_configure_win" tabindex="-1" role="dialog" aria-labelledby="card_manager_configureLabel" aria-hidden ="true">
+	<div class="modal-dialog modal-width" style="min-height:900px;background-color:#fff">
+		<div class="modal-header">
+			<h4 class="modal-title" id="myModalLabel">用户配置权限</h4>	
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal" id="enter_form">
+				<div class="form-group">
+					<input type="hidden" name="user_id" id="enter_hidden_id">
+					<div>
+						<input type="checkbox" name="creat_new_card_all" id="creat_new_card_all" value="" style="margin-left: 20px;">创建新卡	
+					</div>
+					<input type="checkbox" name="creat_new_card" id="can_create_card" value="" style="margin-left: 50px;">新建卡片
+					<input type="checkbox" name="creat_new_card" id="can_export_batch_card" value="" style="margin-left: 10px;">批量导出
+					<input type="checkbox" name="creat_new_card" id="can_add_card" value=""style="margin-left: 10px;">追加卡库
+				</div>
+			</form>
+			<form class="form-horizontal" id="enter_form">
+				<div class="form-group">
+					<div>
+						<input type="checkbox" id="card_active_all"  value="" style="margin-left: 20px;">微众卡激活	
+					</div>
+					<input type="checkbox" name="card_active" id="can_batch_stop_card" value="" style="margin-left: 50px;">批量停用
+					<input type="checkbox" name="card_active" id="can_batch_active_card" value="" style="margin-left: 10px;" >批量激活
+					<input type="checkbox" name="card_active" id="can_stop_card" value=""style="margin-left: 10px;">停用
+					<input type="checkbox" name="card_active" id="can_active_card" value=""style="margin-left: 10px;">激活
+					<input type="checkbox" name="card_active" id="can_view_card_details" value=""style="margin-left: 10px;">使用详情
+				</div>
+			</form>
+			<form class="form-horizontal" id="enter_form">
+				<div class="form-group">
+					<div>
+						<input type="checkbox" id="business_managemen_all"  value="" style="margin-left: 20px;">商户权限管理	
+					</div>
+					<input type="checkbox" name="business_managemen" id="can_change_shop_config" value="" style="margin-left: 50px;">开启关闭
+				</div>
+			</form>
+			<form class="form-horizontal" id="enter_form">
+				<div class="form-group">
+					<div>
+						<input type="checkbox" id="data_statistical_all" value="" style="margin-left: 20px;" >数据统计	
+					</div>
+					<input type="checkbox" name="data_statistical" id="can_view_statistical_details" value="" style="margin-left: 50px;">使用详情
+					<input type="checkbox" name="data_statistical" id="can_export_statistical_details" value=""style="margin-left: 10px;">批量导出
+				</div>
+			</form>
+		</div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary " style="margin-bottom: 0px;" data-dismiss="modal" onclick="save_enter();">确定</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">取消</span></button>
+        </div>
+		
+	</div>
+	
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+        <script id="card_manager_list_view" type="text/x-jquery-tmpl">
+            <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" style="margin-bottom: 10px;clear:both;">
+                <thead>
+                    <tr>
+                        <th style="width:20%">用户名</th>
+                        <th style="width:60%">权限</th>
+                        <th style="width:20%">操作</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{each(i,card_manager) items}}
+                    <tr>
+                        <td> ${card_manager.username}</td>
+                        <td>{{if card_manager.can_create_card }}创建卡,{{/if}}{{if card_manager.can_export_batch_card }}批量导出,{{/if}}{{if card_manager.can_add_card }}追加卡库,{{/if}}{{if card_manager.can_batch_stop_card }}批量停用,{{/if}}{{if card_manager.can_batch_active_card }}批量激活,{{/if}}{{if card_manager.can_view_card_details }}显示微众卡使用详情,{{/if}}{{if card_manager.can_stop_card }}停用,{{/if}}{{if card_manager.can_active_card }}激活,{{/if}}{{if card_manager.can_change_shop_config }}开启关闭,{{/if}}{{if card_manager.can_view_statistical_details }}查看数据统计使用详情,{{/if}}{{if card_manager.can_export_statistical_details }}批量导出统计,{{/if}}</td>
+                        <td><a href="javascript:void(0);" class="btn btn-default ml10 " onclick="card_manager_configure(${card_manager.user_id})" >配置</a></td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </script>
+    {% endverbatim %}
+	<script>
+	$(function(){
+		$("#creat_new_card_all").click(function(){
+			$('[name=creat_new_card]:checkbox').attr('checked',this.checked);
+		})
+		$('[name=creat_new_card]:checkbox').click(function(){
+			$(this).attr('checked',this.checked);
+		})	
+		$("#card_active_all").click(function(){
+			$('[name=card_active]:checkbox').attr('checked',this.checked);
+		})
+		$('[name=card_active]:checkbox').click(function(){
+			$(this).attr('checked',this.checked);
+		})		
+		$("#business_managemen_all").click(function(){
+			$('[name=business_managemen]:checkbox').attr('checked',this.checked);
+		})
+		$('[name=business_managemen]:checkbox').click(function(){
+			$(this).attr('checked',this.checked);
+		})	
+		$("#data_statistical_all").click(function(){
+			$('[name=data_statistical]:checkbox').attr('checked',this.checked);
+		})
+		$('[name=data_statistical]:checkbox').click(function(){
+			$(this).attr('checked',this.checked);
+		})	
+	});
+	function card_manager_configure(id){
+		$('#enter_hidden_id').val(id);
+        W.getApi().call({
+                    app: 'card',
+                    api: 'weizoomcard_permission_own/get',
+                    method: 'post',
+                    args: {
+                        user_id: id,
+                    },
+                    success: function(data) {
+                        can_create_card=data.items.can_create_card;
+                        can_export_batch_card=data.items.can_export_batch_card;
+                        can_add_card=data.items.can_add_card;
+                        can_batch_stop_card=data.items.can_batch_stop_card;
+                        can_batch_active_card=data.items.can_batch_active_card;
+                        can_view_card_details=data.items.can_view_card_details;
+                        can_stop_card=data.items.can_stop_card;
+                        can_active_card=data.items.can_active_card;
+                        can_change_shop_config=data.items.can_change_shop_config;
+                        can_view_statistical_details=data.items.can_view_statistical_details;
+                        can_export_statistical_details=data.items.can_export_statistical_details;
+
+                        if (can_create_card){
+                            $('#can_create_card').attr('checked',true);
+                        }
+                        
+                        else{
+                            $('#can_create_card').attr('checked',false);
+                        }
+                        if (can_export_batch_card){
+                            $('#can_export_batch_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_export_batch_card').attr('checked',false);
+                        }
+                        if (can_add_card){
+                            $('#can_add_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_add_card').attr('checked',false);
+                        }
+                        if (can_batch_stop_card){
+                            $('#can_batch_stop_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_batch_stop_card').attr('checked',false);
+                        }
+                        if (can_batch_active_card){
+                            $('#can_batch_active_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_batch_active_card').attr('checked',false);
+                        }
+                        if (can_view_card_details){
+                            $('#can_view_card_details').attr('checked',true);
+                        }
+                        else{
+                            $('#can_view_card_details').attr('checked',false);
+                        }
+                        if (can_stop_card){
+                            $('#can_stop_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_stop_card').attr('checked',false);
+                        }
+                        if (can_active_card){
+                            $('#can_active_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_active_card').attr('checked',false);
+                        }
+                        if (can_change_shop_config){
+                            $('#can_change_shop_config').attr('checked',true);
+                        }
+                        else{
+                            $('#can_change_shop_config').attr('checked',false);
+                        }
+                        if (can_view_statistical_details){
+                            $('#can_view_statistical_details').attr('checked',true);
+                        }
+                        else{
+                            $('#can_view_statistical_details').attr('checked',false);
+                        }
+                        if (can_export_statistical_details){
+                            $('#can_export_statistical_details').attr('checked',true);
+                        }
+                        else{
+                            $('#can_export_statistical_details').attr('checked',false);
+                        }
+                        $('#card_manager_configure_win').modal({keyboard:false});
+                    },
+                    error: function(resp) {
+                        if(resp.code == 500){
+                            console.log('error');
+                        }else{
+                            console.log('error');
+                        }
+                    },
+                    scope: this
+        })
+    }
+
+    function save_enter(){
+    	var user_id=$('#enter_hidden_id').val();
+    	var can_create_card=$('#can_create_card').prop("checked");
+    	var can_export_batch_card=$('#can_export_batch_card').prop("checked");
+    	var can_add_card=$('#can_add_card').prop("checked");
+    	var can_batch_stop_card=$('#can_batch_stop_card').prop("checked");
+    	var can_batch_active_card=$('#can_batch_active_card').prop("checked");
+    	var can_stop_card=$('#can_stop_card').prop("checked");
+    	var can_active_card=$('#can_active_card').prop("checked");
+    	var can_view_card_details=$('#can_view_card_details').prop("checked");
+    	var can_change_shop_config=$('#can_change_shop_config').prop("checked");
+    	var can_view_statistical_details=$('#can_view_statistical_details').prop("checked");
+    	var can_export_statistical_details=$('#can_export_statistical_details').prop("checked");
+    	W.getApi().call({
+                    app: 'card',
+                    api: 'weizoomcard_permission/get',
+                    method: 'post',
+                    args: {
+                    	user_id: user_id,
+                        can_create_card: can_create_card,
+                        can_export_batch_card: can_export_batch_card,
+                        can_add_card: can_add_card,
+                        can_batch_stop_card: can_batch_stop_card,
+                        can_batch_active_card: can_batch_active_card,
+                        can_stop_card: can_stop_card,
+                        can_active_card: can_active_card,
+                        can_view_card_details: can_view_card_details,
+                        can_change_shop_config: can_change_shop_config,
+                        can_view_statistical_details: can_view_statistical_details,
+                        can_export_statistical_details: can_export_statistical_details,
+                    },
+                    success: function(data) {
+                    	window.location.href = '/card/cardmanager/get/'
+                    },
+                    error: function(resp) {
+                        if(resp.code == 500){
+                          	console.log('error');
+                        }else{
+                            console.log('error');
+                        }
+                    },
+                    scope: this
+        })
+
+    }
+	</script>
+{% endblock %}
