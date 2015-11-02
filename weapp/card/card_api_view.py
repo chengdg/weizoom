@@ -359,7 +359,6 @@ def get_weizoom_cards(request):
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
     weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
-    print weizoomcardpermission[0].can_active_card
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
