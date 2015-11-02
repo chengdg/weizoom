@@ -66,10 +66,10 @@ class PowerMeParticipances(resource.Resource):
 			params['created_at__lte'] = end_time
 		datas = app_models.PowerMeParticipance.objects(**params).order_by('-power','created_at')
 
+		#进行分页
+		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		cur_page = int(request.GET.get('page', '1'))
 		if not export_id:
-			#进行分页
-			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-			cur_page = int(request.GET.get('page', '1'))
 			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
 		tmp_member_ids = []
@@ -79,9 +79,13 @@ class PowerMeParticipances(resource.Resource):
 		member_id2member = {member.id: member for member in members}
 
 		items = []
+		#排名  导出时不适用
+		ranking = (cur_page-1)*count_per_page
 		for data in datas:
+			ranking += 1
 			items.append({
 				'id': str(data.id),
+				'ranking': ranking,
 				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
 				'username': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
