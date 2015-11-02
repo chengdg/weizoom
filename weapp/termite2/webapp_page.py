@@ -32,7 +32,7 @@ class WebappPage(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'没有project_id参数'
 			return response.get_response()
-		
+
 
 		#获取project
 		# project = None
@@ -91,6 +91,7 @@ class WebappPage(resource.Resource):
 			'share_page_desc': site_description,
 			'current_page_name': current_page_name,
 			'is_preview': is_preview,
+			'share_to_timeline': True,
 			'hide_non_member_cover': True #非会员也可使用该页面
 		})
 
