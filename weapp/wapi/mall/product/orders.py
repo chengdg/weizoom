@@ -83,6 +83,8 @@ class Orders(api_resource.ApiResource):
 			data['product_count'] = order.product_count
 		if hasattr(order, 'status'):
 			data['status'] = order.status
+		if hasattr(order, 'review_is_finished'):
+			data['review_is_finished'] = order.review_is_finished
 		return data
 
 	@param_required(['wuid', 'member_id', 'woid'])
