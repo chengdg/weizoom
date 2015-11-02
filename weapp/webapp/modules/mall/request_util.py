@@ -1500,7 +1500,7 @@ def edit_refueling_order(request):
 	return render_to_response('%s/edit_order.html' % request.template_dir, c)
 
 
-# 商城首页链接，./?woid={{request.webapp_owner_id}}&module=mall&model=homepage&action=get
+# 商城首页链接 ./?woid={{request.webapp_owner_id}}&module=mall&model=homepage
 def get_homepage(request):
     homepage_url = u'/workbench/jqm/preview/?woid={}&module=mall&model=products&action=list'.format(
         request.webapp_owner_id)
