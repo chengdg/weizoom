@@ -10,6 +10,8 @@ from webapp.modules.mall import request_util
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 
+def get_homepage(request):
+	return request_util.get_homepage(request)
 
 def list_products(request):
 	"""显示"商品列表"页面
