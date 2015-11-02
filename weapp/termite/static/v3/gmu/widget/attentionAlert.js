@@ -58,7 +58,9 @@ Copyright (c) 2011-2012 Weizoom Inc
                 top:0,
                 left:0,
                 'z-index':10003
-            });
+            }).click(function(){
+                $(this).addClass('none');
+            });;
             $('.xui-attentionBox').css({
                 width: 233,
                 height: 270,
@@ -105,9 +107,6 @@ Copyright (c) 2011-2012 Weizoom Inc
     	});
         $('.xui-attentionAlert').click(function(){
             $(this).attentionAlert('clickGuideAttention');
-        });
-        $('.xa-mask').click(function(){
-            $(this).addClass('none');
         });
 
 	})
