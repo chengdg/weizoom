@@ -137,7 +137,8 @@
                     },300)                
                 },
                 error: function (data) {
-                    alert('没有可连接的网络');
+                    _this._alert('上传失败');
+                    clearInterval(loop);
                     return;
                 }
             });
