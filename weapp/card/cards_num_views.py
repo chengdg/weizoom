@@ -84,6 +84,7 @@ def get_card_num_details(request):
             card_type = u'赠品卡'
         card.type = card_type
         card_orders = WeizoomCardHasOrder.objects.filter(card_id=card.id)
+        card_operations = WeizoomCardOperationLog.objects.filter(card_id=card.id)
         card.start_date= start_date
         card.end_date= end_date
 
@@ -96,6 +97,7 @@ def get_card_num_details(request):
                 'weizoom_card_rule_id': weizoom_card_rule_id,
                 'card': card,
                 'card_orders': card_orders,
+                'card_operations': card_operations,
                 'IS_CARD_RULE': True,
                 'password_is_show':password_is_show
             })
@@ -107,6 +109,7 @@ def get_card_num_details(request):
                 'third_nav_name': export.MALL_CARD_BY_CARD_NAV,
                 'card': card,
                 'card_orders': card_orders,
+                'card_operations': card_operations,
                 'IS_CARD_RULE': False
             })
 
