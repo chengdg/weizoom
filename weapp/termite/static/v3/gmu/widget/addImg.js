@@ -75,8 +75,10 @@
                         var img = new Image();
                         img.src = result;
 
-                        var innerHtml = "<img src="+ result +" data-allow-autoplay = 'true' id=pro_reivew"+imglength+"><div class='xui-progress xa-progress'><span></span></div>";
+                        var innerHtml = "<img src="+ result +" id='pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
+                        $li.children('img').data('allow-autoplay','true');
+                        W.ImagePreview(wx);
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
@@ -104,7 +106,6 @@
 
                 _this.showDelete();
                 _this.finishEdit();
-                _this.removeImgFun();
             });
         },
         upload: function(basestr,imglength,$li) {
@@ -209,9 +210,11 @@
         },
 
         showDelete:function(){
+            var _this = this;
             $('.xa-deletePhoto').show().unbind('click').click(function(){
                 $('.xa-remove, .xa-finishEdit').show();
                 $('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
+                _this.removeImgFun();
             });
         },
 
@@ -224,10 +227,12 @@
                     $('.xa-addPhoto').show();
                     $('.xa-finishEdit').hide();
                 }
+                $('.xa-remove').unbind('click');
             });
         },
         removeImgFun:function(){
-            $('body').delegate($('.xa-remove'), 'click', function(event) {
+            $('.xa-remove').click( function(event) {
+            // $('body').delegate($('.xa-remove'), 'click', function(event) {
                 $(event.target).parents('li').remove();
                 var length = $('.xa-imgList').children('li').length;
                 if(length == 0){

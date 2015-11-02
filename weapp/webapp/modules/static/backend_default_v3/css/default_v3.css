@@ -3741,6 +3741,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     width: 45px;
     height: 45px;
     margin-right: 2px;
+    box-shadow: inset 0px 0px 0px 1px #ddd;
 }
 .xui-productReviewCreatePage .xui-imgList li img{
     width: 45px;
