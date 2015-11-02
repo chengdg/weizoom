@@ -1,6 +1,7 @@
 {% block base_js %}
 <script type="text/javascript">
       var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
+      var isShareToTimeline = {% if share_to_timeline %}true{% else %}false{% endif %};
 
       W.currentPageName = "{{current_page_name}}";
 
@@ -68,7 +69,7 @@
           }
       };
 
-      if (window.location.href.indexOf('share_red_envelope') > 0 || window.location.href.indexOf('webapp_page') > 0){
+      if (isShareToTimeline){
           W.wxShareTimelineData = {
               "imgUrl" : W.sharePageImg,
               "link" : link,
