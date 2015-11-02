@@ -780,18 +780,20 @@ def create_product_review(request):
 			product_score=product_score,
 			review_detail=review_detail
 		)
-		for picture in list(eval(picture_list)):
-			mall_models.ProductReviewPicture(
-				product_review=product_review,
-				order_has_product_id=order_has_product_id,
-				att_url=picture
-			).save()
-			watchdog_info(u"create_product_review after save img  %s" %\
-				(picture), type="mall", user_id=request.webapp_owner_id)
 		response = create_response(200)
 		response.data = get_review_status(request)
-		watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
-			(order_has_product_id), type="mall", user_id=owner_id)
+		if picture_list:
+			for picture in list(eval(picture_list)):
+				mall_models.ProductReviewPicture(
+					product_review=product_review,
+					order_has_product_id=order_has_product_id,
+					att_url=picture
+				).save()
+				watchdog_info(u"create_product_review after save img  %s" %\
+					(picture), type="mall", user_id=request.webapp_owner_id)
+
+			watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
+				(order_has_product_id), type="mall", user_id=owner_id)
 		return response.get_response()
 	elif request.method == 'GET':
 		return create_response(500).get_response()
