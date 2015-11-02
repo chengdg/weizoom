@@ -20,13 +20,21 @@
     <div class="xa-cardListFilterView xui-filterPanel"></div>
 
     <div class="panel-heading" style="position: absolute;clear: both;margin-top: 22px;z-index: 10;left: -4px;">
+        {% if can_batch_active_card %}
         <a class="btn btn-success xa-batch-active fr mt5 ml10" operate_style="active" href="javascript:void(0)">批量激活</a>
+        {% endif %}
+        {% if can_batch_stop_card %}
         <a class="btn btn-success xa-batch-inactive fr mt5" operate_style="inactive" href="javascript:void(0)">批量停用</a>
+        {% endif %}
     </div>
 
     <div class=" " style="position: absolute;clear: both;margin-top: 27px;right:0px;z-index: 10;">
+        {% if can_add_card %}
         <a id="appendBtn" rule-id="{{weizoom_card_rule.id}}" class="btn btn-primary" href="javascript:void(0)" style="margin:0px">追加</a>
+        {% endif %}
+        {% if can_export_batch_card %}
         <a id="exportBtn" class="btn btn-primary" href="javascript:void(0)"><i class="icon-plus icon-white"></i>导出表格</a>
+        {% endif %}
     </div>
 
     <form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="post" id="editForm" style="">
@@ -140,7 +148,9 @@
                 <td>
                     {{if !card.is_expired}}
                         {{if card.status==3}}
-                        <a class="btn btn-success xa-active" operate_style="active" href="javascript:void(0)">激活</a>   
+                            {{if can_active_card }}
+                                <a class="btn btn-success xa-active" operate_style="active" href="javascript:void(0)">激活</a> 
+                            {{/if}}  
                         {{else}}
                         {{if card.status!=2}}
                         <a class="btn btn-danger xa-active" operate_style="inactive" href="javascript:void(0)">停用</a>

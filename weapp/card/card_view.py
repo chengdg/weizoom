@@ -51,6 +51,12 @@ def get_card_detail(request):
     """
     显示某一规则下的卡列表
     """
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
+    can_batch_active_card=weizoomcardpermission[0].can_batch_active_card
+    can_batch_stop_card=weizoomcardpermission[0].can_batch_stop_card
+    can_add_card=weizoomcardpermission[0].can_add_card
+    can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
+    
     rule_id = request.GET.get('id','')
     if rule_id:
         rule = WeizoomCardRule.objects.get(id=rule_id)
@@ -58,7 +64,12 @@ def get_card_detail(request):
             'first_nav_name': export.MALL_CARD_FIRST_NAV,
             'second_navs': export.get_card_second_navs(request),
             'second_nav_name': export.MALL_CARD_MANAGER_NAV,
-            'weizoom_card_rule': rule
+            'weizoom_card_rule': rule,
+            'can_batch_active_card': can_batch_active_card,
+            'can_batch_stop_card': can_batch_stop_card,
+            'can_add_card': can_add_card,
+            
+
         })
         return render_to_response('card/editor/list_weizoom_card_detail.html', c)
 

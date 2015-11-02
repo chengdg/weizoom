@@ -34,6 +34,7 @@ def get_cards(request):
     card_name = request.GET.get('cardName', '').strip()
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_card_rules = WeizoomCardRule.objects.all().order_by('-created_at')
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
     if card_name:
         weizoom_card_rules = weizoom_card_rules.filter(name__icontains = card_name)
 
@@ -133,7 +134,6 @@ def get_cards(request):
         cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
-
         #卡号区间
         try:
             weizoom_card_ids = rule_id2card_ids[cur_weizoom_card_rule.id]
@@ -157,7 +157,7 @@ def get_cards(request):
     response.data.items = cur_weizoom_card_rules
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-   
+    response.data.can_export_batch_card = weizoomcardpermission[0].can_export_batch_card
     return response.get_response()
 
 @api(app='card', resource='managers', action='get')
@@ -220,7 +220,7 @@ def get_weizoomcard_permission_own(request):
         cur_weizoomcardpermission.can_view_statistical_details=weizoomcardpermission[0].can_view_statistical_details
         cur_weizoomcardpermission.can_export_statistical_details=weizoomcardpermission[0].can_export_statistical_details
     response = create_response(200)
-    response.data.items = cur_weizoomcardpermission  
+    response.data.items = cur_weizoomcardpermission 
     return response.get_response()
 
 
@@ -358,6 +358,8 @@ def get_weizoom_cards(request):
     cur_page = int(request.GET.get('page', '1'))
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
+    print weizoomcardpermission[0].can_active_card
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
@@ -445,7 +447,7 @@ def get_weizoom_cards(request):
     response.data.items = cur_weizoom_cards
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-
+    response.data.can_active_card=weizoomcardpermission[0].can_active_card
     return response.get_response()
 
 
