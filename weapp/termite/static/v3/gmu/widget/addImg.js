@@ -46,8 +46,11 @@
                 var files = Array.prototype.slice.call(this.files);
                 var hasImgLength = $('.xa-imgList').children('li').length;
                 var preLength = hasImgLength + files.length;
+                if(preLength >= 5){
+                    $('.xa-addPhoto').hide();
+                }
                 if(preLength > 5){
-                    _this._alert('最多同时可上传5张');
+                    _this._alert('最多可上传5张图片');
                     files.splice(5 - hasImgLength, preLength - 5);
                 }
                 var $files = $(files);
