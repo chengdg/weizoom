@@ -114,7 +114,7 @@
     <div class="wui-win wui-qrimg-win wui-hide"></div>
     <div class="wui-win wui-guide-win wui-hide"></div>
     {{ page_html_content|safe }}
-    <div class="wui-masterinfo wa-masterinfo">
+    <div class="wui-masterinfo wa-masterinfo wui-hide">
         <div style="float: left;">
             <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
         <span class="wa-mypower">我的助力值: <b>{% if current_member_rank_info %}{{ current_member_rank_info.power }}{% else %}0{% endif %}</b></span>
@@ -176,6 +176,8 @@
         //启动倒计时
         renderTime({{ timing }});
 
+        //展示与隐藏我的排名面板
+        showMyRank();
     });
 
     function updateBtnStatus(){
@@ -251,6 +253,20 @@
             $d.text(left_days);
             seconds--;
         },950);
+    }
+
+    function showMyRank(){
+        var $win = $(window);
+        var $top = $('.wa-top100');
+        var el_height = $top.height();
+        var h = $('body').height() - $top.offset().top;
+        window.onscroll = function(){
+            if($win.scrollTop() - h + el_height > 0){
+                $('.wa-masterinfo').show();
+            }else{
+                $('.wa-masterinfo').hide();
+            }
+        };
     }
 
     function openGuideMask(){
