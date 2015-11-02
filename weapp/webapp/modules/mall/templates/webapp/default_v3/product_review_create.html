@@ -212,7 +212,6 @@ $(document).ready(function(){
         var picture_list = [];
         var webapp_owner_id = $('#dj_request_owner_id').data('value');
         $('.xui-imgList img').each(function(){
-                  console.info($(this).attr('data-src'))
                   picture_list.push($(this).attr('data-src'))
         });
         if(!created){
@@ -259,9 +258,9 @@ $(document).ready(function(){
                 },
             });
         }else{
-            var $img = $('.xui-addPhoto');
-            if( $img.length ==1 ){
-                if( $img.find('img').attr('src').indexOf('data:image') == -1){
+            var $img = $('.xui-imgList img');
+            if( $img.length ==0 ){
+
                     $('body').alert({
                         isShow: true,
                         info: '请添加图片',
@@ -271,7 +270,6 @@ $(document).ready(function(){
                         }
                     });
                     return false;
-                }
             }
             if (!slag){return;}
             slag = false;
