@@ -167,7 +167,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				image = data.images[0];
 			}
 			model.set({
-				image: image.url
+				material_image: image.url
 			}, {silent: true});
 
 			if (data.type === 'newImage') {
@@ -194,7 +194,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				image = data.images[0];
 			}
 			model.set({
-				image: image.url
+				background_image: image.url
 			}, {silent: true});
 
 			if (data.type === 'newImage') {

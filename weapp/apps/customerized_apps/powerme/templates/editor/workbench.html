@@ -11,6 +11,9 @@
         .xui-propertyView-app-PowerMeGroup .propertyGroup_property_input #start_time{
             margin-left: 3px !important;
         }
+        .xa-protocol-deleteData{
+            display: none;
+        }
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -177,8 +180,7 @@
           var relatedPageId = data['project_id'];
           var timing = descriptionModel.get('timing');
           var reply_content = descriptionModel.get('reply_content');
-          var material_image = JSON.parse(descriptionModel.get('material_image')).images[0].url;
-
+          var material_image = descriptionModel.get('material_image');
           var args = {
             "name": name,
             "start_time": startTime,
