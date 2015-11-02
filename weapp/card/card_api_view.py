@@ -420,6 +420,8 @@ def get_weizoom_cards(request):
         cur_weizoom_card.status = c.status
         cur_weizoom_card.weizoom_card_id = c.weizoom_card_id
         cur_weizoom_card.password = c.password
+        cur_weizoom_card.active_card_user_id = c.active_card_user_id #激活卡用户的id
+        cur_weizoom_card.user_id = request.user.id #当前用户的id
         cur_weizoom_card.money = '%.2f' % c.money # 余额
 
         if c.activated_at:
@@ -506,7 +508,8 @@ def __create_weizoom_card(rule, count, request):
             weizoom_card_id = weizoom_card_id,
             money = rule.money,
             expired_time = rule.valid_time_to,
-            password = password
+            password = password,
+            active_card_user_id = request.user.id
         ))
         passwords.add(password)
     WeizoomCard.objects.bulk_create(create_list)
@@ -550,14 +553,15 @@ def update_status(request):
         id = request.POST.get('card_id','')
         card_remark = request.POST.get('card_remark','')
         activated_to = request.POST.get('activated_to','')
-        operate_style = request.POST.get('operate_style','')
-        if operate_style == 'active':
-            status = 0
-        else:
-            status = 3
-            # status = int(request.POST['status'])
+        operate_style = request.POST.get('operate_style','')  
+        # status = int(request.POST['status'])
         event_type = WEIZOOM_CARD_LOG_TYPE_DISABLE
         weizoom_card = WeizoomCard.objects.get(id=id)
+        if operate_style == 'active':
+            status = 0
+            weizoom_card.active_card_user_id = request.user.id
+        else:
+            status = 3
         if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
             weizoom_card.activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
             event_type = WEIZOOM_CARD_LOG_TYPE_ACTIVATION

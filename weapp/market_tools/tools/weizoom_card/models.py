@@ -71,6 +71,7 @@ class WeizoomCard(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	remark = models.CharField(max_length=20, db_index=True) #备注
 	activated_to = models.CharField(max_length=20) #领用人
+	active_card_user_id = models.IntegerField() #激活卡片人
 
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card'
