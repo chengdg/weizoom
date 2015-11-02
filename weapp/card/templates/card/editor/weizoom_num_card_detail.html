@@ -73,6 +73,27 @@
     {% endif %}
     </div>
 
+
+    <div class="panel  panel-default mt20 pr" style="background-color:#EAEEF6">
+        <div class="panel-heading" style="font-size:16px">操作记录</div>
+        {% if card_operations %}
+        <div 
+            data-ui-role="advanced-table" 
+            data-app="card" 
+            data-resource="card_num_operations/get"
+            data-template-id="#card-operation-list"
+            data-enable-paginator="false" 
+            data-enable-sort="false" 
+            data-auto-load="true"
+            class="panel-body"
+            data-args='{"card_id":"{{card.weizoom_card_id}}"}'
+        ></div>
+        
+        {% else %}
+        <div class="xui-emptyBox"><img src="/static_v2/img/editor/empty.png"><span class="ml20">您还没有相关数据！</span></div>
+        {% endif %}
+    </div>
+
 {% verbatim %}
 <script id="card-detail-list" type="text/x-jquery-tmpl">
     <div class="panel panel-default mt20 xb-rightPanel pr">
@@ -106,6 +127,30 @@
     </div>
 </script>
 
+
+<!-- 操作记录 -->
+<script id="card-operation-list" type="text/x-jquery-tmpl">
+    <div class="panel panel-default mt20 xb-rightPanel pr">
+        <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
+            <thead>
+                <tr>
+                    <th>操作时间</th>
+                    <th>用户名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{each(i,card_order) items}}
+                <tr>
+                    <td>${card_order.money}</td>
+                    <td>${card_order.remainder}</td>
+                    <td>{{html card_order.use_name}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>
 {% endverbatim %}
 
 {% endblock %}
@@ -160,6 +205,7 @@ $(document).ready(function() {
         });
     });
 });
+
 </script>
 
 {% endblock %}

@@ -73,8 +73,21 @@ def get_card_num_details(request):
     response.data.items = cards
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-
     return response.get_response()
+
+
+@api(app='card', resource='card_num_operations', action='get')
+@login_required
+def get_card_num_operations(request):
+    """
+    微众卡操作记录页面
+    """
+    print 11111111111111111
+    response = create_response(200)
+    response.data.asd='123'
+    response.data.items=['123']
+    return response.get_response()
+
 
 
 @api(app='card', resource='card_num_filter_params', action='get')
