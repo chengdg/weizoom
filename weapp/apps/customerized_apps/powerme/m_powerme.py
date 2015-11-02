@@ -106,7 +106,6 @@ class MPowerMe(resource.Resource):
 
 				project_id = 'new_app:powerme:%s' % record.related_page_id
 
-				#增加/更新当前member的参与信息
 				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_power_info.count()> 0:
 					curr_member_power_info = curr_member_power_info.first()
@@ -119,22 +118,14 @@ class MPowerMe(resource.Resource):
 					curr_member_power_info.save()
 				is_already_participanted = curr_member_power_info.has_join
 
-				#如果当前member不是会员，则清空其助力值
+				#如果当前member不是会员，则清空其助力值同时设置为未参与
 				if not isMember:
-					curr_member_power_info.update(set__power=0)
+					curr_member_power_info.update(set__power=0, set__has_join=False)
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
-					#调整参与数量(首先检测是否已参与)
-					if not is_already_participanted:
-						app_models.PowerMe.objects(id=record_id).update(inc__participant_count=1)
-						curr_member_power_info.update(set__has_join=True)
-						curr_member_power_info.reload()
-
 					page_owner_name = request.member.username_size_ten
-
 					page_owner_member_id = member_id
-
 					self_page = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
@@ -144,6 +135,26 @@ class MPowerMe(resource.Resource):
 
 				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
 				total_participant_count = participances.count()
+
+				#遍历log，统计助力值
+				power_logs = app_models.PowerLog.objects(belong_to=record_id)
+				power_member_ids = [p.power_member_id for p in power_logs]
+				member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
+				power_logs = [p for p in power_logs if member_id2subscribe[p.power_member_id]]
+				power_log_ids = [p.id for p in power_logs]
+				need_power_member_ids = [p.be_powered_member_id for p in power_logs]
+				#计算助力值
+				need_power_member_id2power = {}
+				for m_id in need_power_member_ids:
+					if not need_power_member_id2power.has_key(m_id):
+						need_power_member_id2power[m_id] = 1
+					else:
+						need_power_member_id2power[m_id] += 1
+				for m_id in need_power_member_id2power.keys():
+					app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__power=need_power_member_id2power[m_id])
+
+				#删除计算过的log
+				app_models.PowerLog.objects(id__in=power_log_ids).delete()
 
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
@@ -200,12 +211,15 @@ class MPowerMe(resource.Resource):
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"微助力",
 			'qrcode_url': qrcode_url,
+			'params_qrcode_url': record.qrcode['ticket'] if record.qrcode else False,
+			'params_qrcode_name': record.qrcode['name'] if record.qrcode else False,
 			'timing': timing,
 			'current_member_rank_info': current_member_rank_info, #我的排名
 			'total_participant_count': total_participant_count, #总参与人数
 			'page_owner_name': page_owner_name,
 			'page_owner_member_id': page_owner_member_id,
 			'reply_content': record.reply_content if record else '',
-			'mpUserPreviewName': mpUserPreviewName
+			'mpUserPreviewName': mpUserPreviewName,
+			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		return render_to_response('powerme/templates/webapp/m_powerme.html', c)

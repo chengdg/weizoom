@@ -1,5 +1,6 @@
 @charset "utf-8";
-.xui-selectPromotionProductDialog input[type="checkbox"],.xui-selectCouponDialog input[type="checkbox"] {
+.xui-selectPromotionProductDialog input[type="checkbox"],.xui-selectCouponDialog input[type="checkbox"],
+.xui-selectQrcodeDialog input[type="checkbox"]{
 	position: absolute;
 	clip: rect(0,0,0,0);
 	pointer-events: none;

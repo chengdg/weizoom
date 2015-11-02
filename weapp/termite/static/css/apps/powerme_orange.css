@@ -1,3 +1,4 @@
+@charset "utf-8";
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
     background: #ec352d;
     border-radius: 5px;
@@ -11,14 +12,13 @@
     background-position: -49px -44px;
 }
 .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
-    background-position: 9px 3px;
+    background-position: -93px -39px;
 }
 .wui-i-description-content {
     color: #ce4000;
 }
 .wui-masterinfo b{
     color: #ff7d42;
-    font-size: 15px;
 }
 .wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b{
     color: #9d3100;

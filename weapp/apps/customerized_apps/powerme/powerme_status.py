@@ -47,3 +47,18 @@ class PowerMeStatus(resource.Resource):
 		
 		response = create_response(200)
 		return response.get_response()
+
+	@login_required
+	def api_put(request):
+		"""
+		临时方法，用于覆盖历史数据
+		"""
+		record_id = request.POST['id']
+		response = create_response(500)
+		if record_id:
+			record = app_models.PowerMe.objects.get(id=record_id)
+			if record.status == 1:
+				record.update(set__status=app_models.STATUS_NOT_START)
+				response = create_response(200)
+				response.data.page_id = record.related_page_id
+		return response.get_response()

@@ -45,7 +45,10 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         //image_dialog_select 类型
         'click .xa-deleteImageButton': 'onClickDeleteImage',
-        'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage'
+        'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage',
+
+        'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
+        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode'
 	},
 
     getTemplate: function() {
@@ -1003,5 +1006,23 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $data_func = $(event.target).attr('data-func');
         W.data.getData($data_func);
 
+    },
+
+    onClickDeleteQrcode: function(event){
+        var $el = $(event.currentTarget);
+        $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
+        $el.siblings('input[data-field="image"]').val('');
+        $el.siblings('.qrcodeName').addClass('xui-hide').html('');
+        $el.siblings('.xui-i-triggerButton').text('选择带参数二维码');
+        $el.parent().next().css({
+            'height': '17px',
+            'line-height': '17px'
+        });
+        $el.hide();
+    },
+
+    onMouseoverQrcode: function(event){
+        var $el = $(event.target);
+        $el.parent().siblings('.deleteQrcode').show();
     }
 });

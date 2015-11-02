@@ -46,15 +46,11 @@ class surveyParticipances(resource.Resource):
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
 		webapp_id = request.user_profile.webapp_id
+		member_ids = []
 		if name:
 			hexstr = byte_to_hex(name)
 			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			if name.find(u'非')>=0:
-				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-				members = members|sub_members
-		else:
-			members = member_models.Member.objects.filter(webapp_id=webapp_id)
-		member_ids = [member.id for member in members]
+			member_ids = [member.id for member in members]
 		# webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -80,33 +76,19 @@ class surveyParticipances(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = surveyParticipances.get_datas(request)
-		
-		webappuser2datas = {}
-		webapp_user_ids = set()
 
+		tmp_member_ids = []
 		for data in datas:
-			webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-			webapp_user_ids.add(data.webapp_user_id)
-			data.participant_name = u'未知'
-			data.participant_icon = '/static/img/user-1.jpg'
-		
-		webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
-		if len(webappuser2member) > 0:
-			for webapp_user_id, member in webappuser2member.items():
-				for data in webappuser2datas.get(webapp_user_id, ()):
-					if member.is_subscribed:
-						data.participant_name = member.username_for_html
-						data.participant_icon = member.user_icon
-					else:
-						data.participant_name = u'非会员'
-						data.participant_icon = '/static/img/user-1.jpg'
+			tmp_member_ids.append(data.member_id)
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		member_id2member = {member.id: member for member in members}
 		
 		items = []
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
+				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {

@@ -31,6 +31,7 @@ class PowerMe(models.Document):
 	timing = models.BooleanField(default=True) #是否显示倒计时
 	reply_content = models.StringField(default="", max_length=50) #参与活动回复语
 	material_image = models.StringField(default="", max_length=1024) #分享的图片链接
+	qrcode = models.DynamicField(default="") #带参数二维码ticket，name
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
@@ -61,4 +62,12 @@ class PowerMe(models.Document):
 			return False
 
 
-	
+class PowerLog(models.Document):
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	power_member_id = models.LongField() #助力者id
+	be_powered_member_id = models.LongField() #被助力者id
+	created_at = models.DateTimeField(default=datetime.now()) #创建时间
+
+	meta = {
+		'collection': 'powerme_powered_log'
+	}
