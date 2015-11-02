@@ -622,7 +622,7 @@ else:
     BATMAN_API_HOST = 'batman.weizoom.com'
     MOM_HOST = 'amq.wintim.com'
     MOM_PORT = 61613
-    DOMAIN = 'yanshi.weizoom.com'
+    DOMAIN = 'weapp.weizoom.com'
     DUMP_DEBUG_MSG = False
     WATCHDOG_WEIXIN_MESSAGE = True
     IS_IN_TESTING = False
