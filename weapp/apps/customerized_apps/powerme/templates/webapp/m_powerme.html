@@ -258,10 +258,15 @@
     function showMyRank(){
         var $win = $(window);
         var $top = $('.wa-top100');
-        var el_height = $top.height();
-        var h = $('body').height() - $top.offset().top;
+        var rect;
+
+        var djage = function(){
+            return rect.top >= 0 && ($win.height()-rect.top>=0)
+        };
+
         window.onscroll = function(){
-            if($win.scrollTop() - h + el_height > 0){
+            rect = $top[0].getBoundingClientRect();
+            if(rect && djage()){
                 $('.wa-masterinfo').show();
             }else{
                 $('.wa-masterinfo').hide();
