@@ -68,6 +68,9 @@ hr{
 }
 .wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
     border-bottom: 1px dotted #ffffff;
+    height: 55px;
+    width: 90%;
+    display: inline-block;
 }
 .wui-powerme-container .wui-i-states ul li:nth-child(1) span{
     min-width: 45px;
@@ -119,7 +122,11 @@ hr{
     font-weight: bold;
 }
 .wui-powerme-container .wui-i-top100-name {
+    display: inline-block;
+    height: 55px;
     margin-left: 15px;
+    overflow: hidden;
+    width: 80%;
 }
 .wui-i-top100-power {
     float: right;
@@ -133,6 +140,7 @@ hr{
     margin-left: -8px;
     text-align: center;
     padding-right: 0;
+    float: left;
 }
 .wa-top100 li:nth-child(2) .wui-i-top100-range {
   background-position: -156px 7px;
