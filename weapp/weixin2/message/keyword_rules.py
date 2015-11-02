@@ -154,6 +154,12 @@ class KeywordRules(resource.Resource):
             raise Http404('invalid keywords')
 
         answer = request.POST.get('answer', '')
+        # 校验回复消息为图文时content不能为0 by Eugene
+        data_answer = json.loads(answer)
+        for data in data_answer:
+            if data["type"] == "news" and (data["content"] == "0" or not data["content"]):
+                response = create_response(500)
+                return response.get_response()
         material_id = int(request.POST.get('material_id', 0))
 
         if material_id == 0:
@@ -206,6 +212,10 @@ class KeywordRules(resource.Resource):
             for data in answers:
                 if data['type'] == "text":
                     data['content'] = emotion.change_img_to_emotion(data['content'])
+                # 校验回复消息为图文时content不能为0 by Eugene
+                if data['type'] == "news" and (data['content'] == "0" or not data["content"]):
+                    response = create_response(500)
+                    return response.get_response()
             answer = json.dumps(answers)
             material_id = int(request.POST.get('material_id', 0))
 

@@ -23,6 +23,8 @@ from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_l
 
 from mall.promotion.models import RedEnvelopeRule
 
+from apps.customerized_apps.sign.export import get_sign_webapp_link
+
 def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
@@ -153,7 +155,7 @@ def get_webapp_link_menu_objectes(request):
 		'sign': {
 			'id': 10,
 			'name': '签到',
-			'link': '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.manager.id
+			'link': get_sign_webapp_link(request)
 		}
 	}
 

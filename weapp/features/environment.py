@@ -171,6 +171,9 @@ def __clear_all_app_data():
 	promotion_models.PremiumSale.objects.all().delete()
 	promotion_models.IntegralSale.objects.all().delete()
 	promotion_models.RedEnvelopeRule.objects.all().delete()
+	promotion_models.RedEnvelopeToOrder.objects.all().delete()
+	promotion_models.GetRedEnvelopeRecord.objects.all().delete()
+	promotion_models.RedEnvelopeParticipences.objects.all().delete()
 	promotion_models.ForbiddenCouponProduct.objects.all().delete()
 
 	#商城
@@ -304,8 +307,6 @@ def __clear_all_app_data():
 	# weixin_user_models.ComponentAuthedAppid.objects.all().delete()
 	# 缓存
 	cache.clear()
-
-
 
 def __binding_wexin_mp_account(user=None):
 	"""
@@ -527,6 +528,21 @@ def __update_template_to_v3():
 	webapp_models.Workspace.objects.filter(inner_name='home_page').update(backend_template_name='default_v3')
 	account_models.UserProfile.objects.all().update(backend_template_name='default_v3')
 
+def __init_red_envelope_app():
+	if customized.CustomizedApp.objects.filter(name='red_envelope'):
+		customized.CustomizedApp.objects.filter(name='red_envelope').delete()
+		customized.CustomizedAppInfo.objects.filter(app_name='red_envelope').delete()
+	user = User.objects.get(username='jobs')
+	app = customized.CustomizedApp.objects.create(owner=user, name='red_envelope', display_name='red_envelope', status=3, last_version=1, updated_time=datetime.now(), created_at=datetime.now())
+	customized.CustomizedAppInfo.objects.create(
+		owner=user,
+		customized_app=app,
+		app_name='red_envelope',
+		repository_path='',
+		repository_username='',
+		repository_passwd=''
+	)
+	apps_manager.manager.start_app(app)
 
 def before_all(context):
 	__clear_all_account_data()
@@ -550,6 +566,7 @@ def before_all(context):
 	#call_command('loaddata', 'regional')
 	__create_shengjing_app()
 	__update_template_to_v3()
+	__init_red_envelope_app()
 
 	# member_A = __create_system_member(u'A',user_guo)
 	# member_B = __create_system_member(u'B',user_guo)

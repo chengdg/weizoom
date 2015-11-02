@@ -430,6 +430,8 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     function updateProductInfo(model) {
         if (model === null || (model.stock_type === 1 && model.stocks === 0)) {
             $('.xa-price').text(price_range);
+            $('.xa-fixed-price').text(price_range);
+            $('.xa-variable-price').text(price_range);
             $('.xa-market-price').text(market_price_range);
             $('.xa-enabledBuyLinks').hide();
             $('.xa-disabledBuyLinks').show();
@@ -447,7 +449,10 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             //库存
             $('.xa-stock').hide();
         } else {
-            $('.xa-price').text((model.price*weshop_price).toFixed(2));
+            var price = (model.price*weshop_price).toFixed(2);
+            $('.xa-price').text(price);
+            $('.xa-fixed-price').text(price);
+            $('.xa-variable-price').text(price);
             $('.xa-market-price').text((model.market_price*weshop_price).toFixed(2));
             if ('object' == '{{product.type}}'){
                 $('.xa-disabledBuyLinks').hide();

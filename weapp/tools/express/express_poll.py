@@ -57,8 +57,8 @@ class ExpressPoll(object):
 	'''
 
 	def __init__(self, order):
-		self.express_company_name = order.express_company_name
-		self.express_number = order.express_number
+		self.express_company_name = order.express_company_name if order.express_company_name else ''
+		self.express_number = order.express_number if order.express_number else ''
 		self.order = order
 		self.order_id = order.id
 		self.area = order.get_str_area
@@ -202,8 +202,9 @@ class ExpressPoll(object):
 
 
 	def get_express_poll(self):
-		# if self.order.status not in [3, 4]:
-		# 	return Falses
+		# 如果是空不处理
+		if self.express_company_name is '' or self.express_number is '':
+			return False
 
 		# 是否已经订阅过该订单，并且成功
 		status = self._is_poll_by_order()
@@ -226,24 +227,3 @@ class ExpressPoll(object):
 			return True
 		else:
 			return False
-
-
-	# def get_express_poll(self):
-	# 	if self.order.status not in [3, 4]:
-	# 		return False
-
-	# 	# 是否已经订阅过该订单，并且成功
-	# 	status = self._is_poll_by_order()
-	# 	if status:
-	# 		return True
-
-	# 	# 发送订阅请求
-	# 	data = self._send_poll_requset()
-	# 	result = True if data.get('result') == "true" or data.get('result') is True else False
-
-	# 	if result:
-	# 		self._save_poll_order_id(result)
-	# 		return True
-	# 	else:
-	# 		return False
-
