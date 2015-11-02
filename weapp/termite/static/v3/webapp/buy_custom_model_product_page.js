@@ -27,7 +27,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
 
         this.productId = options.productId;
         this.models = options.models;
-        this.minPrice = options.priceInfo;
+        this.minPrice = options.priceInfo.min_price;
         this.is_member_product = options.is_member_product == 'True';
         this.promotion = options.promotion || null;
         // 限购数量
