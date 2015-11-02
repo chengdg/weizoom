@@ -6,7 +6,7 @@ import urllib, urllib2
 import os
 import json
 import shutil
-
+from account import views
 from webapp.modules.mall import request_api_util
 
 ########################################################################
@@ -179,6 +179,9 @@ def check_product_in_wishlist(request):
 def create_product_review(request):
     return request_api_util.create_product_review(request)
 
+def create_product_review_pic(request):
+
+	return request_api_util.create_mobile_pic(request)
 
 def update_product_review_picture(request):
     '''

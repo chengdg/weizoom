@@ -52,7 +52,7 @@ Background:
 		}]
 		"""
 	Given jobs已添加商品
-	#商品1：开起了会员价，多规格，商品2：是限时抢购商品，商品3：普通商品
+	#商品1：开起了会员价，多规格，起购数量 商品2：是限时抢购商品，商品3：普通商品，商品5：起购数量
 		"""
 		[{
 			"name": "商品1",
@@ -60,6 +60,7 @@ Background:
 			"categories": "分类1,分类2,分类3",
 			"detail": "东坡肘子的详情",
 			"status": "在售",
+			"purchase_count": 3,
 			"is_member_product": "on",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
@@ -111,7 +112,8 @@ Background:
 				"models": {
 					"standard": {
 						"price": 12.00,
-						"stock_type": "无限"
+						"stock_type": "有限",
+						"stocks": 3
 					}
 				}
 			}
@@ -128,6 +130,24 @@ Background:
 					"standard": {
 						"price": 15.00,
 						"stock_type": "无限"
+					}
+				}
+			}
+		}, {
+			"name": "商品5",
+			"category": "",
+			"detail": "",
+			"status": "在售",
+			"purchase_count": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 15.00,
+						"stock_type": "有限",
+						"stocks": 2
 					}
 				}
 			}
@@ -169,7 +189,7 @@ Background:
 		"""
 
 
-@product @ui
+@product @ui @ProductDetail
 Scenario: 1 浏览商品
 	jobs添加商品后
 	1. bill能在webapp中看到jobs添加的商品
@@ -178,6 +198,8 @@ Scenario: 1 浏览商品
 	When bill访问jobs的webapp
 	And bill浏览jobs的webapp的'商品1'商品页
 	#享受会员价的会员能获取商品原价和会员价
+	#设置了起购数量3，商品详情页提示“至少购买3件”
+	#库存和起购数量相等时，点击加数量时提示“库存不足”
 	Then webapp页面标题为'商品1'
 	And bill获得webapp商品
 		"""
@@ -197,11 +219,16 @@ Scenario: 1 浏览商品
 					"黑色 S": {
 						"price": 20.00,
 						"member_price": 18.00,
-						"stocks": 3
+						"stocks": 3,
+						"count": 3,
+						"提示信息": "库存不足",
+						"提示信息": "至少购买3件"
 					},
 					"白色 S": {
 						"price": 10.00,
-						"member_price": 9.00
+						"member_price": 9.00,
+						"count": 3,
+						"提示信息": "至少购买3件"
 					}
 				}
 			}
@@ -209,6 +236,7 @@ Scenario: 1 浏览商品
 		"""
 	When bill浏览jobs的webapp的'商品2'商品页
 	#享受限时抢购的会员获取的是限时抢购价
+	#购买的数量等于显示抢购数量时，点击加数量提示“限购一件”
 	Then webapp页面标题为'商品2'
 	And bill获得webapp商品
 		"""
@@ -222,7 +250,8 @@ Scenario: 1 浏览商品
 				"models": {
 					"standard": {
 						"price": 50.00,
-						"stocks": 3
+						"count": 1,
+						"提示信息": "限购一件"
 					}
 				}
 			}
@@ -241,12 +270,41 @@ Scenario: 1 浏览商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.00
+						"price": 12.00,
+						"stocks": 3
 					}
 				}
 			}
 		}
 		"""
+	When bill浏览jobs的webapp的'商品5'商品页
+	#起购数量大于库存数量时提示“库存不足”，“至少购买几件”
+	#点击加入购物车和立即购买时提示“库存不足”
+	Then webapp页面标题为'商品5'
+	And bill获得webapp商品
+		"""
+		{
+			"name": "商品5",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 15.00,
+						"count": 3,
+						"提示信息": "库存不足",
+						"提示信息": "至少购买3件"
+					}
+				}
+			}
+		}
+		"""
+	When bill点击"加入购物车"
+	Then bill获得错误提示'库存不足'
+	When bill点击"立即购买"
+	Then bill获得错误提示'库存不足'
+
 	When tom访问jobs的webapp
 	And tom浏览jobs的webapp的'商品1'商品页
 	Then webapp页面标题为'商品1'
@@ -267,16 +325,22 @@ Scenario: 1 浏览商品
 				"models": {
 					"黑色 S": {
 						"price": 20.00,
-						"stocks": 3
+						"stocks": 3,
+						"count": 3,
+						"提示信息": "库存不足",
+						"提示信息": "至少购买3件"
 					},
 					"白色 S": {
-						"price": 10.00
+						"price": 10.00,
+						"count": 3,
+						"提示信息": "至少购买3件"
 					}
 				}
 			}
 		}
 		"""
 	When tom浏览jobs的webapp的'商品2'商品页
+	#有限商品，库存和购买数量相等时，点击加数量提示“库存不足”
 	Then webapp页面标题为'商品2'
 	And tom获得webapp商品
 		"""
@@ -290,11 +354,12 @@ Scenario: 1 浏览商品
 				"models": {
 					"standard": {
 						"price": 100.00,
-						"stocks": 3
+						"count": 3,
+						"提示信息": "库存不足"
 					}
 				}
 			}
-		}
+		} 
 		"""
 	When tom浏览jobs的webapp的'商品3'商品页
 	Then webapp页面标题为'商品3'
@@ -309,7 +374,8 @@ Scenario: 1 浏览商品
 			"model": {
 				"models": {
 					"standard": {
-						"price": 12.00
+						"price": 12.00,
+						"stocks": 3
 					}
 				}
 			}
@@ -317,7 +383,7 @@ Scenario: 1 浏览商品
 		"""
 
 
-@product @ui
+@product @ui @ProductList
 Scenario: 2 浏览商品列表
 	jobs添加商品后
 	1. bill获得webapp商品列表，商品按添加顺序倒序排序
@@ -331,6 +397,9 @@ Scenario: 2 浏览商品列表
 	And bill获得webapp商品列表
 		"""
 		[{
+			"name": "商品5",
+			"price": 15.00
+		}, {
 			"name": "商品3",
 			"price": 12.00
 		}, {
@@ -347,6 +416,9 @@ Scenario: 2 浏览商品列表
 	And tom获得webapp商品列表
 		"""
 		[{
+			"name": "商品5",
+			"price": 15.00
+		}, {
 			"name": "商品3",
 			"price": 12.00
 		}, {
@@ -359,7 +431,7 @@ Scenario: 2 浏览商品列表
 		"""
 
 
-@product @ui
+@product @ui @ProductList
 Scenario: 3 浏览商品分类
 	jobs添加商品后
 	1. bill获得webapp商品列表，商品按添加顺序倒序排序

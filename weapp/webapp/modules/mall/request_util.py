@@ -546,6 +546,7 @@ def show_shopping_cart(request):
 	显示购物车详情
 	"""
 
+
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -567,6 +568,7 @@ def show_shopping_cart(request):
 		'jsons': jsons,
 		'discount': get_member_discount_percentage(request)
 	})
+
 	response = render_to_response('%s/shopping_cart.html' % request.template_dir, c)
 
 	return response
@@ -1371,7 +1373,6 @@ def create_product_review(request):
                        })
     return render_to_response(
         '%s/product_review_create.html' % request.template_dir, c)
-
 
 def update_product_review_picture(request):
     '''

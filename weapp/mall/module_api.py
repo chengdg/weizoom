@@ -461,16 +461,15 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
 				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
 				if integral_sale.promotion_title:
-					product.promotion_title = integral_sale.promotion_title
+					product.integral_sale_promotion_title = integral_sale.promotion_title
 				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
 			else:
 				product.integral_sale = None
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
-				product.original_promotion_title = product.promotion_title
 				if promotion.promotion_title:
-					product.promotion_title = promotion.promotion_title
+					product.master_promotion_title = promotion.promotion_title
 				if promotion.type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 					promotion.promotion_title = '满%s减%s' % (promotion.detail['price_threshold'], promotion.detail['cut_money'])
 				elif promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
@@ -481,10 +480,8 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					promotion.promotion_title = '已优惠%s元' % gapPrice
 				else:
 					promotion.promotion_title = ''
-				product.original_promotion_title = product.promotion_title
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
-				product.original_promotion_title = product.promotion_title
 				product.promotion = None
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
@@ -520,9 +517,10 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 								'promotion',
 								'integral_sale',
 								'properties',
-								'product_review'
+								'product_review',
+								'master_promotion_title',
+								'integral_sale_promotion_title'
 		)
-		data['original_promotion_title'] = product.original_promotion_title
 
 		return {'value': data}
 
@@ -897,7 +895,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_market_price': str("%.2f" % product_model['market_price']),
 					'min_price': product_model['price'],
 					'max_price': product_model['price'],
-					'promotion_title': product.original_promotion_title
 				}
 			else:
 				#有多个custom model，显示custom model集合组合后的价格信息
@@ -939,7 +936,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_market_price': market_price_range,
 					'min_price': min_price,
 					'max_price': max_price,
-					'promotion_title': product.original_promotion_title
 				}
 		else:
 			standard_model = product.models[0]
@@ -949,7 +945,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				'display_market_price': str("%.2f" % standard_model['market_price']),
 				'min_price': standard_model['price'],
 				'max_price': standard_model['price'],
-				'promotion_title': product.original_promotion_title
 			}
 
 	except:
@@ -964,12 +959,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 			product.is_deleted = True
 	return product
 
-
-# def str("%.2f" % price):
-# 	if p_type == PRODUCT_INTEGRAL_TYPE:
-# 		return int(price)
-# 	else:
-# 		return str("%.2f" % price)
 
 def create_order(webapp_owner_id, webapp_user, product):
 	"""
