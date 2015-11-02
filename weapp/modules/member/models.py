@@ -116,13 +116,14 @@ class WebAppUser(models.Model):
 				is_selected = True
 			)
 		else:
-			ShipInfo.objects.create(
+			ship_id = ShipInfo.objects.create(
 				webapp_user_id = self.id,
 				ship_tel = ship_tel,
 				ship_address = ship_address,
 				ship_name = ship_name,
 				area = area
-			)
+			).id
+		return ship_id
 
 	@property
 	def is_member(self):
@@ -251,7 +252,7 @@ class WebAppUser(models.Model):
 			return None
 
 		try:
-			return WebAppUser.objects.get(member_id=member.id, father_id=0, webapp_id=member.webapp_id)
+			return WebAppUser.objects.filter(member_id=member.id, father_id=0, webapp_id=member.webapp_id)[0]
 		except WebAppUser.DoesNotExist:
 			return None
 
@@ -282,6 +283,8 @@ class MemberGrade(models.Model):
 	pay_money = models.FloatField(default=0.00)
 	pay_times = models.IntegerField(default=0)
 	integral = models.IntegerField(default=0)
+	#add by duhao 20151030
+	created_at = models.DateTimeField(auto_now_add=True)
 
 	# @staticmethod
 	# def is_auto_grade(id):

@@ -20,6 +20,7 @@ API_CLASSES = {
 	'send_custom_msg': 'core.wxapi.api_send_custom_msg.WeixinSendCustomMsgApi',
 	'get_member_group_id': 'core.wxapi.api_get_member_groupid.WeixinGetMemberGroupIdApi',
 	'upload_media_image': 'core.wxapi.api_upload_media.WeixinUploadMediaImageApi',
+	'upload_content_media_image': 'core.wxapi.api_upload_media.WeixinUploadContentMediaImageApi',
 	'upload_media_voice': 'core.wxapi.api_upload_media.WeixinUploadMediaVoiceApi',
 	'upload_media_news': 'core.wxapi.api_upload_news.WeixinUploadNewsApi',
 	'send_mass_message': 'core.wxapi.api_send_mass_message.WeixinMassSendApi',

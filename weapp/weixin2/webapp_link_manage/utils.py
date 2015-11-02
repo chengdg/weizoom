@@ -23,6 +23,8 @@ from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_l
 
 from mall.promotion.models import RedEnvelopeRule
 
+from apps.customerized_apps.sign.export import get_sign_webapp_link
+
 def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
@@ -106,6 +108,11 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'red_envelope',
 				'add_btn_title': '新建分享红包',
 				'add_link': '/apps/red_envelope/red_envelope_rule/'
+			},{
+				'name': '微助力',
+				'type': 'powerme',
+				'add_btn_title': '新建微助力',
+				'add_link': '/apps/powerme/powerme/'
 			}
 			# {
 			# 	'name': '趣味测试',
@@ -153,7 +160,7 @@ def get_webapp_link_menu_objectes(request):
 		'sign': {
 			'id': 10,
 			'name': '签到',
-			'link': '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.manager.id
+			'link': get_sign_webapp_link(request)
 		}
 	}
 

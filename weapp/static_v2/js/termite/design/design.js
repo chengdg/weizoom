@@ -144,12 +144,19 @@ W.data.getDynamicComponentDataForDialogSelectControl = function(dynamicComponent
 			if (dynamicComponent.type === 'appkit.lotteryitem'){
 				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox"><img src="' + src + '"/></div>';
 			}else {
-				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox"><img src="' + src + '"/><button type="button" class="close xa-protocol-deleteData xui-removeImageButton" data-protocol-deleted-value=""><span>&times;</span></button></div>';
+				if(dynamicComponent.type === 'appkit.powermedescription'){
+					src = JSON.parse(src).images[0].url;
+					html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox"><img src="' + src + '"/></div>';
+				}
+				else{
+					html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox"><img src="' + src + '"/><button type="button" class="close xa-protocol-deleteData xui-removeImageButton" data-protocol-deleted-value=""><span>&times;</span></button></div>';
+				}
 			}
 		} else {
-			if (dynamicComponent.type === 'appkit.lotteryitem'){
+			if (dynamicComponent.type === 'appkit.lotteryitem' || dynamicComponent.type === 'appkit.powermedescription'){
 				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox xui-hide"><img src=""/></div>';
-			}else {
+			}
+			else {
 				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox xui-hide"><img src=""/><button type="button" class="close xa-protocol-deleteData xui-removeImageButton"  data-protocol-deleted-value=""><span>&times;</span></button></div>';
 			}
 		}

@@ -72,7 +72,6 @@
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
-
                         var innerHtml = "<img src="+ result +" id='pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
                         $li.children('img').data('allow-autoplay','true');
@@ -90,11 +89,9 @@
                         } else {
                             img.onload = callback;
                         }
-
                         function callback() {
                             var data = _this.compress(img);
                             _this.upload(data, imglength,$li);
-
                             img = null;
                         }
                     }
@@ -106,7 +103,6 @@
                 _this.finishEdit();
             });
         },
-
         upload: function(basestr,imglength,$li) {
             var $bar = $li.find('.xa-progress span');
             var percent = 0;

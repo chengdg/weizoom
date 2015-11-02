@@ -32,7 +32,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-@mall2 @product @saleingProduct
+@mall2 @product @saleingProduct @ProductList
 Scenario: 1商品排序初始化
 	Jobs商品没有排序时,按创建时间的倒序显示
 	Given jobs登录系统
@@ -50,7 +50,7 @@ Scenario: 1商品排序初始化
 		| 商品2  |
 		| 商品1  |
 
-@mall2 @product @saleingProduct
+@mall2 @product @saleingProduct @ProductList
 Scenario: 2修改商品排序
 	Jobs从初始化编辑商品排序
 
@@ -109,7 +109,7 @@ Scenario: 2修改商品排序
 		| 商品3   |
 		| 商品1   |
 
-@mall2 @product @saleingProduct
+@mall2 @product @saleingProduct @ProductList
 Scenario:3分页
     #没有排序时,按照创建时间倒序排列
     #初始化分页

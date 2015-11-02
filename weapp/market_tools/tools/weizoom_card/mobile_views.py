@@ -30,10 +30,10 @@ def get_weizoom_card_login(request):
 
 def get_weizoom_card_change_money(request):
 	card_id = request.GET.get('card_id', -1)
-	auth_key = request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY]
 
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
-
+	# jz 2015-10-20
+	# auth_key = request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY]
 	# if WeizoomCard.objects.filter(id=card_id).count() > 0 and WeizoomCardUsedAuthKey.is_can_pay(auth_key, card_id) and integral_each_yuan:
 
 	if WeizoomCard.objects.filter(id=card_id).count() > 0 and integral_each_yuan:

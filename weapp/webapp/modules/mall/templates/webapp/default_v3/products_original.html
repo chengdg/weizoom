@@ -73,12 +73,11 @@
 $(document).ready(function() {
     // 计算列表页面价钱
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
-        fmt: $('body').data('value'),
         updateProductPrice: function(event, data){
             var _this = this;
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
-                $('.xa-shopCarCount').text(data.count).show();
+                // $('.xa-shopCarCount').text(data.count).show();
             }
 
             $(".xa-product").each(function(){
@@ -98,7 +97,7 @@ $(document).ready(function() {
             });
         }
     });
-/*
+/* jz 2015-11-26
     var fmt = $('body').data('value');
     var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
         if(promotion_member_grade_id == '0'){return true;}

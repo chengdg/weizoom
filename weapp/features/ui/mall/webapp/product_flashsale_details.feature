@@ -78,6 +78,8 @@ Background:
 		"""
 		And bill关注jobs的公众号
 
+
+@ProductDetail
 Scenario:1 商品限时抢购时,商品详情页
 	When bill访问jobs的webapp
 	When bill查看详情
@@ -88,6 +90,8 @@ Scenario:1 商品限时抢购时,商品详情页
 	"""
 	Then bill商品详情页中看到提示信息"限时抢购已优惠20.00元"
 
+
+@ProductDetail
 Scenario:2 商品买赠时,商品详情页
 	When bill访问jobs的webapp
 	When bill查看详情
@@ -98,6 +102,8 @@ Scenario:2 商品买赠时,商品详情页
 	"""
 	Then bill商品详情页中看到提示信息"买赠商品2 * 1单位"
 
+
+@ProductDetail
 Scenario:3 商品积分时,商品详情页
 	When bill访问jobs的webapp
 	When bill查看详情
@@ -108,6 +114,8 @@ Scenario:3 商品积分时,商品详情页
 	"""
 	Then bill商品详情页中看到提示信息"积分抵扣最多可使用200积分,抵扣100.00元"
 
+
+@ProductDetail
 Scenario:4 商品禁用优惠券时,商品详情页
 	When bill访问jobs的webapp
 	When bill查看详情

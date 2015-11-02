@@ -13,6 +13,7 @@ W.view.weixin.EditNewsPanel = Backbone.View.extend({
     events: {
         'click #submit-btn': 'onSubmitNews',
         'change input[name="change_action"]': 'changeEditAction',
+        'input #urlDisplayValue': 'onManualInputUrl',
     },
 
     getTemplate: function() {
@@ -161,6 +162,24 @@ W.view.weixin.EditNewsPanel = Backbone.View.extend({
         this.messageId = options.messageId;
 
         this.changeEditAction();
+    },
+
+        /**
+     * onManualInputUrl: 手工输入链接的响应函数
+     */
+    onManualInputUrl: function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var $input = $(event.currentTarget);
+        var url = $input.val();
+        if (url.length >= 7 && url.substr(0, 1) != '/' && url.substr(0, 3) != './?' && url.substr(0, 7) != 'http://') {
+            url = 'http://'+ url
+            $input.val(url);
+        };
+        // var linkData = {data:url, data_path:"", type:'manualInput'};
+        // var $targetInput = $input.parent().find('input[type="hidden"]');
+        // $targetInput.val(JSON.stringify(linkData)).trigger('input');
     },
 
     render: function() {

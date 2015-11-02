@@ -69,5 +69,6 @@ weapp/.idea/*
 #self
 .gitignore
 
-/.gitignore
+
 weapp/.idea/
+weapp/static/coupon_qrcode/

@@ -30,7 +30,7 @@ class Command(BaseCommand):
         webapp_id2expired_time = {}
         for user in users:
             user_id = user.id
-            if user_id not in user2webapp_id.keys():
+            if user not in user2webapp_id.keys():
                 continue
             webapp_id = user2webapp_id[user]
             expired_hour = user2order_expired_hour[user_id]
@@ -57,7 +57,6 @@ class Command(BaseCommand):
 
             if len(need_cancel_orders) > 50:
                 break
-
         for order in need_cancel_orders:
             update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
 

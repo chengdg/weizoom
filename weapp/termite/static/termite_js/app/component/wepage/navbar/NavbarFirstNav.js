@@ -69,7 +69,11 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             }
         },
         second_navs: function($node, model, value, $propertyViewNode) {
-            model.set('second_navs', $.parseJSON(value), {silent:true});
+            value = $.parseJSON(value);
+            if (value.length == 0) {
+                value = ""
+            }
+            model.set('second_navs', value, {silent:true});
             var parentComponent = W.component.getComponent(this.pid);
             parentComponent.refresh($node, {resize:true});
         }
@@ -109,7 +113,6 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             this.propertyViewTitle = '一级菜单';
             this.properties[0].fields[1].otherUpdateDisplayName = '菜单';
         }
-        console.log(90909090)
         this.updateComponent();
     }
 });
