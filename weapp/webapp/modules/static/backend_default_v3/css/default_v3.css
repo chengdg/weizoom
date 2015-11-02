@@ -3819,8 +3819,8 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     height:4px;
     width: 0;
     background:#4AB700;
-    -webkit-transition:all linear .6;
-    transition:all linear .6;
+    -webkit-transition:all linear .6s;
+    transition:all linear .6s;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto .xui-i-box i{
     margin-left: -3px;
