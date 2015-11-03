@@ -20,7 +20,9 @@ def get_cards(request):
     显示卡规则列表
     """
     weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
-    can_create_card=weizoomcardpermission[0].can_create_card
+    can_create_card=0
+    if weizoomcardpermission:
+        can_create_card=weizoomcardpermission[0].can_create_card
     c = RequestContext(request, {
         'first_nav_name': export.MALL_CARD_FIRST_NAV,
         'second_navs': export.get_card_second_navs(request),
@@ -52,10 +54,12 @@ def get_card_detail(request):
     显示某一规则下的卡列表
     """
     weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
-    can_batch_active_card=weizoomcardpermission[0].can_batch_active_card
-    can_batch_stop_card=weizoomcardpermission[0].can_batch_stop_card
-    can_add_card=weizoomcardpermission[0].can_add_card
-    can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
+    can_batch_active_card=can_batch_stop_card=can_add_card=can_export_batch_card=0
+    if weizoomcardpermission:
+        can_batch_active_card=weizoomcardpermission[0].can_batch_active_card
+        can_batch_stop_card=weizoomcardpermission[0].can_batch_stop_card
+        can_add_card=weizoomcardpermission[0].can_add_card
+        can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
     rule_id = request.GET.get('id','')
     if rule_id:
         rule = WeizoomCardRule.objects.get(id=rule_id)
