@@ -42,11 +42,11 @@
 <body>
 	<div class="content">
         <div class="xui-empty-box"><img src="notFind.jpg" alt=""></div>
-        <a class="xui-goShopping-btn" id="url">返回首页</a>
+        <a class="xui-goShopping-btn" id="url" >返回首页</a>
     </div>	
 </body>
 <script>
-	var homePageUrl = localStorage.getItem("homepage_url");
-	document.getElementById('url').setAttribute("href",homePageUrl);
+	var woid = localStorage.getItem("woid");
+	document.getElementById('url').setAttribute("href","./?woid="+woid+"&module=mall&model=homepage");
 </script>
 </html>
