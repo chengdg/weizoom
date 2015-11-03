@@ -72,11 +72,10 @@
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
-
                         var innerHtml = "<img src="+ result +" id='pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
-                        $li.children('img').data('allow-autoplay','true');
-                        W.ImagePreview(wx);
+                        $li.children('img').unbind('click');
+                        
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
@@ -108,6 +107,7 @@
         },
 
         upload: function(basestr,imglength,$li) {
+            var _this = this;
             var $bar = $li.find('.xa-progress span');
             var percent = 0;
             var loop = setInterval(function () {
@@ -128,7 +128,9 @@
                     basestr: JSON.stringify(basestr)
                 }),
                 success: function (data) {
-                    $("#pro_reivew"+imglength).attr('data-src',data.path)
+                    $("#pro_reivew"+imglength).attr('data-src',data.path);
+                    $li.children('img').data('allow-autoplay','true').attr('src', data.path);
+                    W.ImagePreview(wx);
                     clearInterval(loop);
                     $bar.css('width',"100%");
                     setTimeout(function(){
@@ -146,7 +148,6 @@
             var initSize = img.src.length;
             var width = img.width;
             var height = img.height;
-
             //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
             var ratio;
             if ((ratio = width * height / 4000000)>1) {
