@@ -118,9 +118,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item2']['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item2']['serial_count_points'],
-                            "serial_count_prizes":args['prizes']['prize_item2']['serial_count_prizes']
+                            "serial_count": args['prizes']['prize_item0']['serial_count'],
+                            "serial_count_points": args['prizes']['prize_item0']['serial_count_points'],
+                            "serial_count_prizes":args['prizes']['prize_item0']['serial_count_prizes']
                         },
                         "components": []
                     },
@@ -144,9 +144,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item3']['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item3']['serial_count_points'],
-                            "serial_count_prizes":args['prizes']['prize_item3']['serial_count_prizes']
+                            "serial_count": args['prizes']['prize_item1']['serial_count'],
+                            "serial_count_points": args['prizes']['prize_item1']['serial_count_points'],
+                            "serial_count_prizes":args['prizes']['prize_item1']['serial_count_prizes']
                         },
                         "components": []
                     },
@@ -170,9 +170,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item4']['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item4']['serial_count_points'],
-                            "serial_count_prizes":args['prizes']['prize_item4']['serial_count_prizes']
+                            "serial_count": args['prizes']['prize_item2']['serial_count'],
+                            "serial_count_points": args['prizes']['prize_item2']['serial_count_points'],
+                            "serial_count_prizes":args['prizes']['prize_item2']['serial_count_prizes']
                         },
                         "components": []
                     }
@@ -241,18 +241,19 @@ def __get_coupon_json(coupon_rule_name):
     coupon ={
         "count":coupon_rule.count,
         "id":coupon_rule.id,
-        "name":coupon.name
+        "name":coupon_rule.name
     }
     return coupon
 
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
-    ##  获得feature数据
+    #feature 数据
     sign_json = json.loads(context.text)
 
     status = sign_json['status']
     name = sign_json['name']
+    sign_describe = sign_json['sign_describe']
     share = {
         "img":sign_json["share_pic"],
         "desc":sign_json["share_describe"]
@@ -270,68 +271,6 @@ def step_impl(context,user,sign_name):
     reply ={
         "keyword":keyword,
         "content":sign_json["share_describe"]
-    }
-    prize_settings = {}
-    sign_settings = sign_json["sign_settings"]
-    for item in sign_settings:
-        prize_settings[item["sign_in"]]={
-            "integral":item["integral"],
-            "coupon":{
-                "count":item["prize_counts"],
-                "id":__get_coupon_rule_id(item["send_coupon"]),
-                "name":item["send_coupon"]
-            }
-        }
-
-
-    page_args ={
-        "sign_title":name,
-        "sign_description":"1111签到活动说明",
-        "share_pic":"/termite_static/img/component/sign/default_gift.png",
-        "share_description":"1111分享描述",
-        "reply_keyword":{
-                            "11ka": "accurate",
-                            "11kb": "blur"
-                        },
-        "reply_content": "1111回复内容s",
-        "prizes":{
-            "prize_item1":{
-                "serial_count":"1",
-                "serial_count_points":"1",
-                "serial_count_prizes":{
-                    "id":405,
-                    "name":"优惠券2",
-                    "count":4
-                }
-            },
-            "prize_item2":{
-                "serial_count":"10",
-                "serial_count_points":"100",
-                "serial_count_prizes":{
-                    "id":405,
-                    "name":"优惠券2",
-                    "count":4
-                }
-            },
-            "prize_item3":{
-                "serial_count":"20",
-                "serial_count_points":"200",
-                "serial_count_prizes":{
-                    "id":404,
-                    "name":"优惠券1",
-                    "count":4
-                }
-            },
-            "prize_item4":{
-                "serial_count":"30",
-                "serial_count_points":"300",
-                "serial_count_prizes":{
-                    "id":404,
-                    "name":"优惠券1",
-                    "count":4
-                }
-            }
-        }
     }
 
     ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
@@ -360,6 +299,42 @@ def step_impl(context,user,sign_name):
     bdd_util.assert_api_call_success(keyword_response)
 
     #step5 POST,PageJSON到Mongo,返回Page_id(Fin)
+    #Page的数据处理
+    prize_settings = {}#sign记录数据
+    prize_settings_arr = []#page数据结构
+    sign_settings = sign_json["sign_settings"]
+    for item in sign_settings:
+        prize_settings[item["sign_in"]]={
+            "integral":item["integral"],
+            "coupon":__get_coupon_json(item["send_coupon"])
+        }
+
+        prize_settings_arr.append({
+            "serial_count":item["sign_in"],
+            "serial_count_points":item["integral"],
+            "serial_count_prizes":__get_coupon_json(item["send_coupon"])
+            })
+
+    page_prizes = {}#Page记录数据
+    for i in range(len(prize_settings_arr)):
+        item = prize_settings_arr[i]
+        page_prizes["prize_item%d"%i]={
+                "serial_count":prize_settings_arr[i]["serial_count"],
+                "serial_count_points":prize_settings_arr[i]["serial_count_points"],
+                "serial_count_prizes":prize_settings_arr[i]["serial_count_prizes"]
+        }
+
+    #Page的参数args
+    page_args ={
+        "sign_title":name,
+        "sign_description":sign_describe,
+        "share_pic":share['img'],
+        "share_description":share['desc'],
+        "reply_keyword":keyword,
+        "reply_content": reply['content'],
+        "prizes":page_prizes
+    }
+
     termite_url = "http://dev.weapp.com/termite2/api/project/?design_mode={}&project_id={}&version={}".format(0,project_id,1)
     termite_post_args={
         "field":"page_content",
@@ -385,12 +360,6 @@ def step_impl(context,user,sign_name):
     }
     post_sign_response = context.client.post(sign_url,post_sign_args)
     bdd_util.assert_api_call_success(post_sign_response)
-
-
-
-    __debug_print(__get_coupon_rule_id("优惠券1"))
-
-
 
 
 @then(u'{user}获得签到活动"{sign_name}"')
