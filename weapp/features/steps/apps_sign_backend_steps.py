@@ -16,15 +16,6 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 import json
 
-##  验证请求200
-
-# def __assert_call_success(response):
-#     """
-#     验证请求调用成功
-#     """
-#     content = response.content
-#     assert 200 == content['code'], "code != 200, call api FAILED!!!!"
-#     return content
 
 def __debug_print(content,type_tag=True):
     print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
@@ -239,16 +230,20 @@ def __get_page_json(args):
 
 
 
-##  获取优惠券id
+#获取优惠券id
 def __get_coupon_rule_id(coupon_rule_name):
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.id
 
-## 获取新的 project_id
-def _get_new_project_id(context):
-    response = context.client.post("/termite2/api/project/?_method=put", {"source_template_id": -1})
-    data = json.loads(response.content)["data"]
-    return data['project_id']
+#获取优惠券json
+def __get_coupon_json(coupon_rule_name):
+    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    coupon ={
+        "count":coupon_rule.count,
+        "id":coupon_rule.id,
+        "name":coupon.name
+    }
+    return coupon
 
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
@@ -290,7 +285,7 @@ def step_impl(context,user,sign_name):
 
 
     page_args ={
-        "sign_title":"111活动名称",
+        "sign_title":name,
         "sign_description":"1111签到活动说明",
         "share_pic":"/termite_static/img/component/sign/default_gift.png",
         "share_description":"1111分享描述",
@@ -298,7 +293,7 @@ def step_impl(context,user,sign_name):
                             "11ka": "accurate",
                             "11kb": "blur"
                         },
-        "reply_content": "1111回复内容",
+        "reply_content": "1111回复内容s",
         "prizes":{
             "prize_item1":{
                 "serial_count":"1",
@@ -339,7 +334,7 @@ def step_impl(context,user,sign_name):
         }
     }
 
-    ##Step1模拟登陆Sign页面 Fin（初始页面所有HTML元素）
+    ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
     get_sign_response = context.client.get("/apps/sign/sign/")
     sign_args_response = get_sign_response.context
 
@@ -350,17 +345,17 @@ def step_impl(context,user,sign_name):
     keywords = sign_args_response['keywords']
 
 
-    ##step2访问后台Phone页面 Fin(不是标准api请求，Phone页面HTML)
+    ##step2访问后台Phone页面 (Fin不是标准api请求，Phone页面HTML)
     url = "/termite2/webapp_design_page/?project_id={}&design_mode={}".format(project_id,1)
     get_termite_response = context.client.get(url)
 
-    ##step3 获得Page右边个人配置JSON Fin(获得右边配置的空Json，这边主要是验证请求是否成功)
+    ##step3 获得Page右边个人配置JSON (Fin获得右边配置的空Json，这边主要是验证请求是否成功)
     get_dynamicPage_response = context.client.get('/apps/api/dynamic_pages/get/',{'project_id':project_id,"design_mode":0,"version":1})
     dynamicPage_data = get_dynamicPage_response
 
     bdd_util.assert_api_call_success(get_dynamicPage_response)
 
-    ##step4 获得关键字OK
+    ##step4 获得关键字(Fin)
     keyword_response = context.client.get('/apps/sign/api/sign/')
     bdd_util.assert_api_call_success(keyword_response)
 
@@ -377,7 +372,7 @@ def step_impl(context,user,sign_name):
 
     page_related_id = __res2json(post_termite_response)['data']['project_id']
 
-    #step6 POST,填写JSON至Mongo，返回JSON()
+    #step6 POST,填写JSON至Mongo，返回JSON(Fin)
     sign_url = "http://dev.weapp.com/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(0,project_id,1)
     post_sign_args = {
         "_method":"put",
@@ -391,6 +386,9 @@ def step_impl(context,user,sign_name):
     post_sign_response = context.client.post(sign_url,post_sign_args)
     bdd_util.assert_api_call_success(post_sign_response)
 
+
+
+    __debug_print(__get_coupon_rule_id("优惠券1"))
 
 
 
