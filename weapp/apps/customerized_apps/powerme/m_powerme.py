@@ -125,12 +125,6 @@ class MPowerMe(resource.Resource):
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
-					#调整参与数量(首先检测是否已参与)
-					if not is_already_participanted:
-						app_models.PowerMe.objects(id=record_id).update(inc__participant_count=1)
-						curr_member_power_info.update(set__has_join=True)
-						curr_member_power_info.reload()
-
 					page_owner_name = request.member.username_size_ten
 
 					page_owner_member_id = member_id
