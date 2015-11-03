@@ -302,7 +302,7 @@ def pay_order(request):
 		order = orders[0]
 
 	c = RequestContext(request, {
-		'page_title': u'订单支付',
+		'page_title': u'订单详情',
 		'order': order,
 		'has_sub_order': has_sub_order,
 		'orders': orders,
