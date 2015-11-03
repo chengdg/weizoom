@@ -319,11 +319,7 @@ def get_weizoomcard_permission(request):
         can_export_statistical_details=can_export_statistical_details)
         response = create_response(200)
     else:
-<<<<<<< HEAD
-        try:   
-=======
         try:
->>>>>>> 34a1c05c39eebcc2656d02f2016ce2d0f0714d71
             WeiZoomCardPermission.objects.create(
                 user_id=user_id,
                 can_create_card=can_create_card,
