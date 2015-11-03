@@ -46,7 +46,7 @@
     </div>	
 </body>
 <script>
-	var homePageUrl = localStorage.getItem("homepage_url");
-	document.getElementById('url').setAttribute("href",homePageUrl);
+    var woid = localStorage.getItem("woid");
+	document.getElementById('url').setAttribute("href","./?woid="+woid+"&module=mall&model=homepage");
 </script>
 </html>
