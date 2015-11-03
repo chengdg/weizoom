@@ -74,7 +74,7 @@
 				{% for second_nav in second_navs %}
 					{% for nav in second_nav.navs %}
 							<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+							<a {% if nav.uservalue %}{% if request.user.username == 'card_admin' %} {% else %}class="hidden" {% endif %}{% endif %} href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
 							<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
 							<i class="xui-icon-arrow"></i>
 							</a>
