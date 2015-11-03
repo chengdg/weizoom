@@ -106,3 +106,15 @@ def upload_weixin_url_to_upyun(http_image_url, file_name):
 		watchdog_error(notify_message)
 		return http_image_url
 	return None
+
+def upload_audio_file(file_path, upyun_path):
+	up = upyun.UpYun('weappstatic', USERNAME, PASSWORD, timeout=300,
+			endpoint=upyun.ED_AUTO)
+	#print '[upyun] need upload file_path:', upyun_path
+	with open(file_path, 'rb') as f:
+		try:
+			res = up.put(upyun_path, f)
+		except:
+			res = up.put(upyun_path, f)
+		
+		return "http://weappstatic.b0.upaiyun.com%s" % upyun_path
