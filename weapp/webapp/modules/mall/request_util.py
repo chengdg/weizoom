@@ -1522,5 +1522,5 @@ def get_homepage(request):
                 request.webapp_owner_id, request.user_profile.homepage_workspace_id))
 
     fmt = request.GET.get('fmt', '')
-    homepage_url += fmt
+    homepage_url = homepage_url + '&' + fmt
     return HttpResponseRedirect(homepage_url)
