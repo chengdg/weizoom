@@ -142,9 +142,9 @@
             <tbody>
             {{each(i,card_operation) items}}
                 <tr>
+                    <td>${card_operation.created_at}</td>
                     <td>${card_operation.operater_name}</td>
                     <td>${card_operation.operate_log}</td>
-                    <td>${card_operation.created_at}</td>
                 </tr>
                 {{/each}}
             </tbody>

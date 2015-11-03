@@ -573,8 +573,10 @@ def update_status(request):
         if operate_style == 'active':
             status = 0
             weizoom_card.active_card_user_id = request.user.id
+            operate_log = u'停用'
         else:
             status = 3
+            operate_log = u'激活'
         if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
             weizoom_card.activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
             event_type = WEIZOOM_CARD_LOG_TYPE_ACTIVATION
@@ -582,7 +584,7 @@ def update_status(request):
         if (status==0 and weizoom_card.weizoom_card_rule.money!=weizoom_card.money):
             weizoom_card.status = WEIZOOM_CARD_STATUS_USED
         else:
-            weizoom_card.status = status=status
+            weizoom_card.status = status
         weizoom_card.target_user_id = 0
         if card_remark and activated_to:
             weizoom_card.remark = card_remark
@@ -592,6 +594,8 @@ def update_status(request):
         # 创建激活日志
         module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
         response = create_response(200)
+        # 创建操作日志
+        WeizoomCardOperationLog.objects.create(card_id=id,operater_id=request.user.id,operater_name=request.user,operate_log=operate_log)
     except:
         response = create_response(500)
     return response.get_response()
