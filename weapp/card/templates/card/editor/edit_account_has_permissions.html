@@ -29,7 +29,8 @@
 		<legend></legend>
 	  	<div class="control-group">
 			<div class="controls">
-				<button class="btn btn-success ua-submit">保存</button>
+				{%if can_change_shop_config %}<button class="btn btn-success ua-submit">保存</button>
+				{% endif %}
 			</div>
 		</div>
 	</fieldset>
