@@ -615,8 +615,8 @@ def update_batch_status(request):
         cards = WeizoomCard.objects.filter(id__in=card_ids)
 
         cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
-        operation_logs=[]
         # 创建操作日志
+        operation_logs=[]
         for card_id in card_ids:
             operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'激活'))
         WeizoomCardOperationLog.objects.bulk_create(operation_logs)
@@ -653,6 +653,7 @@ def update_onbatch_status(request):
         cards.update(status=3, remark=card_remark, activated_to=activated_to)
 
         # 创建操作日志
+        operation_logs=[]
         for card_id in card_ids:
             operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'停用'))
         WeizoomCardOperationLog.objects.bulk_create(operation_logs)
