@@ -19,22 +19,24 @@ gmu.define('integralMechanism', {
         //     return isHasArgs;
         // },
         dataValue: function(_this) {
-            return _this.$el.attr('data-value');
+            return _this.$el.data('value');
         },
         dataKey: function(_this) {
             return _this.$el.data('key');
         }
     },
     _create : function() {
-        this.$element = this.element;
         this.setFmt();
+        this.$el.data('view', this);
     },
 
     _bind: function() {
 
     },
-    setFmt: function() {
-        var value = this.setting.dataValue(this);
+    setFmt: function(value) {
+        if(!value){
+            value = this.setting.dataValue(this);
+        }
         var key = this.setting.dataKey(this);
         KEY_NAME = key;
         DATA_VALUE = value;
