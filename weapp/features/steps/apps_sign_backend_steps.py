@@ -16,7 +16,7 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 import json
 
-
+#debug工具函数
 def __debug_print(content,type_tag=True):
     print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
     if type_tag:
@@ -26,11 +26,37 @@ def __debug_print(content,type_tag=True):
     print content
     print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
 
+#response 转换 json
 def __res2json(obj):
     return json.loads(obj.content)
 
+#获取优惠券id
+def __get_coupon_rule_id(coupon_rule_name):
+    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    return coupon_rule.id
+
+#获取优惠券name
+def __get_coupon_rule_name(coupon_rule_name):
+    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    return coupon_rule.name
+
+#获取优惠券count
+def __get_coupon_rule_count(coupon_rule_name):
+    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    return coupon_rule.count
+
+#获取优惠券json
+def __get_coupon_json(coupon_rule_name):
+    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    coupon ={
+        "count":coupon_rule.count,
+        "id":coupon_rule.id,
+        "name":coupon_rule.name
+    }
+    return coupon
 
 
+#手动模板
 def __get_page_json(args):
     page_temple = {
         "type": "appkit.page",
@@ -81,16 +107,16 @@ def __get_page_json(args):
                         "api_name": ""
                     },
                     "undefined": "",
-                    "title": args['sign_title'],
-                    "description": args['sign_description'],
-                    "image": args["share_pic"],
-                    "share_description": args["share_description"],
-                    "reply_keyword": args["reply_keyword"],
-                    "reply_content": args["reply_content"],
+                    "title": args['sign_title'] or "",
+                    "description": args['sign_description'] or "",
+                    "image": args["share_pic"] or "",
+                    "share_description": args["share_description"] or "",
+                    "reply_keyword": args["reply_keyword"] or "",
+                    "reply_content": args["reply_content"] or "",
                     "SignSettingGroupName": "",
                     "daily_group": "",
                     "daily_points": "1",
-                    "daily_prizes": args['prizes']['prize_item1']['serial_count_prizes'],
+                    "daily_prizes": args['prizes']['prize_item1']['serial_count_prizes'] or "",
                     "items": [
                         5,
                         6,
@@ -118,9 +144,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item0']['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item0']['serial_count_points'],
-                            "serial_count_prizes":args['prizes']['prize_item0']['serial_count_prizes']
+                            "serial_count": args['prizes']['prize_item0']['serial_count'] or "",
+                            "serial_count_points": args['prizes']['prize_item0']['serial_count_points'] or "",
+                            "serial_count_prizes":args['prizes']['prize_item0']['serial_count_prizes'] or ""
                         },
                         "components": []
                     },
@@ -144,9 +170,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item1']['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item1']['serial_count_points'],
-                            "serial_count_prizes":args['prizes']['prize_item1']['serial_count_prizes']
+                            "serial_count": args['prizes']['prize_item1']['serial_count'] or "",
+                            "serial_count_points": args['prizes']['prize_item1']['serial_count_points'] or "",
+                            "serial_count_prizes":args['prizes']['prize_item1']['serial_count_prizes'] or ""
                         },
                         "components": []
                     },
@@ -170,9 +196,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item2']['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item2']['serial_count_points'],
-                            "serial_count_prizes":args['prizes']['prize_item2']['serial_count_prizes']
+                            "serial_count": args['prizes']['prize_item2']['serial_count'] or "",
+                            "serial_count_points": args['prizes']['prize_item2']['serial_count_points'] or "",
+                            "serial_count_prizes":args['prizes']['prize_item2']['serial_count_prizes'] or ""
                         },
                         "components": []
                     }
@@ -230,37 +256,22 @@ def __get_page_json(args):
 
 
 
-#获取优惠券id
-def __get_coupon_rule_id(coupon_rule_name):
-    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-    return coupon_rule.id
-
-#获取优惠券json
-def __get_coupon_json(coupon_rule_name):
-    coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-    coupon ={
-        "count":coupon_rule.count,
-        "id":coupon_rule.id,
-        "name":coupon_rule.name
-    }
-    return coupon
-
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
     #feature 数据
     sign_json = json.loads(context.text)
 
-    status = sign_json['status']
-    name = sign_json['name']
-    sign_describe = sign_json['sign_describe']
+    status = sign_json.get('status',"")
+    name = sign_json.get('name',"")
+    sign_describe = sign_json.get('sign_describe',"")
     share = {
-        "img":sign_json["share_pic"],
-        "desc":sign_json["share_describe"]
+        "img":sign_json.get("share_pic",""),
+        "desc":sign_json.get("share_describe","")
     }
     reply = {}
     keyword ={}
-    keyword_reply = sign_json["keyword_reply"]
+    keyword_reply = sign_json.get("keyword_reply","")
     for item in keyword_reply:
         rule = ""
         if item['rule']=="精确":
@@ -270,7 +281,7 @@ def step_impl(context,user,sign_name):
         keyword[item["key_word"]] = rule
     reply ={
         "keyword":keyword,
-        "content":sign_json["share_describe"]
+        "content":sign_json.get("share_describe","")
     }
 
     ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
@@ -302,17 +313,17 @@ def step_impl(context,user,sign_name):
     #Page的数据处理
     prize_settings = {}#sign记录数据
     prize_settings_arr = []#page数据结构
-    sign_settings = sign_json["sign_settings"]
+    sign_settings = sign_json.get("sign_settings","")
     for item in sign_settings:
-        prize_settings[item["sign_in"]]={
-            "integral":item["integral"],
-            "coupon":__get_coupon_json(item["send_coupon"])
+        prize_settings[item.get("sign_in","")]={
+            "integral":item.get("integral",""),
+            "coupon":__get_coupon_json(item.get("send_coupon",""))
         }
 
         prize_settings_arr.append({
-            "serial_count":item["sign_in"],
-            "serial_count_points":item["integral"],
-            "serial_count_prizes":__get_coupon_json(item["send_coupon"])
+            "serial_count":item.get("sign_in",""),
+            "serial_count_points":item.get("integral",""),
+            "serial_count_prizes":__get_coupon_json(item.get("send_coupon",""))
             })
 
     page_prizes = {}#Page记录数据
@@ -328,10 +339,10 @@ def step_impl(context,user,sign_name):
     page_args ={
         "sign_title":name,
         "sign_description":sign_describe,
-        "share_pic":share['img'],
-        "share_description":share['desc'],
+        "share_pic":share.get('img',""),
+        "share_description":share.get('desc',""),
         "reply_keyword":keyword,
-        "reply_content": reply['content'],
+        "reply_content": reply.get('content',""),
         "prizes":page_prizes
     }
 
