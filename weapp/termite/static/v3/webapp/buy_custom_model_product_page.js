@@ -226,6 +226,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                             }
                         }
                     }
+                    $('.xa-promotionSection').show();
                     $('.xt-promotionTile:first').show();
                     if(!_this.isFlashSale && _this.is_member_product && data.discount < 100){
                         // 会员价处理
