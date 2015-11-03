@@ -45,7 +45,6 @@ class PowerMeParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
-			print 333333
 			response = create_response(200)
 			member_id = request.member.id
 			power_id = request.POST['id']
@@ -59,11 +58,13 @@ class PowerMeParticipance(resource.Resource):
 			else:
 				ids_tmp.append(fid)
 			curr_member_power_info.update(set__powered_member_id=ids_tmp)
-			print 22222
 			#更新被助力者信息
-			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid))
+			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid)).first()
+			#调整参与数量(首先检测是否已参与)
+			if not powered_member_info.has_join:
+				powered_member_info.update(set__has_join=True)
+				app_models.PowerMe.objects(id=power_id).update(inc__participant_count=1)
 			powered_member_info.update(inc__power=1)
-			print 11111
 		except Exception,e:
 			print e
 			response = create_response(500)
