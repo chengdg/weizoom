@@ -243,6 +243,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                     }
                     _this.updateProductInfo(_this.targetModel);
 
+                    var token = $.cookie('current_token');
+                    if(token){
+                        $('[data-ui-role="integralMechanism"]').data('view').setFmt(token.split('____')[1]);
+                    }
                     if(data.is_subscribed){
                         $('.xa-collectProduct').show();
                     }else{// 非会员
