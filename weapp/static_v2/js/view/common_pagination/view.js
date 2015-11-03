@@ -74,7 +74,7 @@ W.view.common.PaginationView = Backbone.View.extend({
 	onKeyUp: function(event) {
 		var $el = $(event.target);
 		var value = $el.val();
-		if(!Number(value) ||value.indexOf('.')>=0) {
+		if(!Number(value) || value.indexOf('.')>=0) {
 			$el.val('');
 		}
 		else if(Number(value) > this.pageinfo.max_page) {
@@ -103,8 +103,8 @@ W.view.common.PaginationView = Backbone.View.extend({
 			page = $(event.target).attr('page');
 		}
 
-		// update:增加判断是否undefined，防止报错
-		if(page && page.indexOf('#') === 0) {
+
+		if(page.indexOf('#') === 0) {
 			return false;
 		}
 
