@@ -158,6 +158,7 @@ def get_cards(request):
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
     response.data.can_export_batch_card = weizoomcardpermission[0].can_export_batch_card
+    response.data.can_view_card_details = weizoomcardpermission[0].can_view_card_details
     return response.get_response()
 
 @api(app='card', resource='managers', action='get')
@@ -447,6 +448,7 @@ def get_weizoom_cards(request):
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
     response.data.can_active_card=weizoomcardpermission[0].can_active_card
+    response.data.can_stop_card=weizoomcardpermission[0].can_stop_card
     return response.get_response()
 
 

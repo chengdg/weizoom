@@ -19,6 +19,7 @@ def get_cards_num_census(request):
     """
     微众卡列表页面
     """
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
     count_per_page = int(request.GET.get('count_per_page', '1'))
     cur_page = int(request.GET.get('page', '1'))
     filter_value = request.GET.get('filter_value', None)
@@ -30,7 +31,8 @@ def get_cards_num_census(request):
     response.data.card_ids=card_ids
     response.data.sortAttr = request.GET.get('sort_attr', 'money')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-    
+    response.data.can_view_statistical_details = weizoomcardpermission[0].can_view_statistical_details
+    response.data.can_export_statistical_details = weizoomcardpermission[0].can_export_statistical_details  
     return response.get_response()
 
 

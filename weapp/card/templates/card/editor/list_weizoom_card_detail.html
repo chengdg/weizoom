@@ -153,7 +153,9 @@
                             {{/if}}  
                         {{else}}
                         {{if card.status!=2}}
-                        <a class="btn btn-danger xa-active" operate_style="inactive" href="javascript:void(0)">停用</a>
+                          {{if can_stop_card }}
+                            <a class="btn btn-danger xa-active" operate_style="inactive" href="javascript:void(0)">停用</a>
+                          {{/if}} 
                         {{/if}} 
                         {{/if}}
                     {{/if}}
@@ -525,7 +527,6 @@ $(document).ready(function() {
   var CardRule = W.view.common.AdvancedTable.extend({
     load: function(from_goto, options) {
         //构造传递给后台api的参数
-        console.log('111111111111')
         var args = {};
         // 解决BUG 002900: 微站-订单管理-创建筛选标签可以创建但是创建好的点击没有效果
         // 去掉注释部分
@@ -587,6 +588,7 @@ $(document).ready(function() {
                     items: data.items,
                     data: data,
                     can_active_card: data.can_active_card,
+                    can_stop_card: data.can_stop_card,
                     categories: data.categories,
                     'userWebappId': _this.userWebappId
                 });

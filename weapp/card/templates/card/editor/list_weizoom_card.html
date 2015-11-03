@@ -72,7 +72,7 @@
                     {{each(i, card_rule) items}}
                     <tr>
                         <td style="width:auto">
-                            <a href="/card/card_detail/get/?id=${card_rule.id}" >${card_rule.name}</a>
+                            <a {{if can_view_card_details}} href="/card/card_detail/get/?id=${card_rule.id}" {{else}} href="javascript:void(0);"{{/if}}>${card_rule.name}</a>
                         </td>
                         <td>${card_rule.money}</td>
                         <td>${card_rule.count}</td>
@@ -168,6 +168,7 @@
                             items: data.items,
                             can_export_batch_card: data.can_export_batch_card,
                             data: data,
+                            can_view_card_details:data.can_view_card_details,
                             categories: data.categories,
                             'userWebappId': _this.userWebappId
                         });
