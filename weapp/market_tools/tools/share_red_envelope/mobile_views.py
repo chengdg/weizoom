@@ -74,6 +74,7 @@ def get_share_red_envelope(request):
         'share_page_title': "优惠大放送",
         'share_page_desc': red_envelope_rule.share_title,
         'share_img_url': red_envelope_rule.share_pic,
+        'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
         'is_share': is_share
     }
 
