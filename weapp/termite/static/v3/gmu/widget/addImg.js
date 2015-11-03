@@ -28,6 +28,11 @@
         _create : function() {
             this.$input = this.$el;
             this.$parents = this.$input.parents('.xui-productPhoto');
+            this.$uploadImg = this.$parents.parents('.wui-UploadImg')|| "";
+            this.uploadImg_id = '';
+            if (this.$uploadImg != ""){
+                this.uploadImg_id = this.$uploadImg.attr('data-component-cid');
+            }
             this.$parents.prepend('<ul class="xui-imgList xa-imgList"></ul>');
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext('2d');
@@ -42,12 +47,12 @@
             var maxsize = 200 * 1024;
             this.$input.bind('change', function(event) {
                 if(!this.files.length) return;
-                $('.xa-text').hide();
+                _this.$parents.find('.xa-text').hide();
                 var files = Array.prototype.slice.call(this.files);
-                var hasImgLength = $('.xa-imgList').children('li').length;
+                var hasImgLength = _this.$parents.find('.xa-imgList').children('li').length;
                 var preLength = hasImgLength + files.length;
                 if(preLength >= 5){
-                    $('.xa-addPhoto').hide();
+                    _this.$parents.find('.xa-addPhoto').hide();
                 }
                 if(preLength > 5){
                     _this._alert('最多可上传5张图片');
@@ -65,15 +70,15 @@
                     }
                     var reader = new FileReader();
                     var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>");
-                    $('.xa-imgList').append($li);
+                    _this.$parents.find('.xa-imgList').append($li);
 
-                    var imglength = $('.xa-imgList').children('li').length;
+                    var imglength = _this.$parents.find('.xa-imgList').children('li').length;
                     reader.onload = function() {
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
 
-                        var innerHtml = "<img src="+ result +" id='pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
+                        var innerHtml = "<img src="+ result +" id='"+_this.uploadImg_id+"pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
                         $li.children('img').data('allow-autoplay','true');
                         W.ImagePreview(wx);
@@ -108,6 +113,7 @@
         },
 
         upload: function(basestr,imglength,$li) {
+            var _this = this;
             var $bar = $li.find('.xa-progress span');
             var percent = 0;
             var loop = setInterval(function () {
@@ -128,7 +134,7 @@
                     basestr: JSON.stringify(basestr)
                 }),
                 success: function (data) {
-                    $("#pro_reivew"+imglength).attr('data-src',data.path)
+                    $("#"+_this.uploadImg_id+"pro_reivew"+imglength).attr('data-src',data.path);
                     clearInterval(loop);
                     $bar.css('width',"100%");
                     setTimeout(function(){
@@ -211,33 +217,35 @@
 
         showDelete:function(){
             var _this = this;
-            $('.xa-deletePhoto').show().unbind('click').click(function(){
-                $('.xa-remove, .xa-finishEdit').show();
-                $('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
+            _this.$parents.find('.xa-deletePhoto').show().unbind('click').click(function(){
+                _this.$parents.find('.xa-remove, .xa-finishEdit').show();
+                _this.$parents.find('.xa-addPhoto, .xa-deletePhoto,.xa-text').hide();
                 _this.removeImgFun();
             });
         },
 
         finishEdit:function(){
-            $('.xa-finishEdit').click(function(event) {
-               $('.xa-remove,.xa-finishEdit').hide();
-               $('.xa-deletePhoto').show();
+            var _this = this;
+            this.$parents.find('.xa-finishEdit').click(function(event) {
+               _this.$parents.find('.xa-remove,.xa-finishEdit').hide();
+               _this.$parents.find('.xa-deletePhoto').show();
                var length = $('.xa-imgList').children('li').length;
                if(length < 5){
-                    $('.xa-addPhoto').show();
-                    $('.xa-finishEdit').hide();
+                    _this.$parents.find('.xa-addPhoto').show();
+                    _this.$parents.find('.xa-finishEdit').hide();
                 }
-                $('.xa-remove').unbind('click');
+                _this.$parents.find('.xa-remove').unbind('click');
             });
         },
         removeImgFun:function(){
-            $('.xa-remove').click( function(event) {
+            var _this = this;
+            this.$parents.find('.xa-remove').click( function(event) {
             // $('body').delegate($('.xa-remove'), 'click', function(event) {
                 $(event.target).parents('li').remove();
-                var length = $('.xa-imgList').children('li').length;
+                var length = _this.$parents.find('.xa-imgList').children('li').length;
                 if(length == 0){
-                    $('.xa-addPhoto,.xa-text').show();
-                    $('.xa-finishEdit').hide();
+                    _this.$parents.find('.xa-addPhoto,.xa-text').show();
+                    _this.$parents.find('.xa-finishEdit').hide();
                 }
             });
         }
