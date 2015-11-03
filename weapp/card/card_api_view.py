@@ -572,10 +572,10 @@ def update_status(request):
         if operate_style == 'active':
             status = 0
             weizoom_card.active_card_user_id = request.user.id
-            operate_log = u'停用'
+            operate_log = u'激活'
         else:
             status = 3
-            operate_log = u'激活'
+            operate_log = u'停用'
         if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
             weizoom_card.activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
             event_type = WEIZOOM_CARD_LOG_TYPE_ACTIVATION
@@ -615,7 +615,11 @@ def update_batch_status(request):
         cards = WeizoomCard.objects.filter(id__in=card_ids)
 
         cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
-
+        # 创建操作日志
+        operation_logs=[]
+        for card_id in card_ids:
+            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'激活'))
+        WeizoomCardOperationLog.objects.bulk_create(operation_logs)
         # 创建激活日志
         for card in cards:
             module_api.create_weizoom_card_log(
@@ -624,6 +628,7 @@ def update_batch_status(request):
                 WEIZOOM_CARD_LOG_TYPE_ACTIVATION, 
                 card.id, 
                 card.money)
+
         
         response = create_response(200)
     else:
@@ -646,6 +651,12 @@ def update_onbatch_status(request):
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
         cards.update(status=3, remark=card_remark, activated_to=activated_to)
+
+        # 创建操作日志
+        operation_logs=[]
+        for card_id in card_ids:
+            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'停用'))
+        WeizoomCardOperationLog.objects.bulk_create(operation_logs)
 
         # 创建激活日志
         for card in cards:
