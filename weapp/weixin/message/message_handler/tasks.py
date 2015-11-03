@@ -296,6 +296,18 @@ def __download_voice(message, weixin_mp_user_access_token):
 			message.audio_url = mp3_url
 			message.is_updated = True
 			message.save()
+			#将声音上传至upyun
+			#mp3_url例子：/static/audio/6195386180321517357.mp3
+			try:
+				upyun_path = '/upload%s' %mp3_url
+				yun_url = upyun_util.upload_audio_file(mp3_url, upyun_path)
+				if yun_url:
+					message.audio_url = yun_url
+					message.is_updated = True
+					message.save()
+			except: 
+				notify_message = 'error:upload audio failed!!!'
+				watchdog_error(notify_message)
 
 def _save_amr_audio(audio_content, message):
 
