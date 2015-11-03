@@ -46,12 +46,11 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 		{
 			"status":"off",
 			"name": "签到活动1",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
-			
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
+
 			"share_pic":"1.jpg",
 			"share_describe": "签到获得奖励",
-			
-			"keyword_reply": 
+			"keyword_reply":
 				[{
 					"rule": "精确",
 					"key_word": "78"
@@ -88,7 +87,7 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 		{
 			"status":"off",
 			"name":"签到活动1",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"keyword_reply":
 				[{
 					"rule": "精确",
@@ -126,9 +125,9 @@ Scenario:一条奖励下,不添加优惠券,有积分
 		"""
 		{
 			"name": "签到活动2",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"2.jpg",
-			"keyword_reply": 
+			"keyword_reply":
 				[{
 					"rule": "精确",
 					"key_word": "78"
@@ -154,7 +153,7 @@ Scenario:一条奖励下,不添加优惠券,有积分
 		"""
 		{
 			"name":"签到活动2",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"keyword_reply":
 				[{
 					"rule": "精确",
@@ -181,9 +180,9 @@ Scenario:一条奖励下,添加优惠券,不添加积分
 		"""
 		{
 			"name": "签到活动3",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"3.jpg",
-			"keyword_reply": 
+			"keyword_reply":
 				{
 					"rule": "精确",
 					"key_word": "78"
@@ -203,7 +202,7 @@ Scenario:一条奖励下,添加优惠券,不添加积分
 		"""
 		{
 			"name":"签到活动3",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"3.jpg",
 			"keyword_reply":
 				{
@@ -224,9 +223,9 @@ Scenario:一条奖励下,添加优惠券,添加积分
 		"""
 			{
 				"name": "签到活动4",
-				"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+				"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 				"share_pic":"4.jpg",
-				"keyword_reply": 
+				"keyword_reply":
 					{
 						"rule":"模糊",
 						"key_word": "123456"
@@ -248,7 +247,7 @@ Scenario:一条奖励下,添加优惠券,添加积分
 		{
 			"name":"签到活动4",
 			"share_pic":"4.jpg",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"keyword_reply":
 				{
 					"rule":"模糊",
@@ -271,9 +270,9 @@ Scenario:三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		"""
 		{
 			"name": "签到活动5",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"5.jpg",
-			"keyword_reply": 
+			"keyword_reply":
 				[{
 					"rule": "精确",
 					"key_word": "78"
@@ -308,7 +307,7 @@ Scenario:三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		"""
 		{
 			"name":"签到活动5",
-			"sign_illustration":"签到即可获得积分,连续签到奖励更大哦",
+			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"keyword_reply":
 				[{
 					"rule": "精确",
