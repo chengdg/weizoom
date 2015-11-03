@@ -76,12 +76,17 @@ $(document).ready(function() {
     // 计算列表页面价钱
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
         updateProductPrice: function(event, data){
-            var _this = this;
+            var token = $.cookie('current_token');
+            if(token){
+                $('[data-ui-role="integralMechanism"]').data('view').setFmt(token.split('____')[1]);
+                W.curRequestMemberToken = token.split('____')[1];
+            }
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
                 // $('.xa-shopCarCount').text(data.count).show();
             }
 
+            var _this = this;
             $(".xa-product").each(function(){
                 // 商品原价
                 var price = $(this).data('productPrice');
