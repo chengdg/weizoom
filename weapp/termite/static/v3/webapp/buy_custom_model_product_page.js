@@ -359,7 +359,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         }
         if (this.discount){
             $('.xa-orPrice').text(singlePrice.toFixed(2));
-            singlePrice = (singlePrice * this.discount / 100).toFixed(2);
+            singlePrice = singlePrice * this.discount / 100;
         }
         $('.xa-singlePrice').text(singlePrice.toFixed(2));
     },
