@@ -206,6 +206,7 @@ class MPowerMe(resource.Resource):
 			'page_owner_name': page_owner_name,
 			'page_owner_member_id': page_owner_member_id,
 			'reply_content': record.reply_content if record else '',
-			'mpUserPreviewName': mpUserPreviewName
+			'mpUserPreviewName': mpUserPreviewName,
+			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
