@@ -41,18 +41,30 @@ def get_userinfo_by_phone_number(phone_number):
         contact_name = contact_info[crm_settings.CONTACT_NAME]
         account_ids.append(contact_info[crm_settings.ACCOUNT_ID])
 
-    accounts = CRMAccount.objects.using(crm_settings.SHENGJINGD_DB).filter(acct_int02=1004)\
-        .filter(Q(account_mobile_phone__icontains=phone_number) | Q(account_id__in=account_ids))
-    decision_maker = False
+    # 查找公司名称
     companys = []
-    # 判断是否为决策人、决策人姓名
-    if accounts:
+    accounts = CRMAccount.objects.using(crm_settings.SHENGJINGD_DB).filter(acct_int02=1004, account_id__in=account_ids)
+    for account in accounts:
+        companys.append(account.account_name)
+
+    # 查找是否是决策人
+    decision_maker = False
+    accounts = accounts.filter(account_mobile_phone__icontains=phone_number)
+    if accounts.count() > 0:
         decision_maker = True
-        for account in accounts:
-            companys.append(account.account_name)
-            lader_name = accounts[0].acct_char01.strip()
-            if len(lader_name) > 0:
-                contact_name = lader_name
+
+    # accounts = CRMAccount.objects.using(crm_settings.SHENGJINGD_DB).filter(acct_int02=1004)\
+    #     .filter(Q(account_mobile_phone__icontains=phone_number) | Q(account_id__in=account_ids))
+    # decision_maker = False
+    # companys = []
+    # # 判断是否为决策人、决策人姓名
+    # if accounts:
+    #     decision_maker = True
+    #     for account in accounts:
+    #         companys.append(account.account_name)
+    #         lader_name = accounts[0].acct_char01.strip()
+    #         if len(lader_name) > 0:
+    #             contact_name = lader_name
 
     # 获取公司名
     # if account_ids:
@@ -75,6 +87,7 @@ def get_userinfo_by_phone_number(phone_number):
         # items[crm_settings.IDENTIFY] = OUTSIDER
     if decision_maker:
         items[crm_settings.IDENTIFY] = LEADER
+        
     items[crm_settings.CONTACT_NAME] = contact_name
     items[crm_settings.COMPANYS] = companys
     items[crm_settings.PHONE] = phone_number
