@@ -46,7 +46,7 @@
         <div class="xui-hlist xui-hlist-cell-2 xui-products-original" id="xa-wrapper">
             <ul data-role="listview" data-theme="x" data-icon="false">
                 {% for product in products %}
-                <li id="product" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
+                <li id="{{product.id}}" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
                     data-product-promotion='{{product.promotion_js}}' data-product-price="{{product.display_price}}"
                 >
                     <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
@@ -84,9 +84,9 @@ $(document).ready(function() {
 
             $(".xa-product").each(function(){
                 // 商品原价
-                var price = $(this).data('product-price').toFixed(2);
+                var price = $(this).data('productPrice');
                 // 商品有促销
-                var productPromotion = $(this).data('product-promotion');
+                var productPromotion = $(this).data('productPromotion');
                 var isMemberProduct = $(this).hasClass('xa-member-product');
                 // 计算价钱                
                 price = _this.calculPrice({
