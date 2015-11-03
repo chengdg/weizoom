@@ -1517,7 +1517,8 @@ def get_homepage(request):
     if profile and profile.is_use_wepage:
         homepage_url = u'/termite2/webapp_page/?{}'.format(
             'workspace_id=home_page&webapp_owner_id=%s&workspace_id=%s&project_id=0' % (
-            request.webapp_owner_id, request.user_profile.homepage_workspace_id))
-        print homepage_url
+                request.webapp_owner_id, request.user_profile.homepage_workspace_id))
 
+    fmt = request.GET.get('fmt', '')
+    homepage_url += fmt
     return HttpResponseRedirect(homepage_url)
