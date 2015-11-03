@@ -64,6 +64,7 @@
 					<input type="checkbox" name="card_active" id="can_batch_active_card" value="" style="margin-left: 10px;" >批量激活
 					<input type="checkbox" name="card_active" id="can_stop_card" value=""style="margin-left: 10px;">停用
 					<input type="checkbox" name="card_active" id="can_active_card" value=""style="margin-left: 10px;">激活
+                    <input type="checkbox" name="card_active" id="can_delay_card" value=""style="margin-left: 10px;">卡延期
 					<input type="checkbox" name="card_active" id="can_view_card_details" value=""style="margin-left: 10px;">使用详情
 				</div>
 			</form>
@@ -111,7 +112,7 @@
                     {{each(i,card_manager) items}}
                     <tr>
                         <td> ${card_manager.username}</td>
-                        <td>{{if card_manager.can_create_card }}创建卡,{{/if}}{{if card_manager.can_export_batch_card }}批量导出,{{/if}}{{if card_manager.can_add_card }}追加卡库,{{/if}}{{if card_manager.can_batch_stop_card }}批量停用,{{/if}}{{if card_manager.can_batch_active_card }}批量激活,{{/if}}{{if card_manager.can_view_card_details }}显示微众卡使用详情,{{/if}}{{if card_manager.can_stop_card }}停用,{{/if}}{{if card_manager.can_active_card }}激活,{{/if}}{{if card_manager.can_change_shop_config }}开启关闭,{{/if}}{{if card_manager.can_view_statistical_details }}查看数据统计使用详情,{{/if}}{{if card_manager.can_export_statistical_details }}批量导出统计,{{/if}}</td>
+                        <td>{{if card_manager.can_create_card }}创建卡,{{/if}}{{if card_manager.can_export_batch_card }}批量导出,{{/if}}{{if card_manager.can_add_card }}追加卡库,{{/if}}{{if card_manager.can_batch_stop_card }}批量停用,{{/if}}{{if card_manager.can_batch_active_card }}批量激活,{{/if}}{{if card_manager.can_view_card_details }}显示微众卡使用详情,{{/if}}{{if card_manager.can_stop_card }}停用,{{/if}}{{if card_manager.can_active_card }}激活,{{/if}}{{if card_manager.can_delay_card }}卡延期,{{/if}}{{if card_manager.can_change_shop_config }}开启关闭,{{/if}}{{if card_manager.can_view_statistical_details }}查看数据统计使用详情,{{/if}}{{if card_manager.can_export_statistical_details }}批量导出统计,{{/if}}</td>
                         <td><a href="javascript:void(0);" class="btn btn-default ml10 " onclick="card_manager_configure(${card_manager.user_id})" >配置</a></td>
                     </tr>
                     {{/each}}
@@ -164,6 +165,7 @@
                         can_view_card_details=data.items.can_view_card_details;
                         can_stop_card=data.items.can_stop_card;
                         can_active_card=data.items.can_active_card;
+                        can_delay_card=data.items.can_delay_card;
                         can_change_shop_config=data.items.can_change_shop_config;
                         can_view_statistical_details=data.items.can_view_statistical_details;
                         can_export_statistical_details=data.items.can_export_statistical_details;
@@ -217,6 +219,12 @@
                         else{
                             $('#can_active_card').attr('checked',false);
                         }
+                        if (can_delay_card){
+                            $('#can_delay_card').attr('checked',true);
+                        }
+                        else{
+                            $('#can_delay_card').attr('checked',false);
+                        }
                         if (can_change_shop_config){
                             $('#can_change_shop_config').attr('checked',true);
                         }
@@ -257,6 +265,7 @@
     	var can_batch_active_card=$('#can_batch_active_card').prop("checked");
     	var can_stop_card=$('#can_stop_card').prop("checked");
     	var can_active_card=$('#can_active_card').prop("checked");
+        var can_delay_card=$('#can_delay_card').prop("checked");
     	var can_view_card_details=$('#can_view_card_details').prop("checked");
     	var can_change_shop_config=$('#can_change_shop_config').prop("checked");
     	var can_view_statistical_details=$('#can_view_statistical_details').prop("checked");
@@ -274,6 +283,7 @@
                         can_batch_active_card: can_batch_active_card,
                         can_stop_card: can_stop_card,
                         can_active_card: can_active_card,
+                        can_delay_card: can_delay_card,
                         can_view_card_details: can_view_card_details,
                         can_change_shop_config: can_change_shop_config,
                         can_view_statistical_details: can_view_statistical_details,

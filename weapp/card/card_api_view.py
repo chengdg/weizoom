@@ -36,10 +36,10 @@ def get_cards(request):
     weizoom_card_rules = WeizoomCardRule.objects.all().order_by('-created_at')
     weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
     can_export_batch_card=0
-    can_view_card_details=0
+    can_delay_card=0
     if weizoomcardpermission:
         can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
-        can_view_card_details=weizoomcardpermission[0].can_view_card_details
+        can_delay_card=weizoomcardpermission[0].can_delay_card
     if card_name:
         weizoom_card_rules = weizoom_card_rules.filter(name__icontains = card_name)
 
@@ -162,8 +162,8 @@ def get_cards(request):
     response.data.items = cur_weizoom_card_rules
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
+    response.data.can_delay_card = can_delay_card
     response.data.can_export_batch_card = can_export_batch_card
-    response.data.can_view_card_details = can_view_card_details
     return response.get_response()
 
 @api(app='card', resource='managers', action='get')
@@ -193,6 +193,7 @@ def get_managers(request):
             cur_card_manager.can_view_card_details=card_manager2weizoomcardpermission[card_manager.user_id].can_view_card_details
             cur_card_manager.can_stop_card=card_manager2weizoomcardpermission[card_manager.user_id].can_stop_card
             cur_card_manager.can_active_card=card_manager2weizoomcardpermission[card_manager.user_id].can_active_card
+            cur_card_manager.can_delay_card=card_manager2weizoomcardpermission[card_manager.user_id].can_delay_card
             cur_card_manager.can_change_shop_config=card_manager2weizoomcardpermission[card_manager.user_id].can_change_shop_config
             cur_card_manager.can_view_statistical_details=card_manager2weizoomcardpermission[card_manager.user_id].can_view_statistical_details
             cur_card_manager.can_export_statistical_details=card_manager2weizoomcardpermission[card_manager.user_id].can_export_statistical_details
@@ -222,6 +223,7 @@ def get_weizoomcard_permission_own(request):
         cur_weizoomcardpermission.can_view_card_details=weizoomcardpermission[0].can_view_card_details
         cur_weizoomcardpermission.can_stop_card=weizoomcardpermission[0].can_stop_card
         cur_weizoomcardpermission.can_active_card=weizoomcardpermission[0].can_active_card
+        cur_weizoomcardpermission.can_delay_card=weizoomcardpermission[0].can_delay_card
         cur_weizoomcardpermission.can_change_shop_config=weizoomcardpermission[0].can_change_shop_config
         cur_weizoomcardpermission.can_view_statistical_details=weizoomcardpermission[0].can_view_statistical_details
         cur_weizoomcardpermission.can_export_statistical_details=weizoomcardpermission[0].can_export_statistical_details
@@ -270,6 +272,11 @@ def get_weizoomcard_permission(request):
         can_active_card=0
     else:
         can_active_card=1
+    can_delay_card = post.get('can_delay_card','')
+    if can_delay_card =='false':
+        can_delay_card=0
+    else:
+        can_delay_card=1
     can_view_card_details = post.get('can_view_card_details','')
     if can_view_card_details =='false':
         can_view_card_details=0
@@ -305,6 +312,7 @@ def get_weizoomcard_permission(request):
         can_batch_active_card=can_batch_active_card,
         can_stop_card=can_stop_card,
         can_active_card=can_active_card,
+        can_delay_card=can_delay_card,
         can_view_card_details=can_view_card_details,
         can_change_shop_config=can_change_shop_config,
         can_view_statistical_details=can_view_statistical_details,
@@ -312,7 +320,6 @@ def get_weizoomcard_permission(request):
         response = create_response(200)
     else:
         try:   
-            print '+------+' 
             WeiZoomCardPermission.objects.create(
                 user_id=user_id,
                 can_create_card=can_create_card,
@@ -322,6 +329,7 @@ def get_weizoomcard_permission(request):
                 can_batch_active_card=can_batch_active_card,
                 can_stop_card=can_stop_card,
                 can_active_card=can_active_card,
+                can_delay_card=can_delay_card,
                 can_view_card_details=can_view_card_details,
                 can_change_shop_config=can_change_shop_config,
                 can_view_statistical_details=can_view_statistical_details,
@@ -367,9 +375,11 @@ def get_weizoom_cards(request):
     weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
     can_active_card=0
     can_stop_card=0
+    can_stop_card=0
     if weizoomcardpermission:
             can_active_card=weizoomcardpermission[0].can_active_card
             can_stop_card=weizoomcardpermission[0].can_stop_card
+            can_view_card_details=weizoomcardpermission[0].can_view_card_details
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
@@ -459,6 +469,7 @@ def get_weizoom_cards(request):
     response.data.pageinfo = paginator.to_dict(pageinfo)
     response.data.can_active_card=can_active_card
     response.data.can_stop_card=can_stop_card
+    response.data.can_view_card_details = can_view_card_details
     return response.get_response()
 
 

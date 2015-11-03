@@ -67,7 +67,7 @@
                     {{each(i, card_rule) items}}
                     <tr>
                         <td style="width:auto">
-                            <a {{if can_view_card_details}} href="/card/card_detail/get/?id=${card_rule.id}" {{else}} href="javascript:void(0);"{{/if}}>${card_rule.name}</a>
+                            <a href="/card/card_detail/get/?id=${card_rule.id}">${card_rule.name}</a>
                         </td>
                         <td>${card_rule.money}</td>
                         <td>${card_rule.count}</td>
@@ -78,7 +78,9 @@
                         <td>{{if can_export_batch_card}}
                             <a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a>
                             {{/if}}
-                            <a id="appendTime" class="appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a>
+                            {{if can_delay_card}}
+                                <a id="appendTime" class="appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a>
+                            {{/if}}
                         </td>
                     </tr>
                     {{/each}}
@@ -162,8 +164,8 @@
                         var $node = $.tmpl(this.template, {
                             items: data.items,
                             can_export_batch_card: data.can_export_batch_card,
+                            can_delay_card: data.can_delay_card,
                             data: data,
-                            can_view_card_details:data.can_view_card_details,
                             categories: data.categories,
                             'userWebappId': _this.userWebappId
                         });
