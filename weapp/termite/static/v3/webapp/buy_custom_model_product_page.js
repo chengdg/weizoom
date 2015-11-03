@@ -73,7 +73,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      */
     initProductModel: function(maxCount) {
         this.counter.setMaxCount(maxCount);
-        if(maxCount < 1 && maxCount != -99999){
+        if(maxCount < 1){
             this.counter.disable();
         }else if(maxCount = -99999 || this.counter.minCount <= maxCount){
             $('.xa-disabledBuyLinks').hide();
@@ -141,7 +141,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 maxCount = this.countPerPurchase;
                 message = '限购'+ maxCount +'件';
             }else{
-                maxCount = -99999;
+                maxCount = 99999;
             }
         }
 
@@ -237,11 +237,11 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                         _this.targetModel = _this.models[0];
                         var maxCount=_this.getMaxCount(_this.targetModel);
                         _this.initProductModel(maxCount);
-                        _this.updateProductInfo(_this.targetModel);
                     } else {
                         _this.initProductModel(0);
                     }
-                    
+                    _this.updateProductInfo(_this.targetModel);
+
                     if(data.is_subscribed){
                         $('.xa-collectProduct').show();
                     }else{// 非会员
@@ -337,14 +337,13 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      * 更新DOM，使用在选中和释放规格值时
      */
     updateProductInfo: function(model) {
+        var singlePrice = 0;
+        if (this.isFlashSale) {
+            singlePrice = this.promotion.detail.promotion_price;
+        }
         if (!model) {
-            if (!this.promotion || !this.isFlashSale) {
-                var min_price = (this.minPrice).toFixed(2);
-                if (this.discount){
-                    $('.xa-orPrice').text(min_price);
-                    min_price = (min_price * this.discount / 100).toFixed(2);
-                }
-                $('.xa-singlePrice').text(min_price);
+            if(singlePrice == 0){
+                singlePrice = this.minPrice;
             }
             $('.xa-enabledBuyLinks').hide();
             $('.xa-disabledBuyLinks').show();
@@ -352,43 +351,27 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             //库存
             this.counter.setMaxCount(0);
         } else {
-            var change_price = 0;
-            // if (this.promotion && this.isFlashSale) {
-            //     if (this.promotion.type == 1 && this.member_or_promotion === 'promotion') {
-            //         change_price = this.promotion.detail.promotion_price.toFixed(2); //无规格时，显示抢购的价钱
-            //     }else if (this.promotion.type == 1 && this.member_or_promotion === 'member') {
-            //         change_price = model.price.toFixed(2); //无规格时，显示抢购的价钱
-            //     }else{
-            //         change_price = model.price.toFixed(2);//无规格时，显示抢购的价钱
-            //     }
-            if(this.isFlashSale){
-                change_price = this.promotion.detail.promotion_price.toFixed(2); //无规格时，显示抢购的价钱
-            } else {
-                change_price = model.price.toFixed(2);
+            if(singlePrice == 0) {
+                singlePrice = model.price;
             }
-            if(this.discount < 100){
-                $('.xa-orPrice').text(change_price);
-                change_price = (change_price * this.discount / 100).toFixed(2);
-            }
-            $('.xa-singlePrice').text(change_price);
             this.updateProductStock(model);
         }
+        if (this.discount){
+            $('.xa-orPrice').text(singlePrice.toFixed(2));
+            singlePrice = (singlePrice * this.discount / 100).toFixed(2);
+        }
+        $('.xa-singlePrice').text(singlePrice.toFixed(2));
     },
     /**
      * 只对targetModel执行
      * @param model
      */
     updateProductStock: function(model){
-        // if (!this.targetModel) {
-        //     // 如果没有选中规格，则不处理
-        //     return;
-        // }
         //库存
         var maxCount = this.getMaxCount(model);
         this.counter.setMaxCount(maxCount);
 
         if(this.counter.maxCount >= 0 && (this.counter.maxCount < this.counter.count || this.counter.maxCount < this.counter.minCount)){
-            this.showUnderStock();
             $('.xa-disabledBuyLinks').show();
             $('.xa-enabledBuyLinks').hide();
         }else{
