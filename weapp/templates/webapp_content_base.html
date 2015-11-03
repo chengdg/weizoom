@@ -208,6 +208,7 @@
                     if (url.length == 0 || url.indexOf('javascript:') >= 0) {
                         return;
                     }
+                    url +='&fmt='+W.curRequestMemberToken;
                     if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
                         /* 非会员显示二维码 */
                         showSwiper();
