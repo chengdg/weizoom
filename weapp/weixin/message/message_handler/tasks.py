@@ -305,8 +305,9 @@ def __download_voice(message, weixin_mp_user_access_token):
 					message.audio_url = yun_url
 					message.is_updated = True
 					message.save()
-			except:
-				print 'error:upload audio failed!!!'
+			except: 
+				notify_message = 'error:upload audio failed!!!'
+				watchdog_error(notify_message)
 
 def _save_amr_audio(audio_content, message):
 
