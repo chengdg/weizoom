@@ -306,8 +306,7 @@ def get_weizoomcard_permission(request):
         can_export_statistical_details=can_export_statistical_details)
         response = create_response(200)
     else:
-        try:   
-            print '+------+' 
+        try:
             WeiZoomCardPermission.objects.create(
                 user_id=user_id,
                 can_create_card=can_create_card,
@@ -355,7 +354,7 @@ def get_weizoom_cards(request):
     """
     卡列表
     """
-    count_per_page = int(request.GET.get('count_per_page', '1'))
+    count_per_page = int(20)
     cur_page = int(request.GET.get('page', '1'))
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
@@ -632,7 +631,7 @@ def update_onbatch_status(request):
         card_ids = card_ids.split(',')
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
-        cards.update(status=3, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
+        cards.update(status=3, remark=card_remark, activated_to=activated_to)
 
         # 创建激活日志
         for card in cards:
@@ -674,7 +673,7 @@ def append_weizoom_cards(request):
 @login_required
 def append_card_expired_time(request):
     """
-    追加微众卡
+    追加卡规则时间
     """
     rule_id = request.POST.get('rule_id', '')
     card_append_time = request.POST.get('card_append_time', '')
