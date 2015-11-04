@@ -29,7 +29,7 @@ class WeizoomCardRule(models.Model):
 	money = models.DecimalField(max_digits=65, decimal_places=2) #微众卡金额
 	count = models.IntegerField(default=0) #发放总数量
 	remark = models.CharField(max_length=20, db_index=True) #备注
-	expired_time = models.DateTimeField(auto_now_add=True) #过期时间
+	expired_time = models.DateTimeField() #过期时间
 	valid_time_from = models.DateTimeField() #有效范围开始时间
 	valid_time_to = models.DateTimeField() #有效范围结束时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
