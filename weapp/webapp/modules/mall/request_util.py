@@ -482,7 +482,7 @@ def get_pay_result_success(request):
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
 		is_show_red_envelope = True
-		red_envelope_rule_id = red_envelope.id
+		red_envelope_rule_id = red_envelope['id']
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
