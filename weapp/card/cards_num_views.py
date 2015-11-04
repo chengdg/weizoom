@@ -54,7 +54,8 @@ def get_card_num_details(request):
         password_is_show = False
         if card.is_expired:
             status_str = u'己过期'
-            password_is_show = True
+            if active_card_user_id == request.user.id:
+                password_is_show = True
         else:
             if card.status==WEIZOOM_CARD_STATUS_UNUSED:
                 status_str = u'未使用'
