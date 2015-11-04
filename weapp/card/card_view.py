@@ -143,6 +143,8 @@ def export_weizoom_cards(request):
             password = c.password
         elif (c.active_card_user_id == request.user.id) and c.is_expired:
             password = c.password
+        elif (c.active_card_user_id == request.user.id) and c.status==1:
+            password = c.password
         else:
             password = '*******'
         info = [
