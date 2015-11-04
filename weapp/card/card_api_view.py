@@ -601,7 +601,6 @@ def update_status(request):
             weizoom_card.remark = card_remark
             weizoom_card.activated_to = activated_to
         weizoom_card.save()
-
         # 创建激活日志
         module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
         response = create_response(200)
