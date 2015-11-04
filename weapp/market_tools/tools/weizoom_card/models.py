@@ -246,7 +246,7 @@ class WeiZoomCardPermission(models.Model):
 	can_change_shop_config = models.BooleanField(default=False)#能否开启关闭
 	can_view_statistical_details = models.BooleanField(default=False)#能否查看数据统计使用详情
 	can_export_statistical_details= models.BooleanField(default=False)#能否批量导出统计
-
+	can_delay_card= models.BooleanField(default=False)#能否延期卡
 
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card_permission'
