@@ -705,13 +705,15 @@ def append_card_expired_time(request):
     card_append_time = request.POST.get('card_append_time', '')
     rule = WeizoomCardRule.objects.get(id=rule_id)
     valid_time_from = datetime.strftime(rule.valid_time_from, '%Y-%m-%d %H:%M:%S')
+    valid_time_to = datetime.strftime(rule.valid_time_to, '%Y-%m-%d %H:%M:%S')
     if valid_time_from >('%s' %card_append_time):
         response = create_response(500)
     else:
+        if ('%s' %card_append_time) > valid_time_to:
+            WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(is_expired=False)
         rule.valid_time_to = card_append_time
         rule.expired_time = card_append_time
-        rule.save()
-        WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(is_expired=False)
+        rule.save()  
         response = create_response(200)
     return response.get_response()
 
