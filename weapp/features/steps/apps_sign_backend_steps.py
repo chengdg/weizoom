@@ -16,8 +16,10 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 import json
 
-#debug工具函数
 def __debug_print(content,type_tag=True):
+    """
+    debug工具函数
+    """
     print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
     if type_tag:
         print "====== Type ======"
@@ -26,27 +28,37 @@ def __debug_print(content,type_tag=True):
     print content
     print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
 
-#response 转换 json
 def __res2json(obj):
+    """
+    response 转换 json
+    """
     return json.loads(obj.content)
 
-#获取优惠券id
 def __get_coupon_rule_id(coupon_rule_name):
+    """
+    获取优惠券id
+    """
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.id
 
-#获取优惠券name
 def __get_coupon_rule_name(coupon_rule_name):
+    """
+    获取优惠券name
+    """
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.name
 
-#获取优惠券count
 def __get_coupon_rule_count(coupon_rule_name):
+    """
+    获取优惠券count
+    """
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     return coupon_rule.count
 
-#获取优惠券json
 def __get_coupon_json(coupon_rule_name):
+    """
+    获取优惠券json
+    """
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
     coupon ={
         "count":coupon_rule.count,
@@ -55,9 +67,103 @@ def __get_coupon_json(coupon_rule_name):
     }
     return coupon
 
+def __get_sign(context):
+    """
+    step1 登录Sign页面
+    """
+    get_sign_response = context.client.get("/apps/sign/sign/")
+    sign_args_response = get_sign_response.context
+    return sign_args_response
 
-#手动模板
+def __get_termite(context,project_id,design_mode=1):
+    """
+    step2 访问PC的Phone页面termite2
+    """
+    url = "/termite2/webapp_design_page/?project_id={}&design_mode={}".format(project_id,design_mode)
+    get_termite_response = context.client.get(url)
+    return get_termite_response
+
+def __get_dynamicPage(context,project_id,design_mode=0,version=1):
+    """
+    step3 获得Page右边个人配置JSON
+    """
+    get_dynamicPage_response = context.client.get('/apps/api/dynamic_pages/get/',{'project_id':project_id,"design_mode":design_mode,"version":version})
+    bdd_util.assert_api_call_success(get_dynamicPage_response)
+    return get_dynamicPage_response
+
+def __get_keywords(context):
+    """
+    step4 获得关键字(Fin)
+    """
+    keyword_response = context.client.get('/apps/sign/api/sign/')
+    bdd_util.assert_api_call_success(keyword_response)
+    return keyword_response
+
+def __post_PageJson(context,post_args,project_id,design_mode=0,version=1):
+    """
+    step5 POST,PageJSON到Mongo,返回Page_id
+
+    参数：
+    termite_post_args={
+        "field":"page_content",
+        "id":project_id,
+        "page_id":"1",
+        "page_json": "",
+    }
+
+    """
+
+    termite_url = "http://dev.weapp.com/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    if post_args:
+        termite_post_args = post_args
+    else:
+        termite_post_args={
+            "field":"page_content",
+            "id":project_id,
+            "page_id":"1",
+            "page_json": "",
+        }
+    post_termite_response = context.client.post(termite_url,termite_post_args)
+    bdd_util.assert_api_call_success(post_termite_response)
+    return post_termite_response
+
+def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
+    """
+    step6 POST,填写JSON至Mongo
+    sign_args = {
+        "_method":"put",
+        "name":"",
+        "prize_settings":"",
+        "reply":"",
+        "share":"",
+        "status":"off",
+        "related_page_id":"",
+    }
+
+    """
+
+    sign_url = "http://dev.weapp.com/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    if sign_args:
+        pass
+    else:
+        sign_args = {
+        "_method":"put",
+        "name":"",
+        "prize_settings":"",
+        "reply":"",
+        "share":"",
+        "status":"off",
+        "related_page_id":"",
+    }
+
+    post_sign_response = context.client.post(sign_url,sign_args)
+    bdd_util.assert_api_call_success(post_sign_response)
+    return post_sign_response
+
 def __get_page_json(args):
+    """
+    Page模板
+    """
     __prizes = args.get('prizes',"")
     __items = range(5,5-1+len(__prizes))
     __inner_components = []
@@ -238,8 +344,7 @@ def step_impl(context,user,sign_name):
     }
 
     ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
-    get_sign_response = context.client.get("/apps/sign/sign/")
-    sign_args_response = get_sign_response.context
+    sign_args_response = __get_sign(context)
 
     sign  = sign_args_response['sign']
     is_create_new_data = sign_args_response['is_create_new_data']
@@ -248,19 +353,12 @@ def step_impl(context,user,sign_name):
     keywords = sign_args_response['keywords']
 
     ##step2访问后台Phone页面 (Fin不是标准api请求，Phone页面HTML)
-    url = "/termite2/webapp_design_page/?project_id={}&design_mode={}".format(project_id,1)
-    get_termite_response = context.client.get(url)
-
+    __get_termite(context,project_id,design_mode=1)
     ##step3 获得Page右边个人配置JSON (Fin获得右边配置的空Json，这边主要是验证请求是否成功)
-    get_dynamicPage_response = context.client.get('/apps/api/dynamic_pages/get/',{'project_id':project_id,"design_mode":0,"version":1})
-    dynamicPage_data = get_dynamicPage_response
-
-    bdd_util.assert_api_call_success(get_dynamicPage_response)
+    dynamicPage_data = __get_dynamicPage(context,project_id)
 
     ##step4 获得关键字(Fin)
-    keyword_response = context.client.get('/apps/sign/api/sign/')
-    bdd_util.assert_api_call_success(keyword_response)
-
+    keyword_response = __get_keywords(context)
     #step5 POST,PageJSON到Mongo,返回Page_id(Fin)
     #Page的数据处理
     prize_settings = {}#sign记录数据
@@ -298,20 +396,16 @@ def step_impl(context,user,sign_name):
         "prizes":page_prizes
     }
 
-    termite_url = "http://dev.weapp.com/termite2/api/project/?design_mode={}&project_id={}&version={}".format(0,project_id,1)
     termite_post_args={
         "field":"page_content",
         "id":project_id,
         "page_id":"1",
         "page_json": __get_page_json(page_args),
     }
-    post_termite_response = context.client.post(termite_url,termite_post_args)
-    bdd_util.assert_api_call_success(post_termite_response)
-
+    post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
     page_related_id = __res2json(post_termite_response)['data']['project_id']
 
     #step6 POST,填写JSON至Mongo，返回JSON(Fin)
-    sign_url = "http://dev.weapp.com/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(0,project_id,1)
     post_sign_args = {
         "_method":"put",
         "name":name,
@@ -321,14 +415,51 @@ def step_impl(context,user,sign_name):
         "status":"off",
         "related_page_id":page_related_id,
     }
-    post_sign_response = context.client.post(sign_url,post_sign_args)
-    bdd_util.assert_api_call_success(post_sign_response)
-
+    __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
-    #:88
-    pass
+    # feature数据
+    sign_json = json.loads(context.text)
+
+    status = sign_json.get('status',"")
+    name = sign_json.get('name',"")
+    sign_describe = sign_json.get('sign_describe',"")
+    share = {
+        "img":sign_json.get("share_pic",""),
+        "desc":sign_json.get("share_describe","")
+    }
+    reply = {}
+    keyword ={}
+    reply_keyword = sign_json.get("reply_keyword","")
+    reply_content = sign_json.get("reply_content","")
+    for item in reply_keyword:
+        rule = ""
+        if item['rule']=="精确":
+            rule = "accurate"
+        elif item['rule']=="模糊":
+            rule = "blur"
+        keyword[item["key_word"]] = rule
+    reply ={
+        "keyword":keyword,
+        "content":reply_content
+    }
+
+
+
+    # __debug_print(sign_json)
+    # __debug_print(status)
+    # __debug_print(name)
+    # __debug_print(sign_describe)
+    # __debug_print(share)
+    # __debug_print(reply)
+    # __debug_print(keyword)
+    # __debug_print(reply_keyword)
+    # __debug_print(reply_content)
+    # __debug_print(reply)
+    # __debug_print()
+    # __debug_print()
+
 
 
 @when(u'选择优惠券')
