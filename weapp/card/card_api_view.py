@@ -624,7 +624,7 @@ def update_batch_status(request):
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
 
-        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
+        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to,active_card_user_id=request.user.id)
         # 创建操作日志
         operation_logs=[]
         for card_id in card_ids:
