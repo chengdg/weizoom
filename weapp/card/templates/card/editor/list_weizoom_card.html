@@ -181,6 +181,7 @@
                                             method: 'post',
                                             args: data,
                                             success: function(){
+                                                W.showHint('success','追加成功！');
                                                 $('div[data-ui-role="advanced-table-card-rule"]').data('view').reload();
                                             },
                                             error: function(resp) {

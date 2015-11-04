@@ -294,8 +294,6 @@ def get_weizoomcard_permission(request):
     manager_ids = []
     for manager in managers:
         manager_ids.append(manager.user_id)
-    print manager_ids
-    print user_id
     if user_id in manager_ids:
         weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=user_id)
         weizoomcardpermission.update(can_create_card=can_create_card,
@@ -709,7 +707,10 @@ def append_card_expired_time(request):
         response = create_response(500)
     else:
         if ('%s' %card_append_time) > valid_time_to:
-            WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(is_expired=False)
+            WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(
+                is_expired=False,
+                expired_time = card_append_time
+            )
         rule.valid_time_to = card_append_time
         rule.expired_time = card_append_time
         rule.save()  
