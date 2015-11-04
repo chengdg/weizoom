@@ -3742,10 +3742,11 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     height: 45px;
     margin-right: 2px;
     box-shadow: inset 0px 0px 0px 1px #ddd;
+    overflow: hidden;
 }
 .xui-productReviewCreatePage .xui-imgList li img{
-    width: 45px;
-    height: 45px;
+    /*width: 45px;*/
+    /*height: 45px;*/
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
