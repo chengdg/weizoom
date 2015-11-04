@@ -88,6 +88,12 @@ W.weapp.dialog.AppendWeizoomCardTimeDialog = W.dialog.Dialog.extend({
             W.showHint('error','请选择延期时间');
             return false;
         }
+        var append_time = new Date(card_append_time.replace("-", "/").replace("-", "/"));
+        var now_date = new Date();
+        if(append_time < now_date){
+            W.showHint('error','有效期不能小于当期日期！');
+            return false;
+        }
         data = {
             'rule_id': "",
             'card_append_time': card_append_time
