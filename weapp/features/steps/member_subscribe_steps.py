@@ -99,6 +99,8 @@ def step_impl(context, user):
 		for data in json_data:
 			if 'experience' in data:
 				del data['experience']
+			if data.has_key('attention_time') and data['attention_time'] == '今天':
+				data['attention_time'] = time.strftime('%Y-%m-%d')
 		actual_data = actual_members
 	elif context.table:
 		grades_dict = {}
