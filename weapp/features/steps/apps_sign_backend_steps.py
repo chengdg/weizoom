@@ -85,9 +85,9 @@ def __get_page_json(args):
                                 "type": "api",
                                 "api_name": ""
                             },
-                            "serial_count": args['prizes']['prize_item%d'%index]['serial_count'],
-                            "serial_count_points": args['prizes']['prize_item%d'%index]['serial_count_points'] ,
-                            "serial_count_prizes":args['prizes']['prize_item%d'%index]['serial_count_prizes']
+                            "serial_count": args.get('prizes',{}).get('prize_item%d'%index,{}).get('serial_count',""),
+                            "serial_count_points": args.get('prizes',{}).get('prize_item%d'%index,{}).get('serial_count_points',"") ,
+                            "serial_count_prizes":args.get('prizes',{}).get('prize_item%d'%index,{}).get('serial_count_prizes',"")
                         },
                         "components": []
                     }
@@ -151,7 +151,7 @@ def __get_page_json(args):
                     "SignSettingGroupName": "",
                     "daily_group": "",
                     "daily_points": "1",
-                    "daily_prizes": args['prizes']['prize_item0']['serial_count_prizes'],
+                    "daily_prizes": args.get('prizes',{}).get('prize_item0',{}).get('serial_count_prizes',""),
                     "items": __items
                 },
                 "components":__inner_components
