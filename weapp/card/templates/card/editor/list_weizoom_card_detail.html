@@ -492,14 +492,8 @@ $(document).ready(function() {
     
     
     $('.xa-listView').delegate('.xa-select-all', 'click', function(event) {
-        var checkboxes = $('input[name="select-one"]');
-        for(var i=0; i < checkboxes.length; i++) {
-            if(checkboxes[i].disabled) {
-                continue;
-            }
-            checkboxes[i].checked = !checkboxes[i].checked;
-        }
-    });
+        $('[name=select-one]:checkbox').attr('checked',this.checked);
+            });
     
     $('#appendBtn').click(function(event) {
         W.dialog.showDialog('W.weapp.dialog.AppendWeizoomCardDialog', {
