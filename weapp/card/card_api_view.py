@@ -497,6 +497,7 @@ def create_weizoom_cards(request):
             card_type = card_type,
             valid_time_to = valid_time_to,
             valid_time_from = valid_time_from,
+            expired_time = valid_time_to
             )
         #生成微众卡
         __create_weizoom_card(rule, count, request)
@@ -719,7 +720,9 @@ def append_card_expired_time(request):
         response = create_response(500)
     else:
         rule.valid_time_to = card_append_time
+        rule.expired_time = card_append_time
         rule.save()
+        WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(is_expired=False)
         response = create_response(200)
     return response.get_response()
 
