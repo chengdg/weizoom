@@ -102,9 +102,9 @@
                     <a {{if can_view_card_details}} href="/card/card_num_details/get/?card_id=${card.weizoom_card_id}&IS_CARD_RULE=TRUE"{{else}} href="javascript:void(0);"{{/if}}>${card.weizoom_card_id}</a>
                 </td>
                 <td>
-                    {{if ((card.active_card_user_id == card.user_id) && card.status==0) || card.is_expired || ((card.active_card_user_id == card.user_id) && card.status==2 )}}
+                    {{if ((card.active_card_user_id == card.user_id) && card.status==0) || (card.is_expired && (card.active_card_user_id == card.user_id)) || ((card.active_card_user_id == card.user_id) && card.status==2 )}}
                         ${card.password}
-                    {{else card.status==3 }}
+                    {{ else }}
                         *******
                     {{/if}}
                 </td>
