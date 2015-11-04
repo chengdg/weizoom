@@ -47,6 +47,7 @@
 </body>
 <script>
 	var woid = localStorage.getItem("woid");
-	document.getElementById('url').setAttribute("href","/termite/workbench/jqm/preview/?woid="+woid+"&module=mall&model=homepage");
+	var fmt = localStorage.getItem("fmt");
+	document.getElementById('url').setAttribute("href","/termite/workbench/jqm/preview/?woid="+woid+"&module=mall&model=homepage&fmt="+fmt);
 </script>
 </html>
