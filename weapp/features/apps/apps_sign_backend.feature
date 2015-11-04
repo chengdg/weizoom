@@ -50,7 +50,8 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 
 			"share_pic":"1.jpg",
 			"share_describe": "签到获得奖励",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				[{
 					"rule": "精确",
 					"key_word": "78"
@@ -88,7 +89,8 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 			"status":"off",
 			"name":"签到活动1",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				[{
 					"rule": "精确",
 					"key_word":"78"
@@ -124,10 +126,12 @@ Scenario:一条奖励下,不添加优惠券,有积分
 	When jobs添加签到活动"签到活动2",并且保存
 		"""
 		{
+			"status":"off",
 			"name": "签到活动2",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"2.jpg",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				[{
 					"rule": "精确",
 					"key_word": "78"
@@ -142,19 +146,21 @@ Scenario:一条奖励下,不添加优惠券,有积分
 
 			"share_describe": "签到获得奖励",
 			"sign_settings":
-				{
+				[{
 					"sign_in": "1",
 					"integral": "100"
-				}
+				}]
 		}
 
 		"""
 	Then jobs获得签到活动"签到活动2"
 		"""
 		{
+			"status":"off",
 			"name":"签到活动2",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				[{
 					"rule": "精确",
 					"key_word":"78"
@@ -179,10 +185,12 @@ Scenario:一条奖励下,添加优惠券,不添加积分
 	When jobs添加签到活动"签到活动3",并且保存
 		"""
 		{
+			"status":"off",
 			"name": "签到活动3",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"3.jpg",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				{
 					"rule": "精确",
 					"key_word": "78"
@@ -201,10 +209,12 @@ Scenario:一条奖励下,添加优惠券,不添加积分
 	Then jobs获得签到活动"签到活动3"
 		"""
 		{
+			"status":"off",
 			"name":"签到活动3",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"3.jpg",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				{
 					"rule": "精确",
 					"key_word":"78"
@@ -222,10 +232,12 @@ Scenario:一条奖励下,添加优惠券,添加积分
 	When jobs添加签到活动"签到活动4",并且保存
 		"""
 			{
+				"status":"off",
 				"name": "签到活动4",
 				"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 				"share_pic":"4.jpg",
-				"keyword_reply":
+				"reply_content":"签到",
+				"reply_keyword":
 					{
 						"rule":"模糊",
 						"key_word": "123456"
@@ -245,10 +257,12 @@ Scenario:一条奖励下,添加优惠券,添加积分
 	Then jobs获得签到活动"签到活动4"
 		"""
 		{
+			"status":"off",
 			"name":"签到活动4",
 			"share_pic":"4.jpg",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				{
 					"rule":"模糊",
 					"key_word":"123456"
@@ -269,10 +283,12 @@ Scenario:三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 	When jobs添加签到活动"签到活动5",并且保存
 		"""
 		{
+			"status":"off",
 			"name": "签到活动5",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
 			"share_pic":"5.jpg",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				[{
 					"rule": "精确",
 					"key_word": "78"
@@ -306,9 +322,11 @@ Scenario:三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 	Then jobs获得签到活动"签到活动5"
 		"""
 		{
+			"status":"off",
 			"name":"签到活动5",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-			"keyword_reply":
+			"reply_content":"签到",
+			"reply_keyword":
 				[{
 					"rule": "精确",
 					"key_word":"78"

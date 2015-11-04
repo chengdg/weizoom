@@ -150,7 +150,7 @@ def __get_page_json(args):
                     "reply_content": args.get("reply_content",""),
                     "SignSettingGroupName": "",
                     "daily_group": "",
-                    "daily_points": "1",
+                    "daily_points": args.get('prizes',{}).get('prize_item0',{}).get('serial_count_points',""),
                     "daily_prizes": args.get('prizes',{}).get('prize_item0',{}).get('serial_count_prizes',""),
                     "items": __items
                 },
@@ -223,8 +223,9 @@ def step_impl(context,user,sign_name):
     }
     reply = {}
     keyword ={}
-    keyword_reply = sign_json.get("keyword_reply","")
-    for item in keyword_reply:
+    reply_keyword = sign_json.get("reply_keyword","")
+    reply_content = sign_json.get("reply_content","")
+    for item in reply_keyword:
         rule = ""
         if item['rule']=="精确":
             rule = "accurate"
@@ -233,7 +234,7 @@ def step_impl(context,user,sign_name):
         keyword[item["key_word"]] = rule
     reply ={
         "keyword":keyword,
-        "content":sign_json.get("share_describe","")
+        "content":reply_content
     }
 
     ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
