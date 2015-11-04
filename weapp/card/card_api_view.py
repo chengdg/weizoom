@@ -385,10 +385,9 @@ def get_weizoom_cards(request):
         #记录过期并且是未使用的微众卡id
         if card.expired_time < today:
             card_ids_need_expire.append(card.id)
-    
     if len(card_ids_need_expire) > 0:
         WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
-
+    weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
     filter_value = request.GET.get('filter_value', '')
     card_number = _get_cardNumber_value(filter_value)
     cardStatus = _get_status_value(filter_value)
