@@ -366,7 +366,7 @@ def get_weizoom_cards(request):
     """
     卡列表
     """
-    count_per_page = int(20)
+    count_per_page = int(30)
     cur_page = int(request.GET.get('page', '1'))
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
@@ -531,7 +531,7 @@ def __create_weizoom_card(rule, count, request):
             money = rule.money,
             expired_time = rule.valid_time_to,
             password = password,
-            active_card_user_id = request.user.id
+            active_card_user_id = 0
         ))
         passwords.add(password)
     WeizoomCard.objects.bulk_create(create_list)
