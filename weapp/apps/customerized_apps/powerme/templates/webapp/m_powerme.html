@@ -183,7 +183,23 @@
 
         //监听分享成功事件
         $(document).on("share:success",function(data){
-            alert('a hahahahahahahahahahaha');
+            //分享成功后就算该用户参与活动
+            W.getApi().call({
+                app: 'm/apps/powerme',
+                resource: 'powerme_participance',
+                method: 'post',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    id: W.appRecordId,
+                    fid:'{{ page_owner_member_id }}'
+                },
+                success: function(data) {
+                    console.log(page_owner_name+'成功参与活动');
+                },
+                error: function(data) {
+                    console.error(data.errMsg);
+                }
+            });
         });
     });
 
