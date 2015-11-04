@@ -60,6 +60,7 @@
                       title:W.sharePageTitle
                   }),
                   success: function(data) {
+                      $(document).trigger("share:success",{});
                       alert("分享链接成功")
                   },
                   error: function(data){
@@ -94,6 +95,7 @@
                           title:W.sharePageTitle
                       }),
                       success: function(data) {
+                          $(document).trigger("share:success",{});
                           alert("分享链接成功")
                       },
                       error: function(data){

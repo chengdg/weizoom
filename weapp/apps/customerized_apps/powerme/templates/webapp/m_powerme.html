@@ -180,6 +180,11 @@
 
         //展示与隐藏我的排名面板
         showMyRank();
+
+        //监听分享成功事件
+        $(document).on("share:success",function(data){
+            alert('a hahahahahahahahahahaha');
+        });
     });
 
     function updateBtnStatus(){
@@ -254,7 +259,7 @@
             $h.text(left_hours);
             $d.text(left_days);
             seconds--;
-        },950);
+        },990);
     }
 
     function showMyRank(){
