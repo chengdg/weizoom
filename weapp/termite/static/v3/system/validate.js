@@ -202,7 +202,7 @@ W.ValidaterClass = function() {
 			type: 'function',
 			extract: 'element',
 			check: function(element) {
-				var is_upload = element.parent().find('img').attr('src').indexOf('data:image');
+				var is_upload = element.parent().find('.xa-imgList .xa-img');
 				if (is_upload == -1) {
 					return false;
 				} else {

@@ -8,20 +8,18 @@
     style=""
 >
 	<h1 class="wui-i-title">{{component.model.title}} {% if component.model.is_mandatory == "true" %}<span class="wui-i-mandatory">(必填)</span>{% endif %}</h1>
-	<div class="wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="{{component.model.title}}" data-control-type="appkit.uploadimg">
+	<div class="xui-productReviewCreatePage wui-i-uploadimg xa-inputControl" data-input-type="imgarea" data-input-name="{{component.model.title}}" data-control-type="appkit.uploadimg">
 		<div class="xui-productPhoto mt10">
-			<div class="xui-addPhoto fl pr"
+			<div class="xui-addPhoto xa-addPhoto mb10 fl pr"
 				{% if component.model.is_mandatory == "true" %}
 		 		data-validate='require-upload-img::请上传"{{component.model.title}}"'
 		 		{% endif %}
 			>
-				<span class="xui-i-box"></span>
-				<input id="" name="imgFile123"  data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa">
-			</div>
-			<div class="xui-deletePhoto xa-deletePhoto" style="display:none;">
-			</div>
-			<span class="cRed em95 none xa-finishEdit xui-finishEdit ml5">完成</span>
-			<span class="em75 xa-text xui-text">最多可上传5张图片</span>
+                <input name="imgFile123" data-ui-role="uploadImage" type="file" style="opacity:0;top:0;left:0;width:45px;height:45px;" class="pa" multiple>
+            </div>
+            <div class="xui-deletePhoto xa-deletePhoto" style="display:none;"></div>
+            <span class="cRed em95 none xa-finishEdit xui-finishEdit ml10">完成</span>
+            <span class="em75 xa-text xui-text">最多可上传5张图片</span>
         </div>
 	</div>
 </div>

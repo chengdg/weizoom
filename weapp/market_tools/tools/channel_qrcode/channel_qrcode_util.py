@@ -172,6 +172,8 @@ def create_channel_qrcode_has_memeber_restructure(channel_qrcode, user_profile, 
 				Member.update_member_grade(member, channel_qrcode.grade_id)
 			if channel_qrcode.tag_id > 0:
 				MemberHasTag.add_tag_member_relation(member, [channel_qrcode.tag_id])
+				if MemberHasTag.objects.filter(member=member).count() > 1:
+					MemberHasTag.objects.filter(member=member, member_tag__name="未分组").delete()
 		except:
 			notify_message = u"渠道扫描异常update_member_grade error, cause:\n{}".format(unicode_full_stack())
 			watchdog_warning(notify_message)
