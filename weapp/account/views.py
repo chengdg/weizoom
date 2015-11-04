@@ -410,23 +410,26 @@ def upload_picture(request):
 	webp_path, webp_file_name = None, None
 	is_valid_image, width, height = __check_image(file_path)
 	if is_valid_image:
-		if settings.MODE == 'deploy':
-			try:
-				if webp_path and webp_file_name:
-					image_path = upload_image_to_upyun(webp_path,'/upload/%s/%s' % (dir_path_suffix, webp_file_name))	
-				else:
-					image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))	
-			except:
-				image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
-		else:
+		# if settings.MODE == 'deploy':
+		try:
+			print 'jz-----1'
 			if webp_path and webp_file_name:
-				image_path = '/static/upload/%s/%s' % (dir_path_suffix, webp_file_name)
+				image_path = upload_image_to_upyun(webp_path,'/upload/%s/%s' % (dir_path_suffix, webp_file_name))	
 			else:
-				image_path = '/static/upload/%s/%s' % (dir_path_suffix, file_name)
+				image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
+			print 'jz-----2', image_path
+		except:
+			image_path = upload_image_to_upyun(file_path,'/upload/%s/%s' % (dir_path_suffix, file_name))
+		# else:
+		# 	if webp_path and webp_file_name:
+		# 		image_path = '/static/upload/%s/%s' % (dir_path_suffix, webp_file_name)
+		# 	else:
+		# 		image_path = '/static/upload/%s/%s' % (dir_path_suffix, file_name)
 
 		if 'is_need_size' in request.REQUEST:
 			return HttpResponse('%d:%d:%s' % (width, height, image_path))
 		else:
+			print
 			return HttpResponse(image_path)
 	else:
 		raise Http404('invalid image')
