@@ -80,24 +80,50 @@
 
                         var innerHtml = "<img src="+ result +" id='"+_this.uploadImg_id+"pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
                         $li.append(innerHtml);
-                        $li.children('img').data('allow-autoplay','true');
-                        W.ImagePreview(wx);
+                        var $img = $li.children('img');
+                        $img.unbind('click');
+                        
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
-
+                            $img.css({
+                                    'width': '45px',
+                                    'height': '45px'
+                                });
                             _this.upload(result, imglength,$li);
 
                             return;
                         }
-                        if (img.complete) {
-                            callback();
-                        } else {
-                            img.onload = callback;
-                        }
 
-                        function callback() {
-                            var data = _this.compress(img);
+                        var flag = null;
+                        if (img.complete) {
+                            trigger($img);
+                            callback(flag);
+                        } else {
+                            img.onload = function(){
+                                trigger($img);
+                                callback(flag);
+                            };
+                        }
+                        function trigger($img){
+                            var h = $img.height();
+                            var w = $img.width();
+                            if(h > w){
+                                $img.css({
+                                    'max-width': '100%',
+                                });
+                                flag = true;
+                            }else{
+                                $img.css({
+                                    'max-height': '100%',
+                                    'max-width': 'inherit',
+                                });
+                                flag = false;
+                            }
+                            return flag;
+                        }
+                        function callback(flag) {
+                            var data = _this.compress(img,flag);
                             _this.upload(data, imglength,$li);
 
                             img = null;
@@ -135,6 +161,8 @@
                 }),
                 success: function (data) {
                     $("#"+_this.uploadImg_id+"pro_reivew"+imglength).attr('data-src',data.path);
+                    $li.children('img').data('allow-autoplay','true').attr('src', data.path);
+                    W.ImagePreview(wx);
                     clearInterval(loop);
                     $bar.css('width',"100%");
                     setTimeout(function(){
@@ -148,14 +176,17 @@
                 }
             });
         },
-        compress:function(img){
+        compress:function(img, flag){
             var initSize = img.src.length;
-            var width = img.width;
-            var height = img.height;
-
+            var width,
+                height,
+                ratio,
+                ndata;
+            width = img.width;
+            height = img.height;
+            var needCompress = (ratio = width * height / 4000000)>1 ? true : false;
             //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
-            var ratio;
-            if ((ratio = width * height / 4000000)>1) {
+            if (needCompress) {
                 ratio = Math.sqrt(ratio);
                 width /= ratio;
                 height /= ratio;
@@ -174,27 +205,42 @@
             var count;
             if ((count = width * height / 1000000) > 1) {
                 count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
-
+                
             //计算每块瓦片的宽和高
                 var nw = ~~(width / count);
                 var nh = ~~(height / count);
-
                 this.tCanvas.width = nw;
                 this.tCanvas.height = nh;
-
+          
+                
+                
                 for (var i = 0; i < count; i++) {
                     for (var j = 0; j < count; j++) {
-                        this.tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+                        this.tctx.drawImage(img,i * nw * ratio, j * nh * ratio,nw * ratio, nh * ratio, 0, 0, nw, nh);
 
-                        this.ctx.drawImage(this.tCanvas, i * nw, j * nh, nw, nh);
+                        this.ctx.drawImage(this.tCanvas,  i*nw,j * nh, nw, nh);
+                        
                     }
+                }
+                if(flag){
+                    this.vCanvas = document.createElement("canvas");
+                    this.vctx = this.vCanvas.getContext('2d');
+                    this.vCanvas.width = height;
+                    this.vCanvas.height = width;
+                    this.vctx.rotate(90 * Math.PI / 180);
+                    this.vctx.drawImage(this.canvas, 0, -this.vCanvas.width, width, height);
                 }
             } else {
                 this.ctx.drawImage(img, 0, 0, width, height);
             }
 
             //进行最小压缩
-            var ndata = this.canvas.toDataURL('image/jpeg', 0.3);
+            if(flag && needCompress){
+                ndata = this.vCanvas.toDataURL('image/jpeg', 0.3);
+                this.vCanvas.width = this.vCanvas.height = 0;
+            }else{
+                ndata = this.canvas.toDataURL('image/jpeg', 0.3);
+            }
 
             console.log('压缩前：' + initSize);
             console.log('压缩后：' + ndata.length);
