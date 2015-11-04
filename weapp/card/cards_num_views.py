@@ -68,6 +68,8 @@ def get_card_num_details(request):
                 status_str = u'未激活'
             if card.status==WEIZOOM_CARD_STATUS_EMPTY:
                 status_str = u'己用完'
+                if active_card_user_id == request.user.id:
+                    password_is_show = True
 
         card.status_str = status_str
         card_rule = WeizoomCardRule.objects.get(id=card.weizoom_card_rule_id)
