@@ -153,6 +153,7 @@
             }
             W.pageTitle = "{{page_title}}";
             W.errorMessage = null;
+            localStorage.setItem('woid',W.webappOwnerId);
 
             {% if messages %}
             {% for message in messages %}
