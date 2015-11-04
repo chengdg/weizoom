@@ -118,9 +118,9 @@ class MPowerMe(resource.Resource):
 					curr_member_power_info.save()
 				is_already_participanted = curr_member_power_info.has_join
 
-				#如果当前member不是会员，则清空其助力值
+				#如果当前member不是会员，则清空其助力值同时设置为未参与
 				if not isMember:
-					curr_member_power_info.update(set__power=0)
+					curr_member_power_info.update(set__power=0, set_has_join=False)
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
