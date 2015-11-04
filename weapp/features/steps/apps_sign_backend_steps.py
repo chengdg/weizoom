@@ -58,7 +58,42 @@ def __get_coupon_json(coupon_rule_name):
 
 #手动模板
 def __get_page_json(args):
-    page_temple = {
+    __prizes = args.get('prizes',"")
+    __items = range(5,5-1+len(__prizes))
+    __inner_components = []
+    if __prizes:
+        index=0
+        for i in __items:
+            index += 1
+            __components_tmp = {
+                        "type": "appkit.signitem",
+                        "cid": i,
+                        "pid": 2,
+                        "auto_select": "false",
+                        "selectable": "no",
+                        "force_display_in_property_view": "no",
+                        "has_global_content": "no",
+                        "need_server_process_component_data": "no",
+                        "is_new_created": "true",
+                        "property_view_title": "",
+                        "model": {
+                            "id": "",
+                            "class": "",
+                            "name": "",
+                            "index": i,
+                            "datasource": {
+                                "type": "api",
+                                "api_name": ""
+                            },
+                            "serial_count": args['prizes']['prize_item%d'%index]['serial_count'],
+                            "serial_count_points": args['prizes']['prize_item%d'%index]['serial_count_points'] ,
+                            "serial_count_prizes":args['prizes']['prize_item%d'%index]['serial_count_prizes']
+                        },
+                        "components": []
+                    }
+            __inner_components.append(__components_tmp)
+
+    __page_temple = {
         "type": "appkit.page",
         "cid": 1,
         "pid": "",
@@ -107,102 +142,19 @@ def __get_page_json(args):
                         "api_name": ""
                     },
                     "undefined": "",
-                    "title": args['sign_title'] or "",
-                    "description": args['sign_description'] or "",
-                    "image": args["share_pic"] or "",
-                    "share_description": args["share_description"] or "",
-                    "reply_keyword": args["reply_keyword"] or "",
-                    "reply_content": args["reply_content"] or "",
+                    "title": args.get('sign_title',''),
+                    "description": args.get('sign_description',''),
+                    "image": args.get("share_pic",''),
+                    "share_description": args.get("share_description",""),
+                    "reply_keyword": args.get("reply_keyword",""),
+                    "reply_content": args.get("reply_content",""),
                     "SignSettingGroupName": "",
                     "daily_group": "",
                     "daily_points": "1",
-                    "daily_prizes": args['prizes']['prize_item1']['serial_count_prizes'] or "",
-                    "items": [
-                        5,
-                        6,
-                        7
-                    ]
+                    "daily_prizes": args['prizes']['prize_item0']['serial_count_prizes'],
+                    "items": __items
                 },
-                "components": [
-                    {
-                        "type": "appkit.signitem",
-                        "cid": 5,
-                        "pid": 2,
-                        "auto_select": "false",
-                        "selectable": "no",
-                        "force_display_in_property_view": "no",
-                        "has_global_content": "no",
-                        "need_server_process_component_data": "no",
-                        "is_new_created": "true",
-                        "property_view_title": "",
-                        "model": {
-                            "id": "",
-                            "class": "",
-                            "name": "",
-                            "index": 5,
-                            "datasource": {
-                                "type": "api",
-                                "api_name": ""
-                            },
-                            "serial_count": args['prizes']['prize_item0']['serial_count'] or "",
-                            "serial_count_points": args['prizes']['prize_item0']['serial_count_points'] or "",
-                            "serial_count_prizes":args['prizes']['prize_item0']['serial_count_prizes'] or ""
-                        },
-                        "components": []
-                    },
-                    {
-                        "type": "appkit.signitem",
-                        "cid": 6,
-                        "pid": 2,
-                        "auto_select": "false",
-                        "selectable": "no",
-                        "force_display_in_property_view": "no",
-                        "has_global_content": "no",
-                        "need_server_process_component_data": "no",
-                        "is_new_created": "true",
-                        "property_view_title": "",
-                        "model": {
-                            "id": "",
-                            "class": "",
-                            "name": "",
-                            "index": 6,
-                            "datasource": {
-                                "type": "api",
-                                "api_name": ""
-                            },
-                            "serial_count": args['prizes']['prize_item1']['serial_count'] or "",
-                            "serial_count_points": args['prizes']['prize_item1']['serial_count_points'] or "",
-                            "serial_count_prizes":args['prizes']['prize_item1']['serial_count_prizes'] or ""
-                        },
-                        "components": []
-                    },
-                    {
-                        "type": "appkit.signitem",
-                        "cid": 7,
-                        "pid": 2,
-                        "auto_select": "false",
-                        "selectable": "no",
-                        "force_display_in_property_view": "no",
-                        "has_global_content": "no",
-                        "need_server_process_component_data": "no",
-                        "is_new_created": "true",
-                        "property_view_title": "",
-                        "model": {
-                            "id": "",
-                            "class": "",
-                            "name": "",
-                            "index": 7,
-                            "datasource": {
-                                "type": "api",
-                                "api_name": ""
-                            },
-                            "serial_count": args['prizes']['prize_item2']['serial_count'] or "",
-                            "serial_count_points": args['prizes']['prize_item2']['serial_count_points'] or "",
-                            "serial_count_prizes":args['prizes']['prize_item2']['serial_count_prizes'] or ""
-                        },
-                        "components": []
-                    }
-                ]
+                "components":__inner_components
             },
             {
                 "type": "appkit.submitbutton",
@@ -252,7 +204,7 @@ def __get_page_json(args):
             }
         ]
     }
-    return json.dumps(page_temple)
+    return json.dumps(__page_temple)
 
 
 
@@ -293,7 +245,6 @@ def step_impl(context,user,sign_name):
     project_id = sign_args_response['project_id']
     webapp_owner_id = sign_args_response['webapp_owner_id']
     keywords = sign_args_response['keywords']
-
 
     ##step2访问后台Phone页面 (Fin不是标准api请求，Phone页面HTML)
     url = "/termite2/webapp_design_page/?project_id={}&design_mode={}".format(project_id,1)
