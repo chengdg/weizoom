@@ -336,24 +336,30 @@ class RedEnvelopeParticipances(resource.Resource):
         """
         rule_id = request.GET.get('id', None)
         redEnvelope2Order_data = promotion_models.RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=rule_id)
-        has_data = redEnvelope2Order_data.count()
+        received_count = redEnvelope2Order_data.count() #领取人数
         rule_data = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
         coupon_rule = promotion_models.CouponRule.objects.get(id=rule_data.coupon_rule_id)
         relations = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
+        coupon_ids = [r.coupon_id for r in relations]
+        coupons = promotion_models.Coupon.objects.filter(id__in=coupon_ids)
+        coupon_id2coupon = dict([c.id, c] for c in coupons)
         new_member_count = 0         #新关注人数
-        consumption_sum = 0          #产生消费额
-        received_count = has_data      #领取人数
+        consumption_sum = 0          #产生消费额  
         total_use_count = relations.filter(coupon__status=COUPON_STATUS_USED).count()     #使用人数
-        #求用优惠券的情况下，该红包规则下的总消费额
-
-        participences = promotion_models.RedEnvelopeParticipences.objects.filter(red_envelope_rule_id=rule_id)
-        for participence in participences:
-            if participence.coupon.status == 1 and participence.introduced_by == 0:
-                order = Order.objects.filter(coupon_id=participence.coupon.id, status=5)
-                if order.count() > 0:
-                    consumption_sum = consumption_sum + order[0].final_price + order[0].postage
+        
         #加上引入的数字
+        orders = Order.objects.filter(coupon_id__in=coupon_ids, status=5)
+        coupon_id2order = {}
+        for order in orders:
+            cur_coupon_id = order.coupon_id
+            coupon_id2order[cur_coupon_id] = order
         for relation in relations:
+            #求用优惠券的情况下，该红包规则下的总消费额
+            cur_coupon = coupon_id2coupon[relation.coupon_id]
+            if cur_coupon.status == 1 and relation.introduced_by == 0:
+                if cur_coupon.id in coupon_id2order:
+                    order = coupon_id2order[cur_coupon.id]
+                    consumption_sum = consumption_sum + order.final_price + order.postage
             new_member_count += relation.introduce_new_member
             received_count += relation.introduce_received_number
             consumption_sum += relation.introduce_sales_number
@@ -362,7 +368,6 @@ class RedEnvelopeParticipances(resource.Resource):
             'second_navs': export.get_promotion_and_apps_second_navs(request),
             'second_nav_name': export.MALL_APPS_SECOND_NAV,
             'third_nav_name': export.MALL_APPS_RED_ENVELOPE_NAV,
-            'has_data': has_data,
             'new_member_count': new_member_count,
             'received_count': received_count,
             'consumption_sum': '%.2f' % consumption_sum,
@@ -433,7 +438,7 @@ def _update_member_bring_new_member_count(red_envelope_rule_id=None):
             if sub_relation.member.is_subscribed \
                     and sub_relation.is_new \
                     and relation.red_envelope_relation_id == sub_relation.red_envelope_relation_id \
-                    and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id] if member_id2follower_member_id.has_key(sub_relation.member_id) else "":
+                    and sub_relation.introduced_by == member_id2follower_member_id[sub_relation.member_id]:
                 count += 1
         relation.introduce_new_member = count
         relation.save()
