@@ -359,7 +359,7 @@ class RedEnvelopeParticipances(resource.Resource):
             if cur_coupon.status == 1 and relation.introduced_by == 0:
                 if cur_coupon.id in coupon_id2order:
                     order = coupon_id2order[cur_coupon.id]
-                    consumption_sum = consumption_sum + order.final_price + order.postage
+                    consumption_sum = consumption_sum + order.final_price
             new_member_count += relation.introduce_new_member
             received_count += relation.introduce_received_number
             consumption_sum += relation.introduce_sales_number
