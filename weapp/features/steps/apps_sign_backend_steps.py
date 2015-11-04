@@ -75,7 +75,7 @@ def __get_sign(context):
     sign_args_response = get_sign_response.context
     return sign_args_response
 
-def __get_termite(context,project_id,design_mode=1):
+def __get_Termite(context,project_id,design_mode=1):
     """
     step2 访问PC的Phone页面termite2
     """
@@ -83,7 +83,7 @@ def __get_termite(context,project_id,design_mode=1):
     get_termite_response = context.client.get(url)
     return get_termite_response
 
-def __get_dynamicPage(context,project_id,design_mode=0,version=1):
+def __get_DynamicPage(context,project_id,design_mode=0,version=1):
     """
     step3 获得Page右边个人配置JSON
     """
@@ -91,7 +91,7 @@ def __get_dynamicPage(context,project_id,design_mode=0,version=1):
     bdd_util.assert_api_call_success(get_dynamicPage_response)
     return get_dynamicPage_response
 
-def __get_keywords(context):
+def __get_Keywords(context):
     """
     step4 获得关键字(Fin)
     """
@@ -160,7 +160,7 @@ def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
     bdd_util.assert_api_call_success(post_sign_response)
     return post_sign_response
 
-def __get_page_json(args):
+def __get_PageJson(args):
     """
     Page模板
     """
@@ -353,12 +353,12 @@ def step_impl(context,user,sign_name):
     keywords = sign_args_response['keywords']
 
     ##step2访问后台Phone页面 (Fin不是标准api请求，Phone页面HTML)
-    __get_termite(context,project_id,design_mode=1)
+    __get_Termite(context,project_id,design_mode=1)
     ##step3 获得Page右边个人配置JSON (Fin获得右边配置的空Json，这边主要是验证请求是否成功)
-    dynamicPage_data = __get_dynamicPage(context,project_id)
+    dynamicPage_data = __get_DynamicPage(context,project_id)
 
     ##step4 获得关键字(Fin)
-    keyword_response = __get_keywords(context)
+    keyword_response = __get_Keywords(context)
     #step5 POST,PageJSON到Mongo,返回Page_id(Fin)
     #Page的数据处理
     prize_settings = {}#sign记录数据
@@ -400,7 +400,7 @@ def step_impl(context,user,sign_name):
         "field":"page_content",
         "id":project_id,
         "page_id":"1",
-        "page_json": __get_page_json(page_args),
+        "page_json": __get_PageJson(page_args),
     }
     post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
     page_related_id = __res2json(post_termite_response)['data']['project_id']
