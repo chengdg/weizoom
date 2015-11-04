@@ -328,7 +328,6 @@ $(document).ready(function() {
         var card_ids =[],flag = false;
         $('input[name="select-one"]:checked').parents('tr').each(function(){
             card_status= $(this).children('.card_status').attr('td-status');
-            console.log(card_status);
             if(card_status == 3 ){
                 card_ids.push($(this).attr('tr-id'));
             }else{
@@ -567,8 +566,7 @@ $(document).ready(function() {
             }
         }
         var _this = this;
-        console.log("options.app", this.options.app);
-        console.log("options.api", this.options.api);
+
         //W.getLoadingView().show();
         W.getApi().call({
             app: this.options.app,
