@@ -134,6 +134,7 @@ def export_cards(request):
         rule = rule_id2rule[card.weizoom_card_rule_id]
         card_id2card_rule[card.id] = {
             'weizoom_card_id': card.weizoom_card_id,
+            'active_card_user_id': card.active_card_user_id,
             'rule_money': rule.money,
             'status': card.status,
             'is_expired': card.is_expired,
@@ -196,6 +197,7 @@ def export_cards(request):
         cur_cards[k]={
             'card_id': k,
             'weizoom_card_id': card['weizoom_card_id'],
+            'active_card_user_id': card['active_card_user_id'],
             'name': card['name'],
             'rule_money': '%.2f' %  card['rule_money'],
             'status' : status_str,
@@ -212,6 +214,10 @@ def export_cards(request):
     ]
     all_nedded_cards = WeizoomCard.objects.filter(id__in=crad_ids)
     cards_id2card = {c.id: c for c in all_nedded_cards}
+    users = User.objects.all()
+    user_id2username = {}
+    for user in users:
+        user_id2username[user.id] = user.username
     for ch in cards:
         card = cards_id2card[ch[0]]
         weizoom_card_id = ch[1]['weizoom_card_id']
@@ -228,7 +234,11 @@ def export_cards(request):
         expire_time = card.expired_time.strftime('%Y-%m-%d %H:%M:%S')
         activated_to = card.activated_to
         activate_time = card.activated_at.strftime('%Y-%m-%d %H:%M:%S') if card.activated_at else ''
-        activated_by = 'card_admin'
+        active_user_id = ch[1]['active_card_user_id']
+        if active_user_id in user_id2username:
+            activated_by = user_id2username[active_user_id]
+        else:
+            activated_by = ""
         remark = card.remark
 
         info_list = [
