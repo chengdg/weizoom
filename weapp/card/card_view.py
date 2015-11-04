@@ -137,9 +137,17 @@ def export_weizoom_cards(request):
         valid_time_from = datetime.strftime(weizoom_card_rule.valid_time_from, '%Y-%m-%d %H:%M')
         valid_time_to = datetime.strftime(weizoom_card_rule.valid_time_to, '%Y-%m-%d %H:%M')
         c.time = '%s/%s' % (valid_time_from,valid_time_to)
+        if (c.active_card_user_id == request.user.id) and c.status==0:
+            password = c.password
+        elif (c.active_card_user_id == request.user.id) and c.status==2:
+            password = c.password
+        elif (c.active_card_user_id == request.user.id) and c.is_expired:
+            password = c.password
+        else:
+            password = '*******'
         info = [
             c.weizoom_card_id,
-            c.password, 
+            password, 
             status_str,
             c.total_and_balance_money, 
             c.used_money, 
