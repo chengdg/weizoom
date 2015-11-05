@@ -14,6 +14,7 @@ from utils import url_helper
 import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
+import termite.pagestore as pagestore_manager
 import json
 
 def __debug_print(content,type_tag=True):
@@ -346,10 +347,21 @@ def __get_ProjectId(context):
     return project_id
 
 def __get_PageKeywords(context):
+    """
+    获取关键字请求
+    """
     sign_args_response = __get_sign(context)
     keywords = sign_args_response['keywords']
     return keywords
 
+
+def __get_DB_DynamicPages(project_id):
+    """
+    直接从Mongo数据库取数据
+    """
+    pagestore = pagestore_manager.get_pagestore('mongo')
+    pages = pagestore.get_page_components(project_id)
+    return pages
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
@@ -440,7 +452,6 @@ def step_impl(context,user,sign_name):
     }
     post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
     page_related_id = __res2json(post_termite_response)['data']['project_id']
-
     #step6 POST,填写JSON至Mongo，返回JSON(Fin)
     post_sign_args = {
         "_method":"put",
@@ -453,6 +464,10 @@ def step_impl(context,user,sign_name):
     }
     __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
 
+
+    #传递保留参数
+    context.project_id = page_related_id
+    context.json_page = __get_PageJson(page_args)
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
@@ -483,11 +498,21 @@ def step_impl(context,user,sign_name):
     }
     #http://dev.weapp.com/apps/api/dynamic_pages/get/?design_mode=0&project_id=new_app:sign:5639b66df44ad91108bcbc04&version=1&timestamp=1446626790210&_=1446626780615
     #对Sign JSON核对
-    project_id = __get_PageKeywords(context)
-    __debug_print(project_id)
-    get_page_response = __get_DynamicPage(context,project_id)
-    # get_page_response = __get_DB_DynamicPages(project_id)
-    __debug_print(get_page_response)
+
+    # # 方案1：核对Page
+    # # 还是细节差距比较大，模板是僵死的，不是联动的，一旦改动结构，就会立刻失败
+    # # 比较不成功
+    # json_page = json.loads(context.json_page) #dict
+    # db_page = __get_DB_DynamicPages(context.project_id)#dict
+    # bdd_util.assert_dict(json_page,db_page)
+
+    #方案2比较核心数据
+
+    # bdd_util.print_json(db_page)
+    # bdd_util.print_json(json_page)
+    # __debug_print(db_page[0])
+    # __debug_print(json.loads(json_page))
+
 
 
 @when(u'选择优惠券')
