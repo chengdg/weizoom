@@ -64,13 +64,13 @@
 
             </fieldset>
             <fieldset class="hidden">
-                <input id="ship_id" name="ship_id" value="{% if order %}{{ order.ship_id }}{% endif %}" type="hidden" >
+                <input id="ship_name" name="ship_name" type="hidden" value="" >
+                <input id="ship_tel" name="ship_tel" type="hidden" value="" >
+                <input id="area" name="area" class="xa-areaInput" type="hidden" value="" data-area-str="">
+                <input id="ship_address" name="ship_address" type="hidden" value="" >
+
                 <input id="delivery_plan_id" name="delivery_plan_id" value="{{ delivery_plan_id }}" type="hidden" >
                 <input id="delivery_dates" name="delivery_dates" value="{{ delivery_dates }}" type="hidden">
-                <input id="ship_name" name="ship_name" type="hidden" value="{% if order %}{{ order.ship_name }}{% endif %}" >
-                <input id="ship_tel" name="ship_tel" type="hidden" value="{% if order %}{{ order.ship_tel }}{% endif %}" >
-                <input id="area" name="area" class="xa-areaInput" data-ui-role="areaPop" type="hidden" value="{% if order %}{{ order.area }}{% endif %}" data-area-str="{% if order %}{{order.get_str_area}}{% endif %}">
-                <input id="ship_address" name="ship_address" type="hidden" value="{% if order %}{{ order.ship_address }}{% endif %}" >
                 <input id="refueling_order" name="refueling_order" value="{{ refueling_order }}" type="hidden" >
             </fieldset>
             <input type="hidden" name="integral" id="integral" value="0" />
@@ -623,6 +623,10 @@ for(var i in ship_infos) {
     }
 
 }
+$('input[name="ship_name"]').val(ship_info.ship_name)
+$('input[name="ship_tel"]').val(ship_info.ship_tel)
+$('input[name="area"]').val(ship_info.area)
+$('input[name="ship_address"]').val(ship_info.ship_address)
 $('.xa-shipName').text(ship_info.ship_name);
 $('.xa-shipTel').text(ship_info.ship_tel);
 $('.xa-shipArea').text(ship_info.area_str);
