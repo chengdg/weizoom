@@ -30,6 +30,7 @@
         data-enable-paginator="true" 
         data-app="card" 
         data-api="managers/get" 
+        {% if is_manage %}data-args='{"manage": 1}'{% endif %}
         data-template-id="#card_manager_list_view" 
         data-init-sort="-created_at" 
         data-item-count-per-page="15"

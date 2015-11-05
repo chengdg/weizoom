@@ -91,14 +91,12 @@
 
 		$('.ua-submit').click(function(event) {
 			var $right = $('.right-data-list');
-
 			var $check = $right.find("input[name='member_check']");
 			var ids = [];
 			var $id = $check.each(function() {
 				ids.push($(this).attr('value'));
 			});
 			var idStr = ids.join(',');
-			console.log(idStr);
 			if (idStr){
 				W.getApi().call({
 					app: 'card',

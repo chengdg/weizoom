@@ -29,9 +29,11 @@ def edit_weizoom_card_account_permission(request):
 @login_required
 @view(app='card', resource='cardmanager', action='get')
 def edit_weizoom_card_account_permission(request):
+    is_manage = 'manage' in request.GET
     c = RequestContext(request, {
         'first_nav_name': export.MALL_CARD_FIRST_NAV,
         'second_navs': export.get_card_second_navs(request),
-        'second_nav_name': export.MALL_CARD_PERMISSIONS_NAV
+        'second_nav_name': export.MALL_CARD_PERMISSIONS_NAV,
+        'is_manage': is_manage
     })
     return render_to_response('card/editor/list_weizoom_card_manager.html', c)
