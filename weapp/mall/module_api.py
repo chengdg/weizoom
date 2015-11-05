@@ -968,13 +968,13 @@ def create_order(webapp_owner_id, webapp_user, product):
 	"""
 	from cache import webapp_cache
 	order = Order()
-	if webapp_user.ship_info:
-		ship_info = webapp_user.ship_info
-		order.ship_name = ship_info.ship_name
-		order.area = ship_info.area
-		order.ship_address = ship_info.ship_address
-		order.ship_tel = ship_info.ship_tel
-		order.ship_id = ship_info.id
+	# if webapp_user.ship_info:
+	# 	ship_info = webapp_user.ship_info
+	# 	order.ship_name = ship_info.ship_name
+	# 	order.area = ship_info.area
+	# 	order.ship_address = ship_info.ship_address
+	# 	order.ship_tel = ship_info.ship_tel
+	# 	order.ship_id = ship_info.id
 
 	# 积分订单
 	if product.type == PRODUCT_INTEGRAL_TYPE:

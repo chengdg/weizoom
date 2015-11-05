@@ -32,10 +32,12 @@
 								<div class="pr20w">
 									<h2 class="mb10">
 										<span class="xui-receiver">收件人:</span>
-										<span class="xt-name xui-name xa-name"></span>
-										<span class="xui-tel xt-tel"></span>
+										<span class="xt-name xui-name xa-shipName"></span>
+										<span class="xui-tel xt-tel xa-shipTel"></span>
 									</h2>
-									<div style="color:#7f7f7f;font-size:0.9em;line-height:18px;" class="xt-areaAddress xa-areaAddress"></div>
+									<div style="color:#7f7f7f;font-size:0.9em;line-height:18px;" class="xt-areaAddress ">
+                                        <span class="xt-shipArea xa-shipArea">收货地址:</span><span class="xt-shipAddress xa-shipAddress ml5"></span>
+                                    </div>
 								</div>
 							</div>
 
@@ -83,9 +85,10 @@ $(document).ready(function() {
 
             var template = templateElem.clone();
             template.show();
-            $('.xa-name', template).text(ship_info.ship_name);
-            $('.xa-tel', template).text(ship_info.ship_tel);
-            $('.xa-areaAddress', template).text(ship_info.ship_address + ' ' + ship_info.area_str);
+            $('.xa-shipName', template).text(ship_info.ship_name);
+            $('.xa-shipTel', template).text(ship_info.ship_tel);
+            $('.xa-shipArea', template).text(ship_info.area_str);
+            $('.xa-shipAddress', template).text(ship_info.ship_address);
             $('.xa-shipInfoSelector', template).attr('data-id', ship_info.ship_id);
             if (ship_info.is_selected) {
                 $(template).addClass('xui-checked');
