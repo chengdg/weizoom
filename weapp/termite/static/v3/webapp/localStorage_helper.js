@@ -34,7 +34,13 @@ weapp特有部分
 */
 
 var getWoid = function(){
-    return getParam('woid')
+    var urlParm = document.location.search
+    if(urlParm.indexOf('woid=')>=0){
+        return getParam('woid');
+    } else{
+        return getParam('webapp_owner_id');
+    }
+
 };
 
 
