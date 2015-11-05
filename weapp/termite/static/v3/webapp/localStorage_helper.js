@@ -1,5 +1,8 @@
+/*
+收货地址相关
+*/
 
-// 获得get查询参数
+// 获得url中get查询参数
 var getParam = function (name) {
     var search = document.location.search;
     var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
@@ -24,19 +27,11 @@ var deepCopyJSON = function(obj){
     return JSON.parse(JSON.stringify(obj));
 };
 
-// 创建createdAt属性，为1970 年 1 月 1 日至今的毫秒数
-var setCreatedAt = function(obj){
-    now = new Date();
-    obj.createdAt = now.getTime();
-    return obj;
-};
-//var getLocalStorageJsonList = function (name) {
-//    var list = localStorage.name;
-//    list = list.split('|');
-//
-//};
 
-//*********** weapp部分 **********
+
+/*
+weapp特有部分
+*/
 
 var getWoid = function(){
     return getParam('woid')
@@ -80,28 +75,50 @@ var getRedirectUrlQueryString = function(){
 };
 
 
+
+/*
+收货地址相关
+*/
+
+var shipInfosConfig = {
+    'cacheTime': 1000*60*5
+};
+
+
 var initShipInofs = function(){
     localStorage.removeItem('ship_infos');
-
-    W.getApi().call({
-        app: 'webapp',
-        api: 'project_api/call',
-        method: 'get',
-        args: {
-            woid: W.webappOwnerId,
-            module: 'mall',
-            target_api: 'address/list',
-        },
-        success: function(data) {
-            ship_infos = data.ship_infos;
-            infos = {};
-            for(i in ship_infos){
-                infos[ship_infos[i].ship_id] = ship_infos[i]
+    var lastUpdate;
+    if(localStorage.ship_infos_updated_at){
+        lastUpdate = localStorage.ship_infos_updated_at;
+    }
+    else {
+        lastUpdate = 0
+    }
+    var now = new Date();
+    var woid = getWoid();
+    if (now.getTime() - lastUpdate > shipInfosConfig.cacheTime) {
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            method: 'get',
+            args: {
+                woid: woid,
+                module: 'mall',
+                target_api: 'address/list'
+            },
+            success: function(data) {
+                var ship_infos = data.ship_infos;
+                var infos = {};
+                for(var i in ship_infos){
+                    infos[ship_infos[i].ship_id] = ship_infos[i]
+                }
+                localStorage.ship_infos=JSON.stringify(infos);
+                var now = new Date();
+                localStorage.ship_infos_updated_at = now.getTime();
+            },
+            error: function(resp) {
             }
-            localStorage.ship_infos=JSON.stringify(infos);
-        },
-        error: function(resp) {
-        }
-    });
+        });
+    }
 };
 
