@@ -608,7 +608,7 @@ def update_status(request):
         module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
         response = create_response(200)
         # 创建操作日志
-        WeizoomCardOperationLog.objects.create(card_id=id,operater_id=request.user.id,operater_name=request.user,operate_log=operate_log)
+        WeizoomCardOperationLog.objects.create(card_id=id,operater_id=request.user.id,operater_name=request.user,operate_log=operate_log,remark=card_remark,activated_to=activated_to)
     except:
         response = create_response(500)
     return response.get_response()
@@ -632,7 +632,7 @@ def update_batch_status(request):
         # 创建操作日志
         operation_logs=[]
         for card_id in card_ids:
-            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'激活'))
+            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'激活',remark=card_remark,activated_to=activated_to))
         WeizoomCardOperationLog.objects.bulk_create(operation_logs)
         # 创建激活日志
         for card in cards:
@@ -669,7 +669,7 @@ def update_onbatch_status(request):
         # 创建操作日志
         operation_logs=[]
         for card_id in card_ids:
-            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'停用'))
+            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'停用',remark=card_remark,activated_to=activated_to))
         WeizoomCardOperationLog.objects.bulk_create(operation_logs)
 
         # 创建激活日志
