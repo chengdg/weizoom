@@ -4,7 +4,7 @@ __author__ = 'bert'
 
 from time import time
 import traceback
-
+import redis
 from django.core.cache import cache
 from django.conf import settings
 
@@ -12,7 +12,7 @@ from core.exceptionutil import unicode_full_stack
 
 
 CACHE_QUERIES = []
-
+pyredis =redis.Redis("127.0.0.1",6379,1)
 def get_trace_back():
 	stack_entries = traceback.extract_stack()
 	stack_entries = filter(lambda entry: (('weapp' in entry[0]) and (not 'hack_django' in entry[0])), stack_entries)
@@ -213,3 +213,14 @@ def get_many_from_cache(key_infos):
 			objs[key] = value
 
 	return objs
+
+def get_zset_from_cache(zset_name):
+	return pyredis
+
+def add_zset_from_cache(zset_name,*keys):
+	print zset_name,keys
+	return pyredis.zadd(zset_name,keys)
+
+def rem_zset_member_from_cache(zset_name,*keys):
+	return pyredis.zrem(zset_name,keys)
+
