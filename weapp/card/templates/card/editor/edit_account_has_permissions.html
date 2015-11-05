@@ -97,7 +97,8 @@
 				ids.push($(this).attr('value'));
 			});
 			var idStr = ids.join(',');
-			if (idStr){
+			console.log(idStr.length)
+			if (idStr.length>=14){
 				W.getApi().call({
 					app: 'card',
 					api: 'weizoom_card_account_permission/update',
@@ -119,7 +120,7 @@
 					width: 800,
 					height: 55,
 					isTitle: false,
-					msg: '确认清除所有所有微众卡权限吗？请确认目前是否在搜索模式下！',
+					msg: '确认保存则其他商家将取消微信卡支付权限，请清除搜索内容后再保存！',
 					confirm: function() {
 						W.getApi().call({
 							app: 'card',
