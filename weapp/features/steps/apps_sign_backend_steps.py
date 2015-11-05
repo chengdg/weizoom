@@ -372,6 +372,9 @@ def __get_DB_DynamicPages(project_id):
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
+    """
+    模拟登录签到PC页面，填写，保存
+    """
     #feature 数据
     sign_json = json.loads(context.text)
 
@@ -479,6 +482,9 @@ def step_impl(context,user,sign_name):
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
+    """
+    feature数据生成Page，与数据库Page比较
+    """
     # feature数据
     sign_json = json.loads(context.text)
 
