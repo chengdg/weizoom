@@ -14,6 +14,7 @@ from mall import module_api as mall_api
 from mall import models as mall_models
 from mall.promotion import models as promotion_models
 from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
+from django.core.exceptions import ObjectDoesNotExist
 
 
 from weapp.hack_django import post_update_signal, post_delete_signal
@@ -155,6 +156,14 @@ def update_webapp_product_cache(**kwargs):
         webapp_owner_id = cache.request.user_profile.user_id
         key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
         cache_util.delete_cache(key)
+        instance = kwargs.get('instance', None)
+        sender = kwargs.get('sender', None)
+        if instance and sender==mall_models.Product:
+            if isinstance(instance, mall_models.Product):
+                product_id = instance.id
+            else:
+                product_id = instance[0].id
+            update_product_cache(webapp_owner_id, product_id)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
@@ -282,6 +291,16 @@ def update_webapp_product_detail_cache(**kwargs):
         else:
             pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
             cache_util.delete_pattern(pattern)
+            instance = kwargs.get('instance', None)
+            if instance:
+                if isinstance(instance, mall_models.Product):
+                    product_id = instance.id
+                else:
+                    product_id = instance[0].id
+                # 会有一次多余删除 todo
+                update_product_cache(webapp_owner_id, product_id,deleteRedis=False)
+                # 如果没有配置varnish，则会访问报错，不用理会
+
 
 
 post_update_signal.connect(update_webapp_product_detail_cache,
@@ -552,6 +571,7 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         request = urllib2.Request(url)
         request.get_method = lambda: 'PURGE'
         urllib2.urlopen(request)
+
     if not settings.IS_UNDER_BDD and deleteVarnishList:
         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
             (settings.DOMAIN, webapp_owner_id)
