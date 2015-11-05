@@ -69,7 +69,7 @@ class WeizoomCard(models.Model):
 	is_expired = models.BooleanField(default=False) #是否过期
 	activated_at = models.DateTimeField(null=True) #激活时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
-	remark = models.CharField(max_length=20, db_index=True) #备注
+	remark = models.CharField(max_length=20) #备注
 	activated_to = models.CharField(max_length=20) #申请人
 	active_card_user_id = models.IntegerField() #激活卡片人
 
@@ -190,6 +190,8 @@ class WeizoomCardOperationLog(models.Model):
 	operater_name = models.CharField(max_length=64)
 	operate_log = models.CharField(max_length=64, verbose_name='事件类型')
 	created_at = models.DateTimeField(auto_now_add=True)
+	remark = models.CharField(max_length=20) #备注
+	activated_to = models.CharField(max_length=20) #申请人
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card_operation_log'
 
