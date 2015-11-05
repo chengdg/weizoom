@@ -11,6 +11,12 @@
 {% endblock %}
 
 {% block content-panel %}
+    <script>
+    // 没有收货地址则跳转到新建收货地址
+    if(!localStorage.hasOwnProperty('ship_infos')||localStorage.ship_infos.length<=2){
+        window.location.href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" +'&' +getParam('fmt');
+    }
+    </script>
 <div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage xa-editOrderPage">
 
     <div id="wrapper" data-role="content" class="xui-wrapper">
