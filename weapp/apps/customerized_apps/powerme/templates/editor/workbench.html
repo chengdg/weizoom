@@ -181,13 +181,15 @@
           var timing = descriptionModel.get('timing');
           var reply_content = descriptionModel.get('reply_content');
           var material_image = descriptionModel.get('material_image');
+          var qrcode = descriptionModel.get('qrcode');
           var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
             "timing": timing,
             "reply_content": reply_content,
-            "material_image": material_image
+            "material_image": material_image,
+            "qrcode": JSON.stringify(qrcode)
           };
           var method;
           if (isCreateNewData) {

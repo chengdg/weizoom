@@ -788,3 +788,97 @@ class QrcodeOrder(resource.Resource):
 			'data': {}
 		}
 		return response.get_response()
+
+class QrcodesFilter(resource.Resource):
+	app = 'new_weixin'
+	resource = 'qrcodes_filter'
+
+	@login_required
+	@mp_required
+	def api_get(request):
+		sort_attr = request.GET.get('sort_attr', '-created_at')
+		items = _get_filter_qrcode_items(request)
+
+		#进行分页
+
+		if 'created_at' not in  sort_attr:
+			if '-' in sort_attr:
+				sorter = sort_attr[1:]
+				is_reverse = True
+			else:
+				sorter = sort_attr
+				is_reverse = False
+
+			# items = sorted(items, reverse=is_reverse, key=lambda b : getattr(b, sorter))
+			items = sorted(items, reverse=is_reverse, key=lambda x:getattr(x, sorter))
+		count_per_page = int(request.GET.get('count_per_page', 15))
+		cur_page = int(request.GET.get('page', '1'))
+		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		new_items = []
+		for item in items:
+			new_items.append(item.__dict__)
+
+		response = create_response(200)
+		response.data = {
+			'items': new_items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': sort_attr,
+			'data': {}
+		}
+		return response.get_response()
+
+def _get_filter_qrcode_items(request):
+	#处理搜索
+	from mall.models import *
+	query = request.GET.get('query', '').strip()
+	sort_attr = request.GET.get('sort_attr', '-created_at')
+	created_at = '-created_at'
+	if 'created_at' in  sort_attr:
+		created_at = sort_attr
+
+	if query:
+		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager, name__contains=query).order_by(created_at)
+	else:
+		settings = ChannelQrcodeSettings.objects.filter(owner=request.manager).order_by(created_at)
+
+	items = []
+
+	mp_user = get_binding_weixin_mpuser(request.manager)
+	mpuser_access_token = get_mpuser_accesstoken(mp_user)
+
+	for setting in settings:
+		current_setting = JsonResponse()
+		prize_info = decode_json_str(setting.award_prize_info)
+		if prize_info['name'] == '_score-prize_':
+			setting.cur_prize = '[%s]%d' % (prize_info['type'], prize_info['id'])
+		elif prize_info['name'] == 'non-prize':
+			setting.cur_prize = prize_info['type']
+		else:
+			setting.cur_prize = '[%s]%s' % (prize_info['type'], prize_info['name'])
+
+
+		#如果没有ticket信息则获取ticket信息
+		if not setting.ticket:
+			try:
+				if mp_user.is_certified and mp_user.is_service and mpuser_access_token.is_active:
+					weixin_api = get_weixin_api(mpuser_access_token)
+					qrcode_ticket = weixin_api.create_qrcode_ticket(int(setting.id), QrcodeTicket.PERMANENT)
+
+					try:
+						ticket = qrcode_ticket.ticket
+					except:
+						ticket = ''
+					setting.ticket = ticket
+					setting.save()
+			except:
+				pass
+		current_setting.id = setting.id
+		current_setting.name = setting.name
+		current_setting.re_old_member =  u'是'if setting.re_old_member else u'否'
+		current_setting.cur_prize = setting.cur_prize
+		current_setting.ticket = setting.ticket
+		current_setting.created_at = setting.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+		items.append(current_setting)
+	return items

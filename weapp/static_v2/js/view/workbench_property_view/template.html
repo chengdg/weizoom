@@ -416,6 +416,33 @@
                     </div>
                     {{/if}}
 
+                    {{if (field.type == 'qrcode_dialog_select')}}
+                    <div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+                        <div class="propertyGroup_property_input" style="position:relative;">
+                            {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
+                            <input data-field="${field.name}" name="${field.name}" type="hidden" />
+                                <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}">
+                                    {{if component.model.get(field.name)}}
+                                        ${field.triggerButton.hasdata}
+                                    {{else}}
+                                        ${field.triggerButton.nodata}
+                                    {{/if}}
+                                </button>
+
+                            {{if field.help}}
+                            <span style="color: #666;">
+                                {{html field.help.replace(/\n/g, "<br/>")}}
+                            </span>
+                            {{/if}}
+
+                            {{if field.isShowCloseButton}}
+                                <button type="button" class="deleteImage xa-deleteImageButton xui-deleteImageButton" style="display:none;"><span>&times;</span></button>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+
 					{{if (field.type == 'rich_text')}}
 					<div class="propertyGroup_property_richTextField propertyGroup_property_horizontalField">
 						{{if (field.displayName)}}

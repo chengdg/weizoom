@@ -81,6 +81,18 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			placeholder: '触发获取图文信息，如：抢礼物',
 			default: ""
 		},{
+			name: 'qrcode',
+			type: 'qrcode_dialog_select',
+			displayName: '用户识别二维码',
+			isUserProperty: true,
+			isShowCloseButton: false,
+			triggerButton: {nodata:'选择带参数二维码', hasdata:'修改'},
+			selectedButton: '选择带参数二维码',
+			dialog: 'W.dialog.termite.SelectQrcodeDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '此处若空缺，则使用公众号二维码代替',
+			default: ""
+		},{
 			name: 'material_image',
 			type: 'image_dialog_select',
 			displayName: '链接图文小图',
@@ -158,6 +170,29 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		description: function($node, model, value, $propertyViewNode) {
 			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
+		},
+		qrcode:function($node, model, value, $propertyViewNode){
+			var qrcode = {ticket:'',name:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				qrcode = data[0];
+			}
+			var ticket ='https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+qrcode.ticket;
+			model.set({
+				qrcode:{
+					ticket: ticket,
+					name: qrcode.name
+				}
+			}, {silent: true});
+
+			if (value) {
+				//更新propertyView中的图片
+				var $target = $propertyViewNode.find($('[data-field-anchor="qrcode"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',ticket);
+				$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').html(qrcode.name);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
 		},
 		material_image: function($node, model, value, $propertyViewNode) {
 			var image = {url:''};
