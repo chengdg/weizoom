@@ -123,9 +123,10 @@ def get_cards(request):
             rule_id2cards[card_rule_id].append(c)
 
     for r_id in card_rule_ids:
-        weizoom_cards = rule_id2cards[r_id]
-        weizoom_card_ids = [int(weizoom_cards[0].weizoom_card_id), int(weizoom_cards[::-1][0].weizoom_card_id)]
-        rule_id2card_ids[r_id] = weizoom_card_ids
+        if r_id in rule_id2cards:
+            weizoom_cards = rule_id2cards[r_id]
+            weizoom_card_ids = [int(weizoom_cards[0].weizoom_card_id), int(weizoom_cards[::-1][0].weizoom_card_id)]
+            rule_id2card_ids[r_id] = weizoom_card_ids
 
     cur_weizoom_card_rules = []
     for rule in weizoom_card_rules:
@@ -171,7 +172,11 @@ def get_cards(request):
 def get_managers(request):
     count_per_page = int(request.GET.get('count_per_page', '1'))
     cur_page = int(request.GET.get('page', '1'))
-    card_managers=WeiZoomCardManager.objects.all()
+    is_manage = 'manage' in request.GET
+    if is_manage:
+        card_managers=WeiZoomCardManager.objects.all()
+    else:
+        card_managers=WeiZoomCardManager.objects.exclude(user_id=request.user.id)
     pageinfo, card_managers = paginator.paginate(card_managers, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
     weizoomcardpermissions=WeiZoomCardPermission.objects.all()
     card_manager2weizoomcardpermission={}
