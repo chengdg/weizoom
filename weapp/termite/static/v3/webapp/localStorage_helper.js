@@ -86,7 +86,6 @@ var shipInfosConfig = {
 
 
 var initShipInofs = function(){
-    localStorage.removeItem('ship_infos');
     var lastUpdate;
     if(localStorage.ship_infos_updated_at){
         lastUpdate = localStorage.ship_infos_updated_at;
