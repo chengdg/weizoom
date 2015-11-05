@@ -211,13 +211,8 @@ $(document).ready(function() {
         }
         var start = new Date(startDate.replace("-", "/").replace("-", "/"));
         var end = new Date(endDate.replace("-", "/").replace("-", "/"));
-        var now_date = new Date();
         if ((startDate.length > 0 || endDate.length > 0) && start > end){
             W.showHint('error','开始日期不能大于结束日期！');
-            return false;
-        }
-        if(start < now_date){
-            W.showHint('error','开始日期不能小于当期日期！');
             return false;
         }
         $('#submitBtn').attr('disabled', true);
