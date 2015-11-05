@@ -350,6 +350,16 @@ def export_csv(data,output_name,force_csv,encoding='utf8'):
             else:
                 cell_style = styles['default']
             sheet.write(rowx, colx, value, style=cell_style)
+
     excel_file_path = os.path.join(settings.UPLOAD_DIR,output_name)
+    upload_path = '/static/upload/%s' % output_name
+
+    if os.name =="nt":
+        excel_file_path=excel_file_path.encode("GBK")
+        # upload_path.encode("GBK")
+    elif os.name =="posix":
+        excel_file_path=excel_file_path.encode("utf-8")
+        # upload_path.encode("utf-8")
+    
     book.save(excel_file_path)
-    return '/static/upload/%s' % output_name
+    return upload_path
