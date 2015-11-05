@@ -106,7 +106,6 @@ class MPowerMe(resource.Resource):
 
 				project_id = 'new_app:powerme:%s' % record.related_page_id
 
-				#增加/更新当前member的参与信息
 				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_power_info.count()> 0:
 					curr_member_power_info = curr_member_power_info.first()
@@ -119,16 +118,14 @@ class MPowerMe(resource.Resource):
 					curr_member_power_info.save()
 				is_already_participanted = curr_member_power_info.has_join
 
-				#如果当前member不是会员，则清空其助力值
+				#如果当前member不是会员，则清空其助力值同时设置为未参与
 				if not isMember:
-					curr_member_power_info.update(set__power=0)
+					curr_member_power_info.update(set__power=0, set_has_join=False)
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = request.member.username_size_ten
-
 					page_owner_member_id = member_id
-
 					self_page = True
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
@@ -138,6 +135,18 @@ class MPowerMe(resource.Resource):
 
 				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
 				total_participant_count = participances.count()
+
+				#遍历log，统计助力值
+				power_logs = app_models.PowerLog.objects(belong_to=record_id)
+				power_member_ids = [p.power_member_id for p in power_logs]
+				member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
+				power_logs = [p for p in power_logs if member_id2subscribe[p.power_member_id]]
+				power_log_ids = [p.id for p in power_logs]
+				need_power_member_ids = [p.be_powered_member_id for p in power_logs]
+				#计算助力值
+				app_models.PowerMeParticipance.objects(belong_to=record_id,member_id__in=need_power_member_ids).update(inc__power=1)
+				#删除计算过的log
+				app_models.PowerLog.objects(id__in=power_log_ids).delete()
 
 				member_ids = [p.member_id for p in participances]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}

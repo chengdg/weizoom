@@ -62,4 +62,12 @@ class PowerMe(models.Document):
 			return False
 
 
-	
+class PowerLog(models.Document):
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	power_member_id = models.LongField() #助力者id
+	be_powered_member_id = models.LongField() #被助力者id
+	created_at = models.DateTimeField(default=datetime.now()) #创建时间
+
+	meta = {
+		'collection': 'powerme_powered_log'
+	}
