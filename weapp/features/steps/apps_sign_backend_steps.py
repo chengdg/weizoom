@@ -21,13 +21,16 @@ def __debug_print(content,type_tag=True):
     """
     debug工具函数
     """
-    print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
-    if type_tag:
-        print "====== Type ======"
-        print type(content)
-        print "==================="
-    print content
-    print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
+    if content:
+        print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
+        if type_tag:
+            print "====== Type ======"
+            print type(content)
+            print "==================="
+        print content
+        print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
+    else:
+        pass
 
 def __res2json(obj):
     """
@@ -61,9 +64,11 @@ def __get_coupon_json(coupon_rule_name):
     获取优惠券json
     """
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+    __debug_print(coupon_rule)
+    __debug_print(coupon_rule.id)
     coupon ={
-        "count":coupon_rule.count,
         "id":coupon_rule.id,
+        "count":coupon_rule.count,
         "name":coupon_rule.name
     }
     return coupon
@@ -363,6 +368,8 @@ def __get_DB_DynamicPages(project_id):
     pages = pagestore.get_page_components(project_id)
     return pages
 
+
+
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
     #feature 数据
@@ -469,6 +476,7 @@ def step_impl(context,user,sign_name):
     context.project_id = page_related_id
     context.json_page = __get_PageJson(page_args)
 
+
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
     # feature数据
@@ -496,23 +504,21 @@ def step_impl(context,user,sign_name):
         "keyword":keyword,
         "content":reply_content
     }
-    #http://dev.weapp.com/apps/api/dynamic_pages/get/?design_mode=0&project_id=new_app:sign:5639b66df44ad91108bcbc04&version=1&timestamp=1446626790210&_=1446626780615
-    #对Sign JSON核对
 
-    # # 方案1：核对Page
-    # # 还是细节差距比较大，模板是僵死的，不是联动的，一旦改动结构，就会立刻失败
-    # # 比较不成功
-    # json_page = json.loads(context.json_page) #dict
-    # db_page = __get_DB_DynamicPages(context.project_id)#dict
-    # bdd_util.assert_dict(json_page,db_page)
+    # 方案1：核对Page
+    # 问题：模板组建的变化，也许需要更改组件
+    # 发现一个坑，python中的True在Mongo中被保存为'true'，需要在字典中手动修改
+    # 尝试自己写增强的判断函数，连带着各种麻烦，在这里留个戳，告诉后来人
+    json_page = json.loads(context.json_page) #dict
+    db_page = __get_DB_DynamicPages(context.project_id)[0]#永远是list第一项dict型
 
-    #方案2比较核心数据
+    if db_page["is_new_created"]:
+        db_page["is_new_created"] = "true"
+    else:
+        db_page["is_new_created"] = "false"
+    __debug_print(db_page)
 
-    # bdd_util.print_json(db_page)
-    # bdd_util.print_json(json_page)
-    # __debug_print(db_page[0])
-    # __debug_print(json.loads(json_page))
-
+    bdd_util.assert_dict(json_page,db_page)
 
 
 @when(u'选择优惠券')
