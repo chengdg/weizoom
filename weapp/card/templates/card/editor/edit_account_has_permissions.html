@@ -4,6 +4,13 @@
 {% load mall_filter %}
 
 {% block content-panel %}
+<style type="text/css">
+    .dropdown-menu{
+    	left: 468px !important;
+    	top:570px !important;
+    }
+</style>
+
 <ul class="breadcrumb">
     <li>您当前所在位置</li>
     <li>
@@ -29,7 +36,7 @@
 		<legend></legend>
 	  	<div class="control-group">
 			<div class="controls">
-				{%if can_change_shop_config %}<button class="btn btn-success ua-submit">保存</button>
+				{%if can_change_shop_config %}<button class="btn btn-success ua-submit" style="margin-left: 579px;">保存</button>
 				{% endif %}
 			</div>
 		</div>
@@ -82,27 +89,60 @@
 		});
 
 
-		$('.ua-submit').click(function() {
+		$('.ua-submit').click(function(event) {
 			var $right = $('.right-data-list');
+
 			var $check = $right.find("input[name='member_check']");
 			var ids = [];
 			var $id = $check.each(function() {
 				ids.push($(this).attr('value'));
 			});
 			var idStr = ids.join(',');
-			W.getApi().call({
-				app: 'card',
-				api: 'weizoom_card_account_permission/update',
-				args: {
-					'owner_ids': idStr.trim(),
-				},
-				success: function() {
-					W.showHint('success','设置成功！');
-				},
-				error: function() {
-					W.showHint('error','设置失败！');
-				}
-			});
+			console.log(idStr);
+			if (idStr){
+				W.getApi().call({
+					app: 'card',
+					api: 'weizoom_card_account_permission/update',
+					args: {
+						'owner_ids': idStr.trim(),
+					},
+					success: function() {
+						W.showHint('success','设置成功！');
+					},
+					error: function() {
+						W.showHint('error','设置失败！');
+					}
+				});
+			}
+			else{
+				var $el = $(event.target);
+				W.requireConfirm({
+					$el: $el,
+					width: 800,
+					height: 55,
+					isTitle: false,
+					msg: '确认清除所有所有微众卡权限吗？请确认目前是否在搜索模式下！',
+					confirm: function() {
+						W.getApi().call({
+							app: 'card',
+							api: 'weizoom_card_account_permission/update',
+							args: {
+								'owner_ids': idStr.trim(),
+							},
+							success: function() {
+								W.showHint('success','设置成功！');
+								setTimeout(function() {
+															location.reload()
+														}, 800);
+
+							},
+							error: function() {
+								W.showHint('error','设置失败！');
+							}
+						});
+					}
+				});
+			}	
 			return false;
 		});
 	});
