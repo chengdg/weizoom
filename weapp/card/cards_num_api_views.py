@@ -90,12 +90,18 @@ def get_card_num_operations(request):
     """
     card_id = request.GET.get('card_id','')
     card_operations = WeizoomCardOperationLog.objects.filter(card_id=card_id).order_by('-created_at')
+    w_cards = WeizoomCard.objects.filter(id=card_id)
+    id2cardObj = {}
+    for card in w_cards:
+        id2cardObj[card.id] = card
     cur_card_operations = []
     for cur_card_operation in card_operations:
         cur_weizoom_card = JsonResponse()
         cur_weizoom_card.operater_name = cur_card_operation.operater_name
         cur_weizoom_card.operate_log = cur_card_operation.operate_log
         cur_weizoom_card.created_at = cur_card_operation.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        cur_weizoom_card.remark = id2cardObj[cur_card_operation.card_id].remark
+        cur_weizoom_card.activated_to = id2cardObj[cur_card_operation.card_id].activated_to
         cur_card_operations.append(cur_weizoom_card)
     response = create_response(200)
     response.data.items=cur_card_operations

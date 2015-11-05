@@ -134,8 +134,10 @@
         <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg">
             <thead>
                 <tr>
-                    <th style="width: 33.33333333%">操作时间</th>
-                    <th style="width: 33.33333333%">用户名</th>
+                    <th style="width: 20%">操作时间</th>
+                    <th style="width: 20%">用户名</th>
+                    <th>申请人</th>
+                    <th>备注</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -144,6 +146,8 @@
                 <tr>
                     <td>${card_operation.created_at}</td>
                     <td>${card_operation.operater_name}</td>
+                    <td>${card_operation.activated_to}</td>
+                    <td>${card_operation.remark}</td>
                     <td>${card_operation.operate_log}</td>
                 </tr>
                 {{/each}}
