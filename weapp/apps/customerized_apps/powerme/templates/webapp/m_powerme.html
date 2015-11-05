@@ -134,12 +134,15 @@
     </div>
     <div class="xui-attention xa-attention none">
         <div class="xui-twoDimensionBox">
-            <div style="margin-left: 8px;margin-top: 32px;">
+            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-top: 32px;">
                 <p>1.长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
             </div>
             <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
             <p></p>
-            <div style="margin-left:8px;">
+            <div class="xa-attention-tip" style="margin-left:8px;display:none">
+                <p style="color: orangered;">2.关注公众号后即可为好友助力值+1</p>
+            </div>
+            <div class="xa-attention-reply" style="margin-left:8px;">
                 <p>2.回复：“</p><div style="color: orangered;display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
@@ -229,7 +232,10 @@
                         powerYou();
                     }
                     else{
-                        $('.xa-attention').find('img').attr('src',new_qrcode_url);
+                        var $attention = $('.xa-attention');
+                        $attention.find('img').attr('src',new_qrcode_url);
+                        $attention.find('.xa-attention-tip').show();
+                        $attention.find('.xa-attention-reply').first().html("3.回复：“");
                         openQrMask();
                     }
 
@@ -239,10 +245,14 @@
 
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
+                $('.xa-attention').find('.xa-attention-tip-one').html('<div style="color: orangered">您已参加该活动！</div><div>长按二维码进入公众号</div><div>获取你自己的专属页，</div>');
+                $('.xa-attention').find('.xa-attention-reply').html('分享到朋友圈，发动小伙伴帮你助力赢大奖！');
+                $('.wa-using').text(using_msg).on('click', openQrMask).show();
+
             }else{
                 using_msg = '我也要参加';
+                $('.wa-using').text(using_msg).on('click', openQrMask).show();
             }
-            $('.wa-using').text(using_msg).on('click', openQrMask).show();
         }
 
     }
