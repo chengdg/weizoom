@@ -3745,8 +3745,8 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     overflow: hidden;
 }
 .xui-productReviewCreatePage .xui-imgList li img{
-    /*width: 45px;*/
-    /*height: 45px;*/
+    width: 45px;
+    height: 45px;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
