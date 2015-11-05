@@ -79,7 +79,7 @@ def __get_Termite(context,project_id,design_mode=1):
     """
     step2 访问PC的Phone页面termite2
     """
-    url = "/termite2/webapp_design_page/?project_id={}&design_mode={}".format(project_id,design_mode)
+    url = "/termite2/webapp_design_page/?project_id={}&design_mode={}&".format(project_id,design_mode)
     get_termite_response = context.client.get(url)
     return get_termite_response
 
@@ -87,13 +87,13 @@ def __get_DynamicPage(context,project_id,design_mode=0,version=1):
     """
     step3 获得Page右边个人配置JSON
     """
-    get_dynamicPage_response = context.client.get('/apps/api/dynamic_pages/get/',{'project_id':project_id,"design_mode":design_mode,"version":version})
+    get_dynamicPage_response = context.client.get('/apps/api/dynamic_pages/get/',{'project_id':project_id})
     bdd_util.assert_api_call_success(get_dynamicPage_response)
     return get_dynamicPage_response
 
 def __get_Keywords(context):
     """
-    step4 获得关键字(Fin)
+    step4 获得关键字JSON
     """
     keyword_response = context.client.get('/apps/sign/api/sign/')
     bdd_util.assert_api_call_success(keyword_response)
@@ -130,6 +130,7 @@ def __post_PageJson(context,post_args,project_id,design_mode=0,version=1):
 def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
     """
     step6 POST,填写JSON至Mongo
+
     sign_args = {
         "_method":"put",
         "name":"",
@@ -163,6 +164,29 @@ def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
 def __get_PageJson(args):
     """
     Page模板
+    传入args：生成Page
+
+    #####
+    args结构
+    #####
+    args ={
+        "sign_title":name,
+        "sign_description":sign_describe,
+        "share_pic":share.get('img',""),
+        "share_description":share.get('desc',""),
+        "reply_keyword":keyword,
+        "reply_content": reply.get('content',""),
+        "prizes":page_prizes
+    }
+
+    page_prizes = {}#Page记录数据
+    for i in range(len(prize_settings_arr)):
+        item = prize_settings_arr[i]
+        page_prizes["prize_item%d"%i]={
+                "serial_count":prize_settings_arr[i]["serial_count"],
+                "serial_count_points":prize_settings_arr[i]["serial_count_points"],
+                "serial_count_prizes":prize_settings_arr[i]["serial_count_prizes"]
+        }
     """
     __prizes = args.get('prizes',"")
     __items = range(5,5-1+len(__prizes))
@@ -313,6 +337,18 @@ def __get_PageJson(args):
     return json.dumps(__page_temple)
 
 
+def __get_ProjectId(context):
+    """
+    获取当下条件下的Project_id，就是Page的_id
+    """
+    sign_args_response = __get_sign(context)
+    project_id = sign_args_response['project_id']
+    return project_id
+
+def __get_PageKeywords(context):
+    sign_args_response = __get_sign(context)
+    keywords = sign_args_response['keywords']
+    return keywords
 
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
@@ -329,7 +365,7 @@ def step_impl(context,user,sign_name):
     }
     reply = {}
     keyword ={}
-    reply_keyword = sign_json.get("reply_keyword","")
+    reply_keyword = sign_json.get("reply_keyword",{})
     reply_content = sign_json.get("reply_content","")
     for item in reply_keyword:
         rule = ""
@@ -360,7 +396,8 @@ def step_impl(context,user,sign_name):
     ##step4 获得关键字(Fin)
     keyword_response = __get_Keywords(context)
     #step5 POST,PageJSON到Mongo,返回Page_id(Fin)
-    #Page的数据处理
+
+    ##Page的数据处理
     prize_settings = {}#sign记录数据
     prize_settings_arr = []#page数据结构
     sign_settings = sign_json.get("sign_settings","")
@@ -384,14 +421,13 @@ def step_impl(context,user,sign_name):
                 "serial_count_points":prize_settings_arr[i]["serial_count_points"],
                 "serial_count_prizes":prize_settings_arr[i]["serial_count_prizes"]
         }
-
     #Page的参数args
     page_args ={
         "sign_title":name,
         "sign_description":sign_describe,
         "share_pic":share.get('img',""),
         "share_description":share.get('desc',""),
-        "reply_keyword":keyword,
+        "reply_keyword":keyword,#dict
         "reply_content": reply.get('content',""),
         "prizes":page_prizes
     }
@@ -416,6 +452,7 @@ def step_impl(context,user,sign_name):
         "related_page_id":page_related_id,
     }
     __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
+
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
@@ -444,22 +481,13 @@ def step_impl(context,user,sign_name):
         "keyword":keyword,
         "content":reply_content
     }
-
-
-
-    # __debug_print(sign_json)
-    # __debug_print(status)
-    # __debug_print(name)
-    # __debug_print(sign_describe)
-    # __debug_print(share)
-    # __debug_print(reply)
-    # __debug_print(keyword)
-    # __debug_print(reply_keyword)
-    # __debug_print(reply_content)
-    # __debug_print(reply)
-    # __debug_print()
-    # __debug_print()
-
+    #http://dev.weapp.com/apps/api/dynamic_pages/get/?design_mode=0&project_id=new_app:sign:5639b66df44ad91108bcbc04&version=1&timestamp=1446626790210&_=1446626780615
+    #对Sign JSON核对
+    project_id = __get_PageKeywords(context)
+    __debug_print(project_id)
+    get_page_response = __get_DynamicPage(context,project_id)
+    # get_page_response = __get_DB_DynamicPages(project_id)
+    __debug_print(get_page_response)
 
 
 @when(u'选择优惠券')
