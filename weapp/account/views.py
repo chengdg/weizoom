@@ -196,7 +196,7 @@ def login(request):
 def logout(request):
 	auth.logout(request)
 
-	redirect_url = '/login/'
+	redirect_url = '/logout/'
 	# http_host = request.META['HTTP_HOST']
 	# http_referer = request.META.get('HTTP_REFERER', '')
 	if settings.FAN_HOST:
