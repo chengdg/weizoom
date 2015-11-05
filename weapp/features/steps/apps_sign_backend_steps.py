@@ -522,8 +522,6 @@ def step_impl(context,user,sign_name):
         db_page["is_new_created"] = "true"
     else:
         db_page["is_new_created"] = "false"
-    __debug_print(db_page)
-
     bdd_util.assert_dict(json_page,db_page)
 
 
