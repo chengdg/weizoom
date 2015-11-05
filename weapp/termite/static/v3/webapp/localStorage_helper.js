@@ -95,7 +95,7 @@ var initShipInofs = function(){
     }
     var now = new Date();
     var woid = getWoid();
-    if (now.getTime() - lastUpdate > shipInfosConfig.cacheTime) {
+    if (now.getTime() - lastUpdate > shipInfosConfig.cacheTime || getParam('fmt')!=localStorage.ship_infos_token) {
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
@@ -114,6 +114,7 @@ var initShipInofs = function(){
                 localStorage.ship_infos=JSON.stringify(infos);
                 var now = new Date();
                 localStorage.ship_infos_updated_at = now.getTime();
+                localStorage.ship_infos_token = getParam('fmt');
             },
             error: function(resp) {
             }
