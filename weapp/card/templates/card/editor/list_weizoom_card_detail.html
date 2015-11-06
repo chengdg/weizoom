@@ -73,7 +73,7 @@
             <tr>
                 <th>
                     <input class="xa-select-all fl " style="cursor: default;margin-top:2px;" type="checkbox" value="1" name="select-all">
-                    <span class="tx_searchable">
+                    <span class="">
                         卡号
                     </span>
                 </th>
@@ -99,7 +99,7 @@
                     {{else}}
                         <input class="fl " style="cursor: default;margin-top:2px;" type="checkbox" value="1" name="select-one" >
                     {{/if}}
-                    <a href="/card/card_num_details/get/?card_id=${card.weizoom_card_id}&IS_CARD_RULE=TRUE">${card.weizoom_card_id}</a>
+                    <a {{if can_view_card_details}} href="/card/card_num_details/get/?card_id=${card.weizoom_card_id}&IS_CARD_RULE=TRUE"{{else}} href="javascript:void(0);"{{/if}}>${card.weizoom_card_id}</a>
                 </td>
                 <td>
                     {{if ((card.active_card_user_id == card.user_id) && card.status==0) || ((card.active_card_user_id == card.user_id) && card.is_expired)|| ((card.active_card_user_id == card.user_id) && card.status==2 ) || ((card.active_card_user_id == card.user_id) && card.status==1)}}
@@ -581,6 +581,7 @@ $(document).ready(function() {
                     data: data,
                     can_active_card: data.can_active_card,
                     can_stop_card: data.can_stop_card,
+                    can_view_card_details:data.can_view_card_details,
                     categories: data.categories,
                     'userWebappId': _this.userWebappId
                 });
@@ -696,24 +697,12 @@ $(document).ready(function() {
                 if (this.enableSort) {
                     this.$el.find('thead tr').append('<th width="100">排序</th>');
                     this.$el.find('tbody tr').append('<td>' + '<a class="xa-inner-sortTrigger" data-direction="up" href="javascript:void(0);" data-toggle="tooltip" title="向上" data-placement="bottom" style="color:#0C9D08;"><i class="icon-arrow-up glyphicon glyphicon-arrow-up"></i></a>' + '<a class="ml20 xa-inner-sortTrigger" data-direction="down" href="javascript:void(0);" data-toggle="tooltip" title="向下" data-placement="bottom"><i class="icon-arrow-down glyphicon glyphicon-arrow-down"></i></a>' + '<a class="" data-direction="top" href="javascript:void(0);" data-toggle="tooltip" title="置顶" data-placement="bottom"><i class=""></i></a>');
-                    /*
-                    $tbody = this.$el.find('tbody');
-                    $sortHandler = $tbody.find('td.wui-advanced-table-sort-handler');
-                    $sortHandler.wrapInner('<div class="fl"></div>');
-                    $sortHandler.prepend('<div class="fl wui-inner-real-sort-handler" style="cursor: move;"><i class=" icon-resize-vertical"></i></div>');
-                    $tbody.sortable({
-                        axis: 'y',
-                        helper: this.storHelper,
-                        placeholder: "ui-state-highlight",
-                        cursor: 'move',
-                        handle: '.wui-inner-real-sort-handler',
-                        stop: _.bind(function(options) {
-                            this.submitForSort();
-                        }, this)
-                    });
-                    */
+
                 }
                 // 扩展advanced_table.load方法
+                if($('.card_status:first dl').html()=="已过期"){
+                    $('.xa-select-all').attr('disabled',true);
+                }
                 this.afterload();               
             },
             error: function(resp) {
