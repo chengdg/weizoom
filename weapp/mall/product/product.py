@@ -223,6 +223,7 @@ class ProductList(resource.Resource):
             if request.manager.id == products[0].owner_id:
                 now = datetime.now()
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+                    print "zl---------------------xiajia",shelve_type
                     products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
                 else:
                     products.update(shelve_type=shelve_type, display_index=0, update_time=now)
