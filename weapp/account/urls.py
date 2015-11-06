@@ -9,7 +9,7 @@ import statistics_views
 import accounts_views
 import accounts_api_views
 # jz 2015-10-22
-# import settings_views
+import settings_views
 # import settings_api_views
 import accounts_landing_views
 
@@ -61,7 +61,7 @@ urlpatterns = patterns('',
 	# url(r'setting/edit_email_setting/(\d+)/$', settings_views.edit_email_setting),
 	# url(r'setting/integral_detail/$', settings_views.edit_integral_detail),
 
-	# url(r'setting/notify/update/(\d+)/$', settings_views.update_email_status),
+	url(r'setting/notify/update/(\d+)/$', settings_views.update_email_status),
 
 	#icon api url
 	url(r'user_icons/get/$', api_views.get_user_icons),	
