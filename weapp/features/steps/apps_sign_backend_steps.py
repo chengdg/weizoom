@@ -162,8 +162,10 @@ def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
     }
 
     post_sign_response = context.client.post(sign_url,sign_args)
-    bdd_util.assert_api_call_success(post_sign_response)
+    post_sign_response = json.loads(post_sign_response.content)
     return post_sign_response
+
+
 
 def __get_PageJson(args):
     """
@@ -415,6 +417,7 @@ def step_impl(context,user,sign_name):
 
     ##step4 获得关键字(Fin)
     keyword_response = __get_Keywords(context)
+
     #step5 POST,PageJSON到Mongo,返回Page_id(Fin)
 
     ##Page的数据处理
@@ -441,14 +444,13 @@ def step_impl(context,user,sign_name):
         else:
             pass
         prize_settings_arr.append(tmp_prize_settings_arr)
-        ##不同数组的协调
     page_prizes = {}#Page记录数据
     for i in range(len(prize_settings_arr)):
         item = prize_settings_arr[i]
         page_prizes["prize_item%d"%i]={
                 "serial_count":prize_settings_arr[i]["serial_count"],
-                "serial_count_points":prize_settings_arr[i]["serial_count_points"],
-                "serial_count_prizes":prize_settings_arr[i]["serial_count_prizes"]
+                "serial_count_points":prize_settings_arr[i].get("serial_count_points",0),
+                "serial_count_prizes":prize_settings_arr[i].get("serial_count_prizes",{})
         }
     #Page的参数args
     page_args ={
@@ -480,13 +482,13 @@ def step_impl(context,user,sign_name):
         "status":"off",
         "related_page_id":page_related_id,
     }
-    __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
+    post_sign_response = __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
 
 
     #传递保留参数
     context.project_id = page_related_id
     context.json_page = __get_PageJson(page_args)
-
+    context.sign_id = post_sign_response['data']['id']
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
@@ -494,7 +496,11 @@ def step_impl(context,user,sign_name):
     feature数据生成Page，与数据库Page比较
     """
     # feature数据
-    sign_json = json.loads(context.text)
+    if context.text:
+        sign_json = json.loads(context.text)
+
+    else:
+        sign_json = {}
 
     status = sign_json.get('status',"")
     name = sign_json.get('name',"")
@@ -507,6 +513,8 @@ def step_impl(context,user,sign_name):
     keyword ={}
     reply_keyword = sign_json.get("reply_keyword","")
     reply_content = sign_json.get("reply_content","")
+
+
     for item in reply_keyword:
         rule = ""
         if item['rule']=="精确":
@@ -534,25 +542,24 @@ def step_impl(context,user,sign_name):
 
 
 
-@when(u'选择优惠券')
-def step_impl(context):
-    #331
-    pass
-
-@when(u'{user1}进入{user2}签到后台配置页面')
-def step_impl(context,user1,user2):
-    #341
-    pass
-
-@then(u'{user}获得优惠券列表,没有"{coupon}"')
-def step_impl(context,user,coupon):
-    #334
-    pass
-
 @when(u'{user}开启签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
-    #338
-    pass
+    text = json.loads(context.text)
+    switch = "off"
+    if context.text:
+        value = text.get("enable","")
+        if value:
+            switch = "on"
+        else:
+            switch = "off"
+    project_id = u'new_app:sign:'+context.project_id
+    __debug_print(project_id)
+    sign_id = context.sign_id
+    args = {
+        "signId":sign_id,
+        "status":switch
+    }
+    post_response = __post_SignArgs(context,args,project_id)
 
 
 @then(u'{user}能获得签到活动{sign_name}的状态为{sign_tag}')
