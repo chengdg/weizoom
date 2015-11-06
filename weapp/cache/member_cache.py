@@ -54,7 +54,7 @@ def delete_member_cache(openid, webapp_id):
 	key = 'member_{webapp:%s}_{openid:%s}' % (webapp_id, openid)
 	cache_util.delete_pattern(key)
 
-
+# zhaolei 2015-11-9
 # from django.dispatch.dispatcher import receiver
 # from django.db.models import signals
 # from weapp.hack_django import post_update_signal
