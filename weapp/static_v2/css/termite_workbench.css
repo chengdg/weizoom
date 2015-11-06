@@ -1579,3 +1579,21 @@ button.xui-deleteImageButton{
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_dateRangeSelectorField {
     width: 83%;
 }
+
+button.xui-deleteQrcodeButton{
+	position: absolute;
+    top: -10px;
+    margin-left: 85px;
+    font-size: 14px;
+    z-index: 1;
+    background: none;
+    border: none;
+}
+.xui-deleteQrcodeButton span{
+	color: #fff;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: rgba(0,0,0,0.45);
+	border-radius: 50%;
+}

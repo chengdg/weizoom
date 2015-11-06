@@ -431,13 +431,13 @@
                                 </button>
 
                             {{if field.help}}
-                            <span style="color: #666;">
+                            <div style="color: #666;">
                                 {{html field.help.replace(/\n/g, "<br/>")}}
-                            </span>
+                            </div>
                             {{/if}}
 
                             {{if field.isShowCloseButton}}
-                                <button type="button" class="deleteImage xa-deleteImageButton xui-deleteImageButton" style="display:none;"><span>&times;</span></button>
+                                <button type="button" class="deleteQrcode xa-deleteQrcodeButton xui-deleteQrcodeButton" style="display:none;"><span>&times;</span></button>
                             {{/if}}
                         </div>
                     </div>

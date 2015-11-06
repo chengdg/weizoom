@@ -1,3 +1,4 @@
+@charset "utf-8";
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
     background: #ec352d;
     border-radius: 5px;
@@ -18,7 +19,6 @@
 }
 .wui-masterinfo b{
     color: #ff7d42;
-    font-size: 15px;
 }
 .wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b{
     color: #9d3100;

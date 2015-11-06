@@ -1,3 +1,4 @@
+@charset "utf-8";
 hr{
     display: inline-block;
     width: 60px;
@@ -25,17 +26,17 @@ hr{
     border: none;
 }
 .wui-powerme-container .wui-i-body div{
-    margin-top: 15px;
+    margin-top: 13px;
     font-family: "黑体";
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup button{
-    width: 80%;
-    height: 35px;
-    border-radius: 2px;
+    width: 70%;
+    height: 34px;
     border: none;
     color: white;
-    font-size: 20px;
+    font-size: 1rem;
     margin: 5px 0;
+    font-family: "黑体";
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
     background: #B5B5B5;
@@ -48,14 +49,14 @@ hr{
 .wui-powerme-container .wui-i-timing{
     font-weight: bold;
     min-height: 33px;
-    font-size: 18px;
+    font-size: 1rem;
 }
 .wui-powerme-container .wui-i-timing b{
-    width: 20px;
+    margin-right: 5px;
     height: 100%;
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-position: -170px -12px;
-    font-size: 14px;
+    font-size: 0.8rem;
     padding: 7px 5px;
     color: white;
     border-radius: 2px;
@@ -63,8 +64,7 @@ hr{
 }
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
-    line-height: 50px;
-    margin: 5px 16px 0;
+    margin: 16px 10px 0;
 }
 .wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
     border-bottom: 1px dotted #ffffff;
@@ -80,16 +80,22 @@ hr{
     margin-bottom: -4px;
 }
 .wui-powerme-container .wui-i-rules-content {
+    margin-bottom: 20px;
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-top: 18px !important;
     text-align: left !important;
-    margin: 0 10px 0 15px;
+    font-size: 0.75rem;
 }
 .wui-powerme-container .wui-i-description-content {
     margin: 0 10px 0 10px;
+    font-size: 0.8rem;
 }
 .wui-powerme-container .wui-i-line{
     margin-bottom: -26px;
-    width: 90%;
-    margin-left: 14px;
+    margin-left: 12px;
+    margin-right: 12px;
+    padding-top: 8px;
 }
 .wui-powerme-container .wui-i-rules-title-content {
     margin-left: 28%;
@@ -116,10 +122,10 @@ hr{
 }
 .wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b {
     font-weight: normal;
-    font-size: 18px;
+    font-size: 1rem;
 }
 .wui-powerme-container .wui-i-top100-title{
-    font-weight: bold;
+    font-size: 0.8rem;
 }
 .wui-powerme-container .wui-i-top100-name {
     display: inline-block;
