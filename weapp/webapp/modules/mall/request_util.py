@@ -142,7 +142,7 @@ def get_product(request):
 	#hint = __get_product_hint(request.webapp_owner_id, product_id)
 	hint = resource.get('mall', 'product_hint', {'woid': request.webapp_owner_id, 'id': product_id}).get('hint', '')
 
-	if product['is_deleted'] or (request.manager.username == 'weshop' and product['owner_id'] != 216 and product['weshop_sync'] == 0):
+	if product['is_deleted'] or (request.user.is_weizoom_mall and product['owner_id'] != 216 and product['weshop_sync'] == 0):
 	#if product.is_deleted:
 		# url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
 		return HttpResponseRedirect('/static/error-page/404.html')
