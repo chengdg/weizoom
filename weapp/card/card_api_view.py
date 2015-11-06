@@ -370,8 +370,10 @@ def get_weizoom_cards(request):
     can_active_card=0
     can_stop_card=0
     if weizoomcardpermission:
-            can_active_card=weizoomcardpermission[0].can_active_card
-            can_stop_card=weizoomcardpermission[0].can_stop_card
+        can_active_card=weizoomcardpermission[0].can_active_card
+        can_stop_card=weizoomcardpermission[0].can_stop_card
+        can_view_card_details=weizoomcardpermission[0].can_view_card_details
+
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
