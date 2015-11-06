@@ -85,7 +85,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			type: 'qrcode_dialog_select',
 			displayName: '用户识别二维码',
 			isUserProperty: true,
-			isShowCloseButton: false,
+			isShowCloseButton: true,
 			triggerButton: {nodata:'选择带参数二维码', hasdata:'修改'},
 			selectedButton: '选择带参数二维码',
 			dialog: 'W.dialog.termite.SelectQrcodeDialog',

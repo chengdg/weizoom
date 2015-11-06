@@ -165,7 +165,7 @@
     var is_powered = {% if is_powered %}true{% else %}false{% endif %};
     var is_self_page = {% if is_self_page %}true{% else %}false{% endif %};
     var page_owner_name = '{{ page_owner_name|safe }}';
-    var new_qrcode_url = {% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{qrcode_url}}{% endif %};
+    var new_qrcode_url = {% if params_qrcode_url !="" %}{{params_qrcode_url}}{% else %}{{qrcode_url}}{% endif %};
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();

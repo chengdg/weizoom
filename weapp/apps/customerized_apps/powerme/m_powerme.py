@@ -203,8 +203,8 @@ class MPowerMe(resource.Resource):
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"微助力",
 			'qrcode_url': qrcode_url,
-			'params_qrcode_url': record.qrcode.ticket if record.qrcode else '',
-			'params_qrcode_name': record.qrcode.name if record.qrcode else '',
+			'params_qrcode_url': record.qrcode['ticket'] if record.qrcode else '',
+			'params_qrcode_name': record.qrcode['name'] if record.qrcode else '',
 			'timing': timing,
 			'current_member_rank_info': current_member_rank_info, #我的排名
 			'total_participant_count': total_participant_count, #总参与人数
