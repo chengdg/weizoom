@@ -133,11 +133,11 @@ class lottery_prize(resource.Resource):
 			lottery_participance.save()
 
 		#如果当前可玩次数为0，则直接返回
-		#增加lottery_participance.can_play_count != -1 条件限制，修复可玩次数在异常情况下突破-1后无限抽奖的问题
-		if lottery_participance.can_play_count <= 0 and lottery_participance.can_play_count != -1:
-			response = create_response(500)
-			response.errMsg = u'您今天的抽奖机会已经用完~'
-			return response.get_response()
+		if limitation != -1:
+			if lottery_participance.can_play_count <= 0:
+				response = create_response(500)
+				response.errMsg = u'您今天的抽奖机会已经用完~'
+				return response.get_response()
 
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')
