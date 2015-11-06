@@ -15,7 +15,11 @@ import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 import termite.pagestore as pagestore_manager
+from apps.customerized_apps.sign.models import Sign
 import json
+
+global delete_switch
+delete_switch = True
 
 def __debug_print(content,type_tag=True):
     """
@@ -368,6 +372,17 @@ def __get_DB_DynamicPages(project_id):
     pages = pagestore.get_page_components(project_id)
     return pages
 
+def __api_delete(context,sign_id=None,project_id=None):
+    global delete_switch
+    if delete_switch:
+        #删除mongo中project所有的page
+        if project_id:
+            pagestore = pagestore_manager.get_pagestore('mongo')
+            pagestore.remove_project_pages(str(project_id))
+
+        #删除project本身
+        if sign_id:
+            Sign.objects.filter(id=sign_id).delete()
 
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
@@ -375,6 +390,9 @@ def step_impl(context,user,sign_name):
     """
     模拟登录签到PC页面，填写，保存
     """
+
+    project_id = '0'
+    sign_id = '0'
     #feature 数据
     sign_json = json.loads(context.text)
 
@@ -471,7 +489,7 @@ def step_impl(context,user,sign_name):
         "page_json": __get_PageJson(page_args),
     }
     post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
-    page_related_id = __res2json(post_termite_response)['data']['project_id']
+    page_related_id = json.loads(post_termite_response.content).get('data',{}).get('project_id',0)
     #step6 POST,填写JSON至Mongo，返回JSON(Fin)
     post_sign_args = {
         "_method":"put",
@@ -540,6 +558,9 @@ def step_impl(context,user,sign_name):
         db_page["is_new_created"] = "false"
     bdd_util.assert_dict(json_page,db_page)
 
+    #删除数据
+    __api_delete(context,context.sign_id,context.project_id)
+
 
 
 @when(u'{user}开启签到活动"{sign_name}"')
@@ -552,17 +573,32 @@ def step_impl(context,user,sign_name):
             switch = "on"
         else:
             switch = "off"
-    project_id = u'new_app:sign:'+context.project_id
-    __debug_print(project_id)
-    sign_id = context.sign_id
+    project_id = u'new_app:sign:'+str(context.project_id)
+    sign_id = str(context.sign_id)
     args = {
         "signId":sign_id,
         "status":switch
     }
     post_response = __post_SignArgs(context,args,project_id)
+    context.sign_id = sign_id
 
-
-@then(u'{user}能获得签到活动{sign_name}的状态为{sign_tag}')
-def step_impl(context,user,sign_name,sign_tag):
-    #348
+@when(u'{user}离开签到活动"{sign_name}"')
+def step_impl(context,user,sign_name):
     pass
+
+
+@then(u'{user}的签到活动"{sign_name}"状态为"{sign_tag}"')
+def step_impl(context,user,sign_name,sign_tag):
+    status2name = {
+        u'开启':1,
+        u'关闭':0
+    }
+    sign_id = context.sign_id
+    db_sign = Sign.objects(id=sign_id)[0]
+
+    sign_status = {'status':status2name[sign_tag]}
+    db_status = {'status':db_sign['status']}
+    bdd_util.assert_dict(sign_status,db_sign)
+
+    # #删除数据
+    # __api_delete(context,context.sign_id,context.project_id)

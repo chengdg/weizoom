@@ -39,7 +39,7 @@ Background:
 
 		"""
 
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku1
 Scenario:配置后台所有数据,优惠券数量足,没有过期
 	When jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -124,7 +124,7 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 				}]
 		}
 		"""
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku2
 Scenario:一条奖励下,不添加优惠券,有积分
 	When jobs添加签到活动"签到活动2",并且保存
 		"""
@@ -183,7 +183,7 @@ Scenario:一条奖励下,不添加优惠券,有积分
 				}]
 		}
 		"""
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku3
 Scenario:一条奖励下,添加优惠券,不添加积分
 	When jobs添加签到活动"签到活动3",并且保存
 		"""
@@ -234,7 +234,7 @@ Scenario:一条奖励下,添加优惠券,不添加积分
         }
 
 		"""
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku4
 Scenario:一条奖励下,添加优惠券,添加积分
 	When jobs添加签到活动"签到活动4",并且保存
 		"""
@@ -287,7 +287,7 @@ Scenario:一条奖励下,添加优惠券,添加积分
                 }]
         }
 		"""
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku5
 Scenario:三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 	When jobs添加签到活动"签到活动5",并且保存
 		"""
@@ -369,7 +369,7 @@ Scenario:三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		"""
 
 
-@apps_sign @apps_sign_backend @kuku
+@apps_sign @apps_sign_backend @kuku6
 Scenario: 保存活动后，立刻开启签到活动
 	When jobs添加签到活动"签到活动6",并且保存
 	"""
@@ -419,20 +419,68 @@ Scenario: 保存活动后，立刻开启签到活动
 		"enable": true
 	}
 	"""
-	Then jobs能获得签到活动"签到活动6"的状态为"已开启"
+	Then jobs的签到活动"签到活动6"状态为"开启"
 
 
 
-@apps_sign @apps_sign_backend
+
+@apps_sign @apps_sign_backend @kuku7
 Scenario: 保存后开启签到活动
-  When jobs开启签到活动"签到活动7"
+    When jobs添加签到活动"签到活动7",并且保存
+    """
+    {
+        "status":"off",
+        "name": "签到活动7",
+        "sign_describe":"签到即可获得积分,连续签到奖励更大哦",
+
+        "share_pic":"7.jpg",
+        "share_describe": "签到获得奖励",
+        "reply_content":"签到",
+        "reply_keyword":
+            [{
+                "rule": "精确",
+                "key_word": "78"
+            },{
+                "rule": "精确",
+                "key_word": "12"
+            },{
+                "rule":"模糊",
+                "key_word": "123456"
+            }],
+
+        "sign_settings":
+            [{
+                "sign_in": "1",
+                "integral": "100",
+                "send_coupon": "优惠券1",
+                "prize_counts":50
+            },{
+                "sign_in": "3",
+                "integral": "300",
+                "send_coupon": "优惠券1",
+                "prize_counts":50
+            },{
+                "sign_in": "5",
+                "integral": "500",
+                "send_coupon": "优惠券1",
+                "prize_counts":50
+            }]
+    }
+    """
+  And jobs离开签到活动"签到活动7"
 	"""
 	{
 		"name": "签到活动7",
 		"enable": false
 	}
 	"""
-  Then jobs能获得签到活动"签到活动7"的状态为"未开启"
+  Then jobs的签到活动"签到活动7"状态为"关闭"
   When jobs开启签到活动"签到活动7"
-  Then jobs能获得签到活动"签到活动7"的状态为"已开启"
+    """
+    {
+        "name": "签到活动7",
+        "enable": true
+    }
+    """
+  Then jobs的签到活动"签到活动7"状态为"开启"
 
