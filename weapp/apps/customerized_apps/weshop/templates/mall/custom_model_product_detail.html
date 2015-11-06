@@ -318,7 +318,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     var market_price_range = '{{ price_info.display_market_price }}';
     var weshop_price = {{''|settings_price}};
     // 可用积分
-    var useIntegral = {{use_integral}};
+    // var useIntegral = {{use_integral}};
 
     // function getPostageForWeight(weight) {
     //     if(!isNaN(weight)){
@@ -568,7 +568,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             var total_price = (price*productCount).toFixed(2);
             // $('.xa-variable-price').text(total_price);
             console.log(price, productCount, (price*productCount).toFixed(2))
-            if('integral' == '{{product.type}}'){   
+            /*if('integral' == '{{product.type}}'){   
                 if (total_price > {{use_integral}}) {
                     $('.xa-disabledIntegralBuyLinks').show();
                     $('.xa-disabledBuyLinks').hide();
@@ -578,7 +578,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     $('.xa-disabledBuyLinks').hide();
                     $('.xa-enabledBuyLinks').show();
                 }
-            }
+            }*/
         };
         $('input[data-ui-role="counter"]').bind('count-changed', function(event, value) {
             updateBuyLink(value);
@@ -743,5 +743,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 if (document.getElementById('total_count')) {
     document.getElementById('total_count').value = 1;    
 }
+$('img[data-url]').each(function(i,n){$(n).attr('src',$(n).data('url'))});
 </script>
 {% endblock %}

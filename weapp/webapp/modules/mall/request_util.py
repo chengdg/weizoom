@@ -69,7 +69,10 @@ def list_products(request):
 		#categories = resource.get('mall', 'product_categories', {'uid': owner_id})
 		category = {"id": category_id, "name": u"全部"}
 	else:
-		category = resource.get('mall', 'product_category', {'id': category_id})
+		try:
+			category = resource.get('mall', 'product_category', {'id': category_id})
+		except ObjectDoesNotExist:
+			return HttpResponseRedirect('/static/error-page/404.html')
 
 	products = resource.get('mall', 'products_by_category', {
 		'category_id': category_id,
@@ -92,13 +95,13 @@ def list_products(request):
 	has_category = False
 	if len(product_categories) > 0:
 		has_category = True
+	if hasattr(category, 'is_deleted') and category.is_deleted:
+		return HttpResponseRedirect('/static/error-page/404.html')
 	c = RequestContext(request, {
 		'page_title': u'商品列表',
 		'products': products,
 		'category': category,
 		'is_deleted_data': category.is_deleted if hasattr(category, 'is_deleted') else False,
-		# jz 2015-10-09
-		#'shopping_cart_product_nums': mall_api.get_shopping_cart_product_nums(request.webapp_user),
 		'product_categories': product_categories,
 		'has_category': has_category,
 		'hide_non_member_cover': True
@@ -141,10 +144,9 @@ def get_product(request):
 
 	if product['is_deleted']:
 	#if product.is_deleted:
-		c = RequestContext(request, {
-			'is_deleted_data': True
-		})
-		return render_to_response('%s/product_detail.html' % request.template_dir, c)
+		# url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		return HttpResponseRedirect('/static/error-page/404.html')
+		# return render_to_response()
 
 	#if product.get('promotion'):
 	#	product['promotion']['is_active'] = product['promotion_model'].is_active
@@ -173,12 +175,13 @@ def get_product(request):
 			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product['id'], product['owner_id'])
 
 	request.should_hide_footer = True
-
-	usable_integral = request.member.integral if request.member else 0
-	use_integral = request.member.integral if request.member else 0
+	# jz 2015-10-29
+	# usable_integral = request.member.integral if request.member else 0
+	# use_integral = request.member.integral if request.member else 0
 
 	is_non_member = True if request.member else False
-
+	if product.get('is_deleted',False):
+		return HttpResponseRedirect('/static/error-page/404.html')
 	c = RequestContext(request, {
 		'page_title': product['name'],
 		'product': product,
@@ -188,8 +191,9 @@ def get_product(request):
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
 		'price_info': product['price_info'],
-		'usable_integral': usable_integral,
-		'use_integral': use_integral,
+		# jz 2015-10-29
+		# 'usable_integral': usable_integral,
+		# 'use_integral': use_integral,
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
@@ -301,7 +305,7 @@ def pay_order(request):
 		order = orders[0]
 
 	c = RequestContext(request, {
-		'page_title': u'订单支付',
+		'page_title': u'订单详情',
 		'order': order,
 		'has_sub_order': has_sub_order,
 		'orders': orders,
@@ -448,13 +452,15 @@ def get_pay_result(request):
 	# if hasattr(request, 'is_return_context'):
 	# 	return c
 	# else:
-	if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-		return render_to_response('%s/success.html' % request.template_dir, c)
-	else:
-		#获取订单包含商品
-		order_has_products = OrderHasProduct.objects.filter(order=order)
-		c.update('order_has_products', order_has_products)
-		return render_to_response('%s/order_detail.html' % request.template_dir, c)
+	# if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+	# else:
+	# 	#获取订单包含商品
+	# 	order_has_products = OrderHasProduct.objects.filter(order=order)
+	# 	c['order_has_products'] = order_has_products
+	# 	c.update()
+	# 	return render_to_response('%s/order_detail.html' % request.template_dir, c)
+	
+	return render_to_response('%s/success.html' % request.template_dir, c)
 
 
 ########################################################################
@@ -476,7 +482,7 @@ def get_pay_result_success(request):
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
 		is_show_red_envelope = True
-		red_envelope_rule_id = red_envelope.id
+		red_envelope_rule_id = red_envelope['id']
 
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
@@ -542,6 +548,7 @@ def show_shopping_cart(request):
 	"""
 	显示购物车详情
 	"""
+
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -563,7 +570,9 @@ def show_shopping_cart(request):
 		'jsons': jsons,
 		'discount': get_member_discount_percentage(request)
 	})
-	return render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+	response = render_to_response('%s/shopping_cart.html' % request.template_dir, c)
+
+	return response
 
 
 def _sorted_product_groups_by_promotioin(product_groups):
@@ -810,7 +819,10 @@ def edit_shopping_cart_order(request):
 
 	# 没有选择商品，跳转回购物车
 	if len(products) == 0:
-		url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		if settings.IS_UNDER_BDD:
+			url = request.META.get('HTTP_REFERER', '/termite/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
+		else:
+			url = request.META.get('HTTP_REFERER', '/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
 		return HttpResponseRedirect(url)
 
 	order = mall_api.create_shopping_cart_order(webapp_owner_id, webapp_user, products)
@@ -1000,29 +1012,11 @@ def pay_alipay_order(request):
 # edit_address: 编辑收货地址信息
 ########################################################################
 def edit_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
-	#隐藏底部导航条#
-	request.should_hide_footer = True
-	ship_info_id = request.GET.get('id', 0)
-	if request.action == 'add':
-		ship_info = None
-	elif ship_info_id > 0:
-		try:
-			ship_info = ShipInfo.objects.get(id=ship_info_id)
-		except:
-			ship_info = None
-	else:
-		ship_info = webapp_user.ship_info
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'ship_info': ship_info,
-		'redirect_url_query_string': request.redirect_url_query_string
+
 	})
-	if hasattr(request, 'is_return_context'):
-		return c
 	return render_to_response('%s/order_address.html' % request.template_dir, c)
 
 
@@ -1051,15 +1045,10 @@ def show_concern_shop_url(request):
 # list_address: 收货地址信息列表
 ########################################################################
 def list_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
 	#隐藏底部导航条#
-	request.should_hide_footer = True
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'redirect_url_query_string': request.redirect_url_query_string,
-		'ship_infos': webapp_user.ship_infos,
 	})
 	return render_to_response('%s/list_address.html' % request.template_dir, c)
 
@@ -1068,36 +1057,11 @@ def list_address(request):
 # add_address: 添加收货地址信息
 ########################################################################
 def add_address(request):
-	webapp_user = request.webapp_user
-	webapp_owner_id = request.webapp_owner_id
-	#隐藏底部导航条#
-	request.should_hide_footer = True
-
 	c = RequestContext(request, {
 		'is_hide_weixin_option_menu': True,
 		'page_title': u'编辑收货地址',
-		'redirect_url_query_string': request.redirect_url_query_string
 	})
 	return render_to_response('%s/order_address.html' % request.template_dir, c)
-
-
-########################################################################
-# delete_address: 删除收货地址信息
-########################################################################
-def delete_address(request):
-	ship_info_id = request.GET.get('id', 0)
-	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
-
-	# 默认选中
-	ship_infos = request.webapp_user.ship_infos
-	selected_ships_count = ship_infos.filter(is_selected=True).count()
-	if ship_infos.count() > 0 and selected_ships_count == 0:
-		ship_info = ship_infos[0]
-		ship_info.is_selected = True
-		ship_info.save()
-
-	# 显示地址列表
-	return list_address(request)
 
 
 ########################################################################
@@ -1411,7 +1375,6 @@ def create_product_review(request):
     return render_to_response(
         '%s/product_review_create.html' % request.template_dir, c)
 
-
 def update_product_review_picture(request):
     '''
 
@@ -1537,3 +1500,27 @@ def edit_refueling_order(request):
 	if hasattr(request, 'is_return_context'):
 		return c
 	return render_to_response('%s/edit_order.html' % request.template_dir, c)
+
+
+# 商城首页链接 ./?woid={{request.webapp_owner_id}}&module=mall&model=homepage
+def get_homepage(request):
+    homepage_url = u'/workbench/jqm/preview/?woid={}&module=mall&model=products&action=list'.format(
+        request.webapp_owner_id)
+
+    if hasattr(request, 'user_profile') and request.user_profile:
+        profile = request.user_profile
+    else:
+        profiles = UserProfile.objects.filter(user_id=request.webapp_owner_id)
+        if profiles.count() > 0:
+            profile = profiles[0]
+        else:
+            profile = None
+
+    if profile and profile.is_use_wepage:
+        homepage_url = u'/termite2/webapp_page/?{}'.format(
+            'workspace_id=home_page&webapp_owner_id=%s&workspace_id=%s&project_id=0' % (
+                request.webapp_owner_id, request.user_profile.homepage_workspace_id))
+
+    fmt = request.GET.get('fmt', '')
+    homepage_url = homepage_url + '&fmt=' + fmt
+    return HttpResponseRedirect(homepage_url)

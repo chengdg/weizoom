@@ -921,7 +921,21 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-products-original .ui-listview .ui-li > .ui-btn-text{
     height: 240px;
 }
-
+.xui-productsList-page .xui-empty-box{
+    width:50%;
+    margin:20% auto;
+}
+.xui-productsList-page .xui-goShopping-btn{
+    display: block;
+    text-align: center;
+    margin:0 auto;
+    width: 94%;
+    background: #CF0305;
+    color: #fff;
+    height: 45px;
+    line-height: 45px;
+    border-radius:2px;
+}
 /*
  * product_new list页面样式
  */
@@ -3734,15 +3748,35 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-productReviewCreatePage .xui-productPhoto{
     overflow: hidden;
 }
-.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
-.xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
+.xui-productReviewCreatePage .xui-imgList li{
+    position: relative;
+    float: left;
+    margin-bottom: 10px;
     width: 45px;
     height: 45px;
+    margin-right: 2px;
+    box-shadow: inset 0px 0px 0px 1px #ddd;
+}
+.xui-productReviewCreatePage .xui-imgList li img{
+    width: 45px;
+    height: 45px;
+}
+.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
+.xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
+    width: 46px;
+    height: 45px;
     display: inline-block;
+    background: url(/static_v2/img/webapp/mall/photoBtn.png);
+    -webkit-background-size: 92px 45px;
+    background-size: 92px 45px;
+    background-position: -46px 0;
     text-align: center;
     line-height: 45px;
     margin-right: 3px;
     overflow: hidden;
+    float: left;
+    position: relative;
+    margin-bottom: 10px;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     line-height: 35px;
@@ -3753,16 +3787,13 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     margin-right: 0;
 }
-.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto span.xui-i-box,
+/*.xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto,
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     display: inline-block;
     width:46px;
     height:45px;
-    background: url(/static_v2/img/webapp/mall/photoBtn.png);
-    -webkit-background-size: 92px 45px;s
-    background-size: 92px 45px;
-    background-position: -46px 0;
-}
+    
+}*/
 .xui-productReviewCreatePage .xui-productPhoto .xui-deletePhoto{
     background-position: 0 0;
 }
@@ -3787,6 +3818,24 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     display: inline-block;
     top:10px;
     left: 10px;
+}
+.xui-productReviewCreatePage .xui-progress{
+    position:absolute;
+    width:100%;
+    height:4px;
+    background:rgba(0,0,0,.6);
+    left:0;
+    bottom:0;
+    -webkit-transition:all linear .4s;
+    transition:all linear .4s;
+}
+.xui-productReviewCreatePage .xui-progress span{
+    display: block;
+    height:4px;
+    width: 0;
+    background:#4AB700;
+    -webkit-transition:all linear .6s;
+    transition:all linear .6s;
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-addPhoto .xui-i-box i{
     margin-left: -3px;
@@ -4469,6 +4518,13 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     }
     .xui-shoppingCartPage .xui-productName,.xui-shoppingCartPage .xui-productCustomModel{
         width:115px!important;
+    }
+    
+}
+@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+    .xui-productsList-page .xui-empty-box{
+        width:50%;
+        margin:10% auto;
     }
 }
  /*iphone6*/

@@ -697,24 +697,12 @@ $(document).ready(function() {
                 if (this.enableSort) {
                     this.$el.find('thead tr').append('<th width="100">排序</th>');
                     this.$el.find('tbody tr').append('<td>' + '<a class="xa-inner-sortTrigger" data-direction="up" href="javascript:void(0);" data-toggle="tooltip" title="向上" data-placement="bottom" style="color:#0C9D08;"><i class="icon-arrow-up glyphicon glyphicon-arrow-up"></i></a>' + '<a class="ml20 xa-inner-sortTrigger" data-direction="down" href="javascript:void(0);" data-toggle="tooltip" title="向下" data-placement="bottom"><i class="icon-arrow-down glyphicon glyphicon-arrow-down"></i></a>' + '<a class="" data-direction="top" href="javascript:void(0);" data-toggle="tooltip" title="置顶" data-placement="bottom"><i class=""></i></a>');
-                    /*
-                    $tbody = this.$el.find('tbody');
-                    $sortHandler = $tbody.find('td.wui-advanced-table-sort-handler');
-                    $sortHandler.wrapInner('<div class="fl"></div>');
-                    $sortHandler.prepend('<div class="fl wui-inner-real-sort-handler" style="cursor: move;"><i class=" icon-resize-vertical"></i></div>');
-                    $tbody.sortable({
-                        axis: 'y',
-                        helper: this.storHelper,
-                        placeholder: "ui-state-highlight",
-                        cursor: 'move',
-                        handle: '.wui-inner-real-sort-handler',
-                        stop: _.bind(function(options) {
-                            this.submitForSort();
-                        }, this)
-                    });
-                    */
+
                 }
                 // 扩展advanced_table.load方法
+                if($('.card_status:first dl').html()=="已过期"){
+                    $('.xa-select-all').attr('disabled',true);
+                }
                 this.afterload();               
             },
             error: function(resp) {

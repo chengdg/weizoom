@@ -108,6 +108,11 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'red_envelope',
 				'add_btn_title': '新建分享红包',
 				'add_link': '/apps/red_envelope/red_envelope_rule/'
+			},{
+				'name': '微助力',
+				'type': 'powerme',
+				'add_btn_title': '新建微助力',
+				'add_link': '/apps/powerme/powerme/'
 			}
 			# {
 			# 	'name': '趣味测试',
@@ -181,7 +186,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'product': {
 			'class': Product, #is_deleted=False,
 			'query_name': 'name',
-			'link_template': './?module=mall&model=product&action=get&rid={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id,
+			'link_template': './?woid=%d&module=mall&model=product&rid={}' % webapp_owner_id,
 			'filter':{
 				"is_deleted": False,
 				"shelve_type": PRODUCT_SHELVE_TYPE_ON
@@ -190,7 +195,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'category': {
 			'class': ProductCategory,
 			'query_name': 'name',
-			'link_template': './?module=mall&model=products&action=list&category_id={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id,
+			'link_template': './?woid=%d&module=mall&model=products&action=list&category_id={}' % webapp_owner_id,
 			'filter':{}
 		},
 		'lottery': {

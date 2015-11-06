@@ -4,7 +4,7 @@ import time
 import urllib
 import urllib2
 import json
-
+import datetime
 from django.conf import settings
 
 from core.jsonresponse import create_response
@@ -19,7 +19,7 @@ from mall import models as mall_models
 from mall import module_api as mall_api
 from mall import signals as mall_signals
 from account.models import *
-from account.views import save_base64_img_file_local_for_webapp
+from account.views import save_base64_img_file_local_for_webapp,save_upload_mobile_pic
 from . import request_util
 from . import utils
 from core.send_order_email_code import *
@@ -193,7 +193,6 @@ def save_order(request):
 
 	# 获取地址信息
 	area = request.POST.get('area', '')
-
 	# 获取发票信息
 	if 'is_use_bill' in request.POST:
 		bill_type = request.POST.get('bill_type', ORDER_BILL_TYPE_NONE)
@@ -598,7 +597,7 @@ def save_address(request):
 		area = request.POST.get('area', '')
 
 		#更新收货地址信息
-		webapp_user.update_ship_info(
+		ship_id = webapp_user.update_ship_info(
 			ship_id = ship_id,
 			ship_name=ship_name,
 			ship_address=ship_address,
@@ -616,6 +615,7 @@ def save_address(request):
 			data['exception'] = stack
 
 	data['ship_name'] = ship_name
+	data['ship_id'] = ship_id
 	response.data = data
 	return response.get_response()
 
@@ -760,7 +760,7 @@ def create_product_review(request):
 		serve_score = data_dict.get('serve_score', None)
 		deliver_score = data_dict.get('deliver_score', None)
 		process_score = data_dict.get('process_score', None)
-
+		picture_list = data_dict.get('picture_list', None)
 		#创建订单评论
 		order_review, created = mall_models.OrderReview.objects.get_or_create(
 			order_id=order_id,
@@ -781,31 +781,27 @@ def create_product_review(request):
 			product_score=product_score,
 			review_detail=review_detail
 		)
-
-		# 创建商品评价图片
-		picture_list = data_dict.get('picture_list', None)
+		response = create_response(200)
+		response.data = get_review_status(request)
 		if picture_list:
-			picture_list = json.loads(picture_list)
-			picture_model_list = []
-
-			for picture in picture_list:
-				att_url=save_base64_img_file_local_for_webapp(request, picture)
+			for picture in list(eval(picture_list)):
 				mall_models.ProductReviewPicture(
 					product_review=product_review,
 					order_has_product_id=order_has_product_id,
-					att_url=att_url
+					att_url=picture
 				).save()
 				watchdog_info(u"create_product_review after save img  %s" %\
-					(att_url), type="mall", user_id=owner_id)
+					(picture), type="mall", user_id=request.webapp_owner_id)
 
-		response = create_response(200)
-		response.data = get_review_status(request)
-		watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
-			(order_has_product_id), type="mall", user_id=owner_id)
+			watchdog_info(u"create_product_review end, order_has_product_id is %s" %\
+				(order_has_product_id), type="mall", user_id=owner_id)
 		return response.get_response()
 	elif request.method == 'GET':
 		return create_response(500).get_response()
 
+def create_mobile_pic(request):
+	basestr=request.POST.get('basestr',None)
+	return save_upload_mobile_pic(request,basestr)
 
 def update_product_review_picture(request):
 	'''
@@ -830,14 +826,11 @@ def update_product_review_picture(request):
 	picture_list = request.POST.get('picture_list', None)
 	# 为此商品评论创建贴图
 	if picture_list:
-		picture_list = json.loads(picture_list)
-		picture_model_list = []
-
-		for picture in picture_list:
+		for picture in list(eval(picture_list)):
 			mall_models.ProductReviewPicture(
 				product_review_id=product_review_id,
 				order_has_product_id=order_has_product_id,
-				att_url=save_base64_img_file_local_for_webapp(request, picture)
+				att_url=picture
 			).save()
 		# TODO 更好的实现，能触发缓存更新
 		# mall_models.ProductReviewPicture.objects.bulk_create(picture_model_list)
@@ -845,3 +838,51 @@ def update_product_review_picture(request):
 		response = create_response(200)
 		response.data = get_review_status(request)
 		return response.get_response()
+
+
+def list_address(request):
+	ship_infos = list(request.webapp_user.ship_infos)
+	items = []
+	for ship_info in ship_infos:
+		data_dict = dict()
+		data_dict['ship_id'] = ship_info.id
+		data_dict['ship_name'] = ship_info.ship_name
+		data_dict['ship_tel'] = ship_info.ship_tel
+		data_dict['ship_address'] = ship_info.ship_address
+		data_dict['area'] = ship_info.area
+		try:
+			data_dict['area_str'] = ship_info.get_str_area
+		except:
+			pass
+		data_dict['is_selected'] = ship_info.is_selected
+		items.append(data_dict)
+	print(items)
+	response = create_response(200)
+	data = dict()
+	data['ship_infos'] = items
+	response.data = data
+	return response.get_response()
+
+
+def delete_address(request):
+	print('hereeee')
+	ship_info_id = request.POST.get('id', 0)
+	ShipInfo.objects.filter(id=ship_info_id).update(is_deleted=True)
+
+	# 默认选中
+	ship_infos = request.webapp_user.ship_infos
+	selected_ships_count = ship_infos.filter(is_selected=True).count()
+	if ship_infos.count() > 0 and selected_ships_count == 0:
+		ship_info = ship_infos[0]
+		ship_info.is_selected = True
+		ship_info.save()
+		selected_id = ship_info.id
+	else:
+		selected_id = 0
+	print('selected_id...:', selected_id)
+	# 显示地址列表
+	response = create_response(200)
+	data = dict()
+	data['selected_id'] = selected_id
+	response.data = data
+	return response.get_response()

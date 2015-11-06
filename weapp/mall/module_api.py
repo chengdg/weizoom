@@ -454,12 +454,22 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				# RFC
 				elif one_promotion.type != promotion_models.PROMOTION_TYPE_COUPON:
 					promotion = one_promotion
+			#填充积分折扣信息
+			if integral_sale:
+				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
+				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
+				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
+				if integral_sale.promotion_title:
+					product.integral_sale_promotion_title = integral_sale.promotion_title
+				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
+			else:
+				product.integral_sale = None
 			#填充促销活动信息
 			if promotion:
 				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [promotion])
-				product.original_promotion_title = product.promotion_title
 				if promotion.promotion_title:
-					product.promotion_title = promotion.promotion_title
+					product.master_promotion_title = promotion.promotion_title
 				if promotion.type == promotion_models.PROMOTION_TYPE_PRICE_CUT:
 					promotion.promotion_title = '满%s减%s' % (promotion.detail['price_threshold'], promotion.detail['cut_money'])
 				elif promotion.type == promotion_models.PROMOTION_TYPE_PREMIUM_SALE:
@@ -472,18 +482,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 					promotion.promotion_title = ''
 				product.promotion = promotion.to_dict('detail', 'type_name')
 			else:
-				product.original_promotion_title = product.promotion_title
 				product.promotion = None
-			#填充积分折扣信息
-			if integral_sale:
-				promotion_models.Promotion.fill_concrete_info_detail(webapp_owner_id, [integral_sale])
-				# integral_sale.end_date = integral_sale.end_date.strftime('%Y-%m-%d %H:%M:%S')
-				# integral_sale.created_at = integral_sale.created_at.strftime('%Y-%m-%d %H:%M:%S')
-				# integral_sale.start_date = integral_sale.start_date.strftime('%Y-%m-%d %H:%M:%S')
-				product.integral_sale = integral_sale.to_dict('detail', 'type_name')
-			else:
-				product.integral_sale = None
-
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
 			if settings.DEBUG:
@@ -518,9 +517,10 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 								'promotion',
 								'integral_sale',
 								'properties',
-								'product_review'
+								'product_review',
+								'master_promotion_title',
+								'integral_sale_promotion_title'
 		)
-		data['original_promotion_title'] = product.original_promotion_title
 
 		return {'value': data}
 
@@ -895,7 +895,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_market_price': str("%.2f" % product_model['market_price']),
 					'min_price': product_model['price'],
 					'max_price': product_model['price'],
-					'promotion_title': product.original_promotion_title
 				}
 			else:
 				#有多个custom model，显示custom model集合组合后的价格信息
@@ -937,7 +936,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 					'display_market_price': market_price_range,
 					'min_price': min_price,
 					'max_price': max_price,
-					'promotion_title': product.original_promotion_title
 				}
 		else:
 			standard_model = product.models[0]
@@ -947,7 +945,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 				'display_market_price': str("%.2f" % standard_model['market_price']),
 				'min_price': standard_model['price'],
 				'max_price': standard_model['price'],
-				'promotion_title': product.original_promotion_title
 			}
 
 	except:
@@ -962,12 +959,6 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 			product.is_deleted = True
 	return product
 
-
-# def str("%.2f" % price):
-# 	if p_type == PRODUCT_INTEGRAL_TYPE:
-# 		return int(price)
-# 	else:
-# 		return str("%.2f" % price)
 
 def create_order(webapp_owner_id, webapp_user, product):
 	"""
@@ -2000,18 +1991,7 @@ def get_order_usable_integral(order, integral_info):
 	else:
 		return int(user_integral)
 
-def __hack_product_id_for_show(relations):
-	"""
-	为演示账号修改订单中的商品id duhao 20151022
-	"""
-	products = list(Product.objects.filter(owner_id = settings.TARGET_ID))
-	length = len(products)
-	for r in relations:
-		r.product_id = products[r.product_id % length].id
-		r.product_model_name = 'standard'
-
-	return relations
-def get_order_products(order, user=None):
+def get_order_products(order):
 	"""
 	user参数由duhao在20151023添加，为了使客户演示账号的订单商品不露馅
 
@@ -2041,10 +2021,6 @@ def get_order_products(order, user=None):
 	order.session_data = dict()
 	order_id = order.id
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
-
-	#为演示账号修改订单中的商品id duhao 20151022
-	if user and hasattr(settings, 'SELF_ID') and user.id == settings.SELF_ID:
-		relations = __hack_product_id_for_show(relations)
 		
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
@@ -3101,11 +3077,15 @@ def get_member_product_info_dict(request):
 		member_grade_id, discount = get_member_discount(request)
 		result_data['member_grade_id'] = member_grade_id
 		result_data['discount'] = discount
+		result_data['usable_integral'] = request.member.integral
+		result_data['is_subscribed'] = request.member.is_subscribed
 	else:
 		if product_id:
 			result_data['is_collect'] = 'false'
 		result_data['member_grade_id'] = -1
 		result_data['discount'] = 100
+		result_data['usable_integral'] = 0
+		result_data['is_subscribed'] = False
 	return result_data
 
 def get_member_product_info(request):

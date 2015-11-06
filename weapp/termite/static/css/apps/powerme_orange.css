@@ -1,0 +1,46 @@
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
+    background: #ec352d;
+    border-radius: 5px;
+    border-bottom: 3px solid #c70800;
+}
+.wui-powerme-container .wui-i-body{
+    background: #ff7d42;
+    padding: 10px 0 50px;
+}
+.wui-powerme-container .wui-i-timing i{
+    background-position: -49px -44px;
+}
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
+    background-position: 9px 3px;
+}
+.wui-i-description-content {
+    color: #ce4000;
+}
+.wui-masterinfo b{
+    color: #ff7d42;
+    font-size: 15px;
+}
+.wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b{
+    color: #9d3100;
+}
+.wui-i-rules-content {
+    color: #fff;
+}
+.wui-powerme-container .wui-i-line{
+    border-bottom: 1px solid #9d3100;
+}
+.wui-powerme-container .wui-i-rules-title-content,.wui-powerme-container .wui-i-helper-title-content{
+    background: #ff7d42;
+}
+.wui-powerme-container .wui-i-timing{
+    color: #fff;
+}
+.wui-powerme-container .wui-i-top100-title{
+    color: #642100;
+}
+.wui-i-top100-name {
+    color: #9b2f00;
+}
+.wui-i-top100-power {
+    color: #fff;
+}

@@ -286,6 +286,7 @@ MALL_APPS_EVENT_NAV = 'events'
 MALL_APPS_VOTE_NAV = 'votes'
 MALL_APPS_SIGN_NAV = 'sign'
 MALL_APPS_RED_ENVELOPE_NAV = 'red_envelopes'
+MALL_APPS_POWERME_NAV = 'powerme'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -407,6 +408,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_APPS_SIGN_NAV,
                     'title': u'签到',
                     'url': '/apps/sign/sign/',
+                    'permission': ''
+                },
+                {
+                    'name': MALL_APPS_POWERME_NAV,
+                    'title': u'微助力',
+                    'url': '/apps/powerme/powermes/',
                     'permission': ''
                 }
             ]

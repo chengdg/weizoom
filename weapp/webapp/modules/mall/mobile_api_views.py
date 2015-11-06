@@ -6,7 +6,7 @@ import urllib, urllib2
 import os
 import json
 import shutil
-
+from account import views
 from webapp.modules.mall import request_api_util
 
 ########################################################################
@@ -134,6 +134,18 @@ def select_address(request):
 	return request_api_util.select_address(request)
 
 ########################################################################
+# list_address: localStorage获取地址信息
+########################################################################
+def list_address(request):
+	return request_api_util.list_address(request)
+
+########################################################################
+# delete_address: 删除收获地址
+########################################################################
+def delete_address(request):
+	return request_api_util.delete_address(request)
+
+########################################################################
 # check_shopping_cart_products: 检查购物车商品有效性
 ########################################################################
 def check_shopping_cart_products(request):
@@ -167,6 +179,9 @@ def check_product_in_wishlist(request):
 def create_product_review(request):
     return request_api_util.create_product_review(request)
 
+def create_product_review_pic(request):
+
+	return request_api_util.create_mobile_pic(request)
 
 def update_product_review_picture(request):
     '''

@@ -42,26 +42,6 @@ Background:
 			"discount": "7"
 		}]
 		"""
-	Then jobs能获取会员等级列表
-		"""
-		[{
-			"name": "普通会员",
-			"upgrade": "自动升级",
-			"discount": "10"
-		}, {
-			"name": "铜牌会员",
-			"upgrade": "手动升级",
-			"discount": "9"
-		}, {
-			"name": "银牌会员",
-			"upgrade": "手动升级",
-			"discount": "8"
-		}, {
-			"name": "金牌会员",
-			"upgrade": "手动升级",
-			"discount": "7"
-		}]
-		"""
 	When jobs已添加支付方式
 		"""
 		[{
@@ -212,6 +192,15 @@ Scenario:2 购买多个会员价商品
 	3. bill能从购物车进行购买jobs的商品
 
 	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
 	And bill加入jobs的商品到购物车
 		"""
 		[{
@@ -275,21 +264,12 @@ Scenario:2 购买多个会员价商品
 			}]
 		}
 		"""
-	And bill填写收货信息
-	"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦"
-		}
-	"""
 	And bill在购物车订单编辑中点击提交订单
-	"""
-	{
-		"pay_type": "货到付款"
-	}
-	"""
+		"""
+		{
+			"pay_type": "货到付款"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -320,6 +300,15 @@ Scenario:3 购买多个商品包括会员价商品
 	2. bill购买的商品中有普通商品和会员价商品
 	
 	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
 	And bill加入jobs的商品到购物车
 		"""
 		[{
@@ -356,15 +345,6 @@ Scenario:3 购买多个商品包括会员价商品
 			}, {
 				"name": "商品3"
 			}]
-		}
-		"""
-	And bill填写收货信息
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦"
 		}
 		"""
 	And bill在购物车订单编辑中点击提交订单
@@ -593,7 +573,7 @@ Scenario:5 使用积分购买商品后，取消订单，积分返回
 			}]
 		}
 		"""
-  	Given jobs登录系统
+	Given jobs登录系统
 	When jobs对订单进行发货
 		"""
 		{
@@ -603,7 +583,7 @@ Scenario:5 使用积分购买商品后，取消订单，积分返回
 		}
 		"""
 	When jobs'完成'订单'0000001'
-  	when bill访问jobs的webapp
+	when bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有30会员积分
 	Then bill在jobs的webapp中获得积分日志
 		"""

@@ -37,7 +37,7 @@
                 this.count = this.minCount;
                 this.$el.siblings('.wa-down').css('border-color','#e5e5e5');
             }
-            this.maxCount = parseInt(this.$el.attr('data-max-count') || -99999);
+            this.maxCount = this.$el.data('maxCount') || 99999;
             if(this.count == this.maxCount){
                 this.$el.siblings('.wa-up').css('border-color','#e5e5e5');
             }
@@ -128,7 +128,7 @@
 
         reset: function() {
             this.count = this.minCount;
-            if(this.count<this.maxCount || this.maxCount<-1){
+            if(this.count<=this.maxCount){
                 this.changeCountTo(this.count);
             }
             return this;
