@@ -64,8 +64,6 @@ def __get_coupon_json(coupon_rule_name):
     获取优惠券json
     """
     coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-    __debug_print(coupon_rule)
-    __debug_print(coupon_rule.id)
     coupon ={
         "id":coupon_rule.id,
         "count":coupon_rule.count,
@@ -424,17 +422,26 @@ def step_impl(context,user,sign_name):
     prize_settings_arr = []#page数据结构
     sign_settings = sign_json.get("sign_settings","")
     for item in sign_settings:
-        prize_settings[item.get("sign_in","")]={
-            "integral":item.get("integral",""),
-            "coupon":__get_coupon_json(item.get("send_coupon",""))
-        }
+        tmp_sign_in = item.get("sign_in","")
+        tmp_integral = item.get("integral","")
+        tmp_send_coupon = item.get("send_coupon","")
+        tmp_prize_counts = item.get("prize_counts","")
+        tmp_prize_settings_arr = {}
 
-        prize_settings_arr.append({
-            "serial_count":item.get("sign_in",""),
-            "serial_count_points":item.get("integral",""),
-            "serial_count_prizes":__get_coupon_json(item.get("send_coupon",""))
-            })
-
+        if tmp_sign_in:
+            prize_settings[tmp_sign_in] = {}
+            tmp_prize_settings_arr["serial_count"] = tmp_sign_in
+            if tmp_integral:
+                prize_settings[tmp_sign_in]["integral"] = tmp_integral
+                tmp_prize_settings_arr["serial_count_points"] = tmp_integral
+            if tmp_send_coupon:
+                tmp_prize_settings_arr["serial_count_prizes"] ={}
+                prize_settings[tmp_sign_in]["send_coupon"] = __get_coupon_json(tmp_send_coupon)
+                tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
+        else:
+            pass
+        prize_settings_arr.append(tmp_prize_settings_arr)
+        ##不同数组的协调
     page_prizes = {}#Page记录数据
     for i in range(len(prize_settings_arr)):
         item = prize_settings_arr[i]
@@ -445,6 +452,7 @@ def step_impl(context,user,sign_name):
         }
     #Page的参数args
     page_args ={
+
         "sign_title":name,
         "sign_description":sign_describe,
         "share_pic":share.get('img',""),
@@ -523,6 +531,7 @@ def step_impl(context,user,sign_name):
     else:
         db_page["is_new_created"] = "false"
     bdd_util.assert_dict(json_page,db_page)
+
 
 
 @when(u'选择优惠券')

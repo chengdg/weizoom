@@ -39,7 +39,7 @@ Background:
 
 		"""
 
-@apps_sign @apps_sign_backend @kuku
+@apps_sign @apps_sign_backend
 Scenario:配置后台所有数据,优惠券数量足,没有过期
 	When jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -124,15 +124,17 @@ Scenario:配置后台所有数据,优惠券数量足,没有过期
 				}]
 		}
 		"""
-@apps_sign @apps_sign_backend
+@apps_sign @apps_sign_backend @kuku
 Scenario:一条奖励下,不添加优惠券,有积分
 	When jobs添加签到活动"签到活动2",并且保存
 		"""
 		{
 			"status":"off",
-			"name": "签到活动2",
+			"name": "签到活动1",
 			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-			"share_pic":"2.jpg",
+
+			"share_pic":"1.jpg",
+			"share_describe": "签到获得奖励",
 			"reply_content":"签到",
 			"reply_keyword":
 				[{
@@ -144,10 +146,7 @@ Scenario:一条奖励下,不添加优惠券,有积分
 				},{
 					"rule":"模糊",
 					"key_word": "123456"
-
 				}],
-
-			"share_describe": "签到获得奖励",
 			"sign_settings":
 				[{
 					"sign_in": "1",
@@ -176,10 +175,10 @@ Scenario:一条奖励下,不添加优惠券,有积分
 				}],
 			"share_pic":"2.jpg",
 			"sign_settings":
-				{
+				[{
 					"sign_in": "1",
 					"integral": "100"
-				}
+				}]
 		}
 
 		"""
