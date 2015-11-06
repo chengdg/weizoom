@@ -49,14 +49,14 @@ hr{
 .wui-powerme-container .wui-i-timing{
     font-weight: bold;
     min-height: 33px;
-    font-size: 18px;
+    font-size: 1rem;
 }
 .wui-powerme-container .wui-i-timing b{
     margin-right: 5px;
     height: 100%;
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
     background-position: -170px -12px;
-    font-size: 14px;
+    font-size: 0.8rem;
     padding: 7px 5px;
     color: white;
     border-radius: 2px;
@@ -90,12 +90,12 @@ hr{
 .wui-powerme-container .wui-i-description-content {
     margin: 0 10px 0 10px;
     font-size: 0.8rem;
-    padding-bottom: 15px;
 }
 .wui-powerme-container .wui-i-line{
     margin-bottom: -26px;
     margin-left: 12px;
     margin-right: 12px;
+    padding-top: 8px;
 }
 .wui-powerme-container .wui-i-rules-title-content {
     margin-left: 28%;
