@@ -152,9 +152,11 @@ def get_webapp_product_categories(webapp_owner_user_profile, is_access_weizoom_m
 
 
 def update_webapp_product_cache(**kwargs):
+    print "zl=------------------------11111111111111cache ", cache
     if hasattr(cache, 'request') and cache.request.user_profile:
         webapp_owner_id = cache.request.user_profile.user_id
         key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+        print "zl=------------------------product ",key
         cache_util.delete_cache(key)
         instance = kwargs.get('instance', None)
         sender = kwargs.get('sender', None)
@@ -562,6 +564,7 @@ post_update_signal.connect(update_forbidden_coupon_product_ids, sender=promotion
 signals.post_save.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.save")
 
 def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVarnish=True, deleteVarnishList=True):
+    print "zl---------------------------------22222"
     if deleteRedis:
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
         cache_util.delete_cache(key)
