@@ -6,9 +6,14 @@
 {% block content-panel %}
 <style type="text/css">
     .dropdown-menu{
-    	left: 468px !important;
+    	left: 511px !important;
     	top:570px !important;
+    	width:511px !important;
     }
+    .drop-box-arrow-top {
+    right: 455px;
+    top: -12px;
+	}
 </style>
 
 <ul class="breadcrumb">
@@ -36,7 +41,7 @@
 		<legend></legend>
 	  	<div class="control-group">
 			<div class="controls">
-				{%if can_change_shop_config %}<button class="btn btn-success ua-submit" style="margin-left: 579px;">保存</button>
+				{%if can_change_shop_config %}<button class="btn btn-success ua-submit" style="margin-left: 5px;">保存</button>
 				{% endif %}
 			</div>
 		</div>
