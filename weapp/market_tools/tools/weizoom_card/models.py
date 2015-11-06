@@ -29,7 +29,7 @@ class WeizoomCardRule(models.Model):
 	money = models.DecimalField(max_digits=65, decimal_places=2) #微众卡金额
 	count = models.IntegerField(default=0) #发放总数量
 	remark = models.CharField(max_length=20, db_index=True) #备注
-	expired_time = models.DateTimeField(auto_now_add=True) #过期时间
+	expired_time = models.DateTimeField() #过期时间
 	valid_time_from = models.DateTimeField() #有效范围开始时间
 	valid_time_to = models.DateTimeField() #有效范围结束时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
@@ -69,8 +69,9 @@ class WeizoomCard(models.Model):
 	is_expired = models.BooleanField(default=False) #是否过期
 	activated_at = models.DateTimeField(null=True) #激活时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
-	remark = models.CharField(max_length=20, db_index=True) #备注
-	activated_to = models.CharField(max_length=20) #领用人
+	remark = models.CharField(max_length=20,db_index=True) #备注
+	activated_to = models.CharField(max_length=20) #申请人
+	active_card_user_id = models.IntegerField(default=1) #激活卡片人
 
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card'
@@ -181,6 +182,20 @@ class WeizoomCardHasOrder(models.Model):
 
 
 #########################################################################
+# WeizoomCardHasOrder : 微众卡记录操作日志
+#########################################################################
+class WeizoomCardOperationLog(models.Model):
+	card = models.ForeignKey(WeizoomCard, related_name='market_tool_weizoom_card')
+	operater = models.ForeignKey(User, related_name='auth_user')
+	operater_name = models.CharField(max_length=64)
+	operate_log = models.CharField(max_length=64, verbose_name='事件类型')
+	created_at = models.DateTimeField(auto_now_add=True)
+	remark = models.CharField(max_length=20) #备注
+	activated_to = models.CharField(max_length=20) #申请人
+	class Meta(object):
+		db_table = 'market_tool_weizoom_card_operation_log'
+
+#########################################################################
 # WeizoomCardHasAccount ：微众卡账号管理
 #########################################################################
 class WeizoomCardHasAccount(models.Model):
@@ -207,3 +222,34 @@ class WeizoomCardHasAccount(models.Model):
 			return WeizoomCardHasAccount.objects.get(owner=request.user, account_id=user_id).account_name
 		except:
 			return None
+
+
+class WeiZoomCardManager(models.Model):
+	user = models.ForeignKey(User)
+	username = models.CharField(max_length=100) #
+	nickname = models.CharField(max_length=100) #实名
+
+	class Meta(object):
+		db_table = 'market_tool_weizoom_card_manager'
+		verbose_name = '微众卡管理员'
+		verbose_name_plural = '微众卡管理员'
+
+
+class WeiZoomCardPermission(models.Model):
+	user = models.ForeignKey(User)  
+	can_create_card = models.BooleanField(default=False)#能否创建卡
+	can_export_batch_card = models.BooleanField(default=False)#能否批量导出
+	can_add_card = models.BooleanField(default=False)#能否追加卡库
+	can_batch_stop_card = models.BooleanField(default=False)#能否批量停用
+	can_batch_active_card = models.BooleanField(default=False)#能否批量激活
+	can_view_card_details = models.BooleanField(default=False)#能否显示微众卡使用详情
+	can_stop_card = models.BooleanField(default=False)#能否停用
+	can_active_card = models.BooleanField(default=False)#能否激活
+	can_change_shop_config = models.BooleanField(default=False)#能否开启关闭
+	can_view_statistical_details = models.BooleanField(default=False)#能否查看数据统计使用详情
+	can_export_statistical_details= models.BooleanField(default=False)#能否批量导出统计
+	can_delay_card= models.BooleanField(default=False)#能否延期卡
+
+
+	class Meta(object):
+		db_table = 'market_tool_weizoom_card_permission'

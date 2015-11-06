@@ -199,7 +199,6 @@ $(document).ready(function() {
     });
 
     $('form').submit(function() {
-
         var startDate = $('#valid_time_from').val();
         var endDate = $('#valid_time_to').val();
         if (startDate.length > 0 && endDate.length == 0) {
@@ -216,7 +215,6 @@ $(document).ready(function() {
             W.showHint('error','开始日期不能大于结束日期！');
             return false;
         }
-
         $('#submitBtn').attr('disabled', true);
         if (!W.validate()) {
             $('#submitBtn').prop('disabled', false);
