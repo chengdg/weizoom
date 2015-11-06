@@ -37,6 +37,8 @@
 		}
 	</style>
     <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
+    <script type="text/javascript" src="/termite_static/v3/gmu/widget/cookie.js"></script>
 </head>
 
 <body>
@@ -46,8 +48,9 @@
     </div>	
 </body>
 <script>
-	var woid = localStorage.getItem("woid");
-	var fmt = localStorage.getItem("fmt");
+    var token = $.cookie('current_token');
+	var woid = token.split('____')[0];
+	var fmt = token.split('____')[1];
 	document.getElementById('url').setAttribute("href","/termite/workbench/jqm/preview/?woid="+woid+"&module=mall&model=homepage&fmt="+fmt);
 </script>
 </html>
