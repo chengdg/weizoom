@@ -66,7 +66,7 @@
                 <tbody>
                     {{each(i, card_rule) items}}
                     <tr>
-                        <td style="max-width:120px;">
+                        <td style="width:120px;max-width:150px;">
                             <a href="/card/card_detail/get/?id=${card_rule.id}">${card_rule.name}</a>
                         </td>
                         <td>${card_rule.money}</td>
@@ -74,7 +74,7 @@
                         <td>${card_rule.card_type}</td>
                         <td>${card_rule.card_range}</td>
                         <td>${card_rule.valid_time_from}至${card_rule.valid_time_to}</td>
-                        <td>${card_rule.remark}</td>
+                        <td style="max-width:150px;">${card_rule.remark}</td>
                         <td>{{if can_export_batch_card}}
                             <a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a>
                             {{/if}}
