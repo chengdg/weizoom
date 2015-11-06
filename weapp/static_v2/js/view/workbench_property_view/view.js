@@ -1012,7 +1012,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var $el = $(event.currentTarget);
         $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
         $el.siblings('input[data-field="image"]').val('');
-        $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('.qrcodeName').html('');
+        $el.siblings('.qrcodeName').addClass('xui-hide').html('');
         $el.siblings('.xui-i-triggerButton').text('选择带参数二维码');
         $el.hide();
     },

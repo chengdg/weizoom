@@ -190,7 +190,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				//更新propertyView中的图片
 				var $target = $propertyViewNode.find($('[data-field-anchor="qrcode"]'));
 				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',ticket);
-				$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').html(qrcode.name);
+				$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').removeClass('xui-hide').html(qrcode.name);
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
 			}
 		},
