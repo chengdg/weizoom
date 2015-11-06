@@ -74,7 +74,7 @@ Background:
 		"""
 
 
-@mall2  @termite2 
+@mall2  @termite2
 Scenario:1 商品管理'下架'、'删除'、'添加'、'修改'分组中的商品
 
 	#商品列表模块显示个数'6','详细列表'样式,'默认样式'

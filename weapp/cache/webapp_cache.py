@@ -15,7 +15,7 @@ from mall import models as mall_models
 from mall.promotion import models as promotion_models
 from mall.promotion.models import PROMOTION_TYPE_FLASH_SALE
 from django.core.exceptions import ObjectDoesNotExist
-
+import json
 
 from weapp.hack_django import post_update_signal, post_delete_signal
 
@@ -82,95 +82,255 @@ def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mal
                 return None
     return inner_func
 
+def get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id):
+    """
+        获取商品分类下的商品id集合
+    :param webapp_owner_user_profile:
+    :param is_access_weizoom_mall:
+    :param category_id:
+    :return:
+    """
+    webapp_id = webapp_owner_user_profile.webapp_id
+    webapp_owner_id = webapp_owner_user_profile.user_id
+    _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id)
+    return products
 
-def get_webapp_products(webapp_owner_user_profile,
+def get_webapp_categories(webapp_owner_user_profile):
+    """
+        获取webapp的所有商品分类
+    :param webapp_owner_user_profile:
+    :return:
+    """
+    webapp_id = webapp_owner_user_profile.webapp_id
+    webapp_owner_id = webapp_owner_user_profile.user_id
+    categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
+    categories = [{"id": category.id, "name": category.name} for category in categories]
+    return categories
+
+def get_webapp_products_new(webapp_owner_user_profile,
                         is_access_weizoom_mall,
                         category_id):
-    key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
-    if key in local_cache:
-        data = local_cache[key]
+    # 商城下分类对应的商品id
+    categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_user_profile.user_id,category_id)
+    # 商城下所有的分类,存放id，name，之后更改包括商品数量等信息，主要参考ProductCategory
+    categories_key = '{wo:%s}_categories' % webapp_owner_user_profile.user_id
+
+    category_pros_data = cache_util.get_zrange_from_redis(categories_products_key,desc=True)
+    #倒叙获取，可以直接取消get_webapp_product_ids_from_db_new中的id 逆序排序，两者的效率待分析  TODO zhaolei
+    if len(category_pros_data)==0:
+        # product.id,display_index
+        productid_display_list = []
+        products = get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id)
+        if products:
+            for product in products:
+                productid_display_list.append(product.id)
+                productid_display_list.append(product.display_index)
+                product.promotion = None
+                # 添加promation
+            cache_util.add_zdata_to_redis(categories_products_key,*productid_display_list)
+        cache_products = products
     else:
-        data = cache_util.get_from_cache(key, get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall))
-        local_cache[key] = data
+        cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
+
+    if categories_key in local_cache:
+        categories_data = local_cache[categories_key]
+    else:
+        categories_data = get_webapp_categories(webapp_owner_user_profile)
+        local_cache[categories_key] = categories_data
+        cache_util.set_cache(categories_key,json.dumps(categories_data)) # todo 需要优化为回调函数的形式
 
     if category_id == 0:
         category = mall_models.ProductCategory()
         category.name = u'全部'
     else:
-        id2category = dict([(c["id"], c) for c in data['categories']])
-        if category_id in id2category:
-            category_dict = id2category[category_id]
+        id2category_name = dict([(c["id"], c["name"]) for c in categories_data])
+        if category_id in id2category_name:
             category = mall_models.ProductCategory()
-            category.id = category_dict['id']
-            category.name = category_dict['name']
+            category.id = category_id
+            category.name = id2category_name[category_id]
         else:
             category = mall_models.ProductCategory()
             category.is_deleted = True
             category.name = u'已删除分类'
+    mall_models.Product.fill_display_price(cache_products)
 
-    products = mall_models.Product.from_list(data['products'])
-    if category_id != 0:
-        products = [product for product in products if category_id in product.categories]
-
-        # 分组商品排序
-        products_id = map(lambda p: p.id, products)
+    # 分组商品排序,暂未搞清楚哪个地方在使用  todo  zhaolei
+    if category_id!=0:
+        products_id = map(lambda p: p.id, cache_products)
         chp_list = mall_models.CategoryHasProduct.objects.filter(
             category_id=category_id, product_id__in=products_id)
         product_id2chp = dict(map(lambda chp: (chp.product_id, chp), chp_list))
-        for product in products:
+        for product in cache_products:
             product.display_index = product_id2chp[product.id].display_index
             product.join_category_time = product_id2chp[product.id].created_at
 
         # 1.shelve_type, 2.display_index, 3.id
 
         products_is_0 = filter(lambda p: p.display_index == 0,
-                                             products)
+                                             cache_products)
         products_not_0 = filter(lambda p: p.display_index != 0,
-                                              products)
+                                              cache_products)
         products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
-        # products = sorted(products, key=attrgetter('shelve_type'), reverse=False)
+        cache_products = products_not_0 + products_is_0
+        # 分类中的排序规则是不唯一的，这个地方的score要注意
+    return category, cache_products
+
+# todo 需要优化
+def _get_products_from_redis(category_pros_data):
+    """
+        封装商品列表，将products_ids构造为对上层透明
+    :param category_pros_data:
+    :return:
+    """
+
+    for productid in category_pros_data:
+        pass
+    return None
+
+# zhaolei 2014-11-9 the right code, may be used
+# def get_webapp_products(webapp_owner_user_profile,
+#                         is_access_weizoom_mall,
+#                         category_id):
+#     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
+#     if key in local_cache:
+#         data = local_cache[key]
+#     else:
+#         data = cache_util.get_from_cache(key, get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall))
+#         local_cache[key] = data
+#
+#     if category_id == 0:
+#         category = mall_models.ProductCategory()
+#         category.name = u'全部'
+#     else:
+#         id2category = dict([(c["id"], c) for c in data['categories']])
+#         if category_id in id2category:
+#             category_dict = id2category[category_id]
+#             category = mall_models.ProductCategory()
+#             category.id = category_dict['id']
+#             category.name = category_dict['name']
+#         else:
+#             category = mall_models.ProductCategory()
+#             category.is_deleted = True
+#             category.name = u'已删除分类'
+#
+#     products = mall_models.Product.from_list(data['products'])
+#     if category_id != 0:
+#         products = [product for product in products if category_id in product.categories]
+#
+#         # 分组商品排序
+#         products_id = map(lambda p: p.id, products)
+#         chp_list = mall_models.CategoryHasProduct.objects.filter(
+#             category_id=category_id, product_id__in=products_id)
+#         product_id2chp = dict(map(lambda chp: (chp.product_id, chp), chp_list))
+#         for product in products:
+#             product.display_index = product_id2chp[product.id].display_index
+#             product.join_category_time = product_id2chp[product.id].created_at
+#
+#         # 1.shelve_type, 2.display_index, 3.id
+#
+#         products_is_0 = filter(lambda p: p.display_index == 0,
+#                                              products)
+#         products_not_0 = filter(lambda p: p.display_index != 0,
+#                                               products)
+#         products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time'), reverse=True)
+#         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
+#         # products = sorted(products, key=attrgetter('shelve_type'), reverse=False)
+#         products = products_not_0 + products_is_0
+#     return category, products
 
 
-        products = products_not_0 + products_is_0
-
-
-
-    return category, products
-
-
-def get_webapp_product_categories(webapp_owner_user_profile, is_access_weizoom_mall):
-    key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
-    if key in local_cache:
-        data = local_cache[key]
-    else:
-        data = cache_util.get_from_cache(key, get_webapp_products_from_db(
-            webapp_owner_user_profile, is_access_weizoom_mall))
-        local_cache[key] = data
-
-    return mall_models.ProductCategory.from_list(data['categories'])
+# zhaolei 2014-11-9 unuse
+# def get_webapp_product_categories(webapp_owner_user_profile, is_access_weizoom_mall):
+#     key = 'webapp_products_categories_{wo:%s}' % webapp_owner_user_profile.user_id
+#     if key in local_cache:
+#         data = local_cache[key]
+#     else:
+#         data = cache_util.get_from_cache(key, get_webapp_products_from_db(
+#             webapp_owner_user_profile, is_access_weizoom_mall))
+#         local_cache[key] = data
+#
+#     return mall_models.ProductCategory.from_list(data['categories'])
 
 
 def update_webapp_product_cache(**kwargs):
-    print "zl=------------------------11111111111111cache ", cache
     if hasattr(cache, 'request') and cache.request.user_profile:
         webapp_owner_id = cache.request.user_profile.user_id
-        key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
-        print "zl=------------------------product ",key
-        cache_util.delete_cache(key)
         instance = kwargs.get('instance', None)
+        before_instance = kwargs.get('before_instance', None)
         sender = kwargs.get('sender', None)
         if instance and sender==mall_models.Product:
             if isinstance(instance, mall_models.Product):
                 product_id = instance.id
+                shelve_type = instance.shelve_type
+                is_deleted = instance.is_deleted
+                display_index = instance.display_index
             else:
                 product_id = instance[0].id
+                shelve_type = instance[0].shelve_type
+                is_deleted = instance[0].is_deleted
+                display_index = instance[0].display_index
+            if before_instance:
+                # print "zl----------------------",before_instance.shelve_type,shelve_type,before_instance.is_deleted,is_deleted,before_instance.name,product_id
+                if before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_OFF == shelve_type or is_deleted == True:
+                    #下架商品，清除redis中{wo:38}_{co:*}_products的数据项,批量更新
+                    # 或者删除商品时
+                    categories_products_key = '{wo:%s}_{co:*}_products' % (webapp_owner_id)
+                    cache_util.rem_zset_member_by_patten_from_redis(categories_products_key,product_id)
+                elif before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
+                    #上架商品，确定该商品原来是否有category
+                    category_has_products = mall_models.CategoryHasProduct.objects.filter(product=instance)
+                    if category_has_products:
+                        for category_has_pro in category_has_products:
+                            categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,category_has_pro.category.id)
+                            cache_util.add_zdata_to_redis(categories_products_key,category_has_pro.product_id,category_has_pro.product.display_index)
+                    categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
+                    cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
             update_product_cache(webapp_owner_id, product_id)
+
+# todo 该处触发的product较多，需要优化
+def update_webapp_product_pos_cache(**kwargs):
+    if hasattr(cache, 'request') and cache.request.user_profile:
+        webapp_owner_id = cache.request.user_profile.user_id
+        instance = kwargs.get('instance', None)
+        sender = kwargs.get('sender', None)
+        # instance.id 避免创建操作进入
+        if instance and sender==mall_models.Product and instance.id!=None:
+            if instance and sender==mall_models.Product :
+                display_index = instance.display_index
+                product_id = instance.id
+            else:
+                product_id = instance[0].id
+                display_index = instance[0].display_index
+            product = mall_models.Product.objects.filter(id=product_id).get()
+            #更新商品排序,只更新在售和待售列表中的商品排序
+            if display_index != product.display_index:
+                categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
+                cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
+        elif instance and sender==mall_models.CategoryHasProduct and instance.id!=None:
+            if instance and sender==mall_models.CategoryHasProduct:
+                display_index = instance.display_index
+                product_id = instance.product_id
+                chp_id = instance.id
+            else:
+                product_id = instance[0]['product'][0].id
+                display_index = instance[0].display_index
+                chp_id = instance[0].id
+            chp = mall_models.CategoryHasProduct.objects.filter(id=chp_id).get()
+            #更新商品排序，只更新分组管理中的商品排序
+            categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,chp.category_id)
+            cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
 signals.post_save.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.save")
+
+signals.pre_save.connect(
+    update_webapp_product_pos_cache, sender=mall_models.Product, dispatch_uid="product.pre_save")
+signals.pre_save.connect(
+    update_webapp_product_pos_cache, sender=mall_models.CategoryHasProduct, dispatch_uid="mall_category_has_product.pre_save")
+
 signals.post_save.connect(update_webapp_product_cache,
                           sender=mall_models.ProductCategory, dispatch_uid="product_category.save")
 signals.post_save.connect(update_webapp_product_cache,
@@ -224,9 +384,9 @@ def get_webapp_products_detail(webapp_owner_id, product_ids, member_grade_id=Non
                 integral_sale_data)
         else:
             product.integral_sale_model = None
-
+        # product['promotion'] = product.promotion if hasattr(product, 'promotion') else None
         products.append(product)
-
+    mall_models.Product.fill_display_price(products)
     return products
 
 
@@ -265,7 +425,7 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         product.integral_sale_model = None
     product.master_promotion_title = data.get('master_promotion_title', None)
     product.integral_sale_promotion_title = data.get('integral_sale_promotion_title', None)
-
+    mall_models.Product.fill_display_price([product])## 填充价格
     return product
 
 
@@ -564,7 +724,6 @@ post_update_signal.connect(update_forbidden_coupon_product_ids, sender=promotion
 signals.post_save.connect(update_forbidden_coupon_product_ids, sender=promotion_models.ForbiddenCouponProduct, dispatch_uid = "mall_forbidden_coupon_product.save")
 
 def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVarnish=True, deleteVarnishList=True):
-    print "zl---------------------------------22222"
     if deleteRedis:
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
         cache_util.delete_cache(key)
