@@ -9,10 +9,10 @@ from django.core.cache import cache
 from django.conf import settings
 
 from core.exceptionutil import unicode_full_stack
+from django.conf import settings
 
 
-CACHE_QUERIES = []
-pyredis =redis.Redis("127.0.0.1",6379,1)
+pyredis =redis.Redis(settings.REDIS_HOST,settings.REDIS_PORT,settings.REDIS_CACHES_DB)
 def get_trace_back():
 	stack_entries = traceback.extract_stack()
 	stack_entries = filter(lambda entry: (('weapp' in entry[0]) and (not 'hack_django' in entry[0])), stack_entries)
@@ -214,13 +214,48 @@ def get_many_from_cache(key_infos):
 
 	return objs
 
-def get_zset_from_cache(zset_name):
-	return pyredis
+def get_zset_from_redis(zset_name):
+	return pyredis.zrange(zset_name,0,-1)
 
-def add_zset_from_cache(zset_name,*keys):
-	print zset_name,keys
-	return pyredis.zadd(zset_name,keys)
+def add_zdata_to_redis(zset_name,*args):
+	return pyredis.zadd(zset_name,*args)
 
-def rem_zset_member_from_cache(zset_name,*keys):
-	return pyredis.zrem(zset_name,keys)
+def rem_zset_member_from_redis(zset_name,*args):
+	return pyredis.zrem(zset_name,*args)
 
+def get_zset_count_from_redis(zset_name):
+	return pyredis.zcard(zset_name)
+
+def get_zrange_from_redis(name,  start =0, end =-1,desc=False, withscores=False,
+	               score_cast_func=int):
+	return pyredis.zrange(name, start, end, desc, withscores,
+				   score_cast_func)
+
+def rem_zset_member_by_patten_from_redis(zset_pattern_name,*args):
+	key_list = pyredis.keys(zset_pattern_name)
+	if key_list:
+		for key_name in key_list:
+			result = rem_zset_member_from_redis(key_name,*args)
+	else:
+		return 0
+
+def rem_set_member_by_patten_from_redis(set_pattern_name,*args):
+	key_list = pyredis.keys(set_pattern_name)
+	if key_list:
+		for key_name in key_list:
+			result = rem_set_member_from_redis(key_name,*args)
+	else:
+		return 0
+
+def get_set_from_redis(set_name):
+	return pyredis.smembers(set_name)
+
+
+def add_set_to_redis(set_name,*args):
+	return pyredis.sadd(set_name,*args)
+
+def rem_set_member_from_redis(set_name,*args):
+	return pyredis.srem(set_name,*args)
+
+def delete_redis_key(*key_name):
+	return pyredis.delete(*key_name)
