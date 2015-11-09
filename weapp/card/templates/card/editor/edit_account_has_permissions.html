@@ -102,9 +102,9 @@
 				ids.push($(this).attr('value'));
 			});
 			var idStr = ids.join(',');
-			console.log(idStr.length)
-			if (idStr.length<=14){
-				W.showHint('error','提示语为 请清除搜索内容');
+			idStr_longth=idStr.split(',').length
+			if (idStr_longth<5){
+				W.showHint('error','提请清除搜索内容');
 			}
 			else{	
 				W.getApi().call({
