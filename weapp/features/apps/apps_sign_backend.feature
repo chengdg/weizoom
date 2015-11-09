@@ -214,7 +214,6 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
                     "rule": "精确",
                     "key_word": "78"
                 }],
-
             "sign_settings":
                 [{
                     "sign_in": "1",
@@ -222,7 +221,6 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
                     "prize_counts":50
                 }]
         }
-
 		"""
 
 @apps_sign @apps_sign_backend @kuku4
@@ -233,7 +231,6 @@ Scenario:4 一条奖励下,添加优惠券,添加积分
             "status":"off",
             "name": "签到活动4",
             "sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-
             "share_pic":"4.jpg",
             "share_describe": "签到获得奖励",
             "reply_content":"签到",
@@ -266,7 +263,6 @@ Scenario:4 一条奖励下,添加优惠券,添加积分
                     "rule":"模糊",
                     "key_word": "123456"
                 }],
-
             "sign_settings":
                 [{
                     "sign_in": "1",
@@ -354,65 +350,14 @@ Scenario:5 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
         }
 		"""
 
-@apps_sign @apps_sign_backend @kuku6
-Scenario:6 保存活动后，立刻开启签到活动
-	When jobs添加签到活动"签到活动6",并且保存
-		"""
-		{
-			"status":"off",
-			"name": "签到活动6",
-			"sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-			"share_pic":"6.jpg",
-			"share_describe": "签到获得奖励",
-			"reply_content":"签到",
-			"reply_keyword":
-				[{
-					"rule": "精确",
-					"key_word": "78"
-				},{
-					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123456"
-				}],
-			"sign_settings":
-				[{
-					"sign_in": "1",
-					"integral": "100",
-					"send_coupon": "优惠券1",
-					"prize_counts":50
-				},{
-					"sign_in": "3",
-					"integral": "300",
-					"send_coupon": "优惠券1",
-					"prize_counts":50
-				},{
-					"sign_in": "5",
-					"integral": "500",
-					"send_coupon": "优惠券1",
-					"prize_counts":50
-				}]
-		}
-		"""
-	And jobs开启签到活动"签到活动6"
-		"""
-		{
-			"name": "签到活动6",
-			"enable": true
-		}
-		"""
-	Then jobs的签到活动"签到活动6"状态为"开启"
-
 @apps_sign @apps_sign_backend @kuku7
-Scenario:7 保存后开启签到活动
+Scenario:6 更新签到活动的状态
 	When jobs添加签到活动"签到活动7",并且保存
 	    """
 	    {
 	        "status":"off",
 	        "name": "签到活动7",
 	        "sign_describe":"签到即可获得积分,连续签到奖励更大哦",
-
 	        "share_pic":"7.jpg",
 	        "share_describe": "签到获得奖励",
 	        "reply_content":"签到",
@@ -446,20 +391,23 @@ Scenario:7 保存后开启签到活动
 	            }]
 	    }
 	    """
-	And jobs离开签到活动"签到活动7"
-		"""
-		{
-			"name": "签到活动7",
-			"enable": false
-		}
-		"""
 	Then jobs的签到活动"签到活动7"状态为"关闭"
-	When jobs开启签到活动"签到活动7"
+	#开启签到活动
+	When jobs更新签到活动的状态
 	    """
 	    {
 	        "name": "签到活动7",
-	        "enable": true
+	        "status": on
 	    }
 	    """
 	Then jobs的签到活动"签到活动7"状态为"开启"
+	#关闭签到活动
+	When jobs更新签到活动的状态
+	    """
+	    {
+	        "name": "签到活动7",
+	        "status": off
+	    }
+	    """
+	Then jobs的签到活动"签到活动7"状态为"关闭"
 
