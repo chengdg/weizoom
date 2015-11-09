@@ -1011,7 +1011,7 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-productModel-section .xui-inner-selected-tag:before{
     background-image:url(/static_v2/img/webapp/mall/sprite0506.png);
     background-repeat: no-repeat;
-    background-size: 195px 123px;
+    background-size: 225px 123px;
 }
 .xui-productDetailPage .xui-content{
     padding-bottom:42px;
@@ -1060,7 +1060,7 @@ input.ui-input-text, textarea.ui-input-text {
     display: block;
     position: absolute;
     left: 0;
-    bottom: 5px;
+    bottom: 0;
     height:32px;
     background-color: #e3e3e3;
     width:1px;
@@ -3296,8 +3296,8 @@ input.ui-input-text, textarea.ui-input-text {
     display: inline-block;
     background: url(/static_v2/img/webapp/mall/sprite0506.png) no-repeat;
     background-position: -48px -57px;
-    -webkit-background-size: 195px 123px;
-    background-size: 195px 123px;
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
 }
 .xui-userCenter-itemList {
     margin-bottom: 30px;
@@ -3368,8 +3368,8 @@ input.ui-input-text, textarea.ui-input-text {
     height: 15px;
     background: url(/static_v2/img/webapp/mall/sprite0506.png) no-repeat;
     background-position:-30px -24px;
-    -webkit-background-size: 195px 123px;
-    background-size: 195px 123px;
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
     margin: 0 auto 3px;
     font-style: normal;
 }
@@ -3420,7 +3420,7 @@ input.ui-input-text, textarea.ui-input-text {
 a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 .xui-icon-tool{
     background: url(/static_v2/img/webapp/mall/sprite0506.png) no-repeat;
-    background-size: 195px 123px;
+    background-size: 225px 123px;
     width: 22px;
     height:23px;
     display:block;
@@ -3707,8 +3707,8 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     width: 181px;
     height: 21px;
     background: url(/static_v2/img/webapp/mall/sprite0506.png) no-repeat;
-    -webkit-background-size: 195px 123px;
-    background-size: 195px 123px;
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
     background-position: 0 -82px;
     float: right;
 }
@@ -3756,6 +3756,10 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     height: 45px;
     margin-right: 2px;
     box-shadow: inset 0px 0px 0px 1px #ddd;
+    overflow: hidden;
+    background: url(/static_v2/img/webapp/mall/sprite0506.png) no-repeat;
+    background-size: 225px 123px;
+    background-position: -180px 0px;
 }
 .xui-productReviewCreatePage .xui-imgList li img{
     width: 45px;
@@ -3810,8 +3814,8 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
 }
 .xui-productReviewCreatePage .xui-productPhoto .xui-remove i{
     background: url(/static_v2/img/webapp/mall/sprite0506.png);
-    -webkit-background-size: 195px 123px;
-    background-size: 195px 123px;
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
     background-position: -44px 0;
     width: 23px;
     height: 22px;
@@ -3823,7 +3827,7 @@ a.xui-pointCardLink:link,a.xui-pointCardLink:visited{color:#fff;}
     position:absolute;
     width:100%;
     height:4px;
-    background:rgba(0,0,0,.6);
+    background:rgba(0,0,0,.3);
     left:0;
     bottom:0;
     -webkit-transition:all linear .4s;

@@ -1355,7 +1355,7 @@ line-height: 100px;
 .wui-returnTop:before{
     background-image: url(/static_v2/img/webapp/mall/sprite0506.png);
     background-repeat: no-repeat;
-    background-size: 195px 123px;
+    background-size: 225px 123px;
 }
 .wui-globalNav .wui-globalLink ul li a.wui-globalHome:before{
     background-position: -14px -17px;
