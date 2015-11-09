@@ -107,60 +107,53 @@ Scenario:1 用户浏览"签到活动1"
 Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加"签到活动1"
 		"""
-		{
-			"name":"签到活动1",
-			"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-			"share":
-				{
-					"img": 1.img,
-					"desc":"签到送好礼！"
-				},
-			"key_word":
-				[{
-					"keyword": "12",
-					"type": "equal"
-				},{
-					"keyword": "123",
-					"type": "like"
-				}],
-			"reply":
-				{
-					"content":
-					"每日签到获得2积分
-					连续签到3天获得5积分
-					连续签到5天获得7积分",
-					"reply_type":"text"
-				},
-			"prize_settings":
-				[{
-					"serial_count":"1",
-					"integral":"2"
-				},{
-					"serial_count":"3",
-					"integral":"5"
-				},{
-					"serial_count":"5",
-					"integral":"7"
-				}]
-		}
+        {
+            "status":"off",
+            "name": "签到活动1",
+            "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
+
+            "share_pic":"1.img",
+            "share_describe": "签到送好礼！",
+            "reply_content":"每日签到获得2积分
+                    连续签到3天获得5积分
+                    连续签到5天获得7积分",
+            "reply_keyword":
+                [{
+                    "rule": "精确",
+                    "key_word": "12"
+                },{
+                    "rule":"模糊",
+                    "key_word": "123"
+                }],
+
+            "sign_settings":
+                [{
+                    "sign_in": "1",
+                    "integral": "2"
+                },{
+                    "sign_in": "3",
+                    "integral": "5"
+                },{
+                    "sign_in": "5",
+                    "integral": "7"
+                }]
+        }
 		"""
-	And jobs设置"签到活动1"状态
+	And jobs开启签到活动"签到活动1"
 		"""
 		{
 			"name":"签到活动1",
-			"status":"开启"
+			"enable": true
 		}
 		"""
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill的会员积分0
 	When bill回复关键字
-
-	Examples:
-		| keyword | type |
-		| 12      | equal|
-		| 123     | like |
-		| 1234    | like |
+		| key_word | rule |
+		| 12       | 精确 |
+		| 123      | 模糊 |
+		| 1234     | 模糊 |
 
 	Then bill获得系统回复的消息
 		"""
@@ -172,11 +165,9 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
 				},
 			"reply":
 				{
-					"content":
-					"每日签到获得2积分
+					"content":"每日签到获得2积分
 					连续签到3天获得5积分
-					连续签到5天获得7积分",
-					"reply_type":"text"
+					连续签到5天获得7积分"
 				}
 			"url_id_2":url2
 		}
@@ -199,40 +190,36 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
 Scenario:3 用户回复完全不匹配关键字签到
 	Given jobs添加"签到活动1"
 		"""
-		{
-			"name":"签到活动1",
-			"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-			"share":
-				{
-					"img": 1.img,
-					"desc":"签到送好礼！"
-				},
-			"key_word":
-				[{
-					"keyword": "12",
-					"type": "equal"
-				},{
-					"keyword": "123",
-					"type": "like"
-				}],
-			"reply":
-				{
-					"content":
-					"每日签到获得优惠券1一张",
-					"reply_type":"text"
-				},
-			"prize_settings":
-				{
-					"serial_count":"1",
-					"coupon_name":"优惠券1"
-				}
-		}
-		"""
-	And jobs设置"签到活动1"状态
+        {
+            "status":"off",
+            "name": "签到活动1",
+            "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
+
+            "share_pic":"1.img",
+            "share_describe": "签到送好礼！",
+            "reply_content":"每日签到获得优惠券1一张",
+            "reply_keyword":
+                [{
+                    "rule": "精确",
+                    "key_word": "12"
+                },{
+                    "rule":"模糊",
+                    "key_word": "123"
+                }],
+
+            "sign_settings":
+                [{
+                    "sign_in": "1",
+                    "send_coupon": "优惠券1",
+                    "prize_counts":50
+                }]
+        }
+        """
+	And jobs开启签到活动"签到活动1"
 		"""
 		{
 			"name":"签到活动1",
-			"status":"开启"
+			"enable": true
 		}
 		"""
 	When bill关注jobs的公众号
@@ -254,39 +241,34 @@ Scenario:3 用户回复完全不匹配关键字签到
 Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加"签到活动1"
 		"""
-		{
-			"name":"签到活动1",
-			"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-			"share":
-				{
-					"img": 1.img,
-					"desc":"签到送好礼！"
-				},
-			"key_word":
-				[{
-					"keyword": "78",
-					"type": "equal"
-				},{
-					"keyword": "abc",
-						"type": "like"
-				}],
-			"reply":
-				{
-					"content":
-					"每日签到获得2积分和优惠券1一张
-					连续签到3天获得5积分",
-					"reply_type":"text"
-				},
-			"prize_settings":
-				[{
-					"serial_count":"1",
-					"integral":"2",
-					"coupon_name":"优惠券1"
-				},{
-					"serial_count":"3",
-					"integral":"5"
-				}]
-		}
+        {
+            "status":"off",
+            "name": "签到活动1",
+            "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
+
+            "share_pic":"1.img",
+            "share_describe": "签到送好礼！",
+            "reply_content":"每日签到获得2积分和优惠券1一张
+                    连续签到3天获得5积分",
+            "reply_keyword":
+                [{
+                    "rule": "精确",
+                    "key_word": "78"
+                },{
+                    "rule":"模糊",
+                    "key_word": "abc"
+                }],
+
+            "sign_settings":
+                [{
+                    "sign_in": "1",
+                    "integral": "2"
+                    "send_coupon": "优惠券1"
+                },{
+                    "sign_in": "3",
+                    "integral": "5"
+                }]
+        }
 		"""
 	And jobs设置"签到活动1"状态
 		"""
@@ -299,12 +281,10 @@ Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹
 	When bill访问jobs的webapp
 	When bill的会员积分0
 	When bill回复关键字
-
-	Examples:
-		| keyword | type |
-		| 78      | equal|
-		| abc     | like |
-		| abcd    | like |
+		| key_word | rule |
+		| 78       | 精确 |
+		| abc      | 模糊 |
+		| abcd     | 模糊 |
 
 	Then bill获得系统自动回复的消息"签到活动还未开始。"
 
@@ -361,12 +341,10 @@ Scenario:5 用户一天内连续两次签到
 	When bill访问jobs的weapp
 	When bill的会员积分0
 	When bill回复关键字
-
-	Examples:
-		| keyword | type |
-		| 签到    | equal|
-		| 123     | like |
-		| 1234    | like |
+		| key_word | rule |
+		| 签到     | 精确 |
+		| 123      | 模糊 |
+		| 1234     | 模糊 |
 
 	Then bill获得系统回复的消息
 		"""
@@ -493,11 +471,10 @@ Scenario:6 用户连续3天进行签到
 	When bill访问jobs的weapp
 	When bill的会员积分0
 	When bill回复关键字
-	Examples:
-		| keyword | type |
-		| a       | equal|
-		| 签到    | like |
-		| 参加签到| like |
+		| key_word | rule |
+		| a        | 精确 |
+		| 签到     | 模糊 |
+		| 参加签到 | 模糊 |
 
 	Then bill获得系统回复的消息
 		"""
