@@ -120,7 +120,7 @@ var initShipInofs = function(){
                 localStorage.ship_infos=JSON.stringify(infos);
                 var now = new Date();
                 localStorage.ship_infos_updated_at = now.getTime();
-                localStorage.ship_infos_token = getParam('fmt');
+                localStorage.ship_infos_token = $.cookie('current_token');
             },
             error: function(resp) {
             }
