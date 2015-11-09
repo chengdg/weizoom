@@ -93,16 +93,16 @@ Copyright (c) 2011-2012 Weizoom Inc
 			var isUserHasPromotion = false;
 			if(args.productPromotion){
 				// 促销是否对此用户开发
+				// args.productPromotion 包含 限时抢购、买赠活动
 				isUserHasPromotion = this.userHasPromotion(args.productPromotion.member_grade_id);
 				if(isUserHasPromotion && args.productPromotion.detail.promotion_price){
+					// 限时抢购
 					price = (args.productPromotion.detail.promotion_price).toFixed(2);
 				}
 			}
-			if(!isUserHasPromotion){
-				// 商品是否折扣
-				if(args.isMemberProduct){
-					price = (price * this.memberInfoData.discount / 100).toFixed(2);
-				}
+			if(!isUserHasPromotion && args.isMemberProduct && this.memberInfoData.discount < 100){
+				// 商品是否参与会员折扣
+				price = (price * this.memberInfoData.discount / 100).toFixed(2);
 			}
 			return price;
 		}
