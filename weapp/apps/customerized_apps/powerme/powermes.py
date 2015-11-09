@@ -32,7 +32,7 @@ class PowerMes(resource.Resource):
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
             'third_nav_name': export.MALL_APPS_POWERME_NAV,
 			'has_data': has_data
-		});
+		})
 		
 		return render_to_response('powerme/templates/editor/powermes.html', c)
 	
@@ -81,6 +81,7 @@ class PowerMes(resource.Resource):
 		for data in datas:
 			items.append({
 				'id': str(data.id),
+				'owner_id': data.owner_id,
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
