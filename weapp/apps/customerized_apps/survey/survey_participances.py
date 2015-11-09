@@ -50,9 +50,6 @@ class surveyParticipances(resource.Resource):
 		if name:
 			hexstr = byte_to_hex(name)
 			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			if name.find(u'非')>=0:
-				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-				members = members|sub_members
 			member_ids = [member.id for member in members]
 		# webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
