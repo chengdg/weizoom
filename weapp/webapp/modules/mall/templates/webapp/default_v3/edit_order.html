@@ -11,6 +11,12 @@
 {% endblock %}
 
 {% block content-panel %}
+    <script>
+    // 没有收货地址则跳转到新建收货地址
+    if(!localStorage.hasOwnProperty('ship_infos')||localStorage.ship_infos.length<=2){
+        window.location.href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=list" +'&' +getParam('fmt');
+    }
+    </script>
 <div data-role="page" data-theme="x" data-title="{{ page_title }}" class="xui-editOrderPage xa-editOrderPage">
 
     <div id="wrapper" data-role="content" class="xui-wrapper">
@@ -25,13 +31,15 @@
                     <div class="xui-section-title xui-receiverInfo pr disTc">
                         <p class="mb10 em9 disT">
                             <span class="disTc xui-nameTd">
-                                {% if order %}<span class="xt-shipName">收货人:{{ order.ship_name }}</span>{% endif %}
+                                {% if order %}<span class="xt-shipName xa-shipName">收货人:</span>{% endif %}
                             </span>
                             <span class="disTc">
-                                <span class="xt-shipTel">{% if order %}{{ order.ship_tel }}{% endif %}</span>
+                                <span class="xt-shipTel xa-shipTel"></span>
                             </span>
                         </p>
-                        <div class="xui-address pr20">{% if order %}<span class="xt-shipArea">收货地址:{{ order.get_str_area }}</span><span class="xt-shipAddress ml5">{{ order.ship_address }}</span>{% endif %}</div>
+                        <div class="xui-address pr20">
+                            <span class="xt-shipArea xa-shipArea">收货地址:</span><span class="xt-shipAddress xa-shipAddress ml5"></span>
+                        </div>
                         <!-- <span class="xui-icon xui-icon-rightarrow"> </span> -->
                     </div>
                     <div class="xui-rightArrow disTc">
@@ -56,13 +64,13 @@
 
             </fieldset>
             <fieldset class="hidden">
-                <input id="ship_id" name="ship_id" value="{% if order %}{{ order.ship_id }}{% endif %}" type="hidden" >
+                <input id="ship_name" name="ship_name" type="hidden" value="" >
+                <input id="ship_tel" name="ship_tel" type="hidden" value="" >
+                <input id="area" name="area" class="xa-areaInput" type="hidden" value="" data-area-str="">
+                <input id="ship_address" name="ship_address" type="hidden" value="" >
+
                 <input id="delivery_plan_id" name="delivery_plan_id" value="{{ delivery_plan_id }}" type="hidden" >
                 <input id="delivery_dates" name="delivery_dates" value="{{ delivery_dates }}" type="hidden">
-                <input id="ship_name" name="ship_name" type="hidden" value="{% if order %}{{ order.ship_name }}{% endif %}" >
-                <input id="ship_tel" name="ship_tel" type="hidden" value="{% if order %}{{ order.ship_tel }}{% endif %}" >
-                <input id="area" name="area" class="xa-areaInput" data-ui-role="areaPop" type="hidden" value="{% if order %}{{ order.area }}{% endif %}" data-area-str="{% if order %}{{order.get_str_area}}{% endif %}">
-                <input id="ship_address" name="ship_address" type="hidden" value="{% if order %}{{ order.ship_address }}{% endif %}" >
                 <input id="refueling_order" name="refueling_order" value="{{ refueling_order }}" type="hidden" >
             </fieldset>
             <input type="hidden" name="integral" id="integral" value="0" />
@@ -407,11 +415,11 @@
                     </p>
                     <p class="zoom">
                         <span class="fl xui-gray-8">积分抵扣</span>
-                        <span class="fr">- ￥<span class="xa-integralMoney xt-integralMoney"></span>
+                        <span class="fr">- ￥<span class="xa-integralMoney xt-integralMoney"></span></span>
                     </p>
                     <p class="zoom">
                         <span class="fl xui-gray-8">促销优惠</span>
-                        <span class="fr">- ￥<span class="xa-promotionMoney xt-promotionMoney"></span>
+                        <span class="fr">- ￥<span class="xa-promotionMoney xt-promotionMoney"></span></span>
                     </p>
                     <p class="zoom">
                         <span class="fl xui-gray-8">优惠劵</span>
@@ -603,7 +611,26 @@
 
 {% block js %}
 <script type="text/javascript">
-initShipInofs();
+
+// 从localStorage获取收货地址
+var ship_infos = JSON.parse(localStorage.ship_infos);
+console.log(localStorage.hasOwnProperty('ship_infos'))
+
+for(var i in ship_infos) {
+    if (ship_infos[i].is_selected){
+        var ship_info = ship_infos[i];
+        break;
+    }
+
+}
+$('input[name="ship_name"]').val(ship_info.ship_name)
+$('input[name="ship_tel"]').val(ship_info.ship_tel)
+$('input[name="area"]').val(ship_info.area)
+$('input[name="ship_address"]').val(ship_info.ship_address)
+$('.xa-shipName').text(ship_info.ship_name);
+$('.xa-shipTel').text(ship_info.ship_tel);
+$('.xa-shipArea').text(ship_info.area_str);
+$('.xa-shipAddress').text(ship_info.ship_address);
 
 if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     $('#wrapper').addClass('xui-wrapper');

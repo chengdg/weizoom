@@ -44,11 +44,13 @@ def get_order_list(request):
 ########################################################################
 def edit_order(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
-		return request_util.edit_order(request)
-	else:
-		request.action = 'add'
-		return request_util.edit_address(request)
+	return request_util.edit_order(request)
+
+	# if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
+	# 	return request_util.edit_order(request)
+	# else:
+	# 	request.action = 'add'
+	# 	return request_util.edit_address(request)
 
 
 ########################################################################

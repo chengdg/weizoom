@@ -351,6 +351,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 {% if not is_deleted_data %}
 <script type="text/javascript">
+initShipInofs();
 //商品id
 var productId = '{{product.id}}';
 //商品规格值
