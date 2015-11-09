@@ -397,7 +397,7 @@ Scenario:6 更新签到活动的状态
 	    """
 	    {
 	        "name": "签到活动7",
-	        "status": on
+	        "status": "on"
 	    }
 	    """
 	Then jobs的签到活动"签到活动7"状态为"开启"
@@ -406,7 +406,7 @@ Scenario:6 更新签到活动的状态
 	    """
 	    {
 	        "name": "签到活动7",
-	        "status": off
+	        "status": "off"
 	    }
 	    """
 	Then jobs的签到活动"签到活动7"状态为"关闭"

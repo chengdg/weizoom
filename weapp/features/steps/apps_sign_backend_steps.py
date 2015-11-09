@@ -562,22 +562,17 @@ def step_impl(context,user,sign_name):
     __api_delete(context,context.sign_id,context.project_id)
 
 
-
-@when(u'{user}开启签到活动"{sign_name}"')
-def step_impl(context,user,sign_name):
+@when(u'{user}更新签到活动的状态')
+def step_impl(context,user):
     text = json.loads(context.text)
-    switch = "off"
     if context.text:
-        value = text.get("enable","")
-        if value:
-            switch = "on"
-        else:
-            switch = "off"
+        value = text.get("status","off")
+
     project_id = u'new_app:sign:'+str(context.project_id)
     sign_id = str(context.sign_id)
     args = {
         "signId":sign_id,
-        "status":switch
+        "status":value
     }
     post_response = __post_SignArgs(context,args,project_id)
     context.sign_id = sign_id
