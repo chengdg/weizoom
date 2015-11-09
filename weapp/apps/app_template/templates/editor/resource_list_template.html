@@ -141,7 +141,7 @@ __STRIPPER_TAG__
 					${item.participant_count}
 				</td>
 				<td>
-					{{if (item.status === '未开启' || item.status === '已结束')}}
+					{{if (item.status === '未开始' || item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
 					{{if (item.status === '进行中')}}
