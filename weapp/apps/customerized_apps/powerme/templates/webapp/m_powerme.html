@@ -237,7 +237,7 @@
                         var $attention = $('.xa-attention');
                         $attention.find('img').attr('src',new_qrcode_url);
                         $attention.find('.xa-attention-tip').show();
-                        $attention.find('.xa-attention-reply').first().html("3.回复：“");
+                        $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
                         openQrMask();
                     }
 
