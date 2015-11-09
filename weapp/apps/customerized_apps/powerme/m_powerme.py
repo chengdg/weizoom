@@ -145,12 +145,11 @@ class MPowerMe(resource.Resource):
 				need_power_member_ids = [p.be_powered_member_id for p in power_logs]
 				#计算助力值
 				need_power_member_id2power = {}
-				def assemble_dict(m_id):
+				for m_id in need_power_member_ids:
 					if not need_power_member_id2power.has_key(m_id):
 						need_power_member_id2power[m_id] = 1
 					else:
 						need_power_member_id2power[m_id] += 1
-				map(assemble_dict, need_power_member_ids)
 				for m_id in need_power_member_id2power.keys():
 					app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__power=need_power_member_id2power[m_id])
 
