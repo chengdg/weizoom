@@ -30,7 +30,7 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario:1 用户浏览"签到活动1"
 	Given jobs添加"签到活动1"
 		"""
@@ -42,7 +42,7 @@ Scenario:1 用户浏览"签到活动1"
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 					[{
 						"keyword": "12",
 						"type": "equal"
@@ -50,7 +50,7 @@ Scenario:1 用户浏览"签到活动1"
 						"keyword": "123",
 						"type": "like"
 					}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分和优惠券1一张
@@ -105,7 +105,7 @@ Scenario:1 用户浏览"签到活动1"
 			}
 		}
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加"签到活动1"
 		"""
@@ -158,10 +158,10 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
 	When bill的会员积分0
 	When bill回复关键字
 
-	Examples: 
-		| keyword | type | 
+	Examples:
+		| keyword | type |
 		| 12      | equal|
-		| 123     | like | 
+		| 123     | like |
 		| 1234    | like |
 
 	Then bill获得系统回复的消息
@@ -172,7 +172,7 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
 					"serial_count":"1",
 					"integral":"2"
 				},
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分
@@ -197,7 +197,7 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
 				}
 		}
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario:3 用户回复完全不匹配关键字签到
 	Given jobs添加"签到活动1"
 		"""
@@ -209,7 +209,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "12",
 					"type": "equal"
@@ -217,7 +217,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 					"keyword": "123",
 					"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得优惠券1一张",
@@ -252,6 +252,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 	And bill回复关键字"1"
 	Then bill没有获得系统回复的消息
 
+@apps_sign @apps_sign_frontend
 Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加"签到活动1"
 		"""
@@ -263,7 +264,7 @@ Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "78",
 					"type": "equal"
@@ -271,7 +272,7 @@ Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹
 					"keyword": "abc",
 						"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分和优惠券1一张
@@ -301,14 +302,15 @@ Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹
 	When bill的会员积分0
 	When bill回复关键字
 
-	Examples: 
-		| keyword | type | 
+	Examples:
+		| keyword | type |
 		| 78      | equal|
-		| abc     | like | 
+		| abc     | like |
 		| abcd    | like |
 
 	Then bill获得系统自动回复的消息"签到活动还未开始。"
 
+@apps_sign @apps_sign_frontend
 Scenario:5 用户一天内连续两次签到
 	Given jobs添加"签到活动1"
 		"""
@@ -320,7 +322,7 @@ Scenario:5 用户一天内连续两次签到
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "签到",
 					"type": "equal"
@@ -328,7 +330,7 @@ Scenario:5 用户一天内连续两次签到
 					"keyword": "123",
 						"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得优惠券1一张
@@ -361,10 +363,10 @@ Scenario:5 用户一天内连续两次签到
 	When bill访问jobs的weapp
 	When bill的会员积分0
 	When bill回复关键字
-	Examples: 
-		| keyword | type | 
+	Examples:
+		| keyword | type |
 		| 签到    | equal|
-		| 123     | like | 
+		| 123     | like |
 		| 1234    | like |
 
 	Then bill获得系统回复的消息
@@ -376,7 +378,7 @@ Scenario:5 用户一天内连续两次签到
 					"coupon_name":[优惠券1]
 				},
 			"url_id_1":url1,
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得优惠券1一张
@@ -439,7 +441,7 @@ Scenario:5 用户一天内连续两次签到
 				}
 		}
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario:6 用户连续3天进行签到
 	Given jobs添加"签到活动1"
 		"""
@@ -451,7 +453,7 @@ Scenario:6 用户连续3天进行签到
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "a",
 					"type": "equal"
@@ -459,7 +461,7 @@ Scenario:6 用户连续3天进行签到
 					"keyword": "签到",
 						"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分
@@ -492,10 +494,10 @@ Scenario:6 用户连续3天进行签到
 	When bill访问jobs的weapp
 	When bill的会员积分0
 	When bill回复关键字
-	Examples: 
-		| keyword | type | 
+	Examples:
+		| keyword | type |
 		| a       | equal|
-		| 签到    | like | 
+		| 签到    | like |
 		| 参加签到| like |
 
 	Then bill获得系统回复的消息
@@ -506,7 +508,7 @@ Scenario:6 用户连续3天进行签到
 					"serial_count":"1",
 					"integral":"2"
 				},
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分
@@ -542,7 +544,7 @@ Scenario:6 用户连续3天进行签到
 					"serial_count":"2",
 					"integral":"2"
 				},
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分
@@ -578,7 +580,7 @@ Scenario:6 用户连续3天进行签到
 					"coupon_name":"优惠券1"
 				},
 			"url_id_1":url1,
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得2积分
@@ -605,7 +607,7 @@ Scenario:6 用户连续3天进行签到
 				}
 		}
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario:7 用户分享"签到活动1"到朋友圈
 	Given jobs添加"签到活动1"
 		"""
@@ -617,7 +619,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "签到",
 					"type": "equal"
@@ -625,7 +627,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈
 					"keyword": "123",
 						"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得5积分和优惠券1一张
@@ -666,7 +668,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈
 			"desc":"签到送好礼！"
 		}
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario:8 会员用户访问签到分享进行签到
 	Given jobs添加"签到活动1"
 		"""
@@ -678,7 +680,7 @@ Scenario:8 会员用户访问签到分享进行签到
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "签到",
 					"type": "equal"
@@ -686,7 +688,7 @@ Scenario:8 会员用户访问签到分享进行签到
 					"keyword": "123",
 						"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得5积分和优惠券1一张
@@ -750,7 +752,7 @@ Scenario:8 会员用户访问签到分享进行签到
 				}
 		}
 		"""
-
+@apps_sign @apps_sign_frontend
 Scenario:9 非会员用户访问签到分享进行签到
 	Given jobs添加"签到活动1"
 		"""
@@ -762,7 +764,7 @@ Scenario:9 非会员用户访问签到分享进行签到
 					"img": 1.img,
 					"desc":"签到送好礼！"
 				},
-			"key_word": 
+			"key_word":
 				[{
 					"keyword": "签到",
 					"type": "equal"
@@ -770,7 +772,7 @@ Scenario:9 非会员用户访问签到分享进行签到
 					"keyword": "123",
 						"type": "like"
 				}],
-			"reply": 
+			"reply":
 				{
 					"content":
 					"每日签到获得优惠券1
