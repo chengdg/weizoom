@@ -397,7 +397,7 @@ $(".wui-swiper-slide").css('height', containerHeight );
 $("body").css('overflow-y', 'hidden');
 if (/ipad|iphone|mac/i.test(navigator.userAgent)){
     function loaded() {
-        var myscroll=new iScroll('xa-wrapper',{hScrollbar:false});
+        var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,checkDOMChanges:true});
     }
     document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     document.addEventListener('DOMContentLoaded', loaded, false);
@@ -409,7 +409,7 @@ var tabsSwiper = new Swiper('.wui-swiper-container',{
         $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
         $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
         if (/ipad|iphone|mac/i.test(navigator.userAgent)){
-            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false,checkDOMChanges:true});
         }
         var $el = $('.wui-swiper-slide-active');
         var $info = $el.find('.xa-emptyOrder');
