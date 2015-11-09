@@ -137,12 +137,13 @@
 					${item.participant_count}
 				</td>
 				<td>
-				    <a href="/apps/powerme/powerme_participances/?id=${item.id}" class="ml5">查看</a>
-				    <a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
-					{{if (item.status === '未开启' || item.status === '已结束')}}
+				    <a href="/apps/powerme/powerme_participances/?id=${item.id}" class="ml5" target="_blank">查看</a>
+				    <a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id} target="_blank">预览</a>
+				    <a href="javascript:void(0);" class="ml5 xa-link-copy" data-clipboard-text="/m/apps/powerme/m_powerme/?webapp_owner_id=${item.owner_id}&id=${item.id}">复制链接</a>
+					{{if (item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
-					{{if (item.status === '进行中')}}
+					{{if (item.status === '进行中' || item.status === '未开始')}}
 					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
 					<a href="javascript:void(0)" class="xa-pause-to-clean-history xui-hide" data-id=${item.id}>暂停</a>
@@ -164,7 +165,17 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	
+
+    var table = $('div[data-ui-role="advanced-table"]').data('view');
+    table.afterload = function(){
+        var client = new ZeroClipboard( $(".xa-link-copy") , {
+            moviePath: "/static_v2/zero_clipboard.swf"
+        });
+        client.on('complete', function(client, args) {
+            W.showHint('success', '已经将链接复制到剪贴板');
+        });
+    };
+
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
