@@ -392,6 +392,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                         },
                         success: function(data){
                            $(event.currentTarget).data('display-index', rankText).val(rankText);
+                            W.finishConfirm();
                         },
                         error: function(response){
                             W.showHint('error', '更新产品位置失效');
