@@ -361,11 +361,13 @@
 </div>
 {% endblock %}
 {% block js %}
-{#防止连续点击保存#}
+<!--    防止连续点击保存    -->
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#editProduct').submit(function() {
-            $('.xa-submit').attr('disabled','disabled');
+            if (W.validate()) {
+                $('.xa-submit').attr('disabled','disabled');
+			}
 		});
 	});
 </script>
