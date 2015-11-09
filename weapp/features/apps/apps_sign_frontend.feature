@@ -30,55 +30,53 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
-@apps_sign @apps_sign_frontend
+@apps_sign @apps_sign_frontend @kuku
 Scenario:1 用户浏览"签到活动1"
-	Given jobs添加"签到活动1"
+	Given jobs添加签到活动"签到活动1",并且保存
+		"""
+        {
+            "status":"off",
+            "name": "签到活动1",
+            "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
+
+            "share_pic":"1.img",
+            "share_describe": "签到送好礼！",
+            "reply_content":"每日签到获得2积分和优惠券1一张
+                    连续签到3天获得5积分和优惠券1一张
+                    连续签到5天获得7积分和优惠券1一张",
+            "reply_keyword":
+                [{
+                    "rule": "精确",
+                    "key_word": "12"
+                },{
+                    "rule":"模糊",
+                    "key_word": "123"
+                }],
+
+            "sign_settings":
+                [{
+                    "sign_in": "1",
+                    "integral": "2",
+                    "send_coupon": "优惠券1",
+                    "prize_counts":50
+                },{
+                    "sign_in": "3",
+                    "integral": "5",
+                    "send_coupon": "优惠券1",
+                    "prize_counts":50
+                },{
+                    "sign_in": "5",
+                    "integral": "7",
+                    "send_coupon": "优惠券1",
+                    "prize_counts":50
+                }]
+        }
+		"""
+	And jobs开启签到活动"签到活动6"
 		"""
 		{
 			"name":"签到活动1",
-			"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-			"share":
-				{
-					"img": 1.img,
-					"desc":"签到送好礼！"
-				},
-			"key_word":
-					[{
-						"keyword": "12",
-						"type": "equal"
-					},{
-						"keyword": "123",
-						"type": "like"
-					}],
-			"reply":
-				{
-					"content":
-					"每日签到获得2积分和优惠券1一张
-					连续签到3天获得5积分和优惠券1一张
-					连续签到5天获得7积分和优惠券1一张",
-					"reply_type":"text"
-				},
-			"prize_settings":
-				[{
-					"serial_count":"1",
-					"integral":"2",
-					"coupon_name":"优惠券1"
-				},{
-					"serial_count":"3",
-					"integral":"5",
-					"coupon_name":"优惠券1"
-				},{
-					"serial_count":"5",
-					"integral":"7",
-					"coupon_name":"优惠券1"
-				}]
-		}
-		"""
-	And jobs设置"签到活动1"状态
-		"""
-		{
-			"name":"签到活动1",
-			"status":"开启"
+			"enable": true
 		}
 		"""
 	When bill关注jobs的公众号
@@ -363,6 +361,7 @@ Scenario:5 用户一天内连续两次签到
 	When bill访问jobs的weapp
 	When bill的会员积分0
 	When bill回复关键字
+
 	Examples:
 		| keyword | type |
 		| 签到    | equal|

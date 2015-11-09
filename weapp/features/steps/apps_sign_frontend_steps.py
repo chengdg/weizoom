@@ -1,11 +1,21 @@
 # -*- coding: utf-8 -*-
-__author__ = 'aix'
-
-import json
+__author__ = 'Mark24'
 
 from behave import *
-
 from test import bdd_util
+
+from features.testenv.model_factory import *
+import steps_db_util
+#from mall import module_api as mall_api
+from mall.promotion import models as  promotion_models
+from modules.member import module_api as member_api
+from utils import url_helper
+import datetime as dt
+from mall.promotion.models import CouponRule
+from weixin.message.material import models as material_models
+import termite.pagestore as pagestore_manager
+from apps.customerized_apps.sign.models import Sign
+import json
 
 
 @when(u'{user}进入{mp_user}的签到页面')
