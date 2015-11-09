@@ -230,17 +230,14 @@
                 }).show();
             }else{
                 $('.wa-power').html('帮'+page_owner_name+'助力').one('click', function(){
-                    if (W.isMember){
-                        powerYou();
-                    }
-                    else{
+                    powerYou();
+                    if (!W.isMember){
                         var $attention = $('.xa-attention');
                         $attention.find('img').attr('src',new_qrcode_url);
                         $attention.find('.xa-attention-tip').show();
                         $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
                         openQrMask();
                     }
-
                 }).show();
             }
 
