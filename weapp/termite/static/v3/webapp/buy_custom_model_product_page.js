@@ -25,7 +25,12 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         }else{
             this.countPerPurchase = -1;
         }
-
+        //买赠
+        if (this.promotion && this.promotion.type == 2){
+            this.isPremium = true;
+        }else{
+            this.isPremium = false;
+        }
         this.targetModel = null;
         this.isStandardModelProduct = false;
         this.isSideSlideOpen = false;
@@ -224,11 +229,14 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                             if(_this.isFlashSale){
                                 _this.isFlashSale = false;
                             }
+                            if(_this.isPremium){
+                                _this.isPremium = false;
+                            }
                         }
                     }
                     $('.xa-promotionSection').show();
                     $('.xt-promotionTile:first').show();
-                    if(!_this.isFlashSale && _this.is_member_product && data.discount < 100){
+                    if(!_this.isFlashSale && _this.is_member_product && data.discount < 100 && !_this.isPremium){
                         // 会员价处理
                         _this.discount = data.discount;
                         $('.xa-singlePrice').html((_this.minPrice * data.discount / 100).toFixed(2)).parent().before('<span class="xui-memberPriceTag">会员价</span>');

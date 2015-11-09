@@ -89,7 +89,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 		 * @return {[type]}      [description]
 		 */
 		calculPrice: function(args){
-			var price = args.price;	
+			var price = (args.price).toFixed(2);	
 			var isUserHasPromotion = false;
 			if(args.productPromotion){
 				// 促销是否对此用户开发
@@ -101,7 +101,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 			if(!isUserHasPromotion){
 				// 商品是否折扣
 				if(args.isMemberProduct){
-					price = ((price * this.memberInfoData.discount / 100).toFixed(2));
+					price = (price * this.memberInfoData.discount / 100).toFixed(2);
 				}
 			}
 			return price;
