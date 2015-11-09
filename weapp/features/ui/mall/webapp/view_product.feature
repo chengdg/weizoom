@@ -384,7 +384,6 @@ Scenario: 1 浏览商品
 		}
 		"""
 
-
 @product @ui @ProductList
 Scenario: 2 浏览商品列表
 	jobs添加商品后
@@ -431,8 +430,6 @@ Scenario: 2 浏览商品列表
 			"price": 10.00
 		}]
 		"""
-
-
 @product @ui @ProductList
 Scenario: 3 浏览商品分类
 	jobs添加商品后
