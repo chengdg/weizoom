@@ -78,10 +78,10 @@ class ExpressCallbackHandle(object):
 		return {
 			"result": True,
 			"returnCode": 200,
-			"message": "成功"
+			"message": u"成功"
 		}
 
-	def error_json(self, message="失败"):
+	def error_json(self, message=u"失败"):
 		return {
 			"result": False,
 			"returnCode": 500,
@@ -197,16 +197,16 @@ class ExpressCallbackHandle(object):
 		# 保存快递信息
 		is_success = self.save_express_details(json)
 		if is_success is False:
-			return self.error_json('保存快递信息失败！')
+			return self.error_json(u'保存快递信息失败！')
 
 		# 获取 改 快递公司 与 快递单号 对应的order
 		orders = self.get_orders()
 		if orders.count() == 0:
-			return self.error_json('该订单的状态不是已发货或待发货！')
+			return self.error_json(u'该订单的状态不是已发货或待发货！')
 
 		# 修改订单的状态
 		is_update_success = self.update_order_status(json, orders)
 		if is_update_success:
 			return self.success_json()
 		else:
-			return self.error_json('修改订单状态失败！')
+			return self.error_json(u'修改订单状态失败！')
