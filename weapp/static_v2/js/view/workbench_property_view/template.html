@@ -435,7 +435,7 @@
                             {{/if}}
                         </div>
                         {{if field.help}}
-                        <div class="qrcode_help" style="float:right;color: #666;width: 55%;">
+                        <div class="qrcode_help" style="float:right;color: #666;width: 55%;{{if component.model.get(field.name)}} height:100px;line-height:100px{{/if}}">
                             {{html field.help.replace(/\n/g, "<br/>")}}
                         </div>
                         {{/if}}
