@@ -1,4 +1,4 @@
-__author__ : "许韦"
+#__author__ : "许韦"
 
 Feature: Sign
     用户进行签到
@@ -97,9 +97,8 @@ Scenario:1 用户浏览"签到活动1"
             }
         }
         """
-
-@apps_sign @apps_sign_frontend @yuyu @kuki
-Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
+@apps_sign @apps_sign_frontend @kuku @kuki
+Scenario:1 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
     Given jobs添加"签到活动1"
         """
         {
