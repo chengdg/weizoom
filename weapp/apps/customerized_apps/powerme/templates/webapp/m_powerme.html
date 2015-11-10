@@ -254,8 +254,8 @@
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
                 $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('.xa-attention-tip-one').html('<div style="color: orangered">您已参加该活动！</div><div>长按二维码进入公众号</div><div>获取你自己的专属页，</div>');
-                    $attention.find('.xa-attention-reply').html('分享到朋友圈，发动小伙伴帮你助力赢大奖！');
+                    $attention.find('.xa-attention-tip-one').html('<div style="color: orangered;text-align:center">您已参加该活动！</div><div style="text-align:center">长按二维码进入公众号</div><div style="text-align:center">获取你自己的专属页，</div>');
+                    $attention.find('.xa-attention-reply').html('分享到朋友圈,发动小伙伴帮你助力赢大奖！');
                     openQrMask();
                 }).show();
             }else{
