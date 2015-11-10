@@ -233,6 +233,7 @@
             $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
         }else{
             var using_msg;
+            var $attention = $('.xa-attention');
             if(is_powered){
                 $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
                     openGuideMask();
@@ -241,7 +242,6 @@
                 $('.wa-power').html('帮'+page_owner_name+'助力').one('click', function(){
                     powerYou();
                     if (!W.isMember){
-                        var $attention = $('.xa-attention');
                         $attention.find('img').attr('src',new_qrcode_url);
                         $attention.find('.xa-attention-tip').show();
                         $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
@@ -253,16 +253,19 @@
 
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
-                $('.xa-attention').find('.xa-attention-tip-one').html('<div style="color: orangered">您已参加该活动！</div><div>长按二维码进入公众号</div><div>获取你自己的专属页，</div>');
-                $('.xa-attention').find('.xa-attention-reply').html('分享到朋友圈，发动小伙伴帮你助力赢大奖！');
-                $('.wa-using').text(using_msg).on('click', openQrMask).show();
+                $('.wa-using').text(using_msg).on('click', function(){
+                    $attention.find('.xa-attention-tip-one').html('<div style="color: orangered">您已参加该活动！</div><div>长按二维码进入公众号</div><div>获取你自己的专属页，</div>');
+                    $attention.find('.xa-attention-reply').html('分享到朋友圈，发动小伙伴帮你助力赢大奖！');
+                    openQrMask();
+                }).show();
             }else{
                 using_msg = '我也要参加';
-                var $attention = $('.xa-attention');
-                $attention.find('img').attr('src','{{qrcode_url}}');
-                $attention.find('.xa-attention-tip').hide();
-                $attention.find('.xa-attention-reply').children().first().html("2.回复：“");
-                $('.wa-using').text(using_msg).on('click', openQrMask).show();
+                $('.wa-using').text(using_msg).on('click', function(){
+                    $attention.find('img').attr('src','{{qrcode_url}}');
+                    $attention.find('.xa-attention-tip').hide();
+                    $attention.find('.xa-attention-reply').children().first().html("2.回复：“");
+                    openQrMask();
+                }).show();
             }
         }
 
