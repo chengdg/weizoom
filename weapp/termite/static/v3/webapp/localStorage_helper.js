@@ -92,7 +92,6 @@ var shipInfosConfig = {
 
 
 var initShipInofs = function(){
-    alert(localStorage.ship_infos_token);
     var lastUpdate;
     if(localStorage.ship_infos_updated_at){
         lastUpdate = localStorage.ship_infos_updated_at;
@@ -102,12 +101,6 @@ var initShipInofs = function(){
     }
     var now = new Date();
     var woid = getWoid();
-    if(now.getTime() - lastUpdate > shipInfosConfig.cacheTime){
-        alert('缓存过期');
-    }
-    if($.cookie('current_token')!=localStorage.ship_infos_token){
-        alert('token不相等');
-    }
     if (now.getTime() - lastUpdate > shipInfosConfig.cacheTime || $.cookie('current_token')!=localStorage.ship_infos_token) {
         W.getApi().call({
             app: 'webapp',

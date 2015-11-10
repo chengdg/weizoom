@@ -181,6 +181,17 @@
 {% block js %}
 
 <script>
+    alert(localStorage.ship_infos_token);
+    alert(navigator.userAgent);
+
+if(now.getTime() - lastUpdate > shipInfosConfig.cacheTime){
+    alert('缓存过期');
+}
+if($.cookie('current_token')!=localStorage.ship_infos_token){
+    alert('token不相等');
+}
+
+
 initShipInofs();
 $(document).ready(function(){
     // $('.xa-clickPointCard').click(function(event){
