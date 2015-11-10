@@ -276,7 +276,7 @@ def _fill_answer_dict(answer_dict):
 		# answer_dict['content'] = answer_dict['content'].replace('<', "&lt;")
 		# answer_dict['content'] = answer_dict['content'].replace('>', "&gt;")
 		# answer_dict['content'] = answer_dict['content'] % tuple(all_a_html)
-		from message.utils import translate_special_characters
+		from message.util import translate_special_characters
 		answer_dict['content'] = translate_special_characters(answer_dict['content'])
 
 		#处理表情
