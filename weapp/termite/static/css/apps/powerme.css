@@ -133,17 +133,20 @@ hr{
     margin-left: 15px;
     overflow: hidden;
     width: 70%;
+    font-size: 0.8rem
 }
 .wui-i-top100-power {
     float: right;
     margin-right: 5px;
+    font-size: 0.8rem;
+    line-height: 2.8rem;
 }
 .wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
     display: inline-block;
     height: 35px;
     width: 50px;
-    margin-left: -8px;
+    margin-left: -1rem;
     text-align: center;
     padding-right: 0;
     float: left;
@@ -158,6 +161,7 @@ hr{
   background-position: -269px 7px;
 }
 .wui-i-top100-range{
+    line-height: 3rem;
     margin-left: 12px;
     padding-right: 21px;
 }
