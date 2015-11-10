@@ -109,6 +109,13 @@
     .xui-twoDimensionBox p {
         display: inline-block;
     }
+    .wui-wraper{
+        background: white none repeat scroll 0 0;
+        border-radius: 100px;
+        float: left;
+        height: 44px;
+        width: 44px;
+    }
 </style>
 {% endblock %}
 
@@ -261,7 +268,7 @@
             var li_content = '';
             for(var i in participances){
                 var p = participances[i];
-                li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+                li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><i class='wui-wraper'></i><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
             }
             $('.wa-top100').append($(li_content));
         }
