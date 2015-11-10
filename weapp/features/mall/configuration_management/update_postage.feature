@@ -1,4 +1,6 @@
-# __author__ : "冯雪静"
+#author: 冯雪静
+#editor: 张三香 2015.10.16
+
 Feature:更新运费配置
 	Jobs能通过管理系统为管理商城更新已添加的"邮费配置"
 
@@ -19,13 +21,13 @@ Background:
 		}]
 		"""
 
-@mall @mall.postage @mall2
-Scenario: 更新邮费配置
+@mall2 @configuration @postaSet   @mall @mall.postage
+Scenario:1 更新邮费配置
 	Jobs更新"邮费配置"
 	1. jobs能获得更新后的邮费配置
 
 	Given jobs登录系统
-		When jobs修改'顺丰'运费配置
+	When jobs修改'顺丰'运费配置
 		"""
 		{
 			"name" : "顺丰",

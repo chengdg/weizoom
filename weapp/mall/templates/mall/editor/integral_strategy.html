@@ -120,6 +120,14 @@
 						</td>
 					</tr>
 					<tr>
+						<td>商品好评送积分</td>
+						<td><input type="text" class="form-control" name="review_increase" value="{{integral_strategy.review_increase}}" data-validate="require-int"/>
+						<div class="errorHint"></div>
+						</td>
+						<td colspan="2">用户评价已购买商品，评价内容审核后增加积分</td>
+					</tr>
+
+					<tr>
 						<td>订单积分抵扣上限</br>(指订单中商品金额)</td>
 						<!--		积分抵扣状态初始化		-->
 						<td colspan="3">
@@ -155,12 +163,6 @@
 								{% endif %}
 							</span>
 						</td>
-					<tr>
-						<td>商品好评送积分</td>
-						<td><input type="text" class="form-control" name="review_increase" value="{{integral_strategy.review_increase}}" data-validate="require-int"/>
-						<div class="errorHint"></div>
-						</td>
-						<td colspan="2">用户评价已购买商品，评价内容审核后增加积分</td>
 					</tr>
 				</tbody>
 			</table>

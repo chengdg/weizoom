@@ -155,8 +155,10 @@
       loadPages(pageManagerView);
 
       $('.xa-save').click(function() {
+          var that = this;
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
+            that.disabled = true;
           var descriptionModel = page.components[0].model;
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
@@ -187,6 +189,7 @@
             },
             error: function(resp) {
               W.showHint('error', '保存失败!');
+                that.disabled = false;
             }
           });
         });

@@ -68,7 +68,7 @@ from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissi
 from weixin2 import models as weixin2_models
 from stats import models as stats_models
 from modules.member import models as modules_member_models
-
+from tools.express import models as express_model
 from selenium import webdriver
 from test.pageobject.page_frame import PageFrame
 #from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
@@ -207,13 +207,17 @@ def __clear_all_app_data():
 	AccountHasWeizoomCardPermissions.objects.all().delete()
 	mall_models.Supplier.objects.all().delete()
 
+	# 快递数据
+	express_model.ExpressHasOrderPushStatus.objects.all().delete()
+
 	#权限
-	auth_models.UserHasPermission.objects.all().delete()
-	auth_models.UserHasGroup.objects.all().delete()
-	auth_models.GroupHasPermission.objects.all().delete()
-	auth_models.SystemGroup.objects.all().delete()
-	auth_models.DepartmentHasUser.objects.all().delete()
-	auth_models.Department.objects.all().delete()
+	#duhao 20151019注释
+	# auth_models.UserHasPermission.objects.all().delete()
+	# auth_models.UserHasGroup.objects.all().delete()
+	# auth_models.GroupHasPermission.objects.all().delete()
+	# auth_models.SystemGroup.objects.all().delete()
+	# auth_models.DepartmentHasUser.objects.all().delete()
+	# auth_models.Department.objects.all().delete()
 
 	#会员
 	#member_models.MemberGrade.objects.all().update(usable_integral_percentage_in_order=100)
@@ -338,11 +342,37 @@ def __binding_wexin_mp_account(user=None):
 	
 			weixin_user_models.WeixinMpUserAccessToken.objects.create(mpuser=mpuser, is_active=True,app_id=user.id, app_secret='app_secret',  access_token='access_token')
 			weixin_user_models.MpuserPreviewInfo.objects.create(mpuser=mpuser, name=mpuser.username)
-			weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+			auth_appid = weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+
+			weixin_user_models.ComponentAuthedAppidInfo.objects.create(
+						auth_appid=auth_appid,
+						nick_name='',
+						head_img='',
+						service_type_info=2,
+						verify_type_info=0,
+						user_name='',
+						alias='',
+						qrcode_url='',
+						appid=user.id,
+						func_info=''
+						)
+
 		else:
 			weixin_user_models.WeixinMpUser.objects.filter(owner=user).update(is_certified=True, is_service=True, is_active=True)
 			if weixin_user_models.ComponentAuthedAppid.objects.filter(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True).count() == 0:
-				weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+				auth_appid = weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
+				weixin_user_models.ComponentAuthedAppidInfo.objects.create(
+						auth_appid=auth_appid,
+						nick_name='',
+						head_img='',
+						service_type_info=2,
+						verify_type_info=0,
+						user_name='',
+						alias='',
+						qrcode_url='',
+						appid=user.id,
+						func_info=''
+						)
 
 def __sync_workspace():
 	"""

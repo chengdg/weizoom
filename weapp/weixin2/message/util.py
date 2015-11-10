@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 from weixin2.models import *
 from core.jsonresponse import create_response
 from core import emotion
@@ -53,7 +54,7 @@ def check_duplicate_patterns(request):
     """
     patterns = request.POST['patterns']
     ignore_rule_id = request.POST.get('id', None)
-    has_duplicate, duplicate_patterns = has_duplicate_pattern(request.user, patterns, ignore_rule_id)
+    has_duplicate, duplicate_patterns = has_duplicate_pattern(request.manager, patterns, ignore_rule_id)
 
     if has_duplicate:
         response = create_response(601)
@@ -98,3 +99,17 @@ def is_valid_time(time_str):
                 except Exception, e:
                     return False
     return False
+
+
+#处理消息中的特殊字符
+def translate_special_characters(message_text):
+    a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
+    all_a_html = a_pattern.findall(message_text)
+    
+    for html in all_a_html:
+        message_text = message_text.replace(html, "%s")
+    message_text = message_text.replace('<', "&lt;")
+    message_text = message_text.replace('>', "&gt;")
+    if all_a_html:
+        message_text = message_text % tuple(all_a_html)
+    return message_text

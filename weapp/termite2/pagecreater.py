@@ -34,6 +34,13 @@ def __get_display_info(request):
 		return __get_fake_project_display_info(request)
 
 	#获取project
+	# project = request.project
+	# is_app_project = False
+	# if hasattr(project, 'app_name'):
+	# 	app_name = request.project.app_name
+	# if hasattr(project,'is_app_project'):
+	# 	is_app_project = request.project.is_app_project
+	# project_id = project.id
 	project = None
 	project_id = request.REQUEST.get('project_id')
 	is_app_project = False
@@ -99,7 +106,11 @@ def __get_display_info(request):
 底部导航总开关
 '''
 def __get_is_enable_navbar(request):
-	navbar = termite2_models.TemplateGlobalNavbar.get_object(request.webapp_owner_id)
+	#update by bert at 20151023
+	if hasattr(request, 'webapp_owner_info') and hasattr(request.webapp_owner_info, 'global_navbar') and hasattr(request.webapp_owner_info.global_navbar, 'is_enable'):
+		navbar = request.webapp_owner_info.global_navbar
+	else:
+		navbar = termite2_models.TemplateGlobalNavbar.get_object(request.webapp_owner_id)
 	return navbar.is_enable
 
 def is_home_page(request):

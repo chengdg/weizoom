@@ -13,6 +13,7 @@ from mall.models import *
 from modules.member.models import *
 from mall.promotion.models import CouponRule
 from utils.string_util import byte_to_hex, hex_to_byte
+from tools.regional import views as regional_util
 
 @when(u"{user}访问'{member}'会员详情")
 def step_impl(context, user, member):
@@ -191,7 +192,7 @@ def step_impl(context, user, member):
     print "actual:",actual
     print "expected:",expected
 
-    bdd_util.assert_dict(actual, expected)
+    bdd_util.assert_dict(expected, actual)
 
 @then(u"{user}获得'{member}'的浏览轨迹")
 def step_impl(context, user, member):
@@ -210,4 +211,102 @@ def step_impl(context, user, member):
     for item in expected:
         item['date_time'] = "{}".format(bdd_util.get_date_str(item['date_time']))
 
+    bdd_util.assert_list(actual, expected)
+
+
+@When(u"{user}访问'{webapp_user}'{spreadPath}引流会员好友列表")
+def step_impl(context, user, webapp_user, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
+    url = '/member/api/member_list/?design_mode=0&version=1&status=1&enable_paginate=1'
+    response = context.client.get(bdd_util.nginx(url))
+    items = json.loads(response.content)['data']['items']
+    for member_item in items:
+        if webapp_user == member_item['username']:
+            context.user_id = member_item['id']
+            break
+    if hasattr(context, 'user_id'):
+        context.page = 1
+        context.url = '/member/api/follow_relations/?design_mode=0&'\
+        'version=1&data_value=%s&member_id=%s&sort_attr=-created_at&count_per_page=%s&page=%s'\
+        '&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
+
+@Then(u"{user}获得{spreadPath}引流会员好友列表显示共{page_total}页")
+def step_impl(context, user, page_total, spreadPath):
+    #spreadPath = spreadMethod(spreadPath)
+    response = context.client.get(bdd_util.nginx(context.url))
+    actual_total = int(json.loads(response.content)['data']['pageinfo']['max_page'])
+    page_total = int(page_total)
+    assert(page_total, actual_total)
+
+@When(u"{user}浏览{spreadPath}引流会员好友列表'第{page}页'")
+def step_impl(context, user, page, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
+    context.page = page
+    context.url = '/member/api/follow_relations/?design_mode=0&'\
+        'version=1&data_value=%s&member_id=%s&sort_attr=-created_at&count_per_page=%s&'\
+        'page=%s&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
+
+@Then(u'{user}获得{spreadPath}引流会员好友列表')
+def step_impl(context, user, spreadPath):
+    source_dict = {0:u'直接关注', 1:u'推广扫码', 2:u'会员分享'}
+    response = context.client.get(bdd_util.nginx(context.url))
+    items = json.loads(response.content)['data']['items']
+    actual_data = []
+    for item in items:
+        adict = {}
+        adict['name'] = item['username']
+        adict['member_rank'] = item['grade_name']
+        adict['integral'] = item['integral']
+        adict['attention_time'] = item['created_at']
+        adict['source'] = source_dict[item['source']]
+        actual_data.append(adict)
+
+    expected_data = json.loads(context.text)
+
+    for tmp in expected_data:
+        if tmp['attention_time'] == u'今天':
+            tmp['attention_time'] = time.strftime('%Y-%m-%d')
+    bdd_util.assert_list(expected_data, actual_data)
+
+@When(u"{user}浏览{spreadPath}引流会员好友列表'下一页'")
+def step_impl(context, user, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
+    context.page = int(context.page) + 1
+    context.url = '/member/api/follow_relations/?design_mode=0&'\
+        'version=1&data_value=%s&member_id=%s&sort_attr=-created_at&count_per_page=%s&'\
+        'page=%s&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
+
+@When(u"{user}浏览{spreadPath}引流会员好友列表'上一页'")
+def step_impl(context, user, spreadPath):
+    spreadPath = spreadMethod(spreadPath)
+    if int(context.page) > 1:
+        context.page = int(context.page) - 1
+    context.url = '/member/api/follow_relations/?design_mode=0&'\
+        'version=1&data_value=%s&member_id=%s&sort_attr=-created_at&count_per_page=%s&'\
+        'page=%s&enable_paginate=1' %(spreadPath, context.user_id, context.count_per_page, context.page)
+
+
+def spreadMethod(sMethod):
+    if u'分享链接' == sMethod:
+        return 'shared'
+    elif u'二维码' == sMethod:
+        return 'qrcode'
+
+@When(u"休眠1秒")
+def step_impl(context):
+    time.sleep(1)
+
+@Then(u"{user}获得'{member}'的收货信息列表")
+def step_impl(context, user, member):
+    expected = json.loads(context.text)
+    response = _get_member_info(context, member)
+    actual = []
+    for ship_info in response.context['ship_infos']:
+        ship = {}
+        ship['area'] = regional_util.get_str_value_by_string_ids(ship_info.area)
+        ship['area'] = ','.join(ship['area'].split())
+        ship['ship_address'] = ship_info.ship_address
+        ship['ship_name'] = ship_info.ship_name
+        ship['ship_tel'] = ship_info.ship_tel
+        actual.append(ship)
     bdd_util.assert_list(actual, expected)

@@ -30,9 +30,9 @@ class MSign(resource.Resource):
 		响应GET
 		"""
 		p_id = request.GET.get('id','id')
-		member = request.member
+
 		isPC = request.GET.get('isPC',0)
-		isMember = member.is_subscribed
+		isMember = False
 		webapp_owner_id = request.GET.get('webapp_owner_id', None)
 		participance_data_count = 0
 		auth_appid_info = None
@@ -47,6 +47,10 @@ class MSign(resource.Resource):
 			sign_description = ""
 			record = None
 		else:
+			member = request.member
+			member_id = member.id
+			isMember = member.is_subscribed
+
 			record = app_models.Sign.objects(owner_id=webapp_owner_id)
 
 			if record.count() > 0:
@@ -73,7 +77,7 @@ class MSign(resource.Resource):
 
 				project_id = 'new_app:sign:%s' % record.related_page_id
 				record_id = record.id
-				signers = app_models.SignParticipance.objects(belong_to=str(record_id), member_id=member.id)
+				signers = app_models.SignParticipance.objects(belong_to=str(record_id), member_id=member_id)
 				participance_data_count = signers.count()
 				signer = signers[0] if participance_data_count>0 else None
 				#检查当前用户签到情况

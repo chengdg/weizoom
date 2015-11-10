@@ -86,7 +86,6 @@ def step_impl(context, user, webapp_user):
         adict['father_name'] = row['recommended']
         adict['created_at'] = bdd_util.get_date_str(row['attention_time'])
         expected_data.append(adict)
-    print 'justing:', expected_data, actual_data
     bdd_util.assert_list(expected_data, actual_data)
 
 

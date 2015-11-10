@@ -39,26 +39,55 @@ from webapp import util as webapp_util
 from cache import webapp_cache
 from bs4 import BeautifulSoup
 
+import wapi as resource
+from utils import dateutil as utils_dateutil
+
+# TODO: 待删除
+from wapi.mall.product.product_hint import ProductHint
 # jz 2015-10-09
 # page_title = u'微众商城'
 
 
-########################################################################
-# list_products: 显示"商品列表"页面
-########################################################################
 def list_products(request):
+	"""
+	移动端显示"商品列表"页面
+	"""
 	# jz 2015-10-09
 	# 得到会员对应的折扣
 	# discount = get_member_discount(member)
 
 	category_id = int(request.GET.get('category_id', 0))
+	owner_id = request.user_profile.user_id
 
-	category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
-	product_categories = webapp_cache.get_webapp_product_categories(request.user_profile, request.is_access_weizoom_mall)
+	# TODO: 改用API获取商品、分类
+
+	# 改造如下的语句
+	#category, products = webapp_cache.get_webapp_products(request.user_profile, request.is_access_weizoom_mall, category_id)
+	if category_id == 0:
+		# category_id=0 表示全部商品
+		# 获取全部分类
+		#categories = resource.get('mall', 'product_categories', {'uid': owner_id})
+		category = {"id": category_id, "name": u"全部"}
+	else:
+		category = resource.get('mall', 'product_category', {'id': category_id})
+
+	products = resource.get('mall', 'products_by_category', {
+		'category_id': category_id,
+		'wid': request.user_profile.webapp_id,
+		'oid': request.user_profile.user_id,
+		'is_access_weizoom_mall': request.is_access_weizoom_mall
+		}) # 按类别取商品
+
+	# 用WAPI方式获取数据
+	product_categories = resource.get('mall', 'products_categories', {
+		'wid': request.user_profile.webapp_id,
+		'oid': request.user_profile.user_id,
+		'is_access_weizoom_mall': request.is_access_weizoom_mall
+		})
 
 	for p in products:
-		if p.promotion:
-			p.promotion_js = json.dumps(p.promotion)
+		if p['promotion']:
+			p['promotion_js'] = json.dumps(p['promotion'])
 
 	has_category = False
 	if len(product_categories) > 0:
@@ -91,61 +120,57 @@ def __is_forbidden_coupon(owner_id, product_id):
 	product_id = int(product_id)
 	return product_id in forbidden_coupon_product_ids
 
-def __get_product_hint(owner_id, product_id):
-	"""
-	获取显示在商品详情页的商品相关的提示信息
-	duhao 2015-09-08
-	"""
-	hint = ''
-	if __is_forbidden_coupon(owner_id, product_id):
-		hint = u'该商品不参与全场优惠券使用！'
-	
-	return hint
 
 
-########################################################################
-# get_product: 显示“商品详情”页面
-########################################################################
 def get_product(request):
+	"""
+	显示“商品详情”页面
+
+	"""
+	#print("in get_product()")
 	product_id = request.GET['rid']
 	webapp_user = request.webapp_user
 
 	member_grade_id = request.member.grade_id if request.member else None
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
-	product = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	#duhao 2015-09-08
-	hint = __get_product_hint(request.webapp_owner_id, product_id)
+	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
+	#product0 = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
+	#hint = __get_product_hint(request.webapp_owner_id, product_id)
+	hint = resource.get('mall', 'product_hint', {'woid': request.webapp_owner_id, 'id': product_id}).get('hint', '')
 
-	if product.is_deleted:
+	if product['is_deleted']:
+	#if product.is_deleted:
 		c = RequestContext(request, {
 			'is_deleted_data': True
 		})
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
-	if product.promotion:
-		product.promotion['is_active'] = product.promotion_model.is_active
+	#if product.get('promotion'):
+	#	product['promotion']['is_active'] = product['promotion_model'].is_active
 	jsons = [{
 		"name": "models",
-		"content": product.models
+		"content": product.get('models')
 	}, {
 		'name': 'priceInfo',
-		'content': product.price_info
+		'content': product.get('price_info')
 	}, {
 		'name': 'promotion',
-		'content': product.promotion
+		'content': product.get('promotion')
 	}]
 
 	non_member_followurl = None
 	if request.user.is_weizoom_mall:
-		product.is_can_buy_by_product(request)
-		otherProfile = UserProfile.objects.get(user_id=product.owner_id)
+		# TODO: is_can_buy_by_product做什么？To be deprecated.
+		#product0.is_can_buy_by_product(request)
+		# TODO: API化
+		otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
 		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
 		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
 			non_member_followurl = otherSettings.weshop_followurl
 
 			# liupeiyu 记录点击关注信息
-			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product.id, product.owner.id)
+			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product['id'], product['owner_id'])
 
 	request.should_hide_footer = True
 
@@ -155,21 +180,21 @@ def get_product(request):
 	is_non_member = True if request.member else False
 
 	c = RequestContext(request, {
-		'page_title': product.name,
+		'page_title': product['name'],
 		'product': product,
 		'jsons': jsons,
-		'is_deleted_data': product.is_deleted if hasattr(product, 'is_deleted') else False,
-		'model_property_size': len(product.product_model_properties),
+		'is_deleted_data': product.get('is_deleted', False),
+		'model_property_size': len(product.get('product_model_properties',[])),
 		'hide_non_member_cover': True,
 		'non_member_followurl': non_member_followurl,
-		'price_info': product.price_info,
+		'price_info': product['price_info'],
 		'usable_integral': usable_integral,
 		'use_integral': use_integral,
 		'is_non_member': is_non_member,
 		'per_yuan': request.webapp_owner_info.integral_strategy_settings.integral_each_yuan,
 		#add by bert 增加分享时显示信息
-		'share_page_desc': product.name,
-		'share_img_url': product.thumbnails_url,
+		'share_page_desc': product['name'],
+		'share_img_url': product['thumbnails_url'],
 		#add by duhao 增加友情提示语
 		'hint': hint
 	})
@@ -177,32 +202,46 @@ def get_product(request):
 	if hasattr(request, 'is_return_context'):
 		return c, product
 	else:
+		# 默认目录: default_v3
 		return render_to_response('%s/product_detail.html' % request.template_dir, c)
 
+PAGE_TITLE_TYPE = {
+	-1: u'全部订单列表',
+	0: u'待支付',
+	3: u'待发货',
+	4: u'待收货',
+	5: u'待评价',
+}
 
-########################################################################
-# get_order_list: 获取订单列表
-########################################################################
+
 def get_order_list(request):
-    type = int(request.GET.get('type', -1))
-    orders = mall_api.get_orders(request)
+	"""
+	获取订单列表
+	"""
+	type = int(request.GET.get('type', -1))
 
-    status = {
-        -1: u'全部订单列表',
-        0: u'待支付',
-        3: u'待发货',
-        4: u'待收货',
-        5: u'待评价',
-    }
+	orders = resource.get('mall', 'orders', {
+		'wuid': request.webapp_user.id,
+		'member_id': request.member.id,
+		# red_envelop_rule_id参数可以为None
+		'red_envelop_rule_id': request.webapp_owner_info.red_envelope['id'] if request.webapp_owner_info.red_envelope else '',
+		'woid': request.webapp_owner_id
+		})
+	#orders = mall_api.get_orders(request)
+	for order in orders:
+		order['created_at'] = utils_dateutil.parse_datetime(order['created_at'])
+	print("orders: {}".format(orders))
 
-    c = RequestContext(request, {
-        'is_hide_weixin_option_menu': True,
-        'page_title': status[type],
-        'orders': orders,
-        'hide_non_member_cover': True,
-        'status_type': type
-    })
-    return render_to_response('%s/order_list.html' % request.template_dir, c)
+	c = RequestContext(request, {
+			'is_hide_weixin_option_menu': True,
+			'page_title': PAGE_TITLE_TYPE[type],
+			'orders': orders,
+			'hide_non_member_cover': True,
+			'status_type': type
+	})
+	return render_to_response('%s/order_list.html' % request.template_dir, c)
+
+
 
 
 ########################################################################
@@ -241,7 +280,7 @@ def pay_order(request):
 
 	red_envelope = request.webapp_owner_info.red_envelope
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
-		order.red_envelope = red_envelope.id
+		order.red_envelope = red_envelope['id']
 		if promotion_models.RedEnvelopeToOrder.objects.filter(order_id=order.id).count():
 			order.red_envelope_created = True
 
@@ -378,7 +417,7 @@ def get_pay_result(request):
 	if promotion_models.RedEnvelopeRule.can_show_red_envelope(order, red_envelope):
 		# 是可以显示分享红包按钮
 		is_show_red_envelope = True
-		red_envelope_rule_id = red_envelope.id
+		red_envelope_rule_id = red_envelope['id']
 
 	#获取订单包含商品
 	order_has_products = OrderHasProduct.objects.filter(order=order)
@@ -499,8 +538,9 @@ def get_pay_notify_result(request):
 
 
 def show_shopping_cart(request):
-	'''显示购物车详情
-	'''
+	"""
+	显示购物车详情
+	"""
 	product_groups, invalid_products = mall_api.get_shopping_cart_products(request)
 	product_groups = _sorted_product_groups_by_promotioin(product_groups)
 
@@ -615,7 +655,8 @@ def __fill_coupons_for_edit_order(webapp_user, products, webapp_owner_id):
 		product_ids.append(product.id)
 		product_total_price = product.price * product.purchase_count
 		product_total_original_price = product.original_price * product.purchase_count
-		if not __is_forbidden_coupon(webapp_owner_id, product.id):
+		# TODO: 去掉ProductHint的直接调用
+		if not ProductHint.is_forbidden_coupon(webapp_owner_id, product.id):
 			#不是被禁用全场优惠券的商品 duhao 20150908
 			total_price += product_total_price
 			is_forbidden_coupon = False
@@ -716,7 +757,8 @@ def __format_product_group_price_factor(product_groups, webapp_owner_id):
 
 
 def get_member_discount(request):
-	"""返回与会员等级相关的折扣
+	"""
+	返回与会员等级相关的折扣
 
 	Return:
 	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回1.00
@@ -733,7 +775,8 @@ def get_member_discount(request):
 
 
 def get_member_discount_percentage(request):
-	"""返回与会员等级相关的折扣
+	"""
+	返回与会员等级相关的折扣
 
 	Return:
 	  fload: 如果用户是会员返回对应的折扣， 否这不打折返回100

@@ -124,7 +124,7 @@ Background:
 		}]
 		"""
 
-@promotion @promotionRedbag @kuki
+@mall2 @promotion @promotionRedbag
 Scenario:1 自动回复获取图文领取分享红包
 	#自动回复单图文领取分享红包
 	When 清空浏览器
@@ -143,7 +143,7 @@ Scenario:1 自动回复获取图文领取分享红包
 	#自动回复多图文领取分享红包
 	When bill在微信中向jobs的公众号发送消息'红包2'
 	Then bill收到自动回复'多图文'
-    When bill点击图文"sub红包2图文"
+	When bill点击图文"sub红包2图文"
 	Then bill能获得webapp优惠券列表
 		"""
 		[{
@@ -174,7 +174,7 @@ Scenario:1 自动回复获取图文领取分享红包
 		}]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario:2 通过好友分享获取图文领取分享红包
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -205,6 +205,10 @@ Scenario:2 通过好友分享获取图文领取分享红包
 		"""
 
 	#非会员通过分享链接领取分享红包
+	#暂时用先关注再取消关注的方式来模拟非会员的情况，需要改进
+	When tom2关注jobs的公众号
+	And tom2取消关注jobs的公众号
+	When tom2访问jobs的webapp
 	When tom2点击bill分享红包链接
 	Then tom2能获得webapp优惠券列表
 		"""
@@ -227,7 +231,7 @@ Scenario:2 通过好友分享获取图文领取分享红包
 		}]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario:3 优惠券库存为0,红包领取失败
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
@@ -238,7 +242,7 @@ Scenario:3 优惠券库存为0,红包领取失败
 			"name": "单品券1",
 			"count": 4,
 			"members": ["bill"],
-			"coupon_ids": ["coupon1_id_4","coupon1_id_3", "coupon1_id_2", "coupon1_id_1"]
+			"coupon_ids": ["coupon1_id_4","coupon1_id_3","coupon1_id_2","coupon1_id_1"]
 		}
 		"""
 	When bill在微信中向jobs的公众号发送消息'红包1'
@@ -271,8 +275,9 @@ Scenario:3 优惠券库存为0,红包领取失败
 	When bill把jobs的分享红包链接分享到朋友圈
 
 	#tom点击bill分享链接页面展示'很遗憾，红包已经领完了'
-	When tom访问jobs的webapp
+
 	When tom点击bill分享红包链接
+	When tom访问jobs的webapp
 	Then tom能获得webapp优惠券列表
 		"""
 		[]
@@ -281,10 +286,12 @@ Scenario:3 优惠券库存为0,红包领取失败
 	When jobs为优惠券'单品券1'添加库存
 		"""
 		{
-			"count": 2,
+			"count": 1,
 			"coupon_id_prefix": "coupon1_id_"
 		}
 		"""
+	When bill访问jobs的webapp
+	When bill把jobs的分享红包链接分享到朋友圈
 	When tom访问jobs的webapp
 	When tom点击bill分享红包链接
 	Then tom能获得webapp优惠券列表
@@ -296,7 +303,7 @@ Scenario:3 优惠券库存为0,红包领取失败
 		}]
 		"""
 
-@promotion @promotionRedbag
+@mall2 @promotion @promotionRedbag
 Scenario:4 删除分享红包,红包领取失败
 	Given jobs登录系统
 	Then jobs能获取分享红包列表
@@ -311,7 +318,7 @@ Scenario:4 删除分享红包,红包领取失败
 			"actions": ["分析","删除","查看"]
 		}]
 		"""
-  	When jobs-删除分享红包"【图文领取】红包1"
+	When jobs-删除分享红包"【图文领取】红包1"
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'

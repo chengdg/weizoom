@@ -45,6 +45,6 @@ class NewsPreview(resource.Resource):
             'material_id': material_id,
             'newses': json.dumps(newses_object),
             'material': material,
-            'head_img': get_mp_qrcode_img(request.user.id)
+            'head_img': get_mp_qrcode_img(request.manager.id)
         })
         return render_to_response('weixin/advance_manage/news_preview.html', c)

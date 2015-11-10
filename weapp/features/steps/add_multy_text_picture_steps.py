@@ -16,12 +16,19 @@ def adict_addNews(addNews):
     adict['type'] = 'news'
     adict['display_index'] = 1
     adict['title'] = addNews['title']
-    adict['summary'] = ''
+    adict['summary'] = addNews.get('summary', '')
     adict['text'] = addNews.get('content','')
     adict['pic_url'] = addNews['cover'][0]['url']
     adict['is_show_cover_pic'] = addNews['cover_in_the_text']
     adict['url'] = addNews.get('jump_url','')
-    adict['link_target'] = addNews.get('link_target','')
+    if adict['url'].strip().startswith('www.'):
+        adict['url'] = 'http://' + adict['url'].strip()
+    if adict['url']:
+        adict['link_target'] = '{"workspace":"custom","workspace_name":"外部链接",'\
+        '"data_category":"外部链接","data_item_name":"外部链接","data_path":"%s",'\
+        '"data":"%s"}' %(adict['url'], adict['url'])
+    else:
+        adict['link_target'] = ''
     return adict
 
 @when(u"{user}已添加多图文")
@@ -57,8 +64,6 @@ def step_impl(context, user, news_title):
     expected_datas = json.loads(context.text)
     for expected_data in expected_datas:
         expected_data['cover_in_the_text'] = True if (expected_data.get('cover_in_the_text', True) in ('true', 'yes', 'True', 'Yes', True)) else False
-
+        if expected_data.get('jump_url',''):
+            expected_data['jump_url'] = 'http://' + expected_data['jump_url'].strip()
     bdd_util.assert_list(expected_datas, actual_datas)
-
-
-

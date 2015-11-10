@@ -385,7 +385,9 @@ class PageStore(object):
 					if component:
 						pages[i]["components"][j] = self.__update_category(component)
 					else:
-						delete_ids.append(j)
+						# 组件中删除该分组信息，但保留控件 by liupeiyu
+						pages[i]["components"][j]["model"]["category"] = ""
+						# delete_ids.append(j)
 
 			for id in delete_ids:
 				del pages[i]["components"][id]			

@@ -52,6 +52,7 @@ W.weapp.dialog.LoginDialog = W.dialog.Dialog.extend({
 			$('.login-error').removeClass('hidden');
 			return false;
 		}
+
 		var $checkbox = $('[name=remember_password]');
 		var remember_password = $checkbox[0].checked;
 		var _this = this;

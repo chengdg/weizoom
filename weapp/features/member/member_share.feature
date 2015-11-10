@@ -1,5 +1,7 @@
-# __author__ : "崔帅帅"
+#author: 崔帅帅
+#editor: 张三香 2015.10.16
 @func:webapp.modules.user_center.views
+
 Feature: 微信会员分享信息和关系建立
 	A和B是会员,其余不是会员
 	1.A-->(E,F,G)
@@ -12,7 +14,7 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-@mall2 @crm @member @member.member_share
+@mall2 @member @memberList   @crm @member @member.member_share
 Scenario:1 建立好友关系传播情景,A-->(E,F,G)
 
 	When 清空浏览器
@@ -77,7 +79,7 @@ Scenario:1 建立好友关系传播情景,A-->(E,F,G)
 		}]
 		"""
 
-@mall2 @crm @member @member.member_share
+@mall2 @member @memberList   @crm @member @member.member_share
 Scenario:2 建立好友关系传播情景,A-->B-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -134,7 +136,7 @@ Scenario:2 建立好友关系传播情景,A-->B-->(E,F,G)
 		}]
 		"""
 
-@mall2 @crm @member @member.member_share
+@mall2 @member @memberList   @crm @member @member.member_share
 Scenario:3 建立好友关系传播情景,A-->C-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -201,7 +203,7 @@ Scenario:3 建立好友关系传播情景,A-->C-->(E,F,G)
 		}]
 		"""
 
-@mall2 @crm @member @member.member_share
+@mall2 @member @memberList   @crm @member @member.member_share
 Scenario:4 建立好友关系传播情景,A-->C-->B-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -263,7 +265,7 @@ Scenario:4 建立好友关系传播情景,A-->C-->B-->(E,F,G)
 		}]
 		"""
 
-@mall2 @crm @member @member.member_share
+@mall2 @member @memberList   @crm @member @member.member_share
 Scenario:5 建立好友关系传播情景,A-->C-->D-->(E,F,G)
 	When 清空浏览器
 	When bill关注jobs的公众号

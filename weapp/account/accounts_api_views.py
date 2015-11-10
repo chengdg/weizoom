@@ -88,6 +88,23 @@ INVALID_KEY_ERROR_CODE = 888
 
 from product import module_api as weapp_product_api
 
+def delete_user_by_agent(request):
+	from_username = request.POST['f_un']
+	to_username = request.POST['t_un']
+	key = request.POST['key']
+	try:
+		for user in User.objects.filter(username=from_username):
+			user.is_active = False
+			user.username = to_username
+			user.save()
+
+		response = create_response(200)
+	except:
+		response = create_response(500)
+
+	return response.get_response()
+	
+
 def create_new_user_by_agent(request):
 	username = request.POST['un']
 	password = request.POST['pw']
@@ -98,6 +115,7 @@ def create_new_user_by_agent(request):
 	host_name = request.POST.get('hn', '')
 	product_id = int(request.POST.get('pid', -1))
 	company_name = request.POST.get('cn', None)
+	manager_name = request.POST.get('mn', None)
 	
 	exist_users = User.objects.filter(username=username)
 	if exist_users.count() > 0:
@@ -117,6 +135,17 @@ def create_new_user_by_agent(request):
 		profile.expire_date_day = dateutil.yearsafter(use_year)
 		profile.system_version = weapp_product_api.get_product_name(product_id)
 		profile.host_name = host_name
+
+		#add by duhao 20151016
+		#从fans创建子账号时，需要设置manager账号的id
+		if manager_name:
+			try:
+				manager_id = User.objects.get(username=manager_name).id
+				profile.manager_id = manager_id
+			except:
+				pass
+
+			
 		if system_name is not None:
 			profile.system_name = system_name
 

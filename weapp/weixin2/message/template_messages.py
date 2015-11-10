@@ -57,7 +57,7 @@ class MessageIndustry(resource.Resource):
         major_templates = []
         try:
             major_type = int(major_type)
-            majors = MarketToolsTemplateMessageDetail.objects.filter(owner=request.user, industry=major_type)
+            majors = MarketToolsTemplateMessageDetail.objects.filter(owner=request.manager, industry=major_type)
             if len(majors) > 0:
                 majors.update(type=MAJOR_INDUSTRY_TYPE)
             else:
@@ -68,7 +68,7 @@ class MessageIndustry(resource.Resource):
         deputy_templates = []
         try:
             deputy_type = int(request.POST.get('deputy_type'))
-            deputies = MarketToolsTemplateMessageDetail.objects.filter(owner=request.user, industry=deputy_type)
+            deputies = MarketToolsTemplateMessageDetail.objects.filter(owner=request.manager, industry=deputy_type)
             if len(deputies) > 0:
                 deputies.update(type=DEPUTY_INDUSTRY_TYPE)
             else:
@@ -76,11 +76,11 @@ class MessageIndustry(resource.Resource):
             industries.append(deputy_type)
         except:
             pass
-        MarketToolsTemplateMessageDetail.objects.filter(owner=request.user).exclude(industry__in=industries).delete()
+        MarketToolsTemplateMessageDetail.objects.filter(owner=request.manager).exclude(industry__in=industries).delete()
         if major_templates:
             for template in major_templates:
                 MarketToolsTemplateMessageDetail.objects.create(
-                    owner = request.user,
+                    owner = request.manager,
                     template_message = template,
                     industry = major_type,
                     type = MAJOR_INDUSTRY_TYPE
@@ -88,7 +88,7 @@ class MessageIndustry(resource.Resource):
         if deputy_templates:
             for template in deputy_templates:
                 MarketToolsTemplateMessageDetail.objects.create(
-                    owner = request.user,
+                    owner = request.manager,
                     template_message = template,
                     industry = deputy_type,
                     type = DEPUTY_INDUSTRY_TYPE
@@ -112,7 +112,7 @@ class TemplateMessages(resource.Resource):
         获取“模板消息”的页面
         """
 
-        industries = MarketToolsTemplateMessageDetail.objects.filter(owner=request.user).values('industry', 'type').distinct()
+        industries = MarketToolsTemplateMessageDetail.objects.filter(owner=request.manager).values('industry', 'type').distinct()
         industry = {}
         for indus in industries:
             industry_name = TYPE2INDUSTRY.get(indus['industry'], '')
@@ -154,7 +154,7 @@ class TemplateMessages(resource.Resource):
         #获取每页个数
         count_per_page = int(request.GET.get('count', COUNT_PER_PAGE))
 
-        templates = MarketToolsTemplateMessageDetail.objects.filter(owner=request.user).order_by('type')
+        templates = MarketToolsTemplateMessageDetail.objects.filter(owner=request.manager).order_by('type')
         pageinfo, templates = paginator.paginate(templates, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
         template_ids = [t.template_message_id for t in templates]
         messages = MarketToolsTemplateMessage.objects.filter(id__in=template_ids)

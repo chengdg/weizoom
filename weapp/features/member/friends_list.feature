@@ -1,4 +1,5 @@
-#_author_:王丽
+#author: 王丽
+#editor: 张三香 2015.10.16
 
 Feature: 会员管理-好友关系列表
 """
@@ -242,7 +243,6 @@ Background:
 Scenario:1 会员的好友列表和推荐关注列表
 
 	Given jobs登录系统
-
 	#会员的推荐关注列表数据
 	Then jobs获得'bill'推荐关注统计
 		"""
@@ -290,7 +290,6 @@ Scenario:1 会员的好友列表和推荐关注列表
 Scenario:2 会员的好友列表和推荐关注列表分页
 
 	Given jobs登录系统
-
 	#推荐关注列表分页
 		Given jobs设置分页查询参数
 			"""
@@ -315,7 +314,6 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 			|  member  | pay_money |  integral  |  Source  | attention_time |
 			|  bill3   |    0      |     0      | 会员分享 |      今天      |
 			|  bill1   |    0      |     50     | 会员分享 |      今天      |
-
 
 	#好友列表分页
 		Given jobs设置分页查询参数

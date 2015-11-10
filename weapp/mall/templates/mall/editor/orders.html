@@ -368,8 +368,10 @@ $(document).ready(function() {
 		status = $el.data('total-status-value');
 		filterBox.trigger('clickStatusBox', status);
 	});
-    $('[data-ui-role="advanced-table"]').data('view').afterload = function(){
-        common_interval_check_func();
+    var table = $('[data-ui-role="advanced-table"]');
+    if(table.length>0){
+        table.data('view').afterload = function(){
+        common_interval_check_func();}
     }
 	// 时间确定按钮
 	$('#dateTimeBtn').click(function(event){

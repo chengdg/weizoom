@@ -1,14 +1,16 @@
-# __author__ : "冯雪静"
+#author: 冯雪静
+#editor: 师帅 2015.10.19
+
 Feature: 在webapp中购买有会员折扣的商品
 	bill能在webapp中购买jobs添加的"会员价的商品"
-"""
-列表页、详情页、购物车页、下单页、订单页，全显示会员价
-1.购买单个会员价商品：直接下单
-2.购买多个会员价商品：从购物车下单
-3.购买多个商品包括会员价商品：从购物车下单，购买的商品有原价和会员价
-4.订单完成后，达到自动升级的条件：会员的订单完成后，满足自动升级的条件，自动升级
-5.使用积分购买商品后，取消订单，积分返回不增加经验值
-"""
+	"""
+	列表页、详情页、购物车页、下单页、订单页，全显示会员价
+	1.购买单个会员价商品：直接下单
+	2.购买多个会员价商品：从购物车下单
+	3.购买多个商品包括会员价商品：从购物车下单，购买的商品有原价和会员价
+	4.订单完成后，达到自动升级的条件：会员的订单完成后，满足自动升级的条件，自动升级
+	5.使用积分购买商品后，取消订单，积分返回不增加经验值
+	"""
 
 Background:
 	Given jobs登录系统
@@ -146,27 +148,9 @@ Background:
 			"member_rank": "铜牌会员"
 		}
 		"""
-	Then jobs可以获得会员列表
-		"""
-		[{
-			"name": "tom",
-			"member_rank": "普通会员",
-			"pay_money": 0.00,
-			"pay_times": 0,
-			"experience": 20,
-			"integral": 20
-		}, {
-			"name": "bill",
-			"member_rank": "铜牌会员",
-			"pay_money": 0.00,
-			"pay_times": 0,
-			"experience": 20,
-			"integral": 20
-		}]
-		"""
 
 @mall2 @member_product
-Scenario: 1 购买单个会员价商品
+Scenario:1 购买单个会员价商品
 	jobs添加商品后
 	1. tom能在webapp中购买jobs添加的会员价商品
 	2. tom是普通会员没有会员折扣
@@ -221,7 +205,7 @@ Scenario: 1 购买单个会员价商品
 		"""
 
 @mall2 @member_product
-Scenario: 2 购买多个会员价商品
+Scenario:2 购买多个会员价商品
 	jobs添加商品后
 	1. bill能在webapp中把jobs添加的会员价商品添加到购物车
 	2. bill能获取购物车的商品
@@ -329,9 +313,8 @@ Scenario: 2 购买多个会员价商品
 		}
 		"""
 
-
 @mall2 @member_product
-Scenario: 3 购买多个商品包括会员价商品
+Scenario:3 购买多个商品包括会员价商品
 	jobs添加商品后
 	1. bill能在webapp中购买jobs的商品
 	2. bill购买的商品中有普通商品和会员价商品
@@ -376,20 +359,20 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 	And bill填写收货信息
-	"""
+		"""
 		{
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"area": "北京市 北京市 海淀区",
 			"ship_address": "泰兴大厦"
 		}
-	"""
+		"""
 	And bill在购物车订单编辑中点击提交订单
-	"""
-	{
-		"pay_type": "货到付款"
-	}
-	"""
+		"""
+		{
+			"pay_type": "货到付款"
+		}
+		"""
 	Then bill成功创建订单
 		"""
 		{
@@ -407,8 +390,8 @@ Scenario: 3 购买多个商品包括会员价商品
 		}
 		"""
 
-@meberGrade @mall2
-Scenario: 4 订单完成后，达到自动升级的条件
+@mall2 @meberGrade
+Scenario:4 订单完成后，达到自动升级的条件
 	jobs添加商品后
 	1. tom能在webapp中购买jobs的商品后，完成订单后
 	2. tom达到自动升级的条件，并升级
@@ -555,23 +538,21 @@ Scenario: 4 订单完成后，达到自动升级的条件
 			"member_rank": "铜牌会员",
 			"pay_money": 600.00,
 			"pay_times": 1,
-			"experience": 50,
 			"integral": 50
 		}, {
 			"name": "bill",
 			"member_rank": "铜牌会员",
 			"pay_money": 0.00,
 			"pay_times": 0,
-			"experience": 20,
 			"integral": 20
 		}]
 		"""
 
 @mall2 @integral_experience
-Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加经验值
+Scenario:5 使用积分购买商品后，取消订单，积分返回
 	jobs添加商品后
 	1. bill能在webapp中使用积分购买jobs的商品后，创建订单后
-	2. jobs取消bill的订单，bill积分返还，经验值不变
+	2. jobs取消bill的订单，bill积分返还
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -679,14 +660,12 @@ Scenario: 5 使用积分购买商品后，取消订单，积分返回不增加�
 			"member_rank": "普通会员",
 			"pay_money": 0.00,
 			"pay_times": 0,
-			"experience": 20,
 			"integral": 20
 		}, {
 			"name": "bill",
 			"member_rank": "铜牌会员",
 			"pay_money": 88.00,
 			"pay_times": 1,
-			"experience": 50,
 			"integral": 50
 		}]
 		"""

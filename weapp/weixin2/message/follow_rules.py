@@ -51,10 +51,10 @@ class FollowRules(resource.Resource):
         else:
             rule =None
             try:
-                raw_rule = Rule.objects.get(owner=request.user, type=FOLLOW_TYPE)
+                raw_rule = Rule.objects.get(owner=request.manager, type=FOLLOW_TYPE)
                 if not raw_rule.answer or raw_rule.answer == '':
                     #当内容为空时删除该条记录
-                    Rule.objects.filter(owner=request.user, type=FOLLOW_TYPE).delete()
+                    Rule.objects.filter(owner=request.manager, type=FOLLOW_TYPE).delete()
                 else:
                     rule = raw_rule.format_to_dict()
             except Exception, e:
@@ -84,9 +84,9 @@ class FollowRules(resource.Resource):
         material_id = request.POST.get('material_id', 0)
 
         rule = None
-        if Rule.objects.filter(owner=request.user, type=FOLLOW_TYPE).count() < 1:
+        if Rule.objects.filter(owner=request.manager, type=FOLLOW_TYPE).count() < 1:
             rule = Rule.objects.create(
-                owner = request.user,
+                owner = request.manager,
                 type = FOLLOW_TYPE,
                 answer = answer,
                 material_id = material_id
@@ -129,5 +129,5 @@ class FollowRules(resource.Resource):
         删除关注自动回复规则
         """
         id = int(request.POST.get('id', -1))
-        Rule.objects.filter(owner=request.user, id=id, type=FOLLOW_TYPE).delete()
+        Rule.objects.filter(owner=request.manager, id=id, type=FOLLOW_TYPE).delete()
         return create_response(200).get_response()

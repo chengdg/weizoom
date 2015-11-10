@@ -109,7 +109,7 @@ W.component.wepage.Navar = W.component.Component.extend({
             xwarn(model.get('items'));
 
             // 修改 一级菜单 限制
-            var titleMaxLength = 5;
+            var titleMaxLength = 4;
             var propertyViewTitle = "";
             var otherUpdateDisplayName = "";
             if (oldType == 'weixin') {
@@ -121,7 +121,7 @@ W.component.wepage.Navar = W.component.Component.extend({
             } else {
                 this.name2field['items'].minItemLength = 1;
                 this.name2field['items'].maxItemLength = 3;
-                titleMaxLength = 5;
+                titleMaxLength = 4;
                 propertyViewTitle = '一级菜单';
                 otherUpdateDisplayName = '菜单';
             }

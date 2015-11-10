@@ -35,22 +35,22 @@ class ChannelQrcode(resource.Resource):
     @login_required
     @mp_required
     def get(request):
-        mpuser = get_system_user_binded_mpuser(request.user)
+        mpuser = get_system_user_binded_mpuser(request.manager)
 
         if (mpuser is None) or (not mpuser.is_certified) or (not mpuser.is_service):
             should_show_authorize_cover = True
         else:
             should_show_authorize_cover = False
 
-        coupon_rules = get_coupon_rules(request.user)
+        coupon_rules = get_coupon_rules(request.manager)
         try:
-            member_qrcode_setting = MemberChannelQrcodeSettings.objects.get(owner=request.user)
+            member_qrcode_setting = MemberChannelQrcodeSettings.objects.get(owner=request.manager)
         except:
             member_qrcode_setting = None
 
         if member_qrcode_setting:
             try:
-                award_content = MemberChannelQrcodeAwardContent.objects.get(owner=request.user)
+                award_content = MemberChannelQrcodeAwardContent.objects.get(owner=request.manager)
             except:
                 award_content = None
         else:
@@ -98,9 +98,9 @@ class ChannelQrcode(resource.Resource):
                     award_member_type=int(reward),
                     detail=detail
                 )
-                MemberChannelQrcodeAwardContent.objects.filter(owner=request.user).delete()
+                MemberChannelQrcodeAwardContent.objects.filter(owner=request.manager).delete()
                 MemberChannelQrcodeAwardContent.objects.create(
-                        owner=request.user,
+                        owner=request.manager,
                         member_channel_qrcode_settings_id=id,
                         scanner_award_type=scanner_award_type,
                         scanner_award_content=scanner_award_content,
@@ -109,13 +109,13 @@ class ChannelQrcode(resource.Resource):
                 )
             else:
                 member_qrcode_settings = MemberChannelQrcodeSettings.objects.create(
-                        owner=request.user,
+                        owner=request.manager,
                         award_member_type=int(reward),
                         detail=detail
                     )
 
                 MemberChannelQrcodeAwardContent.objects.create(
-                        owner=request.user,
+                        owner=request.manager,
                         member_channel_qrcode_settings=member_qrcode_settings,
                         scanner_award_type=scanner_award_type,
                         scanner_award_content=scanner_award_content,
@@ -187,7 +187,7 @@ def _get_channel_qrcode_items(request):
     if 'created_at' in  sort_attr:
         created_at = sort_attr
 
-    setting = MemberChannelQrcodeSettings.objects.filter(owner=request.user)
+    setting = MemberChannelQrcodeSettings.objects.filter(owner=request.manager)
 
     if setting.count() > 0:
         member_channel_qrcodes = MemberChannelQrcode.objects.filter(
@@ -260,7 +260,7 @@ def _get_channel_qrcode_items(request):
     #response.data.items = []
     items = []
 
-    mp_user = get_binding_weixin_mpuser(request.user)
+    mp_user = get_binding_weixin_mpuser(request.manager)
     mpuser_access_token = get_mpuser_accesstoken(mp_user)
 
     for qrcode in member_channel_qrcodes:

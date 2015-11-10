@@ -8,16 +8,9 @@
     margin-left: 10px;
   }
   .xui-create-redEnvelope-page .imageView-uploadZone{
-      position: relative;
-      top: -30px;
-  }
-  .xui-create-redEnvelope-page .uploadify{
-    height:30px!important;
-    margin-bottom: 0!important;
-  }
-  .xui-create-redEnvelope-page .swfupload{
-    height:30px!important;
-    margin-bottom: 0!important;
+      position: absolute;
+        margin-top: 60px;
+      z-index: 99999;
   }
   .xui-create-redEnvelope-page .uploadify-button{
     background-color: #fafafa;
@@ -201,11 +194,11 @@
     <fieldset>
         <span class="xui-fontBold ml30" style="font-size:14px;">分享图文设置</span>
         <hr class="ml30" style="border-color:#ccc;margin-top:8px;width:638px;">
-        <div class="form-group pr" style="min-height:100px;">
+        <div class="form-group pr" style="min-height: 160px;;">
             <label for="" class="control-label col-sm-2 col-sm-offset-1 pt0 w110">分享图片</label>
             <p class="xui-imgTips">注：不上传为使用默认图片<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;推荐尺寸:90*90，仅支持jpg,png&nbsp;&nbsp;<i class="xa-tips">?</i></p>
-            <input type="hidden" name="share_pic" id="share_pic" value="{% if red_envelope_rule.share_pic %}{{red_envelope_rule.share_pic }}{% else %}/static_v2/img/editor/redEnv.jpg{% endif %}" data-ui-role="image-selector" data-width="90" data-height="90"/>
-            <div data-ui-role="red-image-selector-view" auto-show-help="false" style="margin-left: 120px;">
+            <input type="hidden" name="share_pic" id="share_pic" value="{% if red_envelope_rule.share_pic %}{{red_envelope_rule.share_pic }}{% else %}/static_v2/img/editor/redEnv.jpg{% endif %}" data-ui-role="image-selector" data-button-text="重新上传" data-format="jpg; *.png;" data-show-delete="false" data-width="90" data-height="90" />
+            <div data-ui-role="image-selector-view" auto-show-help="false" style="margin-left: 120px;">
             </div>
             <div class="errorHint"></div>
         </div>

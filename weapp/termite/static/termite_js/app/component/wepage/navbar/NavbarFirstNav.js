@@ -18,7 +18,7 @@ W.component.wepage.NavbarFirstNav = W.component.Component.extend({
             	name: 'title',
             	type: 'text',
             	displayName: '标题',
-                maxLength:5,
+                maxLength:4,
                 validate: 'data-validate="require-notempty::标题名不能为空"',
                 validateIgnoreDefaultValue: true,
                 validateIgnoreDefaultValue: true,

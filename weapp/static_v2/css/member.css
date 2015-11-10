@@ -442,6 +442,10 @@
   color: #fff;
   line-height: 20px;
 }
+.xui-memberOrderPayDialog .xui-advancedTablePaginator {
+	padding-right: 20px;
+	padding-top: 10px;
+}
 .xui-memberOrderPayDialog .modal-body{
 	padding:0px;
 }

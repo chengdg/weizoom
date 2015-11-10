@@ -16,62 +16,59 @@
 		</div>
 		<span class="xui-systemName"></span>
 		<div class="xui-headerActionBar">
-			{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
-			<a href="http://fans.weapp.weizzz.com/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
-			{% endif %}
-			<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
-            {% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
-			<a href="{{ fans_host }}/message/message_list/?from=portal"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:inline" id ="message_count"></i></a>
-            <a href="{{ fans_host }}/help_center/outline/"><i class="xui-toolIcon"></i>帮助中心</a>
-			{% endif %}
+			{% if request.user.id == request.manager.id %}
+					<a href="{{ fans_host }}/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
+					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
+				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
+					<a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:none" id ="message_count"></i></a>
+					<a href="{{ fans_host }}/help_center/outline/" target="_blank"><i class="xui-toolIcon"></i>帮助中心</a>
+				{% endif %}
+				<div id='popover_tmpl' style="display:none;">
+					<form class="form-horizontal">
+						<div class="control-group">
+							<span class="control-label" for="old_password">当前密码</span>
+							<span class="controls">
+								<input type="password" id="old_password" name="old_password"/>
+							</span>
+						</div>
 
-			<!-- <a href="#"><i class="xui-toolIcon"></i>帮助中心 </a> -->
+						<div class="control-group">
+							<span class="control-label pr15" for="new_password">新密码</span>
+							<span class="controls">
+								<input type="password" id="new_password" name="new_password" />
+							</span>
+						</div>
+
+						<div class="control-group">
+							<span class="control-label" for="confirm_password">确认密码</span>
+							<span class="controls">
+								<input type="password" id="confirm_password" name="confirm_password"/>
+								<p class="origin edit_password" error="old_password"></p>
+							</span>
+						</div>
+
+						<div class="control-group tc">
+							<input type="button" class="btn btn-primary xa-submit btn-sm " value="保存" />
+							<input type="button" class="btn btn-default xa-cancle btn-sm" value="取消" />
+						</div>
+					</form>
+				</div>
+			{% endif %}
 			<span class="ml15">欢迎您：{{ request.user.username }}</span>
 			<a href="javascript:void(0)" onclick="logout()" title="{{ request.user.username }}" class="ml10">退出</a>
 			</span>
-			<div id='popover_tmpl' style="display:none;">
-		 		<form class="form-horizontal">
-					<div class="control-group">
-						<span class="control-label" for="old_password">当前密码</span>
-						<span class="controls">
-							<input type="password" id="old_password" name="old_password"/>
-						</span>
-					</div>
-
-					<div class="control-group">
-						<span class="control-label pr15" for="new_password">新密码</span>
-						<span class="controls">
-							<input type="password" id="new_password" name="new_password" />
-						</span>
-					</div>
-
-					<div class="control-group">
-						<span class="control-label" for="confirm_password">确认密码</span>
-						<span class="controls">
-							<input type="password" id="confirm_password" name="confirm_password"/>
-							<p class="origin edit_password" error="old_password"></p>
-						</span>
-					</div>
-
-					<div class="control-group tc">
-						<input type="button" class="btn btn-primary xa-submit btn-sm " value="保存" />
-						<input type="button" class="btn btn-default xa-cancle btn-sm" value="取消" />
-					</div>
-				</form>
- 			</div>
+				
 		</div>
 	</div>
 	<div class="xui-navBar xa-navBar">
 		<div class="xui-i pr">
-			<ul class="xui-navBar-box clearStyle">
+			<ul class="xui-navBar-box clearStyle xa-first-navs" style="visibility:hidden;">
 				{% if first_navs %}
 					{% for nav in first_navs %}
-						{% if nav.inner_name|satisfy_permission:request %}
-						<li class="pr">
+						<li class="pr {% ifequal nav.name '大数据挖掘' %}xui-i-bigDataTab{% endifequal %}">
 							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title='{{nav.name}}'>{{nav.name}}</a>
 							{% if nav.class_name %}<i class="xui-noticyTip {{nav.class_name}}"></i>{% endif %}
 						</li>
-						{% endif %}
 					{% endfor %}
 				{% endif %}
 			</ul>
@@ -83,23 +80,17 @@
 <div id="" class="xui-mainPanel">
 	<div class="xui-container pr">
 		<!-- 左侧垂直方向二级导航 -->
-		<!-- <div class="row"> -->
-			{% if second_navs %}
-			<div id="" class="xui-sideBar xa-sideBar pa {% if second_navs %}xui-sideBarBg{% endif %}">
+		{% if second_navs %}
+			<div id="" class="xui-sideBar xa-sideBar pa xui-sideBarBg" style="visibility:hidden;">
 				<ul class="nav">
 				{% for second_nav in second_navs %}
-					<!-- {% if second_nav.section %}
-					<li><span>1111{{ second_nav.section }}</span></li>
-					{% endif %} -->
 					{% for nav in second_nav.navs %}
-					{% if nav|satisfy_permission:request %}
-						{% if not forloop.last %}
 						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-						<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-						<i class="xui-icon-arrow"></i>
-						</a>
-					   </li>
+							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+								<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+								<i class="xui-icon-arrow"></i>
+							</a>
+						</li>
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
@@ -112,44 +103,16 @@
 								</li>
 							{% endfor %}
 						{% endif %}
-					{% else %}
-						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-						<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
-						<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
-						{% if nav.name != 'orderBatchDelivery' %}
-						<i class="xui-icon-arrow"></i>
-						{% endif %}
-						</a>
-					   </li>
-							<!-- 三级导航 -->
-							{% if nav.third_navs %}
-								{% for third_nav in nav.third_navs %}
-									<li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
-										<a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
-											&nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
-											<i class="xui-icon-arrow"></i>
-										</a>
-									</li>
-								{% endfor %}
-							{% endif %}
-						{% endif %}
-
-					{% endif %}
 					{% endfor %}
 				{% endfor %}
 				</ul>
 			</div>
-			<!-- 内容 start -->
-			<div class="span9 pr xui-content" style="">
-				{% block content-panel %}{% endblock %}
-			</div>
-			<!-- 内容 end -->
-			{% else %}
-				<!-- 内容 start -->
-				{% block single-content-panel %}{% endblock %}
-				<!-- 内容 end -->
-			{% endif %}
-		<!-- </div> -->
+		{% endif %}
+		<!-- 内容 start -->
+		<div class="span9 pr xui-content xa-content" style="visibility:hidden;">
+			{% block content-panel %}{% endblock %}
+		</div>
+		<!-- 内容 end -->
 	</div>
 </div>
 
@@ -195,142 +158,139 @@
 	{% endif %}
 
 </script>
- <script type="text/javascript">
+<script type="text/javascript">
+	document.addEventListener("visibilitychange", common_interval_check_func, false);
 
-    document.addEventListener("visibilitychange", common_interval_check_func, false);
+	function common_interval_check_func(){
+		if(document.visibilityState != 'visible'){
+			return
+		}
+		W.getApi().call({
+			app:'new_weixin',
+			resource:'outline',
+			showLoading: false,
+			args:{},
+			success: function (data) {
+				//待发货订单计数
+				var unship_order_count = data.unship_order_count;
+				var orderTipItem = $('.xa-orderTip');
+				if(unship_order_count>0){
+					orderTipItem.show();
+					if(unship_order_count>99){
+						orderTipItem.text(99);
+					}
+					else{
+						orderTipItem.text(unship_order_count);
+					}
+				}
+				else{
+					orderTipItem.hide();
+					orderTipItem.text(0);
+				}
 
-    function common_interval_check_func(){
-        if(document.visibilityState != 'visible'){
-        	return
-        }
-        W.getApi().call({
-          app:'new_weixin',
-          resource:'outline',
-          showLoading: false,
-          args:{},
-          success: function (data) {
-            //待发货订单计数
-            var unship_order_count = data.unship_order_count;
-            var orderTipItem = $('.xa-orderTip');
-            if(unship_order_count>0){
-                orderTipItem.show();
-                if(unship_order_count>99){
-                   orderTipItem.text(99);
-                }
-                else{
-                   orderTipItem.text(unship_order_count);
-                }
-            }
-            else{
-              orderTipItem.hide();
-              orderTipItem.text(0);
-            }
+				//微信未读消息计数
+				var unreadRealtimeCount = data.unread_realtime_count;
+				var msgTip = $('.xa-msgTip');
+				if (unreadRealtimeCount > 0){
+					msgTip.show();
+					if (parseInt(unreadRealtimeCount) > 99){
+						unreadRealtimeCount = '99+'
+					}
+					msgTip.text(unreadRealtimeCount);
+				} else {
+					msgTip.hide();
+				}
+			},error: function(resp) {
+				//TODO 进行错误通知
+			}
+		});
+	}
 
-            //微信未读消息计数
-            var unreadRealtimeCount = data.unread_realtime_count;
-            var msgTip = $('.xa-msgTip');
-            if (unreadRealtimeCount > 0){
-                msgTip.show();
-                if (parseInt(unreadRealtimeCount) > 99){
-                    unreadRealtimeCount = '99+'
-                }
-                msgTip.text(unreadRealtimeCount);
-            } else {
-                msgTip.hide();
-            }
-	    },error: function(resp) {
-	        //TODO 进行错误通知
-	    }
-      })
-    }
+	
 
 	$(document).ready(function($) {
-		// if($('.xui-navBar-box .active').length==0 && $('.xui-navBar-box a').length){
-		// 	location.href = $('.xui-navBar-box a:first').attr('href');
-		// }else if($('.xa-sideBar .active').length==0 && $('.xa-sideBar a').length){
-		// 	location.href = $('.xa-sideBar a:first').attr('href');
-		// }
+		
+		setTimeout(function(){
+			common_interval_check_func();
+			{% if not under_develop %}
+				var common_interval_check = setInterval(common_interval_check_func, 10000);
+			{% endif %}
+		}, 1500);
 
-        common_interval_check_func();
-        {% if not under_develop %}
-        var common_interval_check = setInterval(common_interval_check_func, 10000);
-        {% endif %}
+		// 批量发货
+		$('a[name="orderBatchDelivery"]').click(function(event){
+			W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
+				success: function(data) {
+					// W.getLoadingView().show();
 
-        // 批量发货
-        $('a[name="orderBatchDelivery"]').click(function(event){
+					W.getApi().call({
+						app: 'mall2',
+						resource: 'bulk_shipment',
+						method: 'post',
+						args: {
+							file_url: data
+						},
+						success: function(data) {
+							console.log('bulk_shipments/update', data.error_count);
+							if (data.error_count == 0) {
+								W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
+								W.getLoadingView().hide();
+							} else {
+								W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
+										data: data,
+										success: function(data) {},
+										error: function(data) {}
+									});
+							}
+							if (data.success_count>0){
+								common_interval_check_func();
+							}
 
-            W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
-                success: function(data) {
-                    // W.getLoadingView().show();
-
-                    W.getApi().call({
-                        app: 'mall2',
-                        resource: 'bulk_shipment',
-                        method: 'post',
-                        args: {
-                            file_url: data
-                        },
-                        success: function(data) {
-                            console.log('bulk_shipments/update', data.error_count);
-                            if (data.error_count == 0) {
-                                W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
-                                W.getLoadingView().hide();
-                            } else {
-                                W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
-                                        data: data,
-                                        success: function(data) {},
-                                        error: function(data) {}
-                                    });
-                            }
-                            if (data.success_count>0){
-                                common_interval_check_func();
-                            }
-
-                        },
-                        error: function(resp) {
-                            W.getLoadingView().hide();
-                            W.getErrorHintView().show('处理失败，请稍后重试！66666');
-                        }
-                    })
-                }
-            });
-
-
-        });
+						},
+						error: function(resp) {
+							W.getLoadingView().hide();
+							W.getErrorHintView().show('处理失败，请稍后重试！66666');
+						}
+					})
+				}
+			});
+		});
 		var tmpl = getPopoverContent();
 		$('#mf').popover({
-		    html: true,
-		    trigger: "click",
-		    content: tmpl,
-		    container: '.xui-headerActionBar',
-		    animation: false,
-		    placement: "bottom",
-		    template: '<div class="popover" role="tooltip" id="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
-  		});
-  		$('#mf').on('shown.bs.popover',initSubmit);
-  		function getPopoverContent(){
+			html: true,
+			trigger: "click",
+			content: tmpl,
+			container: '.xui-headerActionBar',
+			animation: false,
+			placement: "bottom",
+			template: '<div class="popover" role="tooltip" id="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
+		});
+		$('#mf').on('shown.bs.popover',initSubmit);
+		function getPopoverContent(){
 			var result = $('#popover_tmpl').html();
 			$('#popover_tmpl').remove();
 			return result;
 		}
-        //获取message_count
-        if(localStorage.getItem('message_count') ==null){
-            $.ajax({
-            url:'{{fans_host}}/count/message_count/',
-            type:'post',
-            dataType:'jsonp',
-            success:function(response) {
-                if (response.code == 200) {
-                    localStorage.message_count=response.data.message_count;
-                    $("#message_count").html(localStorage.message_count)
-                }else{
-                    xlog("获取message_count失败")
-                }
-            }
-        });
-        }else{
-            $("#message_count").html(localStorage.message_count)
-        }
+		//获取message_count
+		if(localStorage.getItem('message_count') ==null){
+			$.ajax({
+			url:'{{fans_host}}/count/message_count/',
+			type:'post',
+			dataType:'jsonp',
+			success:function(response) {
+				if (response.code == 200) {
+					localStorage.message_count=response.data.message_count;
+					$("#message_count").html(localStorage.message_count)
+					$("#message_count").css('display','inline');
+				}else{
+					xlog("获取message_count失败")
+				}
+			}
+		});
+		}else{
+			$("#message_count").html(localStorage.message_count)
+			$("#message_count").css('display','inline');
+		}
 
 		function initSubmit(){
 			$('#old_password').val('');
@@ -338,7 +298,7 @@
 				$('#mf').popover('hide');
 			});
 			$('.xa-submit').on('click',function(){
-	  			var oldPassword = $('#old_password').val();
+				var oldPassword = $('#old_password').val();
 				var newPassword = $('#new_password').val();
 				var confirmPassword = $('#confirm_password').val();
 			
@@ -392,26 +352,9 @@
 				return false;
 			});
 		}
-// 	var scrollLeft = $(this).scrollLeft();
-// 	if(scrollLeft != 0){
-// 		$('.xa-sideBar').css('position', 'absolute');
-// 	}else{
-// 		$('.xa-sideBar').css('position', 'fixed');
-// 	}
-// 	if($('.xa-sideBar').length !== 0){
-// 		$(document).scroll(function(event) {
-// 			var scrollLeft = $(this).scrollLeft();
-// 			if(scrollLeft != 0){
-// 				$订单概况('.xa-sideBar').css('position', 'absolute');
-// 			}else{
-// 				$('.xa-sideBar').css('position', 'fixed');
-// 			}
-// 		});
-// 	}
+
 		// 导航右边线选中无
 		$('.xui-navBar a.active').parent('li').prev().children('a').addClass('xui-rightBorder');
-
-
 	});
 
 </script>

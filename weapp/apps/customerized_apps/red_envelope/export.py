@@ -50,7 +50,6 @@ def get_link_targets(request):
 	if query:
 		params['name__contains'] = query
 	objects = promotion_models.RedEnvelopeRule.objects.filter(**params).order_by('-id')
-	pageinfo, rules = paginator.paginate(objects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 	link_targets = []
 	for object in objects:
 		id2coupon_rule = dict([(coupon_rule.id, coupon_rule) for coupon_rule in
@@ -81,4 +80,5 @@ def get_link_targets(request):
 					"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
                 }
 				link_targets.append(data)
+	pageinfo, link_targets = paginator.paginate(link_targets, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 	return pageinfo, link_targets

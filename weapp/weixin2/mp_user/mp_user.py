@@ -32,7 +32,8 @@ class MpUser(resource.Resource):
 		获得公众号详情
 		"""
 		user_profile = request.user_profile
-		request_user = request.user
+		# request_user = request.user
+		request_user = request.manager #duhao 20151020
 		user_profile = account_models.UserProfile.objects.get(id=user_profile.id)
 
 		if user_profile.is_mp_registered:
@@ -42,10 +43,10 @@ class MpUser(resource.Resource):
 			except:
 				mpuser = None
 				mpuser_preview_info = None
-		
+
 		from weixin.user.util import get_component_info_from
 		component_info = get_component_info_from(request)
-		
+
 		pre_auth_code = None
 		request_host = request.META['HTTP_HOST']
 		if component_info:
@@ -63,9 +64,9 @@ class MpUser(resource.Resource):
 				else:
 					watchdog_error(result)
 
-			if weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).count() == 0:
-				weixin_models.ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id)
-			auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id)[0]
+			if weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.manager.id).count() == 0:
+				weixin_models.ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.manager.id)
+			auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.manager.id)[0]
 
 			if weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid).count() > 0:
 				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
@@ -75,6 +76,13 @@ class MpUser(resource.Resource):
 			component_info = None
 			auth_appid = None
 			auth_appid_info = None
+
+		#微众商城引流图文地址
+		operation_settings_objs = account_models.OperationSettings.objects.filter(owner=request.manager)
+		if operation_settings_objs.count() == 0:
+			operation_settings = account_models.OperationSettings.objects.create(owner=request.manager)
+		else:
+			operation_settings = operation_settings_objs[0]
 
 		if user_profile.is_mp_registered:
 			mpuser_access_token = weixin_models.get_mpuser_access_token_for(mpuser)
@@ -93,7 +101,8 @@ class MpUser(resource.Resource):
 				'is_mp_registered':user_profile.is_mp_registered,
 				'pre_auth_code': pre_auth_code,
 				'auth_appid_info':auth_appid_info,
-				'request_host':request_host
+				'request_host':request_host,
+				'operation_settings': operation_settings
 			})
 			return render_to_response('weixin/mp_user/mp_user.html', c)
 		else:
@@ -106,11 +115,12 @@ class MpUser(resource.Resource):
 				'component_info': component_info,
 				'is_mp_registered':user_profile.is_mp_registered,
 				'auth_appid_info':auth_appid_info,
-				'request_host':request_host
+				'request_host':request_host,
+				'operation_settings': operation_settings
 			})
 			return render_to_response('weixin/mp_user/mp_user_index.html', c)
 
-		
+
 	@login_required
 	@mp_required
 	def api_put(request):
@@ -133,15 +143,23 @@ class MpUser(resource.Resource):
 		"""
 		mp_user_id = request.POST.get('mp_user_id')
 		pic_url = request.POST.get('pic_url')
+		weshop_followurl = request.POST.get('weshop_followurl', '')
+		try:
+			account_models.OperationSettings.objects.filter(owner=request.user).update(
+				weshop_followurl = weshop_followurl
+			)
 
-		if weixin_models.MpuserPreviewInfo.objects.filter(mpuser_id=mp_user_id).count() > 0:
-			weixin_models.MpuserPreviewInfo.objects.filter(mpuser_id=mp_user_id).update(image_path=pic_url)
-		else:
-			weixin_models.MpuserPreviewInfo.objects.create(
-				mpuser_id=mp_user_id,
-				name='',
-				image_path=pic_url
-				)
-		
+			if weixin_models.MpuserPreviewInfo.objects.filter(mpuser_id=mp_user_id).count() > 0:
+				weixin_models.MpuserPreviewInfo.objects.filter(mpuser_id=mp_user_id).update(image_path=pic_url)
+			else:
+				weixin_models.MpuserPreviewInfo.objects.create(
+					mpuser_id=mp_user_id,
+					name='',
+					image_path=pic_url
+					)
+		except:
+			response = create_response(500)
+			return response.get_response()
+
 		response = create_response(200)
 		return response.get_response()
