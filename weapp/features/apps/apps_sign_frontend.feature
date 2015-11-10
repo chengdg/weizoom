@@ -98,7 +98,7 @@ Scenario:1 用户浏览"签到活动1"
         }
         """
 
-@apps_sign @apps_sign_frontend @yuyu
+@apps_sign @apps_sign_frontend @yuyu @kuki
 Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
     Given jobs添加"签到活动1"
         """
@@ -106,12 +106,9 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
             "status":"off",
             "name": "签到活动1",
             "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
-
             "share_pic":"1.img",
             "share_describe": "签到送好礼！",
-            "reply_content":"每日签到获得2积分
-                    连续签到3天获得5积分
-                    连续签到5天获得7积分",
+            "reply_content":"每日签到获得2积分,连续签到3天获得5积分,连续签到5天获得7积分",
             "reply_keyword":
                 [{
                     "rule": "精确",
@@ -138,49 +135,47 @@ Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、
         """
         {
             "name":"签到活动1",
-            "statis": "on"
+            "status": "on"
         }
         """
     When bill关注jobs的公众号
     When bill访问jobs的webapp
-    When bill的会员积分"0"
-    When bill回复关键字
-        | key_word | rule |
-        | 12       | 精确 |
-        | 123      | 模糊 |
-        | 1234     | 模糊 |
-
-    Then bill获得系统回复的消息
-        """
-        {
-            "prize_item":
-                {
-                    "serial_count":"1",
-                    "integral":"2"
-                },
-            "reply":
-                {
-                    "content":"每日签到获得2积分
-                    连续签到3天获得5积分
-                    连续签到5天获得7积分"
-                }
-            "url_id_2":url2
-        }
-        """
-    When bill访问系统回复的"url2"
-    Then bill获取"签到活动1"内容
-        """
-        {
-            "user_name":"bill",
-            "integral_account":"2",
-            "serial_count":"1",
-            "prize_item":
-                {
-                    "serial_count_next":"3",
-                    "integral":"5"
-                }
-        }
-        """
+    Then bill在jobs的webapp中拥有'0'会员积分
+#    When bill回复关键字
+#        | key_word | rule |
+#        | 12       | 精确 |
+#        | 123      | 模糊 |
+#        | 1234     | 模糊 |
+#
+#    Then bill获得系统回复的消息
+#        """
+#        {
+#            "prize_item":
+#                {
+#                    "serial_count":"1",
+#                    "integral":"2"
+#                },
+#            "reply":
+#                {
+#                    "content":"每日签到获得2积分,连续签到3天获得5积分,连续签到5天获得7积分"
+#                }
+#            "url_id_2":url2
+#        }
+#        """
+#    When bill访问系统回复的"url2"
+#    Then bill获取"签到活动1"内容
+#        """
+#        {
+#            "user_name":"bill",
+#            "integral_account":"2",
+#            "serial_count":"1",
+#            "prize_item":
+#                {
+#                    "serial_count_next":"3",
+#                    "integral":"5"
+#                }
+#        }
+#        """
 @apps_sign @apps_sign_frontend
 Scenario:3 用户回复完全不匹配关键字签到
     Given jobs添加"签到活动1"
