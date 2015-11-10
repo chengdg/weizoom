@@ -52,9 +52,9 @@
                     <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                         <div class="xui-inner-img">
                         {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
-                            <img src="{{ product.thumbnails_url }}!list">
+                            <img src="{{ product.thumbnails_url }}!list" style="height: 1000px;">
                         {% else %}
-                            <img src="{{ product.thumbnails_url }}">
+                            <img src="{{ product.thumbnails_url }}" style="height: 1000px;">
                         {% endifequal%}
                         </div>
                         <h3 class="xt-productName">{{ product.name }}</h3>
