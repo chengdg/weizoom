@@ -168,7 +168,6 @@ Scenario:3 用户回复完全不匹配关键字签到
             "status":"off",
             "name": "签到活动1",
             "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
-
             "share_pic":"1.img",
             "share_describe": "签到送好礼！",
             "reply_content":"每日签到获得优惠券1一张",
@@ -189,27 +188,27 @@ Scenario:3 用户回复完全不匹配关键字签到
                 }]
         }
         """
-    And jobs开启签到活动"签到活动1"
+    And jobs更新签到活动的状态
         """
         {
             "name":"签到活动1",
-            "enable": true
+            "status": "on"
         }
         """
     When bill关注jobs的公众号
     When bill访问jobs的webapp
-    When bill的会员积分"0"
-    When bill回复关键字"1"
-    Then bill没有获得系统回复的消息
-    When jobs设置"签到活动1"状态
+    Then bill在jobs的webapp中拥有0会员积分
+    When bill在微信中向jobs的公众号发送消息'1'
+    Then bill获得系统回复的消息' '
+    When jobs更新签到活动的状态
         """
         {
             "name":"签到活动1",
-            "status":"关闭"
+            "status": "off"
         }
         """
-    And bill回复关键字"1"
-    Then bill没有获得系统回复的消息
+    And bill在微信中向jobs的公众号发送消息'1'
+    Then bill获得系统回复的消息' '
 
 @apps_sign @apps_sign_frontend
 Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到

@@ -57,16 +57,13 @@ def step_impl(context, user, answer):
     begin = result.find('<div class="content">') + len('<div class="content">')
     end = result.find('<a', begin)
     actual  = result[begin:end]
-    if answer:
-        answer = answer
     expected = answer
-    if expected == 'None':
+    if answer == ' ':
         expected = ''
     context.tc.assertEquals(expected, actual)
     link_url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
     link_url = bdd_util.nginx(link_url)
     context.link_url = link_url
-    print(link_url)
 
 @when(u'{user}点击系统回复的链接')
 def step_tmpl(context, user):
