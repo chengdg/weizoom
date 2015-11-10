@@ -76,16 +76,17 @@ class PowerMes(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = PowerMes.get_datas(request)
-		
+
 		items = []
 		for data in datas:
+			str_id = str(data.id)
 			items.append({
-				'id': str(data.id),
+				'id': str_id,
 				'owner_id': data.owner_id,
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'participant_count': data.participant_count,
+				'participant_count': app_models.PowerMeParticipance.objects(belong_to=str_id, has_join=True).count(),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
