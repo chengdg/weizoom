@@ -572,7 +572,10 @@ def step_impl(context,user,sign_name):
         tmp_prize_settings_arr = {}
 
         if tmp_sign_in:
+            if tmp_sign_in == "1":
+                tmp_sign_in = "0"
             prize_settings[tmp_sign_in] = {}
+
             tmp_prize_settings_arr["serial_count"] = tmp_sign_in
             if tmp_integral:
                 prize_settings[tmp_sign_in]["integral"] = tmp_integral
