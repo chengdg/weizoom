@@ -20,7 +20,7 @@
           <div class="xui-form-cell pr xa-clearBtnContainer">
             <div class="xui-clearBtn pa hidden"></div>
             <div class="xui-inner-input-container">
-              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text"  class="ui-input-text xa-name" placeholder="姓名"></div>
+              <input id="ship_name" name="ship_name" style="color:#878787" data-validate="require-notempty::收货人不能为空" type="text"  class="ui-input-text xa-shipName" placeholder="姓名"></div>
           </div>
         </div>
         <div class="xui-cuttingLine"></div>
@@ -56,7 +56,7 @@
     </fieldset>
   </form>
       <div class="xui-btnBox">
-        <a href="javascript:void(0);" data-role="button" class="xui-btn xui-btn-danger xa-submit">保存并使用</a>
+        <input href="javascript:void(0);" type="button" class="xui-btn xui-btn-danger xa-submit" value="保存并使用">
       </div>
     </div>
     <div data-ui-role="swipemask" class="mask">
@@ -109,7 +109,7 @@
 
         $deleteElem.show();
         $('.xa-shipId').val(ship_info['ship_id']);
-        $('.xa-name').val(ship_info.ship_name);
+        $('.xa-shipName').val(ship_info.ship_name);
         $('.xa-shipTel').val(ship_info.ship_tel);
         $areaElement = $('.xa-areaInput');
         $areaElement.val(ship_info.area);
