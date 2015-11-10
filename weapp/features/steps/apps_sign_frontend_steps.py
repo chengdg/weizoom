@@ -16,6 +16,7 @@ from weixin.message.material import models as material_models
 import termite.pagestore as pagestore_manager
 from apps.customerized_apps.sign.models import Sign
 import json
+import re
 
 
 def __debug_print(content,type_tag=True):
@@ -64,15 +65,21 @@ def step_tmpl(context, user,sign):
     # bdd_util.assert_dict(response_context, rules)
     pass
 
-@when(u'{user}的会员积分"{points}"')
-def step_tmpl(context, user):
-    # rules = json.loads(context.text)
-    # response_context = context.response.context
-    # print response_context
-    # bdd_util.assert_dict(response_context, rules)
-    pass
+@then(u"{user}获得系统回复的消息'{answer}'")
+def step_impl(context, user, answer):
+    result = context.qa_result["data"]
+    begin = result.find('<div class="content">') + len('<div class="content">')
+    end = result.find('<a', begin)
+    actual  = result[begin:end]
+    expected = answer
+    if answer == ' ':
+        expected = ''
+    context.tc.assertEquals(expected, actual)
+    link_url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
+    link_url = bdd_util.nginx(link_url)
+    context.link_url = link_url
 
-@when(u'{user}回复关键字')
+@when(u'{user}点击系统回复的链接')
 def step_tmpl(context, user):
-    __debug_print("hehe")
-    pass
+    url = "%s&fmt=%s" % (context.link_url, context.member.token)
+    response = context.client.get(url)
