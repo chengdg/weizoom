@@ -86,7 +86,7 @@ class PowerMes(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'participant_count': app_models.PowerMeParticipance.objects(belong_to=str_id).count(),
+				'participant_count': app_models.PowerMeParticipance.objects(belong_to=str_id, has_join=True).count(),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
