@@ -249,9 +249,12 @@
                 $('.xa-attention').find('.xa-attention-tip-one').html('<div style="color: orangered">您已参加该活动！</div><div>长按二维码进入公众号</div><div>获取你自己的专属页，</div>');
                 $('.xa-attention').find('.xa-attention-reply').html('分享到朋友圈，发动小伙伴帮你助力赢大奖！');
                 $('.wa-using').text(using_msg).on('click', openQrMask).show();
-
             }else{
                 using_msg = '我也要参加';
+                var $attention = $('.xa-attention');
+                $attention.find('img').attr('src','{{qrcode_url}}');
+                $attention.find('.xa-attention-tip').hide();
+                $attention.find('.xa-attention-reply').children().first().html("2.回复：“");
                 $('.wa-using').text(using_msg).on('click', openQrMask).show();
             }
         }
