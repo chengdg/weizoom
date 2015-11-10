@@ -1530,10 +1530,10 @@ button.xui-deleteImageButton{
     color: #1262b7;
 }
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_horizontalField .propertyGroup_property_label{
-	width: 90px !important;
+	width: 91px !important;
 }
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_input {
-    width: 76%;
+    width: 75%;
 }
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_dialogSelectField {
     margin-top: 10px;
