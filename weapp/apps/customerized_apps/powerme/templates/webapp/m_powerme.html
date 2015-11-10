@@ -189,6 +189,7 @@
 
         //监听分享成功事件
         $(document).on("share:success",function(data){
+            $('.xa-share').addClass('none');
             //分享成功后就算该用户参与活动
             W.getApi().call({
                 app: 'm/apps/powerme',

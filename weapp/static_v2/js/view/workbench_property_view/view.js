@@ -1014,6 +1014,10 @@ W.workbench.PropertyView = Backbone.View.extend({
         $el.siblings('input[data-field="image"]').val('');
         $el.siblings('.qrcodeName').addClass('xui-hide').html('');
         $el.siblings('.xui-i-triggerButton').text('选择带参数二维码');
+        $el.parent().next().css({
+            'height': '17px',
+            'line-height': '17px'
+        });
         $el.hide();
     },
 

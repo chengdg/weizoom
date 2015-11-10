@@ -194,6 +194,10 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',ticket);
 				$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').removeClass('xui-hide').html(qrcode.name);
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+				$target.find('.propertyGroup_property_dialogSelectField').find('.qrcode_help').css({
+					'height': '100px',
+					'line-height': '100px'
+				});
 			}
 		},
 		material_image: function($node, model, value, $propertyViewNode) {
