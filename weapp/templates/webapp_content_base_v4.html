@@ -311,9 +311,10 @@
             W.isMember = {% if isMember %}true{% else %}false{% endif %};
             W.qrcodeUrl = "{{ request.webapp_owner_info.qrcode_img }}";
             W.permission = "{{ permission }}";
+            
+            var slag = true;//调研图片上传较慢或阻止重复提交，给出提示用
   //          if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
   //          W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
-            var slag = true;//调研图片上传较慢，给出提示用
   //          var link = window.location.href;
   //          if (link.indexOf('fmt') === -1){
   //              if (link.indexOf('&') === -1){
@@ -497,7 +498,6 @@
                         $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
                         var $button = $submitButtonContainer.find('.xa-submitTermite');
                         $button.text('您已参加过该活动');
-                        $('.xa-submitTermite').unbind('click');
                         $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
                         },
                     error: function(resp) {
@@ -507,6 +507,7 @@
                             info: '参与失败，请稍后再试！',
                             speed: 3000,
                         });
+                        slag = true;
                     }
                 });
             }
