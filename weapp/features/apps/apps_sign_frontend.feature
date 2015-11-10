@@ -97,9 +97,9 @@ Scenario:1 用户浏览"签到活动1"
             }
         }
         """
-@apps_sign @apps_sign_frontend @kuku @kuki
-Scenario:1 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
-    Given jobs添加"签到活动1"
+@apps_sign @apps_sign_frontend @kuki
+Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
+    Given jobs添加签到活动"签到活动1",并且保存
         """
         {
             "status":"off",
@@ -177,7 +177,7 @@ Scenario:1 用户回复精确关键字、完全匹配模糊关键字、不完全
 #        """
 @apps_sign @apps_sign_frontend
 Scenario:3 用户回复完全不匹配关键字签到
-    Given jobs添加"签到活动1"
+    Given jobs添加签到活动"签到活动1",并且保存
         """
         {
             "status":"off",
@@ -227,7 +227,7 @@ Scenario:3 用户回复完全不匹配关键字签到
     Then bill没有获得系统回复的消息
 
 @apps_sign @apps_sign_frontend
-Scenario Outline: 4 签到活动结束后用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
+Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
     Given jobs添加"签到活动1"
         """
         {
