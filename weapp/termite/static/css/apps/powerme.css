@@ -139,7 +139,7 @@ hr{
     float: right;
     margin-right: 5px;
     font-size: 0.8rem;
-    line-height: 2.8rem;
+    line-height: 3.5rem;
 }
 .wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
