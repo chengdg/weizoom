@@ -61,7 +61,7 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 				}],
 			"sign_settings":
 				[{
-					"sign_in": "1",
+					"sign_in": "0",
 					"integral": "100",
 					"send_coupon": "优惠券1",
 					"prize_counts":50
@@ -100,7 +100,7 @@ Scenario:1 配置后台所有数据,优惠券数量足,没有过期
 				}],
 			"sign_settings":
 				[{
-					"sign_in": "1",
+					"sign_in": "0",
 					"integral": "100",
 					"send_coupon": "优惠券1",
 					"prize_counts":50
@@ -142,7 +142,7 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 				}],
 			"sign_settings":
 				[{
-					"sign_in": "1",
+					"sign_in": "0",
 					"integral": "100"
 				}]
 		}
@@ -169,7 +169,7 @@ Scenario:2 一条奖励下,不添加优惠券,有积分
 				}],
 			"sign_settings":
 				[{
-					"sign_in": "1",
+					"sign_in": "0",
 					"integral": "100"
 				}]
 		}
@@ -193,7 +193,7 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
 			}],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
                 }]
@@ -216,7 +216,7 @@ Scenario:3 一条奖励下,添加优惠券,不添加积分
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
                 }]
@@ -241,7 +241,7 @@ Scenario:4 一条奖励下,添加优惠券,添加积分
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "100",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
@@ -265,7 +265,7 @@ Scenario:4 一条奖励下,添加优惠券,添加积分
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "100",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
@@ -297,7 +297,7 @@ Scenario:5 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "100",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
@@ -334,7 +334,7 @@ Scenario:5 三条奖励下,一条优惠券,一条积分,一条优惠券加积分
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "100",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
@@ -374,7 +374,7 @@ Scenario:6 更新签到活动的状态
 	            }],
 	        "sign_settings":
 	            [{
-	                "sign_in": "1",
+	                "sign_in": "0",
 	                "integral": "100",
 	                "send_coupon": "优惠券1",
 	                "prize_counts":50

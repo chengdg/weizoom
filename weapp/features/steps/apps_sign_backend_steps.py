@@ -456,7 +456,7 @@ def step_impl(context,user,sign_name):
                 tmp_prize_settings_arr["serial_count_points"] = tmp_integral
             if tmp_send_coupon:
                 tmp_prize_settings_arr["serial_count_prizes"] ={}
-                prize_settings[tmp_sign_in]["send_coupon"] = __get_coupon_json(tmp_send_coupon)
+                prize_settings[tmp_sign_in]["coupon"] = __get_coupon_json(tmp_send_coupon)
                 tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
         else:
             pass
@@ -572,8 +572,6 @@ def step_impl(context,user,sign_name):
         tmp_prize_settings_arr = {}
 
         if tmp_sign_in:
-            if tmp_sign_in == "1":
-                tmp_sign_in = "0"
             prize_settings[tmp_sign_in] = {}
 
             tmp_prize_settings_arr["serial_count"] = tmp_sign_in
@@ -582,7 +580,7 @@ def step_impl(context,user,sign_name):
                 tmp_prize_settings_arr["serial_count_points"] = tmp_integral
             if tmp_send_coupon:
                 tmp_prize_settings_arr["serial_count_prizes"] ={}
-                prize_settings[tmp_sign_in]["send_coupon"] = __get_coupon_json(tmp_send_coupon)
+                prize_settings[tmp_sign_in]["coupon"] = __get_coupon_json(tmp_send_coupon)
                 tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
         else:
             pass
