@@ -1,6 +1,6 @@
 /*
  * Jquery Mobile地址选择插件
- * 
+ *
  *
  * 使用示例;
  * <input id="" name=""  data-ui-role="uploadImage" type="file" >
@@ -37,9 +37,6 @@
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext('2d');
 
-            //瓦片canvas
-            this.tCanvas = document.createElement("canvas");
-            this.tctx = this.tCanvas.getContext("2d");
             this._bind();
         },
         _bind : function() {
@@ -61,50 +58,56 @@
                 var $files = $(files);
                 $files.each(function(i, file) {
                     //todo验证格式不正确的交互
-                    var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
-                    var name = file.name.toLowerCase();
-                    var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
-                    if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
-                        _this._alert('图片格式不正确');
-                        return;
-                    }
+                    // var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
+                    // var name = file.name.toLowerCase();
+                    // var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
+                    // if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
+                    //     _this._alert('图片格式不正确');
+                    //     return;
+                    // }
                     var reader = new FileReader();
-                    var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>");
+                    // var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>");
+                    var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress'><span></span></div></li>");
                     _this.$parents.find('.xa-imgList').append($li);
 
                     var imglength = _this.$parents.find('.xa-imgList').children('li').length;
+                    var orientation;
+
+                    EXIF.getData(file, function() {  
+                        EXIF.getAllTags(this);   
+                        orientation = EXIF.getTag(this, 'Orientation'); 
+                    });
                     reader.onload = function() {
                         var result = this.result;
                         var img = new Image();
                         img.src = result;
 
-                        var innerHtml = "<img src="+ result +" id='"+_this.uploadImg_id+"pro_reivew"+imglength+"'><div class='xui-progress xa-progress'><span></span></div>";
-                        $li.append(innerHtml);
-                        $li.children('img').data('allow-autoplay','true');
-                        W.ImagePreview(wx);
+                        // var innerHtml = "<div class='xui-progress xa-progress'><span></span></div>";
+                        // $li.append(innerHtml);
+                        
                         //如果图片大小小于200kb，则直接上传
                         if (result.length <= maxsize) {
                             img = null;
-
                             _this.upload(result, imglength,$li);
 
                             return;
                         }
                         if (img.complete) {
-                            callback();
+                            callback(orientation);
                         } else {
-                            img.onload = callback;
+                            img.onload = function(){
+                                callback(orientation);
+                            };
                         }
-
                         function callback() {
-                            var data = _this.compress(img);
+                            var data = _this.compress(img,orientation);
                             _this.upload(data, imglength,$li);
 
                             img = null;
                         }
                     }
                     reader.readAsDataURL(file);
-                    
+                   
                 });
 
                 _this.showDelete();
@@ -134,7 +137,10 @@
                     basestr: JSON.stringify(basestr)
                 }),
                 success: function (data) {
-                    $("#"+_this.uploadImg_id+"pro_reivew"+imglength).attr('data-src',data.path);
+                    var img ="<img src='" + data.path + "!reviewS' id='"+_this.uploadImg_id+"pro_reivew"+imglength+"' data-src="+ data.path +" full-src='" + data.path + "!review'>";
+                    $li.append(img);
+                    $li.children('img').data('allow-autoplay','true')
+                    W.ImagePreview(wx);
                     clearInterval(loop);
                     $bar.css('width',"100%");
                     setTimeout(function(){
@@ -142,20 +148,23 @@
                     },300)                
                 },
                 error: function (data) {
-                    _this._alert('上传失败');
+                    _this._alert('图片格式不正确，请重新上传');
                     clearInterval(loop);
                     return;
                 }
             });
         },
-        compress:function(img){
+        compress:function(img, orientation){
             var initSize = img.src.length;
-            var width = img.width;
-            var height = img.height;
-
+            var width,
+                height,
+                ratio,
+                ndata;
+            width = img.width;
+            height = img.height;
+            var needCompress = (ratio = width * height / 4000000)>1 ? true : false;
             //如果图片大于四百万像素，计算压缩比并将大小压至400万以下
-            var ratio;
-            if ((ratio = width * height / 4000000)>1) {
+            if (needCompress) {
                 ratio = Math.sqrt(ratio);
                 width /= ratio;
                 height /= ratio;
@@ -163,51 +172,34 @@
                 ratio = 1;
             }
 
-            this.canvas.width = width;
-            this.canvas.height = height;
-
+            if(orientation == 6){
+                this.canvas.width = height;
+                this.canvas.height = width;
+            }else{
+                this.canvas.width = width;
+                this.canvas.height = height;
+            }
             //铺底色
             this.ctx.fillStyle = "#fff";
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            //如果图片像素大于100万则使用瓦片绘制
-            var count;
-            if ((count = width * height / 1000000) > 1) {
-                count = ~~(Math.sqrt(count)+1); //计算要分成多少块瓦片
-
-            //计算每块瓦片的宽和高
-                var nw = ~~(width / count);
-                var nh = ~~(height / count);
-
-                this.tCanvas.width = nw;
-                this.tCanvas.height = nh;
-
-                for (var i = 0; i < count; i++) {
-                    for (var j = 0; j < count; j++) {
-                        this.tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
-
-                        this.ctx.drawImage(this.tCanvas, i * nw, j * nh, nw, nh);
-                    }
-                }
-            } else {
-                this.ctx.drawImage(img, 0, 0, width, height);
+            
+            if(orientation == 6){
+                this.ctx.rotate(0.5 * Math.PI);
+                this.ctx.translate(0, -height);
             }
+            this.ctx.drawImage(img, 0, 0, width, height);
 
-            //进行最小压缩
-            var ndata = this.canvas.toDataURL('image/jpeg', 0.3);
+            ndata = this.canvas.toDataURL('image/jpeg', 0.3);
 
-            console.log('压缩前：' + initSize);
-            console.log('压缩后：' + ndata.length);
-            console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
-
-            this.tCanvas.width = this.tCanvas.height = this.canvas.width = this.canvas.height = 0;
+            this.canvas.width = this.canvas.height = 0;
 
             return ndata;
         },
         _unbind : function() {
-            
+           
         },
-        
+       
         destroy : function() {
             // Unbind any events that were bound at _create
             this._unbind();
@@ -240,7 +232,6 @@
         removeImgFun:function(){
             var _this = this;
             this.$parents.find('.xa-remove').click( function(event) {
-            // $('body').delegate($('.xa-remove'), 'click', function(event) {
                 $(event.target).parents('li').remove();
                 var length = _this.$parents.find('.xa-imgList').children('li').length;
                 if(length == 0){
@@ -250,7 +241,7 @@
             });
         }
     });
-    
+   
 
 
     // taking into account of the component when creating the window
@@ -261,5 +252,5 @@
             $uploadImage.uploadImage();
         })
     });
-    
+   
 })(Zepto);

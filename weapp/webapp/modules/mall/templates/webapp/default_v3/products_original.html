@@ -1,7 +1,7 @@
 {% extends "webapp_content_base.html" %}
 {% load common_tag %}
 {% block content-panel %}
-<div id='product_list_contain' data-role="page" data-theme="x" data-title="商品列表" class="xui-page xui-productsList-page xa-page">
+<div id='product_list_contain' data-role="page" data-theme="x" data-title="商品列表" class="xui-productsList-page">
 
     
     {% if global_navbar == None %}
@@ -51,7 +51,11 @@
                 >
                     <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                         <div class="xui-inner-img">
+                        {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                            <img src="{{ product.thumbnails_url }}!list">
+                        {% else %}
                             <img src="{{ product.thumbnails_url }}">
+                        {% endifequal%}
                         </div>
                         <h3 class="xt-productName">{{ product.name }}</h3>
                         <p class="xt-productPrice">￥{{ product.display_price | floatformat:2}}</p>
