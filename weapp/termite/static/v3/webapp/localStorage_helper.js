@@ -101,6 +101,12 @@ var initShipInofs = function(){
     }
     var now = new Date();
     var woid = getWoid();
+    if(now.getTime() - lastUpdate > shipInfosConfig.cacheTime){
+        alert('缓存过期');
+    }
+    if($.cookie('current_token')!=localStorage.ship_infos_token){
+        alert('token不相等');
+    }
     if (now.getTime() - lastUpdate > shipInfosConfig.cacheTime || $.cookie('current_token')!=localStorage.ship_infos_token) {
         W.getApi().call({
             app: 'webapp',
