@@ -92,6 +92,7 @@ var shipInfosConfig = {
 
 
 var initShipInofs = function(){
+    alert(localStorage.ship_infos_token);
     var lastUpdate;
     if(localStorage.ship_infos_updated_at){
         lastUpdate = localStorage.ship_infos_updated_at;
