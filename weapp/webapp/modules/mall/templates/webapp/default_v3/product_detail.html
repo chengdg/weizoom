@@ -26,74 +26,65 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
         <i data-ui-role="goBack"></i>
         <div id="product" class="xui-section pt5 pb5" style="padding-right:0;">
             <div class="xui-section-title xui-section-item xui-pl0">
-                {% if cur_request_member %}
                 <div class="pr">
                     <div class="xui-productInfoBox">
                         <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}</h2>
+                        {% if product.master_promotion_title %}
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile xt-masterPromotionTile" style="padding-top:2px;">{{ product.master_promotion_title }}</div>
+                        {% endif %}
+                        {% if product.integral_sale_promotion_title %}
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile" style="padding-top:2px;">{{ product.integral_sale_promotion_title }}</div>
+                        {% endif %}
                         {% if product.promotion_title %}
-                        <div class="xui-text-red em9" style="padding-top:2px;">{{ product.promotion_title|safe }}</div>
+                        <div class="xui-text-red em9 xui-hide xt-promotionTile" style="padding-top:2px;">{{ product.promotion_title }}</div>
                         {% endif %}
                     </div>
-                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa" data-is-collect="false">收藏</a>
+                    <a href="javascript:void(0);" class="xui-fav xa-collectProduct pa xui-hide" data-is-collect="false">收藏</a>
                 </div>
-                {% else %}
-                <div class="disF">
-                    <h2 class="xui-productName xt-productName xa-productName">{{ product.name }}{% if product.promotion_title %}
-                    <span class="xui-text-red">{{ product.promotion_title }}</span>{% endif %}</h2>
-                </div>
-                {% endif %}
                 <p class="xui-section-boldItemText xui-text-red xa-priceSection">
-                    {% if product.promotion and product.promotion.type == 1 %}
-                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price }}</span></span>
-                    {% else %}
-                        <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price }}</span></span>
-                    {% endif %}
+                    <span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1">{{ price_info.min_price|format_float}}</span></span>
                 </p>
             </div>
         </div>
         {% if product.promotion or hint or product.integral_sale %}
-        <div class="xui-section xui-section-title clearfix xa-promotionSection xui-promotionSection pr" style="min-height:17px;">
+        <div class="xui-section xui-section-title clearfix xa-promotionSection xui-promotionSection pr xui-hide" style="min-height:17px;">
             <div class="xui-upDecorate-left"></div>
             <div class="xui-upDecorate-right"></div>
-            {% if product.promotion and product.promotion_model.is_active or product.integral_sale %}
-                {% if product.promotion and product.promotion_model.is_active %}
-                <div class="disT w xa-display-promotion">
-                    <div class="disTc em85 c6" style="width:3rem;">
-                        <span style="margin-top:4px;display:inline-block;">优惠：</span>
-                    </div>
-                    <div class="disTc em85 pr" style="width:3.4rem;top:-2px;">
-                        <span class="xui-promotionName xa-promotionNormal" data-type="{{ product.promotion.type}}">{{ product.promotion.type_name|safe }}</span>
-                    </div>
-                    <div class="disTc c6 em8 pl5">
-                    {% if product.promotion.type == 2 %}
-                    <span style="line-height:1.3rem">
-                        {% for premium_product in product.promotion.detail.premium_products %}
-                            {{premium_product.name}}&nbsp; x&nbsp;{{premium_product.premium_count}}{{premium_product.premium_unit}}<br/>
-                        {% endfor %}
-                    </span>
-                    {% else %}
-                        <span class="ml5 xa-promotionNormal-info">{{ product.promotion.promotion_title }}</span>
-                    {% endif %}
-                    </div>
+            {% if product.promotion and product.promotion_model.is_active %}
+            <div class="disT w xa-display-promotion">
+                <div class="disTc em85 c6" style="width:3rem;">
+                    <span style="margin-top:4px;display:inline-block;">优惠：</span>
                 </div>
-                {% endif %}
-                
-                {% if product.integral_sale %}
-                <div class="disT w" style="margin-top:4px;">
-                    <div class="disTc em85 c6" style="width:3rem;">
-                    {% if not product.promotion or not product.promotion_model.is_active %}
-                        优惠：
-                    {% endif %}</div>
-                    <div class="disTc em85 pr" style="width:3.1rem;top:-2px;">
-                        <span class="xui-promotionName xa-promotion" data-type="5" data-discount="{{product.integral_sale.detail.discount}}" data-per-yuan="{{per_yuan}}">积分抵扣</span>
-                    </div>
-                    <div class="disTc c6 em8 pl5">
-                        <span class="xa-intergralInfo"></span>
-                    </div>
+                <div class="disTc em85 pr" style="width:3.4rem;top:-2px;">
+                    <span class="xui-promotionName xa-promotionNormal" data-type="{{ product.promotion.type}}">{{ product.promotion.type_name|safe }}</span>
                 </div>
+                <div class="disTc c6 em8 pl5">
+                {% if product.promotion.type == 2 %}
+                <span style="line-height:1.3rem">
+                    {% for premium_product in product.promotion.detail.premium_products %}
+                        {{premium_product.name}}&nbsp; x&nbsp;{{premium_product.premium_count}}{{premium_product.premium_unit}}<br/>
+                    {% endfor %}
+                </span>
+                {% else %}
+                <span class="ml5 xa-promotionNormal-info"></span>
                 {% endif %}
+                </div>
+            </div>
             {% endif %}
-        
+            {% if product.integral_sale %}
+            <div class="disT w" style="margin-top:4px;">
+                <div class="disTc em85 c6" style="width:3rem;">
+                {% if not product.promotion or not product.promotion_model.is_active %}
+                    优惠：
+                {% endif %}</div>
+                <div class="disTc em85 pr" style="width:3.1rem;top:-2px;">
+                    <span class="xui-promotionName xa-promotion" data-type="5"{% for rule in product.integral_sale.detail.rules %} data-discount{{rule.member_grade_id}}="{{rule.discount}}"{% endfor %} data-per-yuan="{{per_yuan}}">积分抵扣</span>
+                </div>
+                <div class="disTc c6 em8 pl5">
+                    <span class="xa-intergralInfo"></span>
+                </div>
+            </div>
+            {% endif %}
             {% if hint %}
             <div class="disT w">
                 <div class="disTc em85 c6" style="width:3rem;">
@@ -117,12 +108,10 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 <div class="xui-section-item xui-section-title">
                     <a href="javascript:void(0);" class="pt10 pb10 block xa-slidePanelShow">
                         <label for="" class="pr10">请选择</label>
-                        <!-- <span class="xa-selectedModelHint">请选择</span> -->
                         {% for property in product.product_model_properties %}
                         <span class="xa-selectedModelPropertyValueName pr5" data-property-id="{{property.id}}" data-property-name="{{property.name}}">{{property.name}}</span>
                         {% endfor %}
                         <span class="xa-purchaseCount">数量</span>
-                        <!-- <span class="">{{product.physical_unit}}</span> -->
                         <span class="xui-icon xui-icon-rightarrow"></span>
                     </a>
                 </div>
@@ -153,7 +142,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     {% endif %}
                     </span>
                 </div>
-                
             {% endif %}
             {% if product.properties %}
             <div class="xui-section-item xui-section-title xui-property-panel">
@@ -221,38 +209,34 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             </div>
         </div>
         {% endif %}
-        <!-- <div class="ui-refresh-down"></div> -->
     </div>
     <!-- 购物车、加入购物车、购买按钮组Start -->
     <div class="tc xui-tab-fixed">
-        {% if is_weizoom_mall %}
-        {% else %}
         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn xui-btn">
-
-                <i class="xui-inner-icon pr">
-                    <span class="xui-inner-count pa hidden xa-shoppingCartCount"></span>
-                </i>
+            <i class="xui-inner-icon pr">
+                <span class="xui-inner-count pa hidden xa-shoppingCartCount"></span>
+            </i>
         </a>
-        {% endif %}
         <!-- 已售罄 -->
         {% if product.shelve_type == 1 %}
-            {% if product.is_sellout %}
+             <div class="xa-selloutAlert clearfix xui-hide" style="padding:3px 0;">
                 <div class="xui-selloutAlert">商品已售罄，非常抱歉</div>
                 <div style="padding:3px 0;">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xui-addCartBtn-disable" data-type='shoppingCart'>加入购物车</a>
                     <a href="javascript:void(0);" class="xui-btn xui-buyBtn xui-buyBtn-disable" data-type='buy'>立即购买</a>
                 </div>
+             </div>
             <!-- 普通商品 -->
-            {% else %}
-            <div class="xa-disabledBuyLinks xui-inlineblock clearfix" style="padding:3px 0;">
-                <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton" data-type='shoppingCart'>加入购物车</a>
-                <a href="javascript:void(0);" class="xui-btn xui-buyBtn xa-canNotBuyButton" data-type='buy'>立即购买</a>
+            <div class="xa-not_selloutAlert clearfix xui-hide" style="padding:3px 0;">
+                <div class="xa-disabledBuyLinks xui-inlineblock clearfix">
+                    <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton" data-type='shoppingCart'>加入购物车</a>
+                    <a href="javascript:void(0);" class="xui-btn xui-buyBtn xa-canNotBuyButton" data-type='buy'>立即购买</a>
+                </div>
+                <div class="xa-enabledBuyLinks xui-inlineblock xui-hide clearfix">
+                    <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-addShoppingCartBtn" data-type='shoppingCart'>加入购物车</a>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
+                </div>
             </div>
-            <div class="xa-enabledBuyLinks xui-inlineblock xui-hide clearfix" style="padding:3px 0;">
-                <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-addShoppingCartBtn" data-type='shoppingCart'>加入购物车</a>
-                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
-            </div>
-            {% endif %}
         {% else %}
             <div class="xui-selloutAlert">商品已下架，非常抱歉</div>
             <div style="padding:3px 0;">
@@ -270,30 +254,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             </div>
             <div class="" style="padding-left:103px;min-height: 75px;">
                 <p class="pt5 em95 xui-text-red xa-priceSection">
-                <!-- 积分商品 -->
-                {% if product.type == 'integral' %}
-                    {% if cur_request_member %}
-                        {% if price_info.price == price_info.original_price %}
-                        <span class="xt-price xa-price xui-vipPrice-num">{{ price_info.min_price }}</span>
-                        {% else %}
-                        <span class="xt-price xui-vipPrice-num">{{ price_info.min_price }}</span>
-                        {% endif %}
-                    {% else %}
-                        <span class="xt-originalPrice xui-vipPrice-num xa-price xa-fixed-price">{{ price_info.min_price }}</span><!-- <span class="xui-vipPrice ml20">会员价？</span> -->
-                    {% endif %}积分
-
-                <!-- 普通商品 -->
-                {% elif product.type == 'object' %}
-                    {% if cur_request_member %}
-                        <span class="xa-price xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
-                    {% else %}
-                        <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price }}</span></span>
-                    {% endif %}
-                {% endif %}
+                <span class="xui-vipPrice-num xa-price em85">￥<span class="xa-price xa-singlePrice fb em95">{{ price_info.min_price |format_float}}</span></span>
                 </p>
                 <p class="c6 em8 mt5">{{ product.name }}</p>
-
-                <!-- <p class="mt10 xa-stock">(库存<span class="xa-stockCount">{{product.physical_unit}}</span>)</p> -->
             </div>
             <i class="xui-popInfo-close pa xa-closeModelSelection"></i>
         </div>
@@ -304,7 +267,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         <label class="xui-i-propertyName">{{property.name}}</label>
                         <div class="xui-i-customModel clearfix">
                         {% for value in property.values %}
-
                             {% if value.is_belong_product %}
                                 {% if value.image %}
                                 <a
@@ -316,7 +278,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                                     name="{{property.id}}:{{value.id}}"
                                     style="overflow:hidden"
                                 >
-
                                     <img class="addBorder" src="{{ value.image|safe }}" />
                                 </a>
                                 {% else %}
@@ -378,11 +339,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     </div>
     <div class="xui-coverV2 xa-coverV2 hidden"></div>
     {% endif %}
-    {% if not is_weizoom_mall %}
     <!-- 全局导航 -->
-    <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="{% if cur_request_member %}true{% else %}false{% endif %}">
+    <div class="wui-globalNav xa-globalNav" data-ui-role="global-nav" data-member="true">
     </div>
-    {% endif %}
     <!-- 返回顶部 -->
     <div class="wui-returnTop xa-returnTop hidden" data-ui-role="return-top">
     </div>
@@ -392,231 +351,41 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 {% if not is_deleted_data %}
 <script type="text/javascript">
-
-//运费计算因子
-var postageFactor = {};
-//可用积分
-var usableIntegral = {{usable_integral}};
-//是否启用"测试购买"
-var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
 //商品id
 var productId = '{{product.id}}';
-//商品类型
-var productType = "{{product.type}}";
 //商品规格值
 var models = W.loadJSON('models');
 //商品价格信息
 var priceInfo = W.loadJSON('priceInfo');
-//运费配置名称
-var postageConfigName = "{{product.postage_config.name}}";
-// 限购数量
-var countPerPurchase = {% if product.promotion.detail.count_per_purchase %}{{product.promotion.detail.count_per_purchase}}{% else %}-1{% endif %};
 // 是否会员商品
 var is_member_product = '{{product.is_member_product}}'
 // 促销信息
 var promotion = W.loadJSON('promotion');
 
 $(document).ready(function() {
-    var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
-        if(promotion_member_grade_id == '0'){return true;}
-        if(promotion_member_grade_id == user_member_grade_id){
-            return true;
-        }else{
-            return false;
-        }
-
-    };
-    //检查此商品是否被收藏和显示购物车的数量
-    W.getApi().call({
-        app: 'webapp',
-        api: 'project_api/call',
-        method: 'get',
-        args: {
-            woid: W.webappOwnerId,
-            module: 'mall',
-            target_api: 'member_product_info/get',
-            product_id: productId,
-        },
-        success: function(data) {
-            var user_member_grade_id = data.member_grade_id;
-            if(data.is_collect == 'true'){
-                $('.xa-collectProduct').addClass('faved').text('已收藏');
-                $('.xa-collectProduct').attr('data-is-collect', 'true');
-            }
-            if(data.count != 0) {
-                $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
-            }
-            // 优惠信息标签
-            var msg = '';
-            // 商品原价
-            var price = view.priceInfo.min_price;
-
-            // 存储商品会员价与促销的状态
-            view.member_or_promotion = '';
-            // 商品有促销
-            var product_promotion = view.promotion;
-            is_product_promotion = !($.isEmptyObject(product_promotion));
-            var is_user_has_promotion = false;
-            if(is_product_promotion){
-                // 促销是否对此用户开发
-                is_user_has_promotion = user_has_promotion(user_member_grade_id, product_promotion.member_grade_id);
-                // 限时抢购
-                if(is_user_has_promotion && product_promotion.detail.promotion_price){
-                    price = (product_promotion.detail.promotion_price).toFixed(2);
-                    msg = true;
-                    view.member_or_promotion = 'promotion';
-                }
-                if(!is_user_has_promotion){
-
-                    view.promotion.isFlashSalePromotion = false;
-                    // 促销bu对此用户开发
-                    var next_promotions = $('.xa-display-promotion').next('div');
-                    if(next_promotions.length==0){
-                        // mei ji fen ying yong
-                        $('.xa-promotionSection').remove();
-                    }else if(next_promotions.length == 1){
-                        // you ji fen ying yong
-                        $('.xa-display-promotion').html(next_promotions.html()).find('div:first').html('优惠：');
-                        next_promotions.remove();
-                    }
-                    // // 对于不开放的促销，不显示广告语
-                    // var span = $('.xa-productName').find('span');
-                    // if(span){
-                    //     span.remove();
-                    // }
-                }
-            // 商品无促销
-            }
-            if(!is_user_has_promotion){
-                // 商品是否折扣
-                has_discount = is_member_product;
-                if(has_discount === "True" && data.discount < 100){
-                    //促销与会员价格处理
-                    view.discount = data.discount;
-                    if(view.isStandardModelProduct){
-                        view.initForStandardModelProduct()
-                    }else{
-                        view.initForCustomModelProduct()
-                    }
-                    price = ((price * data.discount / 100).toFixed(2));
-                    msg = '会员价';
-                    view.member_or_promotion = 'member';
-
-                }
-                // 对于不开放的促销，不显示广告语
-                var span = $('.xa-productName').find('span');
-                if(span){
-
-                    span.html('<span class="xui-text-red">'+view.priceInfo.promotion_title+'</span>');
-                }
-            }
-            // 处理会员价
-            if (msg === true){
-                var temp = '<span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span>';
-                $('.xa-priceSection').html(temp);
-
-            }else if(msg === '会员价'){
-                var orPrice = (view.priceInfo.min_price).toFixed(2);
-                var temp = '<span class="xui-memberPriceTag">'+msg+'</span><span class="xui-vipPrice-num em85">￥<span class="xa-price xa-singlePrice fb em1" data-display-price="'+price+'">'+ price +'</span></span><span class="xui-orPrice">原价￥<span class="xa-orPrice" data-orPrice="'+orPrice+'">'+ orPrice +'</span></span>';
-                $('.xa-priceSection').html(temp);
-            }
-        },
-        error: function(data) {
-
-        }
-    });
-    // setTimeout(function(){
-    //     $('.xui-applyBox').removeClass('hidden');
-    // },200);
     view = new W.page.BuyProductPage({
         el: '.xui-page',
-        postageFactor: postageFactor,
-        usableIntegral: usableIntegral,
-        enableTestBuy: enableTestBuy,
         productId: productId,
-        productType: productType,
         models: models,
         priceInfo: priceInfo,
-        postageConfigName: postageConfigName,
-        countPerPurchase: countPerPurchase,
         promotion: promotion,
         is_member_product: is_member_product,
+        cdn_host: '{{cdn_host}}'
     });
 
-    if(models.length > 1){
-        var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,bounce:false});
-    }
-    var $img = $('.xa-productDetail-content img');
-    $img.lazyload({
-        data_attribute:"url",
-        effect : "fadeIn",
-        placeholder:"{{cdn_host}}/static_v2/img/webapp/mall/info_placeholder.png"
-    });
-    // if($('.xa-production').length > 0){
-    //     var $wrapper = $('.xa-content');
-    //     $wrapper.css('height',window.document.body.clientHeight - 42).refresh({
-    //         statechange: function (e, $elem, state, dir) {
-    //             var refreshInfo = this._options.refreshInfo[dir];
-    //             switch (state) {
-    //                 case 'loading':
-    //                     refreshInfo['$label'].html('详情加载中...');
-    //                     break;
-    //             }
-    //         },
-    //         load: function (dir, type) {
-    //             var me = this;
-    //             var data = $('.xa-productDetail-content').data('detail');
-    //             $('.xa-productDetail-content').html(data);
-    //             var $img = $('.xa-productDetail-content').find('img');
-    //             // $img.lazyload({
-    //             //     container: $(".xa-productDetail-content"),
-    //             //     data_attribute:"url"
-    //             // });
-    //             $img.imglazyload({
-    //                 container:$('.xa-content'),
-    //                 innerScroll: true
-    //             }).on('loadcomplete', function () {
-    //                 $wrapper.iScroll('refresh');
-    //             });
-    //             if($img.length > 0){
-    //                 var a = setInterval(function(){
-    //                     var flag = true;
-    //                     $img.each(function(i,n){
-    //                         if(!n.complete)
-    //                             flag = false;
-    //                     })
-    //                     if(flag){
-    //                         $('.xa-production').removeClass('hidden');
-    //                         me.afterDataLoading(dir);
-    //                         clearInterval(a)
-    //                         me.disable(dir,true);
-    //                     }
-    //                 });
-    //             }else{
-    //                 $('.xa-production').removeClass('hidden');
-    //                 me.afterDataLoading(dir);
-    //                 me.disable(dir,true);
-    //             }
-                
-
-    //         }
-    //     });
-    //     // $('.ui-refresh-icon').hide();
-    //     isPhone6pinches = (window.screen.height==736);
-    //     if(isPhone6pinches){
-    //         $('.ui-refresh-label').text("点击加载商品详情");
-    //     }else{
-    //         $('.ui-refresh-label').text("↑ 上拉加载商品详情");
-    //     }
-    // }
-
+    // var $img = $('.xa-productDetail-content img');
+    // $('[data-url]').lazyload({
+    //     data_attribute:"url",
+    //     effect : "fadeIn",
+    //     placeholder:"/static_v2/img/webapp/mall/info_placeholder.png"
+    // });
     //处理会员名称
-    var spanMemberName = $(".xa-memberName");
-    for(var i = 0; i < spanMemberName.length; i++) {
-        var str = $(spanMemberName[i]).text().trim();
-        var str_name = str.substring(0,1)+"**"+str[str.length-1];
-        $(spanMemberName[i]).html(str_name)
-    }
+    // var spanMemberName = $(".xa-memberName");
+    // for(var i = 0; i < spanMemberName.length; i++) {
+    //     var str = $(spanMemberName[i]).text().trim();
+    //     var str_name = str.substring(0,1)+"**"+str[str.length-1];
+    //     $(spanMemberName[i]).html(str_name)
+    // }
 });
 //无刷新页面重置数量信息
 if (document.getElementById('total_count')) {

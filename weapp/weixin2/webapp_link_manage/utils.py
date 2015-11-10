@@ -23,6 +23,8 @@ from market_tools.tools.channel_qrcode.export import get_channel_qrcode_webapp_l
 
 from mall.promotion.models import RedEnvelopeRule
 
+from apps.customerized_apps.sign.export import get_sign_webapp_link
+
 def get_webapp_link_menu_objectes(request):
 	"""
 	获取微站内部链接的menu的json数据
@@ -106,6 +108,11 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'red_envelope',
 				'add_btn_title': '新建分享红包',
 				'add_link': '/apps/red_envelope/red_envelope_rule/'
+			},{
+				'name': '微助力',
+				'type': 'powerme',
+				'add_btn_title': '新建微助力',
+				'add_link': '/apps/powerme/powerme/'
 			}
 			# {
 			# 	'name': '趣味测试',
@@ -153,7 +160,7 @@ def get_webapp_link_menu_objectes(request):
 		'sign': {
 			'id': 10,
 			'name': '签到',
-			'link': '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.manager.id
+			'link': get_sign_webapp_link(request)
 		}
 	}
 
@@ -179,7 +186,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'product': {
 			'class': Product, #is_deleted=False,
 			'query_name': 'name',
-			'link_template': './?module=mall&model=product&action=get&rid={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id,
+			'link_template': './?woid=%d&module=mall&model=product&rid={}' % webapp_owner_id,
 			'filter':{
 				"is_deleted": False,
 				"shelve_type": PRODUCT_SHELVE_TYPE_ON
@@ -188,7 +195,7 @@ def get_webapp_link_objectes_for_type(request, type, query, order_by):
 		'category': {
 			'class': ProductCategory,
 			'query_name': 'name',
-			'link_template': './?module=mall&model=products&action=list&category_id={}&workspace_id=mall&webapp_owner_id=%d' % webapp_owner_id,
+			'link_template': './?woid=%d&module=mall&model=products&action=list&category_id={}' % webapp_owner_id,
 			'filter':{}
 		},
 		'lottery': {

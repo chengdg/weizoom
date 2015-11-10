@@ -116,31 +116,42 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 @receiver(mall_signals.post_pay_order, sender=Order)
 def post_pay_order_handler(order, request, **kwargs):
     try:
+        from modules.member.tasks import post_pay_tasks
+        post_pay_tasks(request, order)
+        """
+            将模版消息加人celery
+        """
+        from modules.member.tasks import send_order_template_message
+        send_order_template_message.delay(order.webapp_id, order.id, 0)
         #支付完成之后的webapp_user操作
-        if hasattr(request, 'webapp_user'):
-            request.webapp_user.complete_payment(request, order)
-        #更新order的payment_time字段
-        dt = datetime.now()
-        payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
-        Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
-        #发送模板消息
-        try:
-            from market_tools.tools.template_message.module_api import send_order_template_message
-            send_order_template_message(order.webapp_id, order.id, 0)
-        except:
-            alert_message = u"post_pay_order_handler 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
-            watchdog_warning(alert_message)
+        # if hasattr(request, 'webapp_user'):
+        #    request.webapp_user.complete_payment(request, order)
 
-        try:
-            """
-                增加异步消息：修改会员消费次数和金额,平均客单价
-            """
-            from modules.member.tasks import update_member_pay_info
-            order.payment_time = payment_time
-            update_member_pay_info(order)
-        except:
-            alert_message = u"post_pay_order_handler 修改会员消费次数和金额,平均客单价, cause:\n{}".format(unicode_full_stack())
-            watchdog_warning(alert_message)
+        #更新order的payment_time字段
+        # dt = datetime.now()
+        # # jz 2015-10-22
+        # payment_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+        # Order.objects.filter(order_id=order.order_id).update(payment_time = payment_time)
+        #发送模板消息
+
+        # try:
+        #     from market_tools.tools.template_message.module_api import send_order_template_message
+        #     send_order_template_message(order.webapp_id, order.id, 0)
+        # except:
+        #     alert_message = u"post_pay_order_handler 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
+        #     watchdog_warning(alert_message)
+        # from modules.member.tasks import post_pay_tasks
+        # post_pay_tasks(request, order)
+        # try:
+        #     """
+        #         增加异步消息：修改会员消费次数和金额,平均客单价
+        #     """
+        #     from modules.member.tasks import update_member_pay_info
+        #     # order.payment_time = payment_time
+        #     update_member_pay_info(order)
+        # except:
+        #     alert_message = u"post_pay_order_handler 修改会员消费次数和金额,平均客单价, cause:\n{}".format(unicode_full_stack())
+        #     watchdog_warning(alert_message)
     except:
         alert_message = u"post_pay_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         if hasattr(request, 'user'):
@@ -168,38 +179,6 @@ def post_pay_order_handler(order, request, **kwargs):
                 watchdog_alert(alert_message, type='WEB', user_id=str(request.user.id))
             else:
                 watchdog_alert(alert_message, type='WEB')
-
-    # try:
-    #     order_has_products = OrderHasProduct.objects.filter(order_id=order.id)
-    #     is_thanks_card_order = False
-    #     for order_has_product in order_has_products:
-    #         product = Product.objects.get(id = order_has_product.product_id)
-    #         if product.is_support_make_thanks_card:
-    #             is_thanks_card_order = True
-    #             for i in range(order_has_product.number):    #购买几个商品创建几个密码
-    #                 secret = __gen_thanks_card_secret()
-    #                 member_id = 0    #bdd测试不支持request.member
-    #                 if request.member:
-    #                     member_id = request.member.id
-    #                 ThanksCardOrder.objects.create(
-    #                     order_id= order.id,
-    #                     thanks_secret= secret,
-    #                     card_count= 0,
-    #                     listen_count= 0,
-    #                     is_used= False,
-    #                     title='',
-    #                     content='',
-    #                     type=IMG_TYPE,
-    #                     att_url='',
-    #                     member_id=member_id)
-    #         if is_thanks_card_order:
-    #             Order.objects.filter(order_id=order.order_id).update(type = THANKS_CARD_ORDER)
-    # except:
-    #     alert_message = u"post_pay_order_handler 生成感恩密码失败, cause:\n{}".format(unicode_full_stack())
-    #     if hasattr(request, 'user'):
-    #         watchdog_alert(alert_message, type='WEB', user_id=str(request.user.id))
-    #     else:
-    #         watchdog_alert(alert_message, type='WEB')
 
 #############################################################################################
 # create_delivery_product_handler: 创建一个与DeliveryPlan关联的product一模一样的product,
@@ -261,12 +240,13 @@ def create_delivery_product_handler(delivery_plan, **keyword):
 ########################################################################
 # __gen_thanks_card_secret: 生成感恩密码
 ########################################################################
-def __gen_thanks_card_secret():
-    secret = random.randint(1000000, 9999999)
-    if ThanksCardOrder.objects.filter(thanks_secret=secret).count() > 0:
-        return __gen_thanks_card_secret()
-    else:
-        return secret
+# made by zhaolei 2015-10-28
+# def __gen_thanks_card_secret():
+#     secret = random.randint(1000000, 9999999)
+#     if ThanksCardOrder.objects.filter(thanks_secret=secret).count() > 0:
+#         return __gen_thanks_card_secret()
+#     else:
+#         return secret
 
 #############################################################################################
 # cancel_order_handler: 取消订单后触发的动作
@@ -302,9 +282,9 @@ def cancel_order_handler(order, **kwargs):
     except:
         alert_message = u"cancel_order_handler处理失败, cause:\n{}".format(unicode_full_stack())
         watchdog_fatal(alert_message, type='WEB')
-
+    # jz 2015-10-20
     # 2、删除订单统计表中的数据
-    PurchaseDailyStatistics.objects.filter(order_id=order.order_id).delete()
+    # PurchaseDailyStatistics.objects.filter(order_id=order.order_id).delete()
 
 
 #############################################################################################
@@ -427,7 +407,7 @@ def coupon_pre_save_order(pre_order, order, products, product_groups, owner_id=N
 
     #更新红包优惠券分析数据 by Eugene
     if promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id).count() > 0:
-        red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.get(coupon_id=coupon[0].id)
+        red_envelope2member = promotion_models.RedEnvelopeParticipences.objects.filter(coupon_id=coupon[0].id)[0]
         if red_envelope2member.introduced_by != 0:
             for_udpate = promotion_models.RedEnvelopeParticipences.objects.get(
                         red_envelope_rule_id=red_envelope2member.red_envelope_rule_id,

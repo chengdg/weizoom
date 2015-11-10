@@ -37,7 +37,7 @@ Background:
 	And bill关注jobs的公众号
 
 
-@product @online_bug @ui
+@product @online_bug @ui @ProductDetail
 Scenario: 手机端商品显示已售罄,后台修改库存为有数量后,手机端不再显示已售罄
 
 	#商品由有库存变为已售罄

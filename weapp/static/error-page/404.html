@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>	</title>
+	<style>
+		body {
+		    margin: 0;
+		    padding: 0;
+		    background: #f0f0f0;
+		}
+		.xui-empty-box{
+		    width:65.937%;
+		    margin:20% auto 16% auto;
+		}
+		.xui-empty-box img{
+			max-width: 100%;
+		}
+		.xui-goShopping-btn{
+			display: block;
+			text-align: center;
+			margin:0 auto;
+			width: 94%;
+			background: #CF0305;
+			color: #fff;
+			height: 45px;
+			line-height: 45px;
+			border-radius:2px;
+			text-decoration: none;
+			font-family: Arial,Tahoma,"Helvetica Neue","Heiti SC","Microsoft Yahei";
+		}
+		@media only screen and (min-device-width: 320px) and (max-device-height: 480px){
+		    .xui-empty-box{
+		        width: 65.937%;
+    			margin: 8% auto 13% auto;
+		    }
+		}
+	</style>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <script type="text/javascript" src="/termite_static/v3/gmu/zepto.js"></script>
+    <script type="text/javascript" src="/termite_static/v3/gmu/widget/cookie.js"></script>
+</head>
+
+<body>
+	<div class="content">
+        <div class="xui-empty-box"><img src="notFind.jpg" alt=""></div>
+        <a class="xui-goShopping-btn" id="url">返回首页</a>
+    </div>	
+</body>
+<script>
+    var token = $.cookie('current_token');
+	var woid = token.split('____')[0];
+	var fmt = token.split('____')[1];
+	document.getElementById('url').setAttribute("href","/termite/workbench/jqm/preview/?woid="+woid+"&module=mall&model=homepage&fmt="+fmt);
+</script>
+</html>

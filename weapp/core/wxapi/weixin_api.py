@@ -198,6 +198,11 @@ def call_api(weixin_api, api_instance_class):
 			weixin_api._raise_system_error(api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
 
 		result = api_response
+
+		try:
+			watchdog_info('call weixin api: {} , result:{}'.format(api_instance_class,result))	
+		except:
+			pass
 		
 		if hasattr(result, 'errcode'):
 			try:

@@ -300,7 +300,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     W.showHint('error', msg);
                 }
             });
-        } else if(stockText === "" || parseInt(stockText) != NaN){
+        } else if(stockText === "" || ((parseInt(stockText)).toString()==stockText)&&parseInt(stockText)>=0){
             if(stockText===""){stockText = 0;}
             else{stockText = parseInt(stockText);}
 
@@ -334,6 +334,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     W.showHint('error', msg);
                 }
             })
+        }else{
+            W.showHint('error', '库存请输入非负整数');
         }
     },
 

@@ -166,27 +166,30 @@ def to_json_str(obj):
 	return obj
 
 
-@register.filter(name='get_back_homepage_url')
-def get_back_homepage_url(request, homepage_workspace_info):
-	"""
-	当启用新版微页面时，打开的微页面设置的首页，如果不是，返回删除列表页面
 
-	author: liupeiyu
-	"""
-	back_homepage_url = u'/workbench/jqm/preview/?woid={}&module=mall&model=products&action=list'.format(request.webapp_owner_id)
 
-	if hasattr(request, 'user_profile') and request.user_profile:
-		profile = request.user_profile
-	else:
-		profiles = UserProfile.objects.filter(user_id=request.webapp_owner_id)
-		if profiles.count() > 0:
-			profile = profiles[0]
-		else:
-			profile = None
-	
-	if profile and profile.is_use_wepage:
-	 	back_homepage_url = u'/termite2/webapp_page/?{}'.format(homepage_workspace_info)
-	 	print back_homepage_url
-
-	return back_homepage_url
+# 弃用
+# @register.filter(name='get_back_homepage_url')
+# def get_back_homepage_url(request, homepage_workspace_info):
+# 	"""
+# 	当启用新版微页面时，打开的微页面设置的首页，如果不是，返回删除列表页面
+#
+# 	author: liupeiyu
+# 	"""
+# 	back_homepage_url = u'/workbench/jqm/preview/?woid={}&module=mall&model=products&action=list'.format(request.webapp_owner_id)
+#
+# 	if hasattr(request, 'user_profile') and request.user_profile:
+# 		profile = request.user_profile
+# 	else:
+# 		profiles = UserProfile.objects.filter(user_id=request.webapp_owner_id)
+# 		if profiles.count() > 0:
+# 			profile = profiles[0]
+# 		else:
+# 			profile = None
+#
+# 	if profile and profile.is_use_wepage:
+# 	 	back_homepage_url = u'/termite2/webapp_page/?{}'.format(homepage_workspace_info)
+# 	 	print back_homepage_url
+#
+# 	return back_homepage_url
 

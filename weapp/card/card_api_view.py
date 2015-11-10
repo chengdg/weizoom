@@ -34,6 +34,12 @@ def get_cards(request):
     card_name = request.GET.get('cardName', '').strip()
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_card_rules = WeizoomCardRule.objects.all().order_by('-created_at')
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
+    can_export_batch_card=0
+    can_delay_card=0
+    if weizoomcardpermission:
+        can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
+        can_delay_card=weizoomcardpermission[0].can_delay_card
     if card_name:
         weizoom_card_rules = weizoom_card_rules.filter(name__icontains = card_name)
 
@@ -117,9 +123,10 @@ def get_cards(request):
             rule_id2cards[card_rule_id].append(c)
 
     for r_id in card_rule_ids:
-        weizoom_cards = rule_id2cards[r_id]
-        weizoom_card_ids = [int(weizoom_cards[0].weizoom_card_id), int(weizoom_cards[::-1][0].weizoom_card_id)]
-        rule_id2card_ids[r_id] = weizoom_card_ids
+        if r_id in rule_id2cards:
+            weizoom_cards = rule_id2cards[r_id]
+            weizoom_card_ids = [int(weizoom_cards[0].weizoom_card_id), int(weizoom_cards[::-1][0].weizoom_card_id)]
+            rule_id2card_ids[r_id] = weizoom_card_ids
 
     cur_weizoom_card_rules = []
     for rule in weizoom_card_rules:
@@ -133,7 +140,6 @@ def get_cards(request):
         cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
-
         #卡号区间
         try:
             weizoom_card_ids = rule_id2card_ids[cur_weizoom_card_rule.id]
@@ -152,14 +158,191 @@ def get_cards(request):
         else:
             cur_weizoom_card_rule.card_type = TYPE2NAME['WEIZOOM_CARD_GIFT']
         cur_weizoom_card_rules.append(cur_weizoom_card_rule)
-        
+       
     response = create_response(200)
     response.data.items = cur_weizoom_card_rules
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-   
+    response.data.can_delay_card = can_delay_card
+    response.data.can_export_batch_card = can_export_batch_card
     return response.get_response()
 
+@api(app='card', resource='managers', action='get')
+@login_required 
+def get_managers(request):
+    count_per_page = int(request.GET.get('count_per_page', '1'))
+    cur_page = int(request.GET.get('page', '1'))
+    is_manage = 'manage' in request.GET
+    if is_manage:
+        card_managers=WeiZoomCardManager.objects.all()
+    else:
+        card_managers=WeiZoomCardManager.objects.exclude(user_id=request.user.id)
+    pageinfo, card_managers = paginator.paginate(card_managers, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+    weizoomcardpermissions=WeiZoomCardPermission.objects.all()
+    card_manager2weizoomcardpermission={}
+    for weizoomcardpermission in weizoomcardpermissions:
+        card_manager2weizoomcardpermission[weizoomcardpermission.user_id]=weizoomcardpermission
+    cur_card_managers=[]
+    for card_manager in card_managers:
+        cur_card_manager=JsonResponse()
+        cur_card_manager.id=card_manager.id
+        cur_card_manager.user_id=card_manager.user_id
+        cur_card_manager.username=card_manager.username
+        cur_card_manager.nickname=card_manager.nickname        
+        try:
+            cur_card_manager.can_create_card=card_manager2weizoomcardpermission[card_manager.user_id].can_create_card
+            cur_card_manager.can_export_batch_card=card_manager2weizoomcardpermission[card_manager.user_id].can_export_batch_card
+            cur_card_manager.can_add_card=card_manager2weizoomcardpermission[card_manager.user_id].can_add_card
+            cur_card_manager.can_batch_stop_card=card_manager2weizoomcardpermission[card_manager.user_id].can_batch_stop_card
+            cur_card_manager.can_batch_active_card=card_manager2weizoomcardpermission[card_manager.user_id].can_batch_active_card
+            cur_card_manager.can_view_card_details=card_manager2weizoomcardpermission[card_manager.user_id].can_view_card_details
+            cur_card_manager.can_stop_card=card_manager2weizoomcardpermission[card_manager.user_id].can_stop_card
+            cur_card_manager.can_active_card=card_manager2weizoomcardpermission[card_manager.user_id].can_active_card
+            cur_card_manager.can_delay_card=card_manager2weizoomcardpermission[card_manager.user_id].can_delay_card
+            cur_card_manager.can_change_shop_config=card_manager2weizoomcardpermission[card_manager.user_id].can_change_shop_config
+            cur_card_manager.can_view_statistical_details=card_manager2weizoomcardpermission[card_manager.user_id].can_view_statistical_details
+            cur_card_manager.can_export_statistical_details=card_manager2weizoomcardpermission[card_manager.user_id].can_export_statistical_details
+        except:
+            pass
+        cur_card_managers.append(cur_card_manager)
+    response = create_response(200)
+    response.data.items = cur_card_managers 
+    response.data.pageinfo = paginator.to_dict(pageinfo)  
+    return response.get_response()
+
+
+@api(app='card', resource='weizoomcard_permission_own', action='get')
+@login_required 
+def get_weizoomcard_permission_own(request):
+    post = request.POST
+    user_id =int(post.get('user_id',''))
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=user_id)
+    cur_weizoomcardpermission=[]
+    if weizoomcardpermission:
+        cur_weizoomcardpermission=JsonResponse()
+        cur_weizoomcardpermission.can_create_card=weizoomcardpermission[0].can_create_card
+        cur_weizoomcardpermission.can_export_batch_card=weizoomcardpermission[0].can_export_batch_card
+        cur_weizoomcardpermission.can_add_card=weizoomcardpermission[0].can_add_card
+        cur_weizoomcardpermission.can_batch_stop_card=weizoomcardpermission[0].can_batch_stop_card
+        cur_weizoomcardpermission.can_batch_active_card=weizoomcardpermission[0].can_batch_active_card
+        cur_weizoomcardpermission.can_view_card_details=weizoomcardpermission[0].can_view_card_details
+        cur_weizoomcardpermission.can_stop_card=weizoomcardpermission[0].can_stop_card
+        cur_weizoomcardpermission.can_active_card=weizoomcardpermission[0].can_active_card
+        cur_weizoomcardpermission.can_delay_card=weizoomcardpermission[0].can_delay_card
+        cur_weizoomcardpermission.can_change_shop_config=weizoomcardpermission[0].can_change_shop_config
+        cur_weizoomcardpermission.can_view_statistical_details=weizoomcardpermission[0].can_view_statistical_details
+        cur_weizoomcardpermission.can_export_statistical_details=weizoomcardpermission[0].can_export_statistical_details
+    response = create_response(200)
+    response.data.items = cur_weizoomcardpermission 
+    return response.get_response()
+
+
+@api(app='card', resource='weizoomcard_permission', action='get')
+@login_required 
+def get_weizoomcard_permission(request):
+    post = request.POST
+    user_id =int(post.get('user_id',''))
+    can_create_card = post.get('can_create_card','')
+    if can_create_card =='false':
+        can_create_card=0
+    else:
+        can_create_card=1
+    can_export_batch_card = post.get('can_export_batch_card','')
+    if can_export_batch_card =='false':
+        can_export_batch_card=0
+    else:
+        can_export_batch_card=1
+    can_add_card = post.get('can_add_card','')
+    if can_add_card =='false':
+        can_add_card=0
+    else:
+        can_add_card=1
+    can_batch_stop_card = post.get('can_batch_stop_card','')
+    if can_batch_stop_card =='false':
+        can_batch_stop_card=0
+    else:
+        can_batch_stop_card=1
+    can_batch_active_card = post.get('can_batch_active_card','')
+    if can_batch_active_card =='false':
+        can_batch_active_card=0
+    else:
+        can_batch_active_card=1
+    can_stop_card = post.get('can_stop_card','')
+    if can_stop_card =='false':
+        can_stop_card=0
+    else:
+        can_stop_card=1
+    can_active_card = post.get('can_active_card','')
+    if can_active_card =='false':
+        can_active_card=0
+    else:
+        can_active_card=1
+    can_delay_card = post.get('can_delay_card','')
+    if can_delay_card =='false':
+        can_delay_card=0
+    else:
+        can_delay_card=1
+    can_view_card_details = post.get('can_view_card_details','')
+    if can_view_card_details =='false':
+        can_view_card_details=0
+    else:
+        can_view_card_details=1
+    can_change_shop_config = post.get('can_change_shop_config','')
+    if can_change_shop_config =='false':
+        can_change_shop_config=0
+    else:
+        can_change_shop_config=1
+    can_view_statistical_details = post.get('can_view_statistical_details','')
+    if can_view_statistical_details =='false':
+        can_view_statistical_details=0
+    else:
+        can_view_statistical_details=1
+    can_export_statistical_details = post.get('can_export_statistical_details','')
+    if can_export_statistical_details =='false':
+        can_export_statistical_details=0
+    else:
+        can_export_statistical_details=1
+    managers = WeiZoomCardPermission.objects.all()
+    manager_ids = []
+    for manager in managers:
+        manager_ids.append(manager.user_id)
+    if user_id in manager_ids:
+        weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=user_id)
+        weizoomcardpermission.update(can_create_card=can_create_card,
+        can_export_batch_card=can_export_batch_card,
+        can_add_card=can_add_card,
+        can_batch_stop_card=can_batch_stop_card,
+        can_batch_active_card=can_batch_active_card,
+        can_stop_card=can_stop_card,
+        can_active_card=can_active_card,
+        can_delay_card=can_delay_card,
+        can_view_card_details=can_view_card_details,
+        can_change_shop_config=can_change_shop_config,
+        can_view_statistical_details=can_view_statistical_details,
+        can_export_statistical_details=can_export_statistical_details)
+        response = create_response(200)
+    else:
+        try:
+            WeiZoomCardPermission.objects.create(
+                user_id=user_id,
+                can_create_card=can_create_card,
+                can_export_batch_card=can_export_batch_card,
+                can_add_card=can_add_card,
+                can_batch_stop_card=can_batch_stop_card,
+                can_batch_active_card=can_batch_active_card,
+                can_stop_card=can_stop_card,
+                can_active_card=can_active_card,
+                can_delay_card=can_delay_card,
+                can_view_card_details=can_view_card_details,
+                can_change_shop_config=can_change_shop_config,
+                can_view_statistical_details=can_view_statistical_details,
+                can_export_statistical_details=can_export_statistical_details
+                )
+            response = create_response(200)
+        except:
+            response = create_response(500)
+            response.errMsg = u'error'
+    return response.get_response()
 
 @api(app='card', resource='card_filter_params', action='get')
 @login_required
@@ -188,10 +371,18 @@ def get_weizoom_cards(request):
     """
     卡列表
     """
-    count_per_page = int(request.GET.get('count_per_page', '1'))
+    count_per_page = int(30)
     cur_page = int(request.GET.get('page', '1'))
     weizoom_card_rule_id = int(request.GET.get('weizoom_card_rule_id', '-1'))
     weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
+    can_active_card=0
+    can_stop_card=0
+    if weizoomcardpermission:
+        can_active_card=weizoomcardpermission[0].can_active_card
+        can_stop_card=weizoomcardpermission[0].can_stop_card
+        can_view_card_details=weizoomcardpermission[0].can_view_card_details
+
     #获得已经过期的微众卡id
     today = datetime.today()
     card_ids_need_expire = []
@@ -199,10 +390,9 @@ def get_weizoom_cards(request):
         #记录过期并且是未使用的微众卡id
         if card.expired_time < today:
             card_ids_need_expire.append(card.id)
-    
     if len(card_ids_need_expire) > 0:
         WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
-
+    weizoom_cards = WeizoomCard.objects.filter(weizoom_card_rule_id=weizoom_card_rule_id)
     filter_value = request.GET.get('filter_value', '')
     card_number = _get_cardNumber_value(filter_value)
     cardStatus = _get_status_value(filter_value)
@@ -254,6 +444,8 @@ def get_weizoom_cards(request):
         cur_weizoom_card.status = c.status
         cur_weizoom_card.weizoom_card_id = c.weizoom_card_id
         cur_weizoom_card.password = c.password
+        cur_weizoom_card.active_card_user_id = c.active_card_user_id #激活卡用户的id
+        cur_weizoom_card.user_id = request.user.id #当前用户的id
         cur_weizoom_card.money = '%.2f' % c.money # 余额
 
         if c.activated_at:
@@ -277,7 +469,9 @@ def get_weizoom_cards(request):
     response.data.items = cur_weizoom_cards
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-
+    response.data.can_active_card=can_active_card
+    response.data.can_stop_card=can_stop_card
+    response.data.can_view_card_details = can_view_card_details
     return response.get_response()
 
 
@@ -305,6 +499,7 @@ def create_weizoom_cards(request):
             card_type = card_type,
             valid_time_to = valid_time_to,
             valid_time_from = valid_time_from,
+            expired_time = valid_time_to
             )
         #生成微众卡
         __create_weizoom_card(rule, count, request)
@@ -340,7 +535,8 @@ def __create_weizoom_card(rule, count, request):
             weizoom_card_id = weizoom_card_id,
             money = rule.money,
             expired_time = rule.valid_time_to,
-            password = password
+            password = password,
+            active_card_user_id = 0
         ))
         passwords.add(password)
     WeizoomCard.objects.bulk_create(create_list)
@@ -384,9 +580,17 @@ def update_status(request):
         id = request.POST.get('card_id','')
         card_remark = request.POST.get('card_remark','')
         activated_to = request.POST.get('activated_to','')
-        status = int(request.POST['status'])
+        operate_style = request.POST.get('operate_style','')  
+        # status = int(request.POST['status'])
         event_type = WEIZOOM_CARD_LOG_TYPE_DISABLE
         weizoom_card = WeizoomCard.objects.get(id=id)
+        if operate_style == 'active':
+            status = 0
+            weizoom_card.active_card_user_id = request.user.id
+            operate_log = u'激活'
+        else:
+            status = 3
+            operate_log = u'停用'
         if weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
             weizoom_card.activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
             event_type = WEIZOOM_CARD_LOG_TYPE_ACTIVATION
@@ -394,16 +598,17 @@ def update_status(request):
         if (status==0 and weizoom_card.weizoom_card_rule.money!=weizoom_card.money):
             weizoom_card.status = WEIZOOM_CARD_STATUS_USED
         else:
-            weizoom_card.status = status=status
+            weizoom_card.status = status
         weizoom_card.target_user_id = 0
         if card_remark and activated_to:
             weizoom_card.remark = card_remark
             weizoom_card.activated_to = activated_to
         weizoom_card.save()
-
         # 创建激活日志
         module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
         response = create_response(200)
+        # 创建操作日志
+        WeizoomCardOperationLog.objects.create(card_id=id,operater_id=request.user.id,operater_name=request.user,operate_log=operate_log,remark=card_remark,activated_to=activated_to)
     except:
         response = create_response(500)
     return response.get_response()
@@ -423,8 +628,12 @@ def update_batch_status(request):
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
 
-        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to)
-
+        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to,active_card_user_id=request.user.id)
+        # 创建操作日志
+        operation_logs=[]
+        for card_id in card_ids:
+            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'激活',remark=card_remark,activated_to=activated_to))
+        WeizoomCardOperationLog.objects.bulk_create(operation_logs)
         # 创建激活日志
         for card in cards:
             module_api.create_weizoom_card_log(
@@ -433,6 +642,7 @@ def update_batch_status(request):
                 WEIZOOM_CARD_LOG_TYPE_ACTIVATION, 
                 card.id, 
                 card.money)
+
         
         response = create_response(200)
     else:
@@ -448,11 +658,19 @@ def update_onbatch_status(request):
     批量停用微众卡
     """
     card_ids = request.POST.get('card_id', '')
+    card_remark = request.POST['card_remark']
+    activated_to = request.POST['activated_to']
     if card_ids:
         card_ids = card_ids.split(',')
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
-        cards.update(status=3, activated_at=activated_at)
+        cards.update(status=3, remark=card_remark, activated_to=activated_to)
+
+        # 创建操作日志
+        operation_logs=[]
+        for card_id in card_ids:
+            operation_logs.append(WeizoomCardOperationLog(card_id=card_id,operater_id=request.user.id,operater_name=request.user,operate_log=u'停用',remark=card_remark,activated_to=activated_to))
+        WeizoomCardOperationLog.objects.bulk_create(operation_logs)
 
         # 创建激活日志
         for card in cards:
@@ -489,6 +707,35 @@ def append_weizoom_cards(request):
     response.data.count = rule.count
     return response.get_response()
 
+
+@api(app='card', resource='card_expired_time', action='append')
+@login_required
+def append_card_expired_time(request):
+    """
+    追加卡规则时间
+    """
+    rule_id = request.POST.get('rule_id', '')
+    card_append_time = request.POST.get('card_append_time', '')
+    rule = WeizoomCardRule.objects.get(id=rule_id)
+    valid_time_from = datetime.strftime(rule.valid_time_from, '%Y-%m-%d %H:%M:%S')
+    valid_time_to = datetime.strftime(rule.valid_time_to, '%Y-%m-%d %H:%M:%S')
+    if valid_time_from >('%s' %card_append_time):
+        response = create_response(500)
+    else:
+        if ('%s' %card_append_time) > valid_time_to:
+            WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(
+                is_expired=False,
+                expired_time = card_append_time
+            )
+        else:
+            WeizoomCard.objects.filter(weizoom_card_rule_id=rule_id).update(
+                expired_time = card_append_time
+            )
+        rule.valid_time_to = card_append_time
+        rule.expired_time = card_append_time
+        rule.save()  
+        response = create_response(200)
+    return response.get_response()
 
 def _get_status_value(filter_value):
     if filter_value == '-1':

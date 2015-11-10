@@ -34,11 +34,11 @@ Copyright (c) 2011-2012 Weizoom Inc
 		},
 
 		_init: function(){
-			console.log('init calculProductMemberPriceOrPromotionPrice')
+			// console.log('init calculProductMemberPriceOrPromotionPrice')
 		},
 
 		_create: function() {
-			console.log('create calculProductMemberPriceOrPromotionPrice')
+			// console.log('create calculProductMemberPriceOrPromotionPrice')
 			this.getMemberProductInfo();
 		},
 
@@ -51,11 +51,14 @@ Copyright (c) 2011-2012 Weizoom Inc
 				args: {
 					woid: W.webappOwnerId,
 					module: 'mall',
-					target_api: 'member_product_info/get',
-					fmt: this._options.fmt
+					target_api: 'member_product_info/get'
 				},
 				success: function(data) {
 					_this.memberInfoData = data;
+					var alertView = $('[data-ui-role="attentionAlert"]').data('view');
+					if(!data.is_subscribed){
+						alertView.render();
+					}
 					_this.trigger('updateProductPrice', data);
 				},
 				error: function(data) {
@@ -68,7 +71,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 			if(promotion_member_grade_id == '0'){
 				return true;
 			}
-			if(promotion_member_grade_id == this.memberInfoData.user_member_grade_id){
+			if(promotion_member_grade_id == this.memberInfoData.member_grade_id){
 				return true;
 			}else{
 				return false;

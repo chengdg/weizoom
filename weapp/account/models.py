@@ -443,8 +443,9 @@ def update_user_settings(instance, created, **kwargs):
 	else:
 		disable_market_tool_authority_for(instance.user)
 
-	import cache_util
-	cache_util.get_user_profile_by_owner_id(instance.user_id)
+	# jz 2015-10-27
+	# import cache_util
+	# cache_util.get_user_profile_by_owner_id(instance.user_id)
 
 
 signals.post_save.connect(update_user_settings, sender=UserProfile, dispatch_uid = "account.update_profile")

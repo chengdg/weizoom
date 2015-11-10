@@ -21,9 +21,10 @@ import export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
+from mall import export as mall_export
 
 __STRIPPER_TAG__
-FIRST_NAV = 'apps'
+FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 __STRIPPER_TAG__
 class {{resource.class_name}}(resource.Resource):
@@ -52,8 +53,9 @@ class {{resource.class_name}}(resource.Resource):
 		__STRIPPER_TAG__
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
-			'second_nav_name': '{{resource.plural_name}}',
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': "{{resource.plural_name}}",
 			'{{resource.lower_name}}': {{resource.lower_name}},
 			{% if resource.enable_termite %}
 			'is_create_new_data': is_create_new_data,

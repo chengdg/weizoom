@@ -1,0 +1,66 @@
+{% load workbench_filter %}
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme.css">
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_red.css" id="css_red" {% if component.model.color == 'red' %}{% else %}disabled=" true"{% endif %}>
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_orange.css" id="css_orange" {% if component.model.color == 'orange' %}{% else %}disabled=" true"{% endif %}>
+<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme_yellow.css" id="css_yellow" {% if component.model.color %}{% if component.model.color == 'yellow' %}{% else %}disabled=" true"{% endif %}{% endif %}>
+{% endblock %}
+
+{% ifequal component.type 'appkit.powermedescription' %}
+    <div class="wui-powerme-container">
+        <div class="wui-i-background-image">
+            {% if component.model.background_image %}
+                <img src="{{ component.model.image }}">
+            {% else %}
+                <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
+            {% endif %}
+        </div>
+        <div class="wui-i-body">
+            <div style="display: none" class="wui-i-start_time">{{component.model.start_time}}</div>
+            <div style="display: none" class="wui-i-end_time">{{component.model.end_time}}</div>
+            <div class="wui-i-timing wa-timing {% if component.model.timing.timing %}{% if not component.model.timing.timing.select %}hide{% endif %}{% endif %}">
+                <i></i>:
+                <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
+                <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
+                <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
+                <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
+            </div>
+            <div class="wui-i-btngroup">
+                <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
+                <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
+                <button class="wui-i-btn-power wa-power wui-hide">帮助力</button>
+                <button class="wui-i-btn-using wa-using wui-hide">我也要参加</button>
+            </div>
+            <div class="wui-i-description xa-description cl">
+                <div class="wui-i-description-content">
+                    {{component.model.description|safe}}
+                </div>
+            </div>
+            <div class="wui-i-rules xa-rules">
+                <div class="wui-i-title">
+                    <div class="wui-i-line"></div>
+                    <div class="wui-i-rules-title-content">
+                        <i class="wui-i-star"></i><b>活动规则</b><i class="wui-i-star"></i>
+                    </div>
+                </div>
+                <div class="wui-i-rules-content">
+                    {{component.model.rules|safe}}
+                </div>
+            </div>
+            <div class="wui-i-states">
+                <div class="wui-i-title">
+                    <div class="wui-i-line"></div>
+                    <div class="wui-i-helper-title-content">
+                        <i class="wui-i-star"></i><b>助力值TOP100</b><i class="wui-i-star"></i></div>
+                    </div>
+                <ul class="wa-top100">
+                    <li class="wui-i-top100-title">
+                        <span style="margin-left: 5px">排名</span>
+                        <span style="margin-left: 18px">会员</span>
+                        <span class="fr">助力值</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endifequal %}

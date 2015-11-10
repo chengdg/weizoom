@@ -82,7 +82,7 @@ def send_create_template_message(request):
 
 
 def __member_webapp_user(phone_number):
-	shengjing_members = shengjing_models.ShengjingBindingMember.objects.filter(phone_number=phone_number)
+	shengjing_members = shengjing_models.ShengjingBindingMember.objects.filter(phone_number=phone_number).exclude(member_id=0)
 	member_ids = [s.member_id for s in shengjing_members]
 	webapp_users = member_models.WebAppUser.objects.filter(member_id__in=member_ids)
 	if webapp_users.count() == 0:

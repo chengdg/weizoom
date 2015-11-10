@@ -128,7 +128,7 @@
 # 		"code_name": u"manage_supplier"
 # 	}]
 # }, {
-# 	"name": u"大数据挖掘",
+# 	"name": u"粉丝招募平台",
 # 	"code_name": u"big_data"
 # }]
 

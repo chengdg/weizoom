@@ -15,8 +15,9 @@ from core.jsonresponse import create_response
 import models as app_models
 import export
 from datetime import datetime
+from mall import export as mall_export
 __STRIPPER_TAG__
-FIRST_NAV = 'apps'
+FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 __STRIPPER_TAG__
 class {{resource.class_name}}(resource.Resource):
@@ -34,8 +35,9 @@ class {{resource.class_name}}(resource.Resource):
 		__STRIPPER_TAG__
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
-			'second_navs': export.get_second_navs(request),
-			'second_nav_name': "{{resource.second_nav}}",
+			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+			'third_nav_name': "{{resource.second_nav}}",
 			'has_data': has_data
 		});
 		__STRIPPER_TAG__
