@@ -270,8 +270,7 @@ def _fill_answer_dict(answer_dict):
 	else:
 		#把除a表情外的html字符<,>转化成html对应的编码 by Eugene
 		from message.utils import translate_special_characters
-		answer_dict['content'] = translate_special_characters(answer_dict['content'])
-
+ 		answer_dict['content'] = translate_special_characters(answer_dict['content'])
 		#处理表情
 		answer_dict['content'] = emotion.change_emotion_to_img(answer_dict['content'])
 
