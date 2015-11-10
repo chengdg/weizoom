@@ -311,7 +311,7 @@
             W.isMember = {% if isMember %}true{% else %}false{% endif %};
             W.qrcodeUrl = "{{ request.webapp_owner_info.qrcode_img }}";
             W.permission = "{{ permission }}";
-            
+
             var slag = true;//调研图片上传较慢或阻止重复提交，给出提示用
   //          if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
   //          W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
