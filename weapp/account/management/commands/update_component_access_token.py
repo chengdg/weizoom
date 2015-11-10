@@ -15,6 +15,7 @@ from core.upyun_util import upload_qrcode_url_to_upyun
 weixin_http_client = WeixinHttpClient()
 import datetime
 from account.models import UserProfile
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 
 class Command(BaseCommand):
 	help = "init global navbar for all user"
@@ -24,13 +25,19 @@ class Command(BaseCommand):
 		for component in ComponentInfo.objects.filter(is_active=True):
 			weixin_api = WeixinApi(None, weixin_http_client)
 			result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
-			#try:
 			print result,'---'
+			try:
+				watchdog_info('call weixin api: get_component_token , result:{}'.format(result))	
+			except:
+				pass
+
 			component_access_token = result['component_access_token']
 			component.component_access_token = component_access_token
 			component.save()
 			mp_user = None
 			#更新appid token
+
+
 			weixin_api = WeixinApi(component_access_token, weixin_http_client)
 			for auth_appid in ComponentAuthedAppid.objects.filter(is_active=True, component_info=component):
 				
@@ -66,6 +73,10 @@ class Command(BaseCommand):
 
 				result = weixin_api.api_get_authorizer_info(component.app_id,auth_appid.authorizer_appid)
 				print result
+				try:
+					watchdog_info('call weixin api: api_get_authorizer_info , result:{}'.format(result))	
+				except:
+					pass
 				if result.has_key('authorizer_info'):
 					nick_name = result['authorizer_info'].get('nick_name', '')
 					head_img = result['authorizer_info'].get('head_img', '')
