@@ -97,7 +97,7 @@ Scenario:1 用户浏览"签到活动1"
             }
         }
         """
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
     Given jobs添加签到活动"签到活动1",并且保存
         """
@@ -139,29 +139,15 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
         """
     When bill关注jobs的公众号
     When bill访问jobs的webapp
-    Then bill在jobs的webapp中拥有'0'会员积分
+    Then bill在jobs的webapp中拥有0会员积分
+    When bill在微信中向jobs的公众号发送消息'12'
 #    When bill回复关键字
 #        | key_word | rule |
 #        | 12       | 精确 |
 #        | 123      | 模糊 |
 #        | 1234     | 模糊 |
-#
-#    Then bill获得系统回复的消息
-#        """
-#        {
-#            "prize_item":
-#                {
-#                    "serial_count":"1",
-#                    "integral":"2"
-#                },
-#            "reply":
-#                {
-#                    "content":"每日签到获得2积分,连续签到3天获得5积分,连续签到5天获得7积分"
-#                }
-#            "url_id_2":url2
-#        }
-#        """
-#    When bill访问系统回复的"url2"
+    Then bill获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分,连续签到3天获得5积分,连续签到5天获得7积分<br />'
+    When bill点击系统回复的链接
 #    Then bill获取"签到活动1"内容
 #        """
 #        {
