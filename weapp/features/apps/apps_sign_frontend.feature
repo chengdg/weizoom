@@ -20,14 +20,14 @@ Background:
             "limit_counts": "无限",
             "start_date": "今天",
             "end_date": "1天后",
-            "coupon_id_prefix": "coupon1_id_"
+            "coupon_id_prefix": "coupon2_id_"
         },{
             "name": "优惠券3",
             "money": 10.00,
             "limit_counts": "无限",
             "start_date": "2天前",
             "end_date": "2天后",
-            "coupon_id_prefix": "coupon2_id_"
+            "coupon_id_prefix": "coupon3_id_"
         }]
         """
 @apps_sign @apps_sign_frontend @kuku
@@ -38,12 +38,9 @@ Scenario:1 用户浏览"签到活动1"
             "status":"off",
             "name": "签到活动1",
             "sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
-
             "share_pic":"1.img",
             "share_describe": "签到送好礼！",
-            "reply_content":"每日签到获得2积分和优惠券1一张
-                    连续签到3天获得5积分和优惠券1一张
-                    连续签到5天获得7积分和优惠券1一张",
+            "reply_content":"每日签到获得2积分和优惠券1一张,连续签到3天获得5积分和优惠券1一张,连续签到5天获得7积分和优惠券1一张",
             "reply_keyword":
                 [{
                     "rule": "精确",
@@ -91,19 +88,15 @@ Scenario:1 用户浏览"签到活动1"
             "prize_item":
                 {
                     "integral":"2",
-                    "coupon_name":"优惠券1",
+                    "coupon_name":"优惠券1"
                 },
             "sign_item":
             {
                 "sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-                "sign_rule":
-                    "1.每日签到，获得2积分奖励"优惠券1"一张。
-                    2.连续签到至3天，获得5积分奖励"优惠券1"一张。
-                    3.连续签到至5天，获得7积分奖励"优惠券1"一张。"
+                "sign_rule":"1.每日签到,获得2积分奖励优惠券1一张,2.连续签到至3天,获得5积分奖励优惠券1一张,3.连续签到至5天,获得7积分奖励优惠券1一张"
             }
         }
         """
-
 
 @apps_sign @apps_sign_frontend @yuyu
 Scenario Outline: 2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
