@@ -18,8 +18,6 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
     onClickSubmitButton: function(event) {
         var $form = $('form');
         if (W.validate($form)) {
-            $('.xa-submit').attr('disabled','disabled');
-
             var args = $form.serializeObject();
             var ship_info = deepCopyJSON(args);
             ship_info['area_str'] = $('.xa-openSelect').text();
