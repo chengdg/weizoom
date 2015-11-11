@@ -42,7 +42,7 @@
     </div>
     {% endif %}
     {% if products %}
-        <ul class="xui-products-original">
+        <ul class="xui-products-original clearfix">
             {% for product in products %}
             <li id="{{product.id}}" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
                 data-product-promotion='{{product.promotion_js}}' data-product-price="{{product.display_price}}"
