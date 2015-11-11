@@ -63,7 +63,7 @@ Scenario:1 用户浏览"签到活动1"
 
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "2",
                     "send_coupon": "优惠券1",
                     "prize_counts":50
@@ -130,7 +130,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
 
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "2"
                 },{
                     "sign_in": "3",
@@ -193,7 +193,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "send_coupon": "优惠券1",
                     "prize_counts": 50
                 }]
@@ -242,7 +242,7 @@ Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模�
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "integral": "2",
                     "send_coupon": "优惠券1"
                 },{
@@ -289,7 +289,7 @@ Scenario:5 用户一天内连续两次签到
                 }],
             "sign_settings":
                 [{
-                    "sign_in": "1",
+                    "sign_in": "0",
                     "send_coupon": "优惠券1"
                 },{
                     "sign_in": "3",
