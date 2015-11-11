@@ -116,7 +116,7 @@
         width: 44px;
     }
     .wui-win-font-color{
-        color: #FECCCD;
+        color: orangered;
     }
 </style>
 {% endblock %}
@@ -145,14 +145,14 @@
     </div>
     <div class="xui-attention xa-attention none">
         <div class="xui-twoDimensionBox">
-            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-top: 32px;">
+            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
                 <p>1.长按二维码关注“</p><p class="wui-win-font-color">{{ mpUserPreviewName }}</p><p>”公众号</p>
             </div>
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
-            <div class="xa-attention-tip" style="margin-left:8px;display:none">
+            <div class="xa-attention-tip" style="margin-left:8px;margin-right: 5px;display:none">
                 <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
             </div>
-            <div class="xa-attention-reply" style="margin-left:8px;margin-top: 5px;">
+            <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
                 <p>2.回复：“</p><div class="wui-win-font-color" style="display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
@@ -242,7 +242,9 @@
                         openGuideMask();
                     }).show();
                 }else{
-                    powerYou();
+                   $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
+                       powerYou();
+                   }).show();
                 }
             }else{
                 if(is_powered){
