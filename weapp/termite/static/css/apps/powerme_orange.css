@@ -44,3 +44,6 @@
 .wui-i-top100-power {
     color: #fff;
 }
+.wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #ddad87;
+}

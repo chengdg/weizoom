@@ -96,6 +96,7 @@
         top: 12%;
         width: 285px;
         z-index: 10001;
+        text-align: center;
     }
     .xui-attention .xui-twoDimension{
         display: block;
@@ -113,6 +114,9 @@
         float: left;
         height: 44px;
         width: 44px;
+    }
+    .wui-win-font-color{
+        color: #FECCCD;
     }
 </style>
 {% endblock %}
@@ -142,14 +146,14 @@
     <div class="xui-attention xa-attention none">
         <div class="xui-twoDimensionBox">
             <div class="xa-attention-tip-one" style="margin-left: 8px;margin-top: 32px;">
-                <p>1.长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
+                <p>1.长按二维码关注“</p><p class="wui-win-font-color">{{ mpUserPreviewName }}</p><p>”公众号</p>
             </div>
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
             <div class="xa-attention-tip" style="margin-left:8px;display:none">
-                <p style="color: orangered;">2.关注公众号后即可为好友助力值+1</p>
+                <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
             </div>
-            <div class="xa-attention-reply" style="margin-left:8px;">
-                <p>2.回复：“</p><div style="color: orangered;display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
+            <div class="xa-attention-reply" style="margin-left:8px;margin-top: 5px;">
+                <p>2.回复：“</p><div class="wui-win-font-color" style="display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
@@ -232,6 +236,32 @@
         }else{
             var using_msg;
             var $attention = $('.xa-attention');
+            if(W.isMember){
+                if(is_powered){
+                    $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
+                        openGuideMask();
+                    }).show();
+                }else{
+                    powerYou();
+                }
+            }else{
+                if(is_powered){
+                    $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
+                        $attention.find('img').attr('src',new_qrcode_url);
+                        $attention.find('.xa-attention-tip').show();
+                        $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
+                        openQrMask();
+                    }).show();
+                }else{
+                    $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
+                        powerYou();
+                        $attention.find('img').attr('src',new_qrcode_url);
+                        $attention.find('.xa-attention-tip').show();
+                        $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
+                        openQrMask();
+                    }).show();
+                }
+            }
             if(is_powered && W.isMember){
                 $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
                     openGuideMask();

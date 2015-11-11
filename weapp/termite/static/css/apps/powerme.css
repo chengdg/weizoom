@@ -158,8 +158,12 @@ hr{
 }
 .wui-i-top100-range{
     line-height: 3rem;
-    margin-left: 12px;
-    padding-right: 21px;
+    float: left;
+    text-align: center;
+    display: inline-block;
+    margin-left: -1rem;
+    height: 35px;
+    width: 50px;
 }
 .wui-powerme-container .wui-i-top100-name img {
     border-radius: 80px;

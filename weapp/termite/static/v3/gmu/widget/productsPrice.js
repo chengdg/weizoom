@@ -56,7 +56,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 				success: function(data) {
 					_this.memberInfoData = data;
 					var alertView = $('[data-ui-role="attentionAlert"]').data('view');
-					if(!data.is_subscribed){
+					if(!data.is_subscribed && alertView){
 						alertView.render();
 					}
 					_this.trigger('updateProductPrice', data);
