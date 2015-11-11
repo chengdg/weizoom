@@ -133,7 +133,8 @@ class lottery_prize(resource.Resource):
 			lottery_participance.save()
 
 		#如果当前可玩次数为0，则直接返回
-		if limitation != -1:
+		#如果限制抽奖次数，则进行判断目前是否抽奖次数已经使用完
+		if int(limitation) != -1:
 			if lottery_participance.can_play_count <= 0:
 				response = create_response(500)
 				response.errMsg = u'您今天的抽奖机会已经用完~'

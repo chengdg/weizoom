@@ -19,6 +19,11 @@ def get_cards_num_census(request):
     """
     微众卡列表页面
     """
+    weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
+    can_view_statistical_details=can_export_statistical_details=0
+    if weizoomcardpermission:
+        can_view_statistical_details = weizoomcardpermission[0].can_view_statistical_details
+        can_export_statistical_details = weizoomcardpermission[0].can_export_statistical_details 
     count_per_page = int(request.GET.get('count_per_page', '1'))
     cur_page = int(request.GET.get('page', '1'))
     filter_value = request.GET.get('filter_value', None)
@@ -30,7 +35,8 @@ def get_cards_num_census(request):
     response.data.card_ids=card_ids
     response.data.sortAttr = request.GET.get('sort_attr', 'money')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-    
+    response.data.can_view_statistical_details = can_view_statistical_details
+    response.data.can_export_statistical_details = can_export_statistical_details  
     return response.get_response()
 
 
@@ -73,8 +79,31 @@ def get_card_num_details(request):
     response.data.items = cards
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
     response.data.pageinfo = paginator.to_dict(pageinfo)
-
     return response.get_response()
+
+
+@api(app='card', resource='card_num_operations', action='get')
+@login_required
+def get_card_num_operations(request):
+    """
+    微众卡操作记录页面
+    """
+    card_id = request.GET.get('card_id','')
+    w_card = WeizoomCard.objects.filter(weizoom_card_id=card_id)
+    card_operations = WeizoomCardOperationLog.objects.filter(card_id=w_card[0].id).order_by('-created_at')
+    cur_card_operations = []
+    for cur_card_operation in card_operations:
+        cur_weizoom_card = JsonResponse()
+        cur_weizoom_card.operater_name = cur_card_operation.operater_name
+        cur_weizoom_card.operate_log = cur_card_operation.operate_log
+        cur_weizoom_card.created_at = cur_card_operation.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        cur_weizoom_card.remark = cur_card_operation.remark
+        cur_weizoom_card.activated_to = cur_card_operation.activated_to
+        cur_card_operations.append(cur_weizoom_card)
+    response = create_response(200)
+    response.data.items=cur_card_operations
+    return response.get_response()
+
 
 
 @api(app='card', resource='card_num_filter_params', action='get')

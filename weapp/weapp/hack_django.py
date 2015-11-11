@@ -117,58 +117,6 @@ def hackQuerySetFilter():
 	QuerySet.filter = new_filter
 
 
-
-
-def hackQuerySetFilterForShow():
-	"""
-	丰富用于为客户演示的账号的数据 duhao 20151022
-	"""
-	old_filter = QuerySet.filter
-	def new_filter(self,  *args, **kwargs):
-		import modules.member.models as member_models
-		import stats.models as stats_models
-		import mall.models as mall_models
-		try:
-			if 'owner' in kwargs and kwargs['owner'].id == settings.SELF_ID:
-				owner = kwargs.pop('owner')
-
-				if self.model in (member_models.Member, mall_models.Order):
-					return old_filter(self, **kwargs).filter(owner_id__in=settings.OWNER_IDS)
-
-				return old_filter(self, **kwargs).filter(owner_id=settings.TARGET_ID)
-
-			if 'owner_id' in kwargs and kwargs['owner_id'] == settings.SELF_ID and self.model in (member_models.Member, mall_models.Order):
-				owner_id = kwargs.pop('owner_id')
-				return old_filter(self, **kwargs).filter(owner_id__in=settings.OWNER_IDS)
-
-			if 'webapp_id' in kwargs and kwargs['webapp_id'] == settings.SELF_WEBAPP_ID:
-				webapp_id = kwargs.pop('webapp_id')
-				if self.model == member_models.IntegralStrategySttings:
-					return old_filter(self, **kwargs).filter(webapp_id=settings.TARGET_WEBAPP_ID)
-
-				if self.model == stats_models.BrandValueHistory:
-					kwargs['webapp_id'] = settings.SELF_WEBAPP_ID
-					return old_filter(self, **kwargs)
-				
-				if self.model in (member_models.Member, mall_models.Order):
-					return old_filter(self, **kwargs).filter(webapp_id__in=settings.WEBAPP_IDS)
-
-				return old_filter(self, **kwargs).filter(webapp_id=settings.TARGET_WEBAPP_ID)
-
-			if 'webapp_source_id' in kwargs and kwargs['webapp_source_id'] == settings.SELF_WEBAPP_ID:
-				webapp_source_id = kwargs.pop('webapp_source_id')
-
-				if self.model in (member_models.Member,  mall_models.Order):
-					return old_filter(self, **kwargs).filter(webapp_source_id__in=settings.WEBAPP_IDS)
-
-				return old_filter(self, **kwargs).filter(webapp_source_id=settings.TARGET_WEBAPP_ID)
-		except:
-			pass
-
-		return old_filter(self, *args, **kwargs)
-	QuerySet.filter = new_filter
-
-
 def hackModel():
 	"""
 	改进django model，添加to_dict方法
@@ -273,4 +221,3 @@ def hack(params):
 	hackRenderToResponse()
 	hackModelManager()
 	# hackUser() duhao 20151019 注释
-	hackQuerySetFilterForShow()

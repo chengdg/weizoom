@@ -45,7 +45,8 @@ def step_finished_a_product_review(context, webapp_user, order_code, product_nam
     data['order_has_product_id'] = order_has_product.id
     has_picture = context_dict.get('picture_list', None)
     if has_picture:
-        data['picture_list'] = json.dumps(has_picture)
+        data['picture_list'] = str(has_picture)
+
     context.client.post(url, data)
 
 

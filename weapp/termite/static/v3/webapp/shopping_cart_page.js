@@ -254,29 +254,29 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             }else{
                 $stockTip.hide();
             }
-
+            // jz 2015-10-28
             // 库存不足提示
-            var understock_msg = '';
-            if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
-                if(stocks < count){
-                    $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
-                    understock_msg = '库存不足'
-                    _this.unselectProduct($product);
-                }else{
-                    $check.removeClass('xui-disabled-radio');
-                }
-            }
-            // 限购提示
-            if(purchase && purchase < count){
-                $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
-                understock_msg = '限购' + purchase +'件 ' + understock_msg
-                _this.unselectProduct($product);
-            }
-            if(understock_msg){
-                $product.find('.xui-understock').html(understock_msg).show();
-            }else{
-                $product.find('.xui-understock').hide();
-            }
+            // var understock_msg = '';
+            // if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
+            //     if(stocks < count){
+            //         $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+            //         understock_msg = '库存不足'
+            //         _this.unselectProduct($product);
+            //     }else{
+            //         $check.removeClass('xui-disabled-radio');
+            //     }
+            // }
+            // // 限购提示
+            // if(purchase && purchase < count){
+            //     $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+            //     understock_msg = '限购' + purchase +'件 ' + understock_msg
+            //     _this.unselectProduct($product);
+            // }
+            // if(understock_msg){
+            //     $product.find('.xui-understock').html(understock_msg).show();
+            // }else{
+            //     $product.find('.xui-understock').hide();
+            // }
             $counter.bind('count-changed', _.bind(_this.onChangCounter, _this));
         });
     },

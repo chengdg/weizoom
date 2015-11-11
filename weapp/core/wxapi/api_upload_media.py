@@ -135,3 +135,46 @@ class WeixinUploadMediaVoiceApi(object):
 
 	def is_for_form(self):
 		return True
+
+UPLOAD_MEDIA_URI = 'cgi-bin/media/uploadimg'
+class WeixinUploadContentMediaImageApi(object):
+
+	def get_get_request_url_and_api_info(self, mpuser_access_token=None, varargs=()):
+		if len(varargs) > 3 and len(varargs) == 1:
+			raise ValueError(u'WeixinUploadMediaImageApi.get_get_request_url error, param illegal')
+
+		if mpuser_access_token is None:
+			raise ValueError(u'WeixinUploadMediaImageApi get_get_request_url_and_api_info：mpuser_access_token is None')
+		return self._complete_weixin_api_get_request_url(mpuser_access_token), u'上传媒体文件返回url：image'
+
+	def parse_response(self, api_response):
+		return api_response
+
+	def parese_post_param_json_str(self, args):
+		if len(args) != 2:
+			raise ValueError(u'WeixinUploadMediaImageApi param number illegal')
+
+		return build_post_json(args[0], MediaType.IMAGE)
+
+	def request_method(self):
+		return api_settings.API_POST
+
+	def _complete_weixin_api_get_request_url(self, mpuser_access_token):
+		param_dict = {}
+		param_dict['access_token'] = mpuser_access_token.access_token
+		param_dict[MediaType.TYPE] = MediaType.IMAGE
+		
+		return complete_get_request_url(
+				api_settings.WEIXIN_API_PROTOCAL, 
+				api_settings.WEIXIN_API_DOMAIN,
+				UPLOAD_MEDIA_URI,
+				param_dict
+				)
+
+	def is_retry(self, args):
+		if len(args) == 2:
+			return True if args[1] is True else False
+		return False
+
+	def is_for_form(self):
+		return True

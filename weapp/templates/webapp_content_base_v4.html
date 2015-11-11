@@ -17,7 +17,8 @@
                 "args": {
                     "dest":"cdn/standard_static/css/webapp_v4_all.css",
                     "path_map": {
-                        "termite_static": "termite/static"
+                        "termite_static": "termite/static",
+                        "webapp_static": "webapp/modules/static"
                     }
                 }
             }
@@ -30,6 +31,7 @@
         <link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">
         <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">
+        <link type="text/css" rel="stylesheet"  href="/webapp_static/backend_default_v3/css/default_v3.css">
         <!-- *end_prunt_task* -->
 
 
@@ -71,7 +73,7 @@
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/attentionAlert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/gmu/widget/uploadImg.js"></script> 
+        <script type="text/javascript" src="/termite_static/v3/gmu/widget/addImg.js"></script>
 
         <script type="text/javascript" src="/termite_static/v3/system/debug.js"></script>
         <!-- *end_prunt_task* -->
@@ -254,7 +256,7 @@
             };
 
             $('.xa-wepage-navbar-link').click(function(event){
-                var url = $(event.currentTarget).find('a').attr('data-link');
+                var url = $(event.currentTarget).find('a').attr('data-link') || "";
                 if (url.length == 0 || url.indexOf('javascript:') >= 0) {
                     return;
                 }
@@ -430,7 +432,7 @@
                             }else if (inputType === 'imgarea') {
                                 var picture_list = [];
                                 $control.find('img').each(function(){
-                                   if($(this).attr('src').indexOf('data:image') != -1){picture_list.push($(this).attr('src'))}
+                                    picture_list.push($(this).attr('data-src'))
                                 });
                                 var value = JSON.stringify(picture_list);
                             }

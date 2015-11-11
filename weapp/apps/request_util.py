@@ -42,6 +42,6 @@ def get_fields_to_be_save(request):
 			if fields['termite_data'][item]['type']=='appkit.uploadimg':
 				fields['uploadImg'] = json.loads(fields['termite_data'][item]['value'])
 				for picture in fields['uploadImg']:
-					att_url.append(save_base64_img_file_local_for_webapp(request, picture))
+					att_url.append(picture)
 				fields['termite_data'][item]['value'] = att_url
 	return fields

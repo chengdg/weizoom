@@ -3,6 +3,7 @@
 MALL_CARD_FIRST_NAV = 'card'
 MALL_CARD_MANAGER_NAV = 'manager'
 MALL_CARD_CENSUS_NAV = 'census'
+MALL_CARD_PERMISSIONS_NAV='permissions'
 
 MALL_CARD_TOTAL_CENSUS_NAV = 'total_cencus'
 MALL_CARD_BY_CARD_NAV = 'by_card_cencus'
@@ -37,7 +38,13 @@ CARD_NAV = {
                     'url': '/card/cards_channel_census/get/',
                 },
             ]
-        }
+        },
+        {
+            'name': MALL_CARD_PERMISSIONS_NAV,
+            'title': u'用户权限管理',
+            'url': '/card/cardmanager/get/',
+            'uservalue': True,
+        },
     ]
 }
 

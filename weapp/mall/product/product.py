@@ -519,7 +519,6 @@ class Product(resource.Resource):
         """
 
         # 获取默认运费
-        source = int(request.GET.get('shelve_type', 0))
         swipe_images = request.POST.get('swipe_images', '[]')
         if not swipe_images:
             url = '/mall2/product_list/?shelve_type=%d' % int(request.GET.get('shelve_type', 0))
@@ -528,77 +527,7 @@ class Product(resource.Resource):
             swipe_images = json.loads(swipe_images)
         thumbnails_url = swipe_images[0]["url"]
 
-        # 更新product
-        postage_type = request.POST['postage_type']
-        if postage_type == models.POSTAGE_TYPE_UNIFIED:
-            postage_id = -1
-            unified_postage_money = request.POST.get(
-                'unified_postage_money', '')
-            if unified_postage_money == '':
-                unified_postage_money = 0.0
-        else:
-            postage_id = 999  # request.POST['postage_config_id']
-            unified_postage_money = 0.0
         product_id = request.GET.get('id')
-
-        min_limit = request.POST.get('min_limit', '0')
-        if not min_limit.isdigit():
-            min_limit = 0
-        else:
-            min_limit = float(min_limit)
-        purchase_price = request.POST.get("purchase_price", '')
-        if purchase_price == '':
-            purchase_price = 0
-        if request.POST.get('weshop_sync', None):
-            models.Product.objects.record_cache_args(
-                ids=[product_id]
-            ).filter(
-                owner=request.manager,
-                id=product_id
-            ).update(
-                name=request.POST.get('name', '').strip(),
-                promotion_title=request.POST.get(
-                    'promotion_title', '').strip(),
-                user_code=request.POST.get('user_code', '').strip(),
-                bar_code=request.POST.get('bar_code', '').strip(),
-                thumbnails_url=thumbnails_url,
-                detail=request.POST.get('detail', '').strip(),
-                is_use_online_pay_interface='is_enable_online_pay_interface' in request.POST,
-                is_use_cod_pay_interface='is_enable_cod_pay_interface' in request.POST,
-                postage_id=postage_id,
-                unified_postage_money=unified_postage_money,
-                postage_type=postage_type,
-                weshop_sync=request.POST.get('weshop_sync', None),
-                stocks=min_limit,
-                is_member_product=request.POST.get("is_member_product", False) == 'on',
-                supplier=request.POST.get("supplier", 0),
-                purchase_price=purchase_price,
-
-            )
-        else:
-            models.Product.objects.record_cache_args(
-                ids=[product_id]
-            ).filter(
-                owner=request.manager,
-                id=product_id
-            ).update(
-                name=request.POST.get('name', '').strip(),
-                promotion_title=request.POST.get(
-                    'promotion_title', '').strip(),
-                user_code=request.POST.get('user_code', '').strip(),
-                bar_code=request.POST.get('bar_code', '').strip(),
-                thumbnails_url=thumbnails_url,
-                detail=request.POST.get('detail', '').strip(),
-                is_use_online_pay_interface='is_enable_online_pay_interface' in request.POST,
-                is_use_cod_pay_interface='is_enable_cod_pay_interface' in request.POST,
-                postage_id=postage_id,
-                unified_postage_money=unified_postage_money,
-                postage_type=postage_type,
-                stocks=min_limit,
-                is_member_product=request.POST.get("is_member_product", False) == 'on',
-                supplier=request.POST.get("supplier", 0),
-                purchase_price=purchase_price,
-            )
 
         # 处理商品排序
         display_index = int(request.POST.get('display_index', '0'))
@@ -710,10 +639,12 @@ class Product(resource.Resource):
                 )
 
         # 删除不用的models
-        to_be_deleted_model_names = existed_model_names - updated_model_names
-        models.ProductModel.objects.filter(
-            product_id=product_id, name__in=to_be_deleted_model_names
-        ).update(is_deleted=True)
+        existed_model_names_not_delete = set([model.name for model in existed_models if not model.is_deleted])
+        to_be_deleted_model_names = existed_model_names_not_delete - updated_model_names
+        if len(to_be_deleted_model_names):
+            models.ProductModel.objects.filter(
+                product_id=product_id, name__in=to_be_deleted_model_names
+            ).update(is_deleted=True)
 
         # 处理轮播图
         models.ProductSwipeImage.objects.filter(
@@ -780,6 +711,98 @@ class Product(resource.Resource):
                 id__in=old_category_ids
             ).update(product_count=F('product_count') - 1)
 
+        # 更新product
+        postage_type = request.POST['postage_type']
+        if postage_type == models.POSTAGE_TYPE_UNIFIED:
+            postage_id = -1
+            unified_postage_money = request.POST.get(
+                'unified_postage_money', '')
+            if unified_postage_money == '':
+                unified_postage_money = 0.0
+        else:
+            postage_id = 999  # request.POST['postage_config_id']
+            unified_postage_money = 0.0
+
+        min_limit = request.POST.get('min_limit', '0')
+        if not min_limit.isdigit():
+            min_limit = 0
+        else:
+            min_limit = float(min_limit)
+        purchase_price = request.POST.get("purchase_price", '')
+        if purchase_price == '':
+            purchase_price = 0
+        param = {
+            'name': request.POST.get('name', '').strip(),
+            'promotion_title': request.POST.get('promotion_title', '').strip(),
+            'user_code': request.POST.get('user_code', '').strip(),
+            'bar_code': request.POST.get('bar_code', '').strip(),
+            'thumbnails_url': thumbnails_url,
+            'detail': request.POST.get('detail', '').strip(),
+            'is_use_online_pay_interface': 'is_enable_online_pay_interface' in request.POST,
+            'is_use_cod_pay_interface': 'is_enable_cod_pay_interface' in request.POST,
+            'postage_id': postage_id,
+            'unified_postage_money': unified_postage_money,
+            'postage_type': postage_type,
+            'stocks': min_limit,
+            'is_member_product': request.POST.get("is_member_product", False) == 'on',
+            'supplier': request.POST.get("supplier", 0),
+            'purchase_price': purchase_price,
+        }
+
+        if request.POST.get('weshop_sync', None):
+            param['weshop_sync'] = request.POST['weshop_sync'][0]
+        models.Product.objects.record_cache_args(
+            ids=[product_id]
+        ).filter(
+            owner=request.manager,
+            id=product_id
+        ).update(**param)
+                # name=request.POST.get('name', '').strip(),
+                # promotion_title=request.POST.get(
+                #     'promotion_title', '').strip(),
+                # user_code=request.POST.get('user_code', '').strip(),
+                # bar_code=request.POST.get('bar_code', '').strip(),
+                # thumbnails_url=thumbnails_url,
+                # detail=request.POST.get('detail', '').strip(),
+                # is_use_online_pay_interface='is_enable_online_pay_interface' in request.POST,
+                # is_use_cod_pay_interface='is_enable_cod_pay_interface' in request.POST,
+                # postage_id=postage_id,
+                # unified_postage_money=unified_postage_money,
+                # postage_type=postage_type,
+                # weshop_sync=request.POST.get('weshop_sync', None),
+                # stocks=min_limit,
+                # is_member_product=request.POST.get("is_member_product", False) == 'on',
+                # supplier=request.POST.get("supplier", 0),
+                # purchase_price=purchase_price,
+
+        #     )
+        # else:
+        #     models.Product.objects.record_cache_args(
+        #         ids=[product_id]
+        #     ).filter(
+        #         owner=request.manager,
+        #         id=product_id
+        #     ).update(
+        #         name=request.POST.get('name', '').strip(),
+        #         promotion_title=request.POST.get(
+        #             'promotion_title', '').strip(),
+        #         user_code=request.POST.get('user_code', '').strip(),
+        #         bar_code=request.POST.get('bar_code', '').strip(),
+        #         thumbnails_url=thumbnails_url,
+        #         detail=request.POST.get('detail', '').strip(),
+        #         is_use_online_pay_interface='is_enable_online_pay_interface' in request.POST,
+        #         is_use_cod_pay_interface='is_enable_cod_pay_interface' in request.POST,
+        #         postage_id=postage_id,
+        #         unified_postage_money=unified_postage_money,
+        #         postage_type=postage_type,
+        #         stocks=min_limit,
+        #         is_member_product=request.POST.get("is_member_product", False) == 'on',
+        #         supplier=request.POST.get("supplier", 0),
+        #         purchase_price=purchase_price,
+        #     )
+        # 更新product结束
+
+        source = int(request.GET.get('shelve_type', 0))
         if source == models.PRODUCT_SHELVE_TYPE_OFF:
             url = '/mall2/product_list/?shelve_type=%d' % (models.PRODUCT_SHELVE_TYPE_OFF, )
             return HttpResponseRedirect(url)

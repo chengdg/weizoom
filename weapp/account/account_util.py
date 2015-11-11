@@ -73,7 +73,7 @@ def get_logined_user_from_token(token, request_host='weixin.weizoom.com'):
 		#进行userid和username的校验，即获取指定userid的User信息，
 		#判断用户名信息是否匹配
 
-		if 	request_host in ['weixin.weizoom.com', 'weapp.weizoom.com', 'dev.weapp.com', 'red.weapp.weizzz.com', 'weapp.dev.com']:
+		if 	request_host in ['weixin.weizoom.com', 'weapp.weizoom.com', 'dev.weapp.com', 'red.weapp.weizzz.com', 'weapp.dev.com', 'yanshi.weizoom.com']:
 			user = User.objects.get(username = username)
 
 			user.backend = 'django.contrib.auth.backends.ModelBackend'

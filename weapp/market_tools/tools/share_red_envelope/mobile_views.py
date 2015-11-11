@@ -24,9 +24,9 @@ def get_share_red_envelope(request):
     """
     red_envelope_rule_id = request.GET.get('red_envelope_rule_id', 0)
     order_id = request.GET.get('order_id', 0) # 下单领取会带有order_id
-    material_id = request.GET.get('material_id', 0) # 图文领取会带有material_id
     user_id = request.GET.get('webapp_owner_id', 0)
     is_share = request.GET.get('is_share', 0)
+    material_id = 0 #除下单领取记录rule_id作为material_id
     # 订单
     # if order_id:
     #     order = Order.objects.get(id=order_id)
@@ -53,10 +53,11 @@ def get_share_red_envelope(request):
     coupon_rule_id = red_envelope_rule.coupon_rule_id
     coupon_rule = CouponRule.objects.get(id=coupon_rule_id)
 
+    member_coupon_record_count = 0
     if order_id:
         relation = RedEnvelopeToOrder.objects.filter(order_id=order_id, red_envelope_rule_id=red_envelope_rule_id)
-    member_coupon_record_count = 0
-    if material_id:
+    else:
+        material_id = red_envelope_rule_id #除下单领取记录rule_id作为material_id
         if followed_member_id == member_id or not followed_member_id:
             relation = RedEnvelopeToOrder.objects.filter(red_envelope_rule_id=red_envelope_rule_id, member_id=member_id)
         else:

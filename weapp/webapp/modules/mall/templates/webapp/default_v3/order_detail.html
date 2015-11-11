@@ -42,7 +42,14 @@
                 <span class="xui-icon xui-icon-rightarrow" style="right:12px"></span>
             </a>
             {% else %}
-                暂无物流信息
+                {% if order.status == 4%}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}">
+                    <p class="em95 c6">暂无跟踪记录</p>
+                    <span class="xui-icon xui-icon-rightarrow" style="right:12px;"></span>
+                </a>
+                {% else %}
+                    暂无物流信息
+                {% endif %}
             {% endif %}
         </div>
         {% endif %}
@@ -140,7 +147,14 @@
                 <span class="xui-icon xui-icon-rightarrow" style="right:12px"></span>
             </a>
             {% else %}
-                暂无物流信息
+                {% if order.status == 4%}
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=express_detail&action=get&order_id={{order.id}}">
+                    <p class="em95 c6">暂无跟踪记录</p>
+                    <span class="xui-icon xui-icon-rightarrow" style="right:12px;"></span>
+                </a>
+                {% else %}
+                    暂无物流信息
+                {% endif %}
             {% endif %}
         </div>
         </fieldset>

@@ -2,6 +2,7 @@
 import datetime
 import json
 import signs
+import models as app_models
 
 NAV = {
 	'section': u'',
@@ -65,3 +66,9 @@ def get_sing_fields_to_save(request):
 		fields['reply'] = json.loads(fields['reply'])
 
 	return fields
+
+def get_sign_webapp_link(request):
+	sign = app_models.Sign.objects.count()
+	if sign > 0:
+		return '/m/apps/sign/m_sign/?webapp_owner_id=%d' % request.manager.id
+	return None

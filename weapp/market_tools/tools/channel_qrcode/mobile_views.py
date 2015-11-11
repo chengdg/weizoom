@@ -169,7 +169,7 @@ def get_settings_detail(request):
     user_id = request.webapp_owner_id
     if sid:
         setting = ChannelQrcodeSettings.objects.get(id=sid)
-        
+
         if setting.bing_member_id == request.member.id:
             relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
             payed_count = 0
@@ -204,7 +204,7 @@ def get_settings_detail(request):
             #获取old会员的webapp_user
             old_webapp_users = WebAppUser.objects.filter(member_id__in=old_member_id2_create_at.keys())
             old_member_order_ids = []
-            
+
             for webapp_user in old_webapp_users:
                 created_at = old_member_id2_create_at[webapp_user.member_id]
                 for order in Order.by_webapp_user_id(webapp_user.id).filter(created_at__gte=created_at):
@@ -222,7 +222,7 @@ def get_settings_detail(request):
                 orders = []
 
             for order in orders:
-                pay_money += order.final_price
+                pay_money += (order.final_price + order.weizoom_card_money)
 
             c = RequestContext(request, {
                     'page_title': u'推荐详情',
