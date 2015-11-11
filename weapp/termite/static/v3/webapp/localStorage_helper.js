@@ -178,21 +178,22 @@ var JSAnalysis = function(analysis_name,content,woid){
 // webStorage可用性探针
 var webStorageProbe = function () {
     var content = '';
-    if (localStorage) {
+    try{
         if (localStorage.mallWebStorageOk == 1) {
             return
         } else {
             localStorage.mallWebStorageOk = 1;
         }
-    } else {
-        content += 'localStorage is undefined\n'
+    }catch(e){
+        content += e;
     }
-    if (!sessionStorage) {
-        content += 'sessionStorage is undefined';
+    try{
+        sessionStorage.getItem('10086');
+    }catch(e){
+        content += '\n'+e
     }
-
     if (content != '') {
-        JSAnalysis(webStorageProbe, content);
+        JSAnalysis('webStorageProbe', content);
     }
 
 };
