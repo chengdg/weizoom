@@ -604,15 +604,35 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-i-uploadimg .xui-productPhoto{
     overflow: hidden;
 }
-.wui-i-uploadimg .xui-productPhoto .xui-addPhoto,
-.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+.wui-i-uploadimg .xui-imgList li{
+    position: relative;
+    float: left;
+    margin-bottom: 10px;
     width: 45px;
     height: 45px;
+    margin-right: 2px;
+    box-shadow: inset 0px 0px 0px 1px #ddd;
+}
+.wui-i-uploadimg .xui-imgList li img{
+    width: 45px;
+    height: 45px;
+}
+.wui-i-uploadimg .xui-productPhoto .xui-addPhoto,
+.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
+    width: 46px;
+    height: 45px;
     display: inline-block;
+    background: url(/static_v2/img/webapp/mall/photoBtn.png);
+    -webkit-background-size: 92px 45px;
+    background-size: 92px 45px;
+    background-position: -46px 0;
     text-align: center;
     line-height: 45px;
     margin-right: 3px;
-	overflow: hidden;
+    overflow: hidden;
+    float: left;
+    position: relative;
+    margin-bottom: 10px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     line-height: 35px;
@@ -622,17 +642,6 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     margin-right: 0;
-}
-.wui-i-uploadimg .xui-productPhoto .xui-addPhoto span.xui-i-box,
-.wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
-    display: inline-block;
-    width:45px;
-    height:45px;
-    background: url(/static_v2/img/webapp/mall/photoBtn.png);
-	background-color: #fff;
-    -webkit-background-size: 92px 45px;
-    background-size: 92px 45px;
-    background-position: -47px 0;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-deletePhoto{
     background-position: 0 0;
@@ -659,21 +668,55 @@ p.wui-i-start_time,p.wui-i-end_time{
     top:10px;
     left: 10px;
 }
+.wui-i-uploadimg .xui-progress{
+    position:absolute;
+    width:100%;
+    height:4px;
+    background:rgba(0,0,0,.6);
+    left:0;
+    bottom:0;
+    -webkit-transition:all linear .4s;
+    transition:all linear .4s;
+}
+.wui-i-uploadimg .xui-progress span{
+    display: block;
+    height:4px;
+    width: 0;
+    background:#4AB700;
+    -webkit-transition:all linear .6s;
+    transition:all linear .6s;
+}
 .wui-i-uploadimg .xui-productPhoto .xui-addPhoto .xui-i-box i{
     margin-left: -3px;
 }
 .wui-i-uploadimg .xui-productPhoto .xui-text{
     color: #A9A9A9;
     line-height: 45px;
-	padding-left: 10px;
 }
-.wui-i-uploadimg.xa-inputControl {
-	min-height: 45px;
-	padding-bottom: 15px;
+.wui-i-uploadimg .xui-serviceReview h2{
+    margin-top: 5px;
+    margin-bottom:16px;
 }
-/*.wui-i-uploadimg .xui-finishEdit{*/
-  /*line-height: 45px;*/
-/*}*/
-/*.xui-i-box {*/
-  /*margin-right: 4px;*/
-/*}*/
+.wui-i-uploadimg .xui-reviewBtn{
+    width: 94%;
+    background: #A9A9A9;
+    color: #fff;
+    height: 40px;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 40px;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    border: none;
+}
+.wui-i-uploadimg .xui-reviewBtn:focus{
+    outline: none;
+}
+.wui-i-uploadimg .xui-red{
+    background: #CF0303;
+}
+.wui-i-uploadimg .xui-uploadImg{
+    width: 45px;
+    height: 45px;
+}

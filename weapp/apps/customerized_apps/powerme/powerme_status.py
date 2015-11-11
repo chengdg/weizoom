@@ -57,8 +57,7 @@ class PowerMeStatus(resource.Resource):
 		response = create_response(500)
 		if record_id:
 			record = app_models.PowerMe.objects.get(id=record_id)
-			if record.status == 1:
-				record.update(set__status=app_models.STATUS_NOT_START)
-				response = create_response(200)
-				response.data.page_id = record.related_page_id
+			record.update(set__status=app_models.STATUS_NOT_START)
+			response = create_response(200)
+			response.data.page_id = record.related_page_id
 		return response.get_response()

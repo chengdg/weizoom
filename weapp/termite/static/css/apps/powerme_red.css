@@ -14,6 +14,9 @@
 .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
     background-position: 9px -36px;
 }
+.wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #d0a194;
+}
 .wui-i-description-content {
     color: #a00211;
 }
