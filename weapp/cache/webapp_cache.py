@@ -170,7 +170,7 @@ def get_webapp_products_new(webapp_owner_user_profile,
                                              cache_products)
         products_not_0 = filter(lambda p: p.display_index != 0,
                                               cache_products)
-        products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time'), reverse=True)
+        products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time','id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
         cache_products = products_not_0 + products_is_0
         # 分类中的排序规则是不唯一的，这个地方的score要注意
