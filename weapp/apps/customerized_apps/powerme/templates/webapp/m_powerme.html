@@ -392,6 +392,7 @@
             },
             success: function(data) {
                 if (W.isMember) {
+                    $('.wa-power').html('已帮'+page_owner_name+'助力')
                     openSuccessWin();
                 }
                 is_powered = true;
