@@ -667,21 +667,6 @@ def get_forbidden_coupon_product_ids_for_cache(webapp_owner_id):
             }
     return inner_func
 
-def get_forbidden_coupon_product_ids_for_cache(webapp_owner_id):
-    def inner_func():
-        forbidden_coupon_products = promotion_models.ForbiddenCouponProduct.objects.filter(
-            owner_id=webapp_owner_id, 
-            status__in=(promotion_models.FORBIDDEN_STATUS_NOT_START, promotion_models.FORBIDDEN_STATUS_STARTED)
-        )
-
-        return {
-                'keys': [
-                    'forbidden_coupon_products_%s' % (webapp_owner_id)
-                ],
-                'value': forbidden_coupon_products
-            }
-    return inner_func
-
 def get_webapp_categories_for_cache(webapp_owner_user_profile):
     def inner_func():
         webapp_owner_id = webapp_owner_user_profile.user_id
