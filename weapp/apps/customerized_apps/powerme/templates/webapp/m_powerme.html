@@ -144,7 +144,7 @@
             <div class="xa-attention-tip-one" style="margin-left: 8px;margin-top: 32px;">
                 <p>1.长按二维码关注“</p><p style="color: orangered">{{ mpUserPreviewName }}</p><p>”公众号</p>
             </div>
-            <img src="{{ qrcode_url }}" alt="" class="xui-twoDimension">
+            <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
             <div class="xa-attention-tip" style="margin-left:8px;display:none">
                 <p style="color: orangered;">2.关注公众号后即可为好友助力值+1</p>
             </div>
@@ -171,7 +171,8 @@
     var is_powered = {% if is_powered %}true{% else %}false{% endif %};
     var is_self_page = {% if is_self_page %}true{% else %}false{% endif %};
     var page_owner_name = '{{ page_owner_name|safe }}';
-    var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}'{{qrcode_url}}'{% endif %};
+    var qrcode_url = W.qrcodeUrl;
+    var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -231,13 +232,13 @@
         }else{
             var using_msg;
             var $attention = $('.xa-attention');
-            if(is_powered){
+            if(is_powered && W.isMember){
                 $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
                     openGuideMask();
                 }).show();
             }else{
                 $('.wa-power').html('帮'+page_owner_name+'助力').one('click', function(){
-                    powerYou();
+                    !is_powered && powerYou();
                     if (!W.isMember){
                         $attention.find('img').attr('src',new_qrcode_url);
                         $attention.find('.xa-attention-tip').show();
@@ -258,7 +259,7 @@
             }else{
                 using_msg = '我也要参加';
                 $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('img').attr('src','{{qrcode_url}}');
+                    $attention.find('img').attr('src',qrcode_url);
                     $attention.find('.xa-attention-tip').hide();
                     $attention.find('.xa-attention-reply').children().first().html("2.回复：“");
                     openQrMask();
@@ -357,7 +358,7 @@
                 if (W.isMember) {
                     openSuccessWin();
                 }
-                $('.wa-power').html('已帮' + page_owner_name + '助力').on('click', openGuideMask).show();
+                $('.wa-power').on('click', openQrMask).show();
             },
             error: function(data) {
                 console.error(data.errMsg);

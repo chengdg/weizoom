@@ -1022,7 +1022,7 @@ W.workbench.PropertyView = Backbone.View.extend({
     },
 
     onMouseoverQrcode: function(event){
-        var $el = $(event.target);
-        $el.parent().siblings('.deleteQrcode').show();
+        var $el = $(event.currentTarget);
+        $el.parent().siblings('.deleteQrcode').css('display','block');
     }
 });
