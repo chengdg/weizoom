@@ -196,3 +196,7 @@ def get_member_product_info(request):
 	获取购物车的数量和检查商品是否已被收藏
 	'''
 	return request_api_util.get_member_product_info(request)
+
+
+def log_js_analysis(request):
+	return request_api_util.log_js_analysis(request)

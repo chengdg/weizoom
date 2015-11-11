@@ -133,6 +133,17 @@ def watchdog_alert(message, type='WEB', user_id='0', db_name='default'):
 	return result
 
 
+def watchdog_js_analysis(message, type='JS_Analysis', user_id='0', db_name='default'):
+	result = None
+	if weapp_settings.TASKQUEUE_ENABLED:
+		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
+			send_watchdog.delay(type, message, WATCHDOG_INFO, user_id, db_name)
+	else:
+		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
+			_watchdog(type, message, WATCHDOG_INFO, user_id, db_name)
+	return result
+
+
 def watchdog_emergency(message, type='WEB', user_id='0', db_name='default'):
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
