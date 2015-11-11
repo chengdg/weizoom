@@ -3,63 +3,111 @@
 {% load mall_filter %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %} xui-addrManage-page xui-page xa-page" data-title="{{ page_title }}">
+<div data-role="page" data-theme="x" class="xui-addrManage-page xui-page xa-page" data-title="编辑收货地址">
 	<div class="xui-section" style="box-shadow:0 0 0;-webkit-box-shadow:0 0 0;">
-		{% if not ship_infos %}
-		<div class="xui-emptyImg">
+
+		<div class="xui-emptyImg xa-emptyTemplate" style="display: none">
 			<img src="/static_v2/img/webapp/mall/map.png"></div>
-		<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=add&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" data-role="button" data-icon="true" class="xui-addAddress">+添加收货地址</a>
-		{% else %}
-		<div class="xui-addNewBtn">
-			<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=add&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" data-role="button" data-icon="true" class="xui-addNew disT pr xt-addShipAddress">
+		<a href="" data-role="button" data-icon="true" class="xui-addAddress xa-addShipAddress xa-emptyTemplate" style="display: none">+添加收货地址</a>
+
+		<div class="xui-addNewBtn xa-addNewBtn" style="display: none">
+			<a href="" data-role="button" data-icon="true" class="xui-addNew disT pr xt-addShipAddress xa-addShipAddress">
 			<span class="disTc">新建地址</span>
 			</a>
 		</div>
+
 		<form action="">
 			<ul>
-				{%for ship_info in ship_infos %}
-				<li data-role="button" data-icon="true" class="xui-inner-box tl pr xt-shipInfo {% if ship_info.is_selected %}xui-checked{% endif %}" >
-					<div class="disT" style="width:100%;">
-						<label class="xui-radioBox disTc tc xt-shipInfoSelector" for="is_addrItem_{{ship_info.id}}"
-						 data-id="{{ship_info.id}}">
-							<div class="disTc xui-choseAddress">
-								<input type="radio" id="is_addrItem_{{ship_info.id}}" name="is_addrItem" data-role="none" class="xui-regular-radio hidden xt-selectRadio" {% if ship_info.is_selected %}checked=checked{% endif %} data-id="{{ship_info.id}}">
 
-								<label for="is_addrItem_{{ship_info.id}}" class="xui-regular-radio-label"></label>
+				<li style="display: none" data-role="button" data-icon="true" class="xui-inner-box tl pr xt-shipInfo xa-shipInfo" >
+					<div class="disT" style="width:100%;">
+						<label class="xui-radioBox disTc tc xt-shipInfoSelector xa-shipInfoSelector" for="" data-id="">
+							<div class="disTc xui-choseAddress">
+								<input type="radio" name="is_addrItem" data-role="none" class="xui-regular-radio hidden xt-selectRadio xa-selectRadio"  data-id="">
+
+								<label for="is_addrItem" class="xui-regular-radio-label"></label>
 							</div>
 
 							<div class="xui-infoLink disTc">
-								<div class="pr20">
+								<div class="pr20w">
 									<h2 class="mb10">
 										<span class="xui-receiver">收件人:</span>
-										<span class="xt-name xui-name">{{ship_info.ship_name}}</span>
-										<span class="xui-tel xt-tel">{{ship_info.ship_tel}}</span>
+										<span class="xt-name xui-name xa-shipName"></span>
+										<span class="xui-tel xt-tel xa-shipTel"></span>
 									</h2>
-									<div style="color:#7f7f7f;font-size:0.9em;line-height:18px;" class="xt-areaAddress">{{ship_info.get_str_area}} {{ship_info.ship_address}}</div>
+									<div style="color:#7f7f7f;font-size:0.9em;line-height:18px;" class="xt-areaAddress ">
+                                        <span class="xt-shipArea xa-shipArea">收货地址:</span><span class="xt-shipAddress xa-shipAddress ml5"></span>
+                                    </div>
 								</div>
 							</div>
 
 						</label>
 
-						<a href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=edit&id={{ship_info.id}}&redirect_url_query_string={{ redirect_url_query_string|url_filter }}" class="xui-editIcon disTc"> <i></i>
+						<a href="" class="xui-editIcon disTc xa-edit"> <i></i>
 						</a>
 
 					</div>
 				</li>
-				{%endfor%}
+
 			</ul>
 		</form>
-		{% endif %}
-	</div>
 
+	</div>
 </div>
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
 
-// 跳转queryString
-var redirectUrlQueryString = "{{redirect_url_query_string}}".replace(/&amp;/g,'&');
 $(document).ready(function() {
+    var ship_infos;
+    var woid = getWoid();
+    // 跳转queryString
+    var redirectUrlQueryString = getRedirectUrlQueryString();
+
+    if(localStorage.ship_infos){
+        ship_infos = JSON.parse(localStorage.ship_infos);
+
+    }
+    else{
+        ship_infos = JSON.constructor();
+    }
+
+    if($.isEmptyObject(ship_infos)){
+        $('.xa-emptyTemplate').show();
+    }
+    else {
+        $('.xa-addNewBtn').show();
+        var ship_info;
+        var templateElem = $($('li')[0]);
+        for (var i in ship_infos) {
+
+            ship_info = ship_infos[i];
+
+            var template = templateElem.clone();
+            template.show();
+            $('.xa-shipName', template).text(ship_info.ship_name);
+            $('.xa-shipTel', template).text(ship_info.ship_tel);
+            $('.xa-shipArea', template).text(ship_info.area_str);
+            $('.xa-shipAddress', template).text(ship_info.ship_address);
+            $('.xa-shipInfoSelector', template).attr('data-id', ship_info.ship_id);
+            if (ship_info.is_selected) {
+                $(template).addClass('xui-checked');
+                $('.xa-selectRadio', template).attr('checked', 'checked');
+
+            }
+
+            $('.xa-selectRadio', template).attr('data-id', ship_info.ship_id);
+            var UrlEdit= './?woid=' + woid + '&module=mall&model=address&action=edit&id=' + ship_info.ship_id+'&redirect_url_query_string='+ urlFilter(redirectUrlQueryString);
+            $('.xa-edit',template).attr('href',UrlEdit);
+            $('ul').append(template);
+
+
+
+        }
+    }
+    var UrlAdd = './?woid=' + woid +'&module=mall&model=address&action=add&redirect_url_query_string=' + urlFilter(redirectUrlQueryString);
+    $('.xa-addShipAddress').attr('href',UrlAdd);
+
 	// $('[name="is_addrItem"]').click(function(event){
 	$('.xui-radioBox').click(function(event){
 		// 点击添加信封边框
@@ -68,7 +116,6 @@ $(document).ready(function() {
 		$target.parents('li').addClass('xui-checked');
 
 		var ship_info_id = $(this).attr('data-id');
-		console.log('aaa', ship_info_id);
 		event.stopPropagation();
 		event.preventDefault();
         //显示提交订单的提示
@@ -77,8 +124,6 @@ $(document).ready(function() {
             info:'正在修改收货地址',
             speed: 200000
         });
-
-
 
 	    W.getApi().call({
 	        app: 'webapp',
@@ -92,6 +137,25 @@ $(document).ready(function() {
 	        },
 	        success: function(data) {
 	            var ship_id = data['ship_id'];
+
+                if(localStorage.ship_infos){
+                        ship_infos = JSON.parse(localStorage.ship_infos);
+
+                    }
+                    else{
+                        ship_infos = JSON.constructor();
+                }
+                ship_infos[ship_id].is_selected = true;
+
+                for(var i in ship_infos){
+                        if(i!=ship_id){
+                            ship_infos[i].is_selected = false;
+
+                        }
+                    }
+                localStorage.ship_infos = JSON.stringify(ship_infos);
+
+
 	            if (data['msg'] != null&&redirectUrlQueryString.indexOf('user_center')>0) {
 	                $('body').alert({
 	                    isShow: true,

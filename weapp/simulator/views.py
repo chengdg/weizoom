@@ -50,7 +50,7 @@ def start_simulator(request):
 				mpuser_preview_info = None
 		else:
 			mpuser_preview_info = None
-			
+
 		c = RequestContext(request, {
 			'title': mpuser_preview_info.name if (mpuser_preview_info and mpuser_preview_info.name) else u'信息预览',
 			'is_logined': True,
@@ -58,7 +58,7 @@ def start_simulator(request):
 			'mp_users': json.dumps([]),
 			'menus_json': menu_util.get_menus_json(request.user)
 		})
-		return render_to_response('simulator/simulator.html', c)		
+		return render_to_response('simulator/simulator.html', c)
 	else:
 		user2profile = dict([(p.user_id, p) for p in list(UserProfile.objects.all())])
 		id2user = dict([(u.id, u) for u in list(User.objects.all())])
@@ -217,7 +217,7 @@ def send_from_simulator(request):
 		'sender_fake_id': weixin_user_fakeid,
 		'is_user_logined': 0
 	}
-	
+
 	if request.user.is_authenticated():
 		params['is_user_logined'] = 1
 

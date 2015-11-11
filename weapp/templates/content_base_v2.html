@@ -17,8 +17,10 @@
 		<span class="xui-systemName"></span>
 		<div class="xui-headerActionBar">
 			{% if request.user.id == request.manager.id %}
+				{% if request.user.username != 'tuxiaobao' %}
 					<a href="{{ fans_host }}/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
 					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
+				{% endif %}
 				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
 					<a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:none" id ="message_count"></i></a>
 					<a href="{{ fans_host }}/help_center/outline/" target="_blank"><i class="xui-toolIcon"></i>帮助中心</a>
@@ -65,7 +67,7 @@
 			<ul class="xui-navBar-box clearStyle xa-first-navs" style="visibility:hidden;">
 				{% if first_navs %}
 					{% for nav in first_navs %}
-						<li class="pr {% ifequal nav.name '大数据挖掘' %}xui-i-bigDataTab{% endifequal %}">
+						<li class="pr {% ifequal nav.name '粉丝招募平台' %}xui-i-bigDataTab{% endifequal %}">
 							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title='{{nav.name}}'>{{nav.name}}</a>
 							{% if nav.class_name %}<i class="xui-noticyTip {{nav.class_name}}"></i>{% endif %}
 						</li>

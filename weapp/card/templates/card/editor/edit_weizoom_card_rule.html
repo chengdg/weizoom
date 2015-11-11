@@ -11,6 +11,7 @@
     .ui-timepicker-div dl dd { margin: 0px 10px 0px 45px; } 
     .ui-timepicker-div td { font-size: 90%; } 
     .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+    .errorHint{width: 260px;}
 </style>
 
 <div class="xui-editProductPage">
@@ -39,7 +40,7 @@
             <div class="form-group">
                 <label class="control-label fl" for="parents_name">名&nbsp;&nbsp;&nbsp;称：</label>
                 <div class="fl">
-                    <input type="text" class="form-control w490 mr20 ml5" name="name" placeholder="1-20个字，中英文、数字特殊符号均可" data-validate="require-notempty"/>
+                    <input type="text" class="form-control mr20 ml5 rule_name" name="name" placeholder="1-20个字，中英文、数字特殊符号均可" data-validate="require-notempty" style="width:300px;" />
                     <div class="errorHint" ></div>
                 </div>
 
@@ -120,7 +121,7 @@
             <div class="form-group nostar">
                 <label class="control-label fl" for="parents_name">备注：</label>
                 <div class="col-sm-2 fl pl5">
-                    <input type="text" class="input-xlarge" name="remark" placeholder=""/>
+                    <input type="text" class="input-xlarge rule_remark" name="remark" placeholder="最多输入20个字符" style="width:174px;" />
                     <div class="errorHint"></div>
                 </div>
             </div>
@@ -199,9 +200,10 @@ $(document).ready(function() {
     });
 
     $('form').submit(function() {
-
         var startDate = $('#valid_time_from').val();
         var endDate = $('#valid_time_to').val();
+        var rule_remark = $('.rule_remark').val();
+        var rule_name = $('.rule_name').val();
         if (startDate.length > 0 && endDate.length == 0) {
             W.showHint('error','请输入结束日期！');
             return false;
@@ -216,7 +218,14 @@ $(document).ready(function() {
             W.showHint('error','开始日期不能大于结束日期！');
             return false;
         }
-
+        if (rule_remark.length> 20){
+            W.showHint('error','备注做多输入20个字符！');
+            return false;
+        }
+        if (rule_name.length> 20){
+            W.showHint('error','名称做多输入20个字符！');
+            return false;
+        }
         $('#submitBtn').attr('disabled', true);
         if (!W.validate()) {
             $('#submitBtn').prop('disabled', false);

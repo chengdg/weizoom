@@ -151,7 +151,7 @@ def kuaidi_callback(request):
 	"""
 	快递100 推送回调接口
 	"""
-	response = create_response(200)
+	response = JsonResponse()
 	callback_id = request.GET.get('callbackid', -1)
 	version = request.GET.get('version', '1')
 	order = None
@@ -163,7 +163,10 @@ def kuaidi_callback(request):
 
 	data = ExpressCallbackHandle(request, order, express).handle()
 
-	response.data = data
-	response.data['callback_id'] = callback_id
-	response.data['version'] = version
+	# response.data = data
+	# response.data['callback_id'] = callback_id
+	# response.data['version'] = version
+	for key,value in data.items():
+		response.__dict__[key] = value
+
 	return response.get_response()

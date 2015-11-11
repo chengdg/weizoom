@@ -208,6 +208,9 @@ W.view.mall.ProductEditor = Backbone.View.extend({
 
 		if (!W.validate()) {
 			return false;
+		}else{
+			// 防止连续点击保存
+			$('.xa-submit').attr('disabled','disabled');
 		}
 	}
 });

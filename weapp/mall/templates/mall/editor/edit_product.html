@@ -14,7 +14,7 @@
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
 
-	<form id="editProduct" class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
+	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
   >
@@ -361,14 +361,7 @@
 </div>
 {% endblock %}
 {% block js %}
-{#防止连续点击保存#}
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#editProduct').submit(function() {
-            $('.xa-submit').attr('disabled','disabled');
-		});
-	});
-</script>
+
 <!--    运费验证实现    -->
 <script type="text/javascript">
 var origin_supplier = $('#supplier').data('origin');

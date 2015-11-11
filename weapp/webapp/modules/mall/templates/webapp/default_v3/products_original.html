@@ -41,12 +41,12 @@
         </a>
     </div>
     {% endif %}
+    {% if products %}
     <div data-role="content" data-theme="x">
         <div class="xui-hlist xui-hlist-cell-2 xui-products-original" id="xa-wrapper">
-            {% if products %}
             <ul data-role="listview" data-theme="x" data-icon="false">
                 {% for product in products %}
-                <li id="product" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
+                <li id="{{product.id}}" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
                     data-product-promotion='{{product.promotion_js}}' data-product-price="{{product.display_price}}"
                 >
                     <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
@@ -60,11 +60,13 @@
                 </li>
                 {% endfor %}
             </ul>
-            {% else %}
-            <h2>没有相关商品</h2>
-            {% endif %}
+            
         </div>
     </div>
+    {% else %}
+        <div class="xui-empty-box"><img src="/static_v2/img/webapp/mall/none.jpg" alt=""></div>
+        <a class="xui-goShopping-btn" href='/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=homepage'>去逛逛</a>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -73,19 +75,23 @@
 $(document).ready(function() {
     // 计算列表页面价钱
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
-        fmt: $('body').data('value'),
         updateProductPrice: function(event, data){
-            var _this = this;
+            var token = $.cookie('current_token');
+            if(token){
+                $('[data-ui-role="integralMechanism"]').data('view').setFmt(token.split('____')[1]);
+                W.curRequestMemberToken = token.split('____')[1];
+            }
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
-                $('.xa-shopCarCount').text(data.count).show();
+                // $('.xa-shopCarCount').text(data.count).show();
             }
 
+            var _this = this;
             $(".xa-product").each(function(){
                 // 商品原价
-                var price = $(this).data('product-price').toFixed(2);
+                var price = $(this).data('productPrice');
                 // 商品有促销
-                var productPromotion = $(this).data('product-promotion');
+                var productPromotion = $(this).data('productPromotion');
                 var isMemberProduct = $(this).hasClass('xa-member-product');
                 // 计算价钱                
                 price = _this.calculPrice({
@@ -94,11 +100,11 @@ $(document).ready(function() {
                     isMemberProduct: isMemberProduct
                 });
                 // 设置显示价格
-                $(this).find('.xt-productPrice').text('￥'+price);
+                $(this).find('.xt-productPrice').text('￥'+ price);
             });
         }
     });
-/*
+/* jz 2015-11-26
     var fmt = $('body').data('value');
     var user_has_promotion = function(user_member_grade_id, promotion_member_grade_id){
         if(promotion_member_grade_id == '0'){return true;}

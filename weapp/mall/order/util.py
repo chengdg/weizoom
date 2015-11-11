@@ -515,21 +515,20 @@ def get_detail_response(request):
             number += order_has_product.number
         order.number = number
 
-        if order.status in [ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED]:
-            order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED)
-            if order_has_delivery_times.count() > 0:
-                tmp_time = order_has_delivery_times[0].delivery_date
-                for order_has_delivery_time in order_has_delivery_times:
-                    if order_has_delivery_time.delivery_date <= tmp_time:
-                        tmp_time = order_has_delivery_time.delivery_date
+        # if order.status in [ORDER_STATUS_PAYED_SUCCESSED, ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED]:
+            # order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED)
+            # if order_has_delivery_times.count() > 0:
+            #     tmp_time = order_has_delivery_times[0].delivery_date
+            #     for order_has_delivery_time in order_has_delivery_times:
+            #         if order_has_delivery_time.delivery_date <= tmp_time:
+            #             tmp_time = order_has_delivery_time.delivery_date
+            #
+            #     # 距离配送日期达到两天之内修改订单状态为代发货
+            #     if (tmp_time - date.today()).days <= 2:
+            #         order.status = ORDER_STATUS_PAYED_NOT_SHIP
+            #         order.save()
 
-                # 距离配送日期达到两天之内修改订单状态为代发货
-                if (tmp_time - date.today()).days <= 2:
-                    order.status = ORDER_STATUS_PAYED_NOT_SHIP
-                    order.save()
-
-        #duhao 20151023添加了一个request.user参数
-        order.products = mall_api.get_order_products(order, request.user)
+        order.products = mall_api.get_order_products(order)
 
         # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
         for product in order.products:
@@ -622,7 +621,7 @@ def get_detail_response(request):
             'order_operation_logs': order_operation_logs,
             'order_status_logs': order_status_logs,
             'log_count': log_count,
-            'order_has_delivery_times': OrderHasDeliveryTime.objects.filter(order=order), # todo 貌似没用
+            # 'order_has_delivery_times': OrderHasDeliveryTime.objects.filter(order=order), # todo 貌似没用
             'show_first': show_first
         })
 
@@ -826,8 +825,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             # 构造返回的order数据
     items = []
     for order in orders:
-        #duhao 20151023添加了一个user参数
-        products = mall_api.get_order_products(order, user)
+        products = mall_api.get_order_products(order)
         order.is_refund = is_refund
         # 用于微众精选拆单
         groups = []

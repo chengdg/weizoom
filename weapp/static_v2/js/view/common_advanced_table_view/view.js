@@ -155,7 +155,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
     load: function(from_goto, options) {
         //构造传递给后台api的参数
         var args = {};
-
         // 解决BUG 002900: 微站-订单管理-创建筛选标签可以创建但是创建好的点击没有效果
         // 去掉注释部分
         _.extend(args, this.args, args);
@@ -348,7 +347,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     */
                 }
                 // 扩展advanced_table.load方法
-                this.afterload();
+                this.afterload();               
             },
             error: function(resp) {
                 // W.getLoadingView().show();

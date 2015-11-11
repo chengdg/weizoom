@@ -10,13 +10,16 @@ from webapp.modules.mall import request_util
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
 
+def get_homepage(request):
+	return request_util.get_homepage(request)
 
 def list_products(request):
 	"""显示"商品列表"页面
 	"""
-	if request.user.is_weizoom_mall:
-		# 微众商城跳至微众商城首页
-		return __weshop_index(request)
+	# 2015-10-20
+	# if request.user.is_weizoom_mall:
+	# 	# 微众商城跳至微众商城首页
+	# 	return __weshop_index(request)
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.list_products(request)
 
@@ -41,12 +44,13 @@ def get_order_list(request):
 ########################################################################
 def edit_order(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
-	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
-		return request_util.edit_order(request)
-	else:
-		request.action = 'add'
-		return request_util.edit_address(request)
+	return request_util.edit_order(request)
+
+	# if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
+	# 	return request_util.edit_order(request)
+	# else:
+	# 	request.action = 'add'
+	# 	return request_util.edit_address(request)
 
 
 ########################################################################
@@ -118,12 +122,10 @@ def edit_shopping_cart_order(request):
 	"""编辑从购物车产生的订单
 	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	# 如果有收货人信息
 	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
 		return request_util.edit_shopping_cart_order(request)
 	else:
-		request.action = 'add'
 		return request_util.edit_address(request)
 
 # jz 2015-10-09
@@ -139,29 +141,30 @@ def edit_shopping_cart_order(request):
 # 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 # 	return request_util.get_weizoomcard_change_intr(request)
 
-def _get_redirect_url_query_string(request):
-	# 入口是图文
-	sign = request.GET.get('sign', None)
-	if sign == 'material_news':
-		return u'woid={}&module=mall&model=address&action=list&sign=material_news'.format(request.webapp_owner_id)
-
-	# 参数中包含
-	redirect_url_query_string = request.GET.get('redirect_url_query_string', None)
-	if redirect_url_query_string:
-		if 'user_center' in redirect_url_query_string:
-			return u'woid={}&module=mall&model=address&action=list&sign=material_news'.format(request.webapp_owner_id)
-		return redirect_url_query_string
-
-	# 当前页面的参数
-	if 'product_ids' in request.REQUEST or 'product_id' in request.REQUEST:
-		return request.META.get('QUERY_STRING', '')
-
-	# 前一页的参数
-	strs = request.META.get('HTTP_REFERER', '').split('/?')
-	if len(strs) > 1:
-		return strs[1]
-
-	return '#'
+# 功能迁移到js
+# def _get_redirect_url_query_string(request):
+# 	# 入口是图文
+# 	sign = request.GET.get('sign', None)
+# 	if sign == 'material_news':
+# 		return u'woid={}&module=mall&model=address&action=list&sign=material_news'.format(request.webapp_owner_id)
+#
+# 	# 参数中包含
+# 	redirect_url_query_string = request.GET.get('redirect_url_query_string', None)
+# 	if redirect_url_query_string:
+# 		if 'user_center' in redirect_url_query_string:
+# 			return u'woid={}&module=mall&model=address&action=list&sign=material_news'.format(request.webapp_owner_id)
+# 		return redirect_url_query_string
+#
+# 	# 当前页面的参数
+# 	if 'product_ids' in request.REQUEST or 'product_id' in request.REQUEST:
+# 		return request.META.get('QUERY_STRING', '')
+#
+# 	# 前一页的参数
+# 	strs = request.META.get('HTTP_REFERER', '').split('/?')
+# 	if len(strs) > 1:
+# 		return strs[1]
+#
+# 	return '#'
 
 
 ########################################################################
@@ -177,7 +180,6 @@ def show_concern_shop_url(request):
 ########################################################################
 def list_address(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	return request_util.list_address(request)
 
 
@@ -186,8 +188,6 @@ def list_address(request):
 ########################################################################
 def add_address(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
-	request.action = 'add'
 	return request_util.edit_address(request)
 
 
@@ -196,19 +196,8 @@ def add_address(request):
 ########################################################################
 def edit_address(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
 	request.action = 'edit'
 	return request_util.edit_address(request)
-
-
-
-########################################################################
-# delete_address: 删除收获地址
-########################################################################
-def delete_address(request):
-	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	request.redirect_url_query_string = _get_redirect_url_query_string(request)
-	return request_util.delete_address(request)
 
 
 ########################################################################
@@ -233,7 +222,6 @@ def get_express_detail(request):
 def create_product_review(request):
     request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
     return request_util.create_product_review(request)
-
 
 ########################################################################
 # get_product_review_successful_page: 创建商品评论

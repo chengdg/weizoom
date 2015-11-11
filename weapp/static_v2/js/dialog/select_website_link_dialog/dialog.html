@@ -50,13 +50,13 @@
 			{{else}}
 				<th>名称</th>
 			{{/if}}
-			{{if data.type == 'lottery' || data.type == 'coupon'}}
+			{{if data.type == 'coupon'}}
 				<th>类型</th>
 			{{/if}}
 
 			{{if data.type != 'shengjing_app'}}
 				{{if data.type == 'lottery' || data.type == 'coupon' || data.type == 'activity'}}
-					<th width="230">有效期</th>
+				    <th width="230">有效期</th>
 				{{else}}
 					{{if data.type == 'red_envelope'}}
 						<th width="230">奖励时间</th>
@@ -83,19 +83,19 @@
 					${item.name}
 				</td>
 			{{/if}}
-			{{if data.type == 'lottery' || data.type == 'coupon'}}
+			{{if data.type == 'coupon'}}
 				<td>
 					${item.type}
 				</td>
 			{{/if}}
 			
-				{{if data.type == 'lottery' || data.type == 'coupon' || data.type == 'activity'}}
+				{{if data.type == 'coupon' || data.type == 'activity'}}
 					<td>
 						${item.valid}
 					</td>
 				{{else}}
 					{{if data.type != 'shengjing_app'}}
-						{{if data.type == 'red_envelope'}}
+						{{if data.type == 'lottery' || data.type == 'red_envelope'}}
 							<td>
 							{{if  item.limit_time}}
 								永久

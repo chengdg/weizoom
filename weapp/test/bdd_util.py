@@ -124,6 +124,21 @@ def get_member_for(username, webapp_id):
 		member = member_models.Member(id=1, grade_id=0)
 		return member
 
+def get_member_by_username(username, webapp_id):
+	"""
+	获取username对应的会员
+	"""
+	from utils.string_util import byte_to_hex
+	if isinstance(username, unicode):
+		member_nickname_str = username.encode('utf-8')
+	else:
+		member_nickname_str = username
+	username_hexstr = byte_to_hex(member_nickname_str)
+	try:
+		return member_models.Member.objects.get(webapp_id=webapp_id, username_hexstr=username_hexstr)
+	except:
+		return None
+
 def get_order_by_order_no(order_no):
 	return mall_models.Order.objects.get(order_id=order_no)
 
@@ -354,7 +369,7 @@ def get_date_to_time_interval (str):
 	return date_interval
 
 #def parse_datetime(str):
-#	return datetime.strptime(str, "%Y/%m/%d %H:%M:%S")	
+#	return datetime.strptime(str, "%Y/%m/%d %H:%M:%S")
 
 def get_date_str(str):
 	date = get_date(str)

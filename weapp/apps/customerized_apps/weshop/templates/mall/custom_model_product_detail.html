@@ -318,7 +318,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     var market_price_range = '{{ price_info.display_market_price }}';
     var weshop_price = {{''|settings_price}};
     // 可用积分
-    var useIntegral = {{use_integral}};
+    // var useIntegral = {{use_integral}};
 
     // function getPostageForWeight(weight) {
     //     if(!isNaN(weight)){
@@ -430,6 +430,8 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
     function updateProductInfo(model) {
         if (model === null || (model.stock_type === 1 && model.stocks === 0)) {
             $('.xa-price').text(price_range);
+            $('.xa-fixed-price').text(price_range);
+            $('.xa-variable-price').text(price_range);
             $('.xa-market-price').text(market_price_range);
             $('.xa-enabledBuyLinks').hide();
             $('.xa-disabledBuyLinks').show();
@@ -447,7 +449,10 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             //库存
             $('.xa-stock').hide();
         } else {
-            $('.xa-price').text((model.price*weshop_price).toFixed(2));
+            var price = (model.price*weshop_price).toFixed(2);
+            $('.xa-price').text(price);
+            $('.xa-fixed-price').text(price);
+            $('.xa-variable-price').text(price);
             $('.xa-market-price').text((model.market_price*weshop_price).toFixed(2));
             if ('object' == '{{product.type}}'){
                 $('.xa-disabledBuyLinks').hide();
@@ -563,7 +568,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             var total_price = (price*productCount).toFixed(2);
             // $('.xa-variable-price').text(total_price);
             console.log(price, productCount, (price*productCount).toFixed(2))
-            if('integral' == '{{product.type}}'){   
+            /*if('integral' == '{{product.type}}'){   
                 if (total_price > {{use_integral}}) {
                     $('.xa-disabledIntegralBuyLinks').show();
                     $('.xa-disabledBuyLinks').hide();
@@ -573,7 +578,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     $('.xa-disabledBuyLinks').hide();
                     $('.xa-enabledBuyLinks').show();
                 }
-            }
+            }*/
         };
         $('input[data-ui-role="counter"]').bind('count-changed', function(event, value) {
             updateBuyLink(value);
@@ -738,5 +743,6 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 if (document.getElementById('total_count')) {
     document.getElementById('total_count').value = 1;    
 }
+$('img[data-url]').each(function(i,n){$(n).attr('src',$(n).data('url'))});
 </script>
 {% endblock %}

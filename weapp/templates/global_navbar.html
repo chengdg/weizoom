@@ -13,9 +13,12 @@
         </div>
         <div class="xui-calc">
             {% for sub_component in component.components %}
-            <div class="">
+            <div class="xui-menuBox">
                 <div data-component-cid="{{sub_component.cid}}" class="xui-flex xui-flex-{{component.components|length}} xui-menu xa-menu f14">
-                    <a href="{% if sub_component.model.second_navs %}javascript:void(0);{% else %}{{ sub_component.model.target|extract_target_data:request|safe }}{% endif %}" class="wa-inner-link">{{ sub_component.model.title }}</a>
+                    <a href="{% if sub_component.model.second_navs %}javascript:void(0);{% else %}{{ sub_component.model.target|extract_target_data:request|safe }}{% endif %}">
+                        {% if sub_component.model.second_navs %}
+                        <img src="/static_v2/img/termite2/menu-icon.png"/>{% endif %}<span class="wa-inner-link">{{ sub_component.model.title }}</span>
+                    </a>
                 </div>
                 <div class="xui-subMenuContainer">
                     <span class="xui-menuArrow"></span>
@@ -38,7 +41,7 @@
             <div class="xui-bottomNav">
                 <ul class="">
                     <li class="xa-outLink" data-page="home">
-                        <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0"><i class="xui-bg"></i></a>
+                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=homepage"><i class="xui-bg"></i></a>
                     </li>
                     <li class="xa-category" data-page="product-category"><i class="xui-bg{% if in_design_mode %} xui-active {% endif %}"></i></li>
                     <li class="xa-outLink" data-page="shopping-cart">
@@ -48,8 +51,8 @@
                             </i>
                         </a>
                     </li>
-                    <li class="xa-outLink" data-page="usercenter">
-                        <a href="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
+                    <li class="xa-outLink xa-wepage-navbar-link" data-page="usercenter">
+                        <a href="javascript:void(0);" data-link="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
                     </li>
                 </ul>
             </div>
@@ -79,5 +82,9 @@
         </div>
     </div>    
     {% endif %}
+    <div data-ui-role="swipemask" class="mask"></div>
+    <div class="xui-two-dimension">
+        <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="">
+    </div>
 </div>
 {% endwith %}

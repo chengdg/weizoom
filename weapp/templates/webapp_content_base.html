@@ -31,7 +31,7 @@
         <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
         <!-- *end_prunt_task* -->
 
-        <link type="text/css" rel="stylesheet" href="{{cdn_host}}/webapp_static/backend_{{request.template_name}}/css/{{request.template_name}}.css">
+        <link type="text/css" rel="stylesheet" href="/webapp_static/backend_{{request.template_name}}/css/{{request.template_name}}.css">
         {% block css %}{% endblock %}
 
 
@@ -51,8 +51,6 @@
         <script type="text/javascript" src="/termite_static/v3/gmu/gmu-2.1.1.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/idangerous.swiper.js"></script>
         <script type="text/javascript" src="/termite_static/v3/lib/fastclick.js"></script>
-        <!--<script type="text/javascript" src="/termite_static/v3/lib/refresh.js"></script> 
-        <script type="text/javascript" src="/termite_static/v3/lib/$iscroll.js"></script> -->
         <script type="text/javascript" src="/termite_static/v3/lib/lazyload.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/system.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/cookie.js"></script>
@@ -62,6 +60,7 @@
         <script type="text/javascript" src="/termite_static/v3/webapp/common.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/inputable_page.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/edit_order_page.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/webapp/localStorage_helper.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/shopping_cart_page.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/buy_custom_model_product_page.js"></script>
         <script type="text/javascript" src="/termite_static/v3/webapp/edit_address_page.js"></script>
@@ -106,7 +105,7 @@
         {% if is_deleted_data %}
             <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
                 <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
-                <a data-theme="x" href="{{request|get_back_homepage_url:homepage_workspace_info}}" data-role="button" class="xui-btn mt20">返回首页</a>
+                <a data-theme="x" href="./?woid={{request.webapp_owner_id}}&module=mall&model=homepage" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
              <div data-ui-role="attentionAlert" class="xui-attentionAlert"
@@ -117,7 +116,9 @@
                     data-is-show-cover="true"
                 {% endif %}
                 data-id="{{request.webapp_owner_id}}"
-                data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}">
+                data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}"
+                data-varnish="{{is_varnish_url}}"
+                >
             </div>
             {% block content-panel %}{% endblock %}
         {% endif %}
@@ -143,6 +144,10 @@
             W.webappOwnerId = "{{request.webapp_owner_id}}";
             W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
             W.curRequestMemberToken = "{{ cur_request_member.token }}";
+            var token = $.cookie('current_token');
+            if(token){
+                W.curRequestMemberToken = token.split('____')[1];
+            }
             W.visitHistory = "{{ visit_histroy_url }}";
             W.urlTitle = "{{ visit_histroy_url_title }}";
             if (W.urlTitle == ''){
@@ -150,9 +155,8 @@
             }
             W.pageTitle = "{{page_title}}";
             W.errorMessage = null;
-
-            /* 返回首页链接地址 */
-            W.backHomePageUrl = "{{request|get_back_homepage_url:homepage_workspace_info}}";
+            localStorage.setItem('woid',W.webappOwnerId);
+            localStorage.setItem('fmt',W.curRequestMemberToken);
 
             {% if messages %}
             {% for message in messages %}
@@ -172,6 +176,58 @@
                         speed: 3000
                     });
                 }
+
+                // 默认列表页--非会员点击会员中心
+                var height = $(window).height();
+                
+                var $twoDimension = $('.xui-two-dimension');
+
+                var showSwiper = function(){
+                    $('body').swipeMask('show');
+                    $('.mask').css({
+                        height: height,
+                        background: 'rgba(132,132,132,0.5)',
+                        position:'fixed'
+                    });
+                    $('.xui-two-dimension').css({
+                        top: height/2,
+                        'margin-top': -185,
+                        display:'block'
+                    });
+                };
+
+                var isUserCenterLink = function(url){
+                    if (url.indexOf('module=user_center') > 0 &&
+                        url.indexOf('model=user_info') > 0 &&
+                        url.indexOf('action=get') > 0 ) {
+                        return true;
+                    }else{
+                        return false;
+                    }
+                };
+
+                $('.xa-wepage-navbar-link').click(function(event){
+                    var url = $(event.currentTarget).find('a').attr('data-link');
+                    if (url.length == 0 || url.indexOf('javascript:') >= 0) {
+                        return;
+                    }
+                    url +='&fmt='+W.curRequestMemberToken;
+                    if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
+                        /* 非会员显示二维码 */
+                        showSwiper();
+                    } else {
+                        if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
+                            window.location.href = url;
+                        }else{
+                            window.location.href = "http://"+ window.location.host + url;
+                        }
+                    }
+                });
+
+                $('.mask').click(function(){
+                    $('body').swipeMask('hide');
+                    $('.xui-two-dimension').hide();
+                });
             });
             {# 百度统计代码开始 #}
             var _hmt = _hmt || [];

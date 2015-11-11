@@ -712,11 +712,10 @@ MIDDLEWARE_CLASSES.extend([
     'core.middleware.ForceLogoutMiddleware',
     'core.middleware.RequestWebAppMiddleware',
 
-    'core.middleware.WeizoomCardUseAuthKeyMiddleware',
     'core.middleware.SubUserMiddleware',
-
+    # jz 2015-10-20
+    # 'core.middleware.WeizoomCardUseAuthKeyMiddleware',
     #'modules.member.middleware.AddSocialAccountInfoForPcBrowserMiddleware',
-
     #'modules.member.middleware.RequestSocialAccountMiddleware',
     #'modules.member.middleware.MemberSessionMiddleware',
     #'modules.member.middleware.WebAppUserMiddleware',
@@ -724,13 +723,13 @@ MIDDLEWARE_CLASSES.extend([
     # 'modules.member.middleware.MemberRelationMiddleware', #DONE: move to page_visit service
     # 'modules.member.middleware.MemberSouceMiddleware', #DONE: move to page_visit service
     #'modules.member.middleware.SharedPageVisitSessionMiddleWare',
+    # 'modules.member.middleware.MemberBrowseRecordMiddleware', #TODO: change to service
+    # 'core.middleware.PermissionMiddleware',
     'modules.member.middleware.RemoveSharedInfoMiddleware',
     'core.debug_middleware.DisplayImportantObjectMiddleware',
     'core.debug_middleware.DumpContextMiddleware',
     'core.middleware.PageIdMiddleware',
     'core.middleware.ManagerDetectMiddleware',
-    # 'core.middleware.PermissionMiddleware',
-    # 'modules.member.middleware.MemberBrowseRecordMiddleware', #TODO: change to service
     'core.middleware.WeizoomMallMiddleware',
     'core.middleware.WebAppPageVisitMiddleware',
     'core.middleware.LocalCacheMiddleware',
@@ -799,17 +798,3 @@ else:
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
 
-
-#为客户演示数据的假账号相关变量
-SELF_ID = 779  #tuxiaobao
-TARGET_ID = 220  #主账号id  wubao
-ASSISTANT_ID1 = 474
-ASSISTANT_ID2 = 570
-OWNER_IDS = (TARGET_ID, SELF_ID, ASSISTANT_ID1, ASSISTANT_ID2)  #副账号  annicoffee   guangruishipin
-
-SELF_WEBAPP_ID = '3909'  #wofu webapp_id
-TARGET_WEBAPP_ID = '3398'  #主账号webapp_id
-
-ASSISTANT_WEBAPP_ID1 = '3615'
-ASSISTANT_WEBAPP_ID2 = '3704'
-WEBAPP_IDS = (TARGET_WEBAPP_ID, SELF_WEBAPP_ID, ASSISTANT_WEBAPP_ID1, ASSISTANT_WEBAPP_ID2)

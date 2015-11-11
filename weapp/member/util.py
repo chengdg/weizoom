@@ -3,6 +3,7 @@
 __author__ = 'bert'
 
 import os
+import re
 from django.conf import settings
 
 from core.wxapi.weixin_api import *
@@ -78,12 +79,37 @@ def send_mass_new_message(user_profile, group_id, material_id):
 # send_mass_news_message_with_openid_list: 直接使用已给的openid_list发送图文消息
 ####################################################################################
 def send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, log_id=None):
+	
+
 	user = user_profile.user
 	if len(openid_list) > 0 and material_id != None and material_id != '' and user:
 		news = News.get_news_by_material_id(material_id)
 		mpuser_access_token = _get_mpuser_access_token(user)
 		if mpuser_access_token:
 			weixin_api = get_weixin_api(mpuser_access_token)
+
+			def pic_re(matched):
+				pic_astr = matched.group("img_url")
+				if pic_astr.startswith('/') and pic_astr.find('http') == -1:
+					pic_astr = pic_astr[1:]
+					pic_url = os.path.join(settings.PROJECT_HOME, '../', pic_astr)
+				else:
+					pic_url = pic_astr
+
+				pic_result = weixin_api.upload_content_media_image(pic_url, True)
+				pic_result_url = ''
+				if pic_result.has_key('url'):
+					pic_result_url = pic_result['url']
+				
+				try:
+					if not pic_result_url:
+						watchdog_error(u'上传多媒体文件失败 url:{}, pic_result:{}'.format(pic_url, pic_result))
+				except:
+					pass
+
+				pic_result_url = '<img src=\"%s\"' % pic_result_url
+				return pic_result_url
+			
 			try:
 				article = Articles()
 				for new in news:
@@ -107,8 +133,16 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 								new.url = '%s/%s' % (user_profile.host, new.url)
 								
 						if len(new.text.strip()) != 0:
-							if new.text.find('static') :
-								content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
+							if new.text.find('img') :
+								#content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
+								if new.text.find('.jpg') :
+									new.text = re.sub(r'<img src=[\"\'](?P<img_url>[^>]+?\.jpg)[\"\']',
+										pic_re,new.text)
+								if new.text.find('.png') :
+									new.text = re.sub(r'<img src=[\"\'](?P<img_url>[^>]+?\.png)[\"\']',
+										pic_re,new.text)
+								content = new.text
+
 							else:
 								content = new.text
 						else:
@@ -191,3 +225,4 @@ def _get_mpuser_access_token(user):
 		return mpuser_access_token
 	else:
 		return None
+

@@ -291,11 +291,36 @@ def __download_voice(message, weixin_mp_user_access_token):
 		#3. 转换音频格式（amr->mp3）
 		mp3_url = _convert_amr_to_mp3(audio_content, message)
 		if mp3_url:
+			mp3_dir_url = mp3_url
 			if mp3_url.find('/weapp/web/weapp') > -1:
 				mp3_url = mp3_url.replace('/weapp/web/weapp/','/')
 			message.audio_url = mp3_url
 			message.is_updated = True
 			message.save()
+
+			_upload_mp3_to_upyun(message.id, mp3_dir_url)
+
+			#将声音上传至upyun
+			#mp3_url例子：/static/audio/6195386180321517357.mp3
+			
+def _upload_mp3_to_upyun(message_id, mp3_dir_url):
+	try:
+		index = mp3_dir_url.rfind('/')
+		mp3_name = mp3_dir_url[index+1:]
+		upyun_path = '/upload/audio/%s' % mp3_name
+		yun_url = upyun_util.upload_audio_file(mp3_dir_url, upyun_path)
+		if yun_url:
+			Message.objects.filter(id=message_id).update(audio_url=yun_url)
+	except:
+		try:
+			index = mp3_dir_url.rfind('/')
+			mp3_name = mp3_dir_url[index+1:]
+			upyun_path = '/upload/audio/%s' % mp3_name
+			yun_url = upyun_util.upload_audio_file(mp3_dir_url, upyun_path)
+			if yun_url:
+				Message.objects.filter(id=message_id).update(audio_url=yun_url)
+		except:
+			watchdog_error(u"_upload_mp3_to_upyun, cause:\n{}".format(unicode_full_stack()))
 
 def _save_amr_audio(audio_content, message):
 

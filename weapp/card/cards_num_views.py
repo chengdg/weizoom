@@ -42,6 +42,7 @@ def get_card_num_details(request):
     start_date = request.GET.get('start_date','')
     end_date = request.GET.get('end_date','')
     card = WeizoomCard.objects.get(weizoom_card_id=card_id)
+    active_card_user_id = card.active_card_user_id
     IS_CARD_RULE = request.GET.get('IS_CARD_RULE','')
 
     # if not start_date:
@@ -50,17 +51,26 @@ def get_card_num_details(request):
     #     end_date = str(end_date) + ' 23:59:59'
     if card:
         status_str = u''
+        password_is_show = False
         if card.is_expired:
             status_str = u'己过期'
+            if active_card_user_id == request.user.id:
+                password_is_show = True
         else:
             if card.status==WEIZOOM_CARD_STATUS_UNUSED:
                 status_str = u'未使用'
+                if active_card_user_id == request.user.id:
+                    password_is_show = True
             if card.status==WEIZOOM_CARD_STATUS_USED:
                 status_str = u'使用中'
+                if active_card_user_id == request.user.id:
+                    password_is_show = True
             if card.status == WEIZOOM_CARD_STATUS_INACTIVE:
                 status_str = u'未激活'
             if card.status==WEIZOOM_CARD_STATUS_EMPTY:
                 status_str = u'己用完'
+                if active_card_user_id == request.user.id:
+                    password_is_show = True
 
         card.status_str = status_str
         card_rule = WeizoomCardRule.objects.get(id=card.weizoom_card_rule_id)
@@ -77,6 +87,7 @@ def get_card_num_details(request):
             card_type = u'赠品卡'
         card.type = card_type
         card_orders = WeizoomCardHasOrder.objects.filter(card_id=card.id)
+        card_operations = WeizoomCardOperationLog.objects.filter(card_id=card.id)
         card.start_date= start_date
         card.end_date= end_date
 
@@ -89,7 +100,9 @@ def get_card_num_details(request):
                 'weizoom_card_rule_id': weizoom_card_rule_id,
                 'card': card,
                 'card_orders': card_orders,
-                'IS_CARD_RULE': True
+                'card_operations': card_operations,
+                'IS_CARD_RULE': True,
+                'password_is_show':password_is_show
             })
         else:
             c = RequestContext(request, {
@@ -99,6 +112,7 @@ def get_card_num_details(request):
                 'third_nav_name': export.MALL_CARD_BY_CARD_NAV,
                 'card': card,
                 'card_orders': card_orders,
+                'card_operations': card_operations,
                 'IS_CARD_RULE': False
             })
 
@@ -121,6 +135,7 @@ def export_cards(request):
         rule = rule_id2rule[card.weizoom_card_rule_id]
         card_id2card_rule[card.id] = {
             'weizoom_card_id': card.weizoom_card_id,
+            'active_card_user_id': card.active_card_user_id,
             'rule_money': rule.money,
             'status': card.status,
             'is_expired': card.is_expired,
@@ -183,6 +198,7 @@ def export_cards(request):
         cur_cards[k]={
             'card_id': k,
             'weizoom_card_id': card['weizoom_card_id'],
+            'active_card_user_id': card['active_card_user_id'],
             'name': card['name'],
             'rule_money': '%.2f' %  card['rule_money'],
             'status' : status_str,
@@ -199,6 +215,10 @@ def export_cards(request):
     ]
     all_nedded_cards = WeizoomCard.objects.filter(id__in=crad_ids)
     cards_id2card = {c.id: c for c in all_nedded_cards}
+    users = User.objects.all()
+    user_id2username = {}
+    for user in users:
+        user_id2username[user.id] = user.username
     for ch in cards:
         card = cards_id2card[ch[0]]
         weizoom_card_id = ch[1]['weizoom_card_id']
@@ -215,7 +235,11 @@ def export_cards(request):
         expire_time = card.expired_time.strftime('%Y-%m-%d %H:%M:%S')
         activated_to = card.activated_to
         activate_time = card.activated_at.strftime('%Y-%m-%d %H:%M:%S') if card.activated_at else ''
-        activated_by = 'card_admin'
+        active_user_id = ch[1]['active_card_user_id']
+        if active_user_id in user_id2username:
+            activated_by = user_id2username[active_user_id]
+        else:
+            activated_by = ""
         remark = card.remark
 
         info_list = [
