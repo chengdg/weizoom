@@ -81,7 +81,48 @@ var getRedirectUrlQueryString = function(){
     return '#'
 };
 
+var JSAnalysis = function(analysis_name,content,woid){
+    if(woid === undefined){
+        woid = getWoid();
+    }
+    W.getApi().call({
+    app: 'webapp',
+    api: 'project_api/call',
+    method: 'post',
+    args: {
+        woid: woid,
+        module: 'mall',
+        target_api: 'js_analysis/log',
+        analysis_name: analysis_name,
+        content: content
+        }
 
+    });
+};
+
+
+// webStorage可用性探针
+var webStorageProbe = function () {
+    var content = '';
+    try{
+        if (localStorage.mallWebStorageOk == 1) {
+            return
+        } else {
+            localStorage.mallWebStorageOk = 1;
+        }
+    }catch(e){
+        content += e;
+    }
+    try{
+        sessionStorage.getItem('10086');
+    }catch(e){
+        content += '\n'+e
+    }
+    if (content != '') {
+        JSAnalysis('webStorageProbe', content);
+    }
+
+};
 
 /*
 收货地址相关
@@ -127,73 +168,4 @@ var initShipInofs = function(){
             }
         });
     }
-};
-
-
-/*
-JS_Analysis_Demo
-t = {
-    'a':-1,
-    'HTTP_ACCEPT_ENCODING':null
-};
-W.getApi().call({
-
-    app: 'webapp',
-    api: 'project_api/call',
-    method: 'post',
-    args: {
-        woid: W.webappOwnerId,
-        module: 'mall',
-        target_api: 'js_analysis/log',
-        analysis_name: 'test',
-{#        content: 'test_content',#}
-        content: JSON.stringify(t)
-    }
-
-});
-
-*/
-
-
-var JSAnalysis = function(analysis_name,content,woid){
-    if(woid === undefined){
-        woid = getWoid();
-    }
-    W.getApi().call({
-    app: 'webapp',
-    api: 'project_api/call',
-    method: 'post',
-    args: {
-        woid: woid,
-        module: 'mall',
-        target_api: 'js_analysis/log',
-        analysis_name: analysis_name,
-        content: content
-        }
-
-    });
-};
-
-
-// webStorage可用性探针
-var webStorageProbe = function () {
-    var content = '';
-    try{
-        if (localStorage.mallWebStorageOk == 1) {
-            return
-        } else {
-            localStorage.mallWebStorageOk = 1;
-        }
-    }catch(e){
-        content += e;
-    }
-    try{
-        sessionStorage.getItem('10086');
-    }catch(e){
-        content += '\n'+e
-    }
-    if (content != '') {
-        JSAnalysis('webStorageProbe', content);
-    }
-
 };
