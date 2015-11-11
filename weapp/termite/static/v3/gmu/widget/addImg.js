@@ -57,56 +57,52 @@
                 }
                 var $files = $(files);
                 $files.each(function(i, file) {
-                    //todo验证格式不正确的交互
-                    // var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
-                    // var name = file.name.toLowerCase();
-                    // var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
-                    // if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
-                    //     _this._alert('图片格式不正确');
-                    //     return;
-                    // }
+                    if(file.type !== "" && file.name !== ""){
+                        var isErrorByType = (file && file.type !== 'image/jpeg' && file.type !== 'image/gif' && file.type !== 'image/png');
+                        var name = file.name.toLowerCase();
+                        var isErrorByName = (file && file.name && !name.match(/\.(jpg|gif|png|jpeg)$/));
+                        if(!file || (file && file.type && isErrorByType) || (file && file.name && isErrorByName)) {
+                            _this._alert('图片格式不正确');
+                            return;
+                        }
+                    }
                     var reader = new FileReader();
-                    // var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span></li>");
                     var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress'><span></span></div></li>");
                     _this.$parents.find('.xa-imgList').append($li);
 
                     var imglength = _this.$parents.find('.xa-imgList').children('li').length;
                     var orientation;
 
-                    EXIF.getData(file, function() {  
+                    EXIF.getData(file, function() {
                         EXIF.getAllTags(this);   
                         orientation = EXIF.getTag(this, 'Orientation'); 
-                    });
-                    reader.onload = function() {
-                        var result = this.result;
-                        var img = new Image();
-                        img.src = result;
+                        reader.onload = function() {
+                            var result = this.result;
+                            var img = new Image();
+                            img.src = result;                        
+                            //如果图片大小小于200kb，则直接上传
+                            if (result.length <= maxsize) {
+                                img = null;
+                                _this.upload(result, imglength,$li);
 
-                        // var innerHtml = "<div class='xui-progress xa-progress'><span></span></div>";
-                        // $li.append(innerHtml);
-                        
-                        //如果图片大小小于200kb，则直接上传
-                        if (result.length <= maxsize) {
-                            img = null;
-                            _this.upload(result, imglength,$li);
-
-                            return;
-                        }
-                        if (img.complete) {
-                            callback(orientation);
-                        } else {
-                            img.onload = function(){
+                                return;
+                            }
+                            if (img.complete) {
                                 callback(orientation);
-                            };
-                        }
-                        function callback() {
-                            var data = _this.compress(img,orientation);
-                            _this.upload(data, imglength,$li);
+                            } else {
+                                img.onload = function(){
+                                    callback(orientation);
+                                };
+                            }
+                            function callback() {
+                                var data = _this.compress(img,orientation);
+                                _this.upload(data, imglength,$li);
 
-                            img = null;
+                                img = null;
+                            }
                         }
-                    }
-                    reader.readAsDataURL(file);
+                        reader.readAsDataURL(file);
+                    });
                    
                 });
 
@@ -171,7 +167,7 @@
             }else {
                 ratio = 1;
             }
-
+            //当竖着手机拍照时为6
             if(orientation == 6){
                 this.canvas.width = height;
                 this.canvas.height = width;
