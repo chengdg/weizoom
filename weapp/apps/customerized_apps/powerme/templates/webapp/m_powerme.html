@@ -232,13 +232,13 @@
         }else{
             var using_msg;
             var $attention = $('.xa-attention');
-            if(is_powered){
+            if(is_powered && W.isMember){
                 $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
                     openGuideMask();
                 }).show();
             }else{
                 $('.wa-power').html('帮'+page_owner_name+'助力').one('click', function(){
-                    powerYou();
+                    !is_powered && powerYou();
                     if (!W.isMember){
                         $attention.find('img').attr('src',new_qrcode_url);
                         $attention.find('.xa-attention-tip').show();
@@ -358,7 +358,7 @@
                 if (W.isMember) {
                     openSuccessWin();
                 }
-                $('.wa-power').html('已帮' + page_owner_name + '助力').on('click', openGuideMask).show();
+                $('.wa-power').on('click', openQrMask).show();
             },
             error: function(data) {
                 console.error(data.errMsg);
