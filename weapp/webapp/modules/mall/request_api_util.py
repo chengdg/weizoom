@@ -889,7 +889,9 @@ def delete_address(request):
 
 
 def log_js_analysis(request):
-	def __get_from_request(key):
+	def __get_from_request(key, value=None):
+		if value:
+			return False
 		if key in request.META:
 			value = request.META.get(key, None)
 		elif key in request:
@@ -904,7 +906,6 @@ def log_js_analysis(request):
 	if not request.is_ajax():
 		return response
 
-	# message_dict = dict()
 	message = ''
 	message_list = []
 	try:
@@ -935,7 +936,7 @@ def log_js_analysis(request):
 		content = request.POST.get('content', '')
 		try:
 			for key, value in json.loads(content).items():
-				if not __get_from_request(key):
+				if not __get_from_request(key, value):
 					message_list.append({key: value})
 		except ValueError:
 			# 如果不是JSON对象，则以字符串判断
