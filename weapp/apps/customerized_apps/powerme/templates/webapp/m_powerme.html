@@ -268,22 +268,6 @@
                     }).show();
                 }
             }
-            if(is_powered && W.isMember){
-                $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
-                    openGuideMask();
-                }).show();
-            }else{
-                $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
-                    !is_powered && powerYou();
-                    if (!W.isMember){
-                        $attention.find('img').attr('src',new_qrcode_url);
-                        $attention.find('.xa-attention-tip').show();
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
-                        openQrMask();
-                    }
-                }).show();
-            }
-
 
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
@@ -381,6 +365,10 @@
         $('.xa-attention').removeClass('none');
     }
     function powerYou(){
+        if (is_powered) {
+            return
+        }
+        is_powered = true;
         W.getApi().call({
             app: 'm/apps/powerme',
             resource: 'powerme_participance',
@@ -399,6 +387,7 @@
             },
             error: function(data) {
                 console.error(data.errMsg);
+                is_powered = false;
             }
         });
     }
