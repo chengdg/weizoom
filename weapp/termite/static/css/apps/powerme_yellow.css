@@ -26,8 +26,8 @@
 .wui-i-rules-content {
     color: #666;
 }
-.wui-powerme-container .wui-i-line{
-    border-bottom: 1px solid #6d2e0d;
+.wui-powerme-container .wui-i-rules, .wui-powerme-container .wui-i-states{
+    border-top: 1px solid #6d2e0d;
 }
 .wui-powerme-container .wui-i-rules-title-content,.wui-powerme-container .wui-i-helper-title-content {
     background: #FEF6C5;

@@ -237,7 +237,7 @@
                     openGuideMask();
                 }).show();
             }else{
-                $('.wa-power').html('帮'+page_owner_name+'助力').one('click', function(){
+                $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
                     !is_powered && powerYou();
                     if (!W.isMember){
                         $attention.find('img').attr('src',new_qrcode_url);
@@ -358,7 +358,7 @@
                 if (W.isMember) {
                     openSuccessWin();
                 }
-                $('.wa-power').on('click', openQrMask).show();
+                is_powered = true;
             },
             error: function(data) {
                 console.error(data.errMsg);
