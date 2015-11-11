@@ -26,7 +26,6 @@ class PowerMe(models.Document):
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
-	participant_count = models.IntField(default=0) #参与者数量
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	timing = models.BooleanField(default=True) #是否显示倒计时
 	reply_content = models.StringField(default="", max_length=50) #参与活动回复语

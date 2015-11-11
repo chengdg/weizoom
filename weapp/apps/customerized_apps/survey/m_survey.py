@@ -1,25 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import json
 from datetime import datetime
-from collections import OrderedDict
 
-from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import F
-from django.contrib.auth.decorators import login_required
 
 from core import resource
-from core import paginator
-from core.jsonresponse import create_response
 
 import models as app_models
-import export
-from apps import request_util
 from termite2 import pagecreater
 from termite import pagestore as pagestore_manager
-import weixin.user.models as weixin_models
+from weixin.user.module_api import get_mp_qrcode_img
 
 SHORTCUTS_TEXT={
 	'phone': u'手机',
@@ -41,17 +32,18 @@ class Msurvey(resource.Resource):
 			id = request.GET['id']
 			isPC = request.GET.get('isPC',0)
 			isMember = False
-			auth_appid_info = None
+			qrcode_url = None
 			permission = ''
 			share_page_desc = ''
 			thumbnails_url = '/static_v2/img/thumbnails_survey.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
 				if not isMember:
-					from weixin.user.util import get_component_info_from
-					component_info = get_component_info_from(request)
-					auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-					auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+					if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
+						qrcode_url = request.webapp_owner_info.qrcode_img
+					else:
+						qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
+
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
@@ -93,7 +85,7 @@ class Msurvey(resource.Resource):
 					'q_survey': result_list,
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isMember': isMember,
-					'auth_appid_info': auth_appid_info
+					'qrcode_url': qrcode_url
 				})
 				return render_to_response('survey/templates/webapp/result_survey.html', c)
 			else:
@@ -113,7 +105,7 @@ class Msurvey(resource.Resource):
 					'hide_non_member_cover': True, #非会员也可使用该页面
 					'isPC': isPC,
 					'isMember': isMember,
-					'auth_appid_info': auth_appid_info,
+					'qrcode_url': qrcode_url,
 					'permission': permission,
 					'share_page_desc': share_page_desc,
 					'share_img_url': thumbnails_url

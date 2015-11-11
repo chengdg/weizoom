@@ -72,14 +72,7 @@ class MPowerMe(resource.Resource):
 			member = request.member
 			member_id = member.id
 			isMember =request.member.is_subscribed
-			if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
-				qrcode_url = request.webapp_owner_info.qrcode_img
-			else:
-				qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
-
 			fid = request.GET.get('fid', None)
-
-			qrcode_url = qrcode_url if qrcode_url is not None else ''
 
 			if not fid:
 				new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
@@ -106,6 +99,9 @@ class MPowerMe(resource.Resource):
 
 				project_id = 'new_app:powerme:%s' % record.related_page_id
 
+				#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
+				clear_non_member_power_info(record_id)
+
 				curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_power_info.count()> 0:
 					curr_member_power_info = curr_member_power_info.first()
@@ -117,10 +113,6 @@ class MPowerMe(resource.Resource):
 					)
 					curr_member_power_info.save()
 				is_already_participanted = curr_member_power_info.has_join
-
-				#如果当前member不是会员，则清空其助力值同时设置为未参与
-				if not isMember:
-					curr_member_power_info.update(set__power=0, set__has_join=False)
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
@@ -210,7 +202,6 @@ class MPowerMe(resource.Resource):
 			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"微助力",
-			'qrcode_url': qrcode_url,
 			'params_qrcode_url': record.qrcode['ticket'] if record.qrcode else False,
 			'params_qrcode_name': record.qrcode['name'] if record.qrcode else False,
 			'timing': timing,
@@ -223,3 +214,15 @@ class MPowerMe(resource.Resource):
 			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		return render_to_response('powerme/templates/webapp/m_powerme.html', c)
+
+def clear_non_member_power_info(record_id):
+	"""
+	所有取消关注的参与用户，清空其助力值同时设置为未参与
+	:param record_id: 活动id
+	"""
+	record_id = str(record_id)
+	all_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True)
+	all_member_power_info_ids = [p.member_id for p in all_member_power_info]
+	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_power_info_ids, is_subscribed=False)]
+	app_models.PowerMeParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__power=0, set__has_join=False)
+

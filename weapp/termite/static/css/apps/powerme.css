@@ -26,7 +26,6 @@ hr{
     border: none;
 }
 .wui-powerme-container .wui-i-body div{
-    margin-top: 13px;
     font-family: "黑体";
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup button{
@@ -35,7 +34,7 @@ hr{
     border: none;
     color: white;
     font-size: 1rem;
-    margin: 5px 0;
+    margin-top: 7px;
     font-family: "黑体";
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
@@ -45,6 +44,11 @@ hr{
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
     background: #666666;
     border-radius: 5px;
+}
+
+.wui-powerme-container .wui-i-title{
+    background: transparent;
+    margin-top: -12px !important;
 }
 .wui-powerme-container .wui-i-timing{
     font-weight: bold;
@@ -97,20 +101,12 @@ hr{
     margin-right: 12px;
     padding-top: 8px;
 }
-.wui-powerme-container .wui-i-rules-title-content {
-    margin-left: 28%;
-    width: 45%;
-}
-.wui-powerme-container .wui-i-helper-title-content {
-    margin-left: 20%;
-    width: 60%;
-}
 .wui-powerme-container .wui-i-timing i{
     background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
-    background-size: 940% 220%;
+    background-size: 900% 200%;
     display: inline-block;
     height: 35px;
-    margin-bottom: -12px;
+    margin-bottom: -15px;
     width: 33px;
 }
 .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
@@ -172,4 +168,16 @@ hr{
 }
 .wui-powerme-container .hide{
     display: none;
+}
+
+.wui-powerme-container .wui-i-rules, .wui-powerme-container .wui-i-states{
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 21px;
+}
+.wui-powerme-container .wui-i-description{
+    margin-top: 13px;
+}
+.wui-powerme-container .wui-i-btngroup{
+    margin-top: 15px;
 }

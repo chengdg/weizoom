@@ -9,7 +9,7 @@
     padding: 10px 0 50px;
 }
 .wui-powerme-container .wui-i-timing i{
-    background-position: -49px -44px;
+    background-position: -45px -40px;
 }
 .wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
     background-position: 9px -36px;
@@ -26,8 +26,8 @@
 .wui-i-rules-content {
     color: #fff;
 }
-.wui-powerme-container .wui-i-line{
-    border-bottom: 1px solid #6f2e0e;
+.wui-powerme-container .wui-i-rules, .wui-powerme-container .wui-i-states{
+    border-top: 1px solid #6f2e0e;
 }
 .wui-powerme-container .wui-i-rules-title-content,.wui-powerme-container .wui-i-helper-title-content {
     background: #e63041;
