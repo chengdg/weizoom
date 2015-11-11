@@ -228,23 +228,23 @@ def get_zset_count_from_redis(zset_name):
 
 def get_zrange_from_redis(name,  start =0, end =-1,desc=False, withscores=False,
 	               score_cast_func=int):
-	# todo zhaolei ,该段查询的效率可能欠佳，商品排序原因导致
-	if start==0 and end ==-1:
-		element_count = pyredis.zcard(name)
-		redis_element_eq_0 = pyredis.zrangebyscore(name,0,0,None,None,False,score_cast_func)
-		if element_count == len(redis_element_eq_0):
-			return pyredis.zrange(name, start, end, desc, withscores,
-					   score_cast_func)
-		else:
-			redis_element_not_eq_0 = pyredis.zrangebyscore(name,1,1000,None,None,False,score_cast_func)
-			if desc:
-				redis_element_eq_0.reverse()
-				return redis_element_not_eq_0 + redis_element_eq_0
-			else:
-				return redis_element_not_eq_0 + redis_element_eq_0
-	else:
-		return pyredis.zrange(name, start, end, desc, withscores,
-					   score_cast_func)
+	# # todo zhaolei ,该段查询的效率可能欠佳，商品排序原因导致
+	# if start==0 and end ==-1:
+	# 	element_count = pyredis.zcard(name)
+	# 	redis_element_eq_0 = pyredis.zrangebyscore(name,0,0,None,None,False,score_cast_func)
+	# 	if element_count == len(redis_element_eq_0):
+	# 		return pyredis.zrange(name, start, end, desc, withscores,
+	# 				   score_cast_func)
+	# 	else:
+	# 		redis_element_not_eq_0 = pyredis.zrangebyscore(name,1,1000,None,None,False,score_cast_func)
+	# 		if desc:
+	# 			redis_element_eq_0.reverse()
+	# 			return redis_element_not_eq_0 + redis_element_eq_0
+	# 		else:
+	# 			return redis_element_not_eq_0 + redis_element_eq_0
+	# else:
+	return pyredis.zrange(name, start, end, desc, withscores,
+				   score_cast_func)
 
 def rem_zset_member_by_patten_from_redis(zset_pattern_name,*args):
 	key_list = pyredis.keys(zset_pattern_name)

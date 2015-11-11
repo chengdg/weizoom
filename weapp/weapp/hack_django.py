@@ -61,7 +61,7 @@ def hackQuerySetUpdate():
 		instance = self
 		if cache_args:
 			instance = cache_args.get('instance', self)
-		if before_instance:
+		if len(self)!=0:
 			post_update_signal.send(sender=self.model, model=self.model,instance=instance,before_instance=before_instance, cache_args=cache_args)
 		else:
 			post_update_signal.send(sender=self.model, model=self.model,instance=instance, cache_args=cache_args)

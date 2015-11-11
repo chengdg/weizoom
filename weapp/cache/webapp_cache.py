@@ -19,9 +19,6 @@ import json
 
 from weapp.hack_django import post_update_signal, post_delete_signal
 
-local_cache = {}
-
-
 def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
     """根据促销类型返回商品价格
     """
@@ -95,28 +92,12 @@ def get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weiz
     _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id)
     return products
 
-def get_webapp_categories(webapp_owner_user_profile):
-    """
-        获取webapp的所有商品分类
-    :param webapp_owner_user_profile:
-    :return:
-    """
-    webapp_id = webapp_owner_user_profile.webapp_id
-    webapp_owner_id = webapp_owner_user_profile.user_id
-    categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
-    categories = [{"id": category.id, "name": category.name} for category in categories]
-    return categories
-
 def get_webapp_products_new(webapp_owner_user_profile,
                         is_access_weizoom_mall,
                         category_id):
     # 商城下分类对应的商品id
     categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_user_profile.user_id,category_id)
-    # 商城下所有的分类,存放id，name，之后更改包括商品数量等信息，主要参考ProductCategory
-    categories_key = '{wo:%s}_categories' % webapp_owner_user_profile.user_id
-
     category_pros_data = cache_util.get_zrange_from_redis(categories_products_key,desc=True)
-    #倒叙获取，可以直接取消get_webapp_product_ids_from_db_new中的id 逆序排序，两者的效率待分析  TODO zhaolei
     if len(category_pros_data)==0:
         # product.id,display_index
         productid_display_list = []
@@ -132,17 +113,11 @@ def get_webapp_products_new(webapp_owner_user_profile,
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
 
-    if categories_key in local_cache:
-        categories_data = local_cache[categories_key]
-    else:
-        categories_data = get_webapp_categories(webapp_owner_user_profile)
-        local_cache[categories_key] = categories_data
-        cache_util.set_cache(categories_key,json.dumps(categories_data)) # todo 需要优化为回调函数的形式
-
     if category_id == 0:
         category = mall_models.ProductCategory()
         category.name = u'全部'
     else:
+        categories_data = get_webapp_categories_from_cache(webapp_owner_user_profile)
         id2category_name = dict([(c["id"], c["name"]) for c in categories_data])
         if category_id in id2category_name:
             category = mall_models.ProductCategory()
@@ -154,8 +129,8 @@ def get_webapp_products_new(webapp_owner_user_profile,
             category.name = u'已删除分类'
     mall_models.Product.fill_display_price(cache_products)
 
-    # 分组商品排序,暂未搞清楚哪个地方在使用  todo  zhaolei
-    if category_id!=0:
+    # 分组商品排序，有商品分类和无商品分类的排序规则不同
+    if category_id != 0:
         products_id = map(lambda p: p.id, cache_products)
         chp_list = mall_models.CategoryHasProduct.objects.filter(
             category_id=category_id, product_id__in=products_id)
@@ -163,30 +138,30 @@ def get_webapp_products_new(webapp_owner_user_profile,
         for product in cache_products:
             product.display_index = product_id2chp[product.id].display_index
             product.join_category_time = product_id2chp[product.id].created_at
-
         # 1.shelve_type, 2.display_index, 3.id
-
         products_is_0 = filter(lambda p: p.display_index == 0,
                                              cache_products)
         products_not_0 = filter(lambda p: p.display_index != 0,
                                               cache_products)
-        products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time'), reverse=True)
+        products_is_0 = sorted(products_is_0, key=attrgetter('join_category_time','id'), reverse=True)
         products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
         cache_products = products_not_0 + products_is_0
-        # 分类中的排序规则是不唯一的，这个地方的score要注意
+    else:
+        products_is_0 = filter(lambda p: p.display_index == 0,
+                                             cache_products)
+        products_not_0 = filter(lambda p: p.display_index != 0,
+                                              cache_products)
+        products_is_0 = sorted(products_is_0, key=attrgetter('id'), reverse=True)
+        products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
+        cache_products = products_not_0 + products_is_0
+
     return category, cache_products
 
-# todo 需要优化
-def _get_products_from_redis(category_pros_data):
-    """
-        封装商品列表，将products_ids构造为对上层透明
-    :param category_pros_data:
-    :return:
-    """
+def get_webapp_categories_from_cache(webapp_owner_user_profile):
+    # 商城下所有的分类,存放id，name，之后更改包括商品数量等信息，主要参考ProductCategory
+    categories_key = '{wo:%s}_categories' % webapp_owner_user_profile.user_id
+    return cache_util.get_from_cache(categories_key,get_webapp_categories_for_cache(webapp_owner_user_profile))
 
-    for productid in category_pros_data:
-        pass
-    return None
 
 # zhaolei 2014-11-9 the right code, may be used
 # def get_webapp_products(webapp_owner_user_profile,
@@ -271,7 +246,6 @@ def update_webapp_product_cache(**kwargs):
                 is_deleted = instance[0].is_deleted
                 display_index = instance[0].display_index
             if before_instance:
-                # print "zl----------------------",before_instance.shelve_type,shelve_type,before_instance.is_deleted,is_deleted,before_instance.name,product_id
                 if before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_OFF == shelve_type or is_deleted == True:
                     #下架商品，清除redis中{wo:38}_{co:*}_products的数据项,批量更新
                     # 或者删除商品时
@@ -678,11 +652,10 @@ def get_webapp_mall_data(webapp_owner_id):
 
     return result
 
-
 def get_forbidden_coupon_product_ids_for_cache(webapp_owner_id):
     def inner_func():
         forbidden_coupon_products = promotion_models.ForbiddenCouponProduct.objects.filter(
-            owner_id=webapp_owner_id, 
+            owner_id=webapp_owner_id,
             status__in=(promotion_models.FORBIDDEN_STATUS_NOT_START, promotion_models.FORBIDDEN_STATUS_STARTED)
         )
 
@@ -706,6 +679,19 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
         if product.is_active:
             product_ids.append(product.product_id)
     return product_ids
+
+def get_webapp_categories_for_cache(webapp_owner_user_profile):
+    def inner_func():
+        webapp_owner_id = webapp_owner_user_profile.user_id
+        categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
+        categories = [{"id": category.id, "name": category.name} for category in categories]
+        return {
+            'keys': [
+                '{wo:%s}_categories' % webapp_owner_id
+            ],
+            'value': categories
+        }
+    return inner_func
 
 def update_forbidden_coupon_product_ids(instance, **kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile and not kwargs.get('created', False):
