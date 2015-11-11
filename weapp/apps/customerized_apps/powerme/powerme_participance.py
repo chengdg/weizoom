@@ -62,7 +62,6 @@ class PowerMeParticipance(resource.Resource):
 			#调整参与数量(首先检测是否已参与)
 			if not powered_member_info.has_join:
 				powered_member_info.update(set__has_join=True)
-				app_models.PowerMe.objects(id=power_id).update(inc__participant_count=1)
 			#记录每一次未参与人给予的助力,已关注的则直接计算助力值
 			if not request.member.is_subscribed:
 				power_log = app_models.PowerLog(
@@ -89,7 +88,6 @@ class PowerMeParticipance(resource.Resource):
 			powered_member_info = app_models.PowerMeParticipance.objects.get(belong_to=power_id, member_id=int(fid))
 			if not powered_member_info.has_join:
 				powered_member_info.update(set__has_join=True)
-				app_models.PowerMe.objects(id=power_id).update(inc__participant_count=1)
 		except Exception,e:
 			print e
 			response = create_response(500)

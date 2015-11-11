@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+from apps.customerized_apps.powerme.m_powerme import clear_non_member_power_info
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -64,6 +65,10 @@ class PowerMeParticipances(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
+
+		#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
+		clear_non_member_power_info(belong_to)
+		
 		datas = app_models.PowerMeParticipance.objects(**params).order_by('-power','created_at')
 
 		#进行分页
