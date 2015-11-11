@@ -34,13 +34,14 @@ weapp特有部分
 */
 
 var getWoid = function(){
-    var urlParm = document.location.search
+    var urlParm = document.location.search;
     if(urlParm.indexOf('woid=')>=0){
         return getParam('woid');
-    } else{
+    } else if(urlParm.indexOf('webapp_owner_id=')>=0){
         return getParam('webapp_owner_id');
+    }else{
+        return $.cookie('current_token').split('____')[0]
     }
-
 };
 
 
@@ -80,7 +81,48 @@ var getRedirectUrlQueryString = function(){
     return '#'
 };
 
+var JSAnalysis = function(analysis_name,content,woid){
+    if(woid === undefined){
+        woid = getWoid();
+    }
+    W.getApi().call({
+    app: 'webapp',
+    api: 'project_api/call',
+    method: 'post',
+    args: {
+        woid: woid,
+        module: 'mall',
+        target_api: 'js_analysis/log',
+        analysis_name: analysis_name,
+        content: content
+        }
 
+    });
+};
+
+
+// webStorage可用性探针
+var webStorageProbe = function () {
+    var content = '';
+    try{
+        if (localStorage.mallWebStorageOk == 1) {
+            return
+        } else {
+            localStorage.mallWebStorageOk = 1;
+        }
+    }catch(e){
+        content += e;
+    }
+    try{
+        sessionStorage.getItem('10086');
+    }catch(e){
+        content += '\n'+e
+    }
+    if (content != '') {
+        JSAnalysis('webStorageProbe', content);
+    }
+
+};
 
 /*
 收货地址相关
@@ -127,4 +169,3 @@ var initShipInofs = function(){
         });
     }
 };
-
