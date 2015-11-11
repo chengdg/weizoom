@@ -1452,29 +1452,6 @@ def ship_order(order_id, express_company_name,
 		order_params['is_100'] = is_100
 		order = Order.objects.get(id=order_id)
 		Order.objects.filter(id=order_id).update(**order_params)
-		# order_has_delivery_params = dict()
-		# order_has_delivery_params['express_company_name'] = express_company_name
-		# order_has_delivery_params['express_number'] = express_number
-		# order_has_delivery_params['leader_name'] = leader_name
-		# order_has_delivery_id = 0
-		# 即修改物流信息，也修改状态, 需要加上状态条件
-		# if not is_update_express:
-		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=UNSHIPED).order_by('delivery_date')
-		# 		if order_has_delivery_times.count() > 0:
-		# 			order_has_delivery_id = order_has_delivery_times[0].id
-		# 			order_has_delivery_params['status'] = SHIPED
-		# else:
-		# 	if order.type == PRODUCT_DELIVERY_PLAN_TYPE:
-		# 		order_has_delivery_times = OrderHasDeliveryTime.objects.filter(order=order, status=SHIPED).order_by('-delivery_date')
-		# 		if order_has_delivery_times.count() > 0:
-		# 			order_has_delivery_id = order_has_delivery_times[0].id
-		# 			order_has_delivery_params['status'] = order_has_delivery_times[0].status
-		# OrderHasDeliveryTime.objects.filter(id=order_has_delivery_id).update(**order_has_delivery_params)
-		#发送模板消息
-		# current_final_price = order.final_price
-		# if order.type == PRODUCT_INTEGRAL_TYPE:
-		# 	order.final_price = 0
 		try:
 			if express_company_name and express_number:
 				order.express_company_name = express_company_name

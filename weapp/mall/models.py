@@ -1767,55 +1767,6 @@ class OrderHasPromotion(models.Model):
 		data['type'] = self.promotion_type
 		return data
 
-
-UNSHIPED = 0
-SHIPED = 1
-########################################################################
-# OrderHasDeliverTime: 订单对应配送套餐配送时间表
-########################################################################
-
-
-# class OrderHasDeliveryTime(models.Model):
-# 	order = models.ForeignKey(Order)
-# 	express_company_name = models.CharField(max_length=50, default='')  # 物流公司名称
-# 	express_number = models.CharField(max_length=100)  # 快递单号
-# 	leader_name = models.CharField(max_length=256)  # 订单负责人
-# 	status = models.IntegerField(default=UNSHIPED)
-# 	delivery_date = models.DateField(default=DEFAULT_DATETIME)  # 配送日期
-#
-#
-# 	class Meta(object):
-# 		db_table = 'mall_order_has_delivery_time'
-# 		verbose_name = '配送时间'
-# 		verbose_name_plural = '配送时间'
-
-
-IMG_TYPE = 0  # 图片
-VIDEO_TYPE = 1  # 视频
-########################################################################
-# ThanksCardOrder:    感恩贺卡订单
-########################################################################
-# made by zhaolei 2015-10-28
-#
-# class ThanksCardOrder(models.Model):
-# 	order = models.ForeignKey(Order)  # 订单
-# 	thanks_secret = models.CharField(max_length=100, default='')  # 感恩密码
-# 	card_count = models.IntegerField(default=0)  # 生成贺卡个数
-# 	listen_count = models.IntegerField(default=0)  # 收听次数
-# 	is_used = models.BooleanField(default=False)  # 是否已经使用
-# 	title = models.CharField(max_length=50)
-# 	content = models.TextField()  # 贺卡内容
-# 	type = models.IntegerField(default=IMG_TYPE)  # 贺卡附件类型
-# 	att_url = models.CharField(max_length=1024)  # 附件地址
-# 	member_id = models.IntegerField(default=0)  # 会员的id
-# 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
-#
-# 	class Meta(object):
-# 		db_table = 'mall_thanks_card_order'
-# 		verbose_name = '感恩贺卡订单'
-# 		verbose_name_plural = '感恩贺卡订单'
-
-
 ########################################################################
 # OrderOperationLog:订单操作日志
 ########################################################################
