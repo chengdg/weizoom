@@ -243,7 +243,12 @@
                     }).show();
                 }else{
                    $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
-                       powerYou();
+                       if(is_powered){
+                           $('.wa-power').html('已帮'+page_owner_name+'助力');
+                           openGuideMask();
+                       }else{
+                           powerYou();
+                       }
                    }).show();
                 }
             }else{
