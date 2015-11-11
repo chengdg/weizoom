@@ -71,11 +71,10 @@
 
 {% block js %}
 <script type="text/javascript">
+$('.xui-inner-img').css('height', height);
 $(document).ready(function() {
     // 计算列表页面价钱
-    var height = $('.xa-product').width() - 22;
-    console.log($('.xa-product').width(),"____");
-    $('.xui-inner-img').css('height', height);
+    
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
         updateProductPrice: function(event, data){
             var token = $.cookie('current_token');
