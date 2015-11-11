@@ -160,12 +160,18 @@ W.view.weixin.MenuEditorPanel = Backbone.View.extend({
 	onChangeUrlDisplayValue: function(event) {
 		var $current = $(event.currentTarget);
 		var value = $current.parent('div').find('#menuLinkTarget').val();
+		if (value.length > 0) {
+			var obj = $.parseJSON(value);
+			if (obj.workspace === 'custom') {
+				value = $current.val();
+			}
+		}
 		if (!value || value.length == 0) {
 			value = $current.val();
 		}
 		this.trigger('custom-menu-change', value, 'url');
 	},
-
+	
 	getMenuModel: function(currentMenuId) {
 		//alert(W.currentMenuId)
 		var items = currentMenuId.toString().split('-');
