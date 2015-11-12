@@ -88,7 +88,7 @@ Scenario:1 用户浏览"签到活动1"
         """
     When bill关注jobs的公众号
     When bill访问jobs的webapp
-    When bill的会员积分"0"
+    Then bill在jobs的webapp中拥有0会员积分
     When bill进入jobs的签到页面
     Then bill获取"签到活动1"内容
         """
