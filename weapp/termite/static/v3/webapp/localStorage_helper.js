@@ -129,7 +129,7 @@ var webStorageProbe = function () {
 */
 
 var shipInfosConfig = {
-    'cacheTime': 1000*20
+    'cacheTime': 1000*60*5
 };
 
 
@@ -147,7 +147,6 @@ var initShipInofs = function(){
             }
         }
         if(content){
-            alert(10086)
             JSAnalysis('shipInfoAnalysis',content)
         }
     }
