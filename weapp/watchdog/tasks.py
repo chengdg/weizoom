@@ -50,7 +50,10 @@ def _watchdog(type, message, severity=WATCHDOG_INFO, user_id='0', db_name='defau
 				if not settings.IS_UNDER_BDD:
 					logging.info("[%s] [%s] : %s" % (severity, type, message))
 				WeappMessage.objects.using(settings.WATCHDOG_DB).create(type=type, message=message, severity=severity, user_id=user_id)
+				print('here111111111111111111111111111111111111111111111111111')
 			except:
+				print('here2222222')
+
 				logging.error(u'>>>>>>>>>>>>>>>>> not connection operation databases settings.WATCHDOG_DB={}'.format(settings.WATCHDOG_DB))
 				logging.error("Cause:\n{}".format(full_stack()))
 				print 'error message==============', message
