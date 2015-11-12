@@ -14,6 +14,10 @@ Feature: 后台配置数据
 		9.三条奖励下,一条优惠券,一条积分,一条优惠券加积分
 		10.优惠券数量为0,无法添加优惠券
 		11.保存后开启签到活动
+
+        【feature注意事项】:
+        1.每个添加签到活动的场景中，"sign_settings"集合中的"prize_counts":50，其中prize_counts表示优惠券的库存，这里是一个由于占位需要提供的库存数字，数字可以任意。真实的库存数据，由前端脚本获取。
+
 	"""
 
 Background:
@@ -23,14 +27,14 @@ Background:
 		[{
 			"name": "优惠券1",
 			"money":1.00,
-			"limit_counts":50,
+            "count":50,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
 		},{
 			"name": "优惠券2",
 			"money":1.00,
-			"counts":0,
+			"count":0,
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_"
