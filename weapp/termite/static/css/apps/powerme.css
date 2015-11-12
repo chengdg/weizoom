@@ -64,11 +64,11 @@ hr{
     padding: 7px 5px;
     color: white;
     border-radius: 2px;
-    font-family: '微软雅黑';
+    font-family: "Arial", "黑体";
 }
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
-    margin: 16px 10px 0;
+    padding: 16px 10px 0;
 }
 .wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
     border-bottom: 1px dotted #ffffff;
