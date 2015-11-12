@@ -87,3 +87,18 @@ def step_impl(context, user, answer):
 def step_tmpl(context, user):
     url = "%s&fmt=%s" % (context.link_url, context.member.token)
     response = context.client.get(url)
+
+@when(u"修改系统时间为'{date}'")
+def step_impl(context, date):
+    if date == u'1天后':
+        context.now_date = datetime.now()
+        delta = timedelta(days=1)
+        next_date = (context.now_date + delta).strftime('%Y-%m-%d')
+    elif date == u'2天后':
+        delta = timedelta(days=2)
+        next_date = (context.now_date + delta).strftime('%Y-%m-%d')
+    os.system("date %s" %(next_date))
+
+@when(u'还原系统时间')
+def step_impl(context):
+    os.system("date %s" %(context.now_date))
