@@ -682,7 +682,7 @@ def step_impl(context,user,sign_name):
     bdd_util.assert_dict(json_page,db_page)
 
     #删除数据
-    __api_delete(context,context.sign_id,context.project_id)
+    # __api_delete(context,context.sign_id,context.project_id)
 
 
 @given(u'{user}更新签到活动的状态')
