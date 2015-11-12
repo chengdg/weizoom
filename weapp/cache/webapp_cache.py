@@ -97,7 +97,7 @@ def get_webapp_products_new(webapp_owner_user_profile,
                         category_id):
     # 商城下分类对应的商品id
     categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_user_profile.user_id,category_id)
-    category_pros_data = cache_util.get_zrange_from_redis(categories_products_key,desc=True)
+    category_pros_data = cache_util.get_set_from_redis(categories_products_key)
     if len(category_pros_data)==0:
         # product.id,display_index
         productid_display_list = []
@@ -105,10 +105,9 @@ def get_webapp_products_new(webapp_owner_user_profile,
         if products:
             for product in products:
                 productid_display_list.append(product.id)
-                productid_display_list.append(product.display_index)
                 product.promotion = None
                 # 添加promation
-            cache_util.add_zdata_to_redis(categories_products_key,*productid_display_list)
+            cache_util.add_set_to_redis(categories_products_key,*productid_display_list)
         cache_products = products
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
@@ -239,71 +238,71 @@ def update_webapp_product_cache(**kwargs):
                 product_id = instance.id
                 shelve_type = instance.shelve_type
                 is_deleted = instance.is_deleted
-                display_index = instance.display_index
+                # display_index = instance.display_index
             else:
                 product_id = instance[0].id
                 shelve_type = instance[0].shelve_type
                 is_deleted = instance[0].is_deleted
-                display_index = instance[0].display_index
+                # display_index = instance[0].display_index
             if before_instance:
                 if before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_OFF == shelve_type or is_deleted == True:
                     #下架商品，清除redis中{wo:38}_{co:*}_products的数据项,批量更新
                     # 或者删除商品时
                     categories_products_key = '{wo:%s}_{co:*}_products' % (webapp_owner_id)
-                    cache_util.rem_zset_member_by_patten_from_redis(categories_products_key,product_id)
+                    cache_util.rem_set_member_by_patten_from_redis(categories_products_key,product_id)
                 elif before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
                     #上架商品，确定该商品原来是否有category
                     category_has_products = mall_models.CategoryHasProduct.objects.filter(product=instance)
                     if category_has_products:
                         for category_has_pro in category_has_products:
                             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,category_has_pro.category.id)
-                            cache_util.add_zdata_to_redis(categories_products_key,category_has_pro.product_id,category_has_pro.product.display_index)
+                            cache_util.add_set_to_redis(categories_products_key,category_has_pro.product_id)
                     categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
-                    cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
+                    cache_util.add_set_to_redis(categories_products_key,product_id)
             update_product_cache(webapp_owner_id, product_id)
 
-# todo 该处触发的product较多，需要优化
-def update_webapp_product_pos_cache(**kwargs):
-    if hasattr(cache, 'request') and cache.request.user_profile:
-        webapp_owner_id = cache.request.user_profile.user_id
-        instance = kwargs.get('instance', None)
-        sender = kwargs.get('sender', None)
-        # instance.id 避免创建操作进入
-        if instance and sender==mall_models.Product and instance.id!=None:
-            if instance and sender==mall_models.Product :
-                display_index = instance.display_index
-                product_id = instance.id
-            else:
-                product_id = instance[0].id
-                display_index = instance[0].display_index
-            product = mall_models.Product.objects.filter(id=product_id).get()
-            #更新商品排序,只更新在售和待售列表中的商品排序
-            if display_index != product.display_index:
-                categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
-                cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
-        elif instance and sender==mall_models.CategoryHasProduct and instance.id!=None:
-            if instance and sender==mall_models.CategoryHasProduct:
-                display_index = instance.display_index
-                product_id = instance.product_id
-                chp_id = instance.id
-            else:
-                product_id = instance[0]['product'][0].id
-                display_index = instance[0].display_index
-                chp_id = instance[0].id
-            chp = mall_models.CategoryHasProduct.objects.filter(id=chp_id).get()
-            #更新商品排序，只更新分组管理中的商品排序
-            categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,chp.category_id)
-            cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
+# # todo 该处触发的product较多，需要优化
+# def update_webapp_product_pos_cache(**kwargs):
+#     if hasattr(cache, 'request') and cache.request.user_profile:
+#         webapp_owner_id = cache.request.user_profile.user_id
+#         instance = kwargs.get('instance', None)
+#         sender = kwargs.get('sender', None)
+#         # instance.id 避免创建操作进入
+#         if instance and sender==mall_models.Product and instance.id!=None:
+#             if instance and sender==mall_models.Product :
+#                 display_index = instance.display_index
+#                 product_id = instance.id
+#             else:
+#                 product_id = instance[0].id
+#                 display_index = instance[0].display_index
+#             product = mall_models.Product.objects.filter(id=product_id).get()
+#             #更新商品排序,只更新在售和待售列表中的商品排序
+#             if display_index != product.display_index:
+#                 categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
+#                 cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
+#         elif instance and sender==mall_models.CategoryHasProduct and instance.id!=None:
+#             if instance and sender==mall_models.CategoryHasProduct:
+#                 display_index = instance.display_index
+#                 product_id = instance.product_id
+#                 chp_id = instance.id
+#             else:
+#                 product_id = instance[0]['product'][0].id
+#                 display_index = instance[0].display_index
+#                 chp_id = instance[0].id
+#             chp = mall_models.CategoryHasProduct.objects.filter(id=chp_id).get()
+#             #更新商品排序，只更新分组管理中的商品排序
+#             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,chp.category_id)
+#             cache_util.add_zdata_to_redis(categories_products_key,product_id,display_index)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
 signals.post_save.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.save")
 
-signals.pre_save.connect(
-    update_webapp_product_pos_cache, sender=mall_models.Product, dispatch_uid="product.pre_save")
-signals.pre_save.connect(
-    update_webapp_product_pos_cache, sender=mall_models.CategoryHasProduct, dispatch_uid="mall_category_has_product.pre_save")
+# signals.pre_save.connect(
+#     update_webapp_product_pos_cache, sender=mall_models.Product, dispatch_uid="product.pre_save")
+# signals.pre_save.connect(
+#     update_webapp_product_pos_cache, sender=mall_models.CategoryHasProduct, dispatch_uid="mall_category_has_product.pre_save")
 
 signals.post_save.connect(update_webapp_product_cache,
                           sender=mall_models.ProductCategory, dispatch_uid="product_category.save")
