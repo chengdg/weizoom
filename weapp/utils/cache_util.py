@@ -256,3 +256,6 @@ def add_set_to_redis(set_name,*args):
 
 def rem_set_member_from_redis(set_name,*args):
 	return pyredis.srem(set_name,*args)
+
+def delete_redis_key(*key_name):
+	return pyredis.delete(*key_name)
