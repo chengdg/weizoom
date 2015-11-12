@@ -75,6 +75,7 @@ from test.pageobject.page_frame import PageFrame
 from selenium.webdriver.chrome.options import Options
 from apps import models as customized
 from apps import apps_manager
+from apps.customerized_apps.sign import models as sign_models
 
 from django.core.cache import cache
 from weapp import celeryconfig
@@ -292,6 +293,10 @@ def __clear_all_app_data():
 	# 店铺装修
 	termite2_models.TemplateCustomModule.objects.all().delete()
 
+	# 签到
+	sign_models.Sign.objects.all().delete()
+	sign_models.SignParticipance.objects.all().delete()
+	
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
 
