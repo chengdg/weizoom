@@ -15,7 +15,7 @@ from django.db.models import Model
 from django.conf import settings
 from django.db.models.manager import Manager
 from django.contrib.auth.models import User
-
+import copy
 import traceback
 
 
@@ -53,15 +53,19 @@ post_update_signal = Signal(providing_args=["model", "instance"])
 def hackQuerySetUpdate():
 	old_update = QuerySet.update
 	def new_update(self, **kwargs):
+		if len(self)!=0:
+			before_instance = self[0]
 		old_update(self, **kwargs)
 		cache_args = getattr(Model, 'cache_args', None)
 		setattr(Model, 'cache_args', None)
 		instance = self
 		if cache_args:
 			instance = cache_args.get('instance', self)
-		post_update_signal.send(sender=self.model, model=self.model, instance=instance, cache_args=cache_args)
+		if len(self)!=0:
+			post_update_signal.send(sender=self.model, model=self.model,instance=instance,before_instance=before_instance, cache_args=cache_args)
+		else:
+			post_update_signal.send(sender=self.model, model=self.model,instance=instance, cache_args=cache_args)
 	QuerySet.update = new_update
-
 
 post_delete_signal = Signal(providing_args=["model", "instance"])
 def hackQuerySetDelete():
