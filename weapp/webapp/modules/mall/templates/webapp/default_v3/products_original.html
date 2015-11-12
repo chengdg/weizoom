@@ -1,7 +1,7 @@
 {% extends "webapp_content_base.html" %}
 {% load common_tag %}
 {% block content-panel %}
-<div id='product_list_contain' data-title="商品列表" class="xui-productsList-page">
+<div id='product_list_contain' data-title="商品列表" class="xui-productsList-page xa-page">
 
     
     {% if global_navbar == None %}
@@ -42,14 +42,14 @@
     </div>
     {% endif %}
     {% if products %}
-        <ul class="xui-products-original">
+        <ul class="xui-products-original clearfix">
             {% for product in products %}
             <li id="{{product.id}}" class="xa-product xui-inner-li xt-oneProduct {% if product.is_member_product %}xa-member-product{% endif %}"
                 data-product-promotion='{{product.promotion_js}}' data-product-price="{{product.display_price}}"
             >
                 <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                     <div class="xui-inner-img">
-                    {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
+                    {% ifequal product.thumbnails_url|truncatechars:22 'http://weappimgtest...'%}
                         <img src="{{ product.thumbnails_url }}!list">
                     {% else %}
                         <img src="{{ product.thumbnails_url }}">
@@ -73,6 +73,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
     // 计算列表页面价钱
+    
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
         updateProductPrice: function(event, data){
             var token = $.cookie('current_token');
