@@ -36,30 +36,20 @@ class MSign(resource.Resource):
 		webapp_owner_id = request.GET.get('webapp_owner_id', None)
 		participance_data_count = 0
 		auth_appid_info = None
+		member_info = {}
+		prize_info = {}
 
 
 		if 'new_app' in p_id:
 			project_id = p_id
 			activity_status = u"未开始"
 			record_id = 0
-			member_info = {}
-			prize_info = {}
 			sign_description = ""
 			record = None
 		else:
-			member = request.member
-			member_id = member.id
-			isMember = member.is_subscribed
-
 			record = app_models.Sign.objects(owner_id=webapp_owner_id)
-
 			if record.count() > 0:
 				record = record[0]
-				member_info = {
-					'user_name': member.username_for_html if member and member.username_for_html else u'未知',
-					'user_icon': member.user_icon if member and member.user_icon else '/static/img/user-1.jpg',
-					'user_integral': member.integral if member else 0
-				}
 				prize_settings = record.prize_settings
 
 				pagestore = pagestore_manager.get_pagestore('mongo')
@@ -77,71 +67,97 @@ class MSign(resource.Resource):
 
 				project_id = 'new_app:sign:%s' % record.related_page_id
 				record_id = record.id
-				signers = app_models.SignParticipance.objects(belong_to=str(record_id), member_id=member_id)
-				participance_data_count = signers.count()
-				signer = signers[0] if participance_data_count>0 else None
+
 				#检查当前用户签到情况
 				daily_prize = prize_settings['0']
 				serial_prize = {}
 				next_serial_prize = {}
 				prize_rules = {}
-				for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
-					setting = prize_settings[name[1]]
-					name = name[0]
-					if setting['integral']:
-						p_integral = setting['integral']
-					else:
-						p_integral = 0
-					if setting['coupon']['name']:
-						p_coupon = setting['coupon']['name']
-					else:
-						p_coupon = ""
-					prize_rules[name] = {'integral': p_integral,'coupon': p_coupon}
-				if signer:
-					#检查是否已签到
-					latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
-					nowDate = datetime.now().strftime('%Y-%m-%d')
-					#首先检查是否断掉了连续签到条件，状态重置serial_count为1
-					if latest_sign_date == (datetime.now() - dt_datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
-						temp_serial_count = signer.serial_count
-					else:
-						temp_serial_count = 0
-					if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
-						activity_status = u'已签到'
-						for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
-							setting = prize_settings[name[1]]
-							name = name[0]
-							if int(name) > signer.serial_count:
-								next_serial_prize = {
-									'count': int(name),
-									'prize': setting
-								}
-								break
-					elif temp_serial_count >=1:
-						flag = False
-						for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
-							setting = prize_settings[name[1]]
-							name = int(name[0])
-							if flag or name>signer.serial_count + 1:
-								next_serial_prize = {
-									'count': name,
-									'prize': setting
-								}
-								break
-							if name == signer.serial_count + 1:
-								serial_prize = {
-									'count': name,
-									'prize':setting
-								}
-								flag = True
 
-				prize_info = {
-					'serial_count': signer.serial_count if signer else 0,
-					'daily_prize': daily_prize,
-					'serial_prize': serial_prize,
-					'next_serial_prize': next_serial_prize,
-					'prize_rules':prize_rules
-				}
+				if request.member:
+					member = request.member
+					member_id = member.id
+					isMember = member.is_subscribed
+					member_info = {
+						'user_name': member.username_for_html if member and member.username_for_html else u'未知',
+						'user_icon': member.user_icon if member and member.user_icon else '/static/img/user-1.jpg',
+						'user_integral': member.integral if member else 0
+					}
+
+					signers = app_models.SignParticipance.objects(belong_to=str(record_id), member_id=member_id)
+					participance_data_count = signers.count()
+					signer = signers[0] if participance_data_count>0 else None
+
+					for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+						setting = prize_settings[name[1]]
+						name = name[0]
+						if setting['integral']:
+							p_integral = setting['integral']
+						else:
+							p_integral = 0
+						if setting['coupon']['name']:
+							p_coupon = setting['coupon']['name']
+						else:
+							p_coupon = ""
+						prize_rules[name] = {'integral': p_integral,'coupon': p_coupon}
+					if signer:
+						#检查是否已签到
+						latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
+						nowDate = datetime.now().strftime('%Y-%m-%d')
+						#首先检查是否断掉了连续签到条件，状态重置serial_count为1
+						if latest_sign_date == (datetime.now() - dt_datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
+							temp_serial_count = signer.serial_count
+						else:
+							temp_serial_count = 0
+						if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
+							activity_status = u'已签到'
+							for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+								setting = prize_settings[name[1]]
+								name = name[0]
+								if int(name) > signer.serial_count:
+									next_serial_prize = {
+										'count': int(name),
+										'prize': setting
+									}
+									break
+						elif temp_serial_count >=1:
+							flag = False
+							for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
+								setting = prize_settings[name[1]]
+								name = int(name[0])
+								if flag or name>signer.serial_count + 1:
+									next_serial_prize = {
+										'count': name,
+										'prize': setting
+									}
+									break
+								if name == signer.serial_count + 1:
+									serial_prize = {
+										'count': name,
+										'prize':setting
+									}
+									flag = True
+
+					prize_info = {
+						'serial_count': signer.serial_count if signer else 0,
+						'daily_prize': daily_prize,
+						'serial_prize': serial_prize,
+						'next_serial_prize': next_serial_prize,
+						'prize_rules':prize_rules
+					}
+				else:
+					prize_info = {
+						'serial_count': 0,
+						'daily_prize': daily_prize,
+						'serial_prize': serial_prize,
+						'next_serial_prize': next_serial_prize,
+						'prize_rules':prize_rules
+					}
+					member_info = {
+						'user_name': u'未知',
+						'user_icon': u'/static/img/user-1.jpg',
+						'user_integral': 0
+					}
 
 			else:
 				c = RequestContext(request, {
@@ -162,7 +178,7 @@ class MSign(resource.Resource):
 			'app_name': "sign",
 			'resource': "sign",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': isPC,
+			'isPC': False if request.member else True,
 			'isMember': isMember,
 			'member_info':member_info,
 			'prize_info': json.dumps(prize_info),

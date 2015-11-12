@@ -100,7 +100,7 @@ class Mevent(resource.Resource):
 						'app_name': "event",
 						'resource': "event",
 						'hide_non_member_cover': True, #非会员也可使用该页面
-						'isPC': isPC,
+						'isPC': False if request.member else True,
 						'isMember': isMember,
 						'auth_appid_info': auth_appid_info,
 						'permission': permission,

@@ -39,37 +39,13 @@ class MPowerMe(resource.Resource):
 		page_owner_name = ''
 		page_owner_member_id = 0
 		activity_status = u"未开始"
+		member = request.member
 
 		if 'new_app:' in record_id:
 			project_id = record_id
 			record_id = 0
 			record = None
-		elif isPC:
-			record = app_models.PowerMe.objects(id=record_id)
-			if record.count() >0:
-				record = record.first()
-
-				#获取活动状态
-				activity_status = record.status_text
-
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
-				project_id = 'new_app:powerme:%s' % record.related_page_id
-			else:
-				c = RequestContext(request, {
-					'is_deleted_data': True
-				})
-				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
-		else:
-			member = request.member
+		elif member:
 			member_id = member.id
 			isMember =request.member.is_subscribed
 			fid = request.GET.get('fid', None)
@@ -177,6 +153,32 @@ class MPowerMe(resource.Resource):
 					'is_deleted_data': True
 				})
 				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
+
+		else:
+			record = app_models.PowerMe.objects(id=record_id)
+			if record.count() >0:
+				record = record.first()
+
+				#获取活动状态
+				activity_status = record.status_text
+
+				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
+				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
+				if data_start_time <= now_time and now_time < data_end_time:
+					record.update(set__status=app_models.STATUS_RUNNING)
+					activity_status = u'进行中'
+				elif now_time >= data_end_time:
+					record.update(set__status=app_models.STATUS_STOPED)
+					activity_status = u'已结束'
+
+				project_id = 'new_app:powerme:%s' % record.related_page_id
+			else:
+				c = RequestContext(request, {
+					'is_deleted_data': True
+				})
+				return render_to_response('powerme/templates/webapp/m_powerme.html', c)
+
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
 		request.GET._mutable = False
@@ -194,7 +196,7 @@ class MPowerMe(resource.Resource):
 			'app_name': "powerme",
 			'resource': "powerme",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': isPC,
+			'isPC': False if request.member else True,
 			'isMember': isMember,
 			'is_powered': is_powered, #是否已为该member助力
 			'is_self_page': self_page, #是否自己主页

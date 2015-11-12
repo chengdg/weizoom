@@ -65,6 +65,7 @@ class Msurvey(resource.Resource):
 						activity_status = u'已结束'
 
 				project_id = 'new_app:survey:%s' % record.related_page_id
+
 				if request.member:
 					participance_data_count = app_models.surveyParticipance.objects(belong_to=id, member_id=request.member.id).count()
 				if participance_data_count == 0 and request.webapp_user:
@@ -93,7 +94,6 @@ class Msurvey(resource.Resource):
 				request.GET.update({"project_id": project_id})
 				request.GET._mutable = False
 				html = pagecreater.create_page(request, return_html_snippet=True)
-
 				c = RequestContext(request, {
 					'record_id': id,
 					'activity_status': activity_status,
@@ -103,7 +103,7 @@ class Msurvey(resource.Resource):
 					'app_name': "survey",
 					'resource': "survey",
 					'hide_non_member_cover': True, #非会员也可使用该页面
-					'isPC': isPC,
+					'isPC': False if request.member else True,
 					'isMember': isMember,
 					'qrcode_url': qrcode_url,
 					'permission': permission,
@@ -116,7 +116,7 @@ class Msurvey(resource.Resource):
 			record = None
 			c = RequestContext(request, {
 				'record': record
-			});
+			})
 			return render_to_response('survey/templates/webapp/m_survey.html', c)
 
 def get_result(id,member_id):

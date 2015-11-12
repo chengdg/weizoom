@@ -6,8 +6,9 @@ html{
 html,body{
 	background: #e93131;
 }
-.xui-attentionAlert{
-	display: none;
+
+.xui-attentionAlert a {
+	font-size: 14px;
 }
 .xui-content{
 	background-image: url(/markettools_static/share_red_envelope/img/bg_bottom.png),url(/markettools_static/share_red_envelope/img/bg.jpg);

@@ -118,7 +118,7 @@ class Mlottery(resource.Resource):
 			'app_name': "lottery",
 			'resource': "lottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': isPC,
+			'isPC': False if request.member else True,
 			'isMember': isMember,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
