@@ -135,6 +135,21 @@ var shipInfosConfig = {
 
 var initShipInofs = function(){
     var lastUpdate;
+    function shipInfoAnalysis(){
+        var s = sessionStorage;
+        var content = '';
+        // mallShipSessionFlag会话标志，辨别当前是第一次运行还是会话中的运行
+        if(!s.mallShipSessionFlag){
+            s.mallShipSessionFlag = 1
+        }else{
+            if(now.getTime() - lastUpdate > shipInfosConfig.cacheTime && lastUpdate > 0){
+                content = '单个会话超过5分钟触发更新';
+            }
+        }
+        if(content){
+            JSAnalysis('initShipInofs',content)
+        }
+    }
     if(localStorage.ship_infos_updated_at){
         lastUpdate = localStorage.ship_infos_updated_at;
     }
@@ -160,9 +175,9 @@ var initShipInofs = function(){
                     infos[ship_infos[i].ship_id] = ship_infos[i]
                 }
                 localStorage.ship_infos=JSON.stringify(infos);
-                var now = new Date();
-                localStorage.ship_infos_updated_at = now.getTime();
+                localStorage.ship_infos_updated_at = new Date().getTime();
                 localStorage.ship_infos_token = $.cookie('current_token');
+                shipInfoAnalysis();
             },
             error: function(resp) {
             }
