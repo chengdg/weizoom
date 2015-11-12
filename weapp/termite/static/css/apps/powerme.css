@@ -192,7 +192,7 @@ hr{
     text-overflow: ellipsis;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    max-width: 100px;
+    max-width: 200px;
     line-height: 35px;
     font-family: 微软雅黑;
     height: 35px;
