@@ -216,25 +216,25 @@ def call_api(weixin_api, api_instance_class):
 				mpuser_access_token.is_certified = False
 				mpuser_access_token.save()
 			
-			try:
-				if result_code == errorcodes.INVALID_ACCESS_TOKEN_CODE or result_code == errorcodes.ILLEGAL_ACCESS_TOKEN_CODE or result_code == errorcodes.ACCESS_TOKEN_EXPIRED_CODE:
-					update_access_token(weixin_api.mpuser_access_token)	
-			except:
-				notify_message = u"weixin_api update_access_token error {}".format(unicode_full_stack())
-				watchdog_error(notify_message)
+			# try:
+			# 	if result_code == errorcodes.INVALID_ACCESS_TOKEN_CODE or result_code == errorcodes.ILLEGAL_ACCESS_TOKEN_CODE or result_code == errorcodes.ACCESS_TOKEN_EXPIRED_CODE:
+			# 		update_access_token(weixin_api.mpuser_access_token)	
+			# except:
+			# 	notify_message = u"weixin_api update_access_token error {}".format(unicode_full_stack())
+			# 	watchdog_error(notify_message)
 
 		if weixin_api._is_error_response(api_response):
-			if weixin_api._is_error_dueto_access_token(api_response):
-				if api_instance_class.is_retry(agrs):
-					weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
-				else:
-					#如果由于access_token的问题，那么先更新access_token后重试
-					if (update_access_token(weixin_api.mpuser_access_token)):
-						return _call_api(*agrs)
-					else:
-						weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
-			else:
-				weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
+			# if weixin_api._is_error_dueto_access_token(api_response):
+			# 	if api_instance_class.is_retry(agrs):
+			# 		weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
+			# 	else:
+			# 		#如果由于access_token的问题，那么先更新access_token后重试
+			# 		if (update_access_token(weixin_api.mpuser_access_token)):
+			# 			return _call_api(*agrs)
+			# 		else:
+			# 			weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
+			# else:
+			weixin_api._raise_request_error(api_response, api_desc, weixin_api.mpuser_access_token.mpuser.owner_id)
 		
 		return api_instance_class.parse_response(api_response)
 
