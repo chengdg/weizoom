@@ -52,7 +52,13 @@ def get_share_red_envelope(request):
         qcode_img_url = auth_appid.qrcode_url if auth_appid.qrcode_url else ''
         shop_name = auth_appid.nick_name if auth_appid.nick_name else ''
 
-    red_envelope_rule = RedEnvelopeRule.objects.get(id=red_envelope_rule_id)
+    try:
+        red_envelope_rule = RedEnvelopeRule.objects.get(id=red_envelope_rule_id,is_delete=False)
+    except:
+        c = RequestContext(request, {
+            'is_deleted_data': True
+        })
+        return render_to_response('shareRedEnvelope/webapp/share_red_envelope.html', c)
     coupon_rule_id = red_envelope_rule.coupon_rule_id
     coupon_rule = CouponRule.objects.get(id=coupon_rule_id)
 
@@ -79,9 +85,7 @@ def get_share_red_envelope(request):
         'share_page_desc': red_envelope_rule.share_title,
         'share_img_url': red_envelope_rule.share_pic,
         'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
-        'is_share': is_share,
-        'coupon_rule': coupon_rule,
-        'hide_non_member_cover': True
+        'is_share': is_share
     }
 
     if member:
@@ -210,7 +214,10 @@ def get_share_red_envelope(request):
                         return_data['coupon_rule'] = coupon_rule
                         return_data['member'] = member if member.is_subscribed else ""
                         return_data['qcode_img_url'] = qcode_img_url
-
+    else:
+        return_data['coupon_rule'] = coupon_rule
+        return_data['hide_non_member_cover'] = True,
+        return_data['qcode_img_url'] = qcode_img_url
     request.META['should_remove_shared_url_session'] = True
     c = RequestContext(request, return_data)
     return render_to_response('shareRedEnvelope/webapp/share_red_envelope.html', c)

@@ -544,7 +544,8 @@
             });
         </script>
         {% endif %}
-
-        {% block js %}{% endblock %}
+        {% if not is_deleted_data %}
+            {% block js %}{% endblock %}
+        {% endif %}
     </body>
 </html>

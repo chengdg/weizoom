@@ -49,18 +49,24 @@ class Mvote(resource.Resource):
 			thumbnails_url = '/static_v2/img/thumbnails_vote.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
-				if not isMember:
-					from weixin.user.util import get_component_info_from
-					component_info = get_component_info_from(request)
-					auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-					auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+				# if not isMember:
+				# 	from weixin.user.util import get_component_info_from
+				# 	component_info = get_component_info_from(request)
+				# 	auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+				# 	auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
 				activity_status = u"未开始"
 			else:
 				#termite类型数据
-				record = app_models.vote.objects.get(id=id)
+				try:
+					record = app_models.vote.objects.get(id=id)
+				except:
+					c = RequestContext(request, {
+						'is_deleted_data': True
+					})
+					return render_to_response('workbench/wepage_webapp_page.html', c)
 				activity_status = record.status_text
 				share_page_desc =record.name
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -77,8 +83,6 @@ class Mvote(resource.Resource):
 				project_id = 'new_app:vote:%s' % record.related_page_id
 				if request.member:
 					participance_data_count = app_models.voteParticipance.objects(belong_to=id, member_id=request.member.id).count()
-				if participance_data_count == 0 and request.webapp_user:
-					participance_data_count = app_models.voteParticipance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
 				pagestore = pagestore_manager.get_pagestore('mongo')
 				page = pagestore.get_page(record.related_page_id, 1)
 				permission = page['component']['components'][0]['model']['permission']
@@ -142,11 +146,11 @@ class resultVote(resource.Resource):
 			isMember = request.GET.get('isMember',0)
 			member_id = request.GET['member_id']
 			auth_appid_info = None
-			if not isMember:
-				from weixin.user.util import get_component_info_from
-				component_info = get_component_info_from(request)
-				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+			# if not isMember:
+			# 	from weixin.user.util import get_component_info_from
+			# 	component_info = get_component_info_from(request)
+			# 	auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+			# 	auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 			vote_detail,result_list = get_result(id,member_id)
 			c = RequestContext(request, {
 				'vote_detail': vote_detail,
