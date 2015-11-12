@@ -162,19 +162,6 @@ WAIT_BUYER_CONFIRM_GOODS = 'WAIT_BUYER_CONFIRM_GOODS'
 
 # 	return off_shelve_products
 
-
-########################################################################
-# __save_delivery_date: 创建配送套餐配送时间表
-########################################################################
-# def __save_delivery_date(order, delivery_dates):
-# 	if delivery_dates.strip() != '':
-# 		for delivery_date in delivery_dates.split(','):
-# 			OrderHasDeliveryTime.objects.create(
-# 				order = order,
-# 				delivery_date = delivery_date.strip()
-# 				)
-
-
 def save_order(request):
 	"""保存订单
 	"""

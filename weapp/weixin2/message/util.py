@@ -103,13 +103,15 @@ def is_valid_time(time_str):
 
 #处理消息中的特殊字符
 def translate_special_characters(message_text):
+    old_message_text = message_text
     a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
     all_a_html = a_pattern.findall(message_text)
-    
+
     for html in all_a_html:
         message_text = message_text.replace(html, "%s")
     message_text = message_text.replace('<', "&lt;")
     message_text = message_text.replace('>', "&gt;")
-    if all_a_html:
+    if all_a_html and len(all_a_html) == message_text.count('%s'):
         message_text = message_text % tuple(all_a_html)
-    return message_text
+        return message_text
+    return old_message_text

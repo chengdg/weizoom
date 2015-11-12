@@ -237,17 +237,6 @@ def create_delivery_product_handler(delivery_plan, **keyword):
         watchdog_fatal(alert_message, type='WEB')
 
 
-########################################################################
-# __gen_thanks_card_secret: 生成感恩密码
-########################################################################
-# made by zhaolei 2015-10-28
-# def __gen_thanks_card_secret():
-#     secret = random.randint(1000000, 9999999)
-#     if ThanksCardOrder.objects.filter(thanks_secret=secret).count() > 0:
-#         return __gen_thanks_card_secret()
-#     else:
-#         return secret
-
 #############################################################################################
 # cancel_order_handler: 取消订单后触发的动作
 # 1、重置该订单的感恩密码
