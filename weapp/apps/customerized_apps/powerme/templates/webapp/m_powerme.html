@@ -112,7 +112,7 @@
         height: 180px;
         position: relative;
         width: 180px;
-        margin-left: 50px;
+        margin-left: 40px;
     }
     .xui-twoDimensionBox p {
         display: inline-block;
@@ -152,14 +152,14 @@
     <div class="xui-attention xa-attention-guest none">
         <div class="xui-twoDimensionBox">
             <div class="xa-attention-tip-one" style="margin-top: 32px;">
-                <p>1.长按二维码关注</p><p class="wui-win-font-color">“{{ mpUserPreviewName }}”</p><p>公众号</p>
+                <p>1.长按二维码关注</p><p class="wui-win-font-color">“{{ mpUserPreviewName }}”公众号</p>
             </div>
             <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
             <div class="xa-attention-tip" style="display:none">
                 <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
             </div>
             <div class="xa-attention-reply" style="margin-top: 5px;">
-                <p>2.回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，</div><p>即可参加活动</p>
+                <p>2.回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，即可参加活动</div>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
