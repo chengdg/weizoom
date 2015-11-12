@@ -75,12 +75,14 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			default: ''
 		},{
 			name: 'reply_content',
-			type: 'text',
+			type: 'text_with_annotation',
 			displayName: '参与活动回复语',
 			isUserProperty: true,
+			maxLength: 5,
 			placeholder: '触发获取图文信息，如：抢礼物',
 			validate: 'data-validate="require-notempty::回复语不能为空"',
 			validateIgnoreDefaultValue: true,
+			annotation: '请在 微信-自动回复 创建该关键词',
 			default: ""
 		},{
 			name: 'qrcode',

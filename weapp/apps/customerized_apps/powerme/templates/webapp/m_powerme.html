@@ -86,24 +86,33 @@
         width: 46px;
         float: left;
     }
+    .xui-attention{
+        position: fixed;
+        top: 12%;
+        width: 100%;
+        text-align: center;
+        z-index: 10001;
+    }
+    .xa-attention-member .xui-twoDimensionBox{
+        text-align: center;
+    }
+    .xa-attention-guest .xui-twoDimensionBox{
+        text-align: left;
+    }
+
     .xui-attention .xui-twoDimensionBox {
         background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto #fff;
         border-radius: 8px;
-        left: 50%;
-        margin-left: -143px;
-        padding-bottom: 20px;
-        position: fixed;
-        top: 12%;
-        width: 285px;
-        z-index: 10001;
-        text-align: center;
+        padding: 5px 20px 20px 20px;
+        width: 260px;
+        display: inline-block;
     }
     .xui-attention .xui-twoDimension{
         display: block;
         height: 180px;
         position: relative;
         width: 180px;
-        margin-left: 50px;
+        margin-left: 40px;
     }
     .xui-twoDimensionBox p {
         display: inline-block;
@@ -122,17 +131,13 @@
 {% endblock %}
 
 {% block content-panel %}
-    <div class="wui-mask wui-hide"></div>
-    <div class="wui-win wui-power-win wui-hide"></div>
-    <div class="wui-win wui-qrimg-win wui-hide"></div>
-    <div class="wui-win wui-guide-win wui-hide"></div>
     {{ page_html_content|safe }}
     <div class="wui-masterinfo wa-masterinfo">
         <div style="float: left;">
             <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
         <span class="wa-mypower">我的助力值: <b>{% if current_member_rank_info %}{{ current_member_rank_info.power }}{% else %}0{% endif %}</b></span>
         </div>
-        <div style="float: right;">
+        <div style="float: right;margin-right: 25px">
         <span class="wa-totalcount">参与人数: <b>{{ total_participant_count }}</b></span>
         </div>
     </div>
@@ -143,17 +148,33 @@
             <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮{{ page_owner_name|safe }}助力值+1</p><p>关系好就是任性！</p></div>
         </div>
     </div>
-    <div class="xui-attention xa-attention none">
+    <!-- 非会员引导 -->
+    <div class="xui-attention xa-attention-guest none">
         <div class="xui-twoDimensionBox">
-            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
-                <p>1.长按二维码关注“</p><p class="wui-win-font-color">{{ mpUserPreviewName }}</p><p>”公众号</p>
+            <div class="xa-attention-tip-one" style="margin-top: 32px;">
+                <p>1.长按二维码关注</p><span class="wui-win-font-color">“{{ mpUserPreviewName }}”</span><span>公众号</span>
             </div>
-            <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
-            <div class="xa-attention-tip" style="margin-left:8px;margin-right: 5px;display:none">
+            <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
+            <div class="xa-attention-tip" style="display:none">
                 <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
             </div>
+            <div class="xa-attention-reply" style="margin-top: 5px;">
+                <p>2.回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，即可参加活动</div>
+            </div>
+            <div class="xui-closeBtn xa-closeBtn"></div>
+        </div>
+    </div>
+    <!-- 个人引导 -->
+    <div class="xui-attention xa-attention-member none">
+        <div class="xui-twoDimensionBox">
+            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
+                <div style="color: orangered;text-align:center">您已参加该活动！</div>
+                <div style="text-align:center">长按二维码进入公众号</div>
+                <div style="text-align:center">获取你自己的专属页，</div>
+            </div>
+            <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
             <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
-                <p>2.回复：“</p><div class="wui-win-font-color" style="display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
+                分享到朋友圈,发动小伙伴帮你助力赢大奖！
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
@@ -235,14 +256,18 @@
             $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
         }else{
             var using_msg;
-            var $attention = $('.xa-attention');
+            var $attention = $('.xa-attention-guest');
+            var $powerBtn = $('.wa-power');
+            $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
                 if(is_powered){
-                    $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
                         openGuideMask();
                     }).show();
                 }else{
-                   $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                   $powerBtn.on('click', function(){
                        if(is_powered){
                            openGuideMask();
                        }else{
@@ -252,19 +277,18 @@
                 }
             }else{
                 if(is_powered){
-                    $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
-                        $attention.find('img').attr('src',new_qrcode_url);
-                        $attention.find('.xa-attention-tip').show();
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
-                        openQrMask();
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        openGuideMask();
                     }).show();
                 }else{
-                    $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                    $powerBtn.on('click', function(){
                         powerYou();
-                        $attention.find('img').attr('src',new_qrcode_url);
                         $attention.find('.xa-attention-tip').show();
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
-                        openQrMask();
+                        $attention.find('img').attr('src', new_qrcode_url);
+                        $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                        openGuestMask();
                     }).show();
                 }
             }
@@ -272,17 +296,15 @@
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
                 $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('.xa-attention-tip-one').html('<div style="color: orangered;text-align:center">您已参加该活动！</div><div style="text-align:center">长按二维码进入公众号</div><div style="text-align:center">获取你自己的专属页，</div>');
-                    $attention.find('.xa-attention-reply').html('分享到朋友圈,发动小伙伴帮你助力赢大奖！');
-                    openQrMask();
+                    openMemberMask();
                 }).show();
             }else{
                 using_msg = '我也要参加';
                 $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('img').attr('src',qrcode_url);
+                    $attention.find('img').attr('src', qrcode_url);
                     $attention.find('.xa-attention-tip').hide();
-                    $attention.find('.xa-attention-reply').children().first().html("2.回复：“");
-                    openQrMask();
+                    $attention.find('.xa-attention-reply').children().first().html("2.回复：");
+                    openGuestMask();
                 }).show();
             }
         }
@@ -360,9 +382,13 @@
         $('body').swipeMask('show');
         $('.xui-powerSucceed').removeClass('none');
     }
-    function openQrMask(){
+    function openGuestMask(){
         $('body').swipeMask('show');
-        $('.xa-attention').removeClass('none');
+        $('.xa-attention-guest').removeClass('none');
+    }
+    function openMemberMask(){
+        $('body').swipeMask('show');
+        $('.xa-attention-member').removeClass('none');
     }
     function powerYou(){
         if (is_powered) {
@@ -380,7 +406,7 @@
             },
             success: function(data) {
                 if (W.isMember) {
-                    $('.wa-power').html('已帮'+page_owner_name+'助力')
+                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                 }
                 is_powered = true;
@@ -395,11 +421,11 @@
     $('.mask').click(function(){
         $('body').swipeMask('hide');
         $('.xui-powerSucceed').addClass('none');
-        $('.xa-attention').addClass('none');
+        $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
-        $('.xa-attention').addClass('none');
+        $('.xui-attention').addClass('none');
         $('body').swipeMask('hide');
     });
     $('.xa-colseButton').click(function(){
