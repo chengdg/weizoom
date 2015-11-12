@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div data-role="page" data-theme="x" class="{% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
+<div class="{% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
     <div data-role="header" data-theme="x">
 		<h1>优惠券</h1>
 	</div>
