@@ -78,6 +78,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			type: 'text',
 			displayName: '参与活动回复语',
 			isUserProperty: true,
+			maxLength: 5,
 			placeholder: '触发获取图文信息，如：抢礼物',
 			validate: 'data-validate="require-notempty::回复语不能为空"',
 			validateIgnoreDefaultValue: true,

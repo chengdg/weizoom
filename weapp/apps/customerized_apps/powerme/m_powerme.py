@@ -26,13 +26,11 @@ class MPowerMe(resource.Resource):
 		record_id = request.GET.get('id','id')
 		isPC = request.GET.get('isPC',0)
 		isMember = False
-		qrcode_url = ''
 		timing = 0
 		mpUserPreviewName = ''
 		is_already_participanted = False
 		is_powered = False
 		self_page = False
-		fid = None
 		current_member_rank_info = None
 		participances_list = []
 		total_participant_count = 0
