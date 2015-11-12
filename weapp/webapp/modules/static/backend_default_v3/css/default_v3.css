@@ -2303,6 +2303,10 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-getCouponPage .xui-goShopping-btn,.xui-getCouponPage .xui-myCoupon-btn{
     background: transparent;
 }
+.xui-getCouponPage .xui-goShopping-btn,.xui-getCouponPage .xui-myCoupon-btn-disable{
+    background:#a19fa0;
+}
+
 /*
  * mall: 购物车页面样式
  */
