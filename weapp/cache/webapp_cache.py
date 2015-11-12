@@ -258,6 +258,19 @@ def update_webapp_product_cache(**kwargs):
                     categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
                     cache_util.add_set_to_redis(categories_products_key,product_id)
             update_product_cache(webapp_owner_id, product_id)
+        elif instance and sender==mall_models.CategoryHasProduct:
+            # 商品分组中更新商品时
+            if isinstance(instance, mall_models.CategoryHasProduct):
+                catory_id = instance.category_id
+                product_id = instance.product_id
+            else:
+                catory_id = instance[0].category_id
+                product_id = instance[0].product_id
+            product = mall_models.Product.objects.filter(id = product_id).get()
+            # 非待售添加
+            if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF:
+                categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
+                cache_util.add_set_to_redis(categories_products_key,product_id)
 
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
@@ -280,7 +293,6 @@ def update_webapp_category_cache(**kwargs):
             else:
                 product_id = instance[0].product_id
                 catory_id = instance[0].category_id
-                pass
             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
             cache_util.rem_set_member_from_redis(categories_products_key,product_id)
 
