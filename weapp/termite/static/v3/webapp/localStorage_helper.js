@@ -95,13 +95,7 @@ var JSAnalysis = function(analysis_name,content,woid){
         target_api: 'js_analysis/log',
         analysis_name: analysis_name,
         content: content
-        },
-        success: function(data) {
-            alert("success")
-            },
-        error: function(resp) {
-            alert('error')
-            }
+        }
 
     });
 };

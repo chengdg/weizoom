@@ -889,7 +889,6 @@ def delete_address(request):
 
 
 def log_js_analysis(request):
-	print('here-----------------------------------')
 	def __get_from_request(key, value=None):
 		if value:
 			return False
