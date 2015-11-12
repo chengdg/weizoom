@@ -162,19 +162,6 @@ WAIT_BUYER_CONFIRM_GOODS = 'WAIT_BUYER_CONFIRM_GOODS'
 
 # 	return off_shelve_products
 
-
-########################################################################
-# __save_delivery_date: 创建配送套餐配送时间表
-########################################################################
-# def __save_delivery_date(order, delivery_dates):
-# 	if delivery_dates.strip() != '':
-# 		for delivery_date in delivery_dates.split(','):
-# 			OrderHasDeliveryTime.objects.create(
-# 				order = order,
-# 				delivery_date = delivery_date.strip()
-# 				)
-
-
 def save_order(request):
 	"""保存订单
 	"""
@@ -258,9 +245,9 @@ def save_order(request):
 		})
 		event_handler_util.handle(request, 'post_save_order')
 
-		
+
 		try:
-			mall_api.create_mall_order_from_shared(request, order.id)	
+			mall_api.create_mall_order_from_shared(request, order.id)
 		except:
 			pass
 
@@ -886,3 +873,72 @@ def delete_address(request):
 	data['selected_id'] = selected_id
 	response.data = data
 	return response.get_response()
+
+
+def log_js_analysis(request):
+	def __get_from_request(key, value=None):
+		if value:
+			return False
+		if key in request.META:
+			value = request.META.get(key, None)
+		elif key in request:
+			value = request.get(key, None)
+		else:
+			# value_from_request = None
+			return False
+		message_list.append({key: value})
+		return True
+
+	response = create_response(200).get_response()
+	if not request.is_ajax():
+		return response
+
+	message = ''
+	message_list = []
+	try:
+		# 默认数据
+
+		# api默认数据
+		message_list.append({'analysis_name': request.POST.get('analysis_name', '')})
+
+		# request默认数据
+		"""
+		HTTP_REFERER:发送请求的页面URL
+		REMOTE_ADDR：用户IP
+		HTTP_USER_AGENT：USER_AGENT
+		"""
+		request_default_info = ('HTTP_REFERER', 'REMOTE_ADDR', 'HTTP_USER_AGENT')
+		for key in request_default_info:
+			# message_dict[key] = request.META.get(key, None)
+			__get_from_request(key)
+
+		# weapp默认数据
+		try:
+			member_id = request.member.id
+		except:
+			member_id = '0'
+		message_list.append({'member_id': member_id})
+
+		# 处理content
+		content = request.POST.get('content', '')
+		try:
+			for key, value in json.loads(content).items():
+				if not __get_from_request(key, value):
+					message_list.append({key: value})
+		except ValueError:
+			# 如果不是JSON对象，则以字符串判断
+			message_list.append({'content': content})
+
+		for item in message_list:
+			message += '[%s]:%s\n' % (item.items()[0][0], item.items()[0][1])
+
+		try:
+			woid = request.webapp_owner_id
+		except:
+			woid = '0'
+		watchdog_js_analysis(message, type='JS_Analysis', user_id=woid)
+	except:
+		# 即使出错，也返回200响应
+		stack = unicode_full_stack()
+		watchdog_error(stack)
+	return response

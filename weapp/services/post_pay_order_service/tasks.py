@@ -12,18 +12,6 @@ from market_tools.tools.template_message import module_api as template_message_a
 
 from celery import task
 
-#made by zhaolei 2015-10-28
-# def __gen_thanks_card_secret():
-# 	"""
-# 	__gen_thanks_card_secret: 生成感恩密码
-# 	"""
-# 	secret = random.randint(1000000, 9999999)
-# 	if mall_models.ThanksCardOrder.objects.filter(thanks_secret=secret).count() > 0:
-# 		return __gen_thanks_card_secret()
-# 	else:
-# 		return secret
-
-
 def serve(request, args):
 	event_specific_data = args['event_specific_data']
 	order_order_id = event_specific_data['order_order_id']
@@ -51,40 +39,6 @@ def serve(request, args):
 	except:
 		alert_message = u"post_pay_order service: 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
 		watchdog_warning(alert_message)
-
-	# 生成感恩卡密码 made by zhaolei 2015-10-28
-	# try:
-	# 	order_has_products = mall_models.OrderHasProduct.objects.filter(order_id=order.id)
-	# 	is_thanks_card_order = False
-	# 	for order_has_product in order_has_products:
-	# 		product = mall_models.Product.objects.get(id = order_has_product.product_id)
-	# 		if product.is_support_make_thanks_card:
-	# 			is_thanks_card_order = True
-	# 			for i in range(order_has_product.number):	#购买几个商品创建几个密码
-	# 				secret = __gen_thanks_card_secret()
-	# 				member_id = 0	#bdd测试不支持request.member
-	# 				if request.member:
-	# 					member_id = request.member.id
-	# 				mall_models.ThanksCardOrder.objects.create(
-	# 					order_id= order.id,
-	# 					thanks_secret= secret,
-	# 					card_count= 0,
-	# 					listen_count= 0,
-	# 					is_used= False,
-	# 					title='',
-	# 					content='',
-	# 					type=mall_models.IMG_TYPE,
-	# 					att_url='',
-	# 					member_id=member_id)
-	# 		if is_thanks_card_order:
-	# 			mall_models.Order.objects.filter(order_id=order.order_id).update(type = mall_models.THANKS_CARD_ORDER)
-	# except:
-	# 	alert_message = u"post_pay_order service: 生成感恩密码失败, cause:\n{}".format(unicode_full_stack())
-	# 	if hasattr(request, 'user') and request.user:
-	# 		watchdog_alert(alert_message, type='WEB', user_id=str(request.user.id))
-	# 	else:
-	# 		watchdog_alert(alert_message, type='WEB')
-
 	try:
 		mall_util.email_order(order=order)
 	except:
