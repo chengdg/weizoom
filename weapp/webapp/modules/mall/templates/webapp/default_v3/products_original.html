@@ -49,7 +49,7 @@
             >
                 <a href='./?woid={{request.webapp_owner_id}}&module=mall&model=product&rid={{product.id}}'>
                     <div class="xui-inner-img">
-                    {% ifequal product.thumbnails_url|truncatechars:22 'http://weappimgtest...'%}
+                    {% ifequal product.thumbnails_url|truncatechars:18 'http://weappimg...'%}
                         <img src="{{ product.thumbnails_url }}!list">
                     {% else %}
                         <img src="{{ product.thumbnails_url }}">
