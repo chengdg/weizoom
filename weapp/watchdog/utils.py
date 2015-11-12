@@ -137,6 +137,7 @@ def watchdog_js_analysis(message, type='JS_Analysis', user_id='0', db_name='defa
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
+			print('here10086')
 			send_watchdog.delay(type, message, WATCHDOG_INFO, user_id, db_name)
 	else:
 		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
