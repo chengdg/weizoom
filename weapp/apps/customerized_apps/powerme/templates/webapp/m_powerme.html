@@ -90,8 +90,10 @@
         position: fixed;
         top: 12%;
         z-index: 10001;
-        text-align: center;
         width: 100%;
+    }
+    .xa-attention-member{
+        text-align: center;
     }
 
     .xui-attention .xui-twoDimensionBox {
@@ -273,10 +275,7 @@
                 if(is_powered){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        $attention.find('.xa-attention-tip').show();
-                        $attention.find('img').attr('src', qrcode_url);
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：");
-                        openGuestMask();
+                        openGuideMask();
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
