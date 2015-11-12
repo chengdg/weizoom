@@ -122,6 +122,11 @@ class ExceptionMiddleware(object):
 	将XMonitorWeb系统抛出的异常记录在watchdog的表中
 	"""
 
+	def process_request(self, request):
+		# 解决本地没有开启varnish，导致商品删除等操作报错
+		if request.META.get('REQUEST_METHOD','') == 'PURGE':
+			return HttpResponse('')
+
 	def process_exception(self, request, exception):
 		# print '>>>>>>> process exception <<<<<<<'
 		# exception_stack_str = unicode_full_stack()
