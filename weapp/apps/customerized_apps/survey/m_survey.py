@@ -38,11 +38,11 @@ class Msurvey(resource.Resource):
 			thumbnails_url = '/static_v2/img/thumbnails_survey.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
-				# if not isMember:
-				# 	if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
-				# 		qrcode_url = request.webapp_owner_info.qrcode_img
-				# 	else:
-				# 		qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
+				if not isMember:
+					if hasattr(request, "webapp_owner_info") and request.webapp_owner_info and hasattr(request.webapp_owner_info, "qrcode_img") :
+						qrcode_url = request.webapp_owner_info.qrcode_img
+					else:
+						qrcode_url = get_mp_qrcode_img(request.webapp_owner_id)
 
 			participance_data_count = 0
 			if 'new_app:' in id:
@@ -73,22 +73,21 @@ class Msurvey(resource.Resource):
 				project_id = 'new_app:survey:%s' % record.related_page_id
 
 				if request.member:
-					try:
-						participance_data = app_models.surveyParticipance.objects.get(belong_to=id,member_id=request.member.id)
-						if participance_data:
-							participance_data_count = 1
-					except:
-						c = RequestContext(request,{
-							'is_deleted_data': True
-						})
-						return render_to_response('survey/templates/webapp/result_survey.html', c)
+					participance_data_count = app_models.surveyParticipance.objects(belong_to=id, member_id=request.member.id).count()
+
 				pagestore = pagestore_manager.get_pagestore('mongo')
 				page = pagestore.get_page(record.related_page_id, 1)
 				permission = page['component']['components'][0]['model']['permission']
 			is_already_participanted = (participance_data_count > 0)
 			if  is_already_participanted:
 				member_id = request.member.id
-				survey_detail,result_list = get_result(id,member_id)
+				try:
+					survey_detail,result_list = get_result(id,member_id)
+				except:
+					c = RequestContext(request,{
+						'is_deleted_data': True
+					})
+					return render_to_response('survey/templates/webapp/result_survey.html', c)
 				c = RequestContext(request, {
 					'survey_detail': survey_detail,
 					'record_id': id,

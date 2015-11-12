@@ -50,13 +50,7 @@ class Mevent(resource.Resource):
 					activity_status = u"未开始"
 				else:
 					#termite类型数据
-					try:
-						record = app_models.event.objects.get(id=id)
-					except:
-						c = RequestContext(request,{
-								'is_deleted_data': True
-							})
-						return render_to_response('workbench/wepage_webapp_page.html', c)
+					record = app_models.event.objects.get(id=id)
 					activity_status = record.status_text
 					share_page_desc = record.name
 					now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -73,22 +67,20 @@ class Mevent(resource.Resource):
 					project_id = 'new_app:event:%s' % record.related_page_id
 
 					if request.member:
-						try:
-							participance_data = app_models.eventParticipance.objects.get(belong_to=id,member_id=request.member.id)
-							if participance_data:
-								participance_data_count = 1
-						except:
-							c = RequestContext(request,{
-								'is_deleted_data': True
-							})
-							return render_to_response('event/templates/webapp/is_already_participanted.html', c)
+						participance_data_count = app_models.eventParticipance.objects(belong_to=id, member_id=request.member.id).count()
 
 					pagestore = pagestore_manager.get_pagestore('mongo')
 					page = pagestore.get_page(record.related_page_id, 1)
 					permission = page['component']['components'][0]['model']['permission']
 				is_already_participanted = (participance_data_count > 0)
 				if  is_already_participanted:
-					event_detail,activity_status = get_result(id,request.member.id)
+					try:
+						event_detail,activity_status = get_result(id,request.member.id)
+					except:
+						c = RequestContext(request,{
+							'is_deleted_data': True
+						})
+						return render_to_response('event/templates/webapp/is_already_participanted.html', c)
 					c = RequestContext(request, {
 						'event_detail': event_detail,
 						'record_id': id,

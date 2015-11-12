@@ -32,7 +32,13 @@ class survey(resource.Resource):
 		响应GET
 		"""
 		if 'id' in request.GET:
-			survey = app_models.survey.objects.get(id=request.GET['id'])
+			try:
+				survey = app_models.survey.objects.get(id=request.GET['id'])
+			except:
+				c = RequestContext(request, {
+					'is_'
+				})
+				return render_to_response('survey/templates/editor/workbench.html', c)
 			is_create_new_data = False
 			project_id = 'new_app:survey:%s' % request.GET.get('related_page_id', 0)
 		else:
@@ -48,7 +54,7 @@ class survey(resource.Resource):
 			'survey': survey,
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
-		});
+		})
 		
 		return render_to_response('survey/templates/editor/workbench.html', c)
 	

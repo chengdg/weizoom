@@ -659,8 +659,8 @@ p.wui-i-start_time,p.wui-i-end_time{
 }
 .wui-i-uploadimg .xui-productPhoto .xui-remove i{
     background: url(/static_v2/img/webapp/mall/sprite0506.png);
-    -webkit-background-size: 195px 123px;
-    background-size: 195px 123px;
+    -webkit-background-size: 225px 123px;
+    background-size: 225px 123px;
     background-position: -44px 0;
     width: 23px;
     height: 22px;
