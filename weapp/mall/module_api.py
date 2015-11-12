@@ -1216,7 +1216,7 @@ def get_order(webapp_user, order_id, should_fetch_product=False, is_sub_order=Fa
 				'price': '%.2f' % relation.price,
 				'custom_model_properties': product.custom_model_properties,
 				'physical_unit': product.physical_unit,
-				'is_deleted': product.is_deleted,
+				 'is_deleted': product.is_deleted,
 				'grade_discounted_money': relation.grade_discounted_money
 			}
 

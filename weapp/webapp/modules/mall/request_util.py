@@ -138,18 +138,11 @@ def get_product(request):
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
 	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
-	#product0 = mall_api.get_product_detail(request.webapp_owner_id, product_id, webapp_user, member_grade_id)
-	#hint = __get_product_hint(request.webapp_owner_id, product_id)
 	hint = resource.get('mall', 'product_hint', {'woid': request.webapp_owner_id, 'id': product_id}).get('hint', '')
 
 	if product['is_deleted'] or (request.user.is_weizoom_mall and product['owner_id'] != 216 and product['weshop_sync'] == 0):
-	#if product.is_deleted:
-		# url = request.META.get('HTTP_REFERER','/workbench/jqm/preview/?woid={}&module=mall&model=shopping_cart&action=show'.format(webapp_owner_id))
 		return HttpResponseRedirect('/static/error-page/404.html')
-		# return render_to_response()
 
-	#if product.get('promotion'):
-	#	product['promotion']['is_active'] = product['promotion_model'].is_active
 	jsons = [{
 		"name": "models",
 		"content": product.get('models')
@@ -180,8 +173,6 @@ def get_product(request):
 	# use_integral = request.member.integral if request.member else 0
 
 	is_non_member = True if request.member else False
-	if product.get('is_deleted',False):
-		return HttpResponseRedirect('/static/error-page/404.html')
 	c = RequestContext(request, {
 		'page_title': product['name'],
 		'product': product,
