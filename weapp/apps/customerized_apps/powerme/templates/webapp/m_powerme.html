@@ -89,14 +89,12 @@
     .xui-attention .xui-twoDimensionBox {
         background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto #fff;
         border-radius: 8px;
-        left: 50%;
-        margin-left: -143px;
-        padding-bottom: 20px;
+        left: 5%;
+        padding: 5px 20px 20px 20px;
         position: fixed;
         top: 12%;
         width: 285px;
         z-index: 10001;
-        text-align: center;
     }
     .xui-attention .xui-twoDimension{
         display: block;
@@ -142,14 +140,14 @@
     <!-- 非会员引导 -->
     <div class="xui-attention xa-attention-guest none">
         <div class="xui-twoDimensionBox">
-            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
+            <div class="xa-attention-tip-one" style="margin-top: 32px;">
                 <p>1.长按二维码关注“</p><p class="wui-win-font-color">{{ mpUserPreviewName }}</p><p>”公众号</p>
             </div>
             <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
-            <div class="xa-attention-tip" style="margin-left:8px;margin-right: 5px;display:none">
+            <div class="xa-attention-tip" style="display:none">
                 <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
             </div>
-            <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
+            <div class="xa-attention-reply" style="margin-top: 5px;">
                 <p>2.回复：“</p><div class="wui-win-font-color" style="display: inline;">{{ reply_content|safe }}</div><p>”，即可参加活动</p>
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
