@@ -70,10 +70,12 @@ def _watchdog(type, message, severity=WATCHDOG_INFO, user_id='0', db_name='defau
 @task(**TASK_CONFIG)
 def send_watchdog(level, message, severity=WATCHDOG_INFO, user_id='0', db_name='default'):
 	try:
+		print('here0000000000000000000000000000000')
 		if not settings.IS_UNDER_BDD:
 			logging.info('received watchdog message: [%s] [%s]' % (level, message))
 		_watchdog(level, message, severity, user_id, db_name)
 	except Exception, e:
+		print('here4444444444444444444444444444444444444')
 		logging.error("Failed to send watchdog message, retrying...")
 		send_watchdog.retry(exc=e)
 	return 'OK'
