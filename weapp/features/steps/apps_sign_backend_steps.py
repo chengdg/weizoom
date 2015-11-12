@@ -372,17 +372,6 @@ def __get_DB_DynamicPages(project_id):
     pages = pagestore.get_page_components(project_id)
     return pages
 
-def __api_delete(context,sign_id=None,project_id=None):
-    global delete_switch
-    if delete_switch:
-        #删除mongo中project所有的page
-        if project_id:
-            pagestore = pagestore_manager.get_pagestore('mongo')
-            pagestore.remove_project_pages(str(project_id))
-
-        #删除project本身
-        if sign_id:
-            Sign.objects.filter(id=sign_id).delete()
 
 @given(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
@@ -681,9 +670,6 @@ def step_impl(context,user,sign_name):
         db_page["is_new_created"] = "false"
     bdd_util.assert_dict(json_page,db_page)
 
-    #删除数据
-    # __api_delete(context,context.sign_id,context.project_id)
-
 
 @given(u'{user}更新签到活动的状态')
 def step_impl(context,user):
@@ -733,6 +719,3 @@ def step_impl(context,user,sign_name,sign_tag):
     sign_status = {'status':status2name[sign_tag]}
     db_status = {'status':db_sign['status']}
     bdd_util.assert_dict(sign_status,db_sign)
-
-    # #删除数据
-    # __api_delete(context,context.sign_id,context.project_id)

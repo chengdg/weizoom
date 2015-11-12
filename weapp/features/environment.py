@@ -80,6 +80,7 @@ from apps.customerized_apps.sign import models as sign_models
 from django.core.cache import cache
 from weapp import celeryconfig
 from termite2 import models as termite2_models
+import termite.pagestore as pagestore_manager
 
 
 def add_touch_support_in_selenium():
@@ -296,7 +297,7 @@ def __clear_all_app_data():
 	# 签到
 	sign_models.Sign.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
-	
+
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
 
@@ -344,7 +345,7 @@ def __binding_wexin_mp_account(user=None):
 				is_service = True,
 				is_active = True
 			)
-	
+
 			weixin_user_models.WeixinMpUserAccessToken.objects.create(mpuser=mpuser, is_active=True,app_id=user.id, app_secret='app_secret',  access_token='access_token')
 			weixin_user_models.MpuserPreviewInfo.objects.create(mpuser=mpuser, name=mpuser.username)
 			auth_appid = weixin_user_models.ComponentAuthedAppid.objects.create(component_info=component_info,user_id=user.id,authorizer_appid=user.id,is_active=True)
@@ -392,6 +393,10 @@ def __sync_workspace():
 	print(settings.PAGE_STORE_SERVER_HOST)
 	connection = Connection(settings.PAGE_STORE_SERVER_HOST, settings.PAGE_STORE_SERVER_PORT)
 	connection.drop_database(settings.PAGE_STORE_DB)
+
+	#清理mongo中，签到page
+	sign_pagestore = pagestore_manager.get_pagestore('mongo')
+	sign_pagestore.remove_all()
 
 	#清理数据库
 	weapp_product_models.Product.objects.all().delete()
