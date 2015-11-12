@@ -87,7 +87,7 @@ class PowerMeParticipance(resource.Resource):
 			response = create_response(200)
 			powered_member_info = app_models.PowerMeParticipance.objects.get(belong_to=power_id, member_id=int(fid))
 			if not powered_member_info.has_join:
-				powered_member_info.update(set__has_join=True)
+				powered_member_info.update(set__has_join=True,set__created_at=datetime.now())
 		except Exception,e:
 			print e
 			response = create_response(500)

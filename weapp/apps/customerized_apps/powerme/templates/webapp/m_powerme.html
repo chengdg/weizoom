@@ -86,15 +86,20 @@
         width: 46px;
         float: left;
     }
+    .xui-attention{
+        position: fixed;
+        top: 12%;
+        z-index: 10001;
+        text-align: center;
+        width: 100%;
+    }
+
     .xui-attention .xui-twoDimensionBox {
         background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto #fff;
         border-radius: 8px;
-        left: 5%;
         padding: 5px 20px 20px 20px;
-        position: fixed;
-        top: 12%;
         width: 285px;
-        z-index: 10001;
+        display: inline-block;
     }
     .xui-attention .xui-twoDimension{
         display: block;
@@ -264,6 +269,7 @@
                 if(is_powered){
                     $('.wa-power').html('已帮'+page_owner_name+'助力').on('click', function(){
                         $attention.find('.xa-attention-tip').show();
+                        $attention.find('img').attr('src', qrcode_url);
                         $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
                         openGuestMask();
                     }).show();
@@ -271,6 +277,7 @@
                     $('.wa-power').html('帮'+page_owner_name+'助力').on('click', function(){
                         powerYou();
                         $attention.find('.xa-attention-tip').show();
+                        $attention.find('img').attr('src', new_qrcode_url);
                         $attention.find('.xa-attention-reply').children().first().html("3.回复：“");
                         openGuestMask();
                     }).show();
@@ -285,6 +292,7 @@
             }else{
                 using_msg = '我也要参加';
                 $('.wa-using').text(using_msg).on('click', function(){
+                    $attention.find('img').attr('src', qrcode_url);
                     $attention.find('.xa-attention-tip').hide();
                     $attention.find('.xa-attention-reply').children().first().html("2.回复：“");
                     openGuestMask();

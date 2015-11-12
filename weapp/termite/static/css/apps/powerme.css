@@ -28,9 +28,10 @@ hr{
 .wui-powerme-container .wui-i-body div{
     font-family: "黑体";
 }
-.wui-powerme-container .wui-i-body .wui-i-btngroup button{
+.wui-powerme-container .wui-i-body .wui-i-btngroup p, .wui-powerme-container .wui-i-body .wui-i-btngroup button{
     width: 70%;
     height: 34px;
+    line-height: 34px;
     border: none;
     color: white;
     font-size: 1rem;
@@ -184,4 +185,12 @@ hr{
 }
 .wui-powerme-container .wui-i-btngroup{
     margin-top: 15px;
+}
+.mobile_solution{
+    display: -webkit-box;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    margin: 0 auto;
 }

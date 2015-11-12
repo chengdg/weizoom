@@ -215,7 +215,7 @@ class MPowerMe(resource.Resource):
 
 def clear_non_member_power_info(record_id):
 	"""
-	所有取消关注的参与用户，清空其助力值同时设置为未参与
+	所有取消关注的参与用户，清空其助力值同时设置为未参与,重置时间
 	:param record_id: 活动id
 	"""
 	record_id = str(record_id)
