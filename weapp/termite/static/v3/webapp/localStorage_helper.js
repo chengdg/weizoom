@@ -129,7 +129,7 @@ var webStorageProbe = function () {
 */
 
 var shipInfosConfig = {
-    'cacheTime': 1000*60*5
+    'cacheTime': 1000*20
 };
 
 
@@ -147,7 +147,8 @@ var initShipInofs = function(){
             }
         }
         if(content){
-            JSAnalysis('initShipInofs',content)
+            alert(10086)
+            JSAnalysis('shipInfoAnalysis',content)
         }
     }
     if(localStorage.ship_infos_updated_at){
