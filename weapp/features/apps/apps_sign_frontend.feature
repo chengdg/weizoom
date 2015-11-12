@@ -1,7 +1,6 @@
 #__author__ : "许韦"
 
-Feature: Sign
-    用户进行签到
+Feature:用户进行签到
 
 Background:
     Given jobs登录系统
@@ -108,7 +107,7 @@ Scenario:1 用户浏览"签到活动1"
             }
         }
         """
-@apps_sign @apps_sign_frontend
+@apps_sign @apps_sign_frontend @kuki
 Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
     Given jobs添加签到活动"签到活动1",并且保存
         """
@@ -118,7 +117,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
             "sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
             "share_pic": "1.img",
             "share_describe": "签到送好礼！",
-            "reply_content": "每日签到获得2积分,连续签到3天获得5积分,连续签到5天获得7积分",
+            "reply_content": "每日签到获得2积分",
             "reply_keyword":
                 [{
                     "rule": "精确",
@@ -132,12 +131,6 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
                 [{
                     "sign_in": "0",
                     "integral": "2"
-                },{
-                    "sign_in": "3",
-                    "integral": "5"
-                },{
-                    "sign_in": "5",
-                    "integral": "7"
                 }]
         }
         """
@@ -152,9 +145,11 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
     When bill访问jobs的webapp
     Then bill在jobs的webapp中拥有0会员积分
     When bill在微信中向jobs的公众号发送消息'12'
-    Then bill获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分,连续签到3天获得5积分,连续签到5天获得7积分<br />'
+    Then bill获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分<br />'
+    When 清空浏览器
     When bill在微信中向jobs的公众号发送消息'123'
     Then bill获得系统回复的消息'亲，今天您已经签到过了哦，<br />明天再来吧！<br />'
+    When 清空浏览器
     When bill在微信中向jobs的公众号发送消息'1234'
     Then bill获得系统回复的消息'亲，今天您已经签到过了哦，<br />明天再来吧！<br />'
     When bill点击系统回复的链接
@@ -171,7 +166,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
 #                }
 #        }
 #        """
-@apps_sign @apps_sign_frontend
+@apps_sign @apps_sign_frontend @kuki
 Scenario:3 用户回复完全不匹配关键字签到
     Given jobs添加签到活动"签到活动1",并且保存
         """
@@ -209,6 +204,7 @@ Scenario:3 用户回复完全不匹配关键字签到
     When bill关注jobs的公众号
     When bill访问jobs的webapp
     Then bill在jobs的webapp中拥有0会员积分
+    When 清空浏览器
     When bill在微信中向jobs的公众号发送消息'1'
     Then bill获得系统回复的消息' '
     When jobs更新签到活动的状态
@@ -218,11 +214,12 @@ Scenario:3 用户回复完全不匹配关键字签到
             "status": "off"
         }
         """
+    When 清空浏览器
     And bill在微信中向jobs的公众号发送消息'1'
     Then bill获得系统回复的消息' '
 
-@apps_sign @apps_sign_frontend
-Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
+@apps_sign @apps_sign_frontend @kuki
+Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
     Given jobs添加签到活动"签到活动1",并且保存
         """
         {
@@ -231,7 +228,7 @@ Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模�
             "sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
             "share_pic": "1.img",
             "share_describe": "签到送好礼！",
-            "reply_content": "每日签到获得2积分和优惠券1一张,连续签到3天获得5积分",
+            "reply_content": "每日签到获得2积分和优惠券1一张",
             "reply_keyword":
                 [{
                     "rule": "精确",
@@ -245,17 +242,7 @@ Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模�
                     "sign_in": "0",
                     "integral": "2",
                     "send_coupon": "优惠券1"
-                },{
-                    "sign_in": "3",
-                    "integral": "5"
                 }]
-        }
-        """
-    And jobs更新签到活动的状态
-        """
-        {
-            "name": "签到活动1",
-            "status": "off"
         }
         """
     When bill关注jobs的公众号
@@ -263,13 +250,15 @@ Scenario: 4 签到活动结束后用户回复精确关键字、完全匹配模�
     Then bill在jobs的webapp中拥有0会员积分
     When bill在微信中向jobs的公众号发送消息'78'
     Then bill获得系统回复的消息'签到活动未开始'
+    When 清空浏览器
     When bill在微信中向jobs的公众号发送消息'abc'
     Then bill获得系统回复的消息'签到活动未开始'
+    When 清空浏览器
     When bill在微信中向jobs的公众号发送消息'abcd'
     Then bill获得系统回复的消息'签到活动未开始'
 
 @apps_sign @apps_sign_frontend @kuki
-Scenario:5 用户一天内连续两次签到
+Scenario:5 用户一天内连续两次签到，获取优惠券奖励
     Given jobs添加签到活动"签到活动1",并且保存
         """
         {
@@ -278,7 +267,7 @@ Scenario:5 用户一天内连续两次签到
             "sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
             "share_pic": "1.img",
             "share_describe": "签到送好礼！",
-            "reply_content": "每日签到获得优惠券1一张,连续签到3天获得优惠券2一张,连续签到5天获得优惠券3一张",
+            "reply_content": "每日签到获得优惠券1一张",
             "reply_keyword":
                 [{
                     "rule": "精确",
@@ -291,12 +280,6 @@ Scenario:5 用户一天内连续两次签到
                 [{
                     "sign_in": "0",
                     "send_coupon": "优惠券1"
-                },{
-                    "sign_in": "3",
-                    "send_coupon": "优惠券2"
-                },{
-                    "sign_in": "5",
-                    "send_coupon": "优惠券3"
                 }]
         }
         """
@@ -307,14 +290,13 @@ Scenario:5 用户一天内连续两次签到
             "status": "on"
         }
         """
-    When bill关注jobs的公众号
-    When bill访问jobs的webapp
-    Then bill在jobs的webapp中拥有0会员积分
-    When bill在微信中向jobs的公众号发送消息'签到'
-    Then bill获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />0积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得优惠券1一张,连续签到3天获得优惠券2一张,连续签到5天获得优惠券3一张<br />'
-    When bill在微信中向jobs的公众号发送消息'1234'
-    Then bill获得系统回复的消息'亲，今天您已经签到过了哦，<br />明天再来吧！<br />'
-    When bill点击系统回复的链接
+    When tom关注jobs的公众号
+    When tom访问jobs的webapp
+    Then tom在jobs的webapp中拥有0会员积分
+    When 清空浏览器
+    When tom在微信中向jobs的公众号发送消息'签到'
+    Then tom获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />0积分<br />优惠券1<br />'
+    When tom点击系统回复的链接
 #    Then bill获取"签到活动1"内容
 #        """
 #        {
@@ -328,8 +310,8 @@ Scenario:5 用户一天内连续两次签到
 #                }
 #        }
 #        """
-    When bill访问jobs的webapp
-    Then bill能获得webapp优惠券列表
+    When tom访问jobs的webapp
+    Then tom能获得webapp优惠券列表
 		"""
 		[{
 			"coupon_id": "coupon1_id_1",
