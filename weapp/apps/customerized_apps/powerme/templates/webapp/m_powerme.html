@@ -152,7 +152,7 @@
     <div class="xui-attention xa-attention-guest none">
         <div class="xui-twoDimensionBox">
             <div class="xa-attention-tip-one" style="margin-top: 32px;">
-                <p>1.长按二维码关注</p><p class="wui-win-font-color">“{{ mpUserPreviewName }}”公众号</p>
+                <p>1.长按二维码关注</p><span class="wui-win-font-color">“{{ mpUserPreviewName }}”</span><span>公众号</span>
             </div>
             <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
             <div class="xa-attention-tip" style="display:none">
