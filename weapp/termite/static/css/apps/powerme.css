@@ -187,10 +187,13 @@ hr{
     margin-top: 15px;
 }
 .mobile_solution{
-    display: -webkit-box;
+    display: -webkit-inline-box;
     overflow : hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    margin: 0 auto;
+    max-width: 150px;
+    line-height: 35px;
+    font-family: 微软雅黑;
+    height: 35px;
 }

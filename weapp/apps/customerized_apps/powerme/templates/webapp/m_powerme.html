@@ -251,13 +251,17 @@
         }else{
             var using_msg;
             var $attention = $('.xa-attention-guest');
+            var $powerBtn = $('.wa-power');
+            $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
                 if(is_powered){
-                    $('.wa-power').html('已帮'+page_owner_name+'助力').addClass('mobile_solution').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
                         openGuideMask();
                     }).show();
                 }else{
-                   $('.wa-power').html('帮'+page_owner_name+'助力').addClass('mobile_solution').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                   $powerBtn.on('click', function(){
                        if(is_powered){
                            openGuideMask();
                        }else{
@@ -267,14 +271,16 @@
                 }
             }else{
                 if(is_powered){
-                    $('.wa-power').html('已帮'+page_owner_name+'助力').addClass('mobile_solution').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
                         $attention.find('.xa-attention-tip').show();
                         $attention.find('img').attr('src', qrcode_url);
                         $attention.find('.xa-attention-reply').children().first().html("3.回复：");
                         openGuestMask();
                     }).show();
                 }else{
-                    $('.wa-power').html('帮'+page_owner_name+'助力').addClass('mobile_solution').on('click', function(){
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                    $powerBtn.on('click', function(){
                         powerYou();
                         $attention.find('.xa-attention-tip').show();
                         $attention.find('img').attr('src', new_qrcode_url);
@@ -397,7 +403,7 @@
             },
             success: function(data) {
                 if (W.isMember) {
-                    $('.wa-power').html('已帮'+page_owner_name+'助力')
+                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                 }
                 is_powered = true;
