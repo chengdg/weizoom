@@ -66,7 +66,7 @@
                             return;
                         }
                     }else{
-                        JSAnalysis('userAddImg','');
+                        JSAnalysis('userAddImg','',W.webappOwnerId);
                     }
                     var reader = new FileReader();
                     var $li = $("<li class='xa-img'><span class='pa xa-remove xui-remove' style='display:none;'><i class='pa'></i></span><div class='xui-progress xa-progress'><span></span></div></li>");
