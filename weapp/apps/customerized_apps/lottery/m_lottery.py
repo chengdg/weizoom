@@ -40,17 +40,23 @@ class Mlottery(resource.Resource):
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
 		if not isPC:
 			isMember = request.member and request.member.is_subscribed
-			if not isMember:
-				from weixin.user.util import get_component_info_from
-				component_info = get_component_info_from(request)
-				auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-				auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+			# if not isMember:
+			# 	from weixin.user.util import get_component_info_from
+			# 	component_info = get_component_info_from(request)
+			# 	auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+			# 	auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
 		if 'new_app:' in id:
 			project_id = id
 			activity_status = u"未开始"
 		else:
 			#termite类型数据
-			record = app_models.lottery.objects.get(id=id)
+			try:
+				record = app_models.lottery.objects.get(id=id)
+			except:
+				c = RequestContext(request,{
+					'is_deleted_data': True
+				})
+				return render_to_response('lottery/templates/webapp/m_lottery.html', c)
 			expend = record.expend
 			activity_status = record.status_text
 			share_page_desc = record.name
@@ -118,7 +124,7 @@ class Mlottery(resource.Resource):
 			'app_name': "lottery",
 			'resource': "lottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': isPC,
+			'isPC': False if request.member else True,
 			'isMember': isMember,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,

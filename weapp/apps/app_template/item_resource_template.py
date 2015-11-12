@@ -22,6 +22,7 @@ from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 from mall import export as mall_export
+import termite.pagestore as pagestore_manager
 
 __STRIPPER_TAG__
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
@@ -39,10 +40,29 @@ class {{resource.class_name}}(resource.Resource):
 		响应GET
 		"""
 		if 'id' in request.GET:
-			{{resource.lower_name}} = app_models.{{resource.class_name}}.objects.get(id=request.GET['id'])
+			project_id = 'new_app:{{app_name}}:%s' % request.GET.get('related_page_id', 0)
+			#处理删除异常
+			try:
+				{{resource.lower_name}} = app_models.{{resource.class_name}}.objects.get(id=request.GET['id'])
+			except:
+				c = RequestContext(request, {
+					'first_nav_name': FIRST_NAV,
+					'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+					'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+					'third_nav_name': "{{resource.plural_name}}",
+					'is_deleted_data': True
+				})
+				__STRIPPER_TAG__
+				{% if resource.enable_termite %}
+				return render_to_response('{{app_name}}/templates/editor/workbench.html', c)
+				{% else %}
+				return render_to_response('{{app_name}}/templates/editor/{{resource.lower_name}}.html', c)
+				{% endif %}
+
+			__STRIPPER_TAG__
 			{% if resource.enable_termite %}
 			is_create_new_data = False
-			project_id = 'new_app:{{app_name}}:%s' % request.GET.get('related_page_id', 0)
+
 			{% endif %}
 		else:
 			{{resource.lower_name}} = None
@@ -50,6 +70,26 @@ class {{resource.class_name}}(resource.Resource):
 			is_create_new_data = True
 			project_id = 'new_app:{{app_name}}:0'
 			{% endif %}
+		__STRIPPER_TAG__
+		_, app_name, real_project_id = project_id.split(':')
+		if real_project_id != '0':
+			pagestore = pagestore_manager.get_pagestore('mongo')
+			pages = pagestore.get_page_components(real_project_id)
+			if not pages:
+				c = RequestContext(request, {
+					'first_nav_name': FIRST_NAV,
+					'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
+					'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
+					'third_nav_name': "{{resource.plural_name}}",
+					'is_deleted_data': True
+				})
+				__STRIPPER_TAG__
+				{% if resource.enable_termite %}
+				return render_to_response('{{app_name}}/templates/editor/workbench.html', c)
+				{% else %}
+				return render_to_response('{{app_name}}/templates/editor/{{resource.lower_name}}.html', c)
+				{% endif %}
+
 		__STRIPPER_TAG__
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -61,7 +101,7 @@ class {{resource.class_name}}(resource.Resource):
 			'is_create_new_data': is_create_new_data,
 			'project_id': project_id,
 			{% endif %}
-		});
+		})
 		__STRIPPER_TAG__
 		{% if resource.enable_termite %}
 		return render_to_response('{{app_name}}/templates/editor/workbench.html', c)

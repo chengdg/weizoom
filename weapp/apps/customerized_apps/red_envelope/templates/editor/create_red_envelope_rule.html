@@ -75,6 +75,14 @@
     <li><a href="/apps/red_envelope/red_envelope_rule_list/">分享红包</a></li>
     <li class="active">新建分享红包</li>
 </ul>
+{% if is_deleted_data %}
+    <div style="background-color: #EAEEF7;" class="clearfix">
+    <div class="xui-emptyBox m10">
+        <img src="/static_v2/img/editor/empty.png">
+        <span class="ml20">您访问的数据已被删除！</span>
+    </div>
+    </div>
+{% else %}
 <form class="form-horizontal xui-formPanel xa-form pt0 pr" method="post">
 
 <div class="xui-unchangedCover{% if not red_envelope_rule %}hidden{% endif%}"></div>
@@ -222,6 +230,7 @@
   </fieldset>
 </section>
 </form>
+{% endif %}
 {% endblock %}
 {% block js %}
 <script type="text/javascript">

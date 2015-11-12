@@ -55,6 +55,12 @@
 {% endblock %}
 
 {% block content-panel %}
+{% if is_deleted_data %}
+    <div data-role="content" data-theme="x" class="tc" style="background: transparent;">
+        <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
+        <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
+    </div>
+{% else %}
     <div class="wa-page xui-default-background" data-page-title="">
         <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
             <h1 class="wui-i-title xa-title">{{ survey_detail.name }}</h1>
@@ -164,6 +170,7 @@
             <div style="min-height: 25px;"></div>
         {% endif %}
     </div>
+{% endif %}
 {% endblock %}
 {% block js %}
     <script type="text/javascript">

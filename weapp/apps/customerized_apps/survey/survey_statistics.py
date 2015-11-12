@@ -156,24 +156,16 @@ class question(resource.Resource):
 						})
 					if value['type'] == 'appkit.uploadimg':
 						img_urls = []
-						if len(value['value'])>1:
-							index = 0
-							for v in value['value']:
+						index = 0
+						for v in value['value']:
+							if v:
 								img_urls.append('<img class="xui-uploadimg xa-uploadimg" id="uploadimg-%d" src="'%(index)+v+'">')
 								index +=1
-							result_list.append({
-								'content': img_urls,
-								'type': 'uploadimg',
-								'created_at':participance['created_at'].strftime('%Y-%m-%d')
-							})
-						else:
-							for v in value['value']:
-								img_urls.append('<img class="xui-uploadimg xa-uploadimg" id=\"uploadimg-0\" src="'+v+'">')
-							result_list.append({
-								'content': img_urls,
-								'type': 'uploadimg',
-								'created_at':participance['created_at'].strftime('%Y-%m-%d')
-							})
+						result_list.append({
+							'content': img_urls,
+							'type': 'uploadimg',
+							'created_at':participance['created_at'].strftime('%Y-%m-%d')
+						})
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))

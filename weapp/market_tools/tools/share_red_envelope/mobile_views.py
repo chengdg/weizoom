@@ -32,8 +32,11 @@ def get_share_red_envelope(request):
     #     order = Order.objects.get(id=order_id)
 
     #会员
-    member_id = request.member.id
-    member = Member.objects.get(id=request.member.id)
+    member_id = -1
+    if request.member:
+        member_id = request.member.id
+
+    member = Member.objects.filter(id=member_id)
 
     #分享链接的会员id
     cookie_fmt = request.COOKIES.get('fmt', None)
@@ -49,7 +52,13 @@ def get_share_red_envelope(request):
         qcode_img_url = auth_appid.qrcode_url if auth_appid.qrcode_url else ''
         shop_name = auth_appid.nick_name if auth_appid.nick_name else ''
 
-    red_envelope_rule = RedEnvelopeRule.objects.get(id=red_envelope_rule_id)
+    try:
+        red_envelope_rule = RedEnvelopeRule.objects.get(id=red_envelope_rule_id,is_delete=False)
+    except:
+        c = RequestContext(request, {
+            'is_deleted_data': True
+        })
+        return render_to_response('shareRedEnvelope/webapp/share_red_envelope.html', c)
     coupon_rule_id = red_envelope_rule.coupon_rule_id
     coupon_rule = CouponRule.objects.get(id=coupon_rule_id)
 
@@ -79,131 +88,136 @@ def get_share_red_envelope(request):
         'is_share': is_share
     }
 
-    if relation.count() > 0 or member_coupon_record_count > 0:
-        #分享获取红包
-        if member_coupon_record_count:
-            records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
-            p = RedEnvelopeParticipences.objects.get(coupon_id=records[0].coupon_id) #获取领取关系的记录
-            relation = RedEnvelopeToOrder.objects.filter(id=p.red_envelope_relation_id)
-            friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=records[0].red_envelope_relation_id).order_by("-id")[:4]
-        else:
-            records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
-            friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")[:4]
+    if member:
+        member = member[0]
+        if relation.count() > 0 or member_coupon_record_count > 0:
+            #分享获取红包
+            if member_coupon_record_count:
+                records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+                p = RedEnvelopeParticipences.objects.get(coupon_id=records[0].coupon_id) #获取领取关系的记录
+                relation = RedEnvelopeToOrder.objects.filter(id=p.red_envelope_relation_id)
+                friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=records[0].red_envelope_relation_id).order_by("-id")[:4]
+            else:
+                records = GetRedEnvelopeRecord.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+                friends = GetRedEnvelopeRecord.objects.filter(red_envelope_relation_id=relation[0].id).order_by("-id")[:4]
 
-        for friend in friends:
-            friend.member_name = friend.member.username
-            friend.member_header_img = friend.member.user_icon
+            for friend in friends:
+                friend.member_name = friend.member.username
+                friend.member_header_img = friend.member.user_icon
 
-        member_red_envelope_relation = RedEnvelopeToOrder.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
+            member_red_envelope_relation = RedEnvelopeToOrder.objects.filter(member_id=member_id, red_envelope_rule_id=red_envelope_rule_id)
 
-        red_envelope_relation_ids = [record.red_envelope_relation_id for record in records]
+            red_envelope_relation_ids = [record.red_envelope_relation_id for record in records]
 
-        if (records.count() > 0
-            and ((relation[0].id in red_envelope_relation_ids)
-            or records.count() > member_red_envelope_relation.count()) or member_coupon_record_count):
-            #会员已经领了
-            return_data['has_red_envelope'] = True
-            return_data['coupon_rule'] = coupon_rule
-            return_data['member'] = member if member.is_subscribed else ""
-            return_data['qcode_img_url'] = qcode_img_url
-            return_data['friends'] = friends
-        else:
-            if (coupon_rule.is_active
-                    and coupon_rule.remained_count
-                    and coupon_rule.end_date > datetime.now()
-                    and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
-                coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
-                if coupon:
-                    this_received_count = RedEnvelopeParticipences.objects.filter(owner_id=request.webapp_owner_id,
-                                    red_envelope_rule_id=red_envelope_rule_id,
-                                    red_envelope_relation_id=relation[0].id,
-                                    member_id=member.id).count()
-                    if this_received_count > 0:
-                        pass
-                    else:
-                        GetRedEnvelopeRecord.objects.create(
-                                    owner_id=request.webapp_owner_id,
-                                    coupon_id=coupon.id,
-                                    red_envelope_rule_id=red_envelope_rule_id,
-                                    red_envelope_relation_id=relation[0].id,
-                                    member=member,
-                            )
-                        if followed_member_id:
-                            RedEnvelopeParticipences.objects.create(
+            if (records.count() > 0
+                and ((relation[0].id in red_envelope_relation_ids)
+                or records.count() > member_red_envelope_relation.count()) or member_coupon_record_count):
+                #会员已经领了
+                return_data['has_red_envelope'] = True
+                return_data['coupon_rule'] = coupon_rule
+                return_data['member'] = member if member.is_subscribed else ""
+                return_data['qcode_img_url'] = qcode_img_url
+                return_data['friends'] = friends
+            else:
+                if (coupon_rule.is_active
+                        and coupon_rule.remained_count
+                        and coupon_rule.end_date > datetime.now()
+                        and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
+                    coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
+                    if coupon:
+                        this_received_count = RedEnvelopeParticipences.objects.filter(owner_id=request.webapp_owner_id,
+                                        red_envelope_rule_id=red_envelope_rule_id,
+                                        red_envelope_relation_id=relation[0].id,
+                                        member_id=member.id).count()
+                        if this_received_count > 0:
+                            pass
+                        else:
+                            GetRedEnvelopeRecord.objects.create(
                                         owner_id=request.webapp_owner_id,
                                         coupon_id=coupon.id,
                                         red_envelope_rule_id=red_envelope_rule_id,
                                         red_envelope_relation_id=relation[0].id,
-                                        member_id=member.id,
-                                        is_new= False if member.is_subscribed else True,
-                                        introduced_by=followed_member_id
+                                        member=member,
+                                )
+                            if followed_member_id:
+                                RedEnvelopeParticipences.objects.create(
+                                            owner_id=request.webapp_owner_id,
+                                            coupon_id=coupon.id,
+                                            red_envelope_rule_id=red_envelope_rule_id,
+                                            red_envelope_relation_id=relation[0].id,
+                                            member_id=member.id,
+                                            is_new= False if member.is_subscribed else True,
+                                            introduced_by=followed_member_id
+                                )
+                                RedEnvelopeParticipences.objects.filter(
+                                            owner_id=request.webapp_owner_id,
+                                            red_envelope_rule_id=red_envelope_rule_id,
+                                            red_envelope_relation_id=relation[0].id,
+                                            member_id=followed_member_id
+                                ).update(introduce_received_number = F('introduce_received_number') + 1)
+                            if member.is_subscribed:
+                                return_data['has_red_envelope'] = False
+                                return_data['coupon_rule'] = coupon_rule
+                                return_data['member'] = member
+                                return_data['friends'] = friends
+                            else:
+                                return_data['has_red_envelope'] = False
+                                return_data['coupon_rule'] = coupon_rule
+                                return_data['qcode_img_url'] = qcode_img_url
+                                return_data['friends'] = friends
+
+        else:
+            #用户订单获取
+            # if not order.webapp_user_id == member_id:
+            #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
+            member.member_name = member.username_for_html
+            if (coupon_rule.is_active
+                and coupon_rule.remained_count
+                and coupon_rule.end_date > datetime.now()
+                and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
+                coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
+                if coupon:
+                    this_received_count = RedEnvelopeToOrder.objects.filter(owner_id=request.webapp_owner_id,
+                                                                                order_id=order_id,
+                                                                                material_id=material_id,
+                                                                                member_id=member.id,
+                                                                                red_envelope_rule_id=red_envelope_rule_id).count()
+                    if this_received_count > 0:
+                        pass
+                    else:
+                        relation = RedEnvelopeToOrder.objects.create(
+                                    owner_id=request.webapp_owner_id,
+                                    member_id=member_id,
+                                    order_id=order_id,
+                                    material_id=material_id,
+                                    red_envelope_rule_id=red_envelope_rule_id,
+                                    count = 1
                             )
-                            RedEnvelopeParticipences.objects.filter(
-                                        owner_id=request.webapp_owner_id,
-                                        red_envelope_rule_id=red_envelope_rule_id,
-                                        red_envelope_relation_id=relation[0].id,
-                                        member_id=followed_member_id
-                            ).update(introduce_received_number = F('introduce_received_number') + 1)
-                        if member.is_subscribed:
-                            return_data['has_red_envelope'] = False
-                            return_data['coupon_rule'] = coupon_rule
-                            return_data['member'] = member
-                            return_data['friends'] = friends
-                        else:
-                            return_data['has_red_envelope'] = False
-                            return_data['coupon_rule'] = coupon_rule
-                            return_data['qcode_img_url'] = qcode_img_url
-                            return_data['friends'] = friends
+                        GetRedEnvelopeRecord.objects.create(
+                                    owner_id=request.webapp_owner_id,
+                                    coupon_id=coupon.id,
+                                    red_envelope_rule_id=red_envelope_rule_id,
+                                    red_envelope_relation_id=relation.id,
+                                    member_id=member.id
+                            )
 
+                        RedEnvelopeParticipences.objects.create(
+                                    owner_id=request.webapp_owner_id,
+                                    coupon_id=coupon.id,
+                                    red_envelope_rule_id=red_envelope_rule_id,
+                                    red_envelope_relation_id=relation.id,
+                                    member_id=member.id,
+                                    is_new= False if member.is_subscribed else True
+                        )
+
+                        return_data['has_red_envelope'] = False
+                        return_data['coupon_rule'] = coupon_rule
+                        return_data['member'] = member if member.is_subscribed else ""
+                        return_data['qcode_img_url'] = qcode_img_url
     else:
-        #用户订单获取
-        # if not order.webapp_user_id == member_id:
-        #     return HttpResponseRedirect("/workbench/jqm/preview/?module=mall&model=products&action=list&workspace_id=mall&project_id=0&webapp_owner_id=%s" % user_id)
-        member.member_name = member.username_for_html
-        if (coupon_rule.is_active
-            and coupon_rule.remained_count
-            and coupon_rule.end_date > datetime.now()
-            and red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
-            coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
-            if coupon:
-                this_received_count = RedEnvelopeToOrder.objects.filter(owner_id=request.webapp_owner_id,
-                                                                            order_id=order_id,
-                                                                            material_id=material_id,
-                                                                            member_id=member.id,
-                                                                            red_envelope_rule_id=red_envelope_rule_id).count()
-                if this_received_count > 0:
-                    pass
-                else:
-                    relation = RedEnvelopeToOrder.objects.create(
-                                owner_id=request.webapp_owner_id,
-                                member_id=member_id,
-                                order_id=order_id,
-                                material_id=material_id,
-                                red_envelope_rule_id=red_envelope_rule_id,
-                                count = 1
-                        )
-                    GetRedEnvelopeRecord.objects.create(
-                                owner_id=request.webapp_owner_id,
-                                coupon_id=coupon.id,
-                                red_envelope_rule_id=red_envelope_rule_id,
-                                red_envelope_relation_id=relation.id,
-                                member_id=member.id
-                        )
-
-                    RedEnvelopeParticipences.objects.create(
-                                owner_id=request.webapp_owner_id,
-                                coupon_id=coupon.id,
-                                red_envelope_rule_id=red_envelope_rule_id,
-                                red_envelope_relation_id=relation.id,
-                                member_id=member.id,
-                                is_new= False if member.is_subscribed else True
-                    )
-
-                    return_data['has_red_envelope'] = False
-                    return_data['coupon_rule'] = coupon_rule
-                    return_data['member'] = member if member.is_subscribed else ""
-                    return_data['qcode_img_url'] = qcode_img_url
-
+        return_data['coupon_rule'] = coupon_rule
+        return_data['hide_non_member_cover'] = True,
+        return_data['qcode_img_url'] = qcode_img_url
     request.META['should_remove_shared_url_session'] = True
     c = RequestContext(request, return_data)
     return render_to_response('shareRedEnvelope/webapp/share_red_envelope.html', c)

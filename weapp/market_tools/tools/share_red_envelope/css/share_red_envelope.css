@@ -3,11 +3,12 @@
 html{
 	font-family:Arial,Tahoma,Roboto,"Droid Sans","Helvetica Neue","Droid Sans Fallback","Heiti SC","Hiragino Sans GB",'Microsoft Yahei',Simsun,sans-serif;
 }
-html,body{
+.xui-wrap{
 	background: #e93131;
 }
-.xui-attentionAlert{
-	display: none;
+
+.xui-attentionAlert a {
+	font-size: 14px;
 }
 .xui-content{
 	background-image: url(/markettools_static/share_red_envelope/img/bg_bottom.png),url(/markettools_static/share_red_envelope/img/bg.jpg);

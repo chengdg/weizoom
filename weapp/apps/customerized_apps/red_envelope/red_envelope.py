@@ -29,7 +29,17 @@ class RedEnvelopeRule(resource.Resource):
 
         rule_id = request.GET.get('id', None)
         if rule_id:
-            red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
+            try:
+                red_envelope_rule = promotion_models.RedEnvelopeRule.objects.get(id=rule_id)
+            except:
+                c = RequestContext(request, {
+                    'first_nav_name': FIRST_NAV_NAME,
+                    'second_navs': export.get_promotion_and_apps_second_navs(request),
+                    'second_nav_name': export.MALL_APPS_SECOND_NAV,
+                    'third_nav_name': export.MALL_APPS_RED_ENVELOPE_NAV,
+                    'is_deleted_data': True,
+                })
+                return render_to_response('red_envelope/templates/editor/create_red_envelope_rule.html', c)
             coupon_rule = promotion_models.CouponRule.objects.get(id=red_envelope_rule.coupon_rule_id)
             c = RequestContext(request, {
                 'first_nav_name': FIRST_NAV_NAME,
