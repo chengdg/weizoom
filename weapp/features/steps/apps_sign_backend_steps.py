@@ -567,10 +567,15 @@ def step_impl(context,user,sign_name):
             if tmp_integral:
                 prize_settings[tmp_sign_in]["integral"] = tmp_integral
                 tmp_prize_settings_arr["serial_count_points"] = tmp_integral
+            else:
+                prize_settings[tmp_sign_in]["integral"] = 0
+
             if tmp_send_coupon:
                 tmp_prize_settings_arr["serial_count_prizes"] ={}
                 prize_settings[tmp_sign_in]["coupon"] = __get_coupon_json(tmp_send_coupon)
                 tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
+            else:
+                prize_settings[tmp_sign_in]["coupon"] = {'id':None,'count':0,'name':''}
         else:
             pass
         prize_settings_arr.append(tmp_prize_settings_arr)
