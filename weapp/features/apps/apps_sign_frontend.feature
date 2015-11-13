@@ -39,7 +39,7 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend
+@apps_sign @apps_sign_frontend @kuki1
 Scenario:1 用户浏览"签到活动1"
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -74,11 +74,11 @@ Scenario:1 用户浏览"签到活动1"
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
 	When bill进入jobs签到页面进行签到
-	Then bill获取"签到活动1"的内容
+	Then bill获取签到成功的内容
 		"""
 		{
 			"user_name":"bill",
-			"integral_account":"0",
+			"integral_account":"2",
 			"prize_item":
 				{
 					"integral":"2",
@@ -147,20 +147,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'1234'
 	Then bill获得系统回复的消息'亲，今天您已经签到过了哦，<br />明天再来吧！<br />'
-	When bill点击系统回复的链接
-#   Then bill获取"签到活动1"内容
-#       """
-#       {
-#           "user_name":"bill",
-#           "integral_account":"2",
-#           "serial_count":"1",
-#           "prize_item":
-#               {
-#                   "serial_count_next":"3",
-#                   "integral":"5"
-#               }
-#       }
-#       """
+
 @apps_sign @apps_sign_frontend
 Scenario:3 用户回复完全不匹配关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
@@ -290,20 +277,6 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />0积分<br />优惠券1<br />'
-	When bill点击系统回复的链接
-#   Then bill获取"签到活动1"内容
-#       """
-#       {
-#           "user_name":"bill",
-#           "integral_account":"0",
-#           "serial_count":"1",
-#           "prize_item":
-#               {
-#                   "serial_count_next":"3",
-#                   "coupon_name":"优惠券2"
-#               }
-#       }
-#       """
 	When bill访问jobs的webapp
 	Then bill能获得webapp优惠券列表
 		"""
