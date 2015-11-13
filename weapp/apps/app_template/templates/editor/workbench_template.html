@@ -77,10 +77,9 @@ __STRIPPER_TAG__
         "task": "weizoom-load-termite-components"
       }
     -->
-{% if not is_deleted_data %}
   << '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.qa", "appkit.selection", "appkit.shortcuts", "appkit.submitbutton"]'|load_termite_components|safe >>
   <!-- *end_prunt_task* -->
-
+{% if not is_deleted_data %}
   __STRIPPER_TAG__
   <script type="text/javascript">
     W.uid = << user.id >>;

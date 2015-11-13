@@ -75,10 +75,9 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-{% if not is_deleted_data %}
   {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.selection", "appkit.textlist", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
-  
+{% if not is_deleted_data %}
   <script type="text/javascript">
     W.uid = {{ user.id }};
     W.projectId = "{{project_id}}";
@@ -96,7 +95,7 @@
 
     //阻止删除第一个组件
     W.preventFirstComponentDelected = true;
-    
+
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'apps',
@@ -273,7 +272,7 @@
           }));
     });
   </script>
-{% endif %}
+    {% endif %}
+    {% block js %}{% endblock %}
 {% endblock %}
-{% block js %}{% endblock %}
 

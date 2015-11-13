@@ -74,10 +74,9 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-{% if not is_deleted_data %}
   {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.submitbutton", "appkit.textlist"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
-  
+  {% if not is_deleted_data %}
   <script type="text/javascript">
     W.uid = {{ user.id }};
     W.projectId = "{{project_id}}";
@@ -253,8 +252,6 @@
 
     });
   </script>
-{% endif %}
-{% endblock %}
+    {% endif %}
 {% block js %}{% endblock %}
-
-
+{% endblock %}
