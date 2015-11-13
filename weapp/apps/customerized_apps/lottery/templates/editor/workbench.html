@@ -54,20 +54,20 @@
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
     <div class="relative">
         <ul class="breadcrumb">
-            <li>您当前所在位置</li>
-            <li><a href="/termite2/pages/">百宝箱</a></li>
-            <li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
-            <li class="active">新建抽奖</li>
+      <li>您当前所在位置</li>
+      <li><a href="/termite2/pages/">百宝箱</a></li>
+      <li><a href="/apps/lottery/lotteries/">微信抽奖</a></li>
+      <li class="active">新建抽奖</li>
         </ul>
     </div>
-    {% if is_deleted_data %}
-        <div style="background-color: #EAEEF7;" class="clearfix">
-        <div class="xui-emptyBox m10">
-            <img src="/static_v2/img/editor/empty.png">
-            <span class="ml20">您访问的数据已被删除！</span>
-        </div>
-        </div>
-    {% else %}
+{% if is_deleted_data %}
+    <div style="background-color: #EAEEF7;" class="clearfix">
+    <div class="xui-emptyBox m10">
+        <img src="/static_v2/img/editor/empty.png">
+        <span class="ml20">您访问的数据已被删除！</span>
+    </div>
+    </div>
+{% else %}
   <div style="background-color: #EAEEF7;" class="clearfix">
     <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
     </div>
@@ -387,7 +387,6 @@
           }));
     });
   </script>
-{% endif %}
 <script id="lottery-chance-dialog-tmpl-src" type="text/x-jquery-tmpl">
 <div class="modal fade">
     <div class="modal-dialog modal-lg" style="width: 600px;">
@@ -422,6 +421,6 @@
     </div>
 </div>
 </script>
-{% block js %}{% endblock %}
+{% endif %}
 {% endblock %}
-
+{% block js %}{% endblock %}
