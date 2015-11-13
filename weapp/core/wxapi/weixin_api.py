@@ -203,7 +203,7 @@ def call_api(weixin_api, api_instance_class):
 			#watchdog_info('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))
 
 			from weixin.message.message_handler.tasks import record_call_weixin_api
-			if result.has_key('errcode'):
+			if hasattr(result, 'errcode'):
 				success = False
 				#watchdog_error('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))	
 			else:

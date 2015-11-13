@@ -29,7 +29,7 @@ class Command(BaseCommand):
 			try:
 				#watchdog_info('call weixin api: get_component_token , result:{}'.format(result))	
 				from weixin.message.message_handler.tasks import record_call_weixin_api
-				if result.has_key('errcode'):
+				if hasattr(result, 'errcode'):
 					success = False
 					watchdog_error('call weixin api: get_component_token , result:{}'.format(result))	
 				else:

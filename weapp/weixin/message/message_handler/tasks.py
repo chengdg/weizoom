@@ -11,6 +11,7 @@ import base64
 import urllib
 import urllib2
 import subprocess
+import requests
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -368,17 +369,13 @@ def record_call_weixin_api(class_name, success=True):
 	now_time = datetime.today().strftime('%Y-%m-%d')
 	table = "%s_weixin_api" % settings.MODE
 	rkey = "%s_%s" % (now_time, success)
-	print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',rkey
 	params = {
 		"table": table,
 		"rkey": rkey,
 		"cname": class_name,
 		"val": '1'
 	}
-	req = urllib2.Request(url) 
-	data = urllib.urlencode(params) 
-	#enable cookie 
-	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor()) 
-	response = opener.open(req, data) 
-	print 'record_call_weixin_api>>>',response.read() 
+	res = requests.post(url, params)
+	json_obj = json.loads(res.text)
+	print 'record_call_weixin_api>>>',json_obj
 
