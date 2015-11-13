@@ -298,6 +298,10 @@ def __clear_all_app_data():
 	sign_models.Sign.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
 
+	#清理mongo中，签到page
+	sign_pagestore = pagestore_manager.get_pagestore('mongo')
+	sign_pagestore.remove_all()
+
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
 
@@ -394,9 +398,6 @@ def __sync_workspace():
 	connection = Connection(settings.PAGE_STORE_SERVER_HOST, settings.PAGE_STORE_SERVER_PORT)
 	connection.drop_database(settings.PAGE_STORE_DB)
 
-	#清理mongo中，签到page
-	sign_pagestore = pagestore_manager.get_pagestore('mongo')
-	sign_pagestore.remove_all()
 
 	#清理数据库
 	weapp_product_models.Product.objects.all().delete()
