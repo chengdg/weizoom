@@ -12,15 +12,22 @@
 
 {% block content-panel %}
 <div id="workbench" class="xui-wepage-workbenchPage clearfix pr xui-appPage-commonStyle">
-  <div class="relative">
-    <ul class="breadcrumb">
-      <li>您当前所在位置</li>
-      <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-      <li><a href="/apps/event/events/">活动报名</a></li>
-      <li class="active">新建活动</li>
-    </ul>
-  </div>
-  
+    <div class="relative">
+        <ul class="breadcrumb">
+          <li>您当前所在位置</li>
+          <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
+          <li><a href="/apps/event/events/">活动报名</a></li>
+          <li class="active">新建活动</li>
+        </ul>
+    </div>
+    {% if is_deleted_data %}
+        <div style="background-color: #EAEEF7;" class="clearfix">
+        <div class="xui-emptyBox m10">
+            <img src="/static_v2/img/editor/empty.png">
+            <span class="ml20">您访问的数据已被删除！</span>
+        </div>
+        </div>
+    {% else %}
   <div style="background-color: #EAEEF7;" class="clearfix">
     <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
     </div>
@@ -56,6 +63,7 @@
           {% endif %}
     </div>
   </div>
+{% endif %}
 </div>
 {% endblock %}
 
@@ -65,7 +73,8 @@
       {
         "task": "weizoom-load-termite-components"
       }
-    -->  
+    -->
+{% if not is_deleted_data %}
   {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.submitbutton", "appkit.textlist"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
   
@@ -244,6 +253,8 @@
 
     });
   </script>
+    {% endif %}
 {% block js %}{% endblock %}
 {% endblock %}
+
 
