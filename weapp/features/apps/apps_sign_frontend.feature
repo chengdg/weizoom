@@ -39,7 +39,7 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:1 用户浏览"签到活动1"
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -102,7 +102,7 @@ Scenario:1 用户浏览"签到活动1"
 		}]
 		"""
 
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -161,7 +161,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
 #               }
 #       }
 #       """
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:3 用户回复完全不匹配关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -212,7 +212,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 	And bill在微信中向jobs的公众号发送消息'1'
 	Then bill获得系统回复的消息' '
 
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -251,7 +251,7 @@ Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模�
 	When bill在微信中向jobs的公众号发送消息'abcd'
 	Then bill获得系统回复的消息'签到活动未开始'
 
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -314,7 +314,7 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 		}]
 		"""
 
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:6 用户连续3天进行签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -373,7 +373,7 @@ Scenario:6 用户连续3天进行签到
 		}]
 		"""
 
-@apps_sign @apps_sign_frontend @kuki7
+@apps_sign @apps_sign_frontend
 Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友圈的链接参与签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -413,11 +413,11 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有0会员积分
-	When tom点击bill分享的签到链接
+	When tom点击bill分享的签到链接进行签到
   	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@apps_sign @apps_sign_frontend @kuki
+@apps_sign @apps_sign_frontend
 Scenario:8 非会员用户访问签到分享进行签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -458,10 +458,10 @@ Scenario:8 非会员用户访问签到分享进行签到
     #暂时用先关注再取消关注的方式来模拟非会员的情况
 	When tom关注jobs的公众号
     And tom取消关注jobs的公众号
-    When tom点击bill分享的签到链接
+    When tom点击bill分享的签到链接进行签到
     When tom通过弹出的二维码关注jobs的公众号
     When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有0会员积分
-    When tom进入jobs签到页面进行签到
+    When tom点击bill分享的签到链接进行签到
   	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
