@@ -36,7 +36,6 @@ def __debug_print(content,type_tag=True):
 def __get_sign_record_id(webapp_owner_id):
 	return Sign.objects.get(owner_id=webapp_owner_id).id
 
-
 def __assert_dict(context,expected, actual):
     """
     针对m_sign手机页面
@@ -63,24 +62,18 @@ def __assert_dict(context,expected, actual):
                 print '      Compare Dict Key: ', key
                 raise
 
-@when(u'{webapp_user_name}进入{webapp_owner_name}签到页面进行签到')
+
+@when(u"{webapp_user_name}进入{webapp_owner_name}签到页面进行签到")
 def step_tmpl(context, webapp_user_name, webapp_owner_name):
 	webapp_owner_id = context.webapp_owner_id
 	appRecordId = __get_sign_record_id(webapp_owner_id)
-	url = 'm/apps/sign/api/sign_participance/?design_mode=0&version=2&method=put&webapp_owner_id=%s&id=%s' % (webapp_owner_id, appRecordId)
-	url = bdd_util.nginx(url)
-	print('url!!!!')
-	print(url)
-	response = context.client.get(url)
-	redirect_url = bdd_util.nginx(response['Location'])
-	context.last_url = redirect_url
-	response = context.client.get(bdd_util.nginx(redirect_url))
-	print('response!!!!!!!!!!!!!!')
-	print(response.status_code)
-	print(response)
+	params = {
+        'webapp_owner_id': webapp_owner_id,
+        'id': appRecordId
+    }
+	response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
 
-
-@then(u'{user}获取"{sign}"的内容')
+@then(u"{user}获取'{sign}'的内容")
 def step_tmpl(context, user,sign):
     #验证登录
     url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (webapp_owner_id)
@@ -132,6 +125,7 @@ def step_impl(context, user, answer):
 		link_url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
 		link_url = bdd_util.nginx(link_url)
 		context.link_url = link_url
+
 	else:
 		end = result.find('</div>', begin)
 	actual  = result[begin:end]
@@ -144,7 +138,6 @@ def step_impl(context, user, answer):
 @when(u'{user}点击系统回复的链接')
 def step_tmpl(context, user):
 	url = "%s&fmt=%s" % (context.link_url, context.member.token)
-	context.sign_url = url
 	response = context.client.get(url)
 
 @when(u"修改系统时间为'{date}'")
@@ -164,35 +157,22 @@ def step_impl(context):
 
 @When(u'{webapp_user_name}把{webapp_owner_name}的签到活动链接分享到朋友圈')
 def step_impl(context, webapp_user_name, webapp_owner_name):
-	context.shared_url = context.sign_url
+	context.shared_url = context.link_url
 	print('context.shared_url1111111',context.shared_url)
 
-@When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的签到链接')
+@When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的签到链接进行签到')
 def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	member = member_api.get_member_by_openid(openid, context.webapp_id)
 	if member.is_subscribed: #非会员不可签到
-		followed_member = Member.objects.get(username_hexstr=byte_to_hex(shared_webapp_user_name))
-		if member:
-			new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
-			new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'opid')
-			context.shared_url = "%s&fmt=%s" % (new_url, followed_member.token)
-			print('context.shared_url22222222',context.shared_url)
-		response = context.client.get(context.shared_url)
-		print('response!!!!!!!!!!!!!')
-		print(response)
-		if response.status_code == 302:
-			print('[info] redirect by change fmt in shared_url')
-			redirect_url = bdd_util.nginx(response['Location'])
-			context.last_url = redirect_url
-			response = context.client.get(bdd_util.nginx(redirect_url))
-			print('response22222222222!!!!!!!!!!!!!')
-			print(response)
-		else:
-			print('[info] not redirect')
-			context.last_url = context.shared_url
+		appRecordId = __get_sign_record_id(webapp_owner_id)
+		params = {
+			'webapp_owner_id': webapp_owner_id,
+			'id': appRecordId
+		}
+		response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
 	else:
 		pass
 
