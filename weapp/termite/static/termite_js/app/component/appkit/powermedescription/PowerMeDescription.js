@@ -142,7 +142,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			name: 'rules',
 			type: 'textarea',
 			displayName: '活动规则',
-			maxLength: 200,
+			maxLength: 500,
 			isUserProperty: true,
 			placeholder: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。',
 			default: ""
