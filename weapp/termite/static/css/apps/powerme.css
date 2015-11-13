@@ -69,7 +69,7 @@ hr{
 }
 .wui-powerme-container .wui-i-states ul li{
     text-align: left;
-    padding: 16px 10px 0;
+    padding: 16px 17px 0;
 }
 .wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
     border-bottom: 1px dotted #ffffff;
@@ -82,7 +82,7 @@ hr{
     display: inline-block;
 }
 .wui-powerme-container .wui-i-background-image {
-    margin-bottom: -4px;
+    margin-bottom: -6px;
 }
 .wui-powerme-container .wui-i-rules-content {
     margin-bottom: 20px;
