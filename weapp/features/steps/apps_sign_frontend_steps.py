@@ -35,24 +35,17 @@ def __debug_print(content,type_tag=True):
 def __get_sign_record_id(webapp_owner_id):
 	return Sign.objects.get(owner_id=webapp_owner_id).id
 
-@when(u'{webapp_user_name}进入{webapp_owner_name}签到页面进行签到')
+@when(u"{webapp_user_name}进入{webapp_owner_name}签到页面进行签到")
 def step_tmpl(context, webapp_user_name, webapp_owner_name):
 	webapp_owner_id = context.webapp_owner_id
 	appRecordId = __get_sign_record_id(webapp_owner_id)
-	url = 'm/apps/sign/api/sign_participance/?design_mode=0&version=2&method=put&webapp_owner_id=%s&id=%s' % (webapp_owner_id, appRecordId)
-	url = bdd_util.nginx(url)
-	print('url!!!!')
-	print(url)
-	response = context.client.get(url)
-	redirect_url = bdd_util.nginx(response['Location'])
-	context.last_url = redirect_url
-	response = context.client.get(bdd_util.nginx(redirect_url))
-	print('response!!!!!!!!!!!!!!')
-	print(response.status_code)
-	print(response)
+	params = {
+        'webapp_owner_id': webapp_owner_id,
+        'id': appRecordId
+    }
+	response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
 
-
-@then(u'{user}获取"{sign}"的内容')
+@then(u"{user}获取'{sign}'的内容")
 def step_tmpl(context, user,sign):
 	url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
 	url = bdd_util.nginx(url)

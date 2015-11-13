@@ -39,7 +39,7 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend @kuki1
+@apps_sign @apps_sign_frontend @kuki
 Scenario:1 用户浏览"签到活动1"
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -67,14 +67,13 @@ Scenario:1 用户浏览"签到活动1"
 		"""
 		{
 			"name":"签到活动1",
-			"statis": "on"
+			"status": "on"
 		}
 		"""
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
-  	When bill访问jobs的webapp
-	When bill进入jobs的签到页面进行签到
+	When bill进入jobs签到页面进行签到
 #	Then bill获取"签到活动1"的内容
 #		"""
 #		{
@@ -92,6 +91,16 @@ Scenario:1 用户浏览"签到活动1"
 #			}
 #		}
 #		"""
+  	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有2会员积分
+  	Then bill能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon1_id_1",
+			"money": 1.00,
+			"status": "未使用"
+		}]
+		"""
 
 @apps_sign @apps_sign_frontend @kuki
 Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
@@ -175,8 +184,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 			"sign_settings":
 				[{
 					"sign_in": "0",
-					"send_coupon": "优惠券1",
-					"prize_counts": 50
+					"send_coupon": "优惠券1"
 				}]
 		}
 		"""
@@ -454,7 +462,6 @@ Scenario:8 非会员用户访问签到分享进行签到
     When tom通过弹出的二维码关注jobs的公众号
     When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有0会员积分
-    When tom在微信中向jobs的公众号发送消息'签到'
-	Then tom获得系统回复的消息'签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分<br />'
-    When tom访问jobs的webapp
+    When tom进入jobs签到页面进行签到
+  	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
