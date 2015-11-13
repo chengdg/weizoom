@@ -15,6 +15,8 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 import termite.pagestore as pagestore_manager
 from apps.customerized_apps.sign.models import Sign
+from modules.member.models import Member
+from utils.string_util import byte_to_hex
 import json
 import re
 
@@ -86,6 +88,7 @@ def step_impl(context, user, answer):
 @when(u'{user}点击系统回复的链接')
 def step_tmpl(context, user):
     url = "%s&fmt=%s" % (context.link_url, context.member.token)
+    context.sign_url = url
     response = context.client.get(url)
 
 @when(u"修改系统时间为'{date}'")
@@ -102,3 +105,34 @@ def step_impl(context, date):
 @when(u'还原系统时间')
 def step_impl(context):
     os.system("date %s" %(context.now_date))
+
+@When(u'{webapp_user_name}把{webapp_owner_name}的签到活动链接分享到朋友圈')
+def step_impl(context, webapp_user_name, webapp_owner_name):
+    context.shared_url = context.sign_url
+    print('context.shared_url1111111',context.shared_url)
+
+@When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的签到链接')
+def step_impl(context, webapp_user_name, shared_webapp_user_name):
+    webapp_owner_id = context.webapp_owner_id
+    user = User.objects.get(id=webapp_owner_id)
+    openid = "%s_%s" % (webapp_user_name, user.username)
+    member = member_api.get_member_by_openid(openid, context.webapp_id)
+    followed_member = Member.objects.get(username_hexstr=byte_to_hex(shared_webapp_user_name))
+    if member:
+        new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
+        new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'opid')
+        context.shared_url = "%s&fmt=%s" % (new_url, followed_member.token)
+        print('context.shared_url22222222',context.shared_url)
+    response = context.client.get(context.shared_url)
+    print('response!!!!!!!!!!!!!')
+    print(response)
+    if response.status_code == 302:
+        print('[info] redirect by change fmt in shared_url')
+        redirect_url = bdd_util.nginx(response['Location'])
+        context.last_url = redirect_url
+        response = context.client.get(bdd_util.nginx(redirect_url))
+        print('response22222222222!!!!!!!!!!!!!')
+        print(response)
+    else:
+        print('[info] not redirect')
+        context.last_url = context.shared_url
