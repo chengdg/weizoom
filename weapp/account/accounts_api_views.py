@@ -17,7 +17,7 @@ from core.jsonresponse import create_response, decode_json_str
 from core.exceptionutil import unicode_full_stack
 from account.models import UserProfile
 
-from modules.member.models import Member
+from modules.member.models import Member, MemberGrade
 from weixin.user.models import WeixinUser, WeixinMpUser, get_system_user_binded_mpuser
 from market_tools.tools.weizoom_card.models import WeizoomCardHasAccount
 
@@ -150,7 +150,8 @@ def create_new_user_by_agent(request):
 			profile.system_name = system_name
 
 		profile.save()
-
+		# 创建默认会员等级
+		MemberGrade.get_default_grade(user.get_profile().webapp_id)
 		#添加用户模块
 		weapp_product_api.install_product_for_user(user, product_id)
 
