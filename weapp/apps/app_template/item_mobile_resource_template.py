@@ -43,17 +43,20 @@ class M{{resource.class_name}}(resource.Resource):
 			auth_appid_info = None
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
-				if not isMember:
-					from weixin.user.util import get_component_info_from
-					component_info = get_component_info_from(request)
-					auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-					auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+
+			__STRIPPER_TAG__
 			if 'new_app:' in id:
 				project_id = id
 				activity_status = u"未开启"
 			else:
 				#termite类型数据
-				record = app_models.{{resource.class_name}}.objects.get(id=id)
+				try:
+					record = app_models.{{resource.class_name}}.objects.get(id=id)
+				except:
+					c = RequestContext(request,{
+						'is_deleted_data': True
+					})
+					return render_to_response('workbench/wepage_webapp_page.html', c)
 				activity_status = record.status_text
 
 				__STRIPPER_TAG__
@@ -74,8 +77,6 @@ class M{{resource.class_name}}(resource.Resource):
 				{% if resource.need_check_user_participant %}
 				if request.member:
 					participance_data_count = app_models.{{resource.class_name}}Participance.objects(belong_to=id, member_id=request.member.id).count()
-				if participance_data_count == 0 and request.webapp_user:
-					participance_data_count = app_models.{{resource.class_name}}Participance.objects(belong_to=id, webapp_user_id=request.webapp_user.id).count()
 				{% endif %}
 
 			__STRIPPER_TAG__

@@ -50,7 +50,13 @@ class Mevent(resource.Resource):
 					activity_status = u"未开始"
 				else:
 					#termite类型数据
-					record = app_models.event.objects.get(id=id)
+					try:
+						record = app_models.event.objects.get(id=id)
+					except:
+						c = RequestContext(request,{
+							'is_deleted_data': True
+						})
+						return render_to_response('workbench/wepage_webapp_page.html', c)
 					activity_status = record.status_text
 					share_page_desc = record.name
 					now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
