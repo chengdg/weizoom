@@ -99,14 +99,14 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		},{
 			name: 'material_image',
 			type: 'image_dialog_select',
-			displayName: '链接图文小图',
+			displayName: '分享图标',
 			isUserProperty: true,
 			isShowCloseButton: false,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
 			selectedButton: '选择图片',
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
-			help: '提示：建议图片长宽20px*20px，正方形图片',
+			help: '提示：建议图片长宽100px*100px，正方形图片',
 			validate: 'data-validate="require-notempty::请添加一张图片"',
 			default: ""
 		},{
