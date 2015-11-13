@@ -42,22 +42,23 @@ Background:
 	And bill关注tom的公众号
 
 
-
+@mall2
 Scenario: 1 修改本商户商品ID，进行访问
 	1. bill在webapp把jobs的商品1链接的商品ID修改成商品2的商品ID
 	2. bill访问修改后的链接
 	3. 进行购买，成功下单
 
 	When bill访问jobs的webapp
-	When bill把jobs的商品1链接的商品ID修改成商品2的商品ID
+	When bill把jobs的'商品1'链接的商品ID修改成'商品2'的商品ID
 	When bill访问修改后的链接
 	Then webapp页面标题为'商品2'
-	When bill购买webapp页面的商品
+	When bill购买jobs的商品
 		"""
 		{
 			"products": [{
 				"name": "商品2",
 				"count": 1
+				}]
 		}
 		"""
 	Then bill成功创建订单
@@ -80,7 +81,7 @@ Scenario: 1 修改本商户商品ID，进行访问
 			"actions": ["修改价格", "取消订单", "支付"],
 			"final_price": 90.00,
 			"products": [{
-				"name": "商品1",
+				"name": "商品2",
 				"price": 90.00,
 				"count": 1
 			}]
@@ -88,14 +89,14 @@ Scenario: 1 修改本商户商品ID，进行访问
 		"""
 
 
-
+@mall2
 Scenario: 2 修改其他商户商品ID，进行访问
 	1. bill在webapp把jobs的商品1链接的商品ID修改成商品2的商品ID
 	2. bill访问修改后的链接，获得错误提示信息'404页面'
 
 	When bill访问jobs的webapp
-	When bill把jobs的商品1链接的商品ID修改成tom的商品3的商品ID
+	When bill把jobs的'商品1'链接的商品ID修改成tom的'商品3'的商品ID
 	When bill访问修改后的链接
-	Then bill获得错误提示信息'404页面'
+	Then bill获得错误提示'404页面'
 
 

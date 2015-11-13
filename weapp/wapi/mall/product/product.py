@@ -69,13 +69,11 @@ class Product(api_resource.ApiResource):
 		}
 		if product.id!=None:
 			data['detail_link']= '/mall2/product/?id=%d&source=onshelf' % product.id,
-		if hasattr(product, 'is_sellout'):
-			data['is_sellout'] = product.is_sellout
 		if hasattr(product, 'min_limit'):
 			data['min_limit'] = product.min_limit
 		if hasattr(product, 'price_info'):
 			data['price_info'] = product.price_info
-		if hasattr(product, 'models'):
+		if hasattr(product, 'models') and product.models!=None:
 			if len(product.models) > 1:
 				data['models'] = product.models[1:]
 			else:

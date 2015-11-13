@@ -132,8 +132,8 @@ def get_product(request):
 	#print("in get_product()")
 	product_id = request.GET['rid']
 	webapp_user = request.webapp_user
-
 	member_grade_id = request.member.grade_id if request.member else None
+
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
 	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
