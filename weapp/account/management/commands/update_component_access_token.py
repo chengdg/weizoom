@@ -27,7 +27,14 @@ class Command(BaseCommand):
 			result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
 			print result,'---'
 			try:
-				watchdog_info('call weixin api: get_component_token , result:{}'.format(result))	
+				#watchdog_info('call weixin api: get_component_token , result:{}'.format(result))	
+				from weixin.message.message_handler.tasks import record_call_weixin_api
+				if result.has_key('errcode'):
+					success = False
+					watchdog_error('call weixin api: get_component_token , result:{}'.format(result))	
+				else:
+					success = True
+				record_call_weixin_api.delay('get_component_token', success)
 			except:
 				pass
 

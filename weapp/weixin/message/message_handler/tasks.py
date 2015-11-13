@@ -361,3 +361,24 @@ def _convert_amr_to_mp3(audio_content, message):
 		watchdog_error(u"调用系统命令ffmpeg完成音频格式的转换, cause:\n{}".format(unicode_full_stack()))
 
 	return mp3_audio_file_path
+
+@task
+def record_call_weixin_api(class_name, success=True):
+	url = "http://index.weizzz.com/table/api/cell_increase/" 
+	now_time = datetime.today().strftime('%Y-%m-%d')
+	table = "%s_weixin_api" % settings.MODE
+	rkey = "%s_%s" % (now_time, success)
+	print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',rkey
+	params = {
+		"table": table,
+		"rkey": rkey,
+		"cname": class_name,
+		"val": '1'
+	}
+	req = urllib2.Request(url) 
+	data = urllib.urlencode(params) 
+	#enable cookie 
+	opener = urllib2.build_opener(urllib2.HTTPCookieProcessor()) 
+	response = opener.open(req, data) 
+	print 'record_call_weixin_api>>>',response.read() 
+
