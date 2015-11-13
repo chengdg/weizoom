@@ -506,16 +506,16 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.promotion = None
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
-			# if settings.DEBUG:
-			# 	raise
-			# else:
-			#记录日志
-			alert_message = u"获取商品记录失败,商品id: {} cause:\n{}".format(product_id, unicode_full_stack())
-			watchdog_alert(alert_message, type='WEB')
-			#返回"被删除"商品
-			product = Product()
-			product.is_deleted = True
-			product.promotion = None
+			if settings.DEBUG:
+				raise
+			else:
+				#记录日志
+				alert_message = u"获取商品记录失败,商品id: {} cause:\n{}".format(product_id, unicode_full_stack())
+				watchdog_alert(alert_message, type='WEB')
+				#返回"被删除"商品
+				product = Product()
+				product.is_deleted = True
+				product.promotion = None
 
 		# 商品详情图片lazyload
 		soup = BeautifulSoup(product.detail)

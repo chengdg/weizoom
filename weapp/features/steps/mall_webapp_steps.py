@@ -115,11 +115,12 @@ def step_impl(context, webapp_user_name, webapp_owner_name, product_name_one,web
 def step_impl(context,webapp_user_name):
 	if hasattr(context,'url'):
 		response = context.client.get(bdd_util.nginx(context.url), follow=True)
-		if response.content.find('返回首页')!= -1:
-			context.server_error_msg = '404页面'
-		else:
+		try:
 			context.product = response.context['product']
 			context.page_title = response.context['page_title']
+		except:
+			context.server_error_msg = u'404页面'
+
 
 @then(u"{webapp_user_name}获得webapp商品")
 def step_impl(context, webapp_user_name):
