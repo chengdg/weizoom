@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
+from modules.member.models import MemberGrade
 from utils import cache_util
 import cache
 from mall import models as mall_models
@@ -64,6 +65,7 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
 
         #member grade
         try:
+            MemberGrade.get_default_grade(webapp_id)
             member_grades = [member_grade.to_dict() for member_grade in member_models.MemberGrade.objects.filter(webapp_id=webapp_id)]
         except:
             error_msg = u"获得user('{}')对应的MemberGrade构建cache失败, cause:\n{}"\
