@@ -11,6 +11,7 @@ from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
 from apps.customerized_apps.sign.models import Sign
+from bdd_util import convert_to_same_type
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
@@ -35,6 +36,33 @@ def __debug_print(content,type_tag=True):
 def __get_sign_record_id(webapp_owner_id):
 	return Sign.objects.get(owner_id=webapp_owner_id).id
 
+
+def __assert_dict(context,expected, actual):
+    """
+    针对m_sign手机页面
+    验证expected中的数据都出现在了actual中
+    """
+    tc = context.tc
+    is_dict_actual = isinstance(actual, dict)
+    for key in expected:
+        expected_value = expected[key]
+        if is_dict_actual:
+            actual_value = actual[key]
+        else:
+            actual_value = getattr(actual, key)
+
+        if isinstance(expected_value, dict):
+            assert_dict(expected_value, actual_value)
+        elif isinstance(expected_value, list):
+            assert_list(expected_value, actual_value, {'key': key})
+        else:
+            expected_value, actual_value = convert_to_same_type(expected_value, actual_value)
+            try:
+                tc.assertEquals(expected_value, actual_value)
+            except:
+                print '      Compare Dict Key: ', key
+                raise
+
 @when(u'{webapp_user_name}进入{webapp_owner_name}签到页面进行签到')
 def step_tmpl(context, webapp_user_name, webapp_owner_name):
 	webapp_owner_id = context.webapp_owner_id
@@ -54,10 +82,46 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name):
 
 @then(u'{user}获取"{sign}"的内容')
 def step_tmpl(context, user,sign):
-	url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
-	url = bdd_util.nginx(url)
-	response = context.client.get(url)
-	response = context.client.get(bdd_util.nginx(response['Location']))
+    #验证登录
+    url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (webapp_owner_id)
+    url = bdd_util.nginx(url)
+    response = context.client.get(url)
+    response = context.client.get(bdd_util.nginx(response['Location']))
+    response_content = response.content
+
+    response_check_str = "<!DOCTYPE html>"
+    assert response_check_str in response_content
+
+    print "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    #验证数据
+    webapp_owner_id = context.webapp_owner_id
+    db_sign = Sign.objects.get(owner_id=webapp_owner_id)
+    page_id = db_sign.related_page_id
+    pagestore = pagestore_manager.get_pagestore('mongo')
+    pages = pagestore.get_page_components(page_id)
+
+    db_sign_dic = {
+        'user_name':user,
+        'integral_account':db_sign.participant_count,
+        'sign_item':{
+            'sign_desc':pages[0]['components'][0]['model']['description'],
+            'sign_rule':pages[0]['components'][0]['model']['reply_content']
+        },
+        'prize_item':{
+            "integral":"2",
+            "coupon_name":"优惠券1"
+        }
+    }
+
+    fea_context_dic = json.loads(context.text)
+    __assert_dict(db_sign_dic,fea_context_dic)
+
+
+    __debug_print(db_sign.prize_settings)
+
+    print "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
+
+
 
 @then(u"{user}获得系统回复的消息'{answer}'")
 def step_impl(context, user, answer):
