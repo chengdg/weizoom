@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myCouponList-Page wui-swiper">
+<div class="xa-page xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myCouponList-Page wui-swiper">
 
 <!--Tab静态-->
 <div class="wui-swiper-tabs-coupon clearfix">
@@ -173,6 +173,9 @@
 $(document).ready(function($) {
   var bodyHeight = window.document.body.clientHeight;
   var containerHeight = bodyHeight - 47;
+  if($('.xa-guideAttention').length){
+    containerHeight -= 40;
+  }
   $(".wui-swiper-container").css('height', containerHeight );
   $(".wui-swiper-slide").css('height', containerHeight );  
   $("body").css('overflow-y', 'hidden');
