@@ -39,42 +39,27 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend @kuku
+@apps_sign @apps_sign_frontend @kuki1
 Scenario:1 用户浏览"签到活动1"
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
 		{
-			"status":"off",
+			"status": "off",
 			"name": "签到活动1",
-			"sign_describe":"签到赚积分！连续签到奖励更丰富哦！",
-			"share_pic":"1.img",
+			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
+			"share_pic": "1.jpg",
 			"share_describe": "签到送好礼！",
-			"reply_content":"每日签到获得2积分和优惠券1一张,连续签到3天获得5积分和优惠券1一张,连续签到5天获得7积分和优惠券1一张",
+			"reply_content": "每日签到获得2积分和优惠券1一张",
 			"reply_keyword":
 				[{
 					"rule": "精确",
-					"key_word": "12"
-				},{
-					"rule":"模糊",
-					"key_word": "123"
+					"key_word": "签到"
 				}],
-
 			"sign_settings":
 				[{
 					"sign_in": "0",
 					"integral": "2",
-					"send_coupon": "优惠券1",
-					"prize_counts":50
-				},{
-					"sign_in": "3",
-					"integral": "5",
-					"send_coupon": "优惠券1",
-					"prize_counts":50
-				},{
-					"sign_in": "5",
-					"integral": "7",
-					"send_coupon": "优惠券1",
-					"prize_counts":50
+					"send_coupon": "优惠券1"
 				}]
 		}
 		"""
@@ -89,23 +74,24 @@ Scenario:1 用户浏览"签到活动1"
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
 	When bill进入jobs的签到页面
-	Then bill获取"签到活动1"内容
-		"""
-		{
-			"user_name":"bill",
-			"integral_account":"0",
-			"prize_item":
-				{
-					"integral":"2",
-					"coupon_name":"优惠券1"
-				},
-			"sign_item":
-			{
-				"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-				"sign_rule":"1.每日签到,获得2积分奖励优惠券1一张,2.连续签到至3天,获得5积分奖励优惠券1一张,3.连续签到至5天,获得7积分奖励优惠券1一张"
-			}
-		}
-		"""
+#	Then bill获取"签到活动1"内容
+#		"""
+#		{
+#			"user_name":"bill",
+#			"integral_account":"0",
+#			"prize_item":
+#				{
+#					"integral":"2",
+#					"coupon_name":"优惠券1"
+#				},
+#			"sign_item":
+#			{
+#				"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
+#				"sign_rule":"1.每日签到,获得2积分奖励优惠券1一张"
+#			}
+#		}
+#		"""
+
 @apps_sign @apps_sign_frontend @kuki
 Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
@@ -419,6 +405,8 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有0会员积分
 	When tom点击bill分享的签到链接
+  	When tom访问jobs的webapp
+	Then tom在jobs的webapp中拥有2会员积分
 
 @apps_sign @apps_sign_frontend @kuki
 Scenario:8 非会员用户访问签到分享进行签到

@@ -33,27 +33,14 @@ def __debug_print(content,type_tag=True):
 		pass
 
 
-@when(u'{user}进入{mp_user}的签到页面')
-def step_tmpl(context, user, mp_user):
-	webapp_owner_id = bdd_util.get_user_id_for(mp_user)
-
-	__debug_print(webapp_owner_id)
-	url_0 = '/m/apps/sign/m_sign/?webapp_owner_id=%d' % webapp_owner_id
-	response_0 = context.client.get(url_0)
-
-
-	prefix,url_1 = response_0['Location'].split('&')
-	url_1 = url_0+"&"+url_1
-	response_1 = context.client.get(url_1)
-	__debug_print(url_1)
-	__debug_print(response_1)
-
-
-	context.response_0 = response_0
-
-	__debug_print(response_0)
-	# context.response_1 = response_1
-
+@when(u'{webapp_user_name}进入{webapp_owner_name}的签到页面')
+def step_tmpl(context, webapp_user_name, webapp_owner_name):
+	url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	response = context.client.get(bdd_util.nginx(response['Location']))
+	# print('response!!!!!!!!!!!')
+	# print(response)
 
 @then(u'{user}获取"{sign}"内容')
 def step_tmpl(context, user,sign):
