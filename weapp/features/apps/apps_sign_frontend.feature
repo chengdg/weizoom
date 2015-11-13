@@ -73,8 +73,9 @@ Scenario:1 用户浏览"签到活动1"
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
-	When bill进入jobs的签到页面
-#	Then bill获取"签到活动1"内容
+  	When bill访问jobs的webapp
+	When bill进入jobs的签到页面进行签到
+#	Then bill获取"签到活动1"的内容
 #		"""
 #		{
 #			"user_name":"bill",
