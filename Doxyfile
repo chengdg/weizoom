@@ -459,7 +459,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = weapp/mall
+INPUT                  = weapp
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -530,8 +530,8 @@ IMAGE_PATH             =
 # to standard output.  If FILTER_PATTERNS is specified, this tag will be 
 # ignored.
 
-#INPUT_FILTER           = "python /usr/bin/doxypy.py"
-INPUT_FILTER           = "c:/Python27/Scripts/doxypypy.exe"
+INPUT_FILTER           = "python /usr/bin/doxypy.py"
+#INPUT_FILTER           = "c:/Python27/Scripts/doxypypy.exe"
 
 #FILTER_PATTERNS        = *.py=py_filter
 

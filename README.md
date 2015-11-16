@@ -1,3 +1,7 @@
+# 相关文档
+* [源码文档](http://s01.gaoliqi.com:82/doc/weapp)
+
+
 # FAQ
 
 **问：如何rebuild本地环境？**
@@ -46,7 +50,7 @@ mysql -u xxx -p weapp < migrate.sql
 
 * [Weapp每日BDD测试](http://192.168.1.21:8081/jenkins/view/bdd/job/weapp_2.0_trunk_bdd_everyday/)
 
-# 积分测试用例
+# 积分测试用例(deprecated)
 
 ```
 水晶虾仁
