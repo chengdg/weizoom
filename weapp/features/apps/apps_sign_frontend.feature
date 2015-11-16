@@ -39,7 +39,7 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend @kuki1
+@apps_sign @apps_sign_frontend
 Scenario:1 用户浏览"签到活动1"
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -76,20 +76,19 @@ Scenario:1 用户浏览"签到活动1"
 	When bill进入jobs签到页面进行签到
 	Then bill获取签到成功的内容
 		"""
-		{
-			"user_name":"bill",
-			"integral_account":"2",
-			"prize_item":
+		[{
+			"serial_count": "1",
+			"daily_prize":
 				{
 					"integral":"2",
-					"coupon_name":"优惠券1"
+					"coupon":"优惠券1"
 				},
-			"sign_item":
-			{
-				"sign_desc":"签到赚积分！连续签到奖励更丰富哦！",
-				"sign_rule":"1.每日签到,获得2积分奖励优惠券1一张"
-			}
-		}
+			"curr_prize":
+				{
+					"integral":"2",
+					"coupon":"优惠券1"
+				}
+		}]
 		"""
   	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分

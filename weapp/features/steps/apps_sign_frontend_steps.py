@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'Mark24'
 
 from behave import *
 from test import bdd_util
@@ -16,22 +15,6 @@ from utils.string_util import byte_to_hex
 import json
 import re
 
-
-def __debug_print(content,type_tag=True):
-	"""
-	debug工具函数
-	"""
-	if content:
-		print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
-		if type_tag:
-			print "====== Type ======"
-			print type(content)
-			print "==================="
-		print content
-		print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
-	else:
-		pass
-
 def __get_sign_record_id(webapp_owner_id):
 	return Sign.objects.get(owner_id=webapp_owner_id).id
 
@@ -44,16 +27,28 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name):
 		'id': appRecordId
 	}
 	response = context.client.post('/m/apps/sign/api/sign_participance/?_method=put', params)
+	context.datas = json.loads(response.content)['data']
 
-@then(u"{user}获取签到成功的内容")
-def step_tmpl(context, user):
-	webapp_owner_id = context.webapp_owner_id
-	appRecordId = __get_sign_record_id(webapp_owner_id)
-	url = '/m/apps/sign/api/sign_participance/?_method=get&id=%s' % (appRecordId)
-	url = bdd_util.nginx(url)
-	response = context.client.get(url)
-	print('response!!!!!!!!!')
-	print(response)
+@then(u"{webapp_user_name}获取签到成功的内容")
+def step_tmpl(context, webapp_user_name):
+	datas = context.datas
+	# 构造实际数据
+	actual = []
+	actual.append({
+		'serial_count': datas['serial_count'],
+		'daily_prize': {
+			'integral': datas['daily_prize']['integral'],
+			'coupon': datas['daily_prize']['coupon']['name']
+		},
+		'curr_prize': {
+			'integral': datas['curr_prize']['integral'],
+			'coupon': datas['curr_prize']['coupon']['name']
+		}
+	})
+	print("actual_data: {}".format(actual))
+	expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+	bdd_util.assert_list(expected, actual)
 
 @then(u"{user}获得系统回复的消息'{answer}'")
 def step_impl(context, user, answer):
@@ -64,7 +59,6 @@ def step_impl(context, user, answer):
 		link_url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
 		link_url = bdd_util.nginx(link_url)
 		context.link_url = link_url
-
 	else:
 		end = result.find('</div>', begin)
 	actual  = result[begin:end]
