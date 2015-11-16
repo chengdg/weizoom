@@ -1075,13 +1075,14 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	else:
 		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
 		order.order_source = ORDER_SOURCE_WEISHOP
-	while True:
+	save_retry_count = 10
+	while save_retry_count > 0:
 		try:
 			order.order_id = __create_random_order_id()
 			order.save()
 		except:
+			save_retry_count -=1
 			watchdog_info(u"出现重复order_id:%s" % str(order.order_id), type="mall", user_id=int(request.webapp_owner_id))
-			continue
 		else:
 			break
 
