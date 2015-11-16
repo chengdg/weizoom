@@ -8,7 +8,7 @@
     </style>
 {% endblock%}
 {% block content-panel %}
-<div id='product_list_contain' data-title="商品列表" class="xui-productsList-page xa-page">
+<div id='product_list_contain' data-title="商品列表" class="xui-productsList-page xa-page" style="{% if not products %}background:#f0f0f0;{% endif %}{% if global_navbar != None %} min-height:calc(100vh - 50px){% endif %}">
 
     
     {% if global_navbar == None %}
@@ -80,7 +80,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
     // 计算列表页面价钱
-    
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
         updateProductPrice: function(event, data){
             var token = $.cookie('current_token');
