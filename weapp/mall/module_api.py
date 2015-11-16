@@ -1038,7 +1038,6 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	order.type = order_info['type']
 	order.pay_interface_type = order_info['pay_interface']
 
-	order.order_id = __create_random_order_id()
 	order.status = ORDER_STATUS_NOT
 	order.webapp_id = webapp_id
 	order.webapp_user_id = webapp_user.id
@@ -1076,8 +1075,15 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	else:
 		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
 		order.order_source = ORDER_SOURCE_WEISHOP
-
-	order.save()
+	while True:
+		try:
+			order.order_id = __create_random_order_id()
+			order.save()
+		except:
+			watchdog_info(u"出现重复order_id:%s" % str(order.order_id), type="mall", user_id=int(request.webapp_owner_id))
+			continue
+		else:
+			break
 
 	#更新库存
 	for product in products:

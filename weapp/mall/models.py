@@ -1397,7 +1397,7 @@ class Order(models.Model):
 
 	表名: mall_order
 	"""
-	order_id = models.CharField(max_length=100)  # 订单号
+	order_id = models.CharField(max_length=100, unique=True)  # 订单号
 	webapp_user_id = models.IntegerField()  # WebApp用户的id
 	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
 	webapp_source_id = models.CharField(max_length=20, default=0, verbose_name='商品来源店铺ID')  # 订单内商品实际来源店铺的id
