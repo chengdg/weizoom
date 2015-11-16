@@ -51,11 +51,16 @@ def get_coupon(request):
 			msg = '该优惠券已领光'
 		elif promotion.status >= PROMOTION_STATUS_FINISHED:
 			msg = '该优惠券使用期已过，不能领取'
+	try:
+		is_subscribed = request.member.is_subscribed
+	except:
+		is_subscribed = False
 	c = RequestContext(request, {
 		'page_title': u'获取优惠券',
 		'rule': rule,
 		'promotion': promotion,
 		'msg': msg,
+		'is_subscribed': is_subscribed
 	})
 	return render_to_response('%s/coupon/webapp/coupon.html' % TEMPLATE_DIR, c)
 
