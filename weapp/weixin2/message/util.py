@@ -7,6 +7,8 @@ from core import emotion
 import json
 from modules.member.models import *
 from utils.json_util import string_json
+from watchdog.utils import watchdog_fatal, watchdog_error
+from core.exceptionutil import unicode_full_stack
 
 def package_rule(rule, should_change_emotion=False):
     """
@@ -111,7 +113,12 @@ def translate_special_characters(message_text):
         message_text = message_text.replace(html, "%s")
     message_text = message_text.replace('<', "&lt;")
     message_text = message_text.replace('>', "&gt;")
-    if all_a_html and len(all_a_html) == message_text.count('%s'):
-        message_text = message_text % tuple(all_a_html)
-        return message_text
+    try:
+        if all_a_html and len(all_a_html) == message_text.count('%s'):
+            message_text = message_text % tuple(all_a_html)
+            return message_text
+    except:
+        error_msg = u"translate_special_characters失败message_text:{},all_a_html:{} cause:\n{}".format(message_text, all_a_html, unicode_full_stack())
+        watchdog_error(error_msg)
+    
     return old_message_text
