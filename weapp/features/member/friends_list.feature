@@ -203,12 +203,6 @@ Background:
 				When bill0013点击jack3分享链接
 				When bill0013访问jobs的webapp
 
-		When 清空浏览器
-		When bill01点击bill分享链接
-
-		When 清空浏览器
-		When bill001点击bill分享链接
-
 	#会员获取jobs的积分
 
 		When bill1访问jobs的webapp
