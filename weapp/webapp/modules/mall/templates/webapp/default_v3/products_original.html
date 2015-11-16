@@ -70,7 +70,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        <div class="xui-empty-box"><img src="/static_v2/img/webapp/mall/none.jpg" alt=""></div>
+        <div class="xui-empty-box xa-empty"><img src="/static_v2/img/webapp/mall/none.jpg" alt=""></div>
         <a class="xui-goShopping-btn" href='/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=homepage'>去逛逛</a>
     {% endif %}
 </div>
@@ -79,8 +79,19 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    //区分是否启用全局导航
+    if($('.xui-header').length){
+        $('.xa-page').css('min-height', 'calc(100vh - 40px)');
+    }else{
+        $('.xa-page').css('min-height', 'calc(100vh - 50px)');
+    }
+    //区分商品分类是否为空
+    if($('.xa-empty').length){
+        $('.xa-page').css('background','#f0f0f0');
+    }else{
+        $('.xa-page').css('background','#fff')
+    }
     // 计算列表页面价钱
-    
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
         updateProductPrice: function(event, data){
             var token = $.cookie('current_token');
