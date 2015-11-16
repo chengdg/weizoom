@@ -16,6 +16,8 @@ from modules.member import models as member_models
 import models as app_models
 import export
 from mall import export as mall_export
+from utils.string_util import byte_to_hex
+
 __STRIPPER_TAG__
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -50,19 +52,19 @@ class {{resource.class_name}}(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
+		webapp_id = request.user_profile.webapp_id
+		member_ids = []
 		if name:
-			members = member_models.Member.get_by_username(name)
-		else:
-			members = member_models.Member.get_members(request.user_profile.webapp_id)
-		member_ids = [member.id for member in members]
-		webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
+			hexstr = byte_to_hex(name)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+			member_ids = [member.id for member in members]
 
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		__STRIPPER_TAG__
 		params = {'belong_to':request.GET['id']}
-		if webapp_user_ids:
-			params['webapp_user_id__in'] = webapp_user_ids
+		if name:
+			params['webapp_user_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if end_time:
@@ -84,27 +86,18 @@ class {{resource.class_name}}(resource.Resource):
 		"""
 		pageinfo, datas = {{resource.class_name}}.get_datas(request)
 		__STRIPPER_TAG__
-		webappuser2datas = {}
-		webapp_user_ids = set()
+		tmp_member_ids = []
 		for data in datas:
-			webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-			webapp_user_ids.add(data.webapp_user_id)
-			data.participant_name = u'未知'
-			data.participant_icon = '/static/img/user-1.jpg'
-		__STRIPPER_TAG__
-		webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
-		if len(webappuser2member) > 0:
-			for webapp_user_id, member in webappuser2member.items():
-				for data in webappuser2datas.get(webapp_user_id, ()):
-					data.participant_name = member.username_for_html
-					data.participant_icon = member.user_icon
+			tmp_member_ids.append(data.member_id)
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		member_id2member = {member.id: member for member in members}
 		__STRIPPER_TAG__
 		items = []
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
+				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		response_data = {

@@ -185,6 +185,13 @@ class MPowerMe(resource.Resource):
 		if u"进行中" == activity_status:
 			timing = (record.end_time - datetime.today()).total_seconds()
 
+		if record and record.qrcode:
+			params_qrcode_url = record.qrcode['ticket']
+			params_qrcode_name = record.qrcode['name']
+		else:
+			params_qrcode_url = False
+			params_qrcode_name = False
+
 		c = RequestContext(request, {
 			'record_id': record_id,
 			'activity_status': activity_status,
@@ -202,8 +209,8 @@ class MPowerMe(resource.Resource):
 			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"微助力",
-			'params_qrcode_url': record.qrcode['ticket'] if record.qrcode else False,
-			'params_qrcode_name': record.qrcode['name'] if record.qrcode else False,
+			'params_qrcode_url': params_qrcode_url,
+			'params_qrcode_name': params_qrcode_name,
 			'timing': timing,
 			'current_member_rank_info': current_member_rank_info, #我的排名
 			'total_participant_count': total_participant_count, #总参与人数

@@ -52,13 +52,7 @@ class lotteryParticipances(resource.Resource):
 		if name:
 			hexstr = byte_to_hex(name)
 			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			print members
-			if name.find(u'非')>=0:
-				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-				members = members|sub_members
-		else:
-			members = member_models.Member.objects.filter(webapp_id=webapp_id)
-		member_ids = [member.id for member in members]
+			member_ids = [member.id for member in members]
 
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -90,34 +84,18 @@ class lotteryParticipances(resource.Resource):
 		"""
 		pageinfo, datas = lotteryParticipances.get_datas(request)
 		
-		memberuser2datas = {}
-		member_ids = set()
+		tmp_member_ids = []
 		for data in datas:
-			memberuser2datas.setdefault(data.member_id, []).append(data)
-			member_ids.add(data.member_id)
-			data.participant_name = u'未知'
-			data.participant_icon = '/static/img/user-1.jpg'
-		
-		member_user2member = {}
-		members = member_models.Member.objects.filter(id__in=member_ids)
-		for member in members:
-			if member.id not in member_user2member:
-				member_user2member[member.id] = member
-			else:
-				member_user2member[member.id] = member
-
-		if len(member_user2member) > 0:
-			for member_id, member in member_user2member.items():
-				for data in memberuser2datas.get(member_id, ()):
-					data.participant_name = member.username_for_html
-					data.participant_icon = member.user_icon
+			tmp_member_ids.append(data.member_id)
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		member_id2member = {member.id: member for member in members}
 
 		items = []
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
+				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'tel': data.tel,
 				'prize_title': data.prize_title,
 				'prize_name': data.prize_name,
@@ -171,13 +149,7 @@ class lotteryParticipances_Export(resource.Resource):
 			if name:
 				hexstr = byte_to_hex(name)
 				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-				print members
-				if name.find(u'非')>=0:
-					sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-					members = members|sub_members
-			else:
-				members = member_models.Member.objects.filter(webapp_id=webapp_id)
-			member_ids = [member.id for member in members]
+				member_ids = [member.id for member in members]
 
 			start_time = request.GET.get('start_time', '')
 			end_time = request.GET.get('end_time', '')

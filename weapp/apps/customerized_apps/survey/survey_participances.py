@@ -128,15 +128,11 @@ class surveyParticipances_Export(resource.Resource):
 			import xlwt
 			name = request.GET.get('participant_name', '')
 			webapp_id = request.user_profile.webapp_id
+			member_ids = []
 			if name:
 				hexstr = byte_to_hex(name)
 				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-				if name.find(u'非')>=0:
-					sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-					members = members|sub_members
-			else:
-				members = member_models.Member.objects.filter(webapp_id=webapp_id)
-			member_ids = [member.id for member in members]
+				member_ids = [member.id for member in members]
 			start_time = request.GET.get('start_time', '')
 			end_time = request.GET.get('end_time', '')
 			params = {'belong_to':request.GET['export_id']}

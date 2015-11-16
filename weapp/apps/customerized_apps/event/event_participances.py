@@ -56,16 +56,12 @@ class eventParticipances(resource.Resource):
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
 		webapp_id = request.user_profile.webapp_id
+		member_ids = []
 		if name:
 			hexstr = byte_to_hex(name)
 			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			print members
-			if name.find(u'非')>=0:
-				sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-				members = members|sub_members
-		else:
-			members = member_models.Member.objects.filter(webapp_id=webapp_id)
-		member_ids = [member.id for member in members]
+			member_ids = [member.id for member in members]
+
 		# webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -91,31 +87,20 @@ class eventParticipances(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = eventParticipances.get_datas(request)
-		
-		webappuser2datas = {}
-		webapp_user_ids = set()
+
+		event_ids = []
+		tmp_member_ids = []
 		for data in datas:
-			webappuser2datas.setdefault(data.webapp_user_id, []).append(data)
-			webapp_user_ids.add(data.webapp_user_id)
-			data.participant_name = u'未知'
-			data.participant_icon = '/static/img/user-1.jpg'
-		
-		webappuser2member = member_models.Member.members_from_webapp_user_ids(webapp_user_ids)
-		if len(webappuser2member) > 0:
-			for webapp_user_id, member in webappuser2member.items():
-				for data in webappuser2datas.get(webapp_user_id, ()):
-					if member.is_subscribed:
-						data.participant_name = member.username_for_html
-						data.participant_icon = member.user_icon
-					else:
-						data.participant_name = u'非会员'
-						data.participant_icon = '/static/img/user-1.jpg'
-		
-		items = []
-		for data in datas:
+			tmp_member_ids.append(data.member_id)
+			event_ids.append(data.id)
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		member_id2member = {member.id: member for member in members}
+
+		event_participances = app_models.eventParticipance.objects(id__in=event_ids)
+		event_id2item_data_list = {}
+		for p in event_participances:
+			termite_data = p.termite_data
 			item_data_list = []
-			event_participance = app_models.eventParticipance.objects.get(id=data.id)
-			termite_data = event_participance.termite_data
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
@@ -126,12 +111,16 @@ class eventParticipances(resource.Resource):
 					item_data['item_name'] = pureName
 				item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
+			event_id2item_data_list[p.id] = item_data_list
+
+		items = []
+		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': data.participant_name,
-				'participant_icon': data.participant_icon,
+				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-				'informations': item_data_list
+				'informations': event_id2item_data_list[data.id]
 			})
 		response_data = {
 			'items': items,
@@ -171,16 +160,11 @@ class eventParticipances_Export(resource.Resource):
 			import xlwt
 			name = request.GET.get('participant_name', '')
 			webapp_id = request.user_profile.webapp_id
+			member_ids = []
 			if name:
 				hexstr = byte_to_hex(name)
 				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-				print members
-				if name.find(u'非')>=0:
-					sub_members = member_models.Member.objects.filter(webapp_id=webapp_id,is_subscribed=False)
-					members = members|sub_members
-			else:
-				members = member_models.Member.objects.filter(webapp_id=webapp_id)
-			member_ids = [member.id for member in members]
+				member_ids = [member.id for member in members]
 			start_time = request.GET.get('start_time', '')
 			end_time = request.GET.get('end_time', '')
 			params = {'belong_to':request.GET['export_id']}
