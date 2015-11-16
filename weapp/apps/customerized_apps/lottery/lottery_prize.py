@@ -140,6 +140,30 @@ class lottery_prize(resource.Resource):
 				response.errMsg = u'您今天的抽奖机会已经用完~'
 				return response.get_response()
 
+			# 临时解决高并发问题 ----start
+			permisson = False
+			index_list = ['one', 'two'] if limitation == 2 else ['one']
+			for index in index_list:
+				try:
+					data = {}
+					data['member_id'] = member_id
+					data['belong_to'] = record_id
+					data['can_play_count_control_%s'%index] = now_datetime.strftime('%Y-%m-%d')
+					control = app_models.lotteryControl(**data)
+					control.save()
+					permisson = True
+					break
+				except:
+					pass
+			if not permisson:
+				response = create_response(500)
+				response.errMsg = u'您今天的抽奖机会已经用完~'
+				return response.get_response()
+			# 临时解决高并发问题 ----end
+
+			#根据抽奖次数限制，更新可抽奖次数
+			lottery_participance.update(dec__can_play_count=1)
+
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')
 		#判定是否中奖
@@ -247,10 +271,6 @@ class lottery_prize(resource.Resource):
 			lottery_participance.update(**{"set__has_prize":has_prize, "inc__total_count":1})
 		else:
 			lottery_participance.update(inc__total_count=1)
-
-		#根据抽奖次数限制，更新可抽奖次数
-		if limitation != -1:
-			lottery_participance.update(dec__can_play_count=1)
 
 		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
 		lottery_participance.update(set__lottery_date=now_datetime)
