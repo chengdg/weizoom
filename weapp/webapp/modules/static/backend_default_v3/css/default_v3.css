@@ -764,7 +764,7 @@ input.ui-input-text, textarea.ui-input-text {
  */
  .xui-productsList-page{
     background-color: #fff;
-    min-height:100%;
+    min-height:100vh;
  }
 .xui-productsList-page .xui-header,.xui-productsList-page .xui-sidePanel .xui-mainMenu .xui-innerHeader{
     width: 100%;
