@@ -40,33 +40,22 @@ def get_coupon(request):
 	msg = None
 	rule = None
 	promotion = None
-
-
 	rule_id = request.GET.get('rule_id', '0')
 	rules = CouponRule.objects.filter(id=rule_id, owner_id=request.webapp_owner_id)
-	is_member = True
 	if len(rules) != 1:
 		msg = '没有此优惠券，请重试'
 	else:
 		rule = rules[0]
-		if not request.member:
-			msg = '请关注店铺后领取优惠券'
-			is_member = False
-		else:
-			promotion = Promotion.objects.get(type=PROMOTION_TYPE_COUPON, detail_id=rule.id)
-			if rule.remained_count == 0:
-				msg = '该优惠券已领光'
-			elif promotion.status >= PROMOTION_STATUS_FINISHED:
-				msg = '该优惠券使用期已过，不能领取'
-			elif promotion.member_grade_id > 0 and promotion.member_grade_id != request.member.grade_id:
-				grade = MemberGrade.objects.get(id=promotion.member_grade_id)
-				msg = '该优惠券只能%s可以领取' % grade.name
+		promotion = Promotion.objects.get(type=PROMOTION_TYPE_COUPON, detail_id=rule.id)
+		if rule.remained_count == 0:
+			msg = '该优惠券已领光'
+		elif promotion.status >= PROMOTION_STATUS_FINISHED:
+			msg = '该优惠券使用期已过，不能领取'
 	c = RequestContext(request, {
 		'page_title': u'获取优惠券',
 		'rule': rule,
 		'promotion': promotion,
 		'msg': msg,
-		'is_member': is_member
 	})
 	return render_to_response('%s/coupon/webapp/coupon.html' % TEMPLATE_DIR, c)
 
