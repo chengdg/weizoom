@@ -71,6 +71,8 @@ def list_products(request):
 	else:
 		try:
 			category = resource.get('mall', 'product_category', {'id': category_id})
+			if category and category['oid']!= request.user_profile.user_id:
+				return HttpResponseRedirect('/static/error-page/404.html')
 		except ObjectDoesNotExist:
 			return HttpResponseRedirect('/static/error-page/404.html')
 
@@ -95,13 +97,10 @@ def list_products(request):
 	has_category = False
 	if len(product_categories) > 0:
 		has_category = True
-	if hasattr(category, 'is_deleted') and category.is_deleted:
-		return HttpResponseRedirect('/static/error-page/404.html')
 	c = RequestContext(request, {
 		'page_title': u'商品列表',
 		'products': products,
 		'category': category,
-		'is_deleted_data': category.is_deleted if hasattr(category, 'is_deleted') else False,
 		'product_categories': product_categories,
 		'has_category': has_category,
 		'hide_non_member_cover': True
@@ -133,8 +132,8 @@ def get_product(request):
 	#print("in get_product()")
 	product_id = request.GET['rid']
 	webapp_user = request.webapp_user
-
 	member_grade_id = request.member.grade_id if request.member else None
+
 	# 检查置顶评论是否过期
 	check_product_review_overdue(product_id)
 	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息

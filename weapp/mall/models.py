@@ -635,7 +635,8 @@ class Product(models.Model):
 		product_ids = [product.id for product in products]
 
 		for product in products:
-			product.detail_link = '/mall2/product/?id=%d&source=onshelf' % product.id
+			if product.id!=None:
+				product.detail_link = '/mall2/product/?id=%d&source=onshelf' % product.id
 
 		if options.get('with_product_model', False):
 			Product.fill_model_detail(
