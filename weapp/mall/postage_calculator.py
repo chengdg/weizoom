@@ -111,11 +111,15 @@ class PostageCalculator(object):
 				#商品使用运费模板
 				products_use_template.append(product)
 				weight += product.weight * product.purchase_count
+				print "zl---------------------weight==2",weight
 
 		if (len(products_use_template) > 0) and (not self.satisfy_free_postage_condition(products_use_template, province_id)):
 			special_postage_factor = self.postage_config['factor']['special_factor'].get(province_id, None)
+			print "zl-------------",special_postage_factor
 			if special_postage_factor:
+				print "zl----------------------000000"
 				postage_template_money = self.get_postage_for_weight(weight, special_postage_factor)
+				print "zl----------------------000000",postage_template_money
 			else:
 				postage_template_money = self.get_postage_for_weight(weight, self.postage_config['factor'])
 

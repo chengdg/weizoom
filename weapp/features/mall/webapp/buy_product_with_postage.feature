@@ -694,7 +694,7 @@ Scenario:17 更新邮费配置后进行购买
 		}
 		"""
 # _edit_ : "新新"
-@mall2 
+@mall2
 Scenario:18 不同等级的会员购买有会员价同时有运费配置
 	#包邮条件:金额取商品原价的金额
 	Given jobs登录系统
@@ -797,6 +797,106 @@ Scenario:18 不同等级的会员购买有会员价同时有运费配置
 				"price": 90.00,
 				"count": 2
 			}]
+		}
+		"""
+
+
+
+#根据bug6023后续补充.雪静
+@mall2
+Scenario: 19 设置首重大于1的运费模板，进行购买商品
+	1.jobs设置首重大于1的运费模板
+	2.bill进行购买jobs的商品
+
+	Given jobs登录系统
+	And jobs已添加运费配置
+		"""
+		[{
+			"name":"天天",
+			"first_weight": 1.5,
+			"first_weight_price": 13.00,
+			"added_weight": 0.5,
+			"added_weight_price": 5.00,
+			"special_area": [{
+				"to_the":"北京市,江苏省",
+				"first_weight": 2,
+				"first_weight_price": 20.00,
+				"added_weight": 1,
+				"added_weight_price": 10.00
+			}],
+			"free_postages": [{
+				"to_the":"北京市",
+				"condition": "count",
+				"value": 3
+			}, {
+				"to_the":"北京市",
+				"condition": "money",
+				"value": 200.0
+			}]
+		}]
+		"""
+	And jobs已添加商品
+		"""
+		[{
+			"name": "商品9",
+			"postage": "系统",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 10.00,
+						"weight": 2,
+						"stock_type": "无限"
+					},
+					"S": {
+						"price": 10.00,
+						"weight": 3.1,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
+	When jobs选择'天天'运费配置
+	When bill访问jobs的webapp
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品9",
+				"model": "S",
+				"count": 1
+			}],
+			"ship_area":"河北省",
+			"ship_address":"呱呱"
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 43.00,
+			"postage": 33.00
+		}
+		"""
+	When bill购买jobs的商品
+		"""
+		{
+			"products": [{
+				"name": "商品9",
+				"model": "M",
+				"count": 1
+			}],
+			"ship_area":"北京市",
+			"ship_address":"呱呱"
+		}
+		"""
+	Then bill成功创建订单
+		"""
+		{
+			"status": "待支付",
+			"final_price": 30.00,
+			"postage": 20.00
 		}
 		"""
 
