@@ -273,11 +273,12 @@ def update_webapp_product_cache(**kwargs):
                 categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
                 cache_util.add_set_to_redis(categories_products_key,product_id)
                 # todo zhaolei 清除对应的varnish缓存,需要重构
-                url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
-                        (settings.DOMAIN, webapp_owner_id, catory_id)
-                request = urllib2.Request(url)
-                request.get_method = lambda: 'PURGE'
-                urllib2.urlopen(request)
+                if not settings.DEBUG:
+                    url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+                            (settings.DOMAIN, webapp_owner_id, catory_id)
+                    request = urllib2.Request(url)
+                    request.get_method = lambda: 'PURGE'
+                    urllib2.urlopen(request)
 
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
@@ -306,11 +307,12 @@ def update_webapp_category_cache(**kwargs):
             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
             cache_util.rem_set_member_from_redis(categories_products_key,product_id)
         # todo zhaolei 清除对应的varnish缓存,需要重构
-        url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
-                (settings.DOMAIN, webapp_owner_id, category_id)
-        request = urllib2.Request(url)
-        request.get_method = lambda: 'PURGE'
-        urllib2.urlopen(request)
+        if not settings.DEBUG:
+            url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+                    (settings.DOMAIN, webapp_owner_id, category_id)
+            request = urllib2.Request(url)
+            request.get_method = lambda: 'PURGE'
+            urllib2.urlopen(request)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
