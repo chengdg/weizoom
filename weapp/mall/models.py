@@ -216,7 +216,10 @@ class Product(models.Model):
 		# 查看指定的位置是否存在元素
 		obj_bs = Product.objects.filter(owner_id=self.owner_id , display_index=pos)
 		if obj_bs.exists():
-			obj_bs.update(display_index=0)
+			# obj_bs.update(display_index=0) 为了监听到display index的改变 zhaolei
+			ele = obj_bs.get()
+			ele.display_index=0
+			ele.save()
 
 		self.display_index = pos
 		self.save()

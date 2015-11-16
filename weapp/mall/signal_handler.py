@@ -1100,7 +1100,7 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
     shelve_type = request.POST.get('shelve_type')
     if shelve_type and shelve_type == 'delete':
         disable_coupon = True
-
+    print "zl-------------------promotion"
     target_promotion_ids = []
     promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
         product_id__in=product_ids)]

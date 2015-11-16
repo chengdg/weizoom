@@ -70,7 +70,7 @@ class ProductsByCategory(api_resource.ApiResource):
 		#product = mall_models.Product.objects.get(id=args['id'])
 
 		# 通过缓存获取数据
-		category, products = webapp_cache.get_webapp_products(user_profile, is_access_weizoom_mall, category_id)
+		category, products = webapp_cache.get_webapp_products_new(user_profile, is_access_weizoom_mall, category_id)
 		#print("products: {}".format(products))
 		#func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
 		#result = func()
