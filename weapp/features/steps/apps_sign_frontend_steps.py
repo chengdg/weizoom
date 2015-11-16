@@ -50,8 +50,9 @@ def step_tmpl(context, webapp_user_name):
 	print("expected: {}".format(expected))
 	bdd_util.assert_list(expected, actual)
 
-@then(u"{user}获得系统回复的消息'{answer}'")
-def step_impl(context, user, answer):
+@then(u"{user}获得系统回复的消息")
+def step_impl(context, user):
+	answer = context.text.strip()
 	result = context.qa_result["data"]
 	begin = result.find('<div class="content">') + len('<div class="content">')
 	if result.find('<a href=') != -1: #result存在a标签
@@ -63,7 +64,7 @@ def step_impl(context, user, answer):
 		end = result.find('</div>', begin)
 	actual  = result[begin:end]
 	expected = answer
-	if answer == ' ':
+	if answer == ' ' or '':
 		expected = ''
 	context.tc.assertEquals(expected, actual)
 
