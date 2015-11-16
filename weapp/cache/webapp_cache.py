@@ -258,6 +258,7 @@ def update_webapp_product_cache(**kwargs):
                     categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
                     cache_util.add_set_to_redis(categories_products_key,product_id)
             update_product_cache(webapp_owner_id, product_id)
+
         elif instance and sender==mall_models.CategoryHasProduct:
             # 商品分组中更新商品时
             if isinstance(instance, mall_models.CategoryHasProduct):
@@ -271,18 +272,27 @@ def update_webapp_product_cache(**kwargs):
             if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF:
                 categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
                 cache_util.add_set_to_redis(categories_products_key,product_id)
+                # todo zhaolei 清除对应的varnish缓存,需要重构
+                if not settings.DEBUG:
+                    url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+                            (settings.DOMAIN, webapp_owner_id, catory_id)
+                    request = urllib2.Request(url)
+                    request.get_method = lambda: 'PURGE'
+                    urllib2.urlopen(request)
 
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
         webapp_owner_id = cache.request.user_profile.user_id
         instance = kwargs.get('instance', None)
         sender = kwargs.get('sender', None)
+        category_id = 0
         if instance and sender==mall_models.ProductCategory:
             # 删除商品分类
             if isinstance(instance, mall_models.ProductCategory):
                 id = instance.id
             else:
                 id = instance[0].id
+            category_id = id
             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,id)
             cache_util.delete_redis_key(categories_products_key)
         elif instance and sender==mall_models.CategoryHasProduct:
@@ -293,8 +303,16 @@ def update_webapp_category_cache(**kwargs):
             else:
                 product_id = instance[0].product_id
                 catory_id = instance[0].category_id
+            category_id = catory_id
             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
             cache_util.rem_set_member_from_redis(categories_products_key,product_id)
+        # todo zhaolei 清除对应的varnish缓存,需要重构
+        if not settings.DEBUG:
+            url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
+                    (settings.DOMAIN, webapp_owner_id, category_id)
+            request = urllib2.Request(url)
+            request.get_method = lambda: 'PURGE'
+            urllib2.urlopen(request)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
@@ -725,6 +743,7 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         request = urllib2.Request(url)
         request.get_method = lambda: 'PURGE'
         urllib2.urlopen(request)
+        # todo 清除商品分类列表
         # for catHasProduct in mall_models.CategoryHasProduct.objects.filter(product_id=product_id):
         #     url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
         #         (settings.DOMAIN, webapp_owner_id, catHasProduct.category_id)
