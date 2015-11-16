@@ -402,6 +402,7 @@ def get_products(request):
         product2promotion[product_model_id] = promotion_ids[i] if promotion_ids[i] else 0
 
     postage_configs = request.webapp_user.webapp_owner_info.mall_data['postage_configs']
+    print "zl-----------------postage_configs",postage_configs
     system_postage_config = filter(lambda c: c.is_used, postage_configs)[0]
     products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
     for product in products:
@@ -413,6 +414,7 @@ def get_products(request):
 
         # 确定商品的运费策略
         if product.postage_type == mall_models.POSTAGE_TYPE_UNIFIED:
+            print "1111111111111111111111111111111111111"
             #使用统一运费
             product.postage_config = {
                 "id": -1,
@@ -420,11 +422,15 @@ def get_products(request):
                 "factor": None
             }
         else:
+            print "222222222222222222222222222222222222"
             if isinstance(system_postage_config.created_at, datetime):
                 system_postage_config.created_at = system_postage_config.created_at.strftime('%Y-%m-%d %H:%M:%S')
             if isinstance(system_postage_config.update_time, datetime):
                 system_postage_config.update_time = system_postage_config.update_time.strftime('%Y-%m-%d %H:%M:%S')
+            print "zl222222222222222222222222222",system_postage_config
+            print "zl222222222222222222222222222",system_postage_config.to_dict('factor')
             product.postage_config = system_postage_config.to_dict('factor')
+            print "zlllllllllllllllllllllll",json.dumps(product.postage_config)
             # postage_config.to_dict('factor')
     return products
 

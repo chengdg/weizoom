@@ -337,11 +337,12 @@ def postage_pre_save_order(pre_order, order, products, product_groups, **kwargs)
     postage_config = None
     for product in products:
         if product.postage_type == POSTAGE_TYPE_CUSTOM:
+            print "zllllllllllllllll-----config",product.postage_config,postage_config
             postage_config = product.postage_config
             break
 
     province_id = _get_province_id_by_area(order.area)
-
+    print "postage_config------------province_id,order_are",postage_config,province_id,order.area
     postage_calculator = mall_postage_calculator.PostageCalculator(postage_config)
 
     order.postage = postage_calculator.get_postage(products, province_id)

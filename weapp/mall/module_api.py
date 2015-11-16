@@ -2910,12 +2910,13 @@ def get_postage_configs_for_cache(webapp_owner_id):
 
 			# 特殊运费配置
 			special_factor = dict()
+			print "zl------------xxxxx",postage_config.get_special_configs()
 			if postage_config.is_enable_special_config:
 				for special_config in postage_config.get_special_configs():
 					data = {
-						'firstWeight': postage_config.first_weight,
+						'firstWeight': special_config.first_weight,
 						'firstWeightPrice': special_config.first_weight_price,
-						'addedWeight': float(postage_config.added_weight),
+						'addedWeight': float(special_config.added_weight),
 						'addedWeightPrice': float(special_config.added_weight_price)
 					}
 					for province_id in special_config.destination.split(','):
