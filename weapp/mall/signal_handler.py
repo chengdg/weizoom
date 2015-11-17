@@ -341,7 +341,6 @@ def postage_pre_save_order(pre_order, order, products, product_groups, **kwargs)
             break
 
     province_id = _get_province_id_by_area(order.area)
-
     postage_calculator = mall_postage_calculator.PostageCalculator(postage_config)
 
     order.postage = postage_calculator.get_postage(products, province_id)
