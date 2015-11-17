@@ -564,3 +564,11 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         #     request = urllib2.Request(url)
         #     request.get_method = lambda: 'PURGE'
         #     urllib2.urlopen(request)
+
+
+def update_product_list(webapp_owner_id):
+    url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
+            (settings.DOMAIN, webapp_owner_id)
+    request = urllib2.Request(url)
+    request.get_method = lambda: 'PURGE'
+    urllib2.urlopen(request)
