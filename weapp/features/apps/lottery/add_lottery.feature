@@ -37,7 +37,7 @@ Background:
 @apps @lottery
 Scenario:1 新建微信抽奖,抽奖限制一人一次
 	Given jobs登录系统
-	When jobs新建微信抽奖
+	When jobs新建微信抽奖活动
 		"""
 		[{
 			"name":"一人一次微信抽奖",
@@ -86,7 +86,7 @@ Scenario:1 新建微信抽奖,抽奖限制一人一次
 @apps @lottery
 Scenario:2 新建微信抽奖,抽奖限制一天一次
 	Given jobs登录系统
-	When jobs新建微信抽奖
+	When jobs新建微信抽奖活动
 		"""
 		[{
 			"name":"一天一次微信抽奖",
@@ -135,7 +135,7 @@ Scenario:2 新建微信抽奖,抽奖限制一天一次
 @apps @lottery
 Scenario:3 新建微信抽奖,抽奖限制不限
 	Given jobs登录系统
-	When jobs新建微信抽奖
+	When jobs新建微信抽奖活动
 		"""
 		[{
 			"name":" 不限制微信抽奖",
