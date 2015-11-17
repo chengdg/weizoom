@@ -38,7 +38,7 @@ Scenario:1 新建微助力，用户识别二维码为空
 		"""
 		{
 			"name":"微助力活动1",
-			"start_date":"当前时间",
+			"start_date":"今天",
 			"end_date":"3天后",
 			"is_show_countdown":"true",
 			"desc":"微助力活动描述",
@@ -54,7 +54,7 @@ Scenario:1 新建微助力，用户识别二维码为空
 		"""
 		{
 			"name":"微助力活动1",
-			"start_date":"当前时间",
+			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
 			"parti_person_cnt":0,
