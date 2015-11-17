@@ -1,7 +1,8 @@
 #_author_:王丽
 #editor:王丽  2015.10.19
+#editor:王丽  2015.11.16
 
-Feature: 会员分析-会员概况-推广扫码和分享链接排行榜
+Feature: 会员分析-会员概况-分享链接排行榜
 """
 
 	对店铺的会员进行不同维度的分析
@@ -47,78 +48,147 @@ Background:
 	Given jobs登录系统
 	And 开启手动清除cookie模式
 
-	When 清空浏览器
-	When bill1关注jobs的公众号
-	When bill1访问jobs的webapp
-	When bill1把jobs的微站链接分享到朋友圈
-	
-	When bill2通过bill1分享链接关注jobs的公众号
-	When bill2访问jobs的webapp
-	When bill2把jobs的微站链接分享到朋友圈
+	#以bill为基础创建数据
+		When 清空浏览器
+		When bill关注jobs的公众号于'2015-5-1'
+		When bill访问jobs的webapp
+		When bill把jobs的微站链接分享到朋友圈
 
-	When bill3通过bill2分享链接关注jobs的公众号
-	When bill3访问jobs的webapp
-	When bill3把jobs的微站链接分享到朋友圈
+	#会员分享
+		#建立好友关系传播情景,A-->(E,F,G)
+			#bill1点击bill的分享链接,bill1关注jobs,访问jobs的webapp; bill1是bill推荐来的下级好友，来源是"会员分享"
+			When 清空浏览器
+			When bill1点击bill分享链接
+			When bill1关注jobs的公众号
+			When bill1访问jobs的webapp
 
-	When bill4通过bill2分享链接关注jobs的公众号
-	When bill4访问jobs的webapp
-	When bill4把jobs的微站链接分享到朋友圈
+			#bill2关注jobs,访问jobs的webapp,点击bill的分享链接; bill2是bill的好友，来源是"直接关注"
+			When 清空浏览器
+			When bill2关注jobs的公众号
+			When bill2访问jobs的webapp
+			When bill2点击bill分享链接
 
-	When bill5通过bill2分享链接关注jobs的公众号
-	When bill5访问jobs的webapp
-	When bill5把jobs的微站链接分享到朋友圈
+			#bill3关注jobs,点击bill的分享链接,访问jobs的webapp; bill3是bill推荐来的下级好友，来源是"会员分享"
+			When 清空浏览器
+			When bill3关注jobs的公众号
+			When bill3点击bill分享链接
+			When bill3访问jobs的webapp
 
-	When bill6通过bill2分享链接关注jobs的公众号
-	When bill6访问jobs的webapp
-	When bill6把jobs的微站链接分享到朋友圈
+		#建立好友关系传播情景,A-->B-->(E,F,G)
 
-	When bill7通过bill3分享链接关注jobs的公众号
-	When bill7访问jobs的webapp
-	When bill7把jobs的微站链接分享到朋友圈
+			#marry关注jobs的公众账号，访问jobs的webapp，点击bill的分享链接，marry分享bill的分享链接到朋友圈；marry是bill的好友，来源是"直接关注"
+				When 清空浏览器
+				When marry关注jobs的公众号
+				When marry访问jobs的webapp
+				When marry点击bill分享链接
+				When marry分享bill分享jobs的微站链接到朋友圈
 
-	When bill8通过bill3分享链接关注jobs的公众号
-	When bill8访问jobs的webapp
-	When bill8把jobs的微站链接分享到朋友圈
+			#bill01点击marry的分享链接，关注jobs的公众账号，访问jobs的webapp；bill01是marry推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill01点击marry分享链接
+				When bill01关注jobs的公众号
+				When bill01访问jobs的webapp
 
-	When bill9通过bill1分享链接关注jobs的公众号
-	When bill9访问jobs的webapp
-	When bill9把jobs的微站链接分享到朋友圈
+			#bill02关注jobs的公众账号，访问jobs的webapp，点击marry的分享链接；bill02是marry的好友，来源是"直接关注"
+				When 清空浏览器
+				When bill02关注jobs的公众号
+				When bill02访问jobs的webapp
+				When bill02点击marry分享链接
 
-	When bill10通过bill7分享链接关注jobs的公众号
-	When bill10访问jobs的webapp
-	When bill10把jobs的微站链接分享到朋友圈
+			#bill03关注jobs的公众账号，点击marry的分享链接，访问jobs的webapp；bill03是marry推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill03关注jobs的公众号
+				When bill03点击marry分享链接
+				When bill03访问jobs的webapp
 
-	When bill11通过bill8分享链接关注jobs的公众号
-	When bill11访问jobs的webapp
-	When bill11把jobs的微站链接分享到朋友圈
+		#建立好友关系传播情景,A-->C-->(E,F,G)
 
-	When bill12通过bill9分享链接关注jobs的公众号
-	When bill12访问jobs的webapp
-	When bill12把jobs的微站链接分享到朋友圈
+			#jack1点击bill的分享链接，jack1分享bill的分享链接到朋友圈
+				When 清空浏览器
+				When jack1点击bill分享链接
+				When jack1分享bill分享jobs的微站链接到朋友圈
 
-	When bill13通过bill7分享链接关注jobs的公众号
-	When bill13访问jobs的webapp
+			#bill11点击jack1的分享链接，关注jobs的公众账号，访问jobs的weapp；bill11是bill推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill11点击jack1分享链接
+				When bill11关注jobs的公众号
+				When bill11访问jobs的webapp
 
-	When bill14通过bill6分享链接关注jobs的公众号
-	When bill14访问jobs的webapp
+			#bill12关注jobs的公众账号，访问jobs的webapp，点击jack1的分享链接；bill12是bill的好友，来源是"直接关注"
+				When 清空浏览器
+				When bill12关注jobs的公众号
+				When bill12访问jobs的webapp
+				When bill12点击jack1分享链接
 
-	When bill15通过bill5分享链接关注jobs的公众号
-	When bill15访问jobs的webapp
+			#bill13关注jobs的公众账号，点击jack1的分享链接，访问jobs的webapp；bill13是bill推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill13关注jobs的公众号
+				When bill13点击jack1分享链接
+				When bill13访问jobs的webapp
 
-	When bill16通过bill5分享链接关注jobs的公众号
-	When bill16访问jobs的webapp
+		#建立好友关系传播情景,A-->C-->B-->(E,F,G)
 
-	When 清空浏览器
-	When bill17关注jobs的公众号
-	When bill17访问jobs的webapp
+			#jack1点击bill的分享链接，jack1分享bill的分享链接到朋友圈
+				When 清空浏览器
+				When jack1点击bill分享链接
+				When jack1分享bill分享jobs的微站链接到朋友圈
 
-	When bill18关注jobs的公众号
-	When bill18访问jobs的webapp
+			#marry2关注jobs的公众账号，访问jobs的webapp，点击jack1的分享链接；marry2是bill的好友，来源是"直接关注"
+				When 清空浏览器
+				When marry2关注jobs的公众号
+				When marry2访问jobs的webapp
+				When marry2点击jack1分享链接
+				When marry2分享jack1分享jobs的微站链接到朋友圈
 
-	When bill6取消关注jobs的公众号
-	When bill7取消关注jobs的公众号
+			#bill01点击marry2的分享链接，关注jobs的公众账号，访问jobs的webapp；bill001是marry2推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill001点击marry2分享链接
+				When bill001关注jobs的公众号
+				When bill001访问jobs的webapp
 
-@mall2 @bi @memberAnalysis  @stats @stats.member @wip.member_rank @zhaolei
+			#bill002关注jobs的公众账号，访问jobs的webapp，点击marry2的分享链接；bill002是marry2的好友，来源是"直接关注"
+				When 清空浏览器
+				When bill002关注jobs的公众号
+				When bill002访问jobs的webapp
+				When bill002点击marry2分享链接
+
+			#bill003关注jobs的公众账号，点击marry2的分享链接，访问jobs的webapp，bill003是marry2推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill003关注jobs的公众号
+				When bill003点击marry2分享链接
+				When bill003访问jobs的webapp
+
+		#建立好友关系传播情景,A-->C-->D-->(E,F,G)
+
+			#jack2点击bill的分享链接，jack2分享bill的分享链接到朋友圈
+				When 清空浏览器
+				When jack2点击bill分享链接
+				When jack2分享bill分享jobs的微站链接到朋友圈
+
+			#jack3点击jack2的分享链接，jack3分享jack2的分享链接到朋友圈
+				When 清空浏览器
+				When jack3点击jack2分享链接
+				When jack3分享jack2分享jobs的微站链接到朋友圈
+
+			#bill0011点击jack3的分享链接，关注jobs的公众账号，访问jobs的webapp；bill0011是bill推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill0011点击jack3分享链接
+				When bill0011关注jobs的公众号
+				When bill0011访问jobs的webapp
+
+			#bill0012关注jobs的公众账号，访问jobs的weapp，点击jack3的分享链接；bill0012是bill好友，来源是"直接关注"
+				When 清空浏览器
+				When bill0012关注jobs的公众号
+				When bill0012访问jobs的webapp
+				When bill0012点击jack3分享链接
+
+			#bill0013关注jobs的公众账号，点击jack3的分享链接，访问jobs的weapp；bill0013是bill推荐的下级好友，来源是"会员分享"
+				When 清空浏览器
+				When bill0013关注jobs的公众号
+				When bill0013点击jack3分享链接
+				When bill0013访问jobs的webapp
+
+@mall2 @bi @memberAnalysis  @stats @stats.member @wip.member_rank
 Scenario: 1  会员概况：分享链接排行Top10
 	Given jobs登录系统
 	When jobs设置筛选日期
@@ -131,11 +201,7 @@ Scenario: 1  会员概况：分享链接排行Top10
 		
 	Then jobs获得分享链接排行Top10
 		| rank | username | followers |
-		|   1  |   bill2  |     4     |
-		|   2  |   bill7  |     2     |
-		|   3  |   bill5  |     2     |
-		|   4  |   bill1  |     2     |
-		|   5  |   bill3  |     2     |
-		|   6  |   bill8  |     1     |
-		|   7  |   bill9  |     1     |
-		|   8  |   bill6  |     1     |
+		|   1  |   bill   |     6     |
+		|   2  |   marry2 |     2     |
+		|   3  |   marry  |     2     |
+
