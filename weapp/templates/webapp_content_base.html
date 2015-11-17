@@ -139,6 +139,7 @@
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
             W.onloadHandlers = [];
+            var is_subscribed = {% if request.member.is_subscribed %}true{% else %}false{% endif %};
             W.currentPageName = "{{current_page_name}}";
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";
@@ -212,7 +213,8 @@
                         return;
                     }
                     url +='&fmt='+W.curRequestMemberToken;
-                    if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
+
+                    if (isUserCenterLink(url) && is_subscribed == false) {
                         /* 非会员显示二维码 */
                         showSwiper();
                     } else {
