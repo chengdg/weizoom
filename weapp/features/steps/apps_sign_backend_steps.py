@@ -122,7 +122,7 @@ def __post_PageJson(context,post_args,project_id,design_mode=0,version=1):
 
     """
 
-    termite_url = "http://dev.weapp.com/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
     if post_args:
         termite_post_args = post_args
     else:
@@ -152,7 +152,7 @@ def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
 
     """
 
-    sign_url = "http://dev.weapp.com/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
     if sign_args:
         pass
     else:
@@ -673,15 +673,6 @@ def step_impl(context,user):
         "content":reply_content
     }
 
-    # ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
-    # sign_args_response = __get_sign(context)
-
-    # sign  = sign_args_response['sign']
-    # is_create_new_data = sign_args_response['is_create_new_data']
-    # project_id = sign_args_response['project_id']
-    # webapp_owner_id = sign_args_response['webapp_owner_id']
-    # keywords = sign_args_response['keywords']
-
     ##step2访问后台Phone页面 (Fin不是标准api请求，Phone页面HTML)
     __get_Termite(context,project_id,design_mode=1)
     ##step3 获得Page右边个人配置JSON (Fin获得右边配置的空Json，这边主要是验证请求是否成功)
@@ -732,7 +723,6 @@ def step_impl(context,user):
         }
     #Page的参数args
     page_args ={
-
         "sign_title":name,
         "sign_description":sign_describe,
         "share_pic":share.get('img',""),
@@ -748,9 +738,6 @@ def step_impl(context,user):
         "page_id":"1",
         "page_json": __get_PageJson(page_args),
     }
-    # #清理mongo中，签到page
-    # sign_pagestore = pagestore_manager.get_pagestore('mongo')
-    # sign_pagestore.remove_all()
 
     post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
     page_related_id = json.loads(post_termite_response.content).get('data',{}).get('project_id',0)
@@ -764,9 +751,6 @@ def step_impl(context,user):
         "status":"off",
         "related_page_id":page_related_id,
     }
-    # # 签到
-    # sign_models.Sign.objects.all().delete()
-    # sign_models.SignParticipance.objects.all().delete()
 
     post_sign_response = __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
 
