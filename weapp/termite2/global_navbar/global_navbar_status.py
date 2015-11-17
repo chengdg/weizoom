@@ -8,7 +8,7 @@ from core.jsonresponse import create_response, JsonResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
-
+from cache import webapp_cache
 import termite2.models as termite_models
 from django.conf import settings
 from termite2 import export
@@ -34,7 +34,9 @@ class GlobalNavbarStatus(resource.Resource):
         global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user.id)
         global_navbar.is_enable = is_enable
         global_navbar.save()
-
+        # 如果点击启用，则更新varnish对于首页的缓存
+        # if not settings.DEBUG:
+        webapp_cache.update_product_list(request.user.id)
         response = create_response(200)
         response.data = True
         return response.get_response()
