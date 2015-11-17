@@ -10,6 +10,16 @@ from modules.member import models as member_models
 from mall.promotion.models import CouponRule
 from termite import pagestore as pagestore_manager
 
+
+class SignControl(models.Document):
+	member_id= models.LongField(default=0) #参与者id
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	sign_control = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id'])
+
+	meta = {
+		'collection': 'sign_sign_control'
+	}
+
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
@@ -190,6 +200,9 @@ class Sign(models.Document):
 					member = get_member_by_openid(data['openid'], data['webapp_id'])
 					if not member:
 						return None
+					#设置的最大连续签到天数
+					max_setting_count = sorted(map(lambda x: int(x), sign.prize_settings.keys()), reverse=True)[0]
+
 					signer = SignParticipance.objects(member_id=member.id, belong_to=str(sign.id))
 					if signer.count() == 0:
 						signer = SignParticipance(
@@ -205,11 +218,17 @@ class Sign(models.Document):
 					else:
 						signer = signer[0]
 
+					#如果已达到最大设置天数则重置签到
+					if signer.serial_count == max_setting_count and signer.latest_date.strftime('%Y-%m-%d') != datetime.datetime.now().strftime('%Y-%m-%d'):
+						signer.update(set__serial_count=0, set__latest_date=datetime.datetime.today())
+						signer.reload()
+
 					pagestore = pagestore_manager.get_pagestore('mongo')
 					page = pagestore.get_page(sign.related_page_id, 1)
 					sign_description = page['component']['components'][0]['model']['description']
 
 					return_data = signer.do_signment(sign)
+					print return_data
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:

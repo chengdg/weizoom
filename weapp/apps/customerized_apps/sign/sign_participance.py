@@ -66,6 +66,20 @@ class SignParticipance(resource.Resource):
 				)
 				signer.save()
 
+			#并发问题临时解决方案 ---start
+			control_data = {}
+			control_data['member_id'] = member_id
+			control_data['belong_to'] = activity_id
+			control_data['sign_control'] = datetime.today().strftime('%Y-%m-%d')
+			try:
+				control = app_models.SignControl(**control_data)
+				control.save()
+			except:
+				response = create_response(500)
+				response.errMsg = u'一天只能签到一次'
+				return response.get_response()
+			#并发问题临时解决方案 ---end
+
 			return_data = signer.do_signment(sign)
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
 				response = create_response(200)

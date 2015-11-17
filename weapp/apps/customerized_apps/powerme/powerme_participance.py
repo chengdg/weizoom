@@ -52,6 +52,19 @@ class PowerMeParticipance(resource.Resource):
 			#更新当前member的参与信息
 			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
 			ids_tmp = curr_member_power_info.powered_member_id
+			#并发问题临时解决方案 ---start
+			control_data = {}
+			control_data['belong_to'] = power_id
+			control_data['member_id'] = member_id
+			control_data['powerme_control'] = datetime.now().strftime('%Y-%m-%d')
+			try:
+				control = app_models.PowerMeControl(**control_data)
+				control.save()
+			except:
+				response = create_response(500)
+				response.errMsg = u'只能助力一次'
+				return response.get_response()
+			#并发问题临时解决方案 ---end
 			if not ids_tmp:
 				ids_tmp = [fid]
 			else:
