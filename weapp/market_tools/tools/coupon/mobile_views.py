@@ -60,7 +60,8 @@ def get_coupon(request):
 		'rule': rule,
 		'promotion': promotion,
 		'msg': msg,
-		'is_subscribed': is_subscribed
+		'is_subscribed': is_subscribed,
+		'hide_non_member_cover': True
 	})
 	return render_to_response('%s/coupon/webapp/coupon.html' % TEMPLATE_DIR, c)
 
