@@ -31,24 +31,10 @@ Background:
 			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
 		}
 		"""
-	Then jobs获得带参数二维码'带参数二维码1'
-		"""
-		{
-			"code_name": "带参数二维码1",
-			"prize_type": "无奖励",
-			"member_rank": "普通会员",
-			"tags": "未分组",
-			"is_attention_in": "false",
-			"remarks": "",
-			"is_relation_member": "false",
-			"reply_type": "文字",
-			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
-		}
-		"""
 @apps @powerme @backend
 Scenario:1 新建微助力，用户识别二维码为空
 	Given jobs登录系统
-	When jobs新建微助力活动,并且保存
+	When jobs新建微助力活动
 		"""
 		{
 			"name":"微助力活动1",
@@ -79,7 +65,7 @@ Scenario:1 新建微助力，用户识别二维码为空
 @apps @powerme @backend
 Scenario:2 新建微助力，用户识别二维码非空
 	Given jobs登录系统
-	When jobs新建微助力活动,并且保存
+	When jobs新建微助力活动
 		"""
 		{
 			"name":"微助力活动2",
@@ -99,7 +85,7 @@ Scenario:2 新建微助力，用户识别二维码非空
 		"""
 		{
 			"name":"微助力活动2",
-			"start_date":"当前时间",
+			"start_date":"明天",
 			"end_date":"3天后",
 			"status":"未开始",
 			"parti_person_cnt":0,
