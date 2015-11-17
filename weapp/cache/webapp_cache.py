@@ -504,7 +504,7 @@ def get_webapp_mall_data(webapp_owner_id):
 def get_forbidden_coupon_product_ids_for_cache(webapp_owner_id):
     def inner_func():
         forbidden_coupon_products = promotion_models.ForbiddenCouponProduct.objects.filter(
-            owner_id=webapp_owner_id, 
+            owner_id=webapp_owner_id,
             status__in=(promotion_models.FORBIDDEN_STATUS_NOT_START, promotion_models.FORBIDDEN_STATUS_STARTED)
         )
 
