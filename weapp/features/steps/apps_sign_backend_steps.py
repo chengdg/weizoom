@@ -14,6 +14,7 @@ from utils import url_helper
 import datetime as dt
 from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
+from apps.customerized_apps.sign import models as sign_models
 import termite.pagestore as pagestore_manager
 from apps.customerized_apps.sign.models import Sign
 import json
@@ -501,6 +502,9 @@ def step_impl(context,user,sign_name):
     context.project_id = page_related_id
     context.json_page = __get_PageJson(page_args)
     context.sign_id = post_sign_response['data']['id']
+    context.sign = sign
+    context.webapp_owner_id = webapp_owner_id
+    # context.is_new_created = is_new_created
 
 @when(u'{user}添加签到活动"{sign_name}",并且保存')
 def step_impl(context,user,sign_name):
@@ -630,6 +634,143 @@ def step_impl(context,user,sign_name):
     context.project_id = page_related_id
     context.json_page = __get_PageJson(page_args)
     context.sign_id = post_sign_response['data']['id']
+
+@when(u'{user}编辑签到活动,并且保存')
+def step_impl(context,user):
+    """
+    编辑签到活动
+    """
+    project_id = context.project_id
+    sign_id = context.sign_id
+    sign = context.sign
+    webapp_owner_id = context.webapp_owner_id
+    json_page = context.json_page
+    # is_new_created = context.is_new_created
+
+    #feature 数据
+    sign_json = json.loads(context.text)
+
+    status = sign_json.get('status',"")
+    name = sign_json.get('name',"")
+    sign_describe = sign_json.get('sign_describe',"")
+    share = {
+        "img":sign_json.get("share_pic",""),
+        "desc":sign_json.get("share_describe","")
+    }
+    reply = {}
+    keyword ={}
+    reply_keyword = sign_json.get("reply_keyword",{})
+    reply_content = sign_json.get("reply_content","")
+    for item in reply_keyword:
+        rule = ""
+        if item['rule']=="精确":
+            rule = "accurate"
+        elif item['rule']=="模糊":
+            rule = "blur"
+        keyword[item["key_word"]] = rule
+    reply ={
+        "keyword":keyword,
+        "content":reply_content
+    }
+
+    # ##Step1模拟登陆Sign页面 （Fin初始页面所有HTML元素）
+    # sign_args_response = __get_sign(context)
+
+    # sign  = sign_args_response['sign']
+    # is_create_new_data = sign_args_response['is_create_new_data']
+    # project_id = sign_args_response['project_id']
+    # webapp_owner_id = sign_args_response['webapp_owner_id']
+    # keywords = sign_args_response['keywords']
+
+    ##step2访问后台Phone页面 (Fin不是标准api请求，Phone页面HTML)
+    __get_Termite(context,project_id,design_mode=1)
+    ##step3 获得Page右边个人配置JSON (Fin获得右边配置的空Json，这边主要是验证请求是否成功)
+    dynamicPage_data = __get_DynamicPage(context,project_id)
+
+    ##step4 获得关键字(Fin)
+    keyword_response = __get_Keywords(context)
+
+    #step5 POST,PageJSON到Mongo,返回Page_id(Fin)
+
+    ##Page的数据处理
+    prize_settings = {}#sign记录数据
+    prize_settings_arr = []#page数据结构
+    sign_settings = sign_json.get("sign_settings","")
+    for item in sign_settings:
+        tmp_sign_in = item.get("sign_in","")
+        tmp_integral = item.get("integral","")
+        tmp_send_coupon = item.get("send_coupon","")
+        tmp_prize_counts = item.get("prize_counts","")
+        tmp_prize_settings_arr = {}
+
+        if tmp_sign_in:
+            prize_settings[tmp_sign_in] = {}
+            tmp_prize_settings_arr["serial_count"] = tmp_sign_in
+            if tmp_integral:
+                prize_settings[tmp_sign_in]["integral"] = tmp_integral
+                tmp_prize_settings_arr["serial_count_points"] = tmp_integral
+            else:
+                prize_settings[tmp_sign_in]["integral"] = 0
+
+            if tmp_send_coupon:
+                tmp_prize_settings_arr["serial_count_prizes"] ={}
+                prize_settings[tmp_sign_in]["coupon"] = __get_coupon_json(tmp_send_coupon)
+                tmp_prize_settings_arr["serial_count_prizes"] = __get_coupon_json(tmp_send_coupon)
+            else:
+                prize_settings[tmp_sign_in]["coupon"] = {'id':None,'count':0,'name':''}
+
+        else:
+            pass
+        prize_settings_arr.append(tmp_prize_settings_arr)
+    page_prizes = {}#Page记录数据
+    for i in range(len(prize_settings_arr)):
+        item = prize_settings_arr[i]
+        page_prizes["prize_item%d"%i]={
+                "serial_count":prize_settings_arr[i]["serial_count"],
+                "serial_count_points":prize_settings_arr[i].get("serial_count_points",0),
+                "serial_count_prizes":prize_settings_arr[i].get("serial_count_prizes",{})
+        }
+    #Page的参数args
+    page_args ={
+
+        "sign_title":name,
+        "sign_description":sign_describe,
+        "share_pic":share.get('img',""),
+        "share_description":share.get('desc',""),
+        "reply_keyword":keyword,#dict
+        "reply_content": reply.get('content',""),
+        "prizes":page_prizes
+    }
+
+    termite_post_args={
+        "field":"page_content",
+        "id":project_id,
+        "page_id":"1",
+        "page_json": __get_PageJson(page_args),
+    }
+    # #清理mongo中，签到page
+    # sign_pagestore = pagestore_manager.get_pagestore('mongo')
+    # sign_pagestore.remove_all()
+
+    post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
+    page_related_id = json.loads(post_termite_response.content).get('data',{}).get('project_id',0)
+    #step6 POST,填写JSON至Mongo，返回JSON(Fin)
+    post_sign_args = {
+        "_method":"put",
+        "name":name,
+        "prize_settings":json.dumps(prize_settings),
+        "reply":json.dumps(reply),
+        "share":json.dumps(share),
+        "status":"off",
+        "related_page_id":page_related_id,
+    }
+    # # 签到
+    # sign_models.Sign.objects.all().delete()
+    # sign_models.SignParticipance.objects.all().delete()
+
+    post_sign_response = __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
+
+
 
 @then(u'{user}获得签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
