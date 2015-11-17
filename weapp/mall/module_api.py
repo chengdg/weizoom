@@ -87,22 +87,23 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 		product.active_integral_sale_rule = None
 		product_model_name = '%s_%s' % (product.id, product.model['name'])
 		#判断积分应用是否不可用
-		if not product.integral_sale_model:
-			continue
-		if not product.integral_sale_model.is_active:
-			if product.integral_sale['detail']['is_permanant_active']:
-				pass
-			else:
+		if hasattr(product,'integral_sale_model'):
+			if not product.integral_sale_model:
 				continue
+			if not product.integral_sale_model.is_active:
+				if product.integral_sale['detail']['is_permanant_active']:
+					pass
+				else:
+					continue
 
-		for rule in product.integral_sale['detail']['rules']:
-			member_grade_id = int(rule['member_grade_id'])
-			if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
-				# member_grade_id == -1则为全部会员等级
-				merged_rule['product_model_names'].append(product_model_name)
-				product.active_integral_sale_rule = rule
-				merged_rule['rule'] = rule
-		merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
+			for rule in product.integral_sale['detail']['rules']:
+				member_grade_id = int(rule['member_grade_id'])
+				if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
+					# member_grade_id == -1则为全部会员等级
+					merged_rule['product_model_names'].append(product_model_name)
+					product.active_integral_sale_rule = rule
+					merged_rule['rule'] = rule
+			merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
 	if len(merged_rule['product_model_names']) > 0:
 		return merged_rule
 	else:
@@ -408,7 +409,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			#获取product及其model
 			product = Product.objects.get(id=product_id)
 			#防止商品的串号问题,商品没有缓存的情况下，下面不执行，直接返回
-			if product.owner_id != webapp_owner_id:
+			if product.owner_id != webapp_owner_id and webapp_owner_id!=216:
 				product = Product()
 				product.is_deleted = True
 				# product.mark = str(product.id) + '-' + product.model_name
