@@ -18,7 +18,7 @@ from django.conf import settings
 #from django.contrib.auth.models import User, Group, Permission
 #from django.contrib import auth
 from django.db.models import Q, F
-
+from django.db.utils import IntegrityError
 from tools.regional import views as regional_util
 from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
@@ -1038,7 +1038,6 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	order.type = order_info['type']
 	order.pay_interface_type = order_info['pay_interface']
 
-	order.order_id = __create_random_order_id()
 	order.status = ORDER_STATUS_NOT
 	order.webapp_id = webapp_id
 	order.webapp_user_id = webapp_user.id
@@ -1076,8 +1075,17 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	else:
 		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
 		order.order_source = ORDER_SOURCE_WEISHOP
-
-	order.save()
+	save_retry_count = 0
+	while save_retry_count <= 10:
+		try:
+			order.order_id = __create_random_order_id()
+			order.save()
+		except IntegrityError:
+			save_retry_count += 1
+			watchdog_info(u"order.id:%s,order_id:%s,重试次数：%s" % (order.id, order.order_id, save_retry_count),
+						type="mall", user_id=int(request.webapp_owner_id))
+		else:
+			break
 
 	#更新库存
 	for product in products:
@@ -1998,7 +2006,7 @@ def get_order_products(order):
 	order.session_data = dict()
 	order_id = order.id
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
-		
+
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])
