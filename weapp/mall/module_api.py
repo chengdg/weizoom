@@ -87,22 +87,23 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 		product.active_integral_sale_rule = None
 		product_model_name = '%s_%s' % (product.id, product.model['name'])
 		#判断积分应用是否不可用
-		if not product.integral_sale_model:
-			continue
-		if not product.integral_sale_model.is_active:
-			if product.integral_sale['detail']['is_permanant_active']:
-				pass
-			else:
+		if hasattr(product,'integral_sale_model'):
+			if not product.integral_sale_model:
 				continue
+			if not product.integral_sale_model.is_active:
+				if product.integral_sale['detail']['is_permanant_active']:
+					pass
+				else:
+					continue
 
-		for rule in product.integral_sale['detail']['rules']:
-			member_grade_id = int(rule['member_grade_id'])
-			if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
-				# member_grade_id == -1则为全部会员等级
-				merged_rule['product_model_names'].append(product_model_name)
-				product.active_integral_sale_rule = rule
-				merged_rule['rule'] = rule
-		merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
+			for rule in product.integral_sale['detail']['rules']:
+				member_grade_id = int(rule['member_grade_id'])
+				if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
+					# member_grade_id == -1则为全部会员等级
+					merged_rule['product_model_names'].append(product_model_name)
+					product.active_integral_sale_rule = rule
+					merged_rule['rule'] = rule
+			merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
 	if len(merged_rule['product_model_names']) > 0:
 		return merged_rule
 	else:
@@ -407,6 +408,27 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 		try:
 			#获取product及其model
 			product = Product.objects.get(id=product_id)
+			#防止商品的串号问题,商品没有缓存的情况下，下面不执行，直接返回
+			if product.owner_id != webapp_owner_id:
+				product = Product()
+				product.is_deleted = True
+				# product.mark = str(product.id) + '-' + product.model_name
+				data = product.to_dict(
+										'min_limit',
+										'swipe_images_json',
+										'models',
+										'_is_use_custom_model',
+										'product_model_properties',
+										'is_sellout',
+										'promotion',
+										'integral_sale',
+										'properties',
+										'product_review',
+										'master_promotion_title',
+										'integral_sale_promotion_title'
+				)
+				return {'value': data}
+				#直接返回
 			if product.owner_id != webapp_owner_id:
 				product.postage_id = -1
 				product.unified_postage_money = 0
@@ -485,15 +507,12 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 				product.promotion = None
 			Product.fill_property_detail(webapp_owner_id, [product], '')
 		except:
-			if settings.DEBUG:
-				raise
-			else:
-				#记录日志
-				alert_message = u"获取商品记录失败,商品id: {} cause:\n{}".format(product_id, unicode_full_stack())
-				watchdog_alert(alert_message, type='WEB')
-				#返回"被删除"商品
-				product = Product()
-				product.is_deleted = True
+			alert_message = u"获取商品记录失败,商品id: {} cause:\n{}".format(product_id, unicode_full_stack())
+			watchdog_alert(alert_message, type='WEB')
+			#返回"被删除"商品
+			product = Product()
+			product.is_deleted = True
+			product.promotion = None
 
 		# 商品详情图片lazyload
 		soup = BeautifulSoup(product.detail)
@@ -521,7 +540,6 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 								'master_promotion_title',
 								'integral_sale_promotion_title'
 		)
-
 		return {'value': data}
 
 	return inner_func
