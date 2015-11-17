@@ -75,7 +75,7 @@ W.ValidaterClass = function() {
 		'require-mobile-phone': {
 			type: 'regex',
 			extract: 'value',
-			regex: /^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g,
+			regex: /^0{0,1}(13[0-9]|147|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g,
 			errorHint: '输入正确11位有效的手机号码'
 		},
         'require-email': {
