@@ -118,7 +118,7 @@ Background:
 	When bill6取消关注jobs的公众号
 	When bill7取消关注jobs的公众号
 
-@mall2 @bi @memberAnalysis  @stats @stats.member @wip.member_rank
+@mall2 @bi @memberAnalysis  @stats @stats.member @wip.member_rank @zhaolei
 Scenario: 1  会员概况：分享链接排行Top10
 	Given jobs登录系统
 	When jobs设置筛选日期
