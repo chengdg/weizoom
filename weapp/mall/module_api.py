@@ -87,22 +87,23 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 		product.active_integral_sale_rule = None
 		product_model_name = '%s_%s' % (product.id, product.model['name'])
 		#判断积分应用是否不可用
-		if not product.integral_sale_model:
-			continue
-		if not product.integral_sale_model.is_active:
-			if product.integral_sale['detail']['is_permanant_active']:
-				pass
-			else:
+		if hasattr(product,'integral_sale_model'):
+			if not product.integral_sale_model:
 				continue
+			if not product.integral_sale_model.is_active:
+				if product.integral_sale['detail']['is_permanant_active']:
+					pass
+				else:
+					continue
 
-		for rule in product.integral_sale['detail']['rules']:
-			member_grade_id = int(rule['member_grade_id'])
-			if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
-				# member_grade_id == -1则为全部会员等级
-				merged_rule['product_model_names'].append(product_model_name)
-				product.active_integral_sale_rule = rule
-				merged_rule['rule'] = rule
-		merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
+			for rule in product.integral_sale['detail']['rules']:
+				member_grade_id = int(rule['member_grade_id'])
+				if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
+					# member_grade_id == -1则为全部会员等级
+					merged_rule['product_model_names'].append(product_model_name)
+					product.active_integral_sale_rule = rule
+					merged_rule['rule'] = rule
+			merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
 	if len(merged_rule['product_model_names']) > 0:
 		return merged_rule
 	else:
