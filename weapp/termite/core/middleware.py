@@ -343,6 +343,8 @@ class ProjectMiddleware(object):
 					#_, app_project_id = project_id.split(':')
 					#request.webapp_owner_id_from_project_middleware = webapp_owner_id
 					request.project = None
+				elif 'sign' in project_id:
+					_, project_id, webapp_owner_id = project_id.split(':')
 				else:
 					# request.project = Project.objects.get(id=project_id)
 					

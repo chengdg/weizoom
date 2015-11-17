@@ -297,6 +297,8 @@ class UserProfileMiddleware(object):
 						_, app, webapp_owner_id = project_id.split(':')
 					elif 'fake:wepage' in project_id:
 						_, wepage, webapp_owner_id, _, page_id = project_id.split(':')
+					elif 'sign' in project_id:
+						_, project_id, webapp_owner_id = project_id.split(':')
 					else:
 						project = Project.objects.get(id=project_id)
 						webapp_owner_id = project.owner_id

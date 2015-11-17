@@ -640,10 +640,10 @@ def step_impl(context,user):
     """
     编辑签到活动
     """
-    project_id = context.project_id
+    webapp_owner_id = context.webapp_owner_id
+    project_id = 'sign:%s:%d'%(context.project_id,webapp_owner_id)
     sign_id = context.sign_id
     sign = context.sign
-    webapp_owner_id = context.webapp_owner_id
     json_page = context.json_page
     # is_new_created = context.is_new_created
 
