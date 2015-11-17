@@ -13,7 +13,7 @@ from core import paginator
 from core.jsonresponse import create_response
 
 import stats.util as stats_util
-from modules.member.models import Member, MemberSharedUrlInfo
+from modules.member.models import Member, MemberSharedUrlInfo,MemberFollowRelation
 from market_tools.tools.member_qrcode.models import MemberQrcode, MemberQrcodeLog
 from core.charts_apis import create_line_chart_response
 
@@ -393,7 +393,12 @@ def _get_member_share_url_rank(webapp_id, low_date, high_date):
 	for share_url_member in share_url_members:
 		if not member_id2followers.has_key(share_url_member.member_id):
 			member_id2followers[share_url_member.member_id] = 0
-		member_id2followers[share_url_member.member_id] += share_url_member.followers
+			fans_count = MemberFollowRelation.get_follow_members_for(share_url_member.member_id, '1')
+			qrcode_friends = 0
+			if fans_count:
+				qrcode_friends = fans_count.filter(source=1).count()
+
+			member_id2followers[share_url_member.member_id] = fans_count.count() - qrcode_friends
 
 	#按粉丝数量倒序
 	sorted_member_id2followers = sorted(member_id2followers.items(), key=lambda d:d[1], reverse = True)
