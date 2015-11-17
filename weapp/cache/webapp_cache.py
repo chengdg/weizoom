@@ -229,8 +229,11 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         webapp_owner_id, product_id)
     data = cache_util.get_from_cache(
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
-
     product = mall_models.Product.from_dict(data)
+    # 解决商品不存在以及商品在店铺间的串号问题
+    if product.is_deleted or product.owner_id != webapp_owner_id:
+        product.is_deleted = True
+        return product
     # Set member's discount of the product
     if hasattr(product, 'integral_sale') and product.integral_sale \
         and product.integral_sale['detail'].get('rules', None):
@@ -564,3 +567,11 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
         #     request = urllib2.Request(url)
         #     request.get_method = lambda: 'PURGE'
         #     urllib2.urlopen(request)
+
+
+def update_product_list(webapp_owner_id):
+    url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list' % \
+            (settings.DOMAIN, webapp_owner_id)
+    request = urllib2.Request(url)
+    request.get_method = lambda: 'PURGE'
+    urllib2.urlopen(request)
