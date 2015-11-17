@@ -46,7 +46,7 @@ Background:
 		"""
 
 
-@mall2  @termite2 
+@mall2  @termite2
 Scenario:1 商品管理'下架'、'删除'商品
 	When jobs创建微页面
 		"""
