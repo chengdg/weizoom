@@ -112,6 +112,9 @@
                 {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
                 {% endif %}
+                {% if not hide_non_member_cover %}
+                    data-is-show-cover="true"
+                {% endif %}
                 data-id="{{request.webapp_owner_id}}"
                 data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}"
                 data-varnish="{{is_varnish_url}}"

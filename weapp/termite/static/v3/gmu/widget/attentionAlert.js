@@ -12,9 +12,9 @@ Copyright (c) 2011-2012 Weizoom Inc
             isShowButton: function(_this) {
                 return _this.$el.data('is-show-button') ? true : false;
             },
-            // isShowCover: function(_this) {
-            //     return _this.$el.data('is-show-cover') ? true : false;
-            // },
+            isShowCover: function(_this) {
+                return _this.$el.data('is-show-cover') ? true : false;
+            },
             getDataId: function(_this) {
                 var id = _this.$el.data('id');
                 return id;
@@ -35,7 +35,6 @@ Copyright (c) 2011-2012 Weizoom Inc
         },
 
         render: function() {
-            var height;
             this.$button = $('<a class="xa-guideAttention">关注我们可查看账户积分、红包、优惠券等！</a>');
             this.$el.html(this.$button);
             if($('.xa-page')){
@@ -48,6 +47,7 @@ Copyright (c) 2011-2012 Weizoom Inc
             if($('xa-editOrderPage')){
                 $('#wrapper').css('top','40px');
             }
+            var height = this.setting.isShowCover(this) ? '100%' : '40px'
             this.$el.css('height', height);
             $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
             $('.xui-mask').css({
