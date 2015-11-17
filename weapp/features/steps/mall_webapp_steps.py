@@ -96,6 +96,31 @@ def step_impl(context, webapp_user_name, webapp_owner_name, product_name):
 	context.product = response.context['product']
 	context.page_title = response.context['page_title']
 
+@when(u"{webapp_user_name}把{webapp_owner_name}的'{product_name_one}'链接的商品ID修改成'{product_name_two}'的商品ID")
+def step_impl(context, webapp_user_name, webapp_owner_name, product_name_one,product_name_two):
+	bdd_util.use_webapp_template(webapp_owner_name, 'simple_fashion')
+	product_two = Product.objects.get(owner_id=context.webapp_owner_id, name=product_name_two)
+	url = '/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%d' % (context.webapp_owner_id, product_two.id)
+	context.url = url
+
+@when(u"{webapp_user_name}把{webapp_owner_name}的'{product_name_one}'链接的商品ID修改成{webapp_owner_name_other}的'{product_name_two}'的商品ID")
+def step_impl(context, webapp_user_name, webapp_owner_name, product_name_one,webapp_owner_name_other,product_name_two):
+	user_other = User.objects.get(username=webapp_owner_name_other).id
+	product_two = Product.objects.get(owner_id=user_other, name=product_name_two)
+	url = '/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%d' % (context.webapp_owner_id, product_two.id)
+	context.url = url
+
+
+@when(u"{webapp_user_name}访问修改后的链接")
+def step_impl(context,webapp_user_name):
+	if hasattr(context,'url'):
+		response = context.client.get(bdd_util.nginx(context.url), follow=True)
+		try:
+			context.product = response.context['product']
+			context.page_title = response.context['page_title']
+		except:
+			context.server_error_msg = u'404页面'
+
 
 @then(u"{webapp_user_name}获得webapp商品")
 def step_impl(context, webapp_user_name):

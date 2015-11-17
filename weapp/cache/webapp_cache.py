@@ -229,8 +229,11 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         webapp_owner_id, product_id)
     data = cache_util.get_from_cache(
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
-
     product = mall_models.Product.from_dict(data)
+    # 解决商品不存在以及商品在店铺间的串号问题
+    if product.is_deleted or product.owner_id != webapp_owner_id and webapp_owner_id!=216:
+        product.is_deleted = True
+        return product
     # Set member's discount of the product
     if hasattr(product, 'integral_sale') and product.integral_sale \
         and product.integral_sale['detail'].get('rules', None):
