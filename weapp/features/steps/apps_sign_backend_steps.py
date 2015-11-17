@@ -713,6 +713,21 @@ def step_impl(context,user):
     post_response = __post_SignArgs(context,args,project_id)
     context.sign_id = sign_id
 
+@then(u'{user}更新签到活动的状态')
+def step_impl(context,user):
+    text = json.loads(context.text)
+    if context.text:
+        value = text.get("status","off")
+
+    project_id = u'new_app:sign:'+str(context.project_id)
+    sign_id = str(context.sign_id)
+    args = {
+        "signId":sign_id,
+        "status":value
+    }
+    post_response = __post_SignArgs(context,args,project_id)
+    context.sign_id = sign_id
+
 @when(u'{user}离开签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):
     pass

@@ -35,7 +35,7 @@ Background:
 	Then jobs能获得优惠券'优惠券2'的码库
 		"""
 		{
-			"coupon1_id_2": {
+			"coupon2_id_1": {
 				"money": 2.00,
 				"status": "未领取",
 				"consumer": "",
@@ -43,7 +43,7 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend 
+@apps_sign @apps_sign_frontend
 Scenario:1 用户进入签到页面完成"签到活动1"签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -489,7 +489,7 @@ Scenario:8 非会员用户访问签到分享进行签到
   	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@apps_sign @apps_sign_frontend
+@apps_sign @apps_sign_frontend @kuku9
 Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -573,7 +573,7 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	Then jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动2",
