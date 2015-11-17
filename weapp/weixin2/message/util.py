@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
+import time
+import string
+import random
 from weixin2.models import *
 from core.jsonresponse import create_response
 from core import emotion
@@ -105,20 +108,18 @@ def is_valid_time(time_str):
 
 #处理消息中的特殊字符
 def translate_special_characters(message_text):
-    old_message_text = message_text
+    time_str = str(time.time())
+    random_str = ''.join(random.sample(string.ascii_letters + string.digits, 6))
+    special_str = time_str + random_str
+
+    message_text = message_text.replace('{}', special_str)
     a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
     all_a_html = a_pattern.findall(message_text)
 
     for html in all_a_html:
-        message_text = message_text.replace(html, "%s")
+        message_text = message_text.replace(html, "{}")
     message_text = message_text.replace('<', "&lt;")
     message_text = message_text.replace('>', "&gt;")
-    try:
-        if all_a_html and len(all_a_html) == message_text.count('%s'):
-            message_text = message_text % tuple(all_a_html)
-            return message_text
-    except:
-        error_msg = u"translate_special_characters失败message_text:{},all_a_html:{} cause:\n{}".format(message_text, all_a_html, unicode_full_stack())
-        watchdog_error(error_msg)
-    
-    return old_message_text
+    message_text = message_text.format(*all_a_html)
+    message_text = message_text.replace(special_str, '{}')
+    return message_text
