@@ -88,12 +88,12 @@ def share_page_title(request):
 	if (hasattr(request, 'context_dict') and request.context_dict is not None) and (request.context_dict.get('share_page_title', None)):
 		return {}
 
-	if hasattr(request, 'webapp_owner_info') and request.webapp_owner_info and request.webapp_owner_info.mpuser_preview_info.name:
-		mpuser_name = request.webapp_owner_info.mpuser_preview_info.name
-		if not str.isdigit(mpuser_name.encode('utf-8')):
-			return {'share_page_title' : mpuser_name}
-		else:
-			return {}
+	# if hasattr(request, 'webapp_owner_info') and request.webapp_owner_info and request.webapp_owner_info.mpuser_preview_info.name:
+	# 	mpuser_name = request.webapp_owner_info.mpuser_preview_info.name
+	# 	if not str.isdigit(mpuser_name.encode('utf-8')):
+	# 		return {'share_page_title' : mpuser_name}
+	# 	else:
+	# 		return {}
 
 	return {}
 
@@ -168,7 +168,7 @@ def system_name(request):
 
 	if show_system_name is None or len(show_system_name) == 0:
 		show_system_name = u'微信营销管理系统'
-				
+
 	return {'system_name': show_system_name}
 
 #===============================================================================
@@ -190,7 +190,7 @@ def debug_merged_js(request):
 		result['debug_merged_js'] = False
 
 	return result
-	
+
 
 #===============================================================================
 # debug_merged_css ： 判断当前是否处于调试合并后的all.css模式
@@ -230,7 +230,7 @@ def webapp_template(request):
 	if request.user.is_authenticated():
 		profile = request.user.get_profile()
 		webapp_template_info_module = '%s.webapp_template_info' % profile.webapp_template
-	
+
 		try:
 			module = __import__(webapp_template_info_module, {}, {}, ['*',])
 			return {'webapp_template': profile.webapp_template, 'webapp_editor_nav': module.NAV}
@@ -239,7 +239,7 @@ def webapp_template(request):
 	else:
 		profile = request.user_profile
 		if profile:
-			return {'webapp_template': profile.webapp_template, 'webapp_editor_nav': {}}	
+			return {'webapp_template': profile.webapp_template, 'webapp_editor_nav': {}}
 		return {'webapp_template': 'unknown', 'webapp_editor_nav': {}}
 	'''
 
@@ -318,7 +318,7 @@ def weapp_dialogs_old(request):
 
 		if dialog_dir[0] == '.':
 			continue
-			
+
 		template_path = os.path.join(dialogs_dir_path, dialog_dir, 'dialog.html')
 		src_file = open(template_path, 'rb')
 		template_source = src_file.read()
@@ -404,9 +404,9 @@ def homepage_workspace_info(request):
 
 	if not request.user_profile:
 		return {}
-		
+
 	return {'homepage_workspace_info': 'workspace_id=home_page&webapp_owner_id=%s&workspace_id=%s&project_id=0' % (request.webapp_owner_id, request.user_profile.homepage_workspace_id)}
-		
+
 #===============================================================================
 # page_help_document ： 获取页面帮助文档
 #  TODO: 加入缓存
@@ -459,7 +459,7 @@ def page_features(request):
 def detect_member_operate_capability(request):
 	if hasattr(request, 'context_dict') and (request.context_dict is not None) and (request.context_dict.get('hide_non_member_cover', None) is not None):
 		return {}
-		
+
 	# 针对gaoge1账号，webapp_owner_id为16的账号，首页可以点击
 	if hasattr(request, 'webapp_owner_id') and request.webapp_owner_id is 16:
 		return {'hide_non_member_cover': True}
@@ -530,7 +530,7 @@ def visit_histroy(request):
 	title = ''
 	uuid = request.COOKIES.get(member_settings.NON_MEMBER_UUID_SESSION_KEY, None)
 	if uuid is None:
-		return {'visit_histroy_url': first_url, 'visit_histroy_url_title': title}	
+		return {'visit_histroy_url': first_url, 'visit_histroy_url_title': title}
 
 	if hasattr(request, 'member') and request.member and hasattr(request,'app') and request.app :
 		first_visit_record = NonmemberFirstVisitRecord.objects.filter(appid=request.app.appid, uuid=uuid)[0] if NonmemberFirstVisitRecord.objects.filter(uuid=uuid, appid=request.app.appid).count() > 0 else None
@@ -543,12 +543,12 @@ def visit_histroy(request):
 		first_visit_record = NonmemberFirstVisitRecord.objects.filter(appid=request.app.appid, uuid=request.uuid)[0] if NonmemberFirstVisitRecord.objects.filter(uuid=request.uuid, appid=request.app.appid).count() > 0 else None
 		if first_visit_record is None:
 			NonmemberFirstVisitRecord.objects.create(
-				uuid=request.uuid, 
-				appid=request.app.appid, 
+				uuid=request.uuid,
+				appid=request.app.appid,
 				url=request.get_full_path(),
 				title = request.context_dict.get('page_title', '')
 				)
-	return {'visit_histroy_url': first_url, 'visit_histroy_url_title': title}	
+	return {'visit_histroy_url': first_url, 'visit_histroy_url_title': title}
 
 def user_token(request):
 	if not hasattr(request, 'user') or request.user is None:
@@ -605,7 +605,7 @@ def __match_navbar_path(request, path):
 			break
 
 	return navbar_type
-	
+
 
 def fetch_webapp_global_navbar(request):
 	if not hasattr(request, 'webapp_owner_id') or request.webapp_owner_id <= 0:
