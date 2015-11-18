@@ -1817,7 +1817,7 @@ class PostageConfig(models.Model):
 	is_enable_added_weight = models.BooleanField(default=True)  # 是否启用续重机制
 	added_weight = models.CharField(max_length=256, default='0')  # 续重
 	added_weight_price = models.CharField(max_length=256, default='0')  # 续重价格
-	display_index = models.IntegerField(default=1, db_index=True)  # 显示的排序
+	# display_index = models.IntegerField(default=1, db_index=True)  # 显示的排序
 	is_used = models.BooleanField(default=True)  # 是否启用
 	is_system_level_config = models.BooleanField(default=False)  # 是否是系统创建的不可修改的配置
 	created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
