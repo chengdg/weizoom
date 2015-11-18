@@ -2,7 +2,7 @@
 
 from behave import *
 from test import bdd_util
-from modules.member.models import WebAppUser
+from modules.member.models import WebAppUser, ShipInfo
 from mall.models import *
 from features.testenv.model_factory import *
 from tools.regional.models import *
@@ -117,15 +117,14 @@ def step_click_check_out(context, webapp_user_name):
         'target_api': 'order/save',
         'is_order_from_shopping_cart': 'true',
         'woid': context.webapp_owner_id,
-        'ship_id': order.ship_id,
-        'ship_name': order.ship_name,
-        'ship_tel': order.ship_tel,
-        'area': order.area,
-        'ship_address': order.ship_address,
         'xa-choseInterfaces': PAYNAME2TYPE.get(pay_type, -1),
         'bill': order.ship_name,
         'group2integralinfo': {},
     }
+
+    ship_info = ShipInfo.objects.get(is_selected=True)
+    ship_dict = ship_info.to_dict()
+    data = dict(data.items() + ship_dict.items())
 
     data.update(argument_request)
     coupon_id = context.product_infos.get('coupon_id', None)
