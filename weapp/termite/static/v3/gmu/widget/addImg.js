@@ -114,6 +114,7 @@
         },
 
         upload: function(basestr,imglength,$li) {
+            W.is_pic_up = false;
             var _this = this;
             var $bar = $li.find('.xa-progress span');
             var percent = 0;
@@ -143,7 +144,8 @@
                     $bar.css('width',"100%");
                     setTimeout(function(){
                         $bar.parent().css('opacity','0');
-                    },300)                
+                    },300);
+                    W.is_pic_up = true;
                 },
                 error: function (data) {
                     _this._alert('图片格式不正确，请重新上传');

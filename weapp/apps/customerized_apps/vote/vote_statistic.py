@@ -87,7 +87,7 @@ class voteStatistic(resource.Resource):
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-			'third_nav_name': export.MALL_APPS_EVENT_NAV,
+			'third_nav_name': export.MALL_APPS_VOTE_NAV,
 			'titles': titles_list,
 			'total_count': total_count,
 			'project_id': project_id,

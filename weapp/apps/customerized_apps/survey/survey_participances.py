@@ -196,19 +196,11 @@ class surveyParticipances_Export(resource.Resource):
 					fields_pure.append(field)
 
 			#username(member_id)
-			member_ids = [record['member_id'] for record in data ]
-			members = member_models.Member.objects.filter(id__in = member_ids)
-			member_id2name ={}
-			for member in members:
-				m_id = member.id
-				if member.is_subscribed == True:
-					u_name = member.username
-				else:
-					u_name = u'非会员'
-				if m_id not in member_id2name:
-					member_id2name[m_id] = u_name
-				else:
-					member_id2name[m_id] = u_name
+			member_ids = []
+			for record in data:
+				member_ids.append(record['member_id'])
+			members = member_models.Member.objects.filter(id__in=member_ids)
+			member_id2member = {member.id: member for member in members}
 			#processing data
 			num = 0
 			for record in data:
@@ -219,7 +211,7 @@ class surveyParticipances_Export(resource.Resource):
 				export_record = []
 
 				num = num+1
-				name = member_id2name[record['member_id']]
+				name = member_id2member[record['member_id']].username if member_id2member.get(record['member_id']) else u'未知'
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:

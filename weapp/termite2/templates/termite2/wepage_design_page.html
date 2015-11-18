@@ -112,8 +112,9 @@
 			$(document).ready(function() {
                 //选中组件，判断是否第一个，隐藏删除按钮
                 W.Broadcaster.on('selectwidget:assert', function(cid){
-                    if(parent.W.preventFirstComponentDelected && cid == 2){
-                        $('.xa-actionPanel').find('.xa-delete').hide();
+
+                    if(parent.W.preventFirstComponentDelected){
+                        $('.xa-actionPanel').find('.xa-delete').first().hide();
                     }
                 });
 				detectParentTask();

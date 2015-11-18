@@ -50,6 +50,7 @@ class lotteryParticipances(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 		prize_type = request.GET.get('prize_type', '-1')
 		status = request.GET.get('status', '-1')
+		export_id = request.GET.get('export_id','')
 		member_ids = []
 		if name:
 			hexstr = byte_to_hex(name)
@@ -58,8 +59,12 @@ class lotteryParticipances(resource.Resource):
 
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		
-		params = {'belong_to':request.GET['id']}
+
+		if not export_id:
+			belong_to = request.GET['id']
+		else:
+			belong_to = export_id
+		params = {'belong_to':belong_to}
 		if name:
 			params['member_id__in'] = member_ids
 		if start_time:
@@ -72,12 +77,14 @@ class lotteryParticipances(resource.Resource):
 			params['status'] = True if status == '1' else False
 		# datas = app_models.lotteryParticipance.objects(**params).order_by('-id')
 		datas = app_models.lottoryRecord.objects(**params)
-		#进行分页
-		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
-		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		
-		return pageinfo, datas
+		if not export_id:
+			#进行分页
+			count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+			cur_page = int(request.GET.get('page', '1'))
+			pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+			return pageinfo, datas
+		else:
+			return datas
 	
 	@login_required
 	def api_get(request):
@@ -134,40 +141,17 @@ class lotteryParticipances_Export(resource.Resource):
 		"""
 		详情导出
 		"""
-		export_id = request.GET.get('export_id')
+		export_id = request.GET.get('export_id','')
 
 		# app_name = lotteryParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = u'微信抽奖详情.xls'
+		download_excel_file_name = u'微信抽奖详情.xls'
+		excel_file_name = 'lottery_details.xls'
 		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 		#Excel Process Part
 		try:
 			import xlwt
-			name = request.GET.get('participant_name', '')
-			webapp_id = request.user_profile.webapp_id
-			prize_type = request.GET.get('prize_type', '-1')
-			status = request.GET.get('status', '-1')
-			member_ids = []
-			if name:
-				hexstr = byte_to_hex(name)
-				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-				member_ids = [member.id for member in members]
-
-			start_time = request.GET.get('start_time', '')
-			end_time = request.GET.get('end_time', '')
-
-			params = {'belong_to':request.GET['export_id']}
-			if name:
-				params['member_id__in'] = member_ids
-			if start_time:
-				params['created_at__gte'] = start_time
-			if end_time:
-				params['created_at__lte'] = end_time
-			if prize_type != '-1':
-				params['prize_type'] = prize_type
-			if status != '-1':
-				params['status'] = True if status == '1' else False
-			data = app_models.lottoryRecord.objects(**params)
+			datas = lotteryParticipances.get_datas(request)
 			fields_raw = []
 			export_data = []
 
@@ -180,25 +164,18 @@ class lotteryParticipances_Export(resource.Resource):
 			fields_raw.append(u'抽奖时间')
 			fields_raw.append(u'领取状态')
 
-			member_ids = [record['member_id'] for record in data ]
-			members = member_models.Member.objects.filter(id__in = member_ids)
-			member_id2name ={}
-			for member in members:
-				m_id = member.id
-				if member.is_subscribed == True:
-					u_name = member.username
-				else:
-					u_name = u'非会员'
-				if m_id not in member_id2name:
-					member_id2name[m_id] = u_name
-				else:
-					member_id2name[m_id] = u_name
+			member_ids = []
+			for record in datas:
+				member_ids.append(record['member_id'])
+			members = member_models.Member.objects.filter(id__in=member_ids)
+			member_id2member = {member.id: member for member in members}
+
 			#processing data
 			num = 0
-			for record in data:
+			for record in datas:
 				export_record = []
 				num = num+1
-				name = member_id2name[record['member_id']]
+				name = member_id2member[record['member_id']].username if member_id2member.get(record['member_id']) else u'未知'
 				tel = record['tel']
 				prize_title = record['prize_title']
 				prize_name = record['prize_name']
@@ -217,7 +194,6 @@ class lotteryParticipances_Export(resource.Resource):
 				export_record.append(status)
 
 				export_data.append(export_record)
-
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 			ws = wb.add_sheet('id%s'%export_id)
@@ -246,7 +222,7 @@ class lotteryParticipances_Export(resource.Resource):
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
 		except Exception, e:
 			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
 			watchdog_error(error_msg)

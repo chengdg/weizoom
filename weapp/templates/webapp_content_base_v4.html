@@ -31,7 +31,6 @@
         <link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">
         <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">
-        <link type="text/css" rel="stylesheet"  href="/webapp_static/backend_default_v3/css/default_v3.css">
         <!-- *end_prunt_task* -->
 
 
@@ -295,6 +294,7 @@
             W.permission = "{{ permission }}";
 
             var slag = true;//调研图片上传较慢或阻止重复提交，给出提示用
+            W.is_pic_up = true;//标识图片是否上传成功
   //          if(W.sharePageImg.substr(0,7)!="http://" && W.sharePageImg.substr(0,8)!="https://")
   //          W.sharePageImg = "http://"+window.location.host+W.sharePageImg;
   //          var link = window.location.href;
@@ -370,6 +370,14 @@
                         }
                     });
                     $('.xa-submitTermite').click(function() {
+                        if (!W.is_pic_up){
+                            $('body').alert({
+                                isShow: true,
+                                info: '图片还未上传成功，请稍等！',
+                                speed: 3000
+                            });
+                            return;
+                        }
                         if (!W.validate()) {
                             return;
                         }
@@ -412,7 +420,7 @@
                             }else if (inputType === 'imgarea') {
                                 var picture_list = [];
                                 $control.find('img').each(function(){
-                                    picture_list.push($(this).attr('data-src'))
+                                    picture_list.push($(this).attr('data-src'));
                                 });
                                 var value = JSON.stringify(picture_list);
                             }
@@ -483,12 +491,28 @@
                         $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
                         },
                     error: function(resp) {
-                        $('body').alert({
-                            isShow: true,
-                            isSlide: true,
-                            info: '参与失败，请稍后再试！',
-                            speed: 3000,
-                        });
+                        if(resp.data!==""){
+                            $('body').alert({
+                                isShow: false
+                            });
+                            $('body').append('<div class="wui-appParticipantResult-Cover" style="background-color: rgba(0, 0, 0, 0.15)">\
+                                <div class="wui-i-background">\
+                                    <div class="wui-i-successText" style="font-size: 20px;margin-top:0">'+resp.data+'</div>\
+                                    <div class="wui-i-close xa-closeParticipantResult" style="right: -10px;top: -10px">&#10005</div>\
+                                </div>\
+                            </div>');
+                            $('.wui-appParticipantResult-Cover').height(document.body.scrollHeight);
+                            $('.xa-closeParticipantResult').on('click', function(event) {
+                                $('.wui-appParticipantResult-Cover').remove();
+                            });
+                        } else {
+                            $('body').alert({
+                                isShow: true,
+                                isSlide: true,
+                                info: '参与失败，请稍后再试！',
+                                speed: 3000
+                            });
+                        }
                         slag = true;
                     }
                 });
