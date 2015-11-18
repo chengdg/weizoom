@@ -116,6 +116,9 @@
       var clientWidth = docEl.clientWidth;
       if (!clientWidth) return;
       docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+      if(20 * (clientWidth / 320) > 40){
+        docEl.style.fontSize = 40+ 'px';
+      }
     };
 
     if (!doc.addEventListener) return;
