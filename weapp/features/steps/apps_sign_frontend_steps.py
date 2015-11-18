@@ -9,7 +9,7 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.sign.models import Sign
+from apps.customerized_apps.sign.models import Sign, SignParticipance
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
@@ -74,20 +74,14 @@ def step_tmpl(context, user):
 	url = "%s&fmt=%s" % (context.link_url, context.member.token)
 	response = context.client.get(url)
 
-@when(u"修改系统时间为'{date}'")
-def step_impl(context, date):
-	if date == u'1天后':
-		context.now_date = datetime.now()
-		delta = timedelta(days=1)
-		next_date = (context.now_date + delta).strftime('%Y-%m-%d')
-	elif date == u'2天后':
-		delta = timedelta(days=2)
-		next_date = (context.now_date + delta).strftime('%Y-%m-%d')
-	os.system("date %s" %(next_date))
+@when(u"修改{user}的签到时间为前一天")
+def step_impl(context, user):
+	signParticipance = SignParticipance.objects.get(member_id=context.member.id)
+	created_at = signParticipance.created_at
+	latest_date = signParticipance.latest_date
 
-@when(u'还原系统时间')
-def step_impl(context):
-	os.system("date %s" %(context.now_date))
+	signParticipance.update(set__created_at = created_at-timedelta(days=1))
+	signParticipance.update(set__latest_date = latest_date-timedelta(days=1))
 
 @When(u'{webapp_user_name}把{webapp_owner_name}的签到活动链接分享到朋友圈')
 def step_impl(context, webapp_user_name, webapp_owner_name):

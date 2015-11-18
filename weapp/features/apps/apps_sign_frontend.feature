@@ -363,23 +363,22 @@ Scenario:6 用户连续3天进行签到
     """
     签到成功！<br />已连续签到1天。<br />本次签到获得以下奖励:<br />2积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分,连续签到3天获得优惠券1一张<br />
     """
-	When 清空浏览器
-	When 修改系统时间为'1天后'
+	When 修改bill的签到时间为前一天
+  	When 清空浏览器
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill获得系统回复的消息
     """
     签到成功！<br />已连续签到2天。<br />本次签到获得以下奖励:<br />2积分<br />签到说明：签到赚积分！连续签到奖励更丰富哦！<br />每日签到获得2积分,连续签到3天获得优惠券1一张<br />
     """
-	When 清空浏览器
-	When 修改系统时间为'2天后'
+	When 修改bill的签到时间为前一天
+  	When 清空浏览器
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill获得系统回复的消息
     """
     签到成功！<br />已连续签到3天。<br />本次签到获得以下奖励:<br />0积分<br />优惠券1<br />
     """
-	When 还原系统时间
     When bill访问jobs的webapp
 	Then bill能获得webapp优惠券列表
 		"""
