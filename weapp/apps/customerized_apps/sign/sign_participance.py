@@ -51,20 +51,6 @@ class SignParticipance(resource.Resource):
 			if sign.status != 1:
 				response.errMsg = u'签到活动未开始'
 				return response.get_response()
-			signer = app_models.SignParticipance.objects(belong_to=activity_id, member_id=member_id)
-			if signer.count() > 0:
-				signer = signer.first()
-			else:
-				signer = app_models.SignParticipance(
-					belong_to = activity_id,
-					member_id = member_id,
-					prize = {
-						'integral': 0,
-						'coupon': ''
-					},
-					created_at= datetime.today()
-				)
-				signer.save()
 
 			#并发问题临时解决方案 ---start
 			control_data = {}
@@ -79,6 +65,21 @@ class SignParticipance(resource.Resource):
 				response.errMsg = u'一天只能签到一次'
 				return response.get_response()
 			#并发问题临时解决方案 ---end
+
+			signer = app_models.SignParticipance.objects(belong_to=activity_id, member_id=member_id)
+			if signer.count() > 0:
+				signer = signer.first()
+			else:
+				signer = app_models.SignParticipance(
+					belong_to = activity_id,
+					member_id = member_id,
+					prize = {
+						'integral': 0,
+						'coupon': ''
+					},
+					created_at= datetime.today()
+				)
+				signer.save()
 
 			return_data = signer.do_signment(sign)
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
