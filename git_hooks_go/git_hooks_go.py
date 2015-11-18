@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import ConfigParser
 import os
-
 import re
 import shutil
 
@@ -14,6 +13,7 @@ src_path = os.path.join(project_home, 'git_hooks_go')
 hooks_path = os.path.join(project_home, '.git/hooks')
 
 
+# 修改自标准库的copytree
 def copytree2(src, dst, symlinks=False, ignore=None):
     names = os.listdir(src)
     if ignore is not None:
@@ -80,9 +80,9 @@ def get_selected_scripts(script_type):
     try:
         config = ConfigParser.ConfigParser()
         config.read(config_path)
-        scripts = config.get('selected_scripts', script_type).split(',')
-        return scripts
-    except BaseException as e:
+        scripts = config.get('selected_scripts', script_type)
+        return scripts.split(',') if scripts else []
+    except:
         return []
 
 
@@ -106,5 +106,4 @@ def go(script_type):
     if script_type in ['post-merge', 'post-checkout', 'post-rewrite']:
         update_git_hooks_go(auto_update, update_config)
     scripts = get_selected_scripts(script_type)
-
     run_scripts(script_type, scripts)
