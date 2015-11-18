@@ -63,8 +63,28 @@ def step_impl(context, user):
 def step_impl(context, user):
 	start_date = bdd_util.get_date_str(context.date_dict['start_date'])
 	end_date = bdd_util.get_date_str(context.date_dict['end_date'])
-	
+
 	url = '/stats/api/member_share_url_rank/?start_date=%s&end_date=%s' % (start_date, end_date)
+	response = context.client.get(url)
+	results = json.loads(response.content)
+	actual_list = results['data']['items']
+
+	actual = {}
+	for item in actual_list:
+		actual[item['username']] = item['followers']
+
+	expected = {}
+	for row in context.table:
+		expected[row['username']] = int(row['followers'])
+
+	bdd_util.assert_dict(expected, actual)
+
+@then(u"{user}获得推广扫码排行Top10")
+def step_impl(context, user):
+	start_date = bdd_util.get_date_str(context.date_dict['start_date'])
+	end_date = bdd_util.get_date_str(context.date_dict['end_date'])
+
+	url = '/stats/api/member_qrcode_rank/?start_date=%s&end_date=%s' % (start_date, end_date)
 	response = context.client.get(url)
 	results = json.loads(response.content)
 	actual_list = results['data']['items']

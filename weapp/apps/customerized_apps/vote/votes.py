@@ -93,14 +93,20 @@ class votes(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = votes.get_datas(request)
-		
+
+		pagestore = pagestore_manager.get_pagestore('mongo')
+		p_ids = []
+		for data in datas:
+			p_ids.append(str(data.related_page_id))
+		pages = pagestore.db.page.find({"project_id":{"$in":p_ids}})
+
+		related_page_id2page = {}
+		for page in pages:
+			related_page_id2page[page['project_id']] = page['component']['components'][0]['model']['prize']['type']
+
 		items = []
 		for data in datas:
-			related_page_id = data.related_page_id
-			pagestore = pagestore_manager.get_pagestore('mongo')
-			page = pagestore.get_page(related_page_id, 1)
-			page_details = page['component']['components'][0]['model']
-			prize_type = page_details['prize']['type']
+			prize_type = related_page_id2page[str(data.related_page_id)]
 			if prize_type == 'no_prize':
 				prize_type = '无奖励'
 			elif prize_type == 'integral':

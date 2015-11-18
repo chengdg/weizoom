@@ -255,13 +255,16 @@
             };
 
             $('.xa-wepage-navbar-link').click(function(event){
+
                 var url = $(event.currentTarget).find('a').attr('data-link') || "";
                 if (url.length == 0 || url.indexOf('javascript:') >= 0) {
                     return;
                 }
+
                 if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
                     /* 非会员显示二维码 */
                     showSwiper();
+                    $('.mask').css('background','rgba(0, 0, 0, 0.5)');
                 } else {
                     if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
                         window.location.href = url;

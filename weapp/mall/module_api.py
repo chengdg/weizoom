@@ -18,7 +18,7 @@ from django.conf import settings
 #from django.contrib.auth.models import User, Group, Permission
 #from django.contrib import auth
 from django.db.models import Q, F
-
+from django.db.utils import IntegrityError
 from tools.regional import views as regional_util
 from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
@@ -87,22 +87,23 @@ def __collect_integral_sale_rules(target_member_grade_id, products):
 		product.active_integral_sale_rule = None
 		product_model_name = '%s_%s' % (product.id, product.model['name'])
 		#判断积分应用是否不可用
-		if not product.integral_sale_model:
-			continue
-		if not product.integral_sale_model.is_active:
-			if product.integral_sale['detail']['is_permanant_active']:
-				pass
-			else:
+		if hasattr(product,'integral_sale_model'):
+			if not product.integral_sale_model:
 				continue
+			if not product.integral_sale_model.is_active:
+				if product.integral_sale['detail']['is_permanant_active']:
+					pass
+				else:
+					continue
 
-		for rule in product.integral_sale['detail']['rules']:
-			member_grade_id = int(rule['member_grade_id'])
-			if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
-				# member_grade_id == -1则为全部会员等级
-				merged_rule['product_model_names'].append(product_model_name)
-				product.active_integral_sale_rule = rule
-				merged_rule['rule'] = rule
-		merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
+			for rule in product.integral_sale['detail']['rules']:
+				member_grade_id = int(rule['member_grade_id'])
+				if member_grade_id <= 0 or member_grade_id == target_member_grade_id:
+					# member_grade_id == -1则为全部会员等级
+					merged_rule['product_model_names'].append(product_model_name)
+					product.active_integral_sale_rule = rule
+					merged_rule['rule'] = rule
+			merged_rule['integral_product_info'] = str(product.id) + '-' + product.model_name
 	if len(merged_rule['product_model_names']) > 0:
 		return merged_rule
 	else:
@@ -408,7 +409,11 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			#获取product及其model
 			product = Product.objects.get(id=product_id)
 			#防止商品的串号问题,商品没有缓存的情况下，下面不执行，直接返回
+<<<<<<< HEAD
 			if product.owner_id != webapp_owner_id:
+=======
+			if product.owner_id != webapp_owner_id and webapp_owner_id!=216:
+>>>>>>> nj_f_sign1
 				product = Product()
 				product.is_deleted = True
 				# product.mark = str(product.id) + '-' + product.model_name
@@ -1055,7 +1060,6 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	order.type = order_info['type']
 	order.pay_interface_type = order_info['pay_interface']
 
-	order.order_id = __create_random_order_id()
 	order.status = ORDER_STATUS_NOT
 	order.webapp_id = webapp_id
 	order.webapp_user_id = webapp_user.id
@@ -1093,8 +1097,17 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	else:
 		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
 		order.order_source = ORDER_SOURCE_WEISHOP
-
-	order.save()
+	save_retry_count = 0
+	while save_retry_count <= 10:
+		try:
+			order.order_id = __create_random_order_id()
+			order.save()
+		except IntegrityError:
+			save_retry_count += 1
+			watchdog_info(u"order.id:%s,order_id:%s,重试次数：%s" % (order.id, order.order_id, save_retry_count),
+						type="mall", user_id=int(request.webapp_owner_id))
+		else:
+			break
 
 	#更新库存
 	for product in products:
@@ -2015,7 +2028,7 @@ def get_order_products(order):
 	order.session_data = dict()
 	order_id = order.id
 	relations = list(OrderHasProduct.objects.filter(order_id=order_id).order_by('id'))
-		
+
 	product_ids = [r.product_id for r in relations]
 	#products = mall_api.get_product_details_with_model(request.webapp_owner_id, request.webapp_user, product_infos)
 	id2product = dict([(product.id, product) for product in Product.objects.filter(id__in=product_ids)])

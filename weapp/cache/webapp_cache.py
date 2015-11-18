@@ -231,7 +231,11 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
     product = mall_models.Product.from_dict(data)
     # 解决商品不存在以及商品在店铺间的串号问题
+<<<<<<< HEAD
     if product.is_deleted or product.owner_id != webapp_owner_id:
+=======
+    if product.is_deleted or product.owner_id != webapp_owner_id and webapp_owner_id!=216:
+>>>>>>> nj_f_sign1
         product.is_deleted = True
         return product
     # Set member's discount of the product
@@ -574,4 +578,8 @@ def update_product_list(webapp_owner_id):
             (settings.DOMAIN, webapp_owner_id)
     request = urllib2.Request(url)
     request.get_method = lambda: 'PURGE'
+<<<<<<< HEAD
     urllib2.urlopen(request)
+=======
+    urllib2.urlopen(request)
+>>>>>>> nj_f_sign1

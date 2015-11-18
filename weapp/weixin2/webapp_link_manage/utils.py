@@ -67,8 +67,13 @@ def get_webapp_link_menu_objectes(request):
 			'name': '会员主页',
 			'link': './?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={}'.format(webapp_owner_id)
 		},
-		'marketPage': {
+		'shoppingCart': {
 			'id': 5,
+			'name': '购物车',
+			'link': './?module=mall&model=shopping_cart&action=show&workspace_id=mall&webapp_owner_id={}'.format(webapp_owner_id)
+		},
+		'marketPage': {
+			'id': 6,
 			'name': '营销推广',
 			'title': [
 			{
@@ -128,7 +133,7 @@ def get_webapp_link_menu_objectes(request):
 			]
 		},
 		'memberQrcode': {
-			'id': 6,
+			'id': 7,
 			'name': '推广扫码',
 			'link': get_member_qrcode_webapp_link(request)
 		},
@@ -158,7 +163,7 @@ def get_webapp_link_menu_objectes(request):
 			}]
 		},
 		'sign': {
-			'id': 10,
+			'id': 11,
 			'name': '签到',
 			'link': get_sign_webapp_link(request)
 		}

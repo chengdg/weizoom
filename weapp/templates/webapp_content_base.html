@@ -112,6 +112,9 @@
                 {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
                 {% endif %}
+                {% if not hide_non_member_cover %}
+                    data-is-show-cover="true"
+                {% endif %}
                 data-id="{{request.webapp_owner_id}}"
                 data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}"
                 data-varnish="{{is_varnish_url}}"
@@ -136,6 +139,7 @@
         <script type="text/javascript">
             var isHideWeixinOptionMenu = {% if is_hide_weixin_option_menu %}true{% else %}false{% endif %};
             W.onloadHandlers = [];
+            var is_subscribed = {% if request.member.is_subscribed %}true{% else %}false{% endif %};
             W.currentPageName = "{{current_page_name}}";
             W.projectId = "{{request.project.id}}";
             W.webappOwnerId = "{{request.webapp_owner_id}}";
@@ -207,9 +211,11 @@
                         return;
                     }
                     url +='&fmt='+W.curRequestMemberToken;
-                    if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
+
+                    if (isUserCenterLink(url) && is_subscribed == false) {
                         /* 非会员显示二维码 */
                         showSwiper();
+                         $('.mask').css('background','rgba(0, 0, 0, 0.5)');
                     } else {
                         if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
                             window.location.href = url;

@@ -106,11 +106,34 @@ def step_impl(context, user, page_name):
 	context.client.post("/termite2/api/active_project/?_method=put", data)
 
 
+def __get_pages_list(context):	
+	api_url = "/termite2/api/pages/"
+
+	cur_page = 1
+	count_per_page = 20
+	if hasattr(context, 'cur_page'):
+		cur_page = context.cur_page
+
+	if hasattr(context, 'count_per_page'):
+		count_per_page = context.count_per_page
+
+	args = []
+	args.append("page={}".format(cur_page))
+	args.append("count_per_page={}".format(count_per_page))
+
+	if hasattr(context, 'search'):
+		args.append("query={}".format(context.search))
+
+	response = context.client.get(u"{}?{}".format(api_url, "&".join(args)))
+	return json.loads(response.content)["data"]
+
+
 @Then(u"{user}能获取微页面列表")
 def step_impl(context, user):
 	user = context.client.user
-	response = context.client.get("/termite2/api/pages/")
-	data = json.loads(response.content)["data"]["items"]
+
+	json_data = __get_pages_list(context)
+	data = json_data["items"]
 
 	actual_datas = []
 	for page in data:
@@ -958,3 +981,42 @@ def step_impl(context, user, page_type):
 		context.page = context.page + 1
 
 	context.page = 1 if context.page<= 0 else context.page
+
+
+@When(u"{user}按微页面名称搜索")
+def step_impl(context, user):
+	user = context.client.user	
+	context.search = json.loads(context.text)[0]["search"]
+
+@When(u"{user}给微页面设置分页条数")
+def step_impl(context, user):
+	user = context.client.user	
+	context.count_per_page = json.loads(context.text)["count_per_page"]
+
+@When(u"{user}访问微页面列表第'{cur_page}'页")
+def step_impl(context, user, cur_page):
+	user = context.client.user	
+	context.cur_page = cur_page
+
+@Then(u"{user}能获取微页面显示共'{page_count}'页")
+def step_impl(context, user, page_count):
+	user = context.client.user
+	json_data = __get_pages_list(context)
+	max_page = json_data['pageinfo']['max_page']
+
+	actual = {"page_count": max_page}
+	expected = {"page_count": page_count}
+	bdd_util.assert_dict(expected, actual)
+
+
+@When(u"{user}浏览微页面列表'{status}'")
+def step_impl(context, user, status):
+	user = context.client.user	
+	cur_page = int(context.cur_page if hasattr(context, 'cur_page') else 1)
+	if status == '下一页':
+		cur_page = cur_page + 1
+
+	if status == '上一页':
+		cur_page = cur_page - 1
+
+	context.cur_page = cur_page

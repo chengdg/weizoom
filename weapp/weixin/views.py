@@ -199,90 +199,90 @@ def receiveauthcode(request):
 			# except:
 			# 	print '授权失败，请重新授权'
 			# 	raise Http404('授权失败，请重新授权')
-			"""
-				处理公众号mp相关信息
-			"""
-			try:
-				result = weixin_api.api_get_authorizer_info(component_info.app_id,authorizer_appid)
-				if result.has_key('authorizer_info'):
-					nick_name = result['authorizer_info'].get('nick_name', '')
-					head_img = result['authorizer_info'].get('head_img', '')
-					service_type_info = result['authorizer_info']['service_type_info'].get('id', '')
-					verify_type_info = result['authorizer_info']['verify_type_info'].get('id', '')
-					user_name = result['authorizer_info'].get('user_name', '')
-					alias = result['authorizer_info'].get('alias', '')
-					qrcode_url = result['authorizer_info'].get('qrcode_url','')
-
-					appid = result['authorization_info'].get('authorizer_appid', '')
-
-					func_info_ids = []
-					func_info = result['authorization_info'].get('func_info')
-					if  isinstance(func_info, list):
-						for funcscope_category in func_info:
-							funcscope_category_id = funcscope_category.get('funcscope_category', None)
-							if funcscope_category_id:
-								func_info_ids.append(str(funcscope_category_id.get('id')))
-					if ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid).count() > 0:
-						auth_appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid)[0]
-						if auth_appid_info.qrcode_url.find('mmbiz.qpic.cn') > -1 or auth_appid_info.nick_name != nick_name:
-							try:
-								qrcode_url = upload_qrcode_url_to_upyun(qrcode_url, authorizer_appid)
-							except:
-								print '>>>>>>>>>>>>>>>>>>>>upload_qrcode_url_to_upyun error'
-						ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid).update(
-							nick_name=nick_name,
-							head_img=head_img,
-							service_type_info=service_type_info,
-							verify_type_info=verify_type_info,
-							user_name=user_name,
-							alias=alias,
-							qrcode_url=qrcode_url,
-							appid=appid,
-							func_info=','.join(func_info_ids)
-							)
-					else:
-						try:
-							qrcode_url = upload_qrcode_url_to_upyun(qrcode_url, authorizer_appid)
-						except:
-							print '>>>>>>>>>>>>>>>>>>>>upload_qrcode_url_to_upyun error'
-						ComponentAuthedAppidInfo.objects.create(
-							auth_appid=component_authed_appid,
-							nick_name=nick_name,
-							head_img=head_img,
-							service_type_info=service_type_info,
-							verify_type_info=verify_type_info,
-							user_name=user_name,
-							alias=alias,
-							qrcode_url=qrcode_url,
-							appid=appid,
-							func_info=','.join(func_info_ids)
-							)
-					is_service = False
-					if int(service_type_info) > 1:
-						is_service = True
-					is_certified = False
-					if int(verify_type_info) > -1:
-						is_certified = True
-					WeixinMpUser.objects.filter(owner_id=user_id).update(is_service=is_service, is_certified=is_certified, is_active=True)
-					
-					if is_certified:
-						UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True, is_oauth=True)
-					else:
-						UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True, is_oauth=False)
-				
+					"""
+						处理公众号mp相关信息
+					"""
 					try:
-						if mp_user:
-							if MpuserPreviewInfo.objects.filter(mpuser=mp_user).count() > 0:
-								MpuserPreviewInfo.objects.filter(mpuser=mp_user).update(image_path=head_img, name=nick_name)
+						result = weixin_api.api_get_authorizer_info(component_info.app_id, authorizer_appid)
+						if result.has_key('authorizer_info'):
+							nick_name = result['authorizer_info'].get('nick_name', '')
+							head_img = result['authorizer_info'].get('head_img', '')
+							service_type_info = result['authorizer_info']['service_type_info'].get('id', '')
+							verify_type_info = result['authorizer_info']['verify_type_info'].get('id', '')
+							user_name = result['authorizer_info'].get('user_name', '')
+							alias = result['authorizer_info'].get('alias', '')
+							qrcode_url = result['authorizer_info'].get('qrcode_url','')
+
+							appid = result['authorization_info'].get('authorizer_appid', '')
+
+							func_info_ids = []
+							func_info = result['authorization_info'].get('func_info')
+							if  isinstance(func_info, list):
+								for funcscope_category in func_info:
+									funcscope_category_id = funcscope_category.get('funcscope_category', None)
+									if funcscope_category_id:
+										func_info_ids.append(str(funcscope_category_id.get('id')))
+							if ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid).count() > 0:
+								auth_appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid)[0]
+								if auth_appid_info.qrcode_url.find('mmbiz.qpic.cn') > -1 or auth_appid_info.nick_name != nick_name:
+									try:
+										qrcode_url = upload_qrcode_url_to_upyun(qrcode_url, authorizer_appid)
+									except:
+										print '>>>>>>>>>>>>>>>>>>>>upload_qrcode_url_to_upyun error'
+								ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid).update(
+									nick_name=nick_name,
+									head_img=head_img,
+									service_type_info=service_type_info,
+									verify_type_info=verify_type_info,
+									user_name=user_name,
+									alias=alias,
+									qrcode_url=qrcode_url,
+									appid=appid,
+									func_info=','.join(func_info_ids)
+									)
 							else:
-								MpuserPreviewInfo.objects.create(mpuser=mp_user,image_path=head_img, name=nick_name)
+								try:
+									qrcode_url = upload_qrcode_url_to_upyun(qrcode_url, authorizer_appid)
+								except:
+									print '>>>>>>>>>>>>>>>>>>>>upload_qrcode_url_to_upyun error'
+								ComponentAuthedAppidInfo.objects.create(
+									auth_appid=component_authed_appid,
+									nick_name=nick_name,
+									head_img=head_img,
+									service_type_info=service_type_info,
+									verify_type_info=verify_type_info,
+									user_name=user_name,
+									alias=alias,
+									qrcode_url=qrcode_url,
+									appid=appid,
+									func_info=','.join(func_info_ids)
+									)
+							is_service = False
+							if int(service_type_info) > 1:
+								is_service = True
+							is_certified = False
+							if int(verify_type_info) > -1:
+								is_certified = True
+							WeixinMpUser.objects.filter(owner_id=user_id).update(is_service=is_service, is_certified=is_certified, is_active=True)
+							
+							if is_certified:
+								UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True, is_oauth=True)
+							else:
+								UserProfile.objects.filter(id=request.user_profile.id).update(is_mp_registered=True, is_oauth=False)
+						
+							try:
+								if mp_user:
+									if MpuserPreviewInfo.objects.filter(mpuser=mp_user).count() > 0:
+										MpuserPreviewInfo.objects.filter(mpuser=mp_user).update(image_path=head_img, name=nick_name)
+									else:
+										MpuserPreviewInfo.objects.create(mpuser=mp_user,image_path=head_img, name=nick_name)
+							except:
+								notify_msg = u"处理公众号mp相关信息:MpuserPreviewInfo, cause:\n{}".format(unicode_full_stack())
+								watchdog_error(notify_msg)		
+							
 					except:
-						notify_msg = u"处理公众号mp相关信息:MpuserPreviewInfo, cause:\n{}".format(unicode_full_stack())
-						watchdog_error(notify_msg)		
-					
-			except:
-				notify_msg = u"处理公众号mp相关信息, cause:\n{}".format(unicode_full_stack())
-				watchdog_error(notify_msg)
+						notify_msg = u"处理公众号mp相关信息, cause:\n{}".format(unicode_full_stack())
+						watchdog_error(notify_msg)
 
 			return HttpResponseRedirect('/new_weixin/mp_user/')
 

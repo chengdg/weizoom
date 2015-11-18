@@ -112,16 +112,16 @@ class Sign(resource.Resource):
 				#将所有已签到用户的签到状态重置，作为一个新的签到
 				sign = sign[0]
 				app_models.SignParticipance.objects(belong_to=str(sign.id)).update(set__serial_count=0)
-			response = create_response(200)
-			return response.get_response()
+			# response = create_response(200)
+			# return response.get_response()
+		if request.POST.get('related_page_id', 0):
+			data = export.get_sing_fields_to_save(request)
+			update_data = {}
+			update_fields = set(['name', 'share', 'reply', 'prize_settings'])
+			for key, value in data.items():
+				if key in update_fields:
+					update_data['set__'+key] = value
+			app_models.Sign.objects(id=request.POST['signId']).update(**update_data)
 
-		data = export.get_sing_fields_to_save(request)
-		update_data = {}
-		update_fields = set(['name', 'share', 'reply', 'prize_settings'])
-		for key, value in data.items():
-			if key in update_fields:
-				update_data['set__'+key] = value
-		app_models.Sign.objects(id=request.POST['id']).update(**update_data)
-		
 		response = create_response(200)
 		return response.get_response()

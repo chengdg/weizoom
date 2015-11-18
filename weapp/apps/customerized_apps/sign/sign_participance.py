@@ -24,8 +24,7 @@ COUNT_PER_PAGE = 20
 class SignParticipance(resource.Resource):
 	app = 'apps/sign'
 	resource = 'sign_participance'
-	
-	@login_required
+
 	def api_get(request):
 		"""
 		响应GET api
