@@ -228,7 +228,7 @@ class Sign(models.Document):
 					sign_description = page['component']['components'][0]['model']['description']
 
 					return_data = signer.do_signment(sign)
-					print return_data
+
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
