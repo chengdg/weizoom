@@ -182,7 +182,7 @@ def process_item_group_data(request, component):
 	else:
 		component['_has_data'] = True
 		products = []
-		category, cached_products = webapp_cache.get_webapp_products(request.user_profile, False, 0)
+		category, cached_products = webapp_cache.get_webapp_products_new(request.user_profile, False, 0)
 		for product in cached_products:
 			if product.id in product_ids:
 				products.append(product) 
@@ -252,7 +252,7 @@ def process_item_list_data(request, component):
 		_set_empty_product_list(request, component)
 		return
 
-	category, products = webapp_cache.get_webapp_products(request.user_profile, False, int(category_id))
+	category, products = webapp_cache.get_webapp_products_new(request.user_profile, False, int(category_id))
 	# product_ids = set([r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)])
 	# product_ids.sort()
 	# products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
