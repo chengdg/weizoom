@@ -757,4 +757,8 @@ def update_product_list(webapp_owner_id):
             (settings.DOMAIN, webapp_owner_id)
     request = urllib2.Request(url)
     request.get_method = lambda: 'PURGE'
+<<<<<<< HEAD
     urllib2.urlopen(request)
+=======
+    urllib2.urlopen(request)
+>>>>>>> b_mall_6077
