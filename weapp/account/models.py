@@ -88,7 +88,7 @@ class UserProfile(models.Model):
 	#v2
 	sub_account_count = models.IntegerField(default=50) #可创建的子账号的个数
 	#wepage
-	is_use_wepage = models.BooleanField(default=False) #是否启用wepage
+	is_use_wepage = models.BooleanField(default=True) #是否启用wepage
 	class Meta(object):
 		db_table = 'account_user_profile'
 		verbose_name = '用户配置'

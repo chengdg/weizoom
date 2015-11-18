@@ -5,6 +5,17 @@
 .xui-termitePagesPage-copyLinkView .xa-linkInput {
     width: 350px !important;
 }
+.xui-head input{
+    height: 30px;
+    line-height: 30px;
+    width: 250px;
+}
+.xui-head .xui-searchBtn{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    border-left: 0;
+}
 </style>
 {% endblock %}
 
@@ -57,6 +68,11 @@
                 </div>
             </a>
             {% endif %}
+
+            <div class="fr mt10">
+                <input type="text" class="xa-search-title">
+                <a class="xui-searchBtn btn btn-default xa-searchBtn c65 fr m0 pt0 mr10">搜索</a>
+            </div>
 		</div>
 
 		{% if has_page %}
@@ -65,12 +81,12 @@
     			data-app="termite2" 
     			data-resource="pages"
     			data-template-id="#pages-view"
-    			data-enable-paginator="false" 
+    			data-enable-paginator="true" 
     			data-enable-sort="false" 
     			data-selectable="false" 
-    			data-item-count-per-page="1000" 
+    			data-item-count-per-page="20" 
     			data-init-sort="-created_at"
-    			class="mt10"
+    			class="mt10 xa-termite2-table"
     		></div>
 		{% else %}
 		<div class="xui-emptyBox m10">
@@ -99,6 +115,7 @@
             </tr>
         </thead>
         <tbody style="background:#fff;">
+            {{if items.length > 0}}
             {{each(i, project) items}}
             <tr class="xa-project" data-id="${project.id}" style="border-bottom:1px solid #E5E5E5;">
                 <td class="p10" style="text-align:left;">
@@ -122,6 +139,9 @@
                 </td>
             </tr>
             {{/each}}
+            {{else}}
+            <tr><td colspan="3"><h1>没有符合条件的微页面</h1></td></tr>
+            {{/if}}
         </tbody>
     </table>
 </script>
@@ -158,12 +178,10 @@ $(document).ready(function() {
         $('.xa-enableHint').show();
     });
     $(document).delegate('.xa-cancelBtn', 'click', function(event) {
-
         $('.xa-enableHint').hide();
     });
     
     $('.xa-enableWepage').click(function(event) {
-
         W.resource.termite2.ActivateWepageMechanism.put({
             data: {
             },
@@ -265,7 +283,6 @@ $(document).ready(function() {
         privateContainerClass:'xui-termiteUpdateNameDropBox'
     });
     updateNameView.bind("submit-finish", function(args){
-        console.log('aaaaaaa', args);
         W.resource.termite2.Project.post({
             data: {      
                 id: args.id,          
@@ -295,7 +312,18 @@ $(document).ready(function() {
             modelId: id,
             modelName: name
         })
+    });
 
+    $('.xa-searchBtn').click(function(event){
+        // search
+        var search = $('.xa-search-title').val();
+        var table = $('[data-ui-role="advanced-table"]').data('view');
+        var data = {
+            'query': search
+        }
+        table.reload(data, {
+            emptyDataHint: '没有符合条件的微页面'
+        });
     });
 
 });
