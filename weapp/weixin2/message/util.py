@@ -106,13 +106,15 @@ def is_valid_time(time_str):
     return False
 
 
-#处理消息中的特殊字符
 def translate_special_characters(message_text):
     time_str = str(time.time())
     random_str = ''.join(random.sample(string.ascii_letters + string.digits, 6))
+    random_str_left = random_str + 'left'
+    random_str_right = random_str + 'right'
     special_str = time_str + random_str
 
-    message_text = message_text.replace('{}', special_str)
+    message_text = message_text.replace('{', random_str_left)
+    message_text = message_text.replace('}', random_str_right)
     a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
     all_a_html = a_pattern.findall(message_text)
 
@@ -121,5 +123,6 @@ def translate_special_characters(message_text):
     message_text = message_text.replace('<', "&lt;")
     message_text = message_text.replace('>', "&gt;")
     message_text = message_text.format(*all_a_html)
-    message_text = message_text.replace(special_str, '{}')
+    message_text = message_text.replace(random_str_left, '{')
+    message_text = message_text.replace(random_str_right, '}')
     return message_text
