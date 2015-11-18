@@ -1,7 +1,7 @@
 Feature: 添加邮费配置
 	Jobs能通过管理系统为商城添加的"邮费配置"
 
-@mall2 @configuration @postaSet   @mall.postage @zypost1
+@mall2 @configuration @postaSet   @mall.postage @zypost1 @jz
 Scenario:1 添加邮费配置
 	Jobs添加"邮费配置"
 	1. jobs能获得邮费配置列表
