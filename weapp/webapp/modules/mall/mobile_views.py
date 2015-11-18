@@ -46,12 +46,6 @@ def edit_order(request):
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
 	return request_util.edit_order(request)
 
-	# if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
-	# 	return request_util.edit_order(request)
-	# else:
-	# 	request.action = 'add'
-	# 	return request_util.edit_address(request)
-
 
 ########################################################################
 # pay_order: 支付订单页面
@@ -122,11 +116,8 @@ def edit_shopping_cart_order(request):
 	"""编辑从购物车产生的订单
 	"""
 	request.template_dir = '%s/%s' % (TEMPLATE_DIR, request.template_name)
-	# 如果有收货人信息
-	if request.webapp_user.ship_info and request.webapp_user.ship_info.ship_name:
-		return request_util.edit_shopping_cart_order(request)
-	else:
-		return request_util.edit_address(request)
+	return request_util.edit_shopping_cart_order(request)
+
 
 # jz 2015-10-09
 # def pay_weizoompay_order(request):
