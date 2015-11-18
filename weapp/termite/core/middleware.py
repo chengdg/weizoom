@@ -25,6 +25,7 @@ from termite.core.jsonresponse import create_response
 from termite import pagestore as pagestore_manager
 
 from workbench.models import Project, Workspace
+from apps.customerized_apps.sign.models import Sign
 
 #===============================================================================
 # ExceptionMiddleware : 将XMonitorWeb系统抛出的异常记录在watchdog的表中
@@ -344,7 +345,9 @@ class ProjectMiddleware(object):
 					#request.webapp_owner_id_from_project_middleware = webapp_owner_id
 					request.project = None
 				elif 'sign' in project_id:
-					_, project_id, webapp_owner_id = project_id.split(':')
+					_, app_name, related_page_id = project_id.split(':')
+					project = Sign.objects.get(id=related_page_id)
+					webapp_owner_id = project.owner_id
 				else:
 					# request.project = Project.objects.get(id=project_id)
 					

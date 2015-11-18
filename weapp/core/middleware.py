@@ -35,6 +35,7 @@ from account.models import UserProfile
 
 #from webapp.models import WebApp, PageVisitLog, Project
 from webapp.models import Project
+from apps.customerized_apps.sign.models import Sign
 from watchdog.utils import watchdog_alert, watchdog_emergency, watchdog_error, watchdog_info
 from account import url_util
 
@@ -298,7 +299,9 @@ class UserProfileMiddleware(object):
 					elif 'fake:wepage' in project_id:
 						_, wepage, webapp_owner_id, _, page_id = project_id.split(':')
 					elif 'sign' in project_id:
-						_, project_id, webapp_owner_id = project_id.split(':')
+						_, app_name, related_page_id = project_id.split(':')
+						project = Sign.objects.get(related_page_id=related_page_id)
+						webapp_owner_id = project.owner_id
 					else:
 						project = Project.objects.get(id=project_id)
 						webapp_owner_id = project.owner_id

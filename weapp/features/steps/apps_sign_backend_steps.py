@@ -88,7 +88,7 @@ def __get_Termite(context,project_id,design_mode=1):
     """
     step2 访问PC的Phone页面termite2
     """
-    url = "/termite2/webapp_design_page/?project_id={}&design_mode={}&".format(project_id,design_mode)
+    url = "/termite2/webapp_design_page/?project_id={}&design_mode={}".format(project_id,design_mode)
     get_termite_response = context.client.get(url)
     return get_termite_response
 
@@ -121,7 +121,6 @@ def __post_PageJson(context,post_args,project_id,design_mode=0,version=1):
     }
 
     """
-
     termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
     if post_args:
         termite_post_args = post_args
@@ -151,7 +150,6 @@ def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
     }
 
     """
-
     sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
     if sign_args:
         pass
@@ -168,6 +166,8 @@ def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
 
     post_sign_response = context.client.post(sign_url,sign_args)
     post_sign_response = json.loads(post_sign_response.content)
+    print('post_sign_response!!!!!!!!')
+    print(post_sign_response)
     return post_sign_response
 
 
@@ -641,7 +641,7 @@ def step_impl(context,user):
     编辑签到活动
     """
     webapp_owner_id = context.webapp_owner_id
-    project_id = 'sign:%s:%d'%(context.project_id,webapp_owner_id)
+    project_id = 'new_app:sign:%s'%(context.project_id)
     sign_id = context.sign_id
     sign = context.sign
     json_page = context.json_page
@@ -731,16 +731,15 @@ def step_impl(context,user):
         "reply_content": reply.get('content',""),
         "prizes":page_prizes
     }
-
     termite_post_args={
         "field":"page_content",
         "id":project_id,
         "page_id":"1",
         "page_json": __get_PageJson(page_args),
     }
-
+    print('project_id!!!!!!!')
+    print(project_id)
     post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
-    page_related_id = json.loads(post_termite_response.content).get('data',{}).get('project_id',0)
     #step6 POST,填写JSON至Mongo，返回JSON(Fin)
     post_sign_args = {
         "_method":"put",
@@ -749,11 +748,9 @@ def step_impl(context,user):
         "reply":json.dumps(reply),
         "share":json.dumps(share),
         "status":"off",
-        "related_page_id":page_related_id,
+        "related_page_id":context.project_id,
     }
-
     post_sign_response = __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
-
 
 
 @then(u'{user}获得签到活动"{sign_name}"')

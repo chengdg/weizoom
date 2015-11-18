@@ -437,7 +437,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
   	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@apps_sign @apps_sign_frontend
+@apps_sign @apps_sign_frontend @kuku8
 Scenario:8 非会员用户访问签到分享进行签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -550,6 +550,7 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 			"status": "未使用"
 		}]
 		"""
+  	Given jobs登录系统
 	When jobs编辑签到活动,并且保存
 		"""
 		{
@@ -564,7 +565,6 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 					"rule": "模糊",
 					"key_word": "签到"
 				}],
-
 			"sign_settings":
 				[{
 					"sign_in": "0",
@@ -573,7 +573,7 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 				}]
 		}
 		"""
-	Then jobs更新签到活动的状态
+  	Then jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动2",
