@@ -472,7 +472,7 @@ def step_add_sign(context,user,sign_name):
 		"prize_settings":json.dumps(prize_settings),
 		"reply":json.dumps(reply),
 		"share":json.dumps(share),
-		"status":"off",
+		"status":status,
 		"related_page_id":page_related_id,
 	}
 	post_sign_response = __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
@@ -597,7 +597,7 @@ def step_impl(context,user):
 		"prize_settings":json.dumps(prize_settings),
 		"reply":json.dumps(reply),
 		"share":json.dumps(share),
-		"status":"off",
+		"status":status,
 		"related_page_id":context.project_id,
 		"signId": context.sign_id
 	}
@@ -655,7 +655,7 @@ def step_impl(context,user,sign_name):
 	bdd_util.assert_dict(json_page,db_page)
 
 
-@given(u'{user}更新签到活动的状态')
+@when(u'{user}更新签到活动的状态')
 def update_sign_status(context,user):
 	text = json.loads(context.text)
 	if context.text:
@@ -670,14 +670,6 @@ def update_sign_status(context,user):
 	post_response = __post_SignArgs(context,args,project_id)
 	context.sign_id = sign_id
 
-
-@when(u'{user}更新签到活动的状态')
-def step_impl(context,user):
-	update_sign_status(context,user)
-
-@then(u'{user}更新签到活动的状态')
-def step_impl(context,user):
-	update_sign_status(context,user)
 
 @when(u'{user}离开签到活动"{sign_name}"')
 def step_impl(context,user,sign_name):

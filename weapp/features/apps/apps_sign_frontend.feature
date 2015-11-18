@@ -67,7 +67,7 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+  	When jobs更新签到活动的状态
 		"""
 		{
 			"name":"签到活动1",
@@ -132,7 +132,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	When jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -187,7 +187,7 @@ Scenario:3 用户回复完全不匹配关键字签到
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	When jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -290,7 +290,7 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	When jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -348,7 +348,7 @@ Scenario:6 用户连续3天进行签到
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	When jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -412,7 +412,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	When jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -460,7 +460,7 @@ Scenario:8 非会员用户访问签到分享进行签到
 				}]
 		}
 		"""
-	And jobs更新签到活动的状态
+	When jobs更新签到活动的状态
 		"""
 		{
 			"name": "签到活动1",
@@ -493,7 +493,7 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
 		{
-			"status": "off",
+			"status": "on",
 			"name": "签到活动1",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "1.jpg",
@@ -510,13 +510,6 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 					"integral": "2",
 					"send_coupon": "优惠券1"
 				}]
-		}
-		"""
-	And jobs更新签到活动的状态
-		"""
-		{
-			"name":"签到活动1",
-			"status": "on"
 		}
 		"""
 	When bill关注jobs的公众号
@@ -553,8 +546,8 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	When jobs编辑签到活动,并且保存
 		"""
 		{
+			"status": "on",
 			"name": "签到活动2",
-			"status": "off",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "2.jpg",
 			"share_describe": "签到送好礼！",
@@ -570,13 +563,6 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 					"integral": "5",
 					"send_coupon":"优惠券2"
 				}]
-		}
-		"""
-  	Then jobs更新签到活动的状态
-		"""
-		{
-			"name": "签到活动2",
-			"status": "on"
 		}
 		"""
 	When bill关注jobs的公众号
