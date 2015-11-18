@@ -644,8 +644,8 @@ ALLOWED_HOSTS = ['*', ]
 # added by chuter
 # mail config for auto sending notify mail
 MAIL_NOTIFY_USERNAME = u'noreply@weizoom.com'
-MAIL_NOTIFY_PASSWORD = u'weizoom2013'
-MAIL_NOTIFY_ACCOUNT_SMTP = u'smtp.biz.mail.qq.com'
+MAIL_NOTIFY_PASSWORD = u'#weizoom2013'
+MAIL_NOTIFY_ACCOUNT_SMTP = u'smtp.mxhichina.com'
 
 IS_UPDATE_PV_UV_REALTIME = True
 
