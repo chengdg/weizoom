@@ -55,9 +55,17 @@ class Pages(resource.Resource):
 		"""
 		微页面列表页
 		"""
-		projects = webapp_models.Project.objects.filter(owner=request.user, is_enable=True).order_by('created_at')
+		projects = webapp_models.Project.objects.filter(owner=request.user, is_enable=True)
+		
+		# 搜索		
+		query = request.GET.get('query', None)
+		if query:
+			projects = projects.filter(site_title__contains=query)
 
-		#进行分页
+		# 先按是否是主页排序（主页始终在最上），再按时间排序.
+		projects = projects.order_by('-is_active', '-created_at', '-id')
+
+		# 进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, projects = paginator.paginate(projects, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
@@ -73,15 +81,15 @@ class Pages(resource.Resource):
 				"isActive": project.is_active,
 				"name": 'project %s' % project.id
 			}
-			if project.is_active:
-				item['index'] = 99999999999
-			else:
-				index = index + 1
-				
+			# if project.is_active:
+			# 	item['index'] = 99999999999
+			# else:
+			# 	index = index + 1
+
 			items.append(item)
 
 		#首页置顶
-		items.sort(lambda x,y: cmp(y['index'], x['index']))
+		# items.sort(lambda x,y: cmp(y['index'], x['index']))
 		
 		data = {
 			"items": items,

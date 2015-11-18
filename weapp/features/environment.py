@@ -155,6 +155,8 @@ def __clear_all_app_data():
 	webapp_models.PageVisitLog.objects.all().delete()
 	webapp_models.PageVisitDailyStatistics.objects.all().delete()
 	webapp_models.Project.objects.filter(type="wepage", is_active=False).delete()
+	#还原空白页面
+	webapp_models.Project.objects.filter(type="wepage", is_active=True).update(site_title=u"空白页面")
 
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
