@@ -466,7 +466,6 @@ INSTALLED_APPS = [
     # 'django_behave',
     'mobile_app',
     'erp',
-    # 'momus',
     'pay',
     'card',
     'mall',
@@ -475,13 +474,15 @@ INSTALLED_APPS = [
     'member',
     'weixin.message.message_handler',
     'notice',
-    'svsmon',
+    # jz 2015-11-18
+    # 'svsmon',
+    # 'momus',
+    # 'new_mall', # for exercises
 
     'cloud_housekeeper',
     # Third-party apps
     # 'django_extensions',
 
-    # 'new_mall', # for exercises
 ]
 
 
