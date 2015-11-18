@@ -145,6 +145,12 @@ class PageStore(object):
 	def remove_project_pages(self, project_id):
 		self.db.page.remove({'project_id': project_id}, safe=True)
 
+	#######################################################################
+	# remove_all: 删除全部page
+	#######################################################################
+	def remove_all(self):
+		self.db.page.remove()
+
 
 	#######################################################################
 	# update_page_display_index: 改变page的display index
@@ -213,7 +219,7 @@ class PageStore(object):
 		for page in self.get_pages(project_id):
 			if page['component']['model']['datasource_page_id'] == datasource_page_id:
 				return page
-				
+
 
 	#######################################################################
 	# save_record: 保存record
@@ -349,7 +355,7 @@ class PageStore(object):
 					query.update(options['search'])
 					datas = list(app_info['mongo_collection'].find(query, sort=sort_option))
 			total_count = len(datas)
-		
+
 		records = []
 		for record in datas:
 			record['id'] = str(record['_id'])
@@ -390,7 +396,7 @@ class PageStore(object):
 						# delete_ids.append(j)
 
 			for id in delete_ids:
-				del pages[i]["components"][id]			
+				del pages[i]["components"][id]
 
 		return pages
 
