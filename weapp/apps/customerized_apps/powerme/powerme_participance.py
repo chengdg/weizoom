@@ -56,6 +56,7 @@ class PowerMeParticipance(resource.Resource):
 			control_data = {}
 			control_data['belong_to'] = power_id
 			control_data['member_id'] = member_id
+			control_data['powered_member_id'] = int(fid)
 			control_data['powerme_control'] = datetime.now().strftime('%Y-%m-%d')
 			try:
 				control = app_models.PowerMeControl(**control_data)
