@@ -139,6 +139,13 @@ def get_member_by_username(username, webapp_id):
 	except:
 		return None
 
+
+def get_webapp_user_id_by_name(username, webapp_id):
+	member = get_member_by_username(username, webapp_id)
+	webapp_user_id = member.get_webapp_user_ids[0]
+	return webapp_user_id
+
+
 def get_order_by_order_no(order_no):
 	return mall_models.Order.objects.get(order_id=order_no)
 

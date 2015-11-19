@@ -122,7 +122,9 @@ def step_click_check_out(context, webapp_user_name):
         'group2integralinfo': {},
     }
 
-    ship_info = ShipInfo.objects.get(is_selected=True)
+    webapp_id = bdd_util.get_webapp_id_via_owner_id(context.webapp_owner_id)
+    webapp_user_id = bdd_util.get_webapp_user_id_by_name(webapp_user_name, webapp_id)
+    ship_info = ShipInfo.objects.get(is_selected=True, webapp_user_id=webapp_user_id)
     ship_dict = ship_info.to_dict()
     data = dict(data.items() + ship_dict.items())
 
