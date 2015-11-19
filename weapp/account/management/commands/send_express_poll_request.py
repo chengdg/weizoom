@@ -51,7 +51,10 @@ class Command(BaseCommand):
 						
 				is_success = ExpressPoll(order).get_express_poll()
 				if not is_success:
-					print u"!!!! error send express poll express_id:{}, number:{}, order_id:{}".format(express.id, express.express_number, order.id)
+					try:
+						print u"!!!! error send express poll express_id:{}, number:{}, order_id:{}".format(express.id, express.express_number, order.id)
+					except:
+						print u"!!!! error send express poll express_id:{}, order_id:{}".format(express.id, order.id)
 				else:
 					print u"success send express poll express_id:{}, number:{}, order_id:{}".format(express.id, express.express_number, order.id)
 					count = count + 1
