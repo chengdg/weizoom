@@ -156,7 +156,9 @@ def export_cards(request):
     member2order = {}
     webapp_user_ids = []
     for order in Order.objects.filter(order_id__in=list(order_ids)):
-        member2order[order.order_id]= order.webapp_user_id
+        member2order[order.order_id]= {'webapp_user_id': order.webapp_user_id,
+                                       'use_time': order.created_at
+                                       }
         webapp_user_ids.append(order.webapp_user_id)
     cur_cards = {}
     all_webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
@@ -164,7 +166,7 @@ def export_cards(request):
         buyer_name = u''
         order_count = 0
         if card2orders.has_key(k):
-            webapp_user_id = member2order[card2orders[k][0].order_id]
+            webapp_user_id = member2order[card2orders[k][0].order_id]['webapp_user_id']
             member = all_webappuser2member[webapp_user_id]
             #获取order对应的member的显示名
             # member = webappuser2member.get(webapp_user_id, None)
@@ -204,6 +206,7 @@ def export_cards(request):
             'status' : status_str,
             'money': '%.2f' % card['money'],
             'use_money': '%.2f' % card['use_money'],
+            'use_time': member2order[card2orders[k][0].order_id]['use_time'] if card2orders.has_key(k) else '',
             'card_type': card_type,
             'order_count': order_count,
             'buyer_name': buyer_name
@@ -211,7 +214,7 @@ def export_cards(request):
     crad_ids = cur_cards.keys()
     cards = sorted(cur_cards.items(), lambda x, y: cmp(float(x[1]['use_money']), float(y[1]['use_money'])),reverse=True)
     members_info = [
-        [u'卡号', u'面额', u'建卡日期', u'建卡人', u'到期时间', u'领用人', u'领用日期', u'激活日期', u'激活人', u'已消费金额',u'余额',u'备注']
+        [u'卡号', u'面额', u'建卡日期', u'建卡人', u'到期时间', u'领用人', u'领用日期', u'激活日期', u'激活人', u'已消费金额',u'消费时间',u'余额',u'备注']
     ]
     all_nedded_cards = WeizoomCard.objects.filter(id__in=crad_ids)
     cards_id2card = {c.id: c for c in all_nedded_cards}
@@ -228,6 +231,7 @@ def export_cards(request):
         money = ch[1]['money']
         weizoom_card_type= ch[1]['card_type']
         weizoom_card_use_money =ch[1]['use_money']
+        use_time = ch[1]['use_time']
         order_count = ch[1]['order_count']
         buyer_name = ch[1]['buyer_name']
         created_at = card.created_at.strftime('%Y-%m-%d %H:%M:%S')
@@ -242,6 +246,7 @@ def export_cards(request):
             activated_by = ""
         remark = card.remark
 
+
         info_list = [
             weizoom_card_id,#卡号
             weizoom_card_rule_money,#面值
@@ -253,6 +258,7 @@ def export_cards(request):
             activate_time,#激活日期
             activated_by,#激活人
             weizoom_card_use_money,#已消费金额
+            use_time,#消费时间
             money,#余额
             remark,#注释
         ]
