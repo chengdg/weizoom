@@ -359,7 +359,7 @@ Scenario:7 创建不带参数二维码的微助力活动，非会员通过会员
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接帮助好友助力
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom关注jobs的公众号
 	When bill清空浏览器
 	When bill点击"图文1"链接
@@ -389,7 +389,7 @@ Scenario:8 创建带参数二维码的微助力活动，非会员通过会员好
 		}
 		"""
 	When tom通过bill分享的"微助力活动2"链接帮助好友助力
-	Then jobs弹出带参数二维码图片
+	Then tom可以查看"带参数二维码1"图片
 	When tom关注jobs的公众号
 	Then tom收到自动回复"感谢您的的参与，为好友助力成功！"
 	When bill清空浏览器
@@ -420,7 +420,7 @@ Scenario:9 非会员通过会员好友分享的活动页参与助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接参与活动
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
@@ -519,7 +519,7 @@ Scenario:11 取消关注的会员通过会员好友分享页再次参加活动
 		"""
 	When tom关注jobs的公众号
 	When tom通过bill分享的"微助力活动1"链接参与活动
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom在微信中向jobs的公众号发送消息'微助力1'
 	Then tom收到自动回复"图文1"
 	When tom击"图文1"链接
@@ -545,7 +545,7 @@ Scenario:11 取消关注的会员通过会员好友分享页再次参加活动
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接参与活动
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
@@ -578,7 +578,7 @@ Scenario:12 非会员通过分享链接为非会员好友助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动2"链接帮助好友助力
-	Then jobs弹出带参数二维码图片
+	Then tom可以查看"带参数二维码1"图片
 	When tom关注jobs的公众号
 	When bill清空浏览器
 	When bill点击"图文2"链接
@@ -595,7 +595,7 @@ Scenario:12 非会员通过分享链接为非会员好友助力
 	When bill清空浏览器
 	When bill取消关注jobs的公众号
 	When tom通过bill分享的"微助力活动2"链接帮助好友助力
-	Then jobs弹出带参数二维码图片
+	Then tom可以查看"带参数二维码1"图片
 	When tom关注jobs的公众号
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
