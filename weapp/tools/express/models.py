@@ -28,11 +28,24 @@ class ExpressDetail(models.Model):
 '''
 快递推送状态
 '''
+EXPRESS_PULL_NOT_STATUS = 0				# 未订阅
+EXPRESS_PULL_SUCCESS_STATUS = 200		# 订阅成功
+EXPRESS_PULL_REFUSE_STATUS = 701		# 拒绝订阅的快递公司
+EXPRESS_PULL_INFO_ERROR_STATUS = 700	# 订阅方的订阅数据存在错误（如不支持的快递公司、单号为空、单号超长等）
+EXPRESS_PULL_KEY_ERROR_STATUS = 600		# 您不是合法的订阅者（即授权Key出错）
+EXPRESS_PULL_SERVER_ERROR_STATUS = 500	# 服务器错误
+EXPRESS_PULL_REPEAT_STATUS = 501		# 重复订阅
+# 不需要重新发送订阅请求的状态
+EXPRESS_NOT_PULL_STATUSES = [
+	EXPRESS_PULL_REFUSE_STATUS,
+	EXPRESS_PULL_INFO_ERROR_STATUS,
+	EXPRESS_PULL_REPEAT_STATUS
+]
 class ExpressHasOrderPushStatus(models.Model):
 	order_id = models.IntegerField(verbose_name="订单id，以后暂不使用", default=-1)
 	express_company_name = models.CharField(max_length=50, default='', verbose_name="快递公司名称")
 	express_number = models.CharField(max_length=100, verbose_name="快递单号")
-	status = models.BooleanField(default=False, verbose_name="状态")
+	status = models.IntegerField(default=EXPRESS_PULL_NOT_STATUS, verbose_name="状态")
 	send_count = models.IntegerField(default=0, verbose_name="发送订阅请求次数")
 	receive_count = models.IntegerField(default=0, verbose_name="接收推送请求次数")
 	created_at = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")

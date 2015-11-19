@@ -160,6 +160,10 @@ class ExpressPoll(object):
 			if pushs.count() > 0:
 				push = pushs[0]
 
+				# 不需要重新发送订阅请求的状态
+				if push.status in EXPRESS_NOT_PULL_STATUSES:
+					return True
+
 				# 超过4次发送就不再发送次快递
 				if push.send_count >= 4:
 					return True
@@ -172,7 +176,7 @@ class ExpressPoll(object):
 						return False
 
 				# 第一次发送订阅
-				if push.status and push.send_count > 0:
+				if push.status == EXPRESS_PULL_SUCCESS_STATUS and push.send_count > 0:
 					return True
 
 			return False
@@ -194,7 +198,6 @@ class ExpressPoll(object):
 		else:
 			express = ExpressHasOrderPushStatus.objects.create(
 				order_id = -1,
-				status = False,
 				express_company_name = self.order.express_company_name,
 				express_number = self.order.express_number
 			)
@@ -220,10 +223,12 @@ class ExpressPoll(object):
 
 		if result:
 			# 修改快递信息状态
-			self.express.status = result
+			self.express.status = data.get('returnCode')
 			self.express.send_count = self.express.send_count + 1
 			self.express.abort_receive_message = ""
 			self.express.save()
 			return True
 		else:
+			self.express.status = data.get('returnCode')
+			self.express.save()
 			return False
