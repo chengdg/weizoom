@@ -17,10 +17,17 @@ Feature: 新建微助力
 	"""
 Background:
 	Given jobs登录系统
-	When jobs添加带参数二维码
+  	And jobs添加会员分组
 		"""
 		{
+			"tag_id_1": "分组1"
+		}
+		"""
+	When jobs添加带参数二维码
+		"""
+		[{
 			"code_name": "带参数二维码1",
+			"create_time": "2015-10-10 10:20:30",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
 			"tags": "未分组",
@@ -29,9 +36,9 @@ Background:
 			"is_relation_member": "false",
 			"reply_type": "文字",
 			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
-		}
+		}]
 		"""
-@apps @powerme @backend
+@apps @apps_powerme @apps_powerme_backend
 Scenario:1 新建微助力，用户识别二维码为空
 	Given jobs登录系统
 	When jobs新建微助力活动
@@ -62,7 +69,7 @@ Scenario:1 新建微助力，用户识别二维码为空
 		}
 		"""
 
-@apps @powerme @backend
+@apps @apps_powerme @apps_powerme_backend
 Scenario:2 新建微助力，用户识别二维码非空
 	Given jobs登录系统
 	When jobs新建微助力活动

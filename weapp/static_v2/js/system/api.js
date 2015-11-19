@@ -71,13 +71,9 @@ W.Api = function() {
 		var method = options.method || 'get';
 
 		if (method != 'get') {
-			if(options.app && (options.resource||options.api)){
-				if(options.api){
-					second_key = 'api_' + options.api
-				}else{
-					second_key = 'resource_' + options.resource
-				}
-				api_key = options.app + '_' + second_key;
+			if(options.app && options.api){
+				api_key = options.app + '_' + options.api;
+
 				if(this.cant_call[api_key]){
 					xlog('Api ERROR'+api_key)
 					xerror('Api ERROR, repeat call!!!!!!!')

@@ -4,6 +4,16 @@ from datetime import datetime
 
 import mongoengine as models
 
+class PowerMeControl(models.Document):
+	member_id= models.LongField(default=0) #参与者id
+	powered_member_id = models.LongField(default=0) #被助力者id
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	powerme_control = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'powered_member_id'])
+
+	meta = {
+		'collection': 'powerme_powerme_control'
+	}
+
 class PowerMeParticipance(models.Document):
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id

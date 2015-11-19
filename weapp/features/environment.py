@@ -76,6 +76,7 @@ from selenium.webdriver.chrome.options import Options
 from apps import models as customized
 from apps import apps_manager
 from apps.customerized_apps.sign import models as sign_models
+from apps.customerized_apps.powerme import models as powerme_models
 
 from django.core.cache import cache
 from weapp import celeryconfig
@@ -299,8 +300,10 @@ def __clear_all_app_data():
 	# 签到
 	sign_models.Sign.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
+	#微助力
+	powerme_models.PowerMe.objects.all().delete()
 
-	#清理mongo中，签到page
+	#清理mongo中所有apps的Page
 	sign_pagestore = pagestore_manager.get_pagestore('mongo')
 	sign_pagestore.remove_all()
 

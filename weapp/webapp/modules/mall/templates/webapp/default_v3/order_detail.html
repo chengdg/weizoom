@@ -303,7 +303,8 @@
     </div>
     </fieldset>
     {% if not has_sub_order %}
-        {% if order.status == 0 or order.status == 4 or  order.status == 3 or order.status == 5%}
+    <!-- 0待支付 或 4待收货 或 3待发货且有红包 或 5已完成且有红包 才显示悬浮的按钮组-->
+        {% if order.status == 0 or order.status == 4 or order.status == 3 and order.red_envelope or order.status == 5 and order.red_envelope %}
             <div style="height:50px;"></div>
             <div class="clearfix xui-stupidBar">
                 <div class="fr xui-btnOuter">

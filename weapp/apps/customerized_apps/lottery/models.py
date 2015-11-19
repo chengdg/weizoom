@@ -101,8 +101,10 @@ class lottery(models.Document):
 class lotteryControl(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的抽奖活动id
 	member_id= models.LongField(default=0) #参与者id
-	can_play_count_control_one = models.StringField(default="", max_length=256, unique_with=['belong_to', 'member_id']) #第一次参与
-	can_play_count_control_two = models.StringField(default="", max_length=256, unique_with=['belong_to', 'member_id']) #第二次参与
+	date_control = models.StringField(default=datetime.today().strftime('%Y-%m-%d'), max_length=100)
+	can_play_count_control_one = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'date_control']) #第一次参与
+	can_play_count_control_two = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'date_control']) #第二次参与
+
 
 	meta = {
 		'collection': 'lottery_lottery_control'
