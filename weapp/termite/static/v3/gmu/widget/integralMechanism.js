@@ -47,7 +47,7 @@ gmu.define('integralMechanism', {
         $('a').each(function() {
             var href = this.getAttribute('href');
             var host = window.location.host;
-            if(href && (href.match(/^(\.\/|\/)\S/g) || href.indexOf(host) >= 0)) {
+            if(href && href.indexOf('&'+key+'=') < 0 && (href.match(/^(\.\/|\/)\S/g) || href.indexOf(host) >= 0)) {
                 href = href.indexOf('?') >= 0 ? href + '&'+key+'=' + value : href + '?'+key+'=' + value;
                 this.setAttribute('href', href);
                 //xlog('把按钮"'+$(this).text().trim()+'"的href修改为:'+href);

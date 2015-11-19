@@ -102,7 +102,6 @@ def __get_display_info(request):
 				page_id = request.GET.get('page_id', 1)
 				page = pagestore.get_page(project_id, page_id)
 			
-
 		display_info = {
 			#'project_id': project_id,
 			'project': project,

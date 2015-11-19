@@ -74,6 +74,9 @@ class MSign(resource.Resource):
 				next_serial_prize = {}
 				prize_rules = {}
 
+				#设置的最大连续签到天数
+				max_setting_count = sorted(map(lambda x: int(x), prize_settings.keys()), reverse=True)[0]
+
 				if request.member:
 					member = request.member
 					member_id = member.id
@@ -109,6 +112,12 @@ class MSign(resource.Resource):
 							temp_serial_count = signer.serial_count
 						else:
 							temp_serial_count = 0
+						#如果已达到最大设置天数则重置签到
+						if signer.serial_count == max_setting_count and latest_sign_date != nowDate:
+							temp_serial_count = 0
+							signer.update(set__serial_count=0)
+							signer.reload()
+
 						if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
 							activity_status = u'已签到'
 							for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
