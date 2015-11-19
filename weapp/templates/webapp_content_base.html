@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html class="{% if user.is_from_android %} android{% endif %}{% if not user.is_from_weixin %} notweixin{% endif %}">
     <head>
+        {% block init %}{% endblock %}
         <meta charset="UTF-8" />
         <title>{{ page_title }}</title>
         {% if request.enable_sql_monitor %}
