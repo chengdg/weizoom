@@ -2167,7 +2167,7 @@ def _get_weizoom_mall_partner_products_and_ids_by(webapp_id, is_checked=None):
 		product_check_dict = dict()
 		other_mall_products = WeizoomMallHasOtherMallProduct.objects.filter(weizoom_mall=weizoom_mall)
 		if is_checked != None:
-			other_mall_products = other_mall_products.filter(is_checked=is_checked)
+			 other_mall_products.filter(is_checked=is_checked)
 
 		for other_mall_product in other_mall_products:
 			product_check_dict[other_mall_product.product_id] = other_mall_product.is_checked
