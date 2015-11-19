@@ -139,26 +139,61 @@ Scenario:1 会员帮助会员好友助力
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复"图文1"链接
 	When bill进入"微助力活动1"活动页面
-	Then bill获取个人活动页面
+	Then bill获得jobs的'微助力活动1'
 		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
+				"buttons":[帮好友助力],["立即分享召唤小伙伴"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
 		"""
-	When tom通过bill分享的"微助力活动1"链接进入活动页面帮助好友助力
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  0   |
+
+	#tom点击bill分享的链接,查看默认活动页
+
+	When tom关注jobs的公众号
+	When tom通过bill分享的"微助力活动1"链接进入活动页面
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["帮bill助力","我也要参加"],["立即分享召唤小伙伴"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
+	When tom完成'帮bill助力'操作
 	Then tom获得弹出公众号带参数二维码"带参数二维码1"
 	When tom关注jobs的公众号
 	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
-	Then bill重新获取个人活动页面
-		"""
-		{
-			"rankings":"1",
-			"power_score":"1",
-			"participant":"1"
-		}
-		"""
+	When 清空浏览器
+	When tom访问jobs的webapp的"微助力活动1"活动页
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["已帮bill助力","我也要参加"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+		And tom获得"微助力活动1"的"助力值TOP100"
+			| rank |name |value |
+			| 1    |bill |  1   |
+
 
 
 @apps @powerme @frontend
