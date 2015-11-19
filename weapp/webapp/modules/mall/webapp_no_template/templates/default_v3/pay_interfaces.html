@@ -147,7 +147,7 @@
             </ul>
         </div>
     </div>
-    <div data-ui-role="swipemask" class="mask">
+    <div data-ui-role="swipemask" class="xa-loadingMask" data-background="rgba(118, 118, 118, .3)">
        <div class="xui-loading">
            <div class="xui-loading-container container1">
                <div class="circle1"></div>
@@ -178,10 +178,10 @@ var orderId = "{{ order_id }}";
 
 $(document).ready(function() {
     // gmu组件,防止重复点击添加蒙版，此步骤使蒙版隐藏
-    $('body').swipeMask();
+    $('.xa-loadingMask').swipeMask();
     $('.x-payInterfaceLink').click(function(){
         // gmu组件,防止重复点击添加蒙版，此步骤使蒙版显示
-        $('body').swipeMask('show');
+        $('.xa-loadingMask').swipeMask('show');
         var $link = $(this);
         var interfaceType = parseInt($link.attr('data-interface-type'));
         var interfaceId = $link.attr('data-id');
@@ -206,7 +206,7 @@ $(document).ready(function() {
                     order_id = data['order_id'];
                     if (data['msg'] != null) {
                         // gmu组件,报错，此步骤使蒙版显示
-                        $('body').swipeMask('hide');
+                        $('.xa-loadingMask').swipeMask('hide');
                         $('body').alert({
                             isShow: true,
                             speed: 2000,
@@ -218,7 +218,7 @@ $(document).ready(function() {
                 },
                 error: function(resp) {
                     // gmu组件,报错，此步骤使蒙版显示
-                    $('body').swipeMask('hide');
+                    $('.xa-loadingMask').swipeMask('hide');
                     var errMsg = null;
                     if (resp.data) {
                         errMsg = resp.data['msg'];
