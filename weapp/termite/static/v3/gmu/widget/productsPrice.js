@@ -39,7 +39,11 @@ Copyright (c) 2011-2012 Weizoom Inc
 
 		_create: function() {
 			// console.log('create calculProductMemberPriceOrPromotionPrice')
-			this.getMemberProductInfo();
+			
+			// 当页面中有商品列表时，才去取会员商品信息
+			if (this.$el.length > 0) {
+				this.getMemberProductInfo();				
+			};
 		},
 
 		getMemberProductInfo: function(){
