@@ -97,6 +97,10 @@ def check_weizoom_card(name, password, owner_id=None):
 			WeizoomCardRule.objects.get(id=rule_id)
 			if '吉祥大药房' in weizoom_card.weizoom_card_rule.name:
 				msg = u'抱歉，该卡仅可在吉祥大药房微站使用！'
+		elif owner_id and rule_id in [99,] and owner_id != 474:
+			WeizoomCardRule.objects.get(id=rule_id)
+			if '爱伲' in weizoom_card.weizoom_card_rule.name:
+				msg = u'抱歉，该卡仅可在爱伲咖啡微站使用！'
 		# else:
 		# 	WeizoomCardUsedAuthKey.objects.get_or_create(weizoom_card_id=weizoom_card.id, auth_key=request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY])
 	else:
