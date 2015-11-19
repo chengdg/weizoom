@@ -29,3 +29,14 @@ def __debug_print(content,type_tag=True):
 		print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
 	else:
 		pass
+
+@when(u'{user}新建微助力活动')
+def step_impl(context,user):
+	__debug_print(context.text)
+
+
+
+@then(u'{user}获得微助力活动列表')
+def step_impl(context,user):
+	pass
+
