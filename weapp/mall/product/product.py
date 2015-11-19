@@ -216,6 +216,7 @@ class ProductList(resource.Resource):
             is_deleted = True
 
         products = models.Product.objects.filter(id__in=ids)
+
         if is_deleted:
             products.update(is_deleted=True, display_index=0)
         else:
@@ -225,6 +226,7 @@ class ProductList(resource.Resource):
                 if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
                     products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
                 else:
+                    #上架
                     products.update(shelve_type=shelve_type, display_index=0, update_time=now)
             else:
                 # 微众商城更新商户商品状态

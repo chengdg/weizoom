@@ -56,6 +56,10 @@ def step_impl(context, user):
 	result = context.qa_result["data"]
 	begin = result.find('<div class="content">') + len('<div class="content">')
 	if result.find('<a href=') != -1: #result存在a标签
+		if result.find('market_tool:coupon') != -1: #result存在优惠券
+			coupon_begin = result.find('<a')
+			coupon_end = result.find('</a><br />', coupon_begin) + len('</a><br />')
+			result = result[:coupon_begin]+result[coupon_end:] #截取掉result中优惠券的a标签内容
 		end = result.find('<a', begin)
 		link_url = '/m/apps/sign/m_sign/?webapp_owner_id=%s' % (context.webapp_owner_id)
 		link_url = bdd_util.nginx(link_url)
