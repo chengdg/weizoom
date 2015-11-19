@@ -409,11 +409,7 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 			#获取product及其model
 			product = Product.objects.get(id=product_id)
 			#防止商品的串号问题,商品没有缓存的情况下，下面不执行，直接返回
-<<<<<<< HEAD
-			if product.owner_id != webapp_owner_id:
-=======
 			if product.owner_id != webapp_owner_id and webapp_owner_id!=216:
->>>>>>> nj_f_sign1
 				product = Product()
 				product.is_deleted = True
 				# product.mark = str(product.id) + '-' + product.model_name
