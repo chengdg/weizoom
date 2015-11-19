@@ -21,7 +21,7 @@ Background:
 	Given jobs登录系统
 	When jobs添加带参数二维码
 		"""
-		{
+		[{
 			"code_name": "带参数二维码1",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
@@ -31,7 +31,7 @@ Background:
 			"is_relation_member": "false",
 			"reply_type": "文字",
 			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
-		}
+		}]
 		"""
 	When jobs新建微助力活动
 		"""
