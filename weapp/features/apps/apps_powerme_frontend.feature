@@ -148,14 +148,14 @@ Scenario:1 会员帮助会员好友助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接进入活动页面帮助好友助力
-	Then jobs弹出公众号带参数二维码
+	Then tom获得弹出公众号带参数二维码"带参数二维码1"
 	When tom关注jobs的公众号
-	Then tom获得公众号返回的参数
+	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
 	Then bill重新获取个人活动页面
 		"""
 		{
-			"rankings":"0",
-			"power_score":"0",
+			"rankings":"1",
+			"power_score":"1",
 			"participant":"1"
 		}
 		"""
@@ -178,9 +178,9 @@ Scenario:2 会员重复帮好友助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接进入活动页面帮助好友助力
-	Then jobs弹出公众号带参数二维码
+	Then tom获得jobs公众号带参数二维码"带参数二维码1"
 	When tom关注jobs的公众号
-	Then tom获得公众号返回的参数
+	Then tom获得公众号返回的参数："感谢您的的参与，为好友助力成功！"
 	Then bill重新获取个人活动页面
 		"""
 		{
@@ -213,7 +213,7 @@ Scenario:3 会员通过会员分享的活动页进行我要参与
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接进入活动页面，点击我也要参与
-	Then jobs弹出公众号二维码
+	Then tom获得jobs公众号二维码"带参数二维码1"
 	When tom关注jobs的公众号
 	When tom在微信中向jobs的公众号发送消息'微助力1'
 	Then tom收到自动回复"图文1"
