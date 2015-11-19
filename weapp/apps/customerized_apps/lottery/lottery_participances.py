@@ -12,10 +12,12 @@ import os
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
 from modules.member import models as member_models
 import models as app_models
 from mall import export
 from utils.string_util import hex_to_byte, byte_to_hex
+from watchdog.utils import watchdog_error
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -243,10 +245,12 @@ class lotteryParticipances_Export(resource.Resource):
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
-
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':excel_file_name,'code':200}
-		except :
+		except Exception, e:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
 			response = create_response(500)
+			response.innerErrMsg = e
 
 		return response.get_response()
