@@ -17,10 +17,17 @@ Feature: 新建微助力
 	"""
 Background:
 	Given jobs登录系统
+  	And jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1"
+		}
+		"""
 	When jobs添加带参数二维码
 		"""
 		[{
 			"code_name": "带参数二维码1",
+			"create_time": "2015-10-10 10:20:30",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
 			"tags": "未分组",
