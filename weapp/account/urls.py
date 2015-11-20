@@ -8,17 +8,10 @@ import debug_api_views
 import statistics_views
 import accounts_views
 import accounts_api_views
-# jz 2015-10-22
 import settings_views
-# import settings_api_views
 import accounts_landing_views
 
 urlpatterns = patterns('',
-	# jz 2015-10-10
-	# (r'^$', views.show_account_info),
-	# (r'mp/$', views.edit_weixin_mp_user),
-	# (r'preview_info/$', views.edit_preview_info),
-	# (r'api/preview_info/get/$', api_views.get_preview_info),
 	
 	#Sub account
 	(r'sub_users/$', views.list_sub_accounts),
@@ -52,16 +45,8 @@ urlpatterns = patterns('',
 	(r'upload_head_image/$', views.upload_head_image),
 
 	(r'statistics/daily_new_weixin_user_trend/get/', statistics_views.get_new_weixin_user_daily_trend),
-
-	#settings
-	# jz 2015-10-22
-	# url(r'api/operation_settings/update', settings_api_views.update_operation_settings),
-	# url(r'api/settings/update', settings_api_views.update_settings),
-	# url(r'settings/', settings_views.index),
-	# url(r'setting/edit_email_setting/(\d+)/$', settings_views.edit_email_setting),
-	# url(r'setting/integral_detail/$', settings_views.edit_integral_detail),
-
-	url(r'setting/notify/update/(\d+)/$', settings_views.update_email_status),
+	# 邮件配置 zhaolei 2015-11-19
+	# url(r'setting/notify/update/(\d+)/$', settings_views.update_email_status),
 
 	#icon api url
 	url(r'user_icons/get/$', api_views.get_user_icons),	
