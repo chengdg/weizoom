@@ -83,6 +83,7 @@ Copyright (c) 2011-2012 Weizoom Inc
             $(this).attentionAlert('clickGuideAttention');
         });
         $('body').delegate('.xa-qrcodeMask', 'click', function(event) {
+            alert(1)
             $(this).attentionAlert('clickMask');
         
         });
