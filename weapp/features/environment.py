@@ -302,8 +302,8 @@ def __clear_all_app_data():
 	sign_models.SignParticipance.objects.all().delete()
 
 	#清理mongo中，签到page
-	sign_pagestore = pagestore_manager.get_pagestore('mongo')
-	sign_pagestore.remove_all()
+	#sign_pagestore = pagestore_manager.get_pagestore('mongo')
+	#sign_pagestore.remove_all()
 
 	#watchdog
 	watchdog_models.Message.objects.all().delete()
