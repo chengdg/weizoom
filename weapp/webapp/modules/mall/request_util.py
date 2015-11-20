@@ -438,17 +438,7 @@ def get_pay_result(request):
 		'is_show_red_envelope': is_show_red_envelope,
 		'red_envelope_rule_id': red_envelope_rule_id
 	})
-	# jz 2015-10-22
-	# if hasattr(request, 'is_return_context'):
-	# 	return c
-	# else:
-	# if order.status == ORDER_STATUS_PAYED_NOT_SHIP:
-	# else:
-	# 	#获取订单包含商品
-	# 	order_has_products = OrderHasProduct.objects.filter(order=order)
-	# 	c['order_has_products'] = order_has_products
-	# 	c.update()
-	# 	return render_to_response('%s/order_detail.html' % request.template_dir, c)
+
 	
 	return render_to_response('%s/success.html' % request.template_dir, c)
 

@@ -124,7 +124,7 @@ class OperationSettings(models.Model):
 	class Meta(object):
 		db_table = 'account_operation_settings'
 		verbose_name = '运营配置'
-		verbose_name_plural = '阴影配置'
+		verbose_name_plural = '运营配置'
 
 	@staticmethod
 	def get_settings_for_user(userid):
