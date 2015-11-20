@@ -245,10 +245,22 @@ def step_impl(context,user):
 	}
 	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	post_termite_response = context.client.post(termite_url,termite_post_args)
+	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
 
 	#step4:发送powerme_args
-
-
+	post_powerme_args = {
+		"_method":"put",
+		"name":title,
+		"start_timea":start_time,
+		"end_date":end_time,
+		"timing[timing][select]":timing_status,
+		"reply_content":reply_content,
+		"material_image":material_image,
+		"qrcode":json.dumps(qrcode),
+		"related_page_id":related_page_id
+	}
+	powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	post_powerme_response = context.client.post(powerme_url,post_powerme_args)
 
 
 
