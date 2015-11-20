@@ -238,22 +238,31 @@ def update_webapp_product_cache(**kwargs):
                 product_id = instance.id
                 shelve_type = instance.shelve_type
                 is_deleted = instance.is_deleted
+                weshop_status = instance.weshop_status
+                weshop_sync = instance.weshop_sync
             else:
                 product_id = instance[0].id
                 shelve_type = instance[0].shelve_type
                 is_deleted = instance[0].is_deleted
+                weshop_status = instance[0].weshop_status
+                weshop_sync = instance[0].weshop_sync
             if before_instance:
+                #微众商城下架处理 duhao 20151120
+                if before_instance.weshop_status != weshop_status and mall_models.PRODUCT_SHELVE_TYPE_OFF == weshop_status:
+                    cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
+
                 if before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_OFF == shelve_type or is_deleted == True:
                     #下架商品，清除redis中{wo:38}_{co:*}_products的数据项,批量更新
                     # 或者删除商品时
                     categories_products_key = '{wo:%s}_{co:*}_products' % (webapp_owner_id)
                     cache_util.rem_set_member_by_patten_from_redis(categories_products_key,product_id)
 
-                    #微众商城的缓存也要一起更新 duhao 20151120
-                    cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
+                    if weshop_sync > 0:
+                        #微众商城的缓存也要一起更新 duhao 20151120
+                        cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
                 elif (before_instance.shelve_type != shelve_type or webapp_owner_id == 216) and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
                     #上架商品，确定该商品原来是否有category
-                    category_has_products = mall_models.CategoryHasProduct.objects.filter(product=instance)
+                    category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product_id)
                     if category_has_products:
                         for category_has_pro in category_has_products:
                             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,category_has_pro.category.id)
