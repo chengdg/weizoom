@@ -115,14 +115,14 @@ def translate_special_characters(message_text):
 
     message_text = message_text.replace('{', random_str_left)
     message_text = message_text.replace('}', random_str_right)
-    a_pattern = re.compile(r'<a.+?href=.+?>.+?</a>')
-    all_a_html = a_pattern.findall(message_text)
+    pattern = re.compile(r'<a.+?href=.+?>.+?</a>|<img.+?src=.+?/>')
+    all_html = pattern.findall(message_text)
 
-    for html in all_a_html:
+    for html in all_html:
         message_text = message_text.replace(html, "{}")
     message_text = message_text.replace('<', "&lt;")
     message_text = message_text.replace('>', "&gt;")
-    message_text = message_text.format(*all_a_html)
+    message_text = message_text.format(*all_html)
     message_text = message_text.replace(random_str_left, '{')
     message_text = message_text.replace(random_str_right, '}')
     return message_text
