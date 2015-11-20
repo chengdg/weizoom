@@ -331,6 +331,11 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 		products_0 = []  # 商品排序， 过滤0
 		products_not_0 = []  # 商品排序， 过滤!0
 		for category_has_product in category_has_products:
+			#微众商城要过滤掉自己的非在售 duhao 20151120
+			if is_access_weizoom_mall:
+				if category_has_product.product.weshop_status != PRODUCT_SHELVE_TYPE_ON:
+					continue
+
 			if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
 				product = category_has_product.product
 				#过滤已删除商品和套餐商品

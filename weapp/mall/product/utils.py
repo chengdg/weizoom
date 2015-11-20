@@ -146,6 +146,16 @@ def sorted_products(manager_id, product_categories, reverse):
     productIds = set([x.product_id for x in relations])
     products = models.Product.objects.filter(id__in=productIds, is_deleted=False).exclude(
         shelve_type=models.PRODUCT_SHELVE_TYPE_RECYCLED)
+    #duhao 20151120
+    #微众商城的商品-分组管理 页面  商品的状态应该是商品在微众商城里的状态，而不是在商户里的状态
+    if manager_id == 216:
+        _products = []
+        for product in products:
+            if product.owner_id == 216 or (product.weshop_sync > 0 and product.shelve_type == models.PRODUCT_SHELVE_TYPE_ON):
+                product.shelve_type = product.weshop_status
+                _products.append(product)
+        products = _products
+
     models.Product.fill_display_price(products)
     models.Product.fill_sales_detail(manager_id, products, productIds)
     id2product = dict([(product.id, product) for product in products])

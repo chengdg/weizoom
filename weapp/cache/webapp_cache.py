@@ -248,7 +248,10 @@ def update_webapp_product_cache(**kwargs):
                     # 或者删除商品时
                     categories_products_key = '{wo:%s}_{co:*}_products' % (webapp_owner_id)
                     cache_util.rem_set_member_by_patten_from_redis(categories_products_key,product_id)
-                elif before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
+
+                    #微众商城的缓存也要一起更新 duhao 20151120
+                    cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
+                elif (before_instance.shelve_type != shelve_type or webapp_owner_id == 216) and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
                     #上架商品，确定该商品原来是否有category
                     category_has_products = mall_models.CategoryHasProduct.objects.filter(product=instance)
                     if category_has_products:
@@ -269,7 +272,10 @@ def update_webapp_product_cache(**kwargs):
                 product_id = instance[0].product_id
             product = mall_models.Product.objects.filter(id = product_id).get()
             # 非待售添加
-            if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF:
+            if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF and (webapp_owner_id != 216 or \
+                (webapp_owner_id == 216 and product.weshop_status != mall_models.PRODUCT_SHELVE_TYPE_OFF)):
+            #如果是微众商城过来的请求，则需要验证微众商城里的在售状态 duhao 20151120
+            # if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF:
                 categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
                 cache_util.add_set_to_redis(categories_products_key,product_id)
                 # todo zhaolei 清除对应的varnish缓存,需要重构
