@@ -109,13 +109,13 @@
                 <a data-theme="x" href="./?woid={{request.webapp_owner_id}}&module=mall&model=homepage" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-             <div data-ui-role="attentionAlert" class="xui-attentionAlert"
-                {% if not request.member.is_subscribed %}
-                    data-is-show-button="true"
-                {% endif %}
-                {% if not hide_non_member_cover %}
-                    data-is-show-cover="true"
-                {% endif %}
+             <div data-ui-role="attentionAlert" class="wui-attentionAlert"
+                    {% if not request.member.is_subscribed %}
+                        data-is-show-button="true"
+                    {% endif %}
+                    {% if not hide_non_member_cover %}
+                        data-is-show-cover="true"
+                    {% endif %}
                 data-id="{{request.webapp_owner_id}}"
                 data-qrcode-image="{{ request.webapp_owner_info.qrcode_img }}"
                 data-varnish="{{is_varnish_url}}"
@@ -176,26 +176,6 @@
                         speed: 3000
                     });
                 }
-
-                // 默认列表页--非会员点击会员中心
-                var height = $(window).height();
-                
-                var $twoDimension = $('.xui-two-dimension');
-
-                var showSwiper = function(){
-                    $('body').swipeMask('show');
-                    $('.mask').css({
-                        height: height,
-                        background: 'rgba(132,132,132,0.5)',
-                        position:'fixed'
-                    });
-                    $('.xui-two-dimension').css({
-                        top: height/2,
-                        'margin-top': -185,
-                        display:'block'
-                    });
-                };
-
                 var isUserCenterLink = function(url){
                     if (url.indexOf('module=user_center') > 0 &&
                         url.indexOf('model=user_info') > 0 &&
@@ -215,8 +195,7 @@
 
                     if (isUserCenterLink(url) && is_subscribed == false) {
                         /* 非会员显示二维码 */
-                        showSwiper();
-                         $('.mask').css('background','rgba(0, 0, 0, 0.5)');
+                        $('.xa-qrcodeMask').swipeMask('show');
                     } else {
                         if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
                             window.location.href = url;
@@ -225,10 +204,8 @@
                         }
                     }
                 });
-
-                $('.mask').click(function(){
-                    $('body').swipeMask('hide');
-                    $('.xui-two-dimension').hide();
+                $('body').delegate('.xa-qrcodeMask', 'click', function(event) {
+                    $('.xa-qrcodeMask').swipeMask('hide');
                 });
             });
             {# 百度统计代码开始 #}

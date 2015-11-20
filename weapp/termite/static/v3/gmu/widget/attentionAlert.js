@@ -35,7 +35,7 @@ Copyright (c) 2011-2012 Weizoom Inc
         },
 
         render: function() {
-            this.$button = $('<a class="xa-guideAttention">关注我们可查看账户积分、红包、优惠券等！</a>');
+            this.$button = $('<a class="wa-guideAttention">关注我们可查看账户积分、红包、优惠券等！</a>');
             this.$el.html(this.$button);
             if($('.xa-page')){
                 $('.xa-page').css('padding-top','40px');
@@ -49,40 +49,12 @@ Copyright (c) 2011-2012 Weizoom Inc
             }
             var height = this.setting.isShowCover(this) ? '100%' : '40px'
             this.$el.css('height', height);
-            $('body').append('<div class="xui-mask xa-mask none"><div class="xui-attentionBox"><img class="xui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
-            $('.xui-mask').css({
-                height: '100%',
-                width: '100%',
-                background:'rgba(0,0,0,0.5)',
-                position:'fixed',
-                top:0,
-                left:0,
-                'z-index':10003
-            }).click(function(){
-                $(this).addClass('none');
-            });;
-            $('.xui-attentionBox').css({
-                width: 233,
-                height: 270,
-                'background':'url(/static_v2/img/termite2/two-dimension.png)',
-                'background-size':'100%',
-                position:'fixed',
-                top:'50%',
-                left:'50%',
-                'margin-top':'-135px',
-                'margin-left':'-115px'
-            });
-            $('.xui-twoDimensionImg').css({
-                width: 148,
-                height: 155,
-                position:'absolute',
-                top:42,
-                left:42
-            });
+            $('body').append('<div data-ui-role="swipemask" class="xa-qrcodeMask" data-background="rgba(0,0,0,.5)"><div class="wui-attentionBox"><img class="wui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
+            $('.xa-qrcodeMask').swipeMask();
         },
 
         clickGuideAttention :function() {
-            $('.xa-mask').removeClass('none');
+            $('.xa-qrcodeMask').swipeMask('show');
         },
 
 		_bind : function() {
@@ -105,7 +77,7 @@ Copyright (c) 2011-2012 Weizoom Inc
     	$('[data-ui-role="attentionAlert"]').each(function() {
     		$(this).attentionAlert();
     	});
-        $('.xui-attentionAlert').click(function(){
+        $('.wui-attentionAlert').click(function(){
             $(this).attentionAlert('clickGuideAttention');
         });
 

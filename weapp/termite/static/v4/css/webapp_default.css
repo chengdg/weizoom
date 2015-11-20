@@ -294,9 +294,9 @@ body.ui-overlay-x .ui-page{
     -moz-border-radius: 0px;
     border-radius: 0px;
 }
-
+/*hrx 2015-11-19 引导关注黄条样式提取在了common_widget.css*/
 /*非会员页面黄色提示框*/
-.xui-attentionAlert{
+/*.xui-attentionAlert{
     position: fixed;
     top: 0;
     left: 0;
@@ -320,4 +320,4 @@ body.ui-overlay-x .ui-page{
     right: 10px;
     width: 6px;
     height: 6px;
-}
+}*/

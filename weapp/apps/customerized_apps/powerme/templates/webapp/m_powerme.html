@@ -31,10 +31,10 @@
         height: 100%;
         width: 100%;
     }
-    .mask{
+    /*.mask{
         background: rgba(0,0,0,0.8)!important;
         position: fixed!important;
-    }
+    }*/
     .xui-share {
         background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll 82% 10px / 53% auto rgba(0, 0, 0, 0);
         height: 75%;
@@ -220,7 +220,7 @@
         //监听分享成功事件
         $(document).on("share:success",function(data){
             $('.xa-share').addClass('none');
-            $('body').swipeMask('hide');
+            $('.mask').swipeMask('hide');
             //分享成功后就算该用户参与活动
             W.getApi().call({
                 app: 'm/apps/powerme',
@@ -375,19 +375,19 @@
     }
 
     function openGuideMask(){
-        $('body').swipeMask('show');
+        $('.mask').swipeMask('show');
         $('.xa-share').removeClass('none');
     }
     function openSuccessWin(){
-        $('body').swipeMask('show');
+        $('.mask').swipeMask('show');
         $('.xui-powerSucceed').removeClass('none');
     }
     function openGuestMask(){
-        $('body').swipeMask('show');
+        $('.mask').swipeMask('show');
         $('.xa-attention-guest').removeClass('none');
     }
     function openMemberMask(){
-        $('body').swipeMask('show');
+        $('.mask').swipeMask('show');
         $('.xa-attention-member').removeClass('none');
     }
     function powerYou(){
@@ -419,18 +419,18 @@
     }
     //隐藏所有
     $('.mask').click(function(){
-        $('body').swipeMask('hide');
+        $('.mask').swipeMask('hide');
         $('.xui-powerSucceed').addClass('none');
         $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
-        $('body').swipeMask('hide');
+        $('.mask').swipeMask('hide');
     });
     $('.xa-colseButton').click(function(){
         $('.xa-share').addClass('none');
-        $('body').swipeMask('hide');
+        $('.mask').swipeMask('hide');
     });
 </script>
 {% endblock %}
