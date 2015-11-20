@@ -151,8 +151,9 @@ def sorted_products(manager_id, product_categories, reverse):
     if manager_id == 216:
         _products = []
         for product in products:
-            if product.owner_id != 216 and product.weshop_sync > 0 and product.shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
-                product.shelve_type = product.weshop_status
+            if product.owner_id == 216 or (product.weshop_sync > 0 and product.shelve_type == models.PRODUCT_SHELVE_TYPE_ON):
+                if product.owner_id != 216:
+                    product.shelve_type = product.weshop_status
                 _products.append(product)
         products = _products
 
