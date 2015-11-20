@@ -373,14 +373,15 @@ def get_webapp_products_detail(webapp_owner_id, product_ids, member_grade_id=Non
                     product.integral_sale['detail'][
                         'discount'] = str(i['discount']) + "%"
                     break
-
-        promotion_data = data[key]['promotion']
-        if promotion_data and len(promotion_data) > 0:
-            product.promotion_model = promotion_models.Promotion.from_dict(
-                promotion_data)
+        if 'promotion' in data[key]:
+            promotion_data = data[key]['promotion']
+            if promotion_data and len(promotion_data) > 0:
+                product.promotion_model = promotion_models.Promotion.from_dict(
+                    promotion_data)
+            else:
+                product.promotion_model = dict()
         else:
             product.promotion_model = dict()
-
         integral_sale_data = data[key]['integral_sale']
         if integral_sale_data and len(integral_sale_data) > 0:
             product.integral_sale_model = promotion_models.Promotion.from_dict(
