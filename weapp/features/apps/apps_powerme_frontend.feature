@@ -144,6 +144,71 @@ Scenario:1 会员帮助会员好友助力
 			{
 				"link_name":"微助力活动1",
 				"is_show_countdown":"true",
+				"buttons":[帮好友助力],["我也要参加"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
+		"""
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  0   |
+
+	#tom点击bill分享的链接,查看默认活动页
+
+	When tom关注jobs的公众号
+	When tom通过bill分享的"微助力活动1"链接进入活动页面
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["帮bill助力"],["我也要参加"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
+	When tom完成'帮bill助力'操作
+	Then tom获得弹出公众号带参数二维码"带参数二维码1"
+	When tom关注jobs的公众号
+	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
+	When 清空浏览器
+	When tom访问jobs的webapp的"微助力活动1"活动页
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["已帮bill助力",["我也要参加"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+		And tom获得"微助力活动1"的"助力值TOP100"
+			| rank |name |value |
+			|  0   |bill |  1   |
+
+
+
+@apps @powerme @frontend
+Scenario:2 会员重复帮好友助力
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有0助力值
+	When bill在微信中向jobs的公众号发送消息'微助力1'
+	Then bill收到自动回复"图文1"链接
+	When bill进入"微助力活动1"活动页面
+	Then bill获得jobs的'微助力活动1'
+		"""
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
 				"buttons":[帮好友助力],["立即分享召唤小伙伴"],
 				"rules":"微助力活动1",
 				"my_rank":"0",
@@ -183,7 +248,7 @@ Scenario:1 会员帮助会员好友助力
 				{
 					"link_name":"微助力活动1",
 					"is_show_countdown":"true",
-					"buttons":["已帮bill助力","我也要参加"],
+					"buttons":["已帮bill助力"],["我也要参加"],
 					"rules":"微助力活动1",
 					"my_rank":"无",
 					"my_power_score":"0",
@@ -192,75 +257,78 @@ Scenario:1 会员帮助会员好友助力
 			"""
 		And tom获得"微助力活动1"的"助力值TOP100"
 			| rank |name |value |
-			| 1    |bill |  1   |
+			|  0   |bill |  1   |
 
 
-
-@apps @powerme @frontend
-Scenario:2 会员重复帮好友助力
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有0助力值
-	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复"图文1"
-	When bill进入"微助力活动1"活动页面参与活动
-	Then bill获取个人活动页面
-		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
-		"""
-	When tom通过bill分享的"微助力活动1"链接进入活动页面帮助好友助力
-	Then tom获得jobs公众号带参数二维码"带参数二维码1"
-	When tom关注jobs的公众号
-	Then tom获得公众号返回的参数："感谢您的的参与，为好友助力成功！"
-	Then bill重新获取个人活动页面
-		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"1"
-		}
-		"""
-	When tom再次帮好友助力
-	Then jobs弹出蒙版提示
-		"""
-		{
-			分享到朋友圈，为好友助力。。。。。
-		}
-		"""
+	When tom再次完成'帮bill助力'操作
+	When 清空浏览器
+	Then ttom获得jobs的webapp页面'微助力活动1'
+		| rank |name |value |
+		|  0   |bill |  1   |
 @apps @powerme @frontend
 Scenario:3 会员通过会员分享的活动页进行我要参与
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0助力值
 	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复"图文1"
-	When bill进入"微助力活动1"活动页面参与活动
-	Then bill获取个人活动页面
+	Then bill收到自动回复"图文1"链接
+	When bill进入"微助力活动1"活动页面
+	Then bill获得jobs的'微助力活动1'
 		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
+				"buttons":[帮好友助力],["我也要参加"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
 		"""
-	When tom通过bill分享的"微助力活动1"链接进入活动页面，点击我也要参与
-	Then tom获得jobs公众号二维码"带参数二维码1"
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  0   |
+
+	#tom点击bill分享的链接,查看默认活动页
+
 	When tom关注jobs的公众号
-	When tom在微信中向jobs的公众号发送消息'微助力1'
-	Then tom收到自动回复"图文1"
-	Then tom进入"微助力活动1"活动页面
-	Then tom获取个人活动页面
-		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"1"
-		}
-		"""
+	When tom通过bill分享的"微助力活动1"链接进入活动页面
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["帮bill助力"],["我也要参加"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
+	When tom完成'我也要参加'操作
+	Then tom获得弹出公众号二维码
+	When tom关注jobs的公众号
+	Then tom进入jobs的公众号
+	When 清空浏览器
+	When tom访问jobs的webapp的"微助力活动1"活动页
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["立即分享召唤小伙伴"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+		And tom获得"微助力活动1"的"助力值TOP100"
+			| rank |name |value |
+			|  0   |bill |  1   |
+
+
 
 
 @apps @powerme @frontend
@@ -269,37 +337,68 @@ Scenario:4 会员通过会员分享的活动页重复进行我要参与
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0助力值
 	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复"图文1"
-	When bill进入"微助力活动1"活动页面参与活动
-	Then bill获取个人活动页面
+	Then bill收到自动回复"图文1"链接
+	When bill进入"微助力活动1"活动页面
+	Then bill获得jobs的'微助力活动1'
 		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
+				"buttons":[帮好友助力],["我也要参加"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
 		"""
-	When tom通过bill分享的"微助力活动1"链接进入活动页面，点击我也要参与
-	Then jobs弹出公众号二维码
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  0   |
+
+	#tom点击bill分享的链接,查看默认活动页
+
 	When tom关注jobs的公众号
-	When tom在微信中向jobs的公众号发送消息'微助力1'
-	Then tom收到自动回复"图文1"
-	Then tom进入"微助力活动1"活动页面
-	Then tom获取个人活动页面
-		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"1"
-		}
-		"""
-	Then tom通过bill分享的"微助力活动1"链接再次进入活动页面，再次点击我也要参与
-	Then jobs弹出蒙版提示
-		"""
-		{
-			分享到朋友圈，为好友助力。。。。。
-		}
-		"""
+	When tom通过bill分享的"微助力活动1"链接进入活动页面
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["帮bill助力"],["我也要参加"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
+	When tom完成'我也要参加'操作
+	Then tom获得弹出公众号二维码
+	When tom关注jobs的公众号
+	Then tom进入jobs的公众号
+	When 清空浏览器
+	When tom访问jobs的webapp的"微助力活动1"活动页
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["立即分享召唤小伙伴"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+	And tom获得"微助力活动1"的"助力值TOP100"
+			| rank |name |value |
+			|  0   |bill |  1   |
+	When tom再次完成'我也要参加'操作
+	When tom再次完成'帮bill助力'操作
+	When 清空浏览器
+	Then tom获得jobs的webapp页面'微助力活动1'
+		| rank |name |value |
+		|  0   |bill |  1   |
 
 @apps @powerme @frontend
 Scenario:5  会员在自己专属页面点击按钮分享活动
@@ -307,33 +406,29 @@ Scenario:5  会员在自己专属页面点击按钮分享活动
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0助力值
 	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复"图文1"
+	Then bill收到自动回复"图文1"链接
 	When bill进入"微助力活动1"活动页面
-	Then bill获取个人活动页面
+	Then bill获得jobs的'微助力活动1'
 		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
+				"buttons":["立即分享召唤小伙伴"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
 		"""
-	Then jobs弹出蒙版提示语
-	"""
-		{
-			"好的事务一起分享，邀请好友帮你一起赢大奖。。。。"
-		}
-	"""
-	When tom点击右上角按钮分享到朋友圈
-	Then 分享成功后，蒙版消失，停留在当前页
-	When bill重新进入活动页面
-	Then bill获取个人活动页面
-		"""
-		{
-			"rankings":"1",
-			"power_score":"0",
-			"participant":"1"
-		}
-		""" 
+	When bill把jobs的微助力活动"微助力活动1"链接分享到朋友圈
+	When 清空浏览器
+	Then bill获得jobs的webapp页面'微助力活动1'
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  1   |
+	
+
+	
 
 @apps @powerme @frontend
 Scenario:6 会员在自己的专属页面重复点击按钮分享活动
@@ -341,41 +436,33 @@ Scenario:6 会员在自己的专属页面重复点击按钮分享活动
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0助力值
 	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复"图文1"
+	Then bill收到自动回复"图文1"链接
 	When bill进入"微助力活动1"活动页面
-	Then bill获取个人活动页面
+	Then bill获得jobs的'微助力活动1'
 		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
+				"buttons":["立即分享召唤小伙伴"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
 		"""
-	When bill点击按钮
-	Then jobs弹出蒙版提示语
-	"""
-		{
-			"好的事务一起分享，邀请好友帮你一起赢大奖。。。。"
-		}
-	"""
-	When tom点击右上角按钮分享到朋友圈
-	Then 分享成功后，蒙版消失，停留在当前页
-	When bill重新进入活动页面
-	Then bill获取个人活动页面
-		"""
-		{
-			"rankings":"1",
-			"power_score":"0",
-			"participant":"1"
-		}
-		""" 
-	Then bill再次进入活动页面，再次点击“立即召唤”按钮
-	Then jobs弹出蒙版提示
-		"""
-		{
-			分享到朋友圈，为好友助力。。。。。
-		}
-		"""
+	When bill把jobs的微助力活动"微助力活动1"链接分享到朋友圈
+	When 清空浏览器
+	Then bill获得jobs的webapp页面'微助力活动1'
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  1   |
+	When 清空浏览器
+	Then bill再次获得jobs的webapp页面'微助力活动1'
+	When bill再次把jobs的微助力活动"微助力活动1"链接分享到朋友圈
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  1   |
+
 
 @apps @powerme @frontend
 Scenario:7 创建不带参数二维码的微助力活动，非会员通过会员好友分享的活动页帮好友助力
