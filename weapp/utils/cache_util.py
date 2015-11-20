@@ -259,9 +259,3 @@ def rem_set_member_from_redis(set_name,*args):
 
 def delete_redis_key(*key_name):
 	return pyredis.delete(*key_name)
-
-def add_mhash_to_redis(hash_name,mapping):
-	return pyredis.hmset(hash_name,mapping)
-
-def get_mhash_from_redis(hash_name):
-	return pyredis.hgetall(hash_name)

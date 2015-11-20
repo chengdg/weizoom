@@ -1,0 +1,79 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+{% endblock %}
+
+{% block content-panel %}
+<ul class="breadcrumb">
+	<li><a href="/account/settings/">邮件配置</a><span class="divider">/</span></li>
+	<li class="active">更新配置</li>
+</ul>
+
+<form class="form-horizontal" method="post" id="editForm" >
+	<fieldset>
+		<div class="control-group">
+			<label class="control-label" for="name">通知情况 ：</label>
+			<div class="controls">
+				
+          {% if notify_setting.status == 0 %}
+            下单时
+          {% endif %}
+          {% if notify_setting.status == 1 %}
+            付款时
+          {% endif %}
+          {% if notify_setting.status == 2 %}
+            发货时
+          {% endif %}
+          {% if notify_setting.status == 3 %}
+            完成时
+          {% endif %}
+          {% if notify_setting.status == 4 %}
+            取消时
+          {% endif %}
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="physical_unit">收件人email：</label>
+			<div class="controls">
+				<textarea class="input-xlarge" id="emails" name="emails" style="height: 100px; width: 96%" placeholder="多个地址用“|”分割" data-validate="required-none" >{{notify_setting.emails}}</textarea>
+				
+				<div class="errorHint"></div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="price">过滤的会员ID：</label>
+			<div class="controls">
+				<textarea class="input-xlarge" id="member_ids" name="member_ids" style="height: 100px; width: 96%" placeholder="多个ID用“|”分割" data-validate="required-none" >{{notify_setting.black_member_ids}}</textarea>
+				<div class="errorHint"></div>
+			</div>
+		</div>
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+			</div>
+
+			
+		</div>
+
+	</fieldset>
+</form>
+
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

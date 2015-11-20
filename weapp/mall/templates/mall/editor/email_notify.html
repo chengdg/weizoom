@@ -18,27 +18,6 @@
     }
 </style>
 {% endblock%}
-{% block js %}
-<script type="text/javascript">
-    function change_notify_setting(status,id){
-        W.getApi().call({
-            method: 'put',
-            app: 'mall2',
-            resource: 'email_notify/?_method=put',
-            args: ({
-                id:id,
-                status:status
-            }),
-            success: function(data) {
-                location.reload();
-            },
-            error: function(resp) {
-                W.showHint('error', '修改失败');
-            }
-        })
-    }
-</script>
-{% endblock js%}
 {% block content-panel %}
 <div class="">
     <ul class="breadcrumb">
@@ -86,9 +65,9 @@
                 </td>
                 <td>
                   {% if notify_setting.is_active %}
-                    <a class="btn btn-danger"  onclick="change_notify_setting(0,{{notify_setting.id}})" href="javascript:void(0)">停用</a>
+                    <a class="btn btn-danger" href="/account/setting/notify/update/{{notify_setting.id}}/?action=stop">停用</a>
                   {% else %}
-                    <a class="btn btn-success" onclick="change_notify_setting(1,{{notify_setting.id}})" href="javascript:void(0)">启用</a>
+                    <a class="btn btn-success" href="/account/setting/notify/update/{{notify_setting.id}}/?action=restart">启用</a>
                   {% endif %}
                 </td>
             </tr>
@@ -101,3 +80,9 @@
 {% endblock %}
 
 
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+});
+</script>
+{% endblock %}

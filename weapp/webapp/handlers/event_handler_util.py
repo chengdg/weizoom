@@ -97,7 +97,6 @@ REGISTERED_EVENTS = {
 	'finish_promotion': 'services.finish_promotion_service.tasks.finish_promotion',
 	'start_promotion': 'services.start_promotion_service.tasks.start_promotion',
 	'cancel_order': 'services.cancel_order_service.tasks.cancel_order',
-	'send_order_email': 'services.send_order_email_service.tasks.send_order_email',
 }
 
 
