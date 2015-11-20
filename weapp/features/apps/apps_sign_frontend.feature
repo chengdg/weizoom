@@ -43,7 +43,7 @@ Background:
 			}
 		}
 		"""
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:1 用户进入签到页面完成"签到活动1"签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -105,7 +105,7 @@ Scenario:1 用户进入签到页面完成"签到活动1"签到
 		}]
 		"""
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -160,7 +160,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
     亲，今天您已经签到过了哦，<br />明天再来吧！<br />
     """
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:3 用户回复完全不匹配关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -216,7 +216,7 @@ Scenario:3 用户回复完全不匹配关键字签到
     """
 
     """
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模糊关键字、不完全匹配模糊关键字签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -264,7 +264,7 @@ Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模�
     签到活动未开始
     """
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -322,7 +322,7 @@ Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 		}]
 		"""
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:6 用户连续3天进行签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -389,7 +389,7 @@ Scenario:6 用户连续3天进行签到
 		}]
 		"""
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友圈的链接参与签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -436,7 +436,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
   	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:8 非会员用户访问签到分享进行签到
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -488,7 +488,7 @@ Scenario:8 非会员用户访问签到分享进行签到
   	When tom访问jobs的webapp
 	Then tom在jobs的webapp中拥有2会员积分
 
-@apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend
 Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""

@@ -20,7 +20,7 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
-@apps_sign @edited_sign
+@mall2 @apps_sign @edited_sign
 Scenario:1 对签到活动内容进行修改，会员访问活动页面
 	When jobs添加签到活动"签到活动1",并且保存
 		"""
