@@ -21,7 +21,7 @@ Background:
 	Given jobs登录系统
 	When jobs添加带参数二维码
 		"""
-		{
+		[{
 			"code_name": "带参数二维码1",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
@@ -31,7 +31,7 @@ Background:
 			"is_relation_member": "false",
 			"reply_type": "文字",
 			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
-		}
+		}]
 		"""
 	When jobs新建微助力活动
 		"""
@@ -139,26 +139,61 @@ Scenario:1 会员帮助会员好友助力
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复"图文1"链接
 	When bill进入"微助力活动1"活动页面
-	Then bill获取个人活动页面
+	Then bill获得jobs的'微助力活动1'
 		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"0"
-		}
+			{
+				"link_name":"微助力活动1",
+				"is_show_countdown":"true",
+				"buttons":[帮好友助力],["立即分享召唤小伙伴"],
+				"rules":"微助力活动1",
+				"my_rank":"0",
+				"my_power_score":"0",
+				"participant":"0"
+			}
 		"""
-	When tom通过bill分享的"微助力活动1"链接进入活动页面帮助好友助力
-	Then jobs弹出公众号带参数二维码
+	And bill获得"微助力活动1"的"助力值TOP100"
+		| rank |name |value |
+		| 0    |bill |  0   |
+
+	#tom点击bill分享的链接,查看默认活动页
+
 	When tom关注jobs的公众号
-	Then tom获得公众号返回的参数
-	Then bill重新获取个人活动页面
-		"""
-		{
-			"rankings":"0",
-			"power_score":"0",
-			"participant":"1"
-		}
-		"""
+	When tom通过bill分享的"微助力活动1"链接进入活动页面
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["帮bill助力","我也要参加"],["立即分享召唤小伙伴"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
+	When tom完成'帮bill助力'操作
+	Then tom获得弹出公众号带参数二维码"带参数二维码1"
+	When tom关注jobs的公众号
+	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
+	When 清空浏览器
+	When tom访问jobs的webapp的"微助力活动1"活动页
+	Then tom获得jobs的webapp页面'微助力活动1'
+			"""
+				{
+					"link_name":"微助力活动1",
+					"is_show_countdown":"true",
+					"buttons":["已帮bill助力","我也要参加"],
+					"rules":"微助力活动1",
+					"my_rank":"无",
+					"my_power_score":"0",
+					"participant":"1"
+				}
+			"""
+		And tom获得"微助力活动1"的"助力值TOP100"
+			| rank |name |value |
+			| 1    |bill |  1   |
+
 
 
 @apps @powerme @frontend
@@ -178,9 +213,9 @@ Scenario:2 会员重复帮好友助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接进入活动页面帮助好友助力
-	Then jobs弹出公众号带参数二维码
+	Then tom获得jobs公众号带参数二维码"带参数二维码1"
 	When tom关注jobs的公众号
-	Then tom获得公众号返回的参数
+	Then tom获得公众号返回的参数："感谢您的的参与，为好友助力成功！"
 	Then bill重新获取个人活动页面
 		"""
 		{
@@ -213,7 +248,7 @@ Scenario:3 会员通过会员分享的活动页进行我要参与
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接进入活动页面，点击我也要参与
-	Then jobs弹出公众号二维码
+	Then tom获得jobs公众号二维码"带参数二维码1"
 	When tom关注jobs的公众号
 	When tom在微信中向jobs的公众号发送消息'微助力1'
 	Then tom收到自动回复"图文1"
@@ -359,7 +394,7 @@ Scenario:7 创建不带参数二维码的微助力活动，非会员通过会员
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接帮助好友助力
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom关注jobs的公众号
 	When bill清空浏览器
 	When bill点击"图文1"链接
@@ -389,7 +424,7 @@ Scenario:8 创建带参数二维码的微助力活动，非会员通过会员好
 		}
 		"""
 	When tom通过bill分享的"微助力活动2"链接帮助好友助力
-	Then jobs弹出带参数二维码图片
+	Then tom可以查看"带参数二维码1"图片
 	When tom关注jobs的公众号
 	Then tom收到自动回复"感谢您的的参与，为好友助力成功！"
 	When bill清空浏览器
@@ -420,7 +455,7 @@ Scenario:9 非会员通过会员好友分享的活动页参与助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接参与活动
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
@@ -519,7 +554,7 @@ Scenario:11 取消关注的会员通过会员好友分享页再次参加活动
 		"""
 	When tom关注jobs的公众号
 	When tom通过bill分享的"微助力活动1"链接参与活动
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom在微信中向jobs的公众号发送消息'微助力1'
 	Then tom收到自动回复"图文1"
 	When tom击"图文1"链接
@@ -545,7 +580,7 @@ Scenario:11 取消关注的会员通过会员好友分享页再次参加活动
 		}
 		"""
 	When tom通过bill分享的"微助力活动1"链接参与活动
-	Then jobs弹出公众号二维码图片
+	Then tom可以查看jobs公众号二维码图片
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
@@ -578,7 +613,7 @@ Scenario:12 非会员通过分享链接为非会员好友助力
 		}
 		"""
 	When tom通过bill分享的"微助力活动2"链接帮助好友助力
-	Then jobs弹出带参数二维码图片
+	Then tom可以查看"带参数二维码1"图片
 	When tom关注jobs的公众号
 	When bill清空浏览器
 	When bill点击"图文2"链接
@@ -595,7 +630,7 @@ Scenario:12 非会员通过分享链接为非会员好友助力
 	When bill清空浏览器
 	When bill取消关注jobs的公众号
 	When tom通过bill分享的"微助力活动2"链接帮助好友助力
-	Then jobs弹出带参数二维码图片
+	Then tom可以查看"带参数二维码1"图片
 	When tom关注jobs的公众号
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
