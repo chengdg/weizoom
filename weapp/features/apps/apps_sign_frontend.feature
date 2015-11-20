@@ -142,6 +142,7 @@ Scenario:2 用户回复精确关键字、完全匹配模糊关键字、不完全
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
+  	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'12'
 	Then bill获得系统回复的消息
     """
@@ -246,6 +247,7 @@ Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模�
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
+  	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'78'
 	Then bill获得系统回复的消息
     """
@@ -358,6 +360,7 @@ Scenario:6 用户连续3天进行签到
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
+  	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill获得系统回复的消息
     """
@@ -422,6 +425,7 @@ Scenario:7 用户分享"签到活动1"到朋友圈,会员通过分享到朋友�
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
+  	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill获得系统回复的消息
     """
@@ -470,6 +474,7 @@ Scenario:8 非会员用户访问签到分享进行签到
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
+  	When 清空浏览器
 	When bill在微信中向jobs的公众号发送消息'签到'
 	Then bill获得系统回复的消息
     """
