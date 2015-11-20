@@ -283,9 +283,9 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">积分不足</a>
                     </div>
                     <div class="xa-enabledBuyLinks hidden">
-                         <a href="./?woid={{request.webapp_owner_id}}&module=={% if is_weizoom_mall %}apps:weshop:{% endif %}mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-commen xa-buyBtn xui-btn xui-w93 xa-buyButton">积分购买</a>
+                         <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=={% if is_weizoom_mall %}apps:weshop:{% endif %}mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-commen xa-buyBtn xui-btn xui-w93 xa-buyButton">积分购买</a>
                         {% if cur_request_member.is_for_buy_test == True%}                     
-                        <a href="./?woid={{request.webapp_owner_id}}&module=={% if is_weizoom_mall %}apps:weshop:{% endif %}mall&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>                    
+                        <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=={% if is_weizoom_mall %}apps:weshop:{% endif %}mall&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>
                         {% endif %}
                     </div>
                     <!-- 普通商品 -->
@@ -295,11 +295,11 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                         <!-- <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton xa-carButton xui-w93">加入购物车</a> -->
                     </div>
                     <div class="xa-enabledBuyLinks hidden">
-                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-commen xa-buyBtn xui-btn xui-w93 xa-buyButton">购买</a>
+                         <a href='javascript:void(0);' data-href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-commen xa-buyBtn xui-btn xui-w93 xa-buyButton">购买</a>
                         <!-- <a href="javascript:void(0);" class="xa-addShoppingCartBtn xui-btn xui-addCartBtn xa-carButton xui-w93">加入购物车</a> -->
 
                         {% if cur_request_member.is_for_buy_test == True%}                     
-                        <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>                    
+                        <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>
                         {% endif %}
                     </div>
                     {% endif %}
@@ -313,6 +313,10 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 
 {% block js %}
 <script type="text/javascript">
+    $('.xa-buyBtn').click(function(event){
+        var url = $(event.currentTarget).attr('data-href');
+        checkShipInfosBeforeBuy(url);
+    });
     // var postageFactor = $.parseJSON('{{postage_factor|safe}}');
     var price_range = '{{ price_info.display_price }}';
     var market_price_range = '{{ price_info.display_market_price }}';

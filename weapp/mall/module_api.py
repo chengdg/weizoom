@@ -1653,14 +1653,6 @@ def get_shopping_cart_products(request):
 #############################################################################
 def create_shopping_cart_order(webapp_owner_id, webapp_user, products):
 	order = Order()
-	#获取收货人信息
-	if webapp_user.ship_info:
-		ship_info = webapp_user.ship_info
-		order.ship_name = ship_info.ship_name
-		order.area = ship_info.area
-		order.ship_address = ship_info.ship_address
-		order.ship_tel = ship_info.ship_tel
-		order.ship_id = ship_info.id
 
 	#在购物车页面，可能更改了商品数量，这里更新购物车中商品的数量
 	for product in products:

@@ -404,9 +404,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var $buy = $('.xa-buyBtn');
         $('.xa-buyBtn').each(function(){
             $buy = $(this);
-            var hrefAttr = $buy.attr('href');
+            var hrefAttr = $buy.attr('data-href');
             hrefAttr = hrefAttr.replace(/product_model_name=.*$/, 'product_model_name='+model.name);
-            $buy.attr('href', hrefAttr);
+            $buy.attr('data-href', hrefAttr);
         });
     },
 
@@ -417,9 +417,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var $buy = $('.xa-buyBtn');
         $('.xa-buyBtn').each(function(){
             $buy = $(this);
-            var hrefAttr = $buy.attr('href');
+            var hrefAttr = $buy.attr('data-href');
             hrefAttr = hrefAttr.replace(/product_count=\d+/, 'product_count='+productCount);
-            $buy.attr('href', hrefAttr);
+            $buy.attr('data-href', hrefAttr);
         });
     },
 

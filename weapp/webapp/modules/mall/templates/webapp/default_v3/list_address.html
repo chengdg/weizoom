@@ -62,10 +62,9 @@ $(document).ready(function() {
     var ship_infos;
     var woid = getWoid();
     // 跳转queryString
-    var redirectUrlQueryString = getRedirectUrlQueryString();
 
-    if(localStorage.ship_infos){
-        ship_infos = JSON.parse(localStorage.ship_infos);
+    if(sessionStorage.ship_infos){
+        ship_infos = JSON.parse(sessionStorage.ship_infos);
 
     }
     else{
@@ -97,7 +96,7 @@ $(document).ready(function() {
             }
 
             $('.xa-selectRadio', template).attr('data-id', ship_info.ship_id);
-            var UrlEdit= './?woid=' + woid + '&module=mall&model=address&action=edit&id=' + ship_info.ship_id+'&redirect_url_query_string='+ urlFilter(redirectUrlQueryString);
+            var UrlEdit= './?woid=' + woid + '&module=mall&model=address&action=edit&id=' + ship_info.ship_id + addFmt();
             $('.xa-edit',template).attr('href',UrlEdit);
             $('ul').append(template);
 
@@ -105,7 +104,7 @@ $(document).ready(function() {
 
         }
     }
-    var UrlAdd = './?woid=' + woid +'&module=mall&model=address&action=add&redirect_url_query_string=' + urlFilter(redirectUrlQueryString);
+    var UrlAdd = './?woid=' + woid +'&module=mall&model=address&action=add' + addFmt();
     $('.xa-addShipAddress').attr('href',UrlAdd);
 
 	// $('[name="is_addrItem"]').click(function(event){
@@ -138,8 +137,8 @@ $(document).ready(function() {
 	        success: function(data) {
 	            var ship_id = data['ship_id'];
 
-                if(localStorage.ship_infos){
-                        ship_infos = JSON.parse(localStorage.ship_infos);
+                if(sessionStorage.ship_infos){
+                        ship_infos = JSON.parse(sessionStorage.ship_infos);
 
                     }
                     else{
@@ -153,17 +152,20 @@ $(document).ready(function() {
 
                         }
                     }
-                localStorage.ship_infos = JSON.stringify(ship_infos);
+                sessionStorage.ship_infos = JSON.stringify(ship_infos);
 
 
-	            if (data['msg'] != null&&redirectUrlQueryString.indexOf('user_center')>0) {
+	            if (data['msg'] != null&&!sessionStorage.mallShipfromUrl) {
 	                $('body').alert({
 	                    isShow: true,
 	                    speed: 2000,
 	                    info: data['msg']
 	                })
 	            } else {
-	                window.location.href = "./?"+redirectUrlQueryString;
+	                if(sessionStorage.mallShipfromUrl){
+                        // 返回订单
+                        window.location.href = sessionStorage.mallShipfromUrl
+                    }
 	            }
 	        },
 	        error: function(resp) {

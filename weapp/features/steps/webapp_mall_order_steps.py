@@ -117,14 +117,14 @@ def step_click_check_out(context, webapp_user_name):
         'target_api': 'order/save',
         'is_order_from_shopping_cart': 'true',
         'woid': context.webapp_owner_id,
-        'ship_id': order.ship_id,
-        'ship_name': order.ship_name,
-        'ship_tel': order.ship_tel,
-        'area': order.area,
-        'ship_address': order.ship_address,
         'xa-choseInterfaces': PAYNAME2TYPE.get(pay_type, -1),
         'bill': order.ship_name,
         'group2integralinfo': {},
+
+        "ship_name": argument.get('ship_name', "未知姓名"),
+        "area": steps_db_util.get_area_ids(argument.get('ship_area')),
+        "ship_address": argument.get('ship_address', "长安大街"),
+        "ship_tel": argument.get('ship_tel', "11111111111"),
     }
 
     data.update(argument_request)
