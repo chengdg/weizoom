@@ -50,6 +50,7 @@ Copyright (c) 2011-2012 Weizoom Inc
             var height = this.setting.isShowCover(this) ? '100%' : '40px'
             this.$el.css('height', height);
             $('body').append('<div data-ui-role="swipemask" class="xa-qrcodeMask" data-background="rgba(0,0,0,.5)"><div class="wui-attentionBox"><img class="wui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
+
             $('.xa-qrcodeMask').swipeMask().bind('click', function(event) {
                 $(this).attentionAlert('clickMask');
             });
@@ -85,6 +86,7 @@ Copyright (c) 2011-2012 Weizoom Inc
         $('.wui-attentionAlert').click(function(){
             $(this).attentionAlert('clickGuideAttention');
         });
+<<<<<<< HEAD
         // $('.xa-qrcodeMask').bind('click', function(event) {
         //     $(this).attentionAlert('clickMask');
         // });
@@ -93,5 +95,7 @@ Copyright (c) 2011-2012 Weizoom Inc
         
         // });
 
+=======
+>>>>>>> f_mall_6096
 	})
 })(Zepto);
