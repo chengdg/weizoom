@@ -12,6 +12,7 @@
     border-top: 1px solid #CBCBCB;
     position: fixed;
     bottom: -1px;
+    left: 0;
     display: box;
     display: -webkit-box;
     display: -moz-box;
@@ -282,20 +283,36 @@
 }
 
 
-/*未关注弹层*/ 
-.wui-template-globalNavbar .xui-two-dimension{
+/*引导关注黄条、二维码弹层*/ 
+.wui-attentionAlert{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+.wui-attentionAlert a{
+    box-sizing:border-box;
+    padding:0 10px;
+    line-height: 40px;
+    text-align: center;
+    display: block;
+    background: rgba(255,243,145,0.9);
+    color: #F95901;
+    font-size: 0.85rem;
+}
+.wui-attentionBox{
     width: 233px;
     height: 270px;
     background: url(/static_v2/img/termite2/two-dimension.png) no-repeat;
-    -webkit-background-size: 233px 270px;
-    background-size: 233px 270px;
+    background-size: 100%;
     position: fixed;
+    top: 50%;
     left:50%;
-    margin-left: -116px;
-    z-index: 10001;
-    display: none;
+    margin-top: -135px;
+    margin-left: -115px;
 }
-.wui-template-globalNavbar .xui-two-dimension img{
+.wui-attentionBox img{
     width: 148px;
     height: 148px;
     position: absolute;

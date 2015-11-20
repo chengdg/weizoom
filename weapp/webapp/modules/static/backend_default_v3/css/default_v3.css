@@ -20,7 +20,8 @@ input,textarea{
     top: 0;
     width: 100%;
 }
-.xui-attentionAlert{
+/*hrx 2015-11-19 引导关注黄条样式提取在了common_widget.css*/
+/*.xui-attentionAlert{
     position: fixed;
     top: 0;
     left: 0;
@@ -37,6 +38,25 @@ input,textarea{
     color: #F95901;
     font-size: 0.85rem;
 }
+
+.xui-attentionBox{
+    width: 233px;
+    height: 270px;
+    background: url('/static_v2/img/termite2/two-dimension.png') no-repeat;
+    background-size: 100%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -135px;
+    margin-left: -115px;
+}
+.xui-twoDimensionImg{
+    width: 148px;
+    height: 155px;
+    position: absolute;
+    top: 42px;
+    left: 42px;
+}
 .xui-attentionAlert .xui-icon-rightarrow{
     border-color: #f95901;
     border-width: 1px;
@@ -44,7 +64,7 @@ input,textarea{
     right: 10px;
     width: 6px;
     height: 6px;
-}
+}*/
 .xui-ellipsis{
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2654,7 +2674,7 @@ input.ui-input-text, textarea.ui-input-text {
 .xui-address-page .xui-loading{
     top:48%;
 }
-.xui-address-page .mask{background: transparent!important;}
+/*.xui-address-page .mask{background: transparent!important;}*/
 
 .xui-address-page .wui-area{
     padding: 0;
