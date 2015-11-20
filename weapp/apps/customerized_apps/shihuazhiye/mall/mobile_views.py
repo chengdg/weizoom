@@ -174,20 +174,6 @@ def _update_status(context):
 	except:
 		pass
 
-# jz 2015-10-22
-########################################################################
-# get_pay_result: 支付结果，在支付宝完成支付后支付宝访问
-# 携带的参数中主要使用：
-# out_trade_no 订单号
-########################################################################
-# @mobile_view_func(resource='pay_result', action='get')
-# def get_pay_result(request):
-# 	request.template_dir = TEMPLATE_DIR
-# 	request.is_return_context = True
-# 	context = request_util.get_pay_result(request)
-# 	_update_status(context)
-# 	return render_to_response('%s/order_payment.html' % request.template_dir, context)
-
 
 ########################################################################
 # get_pay_notify_result : 支付宝异步 回调接口

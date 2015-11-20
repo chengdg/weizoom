@@ -1372,14 +1372,6 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 
 	if is_success and order.status == ORDER_STATUS_NOT: #支付成功
 		pay_result = True
-
-		# jz 2015-10-20
-		# Order.objects.filter(order_id=order_id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
-		#order.status = ORDER_STATUS_PAYED_SUCCESSED
-		#order.status = ORDER_STATUS_PAYED_NOT_SHIP
-		# 修改子订单的订单状态，该处有逻辑状态的校验
-		# origin_order_id = Order.objects.get(order_id=order_id).id
-		# Order.objects.filter()
 		if order.origin_order_id < 0:
 			Order.objects.filter(origin_order_id=order.id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
@@ -1391,26 +1383,19 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		#记录日志
 		record_operation_log(order_id, u'客户', u'支付')
 		record_status_log(order_id, u'客户', ORDER_STATUS_NOT, ORDER_STATUS_PAYED_NOT_SHIP)
-		# jz 2015-10-20
-		#记录购买统计项
-		# PurchaseDailyStatistics.objects.create(
-		# 	webapp_id = webapp_id,
-		# 	webapp_user_id = webapp_user.id,
-		# 	order_id = order_id,
-		# 	order_price = order.final_price,
-		# 	date = dateutil.get_today()
-		# )
 
 		#更新webapp_user的has_purchased字段
 		webapp_user.set_purchased()
-
-		try:
-			mall_util.email_order(order=order)
-		except:
-			notify_message = u"订单状态为已付款时发邮件失败，order_id={}, webapp_id={}, cause:\n{}".format(order_id, webapp_id, unicode_full_stack())
-			watchdog_alert(notify_message)
+		from webapp.handlers import event_handler_util
+		from utils import json_util
+		event_data = {'order':json.dumps(order.to_dict(),cls=json_util.DateEncoder)}
+		event_handler_util.handle(event_data, 'send_order_email')
+		# try:
+		# 	mall_util.email_order(order=order)
+		# except:
+		# 	notify_message = u"订单状态为已付款时发邮件失败，order_id={}, webapp_id={}, cause:\n{}".format(order_id, webapp_id, unicode_full_stack())
+		# 	watchdog_alert(notify_message)
 		# 重新查询订单
-		# order = get_order(webapp_user, order_id, True)
 	return order, pay_result
 
 
@@ -1508,19 +1493,19 @@ def ship_order(order_id, express_company_name,
 
 	record_operation_log(order.order_id, operator_name, action, order)
 
-	#send post_ship_order signal
-	#mall_signals.post_ship_order.send(sender=Order, order=order)
-
 	#send post_ship_send_request_to_kuaidi signal
 	# 是快递100的才进行发送
 	if is_100:
 		mall_signals.post_ship_send_request_to_kuaidi.send(sender=Order, order=order)
-
-	try:
-		mall_util.email_order(order=Order.objects.get(id=order_id))
-	except:
-		notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
-		watchdog_alert(notify_message)
+	from webapp.handlers import event_handler_util
+	from utils import json_util
+	event_data = {'order':json.dumps(Order.objects.get(id=order_id).to_dict(),cls=json_util.DateEncoder)}
+	event_handler_util.handle(event_data, 'send_order_email')
+	# try:
+	# 	mall_util.email_order(order=Order.objects.get(id=order_id))
+	# except:
+	# 	notify_message = u"订单状态为已发货时发邮件失败，order_id:{}，cause:\n{}".format(order_id, unicode_full_stack())
+	# 	watchdog_alert(notify_message)
 	return True
 
 
@@ -1741,9 +1726,6 @@ def record_operation_log(order_id, operator_name, action, order=None):
 	except:
 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(error_msg)
-	# jz 2015-10-22
-	# 修改订单修改时间
-	# update_order_time(order_id)
 
 ########################################################################
 # get_order_status_logs: 获得订单的状态日志
@@ -1940,17 +1922,6 @@ def record_status_log(order_id, operator_name, from_status, to_status):
 	except:
 		error_msg = u"增加订单({})状态更改记录失败, cause:\n{}".format(order_id, unicode_full_stack())
 		watchdog_error(error_msg)
-
-# jz 2015-10-22
-########################################################################
-# update_order_time: 更新订单修改时间
-########################################################################
-# def update_order_time(order_id):
-# 	try:
-# 		Order.objects.filter(order_id=order_id).update(update_at=datetime.now())
-# 	except:
-# 		error_msg = u"更新订单({})修改时间记录失败, cause:\n{}".format(order_id, unicode_full_stack())
-# 		watchdog_error(error_msg)
 
 
 ########################################################################
@@ -2331,11 +2302,15 @@ def update_order_status(user, action, order, request=None):
 	except:
 		notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
 		watchdog_error(notify_message)
-	try:
-		mall_util.email_order(order=Order.objects.get(id=order_id))
-	except :
-		notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
-		watchdog_alert(notify_message)
+	from webapp.handlers import event_handler_util
+	from utils import json_util
+	event_data = {'order':json.dumps(Order.objects.get(id=order_id).to_dict(),cls=json_util.DateEncoder)}
+	event_handler_util.handle(event_data, 'send_order_email')
+	# try:
+	# 	mall_util.email_order(order=Order.objects.get(id=order_id))
+	# except :
+	# 	notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_alert(notify_message)
 
 	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_SUCCESSED]:
 		# 如果更新子订单，更新父订单状态
