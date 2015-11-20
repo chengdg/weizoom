@@ -56,7 +56,9 @@ Copyright (c) 2011-2012 Weizoom Inc
         clickGuideAttention :function() {
             $('.xa-qrcodeMask').swipeMask('show');
         },
-
+        clickMask: function(){
+            $('.xa-qrcodeMask').swipeMask('hide');
+        },
 		_bind : function() {
 		},
 
@@ -79,6 +81,10 @@ Copyright (c) 2011-2012 Weizoom Inc
     	});
         $('.wui-attentionAlert').click(function(){
             $(this).attentionAlert('clickGuideAttention');
+        });
+        $('body').delegate('.xa-qrcodeMask', 'click', function(event) {
+            $(this).attentionAlert('clickMask');
+        
         });
 
 	})
