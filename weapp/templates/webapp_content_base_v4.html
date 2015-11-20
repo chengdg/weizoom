@@ -96,7 +96,7 @@
                 <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
             </div>
         {% else %}
-            <div data-ui-role="attentionAlert" class="xui-attentionAlert {% if in_design_mode %}none{% endif %}" 
+            <div data-ui-role="attentionAlert" class="wui-attentionAlert {% if in_design_mode %}none{% endif %}" 
                 {% if not request.member.is_subscribed %}
                     data-is-show-button="true"
                 {% endif %}
@@ -228,22 +228,6 @@
             if( $shopBackground.length > 0 ){
                 $shopBackground.height(height);
             }
-            var $twoDimension = $('.xui-two-dimension');
-
-            var showSwiper = function(){
-                $('body').swipeMask('show');
-                $('.mask').css({
-                    height: height,
-                    background: 'rgba(132,132,132,0.5)',
-                    position:'fixed'
-                });
-                $('.xui-two-dimension').css({
-                    top: height/2,
-                    'margin-top': -185,
-                    display:'block'
-                });
-            };
-
             var isUserCenterLink = function(url){
                 if (url.indexOf('module=user_center') > 0 &&
                     url.indexOf('model=user_info') > 0 &&
@@ -263,8 +247,7 @@
 
                 if (isUserCenterLink(url) && W.curRequestMemberToken.length == 0) {
                     /* 非会员显示二维码 */
-                    showSwiper();
-                    $('.mask').css('background','rgba(0, 0, 0, 0.5)');
+                    $('.xa-qrcodeMask').swipeMask('show');
                 } else {
                     if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
                         window.location.href = url;
@@ -272,11 +255,6 @@
                         window.location.href = "http://"+ window.location.host + url;
                     }
                 }
-            });
-
-            $('.mask').click(function(){
-                $('body').swipeMask('hide');
-                $('.xui-two-dimension').hide();
             });
         });
 

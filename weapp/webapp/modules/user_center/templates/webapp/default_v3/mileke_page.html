@@ -391,12 +391,12 @@
                 },
                 success: function(data) {                  
                    setTimeout(function() {
-                      $('body').swipeMask('show');
+                      $('.mask').swipeMask('show');
                       $('.xa-attention').removeClass('none');
                    }, 1000);
                 },
                 error: function(data) {
-                      $('body').swipeMask('show');
+                      $('.mask').swipeMask('show');
                       $('.xa-attention').removeClass('none');                
                 }
             });
@@ -407,20 +407,20 @@
         // });
         $('.xa-closeBtn').click(function(){
             $('.xa-attention').addClass('none');
-            $('body').swipeMask('hide');
+            $('.mask').swipeMask('hide');
         });
         $('.xa-colseButton').click(function(){
             $('.xa-share').addClass('none');
-            $('body').swipeMask('hide');
+            $('.mask').swipeMask('hide');
         });
 
         $('.xa-participationBtn').click(function(){
             if (self_visit == 'True' && is_sub == 'True'){
                 $('.xa-share').removeClass('none');
-                $('body').swipeMask('show');
+                $('.mask').swipeMask('show');
             } else {
                 $('.xa-attention').removeClass('none');
-                $('body').swipeMask('show');
+                $('.mask').swipeMask('show');
             }
         });
     });

@@ -317,11 +317,11 @@ body.ui-overlay-x .ui-page{
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 999999;
+    z-index: 10000;
 }
 .xui-attentionAlert a{
-    box-sizing:boredr-box;
-    -webkit-box-sizing:boredr-box;
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
     padding:0 10px;
     line-height: 40px;
     text-align: center;

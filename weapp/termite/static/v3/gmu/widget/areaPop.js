@@ -73,7 +73,7 @@ gmu.define('AreaPop', {
            width: width,
            height: "1730px"
         });
-        $('body').swipeMask('hide');
+        $('.xa-loadingMask').swipeMask('hide');
         this.cachData = {};
         // //绑定change事件
         var _this = this;
@@ -97,7 +97,7 @@ gmu.define('AreaPop', {
 
         this.$el.delegate('ul li', 'click', function(event) {
             event.stopPropagation();
-            $('body').swipeMask('show');
+            $('.xa-loadingMask').swipeMask('show');
             var $ul = $(this).parent('ul');
             var value = $(this).attr('data-value');
             $ul.attr('data-value', value);
@@ -117,7 +117,7 @@ gmu.define('AreaPop', {
                 _this.$el.find('.xa-cityTag').text(value_str);
             }else{
                 $(this).parents('.xui-outer').fadeOut(50);
-                $('body').swipeMask('hide');
+                $('.xa-loadingMask').swipeMask('hide');
                 _this.$el.find('ul').addClass('hidden');
                 _this._set_div_value();
                 _this.$input.trigger('changed-province');
@@ -266,7 +266,7 @@ gmu.define('AreaPop', {
         var _this = this;
         var key = value ? type + '_' + value : type;
         if(this.cachData[key]) {//判断是否缓存        
-            $('body').swipeMask('hide');
+            $('.xa-loadingMask').swipeMask('hide');
             _this._setOptions(type, value);
             return;
         }
@@ -275,7 +275,7 @@ gmu.define('AreaPop', {
         $.ajax({
             url: url,
             success: function(data) {
-                $('body').swipeMask('hide');
+                $('.xa-loadingMask').swipeMask('hide');  
                 data = data.data;
                 _this.cachData[key] = data;
                 _this._setOptions(type, value);       
@@ -284,7 +284,7 @@ gmu.define('AreaPop', {
                 }
             },
             error: function(e) {
-                $('body').swipeMask('hide');
+                $('.xa-loadingMask').swipeMask('hide');
             }
         })
     },
