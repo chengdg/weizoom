@@ -32,7 +32,8 @@ def __debug_print(content,type_tag=True):
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
-	__debug_print(context.text)
+	text = json.loads(context.text)
+	__debug_print(text)
 
 
 
