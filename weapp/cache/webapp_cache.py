@@ -758,4 +758,7 @@ def update_product_list(webapp_owner_id):
     request = urllib2.Request(url)
     request.get_method = lambda: 'PURGE'
     urllib2.urlopen(request)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2304149f4d2fe011ce8317646e635862d8096b50
