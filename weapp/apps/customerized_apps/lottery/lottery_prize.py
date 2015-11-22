@@ -148,6 +148,7 @@ class lottery_prize(resource.Resource):
 					data = {}
 					data['member_id'] = member_id
 					data['belong_to'] = record_id
+					data['date_control'] = now_datetime.strftime('%Y-%m-%d')
 					data['can_play_count_control_%s'%index] = now_datetime.strftime('%Y-%m-%d')
 					control = app_models.lotteryControl(**data)
 					control.save()
