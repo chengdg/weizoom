@@ -135,8 +135,9 @@ def notify_order(user, member_id, status, order_id, buyed_time, order_status, bu
 	order_notify = UserOrderNotifySettings.from_dict(settings_dict)
 	# zhaolei  肯定拥有id
 	if not order_notify.id:
-		order_notify = UserOrderNotifySettings.objects.filter(user=user, status=status, is_active=True).get()
-		cache_util.add_mhash_to_redis(notify_setting_key,order_notify.to_dict())
+		order_notify = UserOrderNotifySettings.objects.filter(user=user, status=status, is_active=True)
+		if order_notify:
+			cache_util.add_mhash_to_redis(notify_setting_key,order_notify.to_dict())
 	# 获得要发送的邮件列表
 	if order_notify and str(member_id) not in str(order_notify.black_member_ids).split('|') and order_notify.emails != '':
 		content_list = []
