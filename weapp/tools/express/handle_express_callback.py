@@ -141,7 +141,7 @@ class ExpressCallbackHandle(object):
 		for order in orders:
 			try:
 				if int(status) == self.express_config.STATE_SIGNED and order.status == 4:
-					mall_api.update_order_status(user=None, action='finish', order=order)
+					mall_api.update_order_status(user=None, action=u'finish-系统', order=order)
 					# order.status = 5
 					# order.save()
 			except:
