@@ -13,7 +13,7 @@ function initSessionStorage(){
                 target_api: 'sessionstorage/init'
             },
             success: function(data) {
-                initShipInofs(data.ship_infos);
+                sessionStorage.ship_infos=JSON.stringify(data.ship_infos);
                 s.mallSessionStorageHasInit = 1;
 
             },
@@ -23,29 +23,20 @@ function initSessionStorage(){
     }
 }
 
-function initShipInofs(ship_infos){
-    var infos = {};
-    for(var i in ship_infos){
-        infos[ship_infos[i].ship_id] = ship_infos[i]
-    }
-    sessionStorage.ship_infos=JSON.stringify(infos);
-}
-
-
-function setMallShipfromUrl(url){
-    if(url === undefined){
-        url = '';
-    }
-    sessionStorage.mallShipfromUrl = url;
-}
-
 function checkShipInfosBeforeBuy(buy_url){
-    setMallShipfromUrl(buy_url);
-    if(!sessionStorage.hasOwnProperty('ship_infos')||sessionStorage.ship_infos.length<=2){
+    sessionStorage.mallShipfromUrl = buy_url;
+    if(!sessionStorage.ship_infos||sessionStorage.ship_infos.length<=2){
         window.location.href="./?woid=" + getWoid() +"&module=mall&model=address&action=add" +addFmt('fmt');
     }else {
         window.location.href = buy_url;
     }
+}
+
+
+function returnOrder(){
+    var mallShipfromUrl = sessionStorage.mallShipfromUrl;
+    sessionStorage.removeItem('mallShipfromUrl');
+    window.location.href = mallShipfromUrl;
 }
 
 /**
@@ -112,7 +103,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     } else {
                         if(sessionStorage.mallShipfromUrl){
                             // 返回订单
-                            window.location.href = sessionStorage.mallShipfromUrl
+                            returnOrder();
                         }else{
                             // 返回地址列表
                             window.location.href = document.referrer;
