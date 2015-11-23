@@ -222,8 +222,6 @@ def step_impl(context,user):
 	}
 
 
-
-
 	#step1：登录页面，获得分配的project_id
 	get_pw_response = context.client.get("/apps/powerme/powerme/")
 	pw_args_response = get_pw_response.context
@@ -251,8 +249,8 @@ def step_impl(context,user):
 	post_powerme_args = {
 		"_method":"put",
 		"name":title,
-		"start_timea":start_time,
-		"end_date":end_time,
+		"start_time":start_time,
+		"end_time":end_time,
 		"timing[timing][select]":timing_status,
 		"reply_content":reply_content,
 		"material_image":material_image,
