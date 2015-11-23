@@ -5,7 +5,7 @@ from django.conf import settings
 
 import mongoengine as models
 from modules.member.module_api import get_member_by_openid
-from market_tools.tools.coupon.util import consume_coupon
+
 from modules.member import models as member_models
 from mall.promotion.models import CouponRule
 from termite import pagestore as pagestore_manager
@@ -135,6 +135,7 @@ class SignParticipance(models.Document):
 		if curr_prize_coupon_id != '':
 			curr_prize_coupon_count = get_coupon_count(curr_prize_coupon_id)
 			if curr_prize_coupon_count > 0:
+				from market_tools.tools.coupon.util import consume_coupon
 				consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
 
 		return_data['curr_prize_integral'] = curr_prize_integral

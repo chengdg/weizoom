@@ -227,6 +227,9 @@ class lottery_prize(resource.Resource):
 					if coupon_limit != -1 and has_coupon_count >= coupon_limit:
 						result = u'谢谢参与'
 						lottery_prize_type = 'no_prize'
+					elif coupon_rule.remained_count <= 0: #修复优惠券库存为0时任然会发放给用户的问题
+						result = u'谢谢参与'
+						lottery_prize_type = 'no_prize'
 					else:
 						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
 						prize_value = lottery_prize['prize_data']['name']

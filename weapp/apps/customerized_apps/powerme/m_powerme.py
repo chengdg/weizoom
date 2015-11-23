@@ -97,7 +97,7 @@ class MPowerMe(resource.Resource):
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
 					if curr_member_power_info.powered_member_id:
-						is_powered = fid in curr_member_power_info.powered_member_id
+						is_powered = True if fid in curr_member_power_info.powered_member_id and isMember else False
 
 				participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
 				total_participant_count = participances.count()
