@@ -288,106 +288,82 @@ def get_shopping_cart_product_nums(webapp_user):
 
 def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id, options=dict()):
 	"""
-	get_products: 获得product集合
-
-	options可用参数：
-
-	 1. search_info: 搜索
-
-	最后修改：闫钊
+		获得商品集合
 	"""
-	#获得category和product集合
-	category = None
+	# products = None
+	# if category_id == 0:
+	# 	products = Product.objects.filter(
+	# 		owner_id=webapp_owner_id, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False).exclude(
+	# 		type=PRODUCT_DELIVERY_PLAN_TYPE).order_by('display_index', '-id')
+	# 	if not is_access_weizoom_mall:
+	# 		# 非微众商城
+	# 		product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
+	# 		products.exclude(id__in=product_ids_in_weizoom_mall)
+    #
+    #
+	# else:
+	# 	# try:
+	# 	if not is_access_weizoom_mall:
+	# 		# 非微众商城
+	# 		product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
+	# 		other_mall_product_ids_not_checked = []
+	# 	else:
+	# 		product_ids_in_weizoom_mall = []
+	# 		_, other_mall_product_ids_not_checked = get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id)
+    #
+    #
+	# 	for category_has_product in category_has_products:
+	# 		#微众商城要过滤掉自己的非在售 duhao 20151120
+	# 		if is_access_weizoom_mall:
+	# 			if category_has_product.product.weshop_status != PRODUCT_SHELVE_TYPE_ON:
+	# 				continue
+    #
+	# 		if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
+	# 			product = category_has_product.product
+	# 			#过滤已删除商品和套餐商品
+	# 			if(product.is_deleted or product.type == PRODUCT_DELIVERY_PLAN_TYPE or
+	# 						product.id in product_ids_in_weizoom_mall or
+	# 						product.id in other_mall_product_ids_not_checked or
+	# 						product.shelve_type != PRODUCT_SHELVE_TYPE_ON):
+	# 				continue
+
 	products = None
-	if category_id == 0:
-		products = Product.objects.filter(
-			owner_id=webapp_owner_id, shelve_type=PRODUCT_SHELVE_TYPE_ON, is_deleted=False).exclude(
-			type=PRODUCT_DELIVERY_PLAN_TYPE).order_by('display_index', '-id')
-		if not is_access_weizoom_mall:
-			# 非微众商城
-			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
-			products.exclude(id__in=product_ids_in_weizoom_mall)
+	params = {
+		'owner_id':webapp_owner_id,
+		'shelve_type':PRODUCT_SHELVE_TYPE_ON,
+		'is_deleted':False
+	}
+	if category_id!=0:
 
-		products_0 = products.filter(display_index=0)
-		products_not_0 = products.exclude(display_index=0)
-		# TODO: need to be optimized
-		products = list(itertools.chain(products_not_0, products_0))
-
-		category = ProductCategory()
-		category.name = u'全部'
+		category_has_products = CategoryHasProduct.objects.filter(category_id = category_id)
+		product_ids = [p.product_id for p in category_has_products]
+		params['id__in'] = product_ids
+	if is_access_weizoom_mall:
+		products = list(Product.objects.filter(**params).exclude(weshop_sync = PRODUCT_SHELVE_TYPE_ON).order_by('-id'))
 	else:
-		watchdog_alert('过期的方法分支module_api.get_products_in_webapp else', type='mall')
-		# try:
-		if not is_access_weizoom_mall:
-			# 非微众商城
-			product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
-			other_mall_product_ids_not_checked = []
-		else:
-			product_ids_in_weizoom_mall = []
-			_, other_mall_product_ids_not_checked = get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id)
+		products = list(Product.objects.filter(**params).order_by('-id'))
+	return products
 
-		category = ProductCategory.objects.get(id=category_id)
-		category_has_products = CategoryHasProduct.objects.filter(category=category)
-		products_0 = []  # 商品排序， 过滤0
-		products_not_0 = []  # 商品排序， 过滤!0
-		for category_has_product in category_has_products:
-			#微众商城要过滤掉自己的非在售 duhao 20151120
-			if is_access_weizoom_mall:
-				if category_has_product.product.weshop_status != PRODUCT_SHELVE_TYPE_ON:
-					continue
-
-			if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
-				product = category_has_product.product
-				#过滤已删除商品和套餐商品
-				if(product.is_deleted or product.type == PRODUCT_DELIVERY_PLAN_TYPE or
-							product.id in product_ids_in_weizoom_mall or
-							product.id in other_mall_product_ids_not_checked or
-							product.shelve_type != PRODUCT_SHELVE_TYPE_ON):
-					continue
-				# # 商品排序， 过滤
-				if product.display_index == 0:
-					products_0.append(product)
-				else:
-					products_not_0.append(product)
-		# 处理商品排序
-		products_0 = sorted(products_0, key=operator.attrgetter('id'), reverse=True)
-		products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
-		products = products_not_0 + products_0
-		# except :
-		# 	products = []
-		# 	category = ProductCategory()
-		# 	category.is_deleted = True
-		# 	category.name = u'全部'
-
-	#处理search信息
-	# if 'search_info' in options:
-	# 	query = options['search_info']['query']
-	# 	if query:
-	# 		conditions = {}
-	# 		conditions['name__contains'] = query
-	# 		products = products.filter(**conditions)
-	return category, products
-
-
-def get_products(webapp_id, is_access_weizoom_mall, webapp_owner_id, webapp_user, category_id, options=dict()):
-	"""
-	get_products: 获得product集合
-
-	options可用参数：
-
-	  1. search_info: 搜索
-	"""
-	watchdog_alert('过期的方法module_api.get_products', type='mall')
-	category, products = get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id, options)
-
-	for product in products:
-		#added by chuter
-		if not isinstance(product, Product):
-			continue
-		product.original_price = product.price
-		# product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
-
-	return category, products
+# unused zhaolei 2015-11-23
+# def get_products(webapp_id, is_access_weizoom_mall, webapp_owner_id, webapp_user, category_id, options=dict()):
+# 	"""
+# 	get_products: 获得product集合
+#
+# 	options可用参数：
+#
+# 	  1. search_info: 搜索
+# 	"""
+# 	watchdog_alert('过期的方法module_api.get_products', type='mall')
+# 	category, products = get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id, options)
+#
+# 	for product in products:
+# 		#added by chuter
+# 		if not isinstance(product, Product):
+# 			continue
+# 		product.original_price = product.price
+# 		# product.price, _ = webapp_user.get_discounted_money(product.price, product_type=product.type)
+#
+# 	return category, products
 
 
 def get_product_by_id(product_id):
