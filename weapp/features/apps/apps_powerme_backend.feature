@@ -43,7 +43,7 @@ Scenario:1 新建微助力，用户识别二维码为空
 	Given jobs登录系统
 	When jobs新建微助力活动
 		"""
-		{
+		[{
 			"name":"微助力活动1",
 			"start_date":"今天",
 			"end_date":"3天后",
@@ -55,18 +55,18 @@ Scenario:1 新建微助力，用户识别二维码为空
 			"background_pic":"2.jpg",
 			"background_color":"冬日暖阳",
 			"rules":"获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
-		}
+		}]
 		"""
 	Then jobs获得微助力活动列表
 		"""
-		{
+		[{
 			"name":"微助力活动1",
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
-		}
+		}]
 		"""
 
 @apps @apps_powerme @apps_powerme_backend
@@ -74,7 +74,7 @@ Scenario:2 新建微助力，用户识别二维码非空
 	Given jobs登录系统
 	When jobs新建微助力活动
 		"""
-		{
+		[{
 			"name":"微助力活动2",
 			"start_date":"明天",
 			"end_date":"3天后",
@@ -86,16 +86,16 @@ Scenario:2 新建微助力，用户识别二维码非空
 			"background_pic":"2.jpg",
 			"background_color":"热带橙色",
 			"rules":"获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
-		}
+		}]
 		"""
 	Then jobs获得微助力活动列表
 		"""
-		{
+		[{
 			"name":"微助力活动2",
 			"start_date":"明天",
 			"end_date":"3天后",
 			"status":"未开始",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
-		}
+		}]
 		"""

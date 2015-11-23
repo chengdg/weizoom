@@ -168,6 +168,11 @@ def __date_delta(start,end):
 	end = datetime.datetime.strptime(end, "%Y-%m-%d").date()
 	return (end-start).days
 
+def __date2time(date_str):
+	cr_date = date_str
+	p_date = bdd_util.get_date_str(cr_date)
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
 
 def Create_PowerMe(context,text,user):
@@ -267,5 +272,37 @@ def step_impl(context,user):
 
 @then(u'{user}获得微助力活动列表')
 def step_impl(context,user):
-	pass
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
 
+	text = json.loads(context.text)
+
+	text_list = []
+	for item in text:
+		tmp = {
+		"name":item['name'],
+		"status":item['status'],
+		"start_time":__date2time(item['start_date']),
+		"end_time":__date2time(item['end_date']),
+		"participant_count":item['participant_count']
+		}
+		text_list.append(tmp)
+
+	rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_powerme_response = context.client.get(rec_powerme_url)
+	rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items'][::-1]
+
+	rec_list = []
+	for item in rec_powerme_list:
+		tmp = {
+		"name":item['name'],
+		"status":item['status'],
+		"start_time":__date2time(item['start_time']),
+		"end_time":__date2time(item['end_time']),
+		"participant_count":item['participant_count']
+		}
+		rec_list.append(tmp)
+	bdd_util.assert_list(text_list,rec_list)
