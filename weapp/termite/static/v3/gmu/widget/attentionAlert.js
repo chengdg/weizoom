@@ -47,7 +47,11 @@ Copyright (c) 2011-2012 Weizoom Inc
             if($('xa-editOrderPage')){
                 $('#wrapper').css('top','40px');
             }
-            var height = this.setting.isShowCover(this) ? '100%' : '40px'
+            //订单列表页，非会员
+            if($('.xui-orderListPage')){
+                $('.wui-swiper-tabs').css('top','40px');
+            }
+            var height = this.setting.isShowCover(this) ? '100%' : '40px';
             this.$el.css('height', height);
             $('body').append('<div data-ui-role="swipemask" class="xa-qrcodeMask" data-background="rgba(0,0,0,.5)"><div class="wui-attentionBox"><img class="wui-twoDimensionImg" src="'+this.qrcode_image+'"/></div></div>');
             
