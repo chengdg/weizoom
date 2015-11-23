@@ -19,10 +19,17 @@ Feature: 会员参加微助力助力
 """
 Background:
 	Given jobs登录系统
+	And jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1"
+		}
+		"""
 	When jobs添加带参数二维码
 		"""
 		[{
 			"code_name": "带参数二维码1",
+			"create_time": "2015-10-10 10:20:30",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
 			"tags": "未分组",
@@ -68,14 +75,14 @@ Background:
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动2",
 			"start_date":"今天",
 			"end_date":"1天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 
 		}]
@@ -83,116 +90,100 @@ Background:
 	When jobs已添加单图文
 		"""
 		[{
-			"title":"图文1",
-			"cover": 
-				{
-				"url": "1.jpg"
-				},
+			"title":"微助力1单图文",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
 			"cover_in_the_text":"true",
 			"summary":"单条图文1文本摘要",
-			"content":"单条图文1文本内容"
+			"content":"单条图文1文本内容",
+			"jump_url":"微助力-微助力活动1"
 		},{
-			"title":"图文2",
-			"cover": 
-				{
-				"url": "2.jpg"
-				},
+			"title":"微助力2单图文",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
 			"cover_in_the_text":"true",
 			"summary":"单条图文2文本摘要",
-			"content":"单条图文2文本内容"
-
+			"content":"单条图文2文本内容",
+			"jump_url":"微助力-微助力活动2"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则
 		"""
 		[{
 			"rules_name":"规则1",
-			"keyword": 
-				{
+			"keyword": [{
 					"keyword": "微助力1",
 					"type": "equal"
-				},
-			"keyword_reply": {
-					 "reply_content":"图文1",
-					 "reply_type":"text_picture"
-				}
+				}],
+			"keyword_reply": [{
+					"reply_content":"微助力1单图文",
+					"reply_type":"text_picture"
+				}]
 		},{
-			"rules_name":"规则2",
-			"keyword": 
-				{
+			"rules_name":"规则1",
+			"keyword": [{
 					"keyword": "微助力2",
 					"type": "equal"
-				},
-			"keyword_reply": {
-					 "reply_content":"图文1",
-					 "reply_type":"text_picture"
-				}
-
+				}],
+			"keyword_reply": [{
+					"reply_content":"微助力2单图文",
+					"reply_type":"text_picture"
+				}]
 		}]
 		"""
 
-@apps @powerme @frontend
+@apps @powerme @frontend @kuki1
 Scenario:1 会员帮助会员好友助力
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	Then bill在jobs的webapp中拥有0助力值
 	When bill在微信中向jobs的公众号发送消息'微助力1'
-	Then bill收到自动回复"图文1"链接
-	When bill进入"微助力活动1"活动页面
-	Then bill获得jobs的'微助力活动1'
-		"""
-			{
-				"link_name":"微助力活动1",
-				"is_show_countdown":"true",
-				"buttons":[帮好友助力],["我也要参加"],
-				"rules":"微助力活动1",
-				"my_rank":"0",
-				"my_power_score":"0",
-				"participant":"0"
-			}
-		"""
-	And bill获得"微助力活动1"的"助力值TOP100"
-		| rank |name |value |
-		| 0    |bill |  0   |
+	Then bill收到自动回复'微助力1单图文'
+	When bill点击图文"微助力1单图文"进入微助力活动页面
 
-	#tom点击bill分享的链接,查看默认活动页
-
-	When tom关注jobs的公众号
-	When tom通过bill分享的"微助力活动1"链接进入活动页面
-	Then tom获得jobs的webapp页面'微助力活动1'
-			"""
-				{
-					"link_name":"微助力活动1",
-					"is_show_countdown":"true",
-					"buttons":["帮bill助力"],["我也要参加"],
-					"rules":"微助力活动1",
-					"my_rank":"无",
-					"my_power_score":"0",
-					"participant":"1"
-				}
-			"""
-	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
-	When tom完成'帮bill助力'操作
-	Then tom获得弹出公众号带参数二维码"带参数二维码1"
-	When tom关注jobs的公众号
-	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
-	When 清空浏览器
-	When tom访问jobs的webapp的"微助力活动1"活动页
-	Then tom获得jobs的webapp页面'微助力活动1'
-			"""
-				{
-					"link_name":"微助力活动1",
-					"is_show_countdown":"true",
-					"buttons":["已帮bill助力",["我也要参加"],
-					"rules":"微助力活动1",
-					"my_rank":"无",
-					"my_power_score":"0",
-					"participant":"1"
-				}
-			"""
-		And tom获得"微助力活动1"的"助力值TOP100"
-			| rank |name |value |
-			|  0   |bill |  1   |
+#	And bill获得"微助力活动1"的"助力值TOP100"
+#		| rank |name |value |
+#		| 0    |bill |  0   |
+#
+#	#tom点击bill分享的链接,查看默认活动页
+#
+#	When tom关注jobs的公众号
+#	When tom通过bill分享的"微助力活动1"链接进入活动页面
+#	Then tom获得jobs的webapp页面'微助力活动1'
+#			"""
+#				{
+#					"link_name":"微助力活动1",
+#					"is_show_countdown":"true",
+#					"buttons":["帮bill助力"],["我也要参加"],
+#					"rules":"微助力活动1",
+#					"my_rank":"无",
+#					"my_power_score":"0",
+#					"participant":"1"
+#				}
+#			"""
+#	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
+#	When tom完成'帮bill助力'操作
+#	Then tom获得弹出公众号带参数二维码"带参数二维码1"
+#	When tom关注jobs的公众号
+#	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
+#	When 清空浏览器
+#	When tom访问jobs的webapp的"微助力活动1"活动页
+#	Then tom获得jobs的webapp页面'微助力活动1'
+#			"""
+#				{
+#					"link_name":"微助力活动1",
+#					"is_show_countdown":"true",
+#					"buttons":["已帮bill助力",["我也要参加"],
+#					"rules":"微助力活动1",
+#					"my_rank":"无",
+#					"my_power_score":"0",
+#					"participant":"1"
+#				}
+#			"""
+#		And tom获得"微助力活动1"的"助力值TOP100"
+#			| rank |name |value |
+#			|  0   |bill |  1   |
 
 
 
@@ -265,7 +256,8 @@ Scenario:2 会员重复帮好友助力
 	Then ttom获得jobs的webapp页面'微助力活动1'
 		| rank |name |value |
 		|  0   |bill |  1   |
-@apps @powerme @frontend
+
+  @apps @powerme @frontend
 Scenario:3 会员通过会员分享的活动页进行我要参与
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp

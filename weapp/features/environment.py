@@ -300,8 +300,11 @@ def __clear_all_app_data():
 	# 签到
 	sign_models.Sign.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
+
 	#微助力
 	powerme_models.PowerMe.objects.all().delete()
+	powerme_models.PowerMeParticipance.objects.all().delete()
+	powerme_models.PowerMeControl.objects.all().delete()
 
 	#清理mongo中所有apps的Page
 	sign_pagestore = pagestore_manager.get_pagestore('mongo')
