@@ -198,6 +198,7 @@ class ExpressPoll(object):
 		else:
 			express = ExpressHasOrderPushStatus.objects.create(
 				order_id = -1,
+				status = EXPRESS_PULL_NOT_STATUS,
 				express_company_name = self.order.express_company_name,
 				express_number = self.order.express_number
 			)
@@ -229,6 +230,7 @@ class ExpressPoll(object):
 			self.express.save()
 			return True
 		else:
-			self.express.status = data.get('returnCode')
-			self.express.save()
+			if data and data.get('returnCode'):
+				self.express.status = data.get('returnCode')
+				self.express.save()
 			return False

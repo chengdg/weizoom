@@ -2,7 +2,7 @@
 __author__ = 'liupeiyu'
 
 from django.core.management.base import BaseCommand, CommandError
-from tools.express.models import ExpressHasOrderPushStatus
+from tools.express.models import ExpressHasOrderPushStatus, EXPRESS_NOT_PULL_STATUSES
 from tools.express.express_poll import ExpressPoll
 from mall.models import Order
 from datetime import datetime
