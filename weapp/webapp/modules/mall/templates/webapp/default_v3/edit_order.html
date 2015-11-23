@@ -1,14 +1,5 @@
 {% extends "webapp_content_base.html" %}
 {% load mall_filter %}
-{% block init %}
-<script>
-fmt = document.location.search.split('fmt=')[1];
-// 没有收货地址则跳转到新建收货地址
-if(!sessionStorage.hasOwnProperty('ship_infos')||sessionStorage.ship_infos.length<=2){
-    window.location.href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=add" +'&fmt=' + fmt;
-}
-</script>
-{% endblock %}
 {% block css %}
 <style>
 .disabled_btn {

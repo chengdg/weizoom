@@ -222,17 +222,17 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                     <div class="xui-section-inner xui-section-btn">
                         <!-- 积分商品 -->
                         {% if product.type == 'integral' %}
-                            <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen xt-integral-buy-Btn">积分购买</a>
+                            <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen xt-integral-buy-Btn">积分购买</a>
 
                         <!-- 普通商品 -->
                         {% else %}  
-                            <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen">购买</a>
+                            <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1" class="xui-btn-danger xa-buyBtn xui-btn xui-w93 xui-btn-commen">购买</a>
                         {% endif %}
                     </div>
 
                     {% if cur_request_member.is_for_buy_test == True%}
                     <div>
-                        <a href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xui-btn-commen">测试购买</a>
+                        <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=apps:weshop:mall2&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xui-btn-commen">测试购买</a>
                     </div>
                     {% endif %}
                 </div>
@@ -297,11 +297,16 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             var $buy = $('.xa-buyBtn');
             $('.xa-buyBtn').each(function(){
                 $buy = $(this);
-                var hrefAttr = $buy.attr('href');
+                var hrefAttr = $buy.data('href');
                 hrefAttr = hrefAttr.replace(/product_count=\d+/, 'product_count='+productCount);
-                $buy.attr('href', hrefAttr).attr('data-url', hrefAttr);
+                $buy.data('href', hrefAttr).attr('data-url', hrefAttr);
             }); 
         };
+
+        $('.xa-buyBtn').click(function(event){
+            var url = $(event.currentTarget).data('href');
+            checkShipInfosBeforeBuy(url);
+        })
 
         //更新重量和邮费  和 价钱
         var updateWeightPostage = function(productCount) {

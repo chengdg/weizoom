@@ -828,7 +828,7 @@ def update_product_review_picture(request):
 
 def init_ship_infos(request):
 	ship_infos = list(request.webapp_user.ship_infos)
-	items = []
+	items = {}
 	for ship_info in ship_infos:
 		data_dict = dict()
 		data_dict['ship_id'] = ship_info.id
@@ -841,7 +841,7 @@ def init_ship_infos(request):
 		except:
 			pass
 		data_dict['is_selected'] = ship_info.is_selected
-		items.append(data_dict)
+		items[ship_info.id] = data_dict
 	return items
 
 def init_sessionstorage(request):
