@@ -32,7 +32,6 @@ def __debug_print(content,type_tag=True):
 		pass
 
 
-
 def __get_powermePageJson(args):
 	__page_temple = {
 			"type": "appkit.page",
@@ -158,7 +157,6 @@ def __get_powermePageJson(args):
 	return json.dumps(__page_temple)
 
 
-
 def __date_delta(start,end):
 	"""
 	格式：
@@ -171,13 +169,12 @@ def __date_delta(start,end):
 	return (end-start).days
 
 
-@when(u'{user}新建微助力活动')
-def step_impl(context,user):
+
+def Create_PowerMe(context,text,user):
 	design_mode = 0
 	version = 1
-	text = json.loads(context.text)
-	__debug_print(text)
-
+	text = text
+	# text = json.loads(context.text)
 	title = text.get("name","")
 
 	cr_start_date = text.get('start_date', u'今天')
@@ -262,6 +259,11 @@ def step_impl(context,user):
 
 
 
+@when(u'{user}新建微助力活动')
+def step_impl(context,user):
+	text_list = json.loads(context.text)
+	for text in text_list:
+		Create_PowerMe(context,text,user)
 
 @then(u'{user}获得微助力活动列表')
 def step_impl(context,user):
