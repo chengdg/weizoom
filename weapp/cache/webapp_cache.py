@@ -31,53 +31,53 @@ def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
     else:
         return product.display_price
 
-
-def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
-
-    def inner_func():
-        webapp_id = webapp_owner_user_profile.webapp_id
-        webapp_owner_id = webapp_owner_user_profile.user_id
-
-        _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
-
-        categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
-
-        product_ids = [product.id for product in products]
-        category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id__in=product_ids)
-        product2categories = dict()
-        for relation in category_has_products:
-            product2categories.setdefault(relation.product_id, set()).add(relation.category_id)
-
-        try:
-            categories = [{"id": category.id, "name": category.name} for category in categories]
-            product_dicts = []
-
-            # Fill detail
-            new_products = []
-            for product in products:
-                new_product = get_webapp_product_detail(webapp_owner_id, product.id)
-                new_products.append(new_product)
-
-            mall_models.Product.fill_display_price(new_products)
-
-            for product in new_products:
-                product_dict = product.to_dict()
-                product_dict['display_price'] = product.display_price
-                product_dict['categories'] = product2categories.get(product.id, set())
-                product_dict['promotion'] = product.promotion if hasattr(product, 'promotion') else None
-                product_dicts.append(product_dict)
-            return {
-                'value': {
-                    "products": product_dicts,
-                    "categories": categories
-                }
-            }
-        except:
-            if settings.DEBUG:
-                raise
-            else:
-                return None
-    return inner_func
+# zhaolei 2015-11-23 unused
+# def get_webapp_products_from_db(webapp_owner_user_profile, is_access_weizoom_mall):
+#
+#     def inner_func():
+#         webapp_id = webapp_owner_user_profile.webapp_id
+#         webapp_owner_id = webapp_owner_user_profile.user_id
+#
+#         _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, 0)
+#
+#         categories = mall_models.ProductCategory.objects.filter(owner_id=webapp_owner_id)
+#
+#         product_ids = [product.id for product in products]
+#         category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id__in=product_ids)
+#         product2categories = dict()
+#         for relation in category_has_products:
+#             product2categories.setdefault(relation.product_id, set()).add(relation.category_id)
+#
+#         try:
+#             categories = [{"id": category.id, "name": category.name} for category in categories]
+#             product_dicts = []
+#
+#             # Fill detail
+#             new_products = []
+#             for product in products:
+#                 new_product = get_webapp_product_detail(webapp_owner_id, product.id)
+#                 new_products.append(new_product)
+#
+#             mall_models.Product.fill_display_price(new_products)
+#
+#             for product in new_products:
+#                 product_dict = product.to_dict()
+#                 product_dict['display_price'] = product.display_price
+#                 product_dict['categories'] = product2categories.get(product.id, set())
+#                 product_dict['promotion'] = product.promotion if hasattr(product, 'promotion') else None
+#                 product_dicts.append(product_dict)
+#             return {
+#                 'value': {
+#                     "products": product_dicts,
+#                     "categories": categories
+#                 }
+#             }
+#         except:
+#             if settings.DEBUG:
+#                 raise
+#             else:
+#                 return None
+#     return inner_func
 
 def get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id):
     """
@@ -89,7 +89,7 @@ def get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weiz
     """
     webapp_id = webapp_owner_user_profile.webapp_id
     webapp_owner_id = webapp_owner_user_profile.user_id
-    _, products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id)
+    products = mall_api.get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, category_id)
     return products
 
 def get_webapp_products_new(webapp_owner_user_profile,
