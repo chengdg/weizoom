@@ -182,11 +182,11 @@ def step_impl(context,user):
 
 	cr_start_date = text.get('start_date', u'今天')
 	start_date = bdd_util.get_date_str(cr_start_date)
-	start_time = "{}+00:00".format(bdd_util.get_date_str(cr_start_date))
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
 	cr_end_date = text.get('end_date', u'1天后')
 	end_date = bdd_util.get_date_str(cr_end_date)
-	end_time = "{}+00:00".format(bdd_util.get_date_str(cr_end_date))
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
 	valid_time = "%s~%s"%(start_time,end_time)
 
