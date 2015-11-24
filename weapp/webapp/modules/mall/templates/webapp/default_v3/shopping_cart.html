@@ -328,7 +328,7 @@ $(document).ready(function() {
     // 促销会员商品价格显示
     $(".xa-product").each(function(){
         // 商品原价
-        var price = $(this).data('product-price');
+        var price = $(this).data('product-price').toFixed(2);
         // 商品有促销
         var product_promotion = $(this).data('product-promotion')
 
@@ -342,7 +342,7 @@ $(document).ready(function() {
                 try{
                     price = (product_promotion.detail.promotion_price).toFixed(2);
                 }catch(err){
-                    price = $(this).data('product-price');
+                    price = $(this).data('product-price').toFixed(2);
                 }
             }
         }
