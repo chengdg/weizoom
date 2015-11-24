@@ -1,3 +1,48 @@
+function initSessionStorage(){
+    var s = sessionStorage;
+    if (s.mallSessionStorageHasInit == 1) {
+        return
+    }else {
+        var woid = getWoid();
+        W.getApi().call({
+            app: 'webapp',
+            api: 'project_api/call',
+            args: {
+                woid: woid,
+                module: 'mall',
+                target_api: 'sessionstorage/init'
+            },
+            success: function(data) {
+                sessionStorage.ship_infos=JSON.stringify(data.ship_infos);
+                s.mallSessionStorageHasInit = 1;
+
+            },
+            error: function(resp) {
+            }
+        });
+    }
+}
+
+/**
+ * 收货地址来源URL：
+ * 从编辑订单或无地址跳转时设置或覆盖mallShipfromUrl，从个人中心进入则清空mallShipfromUrl
+ */
+function setMallShipfromUrl(url){
+    if(url === undefined){
+        url = '';
+    }
+    sessionStorage.mallShipfromUrl = url;
+}
+
+function checkShipInfosBeforeBuy(buy_url){
+    if(!sessionStorage.ship_infos||sessionStorage.ship_infos.length<=2){
+        setMallShipfromUrl(buy_url);
+        window.location.href="./?woid=" + getWoid() +"&module=mall&model=address&action=add" +addFmt('fmt');
+    }else {
+        window.location.href = buy_url;
+    }
+}
+
 /**
  * Backbone View in Mobile
  */
@@ -6,11 +51,6 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
         'click .xa-submit': 'onClickSubmitButton',
         'click .xa-delete':'onClickDeleteButton'
     }, W.page.InputablePage.prototype.events),
-    
-    initialize: function(options) {
-        xlog('in EditAddressPage');
-        this.redirectUrlQueryString = options.redirectUrlQueryString;
-    },
 
     /**
      * onClickSubmitButton: 点击“提交”按钮的响应函数
@@ -38,8 +78,8 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     ship_info['ship_id'] = ship_id;
                     ship_info['is_selected'] = true;
                     var ship_infos;
-                    if(localStorage.ship_infos){
-                        ship_infos = JSON.parse(localStorage.ship_infos);
+                    if(sessionStorage.ship_infos){
+                        ship_infos = JSON.parse(sessionStorage.ship_infos);
 
                     }
                     else{
@@ -54,7 +94,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     }
                     ship_infos[ship_id] = ship_info;
 
-                    localStorage.ship_infos = JSON.stringify(ship_infos);
+                    sessionStorage.ship_infos = JSON.stringify(ship_infos);
 
 
                     if (data['msg'] != null) {
@@ -65,7 +105,15 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                             info: data['msg']
                         })
                     } else {
-                        window.location.href = "./?"+this.redirectUrlQueryString;
+                        var mallShipfromUrl = sessionStorage.mallShipfromUrl;
+                        sessionStorage.removeItem('mallShipfromUrl');
+                        if(mallShipfromUrl){
+                            // 返回订单
+                            window.location.href = mallShipfromUrl;
+                        }else{
+                            // 返回地址列表
+                            window.location.href = document.referrer;
+                        }
                     }
                 },
                 error: function(resp) {
@@ -108,13 +156,13 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                 success: function(data) {
                     var selected_id=data.selected_id;
 
-                    var ship_infos = JSON.parse(localStorage.ship_infos);
+                    var ship_infos = JSON.parse(sessionStorage.ship_infos);
                     delete ship_infos[ship_id];
                     if(selected_id){
                         ship_infos[selected_id]['is_selected'] = true;
                     }
-                    localStorage.ship_infos = JSON.stringify(ship_infos);
-                    window.location.href = './?woid=' + woid + '&module=mall&model=address&action=list&redirect_url_query_string='+ urlFilter(redirectUrlQueryString);
+                    sessionStorage.ship_infos = JSON.stringify(ship_infos);
+                    window.location.href = './?woid=' + getWoid()+ '&module=mall&model=address&action=list' + addFmt();
 
                 },
                 error: function(resp) {
