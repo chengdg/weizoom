@@ -173,27 +173,27 @@
 $(document).ready(function($) {
   var bodyHeight = window.document.body.clientHeight;
   var containerHeight = bodyHeight - 47;
-  if($('.xa-guideAttention').length){
+  if($('.wa-guideAttention').length){
     containerHeight -= 40;
   }
   $(".wui-swiper-container").css('height', containerHeight );
   $(".wui-swiper-slide").css('height', containerHeight );  
   $("body").css('overflow-y', 'hidden');
-  var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
+  var myscroll = new iScroll('xa-wrapper',{hScrollbar:false,checkDOMChanges:true});
     var tabsSwiper = new Swiper('.wui-swiper-container',{
     speed:500,
     onSlideChangeStart: function(){
       $(".wui-swiper-tabs-coupon .wui-inner-active").removeClass('wui-inner-active')
       $(".wui-swiper-tabs-coupon a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
-      myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+      myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false,checkDOMChanges:true});
     }
   })
+
   $(".wui-swiper-tabs-coupon a").click(function(e){
     e.preventDefault();
     $(".wui-swiper-tabs-coupon .wui-inner-active").removeClass('wui-inner-active')
-    $(this).addClass('wui-inner-active')
+    $(this).addClass('wui-inner-active');
     tabsSwiper.swipeTo( $(this).index() );
-    myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
   });
   $('.xa-coupon').click(function(event) {
     window.href='./?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list';
