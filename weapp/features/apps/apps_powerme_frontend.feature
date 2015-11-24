@@ -117,7 +117,7 @@ Background:
 		}]
 		"""
 
-@apps @powerme @frontend 
+@apps @powerme @frontend @kuki1
 Scenario:1 用户重复参与微助力活动
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -126,7 +126,7 @@ Scenario:1 用户重复参与微助力活动
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -136,7 +136,7 @@ Scenario:1 用户重复参与微助力活动
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "0"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		"""
@@ -146,7 +146,7 @@ Scenario:1 用户重复参与微助力活动
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -156,7 +156,7 @@ Scenario:1 用户重复参与微助力活动
 			"my_rank": "1",
 			"my_power_score": "0",
 			"total_participant_count": "0"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -181,7 +181,7 @@ Scenario:2 会员帮助会员好友助力
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -191,7 +191,7 @@ Scenario:2 会员帮助会员好友助力
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "0"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		"""
@@ -211,7 +211,7 @@ Scenario:2 会员帮助会员好友助力
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -221,7 +221,7 @@ Scenario:2 会员帮助会员好友助力
 			"my_rank": "1",
 			"my_power_score": "1",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -239,7 +239,7 @@ Scenario:3 非会员帮助会员好友助力
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -249,7 +249,7 @@ Scenario:3 非会员帮助会员好友助力
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "0"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		"""
@@ -273,7 +273,7 @@ Scenario:3 非会员帮助会员好友助力
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 	"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -283,7 +283,7 @@ Scenario:3 非会员帮助会员好友助力
 			"my_rank": "1",
 			"my_power_score": "1",
 			"total_participant_count": "1"
-		}
+		}]
 	"""
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -302,7 +302,7 @@ Scenario:4 连续帮助会员好友助力
 	When bill点击图文"微助力2单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动2'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动2",
 			"is_show_countdown": "false",
 			"desc": "微助力活动描述",
@@ -312,7 +312,7 @@ Scenario:4 连续帮助会员好友助力
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "0"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		"""
@@ -333,7 +333,7 @@ Scenario:4 连续帮助会员好友助力
 	When tom点击bill分享的微助力活动链接
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -343,7 +343,7 @@ Scenario:4 连续帮助会员好友助力
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -366,7 +366,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -376,7 +376,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "0"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		"""
@@ -393,7 +393,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -403,7 +403,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"my_rank": "1",
 			"my_power_score": "1",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -417,7 +417,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -427,7 +427,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"my_rank": "1",
 			"my_power_score": "1",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -457,7 +457,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -467,7 +467,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -476,7 +476,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -486,7 +486,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 			"my_rank": "2",
 			"my_power_score": "0",
 			"total_participant_count": "2"
-		}
+		}]
 		"""
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -517,7 +517,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	When bill点击图文"微助力2单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动2'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动2",
 			"is_show_countdown": "false",
 			"desc": "微助力活动描述",
@@ -527,7 +527,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 			"my_rank": "1",
 			"my_power_score": "1",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动2"的助力值排名
 		| rank | name | value |
@@ -544,7 +544,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	When tom点击图文"微助力2单图文"进入微助力活动页面
 	Then tom获得jobs的'微助力活动2'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动2",
 			"is_show_countdown": "false",
 			"desc": "微助力活动描述",
@@ -554,7 +554,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then tom获得"微助力活动2"的助力值排名
 		| rank | name | value |
@@ -563,7 +563,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	Then tom获得jobs的'微助力活动2'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动2",
 			"is_show_countdown": "false",
 			"desc": "微助力活动描述",
@@ -573,7 +573,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 			"my_rank": "2",
 			"my_power_score": "0",
 			"total_participant_count": "2"
-		}
+		}]
 		"""
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -589,7 +589,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	When bill点击图文"微助力2单图文"进入微助力活动页面
 	Then bill获得jobs的'微助力活动2'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动2",
 			"is_show_countdown": "false",
 			"desc": "微助力活动描述",
@@ -599,7 +599,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 			"my_rank": "1",
 			"my_power_score": "1",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then bill获得"微助力活动2"的助力值排名
 		| rank | name | value |
@@ -624,7 +624,7 @@ Scenario:8 会员B分享会员A的微助力活动链接
 	When tom2点击tom分享的微助力活动链接进行助力
 	Then tom2获得jobs的'微助力活动1'的内容
 		"""
-		{
+		[{
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
@@ -634,7 +634,7 @@ Scenario:8 会员B分享会员A的微助力活动链接
 			"my_rank": "无",
 			"my_power_score": "0",
 			"total_participant_count": "1"
-		}
+		}]
 		"""
 	Then tom2获得"微助力活动1"的助力值排名
 		| rank | name | value |
@@ -725,7 +725,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 		When bill点击图文"微助力1单图文"进入微助力活动页面
 		Then bill获得jobs的'未开始微助力活动'的内容
 			"""
-			{
+			[{
 				"name": "未开始微助力活动",
 				"is_show_countdown": "true",
 				"desc": "微助力活动描述",
@@ -735,7 +735,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 				"my_rank": "无",
 				"my_power_score": "0",
 				"total_participant_count": "0"
-			}
+			}]
 			"""
 		Then bill获得"未开始微助力活动"的助力值排名
 			"""
@@ -750,7 +750,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 		When tom点击图文"微助力2单图文"进入微助力活动页面
 		Then tom获得jobs的'已结束微助力活动'的内容
 			"""
-			{
+			[{
 				"name": "已结束微助力活动",
 				"is_show_countdown": "false",
 				"desc": "微助力活动描述",
@@ -760,7 +760,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 				"my_rank": "无",
 				"my_power_score": "0",
 				"total_participant_count": "0"
-			}
+			}]
 			"""
 		Then tom获得"已结束微助力活动"的助力值排名
 			"""
