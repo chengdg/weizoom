@@ -23,9 +23,20 @@ function initSessionStorage(){
     }
 }
 
+/**
+ * 收货地址来源URL：
+ * 从编辑订单或无地址跳转时设置或覆盖mallShipfromUrl，从个人中心进入则清空mallShipfromUrl
+ */
+function setMallShipfromUrl(url){
+    if(url === undefined){
+        url = '';
+    }
+    sessionStorage.mallShipfromUrl = url;
+}
+
 function checkShipInfosBeforeBuy(buy_url){
-    sessionStorage.mallShipfromUrl = buy_url;
     if(!sessionStorage.ship_infos||sessionStorage.ship_infos.length<=2){
+        setMallShipfromUrl(buy_url);
         window.location.href="./?woid=" + getWoid() +"&module=mall&model=address&action=add" +addFmt('fmt');
     }else {
         window.location.href = buy_url;
@@ -103,7 +114,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     } else {
                         if(sessionStorage.mallShipfromUrl){
                             // 返回订单
-                            returnOrder();
+                            window.location.href = sessionStorage.mallShipfromUrl;
                         }else{
                             // 返回地址列表
                             window.location.href = document.referrer;

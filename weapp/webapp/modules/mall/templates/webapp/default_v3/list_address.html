@@ -153,7 +153,7 @@ $(document).ready(function() {
 
                 if(sessionStorage.mallShipfromUrl){
                     // 返回订单
-                    returnOrder();
+                    window.location.href = sessionStorage.mallShipfromUrl;
                 }else if(data['msg'] != null){
 	                $('body').alert({
 	                    isShow: true,
