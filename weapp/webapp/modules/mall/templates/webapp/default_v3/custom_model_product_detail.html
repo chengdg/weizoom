@@ -1,0 +1,340 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<style>
+.xui-addCartBtn{
+    background: #ff9400!important;
+}
+html,body,.ui-page{
+    background: #fff;
+}
+.xui-section{
+    margin:0;
+    -webkit-border-radius:0;
+    border-radius:0;
+    border-bottom:1px solid #dfdfdd;
+    border-left: none;
+    border-right: none;
+    border-top:none;
+    box-shadow: none;
+}
+.xui-section-item{
+    border-bottom: none;
+}
+a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
+.xui-btn{
+    display: inline-block;
+    height: 42px;
+    line-height: 42px;
+    -webkit-border-radius:4px;
+    border-radius: 4px;
+    color:#fff;
+    font-size: 1.2em;
+    font-family: "黑体";
+}
+.xui-tab-wrap{
+    position:relative;
+}
+.xui-tab-fixed .xui-tab-wrap{
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    z-index: 998;
+    padding: 5px 0;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+.xui-cf6{
+    background: #f6f6f9;
+}
+.xui-btn-commen{
+    background: #ae0001;
+}
+.xui-btn-disable{
+    background: #ccc;
+}
+.xui-w93{
+    width: 93%;
+}
+.xui-w46{
+    width: 46%;
+}
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-productDetailPage xui-page">
+    {% if is_weizoom_mall %}
+    {% else %}
+    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show" class="xui-shoppingCartBtn">
+        <span class="xui-inner-count {% if shopping_cart_product_nums == 0 %}hidden{% endif %}">{{shopping_cart_product_nums}}</span>
+    </a>
+    {% endif %}
+
+    <div data-role="content" data-theme="x">
+        <div 
+            data-ui-role="swipeimage" 
+            data-jsondata='{{product.swipe_images_json|safe}}' 
+            data-width='320' 
+            data-height='200'
+        >
+        </div>
+
+        <div class="xui-section">
+            <div class="xui-section-title xui-section-item zoom">
+                <h2 class="xt-productName">{{ product.name }}</h2>
+                <p class="xui-section-boldItemText xui-text-red">
+                <!-- 积分商品 -->
+                {% if product.type == 'integral' %}
+                    {% if cur_request_member %}
+                        {% if product.price == product.original_price %}
+                        <span class="xt-price xa-price xui-vipPrice-num xa-fixed-price">{{ price_range }}</span>
+                        {% else %}
+                        <span class="xt-price xui-vipPrice-num xa-fixed-price">{{ product.price }}</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="xt-originalPrice xui-vipPrice-num xa-price xa-fixed-price">{{ price_range }}</span><!-- <span class="xui-vipPrice ml20">会员价？</span> -->
+                    {% endif %}积分
+     
+                <!-- 普通商品 -->
+                {% elif product.type == 'object' %}   
+                    {% if cur_request_member %}
+                        <span class="xt-price xa-price xui-vipPrice-num xa-fixed-price">￥{{ price_info.display_price }}</span>
+                    {% else %}
+                        <span class="xt-originalPrice xui-vipPrice-num xa-price xa-fixed-price">￥{{ price_info.display_original_price }}</span>
+                    {% endif %}
+                {% endif %}
+
+                <!-- 市场价 -->
+                {% if price_info.display_market_price > 0 %}
+                    <span class="xui-text-disabled">市场价：￥<span class="xt-marketPrice xa-market-price">{{ price_info.display_market_price }}</span></span>
+                {% endif %}
+
+                <!-- 积分商品：拥有积分  -->
+                {% if product.type == 'integral' %}
+                    <span class="xui-text-no-disabled">拥有积分：{{ use_integral }}</span>
+                {% endif %}
+                </p>
+            </div>
+            <div class="xui-product-title zoom btn-div xa-tab pt5" style="position:sticky;top:0;">
+                <div class="tc xui-tab-wrap">                 
+                    <!-- 已售罄 -->
+                    {% if product.is_sellout %}
+                        <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">已售罄</a>
+
+                    <!-- 积分商品 -->
+                    {% elif product.type == 'integral' %}
+                        {% if is_non_member == 'True' or use_integral < price_info.min_price %}
+                            <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">积分不足</a>
+                        {% else %}
+                            <a href="javascript:void(0);" class="xui-btn-commen xui-btn xui-w93 xa-apply" data-type='buy'>积分购买</a>
+                        {% endif %}                    
+
+                    <!-- 普通商品 -->
+                    {% else %}
+                        <!-- 微众商城 -->
+                        {% if is_weizoom_mall %}
+                            <!-- 其他商户商品，并且有引导关注地址 -->
+                            {% if non_member_followurl %}
+                                <a href="javascript:void(0);" class=" xui-btn xui-btn-commen xui-w46 xa-apply" data-type='buy'>购买</a>
+                                <a href="{{non_member_followurl}}" class="xui-btn xui-btn-commen xui-addCartBtn xui-w46">关注店铺</a>
+                            <!-- 微众商城 本店商品-->
+                            {% else%}
+                                <a href="javascript:void(0);" class="xui-btn-commen xui-btn xui-w93 xa-apply" data-type='buy'>购买</a>
+                            {% endif %}
+                        <!-- 其他商户商 -->
+                        {% else %}
+                            <a href="javascript:void(0);" class=" xui-btn xui-btn-commen xui-w46 xa-apply" data-type='buy'>购买</a>
+                            <a href="javascript:void(0);" class="xui-btn xui-btn-commen xui-addCartBtn xui-w46 xa-addCart" data-type='shoppingCart'>加入购物车</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if product.detail %}
+        <div class="xui-section">
+            <div class="xui-section-title xui-section-item zoom">
+                <span style="font-size:17px;">商品详情</span>
+                <div class="xui-productDetail-content rawHtml">
+                    {{ product.detail|safe }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="xui-productInfo xui-applyBox" id="xuiSection">
+        <div class="xui-productInfo-box pt10">
+            <i class="xui-popInfo-close pa xa-closeModelSelection"></i>
+            {% for property in product.product_model_properties %}
+            <div class="xui-section xui-property-section-item">
+                <div class="xui-section-info ml15 pb10">
+                    <p class="clearfix" style="overflow: hidden;">
+                        <span class="xui-inner-noborder-tag">{{property.name}}：</span> 
+                        <div class="xui-custom-model-box">
+                        {% for value in property.values %}
+
+                        {% if value.is_belong_product %}
+                            {% if value.image %}
+                            <div class="xui-imgSelect">
+                                <a 
+                                    href="javascript:void(0);" 
+                                    class="xui-inner-imgTag xa-propertyValue" 
+                                    data-property-value-id="{{property.id}}:{{value.id}}"
+                                    id="a_{{property.id}}_{{value.id}}"
+                                    name="{{property.id}}:{{value.id}}"
+                                >
+                                    
+                                    <img src="{{ value.image|safe }}" /><br/>
+                                </a>
+                            </div>
+                            {% else %}
+                            <div class="xui-textSelect">
+                                <a 
+                                    href="javascript:void(0);" 
+                                    class="xui-inner-tag xa-propertyValue" 
+                                    data-property-value-id="{{property.id}}:{{value.id}}"
+                                    id="a_{{property.id}}_{{value.id}}"
+                                    name="{{property.id}}:{{value.id}}"
+                                >
+                                    {{value.name}}
+                                </a>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                        </div>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="xui-section zoom select-count-div" style="overflow:hidden;">
+                <div class="ml15 xui-section-info pb10">
+                    <p class="xui-counterLabel">数量：&nbsp;</p>
+                    <div class="clearfix">
+                        <div class="fl">
+                            <input 
+                                data-ui-role="counter" 
+                                {% ifequal product.stock_type 1 %}data-max-count="{{product.stocks}}"{% endifequal %} 
+                                type="hidden" 
+                                name="total_count" 
+                                id="total_count" 
+                                value="1"
+                            >
+                        </div>
+                        <div class="fl" style="margin:4px 0 0 10px">
+                            <span class="mr20 xt-stocks xui-text-counter xa-stock hidden xui-section-normalItemText xui-counterLabel" style="line-height: 2.04em;">库存<span class="xa-stockCount"></span>{{product.physical_unit}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="xui-section xa-priceSection" style="padding-bottom:70px;">
+                <div class="xui-section-inner ml15 clearfix pr15">
+                    <p class="xui-text-red fl">
+                    <!-- 积分商品 -->
+                    {% if product.type == 'integral' %} 
+                        {% if cur_request_member %}
+                            {% if product.price == product.original_price %}
+                            <span class="xt-price xa-price xui-vipPrice-num xa-variablePrice">{{ price_range }}</span>
+                            {% else %}
+                            <span class="xt-price xui-vipPrice-num xa-variablePrice">{{ product.price }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="xt-originalPrice xui-vipPrice-num xa-price xa-variablePrice">{{ price_range }}</span><!-- <span class="xui-vipPrice ml20">会员价？</span> -->
+                        {% endif %}积分
+         
+                    <!-- 普通商品 -->
+                    {% elif product.type == 'object' %}
+                        {% if cur_request_member %}
+                            ￥<span class="xt-price xa-price xui-vipPrice-num xa-variablePrice">{{ price_info.display_price }}</span>
+                        {% else %}
+                            ￥<span class="xt-originalPrice xui-vipPrice-num xa-price xa-variablePrice">{{ price_info.display_original_price }}</span><!-- <span class="xui-vipPrice ml20">会员价？</span> -->
+                        {% endif %}
+                    {% endif %}
+                    </p>
+                    <p class="xui-section-normalItemText xa-postageContent fr" style="line-height:1.7em;">
+                        重量：<span class="xt-weight xa-weight"> - </span>&nbsp;&nbsp;<span class="xt-postageConfigName ml20">{{product.postage_config.name}}</span>:<span class="xt-postage"> - </span>
+                    </p>
+                </div>
+            </div>
+            
+
+            <div class="xui-section zoom tc xui-cf6 xa-btn-box" style="position:fixed;width:100%!important;bottom:0;">
+                <div class="xui-section-inner xui-section-btn">
+                    <!-- 积分商品 -->
+                    {% if product.type == 'integral' %} 
+                    <div class="xa-disabledBuyLinks">                   
+                        <a href='javascript:void(0);' class='xui-btn-commen xui-btn xui-w93 xa-canNotBuyButton xa-buyButton'>积分购买</a>
+                    </div>
+                    <div class="xa-disabledIntegralBuyLinks hidden">
+                        <a href="javascript:void(0);" class="xui-btn-disable xui-btn xui-w93">积分不足</a>
+                    </div>
+                    <div class="xa-enabledBuyLinks hidden">
+                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-commen xa-buyBtn xui-btn xui-w93 xa-buyButton">积分购买</a>
+                        {% if cur_request_member.is_for_buy_test == True%}                     
+                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>                    
+                        {% endif %}
+                    </div>
+                    <!-- 普通商品 -->
+                    {% elif product.type == 'object' %} 
+                    <div class="xa-disabledBuyLinks">                   
+                        <a href='javascript:void(0);' class='xui-btn-commen xui-btn xui-w93 xa-canNotBuyButton xa-buyButton'>购买</a>                      
+                        <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-canNotBuyButton xa-shoppingCartButton xui-w93">加入购物车</a>
+                    </div>
+                    <div class="xa-enabledBuyLinks hidden">
+                         <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-commen xa-buyBtn xui-btn xui-w93 xa-buyButton">购买</a>
+                        <a href="javascript:void(0);" class="xa-addShoppingCartBtn xui-btn xui-addCartBtn xa-shoppingCartButton xui-w93">加入购物车</a>
+
+                        {% if cur_request_member.is_for_buy_test == True%}                     
+                        <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&type=test&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn-disable xa-buyBtn xui-btn xui-w93 xa-buyButton">测试购买</a>                    
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="xui-cover xa-cover hidden"></div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+//运费计算因子
+var postageFactor = $.parseJSON('{{postage_factor|safe}}');
+//可用积分
+var usableIntegral = {{use_integral}};
+// jz 2015-10-20
+//是否启用"测试购买"
+// var enableTestBuy = {% if cur_request_member.is_for_buy_test %}true{% else %}false{% endif %};
+//商品id
+var productId = '{{product.id}}';
+//商品类型
+var productType = "{{product.type}}";
+//商品规格值
+var models = W.loadJSON('models');
+//商品价格信息
+var priceInfo = W.loadJSON('priceInfo');
+//运费配置名称
+var postageConfigName = "{{product.postage_config.name}}";
+
+$(document).ready(function() {   
+    //绑定初始化数据
+    view = new W.page.BuyProductPage({
+        el: '.xui-page',
+        postageFactor: postageFactor,
+        usableIntegral: usableIntegral,
+        // jz 2015-10-20
+        // enableTestBuy: enableTestBuy,
+        productId: productId,
+        productType: productType,
+        models: models,
+        priceInfo: priceInfo,
+        postageConfigName: postageConfigName
+    });
+}); 
+</script>
+{% endblock %}

@@ -79,6 +79,15 @@ Scenario: 1 查看多供货商多商品订单的操作日志
 
 	#bill下单
 		When bill访问jobs的webapp
+  		And bill设置jobs的webapp的收货地址
+			"""
+			{
+				"ship_name": "AAA",
+				"ship_tel": "13811223344",
+				"area": "北京市 北京市 海淀区",
+				"ship_address": "泰兴大厦"
+			}
+			"""
 		And bill加入jobs的商品到购物车
 			"""
 			[{
@@ -113,10 +122,6 @@ Scenario: 1 查看多供货商多商品订单的操作日志
 		And tom在购物车订单编辑中点击提交订单
 			"""
 			{
-				"ship_name": "AAA",
-				"ship_tel": "13811223344",
-				"ship_area": "北京市 北京市 海淀区",
-				"ship_address": "泰兴大厦",
 				"pay_type": "货到付款",
 				"order_no": "001"
 			}

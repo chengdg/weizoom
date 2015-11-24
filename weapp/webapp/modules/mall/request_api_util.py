@@ -826,9 +826,9 @@ def update_product_review_picture(request):
 		return response.get_response()
 
 
-def init_ship_infos(request):
+def list_address(request):
 	ship_infos = list(request.webapp_user.ship_infos)
-	items = {}
+	items = []
 	for ship_info in ship_infos:
 		data_dict = dict()
 		data_dict['ship_id'] = ship_info.id
@@ -841,13 +841,11 @@ def init_ship_infos(request):
 		except:
 			pass
 		data_dict['is_selected'] = ship_info.is_selected
-		items[ship_info.id] = data_dict
-	return items
-
-def init_sessionstorage(request):
+		items.append(data_dict)
+	print(items)
 	response = create_response(200)
 	data = dict()
-	data['ship_infos'] = init_ship_infos(request)
+	data['ship_infos'] = items
 	response.data = data
 	return response.get_response()
 

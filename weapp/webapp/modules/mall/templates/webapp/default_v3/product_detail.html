@@ -234,7 +234,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
                 </div>
                 <div class="xa-enabledBuyLinks xui-inlineblock xui-hide clearfix">
                     <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-addShoppingCartBtn" data-type='shoppingCart'>加入购物车</a>
-                    <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
+                    <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
                 </div>
             </div>
         {% else %}
@@ -333,7 +333,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
             </div>
             <div class="xa-enabledBuyLinks xui-inlineblock hidden clearfix">
                 <a href="javascript:void(0);" class="xui-btn xui-addCartBtn xa-addShoppingCartBtn" data-type='shoppingCart'>加入购物车</a>
-                <a href="javascript:void(0);" data-href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
+                <a href="./?woid={{request.webapp_owner_id}}&module=mall&model=order&action=edit&product_id={{product.id}}&product_count=1&product_model_name=standard" class="xui-btn xa-buyBtn xui-buyBtn" data-type='buy'>立即购买</a>
             </div>
         </div>
     </div>
@@ -351,6 +351,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 {% if not is_deleted_data %}
 <script type="text/javascript">
+initShipInofs();
 //商品id
 var productId = '{{product.id}}';
 //商品规格值
@@ -391,7 +392,6 @@ $(document).ready(function() {
 if (document.getElementById('total_count')) {
     document.getElementById('total_count').value = 1;
 }
-
 </script>
 {% endif %}
 {% endblock %}

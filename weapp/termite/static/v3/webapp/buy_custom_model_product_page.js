@@ -9,8 +9,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         'click .xa-canNotBuyButton': 'onClickCanNotBuyButton',
         'click .xa-addShoppingCartBtn': 'onClickAddShoppingCartButton',
         'click .xa-collectProduct': 'onClickCollectProductButton',
-        'click .xa-property':'onClickPropertyPanel',
-        'click .xa-buyBtn':'onClickBuyButton'
+        'click .xa-property':'onClickPropertyPanel'
     },
 
     initialize: function(options) {
@@ -405,9 +404,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var $buy = $('.xa-buyBtn');
         $('.xa-buyBtn').each(function(){
             $buy = $(this);
-            var hrefAttr = $buy.data('href');
+            var hrefAttr = $buy.attr('href');
             hrefAttr = hrefAttr.replace(/product_model_name=.*$/, 'product_model_name='+model.name);
-            $buy.data('href', hrefAttr);
+            $buy.attr('href', hrefAttr);
         });
     },
 
@@ -418,9 +417,9 @@ W.page.BuyProductPage = BackboneLite.View.extend({
         var $buy = $('.xa-buyBtn');
         $('.xa-buyBtn').each(function(){
             $buy = $(this);
-            var hrefAttr = $buy.data('href');
+            var hrefAttr = $buy.attr('href');
             hrefAttr = hrefAttr.replace(/product_count=\d+/, 'product_count='+productCount);
-            $buy.data('href', hrefAttr);
+            $buy.attr('href', hrefAttr);
         });
     },
 
@@ -647,10 +646,5 @@ W.page.BuyProductPage = BackboneLite.View.extend({
                 });
             }
         });
-    },
-
-    onClickBuyButton:function(event){
-        var url = $(event.currentTarget).data('href');
-        checkShipInfosBeforeBuy(url);
     }
 });

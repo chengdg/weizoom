@@ -97,6 +97,16 @@ Background:
 		}]
 		"""
 	And bill关注jobs的公众号
+	When bill访问jobs的webapp
+	And bill设置jobs的webapp的收货地址
+		"""
+		{
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"area": "北京市,北京市,海淀区",
+			"ship_address": "泰兴大厦"
+		}
+		"""
 
 
 @mall2 @buy   @supplier
@@ -188,8 +198,6 @@ Scenario: 2 购买一个供货商的多个商品
 	And bill在购物车订单编辑中点击提交订单
 		"""
 		{
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
 			"pay_type": "货到付款",
 			"order_no": "001"
 		}
@@ -299,8 +307,6 @@ Scenario: 3 购买多个供货商的多个商品,使用微信支付
 	And bill在购物车订单编辑中点击提交订单
 		"""
 		{
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
 			"pay_type": "货到付款",
 			"order_no": "001"
 		}
@@ -662,8 +668,6 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 	And bill在购物车订单编辑中点击提交订单
 		"""
 		{
-			"ship_area": "北京市 北京市 海淀区",
-			"ship_address": "泰兴大厦",
 			"pay_type": "货到付款",
 			"order_no": "001"
 		}

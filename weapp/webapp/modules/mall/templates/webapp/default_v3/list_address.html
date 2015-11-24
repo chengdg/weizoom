@@ -61,8 +61,12 @@
 $(document).ready(function() {
     var ship_infos;
     var woid = getWoid();
-    if(sessionStorage.ship_infos){
-        ship_infos = JSON.parse(sessionStorage.ship_infos);
+    // 跳转queryString
+    var redirectUrlQueryString = getRedirectUrlQueryString();
+
+    if(localStorage.ship_infos){
+        ship_infos = JSON.parse(localStorage.ship_infos);
+
     }
     else{
         ship_infos = JSON.constructor();
@@ -93,7 +97,7 @@ $(document).ready(function() {
             }
 
             $('.xa-selectRadio', template).attr('data-id', ship_info.ship_id);
-            var UrlEdit= './?woid=' + woid + '&module=mall&model=address&action=edit&id=' + ship_info.ship_id + addFmt();
+            var UrlEdit= './?woid=' + woid + '&module=mall&model=address&action=edit&id=' + ship_info.ship_id+'&redirect_url_query_string='+ urlFilter(redirectUrlQueryString);
             $('.xa-edit',template).attr('href',UrlEdit);
             $('ul').append(template);
 
@@ -101,16 +105,10 @@ $(document).ready(function() {
 
         }
     }
-    var UrlAdd = './?woid=' + woid +'&module=mall&model=address&action=add' + addFmt();
+    var UrlAdd = './?woid=' + woid +'&module=mall&model=address&action=add&redirect_url_query_string=' + urlFilter(redirectUrlQueryString);
     $('.xa-addShipAddress').attr('href',UrlAdd);
 
-	var mallShipfromUrl = sessionStorage.mallShipfromUrl;
-    sessionStorage.removeItem('mallShipfromUrl');
-
-    $('.xa-addShipAddress,.xa-edit').click(function(event){
-        setMallShipfromUrl(mallShipfromUrl);
-    });
-
+	// $('[name="is_addrItem"]').click(function(event){
 	$('.xui-radioBox').click(function(event){
 		// 点击添加信封边框
 		var $target = $(event.currentTarget);
@@ -140,8 +138,8 @@ $(document).ready(function() {
 	        success: function(data) {
 	            var ship_id = data['ship_id'];
 
-                if(sessionStorage.ship_infos){
-                        ship_infos = JSON.parse(sessionStorage.ship_infos);
+                if(localStorage.ship_infos){
+                        ship_infos = JSON.parse(localStorage.ship_infos);
 
                     }
                     else{
@@ -155,17 +153,17 @@ $(document).ready(function() {
 
                         }
                     }
-                sessionStorage.ship_infos = JSON.stringify(ship_infos);
+                localStorage.ship_infos = JSON.stringify(ship_infos);
 
-                if(mallShipfromUrl){
-                    // 返回订单
-                    window.location.href = mallShipfromUrl;
-                }else if(data['msg'] != null){
+
+	            if (data['msg'] != null&&redirectUrlQueryString.indexOf('user_center')>0) {
 	                $('body').alert({
 	                    isShow: true,
 	                    speed: 2000,
 	                    info: data['msg']
 	                })
+	            } else {
+	                window.location.href = "./?"+redirectUrlQueryString;
 	            }
 	        },
 	        error: function(resp) {
