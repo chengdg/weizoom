@@ -147,7 +147,6 @@ Scenario:1 会员帮助会员好友助力
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
-			"rules": "微助力活动1",
 			"background_pic": "2.jpg",
 			"background_color": "冬日暖阳",
 			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
@@ -174,7 +173,6 @@ Scenario:1 会员帮助会员好友助力
 			"name": "微助力活动1",
 			"is_show_countdown": "true",
 			"desc": "微助力活动描述",
-			"rules": "微助力活动1",
 			"background_pic": "2.jpg",
 			"background_color": "冬日暖阳",
 			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
