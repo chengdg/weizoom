@@ -27,13 +27,13 @@ class Pages(resource.Resource):
 		"""
 		微页面列表页
 		"""
-		has_page = webapp_models.Project.objects.filter(owner=request.user, is_enable=True).count() > 0
+		has_page = webapp_models.Project.objects.filter(owner=request.manager, is_enable=True).count() > 0
 		pages = []
 		if request.user.is_manager:
-			pages = webapp_models.Project.objects.filter(owner=request.user, is_enable=True)
+			pages = webapp_models.Project.objects.filter(owner=request.manager, is_enable=True)
 			active_page = None
 		else:
-			active_page = webapp_models.Project.objects.filter(owner=request.user, is_active=True)[0]
+			active_page = webapp_models.Project.objects.filter(owner=request.manager, is_active=True)[0]
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -55,7 +55,7 @@ class Pages(resource.Resource):
 		"""
 		微页面列表页
 		"""
-		projects = webapp_models.Project.objects.filter(owner=request.user, is_enable=True)
+		projects = webapp_models.Project.objects.filter(owner=request.manager, is_enable=True)
 		
 		# 搜索		
 		query = request.GET.get('query', None)

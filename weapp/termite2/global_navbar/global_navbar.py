@@ -32,7 +32,7 @@ class GlobalNavbar(resource.Resource):
 		fake:${project_type}:${webapp_owner_id}:${page_id}:${mongodb_id}
 		"""
 		pagestore = pagestore_manager.get_pagestore_by_type('mongo')
-		project_id = 'fake:wepage:%d:navbar' % request.user.id
+		project_id = 'fake:wepage:%d:navbar' % request.manager.id
 		page_id = 'navbar'
 		
 		page = pagestore.get_page(project_id, page_id)
@@ -43,7 +43,7 @@ class GlobalNavbar(resource.Resource):
 		project_id = '%s:%s' % (project_id, mongodb_id)
 
 		# 是否启用
-		global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user.id)
+		global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.manager.id)
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
