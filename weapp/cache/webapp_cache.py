@@ -382,13 +382,15 @@ def get_webapp_products_detail(webapp_owner_id, product_ids, member_grade_id=Non
                 product.promotion_model = dict()
         else:
             product.promotion_model = dict()
-        integral_sale_data = data[key]['integral_sale']
-        if integral_sale_data and len(integral_sale_data) > 0:
-            product.integral_sale_model = promotion_models.Promotion.from_dict(
-                integral_sale_data)
+        if 'integral_sale' in data[key]:
+            integral_sale_data = data[key]['integral_sale']
+            if integral_sale_data and len(integral_sale_data) > 0:
+                product.integral_sale_model = promotion_models.Promotion.from_dict(
+                    integral_sale_data)
+            else:
+                product.integral_sale_model = None
         else:
             product.integral_sale_model = None
-        # product['promotion'] = product.promotion if hasattr(product, 'promotion') else None
         products.append(product)
     mall_models.Product.fill_display_price(products)
     return products
