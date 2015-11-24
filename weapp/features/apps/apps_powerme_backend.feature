@@ -38,7 +38,7 @@ Background:
 			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
 		}]
 		"""
-@apps @apps_powerme @apps_powerme_backend @kuki
+@apps @apps_powerme @apps_powerme_backend
 Scenario:1 新建微助力，用户识别二维码为空
 	Given jobs登录系统
 	When jobs新建微助力活动

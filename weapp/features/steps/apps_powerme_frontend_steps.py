@@ -31,11 +31,43 @@ def step_impl(context, webapp_user_name, title):
 	power_me_rule_id = __get_power_me_rule_id(power_me_rule_name)
 	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s' % (context.webapp_owner_id,power_me_rule_id)
 	url = bdd_util.nginx(url)
+	print('url!!!!!!!!!!')
+	print(url)
 	context.red_envelope_url = url
 	response = context.client.get(url)
-	print('response!!!!!!!')
-	print(response)
-	
+	context.powerme_result = response.context
+
+@then(u"{webapp_user_name}获得{webapp_owner_name}的'{power_me_rule_name}'的内容")
+def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
+	result = context.powerme_result
+	related_page_id = PowerMe.objects.get(id=result['record_id']).related_page_id
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	page = pagestore.get_page(related_page_id, 1)
+	page_component = page['component']['components'][0]['model']
+
+	color2name = {
+		'yellow': u'冬日暖阳',
+		'red': u'玫瑰茜红',
+		'orange': u'热带橙色'
+	}
+	# 构造实际数据
+	actual = []
+	actual.append({
+		"name": result['page_title'],
+		"is_show_countdown": 'true' if result['timing'] else 'false',
+		"desc": page_component['description'],
+		"background_pic": page_component['background_image'],
+		"background_color": color2name[page_component['color']],
+		"rules": page_component['rules'],
+		"my_rank":result['current_member_rank_info'] if result['current_member_rank_info'] else u'无',
+		"my_power_score": result['current_member_rank_info'] if result['current_member_rank_info'] else '0',
+		"total_participant_count": result['total_participant_count']
+	})
+	print("actual_data: {}".format(actual))
+	expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+	bdd_util.assert_list(expected, actual)
+
 @then(u"{webapp_user_name}在{webapp_owner_name}的webapp中拥有{integral_count}助力值")
 def step_tmpl(context, webapp_user_name, webapp_owner_name, integral_count):
 	webapp_owner_id = context.webapp_owner_id
