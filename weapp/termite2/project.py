@@ -60,7 +60,7 @@ class Project(resource.Resource):
 		page_component = json.loads(request.POST['page_json'])
 		page_component['is_new_created'] = True
 		page_id = 1
-		project_id = 'app:%s:%s:%s' % (app_name, request.user.id, time.time())
+		project_id = 'app:%s:%s:%s' % (app_name, request.manager.id, time.time())
 		pagestore = pagestore_manager.get_pagestore_by_type('mongo')
 		pagestore.save_page(project_id, page_id, page_component)
 
@@ -89,10 +89,10 @@ class Project(resource.Resource):
 		创建模板项目
 		"""
 		#创建数据库中的数据
-		workspace = webapp_models.Workspace.objects.get(owner=request.user, inner_name='home_page')
-		count = webapp_models.Project.objects.filter(owner=request.user, inner_name__startswith='wepage').count()
+		workspace = webapp_models.Workspace.objects.get(owner=request.manager, inner_name='home_page')
+		count = webapp_models.Project.objects.filter(owner=request.manager, inner_name__startswith='wepage').count()
 		project = webapp_models.Project.objects.create(
-			owner = request.user, 
+			owner = request.manager, 
 			inner_name = 'wepage',
 			workspace_id = workspace.id,
 			name = u'定制模板{}'.format(count+1),
@@ -244,7 +244,7 @@ class Project(resource.Resource):
 			else:
 				Project.update_page_content(request)
 				#清除webapp page cache
-				Project.delete_webapp_page_cache(request.user.id, project_id)
+				Project.delete_webapp_page_cache(request.manager.id, project_id)
 		elif field == 'is_enable':
 			webapp_models.Project.objects.filter(id=project_id).update(is_enable=True)
 		else:
@@ -271,7 +271,7 @@ class Project(resource.Resource):
 		webapp_models.Project.objects.filter(id=project_id).delete()
 
 		#清除webapp page cache
-		Project.delete_webapp_page_cache(request.user.id, project_id)
+		Project.delete_webapp_page_cache(request.manager.id, project_id)
 		
 		response = create_response(200)
 		return response.get_response()

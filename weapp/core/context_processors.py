@@ -3,6 +3,7 @@
 import os
 
 from django.conf import settings
+import re
 
 from weixin.user.models import WeixinMpUser
 from modules.member import member_settings
@@ -577,6 +578,10 @@ navbar_support_page = {
 	'product_list_page': ['module=mall', 'model=products', 'action=list']
 }
 def __match_navbar_path(request, path):
+	# 去除 redirect_url_query_string
+	path = re.sub(r'redirect_url_query_string=.*&', "", path)
+	path = re.sub(r'redirect_url_query_string=.*', "", path)
+
 	webapp_owner_id = request.webapp_owner_id
 	# 全局是否启用
 

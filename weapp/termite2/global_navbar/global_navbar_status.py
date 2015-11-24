@@ -31,12 +31,12 @@ class GlobalNavbarStatus(resource.Resource):
         else:
             is_enable = False
             
-        global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.user.id)
+        global_navbar = termite_models.TemplateGlobalNavbar.get_object(request.manager.id)
         global_navbar.is_enable = is_enable
         global_navbar.save()
         # 如果点击启用，则更新varnish对于首页的缓存
         # if not settings.DEBUG:
-        webapp_cache.update_product_list(request.user.id)
+        webapp_cache.update_product_list(request.manager.id)
         response = create_response(200)
         response.data = True
         return response.get_response()
