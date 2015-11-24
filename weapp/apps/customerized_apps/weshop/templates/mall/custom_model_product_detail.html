@@ -314,7 +314,7 @@ a.xui-btn:link,a.xui-btn:hover,.xui-btn:visited{color:#fff!important;}
 {% block js %}
 <script type="text/javascript">
     $('.xa-buyBtn').click(function(event){
-        var url = $(event.currentTarget).attr('data-href');
+        var url = $(event.currentTarget).data('href');
         checkShipInfosBeforeBuy(url);
     });
     // var postageFactor = $.parseJSON('{{postage_factor|safe}}');

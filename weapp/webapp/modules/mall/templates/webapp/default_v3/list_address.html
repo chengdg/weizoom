@@ -61,11 +61,8 @@
 $(document).ready(function() {
     var ship_infos;
     var woid = getWoid();
-    // 跳转queryString
-
     if(sessionStorage.ship_infos){
         ship_infos = JSON.parse(sessionStorage.ship_infos);
-
     }
     else{
         ship_infos = JSON.constructor();
@@ -154,18 +151,15 @@ $(document).ready(function() {
                     }
                 sessionStorage.ship_infos = JSON.stringify(ship_infos);
 
-
-	            if (data['msg'] != null&&!sessionStorage.mallShipfromUrl) {
+                if(sessionStorage.mallShipfromUrl){
+                    // 返回订单
+                    window.location.href = sessionStorage.mallShipfromUrl;
+                }else if(data['msg'] != null){
 	                $('body').alert({
 	                    isShow: true,
 	                    speed: 2000,
 	                    info: data['msg']
 	                })
-	            } else {
-	                if(sessionStorage.mallShipfromUrl){
-                        // 返回订单
-                        window.location.href = sessionStorage.mallShipfromUrl
-                    }
 	            }
 	        },
 	        error: function(resp) {

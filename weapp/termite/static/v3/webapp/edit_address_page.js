@@ -13,7 +13,7 @@ function initSessionStorage(){
                 target_api: 'sessionstorage/init'
             },
             success: function(data) {
-                initShipInofs(data.ship_infos);
+                sessionStorage.ship_infos=JSON.stringify(data.ship_infos);
                 s.mallSessionStorageHasInit = 1;
 
             },
@@ -23,15 +23,10 @@ function initSessionStorage(){
     }
 }
 
-function initShipInofs(ship_infos){
-    var infos = {};
-    for(var i in ship_infos){
-        infos[ship_infos[i].ship_id] = ship_infos[i]
-    }
-    sessionStorage.ship_infos=JSON.stringify(infos);
-}
-
-
+/**
+ * 收货地址来源URL：
+ * 从编辑订单或无地址跳转时设置或覆盖mallShipfromUrl，从个人中心进入则清空mallShipfromUrl
+ */
 function setMallShipfromUrl(url){
     if(url === undefined){
         url = '';
@@ -40,8 +35,8 @@ function setMallShipfromUrl(url){
 }
 
 function checkShipInfosBeforeBuy(buy_url){
-    setMallShipfromUrl(buy_url);
-    if(!sessionStorage.hasOwnProperty('ship_infos')||sessionStorage.ship_infos.length<=2){
+    if(!sessionStorage.ship_infos||sessionStorage.ship_infos.length<=2){
+        setMallShipfromUrl(buy_url);
         window.location.href="./?woid=" + getWoid() +"&module=mall&model=address&action=add" +addFmt('fmt');
     }else {
         window.location.href = buy_url;
@@ -112,7 +107,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     } else {
                         if(sessionStorage.mallShipfromUrl){
                             // 返回订单
-                            window.location.href = sessionStorage.mallShipfromUrl
+                            window.location.href = sessionStorage.mallShipfromUrl;
                         }else{
                             // 返回地址列表
                             window.location.href = document.referrer;
