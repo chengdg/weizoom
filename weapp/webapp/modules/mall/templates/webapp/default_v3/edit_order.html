@@ -1,14 +1,5 @@
 {% extends "webapp_content_base.html" %}
 {% load mall_filter %}
-{% block init %}
-<script>
-fmt = document.location.search.split('fmt=')[1];
-// 没有收货地址则跳转到新建收货地址
-if(!localStorage.hasOwnProperty('ship_infos')||localStorage.ship_infos.length<=2){
-    window.location.href="./?woid={{request.webapp_owner_id}}&module=mall&model=address&action=add" +'&fmt=' + fmt;
-}
-</script>
-{% endblock %}
 {% block css %}
 <style>
 .disabled_btn {
@@ -614,8 +605,8 @@ if(!localStorage.hasOwnProperty('ship_infos')||localStorage.ship_infos.length<=2
 {% block js %}
 <script type="text/javascript">
 
-// 从localStorage获取收货地址
-var ship_infos = JSON.parse(localStorage.ship_infos);
+// 从sessionStorage获取收货地址
+var ship_infos = JSON.parse(sessionStorage.ship_infos);
 
 for(var i in ship_infos) {
     if (ship_infos[i].is_selected){

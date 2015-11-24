@@ -1,7 +1,3 @@
-/*
-收货地址相关
-*/
-
 // 获得url中get查询参数
 var getParam = function (name) {
     var search = document.location.search;
@@ -33,7 +29,7 @@ var deepCopyJSON = function(obj){
 weapp特有部分
 */
 
-var getWoid = function(){
+function getWoid(){
     var urlParm = document.location.search;
     if(urlParm.indexOf('woid=')>=0){
         return getParam('woid');
@@ -44,6 +40,9 @@ var getWoid = function(){
     }
 };
 
+function addFmt(){
+    return '&fmt=' + getParam('fmt')
+}
 
 var urlFilter = function(url){
 	return url.replace(/&/g, '%26')
@@ -122,65 +121,4 @@ var webStorageProbe = function () {
         JSAnalysis('webStorageProbe', content);
     }
 
-};
-
-/*
-收货地址相关
-*/
-
-var shipInfosConfig = {
-    'cacheTime': 1000*60*5
-};
-
-
-var initShipInofs = function(){
-    var lastUpdate;
-    function shipInfoAnalysis(){
-        var s = sessionStorage;
-        var content = '';
-        // mallShipSessionFlag会话标志，辨别当前是第一次运行还是会话中的运行
-        if(!s.mallShipSessionFlag){
-            s.mallShipSessionFlag = 1
-        }else{
-            if(now.getTime() - lastUpdate > shipInfosConfig.cacheTime && lastUpdate > 0){
-                content = '单个会话超过5分钟触发更新';
-            }
-        }
-        if(content){
-            JSAnalysis('shipInfoAnalysis',content)
-        }
-    }
-    if(localStorage.ship_infos_updated_at){
-        lastUpdate = localStorage.ship_infos_updated_at;
-    }
-    else {
-        lastUpdate = 0
-    }
-    var now = new Date();
-    var woid = getWoid();
-    if (now.getTime() - lastUpdate > shipInfosConfig.cacheTime || $.cookie('current_token')!=localStorage.ship_infos_token) {
-        W.getApi().call({
-            app: 'webapp',
-            api: 'project_api/call',
-            method: 'get',
-            args: {
-                woid: woid,
-                module: 'mall',
-                target_api: 'address/list'
-            },
-            success: function(data) {
-                var ship_infos = data.ship_infos;
-                var infos = {};
-                for(var i in ship_infos){
-                    infos[ship_infos[i].ship_id] = ship_infos[i]
-                }
-                localStorage.ship_infos=JSON.stringify(infos);
-                localStorage.ship_infos_updated_at = new Date().getTime();
-                localStorage.ship_infos_token = $.cookie('current_token');
-                shipInfoAnalysis();
-            },
-            error: function(resp) {
-            }
-        });
-    }
 };
