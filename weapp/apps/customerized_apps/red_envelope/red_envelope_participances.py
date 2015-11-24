@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'cl'
 
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 from django.template import RequestContext
@@ -221,10 +221,15 @@ class RedEnvelopeParticipances(resource.Resource):
                         grade = grade_id2grade[cur_grade_id]
                 else:
                     grade = u"非会员"
+            try:
+                name = cur_member.username.decode('utf8')
+            except:
+                name = cur_member.username_hexstr
             items.append({
                 'id': relation.red_envelope_relation_id,
                 'member_id': relation.member_id,
                 'username': cur_member.username_for_title,
+                'name': name,
                 'username_truncated': cur_member.username_truncated,
                 'participant_icon': relation.member.user_icon,
                 'introduce_received_number_count': relation.introduce_received_number,
@@ -350,8 +355,13 @@ class redParticipances_Export(resource.Resource):
         """
         export_id = int(request.GET.get('id'))
         download_excel_file_name = u'红包分析详情.xls'
-        excel_file_name = 'red_details.xls'
-        export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
+        excel_file_name = 'red_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+        dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+        dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        export_file_path = os.path.join(dir_path,excel_file_name)
         #Excel Process Part
         try:
             import xlwt
@@ -375,7 +385,7 @@ class redParticipances_Export(resource.Resource):
             for relation in relations:
                 export_record = []
                 num = num+1
-                name = relation["username"]
+                name = relation["name"]
                 grade_name = relation["grade"]
                 introduce_received_number_count = relation["introduce_received_number_count"]
                 introduce_used_number_count = relation["introduce_used_number_count"]
@@ -430,12 +440,12 @@ class redParticipances_Export(resource.Resource):
                 except Exception, e:
                     print 'EXPORT EXCEL FILE SAVE ERROR'
                     print e
-                    print '/static/upload/%s'%excel_file_name
+                    print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
             else:
                 ws.write(1,0,'')
                 wb.save(export_file_path)
             response = create_response(200)
-            response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
+            response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
         except Exception, e:
             print e
             response = create_response(500)

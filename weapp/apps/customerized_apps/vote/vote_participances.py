@@ -6,16 +6,18 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 from core import resource
 from core import paginator
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 from mall import export
 from utils.string_util import hex_to_byte, byte_to_hex
+from watchdog.utils import watchdog_error
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -120,9 +122,14 @@ class voteParticipances_Export(resource.Resource):
 
 		# app_name = voteParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = 'vote_details.xls'
+		excel_file_name = 'vote_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
 		download_excel_file_name = u'微信投票详情.xls'
-		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
 		try:
@@ -205,7 +212,14 @@ class voteParticipances_Export(resource.Resource):
 				export_record = []
 
 				num = num+1
-				name = member_id2member[record['member_id']].username if member_id2member.get(record['member_id']) else u'未知'
+				cur_member = member_id2member.get(record['member_id'], None)
+				if cur_member:
+					try:
+						name = cur_member.username.decode('utf8')
+					except:
+						name = cur_member.username_hexstr
+				else:
+					name = u'未知'
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
@@ -257,22 +271,35 @@ class voteParticipances_Export(resource.Resource):
 					row +=1
 					for col in range(lens):
 						if type(record[col]) == list and len(record[col])>=2:
-							ws.write(row,col,u",".join(record[col]))
+							try:
+								ws.write(row,col,u",".join(record[col]))
+							except:
+								#'编码问题，不予导出'
+								print record
+								pass
 						else:
-							ws.write(row,col,record[col])
+							try:
+								ws.write(row,col,record[col])
+							except:
+								#'编码问题，不予导出'
+								print record
+								pass
 				try:
 					wb.save(export_file_path)
 				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
 					print e
-					print '/static/upload/%s'%excel_file_name
+					print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
-		except:
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
+		except Exception, e:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
 			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
 
 		return response.get_response()

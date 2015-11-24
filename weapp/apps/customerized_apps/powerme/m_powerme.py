@@ -185,7 +185,7 @@ class MPowerMe(resource.Resource):
 		if u"进行中" == activity_status:
 			timing = (record.end_time - datetime.today()).total_seconds()
 
-		if record and record.qrcode:
+		if record and record.qrcode['ticket'] != '':
 			params_qrcode_url = record.qrcode['ticket']
 			params_qrcode_name = record.qrcode['name']
 		else:

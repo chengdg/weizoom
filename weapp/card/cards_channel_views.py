@@ -350,8 +350,9 @@ def export_csv(data,output_name,force_csv,encoding='utf8'):
             else:
                 cell_style = styles['default']
             sheet.write(rowx, colx, value, style=cell_style)
-
     excel_file_path = os.path.join(settings.UPLOAD_DIR,output_name)
+    if not os.path.exists(os.path.join(settings.UPLOAD_DIR)):
+        os.makedirs(os.path.join(settings.UPLOAD_DIR))
     upload_path = '/static/upload/%s' % output_name
 
     if os.name =="nt":

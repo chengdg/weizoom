@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 from core import resource
@@ -17,6 +17,8 @@ import models as app_models
 from mall import export
 import re
 from utils.string_util import hex_to_byte, byte_to_hex
+from watchdog.utils import watchdog_error
+from core.exceptionutil import unicode_full_stack
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -152,8 +154,13 @@ class eventParticipances_Export(resource.Resource):
 		# app_name = eventParticipances_Export.app.split('/')[1]
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		download_excel_file_name = u'活动报名详情.xls'
-		excel_file_name = 'event_details.xls'
-		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
+		excel_file_name = 'event_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
 
 		#Excel Process Part
 		try:
@@ -235,7 +242,14 @@ class eventParticipances_Export(resource.Resource):
 				export_record = []
 
 				num = num+1
-				name = member_id2member[record['member_id']].username if member_id2member.get(record['member_id']) else u'未知'
+				cur_member = member_id2member.get(record['member_id'], None)
+				if cur_member:
+					try:
+						name = cur_member.username.decode('utf8')
+					except:
+						name = cur_member.username_hexstr
+				else:
+					name = u'未知'
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:
@@ -281,23 +295,28 @@ class eventParticipances_Export(resource.Resource):
 				lens = len(export_data[0])
 				for record in export_data:
 					row +=1
-					try:
-						for col in range(lens):
+					for col in range(lens):
+						try:
 							ws.write(row,col,record[col])
-					except Exception, e:
-						print e
+						except:
+							#'编码问题，不予导出'
+							print record
+							pass
 				try:
 					wb.save(export_file_path)
 				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
 					print e
-					print '/static/upload/%s'%excel_file_name
+					print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
-		except:
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
+		except Exception, e:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
 			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
 
 		return response.get_response()

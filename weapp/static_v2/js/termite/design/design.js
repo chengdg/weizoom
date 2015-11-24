@@ -156,7 +156,7 @@ W.data.getDynamicComponentDataForDialogSelectControl = function(dynamicComponent
 		}
 	} else if (dynamicComponentField.dialog === 'W.dialog.termite.SelectQrcodeDialog') {
 		var qrcode = dynamicComponent.model.get(dynamicComponentField.name);
-		if (qrcode.length > 0 || qrcode!= "") {
+		if (qrcode['ticket'] != '') {
 			html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox xa-qrcodeImgBox"><img src="'+ qrcode.ticket +'"/></div><div class="qrcodeName">'+qrcode.name+'</div>';
 		} else {
 			html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox xa-qrcodeImgBox xui-hide"><img src=""/></div><div class="qrcodeName"></div>';

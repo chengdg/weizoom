@@ -95,7 +95,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectQrcodeDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '此处若空缺，则使用公众号二维码代替',
-			default: ""
+			default: {ticket:'',name:''}
 		},{
 			name: 'material_image',
 			type: 'image_dialog_select',
@@ -176,8 +176,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
 		},
 		qrcode:function($node, model, value, $propertyViewNode){
-			var qrcode = {ticket:'',name:''};
-			var data = {type:null};
+			var data;
 			if (value !== '') {
 				data = $.parseJSON(value);
 				qrcode = data[0];

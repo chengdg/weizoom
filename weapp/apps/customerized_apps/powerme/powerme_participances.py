@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
+
+from datetime import date, datetime
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -8,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from apps.customerized_apps.powerme.m_powerme import clear_non_member_power_info
 from core import resource
 from core import paginator
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
@@ -15,6 +18,8 @@ import export
 from mall import export as mall_export
 from utils.string_util import byte_to_hex
 import os
+
+from watchdog.utils import watchdog_error
 from weapp import settings
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
@@ -88,11 +93,19 @@ class PowerMeParticipances(resource.Resource):
 		ranking = (cur_page-1)*count_per_page
 		for data in datas:
 			ranking += 1
+			cur_member = member_id2member.get(data.member_id, None)
+			if cur_member:
+				try:
+					name = cur_member.username.decode('utf8')
+				except:
+					name = cur_member.username_hexstr
+			else:
+				name = u'未知'
 			items.append({
 				'id': str(data.id),
 				'ranking': ranking,
 				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
-				'username': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
+				'username': name,
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'power': data.power,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -132,8 +145,13 @@ class PowerMeParticipances_Export(resource.Resource):
 		"""
 		export_id = request.GET.get('export_id',0)
 		download_excel_file_name = u'微助力详情.xls'
-		excel_file_name = 'powerme_details.xls'
-		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
+		excel_file_name = 'powerme_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
 		#Excel Process Part
 		try:
 			import xlwt
@@ -184,9 +202,19 @@ class PowerMeParticipances_Export(resource.Resource):
 							row_l.append(len(record_col))
 							for n in range(len(record_col)):
 								data = record_col[n]
-								ws.write(row+n,col,data)
+								try:
+									ws.write(row+n,col,data)
+								except:
+									#'编码问题，不予导出'
+									print record
+									pass
 						else:
-							ws.write(row,col,record[col])
+							try:
+								ws.write(row,col,record[col])
+							except:
+								#'编码问题，不予导出'
+								print record
+								pass
 					if row_l:
 						row = row + max(row_l)
 					else:
@@ -196,15 +224,17 @@ class PowerMeParticipances_Export(resource.Resource):
 				except Exception, e:
 					print 'EXPORT EXCEL FILE SAVE ERROR'
 					print e
-					print '/static/upload/%s'%excel_file_name
+					print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
 			else:
 				ws.write(1,0,'')
 				wb.save(export_file_path)
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
 		except Exception, e:
-			print e
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
 			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
 
 		return response.get_response()
 
