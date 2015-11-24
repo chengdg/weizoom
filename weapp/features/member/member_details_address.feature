@@ -5,7 +5,7 @@ Feature: 会员列表-会员详情-收货信息
 
 	Jobs能通过管理系统在商城中的会员详情查看到会员在手机端的管理地址中使用的地址信息列表
 """
-@mall2 @member @memberList
+@mall2 @member @memberList @zsx
 Scenario:1 会员添加地址，后台查看会员地址列表
 	Given jobs登录系统
 	And 开启手动清除cookie模式
