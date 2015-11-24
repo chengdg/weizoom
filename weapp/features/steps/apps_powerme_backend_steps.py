@@ -11,10 +11,11 @@ from mall.promotion import models as  promotion_models
 from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
+from market_tools.tools.channel_qrcode import models as channel_qrcode_models
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings
 from weixin.message.material import models as material_models
 import termite.pagestore as pagestore_manager
 import json
-import datetime
 
 def __debug_print(content,type_tag=True):
 	"""
@@ -164,8 +165,8 @@ def __date_delta(start,end):
 		end :(str){2015-11-30}
 	获得时间差，返回int型
 	"""
-	start = datetime.datetime.strptime(start, "%Y-%m-%d").date()
-	end = datetime.datetime.strptime(end, "%Y-%m-%d").date()
+	start = dt.datetime.strptime(start, "%Y-%m-%d").date()
+	end = dt.datetime.strptime(end, "%Y-%m-%d").date()
 	return (end-start).days
 
 def __date2time(date_str):
@@ -197,9 +198,19 @@ def Create_PowerMe(context,text,user):
 
 	description = text.get("desc","")
 	reply_content = text.get("reply")
-	qrcode = text.get("qr_code","")
 	material_image = text.get("share_pic","")
 	background_image = text.get("background_pic","")
+
+	qrcode_name = text.get("qr_code","")
+	if qrcode_name:
+		qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
+		qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
+		qrcode_response = context.client.get(qrcode_i_url)
+		qrcode_info = qrcode_response.context['qrcode']
+		qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
+		qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
+	else:
+		qrcode = ""
 
 	zh2color = {u"冬日暖阳":"yellow",u"玫瑰茜红":"red",u"热带橙色":"orange"}
 	zhcolor = text.get("background_color","冬日暖阳")
