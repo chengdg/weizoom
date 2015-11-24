@@ -119,6 +119,7 @@ Background:
 
 @apps @powerme @frontend @kuki1
 Scenario:1 用户重复参与微助力活动
+	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
@@ -155,7 +156,7 @@ Scenario:1 用户重复参与微助力活动
 			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式",
 			"my_rank": "1",
 			"my_power_score": "0",
-			"total_participant_count": "0"
+			"total_participant_count": "1"
 		}]
 		"""
 	Then bill获得"微助力活动1"的助力值排名
@@ -168,7 +169,6 @@ Scenario:1 用户重复参与微助力活动
 	Then tom收到自动回复'微助力1单图文'
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	When tom把jobs的微助力活动链接分享到朋友圈
-
 	When bill点击tom分享的微助力活动链接进行参与
 	Then bill获得弹层提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
 
