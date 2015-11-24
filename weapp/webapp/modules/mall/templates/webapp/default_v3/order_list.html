@@ -98,7 +98,7 @@
                                     {% endfor %}
                                 {% endif %}
                                 <div class="pr15 xui-bottomBtn tl">
-                                    <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price}}</span></a>
+                                    <a href="javascript:void(0);"  class="em8 c9">实付款：<span class="em8 cRed">￥{{order.final_price | floatformat:"2"}}</span></a>
                                     <span class="xui-button">
                                         {% ifequal order.status 0 %}
                                             <a href="javascript:void(0);" class="xui-forPay-btn xui-cancel update_order_cancel tc" data-id="{{order.id}}">取消订单</a>
