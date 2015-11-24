@@ -118,7 +118,7 @@ Background:
 		"""
 
 @apps @powerme @frontend 
-Scenatio:1 用户重复参与微助力活动
+Scenario:1 用户重复参与微助力活动
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
@@ -641,7 +641,7 @@ Scenario:8 会员B分享会员A的微助力活动链接
 		|  1   | bill |   2   |
 
 @apps @powerme @frontend
-Scenatio:9 用户参加'未开始'和'已结束'的微助力活动
+Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 	When jobs新建微助力活动
 		"""
 		[{
