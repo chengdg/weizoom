@@ -122,7 +122,7 @@ Background:
 					"reply_type":"text_picture"
 				}]
 		},{
-			"rules_name":"规则1",
+			"rules_name":"规则2",
 			"keyword": [{
 					"keyword": "微助力2",
 					"type": "equal"
@@ -141,51 +141,51 @@ Scenario:1 会员帮助会员好友助力
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
-
-#	And bill获得"微助力活动1"的"助力值TOP100"
-#		| rank |name |value |
-#		| 0    |bill |  0   |
-#
-#	#tom点击bill分享的链接,查看默认活动页
-#
-#	When tom关注jobs的公众号
-#	When tom通过bill分享的"微助力活动1"链接进入活动页面
-#	Then tom获得jobs的webapp页面'微助力活动1'
-#			"""
-#				{
-#					"link_name":"微助力活动1",
-#					"is_show_countdown":"true",
-#					"buttons":["帮bill助力"],["我也要参加"],
-#					"rules":"微助力活动1",
-#					"my_rank":"无",
-#					"my_power_score":"0",
-#					"participant":"1"
-#				}
-#			"""
-#	#tom点击帮bill助力按钮,助力成功后再次访问bill的活动页面
-#	When tom完成'帮bill助力'操作
-#	Then tom获得弹出公众号带参数二维码"带参数二维码1"
-#	When tom关注jobs的公众号
-#	Then tom获得公众号返回的参数:"感谢您的的参与，为好友助力成功！"
-#	When 清空浏览器
-#	When tom访问jobs的webapp的"微助力活动1"活动页
-#	Then tom获得jobs的webapp页面'微助力活动1'
-#			"""
-#				{
-#					"link_name":"微助力活动1",
-#					"is_show_countdown":"true",
-#					"buttons":["已帮bill助力",["我也要参加"],
-#					"rules":"微助力活动1",
-#					"my_rank":"无",
-#					"my_power_score":"0",
-#					"participant":"1"
-#				}
-#			"""
-#		And tom获得"微助力活动1"的"助力值TOP100"
-#			| rank |name |value |
-#			|  0   |bill |  1   |
-
-
+	Then bill获得jobs的'微助力活动1'的内容
+	"""
+		{
+			"name": "微助力活动1",
+			"is_show_countdown": "true",
+			"desc": "微助力活动描述",
+			"rules": "微助力活动1",
+			"background_pic": "2.jpg",
+			"background_color": "冬日暖阳",
+			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
+			"my_rank": "无",
+			"my_power_score": "0",
+			"total_participant_count": "0"
+		}
+	"""
+	Then bill获得"微助力活动1"的助力值排名
+		"""
+		[]
+		"""
+	When bill把jobs的微助力活动链接分享到朋友圈
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom点击bill分享的微助力活动链接进行助力
+	When bill访问jobs的webapp
+  	When bill在微信中向jobs的公众号发送消息'微助力1'
+	Then bill收到自动回复'微助力1单图文'
+	When bill点击图文"微助力1单图文"进入微助力活动页面
+	Then bill获得jobs的'微助力活动1'的内容
+	"""
+		{
+			"name": "微助力活动1",
+			"is_show_countdown": "true",
+			"desc": "微助力活动描述",
+			"rules": "微助力活动1",
+			"background_pic": "2.jpg",
+			"background_color": "冬日暖阳",
+			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
+			"my_rank": "1",
+			"my_power_score": "1",
+			"total_participant_count": "1"
+		}
+	"""
+  	Then tom获得"微助力活动1"的助力值排名
+		| rank | name | value |
+		|  1   | bill |   1   |
 
 @apps @powerme @frontend
 Scenario:2 会员重复帮好友助力
