@@ -11,7 +11,6 @@ from mall.promotion import models as  promotion_models
 from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
-from market_tools.tools.channel_qrcode import models as channel_qrcode_models
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings
 from weixin.message.material import models as material_models
 import termite.pagestore as pagestore_manager
