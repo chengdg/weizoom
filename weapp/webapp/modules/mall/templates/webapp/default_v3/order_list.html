@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content-panel %}
-<div class="xui-orderListPage xui-page wui-swiper">
+<div class="xui-orderListPage xui-page wui-swiper xa-page">
     <div class="wui-swiper-tabs">
         <a href="javascript:void(0)" status="-1" class="wui-inner-active"><span class="wui-inner-tabTitle">全部订单</span><i></i></a>
         <a href="javascript:void(0)" status="0"><span class="wui-inner-tabTitle">待支付</span><i></i></a>
@@ -389,38 +389,36 @@ Zepto.fn.buttonLoading = function(options) {
         break;
     }
 }
-var bodyWidth = window.document.body.clientWidth;
-var bodyHeight = window.document.body.clientHeight;
-var containerHeight = bodyHeight - 43;
-$(".wui-swiper-container").css('height',containerHeight);
-$(".wui-swiper-slide").css('height', containerHeight );
-$("body").css('overflow-y', 'hidden');
-if (/ipad|iphone|mac/i.test(navigator.userAgent)){
-    function loaded() {
+
+$(document).ready(function($) {
+    var bodyWidth = window.document.body.clientWidth;
+    var bodyHeight = window.document.body.clientHeight;
+    var containerHeight = bodyHeight - 43;
+    if($('.wa-guideAttention').length == 1){
+        containerHeight -= 40;
+    }
+    $(".wui-swiper-container").css('height',containerHeight);
+    $(".wui-swiper-slide").css('height', containerHeight );
+    $("body").css('overflow-y', 'hidden');
+    if (/ipad|iphone|mac/i.test(navigator.userAgent)){
         var myscroll=new iScroll('xa-wrapper',{hScrollbar:false,checkDOMChanges:true});
     }
-    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-    document.addEventListener('DOMContentLoaded', loaded, false);
-}
 
-var tabsSwiper = new Swiper('.wui-swiper-container',{
-    speed:500,
-    onSlideChangeStart: function() {
-        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
-        $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
-        if (/ipad|iphone|mac/i.test(navigator.userAgent)){
-            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false,checkDOMChanges:true});
+    var tabsSwiper = new Swiper('.wui-swiper-container',{
+        speed:500,
+        onSlideChangeStart: function() {
+            $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+            $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+            if (/ipad|iphone|mac/i.test(navigator.userAgent)){
+                myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false,checkDOMChanges:true});
+            }
+            var $el = $('.wui-swiper-slide-active');
+            var $info = $el.find('.xa-emptyOrder');
+            if($info.css('display') == 'block'){
+                $el.css('background','#fff');
+            };
         }
-        var $el = $('.wui-swiper-slide-active');
-        var $info = $el.find('.xa-emptyOrder');
-        if($info.css('display') == 'block'){
-            $el.css('background','#fff');
-            // $el.parents('.wui-swiper-container').css('background','#fff');
-            // $el.parents('.wui-swiper-wrapper').css('background','#fff');
-        };
-    }
-});
-$(document).ready(function($) {
+    });
     var type = "{{status_type}}";
     if (type === "0"){
         $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
