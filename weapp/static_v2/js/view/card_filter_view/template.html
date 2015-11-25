@@ -9,8 +9,17 @@
             <label>卡类型：</label>
             <select id="cardType" name="cardType" class="w120 m0">
                 <option value="-1">全部</option>
-                {{each(i, types) types}}
-                <option value="${types.value}" data-value="${types.value}" data-name="${types.name}">${types.name}</option>
+                {{each(i, type) types}}
+                <option value="${type.value}" data-value="${type.value}" data-name="${type.name}">${type.name}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="xui-i-item">
+            <label>卡属性：</label>
+            <select id="cardAttr" name="cardAttr" class="w120 m0">
+                <option value="-1">全部</option>
+                {{each(i, card_attr) card_attrs}}
+                <option value="${card_attr.value}" data-value="${card_attr.value}" data-name="${card_attr.name}">${card_attr.name}</option>
                 {{/each}}
             </select>
         </div>

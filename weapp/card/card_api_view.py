@@ -12,6 +12,8 @@ from card_datetime import *
 import random
 
 #微众卡类型
+from weixin.user.models import MpuserPreviewInfo, ComponentAuthedAppidInfo
+
 WEIZOOM_CARD_EXTERNAL = 0
 WEIZOOM_CARD_INTERNAL = 1
 WEIZOOM_CARD_GIFT = 2
@@ -52,8 +54,11 @@ def get_cards(request):
 
     filter_value = request.GET.get('filter_value', '')
     card_type = _get_type_value(filter_value)
+    card_attr = _get_attr_value(filter_value)
     if card_type != -1:
         weizoom_card_rules = weizoom_card_rules.filter(card_type= card_type)
+    if card_attr != -1:
+        weizoom_card_rules = weizoom_card_rules.filter(card_attr= card_attr)
 
     #卡号区间查询
     card_num_min = request.GET.get('card_num_min','')
@@ -109,7 +114,18 @@ def get_cards(request):
 
     pageinfo, weizoom_card_rules = paginator.paginate(weizoom_card_rules, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-    card_rule_ids = [int(r.id) for r in weizoom_card_rules]
+    card_rule_ids = []
+    user_ids = []
+    for r in weizoom_card_rules:
+        card_rule_ids.append(int(r.id))
+        if r.belong_to_owner != -1:
+            user_ids.append(r.belong_to_owner)
+    user_id2mpuser_name = {}
+    authed_appid = ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id__in=user_ids)
+    for appid in authed_appid:
+        if appid.nick_name:
+            user_id2mpuser_name[appid.auth_appid.user_id] = appid.nick_name
+
     all_cards = WeizoomCard.objects.filter(weizoom_card_rule_id__in=card_rule_ids)
     
     rule_id2card_ids={}
@@ -137,6 +153,9 @@ def get_cards(request):
         cur_weizoom_card_rule.remark = rule.remark
         cur_weizoom_card_rule.money = '%.2f' % rule.money
         cur_weizoom_card_rule.card_type = rule.card_type
+        cur_weizoom_card_rule.is_new_member_special = rule.is_new_member_special
+        cur_weizoom_card_rule.card_attr = rule.card_attr
+        cur_weizoom_card_rule.belong_to_owner = user_id2mpuser_name.get(rule.belong_to_owner,None)
         cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
@@ -350,17 +369,22 @@ def get_card_filter_params(request):
     """
     获得卡类型的所有筛选条件
     """
-    response = create_response(200)
     # 类型
 
-    card_type = [
+    card_types = [
         {'name': u'外部卡', 'value': WEIZOOM_CARD_EXTERNAL_USER},
         {'name': u'内部卡', 'value': WEIZOOM_CARD_INTERNAL_USER},
         {'name': u'赠品卡', 'value': WEIZOOM_CARD_GIFT_USER}
     ]
-
+    #卡的属性
+    card_attrs = [
+        {'name': u'通用卡', 'value': WEIZOOM_CARD_ORDINARY},
+        {'name': u'专属卡', 'value': WEIZOOM_CARD_SPECIAL}
+    ]
+    response = create_response(200)
     response.data = {
-        'card_type': card_type,
+        'card_types': card_types,
+        'card_attrs': card_attrs
     }
     return response.get_response()
 
@@ -457,6 +481,7 @@ def get_weizoom_cards(request):
         cur_weizoom_card.used_money = '%.2f' % (float(cur_weizoom_card.total_money) - float(cur_weizoom_card.money)) #已使用金额
         cur_weizoom_card.remark = c.remark
         cur_weizoom_card.activated_to = c.activated_to
+        cur_weizoom_card.department = c.department
         cur_weizoom_card.valid_time_from = datetime.strftime(weizoom_card_rule.valid_time_from, '%Y-%m-%d %H:%M')
         cur_weizoom_card.valid_time_to = datetime.strftime(weizoom_card_rule.valid_time_to, '%Y-%m-%d %H:%M')
         cur_weizoom_card.is_expired = c.is_expired
@@ -488,6 +513,9 @@ def create_weizoom_cards(request):
     card_type = request.POST.get('card_type', '')
     valid_time_from = request.POST.get('valid_time_from', '')
     valid_time_to = request.POST.get('valid_time_to', '')
+    card_attr = request.POST.get('card_attr','')
+    belong_to_owner = request.POST.get('belong_to_owner','')
+    is_new_member_special = request.POST.get('is_new_member_special', 0)
 
     if name not in [card_rule.name for card_rule in WeizoomCardRule.objects.all()]:
         rule = WeizoomCardRule.objects.create(
@@ -499,7 +527,10 @@ def create_weizoom_cards(request):
             card_type = card_type,
             valid_time_to = valid_time_to,
             valid_time_from = valid_time_from,
-            expired_time = valid_time_to
+            expired_time = valid_time_to,
+            card_attr = card_attr,
+            belong_to_owner = belong_to_owner,
+            is_new_member_special = is_new_member_special
             )
         #生成微众卡
         __create_weizoom_card(rule, count, request)
@@ -562,7 +593,8 @@ def get_card_info(request):
     weizoom_card = WeizoomCard.objects.get(id=id)
     dic_card = {
         'card_remark': weizoom_card.remark,
-        'activated_to': weizoom_card.activated_to
+        'activated_to': weizoom_card.activated_to,
+        'department': weizoom_card.department
     }
 
     response = create_response(200)
@@ -580,6 +612,7 @@ def update_status(request):
         id = request.POST.get('card_id','')
         card_remark = request.POST.get('card_remark','')
         activated_to = request.POST.get('activated_to','')
+        department = request.POST.get('department','')
         operate_style = request.POST.get('operate_style','')  
         # status = int(request.POST['status'])
         event_type = WEIZOOM_CARD_LOG_TYPE_DISABLE
@@ -600,15 +633,16 @@ def update_status(request):
         else:
             weizoom_card.status = status
         weizoom_card.target_user_id = 0
-        if card_remark and activated_to:
+        if card_remark and activated_to and department:
             weizoom_card.remark = card_remark
             weizoom_card.activated_to = activated_to
+            weizoom_card.department = department
         weizoom_card.save()
         # 创建激活日志
         module_api.create_weizoom_card_log(request.user.id, -1, event_type, id, weizoom_card.money)
         response = create_response(200)
         # 创建操作日志
-        WeizoomCardOperationLog.objects.create(card_id=id,operater_id=request.user.id,operater_name=request.user,operate_log=operate_log,remark=card_remark,activated_to=activated_to)
+        WeizoomCardOperationLog.objects.create(card_id=id,operater_id=request.user.id,operater_name=request.user,operate_log=operate_log,remark=card_remark,activated_to=activated_to,department=department)
     except:
         response = create_response(500)
     return response.get_response()
@@ -623,12 +657,13 @@ def update_batch_status(request):
     card_ids = request.POST.get('card_id', '')
     card_remark = request.POST['card_remark']
     activated_to = request.POST['activated_to']
+    department = request.POST['department']
     if card_ids:
         card_ids = card_ids.split(',')
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
 
-        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to,active_card_user_id=request.user.id)
+        cards.update(status=0, activated_at=activated_at, remark=card_remark, activated_to=activated_to,department=department,active_card_user_id=request.user.id)
         # 创建操作日志
         operation_logs=[]
         for card_id in card_ids:
@@ -660,11 +695,12 @@ def update_onbatch_status(request):
     card_ids = request.POST.get('card_id', '')
     card_remark = request.POST['card_remark']
     activated_to = request.POST['activated_to']
+    department = request.POST['department']
     if card_ids:
         card_ids = card_ids.split(',')
         activated_at = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
         cards = WeizoomCard.objects.filter(id__in=card_ids)
-        cards.update(status=3, remark=card_remark, activated_to=activated_to)
+        cards.update(status=3, remark=card_remark, activated_to=activated_to,department=department)
 
         # 创建操作日志
         operation_logs=[]
@@ -754,6 +790,17 @@ def _get_type_value(filter_value):
     try:
         for item in filter_value.split('|'):
             if item.split(':')[0] == 'cardType':
+                return int(item.split(':')[1])
+        return -1
+    except:
+        return -1
+
+def _get_attr_value(filter_value):
+    if filter_value == '-1':
+        return -1
+    try:
+        for item in filter_value.split('|'):
+            if item.split(':')[0] == 'cardAttr':
                 return int(item.split(':')[1])
         return -1
     except:

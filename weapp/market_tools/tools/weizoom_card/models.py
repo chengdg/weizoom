@@ -23,6 +23,14 @@ WEIZOOM_CARD_EXTERNAL_USER = 0 #外部卡
 WEIZOOM_CARD_INTERNAL_USER = 1 #内部卡
 WEIZOOM_CARD_GIFT_USER = 2 #赠品卡
 
+#微众卡属性
+WEIZOOM_CARD_ORDINARY = 0 #通用卡
+WEIZOOM_CARD_SPECIAL = 1 #专属卡
+WEIZOOM_CARD_ATTR={
+	WEIZOOM_CARD_ORDINARY: u'通用卡',
+	WEIZOOM_CARD_SPECIAL: u'专属卡'
+}
+
 class WeizoomCardRule(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=20, db_index=True) #名称
@@ -34,6 +42,9 @@ class WeizoomCardRule(models.Model):
 	valid_time_to = models.DateTimeField() #有效范围结束时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	card_type = models.IntegerField(default=WEIZOOM_CARD_EXTERNAL_USER) #微众卡类型
+	card_attr = models.IntegerField(default=0) #微众卡属性
+	belong_to_owner = models.IntegerField(default=0) #专属商家
+	is_new_member_special = models.BooleanField(default=False) #是否为新会员专属卡
 
 	@staticmethod
 	def get_all_weizoom_card_rules_list(user):
@@ -71,6 +82,7 @@ class WeizoomCard(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	remark = models.CharField(max_length=20,db_index=True) #备注
 	activated_to = models.CharField(max_length=20) #申请人
+	department = models.CharField(max_length=20) #申请部门
 	active_card_user_id = models.IntegerField(default=1) #激活卡片人
 
 	class Meta(object):
@@ -192,6 +204,7 @@ class WeizoomCardOperationLog(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	remark = models.CharField(max_length=20) #备注
 	activated_to = models.CharField(max_length=20) #申请人
+	department = models.CharField(max_length=20) #申请部门
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card_operation_log'
 

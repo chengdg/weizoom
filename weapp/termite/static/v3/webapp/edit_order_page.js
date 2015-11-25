@@ -414,15 +414,18 @@ var WeizoomCardView = BackboneLite.View.extend({
 		}else{
 			$el.find('.xa-errorHint').hide();
 		}
-
+		var weizoomCardIsMemberSpecial = false;
 		for (var i = 0; i < this.useWeizoomCards.length; i++) {
-			if(this.useWeizoomCards[i]['weizoomCardNum'] === name){
+			if (this.useWeizoomCards[i]['weizoomCardNum'] === name) {
 				error_message = '该微众卡已经添加';
 				$el.find('.xa-errorHint').show().text(error_message);
 				this.enableSubmitWeizoomCard = true;
 				return false;
-			}
-		};
+			}else if(this.useWeizoomCards[i]['weizoomCardIsMemberSpecial']){
+					weizoomCardIsMemberSpecial = true;
+				}
+
+		}
 
 		var _this = this;
 		W.getApi().call({
@@ -435,10 +438,16 @@ var WeizoomCardView = BackboneLite.View.extend({
 				name: name,
 				module: 'mall',
 				password: pass,
-				target_api: 'weizoom_card/check',
+				target_api: 'weizoom_card/check'
 			}),
 			success: function(data) {
 				if(data.code == 200) {
+					if (weizoomCardIsMemberSpecial && data.is_new_member_special){
+						error_message = '只能使用一张新会员专属卡';
+						$el.find('.xa-errorHint').show().text(error_message);
+						return false;
+					}
+					_this.useWeizoomCards.push({weizoomId: data.id, money: data.money, weizoomCardNum: name, weizoomCardPassWord: pass,weizoomCardIsMemberSpecial: data.is_new_member_special});
 					$('.xa-cardDetails').append(
 						'<div class="xui-weizoomCardInfo xa-weizoomCardInfo" data-weizoom-card-id="'+data.id+'">'
 						+'<span class="xui-cardName">'+name+'</span>'
@@ -450,7 +459,6 @@ var WeizoomCardView = BackboneLite.View.extend({
 							+'<img src=/static_v2/img/webapp/mall/delete.png>'
 						+'</a>'
 						+'</div>');
-					_this.useWeizoomCards.push({weizoomId: data.id, money: data.money, weizoomCardNum: name, weizoomCardPassWord: pass});
 					_this.fillWeizoomCardData();
 
 					$('.xa-guideUse').hide();
