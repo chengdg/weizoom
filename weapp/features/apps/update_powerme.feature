@@ -12,6 +12,18 @@ Feature:更新微助力活动
 
 Background:
 	Given jobs登录系统
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		},{
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}]
+		"""
 	When jobs添加会员分组
 		"""
 		{
@@ -25,7 +37,7 @@ Background:
 			"create_time": "2015-10-10 10:20:30",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
-			"tags": "未分组",
+			"tags": "分组1",
 			"is_attention_in": "false",
 			"remarks": "",
 			"is_relation_member": "false",
