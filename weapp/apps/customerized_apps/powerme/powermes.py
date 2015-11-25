@@ -77,6 +77,19 @@ class PowerMes(resource.Resource):
 		"""
 		pageinfo, datas = PowerMes.get_datas(request)
 
+		powerme_ids = [str(p.id) for p in datas]
+		all_participances = app_models.PowerMeParticipance.objects(belong_to__in=powerme_ids, has_join=True)
+		powerne_id2info = {}
+		for p in all_participances:
+			if not p.belong_to in powerne_id2info:
+				powerne_id2info[p.belong_to] = {
+					"total_power": p.power,
+					"participant_count": 1
+				}
+			else:
+				powerne_id2info[p.belong_to]["total_power"] += p.power
+				powerne_id2info[p.belong_to]["participant_count"] += 1
+
 		items = []
 		for data in datas:
 			str_id = str(data.id)
@@ -86,7 +99,8 @@ class PowerMes(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'participant_count': app_models.PowerMeParticipance.objects(belong_to=str_id, has_join=True).count(),
+				'participant_count': powerne_id2info[str_id]["participant_count"] if powerne_id2info.get(str_id, None) else 0,
+				'total_power' : powerne_id2info[str_id]["total_power"] if powerne_id2info.get(str_id, None) else 0,
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")

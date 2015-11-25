@@ -80,3 +80,18 @@ class PowerLog(models.Document):
 	meta = {
 		'collection': 'powerme_powered_log'
 	}
+
+class PoweredDetail(models.Document):
+	"""
+	助力详情表
+	"""
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	owner_id = models.LongField()
+	power_member_id = models.LongField() #助力者id
+	power_member_name = models.StringField(default='', max_length=1024) #助力者昵称
+	has_powered = models.BooleanField(default=False) #是否已助力(针对未关注用户)
+	created_at = models.DateTimeField() #创建时间
+
+	meta = {
+		'collection': 'powerme_powered_detail'
+	}

@@ -104,6 +104,7 @@
 				<th>结束时间</th>
 				<th>活动状态</th>
 				<th>参与人数</th>
+				<th>助力值总数</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -135,6 +136,9 @@
 				</td>
 				<td>
 					${item.participant_count}
+				</td>
+				<td>
+					${item.total_power}
 				</td>
 				<td>
 				    <a href="/apps/powerme/powerme_participances/?id=${item.id}" class="ml5" target="_blank">查看</a>

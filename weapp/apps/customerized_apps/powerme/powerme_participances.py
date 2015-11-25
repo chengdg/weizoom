@@ -238,3 +238,27 @@ class PowerMeParticipances_Export(resource.Resource):
 
 		return response.get_response()
 
+class PowerMeParticipancesDetail(resource.Resource):
+	'''
+	助力详情
+	'''
+	app = 'apps/powerme'
+	resource = 'powerme_participance_detail'
+	def get(request):
+		"""
+		响应GET
+		"""
+		member_id = request.GET.get('member_id', None)
+		belong_to = request.GET.get('belong_to', None)
+		if member_id and belong_to:
+			items = app_models.PoweredDetail.objects(belong_to=belong_to, owner_id=int(member_id), has_powered=True)
+			c = RequestContext(request, {
+				'items': items,
+				'errMsg': None
+			})
+		else:
+			c = RequestContext(request, {
+				'items': None,
+				'errMsg': u'member_id或者belong_to不存在'
+			})
+		return render_to_response('powerme/templates/editor/powerme_participance_detail.html', c)

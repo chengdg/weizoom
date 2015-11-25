@@ -87,8 +87,8 @@ class PowerMeParticipance(resource.Resource):
 			else:
 				powered_member_info.update(inc__power=1)
 		except Exception,e:
+			print e
 			response = create_response(500)
-			response.innerErrMsg = e
 		return response.get_response()
 
 	def api_post(request):
