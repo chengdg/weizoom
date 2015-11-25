@@ -117,23 +117,72 @@ Background:
 	And tom1关注jobs的公众号
 	And tom2关注jobs的公众号
 
-	When 微信用户批量参加jobs的微助力活动
-		| member_name | powerme_value | parti_time |  name       |
-		| tom1        |     5         | 3天前      | 微助力活动1 |
-		| bill        |     20        | 昨天       | 微助力活动1 |
-		| tom         |     12        | 今天       | 微助力活动1 |
-		| tom2        |     5         | 今天       | 微助力活动1 |
-		| bill        |     8         | 今天       | 微助力活动2 |
-
+@apps @powerme
 Scenario:1 微助力活动列表参与人数的校验
+	#bill参加'微助力活动1'，助力值2（tom tom1帮助力）
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微助力1'
+	Then bill收到自动回复'微助力1单图文'
+	When bill点击图文"微助力1单图文"进入微助力活动页面
+	When bill把jobs的微助力活动链接分享到朋友圈
+
+	When tom点击bill分享的微助力活动链接进行助力
+	When tom1点击bill分享的微助力活动链接进行助力
+
+	#tom参加'微助力活动1'，助力值1（bill帮助力）
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微助力1'
+	Then tom收到自动回复'微助力1单图文'
+	When tom点击图文"微助力1单图文"进入微助力活动页面
+	When tom把jobs的微助力活动链接分享到朋友圈
+
+	When bill点击tom分享的微助力活动链接进行助力
+
+	#tom2参加通过bill分享的链接参加'微助力活动1'，助力值0
+	When tom2点击bill分享的微助力活动链接进行参与
+	Then tom2获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："微助力1",即可参加活动'
+	When tom2通过识别弹层中的公众号二维码关注jobs的公众号
+	When tom2访问jobs的webapp
+	When tom2在微信中向jobs的公众号发送消息'微助力1'
+	Then tom2收到自动回复'微助力1单图文'
+
+	When tom2把jobs的微助力活动链接分享到朋友圈
+
+	#jobs登录后台校验参与人数
 	Given jobs登录系统
 	Then jobs获得微助力活动列表
 		"""
 		[{
 			"name":"微助力活动2",
-			"participant_count":1
+			"participant_count":0
 		},{
 			"name":"微助力活动1",
-			"participant_count":4
+			"participant_count":3
 		}]
 		"""
+	When jobs查看微助力活动'微助力活动1'
+	Then jobs获得微助力活动'微助力活动1'的结果列表
+		| rank | member_name | powerme_value | parti_time |
+		|  1   | bill        |     2         | 今天       |
+		|  2   | tom         |     1         | 今天       |
+		|  3   | tom2        |     0         | 今天       |
+
+	#取消关注后，会员排名消息，参与人数随之减少
+	When bill取消关注jobs的公众号
+	Given jobs登录系统
+	Then jobs获得微助力活动列表
+		"""
+		[{
+			"name":"微助力活动2",
+			"participant_count":0
+		},{
+			"name":"微助力活动1",
+			"participant_count":2
+		}]
+		"""
+
+	When jobs查看微助力活动'微助力活动1'
+	Then jobs获得微助力活动'微助力活动1'的结果列表
+		| rank | member_name | powerme_value | parti_time |
+		|  1   | tom         |     1         | 今天       |
+		|  2   | tom2        |     0         | 今天       |
