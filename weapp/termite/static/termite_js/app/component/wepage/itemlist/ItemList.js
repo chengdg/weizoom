@@ -48,7 +48,7 @@ W.component.wepage.ItemList = W.component.Component.extend({
                 type: 'radio',
                 displayName: '显示个数',
                 isUserProperty: true,
-                source: [{name:'6', value:'6'},{name:'9', value:'9'},{name:'12', value:'12'}],
+                source: [{name:'6', value:'6'},{name:'9', value:'9'},{name:'12', value:'12'},{name:'全部', value:'-1'}],
                 default: '6'
         }, {
             name: 'card_type',

@@ -230,6 +230,21 @@ def _set_empty_product_list(request, component):
 	else:
 		component['_has_data'] = False
 
+# 根据type，修改商品的显示数量
+def _update_product_display_count_by_type(request, products, component):
+	# 编辑模式下处理
+	if not request.in_design_mode:
+		return products
+
+	component_count = int(component['model']['count'])
+	component_type = int(component['model']['type'])
+	default_display_count = [3, 4, 3, 3]
+	if component_count == -1:
+		count = default_display_count[component_type]
+		count = count if len(products) > count else len(products)
+		products = products[:count]
+
+	return products
 
 def process_item_list_data(request, component):
 	component['_has_data'] = True
@@ -256,13 +271,18 @@ def process_item_list_data(request, component):
 	# product_ids = set([r.product_id for r in mall_models.CategoryHasProduct.objects.filter(category_id=category_id)])
 	# product_ids.sort()
 	# products = [product for product in mall_models.Product.objects.filter(id__in=product_ids) if product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON]
-	products = products[:count]
+	
+	# 当count == -1时显示全部，大于-1时，取相应的product 
+	if count > -1:
+		products = products[:count]
+
 	if len(products) == 0:
 		_set_empty_product_list(request, component)
 
 	else:
 		#webapp_owner_id = products[0].owner_id
 		#mall_models.Product.fill_details(webapp_owner_id, products, {'with_product_model':True})
+		# products = _update_product_display_count_by_type(request, products, component)
 		product_datas = []
 		for product in products:
 			product_datas.append({
