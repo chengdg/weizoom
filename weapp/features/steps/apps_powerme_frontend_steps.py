@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+__author__ = 'kuki'
 
 from behave import *
 from test import bdd_util
@@ -26,13 +27,12 @@ def __get_power_me_rule_name(title):
 def __get_power_me_rule_id(power_me_rule_name):
 	return PowerMe.objects.get(name=power_me_rule_name).id
 
-@When(u'{webapp_user_name}点击图文"{title}"进入微助力活动页面')
-def step_impl(context, webapp_user_name, title):
-	user = User.objects.get(id=context.webapp_owner_id)
-	openid = "%s_%s" % (webapp_user_name, user.username)
-	power_me_rule_name = __get_power_me_rule_name(title)
-	power_me_rule_id = __get_power_me_rule_id(power_me_rule_name)
-	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (context.webapp_owner_id, power_me_rule_id, context.member.token, openid)
+def __get_channel_qrcode_name(power_me_rule_id):
+	return PowerMe.objects.get(id=power_me_rule_id).qrcode['name']
+
+def __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid):
+	#进入微助力活动页面
+	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, power_me_rule_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	print('url!!!!!!!!')
 	print(url)
@@ -52,6 +52,16 @@ def step_impl(context, webapp_user_name, title):
 			print('[info] not redirect')
 	else:
 		print('[info] not redirect')
+	return response
+
+@When(u'{webapp_user_name}点击图文"{title}"进入微助力活动页面')
+def step_impl(context, webapp_user_name, title):
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	power_me_rule_name = __get_power_me_rule_name(title)
+	power_me_rule_id = __get_power_me_rule_id(power_me_rule_name)
+	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 	context.powerme_result = response.context
 
 @then(u"{webapp_user_name}获得{webapp_owner_name}的'{power_me_rule_name}'的内容")
@@ -158,26 +168,7 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	power_me_rule_id = context.powerme_result['record_id']
-	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, power_me_rule_id, context.member.token, openid)
-	url = bdd_util.nginx(url)
-	print('url!!!!!!!!')
-	print(url)
-	context.link_url = url
-	response = context.client.get(url)
-	if response.status_code == 302:
-		print('[info] redirect by change fmt in shared_url')
-		redirect_url = bdd_util.nginx(response['Location'])
-		context.last_url = redirect_url
-		response = context.client.get(bdd_util.nginx(redirect_url))
-		if response.status_code == 302:
-			print('[info] redirect by change fmt in shared_url')
-			redirect_url = bdd_util.nginx(response['Location'])
-			context.last_url = redirect_url
-			response = context.client.get(bdd_util.nginx(redirect_url))
-		else:
-			print('[info] not redirect')
-	else:
-		print('[info] not redirect')
+	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 
 	params = {
 		'webapp_owner_id': webapp_owner_id,
@@ -187,3 +178,28 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=put', params)
 	print('response!!!!!!!!!!!')
 	print(response)
+
+@when(u"{webapp_user_name}通过识别弹层中的公众号二维码关注{mp_user_name}的公众号")
+def step_tmpl(context, webapp_user_name, mp_user_name):
+	context.execute_steps(u"when %s关注%s的公众号" % (webapp_user_name, mp_user_name))
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	member = member_api.get_member_by_openid(openid, context.webapp_id)
+	# 因没有可用的API处理Member相关的source字段, 暂时直接操作Member对象
+	Member.objects.filter(id=member.id).update(source=SOURCE_MEMBER_QRCODE)
+
+@when(u"{webapp_user_name}通过识别弹层中的带参数二维码关注{mp_user_name}的公众号")
+def step_tmpl(context, webapp_user_name, mp_user_name):
+	power_me_rule_id = context.powerme_result['record_id']
+	channel_qrcode_name = __get_channel_qrcode_name(power_me_rule_id)
+	context.execute_steps(u'when %s扫描带参数二维码"%s"' % (webapp_user_name, channel_qrcode_name))
+
+@when(u"{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接")
+def step_tmpl(context, webapp_user_name, shared_webapp_user_name):
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	power_me_rule_id = context.powerme_result['record_id']
+	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
+	context.powerme_result = response.context
