@@ -558,7 +558,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         productCounts = productCounts.join('_');
         productModelNames = productModelNames.join('$')
         var url = './?woid='+W.webappOwnerId+'&module=mall&model=shopping_cart_order&action=edit&product_ids='+productIds+'&product_counts='+productCounts+'&product_model_names='+productModelNames;
-        window.location.href = url;
+        checkShipInfosBeforeBuy(url);
     }
 });
 

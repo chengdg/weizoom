@@ -134,10 +134,11 @@ def select_address(request):
 	return request_api_util.select_address(request)
 
 ########################################################################
-# list_address: localStorage获取地址信息
+# init_sessionstorage: 初始化微信的sessionStorage
+# 目前使用: 1.收货地址信息
 ########################################################################
-def list_address(request):
-	return request_api_util.list_address(request)
+def init_sessionstorage(request):
+	return request_api_util.init_sessionstorage(request)
 
 ########################################################################
 # delete_address: 删除收获地址

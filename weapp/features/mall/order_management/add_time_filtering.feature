@@ -128,15 +128,6 @@ Background:
 		}]
 		"""
 	And bill关注jobs的公众号
-	And bill设置jobs的webapp的收货地址
-		"""
-		{
-			"ship_name": "bill",
-			"ship_tel": "13811223344",
-			"area": "北京市,北京市,海淀区",
-			"ship_address": "泰兴大厦"
-		}
-		"""
 	Given jobs登录系统
 	And jobs已有的会员
 		"""
