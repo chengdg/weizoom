@@ -118,7 +118,7 @@ Background:
 	And tom2关注jobs的公众号
 
 @apps @powerme
-Scenario:1 微助力活动列表参与人数
+Scenario:1 微助力活动列表参与人数的校验
 	#bill参加'微助力活动1'，助力值2（tom tom1帮助力）
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
