@@ -60,7 +60,6 @@ class ProductsCategories(api_resource.ApiResource):
 		#product_categories = webapp_cache.get_webapp_product_categories(user_profile, is_access_weizoom_mall)
 		# func = webapp_cache.get_webapp_products_from_db(user_profile, is_access_weizoom_mall)
 		categories = webapp_cache.get_webapp_categories_from_cache(user_profile)
-		print "zl------------------",categories
 		# data = func()
 		# return data['value']['categories']
 		return  categories

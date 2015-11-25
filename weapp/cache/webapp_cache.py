@@ -294,6 +294,9 @@ def update_webapp_product_cache(**kwargs):
                     request = urllib2.Request(url)
                     request.get_method = lambda: 'PURGE'
                     urllib2.urlopen(request)
+        elif instance and sender==mall_models.ProductCategory:
+            categories_key = '{wo:%s}_categories' % (webapp_owner_id)
+            cache_util.delete_cache(categories_key)
 
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
@@ -310,6 +313,8 @@ def update_webapp_category_cache(**kwargs):
             category_id = id
             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,id)
             cache_util.delete_redis_key(categories_products_key)
+            categories_key = '{wo:%s}_categories' % (webapp_owner_id)
+            cache_util.delete_cache(categories_key)
         elif instance and sender==mall_models.CategoryHasProduct:
             # 删除商品分类中的商品
             if isinstance(instance, mall_models.CategoryHasProduct):
@@ -336,6 +341,8 @@ signals.post_save.connect(
 
 signals.post_save.connect(update_webapp_product_cache,
                           sender=mall_models.ProductCategory, dispatch_uid="product_category.save")
+post_update_signal.connect(
+    update_webapp_product_cache, sender=mall_models.ProductCategory, dispatch_uid="product_category.update")
 signals.post_save.connect(update_webapp_product_cache,
                           sender=mall_models.CategoryHasProduct, dispatch_uid="category_has_product.save")
 post_delete_signal.connect(
