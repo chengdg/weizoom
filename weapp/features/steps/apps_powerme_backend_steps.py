@@ -156,6 +156,13 @@ def __get_powermePageJson(args):
 		}
 	return json.dumps(__page_temple)
 
+def __bool2Bool(bo):
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
 
 def __date_delta(start,end):
 	"""
@@ -192,7 +199,11 @@ def Create_PowerMe(context,text,user):
 
 	valid_time = "%s~%s"%(start_time,end_time)
 
-	timing_status = text.get("is_show_countdown","")
+	timing_status = __bool2Bool(text.get("is_show_countdown",""))
+	# __debug_print(timing_status)
+
+	# timing_status = None
+
 	timing_value_day = __date_delta(start_date,end_date)
 
 	description = text.get("desc","")
