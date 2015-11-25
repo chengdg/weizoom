@@ -114,6 +114,7 @@ def step_tmpl(context, webapp_user_name, power_me_rule_name):
 @When(u'{webapp_user_name}把{webapp_owner_name}的微助力活动链接分享到朋友圈')
 def step_impl(context, webapp_user_name, webapp_owner_name):
 	context.shared_url = context.link_url
+	print('context.shared_url:',context.shared_url)
 	params = {
 		'webapp_owner_id': context.webapp_owner_id,
 		'id': context.powerme_result['record_id'],
@@ -149,3 +150,40 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 @then(u"{webapp_user_name}获得弹层提示信息'{text}'")
 def step_tmpl(context, webapp_user_name, text):
 	pass
+
+@When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接进行助力')
+def step_impl(context, webapp_user_name, shared_webapp_user_name):
+	# 要先进入微助力活动页面创建participance记录
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	power_me_rule_id = context.powerme_result['record_id']
+	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, power_me_rule_id, context.member.token, openid)
+	url = bdd_util.nginx(url)
+	print('url!!!!!!!!')
+	print(url)
+	context.link_url = url
+	response = context.client.get(url)
+	if response.status_code == 302:
+		print('[info] redirect by change fmt in shared_url')
+		redirect_url = bdd_util.nginx(response['Location'])
+		context.last_url = redirect_url
+		response = context.client.get(bdd_util.nginx(redirect_url))
+		if response.status_code == 302:
+			print('[info] redirect by change fmt in shared_url')
+			redirect_url = bdd_util.nginx(response['Location'])
+			context.last_url = redirect_url
+			response = context.client.get(bdd_util.nginx(redirect_url))
+		else:
+			print('[info] not redirect')
+	else:
+		print('[info] not redirect')
+
+	params = {
+		'webapp_owner_id': webapp_owner_id,
+		'id': power_me_rule_id,
+		'fid': context.powerme_result['page_owner_member_id']
+	}
+	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=put', params)
+	print('response!!!!!!!!!!!')
+	print(response)

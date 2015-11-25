@@ -117,7 +117,7 @@ Background:
 		}]
 		"""
 
-@apps @powerme @frontend @kuki1
+@apps @powerme @frontend @kuki
 Scenario:1 用户重复参与微助力活动
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -172,7 +172,7 @@ Scenario:1 用户重复参与微助力活动
 	When bill点击tom分享的微助力活动链接进行参与
 	Then bill获得弹层提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
 
-@apps @powerme @frontend 
+@apps @powerme @frontend @kuki
 Scenario:2 会员帮助会员好友助力
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -227,7 +227,7 @@ Scenario:2 会员帮助会员好友助力
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-@apps @powerme @frontend
+@apps @powerme @frontend @kuki3
 Scenario:3 非会员帮助会员好友助力
 	#bill参加'微助力活动1',无识别二维码
 	#tom取消关注后帮bill助力,弹层中显示公众号的二维码
