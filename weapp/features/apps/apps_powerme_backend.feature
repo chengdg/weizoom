@@ -15,9 +15,26 @@ Feature: 新建微助力
 		10.【活动规则】：非必填项，不超过500个字符
 
 	"""
+
 Background:
 	Given jobs登录系统
-  	And jobs添加会员分组
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+	And jobs添加会员分组
 		"""
 		{
 			"tag_id_1": "分组1"
@@ -30,7 +47,7 @@ Background:
 			"create_time": "2015-10-10 10:20:30",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
-			"tags": "未分组",
+			"tags": "分组1",
 			"is_attention_in": "false",
 			"remarks": "",
 			"is_relation_member": "false",
@@ -38,6 +55,7 @@ Background:
 			"scan_code_reply": "感谢您的的参与，为好友助力成功！"
 		}]
 		"""
+
 @apps @apps_powerme @apps_powerme_backend
 Scenario:1 新建微助力，用户识别二维码为空
 	Given jobs登录系统
