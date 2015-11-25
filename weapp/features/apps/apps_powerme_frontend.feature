@@ -117,7 +117,7 @@ Background:
 		}]
 		"""
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:1 用户重复参与微助力活动
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -172,7 +172,7 @@ Scenario:1 用户重复参与微助力活动
 	When bill点击tom分享的微助力活动链接进行参与
 	Then bill获得弹层提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:2 会员帮助会员好友助力
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -227,7 +227,7 @@ Scenario:2 会员帮助会员好友助力
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:3 非会员帮助会员好友助力
 	#bill参加'微助力活动1',无识别二维码
 	#tom取消关注后帮bill助力,弹层中显示公众号的二维码
@@ -289,7 +289,7 @@ Scenario:3 非会员帮助会员好友助力
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:4 连续帮助会员好友助力
 	#bill参加'微助力活动2',有识别二维码
 	#tom取消关注后（已非会员身份）帮bill助力,点击'帮bill助力'按钮,弹层中显示带参数二维码
@@ -352,7 +352,7 @@ Scenario:4 连续帮助会员好友助力
 	When tom点击bill分享的微助力活动链接进行助力
 	Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助力
 	#会员bill分享微助力活动链接
 	#会员tom帮bill助力
@@ -437,7 +437,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	When tom点击bill分享的微助力活动链接进行助力
 	Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维码）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -493,7 +493,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 		|  1   | bill |   0   |
 		|  2   | tom  |   0   |
 
-@apps @powerme @frontend @kuki
+@apps @powerme @apps_powerme_frontend
 Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维码）
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
@@ -604,7 +604,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-@apps @powerme @frontend @kuki8
+@apps @powerme @apps_powerme_frontend
 Scenario:8 会员B分享会员A的微助力活动链接
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -612,16 +612,22 @@ Scenario:8 会员B分享会员A的微助力活动链接
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+
 	#tom点击bill分享的链接助力后并分享bill的活动页到朋友圈
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的微助力活动链接进行助力
-	When tom把jobs的微助力活动链接分享到朋友圈
+	When tom把bill的微助力活动链接分享到朋友圈
 	#tom2点击tom分享的bill的活动页，帮bill进行助力
 	When tom2关注jobs的公众号
 	When tom2访问jobs的webapp
 	When tom2点击tom分享的微助力活动链接进行助力
-	Then tom2获得jobs的'微助力活动1'的内容
+
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微助力1'
+	Then bill收到自动回复'微助力1单图文'
+	When bill点击图文"微助力1单图文"进入微助力活动页面
+	Then bill获得jobs的'微助力活动1'的内容
 		"""
 		[{
 			"name": "微助力活动1",
@@ -630,21 +636,21 @@ Scenario:8 会员B分享会员A的微助力活动链接
 			"background_pic": "2.jpg",
 			"background_color": "冬日暖阳",
 			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式",
-			"my_rank": "无",
-			"my_power_score": "0",
+			"my_rank": "1",
+			"my_power_score": "2",
 			"total_participant_count": "1"
 		}]
 		"""
-	Then tom2获得"微助力活动1"的助力值排名
+	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   2   |
 
-@apps @powerme @frontend
+@apps @powerme @apps_powerme_frontend
 Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 	When jobs新建微助力活动
 		"""
 		[{
-			"name":"未开始微助力活动",
+			"name":"未开始微助力",
 			"start_date":"明天",
 			"end_date":"3天后",
 			"is_show_countdown":"true",
@@ -656,7 +662,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 			"background_color":"冬日暖阳",
 			"rules":"获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
 		},{
-			"name":"已结束微助力活动",
+			"name":"已结束微助力",
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"is_show_countdown":"false",
@@ -672,45 +678,45 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 	When jobs已添加单图文
 		"""
 		[{
-			"title":"微助力1单图文",
+			"title":"微助力3单图文",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
-			"summary":"单条图文1文本摘要",
-			"content":"单条图文1文本内容",
+			"summary":"单条图文3文本摘要",
+			"content":"单条图文3文本内容",
 			"jump_url":"微助力-未开始微助力"
 		},{
-			"title":"微助力2单图文",
+			"title":"微助力4单图文",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
 			"cover_in_the_text":"true",
-			"summary":"单条图文2文本摘要",
-			"content":"单条图文2文本内容",
+			"summary":"单条图文4文本摘要",
+			"content":"单条图文4文本内容",
 			"jump_url":"微助力-已结束微助力"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则
 		"""
 		[{
-			"rules_name":"规则1",
+			"rules_name":"规则3",
 			"keyword": [{
 					"keyword": "未开始微助力",
 					"type": "equal"
 				}],
 			"keyword_reply": [{
-					"reply_content":"微助力1单图文",
+					"reply_content":"微助力3单图文",
 					"reply_type":"text_picture"
 				}]
 		},{
-			"rules_name":"规则2",
+			"rules_name":"规则4",
 			"keyword": [{
 					"keyword": "已结束微助力",
 					"type": "equal"
 				}],
 			"keyword_reply": [{
-					"reply_content":"微助力2单图文",
+					"reply_content":"微助力4单图文",
 					"reply_type":"text_picture"
 				}]
 		}]
@@ -720,12 +726,12 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 		When bill关注jobs的公众号
 		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'未开始微助力'
-		Then bill收到自动回复'微助力1单图文'
-		When bill点击图文"微助力1单图文"进入微助力活动页面
-		Then bill获得jobs的'未开始微助力活动'的内容
+		Then bill收到自动回复'微助力3单图文'
+		When bill点击图文"微助力3单图文"进入微助力活动页面
+		Then bill获得jobs的'未开始微助力'的内容
 			"""
 			[{
-				"name": "未开始微助力活动",
+				"name": "未开始微助力",
 				"is_show_countdown": "true",
 				"desc": "微助力活动描述",
 				"background_pic": "2.jpg",
@@ -736,21 +742,21 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 				"total_participant_count": "0"
 			}]
 			"""
-		Then bill获得"未开始微助力活动"的助力值排名
+		Then bill获得"未开始微助力"的助力值排名
 			"""
 			[]
 			"""
-		And bill获得提示信息'活动尚未开始,敬请期待'
+		Then bill获得提示信息'活动尚未开始,敬请期待'
 	#tom参加已结束微助力活动
 		When tom关注jobs的公众号
 		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'已结束微助力'
-		Then tom收到自动回复'微助力2单图文'
-		When tom点击图文"微助力2单图文"进入微助力活动页面
-		Then tom获得jobs的'已结束微助力活动'的内容
+		Then tom收到自动回复'微助力4单图文'
+		When tom点击图文"微助力4单图文"进入微助力活动页面
+		Then tom获得jobs的'已结束微助力'的内容
 			"""
 			[{
-				"name": "已结束微助力活动",
+				"name": "已结束微助力",
 				"is_show_countdown": "false",
 				"desc": "微助力活动描述",
 				"background_pic":"4.jpg",
@@ -761,8 +767,8 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 				"total_participant_count": "0"
 			}]
 			"""
-		Then tom获得"已结束微助力活动"的助力值排名
+		Then tom获得"已结束微助力"的助力值排名
 			"""
 			[]
 			"""
-		And tom获得提示信息'活动已结束'
+		Then tom获得提示信息'活动已结束'
