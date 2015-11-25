@@ -561,7 +561,7 @@ def __init_red_envelope_app():
 def before_all(context):
 	__clear_all_account_data()
 	__binding_wexin_mp_account()
-	__sync_workspace()
+	
 	__create_weapp_product()
 	__create_system_user('jobs')
 	__create_system_user('nokia')
@@ -582,6 +582,7 @@ def before_all(context):
 	__update_template_to_v3()
 	__init_red_envelope_app()
 
+	__sync_workspace()
 	# member_A = __create_system_member(u'A',user_guo)
 	# member_B = __create_system_member(u'B',user_guo)
 	# member_C = __create_system_member(u'C',user_guo)
