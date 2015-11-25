@@ -1,7 +1,7 @@
 #_author_:张三香 2015.11.23
 
 Feature:微助力活动列表
-"""
+	"""
 	说明：
 		1 微助力活动列表的"查询":
 			【活动名称】：支持模糊查询
@@ -9,7 +9,7 @@ Feature:微助力活动列表
 			【活动时间】：开始时间和结束时间允许为空
 
 		2 微助力活动列表的"分页"，每10条记录一页
-"""
+	"""
 Background:
 	Given jobs登录系统
 	When jobs添加会员等级
@@ -100,21 +100,21 @@ Scenario:1 微助力活动列表查询
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动2",
 			"start_date":"明天",
 			"end_date":"3天后",
 			"status":"未开始",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动1",
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		}]
 		"""
@@ -232,6 +232,7 @@ Scenario:1 微助力活动列表查询
 					"end_date":"3天后"
 				}]
 				"""
+
 		#开始时间为空，结束时间非空
 			When jobs设置微助力活动列表查询条件
 				"""
@@ -248,6 +249,7 @@ Scenario:1 微助力活动列表查询
 					"end_date":"昨天"
 				}]
 				"""
+
 		#开始时间与结束时间相等
 			When jobs设置微助力活动列表查询条件
 				"""
@@ -260,6 +262,42 @@ Scenario:1 微助力活动列表查询
 				"""
 				[]
 				"""
+
+		#开始时间和结束时间不相等
+			When jobs设置微助力活动列表查询条件
+				"""
+				{
+					"stare_date":"3天前",
+					"end_date":"明天"
+				}
+				"""
+			Then jobs获得微助力活动列表
+				"""
+				[{
+					"name":"微助力活动1",
+					"start_date":"3天前",
+					"end_date":"昨天"
+				}]
+				"""
+
+	#组合条件查询
+		When jobs设置微助力活动列表查询条件
+			"""
+			{
+				"name":"微助力活动2",
+				"status":"未开始",
+				"stare_date":"明天",
+				"end_date":"3天后"
+			}
+			"""
+		Then jobs获得微助力活动列表
+			"""
+			[{
+				"name":"微助力活动2",
+				"start_date":"明天",
+				"end_date":"3天后"
+			}]
+			"""
 
 @apps @apps_powerme @apps_powerme_backend
 Scenario:2 微助力活动列表分页
@@ -280,7 +318,7 @@ Scenario:2 微助力活动列表分页
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		}]
 		"""
@@ -292,7 +330,7 @@ Scenario:2 微助力活动列表分页
 			"start_date":"明天",
 			"end_date":"3天后",
 			"status":"未开始",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		}]
 		"""
@@ -304,7 +342,7 @@ Scenario:2 微助力活动列表分页
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		}]
 		"""
@@ -316,7 +354,7 @@ Scenario:2 微助力活动列表分页
 			"start_date":"明天",
 			"end_date":"3天后",
 			"status":"未开始",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		}]
 		"""
