@@ -565,7 +565,6 @@ def before_all(context):
 		__sync_workspace()
 	except:
 		pass
-	
 	__create_weapp_product()
 	__create_system_user('jobs')
 	__create_system_user('nokia')
