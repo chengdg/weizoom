@@ -128,21 +128,21 @@ Scenario:1 编辑'未开始'的微助力活动
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动02",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动1",
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		}]
 		"""
@@ -174,21 +174,21 @@ Scenario:3 关闭'未开始'或'进行中'的微助力活动
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"进行中",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动2",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		},{
 			"name":"微助力活动1",
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		}]
 		"""
@@ -201,21 +201,21 @@ Scenario:3 关闭'未开始'或'进行中'的微助力活动
 			"start_date":"今天",
 			"end_date":"3天后",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		},{
 			"name":"微助力活动2",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		},{
 			"name":"微助力活动1",
 			"start_date":"3天前",
 			"end_date":"昨天",
 			"status":"已结束",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		}]
 		"""
