@@ -192,7 +192,7 @@ def Create_PowerMe(context,text,user):
 
 	valid_time = "%s~%s"%(start_time,end_time)
 
-	timing_status = text.get("is_show_countdown","true")
+	timing_status = text.get("is_show_countdown","")
 	timing_value_day = __date_delta(start_date,end_date)
 
 	description = text.get("desc","")
