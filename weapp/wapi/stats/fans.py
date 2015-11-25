@@ -40,7 +40,14 @@ class Fans(api_resource.ApiResource):
 		#关注会员
 		subscribed_member_count = stats_util.get_subscribed_member_count(webapp_id)
 		#直接关注会员
-		self_follow_member_count = stats_util.get_self_follow_member_count(webapp_id, '2014-01-01 00:00:00', today)
+		self_follow_sources = (-1, 0)  #主动关注的来源代码
+		self_follow_member_count = member_models.Member.objects.filter(
+									webapp_id=webapp_id,
+									is_subscribed=True, 
+									is_for_test=False, 
+									source__in = self_follow_sources, 
+									status__in = (member_models.CANCEL_SUBSCRIBED, member_models.SUBSCRIBED)
+								).count()
 		#推荐关注
 		recommend_member_count = subscribed_member_count - self_follow_member_count
 
