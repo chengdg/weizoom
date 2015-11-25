@@ -68,7 +68,12 @@ def get_products_by_category_id(request):
 	count = int(request.GET.get('count', 5))
 
 	product_ids = [r.product_id for r in CategoryHasProduct.objects.filter(category_id=category_id)]
-	products = Product.objects.filter(id__in=product_ids, is_deleted=False, shelve_type=PRODUCT_SHELVE_TYPE_ON).order_by('-display_index')[:count]
+	products = Product.objects.filter(id__in=product_ids, is_deleted=False, shelve_type=PRODUCT_SHELVE_TYPE_ON).order_by('-display_index')
+
+	# count为-1时取全部商品
+	if count > -1:
+		products = products[:count]
+
 	Product.fill_display_price(products)
 	data = []
 	workspace_id = 0
