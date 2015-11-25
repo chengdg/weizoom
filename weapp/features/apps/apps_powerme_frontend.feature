@@ -352,7 +352,7 @@ Scenario:4 连续帮助会员好友助力
 	When tom点击bill分享的微助力活动链接进行助力
 	Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
-@apps @powerme @frontend
+@apps @powerme @frontend @kuki
 Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助力
 	#会员bill分享微助力活动链接
 	#会员tom帮bill助力
@@ -435,9 +435,9 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 
 	#取消关注后，不能再帮bill助力
 	When tom点击bill分享的微助力活动链接进行助力
-	Then tom获得提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
+	Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
-@apps @powerme @frontend
+@apps @powerme @frontend @kuki
 Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维码）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -493,7 +493,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 		|  1   | bill |   0   |
 		|  2   | tom  |   0   |
 
-@apps @powerme @frontend
+@apps @powerme @frontend @kuki
 Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维码）
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
@@ -560,7 +560,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 		| rank | name | value |
 		|  1   | bill |   1   |
 	When tom把jobs的微助力活动链接分享到朋友圈
-	When tom点击图文"微助力1单图文"进入微助力活动页面
+	When tom点击图文"微助力2单图文"进入微助力活动页面
 	Then tom获得jobs的'微助力活动2'的内容
 		"""
 		[{
@@ -575,14 +575,13 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 			"total_participant_count": "2"
 		}]
 		"""
-	Then tom获得"微助力活动1"的助力值排名
+	Then tom获得"微助力活动2"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
 		|  2   | tom  |   0   |
 
 	#取消关注后,tom的排名消失，tom帮好友的助力值不消失
 	When tom取消关注jobs的公众号
-
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力2'
 	Then bill收到自动回复'微助力2单图文'
@@ -605,7 +604,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-@apps @powerme @frontend
+@apps @powerme @frontend @kuki8
 Scenario:8 会员B分享会员A的微助力活动链接
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
