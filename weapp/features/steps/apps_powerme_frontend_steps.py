@@ -81,7 +81,7 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 	actual = []
 	actual.append({
 		"name": result['page_title'],
-		"is_show_countdown": 'true' if result['timing'] else 'false',
+		"is_show_countdown": page_component['timing']['timing']['select'],
 		"desc": page_component['description'],
 		"background_pic": page_component['background_image'],
 		"background_color": color2name[page_component['color']],
@@ -121,8 +121,8 @@ def step_tmpl(context, webapp_user_name, power_me_rule_name):
 
 	bdd_util.assert_list(expected, actual)
 
-@When(u'{webapp_user_name}把{webapp_owner_name}的微助力活动链接分享到朋友圈')
-def step_impl(context, webapp_user_name, webapp_owner_name):
+@When(u'{webapp_user_name}把{powerme_owner_name}的微助力活动链接分享到朋友圈')
+def step_impl(context, webapp_user_name, powerme_owner_name):
 	context.shared_url = context.link_url
 	print('context.shared_url:',context.shared_url)
 	params = {
@@ -158,6 +158,10 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 		context.last_url = context.shared_url
 
 @then(u"{webapp_user_name}获得弹层提示信息'{text}'")
+def step_tmpl(context, webapp_user_name, text):
+	pass
+
+@then(u"{webapp_user_name}获得提示信息'{text}'")
 def step_tmpl(context, webapp_user_name, text):
 	pass
 
