@@ -399,7 +399,7 @@ $(document).ready(function() {
                             $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
                         }else{
                             $product.find('.xui-understock').hide();
-                            $check.removeClass('xui-disabled-radio').addClass('xui-checkCart');
+                            $check.removeClass('xui-disabled-radio');
                         }
                         $product.find('.xui-understock').html(understock_msg);
                         $(this).data('view').setMaxCount(maxCount);
