@@ -558,7 +558,6 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 	When jobs编辑签到活动,并且保存
 		"""
 		{
-			"status": "on",
 			"name": "签到活动2",
 			"sign_describe": "签到赚积分！连续签到奖励更丰富哦！",
 			"share_pic": "2.jpg",
@@ -577,6 +576,13 @@ Scenario:9 对签到活动内容进行修改，会员访问活动页面
 				}]
 		}
 		"""
+	When jobs更新签到活动的状态
+			"""
+			{
+				"name": "签到活动2",
+				"status": "on"
+			}
+			"""
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有2会员积分

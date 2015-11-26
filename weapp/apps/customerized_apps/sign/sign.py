@@ -113,9 +113,9 @@ class Sign(resource.Resource):
 				sign = sign[0]
 				app_models.SignParticipance.objects(belong_to=str(sign.id)).update(set__serial_count=0)
 				app_models.SignControl.objects.all().delete()
-			# response = create_response(200)
-			# return response.get_response()
-		if request.POST.get('related_page_id', 0):
+			response = create_response(200)
+			return response.get_response()
+		else:
 			data = export.get_sing_fields_to_save(request)
 			update_data = {}
 			update_fields = set(['name', 'share', 'reply', 'prize_settings'])

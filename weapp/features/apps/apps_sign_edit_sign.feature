@@ -112,7 +112,6 @@ Scenario:1 对签到活动内容进行修改，会员访问活动页面
 		When jobs编辑签到活动,并且保存
 			"""
 			{
-				"status": "off",
 				"name": "签到活动3",
 				"sign_describe": "3签到赚积分！连续签到奖励更丰富哦！",
 				"share_pic": "2.jpg",
