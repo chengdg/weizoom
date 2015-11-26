@@ -200,9 +200,6 @@ def Create_PowerMe(context,text,user):
 	valid_time = "%s~%s"%(start_time,end_time)
 
 	timing_status = __bool2Bool(text.get("is_show_countdown",""))
-	# __debug_print(timing_status)
-
-	# timing_status = None
 
 	timing_value_day = __date_delta(start_date,end_date)
 
@@ -274,7 +271,7 @@ def Create_PowerMe(context,text,user):
 		"name":title,
 		"start_time":start_time,
 		"end_time":end_time,
-		"timing[timing][select]":timing_status,
+		"timing":timing_status,
 		"reply_content":reply_content,
 		"material_image":material_image,
 		"qrcode":json.dumps(qrcode),
