@@ -93,7 +93,7 @@ Scenario:1 编辑'未开始'的微助力活动
 		"""
 		[{
 			"name":"微助力活动02",
-			"start_date":"今",
+			"start_date":"今天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"desc":"微助力活动描述02",
@@ -109,7 +109,7 @@ Scenario:1 编辑'未开始'的微助力活动
 		"""
 		[{
 			"name":"微助力活动02",
-			"start_date":"今",
+			"start_date":"今天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"desc":"微助力活动描述02",
@@ -155,10 +155,18 @@ Scenario:2 删除'已结束'的微助力活动
 		"""
 		[{
 			"name":"微助力活动3",
-			"status":"进行中"
+			"start_date":"今天",
+			"end_date":"3天后",
+			"status":"进行中",
+			"participant_count":0,
+			"actions":  ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动2",
-			"status":"未开始"
+			"start_date":"明天",
+			"end_date":"3天后",
+			"status":"未开始",
+			"participant_count":0,
+			"actions":  ["查看","预览","复制链接","关闭"]
 		}]
 		"""
 
