@@ -170,6 +170,7 @@ Scenario:1 用户重复参与微助力活动
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	When tom把jobs的微助力活动链接分享到朋友圈
 
+	When 清空浏览器
 	When bill点击tom分享的微助力活动链接
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
