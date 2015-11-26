@@ -169,8 +169,30 @@ Scenario:1 用户重复参与微助力活动
 	Then tom收到自动回复'微助力1单图文'
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	When tom把jobs的微助力活动链接分享到朋友圈
+
+	When 清空浏览器
+	When bill点击tom分享的微助力活动链接
+	Then bill获得jobs的'微助力活动1'的内容
+		"""
+		[{
+			"name": "微助力活动1",
+			"is_show_countdown": "true",
+			"desc": "微助力活动描述",
+			"background_pic": "2.jpg",
+			"background_color": "冬日暖阳",
+			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式",
+			"my_rank": "1",
+			"my_power_score": "0",
+			"total_participant_count": "2"
+		}]
+		"""
+	Then bill获得"微助力活动1"的助力值排名
+		| rank | name | value |
+		|  1   | bill |   0   |
+		|  2   | tom  |   0   |
+
 	When bill点击tom分享的微助力活动链接进行参与
-	Then bill获得弹层提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
+	#Then bill获得弹层提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
 
 @apps @powerme @apps_powerme_frontend
 Scenario:2 会员帮助会员好友助力
@@ -264,7 +286,7 @@ Scenario:3 非会员帮助会员好友助力
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
 	When tom点击bill分享的微助力活动链接进行助力
-	Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友助力值+1<br />3.回复："微助力1",即可参加活动'
+	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友助力值+1<br />3.回复："微助力1",即可参加活动'
 	When tom通过识别弹层中的公众号二维码关注jobs的公众号
 	#关注成功后，助力成功即bill助力值加1
 	When bill访问jobs的webapp
@@ -327,7 +349,7 @@ Scenario:4 连续帮助会员好友助力
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
 	When tom点击bill分享的微助力活动链接进行助力
-	Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友助力值+1<br />3.回复："微助力2",即可参加活动'
+	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友助力值+1<br />3.回复："微助力2",即可参加活动'
 	When tom通过识别弹层中的带参数二维码关注jobs的公众号
 	#tom关注成功后，助力成功即bill助力值加1
 	When tom点击bill分享的微助力活动链接
@@ -350,7 +372,7 @@ Scenario:4 连续帮助会员好友助力
 		|  1   | bill |   1   |
 	#tom重复帮助好友bill助力
 	When tom点击bill分享的微助力活动链接进行助力
-	Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
+	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
 @apps @powerme @apps_powerme_frontend
 Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助力
@@ -435,7 +457,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 
 	#取消关注后，不能再帮bill助力
 	When tom点击bill分享的微助力活动链接进行助力
-	Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
+	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
 @apps @powerme @apps_powerme_frontend
 Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维码）
@@ -449,7 +471,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的微助力活动链接进行参与
-	Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："微助力1",即可参加活动'
+	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："微助力1",即可参加活动'
 	When tom通过识别弹层中的公众号二维码关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
@@ -536,7 +558,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	When tom取消关注jobs的公众号
 	#取消关注后tom通过bill的分享链接进行参与（页面按钮:'已帮bill助力','我要参与'）
 	When tom点击bill分享的微助力活动链接进行参与
-	Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："微助力2",即可参加活动'
+	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："微助力2",即可参加活动'
 	When tom通过识别弹层中的带参数二维码关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力2'
@@ -746,7 +768,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 			"""
 			[]
 			"""
-		Then bill获得提示信息'活动尚未开始,敬请期待'
+		#Then bill获得按钮提示信息'活动尚未开始,敬请期待'
 	#tom参加已结束微助力活动
 		When tom关注jobs的公众号
 		When tom访问jobs的webapp
@@ -771,4 +793,4 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 			"""
 			[]
 			"""
-		Then tom获得提示信息'活动已结束'
+		#Then tom获得按钮提示信息'活动已结束'
