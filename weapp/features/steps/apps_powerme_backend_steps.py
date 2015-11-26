@@ -404,6 +404,19 @@ def __Update_PowerMe(context,text,page_id,powerme_id):
 	update_powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	update_powerme_response = context.client.post(update_powerme_url,update_powerme_args)
 
+
+def __Delete_PowerMe(context,powerme_id):
+	design_mode = 0
+	version = 1
+	del_powerme_url = "/apps/powerme/api/powerme/?design_mode={}&version={}".format(design_mode,version)
+	del_args ={
+		"id":powerme_id,
+		"_method":'delete'
+	}
+	del_powerme_response = context.client.post(del_powerme_url,del_args)
+	return del_powerme_response
+
+
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
 	text_list = json.loads(context.text)
@@ -423,17 +436,17 @@ def step_impl(context,user):
 	text_list = []
 	for item in text:
 		tmp = {
-		"name":item['name'],
-		"status":item['status'],
-		"start_time":__date2time(item['start_date']),
-		"end_time":__date2time(item['end_date']),
-		"participant_count":item['participant_count']
+			"name":item['name'],
+			"status":item['status'],
+			"start_time":__date2time(item['start_date']),
+			"end_time":__date2time(item['end_date']),
+			"participant_count":item['participant_count']
 		}
 		text_list.append(tmp)
 
 	rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_powerme_response = context.client.get(rec_powerme_url)
-	rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items'][::-1]
+	rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items']#[::-1]
 
 	rec_list = []
 	for item in rec_powerme_list:
@@ -525,3 +538,10 @@ def step_impl(context,user,powerme_name):
 	}
 
 	bdd_util.assert_dict(db_powerme_dic, fe_powerme_dic)
+
+@when(u"{user}删除微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	del_response = __Delete_PowerMe(context,powerme_id)
+	bdd_util.assert_api_call_success(del_response)
+
