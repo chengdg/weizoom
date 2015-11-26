@@ -13,6 +13,7 @@ from utils import url_helper
 import datetime as dt
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings
 from weixin.message.material import models as material_models
+from apps.customerized_apps.powerme import models as powerme_models
 import termite.pagestore as pagestore_manager
 import json
 
@@ -181,12 +182,53 @@ def __date2time(date_str):
 	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
 	return p_time
 
+def __datetime2str(dt_time):
+	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
+	return dt_time
 
-def Create_PowerMe(context,text,user):
+def __powerme_name2id(name):
+	"""
+	给微助力项目的名字
+	返回（related_page_id,powerme_powerme中id）
+	"""
+	obj = powerme_models.PowerMe.objects.get(name=name)
+	return (obj.related_page_id,obj.id)
+
+def __status2name(status_num):
+	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
+	return status2name_dic[status_num]
+
+def __name2color(name):
+	name2color_dic = {
+		u"冬日暖阳":"yellow",
+		u"玫瑰茜红":"red",
+		u"热带橙色":"orange"
+	}
+	return name2color_dic[name]
+
+def __color2name(color):
+	color2name_dic = {
+		'yellow': u'冬日暖阳',
+		'red': u'玫瑰茜红',
+		'orange': u'热带橙色'
+	}
+	return color2name_dic[color]
+
+
+def __get_qrcode(context,qrcode_name):
+	qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
+	qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
+	qrcode_response = context.client.get(qrcode_i_url)
+	qrcode_info = qrcode_response.context['qrcode']
+	qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
+	qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
+	return qrcode
+
+def __Create_PowerMe(context,text,user):
 	design_mode = 0
 	version = 1
 	text = text
-	# text = json.loads(context.text)
+
 	title = text.get("name","")
 
 	cr_start_date = text.get('start_date', u'今天')
@@ -219,9 +261,8 @@ def Create_PowerMe(context,text,user):
 	else:
 		qrcode = ""
 
-	zh2color = {u"冬日暖阳":"yellow",u"玫瑰茜红":"red",u"热带橙色":"orange"}
 	zhcolor = text.get("background_color","冬日暖阳")
-	color = zh2color[zhcolor]
+	color = __name2color(zhcolor)
 
 	rules = text.get("rules","")
 
@@ -240,7 +281,6 @@ def Create_PowerMe(context,text,user):
 		"color":color,
 		"rules":rules
 	}
-
 
 	#step1：登录页面，获得分配的project_id
 	get_pw_response = context.client.get("/apps/powerme/powerme/")
@@ -280,13 +320,95 @@ def Create_PowerMe(context,text,user):
 	powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	post_powerme_response = context.client.post(powerme_url,post_powerme_args)
 
+def __Update_PowerMe(context,text,page_id,powerme_id):
+	"""
+	更新微助力
+	"""
+	design_mode=0
+	version=1
+	project_id = "new_app:powerme:"+page_id
 
+	title = text.get("name","")
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+
+	valid_time = "%s~%s"%(start_time,end_time)
+
+	timing_status = text.get("is_show_countdown","")
+
+	timing_value_day = __date_delta(start_date,end_date)
+
+	description = text.get("desc","")
+	reply_content = text.get("reply")
+	material_image = text.get("share_pic","")
+	background_image = text.get("background_pic","")
+
+	qrcode_name = text.get("qr_code","")
+	if qrcode_name:
+		qrcode = __get_qrcode(context,qrcode_name)
+	else:
+		qrcode = ""
+
+	zhcolor = text.get("background_color","冬日暖阳")
+	color = __name2color(zhcolor)
+
+	rules = text.get("rules","")
+
+	page_args = {
+		"title":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"timing_status":timing_status,
+		"timing_value_day":timing_value_day,
+		"description":description,
+		"reply_content":reply_content,
+		"qrcode":qrcode,
+		"material_image":material_image,
+		"background_image":background_image,
+		"color":color,
+		"rules":rules
+	}
+
+	page_json = __get_powermePageJson(page_args)
+
+	update_page_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
+
+	update_powerme_args = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"timing":timing_status,
+		"reply_content":reply_content,
+		"material_image":material_image,
+		"qrcode":json.dumps(qrcode),
+		"id":powerme_id#updated的差别
+	}
+
+
+	#page 更新Page
+	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_page_response = context.client.post(update_page_url,update_page_args)
+
+	#step4:更新Powerme
+	update_powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_powerme_response = context.client.post(update_powerme_url,update_powerme_args)
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
 	text_list = json.loads(context.text)
 	for text in text_list:
-		Create_PowerMe(context,text,user)
+		__Create_PowerMe(context,text,user)
 
 @then(u'{user}获得微助力活动列表')
 def step_impl(context,user):
@@ -324,3 +446,82 @@ def step_impl(context,user):
 		}
 		rec_list.append(tmp)
 	bdd_util.assert_list(text_list,rec_list)
+
+@when(u"{user}编辑微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	#逻辑上这个函数不可以批量编辑，powerme_name不是一个列表
+	text = json.loads(context.text)[0]
+	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	__Update_PowerMe(context,text,powerme_page_id,powerme_id)
+
+	# text_list = json.loads(context.text)
+	# for text in text_list:
+	# 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	# 	__Update_PowerMe(context,text,powerme_page_id,powerme_id)
+
+@then(u"{user}获得微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	text = json.loads(context.text)[0]
+
+	title = text.get("name","")
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+
+	# valid_time = "%s~%s"%(start_time,end_time)
+	timing_status = text.get("is_show_countdown","")
+	# timing_value_day = __date_delta(start_date,end_date)
+	description = text.get("desc","")
+	reply_content = text.get("reply")
+	material_image = text.get("share_pic","")
+	background_image = text.get("background_pic","")
+
+	qrcode_name = text.get("qr_code","")
+	if qrcode_name:
+		qrcode = __get_qrcode(context,qrcode_name)
+	else:
+		qrcode = ""
+
+	color  = text.get("background_color","冬日暖阳")
+	rules = text.get("rules","")
+
+
+	obj = powerme_models.PowerMe.objects.get(name=powerme_name)#纯数字
+	related_page_id = obj.related_page_id
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	page = pagestore.get_page(related_page_id, 1)
+	page_component = page['component']['components'][0]['model']
+
+	fe_powerme_dic = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"is_show_countdown":timing_status,
+		"desc":description,
+		"reply":reply_content,
+		"qr_code":qrcode,
+		"share_pic":material_image,
+		"background_pic":background_image,
+		"background_color":color,
+		"rules":rules
+	}
+
+	db_powerme_dic = {
+		"name": obj.name,
+		"start_time":__datetime2str(obj.start_time),
+		"end_time":__datetime2str(obj.end_time),
+		"is_show_countdown":page_component['timing']['timing']['select'],
+		"desc":page_component['description'],
+		"reply":obj.reply_content,
+		"qr_code":obj.qrcode,
+		"share_pic":page_component['material_image'],
+		"background_pic": page_component['background_image'],
+		"background_color": __color2name(page_component['color']),
+		"rules": page_component['rules'],
+	}
+
+	bdd_util.assert_dict(db_powerme_dic, fe_powerme_dic)
