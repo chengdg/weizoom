@@ -66,7 +66,7 @@ def step_impl(context):
 			print '*********************** run step **********************'
 			print step
 
-		context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
+			context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
 
 		return 'success'
 
