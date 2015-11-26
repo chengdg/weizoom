@@ -376,8 +376,8 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         $('label[name="checkbox-cart"]').children().each(function() {
             var $checkbox = $(this);
             var $product = $checkbox.parents('.xa-product');
-            var stocks = $product.attr('data-stocks');
-            if (stocks !== '-1') {
+            var stocks = $product.data('stocks');
+            if (stocks !== -1) {
                 var view = $product.find('[data-ui-role="counter"]').data('view');
                 var currentCount = view.count;
                 if (currentCount > stocks) {
@@ -410,8 +410,8 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         }
 
         var $product = $label.parents('.xa-product');
-        var stocks = $product.attr('data-stocks');
-        if (stocks !== '-1') {
+        var stocks = $product.data('stocks');
+        if (stocks !== -1) {
             var view = $product.find('[data-ui-role="counter"]').data('view');
             var currentCount = view.count;
             if (currentCount > stocks) {
