@@ -34,7 +34,7 @@ Background:
 			"create_time": "2015-10-10 10:20:30",
 			"prize_type": "无奖励",
 			"member_rank": "普通会员",
-			"tags": "未分组",
+			"tags": "分组1",
 			"is_attention_in": "false",
 			"remarks": "",
 			"is_relation_member": "false",
