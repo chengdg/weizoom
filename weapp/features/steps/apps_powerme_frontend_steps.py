@@ -34,8 +34,6 @@ def __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid):
 	#进入微助力活动页面
 	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, power_me_rule_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
-	print('url!!!!!!!!')
-	print(url)
 	context.link_url = url
 	response = context.client.get(url)
 	if response.status_code == 302:
@@ -125,16 +123,16 @@ def step_tmpl(context, webapp_user_name, power_me_rule_name):
 def step_impl(context, webapp_user_name, powerme_owner_name):
 	context.shared_url = context.link_url
 	print('context.shared_url:',context.shared_url)
+	webapp_owner_id = context.webapp_owner_id
+	webapp_owner_name = User.objects.get(id=webapp_owner_id).username
+	if powerme_owner_name == webapp_owner_name: #如果是分享自己的助力活动
+		context.page_owner_member_id = context.powerme_result['page_owner_member_id']
 	params = {
 		'webapp_owner_id': context.webapp_owner_id,
 		'id': context.powerme_result['record_id'],
-		'fid': context.powerme_result['page_owner_member_id']
+		'fid': context.page_owner_member_id
 	}
-	print('params!!!!!!!!!')
-	print(params)
 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=post', params)
-	print('response!!!!!!!!!!!')
-	print(response)
 
 @When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接进行参与')
 def step_impl(context, webapp_user_name, shared_webapp_user_name):
@@ -165,15 +163,12 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	power_me_rule_id = context.powerme_result['record_id']
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
-
 	params = {
 		'webapp_owner_id': webapp_owner_id,
 		'id': power_me_rule_id,
-		'fid': context.powerme_result['page_owner_member_id']
+		'fid': context.page_owner_member_id
 	}
 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=put', params)
-	print('response!!!!!!!!!!!')
-	print(response)
 
 @when(u"{webapp_user_name}通过识别弹层中的公众号二维码关注{mp_user_name}的公众号")
 def step_tmpl(context, webapp_user_name, mp_user_name):
@@ -199,3 +194,24 @@ def step_tmpl(context, webapp_user_name, shared_webapp_user_name):
 	power_me_rule_id = context.powerme_result['record_id']
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 	context.powerme_result = response.context
+
+@when(u"微信用户批量参加{webapp_owner_name}的微助力活动")
+def step_impl(context, webapp_owner_name):
+	for row in context.table:
+		webapp_user_name = row['member_name']
+		if webapp_user_name[0] == u'-':
+			webapp_user_name = webapp_user_name[1:]
+			#clear last member's info in cookie and context
+			context.execute_steps(u"When 清空浏览器")
+		else:
+			context.execute_steps(u"When 清空浏览器")
+			context.execute_steps(u"When %s访问%s的webapp" % (webapp_user_name, webapp_owner_name))
+		data = []
+		if row.get('powerme_value', '') != '':
+			data['powerme_value'] = int(row['powerme_value'])
+		if row.get('parti_time') != '':
+			data['parti_time'] = bdd_util.get_date_str(row['parti_time'])
+		if row.get('name', '') != '':
+			data['name'] = row.get('name')
+		print('data!!!!!!!!')
+		print(data)
