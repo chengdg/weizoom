@@ -128,23 +128,23 @@ Background:
 	And tom2关注jobs的公众号
 
 	When 微信用户批量参加jobs的微助力活动
-		| member_name | powerme_value | parti_time |  name       |
-		| tom1        |     5         | 3天前      | 微助力活动1 |
-		| bill        |     20        | 昨天       | 微助力活动1 |
-		| tom         |     12        | 今天       | 微助力活动1 |
-		| tom2        |     5         | 今天       | 微助力活动1 |
-		| bill        |     8         | 今天       | 微助力活动2 |
+		| member_name | powerme_value | parti_time |  name      |
+		| tom1        |     4         | 3天前      | 微助力活动1 |
+		| bill        |     10        | 昨天       | 微助力活动1 |
+		| tom         |     8         | 今天       | 微助力活动1 |
+		| tom2        |     4         | 今天       | 微助力活动1 |
+		| bill        |     6         | 今天       | 微助力活动2 |
 
-@apps @apps_powerme @apps_powerme_backend
+@apps @apps_powerme @apps_powerme_backend @kuki1
 Scenario:1 查看结果
 	Given jobs登录系统
 	When jobs查看微助力活动'微助力活动1'
 	Then jobs获得微助力活动'微助力活动1'的结果列表
 		| rank | member_name | powerme_value | parti_time |
-		|  1   | bill        |     20        | 昨天       |
-		|  2   | tom         |     12        | 今天       |
-		|  3   | tom1        |     5         | 3天前      |
-		|  4   | tom2        |     5         | 今天       |
+		|  1   | bill        |     10        | 昨天       |
+		|  2   | tom         |     8         | 今天       |
+		|  3   | tom1        |     4         | 3天前      |
+		|  4   | tom2        |     4         | 今天       |
 
 @apps @apps_powerme @apps_powerme_backend
 Scenario:2 查看结果页面的查询
@@ -156,10 +156,10 @@ Scenario:2 查看结果页面的查询
 		"""
 	Then jobs获得微助力活动'微助力活动1'的结果列表
 		| rank | member_name | powerme_value | parti_time |
-		|  1   | bill        |     20        | 昨天       |
-		|  2   | tom         |     12        | 今天       |
-		|  3   | tom1        |     5         | 3天前      |
-		|  4   | tom2        |     5         | 今天       |
+		|  1   | bill        |     10        | 昨天       |
+		|  2   | tom         |     8        | 今天       |
+		|  3   | tom1        |     4         | 3天前      |
+		|  4   | tom2        |     4         | 今天       |
 	#用户名查询
 		#精确匹配
 			When jobs设置微助力活动结果列表查询条件
@@ -170,7 +170,7 @@ Scenario:2 查看结果页面的查询
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | bill        |     20        | 昨天       |
+				|  1   | bill        |     10        | 昨天       |
 		#模糊查询
 			When jobs设置微助力活动结果列表查询条件
 				"""
@@ -180,9 +180,9 @@ Scenario:2 查看结果页面的查询
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | tom         |     12        | 今天       |
-				|  2   | tom1        |     5         | 3天前      |
-				|  3   | tom2        |     5         | 今天       |
+				|  1   | tom         |     8         | 今天       |
+				|  2   | tom1        |     4         | 3天前      |
+				|  3   | tom2        |     4         | 今天       |
 
 	#参与时间查询
 		#开始时间非空，结束时间为空
@@ -195,9 +195,9 @@ Scenario:2 查看结果页面的查询
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | bill        |     20        | 昨天       |
-				|  2   | tom         |     12        | 今天       |
-				|  3   | tom2        |     5         | 今天       |
+				|  1   | bill        |     10        | 昨天       |
+				|  2   | tom         |     8         | 今天       |
+				|  3   | tom2        |     4         | 今天       |
 
 		#开始时间为空，结束时间非空
 			When jobs设置微助力活动结果列表查询条件
@@ -209,10 +209,10 @@ Scenario:2 查看结果页面的查询
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | bill        |     20        | 昨天       |
-				|  2   | tom         |     12        | 今天       |
-				|  3   | tom1        |     5         | 3天前      |
-				|  4   | tom2        |     5         | 今天       |
+				|  1   | bill        |     10        | 昨天       |
+				|  2   | tom         |     8         | 今天       |
+				|  3   | tom1        |     4         | 3天前      |
+				|  4   | tom2        |     4         | 今天       |
 
 		#开始时间和结束时间相等
 			When jobs设置微助力活动结果列表查询条件
@@ -224,8 +224,8 @@ Scenario:2 查看结果页面的查询
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | tom         |     12        | 今天       |
-				|  2   | tom2        |     5         | 今天       |
+				|  1   | tom         |     8        | 今天       |
+				|  2   | tom2        |     4         | 今天       |
 
 		#开始时间和结束时间不相等
 			When jobs设置微助力活动结果列表查询条件
@@ -237,8 +237,8 @@ Scenario:2 查看结果页面的查询
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | bill        |     20        | 昨天       |
-				|  2   | tom1        |     5         | 3天前      |
+				|  1   | bill        |     10        | 昨天       |
+				|  2   | tom1        |     4         | 3天前      |
 
 	#组合条件查询
 		When jobs设置微助力活动结果列表查询条件
@@ -251,7 +251,7 @@ Scenario:2 查看结果页面的查询
 			"""
 		Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
-				|  1   | tom2        |     5         | 今天       |
+				|  1   | tom2        |     4         | 今天       |
 
 @apps @apps_powerme @apps_powerme_backend
 Scenario:3 查看结果页面的批量导出
@@ -260,7 +260,7 @@ Scenario:3 查看结果页面的批量导出
 	When jobs批量导出微助力活动'微助力活动1'的结果
 	Then jobs获得微助力活动'微助力活动1'的批量导出结果信息
 		| rank | member_name | powerme_value | parti_time |
-		|  1   | bill        |     20        | 昨天       |
-		|  2   | tom         |     12        | 今天       |
-		|  3   | tom1        |     5         | 3天前      |
-		|  4   | tom2        |     5         | 今天       |
+		|  1   | bill        |     10        | 昨天       |
+		|  2   | tom         |     8         | 今天       |
+		|  3   | tom1        |     4         | 3天前      |
+		|  4   | tom2        |     4         | 今天       |
