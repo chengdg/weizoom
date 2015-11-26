@@ -157,14 +157,6 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 		print('[info] not redirect')
 		context.last_url = context.shared_url
 
-@then(u"{webapp_user_name}获得弹层提示信息'{text}'")
-def step_tmpl(context, webapp_user_name, text):
-	pass
-
-@then(u"{webapp_user_name}获得提示信息'{text}'")
-def step_tmpl(context, webapp_user_name, text):
-	pass
-
 @When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接进行助力')
 def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	# 要先进入微助力活动页面创建participance记录
