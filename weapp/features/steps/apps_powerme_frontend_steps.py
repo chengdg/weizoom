@@ -46,6 +46,13 @@ def __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid):
 			redirect_url = bdd_util.nginx(response['Location'])
 			context.last_url = redirect_url
 			response = context.client.get(bdd_util.nginx(redirect_url))
+			if response.status_code == 302:
+				print('[info] redirect by change fmt in shared_url')
+				redirect_url = bdd_util.nginx(response['Location'])
+				context.last_url = redirect_url
+				response = context.client.get(bdd_util.nginx(redirect_url))
+			else:
+				print('[info] not redirect')
 		else:
 			print('[info] not redirect')
 	else:
