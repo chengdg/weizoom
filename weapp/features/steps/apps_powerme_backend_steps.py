@@ -427,6 +427,12 @@ def __Stop_PowerMe(context,powerme_id):
 	stop_powerme_response = context.client.post(stop_powerme_url,stop_args)
 	return stop_powerme_response
 
+#############################################
+#
+#			powerme_backend
+#
+#############################################
+
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
@@ -470,6 +476,13 @@ def step_impl(context,user):
 		}
 		rec_list.append(tmp)
 	bdd_util.assert_list(text_list,rec_list)
+
+
+#############################################
+#
+#			update_powerme
+#
+#############################################
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
@@ -562,3 +575,11 @@ def step_impl(context,user,powerme_name):
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
 	stop_response = __Stop_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(stop_response)
+
+
+#############################################
+#
+#			powerme_list
+#
+#############################################
+
