@@ -442,34 +442,30 @@ def step_impl(context,user):
 	page = 1
 	enable_paginate = 1
 
-	text = json.loads(context.text)
-
-	text_list = []
-	for item in text:
-		tmp = {
-			"name":item['name'],
-			"status":item['status'],
-			"start_time":__date2time(item['start_date']),
-			"end_time":__date2time(item['end_date']),
-			"participant_count":item['participant_count']
-		}
-		text_list.append(tmp)
+	expected = json.loads(context.text)
+	for expect in expected:
+		if 'start_time' in expect:
+			expect['start_date'] = __date2time(expect['start_date'])
+		if 'end_time' in expect:
+			expect['end_date'] = __date2time(expect['end_date'])
+	print("expected: {}".format(expected))
 
 	rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_powerme_response = context.client.get(rec_powerme_url)
 	rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items']#[::-1]
 
-	rec_list = []
+	actual_list = []
 	for item in rec_powerme_list:
 		tmp = {
-		"name":item['name'],
-		"status":item['status'],
-		"start_time":__date2time(item['start_time']),
-		"end_time":__date2time(item['end_time']),
-		"participant_count":item['participant_count']
+			"name":item['name'],
+			"status":item['status'],
+			"start_time":__date2time(item['start_time']),
+			"end_time":__date2time(item['end_time']),
+			"participant_count":item['participant_count']
 		}
-		rec_list.append(tmp)
-	bdd_util.assert_list(text_list,rec_list)
+		actual_list.append(tmp)
+	print("actual_data: {}".format(actual_list))
+	bdd_util.assert_list(expected,actual_list)
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
@@ -562,3 +558,13 @@ def step_impl(context,user,powerme_name):
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
 	stop_response = __Stop_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(stop_response)
+
+@when(u"{user}查看微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	url ='/apps/powerme/powerme_participances/?id=%s' % (powerme_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	print(response)
+	# participances = response.context
+	# print(participances)
