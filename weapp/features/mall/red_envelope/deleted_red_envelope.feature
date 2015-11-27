@@ -89,7 +89,7 @@ Background:
 @mall2 @promotion @promotionRedbag 
 Scenario:1 删除分享红包
 	Given jobs登录系统
-	When jobs-开启分享红包"红包1"
+	When jobs开启分享红包"红包1"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -111,7 +111,7 @@ Scenario:1 删除分享红包
 		}]
 		"""
 	#删除'图文领取'方式的分享红包
-	When jobs-删除分享红包"【图文领取】红包4"
+	When jobs删除分享红包"【图文领取】红包4"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -129,7 +129,7 @@ Scenario:1 删除分享红包
 		}]
 		"""
 	#删除'下单领取'方式的分享红包（状态必须为'关闭'）
-	When jobs-删除分享红包"红包3"
+	When jobs删除分享红包"红包3"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -160,7 +160,7 @@ Scenario:2 在查询"活动名称"结果中删除分享红包
 			"actions": ["分析","删除","查看"]
 		}]
 		"""
-	When jobs-删除分享红包"【图文领取】红包4"
+	When jobs删除分享红包"【图文领取】红包4"
 	Then jobs能获取分享红包列表
 		"""
 		[]
@@ -186,7 +186,7 @@ Scenario:3 在查询"奖励"结果中删除分享红包
 			"actions": ["分析","开启","删除","查看"]
 		}]
 		"""
-	When jobs-删除分享红包"红包3"
+	When jobs删除分享红包"红包3"
 	Then jobs能获取分享红包列表
 		"""
 		[{
@@ -218,7 +218,7 @@ Scenario:4 在查询"奖励时间"结果中删除分享红包
 			"actions": ["分析","开启","删除","查看"]
 		}]
 		"""
-	When jobs-删除分享红包"红包1"
+	When jobs删除分享红包"红包1"
 	Then jobs能获取分享红包列表
 		"""
 		[{

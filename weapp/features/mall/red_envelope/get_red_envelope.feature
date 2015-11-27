@@ -173,7 +173,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 
 	#通过成功创建订单能获取此红包，订单必须满足（订单金额满200元、待发货状态）
 	Given jobs登录系统
-	When jobs-开启分享红包"红包1"
+	When jobs开启分享红包"红包1"
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -185,7 +185,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -205,7 +205,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-不能领取分享红包
+	Then bill不能领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -225,7 +225,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 		}
 		"""
 	#没有支付，不能领取
-	Then bill-不能领取分享红包
+	Then bill不能领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -236,8 +236,8 @@ Scenario: 1 会员通过成功创建订单获取红包
 		"""
 
 	Given jobs登录系统
-	When jobs-关闭分享红包"红包1"
-	And jobs-开启分享红包"红包2"
+	When jobs关闭分享红包"红包1"
+	And jobs开启分享红包"红包2"
 
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
@@ -250,7 +250,7 @@ Scenario: 1 会员通过成功创建订单获取红包
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -334,7 +334,7 @@ Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 
 	#通过成功创建订单能获取此红包，订单必须满足（待发货状态）
 	Given jobs登录系统
-	When jobs-开启分享红包"红包2"
+	When jobs开启分享红包"红包2"
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -346,7 +346,7 @@ Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -378,7 +378,7 @@ Scenario: 2 会员B通过会员A成功创建订单分享红包后获取红包
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -442,7 +442,7 @@ Scenario: 3 非会员通过会员成功创建订单分享红包后获取红包
 	3. nokia点击bill分享的链接后，关注后能获得jobs的分享红包
 
 	Given jobs登录系统
-	When jobs-开启分享红包"红包2"
+	When jobs开启分享红包"红包2"
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -454,7 +454,7 @@ Scenario: 3 非会员通过会员成功创建订单分享红包后获取红包
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	When bill把jobs的分享红包链接分享到朋友圈
 	#暂时用先关注再取消关注的方式来模拟非会员的情况，需要改进
 	When nokia关注jobs的公众号
@@ -542,7 +542,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 
 
 	Given jobs登录系统
-	When jobs-开启分享红包"红包2"
+	When jobs开启分享红包"红包2"
 	When jobs为会员发放优惠券
 		"""
 		{
@@ -579,7 +579,7 @@ Scenario: 4 会员通过分享链接领取红包时优惠券库存为零,添加�
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[{
@@ -707,7 +707,7 @@ Scenario: 5 会员通过分享链接领取红包时红包规则被删除，领�
 	3. 红包规则被删除，领取红包失败
 
 	Given jobs登录系统
-	When jobs-开启分享红包"红包2"
+	When jobs开启分享红包"红包2"
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -719,10 +719,10 @@ Scenario: 5 会员通过分享链接领取红包时红包规则被删除，领�
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill能够领取分享红包
 	When bill把jobs的分享红包链接分享到朋友圈
 	Given jobs登录系统
-	When jobs-关闭分享红包"红包2"
+	When jobs关闭分享红包"红包2"
 	#tom点击bill分享链接页面展示'很遗憾，红包已经领完了'
 	When tom访问jobs的webapp
 	When tom点击bill分享红包链接
@@ -814,7 +814,7 @@ Scenario: 6 不同等级的会员购买有会员价同时有分享红包设置�
 			"member_rank": "铜牌会员"
 		}]
 		"""
-	When jobs-开启分享红包"红包1"
+	When jobs开启分享红包"红包1"
 	#tom创建的订单满足条件，能获得jobs的分享红包
 	When tom访问jobs的webapp
 	And tom购买jobs的商品
@@ -827,7 +827,7 @@ Scenario: 6 不同等级的会员购买有会员价同时有分享红包设置�
 		}
 		"""
 	And tom使用支付方式'货到付款'进行支付
-	Then tom-能够领取分享红包
+	Then tom能够领取分享红包
 	And tom能获得webapp优惠券列表
 		"""
 		[{
@@ -848,7 +848,7 @@ Scenario: 6 不同等级的会员购买有会员价同时有分享红包设置�
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-不能领取分享红包
+	Then bill不能领取分享红包
 	And bill能获得webapp优惠券列表
 		"""
 		[]
