@@ -171,8 +171,13 @@ Scenario:1 微助力活动列表参与人数的校验
 		|  3   | tom2        |     0         | 今天       |
 
 	#取消关注后，会员排名消息，参与人数随之减少，但是帮别人的助力值还在
-  	When bill取消关注jobs的公众号
+	When bill取消关注jobs的公众号
 	Given jobs登录系统
+	When jobs查看微助力活动'微助力活动1'
+	Then jobs获得微助力活动'微助力活动1'的结果列表
+		| rank | member_name | powerme_value | parti_time |
+		|  1   | tom         |     1         | 今天       |
+		|  2   | tom2        |     0         | 今天       |
 	Then jobs获得微助力活动列表
 		"""
 		[{
@@ -183,8 +188,3 @@ Scenario:1 微助力活动列表参与人数的校验
 			"participant_count":2
 		}]
 		"""
-	When jobs查看微助力活动'微助力活动1'
-	Then jobs获得微助力活动'微助力活动1'的结果列表
-		| rank | member_name | powerme_value | parti_time |
-		|  1   | tom         |     1         | 今天       |
-		|  2   | tom2        |     0         | 今天       |
