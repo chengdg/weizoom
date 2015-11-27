@@ -501,11 +501,18 @@ def step_impl(context,user):
 			if 'end_date' in expect:
 				expect['end_time'] = __date2time(expect['end_date'])
 				del expect['end_date']
+			if 'actions' in expect:
+				del expect['actions']
 		print("expected: {}".format(expected))
 
 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
 
 	else:
+		if hasattr(context,"paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
+
 		for expect in expected:
 			if 'start_date' in expect:
 				expect['start_time'] = __date2time(expect['start_date'])
@@ -513,6 +520,9 @@ def step_impl(context,user):
 			if 'end_date' in expect:
 				expect['end_time'] = __date2time(expect['end_date'])
 				del expect['end_date']
+			if 'actions' in expect:
+				del expect['actions']
+
 		print("expected: {}".format(expected))
 
 		rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
@@ -677,4 +687,19 @@ def step_impl(context,user):
 
 @when(u"{user}访问微助力活动列表第'{page_num}'页")
 def step_impl(context,user,page_num):
-	pass
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}访问微助力活动列表下一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}访问微助力活动列表上一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
