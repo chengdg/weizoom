@@ -4,6 +4,7 @@ __author__ = 'mark24'
 
 from behave import *
 from test import bdd_util
+from collections import OrderedDict
 
 from features.testenv.model_factory import *
 import steps_db_util
@@ -197,6 +198,13 @@ def __powerme_name2id(name):
 def __status2name(status_num):
 	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
 	return status2name_dic[status_num]
+
+def __name2status(name):
+	if name:
+		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
+		return name2status_dic[name]
+	else:
+		return -1
 
 def __name2color(name):
 	name2color_dic = {
@@ -427,6 +435,35 @@ def __Stop_PowerMe(context,powerme_id):
 	stop_powerme_response = context.client.post(stop_powerme_url,stop_args)
 	return stop_powerme_response
 
+def __Search_Powerme(context,search_dic):
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
+
+	name = search_dic["name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+	status = __name2status(search_dic["status"])
+
+
+
+	search_url = "/apps/powerme/api/powermes/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			name,
+			status,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
+
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
+
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
@@ -442,46 +479,65 @@ def step_impl(context,user):
 	page = 1
 	enable_paginate = 1
 
-	text = json.loads(context.text)
+	actual_list = []
+	expected = json.loads(context.text)
 
-	text_list = []
-	for item in text:
-		tmp = {
-			"name":item['name'],
-			"status":item['status'],
-			"start_time":__date2time(item['start_date']),
-			"end_time":__date2time(item['end_date']),
-			"participant_count":item['participant_count']
-		}
-		text_list.append(tmp)
+	if hasattr(context,"search_powerme"):
+		rec_search_list = context.search_powerme
+		for item in rec_search_list:
+			tmp = {
+				"name":item['name'],
+				"status":item['status'],
+				"start_time":item['start_time'],
+				"end_time":item['end_time'],
+				"participant_count":item['participant_count']
+			}
+			actual_list.append(tmp)
 
-	rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-	rec_powerme_response = context.client.get(rec_powerme_url)
-	rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items']#[::-1]
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
+		print("expected: {}".format(expected))
 
-	rec_list = []
-	for item in rec_powerme_list:
-		tmp = {
-		"name":item['name'],
-		"status":item['status'],
-		"start_time":__date2time(item['start_time']),
-		"end_time":__date2time(item['end_time']),
-		"participant_count":item['participant_count']
-		}
-		rec_list.append(tmp)
-	bdd_util.assert_list(text_list,rec_list)
+		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+
+	else:
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
+		print("expected: {}".format(expected))
+
+		rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+		rec_powerme_response = context.client.get(rec_powerme_url)
+		rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items']#[::-1]
+
+		for item in rec_powerme_list:
+			tmp = {
+				"name":item['name'],
+				"status":item['status'],
+				"start_time":__date2time(item['start_time']),
+				"end_time":__date2time(item['end_time']),
+				"participant_count":item['participant_count']
+			}
+			actual_list.append(tmp)
+		print("actual_data: {}".format(actual_list))
+		bdd_util.assert_list(expected,actual_list)
+
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
-	#逻辑上这个函数不可以批量编辑，powerme_name不是一个列表
 	text = json.loads(context.text)[0]
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
 	__Update_PowerMe(context,text,powerme_page_id,powerme_id)
 
-	# text_list = json.loads(context.text)
-	# for text in text_list:
-	# 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
-	# 	__Update_PowerMe(context,text,powerme_page_id,powerme_id)
 
 @then(u"{user}获得微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
@@ -562,3 +618,63 @@ def step_impl(context,user,powerme_name):
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
 	stop_response = __Stop_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(stop_response)
+
+
+@when(u"{user}查看微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	url ='/apps/powerme/api/powerme_participances/?_method=get&id=%s' % (powerme_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	context.participances = json.loads(response.content)
+
+@then(u"{webapp_user_name}获得微助力活动'{power_me_rule_name}'的结果列表")
+def step_tmpl(context, webapp_user_name, power_me_rule_name):
+	participances = context.participances['data']['items']
+	actual = []
+	print(participances)
+	for p in participances:
+		p_dict = OrderedDict()
+		p_dict[u"rank"] = p['ranking']
+		p_dict[u"member_name"] = p['username']
+		p_dict[u"powerme_value"] = p['power']
+		p_dict[u"parti_time"] = bdd_util.get_date_str(p['created_at'])
+		actual.append((p_dict))
+	print("actual_data: {}".format(actual))
+	expected = []
+	if context.table:
+		for row in context.table:
+			cur_p = row.as_dict()
+			if cur_p[u'parti_time']:
+				cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
+			expected.append(cur_p)
+	else:
+		expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+
+	bdd_util.assert_list(expected, actual)
+
+@when(u"{user}设置微助力活动列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
+	if 'start_date' in expect:
+		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
+		del expect['start_date']
+
+	if 'end_date' in expect:
+		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
+		del expect['end_date']
+
+	search_dic = {
+		"name": expect.get("name",""),
+		"start_time": expect.get("start_time",""),
+		"end_time": expect.get("end_time",""),
+		"status": expect.get("status",u"全部")
+	}
+	search_response = __Search_Powerme(context,search_dic)
+	powerme_array = json.loads(search_response.content)['data']['items']
+	context.search_powerme = powerme_array
+
+@when(u"{user}访问微助力活动列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+	pass

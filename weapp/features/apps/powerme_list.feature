@@ -216,7 +216,7 @@ Scenario:1 微助力活动列表查询
 			When jobs设置微助力活动列表查询条件
 				"""
 				{
-					"stare_date":"今天",
+					"start_date":"今天",
 					"end_date":""
 				}
 				"""
@@ -237,7 +237,7 @@ Scenario:1 微助力活动列表查询
 			When jobs设置微助力活动列表查询条件
 				"""
 				{
-					"stare_date":"",
+					"start_date":"",
 					"end_date":"今天"
 				}
 				"""
@@ -254,7 +254,7 @@ Scenario:1 微助力活动列表查询
 			When jobs设置微助力活动列表查询条件
 				"""
 				{
-					"stare_date":"今天",
+					"start_date":"今天",
 					"end_date":"今天"
 				}
 				"""
@@ -267,7 +267,7 @@ Scenario:1 微助力活动列表查询
 			When jobs设置微助力活动列表查询条件
 				"""
 				{
-					"stare_date":"3天前",
+					"start_date":"3天前",
 					"end_date":"明天"
 				}
 				"""
@@ -286,7 +286,7 @@ Scenario:1 微助力活动列表查询
 			{
 				"name":"微助力活动2",
 				"status":"未开始",
-				"stare_date":"明天",
+				"start_date":"明天",
 				"end_date":"3天后"
 			}
 			"""
