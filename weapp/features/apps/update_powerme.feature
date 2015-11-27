@@ -86,7 +86,7 @@ Background:
 		}]
 		"""
 
-@apps @powerme
+@apps @powerme @update_powerme
 Scenario:1 编辑'未开始'的微助力活动
 	Given jobs登录系统
 	When jobs编辑微助力活动'微助力活动2'
@@ -147,7 +147,7 @@ Scenario:1 编辑'未开始'的微助力活动
 		}]
 		"""
 
-@apps @powerme
+@apps @powerme @update_powerme
 Scenario:2 删除'已结束'的微助力活动
 	Given jobs登录系统
 	When jobs删除微助力活动'微助力活动1'
@@ -170,7 +170,7 @@ Scenario:2 删除'已结束'的微助力活动
 		}]
 		"""
 
-@apps @powerme
+@apps @powerme @update_powerme
 Scenario:3 关闭'未开始'或'进行中'的微助力活动
 	Given jobs登录系统
 	#关闭'未开始'状态的微助力活动
@@ -186,8 +186,8 @@ Scenario:3 关闭'未开始'或'进行中'的微助力活动
 			"actions": ["查看","预览","复制链接","关闭"]
 		},{
 			"name":"微助力活动2",
-			"start_date":"今天",
-			"end_date":"2天后",
+			"start_date":"明天",
+			"end_date":"今天",
 			"status":"已结束",
 			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
@@ -207,14 +207,14 @@ Scenario:3 关闭'未开始'或'进行中'的微助力活动
 		[{
 			"name":"微助力活动3",
 			"start_date":"今天",
-			"end_date":"3天后",
+			"end_date":"今天",
 			"status":"已结束",
 			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
 		},{
 			"name":"微助力活动2",
-			"start_date":"今天",
-			"end_date":"2天后",
+			"start_date":"明天",
+			"end_date":"今天",
 			"status":"已结束",
 			"participant_count":0,
 			"actions": ["查看","预览","复制链接","删除"]
