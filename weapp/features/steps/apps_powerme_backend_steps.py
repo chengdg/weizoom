@@ -464,6 +464,15 @@ def __Search_Powerme(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
+def __get_actions(status):
+	actions_list = [u"查看",u"预览",u"复制链接"]
+	if status == u"已结束":
+		actions_list.append(u"删除")
+	elif status=="进行中" or "未开始":
+		actions_list.append(u"关闭")
+	return actions_list
+
+
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
@@ -520,8 +529,7 @@ def step_impl(context,user):
 			if 'end_date' in expect:
 				expect['end_time'] = __date2time(expect['end_date'])
 				del expect['end_date']
-			if 'actions' in expect:
-				del expect['actions']
+
 
 		print("expected: {}".format(expected))
 
@@ -537,6 +545,7 @@ def step_impl(context,user):
 				"end_time":__date2time(item['end_time']),
 				"participant_count":item['participant_count']
 			}
+			tmp["actions"] = __get_actions(item['status'])
 			actual_list.append(tmp)
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
