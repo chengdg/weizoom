@@ -427,6 +427,54 @@ def __Stop_PowerMe(context,powerme_id):
 	stop_powerme_response = context.client.post(stop_powerme_url,stop_args)
 	return stop_powerme_response
 
+def __Search_Powerme(context,search_dic):
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
+
+	name = search_dic["name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+	status = search_dic["status"]
+
+
+
+	search_url = "/apps/powerme/api/powermes/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			name,
+			status,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
+
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
+
+#############################################
+#
+#			powerme_list
+#
+#############################################
+
+@when(u"{user}设置微助力活动列表查询条件")
+def step_impl(context,user):
+	text = json.loads(context.text)
+	search_dic = {
+		"name": text.get("name",""),
+		"start_time": text.get("start_time",""),
+		"end_time": text.get("end_time",""),
+		"status": text.get("status",-1)
+	}
+	search_response = __Search_Powerme(context,search_dic)
+	powerme_array = json.loads(search_response.content)['data']['items']
+	__debug_print(powerme_array)
+
 #############################################
 #
 #			powerme_backend
@@ -576,10 +624,4 @@ def step_impl(context,user,powerme_name):
 	stop_response = __Stop_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(stop_response)
 
-
-#############################################
-#
-#			powerme_list
-#
-#############################################
 
