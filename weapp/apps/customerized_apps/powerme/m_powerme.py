@@ -118,7 +118,9 @@ class MPowerMe(resource.Resource):
 						need_power_member_id2power[m_id] += 1
 				for m_id in need_power_member_id2power.keys():
 					app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__power=need_power_member_id2power[m_id])
-
+				#更新已关注会员的助力详情记录
+				detail_power_member_ids = [p.power_member_id for p in power_logs]
+				app_models.PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).update(set__has_powered=True)
 				#删除计算过的log
 				app_models.PowerLog.objects(id__in=power_log_ids).delete()
 
