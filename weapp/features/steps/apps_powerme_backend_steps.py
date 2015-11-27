@@ -428,6 +428,35 @@ def __Stop_PowerMe(context,powerme_id):
 	stop_powerme_response = context.client.post(stop_powerme_url,stop_args)
 	return stop_powerme_response
 
+def __Search_Powerme(context,search_dic):
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
+
+	name = search_dic["name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+	status = search_dic["status"]
+
+
+
+	search_url = "/apps/powerme/api/powermes/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			name,
+			status,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
+
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
+
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
@@ -467,6 +496,7 @@ def step_impl(context,user):
 		actual_list.append(tmp)
 	print("actual_data: {}".format(actual_list))
 	bdd_util.assert_list(expected,actual_list)
+
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
@@ -560,6 +590,7 @@ def step_impl(context,user,powerme_name):
 	stop_response = __Stop_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(stop_response)
 
+
 @when(u"{user}查看微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
@@ -593,3 +624,17 @@ def step_tmpl(context, webapp_user_name, power_me_rule_name):
 	print("expected: {}".format(expected))
 
 	bdd_util.assert_list(expected, actual)
+
+@when(u"{user}设置微助力活动列表查询条件")
+def step_impl(context,user):
+	text = json.loads(context.text)
+	search_dic = {
+		"name": text.get("name",""),
+		"start_time": text.get("start_time",""),
+		"end_time": text.get("end_time",""),
+		"status": text.get("status",-1)
+	}
+	search_response = __Search_Powerme(context,search_dic)
+	powerme_array = json.loads(search_response.content)['data']['items']
+	__debug_print(powerme_array)
+
