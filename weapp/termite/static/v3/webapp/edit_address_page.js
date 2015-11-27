@@ -41,16 +41,17 @@ function checkShipInfosBeforeBuy(buy_url){
     }else{
             var ship_infos = JSON.parse(sessionStorage.ship_infos);
             var hasSelectedShip =  false
-                for (var i in ship_infos) {
-                    if(ship_infos[i].selected == true){
-                        hasSelectedShip = true
-                    }
+            for (var i in ship_infos) {
+                if(ship_infos[i].is_selected == true){
+                    hasSelectedShip = true;
+                    break;
                 }
-            if(!hasSelectedShip){
+            }
+            if(hasSelectedShip){
+                window.location.href = buy_url;
+            } else {
                 setMallShipfromUrl(buy_url);
                 window.location.href = "./?woid=" + getWoid() +"&module=mall&model=address&action=list" +addFmt('fmt');
-            } else {
-                window.location.href = buy_url;
             }
     }
 }
