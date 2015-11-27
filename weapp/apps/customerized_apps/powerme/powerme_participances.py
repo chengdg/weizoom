@@ -103,6 +103,8 @@ class PowerMeParticipances(resource.Resource):
 				name = u'未知'
 			items.append({
 				'id': str(data.id),
+				'member_id': data.member_id,
+				'belong_to': data.belong_to,
 				'ranking': ranking,
 				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
 				'username': name,

@@ -84,8 +84,19 @@ class PowerMeParticipance(resource.Resource):
 					be_powered_member_id = int(fid)
 				)
 				power_log.save()
+				has_powered = False
 			else:
 				powered_member_info.update(inc__power=1)
+				has_powered = True
+			detail_log = app_models.PoweredDetail(
+				belong_to = power_id,
+				owner_id = int(fid),
+				power_member_id = member_id,
+				power_member_name = request.member.username_for_html,
+				has_powered = has_powered,
+				created_at = datetime.now()
+			)
+			detail_log.save()
 		except Exception,e:
 			print e
 			response = create_response(500)
