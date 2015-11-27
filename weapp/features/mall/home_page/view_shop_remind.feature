@@ -121,7 +121,7 @@ Scenario: 1 查看商品管理
 		"""
 
 	#上架或下架对'商品管理-出售中的商品'的影响
-		When jobs-上架商品'商品1'
+		When jobs上架商品'商品1'
 		Then jobs能获取店铺提醒信息
 			"""
 			{
@@ -129,7 +129,7 @@ Scenario: 1 查看商品管理
 				"sellout_product_count":3
 			}
 			"""
-		When jobs-下架商品'商品4'
+		When jobs下架商品'商品4'
 		Then jobs能获取店铺提醒信息
 			"""
 			{
