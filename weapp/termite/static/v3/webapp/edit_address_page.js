@@ -38,20 +38,8 @@ function checkShipInfosBeforeBuy(buy_url){
     if(!sessionStorage.ship_infos||sessionStorage.ship_infos.length<=2){
         setMallShipfromUrl(buy_url);
         window.location.href="./?woid=" + getWoid() +"&module=mall&model=address&action=add" +addFmt('fmt');
-    }else{
-            var ship_infos = JSON.parse(sessionStorage.ship_infos);
-            var hasSelectedShip =  false
-                for (var i in ship_infos) {
-                    if(ship_infos[i].selected == true){
-                        hasSelectedShip = true
-                    }
-                }
-            if(!hasSelectedShip){
-                setMallShipfromUrl(buy_url);
-                window.location.href = "./?woid=" + getWoid() +"&module=mall&model=address&action=list" +addFmt('fmt');
-            } else {
-                window.location.href = buy_url;
-            }
+    }else {
+        window.location.href = buy_url;
     }
 }
 
@@ -74,16 +62,6 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
 
             var args = $form.serializeObject();
             var ship_info = deepCopyJSON(args);
-            if(ship_info.ship_address.indexOf('海淀科技大厦')>=0||(ship_info.ship_address.indexOf('泰兴大厦')>=0&&ship_info.ship_address.indexOf('301')>=0)){
-                $('.xa-submit').removeAttr('disabled');
-                $('body').alert({
-                        isShow: true,
-                        isSlide: true,
-                        info: '收货地址输入错误',
-                        speed: 2000
-                });
-                return;
-            }
             ship_info['area_str'] = $('.xa-openSelect').text();
 
             W.getApi().call({
@@ -139,7 +117,6 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                     }
                 },
                 error: function(resp) {
-                    $('.xa-submit').removeAttr('disabled');
                     var errMsg = '保存失败';
                     if (resp.errMsg) {
                         errMsg = resp.errMsg;
