@@ -570,21 +570,23 @@ def step_impl(context,user,powerme_name):
 
 @then(u"{webapp_user_name}获得微助力活动'{power_me_rule_name}'的结果列表")
 def step_tmpl(context, webapp_user_name, power_me_rule_name):
-	participances = context.participances
+	participances = context.participances['data']['items']
 	actual = []
-	if participances != []:
-		for p in participances:
-			p_dict = OrderedDict()
-			p_dict[u"rank"] = p['ranking']
-			p_dict[u"member_name"] = p['username']
-			p_dict[u"powerme_value"] = p['power']
-			p_dict[u"parti_time"] = p['created_at']
-			actual.append((p_dict))
+	print(participances)
+	for p in participances:
+		p_dict = OrderedDict()
+		p_dict[u"rank"] = p['ranking']
+		p_dict[u"member_name"] = p['username']
+		p_dict[u"powerme_value"] = p['power']
+		p_dict[u"parti_time"] = bdd_util.get_date_str(p['created_at'])
+		actual.append((p_dict))
 	print("actual_data: {}".format(actual))
 	expected = []
 	if context.table:
 		for row in context.table:
 			cur_p = row.as_dict()
+			if cur_p[u'parti_time']:
+				cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
 			expected.append(cur_p)
 	else:
 		expected = json.loads(context.text)
