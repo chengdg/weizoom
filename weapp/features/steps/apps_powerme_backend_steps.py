@@ -4,6 +4,7 @@ __author__ = 'mark24'
 
 from behave import *
 from test import bdd_util
+from collections import OrderedDict
 
 from features.testenv.model_factory import *
 import steps_db_util
@@ -562,9 +563,31 @@ def step_impl(context,user,powerme_name):
 @when(u"{user}查看微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
-	url ='/apps/powerme/powerme_participances/?id=%s' % (powerme_id)
+	url ='/apps/powerme/api/powerme_participances/?_method=get&id=%s' % (powerme_id)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
-	print(response)
-	# participances = response.context
-	# print(participances)
+	context.participances = json.loads(response.content)
+
+@then(u"{webapp_user_name}获得微助力活动'{power_me_rule_name}'的结果列表")
+def step_tmpl(context, webapp_user_name, power_me_rule_name):
+	participances = context.participances
+	actual = []
+	if participances != []:
+		for p in participances:
+			p_dict = OrderedDict()
+			p_dict[u"rank"] = p['ranking']
+			p_dict[u"member_name"] = p['username']
+			p_dict[u"powerme_value"] = p['power']
+			p_dict[u"parti_time"] = p['created_at']
+			actual.append((p_dict))
+	print("actual_data: {}".format(actual))
+	expected = []
+	if context.table:
+		for row in context.table:
+			cur_p = row.as_dict()
+			expected.append(cur_p)
+	else:
+		expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+
+	bdd_util.assert_list(expected, actual)
