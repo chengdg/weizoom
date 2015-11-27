@@ -456,31 +456,6 @@ def __Search_Powerme(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
-#############################################
-#
-#			powerme_list
-#
-#############################################
-
-@when(u"{user}设置微助力活动列表查询条件")
-def step_impl(context,user):
-	text = json.loads(context.text)
-	search_dic = {
-		"name": text.get("name",""),
-		"start_time": text.get("start_time",""),
-		"end_time": text.get("end_time",""),
-		"status": text.get("status",-1)
-	}
-	search_response = __Search_Powerme(context,search_dic)
-	powerme_array = json.loads(search_response.content)['data']['items']
-	__debug_print(powerme_array)
-
-#############################################
-#
-#			powerme_backend
-#
-#############################################
-
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
@@ -521,12 +496,6 @@ def step_impl(context,user):
 	print("actual_data: {}".format(actual_list))
 	bdd_util.assert_list(expected,actual_list)
 
-
-#############################################
-#
-#			update_powerme
-#
-#############################################
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
@@ -630,4 +599,19 @@ def step_impl(context,user,powerme_name):
 	print(response)
 	# participances = response.context
 	# print(participances)
+
+
+
+@when(u"{user}设置微助力活动列表查询条件")
+def step_impl(context,user):
+	text = json.loads(context.text)
+	search_dic = {
+		"name": text.get("name",""),
+		"start_time": text.get("start_time",""),
+		"end_time": text.get("end_time",""),
+		"status": text.get("status",-1)
+	}
+	search_response = __Search_Powerme(context,search_dic)
+	powerme_array = json.loads(search_response.content)['data']['items']
+	__debug_print(powerme_array)
 
