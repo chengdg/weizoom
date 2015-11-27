@@ -557,6 +557,7 @@ def step_impl(context,user):
 	actual_list = []
 	expected = json.loads(context.text)
 
+	#搜索查看结果
 	if hasattr(context,"search_powerme"):
 		rec_search_list = context.search_powerme
 		for item in rec_search_list:
@@ -580,8 +581,9 @@ def step_impl(context,user):
 		print("expected: {}".format(expected))
 
 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
-
+	#其他查看结果
 	else:
+		#分页情况，更新分页参数
 		if hasattr(context,"paging"):
 			paging_dic = context.paging
 			count_per_page = paging_dic['count_per_page']
@@ -618,40 +620,40 @@ def step_impl(context,user):
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
-	text = json.loads(context.text)[0]
+	expect = json.loads(context.text)[0]
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
-	__Update_PowerMe(context,text,powerme_page_id,powerme_id)
+	__Update_PowerMe(context,expect,powerme_page_id,powerme_id)
 
 
 @then(u"{user}获得微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
-	text = json.loads(context.text)[0]
+	expect = json.loads(context.text)[0]
 
-	title = text.get("name","")
-	cr_start_date = text.get('start_date', u'今天')
+	title = expect.get("name","")
+	cr_start_date = expect.get('start_date', u'今天')
 	start_date = bdd_util.get_date_str(cr_start_date)
 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-	cr_end_date = text.get('end_date', u'1天后')
+	cr_end_date = expect.get('end_date', u'1天后')
 	end_date = bdd_util.get_date_str(cr_end_date)
 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
 	# valid_time = "%s~%s"%(start_time,end_time)
-	timing_status = text.get("is_show_countdown","")
+	timing_status = expect.get("is_show_countdown","")
 	# timing_value_day = __date_delta(start_date,end_date)
-	description = text.get("desc","")
-	reply_content = text.get("reply")
-	material_image = text.get("share_pic","")
-	background_image = text.get("background_pic","")
+	description = expect.get("desc","")
+	reply_content = expect.get("reply")
+	material_image = expect.get("share_pic","")
+	background_image = expect.get("background_pic","")
 
-	qrcode_name = text.get("qr_code","")
+	qrcode_name = expect.get("qr_code","")
 	if qrcode_name:
 		qrcode = __get_qrcode(context,qrcode_name)
 	else:
 		qrcode = ""
 
-	color  = text.get("background_color","冬日暖阳")
-	rules = text.get("rules","")
+	color  = expect.get("background_color","冬日暖阳")
+	rules = expect.get("rules","")
 
 
 	obj = powerme_models.PowerMe.objects.get(name=powerme_name)#纯数字
