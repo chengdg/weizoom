@@ -529,7 +529,7 @@ def step_impl(context,user):
 			}
 			actual_list.append(tmp)
 		print("actual_data: {}".format(actual_list))
-		bdd_util.assert_list(actual_list,expected)
+		bdd_util.assert_list(expected,actual_list)
 
 
 @when(u"{user}编辑微助力活动'{powerme_name}'")
@@ -675,3 +675,6 @@ def step_impl(context,user):
 	powerme_array = json.loads(search_response.content)['data']['items']
 	context.search_powerme = powerme_array
 
+@when(u"{user}访问微助力活动列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+	pass
