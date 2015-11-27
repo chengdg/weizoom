@@ -416,6 +416,17 @@ def __Delete_PowerMe(context,powerme_id):
 	del_powerme_response = context.client.post(del_powerme_url,del_args)
 	return del_powerme_response
 
+def __Stop_PowerMe(context,powerme_id):
+	design_mode = 0
+	version = 1
+	stop_powerme_url = "/apps/powerme/api/powerme_status/?design_mode={}&version={}".format(design_mode,version)
+	stop_args ={
+		"id":powerme_id,
+		"target":'stoped'
+	}
+	stop_powerme_response = context.client.post(stop_powerme_url,stop_args)
+	return stop_powerme_response
+
 
 @when(u'{user}新建微助力活动')
 def step_impl(context,user):
@@ -545,3 +556,9 @@ def step_impl(context,user,powerme_name):
 	del_response = __Delete_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(del_response)
 
+
+@when(u"{user}关闭微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	stop_response = __Stop_PowerMe(context,powerme_id)
+	bdd_util.assert_api_call_success(stop_response)
