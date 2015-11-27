@@ -212,22 +212,22 @@ def step_impl(context, webapp_owner_name):
 			'parti_time': bdd_util.get_date_str(row['parti_time']),
 			'name': row['name']
 		}
-		print('data!!!!!!!!')
-		print(data)
 		#进入微助力活动页面
 		webapp_owner_id = context.webapp_owner_id
 		user = User.objects.get(id=webapp_owner_id)
 		openid = "%s_%s" % (webapp_user_name, user.username)
 		power_me_rule_id = __get_power_me_rule_id(data['name'])
 		member = member_api.get_member_by_openid(openid, context.webapp_id)
+		#先进入微助力页面
 		response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 		context.powerme_result = response.context
 		context.execute_steps(u"when %s把%s的微助力活动链接分享到朋友圈" % (webapp_user_name, webapp_owner_name))
-		PowerMeParticipance.objects.get(member_id=member.id).update(set__created_at=data['parti_time'])
+		PowerMeParticipance.objects(member_id=member.id, belong_to=power_me_rule_id).update(set__created_at=data['parti_time'])
 		i = 0
-		webapp_test_user_name = 'nokia'
+		webapp_test_user_name = 'test_user_'
 		while i < int(data['powerme_value']):
 			i += 1
+			context.execute_steps(u"When 清空浏览器")
 			context.execute_steps(u"When %s关注%s的公众号" % (webapp_test_user_name+str(i), webapp_owner_name))
 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_test_user_name+str(i), webapp_owner_name))
 			context.execute_steps(u"When %s点击%s分享的微助力活动链接进行助力" % (webapp_test_user_name+str(i), webapp_user_name))
