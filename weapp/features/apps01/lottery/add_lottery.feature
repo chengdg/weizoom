@@ -59,8 +59,8 @@ Scenario:1 新建微信抽奖,抽奖限制一人一次
 			},{
 				"name":"二等奖",
 				"prize_counts":30,
-				"prize_type":"优惠券1",
-				"coupon":100,
+				"prize_type":"优惠券",
+				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"name":"三等奖",

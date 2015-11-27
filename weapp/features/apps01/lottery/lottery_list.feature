@@ -1,7 +1,7 @@
 #_author_:张三香 2015.11.17
 
 Feature:微信抽奖列表
-"""
+	"""
 	微信抽奖列表
 		查询条件:
 			活动名称:默认为空,模糊匹配查询
@@ -18,7 +18,7 @@ Feature:微信抽奖列表
 				进行中: 查看结果 关闭 预览
 				已结束: 查看结果 删除 预览
 			排序：按照活动的创建时间进行倒序显示,每页最多显示10条数据
-"""
+	"""
 
 Background:
 	Given jobs登录系统
@@ -57,8 +57,8 @@ Background:
 			},{
 				"name":"二等奖",
 				"prize_counts":30,
-				"prize_type":"优惠券1",
-				"coupon":100,
+				"prize_type":"优惠券",
+				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"name":"三等奖",
@@ -87,8 +87,8 @@ Background:
 			},{
 				"name":"二等奖",
 				"prize_counts":30,
-				"prize_type":"优惠券1",
-				"coupon":100,
+				"prize_type":"优惠券",
+				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"name":"三等奖",
@@ -117,8 +117,8 @@ Background:
 			},{
 				"name":"二等奖",
 				"prize_counts":30,
-				"prize_type":"优惠券1",
-				"coupon":100,
+				"prize_type":"优惠券",
+				"coupon":"优惠券1",
 				"pic":""
 			},{
 				"name":"三等奖",
@@ -134,7 +134,7 @@ Background:
 Scenario:1 微信抽奖活动列表查询
 	Given jobs登录系统
 	#空查询
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{}
 			"""
@@ -151,7 +151,7 @@ Scenario:1 微信抽奖活动列表查询
 
 	#按照活动名称查询
 		#查询结果为空
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{
 				"name":"条件"
@@ -163,7 +163,7 @@ Scenario:1 微信抽奖活动列表查询
 			"""
 
 		#模糊匹配
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{
 				"name":"微信抽奖"
@@ -181,7 +181,7 @@ Scenario:1 微信抽奖活动列表查询
 			"""
 
 		#精确匹配
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{
 				"name":"微信抽奖01"
@@ -195,7 +195,7 @@ Scenario:1 微信抽奖活动列表查询
 			"""
 
 	#按照状态查询
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{
 				"status":"全部"
@@ -212,7 +212,7 @@ Scenario:1 微信抽奖活动列表查询
 			}]
 			"""
 
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{
 				"status":"未开始"
@@ -227,7 +227,7 @@ Scenario:1 微信抽奖活动列表查询
 
 	#按照活动时间查询
 		#查询结果为空
-			When jobs设置查询条件
+			When jobs设置微信抽奖活动列表查询条件
 				"""
 				{
 					"start_date":"2天前",
@@ -240,7 +240,7 @@ Scenario:1 微信抽奖活动列表查询
 				"""
 
 		#开始时间为空，结束时间非空
-			When jobs设置查询条件
+			When jobs设置微信抽奖活动列表查询条件
 				"""
 				{
 					"start_date":"",
@@ -255,7 +255,7 @@ Scenario:1 微信抽奖活动列表查询
 				"""
 
 		#开始时间非空，结束时间为空
-			When jobs设置查询条件
+			When jobs设置微信抽奖活动列表查询条件
 				"""
 				{
 					"start_date":"昨天",
@@ -272,7 +272,7 @@ Scenario:1 微信抽奖活动列表查询
 				"""
 
 		#开始时间非空，结束时间非空
-			When jobs设置查询条件
+			When jobs设置微信抽奖活动列表查询条件
 				"""
 				{
 					"start_date":"今天",
@@ -289,7 +289,7 @@ Scenario:1 微信抽奖活动列表查询
 				"""
 
 		#开始时间和结束时间相等
-			When jobs设置查询条件
+			When jobs设置微信抽奖活动列表查询条件
 				"""
 				{
 					"start_date":"今天",
@@ -302,7 +302,7 @@ Scenario:1 微信抽奖活动列表查询
 				"""
 
 	#组合查询
-		When jobs设置查询条件
+		When jobs设置微信抽奖活动列表查询条件
 			"""
 			{
 				"name":"微信抽奖",
