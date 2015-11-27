@@ -259,7 +259,7 @@
                                         </span>
                                         {% endif %}
                                     </div>
-                                <div class="xui-price xt-price em8 ml10">￥{{ product.price }}</div>
+                                <div class="xui-price xt-price em8 ml10">￥{{ product.price | floatformat:"2" }}</div>
                                 <span class="xui-deleteBtn xa-deleteBtn pa">
                                     <img src="/static_v2/img/webapp/mall/trash.png" data-allow-autoplay=false>
                                 </span>
