@@ -466,12 +466,6 @@ def step_impl(context,user):
 
 @then(u'{user}获得微助力活动列表')
 def step_impl(context,user):
-	design_mode = 0
-	count_per_page = 10
-	version = 1
-	page = 1
-	enable_paginate = 1
-
 	expected = json.loads(context.text)
 	for expect in expected:
 		if 'start_time' in expect:
@@ -480,10 +474,11 @@ def step_impl(context,user):
 			expect['end_date'] = __date2time(expect['end_date'])
 	print("expected: {}".format(expected))
 
-	rec_powerme_url ="/apps/powerme/api/powermes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-	rec_powerme_response = context.client.get(rec_powerme_url)
+	url ='/apps/powerme/api/powermes/'
+	rec_powerme_response = context.client.get(bdd_util.nginx(url))
 	rec_powerme_list = json.loads(rec_powerme_response.content)['data']['items']#[::-1]
-
+	print('rec_powerme_list!!!!!!')
+	print(rec_powerme_list)
 	actual_list = []
 	for item in rec_powerme_list:
 		tmp = {
@@ -583,13 +578,11 @@ def step_impl(context,user,powerme_name):
 	del_response = __Delete_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(del_response)
 
-
 @when(u"{user}关闭微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):
 	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
 	stop_response = __Stop_PowerMe(context,powerme_id)
 	bdd_util.assert_api_call_success(stop_response)
-
 
 @when(u"{user}查看微助力活动'{powerme_name}'")
 def step_impl(context,user,powerme_name):

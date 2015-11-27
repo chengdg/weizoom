@@ -170,22 +170,21 @@ Scenario:1 微助力活动列表参与人数的校验
 		|  2   | tom         |     1         | 今天       |
 		|  3   | tom2        |     0         | 今天       |
 
-	#取消关注后，会员排名消息，参与人数随之减少
-#	When bill取消关注jobs的公众号
-#	Given jobs登录系统
-#	Then jobs获得微助力活动列表
-#		"""
-#		[{
-#			"name":"微助力活动2",
-#			"participant_count":0
-#		},{
-#			"name":"微助力活动1",
-#			"participant_count":2
-#		}]
-#		"""
-#
-#	When jobs查看微助力活动'微助力活动1'
-#	Then jobs获得微助力活动'微助力活动1'的结果列表
-#		| rank | member_name | powerme_value | parti_time |
-#		|  1   | tom         |     1         | 今天       |
-#		|  2   | tom2        |     0         | 今天       |
+	#取消关注后，会员排名消息，参与人数随之减少，但是帮别人的助力值还在
+  	When bill取消关注jobs的公众号
+	Given jobs登录系统
+	Then jobs获得微助力活动列表
+		"""
+		[{
+			"name":"微助力活动2",
+			"participant_count":0
+		},{
+			"name":"微助力活动1",
+			"participant_count":2
+		}]
+		"""
+	When jobs查看微助力活动'微助力活动1'
+	Then jobs获得微助力活动'微助力活动1'的结果列表
+		| rank | member_name | powerme_value | parti_time |
+		|  1   | tom         |     1         | 今天       |
+		|  2   | tom2        |     0         | 今天       |
