@@ -35,6 +35,9 @@ def __debug_print(content,type_tag=True):
 
 
 def __get_powermePageJson(args):
+	"""
+	传入参数，获取模板
+	"""
 	__page_temple = {
 			"type": "appkit.page",
 			"cid": 1,
@@ -159,6 +162,9 @@ def __get_powermePageJson(args):
 	return json.dumps(__page_temple)
 
 def __bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
 	bool_dic = {'true':True,'false':False,'True':True,'False':False}
 	if bo:
 		result = bool_dic[bo]
@@ -168,38 +174,52 @@ def __bool2Bool(bo):
 
 def __date_delta(start,end):
 	"""
+	获得日期，相差天数，返回int
 	格式：
 		start:(str){2015-11-23}
 		end :(str){2015-11-30}
-	获得时间差，返回int型
 	"""
 	start = dt.datetime.strptime(start, "%Y-%m-%d").date()
 	end = dt.datetime.strptime(end, "%Y-%m-%d").date()
 	return (end-start).days
 
 def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
 	cr_date = date_str
 	p_date = bdd_util.get_date_str(cr_date)
 	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
 	return p_time
 
 def __datetime2str(dt_time):
+	"""
+	datetime型数据，转为字符串型，日期
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
 	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
 	return dt_time
 
 def __powerme_name2id(name):
 	"""
-	给微助力项目的名字
+	给微助力项目的名字，返回id元祖
 	返回（related_page_id,powerme_powerme中id）
 	"""
 	obj = powerme_models.PowerMe.objects.get(name=name)
 	return (obj.related_page_id,obj.id)
 
 def __status2name(status_num):
+	"""
+	微助力：状态值 转 文字
+	"""
 	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
 	return status2name_dic[status_num]
 
 def __name2status(name):
+	"""
+	微助力： 文字 转 状态值
+	"""
 	if name:
 		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
 		return name2status_dic[name]
@@ -207,6 +227,9 @@ def __name2status(name):
 		return -1
 
 def __name2color(name):
+	"""
+	微助力背景色：文字 转 状态值
+	"""
 	name2color_dic = {
 		u"冬日暖阳":"yellow",
 		u"玫瑰茜红":"red",
@@ -215,6 +238,9 @@ def __name2color(name):
 	return name2color_dic[name]
 
 def __color2name(color):
+	"""
+	微助力背景色：状态值 转 文字
+	"""
 	color2name_dic = {
 		'yellow': u'冬日暖阳',
 		'red': u'玫瑰茜红',
@@ -224,6 +250,10 @@ def __color2name(color):
 
 
 def __get_qrcode(context,qrcode_name):
+	"""
+	传入二维码名字，获得二维码，信息字典
+	"""
+
 	qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
 	qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
 	qrcode_response = context.client.get(qrcode_i_url)
@@ -232,7 +262,27 @@ def __get_qrcode(context,qrcode_name):
 	qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
 	return qrcode
 
+def __get_actions(status):
+	"""
+	根据输入微助力状态
+	返回对于操作列表
+	"""
+	actions_list = [u"查看",u"预览",u"复制链接"]
+	if status == u"已结束":
+		actions_list.append(u"删除")
+	elif status=="进行中" or "未开始":
+		actions_list.append(u"关闭")
+	return actions_list
+
 def __Create_PowerMe(context,text,user):
+	"""
+	模拟用户登录页面
+	创建微助力项目
+	写入mongo表：
+		1.powerme_powerme表
+		2.page表
+	"""
+
 	design_mode = 0
 	version = 1
 	text = text
@@ -330,8 +380,13 @@ def __Create_PowerMe(context,text,user):
 
 def __Update_PowerMe(context,text,page_id,powerme_id):
 	"""
-	更新微助力
+	模拟用户登录页面
+	编辑微助力项目
+	写入mongo表：
+		1.powerme_powerme表
+		2.page表
 	"""
+
 	design_mode=0
 	version=1
 	project_id = "new_app:powerme:"+page_id
@@ -414,6 +469,13 @@ def __Update_PowerMe(context,text,page_id,powerme_id):
 
 
 def __Delete_PowerMe(context,powerme_id):
+	"""
+	删除微助力活动
+	写入mongo表：
+		1.powerme_powerme表
+
+	注释：page表在原后台，没有被删除
+	"""
 	design_mode = 0
 	version = 1
 	del_powerme_url = "/apps/powerme/api/powerme/?design_mode={}&version={}".format(design_mode,version)
@@ -425,6 +487,10 @@ def __Delete_PowerMe(context,powerme_id):
 	return del_powerme_response
 
 def __Stop_PowerMe(context,powerme_id):
+	"""
+	关闭微助力活动
+	"""
+
 	design_mode = 0
 	version = 1
 	stop_powerme_url = "/apps/powerme/api/powerme_status/?design_mode={}&version={}".format(design_mode,version)
@@ -436,6 +502,13 @@ def __Stop_PowerMe(context,powerme_id):
 	return stop_powerme_response
 
 def __Search_Powerme(context,search_dic):
+	"""
+	搜索微助力活动
+
+	输入搜索字典
+	返回数据列表
+	"""
+
 	design_mode = 0
 	version = 1
 	page = 1
@@ -464,13 +537,6 @@ def __Search_Powerme(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
-def __get_actions(status):
-	actions_list = [u"查看",u"预览",u"复制链接"]
-	if status == u"已结束":
-		actions_list.append(u"删除")
-	elif status=="进行中" or "未开始":
-		actions_list.append(u"关闭")
-	return actions_list
 
 
 
@@ -501,6 +567,7 @@ def step_impl(context,user):
 				"end_time":item['end_time'],
 				"participant_count":item['participant_count']
 			}
+			tmp["actions"] = __get_actions(item['status'])
 			actual_list.append(tmp)
 
 		for expect in expected:
@@ -510,8 +577,6 @@ def step_impl(context,user):
 			if 'end_date' in expect:
 				expect['end_time'] = __date2time(expect['end_date'])
 				del expect['end_date']
-			if 'actions' in expect:
-				del expect['actions']
 		print("expected: {}".format(expected))
 
 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
