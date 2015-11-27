@@ -236,10 +236,17 @@
 								'" title="' + firstNav.title + '">' + 
 								firstNav.title + '</a>'+ className + '</li>');
 						} else {
-							$('.xa-first-navs').append('<li class="pr"><a' + 
-								' href="' + firstNav.url + 
-								'" title="' + firstNav.title + '">' + 
-								firstNav.title + '</a>' + className + '</li>');
+							if(firstNav.title === '粉丝招募平台') {
+								$('.xa-first-navs').append('<li class="pr xui-i-bigDataTab"><a target="_blank"' + 
+									' href="' + firstNav.url + 
+									'?token={{token}}" title="' + firstNav.title + '">' + 
+									firstNav.title + '</a>' + className + '</li>');
+							} else {
+								$('.xa-first-navs').append('<li class="pr"><a' + 
+									' href="' + firstNav.url + 
+									'" title="' + firstNav.title + '">' + 
+									firstNav.title + '</a>' + className + '</li>');
+							}
 						}
 					}
 				}
