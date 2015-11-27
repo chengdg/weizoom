@@ -97,7 +97,7 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 			"price":20.0
 		}]
 		"""
-	When jobs-上架商品'商品2'
+	When jobs上架商品'商品2'
 	Then jobs能获得'在售'商品列表
 		"""
 		[{
@@ -118,7 +118,7 @@ Scenario: 2 下架商品,在待售商品列表中第一个显示
 			"price": 20.0
 		}]
 		"""
-	When jobs-下架商品'商品2'
+	When jobs下架商品'商品2'
 	Then jobs能获得'待售'商品列表
 		"""
 		[{
