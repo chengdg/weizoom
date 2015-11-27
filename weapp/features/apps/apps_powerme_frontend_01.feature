@@ -71,6 +71,7 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
+	When tom点击bill分享的微助力活动链接
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -94,7 +95,7 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 		"""
 		[{
 			"name":"微助力活动1",
-			"participant_count":1,
+			"participant_count":1
 		}]
 		"""
 	When jobs查看微助力活动'微助力活动1'
@@ -105,26 +106,25 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 	When bill取消关注jobs的公众号
 
 	Given jobs登录系统
-	Then jobs获得微助力活动列表
-		"""
-		[{
-			"name":"微助力活动1",
-			"participant_count":0,
-		}]
-		"""
 	When jobs查看微助力活动'微助力活动1'
 	Then jobs获得微助力活动'微助力活动1'的结果列表
 		"""
 		[]
 		"""
-
+	Then jobs获得微助力活动列表
+		"""
+		[{
+			"name":"微助力活动1",
+			"participant_count":0
+		}]
+		"""
 	When bill关注jobs的公众号
 	Given jobs登录系统
 	Then jobs获得微助力活动列表
 		"""
 		[{
 			"name":"微助力活动1",
-			"participant_count":0,
+			"participant_count":0
 		}]
 		"""
 	When jobs查看微助力活动'微助力活动1'
@@ -151,7 +151,7 @@ Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助
 		"""
 		[{
 			"name":"微助力活动1",
-			"participant_count":1,
+			"participant_count":1
 		}]
 		"""
 	When jobs查看微助力活动'微助力活动1'
@@ -165,17 +165,17 @@ Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助
 	When tom点击bill分享的微助力活动链接进行助力
 
 	Given jobs登录系统
+  	When jobs查看微助力活动'微助力活动1'
+	Then jobs获得微助力活动'微助力活动1'的结果列表
+		"""
+		[]
+		"""
 	Then jobs获得微助力活动列表
 		"""
 		[{
 			"name":"微助力活动1",
-			"participant_count":0,
+			"participant_count":0
 		}]
-		"""
-	When jobs查看微助力活动'微助力活动1'
-	Then jobs获得微助力活动'微助力活动1'的结果列表
-		"""
-		[]
 		"""
 
 	When bill关注jobs的公众号
@@ -185,7 +185,7 @@ Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助
 		"""
 		[{
 			"name":"微助力活动1",
-			"participant_count":0,
+			"participant_count":0
 		}]
 		"""
 	When jobs查看微助力活动'微助力活动1'
@@ -214,6 +214,7 @@ Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后
 
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
+	When tom点击bill分享的微助力活动链接
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -237,7 +238,7 @@ Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后
 		"""
 		[{
 			"name":"微助力活动1",
-			"participant_count":1,
+			"participant_count":1
 		}]
 		"""
 	When jobs查看微助力活动'微助力活动1'
