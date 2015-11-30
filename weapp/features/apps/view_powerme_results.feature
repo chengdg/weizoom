@@ -190,14 +190,15 @@ Scenario:2 查看结果页面的查询
 				"""
 				{
 					"parti_start_time":"昨天",
-					"parti_start_time":""
+					"parti_end_time":""
 				}
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
 				|  1   | bill        |     10        | 今天       |
 				|  2   | tom         |     8         | 今天       |
-				|  3   | tom2        |     4         | 今天       |
+				|  3   | tom1        |     4         | 今天       |
+				|  4   | tom2        |     4         | 今天       |
 
 		#开始时间为空，结束时间非空
 			When jobs设置微助力活动结果列表查询条件
@@ -219,7 +220,7 @@ Scenario:2 查看结果页面的查询
 				"""
 				{
 					"parti_start_time":"今天",
-					"parti_start_time":"今天"
+					"parti_end_time":"今天"
 				}
 				"""
 			Then jobs获得微助力活动'微助力活动1'的结果列表
