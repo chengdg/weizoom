@@ -845,3 +845,10 @@ def step_impl(context,user):
 	powerme_result_array = json.loads(search_response.content)['data']['items']
 	context.search_powerme_result = powerme_result_array
 
+@then(u"{user}能批量导出微助力活动'{powerme_name}'")
+def step_impl(context,user,powerme_name):
+	powerme_page_id,powerme_id = __powerme_name2id(powerme_name)#纯数字
+	url ='/apps/powerme/api/powerme_participances_export/?_method=get&export_id=%s' % (powerme_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	bdd_util.assert_api_call_success(response)
