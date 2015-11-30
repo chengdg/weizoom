@@ -86,7 +86,7 @@ Background:
 		}]
 		"""
 
-@apps @powerme @update_powerme
+@apps @powerme @apps_powerme_backend @update_powerme
 Scenario:1 编辑'未开始'的微助力活动
 	Given jobs登录系统
 	When jobs编辑微助力活动'微助力活动2'

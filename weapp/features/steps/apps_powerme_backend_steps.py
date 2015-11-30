@@ -317,7 +317,7 @@ def __Create_PowerMe(context,text,user):
 		qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
 		qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
 	else:
-		qrcode = ""
+		qrcode = {"ticket":"","name":""}
 
 	zhcolor = text.get("background_color","冬日暖阳")
 	color = __name2color(zhcolor)
