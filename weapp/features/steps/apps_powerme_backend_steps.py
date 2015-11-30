@@ -600,7 +600,8 @@ def step_impl(context,user):
 				"status":item['status'],
 				"start_time":item['start_time'],
 				"end_time":item['end_time'],
-				"participant_count":item['participant_count']
+				"participant_count":item['participant_count'],
+				"total_powerme_value":item['total_power']
 			}
 			tmp["actions"] = __get_actions(item['status'])
 			actual_list.append(tmp)
@@ -644,7 +645,8 @@ def step_impl(context,user):
 				"status":item['status'],
 				"start_time":__date2time(item['start_time']),
 				"end_time":__date2time(item['end_time']),
-				"participant_count":item['participant_count']
+				"participant_count":item['participant_count'],
+				"total_powerme_value":item['total_power']
 			}
 			tmp["actions"] = __get_actions(item['status'])
 			actual_list.append(tmp)

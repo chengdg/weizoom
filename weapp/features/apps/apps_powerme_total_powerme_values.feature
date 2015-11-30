@@ -41,8 +41,8 @@ Background:
 		"""
 		[{
 			"name":"微助力活动1",
-			"start_date":"3天前",
-			"end_date":"10天后",
+			"start_date":"今天",
+			"end_date":"3天后",
 			"is_show_countdown":"true",
 			"desc":"微助力活动描述1",
 			"reply":"微助力1",
@@ -53,8 +53,8 @@ Background:
 			"rules":"获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式"
 		},{
 			"name":"微助力活动2",
-			"start_date":"今天",
-			"end_date":"3天后",
+			"start_date":"3天前",
+			"end_date":"10天后",
 			"is_show_countdown":"false",
 			"desc":"微助力活动描述2",
 			"reply":"微助力2",
@@ -117,7 +117,7 @@ Background:
 	And tom1关注jobs的公众号
 	And tom2关注jobs的公众号
 
-@apps @apps_powerme
+@apps @apps_powerme @apps_powerme_backend @total_powerme_values
 Scenario:1 微助力活动列表微助力值总数
 	When 微信用户批量参加jobs的微助力活动
 		| member_name | powerme_value | parti_time |  name       |
