@@ -129,10 +129,10 @@ Background:
 
 	When 微信用户批量参加jobs的微助力活动
 		| member_name | powerme_value | parti_time |  name      |
-#		| tom1        |     4         | 3天前      | 微助力活动1 |
-#		| bill        |     10        | 昨天       | 微助力活动1 |
-#		| tom         |     8         | 今天       | 微助力活动1 |
-#		| tom2        |     4         | 今天       | 微助力活动1 |
+		| tom1        |     4         | 3天前      | 微助力活动1 |
+		| bill        |     10        | 昨天       | 微助力活动1 |
+		| tom         |     8         | 今天       | 微助力活动1 |
+		| tom2        |     4         | 今天       | 微助力活动1 |
 		| bill        |     2         | 今天       | 微助力活动2 |
 
 @apps @apps_powerme @apps_powerme_backend @view_powerme_results
