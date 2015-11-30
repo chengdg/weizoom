@@ -467,7 +467,6 @@ def __Update_PowerMe(context,text,page_id,powerme_id):
 	update_powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	update_powerme_response = context.client.post(update_powerme_url,update_powerme_args)
 
-
 def __Delete_PowerMe(context,powerme_id):
 	"""
 	删除微助力活动
@@ -537,6 +536,41 @@ def __Search_Powerme(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
+def __Search_Powerme_Result(context,search_dic):
+	"""
+	搜索,微助力参与结果
+
+	输入搜索字典
+	返回数据列表
+	"""
+
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
+
+	id = search_dic["id"]
+	participant_name = search_dic["participant_name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+
+
+
+	search_url = "/apps/powerme/api/powerme_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			id,
+			participant_name,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
+
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 
 
@@ -713,10 +747,14 @@ def step_impl(context,user,powerme_name):
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	context.participances = json.loads(response.content)
+	context.powerme_id = "%s"%(powerme_id)
 
 @then(u"{webapp_user_name}获得微助力活动'{power_me_rule_name}'的结果列表")
 def step_tmpl(context, webapp_user_name, power_me_rule_name):
-	participances = context.participances['data']['items']
+	if hasattr(context,"search_powerme_result"):
+		participances = context.search_powerme_result
+	else:
+		participances = context.participances['data']['items']
 	actual = []
 	print(participances)
 	for p in participances:
@@ -779,3 +817,31 @@ def step_impl(context,user):
 	count_per_page = paging_dic['count_per_page']
 	page_num = int(paging_dic['page_num'])-1
 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}设置微助力活动结果列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
+
+	if 'parti_start_time' in expect:
+		expect['start_time'] = __date2time(expect['parti_start_time']) if expect['parti_start_time'] else ""
+		del expect['parti_start_time']
+
+	if 'parti_end_time' in expect:
+		expect['end_time'] = __date2time(expect['parti_end_time']) if expect['parti_end_time'] else ""
+		del expect['parti_end_time']
+
+	id = context.powerme_id
+	participant_name = expect.get("member_name","")
+	start_time = expect.get("start_time","")
+	end_time = expect.get("end_time","")
+
+	search_dic = {
+		"id":id,
+		"participant_name":participant_name,
+		"start_time":start_time,
+		"end_time":end_time
+	}
+	search_response = __Search_Powerme_Result(context,search_dic)
+	powerme_result_array = json.loads(search_response.content)['data']['items']
+	context.search_powerme_result = powerme_result_array
+
