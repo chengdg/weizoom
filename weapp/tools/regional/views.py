@@ -2,9 +2,10 @@
 from django.core.cache import get_cache
 
 from core.jsonresponse import create_response
-from core.exceptionutil import full_stack
-
+from core.exceptionutil import full_stack, unicode_full_stack
 from models import *
+from watchdog.utils import watchdog_error
+
 
 def get_provinces(request):
 	response = create_response(200)
@@ -62,25 +63,34 @@ def _get_districts_for_city(city_id):
 
 
 def get_str_value_by_string_ids(str_ids):
-	if str_ids != '' and str_ids:
-		cache = get_cache('mem')
-		ship_address = cache.get(str_ids)
-		if not ship_address:
-			area_args = str_ids.split('_')
-			ship_address = ''
-			curren_area = ''
-			for index, area in enumerate(area_args):
+	try:
+		# todo 临时解决方案
+		if u'省' in str_ids or u'市' in str_ids:
+			watchdog_error(u'ship_info中存在中文：' + str_ids)
+			return str_ids
+		elif str_ids != '' and str_ids:
+			cache = get_cache('mem')
+			ship_address = cache.get(str_ids)
+			if not ship_address:
+				area_args = str_ids.split('_')
+				ship_address = ''
+				curren_area = ''
+				for index, area in enumerate(area_args):
 
-				if index == 0:
-					curren_area = Province.objects.get(id=int(area))
-				elif index == 1:
-					curren_area = City.objects.get(id=int(area))
-				elif index == 2:
-					curren_area = District.objects.get(id=int(area))
-				ship_address =  ship_address + ' ' + curren_area.name
-			cache.set(str_ids, ship_address)
-		return u'{}'.format(ship_address.strip())
-	else:
+					if index == 0:
+						curren_area = Province.objects.get(id=int(area))
+					elif index == 1:
+						curren_area = City.objects.get(id=int(area))
+					elif index == 2:
+						curren_area = District.objects.get(id=int(area))
+					ship_address =  ship_address + ' ' + curren_area.name
+				cache.set(str_ids, ship_address)
+			return u'{}'.format(ship_address.strip())
+		else:
+			return None
+	except:
+		stack = unicode_full_stack()
+		watchdog_error(stack)
 		return None
 
 
