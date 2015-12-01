@@ -215,20 +215,28 @@ class SqlMonitorMiddleware(object):
 		from utils import cache_util
 		cache_util.CACHE_QUERIES= []
 
-		if not 'HTTP_USER_AGENT' in request.META:
-			return None
+		# if not 'HTTP_USER_AGENT' in request.META:
+		# 	return None
 
-		if 'flash' in request.META['HTTP_USER_AGENT'].lower():
-			return None
+		# if 'flash' in request.META['HTTP_USER_AGENT'].lower():
+		# 	return None
 
-		if 'd-sql' in request.GET or 'd-allsql' in request.GET:
-			settings.DEBUG = True
-			request.enable_sql_monitor = True
-		else:
-			request.enable_sql_monitor = False
+		# if 'd-sql' in request.GET or 'd-allsql' in request.GET:
+		# 	settings.DEBUG = True
+		request.enable_sql_monitor = True
+		# else:
+		# 	request.enable_sql_monitor = False
 		return None
 
 	def process_response(self, request, response):
+		for query in connections['default'].queries:
+			print 'jz------------------------------------------------------------------------------------------------------------------0020:', 'time', query['time'], 'sql', query['sql']
+			# sqls.append({'time':query['time'], 'sql':query['sql'], 'stack':query.get('stack', 'set settings.DJANGO_HACK_PARAMS[`enable_record_sql_stacktrace`]=True to enable sql stack trace')})
+
+		from utils import cache_util
+		for query in cache_util.CACHE_QUERIES:
+			print 'jz------------------------------------------------------------------------------------------------------------------0021:', 'time', query['time'], 'sql', query['sql']
+			# sqls.insert(0, {'time':query['time'], 'sql':query['sql'], 'stack':query.get('stack', 'set settings.DJANGO_HACK_PARAMS[`enable_record_sql_stacktrace`]=True to enable sql stack trace')})
 		if not 'HTTP_USER_AGENT' in request.META:
 			return response
 
@@ -238,8 +246,8 @@ class SqlMonitorMiddleware(object):
 		if ('d-sql' in request.GET) or ('d-allsql' in request.GET) or hasattr(request, 'enable_json2html'):
 			settings.DEBUG = True
 			request.enable_sql_monitor = True
-		else:
-			request.enable_sql_monitor = False
+		# else:
+		# 	request.enable_sql_monitor = False
 			
 		if not request.enable_sql_monitor:
 			return response

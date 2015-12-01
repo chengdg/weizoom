@@ -70,7 +70,9 @@ def get_usage(request):
 	"""
 	个人中心：优惠券列表
 	"""
+	print 'jz------------------------------------------------------------------------------------------------------------------4444:', time.time()
 	coupons = coupon_util.get_my_coupons(request.member.id)
+	print 'jz------------------------------------------------------------------------------------------------------------------4455:', time.time()
 	used_coupons = []
 	unused_coupons = []
 	expired_coupons = []
@@ -94,4 +96,5 @@ def get_usage(request):
 		'expired_coupons': expired_coupons,
 		'is_hide_weixin_option_menu': True
 	})
+	print 'jz------------------------------------------------------------------------------------------------------------------4466:', time.time()
 	return render_to_response('%s/coupon/webapp/my_coupons.html' % TEMPLATE_DIR, c)

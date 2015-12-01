@@ -266,7 +266,7 @@ Scenario: 4 签到活动关闭时用户回复精确关键字、完全匹配模�
     签到活动未开始
     """
 
-@mall2 @apps_sign @apps_sign_frontend
+@mall2 @apps_sign @apps_sign_frontend @jz
 Scenario:5 用户一天内连续两次签到，获取优惠券奖励
 	Given jobs添加签到活动"签到活动1",并且保存
 		"""
