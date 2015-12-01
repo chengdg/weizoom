@@ -1,6 +1,6 @@
 #_author_:张三香 2015.11.13
 
-Feature: 新建用户调研
+Feature: 新建用户调研活动
 
 Background:
 	Given jobs登录系统
@@ -19,9 +19,9 @@ Background:
 		"""
 
 @apps @survey
-Scenario:1 新建用户调研,添加'问答'模块,无奖励
+Scenario:1 新建用户调研活动,添加'问答'模块,无奖励
 	Given jobs登录系统
-	When jobs新建用户调研
+	When jobs新建用户调研活动
 		"""
 		[{
 			"title":"问答用户调研",
@@ -52,9 +52,9 @@ Scenario:1 新建用户调研,添加'问答'模块,无奖励
 		"""
 
 @apps @survey
-Scenario:2 新建用户调研,添加'选择题'模块,积分奖励
+Scenario:2 新建用户调研活动,添加'选择题'模块,积分奖励
 	Given jobs登录系统
-	When jobs新建用户调研
+	When jobs新建用户调研活动
 		"""
 		[{
 			"title":"选择题用户调研",
@@ -105,9 +105,9 @@ Scenario:2 新建用户调研,添加'选择题'模块,积分奖励
 		"""
 
 @apps @survey
-Scenario:3 新建用户调研,添加'快捷模块',优惠券奖励
+Scenario:3 新建用户调研活动,添加'快捷模块',优惠券奖励
 	Given jobs登录系统
-	When jobs新建用户调研
+	When jobs新建用户调研活动
 		"""
 		[{
 			"title":"快捷模块用户调研",
@@ -150,9 +150,9 @@ Scenario:3 新建用户调研,添加'快捷模块',优惠券奖励
 		"""
 
 @apps @survey
-Scenario:4 新建用户调研,添加'上传图片'模块,无需关注即可参与
+Scenario:4 新建用户调研活动,添加'上传图片'模块,无需关注即可参与
 	Given jobs登录系统
-	When jobs新建用户调研
+	When jobs新建用户调研活动
 		"""
 		[{
 			"title":"上传图片用户调研",
@@ -184,9 +184,9 @@ Scenario:4 新建用户调研,添加'上传图片'模块,无需关注即可参�
 		"""
 
 @apps @survey
-Scenario:5 新建用户调研,添加所有模块,必须关注才可参与
+Scenario:5 新建用户调研活动,添加所有模块,必须关注才可参与
 	Given jobs登录系统
-	When jobs新建用户调研
+	When jobs新建用户调研活动
 		"""
 		[{
 			"title":"所有模块用户调研",

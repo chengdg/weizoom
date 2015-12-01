@@ -327,7 +327,7 @@ Scenario:2 微信抽奖活动列表分页
 			"count_per_page":1
 		}
 		"""
-		#Then jobs获得带参数二维码列表共'3'页
+		#Then jobs获得微信抽奖活动列表共'3'页
 
 	When jobs访问微信抽奖活动列表第'1'页
 	Then jobs获得微信抽奖活动列表
