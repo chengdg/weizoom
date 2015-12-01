@@ -582,15 +582,19 @@ def save_address(request):
 		ship_address = request.POST.get('ship_address', '')
 		ship_tel = request.POST.get('ship_tel', '')
 		area = request.POST.get('area', '')
-
+		if '_' not in area:
+			watchdog_info(u'area不含_', type='mall')
+			raise
 		#更新收货地址信息
 		ship_id = webapp_user.update_ship_info(
-			ship_id = ship_id,
+			ship_id=ship_id,
 			ship_name=ship_name,
 			ship_address=ship_address,
 			ship_tel=ship_tel,
 			area=area
 		)
+		data['ship_name'] = ship_name
+		data['ship_id'] = ship_id
 	except:
 		if settings.DEBUG:
 			raise
@@ -600,9 +604,6 @@ def save_address(request):
 			watchdog_error(stack)
 			data['msg'] = u'保存收货信息失败，请稍后重试'
 			data['exception'] = stack
-
-	data['ship_name'] = ship_name
-	data['ship_id'] = ship_id
 	response.data = data
 	return response.get_response()
 

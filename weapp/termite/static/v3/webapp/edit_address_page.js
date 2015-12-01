@@ -154,6 +154,7 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
                         info: errMsg,
                         speed: 2000
                     });
+                    window.location.reload()
                 }
             });
         } else {
