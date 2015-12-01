@@ -160,8 +160,8 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信抽奖活动结果列表查询条件
 				"""
 				{
-					"start_date":"5天前",
-					"end_date":"3天前"
+					"lottery_start_time":"5天前",
+					"lottery_end_time":"3天前"
 				}
 				"""
 			Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
@@ -173,8 +173,8 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信抽奖活动结果列表查询条件
 				"""
 				{
-					"start_date":"",
-					"end_date":"昨天"
+					"lottery_start_time":"",
+					"lottery_end_time":"昨天"
 				}
 				"""
 			Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
@@ -186,8 +186,8 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信抽奖活动结果列表查询条件
 				"""
 				{
-					"start_date":"昨天",
-					"end_date":""
+					"lottery_start_time":"昨天",
+					"lottery_end_time":""
 				}
 				"""
 			Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
@@ -201,8 +201,8 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信抽奖活动结果列表查询条件
 				"""
 				{
-					"start_date":"昨天",
-					"end_date":"今天"
+					"lottery_start_time":"昨天",
+					"lottery_end_time":"今天"
 				}
 				"""
 			Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
@@ -216,8 +216,8 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信抽奖活动结果列表查询条件
 				"""
 				{
-					"start_date":"今天",
-					"end_date":"今天"
+					"lottery_start_time":"今天",
+					"lottery_end_time":"今天"
 				}
 				"""
 			Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
@@ -269,8 +269,8 @@ Scenario:2 查看结果列表查询
 			"""
 			{
 				"member_name":"bill",
-				"start_date":"3天前",
-				"end_date":"今天",
+				"lottery_start_time":"3天前",
+				"lottery_end_time":"今天",
 				"prize_type":"优惠券"
 				"receive_status":"已领取"
 			}
