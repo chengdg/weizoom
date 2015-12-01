@@ -46,19 +46,19 @@ Scenario:1 微信抽奖活动列表参与次数的校验
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"积分",
 				"integral":100,

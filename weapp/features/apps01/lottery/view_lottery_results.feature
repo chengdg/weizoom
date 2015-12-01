@@ -41,19 +41,19 @@ Background:
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"实物",
 				"gift":"精美礼品",

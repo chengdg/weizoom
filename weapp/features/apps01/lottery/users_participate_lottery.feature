@@ -53,19 +53,19 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
@@ -148,20 +148,20 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
 				"integral":50,
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"积分",
 				"integral":30,
 
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
@@ -204,19 +204,19 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
@@ -257,19 +257,19 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
@@ -321,19 +321,19 @@ Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":20,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts"30,
 				"prize_type":"积分",
 				"integral":100,

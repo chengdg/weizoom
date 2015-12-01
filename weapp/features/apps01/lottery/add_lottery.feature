@@ -51,19 +51,19 @@ Scenario:1 新建微信抽奖,抽奖限制一人一次
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts":50,
 				"prize_type":"实物",
 				"gift":"精美礼品",
@@ -100,19 +100,19 @@ Scenario:2 新建微信抽奖,抽奖限制一天一次
 			"win_rate":60%,
 			"is_repeat_win":"否",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"积分",
 				"integral":1000,
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"积分",
 				"integral":500,
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts":50,
 				"prize_type":"积分",
 				"integral":100,
@@ -149,19 +149,19 @@ Scenario:3 新建微信抽奖,抽奖限制不限
 			"win_rate":50%,
 			"is_repeat_win":"否",
 			"prize_settings":[{
-				"name":"一等奖",
+				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
 			},{
-				"name":"二等奖",
+				"prize_grade":"二等奖",
 				"prize_counts":30,
 				"prize_type":"优惠券",
 				"coupon":"优惠券2",
 				"pic":""
 			},{
-				"name":"三等奖",
+				"prize_grade":"三等奖",
 				"prize_counts":50,
 				"prize_type":"优惠券",
 				"coupon":"优惠券3",
