@@ -1,6 +1,6 @@
 function initSessionStorage(){
     var s = sessionStorage;
-    if (s.mallSessionStorageHasInit == 1) {
+    if (s.mallSessionStorageHasInit == 1|| W.projectId) {
         return
     }else {
         var woid = getWoid();
