@@ -311,9 +311,4 @@ Scenario:3 查看结果列表分页
 		|微信抽奖01 |tom        | 二等奖      | 100积分    |今天        | 已领取         |
 		|微信抽奖01 |bill       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |
 
-@apps @lottery
-Scenario:4 批量导出
-	Given jobs登录系统
-	When jobs查看微信抽奖活动'微信抽奖01'
-	Then jobs能批量导出微信抽奖活动'微信抽奖01'的结果列表
 
