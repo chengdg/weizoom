@@ -120,109 +120,111 @@ def __debug_print(content,type_tag=True):
 # 		actions_list.append(u"关闭")
 # 	return actions_list
 
-# def __Create_Lottery(context,text,user):
-# 	"""
-# 	模拟用户登录页面
-# 	创建抽奖项目
-# 	写入mongo表：
-# 		1.lottery_lottery表
-# 		2.page表
-# 	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	text = text
+##从这里开始，从头找
+def __Create_Lottery(context,text,user):
+	"""
+	模拟用户登录页面
+	创建抽奖项目
+	写入mongo表：
+		1.lottery_lottery表
+		2.page表
+	"""
 
-# 	title = text.get("name","")
+	design_mode = 0
+	version = 1
+	text = text
 
-# 	cr_start_date = text.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+	title = text.get("name","")
 
-# 	cr_end_date = text.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-# 	valid_time = "%s~%s"%(start_time,end_time)
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-# 	timing_status = text.get("is_show_countdown","")
+	valid_time = "%s~%s"%(start_time,end_time)
 
-# 	timing_value_day = __date_delta(start_date,end_date)
+	timing_status = text.get("is_show_countdown","")
 
-# 	description = text.get("desc","")
-# 	reply_content = text.get("reply")
-# 	material_image = text.get("share_pic","")
-# 	background_image = text.get("background_pic","")
+	timing_value_day = __date_delta(start_date,end_date)
 
-# 	qrcode_name = text.get("qr_code","")
-# 	if qrcode_name:
-# 		qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
-# 		qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
-# 		qrcode_response = context.client.get(qrcode_i_url)
-# 		qrcode_info = qrcode_response.context['qrcode']
-# 		qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
-# 		qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
-# 	else:
-# 		qrcode = {"ticket":"","name":""}
+	description = text.get("desc","")
+	reply_content = text.get("reply")
+	material_image = text.get("share_pic","")
+	background_image = text.get("background_pic","")
 
-# 	zhcolor = text.get("background_color","冬日暖阳")
-# 	color = __name2color(zhcolor)
+	qrcode_name = text.get("qr_code","")
+	if qrcode_name:
+		qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
+		qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
+		qrcode_response = context.client.get(qrcode_i_url)
+		qrcode_info = qrcode_response.context['qrcode']
+		qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
+		qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
+	else:
+		qrcode = {"ticket":"","name":""}
 
-# 	rules = text.get("rules","")
+	zhcolor = text.get("background_color","冬日暖阳")
+	color = __name2color(zhcolor)
 
-# 	page_args = {
-# 		"title":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"valid_time":valid_time,
-# 		"timing_status":timing_status,
-# 		"timing_value_day":timing_value_day,
-# 		"description":description,
-# 		"reply_content":reply_content,
-# 		"qrcode":qrcode,
-# 		"material_image":material_image,
-# 		"background_image":background_image,
-# 		"color":color,
-# 		"rules":rules
-# 	}
+	rules = text.get("rules","")
 
-# 	#step1：登录页面，获得分配的project_id
-# 	get_pw_response = context.client.get("/apps/lottery/lottery/")
-# 	pw_args_response = get_pw_response.context
-# 	project_id = pw_args_response['project_id']#(str){new_app:lottery:0}
+	page_args = {
+		"title":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"timing_status":timing_status,
+		"timing_value_day":timing_value_day,
+		"description":description,
+		"reply_content":reply_content,
+		"qrcode":qrcode,
+		"material_image":material_image,
+		"background_image":background_image,
+		"color":color,
+		"rules":rules
+	}
 
-# 	#step2: 编辑页面获得右边的page_json
-# 	dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	dynamic_response = context.client.get(dynamic_url)
-# 	dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
+	#step1：登录页面，获得分配的project_id
+	get_pw_response = context.client.get("/apps/lottery/lottery/")
+	pw_args_response = get_pw_response.context
+	project_id = pw_args_response['project_id']#(str){new_app:lottery:0}
 
-# 	#step3:发送Page
-# 	page_json = __get_lotteryPageJson(page_args)
+	#step2: 编辑页面获得右边的page_json
+	dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	dynamic_response = context.client.get(dynamic_url)
+	dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
 
-# 	termite_post_args = {
-# 		"field":"page_content",
-# 		"id":project_id,
-# 		"page_id":"1",
-# 		"page_json": page_json
-# 	}
-# 	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	post_termite_response = context.client.post(termite_url,termite_post_args)
-# 	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
+	#step3:发送Page
+	page_json = __get_lotteryPageJson(page_args)
 
-# 	#step4:发送lottery_args
-# 	post_lottery_args = {
-# 		"_method":"put",
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"timing":timing_status,
-# 		"reply_content":reply_content,
-# 		"material_image":material_image,
-# 		"qrcode":json.dumps(qrcode),
-# 		"related_page_id":related_page_id
-# 	}
-# 	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	post_lottery_response = context.client.post(lottery_url,post_lottery_args)
+	termite_post_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
+	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	post_termite_response = context.client.post(termite_url,termite_post_args)
+	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
+
+	#step4:发送lottery_args
+	post_lottery_args = {
+		"_method":"put",
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"timing":timing_status,
+		"reply_content":reply_content,
+		"material_image":material_image,
+		"qrcode":json.dumps(qrcode),
+		"related_page_id":related_page_id
+	}
+	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	post_lottery_response = context.client.post(lottery_url,post_lottery_args)
 
 # def __Update_Lottery(context,text,page_id,lottery_id):
 # 	"""
@@ -420,11 +422,11 @@ def __debug_print(content,type_tag=True):
 
 
 
-# @when(u'{user}新建抽奖活动')
-# def step_impl(context,user):
-# 	text_list = json.loads(context.text)
-# 	for text in text_list:
-# 		__Create_Lottery(context,text,user)
+@when(u'{user}新建抽奖活动')
+def step_impl(context,user):
+	text_list = json.loads(context.text)
+	for text in text_list:
+		__Create_Lottery(context,text,user)
 
 # @then(u'{user}获得抽奖活动列表')
 # def step_impl(context,user):
