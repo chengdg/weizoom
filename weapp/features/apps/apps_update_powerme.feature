@@ -86,7 +86,7 @@ Background:
 		}]
 		"""
 
-@apps @powerme @apps_powerme_backend @update_powerme
+@mall2 @apps_powerme @apps_powerme_backend @update_powerme
 Scenario:1 编辑'未开始'的微助力活动
 	Given jobs登录系统
 	When jobs编辑微助力活动'微助力活动2'
@@ -147,7 +147,7 @@ Scenario:1 编辑'未开始'的微助力活动
 		}]
 		"""
 
-@apps @powerme @update_powerme
+@mall2 @apps_powerme @apps_powerme_backend @update_powerme
 Scenario:2 删除'已结束'的微助力活动
 	Given jobs登录系统
 	When jobs删除微助力活动'微助力活动1'
@@ -170,7 +170,7 @@ Scenario:2 删除'已结束'的微助力活动
 		}]
 		"""
 
-@apps @powerme @update_powerme
+@mall2 @apps_powerme @apps_powerme_backend @update_powerme
 Scenario:3 关闭'未开始'或'进行中'的微助力活动
 	Given jobs登录系统
 	#关闭'未开始'状态的微助力活动

@@ -57,7 +57,7 @@ Background:
 	When bill关注jobs的公众号
 	When tom关注jobs的公众号
 
-@apps @powerme @apps_powerme_frontend
+@mall2 @apps_powerme @apps_powerme_frontend
 Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动排名不会恢复
 	#会员A'分享'活动链接,有A的排名
 	#会员A'取消关注'公众号,A的排名消失
@@ -133,7 +133,7 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 		[]
 		"""
 
-@apps @powerme @apps_powerme_frontend
+@mall2 @apps_powerme @apps_powerme_frontend
 Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助力
 	#会员A'分享'活动链接,有A的排名
 	#会员A'取消关注'公众号,A的排名消失
@@ -194,7 +194,7 @@ Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助
 		[]
 		"""
 
-@apps @powerme @apps_powerme_frontend
+@mall2 @apps_powerme @apps_powerme_frontend
 Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后，好友B帮其助力
 	#会员A'分享'活动链接,有A的排名
 	#会员A'取消关注'公众号,A的排名消失
