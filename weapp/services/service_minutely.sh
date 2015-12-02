@@ -32,7 +32,6 @@ python services/send_task.py "services.update_mp_token_service.tasks.update_mp_t
 
 echo ">> calling 'cancell_not_pay_order'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
-python manage.py cancell_not_pay_order >> $LOG 2>&1
-
+python services/send_task.py "services.cancel_not_pay_order_service.tasks.cancel_not_pay_order_timeout" {} "{\"id\": 0}" >> $LOG 2>&1
 echo "========================================================" >> $LOG
 echo "done!" >> $LOG
