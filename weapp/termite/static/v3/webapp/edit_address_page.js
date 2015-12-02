@@ -75,15 +75,20 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
 
             var args = $form.serializeObject();
             var ship_info = deepCopyJSON(args);
-            if(ship_info.ship_address.indexOf('海淀科技大厦')>=0||(ship_info.ship_address.indexOf('泰兴大厦')>=0&&ship_info.ship_address.indexOf('301')>=0)){
-                $('.xa-submit').removeAttr('disabled');
-                $('body').alert({
-                        isShow: true,
-                        isSlide: true,
-                        info: '收货地址输入错误',
-                        speed: 2000
-                });
-                return;
+            var banned_address = ["海淀科技大厦12层","海淀科技大厦1201", "海淀科技大厦12层微众", "海淀科技大厦7层", "海淀科技大厦1202",
+                "海淀科技大厦1203", "海淀科技大厦1204", "海淀科技大厦1205", "海淀科技大厦1206", "海淀科技大厦1207", "海淀科技大厦1208",
+                "海淀科技大厦1209", "海淀科技大厦1210", "泰兴大厦301", "泰兴大厦三层301", "泰兴大厦三层微众", "泰兴大厦3层301", "海淀科技大厦十二层", "海淀科技大厦七层"];
+            for (var i=0,len=banned_address.length;i<len;i++){
+                if(ship_info.ship_address.indexOf(banned_address[i])>=0){
+                    $('.xa-submit').removeAttr('disabled');
+                    $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '该收货地址不可用',
+                            speed: 2000
+                    });
+                    return;
+                }
             }
             ship_info['area_str'] = $('.xa-openSelect').text();
 
