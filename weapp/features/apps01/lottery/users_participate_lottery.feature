@@ -129,6 +129,8 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
 		}
 		"""
+
+	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
 
 @apps @lottery
@@ -170,13 +172,13 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 		}]
 		"""
 	When bill参加微信抽奖活动'微信抽奖02'
-	When bill把jobs的微信抽奖活动链接分享到朋友圈
+	When bill把jobs的微信抽奖活动'微信抽奖02'的活动链接分享到朋友圈
 
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
 
-	When tom点击bill分享的微信抽奖活动链接
+	When tom点击bill分享的微信抽奖活动'微信抽奖02'的活动链接
 	When tom参加微信抽奖活动'微信抽奖02'
 	Then tom获得抽奖结果
 		"""
@@ -202,7 +204,7 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一人一次",
 			"win_rate":50%,
-			"is_repeat_win":"是",
+			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
@@ -232,12 +234,12 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 	Then bill获得错误提示'您今天的抽奖机会已经用完,<br />明天再来吧~'
 
 	When tom参加微信抽奖活动'微信抽奖03'
-	When tom把jobs的微信抽奖活动链接分享到朋友圈
+	When tom把jobs的微信抽奖活动'微信抽奖03'的活动链接分享到朋友圈
 
 	When 清空浏览器
 	When bill取消关注jobs的公众号
-	When bill点击tom分享的微信抽奖活动链接
-	When bill参与微信抽奖活动'微信抽奖03'
+	When bill点击tom分享的微信抽奖活动'微信抽奖03'的活动链接
+	When bill参加微信抽奖活动'微信抽奖03'
 	Then bill获得错误提示'您今天的抽奖机会已经用完,<br />明天再来吧~'
 
 @apps @lottery
