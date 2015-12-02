@@ -84,11 +84,11 @@ Background:
 	When tom2取消关注jobs的公众号
 
 	When 微信用户批量参加jobs的用户调研活动
-	| name       | member_name | survey_time |
-	| 用户调研01 | bill        |2天前        |
-	| 用户调研01 | tom         |昨天         |
-	| 用户调研01 | tom1        |今天         |
-	| 用户调研01 | tom2        |今天         |
+		| name       | member_name | survey_time | answer        |choose  |    quick                      | upload_pic |
+		| 用户调研01 | bill        |2天前        |bill问答题内容 | 1      |bill,15111223344,1234@qq.com   | 1.jpg      |
+		| 用户调研01 | tom         |昨天         |tom 问答题内容 | 2      |tom, 15211223344,2234@qq.com   | 2.jpg      |
+		| 用户调研01 | tom1        |今天         |tom1问答题内容 | 1      |tom1,153211223344,3234@qq.com  | 3.jpg      |
+		| 用户调研01 | tom2        |今天         |tom2问答题内容 | 3      |tom2,15411223344,4234@qq.com   | 4.jpg      |
 
 @apps @survey
 Scenario:1 查看结果列表
@@ -269,3 +269,34 @@ Scenario:4 批量导出
 	Given jobs登录系统
 	When jobs查看用户调研活动'用户调研01'
 	Then jobs能批量导出用户调研活动'用户调研01'的结果列表
+
+@apps @survey
+Scenario:5 访问用户的查看结果
+	Given jobs登录系统
+	When jobs查看用户调研活动'用户调研01'
+	Then jobs获得用户调研活动'用户调研01'的结果列表
+		| name       | member_name | survey_time |
+		| 用户调研01 | tom2        |今天         |
+		| 用户调研01 | tom1        |今天         |
+		| 用户调研01 | tom         |昨天         |
+		| 用户调研01 | bill        |2天前        |
+	When jobs访问用户'tom2'的查看结果
+	Then jobs获得用户'tom2'的查看结果
+		"""
+		{
+			"bill填写的内容":
+				[{
+					"问答题":"bill问答题内容"
+				},{
+					"选择题":"1"
+				},{
+					"姓名":"bill"
+				},{
+					"手机":"15111223344"
+				},{
+					"邮箱":"1234@qq.com"
+				},{
+					"上传图片":"1.jpg"
+				}]
+		}
+		"""
