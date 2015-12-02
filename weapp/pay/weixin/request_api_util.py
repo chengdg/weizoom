@@ -83,6 +83,8 @@ def get_unifiedorder(request):
 		
 		weixin_http_client = WeixinHttpClient()
 		message = UnifiedOrderMessage(appid, mch_id, partner_key, out_trade_no, total_fee, spbill_create_ip, notify_url, openid, body)
+		msg = u'weixin pay, stage:[before get unifiedorder], order_id:{}, consumed:{}ms, xml:\n{}'.format(out_trade_no, (int(time.time() * 1000) - get_unifiedorder_start_time), message.get_message_json_str())
+		watchdog_info(msg)
 		api = WeixinPayApi(weixin_http_client, is_for=IS_FOR_XML)
 		data = api.get_unifiedorder(message)
 		
