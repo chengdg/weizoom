@@ -129,6 +129,7 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
 		}
 		"""
+	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
 
 @apps @lottery
@@ -287,101 +288,89 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 	When bill参加微信抽奖活动'微信抽奖04'
 	Then bill获得错误提示'您今天的抽奖机会已经用完,<br />明天再来吧~'
 
+
+#补充：张雪 2015.12.02
 @apps @lottery
-Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
+Scenario:5 中奖概率的校验
+	#设置中奖概率为50%，4个人参加抽奖的情况下，只有2个人会中奖
+
 	Given jobs登录系统
-	When jobs为会员发放优惠券
-		"""
-		{
-			"name": "优惠券1",
-			"count": 1,
-			"members": ["bill"]
-		}
-		"""
-	When bill访问jobs的webapp
-	Then bill能获得webapp优惠券列表
-		"""
-		[{
-			"coupon_id": "coupon1_id_1",
-			"money": 100.00,
-			"status": "未使用"
-		}]
-		"""
 	When jobs新建微信抽奖活动
 		"""
 		[{
-			"name":"微信抽奖05",
-			"start_date":"3天前",
+			"name":"微信抽奖",
+			"start_date":"今天",
 			"end_date":"2天后",
 			"desc":"抽奖啦抽奖啦",
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
-			"lottery_limit":"一天两次",
-			"win_rate":50%,
+			"lottery_limit":"不限",
+			"win_rate":5,
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
 				"prize_counts":10,
-				"prize_type":"优惠券",
-				"coupon":"优惠券1",
+				"prize_type":"积分",
+				"integral":50,
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
 				"prize_counts":20,
-				"prize_type":"优惠券",
-				"coupon":"优惠券2",
+				"prize_type":"积分",
+				"integral":30,
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
 				"prize_counts"30,
-				"prize_type":"积分",
-				"integral":100,
+				"prize_type":"实物",
+				"gift":"精美礼品",
 				"pic":"1.jpg"
 			}]
 		}]
 		"""
 
-	When bill参加微信抽奖活动'微信抽奖04'于'2天前'
-	Then bill获得抽奖结果
-		"""
-		{
-			"prize_type":"优惠券",
-			"coupon":"优惠券2",
-			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
-		}
-		"""
+	When tom关注jobs的公众号
+	When tom1关注jobs的公众号
+	When tom2关注jobs的公众号
+	When tom3关注jobs的公众号
 
-	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖04'于'昨天'
-	Then bill获得抽奖结果
-		"""
-		{
-			"prize_type":"优惠券",
-			"coupon":"优惠券2",
-			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
-		}
-		"""
-
-	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖04'
-	Then bill获得抽奖结果
+	When tom参加微信抽奖活动'微信抽奖08'
+	Then tom获得抽奖结果
 		"""
 		{
 			"prize_type":"积分",
-			"integral":100,
+			"integral":50,
 			"msg":"恭喜您获得了积分奖励！<br />快去个人中心查看吧！<br />"
 		}
 		"""
 
-	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖04'
-	Then bill获得抽奖结果
+	When tom1参加微信抽奖活动'微信抽奖'
+	Then tom1获得抽奖结果
 		"""
 		{
-			"msg":"没有中奖，再接再励吧~"
+			"msg":"很遗憾，没有中奖，再接再厉吧！"
 		}
 		"""
+
+	When tom2参加微信抽奖活动'微信抽奖08'
+	Then tom2获得抽奖结果
+		"""
+		{
+			"msg":"很遗憾，没有中奖，再接再厉吧！"
+		}
+		"""
+
+	When tom3参加微信抽奖活动'微信抽奖08'
+	Then tom3获得抽奖结果
+		"""
+		{
+			"prize_type":"积分",
+			"integral":30,
+			"msg":"恭喜您获得了积分奖励！<br />快去个人中心查看吧！<br />"
+		}
+		"""
+
 @apps @lottery
 Scenario:6 中获奖率为0中奖用户为0
 	Given jobs登录系统
@@ -427,6 +416,7 @@ Scenario:6 中获奖率为0中奖用户为0
 			"msg":"很遗憾，没有中奖，再接再厉吧！"
 		}
 		"""
+
 @apps @lottery
 Scenario:7 优惠券数量为0，用户无法获得优惠券奖励
 	#重新设置优惠券规则，积分数量足，当添加的优惠券数量都为0时，用户无法获得奖励
@@ -497,59 +487,5 @@ Scenario:7 优惠券数量为0，用户无法获得优惠券奖励
 			"msg":"谢谢参与！"
 		}
 		"""
-@apps @lottery
-Scenario:8 中奖概率校验
-	Given jobs登录系统
-	When jobs新建微信抽奖活动
-		"""
-		[{
-			"name":"微信抽奖06",
-			"start_date":"今天",
-			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":10,
-			"send_integral":0,
-			"send_integral_rules":"仅限未中奖用户",
-			"lottery_limit":"不限",
-			"win_rate":5,
-			"is_repeat_win":"是",
-			"prize_settings":[{
-				"prize_grade":"一等奖",
-				"prize_counts":10,
-				"prize_type":"积分",
-				"integral":50,
-				"pic":""
-			},{
-				"prize_grade":"二等奖",
-				"prize_counts":20,
-				"prize_type":"积分",
-				"integral":30,
 
-				"pic":""
-			},{
-				"prize_grade":"三等奖",
-				"prize_counts"30,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
-			}]
-		}]
-		"""
-	When bill参加微信抽奖活动'微信抽奖08'
-	Then bill获得抽奖结果
-		"""
-		{
-			"msg":"很遗憾，没有中奖，再接再厉吧！"
-		}
-		"""
-	When 清空浏览器
-	When Tom参加微信抽奖活动'微信抽奖08'
-	Then Tom获得抽奖结果
-		"""
-		{
-			"prize_type":"优惠券",
-			"coupon":"优惠券1",
-			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
-		}
-		"""
 
