@@ -291,24 +291,8 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 
 @apps @lottery
 Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
+	#无法真实模拟抽奖限制为不限的情况，只能通过参加多次暂时模拟
 	Given jobs登录系统
-	When jobs为会员发放优惠券
-		"""
-		{
-			"name": "优惠券1",
-			"count": 1,
-			"members": ["bill"]
-		}
-		"""
-	When bill访问jobs的webapp
-	Then bill能获得webapp优惠券列表
-		"""
-		[{
-			"coupon_id": "coupon1_id_1",
-			"money": 100.00,
-			"status": "未使用"
-		}]
-		"""
 	When jobs新建微信抽奖活动
 		"""
 		[{
@@ -319,7 +303,7 @@ Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
 			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
-			"lottery_limit":"一天两次",
+			"lottery_limit":"不限",
 			"win_rate":50%,
 			"is_repeat_win":"是",
 			"prize_settings":[{
@@ -344,7 +328,7 @@ Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
 		}]
 		"""
 
-	When bill参加微信抽奖活动'微信抽奖04'于'2天前'
+	When bill参加微信抽奖活动'微信抽奖05'于'2天前'
 	Then bill获得抽奖结果
 		"""
 		{
@@ -355,7 +339,7 @@ Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
 		"""
 
 	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖04'于'昨天'
+	When bill参加微信抽奖活动'微信抽奖05'于'昨天'
 	Then bill获得抽奖结果
 		"""
 		{
@@ -366,7 +350,7 @@ Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
 		"""
 
 	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖04'
+	When bill参加微信抽奖活动'微信抽奖05'
 	Then bill获得抽奖结果
 		"""
 		{
@@ -377,10 +361,11 @@ Scenario:5 会员参加微信抽奖活动，抽奖限制为不限
 		"""
 
 	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖04'
+	When bill参加微信抽奖活动'微信抽奖05'
 	Then bill获得抽奖结果
 		"""
 		{
 			"msg":"没有中奖，再接再励吧~"
 		}
 		"""
+
