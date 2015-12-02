@@ -77,6 +77,7 @@ from apps import models as customized
 from apps import apps_manager
 from apps.customerized_apps.sign import models as sign_models
 from apps.customerized_apps.powerme import models as powerme_models
+from apps.customerized_apps.lottery import models as lottery_models
 
 from django.core.cache import cache
 from weapp import celeryconfig
@@ -297,16 +298,24 @@ def __clear_all_app_data():
 	# 店铺装修
 	termite2_models.TemplateCustomModule.objects.all().delete()
 
-	# 签到
+	#apps签到
 	sign_models.Sign.objects.all().delete()
 	sign_models.SignControl.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
 
-	#微助力
+	#apps微助力
 	powerme_models.PowerMe.objects.all().delete()
 	powerme_models.PowerMeParticipance.objects.all().delete()
 	powerme_models.PowerMeControl.objects.all().delete()
 	powerme_models.PowerLog.objects.all().delete()
+
+	#apps抽奖
+	lottery_models.lottery.objects.add().delete()
+	lottery_models.lotteryParticipance.objects.all().delete()
+	lottery_models.lottoryRecord.objects.all().delete()
+	lottery_models.lotteryControl.objects.all().delete()
+
+
 
 	#清理mongo中，签到page
 	#sign_pagestore = pagestore_manager.get_pagestore('mongo')
