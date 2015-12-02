@@ -30,7 +30,7 @@ Background:
 			"money": 100.00,
 			"count": 10,
 			"limit_counts": 3,
-			"start_date": "今天",
+			"start_date": "4天前",
 			"end_date": "10天后",
 			"coupon_id_prefix": "coupon1_id_"
 		}]
