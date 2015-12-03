@@ -163,6 +163,7 @@ Scenario:2 活动报名-积分奖励-必须关注才可参与
 			}
 			"""
 		Then bill获得提示"提交成功"
+		When bill访问jobs的webapp
 		Then bill在jobs的webapp中拥有50会员积分
 	#取消关注的会员参与
 		When 清空浏览器
@@ -197,7 +198,7 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 		[{
 			"name": "优惠券1",
 			"money": 100.00,
-			"count": 2,
+			"count": 5,
 			"limit_counts": 1,
 			"start_date": "4天前",
 			"end_date": "10天后",
@@ -244,6 +245,14 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 		}
 		"""
 
+	#会员
+		Given bill关注jobs的公众账号
+		When bill访问jobs的webapp
+
+		Given tom关注jobs的公众账号
+		When tom访问jobs的webapp
+		When tom取消关注jobs的公众号
+
 	#会员参与
 		When 清空浏览器		
 		When bill参加活动报名'活动报名-优惠券'于'今天'
@@ -261,6 +270,49 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			"""
 			[{
 				"coupon_id": "coupon1_id_1",
+				"money": 100.00,
+				"status": "未使用"
+			}]
+			"""
+	#取消关注的会员参与
+		When 清空浏览器
+		When tom参加活动报名'活动报名-优惠券'于'今天'
+			"""
+			{
+				"姓名":"tom",
+				"手机":"15213265987",
+				"店铺类型":"旗舰店",
+				"开店时间":"2015-10"
+			}
+			"""
+		Then tom获得提示"提交成功"
+		When tom访问jobs的webapp
+		Then tom能获得webapp优惠券列表
+			"""
+			[{
+				"coupon_id": "coupon1_id_2",
+				"money": 100.00,
+				"status": "未使用"
+			}]
+			"""
+	#非会员参与
+		When 清空浏览器
+		When lily参加活动报名'活动报名-优惠券'于'今天'
+			"""
+			{
+				"姓名":"lily",
+				"手机":"15213265987",
+				"店铺类型":"旗舰店",
+				"开店时间":"2015-10"
+			}
+			"""
+		Then lily获得提示"提交成功"
+		When lily关注jobs的公众账号
+		When lily访问jobs的webapp
+		Then lily能获得webapp优惠券列表
+			"""
+			[{
+				"coupon_id": "coupon1_id_3",
 				"money": 100.00,
 				"status": "未使用"
 			}]
