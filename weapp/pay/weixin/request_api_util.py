@@ -7,6 +7,7 @@ from watchdog.utils import watchdog_info, watchdog_error, watchdog_warning
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 
+from mall.models import Order
 from pay.weixin.api.sign import md5_sign
 from pay.weixin.api.weixin_pay_api import WeixinHttpClient, WeixinPayApi
 from pay.weixin.api.api_pay_queryorder import QueryOrderV2Message, QueryOrderV3Message
@@ -70,7 +71,9 @@ def get_unifiedorder(request):
 	mch_id = request.POST.get('mch_id', '').strip()
 	body = request.POST.get('body', '')
 	out_trade_no = request.POST.get('out_trade_no', '')
-	total_fee = request.POST.get('total_fee', '')
+	order = Order.objects.get(order_id=out_trade_no.split('-')[0])
+	# total_fee = request.POST.get('total_fee', '')
+	total_fee = int(order.final_price * 100)
 	spbill_create_ip = request.POST.get('spbill_create_ip', '')
 	notify_url = request.POST.get('notify_url', '')
 	openid = request.POST.get('openid', '')	

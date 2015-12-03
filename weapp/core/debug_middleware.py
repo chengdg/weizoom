@@ -229,6 +229,10 @@ class SqlMonitorMiddleware(object):
 		return None
 
 	def process_response(self, request, response):
+		if request.GET.get('wztest'):
+			response.set_cookie('wztest', '1', max_age=3600*1000)
+		if request.GET.get('un_wztest'):
+			response.delete_cookie('wztest')
 		if not 'HTTP_USER_AGENT' in request.META:
 			return response
 
@@ -515,7 +519,7 @@ class JsonToHtmlMiddleware(object):
 	将json转化为html，主要是为了获取api调用时的SQL查询信息时使用
 	"""
 	def process_request(self, request):
-		if not request.META.get('HTTP_REFERER') and ('/api/' in request.path) and not settings.IS_UNDER_BDD:
+		if ('/api/' in request.path) and ('POST' == request.method):
 			request.enable_json2html = True
 
 	def process_response(self, request, response):
