@@ -64,9 +64,6 @@ Background:
 					},{
 						"name":"填写项2",
 						"is_required":"否"
-					},{
-						"name":"填写项3",
-						"is_required":"否"
 					}]
 				},
 			"upload_pic":
@@ -84,11 +81,11 @@ Background:
 	When tom2取消关注jobs的公众号
 
 	When 微信用户批量参加jobs的用户调研活动
-		| name       | member_name | survey_time | answer        |choose  |    quick                      | upload_pic |
-		| 用户调研01 | bill        |2天前        |bill问答题内容 | 1      |bill,15111223344,1234@qq.com   | 1.jpg      |
-		| 用户调研01 | tom         |昨天         |tom 问答题内容 | 2      |tom, 15211223344,2234@qq.com   | 2.jpg      |
-		| 用户调研01 | tom1        |今天         |tom1问答题内容 | 1      |tom1,153211223344,3234@qq.com  | 3.jpg      |
-		| 用户调研01 | tom2        |今天         |tom2问答题内容 | 3      |tom2,15411223344,4234@qq.com   | 4.jpg      |
+		| name       | member_name | survey_time | answer        |choose  |    quick                       | upload_pic |
+		| 用户调研01 | bill        |2天前        |bill问答题内容 | 1      |bill,15111223344,1234@qq.com,11 | 1.jpg      |
+		| 用户调研01 | tom         |昨天         |tom 问答题内容 | 2      |tom, 15211223344,2234@qq.com,22 | 2.jpg      |
+		| 用户调研01 | tom1        |今天         |tom1问答题内容 | 1      |tom1,153211223344,3234@qq.com,33| 3.jpg      |
+		| 用户调研01 | tom2        |今天         |tom2问答题内容 | 3      |tom2,15411223344,4234@qq.com,44 | 4.jpg      |
 
 @apps @survey
 Scenario:1 查看结果列表
@@ -107,33 +104,33 @@ Scenario:1 查看结果列表
 		"""
 	When jobs查看用户调研活动'用户调研01'
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | tom2        |今天         |
-		| 用户调研01 | tom1        |今天         |
-		| 用户调研01 | tom         |昨天         |
-		| 用户调研01 | bill        |2天前        |
+		| member_name | survey_time |
+		| tom2        |今天         |
+		| tom1        |今天         |
+		| tom         |昨天         |
+		| bill        |2天前        |
 
 @apps @survey
 Scenario:2 查看结果列表查询
 	Given jobs登录系统
 	When jobs查看用户调研活动'用户调研01'
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | tom2        |今天         |
-		| 用户调研01 | tom1        |今天         |
-		| 用户调研01 | tom         |昨天         |
-		| 用户调研01 | bill        |2天前        |
+		| member_name | survey_time |
+		| tom2        |今天         |
+		| tom1        |今天         |
+		| tom         |昨天         |
+		| bill        |2天前        |
 	#空查询（默认查询）
 		When jobs设置用户调研活动结果列表查询条件
 			"""
 			[]
 			"""
 		Then jobs获得用户调研活动'用户调研01'的结果列表
-			| name       | member_name | survey_time |
-			| 用户调研01 | tom2        |今天         |
-			| 用户调研01 | tom1        |今天         |
-			| 用户调研01 | tom         |昨天         |
-			| 用户调研01 | bill        |2天前        |
+			| member_name | survey_time |
+			| tom2        |今天         |
+			| tom1        |今天         |
+			| tom         |昨天         |
+			| bill        |2天前        |
 
 	#用户名查询
 		#查询结果为空
@@ -155,10 +152,10 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得用户调研活动'用户调研01'的结果列表
-				| name       | member_name | survey_time |
-				| 用户调研01 | tom2        |今天         |
-				| 用户调研01 | tom1        |今天         |
-				| 用户调研01 | tom         |昨天         |
+				| member_name | survey_time |
+				| tom2        |今天         |
+				| tom1        |今天         |
+				| tom         |昨天         |
 		#精确匹配
 			When jobs设置用户调研活动结果列表查询条件
 				"""
@@ -167,8 +164,8 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得用户调研活动'用户调研01'的结果列表
-				| name       | member_name | survey_time |
-				| 用户调研01 | bill        |2天前        |
+				| member_name | survey_time |
+				| bill        |2天前        |
 
 	#调研时间查询
 		#查询结果为空
@@ -192,9 +189,9 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得用户调研活动'用户调研01'的结果列表
-				| name       | member_name | survey_time |
-				| 用户调研01 | tom2        |今天         |
-				| 用户调研01 | tom1        |今天         |
+				| member_name | survey_time |
+				| tom2        |今天         |
+				| tom1        |今天         |
 		#开始时间为空，结束时间非空
 			When jobs设置用户调研活动结果列表查询条件
 				"""
@@ -204,9 +201,9 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得用户调研活动'用户调研01'的结果列表
-				| name       | member_name | survey_time |
-				| 用户调研01 | tom         |昨天         |
-				| 用户调研01 | bill        |2天前        |
+				| member_name | survey_time |
+				| tom         |昨天         |
+				| bill        |2天前        |
 		#开始时间和结束时间相等
 			When jobs设置用户调研活动结果列表查询条件
 				"""
@@ -216,8 +213,8 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得用户调研活动'用户调研01'的结果列表
-				| name       | member_name | survey_time |
-				| 用户调研01 | tom         |昨天         |
+				| member_name | survey_time |
+				| tom         |昨天         |
 
 	#组合条件查询
 		When jobs设置用户调研活动结果列表查询条件
@@ -229,8 +226,8 @@ Scenario:2 查看结果列表查询
 			}
 			"""
 		Then jobs获得用户调研活动'用户调研01'的结果列表
-			| name       | member_name | survey_time |
-			| 用户调研01 | bill        |2天前        |
+			| member_name | survey_time |
+			| bill        |2天前        |
 
 @apps @survey
 Scenario:3 查看结果列表分页
@@ -246,36 +243,36 @@ Scenario:3 查看结果列表分页
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表第'1'页
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | tom2        |今天         |
+		| member_name | survey_time |
+		| tom2        |今天         |
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表下一页
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | tom1        |今天         |
+		| member_name | survey_time |
+		| tom1        |今天         |
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表'4'页
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | bill        |2天前        |
+		| member_name | survey_time |
+		| bill        |2天前        |
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表上一页
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | tom         |昨天         |
+		| member_name | survey_time |
+		| tom         |昨天         |
 
 @apps @survey
 Scenario:4 访问用户的查看结果
 	Given jobs登录系统
 	When jobs查看用户调研活动'用户调研01'
 	Then jobs获得用户调研活动'用户调研01'的结果列表
-		| name       | member_name | survey_time |
-		| 用户调研01 | tom2        |今天         |
-		| 用户调研01 | tom1        |今天         |
-		| 用户调研01 | tom         |昨天         |
-		| 用户调研01 | bill        |2天前        |
-	When jobs访问用户'tom2'的查看结果
-	Then jobs获得用户'tom2'的查看结果
+		| member_name | survey_time |
+		| tom2        |今天         |
+		| tom1        |今天         |
+		| tom         |昨天         |
+		| bill        |2天前        |
+	When jobs访问用户'bill'的查看结果
+	Then jobs获得用户'bill'的查看结果
 		"""
 		{
 			"bill填写的内容":
@@ -289,6 +286,10 @@ Scenario:4 访问用户的查看结果
 					"手机":"15111223344"
 				},{
 					"邮箱":"1234@qq.com"
+				},{
+					"填写项1":"11"
+				},{
+					"填写项2":""
 				},{
 					"上传图片":"1.jpg"
 				}]
