@@ -3,7 +3,7 @@
 # __author__ = 'jiangzhe'
 import random
 from datetime import timedelta, datetime
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import F
 
 from mall.promotion import models as promotion_models
@@ -84,22 +84,24 @@ def consume_coupon(owner_id, rule_id, member_id, coupon_record_id=0):
 	coupon_count = promotion_models.Coupon.objects.filter(coupon_rule_id=rule_id, member_id=member_id).count()
 	if coupon_count >= rules[0].limit_counts and rules[0].limit_counts > 0:
 		return None, u'该优惠券每人限领%s张，你已经领取过了！' % rules[0].limit_counts
-	coupons = promotion_models.Coupon.objects.filter(coupon_rule_id=rule_id, member_id=0, status=promotion_models.COUPON_STATUS_UNGOT)[:1]
-	if len(coupons) == 1:
-		promotion_models.Coupon.objects.filter(id=coupons[0].id).update(
-				status=promotion_models.COUPON_STATUS_UNUSED,
-				member_id=member_id,
-				provided_time=datetime.today(),
-				coupon_record_id=coupon_record_id
-			)
-		if coupon_count:
-			rules.update(remained_count=F('remained_count')-1, get_count=F('get_count')+1)
-		else:
-			rules.update(remained_count=F('remained_count')-1, get_person_count=F('get_person_count')+1, get_count=F('get_count')+1)
 
-		return coupons[0], ''
-	else:
-		return None, u'该优惠券使用期已过，不能领取！'
+	with transaction.atomic():
+		coupon = promotion_models.Coupon.objects.select_for_update().filter(coupon_rule_id=rule_id, member_id=0, status=promotion_models.COUPON_STATUS_UNGOT).first()
+		if coupon:
+			coupon.status = promotion_models.COUPON_STATUS_UNUSED
+			coupon.member_id = member_id
+			coupon.provided_time = datetime.today()
+			coupon.coupon_record_id = coupon_record_id
+			coupon.save()
+
+			if coupon_count:
+				rules.update(remained_count=F('remained_count')-1, get_count=F('get_count')+1)
+			else:
+				rules.update(remained_count=F('remained_count')-1, get_person_count=F('get_person_count')+1, get_count=F('get_count')+1)
+
+			return coupon, ''
+		else:
+			return None, u'该优惠券使用期已过，不能领取！'
 
 
 
