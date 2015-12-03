@@ -28,7 +28,7 @@ python services/send_task.py "services.finish_promotion_service.tasks.finish_pro
 
 echo ">> calling 'services.update_mp_token_service.tasks.update_mp_token'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
-python services/send_task.py "services.update_mp_token_service.tasks.update_mp_token" {} "{\"id\": 0}" >> $LOG 2>&1
+#python services/send_task.py "services.update_mp_token_service.tasks.update_mp_token" {} "{\"id\": 0}" >> $LOG 2>&1
 
 echo ">> calling 'cancel_not_pay_order'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
