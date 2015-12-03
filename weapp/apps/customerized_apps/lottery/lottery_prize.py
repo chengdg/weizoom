@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
+from apps.request_util import get_consume_coupon
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -223,14 +224,19 @@ class lottery_prize(resource.Resource):
 					coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
 					coupon_limit = coupon_rule.limit_counts
 					has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, prize_type='coupon', prize_data=str(couponRule_id)).count()
-					if coupon_limit != -1 and has_coupon_count >= coupon_limit:
-						result = u'谢谢参与'
-						lottery_prize_type = 'no_prize'
-					elif coupon_rule.remained_count <= 0: #修复优惠券库存为0时任然会发放给用户的问题
+					# if coupon_limit != -1 and has_coupon_count >= coupon_limit:
+					# 	result = u'谢谢参与'
+					# 	lottery_prize_type = 'no_prize'
+					# # elif coupon_rule.remained_count <= 0: #修复优惠券库存为0时任然会发放给用户的问题
+					# # 	result = u'谢谢参与'
+					# # 	lottery_prize_type = 'no_prize'
+					# else:
+						# consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
+					coupon, msg = get_consume_coupon(lottery.owner_id, 'lottery',str(lottery.id), lottery_prize_data, member_id,has_coupon_count)
+					if not coupon:
 						result = u'谢谢参与'
 						lottery_prize_type = 'no_prize'
 					else:
-						consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
 						prize_value = lottery_prize['prize_data']['name']
 						lottery_prize_dict[temp_prize_title]['prize_count'] = int(lottery_prize_dict[temp_prize_title]['prize_count']) - 1
 				elif lottery_prize_type == 'integral':

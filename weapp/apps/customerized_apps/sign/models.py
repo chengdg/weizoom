@@ -133,11 +133,12 @@ class SignParticipance(models.Document):
 		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
 		curr_prize_coupon_count = 0
 		if curr_prize_coupon_id != '':
-			curr_prize_coupon_count = get_coupon_count(curr_prize_coupon_id)
-			if curr_prize_coupon_count > 0:
-				from market_tools.tools.coupon.util import consume_coupon
-				consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
-
+			# curr_prize_coupon_count = get_coupon_count(curr_prize_coupon_id)
+			# from market_tools.tools.coupon.util import consume_coupon
+			# consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
+			from apps.request_util import get_consume_coupon
+			coupon,msg = get_consume_coupon(sign.owner_id,'sign', str(sign.id), curr_prize_coupon_id, self.member_id)
+			curr_prize_coupon_count = 1 if coupon else 0 #1表示有优惠券
 		return_data['curr_prize_integral'] = curr_prize_integral
 		return_data['curr_prize_coupon_count'] = curr_prize_coupon_count
 		return_data['curr_prize_coupon_id'] = curr_prize_coupon_id

@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
+from apps.request_util import get_consume_coupon
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -69,7 +70,8 @@ class lotteryParticipance(resource.Resource):
 					pass #非会员，不进行优惠券发放
 				else:
 					coupon_rule_id = int(prize['data']['id'])
-					coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
+					# coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
+					coupon, msg = get_consume_coupon(request.webapp_owner_id, 'lottery', data['belong_to'], coupon_rule_id, request.member.id)
 					if not coupon:
 						error_msg = msg
 		
