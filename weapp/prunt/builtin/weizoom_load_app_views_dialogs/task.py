@@ -35,7 +35,7 @@ def loadAppViewsAndDialogs(prunt):
 	#加载components的js和模板文件
 	from weapp import settings
 	from apps.templatetags import apps_filter
-	content = apps_filter.load_app_views_and_dialogs(app_name).decode('utf-8').encode('utf-8')
+	content = '{%% verbatim %%}%s{%% endverbatim %%}' % apps_filter.load_app_views_and_dialogs(app_name).decode('utf-8').encode('utf-8')
 	print content
 	prunt.set_last_result(content)
 	
