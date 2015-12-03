@@ -121,7 +121,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery @update_lottery @yang
+@apps @lottery @update_lottery
 Scenario:1 编辑'未开始'状态的微信抽奖活动
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
@@ -255,7 +255,7 @@ Scenario:2 关闭'进行中'状态的微信抽奖活动
 		}]
 		"""
 
-@apps @lottery @update_lottery @yang2
+@apps @lottery @update_lottery
 Scenario:3 删除'未开始'和'已结束'状态的微信抽奖活动
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表

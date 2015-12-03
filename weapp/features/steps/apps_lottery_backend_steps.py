@@ -618,20 +618,20 @@ def __Delete_Lottery(context,lottery_id):
 	del_lottery_response = context.client.post(del_lottery_url,del_args)
 	return del_lottery_response
 
-# def __Stop_Lottery(context,lottery_id):
-# 	"""
-# 	关闭抽奖活动
-# 	"""
+def __Stop_Lottery(context,lottery_id):
+	"""
+	关闭抽奖活动
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	stop_lottery_url = "/apps/lottery/api/lottery_status/?design_mode={}&version={}".format(design_mode,version)
-# 	stop_args ={
-# 		"id":lottery_id,
-# 		"target":'stoped'
-# 	}
-# 	stop_lottery_response = context.client.post(stop_lottery_url,stop_args)
-# 	return stop_lottery_response
+	design_mode = 0
+	version = 1
+	stop_lottery_url = "/apps/lottery/api/lottery_status/?design_mode={}&version={}".format(design_mode,version)
+	stop_args ={
+		"id":lottery_id,
+		"target":'stoped'
+	}
+	stop_lottery_response = context.client.post(stop_lottery_url,stop_args)
+	return stop_lottery_response
 
 # def __Search_Lottery(context,search_dic):
 # 	"""
@@ -866,8 +866,6 @@ def step_impl(context,user,lottery_name):
 		"prize_settings":actual_prize_list,
 	}
 
-	__debug_print(expect_lottery_dic)
-	__debug_print(actual_lottery_dic)
 	bdd_util.assert_dict(expect_lottery_dic, actual_lottery_dic)
 
 @when(u"{user}删除微信抽奖活动'{lottery_name}'")
@@ -877,11 +875,11 @@ def step_impl(context,user,lottery_name):
 	bdd_util.assert_api_call_success(del_response)
 
 
-# @when(u"{user}关闭抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	stop_response = __Stop_Lottery(context,lottery_id)
-# 	bdd_util.assert_api_call_success(stop_response)
+@when(u"{user}关闭微信抽奖活动'{lottery_name}'")
+def step_impl(context,user,lottery_name):
+	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
+	stop_response = __Stop_Lottery(context,lottery_id)
+	bdd_util.assert_api_call_success(stop_response)
 
 
 # @when(u"{user}查看抽奖活动'{lottery_name}'")
