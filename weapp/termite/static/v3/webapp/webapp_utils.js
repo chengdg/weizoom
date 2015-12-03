@@ -36,7 +36,13 @@ function getWoid(){
     } else if(urlParm.indexOf('webapp_owner_id=')>=0){
         return getParam('webapp_owner_id');
     }else{
-        return $.cookie('current_token').split('____')[0]
+        var cookies = $.cookie('current_token');
+        if(cookies){
+            return $.cookie('current_token').split('____')[0];
+        } else{
+            return '';
+        }
+
     }
 };
 

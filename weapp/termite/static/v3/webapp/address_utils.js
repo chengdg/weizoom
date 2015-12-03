@@ -4,6 +4,9 @@ function initSessionStorage(){
         return
     }else {
         var woid = getWoid();
+        if(!woid){
+            return
+        }
         W.getApi().call({
             app: 'webapp',
             api: 'project_api/call',
