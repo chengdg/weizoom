@@ -265,13 +265,7 @@ Scenario:3 查看结果列表分页
 		| 用户调研01 | tom         |昨天         |
 
 @apps @survey
-Scenario:4 批量导出
-	Given jobs登录系统
-	When jobs查看用户调研活动'用户调研01'
-	Then jobs能批量导出用户调研活动'用户调研01'的结果列表
-
-@apps @survey
-Scenario:5 访问用户的查看结果
+Scenario:4 访问用户的查看结果
 	Given jobs登录系统
 	When jobs查看用户调研活动'用户调研01'
 	Then jobs获得用户调研活动'用户调研01'的结果列表
