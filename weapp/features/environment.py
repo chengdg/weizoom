@@ -77,7 +77,7 @@ from apps import models as customized
 from apps import apps_manager
 from apps.customerized_apps.sign import models as sign_models
 from apps.customerized_apps.powerme import models as powerme_models
-from apps.customerized_apps.lottery import models as lottery_models
+from apps.customerized_apps.lottery import models as apps_lottery_models
 
 from django.core.cache import cache
 from weapp import celeryconfig
@@ -310,10 +310,10 @@ def __clear_all_app_data():
 	powerme_models.PowerLog.objects.all().delete()
 
 	#apps抽奖
-	lottery_models.lottery.objects.add().delete()
-	lottery_models.lotteryParticipance.objects.all().delete()
-	lottery_models.lottoryRecord.objects.all().delete()
-	lottery_models.lotteryControl.objects.all().delete()
+	apps_lottery_models.lottery.objects.all().delete()
+	apps_lottery_models.lotteryParticipance.objects.all().delete()
+	apps_lottery_models.lottoryRecord.objects.all().delete()
+	apps_lottery_models.lotteryControl.objects.all().delete()
 
 
 

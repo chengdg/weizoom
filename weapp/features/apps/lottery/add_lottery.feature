@@ -34,7 +34,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery @apps_lottery_backend
+@apps @lottery @apps_lottery_backend @yang
 Scenario:1 新建微信抽奖,抽奖限制一人一次
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -48,7 +48,7 @@ Scenario:1 新建微信抽奖,抽奖限制一人一次
 			"send_integral":1,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一人一次",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -97,7 +97,7 @@ Scenario:2 新建微信抽奖,抽奖限制一天一次
 			"send_integral":0,
 			"send_integral_rules":"所有用户",
 			"lottery_limit":"一天一次",
-			"win_rate":60%,
+			"win_rate":"60%",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -146,7 +146,7 @@ Scenario:3 新建微信抽奖,抽奖限制不限
 			"send_integral":1,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
