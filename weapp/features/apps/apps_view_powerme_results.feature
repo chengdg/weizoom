@@ -252,9 +252,3 @@ Scenario:2 查看结果页面的查询
 		Then jobs获得微助力活动'微助力活动1'的结果列表
 				| rank | member_name | powerme_value | parti_time |
 				|  1   | tom2        |     4         | 今天       |
-
-@apps_powerme @apps_powerme_backend @view_powerme_results
-Scenario:3 查看结果页面的批量导出
-	Given jobs登录系统
-	When jobs查看微助力活动'微助力活动1'
-	Then jobs能批量导出微助力活动'微助力活动1'
