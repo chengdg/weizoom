@@ -64,5 +64,5 @@ def cancel_not_pay_order_timeout(request, args):
 
     for order in need_cancel_orders:
         update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
-
+    print "-------------OK cancel order length is %s" % len(need_cancel_orders)
     return "OK cancel order length is %s" % len(need_cancel_orders)
