@@ -34,7 +34,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery @apps_lottery_backend @yang
+@apps @lottery @apps_lottery_backend
 Scenario:1 新建微信抽奖,抽奖限制一人一次
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
