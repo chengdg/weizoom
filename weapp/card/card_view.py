@@ -12,7 +12,11 @@ from market_tools.tools.weizoom_card.models import *
 from card_api_view import _get_cardNumber_value, _get_status_value
 from excel_response import ExcelResponse
 
+from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo, ComponentAuthedAppid
 
+WEIZOOM_CARD_BELONG_TO_OWNER = [
+    "ceshi01", "wzjx001","weizoommm", "weizoomxs", "weizoombfm","weizoomclub", "weizoomshop"
+]
 @view(app='card', resource='cards', action='get')
 @login_required 
 def get_cards(request):
@@ -39,10 +43,27 @@ def get_card_create(request):
     """
     显示创建卡规则
     """
+    user_ids = [user.id for user in User.objects.filter(username__in=WEIZOOM_CARD_BELONG_TO_OWNER)]
+    user_id2mpuser_name = []
+
+    authed_appid = ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id__in=user_ids)
+    authed_appids = []
+    for a in authed_appid:
+        authed_appids.append(a.auth_appid_id)
+    auth_appid2auth = {c.id:c for c in ComponentAuthedAppid.objects.filter(id__in=authed_appids)}
+    for appid in authed_appid:
+        if appid.nick_name:
+            if auth_appid2auth.has_key(appid.auth_appid_id):
+                user_id2mpuser_name.append({
+                    'user_id':auth_appid2auth[appid.auth_appid_id].user_id,
+                    'mpuser_name':appid.nick_name
+                })
+
     c = RequestContext(request, {
         'first_nav_name': export.MALL_CARD_FIRST_NAV,
         'second_navs': export.get_card_second_navs(request),
         'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'belong_to_owner': user_id2mpuser_name
     })
     return render_to_response('card/editor/edit_weizoom_card_rule.html', c)
 
@@ -100,7 +121,7 @@ def export_weizoom_cards(request):
     except:
         filter_value = -1
 
-    titles = [u'卡号', u'密码', u'状态', u'面值/余额', u'已使用金额', u'激活时间', u'有效期', u'备注']
+    titles = [u'卡号', u'密码', u'状态', u'面值/余额', u'已使用金额', u'激活时间', u'有效期', u'备注', u'领用人', u'申请部门']
     weizoom_cards_table = []
     weizoom_cards_table.append(titles)
     
@@ -155,7 +176,9 @@ def export_weizoom_cards(request):
             c.used_money, 
             activated_at, 
             c.time,
-            remark
+            remark,
+            c.activated_to,
+            c.department
         ]
         weizoom_cards_table.append(info)
     

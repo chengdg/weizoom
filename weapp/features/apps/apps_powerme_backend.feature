@@ -56,7 +56,7 @@ Background:
 		}]
 		"""
 
-@apps @apps_powerme @apps_powerme_backend
+@mall2 @apps_powerme @apps_powerme_backend
 Scenario:1 新建微助力，用户识别二维码为空
 	Given jobs登录系统
 	When jobs新建微助力活动
@@ -87,7 +87,7 @@ Scenario:1 新建微助力，用户识别二维码为空
 		}]
 		"""
 
-@apps @apps_powerme @apps_powerme_backend
+@mall2 @apps_powerme @apps_powerme_backend
 Scenario:2 新建微助力，用户识别二维码非空
 	Given jobs登录系统
 	When jobs新建微助力活动

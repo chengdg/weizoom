@@ -1,60 +1,3 @@
-function initSessionStorage(){
-    var s = sessionStorage;
-    if (s.mallSessionStorageHasInit == 1|| W.projectId) {
-        return
-    }else {
-        var woid = getWoid();
-        W.getApi().call({
-            app: 'webapp',
-            api: 'project_api/call',
-            args: {
-                woid: woid,
-                module: 'mall',
-                target_api: 'sessionstorage/init'
-            },
-            success: function(data) {
-                sessionStorage.ship_infos=JSON.stringify(data.ship_infos);
-                s.mallSessionStorageHasInit = 1;
-
-            },
-            error: function(resp) {
-            }
-        });
-    }
-}
-
-/**
- * 收货地址来源URL：
- * 从编辑订单或无地址跳转时设置或覆盖mallShipfromUrl，从个人中心进入则清空mallShipfromUrl
- */
-function setMallShipfromUrl(url){
-    if(url === undefined){
-        url = '';
-    }
-    sessionStorage.mallShipfromUrl = url;
-}
-
-function checkShipInfosBeforeBuy(buy_url){
-    if(!sessionStorage.ship_infos||sessionStorage.ship_infos.length<=2){
-        setMallShipfromUrl(buy_url);
-        window.location.href="./?woid=" + getWoid() +"&module=mall&model=address&action=add" +addFmt('fmt');
-    }else{
-            var ship_infos = JSON.parse(sessionStorage.ship_infos);
-            var hasSelectedShip =  false
-            for (var i in ship_infos) {
-                if(ship_infos[i].is_selected == true){
-                    hasSelectedShip = true;
-                    break;
-                }
-            }
-            if(hasSelectedShip){
-                window.location.href = buy_url;
-            } else {
-                setMallShipfromUrl(buy_url);
-                window.location.href = "./?woid=" + getWoid() +"&module=mall&model=address&action=list" +addFmt('fmt');
-            }
-    }
-}
 
 /**
  * Backbone View in Mobile
@@ -75,15 +18,20 @@ W.page.EditAddressPage = W.page.InputablePage.extend({
 
             var args = $form.serializeObject();
             var ship_info = deepCopyJSON(args);
-            if(ship_info.ship_address.indexOf('海淀科技大厦')>=0||(ship_info.ship_address.indexOf('泰兴大厦')>=0&&ship_info.ship_address.indexOf('301')>=0)){
-                $('.xa-submit').removeAttr('disabled');
-                $('body').alert({
-                        isShow: true,
-                        isSlide: true,
-                        info: '收货地址输入错误',
-                        speed: 2000
-                });
-                return;
+            var banned_address = ["海淀科技大厦12层","海淀科技大厦1201", "海淀科技大厦12层微众", "海淀科技大厦7层", "海淀科技大厦1202",
+                "海淀科技大厦1203", "海淀科技大厦1204", "海淀科技大厦1205", "海淀科技大厦1206", "海淀科技大厦1207", "海淀科技大厦1208",
+                "海淀科技大厦1209", "海淀科技大厦1210", "泰兴大厦301", "泰兴大厦三层301", "泰兴大厦三层微众", "泰兴大厦3层301", "海淀科技大厦十二层", "海淀科技大厦七层"];
+            for (var i=0,len=banned_address.length;i<len;i++){
+                if(ship_info.ship_address.indexOf(banned_address[i])>=0){
+                    $('.xa-submit').removeAttr('disabled');
+                    $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '该收货地址不可用',
+                            speed: 2000
+                    });
+                    return;
+                }
             }
             ship_info['area_str'] = $('.xa-openSelect').text();
 

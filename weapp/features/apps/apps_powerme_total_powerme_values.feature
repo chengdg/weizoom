@@ -117,7 +117,7 @@ Background:
 	And tom1关注jobs的公众号
 	And tom2关注jobs的公众号
 
-@apps @apps_powerme @apps_powerme_backend @total_powerme_values
+@mall2 @apps_powerme @apps_powerme_backend @total_powerme_values
 Scenario:1 微助力活动列表微助力值总数
 	When 微信用户批量参加jobs的微助力活动
 		| member_name | powerme_value | parti_time |  name       |

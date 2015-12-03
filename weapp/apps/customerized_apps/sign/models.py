@@ -220,7 +220,7 @@ class Sign(models.Document):
 						signer = signer[0]
 
 					#如果已达到最大设置天数则重置签到
-					if signer.serial_count == max_setting_count and signer.latest_date and signer.latest_date.strftime('%Y-%m-%d') != datetime.datetime.now().strftime('%Y-%m-%d'):
+					if (signer.serial_count == max_setting_count and signer.latest_date and signer.latest_date.strftime('%Y-%m-%d') != datetime.datetime.now().strftime('%Y-%m-%d')) or (max_setting_count !=0 and signer.serial_count > max_setting_count):
 						signer.update(set__serial_count=0, set__latest_date=datetime.datetime.today())
 						signer.reload()
 

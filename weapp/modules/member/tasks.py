@@ -37,7 +37,7 @@ import member_settings
 # 	print 'call process_error_openid start'
 # 	_process_error_openid(openid, user_profile)
 # 	print 'OK'
-	
+
 
 @task
 def update_member_pay_info(order):
@@ -74,9 +74,9 @@ def update_member_integral(member_id, follower_member_id, integral_increase_coun
 		member.save()
 		#Member.objects.filter(id = member_id).update(integral=F('integral')+integral_increase_count)
 		MemberIntegralLog.objects.create(
-				member = member, 
-				follower_member_token = follower_member.token if follower_member else '', 
-				integral_count = integral_increase_count, 
+				member = member,
+				follower_member_token = follower_member.token if follower_member else '',
+				integral_count = integral_increase_count,
 				event_type = event_type,
 				webapp_user_id = webapp_user_id,
 				reason=reason,
@@ -102,20 +102,20 @@ def increase_intgral_for_be_member_first(self, member_id, webapp_id, event_type)
 
 	"""
 	防止数据库锁
-	"""	
+	"""
 	try:
 		update_member_from_weixin_api(member_id, webapp_id)
 	except:
 		notify_message = u"member_id:{} increase_intgral_for_be_member_first update_member_from_weixin_api cause:\n{}".format(member_id, unicode_full_stack())
 		watchdog_error(notify_message)
-	
+
 
 
 @task
 def create_member_info(member_id, name, sex):
 	if MemberInfo.objects.filter(member_id=member_id).count() > 0:
-		return 
-	
+		return
+
 	MemberInfo.objects.create(
 			member = Member.objects.get(id=member_id),
 			name = name,
@@ -127,7 +127,7 @@ def create_member_info(member_id, name, sex):
 @task
 def process_oauth_member_relation_and_source(fmt, member_id, is_new_created_member=False):
 	print 'received watchdog process_oauth_member_relation_and_source'
-	_process_oauth_member_relation_and_source(fmt, member_id, is_new_created_member)		
+	_process_oauth_member_relation_and_source(fmt, member_id, is_new_created_member)
 	return 'OK'
 
 def _process_oauth_member_relation_and_source(fmt, member_id, is_new_created_member=False):
@@ -139,7 +139,7 @@ def _process_oauth_member_relation_and_source(fmt, member_id, is_new_created_mem
 			follow_member = Member.objects.get(token=fmt)
 			if follow_member.webapp_id != member.webapp_id:
 				return
-				
+
 			if is_new_created_member:
 				MemberFollowRelation.objects.create(member_id=follow_member.id, follower_member_id=member.id, is_fans=is_new_created_member)
 				MemberFollowRelation.objects.create(member_id=member.id, follower_member_id=follow_member.id, is_fans=False)
@@ -172,14 +172,14 @@ def update_member_from_weixin_api(member_id, webapp_id):
 		else:
 			member_nickname_str = member_nickname
 		username_hexstr = byte_to_hex(member_nickname_str)
-		
+
 		if not username_hexstr:
 			username_hexstr = ''
 		sex = social_account_info.sex
 		if sex == '' or sex == None:
 			sex = 0
-		Member.objects.filter(id=member_id).update(user_icon=social_account_info.head_img, 
-					update_time = datetime.now(), 
+		Member.objects.filter(id=member_id).update(user_icon=social_account_info.head_img,
+					update_time = datetime.now(),
 					username_hexstr=username_hexstr,
 					#is_subscribed=social_account_info.is_subscribed,
 					city=social_account_info.city,
@@ -199,8 +199,8 @@ def record_member_pv(self, member_id, url, page_title=''):
 		member = Member.objects.get(id=member_id)
 		if member and url.find('api') == -1:
 			MemberBrowseRecord.objects.create(
-				title = page_title, 
-				url = url, 
+				title = page_title,
+				url = url,
 				member=member
 			)
 	except:
@@ -243,7 +243,7 @@ def post_pay_tasks(request, order):
 	request.META[RemoveSharedInfoMiddleware.SHOULD_REMOVE_SHARED_URL_SESSION_FLAG] = True
 
 	"""
-		
+
 		更新会员购买信息
 	"""
 	update_member_pay_info_task.delay(order.id)
@@ -253,8 +253,11 @@ def post_pay_tasks(request, order):
 def process_payment_with_shared_info(self, member_id, follow_member_token, shared_url_digest):
 	try:
 		member = Member.objects.get(id=member_id)
-		follow_member = Member.objects.get(token = follow_member_token)
-		if member != follow_member and member.webapp_id == follow_member.webapp_id:
+		try:
+			follow_member = Member.objects.get(token = follow_member_token)
+		except:
+			follow_member = None
+		if follow_member and member != follow_member and member.webapp_id == follow_member.webapp_id:
 			MemberSharedUrlInfo.objects.filter(member=follow_member, shared_url_digest=shared_url_digest).update(leadto_buy_count=F('leadto_buy_count')+1)
 	except:
 		notify_message = u"process_payment_with_shared_info member_id:{}, cause:\n{}".format(member_id, unicode_full_stack())
@@ -284,5 +287,5 @@ def send_order_template_message(self, webapp_id, order_id, send_point):
 		send_order_template_message(webapp_id, order_id, send_point)
 	except:
 		alert_message = u"post_pay_order_handler 发送模板消息失败, cause:\n{}".format(unicode_full_stack())
-		watchdog_warning(alert_message)		
+		watchdog_warning(alert_message)
 		raise self.retry()

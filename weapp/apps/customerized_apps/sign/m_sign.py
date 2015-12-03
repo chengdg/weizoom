@@ -113,7 +113,7 @@ class MSign(resource.Resource):
 						else:
 							temp_serial_count = 0
 						#如果已达到最大设置天数则重置签到
-						if signer.serial_count == max_setting_count and latest_sign_date != nowDate:
+						if (signer.serial_count == max_setting_count and latest_sign_date != nowDate) or (max_setting_count!=0 and signer.serial_count > max_setting_count):
 							temp_serial_count = 0
 							signer.update(set__serial_count=0)
 							signer.reload()

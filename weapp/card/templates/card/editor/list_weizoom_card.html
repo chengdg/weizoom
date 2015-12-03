@@ -55,7 +55,8 @@
                         <th>卡名称</th>
                         <th>面值</th>
                         <th>数量</th>
-                        <th>卡类型</th>
+                        <th>卡属性<br>卡类型</th>
+                        <th>专属商家</th>
                         <th>卡号区间</th>
                         <th>有效期</th>
                         <th>备注 </th>
@@ -71,15 +72,26 @@
                         </td>
                         <td>${card_rule.money}</td>
                         <td>${card_rule.count}</td>
-                        <td>${card_rule.card_type}</td>
+                        <td>
+                            {{if card_rule.is_new_member_special}}
+                                <div>新会员</div>
+                            {{/if}}
+                            {{if card_rule.card_attr}}
+                                <div>专属卡</div>
+                            {{else}}
+                                <div>通用卡</div>
+                            {{/if}}
+                            <div>${card_rule.card_type}</div></td>
+                        <td>${card_rule.belong_to_owner}</td>
                         <td>${card_rule.card_range}</td>
                         <td>${card_rule.valid_time_from}</br>${card_rule.valid_time_to}</td>
                         <td style="max-width:150px;">${card_rule.remark}</td>
                         <td>{{if can_export_batch_card}}
-                            <a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a>
+                        <div><a href="javascript:void(0);" class="exportCard" onclick="export_card_list(${ card_rule.id });">导出全部</a></div>
+
                             {{/if}}
                             {{if can_delay_card}}
-                                <a id="appendTime" class="appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a>
+                                <div><a id="appendTime" class="appendTime" rule-id="${card_rule.id}" href="javascript:void(0)">卡延期</a></div>
                             {{/if}}
                         </td>
                     </tr>

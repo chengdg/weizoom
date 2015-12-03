@@ -21,10 +21,7 @@ from celery import task
 @task
 def cancel_not_pay_order_timeout(request, args):
     """
-    取消超时的未付款订单的service
-
-    @param request 无用，为了兼容
-    @param args dict类型，内含order_id, reason
+    取消超时的未付款订单
     """
     user2webapp_id = dict([(user_profile.user, user_profile.webapp_id)for user_profile in UserProfile.objects.filter(is_active=True)])
     users = user2webapp_id.keys()
@@ -36,6 +33,8 @@ def cancel_not_pay_order_timeout(request, args):
     webapp_id2expired_time = {}
     for user in users:
         user_id = user.id
+        if user not in user2webapp_id.keys():
+            continue
         webapp_id = user2webapp_id[user]
         expired_hour = user2order_expired_hour[user_id]
         if expired_hour:
@@ -61,7 +60,6 @@ def cancel_not_pay_order_timeout(request, args):
 
         if len(need_cancel_orders) > 50:
             break
-
     for order in need_cancel_orders:
         update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
 

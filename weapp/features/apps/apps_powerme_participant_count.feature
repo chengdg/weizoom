@@ -117,7 +117,7 @@ Background:
 	And tom1关注jobs的公众号
 	And tom2关注jobs的公众号
 
-@apps @powerme @apps_powerme_backend @powerme_participant_count
+@mall2 @apps_powerme @apps_powerme_backend @powerme_participant_count
 Scenario:1 微助力活动列表参与人数的校验
 	#bill参加'微助力活动1'，助力值2（tom tom1帮助力）
 	When bill访问jobs的webapp

@@ -45,7 +45,7 @@ def __get_qrcode(user_id):
 		notify_msg = u"微信会员二维码__get_qrcode errror :id={}cause:\n{}".format(user_id, unicode_full_stack())
 		watchdog_error(notify_msg)
 		return None, None
-	
+
 	mp_user = get_binding_weixin_mpuser(user)
 	if mp_user:
 		mpuser_access_token = get_mpuser_accesstoken(mp_user)
@@ -64,17 +64,17 @@ def __get_qrcode(user_id):
 				ticket = qrcode_ticket.ticket
 			except:
 				ticket = None
-				
+
 			#qcrod_info = weixin_api.get_qrcode(ticket)
 			if ticket:
-				return ticket, 604800
+				return ticket, 2592000
 			else:
 				return None, None
 		except:
 			notify_msg = u"微信会员二维码__get_qrcode errror :id={}cause:\n{}".format(user_id, unicode_full_stack())
 			watchdog_error(notify_msg, 'WEB', user_id)
 			return None, None
-		
+
 	else:
 		return None, None
 
@@ -107,7 +107,7 @@ def get_member_qrcode(user_id, member_id):
 	# except:
 	# 	notify_msg = u"微信会员二维码get_member_qrcode execute sql errror cause:\n{}".format(unicode_full_stack())
 	# 	watchdog_fatal(notify_msg)
-			
+
 	# try:
 	# 	viper_spreads = MemberQrcode.objects.filter(member_id=member_id, expired_second__gt=850, is_active=1)
 	# 	if viper_spreads.count() > 0:
@@ -152,7 +152,7 @@ def update_member_qrcode_log(user_profile, member, ticket):
 				only_create_friend = True
 			if member and  member.is_new:
 				if MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
-					
+
 					if member_qrcode and MemberQrcodeLog.objects.filter(member_id=member.id).count() == 0:
 						MemberQrcodeLog.objects.create(member_qrcode=member_qrcode,member_id=member.id)
 						_add_award_to_member(user_profile, member, member_qrcode)
@@ -168,7 +168,7 @@ def update_member_qrcode_log(user_profile, member, ticket):
 		notify_msg = u"微信会员二维码扫描增加积分失败1 cause:\n{}".format(unicode_full_stack())
 		watchdog_fatal(notify_msg)
 		return True
-				
+
 
 def _add_award_to_member(user_profile, member, member_qrcode):
 	member_qrcode_setting = MemberQrcodeSettings.objects.filter(owner=user_profile.user)[0] if MemberQrcodeSettings.objects.filter(owner=user_profile.user).count() > 0 else None
@@ -205,7 +205,7 @@ def _add_award_to_member(user_profile, member, member_qrcode):
 	except:
 		notify_msg = u"微信会员二维_add_award_to_member cause:\n{}".format(unicode_full_stack())
 		watchdog_fatal(notify_msg)
-			
+
 def _update_member_source(member):
 	try:
 		if member.source == -1:
@@ -213,7 +213,7 @@ def _update_member_source(member):
 	except:
 		notify_msg = u"微信会员二维码扫描修改会员来源member_id :{} cause:\n{}".format(member.id, unicode_full_stack())
 		watchdog_fatal(notify_msg)
-	
+
 
 def _add_member_relation(new_member, old_member, only_create_friend=False):
 	if only_create_friend and MemberFollowRelation.objects.filter(member_id=new_member.id, follower_member_id=old_member.id).count() == 0:
@@ -239,4 +239,3 @@ def _add_member_relation(new_member, old_member, only_create_friend=False):
 		except:
 			notify_msg = u"微信会员二维码扫描建立粉丝关系new_member_id :{}, follower_member_id:{} cause:\n{}".format(new_member.id, old_member.id, unicode_full_stack())
 			watchdog_fatal(notify_msg)
-	

@@ -34,6 +34,9 @@ from watchdog.utils import watchdog_alert
 #############################################################################
 # is_weizoom_card_use_permission_by_owner_id: 根据owner_id获取微众卡使用权限
 #############################################################################
+from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo
+
+
 def is_weizoom_card_use_permission_by_owner_id(owner_id):
 	try:
 		return AccountHasWeizoomCardPermissions.objects.get(owner_id = owner_id).is_can_use_weizoom_card
@@ -76,12 +79,14 @@ def return_weizoom_card_money(order):
 				-weizoom_card_has_order.money
 			)
 
-def check_weizoom_card(name, password, owner_id=None):
+def check_weizoom_card(name, password,webapp_user=None, owner_id=None):
 	msg = None
 	weizoom_card = {}
 	weizoom_card = WeizoomCard.objects.filter(weizoom_card_id=name, password=password)
+
 	if len(weizoom_card) == 1:
 		weizoom_card = weizoom_card[0]
+		weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card.weizoom_card_rule_id)
 		rule_id = weizoom_card.weizoom_card_rule.id
 		# print rule_id, owner_id
 		today = datetime.today()
@@ -93,6 +98,29 @@ def check_weizoom_card(name, password, owner_id=None):
 			msg = u'微众卡已过期'
 		elif weizoom_card.status == WEIZOOM_CARD_STATUS_INACTIVE:
 			msg = u'微众卡未激活'
+		elif owner_id and weizoom_card_rule.card_attr:
+			#专属卡
+			#是否为新会员专属卡
+			mpuser_name = u''
+			authed_appid = ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id=weizoom_card_rule.belong_to_owner)
+			if authed_appid.count()>0:
+				if authed_appid[0].nick_name:
+					mpuser_name = authed_appid[0].nick_name
+			if weizoom_card_rule.is_new_member_special:
+				orders = Order.objects.filter(webapp_user_id=webapp_user.id)
+				has_order = orders.count() >0
+				#判断是否首次下单
+				if has_order:
+					order_ids = [order.order_id for order in orders]
+					#不是首次下单，判断该卡是否用过
+					has_use_card = WeizoomCardHasOrder.objects.filter(card_id=weizoom_card.id,order_id__in=order_ids).count()>0
+					if not has_use_card:
+						msg = u'该卡为新会员专属卡'
+				if owner_id != weizoom_card_rule.belong_to_owner:
+					msg = u'该卡为'+mpuser_name+'商家专属卡'
+			else:
+				if owner_id != weizoom_card_rule.belong_to_owner:
+					msg = u'该卡为'+mpuser_name+'商家专属卡'
 		elif owner_id and rule_id in [23, 36] and owner_id != 157:
 			WeizoomCardRule.objects.get(id=rule_id)
 			if '吉祥大药房' in weizoom_card.weizoom_card_rule.name:

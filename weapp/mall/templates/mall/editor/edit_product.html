@@ -112,15 +112,15 @@
 			</div>
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="min_limit">起购数量：</label>
-				<div class="fl w700 pl5">
-                {% if product.is_in_flash_sale%}
-                    <input type="hidden" class="form-control w106 fl" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
-                    <input type="text"  disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
-                {% else %}
-					<input type="text" class="form-control w106 fl" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
-                {% endif %}
-                    <span class="xui-fontGary">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
-					<div class="errorHint"></div>
+				<div class="fl w700 pl5 pr">
+	        {% if product.is_in_flash_sale%}
+	          <input type="hidden" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
+	          <input type="text"  disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+	        {% else %}
+						<input type="text" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+	        {% endif %}
+	        <span class="xui-fontGary pa" style="top:2px;left:115px">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
+          <div class="errorHint"></div>
 				</div>
 			</div>
 			{% if not request.manager.is_weizoom_mall and supplier|length == 0 %}
@@ -198,30 +198,30 @@
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">运费设置：</label>
 				<div id="freight"  class="col-sm-9">
 				{% if request.manager.id == product.owner.id or not product %}
-					<label id="unified_freight" class="radio" >
-	             		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
-	             			   {% if not postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
-	             			   value="unified_postage_type"
-	             		/>
-                        <span class="xui-bold">统一运费：￥</span>
-                        <input type='text' name="unified_postage_money"
-                               value='{% if product %}{{product.unified_postage_money}}{% endif %}'
-                               style="width: 80px;" class="form-control xui-inlineblock xa-unifiedPostageInput"
-                               placeholder="0.0"
-                        />
-                        <span>元</span>
-                        <div id="unified_postage_error" class="errorHint" data-error-hint="请输正确的价格"></div>
-	         		</label>
+					<div id="unified_freight" class="radio" >
+         		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
+         			   {% if not postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
+         			   value="unified_postage_type"
+         		/>
+            <span class="xui-bold">统一运费：￥</span>
+            <input type='text' name="unified_postage_money"
+                   value='{% if product %}{{product.unified_postage_money}}{% endif %}'
+                   style="width: 80px;" class="form-control xui-inlineblock xa-unifiedPostageInput mb5"
+                   placeholder="0.0"
+            />
+            <span>元</span>
+            <div id="unified_postage_error" class="errorHint pt0" data-error-hint="请输正确的价格" style="padding-left:80px"></div>
+       		</div>
 
-					<label id="custom_freight" class="radio xa-customPostageSelectorLabel">
-	             		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
-                   			   {% if postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
-                               value="custom_postage_type"
-	             	    />
-                        <span class="xui-bold">使用系统运费模板：</span>
-                        {{postage_config_info.system_postage_config.name}}
-                        <a class="ml5" href="/mall2/postage_list/" target="_blank">新建运费模板</a>
-	         		</label>
+					<div id="custom_freight" class="radio xa-customPostageSelectorLabel">
+         		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
+             			   {% if postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
+                         value="custom_postage_type"
+         	    />
+            <span class="xui-bold">使用系统运费模板：</span>
+            {{postage_config_info.system_postage_config.name}}
+            <a class="ml5" href="/mall2/postage_list/" target="_blank">新建运费模板</a>
+       		</div>
 				{%else%}
 					<label id="unified_freight" class="radio" >包邮</label>
 				{%endif%}

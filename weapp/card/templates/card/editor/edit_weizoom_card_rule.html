@@ -38,16 +38,56 @@
 
         <fieldset>
             <div class="form-group">
-                <label class="control-label fl" for="parents_name">名&nbsp;&nbsp;&nbsp;称：</label>
+                <label class="control-label fl" for="parents_name">名&nbsp;&nbsp;&nbsp;&nbsp;称：</label>
                 <div class="fl">
                     <input type="text" class="form-control mr20 ml5 rule_name" name="name" placeholder="1-20个字，中英文、数字特殊符号均可" data-validate="require-notempty" style="width:300px;" />
                     <div class="errorHint" ></div>
                 </div>
 
             </div>
+
+            <div class="form-group ">
+                <label class="control-label fl" for="parents_name">卡类型：</label>
+                <div class="col-sm-2 fl pl5" style="width: 6%;">
+                    <select type="text" class="input-xlarge" name="type" data-validate="require-select">
+                        <option value="-1">请选择</option>
+                        <option value="0">外部卡</option>
+                        <option value="1">内部卡</option>
+                        <option value="2">赠品卡</option>
+                    </select>
+                    <div class="errorHint"></div>
+                </div>
+                <label class="control-label fl star_show" for="parents_name" style="margin-left: 0px;">卡属性：</label>
+                <div class="col-sm-2 fl pl5">
+                    <select type="text" class="input-xlarge" name="card_attr" data-validate="require-select">
+                        <option value="-1">请选择</option>
+                        <option value="0">通用卡</option>
+                        <option value="1">专属卡</option>
+                    </select>
+                    <div class="errorHint"></div>
+                </div>
+            </div>
+
+            <div id="owner_special" class="form-group" style="display: none">
+                <label class="control-label fl" for="parents_name">专属商家：</label>
+                <div class="col-sm-2 fl pl5" style="width: auto;">
+                    <select type="text" class="input-xlarge" name="belong_to_owner" data-validate="require-select">
+                        <option value="-1">请选择</option>
+                        {% for owner in belong_to_owner %}
+                            <option value="{{ owner.user_id }}">{{ owner.mpuser_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="errorHint" style="width: auto"></div>
+                </div>
+                <div class="checkbox" style="float: left;width: 10%;">
+                    <label>
+                        <input type="checkbox" name="is_new_member_special" style="margin-top: 2px"> 新会员专属
+                    </label>
+                </div>
+            </div>
             
             <div class="form-group ">
-                <label class="control-label fl" for="parents_name">面&nbsp;&nbsp;&nbsp;值：</label>
+                <label class="control-label fl" for="parents_name">面&nbsp;&nbsp;&nbsp;&nbsp;值：</label>
                 <div class="col-sm-2 fl pl5">
                     <input type="text" class="form-control w106"  name="money" placeholder=" " data-validate="require-price"/>
                     <div class="errorHint"></div>
@@ -56,24 +96,12 @@
             </div>
             
             <div class="form-group ">
-                <label class="control-label fl" for="parents_name">数&nbsp;&nbsp;&nbsp;量：</label>
+                <label class="control-label fl" for="parents_name">数&nbsp;&nbsp;&nbsp;&nbsp;量：</label>
                 <div class="col-sm-2 fl pl5">
                     <input type="text" class="form-control w106" name="number" placeholder=" " data-validate="require-int"/>
                     <div class="errorHint"></div>
                 </div>
                 <span style="position: absolute;left: 320px;">张</span>
-            </div>
-
-            <div class="form-group ">
-                <label class="control-label fl" for="parents_name">卡类型：</label>
-                <div class="col-sm-2 fl pl5">
-                    <select type="text" class="input-xlarge" name="type" data-validate="require-select">
-                        <option value="0">外部卡</option>
-                        <option value="1">内部卡</option>
-                        <option value="2">赠品卡</option>
-                    </select>
-                    <div class="errorHint"></div>
-                </div>
             </div>
             
             <div class="form-group ">
@@ -199,17 +227,24 @@ $(document).ready(function() {
         });
     });
 
+    $('[name="card_attr"]').change(function(){
+        if ($(this).val() == 1){
+            $('#owner_special').css('display','block');
+        }else{
+            $('#owner_special').css('display','none');
+        }
+    });
     $('form').submit(function() {
         var startDate = $('#valid_time_from').val();
         var endDate = $('#valid_time_to').val();
         var rule_remark = $('.rule_remark').val();
         var rule_name = $('.rule_name').val();
-        if (startDate.length > 0 && endDate.length == 0) {
-            W.showHint('error','请输入结束日期！');
-            return false;
-        }
         if (endDate.length > 0 && startDate.length == 0) {
             W.showHint('error','请输入开始日期！');
+            return false;
+        }
+        if (startDate.length > 0 && endDate.length == 0) {
+            W.showHint('error','请输入结束日期！');
             return false;
         }
         var start = new Date(startDate.replace("-", "/").replace("-", "/"));
@@ -218,12 +253,12 @@ $(document).ready(function() {
             W.showHint('error','开始日期不能大于结束日期！');
             return false;
         }
-        if (rule_remark.length> 20){
-            W.showHint('error','备注做多输入20个字符！');
+        if (rule_name.length> 20){
+            W.showHint('error','名称最多输入20个字符！');
             return false;
         }
-        if (rule_name.length> 20){
-            W.showHint('error','名称做多输入20个字符！');
+        if (rule_remark.length> 20){
+            W.showHint('error','备注最多输入20个字符！');
             return false;
         }
         $('#submitBtn').attr('disabled', true);
@@ -247,18 +282,24 @@ $(document).ready(function() {
         var expired_hour = $('[name="expired_hour"]').val();
         var expired_minute = $('[name="expired_minute"]').val();
         var card_type = $('[name="type"]').val();
+        var card_attr = $('[name="card_attr"]').val();
+        var belong_to_owner = $('[name="belong_to_owner"]').val();
+        var is_new_member_special = $('[name="is_new_member_special"]').attr('checked');
 
         W.getApi().call({
             app: 'card',
             api: 'weizoom_cards/create',
             args: {
-              name: name,
-              money: money,
-              remark: remark,
-              number: number,
-              valid_time_from: valid_time_from,
-              valid_time_to: valid_time_to,
-              card_type: card_type
+                name: name,
+                money: money,
+                remark: remark,
+                number: number,
+                valid_time_from: valid_time_from,
+                valid_time_to: valid_time_to,
+                card_type: card_type,
+                card_attr: card_attr,
+                belong_to_owner: belong_to_owner,
+                is_new_member_special: is_new_member_special
             },
             method: 'post',
             success: function(data) {

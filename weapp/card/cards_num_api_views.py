@@ -99,6 +99,7 @@ def get_card_num_operations(request):
         cur_weizoom_card.created_at = cur_card_operation.created_at.strftime('%Y-%m-%d %H:%M:%S')
         cur_weizoom_card.remark = cur_card_operation.remark
         cur_weizoom_card.activated_to = cur_card_operation.activated_to
+        cur_weizoom_card.department = cur_card_operation.department
         cur_card_operations.append(cur_weizoom_card)
     response = create_response(200)
     response.data.items=cur_card_operations

@@ -54,6 +54,7 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         var cardName = $('#card_name').val().trim();
         var cardStatus = $('#cardStatus').val();
         var cardType = $('#cardType').val();
+        var cardAttr = $('#cardAttr').val();
         var startDate = $('#start_date').val().trim();
         var endDate = $('#end_date').val().trim();
         var card_num_min = $('#card_num_min').val().trim();
@@ -61,6 +62,9 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         var args = [];
         if (cardType != -1) {
             dataValue.push('cardType:'+cardType);
+        }
+        if (cardAttr != -1) {
+            dataValue.push('cardAttr:'+cardAttr);
         }
         if (cardStatus != -1) {
             dataValue.push('cardStatus:'+cardStatus);
@@ -152,7 +156,8 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {
                     filters: _this.filterData,
-                    types: data.card_type || []
+                    types: data.card_types || [],
+                    card_attrs: data.card_attrs || []
                 });
                 this.$el.append(html);
                 _this.addDatepicker();
@@ -256,6 +261,7 @@ W.view.card.cards.cardFilter = Backbone.View.extend({
         $('#start_date').val('');
         $('#end_date').val('');
         $('#cardType').val(-1);
+        $('#cardAttr').val(-1);
         $('#card_num_min').val('');
         $('#card_num_max').val('');
     }
