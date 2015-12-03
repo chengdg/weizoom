@@ -172,53 +172,53 @@ Scenario:1 编辑'未开始'状态的微信抽奖活动
 			}]
 		}]
 		"""
-	# Then jobs获得微信抽奖活动列表
-	# 	"""
-	# 	[{
-	# 		"name":"微信抽奖03",
-	# 		"status":"已结束"
-	# 	},{
-	# 		"name":"微信抽奖02",
-	# 		"status":"进行中"
-	# 	},{
-	# 		"name":"微信抽奖001",
-	# 		"status":"进行中"
-	# 	}]
-	# 	"""
-	# And jobs获得微信抽奖活动'微信抽奖001'
-	# 	"""
-	# 	{
-	# 		"name":"微信抽奖001",
-	# 		"start_date":"今天",
-	# 		"end_date":"2天后",
-	# 		"desc":"抽奖啦抽奖啦",
-	# 		"reduce_integral":0,
-	# 		"send_integral":1,
-	# 		"send_integral_rules":"仅限未中奖用户",
-	# 		"lottery_limit":"一天一次",
-	# 		"win_rate":50%,
-	# 		"is_repeat_win":"是",
-	# 		"prize_settings":[{
-	# 			"prize_grade":"一等奖",
-	# 			"prize_counts":10,
-	# 			"prize_type":"优惠券",
-	# 			"coupon":"优惠券1",
-	# 			"pic":""
-	# 		},{
-	# 			"prize_grade":"二等奖",
-	# 			"prize_counts":20,
-	# 			"prize_type":"积分",
-	# 			"integral":100,
-	# 			"pic":""
-	# 		},{
-	# 			"prize_grade":"三等奖",
-	# 			"prize_counts":30,
-	# 			"prize_type":"积分",
-	# 			"integral":30,
-	# 			"pic":"1.jpg"
-	# 		}]
-	# 	}
-	# 	"""
+	Then jobs获得微信抽奖活动列表
+		"""
+		[{
+			"name":"微信抽奖03",
+			"status":"已结束"
+		},{
+			"name":"微信抽奖02",
+			"status":"进行中"
+		},{
+			"name":"微信抽奖001",
+			"status":"进行中"
+		}]
+		"""
+	And jobs获得微信抽奖活动'微信抽奖001'
+		"""
+		[{
+			"name":"微信抽奖001",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"desc":"抽奖啦抽奖啦",
+			"reduce_integral":0,
+			"send_integral":1,
+			"send_integral_rules":"仅限未中奖用户",
+			"lottery_limit":"一天一次",
+			"win_rate":"50%",
+			"is_repeat_win":"是",
+			"prize_settings":[{
+				"prize_grade":"一等奖",
+				"prize_counts":10,
+				"prize_type":"优惠券",
+				"coupon":"优惠券1",
+				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":20,
+				"prize_type":"积分",
+				"integral":100,
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":30,
+				"prize_type":"积分",
+				"integral":30,
+				"pic":"1.jpg"
+			}]
+		}]
+		"""
 
 @apps @lottery @update_lottery
 Scenario:2 关闭'进行中'状态的微信抽奖活动
@@ -255,7 +255,7 @@ Scenario:2 关闭'进行中'状态的微信抽奖活动
 		}]
 		"""
 
-@apps @lottery @update_lottery
+@apps @lottery @update_lottery @yang2
 Scenario:3 删除'未开始'和'已结束'状态的微信抽奖活动
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
@@ -271,7 +271,7 @@ Scenario:3 删除'未开始'和'已结束'状态的微信抽奖活动
 		},{
 			"name":"微信抽奖01",
 			"status":"未开始",
-			"actions": ["查看结果","删除","预览"]
+			"actions": ["查看结果","关闭","预览"]
 		}]
 		"""
 	#删除'未开始'状态的微信抽奖01
