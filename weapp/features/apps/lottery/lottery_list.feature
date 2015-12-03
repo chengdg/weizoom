@@ -46,7 +46,7 @@ Background:
 			"send_integral":1,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一人一次",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -76,7 +76,7 @@ Background:
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天一次",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -106,7 +106,7 @@ Background:
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -130,7 +130,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery
+@apps @lottery @lottery_list
 Scenario:1 微信抽奖活动列表查询
 	Given jobs登录系统
 	#空查询
@@ -318,7 +318,7 @@ Scenario:1 微信抽奖活动列表查询
 				}]
 				"""
 
-@apps @lottery
+@apps @lottery @lottery_list
 Scenario:2 微信抽奖活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
