@@ -78,7 +78,7 @@ Scenario:1 新建微信抽奖,抽奖限制一人一次
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
-			"part_num":0,
+			"participant_count":0,
 			"actions": ["查看结果","关闭","预览"]
 		}]
 		"""
@@ -127,8 +127,8 @@ Scenario:2 新建微信抽奖,抽奖限制一天一次
 			"start_date":"明天",
 			"end_date":"2天后",
 			"status":"未开始",
-			"part_num":0,
-			"actions": ["查看结果","删除","预览"]
+			"participant_count":0,
+			"actions": ["查看结果","关闭","预览"]
 		}]
 		"""
 
@@ -138,7 +138,7 @@ Scenario:3 新建微信抽奖,抽奖限制不限
 	When jobs新建微信抽奖活动
 		"""
 		[{
-			"name":" 不限制微信抽奖",
+			"name":"不限制微信抽奖",
 			"start_date":"今天",
 			"end_date":"2天后",
 			"desc":"抽奖啦抽奖啦",
@@ -176,7 +176,7 @@ Scenario:3 新建微信抽奖,抽奖限制不限
 			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
-			"part_num":0,
+			"participant_count":0,
 			"actions": ["查看结果","关闭","预览"]
 		}]
 		"""
