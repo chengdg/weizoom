@@ -38,7 +38,6 @@ def __get_lotteryPageJson(args):
 	"""
 	传入参数，获取模板
 	"""
-	__debug_print(args)
 	__page_temple = {
 		"type": "appkit.page",
 		"cid": 1,
@@ -225,7 +224,8 @@ def __bool2Bool(bo):
 
 def __name2Bool(name):
 	"""
-	"是"--> True
+	"是"--> true
+	"否"--> false
 	"""
 	name_dic = {u'是':"true",u'否':"false"}
 	if name:
@@ -387,13 +387,13 @@ def __prize_settings_process(prize_settings):
 	else:
 		return []
 
-# def __lottery_name2id(name):
-# 	"""
-# 	给抽奖项目的名字，返回id元祖
-# 	返回（related_page_id,lottery_lottery中id）
-# 	"""
-# 	obj = lottery_models.lottery.objects.get(name=name)
-# 	return (obj.related_page_id,obj.id)
+def __lottery_name2id(name):
+	"""
+	给抽奖项目的名字，返回id元祖
+	返回（related_page_id,lottery_lottery中id）
+	"""
+	obj = lottery_models.lottery.objects.get(name=name)
+	return (obj.related_page_id,obj.id)
 
 # def __status2name(status_num):
 # 	"""
@@ -480,14 +480,12 @@ def __Create_Lottery(context,text,user):
 	get_lottery_response = context.client.get("/apps/lottery/lottery/")
 	lottery_args_response = get_lottery_response.context
 	project_id = lottery_args_response['project_id']#(str){new_app:lottery:0}
-	__debug_print(project_id)
 
 	#step2: 编辑页面获得右边的page_json
 	dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	dynamic_response = context.client.get(dynamic_url)
 	dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
 
-	print 'OOOOOOOOOOOOOOKKKKKKKKKKKK!!!!!!!!!!!!!!'
 	#step3:发送Page
 	page_json = __get_lotteryPageJson(page_args)
 
@@ -519,94 +517,88 @@ def __Create_Lottery(context,text,user):
 	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	post_lottery_response = context.client.post(lottery_url,post_lottery_args)
 
-# def __Update_Lottery(context,text,page_id,lottery_id):
-# 	"""
-# 	模拟用户登录页面
-# 	编辑抽奖项目
-# 	写入mongo表：
-# 		1.lottery_lottery表
-# 		2.page表
-# 	"""
+def __Update_Lottery(context,text,page_id,lottery_id):
+	"""
+	模拟用户登录页面
+	编辑抽奖项目
+	写入mongo表：
+		1.lottery_lottery表
+		2.page表
+	"""
 
-# 	design_mode=0
-# 	version=1
-# 	project_id = "new_app:lottery:"+page_id
+	design_mode=0
+	version=1
+	project_id = "new_app:lottery:"+page_id
 
-# 	title = text.get("name","")
-# 	cr_start_date = text.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+	title = text.get("name","")
 
-# 	cr_end_date = text.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-# 	valid_time = "%s~%s"%(start_time,end_time)
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-# 	timing_status = text.get("is_show_countdown","")
+	valid_time = "%s~%s"%(start_time,end_time)
 
-# 	timing_value_day = __date_delta(start_date,end_date)
-
-# 	description = text.get("desc","")
-# 	reply_content = text.get("reply")
-# 	material_image = text.get("share_pic","")
-# 	background_image = text.get("background_pic","")
-
-# 	qrcode_name = text.get("qr_code","")
-# 	if qrcode_name:
-# 		qrcode = __get_qrcode(context,qrcode_name)
-# 	else:
-# 		qrcode = ""
-
-# 	zhcolor = text.get("background_color","冬日暖阳")
-# 	color = __name2color(zhcolor)
-
-# 	rules = text.get("rules","")
-
-# 	page_args = {
-# 		"title":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"valid_time":valid_time,
-# 		"timing_status":timing_status,
-# 		"timing_value_day":timing_value_day,
-# 		"description":description,
-# 		"reply_content":reply_content,
-# 		"qrcode":qrcode,
-# 		"material_image":material_image,
-# 		"background_image":background_image,
-# 		"color":color,
-# 		"rules":rules
-# 	}
-
-# 	page_json = __get_lotteryPageJson(page_args)
-
-# 	update_page_args = {
-# 		"field":"page_content",
-# 		"id":project_id,
-# 		"page_id":"1",
-# 		"page_json": page_json
-# 	}
-
-# 	update_lottery_args = {
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"timing":timing_status,
-# 		"reply_content":reply_content,
-# 		"material_image":material_image,
-# 		"qrcode":json.dumps(qrcode),
-# 		"id":lottery_id#updated的差别
-# 	}
+	desc = text.get('desc','')#描述
+	reduce_integral = text.get('reduce_integral',0)#消耗积分
+	send_integral = text.get('send_integral',0)#参与送积分
+	send_integral_rules = text.get('send_integral_rules',"")#送积分规则
+	lottery_limit = __name2limit(text.get('lottery_limit',u'一人一次'))#抽奖限制
+	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
+	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
+	expect_prize_settings_list = text.get('prize_settings',[])
+	page_prize_settings,lottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
 
 
-# 	#page 更新Page
-# 	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_page_response = context.client.post(update_page_url,update_page_args)
+	page_args = {
+		"title":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"description":desc,#描述
+		"expend":reduce_integral,#消耗积分
+		"delivery":send_integral,#参与送积分
+		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
+		"limitation":lottery_limit,#抽奖限制
+		"chance":win_rate,#中奖率
+		"allow_repeat":is_repeat_win,#重复中奖
+		"prize_settings":page_prize_settings
+	}
 
-# 	#step4:更新lottery
-# 	update_lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_lottery_response = context.client.post(update_lottery_url,update_lottery_args)
+	page_json = __get_lotteryPageJson(page_args)
+
+	update_page_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
+
+	update_lottery_args = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"expend":reduce_integral,#消耗积分
+		"delivery":send_integral,#参与送积分
+		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
+		"limitation":lottery_limit,#抽奖限制
+		"chance":win_rate,#中奖率
+		"allow_repeat":is_repeat_win,#重复中奖
+		"prize_settings":lottery_prize_settings,
+		"id":lottery_id#updated的差别
+	}
+
+
+	#page 更新Page
+	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_page_response = context.client.post(update_page_url,update_page_args)
+
+	#step4:更新lottery
+	update_lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_lottery_response = context.client.post(update_lottery_url,update_lottery_args)
 
 # def __Delete_Lottery(context,lottery_id):
 # 	"""
@@ -795,11 +787,11 @@ def step_impl(context,user):
 		bdd_util.assert_list(expected,actual_list)
 
 
-# @when(u"{user}编辑抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	expect = json.loads(context.text)[0]
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	__Update_Lottery(context,expect,lottery_page_id,lottery_id)
+@when(u"{user}编辑微信抽奖活动'{lottery_name}'")
+def step_impl(context,user,lottery_name):
+	expect = json.loads(context.text)[0]
+	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
+	__Update_Lottery(context,expect,lottery_page_id,lottery_id)
 
 
 # @then(u"{user}获得抽奖活动'{lottery_name}'")

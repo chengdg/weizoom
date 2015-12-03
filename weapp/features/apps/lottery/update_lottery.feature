@@ -37,7 +37,7 @@ Background:
 			"send_integral":1,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一人一次",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -67,7 +67,7 @@ Background:
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天一次",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"否",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -97,7 +97,7 @@ Background:
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -121,7 +121,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery
+@apps @lottery @update_lottery @yang
 Scenario:1 编辑'未开始'状态的微信抽奖活动
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
@@ -140,7 +140,7 @@ Scenario:1 编辑'未开始'状态的微信抽奖活动
 	#修改名称、时间、参与限制及奖项设置
 	When jobs编辑微信抽奖活动'微信抽奖01'
 		"""
-		{
+		[{
 			"name":"微信抽奖001",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -149,7 +149,7 @@ Scenario:1 编辑'未开始'状态的微信抽奖活动
 			"send_integral":1,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一天一次",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -170,57 +170,57 @@ Scenario:1 编辑'未开始'状态的微信抽奖活动
 				"integral":30,
 				"pic":"1.jpg"
 			}]
-		}
-		"""
-	Then jobs获得微信抽奖活动列表
-		"""
-		[{
-			"name":"微信抽奖03",
-			"status":"已结束"
-		},{
-			"name":"微信抽奖02",
-			"status":"进行中"
-		},{
-			"name":"微信抽奖001",
-			"status":"进行中"
 		}]
 		"""
-	And jobs获得微信抽奖活动'微信抽奖001'
-		"""
-		{
-			"name":"微信抽奖001",
-			"start_date":"今天",
-			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":0,
-			"send_integral":1,
-			"send_integral_rules":"仅限未中奖用户",
-			"lottery_limit":"一天一次",
-			"win_rate":50%,
-			"is_repeat_win":"是",
-			"prize_settings":[{
-				"prize_grade":"一等奖",
-				"prize_counts":10,
-				"prize_type":"优惠券",
-				"coupon":"优惠券1",
-				"pic":""
-			},{
-				"prize_grade":"二等奖",
-				"prize_counts":20,
-				"prize_type":"积分",
-				"integral":100,
-				"pic":""
-			},{
-				"prize_grade":"三等奖",
-				"prize_counts":30,
-				"prize_type":"积分",
-				"integral":30,
-				"pic":"1.jpg"
-			}]
-		}
-		"""
+	# Then jobs获得微信抽奖活动列表
+	# 	"""
+	# 	[{
+	# 		"name":"微信抽奖03",
+	# 		"status":"已结束"
+	# 	},{
+	# 		"name":"微信抽奖02",
+	# 		"status":"进行中"
+	# 	},{
+	# 		"name":"微信抽奖001",
+	# 		"status":"进行中"
+	# 	}]
+	# 	"""
+	# And jobs获得微信抽奖活动'微信抽奖001'
+	# 	"""
+	# 	{
+	# 		"name":"微信抽奖001",
+	# 		"start_date":"今天",
+	# 		"end_date":"2天后",
+	# 		"desc":"抽奖啦抽奖啦",
+	# 		"reduce_integral":0,
+	# 		"send_integral":1,
+	# 		"send_integral_rules":"仅限未中奖用户",
+	# 		"lottery_limit":"一天一次",
+	# 		"win_rate":50%,
+	# 		"is_repeat_win":"是",
+	# 		"prize_settings":[{
+	# 			"prize_grade":"一等奖",
+	# 			"prize_counts":10,
+	# 			"prize_type":"优惠券",
+	# 			"coupon":"优惠券1",
+	# 			"pic":""
+	# 		},{
+	# 			"prize_grade":"二等奖",
+	# 			"prize_counts":20,
+	# 			"prize_type":"积分",
+	# 			"integral":100,
+	# 			"pic":""
+	# 		},{
+	# 			"prize_grade":"三等奖",
+	# 			"prize_counts":30,
+	# 			"prize_type":"积分",
+	# 			"integral":30,
+	# 			"pic":"1.jpg"
+	# 		}]
+	# 	}
+	# 	"""
 
-@apps @lottery
+@apps @lottery @update_lottery
 Scenario:2 关闭'进行中'状态的微信抽奖活动
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
@@ -255,7 +255,7 @@ Scenario:2 关闭'进行中'状态的微信抽奖活动
 		}]
 		"""
 
-@apps @lottery
+@apps @lottery @update_lottery
 Scenario:3 删除'未开始'和'已结束'状态的微信抽奖活动
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
