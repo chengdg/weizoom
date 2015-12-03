@@ -262,7 +262,7 @@ Scenario:1 活动报名-列表查询
 			When jobs设置活动报名列表查询条件
 				"""
 				{
-					"status":"进行中"
+					"status":"已结束"
 				}
 				"""
 			Then jobs获得活动报名列表
@@ -383,33 +383,33 @@ Scenario:1 活动报名-列表查询
 			}
 			"""
 		Then jobs获得活动报名列表
-				"""
-				[{
-					"name":"活动报名-无奖励",
-					"part_num": 0,
-					"prize_type": "无奖励",
-					"start_date":"明天",
-					"end_date":"2天后",
-					"status":"未开始",
-					"actions": ["预览","查看结果"]
-				},{
-					"name":"活动报名-积分",
-					"part_num": 0,
-					"prize_type": "积分",
-					"start_date":"1天前",
-					"end_date":"2天后",
-					"status":"进行中",
-					"actions": ["关闭","预览","查看结果"]
-				},{
-					"name":"活动报名-优惠券",
-					"part_num": 0,
-					"prize_type": "优惠券",
-					"start_date":"3天前",
-					"end_date":"1天前",
-					"status":"已结束",
-					"actions": ["删除","预览","查看结果"]
-				}]
-				"""
+			"""
+			[{
+				"name":"活动报名-无奖励",
+				"part_num": 0,
+				"prize_type": "无奖励",
+				"start_date":"明天",
+				"end_date":"2天后",
+				"status":"未开始",
+				"actions": ["预览","查看结果"]
+			},{
+				"name":"活动报名-积分",
+				"part_num": 0,
+				"prize_type": "积分",
+				"start_date":"1天前",
+				"end_date":"2天后",
+				"status":"进行中",
+				"actions": ["关闭","预览","查看结果"]
+			},{
+				"name":"活动报名-优惠券",
+				"part_num": 0,
+				"prize_type": "优惠券",
+				"start_date":"3天前",
+				"end_date":"1天前",
+				"status":"已结束",
+				"actions": ["删除","预览","查看结果"]
+			}]
+			"""
 
 @apps @event
 Scenario:2 活动报名-列表分页
