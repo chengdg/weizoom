@@ -70,7 +70,7 @@ W.view.common.RichTextEditor = Backbone.View.extend({
         } else if (this.type == 'full') {
             $.extend(this.editorOptions, {
                 toolbars: [['bold', 'italic', 'underline', "forecolor", "backcolor", '|', "insertunorderedlist","insertorderedlist", '|', 'link', 'insertframe', 'emotion', 'insertimage', 'fullscreen'],
-                            ['justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'paragraph', 'fontfamily', 'fontsize', '|', 'lineheight', '|', "inserttable", '|', "removeformat"]]
+                            ['justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'paragraph', 'fontfamily', 'fontsize', '|', 'lineheight', '|', "inserttable", '|', "removeformat", '|', 'source']]
             });
         } else if (this.type == 'code') {
             $.extend(this.editorOptions, {
