@@ -30,11 +30,11 @@ from modules.member.models import Member
 # 	ticket = models.TextField()
 # 	expired_second = models.IntegerField()
 # 	created_time = models.IntegerField()
-	
+
 # 	class Meta(object):
 # 		db_table = 'qcrod_login_ticket'
 # 		verbose_name = '二维码登录ticket'
-# 		verbose_name_plural = '二维码登录ticket'	
+# 		verbose_name_plural = '二维码登录ticket'
 
 # class SpreadQrcode(models.Model):
 # 	ticket = models.TextField()
@@ -72,8 +72,8 @@ class MemberQrcodeSettings(models.Model):
 
 class MemberQrcodeAwardContent(models.Model):
 	member_qrcode_settings = models.ForeignKey(MemberQrcodeSettings)
-	member_level =  models.IntegerField(max_length=1, verbose_name=u"会员等级", default=-1) 
-	award_type = models.IntegerField(max_length=1, verbose_name=u"奖励类型", default=AWARD_INTEGRAL) 
+	member_level =  models.IntegerField(max_length=1, verbose_name=u"会员等级", default=-1)
+	award_type = models.IntegerField(max_length=1, verbose_name=u"奖励类型", default=AWARD_INTEGRAL)
 	award_content = models.CharField(max_length=256, verbose_name=u'奖励内容') #目前奖励内容为：1，奖励积分分值 2，优惠券id
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
 
@@ -115,7 +115,7 @@ class MemberQrcode(models.Model):
 	ticket = models.CharField(default='', max_length=256)
 	#ticket = models.TextField() #获取的ticket值
 	member = models.ForeignKey(Member) #会员id
-	expired_second = models.IntegerField(default=1800) #临时二维码失效时间
+	expired_second = models.IntegerField(default=2592000) #临时二维码失效时间
 	created_time = models.IntegerField()
 	is_active = models.IntegerField(default=1)
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
