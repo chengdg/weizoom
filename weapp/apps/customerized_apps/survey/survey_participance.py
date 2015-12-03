@@ -77,12 +77,16 @@ class surveyParticipance(resource.Resource):
 					item_data['item_value'] = v['value']
 				item_data_list.append(item_data)
 		else:
+			survey_participance = None
 			webapp_user_name = ''
 			item_data_list = {}
 		response = create_response(200)
 		response.data = {
 			'webapp_user_name': webapp_user_name,
 			'items': item_data_list,
+			'member_id': survey_participance.member_id if survey_participance else '',
+			'created_at' : survey_participance.created_at.strftime("%Y-%m-%d %H:%M:%S") if survey_participance else '',
+			'id': str(survey_participance.id) if survey_participance else ''
 		}
 		return response.get_response()
 	
