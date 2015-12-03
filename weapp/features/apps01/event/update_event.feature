@@ -238,7 +238,7 @@ Scenario:2 关闭'进行中'状态的活动报名
 			"part_num": 0,
 			"prize_type": "积分",
 			"start_date":"1天前",
-			"end_date":"2天后",
+			"end_date":"今天",
 			"status":"已结束",
 			"actions": ["删除","预览","查看结果"]
 		},{
@@ -299,7 +299,7 @@ Scenario:3 删除'已结束'状态的活动报名
 			"part_num": 0,
 			"prize_type": "积分",
 			"start_date":"1天前",
-			"end_date":"2天后",
+			"end_date":"今天",
 			"status":"已结束",
 			"actions": ["删除","预览","查看结果"]
 		},{
