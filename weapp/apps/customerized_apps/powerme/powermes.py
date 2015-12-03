@@ -44,7 +44,7 @@ class PowerMes(resource.Resource):
 		end_time = request.GET.get('end_time', '')
 		
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		params = {'owner_id':request.user.id}
+		params = {'owner_id':request.manager.id}
 		datas_datas = app_models.PowerMe.objects(**params)
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')

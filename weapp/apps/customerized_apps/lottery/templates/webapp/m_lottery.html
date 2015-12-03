@@ -299,10 +299,10 @@
             this.lights_timer = 0;
             this.$lottery = $lottery;
             this.PRIZE = {
-                '谢谢参与': getRandomStopPosition(['1', '5', '8', '10']), //谢谢参与位置
-                '一等奖': getRandomStopPosition(['0', '7']), //一等奖位置
-                '二等奖': getRandomStopPosition(['2', '4', '9']), //二等奖位置
-                '三等奖': getRandomStopPosition(['3', '6', '11']) //三等奖位置
+                谢谢参与: function(){return getRandomStopPosition(['1', '5', '8', '10'])}, //谢谢参与位置
+                一等奖: function(){return getRandomStopPosition(['0', '7'])}, //一等奖位置
+                二等奖: function(){return getRandomStopPosition(['2', '4', '9'])}, //二等奖位置
+                三等奖: function(){return getRandomStopPosition(['3', '6', '11'])} //三等奖位置
             };
             function getRandomStopPosition(arr){
                 var len = arr.length - 1;
@@ -351,7 +351,7 @@
         Roulette.prototype.stop = function(data){
             this.retuenData = data;
             console.log(this.retuenData.result);
-            var index = this.PRIZE[this.retuenData.result];
+            var index = this.PRIZE[this.retuenData.result]();
             this.prize = parseInt(index);
         };
         Roulette.prototype.roll = function(){

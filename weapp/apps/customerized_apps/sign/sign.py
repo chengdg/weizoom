@@ -32,7 +32,7 @@ class Sign(resource.Resource):
 		"""
 		响应GET
 		"""
-		owner_id = request.user.id
+		owner_id = request.manager.id
 		sign = app_models.Sign.objects(owner_id=owner_id)
 		if sign.count()>0:
 			sign = sign[0]
@@ -64,7 +64,7 @@ class Sign(resource.Resource):
 		"""
 		响应Api_GET
 		"""
-		owner_id = request.user.id
+		owner_id = request.manager.id
 		sign = app_models.Sign.objects(owner_id=owner_id)
 		if sign.count()>0:
 			sign = sign[0]

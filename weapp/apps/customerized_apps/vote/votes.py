@@ -47,7 +47,7 @@ class votes(resource.Resource):
 		prize_type = request.GET.get('prize_type', 'all')
 
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		params = {'owner_id':request.user.id}
+		params = {'owner_id':request.manager.id}
 		datas_datas = app_models.vote.objects(**params)
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
@@ -69,7 +69,7 @@ class votes(resource.Resource):
 		if prize_type != 'all':
 			records = []
 			prize_type_ids = []
-			records = app_models.vote.objects.filter(owner_id=request.user.id)
+			records = app_models.vote.objects.filter(owner_id=request.manager.id)
 			pagestore = pagestore_manager.get_pagestore('mongo')
 			for record in records:
 				page = pagestore.get_page(record.related_page_id, 1)

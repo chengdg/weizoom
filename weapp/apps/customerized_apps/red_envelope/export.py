@@ -21,7 +21,7 @@ NAV = {
 # get_second_navs: 获得二级导航
 ########################################################################
 def get_second_navs(request):
-	if request.user.username == 'manager':
+	if request.manager.username == 'manager':
 		second_navs = [NAV]
 	else:
 		# webapp_module_views.get_modules_page_second_navs(request)
@@ -46,7 +46,7 @@ def get_link_targets(request):
 	query = request.GET.get('query', None)
 	count_per_page = int(request.GET.get('count_per_page', '10'))
 	cur_page = int(request.GET.get('page', '1'))
-	params = {'owner_id':request.user.id,'receive_method':1,'is_delete':False}
+	params = {'owner_id':request.manager.id,'receive_method':1,'is_delete':False}
 	if query:
 		params['name__contains'] = query
 	objects = promotion_models.RedEnvelopeRule.objects.filter(**params).order_by('-id')
@@ -63,7 +63,7 @@ def get_link_targets(request):
                 "end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
                 "coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
                 "remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
-				"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
+				"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.manager.id)
             }
 			link_targets.append(data)
 		else:
@@ -78,7 +78,7 @@ def get_link_targets(request):
 						"end_time": object.end_time.strftime("%Y-%m-%d %H:%M"),
 						"coupon_rule_name": id2coupon_rule[object.coupon_rule_id].name,
 						"remained_count": id2coupon_rule[object.coupon_rule_id].remained_count,
-						"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.user.id)
+						"link": './?module=market_tool:share_red_envelope&model=share_red_envelope&action=get&red_envelope_rule_id=%s&webapp_owner_id=%d&project_id=0' % (object.id,request.manager.id)
 					}
 					link_targets.append(data)
 	pageinfo, link_targets = paginator.paginate(link_targets, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])

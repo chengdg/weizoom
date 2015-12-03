@@ -21,7 +21,7 @@ NAV = {
 # get_second_navs: 获得二级导航
 ########################################################################
 def get_second_navs(request):
-	if request.user.username == 'manager':
+	if request.manager.username == 'manager':
 		second_navs = [NAV]
 	else:
 		# webapp_module_views.get_modules_page_second_navs(request)
@@ -37,7 +37,7 @@ def get_link_targets(request):
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/m/apps/sign/m_sign/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
+			"link": '/m/apps/sign/m_sign/?webapp_owner_id=%d&id=%s' % (request.manager.id, data.id),
 			"isChecked": False,
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})
@@ -46,7 +46,7 @@ def get_link_targets(request):
 def get_sing_fields_to_save(request):
 	fields = request.POST.dict()
 	fields['created_at'] = datetime.datetime.today()
-	fields['owner_id'] = request.user.id
+	fields['owner_id'] = request.manager.id
 
 	webapp_user = getattr(request, 'webapp_user', None)
 	if webapp_user:

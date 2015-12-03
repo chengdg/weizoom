@@ -183,7 +183,7 @@ ui-appPage-commonStyle">
     <div class="xui-tag-group xa-tag-group">
         <span class="xui-i-tag xui-i-tag-active" target="xa-setting">规则设置</span>
         <span class="xui-i-tag" target="xa-state">签到统计</span>
-        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/?webapp_owner_id={{ request.user.id }}">复制链接</button>
+        <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/?webapp_owner_id={{ request.manager.id }}">复制链接</button>
     </div>
 
     <div class="clearfix xui-setting-tag xa-setting">
@@ -312,13 +312,13 @@ ui-appPage-commonStyle">
   
   <script type="text/javascript">
     var signStatus = "off";
-    W.uid = {{ user.id }};
+    W.uid = {{ request.manager.id }};
     W.projectId = "{{project_id}}";
     W.activityId = "{{sign.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
     W.API_VERSION = 1;
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
-    W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
+    W.isSystemManager = {% if request.manager|is_system_manager %}true{% else %}false{% endif %};
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;

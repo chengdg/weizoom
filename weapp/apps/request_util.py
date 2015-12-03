@@ -22,7 +22,7 @@ from account.views import save_base64_img_file_local_for_webapp
 def get_fields_to_be_save(request):
 	fields = request.POST.dict()
 	fields['created_at'] = datetime.today()
-	fields['owner_id'] = request.user.id
+	fields['owner_id'] = request.manager.id
 	
 	webapp_user = getattr(request, 'webapp_user', None)
 	if webapp_user:

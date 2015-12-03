@@ -18,7 +18,7 @@ NAV = {
 # get_second_navs: 获得二级导航
 ########################################################################
 def get_second_navs(request):
-	if request.user.username == 'manager':
+	if request.manager.username == 'manager':
 		second_navs = [NAV]
 	else:
 		# webapp_module_views.get_modules_page_second_navs(request)
@@ -42,7 +42,7 @@ def get_link_targets(request):
 		link_targets.append({
 			"id": str(data.id),
 			"name": data.name,
-			"link": '/m/apps/survey/m_survey/?webapp_owner_id=%d&id=%s' % (request.user.id, data.id),
+			"link": '/m/apps/survey/m_survey/?webapp_owner_id=%d&id=%s' % (request.manager.id, data.id),
 			"isChecked": True if str(data.id) == selected_id else False,
 			"created_at": data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 		})

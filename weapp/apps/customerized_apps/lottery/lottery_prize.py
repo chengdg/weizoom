@@ -127,7 +127,6 @@ class lottery_prize(resource.Resource):
 			#如果当前用户没有参与过该活动，则创建新记录
 			data['belong_to'] = record_id
 			data['lottery_date'] = now_datetime
-			data['owner_id'] = request.user.id
 			data['can_play_count'] = limitation #根据抽奖活动限制，初始化可参与次数
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()

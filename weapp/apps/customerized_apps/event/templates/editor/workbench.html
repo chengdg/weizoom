@@ -78,13 +78,13 @@
   <!-- *end_prunt_task* -->
   {% if not is_deleted_data %}
   <script type="text/javascript">
-    W.uid = {{ user.id }};
+    W.uid = {{ request.manager.id }};
     W.projectId = "{{project_id}}";
     W.activityId = "{{event.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
     W.API_VERSION = 1;
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
-    W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
+    W.isSystemManager = {% if request.manager|is_system_manager %}true{% else %}false{% endif %};
     var bottomDistance = 110;
 
     /* 自动选中cid，当页面进来的时候 */

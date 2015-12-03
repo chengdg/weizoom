@@ -99,7 +99,7 @@ class RedEnvelopeRule(resource.Resource):
             status = True #图文领取-状态默认开启
         if request.POST.get('start_date', None) and request.POST.get('end_date', None):
             promotion_models.RedEnvelopeRule.objects.create(
-                owner=request.user,
+                owner=request.manager,
                 name=request.POST.get('name', ''),
                 coupon_rule_id=request.POST.get('coupon_rule', 0),
                 start_time=request.POST.get('start_date'),
@@ -113,7 +113,7 @@ class RedEnvelopeRule(resource.Resource):
             )
         else:
             promotion_models.RedEnvelopeRule.objects.create(
-                owner=request.user,
+                owner=request.manager,
                 name=request.POST.get('name', ''),
                 coupon_rule_id=request.POST.get('coupon_rule', 0),
                 limit_time=True,
