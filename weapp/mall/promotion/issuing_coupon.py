@@ -201,7 +201,7 @@ class IssuingCouponsRecord(resource.Resource):
                 c_real_count = 0
                 while c_index < pre_person_count:
                     coupon, msg = consume_coupon(request.manager.id, coupon_rule_id, member_id,
-                                                 coupon_record_id=coupon_record.id)
+                                                 coupon_record_id=coupon_record.id, not_block=True)
                     if coupon:
                         c_real_count += 1
                         #给用户发优惠券提示
