@@ -102,7 +102,7 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 		[{
 			"prize_grade":"一等奖",
 			"prize_type":"优惠券",
-			"coupon":"优惠券1"
+			"prize_name":"优惠券1"
 		}]
 		"""
 	When bill访问jobs的webapp
@@ -148,7 +148,7 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 		[{
 			"prize_grade":"一等奖",
 			"prize_type":"优惠券",
-			"coupon":"优惠券1"
+			"prize_name":"优惠券1"
 		}]
 		"""
 	When bill访问jobs的webapp
@@ -205,7 +205,7 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 		[{
 			"prize_grade":"一等奖",
 			"prize_type":"积分",
-			"integral":50
+			"prize_name":"50积分"
 		}]
 		"""
 
@@ -219,7 +219,7 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 			"start_date":"3天前",
 			"end_date":"2天后",
 			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":15,
+			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"一人一次",
@@ -239,7 +239,7 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts"30,
+				"prize_counts":30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
@@ -251,7 +251,7 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 
 	When 清空浏览器
 	When bill参加微信抽奖活动'微信抽奖'
-	Then bill获得抽奖次数用完提示'您今天的抽奖机会已经用完,<br />明天再来吧~'
+	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
 	When tom参加微信抽奖活动'微信抽奖'
 	When tom把jobs的微信抽奖活动'微信抽奖'的活动链接分享到朋友圈
@@ -259,8 +259,8 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 	When 清空浏览器
 	When bill取消关注jobs的公众号
 	When bill点击tom分享的微信抽奖活动'微信抽奖'的活动链接
-	When bill参与微信抽奖活动'微信抽奖'
-	Then bill获得错误提示'您今天的抽奖机会已经用完,<br />明天再来吧~'
+	When bill参加微信抽奖活动'微信抽奖'
+	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
 @mall2 @apps_lottery @apps_lottery_frontend
 Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
@@ -292,7 +292,7 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts"30,
+				"prize_counts":30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
@@ -301,10 +301,10 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 		"""
 
 	#bill昨天参加2次抽奖活动
-	When bill参加微信抽奖活动'微信抽奖'于'昨天'
+	When bill参加微信抽奖活动"微信抽奖"于"昨天"
 
 	When 清空浏览器
-	When bill参加微信抽奖活动'微信抽奖'于'昨天'
+	When bill参加微信抽奖活动"微信抽奖"于"昨天"
 
 	#bill今天仍有2次抽奖机会
 	When bill参加微信抽奖活动'微信抽奖'
@@ -314,7 +314,7 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 
 	When 清空浏览器
 	When bill参加微信抽奖活动'微信抽奖'
-	Then bill获得错误提示'您今天的抽奖机会已经用完,<br />明天再来吧~'
+	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
 #补充：张雪 2015.12.02
 @mall2 @apps_lottery @apps_lottery_frontend
@@ -347,7 +347,7 @@ Scenario:5 中奖概率率为0,中奖用户为0
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts"30,
+				"prize_counts":30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
@@ -378,7 +378,7 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 			"name": "优惠券3",
 			"money": 100.00,
 			"count": 1,
-			"limit_counts": "不限",
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon3_id_"
@@ -412,7 +412,7 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
-				"coupon":优惠券3,
+				"coupon":"优惠券3",
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
@@ -519,7 +519,7 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 				"prize_grade":"一等奖",
 				"prize_counts":10,
 				"prize_type":"优惠券",
-				"coupon":优惠券3,
+				"coupon":"优惠券3",
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
@@ -544,17 +544,17 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 		[{
 			"prize_grade":"一等奖",
 			"prize_type":"优惠券",
-			"coupon":优惠券3
+			"prize_name":"优惠券3"
 		}]
 		"""
 	When tom访问jobs的webapp
 	Then tom能获得webapp优惠券列表
 		"""
-		{
+		[{
 			"coupon_id": "coupon3_id_1",
 			"money": 100.00,
 			"status": "未使用"
-		}
+		}]
 		"""
 
 	When tom参加微信抽奖活动'微信抽奖'
@@ -567,9 +567,9 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 	When tom访问jobs的webapp
 	Then tom能获得webapp优惠券列表
 		"""
-		{
+		[{
 			"coupon_id": "coupon3_id_1",
 			"money": 100.00,
 			"status": "未使用"
-		}
+		}]
 		"""

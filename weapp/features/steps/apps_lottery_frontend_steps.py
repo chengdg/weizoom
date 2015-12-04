@@ -55,7 +55,7 @@ def step_impl(context,webapp_user_name,lottery_name):
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	# response = __get_into_lottery_pages(context,webapp_owner_id,lottery_id,openid)
+	__get_into_lottery_pages(context,webapp_owner_id,lottery_id,openid)
 	params = {
 		'webapp_owner_id': webapp_owner_id,
 		'id': lottery_id,
@@ -63,9 +63,16 @@ def step_impl(context,webapp_user_name,lottery_name):
 		'opid':openid
 	}
 	response = context.client.post('/m/apps/lottery/api/lottery_prize/?_method=put', params)
-	print('response!!!!!!')
-	print(response)
 	context.lottery_result = json.loads(response.content)
+
+@when(u'{webapp_user_name}参加微信抽奖活动"{lottery_name}"于"{date}"')
+def step_impl(context,webapp_user_name,lottery_name,date):
+	context.execute_steps(u"when %s参加微信抽奖活动'%s'" % (webapp_user_name, lottery_name))
+	lottery_id = __get_lottery_id(lottery_name)
+	date = bdd_util.get_date(date)
+	lotteryparticipance = lotteryParticipance.objects.get(member_id=context.member.id,belong_to=str(lottery_id))
+	lotteryparticipance.update(set__lottery_date=date)
+	lotteryparticipance.save()
 
 @then(u"{webapp_user_name}获得抽奖结果")
 def step_impl(context,webapp_user_name):
@@ -73,14 +80,15 @@ def step_impl(context,webapp_user_name):
 	type2name = {
 		'integral': u'积分',
 		'coupon': u'优惠券',
-		'entity': u'实物'
+		'entity': u'实物',
+		'no_prize': u'谢谢参与'
 	}
 	# 构造实际数据
 	actual = []
 	actual.append({
 		"prize_grade": lottery_result['result'],
 		"prize_type": type2name[lottery_result['prize_type']],
-		"coupon": lottery_result['prize_name']
+		"prize_name": lottery_result['prize_name']
 	})
 	print("actual_data: {}".format(actual))
 	expected = json.loads(context.text)
@@ -91,3 +99,20 @@ def step_impl(context,webapp_user_name):
 def step_impl(context,webapp_user_name,message):
 	actual = context.lottery_result['errMsg']
 	context.tc.assertEquals(message, actual)
+
+@When(u"{webapp_user_name}把{webapp_owner_name}的微信抽奖活动'{lottery_name}'的活动链接分享到朋友圈")
+def step_impl(context, webapp_user_name, webapp_owner_name,lottery_name):
+	lottery_id = __get_lottery_id(lottery_name)
+	webapp_owner_id = context.webapp_owner_id
+	url = '/m/apps/lottery/m_lottery/?webapp_owner_id=%s&id=%s' % (webapp_owner_id, lottery_id)
+	url = bdd_util.nginx(url)
+	context.shared_url = url
+	print('context.shared_url:',context.shared_url)
+
+@When(u"{webapp_user_name}点击{shared_webapp_user_name}分享的微信抽奖活动'{lottery_name}'的活动链接")
+def step_impl(context, webapp_user_name, shared_webapp_user_name,lottery_name):
+	lottery_id = __get_lottery_id(lottery_name)
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	__get_into_lottery_pages(context,webapp_owner_id,lottery_id,openid)
