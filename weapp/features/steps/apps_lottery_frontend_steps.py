@@ -52,7 +52,7 @@ def __get_into_lottery_pages(context,webapp_owner_id,lottery_id,openid):
 @when(u"{webapp_user_name}参加微信抽奖活动'{lottery_name}'")
 def step_impl(context,webapp_user_name,lottery_name):
 	lottery_id = __get_lottery_id(lottery_name)
-	print(lottery_id)
+	lottery.objects(id=lottery_id).update(set__status=1)#暂时这样
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
@@ -64,4 +64,32 @@ def step_impl(context,webapp_user_name,lottery_name):
 		'opid':openid
 	}
 	response = context.client.post('/m/apps/lottery/api/lottery_prize/?_method=put', params)
+	print('response!!!!!!')
 	print(response)
+	context.lottery_result = json.loads(response.content)
+
+@then(u"{webapp_user_name}获得抽奖结果")
+def step_impl(context,webapp_user_name):
+	lottery_result = context.lottery_result['data']
+	type2name = {
+		'integral': u'积分',
+		'coupon': u'优惠券',
+		'entity': u'实物'
+	}
+	# 构造实际数据
+	actual = []
+	actual.append({
+		"prize_grade": lottery_result['result'],
+		"prize_type": type2name[lottery_result['prize_type']],
+		"coupon": lottery_result['prize_name']
+	})
+	print("actual_data: {}".format(actual))
+	expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+	bdd_util.assert_list(expected, actual)
+
+@then(u"{webapp_user_name}获得抽奖错误提示'{message}'")
+def step_impl(context,webapp_user_name,message):
+	actual = context.lottery_result['errMsg']
+	expected = json.loads(context.text)
+	context.tc.assertEquals(expected, actual)
