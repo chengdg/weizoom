@@ -286,7 +286,8 @@ def update_webapp_product_cache(**kwargs):
             #如果是微众商城过来的请求，则需要验证微众商城里的在售状态 duhao 20151120
             # if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF:
                 categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
-                cache_util.add_set_to_redis(categories_products_key,product_id)
+                # todo zhaolei 会存在多次删除的情况
+                cache_util.delete_cache(categories_products_key)
                 # todo zhaolei 清除对应的varnish缓存,需要重构
                 if not settings.DEBUG:
                     url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=products&action=list&category_id=%s' % \
