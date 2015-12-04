@@ -47,21 +47,25 @@ Background:
 					}]
 				}],
 			"quick":
-				{
-					"name":"false",
-					"phone":"true",
-					"email":"true",
-					"item":[{
-						"name":"填写项1",
+				[{
+					"items_select":[{
+						"item_name":"姓名",
+						"is_selected":false
+					},{
+						"item_name":"手机",
+						"is_selected":true
+					},{
+						"item_name":"邮箱",
+						"is_selected":true
+				}],
+					"item_add":[{
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
-						"is_required":"否"
-					},{
-						"name":"填写项3",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				},
+				}],
 			"upload_pic":
 				{
 					"title":"上传图片",
@@ -76,11 +80,11 @@ Background:
 	When tom关注jobs的公众号
 
 	When 微信用户批量参加jobs的用户调研活动
-		| name       | member_name | survey_time | answer        |choose  |    quick                      | upload_pic |
-		| 用户调研01 | bill        |2天前        |bill问答题内容 | 1      |bill,15111223344,1234@qq.com   | 1.jpg      |
-		| 用户调研01 | tom         |昨天         |tom 问答题内容 | 2      |tom, 15211223344,2234@qq.com   | 2.jpg      |
-		| 用户调研01 | tom1        |今天         |tom1问答题内容 | 1      |tom1,153211223344,3234@qq.com  | 3.jpg      |
-		| 用户调研01 | tom2        |今天         |tom2问答题内容 | 3      |tom2,15411223344,4234@qq.com   | 4.jpg      |
+		| name       | member_name | survey_time | answer        |choose  |    quick                         | upload_pic |
+		| 用户调研01 | bill        |2天前        |bill问答题内容 | 1      |bill,15111223344,1234@qq.com,11   | 1.jpg      |
+		| 用户调研01 | tom         |昨天         |tom 问答题内容 | 2      |tom, 15211223344,2234@qq.com,22   | 2.jpg      |
+		| 用户调研01 | tom1        |今天         |tom1问答题内容 | 1      |tom1,153211223344,3234@qq.com,33  | 3.jpg      |
+		| 用户调研01 | tom2        |今天         |tom2问答题内容 | 3      |tom2,15411223344,4234@qq.com,44   | 4.jpg      |
 
 @apps @survey
 Scenario:1 查看用户调研的统计结果
