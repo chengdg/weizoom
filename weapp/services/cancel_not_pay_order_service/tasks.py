@@ -33,7 +33,7 @@ def cancel_not_pay_order_timeout(request, args):
     webapp_id2expired_time = {}
     for user in users:
         user_id = user.id
-        if user not in user2webapp_id.keys():
+        if user not in user2webapp_id.keys() or user_id not in user2order_expired_hour.keys():
             continue
         webapp_id = user2webapp_id[user]
         expired_hour = user2order_expired_hour[user_id]
