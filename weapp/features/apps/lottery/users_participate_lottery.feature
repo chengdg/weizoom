@@ -107,7 +107,7 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 	And bill在jobs的webapp中获得积分日志
 		"""
 		[{
-			"content":"参与抽奖,消耗积分",
+			"content":"参与抽奖，消耗积分",
 			"integral":-15
 		},{
 			"content":"首次关注",
@@ -137,8 +137,7 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 		{
 			"prize_grade":"一等奖",
 			"prize_type":"优惠券",
-			"coupon":"优惠券1",
-			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
+			"coupon":"优惠券1"
 		}
 		"""
 	When bill访问jobs的webapp

@@ -29,7 +29,7 @@ Background:
 	When tom关注jobs的公众号
 	When marry关注jobs的公众号
 
-@apps @lottery
+@mall2 @apps_lottery @participate_number
 Scenario:1 微信抽奖活动列表参与次数的校验
 	Given jobs登录系统
 	When jobs新建微信抽奖活动

@@ -130,7 +130,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery @lottery_list
+@mall2 @apps_lottery @lottery_list
 Scenario:1 微信抽奖活动列表查询
 	Given jobs登录系统
 	#空查询
@@ -318,7 +318,7 @@ Scenario:1 微信抽奖活动列表查询
 				}]
 				"""
 
-@apps @lottery @lottery_list
+@mall2 @apps_lottery @lottery_list
 Scenario:2 微信抽奖活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
