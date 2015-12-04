@@ -34,7 +34,7 @@ Background:
 		}]
 		"""
 
-@apps @lottery @apps_lottery_backend
+@mall2 @apps_lottery @apps_lottery_backend
 Scenario:1 新建微信抽奖,抽奖限制一人一次
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -83,7 +83,7 @@ Scenario:1 新建微信抽奖,抽奖限制一人一次
 		}]
 		"""
 
-@apps @lottery @apps_lottery_backend
+@mall2 @apps_lottery @apps_lottery_backend
 Scenario:2 新建微信抽奖,抽奖限制一天一次
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -132,7 +132,7 @@ Scenario:2 新建微信抽奖,抽奖限制一天一次
 		}]
 		"""
 
-@apps @lottery @apps_lottery_backend
+@mall2 @apps_lottery @apps_lottery_backend
 Scenario:3 新建微信抽奖,抽奖限制不限
 	Given jobs登录系统
 	When jobs新建微信抽奖活动

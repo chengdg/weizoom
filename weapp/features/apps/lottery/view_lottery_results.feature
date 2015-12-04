@@ -74,7 +74,7 @@ Background:
 		|微信抽奖01 |bill       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |
 		|微信抽奖01 |tom1       | 一等奖      | 优惠1      |今天        | 已领取         |
 
-@apps @lottery
+@mall2 @apps_lottery @view_lottery_results
 Scenario:1 查看结果列表
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
@@ -93,7 +93,7 @@ Scenario:1 查看结果列表
 		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
 		|微信抽奖01 |tom1       |       | 一等奖      | 优惠1      |今天        | 已领取         |       |
 
-@apps @lottery
+@mall2 @apps_lottery @view_lottery_results
 Scenario:2 查看结果列表查询
 	Given jobs登录系统
 	When jobs查看微信抽奖活动'微信抽奖01'
@@ -279,7 +279,7 @@ Scenario:2 查看结果列表查询
 			| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
 			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
 
-@apps @lottery
+@mall2 @apps_lottery @view_lottery_results
 Scenario:3 查看结果列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
