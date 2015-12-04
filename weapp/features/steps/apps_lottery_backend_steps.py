@@ -339,9 +339,11 @@ def __prize_settings_process(prize_settings):
 	Tag为page，返回page的prize字典
 	Tage为lottery,返回lottery_lottery的prize字典
 	"""
+	__debug_print(prize_settings)
 
 	page_prize_list = []
 	lottery_prize_list = []
+	lottery_prize_dic = {}
 
 	if prize_settings:
 		index = 0
@@ -374,9 +376,8 @@ def __prize_settings_process(prize_settings):
 			page_prize_list.append(page_prize_dic)
 
 			#lottery_lottery
-			lottery_prize_dic = {}
 			lottery_prize_dic[plist[index]] = {
-				"title":prize_setting.get("title",""),
+				"title":prize_setting.get("prize_grade",""),
 				"prize_count":prize_setting.get("prize_counts",""),
 				"prize_type":prize_type,
 				"prize_data":prize_data
@@ -462,6 +463,8 @@ def __Create_Lottery(context,text,user):
 	expect_prize_settings_list = text.get('prize_settings',[])
 	page_prize_settings,lottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
 
+	print "+++++++++++LLLLLLLLLLLLLLLL OOOO  +++++++++++++++++++"
+	print lottery_prize_settings
 	page_args = {
 		"title":title,
 		"start_time":start_time,
@@ -511,7 +514,7 @@ def __Create_Lottery(context,text,user):
 		"limitation":lottery_limit,#抽奖限制
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
-		"prize_settings":lottery_prize_settings,
+		"prize":json.dumps(lottery_prize_settings),
 		"related_page_id":related_page_id
 	}
 	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
@@ -587,7 +590,7 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 		"limitation":lottery_limit,#抽奖限制
 		"chance":win_rate,#中奖率
 		"allow_repeat":is_repeat_win,#重复中奖
-		"prize_settings":lottery_prize_settings,
+		"prize":json.dumps(lottery_prize_settings),
 		"id":lottery_id#updated的差别
 	}
 
