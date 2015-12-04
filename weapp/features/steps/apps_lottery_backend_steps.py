@@ -339,7 +339,6 @@ def __prize_settings_process(prize_settings):
 	Tag为page，返回page的prize字典
 	Tage为lottery,返回lottery_lottery的prize字典
 	"""
-	__debug_print(prize_settings)
 
 	page_prize_list = []
 	lottery_prize_list = []
@@ -463,8 +462,6 @@ def __Create_Lottery(context,text,user):
 	expect_prize_settings_list = text.get('prize_settings',[])
 	page_prize_settings,lottery_prize_settings = __prize_settings_process(expect_prize_settings_list)
 
-	print "+++++++++++LLLLLLLLLLLLLLLL OOOO  +++++++++++++++++++"
-	print lottery_prize_settings
 	page_args = {
 		"title":title,
 		"start_time":start_time,
@@ -519,6 +516,17 @@ def __Create_Lottery(context,text,user):
 	}
 	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	post_lottery_response = context.client.post(lottery_url,post_lottery_args)
+
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
+
+	rec_lottery_url ="/apps/lottery/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_lottery_response = context.client.get(rec_lottery_url)
+
 
 def __Update_Lottery(context,text,page_id,lottery_id):
 	"""
@@ -602,6 +610,17 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 	#step4:更新lottery
 	update_lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	update_lottery_response = context.client.post(update_lottery_url,update_lottery_args)
+
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
+
+	rec_lottery_url ="/apps/lottery/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_lottery_response = context.client.get(rec_lottery_url)
+
 
 def __Delete_Lottery(context,lottery_id):
 	"""
