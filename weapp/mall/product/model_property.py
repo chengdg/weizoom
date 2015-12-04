@@ -282,7 +282,7 @@ class ModelPropertyValue(resource.Resource):
             ids=product_ids
         ).filter(
             id__in=product_ids
-        ).update(shelve_type=shelve_type, weshop_status=shelve_type)
+        ).update(shelve_type=shelve_type)
         # 发送商品下架信号
         signals.products_not_online.send(sender=mall_models.Product, product_ids=product_ids, request=request)
 

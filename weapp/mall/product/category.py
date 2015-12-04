@@ -68,17 +68,17 @@ class CategoryList(resource.Resource):
             products = list(mall_models.Product.objects.filter(
                 owner=request.manager, is_deleted=False).exclude(
                 shelve_type=mall_models.PRODUCT_SHELVE_TYPE_RECYCLED))
-
+            # 微众商城代码
             #duhao 20151120
             #当在 商品-分组管理 页面管理分组时，弹出的商品列表应该只包含商城自己商品列表里的在售商品
-            if request.manager.id == 216:
-                _products = []
-                for product in products:
-                    if product.owner_id == 216 or (product.weshop_sync > 0 and product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON and \
-                        product.weshop_status in (mall_models.PRODUCT_SHELVE_TYPE_ON, mall_models.PRODUCT_SHELVE_TYPE_OFF)):
-                        product.shelve_type = product.weshop_status
-                        _products.append(product)
-                products = _products
+            # if request.manager.id == 216:
+            #     _products = []
+            #     for product in products:
+            #         if product.owner_id == 216 or (product.weshop_sync > 0 and product.shelve_type == mall_models.PRODUCT_SHELVE_TYPE_ON and \
+            #             product.weshop_status in (mall_models.PRODUCT_SHELVE_TYPE_ON, mall_models.PRODUCT_SHELVE_TYPE_OFF)):
+            #             product.shelve_type = product.weshop_status
+            #             _products.append(product)
+            #     products = _products
                     
             if name_query:
                 products = [

@@ -172,15 +172,15 @@ def get_formatted_date_list(date_range, date_formatter):
 	
 	return formatted_date_list
 
-
-#根据webapp_id判断是否是微众商城的订单
-WEISHOP_WEBAPP_ID = '3394'
-OLD_WEISHOP_WEBAPP_ID = '3194'
-def is_weizoom_mall_order(webapp_id):
-	if webapp_id == WEISHOP_WEBAPP_ID or webapp_id == OLD_WEISHOP_WEBAPP_ID:
-		return True
-	
-	return False
+# 微众商城代码
+# #根据webapp_id判断是否是微众商城的订单
+# WEISHOP_WEBAPP_ID = '3394'
+# OLD_WEISHOP_WEBAPP_ID = '3194'
+# def is_weizoom_mall_order(webapp_id):
+# 	if webapp_id == WEISHOP_WEBAPP_ID or webapp_id == OLD_WEISHOP_WEBAPP_ID:
+# 		return True
+#
+# 	return False
 
 
 def get_date2new_member_count(webapp_id, low_date, high_date, date_formatter = None):

@@ -189,8 +189,8 @@ class Product(models.Model):
 	bar_code = models.CharField(max_length=256, default='')  # 条码
 	unified_postage_money = models.FloatField(default=0.0)  # 统一运费金额
 	postage_type = models.CharField(max_length=125, default=POSTAGE_TYPE_UNIFIED)  # 运费类型
-	weshop_sync = models.IntegerField(default=0)  # 0不同步 1普通同步 2加价同步
-	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站
+	weshop_sync = models.IntegerField(default=0)  # 0不同步 1普通同步 2加价同步	#已废弃
+	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站			#已废弃
 	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
 	supplier = models.IntegerField(default=0) # 供货商
 	purchase_price = models.FloatField(default=0.0) # 进货价格
@@ -1404,7 +1404,7 @@ class Order(models.Model):
 	order_id = models.CharField(max_length=100)  # 订单号
 	webapp_user_id = models.IntegerField()  # WebApp用户的id
 	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
-	webapp_source_id = models.CharField(max_length=20, default=0, verbose_name='商品来源店铺ID')  # 订单内商品实际来源店铺的id
+	webapp_source_id = models.CharField(max_length=20, default=0, verbose_name='商品来源店铺ID')  # 订单内商品实际来源店铺的id，已废弃
 	buyer_name = models.CharField(max_length=100)  # 购买人姓名
 	buyer_tel = models.CharField(max_length=100)  # 购买人电话
 	ship_name = models.CharField(max_length=100)  # 收货人姓名
@@ -1412,7 +1412,7 @@ class Order(models.Model):
 	ship_address = models.CharField(max_length=200)  # 收货人地址
 	area = models.CharField(max_length=100)
 	status = models.IntegerField(default=ORDER_STATUS_NOT)  # 订单状态
-	order_source = models.IntegerField(default=ORDER_SOURCE_OWN)  # 订单来源 0本店 1商城
+	order_source = models.IntegerField(default=ORDER_SOURCE_OWN)  # 订单来源 0本店 1商城 #已废弃
 	bill_type = models.IntegerField(default=ORDER_BILL_TYPE_NONE)  # 发票类型
 	bill = models.CharField(max_length=100, default='')  # 发票信息
 	remark = models.TextField()  # 备注
@@ -1480,13 +1480,13 @@ class Order(models.Model):
 
 	@staticmethod
 	def by_webapp_id(webapp_id):
-		# print webapp_id.isdight()
-		if str(webapp_id) == '3394':
-			return Order.objects.filter(webapp_id=webapp_id)
+		# 微众商城代码
+		# if str(webapp_id) == '3394':
+		# 	return Order.objects.filter(webapp_id=webapp_id)
 		if isinstance(webapp_id, list):
-			return Order.objects.filter(webapp_source_id__in=webapp_id, origin_order_id__lte=0)
+			return Order.objects.filter(webapp_id__in=webapp_id, origin_order_id__lte=0)
 		else:
-			return Order.objects.filter(webapp_source_id=webapp_id, origin_order_id__lte=0)
+			return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	##########################################################################
 	# get_coupon: 获取定单使用的优惠券信息
 	##########################################################################
@@ -1669,10 +1669,12 @@ def belong_to(webapp_id):
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	if webapp_id == '3394':
-		return Order.objects.filter(webapp_id=webapp_id)
-	else:
-		return Order.objects.filter(webapp_source_id=webapp_id, origin_order_id__lte=0)
+	return Order.objects.filter(webapp_id=webapp_id)
+	# 微众商城代码
+	# if webapp_id == '3394':
+	# 	return Order.objects.filter(webapp_id=webapp_id)
+	# else:
+	# 	return Order.objects.filter(webapp_source_id=webapp_id, origin_order_id__lte=0)
 
 
 Order.objects.belong_to = belong_to
@@ -2222,12 +2224,13 @@ class WeizoomMall(models.Model):
 		verbose_name = '微众商城用户'
 		verbose_name_plural = '微众商城用户'
 
+	# todo 微众商城代码
 	@staticmethod
 	def is_weizoom_mall(webapp_id):
-		if WeizoomMall.objects.filter(webapp_id=webapp_id).count() > 0:
-			return WeizoomMall.objects.filter(webapp_id=webapp_id)[0].is_active
-		else:
-			return False
+		# if WeizoomMall.objects.filter(webapp_id=webapp_id).count() > 0:
+		# 	return WeizoomMall.objects.filter(webapp_id=webapp_id)[0].is_active
+		# else:
+		return False
 
 #########################################################################
 # WeizoomMallHasOtherMallProduct: 微众商城用户共享其它商家的商品

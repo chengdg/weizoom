@@ -139,7 +139,9 @@ def get_product(request):
 	product = resource.get('mall', 'product', {'woid': request.webapp_owner_id, 'id': product_id, 'member_grade_id': member_grade_id, 'wuid': webapp_user.id}) # 获取商品详细信息
 	hint = resource.get('mall', 'product_hint', {'woid': request.webapp_owner_id, 'id': product_id}).get('hint', '')
 
-	if product['is_deleted'] or (request.user.is_weizoom_mall and product['owner_id'] != 216 and product['weshop_sync'] == 0):
+	# 微众商城代码
+	# if product['is_deleted'] or (request.user.is_weizoom_mall and product['owner_id'] != 216 and product['weshop_sync'] == 0):
+	if product['is_deleted']:
 		return HttpResponseRedirect('/static/error-page/404.html')
 
 	jsons = [{
@@ -154,17 +156,18 @@ def get_product(request):
 	}]
 
 	non_member_followurl = None
-	if request.user.is_weizoom_mall:
-		# TODO: is_can_buy_by_product做什么？To be deprecated.
-		#product0.is_can_buy_by_product(request)
-		# TODO: API化
-		otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
-		otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
-		if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
-			non_member_followurl = otherSettings.weshop_followurl
-
-			# liupeiyu 记录点击关注信息
-			non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product['id'], product['owner_id'])
+	# 微众商城代码
+	# if request.user.is_weizoom_mall:
+	# 	# TODO: is_can_buy_by_product做什么？To be deprecated.
+	# 	#product0.is_can_buy_by_product(request)
+	# 	# TODO: API化
+	# 	otherProfile = UserProfile.objects.get(user_id=product['owner_id'])
+	# 	otherSettings = OperationSettings.objects.get(owner=otherProfile.user)
+	# 	if otherSettings.weshop_followurl.startswith('http://mp.weixin.qq.com'):
+	# 		non_member_followurl = otherSettings.weshop_followurl
+    #
+	# 		# liupeiyu 记录点击关注信息
+	# 		non_member_followurl = './?woid={}&module=mall&model=concern_shop_url&action=show&product_id={}&other_owner_id={}'.format(request.webapp_owner_id, product['id'], product['owner_id'])
 
 	request.should_hide_footer = True
 	# jz 2015-10-29

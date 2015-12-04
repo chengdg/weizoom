@@ -43,8 +43,8 @@ class Product(api_resource.ApiResource):
 			'is_support_make_thanks_card': product.is_support_make_thanks_card,
 
 			'stock_type': product.stock_type,
-
-			'weshop_status': product.weshop_status,
+			# 微众商城代码
+			# 'weshop_status': product.weshop_status,
 			'promotion_title': product.promotion_title,
 			'is_use_online_pay_interface': product.is_use_online_pay_interface,
 			'postage_type': product.postage_type,
@@ -61,7 +61,8 @@ class Product(api_resource.ApiResource):
 			'bar_code': product.bar_code,
 			'user_code': product.user_code,
 			'is_deleted': product.is_deleted,
-			'weshop_sync': product.weshop_sync,
+			# 微众商城代码
+			# 'weshop_sync': product.weshop_sync,
 			'is_member_product': product.is_member_product,
 			'is_use_custom_model': product.is_use_custom_model,
 			'stocks': product.stocks if product.stock_type else '无限',

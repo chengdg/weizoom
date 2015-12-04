@@ -80,45 +80,45 @@ def hackQuerySetDelete():
 		old_delete(self, **kwargs)
 	QuerySet.delete = new_delete
 
-
-def hackQuerySetFilter():
-	old_filter = QuerySet.filter
-	def new_filter(self,  *args, **kwargs):
-		from mall import models as mall_models
-
-		try:
-			if 'owner' in kwargs and kwargs['owner'].id == 216:
-				if self.model == mall_models.Product:
-					owner = kwargs.pop('owner')
-					if 'shelve_type' in kwargs:
-						# print 'jz-----1', kwargs, args ,owner
-						shelve_type = kwargs.pop('shelve_type')
-						return old_filter(self, *args, **kwargs).filter(Q(owner=owner, shelve_type=shelve_type) |\
-								Q(weshop_sync__gt=0, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON, weshop_status=shelve_type))
-					# kwargs['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_ON
-					# kwargs['weshop_status'] = mall_models.PRODUCT_SHELVE_TYPE_ON
-					# print 'jz-----1.5', kwargs, args ,owner
-					return old_filter(self, **kwargs).filter(Q(owner=owner) | Q(weshop_sync__gt=0))
-				if self.model == mall_models.ProductModelProperty:
-					owner = kwargs.pop('owner')
-			if 'owner_id' in kwargs and kwargs['owner_id'] == 216:
-				if self.model == mall_models.Product:
-					owner_id = kwargs.pop('owner_id')
-					if 'shelve_type' in kwargs:
-						# print 'jz-----2', kwargs, args ,owner_id
-						shelve_type = kwargs.pop('shelve_type')
-						return old_filter(self, *args, **kwargs).filter(Q(owner_id=owner_id, shelve_type=shelve_type) |\
-								Q(weshop_sync__gt=0, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON, weshop_status=shelve_type))
-
-					# print 'jz-----2.5', kwargs, args ,owner_id
-					# kwargs['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_ON
-					# kwargs['weshop_status'] = mall_models.PRODUCT_SHELVE_TYPE_ON
-					return old_filter(self, **kwargs).filter(Q(owner_id=owner_id) | Q(weshop_sync__gt=0))
-		except:
-			pass
-
-		return old_filter(self, *args, **kwargs)
-	QuerySet.filter = new_filter
+# 微众商城代码
+# def hackQuerySetFilter():
+# 	old_filter = QuerySet.filter
+# 	def new_filter(self,  *args, **kwargs):
+# 		from mall import models as mall_models
+#
+# 		try:
+# 			if 'owner' in kwargs and kwargs['owner'].id == 216:
+# 				if self.model == mall_models.Product:
+# 					owner = kwargs.pop('owner')
+# 					if 'shelve_type' in kwargs:
+# 						# print 'jz-----1', kwargs, args ,owner
+# 						shelve_type = kwargs.pop('shelve_type')
+# 						return old_filter(self, *args, **kwargs).filter(Q(owner=owner, shelve_type=shelve_type) |\
+# 								Q(weshop_sync__gt=0, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON, weshop_status=shelve_type))
+# 					# kwargs['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_ON
+# 					# kwargs['weshop_status'] = mall_models.PRODUCT_SHELVE_TYPE_ON
+# 					# print 'jz-----1.5', kwargs, args ,owner
+# 					return old_filter(self, **kwargs).filter(Q(owner=owner) | Q(weshop_sync__gt=0))
+# 				if self.model == mall_models.ProductModelProperty:
+# 					owner = kwargs.pop('owner')
+# 			if 'owner_id' in kwargs and kwargs['owner_id'] == 216:
+# 				if self.model == mall_models.Product:
+# 					owner_id = kwargs.pop('owner_id')
+# 					if 'shelve_type' in kwargs:
+# 						# print 'jz-----2', kwargs, args ,owner_id
+# 						shelve_type = kwargs.pop('shelve_type')
+# 						return old_filter(self, *args, **kwargs).filter(Q(owner_id=owner_id, shelve_type=shelve_type) |\
+# 								Q(weshop_sync__gt=0, shelve_type=mall_models.PRODUCT_SHELVE_TYPE_ON, weshop_status=shelve_type))
+#
+# 					# print 'jz-----2.5', kwargs, args ,owner_id
+# 					# kwargs['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_ON
+# 					# kwargs['weshop_status'] = mall_models.PRODUCT_SHELVE_TYPE_ON
+# 					return old_filter(self, **kwargs).filter(Q(owner_id=owner_id) | Q(weshop_sync__gt=0))
+# 		except:
+# 			pass
+#
+# 		return old_filter(self, *args, **kwargs)
+# 	QuerySet.filter = new_filter
 
 
 def hackModel():
@@ -220,7 +220,8 @@ def hack(params):
 	hackCursorDebugWrapper(params)
 	hackQuerySetUpdate()
 	hackQuerySetDelete()
-	hackQuerySetFilter()
+	# 微众商城代码
+	# hackQuerySetFilter()
 	hackModel()
 	hackRenderToResponse()
 	hackModelManager()

@@ -143,11 +143,13 @@ class MpUser(resource.Resource):
 		"""
 		mp_user_id = request.POST.get('mp_user_id')
 		pic_url = request.POST.get('pic_url')
-		weshop_followurl = request.POST.get('weshop_followurl', '')
+		# 微众商城代码
+		# weshop_followurl = request.POST.get('weshop_followurl', '')
 		try:
-			account_models.OperationSettings.objects.filter(owner=request.user).update(
-				weshop_followurl = weshop_followurl
-			)
+			# 微众商城代码
+			# account_models.OperationSettings.objects.filter(owner=request.user).update(
+			# 	weshop_followurl = weshop_followurl
+			# )
 
 			if weixin_models.MpuserPreviewInfo.objects.filter(mpuser_id=mp_user_id).count() > 0:
 				weixin_models.MpuserPreviewInfo.objects.filter(mpuser_id=mp_user_id).update(image_path=pic_url)

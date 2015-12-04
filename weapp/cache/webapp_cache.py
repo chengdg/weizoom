@@ -22,9 +22,10 @@ from weapp.hack_django import post_update_signal, post_delete_signal
 def get_product_display_price(product, webapp_owner_id, member_grade_id=None):
     """根据促销类型返回商品价格
     """
-    if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-        return round(product.display_price * 1.1, 2)
-    elif (hasattr(product, 'promotion') and
+    # 微众商城代码
+    # if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+    #     return round(product.display_price * 1.1, 2)
+    if (hasattr(product, 'promotion') and
                 (product.promotion is not None) and
                 product.promotion['type'] == PROMOTION_TYPE_FLASH_SALE):
         return product.promotion['detail']['promotion_price']
@@ -238,18 +239,21 @@ def update_webapp_product_cache(**kwargs):
                 product_id = instance.id
                 shelve_type = instance.shelve_type
                 is_deleted = instance.is_deleted
-                weshop_status = instance.weshop_status
-                weshop_sync = instance.weshop_sync
+                # 微众商城代码
+                # weshop_status = instance.weshop_status
+                # weshop_sync = instance.weshop_sync
             else:
                 product_id = instance[0].id
                 shelve_type = instance[0].shelve_type
                 is_deleted = instance[0].is_deleted
-                weshop_status = instance[0].weshop_status
-                weshop_sync = instance[0].weshop_sync
+                # 微众商城代码
+                # weshop_status = instance[0].weshop_status
+                # weshop_sync = instance[0].weshop_sync
             if before_instance:
+                # 微众商城代码
                 #微众商城下架处理 duhao 20151120
-                if before_instance.weshop_status != weshop_status and mall_models.PRODUCT_SHELVE_TYPE_OFF == weshop_status:
-                    cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
+                # if before_instance.weshop_status != weshop_status and mall_models.PRODUCT_SHELVE_TYPE_OFF == weshop_status:
+                #     cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
 
                 if before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_OFF == shelve_type or is_deleted == True:
                     #下架商品，清除redis中{wo:38}_{co:*}_products的数据项,批量更新
@@ -257,10 +261,13 @@ def update_webapp_product_cache(**kwargs):
                     categories_products_key = '{wo:%s}_{co:*}_products' % (webapp_owner_id)
                     cache_util.rem_set_member_by_patten_from_redis(categories_products_key,product_id)
 
-                    if weshop_sync > 0:
-                        #微众商城的缓存也要一起更新 duhao 20151120
-                        cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
-                elif (before_instance.shelve_type != shelve_type or webapp_owner_id == 216) and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
+                    # 微众商城代码
+                    # if weshop_sync > 0:
+                    #     #微众商城的缓存也要一起更新 duhao 20151120
+                    #     cache_util.rem_set_member_by_patten_from_redis('{wo:216}_{co:*}_products',product_id)
+                elif before_instance.shelve_type != shelve_type and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
+                # 微众商城代码
+                # elif (before_instance.shelve_type != shelve_type or webapp_owner_id == 216) and mall_models.PRODUCT_SHELVE_TYPE_ON == shelve_type:
                     #上架商品，确定该商品原来是否有category
                     category_has_products = mall_models.CategoryHasProduct.objects.filter(product_id=product_id)
                     if category_has_products:
@@ -281,8 +288,10 @@ def update_webapp_product_cache(**kwargs):
                 product_id = instance[0].product_id
             product = mall_models.Product.objects.filter(id = product_id).get()
             # 非待售添加
-            if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF and (webapp_owner_id != 216 or \
-                (webapp_owner_id == 216 and product.weshop_status != mall_models.PRODUCT_SHELVE_TYPE_OFF)):
+            if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF :
+            # 微众商城代码
+            # if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF and (webapp_owner_id != 216 or \
+            #     (webapp_owner_id == 216 and product.weshop_status != mall_models.PRODUCT_SHELVE_TYPE_OFF)):
             #如果是微众商城过来的请求，则需要验证微众商城里的在售状态 duhao 20151120
             # if product.shelve_type != mall_models.PRODUCT_SHELVE_TYPE_OFF:
                 categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,catory_id)
@@ -416,7 +425,9 @@ def get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id=None)
         key, mall_api.get_product_detail_for_cache(webapp_owner_id, product_id))
     product = mall_models.Product.from_dict(data)
     # 解决商品不存在以及商品在店铺间的串号问题
-    if product.is_deleted or product.owner_id != webapp_owner_id and webapp_owner_id!=216:
+    if product.is_deleted:
+    # 微众商城代码
+    # if product.is_deleted or product.owner_id != webapp_owner_id and webapp_owner_id!=216:
         product.is_deleted = True
         return product
     # Set member's discount of the product
@@ -460,13 +471,15 @@ def update_webapp_product_detail_cache(**kwargs):
         if product_ids and len(product_ids) > 0:
             for product_id in product_ids:
                 update_product_cache(webapp_owner_id, product_id)
+                # 微众商城代码
                 # 更新微众商城缓存
                 # TODO 更好的设计微众商城
-                if webapp_owner_id != 216:
-                    key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (product_id)
-                    cache_util.delete_cache(key)
-            if webapp_owner_id != 216:
-                cache_util.delete_cache('webapp_products_categories_{wo:216}')
+                # if webapp_owner_id != 216:
+                #     key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (product_id)
+                #     cache_util.delete_cache(key)
+            # 微众商城代码
+            # if webapp_owner_id != 216:
+            #     cache_util.delete_cache('webapp_products_categories_{wo:216}')
         else:
             pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
             cache_util.delete_pattern(pattern)
@@ -495,11 +508,11 @@ def update_webapp_product_model_cache(**kwargs):
         # 库存发生变化
         model = model[0]
         # update_product_cache(model.owner_id, model.product_id, deleteVarnish=False)
-
-        if model.owner_id != 216:
-            key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
-                model.product_id)
-            cache_util.delete_cache(key)
+        # 微众商城代码
+        # if model.owner_id != 216:
+        #     key = 'webapp_product_detail_{wo:216}_{pid:%s}' % (
+        #         model.product_id)
+        #     cache_util.delete_cache(key)
 
 post_update_signal.connect(update_webapp_product_model_cache,
                            sender=mall_models.ProductModel, dispatch_uid="product_model.update")
