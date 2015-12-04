@@ -25,8 +25,7 @@ from customerized_apps import mysql_models as mongo_models
 def get_fields_to_be_save(request):
 	fields = request.POST.dict()
 	fields['created_at'] = datetime.today()
-	fields['owner_id'] = request.manager.id
-	
+
 	webapp_user = getattr(request, 'webapp_user', None)
 	if webapp_user:
 		fields['webapp_user_id'] = request.webapp_user.id
@@ -34,6 +33,9 @@ def get_fields_to_be_save(request):
 	member = getattr(request, 'member', None)
 	if member:
 		fields['member_id'] = request.member.id
+		fields['owner_id'] = request.user.id
+	else:
+		fields['owner_id'] = request.manager.id
 
 	if 'prize' in request.POST:
 		fields['prize'] = json.loads(fields['prize'])

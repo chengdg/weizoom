@@ -11,12 +11,14 @@
                     <th>member_id</th>
                     <th>用户名</th>
                     <th>助力时间</th>
+                    <th>当前关注状态</th>
                 </tr>
                 {% for item in items %}
                 <tr>
                     <td>{{ item.power_member_id }}</td>
                     <td>{{ item.power_member_name|safe }}</td>
-                    <td>{{ item.created_at|date:"Y/m/j H:i" }}</td>
+                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.status }}</td>
                 </tr>
                 {% endfor %}
             </table>

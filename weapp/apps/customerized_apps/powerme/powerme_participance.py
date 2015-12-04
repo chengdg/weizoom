@@ -18,6 +18,7 @@ import export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
+from modules.member.models import Member
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -45,10 +46,18 @@ class PowerMeParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
-			response = create_response(200)
+			response = create_response(500)
 			member_id = request.member.id
 			power_id = request.POST['id']
 			fid = request.POST['fid']
+			try:
+				fid_member = Member.objects.get(id=fid)
+				if not fid_member.is_subscribed:
+					response.errMsg = u'该用户已退出活动'
+					return response.get_response()
+			except:
+				response.errMsg = u'不存在该会员'
+				return response.get_response()
 			#更新当前member的参与信息
 			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
 			ids_tmp = curr_member_power_info.powered_member_id
@@ -100,6 +109,9 @@ class PowerMeParticipance(resource.Resource):
 		except Exception,e:
 			print e
 			response = create_response(500)
+			response.errMsg = u'助力失败'
+			return response.get_response()
+		response = create_response(200)
 		return response.get_response()
 
 	def api_post(request):

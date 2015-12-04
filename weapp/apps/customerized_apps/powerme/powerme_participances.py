@@ -16,6 +16,7 @@ from modules.member import models as member_models
 import models as app_models
 import export
 from mall import export as mall_export
+from modules.member.models import Member
 from utils.string_util import byte_to_hex
 import os
 
@@ -253,9 +254,20 @@ class PowerMeParticipancesDetail(resource.Resource):
 		member_id = request.GET.get('member_id', None)
 		belong_to = request.GET.get('belong_to', None)
 		if member_id and belong_to:
-			items = app_models.PoweredDetail.objects(belong_to=belong_to, owner_id=int(member_id), has_powered=True)
+			items = app_models.PoweredDetail.objects(belong_to=belong_to, owner_id=int(member_id), has_powered=True).order_by('-created_at')
+			power_member_ids = [item.power_member_id for item in items]
+			member_id2subscribed = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
+			returnDataList = []
+			for t in items:
+				returnDataDict = {
+					"power_member_id": t.power_member_id,
+					"power_member_name": t.power_member_name,
+					"created_at": t.created_at.strftime("%Y/%m/%d %H:%M"),
+					"status": u'关注' if member_id2subscribed[t.power_member_id] else u'跑路'
+				}
+				returnDataList.append(returnDataDict)
 			c = RequestContext(request, {
-				'items': items,
+				'items': returnDataList,
 				'errMsg': None
 			})
 		else:

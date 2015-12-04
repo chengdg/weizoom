@@ -411,7 +411,13 @@
                 is_powered = true;
             },
             error: function(data) {
-                console.error(data.errMsg);
+                if(data.errMsg){
+                    $("body").alert({
+                        isShow: true,
+                        info: data.errMsg,
+                        speed: 3000
+                    });
+                }
                 is_powered = false;
             }
         });
