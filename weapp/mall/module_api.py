@@ -338,10 +338,12 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 		category_has_products = CategoryHasProduct.objects.filter(category_id = category_id)
 		product_ids = [p.product_id for p in category_has_products]
 		params['id__in'] = product_ids
-	if is_access_weizoom_mall:
-		products = list(Product.objects.filter(**params).exclude(weshop_sync = PRODUCT_SHELVE_TYPE_ON).order_by('-id'))
-	else:
-		products = list(Product.objects.filter(**params).order_by('-id'))
+	# 微众商城代码
+	# if is_access_weizoom_mall:
+	# 	products = list(Product.objects.filter(**params).exclude(weshop_sync = PRODUCT_SHELVE_TYPE_ON).order_by('-id'))
+	# else:
+	# 	products = list(Product.objects.filter(**params).order_by('-id'))
+	products = list(Product.objects.filter(**params).order_by('-id'))
 	return products
 
 # unused zhaolei 2015-11-23
@@ -389,31 +391,32 @@ def get_product_detail_for_cache(webapp_owner_id, product_id, member_grade_id=No
 		try:
 			#获取product及其model
 			product = Product.objects.get(id=product_id)
+			# 微众商城代码
 			#防止商品的串号问题,商品没有缓存的情况下，下面不执行，直接返回
-			if product.owner_id != webapp_owner_id and webapp_owner_id!=216:
-				product = Product()
-				product.is_deleted = True
-				# product.mark = str(product.id) + '-' + product.model_name
-				data = product.to_dict(
-										'min_limit',
-										'swipe_images_json',
-										'models',
-										'_is_use_custom_model',
-										'product_model_properties',
-										'is_sellout',
-										'promotion',
-										'integral_sale',
-										'properties',
-										'product_review',
-										'master_promotion_title',
-										'integral_sale_promotion_title'
-				)
-				return {'value': data}
-				#直接返回
-			if product.owner_id != webapp_owner_id:
-				product.postage_id = -1
-				product.unified_postage_money = 0
-				product.postage_type = POSTAGE_TYPE_UNIFIED
+			# if product.owner_id != webapp_owner_id and webapp_owner_id!=216:
+			# 	product = Product()
+			# 	product.is_deleted = True
+			# 	# product.mark = str(product.id) + '-' + product.model_name
+			# 	data = product.to_dict(
+			# 							'min_limit',
+			# 							'swipe_images_json',
+			# 							'models',
+			# 							'_is_use_custom_model',
+			# 							'product_model_properties',
+			# 							'is_sellout',
+			# 							'promotion',
+			# 							'integral_sale',
+			# 							'properties',
+			# 							'product_review',
+			# 							'master_promotion_title',
+			# 							'integral_sale_promotion_title'
+			# 	)
+			# 	return {'value': data}
+			# 	#直接返回
+			# if product.owner_id != webapp_owner_id:
+			# 	product.postage_id = -1
+			# 	product.unified_postage_money = 0
+			# 	product.postage_type = POSTAGE_TYPE_UNIFIED
 			product.fill_model()
 
 			#获取轮播图
@@ -622,8 +625,9 @@ def get_product_details_with_model(webapp_owner_id, webapp_user, product_infos):
 	for product in products:
 		product_info = id2info[product.flash_data['product_model_id']]
 		product.fill_specific_model(product_info['model_name'], product.models)
-		if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-			product.price = round(product.price * 1.1, 2)
+		# 微众商城代码
+		# if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+		# 	product.price = round(product.price * 1.1, 2)
 
 	#if product.stock_type == PRODUCT_STOCK_TYPE_LIMIT and product.stocks <= 0:
 	#		product.is_sellout = True
@@ -765,8 +769,9 @@ def get_products_detail(webapp_owner_id, product_ids, webapp_user=None, member_g
 				#获取折扣后的价格
 				# if webapp_user:
 					# product_model['price'], _ = webapp_user.get_discounted_money(product_model['price'], product_type=product.type)
-				if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-					product_model['price'] = round(product_model['price'] * 1.1, 2)
+				# 微众商城代码
+				# if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+				# 	product_model['price'] = round(product_model['price'] * 1.1, 2)
 
 				# 商品规格
 				p_type = product.type
@@ -875,10 +880,11 @@ def get_product_detail(webapp_owner_id, product_id, webapp_user=None, member_gra
 		product = webapp_cache.get_webapp_product_detail(webapp_owner_id, product_id, member_grade_id)
 		if product.is_deleted:
 			return product
-		for product_model in product.models:
-			#获取折扣后的价格
-			if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
-				product_model['price'] = round(product_model['price'] * 1.1, 2)
+		# 微众商城代码
+		# for product_model in product.models:
+		# 	#获取折扣后的价格
+		# 	if webapp_owner_id != product.owner_id and product.weshop_sync == 2:
+		# 		product_model['price'] = round(product_model['price'] * 1.1, 2)
 
 		# 商品规格
 
@@ -1066,14 +1072,15 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 			promotion_saved_money += saved_money
 	order.promotion_saved_money = promotion_saved_money
 
-	# 订单来自商铺
-	if products[0].owner_id == webapp_owner_id:
-		order.webapp_source_id = webapp_id
-		order.order_source = ORDER_SOURCE_OWN
-	# 订单来自微众商城
-	else:
-		order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
-		order.order_source = ORDER_SOURCE_WEISHOP
+	# 微众商城代码
+	# # 订单来自商铺
+	# if products[0].owner_id == webapp_owner_id:
+	# 	order.webapp_source_id = webapp_id
+	# 	order.order_source = ORDER_SOURCE_OWN
+	# # 订单来自微众商城
+	# else:
+	# 	order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
+	# 	order.order_source = ORDER_SOURCE_WEISHOP
 	save_retry_count = 0
 	while save_retry_count <= 10:
 		try:

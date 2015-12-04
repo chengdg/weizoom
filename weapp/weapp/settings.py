@@ -400,7 +400,8 @@ INSTALLED_APPS = [
     'captcha',
 
     'apps.customerized_apps.shengjing',
-    'apps.customerized_apps.weshop',
+    # 微众商城代码
+    # 'apps.customerized_apps.weshop',
 
     'account',
     'account.social_account',

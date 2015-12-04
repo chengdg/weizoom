@@ -141,13 +141,14 @@ W.view.common.SelectWebSiteLinkView = Backbone.View.extend({
         selectedLinkTarget: selectedLinkTarget,
         getLinkTargetJsonFun: _this.getLinkTargetJson,
         success: function(data) {
-          if(W.uid == 216){
-            jsonData = JSON.parse(data);
-            if(jsonData.workspace_name == '商品及分组'){
-              jsonData.data = jsonData.data.replace('module=mall', 'module=apps:weshop:mall2')
-              data = JSON.stringify(jsonData)
-            }
-          }
+          //  微众商城代码
+          //if(W.uid == 216){
+          //  jsonData = JSON.parse(data);
+          //  if(jsonData.workspace_name == '商品及分组'){
+          //    jsonData.data = jsonData.data.replace('module=mall', 'module=apps:weshop:mall2')
+          //    data = JSON.stringify(jsonData)
+          //  }
+          //}
           _this.setEditHtml(data, true);
           _this.trigger('finish-select-url', data);          
           W.Broadcaster.trigger('link-url:selected', _this.menuEvent, data);

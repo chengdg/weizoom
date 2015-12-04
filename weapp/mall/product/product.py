@@ -221,17 +221,24 @@ class ProductList(resource.Resource):
             products.update(is_deleted=True, display_index=0)
         else:
             # 更新商品上架状态以及商品排序
-            if request.manager.id == products[0].owner_id:
-                now = datetime.now()
-                if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                    products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
-                else:
-                    #上架
-                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
-            else:
-                # 微众商城更新商户商品状态
-                products.update(weshop_status=shelve_type)
+            # 微众商城代码
+            # if request.manager.id == products[0].owner_id:
+            #     now = datetime.now()
+            #     if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+            #         products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
+            #     else:
+            #         #上架
+            #         products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+            # else:
+            #     # 微众商城更新商户商品状态
+            #     products.update(weshop_status=shelve_type)
 
+            now = datetime.now()
+            if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+                products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+            else:
+                #上架
+                products.update(shelve_type=shelve_type, display_index=0, update_time=now)
         is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
@@ -750,9 +757,9 @@ class Product(resource.Resource):
             'supplier': request.POST.get("supplier", 0),
             'purchase_price': purchase_price,
         }
-
-        if request.POST.get('weshop_sync', None):
-            param['weshop_sync'] = request.POST['weshop_sync'][0]
+        # 微众商城代码
+        # if request.POST.get('weshop_sync', None):
+        #     param['weshop_sync'] = request.POST['weshop_sync'][0]
         models.Product.objects.record_cache_args(
             ids=[product_id]
         ).filter(

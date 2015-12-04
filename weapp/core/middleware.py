@@ -783,15 +783,15 @@ class WeizoomMallMiddleware(object):
 		#added by duhao
 		if is_product_stocks_request(request) or is_wapi_request(request) or is_pay_request(request):
 			return None
-		
-		if request.user_profile:
-			request.user.is_weizoom_mall = request.user_profile.webapp_type == WEBAPP_TYPE_WEIZOOM_MALL#WeizoomMall.is_weizoom_mall(request.user_profile.webapp_id)
-			if hasattr(request, 'manager'):
-				request.manager.is_weizoom_mall = request.user.is_weizoom_mall
-			request.is_access_weizoom_mall = request.user.is_weizoom_mall
-		else:
-			request.user.is_weizoom_mall = False
-			request.is_access_weizoom_mall = False
+		# todo 微众商城代码
+		# if request.user_profile:
+		# 	request.user.is_weizoom_mall = request.user_profile.webapp_type == WEBAPP_TYPE_WEIZOOM_MALL#WeizoomMall.is_weizoom_mall(request.user_profile.webapp_id)
+		# 	if hasattr(request, 'manager'):
+		# 		request.manager.is_weizoom_mall = request.user.is_weizoom_mall
+		# 	request.is_access_weizoom_mall = request.user.is_weizoom_mall
+		# else:
+		request.user.is_weizoom_mall = False
+		request.is_access_weizoom_mall = False
 		return None
 
 

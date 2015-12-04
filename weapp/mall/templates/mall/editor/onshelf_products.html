@@ -86,9 +86,7 @@
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
 				<th width="120">创建时间</th>
-				{{if data.data.owner_id != 216}}
 				<th width="58">排序</th>
-				{{/if}}
 				<th width="90">操作</th>
 			</tr>
 		</thead>
@@ -151,12 +149,10 @@
 					</td>
 					<td>${product.sales}</td>
 					<td>${product.created_at}</td>
-					{{if data.data.owner_id != 216}}
 					<td style="padding:0 15px;">
 						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
 						 			 value="${product.display_index}" data-display-index="${product.display_index}">
 					</td>
-					{{/if}}
 					<td>
 					<div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}&shelve_type=1" class="xa-modify fl" style="width: 37px;">
