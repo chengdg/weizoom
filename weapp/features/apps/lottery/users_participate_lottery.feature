@@ -57,7 +57,7 @@ Background:
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
 
-@mall2 @apps_lottery @apps_lottery_frontend @kuki
+@mall2 @apps_lottery @apps_lottery_frontend
 Scenario:1 会员参加微信抽奖活动,需要消耗积分
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -129,30 +129,30 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 	When bill参加微信抽奖活动'微信抽奖'
 	Then bill获得抽奖错误提示'积分不足'
 
-#	#增加积分后，则可正常参加抽奖活动
-#	Given jobs登录系统
-#	When jobs给"bill"加积分
-#			"""
-#			{
-#				"integral":10,
-#				"reason":""
-#			}
-#			"""
-#
-#	When bill访问jobs的webapp
-#	And bill在jobs的webapp中拥有15会员积分
-#
-#	When bill参加微信抽奖活动'微信抽奖'
-#	Then bill获得抽奖结果
-#		"""
-#		{
-#			"prize_grade":"一等奖",
-#			"prize_type":"优惠券",
-#			"coupon":"优惠券1"
-#		}
-#		"""
-#	When bill访问jobs的webapp
-#	Then bill在jobs的webapp中拥有0会员积分
+	#增加积分后，则可正常参加抽奖活动
+	Given jobs登录系统
+	When jobs给"bill"加积分
+			"""
+			{
+				"integral":10,
+				"reason":""
+			}
+			"""
+
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有15会员积分
+
+	When bill参加微信抽奖活动'微信抽奖'
+	Then bill获得抽奖结果
+		"""
+		[{
+			"prize_grade":"一等奖",
+			"prize_type":"优惠券",
+			"coupon":"优惠券1"
+		}]
+		"""
+	When bill访问jobs的webapp
+	Then bill在jobs的webapp中拥有0会员积分
 
 @mall2 @apps_lottery @apps_lottery_frontend
 Scenario:2 非会员通过分享链接参加微信抽奖活动
@@ -176,6 +176,18 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 				"prize_type":"积分",
 				"integral":50,
 				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券2",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"prize_type":"实物",
+				"gift":"精美礼品",
+				"pic":"1.jpg"
 			}]
 		}]
 		"""
@@ -190,12 +202,11 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 	When tom参加微信抽奖活动'微信抽奖'
 	Then tom获得抽奖结果
 		"""
-		{
+		[{
 			"prize_grade":"一等奖",
 			"prize_type":"积分",
-			"integral":50,
-			"msg":"恭喜您获得了积分奖励！<br />快去个人中心查看吧！<br />"
-		}
+			"integral":50
+		}]
 		"""
 
 @mall2 @apps_lottery @apps_lottery_frontend
@@ -347,10 +358,9 @@ Scenario:5 中奖概率率为0,中奖用户为0
 	When bill参加微信抽奖活动'微信抽奖'
 	Then bill获得抽奖结果
 		"""
-		{
-			"prize_grade":"谢谢参与",
-			"msg":"没有中奖,再接再厉吧~"
-		}
+		[{
+			"prize_grade":"谢谢参与"
+		}]
 		"""
 
 @mall2 @apps_lottery @apps_lottery_frontend
@@ -400,10 +410,22 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
-				"prize_counts":1,
+				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":优惠券3,
 				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券2",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"prize_type":"实物",
+				"gift":"精美礼品",
+				"pic":"1.jpg"
 			}]
 		}]
 		"""
@@ -433,19 +455,17 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 	When tom参加微信抽奖活动'微信抽奖'
 	Then tom获得抽奖结果
 		"""
-		{
-			"prize_grade":"谢谢参与",
-			"msg":"没有中奖,再接再厉吧~"
-		}
+		[{
+			"prize_grade":"谢谢参与"
+		}]
 		"""
 
 	When tom参加微信抽奖活动'微信抽奖'
 	Then tom获得抽奖结果
 		"""
-		{
-			"prize_grade":"谢谢参与",
-			"msg":"没有中奖,再接再厉吧~"
-		}
+		[{
+			"prize_grade":"谢谢参与"
+		}]
 		"""
 
 @mall2 @apps_lottery @apps_lottery_frontend
@@ -497,10 +517,22 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
-				"prize_counts":1,
+				"prize_counts":10,
 				"prize_type":"优惠券",
 				"coupon":优惠券3,
 				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券2",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"prize_type":"实物",
+				"gift":"精美礼品",
+				"pic":"1.jpg"
 			}]
 		}]
 		"""
@@ -509,12 +541,11 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 	When tom参加微信抽奖活动'微信抽奖'
 	Then tom获得抽奖结果
 		"""
-		{
+		[{
 			"prize_grade":"一等奖",
 			"prize_type":"优惠券",
-			"coupon":优惠券3,
-			"msg":"恭喜您获得了一张优惠券！<br />快去个人中心查看吧！<br />"
-		}
+			"coupon":优惠券3
+		}]
 		"""
 	When tom访问jobs的webapp
 	Then tom能获得webapp优惠券列表
@@ -529,10 +560,9 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 	When tom参加微信抽奖活动'微信抽奖'
 	Then tom获得抽奖结果
 		"""
-		{
-			"prize_grade":"谢谢参与",
-			"msg":"没有中奖,再接再厉吧~"
-		}
+		[{
+			"prize_grade":"谢谢参与"
+		}]
 		"""
 	When tom访问jobs的webapp
 	Then tom能获得webapp优惠券列表

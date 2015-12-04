@@ -52,7 +52,6 @@ def __get_into_lottery_pages(context,webapp_owner_id,lottery_id,openid):
 @when(u"{webapp_user_name}参加微信抽奖活动'{lottery_name}'")
 def step_impl(context,webapp_user_name,lottery_name):
 	lottery_id = __get_lottery_id(lottery_name)
-	lottery.objects(id=lottery_id).update(set__status=1)#暂时这样
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
@@ -91,5 +90,4 @@ def step_impl(context,webapp_user_name):
 @then(u"{webapp_user_name}获得抽奖错误提示'{message}'")
 def step_impl(context,webapp_user_name,message):
 	actual = context.lottery_result['errMsg']
-	expected = json.loads(context.text)
-	context.tc.assertEquals(expected, actual)
+	context.tc.assertEquals(message, actual)
