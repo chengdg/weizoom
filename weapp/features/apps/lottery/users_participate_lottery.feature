@@ -16,17 +16,17 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 50,
-			"limit_counts": "不限",
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "10天后",
 			"coupon_id_prefix": "coupon1_id_"
-		},{
+		}, {
 			"name": "优惠券2",
 			"money": 50.00,
-			"count": 20,
-			"limit_counts": "不限",
+			"count": 50,
+			"limit_counts": "无限",
 			"start_date": "今天",
-			"end_date": "1天后",
+			"end_date": "5天后",
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
@@ -79,11 +79,24 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 				"prize_type":"优惠券",
 				"coupon":"优惠券1",
 				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券2",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"prize_type":"实物",
+				"gift":"精美礼品",
+				"pic":"1.jpg"
 			}]
 		}]
 		"""
 	#积分充足时，可以参加抽奖活动
-#	When bill参加微信抽奖活动'微信抽奖'
+	When bill访问jobs的webapp
+	When bill参加微信抽奖活动'微信抽奖'
 #	Then bill获得抽奖结果
 #		"""
 #		{
@@ -149,7 +162,7 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 		"""
 		[{
 			"name":"微信抽奖",
-			"start_date":"今天",
+			"start_date":"昨天",
 			"end_date":"2天后",
 			"desc":"抽奖啦抽奖啦",
 			"reduce_integral":0,
