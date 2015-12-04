@@ -128,7 +128,7 @@ Scenario:2 新建微信抽奖,抽奖限制一天一次
 			"end_date":"2天后",
 			"status":"未开始",
 			"participant_count":0,
-			"actions": ["查看结果","关闭","预览"]
+			"actions": ["查看结果","删除","预览"]
 		}]
 		"""
 
