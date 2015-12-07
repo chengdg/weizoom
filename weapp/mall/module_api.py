@@ -1076,7 +1076,7 @@ def save_order(webapp_id, webapp_owner_id, webapp_user, order_info, request=None
 	# # 订单来自商铺
 	# if products[0].owner_id == webapp_owner_id:
 	# 	order.webapp_source_id = webapp_id
-	# 	order.order_source = ORDER_SOURCE_OWN
+	order.order_source = ORDER_SOURCE_OWN
 	# # 订单来自微众商城
 	# else:
 	# 	order.webapp_source_id = WebApp.objects.get(owner_id=products[0].owner_id).appid
