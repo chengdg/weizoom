@@ -955,16 +955,16 @@ Scenario: 8 多个商品加入购物车后，更改商品为起购商品
 			"product_groups": [{
 				"promotion": null,
 				"products": [{
-					"name": "商品2",
-					"price": 5,
-					"count": 1
+					"name": "商品1",
+					"price": 3,
+					"count": 3
 				}]
 			}, {
 				"promotion": null,
 				"products": [{
-					"name": "商品1",
-					"price": 3,
-					"count": 3
+					"name": "商品2",
+					"price": 5,
+					"count": 1
 				}]
 			}]
 		}
@@ -978,16 +978,16 @@ Scenario: 8 多个商品加入购物车后，更改商品为起购商品
 			"product_groups": [{
 				"promotion": null,
 				"products": [{
-					"name": "商品2",
-					"price": 5,
-					"count": 1
+					"name": "商品1",
+					"price": 3,
+					"count": 3
 				}]
 			}, {
 				"promotion": null,
 				"products": [{
-					"name": "商品1",
-					"price": 3,
-					"count": 3
+					"name": "商品2",
+					"price": 5,
+					"count": 1
 				}]
 			}]
 		}
