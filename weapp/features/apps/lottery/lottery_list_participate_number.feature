@@ -19,7 +19,7 @@ Background:
 			"name": "优惠券2",
 			"money": 50.00,
 			"count": 20,
-			"limit_counts": "不限",
+			"limit_counts": "无限",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon2_id_"
@@ -39,11 +39,11 @@ Scenario:1 微信抽奖活动列表参与次数的校验
 			"start_date":"今天",
 			"end_date":"2天后",
 			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":15,
+			"reduce_integral":0,
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -59,7 +59,7 @@ Scenario:1 微信抽奖活动列表参与次数的校验
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts"30,
+				"prize_counts":30,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":"1.jpg"
@@ -70,7 +70,7 @@ Scenario:1 微信抽奖活动列表参与次数的校验
 		"""
 		[{
 			"name":"微信抽奖01",
-			"part_num":0
+			"participant_count":0
 		}]
 		"""
 
@@ -84,17 +84,17 @@ Scenario:1 微信抽奖活动列表参与次数的校验
 	When 清空浏览器
 	When tom参加微信抽奖活动'微信抽奖01'
 
-	When tom把jobs的微信抽奖活动链接分享到朋友圈
+	When tom把jobs的微信抽奖活动'微信抽奖01'的活动链接分享到朋友圈
 
 
 	#marry取消关注后参加1次，关注后参加1次
 	When marry取消关注jobs的公众号
-	When marry点击jobs分享的微信抽奖活动链接
+	When marry点击tom分享的微信抽奖活动'微信抽奖01'的活动链接
 	When marry参加微信抽奖活动'微信抽奖01'
 
 	When 清空浏览器
 	When marry关注jobs的公众号
-	When marry点击jobs分享的微信抽奖活动链接
+	When marry点击tom分享的微信抽奖活动'微信抽奖01'的活动链接
 	When marry参加微信抽奖活动'微信抽奖01'
 
 	Given jobs登录系统
@@ -102,6 +102,6 @@ Scenario:1 微信抽奖活动列表参与次数的校验
 		"""
 		[{
 			"name":"微信抽奖01",
-			"part_num":5
+			"participant_count":5
 		}]
 		"""

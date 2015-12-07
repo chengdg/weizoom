@@ -20,7 +20,7 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 10,
-			"limit_counts": "不限",
+			"limit_counts": "无限",
 			"using_limit": "满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
@@ -38,7 +38,7 @@ Background:
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
-			"win_rate":50%,
+			"win_rate":"50%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -54,7 +54,7 @@ Background:
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts"30,
+				"prize_counts":30,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
@@ -81,7 +81,7 @@ Scenario:1 查看结果列表
 		"""
 		[{
 			"name":"微信抽奖01",
-			"part_num":5
+			"participant_count":5
 		}]
 		"""
 	When jobs查看微信抽奖活动'微信抽奖01'
