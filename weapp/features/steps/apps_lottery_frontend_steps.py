@@ -12,17 +12,10 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.lottery.models import lottery, lotteryParticipance
-from weixin.message.material import models as material_models
-from modules.member.models import Member, SOURCE_MEMBER_QRCODE
+from apps.customerized_apps.lottery.models import lottery, lotteryParticipance,lotteryControl
 from utils.string_util import byte_to_hex
 import json
 import re
-
-# def __get_power_me_rule_name(title):
-# 	material_url = material_models.News.objects.get(title=title).url
-# 	power_me_rule_name = material_url.split('-')[1]
-# 	return power_me_rule_name
 
 def __get_lottery_id(lottery_name):
 	return lottery.objects.get(name=lottery_name).id
@@ -73,6 +66,8 @@ def step_impl(context,webapp_user_name,lottery_name,date):
 	lotteryparticipance = lotteryParticipance.objects.get(member_id=context.member.id,belong_to=str(lottery_id))
 	lotteryparticipance.update(set__lottery_date=date)
 	lotteryparticipance.save()
+	lotterycontrol = lotteryControl.objects.get(member_id=context.member.id,belong_to=str(lottery_id))
+	lotterycontrol.delete()
 
 @then(u"{webapp_user_name}获得抽奖结果")
 def step_impl(context,webapp_user_name):
