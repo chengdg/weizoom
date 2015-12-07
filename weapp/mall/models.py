@@ -1412,7 +1412,7 @@ class Order(models.Model):
 	ship_address = models.CharField(max_length=200)  # 收货人地址
 	area = models.CharField(max_length=100)
 	status = models.IntegerField(default=ORDER_STATUS_NOT)  # 订单状态
-	order_source = models.IntegerField(default=ORDER_SOURCE_OWN)  # 订单来源 0本店 1商城 #已废弃
+	order_source = models.IntegerField(default=ORDER_SOURCE_OWN)  # 订单来源 0本店 1商城
 	bill_type = models.IntegerField(default=ORDER_BILL_TYPE_NONE)  # 发票类型
 	bill = models.CharField(max_length=100, default='')  # 发票信息
 	remark = models.TextField()  # 备注
