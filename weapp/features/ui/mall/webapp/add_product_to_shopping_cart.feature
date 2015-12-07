@@ -878,3 +878,119 @@ Scenario:6 商品添加到购物车后，后台对商品的价格，库存进行
 #1.将商品添加至购物车，商品参加限时抢购
 #2.将商品添加至购物车，商品参加买赠活动
 #3.将商品添加至购物车，商品参与会员价和积分活动
+
+
+#根据bug_6565-补充.雪静 2015.12.07
+Scenario: 7 把商品加入购物车后，更改商品为起购商品
+	bill把jobs的商品加入购物车后，jobs更改此商品为起购商品
+	1.bill查看购物车此商品数量和总计
+
+	When bill访问jobs的webapp
+	And bill加入jobs的商品到购物车
+		"""
+		[{
+			"name": "商品1",
+			"count": 1
+		}]
+		"""
+	Given jobs登录系统
+	When jobs更新商品'商品1'
+		"""
+		{
+			"name": "商品1",
+			"purchase_count": 3,
+			"price": 3
+		}
+		"""
+	When bill访问jobs的webapp:ui
+	Then bill能获得购物车:ui
+		"""
+		{
+			"total_product_count": 3,
+			"total_price": 9.0,
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 3,
+					"count": 3
+				}]
+			}]
+		}
+		"""
+	Then bill能获得提示信息"至少购买3件":ui
+
+
+#雪静 2015.12.07
+Scenario: 8 多个商品加入购物车后，更改商品为起购商品
+	bill把jobs的商品加入购物车后，jobs更改此商品为起购商品
+	1.bill查看购物车此商品数量和总计
+
+	When bill访问jobs的webapp
+	And bill加入jobs的商品到购物车:ui
+		"""
+		[{
+			"name": "商品1",
+			"count": 1
+		}, {
+			"name": "商品2",
+			"count": 1
+		}]
+		"""
+	Given jobs登录系统
+	When jobs更新商品'商品1'
+		"""
+		{
+			"name": "商品1",
+			"purchase_count": 3,
+			"price": 3
+		}
+		"""
+	When bill访问jobs的webapp:ui
+	Then bill能获得购物车:ui
+		"""
+		{
+			"total_product_count": 4,
+			"total_price": 14.0,
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 3,
+					"count": 3
+				}]
+			}, {
+				"promotion": null,
+				"products": [{
+					"name": "商品2",
+					"price": 5,
+					"count": 1
+				}]
+			}]
+		}
+		"""
+	When bill在购物车中选中商品'商品1':ui
+	Then bill能获得购物车:ui
+		"""
+		{
+			"total_product_count": 3,
+			"total_price": 9.0,
+			"product_groups": [{
+				"promotion": null,
+				"products": [{
+					"name": "商品1",
+					"price": 3,
+					"count": 3
+				}]
+			}, {
+				"promotion": null,
+				"products": [{
+					"name": "商品2",
+					"price": 5,
+					"count": 1
+				}]
+			}]
+		}
+		"""
+	Then bill能获得提示信息"至少购买3件":ui
+

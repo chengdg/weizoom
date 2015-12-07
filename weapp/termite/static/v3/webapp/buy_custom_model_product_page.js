@@ -60,7 +60,10 @@ W.page.BuyProductPage = BackboneLite.View.extend({
             _.bind(this.showUnderStock, this)
         );
         this.counter = $('input[data-ui-role="counter"]').data('view');
-        if(this.counter.minCount>1)this.updateCountInByLink(this.counter.minCount)
+        if(this.counter.minCount>1){
+            this.productCount = this.counter.minCount;
+            this.updateCountInByLink(this.counter.minCount);
+        }
         // 处理懒加载图片
         $('[data-url]').lazyload({
             data_attribute:"url",
@@ -569,6 +572,7 @@ W.page.BuyProductPage = BackboneLite.View.extend({
      * onClickAddShoppingCartButton: 点击"加入购物车"按钮的响应函数
      */
     onClickAddShoppingCartButton: function(event) {
+        console.log('this.productCount',this.productCount);
         var _this = this
         W.getApi().call({
             app: 'webapp',
