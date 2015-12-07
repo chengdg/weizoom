@@ -252,7 +252,10 @@ def get_set_from_redis(set_name):
 
 
 def add_set_to_redis(set_name,*args):
-	return pyredis.sadd(set_name,*args)
+	if pyredis.exists(set_name):
+		return pyredis.sadd(set_name,*args)
+	else:
+		return 0
 
 def rem_set_member_from_redis(set_name,*args):
 	return pyredis.srem(set_name,*args)
