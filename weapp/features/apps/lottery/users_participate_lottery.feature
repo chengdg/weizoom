@@ -30,28 +30,7 @@ Background:
 			"coupon_id_prefix": "coupon2_id_"
 		}]
 		"""
-	Then jobs能获得优惠券'优惠券1'的码库
-		"""
-		{
-			"coupon1_id_1": {
-				"money": 100.00,
-				"status": "未领取",
-				"consumer": "",
-				"target": ""
-			}
-		}
-		"""
-	Then jobs能获得优惠券'优惠券2'的码库
-		"""
-		{
-			"coupon2_id_1": {
-				"money": 50.00,
-				"status": "未领取",
-				"consumer": "",
-				"target": ""
-			}
-		}
-		"""
+
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill获得jobs的20会员积分
@@ -253,6 +232,7 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 	When bill参加微信抽奖活动'微信抽奖'
 	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
+	When tom关注jobs的公众号
 	When tom参加微信抽奖活动'微信抽奖'
 	When tom把jobs的微信抽奖活动'微信抽奖'的活动链接分享到朋友圈
 
