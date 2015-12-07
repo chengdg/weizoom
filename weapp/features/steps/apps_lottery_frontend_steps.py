@@ -66,11 +66,11 @@ def step_impl(context,webapp_user_name,lottery_name,date):
 	lotteryparticipance = lotteryParticipance.objects.get(member_id=context.member.id,belong_to=str(lottery_id))
 	lotteryparticipance.update(set__lottery_date=date)
 	lotteryparticipance.save()
-	lotterycontrol = lotteryControl.objects.get(member_id=context.member.id,belong_to=str(lottery_id))
-	lotterycontrol.delete()
-	lottoryrecords = lottoryRecord.objects(member_id=context.member.id,belong_to=str(lottery_id))
-	for lottoryrecord in lottoryrecords:
-		lottoryrecord.update(set__created_at=date)
+	lotterycontrol = lotteryControl.objects.filter(member_id=context.member.id,belong_to=str(lottery_id))
+	if lotterycontrol:
+		lotterycontrol.delete()
+	lottoryrecord = lottoryRecord.objects(member_id=context.member.id,belong_to=str(lottery_id)).first()
+	lottoryrecord.update(set__created_at=date)
 
 @then(u"{webapp_user_name}获得抽奖结果")
 def step_impl(context,webapp_user_name):
@@ -114,3 +114,24 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name,lottery_name):
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	__get_into_lottery_pages(context,webapp_owner_id,lottery_id,openid)
+
+@When(u"微信用户批量参加{webapp_owner_name}的微信抽奖活动")
+def step_impl(context, webapp_owner_name):
+	for row in context.table:
+		webapp_user_name = row['member_name']
+		if webapp_user_name[0] == u'-':
+			webapp_user_name = webapp_user_name[1:]
+			#clear last member's info in cookie and context
+			context.execute_steps(u"When 清空浏览器")
+		else:
+			context.execute_steps(u"When 清空浏览器")
+			context.execute_steps(u"When %s访问%s的webapp" % (webapp_user_name, webapp_owner_name))
+		data = {
+			'name': row['name'],
+			'webapp_user_name': webapp_user_name,
+			'prize_grade': row['prize_grade'],
+			'prize_name': row['prize_name'],
+			'lottery_time': row['lottery_time'],
+			'receive_status': row['receive_status']
+		}
+		context.execute_steps(u'when %s参加微信抽奖活动"%s"于"%s"' % (webapp_user_name, data['name'], data['lottery_time']))

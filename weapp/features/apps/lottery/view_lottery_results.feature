@@ -38,7 +38,7 @@ Background:
 			"send_integral":0,
 			"send_integral_rules":"仅限未中奖用户",
 			"lottery_limit":"不限",
-			"win_rate":"50%",
+			"win_rate":"100%",
 			"is_repeat_win":"是",
 			"prize_settings":[{
 				"prize_grade":"一等奖",
@@ -48,33 +48,33 @@ Background:
 				"pic":""
 			},{
 				"prize_grade":"二等奖",
-				"prize_counts":20,
+				"prize_counts":0,
 				"prize_type":"积分",
 				"integral":100,
 				"pic":""
 			},{
 				"prize_grade":"三等奖",
-				"prize_counts":30,
+				"prize_counts":0,
 				"prize_type":"实物",
 				"gift":"精美礼品",
 				"pic":"1.jpg"
 			}]
 		}]
 		"""
-	When bill关注jobs的公众号于"2015-10-01"
-	When tom关注jobs的公众号于"2015-10-05"
+	When bill关注jobs的公众号于'2015-10-01'
+	When tom关注jobs的公众号于'2015-10-05'
 	When tom1关注jobs的公众号
 	When tom1取消关注jobs的公众号
 
 	When 微信用户批量参加jobs的微信抽奖活动
 		| name      |member_name| prize_grade | prize_name |lottery_time| receive_status |
-		|微信抽奖01 |bill       | 一等奖      | 优惠1      |2天前       | 已领取         |
-		|微信抽奖01 |bill       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |
-		|微信抽奖01 |tom        | 二等奖      | 100积分    |今天        | 已领取         |
-		|微信抽奖01 |bill       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |
-		|微信抽奖01 |tom1       | 一等奖      | 优惠1      |今天        | 已领取         |
+		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |前天        | 已领取         |
+		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |昨天        | 已领取         |
+		|微信抽奖01 |tom        | 一等奖       | 优惠券1     |今天        | 已领取         |
+		|微信抽奖01 |bill       | 一等奖       | 优惠券1     |今天        | 已领取         |
+		|微信抽奖01 |tom1       | 一等奖       | 优惠券1     |今天        | 已领取         |
 
-@mall2 @apps_lottery @view_lottery_results
+@mall2 @apps_lottery @view_lottery_results @kuki
 Scenario:1 查看结果列表
 	Given jobs登录系统
 	Then jobs获得微信抽奖活动列表
@@ -84,14 +84,14 @@ Scenario:1 查看结果列表
 			"participant_count":5
 		}]
 		"""
-	When jobs查看微信抽奖活动'微信抽奖01'
-	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
-		| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
-		|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
-		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
-		|微信抽奖01 |tom        |       | 二等奖      | 100积分    |今天        | 已领取         |       |
-		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
-		|微信抽奖01 |tom1       |       | 一等奖      | 优惠1      |今天        | 已领取         |       |
+#	When jobs查看微信抽奖活动'微信抽奖01'
+#	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
+#		| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
+#		|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天        | 已领取         |       |
+#		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
+#		|微信抽奖01 |tom        |       | 二等奖      | 100积分    |今天        | 已领取         |       |
+#		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
+#		|微信抽奖01 |tom1       |       | 一等奖      | 优惠1      |今天        | 已领取         |       |
 
 @mall2 @apps_lottery @view_lottery_results
 Scenario:2 查看结果列表查询
@@ -103,7 +103,7 @@ Scenario:2 查看结果列表查询
 		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
 		|微信抽奖01 |tom        |       | 二等奖      | 100积分    |今天        | 已领取         |       |
 		|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
-		|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+		|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天       | 已领取         |       |
 	#空查询（默认查询）
 		When jobs设置微信抽奖活动结果列表查询条件
 			"""
@@ -115,7 +115,7 @@ Scenario:2 查看结果列表查询
 			|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
 			|微信抽奖01 |tom        |       | 二等奖      | 100积分    |今天        | 已领取         |       |
 			|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
-			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天       | 已领取         |       |
 
 	#用户名查询
 		#查询结果为空
@@ -153,7 +153,7 @@ Scenario:2 查看结果列表查询
 				| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
 				|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
 				|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
-				|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+				|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天        | 已领取         |       |
 
 	#抽奖时间查询
 		#查询结果为空
@@ -180,7 +180,7 @@ Scenario:2 查看结果列表查询
 			Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
 				| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
 				|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
-				|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+				|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天        | 已领取         |       |
 
 		#开始时间非空，结束时间为空
 			When jobs设置微信抽奖活动结果列表查询条件
@@ -235,7 +235,7 @@ Scenario:2 查看结果列表查询
 			"""
 		Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
 			| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
-			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天        | 已领取         |       |
 			|微信抽奖01 |tom1       |       | 一等奖      | 优惠1      |今天        | 已领取         |       |
 
 		When jobs设置微信抽奖活动结果列表查询条件
@@ -262,7 +262,7 @@ Scenario:2 查看结果列表查询
 			|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |今天        | 已领取         |       |
 			|微信抽奖01 |tom        |       | 二等奖      | 100积分    |今天        | 已领取         |       |
 			|微信抽奖01 |bill       |       | 谢谢参与    | 谢谢参与   |昨天        | 已领取         |       |
-			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天        | 已领取         |       |
 
 	#组合条件查询
 		When jobs设置微信抽奖活动结果列表查询条件
@@ -277,7 +277,7 @@ Scenario:2 查看结果列表查询
 			"""
 		Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
 			| name      |member_name|mobile | prize_grade | prize_name |lottery_time| receive_status |actions|
-			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |2天前       | 已领取         |       |
+			|微信抽奖01 |bill       |       | 一等奖      | 优惠1      |前天        | 已领取         |       |
 
 @mall2 @apps_lottery @view_lottery_results
 Scenario:3 查看结果列表分页
@@ -304,7 +304,7 @@ Scenario:3 查看结果列表分页
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表第'3'页
 	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
-		|微信抽奖01 |bill       | 一等奖      | 优惠1      |2天前       | 已领取         |
+		|微信抽奖01 |bill       | 一等奖      | 优惠1      |前天        | 已领取         |
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表上一页
 	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
