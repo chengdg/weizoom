@@ -1669,7 +1669,7 @@ def belong_to(webapp_id):
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	return Order.objects.filter(webapp_id=webapp_id)
+	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	# 微众商城代码
 	# if webapp_id == '3394':
 	# 	return Order.objects.filter(webapp_id=webapp_id)
