@@ -133,6 +133,7 @@ hr{
     font-size: 0.8rem
 }
 .wui-i-top100-power {
+    margin-left: -30px;
     float: right;
     margin-right: 5px;
     font-size: 0.8rem;
