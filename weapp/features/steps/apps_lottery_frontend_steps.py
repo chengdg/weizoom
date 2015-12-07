@@ -12,7 +12,7 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.lottery.models import lottery, lotteryParticipance,lotteryControl
+from apps.customerized_apps.lottery.models import lottery, lotteryParticipance, lotteryControl ,lottoryRecord
 from utils.string_util import byte_to_hex
 import json
 import re
@@ -68,6 +68,9 @@ def step_impl(context,webapp_user_name,lottery_name,date):
 	lotteryparticipance.save()
 	lotterycontrol = lotteryControl.objects.get(member_id=context.member.id,belong_to=str(lottery_id))
 	lotterycontrol.delete()
+	lottoryrecords = lottoryRecord.objects(member_id=context.member.id,belong_to=str(lottery_id))
+	for lottoryrecord in lottoryrecords:
+		lottoryrecord.update(set__created_at=date)
 
 @then(u"{webapp_user_name}获得抽奖结果")
 def step_impl(context,webapp_user_name):
