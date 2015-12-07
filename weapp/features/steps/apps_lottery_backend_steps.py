@@ -902,43 +902,46 @@ def step_impl(context,user,lottery_name):
 	bdd_util.assert_api_call_success(stop_response)
 
 
-# @when(u"{user}查看抽奖活动'{lottery_name}'")
-# def step_impl(context,user,lottery_name):
-# 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-# 	url ='/apps/lottery/api/lottery_participances/?_method=get&id=%s' % (lottery_id)
-# 	url = bdd_util.nginx(url)
-# 	response = context.client.get(url)
-# 	context.participances = json.loads(response.content)
-# 	context.lottery_id = "%s"%(lottery_id)
+@when(u"{user}查看微信抽奖活动'{lottery_name}'")
+def step_impl(context,user,lottery_name):
+	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
+	url ='/apps/lottery/api/lottery_participances/?_method=get&id=%s' % (lottery_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	context.participances = json.loads(response.content)
+	context.lottery_id = "%s"%(lottery_id)
 
-# @then(u"{webapp_user_name}获得抽奖活动'{power_me_rule_name}'的结果列表")
-# def step_tmpl(context, webapp_user_name, power_me_rule_name):
-# 	if hasattr(context,"search_lottery_result"):
-# 		participances = context.search_lottery_result
-# 	else:
-# 		participances = context.participances['data']['items']
-# 	actual = []
-# 	print(participances)
-# 	for p in participances:
-# 		p_dict = OrderedDict()
-# 		p_dict[u"rank"] = p['ranking']
-# 		p_dict[u"member_name"] = p['username']
-# 		p_dict[u"lottery_value"] = p['power']
-# 		p_dict[u"parti_time"] = bdd_util.get_date_str(p['created_at'])
-# 		actual.append((p_dict))
-# 	print("actual_data: {}".format(actual))
-# 	expected = []
-# 	if context.table:
-# 		for row in context.table:
-# 			cur_p = row.as_dict()
-# 			if cur_p[u'parti_time']:
-# 				cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
-# 			expected.append(cur_p)
-# 	else:
-# 		expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
+@then(u"{webapp_user_name}获得微信抽奖活动'{power_me_rule_name}'的结果列表")
+def step_tmpl(context, webapp_user_name, power_me_rule_name):
+	if hasattr(context,"search_lottery_result"):
+		participances = context.search_lottery_result
+	else:
+		participances = context.participances['data']['items']
+	actual = []
+	print(participances)
+	for p in participances:
+		p_dict = OrderedDict()
+		p_dict[u"member_name"] = p['participant_name']
+		p_dict[u"mobile"] = p['tel']
+		p_dict[u"prize_grade"] = p['prize_title']
+		p_dict[u"prize_name"] = p['prize_name']
+		p_dict[u"lottery_time"] = bdd_util.get_date_str(p['created_at'])
+		p_dict[u"receive_status"] = u'已领取' if p['status'] else u'未领取'
+		p_dict[u"actions"] = u'' if p['status'] else u'领取'
+		actual.append((p_dict))
+	print("actual_data: {}".format(actual))
+	expected = []
+	if context.table:
+		for row in context.table:
+			cur_p = row.as_dict()
+			if cur_p[u'lottery_time']:
+				cur_p[u'lottery_time'] = bdd_util.get_date_str(cur_p[u'lottery_time'])
+			expected.append(cur_p)
+	else:
+		expected = json.loads(context.text)
+	print("expected: {}".format(expected))
 
-# 	bdd_util.assert_list(expected, actual)
+	bdd_util.assert_list(expected, actual)
 
 @when(u"{user}设置微信抽奖活动列表查询条件")
 def step_impl(context,user):
