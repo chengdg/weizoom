@@ -36,7 +36,7 @@ Background:
 	When bill获得jobs的20会员积分
 	Then bill在jobs的webapp中拥有20会员积分
 
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:1 会员参加微信抽奖活动,需要消耗积分
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -133,7 +133,7 @@ Scenario:1 会员参加微信抽奖活动,需要消耗积分
 	When bill访问jobs的webapp
 	Then bill在jobs的webapp中拥有0会员积分
 
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:2 非会员通过分享链接参加微信抽奖活动
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -188,7 +188,7 @@ Scenario:2 非会员通过分享链接参加微信抽奖活动
 		}]
 		"""
 
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -242,7 +242,7 @@ Scenario:3 会员参加微信抽奖活动，抽奖限制为一人一次
 	When bill参加微信抽奖活动'微信抽奖'
 	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -297,7 +297,7 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
 #补充：张雪 2015.12.02
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:5 中奖概率率为0,中奖用户为0
 	Given jobs登录系统
 	When jobs新建微信抽奖活动
@@ -343,7 +343,7 @@ Scenario:5 中奖概率率为0,中奖用户为0
 		}]
 		"""
 
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 	#中奖概率：100%；抽奖限制：一天两次
 	#奖项设置：
@@ -448,7 +448,7 @@ Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
 		}]
 		"""
 
-@mall2 @apps_lottery @apps_lottery_frontend
+@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 	#中奖概率：100%；抽奖限制：一天两次
 	#奖项设置：
