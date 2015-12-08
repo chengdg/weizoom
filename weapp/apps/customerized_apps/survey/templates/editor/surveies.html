@@ -160,6 +160,7 @@
 					{{if (item.status === '进行中')}}
 					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
+					<a class="ml5 xa-copyLinkBtn" href="javascript:void(0);" data-id=${item.id}>链接</a>
 					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
 					<a href="/apps/survey/survey_statistics/?id=${item.id}" class="ml5">统计</a>
 					<a href="/apps/survey/survey_participances/?id=${item.id}" class="ml5">查看结果</a>
@@ -270,6 +271,26 @@ $(document).ready(function() {
 		$('[name="prize_type"]').val('all');
 	});
 
+    // 复制链接
+	$('body').delegate('.xa-copyLinkBtn', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var data_id = $el.attr('data-id');
+        var urlLink = "/m/apps/survey/m_survey/?webapp_owner_id="+W.uid+"&id="+data_id;
+
+		var promotionCopyLinkView = W.getPromotionCopyLinkView({
+			width: 414,
+			height: 62,
+			title: '复制链接',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-remarkDropBox'
+
+		});
+		promotionCopyLinkView.show({
+			$action: $el,
+			urlLink: urlLink
+		})
+	});
 });
 </script>
 {% endblock %}

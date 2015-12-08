@@ -137,12 +137,13 @@
 					${item.participant_count}
 				</td>
 				<td>
-				    <a href="/apps/lottery/lottery_participances/?id=${item.id}" class="ml5">查看结果</a>
+				    <a href="/apps/lottery/lottery_participances/?id=${item.id}">查看结果</a>
+				    <a class="ml5 xa-copyLinkBtn" href="javascript:void(0);" data-id=${item.id}>链接</a>
 					{{if (item.status === '未开始' || item.status === '已结束')}}
-					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+					<a href="javascript:void(0)" class="ml5 xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
 					{{if (item.status === '进行中')}}
-					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
+					<a href="javascript:void(0)" class="ml5 xa-close" data-id=${item.id}>关闭</a>
 					{{/if}}
 					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
 				</td>
@@ -249,6 +250,26 @@ $(document).ready(function() {
 		$('[name="end_time"]').val('');
 	});
 
+    // 复制链接
+	$('body').delegate('.xa-copyLinkBtn', 'click', function(event){
+		var $el = $(event.currentTarget);
+		var data_id = $el.attr('data-id');
+        var urlLink = "/m/apps/lottery/m_lottery/?webapp_owner_id="+W.uid+"&id="+data_id;
+
+		var promotionCopyLinkView = W.getPromotionCopyLinkView({
+			width: 414,
+			height: 62,
+			title: '复制链接',
+			position:'top',
+			isTitle: false,
+			privateContainerClass:'xui-remarkDropBox'
+
+		});
+		promotionCopyLinkView.show({
+			$action: $el,
+			urlLink: urlLink
+		})
+	});
 });
 </script>
 {% endblock %}
