@@ -33,6 +33,164 @@ def __debug_print(content,type_tag=True):
 	else:
 		pass
 
+def __bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
+
+def __name2Bool(name):
+	"""
+	"是"--> true
+	"否"--> false
+	"""
+	name_dic = {u'是':"true",u'否':"false"}
+	if name:
+		return name_dic[name]
+	else:
+		return None
+
+def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
+
+def __datetime2str(dt_time):
+	"""
+	datetime型数据，转为字符串型，日期
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
+	return dt_time
+
+def __limit2name(limit):
+	"""
+	传入积分规则，返回名字
+	"""
+	limit_dic={
+	"once_per_user":u"一人一次",
+	"once_per_day":u"一天一次",
+	"twice_per_day":u"一天两次",
+	"no_limit":u"不限"
+	}
+	if limit:
+		return limit_dic[limit]
+	else:
+		return ""
+
+def __name2limit(name):
+	"""
+	传入积分名字，返回积分规则
+	"""
+	name_dic={
+		u"一人一次":"once_per_user",
+		u"一天一次":"once_per_day",
+		u"一天两次":"twice_per_day",
+		u"不限":"no_limit"
+	}
+	if name:
+		return name_dic[name]
+	else:
+		return ""
+
+def __name2type(name):
+	type_dic = {
+		u"全部":"-1",
+		u"积分":"integral",
+		u"优惠券":"coupon",
+		u"实物":"entity",
+		u"未中奖":"no_prize"
+	}
+	if name:
+		return type_dic[name]
+	else:
+		return ""
+
+def __delivery2Bool(name):
+	d_dic ={
+		u"所有用户":"false",
+		u'仅限未中奖用户':"true"
+	}
+
+	if name:
+		return d_dic[name]
+	else:
+		return ""
+
+def __get_coupon_json(coupon_rule_name):
+	"""
+	获取优惠券json
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	coupon ={
+		"id":coupon_rule.id,
+		"count":coupon_rule.count,
+		"name":coupon_rule.name
+	}
+	return coupon
+
+def __get_coupon_rule_id(coupon_rule_name):
+	"""
+	获取优惠券id
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	return coupon_rule.id
+
+def __lottery_name2id(name):
+	"""
+	给抽奖项目的名字，返回id元祖
+	返回（related_page_id,lottery_lottery中id）
+	"""
+	obj = lottery_models.lottery.objects.get(name=name)
+	return (obj.related_page_id,obj.id)
+
+def __status2name(status_num):
+	"""
+	抽奖：状态值 转 文字
+	"""
+	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
+	return status2name_dic[status_num]
+
+def __name2status(name):
+	"""
+	抽奖： 文字 转 状态值
+	"""
+	if name:
+		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
+		return name2status_dic[name]
+	else:
+		return -1
+
+def __name2coupon_status(name):
+	"""
+	抽奖： 文字 转 优惠券领取状态值
+	"""
+	if name:
+		name2status_dic = {u"全部":-1,u"未领取":0,u"已领取":1}
+		return name2status_dic[name]
+	else:
+		return -1
+
+def __get_actions(status):
+	"""
+	根据输入抽奖状态
+	返回对于操作列表
+	"""
+	actions_list = [u"查看结果",u"预览"]
+	if status == u"进行中":
+		actions_list.insert(1,u"关闭")
+	elif status=="已结束" or "未开始":
+		actions_list.insert(1,u"删除")
+	return actions_list
 
 def __get_lotteryPageJson(args):
 	"""
@@ -211,129 +369,6 @@ def __get_lotteryPageJson(args):
 	}
 	return json.dumps(__page_temple)
 
-def __bool2Bool(bo):
-	"""
-	JS字符串布尔值转化为Python布尔值
-	"""
-	bool_dic = {'true':True,'false':False,'True':True,'False':False}
-	if bo:
-		result = bool_dic[bo]
-	else:
-		result = None
-	return result
-
-def __name2Bool(name):
-	"""
-	"是"--> true
-	"否"--> false
-	"""
-	name_dic = {u'是':"true",u'否':"false"}
-	if name:
-		return name_dic[name]
-	else:
-		return None
-
-# def __date_delta(start,end):
-# 	"""
-# 	获得日期，相差天数，返回int
-# 	格式：
-# 		start:(str){2015-11-23}
-# 		end :(str){2015-11-30}
-# 	"""
-# 	start = dt.datetime.strptime(start, "%Y-%m-%d").date()
-# 	end = dt.datetime.strptime(end, "%Y-%m-%d").date()
-# 	return (end-start).days
-
-def __date2time(date_str):
-	"""
-	字符串 今天/明天……
-	转化为字符串 "%Y-%m-%d %H:%M"
-	"""
-	cr_date = date_str
-	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-	return p_time
-
-def __datetime2str(dt_time):
-	"""
-	datetime型数据，转为字符串型，日期
-	转化为字符串 "%Y-%m-%d %H:%M"
-	"""
-	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
-	return dt_time
-
-def __limit2name(limit):
-	"""
-	传入积分规则，返回名字
-	"""
-	limit_dic={
-	"once_per_user":u"一人一次",
-	"once_per_day":u"一天一次",
-	"twice_per_day":u"一天两次",
-	"no_limit":u"不限"
-	}
-	if limit:
-		return limit_dic[limit]
-	else:
-		return ""
-
-def __name2limit(name):
-	"""
-	传入积分名字，返回积分规则
-	"""
-	name_dic={
-		u"一人一次":"once_per_user",
-		u"一天一次":"once_per_day",
-		u"一天两次":"twice_per_day",
-		u"不限":"no_limit"
-	}
-	if name:
-		return name_dic[name]
-	else:
-		return ""
-
-def __name2type(name):
-	type_dic = {
-		u"全部":"-1",
-		u"积分":"integral",
-		u"优惠券":"coupon",
-		u"实物":"entity",
-		u"未中奖":"no_prize"
-	}
-	if name:
-		return type_dic[name]
-	else:
-		return ""
-
-def __delivery2Bool(name):
-	d_dic ={
-		u"所有用户":"false",
-		u'仅限未中奖用户':"true"
-	}
-
-	if name:
-		return d_dic[name]
-	else:
-		return ""
-
-def __get_coupon_json(coupon_rule_name):
-	"""
-	获取优惠券json
-	"""
-	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-	coupon ={
-		"id":coupon_rule.id,
-		"count":coupon_rule.count,
-		"name":coupon_rule.name
-	}
-	return coupon
-
-def __get_coupon_rule_id(coupon_rule_name):
-	"""
-	获取优惠券id
-	"""
-	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-	return coupon_rule.id
-
 def __prize_settings_process(prize_settings):
 	"""
 	处理prize_settings
@@ -389,55 +424,6 @@ def __prize_settings_process(prize_settings):
 	else:
 		return []
 
-def __lottery_name2id(name):
-	"""
-	给抽奖项目的名字，返回id元祖
-	返回（related_page_id,lottery_lottery中id）
-	"""
-	obj = lottery_models.lottery.objects.get(name=name)
-	return (obj.related_page_id,obj.id)
-
-def __status2name(status_num):
-	"""
-	抽奖：状态值 转 文字
-	"""
-	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
-	return status2name_dic[status_num]
-
-def __name2status(name):
-	"""
-	抽奖： 文字 转 状态值
-	"""
-	if name:
-		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
-		return name2status_dic[name]
-	else:
-		return -1
-
-def __name2coupon_status(name):
-	"""
-	抽奖： 文字 转 优惠券领取状态值
-	"""
-	if name:
-		name2status_dic = {u"全部":-1,u"未领取":0,u"已领取":1}
-		return name2status_dic[name]
-	else:
-		return -1
-
-def __get_actions(status):
-	"""
-	根据输入抽奖状态
-	返回对于操作列表
-	"""
-	actions_list = [u"查看结果",u"预览"]
-	if status == u"进行中":
-		actions_list.insert(1,u"关闭")
-	elif status=="已结束" or "未开始":
-		actions_list.insert(1,u"删除")
-	return actions_list
-
-
-##从这里开始，从头找
 def __Create_Lottery(context,text,user):
 	"""
 	模拟用户登录页面
@@ -538,7 +524,6 @@ def __Create_Lottery(context,text,user):
 	rec_lottery_url ="/apps/lottery/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_lottery_response = context.client.get(rec_lottery_url)
 
-
 def __Update_Lottery(context,text,page_id,lottery_id):
 	"""
 	模拟用户登录页面
@@ -631,7 +616,6 @@ def __Update_Lottery(context,text,page_id,lottery_id):
 
 	rec_lottery_url ="/apps/lottery/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_lottery_response = context.client.get(rec_lottery_url)
-
 
 def __Delete_Lottery(context,lottery_id):
 	"""
@@ -740,8 +724,6 @@ def __Search_Lottery_Result(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
-
-
 @when(u'{user}新建微信抽奖活动')
 def step_impl(context,user):
 	text_list = json.loads(context.text)
@@ -819,13 +801,11 @@ def step_impl(context,user):
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
 
-
 @when(u"{user}编辑微信抽奖活动'{lottery_name}'")
 def step_impl(context,user,lottery_name):
 	expect = json.loads(context.text)[0]
 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
 	__Update_Lottery(context,expect,lottery_page_id,lottery_id)
-
 
 @then(u"{user}获得微信抽奖活动'{lottery_name}'")
 def step_impl(context,user,lottery_name):
@@ -907,13 +887,11 @@ def step_impl(context,user,lottery_name):
 	del_response = __Delete_Lottery(context,lottery_id)
 	bdd_util.assert_api_call_success(del_response)
 
-
 @when(u"{user}关闭微信抽奖活动'{lottery_name}'")
 def step_impl(context,user,lottery_name):
 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
 	stop_response = __Stop_Lottery(context,lottery_id)
 	bdd_util.assert_api_call_success(stop_response)
-
 
 @when(u"{user}查看微信抽奖活动'{lottery_name}'")
 def step_impl(context,user,lottery_name):
@@ -929,9 +907,13 @@ def step_tmpl(context, webapp_user_name, power_me_rule_name):
 	if hasattr(context,"search_lottery_result"):
 		participances = context.search_lottery_result
 	else:
+		if hasattr(context,"paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
 		participances = context.participances['data']['items']
 	actual = []
-	print(participances)
+
 	for p in participances:
 		p_dict = OrderedDict()
 		p_dict[u"member_name"] = p['participant_name']
@@ -999,11 +981,8 @@ def step_impl(context,user):
 @when(u"{user}设置微信抽奖活动结果列表查询条件")
 def step_impl(context,user):
 	expect = json.loads(context.text)
-	print("expected: {}".format(expect))
-
 
 	if 'lottery_start_time' in expect:
-
 		expect['start_time'] = __date2time(expect['lottery_start_time']) if expect['lottery_start_time'] else ""
 		del expect['lottery_start_time']
 
@@ -1011,13 +990,13 @@ def step_impl(context,user):
 		expect['end_time'] = __date2time(expect['lottery_end_time']) if expect['lottery_end_time'] else ""
 		del expect['lottery_end_time']
 
+	print("expected: {}".format(expect))
 	id = context.lottery_id
 	participant_name = expect.get("member_name","")
 	start_time = expect.get("start_time","")
 	end_time = expect.get("end_time","")
 	prize_type = expect.get("prize_type",u"全部")
 	status = expect.get("status",u"全部")
-
 
 	search_dic = {
 		"id":id,
@@ -1030,7 +1009,13 @@ def step_impl(context,user):
 	search_response = __Search_Lottery_Result(context,search_dic)
 	lottery_result_array = json.loads(search_response.content)['data']['items']
 	context.search_lottery_result = lottery_result_array
-	# __debug_print(lottery_result_array)
+
+
+@when(u"{user}访问微信抽奖活动'{lottery}'的结果列表第'{page_num}'页")
+def step_impl(context,user,lottery,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
 
 # @then(u"{user}能批量导出抽奖活动'{lottery_name}'")
 # def step_impl(context,user,lottery_name):
