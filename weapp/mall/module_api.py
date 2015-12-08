@@ -2951,10 +2951,11 @@ def get_products_in_wishlist(webapp_user, owner_id, member_id):
 	"""
 	获取收藏夹中的商品
 	"""
+	from operator import attrgetter
 	wishlist = MemberProductWishlist.objects.filter(owner_id=owner_id, member_id=member_id, is_collect=True).order_by('-id')
 	product_ids = [item.product_id for item in wishlist]
 	product_list = get_products_detail(owner_id, product_ids, webapp_user)
-
+	product_list = sorted(product_list, key=attrgetter('id'), reverse=True)
 	# for item in wishlist:
 	# 	#---TODO:似乎有更好的函数可以调用get_product_detail()---
 	# 	product = get_product_detail(owner_id, item.product_id, webapp_user)
