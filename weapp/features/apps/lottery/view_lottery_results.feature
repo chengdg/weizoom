@@ -298,15 +298,18 @@ Scenario:3 查看结果列表分页
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表下一页
 	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
+		|member_name| prize_grade | prize_name |lottery_time| receive_status |
 		|tom        | 一等奖      | 优惠券1    |今天        | 已领取         |
 		|bill       | 一等奖      | 优惠券1    |昨天        | 已领取         |
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表第'3'页
 	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
+		|member_name| prize_grade | prize_name |lottery_time| receive_status |
 		|bill       | 一等奖      | 优惠券1      |前天        | 已领取         |
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表上一页
 	Then jobs获得微信抽奖活动'微信抽奖01'的结果列表
+		|member_name	| prize_grade | prize_name |lottery_time| receive_status |
 		|tom        | 一等奖      | 优惠券1    |今天        | 已领取         |
 		|bill       | 一等奖      | 优惠券1    |昨天        | 已领取         |
 
