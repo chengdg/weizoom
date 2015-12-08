@@ -790,6 +790,7 @@ if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
     WAPI_LOGGER_SERVER_PORT = 27017
     WAPI_LOGGER_DB = 'wapi'
+    WAPI_ACCESS_TOKEN_REQUIRED = False
 else:
     # 真实环境暂时关闭
     #WAPI_LOGGER_ENABLED = False
@@ -797,6 +798,7 @@ else:
     WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
     WAPI_LOGGER_SERVER_PORT = 27017
     WAPI_LOGGER_DB = 'wapi'
+    WAPI_ACCESS_TOKEN_REQUIRED = False
 
 
 from weapp import hack_django

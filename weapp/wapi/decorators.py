@@ -30,7 +30,7 @@ def check_access_token(required_params=None):
 
 	def decorator(view_func):
 		def _wrapped_view(request, *args, **kwargs):
-			access_token = request.REQUEST.get('access_token')
+			access_token = request.get('access_token')
 			if access_token is None:
 				return failure_response(msg="The access-token is required.")
 			try:
@@ -38,7 +38,7 @@ def check_access_token(required_params=None):
 				relations = OAuthToken.objects.filter(token=access_token, expire_time__gt=dt.datetime.now())
 				if relations.count()>0:
 					#request.user = relations[0].user
-					request.REQUEST['user'] = relations[0].user
+					request['user'] = relations[0].user
 					response = view_func(request, *args, **kwargs)
 					return response
 				msg = "Invalid access token."
