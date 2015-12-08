@@ -14,7 +14,7 @@ class OAuthToken(models.Model):
 	"""
 	user = models.ForeignKey(User, related_name='owned_tokens')
 	token = models.CharField(max_length=50, db_index=True)
-	expire_time = models.DateTimeField(auto_now_add=True)
+	expire_time = models.DateTimeField()
 	
 	class Meta:
 		db_table = 'wapi_oauthtoken'

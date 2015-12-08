@@ -791,6 +791,7 @@ if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_SERVER_PORT = 27017
     WAPI_LOGGER_DB = 'wapi'
     WAPI_ACCESS_TOKEN_REQUIRED = False
+    #WAPI_ACCESS_TOKEN_REQUIRED = True
 else:
     # 真实环境暂时关闭
     #WAPI_LOGGER_ENABLED = False
