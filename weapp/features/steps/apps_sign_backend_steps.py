@@ -692,21 +692,25 @@ def step_impl(context,user,sign_name,sign_tag):
 @then(u"{user}获得会员签到统计列表")
 def step_impl(context, user):
 	#更改所有参与者的最后一次签到时间
-	signParticipance = SignParticipance.objects(belong_to=context.sign_id)
-	member_ids = []
-	for data in signParticipance:
-		member_ids.append(data.member_id)
-	member_id2participance = SignParticipance.objects(member_id__in=member_ids)
-	for member in member_id2participance:
-		created_at = member.first().created_at
-		total_count = member.first().total_count
-		member.update(set__latest_date = created_at+timedelta(days=total_count))
-	url ='/apps/sign/api/sign_participances/?_method=get&id=%s' % (context.sign_id)
+	if context.need_change_date:
+		__change_all_member_last_sign_time(context)
+		context.need_change_date = False
+
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
+	#分页情况，更新分页参数
+	if hasattr(context,"paging"):
+		paging_dic = context.paging
+		count_per_page = paging_dic['count_per_page']
+		page = paging_dic['page_num']
+	url ='/apps/sign/api/sign_participances/?design_mode=%s&version=%s&count_per_page=%s&page=%s&enable_paginate=%s&_method=get&id=%s' % (design_mode,version,count_per_page,page,enable_paginate,context.sign_id)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	context.participances = json.loads(response.content)
 	participances = context.participances['data']['items']
-	print(participances)
 	actual = []
 	for p in participances:
 		p_dict = OrderedDict()
@@ -730,3 +734,36 @@ def step_impl(context, user):
 	print("expected: {}".format(expected))
 
 	bdd_util.assert_list(expected, actual)
+
+#更改所有参与者的最后一次签到时间
+def __change_all_member_last_sign_time(context):
+	signParticipance = SignParticipance.objects(belong_to=context.sign_id)
+	member_ids = []
+	for data in signParticipance:
+		member_ids.append(data.member_id)
+	member_id2participance = SignParticipance.objects(member_id__in=member_ids)
+	members = member_models.Member.objects.filter(id__in=member_ids)
+	member_id2member = {member.id: member for member in members}
+	for member in member_id2participance:
+		username = member_id2member[member.member_id].username_for_html
+		latest_date = context.latest_date[username]
+		member.update(set__latest_date = latest_date)
+
+@when(u"{user}访问签到统计第'{page_num}'页")
+def step_impl(context,user,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}访问签到统计列表下一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}访问签到统计列表上一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}

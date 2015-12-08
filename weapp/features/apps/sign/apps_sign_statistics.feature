@@ -91,64 +91,83 @@ Background:
 
 	#bill先连续签到5次，终止一天，再连续签到3次
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-01 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-02 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-03 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-04 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-05 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-07 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-08 10:30:00'
 
 		When 清空浏览器
+		When bill访问jobs的webapp
 		When bill在微信中向jobs的公众号发送消息'签到'于'2015-10-09 10:30:00'
 
 	#tom先签到1次，终止一天，再连续签到2次
 		When 清空浏览器
+		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'于'2015-10-03 10:30:00'
 
 		When 清空浏览器
+		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'于'2015-10-05 10:30:00'
 
 		When 清空浏览器
+		When tom访问jobs的webapp
 		When tom在微信中向jobs的公众号发送消息'签到'于'2015-10-06 10:30:00'
 
 	#marry先签到1次，终止一天，再连续签到3次, 再终止两天，再签到一次
 		When 清空浏览器
+		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'于'2015-10-04 10:30:00'
 
 		When 清空浏览器
+		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'于'2015-10-06 10:30:00'
 
 		When 清空浏览器
+		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'于'2015-10-07 10:30:00'
 
 		When 清空浏览器
+		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'于'2015-10-08 10:30:00'
 
 		When 清空浏览器
+		When marry访问jobs的webapp
 		When marry在微信中向jobs的公众号发送消息'签到'于'2015-10-11 10:30:00'
 
 	#jack签到1次
 		When 清空浏览器
+		When jack访问jobs的webapp
 		When jack在微信中向jobs的公众号发送消息'签到'于'2015-10-12 10:30:00'
 
 	#nokia签到1次,终止两天，再签到一次
 		When 清空浏览器
+		When nokia访问jobs的webapp
 		When nokia在微信中向jobs的公众号发送消息'签到'于'2015-10-10 10:30:00'
 
 		When 清空浏览器
+		When nokia访问jobs的webapp
 		When nokia在微信中向jobs的公众号发送消息'签到'于'2015-10-13 10:30:00'
 
 @mall2 @apps_sign @apps_sign_backend @sign_statistics
@@ -157,10 +176,10 @@ Scenario:1 会员签到统计列表
 
 	Then jobs获得会员签到统计列表
 		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
-		| nokia| 2015/10/10 10:30:00 | 2015/10/13 10:30:00 |      2     |         1       |         1           |     40   |                         |
-		| jack | 2015/10/12 10:30:00 | 2015/10/12 10:30:00 |      1     |         1       |         1           |     20   |                         |
+		| nokia| 2015/10/10 10:30:00 | 2015/10/13 10:30:00 |      2     |         1       |         0           |     40   |                         |
+		| jack | 2015/10/12 10:30:00 | 2015/10/12 10:30:00 |      1     |         1       |         0           |     20   |                         |
 		| marry| 2015/10/04 10:30:00 | 2015/10/11 10:30:00 |      5     |         1       |         3           |     60   | 优惠券1<br>优惠券M         |
-		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     60   | 优惠券1<br>优惠券M<br>优惠券2 |
+		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     70   | 优惠券1<br>优惠券M<br>优惠券2 |
 		| tom  | 2015/10/03 10:30:00 | 2015/10/06 10:30:00 |      3     |         2       |         2           |     40   | 优惠券M                 |
 
 @mall2 @apps_sign @apps_sign_backend @sign_statistics
@@ -174,22 +193,22 @@ Scenario:2 会员签到统计列表分页
 		}
 		"""
 	#列表共3页
-
+	When jobs访问签到统计第'1'页
 	Then jobs获得会员签到统计列表
 		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
-		| nokia| 2015/10/10 10:30:00 | 2015/10/13 10:30:00 |      2     |         1       |         1           |     40   |                         |
-		| jack | 2015/10/12 10:30:00 | 2015/10/12 10:30:00 |      1     |         1       |         1           |     20   |                         |
-	When jobs浏览下一页
+		| nokia| 2015/10/10 10:30:00 | 2015/10/13 10:30:00 |      2     |         1       |         0           |     40   |                         |
+		| jack | 2015/10/12 10:30:00 | 2015/10/12 10:30:00 |      1     |         1       |         0           |     20   |                         |
+  	When jobs访问签到统计列表下一页
 	Then jobs获得会员签到统计列表
 		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
 		| marry| 2015/10/04 10:30:00 | 2015/10/11 10:30:00 |      5     |         1       |         3           |     60   | 优惠券1<br>优惠券M         |
-		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     60   | 优惠券1<br>优惠券M<br>优惠券2 |
-	When jobs浏览会员签到统计列表第'3'页
+		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     70   | 优惠券1<br>优惠券M<br>优惠券2 |
+  	When jobs访问签到统计第'3'页
 	Then jobs获得会员签到统计列表
 		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
 		| tom  | 2015/10/03 10:30:00 | 2015/10/06 10:30:00 |      3     |         2       |         2           |     40   | 优惠券M                 |
-	When jobs浏览上一页
+	When jobs访问签到统计列表上一页
 	Then jobs获得会员签到统计列表
 		| name |     first_sign      |       last_sign     | total_sign | continuous_sign | max_continuous_sign | integral |       coupon            |
 		| marry| 2015/10/04 10:30:00 | 2015/10/11 10:30:00 |      5     |         1       |         3           |     60   | 优惠券1<br>优惠券M         |
-		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     60   | 优惠券1<br>优惠券M<br>优惠券2 |
+		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     70   | 优惠券1<br>优惠券M<br>优惠券2 |
