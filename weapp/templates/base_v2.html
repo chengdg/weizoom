@@ -199,6 +199,11 @@
 					return;
 				}
 
+				var currentUrl = window.location.href;
+				if(currentUrl.indexOf('/termite2/termite_preview/') > 0 || currentUrl.indexOf('/termite2/app_preview/') > 0 ){
+					return;
+				}
+
 				//先清空原有的菜单列表
 				$('.xa-first-navs').empty();
 				$('.xa-sideBar').empty();
