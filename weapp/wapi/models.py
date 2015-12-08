@@ -17,4 +17,5 @@ class OAuthToken(models.Model):
 	expire_time = models.DateTimeField(auto_now_add=True)
 	
 	class Meta:
+		db_table = 'wapi_oauth_token'
 		unique_together=("token",)

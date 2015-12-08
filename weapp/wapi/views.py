@@ -17,7 +17,10 @@ def api_wrapper(request, app, resource):
 		response.errMsg = u"出现错误"
 		response.innerErrMsg = unicode_full_stack()
 	"""
-	result = wapi_resource.get(app, resource, request.REQUEST)
+	if request.method == 'POST':
+		result = wapi_resource.post(app, resource, request.REQUEST)
+	else:
+		result = wapi_resource.get(app, resource, request.REQUEST)
 	print("request.REQUEST: {}".format(request.REQUEST))
 	print("WAPI APP:{}, RESOURCE:{}, RESULT: {}".format(app, resource, result))
 	response = create_response(200)
