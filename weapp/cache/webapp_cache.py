@@ -112,6 +112,20 @@ def get_webapp_products_new(webapp_owner_user_profile,
         cache_products = products
     else:
         cache_products = get_webapp_products_detail(webapp_owner_user_profile.user_id,category_pros_data)
+        products = get_webapp_product_ids_from_db_new(webapp_owner_user_profile, is_access_weizoom_mall,category_id)
+        if products:
+            if len(cache_products) == len(products):
+                pass
+            else:
+                productid_display_list = []
+                if products:
+                    for product in products:
+                        productid_display_list.append(product.id)
+                        product.promotion = None
+                        # 添加promation
+                    cache_util.delete_cache(categories_products_key)
+                    cache_util.add_set_to_redis(categories_products_key,*productid_display_list)
+                cache_products = products
 
     if category_id == 0:
         category = mall_models.ProductCategory()
@@ -275,7 +289,9 @@ def update_webapp_product_cache(**kwargs):
                             categories_products_key = '{wo:%s}_{co:%s}_products' % (webapp_owner_id,category_has_pro.category.id)
                             cache_util.add_set_to_redis(categories_products_key,category_has_pro.product_id)
                     categories_products_key = '{wo:%s}_{co:0}_products' % (webapp_owner_id)
-                    cache_util.add_set_to_redis(categories_products_key,product_id)
+                    cache_util.delete_cache(categories_products_key)
+                    #todo zhaolei
+                    # cache_util.add_set_to_redis(categories_products_key,product_id)
             update_product_cache(webapp_owner_id, product_id)
 
         elif instance and sender==mall_models.CategoryHasProduct:
