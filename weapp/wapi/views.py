@@ -4,6 +4,7 @@ import wapi as wapi_resource
 
 from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
+import logging
 
 def api_wrapper(request, app, resource):
 	"""
@@ -21,8 +22,8 @@ def api_wrapper(request, app, resource):
 		result = wapi_resource.post(app, resource, request.REQUEST)
 	else:
 		result = wapi_resource.get(app, resource, request.REQUEST)
-	print("request.REQUEST: {}".format(request.REQUEST))
-	print("WAPI APP:{}, RESOURCE:{}, RESULT: {}".format(app, resource, result))
+	logging.info("request.REQUEST: {}".format(request.REQUEST))
+	logging.info("WAPI APP:{}, RESOURCE:{}, RESULT: {}".format(app, resource, result))
 	response = create_response(200)
 	response.data = result
 	return response.get_response()

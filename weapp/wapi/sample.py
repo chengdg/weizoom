@@ -13,7 +13,7 @@ class Sample(api_resource.ApiResource):
 	resource = 'sample'
 
 	@auth_required
-	@param_required([])
+	#@param_required([])
 	def get(args):
 		"""
 		输入用户名、授权密码获取授权token

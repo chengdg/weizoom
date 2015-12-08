@@ -46,7 +46,7 @@ class AuthToken(api_resource.ApiResource):
 	@staticmethod
 	def _get_token_string(user_id):
 		md5 = hashlib.md5(dt.datetime.now().strftime("%Y-%m-%d %H:%H:%S")+str(user_id)).hexdigest()
-		return "WZT10#"+md5
+		return "WZT10_"+md5
 
 	@param_required(['username', 'password'])
 	def post(args):
