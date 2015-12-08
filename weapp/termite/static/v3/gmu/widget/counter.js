@@ -43,6 +43,7 @@
             }
             this.$textValue = this.$parent.find('.wui-counterText');
             this.$textValue.text(this.count);
+            this.$el.val(this.count);
 
             this.isEnable = true;
             this.bindEvents();
