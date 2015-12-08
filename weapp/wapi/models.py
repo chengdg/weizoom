@@ -13,9 +13,9 @@ class OAuthToken(models.Model):
 	内部使用授权token，用于WGlass访问API用(类似OAuth的token)
 	"""
 	user = models.ForeignKey(User, related_name='owned_tokens')
-	token = models.CharField(max_length=32, db_index=True)
+	token = models.CharField(max_length=50, db_index=True)
 	expire_time = models.DateTimeField(auto_now_add=True)
 	
 	class Meta:
-		db_table = 'wapi_oauth_token'
+		db_table = 'wapi_oauthtoken'
 		unique_together=("token",)
