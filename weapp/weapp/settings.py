@@ -479,6 +479,8 @@ INSTALLED_APPS = [
     'svsmon',
 
     'cloud_housekeeper',
+
+    #'openapi',
     # Third-party apps
     # 'django_extensions',
 

@@ -107,8 +107,10 @@ urlpatterns = patterns('',
     url(r'^stats/', restful_url2('stats')),
     # WGlass用的接口
     url(r'^wapi/', include('wapi.urls')),
+    # OpenAPI
+    #url(r'^api/', include('openapi.urls')),
 
-	url(r'^cloud_housekeeper/', restful_url2('cloud_housekeeper')),
+    url(r'^cloud_housekeeper/', restful_url2('cloud_housekeeper')),
 )
 
 urlpatterns += staticfiles_urlpatterns()
