@@ -4,7 +4,7 @@ __author__ = 'mark24'
 
 from behave import *
 from test import bdd_util
-
+from collections import OrderedDict
 from features.testenv.model_factory import *
 import steps_db_util
 #from mall import module_api as mall_api
@@ -16,7 +16,7 @@ from mall.promotion.models import CouponRule
 from weixin.message.material import models as material_models
 from apps.customerized_apps.sign import models as sign_models
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.sign.models import Sign
+from apps.customerized_apps.sign.models import Sign,SignParticipance
 import json
 
 global delete_switch
@@ -688,3 +688,45 @@ def step_impl(context,user,sign_name,sign_tag):
 	sign_status = {'status':status2name[sign_tag]}
 	db_status = {'status':db_sign['status']}
 	bdd_util.assert_dict(sign_status,db_sign)
+
+@then(u"{user}获得会员签到统计列表")
+def step_impl(context, user):
+	#更改所有参与者的最后一次签到时间
+	signParticipance = SignParticipance.objects(belong_to=context.sign_id)
+	member_ids = []
+	for data in signParticipance:
+		member_ids.append(data.member_id)
+	member_id2participance = SignParticipance.objects(member_id__in=member_ids)
+	for member in member_id2participance:
+		created_at = member.first().created_at
+		total_count = member.first().total_count
+		member.update(set__latest_date = created_at+timedelta(days=total_count))
+	url ='/apps/sign/api/sign_participances/?_method=get&id=%s' % (context.sign_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	context.participances = json.loads(response.content)
+	participances = context.participances['data']['items']
+	print(participances)
+	actual = []
+	for p in participances:
+		p_dict = OrderedDict()
+		p_dict[u"name"] = p['participant_name']
+		p_dict[u"first_sign"] = p['created_at']
+		p_dict[u"last_sign"] = p['latest_date']
+		p_dict[u"total_sign"] = p['total_count']
+		p_dict[u"continuous_sign"] = p['serial_count']
+		p_dict[u"max_continuous_sign"] = p['top_serial_count']
+		p_dict[u"integral"] = p['total_integral']
+		p_dict[u"coupon"] = p['latest_coupon']
+		actual.append((p_dict))
+	print("actual_data: {}".format(actual))
+	expected = []
+	if context.table:
+		for row in context.table:
+			cur_p = row.as_dict()
+			expected.append(cur_p)
+	else:
+		expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+
+	bdd_util.assert_list(expected, actual)
