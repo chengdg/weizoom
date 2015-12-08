@@ -89,7 +89,7 @@ def step_impl(context, user):
 def __change_sign_date(member_id,days):
 	signParticipance = SignParticipance.objects.get(member_id=member_id)
 	latest_date = signParticipance.latest_date
-	signParticipance.update(set__latest_date = latest_date-timedelta(days=days))
+	signParticipance.update(set__latest_date = latest_date-timedelta(days))
 
 @When(u'{webapp_user_name}把{webapp_owner_name}的签到活动链接分享到朋友圈')
 def step_impl(context, webapp_user_name, webapp_owner_name):
@@ -123,15 +123,25 @@ def step_impl(context, webapp_user_name, mp_user_name):
 
 @when(u"{user}在微信中向{mp_user_name}的公众号发送消息'{message}'于'{date}'")
 def step_impl(context, user, mp_user_name, message, date):
+	if not hasattr(context,"latest_date"):
+		context.latest_date = {
+			user : bdd_util.get_date(date)
+		}
 	signParticipance = SignParticipance.objects(member_id=context.member.id)
 	if signParticipance:
-		timedelta = (bdd_util.get_date(date) - context.latest_date).days
+		timedelta = (bdd_util.get_date(date) - context.latest_date[user]).days
 		__change_sign_date(context.member.id,timedelta)#将上一次签到时间向前调整
 		context.execute_steps(u"when %s在微信中向%s的公众号发送消息'%s'" % (user, mp_user_name, message))
 	else:
 		context.execute_steps(u"when %s在微信中向%s的公众号发送消息'%s'" % (user, mp_user_name, message))
 		#首次签到的话，将首次签到时间置为设定的时间
 		signParticipance.update(set__created_at = bdd_util.get_date(date))
-	context.latest_date = bdd_util.get_date(date)
+	#如果是另一个用户签到了，创建新的最近一次签到时间到dict里
+	if user not in context.latest_date:
+		context.latest_date[user] = bdd_util.get_date(date)
+	#对比时间，记录最后一次签到时间
+	if context.latest_date[user] < bdd_util.get_date(date):
+		context.latest_date[user] = bdd_util.get_date(date)
+	context.need_change_date = True
 	#因为无法在这句里更改签到的最后一次签到时间，否则每次跟现在的时间去做对比，都不算是连续签到
 	#暂时先把修改最后一次签到时间的操作放在“then获得会员签到统计列表”的steps中
