@@ -293,9 +293,11 @@ def __name2limit(name):
 
 def __name2type(name):
 	type_dic = {
+		u"全部":"-1",
 		u"积分":"integral",
 		u"优惠券":"coupon",
-		u"实物":"entity"
+		u"实物":"entity",
+		u"未中奖":"no_prize"
 	}
 	if name:
 		return type_dic[name]
@@ -412,6 +414,15 @@ def __name2status(name):
 	else:
 		return -1
 
+def __name2coupon_status(name):
+	"""
+	抽奖： 文字 转 优惠券领取状态值
+	"""
+	if name:
+		name2status_dic = {u"全部":-1,u"未领取":0,u"已领取":1}
+		return name2status_dic[name]
+	else:
+		return -1
 
 def __get_actions(status):
 	"""
@@ -691,41 +702,43 @@ def __Search_Lottery(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
-# def __Search_Lottery_Result(context,search_dic):
-# 	"""
-# 	搜索,抽奖参与结果
+def __Search_Lottery_Result(context,search_dic):
+	"""
+	搜索,抽奖参与结果
 
-# 	输入搜索字典
-# 	返回数据列表
-# 	"""
+	输入搜索字典
+	返回数据列表
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
-# 	count_per_page = 10
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
 
-# 	id = search_dic["id"]
-# 	participant_name = search_dic["participant_name"]
-# 	start_time = search_dic["start_time"]
-# 	end_time = search_dic["end_time"]
+	id = search_dic["id"]
+	participant_name = search_dic["participant_name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+	prize_type = __name2type(search_dic['prize_type'])
+	status =__name2coupon_status(search_dic['status'])
 
+	search_url = "/apps/lottery/api/lottery_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&prize_type={}&status={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			id,
+			participant_name,
+			start_time,
+			end_time,
+			prize_type,
+			status,
+			count_per_page,
+			page,
+			enable_paginate)
 
-
-# 	search_url = "/apps/lottery/api/lottery_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
-# 			design_mode,
-# 			version,
-# 			id,
-# 			participant_name,
-# 			start_time,
-# 			end_time,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate)
-
-# 	search_response = context.client.get(search_url)
-# 	bdd_util.assert_api_call_success(search_response)
-# 	return search_response
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 
 
@@ -983,32 +996,41 @@ def step_impl(context,user):
 	page_num = int(paging_dic['page_num'])-1
 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}设置抽奖活动结果列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
+@when(u"{user}设置微信抽奖活动结果列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
+	print("expected: {}".format(expect))
 
-# 	if 'parti_start_time' in expect:
-# 		expect['start_time'] = __date2time(expect['parti_start_time']) if expect['parti_start_time'] else ""
-# 		del expect['parti_start_time']
 
-# 	if 'parti_end_time' in expect:
-# 		expect['end_time'] = __date2time(expect['parti_end_time']) if expect['parti_end_time'] else ""
-# 		del expect['parti_end_time']
+	if 'lottery_start_time' in expect:
 
-# 	id = context.lottery_id
-# 	participant_name = expect.get("member_name","")
-# 	start_time = expect.get("start_time","")
-# 	end_time = expect.get("end_time","")
+		expect['start_time'] = __date2time(expect['lottery_start_time']) if expect['lottery_start_time'] else ""
+		del expect['lottery_start_time']
 
-# 	search_dic = {
-# 		"id":id,
-# 		"participant_name":participant_name,
-# 		"start_time":start_time,
-# 		"end_time":end_time
-# 	}
-# 	search_response = __Search_Lottery_Result(context,search_dic)
-# 	lottery_result_array = json.loads(search_response.content)['data']['items']
-# 	context.search_lottery_result = lottery_result_array
+	if 'lottery_end_time' in expect:
+		expect['end_time'] = __date2time(expect['lottery_end_time']) if expect['lottery_end_time'] else ""
+		del expect['lottery_end_time']
+
+	id = context.lottery_id
+	participant_name = expect.get("member_name","")
+	start_time = expect.get("start_time","")
+	end_time = expect.get("end_time","")
+	prize_type = expect.get("prize_type",u"全部")
+	status = expect.get("status",u"全部")
+
+
+	search_dic = {
+		"id":id,
+		"participant_name":participant_name,
+		"start_time":start_time,
+		"end_time":end_time,
+		"prize_type":prize_type,
+		"status":status
+	}
+	search_response = __Search_Lottery_Result(context,search_dic)
+	lottery_result_array = json.loads(search_response.content)['data']['items']
+	context.search_lottery_result = lottery_result_array
+	# __debug_print(lottery_result_array)
 
 # @then(u"{user}能批量导出抽奖活动'{lottery_name}'")
 # def step_impl(context,user,lottery_name):
