@@ -498,7 +498,6 @@ def __Create_Lottery(context,text,user):
 
 	#step4:发送lottery_args
 	post_lottery_args = {
-		"_method":"put",
 		"name":title,
 		"start_time":start_time,
 		"end_time":end_time,
@@ -511,7 +510,7 @@ def __Create_Lottery(context,text,user):
 		"prize":json.dumps(lottery_prize_settings),
 		"related_page_id":related_page_id
 	}
-	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	lottery_url ="/apps/lottery/api/lottery/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
 	post_lottery_response = context.client.post(lottery_url,post_lottery_args)
 
 	#跳转,更新状态位
@@ -627,10 +626,9 @@ def __Delete_Lottery(context,lottery_id):
 	"""
 	design_mode = 0
 	version = 1
-	del_lottery_url = "/apps/lottery/api/lottery/?design_mode={}&version={}".format(design_mode,version)
+	del_lottery_url = "/apps/lottery/api/lottery/?design_mode={}&version={}&_method=delete".format(design_mode,version)
 	del_args ={
-		"id":lottery_id,
-		"_method":'delete'
+		"id":lottery_id
 	}
 	del_lottery_response = context.client.post(del_lottery_url,del_args)
 	return del_lottery_response
@@ -948,7 +946,6 @@ def check_lottery_list(context,user,lottery_name):
 	else:
 		count_per_page = 10
 
-	method = "get"
 
 	if hasattr(context,"paging"):
 		paging_dic = context.paging
@@ -956,14 +953,13 @@ def check_lottery_list(context,user,lottery_name):
 		page = paging_dic['page_num']
 
 	lottery_page_id,lottery_id = __lottery_name2id(lottery_name)#纯数字
-	url ='/apps/lottery/api/lottery_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method={}'.format(
+	url ='/apps/lottery/api/lottery_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method=get'.format(
 			design_mode,
 			version,
 			lottery_id,
 			count_per_page,
 			page,
 			enable_paginate,
-			method
 		)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
