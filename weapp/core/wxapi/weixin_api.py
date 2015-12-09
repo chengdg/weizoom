@@ -17,6 +17,7 @@ from watchdog.utils import watchdog_error, watchdog_info
 from weixin.user.access_token import update_access_token
 from util import ObjectAttrWrapedInDict
 
+from django.conf import settings
 """
 微信Api
 
@@ -201,14 +202,14 @@ def call_api(weixin_api, api_instance_class):
 
 		try:
 			#watchdog_info('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))
-
-			from weixin.message.message_handler.tasks import record_call_weixin_api
-			if hasattr(result, 'errcode'):
-				success = False
-				#watchdog_error('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))	
-			else:
-				success = True
-			record_call_weixin_api.delay(api_instance_class.__class__.__name__, success)
+			if settings.MODE != 'develop':
+				from weixin.message.message_handler.tasks import record_call_weixin_api
+				if hasattr(result, 'errcode'):
+					success = False
+					#watchdog_error('call weixin api: {} , result:{}'.format(api_instance_class.__class__.__name__, result))	
+				else:
+					success = True
+				record_call_weixin_api.delay(api_instance_class.__class__.__name__, success)
 		except:
 			pass
 		
