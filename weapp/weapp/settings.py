@@ -480,7 +480,7 @@ INSTALLED_APPS = [
 
     'cloud_housekeeper',
 
-    #'openapi',
+    'openapi',
     # Third-party apps
     # 'django_extensions',
 
@@ -781,7 +781,7 @@ DJANGO_HACK_PARAMS = {
 }
 
 RESOURCE_LOADED = False
-RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
+RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
 
 
 # settings for WAPI Logger
