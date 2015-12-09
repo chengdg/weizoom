@@ -2010,7 +2010,8 @@ def get_order_products(order):
 			'physical_unit': product.physical_unit,
 			'is_deleted': product.is_deleted,
 			'grade_discounted_money': relation.grade_discounted_money,
-			'supplier': product.supplier
+			'supplier': product.supplier,
+			'bar_code':product.bar_code
 		}
 
 
