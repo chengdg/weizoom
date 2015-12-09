@@ -365,7 +365,6 @@ def __Create_PowerMe(context,text,user):
 
 	#step4:发送powerme_args
 	post_powerme_args = {
-		"_method":"put",
 		"name":title,
 		"start_time":start_time,
 		"end_time":end_time,
@@ -375,7 +374,7 @@ def __Create_PowerMe(context,text,user):
 		"qrcode":json.dumps(qrcode),
 		"related_page_id":related_page_id
 	}
-	powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	powerme_url ="/apps/powerme/api/powerme/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
 	post_powerme_response = context.client.post(powerme_url,post_powerme_args)
 
 def __Update_PowerMe(context,text,page_id,powerme_id):
@@ -477,10 +476,9 @@ def __Delete_PowerMe(context,powerme_id):
 	"""
 	design_mode = 0
 	version = 1
-	del_powerme_url = "/apps/powerme/api/powerme/?design_mode={}&version={}".format(design_mode,version)
+	del_powerme_url = "/apps/powerme/api/powerme/?design_mode={}&version={}&_method=delete".format(design_mode,version)
 	del_args ={
-		"id":powerme_id,
-		"_method":'delete'
+		"id":powerme_id
 	}
 	del_powerme_response = context.client.post(del_powerme_url,del_args)
 	return del_powerme_response
