@@ -135,14 +135,15 @@ def __post_PageJson(context,post_args,project_id,design_mode=0,version=1):
 	bdd_util.assert_api_call_success(post_termite_response)
 	return post_termite_response
 
-def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
+def __post_SignArgs(context,sign_args,project_id,method="post",design_mode=0,version=1):
 	"""
 	step6 POST,填写JSON至Mongo
 	"""
-	sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}&_method=post".format(design_mode,project_id,version)
 
-	if sign_args.get('_method') == 'put':
+	if method == 'put':
 		sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
+	elif method == 'post':
+		sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}&_method=post".format(design_mode,project_id,version)
 
 	post_sign_response = context.client.post(sign_url,sign_args)
 	post_sign_response = json.loads(post_sign_response.content)
@@ -460,7 +461,6 @@ def step_add_sign(context,user,sign_name):
 	page_related_id = json.loads(post_termite_response.content).get('data',{}).get('project_id',0)
 	#step6 POST,填写JSON至Mongo，返回JSON(Fin)
 	post_sign_args = {
-		"_method":"put",
 		"name":name,
 		"prize_settings":json.dumps(prize_settings),
 		"reply":json.dumps(reply),
@@ -468,7 +468,7 @@ def step_add_sign(context,user,sign_name):
 		"status":status,
 		"related_page_id":page_related_id,
 	}
-	post_sign_response = __post_SignArgs(context,post_sign_args,project_id,design_mode=0,version=1)
+	post_sign_response = __post_SignArgs(context,post_sign_args,project_id,method="put",design_mode=0,version=1)
 
 	#传递保留参数
 	context.project_id = page_related_id
@@ -585,7 +585,6 @@ def step_impl(context,user):
 	post_termite_response = __post_PageJson(context,termite_post_args,project_id,design_mode=0,version=1)
 	#step6 POST,填写JSON至Mongo，返回JSON(Fin)
 	post_sign_args = {
-		"_method":"post",
 		"name":name,
 		"prize_settings":json.dumps(prize_settings),
 		"reply":json.dumps(reply),
