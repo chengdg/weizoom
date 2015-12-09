@@ -135,6 +135,7 @@ def __clear_all_account_data():
 	User.objects.filter(id__gt=2).delete()
 
 	#会员
+	member_models.MemberTag.objects.all().delete()
 	member_models.MemberGrade.objects.all().delete()
 	SocialAccount.objects.all().delete()
 	member_models.WebAppUser.objects.all().delete()
@@ -287,6 +288,7 @@ def __clear_all_app_data():
 	# 渠道扫码
 	channel_qrcode_models.ChannelQrcodeSettings.objects.all().delete()
 	channel_qrcode_models.ChannelQrcodeHasMember.objects.all().delete()
+	channel_qrcode_models.ChannelQrcodeBingMember.objects.all().delete()
 
 	# 会员扫码
 	member_qrcode_models.MemberQrcode.objects.all().delete()

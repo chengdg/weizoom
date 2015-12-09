@@ -17,17 +17,20 @@ def step_impl(context, user):
 
 @when(u"{user}添加会员分组")
 def step_impl(context, user):
-	MemberTag.objects.all().delete()
-	client = context.client
-	context.member_tags = json.loads(context.text)
-	response = client.post('/member/api/member_tags/',
-		context.member_tags)
+	__add_member_tag(context, user)
 
 @given(u"{user}添加会员分组")
 def step_impl(context, user):
+	__add_member_tag(context, user)
+
+def __add_member_tag(context, user):
 	MemberTag.objects.all().delete()
 	client = context.client
-	context.member_tags = json.loads(context.text)
+	context.member_tags = {}
+	for tag_id, tag_name in json.loads(context.text).items():
+		if tag_name != '未分组':
+			tag_id = 'tag_id_{}'.format(int(tag_id.split('_')[2]) + 1)
+		context.member_tags[tag_id] = tag_name
 	response = client.post('/member/api/member_tags/',
 		context.member_tags)
 
