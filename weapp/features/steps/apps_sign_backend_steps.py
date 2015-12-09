@@ -138,19 +138,12 @@ def __post_PageJson(context,post_args,project_id,design_mode=0,version=1):
 def __post_SignArgs(context,sign_args,project_id,design_mode=0,version=1):
 	"""
 	step6 POST,填写JSON至Mongo
-
-	sign_args = {
-		"_method":"put",
-		"name":"",
-		"prize_settings":"",
-		"reply":"",
-		"share":"",
-		"status":"off",
-		"related_page_id":"",
-	}
-
 	"""
-	sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}&_method=post".format(design_mode,project_id,version)
+
+	if sign_args.get('_method') == 'put':
+		sign_url = "/apps/sign/api/sign/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
+
 	post_sign_response = context.client.post(sign_url,sign_args)
 	post_sign_response = json.loads(post_sign_response.content)
 	return post_sign_response
