@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from weixin.mp_decorators import mp_required
 from django.shortcuts import render_to_response
+from django.conf import settings
 
 from weixin2 import export
 from core.exceptionutil import unicode_full_stack
@@ -431,15 +432,18 @@ class Qrcode(resource.Resource):
 				member_id=bing_member_id
 			)
 
-		mp_user = get_binding_weixin_mpuser(request.manager)
-		mpuser_access_token = get_mpuser_accesstoken(mp_user)
-		weixin_api = get_weixin_api(mpuser_access_token)
+		if settings.MODE != 'develop':
+			mp_user = get_binding_weixin_mpuser(request.manager)
+			mpuser_access_token = get_mpuser_accesstoken(mp_user)
+			weixin_api = get_weixin_api(mpuser_access_token)
 
-		try:
-			qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
-			ticket = qrcode_ticket.ticket
-		except Exception, e:
-			print 'get qrcode_ticket fail:', e
+			try:
+				qrcode_ticket = weixin_api.create_qrcode_ticket(int(cur_setting.id), QrcodeTicket.PERMANENT)
+				ticket = qrcode_ticket.ticket
+			except Exception, e:
+				print 'get qrcode_ticket fail:', e
+				ticket = ''
+		else:
 			ticket = ''
 		cur_setting.ticket = ticket
 		cur_setting.save()
