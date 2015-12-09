@@ -226,6 +226,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
 
     initCounter: function(){
         var $counterEl = $('[data-ui-role="counter"]');
+        console.info($counterEl)
         var _this = this;
         // 多规格限购
         // var productCount = {};
@@ -294,7 +295,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
     onChangCounter: function(event){
         var $currentTarget = $(event.currentTarget)
         var counterCount = $currentTarget.val();
-
+        console.info("test------------",counterCount)
         var $product = $currentTarget.parents('.xa-product');
         var $productGroup = $currentTarget.parents('.xa-productGroup');        
         var stocks = $currentTarget.attr('data-max-count');
@@ -350,10 +351,12 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
 
         // console.log('aaaaa', this.productGroups);
         var productGroupPriceInfo = this.productGroupPriceCalculator.calculate(this.productGroups)
+        console.log('aaaaa', this.productGroups);
         var totalPrice = productGroupPriceInfo.promotionedPrice;
         var totalCount = productGroupPriceInfo.totalCount;
         //更新页面元素
-        $('.xa-totalPrice').text(totalPrice.toFixed(2));
+        console.info(totalCount+"----"+(totalPrice*totalCount).toFixed(2))
+        $('.xa-totalPrice').text((totalPrice*totalCount).toFixed(2));
         $('.xa-total-count').text(totalCount);
     },
 

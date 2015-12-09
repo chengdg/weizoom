@@ -480,7 +480,7 @@ INSTALLED_APPS = [
 
     'cloud_housekeeper',
 
-    #'openapi',
+    'openapi',
     # Third-party apps
     # 'django_extensions',
 
@@ -781,7 +781,7 @@ DJANGO_HACK_PARAMS = {
 }
 
 RESOURCE_LOADED = False
-RESOURCES = ['stats', 'termite2', 'weixin2', 'mall']
+RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
 
 
 # settings for WAPI Logger
@@ -790,7 +790,7 @@ if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_SERVER_HOST = 'mongo.weapp.com'
     WAPI_LOGGER_SERVER_PORT = 27017
     WAPI_LOGGER_DB = 'wapi'
-    WAPI_ACCESS_TOKEN_REQUIRED = False
+    WAPI_ACCESS_TOKEN_REQUIRED = True
     #WAPI_ACCESS_TOKEN_REQUIRED = True
 else:
     # 真实环境暂时关闭

@@ -89,7 +89,7 @@ class MemberSummary(resource.Resource):
 			member_recommend_rate = str(round(((share_url_member_count + ori_qrcode_member_count + 0.0) / _total_member_count) * 100, 2)) + '%'
 			if str(member_recommend_rate) == '0.0%':
 				member_recommend_rate = '0.00%'
-		
+
 		item = {
 			'total_member_count': total_member_count,
 			'subscribed_member_count': subscribed_member_count,
@@ -260,7 +260,7 @@ class MemberDetailData(resource.Resource):
 		#下单会员
 		date2bought_member_count = stats_util.get_date2bought_member_count(webapp_id, low_date, high_date)
 
-		
+
 
 		items = []
 		for date in formatted_date_list:
@@ -327,7 +327,7 @@ def _get_member_qrcode_rank(webapp_id, low_date, high_date):
 	"""
 	member_qrcodes = MemberQrcode.objects.filter(
 						member__webapp_id=webapp_id,
-						# member__is_subscribed=True, 
+						# member__is_subscribed=True,
 						member__is_for_test=False,
 						created_at__range=(low_date, high_date)
 					)
@@ -338,7 +338,7 @@ def _get_member_qrcode_rank(webapp_id, low_date, high_date):
 		qrcode_ids.append(member_qrcode.id)
 
 	member_qrcode_logs = MemberQrcodeLog.objects.filter(member_qrcode_id__in = qrcode_ids)
-	
+
 	member_id2count = {}  #发起会员扫码的会员带来的会员个数
 
 	#处理通过扫码新增的用户列表
@@ -363,18 +363,18 @@ def _get_member_qrcode_rank(webapp_id, low_date, high_date):
 			username = member.username_for_html
 		except:
 			pass
-		
+
 		rank_list.append({
-			'rank': i, 
+			'rank': i,
 			'member_id': member_id,
 			'username': username,
 			'followers': item[1]
 		})
-		
+
 		i += 1
 		if i > 10:
 			break
-		
+
 	return rank_list
 
 
@@ -383,9 +383,9 @@ def _get_member_share_url_rank(webapp_id, low_date, high_date):
 	获取分享链接效果排行（按带来的会员数排名）
 	"""
 	share_url_members = MemberSharedUrlInfo.objects.filter(
-							created_at__range=(low_date, high_date), 
+							created_at__range=(low_date, high_date),
 							member__webapp_id=webapp_id,
-							# member__is_subscribed=True, 
+							# member__is_subscribed=True,
 							member__is_for_test=False
 						)#.values('member_id').annotate(total_followers=Sum('followers')).order_by('-total_followers')
 
@@ -417,16 +417,16 @@ def _get_member_share_url_rank(webapp_id, low_date, high_date):
 			username = member.username_for_html
 		except:
 			pass
-		
+
 		rank_list.append({
-			'rank': i, 
+			'rank': i,
 			'member_id': member_id,
 			'username': username,
 			'followers': followers
 		})
-		
+
 		i += 1
 		if i> 10:
 			break
-		
+
 	return rank_list

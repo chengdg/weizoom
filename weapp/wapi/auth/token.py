@@ -88,3 +88,7 @@ class AuthToken(api_resource.ApiResource):
 				'message': errMsg
 			}
 		return data
+
+	@param_required(['username', 'password'])
+	def get(args):
+		return {"a":"bbb"}

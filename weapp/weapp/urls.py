@@ -108,7 +108,7 @@ urlpatterns = patterns('',
     # WGlass用的接口
     url(r'^wapi/', include('wapi.urls')),
     # OpenAPI
-    #url(r'^api/', include('openapi.urls')),
+    url(r'^openapi/', restful_url2('openapi')),
 
     url(r'^cloud_housekeeper/', restful_url2('cloud_housekeeper')),
 )
