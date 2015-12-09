@@ -85,8 +85,8 @@ Scenario:1 查看员工信息
 			"actions":["停用","员工信息"]
 		}]
 		"""
-	When jobs查看账户'ceshi01'的员工信息
-	Then jobs能获得账户'ceshi01'的员工信息
+	#When jobs查看账户'ceshi01'的员工信息
+	Then jobs获得账户'ceshi01'的员工信息
 		"""
 		[{
 			"info":
@@ -124,7 +124,7 @@ Scenario:2 修改员工信息
 			"actions":["停用","员工信息"]
 		}]
 		"""
-	When jobs查看账户'ceshi01'的员工信息
+	#When jobs查看账户'ceshi01'的员工信息
 	When jobs修改账户'ceshi01'的员工信息
 		"""
 		[{
@@ -156,7 +156,7 @@ Scenario:2 修改员工信息
 				}]
 		}]
 		"""
-	Then jobs能获得账户'ceshi01'的员工信息
+	Then jobs获得账户'ceshi01'的员工信息
 		"""
 		[{
 			"info":

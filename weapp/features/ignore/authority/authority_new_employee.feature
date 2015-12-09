@@ -264,7 +264,7 @@ Scenario:4 新建员工,多个角色
 			"account_name":"ceshi04",
 			"employee_name":"张04",
 			"department_name":"部门2"
-			"roles":"角色1级其他",
+			"roles":"角色1及其他",
 			"status":"启用",
 			"actions":["停用","员工信息"]
 		}]

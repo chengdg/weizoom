@@ -11,7 +11,7 @@ Scenario:1 新建部门
 			"name":"部门1"
 		}]
 		"""
-	Then jobs能获得部门'部门1'
+	Then jobs获得部门'部门1'
 		"""
 		[{
 			"name":"部门1",
@@ -19,11 +19,11 @@ Scenario:1 新建部门
 		}]
 		"""
 	And jobs获得部门列表
-	"""
-	[{
-		"name":
-	}]
-	"""
+		"""
+		[{
+			"name":"部门1"
+		}]
+		"""
 
 @authority @employee
 Scenario:2 重命名部门

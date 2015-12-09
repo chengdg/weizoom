@@ -124,7 +124,7 @@ Scenario:1 停用子账号
 			"actions":["停用","员工信息"]
 		}]
 		"""
-	When jobs停用账户'cesh03'
+	When jobs停用账户'ceshi03'
 	Then jobs获得员工管理列表
 		"""
 		[{
@@ -148,7 +148,7 @@ Scenario:1 停用子账号
 @authority @employee
 Scenario:2 启用子账号
 	Given jobs登录系统
-	When jobs停用账户'cesh03'
+	When jobs停用账户'ceshi03'
 	Then jobs获得员工管理列表
 		"""
 		[{
@@ -168,7 +168,7 @@ Scenario:2 启用子账号
 			"actions":["停用","员工信息"]
 		}]
 		"""
-	When jobs启用账户'cesh03'
+	When jobs启用账户'ceshi03'
 	Then jobs获得员工管理列表
 		"""
 		[{
@@ -217,8 +217,8 @@ Scenario:3 删除子账号
 			"actions":["停用","员工信息"]
 		}]
 		"""
-	When jobs停用账户'cesh03'
-	When jobs停用账户'cesh02'
+	When jobs停用账户'ceshi03'
+	When jobs停用账户'ceshi02'
 	Then jobs获得员工管理列表
 		"""
 		[{
@@ -244,7 +244,7 @@ Scenario:3 删除子账号
 			"actions":["停用","员工信息"]
 		}]
 		"""
-	When jobs删除账户'cesh02'
+	When jobs删除账户'ceshi02'
 	Then jobs获得员工管理列表
 		"""
 		[{
@@ -274,7 +274,7 @@ Scenario:4 员工管理列表的分页
 		}
 		"""
 	#Then jobs获得员工管理列表共'3'页
-	When jobs访问员工管理列表第'1'页
+	#When jobs访问员工管理列表第'1'页
 	Then jobs获得员工管理列表
 		"""
 		[{
