@@ -791,6 +791,8 @@ class WeizoomMallMiddleware(object):
 		# 	request.is_access_weizoom_mall = request.user.is_weizoom_mall
 		# else:
 		request.user.is_weizoom_mall = False
+		if hasattr(request, 'manager'):
+			request.manager.is_weizoom_mall = False
 		request.is_access_weizoom_mall = False
 		return None
 
