@@ -1011,7 +1011,7 @@ W.workbench.PropertyView = Backbone.View.extend({
     onClickDeleteQrcode: function(event){
         var $el = $(event.currentTarget);
         $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
-        $el.siblings('input[data-field="image"]').val('');
+        $el.siblings('input[data-field="qrcode"]').val('');
         $el.siblings('.qrcodeName').addClass('xui-hide').html('');
         $el.siblings('.xui-i-triggerButton').text('选择带参数二维码');
         $el.parent().next().css({
@@ -1019,6 +1019,7 @@ W.workbench.PropertyView = Backbone.View.extend({
             'line-height': '17px'
         });
         $el.hide();
+         W.Broadcaster.trigger("qrcode:deleteQrcode", {});
     },
 
     onMouseoverQrcode: function(event){

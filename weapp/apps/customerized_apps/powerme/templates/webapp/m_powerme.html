@@ -215,7 +215,7 @@
         renderTime({{ timing }});
 
         //展示与隐藏我的排名面板
-        showMyRank();
+        window.setTimeout(showMyRank, 2*1000);
 
         //监听分享成功事件
         $(document).on("share:success",function(data){
@@ -356,9 +356,8 @@
         var $win = $(window);
         var $top = $('.wa-top100');
         var rect;
-
         var djage = function(){
-            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top + $top.height()>=0)
+            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
         };
         var toggle_show = function(){
             rect = $top[0].getBoundingClientRect();
