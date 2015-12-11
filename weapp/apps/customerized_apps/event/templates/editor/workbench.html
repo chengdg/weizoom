@@ -78,7 +78,6 @@
   <!-- *end_prunt_task* -->
   {% if not is_deleted_data %}
   <script type="text/javascript">
-    W.uid = {{ request.manager.id }};
     W.projectId = "{{project_id}}";
     W.activityId = "{{event.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
@@ -237,7 +236,7 @@
             page_json: pageJson
           },
           success: function(data) {
-            var previewUrl = '/m/apps/event/m_event/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
+            var previewUrl = '/m/apps/event/m_event/?page_id=preview&woid='+W.mid+'&id='+W.projectId;
             window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
           },
           error: function(resp) {

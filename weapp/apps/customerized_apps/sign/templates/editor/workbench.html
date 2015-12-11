@@ -312,7 +312,6 @@ ui-appPage-commonStyle">
   
   <script type="text/javascript">
     var signStatus = "off";
-    W.uid = {{ request.manager.id }};
     W.projectId = "{{project_id}}";
     W.activityId = "{{sign.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
@@ -518,7 +517,7 @@ ui-appPage-commonStyle">
             page_json: pageJson
           },
           success: function(data) {
-            var previewUrl = '/m/apps/sign/m_sign/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
+            var previewUrl = '/m/apps/sign/m_sign/?page_id=preview&woid='+W.mid+'&id='+W.projectId;
             window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
           },
           error: function(resp) {
