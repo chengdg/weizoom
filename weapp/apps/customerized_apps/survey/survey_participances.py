@@ -218,7 +218,14 @@ class surveyParticipances_Export(resource.Resource):
 				export_record = []
 
 				num = num+1
-				name = member_id2member[record['member_id']].username if member_id2member.get(record['member_id']) else u'未知'
+				cur_member = member_id2member.get(record['member_id'], None)
+				if cur_member:
+					try:
+						name = cur_member.username.decode('utf8')
+					except:
+						name = cur_member.username_hexstr
+				else:
+					name = u'未知'
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 
 				for s in fields_selec:

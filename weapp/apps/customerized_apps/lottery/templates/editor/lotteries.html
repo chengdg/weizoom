@@ -223,7 +223,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-preview', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
-		var previewUrl = '/m/apps/lottery/m_lottery/?woid='+W.uid+'&id='+id;
+		var previewUrl = '/m/apps/lottery/m_lottery/?woid='+W.mid+'&id='+id;
 		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
 	});
 	
@@ -254,7 +254,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-copyLinkBtn', 'click', function(event){
 		var $el = $(event.currentTarget);
 		var data_id = $el.attr('data-id');
-        var urlLink = "/m/apps/lottery/m_lottery/?webapp_owner_id="+W.uid+"&id="+data_id;
+        var urlLink = "/m/apps/lottery/m_lottery/?webapp_owner_id="+W.mid+"&id="+data_id;
 
 		var promotionCopyLinkView = W.getPromotionCopyLinkView({
 			width: 414,

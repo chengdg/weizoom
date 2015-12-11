@@ -222,7 +222,7 @@ $(document).ready(function() {
 	$('body').delegate('.xa-preview', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
-		var previewUrl = '/m/apps/powerme/m_powerme/?woid='+W.uid+'&id='+id;
+		var previewUrl = '/m/apps/powerme/m_powerme/?woid='+W.mid+'&id='+id;
 		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
 	});
 	
