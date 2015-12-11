@@ -158,13 +158,13 @@ class surveyParticipances_Export(resource.Resource):
 			fields_raw.append(u'编号')
 			fields_raw.append(u'用户名')
 			fields_raw.append(u'提交时间')
+
+			fields_selec = []
+			fields_qa= []
+			fields_textlist = []
+			fields_uploadimg = []
 			if data:
 				sample = data[0]
-
-				fields_selec = []
-				fields_qa= []
-				fields_textlist = []
-				fields_uploadimg = []
 
 				sample_tm = sample['termite_data']
 
@@ -254,8 +254,9 @@ class surveyParticipances_Export(resource.Resource):
 				multi_selec = []
 				for item in selec:
 					multi_selec.append(item)
-				multi_selec = ','.join(multi_selec)
-				export_record.append(multi_selec)
+				if multi_selec:
+					multi_selec = ','.join(multi_selec)
+					export_record.append(multi_selec)
 
 				for item in qa:
 					export_record.append(item)
@@ -263,6 +264,7 @@ class surveyParticipances_Export(resource.Resource):
 					export_record.append(item)
 				for item in uploadimg:
 					export_record.append(item)
+				print export_record,"export_record!!!!!!111"
 
 				export_data.append(export_record)
 
@@ -280,8 +282,8 @@ class surveyParticipances_Export(resource.Resource):
 			##write data
 			if export_data:
 				row = 1
-				lens = len(export_data[0])
 				for record in export_data:
+					lens = len(record)
 					row_l = []
 					for col in range(lens):
 						record_col= record[col]
