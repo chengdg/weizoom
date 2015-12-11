@@ -321,7 +321,8 @@ $(document).ready(function() {
         var model_id = $(this).attr('data-product-model-id');
         model_ids.push(model_id);
     });
-    getProductStocks()
+    getProductStocks();
+    view.onClickCheckAll();
     window.setInterval(getProductStocks, 30*1000);
 
     // 促销会员商品价格显示
@@ -407,7 +408,6 @@ $(document).ready(function() {
                         $(this).data('view').setMaxCount(maxCount);
                     });
                     view.initCounter();
-                    $(document).one('trigger', view.onClickCheckAll());
                 },
                 error: function(){
                     console.log("error");
