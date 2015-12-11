@@ -136,7 +136,6 @@
         },
 
         setMaxCount: function(count) {
-            // console.log('setMaxCount', count);
             this.maxCount = parseInt(count);
 
             if (this.maxCount === 0) {

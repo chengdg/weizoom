@@ -321,7 +321,7 @@ $(document).ready(function() {
         var model_id = $(this).attr('data-product-model-id');
         model_ids.push(model_id);
     });
-    getProductStocks()
+    getProductStocks();
     window.setInterval(getProductStocks, 30*1000);
 
     // 促销会员商品价格显示
@@ -382,7 +382,6 @@ $(document).ready(function() {
                                 maxCount = data[model_id].stocks;
                                 understock_msg = '库存不足';
                             }
-                            // alert(maxCount)
                         }else {
                             if (count_per_purchase > 0){
                                 maxCount = count_per_purchase;
@@ -394,23 +393,38 @@ $(document).ready(function() {
                         }
                         var $product = $(this).parents('.xa-product');
                         var $check = $product.find('.xa-check');
-                        if(maxCount > 0 && $(this).data('view').count > maxCount){
+                        $(this).data('view').setMaxCount(maxCount);
+
+                        if(maxCount > 0 && $(this).data('view').count > maxCount || $(this).data('view').count == 0){
                             $product.find('.xui-understock').show();
                             $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+                            view.unselectProduct($product);
                         }else{
                             $product.find('.xui-understock').hide();
                             $check.removeClass('xui-disabled-radio');
+                            // view.selectProduct($product);
                         }
                         $product.find('.xui-understock').html(understock_msg);
-                        $(this).data('view').setMaxCount(maxCount);
+
+                        view.changeStockRestDOM($(this));   
                     });
-                    view.initCounter();
+                    view.calculatePrice();
+                    $('body').trigger('checkStockOver');
                 },
                 error: function(){
                     console.log("error");
                 }
             })
     }
+    var isTriggered = false;
+    function checkStockOver(){
+        if (!isTriggered) {
+            isTriggered = true;
+            view.initCounter();
+            view.onClickCheckAll();
+        };
+    }
+    $('body').bind('checkStockOver', checkStockOver);
 
     // 继续逛逛透明
     if($('.xui-footprint').length){
