@@ -84,7 +84,7 @@
                     return;
                 }
             }
-            if (this.count === this.minCount && delta < 0) {
+            if (this.count === this.minCount && delta <= 0) {
                 return;
             }
             this.count = this.count + delta;
@@ -136,7 +136,6 @@
         },
 
         setMaxCount: function(count) {
-            // console.log('setMaxCount', count);
             this.maxCount = parseInt(count);
 
             if (this.maxCount === 0) {

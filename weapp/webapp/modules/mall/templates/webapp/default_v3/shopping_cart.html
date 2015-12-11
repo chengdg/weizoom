@@ -322,7 +322,6 @@ $(document).ready(function() {
         model_ids.push(model_id);
     });
     getProductStocks();
-    view.onClickCheckAll();
     window.setInterval(getProductStocks, 30*1000);
 
     // 促销会员商品价格显示
@@ -394,6 +393,7 @@ $(document).ready(function() {
                         }
                         var $product = $(this).parents('.xa-product');
                         var $check = $product.find('.xa-check');
+                        $(this).data('view').setMaxCount(maxCount);
                         if(maxCount > 0 && $(this).data('view').count > maxCount){
                             $product.find('.xui-understock').show();
                             $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
@@ -401,19 +401,30 @@ $(document).ready(function() {
                         }else{
                             $product.find('.xui-understock').hide();
                             $check.removeClass('xui-disabled-radio');
-                            view.selectProduct($product);
-
+                            // view.selectProduct($product);
                         }
                         $product.find('.xui-understock').html(understock_msg);
-                        $(this).data('view').setMaxCount(maxCount);
+
+                        view.changeStockRestDOM($(this));   
                     });
-                    view.initCounter();
+                    view.calculatePrice();
+                    $('body').trigger('checkStockOver');
                 },
                 error: function(){
                     console.log("error");
                 }
             })
     }
+    var isTriggered = false;
+    function checkStockOver(){
+        if (!isTriggered) {
+            console.log('checkStockOver')
+            isTriggered = true;
+            view.initCounter();
+            view.onClickCheckAll();
+        };
+    }
+    $('body').bind('checkStockOver', checkStockOver);
 
     // 继续逛逛透明
     if($('.xui-footprint').length){

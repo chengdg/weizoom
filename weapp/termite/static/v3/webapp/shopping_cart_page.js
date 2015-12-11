@@ -223,36 +223,55 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         var id = productGroupId + '-' + productId + '-' + productModel;
         this.id2product[id].isSelect = false;
     },
+    /*更新页面上库存仅剩的提示*/
+    changeStockRestDOM: function($counter){
+        var count = $counter.val();
+        var stocks = $counter.parents('.xa-product').data('stocks');
+        var $stockTip = $counter.parents('.xa-product').find('.xa-stockTip');
+        var $check = $product.find('.xa-check');
+        // 仅剩X件 提示
+        if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
+            $stockTip.html('仅剩'+stocks+'件').show();
+        }else{
+            $stockTip.hide();
+        }
+    },
     initCounter: function(){
         var $counterEl = $('[data-ui-role="counter"]');
         var _this = this;
-        // 多规格限购
-        // var productCount = {};
-        // $counterEl.each(function(i,n){
-        //     if(!productCount[$(n).data('product-id')]){
-        //         productCount[$(n).data('product-id')]=0;
-        //     }
-        //     productCount[$(n).data('product-id')]+=$(n).data('view').count;
-        // });
         //库存大于购物车数量时显示库存不足
         $counterEl.each(function() {
+            // hongranxuan 2015-12-11
+            // var $counter = $(this);
+            // var $product = $counter.parents('.xa-product')
+            // var stocks = $product.data('stocks');
+            // var purchase = $product.data('count-per-purchase');
+            // var count = $counter.val();
+            // if($counter.data('view').minCount>count){
+            //     count = $counter.data('view').minCount
+            //     $counter.val(count)
+            // }
+            // var $stockTip = $counter.parents('.xa-product').find('.xa-stockTip');
+            // var $check = $product.find('.xa-check');
+            // // 仅剩X件 提示
+            // if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
+            //     $stockTip.html('仅剩'+stocks+'件').show();
+            // }else{
+            //     $stockTip.hide();
+            // }
+
             var $counter = $(this);
             var $product = $counter.parents('.xa-product')
-            var stocks = $product.data('stocks');
             var purchase = $product.data('count-per-purchase');
             var count = $counter.val();
             if($counter.data('view').minCount>count){
                 count = $counter.data('view').minCount
                 $counter.val(count)
             }
-            var $stockTip = $counter.parents('.xa-product').find('.xa-stockTip');
-            var $check = $product.find('.xa-check');
-            // 仅剩X件 提示
-            if(stocks != null && stocks > 0 && (stocks < 5 || stocks < count)){
-                $stockTip.html('仅剩'+stocks+'件').show();
-            }else{
-                $stockTip.hide();
-            }
+            _this.changeStockRestDOM($counter);
+
+
+
             // jz 2015-10-28
             // 库存不足提示
             // var understock_msg = '';
@@ -316,7 +335,6 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         if (priceCutView) {
             priceCutView.doPromotion();
         }
-
         this.calculatePrice();
     },
 
@@ -347,7 +365,6 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             premiumSaleView.doSelectProduct();
         });
 
-        // console.log('aaaaa', this.productGroups);
         var productGroupPriceInfo = this.productGroupPriceCalculator.calculate(this.productGroups)
         var totalPrice = productGroupPriceInfo.promotionedPrice;
         var totalCount = productGroupPriceInfo.totalCount;
@@ -433,7 +450,6 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         }else{
             $("#checkbox-cart-all").removeClass('xui-checkCart');           
         }
-
         this.calculatePrice();
     },
 
