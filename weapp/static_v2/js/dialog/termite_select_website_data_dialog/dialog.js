@@ -123,7 +123,6 @@ W.dialog.termite.SelectWebSiteDataDialog = W.dialog.Dialog.extend({
         var dataId = null;
         var _this = this;
         var id2extraData = this.table.getRawData().data;
-
         var datas = []
         this.$('tbody tr').each(function() {
             var $tr = $(this);
@@ -142,12 +141,14 @@ W.dialog.termite.SelectWebSiteDataDialog = W.dialog.Dialog.extend({
                 }
                 data['timestamp'] = new Date().getTime();
             }
-
             if (data) {
                 datas.push(data);
             }
         });
-
+        if (datas.length == 0) {
+            W.getErrorHintView().show('请选择分组！');
+            datas = "";
+        };
         return datas;
     }
 });
