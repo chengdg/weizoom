@@ -29,7 +29,8 @@ class OrderShip(api_resource.ApiResource):
 				is_100 = True
 		is_update_express = False
 		order = models.Order.objects.filter(order_id=order_id)
-		if order.count()>0:
+		if len(order):
+			order = order[0]
 			err_msg = None
 			is_success = None
 			# 已取消的订单不能发货

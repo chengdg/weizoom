@@ -21,12 +21,15 @@ class OrderList(resource.Resource):
         pay_begin_time = request.POST.get('pay_begin_time','')
         pay_end_time = request.POST.get('pay_end_time','')
         order_status = request.POST.get('order_status','')
+        order_id = request.POST.get('order_id','')
         orders = api_resource.get('open', 'orders', {'access_token':access_token,
 													 'found_begin_time':found_begin_time,
 													 'found_end_time':found_end_time,
 													 'pay_begin_time':pay_begin_time,
 													 'pay_end_time':pay_end_time,
-                                                     'order_status':order_status})
+                                                     'order_status':order_status,
+                                                     'order_id':order_id
+                                                      })
         response.data = orders
         return response.get_response()
 
