@@ -200,8 +200,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             $(this).data('view', view);
             _this.premiumSaleViews.push(view);
         });
-
-        this.onClickCheckAll();
+        // this.onClickCheckAll();
     },
 
     selectProduct: function($product) {
@@ -212,6 +211,7 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         var productModel = $product.data('modelName');
         var id = productGroupId + '-' + productId + '-' + productModel;
         this.id2product[id].isSelect = true;
+
     },
 
     unselectProduct: function($product) {
@@ -223,7 +223,6 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         var id = productGroupId + '-' + productId + '-' + productModel;
         this.id2product[id].isSelect = false;
     },
-
     initCounter: function(){
         var $counterEl = $('[data-ui-role="counter"]');
         var _this = this;
@@ -366,10 +365,8 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
         var isSelect = $this.hasClass('xui-checkCart');
         if (!isSelect && $('.xa-product').length !== 0) {
             $this.addClass('xui-checkCart');
-            // couldDel();
         }else{
             $this.removeClass('xui-checkCart');
-            // couldNotDel();
         };
 
         var _this = this;
@@ -377,15 +374,14 @@ W.page.ShoppingCartPage = W.page.InputablePage.extend({
             var $checkbox = $(this);
             var $product = $checkbox.parents('.xa-product');
             var stocks = $product.data('stocks');
-            if (stocks !== -1) {
+            if (stocks !== -1) {//库存有限
                 var view = $product.find('[data-ui-role="counter"]').data('view');
                 var currentCount = view.count;
                 if (currentCount > stocks) {
+                    _this.unselectProduct($product);
                     return;
                 }
             }
-
-            var $product = $checkbox.parents('.xa-product');
             if (isSelect || $checkbox.hasClass('xui-disabled-radio')) {
                 // 全部不选中，或者 该商品不可选择
                 $checkbox.removeClass('xui-checkCart');

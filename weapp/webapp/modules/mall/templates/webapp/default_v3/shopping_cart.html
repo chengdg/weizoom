@@ -382,7 +382,6 @@ $(document).ready(function() {
                                 maxCount = data[model_id].stocks;
                                 understock_msg = '库存不足';
                             }
-                            // alert(maxCount)
                         }else {
                             if (count_per_purchase > 0){
                                 maxCount = count_per_purchase;
@@ -397,14 +396,18 @@ $(document).ready(function() {
                         if(maxCount > 0 && $(this).data('view').count > maxCount){
                             $product.find('.xui-understock').show();
                             $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
+                            view.unselectProduct($product);
                         }else{
                             $product.find('.xui-understock').hide();
                             $check.removeClass('xui-disabled-radio');
+                            view.selectProduct($product);
+
                         }
                         $product.find('.xui-understock').html(understock_msg);
                         $(this).data('view').setMaxCount(maxCount);
                     });
                     view.initCounter();
+                    $(document).one('trigger', view.onClickCheckAll());
                 },
                 error: function(){
                     console.log("error");
