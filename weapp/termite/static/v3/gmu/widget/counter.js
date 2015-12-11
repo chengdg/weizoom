@@ -84,7 +84,7 @@
                     return;
                 }
             }
-            if (this.count === this.minCount && delta <= 0) {
+            if (this.count === this.minCount && delta < 0) {
                 return;
             }
             this.count = this.count + delta;
