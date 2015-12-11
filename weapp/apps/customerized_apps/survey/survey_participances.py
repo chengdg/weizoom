@@ -264,7 +264,6 @@ class surveyParticipances_Export(resource.Resource):
 					export_record.append(item)
 				for item in uploadimg:
 					export_record.append(item)
-				print export_record,"export_record!!!!!!111"
 
 				export_data.append(export_record)
 
