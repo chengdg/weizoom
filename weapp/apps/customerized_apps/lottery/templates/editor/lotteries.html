@@ -164,7 +164,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	
+	W.mid = "{{ request.manager.id }}";
 	$('body').delegate('.xa-delete', 'click', function(event) {
 		var $el = $(event.target);
 		var id = $el.data('id');
