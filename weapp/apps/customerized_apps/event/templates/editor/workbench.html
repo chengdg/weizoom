@@ -78,6 +78,7 @@
   <!-- *end_prunt_task* -->
   {% if not is_deleted_data %}
   <script type="text/javascript">
+    W.uid = "{{request.manager.id}}";
     W.projectId = "{{project_id}}";
     W.activityId = "{{event.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
