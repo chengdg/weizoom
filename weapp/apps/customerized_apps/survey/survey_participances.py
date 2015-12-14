@@ -227,12 +227,27 @@ class surveyParticipances_Export(resource.Resource):
 				else:
 					name = u'未知'
 				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-
 				for s in fields_selec:
+					is_not_selec_v = True
 					s_i = record[u'termite_data'][s][u'value']
+					select_r_v = []
+					select_v = ''
 					for i in s_i:
-						if s_i[i]['isSelect'] == True:
-							selec.append(i.split('_')[1])
+						if s_i[i]['type'] == 'checkbox':
+							if s_i[i]['isSelect'] == True:
+								is_not_selec_v = False
+								select_r_v.append(i.split('_')[1])
+						else:
+							if s_i[i]['isSelect'] == True:
+								is_not_selec_v = False
+								select_v = i.split('_')[1]
+					if is_not_selec_v:
+						selec.append("")
+					else:
+						if select_r_v:
+							selec.append(select_r_v)
+						else:
+							selec.append(select_v)
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']
 					qa.append(s_v)
@@ -254,9 +269,8 @@ class surveyParticipances_Export(resource.Resource):
 				multi_selec = []
 				for item in selec:
 					multi_selec.append(item)
-				if multi_selec:
-					multi_selec = ','.join(multi_selec)
-					export_record.append(multi_selec)
+				for sele in multi_selec:
+					export_record.append(sele)
 
 				for item in qa:
 					export_record.append(item)
@@ -288,23 +302,22 @@ class surveyParticipances_Export(resource.Resource):
 						record_col= record[col]
 						if type(record_col)==list:
 							row_l.append(len(record_col))
-							for n in range(len(record_col)):
-								data = record_col[n]
-								try:
+							n = 0
+							if record_col:
+								for data in record_col:
 									ws.write(row+n,col,data)
-								except:
-									#'编码问题，不予导出'
-									print record
-									pass
+									n += 1
+							else:
+								ws.write(row+n,col,"")
+								n += 1
 						else:
-							try:
-								ws.write(row,col,record[col])
-							except:
-								#'编码问题，不予导出'
-								print record
-								pass
+							ws.write(row,col,record[col])
+
 					if row_l:
-						row = row + max(row_l)
+						if max(row_l):
+							row = row + max(row_l)
+						else:
+							row = row + 1
 					else:
 						row += 1
 				try:

@@ -43,9 +43,13 @@ class surveyParticipance(resource.Resource):
 		"""
 		if 'id' in request.GET:
 			survey_participance = app_models.surveyParticipance.objects.get(id=request.GET['id'])
-			webapp_user_name = member_models.WebAppUser.get_member_by_webapp_user_id(survey_participance.webapp_user_id).username_for_title
-			if webapp_user_name == "":
-				webapp_user_name = u'非会员'
+			members = member_models.Member.objects.filter(id=survey_participance.member_id)
+			if members >0:
+				member = members[0]
+				if member.is_subscribed:
+					webapp_user_name = member.username_for_html
+				else:
+					webapp_user_name = u"非会员"
 			termite_data = survey_participance.termite_data
 			item_data_list = []
 
