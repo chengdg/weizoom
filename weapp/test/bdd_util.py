@@ -64,7 +64,8 @@ def login(user, password=None, **kwargs):
 		if hasattr(context, 'client'):
 			if context.client.user.username == user:
 				#如果已经登录了，且登录用户与user相同，直接返回
-				return context.client
+				#return context.client
+				context.client.logout()
 			else:
 				#如果已经登录了，且登录用户不与user相同，退出登录
 				context.client.logout()
