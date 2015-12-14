@@ -184,7 +184,7 @@ Scenario: 1 分享红包分析
 		}
 		"""
 	And tom使用支付方式'货到付款'进行支付
-	Then tom'能够领取'分享红包
+	Then tom'能够'领取分享红包
 
 	Given jobs登录系统
 	When jobs对订单进行发货
