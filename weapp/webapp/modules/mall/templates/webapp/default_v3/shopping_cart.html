@@ -394,7 +394,8 @@ $(document).ready(function() {
                         var $product = $(this).parents('.xa-product');
                         var $check = $product.find('.xa-check');
                         $(this).data('view').setMaxCount(maxCount);
-                        if(maxCount > 0 && $(this).data('view').count > maxCount){
+
+                        if(maxCount > 0 && $(this).data('view').count > maxCount || $(this).data('view').count == 0){
                             $product.find('.xui-understock').show();
                             $check.removeClass('xui-checkCart').addClass('xui-disabled-radio');
                             view.unselectProduct($product);
