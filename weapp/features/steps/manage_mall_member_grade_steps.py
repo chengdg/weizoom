@@ -161,7 +161,7 @@ def step_impl(context, user, name):
     context.client.post('/mall2/api/member_grade_list/?_method=post', {'grades': json.dumps(data)})
 
 
-@when(u'{user}更新"{webapp_user_name}"的会员等级')
+@when(u"{user}更新'{webapp_user_name}'的会员等级")
 def step_impl(context, user, webapp_user_name):
     json_data = json.loads(context.text)
     grade_name = json_data['member_rank']

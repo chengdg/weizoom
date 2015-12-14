@@ -1,4 +1,4 @@
-# __author__ : "冯雪静"
+ # __author__ : "冯雪静"
 #editor:王丽 2015.10.16
 Feature: 批量发货
 """
@@ -16,7 +16,7 @@ Background:
 			"name": "商品1",
 			"price": 100,
 			"stocks": 4
-		 }]
+		}]
 		"""
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
@@ -508,7 +508,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 		}
 		"""
 	And jobs'支付'订单'00011'
-	Then jobs能获得订单"00011"
+	Then jobs能获得订单'00011'
 		"""
 		{
 			"order_no":"00011-100",
@@ -529,7 +529,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 		}
 		"""
 	And jobs'支付'订单'00010'
-	Then jobs能获得订单"00010"
+	Then jobs能获得订单'00010'
 		"""
 		{
 			"order_no":"00010-190",
@@ -550,7 +550,7 @@ Scenario: 3 对修改过价格的订单进行批量发货
 		}
 		"""
 	And jobs'支付'订单'00009'
-	Then jobs能获得订单"00009"
+	Then jobs能获得订单'00009'
 		"""
 		{
 			"order_no":"00009-10",

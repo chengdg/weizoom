@@ -66,7 +66,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"shipper": ""
 		}
 		"""
-	Then jobs能获得订单"00008"
+	Then jobs能获得订单'00008'
 		"""
 		{
 			"order_no":"00008",
@@ -89,7 +89,7 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"shipper": "jobs"
 		}
 		"""
-	Then jobs能获得订单"00007"
+	Then jobs能获得订单'00007'
 		"""
 		{
 			"order_no":"00007",
@@ -104,8 +104,8 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"ship_tel":"13811223344"
 		}
 		"""
-	When jobs完成订单"00008"
-	Then jobs能获得订单"00008"
+	When jobs完成订单'00008'
+	Then jobs能获得订单'00008'
 		"""
 		{
 			"order_no":"00008",
@@ -120,8 +120,8 @@ Scenario: 1 对待发货订单进行发货不需要物流
 			"ship_tel":"13811223344"
 		}
 		"""
-	When jobs完成订单"00007"
-	Then jobs能获得订单"00007"
+	When jobs完成订单'00007'
+	Then jobs能获得订单'00007'
 		"""
 		{
 			"order_no":"00007",

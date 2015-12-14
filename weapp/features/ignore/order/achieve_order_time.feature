@@ -53,8 +53,8 @@ Scenario: 1 后台完成订单记录时间
 			"shipper": "jobs"
 		}
 		"""
-	When jobs完成订单"001"
-	Then jobs能获得订单"001"
+	When jobs完成订单'001'
+	Then jobs能获得订单'001'
 		"""
 		{
 			"order_no": "001",

@@ -107,7 +107,7 @@ Background:
 @mall2 @promotion @promotionPremium
 Scenario: 1 结束状态为'未开始'的买赠活动
 	Given jobs登录系统
-	When jobs"结束"促销活动"活动名称:商品1买赠"
+	When jobs'结束'促销活动'活动名称:商品1买赠'
 	Then jobs获取买赠活动列表
 		"""
 		[{
@@ -125,7 +125,7 @@ Scenario: 1 结束状态为'未开始'的买赠活动
 @mall2 @promotion @promotionPremium
 Scenario: 2 结束状态为'进行中'的买赠活动
 	Given jobs登录系统
-	When jobs"结束"促销活动"活动名称:商品2买赠"
+	When jobs'结束'促销活动'活动名称:商品2买赠'
 	Then jobs获取买赠活动列表
 		"""
 		[{

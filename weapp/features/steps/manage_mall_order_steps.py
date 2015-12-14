@@ -567,7 +567,7 @@ def step_get_specify_order(context, user):
     del csv
 
 
-@then(u'{user}能获得订单"{order_id}"')
+@then(u"{user}能获得订单'{order_id}'")
 def step_impl(context, user, order_id):
     real_id = bdd_util.get_order_by_order_no(order_id).id
     response = context.client.get('/mall2/order/?order_id=%d' % real_id)
@@ -612,7 +612,7 @@ def step_impl(context, user, order_id):
     bdd_util.assert_dict(expected, actual_order)
 
 
-@when(u'{user}完成订单"{order_id}"')
+@when(u"{user}完成订单'{order_id}'")
 def step_impl(context, user, order_id):
     order = __get_order(context, order_id)
     data = {
@@ -669,7 +669,7 @@ def __get_actual_orders(json_items, context):
     return actual_orders
 
 
-@then(u'{user}能获得订单"{order_id}"操作日志')
+@then(u"{user}能获得订单'{order_id}'操作日志")
 def step_impl(context, user, order_id):
     order_id = steps_db_util.get_order_by_order_id(order_id).id
     response = context.client.get('/mall2/order/?order_id=%d' % order_id)

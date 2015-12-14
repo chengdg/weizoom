@@ -717,7 +717,7 @@ Scenario:18 不同等级的会员购买有会员价同时有运费配置
 			"discount": "9"
 		}]
 		"""
-	And jobs更新"bill"的会员等级
+	And jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",

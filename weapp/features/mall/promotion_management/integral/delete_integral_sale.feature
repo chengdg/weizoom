@@ -84,7 +84,7 @@ Background:
 @mall2 @promotion @promotionIntegral @integral
 Scenario: 1 删除状态为'已结束'的积分应用活动
 		Given jobs登录系统
-		When jobs"删除"促销活动"商品1积分应用"
+		When jobs'删除'促销活动'商品1积分应用'
 		Then jobs获取积分应用活动列表
 			"""
 			[{
@@ -137,7 +137,7 @@ Scenario: 3 在按"商品名称"查询的查询结果下删除积分活动
 			"name": "商品1积分应用"
 		}]
 		"""
-	When jobs"删除"促销活动"商品1积分应用"
+	When jobs'删除'促销活动'商品1积分应用'
 	Then jobs获取积分应用活动列表
 		"""
 		[]
@@ -159,7 +159,7 @@ Scenario: 4 在按"商品条码"查询的查询结果下删除积分活动
 			"name": "商品1积分应用"
 		}]
 		"""
-	When jobs"删除"促销活动"商品1积分应用"
+	When jobs'删除'促销活动'商品1积分应用'
 	Then jobs获取积分应用活动列表
 		"""
 		[]
@@ -182,7 +182,7 @@ Scenario: 5 在按"促销状态"查询的查询结果下删除积分活动
 			"status":"已结束"
 		}]
 		"""
-	When jobs"删除"促销活动"商品1积分应用"
+	When jobs'删除'促销活动'商品1积分应用'
 	Then jobs获取积分应用活动列表
 		"""
 		[]
@@ -207,7 +207,7 @@ Scenario: 6 在按"活动时间"查询的查询结果下删除积分活动
 			"end_date": "2015-08-10"
 		}]
 		"""
-	When jobs"删除"促销活动"商品1积分应用"
+	When jobs'删除'促销活动'商品1积分应用'
 	Then jobs获取积分应用活动列表
 		"""
 		[]

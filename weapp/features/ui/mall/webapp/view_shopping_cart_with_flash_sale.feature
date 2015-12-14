@@ -550,7 +550,7 @@ Scenario: 10 限购活动会员价添加到购物车中
 		}]
 		"""
 	
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",

@@ -1448,7 +1448,7 @@ Given jobs登录系统
 			"member_rank": "金牌会员"
 		}
 		"""
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",

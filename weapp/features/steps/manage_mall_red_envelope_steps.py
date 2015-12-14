@@ -177,7 +177,7 @@ action2code = {
     u'删除': 'delete'
 }
 
-@when(u'{user}-{action}分享红包"{red_envelope_rule_name}"')
+@when(u"{user}'{action}'分享红包'{red_envelope_rule_name}'")
 def step_impl(context, user, action, red_envelope_rule_name):
     id = __get_red_envelope_rule_id(red_envelope_rule_name)
     params = {
@@ -203,7 +203,7 @@ is_can2code = {
     u'能够': True,
     u'不能': False
 }
-@then(u'{member}-{is_can}领取分享红包')
+@then(u"{member}'{is_can}'领取分享红包")
 def step_impl(context, member, is_can):
     client = context.client
     pay_result = context.pay_result
@@ -332,7 +332,7 @@ def step_impl(context, user, red_envelope_rule_name):
 
     bdd_util.assert_list(expected, actual)
 
-@then(u'{user}能获得分享红包"{red_envelope_rule_name}-{share_member}"订单号"{order_no}"的引入详情')
+@then(u"{user}能获得分享红包'{red_envelope_rule_name}-{share_member}'订单号'{order_no}'的引入详情")
 def step_impl(context, user, red_envelope_rule_name,share_member,order_no):
     id = __get_red_envelope_rule_id(red_envelope_rule_name)
 

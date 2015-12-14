@@ -109,7 +109,7 @@ Scenario:1 bill取消订单
 			"status": "已取消"
 		}
 		"""
-	Then jobs后端获取"商品1"库存
+	Then jobs后端获取'商品1'库存
 		"""
 		{
 			"name": "商品1",
@@ -141,7 +141,7 @@ Scenario:2 bill取消使用了优惠券的订单
 			"status": "已取消"
 		}
 		"""
-	Then jobs后端获取"商品1"库存
+	Then jobs后端获取'商品1'库存
 		"""
 		{
 			"name": "商品1",
@@ -186,7 +186,7 @@ Scenario:3 bill取消使用了积分的订单
 			"status": "已取消"
 		}
 		"""
-	Then jobs后端获取"商品1"库存
+	Then jobs后端获取'商品1'库存
 		"""
 		{
 			"name": "商品1",
@@ -225,7 +225,7 @@ Scenario:4 bill取消使用积分和优惠券的订单
 			"status": "已取消"
 		}
 		"""
-	Then jobs后端获取"商品1"库存
+	Then jobs后端获取'商品1'库存
 		"""
 		{
 			"name": "商品1",

@@ -97,7 +97,7 @@ def step_delete_product_with_custom_model(context, user, product_name, model_nam
     step_update_product(context, user, product_name)
 
 
-@then(u'{user}后端获取"{product_name}"库存')
+@then(u"{user}后端获取'{product_name}'库存")
 def step_get_product_stock(context, user, product_name):
     expected = json.loads(context.text)
     response = get_product_response_from_web_page(context, product_name)
@@ -257,7 +257,7 @@ def step_impl(context, user):
     update_products(context, user, u'回收站')
 
 
-@when(u"{user}-{action}商品'{product_name}'")
+@when(u"{user}'{action}'商品'{product_name}'")
 def update_product(context, user, action, product_name):
     __update_prducts_by_name(context, product_name, action)
 

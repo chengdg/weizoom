@@ -169,7 +169,7 @@ Background:
         """
 
     When bill访问jobs的webapp
-    And bill完成订单'1'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'1'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -180,7 +180,7 @@ Background:
             "picture_list": "['/static/upload/webapp/3_20151102/2015_11_02_18_24_49_948000.png']"
         }
         """
-    And bill完成订单'12'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'12'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -191,7 +191,7 @@ Background:
             "picture_list": "['/static/upload/webapp/3_20151102/2015_11_02_18_24_49_948000.png']"
         }
         """
-    And bill完成订单'13'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'13'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -202,7 +202,7 @@ Background:
             "picture_list": "['/static/upload/webapp/3_20151102/2015_11_02_18_24_49_948000.png']"
         }
         """
-    And bill完成订单'14'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'14'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -213,7 +213,7 @@ Background:
             "picture_list": "['/static/upload/webapp/3_20151102/2015_11_02_18_24_49_948000.png']"
         }
         """
-    And bill完成订单'15'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'15'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -224,7 +224,7 @@ Background:
             "picture_list": "['/static/upload/webapp/3_20151102/2015_11_02_18_24_49_948000.png']"
         }
         """
-    And bill完成订单'16'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'16'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -236,7 +236,7 @@ Background:
         }
         """
 
-    And bill完成订单'2'中'商品2'的评价包括'文字'
+    And bill完成订单'2'中'商品2'的评价
         """
         {
             "product_score": "4",
@@ -289,7 +289,7 @@ Background:
         }]
         """
     When tom访问jobs的webapp
-    When tom完成订单'3'中'商品1'的评价包括'文字与晒图'
+    When tom完成订单'3'中'商品1'的评价
         """
         {
             "product_score": "4",
@@ -300,7 +300,7 @@ Background:
             "picture_list": "['/static/upload/webapp/3_20151102/2015_11_02_18_24_49_948000.png']"
         }
         """
-    When tom完成订单'4'中'商品2'的评价包括'文字'
+    When tom完成订单'4'中'商品2'的评价
         """
         {
             "product_score": "4",

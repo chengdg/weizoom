@@ -105,7 +105,7 @@ Background:
 
 Scenario: 1 评价包括文字与晒图
     When bill访问jobs的webapp
-    And bill完成订单'1'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'1'中'商品1'的评价
     """
         {
             "product_score": "4",
@@ -121,7 +121,7 @@ Scenario: 1 评价包括文字与晒图
     # And 订单'1'中'商品1'的评商品评价提示详情'评价文字要求在200字以内'
 
     #文字在200以内，成功提交
-    When bill完成订单'1'中'商品1'的评价包括'文字与晒图'
+    When bill完成订单'1'中'商品1'的评价
     """
         {
             "product_score": "4",
@@ -148,7 +148,7 @@ Scenario: 1 评价包括文字与晒图
 
 Scenario: 2 无晒图
     When bill访问jobs的webapp
-    And bill完成订单'1'中'商品1'的评价包括'文字与晒图'
+    And bill完成订单'1'中'商品1'的评价
     """
         {
             "product_score": "4",

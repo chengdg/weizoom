@@ -459,7 +459,7 @@ Scenario: 3 购买多个供货商的多个商品,使用微信支付
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",
@@ -527,7 +527,7 @@ Scenario: 3 购买多个供货商的多个商品,使用微信支付
 		}]
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",
@@ -827,7 +827,7 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",
@@ -900,7 +900,7 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}]
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",
@@ -931,7 +931,7 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}
 		"""
 	Given jobs登录系统
-	When jobs完成订单"001-土小宝"
+	When jobs完成订单'001-土小宝'
 	Then jobs可以看到订单列表
 		"""
 		[{
@@ -965,7 +965,7 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}]
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",
@@ -996,7 +996,7 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}
 		"""
 	Given jobs登录系统
-	When jobs完成订单"001-丹江湖"
+	When jobs完成订单'001-丹江湖'
 	Then jobs可以看到订单列表
 		"""
 		[{
@@ -1030,7 +1030,7 @@ Scenario: 4 购买多个供货商的多个商品,使用货到付款
 		}]
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",

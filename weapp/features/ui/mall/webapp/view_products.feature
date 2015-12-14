@@ -259,7 +259,7 @@ Scenario: 5 浏览会员价的商品列表
 			"discount": "7"
 		}]
 		"""
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",

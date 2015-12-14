@@ -58,7 +58,7 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 			"pay_times": 0
 		}]
 		"""
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",
@@ -96,7 +96,7 @@ Scenario: 1 手动把会员调到自动升级的会员等级里面
 			"pay_times": 0
 		}]
 		"""
-	When jobs更新"tom"的会员等级
+	When jobs更新'tom'的会员等级
 		"""
 		{
 			"name": "tom",

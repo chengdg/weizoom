@@ -79,7 +79,7 @@ Background:
 @mall2 @promotion @promotionFlash
 Scenario: 1 删除状态为'已结束'的限时抢购活动
 	Given jobs登录系统
-	When jobs"删除"促销活动"商品0抢购"
+	When jobs'删除'促销活动'商品0抢购'
 	Then jobs获取限时抢购活动列表
 		"""
 		[{
@@ -128,7 +128,7 @@ Scenario: 3 在按"商品名称"查询的查询结果下删除限时抢购活动
 			"name": "商品0抢购"
 		}]
 		"""
-	When jobs"删除"促销活动"商品0抢购"
+	When jobs'删除'促销活动'商品0抢购'
 	Then jobs获取限时抢购活动列表
 		"""
 		[]
@@ -150,7 +150,7 @@ Scenario: 4 在按"商品条码"查询的查询结果下删除限时抢购活动
 			"name": "商品0抢购"
 		}]
 		"""
-	When jobs"删除"促销活动"商品0抢购"
+	When jobs'删除'促销活动'商品0抢购'
 	Then jobs获取限时抢购活动列表
 		"""
 		[]
@@ -174,7 +174,7 @@ Scenario: 5 在按"促销状态"查询的查询结果下删除限时抢购活动
 			"name": "商品0抢购"
 		}]
 		"""
-	When jobs"删除"促销活动"商品0抢购"
+	When jobs'删除'促销活动'商品0抢购'
 	Then jobs获取限时抢购活动列表
 		"""
 		[{
@@ -203,7 +203,7 @@ Scenario: 6 在按"活动时间"查询的查询结果下删除限时抢购活动
 			"name": "商品0抢购"
 		}]
 		"""
-	When jobs"删除"促销活动"商品1抢购"
+	When jobs'删除'促销活动'商品1抢购'
 	Then jobs获取限时抢购活动列表
 		"""
 		[{
@@ -248,7 +248,7 @@ Scenario: 7 删除参加活动的商品时，此商品参加的活动结束
 			"actions": ["详情","删除"]
 		}]
 		"""
-	When jobs-永久删除商品'商品0'
+	When jobs'永久删除'商品'商品0'
   	When jobs设置查询条件
 		"""
 		{
