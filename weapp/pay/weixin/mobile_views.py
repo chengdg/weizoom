@@ -45,7 +45,7 @@ def index(request):
 		weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
 		order = Order.objects.get(order_id=order_id)
 		try:
-			component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, user_id=woid)[0]
+			component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=weixin_pay_config.app_id, user_id=woid)[0]
 			component_info = component_authed_appid.component_info
 			component_appid = component_info.app_id
 		except:
