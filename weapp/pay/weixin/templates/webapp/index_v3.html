@@ -78,12 +78,12 @@
 			
 		    var pay = function() {
 				if (code == '') {
-					//var redirect_uri = encodeURIComponent(window.location.href);
+					var redirect_uri = encodeURIComponent(window.location.href);
 			        //var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base#wechat_redirect";
 			        //var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
 					//setTimeout(function(){document.location.href = auth_url},500);
 
-					var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base&component_appid="+component_appid+" #wechat_redirect";
+					var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base&component_appid="+component_appid+"#wechat_redirect";
 					var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
 					alert(auth_url)
 					setTimeout(function(){document.location.href = auth_url},500);
