@@ -317,6 +317,9 @@ def __clear_all_app_data():
 	apps_lottery_models.lottoryRecord.objects.all().delete()
 	apps_lottery_models.lotteryControl.objects.all().delete()
 
+	#会员积分策略全部清零
+	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)
+
 	#清理mongo中，签到page
 	#sign_pagestore = pagestore_manager.get_pagestore('mongo')
 	#sign_pagestore.remove_all()
