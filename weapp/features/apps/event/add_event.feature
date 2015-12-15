@@ -17,7 +17,7 @@ Feature: 应用和营销-活动报名
 		3）点击"添加"按钮，在后面追加项目，设置"填写项"和"是否必填"；"是否必填"默认"否"
 """
 
-@apps @event @yang1
+@apps @event @add_event
 Scenario:1 新建活动报名-无奖励
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -55,25 +55,25 @@ Scenario:1 新建活动报名-无奖励
 					}]
 		}]
 		"""
-	# Then jobs获得活动报名列表
-	# 	"""
-	# 	[{
-	# 		"name":"活动报名-无奖励",
-	# 		"part_num": 0,
-	# 		"prize_type": "无奖励",
-	# 		"start_date":"明天",
-	# 		"end_date":"2天后",
-	# 		"status":"未开始",
-	# 		"actions": ["链接","预览","查看结果"]
-	# 	}]
-	# 	"""
+	Then jobs获得活动报名列表
+		"""
+		[{
+			"name":"活动报名-无奖励",
+			"participant_count": 0,
+			"prize_type": "无奖励",
+			"start_date":"明天",
+			"end_date":"2天后",
+			"status":"未开始",
+			"actions": ["删除","链接","预览","查看结果"]
+		}]
+		"""
 
-@apps @event
+@apps @event @add_event
 Scenario:2 新建活动报名-积分
 	Given jobs登录系统
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-积分",
 			"subtitle":"活动报名-副标题-积分",
 			"content":"内容描述-积分",
@@ -108,13 +108,13 @@ Scenario:2 新建活动报名-积分
 						"item_name":"开店时间",
 						"is_required":"true"
 					}]
-		}
+		}]
 		"""
 	Then jobs获得活动报名列表
 		"""
 		[{
 			"name":"活动报名-积分",
-			"part_num": 0,
+			"participant_count": 0,
 			"prize_type": "积分",
 			"start_date":"1天前",
 			"end_date":"2天后",
@@ -123,7 +123,7 @@ Scenario:2 新建活动报名-积分
 		}]
 		"""
 
-@apps @event
+@apps @event @add_event
 Scenario:3 新建活动报名-优惠券
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -140,7 +140,7 @@ Scenario:3 新建活动报名-优惠券
 		"""
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-优惠券",
 			"subtitle":"活动报名-副标题-优惠券",
 			"content":"内容描述-优惠券",
@@ -151,22 +151,22 @@ Scenario:3 新建活动报名-优惠券
 			"coupon":"优惠券1",
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"QQ",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":true
+						"is_selected":"true"
 					}],
 			"items_add":[{
 						"item_name":"店铺类型",
@@ -175,13 +175,13 @@ Scenario:3 新建活动报名-优惠券
 						"item_name":"开店时间",
 						"is_required":"true"
 					}]
-		}
+		}]
 		"""
 	Then jobs获得活动报名列表
 		"""
 		[{
 			"name":"活动报名-优惠券",
-			"part_num": 0,
+			"participant_count": 0,
 			"prize_type": "优惠券",
 			"start_date":"3天前",
 			"end_date":"1天前",

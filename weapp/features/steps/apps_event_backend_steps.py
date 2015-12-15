@@ -62,22 +62,22 @@ def __bool2Bool(bo):
 # 	else:
 # 		return None
 
-# def __date2time(date_str):
-# 	"""
-# 	字符串 今天/明天……
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	cr_date = date_str
-# 	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-# 	return p_time
+def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
-# def __datetime2str(dt_time):
-# 	"""
-# 	datetime型数据，转为字符串型，日期
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
-# 	return dt_time
+def __datetime2str(dt_time):
+	"""
+	datetime型数据，转为字符串型，日期
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
+	return dt_time
 
 # def __limit2name(limit):
 # 	"""
@@ -187,17 +187,17 @@ def __get_coupon_rule_id(coupon_rule_name):
 # 	else:
 # 		return -1
 
-# def __get_actions(status):
-# 	"""
-# 	根据输入活动报名状态
-# 	返回对于操作列表
-# 	"""
-# 	actions_list = [u"查看结果",u"链接",u"预览"]
-# 	if status == u"进行中":
-# 		actions_list.insert(1,u"关闭")
-# 	elif status=="已结束" or "未开始":
-# 		actions_list.insert(1,u"删除")
-# 	return actions_list
+def __get_actions(status):
+	"""
+	根据输入活动报名状态
+	返回对于操作列表
+	"""
+	actions_list = [u"链接",u"预览",u"查看结果"]
+	if status == u"进行中":
+		actions_list.insert(0,u"关闭")
+	elif status=="已结束" or "未开始":
+		actions_list.insert(0,u"删除")
+	return actions_list
 
 def name2permission(name):
 	name_dic={u"必须关注才可参与":"member",u"无需关注即可参与":"no_member"}
@@ -413,19 +413,18 @@ def __prize_settings_process(prize_type,integral,coupon):
 
 	if prize_type:
 		if prize_type == "无奖励":
-			prize['type']="no_prize",
-			prize['data']= None
+			prize = {"type":"no_prize","data":None}
 		elif prize_type=="积分":
-			prize['type']="integral",
-			prize['data']=integral
+			prize = {"type":"integral","data":integral}
 		elif prize_type == "优惠券":
 			coupon_name = coupon
 			coupon_id = __get_coupon_rule_id(coupon_name)
-			prize['type'] ="coupon"
-			prize['data'] = {
-				"id":coupon_id,
-				"name":coupon
-			}
+			prize = {"type":"coupon",
+					 "data":{
+						"id":coupon_id,
+						"name":coupon_name
+					 }
+					}
 		else:
 			pass
 	return prize
@@ -731,19 +730,20 @@ def step_impl(context,user):
 	for text in text_list:
 		__Create_Event(context,text,user)
 
-# @then(u'{user}获得活动报名列表')
-# def step_impl(context,user):
-# 	design_mode = 0
-# 	count_per_page = 10
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+@then(u'{user}获得活动报名列表')
+def step_impl(context,user):
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
 
-# 	actual_list = []
-# 	expected = json.loads(context.text)
+	actual_list = []
+	expected = json.loads(context.text)
 
 # 	#搜索查看结果
-# 	if hasattr(context,"search_event"):
+	if hasattr(context,"search_event"):
+		pass
 # 		rec_search_list = context.search_event
 # 		for item in rec_search_list:
 # 			tmp = {
@@ -766,41 +766,42 @@ def step_impl(context,user):
 # 		print("expected: {}".format(expected))
 
 # 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
-# 	#其他查看结果
-# 	else:
-# 		#分页情况，更新分页参数
-# 		if hasattr(context,"paging"):
-# 			paging_dic = context.paging
-# 			count_per_page = paging_dic['count_per_page']
-# 			page = paging_dic['page_num']
+	#其他查看结果
+	else:
+		# #分页情况，更新分页参数
+		# if hasattr(context,"paging"):
+		# 	paging_dic = context.paging
+		# 	count_per_page = paging_dic['count_per_page']
+		# 	page = paging_dic['page_num']
 
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
 
 
-# 		print("expected: {}".format(expected))
+		print("expected: {}".format(expected))
 
-# 		rec_event_url ="/apps/event/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 		rec_event_response = context.client.get(rec_event_url)
-# 		rec_event_list = json.loads(rec_event_response.content)['data']['items']#[::-1]
+		rec_event_url ="/apps/event/api/events/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+		rec_event_response = context.client.get(rec_event_url)
+		rec_event_list = json.loads(rec_event_response.content)['data']['items']#[::-1]
 
-# 		for item in rec_event_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":__date2time(item['start_time']),
-# 				"end_time":__date2time(item['end_time']),
-# 				"participant_count":item['participant_count'],
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
-# 		print("actual_data: {}".format(actual_list))
-# 		bdd_util.assert_list(expected,actual_list)
+		for item in rec_event_list:
+			tmp = {
+				"name":item['name'],
+				"participant_count":item['participant_count'],
+				"prize_type":item["prize_type"],
+				"start_time":__date2time(item['start_time']),
+				"end_time":__date2time(item['end_time']),
+				"status":item['status']
+			}
+			tmp["actions"] = __get_actions(item['status'])
+			actual_list.append(tmp)
+		print("actual_data: {}".format(actual_list))
+		bdd_util.assert_list(expected,actual_list)
 
 # @when(u"{user}编辑活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
