@@ -185,11 +185,11 @@ def __get_actions(status):
 	根据输入抽奖状态
 	返回对于操作列表
 	"""
-	actions_list = [u"查看结果",u"预览"]
+	actions_list = [u"查看结果",u"链接",u"预览"]
 	if status == u"进行中":
-		actions_list.insert(1,u"关闭")
+		actions_list.insert(2,u"关闭")
 	elif status=="已结束" or "未开始":
-		actions_list.insert(1,u"删除")
+		actions_list.insert(2,u"删除")
 	return actions_list
 
 def __get_lotteryPageJson(args):
