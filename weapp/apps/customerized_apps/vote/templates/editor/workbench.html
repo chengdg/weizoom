@@ -8,6 +8,9 @@
         .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
             cursor: pointer;
         }
+        .propertyGroup_property_horizontalField .propertyGroup_property_label{
+            min-width: 70px;
+        }
     </style>
 {% endblock %}
 
@@ -75,7 +78,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.selection", "appkit.textlist", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.textselection", "appkit.imageselection", "appkit.textlist", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 {% if not is_deleted_data %}
   <script type="text/javascript">

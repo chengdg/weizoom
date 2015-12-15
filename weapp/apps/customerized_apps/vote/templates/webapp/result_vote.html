@@ -10,12 +10,21 @@
     .wui-textSelection .wui-i-items {
         color: #666666;
     }
+    .wui-imageSelection .wui-i-items{
+        padding: 15px;
+        background: white;
+    }
     .wui-textSelection .wui-i-item {
         border-bottom: 0;
     }
+
     .ui-progressbar-h .ui-progressbar-bg {
         height: 15px;
         margin-top: 10px;
+    }
+    .wui-imageSelection .ui-progressbar-h .ui-progressbar-bg {
+        height: 20px;
+        margin-top: 0;
     }
     .ui-progressbar-bg {
         background: #eee none repeat scroll 0 0;
@@ -29,11 +38,39 @@
         width: 20px;
         height: 20px;
     }
+    .wa-progress-msg{
+        position: absolute;
+        margin-top: -19px;
+        margin-left: 10%;
+    }
+    .wui-selectBox-display-list label{
+        float: left;
+        display: block;
+        margin-left: -5px;
+        margin-top: 85%;
+        width: 105px;
+    }
+    .mask{
+        position: absolute;
+        z-index: 999;
+        height: 90%;
+        width: 100%;
+    }
+    .wui-image-selected{
+        border: 1px solid #19A4F9;
+    }
+    .wui-selectBox-display-table .wui-inner-selectionwithimage{
+        margin-bottom: 8px;
+    }
+    /*.wui-imageSelection{
+        padding: 0;
+    }*/
     </style>
 
 {% endblock %}
 
 {% block content-panel %}
+    <div class="mask"></div>
     <div class="wa-page xui-default-background" data-page-title="">
         <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
             <h1 class="wui-i-title xa-title">{{ vote_detail.name }}</h1>
@@ -61,7 +98,62 @@
             </div>
         </div>
         {% for item in q_vote %}
-            {% ifequal item.isShortcuts False %}
+            {% ifequal item.selectionType 'image' %}
+                <div class="wui-imageSelection wa-items">
+                    <h1 class="wui-i-title">
+                        {{ item.title }}
+                    </h1>
+                    <ul class="wui-i-items xa-inputControl">
+                        {% for select in item.values %}
+                            {% if item.display_type == 'table' %}
+                                <li class="wui-selectBox-display-table">
+                                    <div class="wui-selectionwithimage xa-inputControl"
+                                        data-type="radio"
+                                        data-input-name="{{select.name}}"
+                                        data-input-type="imageselection"
+                                        data-control-type="appkit.imageselection"
+                                    >
+                                        <div class="wui-inner-selectionwithimage {% if select.isSelect %}wui-image-selected{% endif %}">
+                                            <div class="wui-inner-img">
+                                            <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" class="wui-i-image">
+                                            <span class="wui-i-text">{{ select.name }}</span>
+                                            </div>
+                                        </div>
+                                        <label style="padding: 3px 0;">
+                                            <span data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
+                                            <span class="wa-progress-msg">{{ select.count }}票&nbsp;&nbsp;{{ select.per }}%</span>
+                                        </label>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li class="wui-selectBox-display-list">
+                                    <div class="wui-selectionwithimage xa-inputControl {% if select.isSelect %}wui-image-selected{% endif %}"
+                                        data-type="radio"
+                                        data-input-name="{{select.name}}"
+                                        data-input-type="imageselection"
+                                        data-control-type="appkit.imageselection"
+                                    >
+                                        <div class="wui-inner-selectionwithimage">
+                                            <div class="wui-inner-img">
+                                            <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" class="wui-i-image">
+                                            </div>
+                                        </div>
+                                        <div style="position: relative;float: left;">
+                                            <span class="wui-i-text">{{ select.name }}</span>
+                                            <label style="padding: 3px 0;">
+                                                <span data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
+                                                <span class="wa-progress-msg">{{ select.count }}票&nbsp;&nbsp;{{ select.per }}%</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        <li style="clear: both"></li>
+                    </ul>
+                </div>
+            {% endifequal %}
+            {% ifequal item.selectionType 'text' %}
                 <div class="wui-textSelection">
                     <h1 class="wui-i-title">
                         {{ item.title }}
@@ -69,7 +161,6 @@
                     <ul class="wui-i-items xa-inputControl">
                         {% for select in item.values %}
                         <li class="wui-i-item">
-                            <div class="cover_div" style="position: absolute;z-index: 999;height: 50px;"></div>
                             <label style="padding: 3px 0;" >
                                 <span class="
                                     {% ifequal select.type 'radio' %}
@@ -84,7 +175,7 @@
                                         {% endifequal %}
                                     {% endifequal %}"></span>
                                 <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
-                                <span style="display: inline-block;float: right;margin-top: -15px;">{{ select.per }}%&nbsp;票</span>
+                                <span style="display: inline-block;float: right;margin-top: -15px;">{{ select.count }}票&nbsp;{{ select.per }}%</span>
                                 <span data-per="{{ select.per }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
                             </label>
 
@@ -92,15 +183,16 @@
                         {% endfor %}
                     </ul>
                 </div>
-            {% else %}
-            <ul class="wui-shortcuts" style="padding: 0">
-                <li class="wui-i-item">
-                    <label class="wui-i-label">{{ item.title }}</label>
-                    <div class="wui-i-inputContainer xa-inputControl" >
-                        <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="background:#fff;color:#595959;font-size:13px;" disabled>
-                    </div>
-                </li>
-            </ul>
+            {% endifequal %}
+            {% ifequal item.selectionType 'shortcuts' %}
+                <ul class="wui-shortcuts" style="padding: 0">
+                    <li class="wui-i-item">
+                        <label class="wui-i-label">{{ item.title }}</label>
+                        <div class="wui-i-inputContainer xa-inputControl" >
+                            <input class="wui-i-input" type="text"  placeholder="" value="{{ item.values }}" style="background:#fff;color:#595959;font-size:13px;" disabled>
+                        </div>
+                    </li>
+                </ul>
             {% endifequal %}
         {% endfor %}
         {% if vote_detail.prize_type != 'no_prize' %}
@@ -116,8 +208,6 @@
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        var li_width = $('.wui-textSelection').find('li').css('width');
-        $('.cover_div').css('width',li_width);
         $('.progressbar').each(function(){
             $(this).progressbar({
                 initValue: $(this).attr('data-per')

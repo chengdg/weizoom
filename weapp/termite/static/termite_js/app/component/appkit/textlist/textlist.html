@@ -3,9 +3,10 @@
 
 {% ifequal component.type 'appkit.textlist' %}
 	<ul
-		class="wui-i-items wui-shortcuts"
+		class="wui-i-items wui-shortcuts wa-items"
 		data-input-name="{{component.model.title}}"
         data-component-cid="{{component.cid}}"
+        data-component-type="appkit.textlist"
 	>
         {% if component.model.modules.name.select %}
         <li class="wui-i-item">

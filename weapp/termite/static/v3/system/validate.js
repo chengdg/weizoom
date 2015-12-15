@@ -112,6 +112,22 @@ W.ValidaterClass = function() {
             },
             errorHint: ''
         },
+        'require-select-selectbox': {
+            type: 'function',
+            extract: 'element',
+            check: function(element) {
+                result = false;
+                var $checkEl = element.find(element.attr('data-check-el'));
+                var checkClassNameArr = element.attr('data-check-className').trim().split(' ');
+                for (var i=0;i<checkClassNameArr.length;i++){
+                    if ($checkEl.hasClass(checkClassNameArr[i])){
+                        result = true;
+                    }
+                }
+                return result;
+            },
+            errorHint: ''
+        },
         'require-select-span': {
             type: 'function',
             extract: 'element',

@@ -172,6 +172,7 @@ $(document).ready(function() {
 
     var table = $('div[data-ui-role="advanced-table"]').data('view');
     table.afterload = function(){
+        $(".xa-link-copy").attr('data-clipboard-text', window.location.origin + $(".xa-link-copy").attr('data-clipboard-text'));
         var client = new ZeroClipboard( $(".xa-link-copy") , {
             moviePath: "/static_v2/zero_clipboard.swf"
         });

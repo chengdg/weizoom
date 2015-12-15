@@ -27,56 +27,135 @@
 {% endblock %}
 
 {% block content-panel %}
-<div>
-	<h1 class="tc">Vote({{record.id}})</h1>
-	<div>
-		<div class="xui-recordContainer">
-			{% for item in record.items %}
-			<div class="xui-record">
-				<h3>{{item.0}}</h3>
-				<p class="xui-inner-content">{{item.1}}</p>
-			</div>
-			{% endfor %}
-			<div class="xui-record">
-				<h3>电话</h3>
-				<input name="tel" type="text" placeholder="请输入电话号码" />
-			</div>
-		</div>
-		<div>
-			<a href="javascript:void(0);" class="xa-join xui-button" data-id="{{record.id}}">参与活动</a>
-		</div>
-	</div>
-</div>
+    {{ page_html_content|safe }}
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
+    $(function(){
+        initListener();
+    });
+
+    function initListener(){
+        //先解绑所有之前绑定的事件
+        $('.selection-radio').unbind();
+        $('.selection-checkbox').unbind();
+        //代理图文按钮点击状态切换
+        $('.wui-imageSelection').delegate('.wui-i-button', 'click', function(){
+            var className = 'wui-selectBox-selected';
+            var $this = $(this);
+            var type = $this.parents('.xa-inputControl').eq(0).attr('data-type');
+            if('radio' === type){
+                $this.parents('li').siblings().find('.wui-i-button').removeClass(className);
+                if($this.hasClass(className)) return;
+            }
+            $this.toggleClass(className);
+        });
+        //文本按钮点击状态切换
+        $('.wui-textSelection').delegate('li', 'click', function(){
+            var $this = $(this).find('span').first();
+            var type = $this.attr('data-type');
+            var className = 'radio' === type ? 'radio-select' : 'checkbox-select';
+            if('radio' === type){
+                $(this).siblings().find('span').removeClass(className);
+                if($this.hasClass(className)) return;
+            }
+            $this.toggleClass(className);
+        });
+        if (W.isPC) {
+            $('.xa-submitTermite').unbind('click');
+        }else {
+            //绑定提交按钮
+            $('.xa-submitTermite').unbind().on('click', function () {
+                if (!W.validate()) {
+                    return;
+                }
+                var data = {}, outerTitle, controlType;
+                var $items = $('.wa-items');
+                for (var j = 0; j < $items.length; j++) {
+                    var pid = j.toString();
+                    pid = pid.length < 2 ? '0' + pid : pid;
+                    var $item = $items.eq(j);
+                    outerTitle = pid + '_' + $item.attr('data-input-name');
+                    var $controls = $item.find('.xa-inputControl');
+                    var value = {}, display_type = '';
+                    for (var i = 0; i < $controls.length; ++i) {
+                        var $control = $controls.eq(i);
+                        var inputType = $control.attr('data-input-type');
+                        controlType = $control.attr('data-control-type');
+                        var name = $control.attr('data-input-name');
+                        var cid = i.toString();
+                        cid = cid.length < 2 ? '0' + cid : cid;
+                        name = cid + '_' + name;
+                        var datatype, className;
+                        if (inputType === 'textselection') {
+                            var $span = $control.find('span');
+                            datatype = $span.attr('data-type');
+                            className = 'radio' === datatype ? 'radio-select' : 'checkbox-select';
+                            value[name] = {
+                                type: datatype,
+                                isSelect: $span.hasClass(className)
+                            };
+                        } else if (inputType === 'imageselection') {
+                            datatype = $control.attr('data-type');
+                            className = 'wui-selectBox-selected';
+                            display_type = $item.attr('data-disp_type');
+                            value[name] = {
+                                type: datatype,
+                                isSelect: $control.find('.wui-i-button').hasClass(className),
+                                image: $control.find('img').attr('src'),
+                                mt: $control.find('.wui-i-text').css('margin-top')
+                            };
+                        } else if (inputType === 'text') {
+                            var len = ($items.length + i).toString();
+                            len = len.length < 2 ? '0' + len : len;
+                            var textlistTitle = len + '_' + $control.attr('data-input-name');
+                            data[textlistTitle] = {
+                                type: $control.attr('data-control-type'),
+                                value: $.trim($control.find('input[type="text"]').val())
+                            };
+                        }
+                    }
+                    $.isEmptyObject(value) || (data[outerTitle] = {
+                        type: controlType,
+                        display_type: display_type,
+                        value: value
+                    });
+                }
+                participanceData = {
+                    webapp_owner_id: W.webappOwnerId,
+                    belong_to: W.appRecordId,
+                    termite_data: JSON.stringify(data),
+                    actionButtons: JSON.stringify([{
+                        'text': '查看结果',
+                        'url': 'm/apps/' + W.appName + '/result_vote/?webapp_owner_id=' + W.webappOwnerId + '&id=' + W.appRecordId + '&member_id={{ member_id }}&isMember={{ isMember }}'
+                    }])
+                };
+                var $prizeContainer = $('.xa-prizeContainer');
+                if ($prizeContainer.length > 0) {
+                    $prizeContainer = $prizeContainer.eq(0);
+                    participanceData['prize'] = $prizeContainer.attr('data-prize');
+                }
+
+                //必须关注才可以参与的活动
+                var $submitButtonContainer = $('.xa-submitButtonContainer');
+                if (W.permission == 'member') {
+                    if (W.isMember) {
+                        getParticipance(participanceData, $submitButtonContainer);
+                    } else {
+                        $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                                '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                                '</div><div></div>');
+                    }
+                }
+                else {
+                    getParticipance(participanceData, $submitButtonContainer);
+                }
+            })
+        }
+    }
+
 	W.pageId = "{{request.GET.page_id}}";
-	$(document).ready(function() {
-		$('.xa-join').click(function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-			var $link = $(event.currentTarget);
-			var id = $link.attr('data-id');
-			var tel = $.trim($('[name="tel"]').val());
-			W.getApi().call({
-				app: 'm/apps/vote',
-				resource: 'vote_participance',
-				method: 'put',
-				args: {
-					woid: W.webappOwnerId,
-					belong_to: id,
-					tel: tel
-				},
-				success: function(data) {
-					alert('参与成功');
-				},
-				error: function(data) {
-					alert('参与失败');
-				}
-			})
-		});
-	});
 </script>
 {% endblock %}
 

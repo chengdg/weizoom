@@ -22,7 +22,15 @@
     {{#each items}}
         <tr>
             <td class="xui-result_fr-i-td0">{{item_name}}</td>
-            <td class="xui-result_fr-i-td1">{{item_value}}</td>
+            <td class="xui-result_fr-i-td1">
+            {{#each item_value}}
+                {{#if image}}
+                    <img title="{{ title }}" src="{{ image }}" data-toggle="tooltip" data-placement="top">
+                {{else}}
+                    <span>{{ title }}</span>
+                {{/if}}
+            {{/each}}
+            </td>
         </tr>
     {{/each}}
     </table>

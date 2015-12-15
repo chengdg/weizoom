@@ -70,22 +70,22 @@ class voteParticipances(resource.Resource):
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		
+
 		return pageinfo, datas
-	
+
 	@login_required
 	def api_get(request):
 		"""
 		响应API GET
 		"""
 		pageinfo, datas = voteParticipances.get_datas(request)
-		
+
 		tmp_member_ids = []
 		for data in datas:
 			tmp_member_ids.append(data.member_id)
 		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
 		member_id2member = {member.id: member for member in members}
-		
+
 		items = []
 		for data in datas:
 			items.append({
@@ -102,7 +102,7 @@ class voteParticipances(resource.Resource):
 		}
 		response = create_response(200)
 		response.data = response_data
-		return response.get_response()		
+		return response.get_response()
 
 class voteParticipances_Export(resource.Resource):
 	'''
@@ -176,7 +176,7 @@ class voteParticipances_Export(resource.Resource):
 							pass
 						else:
 							fields_qa.append(item)
-					if sample_tm[item]['type']=='appkit.selection':
+					if sample_tm[item]['type'] in ['appkit.selection', 'appkit.textselection', 'appkit.imageselection']:
 						if item in fields_selec:
 							pass
 						else:
@@ -229,7 +229,10 @@ class voteParticipances_Export(resource.Resource):
 					s_i = record[u'termite_data'][s][u'value']
 					for i in s_i:
 						if s_i[i]['isSelect'] == True:
-							selec_v.append(i.split('_')[1])
+							if s_i[i].has_key('image'):
+								selec_v.append('%s(imageUrl:"%s")' % (i.split('_')[1], s_i[i]['image']))
+							else:
+								selec_v.append(i.split('_')[1])
 					selec.append(selec_v)
 				for s in fields_qa:
 					s_v = record[u'termite_data'][s][u'value']

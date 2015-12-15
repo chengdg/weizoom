@@ -1,0 +1,40 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.textselection' %}
+    <div class="wui-textSelection wa-items" data-component-cid="{{component.cid}}" data-input-name="{{component.model.title}}">
+        <h1 class="wui-i-title">{{component.model.title}} {% if component.model.is_mandatory == "true" %}<span class="wui-i-mandatory">(必填)</span>{% endif %}</h1>
+        <ul class="wui-i-items"
+            {% if component.model.is_mandatory == "true" %}
+                data-validate='require-select-selectbox::请选择"{{component.model.title}}"'
+                data-check-el='li .wa-textselection'
+                data-check-className='radio-select checkbox-select'
+            {% endif %}
+        >
+            {% for sub_component in component.components %}
+                {{ sub_component.html|safe }}
+            {% endfor %}
+        </ul>
+    </div>
+{% endifequal %}
+
+
+{% ifequal component.type 'appkit.textselectionitem' %}
+<li class="wui-i-item xa-inputControl" data-component-cid="{{component.cid}}"
+    data-input-name="{{component.model.title}}"
+    data-input-type="textselection"
+    data-control-type="appkit.textselection"
+>
+	{% if component.parent_component.model.type == 'single' %}
+	<div  style="padding: 3px 0;">
+		<span id="radio_item_{{component.cid}}" data-type="radio"  class="wa-textselection selection-radio"></span>
+        <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ component.model.title }}</span>
+	</div>
+	{% else %}
+	<div  style="padding: 3px 0;">
+		<span id="checkbox_item_{{component.cid}}" data-type="checkbox" class="wa-textselection selection-checkbox"></span>
+        <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ component.model.title }}</span>
+	</div>
+	{% endif %}
+</li>
+{% endifequal %}

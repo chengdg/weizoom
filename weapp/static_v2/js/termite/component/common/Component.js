@@ -44,6 +44,7 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 	},
 
 	refresh: function($node, options) {
+		var tmpCid = this.cid;
 		if (W.Render) {
 			var $componentContainer = null;
 			if ($node && $node.attr("data-component-cid")) {
@@ -68,8 +69,11 @@ _.extend(W.component.Component.prototype, Backbone.Events, {
 			var messageOptions = {};
 			if (options && options.refreshPropertyView) {
 				messageOptions.forceUpdatePropertyView = true;
+				if(options.dynamicComponentId){
+					tmpCid = options.dynamicComponentId
+				}
 			}
-			W.Broadcaster.trigger('mobilewidget:select', this.cid, messageOptions, this);
+			W.Broadcaster.trigger('mobilewidget:select', tmpCid, messageOptions, this);
 
 			if (options && options.refreshPropertyViewForField) {
 				W.Broadcaster.trigger('component:refresh_field_editor', options.refreshPropertyViewForField);

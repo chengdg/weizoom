@@ -141,13 +141,13 @@ W.data.getDynamicComponentDataForDialogSelectControl = function(dynamicComponent
 	} else if (dynamicComponentField.dialog === 'W.dialog.termite.SelectImagesDialog') {
 		var src = dynamicComponent.model.get(dynamicComponentField.name);
 		if (src.length > 0) {
-			if (dynamicComponent.type === 'appkit.lotteryitem'){
+			if (dynamicComponent.type === 'appkit.lotteryitem' || dynamicComponent.type === 'appkit.imageitem'){
 				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox"><img src="' + src + '"/></div>';
 			}else {
 				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox"><img src="' + src + '"/><button type="button" class="close xa-protocol-deleteData xui-removeImageButton" data-protocol-deleted-value=""><span>&times;</span></button></div>';
 			}
 		} else {
-			if (dynamicComponent.type === 'appkit.lotteryitem' || dynamicComponent.type === 'appkit.powermedescription'){
+			if (dynamicComponent.type === 'appkit.lotteryitem' || dynamicComponent.type === 'appkit.powermedescription' || dynamicComponent.type === 'appkit.imageitem'){
 				html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox xui-hide"><img src=""/></div>';
 			}
 			else {
