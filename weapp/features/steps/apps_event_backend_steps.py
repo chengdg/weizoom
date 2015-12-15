@@ -195,7 +195,7 @@ def __get_actions(status):
 	actions_list = [u"链接",u"预览",u"查看结果"]
 	if status == u"进行中":
 		actions_list.insert(0,u"关闭")
-	elif status=="已结束" or "未开始":
+	elif status=="已结束":
 		actions_list.insert(0,u"删除")
 	return actions_list
 
