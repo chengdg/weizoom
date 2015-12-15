@@ -152,13 +152,13 @@ def __get_coupon_rule_id(coupon_rule_name):
 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
 	return coupon_rule.id
 
-# def __event_name2id(name):
-# 	"""
-# 	给活动报名项目的名字，返回id元祖
-# 	返回（related_page_id,event_event中id）
-# 	"""
-# 	obj = event_models.event.objects.get(name=name)
-# 	return (obj.related_page_id,obj.id)
+def __event_name2id(name):
+	"""
+	给活动报名项目的名字，返回id元祖
+	返回（related_page_id,event_event中id）
+	"""
+	obj = event_models.event.objects.get(name=name)
+	return (obj.related_page_id,obj.id)
 
 # def __status2name(status_num):
 # 	"""
@@ -525,130 +525,120 @@ def __Create_Event(context,text,user):
 
 
 
-# def __Update_Event(context,text,page_id,event_id):
-# 	"""
-# 	模拟用户登录页面
-# 	编辑活动报名项目
-# 	写入mongo表：
-# 		1.event_event表
-# 		2.page表
-# 	"""
+def __Update_Event(context,text,page_id,event_id):
+	"""
+	模拟用户登录页面
+	编辑活动报名项目
+	写入mongo表：
+		1.event_event表
+		2.page表
+	"""
 
-# 	design_mode=0
-# 	version=1
-# 	project_id = "new_app:event:"+page_id
+	design_mode=0
+	version=1
+	project_id = "new_app:event:"+page_id
 
-# 	title = text.get("name","")
+	title = text.get("title","")
+	subtitle = text.get("subtitle","")
+	description = text.get("content","")
 
-# 	cr_start_date = text.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-# 	cr_end_date = text.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-# 	valid_time = "%s~%s"%(start_time,end_time)
+	valid_time = "%s~%s"%(start_time,end_time)
 
-# 	desc = text.get('desc','')#描述
-# 	reduce_integral = text.get('reduce_integral',0)#消耗积分
-# 	send_integral = text.get('send_integral',0)#参与送积分
-# 	send_integral_rules = text.get('send_integral_rules',"")#送积分规则
-# 	event_limit = __name2limit(text.get('event_limit',u'一人一次'))#活动报名限制
-# 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
-# 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
-# 	expect_prize_settings_list = text.get('prize_settings',[])
-# 	page_prize_settings,event_prize_settings = __prize_settings_process(expect_prize_settings_list)
+	permission = text.get("permission")
 
+	prize_type = text.get("prize_type","")
+	integral = text.get("integral","")
+	coupon = text.get("coupon","")
+	prize = __prize_settings_process(prize_type,integral,coupon)
 
-# 	page_args = {
-# 		"title":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"valid_time":valid_time,
-# 		"description":desc,#描述
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":event_limit,#活动报名限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize_settings":page_prize_settings
-# 	}
+	items_select = text.get("items_select","")
+	items_add = text.get("items_add","")
 
-# 	page_json = __get_eventPageJson(page_args)
+	page_args = {
+		"title":title,
+		"subtitle":subtitle,
+		"description":description,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"permission":permission,
+		"prize":prize,
+		"items_select":items_select,
+		"items_add":items_add
+	}
 
-# 	update_page_args = {
-# 		"field":"page_content",
-# 		"id":project_id,
-# 		"page_id":"1",
-# 		"page_json": page_json
-# 	}
+	page_json = __get_eventPageJson(page_args)
 
-# 	update_event_args = {
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":event_limit,#活动报名限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize":json.dumps(event_prize_settings),
-# 		"id":event_id#updated的差别
-# 	}
+	update_page_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
 
+	update_event_args = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"id":event_id
+	}
+	#page 更新Page
+	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_page_response = context.client.post(update_page_url,update_page_args)
 
-# 	#page 更新Page
-# 	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_page_response = context.client.post(update_page_url,update_page_args)
+	#step4:更新event
+	update_event_url ="/apps/event/api/event/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_event_response = context.client.post(update_event_url,update_event_args)
 
-# 	#step4:更新event
-# 	update_event_url ="/apps/event/api/event/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_event_response = context.client.post(update_event_url,update_event_args)
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
 
-# 	#跳转,更新状态位
-# 	design_mode = 0
-# 	count_per_page = 1000
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+	rec_event_url ="/apps/event/api/events/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_event_response = context.client.get(rec_event_url)
 
-# 	rec_event_url ="/apps/event/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 	rec_event_response = context.client.get(rec_event_url)
+def __Delete_Event(context,event_id):
+	"""
+	删除活动报名
+	写入mongo表：
+		1.event_event表
 
-# def __Delete_Event(context,event_id):
-# 	"""
-# 	删除活动报名
-# 	写入mongo表：
-# 		1.event_event表
+	注释：page表在原后台，没有被删除a
+	"""
+	design_mode = 0
+	version = 1
+	del_event_url = "/apps/event/api/event/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+	del_args ={
+		"id":event_id
+	}
+	del_event_response = context.client.post(del_event_url,del_args)
+	return del_event_response
 
-# 	注释：page表在原后台，没有被删除
-# 	"""
-# 	design_mode = 0
-# 	version = 1
-# 	del_event_url = "/apps/event/api/event/?design_mode={}&version={}&_method=delete".format(design_mode,version)
-# 	del_args ={
-# 		"id":event_id
-# 	}
-# 	del_event_response = context.client.post(del_event_url,del_args)
-# 	return del_event_response
+def __Stop_Event(context,event_id):
+	"""
+	关闭活动报名
+	"""
 
-# def __Stop_Event(context,event_id):
-# 	"""
-# 	关闭活动报名
-# 	"""
-
-# 	design_mode = 0
-# 	version = 1
-# 	stop_event_url = "/apps/event/api/event_status/?design_mode={}&version={}".format(design_mode,version)
-# 	stop_args ={
-# 		"id":event_id,
-# 		"target":'stoped'
-# 	}
-# 	stop_event_response = context.client.post(stop_event_url,stop_args)
-# 	return stop_event_response
+	design_mode = 0
+	version = 1
+	stop_event_url = "/apps/event/api/event_status/?design_mode={}&version={}".format(design_mode,version)
+	stop_args ={
+		"id":event_id,
+		"target":'stoped'
+	}
+	stop_event_response = context.client.post(stop_event_url,stop_args)
+	return stop_event_response
 
 # def __Search_Event(context,search_dic):
 # 	"""
@@ -803,11 +793,11 @@ def step_impl(context,user):
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
 
-# @when(u"{user}编辑活动报名'{event_name}'")
-# def step_impl(context,user,event_name):
-# 	expect = json.loads(context.text)[0]
-# 	event_page_id,event_id = __event_name2id(event_name)#纯数字
-# 	__Update_Event(context,expect,event_page_id,event_id)
+@when(u"{user}编辑活动报名活动'{event_name}'")
+def step_impl(context,user,event_name):
+	expect = json.loads(context.text)[0]
+	event_page_id,event_id = __event_name2id(event_name)#纯数字
+	__Update_Event(context,expect,event_page_id,event_id)
 
 # @then(u"{user}获得活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
@@ -883,17 +873,17 @@ def step_impl(context,user):
 
 # 	bdd_util.assert_dict(expect_event_dic, actual_event_dic)
 
-# @when(u"{user}删除活动报名'{event_name}'")
-# def step_impl(context,user,event_name):
-# 	event_page_id,event_id = __event_name2id(event_name)#纯数字
-# 	del_response = __Delete_Event(context,event_id)
-# 	bdd_util.assert_api_call_success(del_response)
+@when(u"{user}删除百宝箱活动报名'{event_name}'")
+def step_impl(context,user,event_name):
+	event_page_id,event_id = __event_name2id(event_name)#纯数字
+	del_response = __Delete_Event(context,event_id)
+	bdd_util.assert_api_call_success(del_response)
 
-# @when(u"{user}关闭活动报名'{event_name}'")
-# def step_impl(context,user,event_name):
-# 	event_page_id,event_id = __event_name2id(event_name)#纯数字
-# 	stop_response = __Stop_Event(context,event_id)
-# 	bdd_util.assert_api_call_success(stop_response)
+@when(u"{user}关闭活动报名'{event_name}'")
+def step_impl(context,user,event_name):
+	event_page_id,event_id = __event_name2id(event_name)#纯数字
+	stop_response = __Stop_Event(context,event_id)
+	bdd_util.assert_api_call_success(stop_response)
 
 # @when(u"{user}设置活动报名列表查询条件")
 # def step_impl(context,user):
