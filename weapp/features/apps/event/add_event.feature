@@ -16,57 +16,57 @@ Feature: 应用和营销-活动报名
 		2）可选择勾选项：姓名、手机、邮箱、QQ、职位、住址
 		3）点击"添加"按钮，在后面追加项目，设置"填写项"和"是否必填"；"是否必填"默认"否"
 """
-		
-@apps @event
+
+@apps @event @yang1
 Scenario:1 新建活动报名-无奖励
 	Given jobs登录系统
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-无奖励",
 			"subtitle":"活动报名-副标题-无奖励",
 			"content":"内容描述-无奖励",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"right":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type": "无奖励",
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"QQ",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"其他",
 						"is_required":"false"
 					}]
-		}
-		"""
-	Then jobs获得活动报名列表
-		"""
-		[{
-			"name":"活动报名-无奖励",
-			"part_num": 0,
-			"prize_type": "无奖励",
-			"start_date":"明天",
-			"end_date":"2天后",
-			"status":"未开始",
-			"actions": ["链接","预览","查看结果"]
 		}]
 		"""
+	# Then jobs获得活动报名列表
+	# 	"""
+	# 	[{
+	# 		"name":"活动报名-无奖励",
+	# 		"part_num": 0,
+	# 		"prize_type": "无奖励",
+	# 		"start_date":"明天",
+	# 		"end_date":"2天后",
+	# 		"status":"未开始",
+	# 		"actions": ["链接","预览","查看结果"]
+	# 	}]
+	# 	"""
 
 @apps @event
 Scenario:2 新建活动报名-积分
@@ -79,27 +79,27 @@ Scenario:2 新建活动报名-积分
 			"content":"内容描述-积分",
 			"start_date":"1天前",
 			"end_date":"2天后",
-			"right":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type": "积分",
 			"integral": 50,
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"QQ",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"店铺类型",
@@ -146,7 +146,7 @@ Scenario:3 新建活动报名-优惠券
 			"content":"内容描述-优惠券",
 			"start_date":"3天前",
 			"end_date":"1天前",
-			"right":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type": "优惠券",
 			"coupon":"优惠券1",
 			"items_select":[{

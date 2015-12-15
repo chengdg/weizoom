@@ -33,16 +33,23 @@ def __debug_print(content,type_tag=True):
 	else:
 		pass
 
-# def __bool2Bool(bo):
-# 	"""
-# 	JS字符串布尔值转化为Python布尔值
-# 	"""
-# 	bool_dic = {'true':True,'false':False,'True':True,'False':False}
-# 	if bo:
-# 		result = bool_dic[bo]
-# 	else:
-# 		result = None
-# 	return result
+def __itemName2item(itemName):
+	itemName_dic={u"姓名":'name',u"手机":'phone',u"邮箱":'email',u"QQ":'qq',u"qq":'qq',u"职位":"job",u"住址":"addr"}
+	if itemName:
+		return itemName_dic[itemName]
+	else:
+		return ""
+
+def __bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
 
 # def __name2Bool(name):
 # 	"""
@@ -138,12 +145,12 @@ def __debug_print(content,type_tag=True):
 # 	}
 # 	return coupon
 
-# def __get_coupon_rule_id(coupon_rule_name):
-# 	"""
-# 	获取优惠券id
-# 	"""
-# 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-# 	return coupon_rule.id
+def __get_coupon_rule_id(coupon_rule_name):
+	"""
+	获取优惠券id
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	return coupon_rule.id
 
 # def __event_name2id(name):
 # 	"""
@@ -192,336 +199,332 @@ def __debug_print(content,type_tag=True):
 # 		actions_list.insert(1,u"删除")
 # 	return actions_list
 
-# def __get_eventPageJson(args):
-# 	"""
-# 	传入参数，获取模板
-# 	"""
-# 	__page_temple = {
-# 		"type": "appkit.page",
-# 		"cid": 1,
-# 		"pid": None,
-# 		"auto_select": False,
-# 		"selectable": "yes",
-# 		"force_display_in_property_view": "no",
-# 		"has_global_content": "no",
-# 		"need_server_process_component_data": "no",
-# 		"is_new_created": True,
-# 		"property_view_title": "背景",
-# 		"model": {
-# 			"id": "",
-# 			"class": "",
-# 			"name": "",
-# 			"index": 1,
-# 			"datasource": {
-# 				"type": "api",
-# 				"api_name": ""
-# 			},
-# 			"content_padding": "15px",
-# 			"title": "index",
-# 			"event:onload": "",
-# 			"uploadHeight": "568",
-# 			"uploadWidth": "320",
-# 			"site_title": "活动报名",
-# 			"background": ""
-# 		},
-# 		"components": [
-# 			{
-# 				"type": "appkit.eventdescription",
-# 				"cid": 2,
-# 				"pid": 1,
-# 				"auto_select": False,
-# 				"selectable": "yes",
-# 				"force_display_in_property_view": "no",
-# 				"has_global_content": "no",
-# 				"need_server_process_component_data": "no",
-# 				"property_view_title": "活动报名",
-# 				"model": {
-# 					"id": "",
-# 					"class": "",
-# 					"name": "",
-# 					"index": 2,
-# 					"datasource": {
-# 						"type": "api",
-# 						"api_name": ""
-# 					},
-# 					"title": args['title'],
-# 					"start_time": args['start_time'],
-# 					"end_time": args['end_time'],
-# 					"valid_time": args['valid_time'],
-# 					"description": args['description'],
-# 					"expend": args['expend'],
-# 					"delivery": args['delivery'],
-# 					"delivery_setting": args['delivery_setting'],
-# 					"limitation": args['limitation'],
-# 					"chance": args['chance'],
-# 					"allow_repeat": args['allow_repeat'],
-# 					"items": [
-# 						4,
-# 						5,
-# 						6
-# 					]
-# 				},
-# 				"components": [
-# 					{
-# 						"type": "appkit.eventitem",
-# 						"cid": 4,
-# 						"pid": 2,
-# 						"auto_select": False,
-# 						"selectable": "no",
-# 						"force_display_in_property_view": "no",
-# 						"has_global_content": "no",
-# 						"need_server_process_component_data": "no",
-# 						"property_view_title": "",
-# 						"model": {
-# 							"id": "",
-# 							"class": "",
-# 							"name": "",
-# 							"index": 3,
-# 							"datasource": {
-# 								"type": "api",
-# 								"api_name": ""
-# 							},
-# 							"title": "一等奖",
-# 							"prize_count": args['prize_settings'][0]['prize_count'],
-# 							"prize": args['prize_settings'][0]['prize'],
-# 							"image": args['prize_settings'][0]['image']
-# 						},
-# 						"components": []
-# 					},
-# 					{
-# 						"type": "appkit.eventitem",
-# 						"cid": 5,
-# 						"pid": 2,
-# 						"auto_select": False,
-# 						"selectable": "no",
-# 						"force_display_in_property_view": "no",
-# 						"has_global_content": "no",
-# 						"need_server_process_component_data": "no",
-# 						"property_view_title": "",
-# 						"model": {
-# 							"id": "",
-# 							"class": "",
-# 							"name": "",
-# 							"index": 3,
-# 							"datasource": {
-# 								"type": "api",
-# 								"api_name": ""
-# 							},
-# 							"title": "二等奖",
-# 							"prize_count": args['prize_settings'][1]['prize_count'],
-# 							"prize": args['prize_settings'][1]['prize'],
-# 							"image": args['prize_settings'][1]['image']
-# 						},
-# 						"components": []
-# 					},
-# 					{
-# 						"type": "appkit.eventitem",
-# 						"cid": 6,
-# 						"pid": 2,
-# 						"auto_select": False,
-# 						"selectable": "no",
-# 						"force_display_in_property_view": "no",
-# 						"has_global_content": "no",
-# 						"need_server_process_component_data": "no",
-# 						"property_view_title": "",
-# 						"model": {
-# 							"id": "",
-# 							"class": "",
-# 							"name": "",
-# 							"index": 3,
-# 							"datasource": {
-# 								"type": "api",
-# 								"api_name": ""
-# 							},
-# 							"title": "三等奖",
-# 							"prize_count": args['prize_settings'][2]['prize_count'],
-# 							"prize": args['prize_settings'][2]['prize'],
-# 							"image": args['prize_settings'][2]['image']
-# 						},
-# 						"components": []
-# 					}
-# 				]
-# 			},
-# 			{
-# 				"type": "appkit.submitbutton",
-# 				"cid": 3,
-# 				"pid": 1,
-# 				"auto_select": False,
-# 				"selectable": "no",
-# 				"force_display_in_property_view": "no",
-# 				"has_global_content": "no",
-# 				"need_server_process_component_data": "no",
-# 				"property_view_title": "",
-# 				"model": {
-# 					"id": "",
-# 					"class": "",
-# 					"name": "",
-# 					"index": 99999,
-# 					"datasource": {
-# 						"type": "api",
-# 						"api_name": ""
-# 					},
-# 					"text": "提交"
-# 				},
-# 				"components": []
-# 			}
-# 		]
-# 	}
-# 	return json.dumps(__page_temple)
+def name2permission(name):
+	name_dic={u"必须关注才可参与":"member",u"无需关注即可参与":"no_member"}
+	if name:
+		return name_dic[name]
+	else:
+		return None
 
-# def __prize_settings_process(prize_settings):
-# 	"""
-# 	处理prize_settings
+def __get_eventPageJson(args):
+	"""
+	传入参数，获取模板
+	"""
+	title = args["title"]
+	subtitle = args["subtitle"]
+	description = args["description"]
+	start_time = args["start_time"]
+	end_time = args["end_time"]
+	valid_time = args["valid_time"]
+	permission = name2permission(args["permission"])
+	prize = args["prize"]
+	items_select = args["items_select"]
+	items_add = args["items_add"]
 
-# 	Tag为page，返回page的prize字典
-# 	Tage为event,返回event_event的prize字典
-# 	"""
+	#处理自带选项
+	modules={}
+	for expect_item in items_select:
+		item_name = __itemName2item(expect_item['item_name'])
+		is_selected = __bool2Bool(expect_item['is_selected'])
+		modules[item_name]={"select":is_selected}
 
-# 	page_prize_list = []
-# 	event_prize_list = []
-# 	event_prize_dic = {}
+	#处理自定义添加
+	length = len(items_add)
+	items = [6+x for x in range(length)] #item列表
+	components = [] #组件列表
 
-# 	if prize_settings:
-# 		index = 0
-# 		plist = [u'一等奖',u'二等奖',u'三等奖']
-# 		for prize_setting in prize_settings:
-# 			#Page
-# 			page_prize_dic = {}
-# 			page_prize_dic['title'] = prize_setting.get("prize_grade","")
-# 			page_prize_dic['prize_count'] = prize_setting.get("prize_counts","")
-# 			page_prize_dic['image'] = prize_setting.get("pic","")
+	for index,expect_additem in enumerate(items_add):
+		item_id = 6+index
+		item_name = expect_additem['item_name']
+		is_required = __bool2Bool(expect_additem['is_required'])
 
-# 			page_prize_dic['prize'] = {}
-# 			prize_type = __name2type(prize_setting.get("prize_type"))
-# 			if prize_type == "integral":
-# 				prize_data = prize_setting.get("integral")
-# 			elif prize_type == "coupon":
-# 				coupon_name = prize_setting.get("coupon")
-# 				coupon_id = __get_coupon_rule_id(coupon_name)
-# 				prize_data = {
-# 					"id":coupon_id,
-# 					"name":coupon_name
-# 				}
-# 			elif prize_type == "entity":
-# 				prize_data = prize_setting.get("gift","")
-# 			else:
-# 				prize_data = ""
-# 			page_prize_dic['prize']["type"] = prize_type
-# 			page_prize_dic['prize']["data"] = prize_data
+		textitem_tmp ={
+				"type": "appkit.textitem",
+				"cid": item_id,
+				"pid": 3,
+				"auto_select": False,
+				"selectable": "no",
+				"force_display_in_property_view": "no",
+				"has_global_content": "no",
+				"need_server_process_component_data": "no",
+				"is_new_created": True,
+				"property_view_title": "",
+				"model": {
+					"id": "",
+					"class": "",
+					"name": "",
+					"index": item_id,
+					"datasource": {
+						"type": "api",
+						"api_name": ""
+					},
+					"title": item_name,
+					"is_mandatory": is_required
+				},
+				"components": []
+			}
+		components.append(textitem_tmp)
 
-# 			page_prize_list.append(page_prize_dic)
+	#主模板
+	__page_temple = {
+		"type": "appkit.page",
+		"cid": 1,
+		"pid": "null",
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": "背景",
+		"model": {
+			"id": "",
+			"class": "",
+			"name": "",
+			"index": 1,
+			"datasource": {
+				"type": "api",
+				"api_name": ""
+			},
+			"content_padding": "15px",
+			"title": "index",
+			"event:onload": "",
+			"uploadHeight": "568",
+			"uploadWidth": "320",
+			"site_title": "活动报名",
+			"background": ""
+		},
+		"components": [
+			{
+				"type": "appkit.surveydescription",
+				"cid": 2,
+				"pid": 1,
+				"auto_select": False,
+				"selectable": "yes",
+				"force_display_in_property_view": "no",
+				"has_global_content": "no",
+				"need_server_process_component_data": "no",
+				"property_view_title": "调研简介",
+				"model": {
+					"id": "",
+					"class": "",
+					"name": "",
+					"index": 2,
+					"datasource": {
+						"type": "api",
+						"api_name": ""
+					},
+					"title": title,
+					"subtitle": subtitle,
+					"description": "<p>%s</p>"%description,
+					"start_time": start_time,
+					"end_time": end_time,
+					"valid_time": valid_time,
+					"permission": permission,
+					"prize": prize
+				},
+				"components": components
+			},
+			{
+				"type": "appkit.textlist",
+				"cid": 3,
+				"pid": 1,
+				"auto_select": False,
+				"selectable": "yes",
+				"force_display_in_property_view": "no",
+				"has_global_content": "no",
+				"need_server_process_component_data": "no",
+				"property_view_title": "",
+				"model": {
+					"id": "",
+					"class": "",
+					"name": "",
+					"index": 4,
+					"datasource": {
+						"type": "api",
+						"api_name": ""
+					},
+					"title": "",
+					"modules": modules,
 
-# 			#event_event
-# 			event_prize_dic[plist[index]] = {
-# 				"title":prize_setting.get("prize_grade",""),
-# 				"prize_count":prize_setting.get("prize_counts",""),
-# 				"prize_type":prize_type,
-# 				"prize_data":prize_data
-# 			}
-# 			index += 1
+					"items": items,
+					"is_mandatory": "true"
+				},
+				"components":components
+			},
+			{
+				"type": "appkit.submitbutton",
+				"cid": 4,
+				"pid": 1,
+				"auto_select": False,
+				"selectable": "no",
+				"force_display_in_property_view": "no",
+				"has_global_content": "no",
+				"need_server_process_component_data": "no",
+				"property_view_title": "",
+				"model": {
+					"id": "",
+					"class": "",
+					"name": "",
+					"index": 99999,
+					"datasource": {
+						"type": "api",
+						"api_name": ""
+					},
+					"text": "我要报名"
+				},
+				"components": []
+			},
+			{
+				"type": "appkit.componentadder",
+				"cid": 5,
+				"pid": 1,
+				"auto_select": False,
+				"selectable": "yes",
+				"force_display_in_property_view": "no",
+				"has_global_content": "no",
+				"need_server_process_component_data": "no",
+				"property_view_title": "添加模块",
+				"model": {
+					"id": "",
+					"class": "",
+					"name": "",
+					"index": 3,
+					"datasource": {
+						"type": "api",
+						"api_name": ""
+					},
+					"components": ""
+				},
+				"components": []
+			}
+		]
+	}
+	return json.dumps(__page_temple)
 
-# 		return (page_prize_list,event_prize_dic)
-# 	else:
-# 		return []
+def __prize_settings_process(prize_type,integral,coupon):
+	"""
+	处理prize_settings
 
-# def __Create_Event(context,text,user):
-# 	"""
-# 	模拟用户登录页面
-# 	创建活动报名项目
-# 	写入mongo表：
-# 		1.event_event表
-# 		2.page表
-# 	"""
+	Tag为page，返回page的prize字典
+	Tage为event,返回event_event的prize字典
+	"""
+	prize = {}
 
-# 	design_mode = 0
-# 	version = 1
-# 	text = text
+	if prize_type:
+		if prize_type == "无奖励":
+			prize['type']="no_prize",
+			prize['data']= None
+		elif prize_type=="积分":
+			prize['type']="integral",
+			prize['data']=integral
+		elif prize_type == "优惠券":
+			coupon_name = coupon
+			coupon_id = __get_coupon_rule_id(coupon_name)
+			prize['type'] ="coupon"
+			prize['data'] = {
+				"id":coupon_id,
+				"name":coupon
+			}
+		else:
+			pass
+	return prize
 
-# 	title = text.get("name","")
 
-# 	cr_start_date = text.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+def __Create_Event(context,text,user):
+	"""
+	模拟用户登录页面
+	创建活动报名项目
+	写入mongo表：
+		1.event_event表
+		2.page表
+	"""
 
-# 	cr_end_date = text.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	design_mode = 0
+	version = 1
+	text = text
 
-# 	valid_time = "%s~%s"%(start_time,end_time)
+	title = text.get("title","")
+	subtitle = text.get("subtitle","")
+	description = text.get("content","")
 
-# 	desc = text.get('desc','')#描述
-# 	reduce_integral = text.get('reduce_integral',0)#消耗积分
-# 	send_integral = text.get('send_integral',0)#参与送积分
-# 	send_integral_rules = text.get('send_integral_rules',"")#送积分规则
-# 	event_limit = __name2limit(text.get('event_limit',u'一人一次'))#活动报名限制
-# 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
-# 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
-# 	expect_prize_settings_list = text.get('prize_settings',[])
-# 	page_prize_settings,event_prize_settings = __prize_settings_process(expect_prize_settings_list)
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-# 	page_args = {
-# 		"title":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"valid_time":valid_time,
-# 		"description":desc,#描述
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":event_limit,#活动报名限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize_settings":page_prize_settings
-# 	}
-# 	#step1：登录页面，获得分配的project_id
-# 	get_event_response = context.client.get("/apps/event/event/")
-# 	event_args_response = get_event_response.context
-# 	project_id = event_args_response['project_id']#(str){new_app:event:0}
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-# 	#step2: 编辑页面获得右边的page_json
-# 	dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	dynamic_response = context.client.get(dynamic_url)
-# 	dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
+	valid_time = "%s~%s"%(start_time,end_time)
 
-# 	#step3:发送Page
-# 	page_json = __get_eventPageJson(page_args)
+	permission = text.get("permission")
 
-# 	termite_post_args = {
-# 		"field":"page_content",
-# 		"id":project_id,
-# 		"page_id":"1",
-# 		"page_json": page_json
-# 	}
-# 	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	post_termite_response = context.client.post(termite_url,termite_post_args)
-# 	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
+	prize_type = text.get("prize_type","")
+	integral = text.get("integral","")
+	coupon = text.get("coupon","")
+	prize = __prize_settings_process(prize_type,integral,coupon)
 
-# 	#step4:发送event_args
-# 	post_event_args = {
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":event_limit,#活动报名限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize":json.dumps(event_prize_settings),
-# 		"related_page_id":related_page_id
-# 	}
-# 	event_url ="/apps/event/api/event/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
-# 	post_event_response = context.client.post(event_url,post_event_args)
+	items_select = text.get("items_select","")
+	items_add = text.get("items_add","")
 
-# 	#跳转,更新状态位
-# 	design_mode = 0
-# 	count_per_page = 1000
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+	page_args = {
+		"title":title,
+		"subtitle":subtitle,
+		"description":description,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"permission":permission,
+		"prize":prize,
+		"items_select":items_select,
+		"items_add":items_add
+	}
 
-# 	rec_event_url ="/apps/event/api/lotteries/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 	rec_event_response = context.client.get(rec_event_url)
+	#step1：登录页面，获得分配的project_id
+	get_event_response = context.client.get("/apps/event/event/")
+	event_args_response = get_event_response.context
+	project_id = event_args_response['project_id']#(str){new_app:event:0}
+
+	#step2: 编辑页面获得右边的page_json
+	dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	dynamic_response = context.client.get(dynamic_url)
+	dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
+
+	#step3:发送Page
+	page_json = __get_eventPageJson(page_args)
+
+	termite_post_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
+	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	post_termite_response = context.client.post(termite_url,termite_post_args)
+	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
+
+	#step4:发送event_args
+	post_event_args = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"related_page_id":related_page_id
+	}
+	event_url ="/apps/event/api/event/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
+	post_event_response = context.client.post(event_url,post_event_args)
+
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
+
+	rec_event_url ="/apps/event/api/events/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_event_response = context.client.get(rec_event_url)
+
+
 
 # def __Update_Event(context,text,page_id,event_id):
 # 	"""
@@ -618,7 +621,7 @@ def __debug_print(content,type_tag=True):
 
 # def __Delete_Event(context,event_id):
 # 	"""
-# 	删除活动报名活动
+# 	删除活动报名
 # 	写入mongo表：
 # 		1.event_event表
 
@@ -635,7 +638,7 @@ def __debug_print(content,type_tag=True):
 
 # def __Stop_Event(context,event_id):
 # 	"""
-# 	关闭活动报名活动
+# 	关闭活动报名
 # 	"""
 
 # 	design_mode = 0
@@ -650,7 +653,7 @@ def __debug_print(content,type_tag=True):
 
 # def __Search_Event(context,search_dic):
 # 	"""
-# 	搜索活动报名活动
+# 	搜索活动报名
 
 # 	输入搜索字典
 # 	返回数据列表
@@ -722,13 +725,13 @@ def __debug_print(content,type_tag=True):
 # 	bdd_util.assert_api_call_success(search_response)
 # 	return search_response
 
-@when(u'{user}新建活动报名活动')
+@when(u'{user}新建活动报名')
 def step_impl(context,user):
 	text_list = json.loads(context.text)
 	for text in text_list:
 		__Create_Event(context,text,user)
 
-# @then(u'{user}获得活动报名活动列表')
+# @then(u'{user}获得活动报名列表')
 # def step_impl(context,user):
 # 	design_mode = 0
 # 	count_per_page = 10
@@ -799,13 +802,13 @@ def step_impl(context,user):
 # 		print("actual_data: {}".format(actual_list))
 # 		bdd_util.assert_list(expected,actual_list)
 
-# @when(u"{user}编辑活动报名活动'{event_name}'")
+# @when(u"{user}编辑活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
 # 	expect = json.loads(context.text)[0]
 # 	event_page_id,event_id = __event_name2id(event_name)#纯数字
 # 	__Update_Event(context,expect,event_page_id,event_id)
 
-# @then(u"{user}获得活动报名活动'{event_name}'")
+# @then(u"{user}获得活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
 # 	expect = json.loads(context.text)[0]
 
@@ -879,19 +882,19 @@ def step_impl(context,user):
 
 # 	bdd_util.assert_dict(expect_event_dic, actual_event_dic)
 
-# @when(u"{user}删除活动报名活动'{event_name}'")
+# @when(u"{user}删除活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
 # 	event_page_id,event_id = __event_name2id(event_name)#纯数字
 # 	del_response = __Delete_Event(context,event_id)
 # 	bdd_util.assert_api_call_success(del_response)
 
-# @when(u"{user}关闭活动报名活动'{event_name}'")
+# @when(u"{user}关闭活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
 # 	event_page_id,event_id = __event_name2id(event_name)#纯数字
 # 	stop_response = __Stop_Event(context,event_id)
 # 	bdd_util.assert_api_call_success(stop_response)
 
-# @when(u"{user}设置活动报名活动列表查询条件")
+# @when(u"{user}设置活动报名列表查询条件")
 # def step_impl(context,user):
 # 	expect = json.loads(context.text)
 # 	if 'start_date' in expect:
@@ -912,26 +915,26 @@ def step_impl(context,user):
 # 	event_array = json.loads(search_response.content)['data']['items']
 # 	context.search_event = event_array
 
-# @when(u"{user}访问活动报名活动列表第'{page_num}'页")
+# @when(u"{user}访问活动报名列表第'{page_num}'页")
 # def step_impl(context,user,page_num):
 # 	count_per_page = context.count_per_page
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问活动报名活动列表下一页")
+# @when(u"{user}访问活动报名列表下一页")
 # def step_impl(context,user):
 # 	paging_dic = context.paging
 # 	count_per_page = paging_dic['count_per_page']
 # 	page_num = int(paging_dic['page_num'])+1
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问活动报名活动列表上一页")
+# @when(u"{user}访问活动报名列表上一页")
 # def step_impl(context,user):
 # 	paging_dic = context.paging
 # 	count_per_page = paging_dic['count_per_page']
 # 	page_num = int(paging_dic['page_num'])-1
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}查看活动报名活动'{event_name}'")
+# @when(u"{user}查看活动报名'{event_name}'")
 # def check_event_list(context,user,event_name):
 # 	design_mode = 0
 # 	version = 1
@@ -967,7 +970,7 @@ def step_impl(context,user):
 # 	context.event_id = "%s"%(event_id)
 
 
-# @then(u"{webapp_user_name}获得活动报名活动'{power_me_rule_name}'的结果列表")
+# @then(u"{webapp_user_name}获得活动报名'{power_me_rule_name}'的结果列表")
 # def step_tmpl(context, webapp_user_name, power_me_rule_name):
 
 # 	if hasattr(context,"search_event_result"):
@@ -1000,7 +1003,7 @@ def step_impl(context,user):
 
 # 	bdd_util.assert_list(expected, actual)
 
-# @when(u"{user}设置活动报名活动结果列表查询条件")
+# @when(u"{user}设置活动报名结果列表查询条件")
 # def step_impl(context,user):
 # 	expect = json.loads(context.text)
 
@@ -1032,13 +1035,13 @@ def step_impl(context,user):
 # 	event_result_array = json.loads(search_response.content)['data']['items']
 # 	context.search_event_result = event_result_array
 
-# @when(u"{user}访问活动报名活动'{event_name}'的结果列表第'{page_num}'页")
+# @when(u"{user}访问活动报名'{event_name}'的结果列表第'{page_num}'页")
 # def step_impl(context,user,event_name,page_num):
 # 	count_per_page = context.count_per_page
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 # 	check_event_list(context,user,event_name)
 
-# @when(u"{user}访问活动报名活动'{event_name}'的结果列表下一页")
+# @when(u"{user}访问活动报名'{event_name}'的结果列表下一页")
 # def step_impl(context,user,event_name):
 # 	paging_dic = context.paging
 # 	count_per_page = paging_dic['count_per_page']
@@ -1046,7 +1049,7 @@ def step_impl(context,user):
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 # 	check_event_list(context,user,event_name)
 
-# @when(u"{user}访问活动报名活动'{event_name}'的结果列表上一页")
+# @when(u"{user}访问活动报名'{event_name}'的结果列表上一页")
 # def step_impl(context,user,event_name):
 # 	paging_dic = context.paging
 # 	count_per_page = paging_dic['count_per_page']
@@ -1054,7 +1057,7 @@ def step_impl(context,user):
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 # 	check_event_list(context,user,event_name)
 
-# @then(u"{user}能批量导出活动报名活动'{event_name}'")
+# @then(u"{user}能批量导出活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
 # 	event_page_id,event_id = __event_name2id(event_name)#纯数字
 # 	url ='/apps/event/api/event_participances_export/?_method=get&export_id=%s' % (event_id)
