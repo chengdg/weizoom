@@ -44,7 +44,7 @@
         <script type="text/javascript" src="/pay_static/weixin/static/js/wxpay_v3.js"></script>
 		<script type="text/javascript">
 			W.isUnderDevelopMode = {% if under_develop %}true{% else %}false{% endif %};
-
+			var component_appid = "{{component_appid}}";
 			var appId = "{{app_id}}";
 			var partnerId = "{{partner_id}}";
 			var appSecret = "{{app_secret}}"
@@ -78,9 +78,14 @@
 			
 		    var pay = function() {
 				if (code == '') {
-					var redirect_uri = encodeURIComponent(window.location.href);
-			        var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base#wechat_redirect";
-			        var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
+					//var redirect_uri = encodeURIComponent(window.location.href);
+			        //var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base#wechat_redirect";
+			        //var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
+					//setTimeout(function(){document.location.href = auth_url},500);
+
+					var queryString = "appid="+appId+"&redirect_uri="+redirect_uri+"&response_type=code&scope=snsapi_base&component_appid="+component_appid+" #wechat_redirect";
+					var auth_url = "https://open.weixin.qq.com/connect/oauth2/authorize?"+queryString;
+					alert(auth_url)
 					setTimeout(function(){document.location.href = auth_url},500);
 				} else {
 					var wxpay = new W.WXPayV3(
