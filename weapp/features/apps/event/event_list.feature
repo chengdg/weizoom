@@ -149,7 +149,7 @@ Background:
 		}
 		"""
 
-@apps @event
+@mall2 @apps_event @apps_event_backend @event_list
 Scenario:1 活动报名-列表查询
 	Given jobs登录系统
 	#按照"活动名称"查询
@@ -411,7 +411,7 @@ Scenario:1 活动报名-列表查询
 			}]
 			"""
 
-@apps @event
+@mall2 @apps_event @apps_event_backend @event_list
 Scenario:2 活动报名-列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数

@@ -6,7 +6,7 @@ Feature:手机端用户参与活动报名
 	2 活动报名设置成"必粗关注才可参与"：没有关注和取消关注的微信账号都不可以参与，只有关注状态的微信账号可参与
 """
 
-@apps @event
+@mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:1 活动报名-无奖励-无需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -100,7 +100,7 @@ Scenario:1 活动报名-无奖励-无需关注即可参与
 			"""
 		Then bill获得提示"您已报名"
 
-@apps @event
+@mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:2 活动报名-积分奖励-必须关注才可参与
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -190,7 +190,7 @@ Scenario:2 活动报名-积分奖励-必须关注才可参与
 			"""
 		Then lily获得提示"店铺二维码"
 
-@apps @event
+@mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
