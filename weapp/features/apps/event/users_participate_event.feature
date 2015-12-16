@@ -3,7 +3,7 @@
 Feature:手机端用户参与活动报名
 """
 	1 活动报名设置成"无需关注即可参与"：没有关注和取消关注、关注状态的微信账号都可以参与，没有关注的账号参与之后在结果中显示的头像和昵称为空
-	2 活动报名设置成"必粗关注才可参与"：没有关注和取消关注的微信账号都不可以参与，只有关注状态的微信账号可参与
+	2 活动报名设置成"必需关注才可参与"：没有关注和取消关注的微信账号都不可以参与，只有关注状态的微信账号可参与
 """
 
 @mall2 @apps_event @apps_event_frontend @user_participate_event
@@ -11,50 +11,50 @@ Scenario:1 活动报名-无奖励-无需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-无奖励",
 			"subtitle":"活动报名-副标题-无奖励",
 			"content":"内容描述-无奖励",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"right":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type": "无奖励",
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"QQ",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"其他",
 						"is_required":"false"
 					}]
-		}
+		}]
 		"""
 
 	#会员
-		Given bill关注jobs的公众账号
+		When bill关注jobs的公众号
 		When bill访问jobs的webapp
 
-		Given tom关注jobs的公众账号
+		When tom关注jobs的公众号
 		When tom访问jobs的webapp
 		When tom取消关注jobs的公众号
 
 	#会员参与
-		When 清空浏览器	
+		When 清空浏览器
 		When bill参加活动报名'活动报名-无奖励'于'今天'
 			"""
 			{
@@ -81,6 +81,9 @@ Scenario:1 活动报名-无奖励-无需关注即可参与
 		Then tom获得提示"提交成功"
 	#非会员参与
 		When 清空浏览器
+		When lily关注jobs的公众号
+		When lily访问jobs的webapp
+		When lily取消关注jobs的公众号
 		When lily参加活动报名'活动报名-无奖励'于'今天'
 			"""
 			{
@@ -98,40 +101,40 @@ Scenario:1 活动报名-无奖励-无需关注即可参与
 			"""
 			{}
 			"""
-		Then bill获得提示"您已报名"
+		Then bill获得提示"您已参加过该活动！"
 
 @mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:2 活动报名-积分奖励-必须关注才可参与
 	Given jobs登录系统
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-积分",
 			"subtitle":"活动报名-副标题-积分",
 			"content":"内容描述-积分",
 			"start_date":"1天前",
 			"end_date":"2天后",
-			"right":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type": "积分",
 			"integral": 50,
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"QQ",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"店铺类型",
@@ -140,14 +143,14 @@ Scenario:2 活动报名-积分奖励-必须关注才可参与
 						"item_name":"开店时间",
 						"is_required":"true"
 					}]
-		}
+		}]
 		"""
 
 	#会员
-		Given bill关注jobs的公众账号
+		Given bill关注jobs的公众号
 		When bill访问jobs的webapp
 
-		Given tom关注jobs的公众账号
+		Given tom关注jobs的公众号
 		When tom访问jobs的webapp
 		When tom取消关注jobs的公众号
 
@@ -176,9 +179,12 @@ Scenario:2 活动报名-积分奖励-必须关注才可参与
 				"开店时间":"2015-10"
 			}
 			"""
-		Then tom获得提示"店铺二维码"
+		#Then tom获得提示"店铺二维码"
 	#非会员参与
 		When 清空浏览器
+		When lily关注jobs的公众号
+		When lily访问jobs的webapp
+		When lily取消关注jobs的公众号
 		When lily参加活动报名'活动报名-积分'于'今天'
 			"""
 			{
@@ -188,7 +194,7 @@ Scenario:2 活动报名-积分奖励-必须关注才可参与
 				"开店时间":"2015-10"
 			}
 			"""
-		Then lily获得提示"店铺二维码"
+		#Then lily获得提示"店铺二维码"
 
 @mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:3 活动报名-优惠券奖励-无需关注即可参与
@@ -205,9 +211,32 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			"coupon_id_prefix": "coupon1_id_"
 		}]
 		"""
-	When jobs新建活动报名
+	Then jobs能获得优惠券'优惠券1'的码库
 		"""
 		{
+			"coupon1_id_1": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon1_id_2": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon1_id_3": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+	When jobs新建活动报名
+		"""
+		[{
 			"title":"活动报名-优惠券",
 			"subtitle":"活动报名-副标题-优惠券",
 			"content":"内容描述-优惠券",
@@ -218,22 +247,22 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			"coupon":"优惠券1",
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"QQ",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":true
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"店铺类型",
@@ -242,14 +271,14 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 						"item_name":"开店时间",
 						"is_required":"true"
 					}]
-		}
+		}]
 		"""
 
 	#会员
-		Given bill关注jobs的公众账号
+		Given bill关注jobs的公众号
 		When bill访问jobs的webapp
 
-		Given tom关注jobs的公众账号
+		Given tom关注jobs的公众号
 		When tom访问jobs的webapp
 		When tom取消关注jobs的公众号
 
@@ -286,6 +315,7 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			}
 			"""
 		Then tom获得提示"提交成功"
+  		When tom关注jobs的公众号
 		When tom访问jobs的webapp
 		Then tom能获得webapp优惠券列表
 			"""
@@ -297,6 +327,9 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			"""
 	#非会员参与
 		When 清空浏览器
+  		When lily关注jobs的公众号
+		When lily访问jobs的webapp
+		When lily取消关注jobs的公众号
 		When lily参加活动报名'活动报名-优惠券'于'今天'
 			"""
 			{
@@ -307,7 +340,7 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			}
 			"""
 		Then lily获得提示"提交成功"
-		When lily关注jobs的公众账号
+		When lily关注jobs的公众号
 		When lily访问jobs的webapp
 		Then lily能获得webapp优惠券列表
 			"""

@@ -18,7 +18,7 @@ Background:
 	Given jobs登录系统
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":'活动报名-无奖励',
 			"subtitle":"活动报名-副标题-无奖励",
 			"content":"内容描述-无奖励",
@@ -28,35 +28,35 @@ Background:
 			"prize_type": "无奖励",
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"QQ",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"其他",
 						"is_required":"false"
 					}]
-		}
+		}]
 		"""
 
 	#会员
-		Given bill关注jobs的公众账号
+		Given bill关注jobs的公众号
 		When bill访问jobs的webapp
 
-		Given tom关注jobs的公众账号
+		Given tom关注jobs的公众号
 		When tom访问jobs的webapp
 		When tom取消关注jobs的公众号
 
@@ -89,6 +89,9 @@ Background:
 			Then tom获得提示"提交成功"
 		#非会员参与
 			When 清空浏览器
+			When lily关注jobs的公众号
+			When lily访问jobs的webapp
+			When lily取消关注jobs的公众号
 			When lily参加活动报名'活动报名-无奖励'于'2天前'
 				"""
 				{
@@ -106,7 +109,7 @@ Background:
 				"""
 				{}
 				"""
-			Then bill获得提示"您已报名"
+			Then bill获得提示"您已参加过该活动！"
 
 @mall2 @apps_event @apps_event_backend @view_event_results
 Scenario:1 活动参与结果列表-查询
