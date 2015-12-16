@@ -81,6 +81,7 @@
 $(document).ready(function() {
     // 计算列表页面价钱
     $('.xui-products-original').calculProductMemberPriceOrPromotionPrice({
+        fmt: $('body').data('value'),
         updateProductPrice: function(event, data){
             var token = $.cookie('current_token');
             if(token){
@@ -89,7 +90,9 @@ $(document).ready(function() {
             }
             if(data.count != 0) {
                 $('.xa-shoppingCartCount').text(data.count).removeClass("hidden");
-                // $('.xa-shopCarCount').text(data.count).show();
+                /* 修改店铺底部导航的购物车数量 如需修改请联系我  by liupeiyu */
+                $('.xa-shopCarCount').text(data.count).show();
+                /* end */
             }
 
             var _this = this;
