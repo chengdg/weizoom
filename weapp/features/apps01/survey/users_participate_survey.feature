@@ -26,7 +26,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 		"""
 		[{
 			"title":"用户调研01",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -95,7 +95,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 		"""
 		[{
 			"title":"用户调研02",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -202,7 +202,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 		"""
 		[{
 			"title":"积分用户调研",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -235,7 +235,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 				}]
 		},{
 			"title":"优惠券用户调研01",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -249,7 +249,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 				}
 		},{
 			"title":"优惠券用户调研02",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -335,7 +335,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 		"""
 		[{
 			"title":"未开始用户调研",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"明天",
 			"end_date":"2天后",
@@ -450,7 +450,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 		"""
 		[{
 			"title":"已结束用户调研",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"2天前",
 			"end_date":"昨天",

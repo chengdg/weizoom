@@ -30,7 +30,7 @@ Background:
 		"""
 		[{
 			"title":"未开始用户调研01",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"明天",
 			"end_date":"2天后",
@@ -43,7 +43,7 @@ Background:
 				}
 		},{
 			"title":"进行中用户调研02",
-			"sub_title":"用户调研2",
+			"subtitle":"用户调研2",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -65,7 +65,7 @@ Background:
 				}]
 		},{
 			"title":"已结束用户调研03",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"3天前",
 			"end_date":"昨天",
@@ -102,7 +102,7 @@ Scenario:1 编辑'未开始'状态的用户调研活动
 		"""
 		[{
 			"title":"用户调研01",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -120,7 +120,7 @@ Scenario:1 编辑'未开始'状态的用户调研活动
 		"""
 		[{
 			"title":"用户调研01",
-			"sub_title":"",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
