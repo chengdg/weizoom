@@ -12,6 +12,7 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
+from mall.promotion import models as  promotion_models
 from apps.customerized_apps.event.models import event, eventParticipance
 from weixin.message.material import models as material_models
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
@@ -28,6 +29,13 @@ def __itemName2item(itemName):
 
 def __get_event_rule_id(event_name):
 	return event.objects.get(name=event_name).id
+
+def __get_coupon_rule_id(coupon_rule_name):
+	"""
+	获取优惠券id
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	return coupon_rule.id
 
 def __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid):
 	#进入微助力活动页面
@@ -51,6 +59,33 @@ def __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid):
 		print('[info] not redirect')
 	return response
 
+def __participate_event(context,webapp_owner_id,event_rule_id,member_id, date):
+	termite_data = json.loads(context.text)
+	i = 0
+	data = {}
+	for k,v in termite_data.iteritems():
+		item_name = __itemName2item(k) if k!=u'' else ''
+		name = '0'+str(i)+'_'+item_name
+		data[name] = {
+			'type': 'appkit.textlist',
+			'value': v
+        }
+		i += 1
+	related_page_id = event.objects.get(id=event_rule_id).related_page_id
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	page = pagestore.get_page(related_page_id, 1)
+	prize = page['component']['components'][0]['model']['prize']
+	params = {
+		'webapp_owner_id': webapp_owner_id,
+		'belong_to': event_rule_id,
+		'termite_data': json.dumps(data),
+		'prize': json.dumps(prize)
+	}
+	response = context.client.post('/m/apps/event/api/event_participance/?_method=put', params)
+	event_info = eventParticipance.objects.get(member_id=member_id, belong_to=str(event_rule_id))
+	event_info.update(set__created_at=date)
+	context.response_json = json.loads(response.content)
+
 @when(u"{webapp_user_name}参加活动报名'{event_name}'于'{date}'")
 def step_tmpl(context, webapp_user_name, event_name, date):
 	webapp_owner_id = context.webapp_owner_id
@@ -60,29 +95,19 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 	event_rule_id = __get_event_rule_id(event_name)
 	member = member_api.get_member_by_openid(openid, context.webapp_id)
 	response = __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid)
-	print(json.loads(response.context))
-	termite_data = json.loads(context.text)
-	i = 0
-	data = {}
-	for k,v in termite_data.iteritems():
-		item_name = __itemName2item(k) if k !=u'' else ''
-		name = '0'+str(i)+'_'+item_name
-		data[name] = {
-			'type': 'appkit.textlist',
-			'value': v
-        }
-		i += 1
-	print(data)
-	params = {
-		'webapp_owner_id': webapp_owner_id,
-		'belong_to': event_rule_id,
-		'termite_data': json.dumps(data),
-		# 'prize':prize
-	}
-	response = context.client.post('/m/apps/event/api/event_participance/?_method=put', params)
-	event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
-	event_info.update(set__created_at=date)
-	context.response_json = json.loads(response.content)
+	related_page_id = event.objects.get(id=event_rule_id).related_page_id
+	pagestore = pagestore_manager.get_pagestore('mongo')
+	page = pagestore.get_page(related_page_id, 1)
+	print(page['component']['components'][0]['model'])
+	permission = page['component']['components'][0]['model']['permission']
+	if permission == 'member':
+		if member.is_subscribed == True:
+			__participate_event(context,webapp_owner_id,event_rule_id,member.id,date)
+		else:
+			pass #弹二维码
+	else:
+		__participate_event(context,webapp_owner_id,event_rule_id,member.id,date)
+
 
 @then(u'{webapp_user_name}获得提示"{msg}"')
 def step_tmpl(context, webapp_user_name, msg):
