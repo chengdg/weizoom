@@ -1032,7 +1032,7 @@ def check_weizoom_card_for_order(pre_order, args, request, **kwargs):
         for card_name in card_names:
             msg = None
             if len(card_passes) > card_index and len(card_name) > 0:
-                msg, weizoom_card = weizoom_card_api.check_weizoom_card(card_name, card_passes[card_index],request.webapp_user, request.webapp_owner_id)
+                msg, weizoom_card = weizoom_card_api.check_weizoom_card(card_name, card_passes[card_index],request.webapp_user,request.member,request.webapp_owner_id,request.manager.get_profile().webapp_id)
                 if msg:
                     fail_msg['data']['msg'] = msg
                     return fail_msg
