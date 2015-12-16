@@ -152,8 +152,10 @@ class voteStatistic_Export(resource.Resource):
 						else:
 							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
 			#select-data-processing
+			title_valid_dict = {}
 			for select in select_data:
 				for s_list in select_data[select]:
+					is_valid = False
 					for s in s_list:
 						if select not in select_static:
 							select_static[select]={}
@@ -161,6 +163,15 @@ class voteStatistic_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
+							is_valid = True
+					if is_valid:
+						if title_valid_dict.has_key(select):
+							title_valid_dict[select] += 1
+						else:
+							title_valid_dict[select] = 1
+					else:
+						if not title_valid_dict.has_key(select):
+							title_valid_dict[select] = 0
 					print s_list
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
@@ -171,18 +182,19 @@ class voteStatistic_Export(resource.Resource):
 				header_style = xlwt.XFStyle()
 				select_num = 0
 				row = col =0
-				for s in select_static:
+				for s in sorted(select_static.keys()):
 					select_num += 1
-					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'%total)
+					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'% title_valid_dict[s])
 					ws.write(row,col+1,u'参与人数/百分百')
 					row += 1
 					all_select_num = 0
 					s_i_num = 0
-					for s_i in select_static[s]:
+					for s_i in sorted(select_static[s].keys()):
 						s_num = select_static[s][s_i]
 						if s_num :
 							all_select_num += s_num
-					for s_i in select_static[s]:
+					for s_i in sorted(select_static[s].keys()) :
+
 						s_num = select_static[s][s_i]
 						ws.write(row,col,s_i.split('_')[1])
 						per = s_num*1.0/all_select_num*100 if all_select_num else 0
@@ -194,7 +206,6 @@ class voteStatistic_Export(resource.Resource):
 					row += 1
 					ws.write(row,col,u'')
 					ws.write(row,col+1,u'')
-					row += 1
 
 			#qa_sheet
 			if qa_static:
