@@ -141,7 +141,7 @@ Background:
 		}]
 		"""
 
-@apps @event @evnet_list @yang1
+@apps @event @evnet_list
 Scenario:1 活动报名-列表查询
 	Given jobs登录系统
 	#按照"活动名称"查询
@@ -403,7 +403,7 @@ Scenario:1 活动报名-列表查询
 			}]
 			"""
 
-@apps @event @evnet_list @yang2
+@apps @event @evnet_list
 Scenario:2 活动报名-列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
@@ -412,43 +412,7 @@ Scenario:2 活动报名-列表分页
 			"count_per_page":1
 		}
 		"""
-	When jobs设置活动报名列表查询条件
-		"""
-		{
-			"name":"",
-			"status":"所有状态",
-			"start_date":"",
-			"end_date":"",
-			"prize_type":"所有奖品"
-		}
-		"""
-
-	Then jobs获得活动报名列表
-		"""
-		[{
-			"name":"活动报名-无奖励",
-			"participant_count": 0,
-			"prize_type": "无奖励",
-			"start_date":"明天",
-			"end_date":"2天后",
-			"status":"未开始",
-			"actions": ["链接","预览","查看结果"]
-		}]
-		"""
-	When jobs浏览下一页
-	Then jobs获得活动报名列表
-		"""
-		[{
-			"name":"活动报名-积分",
-			"participant_count": 0,
-			"prize_type": "积分",
-			"start_date":"1天前",
-			"end_date":"2天后",
-			"status":"进行中",
-			"actions": ["关闭","链接","预览","查看结果"]
-		}]
-		"""
-	When jobs浏览活动报名列表第'3'页
+	When jobs访问百宝箱活动报名列表第'1'页
 	Then jobs获得活动报名列表
 		"""
 		[{
@@ -461,7 +425,47 @@ Scenario:2 活动报名-列表分页
 			"actions": ["删除","链接","预览","查看结果"]
 		}]
 		"""
-	When jobs浏览上一页
+	When jobs访问百宝箱活动报名列表第'1'页
+	Then jobs获得活动报名列表
+		"""
+		[{
+			"name":"活动报名-优惠券",
+			"participant_count": 0,
+			"prize_type": "优惠券",
+			"start_date":"3天前",
+			"end_date":"1天前",
+			"status":"已结束",
+			"actions": ["删除","链接","预览","查看结果"]
+		}]
+
+		"""
+	When jobs访问活动报名列表下一页
+	Then jobs获得活动报名列表
+		"""
+		[{
+			"name":"活动报名-积分",
+			"participant_count": 0,
+			"prize_type": "积分",
+			"start_date":"1天前",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","查看结果"]
+		}]
+		"""
+	When jobs访问百宝箱活动报名列表第'3'页
+	Then jobs获得活动报名列表
+		"""
+		[{
+			"name":"活动报名-无奖励",
+			"participant_count": 0,
+			"prize_type": "无奖励",
+			"start_date":"明天",
+			"end_date":"2天后",
+			"status":"未开始",
+			"actions": ["链接","预览","查看结果"]
+		}]
+		"""
+	When jobs访问活动报名列表上一页
 	Then jobs获得活动报名列表
 		"""
 		[{

@@ -670,14 +670,17 @@ def __Search_Event(context,search_dic):
 	enable_paginate = 1
 	count_per_page = 10
 
+	#分页情况，更新分页参数
+	if hasattr(context,"paging"):
+		paging_dic = context.paging
+		count_per_page = paging_dic['count_per_page']
+		page = paging_dic['page_num']
+
 	name = search_dic["name"]
 	start_time = search_dic["start_time"]
 	end_time = search_dic["end_time"]
 	status = search_dic["status"]
 	prize_type = search_dic['prize_type']
-
-	__debug_print(search_dic)
-
 
 	search_url = "/apps/event/api/events/?design_mode={}&version={}&name={}&status={}&prize_type={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
 			design_mode,
@@ -742,17 +745,19 @@ def step_impl(context,user):
 @then(u'{user}获得活动报名列表')
 def step_impl(context,user):
 	design_mode = 0
-	count_per_page = 10
 	version = 1
 	page = 1
 	enable_paginate = 1
+	if hasattr(context,"count_per_page"):
+		count_per_page = context.count_per_page
+	else:
+		count_per_page = 10
 
 	actual_list = []
 	expected = json.loads(context.text)
 
 # 	#搜索查看结果
 	if hasattr(context,"search_event"):
-		pass
 		rec_search_list = context.search_event
 		for item in rec_search_list:
 			tmp = {
@@ -909,6 +914,7 @@ def step_impl(context,user,event_name):
 @when(u"{user}设置活动报名列表查询条件")
 def step_impl(context,user):
 	expect = json.loads(context.text)
+
 	if 'start_date' in expect:
 		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
 		del expect['start_date']
@@ -930,24 +936,24 @@ def step_impl(context,user):
 	event_array = json.loads(search_response.content)['data']['items']
 	context.search_event = event_array
 
-# @when(u"{user}访问活动报名列表第'{page_num}'页")
-# def step_impl(context,user,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问百宝箱活动报名列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问活动报名列表下一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问活动报名列表下一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问活动报名列表上一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问活动报名列表上一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
 # @when(u"{user}查看活动报名'{event_name}'")
 # def check_event_list(context,user,event_name):
