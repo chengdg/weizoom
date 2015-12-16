@@ -33,13 +33,11 @@ Copyright (c) 2011-2012 Weizoom Inc
 		options: {
 		},
 
-		_init: function(){
-			// console.log('init calculProductMemberPriceOrPromotionPrice')
+		_init: function(options){
+			this.fmt = options.fmt;
 		},
 
 		_create: function() {
-			// console.log('create calculProductMemberPriceOrPromotionPrice')
-			
 			// 当页面中有商品列表时，才去取会员商品信息
 			if (this.$el.length > 0) {
 				this.getMemberProductInfo();				
@@ -55,7 +53,8 @@ Copyright (c) 2011-2012 Weizoom Inc
 				args: {
 					woid: W.webappOwnerId,
 					module: 'mall',
-					target_api: 'member_product_info/get'
+					target_api: 'member_product_info/get',
+					fmt: _this.fmt
 				},
 				success: function(data) {
 					_this.memberInfoData = data;
