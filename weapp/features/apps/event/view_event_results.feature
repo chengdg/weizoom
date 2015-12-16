@@ -24,7 +24,7 @@ Background:
 			"content":"内容描述-无奖励",
 			"start_date":"5天前",
 			"end_date":"2天后",
-			"right":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type": "无奖励",
 			"items_select":[{
 						"item_name":"姓名",
@@ -120,15 +120,15 @@ Scenario:1 活动参与结果列表-查询
 			"""
 			{
 				"name":"",
-				"start_time":"",
-				"end_time":""
+				"start_date":"",
+				"end_date":""
 			}
 			"""
 		Then jobs获得活动报名'活动报名-无奖励'结果列表
 			"""
 			[{
 				"name":"",
-				"datetime":"2天前",
+				"date":"2天前",
 				"info":{
 						"姓名":"lily",
 						"手机":"15213265987",
@@ -138,7 +138,7 @@ Scenario:1 活动参与结果列表-查询
 					}
 			},{
 				"name":"tom",
-				"datetime":"3天前",
+				"date":"3天前",
 				"info":{
 						"姓名":"tom",
 						"手机":"15213265987",
@@ -148,7 +148,7 @@ Scenario:1 活动参与结果列表-查询
 					}
 			},{
 				"name":"bill",
-				"datetime":"4天前",
+				"date":"4天前",
 				"info":{
 						"姓名":"bill",
 						"手机":"15213265987",
@@ -165,15 +165,15 @@ Scenario:1 活动参与结果列表-查询
 			"""
 			{
 				"name":"o",
-				"start_time":"",
-				"end_time":""
+				"start_date":"",
+				"end_date":""
 			}
 			"""
 		Then jobs获得活动报名'活动报名-无奖励'结果列表
 			"""
 			[{
 				"name":"tom",
-				"datetime":"3天前",
+				"date":"3天前",
 				"info":{
 						"姓名":"tom",
 						"手机":"15213265987",
@@ -189,15 +189,15 @@ Scenario:1 活动参与结果列表-查询
 			"""
 			{
 				"name":"bill",
-				"start_time":"",
-				"end_time":""
+				"start_date":"",
+				"end_date":""
 			}
 			"""
 		Then jobs获得活动报名'活动报名-无奖励'结果列表
 			"""
 			[{
 				"name":"bill",
-				"datetime":"4天前",
+				"date":"4天前",
 				"info":{
 						"姓名":"bill",
 						"手机":"15213265987",
@@ -212,8 +212,8 @@ Scenario:1 活动参与结果列表-查询
 			"""
 			{
 				"name":"lily",
-				"start_time":"",
-				"end_time":""
+				"start_date":"",
+				"end_date":""
 			}
 			"""
 		Then jobs获得活动报名'活动报名-无奖励'结果列表
@@ -227,15 +227,15 @@ Scenario:1 活动参与结果列表-查询
 				"""
 				{
 					"name":"",
-					"start_time":"3天前",
-					"end_time":""
+					"start_date":"3天前",
+					"end_date":""
 				}
 				"""
 			Then jobs获得活动报名'活动报名-无奖励'结果列表
 				"""
 				[{
 					"name":"",
-					"datetime":"2天前",
+					"date":"2天前",
 					"info":{
 							"姓名":"lily",
 							"手机":"15213265987",
@@ -245,7 +245,7 @@ Scenario:1 活动参与结果列表-查询
 						}
 				},{
 					"name":"tom",
-					"datetime":"3天前",
+					"date":"3天前",
 					"info":{
 							"姓名":"tom",
 							"手机":"15213265987",
@@ -260,15 +260,15 @@ Scenario:1 活动参与结果列表-查询
 				"""
 				{
 					"name":"",
-					"start_time":"",
-					"end_time":"3天前"
+					"start_date":"",
+					"end_date":"3天前"
 				}
 				"""
 			Then jobs获得活动报名'活动报名-无奖励'结果列表
 				"""
 				[{
 					"name":"tom",
-					"datetime":"3天前",
+					"date":"3天前",
 					"info":{
 							"姓名":"tom",
 							"手机":"15213265987",
@@ -278,7 +278,7 @@ Scenario:1 活动参与结果列表-查询
 						}
 				},{
 					"name":"bill",
-					"datetime":"4天前",
+					"date":"4天前",
 					"info":{
 							"姓名":"bill",
 							"手机":"15213265987",
@@ -293,15 +293,15 @@ Scenario:1 活动参与结果列表-查询
 				"""
 				{
 					"name":"",
-					"start_time":"3天前",
-					"end_time":"2天前"
+					"start_date":"3天前",
+					"end_date":"2天前"
 				}
 				"""
 			Then jobs获得活动报名'活动报名-无奖励'结果列表
 				"""
 				[{
 					"name":"",
-					"datetime":"2天前",
+					"date":"2天前",
 					"info":{
 							"姓名":"lily",
 							"手机":"15213265987",
@@ -311,7 +311,7 @@ Scenario:1 活动参与结果列表-查询
 						}
 				},{
 					"name":"tom",
-					"datetime":"3天前",
+					"date":"3天前",
 					"info":{
 							"姓名":"tom",
 							"手机":"15213265987",
@@ -326,8 +326,8 @@ Scenario:1 活动参与结果列表-查询
 				"""
 				{
 					"name":"",
-					"start_time":"6天前",
-					"end_time":"5天前"
+					"start_date":"6天前",
+					"end_date":"5天前"
 				}
 				"""
 			Then jobs获得活动报名'活动报名-无奖励'结果列表
@@ -340,15 +340,15 @@ Scenario:1 活动参与结果列表-查询
 			"""
 			{
 				"name":"i",
-				"start_time":"5天前",
-				"end_time":"4天前"
+				"start_date":"5天前",
+				"end_date":"4天前"
 			}
 			"""
 		Then jobs获得活动报名'活动报名-无奖励'结果列表
 			"""
 			[{
 				"name":"bill",
-				"datetime":"4天前",
+				"date":"4天前",
 				"info":{
 						"姓名":"bill",
 						"手机":"15213265987",
@@ -372,8 +372,8 @@ Scenario:2 活动参与结果列表-分页
 		"""
 		{
 			"name":"",
-			"start_time":"",
-			"end_time":""
+			"start_date":"",
+			"end_date":""
 		}
 		"""
 
@@ -381,7 +381,7 @@ Scenario:2 活动参与结果列表-分页
 		"""
 		[{
 			"name":"",
-			"datetime":"2天前",
+			"date":"2天前",
 			"info":{
 					"姓名":"lily",
 					"手机":"15213265987",
@@ -396,7 +396,7 @@ Scenario:2 活动参与结果列表-分页
 		"""
 		[{
 			"name":"tom",
-			"datetime":"3天前",
+			"date":"3天前",
 			"info":{
 					"姓名":"tom",
 					"手机":"15213265987",
@@ -411,7 +411,7 @@ Scenario:2 活动参与结果列表-分页
 		"""
 		[{
 			"name":"bill",
-			"datetime":"4天前",
+			"date":"4天前",
 			"info":{
 					"姓名":"bill",
 					"手机":"15213265987",
@@ -426,7 +426,7 @@ Scenario:2 活动参与结果列表-分页
 		"""
 		[{
 			"name":"tom",
-			"datetime":"3天前",
+			"date":"3天前",
 			"info":{
 					"姓名":"tom",
 					"手机":"15213265987",
