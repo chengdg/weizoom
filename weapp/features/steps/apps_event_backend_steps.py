@@ -202,6 +202,7 @@ def __prize_type2name(prize_type):
 # 	else:
 # 		return -1
 
+
 def __get_actions(status):
 	"""
 	根据输入活动报名状态
@@ -655,41 +656,47 @@ def __Stop_Event(context,event_id):
 	stop_event_response = context.client.post(stop_event_url,stop_args)
 	return stop_event_response
 
-# def __Search_Event(context,search_dic):
-# 	"""
-# 	搜索活动报名
+def __Search_Event(context,search_dic):
+	"""
+	搜索活动报名
 
-# 	输入搜索字典
-# 	返回数据列表
-# 	"""
+	输入搜索字典
+	返回数据列表
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
-# 	count_per_page = 10
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
 
-# 	name = search_dic["name"]
-# 	start_time = search_dic["start_time"]
-# 	end_time = search_dic["end_time"]
-# 	status = __name2status(search_dic["status"])
+	#分页情况，更新分页参数
+	if hasattr(context,"paging"):
+		paging_dic = context.paging
+		count_per_page = paging_dic['count_per_page']
+		page = paging_dic['page_num']
 
+	name = search_dic["name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+	status = search_dic["status"]
+	prize_type = search_dic['prize_type']
 
+	search_url = "/apps/event/api/events/?design_mode={}&version={}&name={}&status={}&prize_type={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			name,
+			status,
+			prize_type,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
 
-# 	search_url = "/apps/event/api/lotteries/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
-# 			design_mode,
-# 			version,
-# 			name,
-# 			status,
-# 			start_time,
-# 			end_time,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate)
-
-# 	search_response = context.client.get(search_url)
-# 	bdd_util.assert_api_call_success(search_response)
-# 	return search_response
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 # def __Search_Event_Result(context,search_dic):
 # 	"""
@@ -738,46 +745,50 @@ def step_impl(context,user):
 @then(u'{user}获得活动报名列表')
 def step_impl(context,user):
 	design_mode = 0
-	count_per_page = 10
 	version = 1
 	page = 1
 	enable_paginate = 1
+	if hasattr(context,"count_per_page"):
+		count_per_page = context.count_per_page
+	else:
+		count_per_page = 10
 
 	actual_list = []
 	expected = json.loads(context.text)
 
 # 	#搜索查看结果
 	if hasattr(context,"search_event"):
-		pass
-# 		rec_search_list = context.search_event
-# 		for item in rec_search_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":item['start_time'],
-# 				"end_time":item['end_time'],
-# 				"participant_count":item['participant_count'],
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
+		rec_search_list = context.search_event
+		for item in rec_search_list:
+			tmp = {
+				"name":item['name'],
+				"status":item['status'],
+				"prize_type":item['prize_type'],
+				"start_time":item['start_time'],
+				"end_time":item['end_time'],
+				"participant_count":item['participant_count'],
+			}
+			tmp["actions"] = __get_actions(item['status'])
+			actual_list.append(tmp)
 
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
-# 		print("expected: {}".format(expected))
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
+		print("expected: {}".format(expected))
+		print("actual_list:{}".format(actual_list))
 
-# 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
 	#其他查看结果
 	else:
-		# #分页情况，更新分页参数
-		# if hasattr(context,"paging"):
-		# 	paging_dic = context.paging
-		# 	count_per_page = paging_dic['count_per_page']
-		# 	page = paging_dic['page_num']
+		#分页情况，更新分页参数
+		if hasattr(context,"paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
 
 		for expect in expected:
 			if 'start_date' in expect:
@@ -900,45 +911,49 @@ def step_impl(context,user,event_name):
 	stop_response = __Stop_Event(context,event_id)
 	bdd_util.assert_api_call_success(stop_response)
 
-# @when(u"{user}设置活动报名列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
-# 	if 'start_date' in expect:
-# 		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
-# 		del expect['start_date']
+@when(u"{user}设置活动报名列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
 
-# 	if 'end_date' in expect:
-# 		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
-# 		del expect['end_date']
+	if 'start_date' in expect:
+		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
+		del expect['start_date']
 
-# 	search_dic = {
-# 		"name": expect.get("name",""),
-# 		"start_time": expect.get("start_time",""),
-# 		"end_time": expect.get("end_time",""),
-# 		"status": expect.get("status",u"全部")
-# 	}
-# 	search_response = __Search_Event(context,search_dic)
-# 	event_array = json.loads(search_response.content)['data']['items']
-# 	context.search_event = event_array
+	if 'end_date' in expect:
+		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
+		del expect['end_date']
 
-# @when(u"{user}访问活动报名列表第'{page_num}'页")
-# def step_impl(context,user,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	search_dic = {
+		"name": expect.get("name",""),
+		"start_time": expect.get("start_time",""),
+		"end_time": expect.get("end_time",""),
+		"status": __name2status(expect.get("status",u"所有活动")),
+		"prize_type":__name2prize_type(expect.get("prize_type",u"所有奖品"))
+	}
 
-# @when(u"{user}访问活动报名列表下一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问活动报名列表上一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	search_response = __Search_Event(context,search_dic)
+	event_array = json.loads(search_response.content)['data']['items']
+	context.search_event = event_array
+
+@when(u"{user}访问百宝箱活动报名列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}访问活动报名列表下一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+@when(u"{user}访问活动报名列表上一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
 # @when(u"{user}查看活动报名'{event_name}'")
 # def check_event_list(context,user,event_name):
