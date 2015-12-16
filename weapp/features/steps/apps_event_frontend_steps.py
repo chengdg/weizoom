@@ -12,7 +12,6 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from mall.promotion import models as  promotion_models
 from apps.customerized_apps.event.models import event, eventParticipance
 from weixin.message.material import models as material_models
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
@@ -29,13 +28,6 @@ def __itemName2item(itemName):
 
 def __get_event_rule_id(event_name):
 	return event.objects.get(name=event_name).id
-
-def __get_coupon_rule_id(coupon_rule_name):
-	"""
-	获取优惠券id
-	"""
-	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-	return coupon_rule.id
 
 def __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid):
 	#进入微助力活动页面
@@ -98,7 +90,6 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 	related_page_id = event.objects.get(id=event_rule_id).related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
-	print(page['component']['components'][0]['model'])
 	permission = page['component']['components'][0]['model']['permission']
 	if permission == 'member':
 		if member.is_subscribed == True:
