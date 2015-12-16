@@ -160,22 +160,37 @@ def __event_name2id(name):
 	obj = event_models.event.objects.get(name=name)
 	return (obj.related_page_id,obj.id)
 
-# def __status2name(status_num):
-# 	"""
-# 	活动报名：状态值 转 文字
-# 	"""
-# 	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
-# 	return status2name_dic[status_num]
+def __status2name(status_num):
+	"""
+	活动报名：状态值 转 文字
+	"""
+	status2name_dic = {-1:u"所有活动",0:u"未开始",1:u"进行中",2:u"已结束"}
+	return status2name_dic[status_num]
 
-# def __name2status(name):
-# 	"""
-# 	活动报名： 文字 转 状态值
-# 	"""
-# 	if name:
-# 		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
-# 		return name2status_dic[name]
-# 	else:
-# 		return -1
+def __name2status(name):
+	"""
+	活动报名： 文字 转 状态值
+	"""
+	if name:
+		name2status_dic = {u"所有活动":-1,u"未开始":0,u"进行中":1,u"已结束":2}
+		return name2status_dic[name]
+	else:
+		return -1
+
+def __name2prize_type(name):
+	name2prize_type_dic = {u"所有奖品":"all",u"优惠券":"coupon",u"积分":"integral"}
+
+	if name:
+		return name2prize_type_dic[name]
+	else:
+		return "all"
+
+def __prize_type2name(prize_type):
+	prize_type2name_dic = {"all":u"所有奖品","coupon":u"优惠券","integral":u"积分"}
+	if prize_type:
+		return prize_type2name_dic[prize_type]
+	else:
+		return u"所有奖品"
 
 # def __name2coupon_status(name):
 # 	"""
@@ -236,7 +251,7 @@ def __get_eventPageJson(args):
 	for index,expect_additem in enumerate(items_add):
 		item_id = 6+index
 		item_name = expect_additem['item_name']
-		is_required = __bool2Bool(expect_additem['is_required'])
+		is_required = expect_additem['is_required']
 
 		textitem_tmp ={
 				"type": "appkit.textitem",
