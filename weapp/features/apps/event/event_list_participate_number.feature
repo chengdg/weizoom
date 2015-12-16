@@ -9,68 +9,68 @@ Background:
 	Given jobs登录系统
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-无奖励",
 			"subtitle":"活动报名-副标题-无奖励",
 			"content":"内容描述-无奖励",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"right":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type": "无奖励",
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"QQ",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"其他",
 						"is_required":"false"
 					}]
-		}
+		}]
 		"""
 	When jobs新建活动报名
 		"""
-		{
+		[{
 			"title":"活动报名-积分",
 			"subtitle":"活动报名-副标题-积分",
 			"content":"内容描述-积分",
 			"start_date":"1天前",
 			"end_date":"2天后",
-			"right":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type": "积分",
 			"integral": 50,
 			"items_select":[{
 						"item_name":"姓名",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"手机",
-						"is_selected":true
+						"is_selected":"true"
 					},{
 						"item_name":"邮箱",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"QQ",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"职位",
-						"is_selected":false
+						"is_selected":"false"
 					},{
 						"item_name":"住址",
-						"is_selected":false
+						"is_selected":"false"
 					}],
 			"items_add":[{
 						"item_name":"店铺类型",
@@ -79,14 +79,14 @@ Background:
 						"item_name":"开店时间",
 						"is_required":"true"
 					}]
-		}
+		}]
 		"""
 
 	#会员
-		Given bill关注jobs的公众账号
+		Given bill关注jobs的公众号
 		When bill访问jobs的webapp
 
-		Given tom关注jobs的公众账号
+		Given tom关注jobs的公众号
 		When tom访问jobs的webapp
 		When tom取消关注jobs的公众号
 
@@ -136,7 +136,7 @@ Background:
 				"""
 				{}
 				"""
-			Then bill获得提示"您已报名"
+			Then bill获得提示"您已参加过该活动！"
 
 	#必须关注才可参与
 		#会员参与
@@ -162,9 +162,12 @@ Background:
 					"开店时间":"2015-10"
 				}
 				"""
-			Then tom获得提示"店铺二维码"
+			#Then tom获得提示"店铺二维码"
 		#非会员参与
 			When 清空浏览器
+  			When lily关注jobs的公众号
+			When lily访问jobs的webapp
+			When lily取消关注jobs的公众号
 			When lily参加活动报名'活动报名-积分'于'今天'
 				"""
 				{
@@ -174,7 +177,7 @@ Background:
 					"开店时间":"2015-10"
 				}
 				"""
-			Then lily获得提示"店铺二维码"
+			#Then lily获得提示"店铺二维码"
 
 @mall2 @apps_event @apps_event_backend @event_list_participate_number
 Scenario:1 参与活动报名的人数
