@@ -119,6 +119,9 @@ Background:
 			Then tom获得提示"提交成功"
 		#非会员参与
 			When 清空浏览器
+  			When lily关注jobs的公众号
+			When lily访问jobs的webapp
+			When lily取消关注jobs的公众号
 			When lily参加活动报名'活动报名-无奖励'于'今天'
 				"""
 				{
@@ -185,10 +188,10 @@ Scenario:1 参与活动报名的人数
 	Then jobs获得活动报名列表
 		"""
 		[{
-			"name":"活动报名-无奖励",
-			"part_num": 3
-		},{
 			"name":"活动报名-积分",
-			"part_num": 1
+			"participant_count": 1
+		},{
+			"name":"活动报名-无奖励",
+			"participant_count": 3
 		}]
 		"""
