@@ -230,12 +230,13 @@ def clear_non_member_power_info(record_id):
 	"""
 	所有取消关注的参与用户，清空其助力值同时设置为未参与,重置时间
 	清空日志
+	[更改需求，用户取消关注后，对其现有的数据不做任何改动]
 	:param record_id: 活动id
 	"""
-	record_id = str(record_id)
-	all_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True)
-	all_member_power_info_ids = [p.member_id for p in all_member_power_info]
-	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_power_info_ids, is_subscribed=False)]
-	app_models.PowerMeParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__power=0, set__has_join=False)
+	# record_id = str(record_id)
+	# all_member_power_info = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True)
+	# all_member_power_info_ids = [p.member_id for p in all_member_power_info]
+	# need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_power_info_ids, is_subscribed=False)]
+	# app_models.PowerMeParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__power=0, set__has_join=False)
 	#清空助力详情日志
-	app_models.PoweredDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).delete()
+	# app_models.PoweredDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).delete()
