@@ -85,7 +85,10 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 	event_rule_id = __get_event_rule_id(event_name)
 	member = member_api.get_member_by_openid(openid, context.webapp_id)
 	response = __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid)
-	is_already_participanted = (eventParticipance.objects(belong_to=str(event_rule_id), member_id=member.id).count() > 0 )
+	if member:
+		is_already_participanted = (eventParticipance.objects(belong_to=str(event_rule_id), member_id=member.id).count() > 0 )
+	else:
+		is_already_participanted = False
 	if is_already_participanted:
 		context.event_hint = u'您已报名'
 	else:
@@ -100,16 +103,21 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 			if permission == 'member':
 				if isMember:
 					__participate_event(context,webapp_owner_id,event_rule_id)
+					#修改参与时间
+					event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
+					event_info.update(set__created_at=date)
 				else:
 					pass #弹二维码
 			else:
 				__participate_event(context,webapp_owner_id,event_rule_id)
+				#修改参与时间
+				event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
+				event_info.update(set__created_at=date)
+
 			response_json = context.response_json
 			if response_json['code'] == 200:
 				context.event_hint = u"提交成功"
-			#修改参与时间
-			event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
-			event_info.update(set__created_at=date)
+
 
 
 @then(u'{webapp_user_name}获得提示"{msg}"')
