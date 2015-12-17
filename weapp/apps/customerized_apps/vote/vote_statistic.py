@@ -40,10 +40,6 @@ class voteStatistic(resource.Resource):
 						for item, value in data['value'].items():
 							if value['isSelect']:
 								is_valid = True
-								if total_title_valid_dict.has_key(title):
-									total_title_valid_dict[title] += 1
-								else:
-									total_title_valid_dict[title] = 1
 							if title2itemCount.has_key(title):
 								if title2itemCount[title].has_key(item):
 									title2itemCount[title][item] += 1 if value['isSelect'] else 0
@@ -54,6 +50,10 @@ class voteStatistic(resource.Resource):
 								title2itemCount[title][item] = 1 if value['isSelect'] else 0
 							title_type = value['type']
 						if is_valid:
+							if total_title_valid_dict.has_key(title):
+								total_title_valid_dict[title] += 1
+							else:
+								total_title_valid_dict[title] = 1
 							if title_valid_dict.has_key(title):
 								title_valid_dict[title] += 1
 							else:
@@ -66,7 +66,6 @@ class voteStatistic(resource.Resource):
 						title_type_dict[title] = title_type
 
 			for title in sorted(title2itemCount.keys()):
-				print title,"title"
 				single_title_dict = {}
 				single_title_dict['title_name'] = title.split('_')[1]
 				single_title_dict['title_valid_count'] = title_valid_dict[title]
@@ -197,7 +196,7 @@ class voteStatistic_Export(resource.Resource):
 
 						s_num = select_static[s][s_i]
 						ws.write(row,col,s_i.split('_')[1])
-						per = s_num*1.0/all_select_num*100 if all_select_num else 0
+						per = s_num*1.0/title_valid_dict[s]*100 if title_valid_dict[s] else 0
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
