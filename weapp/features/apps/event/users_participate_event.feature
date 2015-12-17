@@ -393,13 +393,13 @@ Scenario:4 活动报名-设置未来时间-无需关注即可参与
 	#会员
 		When bill关注jobs的公众号
 		When bill访问jobs的webapp
-		Then 手机端显示'请耐心等待活动开始'
+		Then 手机端显示'请等待活动开始...'
 
 	#非会员参与
 		When 清空浏览器
 		When tom未关注jobs的公众号
 		When tom访问jobs的webapp
-		Then 手机端显示'请耐心等待活动开始'
+		Then 手机端显示'请等待活动开始...'
 @mall2 @apps_event @apps_event_frontend @user_participate_event @zhangxue
 Scenario:5 活动报名-设置过去时间-必须需关注即可参与
 	Given jobs登录系统
