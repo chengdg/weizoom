@@ -317,7 +317,7 @@ class surveyStatistics_Export(resource.Resource):
 					header_style = xlwt.XFStyle()
 
 					ws.write(row,col,u'提交时间')
-					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% len(qa_static))
+					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% total)
 					for item in qa_static[q]:
 						row +=1
 						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
@@ -333,7 +333,7 @@ class surveyStatistics_Export(resource.Resource):
 					header_style = xlwt.XFStyle()
 
 					ws.write(row,col,u'上传时间')
-					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'% len(uploadimg_static))
+					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'% total)
 
 					for item in uploadimg_static[u]:
 						row +=1
