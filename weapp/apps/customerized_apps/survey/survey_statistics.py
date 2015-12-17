@@ -76,12 +76,15 @@ class surveyStatistics(resource.Resource):
 				for title_value in q_vote[k]['value']:
 					if q_vote[k]['type'] == 'appkit.selection':
 						v_a = title_value
+						is_select =False
 						for a_k,a_v in title_value.items():
 							if not a_isSelect.has_key(a_k):
 								a_isSelect[a_k] = 0
 							if a_v['isSelect'] == True:
+								is_select = True
 								a_isSelect[a_k] += 1
-								total_count += 1
+						if is_select:
+							total_count += 1
 					if q_vote[k]['type'] == 'appkit.qa':
 						type_name = u'问答'
 					if q_vote[k]['type'] == 'appkit.uploadimg':
@@ -251,8 +254,8 @@ class surveyStatistics_Export(resource.Resource):
 			#select-data-processing
 			title_valid_dict = {}
 			for select in select_data:
-				is_valid =False
 				for s_list in select_data[select]:
+					is_valid =False
 					for s in s_list:
 						if select not in select_static:
 							select_static[select]={}
@@ -269,6 +272,7 @@ class surveyStatistics_Export(resource.Resource):
 					else:
 						if not title_valid_dict.has_key(select):
 							title_valid_dict[select] = 0
+			print title_valid_dict.keys(),title_valid_dict.values(),"title_valid_dict"
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -292,7 +296,7 @@ class surveyStatistics_Export(resource.Resource):
 					for s_i in sorted(select_static[s].keys()):
 						ws.write(row,col,s_i.split('_')[1])
 						s_num = select_static[s][s_i]
-						per = s_num*1.0/all_select_num*100 if all_select_num else 0
+						per = s_num*1.0/title_valid_dict[s]*100 if title_valid_dict[s] else 0
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
