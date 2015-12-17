@@ -4,6 +4,8 @@ Feature:手机端用户参与活动报名
 """
 	1 活动报名设置成"无需关注即可参与"：没有关注和取消关注、关注状态的微信账号都可以参与，没有关注的账号参与之后在结果中显示的头像和昵称为空
 	2 活动报名设置成"必需关注才可参与"：没有关注和取消关注的微信账号都不可以参与，只有关注状态的微信账号可参与
+	3 活动报名时间设置为未来时间，手机端显示请耐心等待活动开始
+	4 活动报名时间设置成过去时间，手机端显示活动已结束
 """
 
 @mall2 @apps_event @apps_event_frontend @user_participate_event
@@ -350,3 +352,99 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 				"status": "未使用"
 			}]
 			"""
+@mall2 @apps_event @apps_event_frontend @user_participate_event
+Scenario:4 活动报名-设置未来时间-无需关注即可参与
+	Given jobs登录系统
+	When jobs新建活动报名
+		"""
+		[{
+			"title":"活动报名-无奖励",
+			"subtitle":"活动报名-副标题-无奖励",
+			"content":"内容描述-无奖励",
+			"start_date":"明天",
+			"end_date":"2天后",
+			"permission":"无需关注即可参与",
+			"prize_type": "无奖励",
+			"items_select":[{
+						"item_name":"姓名",
+						"is_selected":"true"
+					},{
+						"item_name":"手机",
+						"is_selected":"true"
+					},{
+						"item_name":"邮箱",
+						"is_selected":"true"
+					},{
+						"item_name":"QQ",
+						"is_selected":"true"
+					},{
+						"item_name":"职位",
+						"is_selected":"false"
+					},{
+						"item_name":"住址",
+						"is_selected":"false"
+					}],
+			"items_add":[{
+						"item_name":"其他",
+						"is_required":"false"
+					}]
+		}]
+		"""
+	#会员
+		When bill关注jobs的公众号
+		When bill访问jobs的webapp
+		Then 手机端显示'请耐心等待活动开始'
+
+	#非会员参与
+		When 清空浏览器
+		When tom未关注jobs的公众号
+		When tom访问jobs的webapp
+		Then 手机端显示'请耐心等待活动开始'
+@mall2 @apps_event @apps_event_frontend @user_participate_event @zhangxue
+Scenario:5 活动报名-设置过去时间-必须需关注即可参与
+	Given jobs登录系统
+	When jobs新建活动报名
+		"""
+		[{
+			"title":"活动报名-无奖励",
+			"subtitle":"活动报名-副标题-无奖励",
+			"content":"内容描述-无奖励",
+			"start_date":"前天",
+			"end_date":"昨天",
+			"permission":"必须关注即可参与",
+			"prize_type": "无奖励",
+			"items_select":[{
+						"item_name":"姓名",
+						"is_selected":"true"
+					},{
+						"item_name":"手机",
+						"is_selected":"true"
+					},{
+						"item_name":"邮箱",
+						"is_selected":"true"
+					},{
+						"item_name":"QQ",
+						"is_selected":"true"
+					},{
+						"item_name":"职位",
+						"is_selected":"false"
+					},{
+						"item_name":"住址",
+						"is_selected":"false"
+					}],
+			"items_add":[{
+						"item_name":"其他",
+						"is_required":"false"
+					}]
+		}]
+		"""
+	#会员
+		When bill关注jobs的公众号
+		When bill访问jobs的webapp
+		Then 手机端显示'活动已结束'
+
+	#非会员参与
+		When 清空浏览器
+		When tom未关注jobs的公众号
+		When tom访问jobs的webapp
+		Then 手机端显示'活动已结束'
