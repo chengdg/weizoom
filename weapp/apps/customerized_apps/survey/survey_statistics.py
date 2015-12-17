@@ -49,21 +49,23 @@ class surveyStatistics(resource.Resource):
 						else:
 							q_vote[k]['value'].append(value['value'])
 					if value['type'] == 'appkit.qa':
-						if not q_vote.has_key(k):
-							q_vote[k] = {
-								'type': 'appkit.qa',
-								'value': [value['value']],
-							}
-						else:
-							q_vote[k]['value'].append(value['value'])
+						if value['value']:
+							if not q_vote.has_key(k):
+								q_vote[k] = {
+									'type': 'appkit.qa',
+									'value': [value['value']],
+								}
+							else:
+								q_vote[k]['value'].append(value['value'])
 					if value['type'] == 'appkit.uploadimg':
-						if not q_vote.has_key(k):
-							q_vote[k] = {
-								'type': 'appkit.uploadimg',
-								'value': [value['value']],
-							}
-						else:
-							q_vote[k]['value'].append(value['value'])
+						if value['value']:
+							if not q_vote.has_key(k):
+								q_vote[k] = {
+									'type': 'appkit.uploadimg',
+									'value': [value['value']],
+								}
+							else:
+								q_vote[k]['value'].append(value['value'])
 
 			for k in sorted(q_vote.keys()):
 				a_isSelect = {}
@@ -153,22 +155,24 @@ class question(resource.Resource):
 				if question_title == k :
 					value = termite_data[k]
 					if value['type'] == 'appkit.qa':
-						result_list.append({
-							'content': value['value'],
-							'created_at':participance['created_at'].strftime('%Y-%m-%d')
-						})
+						if value['value']:
+							result_list.append({
+								'content': value['value'],
+								'created_at':participance['created_at'].strftime('%Y-%m-%d')
+							})
 					if value['type'] == 'appkit.uploadimg':
 						img_urls = []
 						index = 0
-						for v in value['value']:
-							if v:
-								img_urls.append('<img class="xui-uploadimg xa-uploadimg" id="uploadimg-%d" src="'%(index)+v+'">')
-								index +=1
-						result_list.append({
-							'content': img_urls,
-							'type': 'uploadimg',
-							'created_at':participance['created_at'].strftime('%Y-%m-%d')
-						})
+						if value['value']:
+							for v in value['value']:
+								if v:
+									img_urls.append('<img class="xui-uploadimg xa-uploadimg" id="uploadimg-%d" src="'%(index)+v+'">')
+									index +=1
+							result_list.append({
+								'content': img_urls,
+								'type': 'uploadimg',
+								'created_at':participance['created_at'].strftime('%Y-%m-%d')
+							})
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -241,15 +245,17 @@ class surveyStatistics_Export(resource.Resource):
 						else:
 							select_data[termite].append(termite_dic['value'])
 					if termite_dic['type']=='appkit.qa':
-						if termite not in qa_static:
-							qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
-						else:
-							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
+						if termite_dic['value']:
+							if termite not in qa_static:
+								qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
+							else:
+								qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
 					if termite_dic['type']=='appkit.uploadimg':
-						if termite not in uploadimg_static:
-							uploadimg_static[termite]=[{'created_at':time,'url':termite_dic['value']}]
-						else:
-							uploadimg_static[termite].append({'created_at':time,'url':termite_dic['value']})
+						if termite_dic['value']:
+							if termite not in uploadimg_static:
+								uploadimg_static[termite]=[{'created_at':time,'url':termite_dic['value']}]
+							else:
+								uploadimg_static[termite].append({'created_at':time,'url':termite_dic['value']})
 
 			#select-data-processing
 			title_valid_dict = {}
@@ -272,7 +278,6 @@ class surveyStatistics_Export(resource.Resource):
 					else:
 						if not title_valid_dict.has_key(select):
 							title_valid_dict[select] = 0
-			print title_valid_dict.keys(),title_valid_dict.values(),"title_valid_dict"
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -317,7 +322,7 @@ class surveyStatistics_Export(resource.Resource):
 					header_style = xlwt.XFStyle()
 
 					ws.write(row,col,u'提交时间')
-					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% total)
+					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% len(qa_static[q]))
 					for item in qa_static[q]:
 						row +=1
 						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
@@ -333,7 +338,7 @@ class surveyStatistics_Export(resource.Resource):
 					header_style = xlwt.XFStyle()
 
 					ws.write(row,col,u'上传时间')
-					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'% total)
+					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'% len(uploadimg_static[u]))
 
 					for item in uploadimg_static[u]:
 						row +=1
