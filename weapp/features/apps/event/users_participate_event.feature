@@ -393,14 +393,23 @@ Scenario:4 活动报名-设置未来时间-无需关注即可参与
 	#会员
 		When bill关注jobs的公众号
 		When bill访问jobs的webapp
-		Then 手机端显示'请等待活动开始...'
-
+		When bill参加活动报名'活动报名-无奖励'于'今天'
+			"""
+			{}
+			"""
+		Then bill获得提示"请等待活动开始..."
 	#非会员参与
 		When 清空浏览器
-		When tom未关注jobs的公众号
+		When tom关注jobs的公众号
 		When tom访问jobs的webapp
-		Then 手机端显示'请等待活动开始...'
-@mall2 @apps_event @apps_event_frontend @user_participate_event @zhangxue
+		When tom取消关注jobs的公众号
+		When tom参加活动报名'活动报名-无奖励'于'今天'
+			"""
+			{}
+			"""
+		Then tom获得提示"请等待活动开始..."
+
+  @mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:5 活动报名-设置过去时间-必须需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -411,7 +420,7 @@ Scenario:5 活动报名-设置过去时间-必须需关注即可参与
 			"content":"内容描述-无奖励",
 			"start_date":"前天",
 			"end_date":"昨天",
-			"permission":"必须关注即可参与",
+			"permission":"必须关注才可参与",
 			"prize_type": "无奖励",
 			"items_select":[{
 						"item_name":"姓名",
@@ -441,10 +450,19 @@ Scenario:5 活动报名-设置过去时间-必须需关注即可参与
 	#会员
 		When bill关注jobs的公众号
 		When bill访问jobs的webapp
-		Then 手机端显示'活动已结束'
+		When bill参加活动报名'活动报名-无奖励'于'今天'
+			"""
+			{}
+			"""
+		Then bill获得提示"活动已结束"
 
 	#非会员参与
 		When 清空浏览器
-		When tom未关注jobs的公众号
+		When tom关注jobs的公众号
 		When tom访问jobs的webapp
-		Then 手机端显示'活动已结束'
+		When tom取消关注jobs的公众号
+		When tom参加活动报名'活动报名-无奖励'于'今天'
+			"""
+			{}
+			"""
+		Then tom获得提示"活动已结束"
