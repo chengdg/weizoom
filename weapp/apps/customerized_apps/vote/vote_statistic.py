@@ -207,6 +207,9 @@ class voteStatistic_Export(resource.Resource):
 					ws.write(row,col,u'')
 					ws.write(row,col+1,u'')
 					row += 1
+					ws.write(row,col,u'')
+					ws.write(row,col+1,u'')
+					row += 1
 			# #qa_sheet
 			# if qa_static:
 			# 	qa_num = 0
