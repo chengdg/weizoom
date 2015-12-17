@@ -103,7 +103,7 @@ Scenario:1 活动报名-无奖励-无需关注即可参与
 			"""
 			{}
 			"""
-		Then bill获得提示"您已参加过该活动！"
+		Then bill获得提示"您已报名"
 
 @mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:2 活动报名-积分奖励-必须关注才可参与
