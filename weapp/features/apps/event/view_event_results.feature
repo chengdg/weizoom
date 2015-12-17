@@ -109,7 +109,7 @@ Background:
 				"""
 				{}
 				"""
-			Then bill获得提示"您已参加过该活动！"
+			Then bill获得提示"您已报名"
 
 @mall2 @apps_event @apps_event_backend @view_event_results
 Scenario:1 活动参与结果列表-查询
