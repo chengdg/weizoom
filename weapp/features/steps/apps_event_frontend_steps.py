@@ -51,7 +51,7 @@ def __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid):
 		print('[info] not redirect')
 	return response
 
-def __participate_event(context,webapp_owner_id,event_rule_id,member_id, date):
+def __participate_event(context,webapp_owner_id,event_rule_id):
 	termite_data = json.loads(context.text)
 	i = 0
 	data = {}
@@ -74,8 +74,6 @@ def __participate_event(context,webapp_owner_id,event_rule_id,member_id, date):
 		'prize': json.dumps(prize)
 	}
 	response = context.client.post('/m/apps/event/api/event_participance/?_method=put', params)
-	event_info = eventParticipance.objects.get(member_id=member_id, belong_to=str(event_rule_id))
-	event_info.update(set__created_at=date)
 	context.response_json = json.loads(response.content)
 
 @when(u"{webapp_user_name}参加活动报名'{event_name}'于'{date}'")
@@ -87,25 +85,43 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 	event_rule_id = __get_event_rule_id(event_name)
 	member = member_api.get_member_by_openid(openid, context.webapp_id)
 	response = __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid)
-	related_page_id = event.objects.get(id=event_rule_id).related_page_id
-	pagestore = pagestore_manager.get_pagestore('mongo')
-	page = pagestore.get_page(related_page_id, 1)
-	permission = page['component']['components'][0]['model']['permission']
-	if permission == 'member':
-		if member.is_subscribed == True:
-			__participate_event(context,webapp_owner_id,event_rule_id,member.id,date)
-		else:
-			pass #弹二维码
+	if member:
+		is_already_participanted = (eventParticipance.objects(belong_to=str(event_rule_id), member_id=member.id).count() > 0 )
 	else:
-		__participate_event(context,webapp_owner_id,event_rule_id,member.id,date)
+		is_already_participanted = False
+	if is_already_participanted:
+		context.event_hint = u'您已报名'
+	else:
+		activity_status = response.context['activity_status']
+		if activity_status == u'已结束':
+			context.event_hint = u'活动已结束'
+		elif activity_status == u'未开始':
+			context.event_hint = u'请等待活动开始...'
+		elif activity_status == u'进行中':
+			permission = response.context['permission']
+			isMember =  response.context['isMember']
+			if permission == 'member':
+				if isMember:
+					__participate_event(context,webapp_owner_id,event_rule_id)
+					#修改参与时间
+					event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
+					event_info.update(set__created_at=date)
+				else:
+					pass #弹二维码
+			else:
+				__participate_event(context,webapp_owner_id,event_rule_id)
+				#修改参与时间
+				event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
+				event_info.update(set__created_at=date)
+
+			response_json = context.response_json
+			if response_json['code'] == 200:
+				context.event_hint = u"提交成功"
+
 
 
 @then(u'{webapp_user_name}获得提示"{msg}"')
 def step_tmpl(context, webapp_user_name, msg):
 	expected = msg
-	response_json = context.response_json
-	if response_json['code'] == 200:
-		actual = u"提交成功"
-	elif response_json['code'] == 500:
-		actual = response_json['data']
+	actual = context.event_hint
 	context.tc.assertEquals(expected, actual)

@@ -34,7 +34,7 @@ def __debug_print(content,type_tag=True):
 		pass
 
 def __itemName2item(itemName):
-	itemName_dic={u"姓名":'name',u"手机":'phone',u"邮箱":'email',u"QQ":'qq',u"qq":'qq',u"职位":"job",u"住址":"addr"}
+	itemName_dic={u"姓名":'name',u"手机":'phone',u"邮箱":'email',u"QQ号":'qq',u"QQ":'qq',u"qq":'qq',u"职位":"job",u"住址":"addr"}
 	if itemName:
 		return itemName_dic[itemName]
 	else:
@@ -698,43 +698,48 @@ def __Search_Event(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
-# def __Search_Event_Result(context,search_dic):
-# 	"""
-# 	搜索,活动报名参与结果
+def __Search_Event_Result(context,search_dic):
+	"""
+	搜索,活动报名参与结果
 
-# 	输入搜索字典
-# 	返回数据列表
-# 	"""
+	输入搜索字典
+	返回数据列表
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
-# 	count_per_page = 10
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
 
-# 	id = search_dic["id"]
-# 	participant_name = search_dic["participant_name"]
-# 	start_time = search_dic["start_time"]
-# 	end_time = search_dic["end_time"]
-# 	prize_type = __name2type(search_dic['prize_type'])
-# 	status =__name2coupon_status(search_dic['status'])
+	if hasattr(context,"enable_paginate"):
+		enable_paginate = context.enable_paginate
+	else:
+		enable_paginate = 1
+	if hasattr(context,"count_per_page"):
+		count_per_page = context.count_per_page
+	else:
+		count_per_page = 10
 
-# 	search_url = "/apps/event/api/event_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&prize_type={}&status={}&count_per_page={}&page={}&enable_paginate={}".format(
-# 			design_mode,
-# 			version,
-# 			id,
-# 			participant_name,
-# 			start_time,
-# 			end_time,
-# 			prize_type,
-# 			status,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate)
+	id = search_dic["id"]
+	participant_name = search_dic["participant_name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
 
-# 	search_response = context.client.get(search_url)
-# 	bdd_util.assert_api_call_success(search_response)
-# 	return search_response
+	search_url = "/apps/event/api/event_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			id,
+			participant_name,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
+
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 @when(u'{user}新建活动报名')
 def step_impl(context,user):
@@ -955,128 +960,135 @@ def step_impl(context,user):
 	page_num = int(paging_dic['page_num'])-1
 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}查看活动报名'{event_name}'")
-# def check_event_list(context,user,event_name):
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
+@when(u"{user}查看活动报名'{event_name}'")
+def check_event_list(context,user,event_name):
+	design_mode = 0
+	version = 1
+	page = 1
 
-# 	if hasattr(context,"enable_paginate"):
-# 		enable_paginate = context.enable_paginate
-# 	else:
-# 		enable_paginate = 1
-# 	if hasattr(context,"count_per_page"):
-# 		count_per_page = context.count_per_page
-# 	else:
-# 		count_per_page = 10
-
-
-# 	if hasattr(context,"paging"):
-# 		paging_dic = context.paging
-# 		count_per_page = paging_dic['count_per_page']
-# 		page = paging_dic['page_num']
-
-# 	event_page_id,event_id = __event_name2id(event_name)#纯数字
-# 	url ='/apps/event/api/event_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method=get'.format(
-# 			design_mode,
-# 			version,
-# 			event_id,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate,
-# 		)
-# 	url = bdd_util.nginx(url)
-# 	response = context.client.get(url)
-# 	context.participances = json.loads(response.content)
-# 	context.event_id = "%s"%(event_id)
+	if hasattr(context,"enable_paginate"):
+		enable_paginate = context.enable_paginate
+	else:
+		enable_paginate = 1
+	if hasattr(context,"count_per_page"):
+		count_per_page = context.count_per_page
+	else:
+		count_per_page = 10
 
 
-# @then(u"{webapp_user_name}获得活动报名'{power_me_rule_name}'的结果列表")
-# def step_tmpl(context, webapp_user_name, power_me_rule_name):
+	if hasattr(context,"paging"):
+		paging_dic = context.paging
+		count_per_page = paging_dic['count_per_page']
+		page = paging_dic['page_num']
 
-# 	if hasattr(context,"search_event_result"):
-# 		participances = context.search_event_result
-# 	else:
-# 		participances = context.participances['data']['items']
-# 	actual = []
+	event_page_id,event_id = __event_name2id(event_name)#纯数字
+	url ='/apps/event/api/event_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method=get'.format(
+			design_mode,
+			version,
+			event_id,
+			count_per_page,
+			page,
+			enable_paginate,
+		)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	context.participances = json.loads(response.content)
+	context.event_id = "%s"%(event_id)
 
-# 	for p in participances:
-# 		p_dict = OrderedDict()
-# 		p_dict[u"member_name"] = p['participant_name']
-# 		p_dict[u"mobile"] = p['tel']
-# 		p_dict[u"prize_grade"] = p['prize_title']
-# 		p_dict[u"prize_name"] = p['prize_name']
-# 		p_dict[u"event_time"] = bdd_util.get_date_str(p['created_at'])
-# 		p_dict[u"receive_status"] = u'已领取' if p['status'] else u'未领取'
-# 		p_dict[u"actions"] = u'' if p['status'] else u'领取'
-# 		actual.append((p_dict))
-# 	print("actual_data: {}".format(actual))
-# 	expected = []
-# 	if context.table:
-# 		for row in context.table:
-# 			cur_p = row.as_dict()
-# 			if cur_p[u'event_time']:
-# 				cur_p[u'event_time'] = bdd_util.get_date_str(cur_p[u'event_time'])
-# 			expected.append(cur_p)
-# 	else:
-# 		expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
 
-# 	bdd_util.assert_list(expected, actual)
+@then(u"{webapp_user_name}获得活动报名'{event_rule_name}'结果列表")
+def step_tmpl(context, webapp_user_name, event_rule_name):
 
-# @when(u"{user}设置活动报名结果列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
+	if hasattr(context,"search_event_result"):
+		participances = context.search_event_result
+	else:
+		participances = context.participances['data']['items']
 
-# 	if 'event_start_time' in expect:
-# 		expect['start_time'] = __date2time(expect['event_start_time']) if expect['event_start_time'] else ""
-# 		del expect['event_start_time']
+	actual = []
+	for p in participances:
+		p_dict = {}
+		p_dict[u"participant_name"] = p['participant_name']
+		p_dict[u"datetime"] = p['created_at']
+		p_dict[u"informations"] = p['informations']
+		actual.append((p_dict))
+	print("actual_data: {}".format(actual))
 
-# 	if 'event_end_time' in expect:
-# 		expect['end_time'] = __date2time(expect['event_end_time']) if expect['event_end_time'] else ""
-# 		del expect['event_end_time']
+	expect_list = []
+	expected = json.loads(context.text)
+	for expect in expected:
+		e_dict ={}
+		if 'date' in expected:
+			expected['datetime'] = __date2time(expect['datet']) if expect['date'] else ""
+			del expected['date']
+		e_dict["participant_name"] = expect['name']
+		# e_dict["datetime"] = expect['date']
 
-# 	print("expected: {}".format(expect))
-# 	id = context.event_id
-# 	participant_name = expect.get("member_name","")
-# 	start_time = expect.get("start_time","")
-# 	end_time = expect.get("end_time","")
-# 	prize_type = expect.get("prize_type",u"全部")
-# 	status = expect.get("status",u"全部")
+		info_dic = expect['info']
+		info_li = []
+		for k,v in info_dic.iteritems():
+			format_info = {}
+			format_info['item_name']= k
+			format_info['item_value'] = v
+			info_li.append(format_info)
 
-# 	search_dic = {
-# 		"id":id,
-# 		"participant_name":participant_name,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"prize_type":prize_type,
-# 		"status":status
-# 	}
-# 	search_response = __Search_Event_Result(context,search_dic)
-# 	event_result_array = json.loads(search_response.content)['data']['items']
-# 	context.search_event_result = event_result_array
+		e_dict[u'informations'] = info_li
 
-# @when(u"{user}访问活动报名'{event_name}'的结果列表第'{page_num}'页")
-# def step_impl(context,user,event_name,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_event_list(context,user,event_name)
+		expect_list.append(e_dict)
 
-# @when(u"{user}访问活动报名'{event_name}'的结果列表下一页")
-# def step_impl(context,user,event_name):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_event_list(context,user,event_name)
 
-# @when(u"{user}访问活动报名'{event_name}'的结果列表上一页")
-# def step_impl(context,user,event_name):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_event_list(context,user,event_name)
+	print("expected: {}".format(expect_list))
+
+	bdd_util.assert_list(expect_list, actual)
+
+@when(u"{user}设置活动报名结果列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
+
+	if 'start_date' in expect:
+		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
+		del expect['start_date']
+
+	if 'end_date' in expect:
+		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
+		del expect['end_date']
+
+	print("expected: {}".format(expect))
+	id = context.event_id
+	participant_name = expect.get("name","")
+	start_time = expect.get("start_time","")
+	end_time = expect.get("end_time","")
+
+	search_dic = {
+		"id":id,
+		"participant_name":participant_name,
+		"start_time":start_time,
+		"end_time":end_time,
+	}
+	search_response = __Search_Event_Result(context,search_dic)
+	event_result_array = json.loads(search_response.content)['data']['items']
+	context.search_event_result = event_result_array
+
+@when(u"{user}访问活动报名'{event_name}'的结果列表第'{page_num}'页")
+def step_impl(context,user,event_name,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	check_event_list(context,user,event_name)
+
+@when(u"{user}访问活动报名'{event_name}'的结果列表下一页")
+def step_impl(context,user,event_name):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	check_event_list(context,user,event_name)
+
+@when(u"{user}访问活动报名'{event_name}'的结果列表上一页")
+def step_impl(context,user,event_name):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	check_event_list(context,user,event_name)
 
 # @then(u"{user}能批量导出活动报名'{event_name}'")
 # def step_impl(context,user,event_name):
