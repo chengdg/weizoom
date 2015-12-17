@@ -37,10 +37,10 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"无奖励",
 			"answer":
-				{
+				[{
 					"title":"问答题",
 					"is_required":"是"
-				}
+				}]
 		},{
 			"title":"进行中用户调研02",
 			"subtitle":"用户调研2",
@@ -110,10 +110,10 @@ Scenario:1 编辑'未开始'状态的用户调研活动
 			"prize_type":"积分",
 			"integral":10,
 			"answer":
-				{
+				[{
 					"title":"问答题01",
 					"is_required":"否"
-				}
+				}]
 		}]
 		"""
 	Then jobs获得用户调研活动'用户调研01'

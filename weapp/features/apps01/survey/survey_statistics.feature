@@ -29,10 +29,10 @@ Background:
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
-				{
+				[{
 					"title":"问答题",
 					"is_required":"是"
-				},
+				}],
 			"choose":
 				[{
 					"title":"选择题",
@@ -67,10 +67,10 @@ Background:
 					}]
 				}],
 			"upload_pic":
-				{
+				[{
 					"title":"上传图片",
 					"is_required":"是"
-				}
+				}]
 		}]
 		"""
 

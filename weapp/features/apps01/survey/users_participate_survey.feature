@@ -34,10 +34,10 @@ Scenario:1 参加调研活动,无需关注即可参与
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
-				{
+				[{
 					"title":"问答题",
 					"is_required":"是"
-				}
+				}]
 		}]
 		"""
 
@@ -243,10 +243,10 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
-				{
+				[{
 					"title":"问答题1",
 					"is_required":"是"
-				}
+				}]
 		},{
 			"title":"优惠券用户调研02",
 			"subtitle":"",
@@ -257,10 +257,10 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
-				{
+				[{
 					"title":"问答题2",
 					"is_required":"是"
-				}
+				}]
 		}]
 		"""
 
