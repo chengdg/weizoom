@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 from core import resource
@@ -92,7 +92,7 @@ class surveyStatistics(resource.Resource):
 					value['name'] = a_k.split('_')[1]
 					title_type =  v_a[a_k]['type']
 					value['count'] = a_isSelect[a_k]
-					value['per'] =  '%d%s' % (a_isSelect[a_k]*100/float(total_count),'%')
+					value['per'] =  '%d%s' % (a_isSelect[a_k]*100/float(total_count) if total_count else 0,'%')
 					value_list.append(value)
 				title_name = k.split('_')[1]
 				result['title'] = title_name
@@ -103,7 +103,7 @@ class surveyStatistics(resource.Resource):
 
 				result['title_type'] = type_name
 				result['title_'] = k
-				result['count'] = count
+				result['count'] = total_count if q_vote[k]['type'] == 'appkit.selection' else count
 				question_list = []
 				result['values'] = value_list if q_vote[k]['type'] == 'appkit.selection' else question_list
 				result['type'] = q_vote[k]['type']
@@ -202,9 +202,15 @@ class surveyStatistics_Export(resource.Resource):
 
 		# app_name = surveyStatistics_Export.app
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = 'survey_statistic.xls'
+
+		excel_file_name = 'survey_statistic_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
 		download_excel_file_name = u'用户调研统计.xls'
-		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
 		try:
@@ -243,7 +249,9 @@ class surveyStatistics_Export(resource.Resource):
 							uploadimg_static[termite].append({'created_at':time,'url':termite_dic['value']})
 
 			#select-data-processing
+			title_valid_dict = {}
 			for select in select_data:
+				is_valid =False
 				for s_list in select_data[select]:
 					for s in s_list:
 						if select not in select_static:
@@ -252,6 +260,15 @@ class surveyStatistics_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
+							is_valid =True
+					if is_valid:
+						if title_valid_dict.has_key(select):
+							title_valid_dict[select] += 1
+						else:
+							title_valid_dict[select] = 1
+					else:
+						if not title_valid_dict.has_key(select):
+							title_valid_dict[select] = 0
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -261,21 +278,21 @@ class surveyStatistics_Export(resource.Resource):
 				header_style = xlwt.XFStyle()
 				select_num = 0
 				row = col =0
-				for s in select_static:
+				for s in sorted(select_static.keys()):
 					select_num += 1
-					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'%total)
+					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'% title_valid_dict[s])
 					ws.write(row,col+1,u'参与人数/百分百')
 					row += 1
 					all_select_num = 0
 					s_i_num = 0
-					for s_i in select_static[s]:
+					for s_i in sorted(select_static[s].keys()):
 						s_num = select_static[s][s_i]
 						if s_num :
 							all_select_num += s_num
-					for s_i in select_static[s]:
+					for s_i in sorted(select_static[s].keys()):
 						ws.write(row,col,s_i.split('_')[1])
 						s_num = select_static[s][s_i]
-						per = s_num*1.0/all_select_num*100
+						per = s_num*1.0/all_select_num*100 if all_select_num else 0
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
@@ -289,15 +306,14 @@ class surveyStatistics_Export(resource.Resource):
 			#qa_sheet
 			if qa_static:
 				qa_num = 0
-				for q in qa_static:
+				for q in sorted(qa_static.keys()):
 					qa_num += 1
 					row = col = 0
 					ws = wb.add_sheet(u'问题%d'%qa_num)
 					header_style = xlwt.XFStyle()
 
 					ws.write(row,col,u'提交时间')
-					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'%total)
-
+					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% len(qa_static))
 					for item in qa_static[q]:
 						row +=1
 						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
@@ -306,14 +322,14 @@ class surveyStatistics_Export(resource.Resource):
 			#uploadimg_sheet
 			if uploadimg_static:
 				uploadimg_num = 0
-				for u in uploadimg_static:
+				for u in sorted(uploadimg_static.keys()):
 					uploadimg_num += 1
 					row = col = 0
 					ws = wb.add_sheet(u'图片%d'%uploadimg_num)
 					header_style = xlwt.XFStyle()
 
 					ws.write(row,col,u'上传时间')
-					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'%total)
+					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'% len(uploadimg_static))
 
 					for item in uploadimg_static[u]:
 						row +=1
@@ -329,10 +345,10 @@ class surveyStatistics_Export(resource.Resource):
 				wb.save(export_file_path)
 			except:
 				print 'EXPORT EXCEL FILE SAVE ERROR'
-				print '/static/upload/%s'%excel_file_name
+				print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 

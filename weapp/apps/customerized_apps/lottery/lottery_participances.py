@@ -55,7 +55,8 @@ class lotteryParticipances(resource.Resource):
 		if name:
 			hexstr = byte_to_hex(name)
 			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			member_ids = [member.id for member in members]
+			temp_ids = [member.id for member in members]
+			member_ids = temp_ids  if temp_ids else [-1]
 
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')

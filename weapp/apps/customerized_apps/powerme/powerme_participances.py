@@ -54,7 +54,8 @@ class PowerMeParticipances(resource.Resource):
 		member_ids = []
 		if name:
 			members = member_models.Member.objects.filter(username_hexstr__contains = byte_to_hex(name))
-			member_ids = [member.id for member in members]
+			temp_ids = [member.id for member in members]
+			member_ids = temp_ids  if temp_ids else [-1]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		id = request.GET.get('id',0)
