@@ -209,15 +209,18 @@ def get_result(id,member_id):
 		timp_vlaue = {}
 		for value in values:
 			timp_vlaue = value
+			is_select =False
 			for v_title,v_value in value.items():
 				if v_value:
 					if not value_isSelect.has_key(v_title):
 						value_isSelect[v_title] = 0
 					if v_value['isSelect'] == True:
 						value_isSelect[v_title] += 1
-						total_count += 1
+						is_select = True
 				else:
-					value_isSelect[v_title] = []
+					value_isSelect[v_title] = 0
+			if is_select:
+				total_count += 1
 		for timp_k in sorted(timp_vlaue.keys()):
 			value ={}
 			name = timp_k.split('_')[1]
