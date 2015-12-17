@@ -51,10 +51,12 @@ class PowerMeParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
+		webapp_id = request.user_profile.webapp_id
 		member_ids = []
 		if name:
-			members = member_models.Member.objects.filter(username_hexstr__contains = byte_to_hex(name))
-			member_ids = [member.id for member in members]
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains = byte_to_hex(name))
+			temp_ids = [member.id for member in members]
+			member_ids = temp_ids  if temp_ids else [-1]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		id = request.GET.get('id',0)

@@ -2069,7 +2069,8 @@ def get_order_products(order):
 								},
 								'noline': 1,
 								'supplier': product.supplier,
-								'supplier_name': product_info.get('supplier_name', '')
+								'supplier_name': product_info.get('supplier_name', ''),
+								'bar_code':product.bar_code
 							})
 							suppliers.append(product.supplier)
 			else:

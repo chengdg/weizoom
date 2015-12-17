@@ -9,7 +9,7 @@ from django.conf import settings
 
 from mall.models import Order, OrderHasProduct, PayInterface, Product
 from account.models import UserWeixinPayOrderConfig
-from weixin.user.models import WeixinMpUserAccessToken
+from weixin.user.models import WeixinMpUserAccessToken,ComponentAuthedAppid
 
 def wxpay_index(request):
 	order_id = request.GET.get('order_id', None)
@@ -25,6 +25,15 @@ def wxpay_index(request):
 	product_names = ','.join([product.name for product in Product.objects.filter(id__in=product_ids)])
 	if len(product_names) > 127:
 		product_names = product_names[:127]
+	#add by bert 
+	appid = weixin_pay_config.app_id
+	try:
+		component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, user_id=request.user_profile.user_id)[0]
+		component_info = component_authed_appid.component_info
+		component_appid = component_info.app_id
+	except:
+		component_appid = None
+	
 
 	c = RequestContext(request, {
 		'domain': request.user_profile.host,
@@ -42,7 +51,8 @@ def wxpay_index(request):
 		'total_fee': int(order.final_price * 100),	
 		'app_secret': weixin_pay_config.app_secret,
 		'hide_non_member_cover' : True,
-		'callback_module': request.GET.get('callback_module', None)
+		'callback_module': request.GET.get('callback_module', None),
+		'component_appid': component_appid
 	})
 	if weixin_pay_config.pay_version == 0:
 		return render_to_response('webapp/index.html', c)

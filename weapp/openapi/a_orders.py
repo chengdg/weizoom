@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Administrator'
 from core import resource
+from core import paginator
 import wapi as api_resource
 from core.jsonresponse import create_response
 
@@ -22,15 +23,20 @@ class OrderList(resource.Resource):
         pay_end_time = request.POST.get('pay_end_time','')
         order_status = request.POST.get('order_status','')
         order_id = request.POST.get('order_id','')
-        orders = api_resource.get('open', 'orders', {'access_token':access_token,
+        cur_page = request.POST.get('cur_page',1)
+        orders,pageinfo,count = api_resource.get('open', 'orders', {'access_token':access_token,
 													 'found_begin_time':found_begin_time,
 													 'found_end_time':found_end_time,
 													 'pay_begin_time':pay_begin_time,
 													 'pay_end_time':pay_end_time,
                                                      'order_status':order_status,
-                                                     'order_id':order_id
+                                                     'order_id':order_id,
+                                                     'cur_page':cur_page
                                                       })
-        response.data = orders
+        response.data = {}
+        response.data['pageinfo'] = paginator.to_dict(pageinfo)
+        response.data['count'] = count
+        response.data['items'] = orders
         return response.get_response()
 
 

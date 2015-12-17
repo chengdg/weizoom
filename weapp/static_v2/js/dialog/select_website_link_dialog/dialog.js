@@ -128,6 +128,7 @@ W.dialog.weixin.SelectWebSiteLinkDialog = W.dialog.Dialog.extend({
             var json = $.parseJSON(strSelectLinkTarget);
             if (json && json.hasOwnProperty('data')) {
                 json['data'] = ""
+                json['data_path'] = ""
             }
             strSelectLinkTarget = JSON.stringify(json)
         }

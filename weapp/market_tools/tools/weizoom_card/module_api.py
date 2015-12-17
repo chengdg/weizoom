@@ -27,7 +27,7 @@ from core import dateutil, core_setting
 from tools.express import util as express_util
 
 from models import *
-from mall.models import Order
+from mall.models import Order,belong_to, ORDER_STATUS_CANCEL
 from watchdog.utils import watchdog_alert
 
 
@@ -79,7 +79,7 @@ def return_weizoom_card_money(order):
 				-weizoom_card_has_order.money
 			)
 
-def check_weizoom_card(name, password,webapp_user=None, owner_id=None):
+def check_weizoom_card(name, password,webapp_user=None,member=None,owner_id=None,webapp_id=None):
 	msg = None
 	weizoom_card = {}
 	weizoom_card = WeizoomCard.objects.filter(weizoom_card_id=name, password=password)
@@ -107,17 +107,21 @@ def check_weizoom_card(name, password,webapp_user=None, owner_id=None):
 				if authed_appid[0].nick_name:
 					mpuser_name = authed_appid[0].nick_name
 			if weizoom_card_rule.is_new_member_special:
-				orders = Order.objects.filter(webapp_user_id=webapp_user.id)
-				has_order = orders.count() >0
-				#判断是否首次下单
-				if has_order:
-					order_ids = [order.order_id for order in orders]
-					#不是首次下单，判断该卡是否用过
-					has_use_card = WeizoomCardHasOrder.objects.filter(card_id=weizoom_card.id,order_id__in=order_ids).count()>0
-					if not has_use_card:
-						msg = u'该卡为新会员专属卡'
-				if owner_id != weizoom_card_rule.belong_to_owner:
-					msg = u'该卡为'+mpuser_name+'商家专属卡'
+				if member and member.is_subscribed:
+					orders = belong_to(webapp_id)
+					orders = orders.filter(webapp_id=webapp_id,webapp_user_id=webapp_user.id).exclude(status=ORDER_STATUS_CANCEL)
+					has_order = orders.count() >0
+					#判断是否首次下单
+					if has_order:
+						order_ids = [order.order_id for order in orders]
+						#不是首次下单，判断该卡是否用过
+						has_use_card = WeizoomCardHasOrder.objects.filter(card_id=weizoom_card.id,order_id__in=order_ids).count()>0
+						if not has_use_card:
+							msg = u'该卡为新会员专属卡'
+					if owner_id != weizoom_card_rule.belong_to_owner:
+						msg = u'该卡为'+mpuser_name+'商家专属卡'
+				else:
+					msg = u'该卡为新会员专属卡'
 			else:
 				if owner_id != weizoom_card_rule.belong_to_owner:
 					msg = u'该卡为'+mpuser_name+'商家专属卡'

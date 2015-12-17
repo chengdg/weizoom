@@ -224,7 +224,7 @@ def get_result(id,member_id):
 			value['name'] = name
 			value['id_name'] = timp_k
 			value['count'] = value_isSelect[timp_k]
-			value['per'] =  '%d' % (value_isSelect[timp_k]*100/float(total_count))
+			value['per'] =  '%d' % (value_isSelect[timp_k]*100/float(total_count) if total_count else 0)
 			value['isSelect'] = member_termite_select[timp_k]['isSelect']
 			value['type'] = member_termite_select[timp_k]['type']
 			value_list.append(value)

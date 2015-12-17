@@ -16,6 +16,7 @@ from watchdog.utils import *
 
 from mall.models import Order, OrderHasProduct, PayInterface, Product
 from account.models import UserWeixinPayOrderConfig, UserProfile
+from weixin.user.models import ComponentAuthedAppid
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates/webapp' % template_path_items[-1]
@@ -43,7 +44,13 @@ def index(request):
 		pay_interface = PayInterface.objects.get(id=pay_interface_id)
 		weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
 		order = Order.objects.get(order_id=order_id)
-		
+		try:
+			component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=weixin_pay_config.app_id, user_id=woid)[0]
+			component_info = component_authed_appid.component_info
+			component_appid = component_info.app_id
+		except:
+			component_appid = ''
+		data['component_appid'] = component_appid
 		data['app_id'] = weixin_pay_config.app_id
 		data['partner_id'] = weixin_pay_config.partner_id
 		data['partner_key'] = weixin_pay_config.partner_key
