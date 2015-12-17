@@ -2011,7 +2011,7 @@ def get_order_products(order):
 			'is_deleted': product.is_deleted,
 			'grade_discounted_money': relation.grade_discounted_money,
 			'supplier': product.supplier,
-			'bar_code':product.bar_code
+			'user_code':product.user_code
 		}
 
 
@@ -2070,7 +2070,7 @@ def get_order_products(order):
 								'noline': 1,
 								'supplier': product.supplier,
 								'supplier_name': product_info.get('supplier_name', ''),
-								'bar_code':product.bar_code
+								'user_code':product.user_code
 							})
 							suppliers.append(product.supplier)
 			else:
