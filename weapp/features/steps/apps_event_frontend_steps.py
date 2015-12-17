@@ -51,7 +51,7 @@ def __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid):
 		print('[info] not redirect')
 	return response
 
-def __participate_event(context,webapp_owner_id,event_rule_id,member_id, date):
+def __participate_event(context,webapp_owner_id,event_rule_id):
 	termite_data = json.loads(context.text)
 	i = 0
 	data = {}
@@ -74,8 +74,6 @@ def __participate_event(context,webapp_owner_id,event_rule_id,member_id, date):
 		'prize': json.dumps(prize)
 	}
 	response = context.client.post('/m/apps/event/api/event_participance/?_method=put', params)
-	event_info = eventParticipance.objects.get(member_id=member_id, belong_to=str(event_rule_id))
-	event_info.update(set__created_at=date)
 	context.response_json = json.loads(response.content)
 
 @when(u"{webapp_user_name}参加活动报名'{event_name}'于'{date}'")
@@ -87,17 +85,21 @@ def step_tmpl(context, webapp_user_name, event_name, date):
 	event_rule_id = __get_event_rule_id(event_name)
 	member = member_api.get_member_by_openid(openid, context.webapp_id)
 	response = __get_into_event_pages(context,webapp_owner_id,event_rule_id,openid)
+	# print(response.context)
 	related_page_id = event.objects.get(id=event_rule_id).related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
 	permission = page['component']['components'][0]['model']['permission']
 	if permission == 'member':
 		if member.is_subscribed == True:
-			__participate_event(context,webapp_owner_id,event_rule_id,member.id,date)
+			__participate_event(context,webapp_owner_id,event_rule_id)
 		else:
 			pass #弹二维码
 	else:
-		__participate_event(context,webapp_owner_id,event_rule_id,member.id,date)
+		__participate_event(context,webapp_owner_id,event_rule_id)
+	#修改参与时间
+	event_info = eventParticipance.objects.get(member_id=member.id, belong_to=str(event_rule_id))
+	event_info.update(set__created_at=date)
 
 
 @then(u'{webapp_user_name}获得提示"{msg}"')
