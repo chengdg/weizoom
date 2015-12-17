@@ -37,7 +37,7 @@ class Orders(api_resource.ApiResource):
 	@staticmethod
 	def get_order_items(user,order_id,cur_page,order_status=None,found_begin_time=None,found_end_time=None,pay_begin_time=None,pay_end_time=None):
 		if order_id != '':
-			order_list = models.Order.objects.filter(order_id = order_id)
+			order_list = models.Order.objects.filter(order_id = order_id.strip().split('-')[0])
 
 		else:
 			webapp_id = user.get_profile().webapp_id
@@ -115,7 +115,7 @@ class Orders(api_resource.ApiResource):
 					'count':inner_product['count'],
 					'unit_price':inner_product['price'],
 					'goods_name':inner_product['name'],
-					'goods_number':inner_product['bar_code'],
+					'goods_number':inner_product['user_code'],
 					'custom_model_properties': product_model_properties
 				}
 				products_result.append(product)
