@@ -352,6 +352,7 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 				"status": "未使用"
 			}]
 			"""
+
 @mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:4 活动报名-设置未来时间-无需关注即可参与
 	Given jobs登录系统
@@ -409,7 +410,7 @@ Scenario:4 活动报名-设置未来时间-无需关注即可参与
 			"""
 		Then tom获得提示"请等待活动开始..."
 
-  @mall2 @apps_event @apps_event_frontend @user_participate_event
+@mall2 @apps_event @apps_event_frontend @user_participate_event
 Scenario:5 活动报名-设置过去时间-必须需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名
