@@ -518,10 +518,10 @@ function validateUserCode($el){
 	  errorHint: ''
 	}
   }else{
-	var valueRex = /^\w+$/g;
+	var valueRex = /^[\w\-\:\.\|]+$/g;
 	return {
 	  isValidate: valueRex.test(hasValue),
-	  errorHint: "请输入数字或字母"
+	  errorHint: "请输入数字或字母,可以使用- : . |以内的特殊字符"
 	}
   }
 }
