@@ -39,14 +39,15 @@ def build_post_json(media_path, type):
 	
 	if media_path.startswith('http'):
 		media_yun_path = media_path
-		if media_path.find('upload') > -1:
-			media_path = media_path[media_path.find('upload')+6:]
-			media_path = settings.UPLOAD_DIR+media_path
-			if os.path.isfile(media_path) is False:
-				data = urllib.urlopen(media_yun_path).read()  
-				f = file(media_path,"wb")  
-				f.write(data)
-				f.close()
+		# if media_path.find('upload') > -1:
+		# 	media_path = media_path[media_path.find('upload')+6:]
+		media_path = media_path.rsplit('/',1)[1]
+		media_path = settings.UPLOAD_DIR+media_path
+		if os.path.isfile(media_path) is False:
+			data = urllib.urlopen(media_yun_path).read()  
+			f = file(media_path,"wb")  
+			f.write(data)
+			f.close()
 	data = open(media_path, 'rb')
 	post_data[type] = data
 	return post_data
@@ -141,10 +142,10 @@ class WeixinUploadContentMediaImageApi(object):
 
 	def get_get_request_url_and_api_info(self, mpuser_access_token=None, varargs=()):
 		if len(varargs) > 3 and len(varargs) == 1:
-			raise ValueError(u'WeixinUploadMediaImageApi.get_get_request_url error, param illegal')
+			raise ValueError(u'WeixinUploadContentMediaImageApi.get_get_request_url error, param illegal')
 
 		if mpuser_access_token is None:
-			raise ValueError(u'WeixinUploadMediaImageApi get_get_request_url_and_api_info：mpuser_access_token is None')
+			raise ValueError(u'WeixinUploadContentMediaImageApi get_get_request_url_and_api_info：mpuser_access_token is None')
 		return self._complete_weixin_api_get_request_url(mpuser_access_token), u'上传媒体文件返回url：image'
 
 	def parse_response(self, api_response):
@@ -152,7 +153,7 @@ class WeixinUploadContentMediaImageApi(object):
 
 	def parese_post_param_json_str(self, args):
 		if len(args) != 2:
-			raise ValueError(u'WeixinUploadMediaImageApi param number illegal')
+			raise ValueError(u'WeixinUploadContentMediaImageApi param number illegal')
 
 		return build_post_json(args[0], MediaType.IMAGE)
 
