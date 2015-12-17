@@ -29,12 +29,14 @@ def config(request):
 	# 获取 加洛桃红(测试账号) 的ticket
 	jsapi_ticket = cache.get('wxjs_ticket')
 	#appId = 'wx25bbc5642d3cb78c'
-	appId = 'wx4f43465ddfc20077'
+	#appId = 'wx4f43465ddfc20077'
+	appId = 'wxec59d22b62242c4d'
 	if not jsapi_ticket:
 		# 获取 加洛桃红(测试账号) 的token
 
 		#appSecret = '4dfc131ac1b61fcba81db7142d400387'
-		appSecret = 'd4cdbf24a90c57b5e2592e1e2c174b45'
+		#appSecret = 'd4cdbf24a90c57b5e2592e1e2c174b45'
+		appSecret = '9b87b8774172373476f1cd60acc0b25d'
 		token, expires_span, other = access_token.get_new_access_token(appId, appSecret)
 		#print 'get new token ',token
 
