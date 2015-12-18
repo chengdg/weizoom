@@ -17,6 +17,8 @@ Feature: 会员参加微助力助力
 		10、取消关注的会员通过会员好友分享页再次帮助好友助力
 		11、取消关注的会员通过会员好友分享页再次进行我要参与
 		12、取消关注的会员通过之前会员好友分享的链接为非会员好友助力
+	备注：
+		2015-12-18 业务逻辑修改:取消关注的会员，其助力值和排名不消失（前台和后台都保留）
 	"""
 
 Background:
@@ -516,7 +518,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 		|  2   | tom  |   0   |
 
 @mall2 @apps_powerme @apps_powerme_frontend
-Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维码）
+Scenario:7 非会员通过好友分享链接参加微助力活动（有识别二维码）
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
 	#tom再点击bill分享的链接，点击'我要参与',并分享链接
@@ -602,7 +604,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 		|  1   | bill |   1   |
 		|  2   | tom  |   0   |
 
-	#取消关注后,tom的排名消失，tom帮好友的助力值不消失
+	#取消关注后,tom的排名不消失，tom帮好友的助力值不消失
 	When tom取消关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力2'
@@ -625,7 +627,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	Then bill获得"微助力活动2"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
-  		|  2   | tom  |   0   |
+		|  2   | tom  |   0   |
 
 @mall2 @apps_powerme @apps_powerme_frontend
 Scenario:8 会员B分享会员A的微助力活动链接

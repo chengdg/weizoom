@@ -133,7 +133,7 @@ Scenario:1 微助力活动列表参与人数的校验
 
 	#tom参加'微助力活动1'，助力值1（bill帮助力）
 	When 清空浏览器
-  	When tom访问jobs的webapp
+	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
 	Then tom收到自动回复'微助力1单图文'
 	When tom点击图文"微助力1单图文"进入微助力活动页面
@@ -170,7 +170,7 @@ Scenario:1 微助力活动列表参与人数的校验
 		|  2   | tom         |     1         | 今天       |
 		|  3   | tom2        |     0         | 今天       |
 
-	#取消关注后，会员排名消息，参与人数不变，但是帮别人的助力值还在
+	#取消关注后，会员排名信息保留
 	When bill取消关注jobs的公众号
 	Given jobs登录系统
 	When jobs查看微助力活动'微助力活动1'
