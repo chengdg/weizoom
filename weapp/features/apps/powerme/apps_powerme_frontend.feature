@@ -520,7 +520,7 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
 	#tom再点击bill分享的链接，点击'我要参与',并分享链接
-	#tom取消关注,tom的微助力排名消失
+	#tom取消关注,tom的微助力排名不消失
 
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -619,12 +619,13 @@ Scenario:7 非员通过好友分享链接参加微助力活动（有识别二维
 			"rules":"按上按上打算四大的撒的撒<br />撒打算的撒的撒大声地<br />按上打算打算<br />阿萨德按上打",
 			"my_rank": "1",
 			"my_power_score": "1",
-			"total_participant_count": "1"
+			"total_participant_count": "2"
 		}]
 		"""
 	Then bill获得"微助力活动2"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
+  		|  2   | tom  |   0   |
 
 @mall2 @apps_powerme @apps_powerme_frontend
 Scenario:8 会员B分享会员A的微助力活动链接
