@@ -790,7 +790,6 @@ class Product(models.Model):
 				product.custom_model_properties = None
 		else:
 			model = ProductModel.objects.get(product_id=self.id, name=model_name)
-
 			product = self
 			product.price = model.price
 			product.weight = model.weight
@@ -802,7 +801,7 @@ class Product(models.Model):
 			product.model = model
 			product.is_model_deleted = False
 			product.market_price = model.market_price
-
+			product.user_code = model.user_code
 			if model.is_deleted:
 				product.is_model_deleted = True
 				#raise ValueError("product model is deleted: %s" % model_name)
