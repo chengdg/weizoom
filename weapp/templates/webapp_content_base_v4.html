@@ -83,7 +83,7 @@
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
         <meta content="telephone=no" name="format-detection">
     </head>
-    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative;">
+    <body data-value="{{ cur_request_member.token }}" data-key="fmt" is-under-develop="{{ under_develop }}" style="background:#f2f2f2; position:relative; visibility:hidden;">
         <!-- xt-errMsg for test -->
         <input id="xt-errMsg" type="hidden" value="" />
 
@@ -160,6 +160,30 @@
             }
 
             $(document).ready(function() {
+                //如果是来自h5的请求，修改所有链接
+                if (window.location.href.indexOf('from_h5=1') !== -1) {
+                    $('a').each(function() {
+                        var $link = $(this);
+                        var oldHref = $link.attr('href');
+                        if (!oldHref) {
+                            return;
+                        }
+
+                        if (oldHref.indexOf('javascript:') !== -1) {
+                            var oldHref = $link.data('link');
+                        }
+                        if (!oldHref) {
+                            return;
+                        }
+
+                        var pos = oldHref.indexOf('?');
+                        var qs = oldHref.substring(pos, oldHref.length);
+                        var newHref = 'http://h5.weapp.com/mall/weapp_resource/'+qs;
+                        $link.attr('href', newHref);
+                    })
+                }
+                $('body').css('visibility', 'visible');
+
                 var $product = $('.wui-product');
                 var $productList = $('.wui-productlist');
                 var $imageDisplay = $('.wui-imagedisplay');
