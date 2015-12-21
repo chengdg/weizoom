@@ -103,6 +103,12 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
             auth_appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
         except:
             auth_appid_info = ComponentAuthedAppidInfo()
+
+            #member default tags
+        try:
+            default_member_tag = member_models.MemberTag.get_default_tag(webapp_id)
+        except:
+            default_member_tag = member_models.MemberTag()
             
     
         return {
@@ -118,7 +124,8 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
                 'has_permission': has_permission,
                 'operation_settings': operation_settings.to_dict(),
                 'global_navbar': global_navbar.to_dict(),
-                'auth_appid_info': auth_appid_info.to_dict()
+                'auth_appid_info': auth_appid_info.to_dict(),
+                'default_member_tag': default_member_tag.to_dict()
             }
         }
     return inner_func
@@ -200,6 +207,8 @@ def get_webapp_owner_info(webapp_owner_id):
         obj.qrcode_img = obj.auth_appid_info.qrcode_url
     else:
         obj.qrcode_img = ''
+
+    obj.default_member_tag = member_models.MemberTag.from_dict(data['default_member_tag'])  
     return obj
 
 

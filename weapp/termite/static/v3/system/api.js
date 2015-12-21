@@ -129,12 +129,12 @@ W.Api = function() {
 					}
 				}
 			},
-			error: function(xhr, resp) {
-				_this.reportError(url, xhr.responseText);
+			error: function(xhr, errorType, error) {
+				_this.reportError(url, 'responseText:'+xhr.responseText+';errorType:'+errorType+';error:'+error);
                 if (scope) {
-                    onError.call(scope, resp);
+                    onError.call(scope, errorType);
                 } else {
-                    onError(resp);
+                    onError(errorType);
                 }
 			}
 		}
