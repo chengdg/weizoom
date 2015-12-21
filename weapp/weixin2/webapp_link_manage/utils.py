@@ -92,7 +92,7 @@ def get_webapp_link_menu_objectes(request):
 				'name': '优惠券',
 				'type': 'coupon',
 				'add_btn_title': '新建优惠券',
-				'add_link': '/mall_promotion/coupon_rules/create/'
+				'add_link': '/mall2/coupon_rule/'
 			}, {
 				'name': '微信投票',
 				'type': 'vote',

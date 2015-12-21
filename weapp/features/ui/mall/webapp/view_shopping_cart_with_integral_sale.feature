@@ -182,7 +182,7 @@ Background:
 Scenario: 放入参加积分活动的商品到购物车，商品不显示促销信息
 
 	#bill为铜牌会员时,把商品3放到购物车时,显示商品3九折显示价格
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",

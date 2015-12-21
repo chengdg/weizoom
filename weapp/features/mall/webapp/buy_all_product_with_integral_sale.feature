@@ -397,21 +397,21 @@ Scenario: 7 不同等级的会员购买有会员价同时有全体积分抵扣50
 			"discount": "7"
 		}]
 		"""
-	When jobs更新"tom4"的会员等级
+	When jobs更新'tom4'的会员等级
 		"""
 		{
 			"name": "tom4",
 			"member_rank": "金牌会员"
 		}
 		"""
-	And jobs更新"tom3"的会员等级
+	And jobs更新'tom3'的会员等级
 		"""
 		{
 			"name": "tom3",
 			"member_rank": "银牌会员"
 		}
 		"""
-	And jobs更新"tom2"的会员等级
+	And jobs更新'tom2'的会员等级
 		"""
 		{
 			"name": "tom2",

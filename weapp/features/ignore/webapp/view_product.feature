@@ -150,7 +150,7 @@ Background:
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
 	Given jobs登录系统
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",

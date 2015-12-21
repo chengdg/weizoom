@@ -4,6 +4,7 @@ from wapi.decorators import auth_required
 from mall import module_api as mall_api
 from mall import models
 from datetime import datetime
+from core import paginator
 from tools.regional import views as regional_util
 
 DEFAULT_CREATE_TIME = '2000-01-01 00:00:00'
@@ -26,21 +27,37 @@ class Orders(api_resource.ApiResource):
 		pay_begin_time = args['pay_begin_time']
 		pay_end_time = args['pay_end_time']
 		order_status = args['order_status']
-		result = Orders.get_order_items(user,order_status,found_begin_time,found_end_time,pay_begin_time,pay_end_time)
-		return result
+		order_id = args['order_id']
+		cur_page = args['cur_page']
+		result,pageinfo,count = Orders.get_order_items(user,order_id,cur_page,order_status,found_begin_time,found_end_time,pay_begin_time,pay_end_time)
+
+		return result,pageinfo,count
 
 	# get_orders_response调用
 	@staticmethod
-	def get_order_items(user,order_status,found_begin_time,found_end_time,pay_begin_time,pay_end_time):
-		webapp_id = user.get_profile().webapp_id
-		order_list = models.Order.objects.belong_to(webapp_id).order_by('-id')
-		if order_status!='':
-			order_list = order_list.filter(status=order_status)
-		# 1 下单时间，2 付款时间
-		if found_begin_time !='' and found_end_time !='':
-			order_list = order_list.filter(created_at__gte=found_begin_time, created_at__lt=found_end_time)
-		if pay_begin_time !='' and pay_end_time !='':
-			order_list = order_list.filter(payment_time__gte=pay_begin_time, payment_time__lt=pay_end_time)
+	def get_order_items(user,order_id,cur_page,order_status=None,found_begin_time=None,found_end_time=None,pay_begin_time=None,pay_end_time=None):
+		if order_id != '':
+			order_list = models.Order.objects.filter(order_id = order_id)
+
+		else:
+			webapp_id = user.get_profile().webapp_id
+			order_list = models.Order.objects.belong_to(webapp_id).order_by('-id')
+			if order_status!='':
+				order_list = order_list.filter(status=order_status)
+			# 1 下单时间，2 付款时间
+			if found_begin_time !='' and found_end_time !='':
+				order_list = order_list.filter(created_at__gte=found_begin_time, created_at__lt=found_end_time)
+			if pay_begin_time !='' and pay_end_time !='':
+				order_list = order_list.filter(payment_time__gte=pay_begin_time, payment_time__lt=pay_end_time)
+		# 返回订单的数目
+		order_return_count = order_list.count()
+
+		pageinfo, order_list = paginator.paginate(order_list, cur_page, 10)
+
+
+		if order_return_count==0:
+			items = []
+			return items,pageinfo,order_return_count
 		# 获取order对应的会员
 		webapp_user_ids = set([order.webapp_user_id for order in order_list])
 		from modules.member.models import Member
@@ -62,6 +79,10 @@ class Orders(api_resource.ApiResource):
 			member = webappuser2member.get(order.webapp_user_id, None)
 			if member:
 				order.buyer_name = member.username_for_html
+				#过滤掉表情
+				if '<span' in order.buyer_name:
+					order.buyer_name = u'未知'
+
 			else:
 				order.buyer_name = u'未知'
 
@@ -81,15 +102,22 @@ class Orders(api_resource.ApiResource):
 			products = mall_api.get_order_products(order)
 			products_result = []
 			for inner_product in products:
+				product_model_properties = []
+				if 'custom_model_properties' in inner_product and inner_product['custom_model_properties']:
+					for model in inner_product['custom_model_properties']:
+						return_model = {}
+						return_model['property_value'] = model['property_value']
+						return_model['name'] = model['name']
+						product_model_properties.append(return_model)
 				product = {
-                    'price':inner_product['total_price'],
-                    'goods_pic':inner_product['thumbnails_url'],
-                    'unit_price':inner_product['price'],
-                    'count':inner_product['count'],
-                    'total_price':inner_product['price'],
-                    'goods_name':inner_product['name'],
-                    'goods_number':inner_product['bar_code']
-                }
+					'total_price':inner_product['total_price'] if 'total_price' in inner_product else inner_product['price']*inner_product['count'] ,
+					'goods_pic':inner_product['thumbnails_url'],
+					'count':inner_product['count'],
+					'unit_price':inner_product['price'],
+					'goods_name':inner_product['name'],
+					'goods_number':inner_product['bar_code'],
+					'custom_model_properties': product_model_properties
+				}
 				products_result.append(product)
 			regions = regional_util.get_str_value_by_string_ids(order.area).split(" ")
 			items.append({
@@ -103,12 +131,12 @@ class Orders(api_resource.ApiResource):
 					"buyer_name":order.buyer_name,
 					"receiver_name": order.ship_name,
 					"receiver_mobile": order.ship_tel,
-					"receiver_province": regions[0],
-					"receiver_city": regions[1],
-					"receiver_district": regions[2],
+					"receiver_province": regions[0] if len(regions)==3 else "未知",
+					"receiver_city": regions[1] if len(regions)==3 else "未知",
+					"receiver_district": regions[2] if len(regions)==3 else "未知",
 					"receiver_address": order.ship_address,
 					"logistics_name": order.express_company_name
-            	},
+				},
 				'invoice_title': order.bill,
 				'found_time': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
 				'num': order.product_count,
@@ -123,8 +151,7 @@ class Orders(api_resource.ApiResource):
 				'products':products_result
 
 			})
-
-		return items
+		return items,pageinfo,order_return_count
 
 
 

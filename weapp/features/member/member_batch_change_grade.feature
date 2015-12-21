@@ -478,7 +478,7 @@ Scenario:7 批量修改会员等级后，在会员详情和会员的个人中心
 		"""
 
 	#修改会员等级
-		When jobs更新"bill"的会员等级
+		When jobs更新'bill'的会员等级
 			"""
 			{
 				"name": "bill",

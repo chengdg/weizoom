@@ -393,19 +393,34 @@ import urllib
 import json
 import hashlib
 from BeautifulSoup import BeautifulSoup
+from weixin.user.models import ComponentAuthedAppid
 def get_openid(request):
 	code = request.POST.get('code', '')
 	appid = request.POST.get('appid', '')
-	secret = request.POST.get('secret', '')
+	#secret = request.POST.get('secret', '')
+
+	# data = {
+	# 	'appid': appid,
+	# 	'secret': secret,
+	# 	'code': code,
+	# 	'grant_type': 'authorization_code'
+	# }
+	
+	component_authed_appid = ComponentAuthedAppid.objects.filter(authorizer_appid=appid, user_id=request.user_profile.user_id)[0]
+	component_info = component_authed_appid.component_info
+	component_access_token = component_info.component_access_token
 
 	data = {
 		'appid': appid,
-		'secret': secret,
+		#'secret': weixin_mp_user_access_token.app_secret,
 		'code': code,
-		'grant_type': 'authorization_code'
+		'grant_type': 'authorization_code',
+		'component_appid': component_info.app_id,
+		'component_access_token': component_access_token
 	}
+	url = 'https://api.weixin.qq.com/sns/oauth2/component/access_token'
+
 	try:
-		url = 'https://api.weixin.qq.com/sns/oauth2/access_token?'
 		req = urllib2.urlopen(url, urllib.urlencode(data))
 		response_data = req.read()
 		response_data = eval(response_data)
@@ -413,8 +428,15 @@ def get_openid(request):
 			response = create_response(200)
 			response.data = response_data
 		else:
-			response = create_response(201)
-			response.data = response_data
+			req = urllib2.urlopen(url, urllib.urlencode(data))
+			response_data = req.read()
+			response_data = eval(response_data)
+			if response_data.has_key('openid'):
+				response = create_response(200)
+				response.data = response_data
+			else:
+				response = create_response(201)
+				response.data = response_data
 
 		watchdog_info(u"openid获取信息: \n{}".format(response_data), db_name=settings.WATCHDOG_DB)
 		return response.get_response()
@@ -424,6 +446,38 @@ def get_openid(request):
 		response = create_response(500)
 		response.data['exception'] = error_msg
 		return response.get_response()
+	# code = request.POST.get('code', '')
+	# appid = request.POST.get('appid', '')
+	# secret = request.POST.get('secret', '')
+
+	# data = {
+	# 	'appid': appid,
+	# 	'secret': secret,
+	# 	'code': code,
+	# 	'grant_type': 'authorization_code'
+	# }
+
+
+	# try:
+	# 	url = 'https://api.weixin.qq.com/sns/oauth2/access_token?'
+	# 	req = urllib2.urlopen(url, urllib.urlencode(data))
+	# 	response_data = req.read()
+	# 	response_data = eval(response_data)
+	# 	if response_data.has_key('openid'):
+	# 		response = create_response(200)
+	# 		response.data = response_data
+	# 	else:
+	# 		response = create_response(201)
+	# 		response.data = response_data
+
+	# 	watchdog_info(u"openid获取信息: \n{}".format(response_data), db_name=settings.WATCHDOG_DB)
+	# 	return response.get_response()
+	# except:
+	# 	error_msg = u"get_openid异常, cause:\n{}".format(unicode_full_stack())
+	# 	watchdog_error(error_msg, db_name=settings.WATCHDOG_DB)
+	# 	response = create_response(500)
+	# 	response.data['exception'] = error_msg
+	# 	return response.get_response()
 
 
 WEIXIN_XML = u"""<xml><appid>%s</appid><mch_id>%s</mch_id><nonce_str><![CDATA[%s]]></nonce_str><sign><![CDATA[%s]]></sign><body><![CDATA[%s]]></body><out_trade_no>%s</out_trade_no><total_fee>%s</total_fee><spbill_create_ip>%s</spbill_create_ip><notify_url>%s</notify_url><trade_type>JSAPI</trade_type><openid>%s</openid></xml>"""

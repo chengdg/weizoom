@@ -4,7 +4,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 from core import resource
@@ -40,10 +40,6 @@ class voteStatistic(resource.Resource):
 						for item, value in data['value'].items():
 							if value['isSelect']:
 								is_valid = True
-								if total_title_valid_dict.has_key(title):
-									total_title_valid_dict[title] += 1
-								else:
-									total_title_valid_dict[title] = 1
 							if title2itemCount.has_key(title):
 								if title2itemCount[title].has_key(item):
 									title2itemCount[title][item] += 1 if value['isSelect'] else 0
@@ -54,14 +50,22 @@ class voteStatistic(resource.Resource):
 								title2itemCount[title][item] = 1 if value['isSelect'] else 0
 							title_type = value['type']
 						if is_valid:
+							if total_title_valid_dict.has_key(title):
+								total_title_valid_dict[title] += 1
+							else:
+								total_title_valid_dict[title] = 1
 							if title_valid_dict.has_key(title):
 								title_valid_dict[title] += 1
 							else:
 								title_valid_dict[title] = 1
+						else:
+							if not total_title_valid_dict.has_key(title):
+								total_title_valid_dict[title] = 0
+							if not title_valid_dict.has_key(title):
+								title_valid_dict[title] = 0
 						title_type_dict[title] = title_type
 
 			for title in sorted(title2itemCount.keys()):
-				print title,"title"
 				single_title_dict = {}
 				single_title_dict['title_name'] = title.split('_')[1]
 				single_title_dict['title_valid_count'] = title_valid_dict[title]
@@ -72,7 +76,8 @@ class voteStatistic(resource.Resource):
 					single_item_value = {}
 					single_item_value['item_name'] = item.split('_')[1]
 					single_item_value['counter'] = item_value
-					single_item_value['percent'] = '%d%s' % (item_value / float(total_title_valid_dict[title]) * 100, '%')
+
+					single_item_value['percent'] = '%d%s' % (item_value / float(total_title_valid_dict[title]) * 100 if total_title_valid_dict[title] else 0, '%')
 					single_title_dict['title_value'].append(single_item_value)
 
 				titles_list.append(single_title_dict)
@@ -112,9 +117,15 @@ class voteStatistic_Export(resource.Resource):
 
 		# app_name = voteStatistic_Export.app
 		# excel_file_name = ('%s_id%s_%s.xls') % (app_name.split("/")[1],export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
-		excel_file_name = 'vote_statistic.xls'
+
+		excel_file_name = 'vote_statistic_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
 		download_excel_file_name = u'微信投票统计.xls'
-		export_file_path = os.path.join(settings.UPLOAD_DIR,excel_file_name)
 
 		#Excel Process Part
 		try:
@@ -140,14 +151,16 @@ class voteStatistic_Export(resource.Resource):
 							select_data[termite] = [termite_dic['value']]
 						else:
 							select_data[termite].append(termite_dic['value'])
-					if termite_dic['type']=='appkit.qa':
-						if termite not in qa_static:
-							qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
-						else:
-							qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
+					# if termite_dic['type']=='appkit.qa':
+					# 	if termite not in qa_static:
+					# 		qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
+					# 	else:
+					# 		qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
 			#select-data-processing
+			title_valid_dict = {}
 			for select in select_data:
 				for s_list in select_data[select]:
+					is_valid = False
 					for s in s_list:
 						if select not in select_static:
 							select_static[select]={}
@@ -155,7 +168,15 @@ class voteStatistic_Export(resource.Resource):
 							select_static[select][s]  = 0
 						if s_list[s]['isSelect'] == True:
 							select_static[select][s] += 1
-					print s_list
+							is_valid = True
+					if is_valid:
+						if title_valid_dict.has_key(select):
+							title_valid_dict[select] += 1
+						else:
+							title_valid_dict[select] = 1
+					else:
+						if not title_valid_dict.has_key(select):
+							title_valid_dict[select] = 0
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
@@ -165,21 +186,21 @@ class voteStatistic_Export(resource.Resource):
 				header_style = xlwt.XFStyle()
 				select_num = 0
 				row = col =0
-				for s in select_static:
+				for s in sorted(select_static.keys()):
 					select_num += 1
-					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'%total)
+					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'% title_valid_dict[s])
 					ws.write(row,col+1,u'参与人数/百分百')
 					row += 1
 					all_select_num = 0
 					s_i_num = 0
-					for s_i in select_static[s]:
+					for s_i in sorted(select_static[s].keys()):
 						s_num = select_static[s][s_i]
 						if s_num :
 							all_select_num += s_num
-					for s_i in select_static[s]:
+					for s_i in sorted(select_static[s].keys()) :
 						s_num = select_static[s][s_i]
 						ws.write(row,col,s_i.split('_')[1])
-						per = s_num*1.0/all_select_num*100
+						per = s_num*1.0/title_valid_dict[s]*100 if title_valid_dict[s] else 0
 						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
@@ -189,32 +210,31 @@ class voteStatistic_Export(resource.Resource):
 					ws.write(row,col,u'')
 					ws.write(row,col+1,u'')
 					row += 1
-
-			#qa_sheet
-			if qa_static:
-				qa_num = 0
-				for q in qa_static:
-					qa_num += 1
-					row = col = 0
-					ws = wb.add_sheet(u'问题%d'%qa_num)
-					header_style = xlwt.XFStyle()
-
-					ws.write(row,col,u'提交时间')
-					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'%total)
-
-					for item in qa_static[q]:
-						row +=1
-						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
-						ws.write(row,col+1,item['answer'])
-
+			# #qa_sheet
+			# if qa_static:
+			# 	qa_num = 0
+			# 	for q in qa_static:
+			# 		qa_num += 1
+			# 		row = col = 0
+			# 		ws = wb.add_sheet(u'问题%d'%qa_num)
+			# 		header_style = xlwt.XFStyle()
+			#
+			# 		ws.write(row,col,u'提交时间')
+			# 		ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'%total)
+			#
+			# 		for item in qa_static[q]:
+			# 			row +=1
+			# 			ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
+			# 			ws.write(row,col+1,item['answer'])
 			try:
 				wb.save(export_file_path)
 			except:
 				print 'EXPORT EXCEL FILE SAVE ERROR'
-				print '/static/upload/%s'%excel_file_name
+				print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
+
 
 			response = create_response(200)
-			response.data = {'download_path':'/static/upload/%s'%excel_file_name,'filename':download_excel_file_name,'code':200}
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
 		except:
 			response = create_response(500)
 

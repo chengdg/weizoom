@@ -105,7 +105,6 @@ W.common.ProductGroupPriceCalculator = BackboneLite.View.extend({
                 integralMoney += productGroup.promotion_result.integralMoney;
             }
         }
-        console.log('promotionedPrice', promotionedPrice);
         return {
             productPrice: productPrice,
             promotionedPrice: promotionedPrice,

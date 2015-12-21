@@ -196,14 +196,14 @@ Scenario:4 实时消息列表查询
 		"""
 
 	#设置会员等级
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",
 			"member_rank": "银牌会员"
 		}
 		"""
-	When jobs更新"tom"的会员等级
+	When jobs更新'tom'的会员等级
 		"""
 		{
 			"name": "tom",

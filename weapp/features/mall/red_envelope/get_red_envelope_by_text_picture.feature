@@ -318,7 +318,7 @@ Scenario:4 删除分享红包,红包领取失败
 			"actions": ["分析","删除","查看"]
 		}]
 		"""
-	When jobs-删除分享红包"【图文领取】红包1"
+	When jobs'删除'分享红包'【图文领取】红包1'
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill在微信中向jobs的公众号发送消息'红包1'

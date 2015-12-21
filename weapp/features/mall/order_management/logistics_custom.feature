@@ -67,7 +67,7 @@ Scenario: 1 对待发货订单进行发货选择其他物流
 			"shipper": ""
 		}
 		"""
-	Then jobs能获得订单"00008"
+	Then jobs能获得订单'00008'
 		"""
 		{
 			"order_no":"00008",
@@ -93,7 +93,7 @@ Scenario: 1 对待发货订单进行发货选择其他物流
 			"shipper": "jobs|谢谢"
 		}
 		"""
-	Then jobs能获得订单"00007"
+	Then jobs能获得订单'00007'
 		"""
 		{
 			"order_no":"00007",
@@ -110,8 +110,8 @@ Scenario: 1 对待发货订单进行发货选择其他物流
 			"number":"100065947314"
 		}
 		"""
-	When jobs完成订单"00008"
-	Then jobs能获得订单"00008"
+	When jobs完成订单'00008'
+	Then jobs能获得订单'00008'
 		"""
 		{
 			"order_no":"00008",
@@ -127,8 +127,8 @@ Scenario: 1 对待发货订单进行发货选择其他物流
 			"number":"100065947315"
 		}
 		"""
-	When jobs完成订单"00007"
-	Then jobs能获得订单"00007"
+	When jobs完成订单'00007'
+	Then jobs能获得订单'00007'
 		"""
 		{
 			"order_no":"00007",
@@ -172,7 +172,7 @@ Scenario: 2 对选择其他物流的订单进行修改物流信息
 			"shipper": "jobs"
 		}
 		"""
-	Then jobs能获得订单"00008"
+	Then jobs能获得订单'00008'
 		"""
 		{
 			"order_no":"00008",
@@ -208,7 +208,7 @@ Scenario: 2 对选择其他物流的订单进行修改物流信息
 			"shipper": ""
 		}
 		"""
-	Then jobs能获得订单"00007"
+	Then jobs能获得订单'00007'
 		"""
 		{
 			"order_no":"00007",

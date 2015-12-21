@@ -80,7 +80,7 @@ Background:
 
 	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
-	When jobs更新"bill"的会员等级
+	When jobs更新'bill'的会员等级
 		"""
 		{
 			"name": "bill",
@@ -95,6 +95,7 @@ Background:
 		}, {
 			"name": "bill",
 			"member_rank": "银牌会员"
+		}]
 		"""
 
 @promotion @promotionFlash @ui @ProductDetail @ProductList
@@ -218,7 +219,6 @@ Scenario:参与限时抢购的多规格商品手机端详情页显示促销价�
 		[{
 			"name": "多规格商品",
 			"price": 100.00
-				}
 		}]
 		"""
 	When tom进行"立即购买"操作

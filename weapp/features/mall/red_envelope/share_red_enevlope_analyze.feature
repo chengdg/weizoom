@@ -142,7 +142,7 @@ Scenario: 1 分享红包分析
 	3.jobs能获取分享红包-会员引入详情
 
 	Given jobs登录系统
-	When jobs-开启分享红包"红包1"
+	When jobs'开启'分享红包'红包1'
 	When bill访问jobs的webapp
 	And bill购买jobs的商品
 		"""
@@ -155,7 +155,7 @@ Scenario: 1 分享红包分析
 		}
 		"""
 	And bill使用支付方式'货到付款'进行支付
-	Then bill-能够领取分享红包
+	Then bill'能够'领取分享红包
 	When bill把jobs的分享红包链接分享到朋友圈
 	When tom访问jobs的webapp
 	When tom点击bill分享红包链接
@@ -184,7 +184,7 @@ Scenario: 1 分享红包分析
 		}
 		"""
 	And tom使用支付方式'货到付款'进行支付
-	Then tom-能够领取分享红包
+	Then tom'能够'领取分享红包
 
 	Given jobs登录系统
 	When jobs对订单进行发货
@@ -211,7 +211,7 @@ Scenario: 1 分享红包分析
 		| tom      | 普通会员 | 0            | 0            | 0          | 0.00        | 今天     | 未使用   | 查看引入详情 |
 		| bill     | 普通会员 | 2            | 1            | 0          | 100.00      | 今天     | 未使用   | 查看引入详情 |
 
-	Then jobs能获得分享红包"红包1-bill"订单号"00001"的引入详情
+	Then jobs能获得分享红包'红包1-bill'订单号'00001'的引入详情
 		| 分享会员 | 会员状态 | 引入领取人数 | 引入使用人数 | 引入新关注 | 引入消费额 | 领取时间 | 使用状态 | 操作         |
 		| nokia    | 非会员   | 0            | 0            | 0          | 0.00       | 今天     | 未使用   |              |
 		| tom      | 普通会员 | 0            | 0            | 0          | 0.00        | 今天     | 已使用   | 查看使用订单 |

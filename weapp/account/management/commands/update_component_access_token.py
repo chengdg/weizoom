@@ -24,19 +24,24 @@ class Command(BaseCommand):
 	def handle(self, **options):
 		for component in ComponentInfo.objects.filter(is_active=True):
 			weixin_api = WeixinApi(None, weixin_http_client)
-			result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
-			print result,'---'
+			from weixin.message.message_handler.tasks import record_call_weixin_api
+
 			try:
+				result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
+				print result,'---'
 				#watchdog_info('call weixin api: get_component_token , result:{}'.format(result))
-				from weixin.message.message_handler.tasks import record_call_weixin_api
 				if result.has_key('errcode'):
-					success = False
-					watchdog_error('call weixin api: get_component_token , result:{}'.format(result))
+					if result['errcode'] == -1 or result['errcode'] == 995995:
+						result, success = self.__get_component_token_retry(weixin_api, component)
+					else:
+						success = False
+						watchdog_error('call weixin api: get_component_token , result:{}'.format(result))
 				else:
 					success = True
-				record_call_weixin_api.delay('get_component_token', success)
 			except:
-				pass
+				result, success = self.__get_component_token_retry(weixin_api, component)
+			if result != None:
+				record_call_weixin_api.delay('get_component_token', success)
 
 			component_access_token = result['component_access_token']
 			component.component_access_token = component_access_token
@@ -50,7 +55,7 @@ class Command(BaseCommand):
 			for auth_appid in ComponentAuthedAppid.objects.filter(is_active=True, component_info=component):
 				self.__update_auth_appid(auth_appid, weixin_api, component, update_fail_auth_appid)
 
-			print u"更新失败重试数" + str(len(update_fail_auth_appid))
+			print "更新失败重试数" + str(len(update_fail_auth_appid))
 			if update_fail_auth_appid:
 				for auth_appid in update_fail_auth_appid:
 					self.__update_auth_appid(auth_appid, weixin_api, component)
@@ -183,3 +188,16 @@ class Command(BaseCommand):
 				if user_profile.is_oauth:
 					UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=True, is_oauth=False)
 
+	def __get_component_token_retry(self, weixin_api=None, component = None):
+		try:
+			result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
+			print 'justing,retry :\n{}'.format(result)
+			#watchdog_info('call weixin api: get_component_token , result:{}'.format(result))
+			if result.has_key('errcode'):
+				success = False
+				watchdog_error('call weixin api: get_component_token , result:{}'.format(result))
+			else:
+				success = True
+			return result, success
+		except:
+			return None, False

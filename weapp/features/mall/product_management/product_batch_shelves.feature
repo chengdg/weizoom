@@ -182,7 +182,7 @@ Scenario:2 对下架商品进行批量上架
 
 @mall2 @product @saleingProduct @toSaleProduct
 Scenario:3 待售商品上架后，排序重复，自动变为0
-	When jobs-下架商品'叫花鸡'
+	When jobs'下架'商品'叫花鸡'
 	And jobs更新商品'东坡肘子'
 		"""
 		{

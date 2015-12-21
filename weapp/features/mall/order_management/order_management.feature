@@ -207,7 +207,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		}
 		"""
 	#jobs修改完价格，后台的订单号会多一个加后缀的单号
-	Then jobs能获得订单"001"
+	Then jobs能获得订单'001'
 		"""
 		{
 			"order_no": "001-100",
@@ -226,7 +226,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"001"
+	Then bill手机端获取订单'001'
 		"""
 		{
 			"order_no": "001",
@@ -260,7 +260,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		}
 		"""
 	Given jobs登录系统
-	Then jobs能获得订单"001"
+	Then jobs能获得订单'001'
 		"""
 		{
 			"order_no": "001-100",
@@ -355,7 +355,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 		}
 		"""
 	#jobs修改完价格，后台的订单号会多一个加后缀的单号
-	Then jobs能获得订单"002"
+	Then jobs能获得订单'002'
 		"""
 		{
 			"order_no": "002-400",
@@ -376,7 +376,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"002"
+	Then bill手机端获取订单'002'
 		"""
 		{
 			"order_no": "002",
@@ -412,7 +412,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 		}
 		"""
 	Given jobs登录系统
-	Then jobs能获得订单"002"
+	Then jobs能获得订单'002'
 		"""
 		{
 			"order_no": "002-400",
@@ -503,7 +503,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 		}]
 		"""
 	When jobs'支付'订单'003'
-	Then jobs能获得订单"003"
+	Then jobs能获得订单'003'
 		"""
 		{
 			"order_no": "003",
@@ -524,7 +524,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 		}
 		"""
 	When jobs'申请退款'订单'003'
-	Then jobs能获得订单"003"
+	Then jobs能获得订单'003'
 		"""
 		{
 			"order_no": "003",
@@ -545,7 +545,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"003"
+	Then bill手机端获取订单'003'
 		"""
 		{
 			"order_no": "003",
@@ -590,7 +590,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 		"""
 
 	When jobs通过财务审核'退款成功'订单'003'
-	Then jobs能获得订单"003"
+	Then jobs能获得订单'003'
 		"""
 		{
 			"order_no": "003",
@@ -611,7 +611,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"003"
+	Then bill手机端获取订单'003'
 		"""
 		{
 			"order_no": "003",
@@ -718,7 +718,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}
 		"""
 	Given jobs登录系统
-	Then jobs能获得订单"004"
+	Then jobs能获得订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -743,7 +743,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		 	"order_no": "004"
 		}]
 		"""
-	Then jobs能获得订单"004"
+	Then jobs能获得订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -763,7 +763,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"004"
+	Then bill手机端获取订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -780,8 +780,8 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}
 		"""
 	Given jobs登录系统
-	When jobs完成订单"004"
-	Then jobs能获得订单"004"
+	When jobs完成订单'004'
+	Then jobs能获得订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -801,7 +801,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"004"
+	Then bill手机端获取订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -819,7 +819,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		"""
 	Given jobs登录系统
 	When jobs'申请退款'订单'004'
-	Then jobs能获得订单"004"
+	Then jobs能获得订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -839,7 +839,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"004"
+	Then bill手机端获取订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -880,7 +880,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}]
 		"""
 	When jobs通过财务审核'退款成功'订单'004'
-	Then jobs能获得订单"004"
+	Then jobs能获得订单'004'
 		"""
 		{
 			"order_no": "004",
@@ -900,7 +900,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}
 		"""
 	When bill访问jobs的webapp
-	Then bill手机端获取订单"004"
+	Then bill手机端获取订单'004'
 		"""
 		{
 			"order_no": "004",

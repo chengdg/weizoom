@@ -145,7 +145,7 @@ def step_impl(context, user):
     bdd_util.assert_list(expected, actual)
 
 
-@when(u'快递100发送物流单号"{express_number}"完成的信息')
+@when(u"快递100发送物流单号'{express_number}'完成的信息")
 def step_impl(context, express_number):
     """
     参考test_analog_push_data（tools/express/views.py）

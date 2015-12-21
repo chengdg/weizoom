@@ -48,7 +48,7 @@ W.view.common.RichTextEditor = Backbone.View.extend({
             initialContent: '',
             emotionLocalization:true,
             elementPathEnabled: false,
-            pasteplain: true,
+            // pasteplain: true,
             maximumWords: maxCount,
             wordCountMsg:'<span style="color:#333;">已输入{#count}个字符, 还可输入{#leave}个字符</span>',
             wordOverFlowMsg:'<span style="color:red;">已超出{#overflow}个字符！</span>',
@@ -70,7 +70,7 @@ W.view.common.RichTextEditor = Backbone.View.extend({
         } else if (this.type == 'full') {
             $.extend(this.editorOptions, {
                 toolbars: [['bold', 'italic', 'underline', "forecolor", "backcolor", '|', "insertunorderedlist","insertorderedlist", '|', 'link', 'insertframe', 'emotion', 'insertimage', 'fullscreen'],
-                            ['justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'paragraph', 'fontfamily', 'fontsize', '|', 'lineheight', '|', "inserttable", '|', "removeformat", '|', 'source']]
+                            ['justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'paragraph', 'fontfamily', 'fontsize', '|', 'lineheight', '|', "inserttable", '|', "removeformat"]]
             });
         } else if (this.type == 'code') {
             $.extend(this.editorOptions, {

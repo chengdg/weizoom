@@ -31,7 +31,7 @@ def check_weizoom_card(request):
 	name = request.POST.get('name','')
 	password = request.POST.get('password','')
 	data = dict()
-	msg, weizoom_card = module_api.check_weizoom_card(name, password,request.webapp_user, request.webapp_owner_id)
+	msg, weizoom_card = module_api.check_weizoom_card(name, password,request.webapp_user,request.member,request.webapp_owner_id,request.user_profile.webapp_id)
 	if msg:
 		return create_response(500, msg)
 	weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card.weizoom_card_rule_id)
