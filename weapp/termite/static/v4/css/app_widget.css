@@ -67,16 +67,14 @@
 }
 .wui-appParticipantResult-Cover .wui-qrcode{
 	background: rgba(0, 0, 0, 0) url("/static_v2/img/qrcode.png") no-repeat scroll 0 0 / 100% auto;
-	height: 60%;
-	width: 75%;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	position: fixed;
-	padding-top: 15%;
-	padding-left: 15%;
-	top: 10%;
-	left: 4%;
+    border-radius: 3px;
+    height: 75%;
+    left: 4%;
+    padding-left: 15%;
+    padding-top: 5%;
+    position: fixed;
+    top: 10%;
+    width: 75%;
 }
 .wui-appParticipantResult-Cover .wui-i-successIcon {
 	border: 5px solid #59c969;
@@ -719,4 +717,25 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-i-uploadimg .xui-uploadImg{
     width: 45px;
     height: 45px;
+}
+/*需关注可参与*/
+.wui-appParticipantResult-Cover .wui-i-permissionIcon {
+    border: 1px solid #b20000;
+    border-radius: 50%;
+    color: #b20000;
+    display: inline-block;
+    font-size: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin: 0 5px 5px auto;
+    text-align: center;
+    width: 20px;
+}
+.wui-appParticipantResult-Cover .wui-i-permissionText {
+    color: #b20000;
+    display: inline-block;
+    font-size: 18px;
+    line-height: 30px;
+    margin-top: 4%;
+    text-align: center;
 }
