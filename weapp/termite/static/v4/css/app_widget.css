@@ -62,6 +62,7 @@
 	padding-bottom: 5%;
 	top: 10%;
 	left: 12%;
+	text-align: center;
 	/*margin: 0px auto;*/
 	/*margin-top: 30%;*/
 }
@@ -738,4 +739,20 @@ p.wui-i-start_time,p.wui-i-end_time{
     line-height: 30px;
     margin-top: 4%;
     text-align: center;
+}
+/*无需关注即可参与*/
+.wui-appParticipantResult-Cover .wui-i-successQRIcon {
+    border: 1px solid #4AB700;
+    border-radius: 50%;
+    width: 20px;
+    text-align: center;
+    display: inline-block;
+	color: #4AB700;
+}
+.wui-appParticipantResult-Cover .wui-i-successQRText {
+    display: inline-block;
+    color: green;
+}
+.wui-i-successQRinfo {
+    padding: 10px 30px 10px 30px;
 }
