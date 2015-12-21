@@ -359,11 +359,12 @@
                     //必须关注才可以参与的活动
                     if (W.permission == 'member') {
                         if (!W.isMember) {
-                            $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                                    '<div class="wui-i-permissionIcon">&#33</div>' +
-                                    '<div class="wui-i-permissionText">请关注后进行参与！</div>'+
-                                    '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
-                                    '</div><div></div>');
+                            $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-i-background">' +
+                                    '<div class="wui-i-topText"><div class="wui-i-permissionIcon">&#33</div>' +
+                                    '<div class="wui-i-permissionText">请关注后进行参与&#33</div></div>'+
+                                    '<div class="wui-i-qrcode"><img height="205px" width="205px" src="' + W.qrcodeUrl + '"></div>' +
+                                    '<div class="wui-i-bottomText">长按二维码可关注我们</div>'+
+                                    '<div></div>');
                         }
                     }
                     $('.selection-radio').click(function(event){
@@ -459,19 +460,19 @@
                         }
 
                         //必须关注才可以参与的活动
-                        if (W.permission != 'member') {
-                            if (W.isMember == true) {
-                                getParticipance(participanceData,$submitButtonContainer);
+                        //if (W.permission != 'member') {
+                        //    if (W.isMember == true) {
+                        //        getParticipance(participanceData,$submitButtonContainer);
 
-                            } else {
-                                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
-                                        '</div><div></div>');
-                            }
-                        }
-                        else{
-                            getParticipance(participanceData,$submitButtonContainer);
-                        }
+                        //    } else {
+                        //        $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                        //                '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                        //                '</div><div></div>');
+                        //    }
+                        //}
+                        //else{
+                        getParticipance(participanceData,$submitButtonContainer);
+                        //}
 
                     });
                 }
