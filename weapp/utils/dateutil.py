@@ -25,7 +25,6 @@ def get_current_date():
 def datetime2string(at):
 	if at == None:
 		return None
-
 	if isinstance(at,str):
 		return at
 	return at.strftime(DATETIME_FORMAT)
@@ -34,6 +33,8 @@ def datetime2string(at):
 def date2string(at):
 	if at == None:
 		return None
+	if isinstance(at, str):
+		return at
 	return at.strftime(DATE_FORMAT)
 
 # 将"yyyy-MM-dd HH:mm:ss"字符串转成datetime
