@@ -92,7 +92,7 @@ Copyright (c) 2011-2012 Weizoom Inc
 		 * @return {[type]}      [description]
 		 */
 		calculPrice: function(args){
-			var price = (args.price).toFixed(2);	
+			var price = parseFloat(args.price).toFixed(2);	
 			var isUserHasPromotion = false;
 			if(args.productPromotion){
 				// 促销是否对此用户开发
