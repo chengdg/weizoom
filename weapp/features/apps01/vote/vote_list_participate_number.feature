@@ -14,17 +14,17 @@ Background:
 			"end_date":"5天后",
 			"authority":"无需关注即可参与",
 			"prize_type":"无奖励",
-			"choose":
+			"text_options":
 				[{
-					"title":"选择题1",
+					"title":"选择题",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		}]
@@ -40,18 +40,22 @@ Background:
 			"authority":"必须关注才可参与",
 			"prize_type":"积分",
 			"integral":20,
-			"quick":
-				{
-					"name":"ture",
-					"phone":"false",
-					"item":[{
-						"name":"填写项1",
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":true
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				}
+				}]
 		}]
 		"""
 

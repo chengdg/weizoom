@@ -28,43 +28,49 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 					}]
 				},{
 					"title":"选择题2",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"option":[{
-							"options":"A"
+					"options":[{
+							"option":"A"
 						},{
-							"options":"B"
+							"option":"B"
 						},{
-							"options":"C"
+							"option":"C"
 					}]
 				}],
-			"quick":
-				{
-					"name":"false",
-					"phone":"true",
-					"email":"true",
-					"item":[{
-						"name":"填写项1",
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":true
+						},{
+							"item_name":"邮箱",
+							"is_selected":true
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				}
+				}]
 		}]
 		"""
 
@@ -92,17 +98,17 @@ Scenario:1 访问微信投票的统计
 				"valid_parti_person_count":4,
 				"选择题1(单选)":
 					[{
-						"options":"1":
+						"option":"1":
 						{
 							"parti_person_count":2,
 							"percent":50%
 						},
-						"options":"2":
+						"option":"2":
 						{
 							"parti_person_count":1,
 							"percent":25%
 						},
-						"options":"3":
+						"option":"3":
 						{
 							"parti_person_count":1,
 							"percent":25%
@@ -112,17 +118,17 @@ Scenario:1 访问微信投票的统计
 					"valid_parti_person_count":4,
 					"选择题2(多选)":
 					[{
-						"options":"A":
+						"option":"A":
 						{
 							"parti_person_count":2,
 							"percent":50%
 						},
-						"options":"B":
+						"option":"B":
 						{
 							"parti_person_count":2,
 							"percent":50%
 						},
-						"options":"C":
+						"option":"C":
 						{
 							"parti_person_count":0,
 							"percent":0%

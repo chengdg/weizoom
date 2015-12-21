@@ -35,43 +35,49 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 					}]
 				},{
 					"title":"选择题2",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"option":[{
-							"options":"A"
+					"options":[{
+							"option":"A"
 						},{
-							"options":"B"
+							"option":"B"
 						},{
-							"options":"C"
+							"option":"C"
 					}]
 				}],
-			"quick":
-				{
-					"name":"false",
-					"phone":"true",
-					"email":"true",
-					"item":[{
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":true
+						},{
+							"item_name":"邮箱",
+							"is_selected":true
+						}],
+				"items_add":[{
 						"name":"填写项1",
 						"is_required":"是"
 					},{
 						"name":"填写项2",
 						"is_required":"否"
 					}]
-				}
+				}]
 		}]
 		"""
 
@@ -81,11 +87,11 @@ Background:
 	When tom2关注jobs的公众号
 
 	When 微信用户批量参加jobs的微信投票活动
-		| name       | member_name | survey_time |choose  |    quick                         |
-		| 微信投票01 | bill        |2天前        | 1,AB   |bill,15111223344,1234@qq.com,11   |
-		| 微信投票01 | tom         |昨天         | 2,B    |tom, 15211223344,2234@qq.com,22   |
-		| 微信投票01 | tom1        |今天         | 1,B    |tom1,153211223344,3234@qq.com,33  |
-		| 微信投票01 | tom2        |今天         | 3,A    |tom2,15411223344,4234@qq.com,44   |
+		| name       | member_name | survey_time |text_options  |    participate_info              |
+		| 微信投票01 | bill        |2天前        | 1,AB         |bill,15111223344,1234@qq.com,11   |
+		| 微信投票01 | tom         |昨天         | 2,B          |tom, 15211223344,2234@qq.com,22   |
+		| 微信投票01 | tom1        |今天         | 1,B          |tom1,153211223344,3234@qq.com,33  |
+		| 微信投票01 | tom2        |今天         | 3,A          |tom2,15411223344,4234@qq.com,44   |
 
 @apps @vote
 Scenario:1 查看结果列表
@@ -258,11 +264,7 @@ Scenario:3 查看结果列表分页
 
 	When jobs访问微信抽奖活动'微信抽奖01'的结果列表上一页
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		
-
 		| member_name | survey_time |
-		
-
 		| tom         |昨天         |
 
 @apps @vote

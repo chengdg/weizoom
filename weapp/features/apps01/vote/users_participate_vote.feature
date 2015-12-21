@@ -15,17 +15,17 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 			"end_date":"5天后",
 			"authority":"无需关注即可参与",
 			"prize_type":"无奖励",
-			"choose":
+			"text_options":
 				[{
-					"title":"选择题1",
+					"title":"文本选项",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		}]
@@ -44,7 +44,7 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 		When bill参加微信投票活动'微信投票01'于'今天'
 			"""
 			{
-				"选择题":"1"
+				"文本选项":"1"
 			}
 			"""
 		Then bill获得提示"提交成功"
@@ -54,7 +54,7 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 		When tom参加微信投票活动'微信投票01'于'今天'
 			"""
 			{
-				"选择题":"2"
+				"文本选项":"2"
 			}
 			"""
 		Then tom获得提示"提交成功"
@@ -63,7 +63,7 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 		When lily参加微信投票活动'微信投票01'于'今天'
 			"""
 			{
-				"选择题":"1"
+				"文本选项":"1"
 			}
 			"""
 		Then lily获得提示"提交成功"
@@ -90,18 +90,22 @@ Scenario:2 微信投票-积分-必须关注才可参与
 			"authority":"必须关注才可参与",
 			"prize_type":"积分",
 			"integral":20,
-			"quick":
-				{
-					"name":"ture",
-					"phone":"false",
-					"item":[{
-						"name":"填写项1",
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":false
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				}
+				}]
 		}]
 		"""
 
@@ -188,42 +192,46 @@ Scenario:3 微信投票-优惠券-无需关注即可参与
 			"authority":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"否",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				},{
 					"title":"选择题2",
 					"single_or_multiple":"多选",
 					"is_required":"是",
-					"option":[{
-							"options":"A"
+					"options":[{
+							"option":"A"
 						},{
-							"options":"B"
+							"option":"B"
 						},{
-							"options":"C"
+							"option":"C"
 						}]
 				}],
-			"quick":
-				{
-					"name":"ture",
-					"phone":"false",
-					"item":[{
-						"name":"填写项1",
-						"is_required":"否"
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":false
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
+						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				}
+				}]
 		}]
 		"""
 

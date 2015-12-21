@@ -36,17 +36,17 @@ Background:
 			"end_date":"2天后",
 			"authority":"必须关注才可参与",
 			"prize_type":"无奖励",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		},{
@@ -58,17 +58,17 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":20,
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		},{
@@ -80,17 +80,17 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		}]
@@ -110,33 +110,47 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 			"authority":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":10,
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}],
-			"quick":
-				{
-					"name":"ture",
-					"phone":"false",
-					"item":[{
-						"name":"填写项1",
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":true
+						},{
+							"item_name":"邮箱",
+							"is_selected":true
+						},{
+							"item_name":"QQ",
+							"is_selected":true
+						},{
+							"item_name":"职位",
+							"is_selected":true
+						},{
+							"item_name":"住址",
+							"is_selected":false
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				}
-
-
+				}]
 		}
 		"""
 	Then jobs获得微信投票活动'微信投票001'
@@ -150,33 +164,47 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 			"authority":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":10,
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}],
-			"quick":
-				{
-					"name":"ture",
-					"phone":"false",
-					"item":[{
-						"name":"填写项1",
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":true
+						},{
+							"item_name":"邮箱",
+							"is_selected":true
+						},{
+							"item_name":"QQ",
+							"is_selected":true
+						},{
+							"item_name":"职位",
+							"is_selected":true
+						},{
+							"item_name":"住址",
+							"is_selected":false
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
-				}
-
-
+				}]
 		}
 		"""
 

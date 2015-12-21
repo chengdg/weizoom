@@ -46,17 +46,17 @@ Background:
 			"end_date":"2天后",
 			"authority":"必须关注才可参与",
 			"prize_type":"无奖励",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		},{
@@ -68,17 +68,17 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":20,
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		},{
@@ -90,17 +90,17 @@ Background:
 			"authority":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"choose":
+			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"option":[{
-							"options":"1"
+					"options":[{
+							"option":"1"
 						},{
-							"options":"2"
+							"option":"2"
 						},{
-							"options":"3"
+							"option":"3"
 						}]
 				}]
 		}]
