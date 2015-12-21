@@ -128,9 +128,16 @@
                 redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
             }
             else{
-                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                '<img height="195px" width="195px" src="'+ W.qrcodeUrl+'">' +
-                '</div><div></div>');
+                var $node = $('\
+                <div class="wui-appParticipantResult-Cover">\
+                    <div class="wui-i-background">\
+                        <div class="wui-i-successQRcode"></div>\
+                        <div class="wui-i-successQRcodeText">长按二维码可关注我们</div>\
+                    </div>\
+                </div>');
+                $node.find('.wui-i-successQRcode').append('<img height="205px" width="205px" src="' + W.qrcodeUrl + '">');
+                $node.height(document.body.scrollHeight);
+                $('body').append($node);
             }
         });
     });

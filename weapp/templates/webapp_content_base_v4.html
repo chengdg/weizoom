@@ -27,7 +27,6 @@
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/webapp_default.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">
-        <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/app_widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/css/common_widget.css">
         <link type="text/css" rel="stylesheet" href="/termite_static/v4/css/idangerous.swiper.css">
         <link rel="stylesheet" type="text/css" href="/static_v2/css/cloudHousekepper.css">
@@ -356,6 +355,20 @@
                     }
                 }
                 else{
+                    //必须关注才可以参与的活动
+                    if (W.permission == 'member') {
+                        if (!W.isMember) {
+                            var $node = $('\
+                                    <div class="wui-appParticipantResult-Cover"><div class="wui-i-background">\
+                                    <div class="wui-i-topText"><div class="wui-i-permissionIcon">&#33</div>\
+                                    <div class="wui-i-permissionText">请关注后进行参与&#33</div></div>\
+                                    <div class="wui-i-qrcode"><img height="205px" width="205px" src="' + W.qrcodeUrl + '"></div>\
+                                    <div class="wui-i-bottomText">长按二维码可关注我们</div>\
+                                    <div></div>');
+                            $node.height(document.body.scrollHeight);
+                            $('body').append($node);
+                        }
+                    }
                     $('.selection-radio').click(function(event){
                         var $span = $(event.currentTarget);
                         $span.parents('ul').find('label').find('span :first').removeClass('radio-select');
@@ -449,19 +462,19 @@
                         }
 
                         //必须关注才可以参与的活动
-                        if (W.permission == 'member') {
-                            if (W.isMember == true) {
-                                getParticipance(participanceData,$submitButtonContainer);
+                        //if (W.permission != 'member') {
+                        //    if (W.isMember == true) {
+                        //        getParticipance(participanceData,$submitButtonContainer);
 
-                            } else {
-                                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
-                                        '</div><div></div>');
-                            }
-                        }
-                        else{
-                            getParticipance(participanceData,$submitButtonContainer);
-                        }
+                        //    } else {
+                        //        $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                        //                '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                        //                '</div><div></div>');
+                        //    }
+                        //}
+                        //else{
+                        getParticipance(participanceData,$submitButtonContainer);
+                        //}
 
                     });
                 }

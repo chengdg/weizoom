@@ -62,21 +62,9 @@
 	padding-bottom: 5%;
 	top: 10%;
 	left: 12%;
+	text-align: center;
 	/*margin: 0px auto;*/
 	/*margin-top: 30%;*/
-}
-.wui-appParticipantResult-Cover .wui-qrcode{
-	background: rgba(0, 0, 0, 0) url("/static_v2/img/qrcode.png") no-repeat scroll 0 0 / 100% auto;
-	height: 60%;
-	width: 75%;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	position: fixed;
-	padding-top: 15%;
-	padding-left: 15%;
-	top: 10%;
-	left: 4%;
 }
 .wui-appParticipantResult-Cover .wui-i-successIcon {
 	border: 5px solid #59c969;
@@ -719,4 +707,50 @@ p.wui-i-start_time,p.wui-i-end_time{
 .wui-i-uploadimg .xui-uploadImg{
     width: 45px;
     height: 45px;
+}
+/*需关注可参与*/
+.wui-appParticipantResult-Cover .wui-i-topText{
+	text-align: center;
+}
+.wui-appParticipantResult-Cover .wui-i-permissionIcon {
+    border: 1px solid #b20000;
+    border-radius: 50%;
+    color: #b20000;
+    display: inline-block;
+    font-size: 18px;
+    height: 20px;
+    line-height: 20px;
+    margin: 0 5px 5px auto;
+    text-align: center;
+    width: 20px;
+}
+.wui-appParticipantResult-Cover .wui-i-permissionText {
+    color: #b20000;
+    display: inline-block;
+    line-height: 30px;
+    text-align: center;
+}
+.wui-appParticipantResult-Cover .wui-i-qrcode{
+	padding-top:10px;
+	padding-bottom: 10px;
+}
+.wui-appParticipantResult-Cover .wui-i-bottomText{
+
+}
+/*无需关注即可参与*/
+.wui-appParticipantResult-Cover .wui-i-successQRIcon {
+    border: 1px solid #4AB700;
+    border-radius: 50%;
+    width: 20px;
+	height: 20px;
+    text-align: center;
+    display: inline-block;
+	color: #4AB700;
+}
+.wui-appParticipantResult-Cover .wui-i-successQRText {
+    display: inline-block;
+    color: green;
+}
+.wui-i-successQRinfo {
+    padding: 10px 20px 5px 20px;
 }

@@ -32,7 +32,21 @@ var initDom = function(options) {
     }
     if ($result.length === 0) {
         var $body = $('body');
-        var $node = $('\
+        //非必须关注可参与的，参与成功之后弹出关注二维码
+        if (!W.isMember){
+            var $node = $('\
+            <div class="wui-appParticipantResult-Cover">\
+                <div class="wui-i-background">\
+                    <div class="wui-i-successQRIcon">&#10003</div>\
+                    <div class="wui-i-successQRText">提交成功</div>\
+                    <div class="wui-i-successQRinfo"><div class="wui-i-info-prize">恭喜您获得了<span class="xa-appParticipantResult-prizeContent"></span>，请关注后进个人中心查看！</div></div>\
+                    <div class="wui-i-successQRcode"></div>\
+                    <div class="wui-i-successQRcodeText">长按二维码可关注我们</div>\
+                    <div class="wui-i-close xa-closeParticipantResult">&#10005</div>\
+                </div>\
+            </div>');
+        }else{
+            var $node = $('\
             <div class="wui-appParticipantResult-Cover">\
                 <div class="wui-i-background">\
                     <div class="wui-i-successIcon">&#10003</div>\
@@ -41,6 +55,7 @@ var initDom = function(options) {
                     <div class="wui-i-close xa-closeParticipantResult">&#10005</div>\
                 </div>\
             </div>');
+        }
         $node.height(document.body.scrollHeight);
         if (actionButtons) {
             var $buttonContainer = $('<div>');
@@ -56,6 +71,9 @@ var initDom = function(options) {
         } else {
             $node.find('.wui-i-info-prize').remove();
         }
+        if(!W.isMember){
+            $node.find('.wui-i-successQRcode').append('<img height="205px" width="205px" src="' + W.qrcodeUrl + '">')
+        }
         $body.append($node);
 
         $('.xa-closeParticipantResult').on('click', function(event) {
@@ -66,25 +84,20 @@ var initDom = function(options) {
             var url = $link.data('href');
             var text = $link.text();
             if (text.replace(/(^\s*)|(\s*$)/g,'') === '个人中心' && !W.isMember){
-                $('.wui-appParticipantResult-Cover').html('<div class="wui-qrcode">' +
-                '<img height="205px" width="205px" style="margin-top:-2%;margin-left:-3%;" src="'+W.qrcodeUrl+'">' +
-                '</div><div>');
+                $('.wui-appParticipantResult-Cover').show()
             }
             else{
                 $('.wui-appParticipantResult-Cover').hide();
                 redirectTo(url);
             }
-
-
-
         });
     } else {
         $('.xa-appParticipantResult-prizeContent').text(prize);
         $result.show();
     }
-}
+};
 
 $.fn.alertParticipantResult = function(options) {
     initDom(options);
 };
-} (Zepto))
+} (Zepto));
