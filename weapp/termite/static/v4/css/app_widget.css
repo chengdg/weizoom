@@ -742,6 +742,7 @@ p.wui-i-start_time,p.wui-i-end_time{
     border: 1px solid #4AB700;
     border-radius: 50%;
     width: 20px;
+	height: 20px;
     text-align: center;
     display: inline-block;
 	color: #4AB700;
@@ -751,5 +752,5 @@ p.wui-i-start_time,p.wui-i-end_time{
     color: green;
 }
 .wui-i-successQRinfo {
-    padding: 10px 30px 10px 30px;
+    padding: 10px 20px 5px 20px;
 }
