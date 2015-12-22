@@ -271,6 +271,11 @@ W.dialog.termite.SelectImagesDialog = W.dialog.Dialog.extend({
             data.type = "usedImage";
         }
         data.images = this.selectedImages.toJSON();
-        return data;
+        if (data.images.length == 0) {
+            W.getErrorHintView().show('请先选择图片！');
+            return ""
+        } else {
+            return data;
+        }
     }
 });
