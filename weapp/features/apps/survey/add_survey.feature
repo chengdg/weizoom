@@ -1,6 +1,7 @@
 #_author_:张三香 2015.11.13
 
 Feature: 新建用户调研活动
+	#修改备注：原来的'快捷模块'名称改成'参与人信息'
 
 Background:
 	Given jobs登录系统
@@ -108,12 +109,12 @@ Scenario:2 新建用户调研活动,添加'选择题'模块,积分奖励
 		"""
 
 @apps @survey @add_survey
-Scenario:3 新建用户调研活动,添加'快捷模块',优惠券奖励
+Scenario:3 新建用户调研活动,添加'参与人信息'模块,优惠券奖励
 	Given jobs登录系统
 	When jobs新建用户调研活动
 		"""
 		[{
-			"title":"快捷模块用户调研",
+			"title":"参与人信息模块用户调研",
 			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
@@ -121,7 +122,7 @@ Scenario:3 新建用户调研活动,添加'快捷模块',优惠券奖励
 			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
-			"quick":
+			"participate_info":
 				[{
 					"items_select":
 						[{
@@ -151,7 +152,7 @@ Scenario:3 新建用户调研活动,添加'快捷模块',优惠券奖励
 	Then jobs获得用户调研列表
 		"""
 		[{
-			"name":"快捷模块用户调研",
+			"name":"参与人信息模块用户调研",
 			"parti_person_cnt":0,
 			"prize_type":"优惠券",
 			"start_date":"今天",
@@ -227,7 +228,7 @@ Scenario:5 新建用户调研活动,添加所有模块,必须关注才可参与
 							"options":"3"
 					}]
 				}],
-			"quick":
+			"participate_info":
 				[{
 					"items_select":[{
 						"item_name":"姓名",
