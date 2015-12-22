@@ -17,7 +17,7 @@
         text-align: center;
     }
     .wui-masterinfo span{
-        margin: 0 10px;
+        margin: 0 5px;
     }
     .wui-masterinfo b {
         font-size: 0.8rem;
@@ -134,11 +134,11 @@
     {{ page_html_content|safe }}
     <div class="wui-masterinfo wa-masterinfo">
         <div style="float: left;">
-            <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
-        <span class="wa-mypower">我的助力值: <b>{% if current_member_rank_info %}{{ current_member_rank_info.power }}{% else %}0{% endif %}</b></span>
+            <span class="wa-myrange">我的排名: <b></b></span>
+        <span class="wa-mypower">我的助力值: <b></b></span>
         </div>
         <div style="float: right;">
-        <span class="wa-totalcount">参与人数: <b>{{ total_participant_count }}</b></span>
+        <span class="wa-totalcount">参与人数: <b></b></span>
         </div>
     </div>
     <div data-ui-role="swipemask" class="mask"></div>
@@ -192,7 +192,6 @@
 
 {% block js %}
 <script type="text/javascript">
-    var participances = JSON.parse(JSON.stringify({{ participances_list|safe }}));
     var is_powered = {% if is_powered %}true{% else %}false{% endif %};
     var is_self_page = {% if is_self_page %}true{% else %}false{% endif %};
     var page_owner_name = '{{ page_owner_name|safe }}';
@@ -205,17 +204,14 @@
             return false;
         }
 
-        //展示参与统计
-        showTop100();
-
         //检查活动状态,更新参与按钮并绑定事件
         updateBtnStatus();
 
         //启动倒计时
         renderTime({{ timing }});
 
-        //展示与隐藏我的排名面板
-        window.setTimeout(showMyRank, 2*1000);
+        //展示参与统计
+        showTop100();
 
         //监听分享成功事件
         $(document).on("share:success",function(data){
@@ -311,15 +307,52 @@
 
     }
 
+    //发送请求，单独获取排名数据，优化首页时间
     function showTop100(){
-        if(participances){
-            var li_content = '';
-            for(var i in participances){
-                var p = participances[i];
-                li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><i class='wui-wraper'></i><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+        W.getApi().call({
+            app: 'm/apps/powerme',
+            resource: 'm_powerme',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                member_id: '{{ request.member.id }}'
+            },
+            success: function(data) {
+                console.log(data);
+                var participances = data.participances;
+                if(participances || $.isEmptyObject(participances)){
+                    var li_content = '';
+                    for(var i in participances){
+                        var p = participances[i];
+                        li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><i class='wui-wraper'></i><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+                    }
+                    $('.wa-top100').append($(li_content));
+                }
+
+                var current_member_rank_info = data.current_member_rank_info;
+                var total_participant_count = data.total_participant_count;
+
+                if(!current_member_rank_info || $.isEmptyObject(current_member_rank_info)){
+                    $('.wa-myrange').find('b').html('无');
+                    $('.wa-mypower').find('b').html(0);
+                }else{
+                    $('.wa-myrange').find('b').html(current_member_rank_info.rank);
+                    $('.wa-mypower').find('b').html(current_member_rank_info.power);
+                }
+                $('.wa-totalcount').find('b').html(total_participant_count);
+
+                //展示与隐藏我的排名面板
+                window.setTimeout(showMyRank, 2*1000);
+            },
+            error: function(data) {
+                $("body").alert({
+                    isShow: true,
+                    info: data.errMsg,
+                    speed: 3000
+                });
             }
-            $('.wa-top100').append($(li_content));
-        }
+        });
     }
 
     function renderTime(seconds){
