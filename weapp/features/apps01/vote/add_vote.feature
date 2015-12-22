@@ -305,3 +305,110 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 			"actions": ["删除","链接","预览","统计","查看结果"]
 		}]
 		"""
+@apps @vote
+Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相同
+	#活动权限-必须关注才可参与
+	#奖励类型-优惠券
+	#包含模块-1个文本选项模块、1个图片选项模块和一个参与人信息模块
+	#状态-进行中
+
+	Given jobs登录系统
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "优惠券1",
+			"money": 100.00,
+			"count": 5,
+			"limit_counts": 1,
+			"using_limit": "满50元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon1_id_"
+		}]
+		"""
+	When jobs新建微信投票活动
+		"""
+		[{
+			"title":"多个模块微信投票",
+			"sub_title":"微信投票05",
+			"content":"多个模块微信投票内容",
+			"start_date":"今天",
+			"end_date":"明天",
+			"authority":"必须关注才可参与",
+			"prize_type":"优惠券",
+			"coupon":"优惠券1",
+			"text_options":
+				[{
+					"title":"相同的标题",
+					"single_or_multiple":"单选",
+					"is_required":"是",
+					"options":[{
+							"option":"1"
+						},{
+							"option":"2"
+						},{
+							"option":"3"
+						}]
+				}],
+			"pic_options":
+				[{
+					"title":"相同的标题",
+					"single_or_multiple":"单选",
+					"pic_show_type":"列表",
+					"is_required":"是",
+					"options":[{
+						"option":{
+							"pic":"1.jpg",
+							"pic_desc":"图片描述1"
+							},
+						"option":{
+							"pic":"2.jpg",
+							"pic_desc":"图片描述2"
+							},
+						"option":{
+							"pic":"3.jpg",
+							"pic_desc":"图片描述3"
+						}]
+				}],
+			"participate_info":[{
+				"items_select":[{
+							"item_name":"姓名",
+							"is_selected":true
+						},{
+							"item_name":"手机",
+							"is_selected":true
+						},{
+							"item_name":"邮箱",
+							"is_selected":true
+						},{
+							"item_name":"QQ",
+							"is_selected":true
+						},{
+							"item_name":"职位",
+							"is_selected":true
+						},{
+							"item_name":"住址",
+							"is_selected":false
+						}],
+				"items_add":[{
+						"item_name":"填写项1",
+						"is_required":"是"
+					},{
+						"item_name":"填写项2",
+						"is_required":"否"
+					}]
+				}]
+		}]
+		"""
+	Then jobs获得微信投票活动列表
+		"""
+		[{
+			"name":"多个模块微信投票",
+			"parti_person_cnt":0,
+			"prize_type":"优惠券",
+			"start_date":"今天",
+			"end_date":"明天",
+			"status":"进行中",
+			"actions": ["删除","链接","预览","统计","查看结果"]
+		}]
+		"""
