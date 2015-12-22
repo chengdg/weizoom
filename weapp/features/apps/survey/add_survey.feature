@@ -71,7 +71,7 @@ Scenario:2 新建用户调研活动,添加'选择题'模块,积分奖励
 			"choose":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -82,7 +82,7 @@ Scenario:2 新建用户调研活动,添加'选择题'模块,积分奖励
 						}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"
@@ -123,26 +123,28 @@ Scenario:3 新建用户调研活动,添加'快捷模块',优惠券奖励
 			"coupon":"优惠券1",
 			"quick":
 				[{
-					"items_select":[{
-						"item_name":"姓名",
-						"is_selected":false
-					},{
-						"item_name":"手机",
-						"is_selected":true
-					},{
-						"item_name":"邮箱",
-						"is_selected":true
-				}],
-					"item_add":[{
-						"item_name":"填写项1",
-						"is_required":"是"
-					},{
-						"item_name":"填写项2",
-						"is_required":"否"
-					},{
-						"item_name":"填写项3",
-						"is_required":"否"
-					}]
+					"items_select":
+						[{
+							"item_name":"姓名",
+							"is_selected":"false"
+						},{
+							"item_name":"手机",
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"true"
+						}],
+					"item_add":
+						[{
+							"item_name":"填写项1",
+							"is_required":"是"
+						},{
+							"item_name":"填写项2",
+							"is_required":"否"
+						},{
+							"item_name":"填写项3",
+							"is_required":"否"
+						}]
 				}]
 		}]
 		"""
@@ -215,7 +217,7 @@ Scenario:5 新建用户调研活动,添加所有模块,必须关注才可参与
 			"choose":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
