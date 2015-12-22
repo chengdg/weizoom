@@ -359,12 +359,15 @@
                     //必须关注才可以参与的活动
                     if (W.permission == 'member') {
                         if (!W.isMember) {
-                            $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-i-background">' +
-                                    '<div class="wui-i-topText"><div class="wui-i-permissionIcon">&#33</div>' +
-                                    '<div class="wui-i-permissionText">请关注后进行参与&#33</div></div>'+
-                                    '<div class="wui-i-qrcode"><img height="205px" width="205px" src="' + W.qrcodeUrl + '"></div>' +
-                                    '<div class="wui-i-bottomText">长按二维码可关注我们</div>'+
-                                    '<div></div>');
+                            var $node = $('\
+                                    <div class="wui-appParticipantResult-Cover"><div class="wui-i-background">\
+                                    <div class="wui-i-topText"><div class="wui-i-permissionIcon">&#33</div>\
+                                    <div class="wui-i-permissionText">请关注后进行参与&#33</div></div>\
+                                    <div class="wui-i-qrcode"><img height="205px" width="205px" src="' + W.qrcodeUrl + '"></div>\
+                                    <div class="wui-i-bottomText">长按二维码可关注我们</div>\
+                                    <div></div>');
+                            $node.height(document.body.scrollHeight);
+                            $('body').append($node);
                         }
                     }
                     $('.selection-radio').click(function(event){
