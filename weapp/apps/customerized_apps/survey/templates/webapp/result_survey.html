@@ -182,9 +182,7 @@
                 redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
             }
             else{
-                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                '<img height="195px" width="195px" src="'+ W.qrcodeUrl+'">' +
-                '</div><div></div>');
+                $('.wui-appParticipantResult-Cover').show()
             }
         });
     });
