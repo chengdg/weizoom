@@ -25,7 +25,7 @@ Background:
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
@@ -46,7 +46,7 @@ Background:
 							"options":"3"
 					}]
 				}],
-			"quick":
+			"participate_info":
 				[{
 					"items_select":[{
 						"item_name":"姓名",
