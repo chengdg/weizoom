@@ -116,7 +116,7 @@ Scenario:1 用户调研活动列表查询
 		"""
 		[{
 			"name":"已结束用户调研03",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"优惠券",
 			"start_date":"3天前",
 			"end_date":"昨天",
@@ -124,7 +124,7 @@ Scenario:1 用户调研活动列表查询
 			"actions":["删除","链接","预览","统计","查看结果"]
 		},{
 			"name":"进行中用户调研02",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"积分",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -132,7 +132,7 @@ Scenario:1 用户调研活动列表查询
 			"actions":["关闭","链接","预览","统计","查看结果"]
 		},{
 			"name":"未开始用户调研01",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"无奖励",
 			"start_date":"明天",
 			"end_date":"2天后",
@@ -342,7 +342,7 @@ Scenario:1 用户调研活动列表查询
 			"""
 			[{
 				"name":"已结束用户调研03",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"优惠券",
 				"start_date":"3天前",
 				"end_date":"昨天",

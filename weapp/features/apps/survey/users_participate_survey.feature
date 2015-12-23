@@ -83,7 +83,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 			"""
 			[{
 				"name":"用户调研01",
-				"parti_person_cnt":3,
+				"participant_count":3,
 				"prize_type":"优惠券"
 			}]
 			"""
@@ -177,7 +177,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 			"""
 			[{
 				"name":"用户调研02",
-				"parti_person_cnt":1,
+				"participant_count":1,
 				"prize_type":"积分"
 			}]
 			"""
@@ -391,7 +391,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			[{
 				"name":"未开始用户调研",
 				"status":"未开始",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"无奖励"
 			}]
 			"""
@@ -413,7 +413,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			[{
 				"name":"未开始用户调研",
 				"status":"未开始",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"无奖励"
 			}]
 			"""
@@ -435,7 +435,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			[{
 				"name":"未开始用户调研",
 				"status":"未开始",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"无奖励"
 			}]
 			"""
@@ -506,7 +506,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			[{
 				"name":"已结束用户调研",
 				"status":"已结束",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"无奖励"
 			}]
 			"""
@@ -528,7 +528,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			[{
 				"name":"已结束用户调研",
 				"status":"已结束",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"无奖励"
 			}]
 			"""
@@ -550,7 +550,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			[{
 				"name":"已结束用户调研",
 				"status":"已结束",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"无奖励"
 			}]
 			"""

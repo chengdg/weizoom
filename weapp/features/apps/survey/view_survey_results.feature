@@ -101,7 +101,7 @@ Scenario:1 查看结果列表
 		"""
 		[{
 			"name":"用户调研01",
-			"parti_person_cnt":4,
+			"participant_count":4,
 			"prize_type":"优惠券",
 			"start_date":"5天前",
 			"end_date":"2天后",
