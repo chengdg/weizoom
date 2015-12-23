@@ -109,7 +109,7 @@ Background:
 		}]
 		"""
 
-@apps @survey
+@apps @survey @survey_list
 Scenario:1 用户调研活动列表查询
 	Given jobs登录系统
 	Then jobs获得用户调研活动列表
@@ -350,7 +350,7 @@ Scenario:1 用户调研活动列表查询
 			}]
 			"""
 
-@apps @survey
+@apps @survey @survey_list
 Scenario:2 用户调研活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
