@@ -30,7 +30,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
@@ -99,7 +99,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"积分",
 			"integral":100,
 			"choose":
@@ -206,7 +206,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":100,
 			"choose":
@@ -239,7 +239,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
@@ -253,7 +253,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"answer":
@@ -339,7 +339,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			"content":"欢迎参加调研",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
 			"choose":
 				[{
@@ -454,7 +454,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			"content":"欢迎参加调研",
 			"start_date":"2天前",
 			"end_date":"昨天",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
 			"choose":
 				[{
