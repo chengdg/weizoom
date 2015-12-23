@@ -639,7 +639,7 @@ def __get_surveyPageJson(args):
 			},
 			"components": []
 		}
-	__textitem_temple= {
+	__itemadd_temple= {
 					"type": "appkit.textitem",
 					"cid": "",
 					"pid": "",
@@ -667,6 +667,9 @@ def __get_surveyPageJson(args):
 	textlist_arr = args['textlist']
 	for textlist in textlist_arr:
 
+		items_arr = textlist['items_select']
+		itemsadd_arr = textlist['item_add']
+
 		cur_pid = next_pid #1
 		cur_cid = next_cid #12...
 		cur_index = next_index #6...
@@ -675,65 +678,56 @@ def __get_surveyPageJson(args):
 		next_cid = cur_cid+1 #13...
 		next_index = cur_index+1 #7...
 
-		items_arr = textlist['items_select']
-		itemsadd_arr = textlist['item_add']
+		textlist_temple = __textlist_temple
+		textlist_temple['pid'] = cur_pid
+		textlist_temple['cid'] = cur_cid
+		textlist_temple['model']['index'] = cur_index
+		textlist_temple['model']['items'] = [] #内序列
+		textlist_temple['components'] = [] #内部组件
 
+
+		modules = {}
 		for item in items_arr:
 			item_name = __name2textlist(item['item_name'])
-			is_selected = item['is_selected']
+			is_selected = __bool2Bool(item['is_selected'])
+			modules[item_name] = {'select':is_selected}
 
+		textlist_temple['model']['modules']=modules
 
 		for itemadd in itemsadd_arr:
+
 			itemadd_name = itemadd['item_name']
-			is_required = itemadd['is_required']
+			is_required = __bool2Bool(itemadd['is_required'])
 
-#########################################################
-##上面的结构整理清楚了，可以根据上面的结构来写
-	textlist_components = []
-	textlist_items = []
+			#内部的id处理
+			sub_cur_pid = cur_cid #1
+			cur_cid = next_cid #7...
+			# cur_index = next_index
 
+			# next_pid = cur_cid #1
+			next_cid = cur_cid+1 #8...
+			# next_index = cur_index+1 #6...
 
-	textlist_arr = args["textlist"]
-	textlist_len = len(textlist_arr)
+			itemadd_temple = __itemadd_temple
 
-	for textlist in textlist_arr:
-		textlist_items_arr = args["textlist"]['items_select']
-		textlist_add_arr = args['textlist']['item_add']
-		# textlist_tmp['cid'] = cid
-		# components_items.append(cid)
-		# pid = cid
-		# cid += 1
-		modules={}
-		textlist_temple = __textlist_temple
+			itemadd_temple['pid'] = sub_cur_pid
+			itemadd_temple['cid'] = cur_cid
+			itemadd_temple['model']['index'] = cur_cid
+			itemadd_temple['model']['title'] = itemadd_name
+			itemadd_temple['model']['is_mandatory'] = is_required
+			itemadd_temple['model']['items'] = []
+			itemadd_temple['components'] = []
 
-		for items in textlist_items_arr:
-			item_name = __name2textlist(items['item_name'])
-			is_selected = __bool2Bool(items['is_selected'])
-			modules[item_name]={"select":is_selected}
+			textlist_temple['model']['items'].append(cur_cid)
+			textlist_temple['components'].append(itemadd_temple)
 
-		textlist_temple['model']['modules'] = modules
-
-		items_add_components =[]
-		for items_add in textlist_add_arr:
-			textlist_adder_temple = {}
-			textlist_adder_temple=__textlist_item_temple
-			item_name = items_add['item_name']
-			is_required = __name2Bool(items_add['is_required'])
-			textlist_adder_temple['model']['title'] = item_name
-			textlist_adder_temple['model']['is_mandatory'] = is_required
-			items_add_components.append(textlist_adder_temple)
-		textlist_temple['components'] = items_add_components
-
-		components.append(textlist_temple)
-
-
-
+		page_temple['components'].append(textlist_temple)
 
 	#上传图片
 	__uploadimg_temple = {
 			"type": "appkit.uploadimg",
-			"cid": 14,
-			"pid": 1,
+			"cid": '',
+			"pid": '',
 			"auto_select": False,
 			"selectable": "yes",
 			"force_display_in_property_view": "no",
