@@ -48,23 +48,34 @@ Background:
 				}],
 			"participate_info":
 				[{
-					"items_select":[{
-						"item_name":"姓名",
-						"is_selected":false
-					},{
-						"item_name":"手机",
-						"is_selected":true
-					},{
-						"item_name":"邮箱",
-						"is_selected":true
-				}],
-					"item_add":[{
-						"item_name":"填写项1",
-						"is_required":"是"
-					},{
-						"item_name":"填写项2",
-						"is_required":"否"
-					}]
+					"items_select":
+						[{
+							"item_name":"姓名",
+							"is_selected":"false"
+						},{
+							"item_name":"手机",
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"true"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
+						}],
+					"item_add":
+						[{
+							"item_name":"填写项1",
+							"is_required":"是"
+						},{
+							"item_name":"填写项2",
+							"is_required":"否"
+						}]
 				}],
 			"upload_pic":
 				[{
