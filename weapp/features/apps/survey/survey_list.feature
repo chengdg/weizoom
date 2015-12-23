@@ -85,26 +85,37 @@ Background:
 			"coupon":"优惠券1",
 			"participate_info":
 				[{
-					"items_select":[{
-						"item_name":"姓名",
-						"is_selected":false
-					},{
-						"item_name":"手机",
-						"is_selected":true
-					},{
-						"item_name":"邮箱",
-						"is_selected":true
-				}],
-					"item_add":[{
-						"item_name":"填写项1",
-						"is_required":"是"
-					},{
-						"item_name":"填写项2",
-						"is_required":"否"
-					},{
-						"item_name":"填写项3",
-						"is_required":"否"
-					}]
+					"items_select":
+						[{
+							"item_name":"姓名",
+							"is_selected":"false"
+						},{
+							"item_name":"手机",
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"true"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
+						}],
+					"item_add":
+						[{
+							"item_name":"填写项1",
+							"is_required":"是"
+						},{
+							"item_name":"填写项2",
+							"is_required":"否"
+						},{
+							"item_name":"填写项3",
+							"is_required":"否"
+						}]
 				}]
 		}]
 		"""
@@ -362,28 +373,28 @@ Scenario:2 用户调研活动列表分页
 		#Then jobs获得用户调研活动列表共'3'页
 
 	When jobs访问用户调研活动列表第'1'页
-	Then jobs获得用户调研列表
+	Then jobs获得用户调研活动列表
 		"""
 		[{
 			"name":"已结束用户调研03"
 		}]
 		"""
 	When jobs访问用户调研活动列表下一页
-	Then jobs获得用户调研列表
+	Then jobs获得用户调研活动列表
 		"""
 		[{
 			"name":"进行中用户调研02"
 		}]
 		"""
 	When jobs访问用户调研活动列表第'3'页
-	Then jobs获得用户调研列表
+	Then jobs获得用户调研活动列表
 		"""
 		[{
 			"name":"未开始用户调研01"
 		}]
 		"""
 	When jobs访问用户调研活动列表上一页
-	Then jobs获得用户调研列表
+	Then jobs获得用户调研活动列表
 		"""
 		[{
 			"name":"进行中用户调研02"

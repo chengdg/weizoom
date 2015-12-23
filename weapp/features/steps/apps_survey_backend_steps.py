@@ -87,7 +87,6 @@ def name2selection_type(name):
 		return name_dic[name]
 	else:
 		return None
-
 # def __limit2name(limit):
 # 	"""
 # 	传入积分规则，返回名字
@@ -169,22 +168,22 @@ def __survey_name2id(name):
 	obj = survey_models.survey.objects.get(name=name)
 	return (obj.related_page_id,obj.id)
 
-# def __status2name(status_num):
-# 	"""
-# 	调研：状态值 转 文字
-# 	"""
-# 	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
-# 	return status2name_dic[status_num]
+def __status2name(status_num):
+	"""
+	调研：状态值 转 文字
+	"""
+	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
+	return status2name_dic[status_num]
 
-# def __name2status(name):
-# 	"""
-# 	调研： 文字 转 状态值
-# 	"""
-# 	if name:
-# 		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
-# 		return name2status_dic[name]
-# 	else:
-# 		return -1
+def __name2status(name):
+	"""
+	调研： 文字 转 状态值
+	"""
+	if name:
+		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
+		return name2status_dic[name]
+	else:
+		return -1
 
 # def __name2coupon_status(name):
 # 	"""
@@ -195,6 +194,14 @@ def __survey_name2id(name):
 # 		return name2status_dic[name]
 # 	else:
 # 		return -1
+
+def __name2prize_type(name):
+	name2prize_type_dic = {u"所有奖品":"all",u"优惠券":"coupon",u"积分":"integral"}
+
+	if name:
+		return name2prize_type_dic[name]
+	else:
+		return "all"
 
 def __get_actions(status):
 	"""
@@ -1028,41 +1035,50 @@ def __Stop_Survey(context,survey_id):
 	stop_survey_response = context.client.post(stop_survey_url,stop_args)
 	return stop_survey_response
 
-# def __Search_Survey(context,search_dic):
-# 	"""
-# 	搜索调研活动
+def __Search_Survey(context,search_dic):
+	"""
+	搜索调研活动
 
-# 	输入搜索字典
-# 	返回数据列表
-# 	"""
+	输入搜索字典
+	返回数据列表
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
-# 	count_per_page = 10
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
 
-# 	name = search_dic["name"]
-# 	start_time = search_dic["start_time"]
-# 	end_time = search_dic["end_time"]
-# 	status = __name2status(search_dic["status"])
+	#分页情况，更新分页参数
+	if hasattr(context,"paging"):
+		paging_dic = context.paging
+		count_per_page = paging_dic['count_per_page']
+		page = paging_dic['page_num']
+
+
+	name = search_dic["name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
+	status = search_dic["status"]
+	prize_type = search_dic['prize_type']
 
 
 
-# 	search_url = "/apps/survey/api/surveies/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
-# 			design_mode,
-# 			version,
-# 			name,
-# 			status,
-# 			start_time,
-# 			end_time,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate)
+	search_url = "/apps/survey/api/surveies/?design_mode={}&version={}&name={}&status={}&prize_type={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			name,
+			status,
+			prize_type,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
 
-# 	search_response = context.client.get(search_url)
-# 	bdd_util.assert_api_call_success(search_response)
-# 	return search_response
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 # def __Search_Survey_Result(context,search_dic):
 # 	"""
@@ -1146,11 +1162,11 @@ def step_impl(context,user):
 		# bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
 	#其他查看结果
 	else:
-		# #分页情况，更新分页参数
-		# if hasattr(context,"paging"):
-		# 	paging_dic = context.paging
-		# 	count_per_page = paging_dic['count_per_page']
-		# 	page = paging_dic['page_num']
+		#分页情况，更新分页参数
+		if hasattr(context,"paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
 
 		for expect in expected:
 			if 'start_date' in expect:
@@ -1273,45 +1289,46 @@ def step_impl(context,user,survey_name):
 	stop_response = __Stop_Survey(context,survey_id)
 	bdd_util.assert_api_call_success(stop_response)
 
-# @when(u"{user}设置用户调研活动列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
-# 	if 'start_date' in expect:
-# 		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
-# 		del expect['start_date']
+@when(u"{user}设置用户调研活动列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
+	if 'start_date' in expect:
+		expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
+		del expect['start_date']
 
-# 	if 'end_date' in expect:
-# 		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
-# 		del expect['end_date']
+	if 'end_date' in expect:
+		expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
+		del expect['end_date']
 
-# 	search_dic = {
-# 		"name": expect.get("name",""),
-# 		"start_time": expect.get("start_time",""),
-# 		"end_time": expect.get("end_time",""),
-# 		"status": expect.get("status",u"全部")
-# 	}
-# 	search_response = __Search_Survey(context,search_dic)
-# 	survey_array = json.loads(search_response.content)['data']['items']
-# 	context.search_survey = survey_array
+	search_dic = {
+		"name": expect.get("name",""),
+		"start_time": expect.get("start_time",""),
+		"end_time": expect.get("end_time",""),
+		"status": __name2status(expect.get("status",u"全部")),
+		"prize_type":__name2prize_type(expect.get("prize_type",u"所有奖品"))
+	}
+	search_response = __Search_Survey(context,search_dic)
+	survey_array = json.loads(search_response.content)['data']['items']
+	context.search_survey = survey_array
 
-# @when(u"{user}访问用户调研活动列表第'{page_num}'页")
-# def step_impl(context,user,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问用户调研活动列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问用户调研活动列表下一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问用户调研活动列表下一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问用户调研活动列表上一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问用户调研活动列表上一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
 # @when(u"{user}查看用户调研活动'{survey_name}'")
 # def check_survey_list(context,user,survey_name):
