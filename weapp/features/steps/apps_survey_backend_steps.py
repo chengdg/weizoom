@@ -17,6 +17,7 @@ from weixin.message.material import models as material_models
 from apps.customerized_apps.survey import models as survey_models
 import termite.pagestore as pagestore_manager
 import json
+import copy
 
 def __debug_print(content,type_tag=True):
 	"""
@@ -153,12 +154,12 @@ def name2selection_type(name):
 # 	}
 # 	return coupon
 
-# def __get_coupon_rule_id(coupon_rule_name):
-# 	"""
-# 	获取优惠券id
-# 	"""
-# 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-# 	return coupon_rule.id
+def __get_coupon_rule_id(coupon_rule_name):
+	"""
+	获取优惠券id
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	return coupon_rule.id
 
 # def __survey_name2id(name):
 # 	"""
@@ -329,7 +330,7 @@ def __get_surveyPageJson(args):
 	cur_cid = next_cid
 	cur_index = next_index
 
-	next_pid = cur_cid
+	next_pid = cur_pid
 	next_cid = cur_cid+1
 	next_index = cur_index+1
 
@@ -377,7 +378,7 @@ def __get_surveyPageJson(args):
 				"id": "",
 				"class": "",
 				"name": "",
-				"index": 100004,
+				"index": '',
 				"datasource": {
 					"type": "api",
 					"api_name": ""
@@ -391,14 +392,14 @@ def __get_surveyPageJson(args):
 	cur_cid = next_cid #3
 	cur_index = next_index #3
 
-	next_pid = cur_cid #1
+	next_pid = cur_pid #1
 	next_cid = cur_cid+1 #4
 	next_index = cur_index+1 #4
 
 	submitbutton_temple = __submitbutton_temple
 	submitbutton_temple['pid'] = cur_pid
 	submitbutton_temple['cid'] = cur_cid
-	submitbutton_temple['model']['index'] = 100004 #特殊对待
+	submitbutton_temple['model']['index'] = 100000+cur_pid #特殊对待
 	submitbutton_temple['components']=[]
 
 	page_temple['components'].append(submitbutton_temple)
@@ -432,14 +433,14 @@ def __get_surveyPageJson(args):
 	cur_cid = next_cid #4
 	cur_index = next_index #4
 
-	next_pid = cur_cid #1
+	next_pid = cur_pid #1
 	next_cid = cur_cid+1 #5
 	next_index = cur_index+1 #5
 
 	componentadder_temple = __componentadder_temple
 	componentadder_temple['pid'] = cur_pid
 	componentadder_temple['cid'] = cur_cid
-	componentadder_temple['model']['index'] = 100003 #应该等于所有的部件数+1不知道这样子会影响不
+	componentadder_temple['model']['index'] = next_index #应该等于所有的部件数+1不知道这样子会影响不
 	componentadder_temple['components']=[]
 
 	page_temple['components'].append(componentadder_temple)
@@ -479,16 +480,18 @@ def __get_surveyPageJson(args):
 	for qa in qa_arr:
 		qa_title = qa['title']
 		qa_required = __name2Bool(qa['is_required'])
+		print(qa_title)
 
 		cur_pid = next_pid #1
 		cur_cid = next_cid #5...
 		cur_index = next_index #3...
 
-		next_pid = cur_cid #1
+		next_pid = cur_pid #1
 		next_cid = cur_cid+1 #6...
 		next_index = cur_index+1 #4...
 
-		qa_temple = __componentadder_temple
+		qa_temple = {}
+		qa_temple =  copy.deepcopy(__qa_temple)
 		qa_temple['pid'] = cur_pid
 		qa_temple['cid'] = cur_cid
 		qa_temple['model']['index'] = cur_index #校准顺序后4...
@@ -497,6 +500,7 @@ def __get_surveyPageJson(args):
 		qa_temple['components']=[]
 
 		page_temple['components'].append(qa_temple)
+
 
 	#选择模块(据有内置模块)
 
@@ -571,7 +575,7 @@ def __get_surveyPageJson(args):
 		next_cid = cur_cid+1 #8...
 		next_index = cur_index+1 #6...
 
-		selection_temple = __selection_temple
+		selection_temple = copy.deepcopy(__selection_temple)
 		selection_temple['pid'] = cur_pid
 		selection_temple['cid'] = cur_cid
 		selection_temple['model']['index'] = cur_index
@@ -582,7 +586,7 @@ def __get_surveyPageJson(args):
 		selection_temple['components']=[]#内部组件
 
 		#内部拓展
-		selectitem_arr = select['option']
+		selectitem_arr = selection['option']
 		for selectitem in selectitem_arr:
 
 			selectitem_title = selectitem['options']
@@ -597,7 +601,7 @@ def __get_surveyPageJson(args):
 			# next_index = cur_index+1 #6...
 
 
-			selectitem_temple = __selectitem_temple
+			selectitem_temple = copy.deepcopy(__selectitem_temple)
 			selectitem_temple['pid'] = sub_cur_pid
 			selectitem_temple['cid'] = cur_cid
 			selectitem_temple['model']['index'] = cur_cid #与父同，内部组件
@@ -678,7 +682,7 @@ def __get_surveyPageJson(args):
 		next_cid = cur_cid+1 #13...
 		next_index = cur_index+1 #7...
 
-		textlist_temple = __textlist_temple
+		textlist_temple = copy.deepcopy(__textlist_temple)
 		textlist_temple['pid'] = cur_pid
 		textlist_temple['cid'] = cur_cid
 		textlist_temple['model']['index'] = cur_index
@@ -697,7 +701,7 @@ def __get_surveyPageJson(args):
 		for itemadd in itemsadd_arr:
 
 			itemadd_name = itemadd['item_name']
-			is_required = __bool2Bool(itemadd['is_required'])
+			is_required = __name2Bool(itemadd['is_required'])
 
 			#内部的id处理
 			sub_cur_pid = cur_cid #1
@@ -708,7 +712,7 @@ def __get_surveyPageJson(args):
 			next_cid = cur_cid+1 #8...
 			# next_index = cur_index+1 #6...
 
-			itemadd_temple = __itemadd_temple
+			itemadd_temple = copy.deepcopy(__itemadd_temple)
 
 			itemadd_temple['pid'] = sub_cur_pid
 			itemadd_temple['cid'] = cur_cid
@@ -764,7 +768,7 @@ def __get_surveyPageJson(args):
 		next_cid = cur_cid+1 #6...
 		next_index = cur_index+1 #4...
 
-		uploadimg_temple = __uploadimg_temple
+		uploadimg_temple = copy.deepcopy(__uploadimg_temple)
 		uploadimg_temple['pid'] = cur_pid
 		uploadimg_temple['cid'] = cur_cid
 		uploadimg_temple['model']['index'] = cur_index
@@ -773,7 +777,6 @@ def __get_surveyPageJson(args):
 		uploadimg_temple['components']=[]
 
 		page_temple['components'].append(uploadimg_temple)
-
 
 	return json.dumps(page_temple)
 
@@ -812,6 +815,9 @@ def __Create_Survey(context,text,user):
 		1.survey_survey表
 		2.page表
 	"""
+	design_mode = 0
+	version = 1
+	text = text
 
 	title = text.get("title","")
 	subtitle = text.get("subtitle","")
@@ -883,13 +889,6 @@ def __Create_Survey(context,text,user):
 		"name":title,
 		"start_time":start_time,
 		"end_time":end_time,
-		"expend":reduce_integral,#消耗积分
-		"delivery":send_integral,#参与送积分
-		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-		"limitation":survey_limit,#调研限制
-		"chance":win_rate,#中奖率
-		"allow_repeat":is_repeat_win,#重复中奖
-		"prize":json.dumps(survey_prize_settings),
 		"related_page_id":related_page_id
 	}
 	survey_url ="/apps/survey/api/survey/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
