@@ -750,9 +750,32 @@ def __get_surveyPageJson(args):
 			"components": []
 		}
 
+	uploadimg_arr = args['uploadimg']
+
+	for uploadimg in uploadimg_arr:
+		uploadimg_title = uploadimg['title']
+		is_required = __name2Bool(uploadimg['is_required'])
+
+		cur_pid = next_pid #1
+		cur_cid = next_cid #5...
+		cur_index = next_index #3...
+
+		next_pid = cur_cid #1
+		next_cid = cur_cid+1 #6...
+		next_index = cur_index+1 #4...
+
+		uploadimg_temple = __uploadimg_temple
+		uploadimg_temple['pid'] = cur_pid
+		uploadimg_temple['cid'] = cur_cid
+		uploadimg_temple['model']['index'] = cur_index
+		uploadimg_temple['model']['title'] = uploadimg_title
+		uploadimg_temple['model']['is_mandatory'] = is_required
+		uploadimg_temple['components']=[]
+
+		page_temple['components'].append(uploadimg_temple)
 
 
-	return json.dumps(__page_temple)
+	return json.dumps(page_temple)
 
 def __prize_settings_process(prize_type,integral,coupon):
 	"""
