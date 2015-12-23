@@ -664,6 +664,29 @@ def __get_surveyPageJson(args):
 					},
 					"components": []
 				}
+	textlist_arr = args['textlist']
+	for textlist in textlist_arr:
+
+		cur_pid = next_pid #1
+		cur_cid = next_cid #12...
+		cur_index = next_index #6...
+
+		next_pid = cur_cid #1
+		next_cid = cur_cid+1 #13...
+		next_index = cur_index+1 #7...
+
+		items_arr = textlist['items_select']
+		itemsadd_arr = textlist['item_add']
+
+		for item in items_arr:
+			item_name = __name2textlist(item['item_name'])
+			is_selected = item['is_selected']
+
+
+		for itemadd in itemsadd_arr:
+			itemadd_name = itemadd['item_name']
+			is_required = itemadd['is_required']
+
 #########################################################
 ##上面的结构整理清楚了，可以根据上面的结构来写
 	textlist_components = []
