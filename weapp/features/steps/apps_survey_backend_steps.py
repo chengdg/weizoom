@@ -482,7 +482,6 @@ def __get_surveyPageJson(args):
 	for qa in qa_arr:
 		qa_title = qa['title']
 		qa_required = __name2Bool(qa['is_required'])
-		print(qa_title)
 
 		cur_pid = next_pid #1
 		cur_cid = next_cid #5...
@@ -997,37 +996,37 @@ def __Update_Survey(context,text,page_id,survey_id):
 	rec_survey_url ="/apps/survey/api/surveies/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_survey_response = context.client.get(rec_survey_url)
 
-# def __Delete_Survey(context,survey_id):
-# 	"""
-# 	删除调研活动
-# 	写入mongo表：
-# 		1.survey_survey表
+def __Delete_Survey(context,survey_id):
+	"""
+	删除调研活动
+	写入mongo表：
+		1.survey_survey表
 
-# 	注释：page表在原后台，没有被删除
-# 	"""
-# 	design_mode = 0
-# 	version = 1
-# 	del_survey_url = "/apps/survey/api/survey/?design_mode={}&version={}&_method=delete".format(design_mode,version)
-# 	del_args ={
-# 		"id":survey_id
-# 	}
-# 	del_survey_response = context.client.post(del_survey_url,del_args)
-# 	return del_survey_response
+	注释：page表在原后台，没有被删除
+	"""
+	design_mode = 0
+	version = 1
+	del_survey_url = "/apps/survey/api/survey/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+	del_args ={
+		"id":survey_id
+	}
+	del_survey_response = context.client.post(del_survey_url,del_args)
+	return del_survey_response
 
-# def __Stop_Survey(context,survey_id):
-# 	"""
-# 	关闭调研活动
-# 	"""
+def __Stop_Survey(context,survey_id):
+	"""
+	关闭调研活动
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	stop_survey_url = "/apps/survey/api/survey_status/?design_mode={}&version={}".format(design_mode,version)
-# 	stop_args ={
-# 		"id":survey_id,
-# 		"target":'stoped'
-# 	}
-# 	stop_survey_response = context.client.post(stop_survey_url,stop_args)
-# 	return stop_survey_response
+	design_mode = 0
+	version = 1
+	stop_survey_url = "/apps/survey/api/survey_status/?design_mode={}&version={}".format(design_mode,version)
+	stop_args ={
+		"id":survey_id,
+		"target":'stoped'
+	}
+	stop_survey_response = context.client.post(stop_survey_url,stop_args)
+	return stop_survey_response
 
 # def __Search_Survey(context,search_dic):
 # 	"""
@@ -1262,17 +1261,17 @@ def step_impl(context,user,survey_name):
 
 # 	bdd_util.assert_dict(expect_survey_dic, actual_survey_dic)
 
-# @when(u"{user}删除用户调研活动'{survey_name}'")
-# def step_impl(context,user,survey_name):
-# 	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
-# 	del_response = __Delete_Survey(context,survey_id)
-# 	bdd_util.assert_api_call_success(del_response)
+@when(u"{user}删除用户调研活动'{survey_name}'")
+def step_impl(context,user,survey_name):
+	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
+	del_response = __Delete_Survey(context,survey_id)
+	bdd_util.assert_api_call_success(del_response)
 
-# @when(u"{user}关闭用户调研活动'{survey_name}'")
-# def step_impl(context,user,survey_name):
-# 	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
-# 	stop_response = __Stop_Survey(context,survey_id)
-# 	bdd_util.assert_api_call_success(stop_response)
+@when(u"{user}关闭用户调研活动'{survey_name}'")
+def step_impl(context,user,survey_name):
+	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
+	stop_response = __Stop_Survey(context,survey_id)
+	bdd_util.assert_api_call_success(stop_response)
 
 # @when(u"{user}设置用户调研活动列表查询条件")
 # def step_impl(context,user):

@@ -104,7 +104,34 @@ Background:
 				}]
 		}]
 		"""
-
+	Then jobs获得用户调研活动列表
+		"""
+		[{
+			"name":"已结束用户调研03",
+			"participant_count":0,
+			"prize_type":"优惠券",
+			"start_date":"3天前",
+			"end_date":"昨天",
+			"status":"已结束",
+			"actions":["删除","链接","预览","统计","查看结果"]
+		},{
+			"name":"进行中用户调研02",
+			"participant_count":0,
+			"prize_type":"积分",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions":["关闭","链接","预览","统计","查看结果"]
+		},{
+			"name":"未开始用户调研01",
+			"participant_count":0,
+			"prize_type":"无奖励",
+			"start_date":"明天",
+			"end_date":"2天后",
+			"status":"未开始",
+			"actions":["链接","预览","统计","查看结果"]
+		}]
+		"""
 @apps @survey @update_survey
 Scenario:1 编辑'未开始'状态的用户调研活动
 	Given jobs登录系统
@@ -126,22 +153,32 @@ Scenario:1 编辑'未开始'状态的用户调研活动
 				}]
 		}]
 		"""
-	Then jobs获得用户调研活动'用户调研01'
+	Then jobs获得用户调研活动列表
 		"""
 		[{
-			"title":"用户调研01",
-			"subtitle":"",
-			"content":"欢迎参加调研",
+			"name":"已结束用户调研03",
+			"participant_count":0,
+			"prize_type":"优惠券",
+			"start_date":"3天前",
+			"end_date":"昨天",
+			"status":"已结束",
+			"actions":["删除","链接","预览","统计","查看结果"]
+		},{
+			"name":"进行中用户调研02",
+			"participant_count":0,
+			"prize_type":"积分",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"permission":"必须关注才可参与",
+			"status":"进行中",
+			"actions":["关闭","链接","预览","统计","查看结果"]
+		},{
+			"name":"用户调研01",
+			"participant_count":0,
 			"prize_type":"积分",
-			"integral":10,
-			"answer":
-				{
-					"title":"问答题01",
-					"is_required":"否"
-				}
+			"start_date":"今天",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions":["关闭","链接","预览","统计","查看结果"]
 		}]
 		"""
 
@@ -152,7 +189,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 		"""
 		[{
 			"name":"已结束用户调研03",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"优惠券",
 			"start_date":"3天前",
 			"end_date":"昨天",
@@ -160,7 +197,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 			"actions":["删除","链接","预览","统计","查看结果"]
 		},{
 			"name":"进行中用户调研02",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"积分",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -168,7 +205,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 			"actions":["关闭","链接","预览","统计","查看结果"]
 		},{
 			"name":"未开始用户调研01",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"无奖励",
 			"start_date":"明天",
 			"end_date":"2天后",
@@ -181,7 +218,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 		"""
 		[{
 			"name":"已结束用户调研03",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"优惠券",
 			"start_date":"3天前",
 			"end_date":"昨天",
@@ -189,7 +226,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 			"actions":["删除","链接","预览","统计","查看结果"]
 		},{
 			"name":"进行中用户调研02",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"积分",
 			"start_date":"今天",
 			"end_date":"今天",
@@ -197,7 +234,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 			"actions":["删除","链接","预览","统计","查看结果"]
 		},{
 			"name":"未开始用户调研01",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"无奖励",
 			"start_date":"明天",
 			"end_date":"2天后",
