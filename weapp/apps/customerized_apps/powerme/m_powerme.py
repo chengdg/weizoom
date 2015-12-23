@@ -13,10 +13,11 @@ import models as app_models
 from core.jsonresponse import create_response
 from termite2 import pagecreater
 from utils import url_helper
+from utils.cache_util import GET_CACHE, SET_CACHE
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
 
-NEED_ITERRATE = True
+CACHE_TIMEOUT = 300
 
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
@@ -30,57 +31,44 @@ class MPowerMe(resource.Resource):
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 
-		#遍历log，统计助力值
-		if NEED_ITERRATE:
-			power_logs = app_models.PowerLog.objects(belong_to=record_id)
-			power_member_ids = [p.power_member_id for p in power_logs]
-			member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
-			power_logs = [p for p in power_logs if member_id2subscribe[p.power_member_id]]
-			power_log_ids = [p.id for p in power_logs]
-			need_power_member_ids = [p.be_powered_member_id for p in power_logs]
-			#计算助力值
-			need_power_member_id2power = {}
-			for m_id in need_power_member_ids:
-				if not need_power_member_id2power.has_key(m_id):
-					need_power_member_id2power[m_id] = 1
-				else:
-					need_power_member_id2power[m_id] += 1
-			for m_id in need_power_member_id2power.keys():
-				app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__power=need_power_member_id2power[m_id])
-			#更新已关注会员的助力详情记录
-			detail_power_member_ids = [p.power_member_id for p in power_logs]
-			app_models.PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).update(set__has_powered=True)
-			#删除计算过的log
-			app_models.PowerLog.objects(id__in=power_log_ids).delete()
-
-		participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
-		total_participant_count = participances.count()
-		participances_list = []
-
-		member_ids = [p.member_id for p in participances]
-		member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-
-		#检查是否有当前member的排名信息
+		#统计排名信息
 		current_member_rank_info = None
-		rank = 0 #排名
-
-		for p in participances:
-			rank += 1
-			participances_list.append({
-				'rank': rank,
-				'member_id': p.member_id,
-				'user_icon': member_id2member[p.member_id].user_icon,
-				'username': member_id2member[p.member_id].username_size_ten,
-				'power': p.power
-			})
-			if member_id == p.member_id:
-				current_member_rank_info = {
+		cache_key = 'apps_powerme_%s' % record_id
+		cache_data = GET_CACHE(cache_key)
+		if cache_data:
+			participances_dict = cache_data['participances_dict']
+			participances_list = cache_data['participances_list']
+			total_participant_count = cache_data['total_participant_count']
+			print '================from cache'
+		else:
+			#遍历log，统计助力值
+			participances_dict = {}
+			participances_list = []
+			participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
+			total_participant_count = participances.count()
+			member_ids = [p.member_id for p in participances]
+			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+			rank = 0 #排名
+			for p in participances:
+				rank += 1
+				temp_dict = {
 					'rank': rank,
+					'member_id': p.member_id,
+					'user_icon': member_id2member[p.member_id].user_icon,
+					'username': member_id2member[p.member_id].username_size_ten,
 					'power': p.power
 				}
-		# 取前100位
-		participances_list = participances_list[:100]
-
+				participances_dict[p.member_id] = temp_dict
+				participances_list.append(temp_dict)
+			# 取前100位
+			participances_list = participances_list[:100]
+			SET_CACHE(cache_key,{
+				'participances_dict': participances_dict,
+				'participances_list': participances_list,
+				'total_participant_count': total_participant_count
+			})
+			print '================set cache'
+		current_member_rank_info = participances_dict.get(int(member_id), None)
 		response = create_response(200)
 		response.data = {
 			'participances': participances_list,
@@ -94,7 +82,6 @@ class MPowerMe(resource.Resource):
 		"""
 		响应GET
 		"""
-		global NEED_ITERRATE
 		record_id = request.GET.get('id','id')
 		isPC = request.GET.get('isPC',0)
 		isMember = False
