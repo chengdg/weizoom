@@ -21,16 +21,30 @@ class Command(BaseCommand):
 		start_time = time.time()
 
 		need_del_powerlogs_ids = []
-		for powerme in app_models.PowerMe.objects():
+		powermes = app_models.PowerMe.objects(status=1)
+		powerme_ids = [str(p.id) for p in powermes]
+		power_logs = app_models.PowerLog.objects(belong_to__in=powerme_ids)
+		power_member_ids = [p.power_member_id for p in power_logs]
+		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
+		record_id2logs = {}
+		for log in power_logs:
+			cur_powerme_id = log.belong_to
+			if cur_powerme_id in record_id2logs:
+				record_id2logs[cur_powerme_id].append(log)
+			else:
+				record_id2logs[cur_powerme_id] = [log]
+
+		for powerme in app_models.PowerMe.objects.filter(status=1):
 			record_id = str(powerme.id)
 			print '================update data start %s' % record_id
 			#统计助力值
-			power_logs = app_models.PowerLog.objects(belong_to=record_id)
-			power_member_ids = [p.power_member_id for p in power_logs]
-			member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
-			power_logs = [p for p in power_logs if member_id2subscribe[p.power_member_id]]
-			power_log_ids = [p.id for p in power_logs]
-			need_power_member_ids = [p.be_powered_member_id for p in power_logs]
+			if record_id in record_id2logs:
+				power_logs = record_id2logs[record_id]
+			else:
+				power_logs = []
+			need_power_logs = [p for p in power_logs if member_id2subscribe[p.power_member_id]]
+			power_log_ids = [p.id for p in need_power_logs]
+			need_power_member_ids = [p.be_powered_member_id for p in need_power_logs]
 			#计算助力值
 			need_power_member_id2power = {}
 			for m_id in need_power_member_ids:
@@ -41,7 +55,7 @@ class Command(BaseCommand):
 			for m_id in need_power_member_id2power.keys():
 				app_models.PowerMeParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__power=need_power_member_id2power[m_id])
 			#更新已关注会员的助力详情记录
-			detail_power_member_ids = [p.power_member_id for p in power_logs]
+			detail_power_member_ids = [p.power_member_id for p in need_power_logs]
 			app_models.PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).update(set__has_powered=True)
 			need_del_powerlogs_ids += power_log_ids
 			print '================update data end %s' % record_id
