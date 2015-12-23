@@ -74,16 +74,26 @@ Background:
 			"coupon":"优惠券1",
 			"participate_info":
 				[{
-					"items_select":[{
-						"item_name":"姓名",
-						"is_selected":false
-					},{
-						"item_name":"手机",
-						"is_selected":true
-					},{
-						"item_name":"邮箱",
-						"is_selected":true
-				}],
+					"items_select":
+						[{
+							"item_name":"姓名",
+							"is_selected":"false"
+						},{
+							"item_name":"手机",
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"true"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
+						}],
 					"item_add":[{
 						"item_name":"填写项1",
 						"is_required":"是"
@@ -95,7 +105,7 @@ Background:
 		}]
 		"""
 
-@apps @survey
+@apps @survey @update_survey
 Scenario:1 编辑'未开始'状态的用户调研活动
 	Given jobs登录系统
 	When jobs编辑用户调研活动'未开始用户调研01'
@@ -135,7 +145,7 @@ Scenario:1 编辑'未开始'状态的用户调研活动
 		}]
 		"""
 
-@apps @survey
+@apps @survey @update_survey
 Scenario:2 关闭'进行中'状态的用户调研活动
 	Given jobs登录系统
 	Then jobs获得用户调研活动列表
@@ -196,7 +206,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 		}]
 		"""
 
-@apps @survey
+@apps @survey @update_survey
 Scenario:3 删除'已结束'状态的用户调研活动
 	Given jobs登录系统
 	Then jobs获得用户调研活动列表
