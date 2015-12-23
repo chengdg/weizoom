@@ -105,7 +105,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 			"choose":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -116,7 +116,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 						}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"
@@ -212,7 +212,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"choose":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -223,7 +223,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 						}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"
@@ -344,7 +344,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			"choose":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -355,7 +355,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 						}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"
@@ -459,7 +459,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			"choose":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -470,7 +470,7 @@ Scenario:5 参加'已结束'状态的用户调研活动
 						}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"

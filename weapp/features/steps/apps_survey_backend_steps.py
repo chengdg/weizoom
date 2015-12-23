@@ -161,13 +161,13 @@ def __get_coupon_rule_id(coupon_rule_name):
 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
 	return coupon_rule.id
 
-# def __survey_name2id(name):
-# 	"""
-# 	给调研项目的名字，返回id元祖
-# 	返回（related_page_id,survey_survey中id）
-# 	"""
-# 	obj = survey_models.survey.objects.get(name=name)
-# 	return (obj.related_page_id,obj.id)
+def __survey_name2id(name):
+	"""
+	给调研项目的名字，返回id元祖
+	返回（related_page_id,survey_survey中id）
+	"""
+	obj = survey_models.survey.objects.get(name=name)
+	return (obj.related_page_id,obj.id)
 
 # def __status2name(status_num):
 # 	"""
@@ -906,98 +906,96 @@ def __Create_Survey(context,text,user):
 	rec_survey_url ="/apps/survey/api/surveies/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_survey_response = context.client.get(rec_survey_url)
 
-# def __Update_Survey(context,text,page_id,survey_id):
-# 	"""
-# 	模拟用户登录页面
-# 	编辑调研项目
-# 	写入mongo表：
-# 		1.survey_survey表
-# 		2.page表
-# 	"""
+def __Update_Survey(context,text,page_id,survey_id):
+	"""
+	模拟用户登录页面
+	编辑调研项目
+	写入mongo表：
+		1.survey_survey表
+		2.page表
+	"""
 
-# 	design_mode=0
-# 	version=1
-# 	project_id = "new_app:survey:"+page_id
+	design_mode=0
+	version=1
+	project_id = "new_app:survey:"+page_id
 
-# 	title = text.get("name","")
+	title = text.get("title","")
+	subtitle = text.get("subtitle","")
+	description = text.get("content","")
 
-# 	cr_start_date = text.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-# 	cr_end_date = text.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-# 	valid_time = "%s~%s"%(start_time,end_time)
+	valid_time = "%s~%s"%(start_time,end_time)
 
-# 	desc = text.get('desc','')#描述
-# 	reduce_integral = text.get('reduce_integral',0)#消耗积分
-# 	send_integral = text.get('send_integral',0)#参与送积分
-# 	send_integral_rules = text.get('send_integral_rules',"")#送积分规则
-# 	survey_limit = __name2limit(text.get('survey_limit',u'一人一次'))#调研限制
-# 	win_rate = text.get('win_rate','0%').split('%')[0]#中奖率
-# 	is_repeat_win = __name2Bool(text.get('is_repeat_win',"true"))#重复中奖
-# 	expect_prize_settings_list = text.get('prize_settings',[])
-# 	page_prize_settings,survey_prize_settings = __prize_settings_process(expect_prize_settings_list)
+	permission = text.get("permission")
 
+	prize_type = text.get("prize_type","")
+	integral = text.get("integral","")
+	coupon = text.get("coupon","")
+	prize = __prize_settings_process(prize_type,integral,coupon)
 
-# 	page_args = {
-# 		"title":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"valid_time":valid_time,
-# 		"description":desc,#描述
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":survey_limit,#调研限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize_settings":page_prize_settings
-# 	}
-
-# 	page_json = __get_surveyPageJson(page_args)
-
-# 	update_page_args = {
-# 		"field":"page_content",
-# 		"id":project_id,
-# 		"page_id":"1",
-# 		"page_json": page_json
-# 	}
-
-# 	update_survey_args = {
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"expend":reduce_integral,#消耗积分
-# 		"delivery":send_integral,#参与送积分
-# 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# 		"limitation":survey_limit,#调研限制
-# 		"chance":win_rate,#中奖率
-# 		"allow_repeat":is_repeat_win,#重复中奖
-# 		"prize":json.dumps(survey_prize_settings),
-# 		"id":survey_id#updated的差别
-# 	}
+	qa = text.get("answer","")
+	selection = text.get("choose","")
+	textlist = text.get("participate_info","")
+	uploadimg = text.get("upload_pic","")
 
 
-# 	#page 更新Page
-# 	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_page_response = context.client.post(update_page_url,update_page_args)
+	page_args = {
+		"title":title,
+		"subtitle":subtitle,
+		"description":description,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"permission":permission,
+		"prize":prize,
+		"qa":qa,
+		"selection":selection,
+		"textlist":textlist,
+		"uploadimg":uploadimg
+	}
 
-# 	#step4:更新survey
-# 	update_survey_url ="/apps/survey/api/survey/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_survey_response = context.client.post(update_survey_url,update_survey_args)
+	page_json = __get_surveyPageJson(page_args)
 
-# 	#跳转,更新状态位
-# 	design_mode = 0
-# 	count_per_page = 1000
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+	update_page_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
 
-# 	rec_survey_url ="/apps/survey/api/surveies/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 	rec_survey_response = context.client.get(rec_survey_url)
+	update_survey_args = {
+
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"id":survey_id#updated的差别
+	}
+
+
+	#page 更新Page
+	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_page_response = context.client.post(update_page_url,update_page_args)
+
+	#step4:更新survey
+	update_survey_url ="/apps/survey/api/survey/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_survey_response = context.client.post(update_survey_url,update_survey_args)
+
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
+
+	rec_survey_url ="/apps/survey/api/surveies/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_survey_response = context.client.get(rec_survey_url)
 
 # def __Delete_Survey(context,survey_id):
 # 	"""
@@ -1184,11 +1182,11 @@ def step_impl(context,user):
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
 
-# @when(u"{user}编辑用户调研活动'{survey_name}'")
-# def step_impl(context,user,survey_name):
-# 	expect = json.loads(context.text)[0]
-# 	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
-# 	__Update_Survey(context,expect,survey_page_id,survey_id)
+@when(u"{user}编辑用户调研活动'{survey_name}'")
+def step_impl(context,user,survey_name):
+	expect = json.loads(context.text)[0]
+	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
+	__Update_Survey(context,expect,survey_page_id,survey_id)
 
 # @then(u"{user}获得用户调研活动'{survey_name}'")
 # def step_impl(context,user,survey_name):
