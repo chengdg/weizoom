@@ -1,27 +1,16 @@
 {% load workbench_filter %}
-{% block css %}
-<link type="text/css" rel="stylesheet" media="all" href="/termite_static/css/apps/powerme.css">
-<link type="text/css" rel="stylesheet" media="all" id="powerme_css"
-    {% if component.model.color %}
-        {% if component.model.color == 'yellow' %}
-          href="/termite_static/css/apps/powerme_yellow.css" {% else %}
-          {% if component.model.color == 'orange' %}
-              href="/termite_static/css/apps/powerme_orange.css" {% else %}
-            {% if component.model.color == 'red' %}
-                href="/termite_static/css/apps/powerme_red.css" {% else %}
-                {% if component.model.color == 'new_year_red' %}
-                    href="/termite_static/css/apps/powerme_new_year_red.css"
-                {% endif %}
-            {% endif %}
-          {% endif %}
-        {% endif %}
-    {% else %}
-        href="/termite_static/css/apps/powerme_yellow.css"
-    {% endif %}>
-{% endblock %}
 
 {% ifequal component.type 'appkit.powermedescription' %}
-    <div class="wui-powerme-container">
+    <div class="wui-powerme-container
+        {% if component.model.color %}
+            {% if component.model.color == 'yellow' %} yellow {% else %}
+              {% if component.model.color == 'orange' %} orange {% else %}
+                {% if component.model.color == 'red' %} red {% else %}
+                    {% if component.model.color == 'new_year_red' %} new_year_red {% endif %}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+        {% else %}yellow{% endif %}">
         <div class="wui-i-background-image">
             {% if component.model.background_image %}
                 <img src="{{ component.model.background_image }}">

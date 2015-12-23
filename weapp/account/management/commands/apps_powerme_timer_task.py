@@ -1,13 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
 
 import time
-from collections import OrderedDict
 
-from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
-from django.utils.importlib import import_module
 
-from utils.cache_util import GET_CACHE, SET_CACHE
+from utils.cache_util import SET_CACHE
 from apps.customerized_apps.powerme import models as app_models
 from modules.member.models import Member
 
@@ -34,7 +31,20 @@ class Command(BaseCommand):
 			else:
 				record_id2logs[cur_powerme_id] = [log]
 
-		for powerme in app_models.PowerMe.objects.filter(status=1):
+		powerme_ids = [str(p.id) for p in powermes]
+		participances = app_models.PowerMeParticipance.objects(belong_to__in=powerme_ids, has_join=True).order_by('-power', 'created_at')
+		record_id2participances = {}
+		for pa in participances:
+			belong_to = pa.belong_to
+			if not record_id2participances.has_key(belong_to):
+				record_id2participances[belong_to] = [pa]
+			else:
+				record_id2participances[belong_to].append(pa)
+
+		member_ids = [p.member_id for p in participances]
+		member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+
+		for powerme in powermes:
 			record_id = str(powerme.id)
 			print '================update data start %s' % record_id
 			#统计助力值
@@ -62,21 +72,27 @@ class Command(BaseCommand):
 			#统计助力排名
 			print '================set cache start %s' % record_id
 			cache_key = 'apps_powerme_%s' % record_id
-			participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
+
+			if record_id in record_id2participances.keys():
+				participances = record_id2participances[record_id]
+			else:
+				participances = []
+			# participances = app_models.PowerMeParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
 			participances_dict = {}
 			participances_list = []
-			total_participant_count = participances.count()
+			total_participant_count = len(participances)
 
-			member_ids = [p.member_id for p in participances]
-			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+			# member_ids = [p.member_id for p in participances]
+			# member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 			rank = 0 #排名
 			for p in participances:
+				member = member_id2member[p.member_id]
 				rank += 1
 				temp_dict = {
 					'rank': rank,
 					'member_id': p.member_id,
-					'user_icon': member_id2member[p.member_id].user_icon,
-					'username': member_id2member[p.member_id].username_size_ten,
+					'user_icon': member.user_icon,
+					'username': member.username_size_ten,
 					'power': p.power
 				}
 				participances_dict[p.member_id] = temp_dict

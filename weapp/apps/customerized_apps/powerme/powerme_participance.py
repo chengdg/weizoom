@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from core.exceptionutil import unicode_full_stack
 
 import models as app_models
 import export
@@ -110,6 +111,7 @@ class PowerMeParticipance(resource.Resource):
 			print e
 			response = create_response(500)
 			response.errMsg = u'助力失败'
+			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
 		response = create_response(200)
 		return response.get_response()

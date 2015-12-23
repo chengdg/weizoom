@@ -263,19 +263,24 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		color: function($node, model, value, $propertyViewNode) {
 			switch (value){
 				case 'yellow':
-					$node.find("#powerme_css")[0].setAttribute("href","/termite_static/css/apps/powerme_yellow.css");
+					$node.find(".wui-powerme-container").addClass('yellow');
+					$node.find(".wui-powerme-container").removeClass('red orange new_year_red');
 					break;
 				case 'red':
-					$node.find("#powerme_css")[0].setAttribute("href","/termite_static/css/apps/powerme_red.css");
+					$node.find(".wui-powerme-container").addClass('red');
+					$node.find(".wui-powerme-container").removeClass('yellow orange new_year_red');
 					break;
 				case 'orange':
-					$node.find("#powerme_css")[0].setAttribute("href","/termite_static/css/apps/powerme_orange.css");
+					$node.find(".wui-powerme-container").addClass('orange');
+					$node.find(".wui-powerme-container").removeClass('red yellow new_year_red');
 					break;
 				case 'new_year_red':
-					$node.find("#powerme_css")[0].setAttribute("href","/termite_static/css/apps/powerme_new_year_red.css");
+					$node.find(".wui-powerme-container").addClass('new_year_red');
+					$node.find(".wui-powerme-container").removeClass('red orange yellow');
 					break;
 				default :
-					$node.find("#powerme_css")[0].setAttribute("href","/termite_static/css/apps/powerme_yellow.css");
+					$node.find(".wui-powerme-container").addClass('yellow');
+					$node.find(".wui-powerme-container").removeClass('red orange new_year_red');
 					break;
 			}
 		},
