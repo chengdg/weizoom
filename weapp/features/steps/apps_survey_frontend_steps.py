@@ -65,10 +65,7 @@ def __get_into_survey_pages(context,webapp_owner_id,survey_id,openid):
 
 def __participate_survey(context,webapp_owner_id,survey_id):
 	termite_data = json.loads(context.text)
-	print('termite_data')
-	print(termite_data)
 	i = 0
-	j = 0
 	data = {}
 	for k,v in termite_data.iteritems():
 		print(k)
@@ -165,40 +162,6 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name,survey_name):
 	__get_into_survey_pages(context,webapp_owner_id,survey_id,openid)
 
 
-# @then(u"{webapp_user_name}获得抽奖结果")
-# def step_impl(context,webapp_user_name):
-# 	survey_result = context.survey_result['data']
-# 	type2name = {
-# 		'integral': u'积分',
-# 		'coupon': u'优惠券',
-# 		'entity': u'实物',
-# 		'no_prize': u'谢谢参与'
-# 	}
-# 	# 构造实际数据
-# 	actual = []
-# 	actual.append({
-# 		"prize_grade": survey_result['result'],
-# 		"prize_type": type2name[survey_result['prize_type']],
-# 		"prize_name": survey_result['prize_name']
-# 	})
-# 	print("actual_data: {}".format(actual))
-# 	expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
-# 	bdd_util.assert_list(expected, actual)
-#
-# @then(u"{webapp_user_name}获得抽奖错误提示'{message}'")
-# def step_impl(context,webapp_user_name,message):
-# 	actual = context.survey_result['errMsg']
-# 	context.tc.assertEquals(message, actual)
-#
-# @When(u"{webapp_user_name}点击{shared_webapp_user_name}分享的微信抽奖活动'{survey_name}'的活动链接")
-# def step_impl(context, webapp_user_name, shared_webapp_user_name,survey_name):
-# 	survey_id = __get_survey_id(survey_name)
-# 	webapp_owner_id = context.webapp_owner_id
-# 	user = User.objects.get(id=context.webapp_owner_id)
-# 	openid = "%s_%s" % (webapp_user_name, user.username)
-# 	__get_into_survey_pages(context,webapp_owner_id,survey_id,openid)
-#
 # @When(u"微信用户批量参加{webapp_owner_name}的微信抽奖活动")
 # def step_impl(context, webapp_owner_name):
 # 	for row in context.table:
