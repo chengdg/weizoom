@@ -30,32 +30,32 @@ Background:
 		"""
 		[{
 			"title":"微信投票01",
-			"sub_title":"微信投票01",
+			"subtitle":"微信投票01",
 			"content":"谢谢投票",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"authority":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"无奖励",
 			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		},{
 			"title":"微信投票02",
-			"sub_title":"微信投票02",
+			"subtitle":"微信投票02",
 			"content":"谢谢投票",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":20,
 			"text_options":
@@ -63,21 +63,21 @@ Background:
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		},{
 			"title":"微信投票03",
-			"sub_title":"微信投票03",
+			"subtitle":"微信投票03",
 			"content":"谢谢投票",
 			"start_date":"2天前",
 			"end_date":"昨天",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"text_options":
@@ -85,12 +85,12 @@ Background:
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		}]
@@ -103,11 +103,11 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 		"""
 		{
 			"title":"微信投票001",
-			"sub_title":"微信投票001",
+			"subtitle":"微信投票001",
 			"content":"谢谢投票001",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":10,
 			"text_options":
@@ -115,33 +115,33 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 					"title":"选择题1",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}],
 			"participate_info":[{
 				"items_select":[{
 							"item_name":"姓名",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"手机",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"邮箱",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"QQ",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"职位",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"住址",
-							"is_selected":false
+							"is_selected":"false"
 						}],
 				"items_add":[{
 						"item_name":"填写项1",
@@ -153,59 +153,27 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 				}]
 		}
 		"""
-	Then jobs获得微信投票活动'微信投票001'
+	Then jobs获得微信投票活动列表
 		"""
-		{
-			"title":"微信投票001",
-			"sub_title":"微信投票001",
-			"content":"谢谢投票001",
+		[{
+			"name":"微信投票03",
+			"start_date":"2天前",
+			"end_date":"昨天",
+			"status":"已结束",
+			"actions": ["删除","链接","预览","统计","查看结果"]
+		},{
+			"name":"微信投票02",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
-			"prize_type":"积分",
-			"integral":10,
-			"text_options":
-				[{
-					"title":"选择题1",
-					"single_or_multiple":"多选",
-					"is_required":"否",
-					"options":[{
-							"option":"1"
-						},{
-							"option":"2"
-						},{
-							"option":"3"
-						}]
-				}],
-			"participate_info":[{
-				"items_select":[{
-							"item_name":"姓名",
-							"is_selected":true
-						},{
-							"item_name":"手机",
-							"is_selected":true
-						},{
-							"item_name":"邮箱",
-							"is_selected":true
-						},{
-							"item_name":"QQ",
-							"is_selected":true
-						},{
-							"item_name":"职位",
-							"is_selected":true
-						},{
-							"item_name":"住址",
-							"is_selected":false
-						}],
-				"items_add":[{
-						"item_name":"填写项1",
-						"is_required":"是"
-					},{
-						"item_name":"填写项2",
-						"is_required":"否"
-					}]
-				}]
-		}
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","统计","查看结果"]
+		},{
+			"name":"微信投票001",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"status":"进行中",
+			"actions": ["关闭","链接","预览","统计","查看结果"]
+		}]
 		"""
 
 @apps @vote

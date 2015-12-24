@@ -28,11 +28,11 @@ Background:
 		"""
 		[{
 			"title":"微信投票01",
-			"sub_title":"微信投票01",
+			"subtitle":"微信投票01",
 			"content":"谢谢投票",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"text_options":
@@ -40,35 +40,44 @@ Background:
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 					}]
 				},{
 					"title":"选择题2",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"options":[{
-							"option":"A"
+					"option":[{
+							"options":"A"
 						},{
-							"option":"B"
+							"options":"B"
 						},{
-							"option":"C"
+							"options":"C"
 					}]
 				}],
 			"participate_info":[{
 				"items_select":[{
 							"item_name":"姓名",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"手机",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"邮箱",
-							"is_selected":true
+							"is_selected":"true"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
 						}],
 				"items_add":[{
 						"name":"填写项1",
@@ -100,7 +109,7 @@ Scenario:1 查看结果列表
 		"""
 		[{
 			"name":"微信投票01",
-			"parti_person_cnt":4,
+			"participant_count":4,
 			"prize_type":"优惠券",
 			"start_date":"5天前",
 			"end_date":"2天后",

@@ -9,23 +9,23 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 		"""
 		[{
 			"title":"微信投票01",
-			"sub_title":"微信投票01",
+			"subtitle":"微信投票01",
 			"content":"谢谢投票",
 			"start_date":"昨天",
 			"end_date":"5天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
 			"text_options":
 				[{
 					"title":"文本选项",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		}]
@@ -83,20 +83,32 @@ Scenario:2 微信投票-积分-必须关注才可参与
 		"""
 		[{
 			"title":"微信投票02",
-			"sub_title":"微信投票02",
+			"subtitle":"微信投票02",
 			"content":"谢谢投票",
 			"start_date":"昨天",
 			"end_date":"5天后",
-			"authority":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"积分",
 			"integral":20,
 			"participate_info":[{
 				"items_select":[{
 							"item_name":"姓名",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"手机",
-							"is_selected":false
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"false"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
 						}],
 				"items_add":[{
 						"item_name":"填写项1",
@@ -185,11 +197,11 @@ Scenario:3 微信投票-优惠券-无需关注即可参与
 		"""
 		[{
 			"title":"微信投票03",
-			"sub_title":"微信投票03",
+			"subtitle":"微信投票03",
 			"content":"谢谢投票",
 			"start_date":"3天前",
 			"end_date":"昨天",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"text_options":
@@ -197,32 +209,44 @@ Scenario:3 微信投票-优惠券-无需关注即可参与
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"否",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				},{
 					"title":"选择题2",
 					"single_or_multiple":"多选",
 					"is_required":"是",
-					"options":[{
-							"option":"A"
+					"option":[{
+							"options":"A"
 						},{
-							"option":"B"
+							"options":"B"
 						},{
-							"option":"C"
+							"options":"C"
 						}]
 				}],
 			"participate_info":[{
 				"items_select":[{
 							"item_name":"姓名",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"手机",
-							"is_selected":false
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"false"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
 						}],
 				"items_add":[{
 						"item_name":"填写项1",

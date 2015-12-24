@@ -8,23 +8,23 @@ Background:
 		"""
 		[{
 			"title":"微信投票01",
-			"sub_title":"微信投票01",
+			"subtitle":"微信投票01",
 			"content":"谢谢投票",
 			"start_date":"昨天",
 			"end_date":"5天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"无奖励",
 			"text_options":
 				[{
 					"title":"选择题",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		}]
@@ -33,20 +33,32 @@ Background:
 		"""
 		[{
 			"title":"微信投票02",
-			"sub_title":"微信投票02",
+			"subtitle":"微信投票02",
 			"content":"谢谢投票",
 			"start_date":"昨天",
 			"end_date":"5天后",
-			"authority":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"积分",
 			"integral":20,
 			"participate_info":[{
 				"items_select":[{
 							"item_name":"姓名",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"手机",
-							"is_selected":true
+							"is_selected":"true"
+						},{
+							"item_name":"邮箱",
+							"is_selected":"false"
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
 						}],
 				"items_add":[{
 						"item_name":"填写项1",
@@ -113,10 +125,10 @@ Scenario:1 微信投票活动列表参与人数的校验
 		"""
 		[{
 			"name":"微信投票02",
-			"parti_person_cnt":1
+			"participant_count":1
 		},{
 			"name":"微信投票01",
-			"parti_person_cnt":3
+			"participant_count":3
 		}]
 		"""
 

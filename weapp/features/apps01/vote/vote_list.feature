@@ -40,32 +40,32 @@ Background:
 		"""
 		[{
 			"title":"微信投票01",
-			"sub_title":"微信投票01",
+			"subtitle":"微信投票01",
 			"content":"谢谢投票",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"authority":"必须关注才可参与",
+			"permission":"必须关注才可参与",
 			"prize_type":"无奖励",
 			"text_options":
 				[{
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		},{
 			"title":"微信投票02",
-			"sub_title":"微信投票02",
+			"subtitle":"微信投票02",
 			"content":"谢谢投票",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":20,
 			"text_options":
@@ -73,21 +73,21 @@ Background:
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		},{
 			"title":"微信投票03",
-			"sub_title":"微信投票03",
+			"subtitle":"微信投票03",
 			"content":"谢谢投票",
 			"start_date":"2天前",
 			"end_date":"昨天",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"text_options":
@@ -95,12 +95,12 @@ Background:
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 						}]
 				}]
 		}]
@@ -113,7 +113,7 @@ Scenario:1 微信投票活动列表查询
 		"""
 		[{
 			"name":"微信投票03",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"优惠券",
 			"start_date":"2天前",
 			"end_date":"昨天",
@@ -121,7 +121,7 @@ Scenario:1 微信投票活动列表查询
 			"actions": ["删除","链接","预览","统计","查看结果"]
 		},{
 			"name":"微信投票02",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"积分",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -129,7 +129,7 @@ Scenario:1 微信投票活动列表查询
 			"actions": ["关闭","链接","预览","统计","查看结果"]
 		},{
 			"name":"微信投票01",
-			"parti_person_cnt":0,
+			"participant_count":0,
 			"prize_type":"无奖励",
 			"start_date":"明天",
 			"end_date":"2天后",
@@ -352,7 +352,7 @@ Scenario:1 微信投票活动列表查询
 			"""
 			[{
 				"name":"微信投票02",
-				"parti_person_cnt":0,
+				"participant_count":0,
 				"prize_type":"积分",
 				"start_date":"今天",
 				"end_date":"2天后",

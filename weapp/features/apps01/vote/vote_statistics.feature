@@ -21,11 +21,11 @@ Background:
 		"""
 		[{
 			"title":"微信投票01",
-			"sub_title":"微信投票01",
+			"subtitle":"微信投票01",
 			"content":"谢谢投票",
 			"start_date":"今天",
 			"end_date":"2天后",
-			"authority":"无需关注即可参与",
+			"permission":"无需关注即可参与",
 			"prize_type":"优惠券",
 			"coupon":"优惠券1",
 			"text_options":
@@ -33,23 +33,23 @@ Background:
 					"title":"选择题1",
 					"single_or_multiple":"单选",
 					"is_required":"是",
-					"options":[{
-							"option":"1"
+					"option":[{
+							"options":"1"
 						},{
-							"option":"2"
+							"options":"2"
 						},{
-							"option":"3"
+							"options":"3"
 					}]
 				},{
 					"title":"选择题2",
 					"single_or_multiple":"多选",
 					"is_required":"否",
-					"options":[{
-							"option":"A"
+					"option":[{
+							"options":"A"
 						},{
-							"option":"B"
+							"options":"B"
 						},{
-							"option":"C"
+							"options":"C"
 					}]
 				}],
 			"participate_info":[{
@@ -62,6 +62,15 @@ Background:
 						},{
 							"item_name":"邮箱",
 							"is_selected":true
+						},{
+							"item_name":"QQ",
+							"is_selected":"false"
+						},{
+							"item_name":"职位",
+							"is_selected":"false"
+						},{
+							"item_name":"住址",
+							"is_selected":"false"
 						}],
 				"items_add":[{
 						"item_name":"填写项1",
@@ -93,44 +102,44 @@ Scenario:1 访问微信投票的统计
 	Then jobs获得微信投票活动'微信投票01'的统计结果
 		"""
 		{
-			"total_parti_person_count":4,
+			"total_participant_count":4,
 			[{
-				"valid_parti_person_count":4,
+				"valid_participant_count":4,
 				"选择题1(单选)":
 					[{
-						"option":"1":
+						"options":"1":
 						{
-							"parti_person_count":2,
+							"participant_count":2,
 							"percent":50%
 						},
-						"option":"2":
+						"options":"2":
 						{
-							"parti_person_count":1,
+							"participant_count":1,
 							"percent":25%
 						},
-						"option":"3":
+						"options":"3":
 						{
-							"parti_person_count":1,
+							"participant_count":1,
 							"percent":25%
 						}
 					}]
 			},{
-					"valid_parti_person_count":4,
+					"valid_participant_count":4,
 					"选择题2(多选)":
 					[{
-						"option":"A":
+						"options":"A":
 						{
-							"parti_person_count":2,
+							"participant_count":2,
 							"percent":50%
 						},
-						"option":"B":
+						"options":"B":
 						{
-							"parti_person_count":2,
+							"participant_count":2,
 							"percent":50%
 						},
-						"option":"C":
+						"options":"C":
 						{
-							"parti_person_count":0,
+							"participant_count":0,
 							"percent":0%
 						}
 					}]
