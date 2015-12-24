@@ -172,6 +172,8 @@ W.view.common.ImageView = Backbone.View.extend({
                         }
                         _path = null;
                     }
+                    
+                    _this.trigger('imgUploadComplete');
                 },
                 onUploadError: function(file, errorCode, errorMsg, errorString) {
                     xlog(errorCode);
@@ -191,6 +193,8 @@ W.view.common.ImageView = Backbone.View.extend({
                         var errorMsg = '图片'+file.name+'大小超过限制('+_this.sizeLimit+'KB)，请重新选择。';
                         alert(errorMsg);
                     }
+
+                    _this.trigger('imgUploadStart');
                 },
                 onSelectError: function(file, errorCode, errorMsg) {
                     if (errorCode === SWFUpload.QUEUE_ERROR.FILE_EXCEEDS_SIZE_LIMIT) {

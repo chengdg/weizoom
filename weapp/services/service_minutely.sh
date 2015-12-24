@@ -26,6 +26,10 @@ echo ">> calling 'services.finish_promotion_service.tasks.finish_promotion'" >> 
 echo "--------------------------------------------------------" >> $LOG
 python services/send_task.py "services.finish_promotion_service.tasks.finish_promotion" {} "{\"id\": 0}" >> $LOG 2>&1
 
+echo ">> calling 'apps_powerme_timer_task'" >> $LOG
+echo "--------------------------------------------------------" >> $LOG
+python manage.py apps_powerme_timer_task >> $LOG 2>&1
+
 echo ">> calling 'services.update_mp_token_service.tasks.update_mp_token'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
 #python services/send_task.py "services.update_mp_token_service.tasks.update_mp_token" {} "{\"id\": 0}" >> $LOG 2>&1

@@ -402,6 +402,7 @@ def get_weizoom_cards(request):
     weizoomcardpermission=WeiZoomCardPermission.objects.filter(user_id=request.user.id)
     can_active_card=0
     can_stop_card=0
+    can_view_card_details = 0
     if weizoomcardpermission:
         can_active_card=weizoomcardpermission[0].can_active_card
         can_stop_card=weizoomcardpermission[0].can_stop_card
@@ -489,7 +490,7 @@ def get_weizoom_cards(request):
             cur_weizoom_cards.append(cur_weizoom_card)
         else:
             pageinfo.object_count -= 1
-        
+
     response = create_response(200)
     response.data.items = cur_weizoom_cards
     response.data.sortAttr = request.GET.get('sort_attr', '-created_at')

@@ -1564,6 +1564,11 @@ button.xui-deleteImageButton{
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_input .xui-selectBtn:nth-child(3) {
 	background:#FF7D43;
 }
+.xui-propertyView-app-PowerMeGroup .propertyGroup_property_input .xui-selectBtn:nth-child(4) {
+	background:#900000;
+	color: #fff873;
+	width: 75px;
+}
 .xui-propertyView-app-PowerMeGroup .propertyGroup_property_dialogSelectField,.xui-propertyView-app-PowerMeGroup .propertyGroup_property_textareaField,.xui-propertyView-app-PowerMeGroup .propertyGroup_property_radioField {
     margin-top: 10px;
 }

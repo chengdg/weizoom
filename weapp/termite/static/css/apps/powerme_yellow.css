@@ -4,6 +4,12 @@
     border-radius: 5px;
     border-bottom: 3px solid #c74000;
 }
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
+    background: #B5B5B5;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
+    background: #666666;
+}
 .wui-powerme-container .wui-i-body{
     background: #FEF6C5;
     padding: 10px 0 50px;

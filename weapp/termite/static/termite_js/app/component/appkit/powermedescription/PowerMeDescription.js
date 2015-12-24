@@ -136,6 +136,9 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			}, {
 				name: '热带橙色',
 				value: 'orange'
+			}, {
+				name: '新年红',
+				value: 'new_year_red'
 			}],
 			default: 'yellow'
 		},{
@@ -260,32 +263,25 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		color: function($node, model, value, $propertyViewNode) {
 			switch (value){
 				case 'yellow':
-					value = '0';
+					$node.find(".wui-powerme-container").addClass('yellow');
+					$node.find(".wui-powerme-container").removeClass('red orange new_year_red');
 					break;
 				case 'red':
-					value = '1';
+					$node.find(".wui-powerme-container").addClass('red');
+					$node.find(".wui-powerme-container").removeClass('yellow orange new_year_red');
 					break;
 				case 'orange':
-					value = '2';
+					$node.find(".wui-powerme-container").addClass('orange');
+					$node.find(".wui-powerme-container").removeClass('red yellow new_year_red');
+					break;
+				case 'new_year_red':
+					$node.find(".wui-powerme-container").addClass('new_year_red');
+					$node.find(".wui-powerme-container").removeClass('red orange yellow');
 					break;
 				default :
-					value = '0';
+					$node.find(".wui-powerme-container").addClass('yellow');
+					$node.find(".wui-powerme-container").removeClass('red orange new_year_red');
 					break;
-			}
-			if(value == '0'){
-				$node.find("#css_yellow")[0].disabled = false;
-				$node.find("#css_red")[0].disabled = true;
-				$node.find("#css_orange")[0].disabled = true;
-			}else{
-				if(value == '1'){
-					$node.find("#css_yellow")[0].disabled = true;
-					$node.find("#css_red")[0].disabled = false;
-					$node.find("#css_orange")[0].disabled = true;
-				}else{
-					$node.find("#css_yellow")[0].disabled = true;
-					$node.find("#css_red")[0].disabled = true;
-					$node.find("#css_orange")[0].disabled = false;
-				}
 			}
 		},
 		rules: function($node, model, value, $propertyViewNode) {
