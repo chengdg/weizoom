@@ -132,7 +132,7 @@ Background:
 			"actions":["链接","预览","统计","查看结果"]
 		}]
 		"""
-@apps @survey @update_survey
+@mall2 @apps @survey @update_survey
 Scenario:1 编辑'未开始'状态的用户调研活动
 	Given jobs登录系统
 	When jobs编辑用户调研活动'未开始用户调研01'
@@ -182,7 +182,7 @@ Scenario:1 编辑'未开始'状态的用户调研活动
 		}]
 		"""
 
-@apps @survey @update_survey
+@mall2 @apps @survey @update_survey
 Scenario:2 关闭'进行中'状态的用户调研活动
 	Given jobs登录系统
 	Then jobs获得用户调研活动列表
@@ -243,7 +243,7 @@ Scenario:2 关闭'进行中'状态的用户调研活动
 		}]
 		"""
 
-@apps @survey @update_survey
+@mall2 @apps @survey @update_survey
 Scenario:3 删除'已结束'状态的用户调研活动
 	Given jobs登录系统
 	Then jobs获得用户调研活动列表

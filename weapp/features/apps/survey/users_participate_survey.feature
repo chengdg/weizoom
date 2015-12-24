@@ -6,7 +6,7 @@ Feature:手机端用户参加用户调研活动
 		2、针对某调研活动，在活动有效时间内用户只能参加一次
 		3、优惠券奖励：添加每人限领1张的优惠券时，若会员参加活动前已经领取过该优惠券，则参加活动不再获得奖励
 	"""
-@apps @survey
+@mall2 @apps @survey @users_participate_survey @kuki
 Scenario:1 参加调研活动,无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -26,7 +26,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 		"""
 		[{
 			"title":"用户调研01",
-			"subtitle":"",
+			"subtitle":"用户调研",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -51,44 +51,43 @@ Scenario:1 参加调研活动,无需关注即可参与
 				"问答题":"bill填写内容"
 			}
 			"""
-
 		When bill把jobs的用户调研活动'用户调研01'的活动链接分享到朋友圈
 
 	#非会员tom可参与
-		When tom点击bill分享的用户调研活动'用户调研01'的活动链接
-		When tom参加jobs的用户调研活动'用户调研01'
-			"""
-			{
-				"问答题":"tom填写内容"
-			}
-			"""
-		#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
+#		When tom点击bill分享的用户调研活动'用户调研01'的活动链接
+#		When tom参加jobs的用户调研活动'用户调研01'
+#			"""
+#			{
+#				"问答题":"tom填写内容"
+#			}
+#			"""
+#		#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
+#
+#	#取消关注会员marry可参与
+#		When marry关注jobs的公众号
+#		When marry访问jobs的webapp
+#		When marry取消关注jobs的公众号
+#
+#		When marry点击bill分享的用户调研活动'用户调研01'的活动链接
+#		When marry参加jobs的用户调研活动'用户调研01'
+#			"""
+#			{
+#				"问答题":"marry填写内容"
+#			}
+#			"""
+#		#Then marry获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
+#
+#		Given jobs登录系统
+#		Then jobs获得用户调研活动列表
+#			"""
+#			[{
+#				"name":"用户调研01",
+#				"participant_count":3,
+#				"prize_type":"优惠券"
+#			}]
+#			"""
 
-	#取消关注会员marry可参与
-		When marry关注jobs的公众号
-		When marry访问jobs的webapp
-		When marry取消关注jobs的公众号
-
-		When marry点击bill分享的用户调研活动'用户调研01'的活动链接
-		When marry参加jobs的用户调研活动'用户调研01'
-			"""
-			{
-				"问答题":"marry填写内容"
-			}
-			"""
-		#Then marry获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
-
-		Given jobs登录系统
-		Then jobs获得用户调研活动列表
-			"""
-			[{
-				"name":"用户调研01",
-				"participant_count":3,
-				"prize_type":"优惠券"
-			}]
-			"""
-
-@apps @survey
+@mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
 	Given jobs登录系统
 	When jobs新建用户调研活动
@@ -182,7 +181,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 			}]
 			"""
 
-@apps @survey
+@mall2 @apps @survey @users_participate_survey
 Scenario:3 参加调研活动,活动奖励的校验
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -325,7 +324,7 @@ Scenario:3 参加调研活动,活动奖励的校验
 			}]
 			"""
 
-@apps @survey
+@mall2 @apps @survey @users_participate_survey
 Scenario:4 参加'未开始'状态的用户调研活动
 	#手机端页面按钮显示"请等待活动开始"
 	#只能通过校验后台列中的参与人数来验证用户无法参与未开始状态的活动
@@ -440,7 +439,7 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			}]
 			"""
 
-@apps @survey
+@mall2 @apps @survey @users_participate_survey
 Scenario:5 参加'已结束'状态的用户调研活动
 	#手机端页面按钮显示"活动已结束"
 	#只能通过校验后台列中的参与人数来验证用户无法参与已结束状态的活动
