@@ -229,6 +229,7 @@ NEWTITLE2EMOTION = {
 	u':8-)': '5.png',
 	u'流泪': '6.png',
 	u'::<': '6.png',
+	u'::&lt;': '6.png',
 	u'害羞': '7.png',
 	u'::$': '7.png',
 	u'闭嘴': '8.png',
@@ -275,6 +276,7 @@ NEWTITLE2EMOTION = {
 	u'::L': '28.png',
 	u'憨笑': '29.png',
 	u'::>': '29.png',
+	u'::&gt;': '29.png',
 	u'大兵': '30.png',
 	u'::,@': '30.png',
 	u'奋斗': '31.png',
@@ -309,12 +311,15 @@ NEWTITLE2EMOTION = {
 	u':B-)': '45.png',
 	u'左哼哼': '46.png',
 	u':<@': '46.png',
+	u':&lt;@': '46.png',
 	u'右哼哼': '47.png',
 	u':@>': '47.png',
+	u':@&gt;': '47.png',
 	u'哈欠': '48.png',
 	u'::-O': '48.png',
 	u'鄙视': '49.png',
 	u':>-|': '49.png',
+	u':&gt;-|': '49.png',
 	u'委屈': '50.png',
 	u':P-(': '50.png',
 	u'快哭了': '51.png',
@@ -331,6 +336,7 @@ NEWTITLE2EMOTION = {
 	u':pd': '56.png',
 	u'西瓜': '57.png',
 	u':<W>': '57.png',
+	u':&lt;W&gt;': '57.png',
 	u'啤酒': '58.png',
 	u':beer': '58.png',
 	u'篮球': '59.png',
@@ -401,12 +407,14 @@ NEWTITLE2EMOTION = {
 	u':love': '91.png',
 	u'飞吻': '92.png',
 	u':<L>': '92.png',
+	u':&lt;L&gt;': '92.png',
 	u'跳跳': '93.png',
 	u':jump': '93.png',
 	u'发抖': '94.png',
 	u':shake': '94.png',
 	u'怄火': '95.png',
 	u':<O>': '95.png',
+	u':&lt;O&gt;': '95.png',
 	u'转圈': '96.png',
 	u':circle': '96.png',
 	u'磕头': '97.png',
@@ -511,7 +519,7 @@ def new_change_emotion_to_img(content):
 			break
 
 		found_emotion = False
-		for i in range(1, 10):
+		for i in range(1, 11):
 			emotion_title = content[pos+1:pos+1+i]
 			if emotion_title in NEWTITLE2EMOTION:
 				emotion_png = '<img class="emoji_append" src="/static_v2/img/weixin/%s" />' % NEWTITLE2EMOTION[emotion_title]
