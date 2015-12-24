@@ -17,7 +17,10 @@
         text-align: center;
     }
     .wui-masterinfo span{
-        margin: 0 10px;
+        margin: 0 5px;
+    }
+    .wui-masterinfo .wa-mypower{
+        margin: 0;
     }
     .wui-masterinfo b {
         font-size: 0.8rem;
@@ -134,18 +137,18 @@
     {{ page_html_content|safe }}
     <div class="wui-masterinfo wa-masterinfo">
         <div style="float: left;">
-            <span class="wa-myrange">我的排名: <b>{% if current_member_rank_info %}{{ current_member_rank_info.rank }}{% else %}无{% endif %}</b></span>
-        <span class="wa-mypower">我的助力值: <b>{% if current_member_rank_info %}{{ current_member_rank_info.power }}{% else %}0{% endif %}</b></span>
+            <span class="wa-myrange">我的排名: <b></b></span>
+        <span class="wa-mypower">助力值: <b></b></span>
         </div>
         <div style="float: right;">
-        <span class="wa-totalcount">参与人数: <b>{{ total_participant_count }}</b></span>
+        <span class="wa-totalcount">参与人数: <b></b></span>
         </div>
     </div>
     <div data-ui-role="swipemask" class="mask"></div>
     <div class="xui-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
             <div class="xui-spritebg xui-successHint-img"></div>
-            <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮{{ page_owner_name|safe }}助力值+1</p><p>关系好就是任性！</p></div>
+            <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮<span class="wa-pageownername"></span>助力值+1</p><p>关系好就是任性！</p></div>
         </div>
     </div>
     <!-- 非会员引导 -->
@@ -183,7 +186,7 @@
         <div style="margin-top: 49%">
             <p>好的事物，一起分享</p><p>邀请好友或者分享到朋友圈，</p>
             <div style="display: inline">
-                <p style="display: inline">发动小伙伴帮{% if is_self_page %}你{% else %}<p style="color: yellow;display: inline">{{ page_owner_name|safe }}{% endif %}</p><p style="display: inline">赢大奖！</p>
+                <p style="display: inline">发动小伙伴帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">赢大奖！</p>
             </div>
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
@@ -192,10 +195,10 @@
 
 {% block js %}
 <script type="text/javascript">
-    var participances = JSON.parse(JSON.stringify({{ participances_list|safe }}));
-    var is_powered = {% if is_powered %}true{% else %}false{% endif %};
-    var is_self_page = {% if is_self_page %}true{% else %}false{% endif %};
-    var page_owner_name = '{{ page_owner_name|safe }}';
+    var is_powered = true;
+    var is_self_page = true;
+    var page_owner_name = '';
+    var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
     $(function(){
@@ -204,41 +207,8 @@
         if(W.isPC){
             return false;
         }
-
         //展示参与统计
-        showTop100();
-
-        //检查活动状态,更新参与按钮并绑定事件
-        updateBtnStatus();
-
-        //启动倒计时
-        renderTime({{ timing }});
-
-        //展示与隐藏我的排名面板
-        window.setTimeout(showMyRank, 2*1000);
-
-        //监听分享成功事件
-        $(document).on("share:success",function(data){
-            $('.xa-share').addClass('none');
-            $('.mask').swipeMask('hide');
-            //分享成功后就算该用户参与活动
-            W.getApi().call({
-                app: 'm/apps/powerme',
-                resource: 'powerme_participance',
-                method: 'post',
-                args: {
-                    webapp_owner_id: W.webappOwnerId,
-                    id: W.appRecordId,
-                    fid:'{{ page_owner_member_id }}'
-                },
-                success: function(data) {
-                    console.log(page_owner_name+'成功参与活动');
-                },
-                error: function(data) {
-                    console.error(data.errMsg);
-                }
-            });
-        });
+        getDynamicData();
     });
 
     function updateBtnStatus(){
@@ -311,8 +281,84 @@
 
     }
 
-    function showTop100(){
-        if(participances){
+
+    function GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+
+    //发送请求，单独获取排名数据，优化首页时间
+    function getDynamicData(){
+        var fid = GetQueryString("fid")
+        W.getApi().call({
+            app: 'm/apps/powerme',
+            resource: 'm_powerme',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: fid
+            },
+            success: function(data) {
+                console.log(data);
+                //渲染按钮状态
+                updateActivityStatus(data);
+                //启动倒计时
+                renderTime(data.member_info.timing);
+                //渲染排名
+                showTop100(data);
+                //监听分享成功事件
+                $(document).on("share:success",function(data){
+                    $('.xa-share').addClass('none');
+                    $('.mask').swipeMask('hide');
+                    //分享成功后就算该用户参与活动
+                    W.getApi().call({
+                        app: 'm/apps/powerme',
+                        resource: 'powerme_participance',
+                        method: 'post',
+                        args: {
+                            webapp_owner_id: W.webappOwnerId,
+                            id: W.appRecordId,
+                            fid: page_owner_member_id
+                        },
+                        success: function(data) {
+                            console.log(page_owner_name+'成功参与活动');
+                        },
+                        error: function(data) {
+                            console.error(data.errMsg);
+                        }
+                    });
+                });
+            },
+            error: function(data) {
+                $("body").alert({
+                    isShow: true,
+                    info: data.errMsg,
+                    speed: 3000
+                });
+            }
+        });
+    }
+
+    function updateActivityStatus(data){
+        member_info = data.member_info;
+        is_self_page = member_info.self_page;
+        //更新页面拥有者名称
+        page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
+        $('.wa-pageownername').html(page_owner_name);
+        //检查活动状态,更新参与按钮并绑定事件
+        W.activityStatus = member_info.activity_status;
+        W.isMember = member_info.isMember;
+        is_powered = member_info.is_powered;
+        page_owner_member_id = member_info.page_owner_member_id;
+        updateBtnStatus();
+    }
+
+    function showTop100(data){
+        var participances = data.participances;
+        if(participances || $.isEmptyObject(participances)){
             var li_content = '';
             for(var i in participances){
                 var p = participances[i];
@@ -320,6 +366,21 @@
             }
             $('.wa-top100').append($(li_content));
         }
+
+        var current_member_rank_info = data.current_member_rank_info;
+        var total_participant_count = data.total_participant_count;
+
+        if(!current_member_rank_info || $.isEmptyObject(current_member_rank_info)){
+            $('.wa-myrange').find('b').html('无');
+            $('.wa-mypower').find('b').html(0);
+        }else{
+            $('.wa-myrange').find('b').html(current_member_rank_info.rank);
+            $('.wa-mypower').find('b').html(current_member_rank_info.power);
+        }
+        $('.wa-totalcount').find('b').html(total_participant_count);
+
+        //展示与隐藏我的排名面板
+        window.setTimeout(showMyRank, 2*1000);
     }
 
     function renderTime(seconds){
@@ -401,7 +462,7 @@
             args: {
                 webapp_owner_id: W.webappOwnerId,
                 id: W.appRecordId,
-                fid:'{{ page_owner_member_id }}'
+                fid: page_owner_member_id
             },
             success: function(data) {
                 if (W.isMember) {
