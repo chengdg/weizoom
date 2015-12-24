@@ -18,6 +18,7 @@ from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
 import re
+import account.management.commands.apps_powerme_timer_task as apps_powerme_timer_task
 
 def __get_power_me_rule_name(title):
 	material_url = material_models.News.objects.get(title=title).url
@@ -52,6 +53,30 @@ def __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid):
 		print('[info] not redirect')
 	return response
 
+def __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid):
+	url = '/m/apps/powerme/api/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, power_me_rule_id, context.member.token, openid)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	if response.status_code == 302:
+		print('[info] redirect by change fmt in shared_url')
+		redirect_url = bdd_util.nginx(response['Location'])
+		context.last_url = redirect_url
+		response = context.client.get(bdd_util.nginx(redirect_url))
+		if response.status_code == 302:
+			print('[info] redirect by change fmt in shared_url')
+			redirect_url = bdd_util.nginx(response['Location'])
+			context.last_url = redirect_url
+			response = context.client.get(bdd_util.nginx(redirect_url))
+		else:
+			print('[info] not redirect')
+	else:
+		print('[info] not redirect')
+	return response
+
+@When(u'更新助力排名')
+def step_impl(context):
+	apps_powerme_timer_task.Command
+
 @When(u'{webapp_user_name}点击图文"{title}"进入微助力活动页面')
 def step_impl(context, webapp_user_name, title):
 	webapp_owner_id = context.webapp_owner_id
@@ -61,10 +86,14 @@ def step_impl(context, webapp_user_name, title):
 	power_me_rule_id = __get_power_me_rule_id(power_me_rule_name)
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 	context.powerme_result = response.context
+	context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 
 @then(u"{webapp_user_name}获得{webapp_owner_name}的'{power_me_rule_name}'的内容")
 def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 	result = context.powerme_result
+	rank_information = json.loads(context.rank_response)['data']
+	print('rank_information1')
+	print(rank_information)
 	related_page_id = PowerMe.objects.get(id=result['record_id']).related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
@@ -84,9 +113,9 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 		"background_pic": page_component['background_image'],
 		"background_color": color2name[page_component['color']],
 		"rules": page_component['rules'],
-		"my_rank": result['current_member_rank_info']['rank'] if result['current_member_rank_info'] else u'无',
-		"my_power_score": result['current_member_rank_info']['power'] if result['current_member_rank_info'] else '0',
-		"total_participant_count": result['total_participant_count']
+		"my_rank": rank_information['current_member_rank_info']['rank'] if rank_information['current_member_rank_info'] else u'无',
+		"my_power_score": rank_information['current_member_rank_info']['power'] if rank_information['current_member_rank_info'] else '0',
+		"total_participant_count": rank_information['total_participant_count']
 	})
 	print("actual_data: {}".format(actual))
 	expected = json.loads(context.text)
@@ -95,8 +124,10 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 
 @then(u'{webapp_user_name}获得"{power_me_rule_name}"的助力值排名')
 def step_tmpl(context, webapp_user_name, power_me_rule_name):
-	result = context.powerme_result
-	participances = json.loads(result['participances_list'])
+	rank_information = json.loads(context.rank_response)['data']
+	participances = rank_information['participances']
+	print('rank_information')
+	print(rank_information)
 	actual = []
 	if participances != []:
 		rank = 0
@@ -126,7 +157,7 @@ def step_impl(context, webapp_user_name, powerme_owner_name):
 	webapp_owner_id = context.webapp_owner_id
 	webapp_owner_name = User.objects.get(id=webapp_owner_id).username
 	if powerme_owner_name == webapp_owner_name: #如果是分享自己的助力活动
-		context.page_owner_member_id = context.powerme_result['page_owner_member_id']
+		context.page_owner_member_id = json.loads(context.rank_response)['data']['member_info']['page_owner_member_id']
 	params = {
 		'webapp_owner_id': context.webapp_owner_id,
 		'id': context.powerme_result['record_id'],
@@ -163,6 +194,7 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	power_me_rule_id = context.powerme_result['record_id']
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
+	context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 	params = {
 		'webapp_owner_id': webapp_owner_id,
 		'id': power_me_rule_id,
@@ -194,6 +226,7 @@ def step_tmpl(context, webapp_user_name, shared_webapp_user_name):
 	power_me_rule_id = context.powerme_result['record_id']
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 	context.powerme_result = response.context
+	context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 
 @when(u"微信用户批量参加{webapp_owner_name}的微助力活动")
 def step_impl(context, webapp_owner_name):
@@ -220,6 +253,8 @@ def step_impl(context, webapp_owner_name):
 		#先进入微助力页面
 		response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 		context.powerme_result = response.context
+		apps_powerme_timer_task.Command
+		context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 		context.execute_steps(u"when %s把%s的微助力活动链接分享到朋友圈" % (webapp_user_name, webapp_owner_name))
 		powered_member_info = PowerMeParticipance.objects.get(member_id=member.id, belong_to=power_me_rule_id)
 		powered_member_info.update(set__created_at=data['parti_time'])

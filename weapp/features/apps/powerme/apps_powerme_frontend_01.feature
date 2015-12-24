@@ -74,6 +74,7 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
 	When tom点击bill分享的微助力活动链接
+  	When 更新助力排名
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -88,6 +89,7 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 			"total_participant_count": "1"
 		}]
 		"""
+  	When 更新助力排名
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
@@ -213,6 +215,7 @@ Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
 	When tom点击bill分享的微助力活动链接
+  	When 更新助力排名
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -227,6 +230,7 @@ Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后
 			"total_participant_count": "1"
 		}]
 		"""
+  	When 更新助力排名
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
