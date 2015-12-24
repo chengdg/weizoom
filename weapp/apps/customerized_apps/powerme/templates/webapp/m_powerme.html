@@ -207,6 +207,7 @@
         if(W.isPC){
             return false;
         }
+        $('.wui-appParticipantResult-Cover').hide();
         //展示参与统计
         getDynamicData();
     });
@@ -282,16 +283,16 @@
     }
 
 
-    function GetQueryString(name)
-    {
+    function GetQueryString(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if(r!=null)return  unescape(r[2]); return null;
+        if(r!=null) return unescape(r[2]);
+        return null;
     }
 
     //发送请求，单独获取排名数据，优化首页时间
     function getDynamicData(){
-        var fid = GetQueryString("fid")
+        var fid = GetQueryString("fid");
         W.getApi().call({
             app: 'm/apps/powerme',
             resource: 'm_powerme',
@@ -351,6 +352,18 @@
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
         W.isMember = member_info.isMember;
+        //祭出顶部黄条
+        if (!W.isMember) {
+            var $att = $('.wui-attentionAlert');
+            $att.attr('data-is-show-button', 'true');
+            $att.attentionAlert();
+            $att.click(function(){
+                $(this).attentionAlert('clickGuideAttention');
+            });
+            $('.xa-mask').click(function(){
+                $(this).addClass('none');
+            });
+        }
         is_powered = member_info.is_powered;
         page_owner_member_id = member_info.page_owner_member_id;
         updateBtnStatus();
