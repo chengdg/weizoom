@@ -725,12 +725,10 @@ def get_webapp_mall_data(webapp_owner_id):
 
 def get_forbidden_coupon_product_ids_for_cache(webapp_owner_id):
     def inner_func():
-        forbidden_coupon_products = []
-        for forbidden_coupon_product in promotion_models.ForbiddenCouponProduct.objects.filter(
+        forbidden_coupon_products = promotion_models.ForbiddenCouponProduct.objects.filter(
             owner_id=webapp_owner_id,
             status__in=(promotion_models.FORBIDDEN_STATUS_NOT_START, promotion_models.FORBIDDEN_STATUS_STARTED)
-        ):
-            forbidden_coupon_products.append(forbidden_coupon_product.to_cache_dict())
+        )
 
         return {
                 'keys': [
@@ -746,11 +744,7 @@ def get_forbidden_coupon_product_ids(webapp_owner_id):
     """
     key = 'forbidden_coupon_products_%s' % (webapp_owner_id)
 
-    dict_forbidden_coupon_products = cache_util.get_from_cache(key, get_forbidden_coupon_product_ids_for_cache(webapp_owner_id))
-    forbidden_coupon_products = []
-    for dict_forbidden_coupon_product in dict_forbidden_coupon_products:
-        forbidden_coupon_products.append(promotion_models.ForbiddenCouponProduct.from_dict(dict_forbidden_coupon_product))
-
+    forbidden_coupon_products = cache_util.get_from_cache(key, get_forbidden_coupon_product_ids_for_cache(webapp_owner_id))
     product_ids = []
     for product in forbidden_coupon_products:
         if product.is_active:
