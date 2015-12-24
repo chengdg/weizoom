@@ -258,14 +258,14 @@ class PowerMeParticipancesDetail(resource.Resource):
 		if member_id and belong_to:
 			items = app_models.PoweredDetail.objects(belong_to=belong_to, owner_id=int(member_id), has_powered=True).order_by('-created_at')
 			power_member_ids = [item.power_member_id for item in items]
-			member_id2subscribed = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=power_member_ids)}
+			member_id2info = {m.id: {'is_subscribed': m.is_subscribed, 'power_member_name': m.username_for_html} for m in Member.objects.filter(id__in=power_member_ids)}
 			returnDataList = []
 			for t in items:
 				returnDataDict = {
 					"power_member_id": t.power_member_id,
-					"power_member_name": t.power_member_name,
+					"power_member_name": member_id2info[t.power_member_id]['power_member_name'],
 					"created_at": t.created_at.strftime("%Y/%m/%d %H:%M"),
-					"status": u'关注' if member_id2subscribed[t.power_member_id] else u'跑路'
+					"status": u'关注' if member_id2info[t.power_member_id]['is_subscribed'] else u'跑路'
 				}
 				returnDataList.append(returnDataDict)
 			c = RequestContext(request, {
