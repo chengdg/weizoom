@@ -99,7 +99,7 @@ Scenario:2 新建微信投票活动,只添加'图片选项'模块,无奖励
 							"pic_desc":"图片描述3"
 						}]
 				},{
-					"title":"图片选项1",
+					"title":"图片选项2",
 					"single_or_multiple":"多选",
 					"pic_show_type":"表格",
 					"is_required":"否",
