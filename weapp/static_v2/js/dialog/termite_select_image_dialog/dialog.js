@@ -38,6 +38,16 @@ W.dialog.termite.SelectImagesDialog = W.dialog.Dialog.extend({
         this.imageUploader.render();
         this.$imageUploader = this.$('.xa-imageUploader').eq(0);
 
+        // 增加正在上传图片时，按钮不可点
+        this.imageUploader.bind('imgUploadStart', function(){
+            this.$el.find('.xa-submit-dialog').addClass('disabled');
+        }, this)
+
+        this.imageUploader.bind('imgUploadComplete', function(){
+            this.$el.find('.xa-submit-dialog').removeClass('disabled');
+        }, this)
+        
+
         //this.imageTemplate = this.getImageTemplate();
     },
 
