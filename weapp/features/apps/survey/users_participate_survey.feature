@@ -6,7 +6,7 @@ Feature:手机端用户参加用户调研活动
 		2、针对某调研活动，在活动有效时间内用户只能参加一次
 		3、优惠券奖励：添加每人限领1张的优惠券时，若会员参加活动前已经领取过该优惠券，则参加活动不再获得奖励
 	"""
-@mall2 @apps @survey @users_participate_survey @kuki
+@mall2 @apps @survey @users_participate_survey
 Scenario:1 参加调研活动,无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -26,7 +26,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 		"""
 		[{
 			"title":"用户调研01",
-			"subtitle":"用户调研",
+			"subtitle":"",
 			"content":"欢迎参加调研",
 			"start_date":"今天",
 			"end_date":"2天后",
@@ -35,7 +35,7 @@ Scenario:1 参加调研活动,无需关注即可参与
 			"coupon":"优惠券1",
 			"answer":
 				[{
-					"title":"问答题",
+					"title":"问答题标题",
 					"is_required":"是"
 				}]
 		}]
@@ -48,44 +48,59 @@ Scenario:1 参加调研活动,无需关注即可参与
 		When bill参加jobs的用户调研活动'用户调研01'
 			"""
 			{
-				"问答题":"bill填写内容"
+				"问答题":
+					[{
+						"title":"问答题标题",
+						"value":"bill填写内容"
+					}]
 			}
 			"""
+  		#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
 		When bill把jobs的用户调研活动'用户调研01'的活动链接分享到朋友圈
 
 	#非会员tom可参与
-#		When tom点击bill分享的用户调研活动'用户调研01'的活动链接
-#		When tom参加jobs的用户调研活动'用户调研01'
-#			"""
-#			{
-#				"问答题":"tom填写内容"
-#			}
-#			"""
-#		#Then tom获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
-#
-#	#取消关注会员marry可参与
-#		When marry关注jobs的公众号
-#		When marry访问jobs的webapp
-#		When marry取消关注jobs的公众号
-#
-#		When marry点击bill分享的用户调研活动'用户调研01'的活动链接
-#		When marry参加jobs的用户调研活动'用户调研01'
-#			"""
-#			{
-#				"问答题":"marry填写内容"
-#			}
-#			"""
-#		#Then marry获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
-#
-#		Given jobs登录系统
-#		Then jobs获得用户调研活动列表
-#			"""
-#			[{
-#				"name":"用户调研01",
-#				"participant_count":3,
-#				"prize_type":"优惠券"
-#			}]
-#			"""
+		When tom关注jobs的公众号
+		When tom取消关注jobs的公众号
+		When tom点击bill分享的用户调研活动'用户调研01'的活动链接
+		When tom参加jobs的用户调研活动'用户调研01'
+			"""
+			{
+				"问答题":
+					[{
+						"title":"问答题标题",
+						"value":"tom填写内容"
+					}]
+			}
+			"""
+		#Then tom获得信息提示'提交成功'
+
+	#取消关注会员marry可参与
+		When marry关注jobs的公众号
+		When marry访问jobs的webapp
+		When marry取消关注jobs的公众号
+
+		When marry点击bill分享的用户调研活动'用户调研01'的活动链接
+		When marry参加jobs的用户调研活动'用户调研01'
+			"""
+			{
+				"问答题":
+					[{
+						"title":"问答题标题",
+						"value":"marry填写内容"
+					}]
+			}
+			"""
+		#Then marry获得信息提示'您获得了一张优惠券<br />赶紧去个人中心查看吧'
+
+		Given jobs登录系统
+		Then jobs获得用户调研活动列表
+			"""
+			[{
+				"name":"用户调研01",
+				"participant_count":3,
+				"prize_type":"优惠券"
+			}]
+			"""
 
 @mall2 @apps @survey @users_participate_survey
 Scenario:2 参加调研活动,必须关注才可参与
@@ -134,24 +149,84 @@ Scenario:2 参加调研活动,必须关注才可参与
 	#会员bill可参加
 		When bill参加jobs的用户调研活动'用户调研02'
 			"""
-			[{
-				"选择题1":"1"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 
 		When bill把jobs的用户调研活动'用户调研02'的活动链接分享到朋友圈
 
 	#非会员tom参加，点击【提交】按钮时弹出jobs的公众号二维码
+		When tom关注jobs的公众号
+		When tom取消关注jobs的公众号
 		When tom点击bill分享的用户调研活动'用户调研02'的活动链接
 		When tom参加jobs的用户调研活动'用户调研02'
 			"""
-			[{
-				"选择题1":"2"
-			},{
-				"选择题2":"选项A"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 		#Then tom获得jobs的公众号二维码图片
 
@@ -163,11 +238,40 @@ Scenario:2 参加调研活动,必须关注才可参与
 		When marry点击bill分享的用户调研活动'用户调研02'的活动链接
 		When marry参加jobs的用户调研活动'用户调研02'
 			"""
-			[{
-				"选择题1":"3"
-			},{
-				"选择题2":"选项A"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"是"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 		#Then marry获得jobs的公众号二维码图片
 
@@ -196,6 +300,17 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
 		}]
+		"""
+	Then jobs能获得优惠券'优惠券1'的码库
+		"""
+		{
+			"coupon1_id_1": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
 		"""
 	When jobs新建用户调研活动
 		"""
@@ -272,13 +387,42 @@ Scenario:3 参加调研活动,活动奖励的校验
 		"""
 
 	#bill参加'积分'奖励用户调研活动
-		When bill参加用户调研活动'积分用户调研'
+		When bill参加jobs的用户调研活动'积分用户调研'
 			"""
-			[{
-				"选择题1":"1"
-			},{
-				"选择题2":["选择A","选择B"]
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 		When bill访问jobs的webapp
 		Then bill在jobs的webapp中拥有100会员积分
@@ -291,10 +435,14 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"""
 
 	#bill参加'优惠券'奖励用户调研活动
-		When bill参加用户调研活动'优惠券用户调研01'
+		When bill参加jobs的用户调研活动'优惠券用户调研01'
 			"""
 			{
-				"问答题1":"问答题1内容"
+				"问答题":
+					[{
+						"title":"问答题1",
+						"value":"问答题1内容"
+					}]
 			}
 			"""
 		When bill访问jobs的webapp
@@ -308,10 +456,14 @@ Scenario:3 参加调研活动,活动奖励的校验
 			"""
 
 	#bill参加'优惠券用户调研02'不再获得优惠券，因为优惠券1限领1张
-		When bill参加用户调研活动'优惠券用户调研02'
+		When bill参加jobs的用户调研活动'优惠券用户调研02'
 			"""
 			{
-				"问答题2":"问答题2内容"
+				"问答题":
+					[{
+						"title":"问答题2",
+						"value":"问答题2内容"
+					}]
 			}
 			"""
 		When bill访问jobs的webapp
@@ -375,13 +527,41 @@ Scenario:4 参加'未开始'状态的用户调研活动
 		When bill访问jobs的webapp
 		When bill参加jobs的用户调研活动'未开始用户调研'
 			"""
-			[{
-				"选择题1":"1"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
-
 		When bill把jobs的用户调研活动'未开始用户调研'的活动链接分享到朋友圈
 
 		Given jobs登录系统
@@ -399,11 +579,40 @@ Scenario:4 参加'未开始'状态的用户调研活动
 		When tom点击bill分享的用户调研活动'未开始用户调研'的活动链接
 		When tom参加jobs的用户调研活动'未开始用户调研'
 			"""
-			[{
-				"选择题1":"2"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 
 		Given jobs登录系统
@@ -418,14 +627,45 @@ Scenario:4 参加'未开始'状态的用户调研活动
 			"""
 
 	#非会员marry参与(页面按钮显示"请等待活动开始")
+		When marry关注jobs的公众号
+		When marry取消关注jobs的公众号
 		When marry点击bill分享的用户调研活动'未开始用户调研'的活动链接
 		When marry参加jobs的用户调研活动'未开始用户调研'
 			"""
-			[{
-				"选择题1":"2"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 
 		Given jobs登录系统
@@ -490,11 +730,40 @@ Scenario:5 参加'已结束'状态的用户调研活动
 		When bill访问jobs的webapp
 		When bill参加jobs的用户调研活动'已结束用户调研'
 			"""
-			[{
-				"选择题1":"1"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 
 		When bill把jobs的用户调研活动'已结束用户调研'的活动链接分享到朋友圈
@@ -514,11 +783,40 @@ Scenario:5 参加'已结束'状态的用户调研活动
 		When tom点击bill分享的用户调研活动'已结束用户调研'的活动链接
 		When tom参加jobs的用户调研活动'已结束用户调研'
 			"""
-			[{
-				"选择题1":"2"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 
 		Given jobs登录系统
@@ -533,14 +831,45 @@ Scenario:5 参加'已结束'状态的用户调研活动
 			"""
 
 	#非会员marry参与(页面按钮显示"活动已结束")
-		When marry点击bill分享的用户调研活动'已结束用户调研'的活动链接
+		When marry关注jobs的公众号
+		When marry取消关注jobs的公众号
+  		When marry点击bill分享的用户调研活动'已结束用户调研'的活动链接
 		When marry参加jobs的用户调研活动'已结束用户调研'
 			"""
-			[{
-				"选择题1":"2"
-			},{
-				"选择题2":"选项B"
-			}]
+			{
+				"选择题":
+					[{
+						"title":"选择题1",
+						"value":[{
+								"title":"1",
+								"type":"单选",
+								"isSelect":"是"
+							},{
+								"title":"2",
+								"type":"单选",
+								"isSelect":"否"
+							},{
+								"title":"3",
+								"type":"单选",
+								"isSelect":"否"
+							}]
+					},{
+						"title":"选择题2",
+						"value":[{
+								"title":"选项A",
+								"type":"多选",
+								"isSelect":"否"
+							},{
+								"title":"选项B",
+								"type":"多选",
+								"isSelect":"是"
+							},{
+								"title":"选项C",
+								"type":"多选",
+								"isSelect":"否"
+							}]
+					}]
+			}
 			"""
 
 		Given jobs登录系统
