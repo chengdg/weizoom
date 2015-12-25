@@ -534,6 +534,25 @@ class ForbiddenCouponProduct(models.Model):
 			'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
 		}
 
+	# 用于存入缓存的dict zhutianqi
+	def to_cache_dict(self):
+		Product.fill_details(self.owner, [self.product], {
+			'with_product_model': True,
+			"with_model_property_info": True,
+			'with_sales': True
+		})
+		return {
+			'id': self.id,
+			'owner_id': self.owner_id,
+			'product_id': self.product_id,
+			'status': self.status,
+			'status_name': self.status_name,
+			'start_date': self.start_date.strftime('%Y-%m-%d %H:%M:%S'),
+			'end_date': self.end_date.strftime('%Y-%m-%d %H:%M:%S'),
+			'is_permanant_active': self.is_permanant_active,
+			'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S')
+		}
+
 
 class CouponRule(models.Model):
 	"""
