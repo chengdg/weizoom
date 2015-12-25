@@ -709,8 +709,8 @@ SEX_TYPES = (
 	)
 
 class MemberInfo(models.Model):
-	#member = models.ForeignKey(Member)
-	member = models.OneToOneField(Member, primary_key=True)
+	member = models.ForeignKey(Member)
+	#member = models.OneToOneField(Member, primary_key=True)
 	name = models.CharField(max_length=8, verbose_name='会员姓名')
 	sex = models.IntegerField(choices=SEX_TYPES, verbose_name='性别')
 	age = models.IntegerField(default=-1, verbose_name='年龄')

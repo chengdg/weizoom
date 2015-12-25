@@ -13,6 +13,7 @@ import cards_channel_api_views
 import account_has_permissions
 
 import module_api
+import api_view
 urlpatterns = patterns('',
     
 )
