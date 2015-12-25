@@ -20,6 +20,7 @@ from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
 
 CACHE_TIMEOUT = 300
+STATIC_HTML_CACHE = {}
 
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
@@ -201,7 +202,6 @@ class MPowerMe(resource.Resource):
 		member = request.member
 		fid = 0
 
-
 		if 'new_app:' in record_id:
 			project_id = record_id
 			record_id = 0
@@ -209,20 +209,29 @@ class MPowerMe(resource.Resource):
 		elif member:
 			member_id = member.id
 			fid = request.GET.get('fid', None)
-
 			if not fid:
 				new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
 				response = HttpResponseRedirect(new_url)
 				response.set_cookie('fid', member_id, max_age=60*60*24*365)
 				return response
-			#从缓存获取静态页面
+			
+			#从全局变量获取静态页面
 			cache_key = 'apps_powerme_%s_html' % record_id
+			cache_data = STATIC_HTML_CACHE.get(cache_key, None)
+			if cache_data:
+				print 'memory---return'
+				return HttpResponse(cache_data)
+			
+			#从redis缓存获取静态页面
 			cache_data = GET_CACHE(cache_key)
 			if cache_data:
-				response = cache_data
-				return HttpResponse(response)
+				#存入全局变量
+				STATIC_HTML_CACHE[cache_key] = cache_data
+				print 'redis---return'
+				return HttpResponse(cache_data)
+			
 			record = app_models.PowerMe.objects(id=record_id)
-			if record.count() >0:
+			if record.count() > 0:
 				record = record.first()
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
@@ -308,6 +317,7 @@ class MPowerMe(resource.Resource):
 		})
 		response = render_to_string('powerme/templates/webapp/m_powerme.html', c)
 		if request.member:
+			STATIC_HTML_CACHE[cache_key] = response
 			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
