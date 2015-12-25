@@ -187,6 +187,7 @@ def __clear_all_app_data():
 	#商城
 	mall_models.PayInterface.objects.all().delete()
 	account_models.UserWeixinPayOrderConfig.objects.all().delete()
+	account_models.UserOrderNotifySettings.objects.all().delete()
 
 	mall_models.Image.objects.all().delete()
 	mall_models.ImageGroup.objects.all().delete()
