@@ -18,7 +18,6 @@ from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
 import re
-import account.management.commands.apps_powerme_timer_task as apps_powerme_timer_task
 
 def __get_power_me_rule_name(title):
 	material_url = material_models.News.objects.get(title=title).url
@@ -75,7 +74,8 @@ def __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,op
 
 @When(u'更新助力排名')
 def step_impl(context):
-	apps_powerme_timer_task.Command
+	os.system('cd %s' % settings.PROJECT_HOME)
+	os.system('python manage.py apps_powerme_timer_task')
 
 @When(u'{webapp_user_name}点击图文"{title}"进入微助力活动页面')
 def step_impl(context, webapp_user_name, title):
@@ -92,8 +92,6 @@ def step_impl(context, webapp_user_name, title):
 def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 	result = context.powerme_result
 	rank_information = json.loads(context.rank_response)['data']
-	print('rank_information1')
-	print(rank_information)
 	related_page_id = PowerMe.objects.get(id=result['record_id']).related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
@@ -253,7 +251,6 @@ def step_impl(context, webapp_owner_name):
 		#先进入微助力页面
 		response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 		context.powerme_result = response.context
-		apps_powerme_timer_task.Command
 		context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 		context.execute_steps(u"when %s把%s的微助力活动链接分享到朋友圈" % (webapp_user_name, webapp_owner_name))
 		powered_member_info = PowerMeParticipance.objects.get(member_id=member.id, belong_to=power_me_rule_id)
@@ -266,3 +263,4 @@ def step_impl(context, webapp_owner_name):
 			context.execute_steps(u"When %s关注%s的公众号" % (webapp_test_user_name+str(i), webapp_owner_name))
 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_test_user_name+str(i), webapp_owner_name))
 			context.execute_steps(u"When %s点击%s分享的微助力活动链接进行助力" % (webapp_test_user_name+str(i), webapp_user_name))
+	context.execute_steps(u"When 更新助力排名")
