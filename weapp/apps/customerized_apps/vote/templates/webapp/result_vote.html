@@ -40,8 +40,9 @@
     }
     .wa-progress-msg{
         position: absolute;
-        margin-top: -19px;
+        margin-top: -17px;
         margin-left: 10%;
+        font-size: 0.8rem;
     }
     .wui-selectBox-display-list label{
         float: left;
@@ -127,13 +128,13 @@
                                 </li>
                             {% else %}
                                 <li class="wui-selectBox-display-list">
-                                    <div class="wui-selectionwithimage xa-inputControl {% if select.isSelect %}wui-image-selected{% endif %}"
+                                    <div class="wui-selectionwithimage xa-inputControl"
                                         data-type="radio"
                                         data-input-name="{{select.name}}"
                                         data-input-type="imageselection"
                                         data-control-type="appkit.imageselection"
                                     >
-                                        <div class="wui-inner-selectionwithimage">
+                                        <div class="wui-inner-selectionwithimage {% if select.isSelect %}wui-image-selected{% endif %}">
                                             <div class="wui-inner-img">
                                             <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" class="wui-i-image">
                                             </div>
