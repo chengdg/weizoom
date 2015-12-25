@@ -42,7 +42,7 @@ def __get_survey_id(survey_name):
 	return survey.objects.get(name=survey_name).id
 
 def __get_into_survey_pages(context,webapp_owner_id,survey_id,openid):
-	#进入微助力活动页面
+	#进入调研活动页面
 	url = '/m/apps/survey/m_survey/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, survey_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
@@ -64,12 +64,13 @@ def __get_into_survey_pages(context,webapp_owner_id,survey_id,openid):
 	return response
 
 def __participate_survey(context,webapp_owner_id,survey_id):
-	termite_data = json.loads(context.text)
+	if context.text:
+		termite_data = json.loads(context.text)
+	else:
+		termite_data = context.termite_data
 	i = 0
 	data = {}
 	for k,v in termite_data.iteritems():
-		print(k)
-		print(v)
 		for v in v:
 			if k == u"快捷模块":
 				item_name = __itemName2item(k) if k!=u'' else ''
@@ -91,6 +92,10 @@ def __participate_survey(context,webapp_owner_id,survey_id):
 					}
 					j += 1
 				i = j
+			if k == u"上传图片":
+				picture_list = []
+				picture_list.append(v['value'])
+				value = json.dumps(picture_list)
 			else:
 				value = v['value']
 
@@ -134,9 +139,7 @@ def step_impl(context,webapp_user_name,webapp_owner_name,survey_name):
 			context.survey_hint = u'请等待活动开始...'
 		elif activity_status == u'进行中':
 			permission = response.context['permission']
-			print(permission)
 			isMember =  response.context['isMember']
-			print(isMember)
 			if permission == 'member':
 				if isMember:
 					__participate_survey(context,webapp_owner_id,survey_id)
@@ -148,6 +151,19 @@ def step_impl(context,webapp_user_name,webapp_owner_name,survey_name):
 			response_json = context.response_json
 			if response_json['code'] == 200:
 				context.survey_hint = u"提交成功"
+
+@when(u'{webapp_user_name}参加{webapp_owner_name}的用户调研活动"{survey_name}"于"{date}"')
+def step_impl(context,webapp_user_name,webapp_owner_name,survey_name,date):
+	context.termite_data = json.loads(context.text)
+	context.execute_steps(u"When %s参加%s的用户调研活动'%s'" % (webapp_user_name, webapp_owner_name,survey_name))
+	date = bdd_util.get_date(date)
+	survey_id = __get_survey_id(survey_name)
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	member = member_api.get_member_by_openid(openid, context.webapp_id)
+	#修改参与时间
+	survey_info = surveyParticipance.objects.get(member_id=member.id, belong_to=str(survey_id))
+	survey_info.update(set__created_at=date)
 
 @When(u"{webapp_user_name}把{webapp_owner_name}的用户调研活动'{survey_name}'的活动链接分享到朋友圈")
 def step_impl(context, webapp_user_name, webapp_owner_name,survey_name):
