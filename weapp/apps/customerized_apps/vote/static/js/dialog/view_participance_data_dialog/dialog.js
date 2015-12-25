@@ -38,6 +38,7 @@ W.dialog.app.vote.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 					this.$dialog.find('.modal-body').text(data);
 					var template = Handlebars.compile($(that.templates['resultTmpl']).html());
 					$('.xui-app_vote-Dialog .modal-body').html(template(data));
+					$('table img[data-toggle="tooltip"]').tooltip();
 				},
 				error: function(resp) {
 				}

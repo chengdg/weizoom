@@ -18,7 +18,7 @@ COUNT_PER_PAGE = 20
 class voteStatistic(resource.Resource):
 	app = 'apps/vote'
 	resource = 'vote_statistic'
-	
+
 	@login_required
 	def get(request):
 		"""
@@ -32,10 +32,11 @@ class voteStatistic(resource.Resource):
 			title_valid_dict = {}
 			total_title_valid_dict ={}
 			title_type_dict = {}
+			title_image_dict = {}
 			for p in all_participances:
 				for title, data in p.termite_data.items():
 					title_type = u''
-					if data['type'] == 'appkit.selection':
+					if data['type'] in ['appkit.selection', 'appkit.imageselection', 'appkit.textselection']:
 						is_valid = False
 						for item, value in data['value'].items():
 							if value['isSelect']:
@@ -48,6 +49,8 @@ class voteStatistic(resource.Resource):
 							else:
 								title2itemCount[title] = {}
 								title2itemCount[title][item] = 1 if value['isSelect'] else 0
+							if value.has_key('image'):
+								title_image_dict[title+item] = value['image']
 							title_type = value['type']
 						if is_valid:
 							if total_title_valid_dict.has_key(title):
@@ -76,7 +79,8 @@ class voteStatistic(resource.Resource):
 					single_item_value = {}
 					single_item_value['item_name'] = item.split('_')[1]
 					single_item_value['counter'] = item_value
-
+					if title_image_dict.has_key(title+item):
+						single_item_value['image'] = title_image_dict[title+item]
 					single_item_value['percent'] = '%d%s' % (item_value / float(total_title_valid_dict[title]) * 100 if total_title_valid_dict[title] else 0, '%')
 					single_title_dict['title_value'].append(single_item_value)
 
@@ -87,7 +91,7 @@ class voteStatistic(resource.Resource):
 			total_count = 0
 			titles_list = None
 			project_id = 'new_app:vote:0'
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -97,7 +101,7 @@ class voteStatistic(resource.Resource):
 			'total_count': total_count,
 			'project_id': project_id,
 		})
-		
+
 		return render_to_response('vote/templates/editor/vote_statistic.html', c)
 
 class voteStatistic_Export(resource.Resource):
@@ -146,7 +150,7 @@ class voteStatistic_Export(resource.Resource):
 				time = record['created_at']
 				for termite in record['termite_data']:
 					termite_dic = record['termite_data'][termite]
-					if termite_dic['type']=='appkit.selection':
+					if termite_dic['type'] in ['appkit.selection', 'appkit.imageselection', 'appkit.textselection']:
 						if termite not in select_data:
 							select_data[termite] = [termite_dic['value']]
 						else:
@@ -163,12 +167,17 @@ class voteStatistic_Export(resource.Resource):
 					is_valid = False
 					for s in s_list:
 						if select not in select_static:
-							select_static[select]={}
-						if s not in select_static[select]:
-							select_static[select][s]  = 0
+							select_static[select]={
+								'title': {}
+							}
+						if s not in select_static[select]['title']:
+							select_static[select]['title'][s]={'count': 0}
 						if s_list[s]['isSelect'] == True:
-							select_static[select][s] += 1
+							select_static[select]['title'][s]['count'] += 1
 							is_valid = True
+						if s_list[s].has_key('image'):
+							select_static[select]['image'] = True
+							select_static[select]['title'][s]['image'] = s_list[s]['image']
 					if is_valid:
 						if title_valid_dict.has_key(select):
 							title_valid_dict[select] += 1
@@ -189,19 +198,27 @@ class voteStatistic_Export(resource.Resource):
 				for s in sorted(select_static.keys()):
 					select_num += 1
 					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'% title_valid_dict[s])
-					ws.write(row,col+1,u'参与人数/百分百')
+					if select_static[s].has_key('image'):
+						ws.write(row,col+1,u'选项图片')
+						ws.write(row,col+2,u'参与人数/百分百')
+					else:
+						ws.write(row,col+1,u'参与人数/百分百')
 					row += 1
 					all_select_num = 0
 					s_i_num = 0
-					for s_i in sorted(select_static[s].keys()):
-						s_num = select_static[s][s_i]
+					for s_i in sorted(select_static[s]['title'].keys()):
+						s_num = select_static[s]['title'][s_i]['count']
 						if s_num :
 							all_select_num += s_num
-					for s_i in sorted(select_static[s].keys()) :
-						s_num = select_static[s][s_i]
+					for s_i in sorted(select_static[s]['title'].keys()) :
+						s_num = select_static[s]['title'][s_i]['count']
 						ws.write(row,col,s_i.split('_')[1])
 						per = s_num*1.0/title_valid_dict[s]*100 if title_valid_dict[s] else 0
-						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
+						if select_static[s]['title'][s_i].has_key('image'):
+							ws.write(row,col+1,select_static[s]['title'][s_i]['image'])
+							ws.write(row,col+2,u'%d人/%.1f%%'%(s_num,per))
+						else:
+							ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
 						row += 1
 						s_i_num += 1
 					ws.write(row,col,u'')

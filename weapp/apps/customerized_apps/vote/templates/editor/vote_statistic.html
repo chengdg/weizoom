@@ -9,10 +9,16 @@
         }
         .table>tbody tr th:nth-child(2){
             text-align: left;
+            padding-left: 5px;
+            max-width: 20%;
+            min-width: 6%;
+        }
+        .table>tbody tr th:nth-child(3){
+            text-align: left;
             max-width: 680px;
             min-width: 480px;
         }
-        .table>tbody tr th:nth-child(3), .table>tbody tr th:nth-child(4){
+        .table>tbody tr th:nth-child(4), .table>tbody tr th:nth-child(5){
             width: 100px;
         }
         .xui-progressBar{
@@ -36,6 +42,22 @@
             width: 98%;
             margin-left: 10px;
             padding: 15px;
+        }
+        .xui-i-title-image{
+            border-radius: 5px;
+            height: 50px;
+            margin-left: 10px;
+            width: 50px;
+            transition: all 0.2s;
+            -webkit-transform-origin: 50% 50%;
+        }
+        .xui-i-title-image:hover{
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            z-index: 99999;
+        }
+        .xui-hidden{
+            display: none;
         }
     </style>
 {% endblock %}
@@ -68,11 +90,13 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr style="color: #888888">
                     <th>选项</th>
+                    <th></th>
                     <th></th>
                     <th>参与人数</th>
                     <th>百分比</th>
@@ -80,6 +104,7 @@
                 {% for v in title.title_value %}
                     <tr>
                         <th>{{ v.item_name }}</th>
+                        <th><img src="{% if v.image %}{{ v.image }}{% endif %}" class="{% if v.image %}xui-i-title-image{% else %}xui-hidden{% endif %}"></th>
                         <th>
                             <span class="xui-progressBar" style="width: {% ifequal v.percent '0%' %}0{% else %}{{ v.percent }}{% endifequal %}"></span>
                         </th>

@@ -54,18 +54,22 @@ class voteParticipance(resource.Resource):
 				pureName = k.split('_')[1]
 				item_data = {}
 				item_data['item_name'] = pureName
-				if v['type'] == 'appkit.selection':
+				if v['type'] in ['appkit.selection', 'appkit.imageselection', 'appkit.textselection']:
 					value_list = []
 					for inner_k, inner_v in v['value'].items():
+						temp_dict = {}
 						if inner_v['isSelect']:
-							value_list.append(inner_k.split('_')[1])
-					item_data['item_value'] = ','.join(value_list)
+							temp_dict['title'] = inner_k.split('_')[1]
+							if inner_v.has_key('image'):
+								temp_dict['image'] = inner_v['image']
+							value_list.append(temp_dict)
+					item_data['item_value'] = value_list
 				else:
 					if pureName in ITEM_FOR_DISPLAY:
 						item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
 					else:
 						item_data['item_name'] = pureName
-					item_data['item_value'] = v['value']
+					item_data['item_value'] = [{'title': v['value'], 'image': ''}]
 				item_data_list.append(item_data)
 		else:
 			webapp_user_name = ''

@@ -742,13 +742,13 @@
                                     <div class="propertyGroup_property_input" style="position:relative;">
                                         {{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
                                         <input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden" />
-                                            <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">
-                                                {{if dynamicComponent.model.get(dynamicComponentField.name)}}
-                                                    ${dynamicComponentField.triggerButton.hasdata}
-                                                {{else}}
-                                                    ${dynamicComponentField.triggerButton.nodata}
-                                                {{/if}}
+                                        {{if !dynamicComponent.model.get(dynamicComponentField.name)}}
+                                           <div class="btn btn-small xui-image-dialog-trigger {{if dynamicComponent.model.get(dynamicComponentField.name)}}xui-triggerButton-hasdata{{/if}}" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}"></div>
+                                        {{else}}
+                                            <button class="btn btn-small xui-i-triggerButton {{if dynamicComponent.model.get(dynamicComponentField.name)}}xui-triggerButton-hasdata{{/if}}" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}">
+                                                ${dynamicComponentField.triggerButton.hasdata}
                                             </button>
+                                        {{/if}}
 
                                         {{if dynamicComponentField.help}}
                                         <div style="color: #666;">

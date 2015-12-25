@@ -126,7 +126,7 @@ class Mvote(resource.Resource):
 					'share_page_desc': share_page_desc,
 					'share_img_url': thumbnails_url
 				})
-				return render_to_response('workbench/wepage_webapp_page.html', c)
+				return render_to_response('vote/templates/webapp/m_vote.html', c)
 		else:
 			record = None
 			c = RequestContext(request, {
@@ -176,29 +176,52 @@ def get_result(id,member_id):
 	votes = app_models.voteParticipance.objects(belong_to=id)
 	member_vote_termite = app_models.voteParticipance.objects.filter(belong_to=id,member_id=member_id).order_by('-created_at').first().termite_data
 	member_termite_select = {}
+	member_termite_textselect = {}
+	member_termite_imageselect = {}
 	member_termite_shortcuts = {}
 	for k,member_termite in member_vote_termite.items():
 		value = member_vote_termite[k]
 		if value['type'] == 'appkit.selection':
 			for select,isSelect in value['value'].items():
-				member_termite_select[select] = {
+				member_termite_select[k+select] = {
 					'isSelect': isSelect['isSelect'],
 					'type': isSelect['type']
+				}
+		if value['type'] == 'appkit.textselection':
+			for select,isSelect in value['value'].items():
+				member_termite_textselect[k+select] = {
+					'isSelect': isSelect['isSelect'],
+					'type': isSelect['type']
+				}
+		if value['type'] == 'appkit.imageselection':
+			for select,isSelect in value['value'].items():
+				member_termite_imageselect[k+select] = {
+					'isSelect': isSelect['isSelect'],
+					'type': isSelect['type'],
+					'image': isSelect['image'],
+					'mt': isSelect['mt']
 				}
 		if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
 			member_termite_shortcuts[k] = value['value']
 	questions =OrderedDict()
 	result_list = []
+	title_disp_type = {}
+
+	#合并字典
+	member_termite_select = dict(member_termite_select, **(dict(member_termite_textselect, **member_termite_imageselect)))
 
 	for vote in votes:
 		termite_data = vote.termite_data
 		for title in sorted(termite_data.keys()):
 			value = termite_data[title]
-			if value['type'] == 'appkit.selection':
+			if value['type'] in ['appkit.selection', 'appkit.imageselection', 'appkit.textselection']:
 				if not questions.has_key(title):
 					questions[title] = [value['value']]
 				else:
 					questions[title].append(value['value'])
+				if value.has_key('display_type'):
+					display_type = value['display_type']
+					title_disp_type[title] = display_type #若title重复则会覆盖！！
 			if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
 				questions[title] = []
 	for q_title,values in questions.items():
@@ -228,8 +251,11 @@ def get_result(id,member_id):
 			value['id_name'] = timp_k
 			value['count'] = value_isSelect[timp_k]
 			value['per'] =  '%d' % (value_isSelect[timp_k]*100/float(total_count) if total_count else 0)
-			value['isSelect'] = member_termite_select[timp_k]['isSelect']
-			value['type'] = member_termite_select[timp_k]['type']
+			value['isSelect'] = member_termite_select[q_title+timp_k]['isSelect']
+			value['type'] = member_termite_select[q_title+timp_k]['type']
+			if member_termite_select[q_title+timp_k].has_key('image'):
+				value['image'] = member_termite_select[q_title+timp_k]['image']
+				value['mt'] = member_termite_select[q_title+timp_k]['mt']
 			value_list.append(value)
 		title_name = q_title.split('_')[1]
 		isShortcuts = False
@@ -239,7 +265,13 @@ def get_result(id,member_id):
 			title_name = SHORTCUTS_TEXT[title_name]
 		result['title'] = title_name
 		result['values'] = value_list
-		result['isShortcuts'] = isShortcuts
+		if 'image' in value_list[0]:
+			result['selectionType'] = 'image'
+			result['display_type'] = title_disp_type.get(q_title, '')
+		elif isShortcuts:
+			result['selectionType'] = 'shortcuts'
+		else:
+			result['selectionType'] = 'text'
 		result_list.append(result)
 
 	related_page_id = vote_vote.related_page_id

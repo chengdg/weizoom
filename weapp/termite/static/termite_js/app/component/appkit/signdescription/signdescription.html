@@ -1,5 +1,7 @@
 {% load workbench_filter %}
-{% block css %}
+
+{% ifequal component.type 'appkit.signdescription' %}
+
     <style>
         .Chr, p {
             font-family: STHeiti;
@@ -227,9 +229,7 @@
 
     </style>
     <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-{% endblock %}
 
-{% ifequal component.type 'appkit.signdescription' %}
 <div class="wui-SignPageDiv wa-signPageDiv">
     <div class="wui-TopPaneDiv">
         <div class="wui-UserPhotoDiv">

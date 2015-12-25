@@ -344,6 +344,26 @@ body {
 	background-position: -89px 3px;
   	width: 50px;
 }
+.componentList_component_textselection, .componentList_component_imageselection, .componentList_component_memberinfo{
+	background: url(/static_v2/img/termite2/appKit_vote_sprite.png) no-repeat;
+	-webkit-background-size: 180px 45px;
+	background-size: 180px 45px;
+}
+.componentList_component_textselection{
+	background-position: -133px 0;
+	width: 50px !important;
+	height: 50px !important;
+}
+.componentList_component_imageselection{
+	background-position:0 0;
+	width: 50px !important;
+	height: 50px !important;
+}
+.componentList_component_memberinfo{
+	background-position: -60px 0;
+	width: 65px !important;
+	height: 50px !important;
+}
 .xui-component .componentList_component_uploadimg {
   background: url(/static_v2/img/termite2/appKit_uploadimg.png) no-repeat;
   -webkit-background-size: 47px 41px;
@@ -1601,4 +1621,21 @@ button.xui-deleteQrcodeButton{
 	height: 20px;
 	background: rgba(0,0,0,0.45);
 	border-radius: 50%;
+}
+
+.xui-image-dialog-trigger{
+	background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;
+	width: 100px;
+	height: 100px;
+	border: none;
+}
+.xui-triggerButton-hasdata{
+	margin-top: -25px !important;
+	text-align: center !important;
+	width: 100px;
+	background: rgba(0,0,0, 0.5);
+	color: white;
+	height: 25px;
+	font-weight: bold;
+	position: absolute;
 }

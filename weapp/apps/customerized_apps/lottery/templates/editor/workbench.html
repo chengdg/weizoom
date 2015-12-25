@@ -11,10 +11,6 @@
         .propertyGroup_property_dialogSelectField{
             margin-top: 10px;
         }
-        .propertyGroup_property_dialogSelectField .xui-i-triggerButton{
-            background: none;
-            color: #1262b7;
-        }
         .propertyGroup_property_label {
           display: inline-block;
           vertical-align: top;
@@ -187,7 +183,7 @@
 
 				comp.model.set({
 					image: ''
-				}, {silent: true});
+				});
 			});
         },
         error: function(resp) {
