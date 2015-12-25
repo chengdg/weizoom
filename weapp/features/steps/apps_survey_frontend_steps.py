@@ -73,36 +73,44 @@ def __participate_survey(context,webapp_owner_id,survey_id):
 	for k,v in termite_data.iteritems():
 		for v in v:
 			if k == u"快捷模块":
-				item_name = __itemName2item(k) if k!=u'' else ''
-			else:
-				item_name = v['title']
-			name = '0'+str(i)+'_'+item_name
-			if k == u"选择题":
-				value = {}
-				j = i+1
-				for n in v['value']:
-					selectionInputName = str(j)+'_'+ n['title']
-					if n['type'] == u'单选':
-						selectionInputType = "radio"
-					else:
-						selectionInputType = "checkbox"
-					value[selectionInputName] = {
-						'type': selectionInputType,
-						'isSelect': __name2Bool(n['isSelect'])
+				for k,v in v['value'].iteritems():
+					item_name = __itemName2item(k) if k!=u'' else ''
+					j = i+1
+					name = '0'+str(j)+'_'+item_name
+					data[name] = {
+						'type': 'appkit.textlist',
+						'value': v
 					}
 					j += 1
-				i = j
-			if k == u"上传图片":
-				picture_list = []
-				picture_list.append(v['value'])
-				value = json.dumps(picture_list)
 			else:
-				value = v['value']
+				item_name = v['title']
+				name = '0'+str(i)+'_'+item_name
+				if k == u"选择题":
+					value = {}
+					j = i+1
+					for n in v['value']:
+						selectionInputName = str(j)+'_'+ n['title']
+						if n['type'] == u'单选':
+							selectionInputType = "radio"
+						else:
+							selectionInputType = "checkbox"
+						value[selectionInputName] = {
+							'type': selectionInputType,
+							'isSelect': __name2Bool(n['isSelect'])
+						}
+						j += 1
+					i = j
+				elif k == u"上传图片":
+					picture_list = []
+					picture_list.append(v['value'])
+					value = json.dumps(picture_list)
+				else:
+					value = v['value']
 
-			data[name] = {
-				'type': __typeName2type(k) if k!=u'' else '',
-				'value': value
-			}
+				data[name] = {
+					'type': __typeName2type(k) if k!=u'' else '',
+					'value': value
+				}
 			i += 1
 	related_page_id = survey.objects.get(id=survey_id).related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
