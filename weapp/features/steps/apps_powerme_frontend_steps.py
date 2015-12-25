@@ -85,14 +85,15 @@ def step_impl(context, webapp_user_name, title):
 	power_me_rule_name = __get_power_me_rule_name(title)
 	power_me_rule_id = __get_power_me_rule_id(power_me_rule_name)
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
-	context.powerme_result = response.context
+	context.power_me_rule_id = power_me_rule_id
 	context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 
 @then(u"{webapp_user_name}获得{webapp_owner_name}的'{power_me_rule_name}'的内容")
 def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
-	result = context.powerme_result
+	power_me_rule_id = __get_power_me_rule_id(power_me_rule_name)
 	rank_information = json.loads(context.rank_response)['data']
-	related_page_id = PowerMe.objects.get(id=result['record_id']).related_page_id
+	power_me_info = PowerMe.objects.get(id=power_me_rule_id)
+	related_page_id = power_me_info.related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
 	page_component = page['component']['components'][0]['model']
@@ -105,7 +106,7 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 	# 构造实际数据
 	actual = []
 	actual.append({
-		"name": result['page_title'],
+		"name": power_me_info.name,
 		"is_show_countdown": page_component['timing']['timing']['select'],
 		"desc": page_component['description'],
 		"background_pic": page_component['background_image'],
@@ -124,8 +125,6 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name, power_me_rule_name):
 def step_tmpl(context, webapp_user_name, power_me_rule_name):
 	rank_information = json.loads(context.rank_response)['data']
 	participances = rank_information['participances']
-	print('rank_information')
-	print(rank_information)
 	actual = []
 	if participances != []:
 		rank = 0
@@ -158,7 +157,7 @@ def step_impl(context, webapp_user_name, powerme_owner_name):
 		context.page_owner_member_id = json.loads(context.rank_response)['data']['member_info']['page_owner_member_id']
 	params = {
 		'webapp_owner_id': context.webapp_owner_id,
-		'id': context.powerme_result['record_id'],
+		'id': context.power_me_rule_id,
 		'fid': context.page_owner_member_id
 	}
 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=post', params)
@@ -190,7 +189,7 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	power_me_rule_id = context.powerme_result['record_id']
+	power_me_rule_id = context.power_me_rule_id
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
 	context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 	params = {
@@ -212,7 +211,7 @@ def step_tmpl(context, webapp_user_name, mp_user_name):
 
 @when(u"{webapp_user_name}通过识别弹层中的带参数二维码关注{mp_user_name}的公众号")
 def step_tmpl(context, webapp_user_name, mp_user_name):
-	power_me_rule_id = context.powerme_result['record_id']
+	power_me_rule_id = context.power_me_rule_id
 	channel_qrcode_name = __get_channel_qrcode_name(power_me_rule_id)
 	context.execute_steps(u'when %s扫描带参数二维码"%s"' % (webapp_user_name, channel_qrcode_name))
 
@@ -221,9 +220,9 @@ def step_tmpl(context, webapp_user_name, shared_webapp_user_name):
 	webapp_owner_id = context.webapp_owner_id
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	power_me_rule_id = context.powerme_result['record_id']
+	power_me_rule_id = context.power_me_rule_id
 	response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
-	context.powerme_result = response.context
+	# context.powerme_result = response.context
 	context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 
 @when(u"微信用户批量参加{webapp_owner_name}的微助力活动")
@@ -250,7 +249,7 @@ def step_impl(context, webapp_owner_name):
 		member = member_api.get_member_by_openid(openid, context.webapp_id)
 		#先进入微助力页面
 		response = __get_into_power_me_pages(context,webapp_owner_id,power_me_rule_id,openid)
-		context.powerme_result = response.context
+		context.power_me_rule_id = power_me_rule_id
 		context.rank_response = __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,openid).content
 		context.execute_steps(u"when %s把%s的微助力活动链接分享到朋友圈" % (webapp_user_name, webapp_owner_name))
 		powered_member_info = PowerMeParticipance.objects.get(member_id=member.id, belong_to=power_me_rule_id)
