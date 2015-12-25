@@ -55,6 +55,9 @@ class CleanUpCookieMiddleware(object):
 	清除缓存的中间件
 	"""
 	def process_request(self, request):
+		if 'm/apps/powerme/m_powerme' in request.get_full_path():
+			import time
+			print time.time(),'-------------------request begin'
 		if is_product_stocks_request(request) or is_wapi_request(request):
 			return None
 

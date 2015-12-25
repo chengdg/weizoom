@@ -220,6 +220,8 @@ class MPowerMe(resource.Resource):
 			cache_data = STATIC_HTML_CACHE.get(cache_key, None)
 			if cache_data:
 				print 'memory---return'
+				import time
+				print time.time(),'-------------------request end'
 				return HttpResponse(cache_data)
 			
 			#从redis缓存获取静态页面
@@ -228,6 +230,8 @@ class MPowerMe(resource.Resource):
 				#存入全局变量
 				STATIC_HTML_CACHE[cache_key] = cache_data
 				print 'redis---return'
+				import time
+				print time.time(),'-------------------request end'
 				return HttpResponse(cache_data)
 			
 			record = app_models.PowerMe.objects(id=record_id)
