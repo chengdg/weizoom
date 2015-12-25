@@ -80,7 +80,7 @@ class EmailNotify(resource.Resource):
 
     @login_required
     def api_put(request):
-        id = request.POST.get('id', None)
+        id = int(request.POST.get('id', None))
         status = request.POST.get('status', None)
         if id and status and status in ("1","0"):
             user_notify_setting = UserOrderNotifySettings.objects.filter(id=id).get()
