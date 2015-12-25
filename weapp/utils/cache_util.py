@@ -36,6 +36,8 @@ def get_many(keys):
 def delete_cache(key):
 	cache.delete(key)
 
+	cache.delete("api"+key)
+
 def delete_pattern(key):
 	cache.delete_pattern(key)
 
