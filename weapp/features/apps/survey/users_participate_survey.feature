@@ -191,43 +191,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 		When tom关注jobs的公众号
 		When tom取消关注jobs的公众号
 		When tom点击bill分享的用户调研活动'用户调研02'的活动链接
-		When tom参加jobs的用户调研活动'用户调研02'
-			"""
-			{
-				"选择题":
-					[{
-						"title":"选择题1",
-						"value":[{
-								"title":"1",
-								"type":"单选",
-								"isSelect":"否"
-							},{
-								"title":"2",
-								"type":"单选",
-								"isSelect":"是"
-							},{
-								"title":"3",
-								"type":"单选",
-								"isSelect":"否"
-							}]
-					},{
-						"title":"选择题2",
-						"value":[{
-								"title":"选项A",
-								"type":"多选",
-								"isSelect":"是"
-							},{
-								"title":"选项B",
-								"type":"多选",
-								"isSelect":"否"
-							},{
-								"title":"选项C",
-								"type":"多选",
-								"isSelect":"否"
-							}]
-					}]
-			}
-			"""
+		#Then tom获得提示'请关注后进行参与!'
 		#Then tom获得jobs的公众号二维码图片
 
 	#取消关注会员marry参加，点击【提交】按钮时弹出jobs的公众号二维码
@@ -236,43 +200,7 @@ Scenario:2 参加调研活动,必须关注才可参与
 		When marry取消关注jobs的公众号
 
 		When marry点击bill分享的用户调研活动'用户调研02'的活动链接
-		When marry参加jobs的用户调研活动'用户调研02'
-			"""
-			{
-				"选择题":
-					[{
-						"title":"选择题1",
-						"value":[{
-								"title":"1",
-								"type":"单选",
-								"isSelect":"否"
-							},{
-								"title":"2",
-								"type":"单选",
-								"isSelect":"否"
-							},{
-								"title":"3",
-								"type":"单选",
-								"isSelect":"是"
-							}]
-					},{
-						"title":"选择题2",
-						"value":[{
-								"title":"选项A",
-								"type":"多选",
-								"isSelect":"是"
-							},{
-								"title":"选项B",
-								"type":"多选",
-								"isSelect":"否"
-							},{
-								"title":"选项C",
-								"type":"多选",
-								"isSelect":"否"
-							}]
-					}]
-			}
-			"""
+		#Then marry获得提示'请关注后进行参与!'
 		#Then marry获得jobs的公众号二维码图片
 
 		Given jobs登录系统
