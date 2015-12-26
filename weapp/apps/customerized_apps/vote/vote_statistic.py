@@ -174,19 +174,28 @@ class voteStatistic_Export(resource.Resource):
 			for select in select_data:
 				for s_list in select_data[select]:
 					is_valid = False
-					for s in s_list:
+
+					v_title_index = 0
+					for s_k in sorted(s_list.keys()):
+						select_title = s_k.split('_')[1]
+						if len(str(v_title_index))< 2:
+							select_title = '0%s_%s' % (str(v_title_index), select_title)
+						else:
+							select_title = '%s_%s' % (str(v_title_index),select_title)
+
 						if select not in select_static:
 							select_static[select]={
 								'title': {}
 							}
-						if s not in select_static[select]['title']:
-							select_static[select]['title'][s]={'count': 0}
-						if s_list[s]['isSelect'] == True:
-							select_static[select]['title'][s]['count'] += 1
+						if select_title not in select_static[select]['title']:
+							select_static[select]['title'][select_title]={'count': 0}
+						if s_list[s_k]['isSelect'] == True:
+							select_static[select]['title'][select_title]['count'] += 1
 							is_valid = True
-						if s_list[s].has_key('image'):
+						if s_list[s_k].has_key('image'):
 							select_static[select]['image'] = True
-							select_static[select]['title'][s]['image'] = s_list[s]['image']
+							select_static[select]['title'][select_title]['image'] = s_list[s_k]['image']
+						v_title_index += 1
 					if is_valid:
 						if title_valid_dict.has_key(select):
 							title_valid_dict[select] += 1
