@@ -181,26 +181,44 @@ def get_result(id,member_id):
 	member_termite_shortcuts = {}
 	for k,member_termite in member_vote_termite.items():
 		value = member_vote_termite[k]
-		if value['type'] == 'appkit.selection':
-			for select,isSelect in value['value'].items():
-				member_termite_select[k+select] = {
-					'isSelect': isSelect['isSelect'],
-					'type': isSelect['type']
-				}
-		if value['type'] == 'appkit.textselection':
-			for select,isSelect in value['value'].items():
-				member_termite_textselect[k+select] = {
-					'isSelect': isSelect['isSelect'],
-					'type': isSelect['type']
-				}
-		if value['type'] == 'appkit.imageselection':
-			for select,isSelect in value['value'].items():
-				member_termite_imageselect[k+select] = {
-					'isSelect': isSelect['isSelect'],
-					'type': isSelect['type'],
-					'image': isSelect['image'],
-					'mt': isSelect['mt']
-				}
+		if value['type'] in ['appkit.selection','appkit.textselection','appkit.imageselection']:
+			select_vlaue = value['value']
+			v_title_index = 0
+			for select in sorted(select_vlaue.keys()):
+				select_title = select.split('_')[1]
+				if len(str(v_title_index))< 2:
+					select_title = '0' + str(v_title_index) + select_title
+				else:
+					select_title = str(v_title_index) + select_title
+				select_title_name = k+select_title
+				isSelect = select_vlaue[select]
+				if value['type'] in ['appkit.selection','appkit.textselection']:
+					member_termite_select[select_title_name] = {
+						'isSelect': isSelect['isSelect'],
+						'type': isSelect['type']
+					}
+				else:
+					member_termite_imageselect[select_title_name] = {
+						'isSelect': isSelect['isSelect'],
+						'type': isSelect['type'],
+						'image': isSelect['image'],
+						'mt': isSelect['mt']
+					}
+				v_title_index += 1
+		# if value['type'] == 'appkit.textselection':
+		# 	for select,isSelect in value['value'].items():
+		# 		member_termite_textselect[k+select] = {
+		# 			'isSelect': isSelect['isSelect'],
+		# 			'type': isSelect['type']
+		# 		}
+		# if value['type'] == 'appkit.imageselection':
+		# 	for select,isSelect in value['value'].items():
+		# 		member_termite_imageselect[k+select] = {
+		# 			'isSelect': isSelect['isSelect'],
+		# 			'type': isSelect['type'],
+		# 			'image': isSelect['image'],
+		# 			'mt': isSelect['mt']
+		# 		}
 		if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
 			member_termite_shortcuts[k] = value['value']
 	questions =OrderedDict()
@@ -267,11 +285,11 @@ def get_result(id,member_id):
 			value['id_name'] = timp_title_name
 			value['count'] = value_isSelect[timp_title_name]
 			value['per'] =  '%d' % (value_isSelect[timp_title_name]*100/float(total_count) if total_count else 0)
-			value['isSelect'] = member_termite_select[q_title+timp_k]['isSelect']
-			value['type'] = member_termite_select[q_title+timp_k]['type']
-			if member_termite_select[q_title+timp_k].has_key('image'):
-				value['image'] = member_termite_select[q_title+timp_k]['image']
-				value['mt'] = member_termite_select[q_title+timp_k]['mt']
+			value['isSelect'] = member_termite_select[timp_title_name]['isSelect']
+			value['type'] = member_termite_select[timp_title_name]['type']
+			if member_termite_select[timp_title_name].has_key('image'):
+				value['image'] = member_termite_select[timp_title_name]['image']
+				value['mt'] = member_termite_select[timp_title_name]['mt']
 			value_list.append(value)
 			timp_k_index += 1
 		title_name = q_title.split('_')[1]
