@@ -38,20 +38,29 @@ class voteStatistic(resource.Resource):
 					title_type = u''
 					if data['type'] in ['appkit.selection', 'appkit.imageselection', 'appkit.textselection']:
 						is_valid = False
-						for item, value in data['value'].items():
+						data_value = data['value']
+						v_title_index = 0
+						for item_k in sorted(data_value.keys()):
+							value = data_value[item_k]
+							select_title = item_k.split('_')[1]
+							if len(str(v_title_index))< 2:
+								select_title = '0%s_%s' % (str(v_title_index), select_title)
+							else:
+								select_title = '%s_%s' % (str(v_title_index),select_title)
 							if value['isSelect']:
 								is_valid = True
 							if title2itemCount.has_key(title):
-								if title2itemCount[title].has_key(item):
-									title2itemCount[title][item] += 1 if value['isSelect'] else 0
+								if title2itemCount[title].has_key(select_title):
+									title2itemCount[title][select_title] += 1 if value['isSelect'] else 0
 								else:
-									title2itemCount[title][item] = 1 if value['isSelect'] else 0
+									title2itemCount[title][select_title] = 1 if value['isSelect'] else 0
 							else:
 								title2itemCount[title] = {}
-								title2itemCount[title][item] = 1 if value['isSelect'] else 0
+								title2itemCount[title][select_title] = 1 if value['isSelect'] else 0
 							if value.has_key('image'):
-								title_image_dict[title+item] = value['image']
+								title_image_dict[title+select_title] = value['image']
 							title_type = value['type']
+							v_title_index += 1
 						if is_valid:
 							if total_title_valid_dict.has_key(title):
 								total_title_valid_dict[title] += 1
