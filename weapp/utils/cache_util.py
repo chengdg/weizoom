@@ -47,7 +47,7 @@ def delete_cache(key):
 
 def delete_pattern(key):
 	cache.delete_pattern(key)
-	cache.delete("api"+key)
+	cache.delete_pattern("api"+key)
 
 def clear_db():
 	cache.clear()
