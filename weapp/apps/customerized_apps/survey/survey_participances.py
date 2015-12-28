@@ -25,25 +25,25 @@ COUNT_PER_PAGE = 20
 class surveyParticipances(resource.Resource):
 	app = 'apps/survey'
 	resource = 'survey_participances'
-	
+
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
 		has_data = app_models.surveyParticipance.objects(belong_to=request.GET['id']).count()
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
-            'third_nav_name': export.MALL_APPS_SURVEY_NAV,
+			'third_nav_name': export.MALL_APPS_SURVEY_NAV,
 			'has_data': has_data,
 			'activity_id': request.GET['id'],
 		});
-		
+
 		return render_to_response('survey/templates/editor/survey_participances.html', c)
-	
+
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
@@ -52,7 +52,8 @@ class surveyParticipances(resource.Resource):
 		if name:
 			hexstr = byte_to_hex(name)
 			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			member_ids = [member.id for member in members]
+			temp_ids = [member.id for member in members]
+			member_ids = temp_ids  if temp_ids else [-1]
 		# webapp_user_ids = [webapp_user.id for webapp_user in member_models.WebAppUser.objects.filter(member_id__in=member_ids)]
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -64,14 +65,14 @@ class surveyParticipances(resource.Resource):
 		if end_time:
 			params['created_at__lte'] = end_time
 		datas = app_models.surveyParticipance.objects(**params).order_by('-id')
-		
+
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
 		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-		
+
 		return pageinfo, datas
-	
+
 	@login_required
 	def api_get(request):
 		"""
@@ -84,7 +85,7 @@ class surveyParticipances(resource.Resource):
 			tmp_member_ids.append(data.member_id)
 		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
 		member_id2member = {member.id: member for member in members}
-		
+
 		items = []
 		for data in datas:
 			items.append({
@@ -101,7 +102,7 @@ class surveyParticipances(resource.Resource):
 		}
 		response = create_response(200)
 		response.data = response_data
-		return response.get_response()		
+		return response.get_response()
 
 class surveyParticipances_Export(resource.Resource):
 	'''

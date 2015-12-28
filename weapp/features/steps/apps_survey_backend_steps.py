@@ -1080,43 +1080,39 @@ def __Search_Survey(context,search_dic):
 	bdd_util.assert_api_call_success(search_response)
 	return search_response
 
-# def __Search_Survey_Result(context,search_dic):
-# 	"""
-# 	搜索,调研参与结果
+def __Search_Survey_Result(context,search_dic):
+	"""
+	搜索,调研参与结果
 
-# 	输入搜索字典
-# 	返回数据列表
-# 	"""
+	输入搜索字典
+	返回数据列表
+	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
-# 	count_per_page = 10
+	design_mode = 0
+	version = 1
+	page = 1
+	enable_paginate = 1
+	count_per_page = 10
 
-# 	id = search_dic["id"]
-# 	participant_name = search_dic["participant_name"]
-# 	start_time = search_dic["start_time"]
-# 	end_time = search_dic["end_time"]
-# 	prize_type = __name2type(search_dic['prize_type'])
-# 	status =__name2coupon_status(search_dic['status'])
+	id = search_dic["id"]
+	participant_name = search_dic["participant_name"]
+	start_time = search_dic["start_time"]
+	end_time = search_dic["end_time"]
 
-# 	search_url = "/apps/survey/api/survey_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&prize_type={}&status={}&count_per_page={}&page={}&enable_paginate={}".format(
-# 			design_mode,
-# 			version,
-# 			id,
-# 			participant_name,
-# 			start_time,
-# 			end_time,
-# 			prize_type,
-# 			status,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate)
+	search_url = "/apps/survey/api/survey_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+			design_mode,
+			version,
+			id,
+			participant_name,
+			start_time,
+			end_time,
+			count_per_page,
+			page,
+			enable_paginate)
 
-# 	search_response = context.client.get(search_url)
-# 	bdd_util.assert_api_call_success(search_response)
-# 	return search_response
+	search_response = context.client.get(search_url)
+	bdd_util.assert_api_call_success(search_response)
+	return search_response
 
 @when(u'{user}新建用户调研活动')
 def step_impl(context,user):
@@ -1330,128 +1326,123 @@ def step_impl(context,user):
 	page_num = int(paging_dic['page_num'])-1
 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}查看用户调研活动'{survey_name}'")
-# def check_survey_list(context,user,survey_name):
-# 	design_mode = 0
-# 	version = 1
-# 	page = 1
+@when(u"{user}查看用户调研活动'{survey_name}'")
+def check_survey_list(context,user,survey_name):
+	design_mode = 0
+	version = 1
+	page = 1
 
-# 	if hasattr(context,"enable_paginate"):
-# 		enable_paginate = context.enable_paginate
-# 	else:
-# 		enable_paginate = 1
-# 	if hasattr(context,"count_per_page"):
-# 		count_per_page = context.count_per_page
-# 	else:
-# 		count_per_page = 10
-
-
-# 	if hasattr(context,"paging"):
-# 		paging_dic = context.paging
-# 		count_per_page = paging_dic['count_per_page']
-# 		page = paging_dic['page_num']
-
-# 	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
-# 	url ='/apps/survey/api/survey_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method=get'.format(
-# 			design_mode,
-# 			version,
-# 			survey_id,
-# 			count_per_page,
-# 			page,
-# 			enable_paginate,
-# 		)
-# 	url = bdd_util.nginx(url)
-# 	response = context.client.get(url)
-# 	context.participances = json.loads(response.content)
-# 	context.survey_id = "%s"%(survey_id)
+	if hasattr(context,"enable_paginate"):
+		enable_paginate = context.enable_paginate
+	else:
+		enable_paginate = 1
+	if hasattr(context,"count_per_page"):
+		count_per_page = context.count_per_page
+	else:
+		count_per_page = 10
 
 
-# @then(u"{webapp_user_name}获得用户调研活动'{power_me_rule_name}'的结果列表")
-# def step_tmpl(context, webapp_user_name, power_me_rule_name):
+	if hasattr(context,"paging"):
+		paging_dic = context.paging
+		count_per_page = paging_dic['count_per_page']
+		page = paging_dic['page_num']
 
-# 	if hasattr(context,"search_survey_result"):
-# 		participances = context.search_survey_result
-# 	else:
-# 		participances = context.participances['data']['items']
-# 	actual = []
+	survey_page_id,survey_id = __survey_name2id(survey_name)#纯数字
+	url ='/apps/survey/api/survey_participances/?design_mode={}&version={}&id={}&count_per_page={}&page={}&enable_paginate={}&_method=get'.format(
+			design_mode,
+			version,
+			survey_id,
+			count_per_page,
+			page,
+			enable_paginate,
+		)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	context.participances = json.loads(response.content)
+	context.survey_id = "%s"%(survey_id)
 
-# 	for p in participances:
-# 		p_dict = OrderedDict()
-# 		p_dict[u"member_name"] = p['participant_name']
-# 		p_dict[u"mobile"] = p['tel']
-# 		p_dict[u"prize_grade"] = p['prize_title']
-# 		p_dict[u"prize_name"] = p['prize_name']
-# 		p_dict[u"survey_time"] = bdd_util.get_date_str(p['created_at'])
-# 		p_dict[u"receive_status"] = u'已领取' if p['status'] else u'未领取'
-# 		p_dict[u"actions"] = u'' if p['status'] else u'领取'
-# 		actual.append((p_dict))
-# 	print("actual_data: {}".format(actual))
-# 	expected = []
-# 	if context.table:
-# 		for row in context.table:
-# 			cur_p = row.as_dict()
-# 			if cur_p[u'survey_time']:
-# 				cur_p[u'survey_time'] = bdd_util.get_date_str(cur_p[u'survey_time'])
-# 			expected.append(cur_p)
-# 	else:
-# 		expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
 
-# 	bdd_util.assert_list(expected, actual)
+@then(u"{webapp_user_name}获得用户调研活动'{power_me_rule_name}'的结果列表")
+def step_tmpl(context, webapp_user_name, power_me_rule_name):
 
-# @when(u"{user}设置用户调研活动结果列表查询条件")
-# def step_impl(context,user):
-# 	expect = json.loads(context.text)
+	if hasattr(context,"search_survey_result"):
+		participances = context.search_survey_result
+	else:
+		participances = context.participances['data']['items']
+	actual = []
+	print participances
 
-# 	if 'survey_start_time' in expect:
-# 		expect['start_time'] = __date2time(expect['survey_start_time']) if expect['survey_start_time'] else ""
-# 		del expect['survey_start_time']
+	for p in participances:
+		p_dict = OrderedDict()
+		p_dict[u"member_name"] = p['participant_name']
+		p_dict[u"survey_time"] = bdd_util.get_date_str(p['created_at'])
+		actual.append((p_dict))
+	print("actual_data: {}".format(actual))
 
-# 	if 'survey_end_time' in expect:
-# 		expect['end_time'] = __date2time(expect['survey_end_time']) if expect['survey_end_time'] else ""
-# 		del expect['survey_end_time']
+	expected = []
+	if context.table:
+		for row in context.table:
+			cur_p = row.as_dict()
+			if cur_p[u'survey_time']:
+				cur_p[u'survey_time'] = bdd_util.get_date_str(cur_p[u'survey_time'])
+			expected.append(cur_p)
+	else:
+		expected = json.loads(context.text)
+	print("expected: {}".format(expected))
 
-# 	print("expected: {}".format(expect))
-# 	id = context.survey_id
-# 	participant_name = expect.get("member_name","")
-# 	start_time = expect.get("start_time","")
-# 	end_time = expect.get("end_time","")
-# 	prize_type = expect.get("prize_type",u"全部")
-# 	status = expect.get("status",u"全部")
+	bdd_util.assert_list(expected, actual)
+	context.participances = participances
 
-# 	search_dic = {
-# 		"id":id,
-# 		"participant_name":participant_name,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"prize_type":prize_type,
-# 		"status":status
-# 	}
-# 	search_response = __Search_Survey_Result(context,search_dic)
-# 	survey_result_array = json.loads(search_response.content)['data']['items']
-# 	context.search_survey_result = survey_result_array
+@when(u"{user}设置用户调研活动结果列表查询条件")
+def step_impl(context,user):
+	expect = json.loads(context.text)
 
-# @when(u"{user}访问用户调研活动'{survey_name}'的结果列表第'{page_num}'页")
-# def step_impl(context,user,survey_name,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_survey_list(context,user,survey_name)
+	if 'survey_start_time' in expect:
+		expect['start_time'] = __date2time(expect['survey_start_time']) if expect['survey_start_time'] else ""
+		del expect['survey_start_time']
 
-# @when(u"{user}访问用户调研活动'{survey_name}'的结果列表下一页")
-# def step_impl(context,user,survey_name):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_survey_list(context,user,survey_name)
+	if 'survey_end_time' in expect:
+		expect['end_time'] = __date2time(expect['survey_end_time']) if expect['survey_end_time'] else ""
+		del expect['survey_end_time']
 
-# @when(u"{user}访问用户调研活动'{survey_name}'的结果列表上一页")
-# def step_impl(context,user,survey_name):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
-# 	check_survey_list(context,user,survey_name)
+	print("expected: {}".format(expect))
+
+	id = context.survey_id
+	participant_name = expect.get("member_name","")
+	start_time = expect.get("start_time","")
+	end_time = expect.get("end_time","")
+
+	search_dic = {
+		"id":id,
+		"participant_name":participant_name,
+		"start_time":start_time,
+		"end_time":end_time,
+	}
+	search_response = __Search_Survey_Result(context,search_dic)
+	survey_result_array = json.loads(search_response.content)['data']['items']
+	context.search_survey_result = survey_result_array
+
+@when(u"{user}访问用户调研活动'{survey_name}'的结果列表第'{page_num}'页")
+def step_impl(context,user,survey_name,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	check_survey_list(context,user,survey_name)
+
+@when(u"{user}访问用户调研活动'{survey_name}'的结果列表下一页")
+def step_impl(context,user,survey_name):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	check_survey_list(context,user,survey_name)
+
+@when(u"{user}访问用户调研活动'{survey_name}'的结果列表上一页")
+def step_impl(context,user,survey_name):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+	check_survey_list(context,user,survey_name)
 
 # @then(u"{user}能批量导出调研活动'{survey_name}'")
 # def step_impl(context,user,survey_name):
@@ -1460,3 +1451,54 @@ def step_impl(context,user):
 # 	url = bdd_util.nginx(url)
 # 	response = context.client.get(url)
 # 	bdd_util.assert_api_call_success(response)
+
+@when(u"{webapp_owner_name}访问用户'{webapp_user_name}'的查看结果")
+def step_impl(context,webapp_owner_name,webapp_user_name):
+	participances = context.participances
+	webapp_user_id = None
+	for participance_dic in participances:
+		if participance_dic['participant_name'] == webapp_user_name:
+			webapp_user_id = participance_dic['id']
+
+	url ='/apps/survey/api/survey_participance/?id={}'.format(
+				webapp_user_id
+			)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	participance = json.loads(response.content)['data']['items']
+	context.participance_content = {"username":webapp_user_name,'participance':participance}
+
+
+@then(u"{webapp_owner_name}获得用户'{webapp_user_name}'的查看结果")
+def step_impl(context,webapp_owner_name,webapp_user_name):
+
+	expect_order = []
+	title_key = u"{}填写的内容".format(webapp_user_name)
+	expect = json.loads(context.text)
+	print("expect: {}".format(expect))
+
+
+	#获得顺序
+	for ex_dict in expect[title_key]:
+		expect_order.append(ex_dict.keys()[0])
+
+
+
+	participance_content = context.participance_content
+	webapp_user_name = participance_content['username']
+	participance = participance_content['participance']
+
+	actual = {}
+	actual[title_key] = []
+
+	for item_name in expect_order:
+		for parti in participance:
+			parti_name = parti['item_name']
+			parti_value = parti['item_value']
+			if item_name == parti_name:
+				tmp = {}
+				tmp[parti_name] = parti_value
+				actual[title_key].append(tmp)
+
+
+	bdd_util.assert_dict(expect, actual)
