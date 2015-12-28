@@ -76,7 +76,7 @@ def get_order_stats_cache_key(webapp_user_id):
 	"""
 	订单统计数据Redis key
 	"""
-	return "webapp_order_stats_{wo:%d}" % (webapp_user_id)
+	return "webapp_order_stats_{wu:%d}" % (webapp_user_id)
 
 
 
@@ -86,7 +86,7 @@ def get_order_stats(webapp_user_id):
 
 	@param webapp_user_id  webapp_user_id
 
-	缓存的key ：webapp_order_stats_{wo:`<webapp_user_id>`}
+	缓存的key ：webapp_order_stats_{wu:`<webapp_user_id>`}
 
 	缓存的数据：
 
