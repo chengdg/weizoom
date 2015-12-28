@@ -263,7 +263,7 @@ Background:
 		}
 		"""
 
-@mall2 @apps @survey
+@mall2 @apps @survey @view_survey_results
 Scenario:1 查看结果列表
 	Given jobs登录系统
 	Then jobs获得用户调研活动列表
@@ -405,7 +405,7 @@ Scenario:2 查看结果列表查询
 			| member_name | survey_time |
 			| bill        |2天前        |
 
-@mall2 @apps @survey
+@mall2 @apps @survey @view_survey_results
 Scenario:3 查看结果列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数

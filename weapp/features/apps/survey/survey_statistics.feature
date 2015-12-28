@@ -97,7 +97,7 @@ Background:
 		| 用户调研01 | tom1        |今天         |tom1问答题内容 | 1      |tom1,153211223344,3234@qq.com,33  | 3.jpg      |
 		| 用户调研01 | tom2        |今天         |tom2问答题内容 | 3      |tom2,15411223344,4234@qq.com,44   | 4.jpg      |
 
-@mall2 @apps @survey
+@mall2 @apps @survey @survey_statistics
 Scenario:1 查看用户调研的统计结果
 	Given jobs登录系统
 	When jobs访问用户调研活动'用户调研01'的统计
