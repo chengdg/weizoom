@@ -436,7 +436,7 @@ Scenario:3 查看结果列表分页
 		| member_name | survey_time |
 		| tom         |昨天         |
 
-@mall2 @apps @survey @view_survey_results @yang1
+@mall2 @apps @survey @view_survey_results
 Scenario:4 访问用户的查看结果
 	Given jobs登录系统
 	When jobs查看用户调研活动'用户调研01'
