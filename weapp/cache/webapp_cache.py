@@ -498,6 +498,10 @@ def update_webapp_product_detail_cache(**kwargs):
         else:
             pattern = 'webapp_product_detail_{wo:%s}_*' % webapp_owner_id
             cache_util.delete_pattern(pattern)
+
+            pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+            cache_util.delete_pattern(pattern_categories)
+
             instance = kwargs.get('instance', None)
             if instance:
                 if isinstance(instance, mall_models.Product):
