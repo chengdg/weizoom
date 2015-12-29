@@ -185,7 +185,7 @@
                     </h1>
                     <ul class="wui-i-items xa-inputControl">
                         {% for select in item.title_value %}
-                        <li class="wui-i-item">
+                        <li class="wui-i-item" style="position: relative;">
                             <label style="padding: 3px 0;" >
                                 <span class="
                                     {% ifequal select.type 'radio' %}
@@ -201,10 +201,10 @@
                                     {% endifequal %}"></span>
                                 <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
                                 <span style="display: inline-block;float: right;margin-top: -15px;">{{ select.counter }}票&nbsp;{{ select.percent }}</span>
-                                <div style="background-color: #eee;height: 20px;margin-top: 5px">
-                                    <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
-                                </div>
                             </label>
+                            <div style="background-color: #eee;height: 20px;margin-top: 5px;">
+                                <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
+                            </div>
 
                         </li>
                         {% endfor %}
