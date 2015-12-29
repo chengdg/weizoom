@@ -237,8 +237,7 @@ def get_result(request,member_id):
 		if type(data['title_value']) == list:
 			for d in data['title_value']:
 				d['name'] = d['item_name'].split('_')[1]
-				if d['member_id'] == member_id:
-					d['isSelect'] = member_termite_select[data['title_name']+d['item_name']]['isSelect']
+				d['isSelect'] = member_termite_select[data['title_name']+d['item_name']]['isSelect']
 				if data['type'] == u'单选':
 					d['type'] = u'radio'
 				else:
