@@ -39,17 +39,21 @@
         height: 20px;
     }
     .wa-progress-msg{
+        /* display: block; */
         position: absolute;
-        margin-top: -17px;
+        margin-top: -19px;
         margin-left: 10%;
         font-size: 0.8rem;
+        height: 20px;
+        line-height: 20px;
     }
     .wui-selectBox-display-list label{
+        position: absolute;
         float: left;
         display: block;
         margin-left: -5px;
-        margin-top: 85%;
-        width: 105px;
+        width: 50%;
+        bottom: 20px;
     }
     .mask{
         position: absolute;
@@ -127,7 +131,7 @@
                                     </div>
                                 </li>
                             {% else %}
-                                <li class="wui-selectBox-display-list">
+                                <li class="wui-selectBox-display-list" style="position: relative">
                                     <div class="wui-selectionwithimage xa-inputControl"
                                         data-type="radio"
                                         data-input-name="{{select.name}}"
@@ -139,11 +143,11 @@
                                             <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" class="wui-i-image">
                                             </div>
                                         </div>
-                                        <div style="position: relative;float: left;">
+                                        <div style="display: inline-block;">
                                             <span class="wui-i-text">{{ select.name }}</span>
-                                            <label style="padding: 3px 0;">
+                                            <label style="padding-left: 10px;">
                                                 <span data-per="{{ select.percent }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
-                                                <span class="wa-progress-msg">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
+                                                <span class="wa-progress-msg" style="margin-left: 26%;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
                                             </label>
                                         </div>
                                     </div>
