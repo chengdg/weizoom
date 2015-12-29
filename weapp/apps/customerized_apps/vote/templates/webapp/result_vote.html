@@ -54,12 +54,6 @@
         width: 45%;
         bottom: 20px;
     }
-    .mask{
-        position: absolute;
-        z-index: 999;
-        height: 90%;
-        width: 100%;
-    }
     .wui-image-selected{
         border: 1px solid #19A4F9;
     }
@@ -69,23 +63,27 @@
     /*.wui-imageSelection{
         padding: 0;
     }*/
-    .wui-selectBox-display-list .wui-i-text{
+    .xui-list-content{
+        position: absolute;
+        height: 100%;
+        display: inline-block;
+        width: 50%;
+        right: -10px;
+    }
+    .xui-list-content .wui-text{
         display: -webkit-box;
         position: absolute;
         font-size: 14px;
         word-break: break-all;
-        /*margin-top: 15px;*/
-        padding-left: 5px;
-        /*max-width: 38%;*/
-        top: 0;
+        margin-top: 15px;
+        padding-left: 10px;
     }
-    .wui-selectBox-display-list .wui-inner-selectionwithimage{
-        width: 45%;
-        display: inline-block;
-        /*float: left;*/
-        min-width: 120px;
-        min-height: 120px;
-        margin-right: 10px;
+    .xui-list-content .xui-progress-list{
+        position:absolute;
+        height:20px;
+        width:100%;
+        background-color: #eee;
+        bottom: 20px;
     }
     .xui-progressBar{
             position: absolute;
@@ -98,7 +96,6 @@
 {% endblock %}
 
 {% block content-panel %}
-    <div class="mask"></div>
     <div class="wa-page xui-default-background" data-page-title="">
         <div class="wui-surveyDescription xa-prizeContainer" style="min-height:100px; background-color:#FFF;" data-component-cid="2">
             <h1 class="wui-i-title xa-title">{{ vote_detail.name }}</h1>
@@ -147,8 +144,10 @@
                                             <span class="wui-i-text">{{ select.name }}</span>
                                             </div>
                                         </div>
-                                            <span data-per="{{ select.percent }}" id="progressbar-{{ item.title }}-{{ select.id_name }}" class="progressbar"></span>
-                                            <span class="wa-progress-msg">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
+                                        <div style="background-color: #eee;position: relative;width: 100%;height: 20px">
+                                            <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
+                                            <span style="position: absolute;margin-left: 26%;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
+                                        </div>
                                     </div>
                                 </li>
                             {% else %}
@@ -164,9 +163,9 @@
                                             <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" class="wui-i-image">
                                             </div>
                                         </div>
-                                        <div style="position: absolute;height: 100%;/* float: left; */display: inline-block;width: 50%;/* margin-left: 50%; */">
-                                            <span class="wui-i-text">{{ select.name }}</span>
-                                            <div style="position:absolute;height:20px;width:100%;background-color: #eee;bottom: 20px;">
+                                        <div class="xui-list-content">
+                                            <span class="wui-text">{{ select.name }}</span>
+                                            <div class="xui-progress-list">
                                                 <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
                                             </div>
                                             <span class="wa-progress-msg" style="margin-left: 26%;bottom: 20px;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
@@ -202,7 +201,9 @@
                                     {% endifequal %}"></span>
                                 <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
                                 <span style="display: inline-block;float: right;margin-top: -15px;">{{ select.counter }}票&nbsp;{{ select.percent }}</span>
-                                <span data-per="{{ select.percent }}" id="progressbar-{{ item.title }}-{{ forloop.counter }}" class="progressbar"></span>
+                                <div style="background-color: #eee;height: 20px;margin-top: 5px">
+                                    <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
+                                </div>
                             </label>
 
                         </li>
@@ -234,11 +235,6 @@
     <script type="text/javascript" src="/termite_static/v3/gmu/widget/progressbar.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $('.progressbar').each(function(){
-            $(this).progressbar({
-                initValue: $(this).attr('data-per').split('%')[0]
-            });
-        });
         $('.xa-toUserCenter').on('click', function(event) {
             if (W.isMember){
                 redirectTo('/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id='+W.webappOwnerId);
