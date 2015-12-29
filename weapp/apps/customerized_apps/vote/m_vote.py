@@ -225,6 +225,8 @@ def get_result(request,member_id):
 				'title_value': member_termite_shortcuts[shortcut_title]['value'],
 				'selectionType': u'shortcuts'
 			})
+	#重新按title_name正序排序
+	vote_title_select_datas = sorted(vote_title_select_datas, cmp=None, key=lambda vote_title_select_data:vote_title_select_data['title_name'], reverse=False)
 	for data in vote_title_select_datas:
 		title = data['title_name'].split('_')[1]
 		if data.get('selectionType',None) == u'shortcuts':
