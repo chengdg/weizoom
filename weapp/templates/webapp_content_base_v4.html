@@ -176,6 +176,18 @@
                             return;
                         }
 
+                        // 老营销工具，优惠劵、扫码……   加入from_h5=1 其它不做处理
+                        if (oldHref.indexOf('workspace_id=market_tool:') !== -1) {
+                            $link.attr('href', oldHref+'&from_h5=1');
+                            return;
+                        }
+
+                        // 新营销工具，也不做处理，加入from_h5=1
+                        if (oldHref.indexOf('/m/') !== -1) {
+                            $link.attr('href', oldHref+'&from_h5=1');
+                            return;
+                        }
+
                         var pos = oldHref.indexOf('?');
                         var qs = oldHref.substring(pos, oldHref.length);
                         var newHref = 'http://h5.weapp.com/mall/weapp_resource/'+qs;
