@@ -65,6 +65,15 @@ def __date2time(date_str):
 	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
 	return p_time
 
+def __date2str(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{}".format(bdd_util.get_date_str(cr_date))
+	return p_time
+
 def __datetime2str(dt_time):
 	"""
 	datetime型数据，转为字符串型，日期
@@ -1370,7 +1379,6 @@ def step_tmpl(context, webapp_user_name, power_me_rule_name):
 	else:
 		participances = context.participances['data']['items']
 	actual = []
-	print participances
 
 	for p in participances:
 		p_dict = OrderedDict()
@@ -1502,3 +1510,104 @@ def step_impl(context,webapp_owner_name,webapp_user_name):
 
 
 	bdd_util.assert_dict(expect, actual)
+
+@when(u"{webapp_owner_name}访问用户调研活动'{survey_name}'的统计")
+def step_impl(context,webapp_owner_name,survey_name):
+
+	survey = survey_models.survey.objects.get(name=survey_name)
+	survey_id = survey.id
+	related_page_id = survey.related_page_id
+
+	url ="/apps/survey/survey_statistics/?id={}".format(survey_id)
+	url = bdd_util.nginx(url)
+	response = context.client.get(url)
+	result_list =  response.context['titles']
+
+	for appkit in result_list:
+		if appkit['type'] == 'appkit.qa':
+			appkit_title = appkit['title_']
+			appkit_url ="/apps/survey/api/question/?id={}&question_title={}".format(survey_id,appkit_title)
+			appkit_url = bdd_util.nginx(appkit_url)
+			appkit_response = context.client.get(appkit_url)
+			appkit_list =  json.loads(appkit_response.content)['data']['items']
+			appkit['values'] = appkit_list
+
+		elif appkit['type'] == 'appkit.uploadimg':
+			appkit_title = appkit['title_']
+			appkit_url ="/apps/survey/api/question/?id={}&question_title={}".format(survey_id,appkit_title)
+			appkit_url = bdd_util.nginx(appkit_url)
+			appkit_response = context.client.get(appkit_url)
+			appkit_list =  json.loads(appkit_response.content)['data']['items']
+			appkit['values'] = appkit_list
+
+	context.appkit_list = result_list
+
+@then(u"{webapp_owner_name}获得用户调研活动'{survey_name}'的统计结果")
+def step_impl(context,webapp_owner_name,survey_name):
+	expect = json.loads(context.text)
+	expect_title_order = [ ex['title'] for ex in expect]
+
+	for ex_item in expect:
+		for value_item in ex_item['values']:
+			if 'submit_time' in value_item:
+				value_item['submit_time'] = __date2str(value_item['submit_time'])
+	print("expect: {}".format(expect))
+
+	actual = []
+	appkit_list = context.appkit_list
+	for index in range(len(expect_title_order)):
+		ex_title = expect_title_order[index]
+		for appkit in appkit_list:
+			__debug_print(appkit)
+			if appkit['title'] == ex_title:
+				if appkit['type'] == 'appkit.qa':
+					tmp = {}
+					tmp['participate_count'] = appkit['count']
+					tmp['title'] = appkit['title']
+					tmp['type'] = appkit['title_type']
+					tmp['values'] = []
+					for value in appkit['values']:
+						if 'created_at' in value:
+							value['submit_time'] = value['created_at']
+							del value['created_at']
+						tmp['values'].append(value)
+					actual.append(tmp)
+
+				elif appkit['type'] == 'appkit.uploadimg':
+					tmp = {}
+					tmp['participate_count'] = appkit['count']
+					tmp['title'] = appkit['title']
+					tmp['type'] = appkit['title_type']
+					tmp['values'] = []
+					for value in appkit['values']:
+						__debug_print(value)
+						if 'created_at' in value:
+							value['submit_time'] = value['created_at']
+							del value['created_at']
+						if 'content' in value:
+							imgval = value['content'][0]
+							imgval = imgval.strip("<").strip(">").split("src=")[1].strip("\"").strip("\'")
+							value['content'] = imgval
+						tmp['values'].append(value)
+					actual.append(tmp)
+				elif appkit['type'] == 'appkit.selection':
+					tmp = {}
+					tmp['participate_count'] = appkit['count']
+					tmp['title'] = appkit['title']
+					tmp['type'] = appkit['title_type']
+					tmp['values'] = []
+					for value in appkit['values']:
+						if 'name' in value:
+							value['options'] = value['name']
+							del value['name']
+						if 'per' in value:
+							value['percent'] = value['per']
+							del value['per']
+						tmp['values'].append(value)
+					actual.append(tmp)
+
+	print("actual: {}".format(actual))
+	bdd_util.assert_list(expect,actual)
+
+
+

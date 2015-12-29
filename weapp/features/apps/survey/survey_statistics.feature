@@ -258,60 +258,63 @@ Background:
 Scenario:1 查看用户调研的统计结果
 	Given jobs登录系统
 	When jobs访问用户调研活动'用户调研01'的统计
-	# Then jobs获得用户调研活动'用户调研01'的统计结果
-	# 	"""
-	# 	{
-	# 		"total_parti_person_count":4,
-	# 		[{
-	# 			"valid_parti_person_count":4,
-	# 			"问答题(问答)":
-	# 				[{
-	# 					"content":"bill问答题内容",
-	# 					"submit_time":"2天前"
-	# 				},{
-	# 					"content":"tom问答题内容",
-	# 					"submit_time":"昨天"
-	# 				},{
-	# 					"content":"tom1问答题内容",
-	# 					"submit_time":"今天"
-	# 				},{
-	# 					"content":"tom2问答题内容",
-	# 					"submit_time":"今天"
-	# 				}]
-	# 		},{
-	# 			"valid_parti_person_count":4,
-	# 			"选择题(单选)":
-	# 				[{
-	# 					"options":"1",
-	# 					"submit_time":"2天前"
-	# 				},{
-	# 					"options":"2",
-	# 					"submit_time":"昨天"
-	# 				},{
-	# 					"options":"1",
-	# 					"submit_time":"今天"
-	# 				},{
-	# 					"options":"1",
-	# 					"submit_time":"今天"
-	# 				}]
-	# 		},{
-	# 			"valid_parti_person_count":4,
-	# 			"上传图片(上传图片)":
-	# 				[{
-	# 					"content":"1.jpg",
-	# 					"submit_time":"2天前"
-	# 				},{
-	# 					"options":"2.jpg",
-	# 					"submit_time":"昨天"
-	# 				},{
-	# 					"options":"1.jpg",
-	# 					"submit_time":"今天"
-	# 				},{
-	# 					"options":"3.jpg",
-	# 					"submit_time":"今天"
-	# 				}]
-	# 		}]
-	# 	}
-	# 	"""
+	Then jobs获得用户调研活动'用户调研01'的统计结果
+		"""
+		[{
+			"participate_count":4,
+			"title":"问答题",
+			"type":"问答",
+			"values":
+				[{
+					"content":"bill问答题内容",
+					"submit_time":"2天前"
+				},{
+					"content":"tom问答题内容",
+					"submit_time":"昨天"
+				},{
+					"content":"tom1问答题内容",
+					"submit_time":"今天"
+				},{
+					"content":"tom2问答题内容",
+					"submit_time":"今天"
+				}]
+		},{
+			"participate_count":4,
+			"title":"选择题1",
+			"type":"单选",
+			"values":
+				[{
+					"options":"1",
+					"count":2,
+					"percent":"50%"
+				},{
+					"options":"2",
+					"count":1,
+					"percent":"25%"
+				},{
+					"options":"3",
+					"count":1,
+					"percent":"25%"
+				}]
+		},{
+			"participate_count":4,
+			"title":"上传图片",
+			"type":"上传图片",
+			"values":
+				[{
+					"content":"1.jpg",
+					"submit_time":"2天前"
+				},{
+					"content":"2.jpg",
+					"submit_time":"昨天"
+				},{
+					"content":"3.jpg",
+					"submit_time":"今天"
+				},{
+					"content":"4.jpg",
+					"submit_time":"今天"
+				}]
+		}]
+		"""
 
 
