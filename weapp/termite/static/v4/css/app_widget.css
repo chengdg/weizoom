@@ -1208,11 +1208,11 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
 	position: relative;
 }
 .wui-selectBox-display-list .wui-inner-selectionwithimage{
-	width: 45%;
+	width: 30%;
 	display: inline-block;
     float: left;
-    /*min-width: 130px;*/
-    /*min-height: 130px;*/
+	min-width: 130px;
+    min-height: 130px;
 	margin-right: 10px;
 }
 .wui-selectBox-display-list .wui-selectionwithimage{
@@ -1241,9 +1241,9 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
     position: absolute;
     font-size: 14px;
     word-break: break-all;
-    /*margin-top: 15px;*/
-    padding-left: 5px;
-	/*max-width: 38%;*/
+    margin-top: 15px;
+    padding-left: 10px;
+	max-width: 38%;
 }
 li.wui-selectBox-display-table {
     width: 45%;
