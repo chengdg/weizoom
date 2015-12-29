@@ -254,7 +254,7 @@ Background:
 				}]
 		}
 		"""
-@mall2 @apps @survey @survey_statistics @yang1
+@mall2 @apps @survey @survey_statistics
 Scenario:1 查看用户调研的统计结果
 	Given jobs登录系统
 	When jobs访问用户调研活动'用户调研01'的统计
