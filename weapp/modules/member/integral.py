@@ -332,7 +332,6 @@ class IntegralCaculator(object):
 				member = WebAppUser.get_member_by_webapp_user_id(webapp_user_id)
 			except:
 				member = None
-			
 			try:
 				followed_member = Member.objects.get(token=fmt, webapp_id=webapp_id)
 			except:
@@ -340,10 +339,11 @@ class IntegralCaculator(object):
 
 			integral_strategy = self._get_integral_strategy_by_webappid(webapp_id)
 			if integral_strategy:
-
 				increase_count = integral_strategy.buy_via_shared_url_increase_count_for_author
 				#给好友奖励（分享链接购买）
+
 				if increase_count > 0 and followed_member:
+					
 					self.increase_member_integral(followed_member, \
 							increase_count, FOLLOWER_BUYED_VIA_SHARED_URL, None)
 				#购物返利
@@ -358,7 +358,7 @@ class IntegralCaculator(object):
 					if increase_count_integral > 0:
 						self.increase_member_integral(member, increase_count_integral, BUY_AWARD)
 
-				if member:
+				if member and member.is_subscribed:
 					father_member = MemberFollowRelation.get_father_member(member.id)
 					if father_member:
 						if integral_strategy.buy_via_offline_increase_count_for_author > 0:
