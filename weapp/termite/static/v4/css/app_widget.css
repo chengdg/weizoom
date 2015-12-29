@@ -943,15 +943,15 @@ p.wui-i-start_time,p.wui-i-end_time{
     margin-top: 15px;
 }
 .mobile_solution{
-	display: inline-block;
+	display: -webkit-inline-box;
     overflow : hidden;
     text-overflow: ellipsis;
-    /*-webkit-line-clamp: 1;*/
-    /*-webkit-box-orient: vertical;*/
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
     max-width: 160px;
-    /*line-height: 35px;*/
+    line-height: 35px;
     font-family: 微软雅黑;
-    /*height: 35px;*/
+    height: 35px;
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
     border-radius: 5px;

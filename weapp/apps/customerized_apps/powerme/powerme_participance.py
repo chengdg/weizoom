@@ -47,16 +47,18 @@ class PowerMeParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
-			response = create_response(500)
+
 			member_id = request.member.id
 			power_id = request.POST['id']
 			fid = request.POST['fid']
 			try:
 				fid_member = Member.objects.get(id=fid)
 				if not fid_member.is_subscribed:
+					response = create_response(500)
 					response.errMsg = u'该用户已退出活动'
 					return response.get_response()
 			except:
+				response = create_response(500)
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
 			#更新当前member的参与信息

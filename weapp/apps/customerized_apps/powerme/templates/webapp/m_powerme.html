@@ -130,6 +130,25 @@
     .wui-win-font-color{
         color: orangered;
     }
+    .wa-power-btn-action{
+        max-width: 18%;
+    }
+    .wa-mobile_solution{
+        max-width: 43%;
+    }
+    .wui-i-btn-power span{
+        display: inline-block;
+        position: relative;
+        max-width: 41%;
+        /* height: 20px; */
+        /* line-height: 20px; */
+        text-overflow: ellipsis;
+        /*border: 1px solid #999;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
 </style>
 {% endblock %}
 
@@ -144,7 +163,7 @@
         <span class="wa-totalcount">参与人数: <b></b></span>
         </div>
     </div>
-    <div data-ui-role="swipemask" class="mask"></div>
+
     <div class="xui-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
             <div class="xui-spritebg xui-successHint-img"></div>
@@ -191,6 +210,7 @@
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
+
 {% endblock %}
 
 {% block js %}
@@ -256,10 +276,6 @@
                     $powerBtn.find('.wa-power-btn-action').html('帮');
                     $powerBtn.on('click', function(){
                         powerYou();
-                        $attention.find('.xa-attention-tip').show();
-                        $attention.find('img').attr('src', new_qrcode_url);
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：");
-                        openGuestMask();
                     }).show();
                 }
             }
@@ -281,7 +297,6 @@
         }
 
     }
-
 
     function GetQueryString(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -316,7 +331,7 @@
                 //监听分享成功事件
                 $(document).on("share:success",function(data){
                     $('.xa-share').addClass('none');
-                    $('.mask').swipeMask('hide');
+                    mask('hide');
                     //分享成功后就算该用户参与活动
                     W.getApi().call({
                         app: 'm/apps/powerme',
@@ -340,11 +355,7 @@
                 if(data.errMsg == 'is_deleted'){
                     deletedRecord();
                 }else{
-                    $("body").alert({
-                        isShow: true,
-                        info: data.errMsg,
-                        speed: 3000
-                    });
+                    wuiAlert(data.errMsg)
                 }
             }
         });
@@ -447,23 +458,30 @@
     }
 
     function openGuideMask(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xa-share').removeClass('none');
     }
     function openSuccessWin(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xui-powerSucceed').removeClass('none');
     }
     function openGuestMask(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xa-attention-guest').removeClass('none');
     }
     function openMemberMask(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xa-attention-member').removeClass('none');
     }
     function powerYou(){
+        var $attention = $('.xa-attention-guest');
         if (is_powered) {
+            if(!W.isMember){
+                $attention.find('.xa-attention-tip').show();
+                $attention.find('img').attr('src', new_qrcode_url);
+                $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                openGuestMask();
+            }
             return
         }
         is_powered = true;
@@ -480,35 +498,47 @@
                 if (W.isMember) {
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
+                }else{
+                    $attention.find('.xa-attention-tip').show();
+                    $attention.find('img').attr('src', new_qrcode_url);
+                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                    openGuestMask();
                 }
-                is_powered = true;
             },
             error: function(data) {
                 if(data.errMsg){
-                    $("body").alert({
-                        isShow: true,
-                        info: data.errMsg,
-                        speed: 3000
-                    });
+                    if(data.errMsg != '只能助力一次'){
+                        wuiAlert(data.errMsg);
+                        is_powered = false;
+                    }else{
+                        if(!W.isMember){
+                            $attention.find('.xa-attention-tip').show();
+                            $attention.find('img').attr('src', new_qrcode_url);
+                            $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                            openGuestMask();
+                        }
+                    }
+
                 }
-                is_powered = false;
+
             }
         });
     }
     //隐藏所有
     $('.mask').click(function(){
-        $('.mask').swipeMask('hide');
+        mask('hide');
         $('.xui-powerSucceed').addClass('none');
         $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
+        $('.xui-errMsg').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
-        $('.mask').swipeMask('hide');
+        mask('hide');
     });
     $('.xa-colseButton').click(function(){
         $('.xa-share').addClass('none');
-        $('.mask').swipeMask('hide');
+        mask('hide');
     });
 </script>
 {% endblock %}
