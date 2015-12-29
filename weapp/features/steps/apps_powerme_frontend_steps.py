@@ -56,21 +56,13 @@ def __get_power_me_rank_informations(context,webapp_owner_id,power_me_rule_id,op
 	url = '/m/apps/powerme/api/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, power_me_rule_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
-	if response.status_code == 302:
+	while response.status_code == 302:
 		print('[info] redirect by change fmt in shared_url')
 		redirect_url = bdd_util.nginx(response['Location'])
 		context.last_url = redirect_url
 		response = context.client.get(bdd_util.nginx(redirect_url))
-		if response.status_code == 302:
-			print('[info] redirect by change fmt in shared_url')
-			redirect_url = bdd_util.nginx(response['Location'])
-			context.last_url = redirect_url
-			response = context.client.get(bdd_util.nginx(redirect_url))
-		else:
-			print('[info] not redirect')
-	else:
-		print('[info] not redirect')
-	return response
+	if response.status_code == 200:
+		return response
 
 @When(u'更新助力排名')
 def step_impl(context):
