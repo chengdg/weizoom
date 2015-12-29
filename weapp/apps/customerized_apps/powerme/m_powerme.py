@@ -19,9 +19,6 @@ from utils.cache_util import GET_CACHE, SET_CACHE
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
 
-CACHE_TIMEOUT = 300
-STATIC_HTML_CACHE = {}
-
 class MPowerMe(resource.Resource):
 	app = 'apps/powerme'
 	resource = 'm_powerme'
@@ -30,12 +27,14 @@ class MPowerMe(resource.Resource):
 		record_id = request.GET.get('id', None)
 		member = request.member
 		member_id = member.id
-		print '====================', member_id
 		response = create_response(500)
 		if not record_id or not member_id:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
-
+		record = app_models.PowerMe.objects(id=record_id)
+		if record.count() <= 0:
+			response.errMsg = 'is_deleted'
+			return response.get_response()
 		#统计排名信息
 		current_member_rank_info = None
 		cache_key = 'apps_powerme_%s' % record_id
@@ -177,6 +176,7 @@ class MPowerMe(resource.Resource):
 			'is_already_participanted': is_already_participanted,
 			'is_powered': is_powered,
 			'self_page': self_page,
+			'member_id': member_id,
 			'page_owner_name': page_owner_name,
 			'page_owner_member_id': page_owner_member_id,
 			'activity_status': activity_status
@@ -215,18 +215,11 @@ class MPowerMe(resource.Resource):
 				response.set_cookie('fid', member_id, max_age=60*60*24*365)
 				return response
 			
-			#从全局变量获取静态页面
 			cache_key = 'apps_powerme_%s_html' % record_id
-			cache_data = STATIC_HTML_CACHE.get(cache_key, None)
-			if cache_data:
-				print 'memory---return'
-				return HttpResponse(cache_data)
-			
 			#从redis缓存获取静态页面
 			cache_data = GET_CACHE(cache_key)
 			if cache_data:
 				#存入全局变量
-				STATIC_HTML_CACHE[cache_key] = cache_data
 				print 'redis---return'
 				return HttpResponse(cache_data)
 			
@@ -317,7 +310,6 @@ class MPowerMe(resource.Resource):
 		})
 		response = render_to_string('powerme/templates/webapp/m_powerme.html', c)
 		if request.member:
-			STATIC_HTML_CACHE[cache_key] = response
 			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 

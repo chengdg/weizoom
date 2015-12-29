@@ -1,4 +1,4 @@
-{% extends "webapp_content_base_v4.html" %}
+{% extends "apps_static_base.html" %}
 
 {% block css %}
 <style>
@@ -334,11 +334,15 @@
                 });
             },
             error: function(data) {
-                $("body").alert({
-                    isShow: true,
-                    info: data.errMsg,
-                    speed: 3000
-                });
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    $("body").alert({
+                        isShow: true,
+                        info: data.errMsg,
+                        speed: 3000
+                    });
+                }
             }
         });
     }
@@ -351,19 +355,11 @@
         $('.wa-pageownername').html(page_owner_name);
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
+        W.isAlreadyParticipanted = member_info.is_already_participanted;
+        W.member_id = member_info.member_id;
         W.isMember = member_info.isMember;
-        //祭出顶部黄条
-        if (!W.isMember) {
-            var $att = $('.wui-attentionAlert');
-            $att.attr('data-is-show-button', 'true');
-            $att.attentionAlert();
-            $att.click(function(){
-                $(this).attentionAlert('clickGuideAttention');
-            });
-            $('.xa-mask').click(function(){
-                $(this).addClass('none');
-            });
-        }
+        //TODO 未关注会员处理
+
         is_powered = member_info.is_powered;
         page_owner_member_id = member_info.page_owner_member_id;
         updateBtnStatus();
