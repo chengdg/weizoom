@@ -12,6 +12,13 @@ from core.exceptionutil import unicode_full_stack
 from django.conf import settings
 
 
+#add by likunlun
+#初始化CACHE_QUERIES
+try:
+	CACHE_QUERIES = CACHE_QUERIES
+except:
+	CACHE_QUERIES = []
+
 pyredis =redis.Redis(settings.REDIS_HOST,settings.REDIS_PORT,settings.REDIS_CACHES_DB)
 def get_trace_back():
 	stack_entries = traceback.extract_stack()
