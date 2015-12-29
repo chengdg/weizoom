@@ -330,6 +330,11 @@ body {
 	-webkit-background-size: 137px 42px;
 	background-size: 137px 42px;
 }
+.componentList_component_dropdownbox{
+    background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
+    background-position: -90px 0;
+    width: 50px !important;
+}
 .xui-component .componentList_component_qa{
 	background-position:3px 3px;
 }

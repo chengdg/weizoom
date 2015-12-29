@@ -1,0 +1,187 @@
+{% extends "webapp_content_base_v4.html" %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content-panel %}
+{{ page_html_content|safe }}
+    <div id="json_product" style="display: none;">{% for p in product_dict %}<li style="text-overflow:ellipsis;overflow: hidden;white-space: nowrap"><a href="javascript:void(0);" data-type='{"orderhasproduct_id":"{{ p.orderhasproduct_id }}","product_id": "{{ p.product_id }}","product_name":"{{ p.product_name }}","product_supplier_id": "{{ p.product_supplier_id }}","product_owner_id": "{{ p.product_owner_id }}"}'>{{ p.product_name }}</a></li>{% endfor %}</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var json_product = $('#json_product').html();
+    $('.xa-select-type').append(json_product);
+    if (json_product == ""){
+        $('.type_name').html("您还没有可反馈的商品");
+    }else{
+        $('.type_name').html("请选择购买过的商品");
+        $('#freedback_type').click(function(){
+            var $dropmenu = $(this).next();
+            if ($dropmenu.css('display') == 'none'){
+                $dropmenu.show();
+                $(this).find('#icon').addClass('arrow_up').removeClass('arrow_down')
+            }
+            else{
+                $dropmenu.hide();
+                $(this).find('#icon').addClass('arrow_down').removeClass('arrow_up')
+            }
+
+        });
+    }
+    $('.xa-select-type li').click(function(event){
+        var $li= $(event.currentTarget);
+        var type_name = $li.find('a').text();
+        $('#freedback_type').find('span[class="type_name"]').text(type_name);
+        $('#freedback_type').find('span[class="type_name"]').attr('data-product',$li.find('a').attr('data-type'));
+        $li.parents('.xui-dropmenu').hide();
+        $('#icon').addClass('arrow_down').removeClass('arrow_up')
+    });
+    if (W.isPC) {
+        $('.xa-submitTermite').unbind('click');
+    }else {
+        $('.xa-submitTermite').unbind('click');
+        //绑定提交按钮
+        $('.xa-submitTermite').click(function() {
+            if (!W.is_pic_up){
+                $('body').alert({
+                    isShow: true,
+                    info: '图片还未上传成功，请稍等！',
+                    speed: 3000
+                });
+                return;
+            }
+            if (!W.validate()) {
+                return;
+            }
+            var data = {};
+            var $controls = $('.xa-inputControl');
+            for (var i = 0; i < $controls.length; ++i) {
+                var $control = $controls.eq(i);
+                var inputType = $control.attr('data-input-type');
+                var controlType = $control.attr('data-control-type');
+                var name = $control.attr('data-input-name');
+                var cid = i.toString();
+                cid = cid.length<2 ? '0'+cid : cid;
+                name = cid+'_'+name;
+                if (inputType === 'text') {
+                    var value = $.trim($control.find('input[type="text"]').val());
+                } else if (inputType === 'textarea') {
+                    var value = $.trim($control.find('textarea').val());
+                } else if (inputType === 'selection') {
+                    var $spans = $control.find('span[span-type="selection"]');
+                    var value = {};
+                    var selectionInputType = $spans.eq(0).attr('data-type');
+                    for (var j = 0; j < $spans.length; ++j) {
+                        var $span = $spans.eq(j);
+                        var selectionCid = $span.parents('li').eq(0).attr('data-component-cid');
+                        selectionCid = selectionCid.length<2 ? '0'+selectionCid : selectionCid;
+                        var selectionInputName = $span.attr('data-input-name');
+                        selectionInputName = selectionCid+'_'+selectionInputName;
+                        var class_name;
+                        if (selectionInputType === 'radio'){
+                            class_name = 'radio-select';
+                        }else if(selectionInputType === 'checkbox'){
+                            class_name = 'checkbox-select';
+                        }
+                        var isSelect = $span.hasClass(class_name);
+                        value[selectionInputName] = {
+                            type: selectionInputType,
+                            isSelect: isSelect
+                        };
+                    }
+                }else if (inputType === 'imgarea') {
+                    var picture_list = [];
+                    $control.find('img').each(function(){
+                        picture_list.push($(this).attr('data-src'));
+                    });
+                    var value = JSON.stringify(picture_list);
+                }else if (inputType === 'producttype') {
+                    var value = JSON.parse($control.find('.type_name').attr('data-product'));
+                    //value['product_name'] = data_product['product_name'];
+                }
+
+                data[name] = {
+                    type: controlType,
+                    value: value
+                };
+
+            }
+            participanceData = {
+                webapp_owner_id: W.webappOwnerId,
+                belong_to: W.appRecordId,
+                termite_data: JSON.stringify(data)
+            };
+            var $prizeContainer = $('.xa-prizeContainer');
+            if ($prizeContainer.length > 0) {
+                $prizeContainer = $prizeContainer.eq(0);
+                participanceData['prize'] = $prizeContainer.attr('data-prize');
+            }
+            //var $textSelection = $('.wui-textSelection');
+            //if ($textSelection.length > 0){
+            //    participanceData['actionButtons'] = JSON.stringify([{
+            //        'text': '查看结果',
+            //        'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id={{ member_id }}&isMember={{ isMember }}'
+            //    }]);
+            //}
+
+            var $submitButtonContainer = $('.xa-submitButtonContainer');
+            getexParticipance(participanceData,$submitButtonContainer);
+        });
+        function getexParticipance(participanceData,$submitButtonContainer){
+            if (!slag){return;}
+            slag = false;
+            $('body').alert({
+                isShow: true,
+                info: '玩命传输中请等待...',
+                speed: 50000,
+                callBack: function() {
+                }
+            });
+            W.getApi().call({
+                app: 'm/apps/'+W.appName,
+                resource: W.resource+'_participance',
+                method: 'put',
+                args: participanceData,
+                success: function(data) {
+                    $('body').alert({
+                        isShow: false
+                    });
+                    $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
+                    $submitButtonContainer.hide();
+                    },
+                error: function(resp) {
+                    if(resp.data!==""){
+                        $('body').alert({
+                            isShow: false
+                        });
+                        $('body').append('<div class="wui-appParticipantResult-Cover" style="background-color: rgba(0, 0, 0, 0.15)">\
+                            <div class="wui-i-background">\
+                                <div class="wui-i-successText" style="font-size: 20px;margin-top:0">'+resp.data+'</div>\
+                                <div class="wui-i-close xa-closeParticipantResult" style="right: -10px;top: -10px">&#10005</div>\
+                            </div>\
+                        </div>');
+                        $('.wui-appParticipantResult-Cover').height(document.body.scrollHeight);
+                        $('.xa-closeParticipantResult').on('click', function(event) {
+                            $('.wui-appParticipantResult-Cover').remove();
+                        });
+                    } else {
+                        $('body').alert({
+                            isShow: true,
+                            isSlide: true,
+                            info: '参与失败，请稍后再试！',
+                            speed: 3000
+                        });
+                    }
+                    slag = true;
+                }
+            });
+        }
+    }
+});
+</script>
+{% endblock %}
+

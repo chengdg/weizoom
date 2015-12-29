@@ -943,15 +943,15 @@ p.wui-i-start_time,p.wui-i-end_time{
     margin-top: 15px;
 }
 .mobile_solution{
-    display: -webkit-inline-box;
+	display: inline-block;
     overflow : hidden;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    /*-webkit-line-clamp: 1;*/
+    /*-webkit-box-orient: vertical;*/
     max-width: 160px;
-    line-height: 35px;
+    /*line-height: 35px;*/
     font-family: 微软雅黑;
-    height: 35px;
+    /*height: 35px;*/
 }
 .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
     border-radius: 5px;
@@ -1310,3 +1310,77 @@ li.wui-selectBox-display-table {
         margin-top: 10px;
     }
 /* 百宝箱 vote new style ---end*/
+
+/*反馈*/
+.wui-DropDownBox{
+	padding-top: 10px;
+}
+#freedback_type{
+		background: #fff none repeat scroll 0 0;
+		border: 1px solid #eee;
+		color: #000;
+		display: block;
+		font-size: 16px;
+		height: 45px;
+		line-height: 45px;
+		overflow: hidden;
+		padding-left: 20px;
+		padding-right: 33px;
+		position: relative;
+		text-align: left;
+	}
+#freedback_type h1{
+	display: inline-block;
+}
+	#freedback_type .wui-i-mandatory{
+		color: #cdcdcd;
+		font-size: 18px;
+    	font-weight: bold;
+	}
+	.arrow_down{
+		background: #fff url("/static_v2/img/arrow.png") no-repeat scroll 0 0 / 15px 10px;
+		height: 20px;
+		position: absolute;
+		right: 0;
+		top: 19px;
+		width: 34px;
+
+	}
+	.arrow_up{
+		background: #fff url("/static_v2/img/arrow.png") no-repeat scroll 0 0 / 15px 10px;
+		height: 20px;
+		position: absolute;
+    	right: 18px;
+    	top: 8px;
+    	width: 16px;
+		transform:rotate(180deg);
+			-ms-transform:rotate(180deg); 	/* IE 9 */
+			-moz-transform:rotate(180deg); 	/* Firefox */
+			-webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+			-o-transform:rotate(180deg);
+	}
+	.xui-dropmenu{
+		background: #fff none repeat scroll 0 0;
+		position: absolute;
+		width: 100%;
+		z-index: 999;
+	}
+	.xui-dropmenu >ul >li{
+		border-bottom: 1px solid #eee;
+		height: 45px;
+		line-height: 45px;
+		padding-left: 35px !important;
+		padding-right: 35px;
+	}
+	.xui-dropmenu >ul >li >a{
+		color: #000;
+	}
+	#xui-input-type{
+		cursor: pointer;
+		border: 0;
+		color: #fff;
+	}
+	#freedback_textarea::-webkit-input-placeholder::after {
+		display:block;
+		content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
+	}

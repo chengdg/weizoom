@@ -118,7 +118,14 @@ def get_webapp_link_menu_objectes(request):
 				'type': 'powerme',
 				'add_btn_title': '新建微助力',
 				'add_link': '/apps/powerme/powerme/'
-			}
+			},{
+				'name': '用户反馈',
+				'type': 'exsurvey',
+				'add_btn_title': '新建用户反馈',
+				'add_link': '/apps/exsurvey/exsurvey/',
+				'users': ['njtest','ceshi01','weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
+
+				}
 			# {
 			# 	'name': '趣味测试',
 			# 	'type': 'test_game',
@@ -166,7 +173,12 @@ def get_webapp_link_menu_objectes(request):
 			'id': 11,
 			'name': '签到',
 			'link': get_sign_webapp_link(request)
-		}
+		},
+		# 'feedback': {
+		# 	'id': 12,
+		# 	'name': '用户反馈',
+		# 	'link': '/m/apps/feedback/m_feedback/?webapp_owner_id=%d' % request.manager.id
+		# },
 	}
 
 	return menus

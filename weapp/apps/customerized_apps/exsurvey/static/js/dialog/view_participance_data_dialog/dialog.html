@@ -1,0 +1,39 @@
+<script id="app-exsurvey-viewParticipanceDataDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+	<div class="xui-app_survey-Dialog modal fade">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title" >查看结果</h3>
+		</div>
+		<div class="modal-body">			
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+<script id="app-exsurvey-viewParticipanceResultDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+    <span style="font-size:16px;font-weight:bold;">"{{{webapp_user_name}}}"填写的内容</span>
+    <table class="table table-bordered">
+        {{#each items}}
+        	{{#if type}}
+        		<tr>
+					<td style="width: 50%;">{{item_name}}：</td>
+					<td>{{item_value}}</td>
+				</tr>
+            {{else}}
+				<tr>
+					<td style="width: 50%;">{{item_name}}：</td>
+					<td>
+						{{#each item_value}}
+							<img class="xa-uploadimg" id="uploadimg-{{@index}}" src="{{this}}" />
+						{{/each}}
+					</td>
+				</tr>
+            {{/if}}
+        {{/each}}
+    </table>
+    <div class="xa-uploadimg_box inactive"></div>
+</script>
+

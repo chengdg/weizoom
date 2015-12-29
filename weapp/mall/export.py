@@ -280,7 +280,7 @@ MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
 MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV = 'forbiddenCouponProduct'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
-# MALL_APPS_FEEDBACK_NAV = 'feedbacks'
+MALL_APPS_FEEDBACK_NAV = 'exsurveies'
 MALL_APPS_SURVEY_NAV = 'surveies'
 MALL_APPS_EVENT_NAV = 'events'
 MALL_APPS_VOTE_NAV = 'votes'
@@ -415,6 +415,13 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'微助力',
                     'url': '/apps/powerme/powermes/',
                     'permission': ''
+                },
+                {
+                    'name': MALL_APPS_FEEDBACK_NAV,
+                    'title': u'用户反馈',
+                    'url': '/apps/exsurvey/exsurveies/',
+                    'permission': '',
+                    'users': ['njtest','ceshi01','weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
                 }
             ]
         }

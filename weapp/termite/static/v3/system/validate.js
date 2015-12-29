@@ -226,6 +226,19 @@ W.ValidaterClass = function() {
 				}
 			},
 			errorHint: ''
+		},
+		'require-notempty-span': {
+			type: 'function',
+			extract: 'element',
+			check: function(element) {
+				var span_value = element.text();
+				if (span_value.length == 0) {
+					return false;
+				} else {
+					return true;
+				}
+			},
+			errorHint: ''
 		}
 	};
 

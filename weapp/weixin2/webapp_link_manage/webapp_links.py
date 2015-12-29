@@ -40,6 +40,13 @@ class WebappLinkMenus(resource.Resource):
 		"""
 		memus = webapp_link_utils.get_webapp_link_menu_objectes(request)
 
+		#用户反馈只在指定的帐号下显示
+		titles = memus['marketPage']['title']
+		for title in titles:
+			if title['type'] == 'exsurvey' and not request.manager.username in title['users']:
+				memus['marketPage']['title'].remove(title)
+		#
+
 		response = create_response(200)
 		response.data = memus
 		return response.get_response()
