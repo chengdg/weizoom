@@ -177,13 +177,13 @@ def __get_coupon_rule_id(coupon_rule_name):
 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
 	return coupon_rule.id
 
-# def __vote_name2id(name):
-# 	"""
-# 	给投票项目的名字，返回id元祖
-# 	返回（related_page_id,vote_vote中id）
-# 	"""
-# 	obj = vote_models.vote.objects.get(name=name)
-# 	return (obj.related_page_id,obj.id)
+def __vote_name2id(name):
+	"""
+	给投票项目的名字，返回id元祖
+	返回（related_page_id,vote_vote中id）
+	"""
+	obj = vote_models.vote.objects.get(name=name)
+	return (obj.related_page_id,obj.id)
 
 # def __status2name(status_num):
 # 	"""
@@ -935,128 +935,127 @@ def __Create_Vote(context,text,user):
 	rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 	rec_vote_response = context.client.get(rec_vote_url)
 
-# def __Update_Vote(context,text,page_id,vote_id):
-# 	"""
-# 	模拟用户登录页面
-# 	编辑投票项目
-# 	写入mongo表：
-# 		1.vote_vote表
-# 		2.page表
-# 	"""
+def __Update_Vote(context,text,page_id,vote_id):
+	"""
+	模拟用户登录页面
+	编辑投票项目
+	写入mongo表：
+		1.vote_vote表
+		2.page表
+	"""
 
-# 	design_mode=0
-# 	version=1
-# 	project_id = "new_app:vote:"+page_id
+	design_mode=0
+	version=1
+	project_id = "new_app:vote:"+page_id
 
-# 	title = text.get("title","")
-# 	subtitle = text.get("subtitle","")
-# 	description = text.get("content","")
+	title = text.get("title","")
+	subtitle = text.get("subtitle","")
+	description = text.get("content","")
 
-# 	cr_start_date = text.get('start_date', u'今天')
-# 	start_date = bdd_util.get_date_str(cr_start_date)
-# 	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-# 	cr_end_date = text.get('end_date', u'1天后')
-# 	end_date = bdd_util.get_date_str(cr_end_date)
-# 	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-# 	valid_time = "%s~%s"%(start_time,end_time)
+	valid_time = "%s~%s"%(start_time,end_time)
 
-# 	permission = text.get("permission")
+	permission = text.get("permission")
 
-# 	prize_type = text.get("prize_type","")
-# 	integral = text.get("integral","")
-# 	coupon = text.get("coupon","")
-# 	prize = __prize_settings_process(prize_type,integral,coupon)
+	prize_type = text.get("prize_type","")
+	integral = text.get("integral","")
+	coupon = text.get("coupon","")
+	prize = __prize_settings_process(prize_type,integral,coupon)
 
-# 	text_options = text.get("answer","")
-# 	selection = text.get("choose","")
-# 	textlist = text.get("participate_info","")
-# 	uploadimg = text.get("upload_pic","")
-
-
-# 	page_args = {
-# 		"title":title,
-# 		"subtitle":subtitle,
-# 		"description":description,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"valid_time":valid_time,
-# 		"permission":permission,
-# 		"prize":prize,
-# 		"text_options":text_options,
-# 		"selection":selection,
-# 		"textlist":textlist,
-# 		"uploadimg":uploadimg
-# 	}
-
-# 	page_json = __get_votePageJson(page_args)
-
-# 	update_page_args = {
-# 		"field":"page_content",
-# 		"id":project_id,
-# 		"page_id":"1",
-# 		"page_json": page_json
-# 	}
-
-# 	update_vote_args = {
-
-# 		"name":title,
-# 		"start_time":start_time,
-# 		"end_time":end_time,
-# 		"id":vote_id#updated的差别
-# 	}
+	text_options = text.get("text_options","")
+	pic_options = text.get("pic_options","")
+	textlist = text.get("participate_info","")
 
 
-# 	#page 更新Page
-# 	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_page_response = context.client.post(update_page_url,update_page_args)
+	page_args = {
+		"title":title,
+		"subtitle":subtitle,
+		"description":description,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"permission":permission,
+		"prize":prize,
+		"text_options":text_options,
+		"pic_options":pic_options,
+		"textlist":textlist
+	}
 
-# 	#step4:更新vote
-# 	update_vote_url ="/apps/vote/api/vote/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-# 	update_vote_response = context.client.post(update_vote_url,update_vote_args)
 
-# 	#跳转,更新状态位
-# 	design_mode = 0
-# 	count_per_page = 1000
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+	page_json = __get_votePageJson(page_args)
 
-# 	rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 	rec_vote_response = context.client.get(rec_vote_url)
+	update_page_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
 
-# def __Delete_Vote(context,vote_id):
-# 	"""
-# 	删除投票活动
-# 	写入mongo表：
-# 		1.vote_vote表
+	update_vote_args = {
 
-# 	注释：page表在原后台，没有被删除
-# 	"""
-# 	design_mode = 0
-# 	version = 1
-# 	del_vote_url = "/apps/vote/api/vote/?design_mode={}&version={}&_method=delete".format(design_mode,version)
-# 	del_args ={
-# 		"id":vote_id
-# 	}
-# 	del_vote_response = context.client.post(del_vote_url,del_args)
-# 	return del_vote_response
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"id":vote_id#updated的差别
+	}
 
-# def __Stop_Vote(context,vote_id):
-# 	"""
-# 	关闭投票活动
-# 	"""
 
-# 	design_mode = 0
-# 	version = 1
-# 	stop_vote_url = "/apps/vote/api/vote_status/?design_mode={}&version={}".format(design_mode,version)
-# 	stop_args ={
-# 		"id":vote_id,
-# 		"target":'stoped'
-# 	}
-# 	stop_vote_response = context.client.post(stop_vote_url,stop_args)
-# 	return stop_vote_response
+	#page 更新Page
+	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_page_response = context.client.post(update_page_url,update_page_args)
+
+	#step4:更新vote
+	update_vote_url ="/apps/vote/api/vote/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	update_vote_response = context.client.post(update_vote_url,update_vote_args)
+
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
+
+	rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_vote_response = context.client.get(rec_vote_url)
+
+def __Delete_Vote(context,vote_id):
+	"""
+	删除投票活动
+	写入mongo表：
+		1.vote_vote表
+
+	注释：page表在原后台，没有被删除
+	"""
+	design_mode = 0
+	version = 1
+	del_vote_url = "/apps/vote/api/vote/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+	del_args ={
+		"id":vote_id
+	}
+	del_vote_response = context.client.post(del_vote_url,del_args)
+	return del_vote_response
+
+def __Stop_Vote(context,vote_id):
+	"""
+	关闭投票活动
+	"""
+
+	design_mode = 0
+	version = 1
+	stop_vote_url = "/apps/vote/api/vote_status/?design_mode={}&version={}".format(design_mode,version)
+	stop_args ={
+		"id":vote_id,
+		"target":'stoped'
+	}
+	stop_vote_response = context.client.post(stop_vote_url,stop_args)
+	return stop_vote_response
 
 # def __Search_Vote(context,search_dic):
 # 	"""
@@ -1216,11 +1215,11 @@ def step_impl(context,user):
 		print("actual_data: {}".format(actual_list))
 		bdd_util.assert_list(expected,actual_list)
 
-# @when(u"{user}编辑微信投票活动'{vote_name}'")
-# def step_impl(context,user,vote_name):
-# 	expect = json.loads(context.text)[0]
-# 	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
-# 	__Update_Vote(context,expect,vote_page_id,vote_id)
+@when(u"{user}编辑微信投票活动'{vote_name}'")
+def step_impl(context,user,vote_name):
+	expect = json.loads(context.text)[0]
+	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
+	__Update_Vote(context,expect,vote_page_id,vote_id)
 
 # # @then(u"{user}获得微信投票活动'{vote_name}'")
 # # def step_impl(context,user,vote_name):
@@ -1296,17 +1295,17 @@ def step_impl(context,user):
 
 # # 	bdd_util.assert_dict(expect_vote_dic, actual_vote_dic)
 
-# @when(u"{user}删除微信投票活动'{vote_name}'")
-# def step_impl(context,user,vote_name):
-# 	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
-# 	del_response = __Delete_Vote(context,vote_id)
-# 	bdd_util.assert_api_call_success(del_response)
+@when(u"{user}删除微信投票活动'{vote_name}'")
+def step_impl(context,user,vote_name):
+	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
+	del_response = __Delete_Vote(context,vote_id)
+	bdd_util.assert_api_call_success(del_response)
 
-# @when(u"{user}关闭微信投票活动'{vote_name}'")
-# def step_impl(context,user,vote_name):
-# 	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
-# 	stop_response = __Stop_Vote(context,vote_id)
-# 	bdd_util.assert_api_call_success(stop_response)
+@when(u"{user}关闭微信投票活动'{vote_name}'")
+def step_impl(context,user,vote_name):
+	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
+	stop_response = __Stop_Vote(context,vote_id)
+	bdd_util.assert_api_call_success(stop_response)
 
 # @when(u"{user}设置微信投票活动列表查询条件")
 # def step_impl(context,user):

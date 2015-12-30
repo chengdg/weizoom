@@ -19,8 +19,8 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 5,
-			"limit_counts":"不限",
-			"using_limit": "满50元可以使用",
+			"limit_counts": "无限",
+			"using_limit":"满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"coupon_id_prefix": "coupon1_id_"
@@ -101,7 +101,7 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 	Given jobs登录系统
 	When jobs编辑微信投票活动'微信投票01'
 		"""
-		{
+		[{
 			"title":"微信投票001",
 			"subtitle":"微信投票001",
 			"content":"谢谢投票001",
@@ -151,7 +151,7 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 						"is_required":"否"
 					}]
 				}]
-		}
+		}]
 		"""
 	Then jobs获得微信投票活动列表
 		"""
