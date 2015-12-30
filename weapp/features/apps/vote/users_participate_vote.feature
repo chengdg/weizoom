@@ -18,7 +18,7 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 			"text_options":
 				[{
 					"title":"文本选项",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -199,7 +199,7 @@ Scenario:3 微信投票-优惠券-无需关注即可参与
 			"text_options":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"否",
 					"option":[{
 							"options":"1"
@@ -210,7 +210,7 @@ Scenario:3 微信投票-优惠券-无需关注即可参与
 						}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"是",
 					"option":[{
 							"options":"A"
