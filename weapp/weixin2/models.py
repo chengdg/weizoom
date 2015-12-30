@@ -493,7 +493,7 @@ class Message(models.Model):
 
 	class Meta(object):
 		db_table = 'weixin_message_message'
-		ordering = ['-weixin_created_at']
+		ordering = ['-weixin_created_at', '-id']
 
 	@property
 	def is_news_type(self):

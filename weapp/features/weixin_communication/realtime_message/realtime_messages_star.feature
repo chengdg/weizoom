@@ -395,15 +395,14 @@ Scenario: 2 在消息详情中加星标
 	Then jobs获得实时消息'星标信息'列表
 		"""
 		[{
-			"member_name": "tom",
-			"inf_content": "关键词tom",
+			"member_name": "jobs",
+			"inf_content": "【自动回复】 关键字回复内容tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
 			"star": "true"
-		},
-		{
-			"member_name": "jobs",
-			"inf_content": "【自动回复】 关键字回复内容tom",
+		},{
+			"member_name": "tom",
+			"inf_content": "关键词tom",
 			"last_message_time": "今天",
 			"unread_count": 0,
 			"star": "true"
