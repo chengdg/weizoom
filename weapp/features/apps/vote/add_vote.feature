@@ -2,7 +2,7 @@
 
 Feature:新建微信投票活动
 
-@apps @vote
+@mall2 @apps @vote @add_vote
 Scenario:1 新建微信投票活动,只添加'文本选项'模块,无奖励
 	#活动权限-必须关注才可参与
 	#奖励类型-无奖励
@@ -23,7 +23,7 @@ Scenario:1 新建微信投票活动,只添加'文本选项'模块,无奖励
 			"text_options":
 				[{
 					"title":"文本选项1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -34,7 +34,7 @@ Scenario:1 新建微信投票活动,只添加'文本选项'模块,无奖励
 						}]
 				},{
 					"title":"文本选项2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"
@@ -61,7 +61,7 @@ Scenario:1 新建微信投票活动,只添加'文本选项'模块,无奖励
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @add_vote
 Scenario:2 新建微信投票活动,只添加'图片选项'模块,无奖励
 	#活动权限-必须关注才可参与
 	#奖励类型-无奖励
@@ -82,44 +82,37 @@ Scenario:2 新建微信投票活动,只添加'图片选项'模块,无奖励
 			"pic_options":
 				[{
 					"title":"图片选项1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"pic_show_type":"列表",
 					"is_required":"是",
 					"option":[{
-						"options":{
 							"pic":"1.jpg",
 							"pic_desc":"图片描述1"
-							},
-						"options":{
+							},{
 							"pic":"2.jpg",
 							"pic_desc":"图片描述2"
-							},
-						"options":{
+							},{
 							"pic":"3.jpg",
 							"pic_desc":"图片描述3"
-						}]
+							}]
 				},{
 					"title":"图片选项2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"pic_show_type":"表格",
 					"is_required":"否",
 					"option":[{
-						"options":{
 							"pic":"1.jpg",
 							"pic_desc":"图片描述1"
-							},
-						"options":{
+							},{
 							"pic":"2.jpg",
 							"pic_desc":"图片描述2"
-							},
-						"options":{
+							},{
 							"pic":"3.jpg",
 							"pic_desc":"图片描述3"
-						},
-						"options":{
+							},{
 							"pic":"4.jpg",
 							"pic_desc":"图片描述4"
-						}]
+							}]
 				}]
 		}]
 		"""
@@ -136,7 +129,7 @@ Scenario:2 新建微信投票活动,只添加'图片选项'模块,无奖励
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @add_vote
 Scenario:3 新建微信投票活动,只添加'参与人信息'模块,积分奖励
 	#活动权限-无需关注即可参与
 	#奖励类型-积分
@@ -155,8 +148,10 @@ Scenario:3 新建微信投票活动,只添加'参与人信息'模块,积分奖�
 			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":20,
-			"participate_info":[{
-				"items_select":[{
+			"participate_info":
+				[{
+					"items_select":
+						[{
 							"item_name":"姓名",
 							"is_selected":"true"
 						},{
@@ -175,13 +170,14 @@ Scenario:3 新建微信投票活动,只添加'参与人信息'模块,积分奖�
 							"item_name":"住址",
 							"is_selected":"false"
 						}],
-				"items_add":[{
-						"item_name":"填写项1",
-						"is_required":"是"
-					},{
-						"item_name":"填写项2",
-						"is_required":"否"
-					}]
+					"items_add":
+						[{
+							"item_name":"填写项1",
+							"is_required":"是"
+						},{
+							"item_name":"填写项2",
+							"is_required":"否"
+						}]
 				}]
 		}]
 		"""
@@ -198,7 +194,7 @@ Scenario:3 新建微信投票活动,只添加'参与人信息'模块,积分奖�
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @add_vote
 Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 	#活动权限-必须关注才可参与
 	#奖励类型-优惠券
@@ -233,7 +229,7 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 			"text_options":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -246,19 +242,16 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 			"pic_options":
 				[{
 					"title":"图片选项1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"pic_show_type":"列表",
 					"is_required":"是",
 					"option":[{
-						"options":{
 							"pic":"1.jpg",
 							"pic_desc":"图片描述1"
-							},
-						"options":{
+							},{
 							"pic":"2.jpg",
 							"pic_desc":"图片描述2"
-							},
-						"options":{
+							},{
 							"pic":"3.jpg",
 							"pic_desc":"图片描述3"
 						}]
@@ -306,7 +299,7 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @add_vote
 Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相同
 	#活动权限-必须关注才可参与
 	#奖励类型-优惠券
@@ -341,7 +334,7 @@ Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相
 			"text_options":
 				[{
 					"title":"相同的标题",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -356,19 +349,16 @@ Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相
 			"pic_options":
 				[{
 					"title":"相同的标题",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"pic_show_type":"列表",
 					"is_required":"是",
 					"option":[{
-						"options":{
 							"pic":"1.jpg",
 							"pic_desc":"图片描述1"
-							},
-						"options":{
+							},{
 							"pic":"2.jpg",
 							"pic_desc":"图片描述2"
-							},
-						"options":{
+							},{
 							"pic":"3.jpg",
 							"pic_desc":"图片描述3"
 						}]
@@ -412,6 +402,6 @@ Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相
 			"start_date":"今天",
 			"end_date":"明天",
 			"status":"进行中",
-			"actions": ["删除","链接","预览","统计","查看结果"]
+			"actions": ["关闭","链接","预览","统计","查看结果"]
 		}]
 		"""

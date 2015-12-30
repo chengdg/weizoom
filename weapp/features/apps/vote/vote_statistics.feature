@@ -282,7 +282,7 @@ Background:
 		}
 		"""
 
-@apps @vote
+@mall2 @apps @vote @vote_statistics
 Scenario:1 访问微信投票的统计
 	Given jobs登录系统
 	When jobs访问微信投票活动'微信投票01'的统计
