@@ -34,16 +34,16 @@ def __debug_print(content,type_tag=True):
 	else:
 		pass
 
-# def __bool2Bool(bo):
-# 	"""
-# 	JS字符串布尔值转化为Python布尔值
-# 	"""
-# 	bool_dic = {'true':True,'false':False,'True':True,'False':False}
-# 	if bo:
-# 		result = bool_dic[bo]
-# 	else:
-# 		result = None
-# 	return result
+def __bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
 
 def __name2Bool(name):
 	"""
@@ -56,31 +56,31 @@ def __name2Bool(name):
 	else:
 		return None
 
-# def __date2time(date_str):
-# 	"""
-# 	字符串 今天/明天……
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	cr_date = date_str
-# 	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-# 	return p_time
+def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
-# def __date2str(date_str):
-# 	"""
-# 	字符串 今天/明天……
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	cr_date = date_str
-# 	p_time = "{}".format(bdd_util.get_date_str(cr_date))
-# 	return p_time
+def __date2str(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_time = "{}".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
-# def __datetime2str(dt_time):
-# 	"""
-# 	datetime型数据，转为字符串型，日期
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
-# 	return dt_time
+def __datetime2str(dt_time):
+	"""
+	datetime型数据，转为字符串型，日期
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
+	return dt_time
 
 
 def name2permission(name):
@@ -147,35 +147,35 @@ def name2selection_type(name):
 # # 	else:
 # # 		return ""
 
-# # def __delivery2Bool(name):
-# # 	d_dic ={
-# # 		u"所有用户":"false",
-# # 		u'仅限未中奖用户':"true"
-# # 	}
+def __delivery2Bool(name):
+	d_dic ={
+		u"所有用户":"false",
+		u'仅限未中奖用户':"true"
+	}
 
-# # 	if name:
-# # 		return d_dic[name]
-# # 	else:
-# # 		return ""
+	if name:
+		return d_dic[name]
+	else:
+		return ""
 
-# # def __get_coupon_json(coupon_rule_name):
-# # 	"""
-# # 	获取优惠券json
-# # 	"""
-# # 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-# # 	coupon ={
-# # 		"id":coupon_rule.id,
-# # 		"count":coupon_rule.count,
-# # 		"name":coupon_rule.name
-# # 	}
-# # 	return coupon
+def __get_coupon_json(coupon_rule_name):
+	"""
+	获取优惠券json
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	coupon ={
+		"id":coupon_rule.id,
+		"count":coupon_rule.count,
+		"name":coupon_rule.name
+	}
+	return coupon
 
-# def __get_coupon_rule_id(coupon_rule_name):
-# 	"""
-# 	获取优惠券id
-# 	"""
-# 	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
-# 	return coupon_rule.id
+def __get_coupon_rule_id(coupon_rule_name):
+	"""
+	获取优惠券id
+	"""
+	coupon_rule = promotion_models.CouponRule.objects.get(name=coupon_rule_name)
+	return coupon_rule.id
 
 # def __vote_name2id(name):
 # 	"""
@@ -612,7 +612,7 @@ def __get_votePageJson(args):
 	__imageitem_temple = {
 					"type": "appkit.imageitem",
 					"cid": "",
-					"pid": "",
+					"pid": '',
 					"auto_select": False,
 					"selectable": "no",
 					"force_display_in_property_view": "no",
@@ -633,7 +633,7 @@ def __get_votePageJson(args):
 						"title": ""
 					},
 					"components": []
-				},
+				}
 
 
 	imageselection_arr = args['pic_options']
@@ -669,8 +669,8 @@ def __get_votePageJson(args):
 		imageitem_arr = imageselection['option']
 		for imageitem in imageitem_arr:
 
-			imageitem_image = imageitem['options']['pic']
-			imageitem_title = imageitem['options']['desc']
+			imageitem_image = imageitem['pic']
+			imageitem_title = imageitem['pic_desc']
 
 			#内部的id处理
 			sub_cur_pid = cur_cid #1
@@ -1143,78 +1143,78 @@ def step_impl(context,user):
 	for text in text_list:
 		__Create_Vote(context,text,user)
 
-# @then(u'{user}获得微信投票活动列表')
-# def step_impl(context,user):
-# 	design_mode = 0
-# 	count_per_page = 10
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+@then(u'{user}获得微信投票活动列表')
+def step_impl(context,user):
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
 
-# 	actual_list = []
-# 	expected = json.loads(context.text)
+	actual_list = []
+	expected = json.loads(context.text)
 
-# 	#搜索查看结果
-# 	if hasattr(context,"search_vote"):
-# 		pass
-# 		# rec_search_list = context.search_vote
-# 		# for item in rec_search_list:
-# 		# 	tmp = {
-# 		# 		"name":item['name'],
-# 		# 		"status":item['status'],
-# 		# 		"start_time":item['start_time'],
-# 		# 		"end_time":item['end_time'],
-# 		# 		"participant_count":item['participant_count'],
-# 		# 	}
-# 		# 	tmp["actions"] = __get_actions(item['status'])
-# 		# 	actual_list.append(tmp)
+	#搜索查看结果
+	if hasattr(context,"search_vote"):
+		pass
+		# rec_search_list = context.search_vote
+		# for item in rec_search_list:
+		# 	tmp = {
+		# 		"name":item['name'],
+		# 		"status":item['status'],
+		# 		"start_time":item['start_time'],
+		# 		"end_time":item['end_time'],
+		# 		"participant_count":item['participant_count'],
+		# 	}
+		# 	tmp["actions"] = __get_actions(item['status'])
+		# 	actual_list.append(tmp)
 
-# 		# for expect in expected:
-# 		# 	if 'start_date' in expect:
-# 		# 		expect['start_time'] = __date2time(expect['start_date'])
-# 		# 		del expect['start_date']
-# 		# 	if 'end_date' in expect:
-# 		# 		expect['end_time'] = __date2time(expect['end_date'])
-# 		# 		del expect['end_date']
-# 		# print("expected: {}".format(expected))
+		# for expect in expected:
+		# 	if 'start_date' in expect:
+		# 		expect['start_time'] = __date2time(expect['start_date'])
+		# 		del expect['start_date']
+		# 	if 'end_date' in expect:
+		# 		expect['end_time'] = __date2time(expect['end_date'])
+		# 		del expect['end_date']
+		# print("expected: {}".format(expected))
 
-# 		# bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
-# 	#其他查看结果
-# 	else:
-# 		#分页情况，更新分页参数
-# 		if hasattr(context,"paging"):
-# 			paging_dic = context.paging
-# 			count_per_page = paging_dic['count_per_page']
-# 			page = paging_dic['page_num']
+		# bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+	#其他查看结果
+	else:
+		#分页情况，更新分页参数
+		if hasattr(context,"paging"):
+			paging_dic = context.paging
+			count_per_page = paging_dic['count_per_page']
+			page = paging_dic['page_num']
 
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
 
 
-# 		print("expected: {}".format(expected))
+		print("expected: {}".format(expected))
 
-# 		rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 		rec_vote_response = context.client.get(rec_vote_url)
-# 		rec_vote_list = json.loads(rec_vote_response.content)['data']['items']#[::-1]
+		rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+		rec_vote_response = context.client.get(rec_vote_url)
+		rec_vote_list = json.loads(rec_vote_response.content)['data']['items']#[::-1]
 
-# 		for item in rec_vote_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":__date2time(item['start_time']),
-# 				"end_time":__date2time(item['end_time']),
-# 				"participant_count":item['participant_count'],
-# 				"prize_type":item['prize_type']
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
-# 		print("actual_data: {}".format(actual_list))
-# 		bdd_util.assert_list(expected,actual_list)
+		# for item in rec_vote_list:
+		# 	tmp = {
+		# 		"name":item['name'],
+		# 		"status":item['status'],
+		# 		"start_time":__date2time(item['start_time']),
+		# 		"end_time":__date2time(item['end_time']),
+		# 		"participant_count":item['participant_count'],
+		# 		"prize_type":item['prize_type']
+		# 	}
+		# 	tmp["actions"] = __get_actions(item['status'])
+		# 	actual_list.append(tmp)
+		# print("actual_data: {}".format(actual_list))
+		# bdd_util.assert_list(expected,actual_list)
 
 # @when(u"{user}编辑微信投票活动'{vote_name}'")
 # def step_impl(context,user,vote_name):
