@@ -106,7 +106,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @vote @vote_list
+@mall2 @apps @vote @vote_list @yang1
 Scenario:1 微信投票活动列表查询
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表
@@ -141,7 +141,7 @@ Scenario:1 微信投票活动列表查询
 	#空查询（默认查询）
 		When jobs设置微信投票活动列表查询条件
 			"""
-			[]
+			{}
 			"""
 		Then jobs获得微信投票活动列表
 			"""
