@@ -199,9 +199,9 @@
                                         {% endifequal %}
                                     {% endifequal %}"></span>
                                 <span class="ml5 xa-itemTitle" style="margin-left: 34px!important;display: block;min-height: 22px;">{{ select.name }}</span>
-                                <span style="display: inline-block;float: right;margin-top: -15px;">{{ select.counter }}票&nbsp;{{ select.percent }}</span>
+                                <span style="display: inline-block;float: right;margin-top: 0;">{{ select.counter }}票&nbsp;{{ select.percent }}</span>
                             </label>
-                            <div style="background-color: #eee;height: 20px;margin-top: 5px;">
+                            <div style="background-color: #eee;height: 20px;margin-top: 20px">
                                 <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
                             </div>
 
