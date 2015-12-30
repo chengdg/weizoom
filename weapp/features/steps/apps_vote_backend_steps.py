@@ -171,7 +171,7 @@ def __debug_print(content,type_tag=True):
 
 # def __vote_name2id(name):
 # 	"""
-# 	给调研项目的名字，返回id元祖
+# 	给投票项目的名字，返回id元祖
 # 	返回（related_page_id,vote_vote中id）
 # 	"""
 # 	obj = vote_models.vote.objects.get(name=name)
@@ -179,14 +179,14 @@ def __debug_print(content,type_tag=True):
 
 # def __status2name(status_num):
 # 	"""
-# 	调研：状态值 转 文字
+# 	投票：状态值 转 文字
 # 	"""
 # 	status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
 # 	return status2name_dic[status_num]
 
 # def __name2status(name):
 # 	"""
-# 	调研： 文字 转 状态值
+# 	投票： 文字 转 状态值
 # 	"""
 # 	if name:
 # 		name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
@@ -196,7 +196,7 @@ def __debug_print(content,type_tag=True):
 
 # # def __name2coupon_status(name):
 # # 	"""
-# # 	调研： 文字 转 优惠券领取状态值
+# # 	投票： 文字 转 优惠券领取状态值
 # # 	"""
 # # 	if name:
 # # 		name2status_dic = {u"全部":-1,u"未领取":0,u"已领取":1}
@@ -214,7 +214,7 @@ def __debug_print(content,type_tag=True):
 
 # def __get_actions(status):
 # 	"""
-# 	根据输入调研状态
+# 	根据输入投票状态
 # 	返回对于操作列表
 # 	"""
 # 	actions_list = [u"链接",u"预览",u"统计",u"查看结果"]
@@ -232,65 +232,64 @@ def __debug_print(content,type_tag=True):
 # 	else:
 # 		return ""
 
-# def __get_votePageJson(args):
-# 	"""
-# 	传入参数，获取模板
-# 	"""
+def __get_votePageJson(args):
+	"""
+	传入参数，获取模板
+	"""
 
-# 	pid = "null"
-# 	cid = 1
-# 	index = 1
+	pid = "null"
+	cid = 1
+	index = 1
 
-# 	next_pid = pid
-# 	next_cid = cid
-# 	next_index = index
+	next_pid = pid
+	next_cid = cid
+	next_index = index
 
-# 	cur_pid = ""
-# 	cur_cid = ""
-# 	cur_index = ""
+	cur_pid = ""
+	cur_cid = ""
+	cur_index = ""
 
 
-# 	#0.模板列表一览
-# 	__votedescription_temple= {}#调研面板
-# 	__qa_temple = {}#问答
-# 	__selection_temple = {}#选择
-# 	__textlist_temple = {}#快捷添加
-# 	__uploadimg_temple = {}#上传图片
-# 	__submitbutton_temple = {}#提交按钮
-# 	__adder_temple = {}#添加按钮
-# 	__page_temple = {}#总模板
+	#0.模板列表一览
+	__page_temple = {}#总模板
+	__votedescription_temple= {}#投票面板
+	__submitbutton_temple = {}#提交按钮
+	__componentadder_temple = {}#添加按钮
+	__textselection_temple = {}#文本选项
+	__imageselection_temple = {}#图片选项
+	__textlist_temple = {}#快捷添加
 
-# 	#1.主模板 pid:1
-# 	__page_temple = {
-# 		"type": "appkit.page",
-# 		"cid": "",
-# 		"pid": "null",
-# 		"auto_select": False,
-# 		"selectable": "yes",
-# 		"force_display_in_property_view": "no",
-# 		"has_global_content": "no",
-# 		"need_server_process_component_data": "no",
-# 		"is_new_created": True,
-# 		"property_view_title": "背景",
-# 		"model": {
-# 			"id": "",
-# 			"class": "",
-# 			"name": "",
-# 			"index": "",
-# 			"datasource": {
-# 				"type": "api",
-# 				"api_name": ""
-# 			},
-# 			"content_padding": "15px",
-# 			"title": "index",
-# 			"event:onload": "",
-# 			"uploadHeight": "568",
-# 			"uploadWidth": "320",
-# 			"site_title": "用户调研",
-# 			"background": ""
-# 		},
-# 		"components":[]
-# 	}
+	#1.主模板 pid:1
+	__page_temple ={
+		"type": "appkit.page",
+		"cid": '',
+		"pid": "null",
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": "背景",
+		"model": {
+			"id": "",
+			"class": "",
+			"name": "",
+			"index": "",
+			"datasource": {
+				"type": "api",
+				"api_name": ""
+			},
+			"content_padding": "15px",
+			"title": "index",
+			"event:onload": "",
+			"uploadHeight": "568",
+			"uploadWidth": "320",
+			"site_title": "微信投票",
+			"background": ""
+		},
+		"components": []
+	}
 
 
 # 	cur_pid = next_pid#null
@@ -310,38 +309,38 @@ def __debug_print(content,type_tag=True):
 
 
 
-# 	#2.调研面板 pid:2
+	#2.投票面板 pid:2
 
-# 	__votedescription_temple = {
-# 			"type": "appkit.votedescription",
-# 			"cid": '',
-# 			"pid": '',
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"property_view_title": "调研简介",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": "",
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"title": "",
-# 				"subtitle": "",
-# 				"description": "",
-# 				"start_time": "",
-# 				"end_time": "",
-# 				"valid_time": "",
-# 				"permission": "",
-# 				"prize": ""
-# 			},
-# 			"components": []
-# 		}
+	__votedescription_temple = {
+		"type": "appkit.surveydescription",
+		"cid": '',
+		"pid": '',
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"property_view_title": "投票简介",
+		"model": {
+			"id": "",
+			"class": "",
+			"name": "",
+			"index": 1,
+			"datasource": {
+				"type": "api",
+				"api_name": ""
+			},
+			"title": "",
+			"subtitle": "",
+			"description": "",
+			"start_time": "",
+			"end_time": "",
+			"valid_time": "",
+			"permission": "",
+			"prize": ""
+		},
+		"components": []
+	}
 
 
 # 	cur_pid = next_pid
@@ -381,30 +380,30 @@ def __debug_print(content,type_tag=True):
 
 # 	page_temple['components'].append(vote_temple)
 
-# 	#3.提交按钮(系统必需) pid:3
-# 	__submitbutton_temple = {
-# 			"type": "appkit.submitbutton",
-# 			"cid": "",
-# 			"pid": "",
-# 			"auto_select": False,
-# 			"selectable": "no",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"property_view_title": "",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": '',
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"text": "提交"
-# 			},
-# 			"components": []
-# 		}
+	#3.提交按钮(系统必需) pid:3
+	__submitbutton_temple = {
+			"type": "appkit.submitbutton",
+			"cid": "",
+			"pid": "",
+			"auto_select": False,
+			"selectable": "no",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"property_view_title": "",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": "",
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"text": "提交"
+			},
+			"components": []
+		}
 
 # 	cur_pid = next_pid #1
 # 	cur_cid = next_cid #3
@@ -422,30 +421,30 @@ def __debug_print(content,type_tag=True):
 
 # 	page_temple['components'].append(submitbutton_temple)
 
-# 	#4.添加柄(系统必需)  pid:4
-# 	__componentadder_temple = {
-# 			"type": "appkit.componentadder",
-# 			"cid": "",
-# 			"pid": "",
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"property_view_title": "添加模块",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": "",
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"components": ""
-# 			},
-# 			"components": []
-# 		}
+	#4.添加柄(系统必需)  pid:4
+	__componentadder_temple = 		{
+			"type": "appkit.componentadder",
+			"cid": "",
+			"pid": "",
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"property_view_title": "添加模块",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": "",
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"components": ""
+			},
+			"components": []
+		}
 
 # 	cur_pid = next_pid #1
 # 	cur_cid = next_cid #4
@@ -463,33 +462,59 @@ def __debug_print(content,type_tag=True):
 
 # 	page_temple['components'].append(componentadder_temple)
 
-# 	#5.问答组件(用户自定义)  pid:5开始
-# 	__qa_temple = {
-# 			"type": "appkit.qa",
-# 			"cid": '',
-# 			"pid": "",
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"is_new_created": True,
-# 			"property_view_title": "问答",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": "",
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"title": "",
-# 				"is_mandatory": ""
-# 			},
-# 			"components": []
-# 		}
+	#5.文本选项组件(用户自定义)  pid:5开始
+	__textselection_temple = {
+			"type": "appkit.textselection",
+			"cid": "",
+			"pid": "",
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": "",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": "",
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"title": "11select",
+				"type": "single",
+				"is_mandatory": "true",
+				"items":""
+			},
+			"components": ""
+		}
 
+	__textselectionitem_temple = {
+			"type": "appkit.textselectionitem",
+			"cid": "",
+			"pid": "",
+			"auto_select": False,
+			"selectable": "no",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": "",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": "",
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"title": ""
+			},
+			"components": []
+		}
 
 
 # 	qa_arr = args['qa']
@@ -519,60 +544,61 @@ def __debug_print(content,type_tag=True):
 # 		page_temple['components'].append(qa_temple)
 
 
-# 	#选择模块(据有内置模块)
+	#6图片选项模块(据有内置模块)
 
-# 	__selection_temple = {
-# 			"type": "appkit.selection",
-# 			"cid": "",
-# 			"pid": "",
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"is_new_created": True,
-# 			"property_view_title": "",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": "",
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"title": "",
-# 				"type": "",
-# 				"is_mandatory": "true",
-# 				"items": ""
-# 			},
-# 			"components": ""
-# 		}
-
-# 	__selectitem_temple = {
-# 					"type": "appkit.selectitem",
-# 					"cid": '',
-# 					"pid": '',
-# 					"auto_select": False,
-# 					"selectable": "no",
-# 					"force_display_in_property_view": "no",
-# 					"has_global_content": "no",
-# 					"need_server_process_component_data": "no",
-# 					"is_new_created": True,
-# 					"property_view_title": "",
-# 					"model": {
-# 						"id": "",
-# 						"class": "",
-# 						"name": "",
-# 						"index": "",
-# 						"datasource": {
-# 							"type": "api",
-# 							"api_name": ""
-# 						},
-# 						"title": ""
-# 					},
-# 					"components": []
-# 				}
+	__imageselection_temple = {
+			"type": "appkit.imageselection",
+			"cid": "",
+			"pid": "",
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": "",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": "",
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"title": "",
+				"type": "",
+				"disp_type": "",
+				"is_mandatory": "",
+				"items": []
+			},
+			"components": []
+		}
+	__imageitem_temple = {
+					"type": "appkit.imageitem",
+					"cid": "",
+					"pid": "",
+					"auto_select": False,
+					"selectable": "no",
+					"force_display_in_property_view": "no",
+					"has_global_content": "no",
+					"need_server_process_component_data": "no",
+					"is_new_created": True,
+					"property_view_title": "",
+					"model": {
+						"id": "",
+						"class": "",
+						"name": "",
+						"index": "",
+						"datasource": {
+							"type": "api",
+							"api_name": ""
+						},
+						"image": "",
+						"title": ""
+					},
+					"components": []
+				},
 
 
 # 	selection_arr = args['selection']
@@ -632,59 +658,60 @@ def __debug_print(content,type_tag=True):
 # 		page_temple['components'].append(selection_temple)
 
 
-# 	#快捷模块(用户自定义)
+	#7快捷模块(用户自定义)
 
-# 	__textlist_temple = {
-# 			"type": "appkit.textlist",
-# 			"cid": "",
-# 			"pid": '',
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"is_new_created": True,
-# 			"property_view_title": "",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": '',
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"title": "",
-# 				"modules":{},
-# 				"items": []
-# 			},
-# 			"components": []
-# 		}
-# 	__itemadd_temple= {
-# 					"type": "appkit.textitem",
-# 					"cid": "",
-# 					"pid": "",
-# 					"auto_select": False,
-# 					"selectable": "no",
-# 					"force_display_in_property_view": "no",
-# 					"has_global_content": "no",
-# 					"need_server_process_component_data": "no",
-# 					"is_new_created": True,
-# 					"property_view_title": "",
-# 					"model": {
-# 						"id": "",
-# 						"class": "",
-# 						"name": "",
-# 						"index": "",
-# 						"datasource": {
-# 							"type": "api",
-# 							"api_name": ""
-# 						},
-# 						"title": "",
-# 						"is_mandatory": "true"
-# 					},
-# 					"components": []
-# 				}
+	__textlist_temple = {
+			"type": "appkit.textlist",
+			"cid": "",
+			"pid": '',
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"is_new_created": True,
+			"property_view_title": "",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": '',
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"title": "",
+				"modules":{},
+				"items": []
+			},
+			"components": []
+		}
+
+	__itemadd_temple= {
+					"type": "appkit.textitem",
+					"cid": "",
+					"pid": "",
+					"auto_select": False,
+					"selectable": "no",
+					"force_display_in_property_view": "no",
+					"has_global_content": "no",
+					"need_server_process_component_data": "no",
+					"is_new_created": True,
+					"property_view_title": "",
+					"model": {
+						"id": "",
+						"class": "",
+						"name": "",
+						"index": "",
+						"datasource": {
+							"type": "api",
+							"api_name": ""
+						},
+						"title": "",
+						"is_mandatory": "true"
+					},
+					"components": []
+				}
 # 	textlist_arr = args['textlist']
 # 	for textlist in textlist_arr:
 
@@ -797,37 +824,37 @@ def __debug_print(content,type_tag=True):
 
 # 	return json.dumps(page_temple)
 
-# def __prize_settings_process(prize_type,integral,coupon):
-# 	"""
-# 	处理prize_settings
+def __prize_settings_process(prize_type,integral,coupon):
+	"""
+	处理prize_settings
 
-# 	Tag为page，返回page的prize字典
-# 	Tage为event,返回event_event的prize字典
-# 	"""
-# 	prize = {}
+	Tag为page，返回page的prize字典
+	Tage为event,返回event_event的prize字典
+	"""
+	prize = {}
 
-# 	if prize_type:
-# 		if prize_type == "无奖励":
-# 			prize = {"type":"no_prize","data":None}
-# 		elif prize_type=="积分":
-# 			prize = {"type":"integral","data":integral}
-# 		elif prize_type == "优惠券":
-# 			coupon_name = coupon
-# 			coupon_id = __get_coupon_rule_id(coupon_name)
-# 			prize = {"type":"coupon",
-# 					 "data":{
-# 						"id":coupon_id,
-# 						"name":coupon_name
-# 					 }
-# 					}
-# 		else:
-# 			pass
-# 	return prize
+	if prize_type:
+		if prize_type == "无奖励":
+			prize = {"type":"no_prize","data":None}
+		elif prize_type=="积分":
+			prize = {"type":"integral","data":integral}
+		elif prize_type == "优惠券":
+			coupon_name = coupon
+			coupon_id = __get_coupon_rule_id(coupon_name)
+			prize = {"type":"coupon",
+					 "data":{
+						"id":coupon_id,
+						"name":coupon_name
+					 }
+					}
+		else:
+			pass
+	return prize
 
 def __Create_Vote(context,text,user):
 	"""
 	模拟用户登录页面
-	创建调研项目
+	创建投票项目
 	写入mongo表：
 		1.vote_vote表
 		2.page表
@@ -836,47 +863,45 @@ def __Create_Vote(context,text,user):
 	version = 1
 	text = text
 
-	# title = text.get("title","")
-	# subtitle = text.get("subtitle","")
-	# description = text.get("content","")
+	title = text.get("title","")
+	subtitle = text.get("subtitle","")
+	description = text.get("content","")
 
-	# cr_start_date = text.get('start_date', u'今天')
-	# start_date = bdd_util.get_date_str(cr_start_date)
-	# start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+	cr_start_date = text.get('start_date', u'今天')
+	start_date = bdd_util.get_date_str(cr_start_date)
+	start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-	# cr_end_date = text.get('end_date', u'1天后')
-	# end_date = bdd_util.get_date_str(cr_end_date)
-	# end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+	cr_end_date = text.get('end_date', u'1天后')
+	end_date = bdd_util.get_date_str(cr_end_date)
+	end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-	# valid_time = "%s~%s"%(start_time,end_time)
+	valid_time = "%s~%s"%(start_time,end_time)
 
-	# permission = text.get("permission")
+	permission = text.get("permission")
 
-	# prize_type = text.get("prize_type","")
-	# integral = text.get("integral","")
-	# coupon = text.get("coupon","")
-	# prize = __prize_settings_process(prize_type,integral,coupon)
+	prize_type = text.get("prize_type","")
+	integral = text.get("integral","")
+	coupon = text.get("coupon","")
+	prize = __prize_settings_process(prize_type,integral,coupon)
 
-	# qa = text.get("answer","")
-	# selection = text.get("choose","")
-	# textlist = text.get("participate_info","")
-	# uploadimg = text.get("upload_pic","")
+	text_options = text.get("text_options","")
+	pic_options = text.get("pic_options","")
+	textlist = text.get("participate_info","")
 
 
-	# page_args = {
-	# 	"title":title,
-	# 	"subtitle":subtitle,
-	# 	"description":description,
-	# 	"start_time":start_time,
-	# 	"end_time":end_time,
-	# 	"valid_time":valid_time,
-	# 	"permission":permission,
-	# 	"prize":prize,
-	# 	"qa":qa,
-	# 	"selection":selection,
-	# 	"textlist":textlist,
-	# 	"uploadimg":uploadimg
-	# }
+	page_args = {
+		"title":title,
+		"subtitle":subtitle,
+		"description":description,
+		"start_time":start_time,
+		"end_time":end_time,
+		"valid_time":valid_time,
+		"permission":permission,
+		"prize":prize,
+		"text_options":text_options,
+		"pic_options":pic_options,
+		"textlist ":textlist
+	}
 
 	# #step1：登录页面，获得分配的project_id
 	# get_vote_response = context.client.get("/apps/vote/vote/")
@@ -889,7 +914,7 @@ def __Create_Vote(context,text,user):
 	# dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
 
 	# #step3:发送Page
-	# page_json = __get_votePageJson(page_args)
+	page_json = __get_votePageJson(page_args)
 
 	# termite_post_args = {
 	# 	"field":"page_content",
@@ -924,7 +949,7 @@ def __Create_Vote(context,text,user):
 # def __Update_Vote(context,text,page_id,vote_id):
 # 	"""
 # 	模拟用户登录页面
-# 	编辑调研项目
+# 	编辑投票项目
 # 	写入mongo表：
 # 		1.vote_vote表
 # 		2.page表
@@ -1014,7 +1039,7 @@ def __Create_Vote(context,text,user):
 
 # def __Delete_Vote(context,vote_id):
 # 	"""
-# 	删除调研活动
+# 	删除投票活动
 # 	写入mongo表：
 # 		1.vote_vote表
 
@@ -1031,7 +1056,7 @@ def __Create_Vote(context,text,user):
 
 # def __Stop_Vote(context,vote_id):
 # 	"""
-# 	关闭调研活动
+# 	关闭投票活动
 # 	"""
 
 # 	design_mode = 0
@@ -1046,7 +1071,7 @@ def __Create_Vote(context,text,user):
 
 # def __Search_Vote(context,search_dic):
 # 	"""
-# 	搜索调研活动
+# 	搜索投票活动
 
 # 	输入搜索字典
 # 	返回数据列表
@@ -1091,7 +1116,7 @@ def __Create_Vote(context,text,user):
 
 # def __Search_Vote_Result(context,search_dic):
 # 	"""
-# 	搜索,调研参与结果
+# 	搜索,投票参与结果
 
 # 	输入搜索字典
 # 	返回数据列表
@@ -1228,7 +1253,7 @@ def step_impl(context,user):
 # # 	reduce_integral = expect.get('reduce_integral',0)#消耗积分
 # # 	send_integral = expect.get('send_integral',0)#参与送积分
 # # 	send_integral_rules = expect.get('send_integral_rules',"")#送积分规则
-# # 	vote_limit = __name2limit(expect.get('vote_limit',u'一人一次'))#调研限制
+# # 	vote_limit = __name2limit(expect.get('vote_limit',u'一人一次'))#投票限制
 # # 	win_rate = expect.get('win_rate','0%').split('%')[0]#中奖率
 # # 	is_repeat_win = __name2Bool(expect.get('is_repeat_win',"true"))#重复中奖
 # # 	expect_prize_settings_list = expect.get('prize_settings',[])
@@ -1248,7 +1273,7 @@ def step_impl(context,user):
 # # 		"expend":reduce_integral,#消耗积分
 # # 		"delivery":send_integral,#参与送积分
 # # 		"delivery_setting":__delivery2Bool(send_integral_rules),#送积分规则
-# # 		"limitation":vote_limit,#调研限制
+# # 		"limitation":vote_limit,#投票限制
 # # 		"chance":win_rate,#中奖率
 # # 		"allow_repeat":is_repeat_win,#重复中奖
 # # 		"prize_settings":page_prize_settings
@@ -1274,7 +1299,7 @@ def step_impl(context,user):
 # # 		"expend":obj.expend,#消耗积分
 # # 		"delivery":obj.delivery,#参与送积分
 # # 		"delivery_setting":obj.delivery_setting,#送积分规则
-# # 		"limitation":obj.limitation,#调研限制
+# # 		"limitation":obj.limitation,#投票限制
 # # 		"chance":obj.chance,#中奖率
 # # 		"allow_repeat":obj.allow_repeat,#重复中奖
 # # 		"prize_settings":actual_prize_list,
@@ -1452,7 +1477,7 @@ def step_impl(context,user):
 # 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 # 	check_vote_list(context,user,vote_name)
 
-# # @then(u"{user}能批量导出调研活动'{vote_name}'")
+# # @then(u"{user}能批量导出投票活动'{vote_name}'")
 # # def step_impl(context,user,vote_name):
 # # 	vote_page_id,vote_id = __vote_name2id(vote_name)#纯数字
 # # 	url ='/apps/vote/api/vote_participances_export/?_method=get&export_id=%s' % (vote_id)
