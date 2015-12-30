@@ -83,12 +83,12 @@ def __name2Bool(name):
 # 	return dt_time
 
 
-# def name2permission(name):
-# 	name_dic={u"必须关注才可参与":"member",u"无需关注即可参与":"no_member"}
-# 	if name:
-# 		return name_dic[name]
-# 	else:
-# 		return None
+def name2permission(name):
+	name_dic={u"必须关注才可参与":"member",u"无需关注即可参与":"no_member"}
+	if name:
+		return name_dic[name]
+	else:
+		return None
 
 def name2picshow_type(name):
 	name_dic = {u"列表":"list",u"表格":"table"}
@@ -542,7 +542,7 @@ def __get_votePageJson(args):
 		next_index = cur_index+1 #4...
 
 		text_options_temple = {}
-		text_options_temple =  copy.deepcopy(__text_options_temple)
+		text_options_temple =  copy.deepcopy(__textselection_temple)
 		text_options_temple['pid'] = cur_pid
 		text_options_temple['cid'] = cur_cid
 		text_options_temple['model']['index'] = cur_index #校准顺序后4...
@@ -889,51 +889,51 @@ def __Create_Vote(context,text,user):
 		"prize":prize,
 		"text_options":text_options,
 		"pic_options":pic_options,
-		"textlist ":textlist
+		"textlist":textlist
 	}
 
-	# #step1：登录页面，获得分配的project_id
-	# get_vote_response = context.client.get("/apps/vote/vote/")
-	# vote_args_response = get_vote_response.context
-	# project_id = vote_args_response['project_id']#(str){new_app:vote:0}
+	#step1：登录页面，获得分配的project_id
+	get_vote_response = context.client.get("/apps/vote/vote/")
+	vote_args_response = get_vote_response.context
+	project_id = vote_args_response['project_id']#(str){new_app:vote:0}
 
-	# #step2: 编辑页面获得右边的page_json
-	# dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-	# dynamic_response = context.client.get(dynamic_url)
-	# dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
+	#step2: 编辑页面获得右边的page_json
+	dynamic_url = "/apps/api/dynamic_pages/get/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	dynamic_response = context.client.get(dynamic_url)
+	dynamic_data = dynamic_response.context#resp.context=> data ; resp.content => Http Text
 
 	# #step3:发送Page
 	page_json = __get_votePageJson(page_args)
 
-	# termite_post_args = {
-	# 	"field":"page_content",
-	# 	"id":project_id,
-	# 	"page_id":"1",
-	# 	"page_json": page_json
-	# }
-	# termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-	# post_termite_response = context.client.post(termite_url,termite_post_args)
-	# related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
+	termite_post_args = {
+		"field":"page_content",
+		"id":project_id,
+		"page_id":"1",
+		"page_json": page_json
+	}
+	termite_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+	post_termite_response = context.client.post(termite_url,termite_post_args)
+	related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
 
-	# #step4:发送vote_args
-	# post_vote_args = {
-	# 	"name":title,
-	# 	"start_time":start_time,
-	# 	"end_time":end_time,
-	# 	"related_page_id":related_page_id
-	# }
-	# vote_url ="/apps/vote/api/vote/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
-	# post_vote_response = context.client.post(vote_url,post_vote_args)
+	#step4:发送vote_args
+	post_vote_args = {
+		"name":title,
+		"start_time":start_time,
+		"end_time":end_time,
+		"related_page_id":related_page_id
+	}
+	vote_url ="/apps/vote/api/vote/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
+	post_vote_response = context.client.post(vote_url,post_vote_args)
 
-	# #跳转,更新状态位
-	# design_mode = 0
-	# count_per_page = 1000
-	# version = 1
-	# page = 1
-	# enable_paginate = 1
+	#跳转,更新状态位
+	design_mode = 0
+	count_per_page = 1000
+	version = 1
+	page = 1
+	enable_paginate = 1
 
-	# rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-	# rec_vote_response = context.client.get(rec_vote_url)
+	rec_vote_url ="/apps/vote/api/votes/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+	rec_vote_response = context.client.get(rec_vote_url)
 
 # def __Update_Vote(context,text,page_id,vote_id):
 # 	"""
