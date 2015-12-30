@@ -64,10 +64,10 @@
         padding: 0;
     }*/
     .xui-list-content{
+        top: 0;
         position: absolute;
         height: 100%;
-        display: inline-block;
-        width: 52%;
+        width: 50%;
         left: 49%
     }
     .xui-list-content .wui-text{
@@ -75,14 +75,14 @@
         position: absolute;
         font-size: 14px;
         word-break: break-all;
-        margin-top: 15px;
+        margin-top: 10px;
     }
     .xui-list-content .xui-progress-list{
         position:absolute;
         height:20px;
         width:100%;
         background-color: #eee;
-        bottom: 20px;
+        bottom: 10px;
     }
     .xui-progressBar{
         position: absolute;
@@ -91,10 +91,9 @@
         height: 20px;
     }
     .wui-selectBox-display-list .wui-inner-selectionwithimage-list {
+        position: relative;
+        height: 100%;
         width: 45%;
-        display: inline-block;
-        float: left;
-        margin-right: 10px;
     }
     </style>
 
@@ -156,16 +155,16 @@
                                     </div>
                                 </li>
                             {% else %}
-                                <li class="wui-selectBox-display-list" style="position: relative">
-                                    <div class="wui-selectionwithimage xa-inputControl"
+                                <li class="wui-selectBox-display-list {% if select.isSelect %}wui-image-selected{% endif %}" style="position: relative;margin-bottom: 10px;">
+                                    <div style="display: block;margin-bottom:0;" class="wui-selectionwithimage xa-inputControl"
                                         data-type="radio"
                                         data-input-name="{{select.name}}"
                                         data-input-type="imageselection"
                                         data-control-type="appkit.imageselection"
                                     >
-                                        <div class="wui-inner-selectionwithimage-list {% if select.isSelect %}wui-image-selected{% endif %}">
+                                        <div class="wui-inner-selectionwithimage-list">
                                             <div class="wui-inner-img">
-                                            <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" class="wui-i-image">
+                                                <img src="{% if select.image %}{{ select.image }}{% else %}/static_v2/img/termite2/addImgBtn.png{% endif %}" style="position: absolute;height: 100%;">
                                             </div>
                                         </div>
                                         <div class="xui-list-content">
@@ -173,7 +172,7 @@
                                             <div class="xui-progress-list">
                                                 <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
                                             </div>
-                                            <span class="wa-progress-msg" style="margin-left: 26%;bottom: 20px;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
+                                            <span class="wa-progress-msg" style="margin-left: 26%;bottom: 10px;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
                                         </div>
                                     </div>
                                 </li>
