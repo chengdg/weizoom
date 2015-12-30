@@ -43,11 +43,13 @@
         position: absolute;
         /* margin-top: -19px; */
         /* margin-left: 10%; */
-        height: 20px;
-        line-height: 20px;
+        /*height: 20px;*/
+        /*line-height: 20px;*/
         width: 100%;
         text-align: center;
         color: #666;
+        bottom: 0;
+        border: 1px solid red;
     }
     .wui-selectBox-display-list label{
         position: absolute;
@@ -152,7 +154,7 @@
                                         </div>
                                         <div style="background-color: #eee;position: relative;width: 100%;height: 20px">
                                             <span class="xui-progressBar" style="width: {% ifequal select.percent '0%' %}0{% else %}{{ select.percent }}{% endifequal %}"></span>
-                                            <span style="position: absolute;width: 100%;text-align: center;color: #666;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
+                                            <span style="position: absolute;width: 100%;text-align: center;color: #666;bottom: 0;border: 1px solid red;">{{ select.counter }}票&nbsp;&nbsp;{{ select.percent }}</span>
                                         </div>
                                     </div>
                                 </li>
