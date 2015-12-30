@@ -37,6 +37,7 @@
                 animation: loading 2000ms linear infinite both;
             }
             .wui-loading{
+                opacity: 0;
                 position: fixed;
                 top: 5px;
                 left: 5px;
@@ -269,8 +270,13 @@
                 $('body>.tc').css('display', 'block');
             }
 
-            function finishLoading(){
-                $('.wa-loading').hide();
+            function loadingStatus(action){
+                var $loading = $('.wa-loading');
+                if(action){
+                    $loading.css('opacity', 1);
+                }else{
+                    $loading.css('opacity', 0);
+                }
             }
         </script>
 

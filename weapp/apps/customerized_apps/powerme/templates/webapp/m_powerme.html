@@ -292,6 +292,7 @@
 
     //发送请求，单独获取排名数据，优化首页时间
     function getDynamicData(){
+        loadingStatus(true);
         var fid = GetQueryString("fid");
         W.getApi().call({
             app: 'm/apps/powerme',
@@ -311,7 +312,7 @@
                 //渲染排名
                 showTop100(data);
                 //隐藏loading动画元素
-                finishLoading();
+                loadingStatus(false);
                 //监听分享成功事件
                 $(document).on("share:success",function(data){
                     $('.xa-share').addClass('none');
