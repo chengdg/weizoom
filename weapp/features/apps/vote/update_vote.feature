@@ -96,7 +96,7 @@ Background:
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @update_vote
 Scenario:1 编辑'未开始'状态的微信投票活动
 	Given jobs登录系统
 	When jobs编辑微信投票活动'微信投票01'
@@ -176,7 +176,7 @@ Scenario:1 编辑'未开始'状态的微信投票活动
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @update_vote
 Scenario:2 关闭'进行中'状态的微信投票活动
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表
@@ -225,7 +225,7 @@ Scenario:2 关闭'进行中'状态的微信投票活动
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @update_vote
 Scenario:3 删除'未开始'和'已结束'状态的微信投票活动
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表

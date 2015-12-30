@@ -102,7 +102,7 @@ Background:
 		| 微信投票01 | tom1        |今天         | 1,B          |tom1,153211223344,3234@qq.com,33  |
 		| 微信投票01 | tom2        |今天         | 3,A          |tom2,15411223344,4234@qq.com,44   |
 
-@apps @vote
+@mall2 @apps @vote @view_vote_results
 Scenario:1 查看结果列表
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表
@@ -125,7 +125,7 @@ Scenario:1 查看结果列表
 		| tom         |昨天         |
 		| bill        |2天前        |
 
-@apps @vote
+@mall2 @apps @vote @view_vote_results
 Scenario:2 查看结果列表查询
 	Given jobs登录系统
 	When jobs查看微信投票活动'微信投票01'
@@ -244,7 +244,7 @@ Scenario:2 查看结果列表查询
 			| member_name | survey_time |
 			| bill        |2天前        |
 
-@apps @vote
+@mall2 @apps @vote @view_vote_results
 Scenario:3 查看结果列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
@@ -276,7 +276,7 @@ Scenario:3 查看结果列表分页
 		| member_name | survey_time |
 		| tom         |昨天         |
 
-@apps @vote
+@mall2 @apps @vote @view_vote_results
 Scenario:4 访问用户的查看结果
 	Given jobs登录系统
 	When jobs查看微信投票活动'微信投票01'

@@ -118,7 +118,7 @@ Background:
 			}
 			"""
 
-@apps @vote
+@mall2 @apps @vote @vote_list_participate_number
 Scenario:1 微信投票活动列表参与人数的校验
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表

@@ -2,7 +2,7 @@
 
 Feature:手机端用户参与微信投票活动
 
-@apps @vote
+@mall2 @apps @vote @users_participate_vote
 Scenario:1 微信投票活动-无奖励-无需关注即可参与
 	Given jobs登录系统
 	When jobs新建微信投票活动
@@ -76,7 +76,7 @@ Scenario:1 微信投票活动-无奖励-无需关注即可参与
 			"""
 		Then bill获得提示"您已参加过该活动"
 
-@apps @vote
+@mall2 @apps @vote @users_participate_vote
 Scenario:2 微信投票-积分-必须关注才可参与
 	Given jobs登录系统
 	When jobs新建微信投票活动
@@ -170,7 +170,7 @@ Scenario:2 微信投票-积分-必须关注才可参与
 			"""
 		Then bill获得提示"您已参加过该活动"
 
-@apps @vote
+@mall2 @apps @vote @users_participate_vote
 Scenario:3 微信投票-优惠券-无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则

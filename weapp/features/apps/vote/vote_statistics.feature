@@ -95,7 +95,7 @@ Background:
 		| 微信投票01 | tom1        |今天         | 1,B    |tom1,153211223344,3234@qq.com,33  |
 		| 微信投票01 | tom2        |今天         | 3,A    |tom2,15411223344,4234@qq.com,44   |
 
-@apps @vote
+@mall2 @apps @vote @vote_statistics
 Scenario:1 访问微信投票的统计
 	Given jobs登录系统
 	When jobs访问微信投票活动'微信投票01'的统计

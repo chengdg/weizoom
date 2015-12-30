@@ -106,7 +106,7 @@ Background:
 		}]
 		"""
 
-@apps @vote
+@mall2 @apps @vote @vote_list
 Scenario:1 微信投票活动列表查询
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表
@@ -361,7 +361,7 @@ Scenario:1 微信投票活动列表查询
 			}]
 			"""
 
-@apps @vote
+@mall2 @apps @vote @vote_list
 Scenario:2 微信投票活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
