@@ -10,7 +10,7 @@ Background:
 			"name": "优惠券1",
 			"money": 100.00,
 			"count": 5,
-			"limit_counts": "不限",
+			"limit_counts": "无限",
 			"using_limit": "满50元可以使用",
 			"start_date": "今天",
 			"end_date": "1天后",
