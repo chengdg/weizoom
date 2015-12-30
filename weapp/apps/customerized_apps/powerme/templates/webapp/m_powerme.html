@@ -1,4 +1,4 @@
-{% extends "apps_static_base.html" %}
+{% extends "apps_base.html" %}
 
 {% block css %}
 <style>
@@ -310,6 +310,8 @@
                 renderTime(data.member_info.timing);
                 //渲染排名
                 showTop100(data);
+                //隐藏loading动画元素
+                finishLoading();
                 //监听分享成功事件
                 $(document).on("share:success",function(data){
                     $('.xa-share').addClass('none');
