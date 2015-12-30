@@ -3,6 +3,7 @@
 
 import json
 import time
+import base64
 from datetime import datetime, timedelta
 from wsgiref.simple_server import WSGIRequestHandler, make_server
 from wsgiref.util import setup_testing_defaults
@@ -66,9 +67,16 @@ def step_impl(context):
 			print '*********************** run step **********************'
 			print step
 
-			context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
+			try:
+				context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
+			except:
+				from core.exceptionutil import full_stack
+				print '*********************** exception **********************'
+				stacktrace = full_stack()
+				print stacktrace.decode('utf-8')
+				return base64.b64encode(stacktrace)
 
-		return 'success'
+		return base64.b64encode('success')
 
 	httpd = make_server('', 8170, simple_app, handler_class=BDDRequestHandler)
 	print "[bdd server] Serving on port 8170..."
