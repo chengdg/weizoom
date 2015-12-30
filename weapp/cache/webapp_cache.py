@@ -545,6 +545,10 @@ def update_webapp_product_detail_cache_when_update_model_property_value(**kwargs
 
             key = 'webapp_product_detail_{wo:%s}_{pid:*}' % (owner_id)
             cache_util.delete_pattern(key)
+
+            key = 'webapp_products_categories_{wo:%s' % (owner_id)
+            cache_util.delete_pattern(key)
+
 post_update_signal.connect(update_webapp_product_detail_cache_when_update_model_property_value,
                            sender=mall_models.ProductModelPropertyValue, dispatch_uid="mall_product_model_property_value.update")
 
@@ -794,6 +798,10 @@ def update_product_cache(webapp_owner_id, product_id, deleteRedis=True, deleteVa
     if deleteRedis:
         key = 'webapp_product_detail_{wo:%s}_{pid:%s}' % (webapp_owner_id, product_id)
         cache_util.delete_cache(key)
+
+        key = 'webapp_products_categories_{wo:%s}' % webapp_owner_id
+        cache_util.delete_cache(key)
+
     if not settings.IS_UNDER_BDD and deleteVarnish:
         url = 'http://%s/termite/workbench/jqm/preview/?woid=%s&module=mall&model=product&rid=%s' % \
             (settings.DOMAIN, webapp_owner_id, product_id)
