@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
+from apps.customerized_apps.vote.vote_statistic import get_vote_title_select_datas
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -49,11 +50,7 @@ class Mvote(resource.Resource):
 			thumbnails_url = '/static_v2/img/thumbnails_vote.png'
 			if not isPC:
 				isMember = request.member and request.member.is_subscribed
-				# if not isMember:
-				# 	from weixin.user.util import get_component_info_from
-				# 	component_info = get_component_info_from(request)
-				# 	auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-				# 	auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+
 			participance_data_count = 0
 			if 'new_app:' in id:
 				project_id = id
@@ -90,7 +87,7 @@ class Mvote(resource.Resource):
 			is_already_participanted = (participance_data_count > 0)
 			if  is_already_participanted:
 				member_id = request.member.id
-				vote_detail,result_list = get_result(id,member_id)
+				vote_detail,result_list = get_result(request,member_id)
 				c = RequestContext(request, {
 					'vote_detail': vote_detail,
 					'record_id': id,
@@ -135,182 +132,125 @@ class Mvote(resource.Resource):
 			return render_to_response('vote/templates/webapp/m_vote.html', c)
 
 
-class resultVote(resource.Resource):
-	app = 'apps/vote'
-	resource = 'result_vote'
+# class resultVote(resource.Resource):
+# 	app = 'apps/vote'
+# 	resource = 'result_vote'
+#
+# 	def get(request):
+# 		print request.GET
+# 		if 'id' in request.GET:
+# 			id = request.GET['id']
+# 			isMember = request.GET.get('isMember',0)
+# 			member_id = request.member.id
+# 			auth_appid_info = None
+# 			# if not isMember:
+# 			# 	from weixin.user.util import get_component_info_from
+# 			# 	component_info = get_component_info_from(request)
+# 			# 	auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
+# 			# 	auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
+# 			vote_detail,result_list = get_result(request,member_id)
+# 			c = RequestContext(request, {
+# 				'vote_detail': vote_detail,
+# 				'record_id': id,
+# 				'page_title': '微信投票',
+# 				'app_name': "vote",
+# 				'resource': "vote",
+# 				'q_vote': result_list,
+# 				'hide_non_member_cover': True, #非会员也可使用该页面
+# 				'isMember': isMember,
+# 				'auth_appid_info': auth_appid_info,
+# 			})
+# 			return render_to_response('vote/templates/webapp/result_vote.html', c)
 
-	def get(request):
-		print request.GET
-		if 'id' in request.GET:
-			id = request.GET['id']
-			isMember = request.GET.get('isMember',0)
-			member_id = request.GET['member_id']
-			auth_appid_info = None
-			# if not isMember:
-			# 	from weixin.user.util import get_component_info_from
-			# 	component_info = get_component_info_from(request)
-			# 	auth_appid = weixin_models.ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.GET['webapp_owner_id'])[0]
-			# 	auth_appid_info = weixin_models.ComponentAuthedAppidInfo.objects.filter(auth_appid=auth_appid)[0]
-			vote_detail,result_list = get_result(id,member_id)
-			c = RequestContext(request, {
-				'vote_detail': vote_detail,
-				'record_id': id,
-				'page_title': '微信投票',
-				'app_name': "vote",
-				'resource': "vote",
-				'q_vote': result_list,
-				'hide_non_member_cover': True, #非会员也可使用该页面
-				'isMember': isMember,
-				'auth_appid_info': auth_appid_info,
-			})
-			return render_to_response('vote/templates/webapp/result_vote.html', c)
 
-
-def get_result(id,member_id):
+def get_result(request,member_id):
+	'''
+	@param request:
+	@param member_id: 会员的id
+	member_vote_participance: 当前会员的投票信息
+	title: 标题
+	select_vlaue: 某标题的选项信息
+	select_title_name: 选项名
+	@return:
+	'''
+	id = request.GET['id']
 	vote_detail ={}
 	vote_vote = app_models.vote.objects.get(id=id)
 	vote_detail['name'] = vote_vote['name']
 	vote_detail['start_time'] = vote_vote['start_time'].strftime('%Y-%m-%d %H:%M')
 	vote_detail['end_time'] = vote_vote['end_time'].strftime('%Y-%m-%d %H:%M')
 
-	votes = app_models.voteParticipance.objects(belong_to=id)
-	member_vote_termite = app_models.voteParticipance.objects.filter(belong_to=id,member_id=member_id).order_by('-created_at').first().termite_data
+	member_vote_participance = app_models.voteParticipance.objects.filter(belong_to=id,member_id=member_id).order_by('-created_at').first().termite_data
 	member_termite_select = {}
-	member_termite_textselect = {}
-	member_termite_imageselect = {}
 	member_termite_shortcuts = {}
-	for k,member_termite in member_vote_termite.items():
-		value = member_vote_termite[k]
-		if value['type'] in ['appkit.selection','appkit.textselection','appkit.imageselection']:
-			select_vlaue = value['value']
-			v_title_index = 0
+	for title,member_termite in member_vote_participance.items():
+		if member_termite['type'] in ['appkit.selection','appkit.textselection','appkit.imageselection']:
+			select_vlaue = member_termite['value']
+			select_title_index = 0
 			for select in sorted(select_vlaue.keys()):
 				select_title = select.split('_')[1]
-				if len(str(v_title_index))< 2:
-					select_title = '0' + str(v_title_index) + select_title
+				if len(str(select_title_index))< 2:
+					select_title = '0%s_%s' % (str(select_title_index), select_title)
 				else:
-					select_title = str(v_title_index) + select_title
-				select_title_name = k+select_title
+					select_title = '%s_%s' % (str(select_title_index), select_title)
+				select_title_name = title+select_title
 				isSelect = select_vlaue[select]
-				if value['type'] in ['appkit.selection','appkit.textselection']:
+				if member_termite['type'] in ['appkit.selection','appkit.textselection']:
 					member_termite_select[select_title_name] = {
 						'isSelect': isSelect['isSelect'],
 						'type': isSelect['type']
 					}
 				else:
-					member_termite_imageselect[select_title_name] = {
+					member_termite_select[select_title_name] = {
 						'isSelect': isSelect['isSelect'],
 						'type': isSelect['type'],
 						'image': isSelect['image'],
 						'mt': isSelect['mt']
 					}
-				v_title_index += 1
-		# if value['type'] == 'appkit.textselection':
-		# 	for select,isSelect in value['value'].items():
-		# 		member_termite_textselect[k+select] = {
-		# 			'isSelect': isSelect['isSelect'],
-		# 			'type': isSelect['type']
-		# 		}
-		# if value['type'] == 'appkit.imageselection':
-		# 	for select,isSelect in value['value'].items():
-		# 		member_termite_imageselect[k+select] = {
-		# 			'isSelect': isSelect['isSelect'],
-		# 			'type': isSelect['type'],
-		# 			'image': isSelect['image'],
-		# 			'mt': isSelect['mt']
-		# 		}
-		if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
-			member_termite_shortcuts[k] = value['value']
-	questions =OrderedDict()
-	result_list = []
-	title_disp_type = {}
+				select_title_index += 1
+		if member_termite['type'] in['appkit.textlist', 'appkit.shortcuts']:
+			member_termite_shortcuts[title] = {
+				'member_id': member_id,
+				'value': member_termite['value']
+			}
 
-	#合并字典
-	member_termite_select = dict(member_termite_select, **(dict(member_termite_textselect, **member_termite_imageselect)))
+	vote_title_select_datas = get_vote_title_select_datas(request)
 
-	for vote in votes:
-		termite_data = vote.termite_data
-		for title in sorted(termite_data.keys()):
-			value = termite_data[title]
-			if value['type'] in ['appkit.selection', 'appkit.imageselection', 'appkit.textselection']:
-				if not questions.has_key(title):
-					questions[title] = [value['value']]
-				else:
-					questions[title].append(value['value'])
-				if value.has_key('display_type'):
-					display_type = value['display_type']
-					title_disp_type[title] = display_type #若title重复则会覆盖！！
-			if value['type'] in['appkit.textlist', 'appkit.shortcuts']:
-				questions[title] = []
-	for q_title,values in questions.items():
-		value_isSelect = {}
-		result = {}
-		value_list = []
-		total_count = 0
-		timp_vlaue = {}
-		for value in values:
-			timp_vlaue = value
-			is_select =False
-			v_title_index = 0
-			for v_title in sorted(value.keys()):
-				v_value = value[v_title]
-				select_title = v_title.split('_')[1]
-				if len(str(v_title_index))< 2:
-					select_title = '0' + str(v_title_index) + select_title
-				else:
-					select_title = str(v_title_index) + select_title
-				select_title_name = q_title+select_title
+	#如果当前活动有参与人信息的填写项
+	#将填写项合并到选项统计的list中
+	if member_termite_shortcuts:
+		for shortcut_title, shortcut_value in member_termite_shortcuts.items():
+			vote_title_select_datas.append({
+				'title_name': shortcut_title,
+				'title_value': member_termite_shortcuts[shortcut_title]['value'],
+				'selectionType': u'shortcuts'
+			})
+	#重新按title_name正序排序
+	vote_title_select_datas = sorted(vote_title_select_datas, cmp=None, key=lambda vote_title_select_data:vote_title_select_data['title_name'], reverse=False)
+	for data in vote_title_select_datas:
+		title = data['title_name'].split('_')[1]
+		if data.get('selectionType',None) == u'shortcuts':
+			if SHORTCUTS_TEXT.has_key(title):
+				title = SHORTCUTS_TEXT[title]
 
-				if v_value:
-					if not value_isSelect.has_key(select_title_name):
-						value_isSelect[select_title_name] = 0
-					if v_value['isSelect'] == True:
-						value_isSelect[select_title_name] += 1
-						is_select = True
+		data['title'] = title
+		if type(data['title_value']) == list:
+			for d in data['title_value']:
+				d['name'] = d['item_name'].split('_')[1]
+				d['isSelect'] = member_termite_select[data['title_name']+d['item_name']]['isSelect']
+				if data['type'] == u'单选':
+					d['type'] = u'radio'
 				else:
-					value_isSelect[select_title_name] = 0
-				v_title_index += 1
-			if is_select:
-				total_count += 1
-		timp_k_index = 0
-		for timp_k in sorted(timp_vlaue.keys()):
-			value ={}
-			name = timp_k.split('_')[1]
-			if len(str(timp_k_index))< 2:
-				timp_title = '0' + str(timp_k_index) + name
-			else:
-				timp_title = str(timp_k_index) + name
-			timp_title_name = q_title+timp_title
-			value['name'] = name
-			value['id_name'] = timp_title_name
-			value['count'] = value_isSelect[timp_title_name]
-			value['per'] =  '%d' % (value_isSelect[timp_title_name]*100/float(total_count) if total_count else 0)
-			value['isSelect'] = member_termite_select[timp_title_name]['isSelect']
-			value['type'] = member_termite_select[timp_title_name]['type']
-			if member_termite_select[timp_title_name].has_key('image'):
-				value['image'] = member_termite_select[timp_title_name]['image']
-				value['mt'] = member_termite_select[timp_title_name]['mt']
-			value_list.append(value)
-			timp_k_index += 1
-		title_name = q_title.split('_')[1]
-		isShortcuts = False
-		if title_name in SHORTCUTS_TEXT.keys():
-			isShortcuts = True
-			value_list = member_termite_shortcuts[q_title]
-			title_name = SHORTCUTS_TEXT[title_name]
-		result['title'] = title_name
-		result['values'] = value_list
-		if 'image' in value_list[0]:
-			result['selectionType'] = 'image'
-			result['display_type'] = title_disp_type.get(q_title, '')
-		elif isShortcuts:
-			result['selectionType'] = 'shortcuts'
-		else:
-			result['selectionType'] = 'text'
-		result_list.append(result)
+					d['type'] = u'checkbox'
+				if 'image' in d.keys():
+					data['selectionType'] = 'image'
+				else:
+					data['selectionType'] = 'text'
+
+				d['id_name'] = data['title_name']+d['item_name']
+
 
 	related_page_id = vote_vote.related_page_id
-
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
 	page_info = page['component']['components'][0]['model']
@@ -324,4 +264,4 @@ def get_result(id,member_id):
 		prize_data = page_info['prize']['data']
 	vote_detail['prize_data'] = prize_data
 
-	return vote_detail,result_list
+	return vote_detail,vote_title_select_datas

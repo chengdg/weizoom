@@ -135,7 +135,7 @@
             method: 'get',
             app: 'apps/vote',
             resource: 'vote_statistic-export',
-            args: {'export_id':export_id},
+            args: {'id':export_id},
             success: function(resp){
                 if(resp.code == 200){
                     $('#export_href').prop({

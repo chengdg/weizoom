@@ -70,9 +70,11 @@ Scenario:1 会员取消关注公众号后,再次关注公众号,之前的活动�
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
+  	When 更新助力排名
 	When tom点击bill分享的微助力活动链接
   	When 更新助力排名
 	Then tom获得jobs的'微助力活动1'的内容
@@ -147,6 +149,7 @@ Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	Given jobs登录系统
 	Then jobs获得微助力活动列表
@@ -165,6 +168,7 @@ Scenario:2 会员A分享活动链接,取消关注公众号后，好友B帮其助
 
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
+  	When 更新助力排名
 
 	Given jobs登录系统
 	When jobs查看微助力活动'微助力活动1'
@@ -206,6 +210,7 @@ Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	When bill取消关注jobs的公众号
 
@@ -214,6 +219,7 @@ Scenario:3 会员A分享活动链接,取消关注公众号,再关注公众号后
 
 	When 清空浏览器
 	When tom点击bill分享的微助力活动链接进行助力
+  	When 更新助力排名
 	When tom点击bill分享的微助力活动链接
   	When 更新助力排名
 	Then tom获得jobs的'微助力活动1'的内容

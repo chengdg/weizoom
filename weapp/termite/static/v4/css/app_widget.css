@@ -1187,6 +1187,7 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
 	background: white;
 	padding-top: 10px;
 	padding-left: 10px;
+	padding-right: 10px;
 }
 .wui-imageSelection .wui-i-mandatory {
 	color: #CDCDCD;
@@ -1216,11 +1217,19 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
 	margin-right: 10px;
 }
 .wui-selectBox-display-list .wui-selectionwithimage{
-    display: inline-block;
-	margin-bottom: 10px;
+	display: block;
+	margin-bottom:0;
 }
 .wui-selectionwithimage img{
     width: 100%;
+}
+.wui-selectBox-display-list .wui-selectionwithimage img {
+	position: absolute;
+	height: 100%;
+}
+.wui-selectBox-display-list{
+	position: relative;
+	margin-bottom: 10px;
 }
 
 .wui-selectionwithimage .wui-i-button{
@@ -1230,20 +1239,19 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
 }
 
 .wui-selectBox-display-list .wui-i-button{
-    display: -webkit-box;
-    position: relative;
-    margin-top: 90%;
-	margin-left: 10px;
+	display: -webkit-box;
+    position: absolute;
+    /* margin-top: 90%; */
+    /*margin-left: 10px;*/
+    bottom: 10px;
 }
 
 .wui-selectBox-display-list .wui-i-text{
-    display: -webkit-box;
+	display: -webkit-box;
     position: absolute;
     font-size: 14px;
     word-break: break-all;
-    margin-top: 15px;
-    padding-left: 10px;
-	max-width: 38%;
+    margin-top: 10px;
 }
 li.wui-selectBox-display-table {
     width: 45%;
@@ -1278,4 +1286,27 @@ li.wui-selectBox-display-table {
 	background-position-y: -41px !important;
 }
 
+.wui-selectBox-display-list{
+	position: relative;
+	margin-bottom: 10px;
+}
+.wui-selectBox-display-list .wui-inner-selectionwithimage-list {
+        position: relative;
+        height: 100%;
+        width: 45%;
+    }
+    .xui-list-content{
+        top: 0;
+        position: absolute;
+        height: 100%;
+        width: 50%;
+        left: 49%
+    }
+    .xui-list-content .wui-text{
+        display: -webkit-box;
+        position: absolute;
+        font-size: 14px;
+        word-break: break-all;
+        margin-top: 10px;
+    }
 /* 百宝箱 vote new style ---end*/

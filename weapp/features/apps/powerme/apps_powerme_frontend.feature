@@ -148,6 +148,7 @@ Scenario:1 用户重复参与微助力活动
 		[]
 		"""
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	When bill点击图文"微助力1单图文"进入微助力活动页面
   	When 更新助力排名
 	Then bill获得jobs的'微助力活动1'的内容
@@ -175,6 +176,7 @@ Scenario:1 用户重复参与微助力活动
 	Then tom收到自动回复'微助力1单图文'
 	When tom点击图文"微助力1单图文"进入微助力活动页面
 	When tom把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	When 清空浏览器
 	When bill点击tom分享的微助力活动链接
@@ -230,6 +232,7 @@ Scenario:2 会员帮助会员好友助力
 		[]
 		"""
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When 更新助力排名
 	Then bill获得"微助力活动1"的助力值排名
@@ -238,6 +241,7 @@ Scenario:2 会员帮助会员好友助力
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
@@ -271,6 +275,7 @@ Scenario:3 非会员帮助会员好友助力
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
+	When 更新助力排名
 	When bill点击图文"微助力1单图文"进入微助力活动页面
   	When 更新助力排名
 	Then bill获得jobs的'微助力活动1'的内容
@@ -293,6 +298,7 @@ Scenario:3 非会员帮助会员好友助力
 		[]
 		"""
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	When bill点击图文"微助力1单图文"进入微助力活动页面
   	When 更新助力排名
 	Then bill获得"微助力活动1"的助力值排名
@@ -301,7 +307,9 @@ Scenario:3 非会员帮助会员好友助力
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
+	When 更新助力排名
 	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友助力值+1<br />3.回复："微助力1",即可参加活动'
 	When tom通过识别弹层中的公众号二维码关注jobs的公众号
 	When 更新助力排名
@@ -309,6 +317,7 @@ Scenario:3 非会员帮助会员好友助力
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
+	When 更新助力排名
 	When bill点击图文"微助力1单图文"进入微助力活动页面
   	When 更新助力排名
 	Then bill获得jobs的'微助力活动1'的内容
@@ -340,6 +349,7 @@ Scenario:4 连续帮助会员好友助力
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力2'
 	Then bill收到自动回复'微助力2单图文'
+	When 更新助力排名
 	When bill点击图文"微助力2单图文"进入微助力活动页面
   	When 更新助力排名
 	Then bill获得jobs的'微助力活动2'的内容
@@ -362,6 +372,7 @@ Scenario:4 连续帮助会员好友助力
 		[]
 		"""
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	When bill点击图文"微助力2单图文"进入微助力活动页面
   	When 更新助力排名
 	Then bill获得"微助力活动2"的助力值排名
@@ -370,12 +381,18 @@ Scenario:4 连续帮助会员好友助力
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
+	When 更新助力排名
 	When tom点击bill分享的微助力活动链接进行助力
+  	When 更新助力排名
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友助力值+1<br />3.回复："微助力2",即可参加活动'
 	When tom通过识别弹层中的带参数二维码关注jobs的公众号
   	When 更新助力排名
 	#tom关注成功后，助力成功即bill助力值加1
-	When tom点击bill分享的微助力活动链接
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微助力2'
+	Then tom收到自动回复'微助力2单图文'
+	When 更新助力排名
+	When tom点击图文"微助力2单图文"进入微助力活动页面
   	When 更新助力排名
 	Then tom获得jobs的'微助力活动2'的内容
 		"""
@@ -432,10 +449,12 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 		[]
 		"""
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
@@ -498,6 +517,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
@@ -528,6 +548,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 		| rank | name | value |
 		|  1   | bill |   0   |
 	When tom把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	When tom点击图文"微助力1单图文"进入微助力活动页面
   	When 更新助力排名
 	Then tom获得jobs的'微助力活动1'的内容
@@ -563,10 +584,12 @@ Scenario:7 非会员通过好友分享链接参加微助力活动（有识别二
 	Then bill收到自动回复'微助力2单图文'
 	When bill点击图文"微助力2单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
 
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力2'
@@ -597,6 +620,7 @@ Scenario:7 非会员通过好友分享链接参加微助力活动（有识别二
 	When tom点击bill分享的微助力活动链接进行参与
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："微助力2",即可参加活动'
 	When tom通过识别弹层中的带参数二维码关注jobs的公众号
+	When 更新助力排名
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力2'
 	Then tom收到自动回复'微助力2单图文'
@@ -621,6 +645,7 @@ Scenario:7 非会员通过好友分享链接参加微助力活动（有识别二
 		| rank | name | value |
 		|  1   | bill |   1   |
 	When tom把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	When tom点击图文"微助力2单图文"进入微助力活动页面
   	When 更新助力排名
 	Then tom获得jobs的'微助力活动2'的内容
@@ -678,16 +703,20 @@ Scenario:8 会员B分享会员A的微助力活动链接
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
 	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
 
 	#tom点击bill分享的链接助力后并分享bill的活动页到朋友圈
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
 	When tom把bill的微助力活动链接分享到朋友圈
+	When 更新助力排名
 	#tom2点击tom分享的bill的活动页，帮bill进行助力
 	When tom2关注jobs的公众号
 	When tom2访问jobs的webapp
 	When tom2点击tom分享的微助力活动链接进行助力
+	When 更新助力排名
 
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'微助力1'
@@ -821,6 +850,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 		When tom在微信中向jobs的公众号发送消息'已结束微助力'
 		Then tom收到自动回复'微助力4单图文'
 		When tom点击图文"微助力4单图文"进入微助力活动页面
+		When 更新助力排名
 		Then tom获得jobs的'已结束微助力'的内容
 			"""
 			[{
@@ -835,6 +865,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 				"total_participant_count": "0"
 			}]
 			"""
+		When 更新助力排名
 		Then tom获得"已结束微助力"的助力值排名
 			"""
 			[]

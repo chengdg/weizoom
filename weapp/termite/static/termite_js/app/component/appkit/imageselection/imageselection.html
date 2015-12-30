@@ -19,14 +19,14 @@
 
 
 {% ifequal component.type 'appkit.imageitem' %}
-    <li class="{% if component.parent_component.model.disp_type == 'table' %}wui-selectBox-display-table{% else %}wui-selectBox-display-list{% endif %}" data-component-cid="{{component.cid}}">
+    <li  class="{% if component.parent_component.model.disp_type == 'table' %}wui-selectBox-display-table{% else %}wui-selectBox-display-list{% endif %}" data-component-cid="{{component.cid}}">
         {% if component.parent_component.model.type == 'single' %}
             <div class="wui-selectionwithimage xa-inputControl" id="radio_item_{{component.cid}}" data-type="radio"
                 data-input-name="{{component.model.title}}"
                 data-input-type="imageselection"
                 data-control-type="appkit.imageselection"
             >
-                <div class="wui-inner-selectionwithimage">
+                <div class="{% if component.parent_component.model.disp_type == 'list' %} wui-inner-selectionwithimage-list{% else %}wui-inner-selectionwithimage{% endif %}">
                     <div class="wui-inner-img">
                         <img src="{% if component.model.image %}{{ component.model.image }}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wui-i-image">
                         {% if component.parent_component.model.disp_type == 'table' %}
@@ -35,8 +35,9 @@
                     </div>
                 </div>
                 {% if component.parent_component.model.disp_type == 'list' %}
-                    <div style="float: left;">
-                        <span class="wui-i-text">{{ component.model.title }}</span><span class="wui-i-button"></span>
+                    <div class="xui-list-content">
+                        <span class="wui-i-text">{{ component.model.title }}</span>
+                        <span class="wui-i-button"></span>
                     </div>
                 {% else %}
                     <span class="wui-i-button"></span>
@@ -49,7 +50,7 @@
                 data-input-type="imageselection"
                 data-control-type="appkit.imageselection"
             >
-                <div class="wui-inner-selectionwithimage">
+                <div class="{% if component.parent_component.model.disp_type == 'list' %} wui-inner-selectionwithimage-list{% else %}wui-inner-selectionwithimage{% endif %}">
                     <div class="wui-inner-img">
                         <img src="{% if component.model.image %}{{ component.model.image }}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wui-i-image">
                         {% if component.parent_component.model.disp_type == 'table' %}
@@ -58,9 +59,10 @@
                     </div>
                 </div>
                 {% if component.parent_component.model.disp_type == 'list' %}
-                    <div style="float: left; width: 50%">
-                        <span class="wui-i-text">{{ component.model.title }}</span><span class="wui-i-button wui-selectBox-multi"></span>
-                    </div>
+                <div class="xui-list-content">
+                    <span class="wui-i-text">{{ component.model.title }}</span>
+                    <span class="wui-i-button wui-selectBox-multi"></span>
+                </div>
                 {% else %}
                     <span class="wui-i-button wui-selectBox-multi"></span>
                 {% endif %}
