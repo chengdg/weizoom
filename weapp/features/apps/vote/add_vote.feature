@@ -23,7 +23,7 @@ Scenario:1 新建微信投票活动,只添加'文本选项'模块,无奖励
 			"text_options":
 				[{
 					"title":"文本选项1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -34,7 +34,7 @@ Scenario:1 新建微信投票活动,只添加'文本选项'模块,无奖励
 						}]
 				},{
 					"title":"文本选项2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"选项A"
@@ -82,7 +82,7 @@ Scenario:2 新建微信投票活动,只添加'图片选项'模块,无奖励
 			"pic_options":
 				[{
 					"title":"图片选项1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"pic_show_type":"列表",
 					"is_required":"是",
 					"option":[{
@@ -100,7 +100,7 @@ Scenario:2 新建微信投票活动,只添加'图片选项'模块,无奖励
 						}]
 				},{
 					"title":"图片选项2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"pic_show_type":"表格",
 					"is_required":"否",
 					"option":[{
@@ -155,8 +155,10 @@ Scenario:3 新建微信投票活动,只添加'参与人信息'模块,积分奖�
 			"permission":"无需关注即可参与",
 			"prize_type":"积分",
 			"integral":20,
-			"participate_info":[{
-				"items_select":[{
+			"participate_info":
+				[{
+					"items_select":
+						[{
 							"item_name":"姓名",
 							"is_selected":"true"
 						},{
@@ -175,13 +177,14 @@ Scenario:3 新建微信投票活动,只添加'参与人信息'模块,积分奖�
 							"item_name":"住址",
 							"is_selected":"false"
 						}],
-				"items_add":[{
-						"item_name":"填写项1",
-						"is_required":"是"
-					},{
-						"item_name":"填写项2",
-						"is_required":"否"
-					}]
+					"item_add":
+						[{
+							"item_name":"填写项1",
+							"is_required":"是"
+						},{
+							"item_name":"填写项2",
+							"is_required":"否"
+						}]
 				}]
 		}]
 		"""
@@ -233,7 +236,7 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 			"text_options":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -246,7 +249,7 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 			"pic_options":
 				[{
 					"title":"图片选项1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"pic_show_type":"列表",
 					"is_required":"是",
 					"option":[{
@@ -283,7 +286,7 @@ Scenario:4 新建微信投票活动,添加多个模块,优惠券奖励
 							"item_name":"住址",
 							"is_selected":"false"
 						}],
-				"items_add":[{
+				"item_add":[{
 						"item_name":"填写项1",
 						"is_required":"是"
 					},{
@@ -341,7 +344,7 @@ Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相
 			"text_options":
 				[{
 					"title":"相同的标题",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -356,7 +359,7 @@ Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相
 			"pic_options":
 				[{
 					"title":"相同的标题",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"pic_show_type":"列表",
 					"is_required":"是",
 					"option":[{
@@ -393,7 +396,7 @@ Scenario:5 新建微信投票活动,添加多个模块,优惠券奖励,标题相
 							"item_name":"住址",
 							"is_selected":"false"
 						}],
-				"items_add":[{
+				"item_add":[{
 						"item_name":"填写项1",
 						"is_required":"是"
 					},{

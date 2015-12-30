@@ -45,16 +45,16 @@ def __debug_print(content,type_tag=True):
 # 		result = None
 # 	return result
 
-# def __name2Bool(name):
-# 	"""
-# 	"是"--> true
-# 	"否"--> false
-# 	"""
-# 	name_dic = {u'是':"true",u'否':"false"}
-# 	if name:
-# 		return name_dic[name]
-# 	else:
-# 		return None
+def __name2Bool(name):
+	"""
+	"是"--> true
+	"否"--> false
+	"""
+	name_dic = {u'是':"true",u'否':"false"}
+	if name:
+		return name_dic[name]
+	else:
+		return None
 
 # def __date2time(date_str):
 # 	"""
@@ -90,12 +90,20 @@ def __debug_print(content,type_tag=True):
 # 	else:
 # 		return None
 
-# def name2selection_type(name):
-# 	name_dic = {u"单选":"single",u"多选":"multi"}
-# 	if name:
-# 		return name_dic[name]
-# 	else:
-# 		return None
+def name2picshow_type(name):
+	name_dic = {u"列表":"list",u"表格":"table"}
+	if name:
+		return name_dic[name]
+	else:
+		return None
+
+def name2selection_type(name):
+	name_dic = {u"单选":"single",u"多选":"multi"}
+	if name:
+		return name_dic[name]
+	else:
+		return None
+
 # # def __limit2name(limit):
 # # 	"""
 # # 	传入积分规则，返回名字
@@ -225,12 +233,12 @@ def __debug_print(content,type_tag=True):
 # 	return actions_list
 
 
-# def __name2textlist(itemName):
-# 	itemName_dic={u"姓名":'name',u"手机":'phone',u"邮箱":'email',u"QQ号":'qq',u"QQ":'qq',u"qq":'qq',u"职位":"job",u"住址":"addr"}
-# 	if itemName:
-# 		return itemName_dic[itemName]
-# 	else:
-# 		return ""
+def __name2textlist(itemName):
+	itemName_dic={u"姓名":'name',u"手机":'phone',u"邮箱":'email',u"QQ号":'qq',u"QQ":'qq',u"qq":'qq',u"职位":"job",u"住址":"addr"}
+	if itemName:
+		return itemName_dic[itemName]
+	else:
+		return ""
 
 def __get_votePageJson(args):
 	"""
@@ -292,20 +300,20 @@ def __get_votePageJson(args):
 	}
 
 
-# 	cur_pid = next_pid#null
-# 	cur_cid = next_cid#1
-# 	cur_index = next_index#1
+	cur_pid = next_pid#null
+	cur_cid = next_cid#1
+	cur_index = next_index#1
 
-# 	next_pid = 1
-# 	next_cid = cur_cid+1
-# 	next_index = cur_index+1
+	next_pid = 1
+	next_cid = cur_cid+1
+	next_index = cur_index+1
 
 
-# 	page_temple = __page_temple
-# 	page_temple['pid'] = cur_pid
-# 	page_temple['cid'] = cur_cid
-# 	page_temple['model']['index'] = cur_index
-# 	page_temple['components']= []
+	page_temple = __page_temple
+	page_temple['pid'] = cur_pid
+	page_temple['cid'] = cur_cid
+	page_temple['model']['index'] = cur_index
+	page_temple['components']= []
 
 
 
@@ -343,42 +351,42 @@ def __get_votePageJson(args):
 	}
 
 
-# 	cur_pid = next_pid
-# 	cur_cid = next_cid
-# 	cur_index = next_index
+	cur_pid = next_pid
+	cur_cid = next_cid
+	cur_index = next_index
 
-# 	next_pid = cur_pid
-# 	next_cid = cur_cid+1
-# 	next_index = cur_index+1
+	next_pid = cur_pid
+	next_cid = cur_cid+1
+	next_index = cur_index+1
 
-# 	vote_title = args["title"]
-# 	vote_subtitle = args["subtitle"]
-# 	vote_description = args["description"]
-# 	vote_start_time = args["start_time"]
-# 	vote_end_time = args["end_time"]
-# 	vote_valid_time = args["valid_time"]
-# 	vote_permission = name2permission(args["permission"])
-# 	vote_prize = args["prize"]
+	vote_title = args["title"]
+	vote_subtitle = args["subtitle"]
+	vote_description = args["description"]
+	vote_start_time = args["start_time"]
+	vote_end_time = args["end_time"]
+	vote_valid_time = args["valid_time"]
+	vote_permission = name2permission(args["permission"])
+	vote_prize = args["prize"]
 
 
-# 	vote_temple = __votedescription_temple
+	vote_temple = __votedescription_temple
 
-# 	vote_temple['cid'] = cur_cid
-# 	vote_temple['pid'] = cur_pid
+	vote_temple['cid'] = cur_cid
+	vote_temple['pid'] = cur_pid
 
-# 	vote_temple['model']['index'] = cur_index
-# 	vote_temple['model']['title'] = vote_title
-# 	vote_temple['model']['subtitle'] = vote_subtitle
-# 	vote_temple['model']['description'] = "<p>{}</p>".format(vote_description)
-# 	vote_temple['model']['start_time'] = vote_start_time
-# 	vote_temple['model']['end_time'] = vote_end_time
-# 	vote_temple['model']['valid_time'] = vote_valid_time
-# 	vote_temple['model']['permission'] = vote_permission
-# 	vote_temple['model']['prize'] = vote_prize
+	vote_temple['model']['index'] = cur_index
+	vote_temple['model']['title'] = vote_title
+	vote_temple['model']['subtitle'] = vote_subtitle
+	vote_temple['model']['description'] = "<p>{}</p>".format(vote_description)
+	vote_temple['model']['start_time'] = vote_start_time
+	vote_temple['model']['end_time'] = vote_end_time
+	vote_temple['model']['valid_time'] = vote_valid_time
+	vote_temple['model']['permission'] = vote_permission
+	vote_temple['model']['prize'] = vote_prize
 
-# 	vote_temple['components']=[]
+	vote_temple['components']=[]
 
-# 	page_temple['components'].append(vote_temple)
+	page_temple['components'].append(vote_temple)
 
 	#3.提交按钮(系统必需) pid:3
 	__submitbutton_temple = {
@@ -405,24 +413,24 @@ def __get_votePageJson(args):
 			"components": []
 		}
 
-# 	cur_pid = next_pid #1
-# 	cur_cid = next_cid #3
-# 	cur_index = next_index #3
+	cur_pid = next_pid #1
+	cur_cid = next_cid #3
+	cur_index = next_index #3
 
-# 	next_pid = cur_pid #1
-# 	next_cid = cur_cid+1 #4
-# 	next_index = cur_index+1 #4
+	next_pid = cur_pid #1
+	next_cid = cur_cid+1 #4
+	next_index = cur_index+1 #4
 
-# 	submitbutton_temple = __submitbutton_temple
-# 	submitbutton_temple['pid'] = cur_pid
-# 	submitbutton_temple['cid'] = cur_cid
-# 	submitbutton_temple['model']['index'] = 100000+cur_pid #特殊对待
-# 	submitbutton_temple['components']=[]
+	submitbutton_temple = __submitbutton_temple
+	submitbutton_temple['pid'] = cur_pid
+	submitbutton_temple['cid'] = cur_cid
+	submitbutton_temple['model']['index'] = 100000+cur_pid #特殊对待
+	submitbutton_temple['components']=[]
 
-# 	page_temple['components'].append(submitbutton_temple)
+	page_temple['components'].append(submitbutton_temple)
 
 	#4.添加柄(系统必需)  pid:4
-	__componentadder_temple = 		{
+	__componentadder_temple = {
 			"type": "appkit.componentadder",
 			"cid": "",
 			"pid": "",
@@ -446,21 +454,21 @@ def __get_votePageJson(args):
 			"components": []
 		}
 
-# 	cur_pid = next_pid #1
-# 	cur_cid = next_cid #4
-# 	cur_index = next_index #4
+	cur_pid = next_pid #1
+	cur_cid = next_cid #4
+	cur_index = next_index #4
 
-# 	next_pid = cur_pid #1
-# 	next_cid = cur_cid+1 #5
-# 	next_index = cur_index+1 #5
+	next_pid = cur_pid #1
+	next_cid = cur_cid+1 #5
+	next_index = cur_index+1 #5
 
-# 	componentadder_temple = __componentadder_temple
-# 	componentadder_temple['pid'] = cur_pid
-# 	componentadder_temple['cid'] = cur_cid
-# 	componentadder_temple['model']['index'] = next_index #应该等于所有的部件数+1不知道这样子会影响不
-# 	componentadder_temple['components']=[]
+	componentadder_temple = __componentadder_temple
+	componentadder_temple['pid'] = cur_pid
+	componentadder_temple['cid'] = cur_cid
+	componentadder_temple['model']['index'] = next_index #应该等于所有的部件数+1不知道这样子会影响不
+	componentadder_temple['components']=[]
 
-# 	page_temple['components'].append(componentadder_temple)
+	page_temple['components'].append(componentadder_temple)
 
 	#5.文本选项组件(用户自定义)  pid:5开始
 	__textselection_temple = {
@@ -517,31 +525,58 @@ def __get_votePageJson(args):
 		}
 
 
-# 	qa_arr = args['qa']
-# 	next_index = next_index-2 #校准
+	text_options_arr = args['text_options']
+	next_index = next_index-2 #校准
 
-# 	for qa in qa_arr:
-# 		qa_title = qa['title']
-# 		qa_required = __name2Bool(qa['is_required'])
+	for text_options in text_options_arr:
+		text_options_title = text_options['title']
+		text_options_required = __name2Bool(text_options['is_required'])
+		text_options_type = name2selection_type(text_options['type'])
 
-# 		cur_pid = next_pid #1
-# 		cur_cid = next_cid #5...
-# 		cur_index = next_index #3...
+		cur_pid = next_pid #1
+		cur_cid = next_cid #5...
+		cur_index = next_index #3...
 
-# 		next_pid = cur_pid #1
-# 		next_cid = cur_cid+1 #6...
-# 		next_index = cur_index+1 #4...
+		next_pid = cur_pid #1
+		next_cid = cur_cid+1 #6...
+		next_index = cur_index+1 #4...
 
-# 		qa_temple = {}
-# 		qa_temple =  copy.deepcopy(__qa_temple)
-# 		qa_temple['pid'] = cur_pid
-# 		qa_temple['cid'] = cur_cid
-# 		qa_temple['model']['index'] = cur_index #校准顺序后4...
-# 		qa_temple['model']['title'] = qa_title #校准顺序后4...
-# 		qa_temple['model']['is_mandatory'] = qa_required #校准顺序后4...
-# 		qa_temple['components']=[]
+		text_options_temple = {}
+		text_options_temple =  copy.deepcopy(__text_options_temple)
+		text_options_temple['pid'] = cur_pid
+		text_options_temple['cid'] = cur_cid
+		text_options_temple['model']['index'] = cur_index #校准顺序后4...
+		text_options_temple['model']['title'] = text_options_title #校准顺序后4...
+		text_options_temple['model']['type'] = text_options_type
+		text_options_temple['model']['is_mandatory'] = text_options_required #校准顺序后4...
+		text_options_temple['model']['items'] = []
+		text_options_temple['components']=[]
 
-# 		page_temple['components'].append(qa_temple)
+		#内部
+		selectionitem_arr = text_options['option']
+		for selectionitem in selectionitem_arr:
+			selectionitem_title = selectionitem['options']
+			#内部的id处理
+			sub_cur_pid = cur_cid #1
+			cur_cid = next_cid #7...
+			# cur_index = next_index
+
+			# next_pid = cur_cid #1
+			next_cid = cur_cid+1 #8...
+			# next_index = cur_index+1 #6...
+
+			selectionitem_temple = copy.deepcopy(__textselectionitem_temple)
+			selectionitem_temple['pid'] = sub_cur_pid
+			selectionitem_temple['cid'] = cur_cid
+			selectionitem_temple['model']['index'] = cur_cid #与父同，内部组件
+
+			selectionitem_temple['model']['title'] = selectionitem_title
+			selectionitem_temple['components']=[]
+
+			text_options_temple['model']['items'].append(cur_cid)
+			text_options_temple['components'].append(selectionitem_temple)
+
+		page_temple['components'].append(text_options_temple)
 
 
 	#6图片选项模块(据有内置模块)
@@ -601,61 +636,65 @@ def __get_votePageJson(args):
 				},
 
 
-# 	selection_arr = args['selection']
+	imageselection_arr = args['pic_options']
 
-# 	for selection in selection_arr:
+	for imageselection in imageselection_arr:
 
-# 		selection_title = selection['title']
-# 		selection_type = name2selection_type(selection['type'])
-# 		selection_required = __name2Bool(selection['is_required'])
-
-
-# 		cur_pid = next_pid #1
-# 		cur_cid = next_cid #7...
-# 		cur_index = next_index #5...
-
-# 		next_pid = cur_cid #1
-# 		next_cid = cur_cid+1 #8...
-# 		next_index = cur_index+1 #6...
-
-# 		selection_temple = copy.deepcopy(__selection_temple)
-# 		selection_temple['pid'] = cur_pid
-# 		selection_temple['cid'] = cur_cid
-# 		selection_temple['model']['index'] = cur_index
-# 		selection_temple['model']['title'] = selection_title
-# 		selection_temple['model']['type'] = selection_type
-# 		selection_temple['model']['is_mandatory'] = selection_required
-# 		selection_temple['model']['items']=[]#内部组件
-# 		selection_temple['components']=[]#内部组件
-
-# 		#内部拓展
-# 		selectitem_arr = selection['option']
-# 		for selectitem in selectitem_arr:
-
-# 			selectitem_title = selectitem['options']
-
-# 			#内部的id处理
-# 			sub_cur_pid = cur_cid #1
-# 			cur_cid = next_cid #7...
-# 			# cur_index = next_index
-
-# 			# next_pid = cur_cid #1
-# 			next_cid = cur_cid+1 #8...
-# 			# next_index = cur_index+1 #6...
+		imageselection_title = imageselection['title']
+		imageselection_type = name2selection_type(imageselection['type'])
+		imageselection_showtype = name2picshow_type(imageselection['pic_show_type'])
+		imageselection_required = __name2Bool(imageselection['is_required'])
 
 
-# 			selectitem_temple = copy.deepcopy(__selectitem_temple)
-# 			selectitem_temple['pid'] = sub_cur_pid
-# 			selectitem_temple['cid'] = cur_cid
-# 			selectitem_temple['model']['index'] = cur_cid #与父同，内部组件
+		cur_pid = next_pid #1
+		cur_cid = next_cid #7...
+		cur_index = next_index #5...
 
-# 			selectitem_temple['model']['title'] = selectitem_title
-# 			selectitem_temple['components']=[]
+		next_pid = cur_cid #1
+		next_cid = cur_cid+1 #8...
+		next_index = cur_index+1 #6...
 
-# 			selection_temple['model']['items'].append(cur_cid)
-# 			selection_temple['components'].append(selectitem_temple)
+		imageselection_temple = copy.deepcopy(__imageselection_temple)
+		imageselection_temple['pid'] = cur_pid
+		imageselection_temple['cid'] = cur_cid
+		imageselection_temple['model']['index'] = cur_index
+		imageselection_temple['model']['title'] = imageselection_title
+		imageselection_temple['model']['type'] = imageselection_type
+		imageselection_temple['model']['disp_type'] = imageselection_showtype
+		imageselection_temple['model']['is_mandatory'] = imageselection_required
+		imageselection_temple['model']['items']=[]#内部组件
+		imageselection_temple['components']=[]#内部组件
 
-# 		page_temple['components'].append(selection_temple)
+		#内部拓展
+		imageitem_arr = imageselection['option']
+		for imageitem in imageitem_arr:
+
+			imageitem_image = imageitem['options']['pic']
+			imageitem_title = imageitem['options']['desc']
+
+			#内部的id处理
+			sub_cur_pid = cur_cid #1
+			cur_cid = next_cid #7...
+			# cur_index = next_index
+
+			# next_pid = cur_cid #1
+			next_cid = cur_cid+1 #8...
+			# next_index = cur_index+1 #6...
+
+
+			imageitem_temple = copy.deepcopy(__imageitem_temple)
+			imageitem_temple['pid'] = sub_cur_pid
+			imageitem_temple['cid'] = cur_cid
+			imageitem_temple['model']['index'] = cur_cid #与父同，内部组件
+
+			imageitem_temple['model']['image'] = imageitem_image
+			imageitem_temple['model']['title'] = imageitem_title
+			imageitem_temple['components']=[]
+
+			imageselection_temple['model']['items'].append(cur_cid)
+			imageselection_temple['components'].append(imageitem_temple)
+
+		page_temple['components'].append(imageselection_temple)
 
 
 	#7快捷模块(用户自定义)
@@ -712,117 +751,67 @@ def __get_votePageJson(args):
 					},
 					"components": []
 				}
-# 	textlist_arr = args['textlist']
-# 	for textlist in textlist_arr:
+	textlist_arr = args['textlist']
+	for textlist in textlist_arr:
 
-# 		items_arr = textlist['items_select']
-# 		itemsadd_arr = textlist['item_add']
+		items_arr = textlist['items_select']
+		itemsadd_arr = textlist['item_add']
 
-# 		cur_pid = next_pid #1
-# 		cur_cid = next_cid #12...
-# 		cur_index = next_index #6...
+		cur_pid = next_pid #1
+		cur_cid = next_cid #12...
+		cur_index = next_index #6...
 
-# 		next_pid = cur_cid #1
-# 		next_cid = cur_cid+1 #13...
-# 		next_index = cur_index+1 #7...
+		next_pid = cur_cid #1
+		next_cid = cur_cid+1 #13...
+		next_index = cur_index+1 #7...
 
-# 		textlist_temple = copy.deepcopy(__textlist_temple)
-# 		textlist_temple['pid'] = cur_pid
-# 		textlist_temple['cid'] = cur_cid
-# 		textlist_temple['model']['index'] = cur_index
-# 		textlist_temple['model']['items'] = [] #内序列
-# 		textlist_temple['components'] = [] #内部组件
+		textlist_temple = copy.deepcopy(__textlist_temple)
+		textlist_temple['pid'] = cur_pid
+		textlist_temple['cid'] = cur_cid
+		textlist_temple['model']['index'] = cur_index
+		textlist_temple['model']['items'] = [] #内序列
+		textlist_temple['components'] = [] #内部组件
 
 
-# 		modules = {}
-# 		for item in items_arr:
-# 			item_name = __name2textlist(item['item_name'])
-# 			is_selected = __bool2Bool(item['is_selected'])
-# 			modules[item_name] = {'select':is_selected}
+		modules = {}
+		for item in items_arr:
+			item_name = __name2textlist(item['item_name'])
+			is_selected = __bool2Bool(item['is_selected'])
+			modules[item_name] = {'select':is_selected}
 
-# 		textlist_temple['model']['modules']=modules
+		textlist_temple['model']['modules']=modules
 
-# 		for itemadd in itemsadd_arr:
+		for itemadd in itemsadd_arr:
 
-# 			itemadd_name = itemadd['item_name']
-# 			is_required = __name2Bool(itemadd['is_required'])
+			itemadd_name = itemadd['item_name']
+			is_required = __name2Bool(itemadd['is_required'])
 
-# 			#内部的id处理
-# 			sub_cur_pid = cur_cid #1
-# 			cur_cid = next_cid #7...
-# 			# cur_index = next_index
+			#内部的id处理
+			sub_cur_pid = cur_cid #1
+			cur_cid = next_cid #7...
+			# cur_index = next_index
 
-# 			# next_pid = cur_cid #1
-# 			next_cid = cur_cid+1 #8...
-# 			# next_index = cur_index+1 #6...
+			# next_pid = cur_cid #1
+			next_cid = cur_cid+1 #8...
+			# next_index = cur_index+1 #6...
 
-# 			itemadd_temple = copy.deepcopy(__itemadd_temple)
+			itemadd_temple = copy.deepcopy(__itemadd_temple)
 
-# 			itemadd_temple['pid'] = sub_cur_pid
-# 			itemadd_temple['cid'] = cur_cid
-# 			itemadd_temple['model']['index'] = cur_cid
-# 			itemadd_temple['model']['title'] = itemadd_name
-# 			itemadd_temple['model']['is_mandatory'] = is_required
-# 			itemadd_temple['model']['items'] = []
-# 			itemadd_temple['components'] = []
+			itemadd_temple['pid'] = sub_cur_pid
+			itemadd_temple['cid'] = cur_cid
+			itemadd_temple['model']['index'] = cur_cid
+			itemadd_temple['model']['title'] = itemadd_name
+			itemadd_temple['model']['is_mandatory'] = is_required
+			itemadd_temple['model']['items'] = []
+			itemadd_temple['components'] = []
 
-# 			textlist_temple['model']['items'].append(cur_cid)
-# 			textlist_temple['components'].append(itemadd_temple)
+			textlist_temple['model']['items'].append(cur_cid)
+			textlist_temple['components'].append(itemadd_temple)
 
-# 		page_temple['components'].append(textlist_temple)
+		page_temple['components'].append(textlist_temple)
 
-# 	#上传图片
-# 	__uploadimg_temple = {
-# 			"type": "appkit.uploadimg",
-# 			"cid": '',
-# 			"pid": '',
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"is_new_created": True,
-# 			"property_view_title": "上传图片",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": "",
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"title": "",
-# 				"is_mandatory": "true"
-# 			},
-# 			"components": []
-# 		}
 
-# 	uploadimg_arr = args['uploadimg']
-
-# 	for uploadimg in uploadimg_arr:
-# 		uploadimg_title = uploadimg['title']
-# 		is_required = __name2Bool(uploadimg['is_required'])
-
-# 		cur_pid = next_pid #1
-# 		cur_cid = next_cid #5...
-# 		cur_index = next_index #3...
-
-# 		next_pid = cur_cid #1
-# 		next_cid = cur_cid+1 #6...
-# 		next_index = cur_index+1 #4...
-
-# 		uploadimg_temple = copy.deepcopy(__uploadimg_temple)
-# 		uploadimg_temple['pid'] = cur_pid
-# 		uploadimg_temple['cid'] = cur_cid
-# 		uploadimg_temple['model']['index'] = cur_index
-# 		uploadimg_temple['model']['title'] = uploadimg_title
-# 		uploadimg_temple['model']['is_mandatory'] = is_required
-# 		uploadimg_temple['components']=[]
-
-# 		page_temple['components'].append(uploadimg_temple)
-
-# 	return json.dumps(page_temple)
+	return json.dumps(page_temple)
 
 def __prize_settings_process(prize_type,integral,coupon):
 	"""
@@ -980,7 +969,7 @@ def __Create_Vote(context,text,user):
 # 	coupon = text.get("coupon","")
 # 	prize = __prize_settings_process(prize_type,integral,coupon)
 
-# 	qa = text.get("answer","")
+# 	text_options = text.get("answer","")
 # 	selection = text.get("choose","")
 # 	textlist = text.get("participate_info","")
 # 	uploadimg = text.get("upload_pic","")
@@ -995,7 +984,7 @@ def __Create_Vote(context,text,user):
 # 		"valid_time":valid_time,
 # 		"permission":permission,
 # 		"prize":prize,
-# 		"qa":qa,
+# 		"text_options":text_options,
 # 		"selection":selection,
 # 		"textlist":textlist,
 # 		"uploadimg":uploadimg
@@ -1549,7 +1538,7 @@ def step_impl(context,user):
 # 	result_list =  response.context['titles']
 
 # 	for appkit in result_list:
-# 		if appkit['type'] == 'appkit.qa':
+# 		if appkit['type'] == 'appkit.text_options':
 # 			appkit_title = appkit['title_']
 # 			appkit_url ="/apps/vote/api/question/?id={}&question_title={}".format(vote_id,appkit_title)
 # 			appkit_url = bdd_util.nginx(appkit_url)
@@ -1585,7 +1574,7 @@ def step_impl(context,user):
 # 		for appkit in appkit_list:
 # 			__debug_print(appkit)
 # 			if appkit['title'] == ex_title:
-# 				if appkit['type'] == 'appkit.qa':
+# 				if appkit['type'] == 'appkit.text_options':
 # 					tmp = {}
 # 					tmp['participate_count'] = appkit['count']
 # 					tmp['title'] = appkit['title']
