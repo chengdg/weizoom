@@ -220,17 +220,17 @@ def __get_coupon_rule_id(coupon_rule_name):
 # 	else:
 # 		return "all"
 
-# def __get_actions(status):
-# 	"""
-# 	根据输入投票状态
-# 	返回对于操作列表
-# 	"""
-# 	actions_list = [u"链接",u"预览",u"统计",u"查看结果"]
-# 	if status == u"进行中":
-# 		actions_list.insert(0,u"关闭")
-# 	elif status=="已结束":
-# 		actions_list.insert(0,u"删除")
-# 	return actions_list
+def __get_actions(status):
+	"""
+	根据输入投票状态
+	返回对于操作列表
+	"""
+	actions_list = [u"链接",u"预览",u"统计",u"查看结果"]
+	if status == u"进行中":
+		actions_list.insert(0,u"关闭")
+	elif status=="已结束" or "未开始":
+		actions_list.insert(0,u"删除")
+	return actions_list
 
 
 def __name2textlist(itemName):
@@ -755,7 +755,7 @@ def __get_votePageJson(args):
 	for textlist in textlist_arr:
 
 		items_arr = textlist['items_select']
-		itemsadd_arr = textlist['item_add']
+		itemsadd_arr = textlist['items_add']
 
 		cur_pid = next_pid #1
 		cur_cid = next_cid #12...
@@ -1202,19 +1202,19 @@ def step_impl(context,user):
 		rec_vote_response = context.client.get(rec_vote_url)
 		rec_vote_list = json.loads(rec_vote_response.content)['data']['items']#[::-1]
 
-		# for item in rec_vote_list:
-		# 	tmp = {
-		# 		"name":item['name'],
-		# 		"status":item['status'],
-		# 		"start_time":__date2time(item['start_time']),
-		# 		"end_time":__date2time(item['end_time']),
-		# 		"participant_count":item['participant_count'],
-		# 		"prize_type":item['prize_type']
-		# 	}
-		# 	tmp["actions"] = __get_actions(item['status'])
-		# 	actual_list.append(tmp)
-		# print("actual_data: {}".format(actual_list))
-		# bdd_util.assert_list(expected,actual_list)
+		for item in rec_vote_list:
+			tmp = {
+				"name":item['name'],
+				"status":item['status'],
+				"start_time":__date2time(item['start_time']),
+				"end_time":__date2time(item['end_time']),
+				"participant_count":item['participant_count'],
+				"prize_type":item['prize_type']
+			}
+			tmp["actions"] = __get_actions(item['status'])
+			actual_list.append(tmp)
+		print("actual_data: {}".format(actual_list))
+		bdd_util.assert_list(expected,actual_list)
 
 # @when(u"{user}编辑微信投票活动'{vote_name}'")
 # def step_impl(context,user,vote_name):
