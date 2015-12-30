@@ -75,7 +75,7 @@ Background:
 							"item_name":"住址",
 							"is_selected":"false"
 						}],
-					"item_add":
+					"items_add":
 						[{
 							"item_name":"填写项1",
 							"is_required":"是"

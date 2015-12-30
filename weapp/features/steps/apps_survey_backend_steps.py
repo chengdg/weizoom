@@ -624,7 +624,7 @@ def __get_surveyPageJson(args):
 	for textlist in textlist_arr:
 
 		items_arr = textlist['items_select']
-		itemsadd_arr = textlist['item_add']
+		itemsadd_arr = textlist['items_add']
 
 		cur_pid = next_pid #1
 		cur_cid = next_cid #12...

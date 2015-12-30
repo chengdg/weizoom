@@ -144,7 +144,7 @@ Scenario:3 新建用户调研活动,添加'参与人信息'模块,优惠券奖�
 							"item_name":"住址",
 							"is_selected":"false"
 						}],
-					"item_add":
+					"items_add":
 						[{
 							"item_name":"填写项1",
 							"is_required":"是"
@@ -259,7 +259,7 @@ Scenario:5 新建用户调研活动,添加所有模块,必须关注才可参与
 						"item_name":"住址",
 						"is_selected":"false"
 					}],
-					"item_add":[{
+					"items_add":[{
 						"item_name":"填写项1",
 						"is_required":"是"
 					},{
