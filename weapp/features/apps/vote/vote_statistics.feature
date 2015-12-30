@@ -31,7 +31,7 @@ Background:
 			"text_options":
 				[{
 					"title":"选择题1",
-					"single_or_multiple":"单选",
+					"type":"单选",
 					"is_required":"是",
 					"option":[{
 							"options":"1"
@@ -42,7 +42,7 @@ Background:
 					}]
 				},{
 					"title":"选择题2",
-					"single_or_multiple":"多选",
+					"type":"多选",
 					"is_required":"否",
 					"option":[{
 							"options":"A"
