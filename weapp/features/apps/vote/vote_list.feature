@@ -106,7 +106,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @vote @vote_list @yang1
+@mall2 @apps @vote @vote_list
 Scenario:1 微信投票活动列表查询
 	Given jobs登录系统
 	Then jobs获得微信投票活动列表

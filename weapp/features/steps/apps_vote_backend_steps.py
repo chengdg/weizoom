@@ -1329,24 +1329,24 @@ def step_impl(context,user):
 	vote_array = json.loads(search_response.content)['data']['items']
 	context.search_vote = vote_array
 
-# @when(u"{user}访问微信投票活动列表第'{page_num}'页")
-# def step_impl(context,user,page_num):
-# 	count_per_page = context.count_per_page
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问微信投票活动列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+	count_per_page = context.count_per_page
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问微信投票活动列表下一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])+1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问微信投票活动列表下一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])+1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问微信投票活动列表上一页")
-# def step_impl(context,user):
-# 	paging_dic = context.paging
-# 	count_per_page = paging_dic['count_per_page']
-# 	page_num = int(paging_dic['page_num'])-1
-# 	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问微信投票活动列表上一页")
+def step_impl(context,user):
+	paging_dic = context.paging
+	count_per_page = paging_dic['count_per_page']
+	page_num = int(paging_dic['page_num'])-1
+	context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
 # @when(u"{user}查看微信投票活动'{vote_name}'")
 # def check_vote_list(context,user,vote_name):
