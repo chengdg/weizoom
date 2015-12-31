@@ -52,16 +52,18 @@ Background:
 							"options":"C"
 					}]
 				}],
-			"participate_info":[{
-				"items_select":[{
+			"participate_info":
+				[{
+					"items_select":
+						[{
 							"item_name":"姓名",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"手机",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"邮箱",
-							"is_selected":true
+							"is_selected":"true"
 						},{
 							"item_name":"QQ",
 							"is_selected":"false"
