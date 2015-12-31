@@ -546,7 +546,7 @@ class RequestSocialAccountMiddleware(object):
 					#清除cache，更新缓存中social account的uuid，防止一直进行update操作
 					#TODO: 优化这里的逻辑
 					from cache import member_cache
-					member_cache.delete_member_cache(request.member.token, request.user_profile.webapp_id)
+					member_cache.delete_member_cache(request.social_account.openid, request.user_profile.webapp_id)
 				request.social_account.uuid = uuid
 
 
