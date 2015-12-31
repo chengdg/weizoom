@@ -192,6 +192,9 @@
                         var qs = oldHref.substring(pos, oldHref.length);
                         var newHref = '{{h5_host}}/mall/weapp_resource/'+qs;
                         $link.attr('href', newHref);
+                        if ($link.attr('data-link')) {
+                            $link.attr('data-link', newHref);
+                        };
                     })
                 }
                 $('body').css('visibility', 'visible');
@@ -286,6 +289,7 @@
                     if( url.indexOf('http://') == 0 || url.indexOf('https://') == 0){
                         window.location.href = url;
                     }else{
+                        alert(url);
                         window.location.href = "http://"+ window.location.host + url;
                     }
                 }
