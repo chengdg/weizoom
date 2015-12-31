@@ -12,8 +12,8 @@
 		{% endif %}
 	>
 		{% for sub_component in component.components %}{{ sub_component.html|safe }}{% endfor %}
+        <li style="clear: both;"></li>
 	</ul>
-    <div style="clear: both"></div>
 </div>
 {% endifequal %}
 
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 {% if component.parent_component.model.disp_type == 'list' %}
-                    <div style="position: relative;float: left;">
+                    <div style="float: left;">
                         <span class="wui-i-text">{{ component.model.title }}</span><span class="wui-i-button"></span>
                     </div>
                 {% else %}
@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 {% if component.parent_component.model.disp_type == 'list' %}
-                    <div style="position: relative;float: left;">
+                    <div style="float: left; width: 50%">
                         <span class="wui-i-text">{{ component.model.title }}</span><span class="wui-i-button wui-selectBox-multi"></span>
                     </div>
                 {% else %}

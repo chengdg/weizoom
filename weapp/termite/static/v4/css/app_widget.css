@@ -1183,6 +1183,11 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
 .wui-imageSelection{
 	padding: 15px 20px 0 20px;
 }
+.wui-imageSelection .wui-i-items{
+	background: white;
+	padding-top: 10px;
+	padding-left: 10px;
+}
 .wui-imageSelection .wui-i-mandatory {
 	color: #CDCDCD;
 }
@@ -1238,7 +1243,7 @@ div, span, a, ul, li{ /*防止ios点击闪屏*/
     word-break: break-all;
     margin-top: 15px;
     padding-left: 10px;
-	min-width: 130px;
+	max-width: 38%;
 }
 li.wui-selectBox-display-table {
     width: 45%;
