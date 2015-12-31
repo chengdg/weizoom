@@ -41,6 +41,9 @@
 
 <script id="weixin-select-link-page-dialog-table" type="text/x-jquery-tmpl">
 	{{if items.length > 0}}
+	{{if data.type == 'red_envelope'}}
+	<div style="margin-bottom:10px;">提示：如果您图文红包的开始时间设置为<span style="color:red">当前时间之后</span>，图文红包将不会显示在此处。</div>
+	{{/if}}
 	<table id="pageTable" class="table table-bordered table-condensed xb-stripedTable xui-tablePosition m0">
 		<thead style="background:#c8d2e5;">
 			<tr>
@@ -122,6 +125,9 @@
 		</tbody>
 	</table>
     {{else}}
+        {{if data.type == 'red_envelope'}}
+        <div style="margin-bottom:10px;">提示：如果您图文红包的开始时间设置为<span style="color:red">当前时间之后</span>，图文红包将不会显示在此处。</div>
+        {{/if}}
         还没有数据
     {{/if}}
 </script>
