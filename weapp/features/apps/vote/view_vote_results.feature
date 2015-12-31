@@ -59,8 +59,10 @@ Background:
 							"options":"C"
 					}]
 				}],
-			"participate_info":[{
-				"items_select":[{
+			"participate_info":
+				[{
+				"items_select":
+						[{
 							"item_name":"姓名",
 							"is_selected":"true"
 						},{
@@ -80,10 +82,10 @@ Background:
 							"is_selected":"false"
 						}],
 				"items_add":[{
-						"name":"填写项1",
+						"item_name":"填写项1",
 						"is_required":"是"
 					},{
-						"name":"填写项2",
+						"item_name":"填写项2",
 						"is_required":"否"
 					}]
 				}]
@@ -293,15 +295,15 @@ Scenario:1 查看结果列表
 			"name":"微信投票01",
 			"participant_count":4,
 			"prize_type":"优惠券",
-			"start_date":"5天前",
+			"start_date":"今天",
 			"end_date":"2天后",
 			"status":"进行中",
-			"actions":["关闭","预览","统计","查看结果"]
+			"actions":["关闭","链接","预览","统计","查看结果"]
 		}]
 		"""
 	When jobs查看微信投票活动'微信投票01'
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| tom2        |今天         |
 		| tom1        |今天         |
 		| tom         |昨天         |
@@ -312,7 +314,7 @@ Scenario:2 查看结果列表查询
 	Given jobs登录系统
 	When jobs查看微信投票活动'微信投票01'
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| tom2        |今天         |
 		| tom1        |今天         |
 		| tom         |昨天         |
@@ -320,10 +322,10 @@ Scenario:2 查看结果列表查询
 	#空查询（默认查询）
 		When jobs设置微信投票活动结果列表查询条件
 			"""
-			[]
+			{}
 			"""
 		Then jobs获得微信投票活动'微信投票01'的结果列表
-			| member_name | survey_time |
+			| member_name | vote_time |
 			| tom2        |今天         |
 			| tom1        |今天         |
 			| tom         |昨天         |
@@ -349,7 +351,7 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得微信投票活动'微信投票01'的结果列表
-				| member_name | survey_time |
+				| member_name | vote_time |
 				| tom2        |今天         |
 				| tom1        |今天         |
 				| tom         |昨天         |
@@ -361,7 +363,7 @@ Scenario:2 查看结果列表查询
 				}
 				"""
 			Then jobs获得微信投票活动'微信投票01'的结果列表
-				| member_name | survey_time |
+				| member_name | vote_time |
 				| bill        |2天前        |
 
 	#调研时间查询
@@ -369,8 +371,8 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信投票活动结果列表查询条件
 				"""
 				{
-					"survey_start_time":"3天前",
-					"survey_end_time":"2天前"
+					"vote_start_time":"3天前",
+					"vote_end_time":"2天前"
 				}
 				"""
 			Then jobs获得微信投票活动'微信投票01'的结果列表
@@ -381,49 +383,48 @@ Scenario:2 查看结果列表查询
 			When jobs设置微信投票活动结果列表查询条件
 				"""
 				{
-					"survey_start_time":"今天",
-					"survey_end_time":""
+					"vote_start_time":"今天",
+					"vote_end_time":""
 				}
 				"""
 			Then jobs获得微信投票活动'微信投票01'的结果列表
-				| member_name | survey_time |
+				| member_name | vote_time |
 				| tom2        |今天         |
 				| tom1        |今天         |
 		#开始时间为空，结束时间非空
 			When jobs设置微信投票活动结果列表查询条件
 				"""
 				{
-					"survey_start_time":"",
-					"survey_end_time":"昨天"
+					"vote_start_time":"",
+					"vote_end_time":"昨天"
 				}
 				"""
 			Then jobs获得微信投票活动'微信投票01'的结果列表
-				| member_name | survey_time |
-				| tom         |昨天         |
+				| member_name | vote_time |
 				| bill        |2天前        |
-		#开始时间和结束时间相等
+		# 开始时间和结束时间相等
 			When jobs设置微信投票活动结果列表查询条件
 				"""
 				{
-					"survey_start_time":"昨天",
-					"survey_end_time":"昨天"
+					"vote_start_time":"昨天",
+					"vote_end_time":"昨天"
 				}
 				"""
 			Then jobs获得微信投票活动'微信投票01'的结果列表
-				| member_name | survey_time |
-				| tom         |昨天         |
-
+				"""
+				[]
+				"""
 	#组合条件查询
 		When jobs设置微信投票活动结果列表查询条件
 			"""
 			{
 				"member_name":"bill",
-				"survey_start_time":"3天前",
-				"survey_end_time":"今天"
+				"vote_start_time":"3天前",
+				"vote_end_time":"今天"
 			}
 			"""
 		Then jobs获得微信投票活动'微信投票01'的结果列表
-			| member_name | survey_time |
+			| member_name | vote_time |
 			| bill        |2天前        |
 
 @mall2 @apps @vote @view_vote_results
@@ -438,24 +439,24 @@ Scenario:3 查看结果列表分页
 	When jobs查看微信投票活动'微信投票01'
 	#Then jobs获得微信投票活动'微信投票01'的结果列表共'4'页
 
-	When jobs访问微信抽奖活动'微信抽奖01'的结果列表第'1'页
+	When jobs访问微信投票活动'微信投票01'的结果列表第'1'页
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| tom2        |今天         |
 
-	When jobs访问微信抽奖活动'微信抽奖01'的结果列表下一页
+	When jobs访问微信投票活动'微信投票01'的结果列表下一页
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| tom1        |今天         |
 
-	When jobs访问微信抽奖活动'微信抽奖01'的结果列表'4'页
+	When jobs访问微信投票活动'微信投票01'的结果列表第'4'页
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| bill        |2天前        |
 
-	When jobs访问微信抽奖活动'微信抽奖01'的结果列表上一页
+	When jobs访问微信投票活动'微信投票01'的结果列表上一页
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| tom         |昨天         |
 
 @mall2 @apps @vote @view_vote_results
@@ -463,7 +464,7 @@ Scenario:4 访问用户的查看结果
 	Given jobs登录系统
 	When jobs查看微信投票活动'微信投票01'
 	Then jobs获得微信投票活动'微信投票01'的结果列表
-		| member_name | survey_time |
+		| member_name | vote_time |
 		| tom2        |今天         |
 		| tom1        |今天         |
 		| tom         |昨天         |
@@ -474,9 +475,9 @@ Scenario:4 访问用户的查看结果
 		{
 			"bill填写的内容":
 				[{
-					"选择题1":"1"
+					"选择题1":["1"]
 				},{
-					"选择题2":["A","B"]
+					"选择题2":["B","A"]
 				},{
 					"姓名":"bill"
 				},{
