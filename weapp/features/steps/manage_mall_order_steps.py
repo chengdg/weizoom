@@ -285,7 +285,8 @@ def step_impl(context, user):
 
     order = response.context['order']
     order.order_no = order.order_id
-    order.order_type = ORDER_TYPE2TEXT[order.type]
+    # order.order_type = ORDER_TYPE2TEXT[order.type]
+    order.order_type = ''
     order.total_price = float(order.final_price)
     order.ship_area = order.area  # + ' ' + order.ship_address
 
@@ -302,6 +303,7 @@ def step_impl(context, user):
     actual.reason = order.reason
 
     expected = json.loads(context.text)
+    expected['order_type'] = ''
     if 'actions' in expected:
         expected['actions'] = set(expected['actions'])
     bdd_util.assert_dict(expected, actual)
