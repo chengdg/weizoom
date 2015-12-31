@@ -131,9 +131,10 @@ Background:
 
 	#非会员参与'微信投票01'
 		When 清空浏览器
+		When lily关注jobs的公众号
 		When lily访问jobs的webapp
 		When lily取消关注jobs的公众号
-		When lily参加微信投票活动'微信投票01'于'今天'
+		When lily参加微信投票活动"微信投票01"于"今天"
 			"""
 			{
 				"文本选项":
