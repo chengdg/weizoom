@@ -363,6 +363,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'core.context_processors.cdn_host',
     'core.context_processors.handlebar_component_templates',
     'core.context_processors.fetch_webapp_global_navbar',
+    'core.context_processors.h5_host',
 
 ]
 
@@ -583,7 +584,6 @@ ENABLE_WEPAGE_CACHE = False
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
-    H5_DOMAIN = 'h5.weapp.com'
     BATMAN_API_IMPL = 'memory'
     BATMAN_API_HOST = 'dev.batman.com:8080'
     MOM_HOST = '192.168.1.11'
@@ -595,6 +595,7 @@ if 'develop' == MODE:
     # USE_MOCK_PAY_API = True
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
+    H5_HOST = 'http://h5.weapp.com'
     EVENT_DISPATCHER = 'local'
     ENABLE_WEPAGE_CACHE = False
 
@@ -607,7 +608,6 @@ if 'develop' == MODE:
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
-    H5_DOMAIN = 'h5.mall3.weizzz.com'
     BATMAN_API_IMPL = 'server'
     BATMAN_API_HOST = 'batman.weizoom.com'
     MOM_HOST = 'amq.wintim.com'
@@ -618,6 +618,7 @@ elif 'test' == MODE:
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 3 * 60
     USE_MOCK_PAY_API = False
     CDN_HOST = ''
+    H5_HOST = 'http://h5.mall3.weizzz.com'
 
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
@@ -629,7 +630,6 @@ else:
     MOM_HOST = 'amq.wintim.com'
     MOM_PORT = 61613
     DOMAIN = 'weapp.weizoom.com'
-    H5_DOMAIN = 'h5.weizoom.com'
     DUMP_DEBUG_MSG = False
     WATCHDOG_WEIXIN_MESSAGE = True
     IS_IN_TESTING = False
@@ -638,6 +638,7 @@ else:
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 24 * 60 * 60
     USE_MOCK_PAY_API = False
     CDN_HOST = 'http://weappstatic.b0.upaiyun.com'
+    H5_HOST = 'http://h5.mall3.weizzz.com'
     DEBUG_MERGED_JS = False
     USE_DEV_JS = False
 

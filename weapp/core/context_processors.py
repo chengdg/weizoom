@@ -644,3 +644,7 @@ def fetch_webapp_global_navbar(request):
 				return {'global_navbar': None}
 		else:
 			return {'global_navbar': None}
+
+
+def h5_host(request):
+	return {'h5_host' : settings.H5_HOST}

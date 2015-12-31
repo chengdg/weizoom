@@ -190,7 +190,7 @@
 
                         var pos = oldHref.indexOf('?');
                         var qs = oldHref.substring(pos, oldHref.length);
-                        var newHref = 'http://h5.weapp.com/mall/weapp_resource/'+qs;
+                        var newHref = '{{h5_host}}/mall/weapp_resource/'+qs;
                         $link.attr('href', newHref);
                     })
                 }
