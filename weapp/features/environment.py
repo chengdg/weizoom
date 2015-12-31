@@ -64,7 +64,7 @@ from market_tools.tools.store import models as store_models
 from market_tools.tools.lottery import models as lottery_models
 from market_tools.tools.channel_qrcode import models as channel_qrcode_models
 from market_tools.tools.member_qrcode import models as member_qrcode_models
-from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions, WeizoomCardHasOrder
 from weixin2 import models as weixin2_models
 from stats import models as stats_models
 from modules.member import models as modules_member_models
@@ -340,6 +340,10 @@ def __clear_all_app_data():
 	weixin2_models.Message.objects.all().delete()
 	weixin2_models.CollectMessage.objects.all().delete()
 	weixin2_models.MessageRemarkMessage.objects.all().delete()
+
+	#微众卡
+	WeizoomCardHasOrder.objects.all().delete()
+
 
 	# weixin_user_models.ComponentInfo.objects.all().delete()
 	# weixin_user_models.ComponentAuthedAppid.objects.all().delete()
