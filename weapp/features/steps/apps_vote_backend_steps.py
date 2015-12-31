@@ -1528,30 +1528,10 @@ def step_impl(context,user):
 def step_impl(context,webapp_owner_name,vote_name):
 	vote = vote_models.vote.objects.get(name=vote_name)
 	vote_id = vote.id
-	related_page_id = vote.related_page_id
 	url ="/apps/vote/vote_statistic/?id={}".format(vote_id)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	result_list =  response.context['titles']
-	print('result_list')
-	print(result_list)
-	# for appkit in result_list:
-	# 	print(appkit['type'])
-	# 	if appkit['type'] == 'appkit.text_options':
-	# 		appkit_title = appkit['title_']
-	# 		appkit_url ="/apps/vote/api/question/?id={}&question_title={}".format(vote_id,appkit_title)
-	# 		appkit_url = bdd_util.nginx(appkit_url)
-	# 		appkit_response = context.client.get(appkit_url)
-	# 		appkit_list =  json.loads(appkit_response.content)['data']['items']
-	# 		appkit['values'] = appkit_list
-	#
-	# 	elif appkit['type'] == 'appkit.uploadimg':
-	# 		appkit_title = appkit['title_']
-	# 		appkit_url ="/apps/vote/api/question/?id={}&question_title={}".format(vote_id,appkit_title)
-	# 		appkit_url = bdd_util.nginx(appkit_url)
-	# 		appkit_response = context.client.get(appkit_url)
-	# 		appkit_list =  json.loads(appkit_response.content)['data']['items']
-	# 		appkit['values'] = appkit_list
 	context.appkit_list = result_list
 
 @then(u"{webapp_owner_name}获得微信投票活动'{vote_name}'的统计结果")
@@ -1570,51 +1550,20 @@ def step_impl(context,webapp_owner_name,vote_name):
 	for index in range(len(expect_title_order)):
 		ex_title = expect_title_order[index]
 		for appkit in appkit_list:
-			__debug_print(appkit)
-			if appkit['title'] == ex_title:
-				if appkit['type'] == 'appkit.text_options':
+			if appkit['title_name'] == ex_title:
+				if appkit['type'] == u'单选' or u'多选':
 					tmp = {}
-					tmp['participate_count'] = appkit['count']
-					tmp['title'] = appkit['title']
-					tmp['type'] = appkit['title_type']
+					tmp['participate_count'] = appkit['title_valid_count']
+					tmp['title'] = appkit['title_name']
+					tmp['type'] = appkit['type']
 					tmp['values'] = []
-					for value in appkit['values']:
-						if 'created_at' in value:
-							value['submit_time'] = value['created_at']
-							del value['created_at']
-						tmp['values'].append(value)
-					actual.append(tmp)
-
-				elif appkit['type'] == 'appkit.uploadimg':
-					tmp = {}
-					tmp['participate_count'] = appkit['count']
-					tmp['title'] = appkit['title']
-					tmp['type'] = appkit['title_type']
-					tmp['values'] = []
-					for value in appkit['values']:
-						__debug_print(value)
-						if 'created_at' in value:
-							value['submit_time'] = value['created_at']
-							del value['created_at']
-						if 'content' in value:
-							imgval = value['content'][0]
-							imgval = imgval.strip("<").strip(">").split("src=")[1].strip("\"").strip("\'")
-							value['content'] = imgval
-						tmp['values'].append(value)
-					actual.append(tmp)
-				elif appkit['type'] == 'appkit.selection':
-					tmp = {}
-					tmp['participate_count'] = appkit['count']
-					tmp['title'] = appkit['title']
-					tmp['type'] = appkit['title_type']
-					tmp['values'] = []
-					for value in appkit['values']:
-						if 'name' in value:
-							value['options'] = value['name']
-							del value['name']
-						if 'per' in value:
-							value['percent'] = value['per']
-							del value['per']
+					for value in appkit['title_value']:
+						if 'item_name' in value:
+							value['options'] = value['item_name']
+							del value['item_name']
+						if 'counter' in value:
+							value['count'] = value['counter']
+							del value['counter']
 						tmp['values'].append(value)
 					actual.append(tmp)
 
