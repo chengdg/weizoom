@@ -81,23 +81,24 @@ def __participate_survey(context,webapp_owner_id,survey_id):
 	for type,values in termite_data.iteritems():
 		for v in values:
 			if type == u"快捷模块":
+				cid_1 = cid+1
 				for k,v in v['value'].iteritems():
 					item_name = __itemName2item(k) if k!=u'' else ''
-					cid_1 = cid+1
-					name = '0'+str(cid_1)+'_'+item_name
+					name = '0'+ str(cid_1) +'_'+item_name if cid_1 < 10 else str(cid_1)+'_'+item_name
 					data[name] = {
 						'type': 'appkit.textlist',
 						'value': v
 					}
 					cid_1 += 1
+				cid = cid_1
 			else:
 				item_name = v['title']
-				name = '0'+str(cid)+'_'+item_name
+				name = '0'+ str(cid) +'_'+item_name if cid < 10 else str(cid)+'_'+item_name
 				if type == u"选择题":
 					value = {}
 					cid_1 = cid+1
 					for n in v['value']:
-						selectionInputName = str(cid_1)+'_'+ n['title']
+						selectionInputName = '0'+ str(cid_1)+'_'+ n['title'] if cid_1 < 10 else str(cid_1)+'_'+ n['title']
 						if n['type'] == u'单选':
 							selectionInputType = "radio"
 						else:
@@ -119,7 +120,6 @@ def __participate_survey(context,webapp_owner_id,survey_id):
 					'type': __typeName2type(type) if type!=u'' else '',
 					'value': value
 				}
-			cid += 1
 	related_page_id = survey.objects.get(id=survey_id).related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
