@@ -4,6 +4,7 @@ import json
 import time
 from test import bdd_util
 from market_tools.tools.weizoom_card.models import *
+import logging
 
 #######################################################################
 # __supplement_weizoom_card: 补足一个钱包的数据
@@ -63,7 +64,7 @@ def step_impl(context, user, weizoom_card_rule_name):
     data_weizoom_rule['cards'] = data_cards
 
     expected = json.loads(context.text)
-
+    logging.info(u"actual_data: {}".format(actual_data))
     bdd_util.assert_list(expected, actual_data)
 
 
