@@ -583,6 +583,7 @@ ENABLE_WEPAGE_CACHE = False
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
+    H5_DOMAIN = 'h5.weapp.com'
     BATMAN_API_IMPL = 'memory'
     BATMAN_API_HOST = 'dev.batman.com:8080'
     MOM_HOST = '192.168.1.11'
@@ -606,6 +607,7 @@ if 'develop' == MODE:
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
+    H5_DOMAIN = 'h5.mall3.weizzz.com'
     BATMAN_API_IMPL = 'server'
     BATMAN_API_HOST = 'batman.weizoom.com'
     MOM_HOST = 'amq.wintim.com'
@@ -627,6 +629,7 @@ else:
     MOM_HOST = 'amq.wintim.com'
     MOM_PORT = 61613
     DOMAIN = 'weapp.weizoom.com'
+    H5_DOMAIN = 'h5.weizoom.com'
     DUMP_DEBUG_MSG = False
     WATCHDOG_WEIXIN_MESSAGE = True
     IS_IN_TESTING = False

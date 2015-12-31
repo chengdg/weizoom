@@ -166,6 +166,9 @@ def to_json_str(obj):
 	return obj
 
 
+@register.filter(name='get_h5_domain')
+def get_h5_domain(obj):
+	return 'http://{}'.format(settings.H5_DOMAIN)
 
 
 # 弃用
