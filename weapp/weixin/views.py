@@ -78,17 +78,20 @@ def handle(request, webapp_id):
 
 def receiveauthcode(request):
 	#@if request.body:
-	is_from_simulator = False
-	is_aeskey = False
-	wxiz_msg_crypt = None
+	# is_from_simulator = False
+	# is_aeskey = False
+	# wxiz_msg_crypt = None
 
-	msg_signature = request.GET.get('msg_signature', None)
-	timestamp = request.GET.get('timestamp', None)
-	nonce = request.GET.get('nonce', None)
-	encrypt_type = request.GET.get('encrypt_type', None)
-	signature = request.GET.get('signature', None)
+	# encrypt_type = request.GET.get('encrypt_type', None)
+	# signature = request.GET.get('signature', None)
 	#component_info = ComponentInfo.objects.filter(is_active=True)
+	"""
+	POST:接受从微信服务器发送过来的component_verify_ticket
+	"""
 	if request.method == "POST":
+		msg_signature = request.GET.get('msg_signature', None)
+		timestamp = request.GET.get('timestamp', None)
+		nonce = request.GET.get('nonce', None)
 		"""
 			增加微众测试接口
 		"""
