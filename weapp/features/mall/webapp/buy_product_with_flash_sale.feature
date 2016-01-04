@@ -163,6 +163,7 @@ Background:
 	And jobs登录系统
 	And jobs调tom等级为铜牌会员
 	And jobs调sam等级为银牌会员
+	Then jobs获得会员列表默认查询条件
 	Then jobs可以获得会员列表
 		"""
 			[{

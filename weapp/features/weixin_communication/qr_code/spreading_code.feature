@@ -50,6 +50,7 @@ Scenario:1 无奖励
 	When 清空浏览器
 	Given jobs登录系统
 	When jobs访问会员列表
+	Then jobs获得会员列表默认查询条件
 	Then jobs可以获得会员列表
 		| name  | member_rank | friend_count |   attention_time  |  source  |
 		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |
@@ -85,6 +86,7 @@ Scenario:2 积分奖励
 
 	When 清空浏览器
 	Given jobs登录系统
+	Then jobs获得会员列表默认查询条件
 	Then jobs可以获得会员列表
 		| name  | member_rank | friend_count | integral |   attention_time  |  source  |
 		| tom   |   普通会员  |       1      |     0    |        今天       | 推广扫码 |
@@ -153,6 +155,7 @@ Scenario:3 优惠券奖励
 
 	When 清空浏览器
 	Given jobs登录系统
+	Then jobs获得会员列表默认查询条件
 	Then jobs可以获得会员列表
 		| name  | member_rank | friend_count |   attention_time  |  source  |
 		| tom   |   普通会员  |       1      |        今天       | 推广扫码 |

@@ -102,6 +102,7 @@ Scenario:1 调分组
 				"分组1", "分组3"
 			]
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			| name  | member_rank | integral |    tags    |
 			| tom3  |   普通会员  |     0    |未分组      |
@@ -113,6 +114,7 @@ Scenario:1 调分组
 			"""
 			["分组2"]
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			| name  | member_rank | integral |    tags    |
 			| tom3  |   普通会员  |     0    |   未分组   |
@@ -124,6 +126,7 @@ Scenario:1 调分组
 			"""
 			[]
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			| name  | member_rank | integral |    tags    |
 			| tom3  |   普通会员  |     0    | 未分组     |
@@ -141,6 +144,7 @@ Scenario:2 设等级
 				"member_rank":"金牌会员"
 			}
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			| name  | member_rank | integral |
 			| tom3  |   普通会员  |     0    |
@@ -155,6 +159,7 @@ Scenario:2 设等级
 				"member_rank":"金牌会员"
 			}
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			| name  | member_rank | integral |
 			| tom3  |   普通会员  |     0    |
@@ -483,6 +488,7 @@ Scenario:4 加积分
 				"reason":""
 			}
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 		| name  | member_rank | integral |
 		| tom3  |   普通会员  |   -10    |
@@ -497,6 +503,7 @@ Scenario:4 加积分
 				"reason":"添加积分的原因"
 			}
 			"""
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 		| name  | member_rank | integral |
 		| tom3  |   普通会员  |    10    |

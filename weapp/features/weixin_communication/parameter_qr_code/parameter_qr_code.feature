@@ -119,6 +119,7 @@ Scenario:1 带参数二维码-扫码奖励（包含了对缓存和已关注会�
 			When bill访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -189,6 +190,7 @@ Scenario:1 带参数二维码-扫码奖励（包含了对缓存和已关注会�
 			When tom访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -266,6 +268,7 @@ Scenario:1 带参数二维码-扫码奖励（包含了对缓存和已关注会�
 			When marry扫描带参数二维码"带参数二维码-奖励测试"
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -350,6 +353,7 @@ Scenario:2 带参数二维码-重复扫码不重复奖励
 		When tom访问jobs的webapp
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -365,6 +369,7 @@ Scenario:2 带参数二维码-重复扫码不重复奖励
 		When tom扫描带参数二维码"带参数二维码-重复扫码不重复奖励"
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -381,6 +386,7 @@ Scenario:2 带参数二维码-重复扫码不重复奖励
 		When tom扫描带参数二维码"带参数二维码-重复扫码不重复奖励"
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -430,6 +436,7 @@ Scenario:3 带参数二维码-交叉扫码不重复奖励
 		When tom访问jobs的webapp
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -445,6 +452,7 @@ Scenario:3 带参数二维码-交叉扫码不重复奖励
 		When tom扫描带参数二维码"带参数二维码-交叉扫码不重复奖励2"
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -460,6 +468,7 @@ Scenario:3 带参数二维码-交叉扫码不重复奖励
 		When tom扫描带参数二维码"带参数二维码-交叉扫码不重复奖励1"
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -476,6 +485,7 @@ Scenario:3 带参数二维码-交叉扫码不重复奖励
 		When tom扫描带参数二维码"带参数二维码-交叉扫码不重复奖励1"
 
 		Given jobs登录系统
+		Then jobs获得会员列表默认查询条件
 		Then jobs可以获得会员列表
 			"""
 			[{
@@ -514,6 +524,7 @@ Scenario:4 带参数二维码-成为指定等级会员（包含了对缓存和�
 			When bill访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -548,6 +559,7 @@ Scenario:4 带参数二维码-成为指定等级会员（包含了对缓存和�
 			When tom访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -568,6 +580,7 @@ Scenario:4 带参数二维码-成为指定等级会员（包含了对缓存和�
 			When tom扫描带参数二维码"带参数二维码-等级会员测试"
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -593,6 +606,7 @@ Scenario:4 带参数二维码-成为指定等级会员（包含了对缓存和�
 
 			Given jobs登录系统
 			#此处获得会员列表走了会员列表的默认查询条件"已关注"
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -613,6 +627,7 @@ Scenario:4 带参数二维码-成为指定等级会员（包含了对缓存和�
 			When marry扫描带参数二维码"带参数二维码-等级会员测试"
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -661,6 +676,7 @@ Scenario:5 带参数二维码-添加到分组（包含了对缓存和已关注�
 			When jack访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -696,6 +712,7 @@ Scenario:5 带参数二维码-添加到分组（包含了对缓存和已关注�
 			When bill访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -737,6 +754,7 @@ Scenario:5 带参数二维码-添加到分组（包含了对缓存和已关注�
 			When tom访问jobs的webapp
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -764,6 +782,7 @@ Scenario:5 带参数二维码-添加到分组（包含了对缓存和已关注�
 			When tom扫描带参数二维码"带参数二维码-添加到分组测试"
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -796,6 +815,7 @@ Scenario:5 带参数二维码-添加到分组（包含了对缓存和已关注�
 
 			Given jobs登录系统
 			#此处获得会员列表走了会员列表的默认查询条件"已关注"
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{
@@ -823,6 +843,7 @@ Scenario:5 带参数二维码-添加到分组（包含了对缓存和已关注�
 			When marry扫描带参数二维码"带参数二维码-添加到分组测试"
 
 			Given jobs登录系统
+			Then jobs获得会员列表默认查询条件
 			Then jobs可以获得会员列表
 				"""
 				[{

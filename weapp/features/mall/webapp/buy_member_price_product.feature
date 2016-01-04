@@ -493,6 +493,7 @@ Scenario:4 订单完成后，达到自动升级的条件
 			"integral": 20
 		}]
 		"""
+	Then jobs获得会员列表默认查询条件
 	And jobs可以获得会员列表
 		"""
 		[{
@@ -615,6 +616,7 @@ Scenario:5 使用积分购买商品后，取消订单，积分返回
 			"integral": 20
 		}]
 		"""
+	Then jobs获得会员列表默认查询条件
 	And jobs可以获得会员列表
 		"""
 		[{
