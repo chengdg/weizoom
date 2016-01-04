@@ -43,8 +43,7 @@ def get_request_members_list(request, export=False):
 
 	filter_data_args = {}
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
-	if settings.MODE != 'deploy':
-		filter_data_args['is_for_test'] = False
+
 	filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
 
 	#处理已经被选的会员
