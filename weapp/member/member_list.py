@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.db.models import Q
+from django.conf import settings
 
 from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
@@ -22,6 +23,7 @@ from market_tools.tools.member_qrcode.models import *
 from apps.customerized_apps.shengjing.models import *
 from weixin2.models import get_opid_from_session
 from core import resource
+
 import export
 
 COUNT_PER_PAGE = 20
@@ -41,7 +43,8 @@ def get_request_members_list(request, export=False):
 
 	filter_data_args = {}
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
-	filter_data_args['is_for_test'] = False
+	if settings.MODE != 'deploy':
+		filter_data_args['is_for_test'] = False
 	filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
 
 	#处理已经被选的会员
