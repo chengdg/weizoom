@@ -97,16 +97,16 @@ def receiveauthcode(request):
 		"""
 		# if 'weizoom_test_data' in request.GET:
 		# 	xml_message = _get_raw_message(request)
-		# else:
+		# else: 
 		xml_message = _get_raw_message(request).decode('utf-8')
 		xml_message_for_appid = BeautifulSoup(xml_message)
-		print xml_message
+		# print xml_message
 		if xml_message_for_appid.appid and xml_message_for_appid.appid.text:
 			appid = xml_message_for_appid.appid.text
 			component_info = ComponentInfo.objects.get(app_id=appid)
 			wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)
 			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
-			print xml_message
+			# print xml_message
 			xml_message = BeautifulSoup(xml_message)
 			ticket = xml_message.componentverifyticket.text
 
@@ -124,8 +124,8 @@ def receiveauthcode(request):
 		# 	pass
 
 		if request.user.is_authenticated() and auth_code:
-			request.user_profile = request.user.get_profile()
-			webapp_id = request.user_profile.webapp_id
+			# request.user_profile = request.user.get_profile()
+			# webapp_id = request.user_profile.webapp_id
 			user_id=request.user.id
 			# component_info = ComponentInfo.objects.filter(is_active=True)[0]
 			# if ComponentAuthedAppid.objects.filter(component_info=component_info, user_id=request.user.id).count() > 0:
@@ -133,10 +133,11 @@ def receiveauthcode(request):
 			# else:
 			# 	ComponentAuthedAppid.objects.create(component_info=component_info, user_id=request.user.id, auth_code=auth_code)
 			from weixin.user.util import get_component_info_from
-			request_host = request.get_host()
+			#此处不使用request_host，使用的request_host来自weixin.user.util中的settings.DOMAIN
+			# request_host = request.get_host()
 			component_info = get_component_info_from(request)
 			component_authed_appid = ComponentAuthedAppid.objects.get(component_info=component_info, user_id=request.user.id)
-			component_info = component_authed_appid.component_info
+			#component_info = component_authed_appid.component_info
 
 			"""
 			TODO: 使用授权码换取公众号的授权信息 放到 消息队列里 ，并且进行监控， 保证100%成功
@@ -292,7 +293,7 @@ def receiveauthcode(request):
 		else:
 			raise Http404('请先登录系统，继续完成授权！')
 
-		print auth_code, expires_in, '>>>>>>>'
+		# print auth_code, expires_in, '>>>>>>>'
 	return HttpResponse('') 
 
 
