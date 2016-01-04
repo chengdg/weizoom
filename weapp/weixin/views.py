@@ -97,7 +97,7 @@ def receiveauthcode(request):
 		"""
 		# if 'weizoom_test_data' in request.GET:
 		# 	xml_message = _get_raw_message(request)
-		# else: 
+		# else:
 		xml_message = _get_raw_message(request).decode('utf-8')
 		xml_message_for_appid = BeautifulSoup(xml_message)
 		# print xml_message
