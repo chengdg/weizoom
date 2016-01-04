@@ -54,8 +54,9 @@ for k,v in CELERY_BUILTINS.iteritems():
 print("in run_celery.py")
 
 def svslog(t, pid, task_id, status, message):
-    obj=Svsmon(task=t, pid=pid, task_id=task_id, status = status, message=(message  and dumps(message) or ''))
-    obj.save(using=settings.WATCHDOG_DB)
+    pass
+    #obj=Svsmon(task=t, pid=pid, task_id=task_id, status = status, message=(message  and dumps(message) or ''))
+    #obj.save(using=settings.WATCHDOG_DB)
 
 class CeleryTaskMonitor(logging.Filter):
     pairs = {}
