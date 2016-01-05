@@ -37,7 +37,7 @@ class ProductSupplier(api_resource.ApiResource):
 			try:
 				supplier = mall_models.Supplier.objects.get(id=supplier_id)
 				return {
-					'supplier_name' = supplier.name
+					'supplier_name': supplier.name
 				}
 			except Exception, e:
 				print u'根据供应商id获取供应商名失败：', supplier_id, e
