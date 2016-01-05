@@ -71,9 +71,9 @@ def get_query_auth(weixin_api=None, component_info=None, auth_code=None):
                 update_user_ids = [appid.user_id for appid in component_authed_appids]
                 component_authed_appids.update(is_active=False)
                 UserProfile.objects.filter(user_id__in=update_user_ids).update(is_mp_registered=False)
-                return "success"
+                return "success", mp_user
     except:
-        return "error"
+        return "error", None
 
 def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
     """
@@ -87,7 +87,7 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
     result = weixin_api.api_authorizer_token(component.app_id, auth_appid.authorizer_appid, auth_appid.authorizer_refresh_token)
 
     if result.has_key('errcode') and (result['errcode'] == -1 or result['errcode'] == 995995):
-        return 'error'
+        return 'error', None
     if result.has_key('authorizer_access_token'):
         authorizer_access_token = result['authorizer_access_token']
         auth_appid.authorizer_access_token = result['authorizer_access_token']
@@ -109,9 +109,9 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
                 app_secret = '',
                 access_token = authorizer_access_token
             )
-        return True
+        return True, mp_user
 
-def get_authorizer_info(auth_appid=None, weixin_api=None, component=None):
+def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_user=None):
     """
     获取授权方信息
     """

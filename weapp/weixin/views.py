@@ -132,10 +132,10 @@ def receiveauthcode(request):
 			from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 			weixin_http_client = WeixinHttpClient()
 			weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
-			return_msg = get_query_auth(weixin_api, component_info, auth_code)
+			return_msg, mp_user = get_query_auth(weixin_api, component_info, auth_code)
 
 			if return_msg == "success":
-				get_authorizer_info(component_authed_appid, weixin_api, component_info)
+				get_authorizer_info(component_authed_appid, weixin_api, component_info, mp_user)
 
 			return HttpResponseRedirect('/new_weixin/mp_user/')
 

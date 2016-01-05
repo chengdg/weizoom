@@ -63,12 +63,12 @@ class Command(BaseCommand):
 
 
 	def __update_auth_appid(self, auth_appid = None, weixin_api = None, component = None, error_auth_appid = []):
-		return_msg = refresh_auth_token(auth_appid, weixin_api, component)
+		return_msg, mp_user = refresh_auth_token(auth_appid, weixin_api, component)
 		if return_msg:
 			if return_msg == 'error':
 				error_auth_appid.append(auth_appid)
 			else:
-				get_authorizer_info(auth_appid, weixin_api, component)
+				get_authorizer_info(auth_appid, weixin_api, component, mp_user)
 
 
 	def __get_component_token_retry(self, weixin_api=None, component = None):
