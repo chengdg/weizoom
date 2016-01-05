@@ -79,6 +79,8 @@ from apps.customerized_apps.sign import models as sign_models
 from apps.customerized_apps.powerme import models as powerme_models
 from apps.customerized_apps.event import models as event_models
 from apps.customerized_apps.lottery import models as apps_lottery_models
+from apps.customerized_apps.survey import models as apps_survey_models
+from apps.customerized_apps.vote import models as apps_vote_models
 
 from django.core.cache import cache
 from weapp import celeryconfig
@@ -322,6 +324,14 @@ def __clear_all_app_data():
 	apps_lottery_models.lotteryParticipance.objects.all().delete()
 	apps_lottery_models.lottoryRecord.objects.all().delete()
 	apps_lottery_models.lotteryControl.objects.all().delete()
+
+	#apps调研
+	apps_survey_models.survey.objects.all().delete()
+	apps_survey_models.surveyParticipance.objects.all().delete()
+
+	#apps投票
+	apps_vote_models.vote.objects.all().delete()
+	apps_vote_models.voteParticipance.objects.all().delete()
 
 	#会员积分策略全部清零
 	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)
