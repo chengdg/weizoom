@@ -56,7 +56,6 @@ class Command(BaseCommand):
 			for auth_appid in ComponentAuthedAppid.objects.filter(is_active=True, component_info=component):
 				self.__update_auth_appid(auth_appid, weixin_api, component, update_fail_auth_appid)
 
-			print u"更新失败重试数" + str(len(update_fail_auth_appid))
 			if update_fail_auth_appid:
 				for auth_appid in update_fail_auth_appid:
 					self.__update_auth_appid(auth_appid, weixin_api, component)
