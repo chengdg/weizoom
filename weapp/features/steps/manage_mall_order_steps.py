@@ -694,4 +694,17 @@ def step_impl(context, user, order_id):
     bdd_util.assert_list(expected, actual)
 
 
+@then(u"{user}获得订单列表筛选结果")
+def step_impl(context, user):
+    expected = json.loads(context.text)
+    response = context.client.get('/mall2/api/order_list/')
+    total_orders_count = json.loads(response.content)['data']['order_return_count']
+
+    actual = {
+        'total_orders_count': total_orders_count
+    }
+
+    bdd_util.assert_dict(expected, actual)
+
+
 
