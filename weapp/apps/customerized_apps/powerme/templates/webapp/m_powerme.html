@@ -191,6 +191,9 @@
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
+    <div class="xui-errMsg xa-errMsg none">
+        <div style="position: fixed;top: 38%;width: 100%;text-align: center;z-index: 10001;"><p style="color: #ffffff"></p></div>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -281,7 +284,6 @@
         }
 
     }
-
 
     function GetQueryString(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -485,11 +487,9 @@
             },
             error: function(data) {
                 if(data.errMsg){
-                    $("body").alert({
-                        isShow: true,
-                        info: data.errMsg,
-                        speed: 3000
-                    });
+                    $('.xa-errMsg').find('p').html(data.errMsg);
+                    $('.mask').swipeMask('show');
+                    $('.xui-errMsg').removeClass('none');
                 }
                 is_powered = false;
             }
@@ -501,6 +501,7 @@
         $('.xui-powerSucceed').addClass('none');
         $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
+        $('.xui-errMsg').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
