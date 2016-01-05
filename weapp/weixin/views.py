@@ -233,6 +233,8 @@ def receiveauthcode(request):
 										qrcode_url = upload_qrcode_url_to_upyun(qrcode_url, authorizer_appid)
 									except:
 										print '>>>>>>>>>>>>>>>>>>>>upload_qrcode_url_to_upyun error'
+								else:
+									qrcode_url = auth_appid_info.qrcode_url
 								ComponentAuthedAppidInfo.objects.filter(auth_appid=component_authed_appid).update(
 									nick_name=nick_name,
 									head_img=head_img,
