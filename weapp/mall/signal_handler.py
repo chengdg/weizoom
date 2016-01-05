@@ -116,8 +116,9 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 @receiver(mall_signals.post_pay_order, sender=Order)
 def post_pay_order_handler(order, request, **kwargs):
     try:
-        from modules.member.tasks import post_pay_tasks
-        post_pay_tasks(request, order)
+        # update by bert 业务修改订单完成后修改 购买引流 : apiserver
+        #from modules.member.tasks import post_pay_tasks
+        #post_pay_tasks(request, order)
         """
             将模版消息加人celery
         """

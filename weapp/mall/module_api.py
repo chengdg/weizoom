@@ -2281,8 +2281,16 @@ def update_order_status(user, action, order, request=None):
 				order_record = MallOrderFromSharedRecord.objects.filter(order_id=order.id)[0]
 				fmt = order_record.fmt
 			else:
+				order_record = None
 				fmt = None
 			integral.increase_after_payed_finsh(fmt, order)
+			if order_record and order_record.url and order_record.is_updated == False:
+				from modules.member.models import MemberSharedUrlInfo, Member
+				followed_member = Member.objects.get(token=fmt)
+				MemberSharedUrlInfo.objects.filter(shared_url=order_record.url, member_id=followed_member.id).update(leadto_buy_count=F('leadto_buy_count')+1)
+				order_record.is_updated = True
+				order_record.save()
+				#print '>>>>>.aaaaaaaaaaaaaaaaaaaaaaaaffffff>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
 	except:
 		notify_message = u"订单状态为已完成时为贡献者增加积分，cause:\n{}".format(unicode_full_stack())
 		watchdog_error(notify_message)
