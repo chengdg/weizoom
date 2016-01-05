@@ -63,6 +63,9 @@ class Command(BaseCommand):
 
 
 	def __update_auth_appid(self, auth_appid = None, weixin_api = None, component = None, error_auth_appid = []):
+		print "+++++++++++++++++++++++"
+		print refresh_auth_token(auth_appid, weixin_api, component)
+		print "+++++++++++++++++++++++"
 		return_msg, mp_user = refresh_auth_token(auth_appid, weixin_api, component)
 		if return_msg:
 			if return_msg == 'error':
