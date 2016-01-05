@@ -44,7 +44,7 @@ def get_query_auth(weixin_api=None, component_info=None, auth_code=None):
                     authorizer_appid=authorizer_appid,
                     authorizer_access_token=authorizer_access_token,
                     authorizer_refresh_token=authorizer_refresh_token,
-                    last_update_time=datetime.datetime.now(),
+                    last_update_time=datetime.now(),
                     func_info = ','.join(func_info_ids),
                     is_active = True
                     )
@@ -62,7 +62,7 @@ def get_query_auth(weixin_api=None, component_info=None, auth_code=None):
                         app_id = authorizer_appid,
                         app_secret = '',
                         access_token = authorizer_access_token,
-                        update_time=datetime.datetime.now()
+                        update_time=datetime.now()
                     )
                 """
                 处理公众号绑定过其它系统帐号情况
@@ -92,7 +92,7 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
         authorizer_access_token = result['authorizer_access_token']
         auth_appid.authorizer_access_token = result['authorizer_access_token']
         auth_appid.authorizer_refresh_token = result['authorizer_refresh_token']
-        auth_appid.last_update_time = datetime.datetime.now()
+        auth_appid.last_update_time = datetime.now()
         auth_appid.save()
 
         if WeixinMpUser.objects.filter(owner_id=user_id).count() > 0:
@@ -101,7 +101,7 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
             mp_user = WeixinMpUser.objects.create(owner_id=user_id)
 
         if WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).count() > 0:
-            WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(update_time=datetime.datetime.now(), access_token=authorizer_access_token, is_active=True, app_id = auth_appid.authorizer_appid)
+            WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(update_time=datetime.now(), access_token=authorizer_access_token, is_active=True, app_id = auth_appid.authorizer_appid)
         else:
             WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).create(
                 mpuser = mp_user,
