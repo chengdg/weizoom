@@ -166,6 +166,7 @@ class PowerMeParticipances_Export(resource.Resource):
 
 			#from sample to get fields4excel_file
 			fields_pure.append(u'排名')
+			fields_pure.append(u'会员id')
 			fields_pure.append(u'用户名')
 			fields_pure.append(u'助力值')
 			fields_pure.append(u'参与时间')
@@ -176,10 +177,12 @@ class PowerMeParticipances_Export(resource.Resource):
 				export_record = []
 				num = num+1
 				participant_name = data["username"]
+				member_id = data["member_id"]
 				power = data["power"]
 				created_at = data["created_at"]
 
 				export_record.append(num)
+				export_record.append(member_id)
 				export_record.append(participant_name)
 				export_record.append(power)
 				export_record.append(created_at)

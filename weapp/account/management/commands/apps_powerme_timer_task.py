@@ -4,7 +4,7 @@ import time
 
 from django.core.management.base import BaseCommand, CommandError
 
-from utils.cache_util import SET_CACHE
+from utils.cache_util import SET_CACHE, delete_cache, delete_pattern
 from apps.customerized_apps.powerme import models as app_models
 from modules.member.models import Member
 
@@ -13,8 +13,29 @@ class Command(BaseCommand):
 	help = 'start powerme stats task'
 	args = ''
 	
-	def handle(self, **options):
+	def handle(self, *args, **options):
+		"""
+
+		@param args: clear: 清除所有apps_powerme_*的缓存
+		@param options:
+		@return:
+		"""
 		print 'powerme timer task start...'
+		l = len(args)
+		if l == 1:
+			action = args[0]
+			if action == 'clear':
+				delete_pattern("apps_powerme_*")
+				print 'delete all cache those have the prefix apps_powerme_'
+				return
+		elif l == 2:
+			action = args[0]
+			if action == 'clear':
+				powerme_id = args[1]
+				delete_cache("apps_powerme_"+str(powerme_id))
+				print 'delete cache names apps_powerme_'+str(powerme_id)
+				return
+
 		start_time = time.time()
 
 		need_del_powerlogs_ids = []
