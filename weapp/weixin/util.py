@@ -115,6 +115,7 @@ def get_authorizer_info(auth_appid=None, weixin_api=None, component=None):
     """
     获取授权方信息
     """
+    user_id = auth_appid.user_id
     try:
         result = weixin_api.api_get_authorizer_info(component.app_id,auth_appid.authorizer_appid)
 
