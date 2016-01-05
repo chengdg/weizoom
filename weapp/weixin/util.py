@@ -82,7 +82,7 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
     user_id = auth_appid.user_id
     if auth_appid.is_active is False:
         UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=False)
-        return False
+        return False, None
 
     result = weixin_api.api_authorizer_token(component.app_id, auth_appid.authorizer_appid, auth_appid.authorizer_refresh_token)
 
