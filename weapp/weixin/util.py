@@ -110,6 +110,9 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
                 access_token = authorizer_access_token
             )
         return True, mp_user
+    else:
+        print "----111-----"
+        return False, None
 
 def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_user=None):
     """
