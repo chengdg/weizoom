@@ -113,7 +113,7 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
         return True, mp_user
     else:
         print "----111-----", result
-        return False, None
+        return "error", None
 
 def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_user=None):
     """
