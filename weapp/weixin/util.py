@@ -18,13 +18,12 @@ from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
 from account.models import UserProfile
 
 
-def get_query_auth(auth_appid=None, weixin_api=None, auth_code=None):
+def get_query_auth(component_info=None, weixin_api=None, auth_code=None, user_id=None):
     """
     使用授权码换取公众号的授权信息, 并且更新相应的数据库
     """
     try:
-        user_id = auth_appid.user_id
-        result = weixin_api.api_query_auth(auth_appid.app_id, auth_code)
+        result = weixin_api.api_query_auth(component_info.app_id, auth_code)
         mp_user = None
         if result.has_key('authorization_info'):
             authorization_info = result['authorization_info']
