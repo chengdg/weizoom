@@ -421,7 +421,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'用户反馈',
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
-                    'users': ['njtest','ceshi01','weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
+                    'users': ['njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
                 }
             ]
         }
