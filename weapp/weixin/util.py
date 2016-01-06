@@ -55,7 +55,7 @@ def get_query_auth(weixin_api=None, component_info=None, auth_code=None):
                     mp_user = WeixinMpUser.objects.create(owner_id=user_id)
 
                 if WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).count() > 0:
-                    WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(update_time=datetime.datetime.now(), access_token=authorizer_access_token, is_active=True)
+                    WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(update_time=datetime.now(), access_token=authorizer_access_token, is_active=True)
                 else:
                     WeixinMpUserAccessToken.objects.create(
                         mpuser = mp_user,
@@ -79,6 +79,7 @@ def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
     """
     获取（刷新）授权公众号的令牌
     """
+    print "-----0000-----", datetime.now()
     user_id = auth_appid.user_id
     if auth_appid.is_active is False:
         UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=False)
@@ -120,7 +121,7 @@ def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_use
     """
     user_id = auth_appid.user_id
     try:
-        result = weixin_api.api_get_authorizer_info(component.app_id,auth_appid.authorizer_appid)
+        result = weixin_api.api_get_authorizer_info(component.app_id, auth_appid.authorizer_appid)
 
         if result.has_key('authorizer_info'):
             nick_name = result['authorizer_info'].get('nick_name', '')
@@ -184,13 +185,10 @@ def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_use
                     func_info=','.join(func_info_ids)
                     )
 
-            is_service = False
+            is_service, is_certified = False, False
 
-            if int(service_type_info) > 1:
-                is_service = True
-            is_certified = False
-            if int(verify_type_info) > -1:
-                is_certified = True
+            if int(service_type_info) > 1: is_service = True
+            if int(verify_type_info) > -1: is_certified = True
 
             WeixinMpUser.objects.filter(owner_id=user_id).update(is_service=is_service, is_certified=is_certified, is_active=True)
 
@@ -206,6 +204,8 @@ def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_use
             else:
                 if user_profile.is_oauth:
                     UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=True, is_oauth=False)
+            return True
     except:
         notify_msg = u"处理公众号mp相关信息, cause:\n{}".format(unicode_full_stack())
         watchdog_error(notify_msg)
+        return False

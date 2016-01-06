@@ -56,28 +56,25 @@ class Command(BaseCommand):
 			for auth_appid in ComponentAuthedAppid.objects.filter(is_active=True, component_info=component):
 				self.__update_auth_appid(auth_appid, weixin_api, component, update_fail_auth_appid)
 
+			print "更新失败重试数" + str(len(update_fail_auth_appid))
 			if update_fail_auth_appid:
 				for auth_appid in update_fail_auth_appid:
 					self.__update_auth_appid(auth_appid, weixin_api, component)
 
 
 	def __update_auth_appid(self, auth_appid = None, weixin_api = None, component = None, error_auth_appid = []):
-		print "+++++++++++++++++++++++"
-		print refresh_auth_token(auth_appid, weixin_api, component)
-		print "+++++++++++++++++++++++"
 		return_msg, mp_user = refresh_auth_token(auth_appid, weixin_api, component)
 		if return_msg:
 			if return_msg == 'error':
 				error_auth_appid.append(auth_appid)
 			else:
-				get_authorizer_info(auth_appid, weixin_api, component, mp_user)
-
+				result = get_authorizer_info(auth_appid, weixin_api, component, mp_user)
+				if not result:
+					error_auth_appid.append(auth_appid)
 
 	def __get_component_token_retry(self, weixin_api=None, component = None):
 		try:
 			result = weixin_api.get_component_token(component.app_id, component.app_secret, component.component_verify_ticket)
-			print 'justing,retry :\n{}'.format(result)
-			#watchdog_info('call weixin api: get_component_token , result:{}'.format(result))
 			if result.has_key('errcode'):
 				success = False
 				watchdog_error('call weixin api: get_component_token , result:{}'.format(result))
