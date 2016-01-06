@@ -13,7 +13,7 @@ from account.models import UserProfile
 from core.exceptionutil import unicode_full_stack
 from core.upyun_util import upload_qrcode_url_to_upyun
 
-from watchdog.utils import watchdog_fatal, watchdog_error
+from watchdog.utils import watchdog_fatal, watchdog_error, watchdog_info
 from util import get_query_auth, get_authorizer_info
 from weixin.user.models import *
 from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
@@ -91,7 +91,6 @@ def receiveauthcode(request):
 		"""
 		接受微信服务器每隔10分钟推送过来的component_verify_ticket
 		"""
-		print 'request>>>>',request,'>>>>>>'
 		xml_message = _get_raw_message(request).decode('utf-8')
 		xml_message_for_appid = BeautifulSoup(xml_message)
 		appid = xml_message_for_appid.appid.text if xml_message_for_appid.appid else None
@@ -125,19 +124,23 @@ def receiveauthcode(request):
 			from weixin.user.util import get_component_info_from
 			component_info = get_component_info_from(request) # 获取第三方开放平台的基本信息
 			component_authed_appid = ComponentAuthedAppid.objects.get(component_info=component_info, user_id=user_id) # 获取用户委托的账户记录
-			component_info = component_authed_appid.component_info # 用户委托账户的详细信息记录
 
-			"""
-			TODO: 使用授权码换取公众号的授权信息 放到 消息队列里 ，并且进行监控， 保证100%成功
-			"""
 			from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 			weixin_http_client = WeixinHttpClient()
 			weixin_api = WeixinApi(component_info.component_access_token, weixin_http_client)
 			return_msg, mp_user = get_query_auth(weixin_api, component_info, auth_code)
 
+			# 每个api请求如果失败就重试一次
 			if return_msg == "success":
-				get_authorizer_info(component_authed_appid, weixin_api, component_info, mp_user)
-
+				is_success = get_authorizer_info(component_authed_appid, weixin_api, component_info, mp_user)
+				if not is_success:
+					get_authorizer_info(component_authed_appid, weixin_api, component_info, mp_user)
+			else:
+				return_msg, mp_user = get_query_auth(weixin_api, component_info, auth_code)
+				if return_msg == "success":
+					is_success = get_authorizer_info(component_authed_appid, weixin_api, component_info, mp_user)
+					if not is_success:
+						get_authorizer_info(component_authed_appid, weixin_api, component_info, mp_user)
 			return HttpResponseRedirect('/new_weixin/mp_user/')
 
 		else:

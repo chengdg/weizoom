@@ -14,14 +14,13 @@ from core.exceptionutil import unicode_full_stack
 from core.upyun_util import upload_qrcode_url_to_upyun
 from watchdog.utils import watchdog_fatal, watchdog_error
 from weixin.user.models import *
-from weixin.user.util import get_component_info_from
 from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
 from account.models import UserProfile
 
 
 def get_query_auth(weixin_api=None, component_info=None, auth_code=None):
     """
-    使用授权码换取公众号的授权信息
+    使用授权码换取公众号的授权信息, 并且更新相应的数据库
     """
     try:
         result = weixin_api.api_query_auth(component_info.app_id, auth_code)
@@ -73,51 +72,56 @@ def get_query_auth(weixin_api=None, component_info=None, auth_code=None):
                 UserProfile.objects.filter(user_id__in=update_user_ids).update(is_mp_registered=False)
                 return "success", mp_user
     except:
+        notify_msg = u"使用授权码换取公众号的授权信息失败, cause:\n{}".format(unicode_full_stack())
+        watchdog_error(notify_msg)
         return "error", None
 
 def refresh_auth_token(auth_appid=None, weixin_api=None, component=None):
     """
-    获取（刷新）授权公众号的令牌
+    获取（刷新）授权公众号的令牌, 并且更新相应的数据库
     """
-    print "-----0000-----", datetime.now()
-    user_id = auth_appid.user_id
-    if auth_appid.is_active is False:
-        UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=False)
-        return False, None
+    try:
+        user_id = auth_appid.user_id
+        if auth_appid.is_active is False:
+            UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=False)
+            return False, None
 
-    result = weixin_api.api_authorizer_token(component.app_id, auth_appid.authorizer_appid, auth_appid.authorizer_refresh_token)
+        result = weixin_api.api_authorizer_token(component.app_id, auth_appid.authorizer_appid, auth_appid.authorizer_refresh_token)
 
-    if result.has_key('errcode') and (result['errcode'] == -1 or result['errcode'] == 995995):
-        return 'error', None
-    if result.has_key('authorizer_access_token'):
-        authorizer_access_token = result['authorizer_access_token']
-        auth_appid.authorizer_access_token = result['authorizer_access_token']
-        auth_appid.authorizer_refresh_token = result['authorizer_refresh_token']
-        auth_appid.last_update_time = datetime.now()
-        auth_appid.save()
+        if result.has_key('errcode') and (result['errcode'] == -1 or result['errcode'] == 995995):
+            return 'error', None
+        if result.has_key('authorizer_access_token'):
+            authorizer_access_token = result['authorizer_access_token']
+            auth_appid.authorizer_access_token = result['authorizer_access_token']
+            auth_appid.authorizer_refresh_token = result['authorizer_refresh_token']
+            auth_appid.last_update_time = datetime.now()
+            auth_appid.save()
 
-        if WeixinMpUser.objects.filter(owner_id=user_id).count() > 0:
-            mp_user = WeixinMpUser.objects.filter(owner_id=user_id)[0]
+            if WeixinMpUser.objects.filter(owner_id=user_id).count() > 0:
+                mp_user = WeixinMpUser.objects.filter(owner_id=user_id)[0]
+            else:
+                mp_user = WeixinMpUser.objects.create(owner_id=user_id)
+
+            if WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).count() > 0:
+                WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(update_time=datetime.now(), access_token=authorizer_access_token, is_active=True, app_id = auth_appid.authorizer_appid)
+            else:
+                WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).create(
+                    mpuser = mp_user,
+                    app_id = auth_appid.authorizer_appid,
+                    app_secret = '',
+                    access_token = authorizer_access_token
+                )
+            return True, mp_user
         else:
-            mp_user = WeixinMpUser.objects.create(owner_id=user_id)
-
-        if WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).count() > 0:
-            WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(update_time=datetime.now(), access_token=authorizer_access_token, is_active=True, app_id = auth_appid.authorizer_appid)
-        else:
-            WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).create(
-                mpuser = mp_user,
-                app_id = auth_appid.authorizer_appid,
-                app_secret = '',
-                access_token = authorizer_access_token
-            )
-        return True, mp_user
-    else:
-        print "----111-----", result
+            return "error", None
+    except:
+        notify_msg = u"获取（刷新）授权公众号的令牌失败, cause:\n{}".format(unicode_full_stack())
+        watchdog_error(notify_msg)
         return "error", None
 
 def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_user=None):
     """
-    获取授权方信息
+    获取授权方信息, 并且更新相应的数据库
     """
     user_id = auth_appid.user_id
     try:
@@ -132,7 +136,6 @@ def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_use
             alias = result['authorizer_info'].get('alias', '')
             qrcode_url = result['authorizer_info'].get('qrcode_url','')
 
-            #authorization_info
             appid = result['authorization_info'].get('authorizer_appid', '')
 
             func_info_ids = []
