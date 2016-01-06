@@ -3,7 +3,6 @@
 __author__ = 'chuter, bert'
 
 import hashlib
-import datetime
 from BeautifulSoup import BeautifulSoup
 
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, Http404
@@ -18,6 +17,7 @@ from watchdog.utils import watchdog_fatal, watchdog_error
 from util import get_query_auth, get_authorizer_info
 from weixin.user.models import *
 from weixin.message_util.WXBizMsgCrypt import WXBizMsgCrypt
+import datetime
 
 
 
@@ -91,6 +91,7 @@ def receiveauthcode(request):
 		"""
 		接受微信服务器每隔10分钟推送过来的component_verify_ticket
 		"""
+		print 'request>>>>',request,'>>>>>>'
 		xml_message = _get_raw_message(request).decode('utf-8')
 		xml_message_for_appid = BeautifulSoup(xml_message)
 		appid = xml_message_for_appid.appid.text if xml_message_for_appid.appid else None
