@@ -150,7 +150,7 @@
         <span class="wa-totalcount">参与人数: <b></b></span>
         </div>
     </div>
-    <div data-ui-role="swipemask" class="mask"></div>
+
     <div class="xui-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
             <div class="xui-spritebg xui-successHint-img"></div>
@@ -197,9 +197,7 @@
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
-    <div class="xui-errMsg xa-errMsg none">
-        <div style="position: fixed;top: 38%;width: 100%;text-align: center;z-index: 10001;"><p style="color: #ffffff"></p></div>
-    </div>
+
 {% endblock %}
 
 {% block js %}
@@ -320,7 +318,7 @@
                 //监听分享成功事件
                 $(document).on("share:success",function(data){
                     $('.xa-share').addClass('none');
-                    $('.mask').swipeMask('hide');
+                    mask('hide');
                     //分享成功后就算该用户参与活动
                     W.getApi().call({
                         app: 'm/apps/powerme',
@@ -344,11 +342,7 @@
                 if(data.errMsg == 'is_deleted'){
                     deletedRecord();
                 }else{
-                    $("body").alert({
-                        isShow: true,
-                        info: data.errMsg,
-                        speed: 3000
-                    });
+                    wuiAlert(data.errMsg)
                 }
             }
         });
@@ -451,19 +445,19 @@
     }
 
     function openGuideMask(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xa-share').removeClass('none');
     }
     function openSuccessWin(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xui-powerSucceed').removeClass('none');
     }
     function openGuestMask(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xa-attention-guest').removeClass('none');
     }
     function openMemberMask(){
-        $('.mask').swipeMask('show');
+        mask('show');
         $('.xa-attention-member').removeClass('none');
     }
     function powerYou(){
@@ -494,9 +488,7 @@
             },
             error: function(data) {
                 if(data.errMsg){
-                    $('.xa-errMsg').find('p').html(data.errMsg);
-                    $('.mask').swipeMask('show');
-                    $('.xui-errMsg').removeClass('none');
+                    wuiAlert(data.errMsg)
                 }
                 is_powered = false;
             }
@@ -504,7 +496,7 @@
     }
     //隐藏所有
     $('.mask').click(function(){
-        $('.mask').swipeMask('hide');
+        mask('hide');
         $('.xui-powerSucceed').addClass('none');
         $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
@@ -512,11 +504,11 @@
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
-        $('.mask').swipeMask('hide');
+        mask('hide');
     });
     $('.xa-colseButton').click(function(){
         $('.xa-share').addClass('none');
-        $('.mask').swipeMask('hide');
+        mask('hide');
     });
 </script>
 {% endblock %}

@@ -176,7 +176,13 @@
     <body style="background:#f2f2f2; position:relative;">
         <div class="wui-loading wui-loading-animation wa-loading"></div>
 
+        <div data-ui-role="swipemask" class="mask"></div>
+
         {% block content-panel %}{% endblock %}
+
+        <div class="xui-errMsg xa-errMsg none">
+            <div style="position: fixed;top: 38%;width: 100%;text-align: center;z-index: 10001;"><p style="color: #ffffff"></p></div>
+        </div>
 
         {% include "weapp_jssdk_base.html" %}
 
@@ -276,6 +282,21 @@
                 }else{
                     $loading.css('opacity', 0);
                 }
+            }
+
+            //透明遮罩
+            function mask(action){
+                if('show' == action){
+                    $('.mask').swipeMask('show');
+                }else if('hide' == action){
+                    $('.mask').swipeMask('hide');
+                }
+            }
+
+            function wuiAlert(msg){
+                $('.xa-errMsg').find('p').html(msg);
+                mask('show');
+                $('.xui-errMsg').removeClass('none');
             }
         </script>
 
