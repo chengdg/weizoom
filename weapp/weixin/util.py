@@ -212,4 +212,3 @@ def get_authorizer_info(auth_appid=None, weixin_api=None, component=None, mp_use
         notify_msg = u"处理公众号mp相关信息, cause:\n{}".format(unicode_full_stack())
         watchdog_error(notify_msg)
         return False
-    
