@@ -117,8 +117,9 @@ def pre_delete_product_model_property_handler(model_property, request, **kwargs)
 def post_pay_order_handler(order, request, **kwargs):
     try:
         # update by bert 业务修改订单完成后修改 购买引流 : apiserver
-        #from modules.member.tasks import post_pay_tasks
-        #post_pay_tasks(request, order)
+        if not settings.ENAPISERVER:
+            from modules.member.tasks import post_pay_tasks
+            post_pay_tasks(request, order)
         """
             将模版消息加人celery
         """

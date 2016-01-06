@@ -787,6 +787,7 @@ DJANGO_HACK_PARAMS = {
 RESOURCE_LOADED = False
 RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
 
+ENAPISERVER = False
 
 # settings for WAPI Logger
 if MODE == 'develop' or MODE == 'test':
@@ -808,4 +809,6 @@ else:
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
+
+
 
