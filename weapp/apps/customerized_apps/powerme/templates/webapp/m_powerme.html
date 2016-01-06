@@ -507,11 +507,9 @@
             },
             error: function(data) {
                 if(data.errMsg){
-                    $("body").alert({
-                        isShow: true,
-                        info: data.errMsg,
-                        speed: 3000
-                    });
+                    $('.xa-errMsg').find('p').html(data.errMsg);
+                    $('.mask').swipeMask('show');
+                    $('.xui-errMsg').removeClass('none');
                 }
                 is_powered = false;
             }
