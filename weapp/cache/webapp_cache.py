@@ -324,6 +324,9 @@ def update_webapp_product_cache(**kwargs):
             categories_key = '{wo:%s}_categories' % (webapp_owner_id)
             cache_util.delete_cache(categories_key)
 
+        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        cache_util.delete_pattern(pattern_categories)
+
 def update_webapp_category_cache(**kwargs):
     if hasattr(cache, 'request') and cache.request.user_profile:
         webapp_owner_id = cache.request.user_profile.user_id
@@ -359,6 +362,9 @@ def update_webapp_category_cache(**kwargs):
             request = urllib2.Request(url)
             request.get_method = lambda: 'PURGE'
             urllib2.urlopen(request)
+
+        pattern_categories = "webapp_products_categories_{wo:%s}" % webapp_owner_id
+        cache_util.delete_pattern(pattern_categories)
 
 post_update_signal.connect(
     update_webapp_product_cache, sender=mall_models.Product, dispatch_uid="product.update")
