@@ -167,7 +167,7 @@ def component_handle(request, appid):
 		from weixin.message.message_pipeline import MessagePipeline
 		message_pipeline = MessagePipeline()
 
- 	try:
+	try:
 		content = message_pipeline.handle_component(request, appid)
 	except:
 		notify_message = u"进行消息处理失败，cause:\n{}".format(unicode_full_stack())
