@@ -259,10 +259,6 @@
                     $powerBtn.find('.wa-power-btn-action').html('帮');
                     $powerBtn.on('click', function(){
                         powerYou();
-                        $attention.find('.xa-attention-tip').show();
-                        $attention.find('img').attr('src', new_qrcode_url);
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：");
-                        openGuestMask();
                     }).show();
                 }
             }
@@ -482,14 +478,21 @@
                 if (W.isMember) {
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
+                }else{
+                    $attention.find('.xa-attention-tip').show();
+                    $attention.find('img').attr('src', new_qrcode_url);
+                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                    openGuestMask();
                 }
                 is_powered = true;
             },
             error: function(data) {
                 if(data.errMsg){
-                    $('.xa-errMsg').find('p').html(data.errMsg);
-                    $('.mask').swipeMask('show');
-                    $('.xui-errMsg').removeClass('none');
+                    $("body").alert({
+                        isShow: true,
+                        info: data.errMsg,
+                        speed: 3000
+                    });
                 }
                 is_powered = false;
             }
