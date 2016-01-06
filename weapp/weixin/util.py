@@ -66,7 +66,7 @@ def get_query_auth(component_info=None, weixin_api=None, auth_code=None, user_id
                 """
                 处理公众号绑定过其它系统帐号情况
                 """
-                component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=request.user.id), authorizer_appid=authorizer_appid)
+                component_authed_appids = ComponentAuthedAppid.objects.filter(~Q(user_id=user_id), authorizer_appid=authorizer_appid)
                 update_user_ids = [appid.user_id for appid in component_authed_appids]
                 component_authed_appids.update(is_active=False)
                 UserProfile.objects.filter(user_id__in=update_user_ids).update(is_mp_registered=False)
