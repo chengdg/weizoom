@@ -276,10 +276,6 @@
                     $powerBtn.find('.wa-power-btn-action').html('帮');
                     $powerBtn.on('click', function(){
                         powerYou();
-                        $attention.find('.xa-attention-tip').show();
-                        $attention.find('img').attr('src', new_qrcode_url);
-                        $attention.find('.xa-attention-reply').children().first().html("3.回复：");
-                        openGuestMask();
                     }).show();
                 }
             }
@@ -478,7 +474,14 @@
         $('.xa-attention-member').removeClass('none');
     }
     function powerYou(){
+        var $attention = $('.xa-attention-guest');
         if (is_powered) {
+            if(!W.isMember){
+                $attention.find('.xa-attention-tip').show();
+                $attention.find('img').attr('src', new_qrcode_url);
+                $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                openGuestMask();
+            }
             return
         }
         is_powered = true;
@@ -495,8 +498,12 @@
                 if (W.isMember) {
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
+                }else{
+                    $attention.find('.xa-attention-tip').show();
+                    $attention.find('img').attr('src', new_qrcode_url);
+                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                    openGuestMask();
                 }
-                is_powered = true;
             },
             error: function(data) {
                 if(data.errMsg){
