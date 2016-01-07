@@ -507,9 +507,20 @@
             },
             error: function(data) {
                 if(data.errMsg){
-                    wuiAlert(data.errMsg)
+                    if(data.errMsg != '只能助力一次'){
+                        wuiAlert(data.errMsg);
+                        is_powered = false;
+                    }else{
+                        if(!W.isMember){
+                            $attention.find('.xa-attention-tip').show();
+                            $attention.find('img').attr('src', new_qrcode_url);
+                            $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                            openGuestMask();
+                        }
+                    }
+
                 }
-                is_powered = false;
+
             }
         });
     }
