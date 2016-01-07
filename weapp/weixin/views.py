@@ -105,12 +105,31 @@ def receiveauthcode(request):
 			wxiz_msg_crypt = WXBizMsgCrypt(component_info.token, component_info.ase_key, component_info.app_id)
 			_,xml_message = wxiz_msg_crypt.DecryptMsg(xml_message, msg_signature, timestamp, nonce)
 			xml_message = BeautifulSoup(xml_message)
-			ticket = xml_message.componentverifyticket.text
+			#ticket = xml_message.componentverifyticket.text
 
-			if ticket:
-				component_info.component_verify_ticket = ticket
-				component_info.last_update_time = datetime.datetime.now()
-				component_info.save()
+			if xml_message.componentverifyticket:
+				#接受component_verify_ticket
+				ticket = xml_message.componentverifyticket.text
+				if ticket:
+					component_info.component_verify_ticket = ticket
+					component_info.last_update_time = datetime.datetime.now()
+					component_info.save()
+			elif xml_message.infotype and xml_message.infotype.text == 'unauthorized':
+				#接受取消授权
+				authorizerappid = xml_message.authorizerappid.text
+				component_authed_appids = ComponentAuthedAppid.objects.filter(authorizer_appid=authorizerappid)
+				if component_authed_appids.count() > 0:
+					component_authed_appid = component_authed_appids[0]
+					component_authed_appid.is_active = False
+					component_authed_appid.save()
+					user_id = component_authed_appid.user_id
+					if WeixinMpUser.objects.filter(owner_id=user_id).count() > 0:
+						mp_user = WeixinMpUser.objects.filter(owner_id=user_id)[0]
+						mp_user.is_active = False
+						mp_user.save()
+
+						WeixinMpUserAccessToken.objects.filter(mpuser = mp_user).update(is_active=False)
+					UserProfile.objects.filter(user_id=user_id).update(is_mp_registered=False)
 		return HttpResponse('success')
 	else:
 		# 授权后的回调链接的响应函数，使用auth_code获取授权公众号的授权信息
