@@ -232,13 +232,6 @@
                     $prizeContainer = $prizeContainer.eq(0);
                     participanceData['prize'] = $prizeContainer.attr('data-prize');
                 }
-                var $textSelection = $('.wui-textSelection');
-                if ($textSelection.length > 0){
-                    participanceData['actionButtons'] = JSON.stringify([{
-                        'text': '查看结果',
-                        'url': 'm/apps/'+W.appName+'/result_vote/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&member_id='+W.member_id+'&isMember='+W.isMember
-                    }]);
-                }
                 $('body').alert({
                     isShow: true,
                     info: '玩命传输中请等待...',
