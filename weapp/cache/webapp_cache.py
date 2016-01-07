@@ -568,7 +568,11 @@ def update_webapp_product_detail_by_review_cache(**kwargs):
                 product_id = instance.product_id
             else:
                 product_id = instance[0].product_id
+            key = 'p_r_{id:%s}' % product_id
+            cache_util.delete_pattern(key)
+            
             update_product_cache(webapp_owner_id, product_id)
+
 
 post_update_signal.connect(update_webapp_product_detail_by_review_cache,
                            sender=mall_models.ProductReview, dispatch_uid="product_review.update")
