@@ -1,2 +1,0 @@
-该文件夹下存放所有ui相关的bdd Feature实现
-mall文件夹下存放的是微商城相关的ui Feature

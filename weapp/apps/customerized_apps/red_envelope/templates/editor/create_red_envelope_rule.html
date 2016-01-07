@@ -1,6 +1,4 @@
 {% extends "content_base_v2.html" %}
-{% load common_tag %}
-{% load account_filter %}
 
 {% block css %}
 <style>
@@ -192,7 +190,7 @@
           <div style="margin-left:120px;">
             <div class="xui-i-help">(上传图片要求宽度在480~620之间，高度小于等于960，大小不超过500k)</div>
             <textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor-red" data-maxCount="1000" data-type="full" data-height="150" data-width="420">
-                {% if red_envelope_rule %}{{ red_envelope_rule.use_info|format_emotion|safe }}{% endif %}
+                {% if red_envelope_rule %}{{ red_envelope_rule.use_info|safe }}{% endif %}
             </textarea>
           </div>
         <div class="errorHint"></div>
