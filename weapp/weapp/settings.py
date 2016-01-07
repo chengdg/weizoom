@@ -789,6 +789,8 @@ RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
 
 ENAPISERVER = False
 
+EN_VARNISH = False
+
 # settings for WAPI Logger
 if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_ENABLED = False
