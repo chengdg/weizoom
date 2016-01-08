@@ -31,7 +31,7 @@ class MSign(resource.Resource):
 
     def api_get(request):
         member_info = {}
-        prize_info = {}
+        # prize_info = {}
         record_id = request.GET.get('id',None)
         webapp_owner_id = request.GET.get('webapp_owner_id',None)
         member = request.member
@@ -80,7 +80,6 @@ class MSign(resource.Resource):
             sign_description = ""
             record = None
         else:
-            ##ME
             cache_key = 'apps_sign_%s_html' % p_id
             #从redis缓存获取静态页面
             cache_data = GET_CACHE(cache_key)
@@ -88,7 +87,6 @@ class MSign(resource.Resource):
                 #存入全局变量
                 print 'redis---return'
                 return HttpResponse(cache_data)
-            ##endME
 
             record = app_models.Sign.objects(owner_id=webapp_owner_id)
             if record.count() > 0:
@@ -242,8 +240,6 @@ class MSign(resource.Resource):
 
         })
         response = render_to_string('sign/templates/webapp/m_sign.html', c)
-        ##ME
         if request.member:
             SET_CACHE(cache_key, response)
         return HttpResponse(response)
-        ##END ME
