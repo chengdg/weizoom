@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+
+from django.db.models import F
+
 from mall.promotion.models import CouponRule
+from mall.promotion import models as promotion_models
 from market_tools.tools.coupon.util import consume_coupon
 
 __author__ = 'robert'
@@ -63,13 +67,34 @@ def get_consume_coupon(owner_id, app_name, app_id, rule_id, member_id, has_coupo
 	@return:
 	'''
 	coupon = None
+	coupon_message = ''
+	curr_coupon_count = 0
 	rules = CouponRule.objects.filter(id=rule_id, owner_id=owner_id)
-	if rules and rules[0].end_date <= datetime.today():
+	if rules.count() <= 0:
 		coupon_message = u'该优惠券使用期已过，不能领取！'
-	elif rules and rules[0].limit_counts != -1 and has_coupon_count >= rules[0].limit_counts:
-		coupon_message = u'该优惠券每人限领%s张，你已经领取过了！' % rules[0].limit_counts
+		return coupon, coupon_message, curr_coupon_count
+
+	rule = rules.first()
+	if rule.end_date <= datetime.today():
+		coupon_message = u'该优惠券使用期已过，不能领取！'
+	elif rule.limit_counts != -1 and has_coupon_count >= rule.limit_counts:
+		coupon_message = u'该优惠券每人限领%s张，你已经领取过了！' % rule.limit_counts
 	else:
-		coupon,coupon_message =consume_coupon(owner_id, rule_id, member_id)
+		curr_coupon_count = rule.remained_count
+		coupon = promotion_models.Coupon.objects.filter(coupon_rule_id=rule_id, member_id=0, status=promotion_models.COUPON_STATUS_UNGOT).first()
+		if coupon:
+			coupon.status = promotion_models.COUPON_STATUS_UNUSED
+			coupon.member_id = member_id
+			coupon.provided_time = datetime.today()
+			coupon.coupon_record_id = 0
+			coupon.save()
+
+			if has_coupon_count:
+				rules.update(remained_count=F('remained_count') - 1, get_count=F('get_count') + 1)
+			else:
+				rules.update(remained_count=F('remained_count') - 1, get_person_count=F('get_person_count') + 1,
+							 get_count=F('get_count') + 1)
+
 	data = {
 		'user_id': owner_id,
 		'app_name': app_name,
@@ -81,6 +106,6 @@ def get_consume_coupon(owner_id, app_name, app_id, rule_id, member_id, has_coupo
 	}
 	consume_coupon_log = mongo_models.ConsumeCouponLog(**data)
 	consume_coupon_log.save()
-	return coupon,coupon_message
+	return coupon, coupon_message, curr_coupon_count
 
 

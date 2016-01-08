@@ -6,12 +6,11 @@ from datetime import datetime
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import F
 from django.contrib.auth.decorators import login_required
 
 from core import resource
-from core import paginator
 from core.jsonresponse import create_response
+from utils.cache_util import delete_cache
 
 import models as app_models
 import export
@@ -19,6 +18,7 @@ from mall import export as mall_export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
+
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -89,6 +89,10 @@ class Sign(resource.Resource):
 		data['related_page_id'] = request.POST['related_page_id']
 		sign = app_models.Sign(**data)
 		sign.save()
+		#保存后清除redis缓存
+		cache_key = 'apps_sign_%s_html' % data['owner_id']
+		delete_cache(cache_key)
+
 		error_msg = None
 		
 		data = json.loads(sign.to_json())

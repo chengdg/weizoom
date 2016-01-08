@@ -209,7 +209,7 @@ class lottery_prize(resource.Resource):
 					# # 	lottery_prize_type = 'no_prize'
 					# else:
 						# consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
-					coupon, msg = get_consume_coupon(lottery.owner_id, 'lottery',str(lottery.id), lottery_prize_data, member_id,has_coupon_count)
+					coupon, msg, _ = get_consume_coupon(lottery.owner_id, 'lottery',str(lottery.id), lottery_prize_data, member_id,has_coupon_count)
 					if not coupon:
 						result = u'谢谢参与'
 						lottery_prize_type = 'no_prize'

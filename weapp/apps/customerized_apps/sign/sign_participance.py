@@ -81,7 +81,28 @@ class SignParticipance(resource.Resource):
 				signer.save()
 
 			return_data = signer.do_signment(sign)
+			detail_dict = {
+				'belong_to': activity_id,
+				'member_id': member_id,
+				'created_at': datetime.today(),
+				'type': u'页面签到',
+				'prize': {
+					'integral': 0,
+					'coupon': {
+						'id': 0,
+						'name': ''
+					}
+				}
+			}
 			if return_data['status_code'] == app_models.RETURN_STATUS_CODE['SUCCESS']:
+				coupon_flag = return_data['curr_prize_coupon_count'] > 0
+				detail_dict['prize'] = {
+					'integral': return_data['curr_prize_integral'],
+					'coupon': {
+						'id': return_data['curr_prize_coupon_id'],
+						'name': return_data['curr_prize_coupon_name'] if coupon_flag else u'优惠券已领完,请联系客服补发'
+					}
+				}
 				response = create_response(200)
 				response.data = {
 					'serial_count': return_data['serial_count'],
@@ -112,6 +133,9 @@ class SignParticipance(resource.Resource):
 							}
 						}
 					}
+				#记录签到历史
+				details = app_models.SignDetails(**detail_dict)
+				details.save()
 			else:
 				response.errMsg = return_data['errMsg']
 		return response.get_response()
