@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
-from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from datetime import datetime, date
 import os
 
+from apps.customerized_apps.exsurvey.exsurvey_participance import exsurveyParticipance
 from core import resource
 from core import paginator
 from core.exceptionutil import unicode_full_stack
@@ -16,7 +14,7 @@ from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 from mall import export
-from utils.string_util import hex_to_byte, byte_to_hex
+from utils.string_util import byte_to_hex
 from watchdog.utils import watchdog_error
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
@@ -118,10 +116,6 @@ class surveyParticipances_Export(resource.Resource):
 		字段顺序:序号，用户名，创建时间，选择1，选择2……问题1，问题2……快照1，快照2……
 		"""
 		export_id = request.GET.get('export_id')
-		trans2zh = {u'phone':u'手机',u'email':u'邮箱',u'name':u'姓名',u'tel':u'电话',u'qq':u'QQ号',u'job':u'职位',u'addr':u'地址'}
-
-		# app_name = surveyParticipances_Export.app.split('/')[1]
-		# excel_file_name = ('%s_id%s_%s.xls') % (app_name,export_id,datetime.now().strftime('%Y%m%d%H%m%M%S'))
 		excel_file_name = 'exsurvey_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
 		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
 		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
@@ -134,166 +128,18 @@ class surveyParticipances_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			name = request.GET.get('participant_name', '')
-			webapp_id = request.user_profile.webapp_id
-			member_ids = []
-			if name:
-				hexstr = byte_to_hex(name)
-				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-				temp_ids = [member.id for member in members]
-				member_ids = temp_ids  if temp_ids else [-1]
-			start_time = request.GET.get('start_time', '')
-			end_time = request.GET.get('end_time', '')
-			params = {'belong_to':request.GET['export_id']}
-			if member_ids:
-				params['member_id__in'] = member_ids
-			if start_time:
-				params['created_at__gte'] = start_time
-			if end_time:
-				params['created_at__lte'] = end_time
-			data = app_models.exsurveyParticipance.objects(**params).order_by('-id')
-			fields_raw = []
-			fields_pure = []
-			export_data = []
+			item_data_list = exsurveyParticipance.get_exsurveyparticipance_datas(request)
 
+			fields_raw = []
 			#from sample to get fields4excel_file
 			fields_raw.append(u'编号')
 			fields_raw.append(u'用户名')
 			fields_raw.append(u'提交时间')
 
-			fields_selec = []
-			fields_qa= []
-			fields_textlist = []
-			fields_uploadimg = []
-			fields_dropdownbox = []
-			if data:
-				sample = data[0]
-
-				sample_tm = sample['termite_data']
-
-				for item in sorted(sample_tm.keys()):
-					if sample_tm[item]['type']=='appkit.qa':
-						if item in fields_qa:
-							pass
-						else:
-							fields_qa.append(item)
-					if sample_tm[item]['type']=='appkit.selection':
-						if item in fields_selec:
-							pass
-						else:
-							fields_selec.append(item)
-					if sample_tm[item]['type'] in['appkit.textlist', 'appkit.shortcuts']:
-						if item in fields_textlist:
-							pass
-						else:
-							fields_textlist.append(item)
-					if sample_tm[item]['type']=='appkit.uploadimg':
-						if item in fields_uploadimg:
-							pass
-						else:
-							fields_uploadimg.append(item)
-					if sample_tm[item]['type']=='appkit.dropdownbox':
-						if item in fields_dropdownbox:
-							pass
-						else:
-							fields_dropdownbox.append(item)
-				fields_raw = fields_raw + fields_selec + fields_qa + fields_textlist + fields_uploadimg + fields_dropdownbox
-
-
-			for field in fields_raw:
-				if '_' in field:
-					purename = field.split('_')[1]
-					if purename in trans2zh:
-						fields_pure.append(trans2zh[purename])
-					else:
-						fields_pure.append(purename)
-				else:
-					fields_pure.append(field)
-
-			#username(member_id)
-			member_ids = []
-			for record in data:
-				member_ids.append(record['member_id'])
-			members = member_models.Member.objects.filter(id__in=member_ids)
-			member_id2member = {member.id: member for member in members}
-			#processing data
-			num = 0
-			for record in data:
-				selec =[]
-				qa = []
-				shortcuts =[]
-				uploadimg = []
-				export_record = []
-				dropdownbox = []
-
-				num = num+1
-				cur_member = member_id2member.get(record['member_id'], None)
-				if cur_member:
-					try:
-						name = cur_member.username.decode('utf8')
-					except:
-						name = cur_member.username_hexstr
-				else:
-					name = u'未知'
-				create_at = record['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-				for s in fields_selec:
-					is_not_selec_v = True
-					s_i = record[u'termite_data'][s][u'value']
-					select_r_v = []
-					select_v = ''
-					for i in s_i:
-						if s_i[i]['type'] == 'checkbox':
-							if s_i[i]['isSelect'] == True:
-								is_not_selec_v = False
-								select_r_v.append(i.split('_')[1])
-						else:
-							if s_i[i]['isSelect'] == True:
-								is_not_selec_v = False
-								select_v = i.split('_')[1]
-					if is_not_selec_v:
-						selec.append("")
-					else:
-						if select_r_v:
-							selec.append(select_r_v)
-						else:
-							selec.append(select_v)
-				for s in fields_qa:
-					s_v = record[u'termite_data'][s][u'value']
-					qa.append(s_v)
-				for s in fields_textlist:
-					s_t = record[u'termite_data'][s][u'value']
-					shortcuts.append(s_t)
-				for s in fields_uploadimg:
-					upload_v = []
-					u_v = record[u'termite_data'][s][u'value']
-					for i in u_v:
-						upload_v.append(i)
-					uploadimg.append(upload_v)
-				for s in fields_dropdownbox:
-					s_d = record[u'termite_data'][s][u'value'][u'product_name']
-					dropdownbox.append(s_d)
-
-				# don't change the order
-				export_record.append(num)
-				export_record.append(name)
-				export_record.append(create_at)
-
-				multi_selec = []
-				for item in selec:
-					multi_selec.append(item)
-				for sele in multi_selec:
-					export_record.append(sele)
-
-				for item in qa:
-					export_record.append(item)
-				for item in shortcuts:
-					export_record.append(item)
-				for item in uploadimg:
-					export_record.append(item)
-				for item in dropdownbox:
-					export_record.append(item)
-
-				export_data.append(export_record)
+			if item_data_list:
+				sample_datas = item_data_list[0]['items']
+				for sample_data in sample_datas:
+					fields_raw.append(sample_data['item_name'])
 
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
@@ -302,38 +148,37 @@ class surveyParticipances_Export(resource.Resource):
 
 			##write fields
 			row = col = 0
-			for h in fields_pure:
+			for h in fields_raw:
 				ws.write(row,col,h)
 				col += 1
 
 			##write data
-			if export_data:
-				row = 1
-				for record in export_data:
-					lens = len(record)
-					row_l = []
-					for col in range(lens):
-						record_col= record[col]
-						if type(record_col)==list:
-							row_l.append(len(record_col))
-							n = 0
-							if record_col:
-								for data in record_col:
-									ws.write(row+n,col,data)
-									n += 1
+			if item_data_list:
+				row = num = 0
+				for item_data in item_data_list:
+					row += 1
+					num += 1
+					ws.write(row,0,num)
+					ws.write(row,1,item_data['name'])
+					ws.write(row,2,item_data['created_at'])
+					col = 3
+					items = item_data['items']
+					add_row_num = []
+					for item in items:
+						item_values = item['item_value']
+						add_row_list_num = 0
+						if type(item_values) == list and len(item_values) > 1:
+							for item_value in item_values:
+								ws.write(row+add_row_list_num,col,item_value)
+								add_row_list_num += 1
+						else:
+							if item_values:
+								ws.write(row,col,item_values)
 							else:
-								ws.write(row+n,col,"")
-								n += 1
-						else:
-							ws.write(row,col,record[col])
-
-					if row_l:
-						if max(row_l):
-							row = row + max(row_l)
-						else:
-							row = row + 1
-					else:
-						row += 1
+								ws.write(row,col,'')
+						add_row_num.append(add_row_list_num)
+						col += 1
+					row = row + max(add_row_num)
 				try:
 					wb.save(export_file_path)
 				except Exception, e:

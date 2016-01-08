@@ -1356,7 +1356,7 @@ def step_impl(context,webapp_owner_name,survey_name):
 
 	for appkit in result_list:
 		if appkit['type'] == 'appkit.qa':
-			appkit_title = appkit['title_']
+			appkit_title = appkit['complete_title']
 			appkit_url ="/apps/survey/api/question/?id={}&question_title={}".format(survey_id,appkit_title)
 			appkit_url = bdd_util.nginx(appkit_url)
 			appkit_response = context.client.get(appkit_url)
@@ -1364,7 +1364,7 @@ def step_impl(context,webapp_owner_name,survey_name):
 			appkit['values'] = appkit_list
 
 		elif appkit['type'] == 'appkit.uploadimg':
-			appkit_title = appkit['title_']
+			appkit_title = appkit['complete_title']
 			appkit_url ="/apps/survey/api/question/?id={}&question_title={}".format(survey_id,appkit_title)
 			appkit_url = bdd_util.nginx(appkit_url)
 			appkit_response = context.client.get(appkit_url)
@@ -1393,7 +1393,7 @@ def step_impl(context,webapp_owner_name,survey_name):
 			if appkit['title'] == ex_title:
 				if appkit['type'] == 'appkit.qa':
 					tmp = {}
-					tmp['participate_count'] = appkit['count']
+					tmp['participate_count'] = appkit['title_valid_count']
 					tmp['title'] = appkit['title']
 					tmp['type'] = appkit['title_type']
 					tmp['values'] = []
@@ -1406,7 +1406,7 @@ def step_impl(context,webapp_owner_name,survey_name):
 
 				elif appkit['type'] == 'appkit.uploadimg':
 					tmp = {}
-					tmp['participate_count'] = appkit['count']
+					tmp['participate_count'] = appkit['title_valid_count']
 					tmp['title'] = appkit['title']
 					tmp['type'] = appkit['title_type']
 					tmp['values'] = []
@@ -1423,7 +1423,7 @@ def step_impl(context,webapp_owner_name,survey_name):
 					actual.append(tmp)
 				elif appkit['type'] == 'appkit.selection':
 					tmp = {}
-					tmp['participate_count'] = appkit['count']
+					tmp['participate_count'] = appkit['title_valid_count']
 					tmp['title'] = appkit['title']
 					tmp['type'] = appkit['title_type']
 					tmp['values'] = []

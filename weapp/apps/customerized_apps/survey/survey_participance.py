@@ -1,24 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import json
-from datetime import datetime
-
-from django.http import HttpResponseRedirect, HttpResponse
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.db.models import F
 from django.contrib.auth.decorators import login_required
-
+from apps.customerized_apps.survey.m_survey import Msurvey
 from core import resource
-from core import paginator
 from core.jsonresponse import create_response
-
 import models as app_models
-import export
 from apps import request_util
 from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
-from modules.member import models as member_models
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -41,57 +31,13 @@ class surveyParticipance(resource.Resource):
 		"""
 		响应GET api
 		"""
+		items = []
 		if 'id' in request.GET:
-			survey_participance = app_models.surveyParticipance.objects.get(id=request.GET['id'])
-			members = member_models.Member.objects.filter(id=survey_participance.member_id)
-			if members >0:
-				member = members[0]
-				if member.is_subscribed:
-					webapp_user_name = member.username_for_html
-				else:
-					webapp_user_name = u"非会员"
-			termite_data = survey_participance.termite_data
-			item_data_list = []
-
-			for k in sorted(termite_data.keys()):
-				v = termite_data[k]
-				pureName = k.split('_')[1]
-				item_data = {}
-				if v['type'] in['appkit.textlist', 'appkit.shortcuts']:
-					item_data['type'] = v['type']
-					if pureName in TEXT_NAME:#判断是否是自定义的填写项
-						item_data['item_name'] = TEXT_NAME[pureName]
-					else:
-						item_data['item_name'] = pureName
-					item_data['item_value'] = v['value']
-				elif v['type'] == 'appkit.qa':
-					item_data['type'] = v['type']
-					item_data['item_name'] = pureName
-					item_data['item_value'] = v['value']
-				elif v['type'] == 'appkit.selection':
-					item_data['type'] = v['type']
-					item_data['item_name'] = pureName
-					item_data['item_value'] = []
-					for sub_k, sub_v in sorted(v['value'].items()):
-						if sub_v['isSelect']:
-							item_data['item_value'].append(sub_k.split('_')[1])
-				elif v['type'] == 'appkit.uploadimg':
-					item_data['type'] = []
-					item_data['item_name'] = pureName
-					item_data['item_value'] = v['value']
-				item_data_list.append(item_data)
-		else:
-			survey_participance = None
-			webapp_user_name = ''
-			item_data_list = {}
+			item_data_list = Msurvey.get_surveyparticipance_datas(request)
+			if item_data_list:
+				items = item_data_list[0]
 		response = create_response(200)
-		response.data = {
-			'webapp_user_name': webapp_user_name,
-			'items': item_data_list,
-			'member_id': survey_participance.member_id if survey_participance else '',
-			'created_at' : survey_participance.created_at.strftime("%Y-%m-%d %H:%M:%S") if survey_participance else '',
-			'id': str(survey_participance.id) if survey_participance else ''
-		}
+		response.data = items
 		return response.get_response()
 	
 	def api_put(request):
@@ -141,4 +87,3 @@ class surveyParticipance(resource.Resource):
 			response = create_response(200)
 			response.data = data
 			return response.get_response()
-

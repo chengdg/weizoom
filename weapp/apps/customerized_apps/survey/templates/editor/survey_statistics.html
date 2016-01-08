@@ -128,7 +128,7 @@
         {% for title in titles %}
             <div class="xui-i-tableHeader">
                 <span>{{ forloop.counter }}、{{ title.title }}（{{ title.title_type }}）</span>
-                <span class="fr">有效参与人数:{{ title.count }} 人</span>
+                <span class="fr">有效参与人数:{{ title.title_valid_count }} 人</span>
             </div>
             {% ifequal title.type 'appkit.selection' %}
                 <table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder mb10">
@@ -159,7 +159,7 @@
                     data-ui-role="advanced-table"
                     data-app="apps/survey"
                     data-resource="question"
-                    data-args='{"id": "{{survey_id}}","question_title":"{{title.title_}}"}'
+                    data-args='{"id": "{{survey_id}}","question_title":"{{title.complete_title}}"}'
                     data-template-id="#question_table"
                     data-enable-paginator="true"
                     data-enable-sort="false"
@@ -214,7 +214,7 @@
             method: 'get',
             app: 'apps/survey',
             resource: 'survey_statistics-export',
-            args: {'export_id':export_id},
+            args: {'id':export_id},
             success: function(resp){
                 if(resp.code == 200){
                     $('#export_href').prop({

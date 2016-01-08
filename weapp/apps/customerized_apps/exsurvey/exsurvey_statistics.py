@@ -19,7 +19,7 @@ from mall import export
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
 
-class surveyStatistics(resource.Resource):
+class exsurveyStatistics(resource.Resource):
 	app = 'apps/exsurvey'
 	resource = 'exsurvey_statistics'
 
@@ -33,103 +33,16 @@ class surveyStatistics(resource.Resource):
 			all_participances = app_models.exsurveyParticipance.objects(belong_to=survey_id)
 			total_participance = all_participances.count()
 
-			q_vote ={}
-			result_list = []
+			all_participances = exsurveyStatistics.get_exsurvey_title_select_datas(request)
 
 			for participance in all_participances:
-				termite_data = participance.termite_data
-				for k in sorted(termite_data.keys()):
-					value = termite_data[k]
-					if value['type'] == 'appkit.selection':
-						if not q_vote.has_key(k):
-							q_vote[k] = {
-								'type': 'appkit.selection',
-								'value': [value['value']]
-							}
-						else:
-							q_vote[k]['value'].append(value['value'])
-					if value['type'] == 'appkit.qa':
-						if value['value']:
-							if not q_vote.has_key(k):
-								q_vote[k] = {
-									'type': 'appkit.qa',
-									'value': [value['value']],
-								}
-							else:
-								q_vote[k]['value'].append(value['value'])
-					if value['type'] == 'appkit.uploadimg':
-						if value['value']:
-							if not q_vote.has_key(k):
-								q_vote[k] = {
-									'type': 'appkit.uploadimg',
-									'value': [value['value']],
-								}
-							else:
-								q_vote[k]['value'].append(value['value'])
-					if value['type'] == 'appkit.dropdownbox':
-						if value['value']:
-							if not q_vote.has_key(k):
-								q_vote[k] = {
-									'type': 'appkit.dropdownbox',
-									'value': [value['value']['product_name']],
-								}
-							else:
-								q_vote[k]['value'].append(value['value']['product_name'])
-
-			for k in sorted(q_vote.keys()):
-				print q_vote[k]
-				a_isSelect = {}
-				result = {}
-				count = len(q_vote[k]['value'])
-				total_count = 0
-				value_list = []
-				v_a = {}
-				title_type = u''
-				for title_value in q_vote[k]['value']:
-					if q_vote[k]['type'] == 'appkit.selection':
-						v_a = title_value
-						is_select =False
-						for a_k,a_v in title_value.items():
-							if not a_isSelect.has_key(a_k):
-								a_isSelect[a_k] = 0
-							if a_v['isSelect'] == True:
-								is_select = True
-								a_isSelect[a_k] += 1
-						if is_select:
-							total_count += 1
-					if q_vote[k]['type'] == 'appkit.qa':
-						type_name = u'问答'
-					if q_vote[k]['type'] == 'appkit.uploadimg':
-						type_name = u'上传图片'
-					if q_vote[k]['type'] == 'appkit.dropdownbox':
-						type_name = u'选项'
-
-				for a_k in sorted(v_a.keys()):
-					value ={}
-					value['name'] = a_k.split('_')[1]
-					title_type =  v_a[a_k]['type']
-					value['count'] = a_isSelect[a_k]
-					value['per'] =  '%d%s' % (a_isSelect[a_k]*100/float(total_count) if total_count else 0,'%')
-					value_list.append(value)
-				title_name = k.split('_')[1]
-				result['title'] = title_name
-				if title_type == 'radio':
-					type_name = u'单选'
-				elif title_type == 'checkbox':
-					type_name = u'多选'
-
-				result['title_type'] = type_name
-				result['title_'] = k
-				result['count'] = total_count if q_vote[k]['type'] == 'appkit.selection' else count
-				question_list = []
-				result['values'] = value_list if q_vote[k]['type'] == 'appkit.selection' else question_list
-				result['type'] = q_vote[k]['type']
-				result_list.append(result)
+				if participance['type'] == 'appkit.textlist':
+					all_participances.remove(participance)
 
 			project_id = 'new_app:exsurvey:%s' % request.GET.get('related_page_id', 0)
 		else:
 			total_participance = 0
-			result_list = None
+			all_participances = None
 			project_id = 'new_app:exsurvey:0'
 			survey_id = 0
 
@@ -138,7 +51,7 @@ class surveyStatistics(resource.Resource):
 			'second_navs': export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': export.MALL_APPS_SECOND_NAV,
             'third_nav_name': export.MALL_APPS_FEEDBACK_NAV,
-			'titles': result_list,
+			'titles': all_participances,
 			'total_participance': total_participance,
 			'project_id': project_id,
 			'survey_id':survey_id
@@ -146,6 +59,95 @@ class surveyStatistics(resource.Resource):
 		})
 
 		return render_to_response('exsurvey/templates/editor/exsurvey_statistics.html', c)
+
+	@staticmethod
+	def get_exsurvey_title_select_datas(request):
+		all_survey_participances = app_models.exsurveyParticipance.objects(belong_to=request.GET['id'])
+		all_title_select_list = []
+		select_title2itemCount = {}
+		title_valid_dict = {}
+		total_title_valid_dict ={}
+		title_type_dict = {}
+		title_image_dict = {}
+		title_select_type_dict = {}
+		member_dict = {}
+		for p in all_survey_participances:
+			for title, select_datas in p.termite_data.items():
+				title_type = u''
+				if select_datas['type'] =='appkit.selection':
+					is_Select = False
+					select_data_value = select_datas['value']
+					for select_title in sorted(select_data_value.keys()):
+						value = select_data_value[select_title]
+						if value['isSelect']:
+							is_Select = True
+						if select_title2itemCount.has_key(title):
+							if select_title2itemCount[title].has_key(select_title):
+								select_title2itemCount[title][select_title] += 1 if value['isSelect'] else 0
+							else:
+								select_title2itemCount[title][select_title] = 1 if value['isSelect'] else 0
+						else:
+							select_title2itemCount[title] = {}
+							select_title2itemCount[title][select_title] = 1 if value['isSelect'] else 0
+						title_type = value['type']
+					if is_Select:
+						if total_title_valid_dict.has_key(title):
+							total_title_valid_dict[title] += 1
+						else:
+							total_title_valid_dict[title] = 1
+						if title_valid_dict.has_key(title):
+							title_valid_dict[title] += 1
+						else:
+							title_valid_dict[title] = 1
+					else:
+						if not total_title_valid_dict.has_key(title):
+							total_title_valid_dict[title] = 0
+						if not title_valid_dict.has_key(title):
+							title_valid_dict[title] = 0
+					title_select_type_dict[title] = title_type
+				if select_datas['type']  in ['appkit.textlist', 'appkit.shortcuts','appkit.uploadimg','appkit.qa','appkit.dropdownbox']:
+					if not select_title2itemCount.has_key(title):
+						select_title2itemCount[title] = [{
+							'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+							'value': select_datas['value']
+						}]
+					else:
+						select_title2itemCount[title].append({
+							'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+							'value': select_datas['value']
+						})
+				title_type_dict[title] = select_datas['type']
+		for title in sorted(select_title2itemCount.keys()):
+			single_title_dict = {}
+			single_title_dict['title'] = title.split('_')[1]
+			single_title_dict['type'] = title_type_dict[title]
+			single_title_dict['values'] = []
+			if title_type_dict[title] == 'appkit.selection':
+				single_title_dict['title_valid_count'] = title_valid_dict[title]
+				single_title_dict['title_type'] = u'单选' if title_select_type_dict[title] == 'radio' else u'多选'
+				for select_title in sorted(select_title2itemCount[title].keys()):
+					item_value = select_title2itemCount[title][select_title]
+					single_item_value = {}
+					single_item_value['name'] = select_title.split('_')[1]
+					single_item_value['count'] = item_value
+					if title_image_dict.has_key(select_title):
+						single_item_value['image'] = title_image_dict[select_title]
+					single_item_value['per'] = '%d%s' % (item_value / float(total_title_valid_dict[title]) * 100 if total_title_valid_dict[title] else 0, '%')
+					single_title_dict['values'].append(single_item_value)
+			else:
+				type_name = u''
+				if title_type_dict[title] == 'appkit.qa':
+					type_name= u'问答'
+				elif title_type_dict[title] == 'appkit.uploadimg':
+					type_name= u'上传图片'
+				elif title_type_dict[title] == 'appkit.dropdownbox':
+					type_name= u'选项'
+				single_title_dict['title_type'] = type_name
+				single_title_dict['title_valid_count'] = len(select_title2itemCount[title])
+				single_title_dict['complete_title'] = title
+				single_title_dict['values'] = select_title2itemCount[title]
+			all_title_select_list.append(single_title_dict)
+		return  all_title_select_list
 
 class question(resource.Resource):
 	app = 'apps/exsurvey'
@@ -210,7 +212,7 @@ class question(resource.Resource):
 		response.data = response_data
 		return response.get_response()
 
-class surveyStatistics_Export(resource.Resource):
+class exsurveyStatistics_Export(resource.Resource):
 	'''
 	批量导出
 	'''
@@ -240,153 +242,98 @@ class surveyStatistics_Export(resource.Resource):
 		#Excel Process Part
 		try:
 			import xlwt
-			data = app_models.exsurveyParticipance.objects(belong_to=export_id)
-			total = data.count()
-			# member_id2termite_data={}
-			# for item in data:
-			# 	if item['member_id'] not in member_id2termite_data:
-			# 		member_id2termite_data[item['member_id']] = {'created_at':item['created_at'],'termite_data':item['termite_data']}
-
-			#select sheet
-			select_data = {}
-			select_static ={}
-			qa_static = {}
-			uploadimg_static = {}
-			dropdownbox_static = {}
-			for item in data:
-				time = item['created_at']
-				for termite in item['termite_data']:
-					termite_dic = item['termite_data'][termite]
-					if termite_dic['type']=='appkit.selection':
-						if termite not in select_data:
-							select_data[termite] = [termite_dic['value']]
-						else:
-							select_data[termite].append(termite_dic['value'])
-					if termite_dic['type']=='appkit.qa':
-						if termite_dic['value']:
-							if termite not in qa_static:
-								qa_static[termite]=[{'created_at':time,'answer':termite_dic['value']}]
-							else:
-								qa_static[termite].append({'created_at':time,'answer':termite_dic['value']})
-					if termite_dic['type']=='appkit.uploadimg':
-						if termite_dic['value']:
-							if termite not in uploadimg_static:
-								uploadimg_static[termite]=[{'created_at':time,'url':termite_dic['value']}]
-							else:
-								uploadimg_static[termite].append({'created_at':time,'url':termite_dic['value']})
-					if termite_dic['type']=='appkit.dropdownbox':
-						if termite_dic['value']:
-							if termite not in dropdownbox_static:
-								dropdownbox_static[termite]=[{'created_at':time,'product_name':termite_dic['value']['product_name']}]
-							else:
-								dropdownbox_static[termite].append({'created_at':time,'product_name':termite_dic['value']['product_name']})
-
-			#select-data-processing
-			title_valid_dict = {}
-			for select in select_data:
-				for s_list in select_data[select]:
-					is_valid =False
-					for s in s_list:
-						if select not in select_static:
-							select_static[select]={}
-						if s not in select_static[select]:
-							select_static[select][s]  = 0
-						if s_list[s]['isSelect'] == True:
-							select_static[select][s] += 1
-							is_valid =True
-					if is_valid:
-						if title_valid_dict.has_key(select):
-							title_valid_dict[select] += 1
-						else:
-							title_valid_dict[select] = 1
-					else:
-						if not title_valid_dict.has_key(select):
-							title_valid_dict[select] = 0
+			all_participances = exsurveyStatistics.get_exsurvey_title_select_datas(request)
 			#workbook/sheet
 			wb = xlwt.Workbook(encoding='utf-8')
 
-			#select_sheet
-			if select_static:
-				ws = wb.add_sheet(u'选择题')
-				header_style = xlwt.XFStyle()
-				select_num = 0
-				row = col =0
-				for s in sorted(select_static.keys()):
-					select_num += 1
-					ws.write(row,col,'%d.'%select_num+s.split('_')[1]+u'(有效参与人数%d人)'% title_valid_dict[s])
-					ws.write(row,col+1,u'参与人数/百分百')
-					row += 1
-					all_select_num = 0
-					s_i_num = 0
-					for s_i in sorted(select_static[s].keys()):
-						s_num = select_static[s][s_i]
-						if s_num :
-							all_select_num += s_num
-					for s_i in sorted(select_static[s].keys()):
-						ws.write(row,col,s_i.split('_')[1])
-						s_num = select_static[s][s_i]
-						per = s_num*1.0/title_valid_dict[s]*100 if title_valid_dict[s] else 0
-						ws.write(row,col+1,u'%d人/%.1f%%'%(s_num,per))
-						row += 1
-						s_i_num += 1
-					ws.write(row,col,u'')
-					ws.write(row,col+1,u'')
-					row += 1
-					ws.write(row,col,u'')
-					ws.write(row,col+1,u'')
-					row += 1
+			#add_sheet
+			if all_participances:
+				ws_select = None
+				ws_image = None
+				ws_qa = None
+				sheet_types = set()
+				for participance in all_participances:
+					if participance['type'] in ['appkit.selection','appkit.uploadimg','appkit.qa','appkit.dropdownbox']:
+						sheet_types.add(participance['type'])
+					else:
+						all_participances.remove(participance)
+				if sheet_types:
+					for sheet in sheet_types:
+						if sheet == 'appkit.selection':
+							ws_select = wb.add_sheet(u'选择题')
+						elif sheet == 'appkit.uploadimg':
+							ws_image = wb.add_sheet(u'上传图片')
+						elif sheet == 'appkit.qa':
+							ws_qa = wb.add_sheet(u'问答题')
+						else:
+							ws_dropdownbox = wb.add_sheet(u'选项')
+				select_num = image_num = qa_num = dropdownbox_num = 0
+				select_row = select_col = image_row = imge_col = qa_row = qa_col = dropdownbox_row = dropdownbox_col = 0
+				for participance in all_participances:
+					if participance['type'] == 'appkit.selection':
+						select_num += 1
+						ws_select.write(select_row,select_col,'%d.'%select_num+participance['title']+u'(有效参与人数%d人)'% participance['title_valid_count'])
+						is_top_tilte = False
+						for data_value in participance['values']:
+							if not is_top_tilte:
+								ws_select.write(select_row,select_col+1,u'参与人数/百分百')
+								is_top_tilte = True
+							select_row += 1
+							ws_select.write(select_row,select_col,data_value['name'])
+							ws_select.write(select_row,select_col+1,'%d人/%s' % (data_value['count'],data_value['per']))
+						select_row += 1
+						ws_select.write(select_row,select_col,u'')
+						ws_select.write(select_row,select_col+1,u'')
+						select_row += 1
+					elif participance['type'] == 'appkit.uploadimg':
+						image_num += 1
+						ws_image.write(image_row,imge_col,u'上传时间')
+						is_top_tilte = False
+						for data_value in participance['values']:
+							if not is_top_tilte:
+								ws_image.write(image_row,imge_col+1,participance['title']+u'(有效参与人数%d人)'% participance['title_valid_count'])
+								is_top_tilte = True
+							image_row += 1
+							ws_image.write(image_row,imge_col,data_value['created_at'])
+							for value in data_value['value']:
+								ws_image.write(image_row,imge_col+1,value)
+								image_row += 1
+							image_row -= 1
 
-			#qa_sheet
-			if qa_static:
-				qa_num = 0
-				for q in sorted(qa_static.keys()):
-					qa_num += 1
-					row = col = 0
-					ws = wb.add_sheet(u'问题%d'%qa_num)
-					header_style = xlwt.XFStyle()
-
-					ws.write(row,col,u'提交时间')
-					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% len(qa_static[q]))
-					for item in qa_static[q]:
-						row +=1
-						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
-						ws.write(row,col+1,item['answer'])
-
-			#uploadimg_sheet
-			if uploadimg_static:
-				uploadimg_num = 0
-				for u in sorted(uploadimg_static.keys()):
-					uploadimg_num += 1
-					row = col = 0
-					ws = wb.add_sheet(u'图片%d'%uploadimg_num)
-					header_style = xlwt.XFStyle()
-
-					ws.write(row,col,u'上传时间')
-					ws.write(row,col+1,u.split('_')[1]+u'(有效参与人数%d)'% len(uploadimg_static[u]))
-
-					for item in uploadimg_static[u]:
-						row +=1
-						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
-						for i in item['url']:
-							if len(item['url'])>1:
-								ws.write(row,col+1,i)
-								row +=1
-							else:
-								ws.write(row,col+1,i)
-			if dropdownbox_static:
-				dropdownbox_num = 0
-				for q in sorted(dropdownbox_static.keys()):
-					dropdownbox_num += 1
-					row = col = 0
-					ws = wb.add_sheet(u'选项%d'%dropdownbox_num)
-					header_style = xlwt.XFStyle()
-
-					ws.write(row,col,u'提交时间')
-					ws.write(row,col+1,q.split('_')[1]+u'(有效参与人数%d)'% len(dropdownbox_static[q]))
-					for item in dropdownbox_static[q]:
-						row +=1
-						ws.write(row,col,item['created_at'].strftime("%Y/%m/%d %H:%M"))
-						ws.write(row,col+1,item['product_name'])
+						image_row += 1
+						ws_image.write(image_row,imge_col,u'')
+						ws_image.write(image_row,imge_col+1,u'')
+						image_row += 1
+					elif participance['type'] == 'appkit.qa':
+						qa_num += 1
+						ws_qa.write(qa_row,qa_col,u'提交时间')
+						is_top_tilte = False
+						for data_value in participance['values']:
+							if not is_top_tilte:
+								ws_qa.write(qa_row,qa_col+1,participance['title']+u'(有效参与人数%d人)'% participance['title_valid_count'])
+								is_top_tilte = True
+							qa_row += 1
+							ws_qa.write(qa_row,qa_col,data_value['created_at'])
+							ws_qa.write(qa_row,qa_col+1,data_value['value'])
+						qa_row += 1
+						ws_qa.write(qa_row,qa_col,u'')
+						ws_qa.write(qa_row,qa_col+1,u'')
+						qa_row += 1
+					else:
+						dropdownbox_num += 1
+						ws_dropdownbox.write(dropdownbox_row,dropdownbox_col,u'提交时间')
+						is_top_tilte = False
+						for data_value in participance['values']:
+							if not is_top_tilte:
+								ws_dropdownbox.write(dropdownbox_row,dropdownbox_col+1,participance['title']+u'(有效参与人数%d人)'% participance['title_valid_count'])
+								is_top_tilte = True
+							dropdownbox_row += 1
+							ws_dropdownbox.write(dropdownbox_row,dropdownbox_col,data_value['created_at'])
+							ws_dropdownbox.write(dropdownbox_row,dropdownbox_col+1,data_value['value']['product_name'])
+						dropdownbox_row += 1
+						ws_dropdownbox.write(dropdownbox_row,dropdownbox_col,u'')
+						ws_dropdownbox.write(dropdownbox_row,dropdownbox_col+1,u'')
+						dropdownbox_row += 1
 
 			try:
 				wb.save(export_file_path)
