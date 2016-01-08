@@ -275,6 +275,11 @@
         };
         ResultDialog.prototype.close = function(){
             //this.$mask.hide();
+            $('.wui-lotterydescription').find('.wui-i-body').find(".xa-lottery-unit-"+prizeIndex).css({
+                'transform': 'scale(1, 1)',
+                '-webkit-transform': 'scale(1, 1)',
+                'z-index': '0'
+            });
             mask('hide');
             this.$el.hide();
         };
@@ -319,21 +324,23 @@
         Roulette.prototype.move = function(){
             //lottery
             var $lottery = this.$lottery;
-            $lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
-            //$lottery.find(".xa-lottery-unit-"+this.index).css({
-            //    'transform': 'scale(1, 1)',
-            //    'z-index': '0'
-            //});
+            //$lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
+            $lottery.find(".xa-lottery-unit-"+this.index).css({
+                'transform': 'scale(1, 1)',
+                '-webkit-transform': 'scale(1, 1)',
+                'z-index': '0'
+            });
             this.index++;
             if(this.index>=this.count){
                 this.index = 0;
                 this.times ++;
             }
-            $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
-            //$lottery.find(".xa-lottery-unit-"+this.index).css({
-            //    'transform': 'scale(1.2, 1.2)',
-            //    'z-index': '1'
-            //});
+            //$lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+            $lottery.find(".xa-lottery-unit-"+this.index).css({
+                'transform': 'scale(1.2, 1.2)',
+                '-webkit-transform': 'scale(1.2, 1.2)',
+                'z-index': '1'
+            });
             //lights
             var light_index = this.light_index;
             $lottery.find(".xa-circle-unit-"+light_index).removeClass("active");
@@ -362,6 +369,7 @@
                     this.prize = -1;
                     this.speed = 100;
                     this.isRolling = false;
+                    prizeIndex = this.index;
                     resultDialog = resultDialog || new ResultDialog();
                     resultDialog.render({
                         'prize_type': this.retuenData.prize_type,
@@ -380,7 +388,7 @@
         };
     </script>
     <script type="text/javascript">
-        var lottery_status, can_play_count, resultDialog, activity_status;
+        var lottery_status, can_play_count, resultDialog, activity_status, prizeIndex;
         if(!W.isPC){
             $(function(){
                 getDynamicData();
@@ -470,7 +478,7 @@
             activity_status = member_info.activity_status;
             W.isMember = member_info.isMember;
             //可参与次数
-            var can_play_count = member_info.can_play_count;
+            can_play_count = member_info.can_play_count;
             if(can_play_count == -1){
                 $('.wui-lotterydescription .xa-header').addClass('wui-lotterydescription-hide');
             }else{

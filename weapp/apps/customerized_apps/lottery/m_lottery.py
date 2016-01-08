@@ -86,12 +86,10 @@ class Mlottery(resource.Resource):
 		record_id = request.GET.get('id',None)
 		participance_data_count = 0
 		has_prize = False
-
 		lottery_status = False
 		can_play_count = 0
 		member = request.member
-		member_id = member.id
-		isMember = member.is_subscribed
+
 		response = create_response(500)
 
 		if not record_id or not member:
@@ -104,6 +102,8 @@ class Mlottery(resource.Resource):
 			return response.get_response()
 
 		record = record.first()
+		member_id = member.id
+		isMember = member.is_subscribed
 		activity_status, record = update_lottery_status(record)
 
 		lottery_participance = app_models.lotteryParticipance.objects(belong_to=record_id, member_id=member_id)
