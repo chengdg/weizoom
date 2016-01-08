@@ -10,17 +10,6 @@
 		color: #8F8F8F;
 	}
 
-    /*.wui-mask{
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: none;
-        opacity: 0.8 !important;
-        background: black;
-        height: 100%;
-        width: 100%;
-    } */
-
     .wui-resultDialog{
         background: url("/termite_static/img/component/lottery/roulette_mobile_dialog_bg.png") no-repeat;
         background-size: 100% 100%;
@@ -164,12 +153,7 @@
             this.$entitySubmitBtn.on('click', function(){
                 var tel = that.$entityContent.find('input').val().trim();
                 if(!/^0{0,1}(13[0-9]|15[0-9]|17[0-9]|18[0-9])[0-9]{8}$/g.test(tel)){
-                    $('body').alert({
-                        isShow: true,
-                        isSlide: false,
-                        info: '请输入正确的手机号~',
-                        speed: 2000
-                    });
+                    wuiAlert('请输入正确的手机号~');
                     return false;
                 }
                  W.getApi().call({
@@ -189,12 +173,7 @@
                             that.$closeBtn.show();
                         },
                         error: function(error){
-                            $('body').alert({
-                                isShow: true,
-                                isSlide: false,
-                                info: '请重试~',
-                                speed: 3000
-                            });
+                            wuiAlert('请重试~');
                         }
                     });
             });
@@ -275,11 +254,11 @@
         };
         ResultDialog.prototype.close = function(){
             //this.$mask.hide();
-            $('.wui-lotterydescription').find('.wui-i-body').find(".xa-lottery-unit-"+prizeIndex).css({
-                'transform': 'scale(1, 1)',
-                '-webkit-transform': 'scale(1, 1)',
-                'z-index': '0'
-            });
+            //$('.wui-lotterydescription').find('.wui-i-body').find(".xa-lottery-unit-"+prizeIndex).css({
+             //   'transform': 'scale(1, 1)',
+             //   '-webkit-transform': 'scale(1, 1)',
+              //  'z-index': '0'
+            //});
             mask('hide');
             this.$el.hide();
         };
@@ -324,23 +303,23 @@
         Roulette.prototype.move = function(){
             //lottery
             var $lottery = this.$lottery;
-            //$lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
-            $lottery.find(".xa-lottery-unit-"+this.index).css({
-                'transform': 'scale(1, 1)',
-                '-webkit-transform': 'scale(1, 1)',
-                'z-index': '0'
-            });
+            $lottery.find(".xa-lottery-unit-"+this.index).removeClass("active");
+            //$lottery.find(".xa-lottery-unit-"+this.index).css({
+             //   'transform': 'scale(1, 1)',
+             //   '-webkit-transform': 'scale(1, 1)',
+             //   'z-index': '0'
+            //});
             this.index++;
             if(this.index>=this.count){
                 this.index = 0;
                 this.times ++;
             }
-            //$lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
-            $lottery.find(".xa-lottery-unit-"+this.index).css({
-                'transform': 'scale(1.2, 1.2)',
-                '-webkit-transform': 'scale(1.2, 1.2)',
-                'z-index': '1'
-            });
+            $lottery.find(".xa-lottery-unit-"+this.index).addClass("active");
+            //$lottery.find(".xa-lottery-unit-"+this.index).css({
+            //    'transform': 'scale(1.2, 1.2)',
+             //   '-webkit-transform': 'scale(1.2, 1.2)',
+             //   'z-index': '999'
+            //});
             //lights
             var light_index = this.light_index;
             $lottery.find(".xa-circle-unit-"+light_index).removeClass("active");
@@ -433,12 +412,7 @@
                         },
                         error: function(error){
                             $that.removeClass('xa-lottery-go-to');
-                            $('body').alert({
-                                isShow: true,
-                                isSlide: false,
-                                info: error.errMsg,
-                                speed: 3000
-                            });
+                            wuiAlert(error.errMsg);
                         }
                     });
                 }
