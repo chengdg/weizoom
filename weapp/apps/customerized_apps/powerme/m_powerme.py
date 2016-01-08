@@ -219,7 +219,6 @@ class MPowerMe(resource.Resource):
 			#从redis缓存获取静态页面
 			cache_data = GET_CACHE(cache_key)
 			if cache_data:
-				#存入全局变量
 				print 'redis---return'
 				return HttpResponse(cache_data)
 			

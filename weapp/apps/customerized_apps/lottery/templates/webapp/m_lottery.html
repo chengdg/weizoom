@@ -1,4 +1,4 @@
-{% extends "webapp_content_base_v4.html" %}
+{% extends "apps_base.html" %}
 
 {% block css %}
 <style type="text/css">
@@ -10,7 +10,7 @@
 		color: #8F8F8F;
 	}
 
-    .wui-mask{
+    /*.wui-mask{
         position: fixed;
         top: 0;
         left: 0;
@@ -19,7 +19,7 @@
         background: black;
         height: 100%;
         width: 100%;
-    }
+    } */
 
     .wui-resultDialog{
         background: url("/termite_static/img/component/lottery/roulette_mobile_dialog_bg.png") no-repeat;
@@ -30,7 +30,7 @@
         left: 5%;
         width: 90%;
         border-radius: 5px;
-        z-index: 2;
+        z-index: 10001;
     }
     .wui-resultDialog>.wui-i-header>.wui-i-title{
         margin-top: 30px;
@@ -132,11 +132,6 @@
 
 {% block js %}
     <script>
-        var parentUrl = document.referrer;
-        console.log(parentUrl);
-        if(parentUrl && parentUrl.indexOf('user_center')>0){
-            window.location.replace(window.location.href);
-        }
         function afterStop(data){
             //更新可玩次数和剩余积分
             can_play_count = data.can_play_count;
@@ -216,11 +211,11 @@
 
             });
             //初始化result dialog
-            this.$mask = $('<div class="wui-mask"></div>');
-            this.$mask.on('click', function(){
-                that.close();
-            });
-            $('body').append(this.$mask);
+            //this.$mask = $('<div class="wui-mask"></div>');
+            //this.$mask.on('click', function(){
+            //    that.close();
+            //});
+            //$('body').append(this.$mask);
             this.$el.find('.xa-closeDialog').on('click',function(){
                 that.close();
             });
@@ -270,16 +265,17 @@
             var that = this;
             if(delay){
                 setTimeout(function(){
-                    that.$mask.show();
+                    mask('show');
                     that.$el.show();
                 }, 1000);
             }else{
-                that.$mask.show();
+                mask('show');
                 that.$el.show();
             }
         };
         ResultDialog.prototype.close = function(){
-            this.$mask.hide();
+            //this.$mask.hide();
+            mask('hide');
             this.$el.hide();
         };
 
@@ -385,15 +381,14 @@
     </script>
     <script type="text/javascript">
         var lottery_status, can_play_count, resultDialog, activity_status;
-    if(!W.isPC){
-        $(function(){
-            //隐藏参与活动按钮
-            $('.xa-submitButtonContainer').hide();
+        if(!W.isPC){
+            $(function(){
+                getDynamicData();
+            });
+        }
+
+        function initLottery(){
             resultDialog = new ResultDialog();
-            //获取中奖历史和剩余积分
-            getHistory();
-            lottery_status = '{{ lottery_status }}' == 'True' ? true : false;
-            activity_status = '{{ activity_status }}';
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             var lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
@@ -440,50 +435,66 @@
                     });
                 }
             });
-        });
-    }
-        function getHistory(){
-            can_play_count = parseInt('{{ can_play_count }}');
+        }
+        function getDynamicData(){
+            loadingStatus(true);
+            W.getApi().call({
+                app: 'm/apps/lottery',
+                resource: 'm_lottery',
+                method: 'get',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    id: W.appRecordId
+                },
+                success: function(data) {
+                    console.log(data);
+                    var member_info = data.member_info;
+                    renderDynamicData(member_info);
+                    getHistory(data.lottery_history);
+                    initLottery();
+                    loadingStatus(false);
+                },
+                error: function(data) {
+                    if(data.errMsg == 'is_deleted'){
+                        deletedRecord();
+                    }else{
+                        wuiAlert(data.errMsg)
+                    }
+                    loadingStatus(false);
+                }
+            });
+        }
+
+        function renderDynamicData(member_info){
+            lottery_status = member_info.lottery_status;
+            activity_status = member_info.activity_status;
+            W.isMember = member_info.isMember;
+            //可参与次数
+            var can_play_count = member_info.can_play_count;
             if(can_play_count == -1){
                 $('.wui-lotterydescription .xa-header').addClass('wui-lotterydescription-hide');
             }else{
                 $('.wui-lotterydescription .xa-header').removeClass('wui-lotterydescription-hide').find('p>b').html(can_play_count);
             }
-            W.getApi().call({
-                app: 'm/apps/lottery',
-                resource: 'lottery_prize',
-                method: 'get',
-                args:{
-                    id: W.appRecordId,
-                    webapp_owner_id: W.webappOwnerId
-                },
-                success: function(data){
-                    $('.xa-remainedIntegral').find('p>b').html(data.remained_integral);
-                    var hisData = data.history;
-                    var len = hisData.length;
-                    if(len>0){
-                        var str_array = [];
-                        for(var i=0;i<len;i++){
-                            //str_array.push("<li>" + hisData[i].prize_title+'  '+ hisData[i].prize_name + '  ' + hisData[i].created_at + "</li>");
-                            str_array.push("<li>" + hisData[i].prize_title+'&nbsp;&nbsp;&nbsp;&nbsp;'+ hisData[i].prize_name + "</li>");
+            //会员信息
+            var remained_integral = member_info.remained_integral;
+            $('.xa-remainedIntegral').find('p>b').html(remained_integral);
 
-                        }
-                        str_array = str_array.toString().replace(/,/g,'');
-                        $('.wui-i-record').find('.xa-recordData').html(str_array);
-                    }else{
-                        $('.wui-i-record').find('.xa-recordData').html('<p>还未中奖~</p>');
-                    }
 
-                },
-                error: function(error){
-                    $('body').alert({
-                        isShow: true,
-                        isSlide: false,
-                        info: error.errMsg,
-                        speed: 3000
-                    });
+        }
+
+        function getHistory(hisData){
+            var len = hisData.length;
+            if(len>0){
+                var str_array = [];
+                for(var i=0;i<len;i++){
+                    str_array.push("<li>" + hisData[i].prize_title+'&nbsp;&nbsp;&nbsp;&nbsp;'+ hisData[i].prize_name + "</li>");
                 }
-            });
+                str_array = str_array.toString().replace(/,/g,'');
+                $('.wui-i-record').find('.xa-recordData').html(str_array);
+            }else{
+                $('.wui-i-record').find('.xa-recordData').html('<p>还未中奖~</p>');
+            }
         }
     </script>
 {% endblock %}

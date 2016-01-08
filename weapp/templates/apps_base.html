@@ -186,7 +186,7 @@
 
         {% include "weapp_jssdk_base.html" %}
 
-        <div data-role="content" data-theme="x" class="tc" style="background:white;display: none; position: absolute; height: 100%;width: 100%;top: 0;">
+        <div data-role="content" data-theme="x" class="tc" style="background:white;display: {% if is_deleted_data %}block{% else %}none{% endif %}; position: absolute; height: 100%;width: 100%;top: 0;">
             <h2 style="margin-top: 100px;">您访问的数据已被删除</h2>
             <a data-theme="x" href="/workbench/jqm/preview/?{{homepage_workspace_info|safe}}" data-role="button" class="xui-btn mt20">返回首页</a>
         </div>
