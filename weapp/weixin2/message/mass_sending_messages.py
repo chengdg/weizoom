@@ -288,7 +288,7 @@ class MassSendingMessages(resource.Resource):
         else:
             content = int(content)
             message_type = MESSAGE_TYPE_NEWS
-        msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content)
+        msg_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', message_type, content, group_id)
         task_send_mass_message.delay(user_profile.webapp_id,msg_log.id, message_type, content, is_from_fans_list, group_id, id_array)        
         response = create_response(200)
         return response.get_response()

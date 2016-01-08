@@ -1157,6 +1157,7 @@ class UserSentMassMsgLog(models.Model):
 	message_type = models.IntegerField(default=MESSAGE_TYPE_TEXT)
 	#message_content = models.CharField(default='', max_length=256)
 	message_content = models.CharField(default='', max_length=1024)
+	group_id = models.CharField(max_length=16)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	class Meta(object):
@@ -1178,12 +1179,13 @@ class UserSentMassMsgLog(models.Model):
 										)
 
 	@staticmethod
-	def create(webapp_id, msg_id, message_type, message_content):
+	def create(webapp_id, msg_id, message_type, message_content, group_id=None):
 		return UserSentMassMsgLog.objects.create(
 								webapp_id=webapp_id,
 								msg_id=msg_id,
 								message_type=message_type,
-								message_content=message_content
+								message_content=message_content,
+								group_id=group_id
 								)
 
 	@staticmethod
