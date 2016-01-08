@@ -25,22 +25,24 @@ class Mlottery(resource.Resource):
 		响应GET
 		"""
 		id = request.GET['id']
+		is_pc = request.GET.get('isPC', None)
 		expend = 0
 		auth_appid_info = None
 		share_page_desc = ''
 		thumbnails_url = '/static_v2/img/thumbnails_lottery.png'
+		cache_key = 'apps_lottery_%s_html' % id
 		record = None
 		member = request.member
 		if 'new_app:' in id:
 			project_id = id
 			activity_status = u"未开始"
 		else:
-			cache_key = 'apps_lottery_%s_html' % id
-			#从redis缓存获取静态页面
-			cache_data = GET_CACHE(cache_key)
-			if cache_data:
-				print 'redis---return'
-				return HttpResponse(cache_data)
+			if not is_pc:
+				#从redis缓存获取静态页面
+				cache_data = GET_CACHE(cache_key)
+				if cache_data:
+					print 'redis---return'
+					return HttpResponse(cache_data)
 
 			try:
 				record = app_models.lottery.objects.get(id=id)
@@ -68,13 +70,13 @@ class Mlottery(resource.Resource):
 			'app_name': "lottery",
 			'resource': "lottery",
 			'hide_non_member_cover': True, #非会员也可使用该页面
-			'isPC': False if member else True,
+			'isPC': True if is_pc else False,
 			'auth_appid_info': auth_appid_info,
 			'share_page_desc': share_page_desc,
 			'share_img_url': thumbnails_url
 		})
 		response = render_to_string('lottery/templates/webapp/m_lottery.html', c)
-		if member:
+		if not is_pc:
 			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
@@ -84,12 +86,9 @@ class Mlottery(resource.Resource):
 		响应GET
 		"""
 		record_id = request.GET.get('id',None)
-		participance_data_count = 0
-		has_prize = False
 		lottery_status = False
 		can_play_count = 0
 		member = request.member
-
 		response = create_response(500)
 
 		if not record_id or not member:
