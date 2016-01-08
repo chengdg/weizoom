@@ -1,16 +1,16 @@
-{% extends "webapp_content_base_v4.html" %}
+{% extends "apps_base.html" %}
 {% load project_filter %}
 
 {% block css %}
 <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
 <style type="text/css">
-	h1 {
-		color: #00F;
-	}
+    h1 {
+        color: #00F;
+    }
 
-	.xui-record .xui-inner-content {
-		color: #8F8F8F;
-	}
+    .xui-record .xui-inner-content {
+        color: #8F8F8F;
+    }
 
     .wui-mask{
         position: fixed;
@@ -314,10 +314,9 @@
 
             }
         });
-        //填充用户信息
-        $('.wa-username').find('p').html('{{ member_info.user_name|safe }}');
-        $('.wa-user-integral').html('{{ member_info.user_integral }}');
-        $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
+        //发送请求，单独获取数据，优化首页时间
+        getDynamicData();
+
         //填充签到奖励信息
         fillPrizeInfo(prize_info, true);
         //绑定规则信息事件
@@ -390,6 +389,39 @@
             window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
         });
     });
+    function fillUserInfo(data){
+        //填充用户信息xx就是这儿
+        $('.wa-username').find('p').html(data.member_info.username);
+        $('.wa-user-integral').html(data.member_info.user_integral);
+        $('.wa-user-icon').find('img').attr('src', data.member_info.user_icon);
+        // //填充用户信息xx就是这儿 备份
+        // $('.wa-username').find('p').html('{{ member_info.user_name|safe }}');
+        // $('.wa-user-integral').html('{{ member_info.user_integral }}');
+        // $('.wa-user-icon').find('img').attr('src', '{{ member_info.user_icon }}');
+    }
+    function getDynamicData(){
+        loadingStatus(true);
+        W.getApi().call({
+            app: 'm/apps/sign',
+            resource: 'm_sign',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId
+            },
+            success:function(data){
+                //填充用户信息
+                fillUserInfo(data);
+            },
+            error:function(data){
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    wuiAlert(data.errMsg)
+                }
+            }
+        });
+    }
 
     function fillPrizeInfo(prize_info, flag) {
         if ('已签到' != status) {
