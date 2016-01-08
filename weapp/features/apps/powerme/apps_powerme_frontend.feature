@@ -7,16 +7,18 @@ Feature: 会员参加微助力助力
 		带参数的二维码：
 		1、会员帮助会员好友助力
 		2、会员重复帮好友助力
+		3、会员通过好友分享链接参加微助力活动（无识别二维码）
 		3、会员通过会员分享的活动页进行我要参与
-		4、会员通过会员分享的活动页重复进行我要参与
-		5、会员在自己专属页面点击按钮分享活动
-		6、会员在自己的专属页面重复点击按钮分享活动
-		7、非会员通过会员好友分享的活动页帮好友助力
-		8、非会员通过会员好友分享的活动页帮我要参与
-		9、取消关注的会员，排名取消，为会员好友的助力值不变，参与人数减少
-		10、取消关注的会员通过会员好友分享页再次帮助好友助力
+		4、会员在自己专属页面点击按钮分享活动
+		5、非会员通过会员好友分享的活动页帮好友助力
+		6、非会员通过会员好友分享的活动页进行我要参与
+		7、非会员通过中间取消关注的好友分享的活动页帮好友助力
+		8、非会员通过中间取消关注的好友分享的活动页再次帮好友助力
+		9、取消关注的会员，排名仍然在列表里，为会员好友的助力值不变，参与人数不变
+		10、（已帮好友助力，中间取消关注）取消关注的会员通过会员好友分享页帮助好友助力
 		11、取消关注的会员通过会员好友分享页再次进行我要参与
-		12、取消关注的会员通过之前会员好友分享的链接为非会员好友助力
+		12、取消关注的会员通过非会员好友分享页进行我要参与
+		14、取消关注的会员通过之前非会员好友分享的链接为非会员好友助力
 	备注：
 		2015-12-18 业务逻辑修改:取消关注的会员，其助力值和排名不消失（前台和后台都保留）
 	"""
@@ -202,7 +204,7 @@ Scenario:1 用户重复参与微助力活动
 		|  2   | tom  |   0   |
 
 	When bill点击tom分享的微助力活动链接进行参与
-	#Then bill获得弹层提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
+	#Then bill获得按钮提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
 
 @mall2 @apps_powerme @apps_powerme_frontend
 Scenario:2 会员帮助会员好友助力
@@ -265,6 +267,8 @@ Scenario:2 会员帮助会员好友助力
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
+
+
 
 @mall2 @apps_powerme @apps_powerme_frontend
 Scenario:3 非会员帮助会员好友助力
@@ -416,12 +420,13 @@ Scenario:4 连续帮助会员好友助力
 	When tom点击bill分享的微助力活动链接进行助力
 	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
+
 @mall2 @apps_powerme @apps_powerme_frontend
-Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助力
+Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助力，取消关注后的按钮状态显示为“帮XX好友助力”，助力			成功，助力值不生效
 	#会员bill分享微助力活动链接
 	#会员tom帮bill助力
 	#会员tom取消关注公众号
-	#会员tom点击bill分享的链接再帮bill助力
+	#会员tom点击bill分享的链接再帮bill助力，
 
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -508,6 +513,35 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	#取消关注后，不能再帮bill助力
 	When tom点击bill分享的微助力活动链接进行助力
 	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
+	When tom通过识别弹层中的带参数二维码关注jobs的公众号
+  	When 更新助力排名
+	#tom关注成功后，助力成功即bill助力值加1
+	When tom访问jobs的webapp
+	When tom在微信中向jobs的公众号发送消息'微助力1'
+	Then tom收到自动回复'微助力1单图文'
+	When 更新助力排名
+	When tom点击图文"微助力1单图文"进入微助力活动页面
+  	When 更新助力排名
+	Then tom获得jobs的'微助力活动1'的内容
+		"""
+		[{
+			"name": "微助力活动1",
+			"is_show_countdown": "true",
+			"desc": "微助力活动描述",
+			"background_pic": "2.jpg",
+			"background_color": "冬日暖阳",
+			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式",
+			"my_rank": "1",
+			"my_power_score": "1",
+			"total_participant_count": "1"
+		}]
+		"""
+  	When 更新助力排名
+	Then tom获得"微助力活动1"的助力值排名
+		| rank | name | value |
+		|  1   | bill |   1   |
+
+	#虽然按钮显示为未帮助助力之前的状态，而且也在关注公众号的时候显示主力成功，但是助力值是不生效的
 
 @mall2 @apps_powerme @apps_powerme_frontend
 Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维码）
@@ -871,3 +905,118 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 			[]
 			"""
 		#Then tom获得按钮提示信息'活动已结束'
+
+@mall2 @apps_powerme @apps_powerme_frontend
+Scenario:10 会员为非会员（中间取消关注的会员）助力
+	#bill分享微助力链接
+	#tom关注后点击bill分享的链接帮bill助力
+	#bill取消关注jobs的公众号，bill的微助力排名不消失
+	#tom取消关注jobs的公众号,tom的微助力排名不消失
+
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微助力2'
+	Then bill收到自动回复'微助力2单图文'
+	When bill点击图文"微助力2单图文"进入微助力活动页面
+	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
+
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
+
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微助力2'
+	Then bill收到自动回复'微助力2单图文'
+	When bill点击图文"微助力2单图文"进入微助力活动页面
+  	When 更新助力排名
+	Then bill获得jobs的'微助力活动2'的内容
+		"""
+		[{
+			"name": "微助力活动2",
+			"is_show_countdown": "false",
+			"desc": "微助力活动描述",
+			"background_pic": "4.jpg",
+			"background_color": "热带橙色",
+			"rules":"按上按上打算四大的撒的撒<br />撒打算的撒的撒大声地<br />按上打算打算<br />阿萨德按上打",
+			"my_rank": "1",
+			"my_power_score": "1",
+			"total_participant_count": "1"
+		}]
+		"""
+  	When 更新助力排名
+	Then bill获得"微助力活动2"的助力值排名
+		| rank | name | value |
+		|  1   | bill |   1   |
+		
+
+		
+	When bill取消关注jobs的公众号
+	When 更新助力排名
+
+	#取消关注后,bill的排名不消失
+
+	When tom点击bill分享的微助力活动链接进行助力
+	Then tom获得微助力活动提示"该用户已退出活动"
+
+@mall2 @apps_powerme @apps_powerme_frontend
+Scenario:11 非会员为非会员（中间取消关注的会员）助力
+	#bill分享微助力链接
+	#tom关注后点击bill分享的链接帮bill助力
+	#bill取消关注jobs的公众号，bill的微助力排名不消失
+	#tom取消关注jobs的公众号,tom的微助力排名不消失
+
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微助力2'
+	Then bill收到自动回复'微助力2单图文'
+	When bill点击图文"微助力2单图文"进入微助力活动页面
+	When bill把jobs的微助力活动链接分享到朋友圈
+	When 更新助力排名
+
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
+
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'微助力2'
+	Then bill收到自动回复'微助力2单图文'
+	When bill点击图文"微助力2单图文"进入微助力活动页面
+  	When 更新助力排名
+	Then bill获得jobs的'微助力活动2'的内容
+		"""
+		[{
+			"name": "微助力活动2",
+			"is_show_countdown": "false",
+			"desc": "微助力活动描述",
+			"background_pic": "4.jpg",
+			"background_color": "热带橙色",
+			"rules":"按上按上打算四大的撒的撒<br />撒打算的撒的撒大声地<br />按上打算打算<br />阿萨德按上打",
+			"my_rank": "1",
+			"my_power_score": "1",
+			"total_participant_count": "1"
+		}]
+		"""
+  	When 更新助力排名
+	Then bill获得"微助力活动2"的助力值排名
+		| rank | name | value |
+		|  1   | bill |   1   |
+
+		
+	When bill取消关注jobs的公众号
+	When 更新助力排名
+
+
+	When tom取消关注jobs的公众号
+	When 更新助力排名
+	Then tom获得"微助力活动2"的助力值排名
+		| rank | name | value |
+		|  1   | bill |   1   |
+
+
+	#取消关注后,助力值排名不消失
+
+	When tom点击bill分享的微助力活动链接进行助力
+	Then tom获得微助力活动提示"该用户已退出活动"
