@@ -1,25 +1,15 @@
 # -*- coding: utf-8 -*-
-from collections import OrderedDict
 
 import json
-from datetime import datetime
-
-from django.http import HttpResponseRedirect, HttpResponse
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.db.models import F
 from django.contrib.auth.decorators import login_required
-
 from core import resource
-from core import paginator
 from core.jsonresponse import create_response
-
 import models as app_models
-import export
 from apps import request_util
 from modules.member import integral as integral_api
 from modules.member import models as member_models
 from mall.promotion import utils as mall_api
+from utils.string_util import byte_to_hex
 
 COUNT_PER_PAGE = 20
 
@@ -41,14 +31,68 @@ class voteParticipance(resource.Resource):
 		"""
 		响应GET api
 		"""
+		items ={}
+		username_for_title = u''
 		if 'id' in request.GET:
-			vote_participance = app_models.voteParticipance.objects.get(id=request.GET['id'])
-			webapp_user_name = member_models.WebAppUser.get_member_by_webapp_user_id(vote_participance.webapp_user_id).username_for_title
-			if webapp_user_name == "":
-				webapp_user_name = u'非会员'
-			termite_data = vote_participance.termite_data
-			item_data_list = []
+			item_data_list = voteParticipance.get_vote_participance_datas(request)
+			if item_data_list:
+				data = item_data_list[0]
+				items = data['items']
+				username_for_title = data['username_for_title']
+		response = create_response(200)
+		response.data = {
+			'webapp_user_name': username_for_title,
+			'items': items
+		}
+		return response.get_response()
 
+	@staticmethod
+	def get_vote_participance_datas(request):
+		#展示个人数据的id
+		id =request.GET.get('id',None)
+		#用于导出的export_id
+		export_id =request.GET.get('export_id',None)
+		vote_participances = None
+		if id:
+			vote_participances = app_models.voteParticipance.objects.filter(id=id)
+		if export_id:
+			name = request.GET.get('participant_name', '')
+			webapp_id = request.user_profile.webapp_id
+			member_ids = []
+			if name:
+				hexstr = byte_to_hex(name)
+				members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+				temp_ids = [member.id for member in members]
+				member_ids = temp_ids  if temp_ids else [-1]
+			start_time = request.GET.get('start_time', '')
+			end_time = request.GET.get('end_time', '')
+			params = {'belong_to':export_id}
+			if member_ids:
+				params['member_id__in'] = member_ids
+			if start_time:
+				params['created_at__gte'] = start_time
+			if end_time:
+				params['created_at__lte'] = end_time
+			vote_participances = app_models.voteParticipance.objects(**params).order_by('-id')
+		item_data_list = []
+		member_ids = []
+		for record in vote_participances:
+			member_ids.append(record['member_id'])
+		members = member_models.Member.objects.filter(id__in=member_ids)
+		member_id2member = {member.id: member for member in members}
+		for vote_participance in vote_participances:
+			termite_data = vote_participance['termite_data']
+			item_list = []
+			cur_member = member_id2member.get(vote_participance['member_id'], None)
+			if cur_member:
+				try:
+					name = cur_member.username.decode('utf8')
+				except:
+					name = cur_member.username_hexstr
+				username_for_title = cur_member.username_for_title
+			else:
+				name = username_for_title = u'未知'
+			created_at = vote_participance['created_at'].strftime("%Y-%m-%d %H:%M:%S")
 			for k in sorted(termite_data.keys()):
 				v = termite_data[k]
 				pureName = k.split('_')[1]
@@ -69,17 +113,15 @@ class voteParticipance(resource.Resource):
 						item_data['item_name'] = ITEM_FOR_DISPLAY[pureName]
 					else:
 						item_data['item_name'] = pureName
-					item_data['item_value'] = [{'title': v['value'], 'image': ''}]
-				item_data_list.append(item_data)
-		else:
-			webapp_user_name = ''
-			item_data_list = {}
-		response = create_response(200)
-		response.data = {
-			'webapp_user_name': webapp_user_name,
-			'items': item_data_list
-		}
-		return response.get_response()
+					item_data['item_value'] = [{'title': v['value']}]
+				item_list.append(item_data)
+			item_data_list.append({
+				'name': name,
+				'username_for_title': username_for_title,
+				'created_at': created_at,
+				'items': item_list
+			})
+		return item_data_list
 	
 	def api_put(request):
 		"""
@@ -130,4 +172,3 @@ class voteParticipance(resource.Resource):
 			response = create_response(200)
 			response.data = data
 			return response.get_response()
-
