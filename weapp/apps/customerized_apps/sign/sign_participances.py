@@ -12,6 +12,7 @@ from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 import export
+from utils.string_util import hex_to_byte, byte_to_hex
 
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
@@ -40,11 +41,22 @@ class SignParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		sort_attr = request.GET.get('sort_attr', '-latest_date')
+		participant_name = request.GET.get('participant_name', '')
+		webapp_id = request.user_profile.webapp_id
+
+		datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
+
+		if participant_name != '':
+			hexstr = byte_to_hex(participant_name)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
+			temp_ids = [member.id for member in members]
+			member_ids = temp_ids  if temp_ids else [-1]
+			datas = datas.filter(member_id__in=member_ids)
+
 		if 'total_integral' in sort_attr:
-			datas = app_models.SignParticipance.objects(belong_to=request.GET['id'])
 			datas = sorted(datas, lambda x,y: cmp(x.prize['integral'], y.prize['integral']), reverse=True if '-' in sort_attr else False)
 		else:
-			datas = app_models.SignParticipance.objects(belong_to=request.GET['id']).order_by(sort_attr)
+			datas = datas.order_by(sort_attr)
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))

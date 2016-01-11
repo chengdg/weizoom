@@ -165,6 +165,19 @@
         margin-left: 3px;
     }
 
+    .xui-tag-group .xui-i-filter{
+
+    }
+    .xui-tag-group .xui-i-filter a{
+        margin: 0;
+        height: 27px;
+        padding: 5px;
+        border-radius: 2px;
+    }
+    .xui-tag-group .xui-i-filter label{
+        margin-left: 100px;
+    }
+
     </style>
 {% endblock %}
 
@@ -183,6 +196,10 @@ ui-appPage-commonStyle">
     <div class="xui-tag-group xa-tag-group">
         <span class="xui-i-tag xui-i-tag-active" target="xa-setting">规则设置</span>
         <span class="xui-i-tag" target="xa-state">签到统计</span>
+        <span class="xui-i-filter xa-filter" style="display: none;">
+            <label for="participant_name">会员名称：<input type="text" id="participant_name"></label>
+            <a class="btn btn-primary xa-search" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+        </span>
         <button type="button" class="xui-link-copy fr xa-link-copy {% if sign %}{% else %}xui-hide{% endif %}" data-clipboard-text="/m/apps/sign/m_sign/?webapp_owner_id={{ request.manager.id }}">复制链接</button>
     </div>
 
@@ -547,7 +564,13 @@ ui-appPage-commonStyle">
             var $this = $(this);
             if('xa-setting' == target){
                 $('.xa-setting').show().siblings('.xa-state').hide();
+                $('.xa-filter').css('display', 'none');
             }else if('xa-state' == target){
+                $('.xa-filter').css({
+                    'display': 'inline-block',
+                    'vertical-align': 'middle'
+                });
+                $('#participant_name').val('');
                 $('.xa-state').show().siblings('.xa-setting').hide();
                 table && table.reload({
                     id: W.activityId
@@ -556,6 +579,17 @@ ui-appPage-commonStyle">
                 });
             }
             $this.addClass('xui-i-tag-active').siblings().removeClass('xui-i-tag-active');
+        });
+
+        //按用户名搜索
+        $('.xa-search').click(function(event) {
+            var participant_name = $.trim($('#participant_name').val());
+            table.reload({
+                id: W.activityId,
+                participant_name: participant_name
+            }, {
+                emptyDataHint: '没有符合条件的数据'
+            });
         });
 
         //初始化复制链接到剪贴板
