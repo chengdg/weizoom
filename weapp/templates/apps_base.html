@@ -44,6 +44,23 @@
                 height: 10px;
                 background: #D0B915;
             }
+            .wui-apps-alert{
+                opacity: 0;
+                color: whitesmoke;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                transition: opacity 0.5s, top 0.7s;
+                -webkit-transition: opacity 0.5s, top 0.7s;
+                z-index: 10003;
+                text-align: center;
+            }
+            .wui-apps-alert>span{
+                background-color: black;
+                border-radius: 2px;
+                margin: 0 auto;
+                padding: 5px;
+            }
 
             @-webkit-keyframes loading {
               0% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -163,7 +180,6 @@
         <script type="text/javascript" src="/termite_static/v3/webapp/webapp.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/weixinapi.js"></script>
         <script type="text/javascript" src="/termite_static/v3/system/preview_imges.js"></script>
-        <script type="text/javascript" src="/termite_static/v3/gmu/widget/alert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/appalert.js"></script>
         <script type="text/javascript" src="/termite_static/v3/gmu/widget/addImg.js"></script>
 
@@ -180,9 +196,7 @@
 
         {% block content-panel %}{% endblock %}
 
-        <div class="xui-errMsg xa-errMsg none">
-            <div style="position: fixed;top: 38%;width: 100%;text-align: center;z-index: 10000;"><p style="color: #ffffff"></p></div>
-        </div>
+        <div class="wui-apps-alert wa-alert"><span></span></div>
 
         {% include "weapp_jssdk_base.html" %}
 
@@ -207,7 +221,7 @@
             W.qrcodeUrl = "{{ request.webapp_owner_info.qrcode_img }}";
 
             $(document).ready(function() {
-
+                //作为子框架页的展示调整(预览或模拟器中)
                 var isInFrame = (parent !== window);
                 if (isInFrame) {
                     if (parent.setWebappPageTitle) {
@@ -221,6 +235,8 @@
                     })
                 }
             });
+
+            //参与活动，通用的组织数据方法，可覆盖
             function getParticipance(data,$submitButtonContainer){
                 var participanceData = {
                     webapp_owner_id: W.webappOwnerId,
@@ -232,42 +248,30 @@
                     $prizeContainer = $prizeContainer.eq(0);
                     participanceData['prize'] = $prizeContainer.attr('data-prize');
                 }
-                $('body').alert({
-                    isShow: true,
-                    info: '玩命传输中请等待...',
-                    speed: 50000,
-                    callBack: function() {
-                    }
-                });
+                wuiAlert('玩命传输中请等待...', 5000);
                 W.getApi().call({
                     app: 'm/apps/'+W.appName,
                     resource: W.resource+'_participance',
                     method: 'put',
                     args: participanceData,
                     success: function(data) {
-                        $('body').alert({
-                            isShow: false
-                        });
                         $('body').alertParticipantResult({prize: data.prize,actionButtons: data.actionButtons});
                         var $button = $submitButtonContainer.find('.xa-submitTermite');
                         $button.text('您已参加过该活动');
                         $button.removeClass('xa-submitTermite').removeClass('xui-btn-danger').addClass('xui-btn-disable');
-                        },
+                    },
                     error: function(resp) {
-                        $('body').alert({
-                            isShow: true,
-                            isSlide: true,
-                            info: '参与失败，请稍后再试！',
-                            speed: 3000
-                        });
+                        wuiAlert('参与失败，请稍后再试！', 3000);
                     }
                 });
             }
 
+            //如果是已删除的活动
             function deletedRecord(){
                 $('body>.tc').css('display', 'block');
             }
 
+            //xhr等待动画(待完善)
             function loadingStatus(action){
                 var $loading = $('.wa-loading');
                 if(action){
@@ -286,10 +290,23 @@
                 }
             }
 
-            function wuiAlert(msg){
-                $('.xa-errMsg').find('p').html(msg);
-                mask('show');
-                $('.xui-errMsg').removeClass('none');
+            //消息提示
+            var alertTimer;
+            function wuiAlert(msg, time){
+                if(alertTimer) window.clearTimeout(alertTimer);
+                time = parseInt(time) || 2000;
+                var $alert = $('.wa-alert');
+                $alert.find('span').html(msg);
+                $alert.css({
+                    'opacity': 1,
+                    'top': '50px'
+                });
+                alertTimer = window.setTimeout(function(){
+                    $alert.css({
+                        'opacity': 0,
+                        'top': 0
+                    });
+                }, time);
             }
         </script>
 
