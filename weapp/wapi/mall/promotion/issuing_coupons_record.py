@@ -35,9 +35,12 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		coupon_rule_id = int(args['coupon_rule_id'])
 		product_name = args['product_name']
 		remark_text = u'您对“%s”的反馈已经通过审核，特为您奉上优惠券一张！' % product_name
-		# print 'token:',token
-		# print 'member_id:',member_id
-		# print 'coupon_rule_id:',coupon_rule_id
+		print 'token:',token
+		print 'member_id:',member_id
+		print 'coupon_rule_id:',coupon_rule_id
+		print 'product_name:',product_name
+		print 'remark_text:',remark_text
+		print 'owner_id:',owner_id
 		
 		# return {
 		# 	'success': False,
@@ -81,16 +84,21 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 			person_count=person_count,
 			coupon_count=send_count)
 		coupon_record.save()
+
+		print 'coupon_record:',coupon_record.id
 		if member_ids:  # 会员列表
 			# 对每个会员创建优惠券
 			real_person_count = 0
 			real_coupon_count = 0
 			for member_id in member_ids:
+				print 'processing:', member_id
 				c_index = 0
 				c_real_count = 0
 				while c_index < pre_person_count:
 					coupon, msg = consume_coupon(owner_id, coupon_rule_id, member_id,
 												 coupon_record_id=coupon_record.id, not_block=True)
+					print 'coupon:', coupon.id
+					print 'msg:',msg
 					if coupon:
 						coupon_id = coupon.coupon_id
 						c_real_count += 1
