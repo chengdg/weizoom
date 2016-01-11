@@ -97,7 +97,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 				while c_index < pre_person_count:
 					coupon, msg = consume_coupon(owner_id, coupon_rule_id, member_id,
 												 coupon_record_id=coupon_record.id, not_block=True)
-					print 'coupon:', coupon.id
+					# print 'coupon:', coupon.id
 					print 'msg:',msg
 					if coupon:
 						coupon_id = coupon.coupon_id
