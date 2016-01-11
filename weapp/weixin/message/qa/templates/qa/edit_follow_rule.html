@@ -1,0 +1,64 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+{% endblock %}
+
+{% block content-panel %}
+	<legend>被添加时回复:</legend>
+	<div id="edit-message-panel"></div>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var ruleId = {% if rule %}{{ rule.id }}{% else %}-1{% endif %};
+	var answer = {% if rule %}'{{ rule.answer|safe|linebreaksbr|quotation_mark_translate|safe }}'{% else %}''{% endif %};
+
+	var materialId = {% if rule %}{{ rule.material_id }}{% else %}0{% endif %};
+	var newsesJsonStr = '{{ newses|safe }}';
+
+	$(document).ready(function() {
+
+		var editor = new W.view.weixin.MessageEditor({
+			el: '#edit-message-panel',
+			newses: $.parseJSON(this.newsesJsonStr),
+			materialId: materialId,
+			ruleId: ruleId,
+			answer: answer
+		});
+
+		editor.bind("finish-edit", function(message){
+			W.getLoadingView().show();
+			var api = 'follow_rule/update';
+			if (ruleId == -1) {
+				api = 'follow_rule/add';
+			}
+
+			W.getApi().call({
+				app: 'weixin/message/qa',
+				api: api,
+				method: 'post',
+				args: {
+					rule_id: ruleId,
+					answer: message.answer,
+					material_id: message.materialId
+				},
+				success: function(rule) {
+					window.location.href = '/weixin/message/qa/follow_rule/';
+				},
+				error: function(response) {
+					alert('添加规则失败');
+					W.getLoadingView().hide();
+				}
+			})
+		});
+	});
+</script>
+{% endblock %}

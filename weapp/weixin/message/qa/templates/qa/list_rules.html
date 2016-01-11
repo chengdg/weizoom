@@ -1,0 +1,68 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+
+{% block content-panel %}
+<div class="relative">
+	<ul class="breadcrumb">
+		<li class="active">规则列表</li>
+	</ul>
+
+	<span class="breadcrumRightButton">
+		<a class="btn btn-primary" href="/weixin/message/qa/rule/add/"><i class="icon-plus icon-white"></i>添加规则</a>
+	</span>
+</div>
+{% if rules %}
+<div id="TableListView">
+	<table class="table table-bordered table-condensed">
+		<thead>
+			<tr>
+				<th>匹配词</th>
+				<th>回答</th>
+				<th width="150">创建时间</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for rule in rules %}
+			<tr rule_id="{{ rule.id }}">
+				<td style="width: 200px;">
+					<p style="width: 200px">
+						{% ifequal rule.type 1 %}
+						<a href="/weixin/message/qa/rule/update/{{ rule.id }}/">{{ rule.patterns }}</a>
+						{% else %}
+						<a href="/weixin/message/qa/rule/update/{{ rule.id }}/">{{ rule.patterns }}</a>
+						{% endifequal %}
+					</p>
+				</td>
+				<td><span class="rule_list_content_nowrap">
+					{% ifequal rule.type 1 %}
+						{{ rule.answer|safe }}
+					{% else %}
+						{% ifequal rule.type 5 %}
+							[网站消息]
+						{% else %}
+						[图文消息]
+						{% endifequal %}
+					{% endifequal %}
+					</span>
+				</td>
+				<td style="width: 100px;">{{ rule.created_at|date:"Y年m月j日" }}</td>
+				<td style="width: 80px;">
+					<span class="btn-group">
+						<a class="btn btn-danger wx_delete" href="/new_weixin/keyword_rules/?_method=delete&id={{ rule.id }}/">删除</a>
+					</span>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+	目前还没有数据
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+</script>
+{% endblock %}

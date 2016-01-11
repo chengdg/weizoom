@@ -1,0 +1,46 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load project_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+{% endblock %}
+
+{% block content-panel %}
+
+<ul class="breadcrumb">
+	<li><a href="/weixin/message/material/newses/">图文消息列表</a><span class="divider">/</span></li>
+	<li class="active">{% if newses %}更新{% else %}添加{% endif %}多图文信息</li>
+</ul>
+
+<div id="editMultiNewsPanel"></div>
+
+{% endblock %}
+
+
+{% block js %}
+{{ 'select_link_target'|load_termite_dialog|safe }}
+<script type="text/javascript">
+    W.ISUNLOADALERT = true;
+	var newsesJsonStr = '{{ newses|safe }}';
+	//var returnUrl = '{{ return_url }}';
+	var returnQueryString = '{{ return_query_string|safe }}';
+	var materialId = {% if material_id %}{{ material_id }}{% else %}-1{% endif %};
+
+	$(document).ready(function() {
+		$('#title').focus();
+
+		var editNewsPanel = new W.view.weixin.EditNewsPanel({
+			el: '#editMultiNewsPanel',
+			mode: 'multi-news',
+			initCount: 2,
+			materialId: materialId,
+			newses: $.parseJSON(newsesJsonStr)
+		});
+
+		editNewsPanel.bind('finish-create-material', function(data) {
+			window.location.href = '/weixin/message/material/newses/'
+		});
+	});
+</script>
+{% endblock %}

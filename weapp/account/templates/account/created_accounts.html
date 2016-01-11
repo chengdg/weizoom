@@ -1,0 +1,112 @@
+{% extends "content_base.html" %}
+
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/webapp.css">
+{% endblock %}
+
+{% block single-content-panel %}
+  <div id="accountList" class="">
+    <div class="relative">
+      <ul class="breadcrumb">
+        <li class="active">账号列表</li>
+      </ul>
+      <span class="breadcrumRightButton">
+        <a id="addUserBtn" class="btn btn-primary" href="javascript:void(0);"><i class="icon-plus icon-white"></i>创建账号</a>
+      </span>
+    </div>
+    <table id="accountListTable" class="table table-bordered table-condensed mt10">
+      <thead>
+        <tr>
+          <th>用户名</th>
+          <th>启用模块</th>
+          <th>创建日</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in created_users %}
+        <tr>
+          <td>
+            <div>{{user.username}}</div>
+          </td>
+          <td style="width: 150px">{{user.installed_modules}}</td>
+          <td style="width: 100px;">{{user.date_joined|date:"Y-m-d"}}</td>
+          <td style="width: 100px;">
+            <!--
+            <a class="btn btn-mini" title="编辑" href="/account/created_user/edit/?user_id={{user.id}}"><i class="icon-pencil"></i></a>
+            -->
+            <!--
+            <a class="x-manageModules btn btn-mini" data-module-ids='{{user.installed_module_ids}}' data-user-id="{{user.id}}" title="管理模块" href="javascript:void(0);"><i class="icon-list"></i></a>
+          -->
+            <a class="btn btn-danger btn-mini" title="删除" href="/account/created_user/delete/?user_id={{user.id}}" ><i class="icon-remove icon-white"></i></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
+
+{% block base_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#addUserBtn').click(function(event) {
+        W.dialog.showDialog('W.weapp.dialog.AddUserDialog', {
+          success: function(data) {
+            W.getLoadingView().show();
+            W.getApi().call({
+              app: 'account',
+              api: 'user/create',
+              method: 'post',
+              args: data,
+              success: function() {
+                window.location.reload();
+              },
+              error: function(resp) {
+                W.getLoadingView().hide();
+                if (resp.code === 500) {
+                  alert(resp.data);
+                } else {
+                  alert('创建用户失败!')
+                }
+              }
+            })
+          }
+        })
+    });
+
+    $('.x-manageModules').click(function(event) {
+      var $link = $(event.currentTarget);
+      var userId = $link.attr('data-user-id');
+      var installedModuleIds = $.parseJSON($link.attr('data-module-ids'));
+      W.dialog.showDialog('W.weapp.dialog.ManageModuleDialog', {
+        installedModuleIds: installedModuleIds,
+        success: function(data) {
+          W.getLoadingView().show();
+          W.getApi().call({
+            app: 'webapp',
+            api: 'user_module/add',
+            method: 'post',
+            args: {
+              user_id: userId,
+              modules: data
+            },
+            success: function(data) {
+              window.location.reload();
+            },
+            error: function(resp) {
+              W.getLoadingView().hide();
+              alert('添加微站模块失败！');
+            }
+          });
+          xwarn(data);
+        }
+      });
+    });
+  });
+</script>  
+{% endblock %}

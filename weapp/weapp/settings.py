@@ -400,15 +400,15 @@ INSTALLED_APPS = [
 
     'captcha',
 
-    'apps.customerized_apps.shengjing',
+    # 'apps.customerized_apps.shengjing',
     # 微众商城代码
     # 'apps.customerized_apps.weshop',
 
     'account',
     'account.social_account',
-    'simulator',
+    # 'simulator',
     'watchdog',
-    'operation',
+    # 'operation',
 
     'modules',
     'modules.member',
@@ -417,8 +417,8 @@ INSTALLED_APPS = [
     'weixin.user',
     'weixin2',
     'termite2',
-    'stats',
-    'wapi',
+    # 'stats',
+    # 'wapi',
 
     'weixin.message.material',
     'weixin.message.message',
@@ -429,17 +429,17 @@ INSTALLED_APPS = [
 
     'weixin.statistics',
 
-    'wxpay',
+    # 'wxpay',
 
     'market_tools',
-    'market_tools.question',
-    'market_tools.prize',
+    # 'market_tools.question',
+    # 'market_tools.prize',
 
     'tools',
-    'tools.map',
-    'tools.weather',
-    'tools.regional',
-    'tools.express',
+    # 'tools.map',
+    # 'tools.weather',
+    # 'tools.regional',
+    # 'tools.express',
 
     'webapp',
     'webapp.modules.cms',
@@ -447,41 +447,41 @@ INSTALLED_APPS = [
     # 'webapp.modules.shop',
     'termite.workbench',
 
-    'manage_tools',
-    'help_system',
+    # 'manage_tools',
+    # 'help_system',
 
     'product',
 
-    'mockapi',
-    'example',
+    # 'mockapi',
+    # 'example',
 
-    'order',
+    # 'order',
 
     'apps',
 
-    'deploy',
+    # 'deploy',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     # 'django_behave',
-    'mobile_app',
-    'erp',
+    # 'mobile_app',
+    # 'erp',
     # 'momus',
-    'pay',
-    'card',
+    # 'pay',
+    # 'card',
     'mall',
     'mall.promotion',
-    'auth',
+    # 'auth',
     'member',
     'weixin.message.message_handler',
-    'notice',
-    'svsmon',
+    # 'notice',
+    # 'svsmon',
 
-    'cloud_housekeeper',
+    # 'cloud_housekeeper',
 
-    'openapi',
+    # 'openapi',
     # Third-party apps
     # 'django_extensions',
 
@@ -493,32 +493,32 @@ INSTALLED_APPS = [
 INSTALLED_TASKS = [
     # Celery for Django
     'watchdog',
-    'example.example_echo',
+    # 'example.example_echo',
     'modules.member',
     'weixin.message.qa',
     'weixin.statistics',
     'weixin.message.message_handler',
-    'market_tools.tools.shake',
+    # 'market_tools.tools.shake',
     'weixin2',
 
     # for services
-    'services.example_service',
-    'services.send_order_email_service',
-    'services.page_visit_service',
-    'services.post_save_order_service',
-    'services.shared_url_page_visit_service',
-    'services.post_pay_order_service',
-    'services.oauth_shared_url_service',
-    'services.start_promotion_service',
-    'services.finish_promotion_service',
+    # 'services.example_service',
+    # 'services.send_order_email_service',
+    # 'services.page_visit_service',
+    # 'services.post_save_order_service',
+    # 'services.shared_url_page_visit_service',
+    # 'services.post_pay_order_service',
+    # 'services.oauth_shared_url_service',
+    # 'services.start_promotion_service',
+    # 'services.finish_promotion_service',
 
-    'services.daily_page_visit_statistic_service',
-    'services.update_mp_token_service',
-    'services.cancel_not_pay_order_service',
-    # 'services.update_component_mp_token_service',
-    'services.analysis_message_service',
-    'services.count_keyword_service',
-    'services.send_express_poll_service',
+    # 'services.daily_page_visit_statistic_service',
+    # 'services.update_mp_token_service',
+    # 'services.cancel_not_pay_order_service',
+    # # 'services.update_component_mp_token_service',
+    # 'services.analysis_message_service',
+    # 'services.count_keyword_service',
+    # 'services.send_express_poll_service',
 ]
 
 
@@ -667,7 +667,7 @@ UNCATCHED_EXCEPTION_ACTION_URL = ''
 
 WEAPP_WEB_DIALOG_DIRS = [
     ('static', '%s/../static/' % PROJECT_HOME), 
-    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME), 
+    # ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME), 
     #('customerized_apps_static', '%s/../apps/customerized_apps/*' % PROJECT_HOME)
 ]
 WEAPP_WEB_VIEW_DIRS = [
@@ -700,14 +700,14 @@ TEMPLATE_DIRS.extend(termite_settings.TEMPLATE_DIRS)
 INSTALLED_APPS.extend(termite_settings.INSTALLED_APPS)
 locals().update(termite_settings.exports)
 
-#####################################################################
-# import order content
-#####################################################################
-from order import embed_settings as order_settings
+# #####################################################################
+# # import order content
+# #####################################################################
+# from order import embed_settings as order_settings
 
-MIDDLEWARE_CLASSES.extend(order_settings.MIDDLEWARE_CLASSES)
-TEMPLATE_DIRS.extend(order_settings.TEMPLATE_DIRS)
-INSTALLED_APPS.extend(order_settings.INSTALLED_APPS)
+# MIDDLEWARE_CLASSES.extend(order_settings.MIDDLEWARE_CLASSES)
+# TEMPLATE_DIRS.extend(order_settings.TEMPLATE_DIRS)
+# INSTALLED_APPS.extend(order_settings.INSTALLED_APPS)
 
 
 MIDDLEWARE_CLASSES.extend([
@@ -743,7 +743,7 @@ MIDDLEWARE_CLASSES.extend([
     'core.middleware.LocalCacheMiddleware',
 
     # 云管家
-    'cloud_housekeeper.middleware.CloudSessionMiddleware',
+    # 'cloud_housekeeper.middleware.CloudSessionMiddleware',
 ])
 
 
@@ -754,8 +754,8 @@ PROFILE_MIDDLEWARE_SORT = ('time', 'calls')
 #PROFILE_MIDDLEWARE_STRIP_DIRS = True
 PROFILE_MIDDLEWARE_RESTRICTIONS = ('template', 0.5)  # 只看有template的、前50%的记录
 
-from market_tools import embed_settings as market_tools_settings
-INSTALLED_APPS.extend(market_tools_settings.INSTALLED_APPS)
+# from market_tools import embed_settings as market_tools_settings
+# INSTALLED_APPS.extend(market_tools_settings.INSTALLED_APPS)
 
 # add customized apps
 CUSTOMERIZED_APP_DIR = os.path.join(PROJECT_HOME, '../apps/customerized_apps')
@@ -785,7 +785,8 @@ DJANGO_HACK_PARAMS = {
 }
 
 RESOURCE_LOADED = False
-RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
+# RESOURCES = ['stats', 'termite2', 'weixin2', 'mall','openapi']
+RESOURCES = []
 
 ENAPISERVER = False
 

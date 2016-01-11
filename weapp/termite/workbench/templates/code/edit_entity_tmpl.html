@@ -1,0 +1,184 @@
+<% extends "content_base.html" %>
+<% load common_tag %>
+<% load account_filter %>
+
+<% block css %>
+{% ifequal isEnablePreview "yes" %}
+    <link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+{% endifequal %}
+<% endblock %>
+
+<% block content-panel %>
+<ul class="breadcrumb">
+	<li><a href="/{{app}}/editor/{{pluralInstanceName}}/">{{entityName}}列表</a><span class="divider">/</span></li>
+	<li class="active"><% if {{instanceName}} %>更新<% else %>添加<% endif %>{{entityName}}</li>
+</ul>
+
+{% ifequal isEnablePreview "yes" %}
+<div class="clearfix">
+	<div id="embeded-phone-box" class="fl" data-ui-role="embeded-simulator" data-url='/m/{{app}}/{{instanceName}}/<< webapp_id >>/<% if {{instanceName}} %><< {{instanceName}}.id >><% else %>0<% endif %>/'></div>
+	<div id="" class="fl wx-thin-form ml10">
+		<form class="form-horizontal" method="post" id="editForm" data-id="<% if {{instanceName}} %><< {{instanceName}}.id >><% else %>0<% endif %>">
+			<fieldset>
+				{% for property in properties %}
+				<div class="control-group">
+					<div class="controls ml20">
+						{% if property.label %}
+						<label for="{{property.name}}">{{property.label}}：</label>
+						{% endif %}
+
+						{% ifequal property.type 'text_input' %}
+						<input type="text" class="input-xlarge" id="{{property.name}}" name="{{property.name}}" style="width: 350px" placeholder="{{property.placeholder}}" value="<% if {{instanceName}} %><< {{instanceName}}.{{property.name}} >><% endif %>" {{ property.validate|safe }} />
+						<div class="errorHint"></div>
+						{% endifequal %}
+
+						{% ifequal property.type 'select_input' %}
+						<select type="text" class="input-xlarge" id="{{property.name}}" name="{{property.name}}" style="width: 350px" {{ property.validate|safe }}>
+							<option value="-1">选择选项...</option>
+							{% for option in property.options %}
+							<option value="{{option.value}}" <% ifequal {{instanceName}}.{{property.name}} "{{option.value}}" %>selected="selected"<% endifequal %> >{{option.displayName}}</option>
+							{% endfor %}
+						</select>
+						<div class="errorHint"></div>
+						{% endifequal %}
+
+						{% ifequal property.type 'richtext_input' %}
+						<textarea class="input-xlarge hide" id="{{property.name}}" name="{{property.name}}" data-ui-role="richtext-editor" data-type="{{property.editorType}}" data-height="{{property.height}}" data-width="350"><% if {{instanceName}} %><< {{instanceName}}.{{property.name}}|format_emotion|safe >><% endif %></textarea>
+						{% endifequal %}
+
+						{% ifequal property.type 'image_selector' %}
+						<input type="hidden" name="{{property.name}}" id="{{property.name}}" value="<% if {{instanceName}} %><< {{instanceName}}.{{property.name}} >><% endif %>" {{ property.validate|safe }} data-ui-role="image-selector" data-width="{{property.width}}" data-height="{{property.height}}"/>
+		                <div data-ui-role="image-selector-view"></div>
+		                <div class="errorHint"></div>
+						{% endifequal %}
+
+						{% ifequal property.type 'swipe_images_input' %}
+						<input type="hidden" name="{{property.name}}" id="{{property.name}}" value="" />
+						<div id="swipePhotoList" data-validate="require-swip-image" data-ui-role="swipe-images-selector" data-target-input="#{{property.name}}" data-count="{{property.count}}" data-image-width="{{property.imageWidth}}" data-image-height="{{property.imageHeight}}" data-images-json='<< swipe_images_json >>'></div>
+						<div class="errorHint"></div>
+						{% endifequal %}
+
+						{% ifequal property.type 'textarea_input' %}
+						<textarea class="input-xlarge" id="{{property.name}}" name="{{property.name}}" style="height: {{property.height}}px;"><% if {{instanceName}} %><< {{instanceName}}.{{property.name}} >><% endif %></textarea>
+						{% endifequal %}
+
+						{% ifequal property.type 'checkbox_input' %}
+						<label class="checkbox inline">
+							<input id="{{property.name}}" type="checkbox" value="1" name="{{property.name}}" <% if {{instanceName}}.{{property.name}} %>checked="checked"<% endif %> />
+							{{property.help}}
+						</label>
+						{% endifequal %}
+					</div>
+				</div>
+				{% endfor %}
+
+				<div class="control-group mt5 mr5">
+					<div class="controls ml20 tc">
+						<input id="previewBtn" class="btn btn-primary" type="button" value="预&nbsp;&nbsp;览" data-app="{{app}}" data-api-entity="{{instanceName}}" data-ui-role="preview-button" data-target-form='#editForm'>
+						<input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+					</div>
+				</div>
+		    </fieldset>
+		</form>
+	</div>
+</div>
+{% else %}
+<form class="form-horizontal" method="post" id="editForm" data-id="<% if {{instanceName}} %><< {{instanceName}}.id >><% else %>0<% endif %>">
+	<fieldset>
+		{% for property in properties %}
+		<div class="control-group">
+			{% if property.label %}
+			<label class="control-label" for="{{property.name}}">{{property.label}}：</label>
+			{% endif %}
+			<div class="controls">
+				{% ifequal property.type 'text_input' %}
+				<input type="text" class="input-xlarge" id="{{property.name}}" name="{{property.name}}" placeholder="{{property.placeholder}}" value="<% if {{instanceName}} %><< {{instanceName}}.{{property.name}} >><% endif %>" {{ property.validate|safe }} />
+				<div class="errorHint"></div>
+				{% endifequal %}
+
+				{% ifequal property.type 'select_input' %}
+				<select type="text" class="input-xlarge" id="{{property.name}}" name="{{property.name}}" {{ property.validate|safe }}>
+					<option value="-1">选择选项...</option>
+					{% for option in property.options %}
+					<option value="{{option.value}}" <% ifequal {{instanceName}}.{{property.name}} "{{option.value}}" %>selected="selected"<% endifequal %> >{{option.displayName}}</option>
+					{% endfor %}
+				</select>
+				<div class="errorHint"></div>
+				{% endifequal %}
+
+				{% ifequal property.type 'richtext_input' %}
+				<textarea class="input-xlarge hide" id="{{property.name}}" name="{{property.name}}" data-ui-role="richtext-editor" data-type="{{property.editorType}}" data-height="{{property.height}}" data-width="500"><% if {{instanceName}} %><< {{instanceName}}.{{property.name}}|format_emotion|safe >><% endif %></textarea>
+				{% endifequal %}
+
+				{% ifequal property.type 'image_selector' %}
+				<input type="hidden" name="{{property.name}}" id="{{property.name}}" value="<% if {{instanceName}} %><< {{instanceName}}.{{property.name}} >><% endif %>" {{ property.validate|safe }} data-ui-role="image-selector" data-width="{{property.width}}" data-height="{{property.height}}"/>
+                <div data-ui-role="image-selector-view"></div>
+                <div class="errorHint"></div>
+				{% endifequal %}
+
+				{% ifequal property.type 'swipe_images_input' %}
+				<input type="hidden" name="{{property.name}}" id="{{property.name}}" value="" />
+				<div id="swipePhotoList" data-validate="require-swip-image" data-ui-role="swipe-images-selector" data-target-input="#{{property.name}}" data-count="{{property.count}}" data-image-width="{{property.imageWidth}}" data-image-height="{{property.imageHeight}}" data-images-json='<< swipe_images_json >>'></div>
+				<div class="errorHint"></div>
+				{% endifequal %}
+
+				{% ifequal property.type 'textarea_input' %}
+				<textarea class="input-xlarge" id="{{property.name}}" name="{{property.name}}" style="height: {{property.height}}px;"><% if {{instanceName}} %><< {{instanceName}}.{{property.name}} >><% endif %></textarea>
+				{% endifequal %}
+
+				{% ifequal property.type 'checkbox_input' %}
+				<label class="checkbox inline">
+					<input id="{{property.name}}" type="checkbox" value="1" name="{{property.name}}" <% if {{instanceName}}.{{property.name}} %>checked="checked"<% endif %> />
+					{{property.help}}
+				</label>
+				{% endifequal %}
+			</div>
+		</div>
+		{% endfor %}
+    </fieldset>
+
+	<fieldset>
+		<legend></legend>
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-success" id="submitBtn" value="&nbsp;&nbsp;提&nbsp;&nbsp;交&nbsp;&nbsp;" />
+			</div>
+		</div>
+	</fieldset>
+</form>
+{% endifequal %}
+
+<% endblock %>
+
+<% block dialog %>
+<% endblock %>
+
+<% block jsTemplate %>
+	<% include_raw 'jsTemplate/imageView.html' %>
+	{% ifequal isEnablePreview "yes" %}
+	<% include_raw 'jsTemplate/phone.html' %>
+	{% endifequal %}
+	{% ifequal hasSwipeImages "yes" %}
+	<% include_raw 'jsTemplate/swipeImageSelectorView.html' %>
+	{% endifequal %}
+<% endblock %>
+
+<% block js %>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var $inputs = $('input[type="text"]');
+		if ($inputs) {
+			$inputs.eq(0).focus();
+		}
+
+		//提交
+		$('#editForm').submit(function() {
+			if (!W.validate()) {
+				return false;
+			}
+
+			return true;
+		});
+	});
+</script>
+<% endblock %>

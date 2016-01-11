@@ -1,0 +1,89 @@
+{% extends "content_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<link type="text/css" rel="stylesheet" media="all" href="/static/css/small_simulator.css">
+{% endblock %}
+
+{% block content-panel %}
+	<legend>没有匹配关键词时回复:</legend>
+	<div id="edit-message-panel">
+	</div>
+{% endblock %}
+
+{% block dialog %}
+{% endblock %}
+
+{% block jsTemplate %}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var ruleId = {% if rule %}{{ rule.id }}{% else %}-1{% endif %};
+	var answer = {% if rule %}'{{ rule.answer|safe|linebreaksbr|quotation_mark_translate|safe }}'{% else %}''{% endif %};
+
+	var materialId = {% if rule %}{{ rule.material_id }}{% else %}0{% endif %};
+	var newsesJsonStr = '{{ newses|safe }}';
+
+	var activeType = {% if rule %}{{ rule.active_type }}{% else %}0{% endif %};
+	var startHour = {% if rule %}{{ rule.start_hour }}{% else %}0{% endif %};
+	var endHour = {% if rule %}{{ rule.end_hour }}{% else %}0{% endif %};
+
+	$(document).ready(function() {
+		var editor = new W.view.weixin.MessageEditor({
+			el: '#edit-message-panel',
+			newses: $.parseJSON(this.newsesJsonStr),
+			materialId: materialId,
+			ruleId: ruleId,
+			answer: answer,
+			enableRuleActivationController: true,
+			activeType: activeType,
+			startHour: startHour,
+			endHour: endHour
+		});
+		editor.bind("finish-edit", function(message){
+			W.getLoadingView().show();
+			//var api = 'unmatch_rule/update';
+			var method = 'post';
+			if (ruleId == -1) {
+				method = 'put';
+			}
+			
+			var task = new W.DelayedTask(function() {
+				W.getApi().call({
+		            method: method,
+		            app: 'new_weixin',
+		            resource: 'unmatch_rules',
+		            //args: {
+				//W.getApi().call({
+				//W.resource.new_weixin.UnmatchRules.put({
+					//app: 'weixin/message/qa',
+					//api: api,
+					//method: 'post',
+					//method: method,
+					//app: 'new_weixin',
+					//resource: 'unmatch_rules',
+
+					args: {
+						rule_id: ruleId,
+						active_type: message.activeType,
+						start_hour: message.startHour,
+						end_hour: message.endHour,
+						answer: message.answer,
+						material_id: message.materialId
+					},
+					success: function(rule) {
+						//更新ruleId
+						window.location.href = '/weixin/message/qa/unmatch_rule/';
+					},
+					error: function(rule) {
+						W.getLoadingView().hide();
+						alert('添加规则失败');
+					}
+				})
+			});
+			task.delay(100);
+		});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html style="background-color: #F5F5F5;">
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        <link type="text/css" rel="stylesheet" media="all" href="/static/css/base.css">
+        <link type="text/css" rel="stylesheet" media="all" href="/static/termite_css/system.css">
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/library/spin-1.3.js"></script>
+    </head>
+    <body>
+        <div id="spin-wrapper" style="top: 30%;">
+            <div id="spin"></div>
+            <div id="spin-hint" class="ml10">加载设计页...</div>
+        </div>
+        <script type="text/javascript" src="/static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/termite_js/system/termite_system.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/Broadcaster.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/WaitForPageTask.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var clientWidth = $('body').width();
+                var left = (clientWidth - 100) / 2; //100为spinner的width
+                $('#spin-wrapper').css('left', left+'px').show();
+                var BIG_SPIN_OPTS = {
+                    lines: 12, // The number of lines to draw
+                    length: 15, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 10, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 0, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#FFF', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 50, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: 'auto', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                var spinner = new Spinner(BIG_SPIN_OPTS);
+                spinner.spin($('#spin')[0]);
+
+                var waitForParentPage = function() {
+                    W.Broadcaster.attach();
+                    W.Broadcaster.on('component:select', function(component) {
+                        if (component.isRootPage()) {
+                            var url = window.location.href + '&page_id=' + component.cid;
+                            W.design.receivePage();
+                            xlog('[wait design page]: found parent\'s active page, redirect from ' + window.location.href + ' to ' + url);
+                            //刷新页面
+                            window.location.href = url;    
+                        }
+                    });
+                    W.design.requestForPage();
+                }
+
+                var waitForParentBroadcaster = function() {
+                    var task = new W.DelayedTask(function() {
+                        xlog('[wait design page]: check parent.W.Broadcaster...');
+                        if (parent && parent.W && parent.W.Broadcaster) {
+                            xlog('[wait design page]: found parent.W.Broadcaster, wait for parent\'s active page');
+                            waitForParentPage();
+                        } else {
+                            waitForParentBroadcaster();
+                        }
+                    });
+                    task.delay(50);
+                }
+
+                waitForParentBroadcaster();
+            })
+        </script>
+    </body>
+</body>

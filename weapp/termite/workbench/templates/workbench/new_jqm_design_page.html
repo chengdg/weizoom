@@ -1,0 +1,109 @@
+{% load workbench_filter %}
+<!DOCTYPE html>
+<html style="background-color: #ddd">
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        <link type="text/css" rel="stylesheet" href="/static/jquery/jquery.mobile-1.3.1.min.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/webapp_v2/base.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/webapp_v2/webapp_default.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/webapp_v2/widget.css">        
+        <link type="text/css" rel="stylesheet" href="/termite_static/css/webapp_v2/jqmobileEnhance.css">
+        {% if 'custom_template' not in request.project.inner_name%}
+        <link type="text/css" rel="stylesheet" href="/webapp_static/{{request.project.inner_name}}/css/{{request.project.inner_name}}.css">
+        {% endif %}
+        <!--
+        <link type="text/css" rel="stylesheet" href="/static/project_css/{{project_css}}">
+        -->
+
+        <link type="text/css" rel="stylesheet" href="/static/css/design.css">
+        
+        <script type="text/javascript" src="/static/jquery/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="/static/jquery/jquery-ui-1.10.3/jquery-ui-1.10.3.custom.min.js"></script>
+        <script type="text/javascript">
+            var $window = $(window);
+            var W = {};
+            $(document).bind("mobileinit", function () {
+                $.mobile.ajaxEnabled = false;
+            });
+
+            $window.on( "pagebeforecreate", function( event ) {
+                var webappOwnerName = "{{request.user_profile.user.username}}";
+                if (webappOwnerName === 'zhijue') {
+                     $('[data-role="page"]').addClass('xui-zhijuePage');                    
+                }
+            });
+        </script>
+        {% block mobileinit %}{% endblock %}
+
+        <script type="text/javascript" src="/static/jquery/jquery.mobile-1.3.1.min.js"></script>
+        
+        <script type="text/javascript" src="/static/jquery/photoswipe/klass.min.js"></script>
+        <script type="text/javascript" src="/static/jquery/photoswipe/code.photoswipe.jquery-3.0.5-design.js"></script>        
+
+        <script type="text/javascript" src="/static/js/widget/jquery.imageAutoHeight.js"></script>
+        <script type="text/javascript" src="/termite_static/js/widget/jquery.mobile.swipeImage.js"></script>
+        <script type="text/javascript" src="/termite_static/termite_js/library/html2canvas-0.4.1.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div data-role="page" data-theme="x" class="wa-page x-design {{request.page_model.class}} {% if not request.page_model.background %}xui-default-background{% endif %}" style="margin-bottom: 20px; {% if request.page_model.background %}background-image: url({{request.page_model.background}}){% endif %}">
+            {{ page_html_content|safe }}
+        </div>
+
+        <script type="text/javascript" src="/static/js/system/system.js"></script>
+        <script type="text/javascript" src="/static/js/system/template-0.9.js"></script>
+        <script type="text/javascript" src="/static/js/system/api.js"></script>
+
+        <script type="text/javascript" src="/static/backbone/underscore-1.4.4.min.js"></script>
+        <script type="text/javascript" src="/static/backbone/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/termite_js/system/termite_system.js"></script>
+
+        <script type="text/javascript" src="/static/termite_js/app/design/Broadcaster.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/CoverManager.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/DesignPage.js"></script>
+        <script type="text/javascript" src="/static/termite_js/app/design/JqmDesignPage.js"></script>
+        <script type="text/javascript">
+            W.isSystemManager = true;//{% if user|is_system_manager %}true{% else %}false{% endif %};
+            function startDetectParentTask() {
+                var detectParentTask = new W.DelayedTask(function() {
+                    xlog(parent.W);
+                    xlog(parent.W.isReady);
+                    if (parent.W && parent.W.isReady) {
+                        //parent已经准备好，进行初始化
+                        xlog('[design page]: parent is ready, initialize design page');
+                        var task = new W.DelayedTask(function() {
+                            W.Broadcaster.attach();
+                            var page = new W.design.JqmDesignPage({
+                                el: 'div[data-role="page"]',
+                                isEnableAction: W.isSystemManager,
+                                isEnableSort: W.isSystemManager
+                            });
+                            parent.W.design.DesignPageView = page;
+                        });
+                        task.delay(50);
+
+                        var collapsibleTask = new W.DelayedTask(function() {
+                            $('a.ui-collapsible-heading-toggle').click(function(event) {
+                                event.stopPropagation();
+                                event.preventDefault();
+                                return false;
+                            });
+                        });
+                        collapsibleTask.delay(1000);
+                    } else {
+                        //parent没有准备好，准备下一次检测
+                        xlog('[design page]: parent is NOT ready, prepare next detecting');
+                        startDetectParentTask();
+                    }
+                });
+                detectParentTask.delay(500);
+            }
+        
+
+            $(document).ready(function() {
+                startDetectParentTask();
+            });
+        </script>
+    </body>
+</html>

@@ -16,7 +16,7 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib import auth
 from django.db.models import Q, F
 
-from tools.regional import views as regional_util
+# from tools.regional import views as regional_util
 from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
 from core import dateutil

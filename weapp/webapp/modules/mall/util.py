@@ -4,7 +4,7 @@
 import time
 
 
-from core.alipay.alipay_submit import *
+# from core.alipay.alipay_submit import *
 
 from account.models import UserProfile
 from modules.member.models import *
@@ -13,7 +13,7 @@ from modules.member.models import WebAppUser
 from account.models import *
 from mall.models import *
 
-from tools.regional.views import get_str_value_by_string_ids
+# from tools.regional.views import get_str_value_by_string_ids
 # from core.send_order_email_code import *
 
 

@@ -1,0 +1,53 @@
+{% extends "viper/content_base.html" %}
+
+{% load workbench_filter %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    if (!window.W.design) {
+        W.design = {};
+        W.inDesignMode = true;
+    }
+</script>
+<script type="text/javascript" src="/static/termite_js/app/design/Broadcaster.js"></script>
+<script type="text/javascript" src="/static/termite_js/app/design/CoverManager.js"></script>
+<script type="text/javascript" src="/static/termite_js/app/design/DesignPage.js"></script>
+<script type="text/javascript" src="/static/termite_js/app/design/ViperDesignPage.js"></script>
+<!--{/{ ''|load_weapp_ui_role_views|safe }/}-->
+<script type="text/javascript">
+    W.isSystemManager = {% if user|is_system_manager %}true{% else %}false{% endif %};
+    $(document).ready(function() {
+        var createDesignPageViewtask = new W.DelayedTask(function() {
+            xlog('[design page]: create design page');
+            W.Broadcaster.attach();
+            var page = new W.design.ViperDesignPage({
+                el: '.t-pageContainer',
+                isEnableAction: W.isSystemManager,
+                isEnableSort: W.isSystemManager
+            });
+            parent.W.design.DesignPageView = page;
+        });
+        createDesignPageViewtask.delay(50);
+
+        var disableLinkTask = new W.DelayedTask(function() {
+            xlog('[design page]: disable link click');
+            $('#main-panel a').click(function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                return false;
+            });
+
+            $('form').submit(function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                return false;
+            });
+        });
+        disableLinkTask.delay(1000);
+    });
+</script>
+{% endblock %}
