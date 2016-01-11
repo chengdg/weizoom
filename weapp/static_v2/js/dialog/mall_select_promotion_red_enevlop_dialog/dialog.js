@@ -50,7 +50,7 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
     },
 
     onAllin: function(event){
-        var $modal_content = $(event.target).parents('.modal-content')
+        var $modal_content = $(event.target).parents('.modal-content');
         if($(event.target).is(':checked')){
             this.allin_input = $(event.target).is(':checked');
             $modal_content.find('.xa-selectAll').attr('disabled', true);
@@ -102,7 +102,7 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
         var filter_value = dataValue.join('|');
         this.table.reload({
             'filter_value': filter_value,
-            'allin':$('.xa-allin:checked').length
+            'allin': $('.xa-allin:checked').length
         })
     },
 
@@ -148,10 +148,10 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
             data.display_items.push(this.vip_options.member_tag);  // 会员分组
             data.display_items.push(this.vip_options.member_source);  // 会员来源
 
-            var vip_status = this.vip_options.member_status;  // 会员状态
-            vip_status.value = '1';
-            vip_status.text = '关注';
-            data.display_items.push(vip_status);
+            //var vip_status = this.vip_options.member_status;  // 会员状态
+            //vip_status.value = '1';
+            //vip_status.text = '关注';
+            //data.display_items.push(vip_status);
 
             // 积分范围
             if(this.vip_options.integral.value != ''){
@@ -172,18 +172,20 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
             if(this.vip_options.integral.value != ''){
                 filter_value += '|' + 'integral:' + this.vip_options.integral.value;
             }
-
-            filter_value += '|' + 'status:' + '1';
+            if(this.vip_options.member_status.value != '-1') {
+                filter_value += '|' + 'status:' + this.vip_options.member_status.value;
+            }
             var args = {
                 'filter_value': filter_value,
                 'count_per_page':999999999
             };
             W.getApi().call({
                 app: 'member' ,
-                api: 'members/get',
+                api: 'member_list',
+                method: 'get',
                 args: args,
                 success: function(vipdata){
-                    data.is_group = true;
+                    //data.is_group = true;
                     for(var i=0; i<vipdata.items.length; ++i){
                         data.items_ids.push(vipdata.items[i])
                     }

@@ -43,7 +43,7 @@ def get_request_members_list(request, export=False):
 
 	filter_data_args = {}
 	filter_data_args['webapp_id'] = request.user_profile.webapp_id
-
+	filter_data_args['is_for_test'] = False
 	filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
 
 	#处理已经被选的会员
@@ -185,7 +185,7 @@ def build_return_member_json(member):
 	from mall.models import Order
 	return {
 		'id': member.id,
-		'username': member.username_for_title,
+		'username': member.username_truncated,
 		'username_truncated': member.username_truncated,
 		'user_icon': member.user_icon,
 		'grade_name': member.grade.name,
