@@ -638,12 +638,12 @@ else:
     VISIT_RECORD_MIN_TIME_SPAN_SECONDS = 24 * 60 * 60
     USE_MOCK_PAY_API = False
     CDN_HOST = 'http://weappstatic.b0.upaiyun.com'
-    H5_HOST = 'http://h5.mall3.weizzz.com'
+    H5_HOST = 'http://mall.weizoom.com'
     DEBUG_MERGED_JS = False
     USE_DEV_JS = False
 
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
-    WAPI_HOST = 'http://api.weizzz.com'
+    WAPI_HOST = 'http://api.weizoom.com'
 
 
 IN_DEVELOP_MODE = (MODE == 'develop')
