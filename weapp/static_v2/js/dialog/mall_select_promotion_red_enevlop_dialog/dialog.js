@@ -102,7 +102,7 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
         var filter_value = dataValue.join('|');
         this.table.reload({
             'filter_value': filter_value,
-            'allin':$('.xa-allin:checked').length
+            'allin': $('.xa-allin:checked').length
         })
     },
 
@@ -181,7 +181,7 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
             };
             W.getApi().call({
                 app: 'member' ,
-                api: 'issuingcoupon_members',
+                api: 'member_list',
                 method: 'get',
                 args: args,
                 success: function(vipdata){

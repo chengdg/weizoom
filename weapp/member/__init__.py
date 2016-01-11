@@ -6,4 +6,3 @@ import member_list
 import member_tags
 import update_member_tag_or_grade
 import member_qrcode
-import issuing_coupon_members

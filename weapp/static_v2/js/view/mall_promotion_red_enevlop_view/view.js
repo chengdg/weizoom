@@ -169,12 +169,14 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
 W.view.mall.RedAdvancedTable = W.view.common.AdvancedTable.extend({
     //     W.view.mall.RedAdvancedTable.__super__.load.call(this, from_goto, options);
     afterload:function(){
+        var $allin =  $('.xa-allin:checked');
         $('.xui-selectUserDialog .xa-allin').parent().replaceWith('<label class="pa" style="right:25px;">' + 
             '<input class="xa-allin pr" style="top:3px;right:3px;" type="checkbox">' + 
             '筛选出来的' + this.paginationView.pageinfo.object_count + 
             '人(已取消关注的除外)</label>');
-        if($('.xa-allin:checked').length==1){
+        if($allin.length==1){
             $('.xui-advancedTableContent :checkbox').attr('disabled', 'disabled').attr('checked', true);
+            $('.xa-allin').prop('checked', true);
         }
     }
 })
