@@ -87,7 +87,7 @@ class voteParticipances(resource.Resource):
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
+				'participant_name': member_id2member[data.member_id].username_truncated if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})

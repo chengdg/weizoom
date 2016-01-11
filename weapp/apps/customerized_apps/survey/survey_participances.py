@@ -167,7 +167,7 @@ class surveyParticipances_Export(resource.Resource):
 					for item in items:
 						item_values = item['item_value']
 						add_row_list_num = 0
-						if type(item_values) == list and len(item_values) > 1:
+						if type(item_values) == list:
 							for item_value in item_values:
 								ws.write(row+add_row_list_num,col,item_value)
 								add_row_list_num += 1
@@ -176,7 +176,6 @@ class surveyParticipances_Export(resource.Resource):
 								ws.write(row,col,item_values)
 							else:
 								ws.write(row,col,'')
-							row += 1
 						add_row_num.append(add_row_list_num)
 						col += 1
 					row = row + max(add_row_num)
