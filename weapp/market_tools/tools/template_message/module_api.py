@@ -247,7 +247,7 @@ def _record_send_template_info(order, template_id, user):
 # 	"coupon_rule": u'每笔订单满159元即可使用本卷' or u'不限'
 # }
 ########################################################################
-def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
+def send_weixin_template_message(webapp_owner_id, member_id, model, send_point, remark_text=None):
 	if _is_member_subscribed(member_id):
 		# 会员已经取消关注
 		return True
@@ -258,6 +258,11 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point):
 	if not template_message:
 		return False
 	template_message.send_point = send_point
+
+	#duhao 20160108 为了实现微众自营账号在skep系统中给用户发优惠券时显示自定义文本
+	if remark_text:
+		template_message.remark_text = remark_text
+
 	# return _get_send_message_dict(user_profile, member_id, model, template_message)
 
 	if model and user_profile and template_message and template_message.template_id:
