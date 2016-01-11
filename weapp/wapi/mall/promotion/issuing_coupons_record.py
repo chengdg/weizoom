@@ -56,7 +56,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		# member_ids = request.POST.get('member_id', None)  # 获取会员id 组
 		# member_ids = json.loads(member_ids)
 		member_ids = [member_id]
-		coupon_rule_id = int(request.POST.get('coupon_rule_id'))  # 优惠券规则
+		# coupon_rule_id = int(request.POST.get('coupon_rule_id'))  # 优惠券规则
 		pre_person_count = 1  # 每人几张
 		person_count = 1  # 发放的人数
 		send_count = pre_person_count * person_count  # 发放的张数
