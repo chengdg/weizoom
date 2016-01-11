@@ -69,13 +69,13 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
             $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放优惠券</div>");
         }
     },
-    onMouseenterShow:function(event){
-    	$(event.target).find('.xa-delete').show();
-    },
-
-    onMouseenterhide:function(event){
-    	$(event.target).find('.xa-delete').hide();
-    },
+    //onMouseenterShow:function(event){
+    //	$(event.target).find('.xa-delete').show();
+    //},
+	//
+    //onMouseenterhide:function(event){
+    //	$(event.target).find('.xa-delete').hide();
+    //},
 
     onClickDeleteProduct:function(event){
     	$(event.target).parents('.xa-vip-username').remove();
