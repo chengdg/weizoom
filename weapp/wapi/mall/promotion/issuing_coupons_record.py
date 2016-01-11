@@ -16,7 +16,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 	app = 'promotion'
 	resource = 'issuing_coupons_record'
 
-	@param_required(['token', 'member_id', 'coupon_rule_id', 'product_name'])
+	@param_required(['owner_id', 'token', 'member_id', 'coupon_rule_id', 'product_name'])
 	def post(args):
 		"""
 		获取商品和供应商信息
@@ -29,6 +29,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		coupon_id = ''
 		err_msg = ''
 
+		owner_id = args['owner_id']
 		token = args['token']
 		member_id = int(args['member_id'])
 		coupon_rule_id = int(args['coupon_rule_id'])
@@ -74,7 +75,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 
 		# 创建优惠券记录
 		coupon_record = promotion_models.CouponRecord.objects.create(
-			owner=request.manager,
+			owner_id=owner_id,
 			coupon_rule_id=coupon_rule_id,
 			pre_person_count=pre_person_count,
 			person_count=person_count,
@@ -88,7 +89,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 				c_index = 0
 				c_real_count = 0
 				while c_index < pre_person_count:
-					coupon, msg = consume_coupon(request.manager.id, coupon_rule_id, member_id,
+					coupon, msg = consume_coupon(owner_id, coupon_rule_id, member_id,
 												 coupon_record_id=coupon_record.id, not_block=True)
 					if coupon:
 						coupon_id = coupon.coupon_id
