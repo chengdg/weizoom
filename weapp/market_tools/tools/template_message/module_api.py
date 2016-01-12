@@ -247,7 +247,7 @@ def _record_send_template_info(order, template_id, user):
 # 	"coupon_rule": u'每笔订单满159元即可使用本卷' or u'不限'
 # }
 ########################################################################
-def send_weixin_template_message(webapp_owner_id, member_id, model, send_point, remark_text=None):
+def send_weixin_template_message(webapp_owner_id, member_id, model, send_point, first_text=None):
 	if _is_member_subscribed(member_id):
 		# 会员已经取消关注
 		return True
@@ -260,8 +260,8 @@ def send_weixin_template_message(webapp_owner_id, member_id, model, send_point, 
 	template_message.send_point = send_point
 
 	#duhao 20160108 为了实现微众自营账号在skep系统中给用户发优惠券时显示自定义文本
-	if remark_text:
-		template_message.remark_text = remark_text
+	if first_text:
+		template_message.first_text = first_text
 
 	# return _get_send_message_dict(user_profile, member_id, model, template_message)
 
@@ -314,6 +314,7 @@ def _get_send_message_dict(user_profile, member_id, model, template_message):
 		detail_data = {}
 		detail_data["first"] = {"value" : template_message.first_text, "color" : "#000000"}
 		detail_data["remark"] = {"value" : template_message.remark_text, "color" : "#000000"}
+		print 'detail_data:',detail_data
 
 		customer_data = __get_detail_data_by_template(template_message.template_message, model)
 		detail_data = dict(detail_data, **customer_data)
@@ -355,3 +356,51 @@ def __get_coupon_detail_data(attribute, model):
 		detail_data[key] = {"value" : value, "color" : "#173177"}
 
 	return detail_data
+
+
+
+########################################################################
+# send_template_message_for_weizoom: 为微众自营账号定制的发送模板消息接口
+# 目前只发送反馈未被采纳的“审核不通过通知”
+# duhao 20160112
+########################################################################
+def send_template_message_for_weizoom(webapp_owner_id, member_id, template_data):
+	if _is_member_subscribed(member_id):
+		# 会员已经取消关注
+		return True
+
+	#构造template_message对象
+	# template_message = DummyTemplateMessage()
+	# template_message.owner_id = webapp_owner_id
+	# template_message.industry = INDUSTR_IT
+	# template_message.first_text = first_text
+	# template_message.remark_text = remark_text
+	# template_message.type = MAJOR_INDUSTRY_TYPE
+
+	user_profile = UserProfile.objects.get(user_id=webapp_owner_id)
+	user = user_profile.user
+
+	if template_data and user_profile:
+		mpuser_access_token = _get_mpuser_access_token(user)
+		if mpuser_access_token:
+			try:
+				weixin_api = get_weixin_api(mpuser_access_token)
+
+				social_account = member_model_api.get_social_account_by_member_id(member_id)
+				if social_account and social_account.openid:
+					template_data['touser'] = social_account.openid
+					
+				result = weixin_api.send_template_message(template_data, True)
+				return True
+			except:
+				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+				watchdog_warning(notify_message)
+				return False
+		else:
+			return False
+
+	return True
+
+
+# class DummyTemplateMessage():
+# 	pass
