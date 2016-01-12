@@ -512,8 +512,9 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 
 	#取消关注后，不能再帮bill助力
 	When tom点击bill分享的微助力活动链接进行助力
+	When 更新助力排名
 	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
-	When tom通过识别弹层中的带参数二维码关注jobs的公众号
+	When tom关注jobs的公众号
   	When 更新助力排名
 	#tom关注成功后，助力成功即bill助力值加1
 	When tom访问jobs的webapp
@@ -531,8 +532,8 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"background_pic": "2.jpg",
 			"background_color": "冬日暖阳",
 			"rules": "获奖条件必须要排名在100名以内<br />获奖名单将在什么时间点公布<br />奖品都有哪些内容<br />奖励的领取方式",
-			"my_rank": "1",
-			"my_power_score": "1",
+			"my_rank": "无",
+			"my_power_score": "0",
 			"total_participant_count": "1"
 		}]
 		"""
