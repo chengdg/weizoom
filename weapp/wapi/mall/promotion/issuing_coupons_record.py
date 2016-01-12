@@ -62,8 +62,8 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		if has_reward == 'False':
 			template_id = OWNER2TEMPLATE[owner_id]['template_id']
 			template_url = OWNER2TEMPLATE[owner_id]['template_url']
-			first_text = u'很遗憾，您对“%s”的反馈建议未被采纳呢~' % product_name
-			remark_text = u'想知道怎样的反馈才能被采纳么？赶快点击详情了解吧！'
+			first_text = u'很遗憾，您对“%s”的反馈建议未被采纳呢~\n' % product_name
+			remark_text = u'\n想知道怎样的反馈才能被采纳么？赶快点击详情了解吧！'
 			try:
 				send_message_to_member_for_weizoom(owner_id, member_id, template_id, template_url, first_text, remark_text)
 				return {
