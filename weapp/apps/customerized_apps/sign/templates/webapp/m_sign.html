@@ -1,6 +1,5 @@
 {% extends "apps_base.html" %}
 
-
 {% block css %}
 <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
 <style type="text/css">
@@ -12,7 +11,6 @@
         color: #8F8F8F;
     }
 
-
     .wui-resultDialog{
         background: white;
         display: none;
@@ -21,7 +19,7 @@
         left: 5%;
         width: 90%;
         border-radius: 5px;
-        z-index: 2;
+        z-index: 10001;
     }
     .wui-resultDialog>.wui-i-header>.wui-i-title{
         margin-top: 30px;
@@ -175,9 +173,8 @@
 {% block js %}
 <script type="text/javascript">
     var prize_info = JSON.parse('{{ prize_info|safe}}');
-    var status = "{{ activity_status }}";
-    var resultDialog;
-    W.isMember = {% if request.member.is_subscribed %}true{% else %}false{% endif %};
+
+    var activity_status, status, resultDialog;
 
     function ResultDialog(selector) {
         var that = this;
@@ -247,11 +244,7 @@
         this.$el.hide();
     };
 
-    $(function () {
-        if(W.isPC){
-            return false;
-        }
-        resultDialog = new ResultDialog();
+    function bindListeners(){
         //绑定签到按钮点击事件
         $('.wa-sign-btn').on('click', function () {
             var $this = $(this);
@@ -279,9 +272,10 @@
                         status = '已签到';
                         //添加积分增长特效
                         var adder = data.curr_prize.integral;
-                        var ori_integral = $('.wui-UserPoint').find('span').text();
-                        $('.wui-UserPoint').find('span').text(parseInt(ori_integral) + adder);
-                        $('.wui-UserPoint').find('.wui-integral-adder').html('+' + adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function () {
+                        var $userPoint = $('.wui-UserPoint');
+                        var ori_integral = $userPoint.find('span').text();
+                        $userPoint.find('span').text(parseInt(ori_integral) + adder);
+                        $userPoint.find('.wui-integral-adder').html('+' + adder).addClass('animated fadeOutUp').one('webkitAnimationEnd animationend', function () {
                             $(this).hide();
                         });
                         fillPrizeInfo(prize_info);
@@ -296,8 +290,6 @@
 
             }
         });
-        //发送请求，单独获取数据，优化首页时间
-        getDynamicData();
 
         //查看规则
         $('.wa-signPageDiv').find('.wa-rules').on('click', function () {
@@ -305,8 +297,7 @@
             $('.wa-rules-div').show();
             $('title').html('活动规则');
         });
-        //填充积分规则
-        fillRulesInfo(prize_info);
+
         //返回
         $('.wui-rules-footer-div').find('.wa-btn-back').on('click', function () {
             $('.wa-rules-div').hide();
@@ -317,6 +308,19 @@
         $('.wa-rules-i-center').on('click', function () {
             window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
         });
+    }
+
+    $(function () {
+        if(W.isPC){
+            return false;
+        }
+        resultDialog = new ResultDialog();
+        //绑定事件
+        bindListeners();
+        //填充积分规则
+        fillRulesInfo(prize_info);
+        //发送请求，单独获取数据，优化首页时间
+        getDynamicData();
     });
 
     function fillRulesInfo(prize_info){
@@ -392,13 +396,13 @@
             },
             success:function(data){
                 status = data.status;
+                activity_status = data.activity_status;
                 W.isMember = data.isMember;
-                prize_info = data.prize_info;
                 //填充用户信息
                 fillUserInfo(data);
                 //填充签到奖励信息
                 fillPrizeInfo(data.prize_info, true);
-
+                loadingStatus(false);
             },
             error:function(data){
                 if(data.errMsg == 'is_deleted'){
@@ -406,6 +410,7 @@
                 }else{
                     wuiAlert(data.errMsg)
                 }
+                loadingStatus(false);
             }
         });
     }
