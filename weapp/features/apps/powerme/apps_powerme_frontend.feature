@@ -448,7 +448,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"total_participant_count": "0"
 		}]
 		"""
-  	When 更新助力排名
+	When 更新助力排名
 	Then bill获得"微助力活动1"的助力值排名
 		"""
 		[]
@@ -464,7 +464,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
-  	When 更新助力排名
+	When 更新助力排名
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -479,7 +479,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"total_participant_count": "1"
 		}]
 		"""
-  	When 更新助力排名
+	When 更新助力排名
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
@@ -490,7 +490,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 	When bill在微信中向jobs的公众号发送消息'微助力1'
 	Then bill收到自动回复'微助力1单图文'
 	When bill点击图文"微助力1单图文"进入微助力活动页面
-  	When 更新助力排名
+	When 更新助力排名
 	Then bill获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -505,23 +505,26 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"total_participant_count": "1"
 		}]
 		"""
-  	When 更新助力排名
+	When 更新助力排名
 	Then bill获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-	#取消关注后，不能再帮bill助力
+	#取消关注后，tom再点击bill分享的链接，页面按钮显示'帮bill助力'
+	#点击此按钮，显示二维码弹层
+	When tom点击bill分享的微助力活动链接进行助力
+	#Then tom获得公众号二维码
+
+	When tom通过识别弹层中的带参数二维码关注jobs的公众号
+	#关注后，再点击bill分享的链接，页面按钮显示'已帮bill助力'
 	When tom点击bill分享的微助力活动链接进行助力
 	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
-	When tom通过识别弹层中的带参数二维码关注jobs的公众号
-  	When 更新助力排名
-	#tom关注成功后，助力成功即bill助力值加1
+
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'微助力1'
 	Then tom收到自动回复'微助力1单图文'
-	When 更新助力排名
 	When tom点击图文"微助力1单图文"进入微助力活动页面
-  	When 更新助力排名
+	When 更新助力排名
 	Then tom获得jobs的'微助力活动1'的内容
 		"""
 		[{
@@ -536,12 +539,10 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 			"total_participant_count": "1"
 		}]
 		"""
-  	When 更新助力排名
+	When 更新助力排名
 	Then tom获得"微助力活动1"的助力值排名
 		| rank | name | value |
 		|  1   | bill |   1   |
-
-	#虽然按钮显示为未帮助助力之前的状态，而且也在关注公众号的时候显示主力成功，但是助力值是不生效的
 
 @mall2 @apps_powerme @apps_powerme_frontend
 Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维码）
