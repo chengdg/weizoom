@@ -84,7 +84,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		success = False
 		coupon_id = ''
 		err_msg = ''
-		first_text = u'恭喜您，您对“%s”的反馈已经被采纳，特为您奉上反馈奖励券一张！' % product_name
+		first_text = u'恭喜您，您对“%s”的反馈已经被采纳，特为您奉上反馈奖励券一张！\n' % product_name
 		print 'token:',token
 		print 'member_id:',member_id
 		print 'coupon_rule_id:',coupon_rule_id
