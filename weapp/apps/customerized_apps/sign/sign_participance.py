@@ -99,8 +99,8 @@ class SignParticipance(resource.Resource):
 				detail_dict['prize'] = {
 					'integral': return_data['curr_prize_integral'],
 					'coupon': {
-						'id': return_data['curr_prize_coupon_id'] if coupon_flag else 0,
-						'name': return_data['curr_prize_coupon_name'] if coupon_flag else u'奖励已领完,请联系客服补发'
+						'id': return_data['curr_prize_coupon_id'],
+						'name': return_data['curr_prize_coupon_name'] if coupon_flag else u'优惠券已领完,请联系客服补发'
 					}
 				}
 				response = create_response(200)

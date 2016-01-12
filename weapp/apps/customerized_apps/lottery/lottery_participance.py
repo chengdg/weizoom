@@ -71,7 +71,7 @@ class lotteryParticipance(resource.Resource):
 				else:
 					coupon_rule_id = int(prize['data']['id'])
 					# coupon, msg = mall_api.consume_coupon(request.webapp_owner_id, coupon_rule_id, request.member.id)
-					coupon, msg = get_consume_coupon(request.webapp_owner_id, 'lottery', data['belong_to'], coupon_rule_id, request.member.id)
+					coupon, msg, _ = get_consume_coupon(request.webapp_owner_id, 'lottery', data['belong_to'], coupon_rule_id, request.member.id)
 					if not coupon:
 						error_msg = msg
 		

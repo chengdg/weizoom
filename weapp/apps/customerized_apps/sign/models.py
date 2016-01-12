@@ -147,8 +147,8 @@ class SignParticipance(models.Document):
 		curr_prize_coupon_count = 0
 		if curr_prize_coupon_id != '':
 			from apps.request_util import get_consume_coupon
-			coupon,msg = get_consume_coupon(sign.owner_id,'sign', str(sign.id), curr_prize_coupon_id, self.member_id)
-			curr_prize_coupon_count = 1 if coupon else 0 #1表示有优惠券
+			coupon, msg, coupon_count = get_consume_coupon(sign.owner_id,'sign', str(sign.id), curr_prize_coupon_id, self.member_id)
+			curr_prize_coupon_count = coupon_count
 		return_data['curr_prize_integral'] = curr_prize_integral
 		return_data['curr_prize_coupon_count'] = curr_prize_coupon_count
 		return_data['curr_prize_coupon_id'] = curr_prize_coupon_id
@@ -258,7 +258,13 @@ class Sign(models.Document):
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
-						detail_prize_dict = {}
+						detail_prize_dict = {
+							'integral': 0,
+							'coupon': {
+								'id': 0,
+								'name': ''
+							}
+						}
 						return_html.append(u'签到成功！\n已连续签到%s天。\n本次签到获得以下奖励:\n' % return_data['serial_count'])
 						return_html.append(str(return_data['curr_prize_integral']))
 						return_html.append(u'积分')
@@ -274,8 +280,8 @@ class Sign(models.Document):
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
 								detail_prize_dict['coupon'] = {
-									'id': 0,
-									'name': u'奖励已领完,请联系客服补发'
+									'id': return_data['curr_prize_coupon_id'],
+									'name': u'优惠券已领完,请联系客服补发'
 								}
 						return_html.append(u'\n签到说明：%s\n'%sign_description)
 						return_html.append(str(return_data['reply_content']))

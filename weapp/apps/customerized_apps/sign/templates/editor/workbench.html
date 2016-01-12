@@ -275,6 +275,7 @@ ui-appPage-commonStyle">
                         <td
                             class="tl pl25"
                         >
+                        <a class="btn btn-primary hidden-btn" style="display: none;" href="/apps/sign/sign_participance_detail/?member_id=${item.member_id}&belong_to=${item.belong_to}" target="_blank">查看详情</a>
                             <a href="/member/detail/?id=${ item.member_id }" target="_blank">
                                 <img src="${item.participant_icon}" />
                                 {{html item.participant_name}}

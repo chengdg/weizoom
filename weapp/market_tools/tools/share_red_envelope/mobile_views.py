@@ -122,7 +122,7 @@ def get_share_red_envelope(request):
             else:
                 if (red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
                     # coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
-                    coupon, msg = get_consume_coupon(request.webapp_owner_id,'red_envelope',str(red_envelope_rule.id), coupon_rule_id, member_id)
+                    coupon, msg, _ = get_consume_coupon(request.webapp_owner_id,'red_envelope',str(red_envelope_rule.id), coupon_rule_id, member_id)
                     if coupon:
                         this_received_count = RedEnvelopeParticipences.objects.filter(owner_id=request.webapp_owner_id,
                                         red_envelope_rule_id=red_envelope_rule_id,
@@ -172,7 +172,7 @@ def get_share_red_envelope(request):
             member.member_name = member.username_for_html
             if (red_envelope_rule.status and (red_envelope_rule.end_time > datetime.now() or red_envelope_rule.limit_time)):
                 # coupon, msg = consume_coupon(request.webapp_owner_id, coupon_rule_id, member_id)
-                coupon, msg = get_consume_coupon(request.webapp_owner_id,'red_envelope',str(red_envelope_rule.id), coupon_rule_id, member_id)
+                coupon, msg, _ = get_consume_coupon(request.webapp_owner_id,'red_envelope',str(red_envelope_rule.id), coupon_rule_id, member_id)
                 if coupon:
                     this_received_count = RedEnvelopeToOrder.objects.filter(owner_id=request.webapp_owner_id,
                                                                                 order_id=order_id,
