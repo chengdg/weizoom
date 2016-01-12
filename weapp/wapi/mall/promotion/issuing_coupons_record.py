@@ -49,18 +49,35 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		coupon_rule_id = int(args['coupon_rule_id'])
 		product_name = args['product_name']
 
+		user = get_logined_user_from_token(token)
+		if not user:
+			err_msg = u'获取商家身份信息失败'
+			return {
+				'success': False,
+				'coupon_id': coupon_id,
+				'errMsg': err_msg
+			}
+
 		#发送未采纳通知
 		if not has_reward:
 			template_id = OWNER2TEMPLATE[owner_id]['template_id']
 			template_url = OWNER2TEMPLATE[owner_id]['template_url']
 			first_text = u'很遗憾，您对“%s”的反馈建议未被采纳呢~' % product_name
 			remark_text = u'想知道怎样的反馈才能被采纳么？赶快点击详情了解吧！'
-			send_message_to_member_for_weizoom(owner_id, member_id, template_id, template_url, first_text, remark_text)
-			return {
-				'success': True,
-				'coupon_id': '',
-				'errMsg': ''
-			}
+			try:
+				send_message_to_member_for_weizoom(owner_id, member_id, template_id, template_url, first_text, remark_text)
+				return {
+					'success': True,
+					'coupon_id': '',
+					'errMsg': ''
+				}
+			except Exception, e:
+				print 'send no reward message error:',e
+				return {
+					'success': False,
+					'coupon_id': '',
+					'errMsg': e
+				}
 
 
 		#发送优惠券和通知
@@ -75,21 +92,6 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		print 'first_text:',first_text
 		print 'owner_id:',owner_id
 		
-		# return {
-		# 	'success': False,
-		# 	'coupon_id': coupon_id,
-		# 	'errMsg': u'库存不足'
-		# }
-
-		user = get_logined_user_from_token(token)
-		if not user:
-			err_msg = u'获取商家身份信息失败'
-			return {
-				'success': False,
-				'coupon_id': coupon_id,
-				'errMsg': err_msg
-			}
-
 		# member_ids = request.POST.get('member_id', None)  # 获取会员id 组
 		# member_ids = json.loads(member_ids)
 		member_ids = [member_id]
