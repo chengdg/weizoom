@@ -25,8 +25,8 @@ def send_message_to_member_for_weizoom(owner_id, member_id, template_id, templat
     #给用户发审核未通过的提示
     try:
         detail_data = {}
-        detail_data["keyword1"] = u'未采纳'
-        detail_data["keyword2"] = u'反馈内容需进一步完善丰富'
+        detail_data["keyword1"] = {"value" : u'未采纳', "color" : "#173177"}
+        detail_data["keyword2"] = {"value" : u'反馈内容需进一步完善丰富', "color" : "#173177"}
         detail_data["first"] = {"value" : first_text, "color" : "#000000"}
         detail_data["remark"] = {"value" : remark_text, "color" : "#000000"}
         
