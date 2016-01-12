@@ -42,8 +42,8 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		@param coupon_rule_id 优惠券规则id
 		@param has_reward 是否有奖励
 		"""
-		has_reward = args['has_reward']
-		owner_id = args['owner_id']
+		has_reward = bool(args['has_reward'])
+		owner_id = int(args['owner_id'])
 		token = args['token']
 		member_id = int(args['member_id'])
 		coupon_rule_id = int(args['coupon_rule_id'])
