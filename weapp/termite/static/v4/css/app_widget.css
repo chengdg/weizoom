@@ -1313,74 +1313,86 @@ li.wui-selectBox-display-table {
 
 /*反馈*/
 .wui-DropDownBox{
-	padding-top: 10px;
+	padding-top: 15px;
 }
 #freedback_type{
-		background: #fff none repeat scroll 0 0;
-		border: 1px solid #eee;
-		color: #000;
-		display: block;
-		font-size: 16px;
-		height: 45px;
-		line-height: 45px;
-		overflow: hidden;
-		padding-left: 20px;
-		padding-right: 33px;
-		position: relative;
-		text-align: left;
-	}
+	position: relative;
+	background: #fff none repeat scroll 0 0;
+	border: 1px solid #eee;
+	color: #000;
+	display: block;
+	height: 45px;
+	line-height: 45px;
+	padding-left: 20px;
+	padding-right: 33px;
+	text-align: left;
+}
 #freedback_type h1{
 	display: inline-block;
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: bold;
+    max-width: 12.1rem;
+	position: relative;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-left: 4px;
 }
-	#freedback_type .wui-i-mandatory{
-		color: #cdcdcd;
-		font-size: 18px;
-    	font-weight: bold;
-	}
-	.arrow_down{
-		background: #fff url("/static_v2/img/arrow.png") no-repeat scroll 0 0 / 15px 10px;
-		height: 20px;
-		position: absolute;
-		right: 0;
-		top: 19px;
-		width: 34px;
+#freedback_type .type_name{
+	color: #666;
+	margin-left: 10px;
+	display: inline-block;
+	position: relative;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: 1rem;
+}
+.arrow_down{
+	background: #fff url("/static_v2/img/arrow.png") no-repeat scroll 0 0 / 15px 10px;
+	height: 20px;
+	position: absolute;
+	right: 0;
+	top: 19px;
+	width: 34px;
 
-	}
-	.arrow_up{
-		background: #fff url("/static_v2/img/arrow.png") no-repeat scroll 0 0 / 15px 10px;
-		height: 20px;
-		position: absolute;
-    	right: 18px;
-    	top: 8px;
-    	width: 16px;
-		transform:rotate(180deg);
-			-ms-transform:rotate(180deg); 	/* IE 9 */
-			-moz-transform:rotate(180deg); 	/* Firefox */
-			-webkit-transform:rotate(180deg); /* Safari 和 Chrome */
-			-o-transform:rotate(180deg);
-	}
-	.xui-dropmenu{
-		background: #fff none repeat scroll 0 0;
-		position: absolute;
-		width: 100%;
-		z-index: 999;
-	}
-	.xui-dropmenu >ul >li{
-		border-bottom: 1px solid #eee;
-		height: 45px;
-		line-height: 45px;
-		padding-left: 35px !important;
-		padding-right: 35px;
-	}
-	.xui-dropmenu >ul >li >a{
-		color: #000;
-	}
-	#xui-input-type{
-		cursor: pointer;
-		border: 0;
-		color: #fff;
-	}
-	#freedback_textarea::-webkit-input-placeholder::after {
-		display:block;
-		content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
-	}
+}
+.arrow_up{
+	background: #fff url("/static_v2/img/arrow.png") no-repeat scroll 0 0 / 15px 10px;
+	height: 20px;
+	position: absolute;
+	right: 18px;
+	top: 8px;
+	width: 16px;
+	transform:rotate(180deg);
+		-ms-transform:rotate(180deg); 	/* IE 9 */
+		-moz-transform:rotate(180deg); 	/* Firefox */
+		-webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+		-o-transform:rotate(180deg);
+}
+.xui-dropmenu{
+	background: #fff none repeat scroll 0 0;
+	position: absolute;
+	width: 100%;
+	z-index: 999;
+}
+.xui-dropmenu >ul >li{
+	border-bottom: 1px solid #eee;
+	height: 45px;
+	line-height: 45px;
+	padding-left: 35px !important;
+	padding-right: 35px;
+}
+.xui-dropmenu >ul >li >a{
+	color: #000;
+}
+#xui-input-type{
+	cursor: pointer;
+	border: 0;
+	color: #fff;
+}
+#freedback_textarea::-webkit-input-placeholder::after {
+	display:block;
+	content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
+}

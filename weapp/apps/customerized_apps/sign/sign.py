@@ -89,9 +89,6 @@ class Sign(resource.Resource):
 		data['related_page_id'] = request.POST['related_page_id']
 		sign = app_models.Sign(**data)
 		sign.save()
-		#保存后清除redis缓存
-		cache_key = 'apps_sign_%s_html' % data['owner_id']
-		delete_cache(cache_key)
 
 		error_msg = None
 		
@@ -110,15 +107,14 @@ class Sign(resource.Resource):
 		"""
 		if request.POST.get('status', None):
 			status = 1 if request.POST['status'] == 'on' else 0
-			sign = app_models.Sign.objects(id=request.POST['signId'])
-			sign.update(set__status=status)
-			if status == 1 and sign.count() >0:
+			signs = app_models.Sign.objects(id=request.POST['signId'])
+			signs.update(set__status=status)
+			if status == 1 and signs.count() >0:
 				#将所有已签到用户的签到状态重置，作为一个新的签到
-				sign = sign[0]
+				sign = signs[0]
 				app_models.SignParticipance.objects(belong_to=str(sign.id)).update(set__serial_count=0)
 				app_models.SignControl.objects.all().delete()
-			response = create_response(200)
-			return response.get_response()
+			cache_key = 'apps_sign_%s_html' % str(signs[0].owner_id)
 		else:
 			data = export.get_sing_fields_to_save(request)
 			update_data = {}
@@ -126,7 +122,11 @@ class Sign(resource.Resource):
 			for key, value in data.items():
 				if key in update_fields:
 					update_data['set__'+key] = value
-			app_models.Sign.objects(id=request.POST['signId']).update(**update_data)
+			sign = app_models.Sign.objects(id=request.POST['signId']).first()
+			sign.update(**update_data)
+			cache_key = 'apps_sign_%s_html' % sign.owner_id
+		#更新后清除redis缓存
+		delete_cache(cache_key)
 
 		response = create_response(200)
 		return response.get_response()

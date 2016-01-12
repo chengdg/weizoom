@@ -257,7 +257,7 @@ class Msurvey(resource.Resource):
 						'id': str(survey_participance.id),
 						'member_id': survey_participance.member_id,
 						'name': name,
-						'username_for_title': username_for_title,
+						'webapp_user_name': username_for_title,
 						'items': items_data_list,
 						'created_at': created_at
 					})
