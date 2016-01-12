@@ -42,7 +42,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 		@param coupon_rule_id 优惠券规则id
 		@param has_reward 是否有奖励
 		"""
-		has_reward = bool(args['has_reward'])
+		has_reward = args['has_reward']
 		owner_id = int(args['owner_id'])
 		token = args['token']
 		member_id = int(args['member_id'])
@@ -59,7 +59,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 			}
 
 		#发送未采纳通知
-		if not has_reward:
+		if has_reward == 'False':
 			template_id = OWNER2TEMPLATE[owner_id]['template_id']
 			template_url = OWNER2TEMPLATE[owner_id]['template_url']
 			first_text = u'很遗憾，您对“%s”的反馈建议未被采纳呢~' % product_name
