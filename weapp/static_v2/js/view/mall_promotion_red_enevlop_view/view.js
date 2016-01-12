@@ -133,8 +133,8 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
 
 
         if(integral_upper&&integral_lower){
-            integral.value = integral_lower + '-' + integral_upper;
-            integral.text = integral_lower + '-' + integral_upper;
+            integral.value = integral_lower + '--' + integral_upper;
+            integral.text = integral_lower + '--' + integral_upper;
         }else{
             integral.value = '';
             integral.text = '';
