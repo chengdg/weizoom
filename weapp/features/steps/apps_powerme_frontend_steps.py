@@ -304,6 +304,9 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 		'fid': context.page_owner_member_id
 	}
 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=put', params)
+	if json.loads(response.content)['code'] == 500:
+		context.err_msg = json.loads(response.content)['errMsg']
+
 
 @when(u"{webapp_user_name}通过识别弹层中的公众号二维码关注{mp_user_name}的公众号")
 def step_tmpl(context, webapp_user_name, mp_user_name):
@@ -369,3 +372,9 @@ def step_impl(context, webapp_owner_name):
 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_test_user_name+str(i), webapp_owner_name))
 			context.execute_steps(u"When %s点击%s分享的微助力活动链接进行助力" % (webapp_test_user_name+str(i), webapp_user_name))
 	context.execute_steps(u"When 更新助力排名")
+
+@then(u'{webapp_user_name}获得微助力活动提示"{err_msg}"')
+def step_tmpl(context, webapp_user_name, err_msg):
+	expected = err_msg
+	actual = context.err_msg
+	context.tc.assertEquals(expected, actual)
