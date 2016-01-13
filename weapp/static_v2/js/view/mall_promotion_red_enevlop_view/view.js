@@ -59,7 +59,7 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
             // 如果是单选， 显示每个会员
             for(var i=0; i< products.items_ids.length; ++i){
                 $('.xa-selectedProductList').append("<span class='xa-vip-username xui-vip-username mr10 mb10 pr'>"
-                                                        +'<span>'+products.items_ids[i].username+'</span>'
+                                                        +'<span>'+products.items_ids[i].username_truncated+'</span>'
                                                         +'<button class="xui-close xa-delete" type="button">'
                                                         +  '<span>x</span>'
                                                         +'</button>'
