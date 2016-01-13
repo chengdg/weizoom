@@ -58,13 +58,18 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
         }else{
             // 如果是单选， 显示每个会员
             for(var i=0; i< products.items_ids.length; ++i){
-                $('.xa-selectedProductList').append("<span class='xa-vip-username xui-vip-username mr10 mb10 pr'>"
+                if (products.items_ids[i].is_subscribed){
+                    $('.xa-selectedProductList').append("<span class='xa-vip-username xui-vip-username mr10 mb10 pr'>"
                                                         +'<span>'+products.items_ids[i].username_truncated+'</span>'
                                                         +'<button class="xui-close xa-delete" type="button">'
                                                         +  '<span>x</span>'
                                                         +'</button>'
                                                         + "<span class='xa-vip-member-id' style='display:none;'>" + products.items_ids[i].id +"</span>"
                                                         +"</span>");
+                }
+                else{
+                    products.items_ids.splice(i,1);
+                }
             }
             $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放优惠券</div>");
         }
