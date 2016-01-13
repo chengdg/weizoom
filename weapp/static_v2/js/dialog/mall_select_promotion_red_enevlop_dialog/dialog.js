@@ -148,10 +148,10 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
             data.display_items.push(this.vip_options.member_tag);  // 会员分组
             data.display_items.push(this.vip_options.member_source);  // 会员来源
 
-            //var vip_status = this.vip_options.member_status;  // 会员状态
+            var vip_status = this.vip_options.member_status;  // 会员状态
             //vip_status.value = '1';
-            //vip_status.text = '关注';
-            //data.display_items.push(vip_status);
+            vip_status.text = '关注';
+            data.display_items.push(vip_status);
 
             // 积分范围
             if(this.vip_options.integral.value != ''){
@@ -185,7 +185,7 @@ W.dialog.mall.SelectPromotionRedEnevlopDialog = W.dialog.Dialog.extend({
                 method: 'get',
                 args: args,
                 success: function(vipdata){
-                    //data.is_group = true;
+                    data.is_group = true;
                     for(var i=0; i<vipdata.items.length; ++i){
                         data.items_ids.push(vipdata.items[i])
                     }

@@ -46,25 +46,31 @@ W.view.mall.PromotionRedProductView = Backbone.View.extend({
         $('.xa-selectedProductList').empty();
         if(products.is_group){
             // 如果是全选， 显示选择条件
+            var temp = [];
             for(var i=0; i< products.items_ids.length; ++i){
+                if (products.items_ids[i].is_subscribed){
+                    temp.push(products.items_ids[i])
+                }
+            }
+            for(var i=0; i< temp.length; ++i){
                 $('.xa-selectedProductList').append("<span class='xa-vip-member-id' style='display:none;'>" +
-                        products.items_ids[i].id+"</span>" );
+                        temp[i].id+"</span>" );
             }
             // 显示分组查询条件
             for(var i=0; i< products.display_items.length; ++i){
                 $('.xa-selectedProductList').append("<span class='xui-vip-username mr10 mb10'>"+products.display_items[i].name+"("+products.display_items[i].text+")"+"</span>");
             }
-            $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放优惠券</div>");
+            $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+temp.length+">准备向"+temp.length+"人发放优惠券</div>");
         }else{
             // 如果是单选， 显示每个会员
             for(var i=0; i< products.items_ids.length; ++i){
                 $('.xa-selectedProductList').append("<span class='xa-vip-username xui-vip-username mr10 mb10 pr'>"
-                                                        +'<span>'+products.items_ids[i].username_truncated+'</span>'
-                                                        +'<button class="xui-close xa-delete" type="button">'
-                                                        +  '<span>x</span>'
-                                                        +'</button>'
-                                                        + "<span class='xa-vip-member-id' style='display:none;'>" + products.items_ids[i].id +"</span>"
-                                                        +"</span>");
+                                                    +'<span>'+products.items_ids[i].username_truncated+'</span>'
+                                                    +'<button class="xui-close xa-delete" type="button">'
+                                                    +  '<span>x</span>'
+                                                    +'</button>'
+                                                    + "<span class='xa-vip-member-id' style='display:none;'>" + products.items_ids[i].id +"</span>"
+                                                    +"</span>");
             }
             $('.xa-selectedProductList').append("<div class='xa-vip-count' vip_count="+products.items_ids.length+">准备向"+products.items_ids.length+"人发放优惠券</div>");
         }
