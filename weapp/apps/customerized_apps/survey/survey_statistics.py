@@ -101,7 +101,7 @@ class surveyStatistics(resource.Resource):
 						if not title_valid_dict.has_key(title):
 							title_valid_dict[title] = 0
 					title_select_type_dict[title] = title_type
-				if select_datas['type']  in ['appkit.textlist','appkit.uploadimg','appkit.qa']:
+				if select_datas['type']  in ['appkit.uploadimg','appkit.qa']:
 					if not select_title2itemCount.has_key(title):
 						select_title2itemCount[title] = [{
 							'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
