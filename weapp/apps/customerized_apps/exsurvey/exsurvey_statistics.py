@@ -11,10 +11,12 @@ import os
 
 from core import resource
 from core import paginator
+from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from modules.member import models as member_models
 import models as app_models
 from mall import export
+from watchdog.utils import watchdog_error
 
 FIRST_NAV = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -106,16 +108,17 @@ class exsurveyStatistics(resource.Resource):
 							title_valid_dict[title] = 0
 					title_select_type_dict[title] = title_type
 				if select_datas['type']  in ['appkit.uploadimg','appkit.qa','appkit.dropdownbox']:
-					if not select_title2itemCount.has_key(title):
-						select_title2itemCount[title] = [{
-							'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-							'value': select_datas['value']
-						}]
-					else:
-						select_title2itemCount[title].append({
-							'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-							'value': select_datas['value']
-						})
+					if select_datas['value']:
+						if not select_title2itemCount.has_key(title):
+							select_title2itemCount[title] = [{
+								'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+								'value': select_datas['value']
+							}]
+						else:
+							select_title2itemCount[title].append({
+								'created_at': p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+								'value': select_datas['value']
+							})
 				title_type_dict[title] = select_datas['type']
 		for title in sorted(select_title2itemCount.keys()):
 			single_title_dict = {}
@@ -298,8 +301,6 @@ class exsurveyStatistics_Export(resource.Resource):
 							for value in data_value['value']:
 								ws_image.write(image_row,imge_col+1,value)
 								image_row += 1
-							image_row -= 1
-
 						image_row += 1
 						ws_image.write(image_row,imge_col,u'')
 						ws_image.write(image_row,imge_col+1,u'')
@@ -344,6 +345,9 @@ class exsurveyStatistics_Export(resource.Resource):
 			response = create_response(200)
 			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
 		except:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
 			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
 
 		return response.get_response()
