@@ -94,7 +94,7 @@ Background:
 			|   0007   | 2015-03-04   | tom3     | 商品2,1   | 支付    | 微信支付 | 15      | 100    | 115         | 0      | 115    | 0    | jobs,退款     | 退款中       |
 			|   0008   | 2015-03-05   | tom3     | 商品1,1   | 支付    | 支付宝   | 10      | 100    | 110         | 110    | 0      | 0    | jobs,完成退款 | 退款完成     |
 
-@mall2 @send_coupon @eugene
+@send_coupon @eugene
 Scenario: 1 发优惠券-选择会员列表查询
 	Given jobs登录系统
 	#默认条件查询（空条件）
@@ -180,7 +180,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 		When jobs设置发送优惠券选择会员查询条件
 			"""
 			{
-				"tags":"金牌会员"
+				"member_rank":"金牌会员"
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
@@ -326,7 +326,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 			{
 				"name":"4",
 				"tags":"分组3",
-				"tags":"金牌会员",
+				"member_rank":"金牌会员",
 				"start_integral": 0,
 				"end_integral": 20,
 				"source":"会员分享",
@@ -343,7 +343,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
 			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
 
-@mall2 @send_coupon @eugene
+@send_coupon @eugene
 Scenario: 2 发优惠券-选择会员列表分页
 	Given jobs登录系统
 	When jobs设置分页查询参数
@@ -378,7 +378,7 @@ Scenario: 2 发优惠券-选择会员列表分页
 		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
 		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
 
-@mall2 @send_coupon @eugene
+@send_coupon @eugene
 Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取消关注的会员
 	Given jobs登录系统
 	When jobs设置分页查询参数
@@ -416,7 +416,7 @@ Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取
 		}
 		"""
 
-@mall2 @send_coupon @eugene
+@send_coupon @eugene
 Scenario: 4 发优惠券-选择会员列表整页会员带入
 	Given jobs登录系统
 	When jobs设置分页查询参数
@@ -455,8 +455,8 @@ Scenario: 4 发优惠券-选择会员列表整页会员带入
 		}
 		"""
 
-@mall2 @send_coupon @eugene
-Scenario: 5 发优惠券-选择会员列表筛选出来的886人(已取消关注的除外)勾选带入-过滤取消关注的会员
+@send_coupon @eugene
+Scenario: 5 发优惠券-选择会员列表筛选出来的XXX人(已取消关注的除外)勾选带入-过滤取消关注的会员
 	Given jobs登录系统
 	#查询条件为空，全部会员
 	When jobs设置分页查询参数
@@ -486,10 +486,13 @@ Scenario: 5 发优惠券-选择会员列表筛选出来的886人(已取消关注
 		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
 		| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    是    |
 
-	Then jobs获得发送优惠券会员列表
+	Then jobs获得发送优惠券会员过滤条件
 		"""
 		{
-			"name":['tom7','tom6','tom5','tom3','tom1']
+			"tags":"全部",
+			"member_rank":"全部",
+			"source":"全部",
+			"status":"关注"
 		}
 		"""
 
@@ -504,7 +507,9 @@ Scenario: 5 发优惠券-选择会员列表筛选出来的886人(已取消关注
 	When jobs设置发送优惠券选择会员查询条件
 		"""
 		{
-			"source":"会员分享"
+			"source":"会员分享",
+			"start_integral": 0,
+			"end_integral": 100,
 		}
 		"""
 	When jobs勾选'筛选出来的XXX人(已取消关注的除外)'选项
@@ -520,9 +525,13 @@ Scenario: 5 发优惠券-选择会员列表筛选出来的886人(已取消关注
 		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
 		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    是    |
 
-	Then jobs获得发送优惠券会员列表
+	Then jobs获得发送优惠券会员过滤条件
 		"""
 		{
-			"name":['tom5','tom3']
+			"tags":"全部",
+			"member_rank":"全部",
+			"integral": "0-100",
+			"source":"全部",
+			"status":"关注"
 		}
 		"""
