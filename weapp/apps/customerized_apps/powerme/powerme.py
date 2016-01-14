@@ -89,7 +89,7 @@ class PowerMe(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request)
+		data = request_util.get_fields_to_be_save(request, app_models.PowerMe)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 
 		powerme = app_models.PowerMe(**data)
@@ -109,11 +109,11 @@ class PowerMe(resource.Resource):
 		"""
 		响应POST
 		"""
-		data = request_util.get_fields_to_be_save(request)
+		data = request_util.get_fields_to_be_save(request, app_models.PowerMe)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'desc', 'reply_content', 'material_image', 'qrcode'])
+		update_fields = data.keys()
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
