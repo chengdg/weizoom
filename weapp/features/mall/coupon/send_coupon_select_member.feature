@@ -94,7 +94,7 @@ Background:
 			|   0007   | 2015-03-04   | tom3     | 商品2,1   | 支付    | 微信支付 | 15      | 100    | 115         | 0      | 115    | 0    | jobs,退款     | 退款中       |
 			|   0008   | 2015-03-05   | tom3     | 商品1,1   | 支付    | 支付宝   | 10      | 100    | 110         | 110    | 0      | 0    | jobs,完成退款 | 退款完成     |
 
-@send_coupon @eugene
+@send_coupon @eugeneXXX
 Scenario: 1 发优惠券-选择会员列表查询
 	Given jobs登录系统
 	#默认条件查询（空条件）
