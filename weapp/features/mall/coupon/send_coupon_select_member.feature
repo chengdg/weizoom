@@ -103,14 +103,14 @@ Scenario: 1 发优惠券-选择会员列表查询
 			{}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 	#按照会员名称进行查询
 		#模糊匹配
@@ -121,8 +121,8 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
 
 		#完全匹配
 		When jobs设置发送优惠券选择会员查询条件
@@ -132,8 +132,8 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
 
 		#查询结果为空
 		When jobs设置发送优惠券选择会员查询条件
@@ -143,7 +143,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
 
 	#按照会员分组查询
 		#单个分组
@@ -154,10 +154,10 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
 		#全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
@@ -166,14 +166,14 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 	#按照会员等级查询
 		#单个等级
@@ -184,10 +184,10 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
 		#全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
@@ -196,14 +196,14 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 	#按照积分范围查询
 		#积分相同 0~0
@@ -215,11 +215,11 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
 
 		#积分区间 0~20
 		When jobs设置发送优惠券选择会员查询条件
@@ -230,12 +230,12 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 		#积分区间 前大于后50~20
 		When jobs设置发送优惠券选择会员查询条件
@@ -246,9 +246,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
 
 		#查询结果为空
 		When jobs设置发送优惠券选择会员查询条件
@@ -259,7 +259,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
 
 	#按照会员来源查询
 		#按照单个会员来源
@@ -270,10 +270,10 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
 		#按照全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
@@ -282,14 +282,14 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 	#按照会员状态查询
 		#按照单个会员来源
@@ -300,9 +300,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
 		#按照全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
@@ -311,14 +311,14 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 	#条件组合查询
 		When jobs设置发送优惠券选择会员查询条件
@@ -334,14 +334,8 @@ Scenario: 1 发优惠券-选择会员列表查询
 			}
 			"""
 		Then jobs获得发送优惠券选择会员列表
-			| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-			| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-			| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
-			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+			| name  | member_rank | pay_money | unit_price | pay_times | integral |
+			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
 
 @send_coupon @eugene
 Scenario: 2 发优惠券-选择会员列表分页
@@ -357,26 +351,26 @@ Scenario: 2 发优惠券-选择会员列表分页
 		{}
 		"""
 	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-		| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-		| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
+		| name  | member_rank | pay_money | unit_price | pay_times | integral |
+		| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+		| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+		| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
 	When jobs浏览下一页
 	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
+		| name  | member_rank | pay_money | unit_price | pay_times | integral |
+		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
 	When jobs浏览发送优惠券选择会员列表第'3'页
 	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |    否    |
+		| name  | member_rank | pay_money | unit_price | pay_times | integral |
+		| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 	When jobs浏览上一页
 	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
+		| name  | member_rank | pay_money | unit_price | pay_times | integral |
+		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
 
 @send_coupon @eugene
 Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取消关注的会员
@@ -392,10 +386,10 @@ Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取
 		{}
 		"""
 	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-		| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-		| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
+		| name  | member_rank | pay_money | unit_price | pay_times | integral |
+		| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
+		| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
+		| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
 
 	When jobs选择会员列表会员
 		"""
@@ -403,12 +397,6 @@ Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取
 			"name":['tom6','tom5']
 		}
 		"""
-	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    否    |
-		| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |    是    |
-		| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |    是    |
-
 	Then jobs获得发送优惠券会员列表
 		"""
 		{
@@ -431,10 +419,10 @@ Scenario: 4 发优惠券-选择会员列表整页会员带入
 		"""
 	When jobs浏览下一页
 	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    否    |
-		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    否    |
-		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    否    |
+		| name  | member_rank | pay_money | unit_price | pay_times | integral |
+		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |
+		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |
 
 	When jobs选择会员列表会员
 		"""
@@ -442,12 +430,6 @@ Scenario: 4 发优惠券-选择会员列表整页会员带入
 			"name":['tom4','tom3''tom2']
 		}
 		"""
-	Then jobs获得发送优惠券选择会员列表
-		| name  | member_rank | pay_money | unit_price | pay_times | integral | selected |
-		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |    是    |
-		| tom3  | 银牌会员    |   335.00  |    111.67  |    3      |    100   |    是    |
-		| tom2  | 普通会员    |   325.00  |    162.50  |    2      |     50   |    是    |
-
 	Then jobs获得发送优惠券会员列表
 		"""
 		{
