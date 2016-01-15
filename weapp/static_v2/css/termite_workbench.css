@@ -1644,3 +1644,61 @@ button.xui-deleteQrcodeButton{
 	font-weight: bold;
 	position: absolute;
 }
+/*拼红包CSS*/
+.propertyGroup.xui-propertyView-app-RedPacketGroup {
+    width: 500px;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_dialogSelectField .xui-i-triggerButton {
+    background: none;
+    color: #1262b7;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_horizontalField .propertyGroup_property_label{
+	width: 91px !important;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_dialogSelectField {
+    margin-top: 10px;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_textareaField .propertyGroup_property_input {
+    width: 80% !important;
+	display: inline-block;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_label {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 7px;
+    line-height: 24px;
+    text-align: right;
+    width: 88px;
+}
+/*配色选择*/
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_input .xui-selectBtn {
+	padding: 20px 10px;
+	color: #333;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_input .xui-selectBtn:nth-child(1) {
+	background:#FEF6C5;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_input .xui-selectBtn:nth-child(2) {
+	background:#E62F41;
+}
+
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_dialogSelectField,.xui-propertyView-app-RedPacketGroup .propertyGroup_property_textareaField,.xui-propertyView-app-RedPacketGroup .propertyGroup_property_radioField {
+    margin-top: 10px;
+}
+/*拼红包倒计时checkbox*/
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_checkboxField {
+    width: 85px;
+    float: right;
+    margin-top: -40px;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_checkboxField .propertyGroup_property_label{
+	display: none;
+}
+.xui-propertyView-app-RedPacketGroup .propertyGroup_property_dateRangeSelectorField {
+    width: 83%;
+}
+.xui-propertyView-app-RedPacketGroup .money_range_selector_annotation {
+    width: 240px;
+    display: inline-flex;
+    margin-left: 10px;
+}

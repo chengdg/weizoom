@@ -40,7 +40,7 @@
 
 
 
-/** 
+/**
  * app cover样式
  */
 .wui-appParticipantResult-Cover {
@@ -275,7 +275,7 @@
 	width: 95%;
 }
 
-/** 
+/**
  *
  */
 .wui-submitButton {
@@ -1396,3 +1396,409 @@ li.wui-selectBox-display-table {
 	display:block;
 	content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
 }
+
+/*反馈--end*/
+
+
+/*百宝箱 拼红包 red packet CSS--start*/
+.wui-red_packet-container{
+    position: relative;
+    background-color:#B90000;
+    height: auto;
+    padding-bottom: 5rem;
+}
+
+.wui-red_packet-container .wui-i-background-image{
+    /*背景图片*/
+    background-color:#B90000;
+}
+.wui-red_packet-container .wui-i-body{
+    /*网页体*/
+    width: 100%;
+    height: auto;
+}
+
+.wui-red_packet-container .wui-i-background-image img{
+    width: 100%;
+    height: auto;
+    max-width: 200rem;
+}
+
+.wui-red_packet-container .wui-i-help_group{
+    position: absolute;
+    /*background: blue;*/
+    width: 100%;
+    top:0;
+}
+
+.wui-red_packet-container .wui-i-help_group .wui-i-shop_circle{
+    background: #E25102;
+    width: 40px;
+    height: 40px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    float: left;
+    margin-top: 6px;
+    margin-left: 6px;
+}
+
+.wui-red_packet-container .wui-i-help_group .wui-i-shop_circle img{
+    border-radius: 100px;
+    width: 40px;
+    height: 40px;
+}
+.wui-red_packet-container .wui-i-help_group .wui-i-rules{
+    margin-top: 10px;
+    font-weight: normal;
+    float: right;
+    width: 75px;
+    height: 21px;
+    line-height: 21px;
+    text-align: center;
+    background-color: #FEF9B7;
+    font-size: small;
+    color: #B30000;
+    border: 1px solid #8E0000;
+    border-radius: 15px;
+    margin-right: 4px;
+}
+
+.wui-red_packet-container .wui-i-userinfo_group{
+    position: absolute;
+    /*background: blue;*/
+    width: 100%;
+    top:11rem;
+}
+.wui-red_packet-container .wui-i-avatar_group{
+    width:100%;
+    text-align: center;
+}
+
+.wui-red_packet-container .wui-i-avatar_group .wui-i-avatar_circle{
+    width: 60px;
+    height: 60px;
+    border:3px solid #FFFDFE;
+    background: red;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.wui-red_packet-container .wui-i-avatar_group .wui-i-avatar_circle img{
+    border-radius: 100px;
+    width: 60px;
+    height: 60px;
+}
+
+.wui-red_packet-container .wui-i-money_group{
+    color:#FFF059;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.wui-red_packet-container .wui-i-money_group .wui-i-text{
+    font-size: smaller;
+}
+.wui-red_packet-container .wui-i-money_group .wui-i-money{
+    font-size: 2rem;
+    margin-top: 5px;
+}
+
+.wui-red_packet-container .wui-i-powerbar_group{
+    position: relative;
+    top:-2rem;
+    width: 100%;
+    height: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-box{
+    height: 43px;
+}
+
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
+    font-size:10px;
+    color:white;
+    width: 40px;
+    height: 40px;
+    background: no-repeat url("/termite_static/img/component/redpacket/icon_sprite.png");
+    background-size: 291%;
+    background-position: 2px 0px;
+    text-align: center;
+    padding-top: 10px;
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-bar{
+    width: auto;
+    height: 4px;
+    background:#500001;
+    margin-left: 60px;
+    margin-right: 60px;
+    border-radius: 2px;
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-box{
+    width: auto;
+    /*background-color:green;*/
+    margin-left: 40px;
+    margin-right: 80px;
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
+    position: relative;
+    left: 0%;
+    transition: left 3s ease-in-out;
+    -moz-transition: left 3s ease-in-out; /* Firefox 4 */
+    -webkit-transition: left 3s ease-in-out; /* Safari 和 Chrome */
+    -o-transition: left 3s ease-in-out; /* Opera */
+
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-bar_process{
+    background: #FF6E02;
+    width: 0%;
+    height: 100%;
+    border-radius: 2px;
+    transition: width 3s ease-in-out;
+    -moz-transition: width 3s ease-in-out; /* Firefox 4 */
+    -webkit-transition: width 3s ease-in-out; /* Safari 和 Chrome */
+    -o-transition: width 3s ease-in-out; /* Opera */
+}
+
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-power_money{
+    width: 70%;
+    margin: 5px auto 5px auto;
+    font-size:smaller;
+    color:#FFF059;
+    text-align: right;
+}
+
+.wui-red_packet-container .wui-i-timing{
+    font-weight: bold;
+    min-height: 33px;
+    font-size: 1rem;
+    color:white;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: #D40000;
+    width: 78%;
+    border-radius: 5px;
+    padding-bottom: 1px;
+}
+.wui-red_packet-container .wui-i-timing .wui-i-timer b{
+    margin-right: 5px;
+    width:15px;
+    height: 100%;
+    background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
+    background-size: 540%;
+    background-position: -110px -13px;
+    font-size: 0.7rem;
+    padding: 7px 5px;
+    color: white;
+    border-radius: 2px;
+    font-family: "Arial", "黑体";
+    display: inline-block;
+}
+.wui-red_packet-container .wui-i-timing i{
+    background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
+    background-size: 338%;
+    background-position: -41px -4px;
+    display: inline-block;
+    height: 35px;
+    width: 33px;
+    margin-bottom: -15px;
+}
+.wui-red_packet-container .wui-i-timing .wui-i-timer{
+    padding-top: 3px;
+}
+.wui-red_packet-container .wui-i-timing .wui-i-timer-text{
+    font-weight: normal;
+    font-size: smaller;
+    padding-left: 17px;
+    padding-bottom: 2px;
+}
+
+.wui-red_packet-container .wui-i-timing .wui-i-timer-text b{
+    padding-left: 21px;
+    background: #D40000;
+}
+.wui-red_packet-container .wui-i-system_msgbox{
+    width: 80%;
+    /* text-align: center; */
+    /*height: 4rem;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+.wui-red_packet-container .wui-i-btngroup{
+    text-align: center;
+    margin-top: 20px;
+}
+.wui-red_packet-container .wui-i-btngroup button{
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color:#CD0E06;
+    background:#FFC600;
+    border: 0;
+    border-radius: 1px;
+    width: 78%;
+    height: 2.5rem;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
+    color:#EAEAEA;
+    background: #999999;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-notready{
+    color:#EAEAEA;
+    background: #999999;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-power{
+    width: 37%;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-using{
+    width: 40%;
+}
+
+.wui-red_packet-container .wui-i-states{
+
+}
+.wui-red_packet-container .wui-i-states .wui-i-title{
+    text-align: center;
+    color: white;
+    font-weight: normal;
+    font-size: small;
+    margin-top: 18px;
+    margin-bottom: 9px;
+}
+.wui-red_packet-container .wui-i-states .xui-top100{
+    width:90%;
+    height: auto;
+    overflow:hidden;
+    background:#CD292A;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wui-red_packet-container .xui-top100 .wui-i-friend{
+    float: left;
+    width: 50%;
+    height: 60px;
+    /*background: green;*/
+}
+.wui-red_packet-container .xui-top100 .wui-i-avatarbox{
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 60px;
+    text-align: center;
+    line-height: 40px;
+}
+.wui-red_packet-container .xui-top100 .wui-i-avatar{
+    position: relative;
+    top:10px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #FFFDFE;
+    background: #E25102;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.wui-red_packet-container .xui-top100 .wui-i-avatar img{
+    border-radius: 100px;
+    width: 40px;
+    height: 40px;
+}
+
+.wui-red_packet-container .xui-top100 .wui-i-info{
+    width: 50%;
+    height: auto;
+    line-height: 20px;
+    float: right;
+    text-align: left;
+    /*background: blue;*/
+    margin-top: 0px;
+    position: relative;
+    top: 10px;
+    left: -6px;
+}
+.wui-red_packet-container .xui-top100 .wui-i-info li{
+    font-size: small;
+}
+.wui-red_packet-container .xui-top100 .wui-i-money{
+    color:#F7BF0A;
+}
+
+.wui-red_packet-container .xui-top100 .wui-i-name{
+    color: #FFFFFF;
+}
+
+.wui-red_packet-container .wui-i-rules-contentbox{
+    background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+    border-radius: 3px;
+    left: 5%;
+    padding: 10px 10px 16px 9px;
+    position: fixed;
+    top: -10%;
+    width: 85%;
+    height: 75%;
+    z-index: 11111;
+    text-align: center;
+    background-position: -2px -9px;
+    background-size: 99%;
+}
+
+.wui-red_packet-container .wui-i-rules-contentbox{
+    margin-top: 23%;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content{
+    margin-top: 2rem;
+    color: #3D3C35;
+    text-align: center;
+    position: relative;
+    height: 100%;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box{
+    color:#3A1614;
+    font-weight: bold;
+    font-size: large;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box .wui-i-title{
+    margin-bottom: 2px;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-content-box{
+    color: #3D3C35;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    max-height: 69%;
+    overflow-y: auto;
+    position: relative;
+    left: 2px;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-closebtn{
+    color: white;
+    font-size: x-large;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    background: #FF422D;
+    text-align: center;
+    border-radius: 100px;
+    position: relative;
+    left: 95%;
+    top: 4%;
+    line-height: 30px;
+}
+
+
+
+/*百宝箱 拼红包 red packet CSS-- end*/

@@ -1,0 +1,246 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+{% block css %}
+    <style>
+        th, td{
+            text-align: left !important;
+            width: 50%;
+        }
+        .uploadify-queue{
+            position: absolute;
+            width: 30%;
+            margin: -50px 0 0 100px;
+        }
+        .xui-help{
+            margin-right: 10px;
+        }
+        .xui-table{
+            width: 90%;
+        }
+        .xui-table tbody{
+            background: #eaeef6;
+        }
+        i{
+            font-size: 20px;
+            color: red;
+        }
+        .xa-cert-name, .xa-key-name{
+            margin-left: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-RedPacketParticipancesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/">百宝箱</a></li>
+			<li class="xa-open"><a href="/apps/red_packet/red_packets/">拼红包</a></li>
+			<li class="active">证书配置</li>
+		</ul>
+	</div>
+    <div>
+        <table class="table xui-table">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td><i>*</i> 证书pem格式<b class="xa-cert-name">{{ cert_name }}</b></td>
+                    <td><input type="file" id="cert-file"></td>
+                </tr>
+                <tr>
+                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name">{{ key_name }}</b></td>
+                    <td><input type="file" id="key-file"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="xui-done">
+        <button class="btn btn-success xa-help xui-help">&nbsp;帮助说明&nbsp;</button>
+        <button class="btn btn-success xa-done">&nbsp;完&nbsp;&nbsp;成&nbsp;</button>
+    </div>
+{% endblock %}
+
+{% block js %}
+<!-- *start_prunt_task* -->
+<!-- [prunt_task]
+  {
+    "task": "weizoom-load-app-views-dialogs"
+  }
+-->
+{{ "red_packet"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+<script id="red_packet-upload-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade">
+        <div class="modal-dialog modal-lg" style="width: 1020px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">帮助说明</h3>
+                </div>
+
+                <div class="modal-body ml15">
+                    <div>
+                        <p>登录<a href="https://pay.weixin.qq.com" target="_blank">https://pay.weixin.qq.com</a>，进入微信支付商务平台。选择账户中心—账户设置—API安全。</p>
+                    </div>
+                    <div>
+                        <p>找到API证书，点击“下载证书”</p>
+                    </div>
+                    <div>
+                        <img src="/termite_static/img/component/redpacket/red_packt_help_img1.png">
+                    </div>
+                    <div style="display:inline-block">
+                        <p style="display:inline-block">点击“下载”。下载完成后，找到“</p><p style="color:#09F;display:inline-block">证书pem格式与证书密钥pem格式</p><p style="display:inline-block">”上传。</p>
+                    </div>
+                    <div>
+                        <img src="/termite_static/img/component/redpacket/red_packt_help_img2.png">
+                    </div>
+                    <div>
+                        <img src="/termite_static/img/component/redpacket/red_packt_help_img3.jpg">
+                    </div>
+                </div>
+
+                <div class="modal-footer modal-footerBg">
+                    <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var cert_done =  {% if cert_name %}true{% else %}false{% endif %};
+    var key_done = {% if key_name %}true{% else %}false{% endif %};
+    var done_map = {
+        'cert_done': '请上传证书文件',
+        'key_done': '请上传证书密钥文件'
+    };
+    //初始化上传文件说明
+	ensureNS('W.dialog.red_packet');
+	W.dialog.red_packet.UploadInstructionDialog = W.dialog.Dialog.extend({
+		getTemplate: function() {
+			$('#red_packet-upload-dialog-tmpl-src').template('red_packet-upload-dialog-tmpl');
+			return "red_packet-upload-dialog-tmpl";
+		}
+	});
+    //初始化上传组件参数
+    var swf = '/static/uploadify.swf',
+        overrideEvents = ['onError', 'onUploadSuccess'],
+        multi = false,
+        removeCompleted = false,
+        uploader = '/apps/api/upload_file/get',
+        cancelImg = '/static/img/cancel.png',
+        buttonText = '添加文件',
+        fileTypeExts = '*.pem',
+        method = 'post',
+        removeTimeout = 0.0,
+        width = 85,
+        formData = {
+            'owner_id': '{{ request.webapp_owner_id }}'
+        },
+        onError = function(errorType,file) {
+            xlog(errorType);
+            xlog(file.name);
+        };
+
+    $(function(){
+        //跳转到列表页
+        $('.xa-done').on('click', function(){
+            if(cert_done && key_done){
+                $('.xa-open').find('a').get(0).click();
+            }else{
+                if(!key_done) W.showHint('error', done_map['key_done']);
+                if(!cert_done) W.showHint('error', done_map['cert_done']);
+            }
+        });
+        //帮助说明弹窗
+        $('.xa-help').on('click', function(){
+            W.dialog.showDialog('W.dialog.red_packet.UploadInstructionDialog', {});
+        });
+        //初始化上传组件
+        $("#cert-file").uploadify({
+            overrideEvents: overrideEvents,
+            swf: swf,
+            width: width,
+            multi: multi,
+            removeCompleted: removeCompleted,
+            uploader: uploader,
+            cancelImg: cancelImg,
+            buttonText: buttonText,
+            fileTypeDesc: '证书文件',
+            fileTypeExts: fileTypeExts,
+            method: method,
+            removeTimeout: removeTimeout,
+            formData: $.extend(formData, {
+                'cat': 'cert_file'
+            }),
+            onUploadStart: function(file){
+                if(file && file.name == 'apiclient_cert.pem'){}else{
+                    W.showHint('error', '请上传正确的证书文件');
+                    $("#cert-file").uploadify('cancel', '*');
+                    $("#cert-file").uploadify('stop');
+                }
+            },
+            onUploadSuccess : function(file, response, status) {
+                response = JSON.parse(response);
+                if(response.code == 200){
+                    console.log(response.data);
+                    $("#cert-file").find('.uploadify-button-text').html('重新选择');
+                    $('.xa-cert-name').html('  (文件名：'+file.name+')');
+                    cert_done = true;
+                }else{
+                    console.log(response.errMsg);
+                }
+            },
+            onSelect: function(file) {
+                var $queues = $('#cert-file-queue').children();
+                if($queues.length > 1){
+                    $queues.eq(0).remove();
+                }
+            },
+            onError: onError
+        });
+        $("#key-file").uploadify({
+            overrideEvents: overrideEvents,
+            swf: swf,
+            width: width,
+            multi: multi,
+            removeCompleted: removeCompleted,
+            uploader: uploader,
+            cancelImg: cancelImg,
+            buttonText: buttonText,
+            fileTypeDesc: '证书密钥文件',
+            fileTypeExts: fileTypeExts,
+            method: method,
+            removeTimeout: removeTimeout,
+            formData: $.extend(formData, {
+                'cat': 'key_file'
+            }),
+            onUploadStart: function(file){
+                if(file && file.name == 'apiclient_key.pem'){}else{
+                    W.showHint('error', '请上传正确的证书密钥文件');
+                    $("#key-file").uploadify('cancel', '*');
+                    $("#key-file").uploadify('stop');
+                }
+            },
+            onUploadSuccess : function(file, response, status) {
+                response = JSON.parse(response);
+                if(response.code == 200){
+                    console.log(response.data);
+                    $("#key-file").find('.uploadify-button-text').html('重新选择');
+                    $('.xa-key-name').html('  (文件名：'+file.name+')');
+                    key_done = true;
+                }else{
+                    console.log(response.errMsg);
+                }
+            },
+            onSelect: function(file) {
+                var $queues = $('#key-file-queue').children();
+                if($queues.length > 1){
+                    $queues.eq(0).remove();
+                }
+            },
+            onError: onError
+        });
+    });
+</script>
+{% endblock %}

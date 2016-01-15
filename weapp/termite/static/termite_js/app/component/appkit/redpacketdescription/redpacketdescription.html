@@ -1,0 +1,134 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'appkit.redpacketdescription' %}
+    <div class="wui-red_packet-container
+        {% if component.model.color %}
+            {% if component.model.color == 'yellow' %} yellow {% else %}
+              {% if component.model.color == 'orange' %} orange {% else %}
+                {% if component.model.color == 'red' %} red {% else %}
+                    {% if component.model.color == 'new_year_red' %} new_year_red {% endif %}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+        {% else %}yellow{% endif %}">
+        <div class="wui-i-background-image">
+            <!--             {% if component.model.background_image %}
+                <img src="{{ component.model.background_image }}">
+            {% else %} -->
+                <img src="/termite_static/img/component/redpacket/background.png">
+                <!-- {% endif %} -->
+        </div>
+        <div class="wui-i-body">
+            <div class="wui-i-help_group">
+                <div class="wui-i-shop_circle">
+                    <img src="/static/img/default_shop_avatar.png">
+                </div>
+                <div class="wui-i-rules xa-rules">
+                    <div class="wui-i-title xa-i-title">
+                        <span class="wui-i-rules-title-content xa-i-rules-title-content">
+                            <i class="wui-i-star"></i><p>活动规则</p><i class="wui-i-star"></i>
+                        </span>
+                    </div>
+                    <div class="wui-i-rules-contentbox xa-i-rules-contentbox none">
+                        <div class="wui-i-closebtn xa-i-closebtn">
+                            ×
+                        </div>
+                        <div class="wui-i-rules-content xa-i-rules-content">
+                            <div class="wui-i-title-box xa-i-title-box">
+                                <p class="wui-i-title">活动规则</p>
+                            </div>
+                            <div class="wui-i-content-box xa-i-content-box">
+                                {{ component.model.rules|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wui-i-userinfo_group">
+                <div class="wui-i-avatar_group">
+                    <div class="wui-i-avatar_circle xa-i-avatar_circle">
+                        <img style="border:0px" src="/static/img/default_avatar.png">
+                    </div>
+                </div>
+                <div class="wui-i-money_group">
+                    <div class="wui-i-text">
+                        <p>总金额</p>
+                    </div>
+                    <div class="wui-i-money wa-i-red_packet_money">
+                        0.00元
+                    </div>
+                </div>
+            </div>
+            <div class="wui-i-powerbar_group">
+                <div class="wui-i-box">
+                    <div class="wui-i-percentbox xa-i-percentbox">
+                        0%
+                    </div>
+                </div>
+                <div class="wui-i-bar">
+                    <div class="wui-i-bar_process xa-i-bar_process"></div>
+                </div>
+                <div class="wui-i-power_money wa-i-current_money">
+                    <p>当前金额 0.00元</p>
+                </div>
+            </div>
+            <div style="display: none" class="wui-i-start_time">{{ component.model.start_time }}</div>
+            <div style="display: none" class="wui-i-end_time">{{ component.model.end_time }}</div>
+            <div class="wui-i-timing wa-timing
+                    {% if component.model.timing.timing %}{% if not component.model.timing.timing.select %}hide{% endif %}{% endif %}">
+                <div class="wui-i-timing wui-i-timer">
+                    <i></i>:
+                    <b class="xa-day">
+                        {% if component.model.timing_value.day %}{{ component.model.timing_value.day }}{% else %}
+                            99{% endif %}</b>:
+                    <b class="xa-hour">
+                        {% if component.model.timing_value.hour %}{{ component.model.timing_value.hour }}{% else %}
+                            23{% endif %}</b>:
+                    <b class="xa-minute">
+                        {% if component.model.timing_value.minute %}{{ component.model.timing_value.minute }}{% else %}
+                            59{% endif %}</b>:
+                    <b class="xa-second">
+                        {% if component.model.timing_value.second %}{{ component.model.timing_value.second }}{% else %}
+                            59{% endif %}</b>
+                </div>
+                <div class="wui-i-timer-text">
+                    <b>天</b>&nbsp<b>时</b>&nbsp<b>分</b>&nbsp<b>秒</b>
+                </div>
+            </div>
+            <div class="wui-i-btngroup">
+                <button class="wui-i-btn-running wa-running wui-hide">邀请好友 帮我拼红包</button>
+                <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
+                <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
+                <button class="wui-i-btn-power wa-power wui-hide"><b class="wa-power-btn-action">帮</b><b
+                        class="wa-mobile_solution">asdasda</b><b>点赞</b></button>
+                <button class="wui-i-btn-using wa-using wui-hide">我也要参加</button>
+            </div>
+            <!-- 成功消息 -->
+            <div class="wui-i-system_msgbox wa-i-system_msgbox">
+
+            </div>
+            <div class="wui-i-states none">
+                <div class="wui-i-title" style="text-align: center;color:white;font-weight:normal;">
+                    <span class="wui-i-helper-title-content">
+                        <hr style="height:1px;width:34%;display:inline-block;border:none;border-top:1px solid #6C0000;"/>
+                        <b>已贡献好友</b>
+                        <hr style="height:1px;width:34%;display:inline-block;border:none;border-top:1px solid #6C0000;"/>
+                    </span>
+                </div>
+                <div class="xui-top100 wa-top100">
+                    <!-- 测试格式 -->
+                    <!-- <div class="wui-i-friend">
+                         <div  class="wui-i-avatarbox">
+                             <div class="wui-i-avatar"></div>
+                         </div>
+                         <div class="wui-i-info">
+                             <li class="wui-i-money">2.05元</li>
+                             <li class="wui-i-name">一起来笑</li>
+                         </div>
+                     </div> -->
+                    <!-- 测试格式end -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endifequal %}

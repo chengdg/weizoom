@@ -1,0 +1,347 @@
+{% extends "content_base_v2.html" %}
+{% load apps_filter %}
+
+    <style>
+        .tl.pl25 img{
+            height: 60px;
+            width: 60px;
+        }
+    </style>
+{% block content-panel %}
+<div class="xui-RedPacketParticipancesAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/">百宝箱</a></li>
+			<li><a href="/apps/red_packet/red_packets/">拼红包</a></li>
+			<li class="active">查看结果</li>
+		</ul>
+	</div>
+	
+	<div class="xui-formPanel pb10 mb15">
+		<div class="xui-i-col">
+			<div class="xui-i-item">
+				<label class="">用户名：</label>
+				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+			</div>
+			<div class="xui-i-item">
+                <label>红包状态</label>
+                <select class="" id="red_packet_status" name="red_packet_status">
+                    <option value="-1">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
+		</div>
+		<div class="xui-i-col">
+			<div class="xui-i-item ml10">
+				<label>参与时间
+				：</label>
+				<input
+					type="text"
+					class="form-control xui-datePicker"
+					id="start_time"
+					name="start_time"
+					style=""
+					value=""
+					readonly="readonly"
+					data-enable-select-time="true"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-format="yy-mm-dd HH:MM" />
+				至
+				<input
+					type="text"
+					class="form-control xui-datePicker"
+					id="end_time"
+					name="end_time"
+					value=""
+					readonly="readonly"
+					data-enable-select-time="true"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-format="yy-mm-dd HH:MM"
+					data-min-el="#start_time"/>
+			</div>
+			<div class="xui-i-item ml10">
+                <label>发放状态</label>
+                <select class="" id="is_already_paid" name="is_already_paid">
+                    <option value="-1">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
+		</div>
+		<div class="xui-i-col">
+			<div class="ml80">
+				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+				<a class="btn btn-default xui-fontBold xa-export" href="javascript:void(0);">批量导出</a>
+                <a id="export_href" style="display: none ">DownloadXLS</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default xui-tableBox">
+		<div class="panel-heading">
+			<label for="topSelectAll" class="xui-selectAll ml15">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="ml10 xa-send-selected">批量发放</a>
+		</div>
+		<div 
+			class="panel-body panel-table p0 mt10"
+			data-ui-role="advanced-table" 
+			data-app="apps/red_packet"
+			data-resource="red_packet_participances"
+			data-args='{"id": "{{activity_id}}"}'
+			data-template-id="#table" 
+			data-enable-paginator="true" 
+			data-enable-sort="false" 
+			data-selectable="true"
+			data-disable-header-select="true"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
+			data-item-count-per-page="10" 
+		>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<!-- *start_prunt_task* -->
+	<!-- [prunt_task] 
+	  {
+	    "task": "weizoom-load-app-views-dialogs"
+	  }
+	-->
+{{ "red_packet"|load_app_views_and_dialogs|safe }}
+<!-- *end_prunt_task* -->
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	{{if items!='' }}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+		<thead>
+			<tr>
+				<th>用户名</th>
+				<th>红包金额</th>
+				<th>已获取金额</th>
+				<th>红包状态</th>
+				<th>系统发放状态</th>
+				<th>参与时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr data-id="${item.id}" class="xa-selectTr" data-memberId="${item.member_id}">
+				<td class="tl pl25">
+					<img width=60 height=60 src="${item.participant_icon}" />
+					{{html item.participant_name}}
+				</td>
+				<td>
+					${item.red_packet_money}
+				</td>
+				<td>
+					${item.current_money}
+				</td>
+				<td>
+					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
+					${item.red_packet_status}
+					{{/if}}
+				</td>
+				<td>
+					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
+					${item.is_already_paid}
+					{{/if}}
+				</td>
+				<td>
+					${item.created_at}
+				</td>
+				<td>
+					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放')}}
+					<a href="javascript:void(0)" class="xa-pay" data-id="${item.id}" data-memberId="${item.member_id}">发放</a>
+					{{/if}}
+					{{if (item.is_already_paid === '发放' && item.msg_api_status === '失败')}}
+					<a href="javascript:void(0)" class="xa-temp_msg" data-memberId="${item.member_id}">补发模板消息</a>
+					{{/if}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+var activityId = '{{activity_id}}';
+$(document).ready(function() {
+	$('body').delegate('.xa-viewData', 'click', function(event) {
+		var activityId = $(event.currentTarget).parents('tr').data('id');
+		W.dialog.showDialog('W.dialog.app.red_packet.ViewParticipanceDataDialog', {
+			activityId: activityId,
+			success: function(data) {
+				alert(data);
+			}
+		});
+	});
+	
+	$('.xa-search').click(function(event) {
+		var participant_name = $.trim($('[name="participant_name"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+		var redPacketStatus = $.trim($('[name="red_packet_status"]').val());
+        var isAlreadyPaid = $.trim($('[name="is_already_paid"]').val());
+		var table = $('[data-ui-role="advanced-table"]').data('view');
+		table.reload({
+			participant_name: participant_name,
+			start_time: startTime,
+			end_time: endTime,
+			red_packet_status: redPacketStatus,
+            is_already_paid: isAlreadyPaid
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
+
+	$('.xa-selectAll').click(function(event) {
+        var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        $('tbody .xa-select').prop('checked', isChecked);
+        $('.xa-selectAll').prop('checked', isChecked);
+    });
+
+    //export
+    $('.xa-export').click(function(event){
+        W.getLoadingView();
+		var participant_name = $.trim($('[name="participant_name"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+        var export_id =window.location.search.split('?id=')[1];
+        W.getApi().call({
+            method: 'get',
+            app: 'apps/red_packet',
+            resource: 'red_packet_participances_export',
+            args: {
+				'export_id': export_id,
+				'name': participant_name,
+				'start_time': startTime,
+				'end_time': endTime
+			},
+            success: function(resp){
+                if(resp.code == 200){
+                    $('#export_href').prop({
+                        'href': resp.download_path,
+                        'download': resp.filename
+                    }).get(0).click();
+
+                }
+                console.log("导出成功");
+            },
+            error: function(error){
+                console.log('导出失败');
+            }
+        });
+    });
+
+    //批量发红包
+    $('.xa-send-selected').on('click', function(){
+        var $this = $(this);
+        W.requireConfirm({
+			$el: $this,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '支付前请确认账户余额充足，确认发放现金？',
+			confirm: function() {
+				var member_ids = [];
+                $('table').find('input:checkbox:checked').each(function(){
+
+                    member_ids.push($this.parents('tr').eq(0).attr('data-memberId'));
+                });
+                if(member_ids.length <= 0){
+                    W.showHint("error","请选择发放用户");
+                }else{
+                    pull_request(member_ids);
+                }
+			}
+		});
+    });
+    //单发红包
+    $('body').delegate('.xa-pay', 'click', function(){
+        var $this = $(this);
+        W.requireConfirm({
+			$el: $this,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '支付前请确认账户余额充足，确认发放现金？',
+			confirm: function() {
+				var member_id = $this.attr('data-memberId');
+                pull_request([member_id]);
+			}
+		});
+    });
+    //补发模版消息
+    $('body').delegate('.xa-temp-msg', 'click', function(){
+        var $this = $(this);
+        var member_id = $this.attr('data-memberId');
+        W.getApi().call({
+            method: 'get',
+            app: 'apps/red_packet',
+            resource: 'red_packet_granter',
+            args: {
+                id: activityId,
+                member_id: member_id
+            },
+            success: function(resp){
+                W.showHint('',"补发模版消息成功");
+                table.reload({
+                    id: activityId
+                }, {
+                    emptyDataHint: '没有符合条件的数据'
+                });
+            },
+            error: function(error){
+                W.showHint('error', error.errMsg);
+            }
+        });
+    });
+});
+
+function pull_request(member_ids){
+    W.getApi().call({
+        method: 'put',
+        app: 'apps/red_packet',
+        resource: 'red_packet_granter',
+        args: {
+            id: activityId,
+            member_ids: member_ids.join(',')
+        },
+        success: function(resp){
+            W.showHint('',"发放红包完成, 取消关注的会员不会发放红包, 请核查");
+            table.reload({
+                id: activityId
+            }, {
+                emptyDataHint: '没有符合条件的数据'
+            });
+        },
+        error: function(error){
+            W.showHint('error', error.errMsg || '发放红包失败');
+        }
+    });
+}
+</script>
+{% endblock %}
+

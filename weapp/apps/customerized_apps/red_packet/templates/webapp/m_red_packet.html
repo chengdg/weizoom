@@ -1,0 +1,1028 @@
+{% extends "apps_base.html" %}
+
+{% block css %}
+<style>
+    .wui-mask{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(181, 181, 181, 0.3);
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+    }
+    /*.mask{
+        background: rgba(0,0,0,0.8)!important;
+        position: fixed!important;
+    }*/
+    .xui-share {
+        background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll 82% 10px / 53% auto rgba(0, 0, 0, 0);
+        height: 75%;
+        position: fixed;
+        text-align: center;
+        top: 5%;
+        width: 100%;
+        z-index: 10001;
+    }
+    .xui-share.xa-share > div p {
+        color: #fff;
+        text-align: center;
+        width: 100%;
+    }
+    .xui-spritebg{
+        background: url("/termite_static/img/component/powerme/Sprite.png") no-repeat scroll 0 0 / 150% auto rgba(0, 0, 0, 0)
+    }
+    /* 分享的closeButton */
+    .xui-colseButton {
+        background-position: -36px 0;
+        height: 47px;
+        left: 40%;
+        margin-left: 11px;
+        position: absolute;
+        /* top: 60%; */
+        width: 50px;
+        margin-top: 20px;
+    }
+    /* 二维码的closeBtn */
+    .xui-closeBtn {
+        height: 30px;
+        padding-left: 235px;
+        position: fixed;
+        top: 12%;
+        width: 45px;
+    }
+    .xui-successHint {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");
+        border-radius: 3px;
+        left: 12%;
+        padding: 18% 12% 20% 12%;
+        position: fixed;
+        top: 20%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 9px -11px;
+        background-size: 78%;
+    }
+    .xui-successHint{
+        color:#3E1917;
+
+    }
+    .xui-successHint .xui-i-msg{
+        color:#3E1917;
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .xui-successHint .wui-i-closebtn{
+        color: white;
+        font-size: x-large;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        background: #FF422D;
+        text-align: center;
+        border-radius: 100px;
+        position: relative;
+        left: 25px;
+        top: -30px;
+        line-height: 30px;
+        float: right;
+    }
+    .xui-successHint .xui-i-intro_text {
+        font-weight: bold;
+        font-size: 13px;
+    }
+    .xui-successHint .xui-i-intro_num {
+        color:#C11F20;
+        font-weight: bold;
+    }
+    .xui-successHint .xui-i-num {
+        font-size: 199%;
+    }
+    .xui-attention{
+        position: fixed;
+        top: 12%;
+        width: 100%;
+        text-align: center;
+        z-index: 10001;
+    }
+    .xa-attention-member .xui-twoDimensionBox{
+        text-align: center;
+    }
+    .xa-attention-guest .xui-twoDimensionBox{
+        text-align: left;
+    }
+    .xui-attention .xui-twoDimensionBox {
+        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto #fff;
+        border-radius: 8px;
+        padding: 5px 20px 20px 20px;
+        width: 260px;
+        display: inline-block;
+    }
+    .xui-attention .xui-twoDimension{
+        display: block;
+        height: 180px;
+        position: relative;
+        width: 180px;
+        margin-left: 40px;
+    }
+    .xui-twoDimensionBox p {
+        display: inline-block;
+    }
+    .wui-wraper{
+        background: white none repeat scroll 0 0;
+        border-radius: 100px;
+        float: left;
+        height: 44px;
+        width: 44px;
+    }
+    .wui-win-font-color{
+        color: orangered;
+    }
+    .wa-power-btn-action{
+        max-width: 18%;
+    }
+    .wa-mobile_solution{
+        max-width: 43%;
+    }
+    .wui-i-btn-power span{
+        display: inline-block;
+        position: relative;
+        max-width: 41%;
+        /* height: 20px; */
+        /* line-height: 20px; */
+        text-overflow: ellipsis;
+        /*border: 1px solid #999;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .xui-redpacket_success .xui-i-msgbox,.xui-redpacket_fail .xui-i-msgbox{
+
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.5rem;
+        color:#FEEE5A;
+        /*background:#FFC600;*/
+        border: 0px;
+        border-radius: 1px;
+    }
+    .xui-redpacket_success .xui-success_msg{
+        width: 14rem;
+        height: 2rem;
+        background: url("/termite_static/img/component/redpacket/success_msg_text.png") no-repeat;
+        background-size: 100%;
+        background-position: 0px 0px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .xui-redpacket_success .xui-system_msg{
+
+        font-size: small;
+        color:#FC9E00;
+        font-weight: normal;
+    }
+
+    .xui-redpacket_fail .xui-fail_msg{
+        width: 14rem;
+        height: 2rem;
+        background: url("/termite_static/img/component/redpacket/fail_msg_text.png") no-repeat;
+        background-size: 100%;
+        background-position: 0px 0px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+/*竖屏幕*/
+
+/*iphone4,5 w:320*/
+@media (orientation: portrait) and (min-width: 310px) and (max-width:337px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:11rem;
+    }
+}
+
+
+/*小米，华为 w:360*/
+@media (orientation: portrait) and (min-width: 350px) and (max-width: 374px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:12.5rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+}
+/*iphone6*/
+@media (orientation: portrait) and (min-width: 375px) and (max-width: 385px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:13rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-content {
+        margin-top: 4rem !important;
+    }
+}
+/*iphone6p*/
+@media (orientation: portrait) and (min-width: 410px) and (max-width: 430px){
+    /*红包*/
+    .wui-red_packet-container {
+        position: relative;
+        background-color: #B90000;
+        height: auto;
+        padding-bottom: 5rem;
+    }
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:15rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-content {
+        margin-top: 3rem !important;
+    }
+}
+
+/*横屏幕*/
+@media (orientation: landscape) {
+    body{
+        background:#D00405 !important;
+    }
+    .xui-default-background{
+        position: relative;
+    }
+    .wui-red_packet-container{
+        width: 360px;
+        height: 627px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        /* background: blue; */
+        width: 100%;
+        top: 12rem;
+    }
+
+}
+
+
+/*iphone4 横屏*/
+@media (orientation: landscape) and (min-width: 470px) and (max-width:490px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -9%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 2.5rem;
+        color: #3D3C35;
+    }
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 50px -19px;
+        background-size: 66%;
+    }
+
+}
+
+@media (orientation: landscape) and (min-width: 540px) and (max-width:580px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -9%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 3.5rem;
+        color: #3D3C35;
+    }
+
+
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 73px -19px;
+        background-size: 60%;
+    }
+
+}
+@media (orientation: landscape) and (min-width: 650px) and (max-width: 680px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -15%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 4rem;
+        color: #3D3C35;
+    }
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 94px -19px;
+        background-size: 58%;
+    }
+
+    .xui-successHint .wui-i-closebtn {
+        color: white;
+        font-size: x-large;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        background: #FF422D;
+        text-align: center;
+        border-radius: 100px;
+        position: relative;
+        left: 81%;
+        top: -181%;
+        line-height: 30px;
+    }
+
+
+
+}
+
+@media (orientation: landscape) and (min-width: 720px) and (max-width: 750px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -15%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 5rem;
+        color: #3D3C35;
+    }
+
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 94px -19px;
+        background-size: 58%;
+    }
+
+    .xui-successHint .wui-i-closebtn {
+        color: white;
+        font-size: x-large;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        background: #FF422D;
+        text-align: center;
+        border-radius: 100px;
+        position: relative;
+        left: 81%;
+        top: -181%;
+        line-height: 30px;
+    }
+}
+
+
+
+</style>
+{% endblock %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+
+    <!-- 成功页面 -->
+    <div class="xui-powerSucceed xa-powerSucceed none">
+        <div class="f15 xui-successHint xui-spritebg">
+            <div style="display: inline-block;color: #333;width: 90%;">
+                <div class="wui-i-closebtn xa-i-closebtn">
+                    ×
+                </div>
+                <p class="xui-i-intro_text">您已为“<span class="wa-pageownername">他</span>”贡献</p>
+                <p class="xui-i-intro_num"><span class="xui-i-num">+</span><span class="xui-i-num wa-helpmoneynumber">0.00</span><span>元</span></p>
+            </div>
+        </div>
+    </div>
+    <!-- 没有红包了的弹窗页面 -->
+    <div class="xui-powerSucceed xa-redPacketMsg none">
+        <div class="f15 xui-successHint xui-spritebg">
+                <div class="wui-i-closebtn xa-i-closebtn" style="left: 3px;">
+                    ×
+                </div>
+                <p class="xui-i-msg xa-i-msg" style="position: relative;left: -10px;"></p>
+        </div>
+    </div>
+
+    <!-- 非会员引导 -->
+    <div class="xui-attention xa-attention-guest none">
+        <div class="xui-twoDimensionBox">
+            <div class="xa-attention-tip-one" style="margin-top: 32px;">
+                <p>1.长按二维码关注</p><span class="wui-win-font-color">“{{ mpUserPreviewName }}”</span><span>公众号</span>
+            </div>
+            <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
+            <div class="xa-attention-tip" style="display:none">
+                <p class="wui-win-font-color">2.关注公众号后即可为好友贡献金额</p>
+            </div>
+            <div class="xa-attention-reply" style="margin-top: 5px;">
+                <p>2.回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，即可参加活动</div>
+            </div>
+            <div class="xui-closeBtn xa-closeBtn"></div>
+        </div>
+    </div>
+    <!-- 个人引导 -->
+    <div class="xui-attention xa-attention-member none">
+        <div class="xui-twoDimensionBox">
+            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
+                <div style="text-align:center">长按二维码进入公众号</div>
+                <div style="text-align:center">获取你自己的专属页，</div>
+            </div>
+            <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
+            <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
+                分享到朋友圈,发动小伙伴帮你点赞赢红包！
+            </div>
+            <div class="xui-closeBtn xa-closeBtn"></div>
+        </div>
+    </div>
+    <div class="xui-share xa-share none">
+        <div style="margin-top: 49%">
+            <p>请点击右上角</p><p>选择发送给指定好友</p><p>或者分享到朋友圈</p>
+            <div style="display: inline">
+                <p style="display: inline">来帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">点赞</p>
+            </div>
+        </div>
+        <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
+    </div>
+
+    <!-- 成功消息:父wui-i-system_msgbox -->
+    <div class="xui-redpacket_success xa-redpacket_success none">
+        <div class="xui-i-msgbox">
+            <p class="xui-success_msg"></p>
+            <p class="xui-system_msg">系统会在24小时内发放，请注意查收。</p>
+        </div>
+    </div>
+    <div class="xui-redpacket_fail xa-redpacket_fail none">
+        <div class="xui-i-msgbox">
+            <p class="xui-fail_msg"></p>
+            <!-- <p class="xui-system_msg"></p> -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var is_helped = true;
+    var is_self_page = true;
+    var red_packet_status = false;
+    var page_owner_name = '';
+    var page_owner_icon = '';//用户头像
+    var page_owner_member_id = '';
+    var qrcode_url = W.qrcodeUrl;
+    var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
+    var mp_user_head_img = '{{ mpUserHeadImg }}'; //公众号头像
+    $(function(){
+        //隐藏参与活动按钮
+        $('.xa-submitButtonContainer').hide();
+        if(W.isPC){
+            return false;
+        }
+        $('.wui-appParticipantResult-Cover').hide();
+
+        //展示参与统计
+        getDynamicData();
+    });
+
+    function updateBtnStatus(){
+        if('进行中' != W.activityStatus){
+            $('.wa-timing').hide();
+            if('未开始' == W.activityStatus){
+                $('.wa-notready').show();
+            }else{
+                if(is_self_page && !red_packet_status && W.isAlreadyParticipanted){
+                    showFail();
+                }else{
+                    $('.wa-closed').show();
+                }
+            }
+            return false;
+        }
+        //如果是自己的主页
+        if(is_self_page){
+            //参与活动
+            if(red_packet_status){
+                showSuccess();
+                $('.wui-i-states').removeClass('none');
+            }
+            else{
+                if(!W.isMember){
+                    $('.wa-running').on('click', openGuestMask).show();
+                }else{
+                    $('.wa-running').on('click', openGuideMask).show();
+                }
+            }
+
+        }else{
+            $('.wa-running').hide();
+            var using_msg;
+            var $attention = $('.xa-attention-guest');
+            var $powerBtn = $('.wa-power');
+            $powerBtn.find('.wa-mobile_solution').html(sliceName(page_owner_name,4));
+            if(W.isMember){
+                if(is_helped){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        wuiAlert('只能帮好友点赞一次');
+                    }).show();
+                }else{
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                   $powerBtn.on('click', function(){
+                       if(is_helped){
+                           openGuideMask();
+                       }else{
+                           powerYou();
+                       }
+                   }).show();
+                }
+            }else{
+                if(is_helped){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        openGuestMask();
+                    }).show();
+                }else{
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                    $powerBtn.on('click', function(){
+                        powerYou();
+                    }).show();
+                }
+            }
+
+            if(W.isAlreadyParticipanted){
+                using_msg = '您已参加该活动';
+                $('.wa-using').text(using_msg).on('click', function(){
+                    link = window.location.origin + '/m/apps/red_packet/m_red_packet/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+                    console.log(link);
+                    window.open(link, '_tab');
+                }).show();
+            }else{
+                using_msg = '我也要拼红包';
+                if(W.isMember){
+                    $('.wa-using').text(using_msg).on('click', function(){
+                        openMemberMask();
+                    }).show();
+                }else{
+                    $('.wa-using').text(using_msg).on('click', function(){
+                        $attention.find('img').attr('src', qrcode_url);
+                        $attention.find('.xa-attention-tip').hide();
+                        $attention.find('.xa-attention-reply').children().first().html("2.回复：");
+                        openGuestMask();
+                    }).show();
+                }
+            }
+        }
+    }
+
+    function GetQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null) return unescape(r[2]);
+        return null;
+    }
+
+    //发送请求，单独获取排名数据，优化首页时间
+    function getDynamicData(){
+        loadingStatus(true);
+        var fid = GetQueryString("fid");
+        W.getApi().call({
+            app: 'm/apps/red_packet',
+            resource: 'm_red_packet',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: fid
+            },
+            success: function(data) {
+                console.log(data);
+                //渲染按钮状态
+                updateActivityStatus(data);
+                //更新金额数字
+                updateMoneyInfo(data);
+                //启动倒计时
+                renderTime(data.member_info.timing);
+                //渲染帮助者名单
+                showHelperInfo(data);
+                //隐藏loading动画元素
+                loadingStatus(false);
+                //进度bar动画
+                runProcessBar(data.member_info.current_money,data.member_info.red_packet_money);
+            },
+            error: function(data) {
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    if(data.errMsg == 'is_run_out'){
+                        openRunoutWin();
+                    }else{
+                        wuiAlert(data.errMsg)
+                    }
+                }
+            }
+        });
+    }
+    function runProcessBar(current,total){
+        var current_money = current;
+        var red_packet_money = total;
+        var process = "0%";
+        if(red_packet_money==0){
+            process = "0%"
+        }else{
+            process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
+            if(process=="100.0%"){
+                process="100%";
+            }else if(process=="0.0%"){
+                process="0%";
+            }
+
+        }
+
+        $(".xa-i-percentbox").css("left",process);
+        $(".xa-i-bar_process").width(process);
+        percentBox_process_tmp = process;
+        percentBoxTimer();
+    }
+
+    var percentBox_max_count = 10;
+    var percentBox_process_tmp = "";
+    var percentBox_count = percentBox_max_count;
+    function percentBoxTimer(){
+        var maxwidth_process_bar = $(".wui-red_packet-container .wui-i-powerbar_group .wui-i-bar").width();
+        var curr_boxnum = $(".xa-i-percentbox").html().replace(/(^\s*)|(\s*$)/g,'');
+        var curr_width = $(".xa-i-bar_process").width();
+        var curr_process = parseFloat(curr_width/maxwidth_process_bar * 100).toFixed(1) + "%";
+
+        if (percentBox_count == 0) {
+            percentBox_max_count = 10;
+            curr_boxnum = percentBox_process_tmp;
+            $(".xa-i-percentbox").html(curr_boxnum);
+            return false;
+        }else{
+            if(curr_process=="0.0%"){
+                curr_process="0%";
+            }
+            if(curr_process=="100.0%"){
+                curr_process="100%";
+            }
+            $(".xa-i-percentbox").html(curr_process);
+            setTimeout(percentBoxTimer,300);
+            percentBox_count --;
+        }
+    }
+
+
+    function updateActivityStatus(data){
+        member_info = data.member_info;
+        is_self_page = member_info.self_page;
+        //更新页面拥有者名称，头像
+        page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
+        page_owner_icon = member_info.page_owner_icon;
+        $('.wa-pageownername').html(sliceName(page_owner_name,4));
+        if(page_owner_icon!=""){
+            $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
+        }
+        if(mp_user_head_img!=""){
+            $('.wui-i-shop_circle').find('img').attr('src', mp_user_head_img);
+        }
+        //检查活动状态,更新参与按钮并绑定事件
+        W.activityStatus = member_info.activity_status;
+        W.isAlreadyParticipanted = member_info.is_already_participanted;
+        W.member_id = member_info.member_id;
+        W.isMember = member_info.isMember;
+        //TODO 未关注会员处理
+
+        is_helped = member_info.is_helped;
+        page_owner_member_id = member_info.page_owner_member_id;
+        red_packet_status = member_info.red_packet_status;
+        updateBtnStatus();
+    }
+
+    function updateMoneyInfo(data){
+        member_info = data.member_info;
+        red_packet_money = member_info.red_packet_money;
+        current_money = member_info.current_money;
+        $('.wa-i-current_money').text('当前金额 '+current_money+'元');
+        $('.wa-i-red_packet_money').text(red_packet_money+'元');
+    }
+
+    function showHelperInfo(data){
+        var helpers_info = data.helpers_info;
+        if ($.isEmptyObject(helpers_info)){
+            $('.wui-i-states').addClass('none');
+        }else{
+            if(helpers_info || $.isEmptyObject(helpers_info)){
+                $('.wui-i-states').removeClass('none');
+                var li_content = '';
+                for(var i in helpers_info){
+                    var p = helpers_info[i];
+                    li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ p.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ p.help_money+"元</li><li class='wui-i-name'>"+ sliceName(p.username,4)+"</li></div></div>";
+                }
+                $('.wa-top100').append($(li_content));
+            }
+        }
+    }
+
+    function renderTime(seconds){
+        seconds = parseInt(seconds);
+        var formatTime = function(data){
+            data = parseInt(data);
+            if(data<10){
+                return '0'+data;
+            }
+            return data;
+        };
+        var $s = $('.xa-second');
+        var $m = $('.xa-minute');
+        var $h = $('.xa-hour');
+        var $d = $('.xa-day');
+        var timer = window.setInterval(function(){
+            if(seconds <= 0){
+                window.clearInterval(timer);
+                return false;
+            }
+            var left_seconds = formatTime(seconds%60);
+            var left_minites = formatTime(seconds/60%60);
+            var left_hours = formatTime(seconds/60/60%24);
+            var left_days = formatTime(seconds/60/60/24);
+            $s.text(left_seconds);
+            $m.text(left_minites);
+            $h.text(left_hours);
+            $d.text(left_days);
+            seconds--;
+        },990);
+    }
+
+    function openGuideMask(){
+        mask('show');
+        $('.xa-share').removeClass('none');
+    }
+
+    function openSuccessWin(){
+        mask('show');
+        $('.xa-powerSucceed').removeClass('none');
+    }
+    function openRunoutWin(){
+        mask('show');
+        $('.xa-redPacketMsg').removeClass('none');
+        $('.xa-loadingFrame').addClass('none');
+        $('.xa-redPacketMsg').find('.xa-i-msg').html('红包已被抢完啦</p><p>下次早点来哦');
+    }
+    function openCompletedWin(){
+        mask('show');
+        $('.xa-redPacketMsg').removeClass('none');
+        $('.xa-loadingFrame').addClass('none');
+        $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+sliceName(page_owner_name,4)+'"</p><p>已经拼红包成功');
+    }
+    function showSuccess(){
+        $('.wa-running').hide();
+        $('.xa-redpacket_success').removeClass('none');
+    }
+    function showFail(){
+        $('.wa-running').hide();
+        $('.xa-redpacket_fail').removeClass('none');
+    }
+    function openGuestMask(){
+        mask('show');
+        $('.xa-attention-guest').removeClass('none');
+    }
+    function openMemberMask(){
+        mask('show');
+        $('.xa-attention-member').removeClass('none');
+    }
+    function powerYou(){
+        var $attention = $('.xa-attention-guest');
+        if (is_helped) {
+            if(!W.isMember){
+                $attention.find('.xa-attention-tip').show();
+                $attention.find('img').attr('src', new_qrcode_url);
+                $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                openGuestMask();
+            }
+            return
+        }
+        is_helped = true;
+        W.getApi().call({
+            app: 'm/apps/red_packet',
+            resource: 'red_packet_participance',
+            method: 'put',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: page_owner_member_id
+            },
+            success: function(data) {
+                if (W.isMember) {
+                    $('.wui-i-states').removeClass('none');
+                    help_money = data.help_info.help_money;
+                    $('.xui-successHint').find('.wa-helpmoneynumber').html(help_money);
+                    //修改当前金额与帮助列表
+                    $('.wa-i-current_money').text('当前金额 '+data.help_info.current_money+'元');
+                    var li_content = '';
+                    li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ sliceName(data.help_info.username,4)+"</li></div></div>";
+                    $('.wa-top100').prepend($(li_content));
+                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
+                    openSuccessWin();
+                    //进度bar动画
+                    runProcessBar(data.help_info.current_money,data.help_info.red_packet_money);
+
+                }else{
+                    $attention.find('.xa-attention-tip').show();
+                    $attention.find('img').attr('src', new_qrcode_url);
+                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                    openGuestMask();
+                }
+            },
+            error: function(data) {
+                if(data.errMsg){
+                    if(data.errMsg != '只能点赞一次'){
+                        if(data.errMsg == '该用户已经完成拼红包'){
+                            openCompletedWin();
+                            is_helped = false;
+                        }else{
+                            wuiAlert(data.errMsg);
+                            is_helped = false;
+                        }
+                    }else{
+                        if(!W.isMember){
+                            $attention.find('.xa-attention-tip').show();
+                            $attention.find('img').attr('src', new_qrcode_url);
+                            $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                            openGuestMask();
+                        }
+                    }
+
+                }
+            }
+        });
+    }
+    //切割名字
+    function sliceName(name,num){
+        if(name.length<=num){
+            return name
+        }else{
+            return name.substring(0,num-1)+"...";
+        }
+    }
+    //隐藏所有
+    $('.mask').click(function(){
+        mask('hide');
+        $('.xui-powerSucceed').addClass('none');
+        $('.xui-attention').addClass('none');
+        $('.xa-share').addClass('none');
+        $('.xui-errMsg').addClass('none');
+        $('.xa-i-rules-contentbox').addClass('none');
+        $('.xa-loadingFrame').addClass('none');
+    });
+    $('.xa-closeBtn').click(function(){
+        $('.xui-attention').addClass('none');
+        mask('hide');
+    });
+    $('.xa-colseButton').click(function(){
+        $('.xa-share').addClass('none');
+        mask('hide');
+    });
+    // 活动规则
+    $('.xa-i-closebtn').click(function(){
+        $('.xa-i-rules-contentbox').addClass('none');
+        mask('hide');
+    });
+    $('.xa-i-rules-title-content p').click(function(){
+        $('.xa-i-rules-contentbox').removeClass('none');
+        mask('show');
+    });
+    // 通知弹窗
+    $('.xa-powerSucceed .xa-i-closebtn').click(function(){
+        $('.xa-powerSucceed').addClass('none');
+        mask('hide');
+    });
+    $('.xa-redPacketMsg .xa-i-closebtn').click(function(){
+        $('.xa-redPacketMsg').addClass('none');
+        mask('hide');
+    });
+    // 手机界面，发放提示消息 system msg box
+    $('.wa-i-system_msgbox').append($('.xui-redpacket_success'));
+    $('.wa-i-system_msgbox').append($('.xui-redpacket_fail'));
+
+</script>
+{% endblock %}
+
