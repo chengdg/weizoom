@@ -122,7 +122,7 @@ Scenario:1 添加优惠券规则
 		"""
 
 #补充：张三香
-@mall2 @promotion @promotionCoupon 
+@mall2 @promotion @promotionCoupon @as
 Scenario:2 添加单品优惠券规则,单商品支持多个单品优惠券
 	Given jobs登录系统
 	When jobs添加优惠券规则
