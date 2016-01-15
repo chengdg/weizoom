@@ -118,29 +118,37 @@ class lottery_prize(resource.Resource):
 				return response.get_response()
 
 			# 临时解决高并发问题 ----start
-			permisson = False
-			index_list = ['one', 'two'] if limitation == 2 else ['one']
-			for index in index_list:
-				try:
-					data = {}
-					data['member_id'] = member_id
-					data['belong_to'] = record_id
-					data['date_control'] = now_datetime.strftime('%Y-%m-%d')
-					data['can_play_count_control_%s'%index] = now_datetime.strftime('%Y-%m-%d')
-					control = app_models.lotteryControl(**data)
-					control.save()
-					permisson = True
-					break
-				except:
-					pass
-			if not permisson:
-				response = create_response(500)
-				response.errMsg = u'您今天的抽奖机会已经用完~'
-				return response.get_response()
+			# permisson = False
+			# index_list = ['one', 'two'] if limitation == 2 else ['one']
+			# for index in index_list:
+			# 	try:
+			# 		data = {}
+			# 		data['member_id'] = member_id
+			# 		data['belong_to'] = record_id
+			# 		data['date_control'] = now_datetime.strftime('%Y-%m-%d')
+			# 		data['can_play_count_control_%s'%index] = now_datetime.strftime('%Y-%m-%d')
+			# 		control = app_models.lotteryControl(**data)
+			# 		control.save()
+			# 		permisson = True
+			# 		break
+			# 	except:
+			# 		pass
+			# if not permisson:
+			# 	response = create_response(500)
+			# 	response.errMsg = u'您今天的抽奖机会已经用完~'
+			# 	return response.get_response()
 			# 临时解决高并发问题 ----end
 
 			#根据抽奖次数限制，更新可抽奖次数
-			lottery_participance.update(dec__can_play_count=1)
+			sync_result = lottery_participance.modify(
+				query={'lottery_date__lt': now_datetime - datetime.timedelta(seconds=1)},
+				dec__can_play_count=1
+			)
+			print sync_result, '==========================='
+			if not sync_result:
+				response = create_response(500)
+				response.errMsg = u'操作过于频繁！'
+				return response.get_response()
 
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')

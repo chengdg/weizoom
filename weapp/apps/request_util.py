@@ -26,7 +26,7 @@ from customerized_apps import mysql_models as mongo_models
 #===============================================================================
 # __get_fields_to_be_save : 获得待存储的数据
 #===============================================================================
-def get_fields_to_be_save(request, document):
+def get_fields_to_be_save(request):
 	fields = request.POST.dict()
 	fields['created_at'] = datetime.today()
 
@@ -54,11 +54,6 @@ def get_fields_to_be_save(request, document):
 					att_url.append(picture)
 				fields['termite_data'][item]['value'] = att_url
 
-	model_fields = document._fields.keys()
-	post_fields = fields.keys()
-	for f in post_fields:
-		if f not in model_fields:
-			del fields[f]
 	return fields
 
 def get_consume_coupon(owner_id, app_name, app_id, rule_id, member_id, has_coupon_count=0):

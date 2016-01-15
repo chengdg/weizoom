@@ -136,7 +136,14 @@ class SignParticipance(models.Document):
 
 		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
-		self.update(**user_update_data)
+		sync_result = self.modify(
+			query={'latest_date__lt': nowDate.date()},
+			**user_update_data
+		)
+		if not sync_result:
+			return_data['status_code'] = RETURN_STATUS_CODE['ERROR']
+			return_data['errMsg'] = u'操作过于频繁'
+			return return_data
 		self.reload()
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)

@@ -89,19 +89,13 @@ class PowerMe(resource.Resource):
 		"""
 		响应PUT
 		"""
-		data = request_util.get_fields_to_be_save(request, app_models.PowerMe)
+		data = request_util.get_fields_to_be_save(request)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 
 		powerme = app_models.PowerMe(**data)
 		powerme.save()
-		error_msg = None
-		
-		data = json.loads(powerme.to_json())
-		data['id'] = data['_id']['$oid']
-		if error_msg:
-			data['error_msg'] = error_msg
+
 		response = create_response(200)
-		response.data = data
 		return response.get_response()
 	
 	@login_required
@@ -109,7 +103,7 @@ class PowerMe(resource.Resource):
 		"""
 		响应POST
 		"""
-		data = request_util.get_fields_to_be_save(request, app_models.PowerMe)
+		data = request_util.get_fields_to_be_save(request)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 
 		update_data = {}
@@ -117,7 +111,6 @@ class PowerMe(resource.Resource):
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
-				print key,value,"$$$$$$$$$"
 		app_models.PowerMe.objects(id=request.POST['id']).update(**update_data)
 		
 		response = create_response(200)
