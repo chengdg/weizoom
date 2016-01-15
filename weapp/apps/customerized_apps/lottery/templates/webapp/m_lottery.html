@@ -177,12 +177,13 @@
                         }
                     });
             });
-
             this.$userCenter.on('click', function(){
                 if (!W.isMember) {
-                    $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                            '<img height="205px" width="205px" src="'+ W.qrcodeUrl+'">' +
-                            '</div><div></div>');
+                    that.$el.hide();
+                    showQrcode(W.qrcodeUrl);
+                    //$('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                    //        '<img height="205px" width="205px" src="'+ W.qrcodeUrl+'">' +
+                    //        '</div><div></div>');
                 }
                 else {
                     window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
@@ -251,6 +252,14 @@
                 mask('show');
                 that.$el.show();
             }
+        };
+        ResultDialog.prototype._none = function(){
+            this.$entityContent.hide();
+            this.$el.hide();
+            this.$title.html('很遗憾').show();
+            this.$contentHeader.html("奖品已抽光,下次请早点来!");
+            this.$userCenter.show();
+            this.$closeBtn.show();
         };
         ResultDialog.prototype.close = function(){
             //this.$mask.hide();
@@ -412,7 +421,11 @@
                         },
                         error: function(error){
                             $that.removeClass('xa-lottery-go-to');
-                            wuiAlert(error.errMsg);
+                            if(error.errMsg == '很遗憾！奖品已抽光，下次请早点来！'){
+                                resultDialog._none();
+                            }else{
+                                wuiAlert(error.errMsg);
+                            }
                         }
                     });
                 }

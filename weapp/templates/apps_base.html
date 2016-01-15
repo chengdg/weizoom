@@ -61,6 +61,26 @@
                 margin: 0 auto;
                 padding: 5px;
             }
+            .xui-attentionBox {
+                display: none;
+                width: 233px;
+                height: 270px;
+                background: url(/static_v2/img/termite2/two-dimension.png);
+                background-size: 100%;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                margin-top: -135px;
+                margin-left: -115px;
+                z-index: 10000;
+            }
+            .xui-twoDimensionImg {
+                width: 148px;
+                height: 155px;
+                position: absolute;
+                top: 42px;
+                left: 42px;;
+            }
 
             @-webkit-keyframes loading {
               0% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -194,6 +214,8 @@
 
         <div data-ui-role="swipemask" class="mask"></div>
 
+        <div class="xui-attentionBox "><img class="xui-twoDimensionImg" src=""/></div></div>
+
         {% block content-panel %}{% endblock %}
 
         <div class="wui-apps-alert wa-alert"><span></span></div>
@@ -288,6 +310,13 @@
                 }else if('hide' == action){
                     $('.mask').swipeMask('hide');
                 }
+            }
+            //引导关注的二维码弹层
+            function showQrcode(qrcodeurl){
+                qrcodeurl=qrcodeurl || W.qrcodeUrl;
+                mask('show');
+                $('.xui-twoDimensionImg').attr('src',qrcodeurl);
+                $('.xui-attentionBox') .show();
             }
 
             //消息提示

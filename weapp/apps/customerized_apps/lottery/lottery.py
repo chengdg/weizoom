@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from utils.cache_util import delete_cache
 
 import models as app_models
 from mall import export
@@ -111,6 +112,10 @@ class lottery(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 		app_models.lottery.objects(id=request.POST['id']).update(**update_data)
+
+		#更新后清除缓存
+		cache_key = 'apps_lottery_%s_s_noprizecount' % request.POST['id']
+		delete_cache(cache_key)
 		
 		response = create_response(200)
 		return response.get_response()
@@ -134,3 +139,16 @@ def add_extra_data(data, post):
 	data['chance'] = int(post.get('chance', 0))
 	data['allow_repeat'] = post.get('allow_repeat', 'true')
 	return data
+
+class lotteryPrizeCount(resource.Resource):
+	app = 'apps/lottery'
+	resource = 'lottery_prize_count'
+
+	@login_required
+	def api_get(request):
+		lottery = app_models.lottery.objects.get(id=request.GET['id'])
+		response = create_response(200)
+		response.data = lottery.prize
+		return response.get_response()
+
+

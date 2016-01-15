@@ -296,52 +296,52 @@ Scenario:4 会员参加微信抽奖活动，抽奖限制为一天两次
 	When bill参加微信抽奖活动'微信抽奖'
 	Then bill获得抽奖错误提示'您今天的抽奖机会已经用完~'
 
-#补充：张雪 2015.12.02
-@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
-Scenario:5 中奖概率率为0,中奖用户为0
-	Given jobs登录系统
-	When jobs新建微信抽奖活动
-		"""
-		[{
-			"name":"微信抽奖",
-			"start_date":"今天",
-			"end_date":"2天后",
-			"desc":"抽奖啦抽奖啦",
-			"reduce_integral":0,
-			"send_integral":0,
-			"send_integral_rules":"仅限未中奖用户",
-			"lottery_limit":"不限",
-			"win_rate":"0%",
-			"is_repeat_win":"是",
-			"prize_settings":[{
-				"prize_grade":"一等奖",
-				"prize_counts":10,
-				"prize_type":"积分",
-				"integral":50,
-				"pic":""
-			},{
-				"prize_grade":"二等奖",
-				"prize_counts":20,
-				"prize_type":"积分",
-				"integral":30,
-				"pic":""
-			},{
-				"prize_grade":"三等奖",
-				"prize_counts":30,
-				"prize_type":"实物",
-				"gift":"精美礼品",
-				"pic":"1.jpg"
-			}]
-		}]
-		"""
-
-	When bill参加微信抽奖活动'微信抽奖'
-	Then bill获得抽奖结果
-		"""
-		[{
-			"prize_grade":"谢谢参与"
-		}]
-		"""
+#补充：张雪 2015.12.02 (目前不存在概率为0的场景)
+#@mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend 
+#Scenario:5 中奖概率率为0,中奖用户为0
+#	Given jobs登录系统
+#	When jobs新建微信抽奖活动
+#		"""
+#		[{
+#			"name":"微信抽奖",
+#			"start_date":"今天",
+#			"end_date":"2天后",
+#			"desc":"抽奖啦抽奖啦",
+#			"reduce_integral":0,
+#			"send_integral":0,
+#			"send_integral_rules":"仅限未中奖用户",
+#			"lottery_limit":"不限",
+#			"win_rate":"0%",
+#			"is_repeat_win":"是",
+#			"prize_settings":[{
+#				"prize_grade":"一等奖",
+#				"prize_counts":10,
+#				"prize_type":"积分",
+#				"integral":50,
+#				"pic":""
+#			},{
+#				"prize_grade":"二等奖",
+#				"prize_counts":20,
+#				"prize_type":"积分",
+#				"integral":30,
+#				"pic":""
+#			},{
+#				"prize_grade":"三等奖",
+#				"prize_counts":30,
+#				"prize_type":"实物",
+#				"gift":"精美礼品",
+#				"pic":"1.jpg"
+#			}]
+#		}]
+#		"""
+#
+#	When bill参加微信抽奖活动'微信抽奖'
+#	Then bill获得抽奖结果
+#		"""
+#		[{
+#			"prize_grade":"谢谢参与"
+#		}]
+#		"""
 
 @mall2 @apps_lottery @users_participate_lottery @apps_lottery_frontend
 Scenario:6 优惠券数量为0，用户无法获得优惠券奖励
@@ -551,5 +551,252 @@ Scenario:7 优惠券有领取限制，用户无法获得优惠券奖励
 			"coupon_id": "coupon3_id_1",
 			"money": 100.00,
 			"status": "未使用"
+		}]
+		"""
+
+#补充.张雪 2016.01.19
+@apps_lottery @users_participate_lottery @apps_lottery_frontend @cl
+Scenario:8 优惠券数量为0时，手机端提示信息奖品被抽完，下次再来
+	#中奖概率：100%；抽奖限制：一天两次
+	#奖项设置：
+		#一等奖，1，优惠券3
+		#二等奖，0，优惠券3
+		#三等奖，0，优惠券3
+	#优惠券数量为1，当用户在活动期间内抽到此优惠券 ，那么其他用户将不会抽到优惠券奖励，并提示奖品已发完
+
+	Given jobs登录系统
+	When jobs添加优惠券规则
+		"""
+		[{
+			"name": "优惠券3",
+			"money": 100.00,
+			"count": 3,
+			"limit_counts":"无限",
+			"using_limit": "满50元可以使用",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"coupon_id_prefix": "coupon3_id_"
+		}]
+		"""
+	Then jobs能获得优惠券'优惠券3'的码库
+		"""
+		{
+			"coupon3_id_1": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon3_id_2": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			},
+			"coupon3_id_3": {
+				"money": 100.00,
+				"status": "未领取",
+				"consumer": "",
+				"target": ""
+			}
+		}
+		"""
+	When jobs新建微信抽奖活动
+		"""
+		[{
+			"name":"微信抽奖",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"desc":"抽奖啦抽奖啦",
+			"reduce_integral":0,
+			"send_integral":0,
+			"send_integral_rules":"仅限未中奖用户",
+			"lottery_limit":"一天两次",
+			"win_rate":"100%",
+			"is_repeat_win":"是",
+			"prize_settings":[{
+				"prize_grade":"一等奖",
+				"prize_counts":1,
+				"rest":1,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			}]
+		}]
+		"""
+
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom参加微信抽奖活动'微信抽奖'
+	Then tom获得抽奖结果
+		"""
+		[{
+			"prize_grade":"一等奖",
+			"prize_type":"优惠券",
+			"prize_name":"优惠券3"
+		}]
+		"""
+	Then tom能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon3_id_1",
+			"money": 100.00,
+			"status": "未使用"
+		}]
+		"""
+	Given jobs登录系统
+	Then jobs获得微信抽奖活动'微信抽奖'
+		"""
+		[{
+			"name":"微信抽奖",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"desc":"抽奖啦抽奖啦",
+			"reduce_integral":0,
+			"send_integral":0,
+			"send_integral_rules":"仅限未中奖用户",
+			"lottery_limit":"一天两次",
+			"win_rate":"100%",
+			"is_repeat_win":"是",
+			"prize_settings":[{
+				"prize_grade":"一等奖",
+				"prize_counts":1,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			}]
+		}]
+		"""
+
+	When tom参加微信抽奖活动'微信抽奖'
+	Then tom获得抽奖错误提示'很遗憾！奖品已抽光，下次请早点来！'
+
+	Given jobs登录系统
+	When jobs编辑微信抽奖活动'微信抽奖'
+		"""
+		[{
+			"name":"微信抽奖",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"desc":"抽奖啦抽奖啦",
+			"reduce_integral":0,
+			"send_integral":0,
+			"send_integral_rules":"仅限未中奖用户",
+			"lottery_limit":"一天两次",
+			"win_rate":"100%",
+			"is_repeat_win":"是",
+			"prize_settings":[{
+				"prize_grade":"一等奖",
+				"prize_counts":3,
+				"rest":2,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			}]
+		}]
+		"""
+
+	When tom参加微信抽奖活动'微信抽奖'
+	Then tom获得抽奖结果
+		"""
+		[{
+			"prize_grade":"一等奖",
+			"prize_type":"优惠券",
+			"prize_name":"优惠券3"
+		}]
+		"""
+	When tom访问jobs的webapp
+	Then tom能获得webapp优惠券列表
+		"""
+		[{
+			"coupon_id": "coupon3_id_1",
+			"money": 100.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon3_id_2",
+			"money": 100.00,
+			"status": "未使用"
+		}]
+		"""
+
+	Given jobs登录系统
+	Then jobs获得微信抽奖活动'微信抽奖'
+		"""
+		[{
+			"name":"微信抽奖",
+			"start_date":"今天",
+			"end_date":"2天后",
+			"desc":"抽奖啦抽奖啦",
+			"reduce_integral":0,
+			"send_integral":0,
+			"send_integral_rules":"仅限未中奖用户",
+			"lottery_limit":"一天两次",
+			"win_rate":"100%",
+			"is_repeat_win":"是",
+			"prize_settings":[{
+				"prize_grade":"一等奖",
+				"prize_counts":3,
+				"rest":1,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"二等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			},{
+				"prize_grade":"三等奖",
+				"prize_counts":0,
+				"rest":0,
+				"prize_type":"优惠券",
+				"coupon":"优惠券3",
+				"pic":""
+			}]
 		}]
 		"""
