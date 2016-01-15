@@ -176,15 +176,17 @@ def export_orders_json(request):
 
     webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
+    # 构造会员与推荐人或者带参数二维码的关系
     members = webappuser2member.values()
     member_self_sub, member_qrcode_and_by_url = [], []
     follow_member_ids = []
     for member in members:
-        if member.source == SOURCE_SELF_SUB:
-            member_self_sub.append(member)
-        elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
-            member_qrcode_and_by_url.append(member)
-            follow_member_ids.append(member.id)
+        if member:
+            if member.source == SOURCE_SELF_SUB:
+                member_self_sub.append(member)
+            elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
+                member_qrcode_and_by_url.append(member)
+                follow_member_ids.append(member.id)
 
     follow_member2father_member = dict([(relation.follower_member_id, relation.member_id) for relation in MemberFollowRelation.objects.filter(follower_member_id__in=follow_member_ids, is_fans=True)])
     father_member_ids = follow_member2father_member.values()
@@ -265,32 +267,35 @@ def export_orders_json(request):
         else:
             order.buyer_name = u'未知'
 
+        # 根据用户来源获取用户推荐人或者带参数二维码的名称
         father_name_or_qrcode_name = ""
         member_source_name = ""
         before_scanner_qrcode_is_member = ""
         SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
-        if member.source == SOURCE_SELF_SUB:
-            if member.id in member_id2qrcode.keys() and member_id2qrcode[member.id].created_at < order.created_at:
-                member_source_name = "带参数二维码"
-                father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
-                if member_id2qrcode[member.id].is_new:
-                    before_scanner_qrcode_is_member = 0
+        if member:
+            if member.source == SOURCE_SELF_SUB:
+                if member.id in member_id2qrcode.keys() and member_id2qrcode[member.id].created_at < order.created_at:
+                    member_source_name = "带参数二维码"
+                    father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
+                    if member_id2qrcode[member.id].is_new:
+                        before_scanner_qrcode_is_member = 0
+                    else:
+                        before_scanner_qrcode_is_member = 1
                 else:
-                    before_scanner_qrcode_is_member = 1
-            else:
-                member_source_name = "直接关注"
-        elif member.source == SOURCE_MEMBER_QRCODE:
-            member_source_name = "推荐扫码"
-            try:
-                father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
-            except KeyError:
-                father_name_or_qrcode_name = ""
-        elif member.source == SOURCE_BY_URL:
-            member_source_name = "会员分享"
-            try:
-                father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
-            except KeyError:
-                father_name_or_qrcode_name = ""
+                    member_source_name = "直接关注"
+            elif member.source == SOURCE_MEMBER_QRCODE:
+                member_source_name = "推荐扫码"
+                try:
+                    father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                except KeyError:
+                    father_name_or_qrcode_name = ""
+            elif member.source == SOURCE_BY_URL:
+                member_source_name = "会员分享"
+                try:
+                    father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                except KeyError:
+                    father_name_or_qrcode_name = ""
+        #----------end---------
 
         # 计算总和
         final_price = 0.0
