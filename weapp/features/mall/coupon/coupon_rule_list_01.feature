@@ -47,7 +47,7 @@ Background:
 	And bill关注jobs的公众号
 	And tom关注jobs的公众号
 
-@promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon
 Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/次"
 	#校验无领取限制的优惠券1
 	Given jobs登录系统
@@ -190,7 +190,7 @@ Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/�
 		}]
 		"""
 
-@promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon
 Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表中的"领取人/次"
 	Given jobs登录系统
 	Then jobs能获得优惠券规则列表
@@ -322,7 +322,7 @@ Scenario:2 会员购买时输入未领取的优惠券码后，查看优惠列表
 		}]
 		"""
 
-@promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon
 Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠列表中的"领取人/次"
 	Given jobs登录系统
 	When jobs添加分享红包
@@ -460,7 +460,7 @@ Scenario:3 通过分享红包（下单领取）领取优惠券后,查看优惠�
 		}]
 		"""
 
-@promotion @promotionCoupon
+@mall2 @promotion @promotionCoupon
 Scenario:4 通过分享红包（图文领取）领取优惠券后,查看优惠列表中的"领取人/次"
 	Given jobs登录系统
 	When jobs添加分享红包
