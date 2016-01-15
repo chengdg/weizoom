@@ -287,6 +287,7 @@ MALL_APPS_VOTE_NAV = 'votes'
 MALL_APPS_SIGN_NAV = 'sign'
 MALL_APPS_RED_ENVELOPE_NAV = 'red_envelopes'
 MALL_APPS_POWERME_NAV = 'powerme'
+MALL_APPS_REDPACKET_NAV = 'red_packet'
 
 #
 # 应用和营销左侧垂直方向二级导航信息
@@ -422,6 +423,12 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'url': '/apps/exsurvey/exsurveies/',
                     'permission': '',
                     'users': ['njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
+                },
+                {
+                    'name': MALL_APPS_REDPACKET_NAV,
+                    'title': u'拼红包',
+                    'url': '/apps/red_packet/red_packets/',
+                    'permission': ''
                 }
             ]
         }

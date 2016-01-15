@@ -1,0 +1,545 @@
+{% extends "apps_base.html" %}
+
+{% block css %}
+<style>
+	.wui-masterinfo{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30px;
+        padding: 10px 0;
+        font-size: 0.8rem;
+        line-height: 30px;
+        background-color: white;
+        border-top: 1px solid gainsboro;
+        opacity: 0;
+        text-align: center;
+    }
+    .wui-masterinfo span{
+        margin: 0 5px;
+    }
+    .wui-masterinfo .wa-mypower{
+        margin: 0;
+    }
+    .wui-masterinfo b {
+        font-size: 0.8rem;
+    }
+    .wui-mask{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(181, 181, 181, 0.3);
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+    }
+    /*.mask{
+        background: rgba(0,0,0,0.8)!important;
+        position: fixed!important;
+    }*/
+    .xui-share {
+        background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll 82% 10px / 53% auto rgba(0, 0, 0, 0);
+        height: 75%;
+        position: fixed;
+        text-align: center;
+        top: 5%;
+        width: 100%;
+        z-index: 10001;
+    }
+    .xui-share.xa-share > div p {
+        color: #fff;
+        text-align: center;
+        width: 100%;
+    }
+    .xui-spritebg{
+        background: url("/termite_static/img/component/powerme/Sprite.png") no-repeat scroll 0 0 / 150% auto rgba(0, 0, 0, 0)
+    }
+    /* 分享的closeButton */
+    .xui-colseButton {
+        background-position: -36px 0;
+        height: 47px;
+        left: 40%;
+        margin-left: 11px;
+        position: absolute;
+        top: 60%;
+        width: 50px;
+    }
+    /* 二维码的closeBtn */
+    .xui-closeBtn {
+        height: 30px;
+        padding-left: 235px;
+        position: fixed;
+        top: 12%;
+        width: 45px;
+    }
+    .xui-successHint {
+        background: none repeat scroll 0 0 #fff;
+        border-radius: 16px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 20%;
+        width: 60%;
+        z-index: 11111;
+        text-align: center;
+    }
+    .xui-spritebg.xui-successHint-img {
+        display: inline-block;
+        height: 33px;
+        width: 46px;
+        float: left;
+    }
+    .xui-attention{
+        position: fixed;
+        top: 12%;
+        width: 100%;
+        text-align: center;
+        z-index: 10001;
+    }
+    .xa-attention-member .xui-twoDimensionBox{
+        text-align: center;
+    }
+    .xa-attention-guest .xui-twoDimensionBox{
+        text-align: left;
+    }
+    .xui-attention .xui-twoDimensionBox {
+        background: url("/termite_static/img/component/powerme/attention.png") no-repeat scroll 0 0 / 100% auto #fff;
+        border-radius: 8px;
+        padding: 5px 20px 20px 20px;
+        width: 260px;
+        display: inline-block;
+    }
+    .xui-attention .xui-twoDimension{
+        display: block;
+        height: 180px;
+        position: relative;
+        width: 180px;
+        margin-left: 40px;
+    }
+    .xui-twoDimensionBox p {
+        display: inline-block;
+    }
+    .wui-wraper{
+        background: white none repeat scroll 0 0;
+        border-radius: 100px;
+        float: left;
+        height: 44px;
+        width: 44px;
+    }
+    .wui-win-font-color{
+        color: orangered;
+    }
+    .wa-power-btn-action{
+        max-width: 18%;
+    }
+    .wa-mobile_solution{
+        max-width: 43%;
+    }
+    .wui-i-btn-power span{
+        display: inline-block;
+        position: relative;
+        max-width: 41%;
+        /* height: 20px; */
+        /* line-height: 20px; */
+        text-overflow: ellipsis;
+        /*border: 1px solid #999;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+</style>
+{% endblock %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+    <div class="wui-masterinfo wa-masterinfo">
+        <div style="float: left;">
+            <span class="wa-myrange">我的排名: <b></b></span>
+        <span class="wa-mypower">助力值: <b></b></span>
+        </div>
+        <div style="float: right;">
+        <span class="wa-totalcount">参与人数: <b></b></span>
+        </div>
+    </div>
+
+    <div class="xui-powerSucceed none">
+        <div class="f15 xui-successHint xui-spritebg">
+            <div class="xui-spritebg xui-successHint-img"></div>
+            <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮<span class="wa-pageownername"></span>助力值+1</p><p>关系好就是任性！</p></div>
+        </div>
+    </div>
+    <!-- 非会员引导 -->
+    <div class="xui-attention xa-attention-guest none">
+        <div class="xui-twoDimensionBox">
+            <div class="xa-attention-tip-one" style="margin-top: 32px;">
+                <p>1.长按二维码关注</p><span class="wui-win-font-color">“{{ mpUserPreviewName }}”</span><span>公众号</span>
+            </div>
+            <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
+            <div class="xa-attention-tip" style="display:none">
+                <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
+            </div>
+            <div class="xa-attention-reply" style="margin-top: 5px;">
+                <p>2.回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，即可参加活动</div>
+            </div>
+            <div class="xui-closeBtn xa-closeBtn"></div>
+        </div>
+    </div>
+    <!-- 个人引导 -->
+    <div class="xui-attention xa-attention-member none">
+        <div class="xui-twoDimensionBox">
+            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
+                <div style="color: orangered;text-align:center">您已参加该活动！</div>
+                <div style="text-align:center">长按二维码进入公众号</div>
+                <div style="text-align:center">获取你自己的专属页，</div>
+            </div>
+            <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
+            <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
+                分享到朋友圈,发动小伙伴帮你助力赢大奖！
+            </div>
+            <div class="xui-closeBtn xa-closeBtn"></div>
+        </div>
+    </div>
+    <div class="xui-share xa-share none">
+        <div style="margin-top: 49%">
+            <p>好的事物，一起分享</p><p>邀请好友或者分享到朋友圈，</p>
+            <div style="display: inline">
+                <p style="display: inline">发动小伙伴帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">赢大奖！</p>
+            </div>
+        </div>
+        <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    var is_powered = true;
+    var is_self_page = true;
+    var page_owner_name = '';
+    var page_owner_member_id = '';
+    var qrcode_url = W.qrcodeUrl;
+    var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
+    $(function(){
+        //隐藏参与活动按钮
+        $('.xa-submitButtonContainer').hide();
+        if(W.isPC){
+            return false;
+        }
+        $('.wui-appParticipantResult-Cover').hide();
+        //展示参与统计
+        getDynamicData();
+    });
+
+    function updateBtnStatus(){
+        if('进行中' != W.activityStatus){
+            $('.wa-timing').hide();
+            if('未开始' == W.activityStatus){
+                $('.wa-notready').show();
+            }else{
+                $('.wa-closed').show();
+            }
+            return false;
+        }
+        //如果是自己的主页
+        if(is_self_page){
+            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
+        }else{
+            var using_msg;
+            var $attention = $('.xa-attention-guest');
+            var $powerBtn = $('.wa-power');
+            $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
+            if(W.isMember){
+                if(is_powered){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        openGuideMask();
+                    }).show();
+                }else{
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                   $powerBtn.on('click', function(){
+                       if(is_powered){
+                           openGuideMask();
+                       }else{
+                           powerYou();
+                       }
+                   }).show();
+                }
+            }else{
+                if(is_powered){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        openGuideMask();
+                    }).show();
+                }else{
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                    $powerBtn.on('click', function(){
+                        powerYou();
+                    }).show();
+                }
+            }
+
+            if(W.isAlreadyParticipanted){
+                using_msg = '您已参加该活动';
+                $('.wa-using').text(using_msg).on('click', function(){
+                    openMemberMask();
+                }).show();
+            }else{
+                using_msg = '我也要参加';
+                $('.wa-using').text(using_msg).on('click', function(){
+                    $attention.find('img').attr('src', qrcode_url);
+                    $attention.find('.xa-attention-tip').hide();
+                    $attention.find('.xa-attention-reply').children().first().html("2.回复：");
+                    openGuestMask();
+                }).show();
+            }
+        }
+
+    }
+
+    function GetQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null) return unescape(r[2]);
+        return null;
+    }
+
+    //发送请求，单独获取排名数据，优化首页时间
+    function getDynamicData(){
+        loadingStatus(true);
+        var fid = GetQueryString("fid");
+        W.getApi().call({
+            app: 'm/apps/powerme',
+            resource: 'm_powerme',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: fid
+            },
+            success: function(data) {
+                console.log(data);
+                //渲染按钮状态
+                updateActivityStatus(data);
+                //启动倒计时
+                renderTime(data.member_info.timing);
+                //渲染排名
+                showTop100(data);
+                //隐藏loading动画元素
+                loadingStatus(false);
+                //监听分享成功事件
+                $(document).on("share:success",function(data){
+                    $('.xa-share').addClass('none');
+                    mask('hide');
+                    //分享成功后就算该用户参与活动
+                    W.getApi().call({
+                        app: 'm/apps/powerme',
+                        resource: 'powerme_participance',
+                        method: 'post',
+                        args: {
+                            webapp_owner_id: W.webappOwnerId,
+                            id: W.appRecordId,
+                            fid: page_owner_member_id
+                        },
+                        success: function(data) {
+                            console.log(page_owner_name+'成功参与活动');
+                        },
+                        error: function(data) {
+                            console.error(data.errMsg);
+                        }
+                    });
+                });
+            },
+            error: function(data) {
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    wuiAlert(data.errMsg)
+                }
+            }
+        });
+    }
+
+    function updateActivityStatus(data){
+        member_info = data.member_info;
+        is_self_page = member_info.self_page;
+        //更新页面拥有者名称
+        page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
+        $('.wa-pageownername').html(page_owner_name);
+        //检查活动状态,更新参与按钮并绑定事件
+        W.activityStatus = member_info.activity_status;
+        W.isAlreadyParticipanted = member_info.is_already_participanted;
+        W.member_id = member_info.member_id;
+        W.isMember = member_info.isMember;
+        //TODO 未关注会员处理
+
+        is_powered = member_info.is_powered;
+        page_owner_member_id = member_info.page_owner_member_id;
+        updateBtnStatus();
+    }
+
+    function showTop100(data){
+        var participances = data.participances;
+        if(participances || $.isEmptyObject(participances)){
+            var li_content = '';
+            for(var i in participances){
+                var p = participances[i];
+                li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><i class='wui-wraper'></i><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+            }
+            $('.wa-top100').append($(li_content));
+        }
+
+        var current_member_rank_info = data.current_member_rank_info;
+        var total_participant_count = data.total_participant_count;
+
+        if(!current_member_rank_info || $.isEmptyObject(current_member_rank_info)){
+            $('.wa-myrange').find('b').html('无');
+            $('.wa-mypower').find('b').html(0);
+        }else{
+            $('.wa-myrange').find('b').html(current_member_rank_info.rank);
+            $('.wa-mypower').find('b').html(current_member_rank_info.power);
+        }
+        $('.wa-totalcount').find('b').html(total_participant_count);
+
+        //展示与隐藏我的排名面板
+        window.setTimeout(showMyRank, 2*1000);
+    }
+
+    function renderTime(seconds){
+        seconds = parseInt(seconds);
+        var formatTime = function(data){
+            data = parseInt(data);
+            if(data<10){
+                return '0'+data;
+            }
+            return data;
+        };
+        var $s = $('.xa-second');
+        var $m = $('.xa-minute');
+        var $h = $('.xa-hour');
+        var $d = $('.xa-day');
+        var timer = window.setInterval(function(){
+            if(seconds <= 0){
+                window.clearInterval(timer);
+                return false;
+            }
+            var left_seconds = formatTime(seconds%60);
+            var left_minites = formatTime(seconds/60%60);
+            var left_hours = formatTime(seconds/60/60%24);
+            var left_days = formatTime(seconds/60/60/24);
+            $s.text(left_seconds);
+            $m.text(left_minites);
+            $h.text(left_hours);
+            $d.text(left_days);
+            seconds--;
+        },990);
+    }
+
+    function showMyRank(){
+        var $win = $(window);
+        var $top = $('.wa-top100');
+        var rect;
+        var djage = function(){
+            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
+        };
+        var toggle_show = function(){
+            rect = $top[0].getBoundingClientRect();
+            if(rect && djage()){
+                $('.wa-masterinfo').css('opacity',0.86);
+            }else{
+                $('.wa-masterinfo').css('opacity',0);
+            }
+        };
+        toggle_show();
+        window.onscroll = function(){
+            toggle_show();
+        };
+    }
+
+    function openGuideMask(){
+        mask('show');
+        $('.xa-share').removeClass('none');
+    }
+    function openSuccessWin(){
+        mask('show');
+        $('.xui-powerSucceed').removeClass('none');
+    }
+    function openGuestMask(){
+        mask('show');
+        $('.xa-attention-guest').removeClass('none');
+    }
+    function openMemberMask(){
+        mask('show');
+        $('.xa-attention-member').removeClass('none');
+    }
+    function powerYou(){
+        var $attention = $('.xa-attention-guest');
+        if (is_powered) {
+            if(!W.isMember){
+                $attention.find('.xa-attention-tip').show();
+                $attention.find('img').attr('src', new_qrcode_url);
+                $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                openGuestMask();
+            }
+            return
+        }
+        is_powered = true;
+        W.getApi().call({
+            app: 'm/apps/powerme',
+            resource: 'powerme_participance',
+            method: 'put',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: page_owner_member_id
+            },
+            success: function(data) {
+                if (W.isMember) {
+                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
+                    openSuccessWin();
+                }else{
+                    $attention.find('.xa-attention-tip').show();
+                    $attention.find('img').attr('src', new_qrcode_url);
+                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                    openGuestMask();
+                }
+            },
+            error: function(data) {
+                if(data.errMsg){
+                    if(data.errMsg != '只能助力一次'){
+                        wuiAlert(data.errMsg);
+                        is_powered = false;
+                    }else{
+                        if(!W.isMember){
+                            $attention.find('.xa-attention-tip').show();
+                            $attention.find('img').attr('src', new_qrcode_url);
+                            $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+                            openGuestMask();
+                        }
+                    }
+
+                }
+
+            }
+        });
+    }
+    //隐藏所有
+    $('.mask').click(function(){
+        mask('hide');
+        $('.xui-powerSucceed').addClass('none');
+        $('.xui-attention').addClass('none');
+        $('.xa-share').addClass('none');
+        $('.xui-errMsg').addClass('none');
+    });
+    $('.xa-closeBtn').click(function(){
+        $('.xui-attention').addClass('none');
+        mask('hide');
+    });
+    $('.xa-colseButton').click(function(){
+        $('.xa-share').addClass('none');
+        mask('hide');
+    });
+</script>
+{% endblock %}
+

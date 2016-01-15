@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" media="all" href="/static_v2/css/emojilc6cc2.css">
+    </head>
+    <body>
+
+        {% if items %}
+            <table>
+                <tr>
+                    <th>member_id</th>
+                    <th>用户名</th>
+                    <th>助力时间</th>
+                    <th>当前关注状态</th>
+                </tr>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.power_member_id }}</td>
+                    <td>{{ item.power_member_name|safe }}</td>
+                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.status }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <h2>没有人助力</h2>
+        {% endif %}
+        {% if errMsg %}
+            <h2 style="color: #6F0510">{{ errMsg }}</h2>
+        {% endif %}
+    </body>
+</html>
+
+
+
