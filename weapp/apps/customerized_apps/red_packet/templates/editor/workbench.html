@@ -5,10 +5,10 @@
 
 {% block css %}
     <style>
-        .xui-propertyView-app-PowerMeGroup .propertyGroup_property_input {
+        .xui-propertyView-app-RedPacketGroup .propertyGroup_property_input {
             padding-left: 0 !important;
         }
-        .xui-propertyView-app-PowerMeGroup .propertyGroup_property_input #start_time{
+        .xui-propertyView-app-RedPacketGroup .propertyGroup_property_input #start_time{
             margin-left: 3px !important;
         }
         .xa-protocol-deleteData{
@@ -25,8 +25,8 @@
     <ul class="breadcrumb">
       <li>您当前所在位置</li>
       <li><a href="/apps/lottery/lotteries/">百宝箱</a></li>
-      <li><a href="/apps/powerme/powermes/">微助力</a></li>
-      <li class="active">新建微助力</li>
+      <li><a href="/apps/red_packet/red_packets/">拼红包</a></li>
+      <li class="active">新建拼红包</li>
     </ul>
   </div>
     {% if is_deleted_data %}
@@ -55,18 +55,18 @@
     <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
     </div>
     <div class="xui-bottomActionBar xa-stickyBar">
-        {% if not powerme %}
+        {% if not red_packet %}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
         {% else %}
-            {% if powerme.status_text == "未开始" %}
+            {% if red_packet.status_text == "未开始" %}
                 <button class="xa-save btn btn-primary">保存</button>
                 <button class="xa-preview btn btn-default ml20">预览</button>
             {% endif %}
-            {% if powerme.status_text == "进行中" %}
+            {% if red_packet.status_text == "进行中" %}
                 进行中，不可更改
             {% endif %}
-            {% if powerme.status_text == "已结束" %}
+            {% if red_packet.status_text == "已结束" %}
                 已结束，不可更改
             {% endif %}
         {% endif %}
@@ -86,14 +86,14 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.powermedescription", "appkit.submitbutton"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.redpacketdescription", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
 
 {% if not is_deleted_data %}
   <script type="text/javascript">
     W.uid = "{{request.manager.id}}";
     W.projectId = "{{project_id}}";
-    W.activityId = "{{powerme.id}}";
+    W.activityId = "{{red_packet.id}}";
     W.host = "{{request.META.HTTP_HOST}}";
     W.API_VERSION = 1;
     var isCreateNewData = {% if is_create_new_data %}true{% else %}false{% endif %};
@@ -135,7 +135,7 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
-            W.Broadcaster.trigger('powerme:change:title', '{{ title_name }}');
+            W.Broadcaster.trigger('red_packet:change:title', '{{ title_name }}');
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');
@@ -213,14 +213,14 @@
             args['id'] = W.activityId;
           }
           W.getApi().call({
-            app: 'apps/powerme',
-            resource: 'powerme',
+            app: 'apps/red_packet',
+            resource: 'red_packet',
             method: method,
             args: args,
             success: function(data) {
               W.showHint('success', '保存成功');
               _.delay(function() {
-                window.location.href = '/apps/powerme/powermes/';
+                window.location.href = '/apps/red_packet/red_packets/';
               }, 500);
             },
             error: function(resp) {
@@ -265,7 +265,7 @@
             page_json: pageJson
           },
           success: function(data) {
-            var previewUrl = '/m/apps/powerme/m_powerme/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
+            var previewUrl = '/m/apps/red_packet/m_red_packet/?page_id=preview&woid='+W.uid+'&id='+W.projectId;
             window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
           },
           error: function(resp) {
@@ -294,7 +294,7 @@
               stickyMenu();
           }));
     });
-  W.Broadcaster.on('powerme:change:title', function(value){
+  W.Broadcaster.on('red_packet:change:title', function(value){
       $('.xa-title').text(value);
   });
   W.Broadcaster.on("qrcode:deleteQrcode", function(value){
