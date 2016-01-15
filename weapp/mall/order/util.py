@@ -180,8 +180,10 @@ def export_orders_json(request):
     members = webappuser2member.values()
     member_self_sub, member_qrcode_and_by_url = [], []
     follow_member_ids = []
+    all_member_ids = []
     for member in members:
         if member:
+            all_member_ids.append(member.id)
             if member.source == SOURCE_SELF_SUB:
                 member_self_sub.append(member)
             elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
@@ -192,7 +194,7 @@ def export_orders_json(request):
     father_member_ids = follow_member2father_member.values()
     father_member_id2member = dict([(m.id, m) for m in Member.objects.filter(id__in=father_member_ids)])
 
-    member_id2qrcode = dict([(relation.member_id, relation) for relation in ChannelQrcodeHasMember.objects.filter(member_id__in=member_self_sub)])
+    member_id2qrcode = dict([(relation.member_id, relation) for relation in ChannelQrcodeHasMember.objects.filter(member_id__in=all_member_ids)])
 
     # print 'end step 6.7 - '+str(time.time() - begin_time)
     # 获取order对应的赠品
@@ -273,8 +275,8 @@ def export_orders_json(request):
         before_scanner_qrcode_is_member = ""
         SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
         if member:
-            if member.source == SOURCE_SELF_SUB:
-                if member.id in member_id2qrcode.keys() and member_id2qrcode[member.id].created_at < order.created_at:
+            if member.id in member_id2qrcode.keys():
+                if member_id2qrcode[member.id].created_at < order.created_at:
                     member_source_name = "带参数二维码"
                     father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
                     if member_id2qrcode[member.id].is_new:
@@ -282,19 +284,35 @@ def export_orders_json(request):
                     else:
                         before_scanner_qrcode_is_member = 1
                 else:
+                    if member.source == SOURCE_SELF_SUB:
+                        member_source_name = "直接关注"
+                    elif member.source == SOURCE_MEMBER_QRCODE:
+                        member_source_name = "推荐扫码"
+                        try:
+                            father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                        except KeyError:
+                            father_name_or_qrcode_name = ""
+                    elif member.source == SOURCE_BY_URL:
+                        member_source_name = "会员分享"
+                        try:
+                            father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                        except KeyError:
+                            father_name_or_qrcode_name = ""
+            else:
+                if member.source == SOURCE_SELF_SUB:
                     member_source_name = "直接关注"
-            elif member.source == SOURCE_MEMBER_QRCODE:
-                member_source_name = "推荐扫码"
-                try:
-                    father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
-                except KeyError:
-                    father_name_or_qrcode_name = ""
-            elif member.source == SOURCE_BY_URL:
-                member_source_name = "会员分享"
-                try:
-                    father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
-                except KeyError:
-                    father_name_or_qrcode_name = ""
+                elif member.source == SOURCE_MEMBER_QRCODE:
+                    member_source_name = "推荐扫码"
+                    try:
+                        father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                    except KeyError:
+                        father_name_or_qrcode_name = ""
+                elif member.source == SOURCE_BY_URL:
+                    member_source_name = "会员分享"
+                    try:
+                        father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                    except KeyError:
+                        father_name_or_qrcode_name = ""
         #----------end---------
 
         # 计算总和
