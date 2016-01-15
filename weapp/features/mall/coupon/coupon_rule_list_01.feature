@@ -23,8 +23,6 @@ Background:
 			"price": 100.00
 		}]
 		"""
-	And bill关注jobs的公众号
-	And tom关注jobs的公众号
 	When jobs添加优惠券规则
 		"""
 		[{
@@ -46,6 +44,8 @@ Background:
 			"coupon_product": "商品1"
 		}]
 		"""
+	And bill关注jobs的公众号
+	And tom关注jobs的公众号
 
 @promotion @promotionCoupon
 Scenario:1 后台给会员发放优惠券，查看优惠列表中的"领取人/次"
@@ -553,9 +553,9 @@ Scenario:4 通过分享红包（图文领取）领取优惠券后,查看优惠�
 			"end_date": "1天后"
 		}, {
 			"name": "优惠券1",
-			"remained_count": 1,
+			"remained_count": 3,
 			"get_person_count":2,
-			"get_number":4,
+			"get_number":2,
 			"start_date": "今天",
 			"end_date": "1天后"
 		}]
