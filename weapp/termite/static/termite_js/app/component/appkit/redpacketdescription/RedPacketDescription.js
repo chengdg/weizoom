@@ -66,7 +66,7 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 				second:'00'
 			}
 		},{
-			name: 'description',
+			name: 'red_packet_type',
 			type: 'red_packet_selector',
 			displayName: '红包方式',
 			isUserProperty: true,
@@ -77,8 +77,6 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 				name: '普通红包',
 				value: 'regular'
 			}],
-			validate: 'data-validate="require-notempty::红包方式不能为空"',
-			validateIgnoreDefaultValue: true,
 			default: 'random'
 		},{
 			name: 'start_money',
@@ -193,9 +191,8 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 		},
 		timing_value:function($node, model, value, $propertyViewNode){
 		},
-		description: function($node, model, value, $propertyViewNode) {
-			model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-			$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
+		red_packet_type: function($node, model, value, $propertyViewNode) {
+
 		},
 		qrcode:function($node, model, value, $propertyViewNode){
 			var data;
@@ -250,35 +247,6 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
 			}
 		},
-		background_image: function($node, model, value, $propertyViewNode) {
-			var image = {url:''};
-			var data = {type:null};
-			if (value !== '') {
-				data = $.parseJSON(value);
-				image = data.images[0];
-			}
-			model.set({
-				background_image: image.url
-			}, {silent: true});
-
-			if (data.type === 'newImage') {
-				W.resource.termite2.Image.put({
-					data: image,
-					success: function(data) {
-					},
-					error: function(resp) {
-					}
-				})
-			}
-			if (value) {
-				//更新propertyView中的图片
-				var $phone_target = $('#phoneIFrame').contents().find('.wui-i-background-image');
-				var $target = $propertyViewNode.find($('[data-field-anchor="background_image"]'));
-				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
-				$phone_target.html("<img src='"+image.url+"'>");
-			}
-		},
 		color: function($node, model, value, $propertyViewNode) {
 			switch (value){
 				case 'yellow':
@@ -289,14 +257,6 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 					$node.find(".wui-red_packet-container").addClass('red');
 					$node.find(".wui-red_packet-container").removeClass('yellow orange new_year_red');
 					break;
-				case 'orange':
-					$node.find(".wui-red_packet-container").addClass('orange');
-					$node.find(".wui-red_packet-container").removeClass('red yellow new_year_red');
-					break;
-				case 'new_year_red':
-					$node.find(".wui-red_packet-container").addClass('new_year_red');
-					$node.find(".wui-red_packet-container").removeClass('red orange yellow');
-					break;
 				default :
 					$node.find(".wui-red_packet-container").addClass('yellow');
 					$node.find(".wui-red_packet-container").removeClass('red orange new_year_red');
@@ -306,6 +266,9 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 		rules: function($node, model, value, $propertyViewNode) {
 			model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
+		},
+		share_description: function($node, model, value){
+			model.set({share_description:value.replace(/\n/g,'')},{silent: true});
 		}
 	},
 

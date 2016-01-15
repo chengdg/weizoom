@@ -192,16 +192,20 @@
           var endTime = descriptionModel.get('end_time')+":00";
           var relatedPageId = data['project_id'];
           var timing = descriptionModel.get('timing');
+          var red_packet_type = descriptionModel.get('red_packet_type');
           var reply_content = descriptionModel.get('reply_content');
           var material_image = descriptionModel.get('material_image');
+          var share_description = descriptionModel.get('share_description');
           var qrcode = descriptionModel.get('qrcode');
           var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
             "timing": timing,
+            "red_packet_type": red_packet_type,
             "reply_content": reply_content,
             "material_image": material_image,
+            "share_description": share_description,
             "qrcode": JSON.stringify(qrcode)
           };
           var method;

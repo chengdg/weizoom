@@ -531,7 +531,7 @@
 
                     {{if (field.type == 'red_packet_selector')}}
                     <div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
-                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+                        <div class="propertyGroup_property_label star_show">${field.displayName}</div>
                         <div class="propertyGroup_property_input">
 							{{each(fi, radio) field.source}}
 								<input type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}

@@ -1396,3 +1396,29 @@ li.wui-selectBox-display-table {
 	display:block;
 	content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
 }
+
+/*拼红包CSS*/
+.wui-red_packet-container .wui-i-timing{
+    font-weight: bold;
+    min-height: 33px;
+    font-size: 1rem;
+}
+.wui-red_packet-container .wui-i-timing b{
+    margin-right: 5px;
+    height: 100%;
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-position: -170px -12px;
+    font-size: 0.8rem;
+    padding: 7px 5px;
+    color: white;
+    border-radius: 2px;
+    font-family: "Arial", "黑体";
+}
+.wui-red_packet-container .wui-i-timing i{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 900% 200%;
+    display: inline-block;
+    height: 35px;
+    margin-bottom: -15px;
+    width: 33px;
+}
