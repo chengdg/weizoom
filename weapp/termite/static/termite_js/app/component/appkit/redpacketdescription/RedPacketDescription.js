@@ -1,18 +1,18 @@
 /**
- * @class W.component.appkit.PowerMeDescription
+ * @class W.component.appkit.RedPacketDescription
  * 
  */
 ensureNS('W.component.appkit');
-W.component.appkit.PowerMeDescription = W.component.Component.extend({
-	type: 'appkit.powermedescription',
+W.component.appkit.RedPacketDescription = W.component.Component.extend({
+	type: 'appkit.redpacketdescription',
 	selectable: 'yes',
-	propertyViewTitle: '微助力',
+	propertyViewTitle: '拼手气',
 
     dynamicComponentTypes: [],
 
 	properties: [{
 		group: '活动名称',
-		groupClass: 'xui-propertyView-app-PowerMeGroup',
+		groupClass: 'xui-propertyView-app-RedPacketGroup',
 		fields: [{
 			name: 'title',
 			type: 'text_with_annotation',
@@ -67,11 +67,39 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			}
 		},{
 			name: 'description',
-			type: 'text_with_annotation',
-			displayName: '活动描述',
-			maxLength: 30,
+			type: 'red_packet_selector',
+			displayName: '红包方式',
 			isUserProperty: true,
-			annotation: '将显示在页面按钮的下方位置',
+			source: [{
+				name: '拼手气红包',
+				value: 'random'
+			}, {
+				name: '普通红包',
+				value: 'regular'
+			}],
+			validate: 'data-validate="require-notempty::红包方式不能为空"',
+			validateIgnoreDefaultValue: true,
+			default: 'random'
+		},{
+			name: 'start_money',
+			type: 'hidden',
+			displayName: '最小金额',
+			isUserProperty: false,
+			default: ''
+		}, {
+			name: 'end_money',
+			type: 'hidden',
+			displayName: '最大金额',
+			isUserProperty: false,
+			default: ''
+		},{
+			name: 'valid_money',
+			type: 'money_range_selector',
+			displayName: '好友贡献金额区间',
+			isUserProperty: true,
+			validate: 'data-validate="require-notempty::好友贡献金额不能为空"',
+			validateIgnoreDefaultValue: true,
+			annotation: '好友贡献金额区间，为分享好友后，每个好友贡献的金额区间。该区间会影响到一个红包会被几个好友拼满。需根据总金额与红包个数设置适当的区间。',
 			default: ''
 		},{
 			name: 'reply_content',
@@ -79,7 +107,7 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			displayName: '参与活动回复语',
 			isUserProperty: true,
 			maxLength: 5,
-			placeholder: '触发获取图文信息，如：抢礼物',
+			placeholder: '触发获取图文信息，如：拼红包',
 			validate: 'data-validate="require-notempty::回复语不能为空"',
 			validateIgnoreDefaultValue: true,
 			annotation: '请在 微信-自动回复 创建该关键词',
@@ -97,48 +125,16 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			help: '此处若空缺，则使用公众号二维码代替',
 			default: {ticket:'',name:''}
 		},{
-			name: 'material_image',
-			type: 'image_dialog_select',
-			displayName: '分享图标',
-			isUserProperty: true,
-			isShowCloseButton: false,
-			triggerButton: {nodata:'选择图片', hasdata:'修改'},
-			selectedButton: '选择图片',
-			dialog: 'W.dialog.termite.SelectImagesDialog',
-			dialogParameter: '{"multiSelection": false}',
-			help: '提示：建议图片长宽100px*100px，正方形图片',
-			validate: 'data-validate="require-notempty::请添加一张图片"',
-			default: ""
-		},{
-			name: 'background_image',
-			type: 'image_dialog_select',
-			displayName: '顶部背景图',
-			isUserProperty: true,
-			isShowCloseButton: false,
-			triggerButton: {nodata:'选择图片', hasdata:'修改'},
-			selectedButton: '选择图片',
-			dialog: 'W.dialog.termite.SelectImagesDialog',
-			dialogParameter: '{"multiSelection": false}',
-			help: '提示:图片格式jpg/png, 图片宽度640px, 高度自定义, 请上传风格与背景配色协调的图片',
-			validate: 'data-validate="require-notempty::请添加一张图片"',
-			default: ""
-		},{
 			name: 'color',
 			type: 'radio',
 			displayName: '背景配色',
 			isUserProperty: true,
 			source: [{
-				name: '冬日暖阳',
+				name: '默认背景',
 				value: 'yellow'
 			}, {
-				name: '玫瑰茜红',
+				name: '新年快乐',
 				value: 'red'
-			}, {
-				name: '热带橙色',
-				value: 'orange'
-			}, {
-				name: '新年红',
-				value: 'new_year_red'
 			}],
 			default: 'yellow'
 		},{
@@ -149,10 +145,33 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 			isUserProperty: true,
 			placeholder: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。',
 			default: ""
+		},{
+			name: 'material_image',
+			type: 'image_dialog_select',
+			displayName: '分享图标',
+			isUserProperty: true,
+			isShowCloseButton: false,
+			triggerButton: {nodata:'选择图片', hasdata:'修改'},
+			selectedButton: '选择图片',
+			dialog: 'W.dialog.termite.SelectImagesDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '提示：建议图片长宽100px*100px,仅支持jpg,png',
+			validate: 'data-validate="require-notempty::请添加一张图片"',
+			default: ""
+		},{
+			name: 'share_description',
+			type: 'textarea',
+			displayName: '分享描述',
+			maxLength: 26,
+			isUserProperty: true,
+			placeholder: '最多可输入26个字',
+			validate: 'data-validate="require-notempty::分享描述不能为空,,require-word"',
+			validateIgnoreDefaultValue: true,
+			default: ""
 		}]}],
 	propertyChangeHandlers: {
 		title: function($node, model, value) {
-			parent.W.Broadcaster.trigger('powerme:change:title', value);
+			parent.W.Broadcaster.trigger('red_packet:change:title', value);
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
 			var end_time_text = $node.find('.wui-i-end_time').text();
@@ -263,24 +282,24 @@ W.component.appkit.PowerMeDescription = W.component.Component.extend({
 		color: function($node, model, value, $propertyViewNode) {
 			switch (value){
 				case 'yellow':
-					$node.find(".wui-powerme-container").addClass('yellow');
-					$node.find(".wui-powerme-container").removeClass('red orange new_year_red');
+					$node.find(".wui-red_packet-container").addClass('yellow');
+					$node.find(".wui-red_packet-container").removeClass('red orange new_year_red');
 					break;
 				case 'red':
-					$node.find(".wui-powerme-container").addClass('red');
-					$node.find(".wui-powerme-container").removeClass('yellow orange new_year_red');
+					$node.find(".wui-red_packet-container").addClass('red');
+					$node.find(".wui-red_packet-container").removeClass('yellow orange new_year_red');
 					break;
 				case 'orange':
-					$node.find(".wui-powerme-container").addClass('orange');
-					$node.find(".wui-powerme-container").removeClass('red yellow new_year_red');
+					$node.find(".wui-red_packet-container").addClass('orange');
+					$node.find(".wui-red_packet-container").removeClass('red yellow new_year_red');
 					break;
 				case 'new_year_red':
-					$node.find(".wui-powerme-container").addClass('new_year_red');
-					$node.find(".wui-powerme-container").removeClass('red orange yellow');
+					$node.find(".wui-red_packet-container").addClass('new_year_red');
+					$node.find(".wui-red_packet-container").removeClass('red orange yellow');
 					break;
 				default :
-					$node.find(".wui-powerme-container").addClass('yellow');
-					$node.find(".wui-powerme-container").removeClass('red orange new_year_red');
+					$node.find(".wui-red_packet-container").addClass('yellow');
+					$node.find(".wui-red_packet-container").removeClass('red orange new_year_red');
 					break;
 			}
 		},

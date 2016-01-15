@@ -529,6 +529,59 @@
                     </div>
                     {{/if}}
 
+                    {{if (field.type == 'red_packet_selector')}}
+                    <div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+                        <div class="propertyGroup_property_input">
+							{{each(fi, radio) field.source}}
+								<input type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}
+							{{/each}}
+						</div>
+                    </div>
+                    {{/if}}
+
+					{{if (field.type == 'money_range_selector')}}
+					<div class="propertyGroup_property_moneyRangeSelectorField propertyGroup_property_horizontalField">
+						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="moneyrange">
+							<input
+								type="hidden"
+								value="${component.model.get(field.name)}"
+								name="${field.name}"
+								data-field="${field.name}"
+								class="xa-moneyRangeInput xa-valueInput"
+								{{if field.validate}}data-validate="${field.validate}"{{/if}} />
+							<input
+								style="width:50px!important;"
+								type="text"
+								class="input-small xui-propertyGroup-input xui-inline ml5 form-control"
+								id="start_money"
+								name="start_money"
+								value="${component.model.get('start_money')}"
+								data-field="start_money"
+								data-validate="require-notempty"
+                                data-max-el="#end_money"/>
+							-
+							<input
+								style="width:50px!important;"
+								type="text"
+								class="input-small xui-propertyGroup-input xui-inline ml5 form-control"
+								id="end_money"
+								name="end_money"
+								value="${component.model.get('end_money')}"
+								data-field="end_money"
+								data-validate="require-notempty"
+								data-min-el="#start_money" />元
+							{{if field.annotation}}
+							<span style="color: #888">
+								<div class="money_range_selector_annotation">{{html field.annotation}}</div>
+							</span>
+							{{/if}}
+							<div class="errorHint pl5" style="margin-top: -40px;min-height: 50px;"></div>
+						</div>
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
 					<div class="propertyGroup_property_label" style="float:left;width:58px;margin-right:9px;line-height:60px;text-align:right;">${field.displayName}</div>
