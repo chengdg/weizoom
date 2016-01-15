@@ -72,11 +72,20 @@ def get_str_value_by_string_ids(str_ids):
 			for index, area in enumerate(area_args):
 
 				if index == 0:
-					curren_area = Province.objects.get(id=int(area))
+					try:
+						curren_area = Province.objects.get(id=int(area))
+					except ValueError:
+						pass
 				elif index == 1:
-					curren_area = City.objects.get(id=int(area))
+					try:
+						curren_area = City.objects.get(id=int(area))
+					except ValueError:
+						pass
 				elif index == 2:
-					curren_area = District.objects.get(id=int(area))
+					try:
+						curren_area = District.objects.get(id=int(area))
+					except ValueError:
+						pass
 				ship_address =  ship_address + ' ' + curren_area.name
 			cache.set(str_ids, ship_address)
 		return u'{}'.format(ship_address.strip())
@@ -120,11 +129,20 @@ def get_str_value_by_string_ids_new(str_ids):
 		curren_area = ''
 		for index, area in enumerate(area_args):
 			if index == 0:
-				curren_area = ID2PROVINCE.get(int(area))
+				try:
+					curren_area = ID2PROVINCE.get(int(area))
+				except ValueError:
+					pass
 			elif index == 1:
-				curren_area = ID2CITY.get(int(area))
+				try:
+					curren_area = ID2CITY.get(int(area))
+				except ValueError:
+					pass
 			elif index == 2:
-				curren_area = ID2DISTRICT.get(int(area))
+				try:
+					curren_area = ID2DISTRICT.get(int(area))
+				except ValueError:
+					pass
 			ship_address =  ship_address + ' ' + curren_area
 		return u'{}'.format(ship_address.strip())
 	else:
