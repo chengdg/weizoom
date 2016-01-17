@@ -59,10 +59,8 @@ def step_impl(context, user):
 	elif integral_detail:
 		pass
 
-
-@then(u'{user}可以获得会员列表')
-def step_impl(context, user):
-	Member.objects.all().update(is_for_test=False)
+def get_actual_members_data(context):
+	# 处理url
 	if not hasattr(context, 'url'):
 		context.url = '/member/api/member_list/?design_mode=0&version=1&status=1&enable_paginate=1'
 		if hasattr(context, 'count_per_page'):
@@ -74,6 +72,7 @@ def step_impl(context, user):
 		if hasattr(context, 'filter_str'):
 			context.url += context.filter_str
 
+	# 向服务器请求数据，并处理
 	response = context.client.get(bdd_util.nginx(context.url))
 	items = json.loads(response.content)['data']['items']
 	actual_members = []
@@ -94,14 +93,17 @@ def step_impl(context, user):
 		elif member_item['source'] == 2:
 			member_item['source'] = u"会员分享"
 		actual_members.append(member_item)
+	return actual_members
+
+def get_members_dict_by_context(context):
 	if context.text:
-		json_data = json.loads(context.text)
-		for data in json_data:
+		expected = json.loads(context.text)
+		for data in expected:
 			if 'experience' in data:
 				del data['experience']
 			if data.has_key('attention_time') and data['attention_time'] == '今天':
 				data['attention_time'] = time.strftime('%Y-%m-%d')
-		actual_data = actual_members
+		return expected
 	elif context.table:
 		grades_dict = {}
 		tags_dict = {}
@@ -110,38 +112,54 @@ def step_impl(context, user):
 			grades_dict[item['name']] = item['id']
 		for item in json.loads(response.content)['data']['tags']:
 			tags_dict[item['name']] = item['id']
-		json_data = []
-		actual_data = []
+		
+		expected = []
 		for row in context.table:
 			adict = {}
-			if hasattr(row, 'name'):
+			if hasattr(row, 'name') or row.get('name', None):
 				adict['name'] = row['name']
-			if hasattr(row, 'member_rank'):
-				adict['member_grade'] = row['member_rank']
-			if hasattr(row, 'friend_count'):
+			if hasattr(row, 'member_rank') or row.get('member_rank', None):
+				adict['member_rank'] = row['member_rank']
+			if hasattr(row, 'friend_count') or row.get('friend_count', None):
 				adict['friend_count'] = int(row['friend_count'])
-			if hasattr(row, 'integral'):
+			if hasattr(row, 'integral') or row.get('integral', None):
 				adict['integral'] = int(row['integral'])
-			if hasattr(row, 'pay_money'):
+			if hasattr(row, 'pay_money') or row.get('pay_money', None):
 				adict['pay_money'] = row['pay_money']
-			if hasattr(row, 'unit_price'):
+			if hasattr(row, 'unit_price') or row.get('unit_price', None):
 				adict['unit_price'] = row['unit_price']
-			if hasattr(row, 'pay_times'):
+			if hasattr(row, 'pay_times') or row.get('pay_times', None):
 				adict['pay_times'] = int(row['pay_times'])
-			if hasattr(row, 'attention_time'):
+			if hasattr(row, 'attention_time') or row.get('attention_time', None):
 				if row['attention_time'] == u'今天':
 					adict['attention_time'] = time.strftime('%Y-%m-%d')
 				else:
 					adict['attention_time'] = row['attention_time']
-			if hasattr(row, 'source'):
+			if hasattr(row, 'source') or row.get('source', None):
 				adict['source'] = row['source']
-			if hasattr(row, 'tags'):
+			if hasattr(row, 'tags') or row.get('tags', None):
 				adict['tags'] = row['tags']
-			json_data.append(adict)
+			expected.append(adict)
+		return expected
+
+@then(u'{user}可以获得会员列表')
+def step_impl(context, user):
+	Member.objects.all().update(is_for_test=False)
+	# 获得服务器的数据
+	actual_members = get_actual_members_data(context)
+
+	# 处理feature文件中数据
+	expected_data = get_members_dict_by_context(context)
+
+	# 我也不知道这段为什么会这样！！！
+	# 好像是根据不同的数据类型来组织actual_data
+	if context.text:
+		actual_data = actual_members
+	elif context.table:
 		for row in actual_members:
 			adict = {}
 			adict['name'] = row['username']
-			adict['member_grade'] = row['grade_name']
+			adict['member_rank'] = row['grade_name']
 			adict['friend_count'] = row['friend_count']
 			adict['integral'] = row['integral']
 			adict['pay_money'] = row['pay_money']
@@ -152,10 +170,7 @@ def step_impl(context, user):
 			adict['tags'] = ','.join(row['tags'])
 			actual_data.append(adict)
 
-	# for i in range(len(json_data)):
-	# 	print json_data[i]['name'], actual_data[i]['name']
-	# 	print json_data[i]['tags'], actual_data[i]['tags']
-	bdd_util.assert_list(json_data, actual_data)
+	bdd_util.assert_list(expected_data, actual_data)
 
 
 @Given(u'{webapp_owner_name}调{webapp_user_name}等级为{grade_name}')

@@ -100,7 +100,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 	#默认条件查询（空条件）
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{}
+			[{}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -116,9 +116,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#模糊匹配
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"name":"7"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -127,9 +127,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#完全匹配
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"name":"tom3"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -138,9 +138,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#查询结果为空
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"name":"bill"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -149,9 +149,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#单个分组
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"tags":"分组3"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -161,9 +161,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"tags":"全部"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -179,9 +179,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#单个等级
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"member_rank":"金牌会员"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -191,9 +191,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"member_rank":"全部"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -209,25 +209,25 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#积分相同 0~0
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"start_integral": 0,
 				"end_integral": 0
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
 			| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
 			| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
 			| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
-			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
+			| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
 
 		#积分区间 0~20
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"start_integral": 0,
 				"end_integral": 20
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -240,10 +240,10 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#积分区间 前大于后50~20
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"start_integral": 50,
 				"end_integral": 20
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -253,10 +253,10 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#查询结果为空
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"start_integral": 200,
 				"end_integral": 300
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -265,9 +265,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#按照单个会员来源
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"source":"会员分享"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -277,9 +277,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#按照全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"source":"全部"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -295,9 +295,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#按照单个会员来源
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"status":"取消关注"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -306,9 +306,9 @@ Scenario: 1 发优惠券-选择会员列表查询
 		#按照全部
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"source":"全部"
-			}
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -323,24 +323,24 @@ Scenario: 1 发优惠券-选择会员列表查询
 	#条件组合查询
 		When jobs设置发送优惠券选择会员查询条件
 			"""
-			{
+			[{
 				"name":"4",
 				"tags":"分组3",
 				"member_rank":"金牌会员",
 				"start_integral": 0,
 				"end_integral": 20,
 				"source":"会员分享",
-				"status":"关注"
-			}
+				"status":"取消关注"
+			}]
 			"""
 		Then jobs获得发送优惠券选择会员列表
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
 			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
 
-@send_coupon @eugene
+@send_coupon @eugeneXXX
 Scenario: 2 发优惠券-选择会员列表分页
 	Given jobs登录系统
-	When jobs设置分页查询参数
+	And jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":3
@@ -348,14 +348,14 @@ Scenario: 2 发优惠券-选择会员列表分页
 		"""
 	When jobs设置发送优惠券选择会员查询条件
 		"""
-		{}
+		[{}]
 		"""
 	Then jobs获得发送优惠券选择会员列表
 		| name  | member_rank | pay_money | unit_price | pay_times | integral |
 		| tom7  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
 		| tom6  | 普通会员    |   0.00    |    0.00    |    0      |     0    |
 		| tom5  | 金牌会员    |   0.00    |    0.00    |    0      |     0    |
-	When jobs浏览下一页
+	When jobs浏览优惠券选择会员列表的下一页
 	Then jobs获得发送优惠券选择会员列表
 		| name  | member_rank | pay_money | unit_price | pay_times | integral |
 		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
@@ -365,7 +365,7 @@ Scenario: 2 发优惠券-选择会员列表分页
 	Then jobs获得发送优惠券选择会员列表
 		| name  | member_rank | pay_money | unit_price | pay_times | integral |
 		| tom1  | 银牌会员    |   110.00  |    110.00  |    1      |     0    |
-	When jobs浏览上一页
+	When jobs浏览优惠券选择会员列表的上一页
 	Then jobs获得发送优惠券选择会员列表
 		| name  | member_rank | pay_money | unit_price | pay_times | integral |
 		| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
@@ -375,7 +375,7 @@ Scenario: 2 发优惠券-选择会员列表分页
 @send_coupon @eugene
 Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取消关注的会员
 	Given jobs登录系统
-	When jobs设置分页查询参数
+	Given jobs设置分页查询参数
 		"""
 		{
 			"count_per_page":3
@@ -383,7 +383,7 @@ Scenario: 3 发优惠券-选择会员列表单页部分会员带入-不过滤取
 		"""
 	When jobs设置发送优惠券选择会员查询条件
 		"""
-		{}
+		[{}]
 		"""
 	Then jobs获得发送优惠券选择会员列表
 		| name  | member_rank | pay_money | unit_price | pay_times | integral |
@@ -474,7 +474,7 @@ Scenario: 5 发优惠券-选择会员列表筛选出来的XXX人(已取消关注
 			"tags":"全部",
 			"member_rank":"全部",
 			"source":"全部",
-			"status":"关注"
+			"status":"已关注"
 		}
 		"""
 
@@ -514,6 +514,6 @@ Scenario: 5 发优惠券-选择会员列表筛选出来的XXX人(已取消关注
 			"member_rank":"全部",
 			"integral": "0-100",
 			"source":"全部",
-			"status":"关注"
+			"status":"已关注"
 		}
 		"""
