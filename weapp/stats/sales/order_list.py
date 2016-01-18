@@ -251,7 +251,7 @@ def _export_orders_json(request, order_list, params):
 			else:
 				member_source_name = "直接关注"
 		elif member.source == SOURCE_MEMBER_QRCODE:
-			member_source_name = "推荐扫码"
+			member_source_name = "推广扫码"
 			father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
 		elif member.source == SOURCE_BY_URL:
 			member_source_name = "会员分享"
