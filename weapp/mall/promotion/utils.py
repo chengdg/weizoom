@@ -99,7 +99,7 @@ def create_coupons(couponRule, count, promotion=None):
         new_coupons.append(promotion_models.Coupon(
                 owner=couponRule.owner,
                 coupon_id=coupon_id,
-                provided_time=promotion.start_date,
+                #provided_time=promotion.start_date,
                 start_time=promotion.start_date,
                 expired_time=promotion.end_date,
                 money=couponRule.money,

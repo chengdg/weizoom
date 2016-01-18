@@ -266,9 +266,16 @@ def has_can_use_by_coupon_id(coupon_id, owner_id, product_prices, product_ids, m
 
 def restore_coupon(coupon_id):
 	"""
-	改变优惠券使用状态为未使用
+	改变优惠券使用状态为未使用/未获取
 	"""
-	promotion_models.Coupon.objects.filter(id=coupon_id).update(status=promotion_models.COUPON_STATUS_UNUSED)
+	coupons = promotion_models.Coupon.objects.filter(id=coupon_id)
+	if coupons.count()>0:
+		coupon = coupons[0]
+		if coupon.provided_time == promotion_models.DEFAULT_DATETIME:
+			coupon.status = promotion_models.COUPON_STATUS_UNGOT
+		else:
+			coupon.status = promotion_models.COUPON_STATUS_UNUSED
+		coupon.save()
 
 
 def award_coupon_for_member(coupon_rule_info, member):

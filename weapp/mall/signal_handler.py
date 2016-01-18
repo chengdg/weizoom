@@ -227,7 +227,13 @@ def cancel_order_handler(order, **kwargs):
         if order.coupon_id and order.coupon_id > 0:
             coupons = promotion_models.Coupon.objects.filter(id = order.coupon_id)
             if len(coupons) > 0:
-                coupons.update(status = promotion_models.COUPON_STATUS_UNUSED)
+                #coupons.update(status = promotion_models.COUPON_STATUS_UNUSED)
+                coupon = coupons[0]
+                if coupon.provided_time == promotion_models.DEFAULT_DATETIME:
+                    coupon.status = promotion_models.COUPON_STATUS_UNGOT
+                else:
+                    coupon.status = promotion_models.COUPON_STATUS_UNUSED
+                coupon.save()
                 promotion_models.CouponRule.objects.filter(id = coupons[0].coupon_rule_id).update(use_count = F('use_count') - 1)
 
                 #更新红包优惠券分析数据 by Eugene
