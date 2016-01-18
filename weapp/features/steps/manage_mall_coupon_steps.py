@@ -62,16 +62,20 @@ def step_impl(context, user_name):
         rule["type"] = "单品券" if coupon_rule["detail"]["limit_product"] else "全店通用券"
         rule["money"] = coupon_rule["detail"]["money"]
         rule["remained_count"] = coupon_rule["detail"]["remained_count"]
-        rule["limit_counts"] = coupon_rule["detail"]["limit_counts"]
+        rule["limit_counts"] = coupon_rule["detail"]["limit_counts"] if coupon_rule["detail"]["limit_counts"] != -1 else "无限"
         rule["use_count"] = coupon_rule["detail"]["use_count"]
         rule["start_date"] = coupon_rule["start_date"]
         rule["end_date"] = coupon_rule["end_date"]
+        rule["get_person_count"] = coupon_rule["detail"]["get_person_count"]
+        rule["get_number"] = coupon_rule["detail"]["get_count"]
         actual.append(rule)
 
     expected = json.loads(context.text)
     for item in expected:
         item["start_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["start_date"]))
         item["end_date"] = "{} 00:00:00".format(bdd_util.get_date_str(item["end_date"]))
+
+
 
     bdd_util.assert_list(expected, actual)
 

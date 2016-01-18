@@ -53,8 +53,7 @@ W.dialog.mall.SelectProductModelPropertyDialog = W.dialog.Dialog.extend({
                                 break;
                             }
                         }
-
-                        if (isAllSelected) {
+                        if (isAllSelected && $checkboxes.length > 0) {
                             $tr.find('.xa-selectPropertyAllValue').prop('checked', true);
                         }
                     })
