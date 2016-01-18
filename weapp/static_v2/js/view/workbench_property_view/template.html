@@ -539,7 +539,7 @@
 							{{/each}}
 						</div>
                     </div>
-                    <div class="propertyGroup_property_redPacketSelectorField_random">
+                    <div class="propertyGroup_property_redPacketSelectorField_random {{if model.get(field.name) == 'regular'}}xui-hide{{/if}}">
 						<div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
 							<div class="propertyGroup_property_label star_show">总金额</div>
 							<div class="propertyGroup_property_input">
@@ -549,10 +549,10 @@
 									style="width: 80px;"
 									id="random_total_money"
 									name="random_total_money"
-									data-validate="require-positive-int"
+									data-validate="require-positive-int::请输入正整数"
 									value="${component.model.get('random_total_money')}"
 									data-field="random_total_money"
-									placeholder="填写金额"/>元${model.get('random_total_money')}
+									placeholder="填写金额"/>元
 								<div class="errorHint"></div>
 							</div>
 						</div>
@@ -565,7 +565,7 @@
 									style="width: 80px;"
 									id="random_packets_number"
 									name="random_packets_number"
-									data-validate="require-positive-int"
+									data-validate="require-positive-int::请输入正整数"
 									value="${component.model.get('random_packets_number')}"
 									data-field="random_packets_number"
 									placeholder="填写个数"/>个
@@ -574,7 +574,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="propertyGroup_property_redPacketSelectorField_regular xui-hide">
+					<div class="propertyGroup_property_redPacketSelectorField_regular {{if model.get(field.name) == 'random'}}xui-hide{{/if}}">
 						<div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
 							<div class="propertyGroup_property_label star_show">红包个数</div>
 							<div class="propertyGroup_property_input">
@@ -584,7 +584,7 @@
 									style="width: 80px;"
 									id="regular_packets_number"
 									name="regular_packets_number"
-									data-validate="require-positive-int"
+									data-validate="require-positive-int::请输入正整数"
 									value="${component.model.get('regular_packets_number')}"
 									data-field="regular_packets_number"
 									placeholder="填写个数"/>个
@@ -600,7 +600,7 @@
 									style="width: 80px;"
 									id="regular_per_money"
 									name="regular_per_money"
-									data-validate="require-positive-int"
+									data-validate="require-float::请输入正整数或小数"
 									value="${component.model.get('regular_per_money')}"
 									data-field="regular_per_money"
 									placeholder="填写金额"/>元
@@ -630,7 +630,7 @@
 								name="start_money"
 								value="${component.model.get('start_money')}"
 								data-field="start_money"
-								data-validate="require-float"
+								data-validate="require-float::请输入正整数或小数"
                                 data-max-el="#end_money"/>
 							-
 							<input
@@ -641,7 +641,7 @@
 								name="end_money"
 								value="${component.model.get('end_money')}"
 								data-field="end_money"
-								data-validate="require-float"
+								data-validate="require-float::请输入正整数或小数"
 								data-min-el="#start_money" />元
 							{{if field.annotation}}
 							<span style="color: #888">

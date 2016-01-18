@@ -38,9 +38,15 @@ class RedPacket(models.Document):
 	status = models.IntField(default=0) #状态
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	timing = models.BooleanField(default=True) #是否显示倒计时
-	type = models.BooleanField(default=True) #红包方式,默认为拼手气红包
+	type = models.StringField(default="random", max_length=10) #红包方式,默认为拼手气红包
+	random_total_money = models.StringField(default="", max_length=10) #拼手气红包总金额
+	random_packets_number = models.StringField(default="", max_length=10) #拼手气红包红包个数
+	regular_packets_number = models.StringField(default="", max_length=10) #普通红包红包个数
+	regular_per_money = models.StringField(default="", max_length=10) #普通红包单个金额
+	money_range = models.StringField(default="", max_length=50) #好友贡献金额区间
 	reply_content = models.StringField(default="", max_length=50) #参与活动回复语
 	material_image = models.StringField(default="", max_length=1024) #分享的图片链接
+	share_description = models.StringField(default="", max_length=1024) #分享描述
 	qrcode = models.DynamicField() #带参数二维码ticket,name
 	created_at = models.DateTimeField() #创建时间
 	

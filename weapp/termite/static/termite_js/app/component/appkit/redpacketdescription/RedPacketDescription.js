@@ -70,23 +70,27 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			type: 'hidden',
 			displayName: '拼手气红包总金额',
 			isUserProperty: false,
+			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
 			name: 'random_packets_number',
 			type: 'hidden',
 			displayName: '拼手气红包红包个数',
 			isUserProperty: false,
+			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
 			name: 'regular_packets_number',
 			type: 'hidden',
 			displayName: '普通红包红包个数',
 			isUserProperty: false,
+			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
 			name: 'regular_per_money',
 			type: 'hidden',
 			displayName: '普通红包单个金额',
+			validateIgnoreDefaultValue: true,
 			isUserProperty: false,
 			default: ''
 		},{
@@ -106,16 +110,20 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			name: 'start_money',
 			type: 'hidden',
 			displayName: '最小金额',
+			validate: 'data-validate="require-float::请输入正整数或小数"',
+			validateIgnoreDefaultValue: true,
 			isUserProperty: false,
 			default: ''
 		},{
 			name: 'end_money',
 			type: 'hidden',
 			displayName: '最大金额',
+			validate: 'data-validate="require-float::请输入正整数或小数"',
+			validateIgnoreDefaultValue: true,
 			isUserProperty: false,
 			default: ''
 		},{
-			name: 'valid_money',
+			name: 'money_range',
 			type: 'money_range_selector',
 			displayName: '好友贡献金额区间',
 			isUserProperty: true,

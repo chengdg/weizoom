@@ -113,7 +113,7 @@ class RedPacket(resource.Resource):
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'type', 'desc', 'reply_content', 'material_image', 'qrcode'])
+		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
