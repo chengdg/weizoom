@@ -48,7 +48,9 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage',
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
-        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode'
+        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
+
+        'click .xa-red-packet-selector': 'onClickRedPacketSelector'
 	},
 
     getTemplate: function() {
@@ -83,7 +85,8 @@ W.workbench.PropertyView = Backbone.View.extend({
             "prize_selector": _.bind(this.initPrizeSelector, this),
             "prize_selector_v3": _.bind(this.initPrizeSelectorV3, this),
             "prize_selector_v4": _.bind(this.initPrizeSelectorV4, this),
-            "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this)
+            "apps_prize_keywordpane": _.bind(this.initPrizeKeywordPane, this),
+            "moneyrange": _.bind(this.initMoneyRange, this)
         };
 
 
@@ -814,7 +817,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         var setDateRangeValue = function() {
             var value = $startTimeInput.val() + '~' + $endTimeInput.val();            
             $dateRangeInput.val(value).trigger('input');
-        }
+        };
 
         var $startTimeInput = $el.find('#start_time');
         $startTimeInput.bind('change', function() {
@@ -1025,5 +1028,41 @@ W.workbench.PropertyView = Backbone.View.extend({
     onMouseoverQrcode: function(event){
         var $el = $(event.currentTarget);
         $el.parent().siblings('.deleteQrcode').css('display','block');
+    },
+
+    initMoneyRange: function($el){
+        W.createWidgets($el);
+        var $moneyRangeInput = $el.find('.xa-moneyRangeInput');
+
+        var setMoneyRangeValue = function() {
+            var value = $startMoneyInput.val() + '-' + $endMoneyInput.val();
+            $moneyRangeInput.val(value).trigger('input');
+        };
+
+        var $startMoneyInput = $el.find('#start_money');
+        $startMoneyInput.bind('change', function() {
+            $startMoneyInput.trigger('input');
+            setMoneyRangeValue();
+        });
+
+        var $endMoneyInput = $el.find('#end_money');
+        $endMoneyInput.bind('change', function() {
+            $endMoneyInput.trigger('input');
+            setMoneyRangeValue();
+        })
+    },
+
+    onClickRedPacketSelector: function(event){
+        var $el = $(event.currentTarget);
+        var redPacketType = this.$el.find('input[name="red_packet_type"]:checked').val();
+        console.log('redPacketType', redPacketType);
+        if (redPacketType == 'random') {
+            this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').addClass('xui-hide');
+            this.$el.find('.propertyGroup_property_redPacketSelectorField_random').removeClass('xui-hide');
+        }
+        if (redPacketType == 'regular') {
+            this.$el.find('.propertyGroup_property_redPacketSelectorField_random').addClass('xui-hide');
+            this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').removeClass('xui-hide');
+        }
     }
 });

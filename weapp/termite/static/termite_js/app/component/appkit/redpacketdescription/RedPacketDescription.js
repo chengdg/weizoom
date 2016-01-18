@@ -66,6 +66,30 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 				second:'00'
 			}
 		},{
+			name: 'random_total_money',
+			type: 'hidden',
+			displayName: '拼手气红包总金额',
+			isUserProperty: false,
+			default: ''
+		},{
+			name: 'random_packets_number',
+			type: 'hidden',
+			displayName: '拼手气红包红包个数',
+			isUserProperty: false,
+			default: ''
+		},{
+			name: 'regular_packets_number',
+			type: 'hidden',
+			displayName: '普通红包红包个数',
+			isUserProperty: false,
+			default: ''
+		},{
+			name: 'regular_per_money',
+			type: 'hidden',
+			displayName: '普通红包单个金额',
+			isUserProperty: false,
+			default: ''
+		},{
 			name: 'red_packet_type',
 			type: 'red_packet_selector',
 			displayName: '红包方式',
@@ -84,7 +108,7 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			displayName: '最小金额',
 			isUserProperty: false,
 			default: ''
-		}, {
+		},{
 			name: 'end_money',
 			type: 'hidden',
 			displayName: '最大金额',
@@ -95,7 +119,7 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			type: 'money_range_selector',
 			displayName: '好友贡献金额区间',
 			isUserProperty: true,
-			validate: 'data-validate="require-notempty::好友贡献金额不能为空"',
+			validate: 'data-validate="require-notempty::金额区间不能为空"',
 			validateIgnoreDefaultValue: true,
 			annotation: '好友贡献金额区间，为分享好友后，每个好友贡献的金额区间。该区间会影响到一个红包会被几个好友拼满。需根据总金额与红包个数设置适当的区间。',
 			default: ''

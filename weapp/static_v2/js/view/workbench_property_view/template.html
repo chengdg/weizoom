@@ -207,7 +207,7 @@
 					{{if (field.type == 'textarea')}}
 					<div class="propertyGroup_property_textareaField">
 						{{if field.displayName}}
-						<div class="propertyGroup_property_label">${field.displayName}</div>
+						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						{{/if}}
 						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
 							<textarea class="" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}} style="height: 100px; width: 95%;" data-field="${field.name}" {{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
@@ -216,6 +216,7 @@
 								{{html field.help.replace(/\n/g, "<br/>")}}
 							</div>
 							{{/if}}
+							<div class="errorHint"></div>
 						</div>
 					</div>
 					{{/if}}
@@ -532,12 +533,82 @@
                     {{if (field.type == 'red_packet_selector')}}
                     <div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
                         <div class="propertyGroup_property_label star_show">${field.displayName}</div>
-                        <div class="propertyGroup_property_input">
+                        <div class="propertyGroup_property_input xa-thirdPartyPlugin" data-plugin="red_packet_selector"">
 							{{each(fi, radio) field.source}}
-								<input type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}
+								<input class="xa-red-packet-selector" type="radio" data-field="${field.name}" name='${field.name}' {{if model.get(field.name) == radio.value}}checked="checked"{{/if}} value="${radio.value}" />${radio.name}
 							{{/each}}
 						</div>
                     </div>
+                    <div class="propertyGroup_property_redPacketSelectorField_random">
+						<div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
+							<div class="propertyGroup_property_label star_show">总金额</div>
+							<div class="propertyGroup_property_input">
+								<input
+									type="text"
+									class="input-small xui-propertyGroup-input"
+									style="width: 80px;"
+									id="random_total_money"
+									name="random_total_money"
+									data-validate="require-positive-int"
+									value="${component.model.get('random_total_money')}"
+									data-field="random_total_money"
+									placeholder="填写金额"/>元${model.get('random_total_money')}
+								<div class="errorHint"></div>
+							</div>
+						</div>
+						<div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
+							<div class="propertyGroup_property_label star_show">红包个数</div>
+							<div class="propertyGroup_property_input">
+								<input
+									type="text"
+									class="input-small xui-propertyGroup-input"
+									style="width: 80px;"
+									id="random_packets_number"
+									name="random_packets_number"
+									data-validate="require-positive-int"
+									value="${component.model.get('random_packets_number')}"
+									data-field="random_packets_number"
+									placeholder="填写个数"/>个
+									<span style="color: #888;">每人可以领1个，金额随机且不超过总金额</span>
+								<div class="errorHint"></div>
+							</div>
+						</div>
+					</div>
+					<div class="propertyGroup_property_redPacketSelectorField_regular xui-hide">
+						<div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
+							<div class="propertyGroup_property_label star_show">红包个数</div>
+							<div class="propertyGroup_property_input">
+								<input
+									type="text"
+									class="input-small xui-propertyGroup-input"
+									style="width: 80px;"
+									id="regular_packets_number"
+									name="regular_packets_number"
+									data-validate="require-positive-int"
+									value="${component.model.get('regular_packets_number')}"
+									data-field="regular_packets_number"
+									placeholder="填写个数"/>个
+								<div class="errorHint"></div>
+							</div>
+						</div>
+						<div class="propertyGroup_property_redPacketSelectorField propertyGroup_property_horizontalField">
+							<div class="propertyGroup_property_label star_show">单个金额</div>
+							<div class="propertyGroup_property_input">
+								<input
+									type="text"
+									class="input-small xui-propertyGroup-input"
+									style="width: 80px;"
+									id="regular_per_money"
+									name="regular_per_money"
+									data-validate="require-positive-int"
+									value="${component.model.get('regular_per_money')}"
+									data-field="regular_per_money"
+									placeholder="填写金额"/>元
+									<span style="color: #888;">每人可以领1个，金额随机且不超过总金额</span>
+								<div class="errorHint"></div>
+							</div>
+						</div>
+					</div>
                     {{/if}}
 
 					{{if (field.type == 'money_range_selector')}}
@@ -559,7 +630,7 @@
 								name="start_money"
 								value="${component.model.get('start_money')}"
 								data-field="start_money"
-								data-validate="require-notempty"
+								data-validate="require-float"
                                 data-max-el="#end_money"/>
 							-
 							<input
@@ -570,14 +641,14 @@
 								name="end_money"
 								value="${component.model.get('end_money')}"
 								data-field="end_money"
-								data-validate="require-notempty"
+								data-validate="require-float"
 								data-min-el="#start_money" />元
 							{{if field.annotation}}
 							<span style="color: #888">
 								<div class="money_range_selector_annotation">{{html field.annotation}}</div>
 							</span>
 							{{/if}}
-							<div class="errorHint pl5" style="margin-top: -40px;min-height: 50px;"></div>
+							<div class="errorHint pl5"></div>
 						</div>
 					</div>
 					{{/if}}

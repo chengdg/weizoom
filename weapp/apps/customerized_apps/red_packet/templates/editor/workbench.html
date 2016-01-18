@@ -187,6 +187,7 @@
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
           var descriptionModel = page.components[0].model;
+          console.log(descriptionModel);
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
           var endTime = descriptionModel.get('end_time')+":00";
