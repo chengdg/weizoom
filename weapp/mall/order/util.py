@@ -69,7 +69,7 @@ def export_orders_json(request):
          u'现金支付金额', u'微众卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
-         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'是否是老用户']
+         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'是否老用户']
     ]
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
@@ -287,7 +287,7 @@ def export_orders_json(request):
                     if member.source == SOURCE_SELF_SUB:
                         member_source_name = "直接关注"
                     elif member.source == SOURCE_MEMBER_QRCODE:
-                        member_source_name = "推荐扫码"
+                        member_source_name = "推广扫码"
                         try:
                             father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
                         except KeyError:
@@ -302,7 +302,7 @@ def export_orders_json(request):
                 if member.source == SOURCE_SELF_SUB:
                     member_source_name = "直接关注"
                 elif member.source == SOURCE_MEMBER_QRCODE:
-                    member_source_name = "推荐扫码"
+                    member_source_name = "推广扫码"
                     try:
                         father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
                     except KeyError:
