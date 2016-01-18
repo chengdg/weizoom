@@ -240,14 +240,14 @@ def _export_orders_json(request, order_list, params):
 		#获取推荐人的姓名或者带参数二维码的名称
 		father_name_or_qrcode_name = ""
 		member_source_name = ""
-		before_scanner_qrcode_is_member = 1
+		before_scanner_qrcode_is_member = "是"
 		SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 		if member.source == SOURCE_SELF_SUB:
 			if member.id in member_id2qrcode.keys() and member_id2qrcode[member.id].created_at > order.created_at:
 				member_source_name = "带参数二维码"
 				father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
 				if member_id2qrcode[member.id].is_new:
-					before_scanner_qrcode_is_member = 0
+					before_scanner_qrcode_is_member = "否"
 			else:
 				member_source_name = "直接关注"
 		elif member.source == SOURCE_MEMBER_QRCODE:
