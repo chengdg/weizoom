@@ -505,7 +505,10 @@ def get_detail_response(request):
     if not request.GET.get('order_id', None):
         return HttpResponseRedirect('/mall2/order_list/')
     else:
-        order = mall.models.Order.objects.get(id=request.GET['order_id'])
+        try:
+            order = mall.models.Order.objects.get(id=request.GET['order_id'])
+        except:
+            return HttpResponseRedirect('/mall2/order_list/')
 
     if request.method == 'GET':
         order_has_products = OrderHasProduct.objects.filter(order=order)

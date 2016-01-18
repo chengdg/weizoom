@@ -3,6 +3,7 @@
 
 import copy
 
+from django.http import HttpResponseRedirect
 from excel_response import ExcelResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -57,7 +58,10 @@ class OrderInfo(resource.Resource):
         # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
 
-        order = Order.objects.get(id=order_id)
+        try:
+            order = Order.objects.get(id=order_id, webapp_id=request.manager.get_profile().webapp_id)
+        except:
+            return HttpResponseRedirect('/mall2/order_list/')
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
 
