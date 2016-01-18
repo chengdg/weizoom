@@ -50,6 +50,7 @@ Background:
 	Given tom关注jobs的公众号
 	Given marry关注jobs的公众号
 
+	Given jobs登录系统
 	#为会员发放优惠券
 		#为单个会员发优惠券
 		When jobs创建优惠券发放规则发放优惠券于'2015-10-30'
