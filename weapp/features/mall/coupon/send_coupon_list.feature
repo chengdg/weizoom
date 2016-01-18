@@ -518,8 +518,10 @@ Scenario:4 发优惠券-发优惠券记录详情
 		"""
 
 	#取消订单，优惠券退回
-	When When bill取消订单'0001'
+	When bill访问jobs的webapp
+	When bill取消订单'0001'
 
+	When jobs登录系统
 	Then jobs获得发优惠券'单品券2''2015-10-30'的详情
 		"""
 		[{
