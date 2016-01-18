@@ -67,6 +67,15 @@ def step_impl(context, user):
 
 @When(u'{user}设置会员查询条件')
 def step_impl(context, user):
+    
+    init_url = '/member/api/member_list/?design_mode=0&version=1&status=1&filter_value='
+    options_url = get_url_option_by_content(context)
+    init_url = init_url +'|'.join(options_url) + '&page=1&count_per_page=50&enable_paginate=1'
+    context.url = init_url
+    context.filter_str = "&filter_value=" + '|'.join(options_url)
+
+def get_url_option_by_content(context):
+    options_url = []
     status_dict = {u'全部':'-1',u'已关注':'1',u'取消关注':'0'}
     sources_dict = {u'全部':'-1',u'直接关注':'0',u'推广扫码':'1',u'会员分享':'2'}
     grades_dict = {}
@@ -82,8 +91,6 @@ def step_impl(context, user):
         if value ==u'今天':
             options[key] = time.strftime('%Y-%m-%d')
     ###
-    options_url = []
-    init_url = '/member/api/member_list/?design_mode=0&version=1&status=1&filter_value='
     if options.has_key('pay_money_start') and options.has_key('pay_money_end') :
         if options['pay_money_start'] and options['pay_money_end']:
             options_url.append('pay_money:%s--%s' %(options['pay_money_start'],options['pay_money_end']))
@@ -113,6 +120,8 @@ def step_impl(context, user):
             options['message_start_time'] = handtime(options['message_start_time'])
             options['message_end_time'] = handtime(options['message_end_time'])
             options_url.append('last_message_time:%s--%s' %(options['message_start_time'],options['message_end_time']))
+    if options.has_key('start_integral') and options.has_key('end_integral'):
+        options_url.append('integral:%s--%s' % (str(options['start_integral']), str(options['end_integral'])))
     if options.has_key('name'):
         if options['name']:
             options_url.append('name:%s' %options['name'])
@@ -130,7 +139,4 @@ def step_impl(context, user):
     if options.has_key('source'):
         if options['source'] != u'全部':
             options_url.append('source:%s' %sources_dict[options['source']])
-    init_url = init_url +'|'.join(options_url) + '&page=1&count_per_page=50&enable_paginate=1'
-    context.url = init_url
-    context.filter_str = "&filter_value=" + '|'.join(options_url)
-
+    return options_url
