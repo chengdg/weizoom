@@ -280,9 +280,9 @@ def export_orders_json(request):
                     member_source_name = "带参数二维码"
                     father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
                     if member_id2qrcode[member.id].is_new:
-                        before_scanner_qrcode_is_member = 0
+                        before_scanner_qrcode_is_member = "否"
                     else:
-                        before_scanner_qrcode_is_member = 1
+                        before_scanner_qrcode_is_member = "是"
                 else:
                     if member.source == SOURCE_SELF_SUB:
                         member_source_name = "直接关注"
