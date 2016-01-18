@@ -237,7 +237,7 @@ def _export_orders_json(request, order_list, params):
 		else:
 			order.buyer_name = u'未知'
 
-		#获取推荐人的姓名或者带参数二维码的名称+++++++++++++++++++
+		#获取推荐人的姓名或者带参数二维码的名称
 		father_name_or_qrcode_name = ""
 		member_source_name = ""
 		before_scanner_qrcode_is_member = 1
