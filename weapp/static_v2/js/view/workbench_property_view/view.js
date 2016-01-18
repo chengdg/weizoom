@@ -1059,10 +1059,12 @@ W.workbench.PropertyView = Backbone.View.extend({
         if (redPacketType == 'random') {
             this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').addClass('xui-hide');
             this.$el.find('.propertyGroup_property_redPacketSelectorField_random').removeClass('xui-hide');
+            //this.$el.find('.propertyGroup_property_redPacketSelectorField_regular .xui-propertyGroup-input').val("");
         }
         if (redPacketType == 'regular') {
             this.$el.find('.propertyGroup_property_redPacketSelectorField_random').addClass('xui-hide');
             this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').removeClass('xui-hide');
+            //this.$el.find('.propertyGroup_property_redPacketSelectorField_random .xui-propertyGroup-input').val("");
         }
     }
 });

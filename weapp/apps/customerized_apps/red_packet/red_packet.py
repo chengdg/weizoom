@@ -118,6 +118,14 @@ class RedPacket(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
+
+			#清除红包类型选项下不需要再保存的两个字段
+			if key == "type" and value == "random":
+				update_data['set__regular_packets_number'] = ''
+				update_data['set__regular_per_money'] = ''
+			if key == "type" and value == "regular":
+				update_data['set__random_total_money'] = ''
+				update_data['set__random_packets_number'] = ''
 		app_models.RedPacket.objects(id=request.POST['id']).update(**update_data)
 		
 		response = create_response(200)
