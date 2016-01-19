@@ -310,8 +310,8 @@
         loadingStatus(true);
         var fid = GetQueryString("fid");
         W.getApi().call({
-            app: 'm/apps/powerme',
-            resource: 'm_powerme',
+            app: 'm/apps/red_packet',
+            resource: 'm_red_packet',
             method: 'get',
             args: {
                 webapp_owner_id: W.webappOwnerId,
@@ -334,8 +334,8 @@
                     mask('hide');
                     //分享成功后就算该用户参与活动
                     W.getApi().call({
-                        app: 'm/apps/powerme',
-                        resource: 'powerme_participance',
+                        app: 'm/apps/red_packet',
+                        resource: 'red_packet_participance',
                         method: 'post',
                         args: {
                             webapp_owner_id: W.webappOwnerId,
@@ -486,8 +486,8 @@
         }
         is_powered = true;
         W.getApi().call({
-            app: 'm/apps/powerme',
-            resource: 'powerme_participance',
+            app: 'm/apps/red_packet',
+            resource: 'red_packet_participance',
             method: 'put',
             args: {
                 webapp_owner_id: W.webappOwnerId,
