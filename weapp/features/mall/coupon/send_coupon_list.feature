@@ -59,7 +59,7 @@ Background:
 				"name": "单品券2",
 				"count": 2,
 				"members": ["bill"],
-				"coupon_ids": ["coupon1_id_1"]
+				"coupon_ids": ["coupon1_id_1","coupon1_id_2"]
 			}
 			"""
 		#发优惠券给多个会员
@@ -78,7 +78,8 @@ Background:
 			{
 				"name": "全体券3",
 				"count": 1,
-				"members": ["marry"]
+				"members": ["marry"],
+				"coupon_ids": ["coupon2_id_1"]
 			}
 			"""
 		When jobs创建优惠券发放规则发放优惠券于'2015-11-08'
@@ -86,7 +87,8 @@ Background:
 			{
 				"name": "全体券3",
 				"count": 1,
-				"members": ["marry"]
+				"members": ["marry"],
+				"coupon_ids": ["coupon2_id_2"]
 			}
 			"""
 	#会员使用优惠券购买商品
@@ -125,7 +127,7 @@ Background:
 			}
 			"""
 
-@send_coupon @eugene
+@mall2 @send_coupon @eugene
 Scenario:1 发优惠券-优惠券发送记录按照[优惠券名称]查询
 	Given jobs登录系统
 
@@ -236,7 +238,7 @@ Scenario:1 发优惠券-优惠券发送记录按照[优惠券名称]查询
 		[]
 		"""
 
-@send_coupon @eugene
+@mall2 @send_coupon @eugene
 Scenario:2 发优惠券-优惠券发送记录按照[优惠券类型]查询
 	Given jobs登录系统
 
@@ -338,7 +340,7 @@ Scenario:2 发优惠券-优惠券发送记录按照[优惠券类型]查询
 		}]
 		"""
 
-@send_coupon @eugene
+@mall2 @send_coupon @eugene
 Scenario:3 发优惠券-优惠券发送记录按照[发放时间]查询
 	Given jobs登录系统
 
@@ -448,7 +450,7 @@ Scenario:3 发优惠券-优惠券发送记录按照[发放时间]查询
 		[]
 		"""
 
-@send_coupon @eugene
+@mall2 @send_coupon @eugene
 Scenario:4 发优惠券-发优惠券记录详情
 	Given jobs登录系统
 
@@ -521,7 +523,7 @@ Scenario:4 发优惠券-发优惠券记录详情
 	When bill访问jobs的webapp
 	When bill取消订单'0001'
 
-	When jobs登录系统
+	Given jobs登录系统
 	Then jobs获得发优惠券'单品券2''2015-10-30'的详情
 		"""
 		[{
