@@ -69,7 +69,7 @@ Background:
 				"name": "单品券2",
 				"count": 1,
 				"members": ["bill", "tom"],
-				"coupon_ids": ["coupon1_id_3", "coupon1_id_2"]
+				"coupon_ids": ["coupon1_id_3", "coupon1_id_4"]
 			}
 			"""
 		#为会员多次发送有领取限制的优惠券
@@ -140,7 +140,7 @@ Scenario:1 发优惠券-优惠券发送记录按照[优惠券名称]查询
 			"type":"全体券",
 			"money": 100.00,
 			"send_counts": 0,
-			"send_time":"2015-11-07",
+			"send_time":"2015-11-08",
 			"send_memeber": 0,
 			"used_counts": 0
 		},{
@@ -184,7 +184,7 @@ Scenario:1 发优惠券-优惠券发送记录按照[优惠券名称]查询
 			"type":"全体券",
 			"money": 100.00,
 			"send_counts": 0,
-			"send_time":"2015-11-07",
+			"send_time":"2015-11-08",
 			"send_memeber": 0,
 			"used_counts": 0
 		},{
@@ -254,7 +254,7 @@ Scenario:2 发优惠券-优惠券发送记录按照[优惠券类型]查询
 			"type":"全体券",
 			"money": 100.00,
 			"send_counts": 0,
-			"send_time":"2015-11-07",
+			"send_time":"2015-11-08",
 			"send_memeber": 0,
 			"used_counts": 0
 		},{
@@ -324,7 +324,7 @@ Scenario:2 发优惠券-优惠券发送记录按照[优惠券类型]查询
 			"type":"全体券",
 			"money": 100.00,
 			"send_counts": 0,
-			"send_time":"2015-11-07",
+			"send_time":"2015-11-08",
 			"send_memeber": 0,
 			"used_counts": 0
 		},{
@@ -357,7 +357,7 @@ Scenario:3 发优惠券-优惠券发送记录按照[发放时间]查询
 			"type":"全体券",
 			"money": 100.00,
 			"send_counts": 0,
-			"send_time":"2015-11-07",
+			"send_time":"2015-11-08",
 			"send_memeber": 0,
 			"used_counts": 0
 		},{
@@ -420,14 +420,6 @@ Scenario:3 发优惠券-优惠券发送记录按照[发放时间]查询
 			"coupon_name":"全体券3",
 			"type":"全体券",
 			"money": 100.00,
-			"send_counts": 0,
-			"send_time":"2015-11-07",
-			"send_memeber": 0,
-			"used_counts": 0
-		},{
-			"coupon_name":"全体券3",
-			"type":"全体券",
-			"money": 100.00,
 			"send_counts": 1,
 			"send_time":"2015-11-07",
 			"send_memeber": 1,
@@ -463,9 +455,18 @@ Scenario:4 发优惠券-发优惠券记录详情
 	Then jobs获得发优惠券'单品券2''2015-10-30'的详情
 		"""
 		[{
+			"coupon_id":"coupon1_id_2",
+			"money": 10.00,
+			"start_time":"今天",
+			"end_time":"1天后",
+			"target":"bill",
+			"used_time":"",
+			"order_no":"",
+			"status": "未使用"
+		},{
 			"coupon_id":"coupon1_id_1",
 			"money": 10.00,
-			"sart_time":"今天",
+			"start_time":"今天",
 			"end_time":"1天后",
 			"target":"bill",
 			"used_time":"今天",
@@ -477,20 +478,20 @@ Scenario:4 发优惠券-发优惠券记录详情
 	Then jobs获得发优惠券'单品券2''2015-11-03'的详情
 		"""
 		[{
-			"coupon_id":"coupon1_id_2",
+			"coupon_id":"coupon1_id_4",
 			"money": 10.00,
-			"sart_time":"今天",
+			"start_time":"今天",
 			"end_time":"1天后",
-			"target":"bill",
+			"target":"tom",
 			"used_time":"",
 			"order_no":"",
 			"status": "未使用"
 		},{
 			"coupon_id":"coupon1_id_3",
 			"money": 10.00,
-			"sart_time":"今天",
+			"start_time":"今天",
 			"end_time":"1天后",
-			"target":"tom",
+			"target":"bill",
 			"used_time":"",
 			"order_no":"",
 			"status": "未使用"
@@ -502,7 +503,7 @@ Scenario:4 发优惠券-发优惠券记录详情
 		[{
 			"coupon_id":"coupon2_id_1",
 			"money": 100.00,
-			"sart_time":"今天",
+			"start_time":"今天",
 			"end_time":"2天后",
 			"target":"marry",
 			"used_time":"",
@@ -522,9 +523,18 @@ Scenario:4 发优惠券-发优惠券记录详情
 	Then jobs获得发优惠券'单品券2''2015-10-30'的详情
 		"""
 		[{
+			"coupon_id":"coupon1_id_2",
+			"money": 10.00,
+			"start_time":"今天",
+			"end_time":"1天后",
+			"target":"bill",
+			"used_time":"",
+			"order_no":"",
+			"status": "未使用"
+		},{
 			"coupon_id":"coupon1_id_1",
 			"money": 10.00,
-			"sart_time":"今天",
+			"start_time":"今天",
 			"end_time":"1天后",
 			"target":"bill",
 			"used_time":"",

@@ -185,6 +185,7 @@ def __clear_all_app_data():
 	promotion_models.GetRedEnvelopeRecord.objects.all().delete()
 	promotion_models.RedEnvelopeParticipences.objects.all().delete()
 	promotion_models.ForbiddenCouponProduct.objects.all().delete()
+	promotion_models.CouponRecord.objects.all().delete()
 
 	#商城
 	mall_models.PayInterface.objects.all().delete()

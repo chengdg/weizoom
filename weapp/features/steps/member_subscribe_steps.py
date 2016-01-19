@@ -112,7 +112,7 @@ def get_members_dict_by_context(context):
 			grades_dict[item['name']] = item['id']
 		for item in json.loads(response.content)['data']['tags']:
 			tags_dict[item['name']] = item['id']
-		
+
 		expected = []
 		for row in context.table:
 			adict = {}
@@ -156,6 +156,7 @@ def step_impl(context, user):
 	if context.text:
 		actual_data = actual_members
 	elif context.table:
+		actual_data = []
 		for row in actual_members:
 			adict = {}
 			adict['name'] = row['username']
