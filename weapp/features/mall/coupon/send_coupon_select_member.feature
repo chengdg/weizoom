@@ -94,7 +94,7 @@ Background:
 			|   0007   | 2015-03-04   | tom3     | 商品2,1   | 支付    | 微信支付 | 15      | 100    | 115         | 0      | 115    | 0    | jobs,退款     | 退款中       |
 			|   0008   | 2015-03-05   | tom3     | 商品1,1   | 支付    | 支付宝   | 10      | 100    | 110         | 110    | 0      | 0    | jobs,完成退款 | 退款完成     |
 
-@send_coupon @eugene
+@mall2 @send_coupon @eugene
 Scenario: 1 发优惠券-选择会员列表查询
 	Given jobs登录系统
 	#默认条件查询（空条件）
@@ -337,7 +337,7 @@ Scenario: 1 发优惠券-选择会员列表查询
 			| name  | member_rank | pay_money | unit_price | pay_times | integral |
 			| tom4  | 金牌会员    |   0.00    |    0.00    |    0      |     20   |
 
-@send_coupon @eugene
+@mall2 @send_coupon @eugene
 Scenario: 2 发优惠券-选择会员列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
