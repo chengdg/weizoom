@@ -399,23 +399,15 @@ def _get_create_coupon_qrcode(coupon_url, coupon_id):
         )
         qr.add_data(coupon_url)
         img = qr.make_image()
+        img.save(file_path)
 
-        upload_coupon_qrcode_to_upyun = False
         try:
             relative_path = upload_image_to_upyun(file_path, '/coupon_qrcode/%s' % file_name)
-            upload_coupon_qrcode_to_upyun = True
         except:
-            upload_coupon_qrcode_to_upyun = False
+            os.remove(file_path)
             notify_msg = u"上传图片到又拍云时失败, cause:\n{}".format(unicode_full_stack())
             watchdog_error(notify_msg)
             relative_path = '/static/coupon_qrcode/%s' % file_name
-
-        if upload_coupon_qrcode_to_upyun:
-            try:
-                img.save(file_path)
-            except:
-                notify_msg = u"上传图片到又拍云时失败, cause:\n{}".format(unicode_full_stack())
-                watchdog_error(notify_msg)
 
         return relative_path
     else:
