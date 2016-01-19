@@ -210,7 +210,10 @@
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						{{/if}}
 						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
-							<textarea class="" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}} style="height: 100px; width: 95%;" data-field="${field.name}" {{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
+							<textarea class="" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}}
+							style="height: 100px; width: 95%;" data-field="${field.name}"
+							{{if field.validate}}{{html field.validate}}{{/if}}
+							{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
 							{{if field.help}}
 							<div style="color: #888;">
 								{{html field.help.replace(/\n/g, "<br/>")}}

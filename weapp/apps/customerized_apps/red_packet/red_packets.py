@@ -62,7 +62,7 @@ class RedPackets(resource.Resource):
 		if end_time:
 			params['end_time__lte'] = end_time
 		datas = app_models.RedPacket.objects(**params).order_by('-id')
-		
+
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
@@ -83,11 +83,9 @@ class RedPackets(resource.Resource):
 		for p in all_participances:
 			if not p.belong_to in red_packet_id2info:
 				red_packet_id2info[p.belong_to] = {
-					"total_money": p.money,
 					"participant_count": 1
 				}
 			else:
-				red_packet_id2info[p.belong_to]["total_money"] += p.money
 				red_packet_id2info[p.belong_to]["participant_count"] += 1
 
 		items = []
@@ -100,7 +98,7 @@ class RedPackets(resource.Resource):
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'participant_count': red_packet_id2info[str_id]["participant_count"] if red_packet_id2info.get(str_id, None) else 0,
-				'total_money' : red_packet_id2info[str_id]["total_money"] if red_packet_id2info.get(str_id, None) else 0,
+				'total_money' : '%0.2f' %float(data.random_total_money) if data.type == 'random' else '%0.2f' %(float(data.regular_packets_number)*float(data.regular_per_money)),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
