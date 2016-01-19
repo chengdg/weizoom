@@ -7,13 +7,15 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 
+from weapp.settings import MODE
 from core import resource
 from mall import export
 from mall.models import *
 from models import *
 from modules.member import models as member_models
 from core import paginator
-
+from core.exceptionutil import unicode_full_stack
+from core.upyun_util import *
 from core.jsonresponse import create_response
 from core import search_util
 from mall.promotion.utils import create_coupons
@@ -52,7 +54,7 @@ class CouponRuleInfo(resource.Resource):
 
             url = "http://"+request.META['HTTP_HOST']+"/termite/workbench/jqm/preview/?module=market_tool:coupon&model=coupon&action=get&workspace_id=market_tool:coupon&webapp_owner_id="+str(coupon_rule.owner_id)+"&project_id=0&rule_id="+str(coupon_rule.id)
 
-            coupon_img_url = _create_coupon_qrcode(url, coupon_rule.id)
+            coupon_img_url = _get_create_coupon_qrcode(url, coupon_rule.id)
 
             coupon_rule.get_url = url
             coupon_rule.qrcode_url = coupon_img_url
@@ -377,25 +379,39 @@ class CouponRuleList(resource.Resource):
 # }
 
 
-def _create_coupon_qrcode(coupon_url, coupon_id):
+def _get_create_coupon_qrcode(coupon_url, coupon_id):
     """
-    创建优惠券二维码
+    创建或者获取优惠券二维码
     """
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4
-    )
-    qr.add_data(coupon_url)
-    img = qr.make_image()
-
     file_name = '%d.png' % coupon_id
     dir_path = os.path.join(settings.UPLOAD_DIR, '../coupon_qrcode')
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
-
     file_path = os.path.join(dir_path, file_name)
-    img.save(file_path)
+    qrcode_isexist = os.path.isfile(file_path)
 
-    return '/static/coupon_qrcode/%s' % file_name
+    if not qrcode_isexist:
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4
+        )
+        qr.add_data(coupon_url)
+        img = qr.make_image()
+        img.save(file_path)
+
+        try:
+            relative_path = upload_image_to_upyun(file_path, '/coupon_qrcode/%s' % file_name)
+        except:
+            os.remove(file_path)
+            notify_msg = u"上传图片到又拍云时失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(notify_msg)
+            relative_path = '/static/coupon_qrcode/%s' % file_name
+
+        return relative_path
+    else:
+        if settings.MODE == 'develop':
+            return '/static/coupon_qrcode/%s' % file_name
+        else:
+            return image_path % (BUCKETNAME, '/coupon_qrcode/%s' % file_name)
