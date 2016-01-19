@@ -11,7 +11,7 @@ from mall import export
 from tools.regional import views as regional_util
 from tools.regional.views import get_str_value_by_string_ids_new
 from mall.promotion.models import CouponRule, Promotion, ProductHasPromotion, PROMOTION_TYPE_COUPON
-from modules.member.models import WebAppUser
+from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 import mall.models
 import mall.export
 from core.jsonresponse import create_response
@@ -65,9 +65,11 @@ def export_orders_json(request):
 
     orders = [
         [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
-         u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额', u'现金支付金额', u'微众卡支付金额',
-         u'运费', u'积分抵扣金额', u'优惠券金额', u'优惠券名称', u'订单状态', u'购买人',
-         u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号', u'发货时间',u'商家备注',u'用户备注']
+         u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
+         u'现金支付金额', u'微众卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
+         u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
+         u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
+         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'是否老用户']
     ]
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
@@ -174,6 +176,26 @@ def export_orders_json(request):
 
     webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
+    # 构造会员与推荐人或者带参数二维码的关系
+    members = webappuser2member.values()
+    member_self_sub, member_qrcode_and_by_url = [], []
+    follow_member_ids = []
+    all_member_ids = []
+    for member in members:
+        if member:
+            all_member_ids.append(member.id)
+            if member.source == SOURCE_SELF_SUB:
+                member_self_sub.append(member)
+            elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
+                member_qrcode_and_by_url.append(member)
+                follow_member_ids.append(member.id)
+
+    follow_member2father_member = dict([(relation.follower_member_id, relation.member_id) for relation in MemberFollowRelation.objects.filter(follower_member_id__in=follow_member_ids, is_fans=True)])
+    father_member_ids = follow_member2father_member.values()
+    father_member_id2member = dict([(m.id, m) for m in Member.objects.filter(id__in=father_member_ids)])
+
+    member_id2qrcode = dict([(relation.member_id, relation) for relation in ChannelQrcodeHasMember.objects.filter(member_id__in=all_member_ids)])
+
     # print 'end step 6.7 - '+str(time.time() - begin_time)
     # 获取order对应的赠品
     order2premium_product = {}
@@ -246,6 +268,52 @@ def export_orders_json(request):
             order.member_id = member.id
         else:
             order.buyer_name = u'未知'
+
+        # 根据用户来源获取用户推荐人或者带参数二维码的名称
+        father_name_or_qrcode_name = ""
+        member_source_name = ""
+        before_scanner_qrcode_is_member = ""
+        SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
+        if member:
+            if member.id in member_id2qrcode.keys():
+                if member_id2qrcode[member.id].created_at < order.created_at:
+                    member_source_name = "带参数二维码"
+                    father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
+                    if member_id2qrcode[member.id].is_new:
+                        before_scanner_qrcode_is_member = "否"
+                    else:
+                        before_scanner_qrcode_is_member = "是"
+                else:
+                    if member.source == SOURCE_SELF_SUB:
+                        member_source_name = "直接关注"
+                    elif member.source == SOURCE_MEMBER_QRCODE:
+                        member_source_name = "推广扫码"
+                        try:
+                            father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                        except KeyError:
+                            father_name_or_qrcode_name = ""
+                    elif member.source == SOURCE_BY_URL:
+                        member_source_name = "会员分享"
+                        try:
+                            father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                        except KeyError:
+                            father_name_or_qrcode_name = ""
+            else:
+                if member.source == SOURCE_SELF_SUB:
+                    member_source_name = "直接关注"
+                elif member.source == SOURCE_MEMBER_QRCODE:
+                    member_source_name = "推广扫码"
+                    try:
+                        father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                    except KeyError:
+                        father_name_or_qrcode_name = ""
+                elif member.source == SOURCE_BY_URL:
+                    member_source_name = "会员分享"
+                    try:
+                        father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+                    except KeyError:
+                        father_name_or_qrcode_name = ""
+        #----------end---------
 
         # 计算总和
         final_price = 0.0
@@ -375,7 +443,10 @@ def export_orders_json(request):
                     (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
                     postage_time,
                     order.remark.encode('utf8'),
-                    u'' if order.customer_message == '' else order.customer_message.encode('utf-8')
+                    u'' if order.customer_message == '' else order.customer_message.encode('utf-8'),
+                    member_source_name,
+                    father_name_or_qrcode_name,
+                    before_scanner_qrcode_is_member
 
                 ]
                 if has_supplier:
@@ -416,7 +487,10 @@ def export_orders_json(request):
                     (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
                     postage_time,
                     u'',
-                    u''
+                    u'',
+                    member_source_name,
+                    father_name_or_qrcode_name,
+                    before_scanner_qrcode_is_member
 
                 ]
                 if has_supplier:
@@ -462,7 +536,10 @@ def export_orders_json(request):
                         (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
                         postage_time,
                         u'',
-                        u''
+                        u'',
+                        member_source_name,
+                        father_name_or_qrcode_name,
+                        before_scanner_qrcode_is_member
                     ]
                     if has_supplier:
                         tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])

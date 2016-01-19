@@ -13,7 +13,8 @@ from core.jsonresponse import create_response
 from mall.models import *
 from excel_response import ExcelResponse
 from tools.regional.views import get_str_value_by_string_ids, get_str_value_by_string_ids_new
-from modules.member.models import Member, WebAppUser, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
+from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
+from modules.member.models import Member, WebAppUser, MemberFollowRelation, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from mall import module_api as mall_api
 import re
 
@@ -23,7 +24,7 @@ FIRST_NAV = export.STATS_HOME_FIRST_NAV
 ########################################################################
 # export_orders:  导出订单列表
 ########################################################################
-			
+
 
 class OrderExport(resource.Resource):
 	"""
@@ -31,7 +32,7 @@ class OrderExport(resource.Resource):
 	"""
 	app = 'stats'
 	resource = 'order_export'
-	
+
 	@login_required
 	def get(request):
 		"""
@@ -67,6 +68,12 @@ def _export_orders_json(request, order_list, params):
 		'10': u'优惠抵扣'
 	}
 
+	member_source = {
+		'0': u'直接关注',
+		'1': u'推广扫码',
+		'2': u'会员分享'
+	}
+
 	# type = ORDER_TYPE2TEXT
 
 	source_list = {
@@ -78,7 +85,8 @@ def _export_orders_json(request, order_list, params):
 		[u'订单号', u'下单时间',u'付款时间', u'商品名称', u'规格',
 		u'商品单价', u'商品数量', u'支付方式', u'支付金额',u'现金支付金额',u'微众卡支付金额',
 		u'运费', u'积分抵扣金额', u'优惠券金额',u'优惠券名称', u'订单状态', u'购买人',
-		u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'备注', u'来源', u'物流公司', u'快递单号', u'发货时间']
+		u'收货人', u'联系电话', u'收货地址省份', u'收货地址', u'发货人', u'备注', u'来源', u'物流公司', u'快递单号', u'发货时间',
+		u'买家来源', u'买家推荐人']
 	]
 
 	webapp_id = request.user_profile.webapp_id
@@ -172,6 +180,24 @@ def _export_orders_json(request, order_list, params):
 	# from modules.member.models import Member
 	webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
+	#++++++++++++++++++++++++++++++members++++++++++++++++++++++++++++++
+	members = webappuser2member.values()
+	member_self_sub, member_qrcode_and_by_url = [], []
+	follow_member_ids = []
+	for member in members:
+		if member.source == SOURCE_SELF_SUB:
+			member_self_sub.append(member)
+		elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
+			member_qrcode_and_by_url.append(member)
+			follow_member_ids.append(member.id)
+
+	follow_member2father_member = dict([(relation.follower_member_id, relation.member_id) for relation in MemberFollowRelation.objects.filter(follower_member_id__in=follow_member_ids, is_fans=True)])
+	father_member_ids = follow_member2father_member.values()
+	father_member_id2member = dict([(m.id, m) for m in Member.objects.filter(id__in=father_member_ids)])
+
+	member_id2qrcode = dict([(relation.member_id, relation) for relation in ChannelQrcodeHasMember.objects.filter(member_id__in=member_self_sub)])
+
+
 	# print 'end step 6.7 - '+str(time.time() - begin_time)
 	#获取order对应的赠品
 	order2premium_product = {}
@@ -210,6 +236,28 @@ def _export_orders_json(request, order_list, params):
 			order.member_id = member.id
 		else:
 			order.buyer_name = u'未知'
+
+		#获取推荐人的姓名或者带参数二维码的名称
+		father_name_or_qrcode_name = ""
+		member_source_name = ""
+		before_scanner_qrcode_is_member = "是"
+		SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
+		if member.source == SOURCE_SELF_SUB:
+			if member.id in member_id2qrcode.keys() and member_id2qrcode[member.id].created_at > order.created_at:
+				member_source_name = "带参数二维码"
+				father_name_or_qrcode_name = member_id2qrcode[member.id].channel_qrcode.name
+				if member_id2qrcode[member.id].is_new:
+					before_scanner_qrcode_is_member = "否"
+			else:
+				member_source_name = "直接关注"
+		elif member.source == SOURCE_MEMBER_QRCODE:
+			member_source_name = "推广扫码"
+			father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+		elif member.source == SOURCE_BY_URL:
+			member_source_name = "会员分享"
+			father_name_or_qrcode_name = father_member_id2member[follow_member2father_member[member.id]].username_for_html
+		else:
+			pass
 
 		# 计算总和
 		final_price = 0.0
@@ -348,7 +396,10 @@ def _export_orders_json(request, order_list, params):
 					source.encode('utf8'),
 					express_util.get_name_by_value(order.express_company_name).encode('utf8'),
 					order.express_number.encode('utf8'),
-					postage_time
+					postage_time,
+					member_source_name,
+					father_name_or_qrcode_name,
+					before_scanner_qrcode_is_member
 				])
 			else:
 				if coupon_name:
@@ -380,7 +431,10 @@ def _export_orders_json(request, order_list, params):
 				source.encode('utf8'),
 				express_util.get_name_by_value(order.express_company_name).encode('utf8'),
 				order.express_number.encode('utf8'),
-				postage_time
+				postage_time,
+				member_source_name,
+				father_name_or_qrcode_name,
+				before_scanner_qrcode_is_member
 				])
 			i = i +  1
 			if order.id in order2premium_product:
@@ -413,7 +467,10 @@ def _export_orders_json(request, order_list, params):
 					source.encode('utf8'),
 					express_util.get_name_by_value(order.express_company_name).encode('utf8'),
 					order.express_number.encode('utf8'),
-					postage_time
+					postage_time,
+					member_source_name,
+					father_name_or_qrcode_name,
+					before_scanner_qrcode_is_member
 					])
 				temp_premium_products = []
 		# if test_index % pre_page == pre_page-1:
@@ -449,12 +506,12 @@ class OrderList(resource.Resource):
 		显示订单明细
 		"""
 		params = _extract_url_params(request)
-		
+
 		jsons = [{
 			"name": "params",
 			"content": params
 		}]
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'app_name': 'stats',
@@ -463,9 +520,9 @@ class OrderList(resource.Resource):
 			'third_nav_name': export.SALES_ORDER_LIST_NAV,
 			'jsons': jsons
 		})
-		
+
 		return render_to_response('sales/order_list.html', c)
-	
+
 	@login_required
 	def api_get(request):
 		"""
@@ -473,7 +530,7 @@ class OrderList(resource.Resource):
 		"""
 		params = _extract_params(request)
 		# print params
-		
+
 		if params:
 			response = create_response(200)
 			response.data = _get_stats_data(request.manager, params, False)
@@ -483,10 +540,10 @@ class OrderList(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'未指定查询时间段'
 			return response.get_response()
-		
+
 def _extract_url_params(request):
 	params = dict()
-	
+
 	start_time = request.GET.get('start_time', '')
 	end_time = request.GET.get('end_time', '')
 	if start_time and end_time:
@@ -498,20 +555,20 @@ def _extract_url_params(request):
 		start_date = dateutil.get_previous_date(end_date, 6) #获取7天前日期
 		params['start_time'] = start_date + ' 00:00:00'
 		params['end_time'] = end_date + ' 23:59:59'
-	
+
 	status_str = request.GET.get('order_status', '')
 	if status_str:
 		params['order_status'] = status_str
-		
+
 	params['repeat_buy'] = int(request.GET.get('repeat_buy', '-1'))
 	params['buyer_source'] = int(request.GET.get('buyer_source', '-1'))
-	
+
 	discount_type = request.GET.get('discount_type', '')
 	if discount_type:
 		params['discount_type'] = discount_type
-	
+
 	return params
-		
+
 def _get_stats_data(user, params, is_export):
 	webapp_id = user.get_profile().webapp_id
 	total_orders =  belong_to(webapp_id)
@@ -521,18 +578,18 @@ def _get_stats_data(user, params, is_export):
 	past_status_qualified_orders = status_qualified_orders.filter(created_at__lt=params['end_time'])
 	webapp_user_ids = set([order.webapp_user_id for order in past_status_qualified_orders])
 	webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
-	
+
 	# 生成查询对象
 	# print params
 	q_obj = _create_q(params)
 	# print q_obj
-	
+
 	# 提前获取所需内容
 	if params['repeat_buy'] == -1 or params['sort_attr'] == 'id':
 		qualified_orders = total_orders.prefetch_related('orderhasproduct_set__product').filter(q_obj).order_by(params['sort_attr'])
 	else:
 		qualified_orders = total_orders.prefetch_related('orderhasproduct_set__product').filter(q_obj)
-	
+
 	wuid_dict = { 'pos': 0 }
 	items = []
 	# print 'qualified order num=', qualified_orders.count()
@@ -544,7 +601,7 @@ def _get_stats_data(user, params, is_export):
 		checked = __check_repeat_buy(params['repeat_buy'], order.webapp_user_id, wuid_dict, tmp_member, webappuser2member, pre_status_qualified_orders)
 		if not checked:
 			continue
-		
+
 		# clock_t_3 = time.clock()
 		# wall_t_3  = time.time()
 		save_money = float(_get_total_price(order)) + float(order.postage) - float(order.final_price) - float(order.weizoom_card_money)
@@ -576,13 +633,13 @@ def _get_stats_data(user, params, is_export):
 				'order_status': order.get_status_text()
 			})
 		# __report_performance(clock_t_3, wall_t_3, 'doubt part')
-	
+
 	if params['repeat_buy'] != -1 and params['sort_attr'] == '-id':
 		items.reverse()
-	
+
 	if is_export:
 		return items
-	
+
 	return_count = len(items)
 	if params['count_per_page'] > 0:
 		#进行分页
@@ -590,7 +647,7 @@ def _get_stats_data(user, params, is_export):
 	else:
 		#全部订单
 		pageinfo = {"object_count": return_count}
-	
+
 	if params.get('sort_attr') == 'id':
 		params['sort_attr'] = 'created_at'
 	if params.get('sort_attr') == '-id':
@@ -601,7 +658,7 @@ def _get_stats_data(user, params, is_export):
 		percent = "%.2f%%" % float(float(return_count) / float(total_count) * 100)
 	else:
 		percent = '0.00%'
-	
+
 	data = {
 		'items': items,
 		'pageinfo': paginator.to_dict(pageinfo),
@@ -617,18 +674,18 @@ def _get_total_price(order):
 	result = 0.0
 	for r in order.orderhasproduct_set.all():
 		result += r.total_price
-	
+
 	return result
 
 def _get_products(order):
 	result = []
-	
+
 	for r in order.orderhasproduct_set.all():
 		tmp = {}
 		tmp['name'] = r.product.name
 		tmp['thumbnails_url'] = r.product.thumbnails_url
 		result.append(tmp)
-		
+
 	return result
 
 def __report_performance(clock_t, wall_t, title):
@@ -640,16 +697,16 @@ def __report_performance(clock_t, wall_t, title):
 	print wall_x, wall_msg
 	print "=========================================="
 
-		
+
 def __check_repeat_buy(repeat_buy, wuid, wuid_dict, member, webappuser2member, pre_status_qualified_orders):
 	if repeat_buy == -1:
 		return True
-	
+
 	want_repeat = (repeat_buy == 2)
-	
+
 	if wuid_dict.has_key(wuid):
 		return want_repeat
-	
+
 	wuid_dict[wuid] = ""
 
 	if pre_status_qualified_orders:
@@ -665,13 +722,13 @@ def __check_repeat_buy(repeat_buy, wuid, wuid_dict, member, webappuser2member, p
 				if tmp_member.id == member.id:
 					wuid_dict['pos'] = index + 1
 					return want_repeat
-	
-	return not want_repeat 							
+
+	return not want_repeat
 
 def _check_buyer_source(buyer_source, member):
 	if buyer_source == -1:
 		return True
-	
+
 	if member:
 		if member.source in [SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
 			return buyer_source == member.source
@@ -689,7 +746,7 @@ def _create_q(params):
 		q_obj = q_obj & Q(order_id=params['order_id'])
 	if params.get('pay_interface_type') != None:
 		q_obj = q_obj & Q(pay_interface_type=params['pay_interface_type'])
-	
+
 	q_list = []
 	if params.get('iswzcard_pay') == 1:
 		tmp = Q(weizoom_card_money__gt=0.0) & Q(coupon_money=0.0) & Q(integral_money=0.0)
@@ -706,14 +763,14 @@ def _create_q(params):
 	if params.get('iswzcard_discountcoupon') == 1:
 		tmp = Q(weizoom_card_money__gt=0.0) & Q(coupon_money__gt=0.0) & Q(integral_money=0.0)
 		q_list.append(tmp)
-	
+
 	list_len = len(q_list)
 	if list_len > 0:
 		tmp = q_list[0]
 		for index in range(1, list_len):
 			tmp = tmp | q_list[index]
 		q_obj = q_obj & tmp
-	
+
 	return q_obj
 
 def _formalize_date_str(is_start, date_str):
@@ -721,7 +778,7 @@ def _formalize_date_str(is_start, date_str):
 
 	if num == 2:
 		return date_str
-	
+
 	if num == 0:
 		if is_start:
 			date_str += ' 00:00:00'
@@ -729,12 +786,12 @@ def _formalize_date_str(is_start, date_str):
 			date_str += ' 23:59:59'
 	elif num == 1:
 		date_str += ":00"
-	
+
 	return date_str
 
 def _extract_params(request):
 	params = dict()
-	
+
 	# 处理起止时间参数
 	date_interval = request.GET.get('date_interval', '')
 	if date_interval:
@@ -745,22 +802,22 @@ def _extract_params(request):
 		date_now = datetime.strftime(datetime.now(), '%Y-%m-%d')
 		params['start_time'] = date_now + ' 00:00:00'
 		params['end_time'] = date_now + ' 23:59:59'
-	
+
 	params['cur_page'] = int(request.GET.get('page', '1'))
 	params['count_per_page'] = int(request.GET.get('count_per_page', 20))
 	params['query_string'] = request.META['QUERY_STRING']
-	
+
 	tmp = request.GET.get('sort_attr', '-id')
 	if tmp == 'created_at':
 		tmp = 'id'
 	if tmp == '-created_at':
 		tmp = '-id'
 	params['sort_attr'] = tmp
-	
+
 	query = request.GET.get('query', '').strip()
 	if len(query):
 		params['order_id'] = query.strip().split('-')[0]
-	
+
 	params['product_name'] = request.GET.get('product_name', '').strip()
 	pay_type = int(request.GET.get('pay_type', '-1').strip())
 	if pay_type == 1:
@@ -769,10 +826,10 @@ def _extract_params(request):
 		params['pay_interface_type'] = PAY_INTERFACE_WEIXIN_PAY
 	elif pay_type == 3:
 		params['pay_interface_type'] = PAY_INTERFACE_COD
-	
+
 	params['buyer_source'] = int(request.GET.get('buyer_source', '-1').strip())
 	params['repeat_buy'] = int(request.GET.get('repeat_buy', '-1').strip())
-	
+
 	status_list = []
 	iswait_send = int(request.GET.get('iswait_send', '0').strip())
 	isalready_send = int(request.GET.get('isalready_send', '0').strip())
@@ -785,11 +842,11 @@ def _extract_params(request):
 		status_list.append(ORDER_STATUS_SUCCESSED)
 
 	params['status'] = status_list
-	
+
 	params['iswzcard_pay'] = int(request.GET.get('iswzcard_pay', '0').strip())
 	params['isintegral_deduction'] = int(request.GET.get('isintegral_deduction', '0').strip())
 	params['isfavorable_coupon'] = int(request.GET.get('isfavorable_coupon', '0').strip())
 	params['iswzcard_integral'] = int(request.GET.get('iswzcard_integral', '0').strip())
 	params['iswzcard_discountcoupon'] = int(request.GET.get('iswzcard_discountcoupon', '0').strip())
-	
+
 	return params
