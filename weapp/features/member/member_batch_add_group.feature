@@ -148,7 +148,7 @@ Scenario:1 选择当前页的部分会员，选择"给选中的人添加分组";
 				| bill2 |   普通会员  | 未分组             |
 				| bill3 |   普通会员  | 会员分组2,会员分组3|
 
-@mall2 @member @memberList
+@mall2 @member @memberList @eugeneX
 Scenario:2 选择当前页的全部会员，选择"给选中的人添加分组"
 	Given jobs登录系统
 	Given jobs设置分页查询参数

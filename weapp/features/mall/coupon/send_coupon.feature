@@ -367,8 +367,7 @@ Scenario: 4 发送优惠券总数超出优惠券库存
 		{
 			"name": "单品券2",
 			"count": 5,
-			"members": ["bill"],
-			"coupon_ids": []
+			"members": ["bill"]
 		}
 		"""
 	Then jobs能获得发放优惠券失败的信息
