@@ -83,10 +83,12 @@ class RedPackets(resource.Resource):
 		for p in all_participances:
 			if not p.belong_to in red_packet_id2info:
 				red_packet_id2info[p.belong_to] = {
-					"participant_count": 1
+					"participant_count": 1,
+					"already_paid_money": p.money if p.red_packet_status else 0
 				}
 			else:
 				red_packet_id2info[p.belong_to]["participant_count"] += 1
+				red_packet_id2info[p.belong_to]["already_paid_money"] += p.money if p.red_packet_status else 0
 
 		items = []
 		for data in datas:
@@ -99,6 +101,7 @@ class RedPackets(resource.Resource):
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'participant_count': red_packet_id2info[str_id]["participant_count"] if red_packet_id2info.get(str_id, None) else 0,
 				'total_money' : '%0.2f' %float(data.random_total_money) if data.type == 'random' else '%0.2f' %(float(data.regular_packets_number)*float(data.regular_per_money)),
+				'already_paid_money' : '%0.2f' %float(red_packet_id2info[str_id]["already_paid_money"] if red_packet_id2info.get(str_id, None) else 0),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
