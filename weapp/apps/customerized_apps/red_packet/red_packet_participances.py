@@ -92,10 +92,7 @@ class RedPacketParticipances(resource.Resource):
 		member_id2member = {member.id: member for member in members}
 
 		items = []
-		#排名  导出时不适用
-		ranking = (cur_page-1)*count_per_page
 		for data in datas:
-			ranking += 1
 			cur_member = member_id2member.get(data.member_id, None)
 			if cur_member:
 				try:
@@ -108,11 +105,13 @@ class RedPacketParticipances(resource.Resource):
 				'id': str(data.id),
 				'member_id': data.member_id,
 				'belong_to': data.belong_to,
-				# 'ranking': ranking,
 				'participant_name': member_id2member[data.member_id].username_size_ten if member_id2member.get(data.member_id) else u'未知',
 				'username': name,
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
-				# 'power': data.power,
+				'red_packet_money': '%.2f' % data.red_packet_money,
+				'current_money': '%.2f' % data.current_money,
+				'red_packet_status': u'成功' if data.red_packet_status else u'失败',
+				'is_already_paid': u'发放' if data.is_already_paid else u'未发放',
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		if export_id:
