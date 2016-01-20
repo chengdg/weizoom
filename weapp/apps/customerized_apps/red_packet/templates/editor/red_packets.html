@@ -105,6 +105,7 @@
 				<th>活动状态</th>
 				<th>参与人数</th>
 				<th>总金额</th>
+				<th>已发放金额</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -139,6 +140,9 @@
 				</td>
 				<td>
 					${item.total_money}
+				</td>
+				<td>
+					${item.already_paid_money}
 				</td>
 				<td>
 				    <a href="/apps/red_packet/red_packet_participances/?id=${item.id}" class="ml5" target="_blank">查看</a>

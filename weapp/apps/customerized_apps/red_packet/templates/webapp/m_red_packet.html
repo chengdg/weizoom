@@ -2,29 +2,6 @@
 
 {% block css %}
 <style>
-	.wui-masterinfo{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 30px;
-        padding: 10px 0;
-        font-size: 0.8rem;
-        line-height: 30px;
-        background-color: white;
-        border-top: 1px solid gainsboro;
-        opacity: 0;
-        text-align: center;
-    }
-    .wui-masterinfo span{
-        margin: 0 5px;
-    }
-    .wui-masterinfo .wa-mypower{
-        margin: 0;
-    }
-    .wui-masterinfo b {
-        font-size: 0.8rem;
-    }
     .wui-mask{
         position: absolute;
         top: 0;
@@ -154,15 +131,6 @@
 
 {% block content-panel %}
     {{ page_html_content|safe }}
-    <div class="wui-masterinfo wa-masterinfo">
-        <div style="float: left;">
-            <span class="wa-myrange">我的排名: <b></b></span>
-        <span class="wa-mypower">助力值: <b></b></span>
-        </div>
-        <div style="float: right;">
-        <span class="wa-totalcount">参与人数: <b></b></span>
-        </div>
-    </div>
 
     <div class="xui-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
@@ -244,7 +212,7 @@
         }
         //如果是自己的主页
         if(is_self_page){
-            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
+            $('.wa-using').text('邀请好友 帮我拼红包').on('click', openGuideMask).show();
         }else{
             var using_msg;
             var $attention = $('.xa-attention-guest');
@@ -310,8 +278,8 @@
         loadingStatus(true);
         var fid = GetQueryString("fid");
         W.getApi().call({
-            app: 'm/apps/powerme',
-            resource: 'm_powerme',
+            app: 'm/apps/red_packet',
+            resource: 'm_red_packet',
             method: 'get',
             args: {
                 webapp_owner_id: W.webappOwnerId,
@@ -324,32 +292,12 @@
                 updateActivityStatus(data);
                 //启动倒计时
                 renderTime(data.member_info.timing);
+                //参与活动
+                participate_red_packet();
                 //渲染排名
-                showTop100(data);
+{#                showTop100(data);#}
                 //隐藏loading动画元素
                 loadingStatus(false);
-                //监听分享成功事件
-                $(document).on("share:success",function(data){
-                    $('.xa-share').addClass('none');
-                    mask('hide');
-                    //分享成功后就算该用户参与活动
-                    W.getApi().call({
-                        app: 'm/apps/powerme',
-                        resource: 'powerme_participance',
-                        method: 'post',
-                        args: {
-                            webapp_owner_id: W.webappOwnerId,
-                            id: W.appRecordId,
-                            fid: page_owner_member_id
-                        },
-                        success: function(data) {
-                            console.log(page_owner_name+'成功参与活动');
-                        },
-                        error: function(data) {
-                            console.error(data.errMsg);
-                        }
-                    });
-                });
             },
             error: function(data) {
                 if(data.errMsg == 'is_deleted'){
@@ -377,6 +325,26 @@
         is_powered = member_info.is_powered;
         page_owner_member_id = member_info.page_owner_member_id;
         updateBtnStatus();
+    }
+
+    function participate_red_packet(){
+        //进入页面就算参与拼红包活动
+        W.getApi().call({
+            app: 'm/apps/red_packet',
+            resource: 'red_packet_participance',
+            method: 'post',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: page_owner_member_id
+            },
+            success: function(data) {
+                console.log(page_owner_name+'成功参与活动');
+            },
+            error: function(data) {
+                console.error(data.errMsg);
+            }
+        });
     }
 
     function showTop100(data){
@@ -436,27 +404,6 @@
         },990);
     }
 
-    function showMyRank(){
-        var $win = $(window);
-        var $top = $('.wa-top100');
-        var rect;
-        var djage = function(){
-            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
-        };
-        var toggle_show = function(){
-            rect = $top[0].getBoundingClientRect();
-            if(rect && djage()){
-                $('.wa-masterinfo').css('opacity',0.86);
-            }else{
-                $('.wa-masterinfo').css('opacity',0);
-            }
-        };
-        toggle_show();
-        window.onscroll = function(){
-            toggle_show();
-        };
-    }
-
     function openGuideMask(){
         mask('show');
         $('.xa-share').removeClass('none');
@@ -486,8 +433,8 @@
         }
         is_powered = true;
         W.getApi().call({
-            app: 'm/apps/powerme',
-            resource: 'powerme_participance',
+            app: 'm/apps/red_packet',
+            resource: 'red_packet_participance',
             method: 'put',
             args: {
                 webapp_owner_id: W.webappOwnerId,
