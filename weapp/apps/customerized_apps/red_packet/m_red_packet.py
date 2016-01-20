@@ -79,7 +79,7 @@ class MRedPacket(resource.Resource):
 		timing = 0
 		mpUserPreviewName = ''
 		is_already_participanted = False
-		is_powered = False
+		is_helped = False
 		self_page = False
 		page_owner_name = ''
 		page_owner_member_id = 0
@@ -115,19 +115,19 @@ class MRedPacket(resource.Resource):
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 
 				#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
-				# clear_non_member_power_info(record_id)
+				# clear_non_member_helper_info(record_id)
 
-				curr_member_power_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
-				if curr_member_power_info.count()> 0:
-					curr_member_power_info = curr_member_power_info.first()
+				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
+				if curr_member_red_packet_info.count()> 0:
+					curr_member_red_packet_info = curr_member_red_packet_info.first()
 				else:
-					curr_member_power_info = app_models.RedPacketParticipance(
+					curr_member_red_packet_info = app_models.RedPacketParticipance(
 						belong_to = record_id,
 						member_id = member_id,
 						created_at = datetime.now()
 					)
-					curr_member_power_info.save()
-				is_already_participanted = curr_member_power_info.has_join
+					curr_member_red_packet_info.save()
+				is_already_participanted = curr_member_red_packet_info.has_join
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
@@ -137,8 +137,8 @@ class MRedPacket(resource.Resource):
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
-					if curr_member_power_info.powered_member_id:
-						is_powered = True if fid in curr_member_power_info.powered_member_id and isMember else False
+					if curr_member_red_packet_info.helped_member_id:
+						is_helped = True if fid in curr_member_red_packet_info.helped_member_id and isMember else False
 			else:
 				response.errMsg = u'活动信息出错'
 				return response.get_response()
@@ -174,7 +174,7 @@ class MRedPacket(resource.Resource):
 			'timing': timing,
 			'mpUserPreviewName': mpUserPreviewName,
 			'is_already_participanted': is_already_participanted,
-			'is_powered': is_powered,
+			'is_helped': is_helped,
 			'self_page': self_page,
 			'member_id': member_id,
 			'page_owner_name': page_owner_name,
