@@ -151,9 +151,6 @@
 					{{if (item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
-					{{if (item.status === '进行中' || item.status === '未开始')}}
-					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
-					{{/if}}
 					<a href="javascript:void(0)" class="xa-pause-to-clean-history xui-hide" data-id=${item.id}>暂停</a>
 				</td>
 			</tr>

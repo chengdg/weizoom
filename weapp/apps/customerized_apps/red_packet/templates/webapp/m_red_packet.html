@@ -292,6 +292,8 @@
                 console.log(data);
                 //渲染按钮状态
                 updateActivityStatus(data);
+                //更新金额数字
+                updateMoneyInfo(data);
                 //启动倒计时
                 renderTime(data.member_info.timing);
                 //渲染排名
@@ -325,6 +327,14 @@
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
         updateBtnStatus();
+    }
+
+    function updateMoneyInfo(data){
+        member_info = data.member_info;
+        red_packet_money = member_info.red_packet_money;
+        current_money = member_info.current_money;
+        $('.wa-i-current_money').text(current_money+'元');
+        $('.wa-i-red_packet_money').text('总金额'+red_packet_money+'元');
     }
 
     function participate_red_packet(){

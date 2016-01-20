@@ -5,13 +5,13 @@ Copyright (c) 2011-2012 Weizoom Inc
 /**
  * 对话框
  */
-ensureNS('W.dialog.app.powerme');
-W.dialog.app.powerme.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
+ensureNS('W.dialog.app.red_packet');
+W.dialog.app.red_packet.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	events: _.extend({
 	}, W.dialog.Dialog.prototype.events),
 	
 	templates: {
-		dialogTmpl: '#app-powerme-viewParticipanceDataDialog-dialog-tmpl'
+		dialogTmpl: '#app-red_packet-viewParticipanceDataDialog-dialog-tmpl'
 	},
 	
 	onInitialize: function(options) {
@@ -27,8 +27,8 @@ W.dialog.app.powerme.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 	afterShow: function(options) {
 		if (this.activityId) {
 			W.getApi().call({
-				app: 'apps/powerme',
-				resource: 'powerme_participance',
+				app: 'apps/red_packet',
+				resource: 'red_packet_participance',
 				scope: this,
 				args: {
 					id: this.activityId

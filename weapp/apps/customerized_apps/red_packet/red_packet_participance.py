@@ -110,6 +110,7 @@ class RedPacketParticipance(resource.Resource):
 				owner_id = int(fid),
 				helper_member_id = member_id,
 				helper_member_name = request.member.username_for_html,
+				help_money = random_money,
 				has_helped = has_helped,
 				created_at = datetime.now()
 			)
@@ -140,7 +141,7 @@ class RedPacketParticipance(resource.Resource):
 				random_packets_number = float(red_packet_info.random_packets_number)
 				if random_packets_number > all_participate.count():
 					random_average = random_total_money/random_packets_number #红包金额/红包个数
-					red_packet_money = random_average + red_packet_info.random_random_number_list.pop()
+					red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
 				else:
 					response = create_response(500)
 					response.errMsg = u'红包已被抢完啦 下次早点来哦'
