@@ -183,7 +183,7 @@
 
 {% block js %}
 <script type="text/javascript">
-    var is_powered = true;
+    var is_helped = true;
     var is_self_page = true;
     var page_owner_name = '';
     var page_owner_member_id = '';
@@ -212,6 +212,8 @@
         }
         //如果是自己的主页
         if(is_self_page){
+            //参与活动
+            participate_red_packet();
             $('.wa-using').text('邀请好友 帮我拼红包').on('click', openGuideMask).show();
         }else{
             var using_msg;
@@ -219,7 +221,7 @@
             var $powerBtn = $('.wa-power');
             $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
-                if(is_powered){
+                if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
                         openGuideMask();
@@ -227,7 +229,7 @@
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
                    $powerBtn.on('click', function(){
-                       if(is_powered){
+                       if(is_helped){
                            openGuideMask();
                        }else{
                            powerYou();
@@ -235,7 +237,7 @@
                    }).show();
                 }
             }else{
-                if(is_powered){
+                if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
                         openGuideMask();
@@ -292,8 +294,6 @@
                 updateActivityStatus(data);
                 //启动倒计时
                 renderTime(data.member_info.timing);
-                //参与活动
-                participate_red_packet();
                 //渲染排名
 {#                showTop100(data);#}
                 //隐藏loading动画元素
@@ -322,7 +322,7 @@
         W.isMember = member_info.isMember;
         //TODO 未关注会员处理
 
-        is_powered = member_info.is_powered;
+        is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
         updateBtnStatus();
     }
@@ -422,7 +422,7 @@
     }
     function powerYou(){
         var $attention = $('.xa-attention-guest');
-        if (is_powered) {
+        if (is_helped) {
             if(!W.isMember){
                 $attention.find('.xa-attention-tip').show();
                 $attention.find('img').attr('src', new_qrcode_url);
@@ -431,7 +431,7 @@
             }
             return
         }
-        is_powered = true;
+        is_helped = true;
         W.getApi().call({
             app: 'm/apps/red_packet',
             resource: 'red_packet_participance',
@@ -454,9 +454,9 @@
             },
             error: function(data) {
                 if(data.errMsg){
-                    if(data.errMsg != '只能助力一次'){
+                    if(data.errMsg != '只能点赞一次'){
                         wuiAlert(data.errMsg);
-                        is_powered = false;
+                        is_helped = false;
                     }else{
                         if(!W.isMember){
                             $attention.find('.xa-attention-tip').show();
