@@ -24,9 +24,9 @@ from modules.member.models import Member
 FIRST_NAV = 'apps'
 COUNT_PER_PAGE = 20
 
-class PowerMeParticipance(resource.Resource):
-	app = 'apps/powerme'
-	resource = 'powerme_participance'
+class RedPacketParticipance(resource.Resource):
+	app = 'apps/red_packet'
+	resource = 'red_packet_participance'
 	
 	@login_required
 	def api_get(request):
@@ -34,8 +34,8 @@ class PowerMeParticipance(resource.Resource):
 		响应GET api
 		"""
 		if 'id' in request.GET:
-			powerme_participance = app_models.PowerMeParticipance.objects.get(id=request.GET['id'])
-			data = powerme_participance.to_json()
+			red_packet_participance = app_models.RedPacketParticipance.objects.get(id=request.GET['id'])
+			data = red_packet_participance.to_json()
 		else:
 			data = {}
 		response = create_response(200)
@@ -49,7 +49,7 @@ class PowerMeParticipance(resource.Resource):
 		try:
 
 			member_id = request.member.id
-			power_id = request.POST['id']
+			red_packet_id = request.POST['id']
 			fid = request.POST['fid']
 			try:
 				fid_member = Member.objects.get(id=fid)
@@ -62,57 +62,57 @@ class PowerMeParticipance(resource.Resource):
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
 			#更新当前member的参与信息
-			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
-			ids_tmp = curr_member_power_info.powered_member_id
+			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
+			ids_tmp = curr_member_red_packet_info.powered_member_id
 			#并发问题临时解决方案 ---start
 			control_data = {}
-			control_data['belong_to'] = power_id
+			control_data['belong_to'] = red_packet_id
 			control_data['member_id'] = member_id
-			control_data['powered_member_id'] = int(fid)
-			control_data['powerme_control'] = datetime.now().strftime('%Y-%m-%d')
+			control_data['helped_member_id'] = int(fid)
+			control_data['red_packet_control'] = datetime.now().strftime('%Y-%m-%d')
 			try:
-				control = app_models.PowerMeControl(**control_data)
+				control = app_models.RedPacketControl(**control_data)
 				control.save()
 			except:
 				response = create_response(500)
-				response.errMsg = u'只能助力一次'
+				response.errMsg = u'只能帮助一次'
 				return response.get_response()
 			#并发问题临时解决方案 ---end
 			if not ids_tmp:
 				ids_tmp = [fid]
 			else:
 				ids_tmp.append(fid)
-			curr_member_power_info.update(set__powered_member_id=ids_tmp)
-			#更新被助力者信息
-			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid)).first()
+			curr_member_red_packet_info.update(set__powered_member_id=ids_tmp)
+			#更新被帮助者信息
+			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
-			if not powered_member_info.has_join:
-				powered_member_info.update(set__has_join=True)
-			#记录每一次未参与人给予的助力,已关注的则直接计算助力值
+			if not helped_member_info.has_join:
+				helped_member_info.update(set__has_join=True)
+			#记录每一次未参与人给予的帮助,已关注的则直接计算帮助值
 			if not request.member.is_subscribed:
-				power_log = app_models.PowerLog(
-					belong_to = power_id,
+				power_log = app_models.RedPacketLog(
+					belong_to = red_packet_id,
 					power_member_id = member_id,
 					be_powered_member_id = int(fid)
 				)
 				power_log.save()
-				has_powered = False
+				has_helped = False
 			else:
-				powered_member_info.update(inc__power=1)
-				has_powered = True
-			detail_log = app_models.PoweredDetail(
-				belong_to = power_id,
+				helped_member_info.update(inc__money=1)
+				has_helped = True
+			detail_log = app_models.RedPacketDetail(
+				belong_to = red_packet_id,
 				owner_id = int(fid),
-				power_member_id = member_id,
-				power_member_name = request.member.username_for_html,
-				has_powered = has_powered,
+				helper_member_id = member_id,
+				helper_member_name = request.member.username_for_html,
+				has_helped = has_helped,
 				created_at = datetime.now()
 			)
 			detail_log.save()
 		except Exception,e:
 			print e
 			response = create_response(500)
-			response.errMsg = u'助力失败'
+			response.errMsg = u'帮助好友失败'
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
 		response = create_response(200)
@@ -122,13 +122,24 @@ class PowerMeParticipance(resource.Resource):
 		"""
 		响应POST
 		"""
-		power_id = request.POST['id']
+		red_packet_id = request.POST['id']
 		fid = request.POST['fid']
 		try:
 			response = create_response(200)
-			powered_member_info = app_models.PowerMeParticipance.objects.get(belong_to=power_id, member_id=int(fid))
-			if not powered_member_info.has_join:
-				powered_member_info.update(set__has_join=True,set__created_at=datetime.now())
+			helped_member_info = app_models.RedPacketParticipance.objects.get(belong_to=red_packet_id, member_id=int(fid))
+			red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
+			red_packet_type = red_packet_info.type
+			if red_packet_type == 'random':
+				random_total_money = float(red_packet_info.random_total_money)
+				random_packets_number = float(red_packet_info.random_packets_number)
+				random_average = random_total_money/random_packets_number
+				random_average_min = random_average
+				# random_average_max =
+			else:
+				regular_packets_number = red_packet_info.regular_packets_number
+				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
+			if not helped_member_info.has_join:
+				helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
 		except Exception,e:
 			print e
 			response = create_response(500)

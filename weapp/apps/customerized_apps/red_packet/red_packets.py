@@ -84,11 +84,11 @@ class RedPackets(resource.Resource):
 			if not p.belong_to in red_packet_id2info:
 				red_packet_id2info[p.belong_to] = {
 					"participant_count": 1,
-					"already_paid_money": p.money if p.red_packet_status else 0
+					"already_paid_money": p.current_money if p.red_packet_status else 0
 				}
 			else:
 				red_packet_id2info[p.belong_to]["participant_count"] += 1
-				red_packet_id2info[p.belong_to]["already_paid_money"] += p.money if p.red_packet_status else 0
+				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if p.red_packet_status else 0
 
 		items = []
 		for data in datas:

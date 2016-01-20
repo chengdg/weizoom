@@ -32,8 +32,6 @@ class MRedPacket(resource.Resource):
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		record = app_models.RedPacket.objects(id=record_id)
-		print('record00')
-		print(record)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
 			return response.get_response()
@@ -96,7 +94,7 @@ class MRedPacket(resource.Resource):
 			record = None
 		elif member:
 			isMember =member.is_subscribed
-			record = app_models.PowerMe.objects(id=record_id)
+			record = app_models.RedPacket.objects(id=record_id)
 			if record.count() >0:
 				record = record.first()
 				#获取公众号昵称
@@ -164,7 +162,6 @@ class MRedPacket(resource.Resource):
 
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 			else:
-				print('53464654654!!!!!!!!!!!!!!!!!')
 				response.errMsg = 'is_deleted_data'
 				return response.get_response()
 
@@ -223,10 +220,7 @@ class MRedPacket(resource.Resource):
 			# 	return HttpResponse(cache_data)
 			
 			record = app_models.RedPacket.objects(id=record_id)
-			print('record1')
-			print(record.count())
 			if record.count() > 0:
-				print('!!!!!!!!!!!!!!!')
 				record = record.first()
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
@@ -242,8 +236,6 @@ class MRedPacket(resource.Resource):
 				elif now_time >= data_end_time:
 					record.update(set__status=app_models.STATUS_STOPED)
 					activity_status = u'已结束'
-				print('activity_status')
-				print(activity_status)
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 
 				#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
@@ -256,8 +248,6 @@ class MRedPacket(resource.Resource):
 
 		else:
 			record = app_models.RedPacket.objects(id=record_id)
-			print('record2')
-			print(record)
 			if record.count() >0:
 				record = record.first()
 
@@ -276,7 +266,6 @@ class MRedPacket(resource.Resource):
 
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 			else:
-				print('record2!!!!!!!!!!!!!!!!!!!!!')
 				c = RequestContext(request, {
 					'is_deleted_data': True
 				})
