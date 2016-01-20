@@ -40,7 +40,7 @@
 
 
 
-/** 
+/**
  * app cover样式
  */
 .wui-appParticipantResult-Cover {
@@ -275,7 +275,7 @@
 	width: 95%;
 }
 
-/** 
+/**
  *
  */
 .wui-submitButton {
@@ -1397,17 +1397,147 @@ li.wui-selectBox-display-table {
 	content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
 }
 
-/*拼红包CSS*/
+/*反馈--end*/
+
+
+/*百宝箱 拼红包 red packet CSS--start*/
+.wui-red_packet-container{
+    position: relative;
+    background-color:#B90000;
+    /*最好可以在容器这边做一个媒体查询，以适应平板*/
+}
+.wui-red_packet-container .wui-i-background-image img{
+    width: 100%;
+    height: auto;
+    max-width: 200rem;
+}
+
+.wui-red_packet-container .wui-i-help_group{
+    position: absolute;
+    /*background: blue;*/
+    width: 100%;
+    top:0;
+}
+
+.wui-i-help_group .wui-i-shop_circle{
+    background: #E25102;
+    width: 40px;
+    height: 40px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    float: left;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+.wui-i-help_group .wui-i-rules{
+    margin-top: 10px;
+    font-weight: normal;
+    float: right;
+    width: 75px;
+    height: 21px;
+    line-height: 21px;
+    text-align: center;
+    background-color: #FEF9B7;
+    font-size: small;
+    color: #B30000;
+    border: 1px solid #8E0000;
+    border-radius: 15px;
+}
+
+.wui-red_packet-container .wui-i-userinfo_group{
+    position: absolute;
+    /*background: blue;*/
+    width: 100%;
+    top:11rem;
+}
+.wui-red_packet-container .wui-i-avatar_group{
+    width:100%;
+    text-align: center;
+}
+
+.wui-red_packet-container .wui-i-avatar_group .wui-i-avatar_circle{
+    width: 60px;
+    height: 60px;
+    border:3px solid #FFFDFE;
+    background: red;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.wui-red_packet-container .wui-i-money_group{
+    color:#FFF059;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.wui-i-money_group .wui-i-text{
+    font-size: smaller;
+}
+.wui-i-money_group .wui-i-money{
+    font-size: 1.7rem;
+    margin-top: 5px;
+}
+
+.wui-red_packet-container .wui-i-powerbar_group{
+    position: relative;
+    top:-2rem;
+    width: 100%;
+    height: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wui-i-powerbar_group .wui-i-percentbox{
+    font-size:smaller;
+    color:white;
+    width: 40px;
+    height: 40px;
+    background: no-repeat url("/termite_static/img/component/redpacket/icon_sprite.png");
+    background-size: 291%;
+    background-position: 2px 0px;
+    margin-left: 9%;
+    text-align: center;
+    padding-top: 10px;
+}
+.wui-i-powerbar_group .wui-i-bar{
+    width: 70%;
+    height: 4px;
+    background:#500001;
+    margin-left: auto;
+    margin-right: auto;
+}
+.wui-i-powerbar_group .wui-i-power_money{
+    width: 70%;
+    margin:2px auto 2px auto;
+    font-size:smaller;
+    color:#FFF059;
+    text-align: right;
+}
+
 .wui-red_packet-container .wui-i-timing{
     font-weight: bold;
     min-height: 33px;
     font-size: 1rem;
+    color:white;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: #D40000;
+    width: 78%;
+    border-radius: 5px;
+    padding-bottom: 1px;
 }
 .wui-red_packet-container .wui-i-timing b{
     margin-right: 5px;
     height: 100%;
-    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
-    background-position: -170px -12px;
+    background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
+    background-size: 520%;
+    background-position: -94px -4px;
     font-size: 0.8rem;
     padding: 7px 5px;
     color: white;
@@ -1415,10 +1545,18 @@ li.wui-selectBox-display-table {
     font-family: "Arial", "黑体";
 }
 .wui-red_packet-container .wui-i-timing i{
-    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
-    background-size: 900% 200%;
+    background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
+    background-size: 353%;
+    background-position: -46px -6px;
     display: inline-block;
     height: 35px;
-    margin-bottom: -15px;
     width: 33px;
+    margin-bottom: -15px;
 }
+.wui-i-timing .wui-i-timer-text{
+    font-weight:normal;
+    font-size: smaller;
+}
+
+
+/*百宝箱 拼红包 red packet CSS-- end*/

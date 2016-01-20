@@ -12,37 +12,69 @@
             {% endif %}
         {% else %}yellow{% endif %}">
         <div class="wui-i-background-image">
-            {% if component.model.background_image %}
+<!--             {% if component.model.background_image %}
                 <img src="{{ component.model.background_image }}">
-            {% else %}
-                <img src="/termite_static/img/component/powerme/top_default.png" style="padding: 80px 0;width: 150px;height: 110px;">
-            {% endif %}
+            {% else %} -->
+                <img src="/termite_static/img/component/redpacket/background.png">
+            <!-- {% endif %} -->
         </div>
         <div class="wui-i-body">
+            <div class="wui-i-help_group">
+                <div class="wui-i-shop_circle"></div>
+                <div class="wui-i-rules xa-rules">
+                    <div class="wui-i-title">
+                        <span class="wui-i-rules-title-content">
+                            <i class="wui-i-star"></i><p>活动规则</p><i class="wui-i-star"></i>
+                        </span>
+                    </div>
+                    <div class="wui-i-rules-content">
+                        {{component.model.rules|safe}}
+                    </div>
+                </div>
+            </div>
+            <div class="wui-i-userinfo_group">
+                <div class="wui-i-avatar_group">
+                    <div class = "wui-i-avatar_circle"></div>
+                </div>
+                <div class = "wui-i-money_group">
+                    <div class="wui-i-text">
+                        <p>当前金额</p>
+                    </div>
+                    <div class="wui-i-money">
+                        0.00元
+                    </div>
+                </div>
+            </div>
+            <div class="wui-i-powerbar_group">
+                <div class="wui-i-percentbox">
+                    0%
+                </div>
+                <div class="wui-i-bar">
+
+                </div>
+                <div class="wui-i-power_money">
+                    <p>总金额0.00元</p>
+                </div>
+            </div>
             <div style="display: none" class="wui-i-start_time">{{component.model.start_time}}</div>
             <div style="display: none" class="wui-i-end_time">{{component.model.end_time}}</div>
             <div class="wui-i-timing wa-timing {% if component.model.timing.timing %}{% if not component.model.timing.timing.select %}hide{% endif %}{% endif %}">
-                <i></i>:
-                <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
-                <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
-                <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
-                <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
+                <div class="wui-i-timing wui-i-timer">
+                    <i></i>:
+                    <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>:
+                    <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>:
+                    <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>:
+                    <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>
+                </div>
+                <div class="wui-i-timer-text">
+                    &nbsp &nbsp &nbsp 天 &nbsp &nbsp 时  &nbsp  &nbsp 分  &nbsp  &nbsp 秒
+                </div>
             </div>
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
                 <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
                 <button class="wui-i-btn-power wa-power wui-hide"><span class="wa-power-btn-action">帮</span><span class="wa-mobile_solution">asdasda</span><span>助力</span></button>
                 <button class="wui-i-btn-using wa-using wui-hide">我也要参加</button>
-            </div>
-            <div class="wui-i-rules xa-rules">
-                <div class="wui-i-title">
-                    <span class="wui-i-rules-title-content">
-                        <i class="wui-i-star"></i><b>活动规则</b><i class="wui-i-star"></i>
-                    </span>
-                </div>
-                <div class="wui-i-rules-content">
-                    {{component.model.rules|safe}}
-                </div>
             </div>
         </div>
     </div>
