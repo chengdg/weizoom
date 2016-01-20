@@ -143,7 +143,7 @@
 					参与会员折扣
 					</label>
 				</div>
-	      </div>
+			</div>
 		</fieldset>
 
 		<fieldset>
@@ -285,6 +285,18 @@
 				</div>
 
 			</div>
+
+		<div class="form-group">
+				<label class="control-label col-sm-2 col-sm-offset-1" for="is_delivery">配送时间：</label>
+				<div id='delivery_time' class="col-sm-9 " style="height:60px;">
+					<label class="checkbox xui-category">
+						<input name="is_delivery" class="is_delivery_selected xui-inlineblock" type="checkbox" {% if product.is_delivery %}checked{% endif %} id="is_delivery">
+						<span class="xui-bold">需要</span>
+						<i class="xui-tips xa-tips" ></i>
+					</label>
+				</div>
+		</div>
+
 		</fieldset>
 	</section>
 
@@ -446,6 +458,8 @@ $('.xa-selectImage').click(function(){return false;})
 			errorHint: ''
 		}
 	}
+
+
 	$(document).ready(function() {
 		var view = new W.view.mall.ProductEditor({
 			el: '.xui-editProductPage'
@@ -459,7 +473,24 @@ $('.xa-selectImage').click(function(){return false;})
 			}
 			$div.hide();
 		}
+		
+
+		$('.xa-tips').popover({
+			template:"<div class='popover'><div class='popover-content p0'></div></div>",
+			content : "当选择“需要”时，前台-提交订单页会出现配送时间必填项，以便顾<br > 客选择合适的配送时间。关闭则会从前台消失。",
+			trigger : "hover",
+			html : true,
+			placement : "bottom"
+		});
+
+
 	});
+
+
+
+
+
+
 </script>
 
 <script type="text/javascript">

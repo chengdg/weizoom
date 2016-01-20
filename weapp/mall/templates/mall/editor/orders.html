@@ -222,7 +222,7 @@
 						{{if order.member_id > 0}}
 							<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
 							<span class="xui-buyerHint xa-buyerHint pr">
-								<i class="xa-buyerHintImg" data-addr="${order.ship_address}" data-tel="${order.ship_tel}" data-message="${order.customer_message}" data-bill-type="${order.bill_type}" data-bill="${order.bill}"></i>
+								<i class="xa-buyerHintImg" data-delivery_time="${order.delivery_time}" data-addr="${order.ship_address}" data-tel="${order.ship_tel}" data-message="${order.customer_message}" data-bill-type="${order.bill_type}" data-bill="${order.bill}"></i>
 							</span>
 						{{else}}
 							{{html order.buyer_name}}
@@ -497,6 +497,7 @@ $(document).ready(function() {
 			position:'top'
 		});
 
+		var delivery_time = $el.data('delivery_time');
 		var addr = $el.data('addr');
 		var tel = $el.data('tel');
 		var message = $el.data('message');
@@ -512,6 +513,7 @@ $(document).ready(function() {
 
 		buyerHintView.show({
 			$action: $el,
+			delivery_time: delivery_time,
 			addr: addr,
 			tel: tel,
 			message: message,

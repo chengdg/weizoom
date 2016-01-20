@@ -403,7 +403,8 @@ class Product(resource.Resource):
             stocks=min_limit,
             is_member_product=request.POST.get("is_member_product", False) == 'on',
             supplier=request.POST.get("supplier", 0),
-            purchase_price=purchase_price
+            purchase_price=purchase_price,
+            is_delivery=request.POST.get('is_delivery', False)
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -756,6 +757,7 @@ class Product(resource.Resource):
             'is_member_product': request.POST.get("is_member_product", False) == 'on',
             'supplier': request.POST.get("supplier", 0),
             'purchase_price': purchase_price,
+            'is_delivery':request.POST.get('is_delivery', False),
         }
         # 微众商城代码
         # if request.POST.get('weshop_sync', None):

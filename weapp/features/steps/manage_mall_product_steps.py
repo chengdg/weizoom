@@ -417,6 +417,7 @@ def __get_product_from_web_page(context, product_name):
         "supplier": 0 if not supplier else dict(supplier).get(product.supplier),
         "purchase_price": product.purchase_price,
         "promotion_title": product.promotion_title,
+        "distribution_time": 'on' if product.is_delivery else 'off',
     }
 
     #填充运费
@@ -441,6 +442,9 @@ def __get_product_from_web_page(context, product_name):
         actual['pay_interfaces'].append({'type': u"在线支付"})
     if product.is_use_cod_pay_interface:
         actual['pay_interfaces'].append({'type': u"货到付款"})
+
+    # 填充是否添加配送时间
+    # actual['is_delivery'] = product.get("is_delivery",False)
 
     #填充model信息
     if product.is_use_custom_model:
@@ -536,7 +540,8 @@ def __supplement_product(webapp_owner_id, product):
         "pay_interface_online": True,
         "pay_interface_cod": True,
         "is_enable_cod_pay_interface": True,
-        "is_enable_online_pay_interface": True
+        "is_enable_online_pay_interface": True,
+        "is_delivery": False,
     }
     # 支付方式
     pay_interface_online, pay_interface_cod = __pay_interface(
@@ -549,7 +554,9 @@ def __supplement_product(webapp_owner_id, product):
     if pay_interface_online is False:
         product_prototype.pop('pay_interface_online')
         product_prototype.pop('is_enable_online_pay_interface')
-
+    # 配送时间
+    if product.has_key('distribution_time'):
+        product_prototype["is_delivery"] = product['distribution_time']
     # 运费
     postage = product.get('postage', None)
     if postage:
