@@ -672,7 +672,7 @@ class CouponRecord(models.Model):
 	pre_person_count = models.IntegerField(default=1) #每人几张
 	person_count = models.IntegerField(default=0) #发放的人数
 	coupon_count = models.IntegerField(default=0) #发放的张数
-	send_time = models.DateTimeField(auto_now=True) #发放时间
+	send_time = models.DateTimeField(auto_now_add=True) #发放时间
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 
 	class Meta(object):
