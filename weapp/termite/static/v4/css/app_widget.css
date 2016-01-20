@@ -1555,9 +1555,13 @@ li.wui-selectBox-display-table {
     width: 33px;
     margin-bottom: -15px;
 }
+.wui-red_packet-container .wui-i-timing .wui-i-timer{
+    padding-top: 3px;
+}
 .wui-red_packet-container .wui-i-timing .wui-i-timer-text{
     font-weight:normal;
     font-size: smaller;
+    padding-bottom: 3px;
 }
 
 .wui-red_packet-container .wui-i-btngroup{
