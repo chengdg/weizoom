@@ -194,6 +194,7 @@ class Product(models.Model):
 	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
 	supplier = models.IntegerField(default=0) # 供货商
 	purchase_price = models.FloatField(default=0.0) # 进货价格
+	is_enable_bill = models.BooleanField(default=False)  # 商品是否开具发票
 
 	class Meta(object):
 		db_table = 'mall_product'
@@ -2475,7 +2476,7 @@ class ProductReviewPicture(models.Model):
         verbose_name_plural = "商品评价图片"
         db_table = "mall_product_review_picture"
 
-class MallOrderFromSharedRecord(models.Model):        
+class MallOrderFromSharedRecord(models.Model):
     """
     add by bert 记录通过分享链接下单 订单号和分享者信息
     """
@@ -2484,7 +2485,7 @@ class MallOrderFromSharedRecord(models.Model):
     url = models.CharField(default='', max_length=255)
     is_updated = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)  # 添加时间
-    
+
     class Meta:
         verbose_name = "通过分享链接订单"
         verbose_name_plural = "通过分享链接订单"

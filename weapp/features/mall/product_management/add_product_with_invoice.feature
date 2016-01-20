@@ -60,12 +60,12 @@ Scenario:1 添加无规格新商品,支持开票
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
-		{
+		[{
 			"name": "支持开票商品",
 			"category": "",
 			"detail": "商品的详情",
 			"status": "待售",
-			"invoice":ture,
+			"invoice":true,
 			"model": {
 					"models": {
 						"standard": {
@@ -76,7 +76,7 @@ Scenario:1 添加无规格新商品,支持开票
 						}
 					}
 				}
-		}
+		}]
 		"""
 	Then jobs能获取商品'支持开票商品'
 		"""
@@ -84,8 +84,7 @@ Scenario:1 添加无规格新商品,支持开票
 			"name": "支持开票商品",
 			"category": "",
 			"detail": "商品的详情",
-			"status": "待售",
-			"invoice":ture,
+			"invoice":true,
 			"is_use_custom_model": "否",
 			"model": {
 					"models": {
@@ -108,7 +107,7 @@ Scenario:2 添加多规格新商品,支持开票
 		[{
 			"name": "多规格支持开票",
 			"is_enable_model": "启用规格",
-			"invoice":ture,
+			"invoice":true,
 			"model": {
 				"models": {
 					"黑色 S": {
@@ -124,13 +123,13 @@ Scenario:2 添加多规格新商品,支持开票
 					}
 				}
 			}
-		}]	
+		}]
 		"""
 	Then jobs能获取商品'多规格支持开票'
 		"""
 		{
 			"is_enable_model": "启用规格",
-			"invoice":ture,
+			"invoice":true,
 			"model": {
 				"models": {
 					"黑色 S": {
@@ -154,7 +153,7 @@ Scenario:3 添加新商品,不支持开票
 	Given jobs登录系统
 	And jobs已添加商品
 		"""
-		{
+		[{
 			"name": "不支持开票商品",
 			"category": "",
 			"detail": "商品的详情",
@@ -170,15 +169,14 @@ Scenario:3 添加新商品,不支持开票
 						}
 					}
 				}
-		}
+		}]
 		"""
-	Then jobs能获取商品'支持开票商品'
+	Then jobs能获取商品'不支持开票商品'
 		"""
 		{
 			"name": "不支持开票商品",
 			"category": "",
 			"detail": "商品的详情",
-			"status": "待售",
 			"invoice":false,
 			"is_use_custom_model": "否",
 			"model": {

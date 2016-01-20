@@ -384,6 +384,11 @@ class Product(resource.Resource):
 
         if purchase_price == '':
             purchase_price = 0
+        is_enable_bill = request.POST.get('is_enable_bill', False)
+        if is_enable_bill in [True, '1', 'True']:
+            is_enable_bill=True
+        else:
+            is_enable_bill=False
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -403,7 +408,8 @@ class Product(resource.Resource):
             stocks=min_limit,
             is_member_product=request.POST.get("is_member_product", False) == 'on',
             supplier=request.POST.get("supplier", 0),
-            purchase_price=purchase_price
+            purchase_price=purchase_price,
+            is_enable_bill=is_enable_bill
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -427,7 +433,7 @@ class Product(resource.Resource):
             weight=standard_model['weight'],
             stock_type=standard_model['stock_type'],
             stocks=standard_model['stocks'],
-            user_code=standard_model['user_code'], 
+            user_code=standard_model['user_code'],
             is_deleted=is_deleted
         )
 
@@ -740,6 +746,11 @@ class Product(resource.Resource):
         purchase_price = request.POST.get("purchase_price", '')
         if purchase_price == '':
             purchase_price = 0
+        is_enable_bill = request.POST.get('is_enable_bill', False)
+        if is_enable_bill in [True, '1', 'True']:
+            is_enable_bill=True
+        else:
+            is_enable_bill=False
         param = {
             'name': request.POST.get('name', '').strip(),
             'promotion_title': request.POST.get('promotion_title', '').strip(),
@@ -756,6 +767,7 @@ class Product(resource.Resource):
             'is_member_product': request.POST.get("is_member_product", False) == 'on',
             'supplier': request.POST.get("supplier", 0),
             'purchase_price': purchase_price,
+            'is_enable_bill': is_enable_bill
         }
         # 微众商城代码
         # if request.POST.get('weshop_sync', None):
@@ -849,7 +861,7 @@ class ProductPos(resource.Resource):
             print error_msg
             watchdog_warning(error_msg)
             response = create_response(500)
-        
+
         return response.get_response()
 
     @login_required

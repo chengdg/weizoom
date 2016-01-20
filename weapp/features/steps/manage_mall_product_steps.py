@@ -63,6 +63,7 @@ def step_product_add(context, user):
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
         __process_product_data(product)
         product = __supplement_product(context.webapp_owner_id, product)
+        product['is_enable_bill'] = product.get('invoice', False)
         # 转换供货商
         if 'supplier' in product:
             response = context.client.get('/mall2/api/supplier_list/',data={"name":product['supplier']})
@@ -180,7 +181,6 @@ def step_impl(context, user, type_name):
 @then(u"{user}能获取商品规格详情'{product_name}'")
 def get_product_model(context, user, product_name):
     product = __get_product_from_web_page(context, product_name)
-    print product
     expect_dict = {}
     for row in context.table:
         # | 颜色 | 价格(元) | 库存 | 商品编码 | 尺寸
@@ -417,6 +417,7 @@ def __get_product_from_web_page(context, product_name):
         "supplier": 0 if not supplier else dict(supplier).get(product.supplier),
         "purchase_price": product.purchase_price,
         "promotion_title": product.promotion_title,
+        "invoice": product.is_enable_bill
     }
 
     #填充运费
@@ -434,7 +435,7 @@ def __get_product_from_web_page(context, product_name):
         print("product.postage_id={}".format(product.postage_id))
         actual['postage'] = mall_models.PostageConfig.objects.get(
             id=product.postage_id).name
-          
+
 
     # 填充支付方式
     if product.is_use_online_pay_interface:
