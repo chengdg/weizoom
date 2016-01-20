@@ -56,7 +56,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
-			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
 		"""
 	Then jobs获得拼红包活动列表
@@ -97,7 +97,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
-			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
 		"""
 	Then jobs获得拼红包活动列表
