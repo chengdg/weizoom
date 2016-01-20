@@ -410,6 +410,7 @@ class Product(resource.Resource):
             supplier=request.POST.get("supplier", 0),
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill
+            is_delivery=request.POST.get('is_delivery', False)
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
@@ -768,6 +769,7 @@ class Product(resource.Resource):
             'supplier': request.POST.get("supplier", 0),
             'purchase_price': purchase_price,
             'is_enable_bill': is_enable_bill
+            'is_delivery':request.POST.get('is_delivery', False),
         }
         # 微众商城代码
         # if request.POST.get('weshop_sync', None):

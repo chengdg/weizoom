@@ -20,12 +20,14 @@ W.view.mall.BuyerHintView = W.view.common.DropBox.extend({
 	},
     
     showPrivate: function(options) {
+        this.delivery_time = options.delivery_time;
         this.addr = options.addr;
         this.tel = options.tel;
         this.message = options.message;
         this.bill_type = options.bill_type;
         this.bill = options.bill;
         this.$content.html($.tmpl(this.getTemplate(),{
+            delivery_time:this.delivery_time,
             addr:this.addr,
             tel:this.tel,
             message:this.message,

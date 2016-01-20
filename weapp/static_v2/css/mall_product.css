@@ -529,7 +529,24 @@
 .xui-editProductPage select[disabled]{
 	opacity:0.5;
 }
-
+.xui-editProductPage .xui-tips{
+	display: inline-block;
+	width: 13px;
+	height: 13px;
+	margin-bottom: -2px;
+	background: url(/static_v2/img/editor/info.png);
+	-webkit-background-size: 100%;
+	background-size: 100%;
+}
+.xui-editProductPage .xui-tips ~ div.popover{
+	font-size: 12px;
+    max-width: inherit;
+    left: 29px!important;
+    top:10px!important;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 6px 8px;
+}
 /*选择产品规格弹窗*/
 .xui-selectProductModelPropertyDialog .modal-dialog{
 	width: 500px;
