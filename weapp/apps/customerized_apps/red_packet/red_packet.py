@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import json
+import random
 from datetime import datetime
-
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -91,7 +91,31 @@ class RedPacket(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
+		if request.POST['type'] == 'random':
+			"""
+			每次拼手气红包都是取固定金额：总金额/个数，再加上随机的浮动值，得到拼手气红包最终的金额，这里需要在生成拼红包活动时，
+			跟着生成一个随机数的List存到数据库中，随机数数量是红包个数，所有随机数的总和为0
 
+			"""
+			random_random_number_list = []
+			random_number_range = float(data['random_total_money']) * 0.05 #拼手气红包随机数浮动范围为5%
+			random_packets_number = int(data['random_packets_number'])  #拼手气红包红包个数
+			for _ in range(random_packets_number): #在正负浮动范围内生成红包个数个随机数
+				random_random_number_list.append('%.2f'% random.uniform(-random_number_range, random_number_range))
+			total_random = 0 #总随机金额
+			for r in random_random_number_list:
+				total_random += float(r) #计算总随机金额
+			if total_random != 0: #如果总随机金额不等于0，将随机出来的总随机金额与0的差额除以红包个数，分别加到每个随机数上，使之最终总和趋向为0
+				total_random_average = (-total_random) / random_packets_number
+				i = 0
+				total_random = 0 #再次初始化总随机金额
+				for r in random_random_number_list:
+					random_random_number_list[i] = '%.2f'% (float(r) + float(total_random_average))
+					total_random += float(random_random_number_list[i]) #计算平均分配过差额后的总随机金额
+					i += 1
+				if total_random != 0: #如果因为total_random_average产生了0.01上的差别，取反数加到第一个随机数上，使之最终总和为0
+					random_random_number_list[0] = '%.2f'% (float(-total_random) + float(random_random_number_list[0]))
+			data['random_random_number_list'] = random_random_number_list#拼手气红包随机数List
 		red_packet = app_models.RedPacket(**data)
 		red_packet.save()
 		error_msg = None
