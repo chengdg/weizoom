@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import random
 from datetime import datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
@@ -63,7 +64,7 @@ class RedPacketParticipance(resource.Resource):
 				return response.get_response()
 			#更新当前member的参与信息
 			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
-			ids_tmp = curr_member_red_packet_info.powered_member_id
+			ids_tmp = curr_member_red_packet_info.helped_member_id
 			#并发问题临时解决方案 ---start
 			control_data = {}
 			control_data['belong_to'] = red_packet_id
@@ -82,7 +83,7 @@ class RedPacketParticipance(resource.Resource):
 				ids_tmp = [fid]
 			else:
 				ids_tmp.append(fid)
-			curr_member_red_packet_info.update(set__powered_member_id=ids_tmp)
+			curr_member_red_packet_info.update(set__helped_member_id=ids_tmp)
 			#更新被帮助者信息
 			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
@@ -90,15 +91,19 @@ class RedPacketParticipance(resource.Resource):
 				helped_member_info.update(set__has_join=True)
 			#记录每一次未参与人给予的帮助,已关注的则直接计算帮助值
 			if not request.member.is_subscribed:
-				power_log = app_models.RedPacketLog(
+				red_packet_log = app_models.RedPacketLog(
 					belong_to = red_packet_id,
-					power_member_id = member_id,
-					be_powered_member_id = int(fid)
+					helper_member_id = member_id,
+					be_helped_member_id = int(fid)
 				)
-				power_log.save()
+				red_packet_log.save()
 				has_helped = False
 			else:
-				helped_member_info.update(inc__money=1)
+				#随机区间中获得好友帮助的金额
+				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
+				money_range_min,money_range_max = red_packet_info.money_range.split('-')
+				random_money = '%.2f' % random.uniform(float(money_range_min), float(money_range_max))
+				helped_member_info.update(inc__current_money=float(random_money))
 				has_helped = True
 			detail_log = app_models.RedPacketDetail(
 				belong_to = red_packet_id,
