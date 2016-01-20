@@ -110,6 +110,7 @@ class RedPacketParticipance(resource.Resource):
 				owner_id = int(fid),
 				helper_member_id = member_id,
 				helper_member_name = request.member.username_for_html,
+				help_money = random_money,
 				has_helped = has_helped,
 				created_at = datetime.now()
 			)

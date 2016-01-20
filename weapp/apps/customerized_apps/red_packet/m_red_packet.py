@@ -134,9 +134,18 @@ class MRedPacket(resource.Resource):
 					page_owner_name = member.username_size_ten
 					page_owner_member_id = member_id
 					self_page = True
+					red_packet_money = curr_member_red_packet_info.first().red_packet_money
+					current_money = curr_member_red_packet_info.first().current_money
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
+
+					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
+					print('page_owner_member_info.id')
+					print(page_owner_member_info.id)
+					print(page_owner_member_info.has_join)
+					red_packet_money = page_owner_member_info.red_packet_money
+					current_money = page_owner_member_info.current_money
 					if curr_member_red_packet_info.helped_member_id:
 						is_helped = True if fid in curr_member_red_packet_info.helped_member_id and isMember else False
 			else:
@@ -179,7 +188,9 @@ class MRedPacket(resource.Resource):
 			'member_id': member_id,
 			'page_owner_name': page_owner_name,
 			'page_owner_member_id': page_owner_member_id,
-			'activity_status': activity_status
+			'activity_status': activity_status,
+			'red_packet_money': '%.2f' % red_packet_money,
+			'current_money': '%.2f' % current_money
 		}
 
 		response = create_response(200)
