@@ -135,7 +135,7 @@
 						</p>
 						{{if order.payment_time}}
 						<p class="ml15 fl">
-							
+
 							付款时间：${order.payment_time}
 						</p>
 						{{/if}}
@@ -222,7 +222,25 @@
 						{{if order.member_id > 0}}
 							<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
 							<span class="xui-buyerHint xa-buyerHint pr">
-								<i class="xa-buyerHintImg" data-addr="${order.ship_address}" data-tel="${order.ship_tel}" data-message="${order.customer_message}" data-bill-type="${order.bill_type}" data-bill="${order.bill}"></i>
+								<i class="xa-buyerHintImg"
+									data-addr="${order.ship_address}"
+									data-tel="${order.ship_tel}"
+									data-message="${order.customer_message}"
+									{{if order.bill_type == 0}}
+										data-bill-type=""
+										data-bill=""
+									{{else}}
+										{{if order.bill_type == 1}}
+											data-bill-type="个人"
+											data-bill="${order.bill}"
+										{{/if}}
+										{{if order.bill_type == 2}}
+											data-bill-type="公司"
+											data-bill="${order.bill}"
+										{{/if}}
+									{{/if}}
+								>
+								</i>
 							</span>
 						{{else}}
 							{{html order.buyer_name}}
