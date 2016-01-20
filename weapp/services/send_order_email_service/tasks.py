@@ -104,7 +104,7 @@ def send_order_email(request,args):
 			status=status,
 			order_id=order.order_id,
 			# buyed_time=time.strftime('%Y-%m-%d %H:%M', time.localtime(time.time())),
-			buyed_time=datetime.strftime(order.created_at, '%Y-%m-%d %H:%M'),
+			buyed_time=order.created_at,
 			order_status=order_status,
 			buy_count=buy_count,
 			total_price=order.final_price,
