@@ -1404,6 +1404,7 @@ li.wui-selectBox-display-table {
 .wui-red_packet-container{
     position: relative;
     background-color:#B90000;
+    height: 550px;
     /*最好可以在容器这边做一个媒体查询，以适应平板*/
 }
 .wui-red_packet-container .wui-i-background-image img{
@@ -1419,7 +1420,7 @@ li.wui-selectBox-display-table {
     top:0;
 }
 
-.wui-i-help_group .wui-i-shop_circle{
+.wui-red_packet-container .wui-i-help_group .wui-i-shop_circle{
     background: #E25102;
     width: 40px;
     height: 40px;
@@ -1430,7 +1431,7 @@ li.wui-selectBox-display-table {
     margin-top: 3px;
     margin-left: 3px;
 }
-.wui-i-help_group .wui-i-rules{
+.wui-red_packet-container .wui-i-help_group .wui-i-rules{
     margin-top: 10px;
     font-weight: normal;
     float: right;
@@ -1443,6 +1444,7 @@ li.wui-selectBox-display-table {
     color: #B30000;
     border: 1px solid #8E0000;
     border-radius: 15px;
+    margin-right: 2px;
 }
 
 .wui-red_packet-container .wui-i-userinfo_group{
@@ -1474,10 +1476,10 @@ li.wui-selectBox-display-table {
     margin-top: 5px;
 }
 
-.wui-i-money_group .wui-i-text{
+.wui-red_packet-container .wui-i-money_group .wui-i-text{
     font-size: smaller;
 }
-.wui-i-money_group .wui-i-money{
+.wui-red_packet-container .wui-i-money_group .wui-i-money{
     font-size: 1.7rem;
     margin-top: 5px;
 }
@@ -1491,7 +1493,7 @@ li.wui-selectBox-display-table {
     margin-right: auto;
 }
 
-.wui-i-powerbar_group .wui-i-percentbox{
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
     font-size:smaller;
     color:white;
     width: 40px;
@@ -1503,16 +1505,16 @@ li.wui-selectBox-display-table {
     text-align: center;
     padding-top: 10px;
 }
-.wui-i-powerbar_group .wui-i-bar{
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-bar{
     width: 70%;
     height: 4px;
     background:#500001;
     margin-left: auto;
     margin-right: auto;
 }
-.wui-i-powerbar_group .wui-i-power_money{
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-power_money{
     width: 70%;
-    margin:2px auto 2px auto;
+    margin: 5px auto 5px auto;
     font-size:smaller;
     color:#FFF059;
     text-align: right;
@@ -1553,10 +1555,43 @@ li.wui-selectBox-display-table {
     width: 33px;
     margin-bottom: -15px;
 }
-.wui-i-timing .wui-i-timer-text{
+.wui-red_packet-container .wui-i-timing .wui-i-timer{
+    padding-top: 3px;
+}
+.wui-red_packet-container .wui-i-timing .wui-i-timer-text{
     font-weight:normal;
     font-size: smaller;
+    padding-bottom: 3px;
 }
 
+.wui-red_packet-container .wui-i-btngroup{
+    text-align: center;
+    margin-top: 20px;
+}
+.wui-red_packet-container .wui-i-btngroup button{
+    text-align: center;
+    font-weight: bold;
+    /*font-size: 1.5rem;*/
+    color:#CD0E06;
+    background:#FFC600;
+    border: 0px;
+    border-radius: 1px;
+    width: 80%;
+    height: 2.5rem;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
+    color:#EAEAEA;
+    background: #999999;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-notready{
+    color:#EAEAEA;
+    background: #999999;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-power{
+    width: 40%;
+}
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-using{
+    width: 40%;
+}
 
 /*百宝箱 拼红包 red packet CSS-- end*/

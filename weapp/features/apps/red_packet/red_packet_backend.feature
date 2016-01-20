@@ -19,20 +19,20 @@ Feature: 新建红包活动
 Background:
 	Given jobs登录系统
 	When jobs添加带参数二维码
-	"""
-	[{
-		"code_name":"带参数二维码1",
-		"create_time":"2015-10-10 10:20:30",
-		"prize_type":"无奖励",
-		"member_rank":"普通会员",
-		"tags":"未分组",
-		"is_attention_in":"false",
-		"remarks":"",
-		"is_relation_member":"false",
-		"reply_type":"文字",
-		scan_code_reply":"感谢您的参与，为好友点赞成功！"
-	}]
-	"""
+		"""
+		[{
+			"code_name":"带参数二维码1",
+			"create_time":"2015-10-10 10:20:30",
+			"prize_type":"无奖励",
+			"member_rank":"普通会员",
+			"tags":"未分组",
+			"is_attention_in":"false",
+			"remarks":"",
+			"is_relation_member":"false",
+			"reply_type":"文字",
+			"scan_code_reply":"感谢您的参与，为好友点赞成功！"
+		}]
+		"""
 @mall2 @apps_red_packet @apps_red_packet_backend
 Scenario:1 新建拼手气红包活动，用户二维码为空
 	Given jobs登录系统
