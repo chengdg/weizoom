@@ -133,7 +133,7 @@ class RedPacketParticipance(resource.Resource):
 				random_total_money = float(red_packet_info.random_total_money)
 				random_packets_number = float(red_packet_info.random_packets_number)
 				random_average = random_total_money/random_packets_number
-				random_average_min = random_average
+				red_packet_money = random_average
 				# random_average_max =
 			else:
 				regular_packets_number = red_packet_info.regular_packets_number
