@@ -1404,7 +1404,8 @@ li.wui-selectBox-display-table {
 .wui-red_packet-container{
     position: relative;
     background-color:#B90000;
-    height: 550px;
+    height: auto;
+    padding-bottom: 40px;
     /*最好可以在容器这边做一个媒体查询，以适应平板*/
 }
 .wui-red_packet-container .wui-i-background-image img{
@@ -1616,6 +1617,77 @@ li.wui-selectBox-display-table {
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-using{
     width: 40%;
+}
+
+.wui-red_packet-container .wui-i-states{
+
+}
+.wui-red_packet-container .wui-i-states .wui-i-title{
+    text-align: center;
+    color: white;
+    font-weight: normal;
+    font-size: small;
+    margin-top: 9px;
+    margin-bottom: 9px;
+}
+.wui-red_packet-container .wui-i-states .xui-top100{
+    width:90%;
+    height: 12rem;
+    background:#CD292A;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wui-red_packet-container .xui-top100 .wui-i-friend{
+    float: left;
+    width: 50%;
+    height: 60px;
+    /*background: green;*/
+}
+.wui-red_packet-container .xui-top100 .wui-i-avatarbox{
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 60px;
+    text-align: center;
+    line-height: 40px;
+}
+.wui-red_packet-container .xui-top100 .wui-i-avatar{
+    position: relative;
+    top:10px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #FFFDFE;
+    background: #E25102;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.wui-red_packet-container .xui-top100 .wui-i-info{
+    width: 50%;
+    height: auto;
+    line-height: 20px;
+    float: right;
+    text-align: left;
+    /*background: blue;*/
+    margin-top: 0px;
+    position: relative;
+    top: 10px;
+    left: -6px;
+}
+.wui-red_packet-container .xui-top100 .wui-i-info li{
+    font-size: small;
+}
+.wui-red_packet-container .xui-top100 .wui-i-money{
+    color:#F7BF0A;
+}
+
+.wui-red_packet-container .xui-top100 .wui-i-name{
+    color: #FFFFFF;
 }
 
 /*百宝箱 拼红包 red packet CSS-- end*/
