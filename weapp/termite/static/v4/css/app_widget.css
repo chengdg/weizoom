@@ -1632,7 +1632,8 @@ li.wui-selectBox-display-table {
 }
 .wui-red_packet-container .wui-i-states .xui-top100{
     width:90%;
-    height: 12rem;
+    height: auto;
+    overflow:hidden;
     background:#CD292A;
     border-radius: 3px;
     margin-left: auto;
