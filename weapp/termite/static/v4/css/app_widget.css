@@ -1691,20 +1691,32 @@ li.wui-selectBox-display-table {
     color: #FFFFFF;
 }
 
-.wui-red_packet-container .wui-i-rules-content{
-    background-color: blue;
+.wui-red_packet-container .wui-i-rules-contentbox{
     background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
     border-radius: 3px;
     left: 14%;
     padding: 10px 10px 16px 9px;
     position: fixed;
-    top: 16%;
+    top: -5%;
     width: 64%;
-    height: 70%;
+    height: 85%;
     z-index: 11111;
     text-align: center;
-    background-position: -2px -48px;
+    background-position: -2px -9px;
     background-size: 99%;
+}
+
+.wui-red_packet-container .wui-i-rules-contentbox{
+    margin-top: 20%;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content{
+    margin-top: 23%;
+    color:#3D3C35;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box{
+    color:#3A1614;
+    font-weight: bold;
+    font-size: large;
 }
 
 /*百宝箱 拼红包 red packet CSS-- end*/
