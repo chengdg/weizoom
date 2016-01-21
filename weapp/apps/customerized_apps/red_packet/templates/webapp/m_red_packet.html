@@ -51,21 +51,52 @@
         width: 45px;
     }
     .xui-successHint {
-        background: none repeat scroll 0 0 #fff;
-        border-radius: 16px;
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");
+        border-radius: 3px;
         left: 12%;
         padding: 16% 10% 16% 9%;
         position: fixed;
         top: 20%;
         width: 60%;
+        height: 15%;
         z-index: 11111;
         text-align: center;
+        background-position: 5px -20px;
+        background-size: 85%;
     }
-    .xui-spritebg.xui-successHint-img {
-        display: inline-block;
-        height: 33px;
-        width: 46px;
-        float: left;
+    .xui-successHint{
+        color:#3E1917;
+
+    }
+    .xui-successHint .xui-i-msg{
+        color:#3E1917;
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .xui-successHint .wui-i-closebtn{
+        color: white;
+        font-size: x-large;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        background: #FF422D;
+        text-align: center;
+        border-radius: 100px;
+        position: relative;
+        left: 96%;
+        top: -111%;
+        line-height: 30px;
+    }
+    .xui-successHint .xui-i-intro_text {
+        font-weight: bold;
+    }
+    .xui-successHint .xui-i-intro_num {
+        color:#C11F20;
+        font-weight: bold;
+    }
+    .xui-successHint .xui-i-num {
+        font-size: 220%;
     }
     .xui-attention{
         position: fixed;
@@ -132,10 +163,16 @@
 {% block content-panel %}
     {{ page_html_content|safe }}
 
-    <div class="xui-powerSucceed none">
+    <div class="xui-powerSucceed">
         <div class="f15 xui-successHint xui-spritebg">
-            <div class="xui-spritebg xui-successHint-img"></div>
-            <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮<span class="wa-pageownername"></span>贡献</p><p>+<span class="wa-helpmoneynumber"></span>元</p></div>
+            <p class="xui-i-msg none">现金红包已领取成功,系统会在24小时内把现金打入您的钱包，请注意查收！</p>
+            <div style="display: inline-block;color: #333;width: 75%;">
+                <p class="xui-i-intro_text">您已为<span class="wa-pageownername">"未命名"</span>贡献</p>
+                <p class="xui-i-intro_num"><span class="xui-i-num">+</span><span class="xui-i-num wa-helpmoneynumber">0.00</span><span>元</span></p>
+                </div>
+                <div class="wui-i-closebtn">
+                    ×
+                </div>
         </div>
     </div>
     <!-- 非会员引导 -->
