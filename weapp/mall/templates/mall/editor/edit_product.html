@@ -295,7 +295,7 @@
                             name='is_enable_bill'
                             class="product_bill"
                             value="1"
-                            {% if product.is_enable_bill %}checked="checked"{% endif %}
+                            {% if product.is_enable_bill or not product %}checked="checked"{% endif %}
                         />
                         <p class="xui-bold">支持发票</p>
                     </label>
