@@ -1710,7 +1710,7 @@ li.wui-selectBox-display-table {
     margin-top: 20%;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content{
-    margin-top: 23%;
+    margin-top: 1rem;
     color:#3D3C35;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box{
@@ -1718,5 +1718,19 @@ li.wui-selectBox-display-table {
     font-weight: bold;
     font-size: large;
 }
+.wui-i-rules-contentbox .wui-i-closebtn{
+    color: white;
+    font-size: x-large;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    background: #FF422D;
+    text-align: center;
+    border-radius: 100px;
+    position: relative;
+    left: 96%;
+    line-height: 30px;
+}
+
 
 /*百宝箱 拼红包 red packet CSS-- end*/
