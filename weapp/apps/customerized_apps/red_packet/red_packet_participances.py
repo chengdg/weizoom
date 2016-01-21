@@ -51,6 +51,8 @@ class RedPacketParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
+		red_packet_status = request.GET.get('red_packet_status', '-1')
+		is_already_paid = request.GET.get('is_already_paid', '-1')
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
 		if name:
@@ -71,8 +73,10 @@ class RedPacketParticipances(resource.Resource):
 			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
+		if red_packet_status !='-1':
+			params['red_packet_status'] = True if red_packet_status == '1' else False
+		if is_already_paid !='-1':
+			params['is_already_paid'] = True if is_already_paid == '1' else False
 
 		#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
 		# clear_non_member_power_info(belong_to)
