@@ -10,6 +10,19 @@ from modules.member import models as member_models
 from mall.promotion.models import CouponRule
 from termite import pagestore as pagestore_manager
 
+class SignDetails(models.Document):
+	"""
+	签到详情记录表
+	"""
+	member_id= models.LongField(default=0) #参与者id
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	created_at = models.DateTimeField() #创建时间
+	prize = models.DynamicField() #奖励信息
+	type = models.StringField(default=u"页面签到", max_length=20) #页面签到 or 自动签到
+
+	meta = {
+		'collection': 'sign_sign_details'
+	}
 
 class SignControl(models.Document):
 	member_id= models.LongField(default=0) #参与者id
@@ -133,9 +146,6 @@ class SignParticipance(models.Document):
 		member.consume_integral(-int(curr_prize_integral), u'参与签到，积分奖项')
 		curr_prize_coupon_count = 0
 		if curr_prize_coupon_id != '':
-			# curr_prize_coupon_count = get_coupon_count(curr_prize_coupon_id)
-			# from market_tools.tools.coupon.util import consume_coupon
-			# consume_coupon(sign.owner_id, curr_prize_coupon_id, self.member_id)
 			from apps.request_util import get_consume_coupon
 			coupon,msg = get_consume_coupon(sign.owner_id,'sign', str(sign.id), curr_prize_coupon_id, self.member_id)
 			curr_prize_coupon_count = 1 if coupon else 0 #1表示有优惠券
@@ -231,20 +241,48 @@ class Sign(models.Document):
 
 					return_data = signer.do_signment(sign)
 
+					detail_dict = {
+						'belong_to': str(sign.id),
+						'member_id': member.id,
+						'created_at': datetime.datetime.today(),
+						'type': u'自动签到',
+						'prize': {
+							'integral': 0,
+							'coupon': {
+								'id': 0,
+								'name': ''
+							}
+						}
+					}
+
 					if return_data['status_code'] == RETURN_STATUS_CODE['ALREADY']:
 						return_html.append(u'亲，今天您已经签到过了哦，\n明天再来吧！')
 					if return_data['status_code'] == RETURN_STATUS_CODE['SUCCESS']:
+						detail_prize_dict = {}
 						return_html.append(u'签到成功！\n已连续签到%s天。\n本次签到获得以下奖励:\n' % return_data['serial_count'])
 						return_html.append(str(return_data['curr_prize_integral']))
 						return_html.append(u'积分')
+						detail_prize_dict['integral'] = str(return_data['curr_prize_integral'])
 						if return_data['curr_prize_coupon_name'] != '' and return_data['curr_prize_coupon_count'] >= 0:
 							if return_data['curr_prize_coupon_count']>0:
 								return_html.append('\n'+str(return_data['curr_prize_coupon_name']))
 								return_html.append(u'\n<a href="http://%s/termite/workbench/jqm/preview/?module=market_tool:coupon&model=usage&action=get&workspace_id=market_tool:coupon&webapp_owner_id=%s&project_id=0">点击查看</a>' % (host, data['webapp_owner_id']))
+								detail_prize_dict['coupon'] = {
+									'id': return_data['curr_prize_coupon_id'],
+									'name': str(return_data['curr_prize_coupon_name'])
+								}
 							else:
 								return_html.append(u'\n奖励已领完,请联系客服补发')
+								detail_prize_dict['coupon'] = {
+									'id': 0,
+									'name': u'奖励已领完,请联系客服补发'
+								}
 						return_html.append(u'\n签到说明：%s\n'%sign_description)
 						return_html.append(str(return_data['reply_content']))
+						detail_dict['prize'] = detail_prize_dict
+						#记录签到历史
+						details = SignDetails(**detail_dict)
+						details.save()
 					return_html.append(u'\n<a href="http://%s/m/apps/sign/m_sign/?webapp_owner_id=%s"> >>点击查看详情</a>' % (host, data['webapp_owner_id']))
 			else:
 				return None
