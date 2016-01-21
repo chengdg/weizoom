@@ -666,10 +666,13 @@
                     <div class="propertyGroup_property_uploadFileField propertyGroup_property_horizontalField">
                         <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
                         <div class="propertyGroup_property_input" id="fileUploader-${field.name}" style="position:relative;">
-                        	<input data-field="${field.name}" name="${field.name}" type="hidden" />
-							<button class="btn btn-small xui-i-triggerButton xa-uploadFileButton uploadFile">
-								<input name="fileView-fileUploader" type="file">
-							</button>
+                        	<input id="uploadify-${field.name}" class="xa-uploadify-file" type="file" name="${field.name}"
+                        	    data-filter="${field.filter}"
+                        	    data-field="${field.name}"
+                        	    data-url="${field.url}"
+                        	    data-errorHint="${field.errorHint}"
+                        	    data-fileDesc="${field.fileDesc}"
+                        	    data-buttonText="${field.buttonText}">
                             {{if field.help}}
                             <div style="color: #666;">
                                 {{html field.help.replace(/\n/g, "<br/>")}}

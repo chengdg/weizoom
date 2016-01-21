@@ -198,6 +198,11 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			name: 'upload_file_certificate',
 			type: 'upload_file',
 			displayName: '证书pem格式',
+			filter: '*.pem',
+			url: '/account/upload_file/',
+			buttonText: '选择文件...',
+			fileDesc: '拼红包证书文件',
+			errorHint: '请上传正确的.pem格式文件',
 			isUserProperty: true,
 			//validate: 'data-validate="require-notempty::请添加证书"',
 			groupHelp:{
@@ -215,6 +220,11 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			name: 'upload_file_certificate_key',
 			type: 'upload_file',
 			displayName: '证书密钥pem格式',
+			filter: '*.pem',
+			url: '/account/upload_file/',
+			buttonText: '选择文件...',
+			fileDesc: '拼红包证书文件',
+			errorHint: '请上传正确的.pem格式文件',
 			isUserProperty: true,
 			//validate: 'data-validate="require-notempty::请添加证书密钥"',
 			default: ""
