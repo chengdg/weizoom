@@ -103,7 +103,15 @@ class RedPacketParticipance(resource.Resource):
 				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
 				money_range_min,money_range_max = red_packet_info.money_range.split('-')
 				random_money = '%.2f' % random.uniform(float(money_range_min), float(money_range_max))
+				#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
+				current_money = helped_member_info.current_money + float(random_money)
+				if current_money > helped_member_info.red_packet_money:
+					random_money = helped_member_info.red_packet_money - helped_member_info.current_money
 				helped_member_info.update(inc__current_money=float(random_money))
+				helped_member_info.reload()
+				#完成目标金额，设置红包状态为成功
+				if helped_member_info.current_money == helped_member_info.red_packet_money:
+					helped_member_info.update(set__red_packet_status=True)
 				has_helped = True
 			detail_log = app_models.RedPacketDetail(
 				belong_to = red_packet_id,

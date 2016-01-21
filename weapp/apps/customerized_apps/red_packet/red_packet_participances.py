@@ -51,6 +51,8 @@ class RedPacketParticipances(resource.Resource):
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
+		red_packet_status = request.GET.get('red_packet_status', '-1')
+		is_already_paid = request.GET.get('is_already_paid', '-1')
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
 		if name:
@@ -71,8 +73,10 @@ class RedPacketParticipances(resource.Resource):
 			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
+		if red_packet_status !='-1':
+			params['red_packet_status'] = True if red_packet_status == '1' else False
+		if is_already_paid !='-1':
+			params['is_already_paid'] = True if is_already_paid == '1' else False
 
 		#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
 		# clear_non_member_power_info(belong_to)
@@ -164,26 +168,32 @@ class RedPacketParticipances_Export(resource.Resource):
 			export_data = []
 
 			#from sample to get fields4excel_file
-			fields_pure.append(u'排名')
 			fields_pure.append(u'会员id')
 			fields_pure.append(u'用户名')
-			fields_pure.append(u'助力值')
+			fields_pure.append(u'红包金额')
+			fields_pure.append(u'已获取金额')
+			fields_pure.append(u'红包状态')
+			fields_pure.append(u'发放状态')
 			fields_pure.append(u'参与时间')
 
 			#processing data
 			num = 0
 			for data in datas:
 				export_record = []
-				num = num+1
-				participant_name = data["username"]
 				member_id = data["member_id"]
-				power = data["power"]
+				participant_name = data["username"]
+				red_packet_money = data["red_packet_money"]
+				current_money = data["current_money"]
+				red_packet_status = data["red_packet_status"]
+				is_already_paid = data["is_already_paid"]
 				created_at = data["created_at"]
 
-				export_record.append(num)
 				export_record.append(member_id)
 				export_record.append(participant_name)
-				export_record.append(power)
+				export_record.append(red_packet_money)
+				export_record.append(current_money)
+				export_record.append(red_packet_status)
+				export_record.append(is_already_paid)
 				export_record.append(created_at)
 				export_data.append(export_record)
 			#workbook/sheet
