@@ -202,6 +202,9 @@
           var material_image = descriptionModel.get('material_image');
           var share_description = descriptionModel.get('share_description');
           var qrcode = descriptionModel.get('qrcode');
+          var upload_file_certificate = descriptionModel.get('upload_file_certificate');
+          var upload_file_certificate_key = descriptionModel.get('upload_file_certificate_key');
+          var wishing = descriptionModel.get('wishing');
           var args = {
             "name": name,
             "start_time": startTime,
@@ -216,7 +219,10 @@
             "reply_content": reply_content,
             "material_image": material_image,
             "share_description": share_description,
-            "qrcode": JSON.stringify(qrcode)
+            "qrcode": JSON.stringify(qrcode),
+            "upload_file_certificate": upload_file_certificate,
+            "upload_file_certificate_key": upload_file_certificate_key,
+            "wishing": wishing
           };
           var method;
           if (isCreateNewData) {
@@ -288,6 +294,18 @@
       });
       
       $(document).click(function() {
+      //签到奖励说明
+      if(event.target.id == 'outerFunctionTrigger'){
+            W.dialog.showDialog('W.dialog.red_packet.InstructionDialog',{
+                success: function(data){}
+            });
+      }
+      //证书说明
+      if(event.target.id == 'outerUploadTrigger'){
+            W.dialog.showDialog('W.dialog.red_packet.UploadInstructionDialog',{
+                success: function(data){}
+            });
+      }
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');
       });
@@ -320,6 +338,69 @@
       }, {silent: true});
   });
   </script>
-    {% endif %}
-{% block js %}{% endblock %}
+{% endif %}
+{% block js %}
+<script id="red_packet-money-dialog-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">好友贡献金额设置区间说明</h3>
+            </div>
+
+            <div class="modal-body ml15">
+                <div>
+                    <p>好友贡献金额区间，为分享好友后，每个好友贡献的金额区间。</p>
+                </div>
+                <div>
+                    <p>该区间会影响到一个红包会被几个好友拼满。需根据总金额与红包个数设置适当的区间。</p>
+                </div>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+<script id="red_packet-upload-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade">
+        <div class="modal-dialog modal-lg" style="width: 1020px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">帮助说明</h3>
+                </div>
+
+                <div class="modal-body ml15">
+                    <div>
+                        <p>登录<a href="https://pay.weixin.qq.com">https://pay.weixin.qq.com</a>，进入微信支付商务平台。选择账户中心—账户设置—API安全。</p>
+                    </div>
+                    <div>
+                        <p>找到API证书，点击“下载证书”</p>
+                    </div>
+                    <div>
+                        <img src="/termite_static/img/component/redpacket/red_packt_help_img1.png">
+                    </div>
+                    <div style="display:inline-block">
+                        <p style="display:inline-block">点击“下载”。下载完成后，找到“</p><p style="color:#09F;display:inline-block">证书pem格式与证书密钥pem格式</p><p style="display:inline-block">”上传。</p>
+                    </div>
+                    <div>
+                        <img src="/termite_static/img/component/redpacket/red_packt_help_img2.png">
+                    </div>
+                    <div>
+                        <img src="/termite_static/img/component/redpacket/red_packt_help_img3.jpg">
+                    </div>
+                </div>
+
+                <div class="modal-footer modal-footerBg">
+                    <button class="btn btn-success" aria-hidden="true" data-dismiss="modal" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">关&nbsp;&nbsp;闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+{% endblock %}
 {% endblock %}

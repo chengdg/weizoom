@@ -25,7 +25,10 @@ class RedPacket(models.Document):
 	reply_content = models.StringField(default="", max_length=50) #参与活动回复语
 	material_image = models.StringField(default="", max_length=1024) #分享的图片链接
 	share_description = models.StringField(default="", max_length=1024) #分享描述
+	wishing = models.StringField(default="", max_length=50) #开现金红包文字
 	qrcode = models.DynamicField() #带参数二维码ticket,name
+	upload_file_certificate = models.StringField(default="", max_length=1024) #证书
+	upload_file_certificate_key = models.StringField(default="", max_length=1024) #证书key
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
