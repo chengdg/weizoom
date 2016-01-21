@@ -869,7 +869,7 @@ def step_impl(context,user,lottery_name):
 		actual_prize_dic={}
 		actual_prize_dic['title'] = comp['model']['title']
 		actual_prize_dic['prize_count'] = comp['model']['prize_count']
-		actual_prize_dic['leftCount'] = comp['model']['prize_count'] - prize_dic.get(comp['model']['title'], 0)
+		actual_prize_dic['leftCount'] = (comp['model']['prize_count'] - prize_dic.get(comp['model']['title'], 0)) if expect_prize_settings_list[page_component.index(comp)].get('rest', None) else ""
 		actual_prize_dic['image'] = comp['model']['image']
 		actual_prize_dic['prize'] = {
 			"type":comp['model']['prize']['type'],
