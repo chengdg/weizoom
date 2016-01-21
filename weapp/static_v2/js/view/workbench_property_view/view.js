@@ -50,7 +50,8 @@ W.workbench.PropertyView = Backbone.View.extend({
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
         'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
 
-        'click .xa-red-packet-selector': 'onClickRedPacketSelector'
+        'click .xa-red-packet-selector': 'onClickRedPacketSelector',
+        'click .xa-save': 'onClickUploadRedPacketFile'
 	},
 
     getTemplate: function() {
@@ -1059,12 +1060,46 @@ W.workbench.PropertyView = Backbone.View.extend({
         if (redPacketType == 'random') {
             this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').addClass('xui-hide');
             this.$el.find('.propertyGroup_property_redPacketSelectorField_random').removeClass('xui-hide');
-            //this.$el.find('.propertyGroup_property_redPacketSelectorField_regular .xui-propertyGroup-input').val("");
         }
         if (redPacketType == 'regular') {
             this.$el.find('.propertyGroup_property_redPacketSelectorField_random').addClass('xui-hide');
             this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').removeClass('xui-hide');
-            //this.$el.find('.propertyGroup_property_redPacketSelectorField_random .xui-propertyGroup-input').val("");
         }
+    },
+
+    onClickUploadRedPacketFile: function(event){
+        var fileUploader = this.$('[name="fileView-fileUploader"]');
+        console.log('fileUploader!!!!!!!!!!!!!!!');
+        console.log(fileUploader);
+        fileUploader.each(function() {
+            $(this).uploadify({
+                swf: '/static/uploadify.swf',
+                multi: false,
+                removeCompleted: true,
+                uploader: '/account/upload_file/',
+                cancelImg: '/static/img/cancel.png',
+                buttonText: '选择文件...',
+                fileTypeDesc: '拼红包证书文件',
+                fileTypeExts: '*.pem',
+                method: 'post',
+                formData: {
+                    uid: 'sid'+W.uid
+                },
+                removeTimeout: 0.0,
+                onUploadSuccess : function(file, path, response) {
+                    console.log('onUploadSuccess');
+                },
+                onUploadComplete: function() {
+                    console.log('onUploadComplete');
+                },
+                onUploadError: function(file, errorCode, errorMsg, errorString) {
+                    xlog(errorCode);
+                    xlog(errorMsg);
+                    xlog(errorString);
+                    W.getErrorHintView().show('请上传正确的.pem格式文件');
+
+                }
+            });
+        });
     }
 });

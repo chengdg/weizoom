@@ -130,6 +130,16 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			validate: 'data-validate="require-notempty::金额区间不能为空"',
 			validateIgnoreDefaultValue: true,
 			annotation: '好友贡献金额区间，为分享好友后，每个好友贡献的金额区间。该区间会影响到一个红包会被几个好友拼满。需根据总金额与红包个数设置适当的区间。',
+			groupHelp:{
+				className:'xui-propertyView-app-RedPacketSettingGroupName-helper',
+				id:'propertyView-app-RedPacketSettingGroupName-helper',
+				link:{
+					className:'xui-outerFunctionTrigger xa-outerFunctionTrigger',
+					id:'outerFunctionTrigger',
+					text:'设置说明',
+					handler: 'W.component.appkit.RedPacketDescription.handleHelp'
+				}
+			},
 			default: ''
 		},{
 			name: 'reply_content',
@@ -155,9 +165,18 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			help: '此处若空缺，则使用公众号二维码代替',
 			default: {ticket:'',name:''}
 		},{
+			name: 'wishing',
+			type: 'text_with_annotation',
+			displayName: '开现金红包文字',
+			isUserProperty: true,
+			maxLength: 15,
+			placeholder: '点赞帮好友赢现金红包',
+			annotation: '拼红包成功后，开启现金红包时显示文字',
+			default: "点赞帮好友赢现金红包"
+		},{
 			name: 'color',
 			type: 'radio',
-			displayName: '背景配色',
+			displayName: '背景皮肤',
 			isUserProperty: true,
 			source: [{
 				name: '默认背景',
@@ -174,6 +193,30 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			maxLength: 500,
 			isUserProperty: true,
 			placeholder: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。',
+			default: ""
+		},{
+			name: 'upload_file_certificate',
+			type: 'upload_file',
+			displayName: '证书pem格式',
+			isUserProperty: true,
+			//validate: 'data-validate="require-notempty::请添加证书"',
+			groupHelp:{
+				className:'xui-propertyView-app-RedPacketUploadGroupName-helper',
+				id:'propertyView-app-RedPacketUploadGroupName-helper',
+				link:{
+					className:'xui-outerFunctionTrigger xa-outerFunctionTrigger',
+					id:'outerUploadTrigger',
+					text:'帮助说明',
+					handler: 'W.component.appkit.RedPacketDescription.handleHelp'
+				}
+			},
+			default: ""
+		},{
+			name: 'upload_file_certificate_key',
+			type: 'upload_file',
+			displayName: '证书密钥pem格式',
+			isUserProperty: true,
+			//validate: 'data-validate="require-notempty::请添加证书密钥"',
 			default: ""
 		},{
 			name: 'material_image',
@@ -279,6 +322,46 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
 			}
 		},
+		upload_file_certificate: function($node, model, value, $propertyViewNode) {
+			var file = {url:''};
+			var data = {type:null};
+			console.log('value!!!!!!!!!!!!!!!!!!!!');
+			console.log(value);
+			if (value !== '') {
+				data = $.parseJSON(value);
+				console.log('!!!!!!!!!!!!!!!!!!!!');
+				console.log(data);
+				file = data.images[0];
+			}
+			model.set({
+				upload_file_certificate: file.url
+			}, {silent: true});
+			if (value) {
+				//更新propertyView中的图片
+				var $target = $propertyViewNode.find($('[data-field-anchor="upload_file_certificate"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',file.url);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
+		},
+		upload_file_certificate_key: function($node, model, value, $propertyViewNode) {
+			var file = {url:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				console.log('!!!!!!!!!!!!!!!!!!!!');
+				console.log(data);
+				file = data.images[0];
+			}
+			model.set({
+				upload_file_certificate_key: file.url
+			}, {silent: true});
+			if (value) {
+				//更新propertyView中的图片
+				var $target = $propertyViewNode.find($('[data-field-anchor="upload_file_certificate_key"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',file.url);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
+		},
 		color: function($node, model, value, $propertyViewNode) {
 			switch (value){
 				case 'yellow':
@@ -337,5 +420,25 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 		hour: text_hour,
 		minute: text_minute,
 		second: text_second
+	});
+};
+
+W.component.appkit.RedPacketDescription.handleHelp = function(){
+	//初始化好友贡献区间设置说明
+	ensureNS('W.dialog.red_packet');
+	W.dialog.red_packet.InstructionDialog = W.dialog.Dialog.extend({
+		getTemplate: function() {
+			$('#red_packet-money-dialog-tmpl-src').template('red_packet-money-dialog-tmpl');
+			return "red_packet-money-dialog-tmpl";
+		}
+	});
+
+	//初始化上传文件说明
+	ensureNS('W.dialog.red_packet');
+	W.dialog.red_packet.UploadInstructionDialog = W.dialog.Dialog.extend({
+		getTemplate: function() {
+			$('#red_packet-upload-dialog-tmpl-src').template('red_packet-upload-dialog-tmpl');
+			return "red_packet-upload-dialog-tmpl";
+		}
 	});
 };

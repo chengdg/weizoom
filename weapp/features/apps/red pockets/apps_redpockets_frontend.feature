@@ -66,7 +66,7 @@ Background:
 			"share_pic":"1.jpg",
 			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		   },{
-		   "name":"塞红包活动2",
+		   "name":"拼红包活动2",
 			"start_date":"明天",
 			"end_date":"两天后",
 			"is_show_countdown":"false",
@@ -77,7 +77,7 @@ Background:
 			}]
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
-			"reply":"拼红包",
+			"reply":"普通红包",
 			"qr_code":"带参数二维码1",
 			"license":"apiclient_cert.pem",
 			"license_key":"apiclient_key.pem",
@@ -90,23 +90,23 @@ Background:
 	When jobs已添加单图文
 		"""
 		[{
-			"title":"拼红包活动1",
+			"title":"拼红包活动1单图文",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
 			}],
 			"cover_in_the_text":"true",
 			"summary":"单条图文1文本摘要",
 			"content":"单条图文1文本内容",
-			"jump_url":"塞红包-塞红包活动1"
+			"jump_url":"塞红包-拼红包活动1"
 		},{
-			"title":"拼红包活动2",
+			"title":"拼红包活动2单图文",
 			"cover": [{
 				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
 			"cover_in_the_text":"true",
 			"summary":"单条图文2文本摘要",
 			"content":"单条图文2文本内容",
-			"jump_url":"塞红包-塞红包活动2"
+			"jump_url":"塞红包-拼红包活动2"
 		}]
 		"""
 	When jobs已添加关键词自动回复规则
@@ -114,21 +114,21 @@ Background:
 		[{
 			"rules_name":"规则1",
 			"keyword": [{
-					"keyword": "塞红包活动1",
+					"keyword": "拼红包活动1",
 					"type": "equal"
 				}],
 			"keyword_reply": [{
-					"reply_content":"塞红包活动1单图文",
+					"reply_content":"拼红包活动1单图文",
 					"reply_type":"text_picture"
 				}]
 		},{
 			"rules_name":"规则2",
 			"keyword": [{
-					"keyword": "塞红包活动2",
+					"keyword": "拼红包活动2",
 					"type": "equal"
 				}],
 			"keyword_reply": [{
-					"reply_content":"塞红包活动2单图文",
+					"reply_content":"拼包活动2单图文",
 					"reply_type":"text_picture"
 				}]
 		}]
@@ -138,32 +138,32 @@ Background:
 Scenario:1 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'塞红包活动1'
-	Then bill收到自动回复'塞红包活动1单图文'
-	When bill点击图文"塞红包活动1单图文"进入塞红包活动页面
-	Then bill获得jobs的'塞红包活动1'的内容
+	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
+	Then bill收到自动回复'拼红包活动1单图文"
+	When bill点击图文"拼红包活动1"进入塞红包活动页面
+	Then bill获得jobs的'拼红包活动1'的内容
 		"""
 		[{
-			"name": "塞红包活动1",
+			"name": "拼红包活动1",
 			"is_show_countdown": "true",
 			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 		}]
 		"""
-	When bill把jobs的塞红包活动链接分享到朋友圈
-	When 更新塞红包活动
-	When bill点击图文"塞红包活动1"进入微助力活动页面
-	Then bill获得jobs的'塞红包活动1'的内容
+	When bill把jobs的拼红包活动分享到朋友圈
+	When 更新拼红包活动
+	When bill点击图文"拼红包活动1"进入微助力活动页面
+	Then bill获得jobs的'拼红包活动1'的内容
 		"""
 		[{
-			"name": "塞红包活动1",
+			"name": "拼红包活动1",
 			"is_show_countdown": "true",
 			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 		}]
 		"""
 	
  
-  	When 更新塞红包活动
-	Then bill获得"塞红包活动1"的排名
+  	When 更新拼红包活动
+	Then bill获得"拼红包活动1"的排名
 		| name | 
   		| bill |
 
