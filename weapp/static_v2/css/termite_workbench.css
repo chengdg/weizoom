@@ -1646,7 +1646,7 @@ button.xui-deleteQrcodeButton{
 }
 /*拼红包CSS*/
 .propertyGroup.xui-propertyView-app-RedPacketGroup {
-    width: 495px;
+    width: 500px;
 }
 .xui-propertyView-app-RedPacketGroup .propertyGroup_property_dialogSelectField .xui-i-triggerButton {
     background: none;

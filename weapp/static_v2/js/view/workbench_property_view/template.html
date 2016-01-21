@@ -616,7 +616,7 @@
 
 					{{if (field.type == 'money_range_selector')}}
 					<div class="propertyGroup_property_moneyRangeSelectorField propertyGroup_property_horizontalField">
-						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+						<div style="min-height: 50px;" class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="moneyrange">
 							<input
 								type="hidden"
@@ -646,15 +646,50 @@
 								data-field="end_money"
 								data-validate="require-float::请输入正整数或小数"
 								data-min-el="#start_money" />元
-							{{if field.annotation}}
-							<span style="color: #888">
-								<div class="money_range_selector_annotation">{{html field.annotation}}</div>
-							</span>
+							{{if field.groupHelp }}
+								<span id="${field.groupHelp.id}" class="${field.groupHelp.className}">
+								{{if field.groupHelp.link }}
+								<a id="${field.groupHelp.link.id}" class="${field.groupHelp.link.className}" data-func="${field.groupHelp.link.handler}" >${field.groupHelp.link.text}</a>
+								{{/if}}
+
+								{{if field.groupHelp.tip }}
+									<a role="button" tabindex="0" class="groupHelp_tip" data-container="body" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="${field.groupHelp.tip.text}">&#63;</a>
+								{{/if}}
+								</span>
 							{{/if}}
 							<div class="errorHint pl5"></div>
 						</div>
 					</div>
 					{{/if}}
+
+					{{if (field.type == 'upload_file')}}
+                    <div class="propertyGroup_property_uploadFileField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+                        <div class="propertyGroup_property_input" id="fileUploader-${field.name}" style="position:relative;">
+                        	<input data-field="${field.name}" name="${field.name}" type="hidden" />
+							<button class="btn btn-small xui-i-triggerButton xa-uploadFileButton uploadFile">
+								<input name="fileView-fileUploader" type="file">
+							</button>
+                            {{if field.help}}
+                            <div style="color: #666;">
+                                {{html field.help.replace(/\n/g, "<br/>")}}
+                            </div>
+                            {{/if}}
+                        {{if field.groupHelp }}
+							<span id="${field.groupHelp.id}" class="${field.groupHelp.className}">
+							{{if field.groupHelp.link }}
+							<a id="${field.groupHelp.link.id}" class="${field.groupHelp.link.className}" data-func="${field.groupHelp.link.handler}" >${field.groupHelp.link.text}</a>
+							{{/if}}
+
+							{{if field.groupHelp.tip }}
+								<a role="button" tabindex="0" class="groupHelp_tip" data-container="body" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="${field.groupHelp.tip.text}">&#63;</a>
+							{{/if}}
+							</span>
+						{{/if}}
+                        <div class="errorHint"></div>
+                        </div>
+                    </div>
+                    {{/if}}
 
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
