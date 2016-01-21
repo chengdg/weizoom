@@ -42,7 +42,6 @@ class RedPackets(resource.Resource):
 		status = int(request.GET.get('status', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
-		red_packet_type = request.GET.get('red_packet_type','all')
 		
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		params = {'owner_id':request.manager.id}
@@ -62,8 +61,6 @@ class RedPackets(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		if red_packet_type != 'all':
-			params['type'] = red_packet_type
 		datas = app_models.RedPacket.objects(**params).order_by('-id')
 
 		#进行分页
@@ -87,11 +84,11 @@ class RedPackets(resource.Resource):
 			if not p.belong_to in red_packet_id2info:
 				red_packet_id2info[p.belong_to] = {
 					"participant_count": 1,
-					"already_paid_money": p.current_money if (p.red_packet_status and p.is_already_paid) else 0
+					"already_paid_money": p.current_money if p.red_packet_status else 0
 				}
 			else:
 				red_packet_id2info[p.belong_to]["participant_count"] += 1
-				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if (p.red_packet_status and p.is_already_paid) else 0
+				red_packet_id2info[p.belong_to]["already_paid_money"] += p.current_money if p.red_packet_status else 0
 
 		items = []
 		for data in datas:
@@ -102,7 +99,7 @@ class RedPackets(resource.Resource):
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-                'type': u'拼手气' if data.type == 'random' else u'普通',
+				'type': u'拼手气' if data.type == 'random' else u'普通',
 				'participant_count': red_packet_id2info[str_id]["participant_count"] if red_packet_id2info.get(str_id, None) else 0,
 				'total_money' : '%0.2f' %float(data.random_total_money) if data.type == 'random' else '%0.2f' %(float(data.regular_packets_number)*float(data.regular_per_money)),
 				'already_paid_money' : '%0.2f' %float(red_packet_id2info[str_id]["already_paid_money"] if red_packet_id2info.get(str_id, None) else 0),
