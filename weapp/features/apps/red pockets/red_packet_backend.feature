@@ -44,7 +44,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"end_date":"明天",
 			"is_show_countdown":"ture",
 			"red_packet":[{
-				"type":"拼手气红包",
+				"type":"random",
 				"total_amount":"500",
 				"packet_num":"10"	
 			}],
@@ -85,7 +85,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"end_date":"两天后",
 			"is_show_countdown":"false",
 			"red_packet":[{
-				"type":"普通红包",
+				"type":"normal",
 				"packet_num":"10",
 				"single_packet_amount":"10"
 			}]
@@ -96,7 +96,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"license":"apiclient_cert.pem",
 			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-			"share_pic":"1.jpg",
+			"share_pic":"2.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
 		"""

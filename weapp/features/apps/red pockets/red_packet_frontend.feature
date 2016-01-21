@@ -30,9 +30,9 @@ Background:
 			"end_date":"明天",
 			"is_show_countdown":"ture",
 			"red_packet":[{
-				"type":"拼手气红包",
-				"total_amount":"500",
-				"packet_num":"10"	
+				"type":"random",
+				"total_amount":"100",
+				"packet_num":"2"	
 			}],
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
@@ -45,12 +45,12 @@ Background:
 			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		},{
 			"name":"拼红包活动2",
-			"start_date":"明天",
+			"start_date":"昨天",
 			"end_date":"两天后",
 			"is_show_countdown":"false",
 			"red_packet":[{
-				"type":"普通红包",
-				"packet_num":"10",
+				"type":"normal",
+				"packet_num":"2",
 				"single_packet_amount":"10"
 			}]
 			"contribution_start_range":"0.5",
@@ -351,3 +351,184 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 	Then bill获得"拼红包活动2"的已贡献好友列表
 		| name |
 		| tom  |
+
+@mall2 @apps_red_packet @apps_red_packet_frontend
+Scenario:5 会员参与拼红包活动，红包已领完
+	#会员bill参与"拼红包活动1"领取红包
+	When bill关注jobs的公众号
+	When bill访问jobs的weapp
+	When bill在微信中向jobs的公众号发送消息"拼红包活动1"
+	Then bill收到自动回复"拼红包活动1单图文"
+	When bill点击图文"拼红包活动1单图文"进入拼红包活动页面
+	Then bill获得jobs的"拼红包活动1"的内容
+		"""
+		[{
+			"name":"拼红包活动1",
+			"is_show_countdown":"ture",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
+		}]
+		"""
+	When 更新贡献好友列表
+	Then bill获得"拼红包活动1"的已贡献好友列表
+		"""
+		[]
+		"""
+	#会员tom参与"拼红包活动1"领取红包
+	When tom关注jobs的公众号
+	When tom访问jobs的weapp
+	When tom在微信中向jobs的公众号发送消息"拼红包活动1"
+	Then tom收到自动回复"拼红包活动1单图文"
+	When tom点击图文"拼红包活动1单图文"进入拼红包活动页面
+	Then tom获得jobs的"拼红包活动1"的内容
+		"""
+		[{
+			"name":"拼红包活动1",
+			"is_show_countdown":"ture",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
+		}]
+		"""
+	When 更新贡献好友列表
+	Then bill获得"拼红包活动1"的已贡献好友列表
+		"""
+		[]
+		"""
+	#会员jack参与"拼红包活动1"提示红包已领光
+	When jack关注jobs的公众号
+	When jack访问jobs的weapp
+	When jack在微信中向jobs的公众号发送消息"拼红包活动1"
+	Then jack收到自动回复"拼红包活动1单图文"
+	When jack点击图文"拼红包活动1单图文"进入拼红包活动页面
+	Then jack获得弹层提示信息'红包已被抢完啦<br />下次早点来哦'
+
+@mall2 @apps_red_packet @apps_red_packet_frontend
+Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
+	When jobs新建拼红包活动
+		"""
+		[{
+			"name":"未开始的红包活动",
+			"start_date":"明天",
+			"end_date":"两天后",
+			"is_show_countdown":"true",
+			"red_packet":[{
+				"type":"random",
+				"total_amount":"20",
+				"packet_num":"2"
+			}]
+			"contribution_start_range":"1",
+			"contribution_end_range":"2",
+			"reply":"未开始红包活动",
+			"qr_code":"",
+			"license":"apiclient_cert.pem",
+			"license_key":"apiclient_key.pem",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+			"share_pic":"pic1.jpg",
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+		},{
+			"name":"已结束的红包活动",
+			"start_date":"两前天",
+			"end_date":"昨天",
+			"is_show_countdown":"false",
+			"red_packet":[{
+				"type":"normal",
+				"packet_num":"3",
+				"single_packet_amount":"5"
+			}]
+			"contribution_start_range":"1",
+			"contribution_end_range":"2",
+			"reply":"已结束红包活动",
+			"qr_code":"带参数二维码1",
+			"license":"apiclient_cert.pem",
+			"license_key":"apiclient_key.pem",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+			"share_pic":"pic.jpg",
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+		}]
+		"""	
+	When jobs已添加单图文
+		"""
+		[{
+			"title":"未开始红包活动单图文",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"单条图文1文本摘要",
+			"content":"单条图文1文本内容",
+			"jump_url":"拼红包-未开始红包活动"
+		},{
+			"title":"已结束红包活动单图文",
+			"cover": [{
+				"url": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}],
+			"cover_in_the_text":"true",
+			"summary":"单条图文2文本摘要",
+			"content":"单条图文2文本内容",
+			"jump_url":"拼红包-已结束红包活动"
+		}]
+		"""
+	When jobs已添加关键词自动回复规则
+		"""
+		[{
+			"rules_name":"规则1",
+			"keyword": [{
+					"keyword": "未开始红包活动",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					"reply_content":"未开始红包活动单图文",
+					"reply_type":"text_picture"
+				}]
+		},{
+			"rules_name":"规则2",
+			"keyword": [{
+					"keyword": "已结束红包活动",
+					"type": "equal"
+				}],
+			"keyword_reply": [{
+					"reply_content":"已结束红包活动单图文",
+					"reply_type":"text_picture"
+				}]
+		}]
+		"""
+	#bill参加未开始的红包活动
+	When bill关注jobs的公众号
+	When bill访问jobs的weapp
+	When bill在微信中向jobs的公众号发送消息"未开始红包活动"
+	Then bill收到自动回复"未开始红包活动单图文"
+	When bill点击图文"未开始红包活动单图文"进入拼红包活动页面
+	Then bill获得jobs的"未开始的红包活动"的内容
+		"""
+		[{
+			"name":"未开始的红包活动",
+			"is_show_countdown":"true",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
+		}]
+		"""
+	When 更新贡献好友列表
+	Then bill获得"未开始红包活动"的已贡献好友列表
+		"""
+		[]
+		"""
+	#Then bill获得按钮提示信息'活动尚未开始,敬请期待'
+
+	#tom参加已结束的红包活动
+	When tom关注jobs的公众号
+	When tom访问jobs的weapp
+	When tom在微信中向jobs的公众号发送消息"已结束红包活动"
+	Then tom收到自动回复"已结束红包活动单图文"
+	When tom点击图文"已结束红包活动单图文"进入拼红包活动页面
+	Then tom获得jobs的"已结束的红包活动"的内容
+		"""
+		[{
+			"name":"已结束的红包活动",
+			"is_show_countdown":"false",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
+		}]
+		"""
+	When 更新贡献好友列表
+	Then tom获得"已结束红包活动"的已贡献好友列表
+		"""
+		[]
+		"""
+	#Then tom获得按钮提示信息'活动已结束'
+
