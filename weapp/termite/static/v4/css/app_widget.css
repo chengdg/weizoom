@@ -1501,35 +1501,41 @@ li.wui-selectBox-display-table {
     background: no-repeat url("/termite_static/img/component/redpacket/icon_sprite.png");
     background-size: 291%;
     background-position: 2px 0px;
-    margin-left: 9%;
     text-align: center;
     padding-top: 10px;
 }
 .wui-red_packet-container .wui-i-powerbar_group .wui-i-bar{
-    width: 70%;
+    width: auto;
     height: 4px;
     background:#500001;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 60px;
+    margin-right: 60px;
 }
-.wui-red_packet-container .wui-i-powerbar_group .wui-i-bar .wui-i-bar_process{
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-box{
+    width: auto;
+    /*background-color:green;*/
+    margin-left: 40px;
+    margin-right: 80px;
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
+    position: relative;
+    left: 0%;
+    transition: left 3s ease-in-out;
+    -moz-transition: left 3s ease-in-out; /* Firefox 4 */
+    -webkit-transition: left 3s ease-in-out; /* Safari 和 Chrome */
+    -o-transition: left 3s ease-in-out; /* Opera */
+
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-bar_process{
     background: #FF6E02;
     width: 0%;
     height: 100%;
-    animation: load 3s ease-in-out 1 forwards;
-}
-.wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
-    /*animation: load 3s ease-in-out 1 forwards;*/
+    transition: width 3s ease-in-out;
+    -moz-transition: width 3s ease-in-out; /* Firefox 4 */
+    -webkit-transition: width 3s ease-in-out; /* Safari 和 Chrome */
+    -o-transition: width 3s ease-in-out; /* Opera */
 }
 
-@keyframes load {
-    0% {
-        width: 0%;
-    }
-    100% {
-        width: 80%;
-    }
-}
 .wui-red_packet-container .wui-i-powerbar_group .wui-i-power_money{
     width: 70%;
     margin: 5px auto 5px auto;
