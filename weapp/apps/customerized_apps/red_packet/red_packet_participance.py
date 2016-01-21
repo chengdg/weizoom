@@ -89,7 +89,7 @@ class RedPacketParticipance(resource.Resource):
 			#调整参与数量(首先检测是否已参与)
 			if not helped_member_info.has_join:
 				helped_member_info.update(set__has_join=True)
-			#记录每一次未参与人给予的帮助,已关注的则直接计算帮助值
+			#记录每一次未关注人给予的帮助,已关注的则直接计算帮助值
 			if not request.member.is_subscribed:
 				red_packet_log = app_models.RedPacketLog(
 					belong_to = red_packet_id,
@@ -121,7 +121,13 @@ class RedPacketParticipance(resource.Resource):
 			response.errMsg = u'帮助好友失败'
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
+		help_info = {
+			'help_money': random_money,
+		}
 		response = create_response(200)
+		response.data = {
+			'help_info': help_info
+		}
 		return response.get_response()
 
 	def api_post(request):
@@ -133,28 +139,29 @@ class RedPacketParticipance(resource.Resource):
 		try:
 			response = create_response(200)
 			helped_member_info = app_models.RedPacketParticipance.objects.get(belong_to=red_packet_id, member_id=int(fid))
-			all_participate = app_models.RedPacketParticipance.objects(belong_to=red_packet_id)
-			red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
-			red_packet_type = red_packet_info.type
-			if red_packet_type == 'random':
-				random_total_money = float(red_packet_info.random_total_money)
-				random_packets_number = float(red_packet_info.random_packets_number)
-				if random_packets_number > all_participate.count():
-					random_average = random_total_money/random_packets_number #红包金额/红包个数
-					red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
-				else:
-					response = create_response(500)
-					response.errMsg = u'红包已被抢完啦 下次早点来哦'
-					return response.get_response()
-			else:
-				regular_packets_number = red_packet_info.regular_packets_number
-				if regular_packets_number > all_participate.count():
-					red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-				else:
-					response = create_response(500)
-					response.errMsg = u'红包已被抢完啦 下次早点来哦'
-					return response.get_response()
 			if not helped_member_info.has_join:
+				all_participate = app_models.RedPacketParticipance.objects(belong_to=red_packet_id)
+				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
+				red_packet_type = red_packet_info.type
+				if red_packet_type == 'random':
+					random_total_money = float(red_packet_info.random_total_money)
+					random_packets_number = float(red_packet_info.random_packets_number)
+					if random_packets_number > all_participate.count():
+						random_average = random_total_money/random_packets_number #红包金额/红包个数
+						red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
+						red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
+					else:
+						response = create_response(500)
+						response.errMsg = u'红包已被抢完啦 下次早点来哦'
+						return response.get_response()
+				else:
+					regular_packets_number = red_packet_info.regular_packets_number
+					if regular_packets_number > all_participate.count():
+						red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
+					else:
+						response = create_response(500)
+						response.errMsg = u'红包已被抢完啦 下次早点来哦'
+						return response.get_response()
 				helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
 		except Exception,e:
 			print e

@@ -135,7 +135,7 @@
     <div class="xui-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
             <div class="xui-spritebg xui-successHint-img"></div>
-            <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮<span class="wa-pageownername"></span>助力值+1</p><p>关系好就是任性！</p></div>
+            <div style="display: inline-block;color: #333;width: 75%;"><p>成功帮<span class="wa-pageownername"></span>贡献</p><p>+<span class="wa-helpmoneynumber"></span>元</p></div>
         </div>
     </div>
     <!-- 非会员引导 -->
@@ -453,6 +453,7 @@
             },
             success: function(data) {
                 if (W.isMember) {
+                    $('.xui-successHint').find('.wa-helpmoneynumber').html(data.help_info.help_money);
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                 }else{
