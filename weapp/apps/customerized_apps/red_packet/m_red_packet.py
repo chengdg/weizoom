@@ -36,45 +36,19 @@ class MRedPacket(resource.Resource):
 			response.errMsg = 'is_deleted'
 			return response.get_response()
 
-		#统计排名信息
-		# current_member_rank_info = None
-		# cache_key = 'apps_red_packet_%s' % record_id
-		# cache_data = GET_CACHE(cache_key)
-		# if cache_data:
-		# 	participances_dict = cache_data['participances_dict']
-		# 	participances_list = cache_data['participances_list']
-		# 	total_participant_count = cache_data['total_participant_count']
-		# 	print '================from cache'
-		# else:
-		# 	#遍历log，统计助力值
-		# 	participances_dict = {}
-		# 	participances_list = []
-		# 	participances = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True).order_by('-power', 'created_at')
-		# 	total_participant_count = participances.count()
-		# 	member_ids = [p.member_id for p in participances]
-		# 	member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-		# 	rank = 0 #排名
-		# 	for p in participances:
-		# 		rank += 1
-		# 		temp_dict = {
-		# 			'rank': rank,
-		# 			'member_id': p.member_id,
-		# 			'user_icon': member_id2member[p.member_id].user_icon,
-		# 			'username': member_id2member[p.member_id].username_size_ten,
-		# 			'power': p.power
-		# 		}
-		# 		participances_dict[p.member_id] = temp_dict
-		# 		participances_list.append(temp_dict)
-		# 	# 取前100位
-		# 	participances_list = participances_list[:100]
-		# 	SET_CACHE(cache_key,{
-		# 		'participances_dict': participances_dict,
-		# 		'participances_list': participances_list,
-		# 		'total_participant_count': total_participant_count
-		# 	})
-		# 	print '================set cache'
-		# current_member_rank_info = participances_dict.get(int(member_id), None)
-
+		# 统计帮助者信息
+		helpers_info_list = []
+		helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id,has_helped=True).order_by('-created_at')
+		member_ids = [h.helper_member_id for h in helpers]
+		member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+		for h in helpers:
+			temp_dict = {
+				'member_id': h.helper_member_id,
+				'user_icon': member_id2member[h.helper_member_id].user_icon,
+				'username': member_id2member[h.helper_member_id].username_size_ten,
+				'help_money': h.help_money
+			}
+			helpers_info_list.append(temp_dict)
 		isMember = False
 		timing = 0
 		mpUserPreviewName = ''
@@ -192,7 +166,8 @@ class MRedPacket(resource.Resource):
 
 		response = create_response(200)
 		response.data = {
-			'member_info': member_info
+			'member_info': member_info,
+			'helpers_info': helpers_info_list
 		}
 		return response.get_response()
 

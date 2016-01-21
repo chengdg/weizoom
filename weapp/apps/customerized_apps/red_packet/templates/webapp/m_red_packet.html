@@ -296,8 +296,8 @@
                 updateMoneyInfo(data);
                 //启动倒计时
                 renderTime(data.member_info.timing);
-                //渲染排名
-{#                showTop100(data);#}
+                //渲染帮助者名单
+                showHelperInfo(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
             },
@@ -357,31 +357,16 @@
         });
     }
 
-    function showTop100(data){
-        var participances = data.participances;
-        if(participances || $.isEmptyObject(participances)){
+    function showHelperInfo(data){
+        var helpers_info = data.helpers_info;
+        if(helpers_info || $.isEmptyObject(helpers_info)){
             var li_content = '';
-            for(var i in participances){
-                var p = participances[i];
-                li_content += "<li><span class='wui-i-top100-range' id='"+(parseInt(i)+1)+"'>"+(parseInt(i)+1)+"</span><span class='wui-i-top100-name'><i class='wui-wraper'></i><img src='"+ p.user_icon+"'>"+ p.username+"</span><span class='wui-i-top100-power'>"+ p.power+"</span>";
+            for(var i in helpers_info){
+                var p = helpers_info[i];
+                li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ p.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ p.help_money+"元</li><li class='wui-i-name'>"+ p.username+"</li></div></div>";
             }
             $('.wa-top100').append($(li_content));
         }
-
-        var current_member_rank_info = data.current_member_rank_info;
-        var total_participant_count = data.total_participant_count;
-
-        if(!current_member_rank_info || $.isEmptyObject(current_member_rank_info)){
-            $('.wa-myrange').find('b').html('无');
-            $('.wa-mypower').find('b').html(0);
-        }else{
-            $('.wa-myrange').find('b').html(current_member_rank_info.rank);
-            $('.wa-mypower').find('b').html(current_member_rank_info.power);
-        }
-        $('.wa-totalcount').find('b').html(total_participant_count);
-
-        //展示与隐藏我的排名面板
-        window.setTimeout(showMyRank, 2*1000);
     }
 
     function renderTime(seconds){
