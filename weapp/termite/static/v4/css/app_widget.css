@@ -1718,7 +1718,7 @@ li.wui-selectBox-display-table {
     font-weight: bold;
     font-size: large;
 }
-.wui-i-rules-contentbox .wui-i-closebtn{
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-closebtn{
     color: white;
     font-size: x-large;
     font-weight: bold;
@@ -1731,6 +1731,8 @@ li.wui-selectBox-display-table {
     left: 96%;
     line-height: 30px;
 }
+
+
 
 
 /*百宝箱 拼红包 red packet CSS-- end*/
