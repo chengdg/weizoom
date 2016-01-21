@@ -130,8 +130,8 @@
                                 {% endifequal %}
                                 {% ifequal order.bill_type 2 %}
                                     公司
-                                {% endifequal %}
                                 <p class="xui-ml60">{{ order.bill }}</p>
+                                {% endifequal %}
                             {% endifequal %}</p>
                     </div>
                 </div>
@@ -209,7 +209,7 @@
         </div>
       </div>
   {% endif %}
-    
+
   <div class="xa-infotab" id="tab-orderlog" style="display:none;">
       <div class="xui-wuliuinfo">
               <table class="xui-Logtable"  >
@@ -339,7 +339,7 @@
                         {% for card in order.weizoom_cards %}
                           <li>{{card | safe}}</li>
                         {% endfor %}
-                        </ul>  
+                        </ul>
                     </div>
                   </span>
                 {% endif %}
