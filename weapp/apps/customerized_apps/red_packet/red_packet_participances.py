@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
-# from apps.customerized_apps.powerme.m_powerme import clear_non_member_power_info
+from apps.customerized_apps.red_packet.m_red_packet import reset_member_helper_info,reset_re_subscribed_member_helper_info
 from core import resource
 from core import paginator
 from core.exceptionutil import unicode_full_stack
@@ -78,8 +78,9 @@ class RedPacketParticipances(resource.Resource):
 		if is_already_paid !='-1':
 			params['is_already_paid'] = True if is_already_paid == '1' else False
 
-		#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
-		# clear_non_member_power_info(belong_to)
+		#检查所有当前参与用户是否取消关注，设置为未参与
+		reset_member_helper_info(belong_to)
+		reset_re_subscribed_member_helper_info(belong_to)
 		
 		datas = app_models.RedPacketParticipance.objects(**params).order_by('-id','created_at')
 

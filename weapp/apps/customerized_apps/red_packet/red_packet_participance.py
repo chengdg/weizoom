@@ -56,7 +56,7 @@ class RedPacketParticipance(resource.Resource):
 				fid_member = Member.objects.get(id=fid)
 				if not fid_member.is_subscribed:
 					response = create_response(500)
-					response.errMsg = u'该用户已退出活动'
+					response.errMsg = u'该用户已取消关注，暂时不能点赞'
 					return response.get_response()
 			except:
 				response = create_response(500)
