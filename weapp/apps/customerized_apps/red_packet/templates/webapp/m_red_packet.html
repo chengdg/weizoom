@@ -194,6 +194,299 @@
         margin-right: auto;
     }
 
+/*竖屏幕*/
+
+/*iphone4,5 w:320*/
+@media (orientation: portrait) and (min-width: 310px) and (max-width:337px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:11rem;
+    }
+}
+
+
+/*小米，华为 w:360*/
+@media (orientation: portrait) and (min-width: 350px) and (max-width: 374px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:12.5rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+}
+/*iphone6*/
+@media (orientation: portrait) and (min-width: 375px) and (max-width: 385px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:13rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-content {
+        margin-top: 1.5rem !important;
+    }
+}
+/*iphone6p*/
+@media (orientation: portrait) and (min-width: 410px) and (max-width: 430px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:15rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-content {
+        margin-top: 2rem !important;
+    }
+}
+
+/*横屏幕*/
+@media (orientation: landscape) {
+    body{
+        background:#D00405 !important;
+    }
+    .xui-default-background{
+        position: relative;
+    }
+    .wui-red_packet-container{
+        width: 360px;
+        height: 627px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        /* background: blue; */
+        width: 100%;
+        top: 12rem;
+    }
+
+}
+
+
+/*iphone4 横屏*/
+@media (orientation: landscape) and (min-width: 470px) and (max-width:490px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -9%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 2.5rem;
+        color: #3D3C35;
+    }
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 50px -19px;
+        background-size: 66%;
+    }
+
+}
+
+@media (orientation: landscape) and (min-width: 540px) and (max-width:580px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -9%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 3.5rem;
+        color: #3D3C35;
+    }
+
+
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 73px -19px;
+        background-size: 60%;
+    }
+
+}
+@media (orientation: landscape) and (min-width: 650px) and (max-width: 680px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -15%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 4rem;
+        color: #3D3C35;
+    }
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 94px -19px;
+        background-size: 58%;
+    }
+
+    .xui-successHint .wui-i-closebtn {
+        color: white;
+        font-size: x-large;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        background: #FF422D;
+        text-align: center;
+        border-radius: 100px;
+        position: relative;
+        left: 81%;
+        top: -181%;
+        line-height: 30px;
+    }
+
+
+
+}
+
+@media (orientation: landscape) and (min-width: 720px) and (max-width: 750px) {
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
+        border-radius: 3px;
+        left: 14%;
+        padding: 10px 10px 16px 9px;
+        position: fixed;
+        top: -15%;
+        width: 64%;
+        height: 67%;
+        z-index: 11111;
+        text-align: center;
+        background-position: -2px -9px;
+        background-size: 99%;
+    }
+
+    .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content {
+        margin-top: 5rem;
+        color: #3D3C35;
+    }
+
+
+    /*弹窗*/
+
+    .xui-successHint {
+        /*background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/success_msg.png");*/
+        border-radius: 3px;
+        left: 12%;
+        padding: 16% 10% 16% 9%;
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        height: 15%;
+        z-index: 11111;
+        text-align: center;
+        background-position: 94px -19px;
+        background-size: 58%;
+    }
+
+    .xui-successHint .wui-i-closebtn {
+        color: white;
+        font-size: x-large;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        background: #FF422D;
+        text-align: center;
+        border-radius: 100px;
+        position: relative;
+        left: 81%;
+        top: -181%;
+        line-height: 30px;
+    }
+}
+
+
+
 </style>
 {% endblock %}
 
