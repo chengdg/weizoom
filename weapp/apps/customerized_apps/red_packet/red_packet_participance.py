@@ -89,40 +89,45 @@ class RedPacketParticipance(resource.Resource):
 			#调整参与数量(首先检测是否已参与)
 			if not helped_member_info.has_join:
 				helped_member_info.update(set__has_join=True)
-			#记录每一次未关注人给予的帮助,已关注的则直接计算帮助值
-			if not request.member.is_subscribed:
-				red_packet_log = app_models.RedPacketLog(
-					belong_to = red_packet_id,
-					helper_member_id = member_id,
-					be_helped_member_id = int(fid)
-				)
-				red_packet_log.save()
-				has_helped = False
+			if helped_member_info.red_packet_status: #如果已经完成拼红包
+				response = create_response(500)
+				response.errMsg = u'该用户已经完成拼红包'
+				return response.get_response()
 			else:
-				#随机区间中获得好友帮助的金额
-				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
-				money_range_min,money_range_max = red_packet_info.money_range.split('-')
-				random_money = '%.2f' % random.uniform(float(money_range_min), float(money_range_max))
-				#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
-				current_money = helped_member_info.current_money + float(random_money)
-				if current_money > helped_member_info.red_packet_money:
-					random_money = helped_member_info.red_packet_money - helped_member_info.current_money
-				helped_member_info.update(inc__current_money=float(random_money))
-				helped_member_info.reload()
-				#完成目标金额，设置红包状态为成功
-				if helped_member_info.current_money == helped_member_info.red_packet_money:
-					helped_member_info.update(set__red_packet_status=True)
-				has_helped = True
-			detail_log = app_models.RedPacketDetail(
-				belong_to = red_packet_id,
-				owner_id = int(fid),
-				helper_member_id = member_id,
-				helper_member_name = request.member.username_for_html,
-				help_money = random_money,
-				has_helped = has_helped,
-				created_at = datetime.now()
-			)
-			detail_log.save()
+				#记录每一次未关注人给予的帮助,已关注的则直接计算帮助值
+				if not request.member.is_subscribed:
+					red_packet_log = app_models.RedPacketLog(
+						belong_to = red_packet_id,
+						helper_member_id = member_id,
+						be_helped_member_id = int(fid)
+					)
+					red_packet_log.save()
+					has_helped = False
+				else:
+					#随机区间中获得好友帮助的金额
+					red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
+					money_range_min,money_range_max = red_packet_info.money_range.split('-')
+					random_money = '%.2f' % random.uniform(float(money_range_min), float(money_range_max))
+					#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
+					current_money = helped_member_info.current_money + float(random_money)
+					if current_money > helped_member_info.red_packet_money:
+						random_money = helped_member_info.red_packet_money - helped_member_info.current_money
+					helped_member_info.update(inc__current_money=float(random_money))
+					helped_member_info.reload()
+					#完成目标金额，设置红包状态为成功
+					if helped_member_info.current_money == helped_member_info.red_packet_money:
+						helped_member_info.update(set__red_packet_status=True)
+					has_helped = True
+				detail_log = app_models.RedPacketDetail(
+					belong_to = red_packet_id,
+					owner_id = int(fid),
+					helper_member_id = member_id,
+					helper_member_name = request.member.username_for_html,
+					help_money = random_money,
+					has_helped = has_helped,
+					created_at = datetime.now()
+				)
+				detail_log.save()
 		except Exception,e:
 			print e
 			response = create_response(500)
