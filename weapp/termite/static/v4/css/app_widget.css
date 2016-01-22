@@ -1483,30 +1483,6 @@ li.wui-selectBox-display-table {
 
 }
 
-/*iphone4,5*/
-@media (width: 320px){
-    .wui-red_packet-container .wui-i-userinfo_group {
-        position: absolute;
-        width: 100%;
-        top:11rem;
-    }
-}
-/*iphone6*/
-@media (width: 375px){
-    .wui-red_packet-container .wui-i-userinfo_group {
-        position: absolute;
-        width: 100%;
-        top:13rem;
-    }
-}
-/*iphone6*/
-@media (width: 414px){
-    .wui-red_packet-container .wui-i-userinfo_group {
-        position: absolute;
-        width: 100%;
-        top:15rem;
-    }
-}
 .wui-red_packet-container .wui-i-money_group{
     color:#FFF059;
     text-align: center;
@@ -1775,6 +1751,58 @@ li.wui-selectBox-display-table {
     position: relative;
     left: 96%;
     line-height: 30px;
+}
+
+
+/*iphone4,5 w:320*/
+@media (min-width: 310px) and (max-width:337px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:11rem;
+    }
+}
+
+
+/*小米，华为 w:360*/
+@media (min-width: 350px) and (max-width: 374px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:12.5rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-contentbox {
+        margin-top: 11%;
+    }
+}
+/*iphone6*/
+@media (min-width: 375px) and (max-width: 385px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:13rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-content {
+        margin-top: 1.5rem !important;
+    }
+}
+/*iphone6p*/
+@media (min-width: 410px) and (max-width: 430px){
+    /*红包*/
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:15rem;
+    }
+    /*活动规则弹窗*/
+    .wui-red_packet-container .wui-i-rules-content {
+        margin-top: 2rem !important;
+    }
 }
 
 
