@@ -165,7 +165,7 @@ class RedPacketParticipance(resource.Resource):
 						red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
 					else:
 						response = create_response(500)
-						response.errMsg = u'红包已被抢完啦 下次早点来哦'
+						response.errMsg = u'红包已被抢完啦'
 						return response.get_response()
 				else:
 					regular_packets_number = red_packet_info.regular_packets_number
@@ -173,7 +173,7 @@ class RedPacketParticipance(resource.Resource):
 						red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
 					else:
 						response = create_response(500)
-						response.errMsg = u'红包已被抢完啦 下次早点来哦'
+						response.errMsg = u'红包已被抢完啦'
 						return response.get_response()
 				helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
 		except Exception,e:

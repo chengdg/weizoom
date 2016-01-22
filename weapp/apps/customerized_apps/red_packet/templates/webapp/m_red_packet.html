@@ -200,18 +200,29 @@
 {% block content-panel %}
     {{ page_html_content|safe }}
 
+    <!-- 成功页面 -->
     <div class="xui-powerSucceed xa-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
-            <p class="xui-i-msg none">现金红包已领取成功,系统会在24小时内把现金打入您的钱包，请注意查收！</p>
             <div style="display: inline-block;color: #333;width: 75%;">
                 <p class="xui-i-intro_text">您已为<span class="wa-pageownername">他</span>贡献</p>
                 <p class="xui-i-intro_num"><span class="xui-i-num">+</span><span class="xui-i-num wa-helpmoneynumber">0.00</span><span>元</span></p>
-                </div>
-                <div class="wui-i-closebtn xa-i-closebtn">
-                    ×
-                </div>
+            </div>
+            <div class="wui-i-closebtn xa-i-closebtn">
+                ×
+            </div>
         </div>
     </div>
+
+    <!-- 没有红包了的弹窗页面 -->
+    <div class="xui-powerSucceed xa-redPacketMsg none">
+        <div class="f15 xui-successHint xui-spritebg">
+            <p class="xui-i-msg xa-i-msg"></p>
+            <div class="wui-i-closebtn xa-i-closebtn">
+                ×
+            </div>
+        </div>
+    </div>
+
     <!-- 非会员引导 -->
     <div class="xui-attention xa-attention-guest none">
         <div class="xui-twoDimensionBox">
@@ -220,7 +231,7 @@
             </div>
             <img src="{% if params_qrcode_url %}{{params_qrcode_url}}{% else %}{{ request.webapp_owner_info.qrcode_img }}{% endif %}" alt="" class="xui-twoDimension">
             <div class="xa-attention-tip" style="display:none">
-                <p class="wui-win-font-color">2.关注公众号后即可为好友助力值+1</p>
+                <p class="wui-win-font-color">2.关注公众号后即可为好友贡献金额</p>
             </div>
             <div class="xa-attention-reply" style="margin-top: 5px;">
                 <p>2.回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，即可参加活动</div>
@@ -245,9 +256,9 @@
     </div>
     <div class="xui-share xa-share none">
         <div style="margin-top: 49%">
-            <p>好的事物，一起分享</p><p>邀请好友或者分享到朋友圈，</p>
+            <p>请点击右上角</p><p>选择发送给指定好友</p><p>或者分享到朋友圈</p>
             <div style="display: inline">
-                <p style="display: inline">发动小伙伴帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">赢大奖！</p>
+                <p style="display: inline">来帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">点赞</p>
             </div>
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
@@ -272,6 +283,8 @@
 <script type="text/javascript">
     var is_helped = true;
     var is_self_page = true;
+    var is_red_packet_run_out = false;
+    var red_packet_status = false;
     var page_owner_name = '';
     var page_owner_icon = '';
     var page_owner_member_id = '';
@@ -294,13 +307,20 @@
             if('未开始' == W.activityStatus){
                 $('.wa-notready').show();
             }else{
-                $('.wa-closed').show();
+                if(is_self_page && !red_packet_status && W.isAlreadyParticipanted){
+                    showFail();
+                }else{
+                    $('.wa-closed').show();
+                }
             }
             return false;
         }
         //如果是自己的主页
         if(is_self_page){
             //参与活动
+            if(red_packet_status){
+                showSuccess();
+            }
             participate_red_packet();
             $('.wa-running').on('click', openGuideMask).show();
         }else{
@@ -345,7 +365,7 @@
                     openMemberMask();
                 }).show();
             }else{
-                using_msg = '我也要参加';
+                using_msg = '我也要拼红包';
                 $('.wa-using').text(using_msg).on('click', function(){
                     $attention.find('img').attr('src', qrcode_url);
                     $attention.find('.xa-attention-tip').hide();
@@ -428,6 +448,7 @@
 
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
+        red_packet_status = member_info.red_packet_status;
         updateBtnStatus();
     }
 
@@ -454,6 +475,15 @@
                 console.log(page_owner_name+'成功参与活动');
             },
             error: function(data) {
+                if(data.errMsg){
+                    if(data.errMsg != '红包已被抢完啦'){
+                        wuiAlert(data.errMsg);
+                    }else{
+                        is_red_packet_run_out = true;
+                        openRunoutWin();
+                    }
+
+                }
                 console.error(data.errMsg);
             }
         });
@@ -507,7 +537,20 @@
     }
     function openSuccessWin(){
         mask('show');
-        $('.xui-powerSucceed').removeClass('none');
+        $('.xa-powerSucceed').removeClass('none');
+    }
+    function openRunoutWin(){
+        mask('show');
+        $('.xa-redPacketMsg').removeClass('none');
+        if (is_red_packet_run_out){
+            $('.xa-redPacketMsg').find('.xa-i-msg').html('红包已被抢完啦</p><p>下次早点来哦');
+        }
+    }
+    function showSuccess(){
+        $('.xa-redpacket_success').removeClass('none');
+    }
+    function showFail(){
+        $('.xa-redpacket_fail').removeClass('none');
     }
     function openGuestMask(){
         mask('show');
@@ -565,7 +608,6 @@
                     }
 
                 }
-
             }
         });
     }
@@ -597,6 +639,10 @@
     // 通知弹窗
     $('.xa-powerSucceed .xa-i-closebtn').click(function(){
         $('.xa-powerSucceed').addClass('none');
+        mask('hide');
+    });
+    $('.xa-redPacketMsg .xa-i-closebtn').click(function(){
+        $('.xa-redPacketMsg').addClass('none');
         mask('hide');
     });
     // 手机界面，发放提示消息 system msg box
