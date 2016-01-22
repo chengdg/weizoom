@@ -350,10 +350,10 @@
         });
     }
     function runProcessBar(data){
-        red_packet_money = member_info.red_packet_money;
-        current_money = member_info.current_money;
+        var red_packet_money = member_info.red_packet_money;
+        var current_money = member_info.current_money;
 
-        process = parseFloat(current_money/red_packet_money).toFixed(1)*100 +"%";
+        var process = parseFloat(current_money/red_packet_money).toFixed(1)*100 +"%";
 
         $(".xa-i-percentbox").left(process);
         $(".xa-i-bar_process").width(process);
