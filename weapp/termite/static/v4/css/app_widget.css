@@ -1483,30 +1483,41 @@ li.wui-selectBox-display-table {
 
 }
 
-/*iphone4,5*/
-@media (width: 320px){
+/*iphone4,5 w:320*/
+@media (min-width: 310px) and (max-width:337px){
     .wui-red_packet-container .wui-i-userinfo_group {
         position: absolute;
         width: 100%;
         top:11rem;
     }
 }
+
+
+/*小米，华为 w:360*/
+@media (min-width: 350px) and (max-width: 374px){
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:12.5rem;
+    }
+}
 /*iphone6*/
-@media (width: 375px){
+@media (min-width: 375px) and (max-width: 385px){
     .wui-red_packet-container .wui-i-userinfo_group {
         position: absolute;
         width: 100%;
         top:13rem;
     }
 }
-/*iphone6*/
-@media (width: 414px){
+/*iphone6p*/
+@media (min-width: 410px) and (max-width: 430px){
     .wui-red_packet-container .wui-i-userinfo_group {
         position: absolute;
         width: 100%;
         top:15rem;
     }
 }
+
 .wui-red_packet-container .wui-i-money_group{
     color:#FFF059;
     text-align: center;
