@@ -135,11 +135,36 @@ Background:
 		}]
 		"""
 
-
+@apps_redpockets_frontend
+Scenario:1 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包（拼手气红包）
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
+	Then bill收到自动回复'拼红包活动1单图文'
+	When bill点击图文"拼红包活动1"进入塞红包活动页面
+	Then bill获得jobs的'拼红包活动1'的内容
+		"""
+		[{
+			"name": "拼红包活动1",
+			"is_show_countdown": "true",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+		}]
+		"""
+	When bill把jobs的拼红包活动分享到朋友圈
+	When 更新拼红包活动
+	When bill点击图文"拼红包活动1"进入微助力活动页面
+	Then bill获得jobs的'拼红包活动1'的内容
+		"""
+		[{
+			"name": "拼红包活动1",
+			"is_show_countdown": "true",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+		}]
+		"""
 	
 
 @apps_redpockets_frontend
-Scenario:1 会员进入自己专属页面系统自动发放一个固定金额的红包（普通红包）
+Scenario:2 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包（普通红包）
 #主要验证普通红包获得系统自动发放的红包金额
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -155,10 +180,22 @@ Scenario:1 会员进入自己专属页面系统自动发放一个固定金额的
 			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
 		}]
 		"""
+	When bill把jobs的拼红包活动分享到朋友圈
+	When 更新拼红包活动
+	When bill点击图文"拼红包活动2单图文"进入微助力活动页面
+	Then bill获得jobs的'拼红包活动2'的内容
+		"""
+		[{
+			"name": "拼红包活动2",
+			"is_show_countdown": "true",
+			"single_packet_amount":"5",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
+		}]
+		"""
 	
  
 @apps_redpockets_frontend
-Scenario:2 会员帮助会员好友点赞，拼红包成功（弹出提示贡献成功）
+Scenario:3 会员帮助会员好友点赞，拼红包成功（弹出提示贡献成功）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
@@ -207,7 +244,7 @@ Scenario:2 会员帮助会员好友点赞，拼红包成功（弹出提示贡献
 		"""
 	
 @apps_redpockets_frontend
-Scenario:3 会员在好友页面点击“已帮好友点赞”按钮，弹出引导页面
+Scenario:4 会员已帮好友点赞，弹出引导页面
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
@@ -259,7 +296,7 @@ Scenario:3 会员在好友页面点击“已帮好友点赞”按钮，弹出引
 
 
 @apps_redpockets_frontend
-Scenario:4 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
+Scenario:5 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
@@ -306,7 +343,7 @@ Scenario:4 会员通过好友分享的页面进行我也要拼红包，弹出公
 
 	
 @apps_redpockets_frontend
-Scenario:5 好友在活动期间不能为取关会员点赞
+Scenario:6 好友在活动期间不能为取关会员点赞
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
