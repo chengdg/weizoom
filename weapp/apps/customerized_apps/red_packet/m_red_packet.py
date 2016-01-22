@@ -38,7 +38,7 @@ class MRedPacket(resource.Resource):
 
 		# 统计帮助者信息
 		helpers_info_list = []
-		helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id,has_helped=True).order_by('-created_at')
+		helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id,has_helped=True,is_valid=True).order_by('-created_at')
 		member_ids = [h.helper_member_id for h in helpers]
 		member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 		for h in helpers:
@@ -317,20 +317,20 @@ def reset_re_subscribed_member_helper_info(record_id):
 		set__current_money=0,
 		set__is_valid = True
 	)
-
+	# 将之前的点赞详情日志无效
+	app_models.RedPacketDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).update(set__is_valid=False)
 	# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
 	app_models.RedPacketControl.objects(belong_to=record_id, member_id__in=need_clear_member_ids).delete()
-
-	#已成功的不清除，只是使之有效
+	#已成功的不清除记录，只是使之有效，且不可以重新领取红包（has_join=True）
 	need_reset_member_ids = [p.id for p in app_models.RedPacketParticipance.objects.filter(member_id__in=re_subscribed_ids, red_packet_status=True)]
 	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_reset_member_ids).update(
+		set__has_join = True,
 		set__is_valid = True
 	)
 
 def reset_member_helper_info(record_id):
 	"""
 	所有取消关注的用户，设置为未参与，参与记录无效，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
-	将点赞详情日志无效
 	:param record_id: 活动id
 	"""
 	record_id = str(record_id)
@@ -339,5 +339,4 @@ def reset_member_helper_info(record_id):
 	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=False)]
 	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__has_join=False,set__is_valid=False)
 
-	# 将点赞详情日志无效
-	app_models.RedPacketDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).update(set__is_valid=False)
+
