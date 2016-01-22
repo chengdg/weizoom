@@ -55,6 +55,14 @@
 					data-format="yy-mm-dd HH:MM"
 					data-min-el="#start_time"/>
 			</div>
+			<div class="xui-i-item ml10">
+                <label>å‘æ”¾çŠ¶æ€ï¼š</label>
+                <select class="" id="is_already_paid" name="is_already_paid">
+                    <option value="-1">å…¨éƒ¨</option>
+                    <option value="1">å‘æ”¾</option>
+                    <option value="0">æœªå‘æ”¾</option>
+                </select>
+            </div>
 		</div>
 		<div class="xui-i-col">
 			<div class="ml80">
@@ -64,8 +72,14 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="panel panel-default xui-tableBox">
+		<div class="panel-heading">
+			<label for="topSelectAll" class="xui-selectAll ml15">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">å…¨é€‰
+			</label>
+			<a href="javascript:void(0);" class="ml10 xa-send-selected">æ‰¹é‡å‘æ”¾</a>
+		</div>
 		<div 
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table" 
@@ -75,8 +89,10 @@
 			data-template-id="#table" 
 			data-enable-paginator="true" 
 			data-enable-sort="false" 
-			data-selectable="false" 
-			data-disable-header-select="true" 
+			data-selectable="true"
+			data-disable-header-select="true"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
 			data-item-count-per-page="10" 
 		>
 		</div>
@@ -111,7 +127,7 @@
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
-			<tr data-id="${item.id}">
+			<tr data-id="${item.id}" class="xa-selectTr">
 				<td class="tl pl25">
 					<img width=60 height=60 src="${item.participant_icon}" />
 					{{html item.participant_name}}
