@@ -176,25 +176,26 @@ def export_orders_json(request):
 
     webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
 
-    # 构造会员与推荐人或者带参数二维码的关系
-    members = webappuser2member.values()
-    member_self_sub, member_qrcode_and_by_url = [], []
-    follow_member_ids = []
-    all_member_ids = []
-    for member in members:
-        if member:
-            all_member_ids.append(member.id)
-            if member.source == SOURCE_SELF_SUB:
-                member_self_sub.append(member)
-            elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
-                member_qrcode_and_by_url.append(member)
-                follow_member_ids.append(member.id)
+    if webappuser2member:
+        # 构造会员与推荐人或者带参数二维码的关系
+        members = webappuser2member.values()
+        member_self_sub, member_qrcode_and_by_url = [], []
+        follow_member_ids = []
+        all_member_ids = []
+        for member in members:
+            if member:
+                all_member_ids.append(member.id)
+                if member.source == SOURCE_SELF_SUB:
+                    member_self_sub.append(member)
+                elif member.source in [SOURCE_MEMBER_QRCODE, SOURCE_BY_URL]:
+                    member_qrcode_and_by_url.append(member)
+                    follow_member_ids.append(member.id)
 
-    follow_member2father_member = dict([(relation.follower_member_id, relation.member_id) for relation in MemberFollowRelation.objects.filter(follower_member_id__in=follow_member_ids, is_fans=True)])
-    father_member_ids = follow_member2father_member.values()
-    father_member_id2member = dict([(m.id, m) for m in Member.objects.filter(id__in=father_member_ids)])
+        follow_member2father_member = dict([(relation.follower_member_id, relation.member_id) for relation in MemberFollowRelation.objects.filter(follower_member_id__in=follow_member_ids, is_fans=True)])
+        father_member_ids = follow_member2father_member.values()
+        father_member_id2member = dict([(m.id, m) for m in Member.objects.filter(id__in=father_member_ids)])
 
-    member_id2qrcode = dict([(relation.member_id, relation) for relation in ChannelQrcodeHasMember.objects.filter(member_id__in=all_member_ids)])
+        member_id2qrcode = dict([(relation.member_id, relation) for relation in ChannelQrcodeHasMember.objects.filter(member_id__in=all_member_ids)])
 
     # print 'end step 6.7 - '+str(time.time() - begin_time)
     # 获取order对应的赠品
@@ -212,10 +213,10 @@ def export_orders_json(request):
         if promotion.get('premium_products'):
             for premium_product in order2promotion[order_id]['premium_products']:
                 temp_premium_products.append({
-                    'id': premium_product['id'],
-                    'name': premium_product['name'],
-                    'count': premium_product['count'],
-                    'price': premium_product['price'],
+                    'id': premium_product.get('id', ""),
+                    'name': premium_product.get('name', ""),
+                    'count': premium_product.get('count', ""),
+                    'price': premium_product.get('price', ""),
                     'purchase_price': premium_product.get('purchase_price', 0),
                 })
                 premium_product_ids.append(premium_product['id'])
@@ -262,7 +263,10 @@ def export_orders_json(request):
     temp_premium_products = []
     for order in order_list:
         # 获取order对应的member的显示名
-        member = webappuser2member.get(order.webapp_user_id, None)
+        if webappuser2member:
+            member = webappuser2member.get(order.webapp_user_id, None)
+        else:
+            member = None
         if member:
             order.buyer_name = handle_member_nickname(member.username_for_html)
             order.member_id = member.id
