@@ -251,7 +251,7 @@
         if(is_self_page){
             //参与活动
             participate_red_packet();
-            $('.wa-using').text('邀请好友 帮我拼红包').on('click', openGuideMask).show();
+            $('.wa-running').on('click', openGuideMask).show();
         }else{
             var using_msg;
             var $attention = $('.xa-attention-guest');
@@ -355,7 +355,7 @@
 
         var process = parseFloat(current_money/red_packet_money).toFixed(1)*100 +"%";
 
-        $(".xa-i-percentbox").left(process);
+        $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
         $(".xa-i-percentbox").html(process);
     }

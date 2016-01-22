@@ -1604,6 +1604,14 @@ li.wui-selectBox-display-table {
     width: 80%;
     height: 2.5rem;
 }
+
+.wui-red_packet-container .wui-i-btngroup .wui-i-btn-running{
+    color: #CD0E06;
+    background: #FFC600;
+	width:70%;
+	margin-left: auto;
+	margin-right: auto;
+}
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
     background: #999999;
