@@ -163,14 +163,14 @@
 {% block content-panel %}
     {{ page_html_content|safe }}
 
-    <div class="xui-powerSucceed">
+    <div class="xui-powerSucceed xa-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
             <p class="xui-i-msg none">现金红包已领取成功,系统会在24小时内把现金打入您的钱包，请注意查收！</p>
             <div style="display: inline-block;color: #333;width: 75%;">
                 <p class="xui-i-intro_text">您已为<span class="wa-pageownername">"未命名"</span>贡献</p>
                 <p class="xui-i-intro_num"><span class="xui-i-num">+</span><span class="xui-i-num wa-helpmoneynumber">0.00</span><span>元</span></p>
                 </div>
-                <div class="wui-i-closebtn">
+                <div class="wui-i-closebtn xa-i-closebtn">
                     ×
                 </div>
         </div>
@@ -337,6 +337,8 @@
                 showHelperInfo(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
+                //进度bar动画
+                runProcessBar(data);
             },
             error: function(data) {
                 if(data.errMsg == 'is_deleted'){
@@ -346,6 +348,16 @@
                 }
             }
         });
+    }
+    function runProcessBar(data){
+        red_packet_money = member_info.red_packet_money;
+        current_money = member_info.current_money;
+
+        process = parseFloat(current_money/red_packet_money).toFixed(1)*100 +"%";
+
+        $(".xa-i-percentbox").left(process);
+        $(".xa-i-bar_process").width(process);
+        $(".xa-i-percentbox").html(process);
     }
 
     function updateActivityStatus(data){
@@ -518,6 +530,14 @@
     });
     $('.xa-colseButton').click(function(){
         $('.xa-share').addClass('none');
+        mask('hide');
+    });
+    $('.xa-i-closebtn').click(function(){
+        $('.xa-rules').addClass('none');
+        mask('hide');
+    });
+    $('.xa-powerSucceed .xa-i-closebtn').click(function(){
+        $('.xa-powerSucceed').addClass('none');
         mask('hide');
     });
 </script>
