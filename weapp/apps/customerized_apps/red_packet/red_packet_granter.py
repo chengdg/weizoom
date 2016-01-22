@@ -9,7 +9,6 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
-# from apps.customerized_apps.powerme.m_powerme import clear_non_member_power_info
 from account.models import UserWeixinPayOrderConfig
 from core import resource
 from core import paginator

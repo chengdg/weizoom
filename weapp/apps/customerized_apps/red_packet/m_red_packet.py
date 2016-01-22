@@ -56,7 +56,10 @@ class MRedPacket(resource.Resource):
 		is_helped = False
 		self_page = False
 		page_owner_name = ''
+		page_owner_icon = ''
 		page_owner_member_id = 0
+		red_packet_money = 0
+		current_money = 0
 		activity_status = u"未开始"
 
 		# fid = request.COOKIES['fid']
@@ -88,8 +91,9 @@ class MRedPacket(resource.Resource):
 
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 
-				#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
-				# clear_non_member_helper_info(record_id)
+				#检查所有当前参与用户是否取消关注，设置为未参与
+				reset_member_helper_info(record_id)
+				reset_re_subscribed_member_helper_info(record_id)
 
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_red_packet_info.count()> 0:
@@ -106,12 +110,15 @@ class MRedPacket(resource.Resource):
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = member.username_size_ten
+					page_owner_icon = member.user_icon
 					page_owner_member_id = member_id
 					self_page = True
 					red_packet_money = curr_member_red_packet_info.red_packet_money
 					current_money = curr_member_red_packet_info.current_money
 				else:
-					page_owner_name = Member.objects.get(id=fid).username_size_ten
+					page_owner = Member.objects.get(id=fid)
+					page_owner_name = page_owner.username_size_ten
+					page_owner_icon = page_owner.user_icon
 					page_owner_member_id = fid
 
 					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
@@ -158,6 +165,7 @@ class MRedPacket(resource.Resource):
 			'self_page': self_page,
 			'member_id': member_id,
 			'page_owner_name': page_owner_name,
+			'page_owner_icon': page_owner_icon,
 			'page_owner_member_id': page_owner_member_id,
 			'activity_status': activity_status,
 			'red_packet_money': '%.2f' % red_packet_money,
@@ -221,8 +229,9 @@ class MRedPacket(resource.Resource):
 					activity_status = u'已结束'
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 
-				#检查所有当前参与用户是否取消关注，清空其助力值同时设置为未参与
-				# clear_non_member_helper_info(record_id)
+				#检查所有当前参与用户是否取消关注，设置为未参与
+				reset_member_helper_info(record_id)
+				reset_re_subscribed_member_helper_info(record_id)
 			else:
 				c = RequestContext(request, {
 					'is_deleted_data': True
@@ -291,17 +300,44 @@ class MRedPacket(resource.Resource):
 		# 	SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
-def clear_non_member_helper_info(record_id):
+def reset_re_subscribed_member_helper_info(record_id):
 	"""
-	所有取消关注的参与用户，清空其助力值同时设置为未参与,重置时间
+	所有取消关注再关注的参与用户，清空其金额，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
 	清空日志
-	[更改需求，用户取消关注后，对其现有的数据不做任何改动]
 	:param record_id: 活动id
 	"""
-	# record_id = str(record_id)
-	# all_member_power_info = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True)
-	# all_member_power_info_ids = [p.member_id for p in all_member_power_info]
-	# need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_power_info_ids, is_subscribed=False)]
-	# app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__power=0, set__has_join=False)
-	#清空助力详情日志
-	# app_models.PoweredDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).delete()
+	record_id = str(record_id)
+	all_unvalid_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, is_valid=False)
+	all_member_red_packet_info_ids = [p.member_id for p in all_unvalid_member_red_packets_info]
+	re_subscribed_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=True)]
+	#未成功的红包需要清除之前的数据，已成功的不清除
+	need_clear_member_ids = [p.id for p in app_models.RedPacketParticipance.objects.filter(member_id__in=re_subscribed_ids, red_packet_status=False)]
+	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(
+		set__red_packet_money=0,
+		set__current_money=0,
+		set__is_valid = True
+	)
+
+	# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
+	app_models.RedPacketControl.objects(belong_to=record_id, member_id__in=need_clear_member_ids).delete()
+
+	#已成功的不清除，只是使之有效
+	need_reset_member_ids = [p.id for p in app_models.RedPacketParticipance.objects.filter(member_id__in=re_subscribed_ids, red_packet_status=True)]
+	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_reset_member_ids).update(
+		set__is_valid = True
+	)
+
+def reset_member_helper_info(record_id):
+	"""
+	所有取消关注的用户，设置为未参与，参与记录无效，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
+	将点赞详情日志无效
+	:param record_id: 活动id
+	"""
+	record_id = str(record_id)
+	all_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True)
+	all_member_red_packet_info_ids = [p.member_id for p in all_member_red_packets_info]
+	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=False)]
+	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__has_join=False,set__is_valid=False)
+
+	# 将点赞详情日志无效
+	app_models.RedPacketDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).update(set__is_valid=False)

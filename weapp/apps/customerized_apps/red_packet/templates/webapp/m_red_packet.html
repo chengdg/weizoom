@@ -167,7 +167,7 @@
         <div class="f15 xui-successHint xui-spritebg">
             <p class="xui-i-msg none">现金红包已领取成功,系统会在24小时内把现金打入您的钱包，请注意查收！</p>
             <div style="display: inline-block;color: #333;width: 75%;">
-                <p class="xui-i-intro_text">您已为<span class="wa-pageownername">"未命名"</span>贡献</p>
+                <p class="xui-i-intro_text">您已为<span class="wa-pageownername">他</span>贡献</p>
                 <p class="xui-i-intro_num"><span class="xui-i-num">+</span><span class="xui-i-num wa-helpmoneynumber">0.00</span><span>元</span></p>
                 </div>
                 <div class="wui-i-closebtn xa-i-closebtn">
@@ -223,6 +223,7 @@
     var is_helped = true;
     var is_self_page = true;
     var page_owner_name = '';
+    var page_owner_icon = '';
     var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
@@ -253,6 +254,7 @@
             participate_red_packet();
             $('.wa-running').on('click', openGuideMask).show();
         }else{
+            $('.wa-running').hide();
             var using_msg;
             var $attention = $('.xa-attention-guest');
             var $powerBtn = $('.wa-power');
@@ -363,9 +365,10 @@
     function updateActivityStatus(data){
         member_info = data.member_info;
         is_self_page = member_info.self_page;
-        //更新页面拥有者名称
+        //更新页面拥有者名称，头像
         page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
         $('.wa-pageownername').html(page_owner_name);
+        $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
         W.isAlreadyParticipanted = member_info.is_already_participanted;
