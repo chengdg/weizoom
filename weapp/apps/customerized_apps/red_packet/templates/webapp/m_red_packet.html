@@ -156,6 +156,43 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    .xui-redpacket_success .xui-i-msgbox,.xui-redpacket_fail .xui-i-msgbox{
+
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.5rem;
+        color:#FEEE5A;
+        /*background:#FFC600;*/
+        border: 0px;
+        border-radius: 1px;
+    }
+    .xui-redpacket_success .xui-success_msg{
+        width: 14rem;
+        height: 2rem;
+        background: url("/termite_static/img/component/redpacket/success_msg_text.png") no-repeat;
+        background-size: 100%;
+        background-position: 0px 0px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .xui-redpacket_success .xui-system_msg{
+
+        font-size: small;
+        color:#FC9E00;
+        font-weight: normal;
+    }
+
+    .xui-redpacket_fail .xui-fail_msg{
+        width: 14rem;
+        height: 2rem;
+        background: url("/termite_static/img/component/redpacket/fail_msg_text.png") no-repeat;
+        background-size: 100%;
+        background-position: 0px 0px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
 </style>
 {% endblock %}
@@ -216,6 +253,19 @@
         <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
     </div>
 
+    <!-- 成功消息:父wui-i-system_msgbox -->
+    <div class="xui-redpacket_success xa-redpacket_success none">
+        <div class="xui-i-msgbox">
+            <p class="xui-success_msg"></p>
+            <p class="xui-system_msg">系统会在24小时内发放，请注意查收。</p>
+        </div>
+    </div>
+    <div class="xui-redpacket_fail xa-redpacket_fail none">
+        <div class="xui-i-msgbox">
+            <p class="xui-fail_msg"></p>
+            <!-- <p class="xui-system_msg"></p> -->
+        </div>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -535,14 +585,24 @@
         $('.xa-share').addClass('none');
         mask('hide');
     });
+    // 活动规则
     $('.xa-i-closebtn').click(function(){
-        $('.xa-rules').addClass('none');
+        $('.xa-i-rules-contentbox').addClass('none');
         mask('hide');
     });
+    $('.xa-i-rules-title-content p').click(function(){
+        $('.xa-i-rules-contentbox').removeClass('none');
+        mask('show');
+    });
+    // 通知弹窗
     $('.xa-powerSucceed .xa-i-closebtn').click(function(){
         $('.xa-powerSucceed').addClass('none');
         mask('hide');
     });
+    // 手机界面，发放提示消息 system msg box
+    $('.wa-i-system_msgbox').append($('.xui-redpacket_success'));
+    $('.wa-i-system_msgbox').append($('.xui-redpacket_fail'));
+
 </script>
 {% endblock %}
 

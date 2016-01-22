@@ -59,6 +59,10 @@ class lottery(models.Document):
 	chance = models.IntField(default=0) #中奖几率
 	allow_repeat = models.StringField(default="true", max_length=10) #是否允许重复中奖
 	prize = models.DynamicField() #每个奖项的奖品数量
+	#证书文存放件路径
+	cert_pem_path = models.StringField(default="", max_length=256) #证书
+	key_pem_path = models.StringField(default="", max_length=256) #证书密钥
+
 	
 	meta = {
 		'collection': 'lottery_lottery'
