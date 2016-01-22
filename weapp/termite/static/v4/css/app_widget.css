@@ -1589,6 +1589,13 @@ li.wui-selectBox-display-table {
     padding-bottom: 3px;
 }
 
+.wui-red_packet-container .wui-i-system_msgbox{
+    width: 80%;
+    /* text-align: center; */
+    /*height: 4rem;*/
+    margin-left: auto;
+    margin-right: auto;
+}
 .wui-red_packet-container .wui-i-btngroup{
     text-align: center;
     margin-top: 20px;
@@ -1603,14 +1610,6 @@ li.wui-selectBox-display-table {
     border-radius: 1px;
     width: 80%;
     height: 2.5rem;
-}
-
-.wui-red_packet-container .wui-i-btngroup .wui-i-btn-running{
-    color: #CD0E06;
-    background: #FFC600;
-	width:70%;
-	margin-left: auto;
-	margin-right: auto;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
