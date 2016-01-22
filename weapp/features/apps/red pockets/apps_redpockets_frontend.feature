@@ -368,9 +368,21 @@ Scenario:6 好友在活动期间不能为取关会员点赞
 			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 		}]
 		"""
-	When 清空浏览器
-	When bill取消关注jobs的公众号
+	When tom关注jobs的公众号
 	When tom访问jobs的webapp
-	When tom点击bill分享的塞红包活动链接进行点赞
-	Then tom获得塞红包活动提示"该用户已经取消关注 暂不能点赞"
-	
+	When tom点击bill分享的塞红包活动链接进行我也要拼红包
+	Then tom通过识别弹层中的带参数二维码关注jobs的公众号
+	When 更新塞红包活动
+	When tom在微信中向jobs的公众号发送消息'拼红包活动1'
+	Then tom收到自动回复'拼红包活动1单图文'
+	When tom点击图文"拼红包活动1单图文"进入塞红包活动页面
+	Then tom获得jobs的'拼红包活动1'的内容
+	"""
+		[{
+			"name": "拼红包活动1",
+			"is_show_countdown": "true",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+		}]
+		"""
+	When tom点击bill分享的塞红包活动链接再次进行我也要拼红包
+	Then tom通过识别弹层中的带参数二维码关注jobs的公众号

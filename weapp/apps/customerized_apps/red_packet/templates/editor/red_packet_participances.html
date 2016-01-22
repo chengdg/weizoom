@@ -24,6 +24,14 @@
 				<label class="">用户名：</label>
 				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
 			</div>
+			<div class="xui-i-item">
+                <label>红包状态</label>
+                <select class="" id="red_packet_status" name="red_packet_status">
+                    <option value="-1">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
 		</div>
 		<div class="xui-i-col">
 			<div class="xui-i-item ml10">
@@ -55,6 +63,14 @@
 					data-format="yy-mm-dd HH:MM"
 					data-min-el="#start_time"/>
 			</div>
+			<div class="xui-i-item ml10">
+                <label>发放状态</label>
+                <select class="" id="is_already_paid" name="is_already_paid">
+                    <option value="-1">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
 		</div>
 		<div class="xui-i-col">
 			<div class="ml80">
@@ -64,8 +80,14 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="panel panel-default xui-tableBox">
+		<div class="panel-heading">
+			<label for="topSelectAll" class="xui-selectAll ml15">
+				<input type="checkbox" id="topSelectAll" class="xa-selectAll">全选
+			</label>
+			<a href="javascript:void(0);" class="ml10 xa-send-selected">批量发放</a>
+		</div>
 		<div 
 			class="panel-body panel-table p0 mt10"
 			data-ui-role="advanced-table" 
@@ -75,8 +97,10 @@
 			data-template-id="#table" 
 			data-enable-paginator="true" 
 			data-enable-sort="false" 
-			data-selectable="false" 
-			data-disable-header-select="true" 
+			data-selectable="true"
+			data-disable-header-select="true"
+			data-outer-selecter='.xa-selectAll'
+			data-selecttable-tr='xa-selectTr'
 			data-item-count-per-page="10" 
 		>
 		</div>
@@ -111,7 +135,7 @@
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
-			<tr data-id="${item.id}">
+			<tr data-id="${item.id}" class="xa-selectTr">
 				<td class="tl pl25">
 					<img width=60 height=60 src="${item.participant_icon}" />
 					{{html item.participant_name}}
