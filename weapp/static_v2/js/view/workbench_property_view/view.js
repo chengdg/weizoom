@@ -48,7 +48,10 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage',
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
-        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode'
+        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
+
+        //拼红包选择类型
+        'click .xa-red-packet-selector': 'onClickRedPacketSelector'
 	},
 
     getTemplate: function() {

@@ -173,22 +173,7 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			placeholder: '点赞帮好友赢现金红包',
 			annotation: '拼红包成功后，开启现金红包时显示文字',
 			default: "点赞帮好友赢现金红包"
-		},
-		//	{
-		//	name: 'color',
-		//	type: 'radio',
-		//	displayName: '背景皮肤',
-		//	isUserProperty: true,
-		//	source: [{
-		//		name: '默认背景',
-		//		value: 'yellow'
-		//	}, {
-		//		name: '新年快乐',
-		//		value: 'red'
-		//	}],
-		//	default: 'yellow'
-		//},
-			{
+		},{
 			name: 'rules',
 			type: 'textarea',
 			displayName: '活动规则',
@@ -300,22 +285,6 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
 			}
 		},
-		//color: function($node, model, value, $propertyViewNode) {
-		//	switch (value){
-		//		case 'yellow':
-		//			$node.find(".wui-red_packet-container").addClass('yellow');
-		//			$node.find(".wui-red_packet-container").removeClass('red orange new_year_red');
-		//			break;
-		//		case 'red':
-		//			$node.find(".wui-red_packet-container").addClass('red');
-		//			$node.find(".wui-red_packet-container").removeClass('yellow orange new_year_red');
-		//			break;
-		//		default :
-		//			$node.find(".wui-red_packet-container").addClass('yellow');
-		//			$node.find(".wui-red_packet-container").removeClass('red orange new_year_red');
-		//			break;
-		//	}
-		//},
 		rules: function($node, model, value, $propertyViewNode) {
 			model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
 			$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
