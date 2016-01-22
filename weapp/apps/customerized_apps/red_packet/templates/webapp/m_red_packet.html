@@ -548,7 +548,7 @@
             </div>
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
             <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
-                分享到朋友圈,发动小伙伴帮你助力赢大奖！
+                分享到朋友圈,发动小伙伴帮你点赞赢红包！
             </div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
@@ -596,6 +596,7 @@
             return false;
         }
         $('.wui-appParticipantResult-Cover').hide();
+
         //展示参与统计
         getDynamicData();
     });
@@ -620,7 +621,6 @@
             if(red_packet_status){
                 showSuccess();
             }
-            participate_red_packet();
             $('.wa-running').on('click', openGuideMask).show();
         }else{
             $('.wa-running').hide();
@@ -757,35 +757,6 @@
         current_money = member_info.current_money;
         $('.wa-i-current_money').text(current_money+'元');
         $('.wa-i-red_packet_money').text('总金额'+red_packet_money+'元');
-    }
-
-    function participate_red_packet(){
-        //进入页面就算参与拼红包活动
-        W.getApi().call({
-            app: 'm/apps/red_packet',
-            resource: 'red_packet_participance',
-            method: 'post',
-            args: {
-                webapp_owner_id: W.webappOwnerId,
-                id: W.appRecordId,
-                fid: page_owner_member_id
-            },
-            success: function(data) {
-                console.log(page_owner_name+'成功参与活动');
-            },
-            error: function(data) {
-                if(data.errMsg){
-                    if(data.errMsg != '红包已被抢完啦'){
-                        wuiAlert(data.errMsg);
-                    }else{
-                        is_red_packet_run_out = true;
-                        openRunoutWin();
-                    }
-
-                }
-                console.error(data.errMsg);
-            }
-        });
     }
 
     function showHelperInfo(data){

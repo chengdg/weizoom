@@ -2,7 +2,7 @@
 
 import json
 from datetime import datetime
-
+from apps.customerized_apps.red_packet.red_packet_participance import paticipate_red_packet
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -15,9 +15,9 @@ import models as app_models
 from core.jsonresponse import create_response
 from termite2 import pagecreater
 from utils import url_helper
-# from utils.cache_util import GET_CACHE, SET_CACHE
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
+
 
 class MRedPacket(resource.Resource):
 	app = 'apps/red_packet'
@@ -114,9 +114,14 @@ class MRedPacket(resource.Resource):
 					page_owner_icon = member.user_icon
 					page_owner_member_id = member_id
 					self_page = True
+					#自己的主页，则参与拼红包
+					paticipate_red_packet(record_id,member_id)
+					curr_member_red_packet_info.reload()
 					red_packet_money = curr_member_red_packet_info.red_packet_money
 					current_money = curr_member_red_packet_info.current_money
 					red_packet_status = curr_member_red_packet_info.red_packet_status
+					print('red_packet_status11111111111!!!!!!!!!!')
+					print(red_packet_money)
 				else:
 					page_owner = Member.objects.get(id=fid)
 					page_owner_name = page_owner.username_size_ten
@@ -158,7 +163,8 @@ class MRedPacket(resource.Resource):
 
 		if u"进行中" == activity_status:
 			timing = (record.end_time - datetime.today()).total_seconds()
-
+		print('red_packet_status2222222222222!!!!!!!!!!')
+		print(red_packet_money)
 		member_info = {
 			'isMember': isMember,
 			'timing': timing,
@@ -316,6 +322,7 @@ def reset_re_subscribed_member_helper_info(record_id):
 	re_subscribed_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=True)]
 	#未成功的红包需要清除之前的数据，已成功的不清除
 	need_clear_member_ids = [p.id for p in app_models.RedPacketParticipance.objects.filter(member_id__in=re_subscribed_ids, red_packet_status=False)]
+
 	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(
 		set__red_packet_money=0,
 		set__current_money=0,
