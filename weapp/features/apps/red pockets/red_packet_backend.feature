@@ -1,4 +1,4 @@
-# __author__ : 许韦
+# __author__ : 许韦 2016.01.20
 
 Feature: 新建红包活动
 	"""
@@ -12,7 +12,7 @@ Feature: 新建红包活动
 		7.【用户识别二维码】：非必填项，此处若空缺，则使用公众号二维码代替
 		8.【活动规则】：非必填项，不超过500个字符
 		9.【分享图标】：必填项，建议图片长宽100px*100px，正方形图片
-		10.【分项描述】：必填项，不超过26个字符
+		10.【分享描述】：必填项，不超过26个字符
 
 	"""
 
@@ -53,8 +53,6 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"reply":"拼红包",
 			"qr_code":"",
 			"open_packet_reply":"点赞帮好友赢现金红包",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
@@ -83,7 +81,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 		[{
 			"name":"拼红包活动2",
 			"start_date":"明天",
-			"end_date":"两天后",
+			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":[{
 				"type":"normal",
@@ -95,8 +93,6 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"reply":"拼红包",
 			"qr_code":"带参数二维码1",
 			"open_packet_reply":"点赞帮好友赢现金红包",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"2.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
@@ -112,7 +108,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"total_amount":"100",
 			"send_amount":"0",
 			"start_date":"明天",
-			"end_date":"两天后",
+			"end_date":"2天后",
 			"actions": ["删除","链接","预览","查看"]
 		}]
 		"""
