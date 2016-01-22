@@ -96,8 +96,12 @@ LOGGING = {
 
 if MODE == 'develop' or MODE == 'test':
     WATCHDOG_DB = 'default'
+    import logging
+    logging.basicConfig(format='[WD|%(process)s] %(asctime)s %(levelname)s %(message)s', datefmt="%a %b %d %H:%M:%S %Y", level=logging.DEBUG)
 else:
     WATCHDOG_DB = 'watchdog'
+    import logging
+    logging.basicConfig(format='[WD|%(process)s] %(asctime)s %(levelname)s %(message)s', datefmt="%a %b %d %H:%M:%S %Y", level=logging.INFO)
 
 REDIS_HOST = 'redis.weapp.com'
 REDIS_PORT = 6379
@@ -242,7 +246,7 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
-   
+
 
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
@@ -267,7 +271,7 @@ MIDDLEWARE_CLASSES = [
     'core.middleware.UserProfileMiddleware',
      # webapp home_page middleware
     'core.termite_middleware.WebappPageHomePageMiddleware',
-    
+
     'modules.member.middleware.CleanUpCookieMiddleware',
     'modules.member.middleware.MemberCacheMiddleware',
     'modules.member.middleware.ProcessOpenidMiddleware',
@@ -671,8 +675,8 @@ UNCATCHED_EXCEPTION_ACTION_URL = ''
 
 
 WEAPP_WEB_DIALOG_DIRS = [
-    ('static', '%s/../static/' % PROJECT_HOME), 
-    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME), 
+    ('static', '%s/../static/' % PROJECT_HOME),
+    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME),
     #('customerized_apps_static', '%s/../apps/customerized_apps/*' % PROJECT_HOME)
 ]
 WEAPP_WEB_VIEW_DIRS = [
@@ -816,6 +820,4 @@ else:
 
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
-
-
 
