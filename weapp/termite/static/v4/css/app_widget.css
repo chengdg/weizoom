@@ -1482,6 +1482,31 @@ li.wui-selectBox-display-table {
     margin-right: auto;
 
 }
+
+/*iphone4,5*/
+@media (width: 320px){
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:11rem;
+    }
+}
+/*iphone6*/
+@media (width: 375px){
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:13rem;
+    }
+}
+/*iphone6*/
+@media (width: 414px){
+    .wui-red_packet-container .wui-i-userinfo_group {
+        position: absolute;
+        width: 100%;
+        top:15rem;
+    }
+}
 .wui-red_packet-container .wui-i-money_group{
     color:#FFF059;
     text-align: center;
