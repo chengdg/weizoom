@@ -662,38 +662,6 @@
 					</div>
 					{{/if}}
 
-					{{if (field.type == 'upload_file')}}
-                    <div class="propertyGroup_property_uploadFileField propertyGroup_property_horizontalField">
-                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
-                        <div class="propertyGroup_property_input" id="fileUploader-${field.name}" style="position:relative;">
-                        	<input id="uploadify-${field.name}" class="xa-uploadify-file" type="file" name="${field.name}"
-                        	    data-filter="${field.filter}"
-                        	    data-field="${field.name}"
-                        	    data-url="${field.url}"
-                        	    data-errorHint="${field.errorHint}"
-                        	    data-fileDesc="${field.fileDesc}"
-                        	    data-buttonText="${field.buttonText}">
-                            {{if field.help}}
-                            <div style="color: #666;">
-                                {{html field.help.replace(/\n/g, "<br/>")}}
-                            </div>
-                            {{/if}}
-                        {{if field.groupHelp }}
-							<span id="${field.groupHelp.id}" class="${field.groupHelp.className}">
-							{{if field.groupHelp.link }}
-							<a id="${field.groupHelp.link.id}" class="${field.groupHelp.link.className}" data-func="${field.groupHelp.link.handler}" >${field.groupHelp.link.text}</a>
-							{{/if}}
-
-							{{if field.groupHelp.tip }}
-								<a role="button" tabindex="0" class="groupHelp_tip" data-container="body" data-trigger="focus" data-toggle="popover" data-placement="bottom" data-content="${field.groupHelp.tip.text}">&#63;</a>
-							{{/if}}
-							</span>
-						{{/if}}
-                        <div class="errorHint"></div>
-                        </div>
-                    </div>
-                    {{/if}}
-
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
 					<div class="propertyGroup_property_label" style="float:left;width:58px;margin-right:9px;line-height:60px;text-align:right;">${field.displayName}</div>
