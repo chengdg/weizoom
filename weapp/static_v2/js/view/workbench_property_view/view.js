@@ -48,10 +48,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage',
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
-        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
-
-        'click .xa-red-packet-selector': 'onClickRedPacketSelector',
-        'click .xa-save': 'onClickUploadRedPacketFile'
+        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode'
 	},
 
     getTemplate: function() {
@@ -410,48 +407,6 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         //this.$('input').eq(0).focus();   
         this.$el.show();
-
-        //初始化uploadify上传组件 add by aix ---start
-        var $uploaders = this.$el.find('.xa-uploadify-file');
-        $uploaders.each(function(){
-            var id = this.id;
-            var $this = $(this);
-            var url = $this.attr('data-url');
-            var filterType = $this.attr('data-filter');
-            var errorHint = $this.attr('data-errorHint');
-            var fileTypeDesc = $this.attr('data-fileDesc');
-            var buttonText = $this.attr('data-buttonText');
-            $('#'+id).uploadify({
-                swf: '/static/uploadify.swf',
-                multi: false,
-                removeCompleted: true,
-                uploader: url,
-                cancelImg: '/static/img/cancel.png',
-                buttonText: buttonText,
-                fileTypeDesc: fileTypeDesc,
-                fileTypeExts: filterType,
-                method: 'post',
-                uploadLimit: 1,
-                queueSizeLimit: 1,
-                formData: {
-                    uid: 'sid'+W.uid
-                },
-                removeTimeout: 0.0,
-                onUploadSuccess : function(file, path, response) {
-                    console.log('onUploadSuccess');
-                },
-                onUploadComplete: function() {
-                    console.log('onUploadComplete');
-                },
-                onUploadError: function(file, errorCode, errorMsg, errorString) {
-                    xlog(errorCode);
-                    xlog(errorMsg);
-                    xlog(errorString);
-                    W.getErrorHintView().show(errorHint);
-
-                }
-            });
-        });
 
         //判断是否进行输入检查
         if (isRenderForNewComponent) {
@@ -1107,41 +1062,5 @@ W.workbench.PropertyView = Backbone.View.extend({
             this.$el.find('.propertyGroup_property_redPacketSelectorField_random').addClass('xui-hide');
             this.$el.find('.propertyGroup_property_redPacketSelectorField_regular').removeClass('xui-hide');
         }
-    },
-
-    onClickUploadRedPacketFile: function(event){
-        var fileUploader = this.$('[name="fileView-fileUploader"]');
-        console.log('fileUploader!!!!!!!!!!!!!!!');
-        console.log(fileUploader);
-        fileUploader.each(function() {
-            $(this).uploadify({
-                swf: '/static/uploadify.swf',
-                multi: false,
-                removeCompleted: true,
-                uploader: '/account/upload_file/',
-                cancelImg: '/static/img/cancel.png',
-                buttonText: '选择文件...',
-                fileTypeDesc: '拼红包证书文件',
-                fileTypeExts: '*.pem',
-                method: 'post',
-                formData: {
-                    uid: 'sid'+W.uid
-                },
-                removeTimeout: 0.0,
-                onUploadSuccess : function(file, path, response) {
-                    console.log('onUploadSuccess');
-                },
-                onUploadComplete: function() {
-                    console.log('onUploadComplete');
-                },
-                onUploadError: function(file, errorCode, errorMsg, errorString) {
-                    xlog(errorCode);
-                    xlog(errorMsg);
-                    xlog(errorString);
-                    W.getErrorHintView().show('请上传正确的.pem格式文件');
-
-                }
-            });
-        });
     }
 });
