@@ -424,6 +424,7 @@ class lottery_prize(resource.Resource):
 			SET_CACHE(cache_key, null_prize - 1)
 		elif not allow_repeat and lottery_participance.has_prize:
 			result = u'谢谢参与'
+			SET_CACHE(cache_key, null_prize - 1)
 		else:
 			lottery_prize_type = lottery_prize['prize_type']
 			temp_prize_title = result = lottery_prize['title']
