@@ -582,10 +582,16 @@
         $('.xa-share').addClass('none');
         mask('hide');
     });
+    // 活动规则
     $('.xa-i-closebtn').click(function(){
-        $('.xa-rules').addClass('none');
+        $('.xa-i-rules-contentbox').addClass('none');
         mask('hide');
     });
+    $('.xa-i-rules-title-content p').click(function(){
+        $('.xa-i-rules-contentbox').removeClass('none');
+        mask('show');
+    });
+    // 通知弹窗
     $('.xa-powerSucceed .xa-i-closebtn').click(function(){
         $('.xa-powerSucceed').addClass('none');
         mask('hide');

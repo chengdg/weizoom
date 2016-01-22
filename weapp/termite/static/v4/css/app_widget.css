@@ -1408,6 +1408,17 @@ li.wui-selectBox-display-table {
     padding-bottom: 40px;
     /*最好可以在容器这边做一个媒体查询，以适应平板*/
 }
+
+.wui-red_packet-container .wui-i-background-image{
+    /*背景图片*/
+    background-color:#B90000; 
+}
+.wui-red_packet-container .wui-i-body{
+    /*网页体*/
+    width: 100%;
+    height: auto;
+}
+
 .wui-red_packet-container .wui-i-background-image img{
     width: 100%;
     height: auto;
@@ -1511,6 +1522,7 @@ li.wui-selectBox-display-table {
     background:#500001;
     margin-left: 60px;
     margin-right: 60px;
+    border-radius: 2px;
 }
 .wui-red_packet-container .wui-i-powerbar_group .wui-i-box{
     width: auto;
@@ -1531,6 +1543,7 @@ li.wui-selectBox-display-table {
     background: #FF6E02;
     width: 0%;
     height: 100%;
+    border-radius: 2px;
     transition: width 3s ease-in-out;
     -moz-transition: width 3s ease-in-out; /* Firefox 4 */
     -webkit-transition: width 3s ease-in-out; /* Safari 和 Chrome */
