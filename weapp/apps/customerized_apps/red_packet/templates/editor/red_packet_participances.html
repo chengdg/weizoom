@@ -191,15 +191,27 @@ $(document).ready(function() {
 		var participant_name = $.trim($('[name="participant_name"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
+		var redPacketStatus = $.trim($('[name="red_packet_status"]').val());
+        var isAlreadyPaid = $.trim($('[name="is_already_paid"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			participant_name: participant_name,
 			start_time: startTime,
-			end_time: endTime
+			end_time: endTime,
+			red_packet_status: redPacketStatus,
+            is_already_paid: isAlreadyPaid
 		}, {
 			emptyDataHint: '没有符合条件的数据'
 		});
 	});
+
+	$('.xa-selectAll').click(function(event) {
+        var $checkbox = $(event.currentTarget);
+        var isChecked = $checkbox.is(':checked');
+        $('tbody .xa-select').prop('checked', isChecked);
+        $('.xa-selectAll').prop('checked', isChecked);
+    });
+
     //export
     $('.xa-export').click(function(event){
         W.getLoadingView();
