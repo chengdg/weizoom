@@ -173,9 +173,6 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
-            //临时方案
-            //$temp_disabled_radio = $("input[value='no_limit']");
-              //hideNoLimitOption($temp_disabled_radio);
 
             W.Broadcaster.on("image_dialog_select:deleteImage", function(cid){
 				var comp = W.component.CID2COMPONENT[cid],
@@ -227,8 +224,6 @@
                         }
                     });
                 }
-                $temp_disabled_radio = $("input[value='no_limit']");
-                hideNoLimitOption($temp_disabled_radio);
             });
         },
         error: function(resp) {
@@ -237,8 +232,6 @@
       });
     };
     W.Broadcaster.on('selectwidget:assert', function(){
-        $temp_disabled_radio = $("input[value='no_limit']");
-        hideNoLimitOption($temp_disabled_radio);
         var prize_count = $('input[data-field="prize_count"]');
         $(prize_count[0]).parent().find('span b').text(Number($(prize_count[0]).val()) || 0);
         $(prize_count[1]).parent().find('span b').text(Number($(prize_count[1]).val()) || 0);
@@ -250,14 +243,8 @@
             "status": "未开始"
         };
     });
-    function hideNoLimitOption($el){
-        $el = $("input[value='no_limit']");
-        $el.parent().after("<span class='radio-mask' data-toggle='tooltip' title='因近期出现个别粉丝违规操作（刷票）的情况，该功能暂停使用！'></span>");
-        $('[data-toggle="tooltip"]').tooltip();
-    }
     
     $(document).ready(function() {
-        var $temp_disabled_radio;
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
 

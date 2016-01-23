@@ -346,10 +346,16 @@ class lottery_prize(resource.Resource):
 				}
 				prize_tank.append(prize_item)
 		curr_tank_size = len(prize_tank)
-
-		if curr_tank_size == 0:
+		cache_key = 'apps_lottery_%s_noprizecount' % record_id
+		cache_count = GET_CACHE(cache_key)
+		if cache_count or cache_count == 0:
+			null_prize = int(cache_count)
+		else:
+			null_prize = int(curr_tank_size / chance) - curr_tank_size
+		prize_tank.extend([None for _ in range(null_prize)])
+		if len(prize_tank) <= 0:
 			response = create_response(500)
-			response.errMsg = u'很遗憾！奖品已抽光，下次请早点来！'
+			response.errMsg = u'奖品已抽光'
 			return response.get_response()
 
 		member_id = member.id
@@ -405,13 +411,6 @@ class lottery_prize(resource.Resource):
 		lottery_prize_type = "no_prize"
 		lottery_prize_data = ''
 
-		cache_key = 'apps_lottery_%s_noprizecount' % record_id
-		cache_count = GET_CACHE(cache_key)
-		if cache_count or cache_count == 0:
-			null_prize = int(cache_count)
-		else:
-			null_prize = int(curr_tank_size / chance) - curr_tank_size
-		prize_tank.extend([None for _ in range(null_prize)])
 		#收集完所有奖项的数据，打乱奖池list顺序
 		random.shuffle(prize_tank)
 		#随机抽奖
@@ -419,6 +418,7 @@ class lottery_prize(resource.Resource):
 
 		#1、奖品数为0时，不中奖
 		#2、根据是否可以重复抽奖和抽到的优惠券规则判断
+		SET_CACHE(cache_key, null_prize)
 		if not lottery_prize:
 			result = u'谢谢参与'
 			SET_CACHE(cache_key, null_prize - 1)
@@ -430,18 +430,7 @@ class lottery_prize(resource.Resource):
 			#如果抽到的是优惠券，则获取该优惠券的配置
 			if lottery_prize_type == 'coupon':
 				#优惠券
-				lottery_prize_data = couponRule_id = lottery_prize['prize_data']['id']
-				coupon_rule = coupon_models.CouponRule.objects.get(id=couponRule_id)
-				coupon_limit = coupon_rule.limit_counts
-				# has_coupon_count = app_models.lottoryRecord.objects(member_id=member_id, prize_type='coupon', prize_data=str(couponRule_id)).count()
-				# if coupon_limit != -1 and has_coupon_count >= coupon_limit:
-				# 	result = u'谢谢参与'
-				# 	lottery_prize_type = 'no_prize'
-				# # elif coupon_rule.remained_count <= 0: #修复优惠券库存为0时任然会发放给用户的问题
-				# # 	result = u'谢谢参与'
-				# # 	lottery_prize_type = 'no_prize'
-				# else:
-					# consume_coupon(lottery.owner_id, lottery_prize_data, member_id)
+				lottery_prize_data = lottery_prize['prize_data']['id']
 				coupon, msg, _ = get_consume_coupon(lottery.owner_id, 'lottery',str(lottery.id), lottery_prize_data, member_id)
 				if not coupon:
 					result = u'谢谢参与'
