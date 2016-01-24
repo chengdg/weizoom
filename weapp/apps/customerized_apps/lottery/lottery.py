@@ -114,7 +114,7 @@ class lottery(resource.Resource):
 		app_models.lottery.objects(id=request.POST['id']).update(**update_data)
 
 		#更新后清除缓存
-		cache_key = 'apps_lottery_%s_s_noprizecount' % request.POST['id']
+		cache_key = 'apps_lottery_%s_noprizecount' % request.POST['id']
 		delete_cache(cache_key)
 		
 		response = create_response(200)
