@@ -77,9 +77,19 @@ class RedPacketParticipances(resource.Resource):
 		if start_time:
 			params['created_at__gte'] = start_time
 		if red_packet_status !='-1':
-			params['red_packet_status'] = True if red_packet_status == '1' else False
+			if red_packet_status == '1':
+				params['red_packet_status'] = True
+			elif red_packet_status_text == u'已结束' and red_packet_status == '0':
+				params['red_packet_status'] = False
+			else:
+				params['red_packet_status'] = ''#进行中没有失败
 		if is_already_paid !='-1':
-			params['is_already_paid'] = True if is_already_paid == '1' else False
+			if is_already_paid == '1':
+				params['is_already_paid'] = True
+			elif red_packet_status_text == u'已结束' and is_already_paid == '0':
+				params['is_already_paid'] = False
+			else:
+				params['is_already_paid'] = ''#进行中没有失败
 
 		#检查所有当前参与用户是否取消关注，设置为未参与
 		reset_member_helper_info(belong_to)
@@ -191,9 +201,9 @@ class RedPacketParticipances_Export(resource.Resource):
 				participant_name = data["username"]
 				red_packet_money = data["red_packet_money"]
 				current_money = data["current_money"]
-				red_packet_status = data["red_packet_status"]
-				is_already_paid = data["is_already_paid"]
-				receive_status = data["receive_status"]
+				red_packet_status = data["red_packet_status"] if data["red_packet_status_text"] == u'已结束' else ''
+				is_already_paid = data["is_already_paid"] if data["red_packet_status_text"] == u'已结束' else ''
+				receive_status = data["receive_status"] if data["red_packet_status_text"] == u'已结束' else ''
 				created_at = data["created_at"]
 
 				export_record.append(member_id)

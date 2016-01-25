@@ -107,12 +107,12 @@ class RedPacketParticipance(resource.Resource):
 					#随机区间中获得好友帮助的金额
 					red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
 					money_range_min,money_range_max = red_packet_info.money_range.split('-')
-					random_money = '%.2f' % random.uniform(float(money_range_min), float(money_range_max))
+					random_money = random.uniform(float(money_range_min), float(money_range_max))
 					#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
-					current_money = helped_member_info.current_money + float(random_money)
+					current_money = helped_member_info.current_money + random_money
 					if current_money > helped_member_info.red_packet_money:
 						random_money = helped_member_info.red_packet_money - helped_member_info.current_money
-					helped_member_info.update(inc__current_money=float(random_money))
+					helped_member_info.update(inc__current_money=random_money)
 					helped_member_info.reload()
 					#完成目标金额，设置红包状态为成功
 					if helped_member_info.current_money == helped_member_info.red_packet_money:
@@ -123,7 +123,7 @@ class RedPacketParticipance(resource.Resource):
 					owner_id = int(fid),
 					helper_member_id = member_id,
 					helper_member_name = request.member.username_for_html,
-					help_money = random_money,
+					help_money = round(random_money,2),
 					has_helped = has_helped,
 					created_at = datetime.now()
 				)
@@ -135,7 +135,7 @@ class RedPacketParticipance(resource.Resource):
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
 		help_info = {
-			'help_money': random_money,
+			'help_money': round(random_money,2),
 		}
 		response = create_response(200)
 		response.data = {
