@@ -1583,13 +1583,13 @@ li.wui-selectBox-display-table {
     border-radius: 5px;
     padding-bottom: 1px;
 }
-.wui-red_packet-container .wui-i-timing b{
+.wui-red_packet-container .wui-i-timing .wui-i-timer b{
     margin-right: 5px;
     height: 100%;
     background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
     background-size: 520%;
     background-position: -94px -4px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     padding: 7px 5px;
     color: white;
     border-radius: 2px;
@@ -1608,11 +1608,16 @@ li.wui-selectBox-display-table {
     padding-top: 3px;
 }
 .wui-red_packet-container .wui-i-timing .wui-i-timer-text{
-    font-weight:normal;
+    font-weight: normal;
     font-size: smaller;
-    padding-bottom: 3px;
+    padding-left: 17px;
+    padding-bottom: 2px;
 }
 
+.wui-red_packet-container .wui-i-timing .wui-i-timer-text b{
+    padding-left: 21px;
+    background: #D40000;
+}
 .wui-red_packet-container .wui-i-system_msgbox{
     width: 80%;
     /* text-align: center; */
