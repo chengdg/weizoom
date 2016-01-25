@@ -97,6 +97,17 @@ class MRedPacket(resource.Resource):
 				reset_re_subscribed_member_helper_info(record_id)
 
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
+				if curr_member_red_packet_info.count()> 0:
+					curr_member_red_packet_info = curr_member_red_packet_info.first()
+				else:
+					curr_member_red_packet_info = app_models.RedPacketParticipance(
+						belong_to = record_id,
+						member_id = member_id,
+						created_at = datetime.now()
+					)
+					curr_member_red_packet_info.save()
+				is_already_participanted = curr_member_red_packet_info.has_join
+
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = member.username_size_ten
@@ -108,17 +119,7 @@ class MRedPacket(resource.Resource):
 					if json.loads(paticipate_response.content)['errMsg'] == 'is_run_out':
 						response.errMsg = 'is_run_out'
 						return response.get_response()
-
-					if curr_member_red_packet_info.count()> 0:
-						curr_member_red_packet_info = curr_member_red_packet_info.first()
-					else:
-						curr_member_red_packet_info = app_models.RedPacketParticipance(
-							belong_to = record_id,
-							member_id = member_id,
-							created_at = datetime.now()
-						)
-						curr_member_red_packet_info.save()
-
+					curr_member_red_packet_info.reload()
 					red_packet_money = curr_member_red_packet_info.red_packet_money
 					current_money = curr_member_red_packet_info.current_money
 					red_packet_status = curr_member_red_packet_info.red_packet_status
@@ -134,8 +135,6 @@ class MRedPacket(resource.Resource):
 					red_packet_status = page_owner_member_info.red_packet_status
 					if curr_member_red_packet_info.helped_member_id:
 						is_helped = True if fid in curr_member_red_packet_info.helped_member_id and isMember else False
-
-				is_already_participanted = curr_member_red_packet_info.has_join
 			else:
 				response.errMsg = u'活动信息出错'
 				return response.get_response()
