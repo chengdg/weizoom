@@ -158,28 +158,24 @@ class RedPacketParticipance(resource.Resource):
 		return response.get_response()
 
 def paticipate_red_packet(record_id,member_id):
-	helped_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
-	if not helped_member_info.has_join:
-		all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id)
-		red_packet_info = app_models.RedPacket.objects.get(id=record_id)
-		red_packet_type = red_packet_info.type
-		if red_packet_type == 'random':
-			random_total_money = float(red_packet_info.random_total_money)
-			random_packets_number = float(red_packet_info.random_packets_number)
-			if random_packets_number > all_participate.count():
+	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
+	packets_number = red_packet_info.random_packets_number if red_packet_info.random_packets_number!='' else red_packet_info.regular_packets_number
+	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id)
+	if int(packets_number) > all_participate.count():
+		helped_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id, is_valid=True)
+		if not helped_member_info.has_join:
+			red_packet_type = red_packet_info.type
+			if red_packet_type == 'random':
+				random_total_money = float(red_packet_info.random_total_money)
+				random_packets_number = float(red_packet_info.random_packets_number)
 				random_average = random_total_money/random_packets_number #红包金额/红包个数
 				red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
 				red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
 			else:
-				response = create_response(500)
-				response.errMsg = u'红包已被抢完啦'
-				return response.get_response()
-		else:
-			regular_packets_number = red_packet_info.regular_packets_number
-			if regular_packets_number > all_participate.count():
 				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-			else:
-				response = create_response(500)
-				response.errMsg = u'红包已被抢完啦'
-				return response.get_response()
-		helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+			helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+	else:
+		response = create_response(500)
+		response.errMsg = 'is_run_out'
+		return response.get_response()
+

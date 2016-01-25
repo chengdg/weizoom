@@ -631,7 +631,6 @@
 <script type="text/javascript">
     var is_helped = true;
     var is_self_page = true;
-    var is_red_packet_run_out = false;
     var red_packet_status = false;
     var page_owner_name = '';
     var page_owner_icon = '';
@@ -764,7 +763,11 @@
                 if(data.errMsg == 'is_deleted'){
                     deletedRecord();
                 }else{
-                    wuiAlert(data.errMsg)
+                    if(data.errMsg == 'is_run_out'){
+                        openRunoutWin();
+                    }else{
+                        wuiAlert(data.errMsg)
+                    }
                 }
             }
         });
@@ -861,9 +864,7 @@
     function openRunoutWin(){
         mask('show');
         $('.xa-redPacketMsg').removeClass('none');
-        if (is_red_packet_run_out){
-            $('.xa-redPacketMsg').find('.xa-i-msg').html('红包已被抢完啦</p><p>下次早点来哦');
-        }
+        $('.xa-redPacketMsg').find('.xa-i-msg').html('红包已被抢完啦</p><p>下次早点来哦');
     }
     function showSuccess(){
         $('.xa-redpacket_success').removeClass('none');
