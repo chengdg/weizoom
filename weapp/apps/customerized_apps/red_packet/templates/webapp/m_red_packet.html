@@ -789,6 +789,7 @@
         is_self_page = member_info.self_page;
         //更新页面拥有者名称，头像
         page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
+        page_owner_icon = member_info.page_owner_icon;
         $('.wa-pageownername').html(page_owner_name);
         $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
         //检查活动状态,更新参与按钮并绑定事件
