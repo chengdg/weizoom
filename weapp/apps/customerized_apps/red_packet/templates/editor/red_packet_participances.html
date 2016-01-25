@@ -128,7 +128,8 @@
 				<th>红包金额</th>
 				<th>已获取金额</th>
 				<th>红包状态</th>
-				<th>发放状态</th>
+				<th>系统发放状态</th>
+				<th>用户接收状态</th>
 				<th>参与时间</th>
 				<th>操作</th>
 			</tr>
@@ -147,10 +148,19 @@
 					${item.current_money}
 				</td>
 				<td>
+					{{if (item.red_packet_status_text === '已结束')}}
 					${item.red_packet_status}
+					{{/if}}
 				</td>
 				<td>
+					{{if (item.red_packet_status_text === '已结束')}}
 					${item.is_already_paid}
+					{{/if}}
+				</td>
+				<td>
+					{{if (item.red_packet_status_text === '已结束')}}
+					${item.receive_status}
+					{{/if}}
 				</td>
 				<td>
 					${item.created_at}
