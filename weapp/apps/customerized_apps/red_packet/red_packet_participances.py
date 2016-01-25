@@ -62,6 +62,8 @@ class RedPacketParticipances(resource.Resource):
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 		id = request.GET.get('id',0)
+		red_packet_info = app_models.RedPacket.objects.get(id=id)
+		red_packet_status_text = red_packet_info.status_text
 		#导出
 		export_id = request.GET.get('export_id',0)
 		if id:
@@ -115,8 +117,10 @@ class RedPacketParticipances(resource.Resource):
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'red_packet_money': '%.2f' % data.red_packet_money,
 				'current_money': '%.2f' % data.current_money,
-				'red_packet_status': u'成功' if data.red_packet_status else u'失败',
+				'red_packet_status': u'成功' if data.red_packet_status else u'失败', #红包参与者状态
 				'is_already_paid': u'发放' if data.is_already_paid else u'未发放',
+				# 'receive_status': u'成功', #用户接收状态
+				'red_packet_status_text': red_packet_status_text, #红包状态
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 		if export_id:
