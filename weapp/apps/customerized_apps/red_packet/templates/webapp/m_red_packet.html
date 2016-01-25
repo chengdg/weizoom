@@ -942,17 +942,17 @@
             }
         });
     }
-    // //覆盖loading
-    // function loadingStatus(action){
-    //     var $loading = $('.xa-loadingFrame');
-    //     if(action){
-    //         mask('show');
-    //         $loading.removeClass('none');
-    //     }else{
-    //         $loading.addClass('none');
-    //         mask('hide');
-    //     }
-    // }
+    //覆盖loading
+    function loadingStatus(action){
+        var $loading = $('.xa-loadingFrame');
+        if(action){
+            mask('show');
+            $loading.removeClass('none');
+        }else{
+            $loading.addClass('none');
+            mask('hide');
+        }
+    }
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
@@ -961,6 +961,7 @@
         $('.xa-share').addClass('none');
         $('.xui-errMsg').addClass('none');
         $('.xa-i-rules-contentbox').addClass('none');
+        $('.xa-loadingFrame').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
