@@ -777,7 +777,7 @@
         var red_packet_money = member_info.red_packet_money;
         var current_money = member_info.current_money;
 
-        var process = parseFloat(current_money/red_packet_money).toFixed(3)*100 +"%";
+        var process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
