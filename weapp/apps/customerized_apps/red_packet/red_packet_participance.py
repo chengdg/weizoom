@@ -168,12 +168,14 @@ def paticipate_red_packet(record_id,member_id):
 			if red_packet_type == 'random':
 				random_total_money = float(red_packet_info.random_total_money)
 				random_packets_number = float(red_packet_info.random_packets_number)
-				random_average = random_total_money/random_packets_number #红包金额/红包个数
+				random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
 				red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
 				red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
 			else:
 				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
 			helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+		response = create_response(200)
+		return response.get_response()
 	else:
 		response = create_response(500)
 		response.errMsg = 'is_run_out'
