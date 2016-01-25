@@ -1405,13 +1405,12 @@ li.wui-selectBox-display-table {
     position: relative;
     background-color:#B90000;
     height: auto;
-    padding-bottom: 40px;
-    /*最好可以在容器这边做一个媒体查询，以适应平板*/
+    padding-bottom: 5rem;
 }
 
 .wui-red_packet-container .wui-i-background-image{
     /*背景图片*/
-    background-color:#B90000; 
+    background-color:#B90000;
 }
 .wui-red_packet-container .wui-i-body{
     /*网页体*/
