@@ -498,7 +498,7 @@ def __process_stock_type(model):
         model['stock_type'] = mall_models.PRODUCT_STOCK_TYPE_LIMIT
     else:
         model['stock_type'] = mall_models.PRODUCT_STOCK_TYPE_UNLIMIT
-        model['stocks'] = -1
+        model['stocks'] = 0
 
 
 def __pay_interface(pay_interfaces):
@@ -600,7 +600,7 @@ def __supplement_product(webapp_owner_id, product):
                 "market_price": standard_model.get('market_price', 11.0),
                 "weight": standard_model.get('weight', 0.0),
                 "stock_type": standard_model.get('stock_type', mall_models.PRODUCT_STOCK_TYPE_UNLIMIT),
-                "stocks": standard_model.get('stocks', -1)
+                "stocks": standard_model.get('stocks', 0)
 
             })
         else:
