@@ -778,6 +778,9 @@
         var current_money = member_info.current_money;
 
         var process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
+        if(process=="100.0%"){
+            process="100%";
+        }
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
