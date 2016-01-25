@@ -95,6 +95,8 @@ class MRedPacket(resource.Resource):
 				#检查所有当前参与用户是否取消关注，设置为未参与
 				reset_member_helper_info(record_id)
 				reset_re_subscribed_member_helper_info(record_id)
+				#未关注进行点赞，后来又关注的会员将帮助值加上
+				update_be_member_help_details(record_id)
 
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id,is_valid=True)
 				if curr_member_red_packet_info.count()> 0:
@@ -245,6 +247,9 @@ class MRedPacket(resource.Resource):
 				#检查所有当前参与用户是否取消关注，设置为未参与
 				reset_member_helper_info(record_id)
 				reset_re_subscribed_member_helper_info(record_id)
+
+				#未关注进行点赞，后来又关注的会员将帮助值加上
+				update_be_member_help_details(record_id)
 			else:
 				c = RequestContext(request, {
 					'is_deleted_data': True
@@ -358,3 +363,38 @@ def reset_member_helper_info(record_id):
 		for p in need_clear_participances:
 			red_packet_info.random_random_number_list.append(p.red_packet_money-random_average )
 		red_packet_info.save()
+
+def update_be_member_help_details(record_id):
+	#更新已关注会员的点赞详情
+	need_del_red_packet_logs_ids = []
+	red_packets = app_models.RedPacket.objects(status=1)
+	red_packet_ids = [str(p.id) for p in red_packets]
+	red_packet_logs = app_models.RedPacketLog.objects(belong_to__in=red_packet_ids)
+	red_packet_member_ids = [p.helper_member_id for p in red_packet_logs]
+	member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=red_packet_member_ids)}
+
+	need_be_add_logs = [p for p in red_packet_logs if member_id2subscribe[p.helper_member_id]]
+	red_packet_log_ids = [p.id for p in need_be_add_logs]
+	be_helped_member_ids = [p.be_helped_member_id for p in need_be_add_logs]
+
+	red_packet_details = app_models.RedPacketDetail.objects(belong_to__in=red_packet_ids)
+	#计算点赞金额值
+	need_helped_member_id2money = {}
+	print('be_helped_member_ids')
+	print(be_helped_member_ids)
+	for m_id in be_helped_member_ids:
+		help_money = red_packet_details.filter(owner_id=m_id).first().help_money
+		if not need_helped_member_id2money.has_key(m_id):
+			need_helped_member_id2money[m_id] = help_money
+		else:
+			need_helped_member_id2money[m_id] += help_money
+	for m_id in need_helped_member_id2money.keys():
+		app_models.RedPacketParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__current_money=need_helped_member_id2money[m_id])
+
+	#更新已关注会员的点赞详情
+	detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs]
+	app_models.RedPacketDetail.objects(belong_to=record_id, helper_member_id__in=detail_helper_member_ids).update(set__has_helped=True)
+	need_del_red_packet_logs_ids += red_packet_log_ids
+
+	#删除计算过的log
+	app_models.RedPacketLog.objects(id__in=need_del_red_packet_logs_ids).delete()
