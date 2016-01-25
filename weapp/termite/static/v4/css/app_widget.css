@@ -1733,11 +1733,19 @@ li.wui-selectBox-display-table {
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content{
     margin-top: 1rem;
     color:#3D3C35;
+    text-align: center;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box{
     color:#3A1614;
     font-weight: bold;
     font-size: large;
+}
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-content-box{
+    color:#3D3C35;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-closebtn{
     color: white;

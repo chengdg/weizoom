@@ -776,7 +776,7 @@
         var red_packet_money = member_info.red_packet_money;
         var current_money = member_info.current_money;
 
-        var process = parseFloat(current_money/red_packet_money).toFixed(1)*100 +"%";
+        var process = parseFloat(current_money/red_packet_money).toFixed(3)*100 +"%";
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
@@ -931,15 +931,17 @@
             }
         });
     }
-    //覆盖loading
-    function loadingStatus(action){
-        var $loading = $('.xa-loadingFrame');
-        if(action){
-            $loading.removeClass('none');
-        }else{
-            $loading.addClass('none');
-        }
-    }
+    // //覆盖loading
+    // function loadingStatus(action){
+    //     var $loading = $('.xa-loadingFrame');
+    //     if(action){
+    //         mask('show');
+    //         $loading.removeClass('none');
+    //     }else{
+    //         $loading.addClass('none');
+    //         mask('hide');
+    //     }
+    // }
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
