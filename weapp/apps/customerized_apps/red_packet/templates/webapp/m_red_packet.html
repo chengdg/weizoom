@@ -777,10 +777,14 @@
     function runProcessBar(data){
         var red_packet_money = member_info.red_packet_money;
         var current_money = member_info.current_money;
-
-        var process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
-        if(process=="100.0%"){
-            process="100%";
+        var process = "0%";
+        if(red_packet_money==0){
+            process = "0%"
+        }else{
+            process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
+            if(process=="100.0%"){
+                process="100%";
+            }
         }
 
         $(".xa-i-percentbox").css("left",process);
@@ -938,17 +942,17 @@
             }
         });
     }
-    // //覆盖loading
-    // function loadingStatus(action){
-    //     var $loading = $('.xa-loadingFrame');
-    //     if(action){
-    //         mask('show');
-    //         $loading.removeClass('none');
-    //     }else{
-    //         $loading.addClass('none');
-    //         mask('hide');
-    //     }
-    // }
+    //覆盖loading
+    function loadingStatus(action){
+        var $loading = $('.xa-loadingFrame');
+        if(action){
+            mask('show');
+            $loading.removeClass('none');
+        }else{
+            $loading.addClass('none');
+            mask('hide');
+        }
+    }
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
@@ -957,6 +961,7 @@
         $('.xa-share').addClass('none');
         $('.xui-errMsg').addClass('none');
         $('.xa-i-rules-contentbox').addClass('none');
+        $('.xa-loadingFrame').addClass('none');
     });
     $('.xa-closeBtn').click(function(){
         $('.xui-attention').addClass('none');
