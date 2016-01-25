@@ -227,8 +227,7 @@
 									data-tel="${order.ship_tel}"
 									data-message="${order.customer_message}"
 									{{if order.bill_type == 0}}
-										data-bill-type="${order.bill_type}"
-										data-bill="${order.bill}"
+										data-bill-type="--"
 									{{else}}
 										{{if order.bill_type == 1}}
 											data-bill-type="个人"

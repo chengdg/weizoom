@@ -123,14 +123,15 @@
                     <div class="xui-innerwrap">
                         <p>发票抬头：
                             {% ifequal order.bill_type 0 %}
-                                无
+                                --
                             {% else %}
                                 {% ifequal order.bill_type 1 %}
                                     个人
+                                <p class="xui-ml60" style="margin-left: 63px;">{{ order.bill }}</p>
                                 {% endifequal %}
                                 {% ifequal order.bill_type 2 %}
                                     公司
-                                <p class="xui-ml60">{{ order.bill }}</p>
+                                <p class="xui-ml60" style="margin-left: 63px;">{{ order.bill }}</p>
                                 {% endifequal %}
                             {% endifequal %}</p>
                     </div>
