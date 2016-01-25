@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from apps.customerized_apps.red_packet.models import RedPacketCertSettings
 
 __author__ = 'liupeiyu, chuter'
 import json
+import os
 
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -263,3 +265,67 @@ def get_dynamic_pages(request):
 	response = create_response(200)
 	response.data = pages
 	return response.get_response()
+
+@login_required
+def get_upload_file(request):
+	"""
+	处理上传文件
+	@param request:
+	@return:
+	"""
+	upload_file = request.FILES.get('Filedata', None)
+	owner_id = request.POST.get('owner_id', None)
+	file_cat = request.POST.get('cat', None)
+	response = create_response(500)
+	if upload_file:
+		try:
+			file_path = __save_cert_file('red_packet', upload_file, owner_id)
+		except:
+			response.errMsg = u'保存文件出错'
+			return response.get_response()
+		cert_setting = RedPacketCertSettings.objects(owner_id=owner_id)
+		if cert_setting.count() > 0:
+			cert_setting = cert_setting.first()
+			if 'cert_file' == file_cat:
+				cert_setting.update(set__cert_path=file_path)
+			elif 'key_file' == file_cat:
+				cert_setting.update(set__key_path=file_path)
+		else:
+			cert_setting = RedPacketCertSettings(
+				owner_id = owner_id
+			)
+			if 'cert_file' == file_cat:
+				cert_setting.cert_path = file_path
+			elif 'key_file' == file_cat:
+				cert_setting.key_path = file_path
+			cert_setting.save()
+		response = create_response(200)
+		response.data = file_path
+	else:
+		response.errMsg = u'文件错误'
+	return response.get_response()
+
+
+def __save_cert_file(res, file, owner_id):
+	"""
+	将上传的文件保存在每个resource的upload目录下
+	@param res: 资源名
+	@param file: 文件
+	@param owner_id: webapp_owner_id
+	@return: 文件保存路径
+	"""
+	content = []
+	curr_dir = os.path.dirname(os.path.abspath(__file__))
+	if file:
+		for chunk in file.chunks():
+			content.append(chunk)
+
+	dir_path = os.path.join(curr_dir, 'customerized_apps', res, 'upload', 'owner_id'+owner_id)
+	if not os.path.exists(dir_path):
+		os.makedirs(dir_path)
+	file_path = os.path.join(dir_path, file.name)
+
+	dst_file = open(file_path, 'wb')
+	print >> dst_file, ''.join(content)
+	dst_file.close()
+	return file_path
