@@ -55,7 +55,7 @@ Background:
 		}]
 		"""
 
-@product @addProduct
+@product @addProduct @mall2
 Scenario:1 添加无规格新商品,支持开票
 	Given jobs登录系统
 	And jobs已添加商品
@@ -99,7 +99,7 @@ Scenario:1 添加无规格新商品,支持开票
 		}
 		"""
 
-@product @addProduct
+@product @addProduct @mall2
 Scenario:2 添加多规格新商品,支持开票
 	Given jobs登录系统
 	And jobs已添加商品
@@ -148,7 +148,7 @@ Scenario:2 添加多规格新商品,支持开票
 		}
 		"""
 
-@product @addProduct
+@product @addProduct @mall2
 Scenario:3 添加新商品,不支持开票
 	Given jobs登录系统
 	And jobs已添加商品
