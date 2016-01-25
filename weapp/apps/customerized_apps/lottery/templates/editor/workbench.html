@@ -90,19 +90,16 @@
         </div>
       </div>
     </div>
-    <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;">
-    </div>
+      <div id="rightPanel" class="fl xui-workbench-rightPanel xui-hide" style="margin-bottom: 90px;"></div>
+        {% if lottery and lottery.status_text == "进行中"%}<div style="position: absolute;height: 100%;width: 100%"></div>{% endif %}
       <div class="xui-bottomActionBar xa-stickyBar">
           {% if not lottery %}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
           {% else %}
-            {% if lottery.status_text == "未开始" %}
+            {% if lottery.status_text == "未开始" or lottery.status_text == "进行中"%}
             <button class="xa-save btn btn-primary">保存</button>
             <button class="xa-preview btn btn-default ml20">预览</button>
-            {% endif %}
-            {% if lottery.status_text == "进行中" %}
-            进行中，不可更改
             {% endif %}
             {% if lottery.status_text == "已结束" %}
             已结束，不可更改
@@ -143,6 +140,13 @@
 
     //是否隐藏组件控制面板
     W.hideActionPanel = true;
+
+    window.total_prize_count ={
+        "一等奖": {total_prize_count: 0, left_count: 0, control_prize_count: 0},
+        "二等奖": {total_prize_count: 0, left_count: 0, control_prize_count: 0},
+        "三等奖": {total_prize_count: 0, left_count: 0, control_prize_count: 0},
+        "status": "未开始"
+    };
     
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -169,9 +173,6 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
-            //临时方案
-            $temp_disabled_radio = $("input[value='no_limit']");
-              hideNoLimitOption($temp_disabled_radio);
 
             W.Broadcaster.on("image_dialog_select:deleteImage", function(cid){
 				var comp = W.component.CID2COMPONENT[cid],
@@ -199,15 +200,51 @@
 					image: ''
 				});
 			});
+            W.Broadcaster.on('page:rendered', function () {
+                if ("{{ lottery.status_text }}" == "进行中" ){
+                    W.getApi().call({
+                        method: 'get',
+                        app: 'apps/lottery',
+                        resource: 'lottery_prize_count',
+                        args:{id:W.activityId},
+                        success: function (data) {
+                                var prize_count = $('input[data-field="prize_count"]');
+                                $(prize_count[0]).parent().find('span b').text(data["一等奖"].prize_count);
+                                $(prize_count[1]).parent().find('span b').text(data["二等奖"].prize_count);
+                                $(prize_count[2]).parent().find('span b').text(data["三等奖"].prize_count);
+                                window.total_prize_count = {
+                                    "一等奖": {total_prize_count:$(prize_count[0]).val(),left_count:$(prize_count[0]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[0]).val()},
+                                    "二等奖": {total_prize_count:$(prize_count[1]).val(),left_count:$(prize_count[1]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[1]).val()},
+                                    "三等奖": {total_prize_count:$(prize_count[2]).val(),left_count:$(prize_count[2]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[2]).val()},
+                                    "status": "进行中"
+                                };
+                        },
+                        error:function(){
+
+                        }
+                    });
+                }
+            });
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');
         }
       });
     };
+    W.Broadcaster.on('selectwidget:assert', function(){
+        var prize_count = $('input[data-field="prize_count"]');
+        $(prize_count[0]).parent().find('span b').text(Number($(prize_count[0]).val()) || 0);
+        $(prize_count[1]).parent().find('span b').text(Number($(prize_count[1]).val()) || 0);
+        $(prize_count[2]).parent().find('span b').text(Number($(prize_count[2]).val()) || 0);
+        window.total_prize_count = {
+            "一等奖": {total_prize_count:$(prize_count[0]).val(),left_count: Number($(prize_count[0]).parent().find('.xa-leftCount').text()),control_prize_count:$(prize_count[0]).val()},
+            "二等奖": {total_prize_count:$(prize_count[1]).val(),left_count:$(prize_count[1]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[1]).val()},
+            "三等奖": {total_prize_count:$(prize_count[2]).val(),left_count:$(prize_count[2]).parent().find('.xa-leftCount').text(),control_prize_count:$(prize_count[2]).val()},
+            "status": "未开始"
+        };
+    });
     
     $(document).ready(function() {
-        var $temp_disabled_radio;
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
 
@@ -265,19 +302,19 @@
             var prizeData = {
                 "一等奖": {
                     'title': dynamicComponents[0].model.get('title'),
-                    'prize_count': dynamicComponents[0].model.get('prize_count'),
+                    'prize_count': window.total_prize_count["一等奖"]['left_count'],
                     'prize_type': dynamicComponents[0].model.get('prize').type,
                     'prize_data': dynamicComponents[0].model.get('prize').data
                 },
                 "二等奖": {
                     'title': dynamicComponents[1].model.get('title'),
-                    'prize_count': dynamicComponents[1].model.get('prize_count'),
+                    'prize_count': window.total_prize_count["二等奖"]['left_count'],
                     'prize_type': dynamicComponents[1].model.get('prize').type,
                     'prize_data': dynamicComponents[1].model.get('prize').data
                 },
                 "三等奖": {
                     'title': dynamicComponents[2].model.get('title'),
-                    'prize_count': dynamicComponents[2].model.get('prize_count'),
+                    'prize_count': window.total_prize_count["三等奖"]['left_count'],
                     'prize_type': dynamicComponents[2].model.get('prize').type,
                     'prize_data': dynamicComponents[2].model.get('prize').data
                 }
@@ -372,18 +409,18 @@
         W.Broadcaster.trigger('designpage:cancel_delete');
 
           //禁用不限次数选择(临时)，存在高并发bug
-          if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0){
-              $temp_disabled_radio = $("input[value='no_limit']");
-              hideNoLimitOption($temp_disabled_radio);
-          }
+          //if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0){
+          //    $temp_disabled_radio = $("input[value='no_limit']");
+          //    hideNoLimitOption($temp_disabled_radio);
+          //}
       });
 
-        function hideNoLimitOption($el){
-            if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0) return;
-            $el = $("input[value='no_limit']");
-              $el.parent().after("<span class='radio-mask' data-toggle='tooltip' title='因近期出现个别粉丝违规操作（刷票）的情况，该功能暂停使用！'></span>");
-              $('[data-toggle="tooltip"]').tooltip();
-        }
+        //function hideNoLimitOption($el){
+         //   if(!$temp_disabled_radio || $temp_disabled_radio.length <= 0) return;
+         //   $el = $("input[value='no_limit']");
+         //     $el.parent().after("<span class='radio-mask' data-toggle='tooltip' title='因近期出现个别粉丝违规操作（刷票）的情况，该功能暂停使用！'></span>");
+         //     $('[data-toggle="tooltip"]').tooltip();
+        //}
 
         //初始化中奖率说明dialog
         ensureNS('W.dialog.lottery');

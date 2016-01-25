@@ -24,8 +24,8 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 			isUserProperty: true,
 			maxLength: 5,
 			size: '70px',
-			annotation: '个 注：奖品数量为0时，不设此奖项',
-			validate: 'data-validate="require-notempty::选项不能为空,,require-nonnegative::只能填入数字"',
+			annotation: '个 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;剩余：<b class="xa-leftCount" style="color:red">0</b>&nbsp;&nbsp;个',
+			validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
 			validateIgnoreDefaultValue: true,
 			default: ''
 		},{
@@ -141,6 +141,26 @@ W.component.appkit.LottertItem = W.component.Component.extend({
 					$li_b.html('');
 				}
 
+			}
+		},
+		prize_count:function($node, model, value, $propertyViewNode) {
+			var total_prize_count = parent.window.total_prize_count;
+			var prize_title = $propertyViewNode.find('input[data-field="title"]').val();
+			var prize_count = total_prize_count[prize_title]['total_prize_count'];
+			var left_count = total_prize_count[prize_title]['left_count'];
+			if (total_prize_count['status'] == "进行中"){
+				$propertyViewNode.find('input[data-field="prize_count"]').attr('data-validate','"require-notempty::选项不能为空,,require-natural::只能填入数字,,require-countcontrol::请输入大于"'+total_prize_count[prize_title]['control_prize_count']+'"的数字"');
+			}
+			if ((/^[0-9]*$/g).exec(value) != null){
+				var leftCount = Number(value) - Number(prize_count) + Number(left_count);
+				if (leftCount == -1){
+					$propertyViewNode.find('.xa-leftCount').text(0);
+				} else{
+					$propertyViewNode.find('.xa-leftCount').text(leftCount);
+				}
+				total_prize_count[prize_title]['total_prize_count'] = value;
+				total_prize_count[prize_title]['left_count'] = leftCount;
+				model.set({prize_count: value},{silent: true});
 			}
 		}
 	}

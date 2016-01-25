@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from apps.customerized_apps.lottery.models import lottoryRecord
+
 __author__ = 'mark24'
 
 from behave import *
@@ -390,6 +392,7 @@ def __prize_settings_process(prize_settings):
 			page_prize_dic['title'] = prize_setting.get("prize_grade","")
 			page_prize_dic['prize_count'] = prize_setting.get("prize_counts","")
 			page_prize_dic['image'] = prize_setting.get("pic","")
+			page_prize_dic['leftCount'] = prize_setting.get("rest","")
 
 			page_prize_dic['prize'] = {}
 			prize_type = __name2type(prize_setting.get("prize_type"))
@@ -415,6 +418,7 @@ def __prize_settings_process(prize_settings):
 			lottery_prize_dic[plist[index]] = {
 				"title":prize_setting.get("prize_grade",""),
 				"prize_count":prize_setting.get("prize_counts",""),
+				"leftCount":prize_setting.get("rest",""),
 				"prize_type":prize_type,
 				"prize_data":prize_data
 			}
@@ -833,10 +837,18 @@ def step_impl(context,user,lottery_name):
 
 
 	obj = lottery_models.lottery.objects.get(name=lottery_name)#纯数字
+	lottory_record = lottoryRecord.objects.filter(belong_to=str(obj.id))
 	related_page_id = obj.related_page_id
 	pagestore = pagestore_manager.get_pagestore('mongo')
 	page = pagestore.get_page(related_page_id, 1)
 	page_component = page['component']['components'][0]['components']
+
+	prize_dic = {}
+	for record in lottory_record:
+		if not prize_dic.has_key(record.prize_title):
+			prize_dic[record.prize_title] = 1
+		else:
+			prize_dic[record.prize_title] += 1
 
 	expect_lottery_dic = {
 		"name":title,
@@ -857,6 +869,7 @@ def step_impl(context,user,lottery_name):
 		actual_prize_dic={}
 		actual_prize_dic['title'] = comp['model']['title']
 		actual_prize_dic['prize_count'] = comp['model']['prize_count']
+		actual_prize_dic['leftCount'] = (comp['model']['prize_count'] - prize_dic.get(comp['model']['title'], 0)) if expect_prize_settings_list[page_component.index(comp)].has_key('rest') else ""
 		actual_prize_dic['image'] = comp['model']['image']
 		actual_prize_dic['prize'] = {
 			"type":comp['model']['prize']['type'],

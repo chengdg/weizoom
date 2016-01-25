@@ -97,6 +97,10 @@
 							parent.W.design.DesignPageView = page;
 							if (parent.W.autoSelectCid && parent.W.autoSelectCid > 0) {
                             	$('.xa-designPage').find("div[data-cid='"+parent.W.autoSelectCid+"']").get(0).click();
+                                setTimeout(function(){
+                                    parent.W.Broadcaster.trigger('page:rendered');
+                                }, 500);
+
 							}
                             if(parent.W.hideActionPanel){
                                 $('.xa-actionPanel').find('.xa-add, .xa-delete').hide();

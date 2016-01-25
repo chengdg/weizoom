@@ -96,6 +96,12 @@ prunt.register_task('build:webapp_content_base_v4', 'weizoom-build', {
 	}
 })
 
+prunt.register_task('build:apps_base', 'weizoom-build', {
+	"files": {
+		"src": "templates/apps_base.html"
+	}
+})
+
 prunt.register_task('build:termite2_workbench', 'weizoom-build', {
 	"files": {
 		"src": "termite2/templates/termite2/workbench.html"
@@ -120,6 +126,7 @@ prunt.register_task('default', [
 	'build:webapp_content_base', 
 	'build:webapp_content_base_v4', 
 	'build:app', 
+	'build:apps_base',
 	'build:termite2_workbench'
 ])
 
@@ -129,6 +136,7 @@ prunt.register_task('deploy', [
 	'build:webapp_content_base', 
 	'build:webapp_content_base_v4', 
 	'build:app', 
+	'build:apps_base',
 	'build:termite2_workbench', 
 	'deploy:cdn'
 ])

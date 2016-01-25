@@ -220,7 +220,33 @@ W.ValidaterClass = function() {
                 }
             },
             errorHint: ''
-        }
+        },
+        'require-countcontrol':{
+            type: 'function',
+			extract: 'element',
+			check: function(element) {
+				var trimedValue = $.trim(element.val());
+                xwarn('trimed value:' + trimedValue);
+
+                var total_prize_count = parent.window.total_prize_count;
+                var prize_title = element.parents('.propertyGroup_property_dynamicControlField_content').find('input[data-field="title"]').val();
+                var prize_count = total_prize_count[prize_title]['control_prize_count'];
+				if (trimedValue < Number(prize_count)) {
+					this.errorHint = '请输入大于'+prize_count+'数字';
+					return false;
+				} else {
+					return true;
+				}
+			},
+			errorHint: ''
+        },
+        'require-natural': {
+            /*非负整数*/
+            type: 'regex',
+            extract: 'value',
+            regex: /^([0]{0,1}|[1-9][0-9]*)$/g,
+            errorHint: '请输入非负整数'
+        },
 	};
 
 	this.getRule = function(type) {
