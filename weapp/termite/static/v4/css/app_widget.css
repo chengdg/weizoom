@@ -1442,6 +1442,10 @@ li.wui-selectBox-display-table {
     margin-top: 3px;
     margin-left: 3px;
 }
+
+.wui-red_packet-container .wui-i-help_group .wui-i-shop_circle img{
+    border-radius: 100px;
+}
 .wui-red_packet-container .wui-i-help_group .wui-i-rules{
     margin-top: 10px;
     font-weight: normal;
@@ -1507,6 +1511,9 @@ li.wui-selectBox-display-table {
     height: 2rem;
     margin-left: auto;
     margin-right: auto;
+}
+.wui-red_packet-container .wui-i-powerbar_group .wui-i-box{
+    height: 43px;
 }
 
 .wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
