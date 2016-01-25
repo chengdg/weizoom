@@ -1483,6 +1483,10 @@ li.wui-selectBox-display-table {
 
 }
 
+.wui-red_packet-container .wui-i-avatar_group .wui-i-avatar_circle img{
+    border-radius: 100px;
+}
+
 .wui-red_packet-container .wui-i-money_group{
     color:#FFF059;
     text-align: center;
@@ -1689,6 +1693,11 @@ li.wui-selectBox-display-table {
     margin-right: auto;
 
 }
+
+.wui-red_packet-container .xui-top100 .wui-i-avatar img{
+    border-radius: 100px;
+}
+
 .wui-red_packet-container .xui-top100 .wui-i-info{
     width: 50%;
     height: auto;
