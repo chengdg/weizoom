@@ -35,7 +35,7 @@ class RedPacketParticipance(resource.Resource):
 		响应GET api
 		"""
 		if 'id' in request.GET:
-			red_packet_participance = app_models.RedPacketParticipance.objects.get(id=request.GET['id'])
+			red_packet_participance = app_models.RedPacketParticipance.objects.get(id=request.GET['id'],is_valid=True)
 			data = red_packet_participance.to_json()
 		else:
 			data = {}
@@ -63,7 +63,7 @@ class RedPacketParticipance(resource.Resource):
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
 			#更新当前member的参与信息
-			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
+			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id,is_valid=True).first()
 			ids_tmp = curr_member_red_packet_info.helped_member_id
 			#并发问题临时解决方案 ---start
 			control_data = {}
@@ -85,7 +85,7 @@ class RedPacketParticipance(resource.Resource):
 				ids_tmp.append(fid)
 			curr_member_red_packet_info.update(set__helped_member_id=ids_tmp)
 			#更新被帮助者信息
-			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
+			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid),is_valid=True).first()
 			#调整参与数量(首先检测是否已参与)
 			if not helped_member_info.has_join:
 				helped_member_info.update(set__has_join=True)
@@ -160,7 +160,7 @@ class RedPacketParticipance(resource.Resource):
 def paticipate_red_packet(record_id,member_id):
 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
 	packets_number = red_packet_info.random_packets_number if red_packet_info.random_packets_number!='' else red_packet_info.regular_packets_number
-	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True)
+	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
 	if int(packets_number) > all_participate.count():
 		helped_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id, is_valid=True)
 		if not helped_member_info.has_join:

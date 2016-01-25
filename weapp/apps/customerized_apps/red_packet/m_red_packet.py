@@ -96,7 +96,7 @@ class MRedPacket(resource.Resource):
 				reset_member_helper_info(record_id)
 				reset_re_subscribed_member_helper_info(record_id)
 
-				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
+				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id,is_valid=True)
 				if curr_member_red_packet_info.count()> 0:
 					curr_member_red_packet_info = curr_member_red_packet_info.first()
 				else:
@@ -106,6 +106,14 @@ class MRedPacket(resource.Resource):
 						created_at = datetime.now()
 					)
 					curr_member_red_packet_info.save()
+					#判断分享页是否自己的主页，是自己的主页则参与拼红包
+					if fid is None or str(fid) == str(member_id):
+						paticipate_response = paticipate_red_packet(record_id,member_id)
+						if json.loads(paticipate_response.content)['errMsg'] == 'is_run_out':
+							response.errMsg = 'is_run_out'
+							return response.get_response()
+						curr_member_red_packet_info.reload()
+
 				is_already_participanted = curr_member_red_packet_info.has_join
 
 				#判断分享页是否自己的主页
@@ -114,12 +122,7 @@ class MRedPacket(resource.Resource):
 					page_owner_icon = member.user_icon
 					page_owner_member_id = member_id
 					self_page = True
-					#自己的主页，则参与拼红包
-					paticipate_response = paticipate_red_packet(record_id,member_id)
-					if json.loads(paticipate_response.content)['errMsg'] == 'is_run_out':
-						response.errMsg = 'is_run_out'
-						return response.get_response()
-					curr_member_red_packet_info.reload()
+
 					red_packet_money = curr_member_red_packet_info.red_packet_money
 					current_money = curr_member_red_packet_info.current_money
 					red_packet_status = curr_member_red_packet_info.red_packet_status
@@ -129,7 +132,7 @@ class MRedPacket(resource.Resource):
 					page_owner_icon = page_owner.user_icon
 					page_owner_member_id = fid
 
-					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
+					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id,is_valid=True)
 					red_packet_money = page_owner_member_info.red_packet_money
 					current_money = page_owner_member_info.current_money
 					red_packet_status = page_owner_member_info.red_packet_status
@@ -323,11 +326,11 @@ def reset_re_subscribed_member_helper_info(record_id):
 	#未成功的红包需要清除之前的数据，已成功的不清除
 	need_clear_member_ids = [p.id for p in app_models.RedPacketParticipance.objects.filter(member_id__in=re_subscribed_ids, red_packet_status=False)]
 
-	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(
-		set__red_packet_money=0,
-		set__current_money=0,
-		set__is_valid = True
-	)
+	# app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(
+	# 	set__red_packet_money=0,
+	# 	set__current_money=0,
+	# 	set__is_valid = True
+	# )
 	# 将之前的点赞详情日志无效
 	app_models.RedPacketDetail.objects(belong_to=record_id, owner_id__in=need_clear_member_ids).update(set__is_valid=False)
 	# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
