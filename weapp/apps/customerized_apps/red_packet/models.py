@@ -27,8 +27,6 @@ class RedPacket(models.Document):
 	share_description = models.StringField(default="", max_length=1024) #分享描述
 	wishing = models.StringField(default="", max_length=50) #开现金红包文字
 	qrcode = models.DynamicField() #带参数二维码ticket,name
-	upload_file_certificate = models.StringField(default="", max_length=1024) #证书
-	upload_file_certificate_key = models.StringField(default="", max_length=1024) #证书key
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
@@ -110,3 +108,11 @@ class RedPacketControl(models.Document):
 	meta = {
 		'collection': 'red_packet_red_packet_control'
 	}
+
+class RedPacketCertSettings(models.Document):
+	"""
+	存储每个帐号的证书文件地址
+	"""
+	owner_id = models.StringField(default=0) #活动所有者
+	cert_path = models.StringField(default="", max_length=1024) #证书
+	key_path = models.StringField(default="", max_length=1024) #证书key
