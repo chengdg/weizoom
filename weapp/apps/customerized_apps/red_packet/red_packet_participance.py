@@ -168,7 +168,7 @@ def paticipate_red_packet(record_id,member_id):
 			if red_packet_type == 'random':
 				random_total_money = float(red_packet_info.random_total_money)
 				random_packets_number = float(red_packet_info.random_packets_number)
-				random_average = random_total_money/random_packets_number #红包金额/红包个数
+				random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
 				red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
 				red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
 			else:

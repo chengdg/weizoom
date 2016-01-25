@@ -348,6 +348,16 @@ def reset_member_helper_info(record_id):
 	all_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True)
 	all_member_red_packet_info_ids = [p.member_id for p in all_member_red_packets_info]
 	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=False)]
-	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids).update(set__has_join=False,set__is_valid=False)
+	need_clear_participances = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids)
+	need_clear_participances.update(set__has_join=False,set__is_valid=False)
 
-
+	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
+	type = red_packet_info.type
+	# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
+	if type == u'random':
+		random_total_money = float(red_packet_info.random_total_money)
+		random_packets_number = float(red_packet_info.random_packets_number)
+		random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数
+		for p in need_clear_participances:
+			red_packet_info.random_random_number_list.append(p.red_packet_money-random_average )
+		red_packet_info.save()
