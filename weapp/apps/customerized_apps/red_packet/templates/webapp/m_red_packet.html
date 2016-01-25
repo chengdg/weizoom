@@ -784,7 +784,10 @@
             process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
             if(process=="100.0%"){
                 process="100%";
+            }else if(process=="0.0%"){
+                process="0%";
             }
+
         }
 
         $(".xa-i-percentbox").css("left",process);

@@ -1445,6 +1445,8 @@ li.wui-selectBox-display-table {
 
 .wui-red_packet-container .wui-i-help_group .wui-i-shop_circle img{
     border-radius: 100px;
+    width: 40px;
+    height: 40px;
 }
 .wui-red_packet-container .wui-i-help_group .wui-i-rules{
     margin-top: 10px;
@@ -1488,6 +1490,8 @@ li.wui-selectBox-display-table {
 
 .wui-red_packet-container .wui-i-avatar_group .wui-i-avatar_circle img{
     border-radius: 100px;
+    width: 60px;
+    height: 60px;
 }
 
 .wui-red_packet-container .wui-i-money_group{
@@ -1707,6 +1711,8 @@ li.wui-selectBox-display-table {
 
 .wui-red_packet-container .xui-top100 .wui-i-avatar img{
     border-radius: 100px;
+    width: 40px;
+    height: 40px;
 }
 
 .wui-red_packet-container .xui-top100 .wui-i-info{
