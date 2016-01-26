@@ -389,6 +389,12 @@ class Product(resource.Resource):
             is_enable_bill=True
         else:
             is_enable_bill=False
+        #配送时间
+        is_delivery = request.POST.get('is_delivery', False)
+        if is_delivery in [True, '1', 'True','on']:
+            is_delivery=True
+        else:
+            is_delivery=False
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -410,7 +416,7 @@ class Product(resource.Resource):
             supplier=request.POST.get("supplier", 0),
             purchase_price=purchase_price,
             is_enable_bill=is_enable_bill,
-            is_delivery=request.POST.get('is_delivery', False)
+            is_delivery=is_delivery
         )
         # 设置新商品显示顺序
         # product.display_index = models.Product.objects.filter(
