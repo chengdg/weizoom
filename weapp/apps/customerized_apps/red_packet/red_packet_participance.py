@@ -169,9 +169,11 @@ def participate_red_packet(record_id,member_id):
 	if int(packets_number) > all_participate.count():
 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
 		if (not participate_member_info.is_valid) and (not participate_member_info.has_join): #该用户曾经关注参与过
+			print('participate_red_packet :172')
 			#未成功的红包需要将is_valid置为True
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
 			try:
+				print('participate_red_packet :176')
 				# 将之前的点赞详情日志无效
 				app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
 				# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
@@ -181,6 +183,7 @@ def participate_red_packet(record_id,member_id):
 				response = create_response(500)
 				return response.get_response()
 		if not participate_member_info.has_join:
+			print('participate_red_packet :186')
 			red_packet_type = red_packet_info.type
 			if red_packet_type == 'random':
 				random_total_money = float(red_packet_info.random_total_money)

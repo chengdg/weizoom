@@ -104,6 +104,7 @@ class MRedPacket(resource.Resource):
 					if not curr_member_red_packet_info.is_valid: #曾经参与过又取关了，需要重新参与一次
 						if fid is None or str(fid) == str(member_id):
 							participate_response = participate_red_packet(record_id,member_id)
+							print('participate_red_packet in line:107')
 							if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
 								response.errMsg = 'is_run_out'
 								return response.get_response()
@@ -118,6 +119,7 @@ class MRedPacket(resource.Resource):
 					#判断分享页是否自己的主页，是自己的主页则参与拼红包
 					if fid is None or str(fid) == str(member_id):
 						participate_response = participate_red_packet(record_id,member_id)
+						print('participate_red_packet in line:122')
 						if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
 							response.errMsg = 'is_run_out'
 							return response.get_response()
