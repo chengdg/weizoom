@@ -39,8 +39,9 @@
         left: 40%;
         margin-left: 11px;
         position: absolute;
-        top: 60%;
+        /* top: 60%; */
         width: 50px;
+        margin-top: 20px;
     }
     /* 二维码的closeBtn */
     .xui-closeBtn {
@@ -194,49 +195,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    .xui-loadingFrame {
-        height: 31px;
-        position: fixed;
-        top: 43%;
-        width: 100%;
-        text-align: center;
-        z-index: 10001;
-    }
-    .xui-loadingFrame .xui-loadingBox {
-        color:#959595;
-        background-color: black;
-        position: relative;
-        height: 31px;
-        width: 8rem;
-        margin-left: auto;
-        margin-right: auto;
-        border-radius: 3px;
-    }
-    .xui-loadingFrame .xui-loadingBox .xui-loading{
-        position: relative;
-        height: 30px;
-        width: 30px;
-        float: left;
-        background: no-repeat url("/termite_static/img/component/redpacket/loading.png");
-        background-size: 61%;
-        /* background-position: 4px 6px; */
-        text-align: center;
-        animation: spin 1s linear infinite;
-        -webkit-animation: spin 1s linear infinite;
-        background-position: center;
-        left: 7px;
-    }
-    .xui-loadingFrame .xui-loadingBox .xui-loading_text{
-        line-height: 30px;
-    }
-    @keyframes spin {
-      0%   { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @-webkit-keyframes spin {
-      0%   { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+
 /*竖屏幕*/
 
 /*iphone4,5 w:320*/
@@ -558,10 +517,12 @@
     <!-- 没有红包了的弹窗页面 -->
     <div class="xui-powerSucceed xa-redPacketMsg none">
         <div class="f15 xui-successHint xui-spritebg">
-            <p class="xui-i-msg xa-i-msg"></p>
-            <div class="wui-i-closebtn xa-i-closebtn">
-                ×
-            </div>
+            <div style="display: inline-block;color: #333;width: 75%;">
+                <div class="wui-i-closebtn xa-i-closebtn">
+                    ×
+                </div>
+                <p class="xui-i-msg xa-i-msg"></p>
+            <div/>
         </div>
     </div>
 
@@ -619,13 +580,7 @@
             <!-- <p class="xui-system_msg"></p> -->
         </div>
     </div>
-    <!-- loading 层 -->
-    <div class="xui-loadingFrame xa-loadingFrame none">
-        <div class="xui-loadingBox">
-            <div class="xui-loading"></div>
-            <div class="xui-loading_text">加载中...</div>
-        </div>
-    </div>
+
 {% endblock %}
 
 {% block js %}
@@ -670,7 +625,11 @@
             if(red_packet_status){
                 showSuccess();
             }
-            $('.wa-running').on('click', openGuideMask).show();
+            if(!W.isMember){
+                $('.wa-running').on('click', openGuestMask).show();
+            }else{
+                $('.wa-running').on('click', openGuideMask).show();
+            }
         }else{
             $('.wui-i-states').hide();
             $('.wa-running').hide();
@@ -682,7 +641,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        openGuideMask();
+                        showAlert();
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
@@ -698,7 +657,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        openGuideMask();
+                        openGuestMask();
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
@@ -715,12 +674,20 @@
                 }).show();
             }else{
                 using_msg = '我也要拼红包';
-                $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('img').attr('src', qrcode_url);
-                    $attention.find('.xa-attention-tip').hide();
-                    $attention.find('.xa-attention-reply').children().first().html("2.回复：");
-                    openGuestMask();
-                }).show();
+                if(W.isMember){
+                    $('.wa-using').text(using_msg).on('click', function(){
+                        link = window.location.origin + '/m/apps/red_packet/m_red_packet/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+                        console.log(link);
+                        window.open(link, '_tab');
+                    }).show();
+                }else{
+                    $('.wa-using').text(using_msg).on('click', function(){
+                        $attention.find('img').attr('src', qrcode_url);
+                        $attention.find('.xa-attention-tip').hide();
+                        $attention.find('.xa-attention-reply').children().first().html("2.回复：");
+                        openGuestMask();
+                    }).show();
+                }
             }
         }
 
@@ -792,8 +759,38 @@
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
-        $(".xa-i-percentbox").html(process);
+        percentBox_process_tmp = process;
+        percentBoxTimer();
+
     }
+
+    var percentBox_max_count = 10;
+    var percentBox_process_tmp = "";
+    var percentBox_count = percentBox_max_count;
+    function percentBoxTimer(){
+        var maxwidth_process_bar = $(".wui-red_packet-container .wui-i-powerbar_group .wui-i-bar").width();
+        var curr_boxnum = $(".xa-i-percentbox").html().replace(/(^\s*)|(\s*$)/g,'');
+        var curr_width = $(".xa-i-bar_process").width();
+        var curr_process = parseFloat(curr_width/maxwidth_process_bar * 100).toFixed(1) + "%";
+        console.log("maxwidth_process_bar:"+maxwidth_process_bar);
+
+        if (percentBox_count == 0) {
+            curr_boxnum = percentBox_process_tmp;
+            $(".xa-i-percentbox").html(curr_boxnum);
+            return false;
+        }else{
+            if(curr_process=="0.0%"){
+                curr_process="0%";
+            }
+            if(curr_process=="100.0%"){
+                curr_process="100%";
+            }
+            $(".xa-i-percentbox").html(curr_process);
+            setTimeout(percentBoxTimer,300);
+            percentBox_count --;
+        }
+    }
+
 
     function updateActivityStatus(data){
         member_info = data.member_info;
@@ -820,8 +817,8 @@
         member_info = data.member_info;
         red_packet_money = member_info.red_packet_money;
         current_money = member_info.current_money;
-        $('.wa-i-current_money').text(current_money+'元');
-        $('.wa-i-red_packet_money').text('总金额'+red_packet_money+'元');
+        $('.wa-i-red_packet_money').text('当前金额 '+current_money+'元');
+        $('.wa-i-current_money').text(red_packet_money+'元');
     }
 
     function showHelperInfo(data){
@@ -870,6 +867,7 @@
         mask('show');
         $('.xa-share').removeClass('none');
     }
+
     function openSuccessWin(){
         mask('show');
         $('.xa-powerSucceed').removeClass('none');
@@ -879,6 +877,15 @@
         $('.xa-redPacketMsg').removeClass('none');
         $('.xa-loadingFrame').addClass('none');
         $('.xa-redPacketMsg').find('.xa-i-msg').html('红包已被抢完啦</p><p>下次早点来哦');
+    }
+    function openCompletedWin(){
+        mask('show');
+        $('.xa-redPacketMsg').removeClass('none');
+        $('.xa-loadingFrame').addClass('none');
+        $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+page_owner_name+'"</p><p>已经拼红包成功');
+    }
+    function showAlert(){
+        wuiAlert('只能帮好友点赞一次');
     }
     function showSuccess(){
         $('.xa-redpacket_success').removeClass('none');
@@ -930,8 +937,13 @@
             error: function(data) {
                 if(data.errMsg){
                     if(data.errMsg != '只能点赞一次'){
-                        wuiAlert(data.errMsg);
-                        is_helped = false;
+                        if(data.errMsg == '该用户已经完成拼红包'){
+                            openCompletedWin();
+                            is_helped = false;
+                        }else{
+                            wuiAlert(data.errMsg);
+                            is_helped = false;
+                        }
                     }else{
                         if(!W.isMember){
                             $attention.find('.xa-attention-tip').show();
@@ -944,17 +956,6 @@
                 }
             }
         });
-    }
-    //覆盖loading
-    function loadingStatus(action){
-        var $loading = $('.xa-loadingFrame');
-        if(action){
-            mask('show');
-            $loading.removeClass('none');
-        }else{
-            $loading.addClass('none');
-            mask('hide');
-        }
     }
     //隐藏所有
     $('.mask').click(function(){

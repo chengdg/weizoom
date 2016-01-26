@@ -71,7 +71,13 @@ class RedPacketParticipances(resource.Resource):
 
 		red_packet_info = app_models.RedPacket.objects.get(id=belong_to)
 		red_packet_status_text = red_packet_info.status_text
-		params = {'belong_to': belong_to,'has_join': True}
+		#取消关注的参与者也算在列表中，但是一个人只算一次参与，所以取有效参与人的id与无效参与人（可能有多次）的id的并集
+		all_unvalid_participances = app_models.RedPacketParticipance.objects(belong_to=belong_to, is_valid=False)
+		all_unvalid_participance_ids = [un_p.member_id for un_p in all_unvalid_participances]
+		all_valid_participances = app_models.RedPacketParticipance.objects(belong_to=belong_to, has_join=True, is_valid=True)
+		all_valid_participance_ids = [un_p.member_id for un_p in all_valid_participances]
+		member_ids_for_show = list(set(all_valid_participance_ids).union(set(all_unvalid_participance_ids)))
+		params = {'belong_to': belong_to,'member_id__in': member_ids_for_show}
 		if member_ids:
 			params['member_id__in'] = member_ids
 		if start_time:
@@ -96,7 +102,6 @@ class RedPacketParticipances(resource.Resource):
 		reset_re_subscribed_member_helper_info(belong_to)
 		
 		datas = app_models.RedPacketParticipance.objects(**params).order_by('-id','created_at')
-
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
