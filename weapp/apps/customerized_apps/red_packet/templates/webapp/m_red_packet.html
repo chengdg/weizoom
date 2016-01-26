@@ -592,6 +592,7 @@
     var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
+    var mp_user_head_img = '{{ mpUserHeadImg }}';
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -639,7 +640,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        showAlert();
+                        wuiAlert('只能帮好友点赞一次');
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
@@ -660,7 +661,7 @@
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
                     $powerBtn.on('click', function(){
-                        powerYou();
+                        openGuestMask();
                     }).show();
                 }
             }
@@ -798,6 +799,7 @@
         page_owner_icon = member_info.page_owner_icon;
         $('.wa-pageownername').html(sliceName(page_owner_name,4));
         $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
+        $('.wui-i-shop_circle').find('img').attr('src', mp_user_head_img);
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
         W.isAlreadyParticipanted = member_info.is_already_participanted;
@@ -815,8 +817,8 @@
         member_info = data.member_info;
         red_packet_money = member_info.red_packet_money;
         current_money = member_info.current_money;
-        $('.wa-i-red_packet_money').text('当前金额 '+current_money+'元');
-        $('.wa-i-current_money').text(red_packet_money+'元');
+        $('.wa-i-current_money').text('当前金额 '+current_money+'元');
+        $('.wa-i-red_packet_money').text(red_packet_money+'元');
     }
 
     function showHelperInfo(data){
@@ -882,9 +884,6 @@
         $('.xa-loadingFrame').addClass('none');
         $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+sliceName(page_owner_name,4)+'"</p><p>已经拼红包成功');
     }
-    function showAlert(){
-        wuiAlert('只能帮好友点赞一次');
-    }
     function showSuccess(){
         $('.xa-redpacket_success').removeClass('none');
     }
@@ -922,7 +921,13 @@
             },
             success: function(data) {
                 if (W.isMember) {
-                    $('.xui-successHint').find('.wa-helpmoneynumber').html(data.help_info.help_money);
+                    help_money = data.help_info.help_money;
+                    $('.xui-successHint').find('.wa-helpmoneynumber').html(help_money);
+                    //修改当前金额与帮助列表
+                    $('.wa-i-current_money').text('当前金额 '+data.help_info.current_money+'元');
+                    var li_content = '';
+                    li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ data.help_info.username+"</li></div></div>";
+                    $('.wa-top100').append($(li_content));
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                 }else{
