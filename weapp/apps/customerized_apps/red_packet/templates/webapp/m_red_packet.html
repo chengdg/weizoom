@@ -195,49 +195,7 @@
         margin-left: auto;
         margin-right: auto;
     }
-    .xui-loadingFrame {
-        height: 31px;
-        position: fixed;
-        top: 43%;
-        width: 100%;
-        text-align: center;
-        z-index: 10001;
-    }
-    .xui-loadingFrame .xui-loadingBox {
-        color:#959595;
-        background-color: black;
-        position: relative;
-        height: 31px;
-        width: 8rem;
-        margin-left: auto;
-        margin-right: auto;
-        border-radius: 3px;
-    }
-    .xui-loadingFrame .xui-loadingBox .xui-loading{
-        position: relative;
-        height: 30px;
-        width: 30px;
-        float: left;
-        background: no-repeat url("/termite_static/img/component/redpacket/loading.png");
-        background-size: 61%;
-        /* background-position: 4px 6px; */
-        text-align: center;
-        animation: spin 1s linear infinite;
-        -webkit-animation: spin 1s linear infinite;
-        background-position: center;
-        left: 7px;
-    }
-    .xui-loadingFrame .xui-loadingBox .xui-loading_text{
-        line-height: 30px;
-    }
-    @keyframes spin {
-      0%   { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @-webkit-keyframes spin {
-      0%   { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+
 /*竖屏幕*/
 
 /*iphone4,5 w:320*/
@@ -620,13 +578,7 @@
             <!-- <p class="xui-system_msg"></p> -->
         </div>
     </div>
-    <!-- loading 层 -->
-    <div class="xui-loadingFrame xa-loadingFrame none">
-        <div class="xui-loadingBox">
-            <div class="xui-loading"></div>
-            <div class="xui-loading_text">加载中...</div>
-        </div>
-    </div>
+
 {% endblock %}
 
 {% block js %}
@@ -797,8 +749,33 @@
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
-        $(".xa-i-percentbox").html(process);
+
+        percentBoxTimer();
+
     }
+
+    var percentBox_max_count = 10;
+    var percentBox_count = percentBox_max_count;
+    function percentBoxTimer(){
+        var maxwidth_process_bar = $(".wui-red_packet-container .wui-i-powerbar_group .wui-i-bar").width();
+        var curr_boxnum = $(".xa-i-percentbox").html().replace(/(^\s*)|(\s*$)/g,'');
+        var curr_width = $(".xa-i-bar_process").width();
+        var curr_process = parseFloat(curr_width/maxwidth_process_bar * 100).toFixed(1) + "%";
+        console.log("maxwidth_process_bar:"+maxwidth_process_bar);
+
+        if (percentBox_count == 0) {
+            curr_boxnum = curr_process;
+            $(".xa-i-percentbox").html(curr_process);
+            return false;
+        }else{
+            curr_boxnum = curr_process;
+            $(".xa-i-percentbox").html(curr_process);
+            console.log('curr_boxnum:' + curr_boxnum+",curr_width:" + curr_width+",curr_process:" + curr_process);
+            setTimeout(percentBoxTimer,300);
+            percentBox_count --;
+        }
+    }
+
 
     function updateActivityStatus(data){
         member_info = data.member_info;
@@ -961,17 +938,6 @@
                 }
             }
         });
-    }
-    //覆盖loading
-    function loadingStatus(action){
-        var $loading = $('.xa-loadingFrame');
-        if(action){
-            mask('show');
-            $loading.removeClass('none');
-        }else{
-            $loading.addClass('none');
-            mask('hide');
-        }
     }
     //隐藏所有
     $('.mask').click(function(){
