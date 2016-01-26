@@ -31,6 +31,24 @@
         <!-- *end_prunt_task* -->
 
         <style>
+            .wui-apps-alert{
+                opacity: 0;
+                color: whitesmoke;
+                position: fixed;
+                top: 0;
+                width: 100%;
+                transition: opacity 0.5s, top 0.7s;
+                -webkit-transition: opacity 0.5s, top 0.7s;
+                z-index: 10003;
+                text-align: center;
+            }
+            .wui-apps-alert>span{
+                background-color: black;
+                border-radius: 2px;
+                margin: 0 auto;
+                padding: 5px;
+            }
+
           .xui-loadingFrame {
               height: 31px;
               position: fixed;
