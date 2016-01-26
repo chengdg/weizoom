@@ -67,6 +67,7 @@ class RedPacketParticipance(models.Document):
 	is_already_paid = models.BooleanField(default=False) #红包发放状态
 	is_valid = models.BooleanField(default=True) #该条记录是否有效(针对取关后再次关注的情况)
 	helped_member_id = models.DynamicField() #帮他拼红包的会员id list
+	return_result = models.DynamicField() #发完红包的回馈信息
 
 	meta = {
 		'collection': 'red_packet_red_packet_participance'

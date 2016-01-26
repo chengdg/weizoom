@@ -39,8 +39,9 @@
         left: 40%;
         margin-left: 11px;
         position: absolute;
-        top: 60%;
+        /* top: 60%; */
         width: 50px;
+        margin-top: 20px;
     }
     /* 二维码的closeBtn */
     .xui-closeBtn {
@@ -97,7 +98,7 @@
         font-weight: bold;
     }
     .xui-successHint .xui-i-num {
-        font-size: 220%;
+        font-size: 199%;
     }
     .xui-attention{
         position: fixed;
@@ -788,7 +789,10 @@
             process = parseFloat(current_money/red_packet_money*100).toFixed(1)+"%";
             if(process=="100.0%"){
                 process="100%";
+            }else if(process=="0.0%"){
+                process="0%";
             }
+
         }
 
         $(".xa-i-percentbox").css("left",process);
