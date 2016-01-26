@@ -158,13 +158,20 @@ class RedPacketParticipance(resource.Resource):
 			response = create_response(500)
 		return response.get_response()
 
-def paticipate_red_packet(record_id,member_id):
+def participate_red_packet(record_id,member_id):
 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
 	packets_number = red_packet_info.random_packets_number if red_packet_info.random_packets_number!='' else red_packet_info.regular_packets_number
 	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
 	if int(packets_number) > all_participate.count():
-		helped_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id, is_valid=True)
-		if not helped_member_info.has_join:
+		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
+		if not (participate_member_info.is_valid and participate_member_info.has_join): #该用户曾经关注参与过
+			#未成功的红包需要将is_valid置为True
+			participate_member_info.update(set__is_valid=True,set__current_money=0)
+			# 将之前的点赞详情日志无效
+			app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
+			# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
+			app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
+		if not participate_member_info.has_join:
 			red_packet_type = red_packet_info.type
 			if red_packet_type == 'random':
 				random_total_money = float(red_packet_info.random_total_money)
@@ -174,7 +181,7 @@ def paticipate_red_packet(record_id,member_id):
 				red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
 			else:
 				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-			helped_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+			participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
 		response = create_response(200)
 		return response.get_response()
 	else:

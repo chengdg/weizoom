@@ -87,7 +87,7 @@ class RedPacketDetail(models.Document):
 	拼红包详情表
 	"""
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	owner_id = models.LongField()
+	owner_id = models.LongField() #被帮助者id
 	helper_member_id = models.LongField() #帮助者id
 	helper_member_name = models.StringField(default='', max_length=1024) #帮助者昵称
 	help_money = models.FloatField(default=0) #帮助金额
