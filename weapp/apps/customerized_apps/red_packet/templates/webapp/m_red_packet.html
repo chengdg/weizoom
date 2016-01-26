@@ -623,7 +623,11 @@
             if(red_packet_status){
                 showSuccess();
             }
-            $('.wa-running').on('click', openGuideMask).show();
+            if(!W.isMember){
+                $('.wa-running').on('click', openGuestMask).show();
+            }else{
+                $('.wa-running').on('click', openGuideMask).show();
+            }
         }else{
             $('.wui-i-states').hide();
             $('.wa-running').hide();
@@ -651,7 +655,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        openGuideMask();
+                        openGuestMask();
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
