@@ -43,7 +43,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3" for="app_id" style="padding-top:2px;">微信公众号AppId：</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" id="app_id" name="app_id" value="{% if weixin_pay_config %}{{ weixin_pay_config.app_id }}{% endif %}" data-validate="require-notempty"/>
+						<input type="text" class="form-control" id="app_id" name="app_id" value="{% if weixin_pay_config %}{{ weixin_pay_config.app_id }}{% else %}{{ app_id }}{% endif %}" data-validate="require-notempty"/>
 						<div class="errorHint"></div>
 					</div>
 				</div>
@@ -75,13 +75,6 @@
 				</div>
 
 				<div class="{% if weixin_pay_config.pay_version == 1 %}{% else %}xui-hide{% endif %}" id="v3">
-					<div class="form-group">
-						<label class="control-label col-sm-3" for="app_secret" style="padding-top:2px;">微信公众号AppSecret：</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" id="app_secret" name="app_secret" value="{% if weixin_pay_config.pay_version == 1 %}{{ weixin_pay_config.app_secret }}{% endif %}" data-validate="require-notempty"/>
-							<div class="errorHint"></div>
-						</div>
-					</div>
 
 					<div class="form-group">
 						<label class="control-label col-sm-3" for="mch_id" style="padding-top:2px;">商户号MCHID：</label>
@@ -97,9 +90,8 @@
 							<input type="text" class="form-control" id="api_key" name="api_key" value="{% if weixin_pay_config.pay_version == 1 %}{{ weixin_pay_config.partner_key }}{% endif %}" data-validate="require-length" strlength="32"/>
 							<span>
 								<a href='http://pay.weixin.qq.com' target='_blank'>微信商户平台获取</a>
-								<span>
+                            <span>
 									<div class="errorHint"></div>
-								</div>
 							</div>
 						</div>
 						{% endwith %}
