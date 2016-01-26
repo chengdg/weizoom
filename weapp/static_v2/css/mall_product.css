@@ -540,8 +540,8 @@
 }
 .xui-editProductPage .xui-tips ~ div.popover{
 	font-size: 12px;
-    max-width: inherit;
-    left: 29px!important;
+    min-width: 366px;
+    left: 46px!important;
     top:10px!important;
     border-radius: 0px;
     box-shadow: none;
