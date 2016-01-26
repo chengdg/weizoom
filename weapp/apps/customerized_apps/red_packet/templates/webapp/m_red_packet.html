@@ -745,8 +745,33 @@
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
-        $(".xa-i-percentbox").html(process);
+
+        percentBoxTimer();
+
     }
+
+    var percentBox_max_count = 10;
+    var percentBox_count = percentBox_max_count;
+    function percentBoxTimer(){
+        var maxwidth_process_bar = $(".wui-red_packet-container .wui-i-powerbar_group .wui-i-bar").width();
+        var curr_boxnum = $(".xa-i-percentbox").html().replace(/(^\s*)|(\s*$)/g,'');
+        var curr_width = $(".xa-i-bar_process").width();
+        var curr_process = parseFloat(curr_width/maxwidth_process_bar * 100).toFixed(1) + "%";
+        console.log("maxwidth_process_bar:"+maxwidth_process_bar);
+
+        if (percentBox_count == 0) {
+            curr_boxnum = curr_process;
+            $(".xa-i-percentbox").html(curr_process);
+            return false;
+        }else{
+            curr_boxnum = curr_process;
+            $(".xa-i-percentbox").html(curr_process);
+            console.log('curr_boxnum:' + curr_boxnum+",curr_width:" + curr_width+",curr_process:" + curr_process);
+            setTimeout(percentBoxTimer,300);
+            percentBox_count --;
+        }
+    }
+
 
     function updateActivityStatus(data){
         member_info = data.member_info;

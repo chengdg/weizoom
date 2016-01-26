@@ -1521,7 +1521,7 @@ li.wui-selectBox-display-table {
 }
 
 .wui-red_packet-container .wui-i-powerbar_group .wui-i-percentbox{
-    font-size:smaller;
+    font-size:10px;
     color:white;
     width: 40px;
     height: 40px;
