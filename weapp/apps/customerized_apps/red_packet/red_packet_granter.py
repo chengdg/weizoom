@@ -92,7 +92,12 @@ class RedPacketGranter(resource.Resource):
 			is_already_paid=False
 		)
 		member_id2status = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
-		member_id2openid = {m.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
+		member_id2openid = {m.member_id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
+		member_openid2id = {}
+		for k, v in member_id2openid.items():
+			member_openid2id[v] = k
+
+		member_senders_info = []
 		for member_info in member_info_list:
 			member_id = member_info.member_id
 			#非会员不发放
@@ -118,14 +123,23 @@ class RedPacketGranter(resource.Resource):
 			# }
             #
 			# member_info.update(set__return_result=return_result)
+			# if return_code == "SUCCESS":
 
 			#给该会员发送模板消息
 			app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
-			detail_data = {
-				"task_name": record_name,
-				"prize": price,
-				"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
-			}
-			send_apps_template_message(owner_id, app_url, openid, 4, detail_data)
+			member_senders_info.append({
+				"openid": openid,
+				"app_url": app_url,
+				"detail_data": {
+					"task_name": record_name,
+					"prize": price,
+					"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
+				}
+			})
+		succeed_openids= send_apps_template_message(owner_id, 4, member_senders_info)
+		succeed_member_ids = [member_openid2id[o] for o in succeed_openids]
+
+		app_models.RedPacketParticipance.objects(member_id__in=succeed_member_ids).update(set__is_already_paid=True)
+
 		response = create_response(200)
 		return response.get_response()

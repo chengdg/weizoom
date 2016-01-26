@@ -78,36 +78,34 @@ def send_order_template_message(webapp_id, order_id, send_point):
 
 	return True
 
-def send_apps_template_message(owner_id, app_url, openid, send_point, detail_data):
+def send_apps_template_message(owner_id, send_point, member_senders_info):
 	"""
 	百宝箱活动的模板消息
 	@param owner_id:
-	@param app_url: 活动主页page
-	@param openid:
-	@param detail_data: 详情数据
+	@param send_point:
+	@param member_senders_info:
 	@return:
 	"""
 	user = User.objects.get(id=owner_id)
 	template_message = get_template_message_by(user, send_point)
+	succeed_openid = []
 	if template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
 		if mpuser_access_token:
-			try:
-				weixin_api = get_weixin_api(mpuser_access_token)
-				message = _get_apps_send_message_dict(openid, app_url, template_message, detail_data)
-				result = weixin_api.send_template_message(message, True)
-				#_record_send_template_info(order, template_message.template_id, user)
-				# if result.has_key('msg_id'):
-				# 	UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
-				return True
-			except:
-				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
-				watchdog_warning(notify_message)
-				return False
-		else:
-			return False
+			weixin_api = get_weixin_api(mpuser_access_token)
+			for member_info in member_senders_info:
+				openid = member_info.openid
+				app_url = member_info.app_url
+				detail_data = member_info.detail_data
+				try:
+					message = _get_apps_send_message_dict(openid, app_url, template_message, detail_data)
+					weixin_api.send_template_message(message, True)
+					succeed_openid.append(openid)
+				except:
+					notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+					watchdog_warning(notify_message)
 
-	return True
+	return succeed_openid
 
 def _get_mpuser_access_token(user):
 	mp_user = get_binding_weixin_mpuser(user)
