@@ -751,12 +751,13 @@
 
         $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
-
+        percentBox_process_tmp = process;
         percentBoxTimer();
 
     }
 
     var percentBox_max_count = 10;
+    var percentBox_process_tmp = "";
     var percentBox_count = percentBox_max_count;
     function percentBoxTimer(){
         var maxwidth_process_bar = $(".wui-red_packet-container .wui-i-powerbar_group .wui-i-bar").width();
@@ -776,7 +777,7 @@
             if(curr_process=="100.0%"){
                 curr_process="100%";
             }
-            curr_boxnum = curr_process;
+            curr_boxnum = percentBox_process_tmp;
             $(".xa-i-percentbox").html(curr_process);
             console.log('curr_boxnum:' + curr_boxnum+",curr_width:" + curr_width+",curr_process:" + curr_process);
             setTimeout(percentBoxTimer,300);
