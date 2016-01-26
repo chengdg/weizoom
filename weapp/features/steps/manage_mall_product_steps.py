@@ -417,7 +417,7 @@ def __get_product_from_web_page(context, product_name):
         "supplier": 0 if not supplier else dict(supplier).get(product.supplier),
         "purchase_price": product.purchase_price,
         "promotion_title": product.promotion_title,
-        "invoice": product.is_enable_bill
+        "invoice": product.is_enable_bill,
         "distribution_time": 'on' if product.is_delivery else 'off',
     }
 
