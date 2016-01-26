@@ -638,7 +638,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        showAlert();
+                        wuiAlert('只能帮好友点赞一次');
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
@@ -880,9 +880,6 @@
         $('.xa-redPacketMsg').removeClass('none');
         $('.xa-loadingFrame').addClass('none');
         $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+page_owner_name+'"</p><p>已经拼红包成功');
-    }
-    function showAlert(){
-        wuiAlert('只能帮好友点赞一次');
     }
     function showSuccess(){
         $('.xa-redpacket_success').removeClass('none');
