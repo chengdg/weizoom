@@ -409,7 +409,7 @@ class Product(resource.Resource):
             is_member_product=request.POST.get("is_member_product", False) == 'on',
             supplier=request.POST.get("supplier", 0),
             purchase_price=purchase_price,
-            is_enable_bill=is_enable_bill
+            is_enable_bill=is_enable_bill,
             is_delivery=request.POST.get('is_delivery', False)
         )
         # 设置新商品显示顺序
