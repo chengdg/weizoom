@@ -674,12 +674,20 @@
                 }).show();
             }else{
                 using_msg = '我也要拼红包';
-                $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('img').attr('src', qrcode_url);
-                    $attention.find('.xa-attention-tip').hide();
-                    $attention.find('.xa-attention-reply').children().first().html("2.回复：");
-                    openGuestMask();
-                }).show();
+                if(W.isMember){
+                    $('.wa-using').text(using_msg).on('click', function(){
+                        link = window.location.origin + '/m/apps/red_packet/m_red_packet/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+                        console.log(link);
+                        window.open(link, '_tab');
+                    }).show();
+                }else{
+                    $('.wa-using').text(using_msg).on('click', function(){
+                        $attention.find('img').attr('src', qrcode_url);
+                        $attention.find('.xa-attention-tip').hide();
+                        $attention.find('.xa-attention-reply').children().first().html("2.回复：");
+                        openGuestMask();
+                    }).show();
+                }
             }
         }
 
