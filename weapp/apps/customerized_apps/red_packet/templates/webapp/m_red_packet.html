@@ -591,6 +591,7 @@
     var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
+    var mp_user_head_img = '{{ mpUserHeadImg }}';
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -797,6 +798,7 @@
         page_owner_icon = member_info.page_owner_icon;
         $('.wa-pageownername').html(page_owner_name);
         $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
+        $('.wui-i-shop_circle').find('img').attr('src', mp_user_head_img);
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
         W.isAlreadyParticipanted = member_info.is_already_participanted;

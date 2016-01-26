@@ -52,6 +52,7 @@ class MRedPacket(resource.Resource):
 		isMember = False
 		timing = 0
 		mpUserPreviewName = ''
+		mpUserHeadImg = ''
 		is_already_participanted = False
 		is_helped = False
 		self_page = False
@@ -77,6 +78,8 @@ class MRedPacket(resource.Resource):
 				record = record.first()
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
+				#获取公众号头像
+				mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
 				#获取活动状态
 				activity_status = record.status_text
 
@@ -188,6 +191,7 @@ class MRedPacket(resource.Resource):
 			'isMember': isMember,
 			'timing': timing,
 			'mpUserPreviewName': mpUserPreviewName,
+			'mpUserHeadImg': mpUserHeadImg,
 			'is_already_participanted': is_already_participanted,
 			'is_helped': is_helped,
 			'self_page': self_page,
