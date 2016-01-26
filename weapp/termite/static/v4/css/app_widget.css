@@ -1601,8 +1601,8 @@ li.wui-selectBox-display-table {
 }
 .wui-red_packet-container .wui-i-timing i{
     background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
-    background-size: 353%;
-    background-position: -46px -6px;
+    background-size: 338%;
+    background-position: -41px -4px;
     display: inline-block;
     height: 35px;
     width: 33px;
@@ -1741,7 +1741,7 @@ li.wui-selectBox-display-table {
 .wui-red_packet-container .wui-i-rules-contentbox{
     background: no-repeat scroll 0 0 url("/termite_static/img/component/redpacket/rules.png");
     border-radius: 3px;
-    left: 14%;
+    left: 15%;
     padding: 10px 10px 16px 9px;
     position: fixed;
     top: -5%;
