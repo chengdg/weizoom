@@ -92,6 +92,7 @@
     }
     .xui-successHint .xui-i-intro_text {
         font-weight: bold;
+        font-size: 13px;
     }
     .xui-successHint .xui-i-intro_num {
         color:#C11F20;
@@ -504,11 +505,11 @@
     <!-- 成功页面 -->
     <div class="xui-powerSucceed xa-powerSucceed none">
         <div class="f15 xui-successHint xui-spritebg">
-            <div style="display: inline-block;color: #333;width: 75%;">
+            <div style="display: inline-block;color: #333;width: 90%;">
                 <div class="wui-i-closebtn xa-i-closebtn">
                     ×
                 </div>
-                <p class="xui-i-intro_text">您已为<span class="wa-pageownername">他</span>贡献</p>
+                <p class="xui-i-intro_text">您已为“<span class="wa-pageownername">他</span>”贡献</p>
                 <p class="xui-i-intro_num"><span class="xui-i-num">+</span><span class="xui-i-num wa-helpmoneynumber">0.00</span><span>元</span></p>
             </div>
         </div>
@@ -633,7 +634,7 @@
             var using_msg;
             var $attention = $('.xa-attention-guest');
             var $powerBtn = $('.wa-power');
-            $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
+            $powerBtn.find('.wa-mobile_solution').html(sliceName(page_owner_name));
             if(W.isMember){
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
@@ -795,7 +796,7 @@
         //更新页面拥有者名称，头像
         page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
         page_owner_icon = member_info.page_owner_icon;
-        $('.wa-pageownername').html(page_owner_name);
+        $('.wa-pageownername').html(sliceName(page_owner_name,4));
         $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
@@ -824,7 +825,7 @@
             var li_content = '';
             for(var i in helpers_info){
                 var p = helpers_info[i];
-                li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ p.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ p.help_money+"元</li><li class='wui-i-name'>"+ p.username+"</li></div></div>";
+                li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ p.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ p.help_money+"元</li><li class='wui-i-name'>"+ sliceName(p.username,4)+"</li></div></div>";
             }
             $('.wa-top100').append($(li_content));
         }
@@ -879,7 +880,7 @@
         mask('show');
         $('.xa-redPacketMsg').removeClass('none');
         $('.xa-loadingFrame').addClass('none');
-        $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+page_owner_name+'"</p><p>已经拼红包成功');
+        $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+sliceName(page_owner_name,4)+'"</p><p>已经拼红包成功');
     }
     function showAlert(){
         wuiAlert('只能帮好友点赞一次');
@@ -953,6 +954,14 @@
                 }
             }
         });
+    }
+    //切割名字
+    function sliceName(name,num){
+        if(name.length<num){
+            return name
+        }else{
+            return name.substring(0,num)+"...";
+        }
     }
     //隐藏所有
     $('.mask').click(function(){
