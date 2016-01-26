@@ -171,10 +171,15 @@ def participate_red_packet(record_id,member_id):
 		if (not participate_member_info.is_valid) and (not participate_member_info.has_join): #该用户曾经关注参与过
 			#未成功的红包需要将is_valid置为True
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
-			# 将之前的点赞详情日志无效
-			app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
-			# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
-			app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
+			try:
+				# 将之前的点赞详情日志无效
+				app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
+				# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
+				app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
+			except Exception,e:
+				print e
+				response = create_response(500)
+				return response.get_response()
 		if not participate_member_info.has_join:
 			red_packet_type = red_packet_info.type
 			if red_packet_type == 'random':
