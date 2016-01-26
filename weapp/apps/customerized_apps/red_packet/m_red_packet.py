@@ -101,7 +101,7 @@ class MRedPacket(resource.Resource):
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_red_packet_info.count()> 0:
 					curr_member_red_packet_info = curr_member_red_packet_info.first()
-					if not curr_member_red_packet_info.is_valid: #曾经参与过又取关了
+					if not curr_member_red_packet_info.is_valid: #曾经参与过又取关了，需要重新参与一次
 						if fid is None or str(fid) == str(member_id):
 							participate_response = participate_red_packet(record_id,member_id)
 							if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
@@ -141,7 +141,7 @@ class MRedPacket(resource.Resource):
 					page_owner_icon = page_owner.user_icon
 					page_owner_member_id = fid
 
-					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id,is_valid=True)
+					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
 					red_packet_money = page_owner_member_info.red_packet_money
 					current_money = page_owner_member_info.current_money
 					red_packet_status = page_owner_member_info.red_packet_status

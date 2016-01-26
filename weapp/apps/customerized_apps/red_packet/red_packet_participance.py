@@ -85,13 +85,17 @@ class RedPacketParticipance(resource.Resource):
 				ids_tmp.append(fid)
 			curr_member_red_packet_info.update(set__helped_member_id=ids_tmp)
 			#更新被帮助者信息
-			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid),is_valid=True).first()
+			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
 			if not helped_member_info.has_join:
 				helped_member_info.update(set__has_join=True)
 			if helped_member_info.red_packet_status: #如果已经完成拼红包
 				response = create_response(500)
 				response.errMsg = u'该用户已经完成拼红包'
+				return response.get_response()
+			if not helped_member_info.is_valid: #如果已经已退出活动
+				response = create_response(500)
+				response.errMsg = u'该用户已退出活动'
 				return response.get_response()
 			else:
 				#随机区间中获得好友帮助的金额
