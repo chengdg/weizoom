@@ -514,7 +514,6 @@
             </div>
         </div>
     </div>
-
     <!-- 没有红包了的弹窗页面 -->
     <div class="xui-powerSucceed xa-redPacketMsg none">
         <div class="f15 xui-successHint xui-spritebg">
@@ -635,7 +634,7 @@
             var using_msg;
             var $attention = $('.xa-attention-guest');
             var $powerBtn = $('.wa-power');
-            $powerBtn.find('.wa-mobile_solution').html(sliceName(page_owner_name));
+            $powerBtn.find('.wa-mobile_solution').html(sliceName(page_owner_name,4));
             if(W.isMember){
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
@@ -962,10 +961,10 @@
     }
     //切割名字
     function sliceName(name,num){
-        if(name.length<num){
+        if(name.length<=num){
             return name
         }else{
-            return name.substring(0,num)+"...";
+            return name.substring(0,num-1)+"...";
         }
     }
     //隐藏所有
