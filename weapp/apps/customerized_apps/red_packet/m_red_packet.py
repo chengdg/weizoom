@@ -27,6 +27,7 @@ class MRedPacket(resource.Resource):
 		record_id = request.GET.get('id', None)
 		member = request.member
 		member_id = member.id
+		fid = request.GET.get('fid', member_id)
 		response = create_response(500)
 		if not record_id or not member_id:
 			response.errMsg = u'活动信息出错'
@@ -38,7 +39,7 @@ class MRedPacket(resource.Resource):
 
 		# 统计帮助者信息
 		helpers_info_list = []
-		helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id,has_helped=True,is_valid=True).order_by('-created_at')
+		helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
 		member_ids = [h.helper_member_id for h in helpers]
 		member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 		for h in helpers:
@@ -65,7 +66,6 @@ class MRedPacket(resource.Resource):
 		activity_status = u"未开始"
 
 		# fid = request.COOKIES['fid']
-		fid = request.GET.get('fid', member_id)
 
 		if 'new_app:' in record_id:
 			project_id = record_id

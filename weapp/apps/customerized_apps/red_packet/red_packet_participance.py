@@ -139,8 +139,12 @@ class RedPacketParticipance(resource.Resource):
 			response.errMsg = u'帮助好友失败'
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
+		helper_member_info = Member.objects.get(id=member_id)
 		help_info = {
 			'help_money': round(random_money,2),
+			'current_money': helped_member_info.current_money,
+			'user_icon': helper_member_info.user_icon,
+			'username': helper_member_info.username_size_ten
 		}
 		response = create_response(200)
 		response.data = {
