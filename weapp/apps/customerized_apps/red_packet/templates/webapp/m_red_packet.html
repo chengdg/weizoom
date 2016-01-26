@@ -639,7 +639,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        openGuideMask();
+                        wuiAlert('只能帮好友点赞一次');
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
