@@ -429,6 +429,8 @@ def step_look_for_order(context, user):
 
     context.query_params = query_params
 
+
+
 @then(u"{user}导出订单获取订单统计信息")
 def step_get_all_info_of_order(context, user):
     filter_value = dict()
@@ -469,7 +471,6 @@ def step_get_specify_order(context, user):
     url = '/mall2/order_export/'
     response = context.client.get(url, filter_value)
     reader = csv.reader(StringIO(response.content))
-    # 去掉表头信息
     csv_items = [row for row in reader]
     csv_items[0] = [
         'order_no',
@@ -503,6 +504,9 @@ def step_get_specify_order(context, user):
         'delivery_time',
         'remark',
         'customer_message',
+        'customer_source',
+        'customer_recommender',
+        'is_older_mermber',
         'purchase_price',
         'purchase_costs'
 
