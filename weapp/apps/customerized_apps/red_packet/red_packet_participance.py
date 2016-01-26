@@ -62,29 +62,7 @@ class RedPacketParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
-			#更新当前member的参与信息
-			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id,is_valid=True).first()
-			ids_tmp = curr_member_red_packet_info.helped_member_id
-			#并发问题临时解决方案 ---start
-			control_data = {}
-			control_data['belong_to'] = red_packet_id
-			control_data['member_id'] = member_id
-			control_data['helped_member_id'] = int(fid)
-			control_data['red_packet_control'] = datetime.now().strftime('%Y-%m-%d')
-			try:
-				control = app_models.RedPacketControl(**control_data)
-				control.save()
-			except:
-				response = create_response(500)
-				response.errMsg = u'只能帮助一次'
-				return response.get_response()
-			#并发问题临时解决方案 ---end
-			if not ids_tmp:
-				ids_tmp = [fid]
-			else:
-				ids_tmp.append(fid)
-			curr_member_red_packet_info.update(set__helped_member_id=ids_tmp)
-			#更新被帮助者信息
+			#被帮助者信息
 			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
 			if not helped_member_info.has_join:
@@ -98,10 +76,32 @@ class RedPacketParticipance(resource.Resource):
 				response.errMsg = u'该用户已退出活动'
 				return response.get_response()
 			else:
+				#更新当前member的参与信息
+				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id,is_valid=True).first()
+				ids_tmp = curr_member_red_packet_info.helped_member_id
+				#并发问题临时解决方案 ---start
+				control_data = {}
+				control_data['belong_to'] = red_packet_id
+				control_data['member_id'] = member_id
+				control_data['helped_member_id'] = int(fid)
+				control_data['red_packet_control'] = datetime.now().strftime('%Y-%m-%d')
+				try:
+					control = app_models.RedPacketControl(**control_data)
+					control.save()
+				except:
+					response = create_response(500)
+					response.errMsg = u'只能帮助一次'
+					return response.get_response()
+				#并发问题临时解决方案 ---end
+				if not ids_tmp:
+					ids_tmp = [fid]
+				else:
+					ids_tmp.append(fid)
+				curr_member_red_packet_info.update(set__helped_member_id=ids_tmp)
 				#随机区间中获得好友帮助的金额
 				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
 				money_range_min,money_range_max = red_packet_info.money_range.split('-')
-				random_money = random.uniform(float(money_range_min), float(money_range_max))
+				random_money = round(random.uniform(float(money_range_min), float(money_range_max)),2)
 				#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
 				current_money = helped_member_info.current_money + random_money
 				if current_money > helped_member_info.red_packet_money:
