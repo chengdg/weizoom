@@ -74,10 +74,10 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 		for member in datas:
 			items.append({
 				'id': member.id,
-				'pay_money': member.pay_money,
-				'pay_times': '%.2f' % member.pay_times,
+				'pay_money': '%.2f' % member.pay_money,
+				'pay_times': member.pay_times,
 				'last_pay_time': member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S') if member.last_pay_time else '',
-				'unit_price': member.unit_price
+				'unit_price': '%.2f' % member.unit_price
 			})
 
 		return {
