@@ -83,6 +83,7 @@ PAY_ORDER_SUCCESS = 0 		#订单支付成功
 PAY_DELIVER_NOTIFY = 1 		#发货通知
 COUPON_ARRIVAL_NOTIFY = 2 	#优惠劵到账通知
 COUPON_EXPIRED_REMIND = 3 	#优惠劵过期提醒
+MISSION_ACCOMPLISHED_NOTIFY = 4    #任务完成通知
 class MarketToolsTemplateMessage(models.Model):
 	industry = models.IntegerField(default=INDUSTR_IT)
 	title = models.CharField(max_length=256) #标题

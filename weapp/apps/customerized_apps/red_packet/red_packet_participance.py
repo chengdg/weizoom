@@ -117,7 +117,7 @@ class RedPacketParticipance(resource.Resource):
 					helped_member_info.reload()
 					#完成目标金额，设置红包状态为成功
 					if helped_member_info.current_money == helped_member_info.red_packet_money:
-						helped_member_info.update(set__red_packet_status=True)
+						helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
 					has_helped = True
 				detail_log = app_models.RedPacketDetail(
 					belong_to = red_packet_id,

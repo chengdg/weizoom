@@ -78,6 +78,37 @@ def send_order_template_message(webapp_id, order_id, send_point):
 
 	return True
 
+def send_apps_template_message(owner_id, app_url, openid, send_point, detail_data):
+	"""
+	百宝箱活动的模板消息
+	@param owner_id:
+	@param app_url: 活动主页page
+	@param openid:
+	@param detail_data: 详情数据
+	@return:
+	"""
+	user = User.objects.get(id=owner_id)
+	template_message = get_template_message_by(user, send_point)
+	if template_message and template_message.template_id:
+		mpuser_access_token = _get_mpuser_access_token(user)
+		if mpuser_access_token:
+			try:
+				weixin_api = get_weixin_api(mpuser_access_token)
+				message = _get_apps_send_message_dict(openid, app_url, template_message, detail_data)
+				result = weixin_api.send_template_message(message, True)
+				#_record_send_template_info(order, template_message.template_id, user)
+				# if result.has_key('msg_id'):
+				# 	UserSentMassMsgLog.create(user_profile.webapp_id, result['msg_id'], MESSAGE_TYPE_TEXT, content)
+				return True
+			except:
+				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+				watchdog_warning(notify_message)
+				return False
+		else:
+			return False
+
+	return True
+
 def _get_mpuser_access_token(user):
 	mp_user = get_binding_weixin_mpuser(user)
 	if mp_user:
@@ -93,6 +124,32 @@ def _get_mpuser_access_token(user):
 	else:
 		return None
 
+def _get_apps_send_message_dict(openid, app_url, template_message, detail):
+	template_data = dict()
+	template_data['touser'] = openid
+	template_data['template_id'] = template_message.template_id
+	template_data['url'] = app_url
+	template_data['topcolor'] = "#FF0000"
+
+	detail_data = {}
+	detail_data["first"] = {"value" : template_message.first_text, "color" : "#000000"}
+	detail_data["remark"] = {"value" : template_message.remark_text, "color" : "#000000"}
+	template_message_detail = template_message.template_message
+
+	if template_message_detail.attribute:
+		attribute_data_list = template_message_detail.attribute.split(',')
+		attribute_dict = {}
+		for one_data in attribute_data_list:
+			one_data_arr = one_data.split(':')
+			attribute_dict[one_data_arr[1]] = one_data_arr[0]
+		attribute_keys = attribute_dict.keys()
+		for key, value in detail.items():
+			if key not in attribute_keys:
+				continue
+			detail_data[attribute_dict[key]] = {"value": value, "color" : "#173177"}
+
+	template_data['data'] = detail_data
+	return template_data
 def _get_order_send_message_dict(user_profile, template_message, order, send_point):
 	template_data = dict()
 	social_account = member_model_api.get_social_account(order.webapp_user_id)

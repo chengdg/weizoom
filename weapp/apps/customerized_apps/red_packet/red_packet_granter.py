@@ -15,6 +15,7 @@ from core import paginator
 from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall.models import PayInterface
+from market_tools.tools.template_message.module_api import send_apps_template_message
 from modules.member import models as member_models
 import models as app_models
 import export
@@ -117,7 +118,14 @@ class RedPacketGranter(resource.Resource):
 			# }
             #
 			# member_info.update(set__return_result=return_result)
-			#TODO 给该会员发送模板消息
 
+			#给该会员发送模板消息
+			app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
+			detail_data = {
+				"task_name": record_name,
+				"prize": price,
+				"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
+			}
+			send_apps_template_message(owner_id, app_url, openid, 4, detail_data)
 		response = create_response(200)
 		return response.get_response()
