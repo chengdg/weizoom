@@ -23,6 +23,7 @@ from mall.models import PayInterface, PAY_INTERFACE_WEIXIN_PAY, UserWeixinPayOrd
 from mall import export
 from core import resource
 from core.jsonresponse import create_response
+from weixin.user.models import ComponentAuthedAppid
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.MALL_CONFIG_FIRST_NAV
@@ -98,8 +99,6 @@ class PayInterfaceList(resource.Resource):
                                }, {
                                    "name": u"AppID", "value": related_config.app_id
                                }, {
-                                   "name": u"AppSecret", "value": related_config.app_secret
-                               }, {
                                    "name": u"商户号MCHID", "value": related_config.partner_id
                                }, {
                                    "name": u"APIKEY密钥", "value": related_config.partner_key
@@ -146,6 +145,15 @@ class PayInterfaceInfo(resource.Resource):
         is_new = request.GET.get("is_new", None)
         pay_interface_id = request.GET['id']
         pay_interface = PayInterface.objects.get(id=pay_interface_id)
+
+
+        try:
+            component_authed_appid = ComponentAuthedAppid.objects.filter(user_id=request.manager.id)[0]
+            component_info = component_authed_appid.component_info
+            component_appid = component_info.app_id
+        except:
+            component_appid = ''
+
         if not is_new:
             if pay_interface.type == PAY_INTERFACE_WEIXIN_PAY:
                 related_config = UserWeixinPayOrderConfig.objects.get(owner=request.manager,
@@ -156,15 +164,17 @@ class PayInterfaceInfo(resource.Resource):
             else:
                 related_config = None
             pay_interface.related_config = related_config
-
-        c = RequestContext(request, {
+        data =  {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_config_second_navs(request),
             'second_nav_name': export.MALL_CONFIG_PAYINTERFACE_NAV,
             'pay_interface_id': pay_interface_id,
             'pay_interface': pay_interface,
             'is_new': is_new,
-        })
+        }
+        if component_appid != '':
+            data['app_id'] = component_appid
+        c = RequestContext(request,data)
         return render_to_response('mall/editor/edit_pay_interface.html', c)
 
     @login_required
@@ -243,7 +253,6 @@ def _add_weixin_pay_config(request):
             owner=request.manager,
             app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
-            app_secret=request.POST.get('app_secret', ''),
             partner_id=request.POST.get('partner_id', '').strip(),
             partner_key=request.POST.get('partner_key', '').strip(),
             paysign_key=request.POST.get('paysign_key', '').strip(),
@@ -253,7 +262,6 @@ def _add_weixin_pay_config(request):
             owner=request.manager,
             app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
-            app_secret=request.POST.get('app_secret', '').strip(),
             partner_id=request.POST.get('mch_id', '').strip(),
             partner_key=request.POST.get('api_key', '').strip(),
             paysign_key=request.POST.get('paysign_key', ''),
@@ -282,7 +290,6 @@ def _update_weixin_pay_config(request, pay_interface):
     if int(request.POST.get('pay_version', 0)) == 0:
         UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
             app_id=request.POST.get('app_id', '').strip(),
-            app_secret=request.POST.get('app_secret', ''),
             pay_version=request.POST.get('pay_version', 0),
             partner_id=request.POST.get('partner_id', '').strip(),
             partner_key=request.POST.get('partner_key', '').strip(),
@@ -292,7 +299,6 @@ def _update_weixin_pay_config(request, pay_interface):
         UserWeixinPayOrderConfig.objects.filter(owner=request.manager, id=pay_interface.related_config_id).update(
             app_id=request.POST.get('app_id', '').strip(),
             pay_version=request.POST.get('pay_version', 0),
-            app_secret=request.POST.get('app_secret', '').strip(),
             partner_id=request.POST.get('mch_id', '').strip(),
             partner_key=request.POST.get('api_key', '').strip(),
             paysign_key=request.POST.get('paysign_key', ''),
