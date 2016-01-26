@@ -62,22 +62,27 @@
 	{
 		"id": "00013",
 		"name": "比利时邮政",
-		"value": "bpost"		
+		"value": "bpost"
 	},
 	{
 		"id": "00014",
 		"name": "速尔快递",
-		"value": "suer"		
+		"value": "suer"
 	},
 	{
 		"id": "00015",
 		"name": "国通快递",
-		"value": "guotongkuaidi"		
+		"value": "guotongkuaidi"
 	},
   	{
 		"id": "00016",
 		"name": "如风达",
 		"value": "rufengda"
+	},
+	{
+		"id": "00017",
+		"name": "邮政包裹/平邮",
+		"value": "youzhengguonei"
 	}
 ]
 
