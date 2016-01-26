@@ -26,10 +26,8 @@ class MRedPacket(resource.Resource):
 	def api_get(request):
 		record_id = request.GET.get('id', None)
 		member = request.member
-		member_id = member.id
-		fid = request.GET.get('fid', member_id)
 		response = create_response(500)
-		if not record_id or not member_id:
+		if not record_id:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		record = app_models.RedPacket.objects(id=record_id)
@@ -37,19 +35,6 @@ class MRedPacket(resource.Resource):
 			response.errMsg = 'is_deleted'
 			return response.get_response()
 
-		# 统计帮助者信息
-		helpers_info_list = []
-		helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
-		member_ids = [h.helper_member_id for h in helpers]
-		member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-		for h in helpers:
-			temp_dict = {
-				'member_id': h.helper_member_id,
-				'user_icon': member_id2member[h.helper_member_id].user_icon,
-				'username': member_id2member[h.helper_member_id].username_size_ten,
-				'help_money': h.help_money
-			}
-			helpers_info_list.append(temp_dict)
 		isMember = False
 		timing = 0
 		mpUserPreviewName = ''
@@ -72,6 +57,22 @@ class MRedPacket(resource.Resource):
 			record_id = 0
 			record = None
 		elif member:
+			member_id = member.id
+			fid = request.GET.get('fid', member_id)
+			# 统计帮助者信息
+			helpers_info_list = []
+			helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
+			member_ids = [h.helper_member_id for h in helpers]
+			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+			for h in helpers:
+				temp_dict = {
+					'member_id': h.helper_member_id,
+					'user_icon': member_id2member[h.helper_member_id].user_icon,
+					'username': member_id2member[h.helper_member_id].username_size_ten,
+					'help_money': h.help_money
+				}
+				helpers_info_list.append(temp_dict)
+
 			isMember =member.is_subscribed
 			record = app_models.RedPacket.objects(id=record_id)
 			if record.count() >0:

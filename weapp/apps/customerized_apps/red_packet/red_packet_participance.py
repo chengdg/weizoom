@@ -48,7 +48,6 @@ class RedPacketParticipance(resource.Resource):
 		响应PUT
 		"""
 		try:
-
 			member_id = request.member.id
 			red_packet_id = request.POST['id']
 			fid = request.POST['fid']
@@ -61,6 +60,10 @@ class RedPacketParticipance(resource.Resource):
 			except:
 				response = create_response(500)
 				response.errMsg = u'不存在该会员'
+				return response.get_response()
+			if not request.member.is_subscribed:
+				response = create_response(500)
+				response.errMsg = u'请先关注公众号'
 				return response.get_response()
 			#被帮助者信息
 			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
@@ -77,7 +80,7 @@ class RedPacketParticipance(resource.Resource):
 				return response.get_response()
 			else:
 				#更新当前member的参与信息
-				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id,is_valid=True).first()
+				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
 				ids_tmp = curr_member_red_packet_info.helped_member_id
 				#并发问题临时解决方案 ---start
 				control_data = {}
@@ -142,7 +145,7 @@ class RedPacketParticipance(resource.Resource):
 		helper_member_info = Member.objects.get(id=member_id)
 		help_info = {
 			'help_money': round(random_money,2),
-			'current_money': helped_member_info.current_money,
+			'current_money': round(helped_member_info.current_money,2),
 			'user_icon': helper_member_info.user_icon,
 			'username': helper_member_info.username_size_ten
 		}
