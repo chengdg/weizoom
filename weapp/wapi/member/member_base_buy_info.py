@@ -50,7 +50,7 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 
 		if is_all == "1":
 			#获取全部会员信息
-			members = member_models.Member.objects.filter(webapp_id=webapp_id, status=1)
+			members = member_models.Member.objects.filter(webapp_id=webapp_id, status__in=(0, 1))
 			print 'members count:', members.count()
 		elif is_all == "0":
 			#从mall_order_operation_log中获取支付和完成的订单id列表，然后根据订单id获取会员信息
@@ -75,8 +75,8 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 			items.append({
 				'id': member.id,
 				'pay_money': member.pay_money,
-				'pay_times': member.pay_times,
-				'last_pay_time': member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S'),
+				'pay_times': '%.2f' % member.pay_times,
+				'last_pay_time': member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S') if member.last_pay_time else '',
 				'unit_price': member.unit_price
 			})
 
