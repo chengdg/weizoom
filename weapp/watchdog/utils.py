@@ -5,9 +5,11 @@ Watchdog接口
 """
 
 # 异步service
+import logging
+import json
+import sys
 
 from django.conf import settings
-import sys
 #from core.exceptionutil import full_stack
 
 #from .models import Message, WeappMessage
@@ -25,6 +27,12 @@ def watchdog_debug(message, type='WEB', user_id='0', db_name='default'):
 
 	异步方式调用 weapp.services.send_watchdog_service.send_watchdog()
 	"""
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.debug(json.dumps(log))
+
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_DEBUG >= settings.WATCH_DOG_LEVEL:
@@ -41,6 +49,12 @@ def watchdog_info(message, type='WEB', user_id='0', db_name='default'):
 
 	异步方式调用 weapp.services.send_watchdog_service.send_watchdog()
 	"""
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.info(json.dumps(log))
+
 	result = None
 	#print("weapp_settings.TASKQUEUE_ENABLED: {}".format(weapp_settings.TASKQUEUE_ENABLED))
 	if weapp_settings.TASKQUEUE_ENABLED:
@@ -48,7 +62,7 @@ def watchdog_info(message, type='WEB', user_id='0', db_name='default'):
 			result = send_watchdog.delay(type, message, WATCHDOG_INFO, user_id, db_name)
 	else:
 		if WATCHDOG_INFO >= settings.WATCH_DOG_LEVEL:
-			_watchdog(type, message, WATCHDOG_INFO, user_id, db_name)	
+			_watchdog(type, message, WATCHDOG_INFO, user_id, db_name)
 	return result
 
 
@@ -58,6 +72,12 @@ def watchdog_notice(message, type='WEB', user_id='0', db_name='default'):
 
 	异步方式调用 weapp.services.send_watchdog_service.send_watchdog()
 	"""
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.info(json.dumps(log))
+
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_NOTICE>= settings.WATCH_DOG_LEVEL:
@@ -74,6 +94,12 @@ def watchdog_warning(message, type='WEB', user_id='0', db_name='default'):
 
 	异步方式调用 weapp.services.send_watchdog_service.send_watchdog()
 	"""
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.warning(json.dumps(log))
+
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_WARNING>= settings.WATCH_DOG_LEVEL:
@@ -85,6 +111,11 @@ def watchdog_warning(message, type='WEB', user_id='0', db_name='default'):
 
 
 def watchdog_error(message, type='WEB', user_id='0', noraise=False, db_name='default'):
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.error(json.dumps(log))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ERROR >= settings.WATCH_DOG_LEVEL:
@@ -104,6 +135,11 @@ def watchdog_error(message, type='WEB', user_id='0', noraise=False, db_name='def
 
 
 def watchdog_fatal(message, type='WEB', user_id='0', noraise=False, db_name='default'):
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.exception(json.dumps(log))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_FATAL >= settings.WATCH_DOG_LEVEL:
@@ -123,6 +159,11 @@ def watchdog_fatal(message, type='WEB', user_id='0', noraise=False, db_name='def
 
 
 def watchdog_alert(message, type='WEB', user_id='0', db_name='default'):
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.critical(json.dumps(log))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
@@ -134,6 +175,11 @@ def watchdog_alert(message, type='WEB', user_id='0', db_name='default'):
 
 
 def watchdog_js_analysis(message, type='JS_Analysis', user_id='0', db_name='default'):
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.info(json.dumps(log))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_ALERT >= settings.WATCH_DOG_LEVEL:
@@ -145,6 +191,11 @@ def watchdog_js_analysis(message, type='JS_Analysis', user_id='0', db_name='defa
 
 
 def watchdog_emergency(message, type='WEB', user_id='0', db_name='default'):
+	log = {
+	    "message": message,
+	    "user_id": user_id
+	}
+	logging.critical(json.dumps(log))
 	result = None
 	if weapp_settings.TASKQUEUE_ENABLED:
 		if WATCHDOG_EMERGENCY >= settings.WATCH_DOG_LEVEL:
