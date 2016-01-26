@@ -657,7 +657,7 @@
                 if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
-                        openGuestMask();
+                        openGuideMask();
                     }).show();
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
@@ -767,8 +767,8 @@
         console.log("maxwidth_process_bar:"+maxwidth_process_bar);
 
         if (percentBox_count == 0) {
-            curr_boxnum = curr_process;
-            $(".xa-i-percentbox").html(curr_process);
+            curr_boxnum = percentBox_process_tmp;
+            $(".xa-i-percentbox").html(curr_boxnum);
             return false;
         }else{
             if(curr_process=="0.0%"){
@@ -777,9 +777,7 @@
             if(curr_process=="100.0%"){
                 curr_process="100%";
             }
-            curr_boxnum = percentBox_process_tmp;
             $(".xa-i-percentbox").html(curr_process);
-            console.log('curr_boxnum:' + curr_boxnum+",curr_width:" + curr_width+",curr_process:" + curr_process);
             setTimeout(percentBoxTimer,300);
             percentBox_count --;
         }
