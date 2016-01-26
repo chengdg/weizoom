@@ -1,6 +1,6 @@
 /**
  * @class W.component.appkit.RedPacketDescription
- * 
+ *
  */
 ensureNS('W.component.appkit');
 W.component.appkit.RedPacketDescription = W.component.Component.extend({
@@ -125,7 +125,7 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 		},{
 			name: 'money_range',
 			type: 'money_range_selector',
-			displayName: '好友贡献金额区间',
+			displayName: '好友贡献区间',
 			isUserProperty: true,
 			validate: 'data-validate="require-notempty::金额区间不能为空"',
 			validateIgnoreDefaultValue: true,
