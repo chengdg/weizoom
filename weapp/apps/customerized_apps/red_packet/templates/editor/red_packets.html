@@ -84,10 +84,16 @@
             <a href="/apps/red_packet/red_packet_setting/" class="btn btn-success fr ml25">
 				配置证书文件
 			</a>
+            {% if cert_ready %}
+                <a href="/apps/red_packet/red_packet/" class="btn btn-success fr">
+                    <span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建拼红包
+                </a>
+            {% else %}
+                <a href="javascript: W.showHint('error', '创建活动前请先上传证书文件！');" class="btn btn-success fr">
+                    <span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建拼红包
+                </a>
+            {% endif %}
 
-			<a href="/apps/red_packet/red_packet/" class="btn btn-success fr">
-				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建拼红包
-			</a>
 		</div>
 		
 		<div 

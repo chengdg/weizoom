@@ -3,10 +3,8 @@
 {% block css %}
     <style>
         th, td{
-            text-align: left;
-        }
-        .uploadify object{
-            margin-left: -42px;
+            text-align: left !important;
+            width: 50%;
         }
         .uploadify-queue{
             position: absolute;
@@ -14,17 +12,20 @@
             margin: -50px 0 0 100px;
         }
         .xui-help{
-            margin-bottom: 10px;
-        }
-        .xui-done{
-            text-align: center;
+            margin-right: 10px;
         }
         .xui-table{
-            width: 65%;
+            width: 90%;
+        }
+        .xui-table tbody{
+            background: #eaeef6;
         }
         i{
             font-size: 20px;
             color: red;
+        }
+        .xa-cert-name, .xa-key-name{
+            margin-left: 20px;
         }
     </style>
 {% endblock %}
@@ -41,22 +42,22 @@
 	</div>
     <div>
         <table class="table xui-table">
-            <caption class="btn btn-success xa-help xui-help">帮助说明</caption>
             <thead></thead>
             <tbody>
                 <tr>
-                    <td><i>*</i> 证书pem格式</td>
+                    <td><i>*</i> 证书pem格式<b class="xa-cert-name"></b></td>
                     <td><input type="file" id="cert-file"></td>
                 </tr>
                 <tr>
-                    <td><i>*</i> 证书密钥pem格式</td>
+                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name"></b></td>
                     <td><input type="file" id="key-file"></td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="xui-done">
-        <button class="btn btn-primary xa-done">&nbsp;完&nbsp;&nbsp;成&nbsp;</button>
+        <button class="btn btn-success xa-help xui-help">&nbsp;帮助说明&nbsp;</button>
+        <button class="btn btn-success xa-done">&nbsp;完&nbsp;&nbsp;成&nbsp;</button>
     </div>
 {% endblock %}
 
@@ -183,6 +184,7 @@
                 if(response.code == 200){
                     console.log(response.data);
                     $("#cert-file").find('.uploadify-button-text').html('重新选择');
+                    $('.xa-cert-name').html('  (文件名：'+file.name+')');
                     cert_done = true;
                 }else{
                     console.log(response.errMsg);
@@ -215,7 +217,7 @@
             onUploadStart: function(file){
                 if(file && file.name == 'apiclient_key.pem'){}else{
                     W.showHint('error', '请上传正确的证书密钥文件');
-                    $("#cert-file").uploadify('cancel', '*');
+                    $("#key-file").uploadify('cancel', '*');
                     $("#key-file").uploadify('stop');
                 }
             },
@@ -224,13 +226,14 @@
                 if(response.code == 200){
                     console.log(response.data);
                     $("#key-file").find('.uploadify-button-text').html('重新选择');
+                    $('.xa-key-name').html('  (文件名：'+file.name+')');
                     key_done = true;
                 }else{
                     console.log(response.errMsg);
                 }
             },
             onSelect: function(file) {
-                var $queues = $('#cert-file-queue').children();
+                var $queues = $('#key-file-queue').children();
                 if($queues.length > 1){
                     $queues.eq(0).remove();
                 }
