@@ -168,7 +168,7 @@ def participate_red_packet(record_id,member_id):
 	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
 	if int(packets_number) > all_participate.count():
 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
-		if not (participate_member_info.is_valid and participate_member_info.has_join): #该用户曾经关注参与过
+		if (not participate_member_info.is_valid) and (not participate_member_info.has_join): #该用户曾经关注参与过
 			#未成功的红包需要将is_valid置为True
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
 			# 将之前的点赞详情日志无效
