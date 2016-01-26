@@ -862,6 +862,12 @@
         $('.xa-loadingFrame').addClass('none');
         $('.xa-redPacketMsg').find('.xa-i-msg').html('红包已被抢完啦</p><p>下次早点来哦');
     }
+    function openCompletedWin(){
+        mask('show');
+        $('.xa-redPacketMsg').removeClass('none');
+        $('.xa-loadingFrame').addClass('none');
+        $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+page_owner_name+'"</p><p>已经拼红包成功');
+    }
     function showSuccess(){
         $('.xa-redpacket_success').removeClass('none');
     }
@@ -912,8 +918,14 @@
             error: function(data) {
                 if(data.errMsg){
                     if(data.errMsg != '只能点赞一次'){
-                        wuiAlert(data.errMsg);
-                        is_helped = false;
+                        if(data.errMsg == '该用户已经完成拼红包'){
+                            openCompletedWin();
+                            is_helped = false;
+                        }else{
+                            wuiAlert(data.errMsg);
+                            is_helped = false;
+                         }
+
                     }else{
                         if(!W.isMember){
                             $attention.find('.xa-attention-tip').show();
