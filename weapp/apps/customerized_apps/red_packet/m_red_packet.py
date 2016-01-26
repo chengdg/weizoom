@@ -101,8 +101,9 @@ class MRedPacket(resource.Resource):
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_red_packet_info.count()> 0:
 					curr_member_red_packet_info = curr_member_red_packet_info.first()
-					if not curr_member_red_packet_info.is_valid: #曾经参与过又取关了，需要重新参与一次
+					if not curr_member_red_packet_info.is_valid:
 						if fid is None or str(fid) == str(member_id):
+							#曾经参与过又取关了，需要重新参与一次
 							participate_response = participate_red_packet(record_id,member_id)
 							print('participate_red_packet in line:107')
 							if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
@@ -116,7 +117,7 @@ class MRedPacket(resource.Resource):
 						created_at = datetime.now()
 					)
 					curr_member_red_packet_info.save()
-					#判断分享页是否自己的主页，是自己的主页则参与拼红包
+					#未帮助好友情况下，判断分享页是否自己的主页，是自己的主页则参与拼红包
 					if fid is None or str(fid) == str(member_id):
 						participate_response = participate_red_packet(record_id,member_id)
 						print('participate_red_packet in line:122')
@@ -133,7 +134,13 @@ class MRedPacket(resource.Resource):
 					page_owner_icon = member.user_icon
 					page_owner_member_id = member_id
 					self_page = True
-
+					#判断分享页是否自己的主页，是自己的主页则参与拼红包
+					participate_response = participate_red_packet(record_id,member_id)
+					print('participate_red_packet in line:139')
+					if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
+						response.errMsg = 'is_run_out'
+						return response.get_response()
+					curr_member_red_packet_info.reload()
 					red_packet_money = curr_member_red_packet_info.red_packet_money
 					current_money = curr_member_red_packet_info.current_money
 					red_packet_status = curr_member_red_packet_info.red_packet_status
