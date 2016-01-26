@@ -802,8 +802,8 @@
         member_info = data.member_info;
         red_packet_money = member_info.red_packet_money;
         current_money = member_info.current_money;
-        $('.wa-i-current_money').text(current_money+'元');
-        $('.wa-i-red_packet_money').text('总金额'+red_packet_money+'元');
+        $('.wa-i-red_packet_money').text('当前金额 '+current_money+'元');
+        $('.wa-i-current_money').text(red_packet_money+'元');
     }
 
     function showHelperInfo(data){
