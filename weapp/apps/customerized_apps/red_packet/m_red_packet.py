@@ -147,9 +147,12 @@ class MRedPacket(resource.Resource):
 					red_packet_status = page_owner_member_info.red_packet_status
 
 					curr_member_red_packet_detail_info = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id)
-					if curr_member_red_packet_info.helped_member_id:
-						is_helped = True if (fid in curr_member_red_packet_info.helped_member_id) and curr_member_red_packet_info.is_valid and curr_member_red_packet_detail_info.is_valid else False
-
+					if curr_member_red_packet_detail_info:
+						if curr_member_red_packet_detail_info.is_valid:
+							if curr_member_red_packet_info.helped_member_id:
+								is_helped = True if (fid in curr_member_red_packet_info.helped_member_id) and curr_member_red_packet_info.is_valid else False
+						else:
+							is_helped = False
 				# 统计帮助者信息
 				helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
 				member_ids = [h.helper_member_id for h in helpers]
