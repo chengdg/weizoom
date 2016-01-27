@@ -34,7 +34,7 @@ Background:
 			"name":"拼红包活动1",
 			"start_date":"今天",
 			"end_date":"明天",
-			"is_show_countdown":"ture",
+			"is_show_countdown":"true",
 			"red_packet":{
 				"type":"random",
 				"random_total_money":"100",

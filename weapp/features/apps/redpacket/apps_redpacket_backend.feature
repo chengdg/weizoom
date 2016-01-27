@@ -48,7 +48,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"name":"拼红包活动1",
 			"start_date":"今天",
 			"end_date":"明天",
-			"is_show_countdown":"ture",
+			"is_show_countdown":"true",
 			"red_packet":{
 				"type":"random",
 				"random_total_money":"500",
