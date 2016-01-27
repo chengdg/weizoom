@@ -78,7 +78,6 @@ def step_impl(context, user):
         else:
             actual.version = configs[u"接口版本"]
             actual.weixin_appid = configs[u"AppID"]
-            actual.app_secret = configs[u"AppSecret"]
             actual.mch_id = configs[u"商户号MCHID"]
             actual.api_key = configs[u'APIKEY密钥']
             # actual.paysign_key =
