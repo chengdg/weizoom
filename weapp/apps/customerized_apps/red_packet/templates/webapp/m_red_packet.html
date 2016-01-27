@@ -740,8 +740,8 @@
         });
     }
     function runProcessBar(data){
-        var red_packet_money = member_info.red_packet_money;
-        var current_money = member_info.current_money;
+        var red_packet_money = data.member_info.red_packet_money;
+        var current_money = data.member_info.current_money;
         var process = "0%";
         if(red_packet_money==0){
             process = "0%"
@@ -769,9 +769,9 @@
         var curr_boxnum = $(".xa-i-percentbox").html().replace(/(^\s*)|(\s*$)/g,'');
         var curr_width = $(".xa-i-bar_process").width();
         var curr_process = parseFloat(curr_width/maxwidth_process_bar * 100).toFixed(1) + "%";
-        console.log("maxwidth_process_bar:"+maxwidth_process_bar);
 
         if (percentBox_count == 0) {
+            percentBox_max_count = 10;
             curr_boxnum = percentBox_process_tmp;
             $(".xa-i-percentbox").html(curr_boxnum);
             return false;
@@ -923,6 +923,8 @@
                     $('.xui-successHint').find('.wa-helpmoneynumber').html(help_money);
                     //修改当前金额与帮助列表
                     $('.wa-i-current_money').text('当前金额 '+data.help_info.current_money+'元');
+                    //进度bar动画
+                    runProcessBar(data);
                     var li_content = '';
                     li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ data.help_info.username+"</li></div></div>";
                     $('.wa-top100').append($(li_content));
