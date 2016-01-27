@@ -71,7 +71,7 @@ class RedPacketGranter(resource.Resource):
 		# 	response.errMsg = u'该账户未配置支付信息'
 		# 	return response.get_response()
 
-		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=owner_id)
+		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=str(owner_id))
 		if cert_setting.count() > 0:
 			cert_setting = cert_setting.first()
 		else:
