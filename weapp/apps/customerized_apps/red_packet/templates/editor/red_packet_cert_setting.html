@@ -45,11 +45,11 @@
             <thead></thead>
             <tbody>
                 <tr>
-                    <td><i>*</i> 证书pem格式<b class="xa-cert-name"></b></td>
+                    <td><i>*</i> 证书pem格式<b class="xa-cert-name">{{ cert_name }}</b></td>
                     <td><input type="file" id="cert-file"></td>
                 </tr>
                 <tr>
-                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name"></b></td>
+                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name">{{ key_name }}</b></td>
                     <td><input type="file" id="key-file"></td>
                 </tr>
             </tbody>
@@ -108,8 +108,8 @@
     </div>
 </script>
 <script type="text/javascript">
-    var cert_done =  {% if cert_done %}true{% else %}false{% endif %};
-    var key_done = {% if key_done %}true{% else %}false{% endif %};
+    var cert_done =  {% if cert_name %}true{% else %}false{% endif %};
+    var key_done = {% if key_name %}true{% else %}false{% endif %};
     var done_map = {
         'cert_done': '请上传证书文件',
         'key_done': '请上传证书密钥文件'
