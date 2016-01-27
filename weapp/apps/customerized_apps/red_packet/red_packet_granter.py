@@ -48,7 +48,7 @@ class RedPacketGranter(resource.Resource):
 		if not record_id or not member_ids:
 			response.errMsg = u'活动信息出错,请重试~'
 			return response.get_response()
-
+		member_ids = member_ids.split(',')
 		record = app_models.RedPacket.objects(id=record_id)
 		if record.count() <=0:
 			response.errMsg = u'不存在该活动'
@@ -115,7 +115,7 @@ class RedPacketGranter(resource.Resource):
 			# 	weixin_pay_config.partner_key)
 
 			#使用微众家帐号测试
-			print u'实际应发金额：===============》》', price
+			print 'real price:=============>>', price
 			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
 				u'微众家',openid,1,1,1,1, wishing, ip,
 				record_name,
@@ -130,7 +130,7 @@ class RedPacketGranter(resource.Resource):
 				'msg': result.return_msg.text,
 				'xml': red.arrayToXml()
 			}
-
+			print 'red api returned code:=============>>', return_code
 			member_info.update(set__return_result=return_result)
 			if return_code == "SUCCESS":
 				#给该会员发送模板消息
@@ -145,9 +145,10 @@ class RedPacketGranter(resource.Resource):
 					}
 				})
 		succeed_openids= send_apps_template_message(owner_id, 4, member_senders_info)
+		print "template msg sended:=============>>", succeed_openids
 		succeed_member_ids = [member_openid2id[o] for o in succeed_openids]
 
 		app_models.RedPacketParticipance.objects(member_id__in=succeed_member_ids).update(set__is_already_paid=True)
-
+		print "participances status updated"
 		response = create_response(200)
 		return response.get_response()
