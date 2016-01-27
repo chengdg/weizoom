@@ -925,7 +925,7 @@
                     $('.wa-i-current_money').text('当前金额 '+data.help_info.current_money+'元');
                     var li_content = '';
                     li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ data.help_info.username+"</li></div></div>";
-                    $('.wa-top100').append($(li_content));
+                    $('.wa-top100').prepend($(li_content));
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                 }else{
