@@ -1,7 +1,7 @@
 #_author_: 张雪  2016.01.20
 #_editor_: 张三香 2016.01.20
 
-Feature: 手机端前台塞红包
+Featrue: 手机端前台塞红包
 	"""
 		说明：
 		带参数的二维码：
@@ -15,7 +15,7 @@ Feature: 手机端前台塞红包
 		8、不设置带参数二维码的情况下，为好友点赞，弹出公众号二维码
 		9、会员通过好友分享的页面再次进行我也要拼红包（弹出公众号二维码）
 		10、取关会员，其好友在活动期间为其点赞，弹出错误提示（该用户已经取消关注 暂不能点赞）
-		
+
 		备注：
 		1、取消关注的会员，在列表里不会消失，只要为好友拼过红包就一直存在
 		2、列表里的会员按照时间的倒序来排序
@@ -51,40 +51,40 @@ Background:
 			"name":"拼红包活动1",
 			"start_date":"今天",
 			"end_date":"明天",
-			"is_show_countdown":"ture",
-			"red_packet":[{
-				"type":"拼手气红包",
-				"total_amount":"10",
-				"packet_num":"2"	
-			}],
+			"is_show_countdown":"true",
+			"red_packet":{
+				"type":"random",
+				"random_total_money":"10",
+				"random_packets_number":"2",
+				"regular_packets_number":"",
+				"regular_per_money":""
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"拼红包",
 			"qr_code":"",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
-			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		   },{
 		   "name":"拼红包活动2",
 			"start_date":"明天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
-			"red_packet":[{
-				"type":"普通红包",
-				"packet_num":"3",
-				"single_packet_amount":"5"
-			}]
+			"red_packet":{
+				"type":"normal",
+				"random_total_money":"",
+				"random_packets_number":"",
+				"regular_packets_number":"3",
+				"regular_per_money":"5"
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"普通红包",
 			"qr_code":"带参数二维码1",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"2.jpg",
-			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 
 		}]
 		"""
@@ -120,7 +120,7 @@ Background:
 				}],
 			"keyword_reply": [{
 					"reply_content":"拼红包活动1单图文",
-					"reply_type":"text_picture"
+					"reply_type":"text_pictrue"
 				}]
 		},{
 			"rules_name":"规则2",
@@ -130,12 +130,12 @@ Background:
 				}],
 			"keyword_reply": [{
 					"reply_content":"拼包活动2单图文",
-					"reply_type":"text_picture"
+					"reply_type":"text_pictrue"
 				}]
 		}]
 		"""
 
-@apps_redpockets_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:1 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包（拼手气红包）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -161,9 +161,9 @@ Scenario:1 会员在自己专属页面点击按钮分享活动，邀请好友帮
 			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 		}]
 		"""
-	
 
-@apps_redpockets_frontend
+
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:2 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包（普通红包）
 #主要验证普通红包获得系统自动发放的红包金额
 	When bill关注jobs的公众号
@@ -192,11 +192,11 @@ Scenario:2 会员在自己专属页面点击按钮分享活动，邀请好友帮
 			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
 		}]
 		"""
-	
- 
 
 
-@apps_redpockets_frontend
+
+
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:3 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -242,8 +242,8 @@ Scenario:3 会员通过好友分享的页面进行我也要拼红包，弹出公
 	Then tom通过识别弹层中的带参数二维码关注jobs的公众号
 	#tom再次通过好友分享的链接进行我也要拼红包，再次弹出公众号的二维码，通过识别二维码进入公众号
 
-	
-@apps_redpockets_frontend
+
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:4 好友在活动期间不能为取关会员点赞
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -264,9 +264,9 @@ Scenario:4 好友在活动期间不能为取关会员点赞
 	When tom访问jobs的webapp
 	When tom点击bill分享的塞红包活动链接为好友点赞
 	Then tom获得错误提示："该用户已经取消关注 暂不能点赞"
-	
 
-@apps_redpockets_frontend
+
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:5 已贡献好友列表按照时间倒序排列（好友点赞完成后直接排列在最前面）
 		#好友在好友页面点赞后，直接显示在已贡献好友列表里，按照时间倒序
 	When bill关注jobs的公众号
@@ -297,5 +297,5 @@ Scenario:5 已贡献好友列表按照时间倒序排列（好友点赞完成后
 	When lily点击tom分享的塞红包活动链接为好友点赞
 	When 更新贡献好友列表
 	Then lily获得"拼红包活动1"的已贡献好友列表
-		| name ||name|
-		| lily ||tom |
+		| name |name|
+		| lily |tom |
