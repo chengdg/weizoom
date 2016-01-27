@@ -688,7 +688,6 @@
                 }
             }
         }
-
     }
 
     function GetQueryString(name){
@@ -923,6 +922,7 @@
             },
             success: function(data) {
                 if (W.isMember) {
+                     $('.wui-i-states').removeClass('none');
                     help_money = data.help_info.help_money;
                     $('.xui-successHint').find('.wa-helpmoneynumber').html(help_money);
                     //修改当前金额与帮助列表

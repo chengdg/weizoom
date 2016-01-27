@@ -156,8 +156,9 @@ class MRedPacket(resource.Resource):
 					current_money = page_owner_member_info.current_money
 					red_packet_status = page_owner_member_info.red_packet_status
 
+
 					if curr_member_red_packet_info.helped_member_id:
-						is_helped = True if fid in curr_member_red_packet_info.helped_member_id else False
+						is_helped = True if (fid in curr_member_red_packet_info.helped_member_id) and curr_member_red_packet_info.is_valid else False
 			else:
 				response.errMsg = u'活动信息出错'
 				return response.get_response()
