@@ -622,6 +622,7 @@
             //参与活动
             if(red_packet_status){
                 showSuccess();
+                $('.wui-i-states').removeClass('none');
             }
             else{
                 if(!W.isMember){
@@ -826,6 +827,7 @@
             $('.wui-i-states').addClass('none');
         }else{
             if(helpers_info || $.isEmptyObject(helpers_info)){
+                $('.wui-i-states').removeClass('none');
                 var li_content = '';
                 for(var i in helpers_info){
                     var p = helpers_info[i];
@@ -926,7 +928,7 @@
             },
             success: function(data) {
                 if (W.isMember) {
-                     $('.wui-i-states').removeClass('none');
+                    $('.wui-i-states').removeClass('none');
                     help_money = data.help_info.help_money;
                     $('.xui-successHint').find('.wa-helpmoneynumber').html(help_money);
                     //修改当前金额与帮助列表
