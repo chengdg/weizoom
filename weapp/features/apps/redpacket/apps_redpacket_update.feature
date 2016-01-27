@@ -59,7 +59,7 @@ Background:
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"random",
+				"type":"normal",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
@@ -73,7 +73,8 @@ Background:
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"2.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
-		},{
+		}
+		,{
 			"name":"活动3",
 			"start_date":"2天前",
 			"end_date":"昨天",
@@ -96,7 +97,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpacket_update
+@mall2 @apps_redpacket @apps_redpacket_update @yang1
 Scenario:1 编辑"未开始"的拼红包活动
 	Given jobs登录系统
 	When jobs编辑拼红包活动'活动1'
