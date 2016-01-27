@@ -244,28 +244,6 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
 		"""
 		[]
 		"""
-	When tom把jobs的微助力活动链接分享到朋友圈
-	When 清空浏览器
-	When bill点击tom分享的拼红包活动链接参与活动
-  	#Then bill获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："拼红包活动2",即可参加活动'
-	When bill通过识别弹层中的公众号二维码关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息"拼红包活动2"
-	Then bill收到自动回复"拼红包活动2单图文"
-	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
-	Then bill获得jobs的"拼红包活动2"的内容
-		"""
-		[{	
-			"name":"拼红包活动2",
-			"is_show_countdown":"false",
-			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
-		}]
-		"""
-	When 更新贡献好友列表
-	Then bill获得"拼红包活动2"的已贡献好友列表
-		"""
-		[]
-		"""
 
 @mall2 @apps_red_packet @apps_red_packet_frontend
 Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点赞，取消关注后已贡献好友列表汇总仍显示该会员，按钮状态“已帮XX好友点赞”，点击按钮弹层显示公众号二维码
@@ -292,7 +270,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 		"""
 	When tom关注jobs的公众号
 	When tom访问jobs的weapp
-	When tom访问bill分享的拼红包活动链接点赞
+	When tom点击bill分享的拼红包活动链接点赞
 	#点赞成功即bill获得一个随机金额的红包
 	When 更新贡献好友列表
 	When bill访问jobs的weapp
@@ -407,7 +385,7 @@ Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 		[{
 			"name":"未开始的红包活动",
 			"start_date":"明天",
-			"end_date":"两天后",
+			"end_date":"2天后",
 			"is_show_countdown":"true",
 			"red_packet":[{
 				"type":"random",
@@ -419,14 +397,12 @@ Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 			"reply":"未开始红包活动",
 			"qr_code":"",
 			"open_packet_reply":"点赞帮好友赢现金红包",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"pic1.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		},{
 			"name":"已结束的红包活动",
-			"start_date":"两前天",
+			"start_date":"2前天",
 			"end_date":"昨天",
 			"is_show_countdown":"false",
 			"red_packet":[{
@@ -439,8 +415,6 @@ Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 			"reply":"已结束红包活动",
 			"qr_code":"带参数二维码1",
 			"open_packet_reply":"点赞帮好友赢现金红包",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"pic.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
