@@ -143,6 +143,12 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 						print 'start send message to user:', member_id
 						send_message_to_member(coupon_rule, member_id, first_text)
 						print 'finish send message to user:', member_id
+					else:
+						return {
+							'success': False,
+							'coupon_id': '',
+							'errMsg': msg
+						}
 					c_index += 1
 				if c_real_count:
 					real_person_count += 1
