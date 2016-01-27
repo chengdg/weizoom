@@ -139,7 +139,7 @@ class RedPacketGranter(resource.Resource):
 			#非会员不发放
 			if not member_id2status[member_id]:
 				continue
-			price = member_info.red_packet_money * 100
+			price = int(member_info.red_packet_money * 100)
 			#获取该member_id的固定openid
 			openid = member_id2openid[member_id]
 
