@@ -7,4 +7,5 @@ import m_red_packet
 import red_packet_status
 import red_packets
 import red_packet_setting
+import red_packet_granter
 

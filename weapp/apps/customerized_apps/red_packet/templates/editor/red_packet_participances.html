@@ -261,12 +261,8 @@ $(document).ready(function() {
         var member_ids = [];
         $('table').find('input:checkbox:checked').each(function(){
             var $this = $(this);
-            member_ids.push($this.parents('tr').eq(0).attr('data-id'));
+            member_ids.push($this.parents('tr').eq(0).attr('data-memberId'));
         });
-        if(member_ids.length > 10){
-            W.showHint('info', '最多同时发放10个红包，多选的请下次发放~');
-            member_ids = member_ids.substr(0, 10);
-        }
         pull_request(member_ids);
     });
     //单发红包
