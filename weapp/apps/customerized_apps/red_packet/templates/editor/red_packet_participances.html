@@ -163,6 +163,9 @@
 					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放')}}
 					<a href="javascript:void(0)" class="xa-pay" data-id="${item.id}" data-memberId="${item.member_id}">发放</a>
 					{{/if}}
+					{{if (item.is_already_paid === '发放' && item.msg_api_status === '失败')}}
+					<a href="javascript:void(0)" class="xa-temp_msg" data-memberId="${item.member_id}">补发模板消息</a>
+					{{/if}}
 				</td>
 			</tr>
 			{{/each}}
@@ -252,18 +255,64 @@ $(document).ready(function() {
 
     //批量发红包
     $('.xa-send-selected').on('click', function(){
-        var member_ids = [];
-        $('table').find('input:checkbox:checked').each(function(){
-            var $this = $(this);
-            member_ids.push($this.parents('tr').eq(0).attr('data-memberId'));
-        });
-        pull_request(member_ids);
+        var $this = $(this);
+        W.requireConfirm({
+			$el: $this,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '支付前请确认账户余额充足，确认发放现金？',
+			confirm: function() {
+				var member_ids = [];
+                $('table').find('input:checkbox:checked').each(function(){
+
+                    member_ids.push($this.parents('tr').eq(0).attr('data-memberId'));
+                });
+                if(member_ids.length <= 0){
+                    W.showHint("error","请选择发放用户");
+                }else{
+                    pull_request(member_ids);
+                }
+			}
+		});
     });
     //单发红包
     $('body').delegate('.xa-pay', 'click', function(){
         var $this = $(this);
+        W.requireConfirm({
+			$el: $this,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '支付前请确认账户余额充足，确认发放现金？',
+			confirm: function() {
+				var member_id = $this.attr('data-memberId');
+                pull_request([member_id]);
+			}
+		});
+    });
+    //补发模版消息
+    $('body').delegate('.xa-temp-msg', 'click', function(){
+        var $this = $(this);
         var member_id = $this.attr('data-memberId');
-        pull_request([member_id]);
+        W.getApi().call({
+            method: 'get',
+            app: 'apps/red_packet',
+            resource: 'red_packet_granter',
+            args: {
+                id: activityId,
+                member_id: member_id
+            },
+            success: function(resp){
+                W.showHint('',"补发模版消息成功");
+                table.reload();
+            },
+            error: function(error){
+                W.showHint('error', error.errMsg);
+            }
+        });
     });
 });
 
@@ -277,7 +326,7 @@ function pull_request(member_ids){
             member_ids: member_ids.join(',')
         },
         success: function(resp){
-            W.showHint("发放红包完成");
+            W.showHint('',"发放红包完成");
             table.reload();
         },
         error: function(error){
