@@ -40,11 +40,13 @@ Background:
 			"start_date":"今天",
 			"end_date":"明天",
 			"is_show_countdown":"ture",
-			"red_packet":[{
+			"red_packet":{
 				"type":"random",
-				"total_amount":"500",
-				"packet_num":"10"	
-			}],
+				"random_total_money":"500",
+				"random_packets_number":"10",
+				"regular_packets_number":"",
+				"regular_per_money":""
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"拼红包",
@@ -58,11 +60,13 @@ Background:
 			"start_date":"明天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
-			"red_packet":[{
+			"red_packet":{
 				"type":"normal",
-				"packet_num":"10",
-				"single_packet_amount":"10"
-			}]
+				"random_total_money":"",
+				"random_packets_number":"",
+				"regular_packets_number":"10",
+				"regular_per_money":"10"
+			},
 			"contribution_start_range":"0.1",
 			"contribution_end_range":"2",
 			"reply":"拼红包",
@@ -76,11 +80,13 @@ Background:
 			"start_date":"2天前",
 			"end_date":"昨天",
 			"is_show_countdown":"true",
-			"red_packet":[{
+			"red_packet":{
 				"type":"normal",
-				"packet_num":"5",
-				"single_packet_amount":"30"
-			}]
+				"random_total_money":"",
+				"random_packets_number":"",
+				"regular_packets_number":"5",
+				"regular_per_money":"30"
+			},
 			"contribution_start_range":"1",
 			"contribution_end_range":"3",
 			"reply":"拼红包",
@@ -91,7 +97,7 @@ Background:
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
 		"""
-@mall2 @apps_red_packet_backend @red_packet_list
+@mall2 @apps_redpacket @apps_redpacket_list
 Scenario:1 拼红包活动列表查询
 	Given jobs登录系统
 	Then jobs获得拼红包活动列表
@@ -101,31 +107,31 @@ Scenario:1 拼红包活动列表查询
 			"participant_count":"0",
 			"type":"普通",
 			"status":"已结束",
-			"total_amount":"150",
-			"send_amount":"0",
+			"total_money":"150.00",
+			"already_paid_money":"0.00",
 			"start_date":"2天前",
 			"end_date":"昨天",
-			"actions":["删除","链接","预览","查看"] 
+			"actions":["查看","预览","复制链接","删除"]
 		},{
 			"name":"拼红包活动2",
 			"participant_count":"0",
 			"type":"普通",
 			"status":"未开始",
-			"total_amount":"100",
-			"send_amount":"0",
+			"total_money":"100.00",
+			"already_paid_money":"0.00",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"actions": ["","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接"]
 		},{
 			"name":"拼红包活动1",
 			"participant_count":"0",
 			"type":"拼手气",
 			"status":"进行中",
-			"total_amount":"500",
-			"send_amount":"0",
+			"total_money":"500.00",
+			"already_paid_money":"0.00",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions":["","链接","预览","查看"]
+			"actions":["查看","预览","复制链接"]
 		}]
 		"""
 	#空查询（默认查询）
@@ -140,7 +146,7 @@ Scenario:1 拼红包活动列表查询
 			},{
 				"name":"拼红包活动2"
 			},{
-				"name":"拼红包活动1"	
+				"name":"拼红包活动1"
 			}]
 			"""
 	#活动名称
@@ -309,7 +315,7 @@ Scenario:1 拼红包活动列表查询
 				"end_date":"2天后"
 			}]
 			"""
-@mall2 @apps_red_packet_backend @red_packet_list
+@mall2 @apps_redpacket @apps_redpacket_list
 Scenario:2 拼红包活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数
@@ -329,7 +335,7 @@ Scenario:2 拼红包活动列表分页
 			"end_date":"昨天",
 			"status":"已结束",
 			"participant_count":0,
-			"actions": ["删除","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接","删除"]
 		}]
 		"""
 	When jobs访问拼红包活动列表下一页
@@ -341,7 +347,7 @@ Scenario:2 拼红包活动列表分页
 			"end_date":"2天后",
 			"status":"未开始",
 			"participant_count":0,
-			"actions": ["","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
 	When jobs访问拼红包活动列表第'3'页
@@ -353,7 +359,7 @@ Scenario:2 拼红包活动列表分页
 			"end_date":"明天",
 			"status":"进行中",
 			"participant_count":0,
-			"actions": ["","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
 	When jobs访问拼红包活动列表上一页
@@ -365,6 +371,6 @@ Scenario:2 拼红包活动列表分页
 			"end_date":"2天后",
 			"status":"未开始",
 			"participant_count":0,
-			"actions": ["","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
