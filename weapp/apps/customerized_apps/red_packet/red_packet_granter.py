@@ -96,7 +96,8 @@ class RedPacketGranter(resource.Resource):
 			is_already_paid=False
 		)
 		member_id2status = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
-		member_id2openid = {m.member_id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
+		member_id2openid = {m.member.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
+		print "member_id2openid:=============>>", member_id2openid
 		member_openid2id = {}
 		for k, v in member_id2openid.items():
 			member_openid2id[v] = k
