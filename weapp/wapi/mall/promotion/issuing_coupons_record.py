@@ -136,10 +136,13 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 					print 'msg:',msg
 					if coupon:
 						coupon_id = coupon.coupon_id
+						print 'coupon_id:', coupon_id
 						c_real_count += 1
 						#给用户发优惠券提示
 						#duhao 20160108 加了个first_text参数
-						send_message_to_member.delay(coupon_rule, member_id, first_text)
+						print 'start send message to user:', member_id
+						send_message_to_member(coupon_rule, member_id, first_text)
+						print 'finish send message to user:', member_id
 					c_index += 1
 				if c_real_count:
 					real_person_count += 1
@@ -147,14 +150,18 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 
 			if real_coupon_count < coupon_count:
 				# 修正优惠券实际发放数量
+				print 'start modify real_coupon_count'
 				promotion_models.CouponRecord.objects.filter(id=coupon_record.id).update(
 					person_count=real_person_count,
 					coupon_count=real_coupon_count)
+				print 'finish modify real_coupon_count'
 
+			print 'all success........'
 			success = True
 		else:
 			err_msg = "create_red_enevlop error"
 
+		print 'ready to return......'
 		return {
 			'success': success,
 			'coupon_id': coupon_id,
