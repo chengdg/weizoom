@@ -624,11 +624,14 @@
             if(red_packet_status){
                 showSuccess();
             }
-            if(!W.isMember){
-                $('.wa-running').on('click', openGuestMask).show();
-            }else{
-                $('.wa-running').on('click', openGuideMask).show();
+            else{
+                if(!W.isMember){
+                    $('.wa-running').on('click', openGuestMask).show();
+                }else{
+                    $('.wa-running').on('click', openGuideMask).show();
+                }
             }
+
         }else{
             $('.wa-running').hide();
             var using_msg;
@@ -688,7 +691,6 @@
                 }
             }
         }
-
     }
 
     function GetQueryString(name){
@@ -887,9 +889,11 @@
         $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+sliceName(page_owner_name,4)+'"</p><p>已经拼红包成功');
     }
     function showSuccess(){
+        $('.wa-running').hide();
         $('.xa-redpacket_success').removeClass('none');
     }
     function showFail(){
+        $('.wa-running').hide();
         $('.xa-redpacket_fail').removeClass('none');
     }
     function openGuestMask(){
@@ -923,17 +927,19 @@
             },
             success: function(data) {
                 if (W.isMember) {
+                     $('.wui-i-states').removeClass('none');
                     help_money = data.help_info.help_money;
                     $('.xui-successHint').find('.wa-helpmoneynumber').html(help_money);
                     //修改当前金额与帮助列表
                     $('.wa-i-current_money').text('当前金额 '+data.help_info.current_money+'元');
-                    //进度bar动画
-                    runProcessBar(data);
                     var li_content = '';
                     li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ data.help_info.username+"</li></div></div>";
                     $('.wa-top100').prepend($(li_content));
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
+                    //进度bar动画
+                    runProcessBar(data);
+
                 }else{
                     $attention.find('.xa-attention-tip').show();
                     $attention.find('img').attr('src', new_qrcode_url);
