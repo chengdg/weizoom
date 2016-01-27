@@ -622,14 +622,16 @@
         if(is_self_page){
             //参与活动
             if(red_packet_status){
-                $('.wa-running').hide();
                 showSuccess();
             }
-            if(!W.isMember){
-                $('.wa-running').on('click', openGuestMask).show();
-            }else{
-                $('.wa-running').on('click', openGuideMask).show();
+            else{
+                if(!W.isMember){
+                    $('.wa-running').on('click', openGuestMask).show();
+                }else{
+                    $('.wa-running').on('click', openGuideMask).show();
+                }
             }
+
         }else{
             $('.wa-running').hide();
             var using_msg;
@@ -887,9 +889,11 @@
         $('.xa-redPacketMsg').find('.xa-i-msg').html('感谢你的支持</p><p>"'+sliceName(page_owner_name,4)+'"</p><p>已经拼红包成功');
     }
     function showSuccess(){
+        $('.wa-running').hide();
         $('.xa-redpacket_success').removeClass('none');
     }
     function showFail(){
+        $('.wa-running').hide();
         $('.xa-redpacket_fail').removeClass('none');
     }
     function openGuestMask(){
