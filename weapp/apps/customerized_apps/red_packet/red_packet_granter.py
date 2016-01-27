@@ -162,14 +162,8 @@ class RedPacketGranter(resource.Resource):
 			result = BeautifulSoup(result)
 			return_code = result.return_code.text
 			return_msg = result.return_msg.text
-			return_result = {
-				'code': return_code,
-				'msg': return_msg,
-				'xml': red.arrayToXml()
-			}
 			print 'red api returned code:=============>>', return_code
 			print 'red api returned msg:=============>>', return_msg
-			member_info.update(set__return_result=return_result)
 			if return_code == "SUCCESS":
 				#给该会员发送模板消息
 				app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
