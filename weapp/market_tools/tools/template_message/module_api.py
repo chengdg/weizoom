@@ -88,7 +88,7 @@ def send_apps_template_message(owner_id, send_point, member_senders_info):
 	"""
 	user = User.objects.get(id=owner_id)
 	template_message = get_template_message_by(user, send_point)
-	succeed_openid = []
+	succeed_member_ids = []
 	if template_message and template_message.template_id:
 		mpuser_access_token = _get_mpuser_access_token(user)
 		if mpuser_access_token:
@@ -100,12 +100,12 @@ def send_apps_template_message(owner_id, send_point, member_senders_info):
 				try:
 					message = _get_apps_send_message_dict(openid, app_url, template_message, detail_data)
 					weixin_api.send_template_message(message, True)
-					succeed_openid.append(openid)
+					succeed_member_ids.append(member_info['member_id'])
 				except:
 					notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
 					watchdog_warning(notify_message)
 
-	return succeed_openid
+	return succeed_member_ids
 
 def _get_mpuser_access_token(user):
 	mp_user = get_binding_weixin_mpuser(user)
