@@ -1756,12 +1756,14 @@ li.wui-selectBox-display-table {
 }
 
 .wui-red_packet-container .wui-i-rules-contentbox{
-    margin-top: 20%;
+    margin-top: 23%;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-rules-content{
     margin-top: 2rem;
-    color:#3D3C35;
+    color: #3D3C35;
     text-align: center;
+    position: relative;
+    height: 100%;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box{
     color:#3A1614;
@@ -1769,11 +1771,15 @@ li.wui-selectBox-display-table {
     font-size: large;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-content-box{
-    color:#3D3C35;
+    color: #3D3C35;
     width: 90%;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+    max-height: 69%;
+    overflow-y: auto;
+    position: relative;
+    left: 2px;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-closebtn{
     color: white;
@@ -1785,7 +1791,8 @@ li.wui-selectBox-display-table {
     text-align: center;
     border-radius: 100px;
     position: relative;
-    left: 96%;
+    left: 95%;
+    top: 4%;
     line-height: 30px;
 }
 
