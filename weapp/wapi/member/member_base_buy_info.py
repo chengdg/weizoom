@@ -50,7 +50,7 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 
 		if is_all == "1":
 			#获取全部会员信息
-			members = member_models.Member.objects.filter(webapp_id=webapp_id, pay_times__gt=0, status__in=(0, 1))
+			members = member_models.Member.objects.filter(webapp_id=webapp_id, pay_times__gt=0, status__in=(0, 1)).order_by('id')
 			print 'members count:', members.count()
 		elif is_all == "0":
 			#从mall_order_operation_log中获取支付和完成的订单id列表，然后根据订单id获取会员信息
