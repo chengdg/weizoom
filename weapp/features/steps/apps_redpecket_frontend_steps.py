@@ -57,8 +57,8 @@ def __get_into_red_packet_pages(context,webapp_owner_id,red_packet_rule_id,openi
 		print('[info] not redirect')
 	return response
 
-def __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid):
-	url = '/m/apps/red_packet/api/m_red_packet/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, red_packet_rule_id, context.member.token, openid)
+def __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid,fid):
+	url = '/m/apps/red_packet/api/m_red_packet/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s&fid=%s' % (webapp_owner_id, red_packet_rule_id, context.member.token, openid,fid)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	while response.status_code == 302:
@@ -75,13 +75,16 @@ def __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,ope
 @When(u'{webapp_user_name}点击图文"{title}"进入拼红包活动页面')
 def step_impl(context, webapp_user_name, title):
 	webapp_owner_id = context.webapp_owner_id
+	if not context.__contains__('page_owner_member_id'):
+		context.page_owner_member_id = Member.objects.get(username_hexstr=byte_to_hex(webapp_user_name)).id
+	print(context.page_owner_member_id)
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	red_packet_rule_name = __get_red_packet_rule_name(title)
 	red_packet_rule_id = __get_red_packet_rule_id(red_packet_rule_name)
 	response = __get_into_red_packet_pages(context,webapp_owner_id,red_packet_rule_id,openid)
 	context.red_packet_rule_id = red_packet_rule_id
-	context.api_response = __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid).content
+	context.api_response = __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid,context.page_owner_member_id).content
 	context.page_owner_member_id = json.loads(context.api_response)['data']['member_info']['page_owner_member_id']
 	print('context.api_response')
 	print(context.api_response)
@@ -134,6 +137,9 @@ def step_impl(context, webapp_user_name, shared_webapp_user_name):
 	else:
 		print('[info] not redirect')
 		context.last_url = context.shared_url
+	context.api_response = __get_red_packet_informations(context,webapp_owner_id,context.red_packet_rule_id,openid,context.page_owner_member_id).content
+	print('context.api_response')
+	print(context.api_response)
 
 @When(u'{webapp_user_name}为好友{red_packet_owner_name}点赞')
 def step_impl(context, webapp_user_name, red_packet_owner_name):
@@ -143,7 +149,7 @@ def step_impl(context, webapp_user_name, red_packet_owner_name):
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	red_packet_rule_id = context.red_packet_rule_id
 	response = __get_into_red_packet_pages(context,webapp_owner_id,red_packet_rule_id,openid)
-	context.api_response = __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid).content
+	context.api_response = __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid,context.page_owner_member_id).content
 	params = {
 		'webapp_owner_id': webapp_owner_id,
 		'id': red_packet_rule_id,
@@ -152,7 +158,6 @@ def step_impl(context, webapp_user_name, red_packet_owner_name):
 	response = context.client.post('/m/apps/red_packet/api/red_packet_participance/?_method=put', params)
 	if json.loads(response.content)['code'] == 500:
 		context.err_msg = json.loads(response.content)['errMsg']
-
 
 @when(u"{webapp_user_name}通过识别拼红包弹层中的公众号二维码关注{mp_user_name}的公众号")
 def step_tmpl(context, webapp_user_name, mp_user_name):
@@ -169,17 +174,31 @@ def step_tmpl(context, webapp_user_name, mp_user_name):
 	red_packet_rule_id = context.red_packet_rule_id
 	channel_qrcode_name = __get_channel_qrcode_name(red_packet_rule_id)
 	context.execute_steps(u'when %s扫描带参数二维码"%s"' % (webapp_user_name, channel_qrcode_name))
-#
-# @when(u"{webapp_user_name}点击{shared_webapp_user_name}分享的拼红包活动链接")
-# def step_tmpl(context, webapp_user_name, shared_webapp_user_name):
-# 	webapp_owner_id = context.webapp_owner_id
-# 	user = User.objects.get(id=webapp_owner_id)
-# 	openid = "%s_%s" % (webapp_user_name, user.username)
-# 	red_packet_rule_id = context.red_packet_rule_id
-# 	response = __get_into_red_packet_pages(context,webapp_owner_id,red_packet_rule_id,openid)
-# 	# context.red_packet_result = response.context
-# 	context.api_response = __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid).content
-#
+
+@then(u'{webapp_user_name}获得"{red_packet_rule_name}"的已贡献好友列表')
+def step_tmpl(context, webapp_user_name, red_packet_rule_name):
+	api_response_information = json.loads(context.api_response)['data']
+	print('api_response_information')
+	print(api_response_information)
+	helpers_info = api_response_information['helpers_info']
+	actual = []
+	if helpers_info != []:
+		for p in helpers_info:
+			p_dict = OrderedDict()
+			p_dict[u"name"] = p['username']
+			actual.append((p_dict))
+	print("actual_data: {}".format(actual))
+	expected = []
+	if context.table:
+		for row in context.table:
+			cur_p = row.as_dict()
+			expected.append(cur_p)
+	else:
+		expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+
+	bdd_util.assert_list(expected, actual)
+
 # @when(u"微信用户批量参加{webapp_owner_name}的拼红包活动")
 # def step_impl(context, webapp_owner_name):
 # 	for row in context.table:
@@ -218,9 +237,9 @@ def step_tmpl(context, webapp_user_name, mp_user_name):
 # 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_test_user_name+str(i), webapp_owner_name))
 # 			context.execute_steps(u"When %s点击%s分享的拼红包活动链接进行助力" % (webapp_test_user_name+str(i), webapp_user_name))
 # 	context.execute_steps(u"When 更新助力排名")
-#
-# @then(u'{webapp_user_name}获得拼红包活动提示"{err_msg}"')
-# def step_tmpl(context, webapp_user_name, err_msg):
-# 	expected = err_msg
-# 	actual = context.err_msg
-# 	context.tc.assertEquals(expected, actual)
+
+@then(u'{webapp_user_name}获得拼红包活动提示"{err_msg}"')
+def step_tmpl(context, webapp_user_name, err_msg):
+	expected = err_msg
+	actual = context.err_msg
+	context.tc.assertEquals(expected, actual)
