@@ -12,6 +12,12 @@ Feature: 拼红包活动列表
 
 Background:
 	Given jobs登录系统
+	And jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1"
+		}
+		"""
 	When jobs添加带参数二维码
 		"""
 		[{
@@ -91,15 +97,15 @@ Scenario:1 拼红包活动列表查询
 	Then jobs获得拼红包活动列表
 		"""
 		[{
-			"name":"拼红包活动1",
+			"name":"拼红包活动3",
 			"participant_count":"0",
-			"type":"拼手气",
-			"status":"进行中",
-			"total_amount":"500",
+			"type":"普通",
+			"status":"已结束",
+			"total_amount":"150",
 			"send_amount":"0",
-			"start_date":"今天",
-			"end_date":"明天",
-			"actions": ["","链接","预览","查看"]
+			"start_date":"2天前",
+			"end_date":"昨天",
+			"actions":["删除","链接","预览","查看"] 
 		},{
 			"name":"拼红包活动2",
 			"participant_count":"0",
@@ -109,17 +115,17 @@ Scenario:1 拼红包活动列表查询
 			"send_amount":"0",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"actions": ["删除","链接","预览","查看"]
+			"actions": ["","链接","预览","查看"]
 		},{
-			"name":"拼红包活动3",
+			"name":"拼红包活动1",
 			"participant_count":"0",
-			"type":"普通",
-			"status":"已结束",
-			"total_amount":"150",
+			"type":"拼手气",
+			"status":"进行中",
+			"total_amount":"500",
 			"send_amount":"0",
-			"start_date":"2天前",
-			"end_date":"昨天",
-			"actions": ["删除","链接","预览","查看"]
+			"start_date":"今天",
+			"end_date":"明天",
+			"actions":["","链接","预览","查看"]
 		}]
 		"""
 	#空查询（默认查询）
@@ -205,7 +211,7 @@ Scenario:1 拼红包活动列表查询
 					"status":"进行中"
 				}
 				"""
-			Then jobs获得微助力活动列表
+			Then jobs获得拼红包活动列表
 				"""
 				[{
 					"name":"拼红包活动1",
@@ -224,13 +230,13 @@ Scenario:1 拼红包活动列表查询
 			Then jobs获得拼红包活动列表
 				"""
 				[{
-					"name":"拼红包活动1",
-					"start_date":"今天",
-					"end_date":"明天"
-				},{
 					"name":"拼红包活动2",
 					"start_date":"明天",
 					"end_date":"2天后"
+				},{
+					"name":"拼红包活动1",
+					"start_date":"今天",
+					"end_date":"明天"
 				}]
 				"""
 
@@ -275,13 +281,13 @@ Scenario:1 拼红包活动列表查询
 			Then jobs获得拼红包活动列表
 				"""
 				[{
-					"name":"拼红包活动1",
-					"start_date":"今天",
-					"end_date":"明天"
-				},{
 					"name":"拼红包活动3",
 					"start_date":"2天前",
 					"end_date":"昨天"
+				},{
+					"name":"拼红包活动1",
+					"start_date":"今天",
+					"end_date":"明天"
 				}]
 				"""
 
@@ -335,7 +341,7 @@ Scenario:2 拼红包活动列表分页
 			"end_date":"2天后",
 			"status":"未开始",
 			"participant_count":0,
-			"actions": ["删除","链接","预览","查看"]
+			"actions": ["","链接","预览","查看"]
 		}]
 		"""
 	When jobs访问拼红包活动列表第'3'页
@@ -359,6 +365,6 @@ Scenario:2 拼红包活动列表分页
 			"end_date":"2天后",
 			"status":"未开始",
 			"participant_count":0,
-			"actions": ["删除","链接","预览","查看"]
+			"actions": ["","链接","预览","查看"]
 		}]
 		"""
