@@ -104,7 +104,7 @@ class MRedPacket(resource.Resource):
 									curr_member_red_packet_info.reload()
 								else:
 									response.errMsg = u'请先关注公众号'
-									return response.get_response()
+									# return response.get_response()
 				else:
 					curr_member_red_packet_info = app_models.RedPacketParticipance(
 						belong_to = record_id,
