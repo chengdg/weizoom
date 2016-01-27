@@ -148,17 +148,17 @@
 					${item.current_money}
 				</td>
 				<td>
-					{{if (item.red_packet_status_text === '已结束')}}
+					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
 					${item.red_packet_status}
 					{{/if}}
 				</td>
 				<td>
-					{{if (item.red_packet_status_text === '已结束')}}
+					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
 					${item.is_already_paid}
 					{{/if}}
 				</td>
 				<td>
-					{{if (item.red_packet_status_text === '已结束')}}
+					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
 					${item.receive_status}
 					{{/if}}
 				</td>
