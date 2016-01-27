@@ -261,16 +261,12 @@ $(document).ready(function() {
         var member_ids = [];
         $('table').find('input:checkbox:checked').each(function(){
             var $this = $(this);
-            member_ids.push($this.parents('tr').eq(0).attr('data-id'));
+            member_ids.push($this.parents('tr').eq(0).attr('data-memberId'));
         });
-        if(member_ids.length > 10){
-            W.showHint('info', '最多同时发放10个红包，多选的请下次发放~');
-            member_ids = member_ids.substr(0, 10);
-        }
         pull_request(member_ids);
     });
     //单发红包
-    $('.xa-pay').on('click', function(){
+    $('.xa-content').delegate('.xa-pay', 'click', function(){
         var $this = $(this);
         var member_id = $this.attr('data-memberId');
         pull_request([member_id]);
@@ -284,7 +280,7 @@ function pull_request(member_ids){
         resource: 'red_packet_granter',
         args: {
             id: activityId,
-            member_ids: member_ids
+            member_ids: member_ids.join(',')
         },
         success: function(resp){
             W.showHint('info', "发放红包完成, 未发放成功的会员可能已经取消关注，请核实确认");

@@ -48,7 +48,7 @@ class RedPacketGranter(resource.Resource):
 		if not record_id or not member_ids:
 			response.errMsg = u'活动信息出错,请重试~'
 			return response.get_response()
-
+		member_ids = member_ids.split(',')
 		record = app_models.RedPacket.objects(id=record_id)
 		if record.count() <=0:
 			response.errMsg = u'不存在该活动'
@@ -59,13 +59,17 @@ class RedPacketGranter(resource.Resource):
 		wishing = record.wishing
 		record_name = record.name
 
-		#获取商户的支付配置信息
-		pay_interface = PayInterface.objects.get(type=PAY_INTERFACE_WEIXIN_PAY, owner_id=owner_id)
-		weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
-
-		authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=True)[0]
-		appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid)[0]
-		nick_name = appid_info.nick_name
+		#获取商户的支付配置信息 (测试时注释)
+		# try:
+		# 	pay_interface = PayInterface.objects.get(type=PAY_INTERFACE_WEIXIN_PAY, owner_id=owner_id)
+		# 	weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
+        #
+		# 	authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=True)[0]
+		# 	appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid)[0]
+		# 	nick_name = appid_info.nick_name
+		# except:
+		# 	response.errMsg = u'该账户未配置支付信息'
+		# 	return response.get_response()
 
 		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=owner_id)
 		if cert_setting.count() > 0:
