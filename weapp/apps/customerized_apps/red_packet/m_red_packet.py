@@ -94,9 +94,15 @@ class MRedPacket(resource.Resource):
 				if curr_member_red_packet_info.count()> 0:
 					print('in line 95!!!!!!!!!!!!!!!!!!!!!!!!!!')
 					curr_member_red_packet_info = curr_member_red_packet_info.first()
+					print('curr_member_red_packet_info.is_valid!!!!!!!!')
+					print(curr_member_red_packet_info.is_valid)
+					print('curr_member_red_packet_info.has_join')
+					print(curr_member_red_packet_info.has_join)
+					print('fid',fid)
+					print('member_id',member_id)
 					if (not curr_member_red_packet_info.is_valid) or (not curr_member_red_packet_info.has_join):
-							print('fid',fid)
-							print('member_id',member_id)
+							print('fid222222',fid)
+							print('member_id222222222',member_id)
 							if fid is None or str(fid) == str(member_id):#判断分享页是否自己的主页
 
 								print('in line 99!!!!!!!!!!!!!!!!!!!!!!!!!!')
