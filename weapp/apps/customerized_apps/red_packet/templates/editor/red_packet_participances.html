@@ -307,7 +307,11 @@ $(document).ready(function() {
             },
             success: function(resp){
                 W.showHint('',"补发模版消息成功");
-                table.reload();
+                table.reload({
+                    id: activityId
+                }, {
+                    emptyDataHint: '没有符合条件的数据'
+                });
             },
             error: function(error){
                 W.showHint('error', error.errMsg);
@@ -327,7 +331,11 @@ function pull_request(member_ids){
         },
         success: function(resp){
             W.showHint('',"发放红包完成, 取消关注的会员不会发放红包, 请核查");
-            table.reload();
+            table.reload({
+                id: activityId
+            }, {
+                emptyDataHint: '没有符合条件的数据'
+            });
         },
         error: function(error){
             W.showHint('error', error.errMsg || '发放红包失败');
