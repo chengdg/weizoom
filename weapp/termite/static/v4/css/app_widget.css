@@ -1770,6 +1770,9 @@ li.wui-selectBox-display-table {
     font-weight: bold;
     font-size: large;
 }
+.wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box .wui-i-title{
+    margin-bottom: 2px;
+}
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-content-box{
     color: #3D3C35;
     width: 90%;
