@@ -136,7 +136,6 @@ class RedPacketParticipances(resource.Resource):
 				'current_money': '%.2f' % data.current_money,
 				'red_packet_status': u'成功' if data.red_packet_status else u'失败', #红包参与者状态
 				'is_already_paid': u'发放' if data.is_already_paid else u'未发放',
-				'receive_status': u'已接收' if data.return_result else u'未接收',
 				'red_packet_status_text': red_packet_status_text, #红包状态
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
@@ -196,7 +195,6 @@ class RedPacketParticipances_Export(resource.Resource):
 			fields_pure.append(u'已获取金额')
 			fields_pure.append(u'红包状态')
 			fields_pure.append(u'系统发放状态')
-			fields_pure.append(u'用户接收状态')
 			fields_pure.append(u'参与时间')
 
 			#processing data
@@ -209,7 +207,6 @@ class RedPacketParticipances_Export(resource.Resource):
 				current_money = data["current_money"]
 				red_packet_status = data["red_packet_status"] if data["red_packet_status_text"] == u'已结束' else ''
 				is_already_paid = data["is_already_paid"] if data["red_packet_status_text"] == u'已结束' else ''
-				receive_status = data["receive_status"] if data["red_packet_status_text"] == u'已结束' else ''
 				created_at = data["created_at"]
 
 				export_record.append(member_id)
@@ -218,7 +215,6 @@ class RedPacketParticipances_Export(resource.Resource):
 				export_record.append(current_money)
 				export_record.append(red_packet_status)
 				export_record.append(is_already_paid)
-				export_record.append(receive_status)
 				export_record.append(created_at)
 				export_data.append(export_record)
 			#workbook/sheet

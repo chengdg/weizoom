@@ -129,7 +129,6 @@
 				<th>已获取金额</th>
 				<th>红包状态</th>
 				<th>系统发放状态</th>
-				<th>用户接收状态</th>
 				<th>参与时间</th>
 				<th>操作</th>
 			</tr>
@@ -155,11 +154,6 @@
 				<td>
 					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
 					${item.is_already_paid}
-					{{/if}}
-				</td>
-				<td>
-					{{if (item.red_packet_status_text === '已结束') || item.red_packet_status === '成功'}}
-					${item.receive_status}
 					{{/if}}
 				</td>
 				<td>
@@ -283,7 +277,7 @@ function pull_request(member_ids){
             member_ids: member_ids.join(',')
         },
         success: function(resp){
-            W.showHint("发放红包完成, 未发放成功的会员可能已经取消关注，请核实确认");
+            W.showHint("发放红包完成");
             table.reload();
         },
         error: function(error){
