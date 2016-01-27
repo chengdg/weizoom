@@ -821,13 +821,17 @@
 
     function showHelperInfo(data){
         var helpers_info = data.helpers_info;
-        if(helpers_info || $.isEmptyObject(helpers_info)){
-            var li_content = '';
-            for(var i in helpers_info){
-                var p = helpers_info[i];
-                li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ p.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ p.help_money+"元</li><li class='wui-i-name'>"+ sliceName(p.username,4)+"</li></div></div>";
+        if ($.isEmptyObject(helpers_info)){
+            $('.wui-i-states').addClass('none');
+        }else{
+            if(helpers_info || $.isEmptyObject(helpers_info)){
+                var li_content = '';
+                for(var i in helpers_info){
+                    var p = helpers_info[i];
+                    li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ p.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ p.help_money+"元</li><li class='wui-i-name'>"+ sliceName(p.username,4)+"</li></div></div>";
+                }
+                $('.wa-top100').append($(li_content));
             }
-            $('.wa-top100').append($(li_content));
         }
     }
 

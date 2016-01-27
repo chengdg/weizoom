@@ -49,6 +49,7 @@ class MRedPacket(resource.Resource):
 		red_packet_money = 0
 		current_money = 0
 		activity_status = u"未开始"
+		helpers_info_list = []
 
 		# fid = request.COOKIES['fid']
 
@@ -60,7 +61,6 @@ class MRedPacket(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			# 统计帮助者信息
-			helpers_info_list = []
 			helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
 			member_ids = [h.helper_member_id for h in helpers]
 			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
