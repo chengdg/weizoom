@@ -28,7 +28,6 @@ class RedPackets(resource.Resource):
 		cert_ready = False
 		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=str(request.webapp_owner_id))
 		if cert_setting.count() > 0:
-			print '================'
 			cert_setting = cert_setting.first()
 			if '' != cert_setting.cert_path and '' != cert_setting.key_path:
 				cert_ready = True
@@ -89,19 +88,6 @@ class RedPackets(resource.Resource):
 		pageinfo, datas = RedPackets.get_datas(request)
 
 		red_packet_ids = [str(p.id) for p in datas]
-
-		#取消关注的参与者也算在列表中，但是一个人只算一次参与，所以取有效参与人的id与无效参与人（可能有多次）的id的并集
-		# all_unvalid_participances = app_models.RedPacketParticipance.objects(belong_to__in=red_packet_ids, is_valid=False)
-		# all_unvalid_participance_ids = [un_p.member_id for un_p in all_unvalid_participances]
-		# print('all_unvalid_participance_ids')
-		# print(all_unvalid_participance_ids)
-		# all_valid_participances = app_models.RedPacketParticipance.objects(belong_to__in=red_packet_ids, has_join=True, is_valid=True)
-		# all_valid_participance_ids = [un_p.member_id for un_p in all_valid_participances]
-		# print('all_valid_participance_ids',all_valid_participance_ids)
-		# member_ids = list(set(all_valid_participance_ids).union(set(all_unvalid_participance_ids)))
-		# print('member_ids!')
-		# print(member_ids)
-		# all_participances = app_models.RedPacketParticipance.objects(belong_to__in=red_packet_ids, member_id__in=member_ids)
 
 		all_valid_participances = app_models.RedPacketParticipance.objects(belong_to__in=red_packet_ids, has_join=True)
 

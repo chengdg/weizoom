@@ -101,7 +101,7 @@ class RedPacket(resource.Resource):
 			random_number_range = float(data['random_total_money']) * 0.05 #拼手气红包随机数浮动范围为5%
 			random_packets_number = int(data['random_packets_number'])  #拼手气红包红包个数
 			for _ in range(random_packets_number): #在正负浮动范围内生成红包个数个随机数
-				random_random_number_list.append('%.2f'% random.uniform(-random_number_range, random_number_range))
+				random_random_number_list.append(round(random.uniform(-random_number_range, random_number_range),2))
 			total_random = 0 #总随机金额
 			for r in random_random_number_list:
 				total_random += float(r) #计算总随机金额
@@ -110,11 +110,11 @@ class RedPacket(resource.Resource):
 				i = 0
 				total_random = 0 #再次初始化总随机金额
 				for r in random_random_number_list:
-					random_random_number_list[i] = '%.2f'% (float(r) + float(total_random_average))
+					random_random_number_list[i] = round((float(r) + float(total_random_average)),2)
 					total_random += float(random_random_number_list[i]) #计算平均分配过差额后的总随机金额
 					i += 1
 				if total_random != 0: #如果因为total_random_average产生了0.01上的差别，取反数加到第一个随机数上，使之最终总和为0
-					random_random_number_list[0] = '%.2f'% (float(-total_random) + float(random_random_number_list[0]))
+					random_random_number_list[0] = round((float(-total_random) + float(random_random_number_list[0])),2)
 			data['random_random_number_list'] = random_random_number_list#拼手气红包随机数List
 		red_packet = app_models.RedPacket(**data)
 		red_packet.save()
