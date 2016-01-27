@@ -671,15 +671,15 @@
             if(W.isAlreadyParticipanted){
                 using_msg = '您已参加该活动';
                 $('.wa-using').text(using_msg).on('click', function(){
-                    openMemberMask();
+                    link = window.location.origin + '/m/apps/red_packet/m_red_packet/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+                    console.log(link);
+                    window.open(link, '_tab');
                 }).show();
             }else{
                 using_msg = '我也要拼红包';
                 if(W.isMember){
                     $('.wa-using').text(using_msg).on('click', function(){
-                        link = window.location.origin + '/m/apps/red_packet/m_red_packet/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
-                        console.log(link);
-                        window.open(link, '_tab');
+                        openMemberMask();
                     }).show();
                 }else{
                     $('.wa-using').text(using_msg).on('click', function(){
