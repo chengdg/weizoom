@@ -61,10 +61,10 @@ class RedPacketParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
-			if not request.member.is_subscribed:
-				response = create_response(500)
-				response.errMsg = u'请先关注公众号'
-				return response.get_response()
+			# if not request.member.is_subscribed:
+			# 	response = create_response(500)
+			# 	response.errMsg = u'请先关注公众号'
+				# return response.get_response()
 			#被帮助者信息
 			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
@@ -183,8 +183,9 @@ def participate_red_packet(record_id,member_id):
 				print('participate_red_packet :176')
 				# 将之前的点赞详情日志无效
 				app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
-				# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表
+				# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表
 				app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
+				app_models.RedPacketLog.objects(belong_to=record_id, be_helped_member_id=member_id).delete()
 			except Exception,e:
 				print e
 				response = create_response(500)
