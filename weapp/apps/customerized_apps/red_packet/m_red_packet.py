@@ -96,6 +96,9 @@ class MRedPacket(resource.Resource):
 					curr_member_red_packet_info = curr_member_red_packet_info.first()
 					if (not curr_member_red_packet_info.is_valid) or (not curr_member_red_packet_info.has_join):
 							if fid is None or str(fid) == str(member_id):#判断分享页是否自己的主页
+								print('fid',fid)
+								print('member_id',member_id)
+								print('in line 99!!!!!!!!!!!!!!!!!!!!!!!!!!')
 								if isMember:
 									#曾经参与过又取关了，或者帮助过他人但是自己没参与，都需要参与一次
 									participate_response = participate_red_packet(record_id,member_id)
