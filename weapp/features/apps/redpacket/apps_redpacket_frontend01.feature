@@ -194,109 +194,10 @@ Scenario:2 会员在自己专属页面点击按钮分享活动，邀请好友帮
 		"""
 	
  
-@apps_redpockets_frontend
-Scenario:3 会员帮助会员好友点赞，拼红包成功（弹出提示贡献成功）
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
-	Then bill收到自动回复'拼红包活动1单图文'
-	When bill点击图文"拼红包活动1单图文"进入塞红包活动页面
-	Then bill获得jobs的'拼红包活动1'的内容
-		"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	When bill把jobs的塞红包活动链接分享到朋友圈
-	When 更新塞红包活动
-	When bill点击图文"拼红包活动1单图文"进入微助力活动页面
-	Then bill获得jobs的'拼红包活动1'的内容
-		"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	When tom关注jobs的公众号
-	When tom访问jobs的webapp
-	When tom点击bill分享的塞红包活动链接进行拼红包
-	Then tom获得jobs的'拼红包活动1'的内容
-		"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	When tom为好友点赞
-	Then tom点击bill分享的塞红包活动链接进行塞红包
-	When 更新塞红包活动
-	Then tom获得jobs的'拼红包活动1'的内容
-	"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	
-@apps_redpockets_frontend
-Scenario:4 会员已帮好友点赞，弹出引导页面
-	When bill关注jobs的公众号
-	When bill访问jobs的webapp
-	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
-	Then bill收到自动回复'拼红包活动1单图文'
-	When bill点击图文"拼红包活动1单图文"进入塞红包活动页面
-	Then bill获得jobs的'拼红包活动1'的内容
-		"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	When bill把jobs的塞红包活动链接分享到朋友圈
-	When 更新塞红包活动
-	When bill点击图文"拼红包活动1单图文"进入微助力活动页面
-	Then bill获得jobs的'拼红包活动1'的内容
-		"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	When tom关注jobs的公众号
-	When tom访问jobs的webapp
-	When tom点击bill分享的塞红包活动链接进行拼红包
-	Then tom获得jobs的'拼红包活动1'的内容
-		"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	When tom为好友点赞
-	When 更新塞红包活动
-	Then tom获得jobs的'拼红包活动1'的内容
-	"""
-		[{
-			"name": "拼红包活动1",
-			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-		}]
-		"""
-	
-	When tom再次为好友点赞
-	#Then tom获得蒙版提示：点击右上角，选择发送给指定好友或者朋友圈，来帮“XX”点赞
 
 
 @apps_redpockets_frontend
-Scenario:5 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
+Scenario:3 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
@@ -312,7 +213,7 @@ Scenario:5 会员通过好友分享的页面进行我也要拼红包，弹出公
 		"""
 	When bill把jobs的塞红包活动链接分享到朋友圈
 	When 更新塞红包活动
-	When bill点击图文"拼红包活动1单图文"进入微助力活动页面
+	When bill点击图文"拼红包活动1单图文"进入塞红包活动页面
 	Then bill获得jobs的'拼红包活动1'的内容
 		"""
 		[{
@@ -343,7 +244,7 @@ Scenario:5 会员通过好友分享的页面进行我也要拼红包，弹出公
 
 	
 @apps_redpockets_frontend
-Scenario:6 好友在活动期间不能为取关会员点赞
+Scenario:4 好友在活动期间不能为取关会员点赞
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
@@ -358,9 +259,43 @@ Scenario:6 好友在活动期间不能为取关会员点赞
 		}]
 		"""
 	When bill把jobs的塞红包活动链接分享到朋友圈
-	Then bill取消关注jobs公众号
+	When bill取消关注jobs公众号
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的塞红包活动链接为好友点赞
 	Then tom获得错误提示："该用户已经取消关注 暂不能点赞"
 	
+
+@apps_redpockets_frontend
+Scenario:5 已贡献好友列表按照时间倒序排列（好友点赞完成后直接排列在最前面）
+		#好友在好友页面点赞后，直接显示在已贡献好友列表里，按照时间倒序
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
+	Then bill收到自动回复'拼红包活动1单图文'
+	When bill点击图文"拼红包活动1单图文"进入塞红包活动页面
+	Then bill获得jobs的'拼红包活动1'的内容
+		"""
+		[{
+			"name": "拼红包活动1",
+			"is_show_countdown": "true",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+		}]
+		"""
+	When bill把jobs的塞红包活动链接分享到朋友圈
+	When tom关注jobs的公众号
+	When tom访问jobs的webapp
+	When tom点击bill分享的塞红包活动链接为好友点赞
+	When 更新贡献好友列表
+	Then bill获得"拼红包活动1"的已贡献好友列表
+		| name |
+		| tom  |
+
+	When tom把jobs的塞红包活动链接分享到朋友圈
+	When lily关注jobs的公众号
+	When lily访问jobs的webapp
+	When lily点击tom分享的塞红包活动链接为好友点赞
+	When 更新贡献好友列表
+	Then lily获得"拼红包活动1"的已贡献好友列表
+		| name ||name|
+		| lily ||tom |

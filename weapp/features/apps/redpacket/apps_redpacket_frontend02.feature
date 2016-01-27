@@ -213,7 +213,7 @@ Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二
 Scenario:3 非会员通过会员分享的活动链接参加活动
 	#非会员tom点击会员bill分享的活动链接参加活动，弹层显示公众号二维码
 	#tom分享活动页到朋友圈
-	#会员bill通过tom分享到的链接重复参加活动，弹层显示公众号二维码
+	#会员bill通过tom分享到的链接重复参加活动，跳转进入个人活动页
 	When bill关注jobs的公众号
 	When bill访问jobs的weapp
 	When bill在微信中向jobs的公众号发送消息"拼红包活动2"
@@ -244,28 +244,23 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
 		"""
 		[]
 		"""
-	#When tom把jobs的拼红包活动链接分享到朋友圈
-	#When 清空浏览器
-	#When bill点击tom分享的拼红包活动链接参与活动
-  	#Then bill获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："拼红包活动2",即可参加活动'
-	#When bill通过识别弹层中的公众号二维码关注jobs的公众号
-	#When bill访问jobs的webapp
-	#When bill在微信中向jobs的公众号发送消息"拼红包活动2"
-	#Then bill收到自动回复"拼红包活动2单图文"
-	#When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
-	#Then bill获得jobs的"拼红包活动2"的内容
-		#"""
-		#[{	
-		#	"name":"拼红包活动2",
-		#	"is_show_countdown":"false",
-		#	"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
+	When tom把jobs的拼红包活动链接分享到朋友圈
+	When 清空浏览器
+	When bill点击tom分享的拼红包活动链接参与活动
+  	#Then bill进入"拼红包活动2"的个人活动页
+	Then bill获得jobs的"拼红包活动2"的内容
+		"""
+		[{	
+			"name":"拼红包活动2",
+			"is_show_countdown":"false",
+			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
 		}]
-		#"""
-	#When 更新贡献好友列表
-	#Then bill获得"拼红包活动2"的已贡献好友列表
-		#"""
-		#[]
-		#"""
+		"""
+	When 更新贡献好友列表
+	Then bill获得"拼红包活动2"的已贡献好友列表
+		"""
+		[]
+		"""
 
 @mall2 @apps_red_packet @apps_red_packet_frontend
 Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点赞，取消关注后已贡献好友列表汇总仍显示该会员，按钮状态“已帮XX好友点赞”，点击按钮弹层显示公众号二维码
@@ -508,7 +503,7 @@ Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 		[]
 		"""
 	#Then bill获得按钮提示信息'活动尚未开始,敬请期待'
-	
+
 	#tom参加已结束的红包活动
 	When tom关注jobs的公众号
 	When tom访问jobs的weapp
@@ -576,6 +571,7 @@ Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号
 		| tom  |
 	When bill取消关注jobs的公众号
 	When bill通过分享的拼红包链接访问jobs的"拼红包活动2"的内容
+	#Then bill获得弹层提示信息"请先关注公众号"
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
 		[{	
@@ -629,3 +625,4 @@ Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号
 	Then bill获得"拼红包活动2"的已贡献好友列表
 		| name |
 		| tom  |
+
