@@ -67,6 +67,7 @@ class RedPacketGranter(resource.Resource):
 		# 	authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=True)[0]
 		# 	appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid)[0]
 		# 	nick_name = appid_info.nick_name
+		#	remark = nick_name
 		# except:
 		# 	response.errMsg = u'该账户未配置支付信息'
 		# 	return response.get_response()
@@ -82,7 +83,6 @@ class RedPacketGranter(resource.Resource):
 		if '' == SSLKEY_PATH or '' == SSLCERT_PATH:
 			response.errMsg = u'请首先上传证书文件'
 			return response.get_response()
-		remark = ''
 		try:
 			ip = request.META['REMOTE_ADDR']
 		except:
@@ -123,7 +123,7 @@ class RedPacketGranter(resource.Resource):
 			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
 				u'微众家',openid,1,1,1,1, wishing, ip,
 				record_name,
-				remark,
+				u'微众家',
 				'i15uok48plm49wm37ex62qmr50hk27em')
 
 			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)

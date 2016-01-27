@@ -108,7 +108,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"end_date":"3天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"random",
+				"type":"normal",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"5",
@@ -132,7 +132,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"end_date":"3天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"random",
+				"type":"normal",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"5",
@@ -154,22 +154,31 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"name":"活动3",
 			"start_date":"2天前",
 			"end_date":"昨天",
+			"type":"拼手气",
 			"status":"已结束",
-			"participant_count":0,
+			"participant_count":"0",
+			"total_money":"20.00",
+			"already_paid_money":"0.00",
 			"actions": ["查看","预览","复制链接","删除"]
 		},{
 			"name":"活动2",
 			"start_date":"2天前",
 			"end_date":"2天后",
+			"type":"普通",
 			"status":"进行中",
-			"participant_count":0,
+			"participant_count":"0",
+			"total_money":"100.00",
+			"already_paid_money":"0.00",
 			"actions": ["查看","预览","复制链接"]
 		},{
 			"name":"拼红包活动1",
 			"start_date":"今天",
 			"end_date":"3天后",
+			"type":"普通",
 			"status":"进行中",
 			"participant_count":0,
+			"total_money":"50.00",
+			"already_paid_money":"0.00",
 			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
@@ -183,16 +192,22 @@ Scenario:2 删除'已结束'的拼红包活动
 			"name":"活动2",
 			"start_date":"2天前",
 			"end_date":"2天后",
+			"type":"普通",
 			"status":"进行中",
-			"participant_count":0,
+			"participant_count":"0",
+			"total_money":"100.00",
+			"already_paid_money":"0.00",
 			"actions": ["查看","预览","复制链接"]
 		},{
 			"name":"活动1",
 			"start_date":"3天后",
 			"end_date":"5天后",
+			"type":"拼手气",
 			"status":"未开始",
-			"participant_count":0,
-			"actions":  ["查看","预览","复制链接"]
+			"participant_count":"0",
+			"total_money":"200.00",
+			"already_paid_money":"0.00",
+			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
 
