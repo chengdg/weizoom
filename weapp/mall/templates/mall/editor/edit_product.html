@@ -284,6 +284,7 @@
 	         	{%endif%}
 				</div>
 			</div>
+			{% if is_bill %}
             <div class="form-group">
                 <label class="control-label col-sm-2 col-sm-offset-1">商品发票：</label>
                 <div class="col-sm-9" style="margin-top: -6px;margin-left:-20px;">
@@ -300,17 +301,18 @@
                     </label>
                 </div>
             </div>
-		<div class="form-group">
-				<label class="control-label col-sm-2 col-sm-offset-1" for="is_delivery">配送时间：</label>
-				<div id='delivery_time' class="col-sm-9 " style="height:60px;margin-left:-20px;">
-					<label class="checkbox checkbox-inline xui-category">
-						<input name="is_delivery" class="is_delivery_selected xui-inlineblock" type="checkbox" {% if product.is_delivery %}checked{% endif %} id="is_delivery">
-						<span class="xui-bold">需要</span>
-						<i class="xui-tips xa-tips" ></i>
-					</label>
-				</div>
-		</div>
-
+            
+			<div class="form-group">
+					<label class="control-label col-sm-2 col-sm-offset-1" for="is_delivery">配送时间：</label>
+					<div id='delivery_time' class="col-sm-9 " style="height:60px;margin-left:-20px;">
+						<label class="checkbox checkbox-inline xui-category">
+							<input name="is_delivery" class="is_delivery_selected xui-inlineblock" type="checkbox" {% if product.is_delivery %}checked{% endif %} id="is_delivery">
+							<span class="xui-bold">需要</span>
+							<i class="xui-tips xa-tips" ></i>
+						</label>
+					</div>
+			</div>
+			{% endif %}
 		</fieldset>
 	</section>
 

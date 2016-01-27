@@ -4,6 +4,7 @@ import json
 import operator
 from datetime import datetime
 from itertools import chain
+from django.conf import settings
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, Http404
@@ -340,6 +341,8 @@ class Product(resource.Resource):
 
         _type = request.GET.get('type', 'object')
         supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
+        
+        is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
@@ -350,7 +353,8 @@ class Product(resource.Resource):
             'pay_interface_config': pay_interface_config,
             'postage_config_info': postage_config_info,
             'property_templates': property_templates,
-            'supplier': supplier
+            'supplier': supplier,
+            'is_bill': is_bill
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
@@ -395,6 +399,12 @@ class Product(resource.Resource):
             is_delivery=True
         else:
             is_delivery=False
+
+        is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
+        if is_bill is False:
+            is_enable_bill = False
+            is_delivery = False
+
         product = models.Product.objects.create(
             owner=request.manager,
             name=request.POST.get('name', '').strip(),
@@ -758,6 +768,14 @@ class Product(resource.Resource):
             is_enable_bill=True
         else:
             is_enable_bill=False
+
+        is_delivery = request.POST.get('is_delivery', False)
+
+        is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
+        if is_bill is False:
+            is_enable_bill = False
+            is_delivery = False
+
         param = {
             'name': request.POST.get('name', '').strip(),
             'promotion_title': request.POST.get('promotion_title', '').strip(),
@@ -775,7 +793,7 @@ class Product(resource.Resource):
             'supplier': request.POST.get("supplier", 0),
             'purchase_price': purchase_price,
             'is_enable_bill': is_enable_bill,
-            'is_delivery':request.POST.get('is_delivery', False),
+            'is_delivery': is_delivery,
         }
         # 微众商城代码
         # if request.POST.get('weshop_sync', None):

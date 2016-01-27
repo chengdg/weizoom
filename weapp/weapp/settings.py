@@ -796,6 +796,7 @@ ENAPISERVER = False
 
 EN_VARNISH = False
 
+WEIZOOM_ACCOUNTS = ['devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm']
 # settings for WAPI Logger
 if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_ENABLED = False
