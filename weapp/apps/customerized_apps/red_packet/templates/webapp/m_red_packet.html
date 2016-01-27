@@ -586,11 +586,11 @@
     var is_self_page = true;
     var red_packet_status = false;
     var page_owner_name = '';
-    var page_owner_icon = '';
+    var page_owner_icon = '';//用户头像
     var page_owner_member_id = '';
     var qrcode_url = W.qrcodeUrl;
     var new_qrcode_url = {% if params_qrcode_url %}'{{params_qrcode_url}}'{% else %}qrcode_url{% endif %};
-    var mp_user_head_img = '{{ mpUserHeadImg }}';
+    var mp_user_head_img = '{{ mpUserHeadImg }}'; //公众号头像
     $(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -725,7 +725,7 @@
                 //隐藏loading动画元素
                 loadingStatus(false);
                 //进度bar动画
-                runProcessBar(data);
+                runProcessBar(data.member_info.current_money,data.member_info.red_packet_money);
             },
             error: function(data) {
                 if(data.errMsg == 'is_deleted'){
@@ -740,9 +740,9 @@
             }
         });
     }
-    function runProcessBar(data){
-        var red_packet_money = data.member_info.red_packet_money;
-        var current_money = data.member_info.current_money;
+    function runProcessBar(current,total){
+        var current_money = current;
+        var red_packet_money = total;
         var process = "0%";
         if(red_packet_money==0){
             process = "0%"
@@ -932,12 +932,12 @@
                     //修改当前金额与帮助列表
                     $('.wa-i-current_money').text('当前金额 '+data.help_info.current_money+'元');
                     var li_content = '';
-                    li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ data.help_info.username+"</li></div></div>";
+                    li_content += "<div class='wui-i-friend'><div  class='wui-i-avatarbox'><div class='wui-i-avatar'><img src='"+ data.help_info.user_icon+"'></div></div><div class='wui-i-info'><li class='wui-i-money'>"+ help_money+"元</li><li class='wui-i-name'>"+ sliceName(data.help_info.username,4)+"</li></div></div>";
                     $('.wa-top100').prepend($(li_content));
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                     //进度bar动画
-                    runProcessBar(data);
+                    runProcessBar(data.help_info.current_money,data.help_info.red_packet_money);
 
                 }else{
                     $attention.find('.xa-attention-tip').show();

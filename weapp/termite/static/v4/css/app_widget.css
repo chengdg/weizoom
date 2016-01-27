@@ -1589,15 +1589,17 @@ li.wui-selectBox-display-table {
 }
 .wui-red_packet-container .wui-i-timing .wui-i-timer b{
     margin-right: 5px;
+    width:15px;
     height: 100%;
     background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
-    background-size: 520%;
-    background-position: -94px -10px;
+    background-size: 540%;
+    background-position: -110px -13px;
     font-size: 0.7rem;
     padding: 7px 5px;
     color: white;
     border-radius: 2px;
     font-family: "Arial", "黑体";
+    display: inline-block;
 }
 .wui-red_packet-container .wui-i-timing i{
     background: url("/termite_static/img/component/redpacket/icon_sprite.png") no-repeat;
@@ -1641,7 +1643,7 @@ li.wui-selectBox-display-table {
     background:#FFC600;
     border: 0;
     border-radius: 1px;
-    width: 80%;
+    width: 78%;
     height: 2.5rem;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
@@ -1653,7 +1655,7 @@ li.wui-selectBox-display-table {
     background: #999999;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-power{
-    width: 40%;
+    width: 37%;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-using{
     width: 40%;
@@ -1667,7 +1669,7 @@ li.wui-selectBox-display-table {
     color: white;
     font-weight: normal;
     font-size: small;
-    margin-top: 9px;
+    margin-top: 18px;
     margin-bottom: 9px;
 }
 .wui-red_packet-container .wui-i-states .xui-top100{
