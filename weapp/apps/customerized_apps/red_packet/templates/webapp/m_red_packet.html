@@ -798,8 +798,12 @@
         page_owner_name = is_self_page ? '你' : member_info.page_owner_name;
         page_owner_icon = member_info.page_owner_icon;
         $('.wa-pageownername').html(sliceName(page_owner_name,4));
-        $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
-        $('.wui-i-shop_circle').find('img').attr('src', mp_user_head_img);
+        if(page_owner_icon!=""){
+            $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
+        }
+        if(mp_user_head_img!=""){
+            $('.wui-i-shop_circle').find('img').attr('src', mp_user_head_img);
+        }
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
         W.isAlreadyParticipanted = member_info.is_already_participanted;
