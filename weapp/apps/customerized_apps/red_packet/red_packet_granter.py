@@ -48,7 +48,7 @@ class RedPacketGranter(resource.Resource):
 		if not record_id or not member_ids:
 			response.errMsg = u'活动信息出错,请重试~'
 			return response.get_response()
-
+		member_ids = member_ids.split(',')
 		record = app_models.RedPacket.objects(id=record_id)
 		if record.count() <=0:
 			response.errMsg = u'不存在该活动'

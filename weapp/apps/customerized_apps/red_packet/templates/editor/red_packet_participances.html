@@ -280,7 +280,7 @@ function pull_request(member_ids){
         resource: 'red_packet_granter',
         args: {
             id: activityId,
-            member_ids: member_ids
+            member_ids: member_ids.join(',')
         },
         success: function(resp){
             W.showHint('info', "发放红包完成, 未发放成功的会员可能已经取消关注，请核实确认");
