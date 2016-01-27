@@ -115,8 +115,9 @@ class RedPacketGranter(resource.Resource):
 			# 	weixin_pay_config.partner_key)
 
 			#使用微众家帐号测试
+			print u'实际应发金额：===============》》', price
 			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
-				u'微众家',openid,price,price,price,1, wishing, ip,
+				u'微众家',openid,1,1,1,1, wishing, ip,
 				record_name,
 				remark,
 				'i15uok48plm49wm37ex62qmr50hk27em')
