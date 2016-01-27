@@ -136,7 +136,7 @@ class RedPacketParticipances(resource.Resource):
 				'current_money': '%.2f' % data.current_money,
 				'red_packet_status': u'成功' if data.red_packet_status else u'失败', #红包参与者状态
 				'is_already_paid': u'发放' if data.is_already_paid else u'未发放',
-				'receive_status': u'失败', #TODO用户接收状态
+				'receive_status': u'已接收' if data.return_result else u'未接收',
 				'red_packet_status_text': red_packet_status_text, #红包状态
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})

@@ -104,7 +104,6 @@ class MRedPacket(resource.Resource):
 							print('fid222222',fid)
 							print('member_id222222222',member_id)
 							if fid is None or str(fid) == str(member_id):#判断分享页是否自己的主页
-
 								print('in line 99!!!!!!!!!!!!!!!!!!!!!!!!!!')
 								if isMember:
 									#曾经参与过又取关了，或者帮助过他人但是自己没参与，都需要参与一次
@@ -362,7 +361,7 @@ def reset_re_subscribed_member_helper_info(record_id):
 	re_subscribed_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=True)]
 
 	#已成功的不清除记录，只是使之有效，且不可以重新领取红包（has_join=True）
-	need_reset_member_ids = [p.member_id for p in app_models.RedPacketParticipance.objects.filter(member_id__in=re_subscribed_ids, red_packet_status=True)]
+	need_reset_member_ids = [p.member_id for p in app_models.RedPacketParticipance.objects.filter(belong_to=record_id, member_id__in=re_subscribed_ids, red_packet_status=True)]
 	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_reset_member_ids).update(set__has_join = True,set__is_valid = True)
 
 
