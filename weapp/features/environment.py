@@ -81,7 +81,7 @@ from apps.customerized_apps.event import models as event_models
 from apps.customerized_apps.lottery import models as apps_lottery_models
 from apps.customerized_apps.survey import models as apps_survey_models
 from apps.customerized_apps.vote import models as apps_vote_models
-from apps.customerized_apps.redpacket import models as redpacket_models
+from apps.customerized_apps.red_packet import models as redpacket_models
 
 from django.core.cache import cache
 from weapp import celeryconfig
@@ -337,7 +337,6 @@ def __clear_all_app_data():
 	#apps拼红包
 	redpacket_models.RedPacket.objects.all().delete()
 	redpacket_models.RedPacketParticipance.objects.all().delete()
-	redpacket_models.RedPacketParticipances.objects.all().delete()
 
 	#会员积分策略全部清零
 	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)

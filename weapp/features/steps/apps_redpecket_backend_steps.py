@@ -14,7 +14,7 @@ from utils import url_helper
 import datetime as dt
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings
 from weixin.message.material import models as material_models
-from apps.customerized_apps.redpacket import models as redpacket_models
+from apps.customerized_apps.red_packet import models as redpacket_models
 import termite.pagestore as pagestore_manager
 import json
 
@@ -34,132 +34,136 @@ def __debug_print(content,type_tag=True):
 		pass
 
 
-# def __get_redpacketPageJson(args):
-# 	"""
-# 	传入参数，获取模板
-# 	"""
-# 	__page_temple = {
-# 			"type": "appkit.page",
-# 			"cid": 1,
-# 			"pid": None,
-# 			"auto_select": False,
-# 			"selectable": "yes",
-# 			"force_display_in_property_view": "no",
-# 			"has_global_content": "no",
-# 			"need_server_process_component_data": "no",
-# 			"is_new_created": True,
-# 			"property_view_title": "背景",
-# 			"model": {
-# 				"id": "",
-# 				"class": "",
-# 				"name": "",
-# 				"index": 1,
-# 				"datasource": {
-# 					"type": "api",
-# 					"api_name": ""
-# 				},
-# 				"content_padding": "15px",
-# 				"title": "index",
-# 				"event:onload": "",
-# 				"uploadHeight": "568",
-# 				"uploadWidth": "320",
-# 				"site_title": "拼红包",
-# 				"background": ""
-# 			},
-# 			"components": [
-# 				{
-# 					"type": "appkit.redpacketdescription",
-# 					"cid": 2,
-# 					"pid": 1,
-# 					"auto_select": False,
-# 					"selectable": "yes",
-# 					"force_display_in_property_view": "no",
-# 					"has_global_content": "no",
-# 					"need_server_process_component_data": "no",
-# 					"property_view_title": "拼红包",
-# 					"model": {
-# 						"id": "",
-# 						"class": "",
-# 						"name": "",
-# 						"index": 2,
-# 						"datasource": {
-# 							"type": "api",
-# 							"api_name": ""
-# 						},
-# 						"title": args.get("title",""),
-# 						"start_time": args.get("start_time",""),
-# 						"end_time": args.get("end_time",""),
-# 						"valid_time": args.get("valid_time",""),
-# 						"timing": {
-# 							"timing": {
-# 								"select": args.get("timing_status","")
-# 							}
-# 						},
-# 						"timing_value": {
-# 							"day": args.get("timing_value_day",0),
-# 							"hour": "00",
-# 							"minute": "00",
-# 							"second": "00"
-# 						},
-# 						"description": args.get("description",""),
-# 						"reply_content": args.get("reply_content",""),
-# 						"qrcode": args.get("qrcode",{"ticket":"","name":""}),
-# 						"material_image": args.get("material_image",""),
-# 						"background_image": args.get("background_image",""),
-# 						"color": args.get("color",""),
-# 						"rules": args.get("rules","")
-# 					},
-# 					"components": []
-# 				},
-# 				{
-# 					"type": "appkit.submitbutton",
-# 					"cid": 3,
-# 					"pid": 1,
-# 					"auto_select": False,
-# 					"selectable": "no",
-# 					"force_display_in_property_view": "no",
-# 					"has_global_content": "no",
-# 					"need_server_process_component_data": "no",
-# 					"property_view_title": "",
-# 					"model": {
-# 						"id": "",
-# 						"class": "",
-# 						"name": "",
-# 						"index": 99999,
-# 						"datasource": {
-# 							"type": "api",
-# 							"api_name": ""
-# 						},
-# 						"text": "提交"
-# 					},
-# 					"components": []
-# 				},
-# 				{
-# 					"type": "appkit.componentadder",
-# 					"cid": 4,
-# 					"pid": 1,
-# 					"auto_select": False,
-# 					"selectable": "yes",
-# 					"force_display_in_property_view": "no",
-# 					"has_global_content": "no",
-# 					"need_server_process_component_data": "no",
-# 					"property_view_title": "添加模块",
-# 					"model": {
-# 						"id": "",
-# 						"class": "",
-# 						"name": "",
-# 						"index": 3,
-# 						"datasource": {
-# 							"type": "api",
-# 							"api_name": ""
-# 						},
-# 						"components": ""
-# 					},
-# 					"components": []
-# 				}
-# 			]
-# 		}
-# 	return json.dumps(__page_temple)
+def __get_redpacketPageJson(args):
+	"""
+	传入参数，获取模板
+	"""
+	__page_temple = {
+		"type": "appkit.page",
+		"cid": 1,
+		"pid": None,
+		"auto_select": False,
+		"selectable": "yes",
+		"force_display_in_property_view": "no",
+		"has_global_content": "no",
+		"need_server_process_component_data": "no",
+		"is_new_created": True,
+		"property_view_title": "背景",
+		"model": {
+			"id": "",
+			"class": "",
+			"name": "",
+			"index": 1,
+			"datasource": {
+				"type": "api",
+				"api_name": ""
+			},
+			"content_padding": "15px",
+			"title": "index",
+			"event:onload": "",
+			"uploadHeight": "568",
+			"uploadWidth": "320",
+			"site_title": "拼红包",
+			"background": ""
+		},
+		"components": [{
+			"type": "appkit.redpacketdescription",
+			"cid": 2,
+			"pid": 1,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"property_view_title": "拼手气",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": 2,
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"title": args.get("title"),
+				"start_time": args.get("start_time"),
+				"end_time": args.get("end_time"),
+				"valid_time": args.get("valid_time"),
+				"timing": {
+					"timing": {
+						"select": args.get("timing_status")
+					}
+				},
+				"timing_value": {
+					"day": args.get("timing_value_day",0),
+					"hour": "00",
+					"minute": "00",
+					"second": "00"
+				},
+				"random_total_money": args.get("redpacket_random_total_money"),
+				"random_packets_number": args.get("redpacket_random_packets_number"),
+				"regular_packets_number": args.get("redpacket_regular_packets_number"),
+				"regular_per_money": args.get("redpacket_regular_per_money"),
+				"red_packet_type":args.get("redpacket_type"),
+				"start_money": args.get("start_money"),
+				"end_money": args.get("end_money"),
+				"money_range": args.get("money_range"),
+				"reply_content": args.get("reply_content"),
+				"qrcode": args.get("qrcode"),
+				"wishing": args.get("wishing"),
+				"rules": args.get("rules"),
+				"material_image": args.get("material_image"),
+				"share_description": args.get("share_description")
+			},
+			"components": []
+		}, {
+			"type": "appkit.submitbutton",
+			"cid": 3,
+			"pid": 1,
+			"auto_select": False,
+			"selectable": "no",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"property_view_title": "",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": 99999,
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"text": "提交"
+			},
+			"components": []
+		}, {
+			"type": "appkit.componentadder",
+			"cid": 4,
+			"pid": 1,
+			"auto_select": False,
+			"selectable": "yes",
+			"force_display_in_property_view": "no",
+			"has_global_content": "no",
+			"need_server_process_component_data": "no",
+			"property_view_title": "添加模块",
+			"model": {
+				"id": "",
+				"class": "",
+				"name": "",
+				"index": 3,
+				"datasource": {
+					"type": "api",
+					"api_name": ""
+				},
+				"components": ""
+			},
+			"components": []
+		}]
+	}
+
+	return json.dumps(__page_temple)
 
 # def __bool2Bool(bo):
 # 	"""
@@ -172,34 +176,34 @@ def __debug_print(content,type_tag=True):
 # 		result = None
 # 	return result
 
-# def __date_delta(start,end):
-# 	"""
-# 	获得日期，相差天数，返回int
-# 	格式：
-# 		start:(str){2015-11-23}
-# 		end :(str){2015-11-30}
-# 	"""
-# 	start = dt.datetime.strptime(start, "%Y-%m-%d").date()
-# 	end = dt.datetime.strptime(end, "%Y-%m-%d").date()
-# 	return (end-start).days
+def __date_delta(start,end):
+	"""
+	获得日期，相差天数，返回int
+	格式：
+		start:(str){2015-11-23}
+		end :(str){2015-11-30}
+	"""
+	start = dt.datetime.strptime(start, "%Y-%m-%d").date()
+	end = dt.datetime.strptime(end, "%Y-%m-%d").date()
+	return (end-start).days
 
-# def __date2time(date_str):
-# 	"""
-# 	字符串 今天/明天……
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	cr_date = date_str
-# 	p_date = bdd_util.get_date_str(cr_date)
-# 	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-# 	return p_time
+def __date2time(date_str):
+	"""
+	字符串 今天/明天……
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	cr_date = date_str
+	p_date = bdd_util.get_date_str(cr_date)
+	p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+	return p_time
 
-# def __datetime2str(dt_time):
-# 	"""
-# 	datetime型数据，转为字符串型，日期
-# 	转化为字符串 "%Y-%m-%d %H:%M"
-# 	"""
-# 	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
-# 	return dt_time
+def __datetime2str(dt_time):
+	"""
+	datetime型数据，转为字符串型，日期
+	转化为字符串 "%Y-%m-%d %H:%M"
+	"""
+	dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
+	return dt_time
 
 # def __redpacket_name2id(name):
 # 	"""
@@ -262,17 +266,17 @@ def __debug_print(content,type_tag=True):
 # 	qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
 # 	return qrcode
 
-# def __get_actions(status):
-# 	"""
-# 	根据输入拼红包状态
-# 	返回对于操作列表
-# 	"""
-# 	actions_list = [u"查看",u"预览",u"复制链接"]
-# 	if status == u"已结束":
-# 		actions_list.append(u"删除")
-# 	elif status=="进行中" or "未开始":
-# 		actions_list.append(u"关闭")
-# 	return actions_list
+def __get_actions(status):
+	"""
+	根据输入拼红包状态
+	返回对于操作列表
+	"""
+	actions_list = [u"查看",u"预览",u"复制链接"]
+	if status == u"已结束":
+		actions_list.append(u"删除")
+	# elif status=="进行中" or "未开始":
+	# 	actions_list.append(u"关闭")
+	return actions_list
 
 def __Create_RedPacket(context,text,user):
 	"""
@@ -300,13 +304,20 @@ def __Create_RedPacket(context,text,user):
 	valid_time = "%s~%s"%(start_time,end_time)
 
 	timing_status = text.get("is_show_countdown","")
-
 	timing_value_day = __date_delta(start_date,end_date)
 
-	description = text.get("desc","")
-	reply_content = text.get("reply")
-	material_image = text.get("share_pic","")
-	background_image = text.get("background_pic","")
+	redpacket_arr = text.get("red_packet","")#红包类型
+	redpacket_type = redpacket_arr.get('type',""),
+	redpacket_random_total_money = redpacket_arr.get('random_total_money',""),
+	redpacket_random_packets_number = redpacket_arr.get("random_packets_number",""),
+	redpacket_regular_packets_number = redpacket_arr.get("regular_packets_number",""),
+	redpacket_regular_per_money = redpacket_arr.get("regular_per_money",""),
+
+	contribution_start_range = text.get("contribution_start_range",0)
+	contribution_end_range = text.get("contribution_end_range",0)
+	money_range = "{}-{}".format(contribution_start_range,contribution_end_range)
+
+	reply_content = text.get("reply","")
 
 	qrcode_name = text.get("qr_code","")
 	if qrcode_name:
@@ -319,10 +330,12 @@ def __Create_RedPacket(context,text,user):
 	else:
 		qrcode = {"ticket":"","name":""}
 
-	zhcolor = text.get("background_color","冬日暖阳")
-	color = __name2color(zhcolor)
-
+	wishing = text.get("open_packet_reply","")
 	rules = text.get("rules","")
+	material_image = text.get("share_pic","")
+	share_description = text.get("share_desc","")
+
+
 
 	page_args = {
 		"title":title,
@@ -331,17 +344,24 @@ def __Create_RedPacket(context,text,user):
 		"valid_time":valid_time,
 		"timing_status":timing_status,
 		"timing_value_day":timing_value_day,
-		"description":description,
+		"redpacket_type":redpacket_type,
+		"redpacket_random_total_money":redpacket_random_total_money,
+		"redpacket_random_packets_number":redpacket_random_packets_number,
+		"redpacket_regular_packets_number":redpacket_regular_packets_number,
+		"redpacket_regular_per_money":redpacket_regular_per_money,
+		"start_money":contribution_start_range,
+		"end_money":contribution_end_range,
+		"money_range":money_range,
 		"reply_content":reply_content,
 		"qrcode":qrcode,
+		"wishing":wishing,
+		"rules":rules,
 		"material_image":material_image,
-		"background_image":background_image,
-		"color":color,
-		"rules":rules
+		"share_description":share_description,
 	}
 
 	#step1：登录页面，获得分配的project_id
-	get_pw_response = context.client.get("/apps/redpacket/redpacket/")
+	get_pw_response = context.client.get("/apps/red_packet/red_packet/")
 	pw_args_response = get_pw_response.context
 	project_id = pw_args_response['project_id']#(str){new_app:redpacket:0}
 
@@ -369,12 +389,19 @@ def __Create_RedPacket(context,text,user):
 		"start_time":start_time,
 		"end_time":end_time,
 		"timing":timing_status,
+		"type":redpacket_type,
+		"random_total_money":redpacket_random_total_money,
+		"random_packets_number":redpacket_random_packets_number,
+		"regular_packets_number":redpacket_regular_packets_number,
+		"regular_per_money":redpacket_regular_per_money,
+		"money_range":money_range,
 		"reply_content":reply_content,
 		"material_image":material_image,
 		"qrcode":json.dumps(qrcode),
+		"wishing":wishing,
 		"related_page_id":related_page_id
 	}
-	redpacket_url ="/apps/redpacket/api/redpacket/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
+	redpacket_url ="/apps/red_packet/api/red_packet/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
 	post_redpacket_response = context.client.post(redpacket_url,post_redpacket_args)
 
 # def __Update_RedPacket(context,text,page_id,redpacket_id):
@@ -463,7 +490,7 @@ def __Create_RedPacket(context,text,user):
 # 	update_page_response = context.client.post(update_page_url,update_page_args)
 
 # 	#step4:更新Powerme
-# 	update_redpacket_url ="/apps/redpacket/api/redpacket/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+# 	update_redpacket_url ="/apps/red_packet/api/red_packet/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 # 	update_redpacket_response = context.client.post(update_redpacket_url,update_redpacket_args)
 
 # def __Delete_RedPacket(context,redpacket_id):
@@ -476,7 +503,7 @@ def __Create_RedPacket(context,text,user):
 # 	"""
 # 	design_mode = 0
 # 	version = 1
-# 	del_redpacket_url = "/apps/redpacket/api/redpacket/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+# 	del_redpacket_url = "/apps/red_packet/api/red_packet/?design_mode={}&version={}&_method=delete".format(design_mode,version)
 # 	del_args ={
 # 		"id":redpacket_id
 # 	}
@@ -490,7 +517,7 @@ def __Create_RedPacket(context,text,user):
 
 # 	design_mode = 0
 # 	version = 1
-# 	stop_redpacket_url = "/apps/redpacket/api/redpacket_status/?design_mode={}&version={}".format(design_mode,version)
+# 	stop_redpacket_url = "/apps/red_packet/api/redpacket_status/?design_mode={}&version={}".format(design_mode,version)
 # 	stop_args ={
 # 		"id":redpacket_id,
 # 		"target":'stoped'
@@ -519,7 +546,7 @@ def __Create_RedPacket(context,text,user):
 
 
 
-# 	search_url = "/apps/redpacket/api/redpackets/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+# 	search_url = "/apps/red_packet/api/red_packets/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
 # 			design_mode,
 # 			version,
 # 			name,
@@ -555,7 +582,7 @@ def __Create_RedPacket(context,text,user):
 
 
 
-# 	search_url = "/apps/redpacket/api/redpacket_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+# 	search_url = "/apps/red_packet/api/redpacket_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
 # 			design_mode,
 # 			version,
 # 			id,
@@ -573,83 +600,90 @@ def __Create_RedPacket(context,text,user):
 
 
 @when(u'{user}新建拼红包活动')
-def step_impl(context,user):
+def create_RedPacket(context,user):
 	text_list = json.loads(context.text)
 	for text in text_list:
 		__Create_RedPacket(context,text,user)
 
-# @then(u'{user}获得拼红包活动列表')
-# def step_impl(context,user):
-# 	design_mode = 0
-# 	count_per_page = 10
-# 	version = 1
-# 	page = 1
-# 	enable_paginate = 1
+@when(u'{user}新建普通红包活动')
+def step_impl(context,user):
+	create_RedPacket(context,user)
 
-# 	actual_list = []
-# 	expected = json.loads(context.text)
+@then(u'{user}获得拼红包活动列表')
+def step_impl(context,user):
+	design_mode = 0
+	count_per_page = 10
+	version = 1
+	page = 1
+	enable_paginate = 1
 
-# 	#搜索查看结果
-# 	if hasattr(context,"search_redpacket"):
-# 		rec_search_list = context.search_redpacket
-# 		for item in rec_search_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":item['start_time'],
-# 				"end_time":item['end_time'],
-# 				"participant_count":item['participant_count'],
-# 				"total_redpacket_value":item['total_power']
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
+	actual_list = []
+	expected = json.loads(context.text)
 
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
-# 		print("expected: {}".format(expected))
+	#搜索查看结果
+	if hasattr(context,"search_redpacket"):
+		pass
+		# rec_search_list = context.search_redpacket
+		# for item in rec_search_list:
+		# 	tmp = {
+		# 		"name":item['name'],
+		# 		"status":item['status'],
+		# 		"start_time":item['start_time'],
+		# 		"end_time":item['end_time'],
+		# 		"participant_count":item['participant_count'],
+		# 		"total_redpacket_value":item['total_power']
+		# 	}
+		# 	tmp["actions"] = __get_actions(item['status'])
+		# 	actual_list.append(tmp)
 
-# 		bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
-# 	#其他查看结果
-# 	else:
-# 		#分页情况，更新分页参数
-# 		if hasattr(context,"paging"):
-# 			paging_dic = context.paging
-# 			count_per_page = paging_dic['count_per_page']
-# 			page = paging_dic['page_num']
+		# for expect in expected:
+		# 	if 'start_date' in expect:
+		# 		expect['start_time'] = __date2time(expect['start_date'])
+		# 		del expect['start_date']
+		# 	if 'end_date' in expect:
+		# 		expect['end_time'] = __date2time(expect['end_date'])
+		# 		del expect['end_date']
+		# print("expected: {}".format(expected))
 
-# 		for expect in expected:
-# 			if 'start_date' in expect:
-# 				expect['start_time'] = __date2time(expect['start_date'])
-# 				del expect['start_date']
-# 			if 'end_date' in expect:
-# 				expect['end_time'] = __date2time(expect['end_date'])
-# 				del expect['end_date']
+		# bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+	#其他查看结果
+	else:
+		#分页情况，更新分页参数
+		# if hasattr(context,"paging"):
+		# 	paging_dic = context.paging
+		# 	count_per_page = paging_dic['count_per_page']
+		# 	page = paging_dic['page_num']
+
+		for expect in expected:
+			if 'start_date' in expect:
+				expect['start_time'] = __date2time(expect['start_date'])
+				del expect['start_date']
+			if 'end_date' in expect:
+				expect['end_time'] = __date2time(expect['end_date'])
+				del expect['end_date']
 
 
-# 		print("expected: {}".format(expected))
+		print("expected: {}".format(expected))
 
-# 		rec_redpacket_url ="/apps/redpacket/api/redpackets/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-# 		rec_redpacket_response = context.client.get(rec_redpacket_url)
-# 		rec_redpacket_list = json.loads(rec_redpacket_response.content)['data']['items']#[::-1]
+		rec_redpacket_url ="/apps/red_packet/api/red_packets/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+		rec_redpacket_response = context.client.get(rec_redpacket_url)
+		rec_redpacket_list = json.loads(rec_redpacket_response.content)['data']['items']#[::-1]
 
-# 		for item in rec_redpacket_list:
-# 			tmp = {
-# 				"name":item['name'],
-# 				"status":item['status'],
-# 				"start_time":__date2time(item['start_time']),
-# 				"end_time":__date2time(item['end_time']),
-# 				"participant_count":item['participant_count'],
-# 				"total_redpacket_value":item['total_power']
-# 			}
-# 			tmp["actions"] = __get_actions(item['status'])
-# 			actual_list.append(tmp)
-# 		print("actual_data: {}".format(actual_list))
-# 		bdd_util.assert_list(expected,actual_list)
+		for item in rec_redpacket_list:
+			tmp = {
+				"name":item['name'],
+				"participant_count":item['participant_count'],
+				"type":item['type'],
+				"status":item['status'],
+				"total_money":item['total_money'],
+				"already_paid_money":item['already_paid_money'],
+				"start_time":__date2time(item['start_time']),
+				"end_time":__date2time(item['end_time']),
+			}
+			tmp["actions"] = __get_actions(item['status'])
+			actual_list.append(tmp)
+		print("actual_data: {}".format(actual_list))
+		bdd_util.assert_list(expected,actual_list)
 
 
 # @when(u"{user}编辑拼红包活动'{redpacket_name}'")
@@ -743,7 +777,7 @@ def step_impl(context,user):
 # @when(u"{user}查看拼红包活动'{redpacket_name}'")
 # def step_impl(context,user,redpacket_name):
 # 	redpacket_page_id,redpacket_id = __redpacket_name2id(redpacket_name)#纯数字
-# 	url ='/apps/redpacket/api/redpacket_participances/?_method=get&id=%s' % (redpacket_id)
+# 	url ='/apps/red_packet/api/redpacket_participances/?_method=get&id=%s' % (redpacket_id)
 # 	url = bdd_util.nginx(url)
 # 	response = context.client.get(url)
 # 	context.participances = json.loads(response.content)
@@ -848,7 +882,7 @@ def step_impl(context,user):
 # @then(u"{user}能批量导出拼红包活动'{redpacket_name}'")
 # def step_impl(context,user,redpacket_name):
 # 	redpacket_page_id,redpacket_id = __redpacket_name2id(redpacket_name)#纯数字
-# 	url ='/apps/redpacket/api/redpacket_participances_export/?_method=get&export_id=%s' % (redpacket_id)
+# 	url ='/apps/red_packet/api/redpacket_participances_export/?_method=get&export_id=%s' % (redpacket_id)
 # 	url = bdd_util.nginx(url)
 # 	response = context.client.get(url)
 # 	bdd_util.assert_api_call_success(response)

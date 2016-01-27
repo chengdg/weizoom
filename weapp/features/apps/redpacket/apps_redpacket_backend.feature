@@ -18,6 +18,12 @@ Feature: 新建红包活动
 
 Background:
 	Given jobs登录系统
+	When jobs添加会员分组
+		"""
+		{
+			"tag_id_1": "分组1"
+		}
+		"""
 	When jobs添加带参数二维码
 		"""
 		[{
@@ -25,7 +31,7 @@ Background:
 			"create_time":"2015-10-10 10:20:30",
 			"prize_type":"无奖励",
 			"member_rank":"普通会员",
-			"tags":"未分组",
+			"tags":"分组1",
 			"is_attention_in":"false",
 			"remarks":"",
 			"is_relation_member":"false",
@@ -33,7 +39,7 @@ Background:
 			"scan_code_reply":"感谢您的参与，为好友点赞成功！"
 		}]
 		"""
-@mall2 @apps_redpacket @apps_redpacket_backend @yang1
+@mall2 @apps_redpacket @apps_redpacket_backend
 Scenario:1 新建拼手气红包活动，用户二维码为空
 	Given jobs登录系统
 	When jobs新建拼红包活动
@@ -43,11 +49,13 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"start_date":"今天",
 			"end_date":"明天",
 			"is_show_countdown":"ture",
-			"red_packet":[{
+			"red_packet":{
 				"type":"random",
-				"total_amount":"500",
-				"packet_num":"10"
-			}],
+				"random_total_money":"500",
+				"random_packets_number":"10",
+				"regular_packets_number":"",
+				"regular_per_money":""
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"拼红包",
@@ -65,11 +73,11 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"participant_count":"0",
 			"type":"拼手气",
 			"status":"进行中",
-			"total_amount":"10",
-			"send_amount":"0",
+			"total_money":"500.00",
+			"already_paid_money":"0.00",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["关闭","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
 
@@ -83,11 +91,13 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"start_date":"明天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
-			"red_packet":[{
+			"red_packet":{
 				"type":"normal",
-				"packet_num":"10",
-				"single_packet_amount":"10"
-			}]
+				"random_total_money":"",
+				"random_packets_number":"",
+				"regular_packets_number":"10",
+				"regular_per_money":"10"
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"拼红包",
@@ -105,10 +115,10 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"participant_count":"0",
 			"type":"普通",
 			"status":"未开始",
-			"total_amount":"100",
-			"send_amount":"0",
+			"total_money":"100.00",
+			"already_paid_money":"0.00",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"actions": ["删除","链接","预览","查看"]
+			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
