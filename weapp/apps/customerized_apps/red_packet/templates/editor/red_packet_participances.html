@@ -330,7 +330,7 @@ function pull_request(member_ids){
             table.reload();
         },
         error: function(error){
-            W.showHint('error', error.errMsg);
+            W.showHint('error', error.errMsg || '发放红包失败');
         }
     });
 }
