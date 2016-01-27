@@ -62,7 +62,6 @@ Scenario:1 更新支付方式:微信支付
 			"type": "微信支付",
 			"version": "v3",
 			"weixin_appid": "123450",
-			"app_secret": "223450",
 			"mch_id": "323450",
 			"api_key": "423450"
 		}
@@ -74,7 +73,6 @@ Scenario:1 更新支付方式:微信支付
 			"is_active": "启用",
 			"version": "v3",
 			"weixin_appid": "123450",
-			"app_secret": "223450",
 			"mch_id": "323450",
 			"api_key": "423450"
 		}
