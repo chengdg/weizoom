@@ -97,7 +97,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpacket_update @yang1
+@mall2 @apps_redpacket @apps_redpacket_update
 Scenario:1 编辑"未开始"的拼红包活动
 	Given jobs登录系统
 	When jobs编辑拼红包活动'活动1'
@@ -124,31 +124,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"share_desc":"这是一个神奇的活动！"
 		}]
 		"""
-	Then jobs获得微助力活动'拼红包活动1'
-		"""
-		[{
-			"name":"拼红包活动1",
-			"start_date":"今天",
-			"end_date":"3天后",
-			"is_show_countdown":"false",
-			"red_packet":{
-				"type":"normal",
-				"random_total_money":"",
-				"random_packets_number":"",
-				"regular_packets_number":"5",
-				"regular_per_money":"10"
-			},
-			"contribution_start_range":"1.5",
-			"contribution_end_range":"2.0",
-			"reply":"抢红包",
-			"qr_code":"带参数二维码1",
-			"open_packet_reply":"集齐红包金额即可领取现金奖励！",
-			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
-			"share_pic":"4.jpg",
-			"share_desc":"这是一个神奇的活动！"
-		}]
-		"""
-	And jobs获得拼红包活动列表
+	Then jobs获得拼红包活动列表
 		"""
 		[{
 			"name":"活动3",
