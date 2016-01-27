@@ -337,6 +337,9 @@ def __clear_all_app_data():
 	#apps拼红包
 	redpacket_models.RedPacket.objects.all().delete()
 	redpacket_models.RedPacketParticipance.objects.all().delete()
+	redpacket_models.RedPacketControl.objects.all().delete()
+	redpacket_models.RedPacketLog.objects.all().delete()
+	redpacket_models.RedPacketDetail.objects.all().delete()
 
 	#会员积分策略全部清零
 	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)

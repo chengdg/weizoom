@@ -1,7 +1,7 @@
 #_author_: 张雪  2016.01.20
 #_editor_: 张三香 2016.01.20
 
-Featrue: 手机端前台塞红包
+Feature: 手机端前台塞红包
 	"""
 		说明：
 		带参数的二维码：
@@ -120,7 +120,7 @@ Background:
 				}],
 			"keyword_reply": [{
 					"reply_content":"拼红包活动1单图文",
-					"reply_type":"text_pictrue"
+					"reply_type":"text_picture"
 				}]
 		},{
 			"rules_name":"规则2",
@@ -130,7 +130,7 @@ Background:
 				}],
 			"keyword_reply": [{
 					"reply_content":"拼包活动2单图文",
-					"reply_type":"text_pictrue"
+					"reply_type":"text_picture"
 				}]
 		}]
 		"""
