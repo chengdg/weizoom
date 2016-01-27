@@ -34,7 +34,37 @@ PAY_INTERFACE_WEIXIN_PAY = 2 #支付方式为微信支付
 class RedPacketGranter(resource.Resource):
 	app = 'apps/red_packet'
 	resource = 'red_packet_granter'
-	
+
+	@login_required
+	def api_get(request):
+		record_id = request.POST.get('id', None)
+		member_id = request.POST.get('member_id', None)
+		response = create_response(500)
+		if not record_id or not member_id:
+			response.errMsg = u'活动信息出错,请重试~'
+			return response.get_response()
+		record = app_models.RedPacket.objects(id=record_id)
+		if record.count() <=0:
+			response.errMsg = u'不存在该活动'
+			return response.get_response()
+		else:
+			record = record.first()
+		owner_id = record.owner_id
+		member_info = app_models.RedPacketParticipance.objects(member_id=member_id, msg_api_status=False)
+		if member_info.count() <= 0:
+			response.errMsg = u'没有必要给该会员发送模板消息'
+			return response.get_response()
+		else:
+			member_info = member_info.first()
+		member_senders_info = member_info.msg_api_failed_members_info
+		msg_succeed_member_ids= send_apps_template_message(owner_id, 4, member_senders_info)
+		if long(member_id) not in msg_succeed_member_ids:
+			response.errMsg = u'发送模板消息失败'
+			return response.get_response()
+		else:
+			response = create_response(200)
+			return response.get_response()
+
 	@login_required
 	def api_put(request):
 		"""
@@ -98,17 +128,18 @@ class RedPacketGranter(resource.Resource):
 		member_id2status = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
 		member_id2openid = {m.member.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
 		print "member_id2openid:=============>>", member_id2openid
-		member_openid2id = {}
-		for k, v in member_id2openid.items():
-			member_openid2id[v] = k
 
 		member_senders_info = []
+		red_api_succeed_member2member_senders_info = {}
+		if len(member_info_list) <= 0:
+			response.errMsg = u'没有符合条件的会员'
+			return response.get_response()
 		for member_info in member_info_list:
 			member_id = member_info.member_id
 			#非会员不发放
 			if not member_id2status[member_id]:
 				continue
-			price = member_info.red_packet_money
+			price = member_info.red_packet_money * 100
 			#获取该member_id的固定openid
 			openid = member_id2openid[member_id]
 
@@ -122,7 +153,7 @@ class RedPacketGranter(resource.Resource):
 			#使用微众家帐号测试
 			print 'real price:=============>>', price
 			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
-				u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",100,1,1,1, wishing, ip,
+				u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
 				record_name,
 				u'微众家',
 				'i15uok48plm49wm37ex62qmr50hk27em')
@@ -142,20 +173,32 @@ class RedPacketGranter(resource.Resource):
 			if return_code == "SUCCESS":
 				#给该会员发送模板消息
 				app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
-				member_senders_info.append({
+				temp_dict = {
 					"openid": openid,
 					"app_url": app_url,
+					"member_id": member_id,
 					"detail_data": {
 						"task_name": record_name,
 						"prize": price,
 						"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
 					}
-				})
-		succeed_openids= send_apps_template_message(owner_id, 4, member_senders_info)
-		print "template msg sended:=============>>", succeed_openids
-		succeed_member_ids = [member_openid2id[o] for o in succeed_openids]
+				}
+				member_senders_info.append(temp_dict)
+				red_api_succeed_member2member_senders_info[member_id] = temp_dict
+		msg_succeed_member_ids= send_apps_template_message(owner_id, 4, member_senders_info)
+		red_api_succeed_member_ids = red_api_succeed_member2member_senders_info.keys()
 
-		app_models.RedPacketParticipance.objects(member_id__in=succeed_member_ids).update(set__is_already_paid=True)
+		msg_failed_member_ids = [m for m in red_api_succeed_member_ids if m not in msg_succeed_member_ids]
+
+		print "template msg failed:=============>>", msg_failed_member_ids
+
+		#更新已发放红包的会员信息
+		app_models.RedPacketParticipance.objects(member_id__in=red_api_succeed_member_ids).update(set__is_already_paid=True)
+		#更新已发放模板消息的会员信息
+		app_models.RedPacketParticipance.objects(member_id__in=msg_succeed_member_ids).update(set__msg_api_status=True)
+		#记录模板消息发送失败的会员信息
+		for m in msg_failed_member_ids:
+			app_models.RedPacketParticipance.objects(member_id=m).update(set__msg_api_failed_members_info=red_api_succeed_member2member_senders_info[m])
 		print "participances status updated"
 		response = create_response(200)
 		return response.get_response()
