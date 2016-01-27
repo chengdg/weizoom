@@ -107,35 +107,43 @@ class RedPacketGranter(resource.Resource):
 			#获取该member_id的固定openid
 			openid = member_id2openid[member_id]
 
-			red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
-				nick_name,openid,price,price,price,1, wishing, ip,
+			#生产环境
+			# red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
+			# 	nick_name,openid,price,price,price,1, wishing, ip,
+			# 	record_name,
+			# 	remark,
+			# 	weixin_pay_config.partner_key)
+
+			#使用微众家帐号测试
+			print u'实际应发金额：===============》》', price
+			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
+				u'微众家',openid,1,1,1,1, wishing, ip,
 				record_name,
 				remark,
-				weixin_pay_config.partner_key)
+				'i15uok48plm49wm37ex62qmr50hk27em')
 
-			# result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
-			# result = BeautifulSoup(result)
-			# return_code = result.return_code.text
-			# return_result = {
-			# 	'code': return_code,
-			# 	'msg': result.return_msg.text,
-			# 	'xml': red.arrayToXml()
-			# }
-            #
-			# member_info.update(set__return_result=return_result)
-			# if return_code == "SUCCESS":
+			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
+			result = BeautifulSoup(result)
+			return_code = result.return_code.text
+			return_result = {
+				'code': return_code,
+				'msg': result.return_msg.text,
+				'xml': red.arrayToXml()
+			}
 
-			#给该会员发送模板消息
-			app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
-			member_senders_info.append({
-				"openid": openid,
-				"app_url": app_url,
-				"detail_data": {
-					"task_name": record_name,
-					"prize": price,
-					"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
-				}
-			})
+			member_info.update(set__return_result=return_result)
+			if return_code == "SUCCESS":
+				#给该会员发送模板消息
+				app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
+				member_senders_info.append({
+					"openid": openid,
+					"app_url": app_url,
+					"detail_data": {
+						"task_name": record_name,
+						"prize": price,
+						"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
+					}
+				})
 		succeed_openids= send_apps_template_message(owner_id, 4, member_senders_info)
 		succeed_member_ids = [member_openid2id[o] for o in succeed_openids]
 
