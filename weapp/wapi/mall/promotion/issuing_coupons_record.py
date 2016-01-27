@@ -54,7 +54,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 			err_msg = u'获取商家身份信息失败'
 			return {
 				'success': False,
-				'coupon_id': coupon_id,
+				'coupon_id': '',
 				'errMsg': err_msg
 			}
 
@@ -139,7 +139,7 @@ class IssuingCouponsRecord(api_resource.ApiResource):
 						c_real_count += 1
 						#给用户发优惠券提示
 						#duhao 20160108 加了个first_text参数
-						send_message_to_member(coupon_rule, member_id, first_text)
+						send_message_to_member.delay(coupon_rule, member_id, first_text)
 					c_index += 1
 				if c_real_count:
 					real_person_count += 1
