@@ -121,7 +121,10 @@ class MRedPacket(resource.Resource):
 							return response.get_response()
 						curr_member_red_packet_info.reload()
 
-				is_already_participanted = curr_member_red_packet_info.has_join
+				if curr_member_red_packet_info.is_valid:
+					is_already_participanted = curr_member_red_packet_info.has_join
+				else:
+					is_already_participanted = False
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
