@@ -108,7 +108,8 @@
     </div>
 </script>
 <script type="text/javascript">
-    var cert_done = key_done = false;
+    var cert_done =  {% if cert_done %}true{% else %}false{% endif %};
+    var key_done = {% if key_done %}true{% else %}false{% endif %};
     var done_map = {
         'cert_done': '请上传证书文件',
         'key_done': '请上传证书密钥文件'
