@@ -129,12 +129,14 @@ class RedPacketGranter(resource.Resource):
 			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
 			result = BeautifulSoup(result)
 			return_code = result.return_code.text
+			return_msg = result.return_msg.text
 			return_result = {
 				'code': return_code,
-				'msg': result.return_msg.text,
+				'msg': return_msg,
 				'xml': red.arrayToXml()
 			}
 			print 'red api returned code:=============>>', return_code
+			print 'red api returned msg:=============>>', return_msg
 			member_info.update(set__return_result=return_result)
 			if return_code == "SUCCESS":
 				#给该会员发送模板消息
