@@ -254,7 +254,7 @@ Scenario:3 会员在好友页面点击“已帮好友点赞”按钮，弹出引
 	#Then tom获得蒙版提示：点击右上角，选择发送给指定好友或者朋友圈，来帮“XX”点赞
 
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @kuki
+@mall2 @apps_redpacket @apps_redpockets_frontend
 Scenario:4 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -283,21 +283,21 @@ Scenario:4 会员通过好友分享的页面进行我也要拼红包，弹出公
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom点击bill分享的拼红包活动链接
-	Then tom通过识别拼红包弹层中的公众号二维码关注jobs的公众号
+	When tom通过识别拼红包弹层中的公众号二维码关注jobs的公众号
 #	When 更新拼红包活动
 	When tom在微信中向jobs的公众号发送消息'拼红包活动1'
 	Then tom收到自动回复'拼红包活动1单图文'
 	When tom点击图文"拼红包活动1单图文"进入拼红包活动页面
 	Then tom获得jobs的拼红包活动'拼红包活动1'的内容
-	"""
+		"""
 		[{
 			"name": "拼红包活动1",
 			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
 		}]
 		"""
 	When tom点击bill分享的拼红包活动链接
-	Then tom通过识别拼红包弹层中的公众号二维码关注jobs的公众号
+	When tom通过识别拼红包弹层中的公众号二维码关注jobs的公众号
 	#tom再次通过好友分享的链接进行我也要拼红包，再次弹出公众号的二维码，通过识别二维码进入公众号
 
 
@@ -313,25 +313,25 @@ Scenario:5 好友在活动期间不能为取关会员点赞
 		[{
 			"name": "拼红包活动1",
 			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
 		}]
 		"""
 	When bill把jobs的拼红包活动链接分享到朋友圈
-	When 更新拼红包活动
+#	When 更新拼红包活动
 	When bill点击图文"拼红包活动1单图文"进入拼红包活动页面
 	Then bill获得jobs的拼红包活动'拼红包活动1'的内容
 		"""
 		[{
 			"name": "拼红包活动1",
 			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
 		}]
 		"""
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
-	When tom点击bill分享的拼红包活动链接进行我也要拼红包
-	Then tom通过识别弹层中的带参数二维码关注jobs的公众号
-	When 更新拼红包活动
+	When tom点击bill分享的拼红包活动链接
+	When tom通过识别弹层中的公众号二维码关注jobs的公众号
+#	When 更新拼红包活动
 	When tom在微信中向jobs的公众号发送消息'拼红包活动1'
 	Then tom收到自动回复'拼红包活动1单图文'
 	When tom点击图文"拼红包活动1单图文"进入拼红包活动页面
@@ -340,8 +340,8 @@ Scenario:5 好友在活动期间不能为取关会员点赞
 		[{
 			"name": "拼红包活动1",
 			"is_show_countdown": "true",
-			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
+			"rules": "获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
 		}]
 		"""
-	When tom点击bill分享的拼红包活动链接再次进行我也要拼红包
-	Then tom通过识别弹层中的带参数二维码关注jobs的公众号
+	When tom点击bill分享的拼红包活动链接
+	When tom通过识别弹层中的公众号二维码关注jobs的公众号
