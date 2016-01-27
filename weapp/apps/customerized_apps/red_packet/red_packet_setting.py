@@ -34,10 +34,20 @@ class RedPacketSetting(resource.Resource):
 		"""
 		响应GET
 		"""
+		cert_done = key_done = False
+		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=str(request.webapp_owner_id))
+		if cert_setting.count() > 0:
+			cert_setting = cert_setting.first()
+			if '' != cert_setting.cert_path:
+				cert_done = True
+			if '' != cert_setting.key_path:
+				key_done = True
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
             'third_nav_name': mall_export.MALL_APPS_REDPACKET_NAV,
+			'cert_done': cert_done,
+			'key_done': key_done
 		})
 		return render_to_response('red_packet/templates/editor/red_packet_cert_setting.html', c)

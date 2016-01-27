@@ -28,7 +28,6 @@ class RedPackets(resource.Resource):
 		cert_ready = False
 		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=str(request.webapp_owner_id))
 		if cert_setting.count() > 0:
-			print '================'
 			cert_setting = cert_setting.first()
 			if '' != cert_setting.cert_path and '' != cert_setting.key_path:
 				cert_ready = True
