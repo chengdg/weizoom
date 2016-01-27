@@ -178,13 +178,6 @@ def participate_red_packet(record_id,member_id):
 			#未成功的红包需要将is_valid置为True
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
 			try:
-				print('participate_red_packet :176')
-				temp = app_models.RedPacketParticipance.objects.get(belong_to=record_id,helped_member_id__in=member_id)
-				helped_member_ids = temp.helped_member_id
-				print('helped_member_ids')
-				print(helped_member_ids)
-				helped_member_ids.remove(member_id)
-				temp.update(set__helped_member_id=helped_member_ids)
 				# 将之前的点赞详情日志无效
 				app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
 				# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表
