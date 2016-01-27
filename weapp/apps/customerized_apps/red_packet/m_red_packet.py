@@ -61,6 +61,7 @@ class MRedPacket(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
+			print('isMember!!!!!!!!!!!!!',isMember)
 			record = app_models.RedPacket.objects(id=record_id)
 			if record.count() >0:
 				record = record.first()
@@ -91,6 +92,7 @@ class MRedPacket(resource.Resource):
 
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
 				if curr_member_red_packet_info.count()> 0:
+					print('in line 95!!!!!!!!!!!!!!!!!!!!!!!!!!')
 					curr_member_red_packet_info = curr_member_red_packet_info.first()
 					if (not curr_member_red_packet_info.is_valid) or (not curr_member_red_packet_info.has_join):
 							if fid is None or str(fid) == str(member_id):#判断分享页是否自己的主页
