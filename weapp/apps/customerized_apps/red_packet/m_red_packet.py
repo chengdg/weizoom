@@ -60,19 +60,6 @@ class MRedPacket(resource.Resource):
 		elif member:
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
-			# 统计帮助者信息
-			helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
-			member_ids = [h.helper_member_id for h in helpers]
-			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-			for h in helpers:
-				temp_dict = {
-					'member_id': h.helper_member_id,
-					'user_icon': member_id2member[h.helper_member_id].user_icon,
-					'username': member_id2member[h.helper_member_id].username_size_ten,
-					'help_money': h.help_money
-				}
-				helpers_info_list.append(temp_dict)
-
 			isMember =member.is_subscribed
 			record = app_models.RedPacket.objects(id=record_id)
 			if record.count() >0:
@@ -159,6 +146,19 @@ class MRedPacket(resource.Resource):
 
 					if curr_member_red_packet_info.helped_member_id:
 						is_helped = True if (fid in curr_member_red_packet_info.helped_member_id) and curr_member_red_packet_info.is_valid else False
+
+				# 统计帮助者信息
+				helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
+				member_ids = [h.helper_member_id for h in helpers]
+				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+				for h in helpers:
+					temp_dict = {
+						'member_id': h.helper_member_id,
+						'user_icon': member_id2member[h.helper_member_id].user_icon,
+						'username': member_id2member[h.helper_member_id].username_size_ten,
+						'help_money': h.help_money
+					}
+					helpers_info_list.append(temp_dict)
 			else:
 				response.errMsg = u'活动信息出错'
 				return response.get_response()
