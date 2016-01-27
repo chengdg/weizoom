@@ -260,7 +260,7 @@ $(document).ready(function() {
         pull_request(member_ids);
     });
     //单发红包
-    $('.xa-content').delegate('.xa-pay', 'click', function(){
+    $('body').delegate('.xa-pay', 'click', function(){
         var $this = $(this);
         var member_id = $this.attr('data-memberId');
         pull_request([member_id]);
