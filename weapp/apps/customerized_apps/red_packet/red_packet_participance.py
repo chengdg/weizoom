@@ -179,7 +179,7 @@ def participate_red_packet(record_id,member_id):
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
 			try:
 				print('participate_red_packet :176')
-				temp = app_models.RedPacketParticipance.objects.get(belong_to=record_id)
+				temp = app_models.RedPacketParticipance.objects.get(belong_to=record_id,helped_member_id__in=member_id)
 				helped_member_ids = temp.helped_member_id
 				print('helped_member_ids')
 				print(helped_member_ids)
