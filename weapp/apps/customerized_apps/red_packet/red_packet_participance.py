@@ -28,7 +28,7 @@ COUNT_PER_PAGE = 20
 class RedPacketParticipance(resource.Resource):
 	app = 'apps/red_packet'
 	resource = 'red_packet_participance'
-	
+
 	@login_required
 	def api_get(request):
 		"""
@@ -42,7 +42,7 @@ class RedPacketParticipance(resource.Resource):
 		response = create_response(200)
 		response.data = data
 		return response.get_response()
-	
+
 	def api_put(request):
 		"""
 		响应PUT
@@ -141,6 +141,7 @@ class RedPacketParticipance(resource.Resource):
 			return response.get_response()
 		helper_member_info = Member.objects.get(id=member_id)
 		help_info = {
+			'red_packet_money':round(helped_member_info.red_packet_money,2),
 			'help_money': round(random_money,2),
 			'current_money': round(helped_member_info.current_money,2),
 			'user_icon': helper_member_info.user_icon,

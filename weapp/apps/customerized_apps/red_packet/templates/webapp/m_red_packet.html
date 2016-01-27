@@ -725,7 +725,7 @@
                 //隐藏loading动画元素
                 loadingStatus(false);
                 //进度bar动画
-                runProcessBar(data);
+                runProcessBar(data.member_info.current_money,data.member_info.red_packet_money);
             },
             error: function(data) {
                 if(data.errMsg == 'is_deleted'){
@@ -740,9 +740,9 @@
             }
         });
     }
-    function runProcessBar(data){
-        var red_packet_money = data.member_info.red_packet_money;
-        var current_money = data.member_info.current_money;
+    function runProcessBar(current,total){
+        var current_money = current;
+        var red_packet_money = total;
         var process = "0%";
         if(red_packet_money==0){
             process = "0%"
@@ -937,7 +937,7 @@
                     $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     openSuccessWin();
                     //进度bar动画
-                    runProcessBar(data);
+                    runProcessBar(data.help_info.current_money,data.help_info.red_packet_money);
 
                 }else{
                     $attention.find('.xa-attention-tip').show();
