@@ -94,9 +94,9 @@ def send_apps_template_message(owner_id, send_point, member_senders_info):
 		if mpuser_access_token:
 			weixin_api = get_weixin_api(mpuser_access_token)
 			for member_info in member_senders_info:
-				openid = member_info.openid
-				app_url = member_info.app_url
-				detail_data = member_info.detail_data
+				openid = member_info['openid']
+				app_url = member_info['app_url']
+				detail_data = member_info['detail_data']
 				try:
 					message = _get_apps_send_message_dict(openid, app_url, template_message, detail_data)
 					weixin_api.send_template_message(message, True)

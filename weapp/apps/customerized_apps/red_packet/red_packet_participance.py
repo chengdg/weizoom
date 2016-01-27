@@ -195,21 +195,12 @@ def participate_red_packet(record_id,member_id):
 				random_total_money = float(red_packet_info.random_total_money)
 				random_packets_number = float(red_packet_info.random_packets_number)
 				random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
-				print('random_average')
-				print(random_average)
-				print('all_participate.count()')
-				print(all_participate.count())
 				if all_participate.count() == 0:
 					#如果除不尽，把除不尽的分数加给第一个人
-					print('111111111111111')
 					if random_average*random_packets_number != random_total_money:
 						need_fix_number = random_total_money-random_average*random_packets_number
 						random_average = random_average+need_fix_number
-						print('random_average')
-						print(random_average)
 				red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
-				print('red_packet_money')
-				print(red_packet_money)
 				red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
 			else:
 				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
