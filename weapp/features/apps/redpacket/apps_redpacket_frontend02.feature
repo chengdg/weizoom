@@ -35,39 +35,39 @@ Background:
 			"start_date":"今天",
 			"end_date":"明天",
 			"is_show_countdown":"ture",
-			"red_packet":[{
+			"red_packet":{
 				"type":"random",
-				"total_amount":"100",
-				"packet_num":"2"	
-			}],
+				"random_total_money":"100",
+				"random_packets_number":"2",
+				"regular_packets_number":"",
+				"regular_per_money":""
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"拼红包",
 			"qr_code":"",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
-			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		},{
 			"name":"拼红包活动2",
 			"start_date":"昨天",
 			"end_date":"两天后",
 			"is_show_countdown":"false",
-			"red_packet":[{
+			"red_packet":{
 				"type":"normal",
-				"packet_num":"2",
-				"single_packet_amount":"10"
-			}]
+				"random_total_money":"",
+				"random_packets_number":"",
+				"regular_packets_number":"1",
+				"regular_per_money":"10"
+			},
 			"contribution_start_range":"0.5",
 			"contribution_end_range":"1.5",
 			"reply":"拼红包",
 			"qr_code":"带参数二维码1",
-			"license":"apiclient_cert.pem",
-			"license_key":"apiclient_key.pem",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放",
 			"share_pic":"1.jpg",
-			"share_describe":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
+			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 
 		}]
 		"""
@@ -118,7 +118,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数二维码）
 	#非会员tom点击会员bill分享的链接为bill点赞，弹层显示公众号二维码
 	#tom关注jobs的公众号
@@ -130,7 +130,7 @@ Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数
 	When bill点击图文"拼红包活动1单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动1"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动1",
 			"is_show_countdown":"true",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
@@ -155,7 +155,7 @@ Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数
 	When bill点击图文"拼红包活动1单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动1"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动1",
 			"is_show_countdown":"true",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
@@ -166,7 +166,7 @@ Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数
 		| name |
 		| tom  |
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二维码）
 	#非会员tom点击会员bill分享的链接为bill点赞，弹层显示带参数二维码
 	#tom关注jobs的公众号
@@ -178,7 +178,7 @@ Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
@@ -203,7 +203,7 @@ Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
@@ -215,7 +215,7 @@ Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二
 		| tom  |
 
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:3 非会员通过会员分享的活动链接参加活动
 	#非会员tom点击会员bill分享的活动链接参加活动，弹层显示公众号二维码
 	#tom分享活动页到朋友圈
@@ -239,7 +239,7 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
 	When tom点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then tom获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
@@ -256,7 +256,7 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
   	#Then bill进入"拼红包活动2"的个人活动页
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
@@ -268,7 +268,7 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
 		[]
 		"""
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点赞，取消关注后已贡献好友列表汇总仍显示该会员，按钮状态“已帮XX好友点赞”，点击按钮弹层显示公众号二维码
 	#会员tom点击会员bill分享的链接为bill点赞
 	#tom取消关注jobs的公众号
@@ -312,7 +312,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 	Then bill获得"拼红包活动2"的已贡献好友列表
 		| name |
 		| tom  |
-	
+
 	When tom取消关注jobs的公众号
 	#tom取消关注后，bill活动页面的已贡献好友列表中仍然显示tom
 	When bill访问jobs的weapp
@@ -342,7 +342,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
@@ -353,7 +353,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 		| name |
 		| tom  |
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:5 会员参与拼红包活动，红包已领完
 	#会员bill参与"拼红包活动1"领取红包
 	When bill关注jobs的公众号
@@ -401,7 +401,7 @@ Scenario:5 会员参与拼红包活动，红包已领完
 	When jack点击图文"拼红包活动1单图文"进入拼红包活动页面
 	Then jack获得弹层提示信息'红包已被抢完啦<br />下次早点来哦'
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 	When jobs新建拼红包活动
 		"""
@@ -442,7 +442,7 @@ Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 			"share_pic":"pic.jpg",
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
-		"""	
+		"""
 	When jobs已添加单图文
 		"""
 		[{
@@ -531,7 +531,7 @@ Scenario:6 会员参与'未开始'和'已结束'的拼红包活动
 		"""
 	#Then tom获得按钮提示信息'活动已结束'
 
-@mall2 @apps_red_packet @apps_red_packet_frontend
+@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号，重新参与拼红包活动,好友可以为其再次点赞
 	#bill关注jobs的公众号，参与拼红包活动
 	#bill取消关注jobs的公众号，查看活动页
@@ -565,7 +565,7 @@ Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
@@ -580,7 +580,7 @@ Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号
 	#Then bill获得弹层提示信息"请先关注公众号"
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
@@ -599,7 +599,7 @@ Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放现金奖励"
@@ -621,7 +621,7 @@ Scenario:7 会员参与活动，好友为其点赞，会员取消关注公众号
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	Then bill获得jobs的"拼红包活动2"的内容
 		"""
-		[{	
+		[{
 			"name":"拼红包活动2",
 			"is_show_countdown":"false",
 			"rules":"获奖条件必须要在活动时间内攒够红包金额<br />点赞达到红包金额，系统会自动发放"
