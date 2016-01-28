@@ -548,14 +548,14 @@
     <!-- 个人引导 -->
     <div class="xui-attention xa-attention-member none">
         <div class="xui-twoDimensionBox">
-            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;">
+            <div class="xa-attention-tip-one" style="margin-left: 8px;margin-right: 5px;margin-top: 32px;margin-bottom: 8px;">
                 <div style="text-align:center">长按二维码进入公众号</div>
-                <div style="text-align:center">获取你自己的专属页，</div>
+                <div style="text-align:center">
+                    <p>回复：</p><div class="wui-win-font-color" style="display: inline;">“{{ reply_content|safe }}”，即可参加活动</div>
+                </div>
             </div>
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
-            <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;">
-                分享到朋友圈,发动小伙伴帮你点赞赢红包！
-            </div>
+            <div class="xa-attention-reply" style="margin-left:8px;margin-right: 5px;margin-top: 5px;"></div>
             <div class="xui-closeBtn xa-closeBtn"></div>
         </div>
     </div>
