@@ -72,8 +72,8 @@ class Order(api_resource.ApiResource):
 				'weizoom_card_money': '%.2f' % order.weizoom_card_money,
 				'final_price': '%.2f' % order.final_price,
 				'ship_info': ship_info,
-				'ship_info': ship_name,
-				'ship_info': ship_tel,
+				'ship_name': ship_name,
+				'ship_tel': ship_tel,
 				'products': products
 			})
 
