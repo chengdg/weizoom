@@ -19,6 +19,28 @@ Background:
 			"name": "分类3"
 		}]
 		"""
+	And jobs已添加商品规格
+		"""
+		[{
+			"name": "颜色",
+			"type": "图片",
+			"values": [{
+				"name": "黑色",
+				"image": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}, {
+				"name": "白色",
+				"image": "/standard_static/test_resource_img/hangzhou2.jpg"
+			}]
+		}, {
+			"name": "尺寸",
+			"type": "文字",
+			"values": [{
+				"name": "M"
+			}, {
+				"name": "S"
+			}]
+		}]
+		"""
 	When jobs已添加支付方式
 		"""
 		[{
@@ -240,4 +262,370 @@ Scenario:3 添加商品按倒序排列
 	Then bill能获取商品列表
 		"""
 		[]
+		"""
+
+# __author__ : "冯雪静"
+@mall2 @product @addProduct
+Scenario:4 添加有会员折扣的商品
+	jobs添加会员折扣的商品后，能获取他添加的商品
+
+	#系统默认一个会员等级"普通会员"、"自动升级"、
+	#"所有关注过您的公众号的用户"、"购物折扣：10.0"
+	When jobs添加会员等级
+		"""
+		[{
+			"name": "铜牌会员",
+			"upgrade": "手动升级",
+			"discount": "9"
+		}, {
+			"name": "银牌会员",
+			"upgrade": "手动升级",
+			"discount": "8"
+		}, {
+			"name": "金牌会员",
+			"upgrade": "手动升级",
+			"discount": "7"
+		}]
+		"""
+
+	#添加的商品使用了会员等级折扣
+	Given jobs登录系统
+	When jobs已添加商品
+		"""
+		[{
+			"name": "商品1",
+			"price": 100.00,
+			"is_member_product": "on",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			}
+		}, {
+			"name": "商品2",
+			"is_member_product": "on",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 300,
+						"stock_type": "无限"
+					},
+					"S": {
+						"price": 300,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
+	Then jobs能获取商品'商品1'
+		"""
+		{
+			"name": "商品1",
+			"is_member_product": "on",
+			"model": {
+				"models": {
+					"standard": {
+						"price": 100.00,
+						"stock_type": "有限",
+						"stocks": 2
+					}
+				}
+			}
+		}
+		"""
+	Then jobs能获取商品'商品2'
+		"""
+		{
+			"name": "商品2",
+			"is_member_product": "on",
+			"is_enable_model": "启用规格",
+			"model": {
+				"models":{
+					"M": {
+						"price": 300,
+						"stock_type": "无限"
+					},
+					"S": {
+						"price": 300,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}
+		"""
+
+#_author_:王丽 2016.01.20
+@mall2 @product @addProduct
+Scenario:5 添加'配送时间'配置的商品
+	Jobs添加商品后，能获取他添加的商品
+
+	Given jobs登录系统
+	When jobs已添加商品
+		"""
+		[{
+			"name": "红烧肉",
+			"category": "",
+			"price": 12.0,
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"introduction": "红烧肉的简介",
+			"detail": "红烧肉的详情",
+			"shelve_type": "上架",
+			"stock_type": "有限",
+			"stocks": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5.5,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			},
+			"postage": "免运费",
+			"distribution_time":"on"
+		}]
+		"""
+	Then jobs能获取商品'红烧肉'
+		"""
+		{
+			"name": "红烧肉",
+			"category": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"detail": "红烧肉的详情",
+			"shelve_type": "上架",
+			"stock_type": "有限",
+			"stocks": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5.5,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			},{
+				"type": "货到付款"
+			}],
+			"postage": "免运费",
+			"distribution_time":"on"
+		}
+		"""
+
+	When jobs已添加商品
+		"""
+		[{
+			"name": "红烧肉-无配送时间",
+			"category": "",
+			"price": 12.0,
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"introduction": "红烧肉的简介",
+			"detail": "红烧肉的详情",
+			"shelve_type": "上架",
+			"stock_type": "有限",
+			"stocks": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5.5,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			},
+			"postage": "免运费",
+			"distribution_time":"off"
+		}]
+		"""
+	Then jobs能获取商品'红烧肉-无配送时间'
+		"""
+		{
+			"name": "红烧肉-无配送时间",
+			"category": "",
+			"thumbnails_url": "/standard_static/test_resource_img/hangzhou1.jpg",
+			"pic_url": "/standard_static/test_resource_img/hangzhou2.jpg",
+			"detail": "红烧肉的详情",
+			"shelve_type": "上架",
+			"stock_type": "有限",
+			"stocks": 3,
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 12.0,
+						"weight": 5.5,
+						"stock_type": "有限",
+						"stocks": 3
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			},{
+				"type": "货到付款"
+			}],
+			"postage": "免运费",
+			"distribution_time":"off"
+		}
+		"""
+
+#_author_:张三香 2016.01.20
+@mall2 @product @addProduct
+Scenario:6 添加无规格新商品,支持开票
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "支持开票商品",
+			"category": "",
+			"detail": "商品的详情",
+			"status": "待售",
+			"invoice":true,
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.0,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}]
+		"""
+	Then jobs能获取商品'支持开票商品'
+		"""
+		{
+			"name": "支持开票商品",
+			"category": "",
+			"detail": "商品的详情",
+			"invoice":true,
+			"is_use_custom_model": "否",
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.0,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}
+		"""
+
+@mall2 @product @addProduct 
+Scenario:7 添加多规格新商品,支持开票
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "多规格支持开票",
+			"is_enable_model": "启用规格",
+			"invoice":true,
+			"model": {
+				"models": {
+					"黑色 S": {
+						"price": 10.0,
+						"weight": 3.1,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 S": {
+						"price": 9.1,
+						"weight": 1.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}]
+		"""
+	Then jobs能获取商品'多规格支持开票'
+		"""
+		{
+			"is_enable_model": "启用规格",
+			"invoice":true,
+			"model": {
+				"models": {
+					"黑色 S": {
+						"price": 10.0,
+						"weight": 3.1,
+						"stock_type": "有限",
+						"stocks": 3
+					},
+					"白色 S": {
+						"price": 9.1,
+						"weight": 1.0,
+						"stock_type": "无限"
+					}
+				}
+			}
+		}
+		"""
+
+@mall2 @product @addProduct 
+Scenario:8 添加新商品,不支持开票
+	Given jobs登录系统
+	And jobs已添加商品
+		"""
+		[{
+			"name": "不支持开票商品",
+			"category": "",
+			"detail": "商品的详情",
+			"status": "待售",
+			"invoice":false,
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.0,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}]
+		"""
+	Then jobs能获取商品'不支持开票商品'
+		"""
+		{
+			"name": "不支持开票商品",
+			"category": "",
+			"detail": "商品的详情",
+			"invoice":false,
+			"is_use_custom_model": "否",
+			"model": {
+					"models": {
+						"standard": {
+							"price": 12.0,
+							"weight": 5.5,
+							"stock_type": "有限",
+							"stocks": 3
+						}
+					}
+				}
+		}
 		"""

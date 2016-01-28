@@ -404,7 +404,10 @@ def export_orders_json(request):
             if fackorder and 0 != fackorder.supplier:
                 source = order2supplier[fackorder.supplier].name.encode("utf-8")
             elif fackorder == None and 0 != order.supplier:
-                source = order2supplier[order.supplier].name.encode("utf-8")
+                if order2supplier.has_key(order.supplier):
+                    source = order2supplier[order.supplier].name.encode("utf-8")
+                else:
+                    source = ""
 
             if i == 0:
                 # 发货人处填写的备注

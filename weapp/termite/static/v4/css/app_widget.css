@@ -1645,6 +1645,8 @@ li.wui-selectBox-display-table {
     border-radius: 1px;
     width: 78%;
     height: 2.5rem;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
@@ -1771,7 +1773,7 @@ li.wui-selectBox-display-table {
     font-size: large;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-title-box .wui-i-title{
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
 .wui-red_packet-container .wui-i-rules-contentbox .wui-i-content-box{
     color: #3D3C35;

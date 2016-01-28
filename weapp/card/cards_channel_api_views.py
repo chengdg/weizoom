@@ -221,7 +221,6 @@ def get_channel_cards(sort_attr,filter_value,cur_page=None,count_per_page=None,q
 
     if cur_page:
         pageinfo, user2card = paginator.paginate(user2card, cur_page, count_per_page, query_string)
-    print user2card,"user2card"
     channel = OrderedDict()
     for card in user2card:
         channel_card = card[1]
@@ -236,7 +235,6 @@ def get_channel_cards(sort_attr,filter_value,cur_page=None,count_per_page=None,q
             'start_date': start_date,
             'end_date': end_date
         }
-    print channel,"channel"
     channel = sort_channel(sort_attr,channel)
     # if sort_attr == "-use_money":
     #     #channel按消费金额倒序
@@ -396,7 +394,6 @@ def get_channel_details(filter_value,owner_id=None,start_date="",end_date="",cur
                 if card2money:
                     for key,value in card2money.items():
                         for k,v in value.items():
-                            print v
                             if v >= low_money and v <= high_money and v != 0:
                                 orderids.append(key)
                     if orderids:
@@ -423,8 +420,6 @@ def get_channel_details(filter_value,owner_id=None,start_date="",end_date="",cur
                     #     order_ids.append(r.order_id)
                     card_orders = card_orders.filter(order_id__in=order_ids,event_type="使用")
         card_orders = card_orders.filter(**filter_data_args).exclude(order_id=-1).order_by('-created_at')
-        print filter_data_args
-        print card_orders,"print card_orders"
     else:
         card_orders = card_orders.filter(event_type="使用")
     # order2card_id = OrderedDict()
@@ -577,7 +572,6 @@ def get_channel_details(filter_value,owner_id=None,start_date="",end_date="",cur
             for card_order in  orders:
                 card_id = card_order['card_id']
                 card_order.update(weizoom_cards[card_id])
-    print order2card_id
     if cur_page:
         return order2card_id,pageinfo,cur_event_type
     else:

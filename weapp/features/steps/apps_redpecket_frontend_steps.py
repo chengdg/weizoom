@@ -199,47 +199,12 @@ def step_tmpl(context, webapp_user_name, red_packet_rule_name):
 
 	bdd_util.assert_list(expected, actual)
 
-# @when(u"微信用户批量参加{webapp_owner_name}的拼红包活动")
-# def step_impl(context, webapp_owner_name):
-# 	for row in context.table:
-# 		webapp_user_name = row['member_name']
-# 		if webapp_user_name[0] == u'-':
-# 			webapp_user_name = webapp_user_name[1:]
-# 			#clear last member's info in cookie and context
-# 			context.execute_steps(u"When 清空浏览器")
-# 		else:
-# 			context.execute_steps(u"When 清空浏览器")
-# 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_user_name, webapp_owner_name))
-# 		data = {
-# 			'webapp_user_name': webapp_user_name,
-# 			'red_packet_value': row['red_packet_value'],
-# 			'parti_time': bdd_util.get_datetime_str(row['parti_time']),
-# 			'name': row['name']
-# 		}
-# 		webapp_owner_id = context.webapp_owner_id
-# 		user = User.objects.get(id=webapp_owner_id)
-# 		openid = "%s_%s" % (webapp_user_name, user.username)
-# 		red_packet_rule_id = str(__get_red_packet_rule_id(data['name']))
-# 		member = member_api.get_member_by_openid(openid, context.webapp_id)
-# 		#先进入拼红包页面
-# 		response = __get_into_red_packet_pages(context,webapp_owner_id,red_packet_rule_id,openid)
-# 		context.red_packet_rule_id = red_packet_rule_id
-# 		context.api_response = __get_red_packet_informations(context,webapp_owner_id,red_packet_rule_id,openid).content
-# 		context.execute_steps(u"when %s把%s的拼红包活动链接分享到朋友圈" % (webapp_user_name, webapp_owner_name))
-# 		powered_member_info = RedPacketParticipance.objects.get(member_id=member.id, belong_to=red_packet_rule_id)
-# 		powered_member_info.update(set__created_at=data['parti_time'])
-# 		i = 0
-# 		webapp_test_user_name = 'test_user_'
-# 		while i < int(data['red_packet_value']):
-# 			i += 1
-# 			context.execute_steps(u"When 清空浏览器")
-# 			context.execute_steps(u"When %s关注%s的公众号" % (webapp_test_user_name+str(i), webapp_owner_name))
-# 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_test_user_name+str(i), webapp_owner_name))
-# 			context.execute_steps(u"When %s点击%s分享的拼红包活动链接进行助力" % (webapp_test_user_name+str(i), webapp_user_name))
-# 	context.execute_steps(u"When 更新助力排名")
-
 @then(u'{webapp_user_name}获得拼红包活动提示"{err_msg}"')
 def step_tmpl(context, webapp_user_name, err_msg):
 	expected = err_msg
 	actual = context.err_msg
 	context.tc.assertEquals(expected, actual)
+
+@When(u'更新拼红包信息')
+def step_impl(context):
+	pass

@@ -29,14 +29,14 @@ COUNT_PER_PAGE = 20
 class RedPacketParticipances(resource.Resource):
 	app = 'apps/red_packet'
 	resource = 'red_packet_participances'
-	
+
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
 		has_data = app_models.RedPacketParticipance.objects(belong_to=request.GET['id']).count()
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
@@ -45,14 +45,15 @@ class RedPacketParticipances(resource.Resource):
 			'has_data': has_data,
 			'activity_id': request.GET['id']
 		});
-		
+
 		return render_to_response('red_packet/templates/editor/red_packet_participances.html', c)
-	
+
 	@staticmethod
 	def get_datas(request):
 		name = request.GET.get('participant_name', '')
 		red_packet_status = request.GET.get('red_packet_status', '-1')
 		is_already_paid = request.GET.get('is_already_paid', '-1')
+		is_subscribed = request.GET.get('is_subscribed',-1)
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
 		if name:
@@ -101,8 +102,15 @@ class RedPacketParticipances(resource.Resource):
 				params['is_already_paid'] = False
 			else:
 				params['is_already_paid'] = ''#进行中没有失败
-		
+
+		member_id2subscribe = {m.id: m.is_subscribed for m in member_models.Member.objects.filter(id__in=member_ids_for_show)}
 		datas = app_models.RedPacketParticipance.objects(**params).order_by('-id','created_at')
+
+		if is_subscribed == '1':
+			datas = [d for d in datas if member_id2subscribe[d.member_id]]
+		elif is_subscribed == '0':
+			datas = [d for d in datas if not member_id2subscribe[d.member_id]]
+
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
@@ -138,13 +146,15 @@ class RedPacketParticipances(resource.Resource):
 				'is_already_paid': u'发放' if data.is_already_paid else u'未发放',
 				'msg_api_status': u'成功' if data.msg_api_status else u'失败',
 				'red_packet_status_text': red_packet_status_text, #红包状态
-				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				'is_subscribed':member_id2subscribe[data.member_id]
+
 			})
 		if export_id:
 			return items
 		else:
 			return pageinfo, items
-	
+
 	@login_required
 	def api_get(request):
 		"""

@@ -72,3 +72,5 @@ weapp/.idea/*
 
 weapp/.idea/
 weapp/static/coupon_qrcode/
+weapp/apps/customerized_apps/red_packet/upload/owner_id3/apiclient_cert.pem
+weapp/apps/customerized_apps/red_packet/upload/owner_id3/apiclient_key.pem
