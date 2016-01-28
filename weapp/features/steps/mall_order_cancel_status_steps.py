@@ -172,7 +172,8 @@ def _get_coupon_status_by(coupon):
 		COUPON_STATUS_UNUSED: u'未使用',
 		COUPON_STATUS_USED: u'已使用',
 		COUPON_STATUS_EXPIRED: u'已过期',
-		COUPON_STATUS_DISCARD: u'作废'
+		COUPON_STATUS_DISCARD: u'作废',
+		COUPON_STATUS_UNGOT: u'未领取'
 	}
 	return STATUS[coupon.status]
 
