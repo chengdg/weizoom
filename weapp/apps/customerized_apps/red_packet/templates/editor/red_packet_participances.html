@@ -146,19 +146,20 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr" data-memberId="${item.member_id}">
 				<td class="tl pl25" style="position:relative;">
-                    <div class="follow_status" style="width:60px;
-                    height:20px;
-                    background-color:black;
-                    position:absolute;
-                    top:49px;
-                    float:left;
-                    opacity:0.5;
-                    text-align:center;
-                    color:white;
-                    line-height: 20px;">
-                    {{if (item.is_subscribed== true)}}已关注{{/if}}
-                    {{if (item.is_subscribed== false)}}取消关注{{/if}}
-                    </div>
+                    {{if (item.is_subscribed== false)}}
+                        <div class="follow_status" style="width:60px;
+                            height:20px;
+                            background-color:black;
+                            position:absolute;
+                            top:49px;
+                            float:left;
+                            opacity:0.5;
+                            text-align:center;
+                            color:white;
+                            line-height: 20px;">
+                            取消关注
+                        </div>
+                    {{/if}}
 					<img width=60 height=60 src="${item.participant_icon}" />
 					{{html item.participant_name}}
 				</td>
@@ -182,7 +183,7 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed === 'true')}}
+					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed === 'True')}}
 					<a href="javascript:void(0)" class="xa-pay" data-id="${item.id}" data-memberId="${item.member_id}">发放</a>
 					{{/if}}
 					{{if (item.is_already_paid === '发放' && item.msg_api_status === '失败')}}
