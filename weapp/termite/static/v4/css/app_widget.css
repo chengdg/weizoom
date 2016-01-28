@@ -1638,13 +1638,15 @@ li.wui-selectBox-display-table {
 .wui-red_packet-container .wui-i-btngroup button{
     text-align: center;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 0.8rem;
     color:#CD0E06;
     background:#FFC600;
     border: 0;
     border-radius: 1px;
     width: 78%;
     height: 2.5rem;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
