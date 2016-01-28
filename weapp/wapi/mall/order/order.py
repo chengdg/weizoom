@@ -71,7 +71,7 @@ class Order(api_resource.ApiResource):
 				ship_info = '%s %s' % (area, order.ship_address)
 
 			products = []
-			for relation in order_id2relations[order.order_id]:
+			for relation in order_id2relations[order.id]:
 				product_id = relation.product_id
 				# product = id2product[product_id]
 				products.append({
