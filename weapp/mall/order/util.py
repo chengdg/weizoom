@@ -977,7 +977,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
-            'parent_action': parent_action
+            'parent_action': parent_action,
+            'is_first_order': order.is_first_order
         })
 
     return items, pageinfo, order_return_count
@@ -997,6 +998,7 @@ def __get_select_params(request):
     order_status = request.GET.get('order_status', '').strip()
     isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
     date_interval_type = request.GET.get('date_interval_type', '')
+    is_first_order = request.GET.get('buyer_type', '').strip()
 
     # 填充query
     query_dict = dict()
@@ -1018,6 +1020,8 @@ def __get_select_params(request):
         query_dict['status'] = int(order_status)
     if isUseWeizoomCard:
         query_dict['isUseWeizoomCard'] = isUseWeizoomCard
+    if len(is_first_order) and is_first_order != '-1':
+        query_dict['is_first_order'] = int(is_first_order)
 
      # 时间区间
     try:

@@ -220,6 +220,7 @@
 					</td>
 					<td width="100" rowspan="${order.groups.length}">
 						{{if order.member_id > 0}}
+							{{if order.is_first_order }}{{/if}}
 							<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
 							<span class="xui-buyerHint xa-buyerHint pr">
 								<i class="xa-buyerHintImg"
