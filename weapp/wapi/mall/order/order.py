@@ -44,7 +44,7 @@ class Order(api_resource.ApiResource):
 		pageinfo, datas = paginator.paginate(orders, cur_page, count_per_page)
 		order_ids = []
 		for order in datas:
-			order_ids.append(order.order_id)
+			order_ids.append(order.id)
 
 		# product_ids = []
 		order_id2relations = {}
