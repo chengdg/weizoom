@@ -806,8 +806,8 @@
         if(page_owner_icon!=""){
             $('.xa-i-avatar_circle').find('img').attr('src', page_owner_icon);
         }
-        if(mp_user_head_img!=""){
-            $('.wui-i-shop_circle').find('img').attr('src', mp_user_head_img);
+        if(data.member_info.mpUserHeadImg!=""){
+            $('.wui-i-shop_circle').find('img').attr('src', data.member_info.mpUserHeadImg);
         }
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
