@@ -45,11 +45,11 @@
             <thead></thead>
             <tbody>
                 <tr>
-                    <td><i>*</i> 证书pem格式<b class="xa-cert-name">{{ cert_name }}</b></td>
+                    <td><i>*</i> 证书pem格式<b class="xa-cert-name">{% if cert_name %}{{ cert_name }}{% endif %}</b></td>
                     <td><input type="file" id="cert-file"></td>
                 </tr>
                 <tr>
-                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name">{{ key_name }}</b></td>
+                    <td><i>*</i> 证书密钥pem格式<b class="xa-key-name">{% if key_name %}{{ key_name }}{% endif %}</b></td>
                     <td><input type="file" id="key-file"></td>
                 </tr>
             </tbody>

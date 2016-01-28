@@ -134,10 +134,12 @@ class RedPacketGranter(resource.Resource):
 		if len(member_info_list) <= 0:
 			response.errMsg = u'没有符合条件的会员'
 			return response.get_response()
+		result_data = {}
 		for member_info in member_info_list:
 			member_id = member_info.member_id
 			#非会员不发放
 			if not member_id2status[member_id]:
+				result_data[member_id] = u'非会员不予发放红包'
 				continue
 			price = int(member_info.red_packet_money * 100)
 			#获取该member_id的固定openid
@@ -160,25 +162,39 @@ class RedPacketGranter(resource.Resource):
 
 			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
 			result = BeautifulSoup(result)
+			print '999999999999999999999999'
+			print result
 			return_code = result.return_code.text
 			return_msg = result.return_msg.text
+
 			print 'red api returned code:=============>>', return_code
 			print 'red api returned msg:=============>>', return_msg
 			if return_code == "SUCCESS":
-				#给该会员发送模板消息
-				app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
-				temp_dict = {
-					"openid": openid,
-					"app_url": app_url,
-					"member_id": member_id,
-					"detail_data": {
-						"task_name": record_name,
-						"prize": price,
-						"finished_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
+				result_code = result.result_code.text
+				print 'red api result code:=============>>', result_code
+				if result_code == "SUCCESS":
+					#给该会员发送模板消息
+					app_url = 'http://%s/m/apps/red_packet/m_red_packet/?webapp_owner_id=%s&id=%s' % (settings.DOMAIN, owner_id, record_id)
+					temp_dict = {
+						"openid": openid,
+						"app_url": app_url,
+						"member_id": member_id,
+						"detail_data": {
+							"task_name": record_name,
+							"prize": u"￥ %.2f" % (price/100.0),
+							"finish_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M")
+						}
 					}
-				}
-				member_senders_info.append(temp_dict)
-				red_api_succeed_member2member_senders_info[member_id] = temp_dict
+					member_senders_info.append(temp_dict)
+					red_api_succeed_member2member_senders_info[member_id] = temp_dict
+					result_data[member_id] = u'现金红包发放成功!'
+				else:
+					result_msg = result.err_code_des.text
+					print 'red api result msg:=============>>', result_msg
+					result_data[member_id] = result_msg
+			else:
+				response.errMsg = return_msg
+				return response.get_response()
 		msg_succeed_member_ids= send_apps_template_message(owner_id, 4, member_senders_info)
 		red_api_succeed_member_ids = red_api_succeed_member2member_senders_info.keys()
 
@@ -195,4 +211,5 @@ class RedPacketGranter(resource.Resource):
 			app_models.RedPacketParticipance.objects(member_id=m).update(set__msg_api_failed_members_info=red_api_succeed_member2member_senders_info[m])
 		print "participances status updated"
 		response = create_response(200)
+		response.data = result_data
 		return response.get_response()
