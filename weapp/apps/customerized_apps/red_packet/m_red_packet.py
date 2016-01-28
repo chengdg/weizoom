@@ -351,10 +351,11 @@ def update_be_member_help_details(record_id):
 	red_packet_member_ids = [p.helper_member_id for p in red_packet_logs]
 	member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=red_packet_member_ids)}
 
-	need_be_add_logs = [p for p in red_packet_logs if member_id2subscribe[p.helper_member_id]]
-	red_packet_log_ids = [p.id for p in need_be_add_logs]
-	be_helped_member_ids = [p.be_helped_member_id for p in need_be_add_logs]
+	need_be_add_logs_list = [p for p in red_packet_logs if member_id2subscribe[p.helper_member_id]]
+	red_packet_log_ids = [p.id for p in need_be_add_logs_list]
+	be_helped_member_ids = [p.be_helped_member_id for p in need_be_add_logs_list]
 
+	need_be_add_logs = app_models.RedPacketLog.objects(be_helped_member_id__in=be_helped_member_ids)
 	#计算点赞金额值
 	need_helped_member_id2money = {}
 	for m_id in be_helped_member_ids:
@@ -372,7 +373,7 @@ def update_be_member_help_details(record_id):
 			need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
 
 	#更新已关注会员的点赞详情
-	detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs]
+	detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs_list]
 	app_models.RedPacketDetail.objects(belong_to=record_id, helper_member_id__in=detail_helper_member_ids).update(set__has_helped=True)
 	need_del_red_packet_logs_ids += red_packet_log_ids
 
