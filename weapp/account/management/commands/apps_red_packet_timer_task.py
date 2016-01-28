@@ -21,20 +21,6 @@ class Command(BaseCommand):
 		@return:
 		"""
 		print 'red_packet timer task start...'
-		l = len(args)
-		if l == 1:
-			action = args[0]
-			if action == 'clear':
-				delete_pattern("apps_red_packet_*")
-				print 'delete all cache those have the prefix apps_red_packet_'
-				return
-		elif l == 2:
-			action = args[0]
-			if action == 'clear':
-				red_packet_id = args[1]
-				delete_cache("apps_red_packet_"+str(red_packet_id))
-				print 'delete cache names apps_red_packet_'+str(red_packet_id)
-				return
 
 		start_time = time.time()
 
@@ -42,12 +28,20 @@ class Command(BaseCommand):
 		所有取消关注的用户，设置为未参与，参与记录无效，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
 		:param record_id: 活动id
 		"""
-		record_id = str(record_id)
-		all_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True)
-		all_member_red_packet_info_ids = [p.member_id for p in all_member_red_packets_info]
-		need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=False)]
-		need_clear_participances = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids)
+		all_records = app_models.RedPacket.objects(status__ne=0)
+		record_id2members = {}
+		all_member_ids = []
+		for p in app_models.RedPacketParticipance.objects(has_join=True):
+			all_member_ids.append(p.member_id)
+			if record_id2members.has_key(p.belong_to):
+				record_id2members[p.belong_to].append(p)
+			else:
+				record_id2members[p.belong_to] = [p]
+
+		need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_ids, is_subscribed=False)]
+		need_clear_participances = app_models.RedPacketParticipance.objects(member_id__in=need_clear_member_ids)
 		need_clear_participances.update(set__has_join=False,set__is_valid=False)
+
 
 		red_packet_info = app_models.RedPacket.objects.get(id=record_id)
 		type = red_packet_info.type
@@ -104,6 +98,10 @@ class Command(BaseCommand):
 			need_helped_member_info = app_models.RedPacketParticipance.objects(belong_to=record_id,member_id=m_id)
 			if not need_helped_member_info.first().red_packet_status: #如果红包已经拼成功，则不把钱加上去
 				need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
+				need_helped_member_info.reload()
+				#最后一个通过非会员参与完成目标金额，设置红包状态为成功
+				if need_helped_member_info.current_money == need_helped_member_info.red_packet_money:
+					need_helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
 
 		#更新已关注会员的点赞详情
 		detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs_list]

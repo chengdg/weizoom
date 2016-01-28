@@ -37,8 +37,8 @@ class RedPacketGranter(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		record_id = request.POST.get('id', None)
-		member_id = request.POST.get('member_id', None)
+		record_id = request.GET.get('id', None)
+		member_id = request.GET.get('member_id', None)
 		response = create_response(500)
 		if not record_id or not member_id:
 			response.errMsg = u'活动信息出错,请重试~'
