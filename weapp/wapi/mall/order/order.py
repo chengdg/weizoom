@@ -58,7 +58,7 @@ class Order(api_resource.ApiResource):
 			for relation in order_id2relations[order.id]:
 				product_id = relation.product_id
 				products.append({
-					'supplier_name': supplier_id2name[relation.product.supplier],
+					'supplier_name': supplier_id2name.get(relation.product.supplier, ''),
 					'product_name': relation.product.name,
 					'price': relation.price,
 					'number': relation.number
