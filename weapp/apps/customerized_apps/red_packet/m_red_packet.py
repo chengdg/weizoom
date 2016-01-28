@@ -34,6 +34,22 @@ class MRedPacket(resource.Resource):
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
 			return response.get_response()
+		record = record.first()
+
+		#获取活动状态
+		activity_status = record.status_text
+
+		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+		data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
+		data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
+		if data_start_time <= now_time and now_time < data_end_time:
+			record.update(set__status=app_models.STATUS_RUNNING)
+			activity_status = u'进行中'
+		elif now_time >= data_end_time:
+			record.update(set__status=app_models.STATUS_STOPED)
+			activity_status = u'已结束'
+
+		project_id = 'new_app:red_packet:%s' % record.related_page_id
 
 		isMember = False
 		timing = 0
@@ -48,7 +64,6 @@ class MRedPacket(resource.Resource):
 		page_owner_member_id = 0
 		red_packet_money = 0
 		current_money = 0
-		activity_status = u"未开始"
 		helpers_info_list = []
 
 		# fid = request.COOKIES['fid']
@@ -61,137 +76,81 @@ class MRedPacket(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
-			record = app_models.RedPacket.objects(id=record_id)
-			if record.count() >0:
-				record = record.first()
-				#获取公众号昵称
-				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
-				#获取公众号头像
-				mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
-				#获取活动状态
-				activity_status = record.status_text
+			#获取公众号昵称
+			mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
+			#获取公众号头像
+			mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
 
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
+			#检查所有当前参与用户是否取消关注，设置为未参与
+			reset_member_helper_info(record_id)
+			reset_re_subscribed_member_helper_info(record_id)
+			#未关注进行点赞，后来又关注的会员将帮助值加上
+			update_be_member_help_details(record_id)
 
-				project_id = 'new_app:red_packet:%s' % record.related_page_id
-
-				#检查所有当前参与用户是否取消关注，设置为未参与
-				reset_member_helper_info(record_id)
-				reset_re_subscribed_member_helper_info(record_id)
-				#未关注进行点赞，后来又关注的会员将帮助值加上
-				update_be_member_help_details(record_id)
-
-				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
-				if curr_member_red_packet_info.count()> 0:
-					curr_member_red_packet_info = curr_member_red_packet_info.first()
-					if (not curr_member_red_packet_info.is_valid) or (not curr_member_red_packet_info.has_join):
-							if fid is None or str(fid) == str(member_id):#判断分享页是否自己的主页
-								if isMember:
-									#曾经参与过又取关了，或者帮助过他人但是自己没参与，都需要参与一次
-									participate_response = participate_red_packet(record_id,member_id)
-									print('participate_red_packet in line:107')
-									if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
-										response.errMsg = 'is_run_out'
-										return response.get_response()
-									curr_member_red_packet_info.reload()
-								else:
-									response.errMsg = u'请先关注公众号'
-									# return response.get_response()
-				else:
-					curr_member_red_packet_info = app_models.RedPacketParticipance(
-						belong_to = record_id,
-						member_id = member_id,
-						created_at = datetime.now()
-					)
-					curr_member_red_packet_info.save()
-					#未帮助好友情况下，判断分享页是否自己的主页，是自己的主页则参与拼红包
-					if fid is None or str(fid) == str(member_id):
+			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
+			if curr_member_red_packet_info.count()> 0:
+				curr_member_red_packet_info = curr_member_red_packet_info.first()
+			else:
+				curr_member_red_packet_info = app_models.RedPacketParticipance(
+					belong_to = record_id,
+					member_id = member_id,
+					created_at = datetime.now()
+				)
+				curr_member_red_packet_info.save()
+			#未帮助好友情况下，判断分享页是否自己的主页，是自己的主页则参与拼红包
+			if (not curr_member_red_packet_info.is_valid) or (not curr_member_red_packet_info.has_join):
+				if fid is None or str(fid) == str(member_id):#判断分享页是否自己的主页
+					if isMember:
+						#曾经参与过又取关了，或者帮助过他人但是自己没参与，都需要参与一次
 						participate_response = participate_red_packet(record_id,member_id)
-						print('participate_red_packet in line:122')
+						print('participate_red_packet in line:107')
 						if json.loads(participate_response.content)['errMsg'] == 'is_run_out':
 							response.errMsg = 'is_run_out'
 							return response.get_response()
 						curr_member_red_packet_info.reload()
+					else:
+						response.errMsg = u'请先关注公众号'
 
-				if curr_member_red_packet_info.is_valid:
-					is_already_participanted = curr_member_red_packet_info.has_join
-				else:
-					is_already_participanted = False
-
-				#判断分享页是否自己的主页
-				if fid is None or str(fid) == str(member_id):
-					page_owner_name = member.username_size_ten
-					page_owner_icon = member.user_icon
-					page_owner_member_id = member_id
-					self_page = True
-					red_packet_money = curr_member_red_packet_info.red_packet_money
-					current_money = curr_member_red_packet_info.current_money
-					red_packet_status = curr_member_red_packet_info.red_packet_status
-				else:
-					page_owner = Member.objects.get(id=fid)
-					page_owner_name = page_owner.username_size_ten
-					page_owner_icon = page_owner.user_icon
-					page_owner_member_id = fid
-
-					page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
-					red_packet_money = page_owner_member_info.red_packet_money
-					current_money = page_owner_member_info.current_money
-					red_packet_status = page_owner_member_info.red_packet_status
-
-					curr_member_red_packet_detail_info = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id)
-					if curr_member_red_packet_detail_info:
-						if curr_member_red_packet_detail_info.is_valid:
-							if curr_member_red_packet_info.helped_member_id:
-								is_helped = True if (fid in curr_member_red_packet_info.helped_member_id) and curr_member_red_packet_info.is_valid else False
-						else:
-							is_helped = False
-
-				# 统计帮助者信息
-				helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
-				member_ids = [h.helper_member_id for h in helpers]
-				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-				for h in helpers:
-					temp_dict = {
-						'member_id': h.helper_member_id,
-						'user_icon': member_id2member[h.helper_member_id].user_icon,
-						'username': member_id2member[h.helper_member_id].username_size_ten,
-						'help_money': h.help_money
-					}
-					helpers_info_list.append(temp_dict)
+			if curr_member_red_packet_info.is_valid:
+				is_already_participanted = curr_member_red_packet_info.has_join
 			else:
-				response.errMsg = u'活动信息出错'
-				return response.get_response()
-		else:
-			record = app_models.RedPacket.objects(id=record_id)
-			if record.count() >0:
-				record = record.first()
+				is_already_participanted = False
 
-				#获取活动状态
-				activity_status = record.status_text
-
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
-				project_id = 'new_app:red_packet:%s' % record.related_page_id
+			#判断分享页是否自己的主页
+			if fid is None or str(fid) == str(member_id):
+				page_owner_name = member.username_size_ten
+				page_owner_icon = member.user_icon
+				page_owner_member_id = member_id
+				self_page = True
+				red_packet_money = curr_member_red_packet_info.red_packet_money
+				current_money = curr_member_red_packet_info.current_money
+				red_packet_status = curr_member_red_packet_info.red_packet_status
 			else:
-				response.errMsg = 'is_deleted_data'
-				return response.get_response()
+				page_owner = Member.objects.get(id=fid)
+				page_owner_name = page_owner.username_size_ten
+				page_owner_icon = page_owner.user_icon
+				page_owner_member_id = fid
 
+				page_owner_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
+				red_packet_money = page_owner_member_info.red_packet_money
+				current_money = page_owner_member_info.current_money
+				red_packet_status = page_owner_member_info.red_packet_status
+
+				if curr_member_red_packet_info.helped_member_ids:
+					is_helped = long(fid) in curr_member_red_packet_info.helped_member_ids
+
+			# 获取该主页帮助者列表
+			helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
+			member_ids = [h.helper_member_id for h in helpers]
+			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+			for h in helpers:
+				temp_dict = {
+					'member_id': h.helper_member_id,
+					'user_icon': member_id2member[h.helper_member_id].user_icon,
+					'username': member_id2member[h.helper_member_id].username_size_ten,
+					'help_money': h.help_money
+				}
+				helpers_info_list.append(temp_dict)
 
 		if u"进行中" == activity_status:
 			timing = (record.end_time - datetime.today()).total_seconds()
