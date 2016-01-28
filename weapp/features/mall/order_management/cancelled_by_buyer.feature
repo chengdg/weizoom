@@ -152,7 +152,7 @@ Scenario:2 bill取消使用了优惠券的订单
 		"""
 		{
 			"coupon_code": "coupon1_id_1",
-			"coupon_status": "未使用"
+			"coupon_status": "未领取"
 		}
 		"""
 
@@ -236,6 +236,6 @@ Scenario:4 bill取消使用积分和优惠券的订单
 		"""
 		{
 			"coupon_code": "coupon2_id_1",
-			"coupon_status": "未使用"
+			"coupon_status": "未领取"
 		}
 		"""
