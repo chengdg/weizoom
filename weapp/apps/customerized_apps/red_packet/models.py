@@ -80,6 +80,7 @@ class RedPacketParticipance(models.Document):
 class RedPacketLog(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	helper_member_id = models.LongField() #帮助者id
+	help_money = models.FloatField(default=0) #帮助金额
 	be_helped_member_id = models.LongField() #被帮助者id
 	created_at = models.DateTimeField(default=datetime.now()) #创建时间
 
