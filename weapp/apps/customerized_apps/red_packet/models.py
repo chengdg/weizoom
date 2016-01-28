@@ -66,7 +66,7 @@ class RedPacketParticipance(models.Document):
 	red_packet_status = models.BooleanField(default=False) #红包状态
 	is_already_paid = models.BooleanField(default=False) #红包发放状态
 	is_valid = models.BooleanField(default=True) #该条记录是否有效(针对取关后再次关注的情况)
-	helped_member_id = models.DynamicField() #帮他拼红包的会员id list
+	helped_member_ids = models.ListField(models.LongField()) #帮他拼红包的会员id list
 	finished_time = models.DateTimeField() #完成时间
 
 	#存储api状态和结果
@@ -80,6 +80,7 @@ class RedPacketParticipance(models.Document):
 class RedPacketLog(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	helper_member_id = models.LongField() #帮助者id
+	help_money = models.FloatField(default=0) #帮助金额
 	be_helped_member_id = models.LongField() #被帮助者id
 	created_at = models.DateTimeField(default=datetime.now()) #创建时间
 

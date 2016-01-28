@@ -126,7 +126,6 @@ def export_cards(request):
     # cards = get_num_cards(filter_value)
     card_ids = request.POST.get('cards','')
     card_ids = json.loads(card_ids)
-    print card_ids,"card_ids"
     weizoom_cards = WeizoomCard.objects.filter(id__in=card_ids)
     rule_ids = [card.weizoom_card_rule_id for card in weizoom_cards]
     rule_id2rule = {rule.id: rule  for rule in  WeizoomCardRule.objects.filter(id__in=rule_ids)}

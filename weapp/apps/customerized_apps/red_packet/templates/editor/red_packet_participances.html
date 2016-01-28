@@ -17,7 +17,7 @@
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
-	
+
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
@@ -35,6 +35,25 @@
 		</div>
 		<div class="xui-i-col">
 			<div class="xui-i-item ml10">
+                <label>会员状态</label>
+                <select class="" id="is_subscribed" name="is_subscribed">
+                    <option value="-1">全部</option>
+                    <option value="1">已关注</option>
+                    <option value="0">取消关注</option>
+                </select>
+            </div>
+			<div class="xui-i-item ml10">
+                <label>发放状态</label>
+                <select class="" id="is_already_paid" name="is_already_paid">
+                    <option value="-1">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="xui-i-col">
+            <div class="xui-i-item ml10">
 				<label>参与时间
 				：</label>
 				<input
@@ -63,22 +82,12 @@
 					data-format="yy-mm-dd HH:MM"
 					data-min-el="#start_time"/>
 			</div>
-			<div class="xui-i-item ml10">
-                <label>发放状态</label>
-                <select class="" id="is_already_paid" name="is_already_paid">
-                    <option value="-1">全部</option>
-                    <option value="1">成功</option>
-                    <option value="0">失败</option>
-                </select>
-            </div>
 		</div>
-		<div class="xui-i-col">
-			<div class="ml80">
-				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
-				<a class="btn btn-default xui-fontBold xa-export" href="javascript:void(0);">批量导出</a>
-                <a id="export_href" style="display: none ">DownloadXLS</a>
-			</div>
-		</div>
+        <div class="ml80" style="text-align: center">
+            <a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+            <a class="btn btn-default xui-fontBold xa-export" href="javascript:void(0);">批量导出</a>
+            <a id="export_href" style="display: none ">DownloadXLS</a>
+        </div>
 	</div>
 
 	<div class="panel panel-default xui-tableBox">
@@ -88,20 +97,20 @@
 			</label>
 			<a href="javascript:void(0);" class="ml10 xa-send-selected">批量发放</a>
 		</div>
-		<div 
+		<div
 			class="panel-body panel-table p0 mt10"
-			data-ui-role="advanced-table" 
+			data-ui-role="advanced-table"
 			data-app="apps/red_packet"
 			data-resource="red_packet_participances"
 			data-args='{"id": "{{activity_id}}"}'
-			data-template-id="#table" 
-			data-enable-paginator="true" 
-			data-enable-sort="false" 
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
 			data-selectable="true"
 			data-disable-header-select="true"
 			data-outer-selecter='.xa-selectAll'
 			data-selecttable-tr='xa-selectTr'
-			data-item-count-per-page="10" 
+			data-item-count-per-page="10"
 		>
 		</div>
 	</div>
@@ -111,7 +120,7 @@
 
 {% block js %}
 <!-- *start_prunt_task* -->
-	<!-- [prunt_task] 
+	<!-- [prunt_task]
 	  {
 	    "task": "weizoom-load-app-views-dialogs"
 	  }
@@ -136,7 +145,20 @@
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr" data-memberId="${item.member_id}">
-				<td class="tl pl25">
+				<td class="tl pl25" style="position:relative;">
+                    <div class="follow_status" style="width:60px;
+                    height:20px;
+                    background-color:black;
+                    position:absolute;
+                    top:49px;
+                    float:left;
+                    opacity:0.5;
+                    text-align:center;
+                    color:white;
+                    line-height: 20px;">
+                    {{if (item.is_subscribed== true)}}已关注{{/if}}
+                    {{if (item.is_subscribed== false)}}取消关注{{/if}}
+                    </div>
 					<img width=60 height=60 src="${item.participant_icon}" />
 					{{html item.participant_name}}
 				</td>
@@ -160,7 +182,7 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放')}}
+					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed === 'true')}}
 					<a href="javascript:void(0)" class="xa-pay" data-id="${item.id}" data-memberId="${item.member_id}">发放</a>
 					{{/if}}
 					{{if (item.is_already_paid === '发放' && item.msg_api_status === '失败')}}
@@ -194,20 +216,22 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
 		var redPacketStatus = $.trim($('[name="red_packet_status"]').val());
         var isAlreadyPaid = $.trim($('[name="is_already_paid"]').val());
+        var isSubscribed = $.trim($('[name="is_subscribed"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
 			participant_name: participant_name,
 			start_time: startTime,
 			end_time: endTime,
 			red_packet_status: redPacketStatus,
-            is_already_paid: isAlreadyPaid
+            is_already_paid: isAlreadyPaid,
+            is_subscribed:isSubscribed
 		}, {
 			emptyDataHint: '没有符合条件的数据'
 		});
@@ -330,7 +354,12 @@ function pull_request(member_ids){
             member_ids: member_ids.join(',')
         },
         success: function(resp){
-            W.showHint('',"发放红包完成, 取消关注的会员不会发放红包, 请核查");
+            W.showHint('', "发放红包完成");
+            W.dialog.showDialog('W.dialog.app.red_packet.ViewGrantResultDialog', {
+                data: resp.data
+            });
+            console.log(resp.data);
+
             table.reload({
                 id: activityId
             }, {

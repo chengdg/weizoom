@@ -196,6 +196,9 @@
         margin-left: auto;
         margin-right: auto;
     }
+    .xui-attentionBox{
+        display: none !important;
+    }
 
 /*竖屏幕*/
 
@@ -494,7 +497,9 @@
     }
 }
 
-
+::-webkit-scrollbar {
+        width: 2px;
+}
 
 </style>
 {% endblock %}
@@ -807,7 +812,6 @@
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
         W.isAlreadyParticipanted = member_info.is_already_participanted;
-        W.member_id = member_info.member_id;
         W.isMember = member_info.isMember;
         //TODO 未关注会员处理
 
@@ -946,6 +950,7 @@
                     runProcessBar(data.help_info.current_money,data.help_info.red_packet_money);
 
                 }else{
+                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
                     $attention.find('.xa-attention-tip').show();
                     $attention.find('img').attr('src', new_qrcode_url);
                     $attention.find('.xa-attention-reply').children().first().html("3.回复：");

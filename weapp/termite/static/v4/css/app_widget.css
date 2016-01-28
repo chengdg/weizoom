@@ -1645,6 +1645,8 @@ li.wui-selectBox-display-table {
     border-radius: 1px;
     width: 78%;
     height: 2.5rem;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .wui-red_packet-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
