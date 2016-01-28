@@ -191,9 +191,11 @@
 
         this.$userCenter.on('click', function () {
             if (!W.isMember) {
-                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
-                        '</div><div></div>');
+				that.$el.hide();
+				showQrcode(W.qrcodeUrl);
+                //$('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                //        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                //        '</div><div></div>');
             }
             else {
                 window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
@@ -250,9 +252,11 @@
             var $this = $(this);
             //非会员需要关注
             if (!W.isMember) {
-                $('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
-                        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
-                        '</div><div></div>');
+				//that.$el.hide();
+				showQrcode(W.qrcodeUrl);
+                //$('body').html('<div class="wui-appParticipantResult-Cover"><div class="wui-qrcode">' +
+                //        '<img height="205px" width="205px" src="' + W.qrcodeUrl + '">' +
+                //        '</div><div></div>');
                 return false;
             }
             if ('未开始' === status) {
@@ -306,7 +310,12 @@
         });
         //个人中心
         $('.wa-rules-i-center').on('click', function () {
-            window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
+			if (!W.isMember){
+				showQrcode(W.qrcodeUrl);
+			}
+			else{
+				window.location.href = '/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id=' + W.webappOwnerId;
+			}
         });
     }
 
