@@ -144,10 +144,12 @@ Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
+	When 更新拼红包信息
 	When tom点击bill分享的拼红包活动链接
 	When tom为好友bill点赞
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："拼红包活动1",即可参加活动'
 	When tom通过识别拼红包弹层中的公众号二维码关注jobs的公众号
+	When 更新拼红包信息
 	#关注成功后，点赞成功即bill获得一个随机金额的红包
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动1'
@@ -191,10 +193,12 @@ Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
+	When 更新拼红包信息
 	When tom点击bill分享的拼红包活动链接
 	When tom为好友bill点赞
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.关注公众号即可为好友点赞拼红包<br />3.回复："拼红包活动2",即可参加活动'
 	When tom通过识别拼红包弹层中的带参数二维码关注jobs的公众号
+	When 更新拼红包信息
 	#关注成功后，点赞成功即bill获得一个随机金额的红包
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动2'
@@ -228,9 +232,11 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
 	When tom关注jobs的公众号
 	When tom访问jobs的webapp
 	When tom取消关注jobs的公众号
+	When 更新拼红包信息
 	When tom点击bill分享的拼红包活动链接
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："拼红包活动2",即可参加活动'
 	When tom通过识别拼红包弹层中的公众号二维码关注jobs的公众号
+	When 更新拼红包信息
 	When tom访问jobs的webapp
 	When tom在微信中向jobs的公众号发送消息'拼红包活动2'
 	Then tom收到自动回复'拼红包活动2单图文'
@@ -309,6 +315,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 		| tom  |
 
 	When tom取消关注jobs的公众号
+	When 更新拼红包信息
 	#tom取消关注后，bill活动页面的已贡献好友列表中仍然显示tom
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动2'
@@ -330,6 +337,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 	When tom为好友bill点赞
 	#Then tom获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："拼红包活动2",即可参加活动'
 	When tom关注jobs的公众号
+	When 更新拼红包信息
 	#关注成功后，bill红包的金额不变
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动2'
@@ -581,6 +589,7 @@ Scenario:8 会员参与活动，好友为其点赞，会员取消关注公众号
 		| name |
 		| tom  |
 	When bill取消关注jobs的公众号
+	When 更新拼红包信息
 	When bill点击图文"拼红包活动2单图文"进入拼红包活动页面
 	#Then bill获得弹层提示信息"请先关注公众号"
 	Then bill获得jobs的拼红包活动'拼红包活动2'的内容
@@ -597,6 +606,7 @@ Scenario:8 会员参与活动，好友为其点赞，会员取消关注公众号
 	When bill把jobs的拼红包活动链接分享到朋友圈
 	#Then bill获得弹层提示信息'1.长按二维码关注"惠中大酒店"公众<br />号<br />2.回复："拼红包活动2",即可参加活动'
 	When bill通过识别拼红包弹层中的公众号二维码关注jobs的公众号
+	When 更新拼红包信息
 	When bill访问jobs的webapp
 	When bill在微信中向jobs的公众号发送消息'拼红包活动2'
 	Then bill收到自动回复'拼红包活动2单图文'
