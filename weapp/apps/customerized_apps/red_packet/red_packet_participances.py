@@ -56,10 +56,8 @@ class RedPacketParticipances(resource.Resource):
 		is_subscribed = request.GET.get('is_subscribed',-1)
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
-		all_members = member_models.Member.objects.all()
-		member_id2subscribe = {m.id: m.is_subscribed for m in all_members}
 		if name:
-			members = all_members.filter(webapp_id=webapp_id,username_hexstr__contains = byte_to_hex(name))
+			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains = byte_to_hex(name))
 			temp_ids = [member.id for member in members]
 			member_ids = temp_ids  if temp_ids else [-1]
 		start_time = request.GET.get('start_time', '')
@@ -87,11 +85,7 @@ class RedPacketParticipances(resource.Resource):
 		params = {'belong_to': belong_to,'member_id__in': member_ids_for_show}
 
 		if member_ids:
-			if is_subscribed == '1':
-				temp_member_ids = [m_id for m_id in member_ids if member_id2subscribe[m_id]]
-			elif is_subscribed == '0':
-				temp_member_ids = [m_id for m_id in member_ids if not member_id2subscribe[m_id]]
-			params['member_id__in'] = temp_member_ids
+			params['member_id__in'] = member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if red_packet_status !='-1':
@@ -109,7 +103,13 @@ class RedPacketParticipances(resource.Resource):
 			else:
 				params['is_already_paid'] = ''#进行中没有失败
 
+		member_id2subscribe = {m.id: m.is_subscribed for m in member_models.Member.objects.filter(id__in=member_ids_for_show)}
 		datas = app_models.RedPacketParticipance.objects(**params).order_by('-id','created_at')
+
+		if is_subscribed == '1':
+			datas = [d for d in datas if member_id2subscribe[d.member_id]]
+		elif is_subscribed == '0':
+			datas = [d for d in datas if not member_id2subscribe[d.member_id]]
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -120,7 +120,7 @@ class RedPacketParticipances(resource.Resource):
 		tmp_member_ids = []
 		for data in datas:
 			tmp_member_ids.append(data.member_id)
-		members = all_members.filter(id__in=tmp_member_ids)
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
 		member_id2member = {member.id: member for member in members}
 
 		items = []
