@@ -101,7 +101,15 @@
     background-color: #F2F0F0;
     height: 38px;
 }
-
+/*首单标志*/
+.xui-firstTag{
+    background-color: #ff6600;
+    color: #fff;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: bold;
+    padding: 2px;
+}
 .xui-order-firstTr td {
     line-height: 38px !important;
     padding: 0 !important;
@@ -518,6 +526,8 @@
 	white-space: nowrap;
 	/*line-height: 40px;*/
 }
+
+
 /*财务审核确认弹窗样式*/
 /*.xui-orderAuditConfirmPop dd div:first-child{
 	margin: 15px auto;

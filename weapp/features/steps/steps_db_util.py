@@ -148,6 +148,7 @@ def set_order_dict(order, profile):
         'ship_name':
         'ship_tel':
         'order_time':
+        'payment_time':
         'products':
 
     }
@@ -184,6 +185,10 @@ def set_order_dict(order, profile):
     order_model.product_price = 0
     if order.get('order_time'):
         order_model.created_at = order.get('order_time')
+        order_model.save()
+
+    if order.get('payment_time'):
+        order_model.payment_time = order.get('payment_time')
         order_model.save()
 
     if order.get('sources') == u"商城":
@@ -237,6 +242,10 @@ def set_order_dict(order, profile):
     if order.get('integral'):
         member.integral = member.integral - order.get('integral')
         member.save()
+
+    if order.get('is_first_order') == 'true':
+        order_model.is_first_order = True
+        order_model.save()
 
 
 def _get_paytype_by_name(payment_name):

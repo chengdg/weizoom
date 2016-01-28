@@ -53,7 +53,7 @@ def __do_weixin_pay(context, pay_url):
 	if context.text != None:
 		pay_info = json.loads(context.text)
 		is_sync = pay_info['is_sync']
-	
+
 	if is_sync:
 		#同步支付
 		pay_interface_type = __get_js_value_from_html_page(html_page, 'var payInterfaceType')
@@ -122,6 +122,11 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 		url = '/termite/workbench/jqm/preview/?module=mall&model=pay_result&action=get&pay_interface_type=%s&out_trade_no=%s&woid=%s&result=success' % (data['interface_type'], order.order_id, context.webapp_owner_id)
 		context.client.get(bdd_util.nginx(url), follow=True)
 
+	if hasattr(context, 'order_payment_time'):
+		order.payment_time = context.order_payment_time
+		order.save()
+		delattr(context, 'order_payment_time')
+
 	context.pay_order_id = order.order_id
 
 @when(u"{webapp_user_name}使用支付方式'{pay_interface_name}'进行支付订单'{order_code}'")
@@ -129,7 +134,11 @@ def step_impl(context, webapp_user_name, pay_interface_name, order_code):
 	context.created_order_id = order_code
 	context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name,pay_interface_name))
 
-
+@when(u"{webapp_user_name}使用支付方式'{pay_interface_name}'进行支付订单'{order_code}'于{payment_time}")
+def step_impl(context, webapp_user_name, pay_interface_name, order_code, payment_time):
+	context.created_order_id = order_code
+	context.order_payment_time = payment_time
+	context.execute_steps(u"when %s使用支付方式'%s'进行支付" % (webapp_user_name,pay_interface_name))
 
 # @then(u"{webapp_user_name}支付订单成功")
 # def step_impl(context, webapp_user_name):

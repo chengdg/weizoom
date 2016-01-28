@@ -66,6 +66,15 @@ def step_impl(context, action, user, order_code):
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
 
+    if hasattr(context, 'order_payment_time'):
+        Order.objects.filter(order_id=order_code).update(payment_time=context.order_payment_time)
+        delattr(context, 'order_payment_time')
+
+@when(u"{user}'{action}'订单'{order_code}'于{payment_time}")
+def step_impl(context, action, user, order_code, payment_time):
+    context.order_payment_time = payment_time
+    context.execute_steps(u"When %s'%s'订单'%s'" % (user, action, order_code))
+
 
 # @when(u"{user}设置订单过期时间{order_expired_day}天")
 @when(u"{user}设置未付款订单过期时间{order_expired_hour}小时")
@@ -207,6 +216,7 @@ def step_impl(context, user):
     query_params = dict()
     if hasattr(context, 'query_params'):
         query_params = context.query_params
+        delattr(context, 'query_params')
     response = context.client.get('/mall2/api/order_list/', query_params)
     items = json.loads(response.content)['data']['items']
 
@@ -219,7 +229,7 @@ def step_impl(context, user):
         actual_order['ship_name'] = order_item['ship_name']
         actual_order['ship_tel'] = order_item['ship_tel']
         actual_order["sources"] = source[order_item['come']]
-        actual_order["member"] = order_item['buyer_name']
+        actual_order["member"] = order_item['buyer_name'] if order_item['member_is_subscribed'] else '非会员'
         actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
         actual_order["number"] = order_item['express_number']
@@ -227,11 +237,13 @@ def step_impl(context, user):
         actual_order["integral"] = order_item['integral']
         actual_order['status'] = order_item['status']
         actual_order['price'] = order_item['pay_money']
+        actual_order['payment_time'] = order_item['payment_time']
         actual_order['final_price'] = order_item['pay_money']
         actual_order['customer_message'] = order_item['customer_message']
         actual_order['buyer'] = order_item['buyer_name']
         actual_order['postage'] = order_item['postage']
         actual_order['save_money'] = order_item['save_money']
+        actual_order['is_first_order'] = 'true' if order_item['is_first_order'] else 'false'
         if 'edit_money' in order_item and order_item['edit_money']:
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.',
                                                                                                               '').replace(
@@ -273,6 +285,7 @@ def step_impl(context, user):
                 del pro['supplier']
             if 'actions' in pro:
                 pro['actions'] = set(pro['actions'])
+
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -368,6 +381,12 @@ ORDER_STATUS2ID = {
     u'退款成功': 7
 }
 
+ORDER_TYPE = {
+    u'全部': -1,
+    u'首单': 1,
+    u'非首单': 0
+}
+
 
 @when(u'{user}根据给定条件查询订单')
 def step_look_for_order(context, user):
@@ -385,12 +404,14 @@ def step_look_for_order(context, user):
         "order_source":      # 订单来源            e.g.:
         "order_status":      # 订单状态            e.g.:
         "isUseWeizoomCard":  # 仅显示微众卡抵扣订单  e.g.:
+        "order_type":        # 订单是不是首单
     }
     """
     query_params = {
         'pay_type': u'全部',
         'order_source': u'全部',
         'order_status': u'全部',
+        'order_type': u'全部',
         'belong': 'all',
         "date_interval": "",
         "date_interval_type": 1,
@@ -417,6 +438,11 @@ def step_look_for_order(context, user):
     query_params['order_status'] = ORDER_STATUS2ID[query_params['order_status']]
     if query_params['order_status'] == -1:
         query_params.pop('order_status')
+
+    query_params['order_type'] = ORDER_TYPE[query_params['order_type']]
+    if query_params['order_type'] == -1:
+        query_params.pop('order_type')
+
     if query_params.get('date'):
         query_params['date_interval_type'] = 1
         query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('date'))
@@ -427,6 +453,9 @@ def step_look_for_order(context, user):
         query_params['date_interval_type'] = 3
         query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('delivery_time'))
 
+    if query_params.get('isUseWeizoomCard'):
+        query_params['isUseWeizoomCard'] = 1 if query_params['isUseWeizoomCard'] == 'true' else 0
+
     context.query_params = query_params
 
 
@@ -436,7 +465,7 @@ def step_get_all_info_of_order(context, user):
     filter_value = dict()
     if hasattr(context, 'query_params'):
         filter_value = context.query_params
-        print("filter_value---------------",filter_value)
+        print "filter_value---------------",filter_value
     from cStringIO import StringIO
     import csv
 
@@ -709,6 +738,3 @@ def step_impl(context, user):
     }
 
     bdd_util.assert_dict(expected, actual)
-
-
-
