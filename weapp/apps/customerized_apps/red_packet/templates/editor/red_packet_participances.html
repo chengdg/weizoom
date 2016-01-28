@@ -35,6 +35,25 @@
 		</div>
 		<div class="xui-i-col">
 			<div class="xui-i-item ml10">
+                <label>会员状态</label>
+                <select class="" id="is_subscribed" name="is_subscribed">
+                    <option value="-1">全部</option>
+                    <option value="1">已关注</option>
+                    <option value="0">取消关注</option>
+                </select>
+            </div>
+			<div class="xui-i-item ml10">
+                <label>发放状态</label>
+                <select class="" id="is_already_paid" name="is_already_paid">
+                    <option value="-1">全部</option>
+                    <option value="1">成功</option>
+                    <option value="0">失败</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="xui-i-col">
+            <div class="xui-i-item ml10">
 				<label>参与时间
 				：</label>
 				<input
@@ -63,32 +82,12 @@
 					data-format="yy-mm-dd HH:MM"
 					data-min-el="#start_time"/>
 			</div>
-			<div class="xui-i-item ml10">
-                <label>发放状态</label>
-                <select class="" id="is_already_paid" name="is_already_paid">
-                    <option value="-1">全部</option>
-                    <option value="1">成功</option>
-                    <option value="0">失败</option>
-                </select>
-            </div>
-
-        </div>
-        <div class="xui-i-col">
-            <div class="ml80">
-                <a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
-                <a class="btn btn-default xui-fontBold xa-export" href="javascript:void(0);">批量导出</a>
-                <a id="export_href" style="display: none ">DownloadXLS</a>
-            </div>
-            <div class="xui-i-item ml10">
-                <label>会员状态</label>
-                <select class="" id="is_subscribed" name="is_subscribed">
-                    <option value="-1">全部</option>
-                    <option value="1">已关注</option>
-                    <option value="0">取消关注</option>
-                </select>
-            </div>
-
 		</div>
+        <div class="ml80" style="text-align: center">
+            <a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+            <a class="btn btn-default xui-fontBold xa-export" href="javascript:void(0);">批量导出</a>
+            <a id="export_href" style="display: none ">DownloadXLS</a>
+        </div>
 	</div>
 
 	<div class="panel panel-default xui-tableBox">

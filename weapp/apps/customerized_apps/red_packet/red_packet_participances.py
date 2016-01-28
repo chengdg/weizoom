@@ -56,8 +56,10 @@ class RedPacketParticipances(resource.Resource):
 		is_subscribed = request.GET.get('is_subscribed',-1)
 		webapp_id = request.user_profile.webapp_id
 		member_ids = []
+		all_members = member_models.Member.objects.all()
+		member_id2subscribe = {m.id: m.is_subscribed for m in all_members}
 		if name:
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains = byte_to_hex(name))
+			members = all_members.filter(webapp_id=webapp_id,username_hexstr__contains = byte_to_hex(name))
 			temp_ids = [member.id for member in members]
 			member_ids = temp_ids  if temp_ids else [-1]
 		start_time = request.GET.get('start_time', '')
@@ -84,15 +86,12 @@ class RedPacketParticipances(resource.Resource):
 		member_ids_for_show = list(set(all_valid_participance_ids).union(set(all_unvalid_participance_ids)))
 		params = {'belong_to': belong_to,'member_id__in': member_ids_for_show}
 
-
-		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
-
 		if member_ids:
 			if is_subscribed == '1':
-				member_ids = [m_id for m_id in member_ids if member_id2subscribe[m_id]]
+				temp_member_ids = [m_id for m_id in member_ids if member_id2subscribe[m_id]]
 			elif is_subscribed == '0':
-				member_ids = [m_id for m_id in member_ids if not member_id2subscribe[m_id]]
-			params['member_id__in'] = member_ids
+				temp_member_ids = [m_id for m_id in member_ids if not member_id2subscribe[m_id]]
+			params['member_id__in'] = temp_member_ids
 		if start_time:
 			params['created_at__gte'] = start_time
 		if red_packet_status !='-1':
@@ -109,18 +108,8 @@ class RedPacketParticipances(resource.Resource):
 				params['is_already_paid'] = False
 			else:
 				params['is_already_paid'] = ''#进行中没有失败
-		if is_subscribed !='-1':
-			if is_subscribed == '1':
-				pass
-			elif is_subscribed == '0':
-				pass
-
-
-
-
 
 		datas = app_models.RedPacketParticipance.objects(**params).order_by('-id','created_at')
-
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -131,10 +120,8 @@ class RedPacketParticipances(resource.Resource):
 		tmp_member_ids = []
 		for data in datas:
 			tmp_member_ids.append(data.member_id)
-		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		members = all_members.filter(id__in=tmp_member_ids)
 		member_id2member = {member.id: member for member in members}
-		#关注状态
-		member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=tmp_member_ids)}
 
 		items = []
 		for data in datas:
