@@ -15,6 +15,7 @@ import models as app_models
 from core.jsonresponse import create_response
 from termite2 import pagecreater
 from utils import url_helper
+from utils.cache_util import GET_CACHE, SET_CACHE
 from weixin.user.module_api import get_mp_qrcode_img
 from modules.member.models import Member
 
@@ -203,12 +204,12 @@ class MRedPacket(resource.Resource):
 				response.set_cookie('fid', member_id, max_age=60*60*24*365)
 				return response
 			
-			# cache_key = 'apps_red_packet_%s_html' % record_id
-			#从redis缓存获取静态页面
-			# cache_data = GET_CACHE(cache_key)
-			# if cache_data:
-			# 	print 'redis---return'
-			# 	return HttpResponse(cache_data)
+			cache_key = 'apps_red_packet_%s_html' % record_id
+			# 从redis缓存获取静态页面
+			cache_data = GET_CACHE(cache_key)
+			if cache_data:
+				print 'redis---return'
+				return HttpResponse(cache_data)
 			
 			record = app_models.RedPacket.objects(id=record_id)
 			if record.count() > 0:
@@ -299,8 +300,8 @@ class MRedPacket(resource.Resource):
 			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		response = render_to_string('red_packet/templates/webapp/m_red_packet.html', c)
-		# if request.member:
-		# 	SET_CACHE(cache_key, response)
+		if request.member:
+			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
 def reset_re_subscribed_member_helper_info(record_id):

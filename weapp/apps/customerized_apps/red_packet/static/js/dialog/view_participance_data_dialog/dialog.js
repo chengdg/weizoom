@@ -49,3 +49,24 @@ W.dialog.app.red_packet.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 		return {};
 	}
 });
+
+W.dialog.app.red_packet.ViewGrantResultDialog = W.dialog.Dialog.extend({
+	events: _.extend({}, W.dialog.Dialog.prototype.events),
+
+	templates: {
+		dialogTmpl: '#app-red_packet-grant-result-dialog-tmpl'
+	},
+
+	onShow: function(options) {
+		this.data = options.data;
+	},
+
+	afterShow: function(options) {
+		var data = this.data;
+		var html_str = "";
+		for(var m_id in data){
+			html_str += "<p>"+m_id+": "+data[m_id]+"</p>"
+		}
+		this.$dialog.find('.modal-body').html(html_str);
+	}
+});

@@ -98,7 +98,6 @@ def get_card_channel_details(request):
 @login_required
 def export_channel(request):
     channels = request.POST.get('channels','')
-    print channels
     channels = json.loads(channels)
     sort_attr = channels.values()[0]['sort_attr']
     if sort_attr == "-use_money":

@@ -355,7 +355,12 @@ function pull_request(member_ids){
             member_ids: member_ids.join(',')
         },
         success: function(resp){
-            W.showHint('',"发放红包完成, 取消关注的会员不会发放红包, 请核查");
+            W.showHint('', "发放红包完成");
+            W.dialog.showDialog('W.dialog.app.red_packet.ViewGrantResultDialog', {
+                data: resp.data
+            });
+            console.log(resp.data);
+
             table.reload({
                 id: activityId
             }, {
