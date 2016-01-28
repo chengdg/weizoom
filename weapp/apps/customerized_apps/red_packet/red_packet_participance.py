@@ -78,7 +78,7 @@ class RedPacketParticipance(resource.Resource):
 			else:
 				#更新当前member的参与信息
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
-				ids_tmp = curr_member_red_packet_info.helped_member_id
+				ids_tmp = curr_member_red_packet_info.helped_member_ids
 				#并发问题临时解决方案 ---start
 				control_data = {}
 				control_data['belong_to'] = red_packet_id
@@ -93,11 +93,9 @@ class RedPacketParticipance(resource.Resource):
 					response.errMsg = u'只能帮助一次'
 					return response.get_response()
 				#并发问题临时解决方案 ---end
-				if not ids_tmp:
-					ids_tmp = [fid]
-				else:
-					ids_tmp.append(fid)
-				curr_member_red_packet_info.update(set__helped_member_id=ids_tmp)
+				if long(fid) not in curr_member_red_packet_info.helped_member_ids:
+					curr_member_red_packet_info.helped_member_ids.append(long(fid))
+					curr_member_red_packet_info.save()
 				#随机区间中获得好友帮助的金额
 				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
 				money_range_min,money_range_max = red_packet_info.money_range.split('-')
@@ -185,16 +183,13 @@ def participate_red_packet(record_id,member_id):
 			print('participate_red_packet :172')
 			#未成功的红包需要将is_valid置为True
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
-			try:
-				# 将之前的点赞详情日志无效
-				app_models.RedPacketDetail.objects.get(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
-				# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表
-				app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
-				app_models.RedPacketLog.objects(belong_to=record_id, be_helped_member_id=member_id).delete()
-			except Exception,e:
-				print e
-				response = create_response(500)
-				return response.get_response()
+			# 将之前的点赞详情日志无效
+			app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
+			# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表,并移除出各帮助者的helped_member_ids
+			app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
+			app_models.RedPacketLog.objects(belong_to=record_id, be_helped_member_id=member_id).delete()
+			app_models.RedPacketParticipance.objects(belong_to=record_id, helped_member_ids=member_id).update(pull__helped_member_ids=member_id)
+
 		if not participate_member_info.has_join:
 			print('participate_red_packet :186')
 			red_packet_type = red_packet_info.type
