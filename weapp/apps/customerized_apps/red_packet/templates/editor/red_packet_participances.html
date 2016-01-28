@@ -183,7 +183,7 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed === 'True')}}
+					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed)}}
 					<a href="javascript:void(0)" class="xa-pay" data-id="${item.id}" data-memberId="${item.member_id}">发放</a>
 					{{/if}}
 					{{if (item.is_already_paid === '发放' && item.msg_api_status === '失败')}}
