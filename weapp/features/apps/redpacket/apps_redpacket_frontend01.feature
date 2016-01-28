@@ -257,7 +257,9 @@ Scenario:4 好友在活动期间不能为取关会员点赞
 		"""
 	When bill把jobs的拼红包活动链接分享到朋友圈
 	When bill取消关注jobs的公众号
+	When 更新拼红包信息
 	When tom关注jobs的公众号
+	When 更新拼红包信息
 	When tom访问jobs的webapp
 	When tom点击bill分享的拼红包活动链接
 	When tom为好友bill点赞

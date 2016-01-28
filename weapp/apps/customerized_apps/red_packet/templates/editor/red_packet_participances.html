@@ -146,19 +146,20 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}" class="xa-selectTr" data-memberId="${item.member_id}">
 				<td class="tl pl25" style="position:relative;">
-                    <div class="follow_status" style="width:60px;
-                    height:20px;
-                    background-color:black;
-                    position:absolute;
-                    top:49px;
-                    float:left;
-                    opacity:0.5;
-                    text-align:center;
-                    color:white;
-                    line-height: 20px;">
-                    {{if (item.is_subscribed== true)}}已关注{{/if}}
-                    {{if (item.is_subscribed== false)}}取消关注{{/if}}
-                    </div>
+                    {{if (item.is_subscribed== false)}}
+                        <div class="follow_status" style="width:60px;
+                            height:20px;
+                            background-color:black;
+                            position:absolute;
+                            top:49px;
+                            float:left;
+                            opacity:0.5;
+                            text-align:center;
+                            color:white;
+                            line-height: 20px;">
+                            取消关注
+                        </div>
+                    {{/if}}
 					<img width=60 height=60 src="${item.participant_icon}" />
 					{{html item.participant_name}}
 				</td>
@@ -182,11 +183,11 @@
 					${item.created_at}
 				</td>
 				<td>
-					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed === 'true')}}
+					{{if (item.red_packet_status === '成功' && item.is_already_paid === '未发放' && item.is_subscribed)}}
 					<a href="javascript:void(0)" class="xa-pay" data-id="${item.id}" data-memberId="${item.member_id}">发放</a>
 					{{/if}}
 					{{if (item.is_already_paid === '发放' && item.msg_api_status === '失败')}}
-					<a href="javascript:void(0)" class="xa-temp_msg" data-memberId="${item.member_id}">补发模板消息</a>
+					<a href="javascript:void(0)" class="xa-temp-msg" data-memberId="${item.member_id}">补发模板消息</a>
 					{{/if}}
 				</td>
 			</tr>
@@ -319,6 +320,7 @@ $(document).ready(function() {
     });
     //补发模版消息
     $('body').delegate('.xa-temp-msg', 'click', function(){
+        var table = $('[data-ui-role="advanced-table"]').data('view');
         var $this = $(this);
         var member_id = $this.attr('data-memberId');
         W.getApi().call({
@@ -331,7 +333,7 @@ $(document).ready(function() {
             },
             success: function(resp){
                 W.showHint('',"补发模版消息成功");
-                table.reload({
+                table && table.reload({
                     id: activityId
                 }, {
                     emptyDataHint: '没有符合条件的数据'
@@ -345,6 +347,7 @@ $(document).ready(function() {
 });
 
 function pull_request(member_ids){
+    var table = $('[data-ui-role="advanced-table"]').data('view');
     W.getApi().call({
         method: 'put',
         app: 'apps/red_packet',
@@ -353,14 +356,16 @@ function pull_request(member_ids){
             id: activityId,
             member_ids: member_ids.join(',')
         },
-        success: function(resp){
+        success: function(data){
+            console.log(data);
             W.showHint('', "发放红包完成");
-            W.dialog.showDialog('W.dialog.app.red_packet.ViewGrantResultDialog', {
-                data: resp.data
-            });
-            console.log(resp.data);
+            $.isEmptyObject(data) && setTimeout(function(){
+                W.dialog.showDialog('W.dialog.app.red_packet.ViewGrantResultDialog', {
+                    data: data
+                });
+            }, 3000);
 
-            table.reload({
+            table && table.reload({
                 id: activityId
             }, {
                 emptyDataHint: '没有符合条件的数据'
