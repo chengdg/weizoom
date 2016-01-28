@@ -104,11 +104,16 @@ class RedPacketParticipance(resource.Resource):
 				random_money = round(random.uniform(float(money_range_min), float(money_range_max)),2)
 				#如果这次随机的金额加上后，当前金额大于目标金额，则将目标金额与当前金额之差当做这次随机出来的数字
 				current_money = helped_member_info.current_money + random_money
-				if current_money > helped_member_info.red_packet_money:
+				#万一出现当前金额大于总红包金额的情况：
+				if helped_member_info.current_money > helped_member_info.red_packet_money:
+					response = create_response(500)
+					response.errMsg = u'该用户已经完成拼红包'
+					return response.get_response()
+				elif current_money > helped_member_info.red_packet_money:
 					random_money = helped_member_info.red_packet_money - helped_member_info.current_money
-
 				#记录每一次未关注人给予的帮助,已关注的则直接计算帮助值
 				if not request.member.is_subscribed:
+					print('add red_packet_log!!!!!!!!!!!!!!!!')
 					red_packet_log = app_models.RedPacketLog(
 						belong_to = red_packet_id,
 						helper_member_id = member_id,
@@ -116,6 +121,7 @@ class RedPacketParticipance(resource.Resource):
 					)
 					red_packet_log.save()
 					has_helped = False
+					help_info = {}
 				else:
 					helped_member_info.update(inc__current_money=random_money)
 					helped_member_info.reload()
@@ -123,6 +129,14 @@ class RedPacketParticipance(resource.Resource):
 					if helped_member_info.current_money == helped_member_info.red_packet_money:
 						helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
 					has_helped = True
+					helper_member_info = Member.objects.get(id=member_id)
+					help_info = {
+						'red_packet_money':round(helped_member_info.red_packet_money,2),
+						'help_money': round(random_money,2),
+						'current_money': round(helped_member_info.current_money,2),
+						'user_icon': helper_member_info.user_icon,
+						'username': helper_member_info.username_size_ten
+					}
 				detail_log = app_models.RedPacketDetail(
 					belong_to = red_packet_id,
 					owner_id = int(fid),
@@ -139,14 +153,7 @@ class RedPacketParticipance(resource.Resource):
 			response.errMsg = u'帮助好友失败'
 			response.inner_errMsg = unicode_full_stack()
 			return response.get_response()
-		helper_member_info = Member.objects.get(id=member_id)
-		help_info = {
-			'red_packet_money':round(helped_member_info.red_packet_money,2),
-			'help_money': round(random_money,2),
-			'current_money': round(helped_member_info.current_money,2),
-			'user_icon': helper_member_info.user_icon,
-			'username': helper_member_info.username_size_ten
-		}
+
 		response = create_response(200)
 		response.data = {
 			'help_info': help_info

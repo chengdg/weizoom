@@ -407,7 +407,9 @@ def update_be_member_help_details(record_id):
 		else:
 			need_helped_member_id2money[m_id] += help_money
 	for m_id in need_helped_member_id2money.keys():
-		app_models.RedPacketParticipance.objects(belong_to=record_id,member_id=m_id).update(inc__current_money=need_helped_member_id2money[m_id])
+		need_helped_member_info = app_models.RedPacketParticipance.objects(belong_to=record_id,member_id=m_id)
+		if not need_helped_member_info.first().red_packet_status: #如果红包已经拼成功，则不把钱加上去
+			need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
 
 	#更新已关注会员的点赞详情
 	detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs]
