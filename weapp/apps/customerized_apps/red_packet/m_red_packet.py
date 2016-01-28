@@ -368,9 +368,11 @@ def update_be_member_help_details(record_id):
 			need_helped_member_id2money[m_id] = total_help_money
 		else:
 			need_helped_member_id2money[m_id] += total_help_money
+
+	member_id2participance = {p.member_id: p for p in app_models.RedPacketParticipance.objects(belong_to=record_id)}
 	for m_id in need_helped_member_id2money.keys():
-		need_helped_member_info = app_models.RedPacketParticipance.objects(belong_to=record_id,member_id=m_id)
-		if not need_helped_member_info.first().red_packet_status: #如果红包已经拼成功，则不把钱加上去
+		need_helped_member_info = member_id2participance[m_id]
+		if not need_helped_member_info.red_packet_status: #如果红包已经拼成功，则不把钱加上去
 			need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
 			need_helped_member_info.reload()
 			#最后一个通过非会员参与完成目标金额，设置红包状态为成功
