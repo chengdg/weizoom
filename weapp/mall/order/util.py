@@ -400,8 +400,9 @@ def export_orders_json(request):
             order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
             order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
             # 订单发货时间
+            source = ""
             postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
-            if fackorder and 0 != fackorder.supplier:
+            if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
                 source = order2supplier[fackorder.supplier].name.encode("utf-8")
             elif fackorder == None and 0 != order.supplier:
                 if order2supplier.has_key(order.supplier):
