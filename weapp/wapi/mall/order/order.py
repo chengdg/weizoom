@@ -74,6 +74,7 @@ class Order(api_resource.ApiResource):
 				'ship_info': ship_info,
 				'ship_name': order.ship_name,
 				'ship_tel': order.ship_tel,
+				'status': mall_models.STATUS2TEXT[order.status],
 				'products': products
 			})
 
