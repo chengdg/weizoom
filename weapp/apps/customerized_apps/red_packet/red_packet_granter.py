@@ -90,17 +90,17 @@ class RedPacketGranter(resource.Resource):
 		record_name = record.name
 
 		#获取商户的支付配置信息 (测试时注释)
-		# try:
-		# 	pay_interface = PayInterface.objects.get(type=PAY_INTERFACE_WEIXIN_PAY, owner_id=owner_id)
-		# 	weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
-        #
-		# 	authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=True)[0]
-		# 	appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid)[0]
-		# 	nick_name = appid_info.nick_name
-		#	remark = nick_name
-		# except:
-		# 	response.errMsg = u'该账户未配置支付信息'
-		# 	return response.get_response()
+		try:
+			pay_interface = PayInterface.objects.get(type=PAY_INTERFACE_WEIXIN_PAY, owner_id=owner_id)
+			weixin_pay_config = UserWeixinPayOrderConfig.objects.get(id=pay_interface.related_config_id)
+
+			authed_appid = ComponentAuthedAppid.objects.filter(user_id=owner_id, authorizer_appid=weixin_pay_config.app_id, is_active=True)[0]
+			appid_info = ComponentAuthedAppidInfo.objects.filter(auth_appid=authed_appid)[0]
+			nick_name = appid_info.nick_name
+			remark = nick_name
+		except:
+			response.errMsg = u'该账户未配置支付信息'
+			return response.get_response()
 
 		cert_setting = app_models.RedPacketCertSettings.objects(owner_id=str(owner_id))
 		if cert_setting.count() > 0:
@@ -127,7 +127,6 @@ class RedPacketGranter(resource.Resource):
 		)
 		member_id2status = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
 		member_id2openid = {m.member.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
-		print "member_id2openid:=============>>", member_id2openid
 
 		member_senders_info = []
 		red_api_succeed_member2member_senders_info = {}
@@ -146,23 +145,22 @@ class RedPacketGranter(resource.Resource):
 			openid = member_id2openid[member_id]
 
 			#生产环境
-			# red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
-			# 	nick_name,openid,price,price,price,1, wishing, ip,
-			# 	record_name,
-			# 	remark,
-			# 	weixin_pay_config.partner_key)
+			red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
+				nick_name,openid,price,price,price,1, wishing, ip,
+				record_name,
+				remark,
+				weixin_pay_config.partner_key)
 
 			#使用微众家帐号测试
 			print 'real price:=============>>', price
-			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
-				u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
-				record_name,
-				u'微众家',
-				'i15uok48plm49wm37ex62qmr50hk27em')
+			# red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
+			# 	u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
+			# 	record_name,
+			# 	u'微众家',
+			# 	'i15uok48plm49wm37ex62qmr50hk27em')
 
 			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
 			result = BeautifulSoup(result)
-			print '999999999999999999999999'
 			print result
 			return_code = result.return_code.text
 			return_msg = result.return_msg.text
@@ -209,7 +207,6 @@ class RedPacketGranter(resource.Resource):
 		#记录模板消息发送失败的会员信息
 		for m in msg_failed_member_ids:
 			app_models.RedPacketParticipance.objects(member_id=m).update(set__msg_api_failed_members_info=red_api_succeed_member2member_senders_info[m])
-		print "participances status updated"
 		response = create_response(200)
 		response.data = result_data
 		return response.get_response()
