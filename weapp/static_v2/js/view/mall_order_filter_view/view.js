@@ -58,6 +58,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var endDate = $("input[name='end_date']").val().trim();
         var date_type = $("#date_type_select").val();
         var expressNumber = $('#express_number').val().trim();
+        var buyerType = $('#buyerType').val().trim();
 
 
         if ($('#isonlyweizoomcardpay').is(':checked')) {
@@ -111,6 +112,11 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         //is_only_show_pay_by_weizoom_card
         if (isUseWeizoomCard) {
             args.push('"isUseWeizoomCard":"'+isUseWeizoomCard+'"')
+        }
+
+        //
+        if (buyerType != '-1') {
+            args.push('"buyer_type":"'+buyerType+'"')
         }
         return args
     },
@@ -312,5 +318,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         $('#orderSource').val(-1);
         $('#express_number').val('');
         $('#product_name').val('');
+        $('#buyerType').val(-1);
     }
 });
