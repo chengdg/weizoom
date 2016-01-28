@@ -117,6 +117,7 @@ class RedPacketParticipance(resource.Resource):
 					red_packet_log = app_models.RedPacketLog(
 						belong_to = red_packet_id,
 						helper_member_id = member_id,
+						help_money = round(random_money,2),
 						be_helped_member_id = int(fid)
 					)
 					red_packet_log.save()

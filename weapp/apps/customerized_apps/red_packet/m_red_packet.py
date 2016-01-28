@@ -204,7 +204,6 @@ class MRedPacket(resource.Resource):
 			'is_already_participanted': is_already_participanted,
 			'is_helped': is_helped,
 			'self_page': self_page,
-			'member_id': member_id,
 			'page_owner_name': page_owner_name,
 			'page_owner_icon': page_owner_icon,
 			'page_owner_member_id': page_owner_member_id,
@@ -397,15 +396,17 @@ def update_be_member_help_details(record_id):
 	red_packet_log_ids = [p.id for p in need_be_add_logs]
 	be_helped_member_ids = [p.be_helped_member_id for p in need_be_add_logs]
 
-	red_packet_details = app_models.RedPacketDetail.objects(belong_to__in=red_packet_ids)
 	#计算点赞金额值
 	need_helped_member_id2money = {}
 	for m_id in be_helped_member_ids:
-		help_money = red_packet_details.filter(owner_id=m_id).first().help_money
+		red_packet_log_info = need_be_add_logs.filter(be_helped_member_id=m_id)
+		total_help_money = 0
+		for i in red_packet_log_info:
+			total_help_money += i.help_money
 		if not need_helped_member_id2money.has_key(m_id):
-			need_helped_member_id2money[m_id] = help_money
+			need_helped_member_id2money[m_id] = total_help_money
 		else:
-			need_helped_member_id2money[m_id] += help_money
+			need_helped_member_id2money[m_id] += total_help_money
 	for m_id in need_helped_member_id2money.keys():
 		need_helped_member_info = app_models.RedPacketParticipance.objects(belong_to=record_id,member_id=m_id)
 		if not need_helped_member_info.first().red_packet_status: #如果红包已经拼成功，则不把钱加上去
