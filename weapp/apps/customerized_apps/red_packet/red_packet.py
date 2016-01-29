@@ -98,8 +98,9 @@ class RedPacket(resource.Resource):
 
 			"""
 			random_random_number_list = []
-			random_number_range = float(data['random_total_money']) * 0.05 #拼手气红包随机数浮动范围为5%
+			random_total_money = float(data['random_total_money'])#拼手气红包总额
 			random_packets_number = int(data['random_packets_number'])  #拼手气红包红包个数
+			random_number_range = (random_total_money / random_packets_number) * 0.1 #拼手气红包随机范围
 			for _ in range(random_packets_number): #在正负浮动范围内生成红包个数个随机数
 				random_random_number_list.append(round(random.uniform(-random_number_range, random_number_range),2))
 			total_random = 0 #总随机金额
