@@ -54,8 +54,6 @@ class MRedPacket(resource.Resource):
 
 		isMember = False
 		timing = 0
-		mpUserPreviewName = ''
-		mpUserHeadImg = ''
 		is_already_participanted = False
 		is_helped = False
 		self_page = False
@@ -67,8 +65,6 @@ class MRedPacket(resource.Resource):
 		current_money = 0
 		helpers_info_list = []
 
-		# fid = request.COOKIES['fid']
-
 		if 'new_app:' in record_id:
 			project_id = record_id
 			record_id = 0
@@ -77,16 +73,12 @@ class MRedPacket(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
-			#获取公众号昵称
-			mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
-			#获取公众号头像
-			mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
 
-			#检查所有当前参与用户是否取消关注，设置为未参与
-			reset_member_helper_info(record_id)
-			reset_re_subscribed_member_helper_info(record_id)
-			#未关注进行点赞，后来又关注的会员将帮助值加上
-			update_be_member_help_details(record_id)
+			# #检查所有当前参与用户是否取消关注，设置为未参与
+			# reset_member_helper_info(record_id)
+			# reset_re_subscribed_member_helper_info(record_id)
+			# #未关注进行点赞，后来又关注的会员将帮助值加上
+			# update_be_member_help_details(record_id)
 
 			curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id)
 			if curr_member_red_packet_info.count()> 0:
@@ -141,6 +133,12 @@ class MRedPacket(resource.Resource):
 					is_helped = long(fid) in curr_member_red_packet_info.helped_member_ids
 
 			# 获取该主页帮助者列表
+			#并发问题临时解决方案 ---start
+			if current_money > red_packet_money:
+				app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id).update(
+					set__current_money=red_packet_money)
+				current_money = red_packet_money
+			#并发问题临时解决方案 ---end
 			helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
 			member_ids = [h.helper_member_id for h in helpers]
 			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
@@ -159,8 +157,6 @@ class MRedPacket(resource.Resource):
 		member_info = {
 			'isMember': isMember,
 			'timing': timing,
-			'mpUserPreviewName': mpUserPreviewName,
-			'mpUserHeadImg': mpUserHeadImg,
 			'is_already_participanted': is_already_participanted,
 			'is_helped': is_helped,
 			'self_page': self_page,
@@ -187,6 +183,7 @@ class MRedPacket(resource.Resource):
 		"""
 		record_id = request.GET.get('id','id')
 		mpUserPreviewName = ''
+		mpUserHeadImg = ''
 		activity_status = u"未开始"
 		member = request.member
 		fid = 0
@@ -216,6 +213,8 @@ class MRedPacket(resource.Resource):
 				record = record.first()
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
+				#获取公众号头像
+				mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
 				#获取活动状态
 				activity_status = record.status_text
 
@@ -230,12 +229,12 @@ class MRedPacket(resource.Resource):
 					activity_status = u'已结束'
 				project_id = 'new_app:red_packet:%s' % record.related_page_id
 
-				#检查所有当前参与用户是否取消关注，设置为未参与
-				reset_member_helper_info(record_id)
-				reset_re_subscribed_member_helper_info(record_id)
-
-				#未关注进行点赞，后来又关注的会员将帮助值加上
-				update_be_member_help_details(record_id)
+				# #检查所有当前参与用户是否取消关注，设置为未参与
+				# reset_member_helper_info(record_id)
+				# reset_re_subscribed_member_helper_info(record_id)
+				#
+				# #未关注进行点赞，后来又关注的会员将帮助值加上
+				# update_be_member_help_details(record_id)
 			else:
 				c = RequestContext(request, {
 					'is_deleted_data': True
@@ -297,6 +296,7 @@ class MRedPacket(resource.Resource):
 			'params_qrcode_name': params_qrcode_name,
 			'reply_content': record.reply_content if record else '',
 			'mpUserPreviewName': mpUserPreviewName,
+			'mpUserHeadImg': mpUserHeadImg,
 			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		response = render_to_string('red_packet/templates/webapp/m_red_packet.html', c)
@@ -304,85 +304,85 @@ class MRedPacket(resource.Resource):
 			SET_CACHE(cache_key, response)
 		return HttpResponse(response)
 
-def reset_re_subscribed_member_helper_info(record_id):
-	"""
-	所有取消关注再关注的参与用户，清空其金额，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
-	清空日志
-	:param record_id: 活动id
-	"""
-	record_id = str(record_id)
-	all_unvalid_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, is_valid=False)
-	all_member_red_packet_info_ids = [p.member_id for p in all_unvalid_member_red_packets_info]
-	re_subscribed_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=True)]
-
-	#已成功的不清除记录，只是使之有效，且不可以重新领取红包（has_join=True）
-	need_reset_member_ids = [p.member_id for p in app_models.RedPacketParticipance.objects.filter(belong_to=record_id, member_id__in=re_subscribed_ids, red_packet_status=True)]
-	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_reset_member_ids).update(set__has_join = True,set__is_valid = True)
-
-
-def reset_member_helper_info(record_id):
-	"""
-	所有取消关注的用户，设置为未参与，参与记录无效，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
-	:param record_id: 活动id
-	"""
-	record_id = str(record_id)
-	all_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True)
-	all_member_red_packet_info_ids = [p.member_id for p in all_member_red_packets_info]
-	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=False)]
-	need_clear_participances = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids)
-	need_clear_participances.update(set__has_join=False,set__is_valid=False)
-
-	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
-	type = red_packet_info.type
-	# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
-	if type == u'random':
-		random_total_money = float(red_packet_info.random_total_money)
-		random_packets_number = float(red_packet_info.random_packets_number)
-		random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数
-		for p in need_clear_participances:
-			red_packet_info.random_random_number_list.append(p.red_packet_money-random_average )
-		red_packet_info.save()
-
-def update_be_member_help_details(record_id):
-	#更新已关注会员的点赞详情
-	need_del_red_packet_logs_ids = []
-	red_packets = app_models.RedPacket.objects(status=1)
-	red_packet_ids = [str(p.id) for p in red_packets]
-	red_packet_logs = app_models.RedPacketLog.objects(belong_to__in=red_packet_ids)
-	red_packet_member_ids = [p.helper_member_id for p in red_packet_logs]
-	member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=red_packet_member_ids)}
-
-	need_be_add_logs_list = [p for p in red_packet_logs if member_id2subscribe[p.helper_member_id]]
-	red_packet_log_ids = [p.id for p in need_be_add_logs_list]
-	be_helped_member_ids = [p.be_helped_member_id for p in need_be_add_logs_list]
-
-	need_be_add_logs = app_models.RedPacketLog.objects(be_helped_member_id__in=be_helped_member_ids)
-	#计算点赞金额值
-	need_helped_member_id2money = {}
-	for m_id in be_helped_member_ids:
-		red_packet_log_info = need_be_add_logs.filter(be_helped_member_id=m_id)
-		total_help_money = 0
-		for i in red_packet_log_info:
-			total_help_money += i.help_money
-		if not need_helped_member_id2money.has_key(m_id):
-			need_helped_member_id2money[m_id] = total_help_money
-		else:
-			need_helped_member_id2money[m_id] += total_help_money
-
-	member_id2participance = {p.member_id: p for p in app_models.RedPacketParticipance.objects(belong_to=record_id)}
-	for m_id in need_helped_member_id2money.keys():
-		need_helped_member_info = member_id2participance[m_id]
-		if not need_helped_member_info.red_packet_status: #如果红包已经拼成功，则不把钱加上去
-			need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
-			need_helped_member_info.reload()
-			#最后一个通过非会员参与完成目标金额，设置红包状态为成功
-			if need_helped_member_info.current_money == need_helped_member_info.red_packet_money:
-				need_helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
-
-	#更新已关注会员的点赞详情
-	detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs_list]
-	app_models.RedPacketDetail.objects(belong_to=record_id, helper_member_id__in=detail_helper_member_ids).update(set__has_helped=True)
-	need_del_red_packet_logs_ids += red_packet_log_ids
-
-	#删除计算过的log
-	app_models.RedPacketLog.objects(id__in=need_del_red_packet_logs_ids).delete()
+# def reset_re_subscribed_member_helper_info(record_id):
+# 	"""
+# 	所有取消关注再关注的参与用户，清空其金额，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
+# 	清空日志
+# 	:param record_id: 活动id
+# 	"""
+# 	record_id = str(record_id)
+# 	all_unvalid_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, is_valid=False)
+# 	all_member_red_packet_info_ids = [p.member_id for p in all_unvalid_member_red_packets_info]
+# 	re_subscribed_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=True)]
+#
+# 	#已成功的不清除记录，只是使之有效，且不可以重新领取红包（has_join=True）
+# 	need_reset_member_ids = [p.member_id for p in app_models.RedPacketParticipance.objects.filter(belong_to=record_id, member_id__in=re_subscribed_ids, red_packet_status=True)]
+# 	app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_reset_member_ids).update(set__has_join = True,set__is_valid = True)
+#
+#
+# def reset_member_helper_info(record_id):
+# 	"""
+# 	所有取消关注的用户，设置为未参与，参与记录无效，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
+# 	:param record_id: 活动id
+# 	"""
+# 	record_id = str(record_id)
+# 	all_member_red_packets_info = app_models.RedPacketParticipance.objects(belong_to=record_id, has_join=True)
+# 	all_member_red_packet_info_ids = [p.member_id for p in all_member_red_packets_info]
+# 	need_clear_member_ids = [m.id for m in Member.objects.filter(id__in=all_member_red_packet_info_ids, is_subscribed=False)]
+# 	need_clear_participances = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id__in=need_clear_member_ids)
+# 	need_clear_participances.update(set__has_join=False,set__is_valid=False)
+#
+# 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
+# 	type = red_packet_info.type
+# 	# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
+# 	if type == u'random':
+# 		random_total_money = float(red_packet_info.random_total_money)
+# 		random_packets_number = float(red_packet_info.random_packets_number)
+# 		random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数
+# 		for p in need_clear_participances:
+# 			red_packet_info.random_random_number_list.append(p.red_packet_money-random_average )
+# 		red_packet_info.save()
+#
+# def update_be_member_help_details(record_id):
+# 	#更新已关注会员的点赞详情
+# 	need_del_red_packet_logs_ids = []
+# 	red_packets = app_models.RedPacket.objects(status=1)
+# 	red_packet_ids = [str(p.id) for p in red_packets]
+# 	red_packet_logs = app_models.RedPacketLog.objects(belong_to__in=red_packet_ids)
+# 	red_packet_member_ids = [p.helper_member_id for p in red_packet_logs]
+# 	member_id2subscribe = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=red_packet_member_ids)}
+#
+# 	need_be_add_logs_list = [p for p in red_packet_logs if member_id2subscribe[p.helper_member_id]]
+# 	red_packet_log_ids = [p.id for p in need_be_add_logs_list]
+# 	be_helped_member_ids = [p.be_helped_member_id for p in need_be_add_logs_list]
+#
+# 	need_be_add_logs = app_models.RedPacketLog.objects(be_helped_member_id__in=be_helped_member_ids)
+# 	#计算点赞金额值
+# 	need_helped_member_id2money = {}
+# 	for m_id in be_helped_member_ids:
+# 		red_packet_log_info = need_be_add_logs.filter(be_helped_member_id=m_id)
+# 		total_help_money = 0
+# 		for i in red_packet_log_info:
+# 			total_help_money += i.help_money
+# 		if not need_helped_member_id2money.has_key(m_id):
+# 			need_helped_member_id2money[m_id] = total_help_money
+# 		else:
+# 			need_helped_member_id2money[m_id] += total_help_money
+#
+# 	member_id2participance = {p.member_id: p for p in app_models.RedPacketParticipance.objects(belong_to=record_id)}
+# 	for m_id in need_helped_member_id2money.keys():
+# 		need_helped_member_info = member_id2participance[m_id]
+# 		if not need_helped_member_info.red_packet_status: #如果红包已经拼成功，则不把钱加上去
+# 			need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
+# 			need_helped_member_info.reload()
+# 			#最后一个通过非会员参与完成目标金额，设置红包状态为成功
+# 			if need_helped_member_info.current_money == need_helped_member_info.red_packet_money:
+# 				need_helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
+#
+# 	#更新已关注会员的点赞详情
+# 	detail_helper_member_ids = [p.helper_member_id for p in need_be_add_logs_list]
+# 	app_models.RedPacketDetail.objects(belong_to=record_id, helper_member_id__in=detail_helper_member_ids).update(set__has_helped=True)
+# 	need_del_red_packet_logs_ids += red_packet_log_ids
+#
+# 	#删除计算过的log
+# 	app_models.RedPacketLog.objects(id__in=need_del_red_packet_logs_ids).delete()

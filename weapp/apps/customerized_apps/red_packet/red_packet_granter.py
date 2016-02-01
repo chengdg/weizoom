@@ -145,19 +145,19 @@ class RedPacketGranter(resource.Resource):
 			openid = member_id2openid[member_id]
 
 			#生产环境
-			red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
-				nick_name,openid,price,price,price,1, wishing, ip,
-				record_name,
-				remark,
-				weixin_pay_config.partner_key)
+			# red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
+			# 	nick_name,openid,price,price,price,1, wishing, ip,
+			# 	record_name,
+			# 	remark,
+			# 	weixin_pay_config.partner_key)
 
 			#使用微众家帐号测试
 			print 'real price:=============>>', price
-			# red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
-			# 	u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
-			# 	record_name,
-			# 	u'微众家',
-			# 	'i15uok48plm49wm37ex62qmr50hk27em')
+			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
+				u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
+				record_name,
+				u'微众家',
+				'i15uok48plm49wm37ex62qmr50hk27em')
 
 			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
 			result = BeautifulSoup(result)
@@ -193,7 +193,7 @@ class RedPacketGranter(resource.Resource):
 			else:
 				response.errMsg = return_msg
 				return response.get_response()
-		msg_succeed_member_ids= send_apps_template_message(owner_id, 4, member_senders_info)
+		msg_succeed_member_ids= send_apps_template_message(owner_id, member_senders_info)
 		red_api_succeed_member_ids = red_api_succeed_member2member_senders_info.keys()
 
 		msg_failed_member_ids = [m for m in red_api_succeed_member_ids if m not in msg_succeed_member_ids]

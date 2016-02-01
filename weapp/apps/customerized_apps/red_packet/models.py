@@ -106,6 +106,9 @@ class RedPacketDetail(models.Document):
 	}
 
 class RedPacketControl(models.Document):
+	"""
+	控制一个用户同时并发给人点赞的情况
+	"""
 	member_id= models.LongField(default=0) #参与者id
 	helped_member_id = models.LongField(default=0) #被帮助者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
@@ -122,3 +125,15 @@ class RedPacketCertSettings(models.Document):
 	owner_id = models.StringField(default=0) #活动所有者
 	cert_path = models.StringField(default="", max_length=1024) #证书
 	key_path = models.StringField(default="", max_length=1024) #证书key
+
+
+class RedPacketAmountControl(models.Document):
+	"""
+	控制多个用户并发领取红包会超量的情况
+	"""
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	red_packet_amount = models.IntField(default=0,unique_with=['belong_to']) #可领取的红包总量
+
+	meta = {
+		'collection': 'red_packet_red_packet_amount_control'
+	}
