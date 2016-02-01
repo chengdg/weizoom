@@ -43,14 +43,11 @@ class Command(BaseCommand):
 		need_be_add_record_ids = [p.belong_to for p in need_be_add_logs]
 		#计算点赞金额值
 		need_helped_member_id2money = {}
-		record_id2member_id = {}
 		for m_id in be_helped_member_ids:
 			red_packet_log_info = need_be_add_logs.filter(be_helped_member_id=m_id)
 			total_help_money = 0
 			for i in red_packet_log_info:
 				total_help_money += i.help_money
-				#构造record_id2member_id键值对
-				record_id2member_id[m_id] = i.belong_to
 			if not need_helped_member_id2money.has_key(m_id):
 				need_helped_member_id2money[m_id] = total_help_money
 			else:
