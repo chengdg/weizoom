@@ -2247,13 +2247,33 @@ def update_order_status(user, action, order, request=None):
 	expired_status = order.status
 	if target_status:
 		if 'cancel' in action and request:
-			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
+			#更新首单的信息
+			cancel_order = Order.objects.get(id=order_id)
+			if cancel_order.is_first_order:
+				other_orders = Order.objects.filter(
+					webapp_id=cancel_order.webapp_id,
+					webapp_user_id=cancel_order.webapp_user_id,
+					status__gt=ORDER_STATUS_CANCEL,
+					is_first_order=False).order_by('id')
+				if other_orders.count() > 0:
+					new_first_order = other_orders[0]
+					new_first_order.is_first_order = True
+					new_first_order.save()
+
+			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''), is_first_order=False)
 
 		elif 'pay' == action:
 			payment_time = datetime.now()
 			Order.objects.filter(id=order_id).update(status=target_status, payment_time=payment_time)
 			Order.objects.filter(origin_order_id=order_id).update(status=target_status, payment_time=payment_time)
-
+			# 更新首单信息
+			pay_order = Order.objects.get(id=order_id)
+			if Order.objects.filter(
+					webapp_id=pay_order.webapp_id,
+					webapp_user_id=pay_order.webapp_user_id,
+					is_first_order=True
+					).count() == 0:
+				Order.objects.filter(id=order_id).update(is_first_order=True)
 			try:
 				"""
 					增加异步消息：修改会员消费次数和金额,平均客单价
