@@ -173,7 +173,7 @@ class Msurvey(resource.Resource):
 				'permission': permission,
 				'share_page_desc': share_page_desc,
 				'share_img_url': thumbnails_url,
-				'product_dict': product_id2product_name
+				'product_dict': json.dumps(product_id2product_name)
 			})
 
 			return render_to_response('exsurvey/templates/webapp/m_exsurvey.html', c)

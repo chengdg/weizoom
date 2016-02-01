@@ -1315,7 +1315,7 @@ li.wui-selectBox-display-table {
 .wui-DropDownBox{
 	padding-top: 15px;
 }
-#freedback_type{
+.freedback_type{
 	position: relative;
 	background: #fff none repeat scroll 0 0;
 	border: 1px solid #eee;
@@ -1327,7 +1327,7 @@ li.wui-selectBox-display-table {
 	padding-right: 33px;
 	text-align: left;
 }
-#freedback_type h1{
+.freedback_type h1{
 	display: inline-block;
     font-size: 1.1rem;
     color: #333;
@@ -1339,7 +1339,7 @@ li.wui-selectBox-display-table {
 	white-space: nowrap;
 	padding-left: 4px;
 }
-#freedback_type .type_name{
+.freedback_type .type_name{
 	color: #666;
 	margin-left: 10px;
 	display: inline-block;
@@ -1387,16 +1387,6 @@ li.wui-selectBox-display-table {
 .xui-dropmenu >ul >li >a{
 	color: #000;
 }
-#xui-input-type{
-	cursor: pointer;
-	border: 0;
-	color: #fff;
-}
-#freedback_textarea::-webkit-input-placeholder::after {
-	display:block;
-	content:"为了我们能够为您更好的服务，请写下您的意见和反馈意见~";
-}
-
 /*反馈--end*/
 
 

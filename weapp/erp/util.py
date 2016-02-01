@@ -30,7 +30,7 @@ def session_required(func):
 			response = create_response(502)
 			response.errMsg = u'用户不存在'
 			return response.get_response()
-		
+
 		request.user = user
 		return func(request)
 

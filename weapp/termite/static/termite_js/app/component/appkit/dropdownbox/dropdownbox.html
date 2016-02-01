@@ -8,10 +8,10 @@
     style=""
 >
         <div class="wui-i-inputContainer xa-inputControl" data-input-type="producttype" data-input-name="{{component.model.title}}" data-control-type="appkit.dropdownbox">
-            <a id="freedback_type" data-role="button" >
+            <a class="freedback_type" data-role="button" >
                 <h1 class="wui-i-title {% if component.model.is_mandatory == "true" %}xui-mandatory{% endif %}">{{component.model.title}}</h1>
                 <span class="type_name" data-product="" data-validate="require-notempty-span::请选择{{component.model.title}}" ></span>
-                <span id="icon" class=" arrow_down"></span>
+                <span class="icon arrow_down"></span>
             </a>
             <div class="xui-dropmenu" style="display: none">
                 <ul class="ui-dropmenu-items xa-select-type" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);"></ul>
