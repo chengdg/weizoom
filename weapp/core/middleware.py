@@ -574,18 +574,29 @@ class BrowserSourceDetectMiddleware(object):
 			if request.user.is_from_simulator:
 				#不处理来自模拟器中的点击
 				return None
-			if 'webapp_page' in request.get_full_path():
-				return None
-			webapp_owner_id = int(request.GET.get('webapp_owner_id', '0'))
-			if webapp_owner_id == 0:
-				webapp_owner_id = int(request.GET.get('woid', '0'))
-			if webapp_owner_id > 0:
-				not_from_weixin_article = SpecialArticle.objects.get(owner_id=webapp_owner_id, name='not_from_weixin')
-				c = Context({
-					'qrcode_image': not_from_weixin_article.content
-				})
-			else:
-				c = Context({
+			# if 'webapp_page' in request.get_full_path():
+			# 	return None
+			try:
+				nick_name = request.webapp_owner_info.auth_appid_info.nick_name
+				head_img = request.webapp_owner_info.auth_appid_info.head_img
+			except:
+				nick_name = ''
+				head_img = ''
+			
+			# webapp_owner_id = int(request.GET.get('webapp_owner_id', '0'))
+			# if webapp_owner_id == 0:
+			# 	webapp_owner_id = int(request.GET.get('woid', '0'))
+			# if webapp_owner_id > 0:
+			# 	not_from_weixin_article = SpecialArticle.objects.get(owner_id=webapp_owner_id, name='not_from_weixin')
+			# 	c = Context({
+			# 		'qrcode_image': not_from_weixin_article.content
+			# 	})
+			# else:
+			# 	c = Context({
+			# 	})
+			c = Context({
+				'head_img': head_img,
+				'nick_name': nick_name
 				})
 			return render_to_response('webapp/qrcode.html', c)
 			
