@@ -193,7 +193,7 @@ class RedPacketGranter(resource.Resource):
 			else:
 				response.errMsg = return_msg
 				return response.get_response()
-		msg_succeed_member_ids= send_apps_template_message(owner_id, 4, member_senders_info)
+		msg_succeed_member_ids= send_apps_template_message(owner_id, member_senders_info)
 		red_api_succeed_member_ids = red_api_succeed_member2member_senders_info.keys()
 
 		msg_failed_member_ids = [m for m in red_api_succeed_member_ids if m not in msg_succeed_member_ids]

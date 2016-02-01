@@ -54,8 +54,6 @@ class MRedPacket(resource.Resource):
 
 		isMember = False
 		timing = 0
-		mpUserPreviewName = ''
-		mpUserHeadImg = ''
 		is_already_participanted = False
 		is_helped = False
 		self_page = False
@@ -67,8 +65,6 @@ class MRedPacket(resource.Resource):
 		current_money = 0
 		helpers_info_list = []
 
-		# fid = request.COOKIES['fid']
-
 		if 'new_app:' in record_id:
 			project_id = record_id
 			record_id = 0
@@ -77,10 +73,6 @@ class MRedPacket(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
-			#获取公众号昵称
-			mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
-			#获取公众号头像
-			mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
 
 			#检查所有当前参与用户是否取消关注，设置为未参与
 			reset_member_helper_info(record_id)
@@ -159,8 +151,6 @@ class MRedPacket(resource.Resource):
 		member_info = {
 			'isMember': isMember,
 			'timing': timing,
-			'mpUserPreviewName': mpUserPreviewName,
-			'mpUserHeadImg': mpUserHeadImg,
 			'is_already_participanted': is_already_participanted,
 			'is_helped': is_helped,
 			'self_page': self_page,
@@ -187,6 +177,7 @@ class MRedPacket(resource.Resource):
 		"""
 		record_id = request.GET.get('id','id')
 		mpUserPreviewName = ''
+		mpUserHeadImg = ''
 		activity_status = u"未开始"
 		member = request.member
 		fid = 0
@@ -216,6 +207,8 @@ class MRedPacket(resource.Resource):
 				record = record.first()
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
+				#获取公众号头像
+				mpUserHeadImg = request.webapp_owner_info.auth_appid_info.head_img
 				#获取活动状态
 				activity_status = record.status_text
 
@@ -297,6 +290,7 @@ class MRedPacket(resource.Resource):
 			'params_qrcode_name': params_qrcode_name,
 			'reply_content': record.reply_content if record else '',
 			'mpUserPreviewName': mpUserPreviewName,
+			'mpUserHeadImg': mpUserHeadImg,
 			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		response = render_to_string('red_packet/templates/webapp/m_red_packet.html', c)
