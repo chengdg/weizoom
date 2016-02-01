@@ -4,3 +4,4 @@
 import order
 import expired_time
 import delivery
+import purchase_statistics
