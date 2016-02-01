@@ -59,6 +59,8 @@ def extract_product_model(request):
             models.PRODUCT_STOCK_TYPE_UNLIMIT)
         )
         stocks = request.POST.get('stocks')
+        if int(stocks) == -1:
+            stocks = 0
         stocks = int(stocks) if stocks else 0
         user_code = request.POST.get('user_code', '').strip()
         standard_model = {
