@@ -18,7 +18,7 @@ SKEP_ACCOUNT2WEBAPP_ID = {
 class MemberBaseBuyInfo(api_resource.ApiResource):
 	"""
 	获取会员基本信息
-	购买次数，付款金额，最后一次支付时间，客单价
+	购买次数，付款金额，最后一次支付时间，客单价，推荐人，创建时间
 	"""
 	app = 'member'
 	resource = 'member_base_buy_info'
@@ -70,6 +70,17 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 			print 'members count:', len(members)
 
 		pageinfo, datas = paginator.paginate(members, cur_page, count_per_page)
+
+		member_ids = []
+		for member in datas:
+			member_ids.append(member.id)
+
+		member_id2referee_member_id = {}
+		relations = member_models.MemberFollowRelation.objects.filter(follower_member_id__in=member_ids, is_fans=True)
+		for relation in relations:
+			member_id2referee_member_id[relation.follower_member_id] = relation.member_id
+
+
 		items = []
 		for member in datas:
 			items.append({
@@ -77,7 +88,10 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 				'pay_money': '%.2f' % member.pay_money,
 				'pay_times': member.pay_times,
 				'last_pay_time': member.last_pay_time.strftime('%Y-%m-%d %H:%M:%S') if member.last_pay_time else '',
-				'unit_price': '%.2f' % member.unit_price
+				'unit_price': '%.2f' % member.unit_price,
+				'referee_member_id': member_id2referee_member_id.get(member.id, ""),
+				'created_at': member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+				'nickname': member.username
 			})
 
 		return {
