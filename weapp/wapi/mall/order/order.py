@@ -30,7 +30,7 @@ class Order(api_resource.ApiResource):
 		# cur_page = int(args['cur_page'])
 
 		webapp_user_ids = member_models.WebAppUser.objects.filter(member_id=member_id).values('id')
-		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, webapp_user_id__in=webapp_user_ids, origin_order_id=-1).order_by('-id')
+		orders = mall_models.Order.objects.filter(webapp_id=webapp_id, webapp_user_id__in=webapp_user_ids, origin_order_id__lte=0).order_by('-id')
 		print 'order count:', orders.count()
 
 		order_ids = []
