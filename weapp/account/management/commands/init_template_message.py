@@ -24,8 +24,7 @@ template_message_dict = [[1, u'TM00247-购买成功通知' ,'product:product_nam
 						[0,  u'TM00398-付款成功通知' ,'orderProductPrice:final_price,orderProductName:product_name,orderAddress:ship_address,orderName:order_id', PAY_ORDER_SUCCESS],
 						[0,  u'TM00505-订单标记发货通知' ,'orderProductPrice:final_price,orderProductName:product_name,orderAddress:ship_address,orderName:order_id', PAY_DELIVER_NOTIFY],
 						[0,  u'OPENTM200474379-优惠券领取成功通知' ,'keyword1:coupon_name,keyword3:invalid_date', COUPON_ARRIVAL_NOTIFY],
-						[0,  u'TM00853-优惠券过期提醒' ,'orderTicketStore:coupon_store,orderTicketRule:coupon_rule', COUPON_EXPIRED_REMIND],
-						[0,  u'OPENTM207449727-任务完成通知' ,'keyword1:task_name,keyword2:prize,keyword3:finish_time', MISSION_ACCOMPLISHED_NOTIFY]
+						[0,  u'TM00853-优惠券过期提醒' ,'orderTicketStore:coupon_store,orderTicketRule:coupon_rule', COUPON_EXPIRED_REMIND]
 						]
 class Command(BaseCommand):
 	help = "init tempalte message"

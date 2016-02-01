@@ -78,32 +78,29 @@ def send_order_template_message(webapp_id, order_id, send_point):
 
 	return True
 
-def send_apps_template_message(owner_id, send_point, member_senders_info):
+def send_apps_template_message(owner_id, member_senders_info):
 	"""
 	百宝箱活动的模板消息
 	@param owner_id:
-	@param send_point:
 	@param member_senders_info:
 	@return:
 	"""
 	user = User.objects.get(id=owner_id)
-	template_message = get_template_message_by(user, send_point)
 	succeed_member_ids = []
-	if template_message and template_message.template_id:
-		mpuser_access_token = _get_mpuser_access_token(user)
-		if mpuser_access_token:
-			weixin_api = get_weixin_api(mpuser_access_token)
-			for member_info in member_senders_info:
-				openid = member_info['openid']
-				app_url = member_info['app_url']
-				detail_data = member_info['detail_data']
-				try:
-					message = _get_apps_send_message_dict(openid, app_url, template_message, detail_data)
-					weixin_api.send_template_message(message, True)
-					succeed_member_ids.append(member_info['member_id'])
-				except:
-					notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
-					watchdog_warning(notify_message)
+	mpuser_access_token = _get_mpuser_access_token(user)
+	if mpuser_access_token:
+		weixin_api = get_weixin_api(mpuser_access_token)
+		for member_info in member_senders_info:
+			openid = member_info['openid']
+			app_url = member_info['app_url']
+			detail_data = member_info['detail_data']
+			try:
+				message = _get_fixed_apps_send_message_dict(openid, app_url, detail_data)
+				weixin_api.send_template_message(message, True)
+				succeed_member_ids.append(member_info['member_id'])
+			except:
+				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+				watchdog_warning(notify_message)
 
 	return succeed_member_ids
 
@@ -123,6 +120,14 @@ def _get_mpuser_access_token(user):
 		return None
 
 def _get_apps_send_message_dict(openid, app_url, template_message, detail):
+	"""
+	通过配置获取模板内容
+	@param openid:
+	@param app_url:
+	@param template_message:
+	@param detail:
+	@return:
+	"""
 	template_data = dict()
 	template_data['touser'] = openid
 	template_data['template_id'] = template_message.template_id
@@ -148,6 +153,43 @@ def _get_apps_send_message_dict(openid, app_url, template_message, detail):
 
 	template_data['data'] = detail_data
 	return template_data
+
+def _get_fixed_apps_send_message_dict(openid, app_url, detail):
+	"""
+	固定内容的模板消息
+	@param openid:
+	@param app_url:
+	@param detail:
+	@return:
+	"""
+	TEMPLATE_ID = "Gp3QGAKUw3F_qmMtHzLuTWZw5W0fvhjKEtQN_h4Nc8k"
+	TEMPLATE_FIRST = u"恭喜您参与的拼红包活动成功！"
+	TEMPLATE_REMARK = u"请关注更多活动。"
+	TEMPLATE_KEYWORDS = ['keyword1:task_name', 'keyword2:prize', 'keyword3:finish_time']
+
+	template_data = dict()
+	template_data['touser'] = openid
+	template_data['template_id'] = TEMPLATE_ID
+	template_data['url'] = app_url
+	template_data['topcolor'] = "#FF0000"
+
+	detail_data = {}
+	detail_data["first"] = {"value" : TEMPLATE_FIRST, "color" : "#000000"}
+	detail_data["remark"] = {"value" : TEMPLATE_REMARK, "color" : "#000000"}
+
+	attribute_dict = {}
+	for one_data in TEMPLATE_KEYWORDS:
+		one_data_arr = one_data.split(':')
+		attribute_dict[one_data_arr[1]] = one_data_arr[0]
+	attribute_keys = attribute_dict.keys()
+	for key, value in detail.items():
+		if key not in attribute_keys:
+			continue
+		detail_data[attribute_dict[key]] = {"value": value, "color" : "#173177"}
+
+	template_data['data'] = detail_data
+	return template_data
+
 def _get_order_send_message_dict(user_profile, template_message, order, send_point):
 	template_data = dict()
 	social_account = member_model_api.get_social_account(order.webapp_user_id)
