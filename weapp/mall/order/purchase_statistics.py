@@ -9,18 +9,19 @@ from datetime import datetime,timedelta
 from tools.regional.models import Province
 from utils.dateutil import get_date_after_days, date2string
 
-#将省份处理成dict
-id2province ={}
-provinces = Province.objects.all()
-for province in provinces:
-    id2province[province.id] = province.name
-#将省份处理成dict
 
 class PurchaseStatistics(resource.Resource):
     app = "mall2"
     resource = "purchase_statistics"
 
     def api_get(request):
+        #将省份处理成dict
+        id2province ={}
+        provinces = Province.objects.all()
+        for province in provinces:
+            id2province[province.id] = province.name
+        #将省份处理成dict
+
         result=[]
 
         days = int(request.GET.get("days", "30"))
