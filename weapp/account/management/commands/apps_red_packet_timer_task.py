@@ -97,8 +97,7 @@ class Command(BaseCommand):
 				random_packets_number = float(red_packet_info.random_packets_number)
 				random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数
 				for p in need_clear_participances:
-					red_packet_info.random_random_number_list.append(p.red_packet_money-random_average )
-				red_packet_info.save()
+					red_packet_info.update(push__random_random_number_list=p.red_packet_money-random_average)
 
 		"""
 		所有取消关注再关注的参与用户，清空其金额，但是红包状态、发放状态暂时不改变（防止完成拼红包后，通过取关方式再次参与）
