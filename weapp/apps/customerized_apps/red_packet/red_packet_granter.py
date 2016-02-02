@@ -145,19 +145,19 @@ class RedPacketGranter(resource.Resource):
 			openid = member_id2openid[member_id]
 
 			#生产环境
-			red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
-				nick_name,openid,price,price,price,1, wishing, ip,
-				record_name,
-				remark,
-				weixin_pay_config.partner_key)
+			# red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
+			# 	nick_name,openid,price,price,price,1, wishing, ip,
+			# 	record_name,
+			# 	remark,
+			# 	weixin_pay_config.partner_key)
 
 			#使用微众家帐号测试
 			print 'real price:=============>>', price
-			# red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
-			# 	u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
-			# 	record_name,
-			# 	u'微众家',
-			# 	'i15uok48plm49wm37ex62qmr50hk27em')
+			red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
+				u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
+				record_name,
+				u'微众家',
+				'i15uok48plm49wm37ex62qmr50hk27em')
 
 			result = red.post_data(SSLKEY_PATH, SSLCERT_PATH)
 			result = BeautifulSoup(result)
