@@ -88,6 +88,7 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 				#解决用户名本身就是字节码串导致不能正常转换得问题，例如ae
 				nickname = member.username.decode('utf8')
 			except:
+				print '---decode username fail,use member.username_hexstr', member.id
 				nickname = member.username_hexstr
 
 			items.append({
