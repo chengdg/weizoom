@@ -93,9 +93,7 @@ class RedPacketParticipance(resource.Resource):
 					response.errMsg = u'只能帮助一次'
 					return response.get_response()
 				#并发问题临时解决方案 ---end
-				if long(fid) not in curr_member_red_packet_info.helped_member_ids:
-					curr_member_red_packet_info.helped_member_ids.append(long(fid))
-					curr_member_red_packet_info.save()
+				curr_member_red_packet_info.update(add_to_set__helped_member_ids = long(fid))
 				#随机区间中获得好友帮助的金额
 				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
 				money_range_min,money_range_max = red_packet_info.money_range.split('-')
@@ -111,7 +109,6 @@ class RedPacketParticipance(resource.Resource):
 					random_money = helped_member_info.red_packet_money - helped_member_info.current_money
 				#记录每一次未关注人给予的帮助,已关注的则直接计算帮助值
 				if not request.member.is_subscribed:
-					print('add red_packet_log!!!!!!!!!!!!!!!!')
 					red_packet_log = app_models.RedPacketLog(
 						belong_to = red_packet_id,
 						helper_member_id = member_id,
