@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
-from apps.customerized_apps.red_packet.m_red_packet import reset_member_helper_info,reset_re_subscribed_member_helper_info
+# from apps.customerized_apps.red_packet.m_red_packet import reset_member_helper_info,reset_re_subscribed_member_helper_info
 from core import resource
 from core import paginator
 from core.exceptionutil import unicode_full_stack
@@ -70,9 +70,9 @@ class RedPacketParticipances(resource.Resource):
 		else:
 			belong_to = export_id
 
-		#检查所有当前参与用户是否取消关注，设置为未参与
-		reset_member_helper_info(belong_to)
-		reset_re_subscribed_member_helper_info(belong_to)
+		# #检查所有当前参与用户是否取消关注，设置为未参与
+		# reset_member_helper_info(belong_to)
+		# reset_re_subscribed_member_helper_info(belong_to)
 
 		red_packet_info = app_models.RedPacket.objects.get(id=belong_to)
 		red_packet_status_text = red_packet_info.status_text
