@@ -240,13 +240,15 @@
           }
 
           if(red_packet_type=="regular"){
-              if(money_range_min>=regular_per_money){
+              var tmp_regular_per_money = parseFloat(regular_per_money);
+              tmp_regular_per_money = tmp_regular_per_money.toFixed(2);
+              if(money_range_min>=tmp_regular_per_money){
                   validate_money_range = false;
               }
-              if(money_range_max>=regular_per_money){
+              if(money_range_max>=tmp_regular_per_money){
                   validate_money_range = false;
               }
-              if(money_range_avg>=regular_per_money){
+              if(money_range_avg>=tmp_regular_per_money){
                   validate_money_range = false;
               }
           }
