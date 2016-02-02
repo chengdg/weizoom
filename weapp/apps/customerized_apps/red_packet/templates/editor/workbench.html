@@ -40,7 +40,7 @@
   <div style="background-color: #EAEEF7;" class="clearfix">
     <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide">
     </div>
-    
+
     <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
       <div id="phone" class="xui-phone ">
           <div id="phoneSkin" class="xui-i-skin">
@@ -81,8 +81,7 @@
 
 {% block base_js %}
   <!-- *start_prunt_task* -->
-    <!-- [prunt_task] 
-      {
+    <!-- [prunt_task]
         "task": "weizoom-load-termite-components"
       }
     -->
@@ -108,7 +107,7 @@
 
     //是否隐藏组件控制面板
     W.hideActionPanel = true;
-    
+
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'apps',
@@ -142,11 +141,11 @@
         }
       });
     }
-    
+
     $(document).ready(function() {
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
-      
+
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
       $(window).bind('beforeunload', function() {
@@ -155,18 +154,18 @@
         } else {
         }
       });
-      
+
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
         isSystemManager: W.isSystemManager
       });
       pageManagerView.render();
-      
+
       var phoneView = new W.workbench.PhoneView({
         el: '#phonePanel'
       });
       phoneView.render();
-      
+
       var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
       var propertyView = new W.workbench.PropertyView({
         el: '#rightPanel',
@@ -174,18 +173,19 @@
         onlyShowUserProperty: true//!W.isSystemManager
       });
       propertyView.render();
-      
+
       var synchronizer = new W.workbench.PageSynchronizer();
       synchronizer.run();
       W.Synchronizer = synchronizer;
-      
+
       loadPages(pageManagerView);
-      
+
       $('.xa-save').click(function() {
           var that = this;
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
+          var validate_money_range = true;
           var descriptionModel = page.components[0].model;
           var name = descriptionModel.get('title');
           var startTime = descriptionModel.get('start_time')+":00";
@@ -205,6 +205,71 @@
           var upload_file_certificate = descriptionModel.get('upload_file_certificate');
           var upload_file_certificate_key = descriptionModel.get('upload_file_certificate_key');
           var wishing = descriptionModel.get('wishing');
+          //验证区间
+          function vertify_msg(msg){
+              var vertify_msg_div = $(".propertyGroup_property_moneyRangeSelectorField .propertyGroup_property_input .errorHint");
+              vertify_msg_div.html(msg);
+              vertify_msg_div.show();
+          }
+
+          var money_range_arr = money_range.split("-");
+          var money_range_min = parseFloat(money_range_arr[0]);
+          var money_range_max = parseFloat(money_range_arr[1]);
+          if(money_range_min<0.01){
+            validate_money_range = false;
+          }
+          if(money_range_max<0.01){
+            validate_money_range = false;
+          }
+          if(money_range_min>money_range_max){
+            validate_money_range = false;
+          }
+          var money_range_avg = (money_range_min+money_range_max)/2;
+          if(red_packet_type=="random"){
+              if(parseFloat(random_total_money)%parseFloat(random_packets_number)!=0){
+                  vertify_msg("总金额和红包应该整除！");
+                  console.log("总金额和红包应该整除！");
+                  W.showHint('error', '保存失败!');
+                  that.disabled = false;
+                  return false;
+              }
+              var red_packet_avg = parseFloat(random_total_money)/parseFloat(random_packets_number);
+              red_packet_avg = red_packet_avg.toFixed(2);
+              if(money_range_max>=red_packet_avg){
+                  validate_money_range = false;
+              }
+              if(money_range_min>=red_packet_avg){
+                  validate_money_range = false;
+              }
+              if(money_range_avg>=red_packet_avg){
+                  validate_money_range = false;
+              }
+
+          }
+
+          if(red_packet_type=="regular"){
+              var tmp_regular_per_money = parseFloat(regular_per_money);
+              tmp_regular_per_money = tmp_regular_per_money.toFixed(2);
+              if(money_range_min>=tmp_regular_per_money){
+                  validate_money_range = false;
+              }
+              if(money_range_max>=tmp_regular_per_money){
+                  validate_money_range = false;
+              }
+              if(money_range_avg>=tmp_regular_per_money){
+                  validate_money_range = false;
+              }
+          }
+
+          if(!validate_money_range){
+              vertify_msg("好友贡献区间不合理,请重新输入！");
+              console.log("好友贡献区间不合理,请重新输入！");
+              W.showHint('error', '保存失败!');
+              that.disabled = false;
+              return false;
+          }
+
+          //end
           var args = {
             "name": name,
             "start_time": startTime,
@@ -250,9 +315,9 @@
           });
         });
       });
-      
+
       W.isReady = true;
-      
+
       W.Broadcaster.on('designpage:reach_scroll_boundary', function(direction) {
         var $window = $(window);
         var scrollTop = $window.scrollTop();
@@ -263,19 +328,19 @@
         }
         $window.scrollTop(newScrollTop);
       });
-      
+
       $('[data-toggle="tooltip"]').tooltip();
-      
+
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
-        
+
         // 验证
         if (!W.isSystemManager) {
             if(!page.validate()) {
                 return;
             }
         }
-        
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];
@@ -292,7 +357,6 @@
           }
         });
       });
-      
       $(document).click(function() {
       //签到奖励说明
       if(event.target.id == 'outerFunctionTrigger'){
