@@ -177,7 +177,7 @@ def participate_red_packet(record_id,member_id):
 	if int(packets_number) > all_participate.count():
 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
 		if (not participate_member_info.is_valid) and (not participate_member_info.has_join): #该用户曾经关注参与过
-			print('participate_red_packet :172')
+			print('participate_red_packet :180')
 			#未成功的红包需要将is_valid置为True
 			participate_member_info.update(set__is_valid=True,set__current_money=0)
 			# 将之前的点赞详情日志无效
@@ -188,29 +188,29 @@ def participate_red_packet(record_id,member_id):
 			app_models.RedPacketParticipance.objects(belong_to=record_id, helped_member_ids=member_id).update(pull__helped_member_ids=member_id)
 
 		if not participate_member_info.has_join:
-			print('participate_red_packet :186')
-			if red_packet_info.type == 'random':
-				random_total_money = float(red_packet_info.random_total_money)
-				random_packets_number = float(red_packet_info.random_packets_number)
-				random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
-				if all_participate.count() == 0:
-					#如果除不尽，把除不尽的分数加给第一个人
-					if random_average*random_packets_number != random_total_money:
-						need_fix_number = random_total_money-random_average*random_packets_number
-						random_average = random_average+need_fix_number
-				try:#防止万一红包random_random_number_list已经没了，无法pop
-					red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
-					red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
-				except Exception,e:
-					print e
-					response = create_response(500)
-					response.errMsg = 'is_run_out'
-					return response.get_response()
-			else:
-				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
+			print('participate_red_packet :191')
 			try:
 				amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
 				amount_control.update(inc__red_packet_amount = 1)
+				if red_packet_info.type == 'random':
+					random_total_money = float(red_packet_info.random_total_money)
+					random_packets_number = float(red_packet_info.random_packets_number)
+					random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
+					if all_participate.count() == 0:
+						#如果除不尽，把除不尽的分数加给第一个人
+						if random_average*random_packets_number != random_total_money:
+							need_fix_number = random_total_money-random_average*random_packets_number
+							random_average = random_average+need_fix_number
+					try:#防止万一红包random_random_number_list已经没了，无法pop
+						red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
+						red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
+					except Exception,e:
+						print e
+						response = create_response(500)
+						response.errMsg = 'is_run_out'
+						return response.get_response()
+				else:
+					red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
 				participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
 			except:
 				response = create_response(500)
