@@ -130,21 +130,16 @@ class RedPacket(resource.Resource):
 			data['error_msg'] = error_msg
 
 		#并发问题临时解决方案 ---start
-		try:
-			control_data = {}
-			control_data['belong_to'] = data['id']
-			control_data['red_packet_amount'] = 0
-			control = app_models.RedPacketAmountControl(**control_data)
-			control.save()
-			default_data = {}
-			default_data['belong_to'] = data['id']
-			default_data['red_packet_amount'] = red_packet_amount
-			default = app_models.RedPacketAmountControl(**default_data)
-			default.save()
-		except:
-			response = create_response(500)
-			response.errMsg = u'该活动已经创建过'
-			return response.get_response()
+		control_data = {}
+		control_data['belong_to'] = data['id']
+		control_data['red_packet_amount'] = 0
+		control = app_models.RedPacketAmountControl(**control_data)
+		control.save()
+		default_data = {}
+		default_data['belong_to'] = data['id']
+		default_data['red_packet_amount'] = int(red_packet_amount) + 1
+		default = app_models.RedPacketAmountControl(**default_data)
+		default.save()
 		#并发问题临时解决方案 ---end
 
 		response = create_response(200)
