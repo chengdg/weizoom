@@ -104,7 +104,7 @@ class RedPacketParticipances(resource.Resource):
 				params['is_already_paid'] = ''#进行中没有失败
 
 		member_id2subscribe = {m.id: m.is_subscribed for m in member_models.Member.objects.filter(id__in=member_ids_for_show)}
-		datas = app_models.RedPacketParticipance.objects(**params).order_by('-id','created_at')
+		datas = app_models.RedPacketParticipance.objects(**params).order_by('-created_at')
 
 		if is_subscribed == '1':
 			datas = [d for d in datas if member_id2subscribe[d.member_id]]
