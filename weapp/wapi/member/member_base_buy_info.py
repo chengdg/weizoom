@@ -83,6 +83,14 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 
 		items = []
 		for member in datas:
+			nickname = None
+			try:
+				#解决用户名本身就是字节码串导致不能正常转换得问题，例如ae
+				nickname = member.username.decode('utf8')
+			except:
+				nickname = member.username
+
+			print '---',member.id,type(member.username),member.username
 			items.append({
 				'id': member.id,
 				'pay_money': '%.2f' % member.pay_money,
@@ -91,7 +99,7 @@ class MemberBaseBuyInfo(api_resource.ApiResource):
 				'unit_price': '%.2f' % member.unit_price,
 				'referee_member_id': member_id2referee_member_id.get(member.id, ""),
 				'created_at': member.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-				'nickname': member.username
+				'nickname': nickname
 			})
 
 		return {
