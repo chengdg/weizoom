@@ -117,6 +117,9 @@ class RedPacket(resource.Resource):
 				if total_random != 0: #如果因为total_random_average产生了0.01上的差别，取反数加到第一个随机数上，使之最终总和为0
 					random_random_number_list[0] = round((float(-total_random) + float(random_random_number_list[0])),2)
 			data['random_random_number_list'] = random_random_number_list#拼手气红包随机数List
+			red_packet_amount = data['random_packets_number']
+		else:
+			red_packet_amount = data['regular_packets_number']
 		red_packet = app_models.RedPacket(**data)
 		red_packet.save()
 		error_msg = None
@@ -125,6 +128,25 @@ class RedPacket(resource.Resource):
 		data['id'] = data['_id']['$oid']
 		if error_msg:
 			data['error_msg'] = error_msg
+
+		#并发问题临时解决方案 ---start
+		try:
+			control_data = {}
+			control_data['belong_to'] = data['id']
+			control_data['red_packet_amount'] = 0
+			control = app_models.RedPacketAmountControl(**control_data)
+			control.save()
+			default_data = {}
+			default_data['belong_to'] = data['id']
+			default_data['red_packet_amount'] = red_packet_amount
+			default = app_models.RedPacketAmountControl(**default_data)
+			default.save()
+		except:
+			response = create_response(500)
+			response.errMsg = u'该活动已经创建过'
+			return response.get_response()
+		#并发问题临时解决方案 ---end
+
 		response = create_response(200)
 		response.data = data
 		return response.get_response()

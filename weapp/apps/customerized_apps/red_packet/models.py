@@ -122,3 +122,12 @@ class RedPacketCertSettings(models.Document):
 	owner_id = models.StringField(default=0) #活动所有者
 	cert_path = models.StringField(default="", max_length=1024) #证书
 	key_path = models.StringField(default="", max_length=1024) #证书key
+
+
+class RedPacketAmountControl(models.Document):
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	red_packet_amount = models.IntField(default=0,unique_with=['belong_to'])
+
+	meta = {
+		'collection': 'red_packet_red_packet_amount_control'
+	}

@@ -78,7 +78,6 @@ class RedPacketParticipance(resource.Resource):
 			else:
 				#更新当前member的参与信息
 				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
-				ids_tmp = curr_member_red_packet_info.helped_member_ids
 				#并发问题临时解决方案 ---start
 				control_data = {}
 				control_data['belong_to'] = red_packet_id
@@ -190,8 +189,7 @@ def participate_red_packet(record_id,member_id):
 
 		if not participate_member_info.has_join:
 			print('participate_red_packet :186')
-			red_packet_type = red_packet_info.type
-			if red_packet_type == 'random':
+			if red_packet_info.type == 'random':
 				random_total_money = float(red_packet_info.random_total_money)
 				random_packets_number = float(red_packet_info.random_packets_number)
 				random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
@@ -210,7 +208,15 @@ def participate_red_packet(record_id,member_id):
 					return response.get_response()
 			else:
 				red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-			participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+			try:
+				print('app_models.RedPacketAmountControl.objects.get(belong_to=record_id)')
+				amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
+				amount_control.update(inc__red_packet_amount = 1)
+				participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+			except:
+				response = create_response(500)
+				response.errMsg = u'is_run_out'
+				return response.get_response()
 		response = create_response(200)
 		return response.get_response()
 	else:
