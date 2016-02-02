@@ -133,6 +133,12 @@ class MRedPacket(resource.Resource):
 					is_helped = long(fid) in curr_member_red_packet_info.helped_member_ids
 
 			# 获取该主页帮助者列表
+			#并发问题临时解决方案 ---start
+			if current_money > red_packet_money:
+				app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id).update(
+					set__current_money=red_packet_money)
+				current_money = red_packet_money
+			#并发问题临时解决方案 ---end
 			helpers = app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
 			member_ids = [h.helper_member_id for h in helpers]
 			member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}

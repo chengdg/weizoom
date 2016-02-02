@@ -133,6 +133,12 @@ class RedPacketParticipances(resource.Resource):
 					name = cur_member.username_hexstr
 			else:
 				name = u'未知'
+			#并发问题临时解决方案 ---start
+			if data.current_money > data.red_packet_money:
+				app_models.RedPacketParticipance.objects.get(belong_to=belong_to, member_id=data.member_id).update(
+					set__current_money=data.red_packet_money)
+				data.reload()
+			#并发问题临时解决方案 ---end
 			items.append({
 				'id': str(data.id),
 				'member_id': data.member_id,
