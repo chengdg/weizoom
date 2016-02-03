@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from utils.cache_util import delete_cache
 
 import models as app_models
 import export
@@ -119,6 +120,10 @@ class PowerMe(resource.Resource):
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
 		app_models.PowerMe.objects(id=request.POST['id']).update(**update_data)
+
+		#更新后清除缓存
+		cache_key = 'apps_powerme_%s_html' % request.POST['id']
+		delete_cache(cache_key)
 		
 		response = create_response(200)
 		return response.get_response()

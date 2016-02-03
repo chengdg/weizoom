@@ -291,8 +291,8 @@ $(document).ready(function() {
 			confirm: function() {
 				var member_ids = [];
                 $('table').find('input:checkbox:checked').each(function(){
-
-                    member_ids.push($this.parents('tr').eq(0).attr('data-memberId'));
+                	var $inner_this = $(this);
+                    member_ids.push($inner_this.parents('tr').eq(0).attr('data-memberId'));
                 });
                 if(member_ids.length <= 0){
                     W.showHint("error","请选择发放用户");

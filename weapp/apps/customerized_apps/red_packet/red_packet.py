@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
+from utils.cache_util import delete_cache
 
 import models as app_models
 import export
@@ -177,6 +178,9 @@ class RedPacket(resource.Resource):
 				page['component']['components'][0]['model']['random_packets_number'] = ''
 		app_models.RedPacket.objects(id=request.POST['id']).update(**update_data)
 		pagestore.save_page(real_project_id, 1, page['component'])
+		#更新后清除缓存
+		cache_key = 'apps_red_packet_%s_html' % request.POST['id']
+		delete_cache(cache_key)
 		response = create_response(200)
 		return response.get_response()
 	
