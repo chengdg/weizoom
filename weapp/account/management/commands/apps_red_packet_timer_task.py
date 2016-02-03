@@ -58,7 +58,7 @@ class Command(BaseCommand):
 					need_helped_member_info.update(inc__current_money=need_helped_member_id2money[m_id])
 					need_helped_member_info.reload()
 					#最后一个通过非会员参与完成目标金额，设置红包状态为成功
-					if need_helped_member_info.current_money == need_helped_member_info.red_packet_money:
+					if need_helped_member_info.current_money >= need_helped_member_info.red_packet_money:
 						need_helped_member_info.update(set__red_packet_status=True, set__finished_time=datetime.now())
 
 		#更新已关注会员的点赞详情
@@ -91,16 +91,17 @@ class Command(BaseCommand):
 			try:
 				amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
 				amount_control.update(dec__red_packet_amount = 1)
-				red_packet_info = all_red_packets.get(id=record_id)
-				# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
-				if red_packet_info.type == u'random':
-					random_total_money = float(red_packet_info.random_total_money)
-					random_packets_number = float(red_packet_info.random_packets_number)
-					random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数
-					for p in need_clear_participances:
-						red_packet_info.update(push__random_random_number_list=p.red_packet_money-random_average)
 			except:
 				print('dec RedPacketAmountControl error!')
+				print('record_id:',str(record_id))
+			red_packet_info = all_red_packets.get(id=record_id)
+			# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
+			if red_packet_info.type == u'random':
+				random_total_money = float(red_packet_info.random_total_money)
+				random_packets_number = float(red_packet_info.random_packets_number)
+				random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数
+				for p in need_clear_participances:
+					red_packet_info.update(push__random_random_number_list=p.red_packet_money-random_average)
 
 		"""
 		所有取消关注再关注的参与用户，如果红包已经拼成功，参与状态为已参与（防止完成拼红包后，通过取关方式再次参与）

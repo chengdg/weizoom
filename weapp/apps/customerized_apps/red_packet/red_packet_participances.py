@@ -136,7 +136,7 @@ class RedPacketParticipances(resource.Resource):
 			#并发问题临时解决方案 ---start
 			if data.current_money > data.red_packet_money:
 				app_models.RedPacketParticipance.objects.get(belong_to=belong_to, member_id=data.member_id).update(
-					set__current_money=data.red_packet_money)
+					set__current_money=data.red_packet_money,set__red_packet_status=True)
 				data.reload()
 			#并发问题临时解决方案 ---end
 			items.append({

@@ -92,7 +92,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"normal",
+				"type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
