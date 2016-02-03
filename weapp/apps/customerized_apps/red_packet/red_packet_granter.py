@@ -50,15 +50,14 @@ class RedPacketGranter(resource.Resource):
 		else:
 			record = record.first()
 		owner_id = record.owner_id
-		member_info = app_models.RedPacketParticipance.objects(member_id=member_id, msg_api_status=False)
+		member_info = app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id, msg_api_status=False)
 		if member_info.count() <= 0:
 			response.errMsg = u'没有必要给该会员发送模板消息'
 			return response.get_response()
 		else:
 			member_info = member_info.first()
 		member_senders_info = member_info.msg_api_failed_members_info
-		msg_succeed_member_ids= send_apps_template_message(owner_id, 4, member_senders_info)
-		if long(member_id) not in msg_succeed_member_ids:
+		if not send_apps_template_message(owner_id, member_senders_info):
 			response.errMsg = u'发送模板消息失败'
 			return response.get_response()
 		else:
@@ -128,12 +127,13 @@ class RedPacketGranter(resource.Resource):
 		member_id2status = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
 		member_id2openid = {m.member.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
 
-		member_senders_info = []
 		red_api_succeed_member2member_senders_info = {}
 		if len(member_info_list) <= 0:
 			response.errMsg = u'没有符合条件的会员'
 			return response.get_response()
 		result_data = {}
+		msg_failed_member_ids = []
+		msg_succeed_member_ids = []
 		for member_info in member_info_list:
 			member_id = member_info.member_id
 			#非会员不发放
@@ -183,11 +183,15 @@ class RedPacketGranter(resource.Resource):
 							"finish_time": member_info.finished_time.strftime(u"%Y年%m月%d日 %H:%M") if member_info.finished_time else datetime.now().strftime(u"%Y年%m月%d日 %H:%M")
 						}
 					}
-					member_senders_info.append(temp_dict)
 					red_api_succeed_member2member_senders_info[member_id] = temp_dict
 					#更新已发放红包的会员信息
 					app_models.RedPacketParticipance.objects(belong_to=record_id, member_id=member_id).update(set__is_already_paid=True)
 					result_data[member_id] = u'现金红包发放成功!'
+					#发送模板消息
+					if not send_apps_template_message(owner_id, temp_dict):
+						msg_failed_member_ids.append(member_id)
+					else:
+						msg_succeed_member_ids.append(member_id)
 				else:
 					result_msg = result.err_code_des.text
 					print 'red api result msg:=============>>', result_msg
@@ -195,10 +199,6 @@ class RedPacketGranter(resource.Resource):
 			else:
 				response.errMsg = return_msg
 				return response.get_response()
-		msg_succeed_member_ids= send_apps_template_message(owner_id, member_senders_info)
-		red_api_succeed_member_ids = red_api_succeed_member2member_senders_info.keys()
-
-		msg_failed_member_ids = [m for m in red_api_succeed_member_ids if m not in msg_succeed_member_ids]
 
 		print "template msg failed:=============>>", msg_failed_member_ids
 		#更新已发放模板消息的会员信息

@@ -340,7 +340,8 @@ $(document).ready(function() {
                 });
             },
             error: function(error){
-                W.showHint('error', error.errMsg);
+            	console.log(error);
+                W.showHint('error', error.errMsg || '补发模版消息失败, 请稍后重试');
             }
         });
     });
@@ -359,7 +360,7 @@ function pull_request(member_ids){
         success: function(data){
             console.log(data);
             W.showHint('', "发放红包完成");
-            $.isEmptyObject(data) && setTimeout(function(){
+            !$.isEmptyObject(data) && setTimeout(function(){
                 W.dialog.showDialog('W.dialog.app.red_packet.ViewGrantResultDialog', {
                     data: data
                 });
@@ -372,6 +373,7 @@ function pull_request(member_ids){
             });
         },
         error: function(error){
+        	console.log(error);
             W.showHint('error', error.errMsg || '发放红包失败');
         }
     });

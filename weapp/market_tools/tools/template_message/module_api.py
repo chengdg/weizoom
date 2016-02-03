@@ -78,7 +78,7 @@ def send_order_template_message(webapp_id, order_id, send_point):
 
 	return True
 
-def send_apps_template_message(owner_id, member_senders_info):
+def send_apps_template_message(owner_id, member_info):
 	"""
 	百宝箱活动的模板消息
 	@param owner_id:
@@ -86,23 +86,22 @@ def send_apps_template_message(owner_id, member_senders_info):
 	@return:
 	"""
 	user = User.objects.get(id=owner_id)
-	succeed_member_ids = []
 	mpuser_access_token = _get_mpuser_access_token(user)
+	result = False
 	if mpuser_access_token:
 		weixin_api = get_weixin_api(mpuser_access_token)
-		for member_info in member_senders_info:
-			openid = member_info['openid']
-			app_url = member_info['app_url']
-			detail_data = member_info['detail_data']
-			try:
-				message = _get_fixed_apps_send_message_dict(openid, app_url, detail_data)
-				weixin_api.send_template_message(message, True)
-				succeed_member_ids.append(member_info['member_id'])
-			except:
-				notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
-				watchdog_warning(notify_message)
+		openid = member_info['openid']
+		app_url = member_info['app_url']
+		detail_data = member_info['detail_data']
+		try:
+			message = _get_fixed_apps_send_message_dict(openid, app_url, detail_data)
+			weixin_api.send_template_message(message, True)
+			result = True
+		except:
+			notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
+			watchdog_warning(notify_message)
 
-	return succeed_member_ids
+	return result
 
 def _get_mpuser_access_token(user):
 	mp_user = get_binding_weixin_mpuser(user)
