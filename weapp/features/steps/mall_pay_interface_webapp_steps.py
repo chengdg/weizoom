@@ -125,6 +125,7 @@ def step_impl(context, webapp_user_name, pay_interface_name):
 	if hasattr(context, 'order_payment_time'):
 		order.payment_time = context.order_payment_time
 		order.save()
+		delattr(context, 'order_payment_time')
 
 	context.pay_order_id = order.order_id
 

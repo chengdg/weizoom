@@ -66,6 +66,15 @@ def step_impl(context, action, user, order_code):
     response = context.client.post(url, data)
     bdd_util.assert_api_call_success(response)
 
+    if hasattr(context, 'order_payment_time'):
+        Order.objects.filter(order_id=order_code).update(payment_time=context.order_payment_time)
+        delattr(context, 'order_payment_time')
+
+@when(u"{user}'{action}'订单'{order_code}'于{payment_time}")
+def step_impl(context, action, user, order_code, payment_time):
+    context.order_payment_time = payment_time
+    context.execute_steps(u"When %s'%s'订单'%s'" % (user, action, order_code))
+
 
 # @when(u"{user}设置订单过期时间{order_expired_day}天")
 @when(u"{user}设置未付款订单过期时间{order_expired_hour}小时")
@@ -219,7 +228,7 @@ def step_impl(context, user):
         actual_order['ship_name'] = order_item['ship_name']
         actual_order['ship_tel'] = order_item['ship_tel']
         actual_order["sources"] = source[order_item['come']]
-        actual_order["member"] = order_item['buyer_name']
+        actual_order["member"] = order_item['buyer_name'] if order_item['member_is_subscribed'] else '非会员'
         actual_order["methods_of_payment"] = order_item['pay_interface_name']
         actual_order["logistics"] = express_util.get_name_by_value(order_item['express_company_name'])
         actual_order["number"] = order_item['express_number']
