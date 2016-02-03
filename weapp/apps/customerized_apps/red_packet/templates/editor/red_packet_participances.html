@@ -375,6 +375,11 @@ function pull_request(member_ids){
         error: function(error){
         	console.log(error);
             W.showHint('error', error.errMsg || '发放红包失败');
+            table && table.reload({
+                id: activityId
+            }, {
+                emptyDataHint: '没有符合条件的数据'
+            });
         }
     });
 }
