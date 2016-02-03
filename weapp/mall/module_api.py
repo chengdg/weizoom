@@ -2248,7 +2248,7 @@ def update_order_status(user, action, order, request=None):
 	if target_status:
 		if 'cancel' in action and request:
 			#更新首单的信息
-			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''), is_first_order=False)
+			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
 
 		elif 'pay' == action:
 			payment_time = datetime.now()
