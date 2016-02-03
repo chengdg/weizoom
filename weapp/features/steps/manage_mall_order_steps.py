@@ -227,11 +227,13 @@ def step_impl(context, user):
         actual_order["integral"] = order_item['integral']
         actual_order['status'] = order_item['status']
         actual_order['price'] = order_item['pay_money']
+        actual_order['payment_time'] = order_item['payment_time']
         actual_order['final_price'] = order_item['pay_money']
         actual_order['customer_message'] = order_item['customer_message']
         actual_order['buyer'] = order_item['buyer_name']
         actual_order['postage'] = order_item['postage']
         actual_order['save_money'] = order_item['save_money']
+        actual_order['is_first_order'] = 'true' if order_item['is_first_order'] else 'false'
         if 'edit_money' in order_item and order_item['edit_money']:
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.',
                                                                                                               '').replace(
@@ -273,6 +275,7 @@ def step_impl(context, user):
                 del pro['supplier']
             if 'actions' in pro:
                 pro['actions'] = set(pro['actions'])
+
     bdd_util.assert_list(expected, actual_orders)
 
 
@@ -368,6 +371,12 @@ ORDER_STATUS2ID = {
     u'退款成功': 7
 }
 
+ORDER_TYPE = {
+    u'全部': -1,
+    u'首单': 1,
+    u'非首单': 0
+}
+
 
 @when(u'{user}根据给定条件查询订单')
 def step_look_for_order(context, user):
@@ -385,12 +394,14 @@ def step_look_for_order(context, user):
         "order_source":      # 订单来源            e.g.:
         "order_status":      # 订单状态            e.g.:
         "isUseWeizoomCard":  # 仅显示微众卡抵扣订单  e.g.:
+        "order_type":        # 订单是不是首单
     }
     """
     query_params = {
         'pay_type': u'全部',
         'order_source': u'全部',
         'order_status': u'全部',
+        'order_type': u'全部',
         'belong': 'all',
         "date_interval": "",
         "date_interval_type": 1,
@@ -417,6 +428,11 @@ def step_look_for_order(context, user):
     query_params['order_status'] = ORDER_STATUS2ID[query_params['order_status']]
     if query_params['order_status'] == -1:
         query_params.pop('order_status')
+
+    query_params['order_type'] = ORDER_TYPE[query_params['order_type']]
+    if query_params['order_type'] == -1:
+        query_params.pop('order_type')
+
     if query_params.get('date'):
         query_params['date_interval_type'] = 1
         query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('date'))
@@ -426,6 +442,9 @@ def step_look_for_order(context, user):
     if query_params.get('delivery_time'):
         query_params['date_interval_type'] = 3
         query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('delivery_time'))
+
+    if query_params.get('isUseWeizoomCard'):
+        query_params['isUseWeizoomCard'] = 1 if query_params['isUseWeizoomCard'] == 'true' else 0
 
     context.query_params = query_params
 
