@@ -2248,18 +2248,6 @@ def update_order_status(user, action, order, request=None):
 	if target_status:
 		if 'cancel' in action and request:
 			#更新首单的信息
-			cancel_order = Order.objects.get(id=order_id)
-			if cancel_order.is_first_order:
-				other_orders = Order.objects.filter(
-					webapp_id=cancel_order.webapp_id,
-					webapp_user_id=cancel_order.webapp_user_id,
-					status__gt=ORDER_STATUS_CANCEL,
-					is_first_order=False).order_by('id')
-				if other_orders.count() > 0:
-					new_first_order = other_orders[0]
-					new_first_order.is_first_order = True
-					new_first_order.save()
-
 			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''), is_first_order=False)
 
 		elif 'pay' == action:

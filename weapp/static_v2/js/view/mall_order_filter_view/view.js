@@ -49,7 +49,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var shipName = $('#ship_name').val().trim();
         var shipTel = $('#ship_tel').val().trim();
         var orderStatus = $('#orderStatus').val();
-        var orderType = $('#orderType').val();
+        var orderType = $('#orderType').val().trim();
         var payType = $('#payType').val();
         var orderSource = $('#orderSource').val();
         var productName = $('#product_name').val().trim();
@@ -58,8 +58,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var endDate = $("input[name='end_date']").val().trim();
         var date_type = $("#date_type_select").val();
         var expressNumber = $('#express_number').val().trim();
-        var buyerType = $('#buyerType').val().trim();
-
 
         if ($('#isonlyweizoomcardpay').is(':checked')) {
             var isUseWeizoomCard = 1;
@@ -115,8 +113,8 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         }
 
         //
-        if (buyerType != '-1') {
-            args.push('"buyer_type":"'+buyerType+'"')
+        if (orderType != '-1') {
+            args.push('"order_type":"'+orderType+'"')
         }
         return args
     },
@@ -318,6 +316,5 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         $('#orderSource').val(-1);
         $('#express_number').val('');
         $('#product_name').val('');
-        $('#buyerType').val(-1);
     }
 });
