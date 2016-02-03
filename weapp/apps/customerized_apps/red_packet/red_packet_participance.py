@@ -172,7 +172,7 @@ class RedPacketParticipance(resource.Resource):
 
 def participate_red_packet(record_id,member_id):
 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
-	packets_number = red_packet_info.random_packets_number if red_packet_info.random_packets_number!='' else red_packet_info.regular_packets_number
+	packets_number = red_packet_info.random_packets_number if red_packet_info.type =='random' else red_packet_info.regular_packets_number
 	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
 	if int(packets_number) > all_participate.count():
 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)

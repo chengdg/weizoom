@@ -207,79 +207,78 @@
           var wishing = descriptionModel.get('wishing');
 
           //验证区间
-          function vertify_msg(msg){
-              var vertify_msg_div = $(".propertyGroup_property_moneyRangeSelectorField .propertyGroup_property_input .errorHint");
-              vertify_msg_div.html(msg);
-              vertify_msg_div.show();
-          }
+          // function vertify_msg(msg){
+          //     var vertify_msg_div = $(".propertyGroup_property_moneyRangeSelectorField .propertyGroup_property_input .errorHint");
+          //     vertify_msg_div.html(msg);
+          //     vertify_msg_div.show();
+          // }
 
-          var money_range_arr = money_range.split("-");
-          var money_range_min = parseFloat(money_range_arr[0]);
-          var money_range_max = parseFloat(money_range_arr[1]);
-          if(money_range_min<0.01){
-            validate_money_range = false;
-          }
-          if(money_range_max<0.01){
-            validate_money_range = false;
-          }
-          if(money_range_min>money_range_max){
-            validate_money_range = false;
-          }
-          var money_range_avg = (money_range_min+money_range_max)/2;
-          if(red_packet_type=="random"){
-              if(parseFloat(random_total_money)%parseFloat(random_packets_number)!=0){
-                  vertify_msg("总金额和红包应该整除！");
-                  console.log("总金额和红包应该整除！");
-                  W.showHint('error', '保存失败!');
-                  that.disabled = false;
-                  return false;
-              }
-              var red_packet_avg = parseFloat(random_total_money)/parseFloat(random_packets_number);
-              red_packet_avg = red_packet_avg.toFixed(2);
-              if(money_range_max>=red_packet_avg){
-                  validate_money_range = false;
-              }
-              if(money_range_min>=red_packet_avg){
-                  validate_money_range = false;
-              }
-              if(money_range_avg>=red_packet_avg){
-                  validate_money_range = false;
-              }
+          // var money_range_arr = money_range.split("-");
+          // var money_range_min = parseFloat(money_range_arr[0]);
+          // var money_range_max = parseFloat(money_range_arr[1]);
+          // if(money_range_min<0.01){
+          //   validate_money_range = false;
+          // }
+          // if(money_range_max<0.01){
+          //   validate_money_range = false;
+          // }
+          // if(money_range_min>money_range_max){
+          //   validate_money_range = false;
+          // }
+          // var money_range_avg = (money_range_min+money_range_max)/2;
+          // if(red_packet_type=="random"){
+          //     if(parseFloat(random_total_money)%parseFloat(random_packets_number)!=0){
+          //         vertify_msg("总金额和红包应该整除！");
+          //         console.log("总金额和红包应该整除！");
+          //         W.showHint('error', '保存失败!');
+          //         that.disabled = false;
+          //         return false;
+          //     }
+          //     var red_packet_avg = parseFloat(random_total_money)/parseFloat(random_packets_number);
+          //     red_packet_avg = red_packet_avg.toFixed(2);
+          //     if(money_range_max>=red_packet_avg){
+          //         validate_money_range = false;
+          //     }
+          //     if(money_range_min>=red_packet_avg){
+          //         validate_money_range = false;
+          //     }
+          //     if(money_range_avg>=red_packet_avg){
+          //         validate_money_range = false;
+          //     }
+          // }
 
-          }
+          // if(red_packet_type=="regular"){
+          //     var tmp_regular_per_money = parseFloat(regular_per_money);
+          //     tmp_regular_per_money = tmp_regular_per_money.toFixed(2);
+          //     if(money_range_min>=tmp_regular_per_money){
+          //         validate_money_range = false;
+          //     }
+          //     if(money_range_max>=tmp_regular_per_money){
+          //         validate_money_range = false;
+          //     }
+          //     if(money_range_avg>=tmp_regular_per_money){
+          //         validate_money_range = false;
+          //     }
+          // }
 
-          if(red_packet_type=="regular"){
-              var tmp_regular_per_money = parseFloat(regular_per_money);
-              tmp_regular_per_money = tmp_regular_per_money.toFixed(2);
-              if(money_range_min>=tmp_regular_per_money){
-                  validate_money_range = false;
-              }
-              if(money_range_max>=tmp_regular_per_money){
-                  validate_money_range = false;
-              }
-              if(money_range_avg>=tmp_regular_per_money){
-                  validate_money_range = false;
-              }
-          }
+          // if(!validate_money_range){
+          //     vertify_msg("好友贡献区间不合理,请重新输入！");
+          //     console.log("好友贡献区间不合理,请重新输入！");
+          //     W.showHint('error', '保存失败!');
+          //     that.disabled = false;
+          //     return false;
+          // }
 
-          if(!validate_money_range){
-              vertify_msg("好友贡献区间不合理,请重新输入！");
-              console.log("好友贡献区间不合理,请重新输入！");
-              W.showHint('error', '保存失败!');
-              that.disabled = false;
-              return false;
-          }
+          // //end
 
-          //end
-
-          //清除可能产生的无效数据
-          if(red_packet_type=="regular"){
-              random_total_money = '';
-              random_packets_number = '';
-          }else{
-              regular_packets_number = '';
-              regular_per_money = '';
-          }
+          // //清除可能产生的无效数据
+          // if(red_packet_type=="regular"){
+          //     random_total_money = '';
+          //     random_packets_number = '';
+          // }else{
+          //     regular_packets_number = '';
+          //     regular_per_money = '';
+          // }
 
           var args = {
             "name": name,
