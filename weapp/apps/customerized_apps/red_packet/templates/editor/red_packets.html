@@ -1,5 +1,12 @@
 {% extends "content_base_v2.html" %}
+{% block css %}
+    <style>
+        .xui-operations a{
+            display: inline-block;
+        }
+    </style>
 
+{% endblock %}
 {% block content-panel %}
 <div class="xui-RedPacketsAppPage xui-appPage-commonStyle">
 	<div class="relative">
@@ -170,14 +177,13 @@
 				<td>
 					${item.already_paid_money}
 				</td>
-				<td>
+				<td class="xui-operations">
 				    <a href="/apps/red_packet/red_packet_participances/?id=${item.id}" class="ml5">查看</a>
 				    <a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id} target="_blank">预览</a>
 				    <a href="javascript:void(0);" class="ml5 xa-link-copy" data-clipboard-text="/m/apps/red_packet/m_red_packet/?webapp_owner_id=${item.owner_id}&id=${item.id}">复制链接</a>
 					{{if (item.status === '已结束')}}
 					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
 					{{/if}}
-					<a href="javascript:void(0)" class="xa-pause-to-clean-history xui-hide" data-id=${item.id}>暂停</a>
 				</td>
 			</tr>
 			{{/each}}

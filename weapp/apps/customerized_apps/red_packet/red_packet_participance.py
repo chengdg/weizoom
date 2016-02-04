@@ -212,7 +212,8 @@ def participate_red_packet(record_id,member_id):
 				else:
 					red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
 				participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
-			except:
+			except Exception,e:
+				print e
 				response = create_response(500)
 				response.errMsg = u'is_run_out'
 				return response.get_response()

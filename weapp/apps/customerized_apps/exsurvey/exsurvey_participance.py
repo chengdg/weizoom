@@ -117,11 +117,14 @@ class exsurveyParticipance(resource.Resource):
 					product = v['value']
 					item_data['type'] = v['type']
 					item_data['item_name'] = pureName
-					item_data['item_value'] = product['product_name']
-					product_dict['product_id'] = product['product_id']
-					product_dict['product_owner_id'] = product['product_owner_id']
-					product_dict['product_supplier_id'] = product['product_supplier_id']
-					product_dict['product_name'] = product['product_name']
+					if product:
+						item_data['item_value'] = product['product_name']
+						product_dict['product_id'] = product['product_id']
+						product_dict['product_owner_id'] = product['product_owner_id']
+						product_dict['product_supplier_id'] = product['product_supplier_id']
+						product_dict['product_name'] = product['product_name']
+					else:
+						item_data['item_value'] = ""
 				result_list.append(item_data)
 			item_data_list.append({
 				'id': str(exsurvey_participance.id),

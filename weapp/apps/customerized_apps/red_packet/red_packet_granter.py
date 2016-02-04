@@ -147,7 +147,7 @@ class RedPacketGranter(resource.Resource):
 			#生产环境
 			red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
 				nick_name,openid,price,price,price,1, wishing, ip,
-				record_name,
+				u"点赞拼大奖红包",
 				remark,
 				weixin_pay_config.partner_key)
 
@@ -155,7 +155,7 @@ class RedPacketGranter(resource.Resource):
 			print 'real price:=============>>', price
 			# red = RedPackMessage('1231154002', 'wx9fefd1d7a80fbe41', u'微众家',
 			# 	u'微众家',"oucARuOuCP3haBrgYmUFU9aOs0SA",price,1,1,1, wishing, ip,
-			# 	record_name,
+			# 	u"点赞拼大奖红包",
 			# 	u'微众家',
 			# 	'i15uok48plm49wm37ex62qmr50hk27em')
 

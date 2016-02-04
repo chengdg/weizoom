@@ -2,17 +2,35 @@
 
 {% block css %}
 <style type="text/css">
+    .wui-del-storage{
+        height: 25px;
+        width: 25px;
+        position: fixed;
+        right: 5px;
+        top: 5px;
+        background: rgba(74, 82, 55, 0.5);
+        border-radius: 50px;
+        border: none;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
 {{ page_html_content|safe }}
+    <button class="wui-del-storage wa-del-storage">U</button>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
 var storageTimer;
 $(document).ready(function() {
+    //清空当前活动的本地数据
+    $('.wa-del-storage').on('click', function(){
+        if( window.localStorage){
+            window.localStorage.setItem(W.appRecordId, '');
+            console.log('清除存储', W.appRecordId);
+        }
+    });
 	var product_dict_json = JSON.stringify({{ product_dict|safe }});
 	var product_dict = JSON.parse(product_dict_json);
     var $freedback_type = $('.freedback_type');
@@ -57,15 +75,7 @@ $(document).ready(function() {
         $li.parents('.wui-i-inputContainer').find('.icon').addClass('arrow_down').removeClass('arrow_up')
     });
     $('.xa-submitTermite').unbind('click');
-    //连续点击5次title则清空当前活动的本地数据
-    var clickCounts = 0;
-    $('.xa-title').on('click', function(){
-        if(++clickCounts >= 5 && window.localStorage){
-            window.localStorage.setItem(W.appRecordId, '');
-            console.log('清除存储', W.appRecordId);
-            clickCounts = 0;
-        }
-    });
+
     if (!W.isPC) {
         //获取上一次的草稿信息
         if(window.localStorage && window.localStorage.getItem(W.appRecordId)){
@@ -129,8 +139,7 @@ $(document).ready(function() {
                     });
                     var value = JSON.stringify(picture_list);
                 }else if (inputType === 'producttype') {
-                    var value = JSON.parse($control.find('.type_name').attr('data-product'));
-                    //value['product_name'] = data_product['product_name'];
+                    var value = $control.find('.type_name').attr('data-product')=='' ? "" : JSON.parse($control.find('.type_name').attr('data-product'));
                 }
 
                 data[name] = {

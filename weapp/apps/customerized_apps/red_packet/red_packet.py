@@ -93,31 +93,7 @@ class RedPacket(resource.Resource):
 		data = request_util.get_fields_to_be_save(request)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 		if request.POST['type'] == 'random':
-			"""
-			每次拼手气红包都是取固定金额：总金额/个数，再加上随机的浮动值，得到拼手气红包最终的金额，这里需要在生成拼红包活动时，
-			跟着生成一个随机数的List存到数据库中，随机数数量是红包个数，所有随机数的总和为0
-
-			"""
-			random_random_number_list = []
-			random_total_money = float(data['random_total_money'])#拼手气红包总额
-			random_packets_number = int(data['random_packets_number'])  #拼手气红包红包个数
-			random_number_range = (random_total_money / random_packets_number) * 0.1 #拼手气红包随机范围
-			for _ in range(random_packets_number): #在正负浮动范围内生成红包个数个随机数
-				random_random_number_list.append(round(random.uniform(-random_number_range, random_number_range),2))
-			total_random = 0 #总随机金额
-			for r in random_random_number_list:
-				total_random += float(r) #计算总随机金额
-			if total_random != 0: #如果总随机金额不等于0，将随机出来的总随机金额与0的差额除以红包个数，分别加到每个随机数上，使之最终总和趋向为0
-				total_random_average = (-total_random) / random_packets_number
-				i = 0
-				total_random = 0 #再次初始化总随机金额
-				for r in random_random_number_list:
-					random_random_number_list[i] = round((float(r) + float(total_random_average)),2)
-					total_random += float(random_random_number_list[i]) #计算平均分配过差额后的总随机金额
-					i += 1
-				if total_random != 0: #如果因为total_random_average产生了0.01上的差别，取反数加到第一个随机数上，使之最终总和为0
-					random_random_number_list[0] = round((float(-total_random) + float(random_random_number_list[0])),2)
-			data['random_random_number_list'] = random_random_number_list#拼手气红包随机数List
+			data['random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number']) #拼手气红包随机数List
 			red_packet_amount = data['random_packets_number']
 		else:
 			red_packet_amount = data['regular_packets_number']
@@ -164,19 +140,35 @@ class RedPacket(resource.Resource):
 			if key in update_fields:
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
-
 			#清除红包类型选项下不需要再保存的两个字段
 			if key == "type" and value == "random":
+				update_data['set__random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number'])
+				red_packet_amount = data['random_packets_number']
 				update_data['set__regular_packets_number'] = ''
 				update_data['set__regular_per_money'] = ''
 				page['component']['components'][0]['model']['regular_packets_number'] = ''
 				page['component']['components'][0]['model']['regular_per_money'] = ''
 			if key == "type" and value == "regular":
+				red_packet_amount = data['regular_packets_number']
 				update_data['set__random_total_money'] = ''
 				update_data['set__random_packets_number'] = ''
 				page['component']['components'][0]['model']['random_total_money'] = ''
 				page['component']['components'][0]['model']['random_packets_number'] = ''
 		app_models.RedPacket.objects(id=request.POST['id']).update(**update_data)
+		#并发问题临时解决方案 ---start
+		app_models.RedPacketAmountControl.objects(belong_to=request.POST['id']).delete()
+		control_data = {}
+		control_data['belong_to'] = data['id']
+		control_data['red_packet_amount'] = 0
+		control = app_models.RedPacketAmountControl(**control_data)
+		control.save()
+		default_data = {}
+		default_data['belong_to'] = data['id']
+		default_data['red_packet_amount'] = int(red_packet_amount) + 1
+		default = app_models.RedPacketAmountControl(**default_data)
+		default.save()
+		#并发问题临时解决方案 ---end
+
 		pagestore.save_page(real_project_id, 1, page['component'])
 		#更新后清除缓存
 		cache_key = 'apps_red_packet_%s_html' % request.POST['id']
@@ -194,3 +186,30 @@ class RedPacket(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+def create_pop_list(random_total_money,random_packets_number):
+	"""
+	每次拼手气红包都是取固定金额：总金额/个数，再加上随机的浮动值，得到拼手气红包最终的金额，这里需要在生成拼红包活动时，
+	跟着生成一个随机数的List存到数据库中，随机数数量是红包个数，所有随机数的总和为0
+
+	"""
+	random_random_number_list = []
+	random_total_money = float(random_total_money)#拼手气红包总额
+	random_packets_number = int(random_packets_number)  #拼手气红包红包个数
+	random_number_range = (random_total_money / random_packets_number) * 0.1 #拼手气红包随机范围
+	for _ in range(random_packets_number): #在正负浮动范围内生成红包个数个随机数
+		random_random_number_list.append(round(random.uniform(-random_number_range, random_number_range),2))
+	total_random = 0 #总随机金额
+	for r in random_random_number_list:
+		total_random += float(r) #计算总随机金额
+	if total_random != 0: #如果总随机金额不等于0，将随机出来的总随机金额与0的差额除以红包个数，分别加到每个随机数上，使之最终总和趋向为0
+		total_random_average = (-total_random) / random_packets_number
+		i = 0
+		total_random = 0 #再次初始化总随机金额
+		for r in random_random_number_list:
+			random_random_number_list[i] = round((float(r) + float(total_random_average)),2)
+			total_random += float(random_random_number_list[i]) #计算平均分配过差额后的总随机金额
+			i += 1
+		if total_random != 0: #如果因为total_random_average产生了0.01上的差别，取反数加到第一个随机数上，使之最终总和为0
+			random_random_number_list[0] = round((float(-total_random) + float(random_random_number_list[0])),2)
+
+	return random_random_number_list

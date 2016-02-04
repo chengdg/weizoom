@@ -222,7 +222,6 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 			if (start_time_text != ""){
 				getDateTime($node,start_time_text,value,model);
 			}
-
 		},
 		timing: function($node, model, value, $propertyViewNode) {
 			$node.find('.wa-timing').toggle();
@@ -230,7 +229,28 @@ W.component.appkit.RedPacketDescription = W.component.Component.extend({
 		timing_value:function($node, model, value, $propertyViewNode){
 		},
 		red_packet_type: function($node, model, value, $propertyViewNode) {
-
+			$propertyViewNode.find('#random_total_money').val('');
+			$propertyViewNode.find('#random_packets_number').val('');
+			$propertyViewNode.find('#regular_packets_number').val('');
+			$propertyViewNode.find('#regular_per_money').val('');
+		},
+		random_total_money:function($node, model, value, $propertyViewNode){
+			validate_money($node, model, value, $propertyViewNode);
+		},
+		random_packets_number:function($node, model, value, $propertyViewNode){
+			validate_money($node, model, value, $propertyViewNode);
+		},
+		regular_packets_number:function($node, model, value, $propertyViewNode){
+			validate_money($node, model, value, $propertyViewNode);
+		},
+		regular_per_money:function($node, model, value, $propertyViewNode){
+			validate_money($node, model, value, $propertyViewNode);
+		},
+		start_money:function($node, model, value, $propertyViewNode){
+			validate_money($node, model, value, $propertyViewNode);
+		},
+		end_money:function($node, model, value, $propertyViewNode){
+			validate_money($node, model, value, $propertyViewNode);
 		},
 		qrcode:function($node, model, value, $propertyViewNode){
 			var data;
@@ -329,6 +349,124 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 		second: text_second
 	});
 };
+
+function validate_money($node, model, value, $propertyViewNode){
+	clear_vertify_msg();
+	var red_packet_type = $propertyViewNode.find('.xa-red-packet-selector[type=radio]:checked').val();
+	var validate_money_flag = true;
+	var reg = /^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/;
+
+	if(red_packet_type=="random"){
+		var random_total_money = parseFloat($propertyViewNode.find('#random_total_money').val());
+		var random_packets_number = parseFloat($propertyViewNode.find('#random_packets_number').val());
+		var money_range_min = parseFloat($propertyViewNode.find('#start_money').val());
+		var money_range_max = parseFloat($propertyViewNode.find('#end_money').val());
+		var money_range_avg = (money_range_min+money_range_max)/2;
+		if(!random_total_money){
+			vertify_msg("总金额不能为空！");
+			validate_money_flag = false;
+		}else if(!random_packets_number){
+			vertify_msg("红包个数不能为空！");
+			validate_money_flag = false;
+		}else{
+
+			if(money_range_min<=parseFloat(0.01)){
+				vertify_msg("范围应>0.01且最多两位小数");
+				validate_money_flag = false;
+			}
+			if(money_range_max<=parseFloat(0.01)){
+				vertify_msg("范围应>0.01且最多两位小数");
+				validate_money_flag = false;
+			}
+			if(money_range_min>=money_range_max){
+				vertify_msg("最小值不应该大于或等于最大值");
+				validate_money_flag = false;
+			}
+			// if(parseFloat(random_total_money)%parseFloat(random_packets_number)!=0){
+			// 	vertify_msg("总金额和红包应该整除！");
+			// 	validate_money_flag = false;
+			// }
+			if((!reg.test(money_range_min))||(!reg.test(money_range_max))){
+				vertify_msg("范围应>0.01且最多两位小数");
+				validate_money_flag = false;
+			}
+			var red_packet_avg = parseFloat(random_total_money)/parseFloat(random_packets_number);
+			red_packet_avg = red_packet_avg.toFixed(2);
+			if((money_range_max>=red_packet_avg)||(money_range_min>=red_packet_avg)||(money_range_avg>=red_packet_avg)){
+				vertify_msg("范围区间过大！");
+				validate_money_flag = false;
+			}
+			if((0.9*red_packet_avg)<1.0){
+				vertify_msg("随机红包,单个可能<1元,请重新设置");
+				validate_money_flag = false;
+			}
+
+		}
+
+	}else if(red_packet_type=="regular"){
+		var regular_packets_number = parseFloat($propertyViewNode.find('#regular_packets_number').val());
+		var regular_per_money = parseFloat($propertyViewNode.find('#regular_per_money').val());
+		var money_range_min = parseFloat($propertyViewNode.find('#start_money').val());
+		var money_range_max = parseFloat($propertyViewNode.find('#end_money').val());
+		var money_range_avg = (money_range_min+money_range_max)/2;
+
+		var tmp_regular_per_money = parseFloat(regular_per_money);
+		tmp_regular_per_money = tmp_regular_per_money.toFixed(2);
+
+
+		if(!regular_packets_number){
+			vertify_msg("红包个数不能为空！");
+			validate_money_flag = false;
+		}else if(!regular_per_money){
+			vertify_msg("单个红包金额不应为空！");
+			validate_money_flag = false;
+		}else{
+			if(money_range_min<=parseFloat(0.01)){
+
+				vertify_msg("范围应>0.01且最多两位小数");
+				validate_money_flag = false;
+			}
+			if(money_range_max<=parseFloat(0.01)){
+				vertify_msg("范围应>0.01且最多两位小数");
+				validate_money_flag = false;
+			}
+			if(money_range_min>=money_range_max){
+				vertify_msg("最小值不应该大于或等于最大值");
+				validate_money_flag = false;
+			}
+			if((!reg.test(money_range_min))||(!reg.test(money_range_max))){
+				vertify_msg("范围应>0.01且最多两位小数");
+				validate_money_flag = false;
+			}
+			if((money_range_min>=tmp_regular_per_money)||(money_range_max>=tmp_regular_per_money)||(money_range_avg>=tmp_regular_per_money)){
+				vertify_msg("范围区间过大！");
+				validate_money_flag = false;
+			}
+			if(regular_per_money<1.0){
+				vertify_msg("微信限制:单个红包必须>1元");
+				validate_money_flag = false;
+			}
+		}
+
+	}
+
+	if(parent){
+		parent.validate_money_flag = validate_money_flag;
+	}
+}
+
+
+function vertify_msg(msg){
+	var vertify_msg_div = $(".propertyGroup_property_moneyRangeSelectorField .propertyGroup_property_input .errorHint");
+	vertify_msg_div.html(msg);
+	vertify_msg_div.show();
+}
+
+function clear_vertify_msg(){
+	var vertify_msg_div = $(".propertyGroup_property_moneyRangeSelectorField .propertyGroup_property_input .errorHint");
+	vertify_msg_div.html("");
+	vertify_msg_div.hide();
+}
 
 W.component.appkit.RedPacketDescription.handleHelp = function(){
 	//初始化好友贡献区间设置说明
