@@ -16,11 +16,14 @@ $(document).ready(function() {
 	var product_dict_json = JSON.stringify({{ product_dict|safe }});
 	var product_dict = JSON.parse(product_dict_json);
     var $freedback_type = $('.freedback_type');
-    if ($freedback_type){
-        var type_title_width  =  $freedback_type.find('.wui-i-title').width();
-        var padding_width = Number($freedback_type.css('padding-left').split('px')[0]) + Number($freedback_type.css('padding-right').split('px')[0]);
-        var freedback_type_width =  $freedback_type.width()-padding_width-2;
-        $('.type_name').width(freedback_type_width-type_title_width-15);
+    if ($freedback_type.length > 0){
+        $freedback_type.each(function(){
+            var $this = $(this);
+            var type_title_width  =  $this.find('.wui-i-title').width();
+            var padding_width = Number($this.css('padding-left').split('px')[0]) + Number($this.css('padding-right').split('px')[0]);
+            var freedback_type_width =  $this.width()-padding_width-2;
+            $this.find('.type_name').width(freedback_type_width-type_title_width-15);
+        });
     }
 	var html_str = "";
 	for (var i=0; i<product_dict.length;++i){
@@ -53,10 +56,17 @@ $(document).ready(function() {
         $li.parents('.xui-dropmenu').hide();
         $li.parents('.wui-i-inputContainer').find('.icon').addClass('arrow_down').removeClass('arrow_up')
     });
-    if (W.isPC) {
-        $('.xa-submitTermite').unbind('click');
-    }else {
-        $('.xa-submitTermite').unbind('click');
+    $('.xa-submitTermite').unbind('click');
+    //连续点击5次title则清空当前活动的本地数据
+    var clickCounts = 0;
+    $('.xa-title').on('click', function(){
+        if(++clickCounts >= 5 && window.localStorage){
+            window.localStorage.setItem(W.appRecordId, '');
+            console.log('清除存储', W.appRecordId);
+            clickCounts = 0;
+        }
+    });
+    if (!W.isPC) {
         //获取上一次的草稿信息
         if(window.localStorage && window.localStorage.getItem(W.appRecordId)){
             getFormData(JSON.parse(window.localStorage.getItem(W.appRecordId)));
@@ -197,7 +207,7 @@ $(document).ready(function() {
             //textarea
             $('.xa-inputControl[data-input-type=textarea]').each(function(){
                 var $this = $(this);
-                data[".xa-inputControl[data-input-type=textarea][data-input-name="+$this.attr('data-input-name')+"] textarea"] = {
+                data[".wui-QA[data-component-cid='"+$this.parent().attr('data-component-cid')+"'] textarea"] = {
                     "type": "text",
                     "value": $.trim($this.find('textarea').val())
                 };
@@ -205,7 +215,7 @@ $(document).ready(function() {
             //input
             $('.xa-inputControl[data-input-type=text]').each(function(){
                 var $this = $(this);
-                data[".xa-inputControl[data-input-type=text][data-input-name="+$this.attr('data-input-name')+"] input"] = {
+                data[".xa-inputControl[data-input-type=text][data-input-name='"+$this.attr('data-input-name')+"'] input"] = {
                     "type": "text",
                     "value": $.trim($this.find('input').val())
                 };
@@ -213,7 +223,7 @@ $(document).ready(function() {
             //product
             $('.xa-inputControl[data-input-type=producttype]').each(function(){
                 var $this = $(this);
-                data[".xa-inputControl[data-input-type=producttype][data-input-name="+$this.attr('data-input-name')+"] .type_name"] = {
+                data[".wui-DropDownBox[data-component-cid='"+$this.parent().attr('data-component-cid')+"'] .type_name"] = {
                     "type": "product",
                     "data": $this.find('.type_name').attr('data-product'),
                     "value": $this.find('.type_name').html()
@@ -248,28 +258,12 @@ $(document).ready(function() {
                     window.clearInterval(storageTimer); //清除定时器
                 },
                 error: function(resp) {
-                    if(resp.data!==""){
-                        $('body').alert({
-                            isShow: false
-                        });
-                        $('body').append('<div class="wui-appParticipantResult-Cover" style="background-color: rgba(0, 0, 0, 0.15)">\
-                            <div class="wui-i-background">\
-                                <div class="wui-i-successText" style="font-size: 20px;margin-top:0">'+resp.data+'</div>\
-                                <div class="wui-i-close xa-closeParticipantResult" style="right: -10px;top: -10px">&#10005</div>\
-                            </div>\
-                        </div>');
-                        $('.wui-appParticipantResult-Cover').height(document.body.scrollHeight);
-                        $('.xa-closeParticipantResult').on('click', function(event) {
-                            $('.wui-appParticipantResult-Cover').remove();
-                        });
-                    } else {
-                        $('body').alert({
-                            isShow: true,
-                            isSlide: true,
-                            info: '参与失败，请稍后再试！',
-                            speed: 3000
-                        });
-                    }
+                    $('body').alert({
+                        isShow: true,
+                        isSlide: true,
+                        info: '参与失败，请稍后再试！',
+                        speed: 3000
+                    });
                     slag = true;
                 }
             });
