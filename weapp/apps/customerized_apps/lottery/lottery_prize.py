@@ -372,6 +372,11 @@ class lottery_prize(resource.Resource):
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
 
+		if not allow_repeat and lottery_participance.has_prize:
+			response = create_response(500)
+			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
+			return response.get_response()
+
 		#如果当前可玩次数为0，则直接返回
 		#如果限制抽奖次数，则进行判断目前是否抽奖次数已经使用完
 		if int(limitation) != -1:
@@ -420,9 +425,6 @@ class lottery_prize(resource.Resource):
 		#2、根据是否可以重复抽奖和抽到的优惠券规则判断
 		SET_CACHE(cache_key, null_prize)
 		if not lottery_prize:
-			result = u'谢谢参与'
-			SET_CACHE(cache_key, null_prize - 1)
-		elif not allow_repeat and lottery_participance.has_prize:
 			result = u'谢谢参与'
 			SET_CACHE(cache_key, null_prize - 1)
 		else:
