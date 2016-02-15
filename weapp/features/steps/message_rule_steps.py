@@ -493,7 +493,7 @@ def step_impl(context, user):
 			answer_dict['type']  = 'text'
 		else:
 			new_title = answer['reply_content']
-			print '>>>>>>',context.client.user.id, new_title
+			print('>>>>>>',context.client.user.id, new_title)
 			news = News.objects.filter(material__owner_id=context.client.user.id, title=new_title)[0]
 			answer_dict['content']  = "%s" % news.id
 			answer_dict['type']  = 'news'
@@ -533,14 +533,14 @@ def step_impl(context, user):
 @when(u'{user}访问关键词自动回复规则列表')
 def step_impl(context, user):
 	url = "/new_weixin/api/keyword_rules/?count_per_page=%s" % context.count_per_page
-	print "context.count_per_page"
+	print("context.count_per_page")
 	response = context.client.get(url)
 	context.response = response
 
 @then(u'{user}获得关键词自动回复规则列表显示共{page_count}页')
 def step_impl(context, user, page_count):
 	content = context.response.content
-	print json.loads(content)
+	print(json.loads(content))
 	max_page = json.loads(content)['data']['pageinfo']['max_page']
 	if int(page_count) != max_page:
 		raise

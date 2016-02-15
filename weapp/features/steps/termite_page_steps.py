@@ -421,8 +421,8 @@ def __get_index(component):
 	else:
 		INDEX = INDEX + 1
 
-	print '+++++++++++++++'
-	print component.get('index')
+	print('+++++++++++++++')
+	print(component.get('index'))
 
 	return INDEX
 
@@ -430,7 +430,7 @@ def __get_index(component):
 # 标题
 def _add_templet_title(page, page_json):
 	cid, pid = __get_cid_and_pid(page_json)
-	print 
+	print()
 	if page.has_key("templet_title"):
 		wepage_title = {
 			"type":"wepage.title",

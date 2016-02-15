@@ -167,8 +167,8 @@
 #
 # 	actual_orders = _get_actual_orders(items, context)
 # 	expected_order = json.loads(context.text)
-# 	# print actual_orders
-# 	# print '-------------------'
+# 	# print(actual_orders)
+# 	# print('-------------------')
 # 	bdd_util.assert_list(expected_order, actual_orders)
 
 	# url = '/mall/api/orders/get/?{}&sort_attr=-created_at&count_per_page=15&page=1'.format(filter_value)
@@ -227,7 +227,7 @@
 # 	if filter_value:
 # 		url = '/mall/editor/orders/export/?{}'.format(filter_value)
 # 		response = context.client.get(bdd_util.nginx(url))
-# 		# print response
+# 		# print(response)
 # 		# items = json.loads(response.content)['data']['items']
 # 		# actual_orders = _get_actual_orders(items)
 # 		# expected_order = json.loads(context.text)

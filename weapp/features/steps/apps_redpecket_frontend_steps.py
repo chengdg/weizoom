@@ -37,7 +37,7 @@ class Command(BaseCommand):
 		@param options:
 		@return:
 		"""
-		print 'red_packet timer task start...'
+		print('red_packet timer task start...')
 		start_time = time.time()
 
 		"""
@@ -133,7 +133,7 @@ class Command(BaseCommand):
 
 		end_time = time.time()
 		diff = (end_time-start_time)*1000
-		print 'red_packet timer task end...expend %s' % diff
+		print('red_packet timer task end...expend %s' % diff)
 
 def __get_red_packet_rule_name(title):
 	material_url = material_models.News.objects.get(title=title).url

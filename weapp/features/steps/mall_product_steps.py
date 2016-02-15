@@ -13,7 +13,7 @@ from mall.models import *
 @When(u"{ignore}:wglass")
 def step_impl(context, ignore):
 	import sys
-	#print >> sys.stderr, u'ignore weapp operation: %s' % ignore
+	#print(>> sys.stderr, u'ignore weapp operation: %s' % ignore)
 	sys.stderr.write(u'ignore weapp operation: %s' % ignore)
 
 @Given(u"{ignore}:wglass")
@@ -80,7 +80,7 @@ def step_impl(context):
 # 		# 默认运费
 # 		return PostageConfig.objects.filter(owner_id=owner_id, is_used=True)[0].id
 
-# 	# print postage_name
+# 	# print(postage_name)
 # 	postage_name = u'{}'.format(postage_name)
 # 	if postage_name == -1 or postage_name == u'免运费':
 # 		return -1
@@ -167,7 +167,7 @@ def step_impl(context):
 
 # 	product_prototype.update(product)
 
-# 	# print product_prototype
+# 	# print(product_prototype)
 
 # 	#设置启用规格
 # 	if product.get('is_enable_model', None) == u'启用规格':

@@ -436,7 +436,7 @@ def step_get_all_info_of_order(context, user):
     filter_value = dict()
     if hasattr(context, 'query_params'):
         filter_value = context.query_params
-        print "filter_value---------------",filter_value
+        print("filter_value---------------",filter_value)
     from cStringIO import StringIO
     import csv
 

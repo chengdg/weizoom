@@ -366,7 +366,7 @@ def step_impl(context, webapp_user_name, webapp_owner_name):
 		context.created_order_id = -1
 		context.response_json = response_json
 		context.server_error_msg = response_json['data']['msg']
-		print "buy_error----------------------------",context.server_error_msg,response
+		print("buy_error----------------------------",context.server_error_msg,response)
 	if context.created_order_id != -1:
 		if 'date' in args:
 			Order.objects.filter(order_id=context.created_order_id).update(created_at=bdd_util.get_datetime_str(args['date']))
@@ -591,7 +591,7 @@ def _get_product_model_name_from_ids(webapp_owner_id, ids):
 # def step_impl(context, webapp_user_name):
 # 	order_id = context.created_order_id
 # 	if order_id == -1:
-# 		print 'Server Error: ', json.dumps(json.loads(context.response.content), indent=True)
+# 		print('Server Error: ', json.dumps(json.loads(context.response.content), indent=True))
 # 		assert False, "order_id must NOT be -1"
 # 		return
 #
@@ -608,11 +608,11 @@ def _get_product_model_name_from_ids(webapp_owner_id, ids):
 # 		actual_order.coupon_id = coupon.coupon_rule.name
 #
 # 	for product in actual_order.products:
-# 		# print '---product---', product
+# 		# print('---product---', product)
 # 		if 'custom_model_properties' in product and product['custom_model_properties']:
 # 			product['model'] = ' '.join([property['property_value'] for property in product['custom_model_properties']])
 #
-# 	# print '---actual_order---', actual_order
+# 	# print('---actual_order---', actual_order)
 # 	expected = json.loads(context.text)
 # 	bdd_util.assert_dict(expected, actual_order)
 	url = '/workbench/jqm/preview/?woid=%s&module=mall&model=order&action=pay&order_id=%s' % (context.webapp_owner_id, order_id)
@@ -683,8 +683,8 @@ def step_impl(context, webapp_user_name, pay_type, pay_interface):
 # @then(u"{webapp_user_name}获得创建订单失败的信息'{error_msg}'")
 # def step_impl(context, webapp_user_name, error_msg):
 # 	error_data = json.loads(context.response.content)
-# 	# print error_data
-# 	# print error_msg
+# 	# print(error_data)
+# 	# print(error_msg)
 # 	context.tc.assertTrue(200 != error_data['code'])
 # 	response_msg = error_data['data']['msg']
 # 	if response_msg == '':
@@ -1153,7 +1153,7 @@ def get_prodcut_ids_info(order):
 # 		context.created_order_id = content['data']['order_id']
 # 		context.response = response
 	# print("*"*80)
-	# from pprint import pprint
+	# from pprint(import pprint)
 	# pprint(response_data)
 	# raise Exception("hello")
 

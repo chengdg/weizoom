@@ -60,7 +60,7 @@ def step_impl(context, user):
 	search = client.search if hasattr(client, 'search') else ''
 
 	url = u'/termite2/api/custom_modules/?design_mode=0&version=1&sort_attr=-updated_at&count_per_page={}&page={}&query={}'.format(count_per_page, cur_page, search)
-	# print url
+	# print(url)
 	response = client.get(url)
 	custom_modules = json.loads(response.content)['data']['items']
 	actual_data = []
@@ -123,7 +123,7 @@ def step_impl(context, user, page_info):
 	client = context.client
 
 	client.cur_page = page_info
-	# print u'第{}页，每页{}条'.format(client.cur_page, client.object_count)
+	# print(u'第{}页，每页{}条'.format(client.cur_page, client.object_count))
 
 
 @when(u"{user}浏览'{page_info}'")
@@ -136,7 +136,7 @@ def step_impl(context, user, page_info):
 	else:
 		client.cur_page = int(client.cur_page) + 1
 
-	# print u'第{}页，每页{}条'.format(client.cur_page, client.object_count)
+	# print(u'第{}页，每页{}条'.format(client.cur_page, client.object_count))
 
 
 @when(u"{user}按照模块名称搜索")

@@ -116,7 +116,7 @@ def step_impl(context,user):
     header = reader.next()
     supplier_actual = []
     for line in reader:
-        print line
+        print(line)
         supplier_actual.append(line)
     context.supplier_actual = supplier_actual
 

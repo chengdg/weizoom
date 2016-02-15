@@ -547,7 +547,7 @@ def step_impl(context, webapp_user_name):
 def step_impl(context, webapp_user_name):
     order_id = context.created_order_id
     if order_id == -1:
-        print 'Server Error: ', json.dumps(json.loads(context.response.content), indent=True)
+        print('Server Error: ', json.dumps(json.loads(context.response.content), indent=True))
         assert False, "order_id must NOT be -1"
         return
 

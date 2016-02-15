@@ -30,7 +30,7 @@ def step_impl(context, user):
         latest_order_no = Order.objects.get(id=context.latest_order_id).id
     else:
         latest_order_no = steps_db_util.get_latest_order().id
-    print "last----------------------------",latest_order_no
+    print("last----------------------------",latest_order_no)
     url = '/mall2/api/delivery/'
     data = {
         'order_id': latest_order_no,

@@ -586,7 +586,7 @@ def __supplement_product(webapp_owner_id, product):
 
     product_prototype.update(product)
 
-    # print product_prototype
+    # print(product_prototype)
 
     #设置启用规格
     if product.get('is_enable_model', None) == u'启用规格':

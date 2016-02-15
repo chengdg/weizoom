@@ -30,7 +30,7 @@ class Command(BaseCommand):
 	args = ''
 
 	def handle(self, **options):
-		print 'powerme timer task start...'
+		print('powerme timer task start...')
 		start_time = time.time()
 
 		need_del_powerlogs_ids = []
@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
 		for powerme in powermes:
 			record_id = str(powerme.id)
-			print '================update data start %s' % record_id
+			print('================update data start %s' % record_id)
 			#统计助力值
 			if record_id in record_id2logs:
 				power_logs = record_id2logs[record_id]
@@ -84,9 +84,9 @@ class Command(BaseCommand):
 			detail_power_member_ids = [p.power_member_id for p in need_power_logs]
 			PoweredDetail.objects(belong_to=record_id, power_member_id__in=detail_power_member_ids).update(set__has_powered=True)
 			need_del_powerlogs_ids += power_log_ids
-			print '================update data end %s' % record_id
+			print('================update data end %s' % record_id)
 			#统计助力排名
-			print '================set cache start %s' % record_id
+			print('================set cache start %s' % record_id)
 			cache_key = 'apps_powerme_%s' % record_id
 
 			if record_id in record_id2participances.keys():
@@ -120,13 +120,13 @@ class Command(BaseCommand):
 				'participances_list': participances_list,
 				'total_participant_count': total_participant_count
 			})
-			print '================set cache end %s' % record_id
+			print('================set cache end %s' % record_id)
 
 		#删除计算过的log
 		PowerLog.objects(id__in=need_del_powerlogs_ids).delete()
 		end_time = time.time()
 		diff = (end_time-start_time)*1000
-		print 'powerme timer task end...expend %s' % diff
+		print('powerme timer task end...expend %s' % diff)
 
 def __get_power_me_rule_name(title):
 	material_url = material_models.News.objects.get(title=title).url

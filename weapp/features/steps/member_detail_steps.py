@@ -189,8 +189,8 @@ def step_impl(context, user, member):
             )
         )
     actual['share_detailed_data'] = share_detailed_data
-    print "actual:",actual
-    print "expected:",expected
+    print("actual:",actual)
+    print("expected:",expected)
 
     bdd_util.assert_dict(expected, actual)
 

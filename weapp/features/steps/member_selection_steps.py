@@ -27,7 +27,7 @@ def handtime(atime):
 #     items = json.loads(response.content)['data']['items']
 #     for member_item in items:
 #         member_detail_url = '/member/member_detail/edit/?id=%s' %member_item['id']
-#         #print 'kitty',member_detail_url
+#         #print('kitty',member_detail_url)
 #         visit_member_detail_url = context.client.get(member_detail_url)
 #     ###以上为访问会员详情页
 #         p = 'a'
@@ -61,7 +61,7 @@ def step_impl(context, user):
     actual_count = json.loads(response.content)['data']['total_count']
     json_data = json.loads(context.text)
     expected_count = json_data[0]['result_quantity']
-    #print 'hellokittyassert',expected_count,':',actual_count
+    #print('hellokittyassert',expected_count,':',actual_count)
     assert int(expected_count) == int(actual_count)
 
 

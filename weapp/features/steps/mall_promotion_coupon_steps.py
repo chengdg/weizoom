@@ -329,8 +329,8 @@ def step_impl(context, user_name):
 # def step_impl(context, user_name):
 # 	expected = json.loads(context.text)
 # 	error_data = json.loads(context.response.content)
-# 	print "-------------"
-# 	print context.text
+# 	print("-------------")
+# 	print(context.text)
 # 	actual = dict(
 # 		error_message=error_data['errMsg']
 # 	)

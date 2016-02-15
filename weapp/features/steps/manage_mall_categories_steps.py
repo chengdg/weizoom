@@ -69,8 +69,8 @@ def step_get_category(context, user):
             }
             product_dict['products'].append(dict_one)
         actual_list.append(product_dict)
-    print actual_list
-    # print "111"+int(2)
+    print(actual_list)
+    # print("111"+int(2))
     expected = json.loads(context.text)
     bdd_util.assert_list(expected, actual_list)
 

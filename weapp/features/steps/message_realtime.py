@@ -44,8 +44,8 @@ def step_impl(context, user, type):
 
 	response = context.client.get(url)
 	session_messages = json.loads(response.content)['data']['items']
-	# print '-------url', url
-	# print '---:::::::::::::',session_messages
+	# print('-------url', url)
+	# print('---:::::::::::::',session_messages)
 	messages = []
 	for message in session_messages:
 		message_dict = {}

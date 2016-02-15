@@ -27,14 +27,14 @@ class BDDRequestHandler(WSGIRequestHandler):
 		def inner_shutdown():
 			server.shutdown()
 			server.server_close()
-			print '[bdd server] server is shutdown now!'
+			print('[bdd server] server is shutdown now!')
 
 		return inner_shutdown
 
 
 @given(u'启动BDD Server')
 def step_impl(context):
-	# A relatively simple WSGI application. It's going to print out the
+	# A relatively simple WSGI application. It's going to print(out the)
 	# environment dictionary after being updated by setup_testing_defaults
 	def simple_app(environ, start_response):
 		setup_testing_defaults(environ)
@@ -58,28 +58,28 @@ def step_impl(context):
 		step_data = json.loads(post['data'][0])
 		step = step_data['step'].strip()
 		if step == '__reset__':
-			print '*********************** run step **********************'
-			print u'重置bdd环境'
+			print('*********************** run step **********************')
+			print(u'重置bdd环境')
 			environment.after_scenario(context, context.scenario)
 			environment.before_scenario(context, context.scenario)
 		else:
 			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context'])
-			print '*********************** run step **********************'
-			print step
+			print('*********************** run step **********************')
+			print(step)
 
 			try:
 				context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
 			except:
 				from core.exceptionutil import full_stack
-				print '*********************** exception **********************'
+				print('*********************** exception **********************')
 				stacktrace = full_stack()
-				print stacktrace.decode('utf-8')
+				print(stacktrace.decode('utf-8'))
 				return base64.b64encode(stacktrace)
 
 		return base64.b64encode('success')
 
 	httpd = make_server('', 8170, simple_app, handler_class=BDDRequestHandler)
-	print "[bdd server] Serving on port 8170..."
+	print("[bdd server] Serving on port 8170...")
 	httpd.serve_forever()
 
 

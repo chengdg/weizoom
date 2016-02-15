@@ -116,7 +116,7 @@
 # 	model_property = filter(
 # 							lambda x: x.id == model_property.id,
 # 							model_properties)[0]
-# 	# from pprint import pprint
+# 	# from pprint(import pprint)
 # 	# print("*"*29, "model_property", "*"*29)
 # 	# pprint(model_property)
 # 	# print("*"*79)

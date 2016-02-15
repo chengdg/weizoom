@@ -24,13 +24,13 @@ def __debug_print(content,type_tag=True):
 	debug工具函数
 	"""
 	if content:
-		print '++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++'
+		print('++++++++++++++++++  START ++++++++++++++++++++++++++++++++++++')
 		if type_tag:
-			print "====== Type ======"
-			print type(content)
-			print "==================="
-		print content
-		print '++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++'
+			print("====== Type ======")
+			print(type(content))
+			print("===================")
+		print(content)
+		print('++++++++++++++++++++  END  ++++++++++++++++++++++++++++++++++')
 	else:
 		pass
 

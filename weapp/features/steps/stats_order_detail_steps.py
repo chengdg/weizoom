@@ -87,15 +87,15 @@ def step_impl(context, user):
 		if context.target_page > 0:
 			url += '&page=' + str(context.target_page)
 	
-	# print 'param dict -------', dict
-	# print 'url ----------\n', url
+	# print('param dict -------', dict)
+	# print('url ----------\n', url)
 	
 	response = context.client.get(url)
 	bdd_util.assert_api_call_success(response)
 
 	result = json.loads(response.content)
 	context.stats_data = result['data']
-	# print 'result -----------', result
+	# print('result -----------', result)
 	# raise 'debug test -------------------------'
 
 @then(u'{user}获取订单统计列表显示共{count}页')
