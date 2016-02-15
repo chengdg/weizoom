@@ -17,10 +17,13 @@ $(document).ready(function() {
 	var product_dict = JSON.parse(product_dict_json);
     var $freedback_type = $('.freedback_type');
     if ($freedback_type.length > 0){
-        var type_title_width  =  $freedback_type.find('.wui-i-title').width();
-        var padding_width = Number($freedback_type.css('padding-left').split('px')[0]) + Number($freedback_type.css('padding-right').split('px')[0]);
-        var freedback_type_width =  $freedback_type.width()-padding_width-2;
-        $('.type_name').width(freedback_type_width-type_title_width-15);
+        $freedback_type.each(function(){
+            var $this = $(this);
+            var type_title_width  =  $this.find('.wui-i-title').width();
+            var padding_width = Number($this.css('padding-left').split('px')[0]) + Number($this.css('padding-right').split('px')[0]);
+            var freedback_type_width =  $this.width()-padding_width-2;
+            $this.find('.type_name').width(freedback_type_width-type_title_width-15);
+        });
     }
 	var html_str = "";
 	for (var i=0; i<product_dict.length;++i){
