@@ -216,6 +216,7 @@ def step_impl(context, user):
     query_params = dict()
     if hasattr(context, 'query_params'):
         query_params = context.query_params
+        delattr(context, 'query_params')
     response = context.client.get('/mall2/api/order_list/', query_params)
     items = json.loads(response.content)['data']['items']
 
