@@ -1,0 +1,621 @@
+{% extends "content_base_v2.html" %}
+{% load staticfiles %}
+{% load project_filter %}
+{% load account_filter %}
+
+
+{% block content-panel %}
+<div class="xui-editProductPage">
+    <ul class="breadcrumb" style="margin-bottom:-12px;">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/mall2/product_list/?shelve_type=1">商品管理</a>
+        </li>
+        <li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
+    </ul>
+    <ul class="nav nav-tabs">
+        <li class="active xa-addProductNav">
+            <a href="javascript:void(0);">添加新商品</a>
+        </li>
+        <li class="xa-productPoolNav">
+            <a href="javascript:void(0);">商品池</a>
+        </li>
+    </ul>
+    <div class="xa-editProduct">
+    <form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
+        action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
+        id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}">
+        <section>
+        <header>
+            <span class="xui-fontBold">基本信息</span>
+            <span class="xui-fontGary">
+                ( <i class="star_show pl5"></i>
+                表示必填)
+            </span>
+        </header>
+        <fieldset >
+            <legend>基本内容</legend>
+            <div class="form-group ">
+                <label class="control-label fl star_show" for="goodsname">商品名称：</label>
+                <div class="fl">
+                    <input type="text" class="xa-product-name form-control w490 mr20 ml5" id="name" name="name"
+                           placeholder=""
+                           value="{% if product %}{{ product.name }}{% endif %}"
+                           data-validate="require-notempty"
+                           maxlength="30"/>
+                    <div class="errorHint" data-error-hint="请输入商品名称， 不超过30个汉字"></div>
+                </div>
+                <p>
+                    还可以输入
+                    <span class="xa-product-name-tip" style="color:#1F9200;">30</span>
+                    个字
+                </p>
+            </div>
+            <!-- 微众精选开始 -->
+            {%if supplier|length %}
+            <div class="form-group">
+                <label class="control-label fl star_show" for="supplier">供货商：</label>
+                <div class="fl">
+                {% if product.supplier %}
+                        <input type="hidden" name="supplier" value="{{ product.supplier }}"/>
+                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}">
+                {% else %}
+                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty">
+                {% endif %}
+                        <option value="">请选择</option>
+                        {% for id, name in supplier %}
+                        <option value="{{id}}">{{name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="errorHint" data-error-hint="请选择供货商"></div>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="control-label fl" for="purchase_price">采购价：</label>
+                <div class="fl">
+                    <input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price" value="{% if product %}{{ product.purchase_price }}{% endif %}"/>
+                    <div class="errorHint"></div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- 微众精选结束 -->
+            <div class="form-group ">
+                <label class="control-label fl" for="promotion_title">促销标题：</label>
+                <div class="fl">
+                    <input type="text" class="xa-promotion-name form-control w490 mr20 ml5" id="promotion_title" name="promotion_title" placeholder="" value="{% if product %}{{ product.promotion_title }}{% endif %}" maxlength="20"/>
+                    <div class="errorHint"></div>
+                </div>
+                <p>
+                    还可以输入
+                    <span class="xa-promotion-name-tip" style="color:#1F9200;">20</span>
+                    个字
+                </p>
+            </div>
+
+            <div class="form-group ">
+                <label class="control-label fl" for="product_category">店内分组：</label>
+                <div class="fl ml5 w700">
+                    {% for category in categories %}
+                    <label class="xui-category checkbox-inline">
+                        <input
+                            type="checkbox"
+                            value="{{ category.id }}"
+                            class="xa-product_category  mr20"
+                            {% ifequal category.is_selected 1 %}checked="checked"{% endifequal %}
+                        />
+                        {{ category.name }}
+                    </label>
+                    {% endfor %}
+                    <input type="hidden" id="product_category" name="product_category" value="" />
+                    <div class="errorHint"></div>
+                </div>
+            </div>
+            <div class="form-group nostar ">
+                <label class="control-label fl" for="bar_code">商品条码：</label>
+                <div class="col-sm-2 fl pl5">
+                    <input type="text" class="form-control w106" id="bar_code" name="bar_code" placeholder="" value="{% if product %}{{ product.bar_code }}{% endif %}" maxlength="15" data-validate="require-custom-function" data-validate-function="validateBarCode"/>
+                    <div class="errorHint"></div>
+                </div>
+            </div>
+            <div class="form-group nostar ">
+                <label class="control-label fl" for="min_limit">起购数量：</label>
+                <div class="fl w700 pl5 pr">
+            {% if product.is_in_flash_sale%}
+              <input type="hidden" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
+              <input type="text"  disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+            {% else %}
+                        <input type="text" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+            {% endif %}
+            <span class="xui-fontGary pa" style="top:2px;left:115px">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
+          <div class="errorHint"></div>
+                </div>
+            </div>
+{#           微众商城代码#}
+{#          {% if not request.manager.is_weizoom_mall and supplier|length == 0 %}#}
+{#          <div class="form-group nostar ">#}
+{#              <label class="control-label fl" for="bar_code">同步到微众商城：</label>#}
+{#              <div class="fl w700">#}
+{#                  <label><input name="weshop_sync" value="0" class="ml5 mr5" type="radio"{%if product.weshop_sync == 0%} checked{%endif%}{%if product.weshop_status%} disabled{%endif%}/>不同步</label>#}
+{#                  <label><input name="weshop_sync" value="1" class="ml5 mr5" type="radio"{%if product.weshop_sync == 1 or not product%} checked{%endif%}{%if product.weshop_status%} disabled{%endif%}/>同步</label>#}
+{#                  <label><input name="weshop_sync" value="2" class="ml5 mr5" type="radio"{%if product.weshop_sync == 2%} checked{%endif%}{%if product.weshop_status%} disabled{%endif%}/>加价同步</label>#}
+{#                  <span class="xui-fontGary">（同步后，微众商城将加价10%，有助于从微众商城引流到本店）</span>#}
+{#                  <div class="errorHint"></div>#}
+{#              </div>#}
+{#          </div>#}
+{#          {% endif %}#}
+            <div class="form-group nostar ">
+                <label class="control-label fl" for="member_count">会员折扣：</label>
+                <div class="col-sm-2 fl pl5">
+                    <label for="" class="xui-category checkbox-inline"><input name="is_member_product" type="checkbox" {% if product.is_member_product %}checked{% endif %} id="member_count">
+                    参与会员折扣
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <input type="hidden" name="customModels" value="" />
+            <div
+                data-ui-role="mall-product-custom-model-editor"
+                data-use-custom-model="{% if product.is_use_custom_model %}true{% else %}false{% endif %}"
+                data-models='{% if product %}{{product.models|format_json|safe}}{% else %}[]{% endif %}'
+                data-title="商品信息"
+                data-custom-properties='{% if product %}{{product.system_model_properties|format_json|safe}}{% else %}[]{% endif %}'
+                data-validate="require-custom-function"
+                data-validate-function="checkProductModel"
+                data-product-type="object"
+            ></div>
+            <div class="errorHint pr" style="left:24px;top:-10px;"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend>图片管理</legend>
+            <div class="form-group">
+                <label class="control-label col-sm-2 col-sm-offset-1 star_show" for="swipe_images">商品图片：</label>
+                <div id="imgSelect" class="col-sm-9">
+          <input id="swipe_images" name="swipe_images" type='hidden'
+                 data-force-validate="true"
+                 data-validate="require-string::请至少添加一张图片"
+                 data-minlength="3"
+          />
+                    <ul class="xui-i-images clearfix">
+                        {% for image in product.swipe_images %}
+                        <li class="pr xui-i-image xa-image"
+                data-image-id="{{image.id}}"
+                data-width="{{image.width}}"
+                data-height="{{image.height}}">
+                            <img class="imgexist" src="{{image.url}}" />
+                            <button class="xui-close xa-deleteImage" type="button">
+                                <span>&times;</span>
+                            </button>
+                        </li>
+                        {% endfor %}
+                        <li class="xui-i-image xa-selectImage">
+              <img src="/static_v2/img/editor/addProduct.png"/>
+                        </li>
+                    </ul>
+          <div class="errorHint mt5"></div>
+                </div>
+                <div style="padding-top:0px;padding-left:215px;clear:both; line-height:40px;">建议图片尺寸为640*640像素</div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>运费及支付</legend>
+            <div class="form-group">
+                <label class="control-label col-sm-2 col-sm-offset-1 star_show">运费设置：</label>
+                <div id="freight"  class="col-sm-9">
+                {% if request.manager.id == product.owner.id or not product %}
+                    <div id="unified_freight" class="radio" >
+                <input type='radio' class="xui-inlineblock xa-freight"  name='postage_type'
+                       {% if not postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
+                       value="unified_postage_type"
+                />
+            <span class="xui-bold">统一运费：￥</span>
+            <input type='text' name="unified_postage_money"
+                   value='{% if product %}{{product.unified_postage_money}}{% endif %}'
+                   style="width: 80px;" class="form-control xui-inlineblock xa-unifiedPostageInput mb5"
+                   placeholder="0.0"
+            />
+            <span>元</span>
+            <div id="unified_postage_error" class="errorHint pt0" data-error-hint="请输正确的价格" style="padding-left:80px"></div>
+            </div>
+
+                    <div id="custom_freight" class="radio xa-customPostageSelectorLabel">
+                <input type='radio' class="xui-inlineblock xa-freight"  name='postage_type'
+                           {% if postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
+                         value="custom_postage_type"
+                />
+            <span class="xui-bold">使用系统运费模板：</span>
+            {{postage_config_info.system_postage_config.name}}
+            <a class="ml5" href="/mall2/postage_list/" target="_blank">新建运费模板</a>
+            </div>
+                {%else%}
+                    <label id="unified_freight" class="radio" >包邮</label>
+                {%endif%}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2 col-sm-offset-1 star_show">支付方式：</label>
+                <div id="pay-method" class="col-sm-9" data-validate='require-custom-function' data-validate-function='validatePay'>
+                {% if request.manager.id == product.owner.id or not product %}
+                    <label class="checkbox xa-pay-method" >
+                    {% if pay_interface_config.online_pay_interfaces %}
+                        <input type='checkbox' id='is_enable_online_pay_interface'
+                               name='is_enable_online_pay_interface'
+                               checked="checked"
+                               class="xa-pay-selected"
+                               disabled
+                               value="1"
+                         />
+                         <p class="xui-bold">在线支付</p>
+                        {% for pay_interface in pay_interface_config.online_pay_interfaces %}
+                        <p class="tx-pay-interface-item-p">{{ pay_interface.name }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <input type='checkbox' id='is_enable_online_pay_interface'
+                               name='is_enable_online_pay_interface'
+                               class="xa-pay-selected"
+                               {% if is_weizoom_mall %}
+                               checked="checked"
+                               {% endif %}
+                               disabled
+                               value="1"
+                         />
+                        <p class="xui-bold">在线支付</p>
+                        <p class="tx-pay-interface-item-p">当前没有启用在线支付接口，请前往<a href="/mall2/pay_interface_list/" target="_blank">启用在线支付接口</a></p>
+                    {% endif %}
+                    </label>
+
+                    <label class="checkbox inline tx-checkbox-item xa-pay-method" >
+                        <input
+                            type='checkbox'
+                            id='is_enable_cod_pay_interface'
+                            name='is_enable_cod_pay_interface'
+                            class="xa-pay-selected"
+                            value="1"
+                            {% if product.is_use_cod_pay_interface %}checked="checked"{% endif %}
+                            {% if not pay_interface_config.is_enable_cod_pay_interface %}disabled{% endif %}/> <p class="xui-bold">
+                            货到付款</p>
+
+                        {% if pay_interface_config.is_enable_cod_pay_interface %}
+                        <p class="tx-pay-interface-item-p">启用后买家可选择货到付款下单，您需自行通过合作快速安排配送。买家开箱验货无误后，快递公司向买家收款并与您结算费用。</p>
+                        {% else %}
+                        <p class="tx-pay-interface-item-p">当前没有启用货到付款，请前往<a href="/mall2/pay_interface_list/" target="_blank">启用货到付款</a></p>
+                        {% endif %}
+                    </label>
+                     <div class="errorHint" date-error-Hint="请至少输入一种支付方式"></div>
+                {%else%}
+                    <label class="checkbox xa-pay-method">在线支付</label>
+                {%endif%}
+                </div>
+            </div>
+            {% if is_bill %}
+            <div class="form-group">
+                <label class="control-label col-sm-2 col-sm-offset-1">商品发票：</label>
+                <div class="col-sm-9" style="margin-top: -6px;margin-left:-20px;">
+                    <label class="checkbox checkbox-inline tx-checkbox-item" >
+                        <input
+                            type='checkbox'
+                            id='is_enable_bill'
+                            name='is_enable_bill'
+                            class="product_bill"
+                            value="1"
+                            {% if product.is_enable_bill or not product %}checked="checked"{% endif %}
+                        />
+                        <p class="xui-bold">支持开票</p>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                    <label class="control-label col-sm-2 col-sm-offset-1" for="is_delivery">配送时间：</label>
+                    <div id='delivery_time' class="col-sm-9 " style="height:60px;margin-left:-20px;">
+                        <label class="checkbox checkbox-inline xui-category">
+                            <input name="is_delivery" class="is_delivery_selected xui-inlineblock" type="checkbox" {% if product.is_delivery %}checked{% endif %} id="is_delivery">
+                            <span class="xui-bold">需要</span>
+                            <i class="xui-tips xa-tips" ></i>
+                        </label>
+                    </div>
+            </div>
+            {% endif %}
+        </fieldset>
+    </section>
+
+    <section>
+        <header>
+            <span  class="xui-fontBold">商品属性</span>
+            {% if not property_templates %}
+                <span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property_list/" target="_blank">配置属性模板</a></span>
+            {% else %}
+            <select class="ml20 xa-propertyTemplateSelector">
+                <option value="-1">选择属性模板</option>
+                {% for property_template in property_templates %}
+                <option value="{{property_template.id}}">{{property_template.name}}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+        </header>
+        <input type="hidden" name="properties"/>
+        <div class="xa-properties mt10" data-validate="require-custom-function" data-validate-function="checkProperties">
+          <div class="xui-i-templateProperties clearfix">
+              <div class='xa-customProperties'>
+                <ul class="xui-clearListStyle clearfix">
+                    {% for property in product.properties %}
+                    <li class="xui-i-templateProperty xa-property" data-property-id="{{property.id}}">
+                        <input class="xui-i-propertyName xui-propertyNameBtn xa-name" readonly=true value='{{property.name}}' maxlength="15">
+                        <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255">
+                        <a class="xa-deleteProperty xui-deleteProperty">删除</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+              </div>
+              <div class="xa-instantProperties">
+                <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>
+                <div class="errorHint pt0 ml10 fl" date-error-Hint="不能为空"></div>
+              </div>
+          </div>
+        </div>
+    </section>
+
+    <section >
+        <header class="xui-fontBold">商品描述<span class="xui-fontGary" style="font-weight: lighter;">（上传图片要求宽度在480-620之间,高度小于等于960,大小不超过500K）</span></header>
+        <div class="form-group">
+            <label class="control-label col-sm-1" for="detail"></label>
+            <div class="ml100" >
+                <textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="300" data-width="650">
+                    {% if product %}{{ product.detail|format_emotion|safe }}{% endif %}
+                </textarea>
+            </div>
+        </div>
+    </section>
+
+    <section style="background:#FEFEFE;border:0; ">
+        <div class="form-group" style="height:106px;">
+<!--            <label class="control-label col-sm-2"></label> -->
+            <div class="ml100">
+                <div class="xui-fontGary" style="line-height:48px;">创建好的商品会显示在待售列表中，需要您手动上架销售。</div>
+                <div>
+                    {% if request.manager.id == product.owner.id or not product %}
+                    <input type="submit" class="xa-submit btn btn-primary mr40" id="submitBtn" value="保存" />
+                    {% else %}
+                    {% if request.GET.source == 'onshelf' %}
+                    <input type="button" onclick="history.go(-1)" class="btn btn-primary mr40 xa-weshop" value="返回" />
+                    {% else %}
+                    <input type="button" class="btn btn-primary mr40 xa-check xa-weshop" value="审核上架" />
+                    {% endif %}
+                    {% endif %}
+                    <!--
+                    <input type="button" class="btn btn-success" value="预览" />
+                    -->
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+</div>
+<div class="xa-productPool" style="display: none;">
+    <p>这里是商品池！</p>
+</div>
+</div>
+{% endblock %}
+{% block js %}
+
+<!--    运费验证实现    -->
+<script type="text/javascript">
+var origin_supplier = $('#supplier').data('origin');
+if(origin_supplier>0)$('#supplier').val(origin_supplier);
+$('.xa-freight').on('click', function(e){
+    var $el = $(e.target);
+    var $_parent = $el.parents("#freight");
+    var $unified = $_parent.find("#unified_freight");
+    var $unified_input = $_parent.find('input[name="unified_postage_money"]');
+    var $unified_error = $_parent.find("#unified_postage_error");
+
+    var $custom = $_parent.find("#custom_freight");
+    var $custom_input = $_parent.find('select[name="postage_config_id"]');
+    var $custom_error = $_parent.find("#custom_postage_error");
+    var value = $el.attr('value');
+
+    // Initial
+    $custom_input.removeAttr('data-validate');
+    $custom_error.hide();
+    $unified_input.removeAttr('data-validate');
+    $unified_error.hide();
+    if(value === 'unified_postage_type'){  // 统一运费验证
+        // 去掉运费模板验证
+        $custom_input.removeAttr('data-validate');
+        $custom_error.hide();
+
+        // 添加统一运费验证
+        $unified_input.attr('data-validate', 'require-price');
+        // $unified.append('<label id="unified_postage_error" class="errorHint" data-error-hint="请输入价格， 精确到小数点后两位"></label>');
+        $unified_error.show();
+    }else if(value === 'custom_postage_type'){  // 运费模板验证
+        // 去掉统一运费验证
+        $unified.removeClass('has-error');
+        $unified_input.removeAttr('data-validate');
+        $unified_error.hide();
+
+        // 添加运费模板验证
+        $custom_input.attr('data-validate', 'require-nonnegative');
+        // $custom.append('<label id="custom_postage_error" class="errorHint" data-error-hint="请选择运费模板"></label>');
+        $custom_error.show();
+    }
+
+});
+{% if request.manager.id != product.owner.id and product %}
+$('.xa-check').on('click', function(){
+    W.getApi().call({
+        method: 'post',
+        app: 'mall2',
+        resource: 'product_list',
+        args: {
+            id: {{product.id}},
+            shelve_type: "onshelf"
+        },
+        scope: this,
+        success: function(data) {
+            W.showHint('success', '审核成功');
+            history.go(-1)
+        }
+    })
+});
+setTimeout(function(){$('input').not('.xa-weshop').attr('disabled','1');}, 500)
+$('.xa-addProperty').click(function(){return false;})
+$('.xa-selectImage').click(function(){return false;})
+{% endif %}
+</script>
+<!--   / 运费验证实现    -->
+
+<script type="text/javascript">
+    window.checkProductModel = function($el) {
+        if ($('.xa-useCustomModel').is(':checked')) {
+            var $trs = $el.find('tbody tr');
+            if ($trs.length === 0) {
+                return {
+                    isValidate: false,
+                    errorHint: '请添加规格值'
+                }
+            }
+        }
+        return {
+            isValidate: true,
+            errorHint: ''
+        }
+    }
+
+
+    $(document).ready(function() {
+        var view = new W.view.mall.ProductEditor({
+            el: '.xui-editProductPage'
+        });
+        view.render();
+        if(location.search.indexOf('no_custom_model=1')>0||$('#supplier').length>0){
+            // 隐藏定制规格：买赠活动跳转、有供货商选择
+            var $div = $('[data-ui-role="mall-product-custom-model-editor"] legend div');
+            if($(':checkbox', $div).attr('checked')=='checked'){
+                $(':checkbox', $div).click();
+            }
+            $div.hide();
+        }
+
+
+        $('.xa-tips').popover({
+            template:"<div class='popover'><div class='popover-content p0'></div></div>",
+            content : "当选择“需要”时，前台-提交订单页会出现配送时间必填项，以便顾<br > 客选择合适的配送时间。关闭则会从前台消失。",
+            trigger : "hover",
+            html : true,
+            placement : "bottom"
+        });
+
+        $('.nav-tabs > li').on('click', function(){
+            _this = $(this);
+            $('li.active').removeClass('active');
+            _this.addClass('active');
+        });
+
+        $('.xa-addProductNav').on('click', function(){
+            $('.xa-editProduct').toggle(true);
+            $('.xa-productPool').toggle(false);
+        });
+
+        $('.xa-productPoolNav').on('click', function(){
+            $('.xa-editProduct').toggle(false);
+            $('.xa-productPool').toggle(true);
+        });
+    });
+
+
+
+
+
+
+</script>
+
+<script type="text/javascript">
+function validatePay($el){
+    var is_selected = false;
+    $el.find('.xa-pay-selected').each(function(i){
+        is_selected = is_selected | $(this).prop('checked');
+    });
+    console.log("validatePay", is_selected);
+    var isValidate = is_selected;
+    return {
+        isValidate: isValidate,
+        errorHint: "请至少选择一种支付方式"
+    }
+}
+function checkProperties($el){
+    var isValidate = true;
+    $('.xa-property').each(function() {
+        var $property = $(this);
+        var name = $.trim($property.find('.xa-name').val());
+        var value = $.trim($property.find('.xa-value').val());
+        if(name == "" || value == ""){
+            isValidate = false;
+        }
+    });
+    return {
+        isValidate: isValidate,
+        errorHint: "不能为空"
+    }
+}
+
+</script>
+
+<!--    商品条码验证  -->
+<script type="text/javascript">
+function validateBarCode($el){
+  var hasValue= $.trim($el.val());
+  if(!hasValue){
+    return{
+      isValidate: true,
+      errorHint: ''
+    }
+  }else{
+    var valueRex = /^\d+$/g;
+    return {
+      isValidate: valueRex.test(hasValue),
+      errorHint: "请输入数字"
+    }
+  }
+}
+function validateUserCode($el){
+  var hasValue= $.trim($el.val());
+  if(!hasValue){
+    return{
+      isValidate: true,
+      errorHint: ''
+    }
+  }else{
+    var valueRex = /^[\w\-\:\.\|]+$/g;
+    return {
+      isValidate: valueRex.test(hasValue),
+      errorHint: "请输入数字或字母,可以使用- : . |以内的特殊字符"
+    }
+  }
+}
+</script>
+<!--    /商品条码验证 -->
+
+<!--    输入字符计数  -->
+<script type="text/javascript">
+
+$(".xa-product-name").on('input',function(event){
+    var limited = 30;
+    var curLength = $('.xa-product-name').val().length;
+    $('.xa-product-name-tip').text(limited-curLength);
+});
+
+$(".xa-promotion-name").on('input',function(event){
+    var limited = 20;
+    var curLength = $('.xa-promotion-name').val().length;
+    $('.xa-promotion-name-tip').text(limited-curLength);
+});
+
+
+</script>
+<!--    输入字符计数  -->
+{% endblock %}
