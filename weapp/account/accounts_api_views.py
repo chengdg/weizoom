@@ -116,6 +116,7 @@ def create_new_user_by_agent(request):
 	product_id = int(request.POST.get('pid', -1))
 	company_name = request.POST.get('cn', None)
 	manager_name = request.POST.get('mn', None)
+	store_name = request.POST.get('stn', None)
 	
 	exist_users = User.objects.filter(username=username)
 	if exist_users.count() > 0:
@@ -135,6 +136,7 @@ def create_new_user_by_agent(request):
 		profile.expire_date_day = dateutil.yearsafter(use_year)
 		profile.system_version = weapp_product_api.get_product_name(product_id)
 		profile.host_name = host_name
+		profile.store_name = store_name
 
 		#add by duhao 20151016
 		#从fans创建子账号时，需要设置manager账号的id
@@ -381,3 +383,33 @@ def create_authorized_user_from_other_site(request):
 			response = create_response(400)
 
 	return response.get_jsonp_response(request)
+
+def update_user_by_agent(request):
+	username = request.POST.get('un', None)
+	store_name = request.POST.get('stn', None)
+	key = request.POST.get('key', None)
+
+	if KEY != key:
+		response = create_response(INVALID_KEY_ERROR_CODE)
+		response.errMsg = u'非法的key'
+		return response.get_response()
+
+	exist_users = User.objects.filter(username=username)
+	if exist_users.count() == 0:
+		response = create_response(400)
+		response.errMsg = u'该用户不存在'
+		return response.get_response()
+
+	to_operate_user = exist_users[0]
+	try:
+		user_profile = UserProfile.objects.get(user=to_operate_user)
+		user_profile.store_name = store_name
+		user_profile.save()
+
+		response = create_response(200)
+	except:
+		response = create_response(500)
+		response.errMsg = u'系统繁忙，请稍后重试'
+		response.innerErrMsg = unicode_full_stack()
+
+	return response.get_response()
