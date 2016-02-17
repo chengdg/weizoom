@@ -13,7 +13,16 @@
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
-
+    {% if mall_type %}
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="/mall2/product/">添加新商品</a>
+		</li>
+		<li>
+			<a href="/mall2/product_pool/">商品池</a>
+		</li>
+	</ul>
+    {% endif %}
 	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"

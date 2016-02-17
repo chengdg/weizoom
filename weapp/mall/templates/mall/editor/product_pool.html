@@ -1,0 +1,31 @@
+{% extends "content_base_v2.html" %}
+{% load staticfiles %}
+{% load project_filter %}
+{% load account_filter %}
+
+
+{% block content-panel %}
+<div class="xui-editProductPage">
+    <ul class="breadcrumb" style="margin-bottom:-12px;">
+        <li>您当前所在位置</li>
+        <li>
+            <a href="/mall2/product_list/?shelve_type=1">商品管理</a>
+        </li>
+        <li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
+    </ul>
+    {% if mall_type %}
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="/mall2/product/">添加新商品</a>
+        </li>
+        <li class="active">
+            <a href="/mall2/product_pool/">商品池</a>
+        </li>
+    </ul>
+    {% endif %}
+
+</div>
+{% endblock %}
+{% block js %}
+
+{% endblock %}

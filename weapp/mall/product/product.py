@@ -256,7 +256,25 @@ class ProductList(resource.Resource):
         return response.get_response()
 
 
+class ProductPool(resource.Resource):
+    app = 'mall2'
+    resource = 'product_pool'
 
+    @login_required
+    def get(request):
+        # 商城的类型
+        mall_type = request.user_profile.webapp_type
+        c = RequestContext(request, {
+            'first_nav_name': export.PRODUCT_FIRST_NAV,
+            'second_navs': export.get_mall_product_second_navs(request),
+            'second_nav_name': export.PRODUCT_ADD_PRODUCT_NAV,
+            'mall_type': mall_type
+        })
+        return render_to_response('mall/editor/product_pool.html', c)
+
+    @login_required
+    def api_get(request):
+        pass
 
 class Product(resource.Resource):
     app = 'mall2'
@@ -357,12 +375,11 @@ class Product(resource.Resource):
             'postage_config_info': postage_config_info,
             'property_templates': property_templates,
             'supplier': supplier,
-            'is_bill': is_bill
+            'is_bill': is_bill,
+            'mall_type': mall_type
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
-        elif mall_type == 1:
-            return render_to_response('mall/editor/weizoom_mall_edit_product.html', c)
         else:
             return render_to_response('mall/editor/edit_product.html', c)
 
