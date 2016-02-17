@@ -440,7 +440,7 @@ ui-appPage-commonStyle">
             var prize_setings = {
                 '0':{
                         'integral':daily_points,
-                        'coupon':daily_prizes ? daily_prizes : {
+                        'coupon': !$.isEmptyObject(daily_prizes) ? daily_prizes : {
                             "id": 0,
                             "name": ""
                         }
@@ -454,7 +454,7 @@ ui-appPage-commonStyle">
                 var serial_prizes = dynamicComponents[i].model.get('serial_count_prizes');
                 prize_setings[index]={
                     'integral':dynamicComponents[i].model.get('serial_count_points'),
-                    'coupon':serial_prizes? serial_prizes: {
+                    'coupon':!$.isEmptyObject(serial_prizes)? serial_prizes: {
                             "id": 0,
                             "name": ""
                         }

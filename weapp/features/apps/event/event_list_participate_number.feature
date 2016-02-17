@@ -182,7 +182,7 @@ Background:
 				"""
 			#Then lily获得提示"店铺二维码"
 
-@mall2 @apps_event @apps_event_backend @event_list_participate_number
+@mall2 @apps @apps_event @apps_event_backend @event_list_participate_number
 Scenario:1 参与活动报名的人数
 	Given jobs登录系统
 	Then jobs获得活动报名列表

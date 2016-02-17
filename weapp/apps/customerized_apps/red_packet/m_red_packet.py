@@ -124,8 +124,9 @@ class MRedPacket(resource.Resource):
 					current_money = page_owner_member_info.current_money
 					red_packet_status = page_owner_member_info.red_packet_status
 
-					if curr_member_red_packet_info.helped_member_ids:
-						is_helped = long(fid) in curr_member_red_packet_info.helped_member_ids
+					# if curr_member_red_packet_info.helped_member_ids:
+					# 	is_helped = long(fid) in curr_member_red_packet_info.helped_member_ids
+					is_helped = app_models.RedPacketRelations.objects(belong_to=record_id, member_id=str(member_id), helped_member_id=fid).count()>0
 
 				# 获取该主页帮助者列表
 				#并发问题临时解决方案 ---start

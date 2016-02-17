@@ -17,6 +17,7 @@ from django.db.models.manager import Manager
 from django.contrib.auth.models import User
 import copy
 import traceback
+from mongoengine.document import BaseDocument as mongo_document
 
 
 class WeappDebugWrapper(orm_util.CursorDebugWrapper):
@@ -215,6 +216,22 @@ def hackModelManager():
 # 		return False
 # 	User.has_perm = has_perm
 
+def hackMongoDocumentInit():
+	"""
+	原因：由于mongoengine 从0.8.7升级到0.9.0以上版本后，model class的init动作对于class中没有定义的field会报FieldDoesNotExist
+	解决：model class实例初始化之前对field过滤，去掉没有在class中定义的field key
+	add by aix
+	@return:
+	"""
+	old_init = mongo_document.__init__
+	def new_init(self, *args, **values):
+		model_fields = self._fields.keys()
+		post_fields = values.keys()
+		for f in post_fields:
+			if f not in model_fields:
+				del values[f]
+		old_init(self, *args, **values)
+	mongo_document.__init__ = new_init
 
 def hack(params):
 	hackCursorDebugWrapper(params)
@@ -226,3 +243,4 @@ def hack(params):
 	hackRenderToResponse()
 	hackModelManager()
 	# hackUser() duhao 20151019 注释
+	hackMongoDocumentInit()

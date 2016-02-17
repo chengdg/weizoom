@@ -131,7 +131,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_event @apps_event_backend @update_event
+@mall2 @apps @apps_event @apps_event_backend @update_event
 Scenario:1 编辑'未开始'状态的活动报名
 	Given jobs登录系统
 	When jobs编辑活动报名活动'活动报名-无奖励'
@@ -199,7 +199,7 @@ Scenario:1 编辑'未开始'状态的活动报名
 		}]
 		"""
 
-@mall2 @apps_event @apps_event_backend @update_event
+@mall2 @apps @apps_event @apps_event_backend @update_event
 Scenario:2 关闭'进行中'状态的活动报名
 	Given jobs登录系统
 	Then jobs获得活动报名列表
@@ -260,7 +260,7 @@ Scenario:2 关闭'进行中'状态的活动报名
 		}]
 		"""
 
-@mall2 @apps_event @apps_event_backend @update_event
+@mall2 @apps @apps_event @apps_event_backend @update_event
 Scenario:3 删除'已结束'状态的活动报名
 	Given jobs登录系统
 	Then jobs获得活动报名列表

@@ -137,8 +137,9 @@ class MPowerMe(resource.Resource):
 				else:
 					page_owner_name = Member.objects.get(id=fid).username_size_ten
 					page_owner_member_id = fid
-					if curr_member_power_info.powered_member_id:
-						is_powered = True if fid in curr_member_power_info.powered_member_id and isMember else False
+					# if curr_member_power_info.powered_member_id:
+					# 	is_powered = True if fid in curr_member_power_info.powered_member_id and isMember else False
+					is_powered = True if app_models.PowerMeRelations.objects(belong_to=record_id, member_id=str(member_id), powered_member_id=fid).count()>0 and isMember else False
 			else:
 				response.errMsg = u'活动信息出错'
 				return response.get_response()

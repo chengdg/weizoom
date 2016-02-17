@@ -385,7 +385,11 @@
             var $container = $('.wui-lotterydescription').find('.wui-i-body');
             var lottery = new Roulette($container);
             $(".xa-lottery-go").click(function(){
+                var _that = this;
                 $(this).addClass('xa-lottery-go-to');
+                window.setTimeout(function(){
+                    $(_that).removeClass('xa-lottery-go-to');
+                }, 100);
                 if(lottery.isRolling || !lottery_status || can_play_count==0){
                     if(lottery.isRolling) return false;
                     if(activity_status == '未开始'){
@@ -399,10 +403,8 @@
                     }else{
                         resultDialog.render()
                     }
-                    $(this).removeClass('xa-lottery-go-to');
                     return false;
                 }else{
-                    var $that = $(this);
                     W.getApi().call({
                         app: 'm/apps/lottery',
                         resource: 'lottery_prize',
@@ -414,10 +416,8 @@
                         success: function(data){
                             lottery.roll();
                             lottery.stop(data);
-                            $that.removeClass('xa-lottery-go-to');
                         },
                         error: function(error){
-                            $that.removeClass('xa-lottery-go-to');
                             if(error.errMsg == '奖品已抽光'){
                                 resultDialog.render({
                                     prize_type: 'none',

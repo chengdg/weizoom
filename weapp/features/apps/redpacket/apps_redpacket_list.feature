@@ -41,7 +41,7 @@ Background:
 			"end_date":"明天",
 			"is_show_countdown":"ture",
 			"red_packet":{
-				"type":"random",
+				"red_packet_type":"random",
 				"random_total_money":"500",
 				"random_packets_number":"10",
 				"regular_packets_number":"",
@@ -61,7 +61,7 @@ Background:
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
@@ -81,7 +81,7 @@ Background:
 			"end_date":"昨天",
 			"is_show_countdown":"true",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"5",
@@ -97,7 +97,7 @@ Background:
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
 		"""
-@mall2 @apps_redpacket @apps_redpacket_list
+@mall2 @apps @apps_redpacket @apps_redpacket_list
 Scenario:1 拼红包活动列表查询
 	Given jobs登录系统
 	Then jobs获得拼红包活动列表
@@ -105,7 +105,7 @@ Scenario:1 拼红包活动列表查询
 		[{
 			"name":"拼红包活动3",
 			"participant_count":"0",
-			"type":"普通",
+			"red_packet_type":"普通",
 			"status":"已结束",
 			"total_money":"150.00",
 			"already_paid_money":"0.00",
@@ -115,7 +115,7 @@ Scenario:1 拼红包活动列表查询
 		},{
 			"name":"拼红包活动2",
 			"participant_count":"0",
-			"type":"普通",
+			"red_packet_type":"普通",
 			"status":"未开始",
 			"total_money":"100.00",
 			"already_paid_money":"0.00",
@@ -125,7 +125,7 @@ Scenario:1 拼红包活动列表查询
 		},{
 			"name":"拼红包活动1",
 			"participant_count":"0",
-			"type":"拼手气",
+			"red_packet_type":"拼手气",
 			"status":"进行中",
 			"total_money":"500.00",
 			"already_paid_money":"0.00",
@@ -315,7 +315,7 @@ Scenario:1 拼红包活动列表查询
 				"end_date":"2天后"
 			}]
 			"""
-@mall2 @apps_redpacket @apps_redpacket_list
+@mall2 @apps @apps_redpacket @apps_redpacket_list
 Scenario:2 拼红包活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数

@@ -53,7 +53,7 @@ Background:
 			"end_date":"明天",
 			"is_show_countdown":"true",
 			"red_packet":{
-				"type":"random",
+				"red_packet_type":"random",
 				"random_total_money":"10",
 				"random_packets_number":"2",
 				"regular_packets_number":"",
@@ -72,7 +72,7 @@ Background:
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"3",
@@ -135,7 +135,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpackets_frontend @apps_redpackets_frontend01
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:1 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包（拼手气红包）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -163,7 +163,7 @@ Scenario:1 会员在自己专属页面点击按钮分享活动，邀请好友帮
 		"""
 
 
-@mall2 @apps_redpacket @apps_redpackets_frontend @apps_redpackets_frontend01
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:2 会员在自己专属页面点击按钮分享活动，邀请好友帮忙拼红包（普通红包）
 #主要验证普通红包获得系统自动发放的红包金额
 	When bill关注jobs的公众号
@@ -193,7 +193,7 @@ Scenario:2 会员在自己专属页面点击按钮分享活动，邀请好友帮
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpackets_frontend @apps_redpackets_frontend01
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:3 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -240,7 +240,7 @@ Scenario:3 会员通过好友分享的页面进行我也要拼红包，弹出公
 	#tom再次通过好友分享的链接进行我也要拼红包，再次弹出公众号的二维码，通过识别二维码进入公众号
 
 
-@mall2 @apps_redpacket @apps_redpackets_frontend @apps_redpackets_frontend01
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:4 好友在活动期间不能为取关会员点赞
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -266,7 +266,7 @@ Scenario:4 好友在活动期间不能为取关会员点赞
 	Then tom获得拼红包活动提示"该用户已取消关注，暂时不能点赞"
 
 
-@mall2 @apps_redpacket @apps_redpackets_frontend @apps_redpackets_frontend01
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend01
 Scenario:5 已贡献好友列表按照时间倒序排列（好友点赞完成后直接排列在最前面）
 		#好友在好友页面点赞后，直接显示在已贡献好友列表里，按照时间倒序
 	When bill关注jobs的公众号
