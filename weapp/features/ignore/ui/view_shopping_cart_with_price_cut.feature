@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 添加参加满减活动的商品到购物车后，浏览购物车中的商品
 #满减活动已删除该功能
 Background:

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.update_product
 Feature: Delete Product
 	Jobs能通过管理系统删除商品

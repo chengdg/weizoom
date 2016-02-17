@@ -1,4 +1,4 @@
-#author: 崔帅帅
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #editor: 张三香 2015.10.16
 @func:webapp.modules.user_center.views
 

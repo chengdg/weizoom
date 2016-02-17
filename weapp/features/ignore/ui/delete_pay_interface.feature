@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_mall_settings
 Feature:删除支付方式
 #该功能已删除，收藏该功能的UI实现feature

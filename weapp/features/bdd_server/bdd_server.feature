@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 #author: robert
 
 Feature: BDD Server

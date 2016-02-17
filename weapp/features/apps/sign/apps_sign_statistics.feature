@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 # __author__ : 王丽 2015-11-25
 
 Feature: 签到-后台签到统计

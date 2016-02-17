@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 添加微众卡账号
 	jobs在微信营销管理系统后台创建微众卡账号，以便查询微众卡的发放目标
 Background:

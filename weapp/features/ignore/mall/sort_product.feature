@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_products
 Feature: 调整商品的顺序
 	Jobs能调整商品的顺序

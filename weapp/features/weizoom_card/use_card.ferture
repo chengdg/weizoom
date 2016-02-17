@@ -1,4 +1,4 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 使用微众币购物
 	jobs创建微众卡，发放给bill后，bill能用微众币购物
 

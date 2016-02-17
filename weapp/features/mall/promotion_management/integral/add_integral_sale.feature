@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "张三香"
 #editor:雪静 2015.10.15
 Feature: 创建积分应用活动

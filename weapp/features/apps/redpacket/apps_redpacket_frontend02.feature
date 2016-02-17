@@ -1,3 +1,4 @@
+#watcher:xuwei@weizoom.com,benchi@weizoom.com
 # __author__ : 许韦
 
 Feature: 会员参加拼红包活动

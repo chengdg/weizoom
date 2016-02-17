@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 #author：师帅
 
 Feature: 自定义模块-图片导航

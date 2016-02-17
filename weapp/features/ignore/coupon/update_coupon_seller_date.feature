@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 更新优惠券排行榜时间
 	Jobs能通过管理系统添加"更新优惠券排行榜时间"
 

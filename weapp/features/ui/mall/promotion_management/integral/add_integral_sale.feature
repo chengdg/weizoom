@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 # __author__ : "张三香"
 Feature: 创建积分应用活动
 		Jobs能通过管理系统在商城中添加'积分应用'活动

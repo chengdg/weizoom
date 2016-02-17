@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 #微众精选：修改供货商影响商品
 Feature: 修改供货商影响商品

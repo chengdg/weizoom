@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 # __author__ : "王丽"
 
 Feature: 会员列表-会员详情-基本信息

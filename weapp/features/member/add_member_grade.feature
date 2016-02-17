@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,zhangsanxiang@weizoom.com,benchi@weizoom.com
 #author: 冯雪静
 #editor: benchi 对ui验证的修复
 #editor: 张三香 2015.10.15

@@ -1,4 +1,5 @@
-# __author__ : "师帅"
+#watcher:fengxuejing@weizoom.com,wangli@weizoom.com,benchi@weizoom.com
+
 Feature: 带参数二维码
 """
 	# __author__ : "王丽"

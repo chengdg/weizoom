@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 自动生成积分卡
 	Jobs能通过管理系统为一个"积分卡规则"手工生成"积分卡"
 

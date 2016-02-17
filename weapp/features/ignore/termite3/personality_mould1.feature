@@ -1,4 +1,5 @@
-#author：师帅
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 微页面-个性模块1
 
 #默认有两个模块

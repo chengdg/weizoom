@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #_author_:王丽 2015.11.16
 
 Feature: 会员分析-会员概况-推广扫码排行榜

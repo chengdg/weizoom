@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #editor:张三香 2015.10.15
 
 Feature: 需求1291新建多图文 jobs在系统中新建多图文

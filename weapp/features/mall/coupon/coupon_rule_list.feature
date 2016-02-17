@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #author:张三香
 
 Feature:优惠券规则列表中,操作列信息的验证

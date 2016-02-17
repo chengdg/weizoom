@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 在webapp中购买配送套餐
 	bill能在webapp中购买jobs添加的"配送套餐"
 

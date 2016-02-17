@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #editor：王丽 2015.10.14
 
 @func:webapp.modules.mall.views.list_products

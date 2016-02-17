@@ -1,3 +1,4 @@
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 @memberList
 # __editor__ : "新新"
 Feature: 群发消息

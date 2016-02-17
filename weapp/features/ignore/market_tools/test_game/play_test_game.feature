@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 @func:market_tools.tools.test_game.views.list_test_games
 Feature: 参与趣味测试
 	微信用户能通过微信参与"趣味测试"

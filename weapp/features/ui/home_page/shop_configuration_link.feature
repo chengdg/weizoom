@@ -1,3 +1,4 @@
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 # __author__ : "新新2015.11.05"
 
 Feature: 店铺导航配置连接

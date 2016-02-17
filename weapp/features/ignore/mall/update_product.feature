@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.update_product
 Feature: Update Product
 	Jobs能通过管理系统更新商品

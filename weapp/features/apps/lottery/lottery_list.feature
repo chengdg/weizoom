@@ -1,3 +1,4 @@
+# watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2015.11.17
 
 Feature:微信抽奖列表

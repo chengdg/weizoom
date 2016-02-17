@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 激活微众卡确定发放目标
 	jobs在微信营销管理系统后台激活微众卡时，显示发放目标
 Background:

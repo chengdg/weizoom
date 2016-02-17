@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_products
 Feature: Add Product
 	Jobs能通过管理系统在商城中添加"商品"

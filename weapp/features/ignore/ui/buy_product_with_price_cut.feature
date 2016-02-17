@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 购买参加“满减”活动的商品
 #已删除该功能
 

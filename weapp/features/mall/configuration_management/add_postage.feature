@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 添加邮费配置
 	Jobs能通过管理系统为商城添加的"邮费配置"
 

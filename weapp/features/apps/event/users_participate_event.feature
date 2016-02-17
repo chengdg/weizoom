@@ -1,3 +1,4 @@
+# watcher: wangli@weizoom.com,benchi@weizoom.com
 #_author_:王丽 2015.12.02
 
 Feature:手机端用户参与活动报名

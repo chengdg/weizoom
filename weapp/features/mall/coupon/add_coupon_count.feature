@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 #author : 冯雪静
 
 Feature: 优惠券添加库存

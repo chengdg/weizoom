@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #author: 王丽 2015-10-27
 
 Feature:带参数二维码-[关注数量]关注会员列表

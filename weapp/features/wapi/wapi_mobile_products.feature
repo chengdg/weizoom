@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 测试WAPI的场景
 
 Background: 安装完整测试数据

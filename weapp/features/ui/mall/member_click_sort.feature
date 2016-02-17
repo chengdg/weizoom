@@ -1,3 +1,4 @@
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 # __editor__ : "新新9.9"
 
 Feature: 会员列表排序

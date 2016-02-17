@@ -1,3 +1,4 @@
+# watcher: wangli@weizoom.com,benchi@weizoom.com
 #_author_:王丽 2015.12.03
 
 Feature:更新活动报名

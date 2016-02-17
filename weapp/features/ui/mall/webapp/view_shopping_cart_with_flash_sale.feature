@@ -119,7 +119,7 @@ Background:
 			"promotion_price": 11.5
 		}, {
 			"name": "商品2限时抢购",
-			"start_date": "1天后",
+			"start_date": "今天",
 			"end_date": "2天后",
 			"products": ["商品2"],
 			"count_per_purchase": 2,

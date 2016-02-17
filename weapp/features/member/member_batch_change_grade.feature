@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #_author_:王丽
 
 Feature: 会员管理-批量修改等级

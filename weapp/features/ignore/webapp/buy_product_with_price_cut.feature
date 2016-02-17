@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 在webapp中购买参与满减活动的商品
 	用户能在webapp中购买"参与满减活动的商品"
 

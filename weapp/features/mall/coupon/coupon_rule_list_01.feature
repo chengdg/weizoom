@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2016.01.14
 
 #针对bug补充：（功能问题）通过分享红包领取优惠券后，后台优惠券的'领取人/次'统计不对

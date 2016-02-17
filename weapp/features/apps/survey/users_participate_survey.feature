@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2015.11.13
 
 Feature:手机端用户参加用户调研活动

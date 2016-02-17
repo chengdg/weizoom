@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 @func:market_tools.tools.test_game.views.list_test_games
 Feature: 添加趣味测试
 	jobs能通过管理系统添加"趣味测试"

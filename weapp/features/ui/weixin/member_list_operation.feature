@@ -1,3 +1,4 @@
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 # __author__ : "新新"
 
 Feature: 查看聊天记录

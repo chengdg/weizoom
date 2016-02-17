@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_mall_settings
 Feature:删除支付方式
 	Jobs能通过管理系统删除"支付方式"

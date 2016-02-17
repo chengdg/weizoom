@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #author: 张三香
 
 Feature:添加禁用优惠券商品

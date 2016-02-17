@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 需求1290新建单条图文 jobs在系统中新建单条图文
 
 @ignore

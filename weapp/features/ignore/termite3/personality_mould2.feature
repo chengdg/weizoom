@@ -1,4 +1,5 @@
-#author：师帅
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 微页面-个性模板2
 
 #默认为3个模块

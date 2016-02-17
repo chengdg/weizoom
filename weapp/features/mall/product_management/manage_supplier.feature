@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 
 Feature: 管理供货商

@@ -1,3 +1,4 @@
+#watcher:zhangxue@weizoom.com,benchi@weizoom.com
 # __author__ : 张雪
 
 Feature: 后台配置数据

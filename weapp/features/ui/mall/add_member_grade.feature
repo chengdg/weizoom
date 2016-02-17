@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 # __edit__ : "benchi" 对ui验证的修复
 Feature: 增加会员等级

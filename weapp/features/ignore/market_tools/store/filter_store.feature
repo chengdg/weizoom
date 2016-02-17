@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 @func:market_tools.tools.store
 Feature:在webapp中浏览门店列表
 	bill能在webapp中按照地区看到jobs添加的门店列表

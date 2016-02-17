@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 # @func:market_tools.tools.activity.views.list_activity_members
 # Feature: Get Joined Activity Members
 	# Jobs能通过管理系统获取己参加"活动报名"的人员列表

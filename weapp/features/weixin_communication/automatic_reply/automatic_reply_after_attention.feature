@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 # __author__ : "王丽"
 
 Feature: 微信用户关注后系统自动回复

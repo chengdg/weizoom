@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 安装完整测试所需的各种数据
 
 @full_init @mall2

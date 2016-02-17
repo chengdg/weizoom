@@ -1,3 +1,4 @@
+# watcher: wangli@weizoom.com,benchi@weizoom.com
 #_author_:王丽 2015.12.02
 
 Feature:应用和营销-活动报名-参与人数

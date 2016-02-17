@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2015.12.01
 
 Feature:更新用户调研活动

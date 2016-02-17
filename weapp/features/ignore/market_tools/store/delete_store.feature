@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 @func:market_tools.tools.store
 Feature: 删除门店
 	jobs能通过管理系统修改门店信息

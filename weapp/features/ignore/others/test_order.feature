@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 
 Feature: Jobs能通过管理系统为管理会员的测试订单

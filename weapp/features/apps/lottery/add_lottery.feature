@@ -1,5 +1,4 @@
-#_author_:张三香 2015.11.16
-
+# watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 Feature: 新建微信抽奖
 
 Background:

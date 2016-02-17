@@ -1,4 +1,4 @@
-#author：师帅
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 #_author_:新新 15.10.15
 Feature: 自定义模块-图片导航
 

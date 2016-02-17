@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香
 
 Feature:买赠活动列表的查询

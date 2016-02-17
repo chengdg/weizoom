@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 @func:market_tools.tools.thanks_card
 Feature: 感恩贺卡
 	Jobs能通过管理系统设置可以制作感恩贺卡的商品

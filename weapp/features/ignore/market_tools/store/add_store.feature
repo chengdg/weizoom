@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 添加门店
 	Jobs能通过管理系统添加门店
 

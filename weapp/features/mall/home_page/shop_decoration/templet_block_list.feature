@@ -1,4 +1,4 @@
-#author：师帅
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 #editor 新新 2015.10.13
 
 Feature: 微页面列表

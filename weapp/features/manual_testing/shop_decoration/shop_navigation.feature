@@ -1,4 +1,5 @@
-#_author_ "师帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 店铺导航
 #没有启用时，在手机端不显示，启用后才会在手机端显示
 #启用自定义菜单样式

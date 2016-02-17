@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #_author_:王丽
 
 Feature: 会员分析-会员概况-会员增长趋势

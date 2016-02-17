@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 Feature: 微众卡兑换积分
 	微众卡可以在商城兑换积分

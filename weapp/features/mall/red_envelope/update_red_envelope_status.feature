@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #author:张三香 2015.10.19
 
 Feature:更新分享红包状态

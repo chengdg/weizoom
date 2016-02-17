@@ -1,3 +1,4 @@
+#watcher:xuwei@weizoom.com,benchi@weizoom.com
 #__author__ : "许韦"
 Feature:用户进行签到
 

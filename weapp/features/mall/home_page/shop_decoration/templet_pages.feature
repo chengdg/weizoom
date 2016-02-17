@@ -1,3 +1,4 @@
+#watcher:songwenxin@weizoom.com,benchi@weizoom.com
 #_author_:宋温馨
 Feature:商品列表页搜索和分页功能
 

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 浏览 查询图文列表
 """
 	jobs能 浏览 查询图文列表

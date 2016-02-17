@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香
 
 Feature:营销活动分析-微信抽奖

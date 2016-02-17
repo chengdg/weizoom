@@ -1,3 +1,4 @@
+#watcher:benchi@weizoom.com
 # __edit__ : "benchi"
 # 满减活动现在系统中已经关闭，故该feathure的各个场景先设置为@ignore，不再执行，等需要时再开启
 Feature: 添加参与满减活动的商品到购物车中

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,zhangsanxiang@weizoom.com,benchi@weizoom.com
 Feature: 用户状态流
 	测试在各种场景下与用户状态相关的各种数据的状态迁移
 

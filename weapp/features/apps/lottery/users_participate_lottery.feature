@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2015.11.30
 
 Feature:手机端用户参与微信抽奖活动

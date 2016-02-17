@@ -1,4 +1,5 @@
-#author：师帅
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 Feature: 微页面-设为主页
 
 #project1为主页面

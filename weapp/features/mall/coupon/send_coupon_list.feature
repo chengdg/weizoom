@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #author: 王丽 2015-01-13
 
 Feature: 发优惠券-发优惠券记录查询

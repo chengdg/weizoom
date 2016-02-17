@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 需求1298编辑图文消息 jobs在系统中编辑图文消息
 
 Background:

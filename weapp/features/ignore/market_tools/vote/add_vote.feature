@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:market_tools.tools.vote.views.list_votes
 Feature: Add Vote
 	Jobs能通过管理系统添加"微信投票"

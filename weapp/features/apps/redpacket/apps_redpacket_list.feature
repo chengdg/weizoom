@@ -1,3 +1,4 @@
+#watcher:xuwei@weizoom.com,benchi@weizoom.com
 #_auther_:许韦
 
 Feature: 拼红包活动列表

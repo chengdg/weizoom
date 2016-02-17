@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:market_tools.tools.vote.views.list_votes
 Feature: Select Vote Option
 	Jobs能通过管理系统查看"微信投票"的投票票项统计，并按投票项的投票数量倒序排序

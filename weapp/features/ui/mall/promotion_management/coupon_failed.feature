@@ -1,4 +1,4 @@
-# __author__ : "师帅"
+#watcher:benchi@weizoom.com
 # __edite__ : "benchi"
 
 Feature: 优惠券与促销活动互斥问题

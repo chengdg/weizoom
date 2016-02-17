@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 访问PV与UV信息
 	jobs通过管理系统能获得PV和UV信息
 

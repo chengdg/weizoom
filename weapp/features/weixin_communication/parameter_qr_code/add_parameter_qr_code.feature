@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #author: 王丽 2015-10-26
 
 Feature:带参数二维码-添加和修改

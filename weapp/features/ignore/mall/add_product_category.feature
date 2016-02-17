@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 添加商品分类
 	Jobs能通过管理系统为管理商城添加的"商品分类"
 

@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 #editor:王丽 2015.10.14
 @func:webapp.modules.mall.views.update_productcategory

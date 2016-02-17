@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "冯雪静"
 Feature: 添加微众卡钱包
 	jobs在微信营销管理系统后台创建新的钱包规则，以便印刷，发放给客户。

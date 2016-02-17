@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #editor:张三香 2015.10.15
 
 Feature: 1298 编辑(删除) 图文消息 bc

@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,fengxuejing@weizoom.com,benchi@weizoom.com
 #_author_:张三香
 #editor:雪静 2015.10.14
 Feature:删除买赠活动

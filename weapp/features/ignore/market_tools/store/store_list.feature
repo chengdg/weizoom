@@ -1,4 +1,5 @@
-# __author__ : "崔帅帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 @func:market_tools.tools.store
 Feature:Get Store List
 		jobs能通过系统获取已添加的所有门店列表

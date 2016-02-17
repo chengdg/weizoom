@@ -1,4 +1,5 @@
-﻿# __author__ : "王丽"
+﻿#watcher:wangli@weizoom.com,benchi@weizoom.com
+# __author__ : "王丽"
 
 1、会员昵称中有图片的会员昵称可以正确显示
 

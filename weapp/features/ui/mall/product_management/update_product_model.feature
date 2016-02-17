@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_mall_settings
 Feature: 更新商品规格
 	Jobs通过管理系统在商城中更新供商品使用的"商品规格"

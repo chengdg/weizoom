@@ -1,4 +1,4 @@
-#_author_:师帅
+#watcher:wangxinrui@weizoom.com,benchi@weizoom.com
 #editor 新新 2015.10.13
 Feature:自定义模块——【基础模块】橱窗-页面
 	"""

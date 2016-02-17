@@ -1,4 +1,5 @@
-# __author__ : '崔帅帅'
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
+
 
 @func:webapp.modules.mall.views.list_products
 Feature:微众商城商品页面增加现金支付功能

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:market_tools.tools.vote.views.list_votes
 Feature: update Vote
 	Jobs能通过管理系统更新"微信投票"

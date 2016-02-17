@@ -1,3 +1,4 @@
+#watcher:xuwei@weizoom.com,benchi@weizoom.com
 #_author_:许韦 2015.11.30
 
 Feature:测试修改签到活动最高连续签到天数

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_mall_settings
 Feature:添加支付方式
 	Jobs能通过管理系统添加"支付方式"

@@ -1,3 +1,4 @@
+#watcher:xuwei@weizoom.com,benchi@weizoom.com
 # __author__ : 许韦 2016.01.20
 
 Feature: 新建红包活动

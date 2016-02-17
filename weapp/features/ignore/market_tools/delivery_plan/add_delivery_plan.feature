@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 添加配送套餐
 	Jobs能通过管理系统添加"配送套餐"
 

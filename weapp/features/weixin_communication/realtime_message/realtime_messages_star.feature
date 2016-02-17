@@ -1,3 +1,4 @@
+#watcher:benchi@weizoom.com,wangli@weizoom.com
 # __author__ : "benchi"
 # __author__ : "王丽"
 Feature: jobs给实时消息加星标

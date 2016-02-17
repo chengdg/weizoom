@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #editor: 张三香 2015.10.14
 
 Feature: 添加商品规格

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_products
 Feature: 调整商品的顺序
 #该功能是最原始的排序feature，收藏该功能的排序feature

@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 @func:webapp.modules.mall.views.list_mall_settings
 #editor:张三香 2015.10.16
 

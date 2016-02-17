@@ -1,4 +1,4 @@
-
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香 2015.11.27
 
 Feature:会员参加微助力活动

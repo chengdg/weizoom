@@ -1,4 +1,4 @@
-# __author__ : "师帅"
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __edite__ : "benchi"
 #editor:雪静 2015.10.16
 #editor:雪静 2015.10.19

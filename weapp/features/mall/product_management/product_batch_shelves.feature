@@ -1,4 +1,4 @@
-# __author__ : "师帅"
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 #editor:王丽 2015.10.13
 
 Feature:商品批量上下架

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 删除商品
 	Jobs能通过管理系统删除商品
 

@@ -1,4 +1,4 @@
-
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香
 
 Feature:发放优惠券时,优惠券总价值的校验

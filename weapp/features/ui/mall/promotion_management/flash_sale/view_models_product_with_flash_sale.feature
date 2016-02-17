@@ -1,3 +1,4 @@
+#watcher:zhangsanxiang@weizoom.com,benchi@weizoom.com
 #_author_:张三香
 
 Feature:选取多规格商品创建限时抢购活动，手机端商品详情页选择规格时，显示限时抢购价，不显示原价

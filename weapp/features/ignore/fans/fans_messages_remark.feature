@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 # __author__ : "wangli"
 Feature: jobs粉丝管理中的粉丝添加备注
 			1在粉丝管理的粉丝列表中对某个粉丝加备注

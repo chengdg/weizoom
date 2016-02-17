@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 Feature: 1297 预览图文消息
 """
 	jobs能 预览图文消息

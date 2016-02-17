@@ -1,3 +1,4 @@
+#watcher:wangli@weizoom.com,benchi@weizoom.com
 # __author__ : "王丽"
 
 Feature:  浏览 查询 关键词自动回复 bc

@@ -1,3 +1,4 @@
+#watcher:fengxuejing@weizoom.com,benchi@weizoom.com
 # __author__ : "benchi"
 # __author__ : "冯雪静"
 Feature: jobs在后台对已有评价进行审核
