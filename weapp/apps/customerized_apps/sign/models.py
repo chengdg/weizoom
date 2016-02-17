@@ -143,7 +143,7 @@ class SignParticipance(models.Document):
 		)
 		if not sync_result:
 			return_data['status_code'] = RETURN_STATUS_CODE['ERROR']
-			return_data['errMsg'] = u'操作过于频繁'
+			return_data['errMsg'] = u'每天只能签到一次'
 			return return_data
 		self.reload()
 		#更新签到参与人数

@@ -143,8 +143,7 @@ class RedPacketParticipance(resource.Resource):
 					created_at = datetime.now()
 				)
 				detail_log.save()
-		except Exception,e:
-			print e
+		except:
 			response = create_response(500)
 			response.errMsg = u'帮助好友失败'
 			response.inner_errMsg = unicode_full_stack()
@@ -165,8 +164,7 @@ class RedPacketParticipance(resource.Resource):
 		try:
 			response = create_response(200)
 
-		except Exception,e:
-			print e
+		except:
 			response = create_response(500)
 		return response.get_response()
 

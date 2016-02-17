@@ -175,7 +175,8 @@ class lottery_prize(resource.Resource):
 			#根据抽奖次数限制，更新可抽奖次数
 			# lottery_participance.update(dec__can_play_count=1)
 			sync_result = lottery_participance.modify(
-				query={'lottery_date__lt': now_datetime - datetime.timedelta(seconds=1)},
+				query={'lottery_date__gt': now_datetime - datetime.timedelta(seconds=1),
+					   'can_play_count__gte': 1},
 				dec__can_play_count=1
 			)
 			print sync_result, '==========================='
