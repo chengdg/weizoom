@@ -89,7 +89,7 @@ class SignParticipances(resource.Resource):
 				'participant_name': member_id2member[data.member_id].username_for_html if member_id2member.get(data.member_id) else u'未知',
 				'participant_icon': member_id2member[data.member_id].user_icon if member_id2member.get(data.member_id) else '/static/img/user-1.jpg',
 				'created_at': data.created_at.strftime("%Y/%m/%d %H:%M:%S"),
-				'latest_date': data.latest_date.strftime("%Y/%m/%d %H:%M:%S"),
+				'latest_date': data.latest_date.strftime("%Y/%m/%d %H:%M:%S") if data.latest_date else "",
 				'total_count': data.total_count,
 				'serial_count': data.serial_count,
 				'top_serial_count': data.top_serial_count,

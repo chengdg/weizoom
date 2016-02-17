@@ -120,6 +120,7 @@ class exsurveyParticipance(resource.Resource):
 					if product:
 						item_data['item_value'] = product['product_name']
 						product_dict['product_id'] = product['product_id']
+						product_dict['order_id'] = product['order_id'] if product['order_id'] else ""
 						product_dict['product_owner_id'] = product['product_owner_id']
 						product_dict['product_supplier_id'] = product['product_supplier_id']
 						product_dict['product_name'] = product['product_name']
@@ -134,6 +135,7 @@ class exsurveyParticipance(resource.Resource):
 				'created_at': created_at,
 				'items': result_list,
 				'product_id': product_dict['product_id'] if product_dict else '',
+				'order_id': product_dict.get('order_id', 0),
 				'product_owner_id': product_dict['product_owner_id'] if product_dict else '',
 				'product_supplier_id': product_dict['product_supplier_id'] if product_dict else '',
 				'product_name': product_dict['product_name'] if product_dict else ''
