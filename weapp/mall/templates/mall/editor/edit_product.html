@@ -13,14 +13,7 @@
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
-	<ul class="nav nav-tabs">
-		<li class="active">
-			<a href="/mall2/product/">添加新商品</a>
-		</li>
-		<li>
-			<a href="#">商品池</a>
-		</li>
-	</ul> 
+
 	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
@@ -308,7 +301,7 @@
                     </label>
                 </div>
             </div>
-            
+
 			<div class="form-group">
 					<label class="control-label col-sm-2 col-sm-offset-1" for="is_delivery">配送时间：</label>
 					<div id='delivery_time' class="col-sm-9 " style="height:60px;margin-left:-20px;">
@@ -496,7 +489,7 @@ $('.xa-selectImage').click(function(){return false;})
 			}
 			$div.hide();
 		}
-		
+
 
 		$('.xa-tips').popover({
 			template:"<div class='popover'><div class='popover-content p0'></div></div>",

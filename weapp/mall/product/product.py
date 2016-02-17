@@ -271,6 +271,9 @@ class Product(resource.Resource):
         has_product_id = request.GET.get('id')
         has_product_id = int(has_product_id) if has_product_id else 0
 
+        # 商城的类型
+        mall_type = request.user_profile.webapp_type
+
         if has_product_id:
             try:
                 product = models.Product.objects.get(id=has_product_id)
@@ -341,7 +344,7 @@ class Product(resource.Resource):
 
         _type = request.GET.get('type', 'object')
         supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
-        
+
         is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
@@ -358,6 +361,8 @@ class Product(resource.Resource):
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
+        elif mall_type == 1:
+            return render_to_response('mall/editor/weizoom_mall_edit_product.html', c)
         else:
             return render_to_response('mall/editor/edit_product.html', c)
 
