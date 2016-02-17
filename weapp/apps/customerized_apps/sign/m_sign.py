@@ -82,20 +82,25 @@ class MSign(resource.Resource):
 
             if signer:
                 #检查是否已签到
-                latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
                 nowDate = datetime.now().strftime('%Y-%m-%d')
-                #首先检查是否断掉了连续签到条件，状态重置serial_count为1
-                if latest_sign_date == (datetime.now() - dt_datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
-                    temp_serial_count = signer.serial_count
+                if signer.latest_date:
+                    latest_sign_date = signer.latest_date.strftime('%Y-%m-%d')
+                    #首先检查是否断掉了连续签到条件，状态重置serial_count为1
+                    if latest_sign_date == (datetime.now() - dt_datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
+                        temp_serial_count = signer.serial_count
+                    else:
+                        temp_serial_count = 0
+                    #如果已达到最大设置天数则重置签到
+                    if (signer.serial_count == max_setting_count and latest_sign_date != nowDate) or (max_setting_count!=0 and signer.serial_count > max_setting_count):
+                        temp_serial_count = 0
+                        signer.update(set__serial_count=0, set__latest_date=None)
+                        signer.reload()
                 else:
                     temp_serial_count = 0
-                #如果已达到最大设置天数则重置签到
-                if (signer.serial_count == max_setting_count and latest_sign_date != nowDate) or (max_setting_count!=0 and signer.serial_count > max_setting_count):
-                    temp_serial_count = 0
-                    signer.update(set__serial_count=0, set__latest_date=None)
-                    signer.reload()
-
-                if (latest_sign_date == nowDate and signer.serial_count != 0) or (latest_sign_date == nowDate and temp_serial_count != 0):
+                latest_sign_date = signer.latest_date
+                if not latest_sign_date:
+                     pass
+                elif (latest_sign_date.strftime('%Y-%m-%d') == nowDate and signer.serial_count != 0) or (latest_sign_date.strftime('%Y-%m-%d') == nowDate and temp_serial_count != 0):
                     status = u'已签到'
                     for name in sorted(map(lambda x: (int(x),x), prize_settings.keys())):
                         setting = prize_settings[name[1]]
