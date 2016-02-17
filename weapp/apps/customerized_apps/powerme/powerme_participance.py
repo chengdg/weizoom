@@ -65,24 +65,34 @@ class PowerMeParticipance(resource.Resource):
 			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
 			ids_tmp = curr_member_power_info.powered_member_id
 			#并发问题临时解决方案 ---start
-			control_data = {}
-			control_data['belong_to'] = power_id
-			control_data['member_id'] = member_id
-			control_data['powered_member_id'] = int(fid)
-			control_data['powerme_control'] = datetime.now().strftime('%Y-%m-%d')
-			try:
-				control = app_models.PowerMeControl(**control_data)
-				control.save()
-			except:
-				response = create_response(500)
-				response.errMsg = u'只能助力一次'
-				return response.get_response()
+			# control_data = {}
+			# control_data['belong_to'] = power_id
+			# control_data['member_id'] = member_id
+			# control_data['powered_member_id'] = int(fid)
+			# control_data['powerme_control'] = datetime.now().strftime('%Y-%m-%d')
+			# try:
+			# 	control = app_models.PowerMeControl(**control_data)
+			# 	control.save()
+			# except:
+			# 	response = create_response(500)
+			# 	response.errMsg = u'只能助力一次'
+			# 	return response.get_response()
 			#并发问题临时解决方案 ---end
 			if not ids_tmp:
 				ids_tmp = [fid]
 			else:
 				ids_tmp.append(fid)
-			curr_member_power_info.update(set__powered_member_id=ids_tmp)
+			# curr_member_power_info.update(set__powered_member_id=ids_tmp)
+			ids_tmp = list(set(ids_tmp))
+			sync_result = curr_member_power_info.modify(
+				query={'powered_member_id__ne': ids_tmp},
+				set__powered_member_id=ids_tmp
+			)
+			print sync_result, '==========================='
+			if not sync_result:
+				response = create_response(500)
+				response.errMsg = u'操作过于频繁！'
+				return response.get_response()
 			#更新被助力者信息
 			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)

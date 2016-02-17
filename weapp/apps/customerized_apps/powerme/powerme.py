@@ -114,7 +114,8 @@ class PowerMe(resource.Resource):
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'desc', 'reply_content', 'material_image', 'qrcode'])
+		# update_fields = set(['name', 'start_time', 'end_time', 'timing', 'desc', 'reply_content', 'material_image', 'qrcode'])
+		update_fields = data.keys()
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value

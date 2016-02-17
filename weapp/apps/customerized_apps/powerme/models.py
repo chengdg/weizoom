@@ -95,3 +95,6 @@ class PoweredDetail(models.Document):
 	meta = {
 		'collection': 'powerme_powered_detail'
 	}
+
+class TestA(models.Document):
+	li = models.ListField()
