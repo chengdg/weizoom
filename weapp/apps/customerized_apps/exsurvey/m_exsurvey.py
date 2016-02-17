@@ -122,7 +122,7 @@ class Msurvey(resource.Resource):
 					for p in participance_datas:
 						termite_data = p.termite_data
 						for title,value in termite_data.items():
-							if value['type'] == 'appkit.dropdownbox':
+							if value['type'] == 'appkit.dropdownbox' and value['value']:
 								orderhasproduct_ids.append(value['value']['orderhasproduct_id'])
 				webappusers =  WebAppUser.objects.filter(member_id=member_id)
 				webapp_user_ids = [wau.id for wau in webappusers]

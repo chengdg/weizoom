@@ -125,12 +125,13 @@ def get_webapp_link_menu_objectes(request):
 				'add_link': '/apps/exsurvey/exsurvey/',
 				'users': ['njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
 
-			},{
-				'name': '拼红包',
-				'type': 'red_packet',
-				'add_btn_title': '新建拼红包',
-				'add_link': '/apps/red_packet/red_packet/'
-			}
+			},
+			# {
+			# 	'name': '拼红包',
+			# 	'type': 'red_packet',
+			# 	'add_btn_title': '新建拼红包',
+			# 	'add_link': '/apps/red_packet/red_packet/'
+			# }
 			# {
 			# 	'name': '趣味测试',
 			# 	'type': 'test_game',

@@ -65,5 +65,6 @@ urlpatterns = patterns('',
 	# (r'index/$', accounts_landing_views.landing_index),
 	(r'help_center/$', accounts_landing_views.help_center),
 	(r'notice_list/$', accounts_landing_views.notice_list),
+	(r'api/user_by_agent/update/$', accounts_api_views.update_user_by_agent),
 
 )
