@@ -6,15 +6,15 @@
 
 {% block content-panel %}
 <div class="xui-editProductPage">
-	<ul class="breadcrumb" style="margin-bottom:-12px;">
+	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li>
 			<a href="/mall2/product_list/?shelve_type=1">商品管理</a>
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
-    {% if mall_type %}
-	<ul class="nav nav-tabs">
+  {% if mall_type %}
+	<ul class="nav nav-tabs" style="border:none;">
 		<li class="active">
 			<a href="/mall2/product/">添加新商品</a>
 		</li>

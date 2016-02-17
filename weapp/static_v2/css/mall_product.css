@@ -418,7 +418,7 @@
 }
 .xui-mall-addProductForm section {
 	border: solid 1px #DCE4EB;
-	margin-top: 20px;
+	/*margin-top: 20px;*/
 	background: #EAEEF5;
 }
 .xui-editProductPage legend{
@@ -1315,4 +1315,46 @@
 	margin-right: 18px;
 	font-weight: bold;
 	padding: 6px 20px;
+}
+
+/*微众系列商品池*/
+.xui-productsPoolPage .xui-offshelf-btn{
+	font-weight: bold;
+	border-radius:0px;
+	margin: 0;
+	padding: 6px 16px;
+}
+.xui-productsPoolPage .xui-filterPanel {
+    padding: 30px 30px 10px;
+}
+.xui-productsPoolPage .xui-filterPanel .xui-col{
+    width:33.33%;
+}
+.xui-productsPoolPage .xui-imgBox{
+	width: 60px;
+	border:1px solid #ddd;
+}
+.xui-productsPoolPage .xui-createdTime{
+	width: 120px;
+    box-sizing: border-box;
+    padding: 0px 40px;
+}
+.xui-productsPoolPage .xui-updateTag{
+	font-style: normal;
+	font-weight:bold;
+	color:#fff;
+	border-radius: 2px;
+	background: #cf0404;
+	padding:1px 3px;
+	display: inline-block;
+	margin-left: 8px;
+}
+.xui-productsPoolPage .xb-rightPanel .panel-body{
+	background: transparent;
+	margin-bottom: 0;
+}
+.xui-productsPoolPage .xui-bottomSelectAll{
+	position: absolute;
+    bottom: 10px;
+    left: 20px;
 }
