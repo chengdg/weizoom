@@ -457,15 +457,17 @@ def step_look_for_order(context, user):
         query_params['isUseWeizoomCard'] = 1 if query_params['isUseWeizoomCard'] == 'true' else 0
 
     context.query_params = query_params
+    context.export_query_params = query_params
 
 
 
 @then(u"{user}导出订单获取订单统计信息")
 def step_get_all_info_of_order(context, user):
     filter_value = dict()
-    if hasattr(context, 'query_params'):
-        filter_value = context.query_params
+    if hasattr(context, 'export_query_params'):
+        filter_value = context.export_query_params
         #print "filter_value---------------",filter_value
+        delattr(context, 'export_query_params')
     from cStringIO import StringIO
     import csv
 
