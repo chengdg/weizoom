@@ -18,8 +18,8 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         'click .xa-confirm': 'submit',
         'click .xa-cancel': 'hide'
     },
-
-    getTemplate: function() {
+    //横向提示
+    getTemplate1: function() {
         var template = '<dl class="wui-confirmView">'
                 +'<dd>'
                 +  '<div class="xa-icon"><i></i></div>'
@@ -31,13 +31,24 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
                 +'<%=warning_msg%>';
         return _.template(template);
     },
-
+    //纵向提示
+    getTemplate2: function(){
+        var template = '<div class="wui-confirmView v">'
+                +'<div class="xui-msgBox">'
+                +  '<div class="xa-icon"><i></i></div>'
+                +  '<div class="xui-i-msg xa-msg"><%=msg%></span></div>'
+                +'</div>'
+                +  '<div class="tc mb15"><button type="button" class="xa-confirm btn xui-confirm">确定</button><button type="button" class="xa-cancel  xui-cancel btn">取消</button></div> '
+                +'</div>'
+                +'<%=warning_msg%>';
+        return _.template(template);
+    },
     initializePrivate: function(options) {
         this.isTitle = options.isTitle;
         this.position = options.position || 'top';
         this.$el = $(this.el);
         this.render();
-        this.template = this.getTemplate();
+        this.template = (options.templateAlign && options.templateAlign == 'vertical') ? this.getTemplate2():this.getTemplate1();
         this.privateContainerClass = options.privateContainerClass;
         this.$el.addClass(this.privateContainerClass);
         this.viewName = options.viewName;

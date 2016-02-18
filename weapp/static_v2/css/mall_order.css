@@ -59,7 +59,7 @@
     width: 150px;
     line-height: 24px;
     border:1px solid #b1dbf1;
-    background: #f2f2f2;
+    background-color: #f2f2f2;
     padding: 0 5px;
     color: #656565;
     white-space: nowrap;
@@ -87,11 +87,12 @@
     line-height: 34px;
 }*/
 
-.xui-filterPanel .xui-datePicker {
+.xui-filterPanel .xui-datePicker,.modal .xui-datePicker{
     width: 132px !important;
-    background: url(/static_v2/img/editor/calendar.jpg) no-repeat !important;
-    background-position: right !important;
-    background-color: #f2f2f2 !important;
+    background-image: url(/static_v2/img/editor/calendar.jpg);
+    background-repeat: no-repeat; 
+    background-position: right;
+    background-color: #f2f2f2;
 }
 
 /*
