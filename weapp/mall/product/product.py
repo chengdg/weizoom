@@ -340,8 +340,8 @@ class ProductPool(resource.Resource):
             dict_products.append(product)
         products = dict_products
 
-        products = sorted(products, key=lambda product:product['status'])
         products = sorted(products, key=lambda product:product['created_at'], reverse=True)
+        products = sorted(products, key=lambda product:product['status'])
 
         if status != '-1':
             products = filter(lambda product:product['status'] == int(status), products)
@@ -380,6 +380,14 @@ class ProductPool(resource.Resource):
             'data': data
         }
         return response.get_response()
+
+    @login_required
+    def api_post(request):
+        pass
+
+    @login_required
+    def api_put(request):
+        pass
 
 class Product(resource.Resource):
     app = 'mall2'

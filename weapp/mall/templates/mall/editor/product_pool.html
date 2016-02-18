@@ -134,6 +134,15 @@ $(document).ready(function() {
         el: '.xui-productsPoolPage'
     });
     view.render();
+
+    $('body').delegate('.xa-offshelf', click, function(event){
+        var $el = $(event.currentTarget);
+        var product_id = $el.attr('data-id');
+    });
+    $('body').delegate('.xa-update', click, function(event){
+        var $el = $(event.currentTarget);
+        var product_id = $el.attr('data-id');
+    });
 });
 </script>
 {% endblock %}
