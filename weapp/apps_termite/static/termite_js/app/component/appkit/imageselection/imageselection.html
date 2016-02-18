@@ -1,0 +1,73 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'appkit.imageselection' %}
+<div class="wui-imageSelection wa-items" data-component-cid="{{component.cid}}" data-input-name="{{component.model.title}}" data-disp_type="{{ component.model.disp_type }}">
+	<h1 class="wui-i-title">{{component.model.title}} {% if component.model.is_mandatory == "true" %}<span class="wui-i-mandatory">(必填)</span>{% endif %}</h1>
+	<ul class="wui-i-items"
+		{% if component.model.is_mandatory == "true" %}
+        data-validate='require-select-selectbox::请选择"{{component.model.title}}"'
+        data-check-el='li .wui-i-button'
+        data-check-className='wui-selectBox-selected'
+		{% endif %}
+	>
+		{% for sub_component in component.components %}{{ sub_component.html|safe }}{% endfor %}
+        <li style="clear: both;"></li>
+	</ul>
+</div>
+{% endifequal %}
+
+
+{% ifequal component.type 'appkit.imageitem' %}
+    <li  class="{% if component.parent_component.model.disp_type == 'table' %}wui-selectBox-display-table{% else %}wui-selectBox-display-list{% endif %}" data-component-cid="{{component.cid}}">
+        {% if component.parent_component.model.type == 'single' %}
+            <div class="wui-selectionwithimage xa-inputControl" id="radio_item_{{component.cid}}" data-type="radio"
+                data-input-name="{{component.model.title}}"
+                data-input-type="imageselection"
+                data-control-type="appkit.imageselection"
+            >
+                <div class="{% if component.parent_component.model.disp_type == 'list' %} wui-inner-selectionwithimage-list{% else %}wui-inner-selectionwithimage{% endif %}">
+                    <div class="wui-inner-img">
+                        <img src="{% if component.model.image %}{{ component.model.image }}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wui-i-image">
+                        {% if component.parent_component.model.disp_type == 'table' %}
+                            <span class="wui-i-text">{{ component.model.title }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if component.parent_component.model.disp_type == 'list' %}
+                    <div class="xui-list-content">
+                        <span class="wui-i-text">{{ component.model.title }}</span>
+                        <span class="wui-i-button"></span>
+                    </div>
+                {% else %}
+                    <span class="wui-i-button"></span>
+                {% endif %}
+
+            </div>
+        {% else %}
+            <div class="wui-selectionwithimage xa-inputControl" id="checkbox_item_{{component.cid}}" data-type="checkbox"
+                data-input-name="{{component.model.title}}"
+                data-input-type="imageselection"
+                data-control-type="appkit.imageselection"
+            >
+                <div class="{% if component.parent_component.model.disp_type == 'list' %} wui-inner-selectionwithimage-list{% else %}wui-inner-selectionwithimage{% endif %}">
+                    <div class="wui-inner-img">
+                        <img src="{% if component.model.image %}{{ component.model.image }}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wui-i-image">
+                        {% if component.parent_component.model.disp_type == 'table' %}
+                            <span class="wui-i-text">{{ component.model.title }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if component.parent_component.model.disp_type == 'list' %}
+                <div class="xui-list-content">
+                    <span class="wui-i-text">{{ component.model.title }}</span>
+                    <span class="wui-i-button wui-selectBox-multi"></span>
+                </div>
+                {% else %}
+                    <span class="wui-i-button wui-selectBox-multi"></span>
+                {% endif %}
+
+            </div>
+    {% endif %}
+</li>
+{% endifequal %}

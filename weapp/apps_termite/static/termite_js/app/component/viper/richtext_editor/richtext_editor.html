@@ -1,0 +1,32 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'viper.richtext_editor' %}
+<!-- =====> viper:richtext_editor component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="p5"
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div class="controls">            
+            {% if in_design_mode %}
+                <img class="hide x-richtexteditor_image x-richtexteditor_text" src="/static/termite_img/text_richtext_editor.jpg" style="width: 350px;" />
+                <img class="hide x-richtexteditor_image x-richtexteditor_richtext" src="/static/termite_img/richtext_richtext_editor.jpg"  style="width: 350px;" />
+                <img class="x-richtexteditor_image x-richtexteditor_full" src="/static/termite_img/full_richtext_editor.jpg"  style="width: 350px;" />
+                <div class="errorHint">name="{{name}}"</div>
+            {% else %}
+                <textarea class="input-xlarge hide" id="{{name}}" name="{{name}}" data-ui-role="richtext-editor" data-type="{{component.model.type}}" data-height="{{component.model.height}}" data-width="350">{{page.record|get_record_value:name|safe}}</textarea>
+            {% endif %}
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:richtext_editor component -->
+{% endifequal %}

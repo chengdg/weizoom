@@ -1,0 +1,43 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.page_header' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-cid="{{component.cid}}" 
+    data-role="header" 
+    {% if component.model.id %}id="{{componnet.model.id}}"{% endif %} 
+    class="{{component.model.class}}" 
+    data-theme="{{component.model.theme}}" 
+    data-index="{{component.model.index}}"
+    data-component-container="true"
+>
+    {% if not component.components %}
+        <span class="ui-title" data-cid={{''|next_hidden_cid}}></span>
+    {% else %}
+        {{ component|join_sub_components_html|safe }}      
+    {% endif %}
+</div>
+{% endifequal %}
+
+
+
+
+
+{% ifequal component.type 'jqm.header_button' %}
+    <a 
+        {% ifequal component.model.target 'page-$back$' %}
+        data-rel="back" 
+        href='#'
+        {% else %}
+        href="{{component.model.target|format_target:project_id}}" 
+        {% endifequal %}
+        data-transition="slide" 
+        data-cid="{{component.cid}}" 
+        data-theme="{{component.model.theme}}"
+        data-icon="{{component.model.icon}}"
+        {% if component.model.text %}{% else %}data-iconpos="notext"{% endif %}
+    >
+        {{ component.model.text }}
+    </a>
+{% endifequal %}

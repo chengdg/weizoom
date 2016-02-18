@@ -1,0 +1,42 @@
+{% load workbench_filter %}
+
+{# 图片导航固定四张图片 #}
+{% ifequal component.type 'wepage.imagenav_group' %}
+<ul class="wui-imagenav wui-grid-c"
+    data-component-cid="{{component.cid}}" 
+>
+    <li class="wui-block-a">
+        <a class="wui-singleImageWithTitle" data-component-cid="{{component.components.0.cid}}" href="{{component.components.0.model.target|format_target:project_id}}">
+            <div class="wui-inner-pic">
+                <img src="{% if component.components.0.model.image %}{{component.components.0.model.image}}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wa-inner-imgbox"/>
+            </div>
+            <p class="wa-inner-title" {% if not component.components.0.model.image %}style="display:none;"{%endif%}>{{component.components.0.model.title}}</p>
+        </a>
+    </li> 
+    <li class="wui-block-b">
+        <a class="wui-singleImageWithTitle"  data-component-cid="{{component.components.1.cid}}" href="{{component.components.1.model.target|format_target:project_id}}">
+            <div class="wui-inner-pic">
+                <img src="{% if component.components.1.model.image %}{{component.components.1.model.image}}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wa-inner-imgbox"/>
+            </div>
+            <p class="wa-inner-title" {% if not component.components.1.model.image %}style="display:none;"{%endif%}>{{component.components.1.model.title}}</p>
+        </a>
+    </li>
+    <li class="wui-block-c">
+        <a class="wui-singleImageWithTitle"  data-component-cid="{{component.components.2.cid}}" href="{{component.components.2.model.target|format_target:project_id}}">
+            <div class="wui-inner-pic">
+                <img src="{% if component.components.2.model.image %}{{component.components.2.model.image}}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wa-inner-imgbox"/>
+            </div>
+            <p class="wa-inner-title" {% if not component.components.2.model.image %}style="display:none;"{%endif%}>{{component.components.2.model.title}}</p>
+        </a>
+    </li>
+    <li class="wui-block-d">
+        <a class="wui-singleImageWithTitle"  data-component-cid="{{component.components.3.cid}}" href="{{component.components.3.model.target|format_target:project_id}}">
+            <div class="wui-inner-pic">
+                <img src="{% if component.components.3.model.image %}{{component.components.3.model.image}}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wa-inner-imgbox"/>
+            </div>
+            <p class="wa-inner-title" {% if not component.components.3.model.image %}style="display:none;"{%endif%}>{{component.components.3.model.title}}</p>
+        </a>
+    </li>
+
+</ul>
+{%  endifequal %}

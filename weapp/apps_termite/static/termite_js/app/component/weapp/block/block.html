@@ -1,0 +1,10 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'weapp.block' %}
+<div {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    class="weapp-block">
+    <div style="height:{{component.model.height}}px;" class="wa-inner-block"></div>
+</div>
+{% endifequal %}

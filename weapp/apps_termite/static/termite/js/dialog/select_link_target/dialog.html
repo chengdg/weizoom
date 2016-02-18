@@ -1,0 +1,33 @@
+<script id="select-link-target-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal hide fade" style="width: 600px">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3>选择链接目标</h3>
+		</div>
+		<div class="modal-body clearfix">
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<label>模块：
+							<select name="workspace" class="input-medium">
+								<option value="0">加载模块...</option>
+							</select>
+						</label>
+					</td>
+					<td>
+						<label>筛选：
+							<select name="data_category" class="input-medium">
+							</select>
+						</label>
+					</td>
+				</tr>
+			</table>
+			<legend>目标：</legend>
+			<div class="x-dataContent ml20">
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-success btn-submit">确定</button>
+		</div>
+	</div>
+</script>

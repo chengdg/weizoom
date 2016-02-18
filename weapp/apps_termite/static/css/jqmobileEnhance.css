@@ -1,0 +1,100 @@
+.ui-btn-active{
+	border:none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	text-shadow:none;
+	font-family:"微软雅黑";
+}
+.ui-focus,
+.ui-btn:focus {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+/*
+.ui-btn-up-c{
+	border:none;
+}
+.ui-btn-hover-c:hover{
+	border:none;
+}
+*/
+.ui-simpledialog-container > .ui-header:first-child {
+    -webkit-border-top-left-radius: 0;
+    border-top-left-radius: 0;
+    -moz-border-radius-topleft: 0;
+
+    -webkit-border-top-right-radius: 0;
+    border-top-right-radius: 0;
+    -moz-border-radius-topright: 0;
+}
+
+.ui-simpledialog-container .ui-btn {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.ui-simpledialog-container .ui-simpledialog-subtitle {
+	padding-top: 5px;
+}
+
+.ui-header{
+	
+}
+.ui-header .ui-btn-left{
+	/*margin:0.4em 0 0 15px;*/
+}
+.ui-header .ui-btn-right{
+	/*margin:0.4em 15px 0 0;*/
+}
+.ui-header .headImgLink{
+	height: 32px;
+	width: 32px;
+}
+.ui-header .headHome{
+	background: url("/static/img/mall/head-home-normal.png") no-repeat scroll left top;
+}
+.ui-header .headCategory{
+	background: url("/static/img/mall/head-category-normal.png") no-repeat scroll left top;
+}
+.ui-header h1.ui-title{
+	font-size:1.2em;
+	font-weight:normal;
+	margin:0.7em 60px;
+	text-overflow:inherit;
+}
+.ui-header .ui-btn-inner{
+	line-height:20px;
+}
+
+/*
+.ui-footer{
+	width:100%;
+}
+.ui-footer h4.ui-title{
+	padding:0px;
+	margin:0px;
+}
+.ui-footer a{
+	padding:0.6em 0 0.7em 0;
+	display:block;
+	text-decoration:none;
+}
+
+.ui-footer-lay{
+	height: 61px;
+}
+
+.ui-footer.ui-bar-e a.ui-link{
+	color: #333333;
+	font-weight:normal;
+	text-shadow: none;
+}
+*/
+/*
+.ui-page {
+	background-color: #F8EFE0 !important;
+    background-image: none !important;
+}
+*/

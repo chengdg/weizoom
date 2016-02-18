@@ -1,0 +1,33 @@
+.viperWorkbench #phone {
+    width: 754px;
+}
+
+.viperWorkbench #cssEditorIndicator {
+    right: -15px;
+    width: 45px;
+    height: 45px;
+}
+
+.viperWorkbench #cssEditorIndicator img {
+    width: 45px;
+    height: 45px;
+}
+
+.viperWorkbench #apisPyEditorIndicator {
+    right: -15px;
+    width: 45px;
+    height: 45px;
+}
+
+.viperWorkbench #apisPyEditorIndicator img {
+    width: 45px;
+    height: 45px;
+}
+
+.viperWorkbench #phoneSkin {
+    width: 700px;
+}
+
+.viperWorkbench #phoneSkinCover {
+	width: 700px;
+}

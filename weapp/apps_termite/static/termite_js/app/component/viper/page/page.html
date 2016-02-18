@@ -1,0 +1,111 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'viper.page' %}
+{% if in_design_mode %}
+<div 
+    {% if component.model.id %}id="{{componnet.model.id}}"{% endif %} 
+    class="{{component.model.class}} ui-content" 
+    data-index="{{component.model.index}}"
+>
+{% endif %}
+    
+    {% if page.component.model.type == 'top_level_page' %}
+        {{ component|join_sub_components_html|safe }}
+    {% endif %}
+
+    {% if page.component.model.type == 'free_page' %}
+        {{ component|join_sub_components_html|safe }}
+        <div name="pluginData">
+            {% for data in page|get_plugin_datas %}
+            <input type="hidden" name="{{data.name}}" value='{{data.value|safe}}' />
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if page.component.model.type == 'dialog_page' %}
+        <form class="form-horizontal xa-viperForm" method="post">
+            <fieldset>
+                {{ component|join_sub_components_html|safe }}
+            </fieldset>
+        </form>
+    {% endif %}
+
+    {% if page.component.model.type == 'edit_page' %}
+        {% if not in_design_mode %}
+        {% with page.component.model as page_model %}
+        <ul class="breadcrumb">
+            <li>
+                <a 
+                    {% if request.in_generate_mode %}
+                    href="/apps/{{project.inner_name}}/?module={{page.component.model.module}}&resource={{page.top_level_page.component.model.title}}&action=get&project_id=apps:{{project.inner_name}}:0"
+                    {% else %}
+                    href="/workbench/viper/page/?project_id={{project_id}}&page_id={{request.COOKIES.top_level_page_id}}"
+                    {% endif %}
+                >
+                    {% if request.in_generate_mode %}
+                    {{page.top_level_page.component.model.navName}}
+                    {% else %}
+                    {{request.COOKIES.top_level_page_nav_name}}
+                    {% endif %}
+                </a><span class="divider">/</span>
+            </li>
+            <li class="active"><% if record %>更新<% else %>添加<% endif %>{{page_model.entityName}}</li>
+        </ul>
+        {% endwith %}
+        {% endif %}
+
+        {% if not component.components %}
+            {% include 'component/common/circum_insert_indicator.html' %}
+        {% else %}
+        <div class="clearfix">
+            {% if simulator %}
+            <div class="fl">
+                {{ simulator|safe }}
+            </div>
+            {% endif %}
+            <div id="" class="{% if simulator %}fl wx-thin-form{% endif %} ml10">
+                <form class="{% ifequal component.model.is_horizontal 'yes' %}form-horizontal{% endifequal %} xa-viperForm" method="post" id="editForm">
+                    <fieldset>
+                        {{ component|join_sub_components_html|safe }}
+                    </fieldset>
+                    <fieldset>
+                        <legend></legend>
+                        {% if request.in_generate_mode %}
+                        <input type='hidden' name="__page_id" value="<<request.GET.page_id>>" />
+                        <input type='hidden' name="__record_id" value="<<record.id>>" />
+                        {% else %}
+                        <input type='hidden' name="__page_id" value="{{request.GET.page_id}}" />
+                        <input type='hidden' name="__record_id" value="{{page.record.id}}" />
+                        {% endif %}
+
+                        <div class="control-group">
+                            <div class="controls">
+                                {% if simulator_component %}
+                                {% ifequal simulator_component.model.is_preview 'yes' %}
+                                <input id="previewBtn" class="btn btn-primary" type="button" value="预&nbsp;&nbsp;览" data-app="{{app}}" data-api-entity="{{instanceName}}" data-ui-role="preview-button" data-target-form='#editForm'>
+                                {% endifequal %}
+                                {% endif %}
+                                <input type="submit" class="btn btn-success" id="submitBtn" value="提&nbsp;&nbsp;交" />
+                                {% if request.in_generate_mode %}
+                                <% if record %>
+                                <input type="button" class="btn btn-danger xa-deleteRecord" value="删&nbsp;&nbsp;除" />
+                                <% endif %>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
+
+    <div name="pluginData">
+        {% for data in page|get_plugin_datas %}
+        <input type="hidden" name="{{data.name}}" value='{{data.value|safe}}' />
+        {% endfor %}
+    </div>
+{% if in_design_mode %}
+</div>
+{% endif %}
+{% endifequal %}

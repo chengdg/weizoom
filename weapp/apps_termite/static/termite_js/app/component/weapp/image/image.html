@@ -1,0 +1,67 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'weapp.image_group' %}
+<div  class="wui-image"  data-cid="{{component.cid}}" 
+    data-ui-sortable="true" 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable" {% endifequal %}
+    {% if component.components.0.model.image %}
+    style="width: {{component.model.width}}; text-align: center; overflow: hidden;" 
+    {% else %}
+    style="width: {{component.model.width}}; height: 100px; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8; text-align: center; overflow: hidden;" 
+    {% endif %}
+    >
+    {% if component.model.displayMode == 'swipe' %}
+        {% if component.components.0.model.image %}
+            <div data-ui-role="swipeimage" 
+                data-images-json='{{component|to_swipe_images_json:request|safe}}' 
+                {% with component|get_images_max_ratio as size_info %}
+                data-image-width='{{size_info.width}}' 
+                data-image-height='{{size_info.height}}'
+                {% endwith %} 
+                {% if in_design_mode %}data-design='true'{% endif %}
+            >
+            </div>
+        {% else %}
+        <img style="position: absolute; margin-left: -16px;
+         margin-top: 34px; width:auto;" alt="image" src="/static/termite_img/image.png">
+        <span></span>
+        {% endif %}
+    {% else %}
+        {% if component.model.displayMode == 'sequence' and component.model.displaySize == 'small' %}
+        <ul class="wui-grid-a">
+            {% for sub_component in component.components %}
+            <li class="wui-block-a p5">
+                <a 
+                    data-cid="{{sub_component.cid}}" 
+                    href="{{sub_component.model.target|format_target:project_id}}" 
+                    class="wui-singleImageWithTitle"
+                >
+                        <img class="wa-inner-imgbox" src="{{sub_component.model.image}}" />
+                        <h3 class="wa-inner-title wui-inner-bottomTitle {% if not sub_component.model.title %}hidden{% endif %}">{{sub_component.model.title}}</h3>
+                       <!--  <span class="wa-inner-price wui-separateTitle {% if not sub_component.model.price %}hidden{% endif %}">{{sub_component.model.price}}</span> -->
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        {{ component|join_sub_components_html|safe }}
+        {% endif %}
+    {% endif %}
+</div>
+<script type="text/javascript">
+	W.swipeImageSize = {'width':{{component.model.uploadWidth|px2int}}, 'height':{{component.model.uploadHeight|px2int}}};
+</script>
+{% endifequal %}
+
+{% ifequal component.type 'weapp.image' %}
+<a data-cid="{{component.cid}}" href="{{component.model.target|format_target:project_id}}" class="wui-singleImageWithTitle{% for tag in component.model.tag|str_split %} wua-tag{{tag}}{% endfor %}">
+    <img src="{{component.model.image}}" class="wa-inner-imgbox" />
+    <div class="titleAndprice">
+    <span class="wa-inner-title wui-inner-title {% if not component.model.title %}hidden{% endif %}">{{component.model.title}}</span>
+    <span class="wa-inner-price wui-inner-price {% if not component.model.price %}hidden{% endif %}">{{component.model.price}}</span>
+    <span class="wa-inner-originalPrice wui-inner-originalPrice {% if not component.model.originalPrice %}hidden{% endif %}">{{component.model.originalPrice}}</span>
+</div>
+
+</a>
+{% endifequal %}

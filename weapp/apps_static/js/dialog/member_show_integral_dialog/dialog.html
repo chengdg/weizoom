@@ -1,0 +1,63 @@
+<script id="member-ingegral-logs-tmpl-src" type="text/x-jquery-tmpl">
+<div class="modal logs" >
+	<div class="modal-dialog">
+	<div class="modal-content" style="width:667px">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">积分明细</h3>
+		</div>
+		<div class="modal-body" style="padding:0 20px;">
+			
+			<div class="form-inline" style="min-height:420px;">
+				
+				<table class="xa-logTable mt10 w">
+				<div
+					data-ui-role="advanced-table"
+					data-app="member"
+					data-resource="integral_logs"
+					data-template-id="#member-ingegral-log-tmpl-src"
+					data-enable-paginator="true"
+					data-enable-sort="false"
+					data-selectable="false"
+					data-item-count-per-page="10"
+					data-auto-load="false"
+					class="mt10 mb20"
+				></div>
+				</table>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="xa-order-ship-info">
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+<script id="member-ingegral-log-tmpl-src" type="text/x-jquery-tmpl">
+		<table style="width:100%;border:1px solid #ddd" class="table xb-stripedTable xb-noBorder">
+				<thead style="background:#c8d2e5;">
+				<tr class="">
+					<th width="130">时间</th>
+					<th width="90">类型</th>
+					<th width="150">原因</th>
+					<th width="75">管理员</th>
+					<th width="90">明细</th>
+					<th width="90">余额</th>
+				</tr>
+				</thead>
+				<tbody>
+					{{each(i, log) items}}
+					<tr data-id="${log.id}">
+					    <td>${log.created_at} </td>
+					    <td>${log.event_type} </td>
+					    <td class="text_nowrap" style="max-width:150px;" title="${log.reason}">${log.reason} </td>
+					    <td>${log.manager} </td>
+					    <td style="color:{{if log.integral_count >0}}#008620{{else}}#ff6600{{/if}};font-weight:bold;">{{if log.integral_count >0}}+{{/if}}${log.integral_count} </td>
+					    <td style="font-weight:bold;">${log.current_integral} </td>
+					</tr>
+					{{/each}}
+					</tbody>
+			</table>
+	
+</script>

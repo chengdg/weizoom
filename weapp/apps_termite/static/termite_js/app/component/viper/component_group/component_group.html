@@ -1,0 +1,87 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.component_group' %}
+<!-- =====> viper:component_group component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    data-component-container="true"
+    class="p5"
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div 
+        class="control-group" 
+        data-ui-role="viper-component-group" 
+        data-group-name="{{name}}" 
+        data-max-component-group-count="{{component.model.count_limit}}"
+    >
+        <label class="control-label">{{component.model.label}}：</label>
+        <div class="controls xui-componentGroup">
+            {% with component.components|item_count as sub_component_count %}
+            {% if sub_component_count == 0 %}
+                <div class="xui-inner-emptyComponents">
+                    {% include 'component/common/circum_insert_indicator.html' %}
+                </div>
+            {% else %}
+                <script type='text/x-jquery-tmpl' id="xui-inner-componentsTemplate">
+                    <div class="xui-inner-components form-horizontal clearfix">
+                        <button class="close xui-inner-close xa-componentGroup-delete" type="button">×</button>
+                        {{ component|join_sub_components_html|safe }}
+                    </div>
+                </script>
+                <div class="xui-inner-group">
+                    {% if in_design_mode %}
+                    <div class="xui-inner-components form-horizontal clearfix">
+                        <button class="close xui-inner-close xa-componentGroup-delete" type="button">×</button>
+                        {{ component|join_sub_components_html|safe }}
+                    </div>
+                    {% else %}
+                        {% if request.in_generate_mode %}
+                        <% for item in record.{{name}} %>
+                            <div class="xui-inner-components form-horizontal clearfix" data-components-index=<<forloop.counter>> >
+                                <button class="close xui-inner-close xa-componentGroup-delete" type="button">×</button>
+                                {{ component|join_sub_components_html|safe }}
+                            </div>
+                        <% endfor %>
+                        {% else %}
+                        {% for item in page.record|get_record_value:name %}
+                            <div class="xui-inner-components form-horizontal clearfix" data-components-index={{forloop.counter}}>
+                                <button class="close xui-inner-close xa-componentGroup-delete" type="button">×</button>
+                                {{ component|join_sub_components_html|safe }}
+                            </div>
+                        {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                <div class="xui-inner-actionArea {% if component.model.is_enbale_add == 'no' %}xui-hide{% endif %}">
+                    <a href="javascript:void(0);" class="xa-componentGroup-add btn">
+                        <i class="icon icon-plus"></i>添加{{component.model.entity_name}}
+                        {% if in_design_mode %}
+                        <span class="xa-countLimit">{% if component.model.count_limit != '0' %}(最多{{component.model.count_limit}}个){% endif %}</span>
+                        {% endif %}
+                    </a>
+                </div>
+
+                <div class="xa-embededView-data">
+                </div>
+            {% endif %}
+            {% endwith %}
+
+            {% if in_design_mode %}
+            <div class="errorHint">name="{{component.model.name}}"</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endwith %}
+
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:component_group component -->
+{% endifequal %}

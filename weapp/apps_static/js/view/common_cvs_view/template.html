@@ -1,0 +1,16 @@
+<script id="cvs-view-tmpl-src" type="text/x-jquery-tmpl">
+
+	<div id="videoView-uploadZone" class="videoView-uploadZone {{if fileUrl}}hide{{/if}}">
+
+		<input id="cvsView-fileUploader" style="display:inline-block" name="cvsView-fileUploader" type="file" class="xui-hide"/>
+	</div>
+	<div id="videoView-fileZone" name="videoView-fileZone" class="pr pt0 {{if !fileUrl}}hide{{/if}} videoView-fileZone">
+	
+		<button class="xui-close" type="button" style="display:block;">×</button>
+
+		<div class="videoView-fileContainer" style="height: 30px; text-align: center; line-height: 30px; border:1px solid #ccc; border-radius:4px; ">
+			{{if fileUrl}}{{/if}}
+		</div>
+	</div>
+
+</script>

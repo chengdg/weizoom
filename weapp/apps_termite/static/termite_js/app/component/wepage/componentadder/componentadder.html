@@ -1,0 +1,17 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'wepage.componentadder' %}
+	{% if in_production_mode %}
+	{% else %}
+	<div 
+	    href="javascript:void(0);" 
+	    data-component-cid="{{component.cid}}" 
+	    data-index="{{component.model.index}}" 
+	    id="{{component.model.id}}" 
+	    class="{{component.model.class}} wui-componentadder wa-componentadder {% if component.parent_component.sub_component_count > 1 %}xui-hide{% endif %}" 
+	>
+	    +添加模块
+	</div>
+	{% endif %}
+{% endifequal %}

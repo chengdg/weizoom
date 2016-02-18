@@ -1,0 +1,35 @@
+{% load workbench_filter %}
+
+{# 图片导航固定四张图片 #}
+{% ifequal component.type 'weapp.image_nav' %}
+<ul class="wui-imagenav wui-grid-c"
+    data-cid="{{component.cid}}" 
+    data-ui-sortable="true" 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable" {% endifequal %}>
+    <li class="wui-block-a">
+        <a class="wui-singleImageWithTitle" data-cid="{{component.components.0.cid}}" href="{{component.components.0.model.target|format_target:project_id}}">
+            <img src="{{component.components.0.model.image}}" class="wa-inner-imgbox"/>
+            <p class="wui-inner-bottomTitle wa-inner-title">{{component.components.0.model.title}}</p>
+        </a>
+    </li> 
+    <li class="wui-block-b">
+        <a class="wui-singleImageWithTitle"  data-cid="{{component.components.1.cid}}" href="{{component.components.1.model.target|format_target:project_id}}">
+            <img src="{{component.components.1.model.image}}" class="wa-inner-imgbox"/>
+            <p class="wui-inner-bottomTitle wa-inner-title ">{{component.components.1.model.title}}</p>
+        </a>
+    </li>
+    <li class="wui-block-c">
+        <a class="wui-singleImageWithTitle"  data-cid="{{component.components.2.cid}}" href="{{component.components.2.model.target|format_target:project_id}}">
+            <img src="{{component.components.2.model.image}}" class="wa-inner-imgbox"/>
+            <p class="wui-inner-bottomTitle wa-inner-title">{{component.components.2.model.title}}</p>
+        </a>
+    </li>
+    <li class="wui-block-d">
+        <a class="wui-singleImageWithTitle"  data-cid="{{component.components.3.cid}}" href="{{component.components.3.model.target|format_target:project_id}}">
+            <img src="{{component.components.3.model.image}}" class="wa-inner-imgbox"/>
+            <p class="wui-inner-bottomTitle wa-inner-title">{{component.components.3.model.title}}</p>
+        </a>
+    </li>
+
+</ul>
+{%  endifequal %}

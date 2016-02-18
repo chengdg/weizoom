@@ -1,0 +1,26 @@
+<script id="auth-select-permission-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade" >
+	<div class="modal-dialog xui-authSelectPermissionDialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">设置角色权限</h3>
+		</div>
+		<div class="modal-body pl40">
+		
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-primary xa-submit-dialog">保存</button>
+			<button class="btn btn-default ml15 xa-close">返回</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="auth-select-permission-dialog-permissions-tmpl-src" type="text/x-jquery-tmpl">
+	{{each(i, permission) permissions}}
+	<label class="xui-i-permission xui-i-level${permission.level}"><input type="checkbox" data-id="${permission.id}" /> ${permission.name}</label>
+	{{/each}}
+</script>

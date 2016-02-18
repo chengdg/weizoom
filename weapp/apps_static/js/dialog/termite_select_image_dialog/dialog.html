@@ -1,0 +1,38 @@
+<script id="termite-select-images-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+	<div class="modal fade xui-selectTermiteImagesDialog" id="termiteSelectMallImagesDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header" style="margin-bottom: 0;">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				
+			</h3>
+		</div>
+		<div class="modal-body" style="height:400px;  overflow-y: auto;">
+			<ul class="xa-images xui-i-images mb20 clearfix">
+			</ul>
+
+			<div class="xa-uploadImageZone xui-hide">
+				<ul class="xa-customImages xui-i-images mb20 clearfix">
+				</ul>
+
+				<div class="xa-imageUploader ml30"></div>
+			</div>
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-primary xa-submit-dialog">确认添加</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+
+
+<script id="termite-select-images-dialog-image-tmpl-src" type="text/x-handlebar-tmpl">
+<li class="pr xui-i-image xa-image" data-image-id="{{image.id}}">
+	<img src="{{image.src}}" />
+	<div class="xui-i-footer"><span class="xa-width">{{image.width}}</span> x <span class="xa-height">{{image.height}}</span></div>
+</li>
+</script>

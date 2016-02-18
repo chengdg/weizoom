@@ -1,0 +1,14 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'weapp.button' %}
+<a 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    href="{{component.model.target|format_target:project_id}}" 
+    data-component-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    id="{{component.model.id}}" 
+    class="{{component.model.class}}" 
+>
+    {{component.model.text}}
+</a>
+{% endifequal %}

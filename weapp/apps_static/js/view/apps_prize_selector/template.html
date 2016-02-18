@@ -1,0 +1,41 @@
+<script id="apps-prize-selector-tmpl" type="text/x-handlebar-tmpl">
+<div class="xui-apps-prizeSelector">
+	<select class="xui-i-select">
+		<option value="no_prize" {{#ifCond prize.type '===' 'no_prize'}}selected{{/ifCond}}>无奖励</option>
+		<option value="integral" {{#ifCond prize.type '===' 'integral'}}selected{{/ifCond}}>积分</option>
+		<option value="coupon" {{#ifCond prize.type '===' 'coupon'}}selected{{/ifCond}}>优惠券</option>
+	</select>
+
+	<input 
+		type="text" 
+		class="xui-propertyGroup-input xa-optionTarget {{#ifCond prize.type '!==' 'integral'}}xui-hide{{/ifCond}} xa-integral" 
+		name="integral" 
+		data-target="integral"
+		placeholder="输入奖励积分值" 
+		data-validate="require-notempty::不能为空,,require-positive-int::输入正整数积分值"
+		{{#if prize.data}}value="{{prize.data}}"{{/if}} />
+	<div class="coupon_div xa-optionTarget xa-selectCoupon {{#ifCond prize.type '!==' 'coupon'}}xui-hide{{/ifCond}} {{#ifCond prize.type '===' 'coupon'}}{{#if  prize.data}}xui-hide{{/if}}{{/ifCond}}" data-target="coupon"
+	    style="{{#ifCond prize.type '===' 'coupon'}}{{#unless  prize.data}}display:inline{{/unless}}{{/ifCond}}">
+		<a
+			href="javascript:void(0);"
+			class="{{#ifCond prize.type '!==' 'coupon'}}xui-hide{{/ifCond}} ml5 xa-selectCoupon"
+		>请选择优惠券	</a>
+		<input style="width:0;background:#F9F9F9;border:0" type="text" data-validate="require-notempty::请选择一张优惠券" />
+		<div class="errorHint" style="margin-left: 58%;width: 100px;"></div>
+	</div>
+
+
+
+	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#ifCond prize.type '!==' 'coupon'}}xui-hide{{/ifCond}}
+	{{#unless  prize.data}}xui-hide{{/unless}}">
+		<div class="pr xui-i-selectedBox">
+			<span class="xui-i-selected-title xa-couponName">{{prize.data.name}}</span>
+			<button class="close xui-close xa-removeCoupon" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
+		</div>
+
+		<a href="javascript:void(0);" class="xa-selectCoupon ml5">修改</a>
+	</div>
+	<div class="errorHint" style="margin-left: 37%;"></div>
+
+</div>
+</script>

@@ -1,0 +1,45 @@
+<script id="weixin-menu-eidtor-panel-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="wui-messageEditor pa xa-menu-content xa-menu-content=${index}" data-id="${index}">
+		<div>
+			<div>
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#weixinMessageEditer-textMessageZone-${index}" class="xa-text" data-toggle="tab">文字</a></li>
+					<li><a href="#weixinMessageEditer-newsMessageZone-${index}" class="xa-news" data-toggle="tab">图文消息</a></li>
+					{{if is_weizoom_mall=='True' || is_certified_service=='True'}}
+					<li><a href="#weixinMessageEditer-urlMessageZone-${index}" class="xa-url" data-toggle="tab">跳转链接</a></li>
+					{{/if}}
+				</ul>
+				
+				<div class="tab-content">
+					<!-- 文字消息 -->
+					<div class="tab-pane active" id="weixinMessageEditer-textMessageZone-${index}">
+						<textarea id="weixinMessageText" data-id="${index}" rows="7" name="text_content" data-validate="require-string" data-validate-max-length="600" data-validate-min-length="1" class="xui-hide"></textarea>
+					</div>
+
+					<!-- 图文消息 -->
+					<div class="tab-pane pt10 pl10" id="weixinMessageEditer-newsMessageZone-${index}" class="xa-change-newsMessageZone">
+						<div class="xa-newsMessageZone">
+						</div>
+						<a href="javascript:void(0);" class="xa-changeNews m10 xui-inlineblock">更换</a>
+					</div>
+					
+					<!-- 跳转链接 -->
+					<div class="xa-urlMessageZone tab-pane p10 xui-eidt-urlBox pa" id="weixinMessageEditer-urlMessageZone-${index}" style="height: 260px;">					
+						<div class="pl50 pt100 ml30">
+							<input type="hidden" id="menuUrl" name="menuUrl" value=""/>
+							<input type="hidden" id="menuLinkTarget" name="menuLinkTarget" value=""/>
+							<label class="pa" style="top: 105px; right: 245px;">链接地址</label>	
+							<input type="text" style="width: 200px;" id="menuUrlDisplayValue" name="menuUrlDisplayValue" placeholder="可手动输入链接地址" />
+							<div class="pr xui-selected-title-box xui-hide" style="margin-left: 44px; display: none;">
+								<span class="xui-selected-title" style="margin-left: -35px;"></span>
+								<button class="close xui-close xa-close-link" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
+							</div>
+							<a href='javascript:void(0);' class="xa-news-editor-select-link-dialog xui-block xui-news-editor-select-link-dialog xa-news-editor-select-link-menu mt10 pl5 ml0" data-input="url">从微站选择</a>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</script>

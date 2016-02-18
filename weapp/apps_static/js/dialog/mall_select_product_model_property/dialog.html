@@ -1,0 +1,58 @@
+<script id="mall-select-product-model-property-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-selectProductModelPropertyDialog" id="mallSelectProductModelPropertyDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				选择产品规格
+			</h3>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success">完成选择</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="mall-select-product-model-property-dialog-property-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed xui-tableBorderRight xb-stripedTable">
+		<thead>
+			<tr>
+				<th width="126px;">规格名</th>
+				<th width="286px;">规格值</th>
+				<th width="37px;"><input type="checkbox" class="xa-selectAllValue" /></th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, property) properties}}
+			<tr data-model-property-id="${property.id}" data-model-property-name="${property.name}">
+				<td style="width:126px;">${property.name}</td>
+				<td style="width:286px;" class="xa-values">
+					<ul class="clearStyle">
+					{{each(j, value) property.values}}
+						<li 
+							data-model-property-value-id="${value.id}" 
+							data-model-property-value-name="${value.name}"
+							data-model-property-value-full-id="${value.fullId}"
+						>
+						<label class="checkbox" title="${value.name}">
+							<input 
+								type="checkbox"
+								class="xa-selectOneValue" 
+								{{if selectedValues.hasOwnProperty(value.fullId)}}checked="checked"{{/if}}/>${value.shot_name}
+						</label>
+						</li>
+					{{/each}}
+					</ul>
+				</td>
+				<td style="width:37px;"><input type="checkbox" class="xa-selectPropertyAllValue" /></td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>

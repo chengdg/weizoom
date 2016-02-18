@@ -1,0 +1,198 @@
+@charset "utf-8";
+hr{
+    display: inline-block;
+    width: 60px;
+    vertical-align: middle;
+}
+.wui-hide{
+    display: none;
+}
+.wui-powerme-container{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-family: "黑体" !important;
+    text-align: center;
+}
+.wui-powerme-container>.wui-i-top{
+    width: 100%;
+    height: auto;
+    background: white;
+}
+.wui-powerme-container .wui-i-top>img{
+    width: 100%;
+    height: 300px;
+    margin: 0;
+    border: none;
+}
+.wui-powerme-container .wui-i-body div{
+    font-family: "黑体";
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup p, .wui-powerme-container .wui-i-body .wui-i-btngroup button{
+    width: 70%;
+    height: 34px;
+    line-height: 34px;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    margin-top: 7px;
+    font-family: "黑体";
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
+    border-radius: 5px;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
+    border-radius: 5px;
+}
+
+.wui-powerme-container .wui-i-title{
+    background: transparent;
+    margin-top: -12px !important;
+}
+.wui-powerme-container .wui-i-timing{
+    font-weight: bold;
+    min-height: 33px;
+    font-size: 1rem;
+}
+.wui-powerme-container .wui-i-timing b{
+    margin-right: 5px;
+    height: 100%;
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-position: -170px -12px;
+    font-size: 0.8rem;
+    padding: 7px 5px;
+    color: white;
+    border-radius: 2px;
+    font-family: "Arial", "黑体";
+}
+.wui-powerme-container .wui-i-states ul li{
+    text-align: left;
+    padding: 16px 5% 0;
+}
+.wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #ffffff;
+    height: 55px;
+    width: 90%;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-states ul li:nth-child(1) span{
+    min-width: 45px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-background-image {
+    margin-bottom: -6px;
+}
+.wui-powerme-container .wui-i-rules-content {
+    margin-bottom: 20px;
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-top: 18px !important;
+    text-align: left !important;
+    font-size: 0.75rem;
+}
+.wui-powerme-container .wui-i-description-content {
+    margin: 0 10px 0 10px;
+    font-size: 0.8rem;
+}
+.wui-powerme-container .wui-i-line{
+    margin-bottom: -26px;
+    margin-left: 12px;
+    margin-right: 12px;
+    padding-top: 8px;
+}
+.wui-powerme-container .wui-i-timing i{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 900% 200%;
+    display: inline-block;
+    height: 35px;
+    margin-bottom: -15px;
+    width: 33px;
+}
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat;
+    background-size: 940% 420%;
+    width: 30px;
+    height: 17px;
+    display: inline-block;
+}
+.wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b {
+    font-weight: normal;
+    font-size: 1rem;
+}
+.wui-powerme-container .wui-i-top100-title{
+    font-size: 0.8rem;
+}
+.wui-powerme-container .wui-i-top100-name {
+    display: inline-block;
+    height: 55px;
+    margin-left: 15px;
+    overflow: hidden;
+    width: 70%;
+    font-size: 0.8rem
+}
+.wui-i-top100-power {
+    margin-left: -30px;
+    float: right;
+    margin-right: 5px;
+    font-size: 0.8rem;
+    line-height: 3.5rem;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range,.wa-top100 li:nth-child(3) .wui-i-top100-range,.wa-top100 li:nth-child(4) .wui-i-top100-range {
+    background: url("/termite_static/img/component/powerme/icon_sprite.png") no-repeat scroll 0 0 / 625% auto rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 35px;
+    width: 50px;
+    margin-left: -1rem;
+    text-align: center;
+    padding-right: 0;
+    float: left;
+}
+.wa-top100 li:nth-child(2) .wui-i-top100-range {
+  background-position: -156px 7px;
+}
+.wa-top100 li:nth-child(3) .wui-i-top100-range {
+  background-position: -214px 7px;
+}
+.wa-top100 li:nth-child(4) .wui-i-top100-range {
+  background-position: -269px 7px;
+}
+.wui-i-top100-range{
+    line-height: 3rem;
+    float: left;
+    text-align: center;
+    display: inline-block;
+    margin-left: -1rem;
+    height: 35px;
+    width: 50px;
+}
+.wui-powerme-container .wui-i-top100-name img {
+    border-radius: 80px;
+    margin: 2px 5px -13px -42px;
+    width: 40px;
+}
+.wui-powerme-container .hide{
+    display: none;
+}
+
+.wui-powerme-container .wui-i-rules, .wui-powerme-container .wui-i-states{
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 21px;
+}
+.wui-powerme-container .wui-i-description{
+    margin-top: 13px;
+}
+.wui-powerme-container .wui-i-btngroup{
+    margin-top: 15px;
+}
+.mobile_solution{
+    display: -webkit-inline-box;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    max-width: 160px;
+    line-height: 35px;
+    font-family: 微软雅黑;
+    height: 35px;
+}

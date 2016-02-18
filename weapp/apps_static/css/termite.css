@@ -1,0 +1,480 @@
+@charset "utf-8";
+/**
+* 商品组件
+*/
+.xui-termite-product {
+}
+
+.xui-termite-product .xui-i-selectProduct {
+	margin-top: 20px;
+	height: 62px;
+}
+
+.xui-termite-product .xui-i-productTitle {
+	float: left;
+	margin-left: 20px;
+    margin-right: 12px;
+}
+
+.xui-termite-product .xui-i-selectProduct li {
+    background: none repeat scroll 0 0 #fff;
+    box-sizing: border-box;
+    display: inline-block;
+    height: 60px;
+    line-height: 35px;
+    min-width: 60px;
+    position: relative;
+    text-align: center;
+}
+
+.xui-termite-product .xui-i-selectProduct li div {
+    border: 1px dashed #bfbfbf;
+    overflow: hidden;
+}
+
+.xui-termite-product .xui-i-selectProduct img {
+    height: 60px;
+    width: 60px;
+}
+
+.xui-termite-product .xui-i-productStyle {
+    margin-top: 12px;
+}
+
+.xui-termite-product .xui-i-productStyle label {
+    margin-bottom: 0px !important;
+}
+
+.xui-termite-product .hidden-input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.xui-termite-product input[type=radio]+span {
+    display: inline-block;
+    margin: 0 14px 0 0;
+    height: 23px;
+    width: 57px;;
+    background-color: #fff;
+    font-weight: normal;
+    padding-top: 1px;
+    text-align: center;
+    border: 1px solid #bfbfbf;    
+}
+
+.xui-termite-product input[type=radio]:checked+span {
+    border: 1px solid green;
+}
+
+.xui-termite-product .xui-i-productStyleBox {
+	border: 1px solid #bfbfbf;
+	margin-top: 12px;
+	margin-bottom: 20px;
+	background: none repeat scroll 0 0 #fff;
+	width: 322px;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-styleRadio {
+	margin: 20px 12px 0px 20px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #bfbfbf;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-styleCheckbox {
+	margin: 16px 12px 0px 20px;
+	padding-bottom: 16px;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-styleCheckbox input[type=checkbox] {
+	margin-bottom: 12px;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-styleCheckbox label{
+	vertical-align: top;
+	padding-top: 1px;
+	margin-left: 12px;
+	font-weight: normal;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-buyBtn {
+	margin: 0px 0px 12px 25px;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-buyBtn label {
+	margin-left: 0px !important;
+}
+
+.xui-termite-product .xui-i-productStyleBox .xui-i-buyBtn span {
+	margin-right: 5px !important;
+}
+
+/**
+* 自定义模块页面
+*/
+.xui-termite-editPage {
+  	background-color: #eaeef6;
+  	border: 1px solid #d7e0e7;
+
+}
+.xui-termite-editPage .xui-modelBox {
+	width: 320px;
+	height: 46px;
+	line-height: 46px;
+	border:2px solid blue;
+	margin:auto;
+	padding-left: 12px;
+}
+.xui-termite-editPage .xui-modelBox .xui-tool {
+	background-color: #949494;
+	color: #fff;
+	padding: 0px 5px;
+	margin: 0px 5px;
+	float: right;
+}
+.xui-termite-editPage .xui-modelBox .xui-tool:first-child {
+	margin-right:0px;
+}
+.xui-termite-editPage .xui-toolbar{
+	height: 20px;
+	width: 100%;
+	float: right;
+	line-height: 20px;
+	position: absolute;
+	bottom: 0px;
+}
+.xui-termite-editPage .xui-model {
+	margin-top: 175px;
+	margin-left: 16px;
+}
+.xui-termite-editPage .xui-model .xui-addModel {
+	width: 427px;
+	height: 190px;
+	background-color: #fafafa;
+	border:1px solid #dedede;
+}
+.xui-termite-editPage .xui-simulator-box {
+	margin: 20px;
+	margin-right: 0px;
+}
+.xui-termite-editPage .xui-model .xui-addModel .xui-i-title{
+	line-height: 40px;
+	font-size: 16px;
+	color: #333;
+	text-align: center;
+}
+.xui-spriteBg{
+	background: url(/static_v2/img/termite2/termiteSeprites.png) no-repeat;
+	-webkit-background-size: 279px 91px;
+	background-size: 279px 91px;
+}
+.xui-termite-editPage .xui-richHtml,
+.xui-termite-editPage .xui-product,
+.xui-termite-editPage .xui-productList,
+.xui-termite-editPage .xui-imgAdd,
+.xui-termite-editPage .xui-notice,
+.xui-termite-editPage .xui-title,
+.xui-termite-editPage .xui-textNav,
+.xui-termite-editPage .xui-imgNav,
+.xui-termite-editPage .xui-subsidiaryBlack,
+.xui-termite-editPage .xui-shopWindow{
+	width: 72px;
+	height: 60px;
+	border:1px solid #E6E6E6;
+	box-sizing:border-box;
+	background: #fff;
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+.xui-termite-editPage .xui-addModel i{
+	margin-left: 18px;
+	margin-top: 8px;
+	display: block;
+	width: 39px;
+	height: 45px;
+}
+.xui-termite-editPage .xui-richHtml i{
+	background-position:0 0;
+}
+.xui-termite-editPage .xui-product i{
+	background-position:-46px 0;
+}
+.xui-termite-editPage .xui-productList i{
+	width: 51px;
+	margin-left: 11px;
+	background-position:-91px 0;
+}
+.xui-termite-editPage .xui-imgAdd i{
+	width: 51px;
+	margin-left: 11px;
+	background-position:-143px 0;
+}
+.xui-termite-editPage .xui-notice i{
+	background-position:-196px 0;
+}
+.xui-termite-editPage .xui-title i{
+	background-position:0 -46px;
+}
+.xui-termite-editPage .xui-textNav i{
+	margin-left: 11px;
+	height: 46px;
+	width: 51px;
+	background-position:-40px -45px;
+}
+.xui-termite-editPage .xui-imgNav i{
+	margin-left: 11px;
+	width: 51px;
+	height: 46px;
+	background-position:-92px -45px;
+}
+.xui-termite-editPage .xui-subsidiaryBlack i{
+	margin-left: 11px;
+	width: 51px;
+	background-position:-142px -46px;
+}
+.xui-termite-editPage .xui-shopWindow i{
+	height: 46px;
+	background-position:-194px -45px;
+}
+
+
+
+
+
+
+
+
+
+/**
+ * 选择图片分组中的图片的对话框
+ */
+.xui-selectTermiteImagesDialog .xui-i-images {
+	
+}
+.xui-selectTermiteImagesDialog .xui-i-image {
+	width: 96px;
+	height: 96px;
+	float: left;
+	margin: 20px 0px 0px 25px;
+	border: solid 1px #BFBFBF;
+}
+.xui-selectTermiteImagesDialog .xui-i-image img {
+	width: 100%;
+	height: 100%;
+}
+.xui-selectTermiteImagesDialog .xui-i-footer {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: #FFF;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+}
+.xui-selectTermiteImagesDialog .xui-i-imageGroupSelector {
+	color: #000;
+}
+.xui-selectTermiteImagesDialog .xui-i-selected {
+	border: solid 2px  rgb(60, 155, 215);
+}
+.xui-selectTermiteImagesDialog .modal-dialog{
+	width: 812px;
+	height: 514px;
+	position: absolute;
+	top:50%;
+	left: 50%;
+	margin-top: -256px;
+	margin-left: -406px;
+}
+
+
+
+
+
+
+
+
+
+/**
+ * 微页面的页面样式
+ */
+.xui-wepage-pagesPage {
+
+}
+.xui-wepage-pagesPage a{
+	text-decoration: none;
+}
+.xui-pagesPage-pages {
+
+}
+.xui-pagesPage-activePage .xui-i-head {
+	font-size: 14px;
+	padding: 8px 0px;
+	border-bottom: solid 1px #CBCBCB;
+}
+.xui-pagesPage-activePage .xui-i-content {
+	padding: 8px;
+	background-color: #FFF;
+}
+.xui-pagesPage-activePage .xui-i-title {
+	font-size: 14px;
+	font-weight: bold;
+}
+.xui-pagesPage-activePage .xui-i-date {
+	font-size: 12px;
+	color: #999;
+}
+.xui-pagesPage-activePage .xui-i-actions {
+	position: absolute;
+	top: 25px;
+	right: 20px;
+}
+.xui-pagesPage-pages .xui-i-page {
+	margin-right: 20px;
+	margin-top: 20px
+}
+.xui-pagesPage-pages .xui-i-img {
+	width: 256px;
+	height: 414px;
+	max-height: 414px;
+	overflow-y: hidden;
+}
+.xui-pagesPage-pages .xui-i-title {
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-top: 5px;
+}
+
+
+.xui-page-qrcode{
+}
+.xui-page-qrcode p { 
+	padding: 14px 0 0px 20px;
+	margin: 0;
+	font-size: 15px;
+	color: #676767;
+}
+.xui-page-qrcode img {  
+	padding: 0 10px;
+	width: 158px;
+	display: block;
+}
+
+
+
+
+
+
+
+
+/**
+ * 选择project template的对话框的样式
+ */
+.xui-termiteCreateProjectDialog .xui-i-navs {
+
+}
+.xui-termiteCreateProjectDialog a.xui-i-activeNav:link, .xui-termiteCreateProjectDialog a.xui-i-activeNav:visited{
+	color: #000;
+	text-decoration: none;
+}
+.xui-termiteCreateProjectDialog .xui-i-templates {
+
+}
+.xui-termiteCreateProjectDialog .xui-i-template {
+	cursor: pointer;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border: solid 2px #FFF;
+}
+.xui-termiteCreateProjectDialog .xui-i-selectedTemplate {
+	border: solid 2px #1262B7;
+}
+.xui-termiteCreateProjectDialog .xui-i-cover {
+	width: 170px;
+	height: 230px;
+	max-height: 230px;
+}
+.xui-termiteCreateProjectDialog .xui-i-emptyTemplateCover {
+	background-color: #F5F5F5;
+	border: solid 1px #DDD;
+}
+.xui-termiteCreateProjectDialog .xui-i-coverTitle {
+	font-size: 25px;
+	font-weight: bold;
+	height: 60px;
+	line-height: 60px;
+	position: absolute;
+	top: 50%;
+	margin-top: -35px;
+	color: #999;
+	width: 100%;
+	text-align: center;
+}
+.xui-termiteCreateProjectDialog .xui-i-title {
+	font-size: 14px;
+}
+.xui-termiteCreateProjectDialog .xui-i-selectedIndicator {
+	width: 20px;
+	height: 20px;
+	background-color: #1262B7;
+	bottom: 0px;
+	right: 0px;
+	position: absolute;
+	color: #FFF;
+	font-size: 18px;
+	line-height: 20px;
+	text-align: center;
+	font-weight: bold;
+}
+
+
+/**
+ * 底部导航页面样式
+ */
+.xui-wepage-globalNavPage .xui-navbarHeader{
+	width: 956px;
+	height: 96px;
+	color: #333;
+}
+.xui-wepage-globalNavPage .xui-navbarHeader{
+	background: #fff;
+	box-sizing:border-box;
+	padding: 15px 20px;
+	margin: 19px 17px;
+	border:1px solid #DCE3EB;
+}
+.xui-wepage-globalNavPage .xui-navbarHeader .xui-title{
+	font-size: 16px;
+	font-weight: bold;
+}
+.xui-wepage-globalNavPage .xui-navbarHeader .xui-startUseBtn{
+	width: 88px;
+	margin-left: 131px;
+	margin-top: -5px;
+}
+.xui-wepage-globalNavPage .xui-workbench-phonePanel{
+	margin-left: 17px;
+}
+.xui-wepage-globalNavPage .xui-workbench-rightPanel{
+	background: #fff;
+	width: 427px;
+	box-sizing:border-box;
+	margin-top: 75px;
+}
+.xui-wepage-globalNavPage .xui-selectPageSection label{
+	font-weight: normal;
+	margin-right: 45px;
+}
+.xui-wepage-globalNavPage .xui-selectPageSection input{
+	margin-top: 3px;
+	position: relative;
+	top:3px;
+}
+.xui-wepage-globalNavPage .btn-danger{
+	border-radius: 3px;
+}

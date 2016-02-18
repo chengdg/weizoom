@@ -1,0 +1,39 @@
+{% load workbench_filter %}
+
+{# 橱窗固定三张图片 #}
+{% ifequal component.type 'wepage.image_display' %}
+<div class="wui-imagedisplay"
+    data-component-cid="{{component.cid}}" 
+>
+	<h3 class="wui-inner-title wa-display-title">{{component.model.title}}</h3>
+	
+	<ul class="wui-grid-{% ifequal component.model.displayMode 'three' %}b{% else %}e{%  endifequal %}">
+		<li data-component-cid="{{component.components.0.cid}}" class="wui-block-a">
+			{{ component.components.0.html|safe }}
+		</li>
+		<li data-component-cid="{{component.components.1.cid}}" class="wui-block-b">
+			{{ component.components.1.html|safe }}
+		</li>
+		<li data-component-cid="{{component.components.2.cid}}" class="wui-block-c">
+			{{ component.components.2.html|safe }}
+		</li>
+	</ul>
+
+	<p class="wui-inner-contentTitle wa-inner-contentTitle{% if not component.model.contentTitle %} hidden{% endif %}">{{component.model.contentTitle}}</p>
+	<p class="wui-inner-content wa-inner-content{% if not component.model.content %} hidden {% else %} pb10{% endif %}">{{component.model.content}}</p>
+</div>
+{%  endifequal %}
+
+
+{% ifequal component.type 'wepage.imagedisplay_image' %}
+<a 
+	class="wui-singleImageWithTitle" 
+	data-component-cid="{{component.cid}}" 
+	href="{{component.model.target|format_target:project_id}}"
+>
+	<div class="wui-inner-pic">
+		<img src="{% if component.model.image %}{{component.model.image}}{% else %}/static_v2/img/termite2/default.jpg{% endif %}" class="wa-inner-imgbox"/>
+	</div>
+    <p class="wa-inner-title">{{component.title}}</p>
+</a>
+{% endifequal %}

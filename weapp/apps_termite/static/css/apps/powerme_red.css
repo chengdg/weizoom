@@ -1,0 +1,55 @@
+@charset "utf-8";
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-using, .wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-power{
+    background: #ffae20;
+    border-radius: 5px;
+    border-bottom: 3px solid #be7900;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-closed{
+    background: #B5B5B5;
+}
+.wui-powerme-container .wui-i-body .wui-i-btngroup .wui-i-btn-notready{
+    background: #666666;
+}
+.wui-powerme-container .wui-i-body{
+    background: #e63041;
+    padding: 10px 0 50px;
+}
+.wui-powerme-container .wui-i-timing i{
+    background-position: -45px -37px;
+}
+.wui-powerme-container .wui-i-rules .wui-i-star, .wui-powerme-container .wui-i-states .wui-i-star{
+    background-position: 9px -36px;
+}
+.wui-powerme-container .wui-i-states ul li:not(.wui-i-top100-title){
+    border-bottom: 1px dotted #d0a194;
+}
+.wui-i-description-content {
+    color: #a00211;
+}
+.wui-masterinfo b{
+    color: #e63041;
+}
+.wui-powerme-container .wui-i-rules b, .wui-powerme-container .wui-i-states b{
+    color: #74000b;
+}
+.wui-i-rules-content {
+    color: #fff;
+}
+.wui-powerme-container .wui-i-rules, .wui-powerme-container .wui-i-states{
+    border-top: 1px solid #6f2e0e;
+}
+.wui-powerme-container .wui-i-rules-title-content,.wui-powerme-container .wui-i-helper-title-content {
+    background: #e63041;
+}
+.wui-powerme-container .wui-i-timing{
+    color: #fff;
+}
+.wui-powerme-container .wui-i-top100-title{
+    color: #6F0510;
+}
+.wui-i-top100-name {
+    color: #930A17;
+}
+.wui-i-top100-power {
+    color: #FEF354
+}

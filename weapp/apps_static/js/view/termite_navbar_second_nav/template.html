@@ -1,0 +1,76 @@
+<script id="termite-navbar-secondnav-tmpl" type="text/x-handlebar-tmpl">
+	{{#ifCond navbarType '===' "weixin"}}
+	<div class="xui-navbar-secondnav-title">二级菜单</div>
+	<div class="xui-navbar-secondnav-navs xa-navbar-secondnav-navs"></div>
+    <a class="xui-navbar-secondnav-addBtn xa-navbar-secondnav-add" href="javascript:void(0);">
+    	+添加二级菜单
+    </a>
+	{{else}}
+	<div class="xui-navbar-secondnav-title">二级分类</div>
+	<div class="xui-navbar-secondnav-navs xa-navbar-secondnav-navs"></div>
+    <a class="xui-navbar-secondnav-addBtn xa-navbar-secondnav-add" href="javascript:void(0);">
+    	+添加二级分类
+    </a>
+	{{/ifCond}}
+</script>
+
+<script id="termite-navbar-secondnav-tmpl-nav" type="text/x-handlebar-tmpl">
+	<div class="propertyGroup_property_dynamicControlField_content xui-text xa-nav propertyGroup_property_dynamicControlField_control2">
+		<div class="propertyGroup_property_textField propertyGroup_property_horizontalField xa-errorHintContainer">
+			<div class="propertyGroup_property_label star_show">标题</div>
+			<div class="propertyGroup_property_input1">
+				<input 
+					name="title"
+					type="text" 
+					class="input-small xui-propertyGroup-input " 
+					value="{{title}}" 
+					placeholder="编辑[文本导航]" 
+					maxlength="10" 
+					data-force-validate="true"
+					data-validate="require-notempty::标题名不能为空" />
+				</div>
+				<div class="errorHint"></div>
+			</div>                                                                                
+
+		<div class="propertyGroup_property_linkSelectField propertyGroup_property_horizontalField xa-errorHintContainer">
+			<div class="propertyGroup_property_label">链接</div>
+			<div class="propertyGroup_property_input xui-eidt-urlBox" style="height: auto;">
+				<input data-field="second-nav-target" name="second-nav-target" type="hidden" value="{{target}}" data-force-validate="true">
+
+				{{#if target}}
+					{{#ifCond targetData.type '===' "manualInput"}}
+					<!-- 手动输入连接初始化 -->
+						<input type="text" placeholder="可手动输入连接地址" class="xa-second-nav-selectLink-url xui-selectLink" value="{{targetData.data}}">
+						<div class="pr xui-selected-title-box xa-second-nav-selected-title-box xui-hide" style="display:none">
+							<span class="xa-second-nav-selectLink-title xui-selected-title">{{targetData.data_path}}</span>
+							<button class="close xa-second-nav-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
+						</div>
+						<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog">从微站选择<span class="glyphicon glyphicon-menu-down"></span>
+						</a>
+					{{else}}
+					<!-- 选择站内连接初始化 -->				
+						<input type="text" placeholder="可手动输入连接地址" class="xa-second-nav-selectLink-url xui-selectLink" value="{{targetData.data}}" disabled="disabled">
+						<div class="pr xui-selected-title-box xa-second-nav-selected-title-box">
+							<span class="xa-second-nav-selectLink-title xui-selected-title">{{targetData.data_path}}</span>
+							<button class="close xa-second-nav-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
+						</div>
+						<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog">修改<span class="glyphicon glyphicon-menu-down"></span>
+						</a>
+					{{/ifCond}}
+				{{else}}
+					<!-- 未选择连接初始化 -->		
+					<input type="text" placeholder="可手动输入连接地址" class="xa-second-nav-selectLink-url xui-selectLink" value="">
+					<div class="pr xui-selected-title-box xa-second-nav-selected-title-box xui-hide" style="display:none">
+						<span class="xa-second-nav-selectLink-title xui-selected-title"></span>
+						<button class="close xa-second-nav-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>×</span></button>
+					</div>
+					<a class="xa-second-nav-link-menu xui-link xui-news-editor-select-link-dialog">
+						从微站选择<span class="glyphicon glyphicon-menu-down"></span>
+					</a>
+				{{/if}}
+			</div>
+			<div class="errorHint"></div>
+		</div>
+		<button class="close xa-second-nav-close xui-removeImageButton" style="display:none;" type="button"><span>×</span></button>
+	</div>
+</script>

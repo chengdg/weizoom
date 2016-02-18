@@ -1,0 +1,67 @@
+<script id="card-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+    <div class="xui-col disTc">
+        <div class="xui-i-item">
+            <label class="">卡名称：</label>
+            <input type="text" class="form-control" id="card_name" name="cardName" value="" />
+        </div>
+        <div class="xui-i-item">
+            <label>卡类型：</label>
+            <select id="cardType" name="cardType" class="w120 m0">
+                <option value="-1">全部</option>
+                {{each(i, type) types}}
+                <option value="${type.value}" data-value="${type.value}" data-name="${type.name}">${type.name}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="xui-i-item">
+            <label>卡属性：</label>
+            <select id="cardAttr" name="cardAttr" class="w120 m0">
+                <option value="-1">全部</option>
+                {{each(i, card_attr) card_attrs}}
+                <option value="${card_attr.value}" data-value="${card_attr.value}" data-name="${card_attr.name}">${card_attr.name}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+
+    <div class="xui-col disTc">
+        <div class="xui-i-item">
+            <label>有效期：</label>
+            <input
+                type="text"
+                class="form-control xui-datePicker"
+                id="start_date"
+                name="start_date"
+                style=""
+                value=""
+                readonly="readonly"
+                data-enable-select-time="true"
+                data-ui-role="orderDatepicker"
+                data-format="yy-mm-dd HH:MM"/>
+            <span class="ml5 mr5">至</span>
+            <input
+                type="text"
+                class="form-control xui-datePicker"
+                id="end_date"
+                name="end_date"
+                value=""
+                readonly="readonly"
+                data-ui-role="orderDatepicker"
+                data-enable-select-time="true"
+                data-format="yy-mm-dd HH:MM"
+                data-min-el="#start_date"/>
+        </div>
+
+        <div class="xui-i-item">
+            <label >卡号区间 ：</label>
+            <input type="text" id = "card_num_min" name="card_num_min" onkeyup="value=value.replace(/[^\d]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+                -
+            <input type="text" id = "card_num_max" name="card_num_max"onkeyup="value=value.replace(/[^\d]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+        </div>
+    </div>
+<div class="xui-btn-group">
+    <a type="button" class="btn btn-primary mr40 seacrh-card-btn xui-fontBold" id="seacrh-card-btn">查&nbsp; &nbsp;询</a>
+    <a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重置</a>
+</div>
+</script>

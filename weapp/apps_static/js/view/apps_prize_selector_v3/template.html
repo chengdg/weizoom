@@ -1,0 +1,47 @@
+<script id="apps-prize-selector-v3-tmpl" type="text/x-handlebar-tmpl">
+<div class="xui-apps-prizeSelector">
+	<select class="xui-i-select">
+		<option value="integral" {{#ifCond prize.type '===' 'integral'}}selected{{/ifCond}}>积分</option>
+		<option value="coupon" {{#ifCond prize.type '===' 'coupon'}}selected{{/ifCond}}>优惠券</option>
+		<option value="entity" {{#ifCond prize.type '===' 'entity'}}selected{{/ifCond}}>实物</option>
+	</select>
+	<input
+		type="text"
+		class="xui-propertyGroup-input xa-optionTarget {{#ifCond prize.type '!==' 'integral'}}xui-hide{{/ifCond}} xa-integral"
+		name="integral"
+		data-target="integral"
+		placeholder="输入奖励积分值"
+		data-validate="require-notempty::不能为空,,require-nonnegative::输入0或整数积分值"
+		{{#if prize.data}}value="{{prize.data}}"{{/if}} />
+
+	<div class="ml5 xui-inline xa-selectedCoupon xa-optionTarget {{#ifCond prize.type '!==' 'coupon'}}xui-hide{{/ifCond}}">
+		<div class="pr xui-i-selectedBox">
+			<span class="xui-i-selected-title xa-couponName">{{prize.data.name}}</span>
+			<button class="close xui-close xa-removeCoupon" style="display:block;opacity:1;line-height:16px;" type="button">×</button>
+		</div>
+
+		<a href="javascript:void(0);" class="xa-selectCoupon ml5">修改</a>
+	</div>
+	<div class="xa-optionTarget {{#ifCond prize.type '!==' 'entity'}}xui-hide{{/ifCond}}" data-target="entity" {{#ifCond prize.type '==' 'entity'}}style="display:inline"{{/ifCond}}">
+		<input
+			type="text"
+			class="xui-propertyGroup-input xa-entity"
+			name="entity"
+			placeholder="输入实物名称"
+			data-validate="require-string"
+            data-maxlength="14"
+			{{#if prize.data}}value="{{prize.data}}"{{/if}} />
+		<div class="errorHint" style="margin-left: 37%;"></div>
+	</div>
+
+	<div class="coupon_div xa-optionTarget xa-selectCoupon xui-hide" data-target="coupon" style="display:none">
+		<a
+			href="javascript:void(0);"
+			class="ml5"
+		>请选择优惠券	</a>
+		<input style="width:0;background:#F9F9F9;border:0" type="text" data-validate="require-notempty::请选择一张优惠券" />
+		<div class="errorHint" style="margin-left: 58%;width: 100px;"></div>
+	</div>
+	<div class="errorHint" style="margin-left: 37%;"></div>
+</div>
+</script>

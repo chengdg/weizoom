@@ -346,6 +346,9 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     #'core.context_processors.css_name',
     'core.context_processors.first_navs',
     'core.context_processors.is_operator',
+    'core.context_processors.apps_models',
+    'core.context_processors.apps_views',
+    'core.context_processors.apps_dialogs',
     'core.context_processors.weapp_models',
     'core.context_processors.weapp_views',
     'core.context_processors.weapp_dialogs',
@@ -690,6 +693,16 @@ WEAPP_WEB_VIEW_DIRS_V2 = [
 ]
 WEAPP_WEB_MODEL_DIRS_V2 = [
     ('static_v2', '%s/../static_v2/' % PROJECT_HOME),
+]
+
+WEAPP_WEB_DIALOG_DIRS_APPS = [
+    ('apps_static', '%s/../apps_static/' % PROJECT_HOME),
+]
+WEAPP_WEB_VIEW_DIRS_APPS = [
+    ('apps_static', '%s/../apps_static/' % PROJECT_HOME),
+]
+WEAPP_WEB_MODEL_DIRS_APPS = [
+    ('apps_static', '%s/../apps_static/' % PROJECT_HOME),
 ]
 
 

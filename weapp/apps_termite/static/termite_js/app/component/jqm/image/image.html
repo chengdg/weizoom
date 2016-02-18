@@ -1,0 +1,31 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.image' %}
+{% if in_production_mode %}
+    <div 
+        style="width: {{component.model.width}}; height: {{component.model.height}}; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8; text-align: center;"
+        class="{{component.model.class}}"
+    >
+        <a href="{{component.model.target|format_target:project_id}}">
+            <img width="98%" height="98%" src="{% if component.datasources.image %}{{component.datasources.image}}{% else %}{{component.model.image}}{% endif %}" class="{{component.model.class}}"/>
+        </a>
+    </div>
+{% else %}
+    <div 
+        data-cid="{{component.cid}}" 
+        data-ui-sortable="true" 
+        {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+        style="width: {{component.model.width}}; height: {{component.model.height}}; position: relative; background-color: #fbfbfb; border: 1px solid #b8b8b8; text-align: center;"
+        class="{{component.model.class}}"
+    >
+        {% if component.model.image %}
+        <a href="{{component.model.target|format_target:project_id}}">
+    	    <img width="98%" height="98%" src="{{component.model.image}}" />
+    	</a>
+        {% else %}
+        <img style="position: absolute; top: 50%; left: 50%; margin-left: -16px; margin-top: -18px" alt="image" src="/static/termite_img/image.png">
+        {% endif %}
+    </div>
+{% endif %}
+{% endifequal %}

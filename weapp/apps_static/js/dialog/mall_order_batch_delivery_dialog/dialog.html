@@ -1,0 +1,78 @@
+<script id="common-order-batch-deliver-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade" id="commonSelectCSVFileDialog">
+	<div class="modal-dialog xui-batch_delivery_dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+			<h3 class="xui-dialogtitle">上传文件</h3>
+		</div>
+		<div class="modal-body wx-thin-form xui-wrap">
+		<div class="form-horizontal ">
+			<div class="mb10" style="font-size:13px;">
+				<p class="xui-explain">请编辑发货表格，只保留三个字段：<span >订单编号</span>、<span >物流公司</span>、<span >快递单号</span>。</p>
+			</div>
+			<p class="xui-text-file xui-color-gray "> 文件：</p>
+			<div class="control-group xui-controlbox">
+				<div class="controls">
+					<input type="hidden" name="file_url" id="file_url" value="" data-validate="require-file" data-force-validate="true"/>
+					<div id="commonSelectCSVFileDialog-fileView"></div>
+					<span class="help-block mt15 xui-warning">仅支持不大于1MB的CSV文件</span>
+					<div class="errorHint"></div>
+				</div>
+			</div>
+			<div class="fr">
+				<button class="btn xui-batch-delivery btn-primary xa-submit-dialog" id="change_password">批量发货</button>
+			</div>
+			<div class="clear"></div>
+			<div class=" mb10" style="font-size:13px;">
+				<hr class="m0 mt5 mb20">
+				<p  class="mb20 xui-color-gray">附录：</p>
+				<p class="mb20 xui-color-gray">文件格式规范：</p>
+			<table class="xui-table-file mb20"  >
+			   <tr>
+                   <th></th>
+                   <th>订单编号</th>
+                   <th>物流公司</th>
+                   <th>快递单号</th>
+			   </tr>
+			   <tr>
+                   <td>1</td>
+                   <td>20141106163416400</td>
+                   <td>顺丰速运</td>
+                   <td>23154949</td>
+			   </tr>
+			     <tr>
+                   <td>2</td>
+                   <td>20141106163416400</td>
+                   <td>申通快递</td>
+                   <td>512315646</td>
+			   </tr>
+			     <tr>
+                   <td>3</td>
+                   <td>20141106163416400</td>
+                   <td>EMS</td>
+                   <td>16545315</td>
+			   </tr>
+
+			</table>
+				<p class="mb20">快递名称标准：</p>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_yd.png"/><span class="xui-express-t">韵达快运</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_yt.png"/><span class="xui-express-t">圆通速递</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_st.png"/><span class="xui-express-t">申通快递</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_bsh.png"/><span class="xui-express-t">汇通快运</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_db.png"/><span class="xui-express-t">德邦物流</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_tt.png"/><span class="xui-express-t">天天快递</span></label>
+
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_zt.png"/><span class="xui-express-t">中通速递</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_sf.png"/><span class="xui-express-t">顺丰速运</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_ems.png"/><span class="xui-express-t">EMS</span></label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_zjs.png"/><span class="xui-express-t">宅急送</label>
+				<label class="xui-expresslabel"><img src="/static_v2/img/editor/express/express_qf.png"/><span class="xui-express-t">全峰快递</label>
+
+			</div>
+		</div>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>

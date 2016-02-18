@@ -1,0 +1,71 @@
+<script id="select-coupon-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-selectCouponDialog" id="commonSelectCouponDialog">
+    <div class="modal-dialog modal-lg" style="width: 820px;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">选择优惠券</h3>
+        </div>
+
+        <div class="modal-body" style="min-height: 300px; overflow: auto;">
+            <div
+                    data-ui-role="advanced-table"
+                    data-app="mall2"
+                    data-resource="issuing_coupons_filter"
+                    data-args='{"filter_type":"coupon"}'
+                    data-template-id="#add-select-dialog-coupons-tmpl"
+                    data-enable-paginator="true"
+                    data-enable-sort="false"
+                    data-item-count-per-page="5"
+                    data-auto-load="false"
+                    class="mt10 mb20"
+                ></div>
+        </div>
+
+        <div class="modal-footer modal-footerBg">
+            <button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">完成选择</button>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
+
+<script id="add-select-dialog-coupons-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable xa-productTable">
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th width ="165">优惠券名称</th>
+            <th width ="105">类型</th>
+            <th width ="70">价值</th>
+            <th>有效期</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{if items.length}}
+        {{each(i, coupon) items}}
+            <tr data-id="${coupon.id}">
+                <td class="text_nowrap" style="max-width:165px;">${coupon.name}</td>
+                <td>
+                {{if coupon.limit_product }}
+                    单品券
+                {{else}}
+                    全店通用券
+                {{/if}}
+                </td>
+                <td>${coupon.money}</td>
+                <td>${coupon.start_time}&nbsp;至&nbsp;${coupon.end_time}</td>
+                <td>
+                    <label class="btn  lh20  btn-primary" style="border-radius:3px;">
+                        <input type="checkbox" autocomplete="off" class="xa-selectCoupon" ><span>选取</span>
+                    </label>
+                </td>
+            </tr>
+        {{/each}}
+    {{else}}
+        <tr ><td colspan='7' class="h130" style="color:#666">暂无数据</td></tr>
+    {{/if}}
+
+    </tbody>
+</table>
+</script>

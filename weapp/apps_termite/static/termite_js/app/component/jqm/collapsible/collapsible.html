@@ -1,0 +1,35 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.collapsible_group' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="pt5 pb5"
+>
+    <div 
+        data-role="collapsible-set" 
+        data-theme="{{component.model.header_theme}}" 
+        data-content-theme="{{component.model.content_theme}}"    
+    >
+        {{ component|join_sub_components_html|safe }} 
+    </div>
+</div>
+{% endifequal %}  
+
+
+{% ifequal component.type 'jqm.collapsible' %}
+<div 
+    data-role="collapsible" 
+    data-cid="{{component.cid}}"
+    id="{{component.model.id}}" 
+    data-circum-insertable="false" 
+    data-component-container="true" 
+    {% ifequal component.model.is_collapsed 'yes' %}data-collapsed="true"{% else %}data-collapsed="false"{% endifequal %}>
+    <h3>{{ component.model.text }}</h3>
+    {% include 'component/common/circum_insert_indicator.html' %}
+    {{ component|join_sub_components_html|safe }}
+</div>
+{% endifequal %}  

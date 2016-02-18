@@ -1,0 +1,23 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.nav_bar' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-role="navbar" 
+    data-iconpos="{{component.model.icon_position}}"
+>
+    <ul>
+    {{ component|join_sub_components_html|safe }} 
+    </ul>
+</div>
+{% endifequal %}
+
+
+{% ifequal component.type 'jqm.nav_bar_button' %}
+    <li>
+        <a href="{{component.model.target|format_target:project_id}}" data-icon="{{component.model.icon}}" data-cid="{{component.cid}}" {% ifequal component.model.is_initial_active "yes" %}class="ui-btn-active"{% endifequal %}>{{component.model.text}}</a>
+    </li>
+{% endifequal %}

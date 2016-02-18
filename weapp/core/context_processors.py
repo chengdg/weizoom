@@ -373,7 +373,7 @@ def weapp_views(request):
 #===============================================================================
 def weapp_models(request):
 	items = []
-	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path) or ('apps2' in request.path) or ('apps' in request.path):
+	if ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path) or ('apps2' in request.path) or ('apps' in request.path):
 		version = '2'
 	else:
 		version = '1'
@@ -382,6 +382,62 @@ def weapp_models(request):
 		items.append('\n')
 
 	return {'weapp_models': '\n'.join(items)}
+
+
+#===============================================================================
+# apps_dialogs : 获取apps项目的dialog集合
+#===============================================================================
+def apps_dialogs(request):
+	items = []
+	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path):
+		version = '2'
+	elif ('apps2' in request.path) or ('apps' in request.path):
+		version = '3'
+	else:
+		version = '1'
+	for dialog in resource_util.get_web_dialogs(version):
+		items.append(dialog['template_source'])
+		items.append('<script type="text/javascript" src="%s"></script>' % dialog['js_url_path'])
+		items.append('\n')
+
+	return {'apps_dialogs': '\n'.join(items)}
+
+
+#===============================================================================
+# apps_views ： 获取apps项目的view集合
+#===============================================================================
+def apps_views(request):
+	items = []
+	if ('/member/' in request.path) or ('auth' in request.path) or ('new_weixin' in request.path) or ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path):
+		version = '2'
+	elif ('apps2' in request.path) or ('apps' in request.path):
+		version = '3'
+	else:
+		version = '1'
+	for view in resource_util.get_web_views(version):
+		items.append(view['template_source'])
+		items.append('<script type="text/javascript" src="%s"></script>' % view['js_url_path'])
+		items.append('\n')
+
+	return {'apps_views': '\n'.join(items)}
+
+
+#===============================================================================
+# apps_models ： 获取apps项目的model集合
+#===============================================================================
+def apps_models(request):
+	items = []
+	if ('termite2' in request.path) or ('/card/' in request.path) or ('/stats/' in request.path) or ('/mall2/' in request.path):
+		version = '2'
+	elif ('apps2' in request.path) or ('apps' in request.path):
+		version = '3'
+	else:
+		version = '1'
+	for model in resource_util.get_web_models(version):
+		items.append('<script type="text/javascript" src="%s"></script>' % model['js_url_path'])
+		items.append('\n')
+
+	return {'apps_models': '\n'.join(items)}
 
 
 #===============================================================================

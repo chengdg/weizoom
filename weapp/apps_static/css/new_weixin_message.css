@@ -1,0 +1,885 @@
+@charset "utf-8";
+/**
+* 消息互动页面
+*/
+#weixin-realtime-message-filter-view {
+	border: none !important;
+}
+
+.xui-weixin-realtimeMessagePage {
+	background: #eaeef6;
+	min-height: 880px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-imgBox {
+    height: 60px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    width: 60px;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable {
+    border-bottom: 1px solid #ddd;
+}
+.xui-weixin-realtimeMessagePage .xui-selectBox {
+    display:inline-block;
+    margin:5px 10px;
+}
+.xui-weixin-realtimeMessagePage .xui-selectAll {
+    margin-right: 10px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-menu {
+    border-radius: 5px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-submenu a {
+    padding: 8px 10px !important;
+    border-radius: 5px;
+    width: 190px;
+}
+.xui-weixin-realtimeMessagePage .dropdown-submenu:first-child {
+    border-bottom: 1px solid #ddd;
+}
+.xui-weixin-realtimeMessagePage .dropdown-menu {
+    border: 1px solid #c5c5c5;
+    min-width: 96px;
+    left:98px;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable .xui-vmiddle {
+    vertical-align: middle!important;
+}
+.xui-weixin-realtimeMessagePage .xui-listTable .xui-selectWrap {
+    height: 100%;
+    width: 40px;
+    background-color: red;
+    float: left;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-unreadMessageCount {
+    background: #cf0404;
+    color: white;
+    height: 18px;
+    position: absolute;
+    left: 50px;
+    margin-top: -10px;
+    width: auto;
+    padding: 1px 5px 0;
+    min-width: 20px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow:    1px 1px 3px rgba(0, 0, 0, 0.75);
+    box-shadow:         1px 1px 3px rgba(0, 0, 0, 0.75);
+    text-align: center;
+    overflow: hidden;
+    opacity:0.7;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-name {
+    height: 60px;
+    line-height: 15px;
+    padding-top: 5px;
+    text-align: left;
+    width: 8em;
+    word-break: break-all;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-name a {
+    cursor: pointer;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-text {
+    height: auto;
+    line-height: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: left;
+    word-break: break-all;
+    cursor: pointer;
+}
+
+.xui-weixin-realtimeMessagePage .xui-messages {
+    background-color: #fff;
+    width: 100%;
+    padding: 20px 30px 0px 30px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-message-top{
+   margin-bottom: 5px;
+   color: #666;
+}
+.xui-weixin-realtimeMessagePage .xui-message {
+    border-radius:5px;
+    min-width: 250px;
+    min-height: 60px;
+    max-width: 440px;
+    width: auto;
+    border: 1px solid #ccc;
+    padding:10px 10px 0px 10px;
+    clear: both;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message span{
+    cursor: text;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-clock{
+    float: left;
+    position: absolute;
+    left: 110px;
+    top: 45px;
+    font-size: 12px;
+    color: #999;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-i-remark-text {
+    color: #f39800;
+    cursor: text !important;
+    position: relative;
+    top:5px;
+}
+.xui-weixin-realtimeMessagePage .xui-messageWrap {
+}
+.xui-weixin-realtimeMessagePage .xui-recieved {
+    float: left;
+}
+.xui-weixin-realtimeMessagePage .xui-send {
+    float: right;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft {
+   width: 160px;
+   float: left;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapLeft  p {
+    line-height: 60px;
+    height: 60px;
+}
+.xui-weixin-realtimeMessagePage .xui-recieved .xui-i-wrapRight {
+    width: 440px;
+    float: right;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapLeft {
+   width: 440px;
+   float: left;
+
+}
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight {
+    width: 160px;
+    float: right;
+    line-height: 60px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-send .xui-i-wrapRight p{
+    width: 80px;
+    text-align: right;
+
+}
+
+.xui-weixin-realtimeMessagePage .xui-message-recieved {
+    float: left;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message-send {
+    float: right;
+    background-color: #f0f0f0;
+}
+
+.xui-weixin-realtimeMessagePage .xui-message .xui-message-content {
+    font-size: 12px;
+    color: #333;
+    line-height: 20px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-edit-message-panel {
+    width:580px; 
+    z-index:500;
+    background: #eaeef6;
+    margin-top: 10px;
+    padding-left: 15px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-newses {
+    background-color: #1C911C;
+    color: #FFFFFF;
+    display: inline-block;
+    padding: 1px 4px;
+    margin-right: 10px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-operation {
+    height: 60px;
+    width: 90px;
+    line-height: 15px;
+    padding-top: 20px;
+    text-align: left;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-realmessage-tr {
+    height: 80px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.xui-weixin-realtimeMessagePage tbody td {
+    vertical-align: top !important;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-remark {
+    padding-top: 5px !important;
+    color: #c09853;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-quick-reply {
+    padding-top: 5px !important;
+    cursor: pointer;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-quick-reply span {
+    color: #666;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-sessionsImg {
+    display: inline-block;
+    width: 150px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-sessionsImg img {
+    border: 0 none;
+    width: 50px;
+    height: 50px;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.xui-weixin-realtimeMessagePage a {
+    text-decoration: none;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-voiceContent {
+    height: 24px;
+    width: 97px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-voiceStop {
+    background: url("/static_v2/img/weixin/voice_stop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 24px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-voiceIco {
+    display: inline-block;
+    float: left;
+    height: 20px;
+    margin: 3px 12px;
+    width: 17px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-voiceIco-listen {
+    background-position: 0 0 !important;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-voicePlay {
+    background: url("/static_v2/img/weixin/voice_play.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+.xui-weixin-realtimeMessagePage [class^="xui-i-sessionsIcon-"], [class*=" xui-i-sessionsIcon-"] {
+    background: url("/static_v2/img/weixin/sessions_icon.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: inline-block;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-session-btn {
+    height: 18px;
+    margin: 0 3px;
+    width: 18px;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-sessionsIcon-starActive {
+    background-position: -90px 0;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-sessionsIcon-remarkActive {
+    background-position: -90px 0;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-sessionsIcon-star {
+    background: url("/static_v2/img/weixin/star.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-sessionsIcon-remark {
+    background: url("/static_v2/img/weixin/star.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+}
+.xui-weixin-realtimeMessagePage .xui-ellipsis-1{
+    width: 80px;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.xui-weixin-realtimeMessagePage .drop-box-arrow{
+    /*background: url(/static_v2/img/arrow.png) no-repeat;*/
+
+}
+.xui-weixin-realtimeMessagePage .drop-box-arrow-left{
+    background: url("/static_v2/img/weixin/dropArrow.png");
+    position: absolute;
+    width: 8px;
+    height: 9px;
+    transform: rotate(-360deg);
+    left: -8px;
+    /* background-size: 16px 38px; */
+    background-position: 0 -10px;
+}
+.xui-weixin-realtimeMessagePage .drop-box-arrow-right{
+    background: url("/static_v2/img/weixin/dropArrow.png");
+    position: absolute;
+    width: 8px;
+    height: 9px;
+    transform: rotate(-360deg);
+    right: -8px;
+    /* background-size: 16px 38px; */
+    background-position: 0 0;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-remarkIcon {
+	margin-top: -10px;
+	margin-left: 10px;
+}
+.xui-weixin-realtimeMessagePage .xui-i-viewMessages {
+    margin-top: -7px;
+    margin-left: 13px;
+}
+
+.xui-weixin-realtimeMessagePage .errorHint {
+	background: #eaeef6;
+}
+
+.xui-weixin-realtimeMessagePage .wui-messageEditor {
+	background: #eaeef6;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-selectMessage .wui-messageEditor {
+	margin-left: -10px;
+}
+
+.xui-weixin-realtimeMessagePage .wui-messageEditor #weixin-editor-btn {
+	text-align: left !important;
+}
+
+.xui-weixin-realtimeMessagePage .wui-messageEditorPopup {
+	border: none;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-not-reply {
+	color: #f39800;
+}
+
+.xui-weixin-realtimeMessagePage .nav-tabs {
+	border-bottom: none !important;
+}
+
+.xui-weixin-realtimeMessagePage .xui-i-cancelCover {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    top: 43px;
+    width: 60px;
+}
+/*
+【高级管理】粉丝管理页面
+*/
+.xui-weixin-materialsPage .xui-i-fans_List{
+        width:195px;
+        height:auto;
+        background-color:#fff;
+        border:1px solid #ccc;
+        top:50px;right:10px;
+}
+.xui-weixin-materialsPage .xui-i-groupDialog{
+        display:none;
+        z-index:2; 
+        width:205px;/*
+        height: 118px;*/
+        background-color:#fff;
+        border:1px solid #ccc;
+        bottom:10px;left:40px;
+        left: -6px;
+        top: -1px;
+        padding: 20px 0;
+        text-align: center;
+}
+.xui-weixin-materialsPage .xui-filterPanel{
+    border:0!important;
+}
+.xui-weixin-materialsPage .xui-i-showDialog{
+    right:10px;
+    top:10px;
+}
+.xui-weixin-materialsPage .xui-i-addLi{
+    width:193px; top:0;
+    background: #fff;
+}
+.xui-weixin-materialsPage .xui-i-addLi li{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: solid 1px #ccc;
+}
+.xui-weixin-materialsPage .xui-i-addLi li:hover{
+    cursor:default;
+}
+.xui-weixin-materialsPage .xui-i-addLi li,span:hover{
+    cursor:pointer;
+}
+.xui-weixin-materialsPage .xui-i-hoverShow{
+    display:inline-block;
+    display:none;
+}
+.xui-weixin-materialsPage .xui-productList{
+    width:80%;
+    display:table!important;
+}
+.xui-weixin-materialsPage .xui-paginationPosition{
+    position: absolute;
+    bottom: -5px;
+    right: 0px;
+}
+.xui-weixin-materialsPage .xui-cancelCover{
+    width:60px;
+    background-color:rgba(0, 0, 0, 0.4);
+    top:53px;
+    color:#fff;
+}
+.xui-weixin-materialsPage .xui-clickColor{
+    background:#f2f2f2;
+}
+.xui-weixin-materialsPage .xui-sendMessage{
+    width: 198px;
+    height: auto;
+    display: none;
+    border: solid 1px #ccc;
+    border-bottom: none;
+    background: #fff;
+    top: 22px;
+    left: 82px;
+}
+.xui-weixin-materialsPage .xui-sendMessage li {
+    line-height: 29px;
+    padding-left: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+.xui-weixin-materialsPage .xui-addGrouping{
+    width: 198px;
+    display: none;
+    height: auto;
+    border: solid 1px #ccc;
+    border-bottom: none;
+    background: #fff;
+    top: 22px;
+    left: 0px;
+}
+.xui-weixin-materialsPage .xui-addGrouping li{
+        line-height: 29px;
+        padding-left: 10px;
+        border-bottom: 1px solid #ccc;
+}
+
+.xui-weixin-materialsPage .xui-userData{
+    width: 200px;
+    height: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    text-align: left;
+    top:10px;
+    left:80px;
+    z-index: 99999;
+}
+.xui-weixin-materialsPage .xui-userData li span{
+        color: #333;
+}
+.xui-weixin-materialsPage .xui-userData li{
+    line-height: 25px;
+    margin-left: 10px;
+    color: #666;
+}
+.xui-weixin-materialsPage .xui-userData h5{
+    color: #333;
+}
+.xui-weixin-materialsPage .xui-bigwrapper{
+    width: 100%;
+}.xui-weixin-materialsPage .xui-wrapperleft{
+    width: 20%;
+    float: left;
+}.xui-weixin-materialsPage .xui-wrapperright{
+    width: 80%;
+    float: left;
+}
+.xui-weixin-materialsPage .xui-valueAdd{
+    width: 180px;
+    height: 30px;
+}
+.xui-weixin-materialsPage .xui-addfan-primary,.xui-weixin-materialsPage .xui-addfan-default{
+    margin: 10px;
+    border-radius: 3px;
+}
+.xui-weixin-materialsPage .xui-i-dialogPOST a{
+    min-width: 65px;
+}
+.xui-updateGradeBox{
+    min-width: 0px;
+    border-top:1px solid #ddd;
+    border-left:1px solid #ddd;
+    border-right:1px solid #ddd;
+    border-bottom:none;
+    border-radius: 0px;
+}
+.xui-updateGradeBox li{
+    margin: 0;
+}
+.xui-updateGradeBox .xa-selectCategory{
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    border-bottom:1px solid #ddd; 
+    padding-left: 12px;
+    color: #333;
+    text-decoration: none;
+}
+.xui-updateGradeBox .xa-selectCategory:hover {
+    color: #333;
+    text-decoration: none;
+}
+/**
+* 实时消息详情页面
+*/
+.xui-weixin-realtimeMessagePage .xui-i-panel-body {
+    width: 100%;
+    background: #eaeef6;
+    padding-bottom: 0px;
+}
+
+.xui-weixin-user-detail {
+    width: 380px;
+    background: #eaeef6;
+    right: 10px;
+    position: absolute;
+    top: 54px;
+    bottom: 0px;
+}
+
+.xui-weixin-user-detail .xui-i-user-top {
+    margin-top: 25px;
+    border-bottom: 1px solid #ccc;
+    margin-left: 15px;
+    padding-bottom: 10px;
+}
+
+.xui-weixin-user-detail .xui-i-user-top span{
+    margin-left: 10px;
+}
+
+.xui-weixin-user-detail .xui-i-user-body {
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+}
+
+.xui-weixin-user-detail .xui-i-user-body ul{
+    margin-top: 15px;
+}
+
+.xui-weixin-user-detail .xui-i-user-body ul li{
+    margin-left: 20px;
+    margin-right: 278px;
+    text-align: right;
+}
+
+.xui-weixin-user-detail .xui-i-user-body ul span {
+    float: left;
+    margin-left: 100px;
+    margin-top: -17px;
+}
+
+.xui-weixin-user-detail .xui-i-user-body ul span select {
+    margin-top: -3px !important;
+}
+
+
+/*
+【消息互动页面】自动回复
+*/
+.xui-weixin-messagePage{
+    background: #eaeef6;
+    min-height: 950px;
+    padding-bottom: 130px;
+}
+.xui-weixin-messagePage .xui-rule-name{
+    padding-left: 29px;
+}
+.xui-weixin-messagePage .xui-tableHead tr th{
+    text-align: left;
+    padding-left: 30px;
+}
+.xui-weixin-messagePage .xui-plusBolder{
+    font-weight: 700;
+    font-size: 1.5rem;
+    top:2px;
+}
+.xui-weixin-messagePage .xui-i-type{
+    text-align: center;
+}
+.xui-weixin-messagePage .xui-messageNav{
+    border-bottom: 1px solid #ccc;
+    display: block;
+    height: 40px;
+}
+.xui-weixin-messagePage .xui-messageNav li{
+    float: left;
+    padding-left: 38px;
+    padding-right: 38px;
+    line-height: 40px;
+}
+.xui-weixin-messagePage .xui-messageNav li a{
+        color: #000;
+        font-size: 14px;
+        text-decoration:none;
+}
+.xui-weixin-messagePage .xui-messageNav .active{
+    margin-top: -3px;
+    border-bottom: 3px solid #207cbe;
+}
+.xui-weixin-messagePage .xui-editorPosition{
+    bottom: 38px;
+    left: 240px;
+}
+.xui-weixin-messagePage .xui-save{
+    background: #1d921a;
+    border: solid 1px #1d921a;
+}
+.xui-weixin-messagePage .xui-newKeyView{
+      top: -96px;
+      z-index:9999;
+}
+.xui-weixin-messagePage .xui-btnWrap{
+    text-align: center;
+    clear: both;
+    bottom:5%;
+    left:50%;
+    /*margin-left:-111px;*/
+}
+
+/*【自动回复】消息托管*/
+.xui-weixin-messagePage .xui-i-btnColor{
+    width: 88px;
+    height: 30px;
+    border: none;
+}
+.xui-weixin-messagePage .xui-messageTrust{
+    width: auto;
+    height: 116px;
+    background: #fff;
+}
+.xui-weixin-messagePage .xui-replyContent{
+    width: 598px;
+    background: #fff;
+    margin:0 auto;
+}
+.xui-weixin-messagePage .start_hour{
+    width: 70px;
+    height: 24px;
+}
+.xui-weixin-messagePage .end_hour{
+    width: 70px;
+    height: 24px;
+}
+
+/*【自动回复】小尾巴*/
+.xui-weixin-messagePage .xui-textarea{
+    width:600px;
+    min-height: 260px;
+}
+.xui-weixin-messagePage .xui-contentText{
+    width: auto;
+    height: 50px;
+    line-height: 50px;
+}
+.xui-weixin-messagePage .xui-contentText span{
+    left: 40px;
+}
+.xui-weixin-messagePage .xui-greenSpan{
+    display:block;
+    border-radius:2px;
+    background:#1d921a;
+    width:30px;
+    height:16px;
+    float:left;
+    color:#fff;
+}
+
+/* 文字图文选择器样式 */
+/*.xui-weixin-followRulesPage .wui-messageEditor .nav-tabs,*/
+/*.xui-massSendingMessage .wui-messageEditor .nav-tabs*/
+.wui-messageEditor .nav-tabs  {
+    border-bottom: 0px solid #ddd;
+}
+.wui-messageEditor{
+    width: 484px;
+}
+.wui-messageEditor li {
+    border-top:1px solid #ddd;
+}
+
+.wui-messageEditor .wui-newsMessage {
+    border:1px solid #ddd;
+}
+
+
+.xui-weixin-messagePage .edui-editor {
+    width: 478px;
+}
+
+
+.xui-weixin-messagePage .xui-borderBottomNone{
+    border-bottom: 0px;
+}
+
+.fans_name{
+    height: 27px;
+    overflow: hidden;
+    text-overflow:ellipsis; 
+    white-space:nowrap; 
+    max-width: 208px;
+    float: left;
+    padding: 10px 0 0 15px;
+}
+/*【带参数二维码】*/
+.xui-weixin-qrcodePage .xui-rightPanel{
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    background: #eaeef6;
+    border: 1px solid #ccc;
+}
+.xui-weixin-qrcodePage .breadcrumRightButton{
+    top: 10px;
+    left: 15px;
+}
+.xui-weixin-qrcodePage .xui-i-btnWidth{
+    width:114px!important;
+}
+.xui-weixin-qrcodePage .xui-paginationPosition{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+/*【关注粉丝】*/
+.xui-memberListPage .xb-rightPanel{
+    padding-bottom:52px;
+}
+.xui-memberListPage .ellipsis{
+    display:block;
+    white-space:nowrap; 
+    overflow:hidden; 
+    text-overflow:ellipsis;
+}
+/*【新建二维码】*/
+    .xui-weixin-qrcodePage .xui-setting {
+    width: auto;
+    height: auto;
+    /*background-color: #fff;*/
+   }
+   .xui-weixin-qrcodePage .xui-setting .xui-row{
+    width: 75%;
+    height: 60px;
+    background-color: #fff;
+    text-align: center;
+    clear: both;
+    float: left;
+    border:1px solid #dddddd;
+   }
+    .xui-weixin-qrcodePage .xui-Sweep1{
+   width: 100%;
+   margin: 0px 10px;
+   text-align: center;
+   clear: both;
+   float: left;
+  } 
+   .xui-weixin-qrcodePage .xui-setting .xui-i-left{
+    width: 133px;
+    height: 100%;
+    line-height: 60px;
+    text-align: right;
+    padding-right: 10px;
+    background-color: #c8d2e5;
+    clear: both;
+   }
+   .xui-weixin-qrcodePage .xui-Sweep{
+    width: 133px;
+    /*height: 100%;*/
+    background-color: #c8d2e5;
+    clear: both;
+   }
+     .xui-weixin-qrcodePage .xui-setting .xui-i-right{
+    width: 133px;
+    height: 100%;
+   }
+   .xui-weixin-qrcodePage .xui-rightPanel{
+    min-height: 615px;
+   }
+   .xui-weixin-qrcodePage #edit-message-panel .edui-editor-iframeholder{
+        height: 90px!important;
+   }
+    .xui-weixin-qrcodePage  .xui-footerBtn{
+    padding-top: 18px;
+    padding-bottom: 20px;
+    text-align: center;
+    background: #EAEEF6;
+    }
+    .xui-weixin-qrcodePage .edui-editor{
+        width: 598px!important;
+    }
+    .xui-weixin-qrcodePage .edui-for-link{
+        left:-270px;
+    }
+    .xui-weixin-qrcodePage .edui-for-emotion{
+        left:-270px;
+    }
+    .xui-weixin-qrcodePage .xa-changeNews{
+        position: relative;
+        right: 215px;
+    }
+    @-moz-document url-prefix() { .xui-weixin-qrcodePage .xa-changeNews { 
+        right: 215px; 
+        } }
+    .xui-weixin-qrcodePage .xui-i-remark{
+        position: absolute;
+        left: 501px;
+        bottom: 18px;
+        color: #999;
+    }
+    .xui-weixin-qrcodePage #prize_selector .mt10{
+        margin-top: 0px!important;
+    }
+    .xui-weixin-qrcodePage .errorHint{
+        position: relative;
+        left: 39px;
+        bottom: 6px;
+    }
+    .xui-weixin-qrcodePage .edui-editor-iframeholder{
+        width:598px!important;
+    }
+    .xui-weixin-qrcodePage .wui-messageEditor{
+        width: 484px!important;
+    }
+
+    .xui-weixin-qrcodePage #prizeTypesSelector{
+        float: left;
+    }
+     .xui-weixin-qrcodePage #prize_score_input{
+        display: block;
+    }
+    .xui-weixin-qrcodePage #prize_real_prize_input{
+        display: block;
+    }
+    @-moz-document url-prefix(){.xui-firefoxhuk{bottom:24px;
+        left:21px;}}

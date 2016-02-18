@@ -1,0 +1,30 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'viper.swipe_image' %}
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}"
+    class="p5"
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div class="controls">
+            {% if in_design_mode %}
+                <img src="/static/termite_img/viper/swipe_images.jpg" style="width: 350px" />
+                <span class="help-block mt5">建议图片尺寸为<span class="x-imageSelector-width">{{component.model.image_width}}</span>*<span class="x-imageSelector-height">{{component.model.image_height}}</span>像素</span>
+            {% else %}
+                <input type="hidden" name="swipeimage${{name}}" id="{{name}}" value='' />
+                <div id="swipePhotoList" data-validate="require-swip-image" data-ui-role="swipe-images-selector" data-target-input="#{{name}}" data-count="{{component.model.count}}" data-image-width="{{component.model.image_width}}" data-image-height="{{component.model.image_height}}" data-images-json='{{page.record|get_record_list_value:name}}'></div>
+            {% endif %}
+            <div class="errorHint">{% if in_design_mode %}name="{{name}}"{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+{% endifequal %}

@@ -1,0 +1,36 @@
+{% load workbench_filter %}
+
+{% if component.type == 'weapp.item_list' %}
+<div class="wui-productlist" 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    data-ui-behavior="xub-selectable">
+    <ul class="wui-block-type{{component.model.type}}">
+        {% with component.model.count|add:'0' as count %}
+        {% with component.model.target|target_child_links:count as products %}
+        {% for product in products %}
+        {% if in_design_mode or product.url %}
+        <li>
+            <a class="wui-inner-box{% cycle '1' '2' '3' %}" href="{{product.url}}">
+                <div class="wui-inner-pic">
+                    {% if product.pic %}
+                    <img src="{{product.pic}}" />
+                    {% else %}
+                    <p>{% firstof product.name '商品列表' %}</p>
+                    {% endif %}
+                </div>
+                <div class="wui-inner-titleAndprice">
+                    <p class="wa-inner-title">{{product.name}}</p>
+                    <p class="wa-inner-price">¥{% firstof product.price '234.0' %}</p>
+                </div>
+                <div class="wa-inner-shopCar wui-inner-shopCar wui-shopCar-style{{component.model.style}}"></div>
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% endwith %}
+        {% endwith %}
+    </ul>
+</div>
+{% endif %}

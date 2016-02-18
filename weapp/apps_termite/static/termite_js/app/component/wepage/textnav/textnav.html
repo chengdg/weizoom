@@ -1,0 +1,15 @@
+{% load workbench_filter %}
+{% if component.type == 'wepage.textnav_group' %}
+<ul class="wui-textnav"
+    data-component-cid="{{component.cid}}"
+>
+	{% for component in component.components %}
+	<li data-component-cid="{{component.cid}}">
+		<a href="{{component.model.target|extract_target_data:request|safe}}">
+			<span class="wa-inner-link">{{component.model.title}}</span> 
+			<i class="right-arrow"></i>
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endif %}

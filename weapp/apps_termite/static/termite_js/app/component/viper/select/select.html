@@ -1,0 +1,51 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.select_menu' %}
+<!-- =====> viper:select component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="p5" 
+>
+{% endif %}
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{name}}">{{component.model.label}}：</label>
+        <div class="controls">
+            <select 
+                type="text" 
+                class="input-xlarge" 
+                id="{{name}}" 
+                name="{{name}}" 
+                {{ component.model.validate|safe }}
+            >
+                <option value="-1">选择选项...</option>
+                {{ component|join_sub_components_html|safe }}
+            </select>
+            <div class="errorHint">{% if in_design_mode %}name="{{name}}"{% endif %}</div>
+        </div>
+    </div>
+    {% endwith %}
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:select component -->
+{% endifequal %}    
+
+
+{% ifequal component.type 'viper.select_menu_item' %}
+    <option 
+        value='json:{"type":"select","text":"{{component.model.text}}","value":"{{component.model.value}}"}'
+        {% if request.in_generate_mode %}
+        <% if '"value":"{{component.model.value}}"' in record.{{component.parent_component|get_component_name}} %>selected="selected"<% endif %>
+        {% else %} 
+        {% if page.record|should_select_option:component %}selected="selected"{% endif %}
+        {% endif %}
+    >
+        {{component.model.text}}
+    </option>
+{% endifequal %}

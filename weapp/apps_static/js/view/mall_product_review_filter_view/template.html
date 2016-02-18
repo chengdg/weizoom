@@ -1,0 +1,75 @@
+<script id="mall-product-review-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+    <div class="xui-col disTc">
+        <div class="xui-i-item">
+            <label class="">商品名称：</label>
+            <input type="text" class="form-control" id="name" name="name" value="" />
+        </div>
+        <div class="xui-i-item">
+            <label>审核状态：</label>
+            <select class="" id="review_status" name="review_status">
+                <option value="all">全部</option>
+                <option value="0">待审核</option>
+                <option value="1">已通过</option>
+                <option value="-1">已屏蔽</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="xui-col disTc">
+        <div class="xui-i-item pl20">
+            <label>商品编码：</label>
+            <input type="text" class="form-control" id="user_code" name="user_code" value="" />
+        </div>
+        <div class="xui-i-item ml20">
+            <label>商品评星：</label>
+            <select class="" id="product_score" name="product_score">
+                <option value="all">全部</option>
+                <option value="1">1星</option>
+                <option value="2">2星</option>
+                <option value="3">3星</option>
+                <option value="4">4星</option>
+                <option value="5">5星</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="xui-col disTc">
+        <div class="xui-i-item">
+            <label>评价时间
+            ：</label>
+            <input
+                type="text"
+                class="form-control xui-datePicker"
+                id="start_date"
+                name="start_date"
+                style=""
+                value=""
+                readonly="readonly"
+                data-enable-select-time="true"
+                data-validate="require-notempty"
+                data-ui-role="date-picker"
+                data-format="yy-mm-dd HH:MM"
+                data-max="now" />
+            至
+            <input
+                type="text"
+                class="form-control xui-datePicker"
+                id="end_date"
+                name="end_date"
+                value=""
+                readonly="readonly"
+                data-enable-select-time="true"
+                data-validate="require-notempty"
+                data-ui-role="date-picker"
+                data-format="yy-mm-dd HH:MM"
+                data-min-el="#start_date"
+                data-max="now" />
+        </div>
+    </div>
+</div>
+<div class="xui-btn-group">
+    <a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+    <a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+</div>
+</script>

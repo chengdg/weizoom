@@ -1,4 +1,4 @@
-{% extends "content_base_v2.html" %}
+{% extends "apps_pc_content_base.html" %}
 
 {% load workbench_filter %}
 {% load apps_filter %}
@@ -168,7 +168,7 @@
         "task": "weizoom-load-termite-components"
       }
     -->
-  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.qa", "appkit.selection", "appkit.textlist", "appkit.submitbutton","appkit.uploadimg","appkit.dropdownbox"]'|load_termite_components|safe }}
+  {{ '["appkit.page", "appkit.componentadder", "appkit.surveydescription", "appkit.qa", "appkit.selection", "appkit.textlist", "appkit.submitbutton","appkit.uploadimg","appkit.dropdownbox"]'|load_apps_termite_components|safe }}
   <!-- *end_prunt_task* -->
 
 {% if not is_deleted_data %}

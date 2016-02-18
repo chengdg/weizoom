@@ -1,0 +1,386 @@
+{% extends "apps_pc_base.html" %}
+{% load project_filter %}
+{% load account_filter %}
+
+{% block content %}
+<div id="spin-wrapper">
+	<div id="spin"></div>
+	<div id="spin-hint" class="ml10"></div>
+</div>
+<div id="main-mask"></div>
+<div class="xui-header">
+	<div class="xui-i pr">
+		<div class="xui-logo">
+			<!-- <div class="xui-i-logoHref xa-i-logoHref"></div> -->
+			<img src="/apps_static/img/editor/topLogo.jpg" alt="" class="xa-i-logoHref">
+		</div>
+		<span class="xui-systemName"></span>
+		<div class="xui-headerActionBar">
+			{% if request.user.id == request.manager.id %}
+				{% if request.user.username != 'tuxiaobao' %}
+					<a href="{{ fans_host }}/auth/account_help/" target="_blank"><i class="xui-toolIcon"></i>权限管理</a>
+					<a href="javascript:void(0);" data-toggle="popover" id="mf"><i class="xui-toolIcon"></i>修改密码</a>
+				{% endif %}
+				{% if request.user.username == 'malla' or request.user.username == 'ceshi01' or request.user.username == 'jobs' %}
+					<a href="{{ fans_host }}/message/message_list/?from=portal" target="_blank"><i class="xui-toolIcon"></i>系统通知<i class="xui-noticyTip" style="display:none" id ="message_count"></i></a>
+					<a href="{{ fans_host }}/help_center/outline/" target="_blank"><i class="xui-toolIcon"></i>帮助中心</a>
+				{% endif %}
+				<div id='popover_tmpl' style="display:none;">
+					<form class="form-horizontal">
+						<div class="control-group">
+							<span class="control-label" for="old_password">当前密码</span>
+							<span class="controls">
+								<input type="password" id="old_password" name="old_password"/>
+							</span>
+						</div>
+
+						<div class="control-group">
+							<span class="control-label pr15" for="new_password">新密码</span>
+							<span class="controls">
+								<input type="password" id="new_password" name="new_password" />
+							</span>
+						</div>
+
+						<div class="control-group">
+							<span class="control-label" for="confirm_password">确认密码</span>
+							<span class="controls">
+								<input type="password" id="confirm_password" name="confirm_password"/>
+								<p class="origin edit_password" error="old_password"></p>
+							</span>
+						</div>
+
+						<div class="control-group tc">
+							<input type="button" class="btn btn-primary xa-submit btn-sm " value="保存" />
+							<input type="button" class="btn btn-default xa-cancle btn-sm" value="取消" />
+						</div>
+					</form>
+				</div>
+			{% endif %}
+			<span class="ml15">欢迎您：{{ request.user.username }}</span>
+			<a href="javascript:void(0)" onclick="logout()" title="{{ request.user.username }}" class="ml10">退出</a>
+			</span>
+				
+		</div>
+	</div>
+	<div class="xui-navBar xa-navBar">
+		<div class="xui-i pr">
+			<ul class="xui-navBar-box clearStyle xa-first-navs" style="visibility:hidden;">
+				{% if first_navs %}
+					{% for nav in first_navs %}
+						<li class="pr {% ifequal nav.name '粉丝招募平台' %}xui-i-bigDataTab{% endifequal %}">
+							<a {% ifequal first_nav_name nav.inner_name %}class="active"{% endifequal %} href="{{nav.url}}{% if nav.need_token %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title='{{nav.name}}'>{{nav.name}}</a>
+							{% if nav.class_name %}<i class="xui-noticyTip {{nav.class_name}}"></i>{% endif %}
+						</li>
+					{% endfor %}
+				{% endif %}
+			</ul>
+			
+		</div>
+	</div>
+</div>
+
+<div id="" class="xui-mainPanel">
+	<div class="xui-container pr">
+		<!-- 左侧垂直方向二级导航 -->
+		{% if second_navs %}
+			<div id="" class="xui-sideBar xa-sideBar pa xui-sideBarBg" style="visibility:hidden;">
+				<ul class="nav">
+				{% for second_nav in second_navs %}
+					{% for nav in second_nav.navs %}
+						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
+							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+								<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
+								<i class="xui-icon-arrow"></i>
+							</a>
+						</li>
+						<!-- 三级导航 -->
+						{% if nav.third_navs %}
+							{% for third_nav in nav.third_navs %}
+                                {% if third_nav.name == 'exsurveies'%}
+                                    {% if request.manager.username in third_nav.users %}
+                                    <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
+                                        <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
+                                            <i class="xui-icon-arrow"></i>
+                                            {% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
+                                        <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;{{third_nav.title|safe}}
+                                            <i class="xui-icon-arrow"></i>
+                                            {% if third_nav.class_name %}<i class="xui-noticyTip {{third_nav.class_name}}"></i>{% endif %}
+                                        </a>
+                                    </li>
+                                {% endif %}
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
+		<!-- 内容 start -->
+		<div class="span9 pr xui-content xa-content" style="visibility:hidden;">
+			{% block content-panel %}{% endblock %}
+		</div>
+		<!-- 内容 end -->
+	</div>
+</div>
+
+<div class="footer xui-footer">
+	<div class="xui-content">
+		<div class="xui-i" style="">
+			<p style="color:#cd0205">系统负责人：010-50948901&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统服务微信号：2575261826</p>
+			<p>Copyright&nbsp;&copy; 2012-2015 weizoom.com 微众传媒 版权所有&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.weizoom.com">微众传媒</a> 旗下微众云商通</p>
+		</div>
+		<div class="xui-i">
+			<img width="80" height="80" src="/apps_static/img/editor/sys_QRcode.jpg" class="fl"><span class="fl mt20 ml10 xui-greyColor">扫码添加<br>微信号</span>
+		</div>
+	</div>
+</div>
+
+{% block global_elements %}{% endblock %}
+{% endblock %}
+
+{% block base_js %}
+<div id="jsons" style="display: none;">
+	{% for json in jsons %}
+	<div id="__json-{{json.name}}">
+		{{json.content|format_json|ltgt_translate|safe}}
+	</div>
+	{% endfor %}
+</div>
+
+<script type="text/javascript">
+	W.uid = {{ user.id }};
+	W.mid = {{ request.manager.id }};
+	W.username = "{{ user.username }}";
+	W.host = "{{request.META.HTTP_HOST}}";
+	W.API_VERSION = 1;
+	W.isUnderDevelop = {% if under_develop %}true{% else %}false{% endif %};
+	W.isUseWepage = {% if user.get_profile.is_use_wepage %}true{% else %}false{% endif %};
+
+	{% if preview_info %}
+	  W.previewName = "{{ preview_info.name }}";
+	  W.previewImage = "{{ preview_info.image_path }}";
+	{% else %}
+	  W.previewName = "信息预览";
+	  W.previewImage = "/static/img/user-1.jpg";
+	{% endif %}
+
+</script>
+<script type="text/javascript">
+	document.addEventListener("visibilitychange", common_interval_check_func, false);
+
+	function common_interval_check_func(){
+		if(document.visibilityState != 'visible'){
+			return
+		}
+		W.getApi().call({
+			app:'new_weixin',
+			resource:'outline',
+			showLoading: false,
+			args:{},
+			success: function (data) {
+				//待发货订单计数
+				var unship_order_count = data.unship_order_count;
+				var orderTipItem = $('.xa-orderTip');
+				if(unship_order_count>0){
+					orderTipItem.show();
+					if(unship_order_count>99){
+						orderTipItem.text(99);
+					}
+					else{
+						orderTipItem.text(unship_order_count);
+					}
+				}
+				else{
+					orderTipItem.hide();
+					orderTipItem.text(0);
+				}
+
+				//微信未读消息计数
+				var unreadRealtimeCount = data.unread_realtime_count;
+				var msgTip = $('.xa-msgTip');
+				if (unreadRealtimeCount > 0){
+					msgTip.show();
+					if (parseInt(unreadRealtimeCount) > 99){
+						unreadRealtimeCount = '99+'
+					}
+					msgTip.text(unreadRealtimeCount);
+				} else {
+					msgTip.hide();
+				}
+			},error: function(resp) {
+				//TODO 进行错误通知
+			}
+		});
+	}
+
+	
+
+	$(document).ready(function($) {
+		
+		setTimeout(function(){
+			common_interval_check_func();
+			{% if not under_develop %}
+				var common_interval_check = setInterval(common_interval_check_func, 10000);
+			{% endif %}
+		}, 1500);
+
+		// 批量发货
+		$('a[name="orderBatchDelivery"]').click(function(event){
+			W.dialog.showDialog('W.dialog.common.OrderBatchDeliverDialog', {
+				success: function(data) {
+					// W.getLoadingView().show();
+
+					W.getApi().call({
+						app: 'mall2',
+						resource: 'bulk_shipment',
+						method: 'post',
+						args: {
+							file_url: data
+						},
+						success: function(data) {
+							console.log('bulk_shipments/update', data.error_count);
+							if (data.error_count == 0) {
+								W.getSuccessHintView().show('批量处理已完成！成功'+data['success_count']+'条');
+								W.getLoadingView().hide();
+							} else {
+								W.dialog.showDialog('W.dialog.common.OrderResultBatchDeliverDialog', {
+										data: data,
+										success: function(data) {},
+										error: function(data) {}
+									});
+							}
+							if (data.success_count>0){
+								common_interval_check_func();
+							}
+
+						},
+						error: function(resp) {
+							W.getLoadingView().hide();
+							W.getErrorHintView().show('处理失败，请稍后重试！66666');
+						}
+					})
+				}
+			});
+		});
+		var tmpl = getPopoverContent();
+		$('#mf').popover({
+			html: true,
+			trigger: "click",
+			content: tmpl,
+			container: '.xui-headerActionBar',
+			animation: false,
+			placement: "bottom",
+			template: '<div class="popover" role="tooltip" id="popover"><div class="arrow"></div><div class="popover-content"></div></div>'
+		});
+		$('#mf').on('shown.bs.popover',initSubmit);
+		function getPopoverContent(){
+			var result = $('#popover_tmpl').html();
+			$('#popover_tmpl').remove();
+			return result;
+		}
+		//获取message_count
+		if(localStorage.getItem('message_count') ==null){
+			$.ajax({
+			url:'{{fans_host}}/count/message_count/',
+			type:'post',
+			dataType:'jsonp',
+			success:function(response) {
+				if (response.code == 200) {
+					localStorage.message_count=response.data.message_count;
+					$("#message_count").html(localStorage.message_count)
+					$("#message_count").css('display','inline');
+				}else{
+					xlog("获取message_count失败")
+				}
+			}
+		});
+		}else{
+			$("#message_count").html(localStorage.message_count)
+			$("#message_count").css('display','inline');
+		}
+
+		function initSubmit(){
+			$('#old_password').val('');
+			$('.xa-cancle').on('click',function(){
+				$('#mf').popover('hide');
+			});
+			$('.xa-submit').on('click',function(){
+				var oldPassword = $('#old_password').val();
+				var newPassword = $('#new_password').val();
+				var confirmPassword = $('#confirm_password').val();
+			
+				if (oldPassword.length == 0) {
+					$('.edit_password').text("请输入初始密码").css('display', 'block');
+					return false;
+				}
+				if (newPassword.length == 0) {
+					$('.edit_password').text("请输入新密码").css('display', 'block');
+					return false;
+				}
+				if (confirmPassword.length == 0) {
+					$('.edit_password').text("请输入确认密码").css('display', 'block');
+					return false;
+				}
+				if (newPassword != confirmPassword && confirmPassword !=0) {
+					$('.edit_password').text("两次密码输入不一致").css('display', 'block');
+					return false;
+				}
+
+				$.ajax({
+					url:'{{fans_host}}/password/update/',
+					type:'post',
+					dataType:'jsonp',
+					data:{
+						old_password: oldPassword,
+						new_password: newPassword,
+						confirm_password: confirmPassword
+					},
+					// xhrFields: {withCredentials: true},
+					// crossDomain: true,
+					success:function(response) {
+						if (response.code == 200) {
+							if (response.data.success) {
+								$('.edit_password').text("").css('display', 'block');
+								alert("修改成功");
+							} else {
+								alert(response.data.reason);
+							}
+							$('#old_password').val('');
+							$('#new_password').val('');
+							$('#confirm_password').val('');
+						}
+						else{
+							$('.edit_password').text("初始密码不正确").css('display', 'block');	
+						}
+					}
+				});
+
+
+				return false;
+			});
+		}
+
+		// 导航右边线选中无
+		$('.xui-navBar a.active').parent('li').prev().children('a').addClass('xui-rightBorder');
+	});
+
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function($) {
+
+	$('.xa-i-logoHref').click(function(event){
+		location.href = "/mall2/outline/";
+	});
+});
+</script>
+{% block js %}{% endblock %}
+{% endblock %}

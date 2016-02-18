@@ -1,0 +1,192 @@
+<script id="member-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label class="">会员名称：</label>
+			<input type="text" class="form-control " id="name" name="name" value="" />
+		</div>
+		<div class="xui-i-item">
+			<label>会员等级：</label>
+			<select id="grade" name="grade">
+				<option value="-1">全部</option>
+				{{each(i, grade) grades}}
+				<option value="${grade.id}" name="grade">${grade.name}</option>
+				{{/each}}
+			</select>
+		</div>
+	
+	</div>
+
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>会员状态：</label>
+			<select id="status" name="status">
+				<option value="1" {{if status == "1"}}selected="selected"{{/if}}>已关注</option>
+				<option value="-1" {{if status == "-1"}}selected="selected"{{/if}}>全部</option>
+				<option value="0" {{if status == "0"}}selected="selected"{{/if}}>取消关注</option>
+				
+			</select>
+		</div>
+		<div class="xui-i-item">
+			<label>会员分组：</label>
+			<select id="member_tag" name="member_tag">
+				<option value="-1">全部</option>
+				{{each(i, tag) tags}}
+				<option value="${tag.id}" name="tag">${tag.name}</option>
+				{{/each}}
+			</select>
+		</div>
+	</div>
+
+	<div class="xui-col disTc">
+			
+		<div class="xui-i-item">
+			<label>关注时间：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="sub_start_date"
+				name="sub_start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="sub_end_date"
+				name="sub_end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"
+			    data-min-el="#sub_start_date"/>
+		</div>
+		<div class="xui-i-item">
+			<label>会员来源：</label>
+			<select id="source" name="source">
+				<option value="-1">全部</option>
+				<option value="0">直接关注</option>
+				<option value="1">推广扫码</option>
+				<option value="2">会员分享</option>
+			</select>
+		</div>
+	</div>
+<div class="hidden more-filter">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>消费总额
+			：</label>
+
+			<input type="text" name="pay_money" class="form-control xui-w100 pay_money"/>
+			&nbsp;~&nbsp;
+			<input type="text" name="pay_money" class="form-control xui-w100 pay_money"/>
+		</div>
+		<div class="xui-i-item">
+			<label>积分范围
+			：</label>
+
+			<input type="text" name="integral" class="form-control xui-w100 integral"/>
+			&nbsp;~&nbsp;
+			<input type="text" name="integral" class="form-control xui-w100 integral"/>
+		</div>
+	</div>
+	<div class="xui-col disTc">
+
+		<div class="xui-i-item">
+			<label>购买次数
+			：</label>
+
+			<input type="text" name="pay_times" class="form-control xui-w100 pay_times"/>
+			&nbsp;~&nbsp;
+			<input type="text" name="pay_times" class="form-control xui-w100 pay_times"/>
+		</div>
+	</div>
+
+	<div class="xui-col disTc">
+		
+		<div class="xui-i-item">
+			<label>最后购买时间
+			：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="first_pay_start_date"
+				name="first_pay_start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="first_pay_end_date"
+				name="first_pay_end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"
+			    data-min-el="#first_pay_start_date"/>
+		</div>
+		<div class="xui-i-item">
+			<label>最后对话时间
+			：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="last_message_start_time"
+				name="last_message_start_time"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"/>
+			<span class="ml5 mr5">至</span>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="last_message_end_time"
+				name="first_pay_end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH-MM"
+			    data-max="now"
+			    data-min-el="#last_message_start_time"/>
+		</div>
+	</div>
+	</div>
+</div>
+<div class="tr">
+
+
+	<button class="btn btn-link xa-more-filter">>><span  class="mr20">展开</span></button>
+</div>
+<div class="tc">
+
+	<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查询</a>
+	<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重置</a>
+	<!--<a class="btn btn-default xa-more-filter" href="javascript:void(0);">高级查询</a>-->
+</div>
+</script>

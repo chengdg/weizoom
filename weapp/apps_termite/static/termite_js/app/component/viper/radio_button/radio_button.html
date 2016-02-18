@@ -1,0 +1,72 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.radio_button_group' %}
+<!-- =====> viper:radio_button_group component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="p5" 
+>
+{% endif %}
+
+    {% with component|get_component_name as name %}
+    <div class="control-group">
+        <label class="control-label" for="{{component|get_component_name}}">{{component.model.label}}：</label>
+        <div  class="xa-errorHintContainer controls {%ifequal component.model.orientation 'vertical'%}pt5{%endifequal%}">
+            <div name="{{component.model.name}}" id="{{component.model.id}}" class="{{component.model.class}} xui-radioGroup">
+                {% if in_design_mode %}
+                    {{ component|join_sub_components_html|safe }}
+                {% else %}
+                    {% ifequal component.model.datasource_field '#' %}
+                        {{ component|join_sub_components_html|safe }}
+                    {% else %}
+                        {% for item in component|get_related_radio_items:request %}
+                        {% with item|get_component_name as name %}
+                        <label class="radio inline">
+                            <input id="{{name}}" type="radio" value="{{item.model.text}}" name="{{name}}" {% if page.record|is_radio_checked:item %}checked="checked"{% endif %}/><span>{{item.model.text}}</span>
+                        </label>
+                        {% endwith %}
+                        {% endfor %}
+                    {% endifequal %}
+                {% endif %}
+            </div>
+            <div class="errorHint">
+                {% if in_design_mode %}name="{{name}}"{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:radio_button_group component -->
+{% endifequal %}    
+
+{% ifequal component.type 'viper.radio_button' %}
+    {% with component|get_component_name as name %}
+        <label class="radio {%ifequal component.parent_component.model.orientation 'horizontal'%}inline{%endifequal%}" data-cid="{{component.cid}}">
+            <input 
+                id="{{name}}" 
+                type="radio" 
+                name="{{component.parent_component|get_component_name}}" 
+                value='json:{ "type":"radio","text":"{{component.model.text}}","value":"{{component.model.value}}" }' 
+                {% if request.in_generate_mode %}
+                <% if record %>
+                    <% if '"value":"{{component.model.value}}"' in record.{{component.parent_component|get_component_name}} %>checked="checked"<% endif %>
+                <% else %>
+                    {% if component.model.is_checked == 'yes' %}
+                    checked="checked"
+                    {% endif %}
+                <% endif %>
+                {% else %}
+                {% if page.record|is_radio_checked:component %}checked="checked"{% endif %} 
+                {% endif %}
+            /><span>{{component.model.text|format_input_in_radio_text:component|safe}}</span>
+        </label>
+    {% endwith %}
+{% endifequal %}

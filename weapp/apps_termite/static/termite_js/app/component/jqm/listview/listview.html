@@ -1,0 +1,123 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.listview' %}
+{% if in_production_mode_not %}
+    <ul 
+        data-role="listview" 
+        data-divider-theme="{{component.model.divider_theme}}" 
+        {% ifequal component.model.is_inset 'yes' %}data-inset="true"{% else %}data-inset="false"{% endifequal%}
+        class={{component.model.class}}
+    >
+        {% with component.jqmlistview_button.model as button_model %}
+        {% for data_group in component.datasources.data_groups %}
+            {% if data_group.title %}
+            <li data-role="list-divider" role="heading" data-cid="{{component.cid}}">
+                {{data_group.title}}
+            </li>
+            {% endif %}
+            {% for data in data_group.datas %}
+            <li 
+                data-theme="{{button_model.theme}}" 
+                class="{% if data.item__bubble_text %}ui-li-has-count{% endif %}" 
+
+                {% if component.model.icon %}
+                data-icon="{{component.model.icon}}"
+                {% else %}
+                data-icon="false"
+                {% endif %}
+            >
+                <a href="{{data.item__link|add_link_target:button_model.target}}" data-transition="slide">
+                    {% if data.item__image %}
+                    <img src="{{data.item__image}}" />
+                    {% endif %}
+
+                    {% if data.item__title %}
+                    <h2>{{ data.item__title }}</h2>
+                    {% endif %}
+                    
+                    {% if data.item__detail %}
+                    <p>{{ data.item__detail|safe }}</p>
+                    {% endif %}
+
+                    {% if data.item__count %}
+                    <span class="ui-li-count">
+                    {{ data.item__count }}
+                    </span>
+                    {% endif %}
+                </a>
+            </li>
+            {% endfor %}
+        {% endfor %}
+        {% endwith %}
+    </ul>
+{% else %}
+    <div 
+        {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+        data-ui-sortable="true" 
+        data-cid="{{component.cid}}" 
+        data-index="{{component.model.index}}" 
+        class="mb20"
+    >
+        <ul 
+            data-role="listview" 
+            data-divider-theme="{{component.model.divider_theme}}" 
+            {% ifequal component.model.is_inset 'yes' %}data-inset="true"{% else %}data-inset="false"{% endifequal%} 
+            class={{component.model.class}}
+        >
+            {{ component|join_sub_components_html|safe }} 
+        </ul>
+    </div>
+{% endif %}
+{% endifequal %}    
+
+
+{% ifequal component.type 'jqm.listview_button' %}
+    {% if in_production_mode_not %}
+    {% else %}
+    {% with component.model as model %}
+    <li 
+        data-theme="{{model.theme}}" 
+        data-cid="{{component.cid}}" 
+        class="{% if model.bubble_text %}ui-li-has-count{% endif %}" 
+
+        {% if component.model.icon %}
+        data-icon="{{component.model.icon}}"
+        {% else %}
+        data-icon="false"
+        {% endif %}
+    >
+        <a href="{{component.model.target|extract_target_data:request|safe}}" data-transition="slide">
+            {% if model.image %}
+            <img src="{{model.image}}" />
+            {% endif %}
+
+            {% if model.text %}
+            <h2 class="xui-listview-button-text">{{ model.text }}</h2>
+            {% endif %}
+
+            {% if model.detail %}
+            <p class="xui-listview-button-detail">{{ model.detail }}</p>
+            {% endif %}
+
+            {% if model.bubble_text %}
+            <span class="ui-li-count">
+                {{ model.bubble_text }}
+            </span>
+            {% endif %}
+            
+        </a>
+    </li>
+    {% endwith %}
+    {% endif %}
+{% endifequal %}
+
+
+{% ifequal component.type 'jqm.listview_divider' %}
+    {% if in_production_mode %}
+    {% else %}
+    <li data-role="list-divider" role="heading" data-cid="{{component.cid}}">
+    {{component.model.text}}
+    </li>
+    {% endif %}
+{% endifequal %}

@@ -1,0 +1,17 @@
+{% load workbench_filter %}
+{% if component.type == 'weapp.headernav_group' %}
+<div class="wui-HeaderNav">
+	<ul class="wui-headerNav"
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable" {% endifequal %} 
+    data-ui-sortable="true"
+    data-cid="{{component.cid}}">
+    	{% for sub_component in component.components %}
+		<li class="w{{component.components|length}}{% if forloop.first %} wui-headerNav-active{% endif %}" data-tag="{{sub_component.model.tag}}">
+			<a data-cid="{{sub_component.cid}}">
+				<div{% if forloop.last %} class="wui-headerNav-last"{% endif%}>{{sub_component.model.title}}</div>
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endif %}

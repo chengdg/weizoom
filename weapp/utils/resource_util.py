@@ -17,8 +17,10 @@ def get_web_dialogs(version):
 	dirs = []
 	if version == '1':
 		WEAPP_WEB_DIALOG_DIRS = settings.WEAPP_WEB_DIALOG_DIRS
-	else:
+	elif version == '2':
 		WEAPP_WEB_DIALOG_DIRS = settings.WEAPP_WEB_DIALOG_DIRS_V2
+	else:
+		WEAPP_WEB_DIALOG_DIRS = settings.WEAPP_WEB_DIALOG_DIRS_APPS
 
 	for url_path, weapp_dialog_dir_path in WEAPP_WEB_DIALOG_DIRS:
 		if weapp_dialog_dir_path.endswith('*'):
@@ -85,8 +87,10 @@ def get_web_views(version):
 	dirs = []
 	if version == '1':
 		WEAPP_WEB_VIEW_DIRS = settings.WEAPP_WEB_VIEW_DIRS
-	else:
+	elif version == '2':
 		WEAPP_WEB_VIEW_DIRS = settings.WEAPP_WEB_VIEW_DIRS_V2
+	else:
+		WEAPP_WEB_VIEW_DIRS = settings.WEAPP_WEB_VIEW_DIRS_APPS
 	for url_path, weapp_view_dir_path in WEAPP_WEB_VIEW_DIRS:
 		if weapp_view_dir_path.endswith('*'):
 			weapp_view_dir_path = weapp_view_dir_path[:-2]
@@ -149,7 +153,7 @@ def get_web_views(version):
 				js_url_path = '/%s/%s/js/view/%s/view.js' % (dir['url_path'], dir['module'], view_name)
 			else:
 				js_url_path = '/%s/js/view/%s/view.js' % (dir['url_path'], view_name)
-				
+
 			#print('js_file_path:{}'.format(js_file_path))
 			views.append({
 				'template_file_path': template_file_path,
@@ -157,7 +161,6 @@ def get_web_views(version):
 				'js_file_path': js_file_path,
 				'js_url_path': js_url_path
 			})
-
 	return views
 
 
@@ -168,8 +171,10 @@ def get_web_models(version):
 	dirs = []
 	if version == '1':
 		WEAPP_WEB_MODEL_DIRS = settings.WEAPP_WEB_MODEL_DIRS
-	else:
+	elif version == '2':
 		WEAPP_WEB_MODEL_DIRS = settings.WEAPP_WEB_MODEL_DIRS_V2
+	else:
+		WEAPP_WEB_MODEL_DIRS = settings.WEAPP_WEB_MODEL_DIRS_APPS
 	for url_path, weapp_view_dir_path in WEAPP_WEB_MODEL_DIRS:
 		if weapp_view_dir_path.endswith('*'):
 			weapp_view_dir_path = weapp_view_dir_path[:-2]

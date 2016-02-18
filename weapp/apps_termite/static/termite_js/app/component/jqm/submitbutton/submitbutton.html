@@ -1,0 +1,21 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.submitbutton' %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    style="padding: 3px 0px;"
+>
+    <input         
+        {% ifequal component.model.is_inline "yes" %}data-inline="true"{% endifequal %} 
+        {% if component.model.theme %}data-theme="{{component.model.theme}}"{% endif %} 
+        value="{{component.model.text}}" 
+        type = "submit" 
+        id="{{component.model.id}}" 
+        class="{{component.model.class}}" 
+    >
+</div>
+{% endifequal %}

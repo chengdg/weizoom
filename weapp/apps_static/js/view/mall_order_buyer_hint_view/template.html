@@ -1,0 +1,15 @@
+<script id="buyerHint-view" type="text/x-jquery-tmpl">
+
+	{{if delivery_time}}
+	<div><b>配送时间</b></div>
+	<div style="margin-left: 14px;">${delivery_time}</div>
+	{{/if}}
+
+	<div><b>收货地址</b></div>
+	<div style="margin-left: 14px;">${addr}</div>
+	<div style="margin-left: 14px;">电话：${tel}</div>
+	<div style="margin-left: 14px;">买家留言：${message}</div>
+	<div><b>发票信息</b></div>
+	<div style="margin-left: 14px;">发票抬头：${bill_type}</div>
+	<div style="margin-left: 75px;">${bill}</div>
+</script>

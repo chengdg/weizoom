@@ -1,0 +1,20 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.textblock' %}
+{% if in_production_mode %}
+    <p class="{{component.model.class}}">
+        {{component.datasources.text|linebreaksbr}}
+    </p>	
+{% else %}
+	<div 
+	    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+	    data-ui-sortable="true" 
+	    data-cid="{{component.cid}}"
+	>
+	    <p class="{{component.model.class}}">
+	        {{component.model.text|linebreaksbr}}
+	    </p>
+	</div>
+{% endif %}
+{% endifequal %}

@@ -1,0 +1,94 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'wepage.navbar' %}
+<div 
+	class="wui-template-globalNavbar"
+	data-component-cid="{{component.cid}}" 
+	style=""
+>
+
+    {% if component.model.type == "weixin" %}
+    <!-- 微信导航 -->
+	<div class="xui-globalBottomBar" data-ui-role="bottomNav">
+        <div class="xui-home">
+            <a href="/workbench/jqm/preview/?workspace_id=home_page&webapp_owner_id={{request.webapp_owner_id}}&project_id=0" class="xui-bg"></a>
+        </div>
+        <div class="xui-calc">
+            {% for component in component.components %}
+            <div class="xui-menuBox xui-flex-{{component.parent_component.sub_component_count}}">
+                <div data-component-cid="{{component.cid}}" class="xa-wepage-navbar-link xui-flex  xui-menu xa-menu f14">
+                    <a href="javascript:void(0);" data-link="{% if component.model.second_navs %}{% else %}{{ component.model.target|extract_target_data:request|safe }}{% endif %}">
+                        {% if component.model.second_navs %}
+                        <img src="/static_v2/img/termite2/menu-icon.png"/>{% endif %}<span class="wa-inner-link">{{ component.model.title }}</span>
+                    </a>   
+                </div>
+                <div class="xui-subMenuContainer">
+                    <span class="xui-menuArrow"></span>
+                    <span class="xui-menuArrowBorder"></span>
+                    <ul class="xui-subMenu">
+                        {% for second_nav in component.model.second_navs %}
+                        <li class="f14 xa-wepage-navbar-link"><a href="javascript:void(0);" data-link="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+	</div>
+    <div class="xui-hide" data-ui-role="sideNav"></div>
+
+    {% else %}
+    <!-- 侧滑导航 -->
+	<div class="wui-weshopSideBar" data-ui-role="sideNav" {% if in_design_mode %}data-disable-switch="true" data-auto-active="product-category"{% endif %}>
+		<div class="xui-globalSideBar">
+			<div class="xui-bottomNav">
+				<ul class="">
+					<li class="xa-outLink" data-page="home">
+                        <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=homepage"><i class="xui-bg"></i></a>
+                    </li>
+					<li class="xa-category" data-page="product-category"><i class="xui-bg{% if in_design_mode %} xui-active {% endif %}"></i></li>
+					<li class="xa-outLink" data-page="shopping-cart">
+                        <a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=shopping_cart&action=show&workspace_id=mall">
+                            <i class="xui-bg">
+                            <span class="xui-shopCar xa-shopCarCount {% if shopping_cart_product_count %}{% else %}xui-hide{% endif %}">{{ shopping_cart_product_count }}</span>
+                            </i>
+                        </a>
+					</li>
+					<li class="xa-outLink xa-wepage-navbar-link" data-page="usercenter">
+                        <a href="javascript:void(0);" data-link="/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}"><i class="xui-bg"></i></a>
+                    </li>
+				</ul>
+			</div>
+		</div>
+		<div class="xui-sidePanel xa-sidePanel"  {% if in_production_mode %}id="xa-sidePanel" {% endif %} {% if in_design_mode %}style="display:block;"{% endif %}>
+			<ul class="xui-mainMenu">
+				<li class="xui-firstNav">
+					<a href="/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list">
+						<span>全部商品<i class="xui-leftArrow"></i></span>
+					</a>
+                </li>
+
+                {% for component in component.components %}
+                <li class="xui-firstNav xa-firstNav" data-component-cid="{{component.cid}}"> 
+                    <a href="{% if component.model.second_navs %}javascript:void(0);{% else %}{{ component.model.target|extract_target_data:request|safe }}{% endif %}">
+                        <span ><em class="wa-inner-link">{{ component.model.title }}</em><i class="xui-leftArrow"></i></span>
+                    </a>
+                    <ul class="xui-subMenu">                        
+                        {% for second_nav in component.model.second_navs %}
+                        <li><a class="pl50" href="{{ second_nav.target|extract_target_data:request|safe }}">{{ second_nav.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+                <li class="xui-firstNav"></li>
+			</ul>
+		</div>
+	</div>    
+    <div class="xui-hide" data-ui-role="bottomNav"></div>
+    {% endif %}
+    <!-- <div data-ui-role="swipemask" class="mask"></div>
+    <div class="xui-two-dimension">
+        <img src="{{ current_auth_qrcode_img }}">
+    </div> -->
+</div>
+{% endifequal %}

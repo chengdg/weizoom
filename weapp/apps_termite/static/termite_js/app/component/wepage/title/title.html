@@ -1,0 +1,24 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'wepage.title' %}
+<div 
+	class="wui-title"
+    data-component-cid="{{component.cid}}" 
+    style="background-color: {{component.model.background_color}};text-align:{{component.model.align}}"
+>
+    <div class="wa-inner-title wui-inner-title" style="font-weight: bold;">
+    	{{component.model.title}}
+    </div>
+    <div class="c65 wa-subtitle" 
+        {% if component.model.subtitle %}
+        {% else %}
+            {% if component.model.time %}
+            {% else %}
+                style="display:none;"
+            {% endif %}
+        {% endif %}>
+	    <span class="wa-inner-subtitle wui-inner-subtitle">{{component.model.subtitle}}</span>
+	    <p class="wa-inner-time wui-inner-time">{{component.model.time}}</p>
+    </div>
+</div>
+{% endifequal %}

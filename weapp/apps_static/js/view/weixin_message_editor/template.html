@@ -1,0 +1,34 @@
+<script id="weixin-message-eidtor-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="wui-messageEditor">
+		<div>
+			<div class="">
+				<ul class="nav nav-tabs xui-changeStyle">
+					<li class="active"><a href="#weixinMessageEditer-textMessageZone" class="xa-text" data-toggle="tab">文字</a></li>
+					<li><a href="#weixinMessageEditer-newsMessageZone" class="xa-news" data-toggle="tab">图文消息</a></li>
+				</ul>
+
+				<!-- 时间选择器 -->
+				<div class="tab-content">
+					<!-- 文字消息 -->
+					<div class="tab-pane active xui-borderBottomNone" id="weixinMessageEditer-textMessageZone">
+						<textarea id="weixinMessageText" rows="7" name="text_content" data-validate="require-string" data-validate-max-length="600" data-validate-min-length="1" class="xui-hide"></textarea>
+					</div>
+
+					<!-- 图文消息 -->
+					<div class="tab-pane pt10 pl10 wui-newsMessage" id="weixinMessageEditer-newsMessageZone">
+						<div class="xa-newsMessageZone">
+						</div>
+						<a href="javascript:void(0);" class="xa-changeNews m10 xui-inlineblock">更换</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{if helptext}}
+   			<p style="  color: red;font-size: 14px;white-space: nowrap;margin-top:10px;">${helptext}</p>
+   		{{/if}}
+		<div id="weixin-editor-btn" class="mt5 tl">
+			<a href="javascript:void(0);" class="xa-submit btn btn-success xui-weixinMessageBtn">确&nbsp;&nbsp;定</a>
+			<a href="javascript:void(0);" class="xa-cancel btn btn-default ml20">取&nbsp;&nbsp;消</a>
+		</div>
+	</div>
+</script>

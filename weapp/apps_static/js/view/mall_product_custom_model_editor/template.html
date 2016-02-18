@@ -1,0 +1,177 @@
+<script id="mall-product-custom-model-property-editor-tmpl-src" type="text/x-jquery-tmpl">
+<legend class="pr">
+	${title}
+	<div style="position: absolute; bottom: 5px; right: 10px; line-height: 20px;" class="checkbox">
+		<label style="width:100px;">
+			<input type="checkbox" name="is_use_custom_model" class="xa-useCustomModel" value="true" {{if isUseCustomModel}}checked="checked"{{/if}}/> 使用定制规格
+		</label>
+	</div>
+</legend>
+<div class="xa-standardModel {{if isUseCustomModel}}xui-hide{{/if}}">
+	<div class="form-group ">
+		<label class="control-label fl" for="price">商品价格：</label>
+		<div class="fl">
+			<input type="text" class="form-control w106" id="price" name="price"
+                   placeholder="" value="${standardModel.price}"
+                   data-validate="require-price"
+                   {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}
+      >
+			<div class="errorHint" data-error-hint="请输入正确的价格" > </div>
+		</div>
+		<span style="font-size:12px;line-height:24px;font-family:Arial;position:relative; left:10px;">元</span>
+	</div>
+
+	<div class="form-group nostar">
+		<label class="control-label fl" for="user_code">商品编码：</label>
+		<div class="fl">
+			<input type="text" class="form-control w106" id="user_code" maxlength=15 name="user_code" placeholder="" value="${standardModel.user_code}" data-validate="require-custom-function" data-validate-function="validateUserCode" {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}/>
+			<div class="errorHint"></div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label fl" for="weight">商品重量：</label>
+		<div class="fl">
+			<input type="text" class="form-control w106" id="weight" name="weight"
+                   placeholder="" value="${standardModel.weight}"
+                   data-validate="require-float-three"
+                   {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}/>
+			<div class="errorHint" data-error-hint="请输入正确的重量"></div>
+		</div>
+		<span style="font-size:12px;line-height:24px;font-family:Arial;position:relative; left:10px;">kg</span>
+	</div>
+
+	<div class="form-group x-stock">
+		<label class="control-label fl">商品库存：</label>
+		<div class="">
+			<div class="radio ">
+				<label>
+					<input
+						class="xa-stockTypeRadio"
+						type="radio"
+						name="stock_type"
+						value="0"
+						{{if standardModel.stock_type != 1}}checked="checked"{{/if}}>无限
+				</label>
+			</div>
+
+			<div class="radio ml200">
+				<label class="">
+					<input
+						class="xa-stockTypeRadio"
+						type="radio"
+						name="stock_type"
+						value="1"
+						{{if standardModel.stock_type == 1}}checked="checked"{{/if}} />有限&nbsp;
+				</label>
+				<div class="">
+					<input
+						type="text"
+						class="
+						    w106
+							xa-stockCount
+							{{if standardModel.stock_type == 0}}xui-invisible{{/if}}
+							{{if !standardModel.stock_type}}xui-invisible{{/if}}
+						"
+						name="stocks"
+						placeholder="输入商品数量"
+						value="{{if standardModel.stocks == '无限'}}0{{else}}${standardModel.stocks}{{/if}}"
+						style="padding: 0px 2px;" />
+					<span class="errorHint"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="xa-customModel {{if !isUseCustomModel}}xui-hide{{/if}}">
+	<div class="xa-customModelTable" style="padding-left:40px; padding-right:40px;">
+	</div>
+	<div class="control-group">
+		<a href="javascript:void(0);" class="btn xui-button xa-selectProductModelProperty mb20 ml20"><i class="icon-white icon-plus"></i> 添加规格</a>
+	</div>
+</div>
+</script>
+
+
+<script id="mall-product-custom-model-property-editor-custom-model-table-tmpl-src" type="text/x-jquery-tmpl">
+	<table class="table table-bordered table-condensed xb-noTdBorder xb-theadBordered xb-noBorder">
+		<thead>
+			<tr>
+				{{each(i, header) headers}}
+				<th>${header.name}</th>
+				{{/each}}
+				<th width="60">价格（元）</th>
+				<th width="120">库存</th>
+				<th width="60">重量（kg）</th>
+				<th width="60">商品编码</th>
+				<th width="60">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each(i, model) models}}
+			<tr data-model-name="${model.modelId}">
+				{{each(j, propertyValue) model.propertyValues}}
+				<td>${propertyValue.name}</td>
+				{{/each}}
+				<td style="width:125px;">
+					<input type="text" class="form-control xa-price" value="${model.price}" data-validate="require-price"/>
+					<div class="errorHint pa" data-error-hint="请输入正确的价格"></div>
+				</td>
+
+				<td style="text-align: left;">
+					<div class="radio">
+						<label>
+							<input
+								class="xa-stockTypeRadio"
+								type="radio"
+								name="stock_type_${model.modelId}"
+								value="0"
+								{{if model.stock_type != 1}}checked="checked"{{/if}}>无限
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input
+								class="xa-stockTypeRadio"
+								type="radio"
+								name="stock_type_${model.modelId}"
+								value="1"
+								{{if model.stock_type == 1}}checked="checked"{{/if}}>有限
+						</label>
+						<div>
+							<input
+								type="text"
+								class="
+									xa-stockCount
+									form-control
+									{{if model.stock_type == 0}}xui-invisible{{/if}}
+									{{if !model.stock_type}}xui-invisible{{/if}}
+								"
+								placeholder="输入商品数量"
+								value="${model.stocks}"
+								data-validate="require-nonnegative"
+								style="padding: 0px 1px; width: 60px;" />
+							<div class="errorHint"></div>
+						</div>
+					</div>
+				</td>
+
+				<td style="width:125px;">
+					<input type="text" class="form-control xa-weight" value="${model.weight}" data-validate="require-float-three"/>
+					<div class="errorHint pa" data-error-hint="请输入正确的重量"></div>
+				</td>
+
+				<td style="width:125px;">
+					<input type="text" maxlength=15 class="form-control xa-user_code" value="${model.user_code}" data-validate="require-custom-function" data-validate-function="validateUserCode"/>
+					<div class="errorHint pa"></div>
+				</td>
+
+				<td>
+					<a href="javascript:void(0);" class="xa-removeOneModel">删除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>

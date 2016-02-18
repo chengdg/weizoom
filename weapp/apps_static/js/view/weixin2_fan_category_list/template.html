@@ -1,0 +1,26 @@
+<script id="fan-category-list-view-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="xui-i-fans_List pa">
+        <div class="xui-i-groupDialog pr">
+            <form class="xui-i-dialogPOST" action="">
+                <label class="">分组名称</label>
+                <input class="xa-valueAdd" type="text">
+                <br>
+                <a class="btn btn-primary xa-addGroup" href="javascript:void(0);">确定</a>
+                <a class="btn xa-addCancel btn-default" href="javascript:void(0);">取消</a>
+                <div class="data-error-hint" style="color:#f00;"></div>
+            </form>
+        </div>
+        <ul class='xui-i-addLi pa'>
+            {% for item in categories %}
+            <li class="xa-hoverEditor pl20" data-id="{{item.id}}" data-name="{{item.name}}"><span>{{item.name}}</span>（{{item.count}}）
+                <!-- <input type="text" value="{{item.name}}"> -->
+                <div class="xui-i-hoverShow fr">
+                    <a class="xa-editorGroup"><img src="/static_v2/img/weixin/fansPencil.png" alt=""> </a>
+                    <a class="xa-delGroup mr5 ml10"><img src="/static_v2/img/weixin/deleteEditor.png" alt=""></a>
+                </div>
+            </li>
+            <!--<input class='xa-editorInput' style="display:none;" type="text" value="{{item.name}}"><br>-->
+            {% endfor %}
+        </ul>
+    </div>
+</script>

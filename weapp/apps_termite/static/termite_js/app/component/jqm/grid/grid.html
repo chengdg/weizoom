@@ -1,0 +1,37 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.grid' %}
+<div
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="x-ui-grid"
+>
+    <div 
+        class="{{component.model.columns|get_grid_type}}" 
+        id="{{component.model.id}}" 
+    >
+    {% for sub_component in component.components %}
+        <div class="{{forloop.counter0|get_grid_block_type:component.model.columns}}">
+        {{ sub_component.html|safe }}
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endifequal %}  
+
+
+{% ifequal component.type 'jqm.grid_container' %}
+<div
+    data-xui-role="grid_container"
+    data-circum-insertable="false" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    data-component-container="true" 
+>
+    {% include 'component/common/circum_insert_indicator.html' %}
+    {{ component|join_sub_components_html|safe }}
+</div>
+{% endifequal %}  

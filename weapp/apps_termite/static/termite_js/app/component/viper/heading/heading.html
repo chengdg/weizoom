@@ -1,0 +1,17 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.heading' %}
+{% if in_production_mode %}
+	<legend>{{component.model.text}}:</legend>
+{% else %}
+	<legend 
+	    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %}
+	    data-ui-sortable="true"  
+	    data-cid="{{component.cid}}"
+	    data-index="{{component.model.index}}"
+	>
+	    {{component.model.text}}
+	</legend>
+{% endif %}
+{% endifequal %}

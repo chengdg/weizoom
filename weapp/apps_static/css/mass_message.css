@@ -1,0 +1,232 @@
+@charset "utf-8";
+
+/*
+ * 消息概况悬浮框
+ * author: duhao
+*/
+.xui-massSentMessageDropBox {
+	border: 1px solid #d6d4d1;
+	border-radius: 4px;
+	box-shadow: 0 0 5px rgba(214, 212, 209, 0.7);
+	padding: 20px;
+	font-size: 12px;
+	line-height: 24px;
+	width: 300px;
+}
+
+/*群发消息*/
+.xui-massSendingMessage{
+	background:#E9EDF5;
+	min-height: 687px;
+}
+.xui-massSendingMessage select{
+	white-space: nowrap;
+}
+  
+.xui-massSendingMessage .xui-massageSendingCount{
+	width: 185px;
+	height: 32px;
+	line-height: 34px;
+	background: #fff;
+	text-align: center;
+	top:-30px;
+	left: 136px;
+}
+.xui-massSendingMessage .xui-massageSendingCount i{
+	display: inline-block;
+	width: 8px;
+	height: 13px;
+	background: url(/static_v2/img/weixin/left_arrow.png);
+	-webkit-background-size: 100%;
+	background-size: 100%;
+	position: absolute;
+	top:10px;
+	left: -8px;
+
+}
+.xui-massSendingMessage .xui-massageSendingHead{
+	padding-left: 36px;
+	padding-top: 27px;
+	padding-bottom: 9px;
+}
+.xui-massSendingMessage .xui-massageSendingHead .xui-left{
+	width: 74px;
+	float: left;
+}
+.xui-massSendingMessage .xui-massageSendingHead .xui-right{
+	width: 885px;
+	float: right;
+}
+
+
+.xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetGroup{
+	background-color: #fff;
+	border: 1px solid #060606;
+	margin-bottom: 5px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetNames{
+	background-color: #fff;
+	border: 1px solid #060606;
+	margin-bottom: 5px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetNames i{
+	background: url(/static_v2/img/editor/icon_delete.png);
+	width: 15px;
+	height: 15px;
+	background-size: 100%;
+	position: absolute;
+	margin-top: -10px;
+	margin-left: 2px;
+	display: inline-block;
+}
+.xui-massSendingMessage .xui-massageSendingHead .xui-sendTargetNames .emoji {
+	height: 15px;
+}
+
+.xui-massSendingMessage .xui-massageSendingHead input{
+	top:3px;
+}
+.xui-massSendingMessage .xui-massageSendingGroup{
+	padding-left: 36px;
+	height: 42px;
+	line-height: 42px;
+	margin-bottom: 12px;
+}
+
+.xui-massSendingMessage .xui-massageSendingGroup a{
+	padding-left: 25px;
+}
+.xui-massSendingMessage .wui-messageEditor{
+	padding-left: 36px;
+}
+.xui-massSendingMessage .btn{
+	position: relative;
+}
+.xui-massSendingMessage .errorHint{
+	background:#E9EDF5;
+}
+.xui-massSendingMessage .xui-messageNav{
+	border-bottom: 1px solid #ccc;
+	display: block;
+	height: 40px;
+}
+
+.xui-massSendingMessage .xui-messageNav .messageNavLi{
+	float: left;
+	padding-left: 38px;
+	padding-right: 38px;
+	line-height: 40px;
+}
+.xui-massSendingMessage .xui-messageNav .messageNavLi .messageNavLiA{
+	color: #000;
+	font-size: 14px;
+	text-decoration:none;
+}
+.xui-massSendingMessage .messageNavActive{
+	margin-top: -3px;
+	border-bottom: 3px solid #207cbe;
+}
+
+/*已发送*/
+
+.xui-massSentPage table.xui-massSentTable tr{
+	height: 50px;
+}
+
+.xui-massSentPage{
+	background:#E9EDF5;
+	min-height: 687px;
+}
+
+.xui-massSentPage .xui-massSentTableFirstColumn{
+	text-align: left;
+	width: 600px;
+}
+.xui-massSentPage .xui-massSentTableOtherColumn{
+	text-align: center;
+}
+.xui-massSentPage .wui-newses{
+	width: auto;
+}
+.xui-massSentPage .wui-i-news{
+	padding-left: 0;
+	
+}
+.xui-massSentPage .wui-newses .wui-i-header{
+	float: left;
+	margin-right: 15px;
+}
+.xui-massSentPage .wui-newses .wui-i-text{
+	display: block;
+	float: left;
+	width: 88%;
+	min-height: 20px;
+	margin-right: 15px;
+}
+.xui-massSentPage .wui-newses .wui-i-title{
+	margin-left: 0px;
+	line-height: 25px;
+	width: 80%;
+}
+.xui-massSentPage .wui-newses {
+	width: 600px;
+}
+.xui-massSentPage .wui-newses a{
+	white-space: normal;
+}
+ 
+
+
+.xui-massSentPage .xui-messageNav{
+	border-bottom: 1px solid #ccc;
+	display: block;
+	height: 40px;
+}
+
+.xui-massSentPage .xui-messageNav .messageNavLi{
+	float: left;
+	padding-left: 38px;
+	padding-right: 38px;
+	line-height: 40px;
+}
+.xui-massSentPage .xui-messageNav .messageNavLi .messageNavLiA{
+	color: #000;
+	font-size: 14px;
+	text-decoration:none;
+}
+.xui-massSentPage .active{
+	margin-top: -3px;
+	border-bottom: 3px solid #207cbe;
+}
+
+/*已发送页面删除按钮弹出框的样式*/
+.xui-mass{
+	border: none;
+}
+
+.xui-mass .drop-box-arrow{
+	background:url();
+}
+
+.xui-mass .wui-confirmView dd div{
+	display:block;
+	margin-bottom: 10px;
+}
+
+.xui-mass .wui-confirmView div i{
+	background: url();
+}
+
+.xui-mass .wui-confirmView dd div span{
+	margin-left: -46px;
+}

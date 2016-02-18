@@ -1,0 +1,9 @@
+{% load workbench_filter %}
+{% ifequal component.type 'weapp.line' %}
+<div
+    data-component-cid="{{component.cid}}" 
+    class="weapp-line"
+>
+	<hr style="border: 0; border-top: 1px dashed #bbb;">
+</div>
+{% endifequal %}

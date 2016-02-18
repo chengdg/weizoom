@@ -1,0 +1,54 @@
+<script id="common-order-result-batch-deliver-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade" id="commonSelectCSVFileDialog">
+    <div class="modal-dialog xui-batch_delivery_dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+            <h3 class="xui-dialogtitle">发货结果</h3>
+        </div>
+
+        <div class="modal-body">
+          <div class="xa-orderCount ">
+          </div>
+          <div class="form-inline">
+            <table class="xa-orderInfoTable mt10 xui-table-error table mb20 " >
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
+
+<script id="mall-order-count-dialog-products-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-batch_deliveryInfo">
+  <div>上传订单：${allCount}</div>
+  <div>成功订单：${successCount}</div>
+  <div>失败订单：${errorCount}</div>
+</div>
+</script>
+
+<script id="mall-order-info-dialog-products-tmpl-src" type="text/x-jquery-tmpl">
+  <thead>
+    <tr class="wui-dialogTablebg xui-fontGary">
+      <th>订单编号</th>
+      <th>物流公司</th>
+      <th>快递单号</th>
+      <th>失败原因</th>
+    </tr>
+  </thead>
+  <tbody>
+  {{each(i, order) ordersinfo}}
+    <tr>
+      <td>${order.order_id}</td>
+      <td>${order.express_company_name}</td>
+      <td>${order.express_number}</td>
+      <td><span class="xui-colorRed">${order.error_info}</span></td>
+    </tr>
+  {{/each}}
+  </tbody>
+</script>

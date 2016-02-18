@@ -1,0 +1,12 @@
+{% load workbench_filter %}
+
+{% ifequal component.type 'wepage.notice' %}
+<div 
+	class="wui-notice"
+    data-component-cid="{{component.cid}}"
+>
+    <div class="wa-content wui-content">
+   		<span class="wa-inner-title wui-inner-title pl10" >公告：{{component.model.title}}</span>
+    </div>
+</div>
+{% endifequal %}

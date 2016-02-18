@@ -1,0 +1,28 @@
+<script id="mall-product-editor-tmpl-image-src" type="text/x-jquery-tmpl">
+<li class="pr xui-i-image xa-image" data-image-id="${image.id}" data-width="${image.width}" data-height="${image.height}">
+	<img src="${image.url}" />
+	<button class="xui-close xa-deleteImage" type="button">
+		<span>&times;</span>
+	</button>
+</li>
+</script>
+
+
+<script id="mall-product-editor-tmpl-properties-src" type="text/x-jquery-tmpl">
+	{{each(i, property) properties}}
+	<li class="xui-i-templateProperty xa-property" data-property-id="${property.id}">
+		<input class="xui-i-propertyName xui-propertyNameBtn xa-name" readonly=true value='${property.name}' maxlength="15">
+		<input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='${property.value}' maxlength="255">
+		<a class="xa-deleteProperty xui-deleteProperty">删除</a>
+	</li>
+	{{/each}}
+</script>
+
+
+<script id="mall-product-editor-tmpl-property-src" type="text/x-jquery-tmpl">
+	<li class="xui-i-templateProperty xa-property" data-property-id="-1">
+		<input class="xui-i-propertyName xui-propertyNameBtn xa-name xa-contenteditable" data-init-value="点击编辑" placeholder='点击编辑' maxlength="15">
+		<input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" data-init-value="点击编辑" placeholder='点击编辑' maxlength="255">
+		<a class="xa-deleteProperty xui-deleteProperty">删除</a>
+	</li>
+</script>

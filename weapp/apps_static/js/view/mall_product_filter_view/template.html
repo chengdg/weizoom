@@ -1,0 +1,83 @@
+<script id="mall-product-filter-view-tmpl-src" type="text/x-jquery-tmpl">
+<div class="xui-form disT">
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label class="">商品名称：</label>
+			<input type="text" class="form-control" id="name" name="name" value="" />
+		</div>
+		<div class="xui-i-item">
+			<label>商品条码：</label>
+			<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
+		</div>
+	</div>
+
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>商品价格：</label>
+			<input type="text" class="form-control" id="low_price" name="low_price" value="" style="width:100px;"/>
+			<span class="xui-span">~</span>
+			<input type="text" class="form-control" id="high_price" name="high_price" value="" style="width:100px;"/>
+		</div>
+		<div class="xui-i-item">
+			<label>商品库存：</label>
+			<input type="text" class="form-control" id="low_stocks" name="low_stocks" value="${low_stocks}" style="width:100px;"/>
+			<span class="xui-span">~</span>
+			<input type="text" class="form-control" id="high_stocks" name="high_stocks" value="${high_stocks}" style="width:100px;"/>
+		</div>
+		<div class="xui-i-item">
+			<label>商品销量：</label>
+			<input type="text" class="form-control" id="low_sales" name="low_sales" value="" style="width:100px;"/>
+			<span class="xui-span">~</span>
+			<input type="text" class="form-control" id="high_sales" name="high_sales" value="" style="width:100px;"/>
+		</div>
+	</div>
+
+	<div class="xui-col disTc">
+		<div class="xui-i-item">
+			<label>店内分组：</label>
+			<select id="category" name="category">
+				<option value="-1">全部</option>
+				{{each(i, category) categories}}
+				<option value="${category.id}" name="category">${category.name}</option>
+				{{/each}}
+			</select>
+		</div class="xui-i-item">
+
+		<div class="xui-i-item">
+			<label>创建时间
+			：</label>
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="start_date"
+				name="start_date"
+				style=""
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH:MM"
+			    data-max="now"/>
+			至
+			<input
+				type="text"
+				class="form-control xui-datePicker"
+				id="end_date"
+				name="end_date"
+			    value=""
+			    readonly="readonly"
+				data-validate="require-notempty"
+				data-ui-role="orderDatepicker"
+				data-enable-select-time="true"
+			    data-format="yy-mm-dd HH:MM"
+			    data-max="now"
+			    data-min-el="#start_date"/>
+		</div>
+	</div>
+</div>
+<div class="xui-btn-group">
+	<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查询</a>
+	<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重置</a>
+</div>
+</script>

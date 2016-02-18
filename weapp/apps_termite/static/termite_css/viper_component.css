@@ -1,0 +1,47 @@
+.xui-hide {
+	display: none;
+}
+
+.xui-componentGroup .xui-inner-components {
+	border: 1px solid #ddd;
+	background: #f7f7f7;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+.xui-componentGroup .form-horizontal .control-label {
+	text-align: left;
+	width: 80px;
+}
+.xui-componentGroup .form-horizontal .controls {
+	margin-left: 80px;
+}
+.xui-componentGroup .form-horizontal .control-group {
+	margin-bottom: 5px;
+}
+.xui-componentGroup input[type="text"].input-xlarge {
+	width: 100px !important;
+}
+.xui-componentGroup .xui-inner-close {
+	float: right;
+	margin-top: -5px;
+}
+.xui-componentGroup .xui-inner-actionArea {
+	text-align: right;
+}
+.xui-componentGroup .help-block {
+	margin-top: 2px !important;
+	color: #888;
+}
+
+
+/**
+ * radio中的input的样式
+ */
+.xui-numberInput {
+    width: 46px;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}

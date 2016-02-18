@@ -1,0 +1,48 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'jqm.nav_icon_grid' %}
+<div
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true" 
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}" 
+    class="x-ui-grid mt10 {%ifequal component.model.is_image_shadow 'no' %}noImageShadow{% endifequal %}"
+>
+    <div 
+        class="ui-list-horizontal ui-list-cell-{{component.model.columns}} xui-index-nav fixed-{{component.model.fixed_position}} {{component.model.class}}" 
+        id="{{component.model.id}}" 
+    >
+        <ul data-role="listview" data-theme="x" data-icon="false">
+            {% for sub_component in component.components %}
+            {{ sub_component.html|safe }}
+            {% endfor %}        
+        </ul>
+    </div>
+</div>
+{% endifequal %}  
+
+
+{% ifequal component.type 'jqm.nav_icon_grid_button' %}
+<li data-cid="{{component.cid}}" data-index="{{component.model.index}}">
+    <a 
+        href='{{component.model.target|extract_target_data:request|safe}}' 
+        {% if component.parent_component.model.width %}
+        auto_height="{{component.parent_component.model.width}}:{{component.parent_component.model.height}}" 
+        {% endif %}
+        style="
+            background-repeat: no-repeat; 
+    
+            {% if component.model.icon %}
+            background-image: url('{{component.model.icon}}');
+            {% endif %} 
+            
+            {% ifnotequal component.model.color 'none' %}
+            background-color: #{{component.model.color}};
+            {% endifnotequal %}
+        "
+    >
+        <h3>{{component.model.text}}</h3>
+    </a>
+</li>
+{% endifequal %}  

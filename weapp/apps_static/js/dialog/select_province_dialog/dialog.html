@@ -1,0 +1,264 @@
+<script id="mall-select-province-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-mallSelectProvinceDialog" id="mallSelectProvinceDialog">
+	<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">选择区域</h3>
+		</div>
+		<div class="modal-body">
+			<table class="xb-stripedTable">
+				<tbody>
+					<tr>
+						<td>
+							<label class="checkbox-inline xui-fontBold">
+								<input type="checkbox" class="xa-selectAllProvince">华东
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="9">上海
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="10">江苏
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="11">浙江
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="12">安徽
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="14">江西
+							</label>
+							<td></td>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<label class="checkbox-inline xui-fontBold">
+								<input type="checkbox" class="xa-selectAllProvince">华北
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="1">北京
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="2">天津
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="4">山西
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="15">山东
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="3">河北
+							</label>
+						</td>
+						<td>
+							<label class="checkbox-inline">
+								<input type="checkbox" value="5">内蒙古
+							</label>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						<label class="checkbox-inline xui-fontBold">
+							<input type="checkbox" class="xa-selectAllProvince">华中
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="18">湖南
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="17">湖北
+					    </label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="16">河南
+					    </label>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td>
+						<label class="checkbox-inline xui-fontBold">
+							<input type="checkbox" class="xa-selectAllProvince">华南
+					    </label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="19">广东
+					    </label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="20">广西
+					    </label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="13">福建
+					    </label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="21">海南
+					    </label>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+						<label class="checkbox-inline xui-fontBold">
+							<input type="checkbox" class="xa-selectAllProvince">东北
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="6">辽宁
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="7">吉林
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="8">黑龙江
+						</label>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+						<label class="checkbox-inline xui-fontBold">
+							<input type="checkbox" class="xa-selectAllProvince">西北
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="27">陕西
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="31">新疆
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="28">甘肃
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="30">宁夏
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="29">青海
+						</label>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+						<label class="checkbox-inline xui-fontBold">
+							<input type="checkbox" class="xa-selectAllProvince">西南
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="22">重庆
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="25">云南
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+								<input type="checkbox" value="24">贵州
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="26">西藏
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+								<input type="checkbox" value="23">四川
+						</label>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>
+						<label class="checkbox-inline xui-fontBold">
+							<input type="checkbox" class="xa-selectAllProvince">港澳台
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="32">香港
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="33">澳门
+						</label>
+						</td>
+						<td>
+						<label class="checkbox-inline">
+							<input type="checkbox" value="34">台湾
+						</label>
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn btn-success">确&nbsp;认</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>

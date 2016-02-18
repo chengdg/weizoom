@@ -28,6 +28,9 @@ def loadTermiteComponents(prunt):
 		if 'load_termite_components' in line:
 			target_line = line.strip()
 			break
+		if 'load_apps_termite_components' in line:
+			target_line = line.strip()
+			break
 
 	components_str = target_line[2:-2].strip().split('|')[0].strip()
 	components = eval(components_str)

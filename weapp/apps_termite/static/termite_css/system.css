@@ -1,0 +1,405 @@
+html {
+	background-color: #D8DCDF;
+}
+
+html.loginPage {
+	background: url(/termite_static/termite_img/pm5.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover; /*for webKit*/
+    -moz-background-size: cover; /*Mozilla*/
+    -o-background-size: cover; /*opera*/
+    background-size: cover; /*generic*/
+}
+
+body {
+	background: url(/termite_static/termite_img/builder_bg_texture_tile.png) repeat;
+}
+
+.relative {position: relative;}
+.errorHint {color: #CC0000;}
+
+.blue {color: #0088CC;}
+.red {color: #CC0000;}
+.gray {color: #888888;}
+.green{color:green;}
+.wx-sortableTableHead {
+	cursor: pointer;
+}
+
+#globalErrorPanel {
+	position: absolute;
+	top: 60px;
+	left: 50%;
+	margin-left: -525px;
+	width: 650px;
+	z-index: 800;
+	opacity: 0.9;
+	border: solid 1px #990000;
+}
+
+#spin {
+	float: left;
+	height: 80px;
+	width: 100px;
+}
+
+
+#spin-wrapper {
+	background-color: #888;
+	opacity: 0.8;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.75);
+	-moz-box-shadow:    2px 2px 5px rgba(0, 0, 0, 0.75);
+	box-shadow:         2px 2px 5px rgba(0, 0, 0, 0.75);
+	color: #FFF;
+	display: none;
+	font-size: 14px;
+	height: 100px;
+	left: 50%;
+	position: fixed;
+	top: 300px;
+	width: 100px;
+	z-index: 10000;
+	padding: 10px;
+}
+
+/********************************************************************************
+ * login页面样式
+ *******************************************************************************/
+#topbar {
+	position: fixed;
+	width: 100%;
+	height: 60px;
+	top: 0;
+	left: 0;
+	z-index: 1039;
+	-webkit-box-shadow: 0 2px 3px rgba(0,0,0,.25);
+	-moz-box-shadow: 0 2px 3px rgba(0,0,0,.25);
+	box-shadow: 0 2px 3px rgba(0,0,0,.25);
+}
+
+#global-nav {
+	height: 60px;
+	width: 100%;
+	position: relative;
+	/*background-color: #252525;*/
+	background-color: #214E6D;
+	color: #FFFFFF;
+	font-size: 1.8em;
+}
+
+#weixin-logo {
+	width: 500px;
+	height: 40px;
+	line-height: 40px;
+	position: absolute;
+	left: 20px;
+	top: 10px;
+	font-size: 1.2em;
+	text-shadow: 5px 5px 5px #000;
+}
+
+#top-action-bar {
+	font-size: 14px;
+	text-align: right;
+	margin-right: 1px;
+	padding-top: 20px;
+	color: #EFEFEF;
+}
+
+#top-action-bar a:link, #top-action-bar a:visited {
+	color: white;
+	text-decoration: no-underline;
+	color: #EFEFEF;
+}
+
+/*
+#front-bg {
+	position: fixed;
+	width: 200%;
+	height: 200%;
+	background: #000;
+}
+
+#front-bg img {
+	margin: auto;
+	min-width: 50%;
+	min-height: 50%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+*/
+
+#front-card {
+	top: 30%;
+	left: 25%;
+	height: 328px;
+	width: 838px;
+	position: absolute;
+	/*border: solid 1px #FFFFFF;*/
+}
+
+#front-welcome {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 520px;
+	height: 328px;
+}
+
+#front-welcome-text {
+	position: absolute;
+	/*bottom: 60%;*/
+	left: 0;
+	width: 470px;
+	font-size: 20px;
+	font-weight: 300;
+	line-height: 22px;
+	color: #eee;
+	text-align: left;
+	text-shadow: #000 0 1px 2px;
+}
+
+#front-welcome h1 {
+	margin-bottom: 3px;
+	font-size: 20px;
+	font-weight: 700;
+	color: #fff;
+	line-height: 1;
+}
+
+#front-welcome p {
+	margin: 1px;
+}
+
+#front-signin {
+	border-left: solid 1px #eee;
+	border-right: solid 1px #eee;
+	border-bottom: solid 1px #ccc;
+	-webkit-box-shadow: 0 1px 0 rgba(0,0,0,.1);
+	-moz-box-shadow: 0 1px 0 rgba(0,0,0,.1);
+	box-shadow: 0 1px 0 rgba(0,0,0,.1);
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	position: absolute;
+	top: 0;
+	left: 536px;
+	width: 300px;
+	height: 200px;
+	background: -webkit-linear-gradient(top,#fff 0,#ddd 100%);
+	background: -moz-linear-gradient(top,#fff 0,#ddd 100%);
+	background: linear-gradient(top,#fff 0,#ddd 100%);
+}
+
+#front-signin input[type='text'],
+#front-signin input[type='password'],
+#front-signin .add-on{
+	height: 25px;
+	line-height: 25px;
+	font-size: 15px;
+}
+#front-signin input[type='password'],
+#front-signin input[type='text'] {
+	font-size: 20px;
+}
+
+#front-signin .input-prepend {
+	margin-left: 15px;
+}
+
+#front-signin input[type='submit'] {
+	width: 80px;
+	height: 30px;
+	margin-right: 15px;
+}
+
+#front-signin h2 {
+	position: relative;
+	display: block;
+	margin-bottom: 12px;
+	font-size: 16px;
+	font-weight: 400;
+	border-bottom: 1px solid #e2e2e2;
+	-webkit-box-shadow: 0 1px 0 #fff;
+	-moz-box-shadow: 0 1px 0 #fff;
+	box-shadow: 0 1px 0 #fff;
+	-webkit-text-shadow: 0 1px 0 rgba(255,255,255,.6);
+	-moz-text-shadow: 0 1px 0 rgba(255,255,255,.6);
+	text-shadow: 0 1px 0 rgba(255,255,255,.6);
+	padding: 5px;
+	padding-left: 15px;
+	line-height: 1;
+}
+
+
+/********************************************************************************
+ * editor页面样式
+ *******************************************************************************/
+.breadcrumRightButton {
+    position: absolute;
+    right: 10px;
+    top: 3px;
+}
+
+.imgBox {
+	-webkit-box-shadow: 0px 0px 5px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    0px 0px 5px rgba(50, 50, 50, 0.75);
+	box-shadow:         0px 0px 5px rgba(50, 50, 50, 0.75);
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	width: 320px;
+	padding: 10px;
+}
+
+.wx-thin-form .imgBox {
+	width: 280px;
+}
+.wx-thin-form .form-horizontal input[type='text'],
+.wx-thin-form .form-horizontal textarea,
+.wx-thin-form .form-horizontal select {
+    width: 288px;
+}
+
+
+/**
+ * 删除确认框
+ */
+.dropdown-absolte {
+    position: absolute;
+}
+
+
+.dropdown-absolte .drop-box-arrow-down-right {
+    background: url("/termite_static/termite_img/sanjiao.png") no-repeat scroll right top transparent;
+    height: 8px;
+    margin: -12px 10px 0;
+}
+
+.itemDeleteView {
+    margin-bottom: 10px;
+}
+
+.itemDeleteView dt {
+    padding: 10px 7px 0 10px;
+    text-align: center;
+}
+
+.itemDeleteView dd {
+    margin: 0;
+    padding: 10px 0 0;
+    text-align: center;
+}
+
+button.buttonloading span.caret, a.buttonloading b.caret, button.buttonloading span.loading, button.submitting span.img, a.submitting i{
+	margin:0;
+	background:url("/termite_static/termite_img/loading.gif") no-repeat center center;
+	opacity:1;
+	border:none;
+	display:inline-block;
+	width:16px;
+	height:16px;
+}
+button.submitting {
+	padding-left:22px;
+	position:relative;
+}
+button.submitting span.img {
+	margin-top:1px;
+	float:left;
+	position:absolute;
+	top:4px;
+	left:5px;
+}
+button.dropdown-toggle span.img {
+	display:none;
+}
+button.submitting .caret {
+	margin:0;background:url("/termite_static/termite_img/loading.gif") no-repeat center center; 
+	width:15px;
+	height:16px;
+	border:none;
+}
+
+/**
+ * 分页样式
+ */
+
+.pagination {
+    height: 40px;
+    margin: 20px 0;
+}
+
+.pagination ul {
+    clear: none;
+    display: inline-block;
+}
+
+.pagination .jump_page {
+    float: right;
+    padding: 0 0 0 10px;
+}
+
+.pagination .jump_page input.span2 {
+    width: 65px;
+}
+
+/* dialog */
+#overlay {background-color: #000000;display: none; position: absolute;top: 0px;left: 0px;z-index: 20; filter: alpha(opacity=10);  -moz-opacity: 0.1; opacity: 0.1;}
+.dialog-bg{overflow:auto;position: absolute; top: -1000px; left: -1000px; z-index: 100; width: 50px;display:block; background:#DADADA; -moz-background-clip: padding;-webkit-background-clip: padding;background-clip: padding-box;border: 5px solid rgba(0,0,0,0.1); -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
+.dialog-bg .boxBorder{height:100%;border:1px solid #BDBDBD; -webkit-border-radius: 0px 0px 3px 3px;-moz-border-radius: 0px 0px 3px 3px;border-radius:0px 0px 3px 3px;background:#fff;}
+.dialog-title {height: 35px;	background: #F2F2F2; line-height:35px;}
+.dialog-title .title {font-size: 12px;margin-left: 20px;color: #585858;}
+.dialog-content {margin: 10px\9; _margin: 20px;_padding: 10px;}
+.pt0 .dialog-content{padding-top:0;}
+.dialog-bg .close-zone {position: absolute;top: 8px;right: 15px;}
+.dialog-bg .close-zone .close img{display:none;}
+.blogger {width: 54px;text-align: center;padding: 2px;margin-left: 20px;margin-bottom: 15px;}
+.blogger img {padding: 2px;border: solid 1px #C8C6C9;}
+.add-blogger {width: 54px;text-align: center;padding: 2px;margin-left: 20px;}
+.buttonLayout{padding:10px 20px; text-align:center; background:url(/termite_static/resources/img/imgY.gif) 0 -936px repeat-x; margin:0;}
+.dialog-bg .form-horizontal .control-label{width:90px;}
+.dialog-bg .form-horizontal .controls{margin-left:95px;}
+
+
+/* 选择日期 */
+#selectDateZone {
+	background-color: #F5F5F5;
+    border-radius: 4px 4px 4px 4px;
+    margin: 0 0 20px;
+    padding: 3px 15px;
+}
+
+div.wx_dropbox input[readonly] {
+	cursor: text;
+}
+
+div.drop-box-arrow-down-left {
+    background: url("/termite_static/termite_img/sanjiao.png") no-repeat scroll left top transparent;
+    height: 8px;
+    margin: -12px 10px 0;
+}
+
+/*header*/
+#header {top:0px;height: 49px;background: #22405A;position: fixed;width: 100%;z-index: 1040;border-bottom: 1px solid #001a2f}
+#header .head{width:1004px;margin:0 auto;}
+#headerTitle {margin-left: 0px;margin-top: 5px; margin-right:0px;float: left;color: #E8F3F9;font-size: 20px;font-family:"微软雅黑";font-weight:normal;width:200px;text-align:center; overflow:hidden;height:35px;}
+#headerTitle  a{color: #E8F3F9;text-decoration:none;}
+#headerAction {float: right;color: #CFE7F3;	margin-right:20px;	margin-top: 12px;}
+#headerAction a:link, #headerAction a:visited {color: #CFE7F3;text-decoration: none; margin-left:5px; }
+#headerAction a img:hover {opacity: 0.7; filter: alpha(opacity=70)}
+.mailAlert.active {opacity: 0.5; filter: alpha(opacity=50)}
+.headerMenu, .headerMenu li, .headerMenu a{float:left;}
+.headerMenu a:focus{text-decoration:none;}
+.headerMenu a{width:100px; text-align:center;height:50px; line-height:50px; color:#E6F2F8;}
+.headerMenu a:hover{text-decoration:none; font-size:14px; color:#F7FCFF;}
+.headerMenu a.active{background:#1D394F; font-size:14px; color:#E6F2F8; border-bottom: 2px solid #43DD24;}
+.headerMenu a.active:hover{color:#E6F2F8;}
+.headerMenu .unreadMenu{
+    top:15px;
+}

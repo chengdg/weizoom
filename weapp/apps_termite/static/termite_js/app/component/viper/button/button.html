@@ -1,0 +1,25 @@
+{% load workbench_filter %}
+
+
+{% ifequal component.type 'viper.button' %}
+<!-- =====> viper:button component -->
+{% if in_design_mode %}
+<div 
+    {% ifequal component.selectable "yes" %}data-ui-behavior="xub-selectable"{% endifequal %} 
+    data-ui-sortable="true"
+    data-cid="{{component.cid}}" 
+    data-index="{{component.model.index}}"
+>
+{% endif %}
+<a 
+    href="{{component.model.target|format_target:project_id}}"     
+    id="{{component.model.id}}" 
+    class="btn {{component.model.class}}" 
+>
+    {{component.model.text}}
+</a>
+{% if in_design_mode %}
+</div>
+{% endif %}
+<!-- <===== viper:button component -->
+{% endifequal %}
