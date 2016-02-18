@@ -184,6 +184,15 @@ class lottery_prize(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'操作过于频繁！'
 				return response.get_response()
+		else:
+			sync_result = lottery_participance.modify(
+				query={'lottery_date__gt': now_datetime - datetime.timedelta(seconds=1)}
+			)
+			print sync_result, '==========================='
+			if not sync_result:
+				response = create_response(500)
+				response.errMsg = u'操作过于频繁！'
+				return response.get_response()
 
 		#扣除抽奖消耗的积分
 		member.consume_integral(expend, u'参与抽奖，消耗积分')
