@@ -380,7 +380,6 @@ class ProductPool(resource.Resource):
         }
         return response.get_response()
 
-
 class Product(resource.Resource):
     app = 'mall2'
     resource = 'product'
