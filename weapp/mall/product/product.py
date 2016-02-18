@@ -12,6 +12,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from mall.promotion import models as promotion_model
 from watchdog.utils import watchdog_warning
+from account.models import UserProfile
 
 from core import paginator
 from core import resource
@@ -280,16 +281,17 @@ class ProductPool(resource.Resource):
         status = request.GET.get('status', '-1')
 
         # 获取所有供货商的id
-        owner_ids = get_all_active_mp_user_ids()
+        all_user_ids = get_all_active_mp_user_ids()
+        all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
+        user_id2userprofile = dict([(profile.user_id, profile) for profile in all_mall_userprofiles])
+        owner_ids = user_id2userprofile.keys()
         if not owner_ids:
             return create_response(200).get_response()
 
-        all_userprofiles = UserProfile.objects.filter(user_id__in=owner_ids)
-        user_id2userprofile = dict([(profile.user_id, profile) for profile in all_userprofiles])
 
         # 筛选供货商
         if supplier_name:
-            owner_ids = [profile.user_id for profile in all_userprofiles.filter(store_name__contains=supplier_name)]
+            owner_ids = [profile.user_id for profile in all_mall_userprofiles.filter(store_name__contains=supplier_name)]
 
         # 筛选出所有商品
         if product_name:
@@ -305,28 +307,14 @@ class ProductPool(resource.Resource):
                 is_deleted=False)
 
         # 筛选出单规格的商品id
-        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.all(owner__in=owner_ids)]
+        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids)]
         much_model_product_ids = [id for id in all_model_product_ids if all_model_product_ids.count(id) > 1]
-        standard_model_product_ids = [id for id in all_model_product_ids if id not in all_model_product_ids]
+        standard_model_product_ids = [id for id in all_model_product_ids if id not in much_model_product_ids]
 
         # 筛选出已经同步的商品
         mall_product_id2relation = dict([(relation.mall_product_id, relation) for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager, is_deleted=False)])
 
         products = all_mall_product.filter(id__in=standard_model_product_ids)
-        for product in products:
-            if product.id in mall_product_id2relation:
-                if mall_product_id2relation[product.id].is_active and not mall_product_id2relation[product.id].is_deleted:
-                    product.status = 1
-                elif not mall_product_id2relation[product.id].is_active and not mall_product_id2relation[product.id].is_deleted:
-                    product.status = 3
-            else:
-                product.status = 2
-
-        products.order('status').order('status').order('-created_at').order('id')
-
-        if status != '-1':
-            products = products.filter(status=int(status))
-
         models.Product.fill_details(request.manager, products, {
             "with_product_model": True,
             "with_model_property_info": True,
@@ -336,6 +324,29 @@ class ProductPool(resource.Resource):
             'with_sales': True
         })
 
+        dict_products = []
+        for product in products:
+            product = product.to_dict()
+            if product['id'] in mall_product_id2relation:
+                if mall_product_id2relation[product['id']].is_updated and not mall_product_id2relation[product['id']].is_deleted:
+                    product['status'] = 1
+                elif not mall_product_id2relation[product['id']].is_updated and not mall_product_id2relation[product['id']].is_deleted:
+                    product['status'] = 3
+            else:
+                product['status'] = 2
+            dict_products.append(product)
+        products = dict_products
+
+        # products.order_by('status').order_by('-created_at').order_by('id')
+        products = sorted(products, key=lambda product:product['status'])
+        products = sorted(products, key=lambda product:product['created_at'], reverse=True)
+        products = sorted(products, key=lambda product:product['id'])
+
+        if status != '-1':
+            products = filter(lambda product:product['status'] == int(status), products)
+
+
+        COUNT_PER_PAGE = 12
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
@@ -348,7 +359,16 @@ class ProductPool(resource.Resource):
         #构造返回数据
         items = []
         for product in products:
-            items.append(product)
+            items.append({
+                'id': product['id'],
+                'name': product['name'],
+                'thumbnails_url': product['thumbnails_url'],
+                'user_code': product['user_code'],
+                'status': product['status'],
+                'store_name': user_id2userprofile[product['owner_id']].store_name,
+                'stocks': product['stocks'],
+                'sync_time': mall_product_id2relation[product['id']].sync_time.strftime('%Y-%m-%d %H:%M') if mall_product_id2relation.has_key(product['id']) else ''
+            })
 
         data = dict()
         data['owner_id'] = request.manager.id
@@ -356,7 +376,6 @@ class ProductPool(resource.Resource):
         response.data = {
             'items': items,
             'pageinfo': paginator.to_dict(pageinfo),
-            'sortAttr': sort_attr,
             'data': data
         }
         return response.get_response()

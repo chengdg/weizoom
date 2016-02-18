@@ -36,7 +36,7 @@
         <div
         data-ui-role="advanced-table"
         data-app="mall2"
-        data-resource="product_list"
+        data-resource="product_pool"
         data-template-id="#products-view"
         data-enable-paginator="true"
         data-enable-sort="false"
@@ -81,27 +81,43 @@
                                 {{/if}}
                             </div>
                             <div class="pl15 disTc xui-poductorIntroduction">
-                                <div class="mb0 mt0" style="height:35px; "><p class="mb0" style="line-height:16px;">${product.name}<i class="xui-updateTag">更新</i></p></div>
+                                <div class="mb0 mt0" style="height:35px; ">
+                                <p class="mb0" style="line-height:16px;">${product.name}
+                                {{if product.status == 1}}
+                                <i class="xui-updateTag">更新</i>
+                                {{/if}}
+                                </p>
+                                </div>
                                 <span class="xui-fontGary">商品编码: ${product.user_code}</span>
                             </div>
                         </div>
                     </td>
                     <td>
-                        供货商1
+                        ${product.store_name}
                     </td>
-                    <td>${product.sales}</td>
+                    <td>${product.stocks}</td>
                     <td>
+                        {{if product.status == 1}}
                         <span class="cRed">待更新</span>
-                        <span class="cRed">已选择</span>
+                        {{/if}}
+                        {{if product.status == 2}}
                         <span>未选择</span>
+                        {{/if}}
+                        {{if product.status == 3}}
+                        <span class="cRed">已选择</span>
+                        {{/if}}
                     </td>
                     <td class="xui-createdTime">${product.created_at}</td>
                     <td>
+                        {{if product.status == 1}}
                         <a href="javascript:void(0);" class="xa-update">更新</a>
-                        </br>
+                        {{/if}}
+                        {{if product.status == 2}}
                         <a href="javascript:void(0);" class="xa-offshelf">放入待售</a>
-                        </br>
+                        {{/if}}
+                        {{if product.status == 3}}
                         <span class="c6">无更新</a>
+                        {{/if}}
                     </td>
                 </tr>
                 {{/each}}

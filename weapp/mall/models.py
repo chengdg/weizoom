@@ -2515,8 +2515,8 @@ class WeizoomHasMallProductRelation(models.Model):
 	mall_id = models.IntegerField() # 供货商的owner_id
 	mall_product_id = models.IntegerField() # 供货商商品
 	weizoom_product_id = models.IntegerField() # 微众系列上架供货商的商品
-	is_update = models.BooleanField(default=False) # 是否需要更新
-	is_delete = models.BooleanField(default=False) # 供货商是否下架了商品
+	is_updated = models.BooleanField(default=False) # 是否需要更新
+	is_deleted = models.BooleanField(default=False) # 供货商是否下架了商品
 	sync_time = models.DateTimeField(auto_now_add=True) # 微众系列同步商品的时间
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 
