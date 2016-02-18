@@ -1358,3 +1358,53 @@
     bottom: 10px;
     left: 20px;
 }
+.xui-productsPoolPage .xui-productList tr{
+	border-bottom:1px solid #ddd;
+}
+/*失效商品弹窗的表格样式*/
+.xui-offshelfTable{
+	border:1px solid #ddd;
+	margin-bottom: 0px;
+}
+.xui-offshelfTable td,.xui-offshelfTable th{
+	text-align: left!important;
+}
+.xui-offshelfTable tr td:first-child div{
+	width: 230px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	padding-left: 35px;
+	box-sizing: border-box;
+}
+.xui-offshelfTable thead tr th:first-child{
+	min-width: 330px;
+	padding-left: 35px;
+}
+.xui-offshelfProductsListDialog .xui-datePicker{
+	background-color: #fff!important;
+	box-shadow: none;
+}
+.xui-offshelfProductsListDialog .xui-datePicker-inputbox{
+	display:inline-block;
+	vertical-align:text-top;
+	margin-top:-6px;
+}
+.xui-offshelfProductsListDialog .modal-body{
+	min-height: 410px;
+	padding-bottom: 0;
+}
+.xui-offshelfProductsListDialog .modal-dialog {
+	top:50%;
+	margin-top:-267px;
+	position: absolute;
+    left: 50%;
+    margin-left: -275px;
+
+}
+.xui-offshelfProductsListDialog .modal-content{
+	overflow: hidden;
+}
+.xui-offshelfProductsListDialog .modal-dialog tbody tr td:last-child{
+	width: inherit;
+}

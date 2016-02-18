@@ -1,0 +1,171 @@
+<script id="mall-offshelf-products-list-dialog-tmpl-src" type="text/x-jquery-tmpl">
+	<div class="modal fade xui-offshelfProductsListDialog" id="offshelfProductsListDialog">
+	<div class="modal-dialog modal-lg" style="width: 550px;">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+			<h3 class="modal-title">
+				失效商品列表
+			</h3>
+		</div>
+		<div class="modal-body">
+			<label>选择日期：</label>
+			<div class="xui-datePicker-inputbox">
+				<input
+					style="cursor:pointer;"
+					type="text"
+					class="form-control xui-datePicker"
+					id="start_date"
+					name="start_date"
+					style=""
+				    value=""
+				    readonly="readonly"
+					data-validate="require-notempty"
+					data-enable-select-time="true"
+					data-ui-role="date-picker"
+				    data-format="yy-mm-dd HH:MM"
+				    data-min="now"
+				    data-max-el="#end_date"
+				    width="132"/>
+			    <div class="errorHint" data-error-hint="必须选择一个开始时间"></div>
+			</div>
+			至
+			<div class="xui-datePicker-inputbox">
+				<input
+					style="cursor:pointer;"
+					type="text"
+					class="form-control xui-datePicker"
+					id="end_date"
+					name="end_date"
+			    value=""
+			    readonly="readonly"
+					data-validate="require-notempty"
+					data-ui-role="date-picker"
+					data-enable-select-time="true"
+			    data-format="yy-mm-dd HH:MM"
+			    data-min="now"
+			    data-min-el="#start_date"/>
+			    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+			</div>
+			<div
+				data-ui-role="advanced-table"
+				data-app="mall2"
+				data-api="product_list"
+				data-template-id="#offshelf-products-view"
+				data-enable-paginator="true"
+				data-enable-sort="false"
+				data-item-count-per-page="8"
+				data-auto-load="false"
+				class="mt5"
+			></div>
+
+		</div>
+		<div class="modal-footer modal-footerBg">
+			<button class="btn xui-btnStyle xa-search" style="width:84px;height:30px;background:#1F7BBD; color:#ffffff;">确&nbsp;&nbsp;定</button>
+		</div>
+	</div>
+	</div>
+	</div>
+</script>
+
+
+<script id="offshelf-products-view" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-condensed xb-stripedTable xui-offshelfTable">
+		<thead style="background:#fff;">
+			<tr>
+				<th width="180">商品名称</th>
+				<th width="187" style="border-right:1px solid #ddd">日期</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+      {{if items.length}}
+        {{each(i, product) items}}
+				<tr class="" data-id="${product.id}">
+					<td>
+						<div>${product.name}</div>
+					</td>
+					<td>
+						${product.created_at}
+					</td>
+				</tr>
+				{{/each}}
+      {{else}}
+          <tr><td colspan='2'>还没有数据</td></tr>
+      {{/if}}	
+		</tbody>
+	</table>
+	<!-- <table id="productListTable" class="table table-condensed xb-stripedTable xui-offshelfTable">
+		<thead style="background:#fff;">
+			<tr>
+				<th width="180">商品名称</th>
+				<th>日期</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+				<tr class="">
+					<td>
+						<div>我就输帅呆了酷毙了的武汉独家秘制热干面，哟吼吼，快来吃呀呀啊</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>武汉独家秘制热干面</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>我就帅呆了</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>我就输帅呆了酷毙了的武汉独家秘制热干面，哟吼吼，快来吃呀呀啊</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>武汉独家秘制热干面</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>我就帅呆了</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>我就输帅呆了酷毙了的武汉独家秘制热干面，哟吼吼，快来吃呀呀啊</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+				<tr class="">
+					<td>
+						<div>武汉独家秘制热干面</div>
+					</td>
+					<td>
+						2016-02-17 09:30
+					</td>
+				</tr>
+		</tbody>
+	</table> -->
+</script>
