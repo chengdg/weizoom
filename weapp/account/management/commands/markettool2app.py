@@ -11,6 +11,7 @@ from django.conf import settings
 from market_tools import ToolModule
 from market_tools.settings import TOOLS_ORDERING
 from apps.models import CustomizedApp, CustomizedAppInfo, CustomizedappStatus
+import logging
 
 class Command(BaseCommand):
 	help = "change market tool to app"
@@ -38,7 +39,7 @@ class Command(BaseCommand):
 			app_display_name = app['display_name']
 			app_url = app['url']
 			if CustomizedApp.objects.filter(name=app_name).count() == 0:
-				print 'create app ', app_display_name
+				logging.info(u'create app {}'.format(app_display_name))
 				app = CustomizedApp.objects.create(
 					owner = admin,
 					name = app_name, 
@@ -58,7 +59,7 @@ class Command(BaseCommand):
 					repository_passwd = ''
 				)
 			else:
-				print 'ignore app ', app_display_name
+				logging.info(u'ignore app {}'.format(app_display_name))
 
 
 
