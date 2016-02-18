@@ -1363,6 +1363,9 @@ def pay_order(webapp_id, webapp_user, order_id, is_success, pay_interface_type):
 		if order.origin_order_id < 0:
 			Order.objects.filter(origin_order_id=order.id).update(status=ORDER_STATUS_PAYED_NOT_SHIP, pay_interface_type=pay_interface_type, payment_time=datetime.now())
 
+		if Order.objects.filter(webapp_id=order.webapp_id, webapp_user_id=order.webapp_user_id, is_first_order=True).count() == 0:
+			order.is_first_order = True
+
 		order.status = ORDER_STATUS_PAYED_NOT_SHIP
 		order.pay_interface_type = pay_interface_type
 		order.payment_time = datetime.now()
@@ -2247,7 +2250,6 @@ def update_order_status(user, action, order, request=None):
 	expired_status = order.status
 	if target_status:
 		if 'cancel' in action and request:
-			#更新首单的信息
 			Order.objects.filter(id=order_id).update(status=target_status, reason=request.POST.get('reason', ''))
 
 		elif 'pay' == action:
