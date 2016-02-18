@@ -334,13 +334,14 @@ class ProductPool(resource.Resource):
                     product['status'] = 3
             else:
                 product['status'] = 2
+            print product['created_at'], type(product['created_at']), product['name']
+            print product['created_at'].strftime('%Y-%m-%d %H:%M')
+            print type(product['created_at'].strftime('%Y-%m-%d %H:%M'))
             dict_products.append(product)
         products = dict_products
 
-        # products.order_by('status').order_by('-created_at').order_by('id')
         products = sorted(products, key=lambda product:product['status'])
         products = sorted(products, key=lambda product:product['created_at'], reverse=True)
-        products = sorted(products, key=lambda product:product['id'])
 
         if status != '-1':
             products = filter(lambda product:product['status'] == int(status), products)
