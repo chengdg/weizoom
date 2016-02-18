@@ -274,7 +274,19 @@ class ProductPool(resource.Resource):
 
     @login_required
     def api_get(request):
-        pass
+        owner_ids = []
+        all_mall_product = models.Product.objects.filter(
+                owner__in=owner_ids,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                is_deleted=False)
+
+        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.all(owner__in=owner_ids)]
+        much_model_product_ids = [id for id in all_model_product_ids if all_model_product_ids.count(id) > 1]
+        standard_model_product_ids = [id for id in all_model_product_ids if id not in all_model_product_ids]
+
+        sync_products = list(all_mall_product.filter(id__in=standard_model_product_ids))
+
+        synced_products =[relation.product for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager)]
 
 class Product(resource.Resource):
     app = 'mall2'
