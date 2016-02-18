@@ -232,7 +232,7 @@ W.ValidaterClass = function() {
 			extract: 'element',
 			check: function(element) {
 				var span_value = element.text();
-				if (span_value.length == 0) {
+				if (span_value.length == 0  || span_value == '您还没有可反馈的商品') {
 					return false;
 				} else {
 					return true;
