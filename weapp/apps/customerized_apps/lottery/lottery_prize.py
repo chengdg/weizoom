@@ -2,6 +2,7 @@
 
 import json
 import random
+import datetime as dt
 from datetime import datetime
 
 from django.http import HttpResponseRedirect, HttpResponse
@@ -132,7 +133,7 @@ class lottery_prize(resource.Resource):
 		else:
 			#如果当前用户没有参与过该活动，则创建新记录
 			data['belong_to'] = record_id
-			data['lottery_date'] = now_datetime
+			data['lottery_date'] = now_datetime - dt.timedelta(seconds=2) #第一次参与抽奖初始抽奖时间向前2秒以免在下面的逻辑中被判定为过于频繁
 			data['can_play_count'] = limitation #根据抽奖活动限制，初始化可参与次数
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
@@ -175,9 +176,10 @@ class lottery_prize(resource.Resource):
 			#根据抽奖次数限制，更新可抽奖次数
 			# lottery_participance.update(dec__can_play_count=1)
 			sync_result = lottery_participance.modify(
-				query={'lottery_date__gt': now_datetime - datetime.timedelta(seconds=1),
+				query={'lottery_date__lt': now_datetime - dt.timedelta(seconds=1),
 					   'can_play_count__gte': 1},
-				dec__can_play_count=1
+				dec__can_play_count=1,
+				set__lottery_date=now_datetime
 			)
 			print sync_result, '==========================='
 			if not sync_result:
@@ -186,7 +188,8 @@ class lottery_prize(resource.Resource):
 				return response.get_response()
 		else:
 			sync_result = lottery_participance.modify(
-				query={'lottery_date__gt': now_datetime - datetime.timedelta(seconds=1)}
+				query={'lottery_date__lt': now_datetime - dt.timedelta(seconds=1)},
+				set__lottery_date=now_datetime
 			)
 			print sync_result, '==========================='
 			if not sync_result:
@@ -267,9 +270,9 @@ class lottery_prize(resource.Resource):
 		else:
 			lottery_participance.update(inc__total_count=1)
 
-		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
-		lottery_participance.update(set__lottery_date=now_datetime)
-		#修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----end
+		# #修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----start
+		# lottery_participance.update(set__lottery_date=now_datetime)
+		# #修复参与过抽奖的用户隔一天后再抽就能无限制抽奖的bug -----end
 		lottery_participance.reload()
 		#调整参与数量和中奖人数
 		newRecord = {}
