@@ -21,6 +21,7 @@ from mall import models  # 注意不要覆盖此module
 from mall import signals as mall_signals
 from . import utils
 from mall import export
+from weixin.user.module_api import get_all_active_mp_user_ids
 
 class ProductList(resource.Resource):
     app = 'mall2'
@@ -274,19 +275,92 @@ class ProductPool(resource.Resource):
 
     @login_required
     def api_get(request):
-        owner_ids = []
-        all_mall_product = models.Product.objects.filter(
+        product_name = request.GET.get('name', '')
+        supplier_name = request.GET.get('supplier', '')
+        status = request.GET.get('status', '-1')
+
+        # 获取所有供货商的id
+        owner_ids = get_all_active_mp_user_ids()
+        if not owner_ids:
+            return create_response(200).get_response()
+
+        all_userprofiles = UserProfile.objects.filter(user_id__in=owner_ids)
+        user_id2userprofile = dict([(profile.user_id, profile) for profile in all_userprofiles])
+
+        # 筛选供货商
+        if supplier_name:
+            owner_ids = [profile.user_id for profile in all_userprofiles.filter(store_name__contains=supplier_name)]
+
+        # 筛选出所有商品
+        if product_name:
+            all_mall_product = models.Product.objects.filter(
+                owner__in=owner_ids,
+                name__contains=product_name,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                is_deleted=False)
+        else:
+            all_mall_product = models.Product.objects.filter(
                 owner__in=owner_ids,
                 shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
                 is_deleted=False)
 
+        # 筛选出单规格的商品id
         all_model_product_ids = [model.product_id for model in models.ProductModel.objects.all(owner__in=owner_ids)]
         much_model_product_ids = [id for id in all_model_product_ids if all_model_product_ids.count(id) > 1]
         standard_model_product_ids = [id for id in all_model_product_ids if id not in all_model_product_ids]
 
-        sync_products = list(all_mall_product.filter(id__in=standard_model_product_ids))
+        # 筛选出已经同步的商品
+        mall_product_id2relation = dict([(relation.mall_product_id, relation) for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager, is_deleted=False)])
 
-        synced_products =[relation.product for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager)]
+        products = all_mall_product.filter(id__in=standard_model_product_ids)
+        for product in products:
+            if product.id in mall_product_id2relation:
+                if mall_product_id2relation[product.id].is_active and not mall_product_id2relation[product.id].is_deleted:
+                    product.status = 1
+                elif not mall_product_id2relation[product.id].is_active and not mall_product_id2relation[product.id].is_deleted:
+                    product.status = 3
+            else:
+                product.status = 2
+
+        products.order('status').order('status').order('-created_at').order('id')
+
+        if status != '-1':
+            products = products.filter(status=int(status))
+
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
+
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        #构造返回数据
+        items = []
+        for product in products:
+            items.append(product)
+
+        data = dict()
+        data['owner_id'] = request.manager.id
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': sort_attr,
+            'data': data
+        }
+        return response.get_response()
+
 
 class Product(resource.Resource):
     app = 'mall2'
