@@ -14,6 +14,15 @@ class PowerMeControl(models.Document):
 		'collection': 'powerme_powerme_control'
 	}
 
+class PowerMeRelations(models.Document):
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	member_id= models.StringField(default="", max_length=20) #参与者id
+	powered_member_id = models.StringField(default="", max_length=20, unique_with=['belong_to', 'member_id']) #被助力者id
+
+	meta = {
+		'collection': 'powerme_powerme_relations'
+	}
+
 class PowerMeParticipance(models.Document):
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id

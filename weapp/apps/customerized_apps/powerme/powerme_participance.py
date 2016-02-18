@@ -62,8 +62,18 @@ class PowerMeParticipance(resource.Resource):
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
 			#更新当前member的参与信息
-			curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
-			ids_tmp = curr_member_power_info.powered_member_id
+			try:
+				app_models.PowerMeRelations({
+					"belong_to": power_id,
+					"member_id": str(member_id),
+					"powered_member_id": fid
+				}).save()
+			except:
+				response = create_response(500)
+				response.errMsg = u'只能助力一次'
+				return response.get_response()
+			# curr_member_power_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=member_id).first()
+			# ids_tmp = curr_member_power_info.powered_member_id
 			#并发问题临时解决方案 ---start
 			# control_data = {}
 			# control_data['belong_to'] = power_id
@@ -78,21 +88,21 @@ class PowerMeParticipance(resource.Resource):
 			# 	response.errMsg = u'只能助力一次'
 			# 	return response.get_response()
 			#并发问题临时解决方案 ---end
-			if not ids_tmp:
-				ids_tmp = [fid]
-			else:
-				ids_tmp.append(fid)
+			# if not ids_tmp:
+			# 	ids_tmp = [fid]
+			# else:
+			# 	ids_tmp.append(fid)
 			# curr_member_power_info.update(set__powered_member_id=ids_tmp)
-			ids_tmp = list(set(ids_tmp))
-			sync_result = curr_member_power_info.modify(
-				query={'powered_member_id__ne': ids_tmp},
-				set__powered_member_id=ids_tmp
-			)
-			print sync_result, '==========================='
-			if not sync_result:
-				response = create_response(500)
-				response.errMsg = u'操作过于频繁！'
-				return response.get_response()
+			# ids_tmp = list(set(ids_tmp))
+			# sync_result = curr_member_power_info.modify(
+			# 	query={'powered_member_id__ne': ids_tmp},
+			# 	set__powered_member_id=ids_tmp
+			# )
+			# print sync_result, '==========================='
+			# if not sync_result:
+			# 	response = create_response(500)
+			# 	response.errMsg = u'操作过于频繁！'
+			# 	return response.get_response()
 			#更新被助力者信息
 			powered_member_info = app_models.PowerMeParticipance.objects(belong_to=power_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
@@ -119,8 +129,7 @@ class PowerMeParticipance(resource.Resource):
 				created_at = datetime.now()
 			)
 			detail_log.save()
-		except Exception,e:
-			print e
+		except:
 			response = create_response(500)
 			response.errMsg = u'助力失败'
 			response.inner_errMsg = unicode_full_stack()
@@ -139,7 +148,6 @@ class PowerMeParticipance(resource.Resource):
 			powered_member_info = app_models.PowerMeParticipance.objects.get(belong_to=power_id, member_id=int(fid))
 			if not powered_member_info.has_join:
 				powered_member_info.update(set__has_join=True,set__created_at=datetime.now())
-		except Exception,e:
-			print e
+		except:
 			response = create_response(500)
 		return response.get_response()
