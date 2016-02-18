@@ -15,6 +15,7 @@ class Command(BaseCommand):
         print 'Powerme collections are translating...'
         all_data = powerme_models.PowerMeParticipance.objects()
         if all_data:
+            powerme_models.PowerMeRelations.objects.all().delete()
             all_data_list = []
             for data in all_data:
                 data_dic = {}
