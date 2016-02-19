@@ -308,13 +308,13 @@ def __clear_all_app_data():
 
 	# 签到
 	sign_models.Sign.objects.all().delete()
-	sign_models.SignControl.objects.all().delete()
+	# sign_models.SignControl.objects.all().delete()
 	sign_models.SignParticipance.objects.all().delete()
 
 	#微助力
 	powerme_models.PowerMe.objects.all().delete()
 	powerme_models.PowerMeParticipance.objects.all().delete()
-	powerme_models.PowerMeControl.objects.all().delete()
+	# powerme_models.PowerMeControl.objects.all().delete()
 	powerme_models.PowerLog.objects.all().delete()
 
 	#活动报名
@@ -325,7 +325,7 @@ def __clear_all_app_data():
 	apps_lottery_models.lottery.objects.all().delete()
 	apps_lottery_models.lotteryParticipance.objects.all().delete()
 	apps_lottery_models.lottoryRecord.objects.all().delete()
-	apps_lottery_models.lotteryControl.objects.all().delete()
+	# apps_lottery_models.lotteryControl.objects.all().delete()
 
 	#apps调研
 	apps_survey_models.survey.objects.all().delete()
