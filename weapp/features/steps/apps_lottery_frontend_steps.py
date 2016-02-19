@@ -16,6 +16,7 @@ from apps.customerized_apps.lottery.models import lottery, lotteryParticipance, 
 from utils.string_util import byte_to_hex
 import json
 import re
+import time
 
 def __get_lottery_id(lottery_name):
 	return lottery.objects.get(name=lottery_name).id
@@ -57,6 +58,7 @@ def step_impl(context,webapp_user_name,lottery_name):
 	}
 	response = context.client.post('/m/apps/lottery/api/lottery_prize/?_method=put', params)
 	context.lottery_result = json.loads(response.content)
+	time.sleep(2)
 
 @when(u'{webapp_user_name}参加微信抽奖活动"{lottery_name}"于"{date}"')
 def step_impl(context,webapp_user_name,lottery_name,date):
