@@ -2518,7 +2518,7 @@ class WeizoomHasMallProductRelation(models.Model):
 	is_updated = models.BooleanField(default=False) # 是否需要更新
 	is_deleted = models.BooleanField(default=False) # 供货商是否下架了商品
 	sync_time = models.DateTimeField(auto_now_add=True) # 微众系列同步商品的时间
-	delete_time = models.DateTimeField() # 商品的失效时间
+	delete_time = models.DateTimeField(auto_now=True) # 商品的失效时间
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 
 	class Meta(object):

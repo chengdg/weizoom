@@ -334,9 +334,6 @@ class ProductPool(resource.Resource):
                     product['status'] = 3
             else:
                 product['status'] = 2
-            print product['created_at'], type(product['created_at']), product['name']
-            print product['created_at'].strftime('%Y-%m-%d %H:%M')
-            print type(product['created_at'].strftime('%Y-%m-%d %H:%M'))
             dict_products.append(product)
         products = dict_products
 
@@ -361,12 +358,13 @@ class ProductPool(resource.Resource):
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
         mall_product_id2weizoom_product_id = dict([(r.mall_product_id, r.weizoom_product_id) for r in relations])
         promotionrelations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=mall_product_id2weizoom_product_id.values())
-        product_id2relation = dict([(relation.weizoom_product_id, relation)for relation in promotionrelations])
+        product_id2relation = dict([(relation.product_id, relation)for relation in promotionrelations])
 
         #构造返回数据
         items = []
         for product in products:
             if (mall_product_id2weizoom_product_id.has_key(product['id']) and
+                product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
                 product_id2relation[mall_product_id2weizoom_product_id[product['id']]] == promotion_model.PROMOTION_STATUS_STARTED):
                 product_has_promotion = 1
             else:
@@ -394,12 +392,90 @@ class ProductPool(resource.Resource):
         return response.get_response()
 
     @login_required
-    def api_post(request):
-        pass
+    def api_put(request):
+        """
+        put 方法
+
+        将商品池中的商品放入待售
+        """
+        product_ids = request.POST.get('product_ids', '')
+        if not product_ids:
+            return create_response(200).get_response()
+        product_ids = json.loads(product_ids)
+
+        products = models.Product.objects.filter(id__in=product_ids)
+        for product in products:
+            # 商品信息
+            new_product = models.Product.objects.create(
+                owner = request.manager,
+                name = product.name,
+                physical_unit = product.physical_unit,
+                price = product.price,
+                introduction = product.introduction,
+                weight = product.weight,
+                thumbnails_url = product.thumbnails_url,
+                pic_url = product.pic_url,
+                detail = product.detail,
+                remark = product.remark,
+                display_index = product.display_index,
+                shelve_type = models.PRODUCT_SHELVE_TYPE_OFF,
+                stock_type = product.stock_type,
+                stocks = product.stocks,
+                is_support_make_thanks_card = product.is_support_make_thanks_card,
+                type = product.type,
+                promotion_title = product.promotion_title,
+                user_code = product.user_code,
+                bar_code = product.bar_code,
+                is_member_product = product.is_member_product,
+                supplier = product.supplier
+            )
+            # 商品规格
+            product_model = models.ProductModel.objects.get(product=product)
+            models.ProductModel.objects.create(
+                owner=request.manager,
+                product=new_product,
+                name='standard',
+                is_standard=True,
+                price=product_model.price,
+                weight=product_model.weight,
+                stock_type=product_model.stock_type,
+                stocks=product_model.stocks,
+                user_code=product_model.user_code,
+                is_deleted=product_model.is_deleted
+            )
+            # 商品轮播图
+            product_swipe_images = models.ProductSwipeImage.objects.filter(product=product)
+            for item in product_swipe_images:
+                models.ProductSwipeImage.objects.create(
+                    product = new_product,
+                    url = item.url,
+                    link_url = item.link_url,
+                    width = item.width,
+                    height = item.height
+                )
+            # 商品属性
+            properties = models.ProductProperty.objects.filter(product=product)
+            for property in properties:
+                models.ProductProperty.objects.create(
+                    owner=request.manager,
+                    product=new_product,
+                    name=property.name,
+                    value=property.value
+                )
+            # 创建新商品和同步商品的关系
+            models.WeizoomHasMallProductRelation.objects.create(
+                owner = request.manager,
+                mall_id = product.owner_id,
+                mall_product_id = product.id,
+                weizoom_product_id = new_product.id
+            )
+
+            return create_response(200).get_response()
 
     @login_required
-    def api_put(request):
-        pass
+    def api_post(request):
+        return create_response(200).get_response()
+
 
 class DeletedProductList(resource.Resource):
     app = 'mall2'
