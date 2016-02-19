@@ -429,7 +429,7 @@ def __Update_RedPacket(context,text,page_id,redpacket_id):
 
 	valid_time = "%s~%s"%(start_time,end_time)
 
-	timing_status = __bool2Bool(text.get("is_show_countdown",""))
+	timing_status = text.get("is_show_countdown","")
 	timing_value_day = __date_delta(start_date,end_date)
 
 	redpacket_arr = text.get("red_packet","")#红包类型

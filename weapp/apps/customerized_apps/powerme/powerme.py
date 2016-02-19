@@ -118,6 +118,8 @@ class PowerMe(resource.Resource):
 		# update_fields = data.keys()
 		for key, value in data.items():
 			if key in update_fields:
+				if key == "timing":
+					value = bool2Bool(value)
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
 		app_models.PowerMe.objects(id=request.POST['id']).update(**update_data)
@@ -139,3 +141,13 @@ class PowerMe(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+def bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
