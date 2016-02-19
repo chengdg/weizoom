@@ -67,6 +67,9 @@
     -moz-background-size: 100%;
     background-size: 100%;
 }
+.wui-confirmView.v div i{
+    margin-left: 0px;
+}
 .wui-confirmView div i{
     margin-right: 6px;
     margin-left: 0px;
