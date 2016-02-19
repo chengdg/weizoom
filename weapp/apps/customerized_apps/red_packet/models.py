@@ -77,6 +77,15 @@ class RedPacketParticipance(models.Document):
 		'collection': 'red_packet_red_packet_participance'
 	}
 
+class RedPacketRelations(models.Document):
+	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	member_id= models.StringField(default="", max_length=20) #参与者id
+	helped_member_id = models.StringField(default="", max_length=20, unique_with=['belong_to', 'member_id']) #被助力者id
+
+	meta = {
+		'collection': 'red_packet_red_packet_relations'
+	}
+
 class RedPacketLog(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	helper_member_id = models.LongField() #帮助者id
