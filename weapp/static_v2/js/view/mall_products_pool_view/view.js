@@ -91,6 +91,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
             data: {'product_ids': JSON.stringify(product_ids)},
             success: function(data){
                 _this.table.reload();
+                _this.$('.xa-selectAll').prop('checked', false);
             },
             error: function(data){}
         })
