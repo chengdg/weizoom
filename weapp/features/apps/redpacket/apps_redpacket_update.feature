@@ -97,7 +97,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpacket_update
+@mall2 @apps @apps_redpacket @apps_redpacket_update
 Scenario:1 编辑"未开始"的拼红包活动
 	Given jobs登录系统
 	When jobs编辑拼红包活动'活动1'
@@ -158,7 +158,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
-@mall2 @apps_redpacket @apps_redpacket_update
+@mall2 @apps @apps_redpacket @apps_redpacket_update
 Scenario:2 删除'已结束'的拼红包活动
 	Given jobs登录系统
 	When jobs删除拼红包活动'活动3'

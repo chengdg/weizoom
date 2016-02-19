@@ -118,7 +118,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数二维码）
 	#非会员tom点击会员bill分享的链接为bill点赞，弹层显示公众号二维码
 	#tom关注jobs的公众号
@@ -167,7 +167,7 @@ Scenario:1 非会员通过会员分享的活动链接为其点赞（没有参数
 		| name |
 		| tom  |
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二维码）
 	#非会员tom点击会员bill分享的链接为bill点赞，弹层显示带参数二维码
 	#tom关注jobs的公众号
@@ -217,7 +217,7 @@ Scenario:2 非会员通过会员分享的活动链接为其点赞（带参数二
 		| tom  |
 
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:3 非会员通过会员分享的活动链接参加活动
 	#非会员tom点击会员bill分享的活动链接参加活动，弹层显示公众号二维码
 	#tom分享活动页到朋友圈
@@ -270,7 +270,7 @@ Scenario:3 非会员通过会员分享的活动链接参加活动
 		[]
 		"""
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点赞，取消关注后已贡献好友列表汇总仍显示该会员，按钮状态“已帮XX好友点赞”，点击按钮弹层显示公众号二维码
 	#会员tom点击会员bill分享的链接为bill点赞
 	#tom取消关注jobs的公众号
@@ -355,7 +355,7 @@ Scenario:4 会员帮好友点赞成功，取消关注公众号后再帮好友点
 		| name |
 		| tom  |
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:5 会员参与拼红包活动，红包已领完
 	#会员bill参与"拼红包活动1"领取红包
 	When bill关注jobs的公众号
@@ -401,7 +401,7 @@ Scenario:5 会员参与拼红包活动，红包已领完
 	When jack点击图文"拼红包活动1单图文"进入拼红包活动页面
 	#Then jack获得弹层提示信息'红包已被抢完啦<br />下次早点来哦'
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:6 会员参与'未开始'的拼红包活动
 	When jobs新建拼红包活动
 		"""
@@ -473,7 +473,7 @@ Scenario:6 会员参与'未开始'的拼红包活动
 		"""
 	#Then bill获得按钮提示信息'活动尚未开始,敬请期待'
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:7 会员参与'已结束'的拼红包活动
 	When jobs新建拼红包活动
 		"""
@@ -545,7 +545,7 @@ Scenario:7 会员参与'已结束'的拼红包活动
 		"""
 	#Then tom获得按钮提示信息'活动已结束'
 
-@mall2 @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend @apps_redpockets_frontend02
 Scenario:8 会员参与活动，好友为其点赞，会员取消关注公众号，重新参与拼红包活动,好友可以为其再次点赞
 	#bill关注jobs的公众号，参与拼红包活动
 	#bill取消关注jobs的公众号，查看活动页

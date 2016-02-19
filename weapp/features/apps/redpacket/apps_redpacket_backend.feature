@@ -39,7 +39,7 @@ Background:
 			"scan_code_reply":"感谢您的参与，为好友点赞成功！"
 		}]
 		"""
-@mall2 @apps_redpacket @apps_redpacket_backend
+@mall2 @apps @apps_redpacket @apps_redpacket_backend
 Scenario:1 新建拼手气红包活动，用户二维码为空
 	Given jobs登录系统
 	When jobs新建拼红包活动
@@ -81,7 +81,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpacket_backend
+@mall2 @apps @apps_redpacket @apps_redpacket_backend
 Scenario:2 新建普通红包活动，用户二维码非空
 	Given jobs登录系统
 	When jobs新建普通红包活动

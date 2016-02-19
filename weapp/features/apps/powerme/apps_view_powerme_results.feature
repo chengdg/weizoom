@@ -135,7 +135,7 @@ Background:
 		| tom2        |     4         | 今天       | 微助力活动1 |
 		| bill        |     2         | 今天       | 微助力活动2 |
 
-@mall2 @apps_powerme @apps_powerme_backend @view_powerme_results
+@mall2 @apps @apps_powerme @apps_powerme_backend @view_powerme_results
 Scenario:1 查看结果
 	Given jobs登录系统
 	When jobs查看微助力活动'微助力活动1'
@@ -146,7 +146,7 @@ Scenario:1 查看结果
 		|  3   | tom1        |     4         | 3天前      |
 		|  4   | tom2        |     4         | 今天       |
 
-@mall2 @apps_powerme @apps_powerme_backend @view_powerme_results
+@mall2 @apps @apps_powerme @apps_powerme_backend @view_powerme_results
 Scenario:2 查看结果页面的查询
 	Given jobs登录系统
 	When jobs查看微助力活动'微助力活动1'
