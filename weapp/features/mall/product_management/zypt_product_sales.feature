@@ -1,6 +1,6 @@
 # watcher: fengxuejing@weizoom.com
 #_author_:冯雪静
-@wxr
+
 Feature: 自营平台待售商品列表页
 	"""
 	待售商品列表页：
@@ -2202,7 +2202,7 @@ Scenario:9 自营平台把商品从商品池放入待售商品列表后，自营
 						"stock_type": "无限"
 					}
 				}
-			},
+			}
 		}]
 		"""
 	Then jobs能获得'待售'商品列表
