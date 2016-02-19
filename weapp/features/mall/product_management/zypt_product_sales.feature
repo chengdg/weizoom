@@ -1,6 +1,6 @@
 # watcher: fengxuejing@weizoom.com
 #_author_:冯雪静
-@wxr
+
 Feature: 自营平台待售商品列表页
 	"""
 	待售商品列表页：
