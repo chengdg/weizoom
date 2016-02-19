@@ -471,14 +471,81 @@ class ProductPool(resource.Resource):
                 weizoom_product_id = new_product.id
             )
 
-            return create_response(200).get_response()
+        return create_response(200).get_response()
 
     @login_required
     def api_post(request):
-        product_ids = []
-        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids)
-        weizoom_product_ids = [relation.weizoom_product_id for relation in relations]
-        promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=weizoom_product_ids)
+        product_id = request.POST.get('product_id', "")
+        if not product_id:
+            return create_response(500).get_response()
+        relation = models.WeizoomHasMallProductRelation.objects.get(
+            owner=request.manager,
+            mall_product_id=product_id,
+            is_deleted=False)
+
+        # 微众系列商品参加的促销活动
+        from mall.promotion.utils import stop_promotion
+        promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id])
+        stop_promotion(request, [r.promotion for r in promotion_relations])
+
+        weizoom_product = models.Product.objects.get(id=relation.weizoom_product_id)
+        mall_product = models.Product.objects.get(id=relation.mall_product_id)
+
+        weizoom_product.name = mall_product.name
+        weizoom_product.physical_unit = mall_product.physical_unit
+        weizoom_product.price = mall_product.price
+        weizoom_product.introduction = mall_product.introduction
+        weizoom_product.weight = mall_product.weight
+        weizoom_product.thumbnails_url = mall_product.thumbnails_url
+        weizoom_product.pic_url = mall_product.pic_url
+        weizoom_product.detail = mall_product.detail
+        weizoom_product.remark = mall_product.remark
+        weizoom_product.display_index = mall_product.display_index
+        weizoom_product.shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
+        weizoom_product.stock_type = mall_product.stock_type
+        weizoom_product.stocks = mall_product.stocks
+        weizoom_product.is_support_make_thanks_card = mall_product.is_support_make_thanks_card
+        weizoom_product.type = mall_product.type
+        weizoom_product.promotion_title = mall_product.promotion_title
+        weizoom_product.user_code = mall_product.user_code
+        weizoom_product.bar_code = mall_product.bar_code
+        weizoom_product.is_member_product = mall_product.is_member_product
+        weizoom_product.supplier = mall_product.supplier
+        weizoom_product.save()
+
+        # 商品规格
+        mall_product_model = models.ProductModel.objects.get(product=mall_product)
+        weizoom_product_model = models.ProductModel.objects.get(product=weizoom_product)
+        weizoom_product_model.price = weizoom_product_model.price
+        weizoom_product_model.weight = weizoom_product_model.weight
+        weizoom_product_model.user_code = weizoom_product_model.user_code
+        weizoom_product_model.save()
+
+        # 商品轮播图
+        models.ProductSwipeImage.objects.filter(product=weizoom_product).delete()
+        mall_product_swipe_images = models.ProductSwipeImage.objects.filter(product=mall_product)
+        for item in mall_product_swipe_images:
+            models.ProductSwipeImage.objects.create(
+                product = weizoom_product,
+                url = item.url,
+                link_url = item.link_url,
+                width = item.width,
+                height = item.height
+            )
+        # 商品属性
+        models.ProductProperty.objects.filter(product=weizoom_product).delete()
+        properties = models.ProductProperty.objects.filter(product=mall_product)
+        for property in properties:
+            models.ProductProperty.objects.create(
+                owner=request.manager,
+                product=weizoom_product,
+                name=property.name,
+                value=property.value
+            )
+        # 创建新商品和同步商品的关系
+        relation.is_updated = False
+        relation.sync_time = datetime.now()
+        relation.save()
         return create_response(200).get_response()
 
 
@@ -1090,7 +1157,16 @@ class Product(resource.Resource):
         ).update(**param)
 
         # 更新微众系列同步商品的状态
-        models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product_id).update(is_updated=True)
+        if models.ProductModel.objects.filter(product_id=product_id).count() > 1:
+            relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product_id)
+            from mall.promotion.utils import stop_promotion
+            promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id for relation in relations])
+            promotions = stop_promotion(request, [relation.promotion for relation in promotion_relations])
+            models.Product.objects.filter(id__in=[relation.weizoom_product_id for relation in relations]).update(is_deleted=True)
+            relations.update(is_deleted=True)
+        else:
+            models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product_id, is_deleted=False).update(is_updated=True)
+
         # 更新product结束
 
         source = int(request.GET.get('shelve_type', 0))

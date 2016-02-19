@@ -123,18 +123,12 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
             msg:msg
             ,
             confirm:function(){
-                var args = {
-                }
-                W.getApi().call({
-                    method: 'post',
-                    app: 'mall2',
-                    resource: 'order',
-                    args: args,
-                    success: function(data) {
+                W.resource.mall2.ProductPool.post({
+                    data: {'product_id': productId},
+                    success: function(data){
                         _this.table.reload();
                     },
-                    error: function() {
-                        }
+                    error: function(data){}
                 })
             }
         })
