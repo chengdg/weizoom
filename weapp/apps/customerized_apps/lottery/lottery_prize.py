@@ -151,6 +151,9 @@ class lottery_prize(resource.Resource):
 				response.errMsg = u'您今天的抽奖机会已经用完~'
 				return response.get_response()
 
+		if int(limitation) != -1:
+
+
 			# 临时解决高并发问题 ----start
 			# permisson = False
 			# index_list = ['one', 'two'] if limitation == 2 else ['one']
@@ -181,7 +184,6 @@ class lottery_prize(resource.Resource):
 				dec__can_play_count=1,
 				set__lottery_date=now_datetime
 			)
-			print sync_result, '==========================='
 			if not sync_result:
 				response = create_response(500)
 				response.errMsg = u'操作过于频繁！'
@@ -191,7 +193,6 @@ class lottery_prize(resource.Resource):
 				query={'lottery_date__lt': now_datetime - dt.timedelta(seconds=1)},
 				set__lottery_date=now_datetime
 			)
-			print sync_result, '==========================='
 			if not sync_result:
 				response = create_response(500)
 				response.errMsg = u'操作过于频繁！'
