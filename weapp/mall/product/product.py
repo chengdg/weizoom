@@ -222,6 +222,7 @@ class ProductList(resource.Resource):
 
         if is_deleted:
             products.update(is_deleted=True, display_index=0)
+            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True)
         else:
             # 更新商品上架状态以及商品排序
             # 微众商城代码
@@ -474,6 +475,10 @@ class ProductPool(resource.Resource):
 
     @login_required
     def api_post(request):
+        product_ids = []
+        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids)
+        weizoom_product_ids = [relation.weizoom_product_id for relation in relations]
+        promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=weizoom_product_ids)
         return create_response(200).get_response()
 
 
@@ -1083,49 +1088,9 @@ class Product(resource.Resource):
             owner=request.manager,
             id=product_id
         ).update(**param)
-                # name=request.POST.get('name', '').strip(),
-                # promotion_title=request.POST.get(
-                #     'promotion_title', '').strip(),
-                # user_code=request.POST.get('user_code', '').strip(),
-                # bar_code=request.POST.get('bar_code', '').strip(),
-                # thumbnails_url=thumbnails_url,
-                # detail=request.POST.get('detail', '').strip(),
-                # is_use_online_pay_interface='is_enable_online_pay_interface' in request.POST,
-                # is_use_cod_pay_interface='is_enable_cod_pay_interface' in request.POST,
-                # postage_id=postage_id,
-                # unified_postage_money=unified_postage_money,
-                # postage_type=postage_type,
-                # weshop_sync=request.POST.get('weshop_sync', None),
-                # stocks=min_limit,
-                # is_member_product=request.POST.get("is_member_product", False) == 'on',
-                # supplier=request.POST.get("supplier", 0),
-                # purchase_price=purchase_price,
 
-        #     )
-        # else:
-        #     models.Product.objects.record_cache_args(
-        #         ids=[product_id]
-        #     ).filter(
-        #         owner=request.manager,
-        #         id=product_id
-        #     ).update(
-        #         name=request.POST.get('name', '').strip(),
-        #         promotion_title=request.POST.get(
-        #             'promotion_title', '').strip(),
-        #         user_code=request.POST.get('user_code', '').strip(),
-        #         bar_code=request.POST.get('bar_code', '').strip(),
-        #         thumbnails_url=thumbnails_url,
-        #         detail=request.POST.get('detail', '').strip(),
-        #         is_use_online_pay_interface='is_enable_online_pay_interface' in request.POST,
-        #         is_use_cod_pay_interface='is_enable_cod_pay_interface' in request.POST,
-        #         postage_id=postage_id,
-        #         unified_postage_money=unified_postage_money,
-        #         postage_type=postage_type,
-        #         stocks=min_limit,
-        #         is_member_product=request.POST.get("is_member_product", False) == 'on',
-        #         supplier=request.POST.get("supplier", 0),
-        #         purchase_price=purchase_price,
-        #     )
+        # 更新微众系列同步商品的状态
+        models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product_id).update(is_updated=True)
         # 更新product结束
 
         source = int(request.GET.get('shelve_type', 0))
