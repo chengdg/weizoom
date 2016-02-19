@@ -136,10 +136,11 @@ class RedPacket(resource.Resource):
 		page = pagestore.get_page(real_project_id, 1)
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
+
 		for key, value in data.items():
 			if key in update_fields:
-				if key == "timing" and (value == "True" or value == "False"):
-					value = bool(value)
+				if key == "timing":
+					value = bool2Bool(value)
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
 
@@ -217,3 +218,14 @@ def create_pop_list(random_total_money,random_packets_number):
 			random_random_number_list[0] = round((float(-total_random) + float(random_random_number_list[0])),2)
 
 	return random_random_number_list
+
+def bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
