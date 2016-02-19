@@ -338,7 +338,7 @@ def __clear_all_app_data():
 	#apps拼红包
 	redpacket_models.RedPacket.objects.all().delete()
 	redpacket_models.RedPacketParticipance.objects.all().delete()
-	redpacket_models.RedPacketControl.objects.all().delete()
+	redpacket_models.RedPacketRelations.objects.all().delete()
 	redpacket_models.RedPacketLog.objects.all().delete()
 	redpacket_models.RedPacketDetail.objects.all().delete()
 

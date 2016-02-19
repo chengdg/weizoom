@@ -27,6 +27,7 @@ class RedPacket(models.Document):
 	share_description = models.StringField(default="", max_length=1024) #分享描述
 	wishing = models.StringField(default="", max_length=50) #开现金红包文字
 	qrcode = models.DynamicField() #带参数二维码ticket,name
+	red_packet_remain_amount = models.IntField(default=0) #剩余可领取的红包总量
 	created_at = models.DateTimeField() #创建时间
 	
 	meta = {
@@ -114,19 +115,6 @@ class RedPacketDetail(models.Document):
 		'collection': 'red_packet_red_packet_detail'
 	}
 
-class RedPacketControl(models.Document):
-	"""
-	控制一个用户同时并发给人点赞的情况
-	"""
-	member_id= models.LongField(default=0) #参与者id
-	helped_member_id = models.LongField(default=0) #被帮助者id
-	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	red_packet_control = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'helped_member_id'])
-
-	meta = {
-		'collection': 'red_packet_red_packet_control'
-	}
-
 class RedPacketCertSettings(models.Document):
 	"""
 	存储每个帐号的证书文件地址
@@ -136,13 +124,26 @@ class RedPacketCertSettings(models.Document):
 	key_path = models.StringField(default="", max_length=1024) #证书key
 
 
-class RedPacketAmountControl(models.Document):
-	"""
-	控制多个用户并发领取红包会超量的情况
-	"""
-	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	red_packet_amount = models.IntField(default=0,unique_with=['belong_to']) #可领取的红包总量
+# class RedPacketAmountControl(models.Document):
+# 	"""
+# 	控制多个用户并发领取红包会超量的情况
+# 	"""
+# 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+# 	red_packet_amount = models.IntField(default=0,unique_with=['belong_to']) #可领取的红包总量
+#
+# 	meta = {
+# 		'collection': 'red_packet_red_packet_amount_control'
+# 	}
 
-	meta = {
-		'collection': 'red_packet_red_packet_amount_control'
-	}
+# class RedPacketControl(models.Document):
+# 	"""
+# 	控制一个用户同时并发给人点赞的情况
+# 	"""
+# 	member_id= models.LongField(default=0) #参与者id
+# 	helped_member_id = models.LongField(default=0) #被帮助者id
+# 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+# 	red_packet_control = models.StringField(default="", max_length=100, unique_with=['belong_to', 'member_id', 'helped_member_id'])
+#
+# 	meta = {
+# 		'collection': 'red_packet_red_packet_control'
+# 	}

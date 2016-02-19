@@ -88,13 +88,14 @@ class Command(BaseCommand):
 		need_clear_participances.update(set__has_join=False,set__is_valid=False)
 
 		for record_id in need_clear_participances_record_ids:
-			try:
-				amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
-				amount_control.update(dec__red_packet_amount = 1)
-			except:
-				print('dec RedPacketAmountControl error!')
-				print('record_id:',str(record_id))
+			# try:
+			# 	amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
+			# 	amount_control.update(dec__red_packet_amount = 1)
+			# except:
+			# 	print('dec RedPacketAmountControl error!')
+			# 	print('record_id:',str(record_id))
 			red_packet_info = all_red_packets.get(id=record_id)
+			red_packet_info.update(inc__red_packet_remain_amount = 1)
 			# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
 			if red_packet_info.type == u'random':
 				random_total_money = float(red_packet_info.random_total_money)

@@ -94,9 +94,9 @@ class RedPacket(resource.Resource):
 		data['qrcode'] = json.loads(request.POST['qrcode'])
 		if request.POST['type'] == 'random':
 			data['random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number']) #拼手气红包随机数List
-			red_packet_amount = data['random_packets_number']
+			data['red_packet_remain_amount'] = data['random_packets_number']
 		else:
-			red_packet_amount = data['regular_packets_number']
+			data['red_packet_remain_amount'] = data['regular_packets_number']
 		red_packet = app_models.RedPacket(**data)
 		red_packet.save()
 		error_msg = None
@@ -107,16 +107,16 @@ class RedPacket(resource.Resource):
 			data['error_msg'] = error_msg
 
 		#并发问题临时解决方案 ---start
-		control_data = {}
-		control_data['belong_to'] = data['id']
-		control_data['red_packet_amount'] = 0
-		control = app_models.RedPacketAmountControl(**control_data)
-		control.save()
-		default_data = {}
-		default_data['belong_to'] = data['id']
-		default_data['red_packet_amount'] = int(red_packet_amount) + 1
-		default = app_models.RedPacketAmountControl(**default_data)
-		default.save()
+		# control_data = {}
+		# control_data['belong_to'] = data['id']
+		# control_data['red_packet_amount'] = 0
+		# control = app_models.RedPacketAmountControl(**control_data)
+		# control.save()
+		# default_data = {}
+		# default_data['belong_to'] = data['id']
+		# default_data['red_packet_amount'] = int(red_packet_amount) + 1
+		# default = app_models.RedPacketAmountControl(**default_data)
+		# default.save()
 		#并发问题临时解决方案 ---end
 
 		response = create_response(200)
@@ -143,30 +143,31 @@ class RedPacket(resource.Resource):
 			#清除红包类型选项下不需要再保存的两个字段
 			if key == "type" and value == "random":
 				update_data['set__random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number'])
-				red_packet_amount = data['random_packets_number']
+				data['red_packet_remain_amount'] = data['random_packets_number']
 				update_data['set__regular_packets_number'] = ''
 				update_data['set__regular_per_money'] = ''
 				page['component']['components'][0]['model']['regular_packets_number'] = ''
 				page['component']['components'][0]['model']['regular_per_money'] = ''
 			if key == "type" and value == "regular":
-				red_packet_amount = data['regular_packets_number']
+				data['red_packet_remain_amount'] = data['regular_packets_number']
 				update_data['set__random_total_money'] = ''
 				update_data['set__random_packets_number'] = ''
 				page['component']['components'][0]['model']['random_total_money'] = ''
 				page['component']['components'][0]['model']['random_packets_number'] = ''
 		app_models.RedPacket.objects(id=request.POST['id']).update(**update_data)
+
 		#并发问题临时解决方案 ---start
-		app_models.RedPacketAmountControl.objects(belong_to=request.POST['id']).delete()
-		control_data = {}
-		control_data['belong_to'] = data['id']
-		control_data['red_packet_amount'] = 0
-		control = app_models.RedPacketAmountControl(**control_data)
-		control.save()
-		default_data = {}
-		default_data['belong_to'] = data['id']
-		default_data['red_packet_amount'] = int(red_packet_amount) + 1
-		default = app_models.RedPacketAmountControl(**default_data)
-		default.save()
+		# app_models.RedPacketAmountControl.objects(belong_to=request.POST['id']).delete()
+		# control_data = {}
+		# control_data['belong_to'] = data['id']
+		# control_data['red_packet_amount'] = 0
+		# control = app_models.RedPacketAmountControl(**control_data)
+		# control.save()
+		# default_data = {}
+		# default_data['belong_to'] = data['id']
+		# default_data['red_packet_amount'] = int(red_packet_amount) + 1
+		# default = app_models.RedPacketAmountControl(**default_data)
+		# default.save()
 		#并发问题临时解决方案 ---end
 
 		pagestore.save_page(real_project_id, 1, page['component'])

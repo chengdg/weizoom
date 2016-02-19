@@ -12,7 +12,7 @@ from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
-from apps.customerized_apps.red_packet.models import RedPacket, RedPacketParticipance, RedPacketControl,RedPacketLog,RedPacketDetail,RedPacketAmountControl
+from apps.customerized_apps.red_packet.models import RedPacket,RedPacketParticipance,RedPacketLog,RedPacketDetail
 from weixin.message.material import models as material_models
 from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
@@ -106,9 +106,8 @@ class Command(BaseCommand):
 
 		for record_id in need_clear_participances_record_ids:
 			try:
-				amount_control = RedPacketAmountControl.objects.filter(belong_to=record_id).first()
-				amount_control.update(dec__red_packet_amount = 1)
 				red_packet_info = all_red_packets.get(id=record_id)
+				red_packet_info.update(inc__red_packet_remain_amount = 1)
 				# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
 				if red_packet_info.type == u'random':
 					random_total_money = float(red_packet_info.random_total_money)
