@@ -334,13 +334,14 @@ class ProductPool(resource.Resource):
                     product['status'] = 3
             else:
                 product['status'] = 2
+            print product['created_at'], type(product['created_at']), product['name']
+            print product['created_at'].strftime('%Y-%m-%d %H:%M')
+            print type(product['created_at'].strftime('%Y-%m-%d %H:%M'))
             dict_products.append(product)
         products = dict_products
 
-        # products.order_by('status').order_by('-created_at').order_by('id')
-        products = sorted(products, key=lambda product:product['status'])
         products = sorted(products, key=lambda product:product['created_at'], reverse=True)
-        products = sorted(products, key=lambda product:product['id'])
+        products = sorted(products, key=lambda product:product['status'])
 
         if status != '-1':
             products = filter(lambda product:product['status'] == int(status), products)
@@ -356,11 +357,23 @@ class ProductPool(resource.Resource):
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
+        product_ids = [product['id'] for product in products]
+        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
+        mall_product_id2weizoom_product_id = dict([(r.mall_product_id, r.weizoom_product_id) for r in relations])
+        promotionrelations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=mall_product_id2weizoom_product_id.values())
+        product_id2relation = dict([(relation.weizoom_product_id, relation)for relation in promotionrelations])
+
         #构造返回数据
         items = []
         for product in products:
+            if (mall_product_id2weizoom_product_id.has_key(product['id']) and
+                product_id2relation[mall_product_id2weizoom_product_id[product['id']]] == promotion_model.PROMOTION_STATUS_STARTED):
+                product_has_promotion = 1
+            else:
+                product_has_promotion = 0
             items.append({
                 'id': product['id'],
+                'product_has_promotion': product_has_promotion,
                 'name': product['name'],
                 'thumbnails_url': product['thumbnails_url'],
                 'user_code': product['user_code'],
@@ -377,6 +390,70 @@ class ProductPool(resource.Resource):
             'items': items,
             'pageinfo': paginator.to_dict(pageinfo),
             'data': data
+        }
+        return response.get_response()
+
+    @login_required
+    def api_post(request):
+        pass
+
+    @login_required
+    def api_put(request):
+        pass
+
+class DeletedProductList(resource.Resource):
+    app = 'mall2'
+    resource = 'deleted_product_list'
+
+    @login_required
+    def api_get(request):
+        """
+        查看失效商品
+        """
+        start_date = request.GET.get('start_date', "")
+        end_date = request.GET.get('end_date', "")
+
+        if start_date and end_date:
+            params = dict(
+                    owner=request.manager,
+                    is_deleted=True,
+                    start_date__glt=start_date,
+                    end_date__glt=end_date
+                )
+        else:
+            params = dict(
+                    owner=request.manager,
+                    is_deleted=True
+                )
+
+        deleted_product_id2delete_time = dict([(relation.mall_product_id, relation.delete_time) for relation in models.WeizoomHasMallProductRelation.objects.filter(**params)])
+        deleted_product_ids = deleted_product_id2delete_time.keys()
+
+        COUNT_PER_PAGE = 8
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, deleted_product_ids = paginator.paginate(
+            deleted_product_ids,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        products = models.Product.objects.filter(id__in=deleted_product_ids)
+
+        #构造返回数据
+        items = []
+        for product in products:
+            items.append({
+                'id': product.id,
+                'name': product.name,
+                'delete_time': deleted_product_id2delete_time[product.id].strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
         }
         return response.get_response()
 
