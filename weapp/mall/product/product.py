@@ -358,13 +358,16 @@ class ProductPool(resource.Resource):
             query_string=request.META['QUERY_STRING'])
 
         product_ids = [product['id'] for product in products]
-        relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=product_ids)
-        product_id2relation = dict([(relation.product_id, relation)for relation in relations])
+        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id__in=product_ids, is_deleted=False)
+        mall_product_id2weizoom_product_id = dict([(r.mall_product_id, r.weizoom_product_id) for r in relations])
+        promotionrelations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=mall_product_id2weizoom_product_id.values())
+        product_id2relation = dict([(relation.weizoom_product_id, relation)for relation in promotionrelations])
 
         #构造返回数据
         items = []
         for product in products:
-            if product_id2relation.has_key(product['id']) and product_id2relation[product['id']] == promotion_model.PROMOTION_STATUS_STARTED:
+            if (mall_product_id2weizoom_product_id.has_key(product['id']) and
+                product_id2relation[mall_product_id2weizoom_product_id[product['id']]] == promotion_model.PROMOTION_STATUS_STARTED):
                 product_has_promotion = 1
             else:
                 product_has_promotion = 0
