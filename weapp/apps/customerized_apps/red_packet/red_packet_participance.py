@@ -183,7 +183,7 @@ def participate_red_packet(record_id,member_id):
 			# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表,并移除出各帮助者的helped_member_ids
 			app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
 			app_models.RedPacketLog.objects(belong_to=record_id, be_helped_member_id=member_id).delete()
-			app_models.RedPacketParticipance.objects(belong_to=record_id, helped_member_ids=member_id).update(pull__helped_member_ids=member_id)
+			app_models.RedPacketParticipance.objects(belong_to=record_id, helped_member_ids__exact=member_id).update(pull__helped_member_ids=member_id)
 
 		if not participate_member_info.has_join:
 			print('participate_red_packet :191')

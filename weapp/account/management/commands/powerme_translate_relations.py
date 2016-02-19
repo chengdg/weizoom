@@ -14,7 +14,7 @@ class Command(BaseCommand):
         """
         print 'Powerme collections are translating...'
         all_data = powerme_models.PowerMeParticipance.objects()
-        if all_data:
+        if all_data.count() > 0:
             powerme_models.PowerMeRelations.objects.all().delete()
             all_data_list = []
             for data in all_data:
@@ -23,19 +23,19 @@ class Command(BaseCommand):
                 data_dic['belong_to'] = data.belong_to
                 data_dic['powered_member_id'] = data.powered_member_id
                 all_data_list.append(data_dic)
-
+            need_create_docs = []
             for one_data in all_data_list:
                 one_member_id = one_data['member_id']
                 one_belong_to = one_data['belong_to']
                 one_powered_member_id_list = one_data['powered_member_id']
                 if one_powered_member_id_list:
                     for member_id in one_powered_member_id_list:
-                        one_record = powerme_models.PowerMeRelations(
+                        need_create_docs.append(powerme_models.PowerMeRelations(
                             belong_to = str(one_belong_to),
                             member_id = str(one_member_id),
                             powered_member_id = str(member_id)
-                            )
-                        one_record.save()
+                        ))
+            powerme_models.PowerMeRelations.objects.insert(need_create_docs)
             print 'Powerme Collections Translation is finished.'
 
         else:

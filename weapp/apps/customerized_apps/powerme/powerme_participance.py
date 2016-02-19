@@ -63,11 +63,11 @@ class PowerMeParticipance(resource.Resource):
 				return response.get_response()
 			#更新当前member的参与信息
 			try:
-				app_models.PowerMeRelations({
-					"belong_to": power_id,
-					"member_id": str(member_id),
-					"powered_member_id": fid
-				}).save()
+				app_models.PowerMeRelations(
+					belong_to= power_id,
+					member_id= str(member_id),
+					powered_member_id= fid
+				).save()
 			except:
 				response = create_response(500)
 				response.errMsg = u'只能助力一次'

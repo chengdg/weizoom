@@ -20,12 +20,11 @@ class Command(BaseCommand):
 		"""
 		print 'test start...'
 		a = app_models.TestA.objects()
-		if a.count() > 0:
-			a = a.first()
-		else:
-			a = app_models.TestA()
-			a.save()
-		r = a.update(add_to_set__li=1)
-		print r, '+++++++++++++++'
+		if a.count() <= 0:
+			app_models.TestA(
+				li = [0.43, 1.2423,3567]
+			).save()
+		r = app_models.TestA.objects(li__exact=1.2)
+		print r.count(), '+++++++++++++++'
 
 		print 'test end...'
