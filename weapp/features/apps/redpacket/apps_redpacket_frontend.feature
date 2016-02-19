@@ -68,7 +68,7 @@ Background:
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		   },{
 		   "name":"拼红包活动2",
-			"start_date":"明天",
+			"start_date":"今天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{

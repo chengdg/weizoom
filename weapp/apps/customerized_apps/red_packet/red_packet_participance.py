@@ -94,11 +94,11 @@ class RedPacketParticipance(resource.Resource):
 				#并发问题临时解决方案 ---end
 				# curr_member_red_packet_info.update(add_to_set__helped_member_ids = long(fid))
 				try:
-					app_models.RedPacketRelations({
-						"belong_to": red_packet_id,
-						"member_id": str(member_id),
-						"helped_member_id": fid
-					}).save()
+					app_models.RedPacketRelations(
+						belong_to = red_packet_id,
+						member_id = str(member_id),
+						helped_member_id = fid
+					).save()
 				except:
 					response = create_response(500)
 					response.errMsg = u'只能帮助一次'

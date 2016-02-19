@@ -138,8 +138,11 @@ class RedPacket(resource.Resource):
 		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
 		for key, value in data.items():
 			if key in update_fields:
+				if key == "timing" and (value == "True" or value == "False"):
+					value = bool(value)
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
+
 			#清除红包类型选项下不需要再保存的两个字段
 			if key == "type" and value == "random":
 				update_data['set__random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number'])
