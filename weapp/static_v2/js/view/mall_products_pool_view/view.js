@@ -25,6 +25,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         'click .xa-checkOffshelf': 'onClickAddOffShelf',
         'click .xa-batchOffshelf': 'onClickBatchAddOffShelf',
         'click .xa-update': 'onClickUpdateBtn',
+        'click .xa-offshelf': 'onClickCreateProductOnShelf',
 
         // 'click .xa-onshelf': 'onClickUpdateProductShelveTypeLink',
         // 'click .xa-offshelf': 'onClickUpdateProductShelveTypeLink',
@@ -69,6 +70,22 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
     /**
      * onClickSelectAll: 点击全选选择框时的响应函数
      */
+
+    onClickCreateProductOnShelf: function(event) {
+        var _this = this;
+        var product_ids = [];
+        var $el = $(event.currentTarget);
+        var product_id = $el.parent().parent().data('id');
+        product_ids.push(product_id);
+        W.resource.mall2.ProductPool.put({
+            data: {'product_ids': JSON.stringify(product_ids)},
+            success: function(data){
+                _this.table.reload();
+            },
+            error: function(data){}
+        })
+    },
+
     onClickSelectAll: function(event) {
         var $checkbox = $(event.currentTarget);
         var isChecked = $checkbox.is(':checked');
