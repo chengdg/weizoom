@@ -1,6 +1,6 @@
 # watcher: fengxuejing@weizoom.com
 #_author_:冯雪静
-
+@wxr
 Feature: 自营平台待售商品列表页
 	"""
 	待售商品列表页：
@@ -1579,7 +1579,7 @@ Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户
 	Given tom登录系统
 	#修改商品为多规格
 	When tom更新商品'tom无规格商品3'
-
+		"""
 		{
 			"name": "tom多规格商品3",
 			"created_at": "2015-07-05 10:20",
@@ -1624,6 +1624,7 @@ Scenario:5 自营平台把商品从商品池放入待售商品列表后，商户
 			"detail": "商品描述信息",
 			"status": "在售"
 		}
+		"""
 	Then jobs获得商品池商品列表
 		"""
 		[{
