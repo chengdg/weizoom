@@ -357,11 +357,20 @@ class ProductPool(resource.Resource):
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
+        product_ids = [product['id'] for product in products]
+        relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=product_ids)
+        product_id2relation = dict([(relation.product_id, relation)for relation in relations])
+
         #构造返回数据
         items = []
         for product in products:
+            if product_id2relation.has_key(product['id']) and product_id2relation[product['id']] == promotion_model.PROMOTION_STATUS_STARTED:
+                product_has_promotion = 1
+            else:
+                product_has_promotion = 0
             items.append({
                 'id': product['id'],
+                'product_has_promotion': product_has_promotion,
                 'name': product['name'],
                 'thumbnails_url': product['thumbnails_url'],
                 'user_code': product['user_code'],
@@ -388,6 +397,62 @@ class ProductPool(resource.Resource):
     @login_required
     def api_put(request):
         pass
+
+class DeletedProductList(resource.Resource):
+    app = 'mall2'
+    resource = 'deleted_product_list'
+
+    @login_required
+    def api_get(request):
+        """
+        查看失效商品
+        """
+        start_date = request.GET.get('start_date', "")
+        end_date = request.GET.get('end_date', "")
+
+        if start_date and end_date:
+            params = dict(
+                    owner=request.manager,
+                    is_deleted=True,
+                    start_date__glt=start_date,
+                    end_date__glt=end_date
+                )
+        else:
+            params = dict(
+                    owner=request.manager,
+                    is_deleted=True
+                )
+
+        deleted_product_id2delete_time = dict([(relation.mall_product_id, relation.delete_time) for relation in models.WeizoomHasMallProductRelation.objects.filter(**params)])
+        deleted_product_ids = deleted_product_id2delete_time.keys()
+
+        COUNT_PER_PAGE = 8
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, deleted_product_ids = paginator.paginate(
+            deleted_product_ids,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        products = models.Product.objects.filter(id__in=deleted_product_ids)
+
+        #构造返回数据
+        items = []
+        for product in products:
+            items.append({
+                'id': product.id,
+                'name': product.name,
+                'delete_time': deleted_product_id2delete_time[product.id].strftime('%Y-%m-%d %H:%M:%S')
+            })
+
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+        }
+        return response.get_response()
 
 class Product(resource.Resource):
     app = 'mall2'

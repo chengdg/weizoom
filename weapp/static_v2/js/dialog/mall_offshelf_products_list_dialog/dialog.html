@@ -50,7 +50,7 @@
 			<div
 				data-ui-role="advanced-table"
 				data-app="mall2"
-				data-api="product_list"
+				data-api="deleted_product_list"
 				data-template-id="#offshelf-products-view"
 				data-enable-paginator="true"
 				data-enable-sort="false"
@@ -85,87 +85,13 @@
 						<div>${product.name}</div>
 					</td>
 					<td>
-						${product.created_at}
+						${product.delete_time}
 					</td>
 				</tr>
 				{{/each}}
       {{else}}
           <tr><td colspan='2'>还没有数据</td></tr>
-      {{/if}}	
+      {{/if}}
 		</tbody>
 	</table>
-	<!-- <table id="productListTable" class="table table-condensed xb-stripedTable xui-offshelfTable">
-		<thead style="background:#fff;">
-			<tr>
-				<th width="180">商品名称</th>
-				<th>日期</th>
-			</tr>
-		</thead>
-		<tbody id='product_list'>
-				<tr class="">
-					<td>
-						<div>我就输帅呆了酷毙了的武汉独家秘制热干面，哟吼吼，快来吃呀呀啊</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>武汉独家秘制热干面</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>我就帅呆了</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>我就输帅呆了酷毙了的武汉独家秘制热干面，哟吼吼，快来吃呀呀啊</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>武汉独家秘制热干面</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>我就帅呆了</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>我就输帅呆了酷毙了的武汉独家秘制热干面，哟吼吼，快来吃呀呀啊</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-				<tr class="">
-					<td>
-						<div>武汉独家秘制热干面</div>
-					</td>
-					<td>
-						2016-02-17 09:30
-					</td>
-				</tr>
-		</tbody>
-	</table> -->
 </script>
