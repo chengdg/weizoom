@@ -147,17 +147,18 @@ class RedPacket(resource.Resource):
 			#清除红包类型选项下不需要再保存的两个字段
 			if key == "type" and value == "random":
 				update_data['set__random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number'])
-				data['red_packet_remain_amount'] = data['random_packets_number']
+				update_data['set__red_packet_remain_amount'] = data['random_packets_number']
 				update_data['set__regular_packets_number'] = ''
 				update_data['set__regular_per_money'] = ''
 				page['component']['components'][0]['model']['regular_packets_number'] = ''
 				page['component']['components'][0]['model']['regular_per_money'] = ''
 			if key == "type" and value == "regular":
-				data['red_packet_remain_amount'] = data['regular_packets_number']
+				update_data['set__red_packet_remain_amount'] = int(data['regular_packets_number'])
 				update_data['set__random_total_money'] = ''
 				update_data['set__random_packets_number'] = ''
 				page['component']['components'][0]['model']['random_total_money'] = ''
 				page['component']['components'][0]['model']['random_packets_number'] = ''
+
 		app_models.RedPacket.objects(id=request.POST['id']).update(**update_data)
 
 		#并发问题临时解决方案 ---start
