@@ -27,22 +27,18 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
         'click .xa-update': 'onClickUpdateBtn',
         'click .xa-offshelf': 'onClickCreateProductOnShelf',
 
-        // 'click .xa-onshelf': 'onClickUpdateProductShelveTypeLink',
-        // 'click .xa-offshelf': 'onClickUpdateProductShelveTypeLink',
-        // 'click .xa-recycle': 'onClickUpdateProductShelveTypeLink',
-        // 'click .xa-delete': 'onClickUpdateProductShelveTypeLink',
 
-        'click .xa-batchOnshelf': 'onClickBatchUpdateProductShelveTypeLink',
-        'click .xa-batchRecycle': 'onClickBatchUpdateProductShelveTypeLink',
-        'click .xa-batchDelete': 'onClickBatchUpdateProductShelveTypeLink',
+        // 'click .xa-batchOnshelf': 'onClickBatchUpdateProductShelveTypeLink',
+        // 'click .xa-batchRecycle': 'onClickBatchUpdateProductShelveTypeLink',
+        // 'click .xa-batchDelete': 'onClickBatchUpdateProductShelveTypeLink',
 
-        'click .xa-modifyStandardModelStocks': 'onClickModifyStandardModelStocksLink',
-        'click .xa-modifyCustomModelStocks': 'onClickModifyCustomModelStocksLink',
-        'blur .xa-stockInput': 'onConfirmStockInput',
-        'keypress .xa-stockInput': 'onPressKeyInStockInput',
-        'blur .xa-rank': 'onBlurRank',
-        'keypress .xa-rank': 'onPressKeyRank',
-        'click .xa-showAllModels': 'onClickShowAllModelsButton',
+        // 'click .xa-modifyStandardModelStocks': 'onClickModifyStandardModelStocksLink',
+        // 'click .xa-modifyCustomModelStocks': 'onClickModifyCustomModelStocksLink',
+        // 'blur .xa-stockInput': 'onConfirmStockInput',
+        // 'keypress .xa-stockInput': 'onPressKeyInStockInput',
+        // 'blur .xa-rank': 'onBlurRank',
+        // 'keypress .xa-rank': 'onPressKeyRank',
+        // 'click .xa-showAllModels': 'onClickShowAllModelsButton',
 
         'click .xa-selectAll':'onClickSelectAll',
     },
@@ -97,17 +93,35 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
             //this.$('.xa-selectAll').removeAttr('checked');
         // }
     },
+    onClickBatchAddOffShelf: function(){
+
+    },
     onClickUpdateBtn: function(event){
         var $el = $(event.currentTarget);
         var productId = $el.parents('tr').data('id');
-        var _this = this;
+        var hasActivity = $el.parents('tr').data('product-has-promotion');
+        var _this = this,
+            width,
+            templateAlign,
+            msg;
+        if(hasActivity && hasActivity == 1){
+            width = 300;
+            templateAlign = "vertical";
+            msg = "该商品正在参加活动，更新后活动将结束，</br>是否确认更新该商品？";
+        }else{
+            width = 400;
+            templateAlign = "";
+            msg = "是否确认更新该商品？";
+        }
         W.requireConfirm({
             $el: $el,
-            width:410,
+            width:width,
             position:'top',
             isTitle: false,
+            templateAlign:templateAlign,
             privateContainerClass:'xui-updatePop',
-            msg:'是否确认更新该商品？',
+            msg:msg
+            ,
             confirm:function(){
                 var args = {
                 }
