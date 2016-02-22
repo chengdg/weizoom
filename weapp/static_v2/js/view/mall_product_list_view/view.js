@@ -477,3 +477,43 @@ W.view.mall.ProductListView = Backbone.View.extend({
         this.frozenArgs = {};
     },
 });
+W.view.mall.offshelfProductsTable = W.view.common.AdvancedTable.extend({
+    afterload:function(){
+        $('.xa-selectTr').each(function(index, el) {
+            if($(this).data('purchase-price').length !== 0 && $(this).data('purchase-price') == "0"){
+                $(this).find('.xa-select').attr('disabled', 'disabled').removeClass('xa-select');
+            }
+        });
+    }
+});
+W.registerUIRole('div[data-ui-role="offshelf-advanced-table"]', function() {
+    var $div = $(this);
+    var template = $div.data('template-id');
+    var app = $div.data('app')
+    var api = $div.attr('data-api');
+    var args = $div.attr('data-args');
+    var itemCountPerPage = $div.data('item-count-per-page');
+    var enablePaginator = $div.data('enable-paginator');
+    var enableSort = $div.data('enable-sort');
+    var enableSelect = $div.data('selectable');
+    var disableHeaderSelect = $div.data('disable-header-select');
+    var outerSelecter = $div.data('outer-selecter');
+    var advancedTable = new W.view.mall.offshelfProductsTable({
+        el: $div[0],
+        template: template,
+        app: app,
+        api: api,
+        args: args,
+        itemCountPerPage: itemCountPerPage,
+        enablePaginator: enablePaginator,
+        enableSort: enableSort,
+        enableSelect: enableSelect,
+        outerSelecter:outerSelecter,
+        disableHeaderSelect: disableHeaderSelect,
+        autoLoad: true
+    });
+    advancedTable.render();
+    advancedTable.afterload();
+
+    $div.data('view', advancedTable);
+});

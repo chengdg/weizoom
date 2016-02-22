@@ -175,6 +175,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         //商品编码
         var barCode = $.trim(this.$('#bar_code').val());
 
+
         var data = {
             name: name,
             startDate: startDate,
@@ -188,6 +189,12 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             lowSales: lowSales,
             highSales: highSales
         }
+        //微众系列 筛选‘供货商’
+        if(this.$('#supplier').val()){
+            var supplier = $.trim(this.$('#supplier').val());
+            data['supplier'] = supplier;
+        }
+        
         this.trigger('search', data);
     },
 
