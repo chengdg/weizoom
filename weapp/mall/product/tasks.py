@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+import json
+from celery import task
+
+from mall import models
+from . import utils
+
+@task(bing=True)
+def update_sync_product_status(products, request):
+    is_update = None
+    standard_model, custom_models = utils.extract_product_model(request)
+    swipe_images = json.loads(request.POST.get('swipe_images', '[]'))
+    if len(custom_models) > 0:
+        utils.delete_weizoom_mall_sync_product(request, products[0].id)
+        return
+    for product in products:
+        product_standard_model = models.ProductModel.objects.filter(product_id=product.id, name='standard')[0]
+        properties = request.POST.get('properties')
+        properties = json.loads(properties) if properties else []
+        property_ids = set([property['id'] for property in properties])
+        existed_property_ids = set([
+            property.id for property in models.ProductProperty.objects.filter(
+                product_id=product.id)
+            ])
+        if product.name != request.POST.get('name', '').strip():
+            is_update = True
+            break
+        elif product.promotion_title != request.POST.get('promotion_title', '').strip():
+            is_update = True
+            break
+        elif product.user_code != request.POST.get('user_code', '').strip():
+            is_update = True
+            break
+        elif product.bar_code != request.POST.get('bar_code', '').strip():
+            is_update = True
+            break
+        elif product.detail != request.POST.get('detail', '').strip():
+            is_update = True
+            break
+        elif product_standard_model.price != float(standard_model['price']):
+            is_update = True
+            break
+        elif product_standard_model.weight != float(standard_model['weight']):
+            is_update = True
+            break
+        elif product_standard_model.user_code != standard_model['user_code']:
+            is_update = True
+            break
+        elif property_ids != existed_property_ids:
+            is_update = True
+            break
+        elif set([image['url'] for image in product.swipe_images]) != set([image['url'] for image in swipe_images]):
+            is_update = True
+            break
+        else:
+            pass
+
+    if is_update:
+        utils.update_weizoom_mall_sync_product_status(products[0].id)

@@ -5,6 +5,7 @@ from datetime import datetime
 from operator import attrgetter
 
 from mall import models
+from mall.promotion import models as promotion_model
 from core import search_util
 
 
@@ -176,7 +177,7 @@ def sorted_products(manager_id, product_categories, reverse):
         products_is_0 = filter(lambda p: p.display_index == 0 or p.shelve_type != models.PRODUCT_SHELVE_TYPE_ON, products)
         products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_is_0 = sorted(products_is_0, key=attrgetter('shelve_type', 'join_category_time', 'id'), reverse=True)
-        products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))       
+        products_not_0 = sorted(products_not_0, key=attrgetter('display_index'))
         products = products_not_0 + products_is_0
 
         # products = sorted(products, key=attrgetter('join_category_time', 'id'), reverse=True)
@@ -187,6 +188,23 @@ def sorted_products(manager_id, product_categories, reverse):
         c.products = products
     return product_categories
 
+def delete_weizoom_mall_sync_product(request, mall_product_id):
+    try:
+        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=mall_product_id)
+        from mall.promotion.utils import stop_promotion
+        promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id for relation in relations])
+        promotions = stop_promotion(request, [relation.promotion for relation in promotion_relations])
+        models.Product.objects.filter(id__in=[relation.weizoom_product_id for relation in relations]).update(is_deleted=True)
+        relations.update(is_deleted=True)
+    #TODO:钉订提示
+    except:
+       pass
+
+def update_weizoom_mall_sync_product_status(mall_product_id):
+    try:
+        models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=mall_product_id, is_deleted=False).update(is_updated=True)
+    except:
+        pass
 
 # TODO: update models ref
 #

@@ -220,9 +220,10 @@ class ProductList(resource.Resource):
 
         products = models.Product.objects.filter(id__in=ids)
 
+
+
         if is_deleted:
             products.update(is_deleted=True, display_index=0)
-            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True)
         else:
             # 更新商品上架状态以及商品排序
             # 微众商城代码
@@ -254,6 +255,12 @@ class ProductList(resource.Resource):
                 product_ids=product_ids,
                 request=request
             )
+
+        # 供货商商品下架或者删除对应删除weizoom系列上架的商品
+        if UserProfile.objects.filter(user=request.manager, webapp_type=0).count() > 0:
+            if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
+                for id in ids:
+                    utils.delete_weizoom_mall_sync_product(request, id)
 
         response = create_response(200)
         return response.get_response()
@@ -366,7 +373,7 @@ class ProductPool(resource.Resource):
         for product in products:
             if (mall_product_id2weizoom_product_id.has_key(product['id']) and
                 product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
-                product_id2relation[mall_product_id2weizoom_product_id[product['id']]] == promotion_model.PROMOTION_STATUS_STARTED):
+                product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status == promotion_model.PROMOTION_STATUS_STARTED):
                 product_has_promotion = 1
             else:
                 product_has_promotion = 0
@@ -427,7 +434,6 @@ class ProductPool(resource.Resource):
                 promotion_title = product.promotion_title,
                 user_code = product.user_code,
                 bar_code = product.bar_code,
-                is_member_product = product.is_member_product,
                 supplier = product.supplier
             )
             # 商品规格
@@ -509,7 +515,6 @@ class ProductPool(resource.Resource):
         weizoom_product.promotion_title = mall_product.promotion_title
         weizoom_product.user_code = mall_product.user_code
         weizoom_product.bar_code = mall_product.bar_code
-        weizoom_product.is_member_product = mall_product.is_member_product
         weizoom_product.supplier = mall_product.supplier
         weizoom_product.save()
 
@@ -912,6 +917,20 @@ class Product(resource.Resource):
 
         product_id = request.GET.get('id')
 
+        # 更新对应同步的商品状态
+        if UserProfile.objects.filter(user=request.manager, webapp_type=0).count() > 0:
+            from .tasks import update_sync_product_status
+            products = models.Product.objects.filter(id=product_id)
+            models.Product.fill_details(request.manager, products, {
+                'with_product_model': True,
+                'with_image': True,
+                'with_property': True,
+                'with_model_property_info': True,
+                'with_all_category': True,
+                'with_sales': True
+            })
+            update_sync_product_status.delay(products, request)
+
         # 处理商品排序
         display_index = int(request.POST.get('display_index', '0'))
         if display_index > 0:
@@ -1155,17 +1174,6 @@ class Product(resource.Resource):
             owner=request.manager,
             id=product_id
         ).update(**param)
-
-        # 更新微众系列同步商品的状态
-        if models.ProductModel.objects.filter(product_id=product_id).count() > 1:
-            relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product_id)
-            from mall.promotion.utils import stop_promotion
-            promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id for relation in relations])
-            promotions = stop_promotion(request, [relation.promotion for relation in promotion_relations])
-            models.Product.objects.filter(id__in=[relation.weizoom_product_id for relation in relations]).update(is_deleted=True)
-            relations.update(is_deleted=True)
-        else:
-            models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product_id, is_deleted=False).update(is_updated=True)
 
         # 更新product结束
 
