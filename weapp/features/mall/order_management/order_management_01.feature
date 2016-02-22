@@ -1456,7 +1456,7 @@ Scenario:4 从自营平台购买参与买赠活动的商品,同步到商家后�
 		"""
 
 	Given tom登录系统
-	Then bill可以看到订单列表
+	Then tom可以看到订单列表
 		"""
 		[{
 			"order_no":"007-tom商家",
