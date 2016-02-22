@@ -91,23 +91,23 @@ W.isRequireConfirmViewDisplayed = false;
 W.requireConfirm = function(options) {
     //获得view
     var view = W.registry['common-popup-confirm-view'];
-    if (!view) {
+    // if (!view) {
         xlog('create PopupConfirmView');
         view = new W.view.common.ConfirmView(options);
         view.render();
         W.registry['common-popup-confirm-view'] = view;
-    }
+    // }
     if (options.confirm) {
         view.bind(view.SUBMIT_EVENT, options.confirm);
     }
     if(options.cancel){
        view.bind(view.CLOSE_EVENT, options.cancel);
     }
-
     view.show({
         width:options.width,
         height:options.height,
         $action: options.$el,
+        templateAlign: options.templateAlign,
         msg: options.msg || '确定删除吗？',
         warning_msg: options.warning_msg || '',
         minClickTime: options.minClickTime
