@@ -6,8 +6,13 @@
 			<input type="text" class="form-control" id="name" name="name" value="" />
 		</div>
 		<div class="xui-i-item">
+			{{if mall_type}}
+			<label>供货商：</label>
+			<input type="text" class="form-control" id="supplier" name="supplier" value="" />
+			{{else}}
 			<label>商品条码：</label>
 			<input type="text" class="form-control" id="bar_code" name="bar_code" value="" />
+			{{/if}}
 		</div>
 	</div>
 
@@ -44,8 +49,11 @@
 		</div class="xui-i-item">
 
 		<div class="xui-i-item">
-			<label>创建时间
-			：</label>
+		{{if mall_type}}
+			<label>同步时间：</label>
+		{{else}}
+			<label>创建时间：</label>
+		{{/if}}
 			<input
 				type="text"
 				class="form-control xui-datePicker"

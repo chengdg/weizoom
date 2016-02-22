@@ -25,7 +25,7 @@
 			<a href="/mall2/product/" class="btn btn-success xui-addProductBtn ml10 xa-addProduct fr"><span style="padding-right:5px;"><img src="/static_v2/img/editor/plusOpcity.png"></span>添加新商品</a>
 		</div>
 		<div
-			data-ui-role="advanced-table"
+			data-ui-role="offshelf-advanced-table"
 			data-app="mall2"
 			data-api="product_list"
 			data-args='{"type":"offshelf"}'
@@ -78,19 +78,19 @@
 		<thead>
 			<tr>
 				<th width="308">商品信息</th>
-				<th width="100">条码</th>
+				<th width="100">{{if mall_type}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="105">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="50">总销量</th>
-				<th width="120">创建时间</th>
+				<th width="120">{{if mall_type}}同步{{else}}创建{{/if}}时间</th>
 				<th width="110">操作</th>
 			</tr>
 		</thead>
 		<tbody id='product_list'>
             {{if items.length}}
 	            {{each(i, product) items}}
-				<tr data-id="${product.id}" class="xa-selectTr">
+				<tr data-id="${product.id}" class="xa-selectTr" data-purchase-price="${product.purchase_price}">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">
@@ -116,7 +116,7 @@
 							</div>
 						</div>
 					</td>
-					<td>${product.bar_code}</td>
+					<td>{{if mall_type}}${product.store_name}{{else}}${product.bar_code}{{/if}}</td>
 					<td>
 						<ul>
 							{{each(i, category) product.categories}}
@@ -144,12 +144,17 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					<td>${product.created_at}</td>
+					<td>{{if mall_type}}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
 						{{if product.is_self}}修改{{else}}审核{{/if}}</a>
-						<a href="javascript:void(0);" class="xa-onshelf fl" style="width: 30px;">上架</a>
+						<!-- 微众系列-未填写采购价时 -->
+						{{if product.purchase_price == "0"}}
+							<span class="fl c6">上架</span>
+						{{else}}
+							<a href="javascript:void(0);" class="xa-onshelf fl">上架</a>
+						{{/if}}
 						</div>
 						</br>
 						<a href="javascript:void(0);" class="xa-delete">彻底删除</a>

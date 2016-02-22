@@ -9,8 +9,9 @@ Feature:商家后台查看自营平台同步过来的订单列表及订单详情
 				a.同步过来的订单,订单列表中'订单编号'显示子订单编号
 				b.订单列表中增加'来源'一列,其中来源包括'商城'和'本店',其中微众系列自营平台统称为'商城'
 				c.同步过来的订单,订单列表中不显示'单价'、'优惠金额'和'运费'
-				d.同步过来的订单,订单列表中'实付金额'=采购价*数量
-				e.同步过来的订单操作项限制,禁止对订单进行'申请退款'和'取消订单'操作;操作列会将其隐藏不显示
+				d.同步过来的订单,订单列表中'商品名称'显示的是商家这边的商品名称,不显示自营平台中的商品名称
+				e.同步过来的订单,订单列表中'实付金额'=采购价*数量
+				f.同步过来的订单操作项限制,禁止对订单进行'申请退款'和'取消订单'操作;操作列会将其隐藏不显示
 		订单详情页显示:
 			1.同步过来的订单,订单详情页不显示单品优惠、优惠和微众卡支付金额;只显示"支付金额:xx"
 			2.支付信息中的支付方式,全部显示为'微信支付'
@@ -329,7 +330,7 @@ Background:
 		When jobs更新商品'bill商品1'
 			"""
 			{
-				"name":"bill商品1",
+				"name":"bill商品11",
 				"supplier":"bill商家",
 				"purchase_price": 9.00,
 				"is_member_product":"off",
@@ -407,7 +408,7 @@ Background:
 			"""
 		When jobs批量上架商品
 			"""
-			["bill商品1","bill商品2","tom商品1","tom商品2"]
+			["bill商品11","bill商品2","tom商品1","tom商品2"]
 			"""
 
 	#nokia的后台商品信息
@@ -524,7 +525,7 @@ Background:
 					"order_id":"001",
 					"pay_type":"微信支付",
 					"products":[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"count":1
 					}]
 				}
@@ -537,7 +538,7 @@ Background:
 					"order_id":"002",
 					"pay_type":"微信支付",
 					"products":[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"count":1
 					},{
 						"name":"bill商品2",
@@ -555,7 +556,7 @@ Background:
 					"order_id":"003",
 					"pay_type":"货到付款",
 					"products":[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"count":1
 					},{
 						"name":"bill商品2",
@@ -574,7 +575,7 @@ Background:
 					"order_id":"004",
 					"pay_type":"微信支付",
 					"products":[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"count":5
 					}],
 					"integral_money":25.00,
@@ -599,7 +600,7 @@ Background:
 				}
 				"""
 
-	#jack购买商品(nokia自营平台)
+	#jack购买商品(nokia自营平台,bill商品2、tom商品1)
 		When jack关注nokia的公众号
 		When jack访问nokia的webapp
 		When jack购买nokia的商品
@@ -932,7 +933,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"actions": ["发货",取消订单"],
 				"products":
 					[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":5
 					}]
@@ -947,7 +948,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"actions": ["取消订单"],
 				"products":
 					[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":1,
 						"supplier": "bill商家",
@@ -980,7 +981,7 @@ Scenario:2 自营平台进行订单相关操作后,查看对应商家后台订�
 				"actions": ["发货","申请退款"],
 				"products":
 					[{
-						"name":"bill商品1",
+						"name":"bill商品11",
 						"price":10.0,
 						"count":1,
 						"supplier": "bill商家"
@@ -1295,4 +1296,213 @@ Scenario:3 商家后台查看订单详情页,自营平台同步过来的订单
 					"count":5
 				}]
 		}
+		"""
+
+Scenario:4 从自营平台购买参与买赠活动的商品,同步到商家后台的订单列表中不显示赠品
+	Given jobs登录系统
+	When jobs创建买赠活动
+		"""
+		[{
+			"name": "买赠活动1",
+			"promotion_title":"",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"member_grade": "全部会员",
+			"product_name": "bill商品11",
+			"premium_products": 
+			[{
+				"name": "bill商品2",
+				"count": 1
+			}],
+			"count": 1,
+			"is_enable_cycle_mode": true
+		},{
+			"name": "买赠活动2",
+			"promotion_title":"",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"member_grade": "全部会员",
+			"product_name": "tom商品1",
+			"premium_products": 
+			[{
+				"name": "bill商品2",
+				"count": 1
+			}],
+			"count": 1,
+			"is_enable_cycle_mode": true
+		}]
+		"""
+
+	When lily访问jobs的weapp
+	When lily购买jobs的商品
+		"""
+		{
+			"order_id":"007",
+			"pay_type":"微信支付",
+			"products":[{
+				"name":"bill商品11",
+				"count":1
+			},{
+				"name":"tom商品1",
+				"count":1
+			}]
+		}
+		"""
+	When lily使用支付方式'微信支付'进行支付订单'007'
+
+	Given bill登录系统
+	Then bill可以看到订单列表
+		"""
+		[{
+			"order_no":"007-bill商家",
+			"sources": "商城",
+			"status": "待发货",
+			"buyer":"lily",
+			"final_price":9.00,
+			"save_money":"",
+			"methods_of_payment": "微信支付",
+			"actions": ["发货"],
+			"products":
+				[{
+					"name":"bill商品1",
+					"price":"",
+					"count":1
+				}]
+		},{
+			"order_no":"006-bill商家",
+			"sources": "商城",
+			"status": "待发货",
+			"buyer":"jack",
+			"final_price":38.00,
+			"save_money":"",
+			"methods_of_payment": "微信支付",
+			"actions": ["发货"],
+			"products":
+				[{
+					"name":"bill商品2",
+					"price":"",
+					"count":2
+				}]
+			},{
+				"order_no":"005",
+				"sources": "本店",
+				"buyer":"lily",
+				"status": "待支付",
+				"final_price": 20.00,
+				"postage": 10.0,
+				"save_money":"",
+				"methods_of_payment": "微信支付",
+				"actions": ["支付","修改价格","取消订单"],
+				"products":
+					[{
+						"name":"bill商品1",
+						"price":10.0,
+						"count":1
+					}]
+			},{
+				"order_no":"004",
+				"sources": "商城",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":45.00,
+				"save_money":"",
+				"methods_of_payment": "微信支付",
+				"actions": ["发货"],
+				"products":
+					[{
+						"name":"bill商品1",
+						"price":"",
+						"count":5
+					}]
+			},{
+				"order_no":"003-bill商家",
+				"sources": "商城",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":28.00,
+				"save_money":"",
+				"methods_of_payment": "微信支付",
+				"actions": ["发货"],
+				"products":
+					[{
+						"name":"bill商品1",
+						"price":"",
+						"count":1
+					},{
+						"name":"bill商品2",
+						"price":"",
+						"count":1
+					}]
+			},{
+				"order_no":"002",
+				"sources": "商城",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":28.00,
+				"save_money":"",
+				"methods_of_payment": "微信支付",
+				"actions": ["发货"],
+				"products":
+					[{
+						"name":"bill商品1",
+						"price":"",
+						"count":1
+					},{
+						"name":"bill商品2",
+						"price":"",
+						"count":1
+					}]
+		}]
+		"""
+
+	Given tom登录系统
+	Then tom可以看到订单列表
+		"""
+		[{
+			"order_no":"007-tom商家",
+			"sources": "商城",
+			"status": "待发货",
+			"buyer":"lily",
+			"final_price":9.00,
+			"save_money":"",
+			"methods_of_payment": "微信支付",
+			"actions": ["发货"],
+			"products":
+				[{
+					"name":"tom商品1",
+					"price":"",
+					"count":1
+				}]
+		},{
+			"order_no":"006-tom商家",
+			"sources": "商城",
+			"status": "待发货",
+			"buyer":"jack",
+			"final_price":9.00,
+			"save_money":"",
+			"methods_of_payment": "微信支付",
+			"actions": ["发货"],
+			"products":
+				[{
+					"name":"tom商品1",
+					"price":"",
+					"count":1
+				}]
+			
+			},{
+				"order_no":"003-tom商家",
+				"sources": "商城",
+				"buyer":"lily",
+				"status": "待发货",
+				"final_price":9.00,
+				"save_money":"",
+				"methods_of_payment": "微信支付",
+				"actions": ["发货"],
+				"products":
+					[{
+						"name":"tom商品1",
+						"price":"",
+						"count":1
+					}]
+		}]
 		"""
