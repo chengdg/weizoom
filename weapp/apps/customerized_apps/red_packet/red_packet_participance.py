@@ -94,11 +94,11 @@ class RedPacketParticipance(resource.Resource):
 				#并发问题临时解决方案 ---end
 				# curr_member_red_packet_info.update(add_to_set__helped_member_ids = long(fid))
 				try:
-					app_models.RedPacketRelations({
-						"belong_to": red_packet_id,
-						"member_id": str(member_id),
-						"helped_member_id": fid
-					}).save()
+					app_models.RedPacketRelations(
+						belong_to = red_packet_id,
+						member_id = str(member_id),
+						helped_member_id = fid
+					).save()
 				except:
 					response = create_response(500)
 					response.errMsg = u'只能帮助一次'
@@ -222,10 +222,15 @@ def participate_red_packet(record_id,member_id):
 						return response.get_response()
 				else:
 					red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-				participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+				if red_packet_money <= 0:
+					response = create_response(500)
+					response.errMsg = u'抢红包的人太多啦，请稍后再试~'
+					return response.get_response()
+				else:
+					participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
 			else:
 				response = create_response(500)
-				response.errMsg = u'is_run_out'
+				response.errMsg = 'is_run_out'
 				return response.get_response()
 		response = create_response(200)
 		return response.get_response()

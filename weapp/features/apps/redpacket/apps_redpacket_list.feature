@@ -97,7 +97,7 @@ Background:
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		}]
 		"""
-@mall2 @apps_redpacket @apps_redpacket_list
+@mall2 @apps @apps_redpacket @apps_redpacket_list
 Scenario:1 拼红包活动列表查询
 	Given jobs登录系统
 	Then jobs获得拼红包活动列表
@@ -315,7 +315,7 @@ Scenario:1 拼红包活动列表查询
 				"end_date":"2天后"
 			}]
 			"""
-@mall2 @apps_redpacket @apps_redpacket_list
+@mall2 @apps @apps_redpacket @apps_redpacket_list
 Scenario:2 拼红包活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数

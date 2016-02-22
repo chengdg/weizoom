@@ -4,6 +4,8 @@ import datetime
 from django.conf import settings
 
 import mongoengine as models
+from mongoengine.queryset.visitor import Q
+
 from modules.member.module_api import get_member_by_openid
 
 from modules.member import models as member_models
@@ -35,7 +37,7 @@ class SignControl(models.Document):
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
-	member_id= models.LongField(default=0) #参与者id
+	member_id= models.LongField(default=0, unique_with="belong_to") #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	tel = models.StringField(default="", max_length=100)
 	prize = models.DynamicField(default="") #活动奖励
@@ -138,7 +140,7 @@ class SignParticipance(models.Document):
 		user_update_data['set__prize'] = user_prize
 		# self.update(**user_update_data)
 		sync_result = self.modify(
-			query={'latest_date__lt': nowDate.date()},
+			{"__raw__": {'$or': [{'latest_date': None}, {'latest_date': {'$lt': datetime.datetime(nowDate.year, nowDate.month, nowDate.day, 0, 0)}}]}},
 			**user_update_data
 		)
 		if not sync_result:

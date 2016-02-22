@@ -61,7 +61,7 @@ class PowerMeParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
-			#更新当前member的参与信息
+			#更新当前membre的参与信息
 			try:
 				app_models.PowerMeRelations(
 					belong_to= power_id,

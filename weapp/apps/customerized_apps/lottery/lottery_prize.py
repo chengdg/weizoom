@@ -138,11 +138,6 @@ class lottery_prize(resource.Resource):
 			lottery_participance = app_models.lotteryParticipance(**data)
 			lottery_participance.save()
 
-		if not allow_repeat and lottery_participance.has_prize:
-			response = create_response(500)
-			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
-			return response.get_response()
-
 		#如果当前可玩次数为0，则直接返回
 		#如果限制抽奖次数，则进行判断目前是否抽奖次数已经使用完
 		if int(limitation) != -1:
@@ -150,6 +145,13 @@ class lottery_prize(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'您今天的抽奖机会已经用完~'
 				return response.get_response()
+
+		if not allow_repeat and lottery_participance.has_prize:
+			response = create_response(500)
+			response.errMsg = u'您已经抽到奖品了,不能重复中奖~'
+			return response.get_response()
+
+		if int(limitation) != -1:
 
 			# 临时解决高并发问题 ----start
 			# permisson = False
@@ -181,7 +183,6 @@ class lottery_prize(resource.Resource):
 				dec__can_play_count=1,
 				set__lottery_date=now_datetime
 			)
-			print sync_result, '==========================='
 			if not sync_result:
 				response = create_response(500)
 				response.errMsg = u'操作过于频繁！'
@@ -191,7 +192,6 @@ class lottery_prize(resource.Resource):
 				query={'lottery_date__lt': now_datetime - dt.timedelta(seconds=1)},
 				set__lottery_date=now_datetime
 			)
-			print sync_result, '==========================='
 			if not sync_result:
 				response = create_response(500)
 				response.errMsg = u'操作过于频繁！'

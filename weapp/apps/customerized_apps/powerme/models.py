@@ -107,3 +107,5 @@ class PoweredDetail(models.Document):
 
 class TestA(models.Document):
 	li = models.ListField()
+	str = models.StringField(default="hello")
+	bl = models.BooleanField()

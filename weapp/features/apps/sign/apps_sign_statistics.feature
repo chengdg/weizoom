@@ -170,7 +170,7 @@ Background:
 		When nokia访问jobs的webapp
 		When nokia在微信中向jobs的公众号发送消息'签到'于'2015-10-13 10:30:00'
 
-@mall2 @apps_sign @apps_sign_backend @sign_statistics
+@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
 Scenario:1 会员签到统计列表
 	Given jobs登录系统
 
@@ -182,7 +182,7 @@ Scenario:1 会员签到统计列表
 		| bill | 2015/10/01 10:30:00 | 2015/10/09 10:30:00 |      8     |         3       |         5           |     70   | 优惠券1<br>优惠券M<br>优惠券2 |
 		| tom  | 2015/10/03 10:30:00 | 2015/10/06 10:30:00 |      3     |         2       |         2           |     40   | 优惠券M                 |
 
-@mall2 @apps_sign @apps_sign_backend @sign_statistics
+@mall2 @apps @apps_sign @apps_sign_backend @sign_statistics
 Scenario:2 会员签到统计列表分页
 	Given jobs登录系统
 

@@ -19,12 +19,9 @@ class Command(BaseCommand):
 		@return:
 		"""
 		print 'test start...'
-		a = app_models.TestA.objects()
-		if a.count() <= 0:
-			app_models.TestA(
-				li = [0.43, 1.2423,3567]
-			).save()
-		r = app_models.TestA.objects(li__exact=1.2)
-		print r.count(), '+++++++++++++++'
+		a = app_models.TestA(
+			bl="false"
+		)
+		a.save()
 
 		print 'test end...'

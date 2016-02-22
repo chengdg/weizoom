@@ -136,24 +136,29 @@ class RedPacket(resource.Resource):
 		page = pagestore.get_page(real_project_id, 1)
 		update_data = {}
 		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
+
 		for key, value in data.items():
 			if key in update_fields:
+				if key == "timing":
+					value = bool2Bool(value)
 				update_data['set__'+key] = value
 				print key,value,"$$$$$$$$$"
+
 			#清除红包类型选项下不需要再保存的两个字段
 			if key == "type" and value == "random":
 				update_data['set__random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number'])
-				data['red_packet_remain_amount'] = data['random_packets_number']
+				update_data['set__red_packet_remain_amount'] = data['random_packets_number']
 				update_data['set__regular_packets_number'] = ''
 				update_data['set__regular_per_money'] = ''
 				page['component']['components'][0]['model']['regular_packets_number'] = ''
 				page['component']['components'][0]['model']['regular_per_money'] = ''
 			if key == "type" and value == "regular":
-				data['red_packet_remain_amount'] = data['regular_packets_number']
+				update_data['set__red_packet_remain_amount'] = int(data['regular_packets_number'])
 				update_data['set__random_total_money'] = ''
 				update_data['set__random_packets_number'] = ''
 				page['component']['components'][0]['model']['random_total_money'] = ''
 				page['component']['components'][0]['model']['random_packets_number'] = ''
+
 		app_models.RedPacket.objects(id=request.POST['id']).update(**update_data)
 
 		#并发问题临时解决方案 ---start
@@ -214,3 +219,14 @@ def create_pop_list(random_total_money,random_packets_number):
 			random_random_number_list[0] = round((float(-total_random) + float(random_random_number_list[0])),2)
 
 	return random_random_number_list
+
+def bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result

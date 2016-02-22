@@ -165,16 +165,16 @@ def __get_redpacketPageJson(args):
 
 	return json.dumps(__page_temple)
 
-# def __bool2Bool(bo):
-# 	"""
-# 	JS字符串布尔值转化为Python布尔值
-# 	"""
-# 	bool_dic = {'true':True,'false':False,'True':True,'False':False}
-# 	if bo:
-# 		result = bool_dic[bo]
-# 	else:
-# 		result = None
-# 	return result
+def __bool2Bool(bo):
+	"""
+	JS字符串布尔值转化为Python布尔值
+	"""
+	bool_dic = {'true':True,'false':False,'True':True,'False':False}
+	if bo:
+		result = bool_dic[bo]
+	else:
+		result = None
+	return result
 
 def __date_delta(start,end):
 	"""
@@ -516,7 +516,7 @@ def __Update_RedPacket(context,text,page_id,redpacket_id):
 	update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	update_page_response = context.client.post(update_page_url,update_page_args)
 
-	#step4:更新Powerme
+	#step4:更新RedPacket
 	update_redpacket_url ="/apps/red_packet/api/red_packet/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
 	update_redpacket_response = context.client.post(update_redpacket_url,update_redpacket_args)
 

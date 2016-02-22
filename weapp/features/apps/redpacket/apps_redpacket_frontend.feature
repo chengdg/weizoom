@@ -68,7 +68,7 @@ Background:
 			"share_desc":"分享到朋友圈邀请好友点赞集齐红包金额即可获得现金奖励!"
 		   },{
 		   "name":"拼红包活动2",
-			"start_date":"明天",
+			"start_date":"今天",
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
@@ -135,7 +135,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpockets_frontend
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend
 Scenario:1 会员进入自己专属页面系统自动发放一个固定金额的红包（普通红包）
 #主要验证普通红包获得系统自动发放的红包金额
 	When bill关注jobs的公众号
@@ -153,7 +153,7 @@ Scenario:1 会员进入自己专属页面系统自动发放一个固定金额的
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpockets_frontend
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend
 Scenario:2 会员帮助会员好友点赞，拼红包成功（弹出提示贡献成功）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -202,7 +202,7 @@ Scenario:2 会员帮助会员好友点赞，拼红包成功（弹出提示贡献
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpockets_frontend
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend
 Scenario:3 会员在好友页面点击“已帮好友点赞”按钮，弹出引导页面
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -254,7 +254,7 @@ Scenario:3 会员在好友页面点击“已帮好友点赞”按钮，弹出引
 	#Then tom获得蒙版提示：点击右上角，选择发送给指定好友或者朋友圈，来帮“XX”点赞
 
 
-@mall2 @apps_redpacket @apps_redpockets_frontend
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend
 Scenario:4 会员通过好友分享的页面进行我也要拼红包，弹出公众号二维码
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -301,7 +301,7 @@ Scenario:4 会员通过好友分享的页面进行我也要拼红包，弹出公
 	#tom再次通过好友分享的链接进行我也要拼红包，再次弹出公众号的二维码，通过识别二维码进入公众号
 
 
-@mall2 @apps_redpacket @apps_redpockets_frontend
+@mall2 @apps @apps_redpacket @apps_redpockets_frontend
 Scenario:5 好友在活动期间不能为取关会员点赞
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
