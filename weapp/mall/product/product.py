@@ -640,6 +640,7 @@ class Product(resource.Resource):
 
         # 商城的类型
         mall_type = request.user_profile.webapp_type
+        has_store_name = False
 
         if has_product_id:
             try:
@@ -655,7 +656,10 @@ class Product(resource.Resource):
                 'with_all_category': True,
                 'with_sales': True
             })
-
+            # 判断微众系列商品是不是供货商提供的
+            if mall_type:
+                if models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id=has_product_id, is_deleted=False).count > 0:
+                    has_store_name = True
             #获取商品分类信息
             categories = product.categories
 
@@ -725,7 +729,8 @@ class Product(resource.Resource):
             'property_templates': property_templates,
             'supplier': supplier,
             'is_bill': is_bill,
-            'mall_type': mall_type
+            'mall_type': mall_type,
+            'has_store_name': has_store_name
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)
