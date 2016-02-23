@@ -116,7 +116,7 @@
 							</div>
 						</div>
 					</td>
-					<td>{{if data.data.mall_type == 1}}${product.store_name}{{else}}${product.bar_code}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1 && product.store_name }}${product.store_name}{{else}}${product.bar_code}{{/if}}</td>
 					<td>
 						<ul>
 							{{each(i, category) product.categories}}
@@ -144,13 +144,13 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					<td>{{if data.data.mall_type == 1}}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1 && product.sync_time }}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
 						{{if product.is_self}}修改{{else}}审核{{/if}}</a>
 						<!-- 微众系列-未填写采购价时 -->
-						{{if product.purchase_price == "0" && data.data.mall_type == 1}}
+						{{if product.purchase_price == "0" && data.data.mall_type == 1 && product.sync_time}}
 							<span class="fl c6">上架</span>
 						{{else}}
 							<a href="javascript:void(0);" class="xa-onshelf fl">上架</a>
