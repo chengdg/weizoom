@@ -90,6 +90,8 @@ class ProductList(resource.Resource):
               delete   : 删除
 
         """
+        # 商城类型
+        mall_type = UserProfile.objects.get(user=request.manager).webapp_type
         COUNT_PER_PAGE = 10
         _type = request.GET.get('type', 'onshelf')
 
@@ -156,15 +158,28 @@ class ProductList(resource.Resource):
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
+        if mall_type:
+            product_ids = [product.id for product in products]
+            product_id2store_name, product_id2sync_time = utils.get_sync_product_store_name(product_ids)
+        else:
+            product_id2store_name = {}
+            product_id2sync_time = {}
+
         #构造返回数据
         items = []
         for product in products:
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
+            product_dict['store_name'] = product_id2store_name.get(product.id, "")
+            product_dict['sync_time'] = product_id2sync_time.get(product.id, "")
             items.append(product_dict)
+
+        if mall_type:
+            products = sorted(products, key=lambda product:product.purchase_price, reverse=True)
 
         data = dict()
         data['owner_id'] = request.manager.id
+        data['mall_type'] = mall_type
         response = create_response(200)
         response.data = {
             'items': items,
@@ -257,7 +272,7 @@ class ProductList(resource.Resource):
             )
 
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if UserProfile.objects.filter(user=request.manager, webapp_type=0).count() > 0:
+        if UserProfile.objects.filter(user=request.manager, webapp_type=1).count() > 0:
             if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
                 for id in ids:
                     utils.delete_weizoom_mall_sync_product(request, id)

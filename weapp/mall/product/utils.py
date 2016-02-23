@@ -4,7 +4,10 @@ import json, copy
 from datetime import datetime
 from operator import attrgetter
 
+from django.db.models import Q
+
 from mall import models
+from account.models import UserProfile
 from mall.promotion import models as promotion_model
 from core import search_util
 
@@ -190,7 +193,7 @@ def sorted_products(manager_id, product_categories, reverse):
 
 def delete_weizoom_mall_sync_product(request, mall_product_id):
     try:
-        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=mall_product_id)
+        relations = models.WeizoomHasMallProductRelation.objects.filter(Q(mall_product_id=mall_product_id)|Q(weizoom_product_id=mall_product_id))
         from mall.promotion.utils import stop_promotion
         promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id for relation in relations])
         promotions = stop_promotion(request, [relation.promotion for relation in promotion_relations])
@@ -206,6 +209,23 @@ def update_weizoom_mall_sync_product_status(mall_product_id):
     except:
         pass
 
+def get_sync_product_store_name(product_ids):
+    # try:
+    relations = models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=product_ids, is_deleted=False)
+    product_id2mall_id = {}
+    product_id2sync_time = {}
+    for relation in relations:
+        product_id2mall_id[relation.weizoom_product_id] = relation.mall_id
+        product_id2sync_time[relation.weizoom_product_id] = relation.sync_time.strftime('%Y-%m-%d %H:%M:%S')
+    mall_ids = product_id2mall_id.values()
+    mall_id2store_name = dict([(profile.user_id, profile.store_name) for profile in UserProfile.objects.filter(user_id__in=mall_ids)])
+    product_id2store_name = {}
+    for product_id in product_id2mall_id.keys():
+        product_id2store_name[product_id] = mall_id2store_name[product_id2mall_id[product_id]]
+    return product_id2store_name, product_id2sync_time
+    # except:
+    #     pass
+    #     return {}, {}
 # TODO: update models ref
 #
 # def update_one_product(request):

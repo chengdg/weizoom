@@ -125,6 +125,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var $trs = $link.parents('table').find('tr');
         var productId = $tr.data('id');
         var _this = this;
+        console.log(_this);
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
@@ -136,6 +137,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 },
                 scope: this,
                 success: function(data) {
+                        console.log(_this.table);
+                        console.log("++++++++")
                         _this.table.reload(this.extraArgs);
 
                 }
@@ -352,7 +355,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var keyCode = event.keyCode;
         if(keyCode === 13) {
             this.onConfirmRankInput(event);
-        }     
+        }
     },
     onBlurRank:function(event){
         var oldConfirmView = W.registry['common-popup-confirm-view'];
@@ -409,7 +412,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $(event.currentTarget).val(oldPos);
                 }
                 var has_index = false
-                
+
                 W.getApi().call({
                     method: 'get',
                     app: 'mall2',
