@@ -16,7 +16,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
     initialize: function(options) {
         this.$el = $(this.el);
         this.options = options || {};
-        this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+        this.table = this.$('[data-ui-role="products-advanced-table"]').data('view');
         this.modelInfoTemplate = this.getModelInfoTemplate();
         this.type = options.type || 'onshelf';
     },
@@ -489,7 +489,7 @@ W.view.mall.offshelfProductsTable = W.view.common.AdvancedTable.extend({
         });
     }
 });
-W.registerUIRole('div[data-ui-role="offshelf-advanced-table"]', function() {
+W.registerUIRole('div[data-ui-role="products-advanced-table"]', function() {
     var $div = $(this);
     var template = $div.data('template-id');
     var app = $div.data('app')
