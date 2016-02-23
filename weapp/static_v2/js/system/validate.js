@@ -26,12 +26,19 @@ W.ValidaterClass = function() {
             regex: /^[a-zA-Z0-9_]+$/g,
             errorHint: '格式不正确，请输入字母、数字、下划线'
         },
-		'require-int': {
+        'require-int': {
             //整数
             type: 'regex',
             extract: 'value',
             regex: /^-?\d+$/g,
             errorHint: '格式不正确，请输入整数'
+        },
+		'require-notZero': {
+            //整数
+            type: 'regex',
+            extract: 'value',
+            regex: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+            errorHint: '必须大于0'
         },
         'require-positive-int': {
             //正整数
