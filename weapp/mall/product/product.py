@@ -578,15 +578,15 @@ class DeletedProductList(resource.Resource):
         """
         查看失效商品
         """
-        start_date = request.GET.get('start_date', "")
-        end_date = request.GET.get('end_date', "")
+        start_date = request.GET.get('startDate', "")
+        end_date = request.GET.get('endDate', "")
 
         if start_date and end_date:
             params = dict(
                     owner=request.manager,
                     is_deleted=True,
-                    start_date__glt=start_date,
-                    end_date__glt=end_date
+                    delete_time__gte=start_date,
+                    delete_time__lte=end_date
                 )
         else:
             params = dict(

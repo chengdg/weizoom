@@ -28,34 +28,33 @@ def update_sync_product_status(product, request):
     if product.name != request.POST.get('name', '').strip():
         is_update = True
         update_data.append(u'商品名称')
-    elif product.promotion_title != request.POST.get('promotion_title', '').strip():
+    if product.promotion_title != request.POST.get('promotion_title', '').strip():
         is_update = True
         update_data.append(u'促销标题')
-    elif product.user_code != request.POST.get('user_code', '').strip():
+    if product.user_code != request.POST.get('user_code', '').strip():
         is_update = True
-        update_data.append('商品编码')
-    elif product.bar_code != request.POST.get('bar_code', '').strip():
+        update_data.append(u'商品编码')
+    if product.bar_code != request.POST.get('bar_code', '').strip():
         is_update = True
-        update_data.append('商品条码')
-    elif product.detail != request.POST.get('detail', '').strip():
+        update_data.append(u'商品条码')
+    if product.detail != request.POST.get('detail', '').strip():
         is_update = True
-        update_data.append('商品详情')
-    elif product_standard_model.price != float(standard_model['price']):
+        update_data.append(u'商品详情')
+    if product_standard_model.price != float(standard_model['price']):
         is_update = True
-        update_data.append('商品价格')
-    elif product_standard_model.weight != float(standard_model['weight']):
+        update_data.append(u'商品价格')
+    if product_standard_model.weight != float(standard_model['weight']):
         is_update = True
-        update_data.append('商品重量')
-    elif product_standard_model.user_code != standard_model['user_code']:
+        update_data.append(u'商品重量')
+    if product_standard_model.user_code != standard_model['user_code']:
         is_update = True
-        update_data.append('商品编码')
-    elif property_ids != existed_property_ids:
+        update_data.append(u'商品编码')
+    if property_ids != existed_property_ids:
         is_update = True
-        update_data.append('商品属性')
-    elif set([image['url'] for image in product.swipe_images]) != set([image['url'] for image in swipe_images]):
+        update_data.append(u'商品属性')
+    if set([image['url'] for image in product.swipe_images]) != set([image['url'] for image in swipe_images]):
         is_update = True
-        update_data.append('商品图片')
-    else:
-        pass
+        update_data.append(u'商品图片')
+
     if is_update:
         utils.update_weizoom_mall_sync_product_status(product.id)
