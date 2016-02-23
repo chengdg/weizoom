@@ -29,7 +29,7 @@
 		<div
 		data-ui-role="products-advanced-table"
 		data-app="mall2"
-		data-resource="product_list"
+		data-api="product_list"
 		data-template-id="#products-view"
 		data-enable-paginator="true"
 		data-enable-sort="false"
@@ -174,7 +174,7 @@
 $(document).ready(function() {
 	var view = new W.view.mall.ProductListView({
 		el: '.xui-productsPage',
-		type: 'onshelf', 
+		type: 'onshelf',
 		low_stocks: '{{high_stocks}}',  //支持从首页店铺提醒“库存不足商品”过来的请求，这过来的请求是0~0，所以这块就直接用high_stocks了 duhao 20150925
 		high_stocks: '{{high_stocks}}'
 	});

@@ -272,7 +272,7 @@ class ProductList(resource.Resource):
             )
 
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if UserProfile.objects.filter(user=request.manager, webapp_type=1).count() > 0:
+        if not UserProfile.objects.get(user=request.manager).webapp_type:
             if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
                 for id in ids:
                     utils.delete_weizoom_mall_sync_product(request, id)
@@ -933,7 +933,7 @@ class Product(resource.Resource):
         product_id = request.GET.get('id')
 
         # 更新对应同步的商品状态
-        if UserProfile.objects.filter(user=request.manager, webapp_type=0).count() > 0:
+        if not UserProfile.objects.get(user=request.manager).webapp_type:
             from .tasks import update_sync_product_status
             products = models.Product.objects.filter(id=product_id)
             models.Product.fill_details(request.manager, products, {
@@ -944,7 +944,7 @@ class Product(resource.Resource):
                 'with_all_category': True,
                 'with_sales': True
             })
-            update_sync_product_status.delay(products, request)
+            update_sync_product_status.delay(products[0], request)
 
         # 处理商品排序
         display_index = int(request.POST.get('display_index', '0'))
