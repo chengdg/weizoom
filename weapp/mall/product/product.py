@@ -49,6 +49,7 @@ class ProductList(resource.Resource):
           if shelve_type is not be provided the TypeError will be raise
           如果shelve_type没有被提供， 将触发TypeError异常
         """
+        mall_type = UserProfile.objects.get(user=request.manager).webapp_type
         shelve_type = int(request.GET.get("shelve_type", 1))
         has_product = models.Product.objects.filter(
             owner=request.manager,
@@ -60,7 +61,9 @@ class ProductList(resource.Resource):
             {'first_nav_name': export.PRODUCT_FIRST_NAV,
              'second_navs': export.get_mall_product_second_navs(request),
              'has_product': has_product,
-             'high_stocks': request.GET.get('high_stocks', '-1')}
+             'high_stocks': request.GET.get('high_stocks', '-1'),
+             'mall_type': mall_type
+             }
         )
         if shelve_type == models.PRODUCT_SHELVE_TYPE_ON:
             c.update({'second_nav_name': export.PRODUCT_MANAGE_ON_SHELF_PRODUCT_NAV})
@@ -147,7 +150,10 @@ class ProductList(resource.Resource):
         products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
 
-        products = utils.filter_products(request, products_not_0 + products_is_0)
+        if mall_type:
+            products = utils.weizoom_filter_products(request, products_not_0 + products_is_0)
+        else:
+            products = utils.filter_products(request, products_not_0 + products_is_0)
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -165,12 +171,15 @@ class ProductList(resource.Resource):
             product_id2store_name = {}
             product_id2sync_time = {}
 
+        # 手动添加供货商的信息
+        supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
+
         #构造返回数据
         items = []
         for product in products:
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
-            product_dict['store_name'] = product_id2store_name.get(product.id, "")
+            product_dict['store_name'] = supplier_ids2name[product.id] if product.supplier > 0 and supplier_ids2name.has_key(product.id) else product_id2store_name.get(product.id, "")
             product_dict['sync_time'] = product_id2sync_time.get(product.id, "")
             items.append(product_dict)
 
@@ -640,6 +649,7 @@ class Product(resource.Resource):
         # 商城的类型
         mall_type = request.user_profile.webapp_type
         has_store_name = False
+        store_name = ''
 
         if has_product_id:
             try:
@@ -657,8 +667,10 @@ class Product(resource.Resource):
             })
             # 判断微众系列商品是不是供货商提供的
             if mall_type:
-                if models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id=has_product_id, is_deleted=False).count > 0:
+                relations = models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id=has_product_id, is_deleted=False)
+                if relations.count > 0:
                     has_store_name = True
+                    store_name = UserProfile.objects.get(user_id=relations[0].mall_id).store_name
             #获取商品分类信息
             categories = product.categories
 
@@ -729,7 +741,8 @@ class Product(resource.Resource):
             'supplier': supplier,
             'is_bill': is_bill,
             'mall_type': mall_type,
-            'has_store_name': has_store_name
+            'has_store_name': has_store_name,
+            'store_name': store_name
         })
         if _type == models.PRODUCT_INTEGRAL_TYPE:
             return render_to_response('mall/editor/edit_integral_product.html', c)

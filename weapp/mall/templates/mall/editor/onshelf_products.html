@@ -79,12 +79,12 @@
 		<thead>
 			<tr>
 				<th width="250">商品信息</th>
-				<th width="100">{{if mall_type}}供货商{{else}}条码{{/if}}</th>
+				<th width="100">{{if data.data.mall_type == 1}}供货商{{else}}条码{{/if}}</th>
 				<th width="100">分组</th>
 				<th width="115">商品价格（元）</th>
 				<th width="50">库存</th>
 				<th width="78">总销量</th>
-				<th width="120">{{if mall_type}}同步{{else}}创建{{/if}}时间</th>
+				<th width="120">{{if data.data.mall_type == 1}}同步{{else}}创建{{/if}}时间</th>
 				<th width="58">排序</th>
 				<th width="90">操作</th>
 			</tr>
@@ -118,7 +118,7 @@
 							</div>
 						</div>
 					</td>
-					<td>{{if mall_type}}${product.store_name}{{else}}${product.bar_code}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1}}${product.store_name}{{else}}${product.bar_code}{{/if}}</td>
 					<td>
 						<ul>
 							{{each(i, category) product.categories}}
@@ -147,7 +147,7 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					<td>{{if mall_type}}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1}}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
 					<td style="padding:0 15px;">
 						<input width="38" type="text" class="xa-rank" data-id="${product.id}" style="width:100%;"
 						 			 value="${product.display_index}" data-display-index="${product.display_index}">
@@ -176,7 +176,8 @@ $(document).ready(function() {
 		el: '.xui-productsPage',
 		type: 'onshelf',
 		low_stocks: '{{high_stocks}}',  //支持从首页店铺提醒“库存不足商品”过来的请求，这过来的请求是0~0，所以这块就直接用high_stocks了 duhao 20150925
-		high_stocks: '{{high_stocks}}'
+		high_stocks: '{{high_stocks}}',
+		mall_type: '{{ mall_type }}'
 	});
 	view.render();
 });

@@ -47,7 +47,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         this.filterView = new W.view.mall.ProductFilterView({
             el: '.xa-productFilterView',
             low_stocks: this.options.low_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-            high_stocks: this.options.high_stocks || ''  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+            high_stocks: this.options.high_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+            mall_type: this.options.mall_type || 0
         });
         this.filterView.on('search', _.bind(this.onSearch, this));
         this.filterView.render();
@@ -483,7 +484,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
 W.view.mall.offshelfProductsTable = W.view.common.AdvancedTable.extend({
     afterload:function(){
         $('.xa-selectTr').each(function(index, el) {
-            if($(this).data('purchase-price').length !== 0 && $(this).data('purchase-price') == "0" && $(this).data('sync-time')){
+            if($(this).data('purchase-price') == "0" && $(this).data('sync-time')){
                 $(this).find('.xa-select').attr('disabled', 'disabled').removeClass('xa-select');
             }
         });

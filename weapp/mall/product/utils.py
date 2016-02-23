@@ -223,10 +223,65 @@ def get_sync_product_store_name(product_ids):
     for product_id in product_id2mall_id.keys():
         product_id2store_name[product_id] = mall_id2store_name[product_id2mall_id[product_id]]
     return product_id2store_name, product_id2sync_time
-    # except:
-    #     pass
-    #     return {}, {}
-# TODO: update models ref
+
+def weizoom_filter_products(request, products):
+    """
+    weizoom自营平台筛选商品
+    """
+    store_name = request.GET.get('supplier', '')
+    start_date = request.GET.get('startDate', '')
+    end_date = request.GET.get('endDate', '')
+
+    from_supplier_product_ids = []
+    from_store_product_ids = []
+    if not store_name and not start_date and not end_date:
+        return filter_products(request, products)
+
+    # 同步商品
+    from weixin.user.module_api import get_all_active_mp_user_ids
+    all_user_ids = get_all_active_mp_user_ids()
+    all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
+    if store_name:
+        owner_ids = [profile.user_id for profile in all_mall_userprofiles.filter(store_name__contains=store_name)]
+        # 手动添加供货商
+        supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
+                                        owner=request.manager,
+                                        name__contains=store_name,
+                                        is_delete=False
+                                    )]
+        from_supplier_product_ids = [product.id for product in models.Product.objects.filter(
+                                        owner=request.manager,
+                                        supplier__in=supplier_ids,
+                                        is_deleted=False
+                                    )]
+    else:
+        owner_ids = [profile.user_id for profile in all_mall_userprofiles.all()]
+
+    if start_date and end_date:
+        params = dict(
+                owner=request.manager,
+                mall_id__in=owner_ids,
+                is_deleted=False,
+                delete_time__gte=start_date,
+                delete_time__lte=end_date
+            )
+    else:
+        params = dict(
+                owner=request.manager,
+                mall_id__in=owner_ids,
+                is_deleted=False,
+            )
+
+    from_store_product_ids = [relation.weizoom_product_id for relation in models.WeizoomHasMallProductRelation.objects.filter(**params)]
+    filter_product_ids = from_store_product_ids + from_supplier_product_ids
+
+    filtered_products = filter_products(request, products)
+    new_filtered_products = []
+    for product in filtered_products:
+        if product.id in filter_product_ids:
+            new_filtered_products.append(product)
+    return new_filtered_products
+
 #
 # def update_one_product(request):
 #     try:
