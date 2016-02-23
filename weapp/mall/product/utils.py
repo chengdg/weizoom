@@ -50,6 +50,8 @@ def extract_product_model(request):
         custom_models = use_custom_models
         for model in custom_models:
             model['properties'] = process_custom_model(model['name'])
+            if model.get('stocks') and int(model.get('stocks')) == -1:
+                model['stocks'] = 0
 
     else:
         price = request.POST.get('price', '0.0').strip()
