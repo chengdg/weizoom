@@ -90,7 +90,7 @@
 		<tbody id='product_list'>
             {{if items.length}}
 	            {{each(i, product) items}}
-				<tr data-id="${product.id}" class="xa-selectTr" data-purchase-price="${product.purchase_price}">
+				<tr data-id="${product.id}" class="xa-selectTr" data-purchase-price="${product.purchase_price}" data-sync-time="${product.sync_time}">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">
@@ -116,7 +116,8 @@
 							</div>
 						</div>
 					</td>
-					<td>{{if data.data.mall_type == 1 && product.store_name }}${product.store_name}{{else}}${product.bar_code}{{/if}}</td>
+					<td>
+					{{if data.data.mall_type == 1 }}${product.store_name}{{else}}${product.bar_code}${product.store_name}{{/if}}</td>
 					<td>
 						<ul>
 							{{each(i, category) product.categories}}
@@ -144,7 +145,7 @@
 						{{/if}}
 					</td>
 					<td>${product.sales}</td>
-					<td>{{if data.data.mall_type == 1 && product.sync_time }}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
+					<td>{{if data.data.mall_type == 1 }}${product.sync_time}{{else}}${product.created_at}{{/if}}</td>
 					<td>
 					   <div style=" width:74px; margin:auto;">
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">

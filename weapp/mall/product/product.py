@@ -272,10 +272,9 @@ class ProductList(resource.Resource):
             )
 
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if not UserProfile.objects.get(user=request.manager).webapp_type:
-            if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
-                for id in ids:
-                    utils.delete_weizoom_mall_sync_product(request, id)
+        if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
+            for id in ids:
+                utils.delete_weizoom_mall_sync_product(request, id)
 
         response = create_response(200)
         return response.get_response()

@@ -483,7 +483,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
 W.view.mall.offshelfProductsTable = W.view.common.AdvancedTable.extend({
     afterload:function(){
         $('.xa-selectTr').each(function(index, el) {
-            if($(this).data('purchase-price').length !== 0 && $(this).data('purchase-price') == "0"){
+            if($(this).data('purchase-price').length !== 0 && $(this).data('purchase-price') == "0" && $(this).data('sync-time')){
                 $(this).find('.xa-select').attr('disabled', 'disabled').removeClass('xa-select');
             }
         });

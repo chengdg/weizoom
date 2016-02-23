@@ -216,7 +216,7 @@ def get_sync_product_store_name(product_ids):
     product_id2sync_time = {}
     for relation in relations:
         product_id2mall_id[relation.weizoom_product_id] = relation.mall_id
-        product_id2sync_time[relation.weizoom_product_id] = relation.sync_time.strftime('%Y-%m-%d %H:%M:%S')
+        product_id2sync_time[relation.weizoom_product_id] = relation.sync_time.strftime('%Y-%m-%d %H:%M')
     mall_ids = product_id2mall_id.values()
     mall_id2store_name = dict([(profile.user_id, profile.store_name) for profile in UserProfile.objects.filter(user_id__in=mall_ids)])
     product_id2store_name = {}
