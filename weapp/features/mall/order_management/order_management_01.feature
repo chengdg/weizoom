@@ -283,50 +283,6 @@ Background:
 				"name": "bill商品1"
 			}]
 			"""
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "bill商品1",
-				"user_code":"0101",
-				"supplier":"bill商家",
-				"categories": "",
-				"price": 10.00,
-				"stock_type": "无限",
-				"sales": 0,
-				"sync_time":"今天",
-				"actions": ["修改", "上架", "彻底删除"]
-			},{
-				"name": "bill商品2",
-				"user_code": "0102",
-				"supplier":"bill商家",
-				"categories": "",
-				"price": 20.00,
-				"stock_type": "无限",
-				"sales": 0,
-				"sync_time":"今天",
-				"actions": ["修改", "上架", "彻底删除"]
-			},{
-				"name": "tom商品1",
-				"user_code":"0201",
-				"supplier":"tom商家",
-				"categories": "",
-				"price": 10.00,
-				"stock_type": "无限",
-				"sales": 0,
-				"sync_time":"今天",
-				"actions": ["修改", "上架", "彻底删除"]
-			},{
-				"name": "tom商品2",
-				"user_code":"0201",
-				"supplier":"tom商家",
-				"categories": "",
-				"price": 20.00,
-				"stocks":200,
-				"sales": 0,
-				"sync_time":"今天",
-				"actions": ["修改", "上架", "彻底删除"]
-			}]
-			"""
 		When jobs更新商品'bill商品1'
 			"""
 			{
