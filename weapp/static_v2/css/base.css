@@ -347,6 +347,11 @@ textarea{resize:none}
 	background-color: #FCFFD5 !important;
 	background-repeat: no-repeat;
 }
+.xui-contenteditable:hover[readonly="true"],
+.xui-contenteditable[readonly="true"]{
+	color:#999;
+	background-color: #f4f6fa!important;
+}
 .xui-contenteditable:focus {
 	background-color: #FCFFD5 !important;
 	border: solid 1px blue;
