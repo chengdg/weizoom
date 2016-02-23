@@ -15,7 +15,7 @@ class RedPacket(models.Document):
 	status = models.IntField(default=0) #状态
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	timing = models.BooleanField(default=True) #是否显示倒计时
-	type = models.StringField(default="random", max_length=10) #红包方式,默认为拼手气红包
+	red_packet_type = models.StringField(default="random", max_length=10) #红包方式,默认为拼手气红包
 	random_total_money = models.StringField(default="", max_length=10) #拼手气红包总金额
 	random_packets_number = models.StringField(default="", max_length=10) #拼手气红包红包个数
 	random_random_number_list = models.ListField() #随机正负金额List

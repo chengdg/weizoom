@@ -97,7 +97,7 @@ class Command(BaseCommand):
 			red_packet_info = all_red_packets.get(id=record_id)
 			red_packet_info.update(inc__red_packet_remain_amount = 1)
 			# 拼手气红包，取关了的参与者，需要把已领取的放回总红包池中
-			if red_packet_info.type == u'random':
+			if red_packet_info.red_packet_type == u'random':
 				random_total_money = float(red_packet_info.random_total_money)
 				random_packets_number = float(red_packet_info.random_packets_number)
 				random_average = round(random_total_money/random_packets_number,2) #红包金额/红包个数

@@ -307,7 +307,7 @@ def __Create_RedPacket(context,text,user):
 	timing_value_day = __date_delta(start_date,end_date)
 
 	redpacket_arr = text.get("red_packet","")#红包类型
-	redpacket_type = redpacket_arr.get('type',""),
+	redpacket_type = redpacket_arr.get('red_packet_type',""),
 	redpacket_random_total_money = redpacket_arr.get('random_total_money',""),
 	redpacket_random_packets_number = redpacket_arr.get("random_packets_number",""),
 	redpacket_regular_packets_number = redpacket_arr.get("regular_packets_number",""),
@@ -389,7 +389,7 @@ def __Create_RedPacket(context,text,user):
 		"start_time":start_time,
 		"end_time":end_time,
 		"timing":timing_status,
-		"type":redpacket_type,
+		"red_packet_type":redpacket_type,
 		"random_total_money":redpacket_random_total_money,
 		"random_packets_number":redpacket_random_packets_number,
 		"regular_packets_number":redpacket_regular_packets_number,
@@ -433,7 +433,7 @@ def __Update_RedPacket(context,text,page_id,redpacket_id):
 	timing_value_day = __date_delta(start_date,end_date)
 
 	redpacket_arr = text.get("red_packet","")#红包类型
-	redpacket_type = redpacket_arr.get('type',""),
+	redpacket_type = redpacket_arr.get('red_packet_type',""),
 	redpacket_random_total_money = redpacket_arr.get('random_total_money',""),
 	redpacket_random_packets_number = redpacket_arr.get("random_packets_number",""),
 	redpacket_regular_packets_number = redpacket_arr.get("regular_packets_number",""),
@@ -498,7 +498,7 @@ def __Update_RedPacket(context,text,page_id,redpacket_id):
 		"start_time":start_time,
 		"end_time":end_time,
 		"timing":timing_status,
-		"type":redpacket_type,
+		"red_packet_type":redpacket_type,
 		"random_total_money":redpacket_random_total_money,
 		"random_packets_number":redpacket_random_packets_number,
 		"regular_packets_number":redpacket_regular_packets_number,
@@ -654,7 +654,7 @@ def step_impl(context,user):
 			tmp = {
 				"name":item['name'],
 				"participant_count":item['participant_count'],
-				"type":item['type'],
+				"red_packet_type":item['red_packet_type'],
 				"status":item['status'],
 				"total_money":item['total_money'],
 				"already_paid_money":item['already_paid_money'],
@@ -701,7 +701,7 @@ def step_impl(context,user):
 			tmp = {
 				"name":item['name'],
 				"participant_count":item['participant_count'],
-				"type":item['type'],
+				"red_packet_type":item['red_packet_type'],
 				"status":item['status'],
 				"total_money":item['total_money'],
 				"already_paid_money":item['already_paid_money'],

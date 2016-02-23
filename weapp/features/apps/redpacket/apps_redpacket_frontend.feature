@@ -53,7 +53,7 @@ Background:
 			"end_date":"明天",
 			"is_show_countdown":"true",
 			"red_packet":{
-				"type":"random",
+				"red_packet_type":"random",
 				"random_total_money":"10",
 				"random_packets_number":"2",
 				"regular_packets_number":"",
@@ -72,7 +72,7 @@ Background:
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"3",

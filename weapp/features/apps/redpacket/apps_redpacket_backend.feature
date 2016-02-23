@@ -50,7 +50,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 			"end_date":"明天",
 			"is_show_countdown":"true",
 			"red_packet":{
-				"type":"random",
+				"red_packet_type":"random",
 				"random_total_money":"500",
 				"random_packets_number":"10",
 				"regular_packets_number":"",
@@ -71,7 +71,7 @@ Scenario:1 新建拼手气红包活动，用户二维码为空
 		[{
 			"name":"拼红包活动1",
 			"participant_count":"0",
-			"type":"拼手气",
+			"red_packet_type":"拼手气",
 			"status":"进行中",
 			"total_money":"500.00",
 			"already_paid_money":"0.00",
@@ -92,7 +92,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
@@ -113,7 +113,7 @@ Scenario:2 新建普通红包活动，用户二维码非空
 		[{
 			"name":"拼红包活动2",
 			"participant_count":"0",
-			"type":"普通",
+			"red_packet_type":"普通",
 			"status":"未开始",
 			"total_money":"100.00",
 			"already_paid_money":"0.00",
