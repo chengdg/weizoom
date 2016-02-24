@@ -180,7 +180,7 @@ class RedPacketParticipance(resource.Resource):
 
 def participate_red_packet(record_id,member_id):
 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
-	packets_number = red_packet_info.random_packets_number if red_packet_info.type =='random' else red_packet_info.regular_packets_number
+	packets_number = red_packet_info.random_packets_number if red_packet_info.red_packet_type =='random' else red_packet_info.regular_packets_number
 	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
 	if int(packets_number) > all_participate.count():
 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
@@ -204,7 +204,7 @@ def participate_red_packet(record_id,member_id):
 			if sync_result:
 				# amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
 				# amount_control.update(inc__red_packet_amount = 1)
-				if red_packet_info.type == 'random':
+				if red_packet_info.red_packet_type == 'random':
 					random_total_money = float(red_packet_info.random_total_money)
 					random_packets_number = float(red_packet_info.random_packets_number)
 					random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数

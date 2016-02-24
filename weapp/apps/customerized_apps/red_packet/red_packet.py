@@ -92,7 +92,7 @@ class RedPacket(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		data['qrcode'] = json.loads(request.POST['qrcode'])
-		if request.POST['type'] == 'random':
+		if request.POST['red_packet_type'] == 'random':
 			data['random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number']) #拼手气红包随机数List
 			data['red_packet_remain_amount'] = data['random_packets_number']
 		else:
@@ -135,7 +135,7 @@ class RedPacket(resource.Resource):
 		_, app_name, real_project_id = project_id.split(':')
 		page = pagestore.get_page(real_project_id, 1)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
+		update_fields = set(['name', 'start_time', 'end_time', 'timing', 'red_packet_type', 'random_total_money','random_packets_number','regular_packets_number','regular_per_money','money_range','reply_content', 'material_image','share_description', 'qrcode'])
 
 		for key, value in data.items():
 			if key in update_fields:
@@ -145,14 +145,14 @@ class RedPacket(resource.Resource):
 				print key,value,"$$$$$$$$$"
 
 			#清除红包类型选项下不需要再保存的两个字段
-			if key == "type" and value == "random":
+			if key == "red_packet_type" and value == "random":
 				update_data['set__random_random_number_list'] = create_pop_list(data['random_total_money'],data['random_packets_number'])
-				update_data['set__red_packet_remain_amount'] = data['random_packets_number']
+				update_data['set__red_packet_remain_amount'] = int(data['random_packets_number'])
 				update_data['set__regular_packets_number'] = ''
 				update_data['set__regular_per_money'] = ''
 				page['component']['components'][0]['model']['regular_packets_number'] = ''
 				page['component']['components'][0]['model']['regular_per_money'] = ''
-			if key == "type" and value == "regular":
+			if key == "red_packet_type" and value == "regular":
 				update_data['set__red_packet_remain_amount'] = int(data['regular_packets_number'])
 				update_data['set__random_total_money'] = ''
 				update_data['set__random_packets_number'] = ''
