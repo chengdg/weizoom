@@ -78,7 +78,7 @@ W.view.mall.ProductsPoolView = Backbone.View.extend({
      */
     onSearch: function(data) {
         this.table.reload(data, {
-            emptyDataHint: '没有符合条件  的商品'
+            emptyDataHint: '没有符合条件的商品'
         });
     },
     onClickCreateProductOffShelf: function(event) {
