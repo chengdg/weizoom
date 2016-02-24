@@ -7,6 +7,7 @@ from operator import attrgetter
 from django.db.models import Q
 
 from mall import models
+from mall import signals as mall_signals
 from account.models import UserProfile
 from mall.promotion import models as promotion_model
 from core import search_util
@@ -191,14 +192,27 @@ def sorted_products(manager_id, product_categories, reverse):
         c.products = products
     return product_categories
 
-def delete_weizoom_mall_sync_product(request, mall_product_id):
+MALL_PRODUCT_DELETED = -1
+MALL_PRODUCT_OFF_SHELVE = 0
+MALL_PRODUCT_HAS_MORE_MODEL = 1
+
+DELETED_WEIZOOM_PRODUCT_REASON = {
+    MALL_PRODUCT_DELETED: u'供货商商品删除',
+    MALL_PRODUCT_OFF_SHELVE: u'供货商商品下架',
+    MALL_PRODUCT_HAS_MORE_MODEL: u'供货商修改商品为多规格'
+}
+
+def delete_weizoom_mall_sync_product(request, mall_product_id, reason=None):
     try:
         relations = models.WeizoomHasMallProductRelation.objects.filter(Q(mall_product_id=mall_product_id)|Q(weizoom_product_id=mall_product_id))
-        from mall.promotion.utils import stop_promotion
-        promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id for relation in relations])
-        promotions = stop_promotion(request, [relation.promotion for relation in promotion_relations])
-        models.Product.objects.filter(id__in=[relation.weizoom_product_id for relation in relations]).update(is_deleted=True)
+        weizoom_product_ids = [relation.weizoom_product_id for relation in relations]
+        models.Product.objects.filter(id__in=weizoom_product_ids).update(is_deleted=True)
         relations.update(is_deleted=True)
+        mall_signals.products_not_online.send(
+                sender=models.Product,
+                product_ids=weizoom_product_ids,
+                request=request
+            )
     #TODO:钉订提示
     except:
        pass

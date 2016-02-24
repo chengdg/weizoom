@@ -237,10 +237,12 @@ class ProductList(resource.Resource):
             shelve_type = models.PRODUCT_SHELVE_TYPE_ON
         elif shelve_type == 'offshelf':
             shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
+            reason = utils.MALL_PRODUCT_OFF_SHELVE
         elif shelve_type == 'recycled':
             shelve_type = models.PRODUCT_SHELVE_TYPE_RECYCLED
         elif shelve_type == 'delete':
             is_deleted = True
+            reason = utils.MALL_PRODUCT_DELETED
 
         products = models.Product.objects.filter(id__in=ids)
 
@@ -283,7 +285,7 @@ class ProductList(resource.Resource):
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
         if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
             for id in ids:
-                utils.delete_weizoom_mall_sync_product(request, id)
+                utils.delete_weizoom_mall_sync_product(request, id, reason)
 
         response = create_response(200)
         return response.get_response()
@@ -513,9 +515,11 @@ class ProductPool(resource.Resource):
             is_deleted=False)
 
         # 微众系列商品参加的促销活动
-        from mall.promotion.utils import stop_promotion
-        promotion_relations = promotion_model.ProductHasPromotion.objects.filter(product_id__in=[relation.weizoom_product_id])
-        stop_promotion(request, [r.promotion for r in promotion_relations])
+        mall_signals.products_not_online.send(
+                sender=models.Product,
+                product_ids=[relation.weizoom_product_id],
+                request=request
+            )
 
         weizoom_product = models.Product.objects.get(id=relation.weizoom_product_id)
         mall_product = models.Product.objects.get(id=relation.mall_product_id)

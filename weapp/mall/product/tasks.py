@@ -13,7 +13,7 @@ def update_sync_product_status(product, request):
     standard_model, custom_models = utils.extract_product_model(request)
     swipe_images = json.loads(request.POST.get('swipe_images', '[]'))
     if len(custom_models) > 0:
-        utils.delete_weizoom_mall_sync_product(request, product.id)
+        utils.delete_weizoom_mall_sync_product(request, product.id, utils.MALL_PRODUCT_HAS_MORE_MODEL)
         return
     # 属性
     product_standard_model = models.ProductModel.objects.filter(product_id=product.id, name='standard')[0]

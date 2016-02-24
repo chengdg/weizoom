@@ -367,7 +367,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'name': MALL_APPS_SECOND_NAV,
             'title': u'百宝箱',
             'url': '/apps/lottery/lotteries/',
-            'permission': 'manage_apps', 
+            'permission': 'manage_apps',
             'third_navs': [
                 {
                     'name': MALL_APPS_LOTTERY_NAV,
@@ -433,7 +433,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             ]
         }
     ]
-    
+
 }
 
 ########################################################################
@@ -499,7 +499,7 @@ def get_config_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm')
+        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm', 'jobs')
         if request.user.username not in user_list_for_supplier_list:
             nav = {"navs":CONFIG_NAV['navs'][:-1]}
             second_navs = [nav]
