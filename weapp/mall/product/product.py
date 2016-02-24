@@ -182,15 +182,17 @@ class ProductList(resource.Resource):
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
             product_dict['store_name'] = supplier_ids2name[product.id] if product.supplier > 0 and supplier_ids2name.has_key(product.id) else product_id2store_name.get(product.id, "")
-            product_dict['sync_time'] = product_id2sync_time.get(product.id, "")
+            product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M:%S'))
             if product_dict['sync_time'] and not product_dict['purchase_price']:
                 items1.append(product_dict)
             else:
                 items2.append(product_dict)
             items.append(product_dict)
 
-        # 微众系列在售排序
+        # 微众系列待售排序
         if mall_type and _type == 'offshelf':
+            sorted(items1, key=lambda item:item['sync_time'], reverse=True)
+            sorted(items2, key=lambda item:item['sync_time'], reverse=True)
             items = items1 + items2
 
         data = dict()
