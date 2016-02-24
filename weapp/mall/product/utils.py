@@ -11,7 +11,9 @@ from mall import signals as mall_signals
 from account.models import UserProfile
 from mall.promotion import models as promotion_model
 from core import search_util
+from utils import ding_util
 
+DING_GROUP_ID = '80035247'
 
 def process_custom_model(custom_model_str):
     """处理custommodels字符串
@@ -202,9 +204,9 @@ DELETED_WEIZOOM_PRODUCT_REASON = {
     MALL_PRODUCT_HAS_MORE_MODEL: u'供货商修改商品为多规格'
 }
 
-def delete_weizoom_mall_sync_product(request, mall_product_id, reason=None):
+def delete_weizoom_mall_sync_product(request, product, reason):
     try:
-        relations = models.WeizoomHasMallProductRelation.objects.filter(Q(mall_product_id=mall_product_id)|Q(weizoom_product_id=mall_product_id))
+        relations = models.WeizoomHasMallProductRelation.objects.filter(Q(mall_product_id=product.id)|Q(weizoom_product_id=product.id))
         weizoom_product_ids = [relation.weizoom_product_id for relation in relations]
         models.Product.objects.filter(id__in=weizoom_product_ids).update(is_deleted=True)
         relations.update(is_deleted=True)
@@ -213,13 +215,26 @@ def delete_weizoom_mall_sync_product(request, mall_product_id, reason=None):
                 product_ids=weizoom_product_ids,
                 request=request
             )
-    #TODO:钉订提示
+        
+        text = u'商品删除提示：\n'
+        text += u'账号：%s\n' % request.user.username
+        text += u'商品名称：%s\n' % product.name
+        text += u'删除原因：%s\n' % DELETED_WEIZOOM_PRODUCT_REASON[reason]
+        text += u'请及时处理！'
+        ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
        pass
 
-def update_weizoom_mall_sync_product_status(mall_product_id):
+def update_weizoom_mall_sync_product_status(request, product, update_data):
     try:
-        models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=mall_product_id, is_deleted=False).update(is_updated=True)
+        models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product.id, is_deleted=False).update(is_updated=True)
+
+        text = u'商品更新提示：\n'
+        text += u'账号：%s\n' % request.user.username
+        text += u'商品名称：%s\n' % product.name
+        text += u'更新内容：%s\n' % u'，'.join(update_data)
+        text += u'请及时处理！'
+        ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
         pass
 
