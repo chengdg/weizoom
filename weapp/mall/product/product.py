@@ -245,6 +245,9 @@ class ProductList(resource.Resource):
             reason = utils.MALL_PRODUCT_DELETED
 
         products = models.Product.objects.filter(id__in=ids)
+        product_id2product = {}
+        for product in products:
+            product_id2product[product.id] = product
 
 
 
@@ -285,7 +288,7 @@ class ProductList(resource.Resource):
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
         if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
             for id in ids:
-                utils.delete_weizoom_mall_sync_product(request, id, reason)
+                utils.delete_weizoom_mall_sync_product(request, product_id2product[id], reason)
 
         response = create_response(200)
         return response.get_response()
