@@ -151,7 +151,7 @@
 						<a href="/mall2/product/?id=${product.id}" class="xa-modify fl" style="width: 39px;">
 						{{if product.is_self}}修改{{else}}审核{{/if}}</a>
 						<!-- 微众系列-未填写采购价时 -->
-						{{if product.purchase_price == "0" && data.data.mall_type == 1 && product.sync_time}}
+						{{if product.purchase_price == "0" && data.data.mall_type == 1 && product.is_sync}}
 							<span class="fl c6">上架</span>
 						{{else}}
 							<a href="javascript:void(0);" class="xa-onshelf fl">上架</a>

@@ -173,7 +173,6 @@ class ProductList(resource.Resource):
 
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
-
         #构造返回数据
         items = []
         items1 = []
@@ -181,8 +180,9 @@ class ProductList(resource.Resource):
         for product in products:
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
-            product_dict['store_name'] = supplier_ids2name[product.id] if product.supplier > 0 and supplier_ids2name.has_key(product.id) else product_id2store_name.get(product.id, "")
+            product_dict['store_name'] = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
             product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M'))
+            product_dict['is_sync'] = product_id2store_name.has_key(product.id)
             if product_dict['sync_time'] and not product_dict['purchase_price']:
                 items1.append(product_dict)
             else:
@@ -191,8 +191,8 @@ class ProductList(resource.Resource):
 
         # 微众系列待售排序
         if mall_type and _type == 'offshelf':
-            sorted(items1, key=lambda item:item['sync_time'], reverse=True)
-            sorted(items2, key=lambda item:item['sync_time'], reverse=True)
+            items1 = sorted(items1, key=lambda item:item['sync_time'], reverse=True)
+            items2 = sorted(items2, key=lambda item:item['sync_time'], reverse=True)
             items = items1 + items2
 
         data = dict()

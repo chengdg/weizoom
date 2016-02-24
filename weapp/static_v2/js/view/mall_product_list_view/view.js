@@ -139,7 +139,6 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 scope: this,
                 success: function(data) {
                         console.log(_this.table);
-                        console.log("++++++++")
                         _this.table.reload(this.extraArgs);
 
                 }
