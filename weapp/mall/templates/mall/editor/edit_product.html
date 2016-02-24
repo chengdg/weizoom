@@ -59,7 +59,7 @@
 			<div class="form-group">
 				<label class="control-label fl star_show" for="supplier">供货商：</label>
 				<div class="fl">
-            <select disabled="disabled" class="w106 ml5">
+            <select disabled="disabled" class="w106 ml5" id="supplier">
 						<option value="{{ store_name }}">{{ store_name }}</option>
 					</select>
 				</div>
@@ -312,7 +312,7 @@
 	         	{%endif%}
 				</div>
 			</div>
-			{% if is_bill or not has_store_name %}
+			{% if is_bill %}
             <div class="form-group">
                 <label class="control-label col-sm-2 col-sm-offset-1">商品发票：</label>
                 <div class="col-sm-9" style="margin-top: -6px;margin-left:-20px;">
