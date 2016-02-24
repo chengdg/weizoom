@@ -206,7 +206,7 @@ DELETED_WEIZOOM_PRODUCT_REASON = {
 
 def delete_weizoom_mall_sync_product(request, product, reason):
     try:
-        relations = models.WeizoomHasMallProductRelation.objects.filter(Q(mall_product_id=product.id)|Q(weizoom_product_id=product.id))
+        relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product.id)
         weizoom_product_ids = [relation.weizoom_product_id for relation in relations]
         models.Product.objects.filter(id__in=weizoom_product_ids).update(is_deleted=True)
         relations.update(is_deleted=True)
@@ -215,7 +215,7 @@ def delete_weizoom_mall_sync_product(request, product, reason):
                 product_ids=weizoom_product_ids,
                 request=request
             )
-        
+
         text = u'商品删除提示：\n'
         text += u'账号：%s\n' % request.user.username
         text += u'商品名称：%s\n' % product.name

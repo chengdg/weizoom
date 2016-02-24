@@ -49,7 +49,7 @@ class ProductList(resource.Resource):
           if shelve_type is not be provided the TypeError will be raise
           如果shelve_type没有被提供， 将触发TypeError异常
         """
-        mall_type = UserProfile.objects.get(user=request.manager).webapp_type
+        mall_type = request.user_profile.webapp_type
         shelve_type = int(request.GET.get("shelve_type", 1))
         has_product = models.Product.objects.filter(
             owner=request.manager,
@@ -94,7 +94,7 @@ class ProductList(resource.Resource):
 
         """
         # 商城类型
-        mall_type = UserProfile.objects.get(user=request.manager).webapp_type
+        mall_type = request.user_profile.webapp_type
         COUNT_PER_PAGE = 10
         _type = request.GET.get('type', 'onshelf')
 
@@ -189,6 +189,7 @@ class ProductList(resource.Resource):
                 items2.append(product_dict)
             items.append(product_dict)
 
+        # 微众系列在售排序
         if mall_type and _type == 'offshelf':
             items = items1 + items2
 
@@ -224,6 +225,7 @@ class ProductList(resource.Resource):
 
 
         """
+        mall_type = request.user_profile.webapp_type
         ids = request.POST.getlist('ids', [])
         _ids = request.POST.getlist('ids[]', [])
         ids = ids if ids else _ids
@@ -292,9 +294,11 @@ class ProductList(resource.Resource):
             )
 
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
+        if not mall_type and shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
             for id in ids:
                 utils.delete_weizoom_mall_sync_product(request, product_id2product[id], reason)
+        if mall_type and is_deleted:
+            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).delete()
 
         response = create_response(200)
         return response.get_response()
@@ -629,11 +633,11 @@ class DeletedProductList(resource.Resource):
 
         #构造返回数据
         items = []
-        product_id2product_name = dict([(product.id, product.name) for product in models.Product.objects.filter(id__in=[relation.mall_product_id for relation in relations])])
+        product_id2product_name = dict([(product.id, product.name) for product in models.Product.objects.filter(id__in=[relation.weizoom_product_id for relation in relations])])
         for relation in relations:
             items.append({
-                'id': relation.mall_product_id,
-                'name': product_id2product_name[relation.mall_product_id],
+                'id': relation.weizoom_product_id,
+                'name': product_id2product_name[relation.weizoom_product_id],
                 'delete_time': relation.delete_time.strftime('%Y-%m-%d %H:%M:%S')
             })
 
@@ -961,7 +965,7 @@ class Product(resource.Resource):
         product_id = request.GET.get('id')
 
         # 更新对应同步的商品状态
-        if not UserProfile.objects.get(user=request.manager).webapp_type:
+        if not request.user_profile.webapp_type:
             from .tasks import update_sync_product_status
             products = models.Product.objects.filter(id=product_id)
             models.Product.fill_details(request.manager, products, {
