@@ -621,19 +621,15 @@ class DeletedProductList(resource.Resource):
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
-        deleted_product_id2delete_time = dict([(relation.mall_product_id, relation.delete_time) for relation in relations])
-        deleted_product_ids = deleted_product_id2delete_time.keys()
-        products = models.Product.objects.filter(id__in=deleted_product_ids)
-
         #构造返回数据
         items = []
-        for product in products:
+        product_id2product_name = dict([(product.id, product.name) for product in models.Product.objects.filter(id__in=[relation.mall_product_id for relation in relations])])
+        for relation in relations:
             items.append({
-                'id': product.id,
-                'name': product.name,
-                'delete_time': deleted_product_id2delete_time[product.id].strftime('%Y-%m-%d %H:%M:%S')
+                'id': relation.mall_product_id,
+                'name': product_id2product_name[relation.mall_product_id],
+                'delete_time': relation.delete_time.strftime('%Y-%m-%d %H:%M:%S')
             })
-            sorted(items, key=lambda item:item['delete_time'], reverse=True)
 
         response = create_response(200)
         response.data = {
