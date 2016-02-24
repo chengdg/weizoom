@@ -176,15 +176,21 @@ class ProductList(resource.Resource):
 
         #构造返回数据
         items = []
+        items1 = []
+        items2 = []
         for product in products:
             product_dict = product.format_to_dict()
             product_dict['is_self'] = (request.manager.id == product.owner_id)
             product_dict['store_name'] = supplier_ids2name[product.id] if product.supplier > 0 and supplier_ids2name.has_key(product.id) else product_id2store_name.get(product.id, "")
             product_dict['sync_time'] = product_id2sync_time.get(product.id, "")
+            if product_dict['sync_time'] and not product_dict['purchase_price']:
+                items1.append(product_dict)
+            else:
+                items2.append(product_dict)
             items.append(product_dict)
 
-        if mall_type:
-            products = sorted(products, key=lambda product:product.purchase_price, reverse=True)
+        if mall_type and _type == 'offshelf':
+            items = items1 + items2
 
         data = dict()
         data['owner_id'] = request.manager.id
