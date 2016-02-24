@@ -609,28 +609,26 @@ class DeletedProductList(resource.Resource):
                     is_deleted=True
                 )
 
-        deleted_product_id2delete_time = dict([(relation.mall_product_id, relation.delete_time) for relation in models.WeizoomHasMallProductRelation.objects.filter(**params)])
-        deleted_product_ids = deleted_product_id2delete_time.keys()
+        relations = models.WeizoomHasMallProductRelation.objects.filter(**params).order_by('-delete_time')
 
         COUNT_PER_PAGE = 8
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
-        pageinfo, deleted_product_ids = paginator.paginate(
-            deleted_product_ids,
+        pageinfo, relations = paginator.paginate(
+            relations,
             cur_page,
             count_per_page,
             query_string=request.META['QUERY_STRING'])
 
-        products = models.Product.objects.filter(id__in=deleted_product_ids)
-
         #构造返回数据
         items = []
-        for product in products:
+        product_id2product_name = dict([(product.id, product.name) for product in models.Product.objects.filter(id__in=[relation.mall_product_id for relation in relations])])
+        for relation in relations:
             items.append({
-                'id': product.id,
-                'name': product.name,
-                'delete_time': deleted_product_id2delete_time[product.id].strftime('%Y-%m-%d %H:%M:%S')
+                'id': relation.mall_product_id,
+                'name': product_id2product_name[relation.mall_product_id],
+                'delete_time': relation.delete_time.strftime('%Y-%m-%d %H:%M:%S')
             })
 
         response = create_response(200)

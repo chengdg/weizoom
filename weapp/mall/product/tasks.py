@@ -31,9 +31,6 @@ def update_sync_product_status(product, request):
     if product.promotion_title != request.POST.get('promotion_title', '').strip():
         is_update = True
         update_data.append(u'促销标题')
-    if product.user_code != request.POST.get('user_code', '').strip():
-        is_update = True
-        update_data.append(u'商品编码')
     if product.bar_code != request.POST.get('bar_code', '').strip():
         is_update = True
         update_data.append(u'商品条码')
