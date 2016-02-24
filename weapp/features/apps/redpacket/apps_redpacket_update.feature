@@ -37,9 +37,9 @@ Background:
 			"name":"活动1",
 			"start_date":"3天后",
 			"end_date":"5天后",
-			"is_show_countdown":"ture",
+			"is_show_countdown":"true",
 			"red_packet":{
-				"type":"random",
+				"red_packet_type":"random",
 				"random_total_money":"200",
 				"random_packets_number":"20",
 				"regular_packets_number":"",
@@ -59,7 +59,7 @@ Background:
 			"end_date":"2天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"10",
@@ -80,7 +80,7 @@ Background:
 			"end_date":"昨天",
 			"is_show_countdown":"true",
 			"red_packet":{
-				"type":"random",
+				"red_packet_type":"random",
 				"random_total_money":"20",
 				"random_packets_number":"10",
 				"regular_packets_number":"",
@@ -97,7 +97,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_redpacket @apps_redpacket_update
+@mall2 @apps @apps_redpacket @apps_redpacket_update @kuki
 Scenario:1 编辑"未开始"的拼红包活动
 	Given jobs登录系统
 	When jobs编辑拼红包活动'活动1'
@@ -108,7 +108,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"end_date":"3天后",
 			"is_show_countdown":"false",
 			"red_packet":{
-				"type":"regular",
+				"red_packet_type":"regular",
 				"random_total_money":"",
 				"random_packets_number":"",
 				"regular_packets_number":"5",
@@ -130,7 +130,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"name":"活动3",
 			"start_date":"2天前",
 			"end_date":"昨天",
-			"type":"拼手气",
+			"red_packet_type":"拼手气",
 			"status":"已结束",
 			"participant_count":"0",
 			"total_money":"20.00",
@@ -140,7 +140,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"name":"活动2",
 			"start_date":"2天前",
 			"end_date":"2天后",
-			"type":"普通",
+			"red_packet_type":"普通",
 			"status":"进行中",
 			"participant_count":"0",
 			"total_money":"100.00",
@@ -150,7 +150,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"name":"拼红包活动1",
 			"start_date":"今天",
 			"end_date":"3天后",
-			"type":"普通",
+			"red_packet_type":"普通",
 			"status":"进行中",
 			"participant_count":0,
 			"total_money":"50.00",
@@ -158,7 +158,7 @@ Scenario:1 编辑"未开始"的拼红包活动
 			"actions": ["查看","预览","复制链接"]
 		}]
 		"""
-@mall2 @apps_redpacket @apps_redpacket_update
+@mall2 @apps @apps_redpacket @apps_redpacket_update
 Scenario:2 删除'已结束'的拼红包活动
 	Given jobs登录系统
 	When jobs删除拼红包活动'活动3'
@@ -168,7 +168,7 @@ Scenario:2 删除'已结束'的拼红包活动
 			"name":"活动2",
 			"start_date":"2天前",
 			"end_date":"2天后",
-			"type":"普通",
+			"red_packet_type":"普通",
 			"status":"进行中",
 			"participant_count":"0",
 			"total_money":"100.00",
@@ -178,7 +178,7 @@ Scenario:2 删除'已结束'的拼红包活动
 			"name":"活动1",
 			"start_date":"3天后",
 			"end_date":"5天后",
-			"type":"拼手气",
+			"red_packet_type":"拼手气",
 			"status":"未开始",
 			"participant_count":"0",
 			"total_money":"200.00",

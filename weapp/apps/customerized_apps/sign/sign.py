@@ -112,8 +112,8 @@ class Sign(resource.Resource):
 			if status == 1 and signs.count() >0:
 				#将所有已签到用户的签到状态重置，作为一个新的签到
 				sign = signs[0]
-				app_models.SignParticipance.objects(belong_to=str(sign.id)).update(set__serial_count=0)
-				app_models.SignControl.objects.all().delete()
+				app_models.SignParticipance.objects(belong_to=str(sign.id)).update(set__serial_count=0, set__latest_date=None)
+				# app_models.SignControl.objects.all().delete()
 			cache_key = 'apps_sign_%s_html' % str(signs[0].owner_id)
 		else:
 			data = export.get_sing_fields_to_save(request)

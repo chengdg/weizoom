@@ -65,8 +65,8 @@ class RedPacketParticipance(resource.Resource):
 			#被帮助者信息
 			helped_member_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=int(fid)).first()
 			#调整参与数量(首先检测是否已参与)
-			if not helped_member_info.has_join:
-				helped_member_info.update(set__has_join=True)
+			# if not helped_member_info.has_join:
+			# 	helped_member_info.update(set__has_join=True)
 			if helped_member_info.red_packet_status: #如果已经完成拼红包
 				response = create_response(500)
 				response.errMsg = u'该用户已经完成拼红包'
@@ -77,22 +77,32 @@ class RedPacketParticipance(resource.Resource):
 				return response.get_response()
 			else:
 				#更新当前member的参与信息
-				curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
+				# curr_member_red_packet_info = app_models.RedPacketParticipance.objects(belong_to=red_packet_id, member_id=member_id).first()
 				#并发问题临时解决方案 ---start
-				control_data = {}
-				control_data['belong_to'] = red_packet_id
-				control_data['member_id'] = member_id
-				control_data['helped_member_id'] = int(fid)
-				control_data['red_packet_control'] = datetime.now().strftime('%Y-%m-%d')
+				# control_data = {}
+				# control_data['belong_to'] = red_packet_id
+				# control_data['member_id'] = member_id
+				# control_data['helped_member_id'] = int(fid)
+				# control_data['red_packet_control'] = datetime.now().strftime('%Y-%m-%d')
+				# try:
+				# 	control = app_models.RedPacketControl(**control_data)
+				# 	control.save()
+				# except:
+				# 	response = create_response(500)
+				# 	response.errMsg = u'只能帮助一次'
+				# 	return response.get_response()
+				#并发问题临时解决方案 ---end
+				# curr_member_red_packet_info.update(add_to_set__helped_member_ids = long(fid))
 				try:
-					control = app_models.RedPacketControl(**control_data)
-					control.save()
+					app_models.RedPacketRelations(
+						belong_to = red_packet_id,
+						member_id = str(member_id),
+						helped_member_id = fid
+					).save()
 				except:
 					response = create_response(500)
 					response.errMsg = u'只能帮助一次'
 					return response.get_response()
-				#并发问题临时解决方案 ---end
-				curr_member_red_packet_info.update(add_to_set__helped_member_ids = long(fid))
 				#随机区间中获得好友帮助的金额
 				red_packet_info = app_models.RedPacket.objects.get(id=red_packet_id)
 				money_range_min,money_range_max = red_packet_info.money_range.split('-')
@@ -143,8 +153,7 @@ class RedPacketParticipance(resource.Resource):
 					created_at = datetime.now()
 				)
 				detail_log.save()
-		except Exception,e:
-			print e
+		except:
 			response = create_response(500)
 			response.errMsg = u'帮助好友失败'
 			response.inner_errMsg = unicode_full_stack()
@@ -165,14 +174,13 @@ class RedPacketParticipance(resource.Resource):
 		try:
 			response = create_response(200)
 
-		except Exception,e:
-			print e
+		except:
 			response = create_response(500)
 		return response.get_response()
 
 def participate_red_packet(record_id,member_id):
 	red_packet_info = app_models.RedPacket.objects.get(id=record_id)
-	packets_number = red_packet_info.random_packets_number if red_packet_info.type =='random' else red_packet_info.regular_packets_number
+	packets_number = red_packet_info.random_packets_number if red_packet_info.red_packet_type =='random' else red_packet_info.regular_packets_number
 	all_participate = app_models.RedPacketParticipance.objects(belong_to=record_id,has_join=True,is_valid=True)
 	if int(packets_number) > all_participate.count():
 		participate_member_info = app_models.RedPacketParticipance.objects.get(belong_to=record_id, member_id=member_id)
@@ -183,16 +191,20 @@ def participate_red_packet(record_id,member_id):
 			# 将之前的点赞详情日志无效
 			app_models.RedPacketDetail.objects(belong_to=record_id, owner_id=member_id).update(set__is_valid=False)
 			# 参与者取关后再关注后参与活动，取关前帮助的会员还能再次帮助，所以清空control表,log表,并移除出各帮助者的helped_member_ids
-			app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
+			# app_models.RedPacketControl.objects(belong_to=record_id, helped_member_id=member_id).delete()
 			app_models.RedPacketLog.objects(belong_to=record_id, be_helped_member_id=member_id).delete()
-			app_models.RedPacketParticipance.objects(belong_to=record_id, helped_member_ids=member_id).update(pull__helped_member_ids=member_id)
+			app_models.RedPacketRelations.objects(belong_to=record_id, helped_member_id=str(member_id)).delete()
 
 		if not participate_member_info.has_join:
 			print('participate_red_packet :191')
-			try:
-				amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
-				amount_control.update(inc__red_packet_amount = 1)
-				if red_packet_info.type == 'random':
+			sync_result = red_packet_info.modify(
+				query={'red_packet_remain_amount__gte': 1},
+				dec__red_packet_remain_amount=1
+			)
+			if sync_result:
+				# amount_control = app_models.RedPacketAmountControl.objects.filter(belong_to=record_id).first()
+				# amount_control.update(inc__red_packet_amount = 1)
+				if red_packet_info.red_packet_type == 'random':
 					random_total_money = float(red_packet_info.random_total_money)
 					random_packets_number = float(red_packet_info.random_packets_number)
 					random_average =  round(random_total_money/random_packets_number,2) #红包金额/红包个数
@@ -204,18 +216,21 @@ def participate_red_packet(record_id,member_id):
 					try:#防止万一红包random_random_number_list已经没了，无法pop
 						red_packet_money = random_average + float(red_packet_info.random_random_number_list.pop())
 						red_packet_info.update(set__random_random_number_list=red_packet_info.random_random_number_list)
-					except Exception,e:
-						print e
+					except:
 						response = create_response(500)
 						response.errMsg = 'is_run_out'
 						return response.get_response()
 				else:
 					red_packet_money = red_packet_info.regular_per_money #普通红包领取定额金额
-				participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
-			except Exception,e:
-				print e
+				if red_packet_money <= 0:
+					response = create_response(500)
+					response.errMsg = u'抢红包的人太多啦，请稍后再试~'
+					return response.get_response()
+				else:
+					participate_member_info.update(set__has_join=True,set__created_at=datetime.now(),set__red_packet_money=red_packet_money)
+			else:
 				response = create_response(500)
-				response.errMsg = u'is_run_out'
+				response.errMsg = 'is_run_out'
 				return response.get_response()
 		response = create_response(200)
 		return response.get_response()

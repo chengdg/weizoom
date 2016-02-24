@@ -28,7 +28,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_sign @edited_sign
+@mall2 @apps @apps_sign @edited_sign
 Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数，继续签到从头开始
 	When jobs添加签到活动"签到活动1",并且保存
 		"""
@@ -172,7 +172,7 @@ Scenario:1 修改最高连续签到天数，当会员累计签到达到该天数
 		}]
 		"""
 
-@mall2 @apps_sign @edited_sign
+@mall2 @apps @apps_sign @edited_sign
 Scenario:2 修改最高连续签到天数，当会员累计签到未达到该天数，继续签到获得新规则下的奖励
 	When jobs添加签到活动"签到活动2",并且保存
 		"""

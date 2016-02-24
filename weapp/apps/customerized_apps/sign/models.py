@@ -4,6 +4,8 @@ import datetime
 from django.conf import settings
 
 import mongoengine as models
+from mongoengine.queryset.visitor import Q
+
 from modules.member.module_api import get_member_by_openid
 
 from modules.member import models as member_models
@@ -35,7 +37,7 @@ class SignControl(models.Document):
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
-	member_id= models.LongField(default=0) #参与者id
+	member_id= models.LongField(default=0, unique_with="belong_to") #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	tel = models.StringField(default="", max_length=100)
 	prize = models.DynamicField(default="") #活动奖励
@@ -136,7 +138,21 @@ class SignParticipance(models.Document):
 
 		user_prize['coupon'] = ','.join(temp_coupon_list)
 		user_update_data['set__prize'] = user_prize
-		self.update(**user_update_data)
+		# self.update(**user_update_data)
+		sync_result = self.modify(
+			{'__raw__': {'$or':
+							[
+								{'latest_date': None},
+								{'latest_date': {'$lt': datetime.datetime(nowDate.year, nowDate.month, nowDate.day, 0, 0)}}
+							]
+						}
+			},
+			**user_update_data
+		)
+		if not sync_result:
+			return_data['status_code'] = RETURN_STATUS_CODE['ALREADY']
+			return_data['errMsg'] = u'每天只能签到一次'
+			return return_data
 		self.reload()
 		#更新签到参与人数
 		sign.update(inc__participant_count=1)
@@ -232,7 +248,7 @@ class Sign(models.Document):
 
 					#如果已达到最大设置天数则重置签到
 					if (signer.serial_count == max_setting_count and signer.latest_date and signer.latest_date.strftime('%Y-%m-%d') != datetime.datetime.now().strftime('%Y-%m-%d')) or (max_setting_count !=0 and signer.serial_count > max_setting_count):
-						signer.update(set__serial_count=0, set__latest_date=datetime.datetime.today())
+						signer.update(set__serial_count=0, set__latest_date=None)
 						signer.reload()
 
 					pagestore = pagestore_manager.get_pagestore('mongo')

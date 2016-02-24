@@ -8,7 +8,7 @@ Feature:手机端用户参与活动报名
 	4 活动报名时间设置成过去时间，手机端显示活动已结束
 """
 
-@mall2 @apps_event @apps_event_frontend @user_participate_event
+@mall2 @apps @apps_event @apps_event_frontend @user_participate_event
 Scenario:1 活动报名-无奖励-无需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -105,7 +105,7 @@ Scenario:1 活动报名-无奖励-无需关注即可参与
 			"""
 		Then bill获得提示"您已报名"
 
-@mall2 @apps_event @apps_event_frontend @user_participate_event
+@mall2 @apps @apps_event @apps_event_frontend @user_participate_event
 Scenario:2 活动报名-积分奖励-必须关注才可参与
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -198,7 +198,7 @@ Scenario:2 活动报名-积分奖励-必须关注才可参与
 			"""
 		#Then lily获得提示"店铺二维码"
 
-@mall2 @apps_event @apps_event_frontend @user_participate_event
+@mall2 @apps @apps_event @apps_event_frontend @user_participate_event
 Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 	Given jobs登录系统
 	When jobs添加优惠券规则
@@ -353,7 +353,7 @@ Scenario:3 活动报名-优惠券奖励-无需关注即可参与
 			}]
 			"""
 
-@mall2 @apps_event @apps_event_frontend @user_participate_event
+@mall2 @apps @apps_event @apps_event_frontend @user_participate_event
 Scenario:4 活动报名-设置未来时间-无需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -410,7 +410,7 @@ Scenario:4 活动报名-设置未来时间-无需关注即可参与
 			"""
 		Then tom获得提示"请等待活动开始..."
 
-@mall2 @apps_event @apps_event_frontend @user_participate_event
+@mall2 @apps @apps_event @apps_event_frontend @user_participate_event
 Scenario:5 活动报名-设置过去时间-必须需关注即可参与
 	Given jobs登录系统
 	When jobs新建活动报名

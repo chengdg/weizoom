@@ -123,10 +123,10 @@ W.component.appkit.LotteryDescription = W.component.Component.extend({
 				name: '一天两次',
 				value: 'twice_per_day'
 			},
-			//{
-			//	name: '不限',
-			//	value: 'no_limit'
-			//}
+			{
+				name: '不限',
+				value: 'no_limit'
+			}
 			],
 			default: 'once_per_user'
 		},{

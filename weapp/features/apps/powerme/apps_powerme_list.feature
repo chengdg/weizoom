@@ -90,7 +90,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_powerme @apps_powerme_backend @powerme_list
+@mall2 @apps @apps_powerme @apps_powerme_backend @powerme_list
 Scenario:1 微助力活动列表查询
 	Given jobs登录系统
 	Then jobs获得微助力活动列表
@@ -299,7 +299,7 @@ Scenario:1 微助力活动列表查询
 			}]
 			"""
 
-@mall2 @apps_powerme @apps_powerme_backend @powerme_list
+@mall2 @apps @apps_powerme @apps_powerme_backend @powerme_list
 Scenario:2 微助力活动列表分页
 	Given jobs登录系统
 	And jobs设置分页查询参数

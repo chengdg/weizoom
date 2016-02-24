@@ -17,7 +17,7 @@ Feature: 应用和营销-活动报名
 		3）点击"添加"按钮，在后面追加项目，设置"填写项"和"是否必填"；"是否必填"默认"否"
 """
 
-@mall2 @apps_event @apps_event_backend @add_event
+@mall2 @apps @apps_event @apps_event_backend @add_event
 Scenario:1 新建活动报名-无奖励
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -68,7 +68,7 @@ Scenario:1 新建活动报名-无奖励
 		}]
 		"""
 
-@mall2 @apps_event @apps_event_backend @add_event
+@mall2 @apps @apps_event @apps_event_backend @add_event
 Scenario:2 新建活动报名-积分
 	Given jobs登录系统
 	When jobs新建活动报名
@@ -123,7 +123,7 @@ Scenario:2 新建活动报名-积分
 		}]
 		"""
 
-@mall2 @apps_event @apps_event_backend @add_event
+@mall2 @apps @apps_event @apps_event_backend @add_event
 Scenario:3 新建活动报名-优惠券
 	Given jobs登录系统
 	When jobs添加优惠券规则

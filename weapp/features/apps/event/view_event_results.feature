@@ -111,7 +111,7 @@ Background:
 				"""
 			Then bill获得提示"您已报名"
 
-@mall2 @apps_event @apps_event_backend @view_event_results
+@mall2 @apps @apps_event @apps_event_backend @view_event_results
 Scenario:1 活动参与结果列表-查询
 	Given jobs登录系统
 
@@ -340,7 +340,7 @@ Scenario:1 活动参与结果列表-查询
 			}]
 			"""
 
-@mall2 @apps_event @apps_event_backend @view_event_results
+@mall2 @apps @apps_event @apps_event_backend @view_event_results
 Scenario:2 活动参与结果列表-分页
 	Given jobs登录系统
 	And jobs设置分页查询参数

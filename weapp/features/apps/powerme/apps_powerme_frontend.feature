@@ -121,7 +121,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:1 用户重复参与微助力活动
 	When 清空浏览器
 	When bill关注jobs的公众号
@@ -206,7 +206,7 @@ Scenario:1 用户重复参与微助力活动
 	When bill点击tom分享的微助力活动链接进行参与
 	#Then bill获得按钮提示信息'您已参加该活动!<br />长按二维码进入公众号<br />获取你自己的专属页,<br />分享到朋友圈,发动小伙伴帮你助力<br />赢大奖!'
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:2 会员帮助会员好友助力
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -270,7 +270,7 @@ Scenario:2 会员帮助会员好友助力
 
 
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:3 非会员帮助会员好友助力
 	#bill参加'微助力活动1',无识别二维码
 	#tom取消关注后帮bill助力,弹层中显示公众号的二维码
@@ -343,7 +343,7 @@ Scenario:3 非会员帮助会员好友助力
 		| rank | name | value |
 		|  1   | bill |   1   |
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:4 连续帮助会员好友助力
 	#bill参加'微助力活动2',有识别二维码
 	#tom取消关注后（已非会员身份）帮bill助力,点击'帮bill助力'按钮,弹层中显示带参数二维码
@@ -421,7 +421,7 @@ Scenario:4 连续帮助会员好友助力
 	#Then tom获得弹层提示信息'好的事物,一起分享<br />邀请好友或者分享到朋友圈,<br />发动小伙伴帮bill赢大奖!'
 
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助力，取消关注后的按钮状态显示为“帮XX好友助力”，助力			成功，助力值不生效
 	#会员bill分享微助力活动链接
 	#会员tom帮bill助力
@@ -544,7 +544,7 @@ Scenario:5 会员帮好友助力成功后，取消关注公众号再帮好友助
 
 	#虽然按钮显示为未帮助助力之前的状态，而且也在关注公众号的时候显示主力成功，但是助力值是不生效的
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维码）
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -606,7 +606,7 @@ Scenario:6 会员通过好友分享链接参加微助力活动（无识别二维
 		|  1   | bill |   0   |
 		|  2   | tom  |   0   |
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:7 非会员通过好友分享链接参加微助力活动（有识别二维码）
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
@@ -730,7 +730,7 @@ Scenario:7 非会员通过好友分享链接参加微助力活动（有识别二
 		|  1   | bill |   1   |
 		|  2   | tom  |   0   |
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:8 会员B分享会员A的微助力活动链接
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
@@ -777,7 +777,7 @@ Scenario:8 会员B分享会员A的微助力活动链接
 		| rank | name | value |
 		|  1   | bill |   2   |
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 	When jobs新建微助力活动
 		"""
@@ -907,7 +907,7 @@ Scenario:9 用户参加'未开始'和'已结束'的微助力活动
 			"""
 		#Then tom获得按钮提示信息'活动已结束'
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:10 会员为非会员（中间取消关注的会员）助力
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
@@ -961,7 +961,7 @@ Scenario:10 会员为非会员（中间取消关注的会员）助力
 	When tom点击bill分享的微助力活动链接进行助力
 	Then tom获得微助力活动提示"该用户已退出活动"
 
-@mall2 @apps_powerme @apps_powerme_frontend
+@mall2 @apps @apps_powerme @apps_powerme_frontend
 Scenario:11 非会员为非会员（中间取消关注的会员）助力
 	#bill分享微助力链接
 	#tom关注后点击bill分享的链接帮bill助力
