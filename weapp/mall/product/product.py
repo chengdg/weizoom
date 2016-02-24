@@ -606,7 +606,7 @@ class DeletedProductList(resource.Resource):
                     is_deleted=True
                 )
 
-        deleted_product_id2delete_time = dict([(relation.mall_product_id, relation.delete_time) for relation in models.WeizoomHasMallProductRelation.objects.filter(**params)])
+        deleted_product_id2delete_time = dict([(relation.mall_product_id, relation.delete_time) for relation in models.WeizoomHasMallProductRelation.objects.filter(**params).order_by('-delete_time')])
         deleted_product_ids = deleted_product_id2delete_time.keys()
 
         COUNT_PER_PAGE = 8
@@ -629,6 +629,7 @@ class DeletedProductList(resource.Resource):
                 'name': product.name,
                 'delete_time': deleted_product_id2delete_time[product.id].strftime('%Y-%m-%d %H:%M:%S')
             })
+            sorted(items, key=lambda item:item['delete_time'], reverse=True)
 
         response = create_response(200)
         response.data = {
