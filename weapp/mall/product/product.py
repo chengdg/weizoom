@@ -672,7 +672,7 @@ class Product(resource.Resource):
             # 判断微众系列商品是不是供货商提供的
             if mall_type:
                 relations = models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id=has_product_id, is_deleted=False)
-                if relations.count > 0:
+                if relations.count() > 0:
                     has_store_name = True
                     store_name = UserProfile.objects.get(user_id=relations[0].mall_id).store_name
             #获取商品分类信息
