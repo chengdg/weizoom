@@ -90,7 +90,7 @@
 		<tbody id='product_list'>
             {{if items.length}}
 	            {{each(i, product) items}}
-				<tr data-id="${product.id}" class="xa-selectTr" data-purchase-price="${product.purchase_price}" data-sync-time="${product.sync_time}">
+				<tr data-id="${product.id}" class="xa-selectTr" data-purchase-price="${product.purchase_price}" data-sync-time="${product.sync_time}" data-mall-type="${mall_type}">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">
