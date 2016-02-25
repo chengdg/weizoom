@@ -205,8 +205,12 @@
 								</p>
 							</div>
 							<div style="width:80px;display:table-cell">
+							{{if order.supplier_user_id==0}}
 								<p class="tc">${product.price}</p>
 								<p class="tc">(${product.count}&nbsp;件)</p>
+							{{else}}
+								<p class="tc">${product.count}&nbsp;件</p>
+							{{/if}}
 							</div>
 						</li>
 					{{/each}}
@@ -214,7 +218,7 @@
 					</td>
 					{{if j == 0 }}
 					<td width="140px" rowspan="${order.groups.length}">
-						{{if order.save_money != 0 }}
+						{{if order.save_money != 0 && order.supplier_user_id != 0}}
 							${ order.save_money.toFixed(2)}
 						{{/if}}
 					</td>
@@ -256,7 +260,7 @@
 					</td>
 					<td width="110" rowspan="${order.groups.length}">
 						${ order.pay_money }
-						{{if order.postage > 0 }}
+						{{if order.postage > 0 && order.supplier_user_id == 0}}
 						</br>
 							<span class="xui-colorGray">(含运费：${order.postage})</span>
 						{{/if}}

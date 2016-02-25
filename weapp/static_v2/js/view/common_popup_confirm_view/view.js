@@ -19,7 +19,7 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         'click .xa-cancel': 'hide'
     },
     //横向提示
-    getTemplate1: function() {
+    getTemplate: function() {
         var template = '<dl class="wui-confirmView">'
                 +'<dd>'
                 +  '<div class="xa-icon"><i></i></div>'
@@ -48,7 +48,7 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         this.position = options.position || 'top';
         this.$el = $(this.el);
         this.render();
-        this.template = (options.templateAlign && options.templateAlign == 'vertical') ? this.getTemplate2():this.getTemplate1();
+        this.template = (options.templateAlign && options.templateAlign == 'vertical') ? this.getTemplate2():this.getTemplate();
         this.privateContainerClass = options.privateContainerClass;
         this.$el.addClass(this.privateContainerClass);
         this.viewName = options.viewName;
