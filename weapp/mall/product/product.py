@@ -414,7 +414,7 @@ class ProductPool(resource.Resource):
         for product in products:
             if (mall_product_id2weizoom_product_id.has_key(product['id']) and
                 product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
-                product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status == promotion_model.PROMOTION_STATUS_STARTED):
+                product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status in [promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START]):
                 product_has_promotion = 1
             else:
                 product_has_promotion = 0
