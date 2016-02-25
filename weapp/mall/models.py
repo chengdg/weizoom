@@ -1668,13 +1668,13 @@ class Order(models.Model):
 		return Order.objects.filter(webapp_user_id__in=webapp_user_ids)
 
 
-def belong_to(webapp_id, user_id=None):
+def belong_to(webapp_id, user_id=None, mall_type=None):
 	"""
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	if user_id:
-		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id), origin_order_id__lte=0)
+	if user_id and not mall_type:
+		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id))
 	else:
 		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	# 微众商城代码
@@ -2523,6 +2523,7 @@ class WeizoomHasMallProductRelation(models.Model):
 	is_deleted = models.BooleanField(default=False) # 供货商是否下架了商品
 	sync_time = models.DateTimeField(auto_now_add=True) # 微众系列同步商品的时间
 	delete_time = models.DateTimeField(auto_now=True) # 商品的失效时间
+	delete_type = models.BooleanField(default=False) # 删除类型，True为自营平台自己删除，False为供货商操作商品连带删除
 	created_at = models.DateTimeField(auto_now_add=True) # 添加时间
 
 	class Meta(object):

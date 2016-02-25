@@ -699,12 +699,14 @@ def get_detail_response(request):
 
 def is_has_order(request, is_refund=False):
     webapp_id = request.user_profile.webapp_id
+    user_id = request.user_profile.user.id
+    mall_type = request.user_profile.webapp_type
     # weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
     if is_refund:
         orders = belong_to(webapp_id)
         has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]).count() > 0
     else:
-        has_order = (belong_to(webapp_id).count() > 0)
+        has_order = (belong_to(webapp_id, user_id, mall_type).count() > 0)
     MallCounter.clear_unread_order(webapp_owner_id=request.manager.id)  # 清空未读订单数量
     return has_order
 
@@ -808,7 +810,8 @@ def get_unship_order_count(request):
 def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     webapp_id = user.get_profile().webapp_id
-    orders = belong_to(webapp_id, user.id)
+    mall_type = user.get_profile().webapp_type
+    orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
@@ -857,6 +860,11 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
 
     # 供货商同步的订单
     sync_orders = Order.objects.filter(supplier_user_id=user.id)
+    sync_order_ids = [order.id for order in sync_orders]
+    sync_order_id2sync_product_id = dict([(relation.order_id, relation.product_id)for relation in OrderHasProduct.objects.filter(order_id__in=sync_order_ids)])
+    sync_product_ids = sync_order_id2sync_product_id.values()
+    weizoom_product_id2mall_product_id = dict([(relation.weizoom_product_id, relation.mall_product_id) for relation in WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=sync_product_ids)])
+    id2mall_product = dict([(product.id, product)for product in Product.objects.filter(id__in=weizoom_product_id2mall_product_id.values())])
 
     # 构造返回的order数据
     for order in orders:
@@ -934,12 +942,24 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'actions': get_order_actions(order, is_refund=is_refund)
             }
 
-            group_id = order.supplier
-            group = {
-                "id": group_id,
-                "fackorder": group_order,
-                "products": products
-            }
+            if order.supplier_user_id > 0:
+                group_id = order.supplier_user_id
+                pay_money = 0
+                for product in products:
+                    product['name'] = id2mall_product[weizoom_product_id2mall_product_id[product['id']]].name
+                    pay_money += product['total_price']
+                group = {
+                    "id": group_id,
+                    "fackorder": group_order,
+                    "products": products
+                }
+            else:
+                group_id = order.supplier
+                group = {
+                    "id": group_id,
+                    "fackorder": group_order,
+                    "products": products
+                }
             groups.append(group)
         if len(groups) > 1:
             parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True)
@@ -980,7 +1000,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-            'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money),
+            'pay_money': pay_money if order.supplier_user_id > 0 else '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
             'parent_action': parent_action,

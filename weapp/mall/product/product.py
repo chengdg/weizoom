@@ -301,7 +301,7 @@ class ProductList(resource.Resource):
             for id in ids:
                 utils.delete_weizoom_mall_sync_product(request, product_id2product[id], reason)
         if mall_type and is_deleted:
-            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).delete()
+            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
 
         response = create_response(200)
         return response.get_response()
@@ -609,13 +609,15 @@ class DeletedProductList(resource.Resource):
             params = dict(
                     owner=request.manager,
                     is_deleted=True,
+                    delete_type=False,
                     delete_time__gte=start_date,
                     delete_time__lte=end_date
                 )
         else:
             params = dict(
                     owner=request.manager,
-                    is_deleted=True
+                    is_deleted=True,
+                    delete_type=False,
                 )
 
         relations = models.WeizoomHasMallProductRelation.objects.filter(**params).order_by('-delete_time')
