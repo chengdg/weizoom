@@ -499,7 +499,8 @@ def get_config_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm', 'jobs')
+        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm',
+            'jobs', 'wz01', 'wz02', 'wz03')
         if request.user.username not in user_list_for_supplier_list:
             nav = {"navs":CONFIG_NAV['navs'][:-1]}
             second_navs = [nav]

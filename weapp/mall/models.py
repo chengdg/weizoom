@@ -1448,6 +1448,7 @@ class Order(models.Model):
 	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递
 	delivery_time = models.CharField(max_length=50, default='')  # 配送时间字符串
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
+	supplier_user_id = models.IntegerField(default=0) # 订单供货商user的id，用于系列拆单
 
 	class Meta(object):
 		db_table = 'mall_order'
@@ -1667,12 +1668,15 @@ class Order(models.Model):
 		return Order.objects.filter(webapp_user_id__in=webapp_user_ids)
 
 
-def belong_to(webapp_id):
+def belong_to(webapp_id, user_id=None):
 	"""
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	if user_id:
+		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id), origin_order_id__lte=0)
+	else:
+		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	# 微众商城代码
 	# if webapp_id == '3394':
 	# 	return Order.objects.filter(webapp_id=webapp_id)

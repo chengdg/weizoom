@@ -808,7 +808,7 @@ def get_unship_order_count(request):
 def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     webapp_id = user.get_profile().webapp_id
-    orders = belong_to(webapp_id)
+    orders = belong_to(webapp_id, user.id)
 
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
@@ -854,6 +854,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
         order2fackorders.setdefault(origin_order_id, [])
         # order2fackorders[origin_order_id].setdefault(order_supplier, {})
         order2fackorders[origin_order_id].append(order)
+
+    # 供货商同步的订单
+    sync_orders = Order.objects.filter(supplier_user_id=user.id)
 
     # 构造返回的order数据
     for order in orders:
@@ -981,7 +984,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
             'parent_action': parent_action,
-            'is_first_order': order.is_first_order
+            'is_first_order': order.is_first_order,
+            'supplier_user_id': order.supplier_user_id
         })
 
     return items, pageinfo, order_return_count

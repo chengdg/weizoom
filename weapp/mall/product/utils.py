@@ -12,6 +12,7 @@ from account.models import UserProfile
 from mall.promotion import models as promotion_model
 from core import search_util
 from utils import ding_util
+from mall.promotion.utils import stop_promotion
 
 DING_GROUP_ID = '80035247'
 
@@ -212,11 +213,7 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             products = models.Product.objects.filter(id__in=weizoom_product_ids)
             products.update(is_deleted=True)
             relations.update(is_deleted=True)
-            mall_signals.products_not_online.send(
-                    sender=models.Product,
-                    product_ids=weizoom_product_ids,
-                    request=request
-                )
+            stop_promotion(request, weizoom_product_ids)
 
             text = u'商品删除提示：\n'
             text += u'账号：%s\n' % request.user.username
@@ -226,14 +223,13 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             text += u'请及时处理！'
             ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
-       pass
+        pass
 
 def update_weizoom_mall_sync_product_status(request, product, update_data):
     try:
         relations = models.WeizoomHasMallProductRelation.objects.filter(mall_product_id=product.id, is_deleted=False)
-
         if relations.count() > 0:
-            weizoom_product = models.Product.objects.filter(id=relations[0].weizoom_product_id)
+            weizoom_product = models.Product.objects.get(id=relations[0].weizoom_product_id)
             text = u'商品更新提示：\n'
             text += u'账号：%s\n' % request.user.username
             text += u'商品名称：%s\n' % product.name

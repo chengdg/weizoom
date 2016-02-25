@@ -23,6 +23,7 @@ from mall import signals as mall_signals
 from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
+from mall.promotion.utils import stop_promotion
 
 class ProductList(resource.Resource):
     app = 'mall2'
@@ -296,7 +297,7 @@ class ProductList(resource.Resource):
             )
 
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if not mall_type and shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted:
+        if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
             for id in ids:
                 utils.delete_weizoom_mall_sync_product(request, product_id2product[id], reason)
         if mall_type and is_deleted:
@@ -413,7 +414,7 @@ class ProductPool(resource.Resource):
         for product in products:
             if (mall_product_id2weizoom_product_id.has_key(product['id']) and
                 product_id2relation.has_key(mall_product_id2weizoom_product_id[product['id']]) and
-                product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status == promotion_model.PROMOTION_STATUS_STARTED):
+                product_id2relation[mall_product_id2weizoom_product_id[product['id']]].promotion.status in [promotion_model.PROMOTION_STATUS_STARTED, promotion_model.PROMOTION_STATUS_NOT_START]):
                 product_has_promotion = 1
             else:
                 product_has_promotion = 0
@@ -530,11 +531,7 @@ class ProductPool(resource.Resource):
             is_deleted=False)
 
         # 微众系列商品参加的促销活动
-        mall_signals.products_not_online.send(
-                sender=models.Product,
-                product_ids=[relation.weizoom_product_id],
-                request=request
-            )
+        stop_promotion(request, [relation.weizoom_product_id])
 
         weizoom_product = models.Product.objects.get(id=relation.weizoom_product_id)
         mall_product = models.Product.objects.get(id=relation.mall_product_id)

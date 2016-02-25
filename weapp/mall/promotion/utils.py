@@ -2,7 +2,7 @@
 # __author__: zwidny 整理
 import random
 from datetime import datetime
-from django.db.models import F
+from django.db.models import F, Q
 
 from . import models as promotion_models
 from mall import models
@@ -197,11 +197,14 @@ def filter_promotions(request, promotions):
     return filtered_promotions
 
 
-def stop_promotion(request, promotions):
+def stop_promotion(request, product_ids):
     """
     结束促销活动
     """
-    if not promotions:
+    promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
+        product_id__in=product_ids)]
+    promotions = promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED))
+    if not promotions.count():
         return
     for promotion in promotions:
         promotion.status=promotion_models.PROMOTION_STATUS_FINISHED
