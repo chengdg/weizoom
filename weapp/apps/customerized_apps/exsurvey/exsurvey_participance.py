@@ -120,7 +120,7 @@ class exsurveyParticipance(resource.Resource):
 					if product:
 						item_data['item_value'] = product['product_name']
 						product_dict['product_id'] = product['product_id']
-						product_dict['order_id'] = product['order_id']
+						product_dict['order_id'] = product['order_id'] if product['order_id'] else ""
 						product_dict['product_owner_id'] = product['product_owner_id']
 						product_dict['product_supplier_id'] = product['product_supplier_id']
 						product_dict['product_name'] = product['product_name']
