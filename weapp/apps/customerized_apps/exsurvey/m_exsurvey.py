@@ -126,15 +126,15 @@ class Msurvey(resource.Resource):
 								orderhasproduct_ids.append(value['value']['orderhasproduct_id'])
 				webappusers =  WebAppUser.objects.filter(member_id=member_id)
 				webapp_user_ids = [wau.id for wau in webappusers]
-				#获取上个月的时间
+				#获取上2个月的时间
 				curr_time = datetime.now()
-				for m in range(1, 2):
+				for m in range(1, 3):
 					curr_time = (curr_time.replace(day=1) - timedelta(1)).replace(day=curr_time.day)
 				start_date = curr_time.strftime('%Y-%m-%d 00:00:00')
 				#现在的时间
 				end_date = datetime.now().strftime('%Y-%m-%d 23:59:59')
 
-				#获取当前会员一个月内所下单已发货和已完成的id
+				#获取当前会员2个月内所下单已发货和已完成的id
 				orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids,created_at__gte=start_date, created_at__lte=end_date,status__in=[ORDER_STATUS_PAYED_SHIPED,ORDER_STATUS_SUCCESSED,ORDER_STATUS_PAYED_NOT_SHIP])
 				webapp = WebApp.objects.filter(owner_id=webapp_owner_id)
 				if webapp.count()>0:
@@ -149,6 +149,7 @@ class Msurvey(resource.Resource):
 					product_id2product_name.append({
 						"orderhasproduct_id": product_id2product[p.id].id,
 						"product_id": p.id,
+						"order_id": product_id2product[p.id].order.id,
 						"product_name": p.name,
 						"product_supplier_id": p.supplier,
 						"product_owner_id": p.owner_id
