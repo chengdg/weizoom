@@ -1667,12 +1667,15 @@ class Order(models.Model):
 		return Order.objects.filter(webapp_user_id__in=webapp_user_ids)
 
 
-def belong_to(webapp_id):
+def belong_to(webapp_id, user_id=None):
 	"""
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	if user_id:
+		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id), origin_order_id__lte=0)
+	else:
+		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	# 微众商城代码
 	# if webapp_id == '3394':
 	# 	return Order.objects.filter(webapp_id=webapp_id)
