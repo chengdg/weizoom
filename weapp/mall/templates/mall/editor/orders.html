@@ -165,8 +165,8 @@
 						{{if data.show_supplier}}
 							    ${data.supplier[group.id]}
                         {{else}}
-                            {{if order.come == 'weizoom_mall'}}
-                                商户
+                            {{if order.come == 'weizoom_mall' || order.supplier_user_id > 0}}
+                                商城
                             {{else}}
                                 本店
                             {{/if}}
@@ -205,7 +205,11 @@
 								</p>
 							</div>
 							<div style="width:80px;display:table-cell">
-								<p class="tc">${product.price}</p>
+							<p class="tc">
+							{{if order.supplier_user_id <= 0}}
+								${product.price}
+							{{/if}}
+							</p>
 								<p class="tc">(${product.count}&nbsp;件)</p>
 							</div>
 						</li>
@@ -214,7 +218,7 @@
 					</td>
 					{{if j == 0 }}
 					<td width="140px" rowspan="${order.groups.length}">
-						{{if order.save_money != 0 }}
+						{{if order.save_money != 0 && order.supplier_user_id <= 0}}
 							${ order.save_money.toFixed(2)}
 						{{/if}}
 					</td>
@@ -256,11 +260,11 @@
 					</td>
 					<td width="110" rowspan="${order.groups.length}">
 						${ order.pay_money }
-						{{if order.postage > 0 }}
+						{{if order.postage > 0 && order.supplier_user_id <= 0}}
 						</br>
 							<span class="xui-colorGray">(含运费：${order.postage})</span>
 						{{/if}}
-						{{if order.weizoom_card_money > 0}}
+						{{if order.weizoom_card_money > 0 && order.supplier_user_id <= 0}}
 						</br>
 							<span class="xui-weizoomCard pr">
 								<i class="xa-weizoomCardImg"></i>

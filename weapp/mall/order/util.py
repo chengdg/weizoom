@@ -754,7 +754,7 @@ def get_orders_response(request, is_refund=False):
     if is_weizoom_mall_partner or request.manager.is_weizoom_mall:
         is_show_source = True
     else:
-        is_show_source = False
+        is_show_source = True
 
     supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
     if len(supplier.keys()) > 0:
@@ -947,7 +947,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 pay_money = 0
                 for product in products:
                     product['name'] = id2mall_product[weizoom_product_id2mall_product_id[product['id']]].name
-                    pay_money += product['total_price']
+                    pay_money += float(product['total_price'])
                 group = {
                     "id": group_id,
                     "fackorder": group_order,
@@ -1315,10 +1315,16 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
     # 订单列表页有子订单的父母订单
     able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
 
+    # 同步订单操作
+    sync_order_actions = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
+
     # print(order.order_id, order.is_sub_order, order.origin_order_id)
     # print(result)
-    if order.is_sub_order:
-        result = filter(lambda x: x in able_actions_for_sub_order, result)
+    if order.supplier_user_id > 0:
+        result = filter(lambda x: x in sync_order_actions, result)
+    else:
+        if order.is_sub_order:
+            result = filter(lambda x: x in able_actions_for_sub_order, result)
 
     if order.has_sub_order and is_detail_page:
         result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
