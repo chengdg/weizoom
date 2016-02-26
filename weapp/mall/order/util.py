@@ -723,6 +723,9 @@ def get_orders_response(request, is_refund=False):
     if request.manager.is_weizoom_mall:
         is_weizoom_mall_partner = False
 
+    # 商城的类型
+    mall_type = request.user_profile.webapp_type
+
     # 获取查询条件字典和时间筛选条件
     query_dict, date_interval, date_interval_type = __get_select_params(request)
     watchdog_message = "query_dict:" + json.dumps(query_dict) + ",date:" + str(date_interval) + ",date_type" \
@@ -772,7 +775,8 @@ def get_orders_response(request, is_refund=False):
         'order_return_count': order_return_count,
         'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
         'is_refund': is_refund,
-        'show_supplier': show_supplier
+        'show_supplier': show_supplier,
+        'mall_type': mall_type
     }
 
     if query_dict or date_interval:
