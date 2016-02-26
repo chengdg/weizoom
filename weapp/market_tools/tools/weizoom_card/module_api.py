@@ -101,11 +101,16 @@ def check_weizoom_card(name, password,webapp_user=None,member=None,owner_id=None
 		elif owner_id and weizoom_card_rule.card_attr:
 			#专属卡
 			#是否为新会员专属卡
-			mpuser_name = u''
-			authed_appid = ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id=weizoom_card_rule.belong_to_owner)
-			if authed_appid.count()>0:
-				if authed_appid[0].nick_name:
-					mpuser_name = authed_appid[0].nick_name
+
+			#多商家id
+			belong_to_owner_ids = str(weizoom_card_rule.belong_to_owner).split(',')
+			# userprofiles = UserProfile.objects.filter(user_id__in=belong_to_owner_ids)
+			# store_name_list = []
+			# for profile in userprofiles:
+			# 	if profile.store_name:
+			# 		store_name_list.append(profile.store_name)
+			##多商家店铺名称
+			# store_name_str = ','.join(store_name_list)
 			if weizoom_card_rule.is_new_member_special:
 				if member and member.is_subscribed:
 					orders = belong_to(webapp_id)
@@ -118,13 +123,15 @@ def check_weizoom_card(name, password,webapp_user=None,member=None,owner_id=None
 						has_use_card = WeizoomCardHasOrder.objects.filter(card_id=weizoom_card.id,order_id__in=order_ids).count()>0
 						if not has_use_card:
 							msg = u'该卡为新会员专属卡'
-					if owner_id != weizoom_card_rule.belong_to_owner:
-						msg = u'该卡为'+mpuser_name+'商家专属卡'
+					if str(owner_id) not in belong_to_owner_ids:
+						# msg = u'该卡为'+store_name_str+'商家专属卡'
+						msg = u'该专属卡不能在此商家使用'
 				else:
 					msg = u'该卡为新会员专属卡'
 			else:
-				if owner_id != weizoom_card_rule.belong_to_owner:
-					msg = u'该卡为'+mpuser_name+'商家专属卡'
+				if str(owner_id) not in belong_to_owner_ids:
+					# msg = u'该卡为'+store_name_str+'商家专属卡'
+					msg = u'该专属卡不能在此商家使用'
 		elif owner_id and rule_id in [23, 36] and owner_id != 157:
 			WeizoomCardRule.objects.get(id=rule_id)
 			if '吉祥大药房' in weizoom_card.weizoom_card_rule.name:
