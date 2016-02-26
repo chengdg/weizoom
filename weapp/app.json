@@ -1,9 +1,9 @@
 {	
-	"name": "powerme",
+	"name": "group",
 	"resources": [{
-		"name": "PowerMe",
+		"name": "Group",
 		"need_user_participant": true,
-		"display_name": "微助力",
+		"display_name": "团购",
 		"enable_termite": true
 	}]
 }
