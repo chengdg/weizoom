@@ -1998,6 +1998,7 @@ def get_order_products(order):
 	temp_premium_products = []
 	# processed_promotion_set = set()
 	suppliers = []
+	supplier_user_ids = []
 	for relation in relations:
 		product = copy.copy(id2product[relation.product_id])
 		product.fill_specific_model(relation.product_model_name)
@@ -2014,6 +2015,7 @@ def get_order_products(order):
 			'is_deleted': product.is_deleted,
 			'grade_discounted_money': relation.grade_discounted_money,
 			'supplier': product.supplier,
+			'supplier_user_id': product.supplier_user_id,
 			'user_code':product.user_code
 		}
 
@@ -2027,9 +2029,11 @@ def get_order_products(order):
 			product_info['integral_count'] = 0
 
 		suppliers.append(product.supplier)
+		supplier_user_ids.append(product.supplier_user_id)
 
 		try:
 			product_info['supplier_name'] = Supplier.objects.get(id=product.supplier).name
+			product_info['supplier_store_name'] = UserProfile.objects.get(user_id=product.supplier_user_id).store_name
 		except:
 			pass
 
@@ -2073,9 +2077,11 @@ def get_order_products(order):
 								'noline': 1,
 								'supplier': product.supplier,
 								'supplier_name': product_info.get('supplier_name', ''),
+								'supplier_store_name': product_info.get('supplier_store_name', ''),
 								'user_code':product.user_code
 							})
 							suppliers.append(product.supplier)
+							supplier_user_ids.append(product.supplier_user_id)
 			else:
 				# 当前促销中其余商品 不显示上边框,给主商品跨行+1
 				product_info['noline'] = 1
@@ -2095,9 +2101,10 @@ def get_order_products(order):
 
 	for product in products:
 		product['supplier_length'] = suppliers.count(product['supplier'])
+		product['supplier_user_length'] = suppliers.count(product['supplier_user_id'])
 
 	def __sorted_by_supplier(s):
-		return s['supplier']
+		return (s['supplier'], s['supplier_user_length'])
 	sorted(products, key=__sorted_by_supplier)  # 相同supplier排到一起
 
 	return products

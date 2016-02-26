@@ -24,6 +24,8 @@ from core.restful_url_route import api
 from watchdog.utils import watchdog_info
 import re
 from mall.templatetags.mall_filter import *
+from weixin.user.module_api import get_all_active_mp_user_ids
+from account.models import UserProfile
 
 COUNT_PER_PAGE = 20
 
@@ -663,7 +665,7 @@ def get_detail_response(request):
             for product in order.products:
                 product['order_status'] = supplier2status.get(product['supplier'], '')
 
-        name = request.GET.get('name',None)
+        name = request.GET.get('name', None)
         if not name:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids).order_by('-id'))
         else:
@@ -753,29 +755,24 @@ def get_orders_response(request, is_refund=False):
                                                                                is_refund=is_refund)
     # 获取该用户下的所有支付方式
     existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
-    # 是否是合作伙伴，是的话 和微众精选类似都显示来源
-    if is_weizoom_mall_partner or request.manager.is_weizoom_mall:
-        is_show_source = True
-    else:
-        is_show_source = True
-
     supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
-    if len(supplier.keys()) > 0:
-        is_show_source = True
 
-    show_supplier = Supplier.objects.filter(owner=request.manager, is_delete=False).count() > 0
+    #
+    all_user_ids = get_all_active_mp_user_ids()
+    all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
+    supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
+
     response = create_response(200)
     response.data = {
         'items': items,
         'pageinfo': paginator.to_dict(pageinfo),
         'supplier': supplier,
+        'supplier_users': supplier_users,
         'sortAttr': sort_attr,
-        'is_show_source': is_show_source,
         'existed_pay_interfaces': existed_pay_interfaces,
         'order_return_count': order_return_count,
         'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
         'is_refund': is_refund,
-        'show_supplier': show_supplier,
         'mall_type': mall_type
     }
 
@@ -852,7 +849,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
         else:
             order2productcount[order_id] = 1
 
-    # 微众精选子订单
+    # 微众系列子订单
     order2fackorders = {}
     fackorders = Order.objects.filter(origin_order_id__in=order_ids)
     for order in fackorders:
@@ -929,11 +926,18 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                     'leader_name': fackorder.leader_name,
                     'actions': get_order_actions(fackorder, is_refund=is_refund)
                 }
-                group = {
-                    "id": fackorder.supplier,
-                    "fackorder": group_order,
-                    "products": filter(lambda p: p['supplier'] == fackorder.supplier , products)
-                }
+                if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
+                    group = {
+                        "id": fackorder.supplier,
+                        "fackorder": group_order,
+                        "products": filter(lambda p: p['supplier'] == fackorder.supplier , products)
+                    }
+                if fackorder.supplier_user_id:
+                    group = {
+                        "supplier_user_id": fackorder.supplier_user_id,
+                        "fackorder": group_order,
+                        "products": filter(lambda p: p['supplier_user_id'] == fackorder.supplier_user_id , products)
+                    }
                 groups.append(group)
         else:
             group_order = {

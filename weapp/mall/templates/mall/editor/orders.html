@@ -87,13 +87,11 @@
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
-				{{if data.is_show_source }}
-				    {{if data.show_supplier}}
-				        <th width="75">供货商</th>
-				    {{else}}
-				        <th width="75">来源</th>
-				    {{/if}}
-				{{/if}}
+			    {{if data.mall_type}}
+			        <th width="75">供货商</th>
+			    {{else}}
+			        <th width="75">来源</th>
+			    {{/if}}
 				<th width="310">
 					商品
 				</th>
@@ -160,19 +158,22 @@
 				</tr>
 				{{each(j, group) order.groups}}
 				<tr data-order-id="${group.fackorder.id}">
-					{{if data.is_show_source}}
 					<td class="nowrap" width="75">
-						{{if data.show_supplier}}
+						{{if data.mall_type}}
+							{{if group.id > 0}}
 							    ${data.supplier[group.id]}
+							{{/if}}
+							{{if group.supplier_user_id > 0 }}
+								${data.supplier_users[group.supplier_user_id]}
+							{{/if}}
                         {{else}}
-                            {{if order.come == 'weizoom_mall' || order.supplier_user_id > 0}}
+                            {{if order.supplier_user_id > 0}}
                                 商城
                             {{else}}
                                 本店
                             {{/if}}
 						{{/if}}
 					</td>
-					{{/if}}
 					<td class="" width="390px"{{if order.groups.length > 1}} style="border-right:1px solid #ddd;"{{/if}}>
 					<ul class="">
 					{{each(i, product) group.products}}

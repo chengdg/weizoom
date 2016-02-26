@@ -193,6 +193,7 @@ class Product(models.Model):
 	weshop_status = models.IntegerField(default=0)  # 0待售 1上架 2回收站			#已废弃
 	is_member_product = models.BooleanField(default=False)  # 是否参加会员折扣
 	supplier = models.IntegerField(default=0) # 供货商
+	supplier_user_id = models.IntegerField(default=0) # 供货商(非8千)
 	purchase_price = models.FloatField(default=0.0) # 进货价格
 	is_enable_bill = models.BooleanField(default=False)  # 商品是否开具发票
 	is_delivery = models.BooleanField(default=False) # 是否勾选配送时间
