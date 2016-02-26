@@ -12,10 +12,15 @@ from express_order_query import *
 import util
 import mall.module_api as mall_api
 from handle_express_callback import ExpressCallbackHandle
+from kdniao_express_callback import KdniaoCallbackHandle
+from tools.express.tasks import task_kdniao_callback
+from kdniao_express_config import KdniaoExpressConfig
+from datetime import datetime
 from django.conf import settings
-import urllib, urllib2
+import urllib, urllib2, cookielib
 import models as express_models
 import mall.models as mall_models
+import requests
 
 EXPRESS_TYPE = 'EXPRESS_API'
 
@@ -170,3 +175,146 @@ def kuaidi_callback(request):
 		response.__dict__[key] = value
 
 	return response.get_response()
+
+def kdniao_callback(request):
+	print '=================='
+	print '=================='
+	try:
+		param_json = request.POST.get("RequestData","")
+		param_json = json.loads(param_json)
+		datas = param_json.get("Data",[])
+		print "RequestData>>>>>>>>>datas",type(datas),datas
+		#datas = json.dumps(datas)
+		task_kdniao_callback.delay(datas)
+	except:
+		pass
+	updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+	success_json =  {
+		"EBusinessID": KdniaoExpressConfig.EBusiness_id,
+		"UpdateTime": updatetime,
+		"Success": True,
+		"Reason":""
+	}
+	return HttpResponse(json.dumps(success_json), 'application/json; charset=utf-8')
+
+def test_kdniao_push_data(request):	
+	#例子www.xxxx.aspx?RequestData=xxxxxx(
+	api_url = "http://{}/tools/api/express/kdniao/callback/".format(settings.DOMAIN)
+	express_ids = request.GET.get("express_ids","").split(",")
+	# 快递信息
+	param_json = {
+	"EBusinessID": "1256042",
+	"Count": "2",
+	"PushTime": "2015/3/11 16:21:06",
+	"Data": [
+		{
+			"EBusinessID": "1256042",
+			"OrderCode": "",
+			"ShipperCode": "EMS",
+			"LogisticCode": "5042260908504",
+			"Success": True,
+			"Reason": "",
+			"State": "3",
+			"CallBack": express_ids[0],
+			"Traces": [
+				{
+					"AcceptTime": "2015-03-06 21:16:58",
+					"AcceptStation": "<nihao123>深圳市横岗速递营销部已收件，（揽投员姓名：钟定基;联系电话：）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-07 14:25:00",
+					"AcceptStation": "离开深圳市 发往广州市",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-08 00:17:00",
+					"AcceptStation": "到达广东速递物流公司广航中心处理中心（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-08 01:15:00",
+					"AcceptStation": "离开广州市 发往北京市（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-09 09:01:00",
+					"AcceptStation": "到达北京黄村转运站处理中心（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-09 18:39:00",
+					"AcceptStation": "离开北京市 发往呼和浩特市（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-10 18:06:00",
+					"AcceptStation": "到达  呼和浩特市 处理中心",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-11 09:53:48",
+					"AcceptStation": "呼和浩特市邮政速递物流分公司金川揽投部安排投递（投递员姓名：安长虹;联系电话：18047140142）",
+					"Remark": ""
+				}
+			]
+		},
+		{
+			"EBusinessID": "1256042",
+			"OrderCode": "",
+			"ShipperCode": "EMS",
+			"LogisticCode": "5042260943004",
+			"Success": True,
+			"Reason": "",
+			"State": "3",
+			"CallBack": express_ids[1],
+			"Traces": [
+				{
+					"AcceptTime": "2015-03-07 15:26:09",
+					"AcceptStation": "<nihao123>深圳市横岗速递营销部已收件，（揽投员姓名：阿凡达周宏彪;联系电话：13689537568）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-08 16:32:00",
+					"AcceptStation": "离开深圳市 发往广州市",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-09 00:58:00",
+					"AcceptStation": "到达广东速递物流公司广航中心处理中心（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-09 01:15:00",
+					"AcceptStation": "离开广州市 发往北京市（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-10 05:20:00",
+					"AcceptStation": "到达北京黄村转运站处理中心（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-10 11:59:00",
+					"AcceptStation": "离开北京市 发往廊坊市（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-10 14:23:00",
+					"AcceptStation": "到达廊坊市处理中心（经转）",
+					"Remark": ""
+				},
+				{
+					"AcceptTime": "2015-03-11 08:55:00",
+					"AcceptStation": "离开廊坊市 发往保定市（经转）",
+					"Remark": ""
+				}
+			]
+		}
+	]
+}
+
+	json_data ={"RequestData":json.dumps(param_json)}
+	r = requests.post(api_url, json_data)
+	return HttpResponse(r.text, 'application/json; charset=utf-8')

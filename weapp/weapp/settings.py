@@ -500,6 +500,7 @@ INSTALLED_TASKS = [
     'weixin.message.message_handler',
     'market_tools.tools.shake',
     'weixin2',
+    'tools.express',
 
     # for services
     'services.example_service',

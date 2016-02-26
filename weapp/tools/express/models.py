@@ -85,3 +85,19 @@ class ExpressHasOrderPushStatus(models.Model):
 # 
 # ALTER TABLE `tool_express_has_order_push_status` ADD `abort_receive_at` datetime;
 # ALTER TABLE `tool_express_has_order_push_status` ADD `abort_receive_message` longtext;
+#########################################################################
+# ExpressServiceConfig: 快递服务配置，判断是使用快递100还是快递鸟来获取订单状态
+#########################################################################
+"""
+ExpressServiceConfig 中的value说明：
+	value值为空或者不存在或0：使用快递100，
+	value值为1：使用快递鸟
+"""
+class ExpressServiceConfig(models.Model):
+	name = models.CharField(max_length=100, verbose_name='快递服务商')
+	value = models.IntegerField(max_length=10, choices=((0,"关"),(1,"开")), verbose_name='服务开关')
+
+	class Meta(object):
+		db_table = 'mall_express_service_config'
+		verbose_name = '快递服务配置'
+		verbose_name_plural = '快递服务配置'

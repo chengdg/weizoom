@@ -20,6 +20,7 @@ from core.exceptionutil import unicode_full_stack
 from market_tools.tools.delivery_plan.models import DeliveryPlan
 from core.common_util import ignore_exception
 from tools.express.express_poll import ExpressPoll
+from tools.express.models import ExpressServiceConfig
 #from webapp.modules.mall.utils import get_product_member_discount
 from mall.promotion import models as promotion_models
 
@@ -1060,10 +1061,20 @@ def send_request_to_kuaidi(order, **kwargs):
     # if settings.IS_UNDER_BDD:
     #     # BDD 暂时不测试快递100信息
     #     return
-    from tools.express.express_poll import ExpressPoll
+    
     print u'------------ send_request_to_kuaidi order.status:{}'.format(order.status)
-    # if order.status == ORDER_STATUS_PAYED_SHIPED:
-    is_success = ExpressPoll(order).get_express_poll()
+    express_configs = ExpressServiceConfig.objects.filter(value=1)
+    if express_configs.count() > 0:
+        express_config = express_configs[0]
+        if express_config.name == u"快递鸟":
+            from tools.express.kdniao_express_poll import KdniaoExpressPoll
+            is_success = KdniaoExpressPoll(order).get_express_poll()
+        elif express_config.name == u"快递100":
+            from tools.express.express_poll import ExpressPoll
+            is_success = ExpressPoll(order).get_express_poll()
+    else:
+        from tools.express.express_poll import ExpressPoll
+        is_success = ExpressPoll(order).get_express_poll()
     print u'----------- send_request_to_kuaidi: {}'.format(is_success)
 
 
