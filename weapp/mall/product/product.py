@@ -475,7 +475,8 @@ class ProductPool(resource.Resource):
                 promotion_title = product.promotion_title,
                 user_code = product.user_code,
                 bar_code = product.bar_code,
-                supplier = product.supplier
+                supplier = product.supplier,
+                supplier_user_id = product.owner_id
             )
             # 商品规格
             product_model = models.ProductModel.objects.get(product=product)
