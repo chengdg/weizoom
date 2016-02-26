@@ -691,7 +691,8 @@ def get_detail_response(request):
             'order_operation_logs': order_operation_logs,
             'order_status_logs': order_status_logs,
             'log_count': log_count,
-            'show_first': show_first
+            'show_first': show_first,
+            'mall_type': request.user_profile.webapp_type
         })
 
         return render_to_response('mall/editor/order_detail.html', c)
@@ -820,6 +821,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
+
+    # 除掉同步过来的订单中未支付的
+    if not mall_type:
+        orders = orders.exclude(supplier_user_id__gt=0, status=ORDER_STATUS_NOT)
 
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
 
@@ -960,7 +965,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                         pass
                     pay_money += float(product['total_price'])
                 group = {
-                    "id": group_id,
+                    "supplier_user_id": group_id,
                     "fackorder": group_order,
                     "products": products
                 }

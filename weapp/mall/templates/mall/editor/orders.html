@@ -207,7 +207,8 @@
 							</div>
 							<div style="width:80px;display:table-cell">
 							<p class="tc">
-							{{if order.supplier_user_id <= 0}}
+							{{if order.supplier_user_id <= 0 && data.mall_type == 0}}
+							{{else}}
 								${product.price}
 							{{/if}}
 							</p>
