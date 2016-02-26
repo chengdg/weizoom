@@ -2,87 +2,104 @@
 	{
 		"id": "00001",
 		"name": "申通快递",
-		"value": "shentong"
+		"value": "shentong",
+		"kdniao_value": "STO"
 	},
 	{
 		"id": "00002",
 		"name": "EMS",
-		"value": "ems"
+		"value": "ems",
+		"kdniao_value": "EMS"
 	},
 	{
 		"id": "00003",
 		"name": "顺丰速运",
-		"value": "shunfeng"
+		"value": "shunfeng",
+		"kdniao_value": "SF"
 	},
 	{
 		"id": "00004",
 		"name": "圆通速递",
-		"value": "yuantong"
+		"value": "yuantong",
+		"kdniao_value": "YTO"
 	},
 	{
 		"id": "00005",
 		"name": "中通速递",
-		"value": "zhongtong"
+		"value": "zhongtong",
+		"kdniao_value": "ZTO"
 	},
 	{
 		"id": "00006",
 		"name": "韵达快运",
-		"value": "yunda"
+		"value": "yunda",
+		"kdniao_value": "YD"
 	},
 	{
 		"id": "00007",
 		"name": "天天快递",
-		"value": "tiantian"
+		"value": "tiantian",
+		"kdniao_value": "HHTT"
 	},
 	{
 		"id": "00008",
 		"name": "汇通快运",
-		"value": "huitongkuaidi"
+		"value": "huitongkuaidi",
+		"kdniao_value": "HTKY"
 	},
 	{
 		"id": "00009",
 		"name": "全峰快递",
-		"value": "quanfengkuaidi"
+		"value": "quanfengkuaidi",
+		"kdniao_value": "QFKD"
 	},
 	{
 		"id": "00010",
 		"name": "德邦物流",
-		"value": "debangwuliu"
+		"value": "debangwuliu",
+		"kdniao_value": "DBL"
 	},
 	{
 		"id": "00011",
 		"name": "宅急送",
-		"value": "zhaijisong"
+		"value": "zhaijisong",
+		"kdniao_value": "ZJS"
 	},
 	{
 		"id": "00012",
 		"name": "快捷速递",
-		"value": "kuaijiesudi"
+		"value": "kuaijiesudi",
+		"kdniao_value": "FAST"
 	},
 	{
 		"id": "00013",
 		"name": "比利时邮政",
-		"value": "bpost"
+		"value": "bpost",
+		"kdniao_value": "BEL"
 	},
 	{
 		"id": "00014",
 		"name": "速尔快递",
-		"value": "suer"
+		"value": "suer",
+		"kdniao_value": "SURE"
 	},
 	{
 		"id": "00015",
 		"name": "国通快递",
-		"value": "guotongkuaidi"
+		"value": "guotongkuaidi",
+		"kdniao_value": "GTO"
 	},
   	{
 		"id": "00016",
 		"name": "如风达",
-		"value": "rufengda"
+		"value": "rufengda",
+		"kdniao_value": "RFD"
 	},
 	{
 		"id": "00017",
 		"name": "邮政包裹/平邮",
-		"value": "youzhengguonei"
+		"value": "youzhengguonei",
+		"kdniao_value": "YZPY"
 	}
 ]
 
