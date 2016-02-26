@@ -692,7 +692,7 @@ def get_detail_response(request):
             'order_status_logs': order_status_logs,
             'log_count': log_count,
             'show_first': show_first,
-            'mall_type': request.user_profile.webapp_type
+            'is_not_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False
         })
 
         return render_to_response('mall/editor/order_detail.html', c)
