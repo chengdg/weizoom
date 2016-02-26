@@ -946,7 +946,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 group_id = order.supplier_user_id
                 pay_money = 0
                 for product in products:
-                    product['name'] = id2mall_product[weizoom_product_id2mall_product_id[product['id']]].name
+                    try:
+                        product['name'] = id2mall_product[weizoom_product_id2mall_product_id[product['id']]].name
+                    except:
+                        pass
                     pay_money += float(product['total_price'])
                 group = {
                     "id": group_id,
