@@ -890,7 +890,14 @@
 .xui-orderDetialPage .xui-bk {
     background-color: #eaeef6;
 }
-
+.xui-orderDetialPage div[class^="xui-wSync-"]{
+    line-height:30px;
+    padding-left:150px;
+    width:280px;
+}
+.xui-orderDetialPage .xui-wSync-count{
+    border-bottom:1px solid #ccc;
+}
 .xui-orderDetialPage .xui-notify {
     width: 14px;
     height: 14px;

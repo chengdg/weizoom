@@ -299,6 +299,7 @@
               （{{ product.count }}件）
               </td>
               <td class="xui-td-third"{% if product.noline %} style="border-top:none;"{% endif %}>
+              {% if not is_sync %}
                 {% if product.promotion.type == 'flash_sale' %}
                 直降{{product.promotion.promotion_saved_money|floatformat:"2" }}元
                 {% endif %}
@@ -311,6 +312,7 @@
                 {% if product.grade_discounted_money %}
                   会员优惠：{{ product.grade_discounted_money }}
                 {% endif %}
+              {% endif %}
               </td>
 
                 {% if suppliers|length %}
@@ -321,18 +323,20 @@
 
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
-                {% if order.coupon_id and coupon.product_id == -1 %}
-                <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
-                {% endif %}
-                {% if order.integral %}
-                  <p>{{order.integral}}积分，抵扣{{order.integral_money}}</p>
-                {% endif %}
-                {% if order.edit_money %}
-                  <p>商家优惠：{{ order.edit_money|floatformat:"2" }}</p>
+                {% if not is_sync %}
+                  {% if order.coupon_id and coupon.product_id == -1 %}
+                  <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
+                  {% endif %}
+                  {% if order.integral %}
+                    <p>{{order.integral}}积分，抵扣{{order.integral_money}}</p>
+                  {% endif %}
+                  {% if order.edit_money %}
+                    <p>商家优惠：{{ order.edit_money|floatformat:"2" }}</p>
+                  {% endif %}
                 {% endif %}
               </td>
               <td class="xui-td-fifth" rowspan="{{ forloop.revcounter }}">
-                {% if order.weizoom_card_money %}
+                {% if order.weizoom_card_money and not is_sync %}
                   <span class="xa-wzcardHint xui-wzcard pr">{{ order.weizoom_card_money|floatformat:"2" }}
                     <div class="xa-wzcardInfo pa xui-wzcardInfo" style="display:none;">
                       <h4 for="">卡号：</h4>
@@ -345,13 +349,14 @@
                   </span>
                 {% endif %}
               </td>
-              <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{{ order.postage|floatformat:"2" }}</td>
+              <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{% if not is_sync %}{{ order.postage|floatformat:"2" }}{% endif %}</td>
               </td>
               {% endif %}
             </tr>
             {% endfor %}
         </table>
         <div class="xui-summary">
+          {% if not is_sync%}
         	<p class="xui-field">
         		<span class="pull-left">
         			共计商品：<span class="xui-allnum">{{order.number}}</span> 件
@@ -374,7 +379,10 @@
               支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
             </span>
           </p>
-
+          {% else %}
+          <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
+          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥161.20</span></div>
+          {% endif %}
         </div>
     </div>
 </div>
