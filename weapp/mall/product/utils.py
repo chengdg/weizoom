@@ -281,13 +281,12 @@ def weizoom_filter_products(request, products):
                                         name__contains=store_name,
                                         is_delete=False
                                     )]
-        from_supplier_product_ids = [product.id for product in models.Product.objects.filter(
-                                        owner=request.manager,
-                                        supplier__in=supplier_ids,
-                                        is_deleted=False
-                                    )]
     else:
         owner_ids = [profile.user_id for profile in all_mall_userprofiles.all()]
+        supplier_ids = [supplier.id for supplier in models.Supplier.objects.filter(
+                                        owner=request.manager,
+                                        is_delete=False
+                                    )]
 
     if start_date and end_date:
         params = dict(
@@ -297,13 +296,26 @@ def weizoom_filter_products(request, products):
                 delete_time__gte=start_date,
                 delete_time__lte=end_date
             )
+        params1 = dict(
+                owner=request.manager,
+                supplier__in=supplier_ids,
+                is_deleted=False,
+                created_at__gte=start_date,
+                created_at__lte=end_date
+            )
     else:
         params = dict(
                 owner=request.manager,
                 mall_id__in=owner_ids,
                 is_deleted=False,
             )
+        params1 = dict(
+                owner=request.manager,
+                supplier__in=supplier_ids,
+                is_deleted=False,
+            )
 
+    from_supplier_product_ids = [product.id for product in models.Product.objects.filter(**params1)]
     from_store_product_ids = [relation.weizoom_product_id for relation in models.WeizoomHasMallProductRelation.objects.filter(**params)]
     filter_product_ids = from_store_product_ids + from_supplier_product_ids
 
