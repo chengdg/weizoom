@@ -185,10 +185,7 @@ def export_cards(request):
                 buyer_name = member.username_for_html
             else:
                 buyer_name = u'未知'
-            order_ids = []
-            for o in card2orders[k]:
-                order_ids += o['order_id']
-            order_count = len(set(order_ids))
+            order_count = len(card2orders[k]['order_id'])
         card_type = u''
         if card['card_type'] == WEIZOOM_CARD_EXTERNAL_USER:
             card_type = u'外部卡'
