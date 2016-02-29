@@ -179,11 +179,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			}
 
 		},
-		timing: function($node, model, value, $propertyViewNode) {
-			$node.find('.wa-timing').toggle();
-		},
-		timing_value:function($node, model, value, $propertyViewNode){
-		},
 		description: function($node, model, value, $propertyViewNode) {
 			//model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
 			//$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
