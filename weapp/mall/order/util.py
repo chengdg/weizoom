@@ -592,6 +592,7 @@ def get_detail_response(request):
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
 
     if request.method == 'GET':
+        mall_type = request.user_profile.webapp_type
         order_has_products = OrderHasProduct.objects.filter(order=order)
 
         number = 0
@@ -630,13 +631,6 @@ def get_detail_response(request):
         order.pay_money = order.final_price + order.weizoom_card_money
         order.actions = get_order_actions(order, is_detail_page=True)
 
-        if order.order_source:
-            order.source = u'商城'
-            order.come = 'weizoom_mall'
-        else:
-            order.source = u'本店'
-            order.come = 'mine_mall'
-
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -655,9 +649,14 @@ def get_detail_response(request):
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
         supplier_ids = []
+        supplier_user_ids = []
         for child_order in child_orders:
-            supplier_ids.append(child_order.supplier)
+            if child_order.supplier:
+                supplier_ids.append(child_order.supplier)
+            if child_order.supplier_user_id:
+                supplier_ids.append(child_order.supplier_user_id)
 
+        # 商城自己添加的供货商
         if supplier_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
             supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in child_orders])
@@ -683,6 +682,7 @@ def get_detail_response(request):
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_ALL,
+            'mall_type': mall_type,
             'order': order,
             'child_orders': child_orders,
             'suppliers': suppliers,

@@ -2019,6 +2019,16 @@ def get_order_products(order):
 			'user_code':product.user_code
 		}
 
+		# 更换商品名称为供货商的商品名称
+		if WeizoomHasMallProductRelation.objects.filter(
+							owner=product.owner,
+							weizoom_product_id=relation.product_id
+							).count() > 0:
+			mall_product_id = WeizoomHasMallProductRelation.objects.get(
+										owner=product.owner,
+										weizoom_product_id=relation.product_id
+									).mall_product_id
+			product_info['name'] = Product.objects.get(id=mall_product_id).name
 
 		try:
 			integral_product_info = str(product.id) + '-' + product.model_name
@@ -2033,9 +2043,12 @@ def get_order_products(order):
 
 		try:
 			product_info['supplier_name'] = Supplier.objects.get(id=product.supplier).name
+		except:
+			product_info['supplier_name'] = ""
+		try:
 			product_info['supplier_store_name'] = UserProfile.objects.get(user_id=product.supplier_user_id).store_name
 		except:
-			pass
+			product_info['supplier_store_name'] = ""
 
 		promotion_relation = id2promotion.get(relation.promotion_id, None)
 		if promotion_relation:
