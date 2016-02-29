@@ -654,7 +654,7 @@ def get_detail_response(request):
             if child_order.supplier:
                 supplier_ids.append(child_order.supplier)
             if child_order.supplier_user_id:
-                supplier_ids.append(child_order.supplier_user_id)
+                supplier_user_ids.append(child_order.supplier_user_id)
 
         # 商城自己添加的供货商
         if supplier_ids:
@@ -663,6 +663,13 @@ def get_detail_response(request):
             order.products.sort(lambda x, y: cmp(x['supplier'], y['supplier']))
             for product in order.products:
                 product['order_status'] = supplier2status.get(product['supplier'], '')
+
+        if supplier_user_ids:
+            # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
+            supplier_user_id2status = dict([(tmp_order.supplier_user_id, tmp_order.get_status_text()) for tmp_order in child_orders])
+            order.products.sort(lambda x, y: cmp(x['supplier_user_id'], y['supplier_user_id']))
+            for product in order.products:
+                product['order_status'] = supplier_user_id2status.get(product['supplier_user_id'], '')
 
         name = request.GET.get('name', None)
         if not name:

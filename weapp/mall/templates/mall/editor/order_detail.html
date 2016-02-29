@@ -322,12 +322,18 @@
               {% endif %}
               </td>
 
-                {% if suppliers|length %}
-                  {% ifchanged product.supplier %}
-                      <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
-                  {% endifchanged %}
-              {% endif %}
-
+                {% if mall_type %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                  {%if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                {% endif %}
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
                 {% if not is_sync %}
