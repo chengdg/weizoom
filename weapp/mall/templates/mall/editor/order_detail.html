@@ -241,7 +241,7 @@
     </div>
     <div class="xui-orderinfo">
         {% if not suppliers|length %}
-        <p class="xui-info-p">订单来源：<span class="xui-info-value">{{order.source}}</span></p>
+        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}{{order.source}}{% else %}商城{% endif %}</span></p>
         <p class="xui-info-p">运送方式：<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         {% endif %}
         <p class="xui-info-p">支付方式：<span class="xui-info-value">{{order.pay_interface_name}}</span></p>
