@@ -17,7 +17,7 @@ NEW_PAGE_JSON = """
             "force_display_in_property_view": "no",
             "components": [],
             "selectable": "yes",
-            "type": "appkit.surveydescription",
+            "type": "appkit.groupdescription",
             "model": {
                 "index": 2,
                 "name": "",
@@ -63,7 +63,7 @@ NEW_PAGE_JSON = """
             "index": 1,
             "name": "",
             "title": "index",
-            "site_title": "团购",
+            "site_title": "团购活动",
             "uploadWidth": "320",
             "uploadHeight": "568",
             "class": "",
