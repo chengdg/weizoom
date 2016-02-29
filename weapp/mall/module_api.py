@@ -2020,8 +2020,8 @@ def get_order_products(order):
 		}
 
 		# 更换商品名称为供货商的商品名称
-		if WeizoomHasMallProductRelation.objects.filter(
-							owner=product.owner,
+		if UserProfile.objects.get(user_id=product.owner_id).webapp_type == 0 and WeizoomHasMallProductRelation.objects.filter(
+							owner_id=product.owner_id,
 							weizoom_product_id=relation.product_id
 							).count() > 0:
 			mall_product_id = WeizoomHasMallProductRelation.objects.get(
@@ -2114,7 +2114,7 @@ def get_order_products(order):
 
 	for product in products:
 		product['supplier_length'] = suppliers.count(product['supplier'])
-		product['supplier_user_length'] = suppliers.count(product['supplier_user_id'])
+		product['supplier_user_length'] = supplier_user_ids.count(product['supplier_user_id'])
 
 	def __sorted_by_supplier(s):
 		return (s['supplier'], s['supplier_user_length'])

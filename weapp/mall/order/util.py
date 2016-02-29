@@ -699,8 +699,9 @@ def get_detail_response(request):
             'order_status_logs': order_status_logs,
             'log_count': log_count,
             'show_first': show_first,
-            'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False
-        })
+            'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
+            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False
+            })
 
         return render_to_response('mall/editor/order_detail.html', c)
     else:

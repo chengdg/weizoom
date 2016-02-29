@@ -252,7 +252,7 @@
                 <th class="xui-td-first">商品信息</th>
                 <th class="xui-td-second">单价（元）/数量</th>
                 <th class="xui-td-third">单品优惠</th>
-                {% if mall_type %}<th class="xui-td-third">订单状态</th>{% endif %}
+                {% if mall_type and is_show_order_status %}<th class="xui-td-third">订单状态</th>{% endif %}
                 <th class="xui-td-fourth" style="width:160px;">整单优惠</th>
                 <th class="xui-td-fifth" style="width:120px;">微众卡支付金额</th>
                 <th class="xui-td-sixth" style="width:90px;">运费</th>
@@ -322,7 +322,7 @@
               {% endif %}
               </td>
 
-                {% if mall_type %}
+                {% if mall_type and is_show_order_status %}
                   {% if product.supplier %}
                     {% ifchanged product.supplier %}
                         <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
@@ -330,7 +330,7 @@
                   {% endif %}
                   {%if product.supplier_user_id %}
                     {% ifchanged product.supplier_user_id %}
-                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
                     {% endifchanged %}
                   {% endif %}
                 {% endif %}
