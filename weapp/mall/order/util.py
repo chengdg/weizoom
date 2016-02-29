@@ -837,7 +837,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
 
     # 除掉同步过来的订单中未支付的
     if not mall_type:
-        orders = orders.exclude(supplier_user_id__gt=0, status=ORDER_STATUS_NOT)
+        orders = orders.exclude(supplier_user_id__gt=0, status=ORDER_STATUS_NOT).filter(~Q(status=ORDER_STATUS_REFUNDING)).filter(~Q(status=ORDER_STATUS_REFUNDED))
 
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
 
