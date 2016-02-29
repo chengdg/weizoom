@@ -2083,6 +2083,7 @@ def get_order_products(order):
 								"thumbnails_url": premium_product['thumbnails_url'],
 								"count": premium_product['count'],
 								"price": '%.2f' % premium_product['price'],
+								"total_price": '0.0',
 								'product_model_name': "standard",
 								"promotion": {
 									"type": "premium_sale:premium_product"
