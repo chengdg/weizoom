@@ -134,7 +134,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             placeholder: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。',
             default: "1.开团和拼团的顾客需要先已团购价支付商品<br>2.到达团购人数上限或到达团购指定时间后，团购结束<br>到达团购人数上限 - 团购成功<br>成功后,在该商品团购结束 20 天内进行发货.<br>在指定时间未到达团购人数上线 - 团购失败<br>失败后, 5~7个工作日完成退款<br>3.本次活动商品数量为 100 份，售完活动结<br>束。开团截止日期 2014-04-12<br>4.已关注的用户可在我的团购中找到参与过<br>的团购，也可以继续创建其他的团购。<br>"
         },{
-			name: 'image',
+			name: 'material_image',
 			type: 'image_dialog_select',
 			displayName: '上传图片',
 			isUserProperty: true,
