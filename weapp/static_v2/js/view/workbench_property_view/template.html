@@ -52,6 +52,18 @@
 					</div>
 					{{/if}}
 
+					{{if (field.type == 'title_with_nothing')}}
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+					    <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}
+					    </div>
+                        {{if field.annotation}}
+							<div style="color: #888;line-height:22px;">
+								{{html field.annotation}}
+							</div>
+                        {{/if}}
+					</div>
+					{{/if}}
+
 					{{if (field.type == 'text_with_annotation')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
@@ -108,6 +120,8 @@
 						</div>
 					</div>
 					{{/if}}
+
+
 
 					{{if (field.type == 'time')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
@@ -284,6 +298,26 @@
 					{{if (field.type == 'select')}}
 					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label">${field.displayName}</div>
+						<div class="propertyGroup_property_input">
+							<select data-field="${field.name}" name="${field.name}" class="input-medium">
+							{{each(n, nav) W.component.getSelectSource(field.source, component)}}
+								<option value="${nav.value}" {{if model.get(field.name) == nav.value}}selected="selected"{{/if}}>
+									{{if nav.name }}
+										${nav.name}
+									{{else}}
+										${nav.value}
+									{{/if}}
+								</option>
+							{{/each}}
+							</select>
+						</div>
+					</div>
+					{{/if}}
+
+
+					{{if (field.type == 'selector_v1')}}
+					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input">
 							<select data-field="${field.name}" name="${field.name}" class="input-medium">
 							{{each(n, nav) W.component.getSelectSource(field.source, component)}}
@@ -662,6 +696,8 @@
 					</div>
 					{{/if}}
 
+
+
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
 					<div class="propertyGroup_property_label" style="float:left;width:58px;margin-right:9px;line-height:60px;text-align:right;">${field.displayName}</div>
@@ -974,7 +1010,6 @@
 								</div>
 								{{/if}}
 
-
 								{{if (dynamicComponentField.type == 'select')}}
 								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
 									<div class="propertyGroup_property_label">${dynamicComponentField.displayName}：</div>
@@ -993,7 +1028,29 @@
 									</div>
 								</div>
 								{{/if}}
-								
+
+
+
+                                {{if (dynamicComponentField.type == 'selector_v1')}}
+								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+                                    {{if dynamicComponentField.displayName}}
+									<div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
+									{{/if}}									<div class="propertyGroup_property_input">
+										<select data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" class="input-medium">
+										{{each(n, nav) W.component.getSelectSource(dynamicComponentField.source, component)}}
+											<option value="${nav.value}" {{if dynamicComponent.model.get(dynamicComponentField.name) == nav.value}}selected="selected"{{/if}}>
+												{{if nav.name }}
+													${nav.name}
+												{{else}}
+													${nav.value}
+												{{/if}}
+											</option>
+										{{/each}}
+										</select>
+									</div>
+								</div>
+								{{/if}}
+
 								{{/if}} <!-- end for isUserProperty -->
 								{{/each}}
 							</div><!--
