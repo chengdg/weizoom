@@ -150,23 +150,30 @@
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
-          var descriptionModel = page.components[0].model;
-          var name = descriptionModel.get('title');
-          var startTime = descriptionModel.get('start_time')+":00";
-          var endTime = descriptionModel.get('end_time')+":00";
-          var relatedPageId = data['project_id'];
-          var args = {
+            var descriptionModel = page.components[0].model;
+            var name = descriptionModel.get('title');
+            var startTime = descriptionModel.get('start_time')+":00";
+            var endTime = descriptionModel.get('end_time')+":00";
+            var select_product = descriptionModel.get('select_product');
+            var group_list = [];//{'group_type':'5','group_days':'10','group_price':'100.00'}
+            var rules = descriptionModel.get('rules');
+            var material_image = descriptionModel.get('material_image');
+            var share_description =  descriptionModel.get('share_description');
+
+            var relatedPageId = data['project_id'];
+
+            var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime
-          };
-          if (isCreateNewData) {
-            var method = 'put';
-            args['related_page_id'] = relatedPageId;
-          } else {
+            };
+            if (isCreateNewData) {
+                var method = 'put';
+                args['related_page_id'] = relatedPageId;
+            } else {
             var method = 'post';
-            args['id'] = W.activityId;
-          }
+                args['id'] = W.activityId;
+            }
           W.getApi().call({
             app: 'apps/group',
             resource: 'group',
