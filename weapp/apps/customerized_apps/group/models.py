@@ -9,40 +9,44 @@ STATUS_RUNNING = 1
 STATUS_STOPED = 2
 class Group(models.Document):
 	owner_id = models.LongField() #创建人id
+	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	name = models.StringField(default="", max_length=100) #名称
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
-	participant_count = models.IntField(default=0) #参与者数量
-	related_page_id = models.StringField(default="", max_length=100) #termite page的id
 	created_at = models.DateTimeField() #创建时间
-	
+	product = models.StringField(default="") #活动商品
+	group_list = models.DynamicField() #团购活动列表[{'group_type':'5','group_days':'10','group_price':'100.00'},...]
+	rules = models.StringField()#团购说明
+	material_image = models.StringField()#分享图片
+	share_description = models.StringField()#分享描述
+
 	meta = {
 		'collection': 'group_group'
 	}
 	
-	@property
-	def status_text(self):
-		if self.status == STATUS_NOT_START:
-			return u'未开始'
-		elif self.status == STATUS_RUNNING:
-			now = datetime.today()
-			if now >= self.end_time:
-				return u'已结束'
-			else:
-				return u'进行中'
-		elif self.status == STATUS_STOPED:
-			return u'已结束'
-		else:
-			return u'未知'
-	
-	@property
-	def is_finished(self):
-		status_text = self.status_text
-		if status_text == u'已结束':
-			return True
-		else:
-			return False
+	# @property
+	# def status_text(self):
+	# 	if self.status == STATUS_NOT_START:
+	# 		return u'未开始'
+	# 	elif self.status == STATUS_RUNNING:
+	# 		now = datetime.today()
+	# 		if now >= self.end_time:
+	# 			return u'已结束'
+	# 		else:
+	# 			return u'进行中'
+	# 	elif self.status == STATUS_STOPED:
+	# 		return u'已结束'
+	# 	else:
+	# 		return u'未知'
+	#
+	# @property
+	# def is_finished(self):
+	# 	status_text = self.status_text
+	# 	if status_text == u'已结束':
+	# 		return True
+	# 	else:
+	# 		return False
 
 class GroupParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
