@@ -23,7 +23,7 @@ class Command(BaseCommand):
 	help = "init global navbar for all user"
 	args = ''
 
-	def handle(self, **options):
+	def handle(self, **options):gin
 		for component in ComponentInfo.objects.filter(is_active=True):
 			weixin_api = WeixinApi(None, weixin_http_client)
 			from weixin.message.message_handler.tasks import record_call_weixin_api
