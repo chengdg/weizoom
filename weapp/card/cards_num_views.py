@@ -144,14 +144,14 @@ def export_cards(request):
             'card_type': rule.card_type
         }
     card2orders = {}
+    order_ids = set()
     for order in WeizoomCardHasOrder.objects.filter(card_id__in=card_ids).exclude(order_id__in=['-1','-2']).order_by('-created_at'):
         if not card2orders.has_key(order.card_id):
             card2orders[order.card_id] = [order]
         else:
             card2orders[order.card_id].append(order)
-    order_ids = set()
-    for order in card2orders.values():
-        order_ids.add(order[0].order_id)
+        order_ids.add(order.order_id)
+
     member2order = {}
     webapp_user_ids = []
     for order in Order.objects.filter(order_id__in=list(order_ids)):
@@ -165,7 +165,10 @@ def export_cards(request):
         buyer_name = u''
         order_count = 0
         if card2orders.has_key(k):
-            webapp_user_id = member2order[card2orders[k][0].order_id]['webapp_user_id']
+            for tmp_order in card2orders[k]:
+                if member2order[tmp_order.order_id]['webapp_user_id']:
+                    webapp_user_id = member2order[tmp_order.order_id]['webapp_user_id']
+                    break
             member = all_webappuser2member[webapp_user_id]
             #获取order对应的member的显示名
             # member = webappuser2member.get(webapp_user_id, None)
