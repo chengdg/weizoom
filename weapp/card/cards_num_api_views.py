@@ -345,7 +345,6 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
         buyer_name = u''
         order_count = 0
         if card2orders.has_key(card[0]):
-            webapp_user_id = member2order[card2orders[card[0]][0].order_id]
             for tem_order in card2orders[card[0]]:
                 if member2order.get(tem_order.order_id, None):
                     webapp_user_id = member2order[tem_order.order_id]
