@@ -20,7 +20,6 @@ from core.exceptionutil import unicode_full_stack
 from market_tools.tools.delivery_plan.models import DeliveryPlan
 from core.common_util import ignore_exception
 from tools.express.express_poll import ExpressPoll
-from tools.express.models import ExpressServiceConfig
 #from webapp.modules.mall.utils import get_product_member_discount
 from mall.promotion import models as promotion_models
 
@@ -1061,27 +1060,10 @@ def send_request_to_kuaidi(order, **kwargs):
     # if settings.IS_UNDER_BDD:
     #     # BDD 暂时不测试快递100信息
     #     return
-    
+    from tools.express.express_poll import ExpressPoll
     print u'------------ send_request_to_kuaidi order.status:{}'.format(order.status)
-    print order,type(order)
-    express_configs = ExpressServiceConfig.objects.filter()
-    if express_configs.count() > 0:
-        express_config_value = express_configs[0].value
-        print "express_config_value>>>>>>>>>>",express_config_value,type(express_config_value)
-        if int(express_config_value) == 1:
-            print u"使用快递鸟进行订阅birdbirdbirdbirdbirdbird"
-            from tools.express.kdniao_express_poll import KdniaoExpressPoll
-            is_success = KdniaoExpressPoll(order).get_express_poll()
-        else:
-            print u"使用快递100进行订阅100100100100100100100100100，value存在"
-            from tools.express.express_poll import ExpressPoll
-            is_success = ExpressPoll(order).get_express_poll()
-    else:
-        print u"使用快递100进行订阅100100100100100100100100100，value空"
-        from tools.express.express_poll import ExpressPoll
-        is_success = ExpressPoll(order).get_express_poll()
     # if order.status == ORDER_STATUS_PAYED_SHIPED:
-    #is_success = ExpressPoll(order).get_express_poll()
+    is_success = ExpressPoll(order).get_express_poll()
     print u'----------- send_request_to_kuaidi: {}'.format(is_success)
 
 
