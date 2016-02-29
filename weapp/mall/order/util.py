@@ -648,6 +648,8 @@ def get_detail_response(request):
             order.weizoom_cards = [card.weizoom_card_id for card in cards]
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
+        if not child_orders and order.supplier_user_id:
+            child_orders = [order]
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
@@ -674,10 +676,10 @@ def get_detail_response(request):
         name = request.GET.get('name', None)
         if not name:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids).order_by('-id'))
-            supplier_stores = list(UserProfile.objects.filter(id__in=supplier_user_ids).order_by('-id'))
+            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids).order_by('-id'))
         else:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids,name__contains=name).filter(is_delete=False).order_by('-id'))
-            supplier_stores = list(UserProfile.objects.filter(id__in=supplier_user_ids, store_name__contains=name).order_by('-id'))
+            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids, store_name__contains=name).order_by('-id'))
 
         #add by duhao 把订单操作人信息放到操作日志中，方便精选的拆单子订单能正常显示操作员信息
         order_operation_logs = mall_api.get_order_operation_logs(order.order_id)

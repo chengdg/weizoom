@@ -2089,6 +2089,7 @@ def get_order_products(order):
 								},
 								'noline': 1,
 								'supplier': product.supplier,
+								'supplier_user_id': product.supplier_user_id,
 								'supplier_name': product_info.get('supplier_name', ''),
 								'supplier_store_name': product_info.get('supplier_store_name', ''),
 								'user_code':product.user_code

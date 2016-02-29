@@ -151,10 +151,14 @@
   <ul class="nav nav-tabs mt14 ">
   {% if mall_type %}
       {% for supplier in suppliers %}
-          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}"><a href="javascript:void(0);">{{ supplier.name }}</a></li>
+          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}" data-supplier-type="s">
+            <a href="javascript:void(0);">{{ supplier.name }}</a>
+          </li>
       {% endfor %}
       {% for supplier_store in supplier_stores %}
-          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier_store.id }}"><a href="javascript:void(0);">{{ supplier_store }}</a></li>
+          <li class="xa-count {% if forloop.first and suppliers|length == 0 %}active{% endif %}" data-total-status-value="{{ supplier_store.user_id }}" data-supplier-type="u">
+            <a href="javascript:void(0);">{{ supplier_store.store_name }}</a>
+          </li>
       {% endfor %}
   {% else %}
       <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息{{ child_order.supplier }}</a></li>
@@ -164,7 +168,7 @@
 
   {% if child_orders %}
       {% for child_order in child_orders %}
-          <div class="xa-infotab" id="tab-wuliuinfo{{ child_order.supplier }}" style="{% if not forloop.first %}display:none;{% endif %}">
+          <div class="xa-infotab" id="tab-wuliuinfo-{% if child_order.supplier %}s-{{child_order.supplier}}{% elif child_order.supplier_user_id %}u-{{ child_order.supplier_user_id }}{% endif %}"style="{% if not forloop.first %}display:none;{% endif %}">
             <div class="xui-wuliuinfo">
                 <p>
                   物流公司名称：{% if child_order.express_company_name %} {{ child_order.express_company_name|get_company_name_by_value }}   {% endif %}
@@ -442,12 +446,19 @@
           $('.xa-infotab').hide()
           var $el = $(event.currentTarget);
           status = $el.data('total-status-value');
+          type = $el.data('supplier-type');
+          console.log(type, "0000", status);
           $('.xa-count').removeClass('active');
           $el.addClass("active");
           if (status == 0) {
             $("#tab-orderlog").show();
           } else if (status > 0) {
-            $("#tab-wuliuinfo"+status).show();
+            if(type == 'u'){
+              $("#tab-wuliuinfo-u-"+status).show();
+            }
+            if(type == 's'){
+              $("#tab-wuliuinfo-s-"+status).show();
+            }
           }else{
             $("#tab-wuliuinfo").show();
           }
