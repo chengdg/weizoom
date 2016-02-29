@@ -356,7 +356,7 @@ class ProductPool(resource.Resource):
                 is_deleted=False)
 
         # 筛选出单规格的商品id
-        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids)]
+        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids, is_deleted=False)]
         much_model_product_ids = [id for id in all_model_product_ids if all_model_product_ids.count(id) > 1]
         standard_model_product_ids = [id for id in all_model_product_ids if id not in much_model_product_ids]
 

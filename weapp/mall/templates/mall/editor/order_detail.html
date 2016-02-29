@@ -149,9 +149,12 @@
 </div>
 
   <ul class="nav nav-tabs mt14 ">
-  {% if suppliers %}
+  {% if mall_type %}
       {% for supplier in suppliers %}
           <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}"><a href="javascript:void(0);">{{ supplier.name }}</a></li>
+      {% endfor %}
+      {% for supplier_store in supplier_stores %}
+          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier_store.id }}"><a href="javascript:void(0);">{{ supplier_store }}</a></li>
       {% endfor %}
   {% else %}
       <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息{{ child_order.supplier }}</a></li>
@@ -241,28 +244,35 @@
     </div>
     <div class="xui-orderinfo">
         {% if not suppliers|length %}
-        <p class="xui-info-p">订单来源：<span class="xui-info-value">{{order.source}}</span></p>
+        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}商户{% else %}商城{% endif %}</span></p>
         <p class="xui-info-p">运送方式：<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         {% endif %}
-        <p class="xui-info-p">支付方式：<span class="xui-info-value">{{order.pay_interface_name}}</span></p>
+        <p class="xui-info-p">支付方式：<span class="xui-info-value">{% if not is_sync %}{{order.pay_interface_name}}{% else %}微信支付{% endif %}</span></p>
         <table class="xui-producttab table">
             <tr>
-                {% if suppliers|length %}<th class="xui-td-zero" width="80">供货商</th>{% endif %}
+                {% if mall_type %}<th class="xui-td-zero" width="80">供货商</th>{% endif %}
                 <th class="xui-td-img"></th>
                 <th class="xui-td-first">商品信息</th>
                 <th class="xui-td-second">单价（元）/数量</th>
                 <th class="xui-td-third">单品优惠</th>
-                {% if suppliers|length %}<th class="xui-td-third">订单状态</th>{% endif %}
+                {% if mall_type and is_show_order_status %}<th class="xui-td-third">订单状态</th>{% endif %}
                 <th class="xui-td-fourth" style="width:160px;">整单优惠</th>
                 <th class="xui-td-fifth" style="width:120px;">微众卡支付金额</th>
                 <th class="xui-td-sixth" style="width:90px;">运费</th>
             </tr>
             {% for product in order.products %}
             <tr>
-              {% if suppliers|length %}
-                  {% ifchanged product.supplier %}
-                      <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
-                  {% endifchanged %}
+              {% if mall_type %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                  {% if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_store_name }}</td>
+                    {% endifchanged %}
+                  {% endif %}
               {% endif %}
               <td class="xui-td-img"{% if product.noline %} style="border-top:none;"{% endif %}><img width="42" height="42" src="{{product.thumbnails_url}}"></td>
               <td class="xui-td-first"{% if product.noline %} style="border-top:none;"{% endif %}>
@@ -315,12 +325,18 @@
               {% endif %}
               </td>
 
-                {% if suppliers|length %}
-                  {% ifchanged product.supplier %}
-                      <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
-                  {% endifchanged %}
-              {% endif %}
-
+                {% if mall_type and is_show_order_status %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                  {%if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                {% endif %}
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
                 {% if not is_sync %}
@@ -381,7 +397,7 @@
           </p>
           {% else %}
           <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
-          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥161.20</span></div>
+          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.product_price|floatformat:"2" }}</span></div>
           {% endif %}
         </div>
     </div>

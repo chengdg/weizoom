@@ -592,6 +592,7 @@ def get_detail_response(request):
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
 
     if request.method == 'GET':
+        mall_type = request.user_profile.webapp_type
         order_has_products = OrderHasProduct.objects.filter(order=order)
 
         number = 0
@@ -630,13 +631,6 @@ def get_detail_response(request):
         order.pay_money = order.final_price + order.weizoom_card_money
         order.actions = get_order_actions(order, is_detail_page=True)
 
-        if order.order_source:
-            order.source = u'商城'
-            order.come = 'weizoom_mall'
-        else:
-            order.source = u'本店'
-            order.come = 'mine_mall'
-
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -655,9 +649,14 @@ def get_detail_response(request):
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
         supplier_ids = []
+        supplier_user_ids = []
         for child_order in child_orders:
-            supplier_ids.append(child_order.supplier)
+            if child_order.supplier:
+                supplier_ids.append(child_order.supplier)
+            if child_order.supplier_user_id:
+                supplier_user_ids.append(child_order.supplier_user_id)
 
+        # 商城自己添加的供货商
         if supplier_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
             supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in child_orders])
@@ -665,11 +664,20 @@ def get_detail_response(request):
             for product in order.products:
                 product['order_status'] = supplier2status.get(product['supplier'], '')
 
+        if supplier_user_ids:
+            # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
+            supplier_user_id2status = dict([(tmp_order.supplier_user_id, tmp_order.get_status_text()) for tmp_order in child_orders])
+            order.products.sort(lambda x, y: cmp(x['supplier_user_id'], y['supplier_user_id']))
+            for product in order.products:
+                product['order_status'] = supplier_user_id2status.get(product['supplier_user_id'], '')
+
         name = request.GET.get('name', None)
         if not name:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids).order_by('-id'))
+            supplier_stores = list(UserProfile.objects.filter(id__in=supplier_user_ids).order_by('-id'))
         else:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids,name__contains=name).filter(is_delete=False).order_by('-id'))
+            supplier_stores = list(UserProfile.objects.filter(id__in=supplier_user_ids, store_name__contains=name).order_by('-id'))
 
         #add by duhao 把订单操作人信息放到操作日志中，方便精选的拆单子订单能正常显示操作员信息
         order_operation_logs = mall_api.get_order_operation_logs(order.order_id)
@@ -683,17 +691,20 @@ def get_detail_response(request):
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_ALL,
+            'mall_type': mall_type,
             'order': order,
             'child_orders': child_orders,
             'suppliers': suppliers,
+            'supplier_stores': supplier_stores,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
             'coupon': coupon,
             'order_operation_logs': order_operation_logs,
             'order_status_logs': order_status_logs,
             'log_count': log_count,
             'show_first': show_first,
-            'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False
-        })
+            'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
+            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False
+            })
 
         return render_to_response('mall/editor/order_detail.html', c)
     else:

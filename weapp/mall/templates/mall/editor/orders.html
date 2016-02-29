@@ -206,13 +206,14 @@
 								</p>
 							</div>
 							<div style="width:80px;display:table-cell;vertical-align: middle;">
-							<p class="tc">
-							{{if order.supplier_user_id <= 0 && data.mall_type == 0}}
-							{{else}}
-								${product.price}
-							{{/if}}
-							</p>
+							{{if order.supplier_user_id > 0 && data.mall_type == 0}}
 							<p class="tc">${product.count}&nbsp;件</p>
+							{{else}}
+							<p class="tc">
+								${product.price}
+							</p>
+							<p class="tc">(${product.count}&nbsp;件)</p>
+							{{/if}}
 							</div>
 						</li>
 					{{/each}}
