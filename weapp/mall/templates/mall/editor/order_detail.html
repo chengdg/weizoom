@@ -149,9 +149,12 @@
 </div>
 
   <ul class="nav nav-tabs mt14 ">
-  {% if suppliers %}
+  {% if mall_type %}
       {% for supplier in suppliers %}
           <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}"><a href="javascript:void(0);">{{ supplier.name }}</a></li>
+      {% endfor %}
+      {% for supplier_store in supplier_stores %}
+          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier_store.id }}"><a href="javascript:void(0);">{{ supplier_store }}</a></li>
       {% endfor %}
   {% else %}
       <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息{{ child_order.supplier }}</a></li>
@@ -244,7 +247,7 @@
         <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}商户{% else %}商城{% endif %}</span></p>
         <p class="xui-info-p">运送方式：<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         {% endif %}
-        <p class="xui-info-p">支付方式：<span class="xui-info-value">{{order.pay_interface_name}}</span></p>
+        <p class="xui-info-p">支付方式：<span class="xui-info-value">{% if not is_sync %}{{order.pay_interface_name}}{% else %}微信支付{% endif %}</span></p>
         <table class="xui-producttab table">
             <tr>
                 {% if mall_type %}<th class="xui-td-zero" width="80">供货商</th>{% endif %}
