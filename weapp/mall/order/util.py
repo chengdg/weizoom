@@ -629,7 +629,7 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
-        order.actions = get_order_actions(order, is_detail_page=True)
+        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
@@ -796,13 +796,13 @@ def get_orders_response(request, is_refund=False):
     return response.get_response()
 
 
-def check_order_status_filter(order,action):
+def check_order_status_filter(order,action,mall_type=0):
         """
             检查订单的状态是否允许跳转
         """
         flag = False
         is_refund = True if action == 'return_success' else False
-        actions = get_order_actions(order, is_refund=is_refund)
+        actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
         for ac in actions:
             if action == ac['action']:
                 flag = True
@@ -942,7 +942,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                     'express_company_name': fackorder.express_company_name,
                     'express_number': fackorder.express_number,
                     'leader_name': fackorder.leader_name,
-                    'actions': get_order_actions(fackorder, is_refund=is_refund)
+                    'actions': get_order_actions(fackorder, is_refund=is_refund,mall_type=mall_type)
                 }
                 if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                     group = {
@@ -965,7 +965,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
-                'actions': get_order_actions(order, is_refund=is_refund)
+                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
             }
 
             if order.supplier_user_id > 0:
@@ -991,7 +991,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 }
             groups.append(group)
         if len(groups) > 1:
-            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True)
+            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True,mall_type=mall_type)
         else:
             parent_action = None
         items.append({
@@ -1276,7 +1276,7 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False):
+def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False,mall_type=0):
 
     """
     :param order:
@@ -1349,7 +1349,8 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
 
     # print(order.order_id, order.is_sub_order, order.origin_order_id)
     # print(result)
-    if order.supplier_user_id > 0:
+    # 订单被同步后查看
+    if not mall_type and order.supplier_user_id:
         result = filter(lambda x: x in sync_order_actions, result)
     else:
         if order.is_sub_order:

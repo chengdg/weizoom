@@ -60,8 +60,7 @@ class OrderInfo(resource.Resource):
         order = Order.objects.get(id=order_id)
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
-
-            flag = util.check_order_status_filter(order,action)
+            flag = util.check_order_status_filter(order,action,mall_type = request.user_profile.webapp_typ)
             if not flag:
                 response = create_response(500)
                 response.data = {'msg':"非法操作，订单状态不允许进行该操作"}
