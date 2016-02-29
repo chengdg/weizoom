@@ -168,7 +168,7 @@ def export_cards(request):
 
     card_id2member = {}
     for  card_id,order_id in card2orders.items():
-        card_id2member[card_id] = all_webappuser2member[card2orders[order_id]["order_id"][0]]
+        card_id2member[card_id] = all_webappuser2member[card2orders[card_id]["order_id"][0]]
 
     for k,card in card_id2card_rule.items():
         buyer_name = u''
