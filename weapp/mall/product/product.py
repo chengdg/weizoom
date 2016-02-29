@@ -287,7 +287,7 @@ class ProductList(resource.Resource):
         is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
-        if is_prev_shelve and is_not_sale or is_deleted:
+        if (is_prev_shelve and is_not_sale) or is_deleted:
             # 商品不再处于上架状态，发出product_not_offline signal
             product_ids = [int(id) for id in ids]
             mall_signals.products_not_online.send(
@@ -299,7 +299,7 @@ class ProductList(resource.Resource):
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
         if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
             for id in ids:
-                utils.delete_weizoom_mall_sync_product(request, product_id2product[id], reason)
+                utils.delete_weizoom_mall_sync_product(request, product_id2product[int(id)], reason)
         if mall_type and is_deleted:
             models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
 
