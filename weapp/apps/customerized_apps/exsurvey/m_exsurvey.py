@@ -149,7 +149,7 @@ class Msurvey(resource.Resource):
 					product_id2product_name.append({
 						"orderhasproduct_id": product_id2product[p.id].id,
 						"product_id": p.id,
-						"order_id": product_id2product[p.id].order.id,
+						"order_id": product_id2product[p.id].order.order_id,
 						"product_name": p.name,
 						"product_supplier_id": p.supplier,
 						"product_owner_id": p.owner_id
