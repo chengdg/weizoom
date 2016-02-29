@@ -141,35 +141,41 @@ def export_cards(request):
             'money': card.money,
             'use_money': rule.money - card.money,
             'name': rule.name,
-            'card_type': rule.card_type
+            'card_type': rule.card_type,
         }
     card2orders = {}
     order_ids = set()
     for order in WeizoomCardHasOrder.objects.filter(card_id__in=card_ids).exclude(order_id__in=['-1','-2']).order_by('-created_at'):
         if not card2orders.has_key(order.card_id):
-            card2orders[order.card_id] = [order]
+            card2orders[order.card_id] = {
+                "order_id":[order.order_id],
+                "use_time": order.created_at
+            }
         else:
-            card2orders[order.card_id].append(order)
+            card2orders[order.card_id]["order_id"].append(order.order_id)
         order_ids.add(order.order_id)
 
-    member2order = {}
+    order_id2webapp_user_ids = {}
     webapp_user_ids = []
     for order in Order.objects.filter(order_id__in=list(order_ids)):
-        member2order[order.order_id]= {'webapp_user_id': order.webapp_user_id,
-                                       'use_time': order.created_at
-                                       }
+        if not order_id2webapp_user_ids.has_key(order.order_id):
+            order_id2webapp_user_ids[order.order_id]= [order.webapp_user_id]
+        else:
+            order_id2webapp_user_ids[order.order_id].append(order.webapp_user_id)
         webapp_user_ids.append(order.webapp_user_id)
     cur_cards = {}
     all_webappuser2member = Member.members_from_webapp_user_ids(webapp_user_ids)
+
+    card_id2member = {}
+    for  card_id,order_id in card2orders.items():
+        card_id2member[card_id] = all_webappuser2member[order_id2webapp_user_ids[order_id]["order_id"][0]]
+
     for k,card in card_id2card_rule.items():
         buyer_name = u''
         order_count = 0
         if card2orders.has_key(k):
-            for tmp_order in card2orders[k]:
-                if member2order[tmp_order.order_id].get('webapp_user_id', None):
-                    webapp_user_id = member2order[tmp_order.order_id]['webapp_user_id']
-                    break
-            member = all_webappuser2member[webapp_user_id]
+            webapp_user_id = None
+            member = card_id2member.get(k,None)
             #获取order对应的member的显示名
             # member = webappuser2member.get(webapp_user_id, None)
             if member:
@@ -208,7 +214,7 @@ def export_cards(request):
             'status' : status_str,
             'money': '%.2f' % card['money'],
             'use_money': '%.2f' % card['use_money'],
-            'use_time': member2order[card2orders[k][0].order_id]['use_time'] if card2orders.has_key(k) else '',
+            'use_time': card2orders[k]['use_time'] if card2orders.has_key(k) else '',
             'card_type': card_type,
             'order_count': order_count,
             'buyer_name': buyer_name
