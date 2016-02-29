@@ -166,7 +166,7 @@ def export_cards(request):
         order_count = 0
         if card2orders.has_key(k):
             for tmp_order in card2orders[k]:
-                if member2order[tmp_order.order_id]['webapp_user_id']:
+                if member2order[tmp_order.order_id].get('webapp_user_id', None):
                     webapp_user_id = member2order[tmp_order.order_id]['webapp_user_id']
                     break
             member = all_webappuser2member[webapp_user_id]

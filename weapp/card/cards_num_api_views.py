@@ -326,14 +326,14 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
 
     ids = [card[0] for card in card_id2card_rule]
     card2orders = {}
+    order_ids = set()
     for order in card_relation2orders.filter(card_id__in=ids).order_by('-created_at'):
         if not card2orders.has_key(order.card_id):
             card2orders[order.card_id] = [order]
         else:
             card2orders[order.card_id].append(order)
-    order_ids = set()
-    for order in card2orders.values():
         order_ids.add(order[0].order_id)
+
     member2order = {}
     webapp_user_ids = []
     for order in Order.objects.filter(order_id__in=list(order_ids)):
@@ -346,6 +346,10 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
         order_count = 0
         if card2orders.has_key(card[0]):
             webapp_user_id = member2order[card2orders[card[0]][0].order_id]
+            for tem_order in card2orders[card[0]]:
+                if member2order.get(tem_order.order_id, None):
+                    webapp_user_id = member2order[tem_order.order_id]
+                    break
             member = all_webappuser2member[webapp_user_id]
             #获取order对应的member的显示名
             # member = webappuser2member.get(webapp_user_id, None)
