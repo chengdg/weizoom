@@ -20,6 +20,10 @@ def process_shared_url(request, args):
 		is_new_created_member = args['is_new_created_member']
 
 	fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
+
+	if fmt.find(',') > -1:
+		fmt = fmt.split(',')[0]
+
 	member = request.member
 
 	try:
