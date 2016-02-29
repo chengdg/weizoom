@@ -332,7 +332,7 @@ def get_num_cards(filter_value, cur_page=None, count_per_page=None, query_string
             card2orders[order.card_id] = [order]
         else:
             card2orders[order.card_id].append(order)
-        order_ids.add(order[0].order_id)
+        order_ids.add(order.order_id)
 
     member2order = {}
     webapp_user_ids = []
