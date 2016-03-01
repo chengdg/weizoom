@@ -115,7 +115,7 @@
                     <div class="xui-innerwrap">
                       <p>{{ order.ship_name }}<span class="ml30">{{ order.ship_tel }}</span></p>
                       <p>{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
-                      <p>买家留言：{{order.customer_message}}</p>
+                      <p>买家留言：{% if not is_sync %}{{order.customer_message}}{% endif %}{{order.customer_message}}</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -139,8 +139,8 @@
                 <div class="col-md-4">
                     <p class="xui-title">商家备注</p>
                     <div class="xui-innerwrap">
-                    	<img  data-order-id="{{order.id}}" data-order-value="{{order.remark}}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" />
-                        <p>{{order.remark}}</p>
+                    	<img  data-order-id="{{order.id}}" data-order-value="{{order.remark}}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
+                        <p>{% if not is_sync %}{{order.remark}}{% endif %}</p>
                     </div>
                 </div>
             </div>
@@ -248,7 +248,7 @@
     </div>
     <div class="xui-orderinfo">
         {% if not suppliers|length %}
-        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}商户{% else %}商城{% endif %}</span></p>
+        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}本店{% else %}商城{% endif %}</span></p>
         <p class="xui-info-p">运送方式：<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         {% endif %}
         <p class="xui-info-p">支付方式：<span class="xui-info-value">{% if not is_sync %}{{order.pay_interface_name}}{% else %}微信支付{% endif %}</span></p>
@@ -308,7 +308,7 @@
                 </p>
               </td>
               <td class="xui-td-second"{% if product.noline %} style="border-top:none;"{% endif %}>
-                {{ product.price|floatformat:"2" }}
+                  {% if not is_sync %}{{ product.price|floatformat:"2" }}{% else %}{{ product.purchase_price|floatformat:"2" }}{% endif %}
               <br>
               （{{ product.count }}件）
               </td>
@@ -401,7 +401,7 @@
           </p>
           {% else %}
           <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
-          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.product_price|floatformat:"2" }}</span></div>
+          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
           {% endif %}
         </div>
     </div>

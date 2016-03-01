@@ -221,15 +221,25 @@
 					</td>
 					{{if j == 0 }}
 					<td width="140px" rowspan="${order.groups.length}">
-						{{if order.save_money != 0 && order.supplier_user_id <= 0}}
-							${ order.save_money.toFixed(2)}
+						{{if order.save_money != 0 }}
+							{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
+								${ order.save_money.toFixed(2)}
+							{{/if}}
 						{{/if}}
 					</td>
 					<td width="100" rowspan="${order.groups.length}">
 						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
 						{{if order.member_id > 0}}
 							{{if order.member_is_subscribed > 0}}
-								<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{if data.mall_type}}
+									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{else}}
+									{{if order.supplier_user_id > 0}}
+										{{html order.buyer_name}}
+									{{else}}
+										<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+									{{/if}}
+								{{/if}}
 							{{else}}
 								非会员
 							{{/if}}
@@ -262,18 +272,26 @@
 						{{/if}}
 					</td>
 					<td width="110" rowspan="${order.groups.length}">
-						${ order.pay_money }
-						{{if order.postage > 0 && order.supplier_user_id <= 0}}
-						</br>
-							<span class="xui-colorGray">(含运费：${order.postage})</span>
+						{{if (data.mall_type == 0 && order.supplier_user_id) }}
+							${ order.total_purchase_price }
+						{{else}}
+							${ order.pay_money }
 						{{/if}}
-						{{if order.weizoom_card_money > 0 && order.supplier_user_id <= 0}}
-						</br>
-							<span class="xui-weizoomCard pr">
-								<i class="xa-weizoomCardImg"></i>
+						{{if order.postage > 0 }}
+							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
+							</br>
+								<span class="xui-colorGray">(含运费：${order.postage})</span>
+							{{/if}}
+						{{/if}}
+						{{if order.weizoom_card_money > 0 }}
+							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
 								</br>
-								<span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
-							</span>
+								<span class="xui-weizoomCard pr">
+									<i class="xa-weizoomCardImg"></i>
+									</br>
+									<span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
+								</span>
+							{{/if}}
 						{{/if}}
 					</td>
 					{{/if}}
