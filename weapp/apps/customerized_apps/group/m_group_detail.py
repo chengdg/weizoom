@@ -236,7 +236,6 @@ class MGroupDetail(resource.Resource):
 			'share_page_desc': record.name if record else u"团购",
 			'params_qrcode_url': params_qrcode_url,
 			'params_qrcode_name': params_qrcode_name,
-			'reply_content': record.reply_content if record else '',
 			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		response = render_to_string('group/templates/webapp/m_group_detail.html', c)
