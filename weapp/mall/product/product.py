@@ -363,7 +363,7 @@ class ProductPool(resource.Resource):
 
         products = all_mall_product.filter(id__in=standard_model_product_ids)
         models.Product.fill_details(request.manager, products, {
-            "with_product_model": False,
+            "with_product_model": True,
             "with_model_property_info": False,
             "with_selected_category": True,
             'with_image': False,
