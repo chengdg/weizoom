@@ -64,6 +64,10 @@ class MemberQrcodeSettings(models.Model):
 	award_member_type = models.IntegerField(max_length=1, verbose_name=u'扫码后奖励会员', default=AWARD_MEMBER_TYPE_ALL) #扫码后奖励类型
 	created_at = models.DateTimeField(auto_now_add=True) #创建时间
 
+	#增加奖励限制
+	is_limited = models.BooleanField(default=False) #是否有奖励限制
+	limit_chance = models.IntegerField(default=0) #限制奖励的次数
+
 	class Meta(object):
 		db_table = 'market_tool_member_qrcode_settings'
 		verbose_name = '会员二维码配置'
@@ -133,3 +137,14 @@ class MemberQrcodeLog(models.Model):
 		db_table = 'market_tool_member_qrcode_log'
 		verbose_name = '会员二维码使用记录'
 		verbose_name_plural = '会员二维码使用记录'
+
+class MemberQrcodeLimitLog(models.Model):
+	belong_settings = models.ForeignKey(MemberQrcodeSettings) #属于MemberQrcodeSettings
+	owner_member_id = models.CharField(max_length=100, db_index=True) #所属会员id
+	count = models.IntegerField(default=0) #会员扫码计数
+	created_at = models.DateField(auto_now_add=True) #创建时间
+
+	class Meta(object):
+		db_table = 'market_tool_member_qrcode_limit_log'
+		verbose_name = '会员扫码奖励限制记录'
+		verbose_name_plural = '会员扫码奖励限制记录'
