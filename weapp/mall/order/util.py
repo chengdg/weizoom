@@ -1153,7 +1153,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
         order_id = query_dict.get('order_id')
         if order_id.find('^') == -1:
             s_order_id =  "%s^%su" % (order_id, user_profile.user_id)
-            orders = orders.filter(Q(order_id=order_id) | Q(name__in=))
+            orders = orders.filter(Q(order_id=order_id) | Q(order_id=s_order_id))
 
     if len(query_dict):
         orders = orders.filter(**query_dict)
