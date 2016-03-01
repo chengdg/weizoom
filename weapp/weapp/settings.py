@@ -582,6 +582,8 @@ WATCH_DOG_DEVICE = 'mysql'
 WATCHDOG_WEIXIN_MESSAGE = False
 ENABLE_WEPAGE_CACHE = False
 
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
     BATMAN_API_IMPL = 'memory'
@@ -602,9 +604,6 @@ if 'develop' == MODE:
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://dev.weapp.com'
-
-    import logging
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'

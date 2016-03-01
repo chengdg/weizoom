@@ -115,7 +115,7 @@
                     <div class="xui-innerwrap">
                       <p>{{ order.ship_name }}<span class="ml30">{{ order.ship_tel }}</span></p>
                       <p>{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
-                      <p>买家留言：{{order.customer_message}}</p>
+                      <p>买家留言：{% if not is_sync %}{{order.customer_message}}{% endif %}{{order.customer_message}}</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -139,8 +139,8 @@
                 <div class="col-md-4">
                     <p class="xui-title">商家备注</p>
                     <div class="xui-innerwrap">
-                    	<img  data-order-id="{{order.id}}" data-order-value="{{order.remark}}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" />
-                        <p>{{order.remark}}</p>
+                    	<img  data-order-id="{{order.id}}" data-order-value="{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
+                        <p>{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}</p>
                     </div>
                 </div>
             </div>
@@ -151,10 +151,14 @@
   <ul class="nav nav-tabs mt14 ">
   {% if mall_type %}
       {% for supplier in suppliers %}
-          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}"><a href="javascript:void(0);">{{ supplier.name }}</a></li>
+          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}" data-supplier-type="s">
+            <a href="javascript:void(0);">{{ supplier.name }}</a>
+          </li>
       {% endfor %}
       {% for supplier_store in supplier_stores %}
-          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier_store.id }}"><a href="javascript:void(0);">{{ supplier_store }}</a></li>
+          <li class="xa-count {% if forloop.first and suppliers|length == 0 %}active{% endif %}" data-total-status-value="{{ supplier_store.user_id }}" data-supplier-type="u">
+            <a href="javascript:void(0);">{{ supplier_store.store_name }}</a>
+          </li>
       {% endfor %}
   {% else %}
       <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息{{ child_order.supplier }}</a></li>
@@ -164,7 +168,7 @@
 
   {% if child_orders %}
       {% for child_order in child_orders %}
-          <div class="xa-infotab" id="tab-wuliuinfo{{ child_order.supplier }}" style="{% if not forloop.first %}display:none;{% endif %}">
+          <div class="xa-infotab" id="tab-wuliuinfo-{% if child_order.supplier %}s-{{child_order.supplier}}{% elif child_order.supplier_user_id %}u-{{ child_order.supplier_user_id }}{% endif %}"style="{% if not forloop.first %}display:none;{% endif %}">
             <div class="xui-wuliuinfo">
                 <p>
                   物流公司名称：{% if child_order.express_company_name %} {{ child_order.express_company_name|get_company_name_by_value }}   {% endif %}
@@ -244,7 +248,7 @@
     </div>
     <div class="xui-orderinfo">
         {% if not suppliers|length %}
-        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}商户{% else %}商城{% endif %}</span></p>
+        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}本店{% else %}商城{% endif %}</span></p>
         <p class="xui-info-p">运送方式：<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         {% endif %}
         <p class="xui-info-p">支付方式：<span class="xui-info-value">{% if not is_sync %}{{order.pay_interface_name}}{% else %}微信支付{% endif %}</span></p>
@@ -278,15 +282,16 @@
               <td class="xui-td-first"{% if product.noline %} style="border-top:none;"{% endif %}>
                 <div class="xui-a-productname">
                   <span style="color:#333;">
-                  {% if product.promotion.type == 'flash_sale' %}
-                    [限时抢购]
-                  {% elif product.promotion.type == 'premium_sale:premium_product' %}
-                    [赠品]
+                  {% if not is_sync %}
+                    {% if product.promotion.type == 'flash_sale' %}
+                      [限时抢购]
+                    {% elif product.promotion.type == 'premium_sale:premium_product' %}
+                      [赠品]
+                    {% endif %}
+                    {% if product.grade_discounted_money %}
+                      [会员优惠]
+                    {% endif %}
                   {% endif %}
-                  {% if product.grade_discounted_money %}
-                    [会员优惠]
-                  {% endif %}
-
                   {{product.name}}</span>
                 </div>
                 <p class="xui-colorsize">
@@ -304,7 +309,7 @@
                 </p>
               </td>
               <td class="xui-td-second"{% if product.noline %} style="border-top:none;"{% endif %}>
-                {{ product.price|floatformat:"2" }}
+                  {% if not is_sync %}{{ product.price|floatformat:"2" }}{% else %}{{ product.purchase_price|floatformat:"2" }}{% endif %}
               <br>
               （{{ product.count }}件）
               </td>
@@ -397,7 +402,7 @@
           </p>
           {% else %}
           <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
-          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.product_price|floatformat:"2" }}</span></div>
+          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
           {% endif %}
         </div>
     </div>
@@ -442,12 +447,19 @@
           $('.xa-infotab').hide()
           var $el = $(event.currentTarget);
           status = $el.data('total-status-value');
+          type = $el.data('supplier-type');
+          console.log(type, "0000", status);
           $('.xa-count').removeClass('active');
           $el.addClass("active");
           if (status == 0) {
             $("#tab-orderlog").show();
           } else if (status > 0) {
-            $("#tab-wuliuinfo"+status).show();
+            if(type == 'u'){
+              $("#tab-wuliuinfo-u-"+status).show();
+            }
+            if(type == 's'){
+              $("#tab-wuliuinfo-s-"+status).show();
+            }
           }else{
             $("#tab-wuliuinfo").show();
           }

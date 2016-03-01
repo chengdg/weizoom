@@ -2016,7 +2016,8 @@ def get_order_products(order):
 			'grade_discounted_money': relation.grade_discounted_money,
 			'supplier': product.supplier,
 			'supplier_user_id': product.supplier_user_id,
-			'user_code':product.user_code
+			'user_code':product.user_code,
+			'purchase_price': relation.purchase_price
 		}
 
 		# 更换商品名称为供货商的商品名称
@@ -2083,12 +2084,14 @@ def get_order_products(order):
 								"thumbnails_url": premium_product['thumbnails_url'],
 								"count": premium_product['count'],
 								"price": '%.2f' % premium_product['price'],
+								"total_price": '0.0',
 								'product_model_name': "standard",
 								"promotion": {
 									"type": "premium_sale:premium_product"
 								},
 								'noline': 1,
 								'supplier': product.supplier,
+								'supplier_user_id': product.supplier_user_id,
 								'supplier_name': product_info.get('supplier_name', ''),
 								'supplier_store_name': product_info.get('supplier_store_name', ''),
 								'user_code':product.user_code

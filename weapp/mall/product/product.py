@@ -287,7 +287,7 @@ class ProductList(resource.Resource):
         is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
         is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
-        if is_prev_shelve and is_not_sale or is_deleted:
+        if (is_prev_shelve and is_not_sale) or is_deleted:
             # 商品不再处于上架状态，发出product_not_offline signal
             product_ids = [int(id) for id in ids]
             mall_signals.products_not_online.send(
@@ -299,7 +299,7 @@ class ProductList(resource.Resource):
         # 供货商商品下架或者删除对应删除weizoom系列上架的商品
         if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
             for id in ids:
-                utils.delete_weizoom_mall_sync_product(request, product_id2product[id], reason)
+                utils.delete_weizoom_mall_sync_product(request, product_id2product[int(id)], reason)
         if mall_type and is_deleted:
             models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
 
@@ -356,9 +356,7 @@ class ProductPool(resource.Resource):
                 is_deleted=False)
 
         # 筛选出单规格的商品id
-        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids, is_deleted=False)]
-        much_model_product_ids = [id for id in all_model_product_ids if all_model_product_ids.count(id) > 1]
-        standard_model_product_ids = [id for id in all_model_product_ids if id not in much_model_product_ids]
+        standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids, name='standard', is_deleted=False)]
 
         # 筛选出已经同步的商品
         mall_product_id2relation = dict([(relation.mall_product_id, relation) for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager, is_deleted=False)])
@@ -479,7 +477,7 @@ class ProductPool(resource.Resource):
                 supplier_user_id = product.owner_id
             )
             # 商品规格
-            product_model = models.ProductModel.objects.get(product=product)
+            product_model = models.ProductModel.objects.get(product=product, is_deleted=False)
             models.ProductModel.objects.create(
                 owner=request.manager,
                 product=new_product,
