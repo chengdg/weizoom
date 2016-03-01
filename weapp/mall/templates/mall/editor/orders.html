@@ -185,6 +185,7 @@
 							<img class="xui-product-thumbnails" src="${product.thumbnails_url}" width="60" height="60"/>
 							{{/if}}
 							</div>
+							{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
 							<div style="width:235px;display:table-cell">
 								<p class="tl">
 								<span class="xa-productName" name="xa-productName">
@@ -205,6 +206,7 @@
 								{{/each}}
 								</p>
 							</div>
+							{{/if}}
 							<div style="width:80px;display:table-cell;vertical-align: middle;">
 							{{if order.supplier_user_id > 0 && data.mall_type == 0}}
 							<p class="tc">${product.count}&nbsp;件</p>
@@ -272,7 +274,7 @@
 						{{/if}}
 					</td>
 					<td width="110" rowspan="${order.groups.length}">
-						{{if (data.mall_type == 0 && order.supplier_user_id) }}
+						{{if (data.mall_type == 0 && order.supplier_user_id > 0) }}
 							${ order.total_purchase_price }
 						{{else}}
 							${ order.pay_money }

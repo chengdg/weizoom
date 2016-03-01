@@ -356,17 +356,15 @@ class ProductPool(resource.Resource):
                 is_deleted=False)
 
         # 筛选出单规格的商品id
-        all_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids, is_deleted=False)]
-        much_model_product_ids = [id for id in all_model_product_ids if all_model_product_ids.count(id) > 1]
-        standard_model_product_ids = [id for id in all_model_product_ids if id not in much_model_product_ids]
+        standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner_id__in=owner_ids, name='standard', is_deleted=False)]
 
         # 筛选出已经同步的商品
         mall_product_id2relation = dict([(relation.mall_product_id, relation) for relation in models.WeizoomHasMallProductRelation.objects.filter(owner=request.manager, is_deleted=False)])
 
         products = all_mall_product.filter(id__in=standard_model_product_ids)
         models.Product.fill_details(request.manager, products, {
-            "with_product_model": True,
-            "with_model_property_info": True,
+            "with_product_model": False,
+            "with_model_property_info": False,
             "with_selected_category": True,
             'with_image': False,
             'with_property': True,
@@ -479,7 +477,7 @@ class ProductPool(resource.Resource):
                 supplier_user_id = product.owner_id
             )
             # 商品规格
-            product_model = models.ProductModel.objects.get(product=product)
+            product_model = models.ProductModel.objects.get(product=product, is_deleted=False)
             models.ProductModel.objects.create(
                 owner=request.manager,
                 product=new_product,
