@@ -92,11 +92,11 @@ def export_orders_json(request):
                 supplier_user_id__gt=0,
                 status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
             )
-    else: 
-        all_mall_userprofiles = UserProfile.objects.filter(webapp_type=0)
-        supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
-        
-        suplier_not_sub_order_ids = [order.id for order in  Order.objects.filter(webapp_id=webapp_id, supplier_user_id__gt=0, origin_order_id=0)]
+    # else:
+    #     all_mall_userprofiles = UserProfile.objects.filter(webapp_type=0)
+    #     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
+
+    #     suplier_not_sub_order_ids = [order.id for order in  Order.objects.filter(webapp_id=webapp_id, supplier_user_id__gt=0, origin_order_id=0)]
 
 
     #####################################
@@ -251,25 +251,29 @@ def export_orders_json(request):
     # 获取order对应的供货商
 
     order2supplier2fackorders = {}
+    order2store2fackorders = {}
     # 取出所有的子订单
-    suborderid2order = {}
     for order in fackorders:
         origin_order_id = order.origin_order_id
         order2supplier2fackorders.setdefault(origin_order_id, {})
-        order2supplier2fackorders[origin_order_id][order.supplier] = order
+        order2store2fackorders.setdefault(origin_order_id, {})
+        if order.supplier:
+            order2supplier2fackorders[origin_order_id][order.supplier] = order
+        if order.supplier_user_id:
+            order2store2fackorders[origin_order_id][order.supplier_user_id] = order
         # 在order_order_ids中添加子订单
         order_order_ids.append(order.order_id)
-        suborderid2order[order.order_id] = order
 
     # 获取order对应的发货时间
     order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
                         OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
 
-    order2supplier = dict([(supplier.id,supplier) for supplier in Supplier.objects.filter(owner=request.manager)])
+    order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner=request.manager)])
+    id2store = dict([(profile.id, profile) for profile in UserProfile.objects.filter(webapp_type=0)])
     # 判断是否有供货商，如果有则显示该字段
     has_supplier = False
     for order in order_list:
-        if 0 != order.supplier:
+        if 0 != order.supplier or order.supplier_user_id != 0:
             has_supplier = True
             break
 
@@ -409,40 +413,65 @@ def export_orders_json(request):
                 if not role_id or coupon_name and order.coupon_money > 0:
                     coupon_money = order.coupon_money
 
-            if mall_type and product.supplier_user_id > 0:
-                source = supplier_users[product.supplier_user_id].encode("utf-8")
-                order_id = order.order_id
-                if order.id in suplier_not_sub_order_ids:
-                    order_id = order.order_id
-                else:
-                    order_id = "%s^%su" % (order.order_id, product.supplier_user_id)
-                    order = suborderid2order[order_id]
+            # if mall_type and product.supplier_user_id > 0:
+            #     source = supplier_users[product.supplier_user_id].encode("utf-8")
+            #     order_id = order.order_id
+            #     if order.id in suplier_not_sub_order_ids:
+            #         order_id = order.order_id
+            #     else:
+            #         order_id = "%s^%su" % (order.order_id, product.supplier_user_id)
+            #         order = suborderid2order[order_id]
 
-                fackorder = None
-                save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+            #     fackorder = None
+            #     save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
 
-                #order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
-                order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
-                # 订单发货时间
-                postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+            #     #order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+            #     order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
+            #     # 订单发货时间
+            #     postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
 
-            else:
+            # else:
+            fackorder = None
+            fackorder_sons = None
+            if relation.product.supplier:
                 fackorder_sons = order2supplier2fackorders.get(order.id, None)
-                fackorder = None
-                if fackorder_sons:
+            if relation.product.supplier_user_id:
+                fackorder_sons = order2store2fackorders.get(order.id, None)
+
+            if fackorder_sons:
+                if product.supplier:
                     fackorder = fackorder_sons.get(product.supplier, None)
+                if product.supplier_user_id:
+                    fackorder = fackorder_sons.get(product.supplier_user_id, None)
 
-                save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+            save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+            if fackorder:
+                if not '^' in fackorder.order_id:
+                    order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+                else:
+                    order_id = fackorder.order_id
+            else:
+                order_id = order.order_id
 
-                order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
-                order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
-                # 订单发货时间
-                postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
-                if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
+            order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
+            # 订单发货时间
+            postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+            if fackorder:
+                if fackorder.supplier and order2supplier.has_key(fackorder.supplier):
                     source = order2supplier[fackorder.supplier].name.encode("utf-8")
-                elif fackorder == None and 0 != order.supplier:
-                    if order2supplier.has_key(order.supplier):
-                        source = order2supplier[order.supplier].name.encode("utf-8")
+                if fackorder.supplier_user_id and id2store.has_key(fackorder.supplier_user_id):
+                    source = id2store[fackorder.supplier_user_id].store_name.encode("utf-8")
+            else:
+                if order.supplier and order2supplier.has_key(order.supplier):
+                    source = order2supplier[order.supplier].name.encode("utf-8")
+                if order.supplier_user_id and id2store.has_key(order.supplier_user_id):
+                    source = id2store[order.supplier_user_id].store_name.encode("utf-8")
+
+            # if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
+            #     source = order2supplier[fackorder.supplier].name.encode("utf-8")
+            # elif fackorder == None and 0 != order.supplier:
+            #     if order2supplier.has_key(order.supplier):
+            #         source = order2supplier[order.supplier].name.encode("utf-8")
 
             if i == 0:
                 # 发货人处填写的备注
