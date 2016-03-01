@@ -76,6 +76,7 @@ def export_orders_json(request):
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
     webapp_id = request.user_profile.webapp_id
+    mall_type = request.user_profile.webapp_type
     order_list = Order.objects.belong_to(webapp_id).order_by('-id')
     status_type = request.GET.get('status', None)
     if status_type:
@@ -90,7 +91,7 @@ def export_orders_json(request):
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
-    order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list)
+    order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, request.user_profile)
 
     if product_name:
         # 订单总量
@@ -825,7 +826,6 @@ def get_unship_order_count(request):
 def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     webapp_id = user.get_profile().webapp_id
-    mall_type = user.get_profile().webapp_type
     orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
@@ -839,7 +839,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     if not mall_type:
         orders = orders.exclude(supplier_user_id__gt=0, status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
-    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
+    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, request.user_profile)
 
     # 返回订单的数目
     order_return_count = orders.count()
@@ -1100,11 +1100,12 @@ def __get_select_params(request):
 
     return query_dict, date_interval, date_interval_type
 
-def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders):
+def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile):
     """
     按照查询条件筛选符合条件的订单
     """
     # 商品名称
+    mall_type = user_profile.webapp_type
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
         query_dict.pop("product_name")
@@ -1137,6 +1138,11 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
         else:
             orders = orders.filter(supplier_user_id=0)
         query_dict.pop("order_source")
+
+    if query_dict.get('order_id') && not mall_type:
+        order_id = query_dict.get('order_id')
+        if order_id.find('^') == -1:
+            orders = orders.filter(Q(order_id=order_id) | Q(name__in=order_id+'^'+user_profile.user_id+'u'))
 
     if len(query_dict):
         orders = orders.filter(**query_dict)
