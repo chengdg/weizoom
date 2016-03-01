@@ -1139,7 +1139,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
             orders = orders.filter(supplier_user_id=0)
         query_dict.pop("order_source")
 
-    if query_dict.get('order_id') && not mall_type:
+    if query_dict.get('order_id') and not mall_type:
         order_id = query_dict.get('order_id')
         if order_id.find('^') == -1:
             orders = orders.filter(Q(order_id=order_id) | Q(name__in=order_id+'^'+user_profile.user_id+'u'))
