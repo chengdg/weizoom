@@ -139,8 +139,8 @@
                 <div class="col-md-4">
                     <p class="xui-title">商家备注</p>
                     <div class="xui-innerwrap">
-                    	<img  data-order-id="{{order.id}}" data-order-value="{{order.remark}}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
-                        <p>{% if not is_sync %}{{order.remark}}{% endif %}</p>
+                    	<img  data-order-id="{{order.id}}" data-order-value="{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
+                        <p>{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}</p>
                     </div>
                 </div>
             </div>

@@ -77,14 +77,24 @@ def export_orders_json(request):
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
     webapp_id = request.user_profile.webapp_id
     mall_type = request.user_profile.webapp_type
-    order_list = Order.objects.belong_to(webapp_id).order_by('-id')
+    order_list = Order.objects.belong_to(webapp_id, request.manager.id, mall_type).order_by('-id')
     status_type = request.GET.get('status', None)
+
+    supplier_users = None
     if status_type:
         if status_type == 'refund':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
         elif status_type == 'audit':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
-
+    if not mall_type:
+        order_list = order_list.exclude(
+                supplier_user_id__gt=0,
+                status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+            )
+    else: 
+        all_mall_userprofiles = UserProfile.objects.filter(webapp_type=0)
+        supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
+        
     #####################################
     query_dict, date_interval,date_interval_type = __get_select_params(request)
     product_name = ''
@@ -350,11 +360,11 @@ def export_orders_json(request):
             order.come = 'mine_mall'
 
         source = source_list.get(order.come, u'本店')
-        if webapp_id != order.webapp_id:
-            if request.manager.is_weizoom_mall:
-                source = request.manager.username
-            else:
-                source = u'微众商城'
+        # if webapp_id != order.webapp_id:
+        #     if request.manager.is_weizoom_mall:
+        #         source = request.manager.username
+        #     else:
+        #         source = u'微众商城'
 
         i = 0 # 判断是否订单第一件商品
         orderRelations = relations.get(order.id, [])
@@ -393,22 +403,36 @@ def export_orders_json(request):
                 if not role_id or coupon_name and order.coupon_money > 0:
                     coupon_money = order.coupon_money
 
-            fackorder_sons = order2supplier2fackorders.get(order.id, None)
-            fackorder = None
-            if fackorder_sons:
-                fackorder = fackorder_sons.get(product.supplier, None)
+            if product.supplier_user_id > 0:
+                supplier_user_profile = 
+                source = supplier_users[product.supplier_user_id].store_name.encode("utf-8")
+                order_id = order.order_id
 
-            save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+                fackorder = None
+                save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
 
-            order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
-            order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
-            # 订单发货时间
-            postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
-            if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
-                source = order2supplier[fackorder.supplier].name.encode("utf-8")
-            elif fackorder == None and 0 != order.supplier:
-                if order2supplier.has_key(order.supplier):
-                    source = order2supplier[order.supplier].name.encode("utf-8")
+                #order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+                order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
+                # 订单发货时间
+                postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+
+            else:
+                fackorder_sons = order2supplier2fackorders.get(order.id, None)
+                fackorder = None
+                if fackorder_sons:
+                    fackorder = fackorder_sons.get(product.supplier, None)
+
+                save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+
+                order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+                order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
+                # 订单发货时间
+                postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+                if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
+                    source = order2supplier[fackorder.supplier].name.encode("utf-8")
+                elif fackorder == None and 0 != order.supplier:
+                    if order2supplier.has_key(order.supplier):
+                        source = order2supplier[order.supplier].name.encode("utf-8")
 
             if i == 0:
                 # 发货人处填写的备注
@@ -1032,7 +1056,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'express_company_name': order.express_company_name,
             'express_number': order.express_number,
             'leader_name': order.leader_name,
-            'remark': '' if (not mall_type and order.supplier_user_id > 0) else order.remark,
+            'remark': order.supplier_remark if (not mall_type and order.supplier_user_id > 0) else order.remark,
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
