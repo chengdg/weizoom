@@ -231,7 +231,11 @@
 						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
 						{{if order.member_id > 0}}
 							{{if order.member_is_subscribed > 0}}
-								<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{if data.mall_type}}
+									{{html order.buyer_name}}
+								{{else}}
+									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{/if}}
 							{{else}}
 								非会员
 							{{/if}}

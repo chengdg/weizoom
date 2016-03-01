@@ -1008,7 +1008,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'bill': order.bill,
             'customer_message': order.customer_message,
             'buyer_name': order.buyer_name,
-            'pay_interface_name': order.pay_interface_type_text,
+            'pay_interface_name': u'微信支付' if (not mall_type and order.supplier_user_id > 0) else  order.pay_interface_type_text,
             'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
             'product_count': order.product_count,
             'payment_time': order.payment_time,
@@ -1029,7 +1029,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-            'pay_money': '%.2f' % pay_money if (order.supplier_user_id > 0 and mall_type == 0) else '%.2f' % (order.final_price + order.weizoom_card_money),
+            'pay_money': ('%.2f' % (order.total_purchase_price)) if (not mall_type and order.supplier_user_id > 0) else '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
             'parent_action': parent_action,

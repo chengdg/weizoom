@@ -308,7 +308,7 @@
                 </p>
               </td>
               <td class="xui-td-second"{% if product.noline %} style="border-top:none;"{% endif %}>
-                {{ product.price|floatformat:"2" }}
+                  {% if not is_sync %}{{ product.price|floatformat:"2" }}{% else %}{{ product.purchase_price|floatformat:"2" }}{% endif %}
               <br>
               （{{ product.count }}件）
               </td>
@@ -401,7 +401,7 @@
           </p>
           {% else %}
           <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
-          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.product_price|floatformat:"2" }}</span></div>
+          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
           {% endif %}
         </div>
     </div>

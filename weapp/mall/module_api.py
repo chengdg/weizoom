@@ -2016,7 +2016,8 @@ def get_order_products(order):
 			'grade_discounted_money': relation.grade_discounted_money,
 			'supplier': product.supplier,
 			'supplier_user_id': product.supplier_user_id,
-			'user_code':product.user_code
+			'user_code':product.user_code,
+			'purchase_price': relation.purchase_price
 		}
 
 		# 更换商品名称为供货商的商品名称
