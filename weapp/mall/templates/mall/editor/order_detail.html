@@ -308,7 +308,7 @@
                 </p>
               </td>
               <td class="xui-td-second"{% if product.noline %} style="border-top:none;"{% endif %}>
-                {{ product.price|floatformat:"2" }}
+                  {% if not is_sync %}{{ product.price|floatformat:"2" }}{% else %}{{ product.purchase_price|floatformat:"2" }}{% endif %}
               <br>
               （{{ product.count }}件）
               </td>
