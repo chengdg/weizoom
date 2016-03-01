@@ -29,7 +29,10 @@ def edit_member_qrcode_settings(request):
 	id = int(request.POST.get('id', 0))
 	reward = request.POST.get('reward', '')
 	detail = request.POST.get('detail', '').strip()
-	
+	is_limited = True if request.POST.get('is_limited', None) else False
+	limit_chance = request.POST.get('limit_chance', 0) if is_limited else 0
+	limit_chance = int(limit_chance) if limit_chance else 0
+
 	if reward == '':
 		response = create_response(400)
 		return response.get_response()
@@ -43,7 +46,7 @@ def edit_member_qrcode_settings(request):
 			return response.get_response()
 
 		if id:
-			MemberQrcodeSettings.objects.filter(id=id).update(award_member_type=int(reward), detail=detail)
+			MemberQrcodeSettings.objects.filter(id=id).update(award_member_type=int(reward), detail=detail, is_limited=is_limited, limit_chance=limit_chance)
 			MemberQrcodeAwardContent.objects.filter(member_qrcode_settings_id=id).delete()
 			MemberQrcodeAwardContent.objects.create(member_qrcode_settings_id=id,
 													award_type=prize_type, 
@@ -51,7 +54,9 @@ def edit_member_qrcode_settings(request):
 		else:
 			member_qrcode_settings = MemberQrcodeSettings.objects.create(owner=request.user, 
 																		award_member_type=int(reward), 
-																		detail=detail)
+																		detail=detail,
+																		is_limited=is_limited,
+																		limit_chance=limit_chance)
 			
 			MemberQrcodeAwardContent.objects.create(member_qrcode_settings=member_qrcode_settings, 
 													award_type=prize_type, 
@@ -73,12 +78,14 @@ def edit_member_qrcode_settings(request):
 				level2info[level] = {key_name: value}
 		
 		if id:
-			MemberQrcodeSettings.objects.filter(id=id).update(award_member_type=int(reward), detail=detail)
+			MemberQrcodeSettings.objects.filter(id=id).update(award_member_type=int(reward), detail=detail, is_limited=is_limited, limit_chance=limit_chance)
 		else:
 			id = MemberQrcodeSettings.objects.create(
 				owner=request.user, 
 				award_member_type=int(reward), 
-				detail=detail).id
+				detail=detail,
+				is_limited=is_limited,
+				limit_chance=limit_chance).id
 		
 		MemberQrcodeAwardContent.objects.filter(member_qrcode_settings_id=id).delete()
 		for level in level2info.keys():

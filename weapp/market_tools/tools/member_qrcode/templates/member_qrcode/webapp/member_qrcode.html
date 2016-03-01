@@ -23,34 +23,47 @@
         border-radius:2px;
         border:1px solid #dfdfdf;
     }
+    .xui-chance b{
+        color: red;
+    }
+    .xui-chance span{
+        color: grey;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
 <div data-role="page" data-theme="x" class="xui-memberQrcode-page {% if not user.is_from_weixin %}notweixin{% endif %}"  data-title="{{ page_title }}">
 	<div data-role="content">
-            <div class="xui-two-dimensional-code pr"  style="text-align:center;padding:35px 0 15px 0;">
-
-               		{% if member %} 
-               		<input type='hidden' id="member_id" value="{{member.id}}" />
-                    <div class="pr" style="width:100%;height:250px;">
-                        <img width="250" height="250" data-ui-role="twoDimensionalCode" src="{% if qrcode_url %}{{qrcode_url}}{% endif %}" effective-time="{% if expired_second %}{{expired_second}}{% endif %}" api="member_qrcode/get" app="market_tools/member_qrcode" data-allow-autoplay=false class="pa" style="left:50%;margin-left:-125px;">
-                        <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
-                    </div>
-        			
-                	{% else %}
-                	<input type='hidden' id="member_id" value="0" />
-                    <div class="pr" style="width:100%;height:250px;">
-                    	<img width="250" height="250" src="{{default_img}}" style="left:50%;margin-left:-125px;" class="pa">
-                        <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
-                    </div>
-                	{% endif %}
-                    
-    		</div>
-    		<h2>活动说明</h2>
-            <div class="xui-info">
-                {{ member_qrcode_settings.detail|safe }}
+        {% if member_qrcode_settings.is_limited %}
+            <h2>今日推荐奖励机会</h2>
+            <div class="xui-chance">
+                <span>已使用:<b>{{ limit_chance_used }}</b></span>
+                <span>未使用:<b>{{ limit_chance_left }}</b></span>
             </div>
+        {% endif %}
+        <div class="xui-two-dimensional-code pr"  style="text-align:center;padding:35px 0 15px 0;">
+
+                {% if member %}
+                <input type='hidden' id="member_id" value="{{member.id}}" />
+                <div class="pr" style="width:100%;height:250px;">
+                    <img width="250" height="250" data-ui-role="twoDimensionalCode" src="{% if qrcode_url %}{{qrcode_url}}{% endif %}" effective-time="{% if expired_second %}{{expired_second}}{% endif %}" api="member_qrcode/get" app="market_tools/member_qrcode" data-allow-autoplay=false class="pa" style="left:50%;margin-left:-125px;">
+                    <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
+                </div>
+
+                {% else %}
+                <input type='hidden' id="member_id" value="0" />
+                <div class="pr" style="width:100%;height:250px;">
+                    <img width="250" height="250" src="{{default_img}}" style="left:50%;margin-left:-125px;" class="pa">
+                    <img src="{% if member.user_icon %}{{ member.user_icon }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
+                </div>
+                {% endif %}
+
+        </div>
+        <h2>活动说明</h2>
+        <div class="xui-info">
+            {{ member_qrcode_settings.detail|safe }}
+        </div>
 	</div>
 </div>
 {% endblock %}
