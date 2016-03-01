@@ -63,4 +63,5 @@ class PurchaseStatistics(resource.Resource):
 
         response = create_response(200)
         response.data = {'items': result}
-        return response.get_response()
+        #return response.get_response()
+        return response.get_jsonp_response(request)
