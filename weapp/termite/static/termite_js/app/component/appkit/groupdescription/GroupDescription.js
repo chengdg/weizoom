@@ -184,31 +184,31 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 		},
 
 		material_image: function($node, model, value, $propertyViewNode) {
-			//var image = {url:''};
-			//var data = {type:null};
-			//if (value !== '') {
-			//	data = $.parseJSON(value);
-			//	image = data.images[0];
-			//}
-			//model.set({
-			//	material_image: image.url
-			//}, {silent: true});
-            //
-			//if (data.type === 'newImage') {
-			//	W.resource.termite2.Image.put({
-			//		data: image,
-			//		success: function(data) {
-			//		},
-			//		error: function(resp) {
-			//		}
-			//	})
-			//}
-			//if (value) {
-			//	//更新propertyView中的图片
-			//	var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
-			//	$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-			//	$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
-			//}
+			var image = {url:''};
+			var data = {type:null};
+			if (value !== '') {
+				data = $.parseJSON(value);
+				image = data.images[0];
+			}
+			model.set({
+				material_image: image.url
+			}, {silent: true});
+
+			if (data.type === 'newImage') {
+				W.resource.termite2.Image.put({
+					data: image,
+					success: function(data) {
+					},
+					error: function(resp) {
+					}
+				})
+			}
+			if (value) {
+				//更新propertyView中的图片
+				var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
+				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+			}
 		},
 
 		rules: function($node, model, value, $propertyViewNode) {
