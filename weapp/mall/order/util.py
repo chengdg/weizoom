@@ -827,7 +827,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                       is_refund=False):
     user_profile = user.get_profile()
     webapp_id = user_profile.webapp_id
-    mall_type = uuser_profile.webapp_type
+    mall_type = user_profile.webapp_type
 
     orders = belong_to(webapp_id, user.id, mall_type)
 
