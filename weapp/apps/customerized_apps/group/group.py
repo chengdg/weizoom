@@ -107,7 +107,7 @@ class Group(resource.Resource):
 		"""
 		data = request_util.get_fields_to_be_save(request)
 		update_data = {}
-		update_fields = set(['name', 'start_time', 'end_time'])
+		update_fields = set(['name', 'start_time', 'end_time','product','group_list','rules','material_image','share_description'])
 		for key, value in data.items():
 			if key in update_fields:
 				update_data['set__'+key] = value
