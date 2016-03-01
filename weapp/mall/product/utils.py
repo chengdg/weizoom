@@ -14,6 +14,9 @@ from core import search_util
 from utils import ding_util
 from mall.promotion.utils import stop_promotion
 
+from watchdog.utils import watchdog_fatal, watchdog_error
+from core.exceptionutil import unicode_full_stack
+
 DING_GROUP_ID = '93756731'
 
 def process_custom_model(custom_model_str):
@@ -225,7 +228,8 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             text += u'请及时处理！'
             ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
-        pass
+        error_msg = u"delete_weizoom_mall_sync_product error, cause:\n{}".format(unicode_full_stack())
+        watchdog_error(error_msg)
 
 def update_weizoom_mall_sync_product_status(request, product, update_data):
     try:
@@ -241,7 +245,8 @@ def update_weizoom_mall_sync_product_status(request, product, update_data):
             relations.update(is_updated=True)
             ding_util.send_to_ding(text, DING_GROUP_ID)
     except:
-        pass
+        error_msg = u"update_weizoom_mall_sync_product_status error, cause:\n{}".format(unicode_full_stack())
+        watchdog_error(error_msg)
 
 def get_sync_product_store_name(product_ids):
     # try:
