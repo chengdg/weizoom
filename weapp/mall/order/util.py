@@ -272,10 +272,12 @@ def export_orders_json(request):
     id2store = dict([(profile.user_id, profile) for profile in UserProfile.objects.filter(webapp_type=0)])
     # 判断是否有供货商，如果有则显示该字段
     has_supplier = False
-    for order in order_list:
-        if 0 != order.supplier or order.supplier_user_id != 0:
-            has_supplier = True
-            break
+    if mall_type:
+        has_supplier = True
+    # for order in order_list:
+    #     if 0 != order.supplier or order.supplier_user_id != 0:
+    #         has_supplier = True
+    #         break
 
     if has_supplier:
         orders[0].append(u'采购价')
