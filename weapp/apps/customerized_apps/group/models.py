@@ -49,7 +49,6 @@ class Group(models.Document):
 			return False
 
 class GroupParticipance(models.Document):
-	webapp_user_id= models.LongField(default=0) #参与者id
 	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	is_group_leader = models.BooleanField(default=False) #是否是团购的团长
