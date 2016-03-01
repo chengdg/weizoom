@@ -263,9 +263,11 @@
 					</td>
 					<td width="110" rowspan="${order.groups.length}">
 						${ order.pay_money }
-						{{if order.postage > 0 && order.supplier_user_id <= 0}}
-						</br>
-							<span class="xui-colorGray">(含运费：${order.postage})</span>
+						{{if order.postage > 0 }}
+							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
+							</br>
+								<span class="xui-colorGray">(含运费：${order.postage})</span>
+							{{/if}}
 						{{/if}}
 						{{if order.weizoom_card_money > 0 && order.supplier_user_id <= 0}}
 						</br>

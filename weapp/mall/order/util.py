@@ -837,7 +837,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
 
     # 除掉同步过来的订单中未支付的
     if not mall_type:
-        orders = orders.exclude(supplier_user_id__gt=0, status=ORDER_STATUS_NOT).filter(~Q(status=ORDER_STATUS_REFUNDING)).filter(~Q(status=ORDER_STATUS_REFUNDED))
+        orders = orders.exclude(supplier_user_id__gt=0, status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
 
@@ -1029,7 +1029,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-            'pay_money': pay_money if order.supplier_user_id > 0 else '%.2f' % (order.final_price + order.weizoom_card_money),
+            'pay_money': '%.2f' % pay_money if (order.supplier_user_id > 0 and mall_type == 0) else '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
             'parent_action': parent_action,
