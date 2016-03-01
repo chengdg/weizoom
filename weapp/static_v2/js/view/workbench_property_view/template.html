@@ -34,11 +34,11 @@
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input">
-							<input 
-								type="text" 
-								class="input-small xui-propertyGroup-input" 
-								data-field="${field.name}" 
-								value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}" 
+							<input
+								type="text"
+								class="input-small xui-propertyGroup-input"
+								data-field="${field.name}"
+								value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}"
 								placeholder="${field.placeholder}"
 								{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
 								{{if field.validate}}{{html field.validate}}{{/if}} />
@@ -56,16 +56,18 @@
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
 					    <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}
 					    </div>
-                        {{if field.annotation}}
-							<div style="color: #888;line-height:22px;">
+
+						<div class="propertyGroup_property_input pl5" style="width: 70%;">
+							<div style="color: #888;line-height:22px;display: inline-block;">
 								{{html field.annotation}}
 							</div>
-                        {{/if}}
+						</div>
+
 					</div>
 					{{/if}}
 
 					{{if (field.type == 'text_with_annotation')}}
-					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input">
 							<input
@@ -86,6 +88,7 @@
 						</div>
 					</div>
 					{{/if}}
+
 
 					{{if (field.type == 'text_with_annotation_v2')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
@@ -163,12 +166,12 @@
 					<div class="propertyGroup_property_dateRangeSelectorField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="daterange">
-							<input 
-								type="hidden" 
-								value="${component.model.get(field.name)}" 
-								name="${field.name}" 
+							<input
+								type="hidden"
+								value="${component.model.get(field.name)}"
+								name="${field.name}"
 								data-field="${field.name}"
-								class="xa-dateRangeInput xa-valueInput" 
+								class="xa-dateRangeInput xa-valueInput"
 								{{if field.validate}}data-validate="${field.validate}"{{/if}} />
 
 							<input
@@ -210,7 +213,7 @@
 					<div class="propertyGroup_property_prizeSelectorField propertyGroup_property_horizontalField">
 						<div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input pl5 xa-thirdPartyPlugin" data-plugin="prize_selector" data-field="${field.name}">
-							<div 
+							<div
 								data-ui-role="apps-prize-selector"
 								data-prize='${JSON.stringify(component.model.get(field.name))}'
 							></div>
@@ -316,7 +319,7 @@
 
 
 					{{if (field.type == 'selector_v1')}}
-					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField {{if field.className}}${field.className}{{/if}}">
                         <div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input">
 							<select data-field="${field.name}" name="${field.name}" class="input-medium">
@@ -369,7 +372,7 @@
 							{{if model.get(field.name) && field.selectedButton}}
 								<button class="btn btn-small" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}">${field.selectedButton}</button>
 							{{else}}
-							
+
 								<button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}" data-dialog-parameter="${field.dialogParameter}">
 									{{if triggerButton.nodata}}
 										{{if model.get(field.name)}}
@@ -382,7 +385,7 @@
 									{{/if}}
 								</button>
 							{{/if}}
-							
+
 							{{if field.help}}
 							<div style="color: #666;">
 								{{html field.help.replace(/\n/g, "<br/>")}}
@@ -399,12 +402,12 @@
 						<div class="propertyGroup_property_input" style="position:relative;">
 							<div class="" style="padding:3px; background-color:#FFF; border: solid 1px #E6E6E6;">
 								<button class="btn btn-small xui-i-triggerButton xa-colorPickerTrigger"></button>
-								<input 
-									class="xa-thirdPartyPlugin xa-valueInput" 
-									data-plugin="colorpicker" 
-									style="border: solid 1px #E6E6E6; margin-left:-4px; width:100px;" 
-									data-field="${field.name}" 
-									type="text" 
+								<input
+									class="xa-thirdPartyPlugin xa-valueInput"
+									data-plugin="colorpicker"
+									style="border: solid 1px #E6E6E6; margin-left:-4px; width:100px;"
+									data-field="${field.name}"
+									type="text"
 									value="${model.get(field.name)}" />
 								<a href='javascript:void(0);' class="ml5 mr5 xa-protocol-deleteData" data-protocol-deleted-value="${field.default}">重置</a>
 							</div>
@@ -493,7 +496,7 @@
 							</div>
 							{{/if}}
 						</div>
-					
+
 					</div>
 					{{/if}}
 
@@ -697,6 +700,74 @@
 					{{/if}}
 
 
+					{{if (field.type == 'apps_group_selector')}}
+						<div class="propertyGroup_property_horizontalField {{if field.className}}${field.className}{{/if}}">
+							<div class="propertyGroup_property_input">
+
+								<div class="propertyGroup_property_selectField {{if field.typeClassName}}${field.typeClassName}{{/if}}">
+									<div class="propertyGroup_property_label ">${field.typeLabel}</div>
+									<select data-field="${field.selectInfo}" name="${field.selectInfo}" class="input-medium">
+									{{each(n, nav) W.component.getSelectSource(field.type_source, component)}}
+										<option value="${nav.value}" {{if model.get(field.type_name) == nav.value}}selected="selected"{{/if}}>
+											{{if nav.name }}
+												${nav.name}
+											{{else}}
+												${nav.value}
+											{{/if}}
+										</option>
+									{{/each}}
+									</select>
+								</div>
+
+
+								<div class="propertyGroup_property_textField {{if field.daysClassName}}${field.daysClassName}{{/if}}">
+									<div class="propertyGroup_property_label">${field.daysTitle}</div>
+									<div class="propertyGroup_property_input">
+										<input
+											type="text"
+											style="width:${field.days_size};"
+											class="input-small xui-propertyGroup-input"
+											data-field="${field.days_name}"
+											value="{{if field.days_placeholder != model.get(field.days_name)}}${model.get(field.days_name)}{{/if}}"
+											placeholder="${field.days_placeholder}"
+											{{if field.days_maxLength}}maxlength="${field.days_maxLength}"{{/if}}
+											{{if field.days_validate}}{{html field.days_validate}}{{/if}} />
+										{{if field.days_annotation}}
+										<span>
+											{{html field.days_annotation}}
+										</span>
+										{{/if}}
+									</div>
+								</div>
+
+
+								<div class="propertyGroup_property_textField {{if field.priceClassName}}${field.priceClassName}{{/if}}">
+									<div class="propertyGroup_property_label">${field.priceTitle}</div>
+									<div class="propertyGroup_property_input">
+										<input
+											type="text"
+											style="width:${field.size};"
+											class="input-small xui-propertyGroup-input"
+											data-field="${field.name}"
+											value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}"
+											placeholder="${field.placeholder}"
+											{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
+											{{if field.validate}}{{html field.validate}}{{/if}} />
+										{{if field.annotation}}
+										<span>
+											{{html field.annotation}}
+										</span>
+										{{/if}}
+									</div>
+								</div>
+
+
+								<div class="errorHint"></div>
+							</div>
+						</div>
+					{{/if}}
+
+
 
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
@@ -711,7 +782,7 @@
 							{{/if}}
 							<!--
 							<h3 class="propertyGroup_property_dynamicControlField_title clearfix">
-								<i class="icon-chevron-right"></i> 
+								<i class="icon-chevron-right"></i>
 								<span>${dynamicComponent.getDisplayTitle()} </span>
 								<i class="icon-align-justify icon-white fr mr5"></i>
 								<i class="icon-remove fr mr5"></i>
@@ -730,17 +801,17 @@
 
 									{{/if}}
 									<div class="propertyGroup_property_input">
-										<input 
-											type="text" 
-											class="input-small xui-propertyGroup-input ${dynamicComponentField.extraClass}" 
-											data-field="${dynamicComponentField.name}" 
-											value="{{if dynamicComponentField.placeholder != dynamicComponent.model.get(dynamicComponentField.name)}}${dynamicComponent.model.get(dynamicComponentField.name)}{{/if}}" 
-											placeholder="${dynamicComponentField.placeholder}" 
-											
+										<input
+											type="text"
+											class="input-small xui-propertyGroup-input ${dynamicComponentField.extraClass}"
+											data-field="${dynamicComponentField.name}"
+											value="{{if dynamicComponentField.placeholder != dynamicComponent.model.get(dynamicComponentField.name)}}${dynamicComponent.model.get(dynamicComponentField.name)}{{/if}}"
+											placeholder="${dynamicComponentField.placeholder}"
+
 											{{if dynamicComponentField.maxLength}}
 											maxlength="${dynamicComponentField.maxLength}"
 											{{/if}}
-											
+
 											{{if dynamicComponentField.validate}}
 											{{html dynamicComponentField.validate}}
 											data-force-validate="true"
@@ -756,7 +827,7 @@
 								{{/if}}
 
 								{{if (dynamicComponentField.type == 'text_with_annotation')}}
-                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
                                     <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
                                     <div class="propertyGroup_property_input">
                                         <input
@@ -857,12 +928,12 @@
 									<div class="propertyGroup_property_input">
 									{{each(fi, radio) dynamicComponentField.source}}
 									<label type="radio" style="display:inline-block;" class="xui-selectBtn {{if dynamicComponent.model.get(dynamicComponentField.name) == radio.value}}xui-selected{{/if}}">
-										<input 
-											style="margin-top:-3px;" 
-											type="radio" 
-											data-field="${dynamicComponentField.name}" 
-											name='${dynamicComponent.cid}>${dynamicComponentField.name}' 
-											{{if dynamicComponent.model.get(dynamicComponentField.name) == radio.value}}checked="checked"{{/if}} 
+										<input
+											style="margin-top:-3px;"
+											type="radio"
+											data-field="${dynamicComponentField.name}"
+											name='${dynamicComponent.cid}>${dynamicComponentField.name}'
+											{{if dynamicComponent.model.get(dynamicComponentField.name) == radio.value}}checked="checked"{{/if}}
 											value="${radio.value}" /> ${radio.name}
                                         <i class="xui-selectedIcon" {{if dynamicComponent.model.get(dynamicComponentField.name) != radio.value}}style="display:none;"{{/if}}></i>
 									</label>
@@ -879,9 +950,9 @@
 									<div class="propertyGroup_property_input" style="height: auto;">
 										{{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
 
-										<input 
-											data-field="${dynamicComponentField.name}" 
-											name="${dynamicComponentField.name}" 
+										<input
+											data-field="${dynamicComponentField.name}"
+											name="${dynamicComponentField.name}"
 											type="hidden"
 											value="${dynamicComponent.model.get(dynamicComponentField.name)}"
 
@@ -940,12 +1011,12 @@
 									<div class="propertyGroup_property_input xui-eidt-urlBox" style="height: auto;">
 										{{html W.data.getDynamicComponentDataForDialogSelectControl(dynamicComponent, dynamicComponentField)}}
 
-										<input 
-											data-field="${dynamicComponentField.name}" 
-											name="${dynamicComponentField.name}" 
-											type="hidden" 
-											value="${model.get(dynamicComponentField.name)}" 
-											
+										<input
+											data-field="${dynamicComponentField.name}"
+											name="${dynamicComponentField.name}"
+											type="hidden"
+											value="${model.get(dynamicComponentField.name)}"
+
 											{{if dynamicComponentField.validate}}
 											{{html dynamicComponentField.validate}}
 											data-force-validate="true"
@@ -978,7 +1049,7 @@
 												<button class="close xa-selectLink-close xui-removeImageButton" style="display:block;" type="button"><span>&times;</span></button>
 											</div>
 											<a class="xa-link-menu xui-link xui-news-editor-select-link-dialog" data-target-dialog="${dynamicComponentField.dialog}" data-dialog-parameter="${dynamicComponentField.dialogParameter}" data-target-name="${dynamicComponentField.name}">${dynamicComponentField.triggerButton}<span class="glyphicon glyphicon-menu-down"></span></a>
-											
+
 										{{/if}}
 									</div>
 									<div class="xui-hide xa-seconde-navs-prompt" style="color:#888;margin-top:3px;">请选择二级${dynamicComponentField.otherUpdateDisplayName}链接</div>
@@ -990,9 +1061,9 @@
 								<div class="propertyGroup_property_secondNavsField propertyGroup_property_horizontalField">
 									<div class="propertyGroup_property_input pr" style="width:80px; height:auto;">
 										<input data-field="${dynamicComponentField.name}" name="${dynamicComponentField.name}" type="hidden"/>
-										<div 
+										<div
 											class="xui-secondNav xa-thirdPartyPlugin"
-											data-plugin="secondnav" 
+											data-plugin="secondnav"
 											data-ui-role="termite-navbar-secondnav"
 											data-json="${JSON.stringify(dynamicComponent.model.get(dynamicComponentField.name))}"
 										></div>
@@ -1032,7 +1103,7 @@
 
 
                                 {{if (dynamicComponentField.type == 'selector_v1')}}
-								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
                                     {{if dynamicComponentField.displayName}}
 									<div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
 									{{/if}}									<div class="propertyGroup_property_input">
@@ -1061,15 +1132,15 @@
 						{{/if}}
 						{{/each}}
 						<div class="propertyGroup_property_dynamicControlField_buttons mt10">
-						
+
 						{{each(dynamicComponentTypeIndex, dynamicComponentType) component.unifiedDynamicComponentTypes}}
 							{{if dynamicComponentType.noAdd == undefined}}
 							{{if dynamicComponentType.createStrategy}}
 							<input type="hidden" />
 							<div
-								class="mr5 xa-dialogTrigger xa-addDynamicComponentTrigger xui-addDynamicComponentTrigger" 
-								data-component='${dynamicComponentType.type}' 
-								data-target-dialog='${dynamicComponentType.createStrategy.dialog}' 
+								class="mr5 xa-dialogTrigger xa-addDynamicComponentTrigger xui-addDynamicComponentTrigger"
+								data-component='${dynamicComponentType.type}'
+								data-target-dialog='${dynamicComponentType.createStrategy.dialog}'
 								data-dialog-parameter='${dynamicComponentType.createStrategy.dialogParameter}'
 							>
 							</div>

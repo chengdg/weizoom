@@ -17,7 +17,7 @@
 			<li class="active">查看结果</li>
 		</ul>
 	</div>
-	
+
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
@@ -63,20 +63,20 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="panel panel-default xui-tableBox">
-		<div 
+		<div
 			class="panel-body panel-table p0 mt10"
-			data-ui-role="advanced-table" 
-			data-app="apps/group" 
-			data-resource="group_participances" 
+			data-ui-role="advanced-table"
+			data-app="apps/group"
+			data-resource="group_participances"
 			data-args='{"id": "{{activity_id}}"}'
-			data-template-id="#table" 
-			data-enable-paginator="true" 
-			data-enable-sort="false" 
-			data-selectable="false" 
-			data-disable-header-select="true" 
-			data-item-count-per-page="10" 
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
 		>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 
 {% block js %}
 <!-- *start_prunt_task* -->
-	<!-- [prunt_task] 
+	<!-- [prunt_task]
 	  {
 	    "task": "weizoom-load-app-views-dialogs"
 	  }
@@ -99,26 +99,26 @@
 	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
 		<thead>
 			<tr>
-				<th>用户名</th>
-				<th>参与时间</th>
-				<th>操作</th>
+				<th>团长</th>
+				<th>拼团时间</th>
+				<th>状态</th>
+				<th>团员数</th>
 			</tr>
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
-				<td 
-					class="tl pl25"
-					style="width:250px; height:60px;" 
-				>
-					<img src="${item.participant_icon}" />
-					${item.participant_name}
+				<td>
+					${item.group_leader}
 				</td>
 				<td>
-					${item.created_at}
+					${item.group_days}
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData">查看结果</a>
+					${item.status}
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="ml5 xa-viewData"> 9/10 ${item.members_count}</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -146,7 +146,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	$('.xa-search').click(function(event) {
 		var participant_name = $.trim($('[name="participant_name"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
