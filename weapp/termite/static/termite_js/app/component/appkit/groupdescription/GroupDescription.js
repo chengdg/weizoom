@@ -1,6 +1,6 @@
 /**
  * @class W.component.appkit.GroupDescription
- * 
+ *
  */
 ensureNS('W.component.appkit');
 W.component.appkit.GroupDescription = W.component.Component.extend({
@@ -70,7 +70,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         },{
             name: 'group_type',
             type: 'selector_v1',
-            displayName: '团购类型',
+            displayName: '1.',
             isUserProperty: true,
             source:[{
                 name:'5人团',
@@ -109,7 +109,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             type: 'dynamic-generated-control',
             isShowCloseButton: true,
             minItemLength: 0,
-            maxItemLength: 10,
+            maxItemLength: 1,
             isUserProperty: true,
             default: []
         }]},{

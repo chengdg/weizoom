@@ -14,7 +14,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 		fields: [{
             name: 'group_type',
             type: 'selector_v1',
-            displayName: '团购类型',
+            displayName: '2.',
             isUserProperty: true,
             source:[{
                 name:'5人团',
