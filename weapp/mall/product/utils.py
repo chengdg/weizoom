@@ -14,7 +14,7 @@ from core import search_util
 from utils import ding_util
 from mall.promotion.utils import stop_promotion
 
-DING_GROUP_ID = '80035247'
+DING_GROUP_ID = '93756731'
 
 def process_custom_model(custom_model_str):
     """处理custommodels字符串
