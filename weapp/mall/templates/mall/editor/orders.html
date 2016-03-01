@@ -185,15 +185,16 @@
 							<img class="xui-product-thumbnails" src="${product.thumbnails_url}" width="60" height="60"/>
 							{{/if}}
 							</div>
-							{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
 							<div style="width:235px;display:table-cell">
 								<p class="tl">
 								<span class="xa-productName" name="xa-productName">
+								{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
 									{{if product.promotion }}
 										{{if product.promotion.type == "flash_sale"}}【限时抢购】{{/if}}
 										{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
 									{{/if}}
 									{{if product.grade_discounted_money}}【会员优惠】{{/if}}
+								{{/if}}
 									${product.name}{{if order.fackorders && order.fackorders[product.supplier]}}-${order.fackorders[product.supplier].order_id}{{/if}}
 								</span></p>
 								<p class="tl pt10">
@@ -206,7 +207,6 @@
 								{{/each}}
 								</p>
 							</div>
-							{{/if}}
 							<div style="width:80px;display:table-cell;vertical-align: middle;">
 							{{if order.supplier_user_id > 0 && data.mall_type == 0}}
 							<p class="tc">${product.count}&nbsp;件</p>
