@@ -282,15 +282,16 @@
               <td class="xui-td-first"{% if product.noline %} style="border-top:none;"{% endif %}>
                 <div class="xui-a-productname">
                   <span style="color:#333;">
-                  {% if product.promotion.type == 'flash_sale' %}
-                    [限时抢购]
-                  {% elif product.promotion.type == 'premium_sale:premium_product' %}
-                    [赠品]
+                  {% if not is_sync %}
+                    {% if product.promotion.type == 'flash_sale' %}
+                      [限时抢购]
+                    {% elif product.promotion.type == 'premium_sale:premium_product' %}
+                      [赠品]
+                    {% endif %}
+                    {% if product.grade_discounted_money %}
+                      [会员优惠]
+                    {% endif %}
                   {% endif %}
-                  {% if product.grade_discounted_money %}
-                    [会员优惠]
-                  {% endif %}
-
                   {{product.name}}</span>
                 </div>
                 <p class="xui-colorsize">
