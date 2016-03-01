@@ -1008,7 +1008,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'bill': order.bill,
             'customer_message': order.customer_message,
             'buyer_name': order.buyer_name,
-            'pay_interface_name': order.pay_interface_type_text,
+            'pay_interface_name': u'微信支付' if (not mall_type and order.supplier_user_id > 0) else  order.pay_interface_type_text,
             'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
             'product_count': order.product_count,
             'payment_time': order.payment_time,
