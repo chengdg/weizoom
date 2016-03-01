@@ -51,9 +51,6 @@ class GroupParticipance(resource.Resource):
 		group_participance.save()
 		error_msg = None
 		
-		#调整参与数量
-		app_models.Group.objects(id=data['belong_to']).update(**{"inc__participant_count":1})
-		
 		#活动奖励
 		prize = data.get('prize', None)
 		if prize:

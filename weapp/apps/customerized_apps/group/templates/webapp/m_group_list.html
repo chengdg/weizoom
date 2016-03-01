@@ -1,13 +1,7 @@
-{% extends "webapp_content_base.html" %}
-{% load common_tag %}
+{% extends "apps_base.html" %}
 
 {% block css %}
-<!-- <link type="text/css" rel="stylesheet" href="/static/css/market_tools_css/common.css"> -->
-<link rel="stylesheet" href="/markettools_static/coupon/css/idangerous.swiper.css">
-<style>
-    .xui-myActivityPage .wui-swiper-tabs a {
-        width: 50%;
-    }
+<style type="text/css">
     .wui-swiper-slide{overflow-y: auto;}
 
     .xui-listItem{
@@ -41,10 +35,11 @@
 {% endblock %}
 
 {% block content-panel %}
-<div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
-        <div class="wui-swiper-tabs">
-            <a href="javascript:void(0)" class="wui-inner-active"><span class="wui-inner-tabTitle mt5 em85 c65">我要开团</span><i></i></a>
-            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">直接参团</span><i></i></a>
+    {{ page_html_content|safe }}
+    <div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
+        <div class="wui-swiper-tabs" style="margin-top:-47px;">
+            <a href="javascript:void(0)" class="wui-inner-active xa-all_groups_can_open"><span class="wui-inner-tabTitle mt5 em85 c65">我要开团</span><i></i></a>
+            <a href="javascript:void(0)" class="xa-all_groups_can_join"><span class="wui-inner-tabTitle mt5 em85 c65">直接参团</span><i></i></a>
         </div>
         <div class="wui-swiper-container" style="margin-top:47px;">
             <div class="wui-swiper-wrapper">
@@ -54,12 +49,11 @@
                             {% for group_item in all_groups_can_open %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <a href="{{ group_item.url }}">
-                                        <div class="xui-i-title">
-                                          <i class="wui-group_item"></i><span class="disTc pl15 em1">{{ group_item.name }}</span>
-                                        </div>
-                                        <div class="xui-i-time">活动截止{{ group_item.end_time }}</div>
-                                    </a>
+                                    <div class="xui-i-title">
+                                      <i class="wui-group_item"></i><span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                    </div>
+                                    <div class="xui-i-time">活动截止{{ group_item.end_time }}</div>
+                                    <div><a href="{{ group_item.url }}">点击开团</a></div>
                                 </li>
                                 </ul>
                                 {% endfor %}
@@ -67,7 +61,7 @@
                     </div>
                 </div>
                 <div class="wui-swiper-slide">
-                    <div class="wui-content-slide">
+                    <div class="wui-content-slide xa-content-slide">
                         {% if all_groups_can_open %}
                             {% for group_item in all_groups_can_open %}
                                 <ul class="xui-listItem">
@@ -75,7 +69,7 @@
                                     <div class="xui-i-title">
                                         <span class="disTc pl15 em1">{{ group_item.name }}</span>
                                     </div>
-                                    <div>进入找团</div>
+                                    <div class="xa-find_group" data-id="{{group_item.id}}">进入找团</div>
                                 </li>
                                 </ul>
                             {% endfor %}
@@ -84,24 +78,13 @@
                 </div>
             </div>
         </div>
-            
-        </div>
-        <!-- <div class="xui-btn-layer-footer xui-form-box">
-            <a data-role="button" class="btn-back" href="/m/rice/user_center/{{ webapp_id }}/">&nbsp;&nbsp;返 回&nbsp;&nbsp;</a>
-        </div> -->
     </div>
-</div>
 {% endblock %}
 
 {% block js %}
 <script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
 <script type="text/javascript">
 $(document).ready(function($) {
-    var bodyWidth = window.document.body.clientWidth;
-    var bodyHeight = window.document.body.clientHeight;
-    var containerHeight = bodyHeight - 47;
-    $(".wui-swiper-container").css({'height':containerHeight,'width': '100%' });
-    $(".wui-swiper-slide").css('height', containerHeight );
     $("body").css('overflow-y', 'hidden');
     var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
     var tabsSwiper = new Swiper('.wui-swiper-container',{
@@ -119,6 +102,43 @@ $(document).ready(function($) {
         tabsSwiper.swipeTo($(this).index());
         myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
     });
+
+    $('.xa-find_group').on('touchstart', function(e){
+        var $el = $(e.target);
+		var recordId = $el.data('id');
+        getDynamicData(recordId);
+    });
+    $('.xa-all_groups_can_join').on('touchstart', function(){
+        $('.xa-content-slide').removeClass('none');
+    });
+
 });
+
+function getDynamicData(recordId){
+    W.getApi().call({
+        app: 'm/apps/group',
+        resource: 'm_group',
+        method: 'get',
+        args: {
+            webapp_owner_id: W.webappOwnerId,
+            id: recordId
+        },
+        success: function(data) {
+            $('.xa-content-slide').addClass('none');
+            console.log(data);
+        },
+        error: function(data) {
+            if(data.errMsg == 'is_deleted'){
+                deletedRecord();
+            }else{
+                if(data.errMsg == 'is_run_out'){
+                    openRunoutWin();
+                }else{
+                    wuiAlert(data.errMsg)
+                }
+            }
+        }
+    });
+}
 </script>
 {% endblock %}
