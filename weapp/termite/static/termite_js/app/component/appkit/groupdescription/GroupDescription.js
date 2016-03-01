@@ -67,55 +67,101 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			annotation:'1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
 
-        },{
-            name: 'group_type',
+        },
+
+        {
+            name:'default_group',
             className:'xui-app-Group-i-type',
-            type: 'selector_v1',
-            displayName: '1.',
-            isUserProperty: true,
+            type:'apps_group_selector',
+            isUserProperty:true,
+            
+            typeClassName:'xui-i-groupType',
+            typeLabel:'1.',
+            typeName:'group_type',
             source:[{
-                name:'5人团',
-                value:'5'
+                typeName:'5人团',
+                typeValue:'5'
             },{
-                name:'10人团',
-                value:'10'
+               typeName:'10人团',
+                typeValue:'10'
             }],
-			//validate: 'data-validate="require-notempty::选项不能为空',
-            default: '5'
-        },{
-            name: 'group_days',
-            className:'xui-app-Group-i-days',
-            type: 'text_with_annotation',
-            displayName: '拼团时间',
-            isUserProperty: true,
-            maxLength: 5,
-            size: '70px',
-            annotation: '天',
-            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            //validateIgnoreDefaultValue: true,
-            default: ''
-        },{
-            name: 'group_price',
-            className:'xui-app-Group-i-price',
-            type: 'text_with_annotation',
-            displayName: '团购价',
-            isUserProperty: true,
-            maxLength: 5,
-            size: '70px',
-            annotation: '元',
-            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            //validateIgnoreDefaultValue: true,
-            default: ''
-        },{
-            name: 'group_items',//动态组件
-            displayName: '',
-            type: 'dynamic-generated-control',
-            isShowCloseButton: true,
-            minItemLength: 0,
-            maxItemLength: 1,
-            isUserProperty: true,
-            default: []
-        }]},{
+
+            daysClassName:'xui-i-groupDays',
+            daysLabel:'拼团时间:',
+            days_name:'group_days',
+            days_size:'70px',
+            days_placeholder:'',
+            days_maxLength:5,
+            days_annotation:'天',
+            // days_validate:'',
+
+            priceClassName:'xui-i-price',
+            priceLabel:'团购价:',
+            price_size:'70px',
+            price_name:'group_price',
+            price_placeholder:'',
+            price_maxLength:5,
+            price_annotation:'元'
+
+            // price_validate:''
+
+
+        }
+
+
+   //      ,{
+   //          name: 'group_type',
+   //          className:'xui-app-Group-i-type',
+   //          type: 'selector_v1',
+   //          displayName: '1.',
+   //          isUserProperty: true,
+   //          source:[{
+   //              name:'5人团',
+   //              value:'5'
+   //          },{
+   //              name:'10人团',
+   //              value:'10'
+   //          }],
+			// //validate: 'data-validate="require-notempty::选项不能为空',
+   //          default: '5'
+   //      },{
+   //          name: 'group_days',
+   //          className:'xui-app-Group-i-days',
+   //          type: 'text_with_annotation',
+   //          displayName: '拼团时间',
+   //          isUserProperty: true,
+   //          maxLength: 5,
+   //          size: '70px',
+   //          annotation: '天',
+   //          //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+   //          //validateIgnoreDefaultValue: true,
+   //          default: ''
+   //      },{
+   //          name: 'group_price',
+   //          className:'xui-app-Group-i-price',
+   //          type: 'text_with_annotation',
+   //          displayName: '团购价',
+   //          isUserProperty: true,
+   //          maxLength: 5,
+   //          size: '70px',
+   //          annotation: '元',
+   //          //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+   //          //validateIgnoreDefaultValue: true,
+   //          default: ''
+   //      }
+
+        // ,{
+        //     name: 'group_items',//动态组件
+        //     displayName: '',
+        //     type: 'dynamic-generated-control',
+        //     isShowCloseButton: true,
+        //     minItemLength: 0,
+        //     maxItemLength: 1,
+        //     isUserProperty: true,
+        //     default: []
+        // }
+
+        ]},{
         group: '',//团购信息
         groupClass: 'xui-propertyView-app-GroupInfo',
         fields: [{
