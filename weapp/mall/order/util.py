@@ -1129,6 +1129,15 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     if query_dict.get("isUseWeizoomCard"):
         query_dict.pop("isUseWeizoomCard")
         orders = orders.exclude(weizoom_card_money=0)
+    # 供货商筛选本店和商城的订单
+    if query_dict.has_key('order_source'):
+        order_status = query_dict.get('order_source')
+        if order_status:
+            orders = orders.filter(supplier_user_id__gt=0)
+        else:
+            orders = orders.filter(supplier_user_id=0)
+        query_dict.pop("order_source")
+
     if len(query_dict):
         orders = orders.filter(**query_dict)
 
