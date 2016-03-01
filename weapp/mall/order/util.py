@@ -415,7 +415,7 @@ def export_orders_json(request):
                 if order.id in suplier_not_sub_order_ids:
                     order_id = order.order_id
                 else:
-                    order_id = "s%^%su" % (order.order_id, product.supplier_user_id)
+                    order_id = "%s^%su" % (order.order_id, product.supplier_user_id)
                     order = suborderid2order[order_id]
 
                 fackorder = None
