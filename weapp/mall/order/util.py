@@ -819,7 +819,7 @@ def set_children_order_status(origin_order, status):
 # 页脚未读订单数统计
 def get_unship_order_count(request):
     from cache.webapp_owner_cache import get_unship_order_count_from_cache
-    return get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
+    return get_unship_order_count_from_cache(request)
 
 
 # get_orders_response调用
