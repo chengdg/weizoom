@@ -1006,7 +1006,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'ship_tel': order.ship_tel,
             'bill_type': order.bill_type,
             'bill': order.bill,
-            'customer_message': order.customer_message,
+            'customer_message': '' if (not mall_type and order.supplier_user_id > 0) else order.customer_message,
             'buyer_name': order.buyer_name,
             'pay_interface_name': u'微信支付' if (not mall_type and order.supplier_user_id > 0) else  order.pay_interface_type_text,
             'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
@@ -1023,7 +1023,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'express_company_name': order.express_company_name,
             'express_number': order.express_number,
             'leader_name': order.leader_name,
-            'remark': order.remark,
+            'remark': '' if (not mall_type and order.supplier_user_id > 0) else order.remark,
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
