@@ -1507,6 +1507,13 @@ def __get_supplier_name(supplier_id):
 		error_msg = u"获取供应商({})名称失败, cause:\n{}".format(supplier_id, unicode_full_stack())
 		watchdog_error(error_msg)
 
+def __get_store_name(supplier_user_id):
+	try:
+		return UserProfile.objects.get(user_id=supplier_user_id).store_name
+	except:
+		error_msg = u"获取供应商({})名称失败, cause:\n{}".format(supplier_user_id, unicode_full_stack())
+		watchdog_error(error_msg)
+
 
 ########################################################################
 # add_product_to_shopping_cart: 向购物车中添加商品
@@ -1703,8 +1710,11 @@ def get_order_operation_logs(order_id):
 ########################################################################
 def record_operation_log(order_id, operator_name, action, order=None):
 	try:
-		if order and order.origin_order_id > 0 and order.supplier > 0:  #add by duhao 如果是子订单，则加入供应商信息
-			action = '%s - %s' % (action, __get_supplier_name(order.supplier))
+		if order and order.origin_order_id > 0:
+			if order.supplier > 0:  #add by duhao 如果是子订单，则加入供应商信息
+				action = '%s - %s' % (action, __get_supplier_name(order.supplier))
+			if order.supplier_user_id > 0:
+				action = '%s - %s' % (action, __get_store_name(order.supplier_user_id))
 		OrderOperationLog.objects.create(order_id=order_id, action=action, operator=operator_name)
 	except:
 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
