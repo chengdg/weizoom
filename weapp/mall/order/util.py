@@ -81,6 +81,7 @@ def export_orders_json(request):
     status_type = request.GET.get('status', None)
 
     supplier_users = None
+    suplier_not_sub_order_ids = []
     if status_type:
         if status_type == 'refund':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
@@ -95,6 +96,9 @@ def export_orders_json(request):
         all_mall_userprofiles = UserProfile.objects.filter(webapp_type=0)
         supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
         
+        suplier_not_sub_order_ids = [order.id for order in  Order.objects.filter(webapp_id=webapp_id, supplier_user_id__gt=0, origin_order_id=0)]
+
+
     #####################################
     query_dict, date_interval,date_interval_type = __get_select_params(request)
     product_name = ''
@@ -248,13 +252,15 @@ def export_orders_json(request):
 
     order2supplier2fackorders = {}
     # 取出所有的子订单
-
+    suborderid2order = {}
     for order in fackorders:
         origin_order_id = order.origin_order_id
         order2supplier2fackorders.setdefault(origin_order_id, {})
         order2supplier2fackorders[origin_order_id][order.supplier] = order
         # 在order_order_ids中添加子订单
         order_order_ids.append(order.order_id)
+        suborderid2order[order.order_id] = order
+
     # 获取order对应的发货时间
     order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
                         OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
@@ -403,10 +409,14 @@ def export_orders_json(request):
                 if not role_id or coupon_name and order.coupon_money > 0:
                     coupon_money = order.coupon_money
 
-            if product.supplier_user_id > 0:
-                supplier_user_profile = 
-                source = supplier_users[product.supplier_user_id].store_name.encode("utf-8")
+            if mall_type and product.supplier_user_id > 0:
+                source = supplier_users[product.supplier_user_id].encode("utf-8")
                 order_id = order.order_id
+                if order.id in suplier_not_sub_order_ids:
+                    order_id = order.order_id
+                else:
+                    order_id = "s%^%su" % (order.order_id, product.supplier_user_id)
+                    order = suborderid2order[order_id]
 
                 fackorder = None
                 save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
