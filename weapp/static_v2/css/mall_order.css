@@ -1035,6 +1035,12 @@
 }
 .xui-orderDetialPage .xui-producttab .xui-td-third {
     border-right: #ccc solid 1px;
+    min-width: 75px;
+}
+.xui-orderDetialPage .xui-producttab th.xui-td-third,
+.xui-orderDetialPage .xui-producttab th.xui-td-fourth,
+.xui-orderDetialPage .xui-producttab th.xui-td-fifth{
+    border-right: none;
 }
 .xui-orderDetialPage .xui-producttab .xui-td-fourth {
     width: 16%;

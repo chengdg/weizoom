@@ -1005,6 +1005,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True,mall_type=mall_type)
         else:
             parent_action = None
+
         items.append({
             'id': order.id,
             'order_id': order.order_id,
@@ -1045,7 +1046,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'groups': groups,
             'parent_action': parent_action,
             'is_first_order': order.is_first_order,
-            'supplier_user_id': order.supplier_user_id
+            'supplier_user_id': order.supplier_user_id,
+            'total_purchase_price': '%.2f' % order.total_purchase_price
         })
 
     return items, pageinfo, order_return_count
@@ -1153,7 +1155,9 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     if query_dict.get('order_id') and not mall_type:
         order_id = query_dict.get('order_id')
         if order_id.find('^') == -1:
-            orders = orders.filter(Q(order_id=order_id) | Q(name__in=order_id+'^'+user_profile.user_id+'u'))
+            s_order_id =  "%s^%su" % (order_id, user_profile.user_id)
+            orders = orders.filter(Q(order_id=order_id) | Q(order_id=s_order_id))
+            query_dict.pop("order_id")
 
     if len(query_dict):
         orders = orders.filter(**query_dict)
