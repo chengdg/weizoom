@@ -13,6 +13,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 		groupClass: 'xa-serial-points-settings',
 		fields: [{
             name: 'group_type',
+            className:'xui-app-Group-i-type',
             type: 'selector_v1',
             displayName: '2.',
             isUserProperty: true,
@@ -27,6 +28,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             default: '5'
         },{
             name: 'group_days',
+            className:'xui-app-Group-i-days',
             type: 'text_with_annotation',
             displayName: '拼团时间',
             isUserProperty: true,
@@ -38,6 +40,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             default: ''
         },{
             name: 'group_price',
+            className:'xui-app-Group-i-price',
             type: 'text_with_annotation',
             displayName: '团购价',
             isUserProperty: true,

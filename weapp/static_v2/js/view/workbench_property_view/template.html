@@ -67,7 +67,7 @@
 					{{/if}}
 
 					{{if (field.type == 'text_with_annotation')}}
-					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input">
 							<input
@@ -88,6 +88,7 @@
 						</div>
 					</div>
 					{{/if}}
+
 
 					{{if (field.type == 'text_with_annotation_v2')}}
 					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
@@ -318,7 +319,7 @@
 
 
 					{{if (field.type == 'selector_v1')}}
-					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+					<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField {{if field.className}}${field.className}{{/if}}">
                         <div class="propertyGroup_property_label mr5 {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						<div class="propertyGroup_property_input">
 							<select data-field="${field.name}" name="${field.name}" class="input-medium">
@@ -758,7 +759,7 @@
 								{{/if}}
 
 								{{if (dynamicComponentField.type == 'text_with_annotation')}}
-                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+                                <div class="propertyGroup_property_textField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
                                     <div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
                                     <div class="propertyGroup_property_input">
                                         <input
@@ -1034,7 +1035,7 @@
 
 
                                 {{if (dynamicComponentField.type == 'selector_v1')}}
-								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField">
+								<div class="propertyGroup_property_selectField propertyGroup_property_horizontalField  {{if field.className}}${field.className}{{/if}}">
                                     {{if dynamicComponentField.displayName}}
 									<div class="propertyGroup_property_label {{if dynamicComponentField.validate}}star_show{{/if}}">${dynamicComponentField.displayName}</div>
 									{{/if}}									<div class="propertyGroup_property_input">

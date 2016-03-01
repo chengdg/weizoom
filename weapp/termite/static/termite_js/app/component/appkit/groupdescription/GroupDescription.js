@@ -58,7 +58,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             default: ''
         }]},{
         group: '',//团购列表
-        groupClass: 'xui-propertyView-app-SignDynamicGroup',
+        groupClass: 'xui-propertyView-app-GroupDynamicGroup',
         fields: [{
             name: 'group_frame_title',
             type: 'title_with_nothing',
@@ -69,6 +69,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
         },{
             name: 'group_type',
+            className:'xui-app-Group-i-type',
             type: 'selector_v1',
             displayName: '1.',
             isUserProperty: true,
@@ -83,6 +84,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             default: '5'
         },{
             name: 'group_days',
+            className:'xui-app-Group-i-days',
             type: 'text_with_annotation',
             displayName: '拼团时间',
             isUserProperty: true,
@@ -94,6 +96,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             default: ''
         },{
             name: 'group_price',
+            className:'xui-app-Group-i-price',
             type: 'text_with_annotation',
             displayName: '团购价',
             isUserProperty: true,
