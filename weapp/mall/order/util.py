@@ -1004,6 +1004,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True,mall_type=mall_type)
         else:
             parent_action = None
+
+
+        a = ('%.2f' % (order.total_purchase_price)) if (not mall_type and order.supplier_user_id > 0) else '%.2f' % (order.final_price + order.weizoom_card_money)
+        print('--------------a',a)
         items.append({
             'id': order.id,
             'order_id': order.order_id,
@@ -1044,7 +1048,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'groups': groups,
             'parent_action': parent_action,
             'is_first_order': order.is_first_order,
-            'supplier_user_id': order.supplier_user_id
+            'supplier_user_id': order.supplier_user_id,
+            'total_purchase_price': order.total_purchase_price
         })
 
     return items, pageinfo, order_return_count
