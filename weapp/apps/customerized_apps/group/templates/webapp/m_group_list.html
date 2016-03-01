@@ -1,0 +1,124 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<!-- <link type="text/css" rel="stylesheet" href="/static/css/market_tools_css/common.css"> -->
+<link rel="stylesheet" href="/markettools_static/coupon/css/idangerous.swiper.css">
+<style>
+    .xui-myActivityPage .wui-swiper-tabs a {
+        width: 50%;
+    }
+    .wui-swiper-slide{overflow-y: auto;}
+
+    .xui-listItem{
+        background: #fff;
+        border-bottom:1px solid #dfdfdf;
+    }
+    .xui-listInner{
+        border-bottom:1px solid #dfdfdf!important;
+        text-align: left;
+    }
+    .xui-listInner .ui-btn-inner{
+        white-space:normal;
+    }
+    .xui-listInner p{width:100%;}
+    .xui-listInner p span:first-child{width:80%;}
+    a:link,a:hover,a:visited{
+        color:#333;
+    }
+    .xui-i-title .disTc {
+      font-size: 18px;
+      line-height: 30px;
+    }
+    .xui-i-title {
+      border-bottom: 1px solid #dfdfdf;
+    }
+    .xui-i-time {
+        padding-top: 15px;
+        color: #a1a1a1;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
+        <div class="wui-swiper-tabs">
+            <a href="javascript:void(0)" class="wui-inner-active"><span class="wui-inner-tabTitle mt5 em85 c65">我要开团</span><i></i></a>
+            <a href="javascript:void(0)"><span class="wui-inner-tabTitle mt5 em85 c65">直接参团</span><i></i></a>
+        </div>
+        <div class="wui-swiper-container" style="margin-top:47px;">
+            <div class="wui-swiper-wrapper">
+                <div class="wui-swiper-slide" id="xa-wrapper">
+                    <div class="wui-content-slide">
+                        {% if all_groups_can_open %}
+                            {% for group_item in all_groups_can_open %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                    <a href="{{ group_item.url }}">
+                                        <div class="xui-i-title">
+                                          <i class="wui-group_item"></i><span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                        </div>
+                                        <div class="xui-i-time">活动截止{{ group_item.end_time }}</div>
+                                    </a>
+                                </li>
+                                </ul>
+                                {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="wui-content-slide">
+                        {% if all_groups_can_open %}
+                            {% for group_item in all_groups_can_open %}
+                                <ul class="xui-listItem">
+                                <li data-icon="true" class="xui-listInner pl10 pr15">
+                                    <div class="xui-i-title">
+                                        <span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                    </div>
+                                    <div>进入找团</div>
+                                </li>
+                                </ul>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        </div>
+        <!-- <div class="xui-btn-layer-footer xui-form-box">
+            <a data-role="button" class="btn-back" href="/m/rice/user_center/{{ webapp_id }}/">&nbsp;&nbsp;返 回&nbsp;&nbsp;</a>
+        </div> -->
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="/markettools_static/coupon/js/idangerous.swiper.js"></script>
+<script type="text/javascript">
+$(document).ready(function($) {
+    var bodyWidth = window.document.body.clientWidth;
+    var bodyHeight = window.document.body.clientHeight;
+    var containerHeight = bodyHeight - 47;
+    $(".wui-swiper-container").css({'height':containerHeight,'width': '100%' });
+    $(".wui-swiper-slide").css('height', containerHeight );
+    $("body").css('overflow-y', 'hidden');
+    var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
+    var tabsSwiper = new Swiper('.wui-swiper-container',{
+        speed:500,
+        onSlideChangeStart: function() {
+            $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+            $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
+            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+        }
+    });
+    $(".wui-swiper-tabs a").on('touchstart mousedown',function(e){
+        e.preventDefault();
+        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
+        $(this).addClass('wui-inner-active');
+        tabsSwiper.swipeTo($(this).index());
+        myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
+    });
+});
+</script>
+{% endblock %}
