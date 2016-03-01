@@ -22,8 +22,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '团购名称',
             isUserProperty: true,
             maxLength: 30,
-            validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
+            //validateIgnoreDefaultValue: true,
             annotation: '请简要输入团购名称',
             default: ''
         },{
@@ -43,8 +43,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             type: 'date_range_selector',
             displayName: '起止时间',
             isUserProperty: true,
-            validate: 'data-validate="require-notempty::有效时间不能为空"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::有效时间不能为空"',
+            //validateIgnoreDefaultValue: true,
             default: ''
         },{
             name: 'select_product',
@@ -53,8 +53,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             maxLength: 30,
             isUserProperty: true,
             annotation: '',
-            validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+            //validateIgnoreDefaultValue: true,
             default: ''
         }]},{
         group: '',//团购列表
@@ -62,7 +62,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         fields: [{
             name: 'group_frame_title',
             type: 'title_with_nothing',
-			validate:'data-validate="require-notempty::选项不能为空',
+			//validate:'data-validate="require-notempty::选项不能为空',
             displayName: '拼团人数',
 			annotation:'1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
@@ -79,7 +79,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
                 name:'10人团',
                 value:'10'
             }],
-			validate: 'data-validate="require-notempty::选项不能为空',
+			//validate: 'data-validate="require-notempty::选项不能为空',
             default: '5'
         },{
             name: 'group_days',
@@ -89,8 +89,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             maxLength: 5,
             size: '70px',
             annotation: '天',
-            validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+            //validateIgnoreDefaultValue: true,
             default: ''
         },{
             name: 'group_price',
@@ -100,8 +100,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             maxLength: 5,
             size: '70px',
             annotation: '元',
-            validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+            //validateIgnoreDefaultValue: true,
             default: ''
         },{
             name: 'group_items',//动态组件
@@ -118,7 +118,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         fields: [{
             name: 'rule_title',
             type: 'title_with_nothing',
-			validate:'data-validate="require-notempty::选项不能为空',
+			//validate:'data-validate="require-notempty::选项不能为空',
             displayName: '团购说明',
 			annotation:'注：请修改【发货时间】、【开团截止日期】、【商品数量】顾客会查看团购说明，请谨慎填写。',
 			isUserProperty:true
@@ -129,7 +129,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '',
             maxLength: 800,
             isUserProperty: true,
-            validate: 'data-validate="require-notempty::选项不能为空"',
+            //validate: 'data-validate="require-notempty::选项不能为空"',
             annotation: '注：请修改【发货时间】、【开团截止日期】、【商品数量】顾客会查看团购说明，请谨慎填写。',
             placeholder: '请简略描述活动具体规则，譬如获取助力值前多少名可以获得特殊资格，以及活动起止时间，客服联系电话等。',
             default: "1.开团和拼团的顾客需要先已团购价支付商品<br>2.到达团购人数上限或到达团购指定时间后，团购结束<br>到达团购人数上限 - 团购成功<br>成功后,在该商品团购结束 20 天内进行发货.<br>在指定时间未到达团购人数上线 - 团购失败<br>失败后, 5~7个工作日完成退款<br>3.本次活动商品数量为 100 份，售完活动结<br>束。开团截止日期 2014-04-12<br>4.已关注的用户可在我的团购中找到参与过<br>的团购，也可以继续创建其他的团购。<br>"
@@ -151,8 +151,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '分享描述',
             isUserProperty: true,
             maxLength: 26,
-            validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
+            //validateIgnoreDefaultValue: true,
             annotation: '',
             placeholder:'最多可输入26个字',
             default: ''

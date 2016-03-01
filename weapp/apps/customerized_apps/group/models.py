@@ -16,7 +16,7 @@ class Group(models.Document):
 	status = models.IntField(default=0) #状态
 	created_at = models.DateTimeField() #创建时间
 	product = models.StringField(default="") #活动商品
-	group_list = models.DynamicField() #团购活动列表[{'group_type':'5','group_days':'10','group_price':'100.00'},...]
+	group_dict = models.DynamicField() #团购活动字典{'0':{'group_type':'5','group_days':'10','group_price':'100.00'},...}
 	rules = models.StringField()#团购说明
 	material_image = models.StringField()#分享图片
 	share_description = models.StringField()#分享描述

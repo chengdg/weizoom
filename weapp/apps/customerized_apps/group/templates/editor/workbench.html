@@ -13,10 +13,10 @@
             <li class="active">新建</li>
         </ul>
     </div>
-    
+
     <div style="background-color: #EAEEF7;" class="clearfix">
         <div id="leftPanel" class="fl xui-workbench-leftPanel xui-hide"></div>
-        
+
         <div id="phonePanel" class="xui-workbench-phonePanel xui-section fl">
             <div id="phone" class="xui-phone ">
                 <div id="phoneSkin" class="xui-i-skin">
@@ -55,14 +55,14 @@
 
 {% block base_js %}
   <!-- *start_prunt_task* -->
-    <!-- [prunt_task] 
+    <!-- [prunt_task]
       {
         "task": "weizoom-load-termite-components"
       }
     -->
   {{ '["appkit.page", "appkit.componentadder","appkit.groupdescription", "appkit.submitbutton"]'|load_termite_components|safe }}
   <!-- *end_prunt_task* -->
-  
+
   <script type="text/javascript">
     W.uid = {{ request.manager.id }};
     W.projectId = "{{project_id}}";
@@ -74,7 +74,7 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
-    
+
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'apps',
@@ -106,11 +106,11 @@
         }
       });
     }
-    
+
     $(document).ready(function() {
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
-      
+
       $('#leftPanel').css('min-height' ,height+ 'px');
       $('#workbench').css('min-height' ,height+ 'px');
       $(window).bind('beforeunload', function() {
@@ -119,18 +119,18 @@
         } else {
         }
       })
-      
+
       var pageManagerView = new W.workbench.PageManagerView({
         el: '#leftPanel',
         isSystemManager: W.isSystemManager
       });
       pageManagerView.render();
-      
+
       var phoneView = new W.workbench.PhoneView({
         el: '#phonePanel'
       });
       phoneView.render();
-      
+
       var propertyViewLeft = phoneView.getRightBorderOffset() - $('#workbench').offset().left;
       var propertyView = new W.workbench.PropertyView({
         el: '#rightPanel',
@@ -138,63 +138,90 @@
         onlyShowUserProperty: true//!W.isSystemManager
       });
       propertyView.render();
-      
+
       var synchronizer = new W.workbench.PageSynchronizer();
       synchronizer.run();
       W.Synchronizer = synchronizer;
-      
+
       loadPages(pageManagerView);
-      
+
       $('.xa-save').click(function() {
           var that = this;
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
+            var relatedPageId = data['project_id'];
             var descriptionModel = page.components[0].model;
+            var dynamicComponents = page.components[0].components;
             var name = descriptionModel.get('title');
             var startTime = descriptionModel.get('start_time')+":00";
             var endTime = descriptionModel.get('end_time')+":00";
             var select_product = descriptionModel.get('select_product');
-            var group_list = [];//{'group_type':'5','group_days':'10','group_price':'100.00'}
             var rules = descriptionModel.get('rules');
             var material_image = descriptionModel.get('material_image');
             var share_description =  descriptionModel.get('share_description');
 
-            var relatedPageId = data['project_id'];
+
+            var group_dict = {};//'0':{'group_type':'5','group_days':'10','group_price':'100.00'}
+            var default_group_type = descriptionModel.get('group_type');
+            var default_group_days = descriptionModel.get('group_days');
+            var default_group_price =  descriptionModel.get('group_price');
+            var group_dict = {'0':{
+              'group_type':default_group_type,
+              'group_days':default_group_days,
+              'group_price':default_group_price
+            }};
+
+            for(var i=0;i<dynamicComponents.length;i++){
+              var index = i+1;
+              var g_type = dynamicComponents[i].model.get('group_type')
+              var g_days = dynamicComponents[i].model.get('group_days')
+              var g_price = dynamicComponents[i].model.get('group_price')
+              group_dict[String(index)] = {
+                'group_type':g_type,
+                'group_days':g_days,
+                'group_price':g_price
+              }
+            }
 
             var args = {
             "name": name,
             "start_time": startTime,
-            "end_time": endTime
+            "end_time": endTime,
+            'select_product':select_product,
+            'group_dict':group_dict,
+            'rules':rules,
+            'material_image':material_image,
+            'share_description':share_description
             };
-            if (isCreateNewData) {
-                var method = 'put';
-                args['related_page_id'] = relatedPageId;
-            } else {
-            var method = 'post';
-                args['id'] = W.activityId;
-            }
-          W.getApi().call({
-            app: 'apps/group',
-            resource: 'group',
-            method: method,
-            args: args,
-            success: function(data) {
-              W.showHint('success', '保存成功');
-              _.delay(function() {
-                window.location.href = '/apps/group/groups/';
-              }, 500);
-            },
-            error: function(resp) {
-              W.showHint('error', '保存失败!');
-                that.disabled = false;
-            }
-          });
+{#            if (isCreateNewData) {#}
+{#                var method = 'put';#}
+{#                args['related_page_id'] = relatedPageId;#}
+{#            } else {#}
+{#            var method = 'post';#}
+{#                args['id'] = W.activityId;#}
+{#            }#}
+{#          W.getApi().call({#}
+{#            app: 'apps/group',#}
+{#            resource: 'group',#}
+{#            method: method,#}
+{#            args: args,#}
+{#            success: function(data) {#}
+{#              W.showHint('success', '保存成功');#}
+{#              _.delay(function() {#}
+{#                window.location.href = '/apps/group/groups/';#}
+{#              }, 500);#}
+{#            },#}
+{#            error: function(resp) {#}
+{#              W.showHint('error', '保存失败!');#}
+{#                that.disabled = false;#}
+{#            }#}
+{#          });#}
         });
       });
-      
+
       W.isReady = true;
-      
+
       W.Broadcaster.on('designpage:reach_scroll_boundary', function(direction) {
         var $window = $(window);
         var scrollTop = $window.scrollTop();
@@ -205,19 +232,19 @@
         }
         $window.scrollTop(newScrollTop);
       });
-      
+
       $('[data-toggle="tooltip"]').tooltip();
-      
+
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
-        
-        // 验证
-        if (!W.isSystemManager) {
-            if(!page.validate()) {
-                return;
-            }
-        }
-        
+
+{#        // 验证#}
+{#        if (!W.isSystemManager) {#}
+{#            if(!page.validate()) {#}
+{#                return;#}
+{#            }#}
+{#        }#}
+{#        #}
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];
@@ -234,7 +261,7 @@
           }
         });
       });
-      
+
       $(document).click(function() {
         // 点击空白处，触发事件
         W.Broadcaster.trigger('designpage:cancel_delete');
