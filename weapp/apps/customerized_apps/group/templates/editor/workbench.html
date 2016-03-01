@@ -162,7 +162,6 @@
             var share_description =  descriptionModel.get('share_description');
 
 
-            var group_dict = {};//'0':{'group_type':'5','group_days':'10','group_price':'100.00'}
             var default_group_type = descriptionModel.get('group_type');
             var default_group_days = descriptionModel.get('group_days');
             var default_group_price =  descriptionModel.get('group_price');
@@ -174,9 +173,9 @@
 
             for(var i=0;i<dynamicComponents.length;i++){
               var index = i+1;
-              var g_type = dynamicComponents[i].model.get('group_type')
-              var g_days = dynamicComponents[i].model.get('group_days')
-              var g_price = dynamicComponents[i].model.get('group_price')
+              var g_type = dynamicComponents[i].model.get('group_type');
+              var g_days = dynamicComponents[i].model.get('group_days');
+              var g_price = dynamicComponents[i].model.get('group_price');
               group_dict[String(index)] = {
                 'group_type':g_type,
                 'group_days':g_days,
@@ -184,39 +183,43 @@
               }
             }
 
+
+
+            console.log('>>>>>>>>>>>>###@@@@@@@@@@@@@@@@@@！！！！！');
+            console.log(group_dict);
             var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
-            'select_product':select_product,
-            'group_dict':group_dict,
+            'product':select_product,
+            'group_dict':JSON.stringify(group_dict),
             'rules':rules,
             'material_image':material_image,
             'share_description':share_description
             };
-{#            if (isCreateNewData) {#}
-{#                var method = 'put';#}
-{#                args['related_page_id'] = relatedPageId;#}
-{#            } else {#}
-{#            var method = 'post';#}
-{#                args['id'] = W.activityId;#}
-{#            }#}
-{#          W.getApi().call({#}
-{#            app: 'apps/group',#}
-{#            resource: 'group',#}
-{#            method: method,#}
-{#            args: args,#}
-{#            success: function(data) {#}
-{#              W.showHint('success', '保存成功');#}
-{#              _.delay(function() {#}
-{#                window.location.href = '/apps/group/groups/';#}
-{#              }, 500);#}
-{#            },#}
-{#            error: function(resp) {#}
-{#              W.showHint('error', '保存失败!');#}
-{#                that.disabled = false;#}
-{#            }#}
-{#          });#}
+            if (isCreateNewData) {
+                var method = 'put';
+                args['related_page_id'] = relatedPageId;
+            } else {
+            var method = 'post';
+                args['id'] = W.activityId;
+            }
+          W.getApi().call({
+            app: 'apps/group',
+            resource: 'group',
+            method: method,
+            args: args,
+            success: function(data) {
+              W.showHint('success', '保存成功');
+              _.delay(function() {
+                window.location.href = '/apps/group/groups/';
+              }, 500);
+            },
+            error: function(resp) {
+              W.showHint('error', '保存失败!');
+                that.disabled = false;
+            }
+          });
         });
       });
 
