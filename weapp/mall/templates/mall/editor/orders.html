@@ -230,9 +230,13 @@
 						{{if order.member_id > 0}}
 							{{if order.member_is_subscribed > 0}}
 								{{if data.mall_type}}
-									{{html order.buyer_name}}
-								{{else}}
 									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{else}}
+									{{if order.supplier_user_id > 0}}
+										{{html order.buyer_name}}
+									{{else}}
+										<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+									{{/if}}
 								{{/if}}
 							{{else}}
 								非会员
