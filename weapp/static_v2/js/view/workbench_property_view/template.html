@@ -700,6 +700,74 @@
 					{{/if}}
 
 
+					{{if (field.type == 'apps_group_selector')}}
+						<div class="propertyGroup_property_horizontalField {{if field.className}}${field.className}{{/if}}">
+							<div class="propertyGroup_property_input">
+
+								<div class="propertyGroup_property_selectField {{if field.typeClassName}}${field.typeClassName}{{/if}}">
+									<div class="propertyGroup_property_label ">${field.typeLabel}</div>
+									<select data-field="${field.selectInfo}" name="${field.selectInfo}" class="input-medium">
+									{{each(n, nav) W.component.getSelectSource(field.type_source, component)}}
+										<option value="${nav.value}" {{if model.get(field.type_name) == nav.value}}selected="selected"{{/if}}>
+											{{if nav.name }}
+												${nav.name}
+											{{else}}
+												${nav.value}
+											{{/if}}
+										</option>
+									{{/each}}
+									</select>
+								</div>
+
+
+								<div class="propertyGroup_property_textField {{if field.daysClassName}}${field.daysClassName}{{/if}}">
+									<div class="propertyGroup_property_label">${field.daysTitle}</div>
+									<div class="propertyGroup_property_input">
+										<input
+											type="text"
+											style="width:${field.days_size};"
+											class="input-small xui-propertyGroup-input"
+											data-field="${field.days_name}"
+											value="{{if field.days_placeholder != model.get(field.days_name)}}${model.get(field.days_name)}{{/if}}"
+											placeholder="${field.days_placeholder}"
+											{{if field.days_maxLength}}maxlength="${field.days_maxLength}"{{/if}}
+											{{if field.days_validate}}{{html field.days_validate}}{{/if}} />
+										{{if field.days_annotation}}
+										<span>
+											{{html field.days_annotation}}
+										</span>
+										{{/if}}
+									</div>
+								</div>
+
+
+								<div class="propertyGroup_property_textField {{if field.priceClassName}}${field.priceClassName}{{/if}}">
+									<div class="propertyGroup_property_label">${field.priceTitle}</div>
+									<div class="propertyGroup_property_input">
+										<input
+											type="text"
+											style="width:${field.size};"
+											class="input-small xui-propertyGroup-input"
+											data-field="${field.name}"
+											value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}"
+											placeholder="${field.placeholder}"
+											{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
+											{{if field.validate}}{{html field.validate}}{{/if}} />
+										{{if field.annotation}}
+										<span>
+											{{html field.annotation}}
+										</span>
+										{{/if}}
+									</div>
+								</div>
+
+
+								<div class="errorHint"></div>
+							</div>
+						</div>
+					{{/if}}
+
+
 
 					{{if (field.type == 'dynamic-generated-control')}}
 					{{if field.displayName}}
