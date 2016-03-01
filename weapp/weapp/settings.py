@@ -242,7 +242,7 @@ MIDDLEWARE_CLASSES = [
     # Uncomment this middleware for monitor sql querys:
     'core.debug_middleware.SqlMonitorMiddleware',
 
-   
+
 
     # termite middleware
     'core.termite_middleware.WebappPageCacheMiddleware',
@@ -267,7 +267,7 @@ MIDDLEWARE_CLASSES = [
     'core.middleware.UserProfileMiddleware',
      # webapp home_page middleware
     'core.termite_middleware.WebappPageHomePageMiddleware',
-    
+
     'modules.member.middleware.CleanUpCookieMiddleware',
     'modules.member.middleware.MemberCacheMiddleware',
     'modules.member.middleware.ProcessOpenidMiddleware',
@@ -583,6 +583,8 @@ WATCH_DOG_DEVICE = 'mysql'
 WATCHDOG_WEIXIN_MESSAGE = False
 ENABLE_WEPAGE_CACHE = False
 
+logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
     BATMAN_API_IMPL = 'memory'
@@ -603,9 +605,6 @@ if 'develop' == MODE:
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://dev.weapp.com'
-
-    import logging
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
@@ -672,8 +671,8 @@ UNCATCHED_EXCEPTION_ACTION_URL = ''
 
 
 WEAPP_WEB_DIALOG_DIRS = [
-    ('static', '%s/../static/' % PROJECT_HOME), 
-    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME), 
+    ('static', '%s/../static/' % PROJECT_HOME),
+    ('markettools_static', '%s/../market_tools/tools/*' % PROJECT_HOME),
     #('customerized_apps_static', '%s/../apps/customerized_apps/*' % PROJECT_HOME)
 ]
 WEAPP_WEB_VIEW_DIRS = [
@@ -797,7 +796,7 @@ ENAPISERVER = False
 
 EN_VARNISH = False
 
-WEIZOOM_ACCOUNTS = ['devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm']
+WEIZOOM_ACCOUNTS = ['devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm', 'jobs', 'wz01', 'wz02', 'wz03']
 # settings for WAPI Logger
 if MODE == 'develop' or MODE == 'test':
     WAPI_LOGGER_ENABLED = False

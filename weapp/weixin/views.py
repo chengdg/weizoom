@@ -3,6 +3,7 @@
 __author__ = 'chuter, bert'
 
 import hashlib
+import logging
 from BeautifulSoup import BeautifulSoup
 
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, Http404

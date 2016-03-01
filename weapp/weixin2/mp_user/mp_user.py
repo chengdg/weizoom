@@ -18,7 +18,8 @@ from core.jsonresponse import create_response
 import weixin.user.models as weixin_models
 from watchdog.utils import watchdog_fatal, watchdog_error
 from weixin.mp_decorators import mp_required
-
+from django.conf import settings
+import logging
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.WEIXIN_HOME_FIRST_NAV
@@ -48,7 +49,12 @@ class MpUser(resource.Resource):
 		component_info = get_component_info_from(request)
 
 		pre_auth_code = None
-		request_host = request.META['HTTP_HOST']
+		request_host = settings.DOMAIN
+		logging.info('>>>>>>>>>>>>>>>>>>>>>>>start')
+		logging.info(request_host)
+		logging.info('>>>>>>>>>>>>>>>>>>>>>>>end')
+		#request_host = request.META['HTTP_HOST']
+
 		if component_info:
 			from core.wxapi.agent_weixin_api import WeixinApi, WeixinHttpClient
 			weixin_http_client = WeixinHttpClient()

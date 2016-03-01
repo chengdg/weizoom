@@ -2,6 +2,7 @@
 
 __author__ = 'Eugene'
 
+import logging
 import hashlib
 import datetime
 from BeautifulSoup import BeautifulSoup
@@ -23,7 +24,11 @@ def get_query_auth(component_info=None, weixin_api=None, auth_code=None, user_id
     使用授权码换取公众号的授权信息, 并且更新相应的数据库
     """
     try:
+        logging.info('>>>>>>get_query_auth>>>result>>>>>>>>',component_info.app_id, auth_code)
         result = weixin_api.api_query_auth(component_info.app_id, auth_code)
+        logging.info('>>>>>>get_query_auth>>>result')
+        logging.info(result)
+        logging.info('>>>>>>get_query_auth>>>result end')
         mp_user = None
         if result.has_key('authorization_info'):
             authorization_info = result['authorization_info']

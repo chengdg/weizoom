@@ -427,7 +427,7 @@
 .xui-weixin-materialsPage .xui-i-addLi li:hover{
     cursor:default;
 }
-.xui-weixin-materialsPage .xui-i-addLi li,span:hover{
+.xui-weixin-materialsPage .xui-i-addLi li,.xui-weixin-materialsPage .xui-i-addLi span:hover{
     cursor:pointer;
 }
 .xui-weixin-materialsPage .xui-i-hoverShow{

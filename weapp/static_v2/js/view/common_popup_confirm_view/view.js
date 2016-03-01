@@ -18,7 +18,7 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
         'click .xa-confirm': 'submit',
         'click .xa-cancel': 'hide'
     },
-
+    //横向提示
     getTemplate: function() {
         var template = '<dl class="wui-confirmView">'
                 +'<dd>'
@@ -31,13 +31,24 @@ W.view.common.ConfirmView = W.view.common.DropBox.extend({
                 +'<%=warning_msg%>';
         return _.template(template);
     },
-
+    //纵向提示
+    getTemplate2: function(){
+        var template = '<div class="wui-confirmView v">'
+                +'<div class="xui-msgBox">'
+                +  '<div class="xa-icon"><i></i></div>'
+                +  '<div class="xui-i-msg xa-msg"><%=msg%></span></div>'
+                +'</div>'
+                +  '<div class="tc mb15"><button type="button" class="xa-confirm btn xui-confirm">确定</button><button type="button" class="xa-cancel  xui-cancel btn">取消</button></div> '
+                +'</div>'
+                +'<%=warning_msg%>';
+        return _.template(template);
+    },
     initializePrivate: function(options) {
         this.isTitle = options.isTitle;
         this.position = options.position || 'top';
         this.$el = $(this.el);
         this.render();
-        this.template = this.getTemplate();
+        this.template = (options.templateAlign && options.templateAlign == 'vertical') ? this.getTemplate2():this.getTemplate();
         this.privateContainerClass = options.privateContainerClass;
         this.$el.addClass(this.privateContainerClass);
         this.viewName = options.viewName;
@@ -80,23 +91,23 @@ W.isRequireConfirmViewDisplayed = false;
 W.requireConfirm = function(options) {
     //获得view
     var view = W.registry['common-popup-confirm-view'];
-    if (!view) {
+    // if (!view) {
         xlog('create PopupConfirmView');
         view = new W.view.common.ConfirmView(options);
         view.render();
         W.registry['common-popup-confirm-view'] = view;
-    }
+    // }
     if (options.confirm) {
         view.bind(view.SUBMIT_EVENT, options.confirm);
     }
     if(options.cancel){
        view.bind(view.CLOSE_EVENT, options.cancel);
     }
-
     view.show({
         width:options.width,
         height:options.height,
         $action: options.$el,
+        templateAlign: options.templateAlign,
         msg: options.msg || '确定删除吗？',
         warning_msg: options.warning_msg || '',
         minClickTime: options.minClickTime

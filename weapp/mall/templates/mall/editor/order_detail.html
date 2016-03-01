@@ -115,7 +115,7 @@
                     <div class="xui-innerwrap">
                       <p>{{ order.ship_name }}<span class="ml30">{{ order.ship_tel }}</span></p>
                       <p>{% if order.area %}{{ order.area }}{% endif %} {{order.ship_address}}</p>
-                      <p>买家留言：{{order.customer_message}}</p>
+                      <p>买家留言：{% if not is_sync %}{{order.customer_message}}{% endif %}{{order.customer_message}}</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -139,8 +139,8 @@
                 <div class="col-md-4">
                     <p class="xui-title">商家备注</p>
                     <div class="xui-innerwrap">
-                    	<img  data-order-id="{{order.id}}" data-order-value="{{order.remark}}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" />
-                        <p>{{order.remark}}</p>
+                    	<img  data-order-id="{{order.id}}" data-order-value="{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
+                        <p>{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}</p>
                     </div>
                 </div>
             </div>
@@ -149,9 +149,16 @@
 </div>
 
   <ul class="nav nav-tabs mt14 ">
-  {% if suppliers %}
+  {% if mall_type %}
       {% for supplier in suppliers %}
-          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}"><a href="javascript:void(0);">{{ supplier.name }}</a></li>
+          <li class="xa-count {% if forloop.first %}active{% endif %}" data-total-status-value="{{ supplier.id }}" data-supplier-type="s">
+            <a href="javascript:void(0);">{{ supplier.name }}</a>
+          </li>
+      {% endfor %}
+      {% for supplier_store in supplier_stores %}
+          <li class="xa-count {% if forloop.first and suppliers|length == 0 %}active{% endif %}" data-total-status-value="{{ supplier_store.user_id }}" data-supplier-type="u">
+            <a href="javascript:void(0);">{{ supplier_store.store_name }}</a>
+          </li>
       {% endfor %}
   {% else %}
       <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息{{ child_order.supplier }}</a></li>
@@ -161,7 +168,7 @@
 
   {% if child_orders %}
       {% for child_order in child_orders %}
-          <div class="xa-infotab" id="tab-wuliuinfo{{ child_order.supplier }}" style="{% if not forloop.first %}display:none;{% endif %}">
+          <div class="xa-infotab" id="tab-wuliuinfo-{% if child_order.supplier %}s-{{child_order.supplier}}{% elif child_order.supplier_user_id %}u-{{ child_order.supplier_user_id }}{% endif %}"style="{% if not forloop.first %}display:none;{% endif %}">
             <div class="xui-wuliuinfo">
                 <p>
                   物流公司名称：{% if child_order.express_company_name %} {{ child_order.express_company_name|get_company_name_by_value }}   {% endif %}
@@ -241,42 +248,50 @@
     </div>
     <div class="xui-orderinfo">
         {% if not suppliers|length %}
-        <p class="xui-info-p">订单来源：<span class="xui-info-value">{{order.source}}</span></p>
+        <p class="xui-info-p">订单来源：<span class="xui-info-value">{% if not is_sync %}本店{% else %}商城{% endif %}</span></p>
         <p class="xui-info-p">运送方式：<span class="xui-info-value">{{ order.express_company_name|get_company_name_by_value }}</span></p>
         {% endif %}
-        <p class="xui-info-p">支付方式：<span class="xui-info-value">{{order.pay_interface_name}}</span></p>
+        <p class="xui-info-p">支付方式：<span class="xui-info-value">{% if not is_sync %}{{order.pay_interface_name}}{% else %}微信支付{% endif %}</span></p>
         <table class="xui-producttab table">
             <tr>
-                {% if suppliers|length %}<th class="xui-td-zero" width="80">供货商</th>{% endif %}
+                {% if mall_type %}<th class="xui-td-zero" width="80">供货商</th>{% endif %}
                 <th class="xui-td-img"></th>
                 <th class="xui-td-first">商品信息</th>
                 <th class="xui-td-second">单价（元）/数量</th>
                 <th class="xui-td-third">单品优惠</th>
-                {% if suppliers|length %}<th class="xui-td-third">订单状态</th>{% endif %}
+                {% if mall_type and is_show_order_status %}<th class="xui-td-third">订单状态</th>{% endif %}
                 <th class="xui-td-fourth" style="width:160px;">整单优惠</th>
                 <th class="xui-td-fifth" style="width:120px;">微众卡支付金额</th>
                 <th class="xui-td-sixth" style="width:90px;">运费</th>
             </tr>
             {% for product in order.products %}
             <tr>
-              {% if suppliers|length %}
-                  {% ifchanged product.supplier %}
-                      <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
-                  {% endifchanged %}
+              {% if mall_type %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_name }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                  {% if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;" width="80">{{ product.supplier_store_name }}</td>
+                    {% endifchanged %}
+                  {% endif %}
               {% endif %}
               <td class="xui-td-img"{% if product.noline %} style="border-top:none;"{% endif %}><img width="42" height="42" src="{{product.thumbnails_url}}"></td>
               <td class="xui-td-first"{% if product.noline %} style="border-top:none;"{% endif %}>
                 <div class="xui-a-productname">
                   <span style="color:#333;">
-                  {% if product.promotion.type == 'flash_sale' %}
-                    [限时抢购]
-                  {% elif product.promotion.type == 'premium_sale:premium_product' %}
-                    [赠品]
+                  {% if not is_sync %}
+                    {% if product.promotion.type == 'flash_sale' %}
+                      [限时抢购]
+                    {% elif product.promotion.type == 'premium_sale:premium_product' %}
+                      [赠品]
+                    {% endif %}
+                    {% if product.grade_discounted_money %}
+                      [会员优惠]
+                    {% endif %}
                   {% endif %}
-                  {% if product.grade_discounted_money %}
-                    [会员优惠]
-                  {% endif %}
-
                   {{product.name}}</span>
                 </div>
                 <p class="xui-colorsize">
@@ -294,11 +309,12 @@
                 </p>
               </td>
               <td class="xui-td-second"{% if product.noline %} style="border-top:none;"{% endif %}>
-                {{ product.price|floatformat:"2" }}
+                  {% if not is_sync %}{{ product.price|floatformat:"2" }}{% else %}{{ product.purchase_price|floatformat:"2" }}{% endif %}
               <br>
               （{{ product.count }}件）
               </td>
               <td class="xui-td-third"{% if product.noline %} style="border-top:none;"{% endif %}>
+              {% if not is_sync %}
                 {% if product.promotion.type == 'flash_sale' %}
                 直降{{product.promotion.promotion_saved_money|floatformat:"2" }}元
                 {% endif %}
@@ -311,28 +327,37 @@
                 {% if product.grade_discounted_money %}
                   会员优惠：{{ product.grade_discounted_money }}
                 {% endif %}
+              {% endif %}
               </td>
 
-                {% if suppliers|length %}
-                  {% ifchanged product.supplier %}
-                      <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
-                  {% endifchanged %}
-              {% endif %}
-
+                {% if mall_type and is_show_order_status %}
+                  {% if product.supplier %}
+                    {% ifchanged product.supplier %}
+                        <td rowspan="{{product.supplier_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                  {%if product.supplier_user_id %}
+                    {% ifchanged product.supplier_user_id %}
+                        <td rowspan="{{product.supplier_user_length}}" style="text-align:center;border-right:1px solid #ddd;">{{ product.order_status }}</td>
+                    {% endifchanged %}
+                  {% endif %}
+                {% endif %}
               {% if forloop.first %}
               <td class="xui-td-fourth" rowspan="{{ forloop.revcounter }}" {% if product.noline %} style="border-top:none;"{% endif %}>
-                {% if order.coupon_id and coupon.product_id == -1 %}
-                <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
-                {% endif %}
-                {% if order.integral %}
-                  <p>{{order.integral}}积分，抵扣{{order.integral_money}}</p>
-                {% endif %}
-                {% if order.edit_money %}
-                  <p>商家优惠：{{ order.edit_money|floatformat:"2" }}</p>
+                {% if not is_sync %}
+                  {% if order.coupon_id and coupon.product_id == -1 %}
+                  <p> 优惠券:{{order.coupon_money|floatformat:"2"}}</p> <p>（{{ coupon.coupon_id }}）</p>
+                  {% endif %}
+                  {% if order.integral %}
+                    <p>{{order.integral}}积分，抵扣{{order.integral_money}}</p>
+                  {% endif %}
+                  {% if order.edit_money %}
+                    <p>商家优惠：{{ order.edit_money|floatformat:"2" }}</p>
+                  {% endif %}
                 {% endif %}
               </td>
               <td class="xui-td-fifth" rowspan="{{ forloop.revcounter }}">
-                {% if order.weizoom_card_money %}
+                {% if order.weizoom_card_money and not is_sync %}
                   <span class="xa-wzcardHint xui-wzcard pr">{{ order.weizoom_card_money|floatformat:"2" }}
                     <div class="xa-wzcardInfo pa xui-wzcardInfo" style="display:none;">
                       <h4 for="">卡号：</h4>
@@ -345,13 +370,14 @@
                   </span>
                 {% endif %}
               </td>
-              <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{{ order.postage|floatformat:"2" }}</td>
+              <td class="xui-td-sixth" rowspan="{{ forloop.revcounter }}">{% if not is_sync %}{{ order.postage|floatformat:"2" }}{% endif %}</td>
               </td>
               {% endif %}
             </tr>
             {% endfor %}
         </table>
         <div class="xui-summary">
+          {% if not is_sync%}
         	<p class="xui-field">
         		<span class="pull-left">
         			共计商品：<span class="xui-allnum">{{order.number}}</span> 件
@@ -374,7 +400,10 @@
               支付金额：现金<span class="xui-money">￥{{order.final_price|floatformat:"2"}}</span>+微众卡<span class="xui-money">￥{{order.weizoom_card_money|floatformat:"2"}}</span>=<span class="xui-money" style="font-weigth:bolder;">￥{{order.pay_money|floatformat:"2"}}</span>
             </span>
           </p>
-
+          {% else %}
+          <div class="xui-wSync-count">共计商品：<span class="xui-money fb">{{order.number}}</span> 件</div>
+          <div class="xui-wSync-pm">支付金额：<span class="xui-money fb">￥{{ order.total_purchase_price|floatformat:"2" }}</span></div>
+          {% endif %}
         </div>
     </div>
 </div>
@@ -418,12 +447,19 @@
           $('.xa-infotab').hide()
           var $el = $(event.currentTarget);
           status = $el.data('total-status-value');
+          type = $el.data('supplier-type');
+          console.log(type, "0000", status);
           $('.xa-count').removeClass('active');
           $el.addClass("active");
           if (status == 0) {
             $("#tab-orderlog").show();
           } else if (status > 0) {
-            $("#tab-wuliuinfo"+status).show();
+            if(type == 'u'){
+              $("#tab-wuliuinfo-u-"+status).show();
+            }
+            if(type == 's'){
+              $("#tab-wuliuinfo-s-"+status).show();
+            }
           }else{
             $("#tab-wuliuinfo").show();
           }

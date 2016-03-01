@@ -2,7 +2,7 @@
 
 __author__ = 'bert'
 
-from account.social_account.models import SocialAccount 
+from account.social_account.models import SocialAccount
 from core.exceptionutil import full_stack, unicode_full_stack
 from watchdog.utils import watchdog_info, watchdog_error
 from weixin.user.models import *
@@ -42,7 +42,7 @@ def get_mp_info(user_id):
 	if ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id=user_id).count() > 0:
 		return ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id=user_id)[0]
 	else:
-		return None	
+		return None
 
 def authed_appid(user_id):
 	try:
@@ -50,5 +50,8 @@ def authed_appid(user_id):
 	except :
 		return None
 
-
-
+def get_all_active_mp_user_ids():
+	try:
+		return [o.user_id for o in ComponentAuthedAppid.objects.filter(is_active=True)]
+	except:
+		return None

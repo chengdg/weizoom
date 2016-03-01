@@ -127,6 +127,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
     */
 
     render: function() {
+
         if (this.autoLoad) {
             this.load(true);
         }
@@ -218,7 +219,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     'userWebappId': _this.userWebappId
                 });
                 xwarn('====== advance table =====');
-                xwarn($node.html());
                 if (this.enableSelect) {
                     if (this.disableHeaderSelect) {
                         $node.find('thead tr').prepend('<th width="30"></th>');
@@ -244,7 +244,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                 }
 
                 //table不存在
-                xwarn(this.$content);
                 this.$content.html($node);
 				
                 var multilineClass = this.$content.find('#multiline').attr('name');
@@ -674,7 +673,6 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
     } else {
         itemCountPerPage = 15;
     }
-
     var advancedTable = new W.view.common.AdvancedTable({
         el: $div[0],
         template: template,
