@@ -467,6 +467,9 @@ def export_orders_json(request):
                 if order.supplier_user_id and id2store.has_key(order.supplier_user_id):
                     source = id2store[order.supplier_user_id].store_name.encode("utf-8")
 
+            if not mall_type and source != u"本店":
+                source = u"商城"
+
             # if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
             #     source = order2supplier[fackorder.supplier].name.encode("utf-8")
             # elif fackorder == None and 0 != order.supplier:
