@@ -826,6 +826,7 @@ def get_unship_order_count(request):
 def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     webapp_id = user.get_profile().webapp_id
+    mall_type = user.get_profile().webapp_type
     orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
