@@ -45,12 +45,10 @@ def delete_cache(key):
 	cache.delete(key)
 
 	cache.delete("api"+key)
-	logging.info("api"+key)
 
 def delete_pattern(key):
 	cache.delete_pattern(key)
 	cache.delete_pattern("api"+key)
-	logging.info("api"+key)
 
 
 def clear_db():
