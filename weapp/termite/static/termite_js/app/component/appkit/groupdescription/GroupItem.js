@@ -23,7 +23,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
                 name:'10人团',
                 value:'10'
             }],
-			validate: 'data-validate="require-notempty::选项不能为空',
+			//validate: 'data-validate="require-notempty::选项不能为空',
             default: '5'
         },{
             name: 'group_days',
@@ -33,8 +33,8 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             maxLength: 5,
             size: '70px',
             annotation: '天',
-            validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+            //validateIgnoreDefaultValue: true,
             default: ''
         },{
             name: 'group_price',
@@ -44,8 +44,8 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             maxLength: 5,
             size: '70px',
             annotation: '元',
-            validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            validateIgnoreDefaultValue: true,
+            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
+            //validateIgnoreDefaultValue: true,
             default: ''
         }]
 	}],
