@@ -976,7 +976,7 @@ class Product(resource.Resource):
                 'with_all_category': True,
                 'with_sales': True
             })
-            update_sync_product_status.delay(products[0], request)
+            update_sync_product_status(products[0], request)
 
         # 处理商品排序
         display_index = int(request.POST.get('display_index', '0'))
