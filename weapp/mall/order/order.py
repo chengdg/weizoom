@@ -115,9 +115,16 @@ class OrderInfo(resource.Resource):
 
             if 'remark' in request.POST:
                 remark = remark.strip()
-                if order.remark != remark:
-                    operate_log = operate_log + u' 修改订单备注'
-                    order.remark = remark
+
+                webapp_id = request.user_profile.webapp_id
+                if webapp_id == order.webapp_id:
+                    if order.remark != remark:
+                        operate_log = operate_log + u' 修改订单备注'
+                        order.remark = remark
+                else:
+                    if order.supplier_remark != remark:
+                        operate_log = operate_log + u' 修改订单备注'
+                        order.supplier_remark = remark
 
             if final_price:
                 # 只有价格不相等 以及待支付的时候 才可以进行订单价格的修改
