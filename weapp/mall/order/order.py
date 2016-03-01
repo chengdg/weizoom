@@ -157,6 +157,7 @@ class OrderList(resource.Resource):
         #处理来自“微商城-首页-待发货订单-更多”过来的查看待发货订单的请求
         #add by duhao 2015-09-17
         order_status = request.GET.get('order_status' , '-1')
+        mall_type = request.user_profile.webapp_type
 
         if belong == 'audit':
             second_nav_name = export.ORDER_AUDIT
@@ -172,7 +173,8 @@ class OrderList(resource.Resource):
             'second_nav_name': second_nav_name,
             'has_order': has_order,
             'page_type': page_type,
-            'order_status': order_status
+            'order_status': order_status,
+            'mall_type': mall_type
         })
         return render_to_response('mall/editor/orders.html', c)
 
@@ -220,6 +222,7 @@ class OrderFilterParams(resource.Resource):
 
     @login_required
     def api_get(request):
+        mall_type = request.user_profile.webapp_type
         response = create_response(200)
         # 类型
 
@@ -254,7 +257,7 @@ class OrderFilterParams(resource.Resource):
 
         orders = belong_to(request.manager.get_profile().webapp_id)
 
-        if orders.filter(order_source=ORDER_SOURCE_WEISHOP).count() >0:
+        if not mall_type:
             source = [{'name': u'本店', 'value': 0},
                       {'name': u'商城', 'value': 1}]
         else:
@@ -270,7 +273,6 @@ class OrderFilterParams(resource.Resource):
         # 	type.append({'name': u'套餐订单', 'value': PRODUCT_DELIVERY_PLAN_TYPE})
         # if 'thanks_card' in user_market_tool_modules:
         # 	type.append({'name': u'贺卡订单', 'value': THANKS_CARD_ORDER})
-
         response.data = {
             'type': type,
             'status': status,
