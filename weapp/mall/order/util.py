@@ -1056,7 +1056,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'express_company_name': order.express_company_name,
             'express_number': order.express_number,
             'leader_name': order.leader_name,
-            'remark': '' if (not mall_type and order.supplier_user_id > 0) else order.remark,
+            'remark': order.supplier_remark if (not mall_type and order.supplier_user_id > 0) else order.remark,
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
