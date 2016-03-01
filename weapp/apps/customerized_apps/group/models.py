@@ -24,29 +24,29 @@ class Group(models.Document):
 	meta = {
 		'collection': 'group_group'
 	}
-	
-	# @property
-	# def status_text(self):
-	# 	if self.status == STATUS_NOT_START:
-	# 		return u'未开始'
-	# 	elif self.status == STATUS_RUNNING:
-	# 		now = datetime.today()
-	# 		if now >= self.end_time:
-	# 			return u'已结束'
-	# 		else:
-	# 			return u'进行中'
-	# 	elif self.status == STATUS_STOPED:
-	# 		return u'已结束'
-	# 	else:
-	# 		return u'未知'
-	#
-	# @property
-	# def is_finished(self):
-	# 	status_text = self.status_text
-	# 	if status_text == u'已结束':
-	# 		return True
-	# 	else:
-	# 		return False
+
+	@property
+	def status_text(self):
+		if self.status == STATUS_NOT_START:
+			return u'未开始'
+		elif self.status == STATUS_RUNNING:
+			now = datetime.today()
+			if now >= self.end_time:
+				return u'已结束'
+			else:
+				return u'进行中'
+		elif self.status == STATUS_STOPED:
+			return u'已结束'
+		else:
+			return u'未知'
+
+	@property
+	def is_finished(self):
+		status_text = self.status_text
+		if status_text == u'已结束':
+			return True
+		else:
+			return False
 
 class GroupParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
