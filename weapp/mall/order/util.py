@@ -1146,7 +1146,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
         if order_status:
             orders = orders.filter(supplier_user_id__gt=0)
         else:
-            orders = orders.filter(supplier_user_id=0):
+            orders = orders.filter(supplier_user_id=0)
         query_dict.pop("order_source")
 
     if query_dict.get('order_id') and not mall_type:
@@ -1154,6 +1154,7 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
         if order_id.find('^') == -1:
             s_order_id =  "%s^%su" % (order_id, user_profile.user_id)
             orders = orders.filter(Q(order_id=order_id) | Q(order_id=s_order_id))
+            query_dict.pop("order_id")
 
     if len(query_dict):
         orders = orders.filter(**query_dict)
