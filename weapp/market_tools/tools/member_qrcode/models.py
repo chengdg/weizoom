@@ -140,6 +140,7 @@ class MemberQrcodeLog(models.Model):
 
 class MemberQrcodeLimitLog(models.Model):
 	belong_settings = models.ForeignKey(MemberQrcodeSettings) #属于MemberQrcodeSettings
+	owner_member_id = models.CharField(max_length=100, db_index=True) #所属会员id
 	count = models.IntegerField(default=0) #会员扫码计数
 	created_at = models.DateField(auto_now_add=True) #创建时间
 
