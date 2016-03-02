@@ -149,16 +149,16 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
    //          default: ''
    //      }
 
-        // ,{
-        //     name: 'group_items',//动态组件
-        //     displayName: '',
-        //     type: 'dynamic-generated-control',
-        //     isShowCloseButton: true,
-        //     minItemLength: 0,
-        //     maxItemLength: 1,
-        //     isUserProperty: true,
-        //     default: []
-        // }
+        ,{
+            name: 'group_items',//动态组件
+            displayName: '',
+            type: 'dynamic-generated-control',
+            isShowCloseButton: true,
+            minItemLength: 0,
+            maxItemLength: 1,
+            isUserProperty: true,
+            default: []
+        }
 
         ]},{
         group: '',//团购信息

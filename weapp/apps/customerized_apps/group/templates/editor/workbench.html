@@ -4,18 +4,10 @@
 {% load apps_filter %}
 {% block css %}
     <style>
-/*        .xui-propertyView-app-GroupDynamicGroup .xui-propertyView-app-Group-i-type {
-            width: 133px;
-            float: left;
+        .xui-propertyView-app-GroupDynamicGroup .xui-i-groupType, .xui-propertyView-app-GroupDynamicGroup .xui-i-groupDays,.xui-propertyView-app-GroupDynamicGroup .xui-i-groupPrice{
+          display: inline-block;
         }
-        .xui-propertyView-app-GroupDynamicGroup .xui-propertyView-app-Group-i-days {
-            width: 160px;
-            float: left;
-        }
-        .xui-propertyView-app-GroupDynamicGroup .xui-propertyView-app-Group-i-price {
-            width: 160px;
-            float: left;
-        }*/
+
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -167,7 +159,7 @@
             that.disabled = true;
             var relatedPageId = data['project_id'];
             var descriptionModel = page.components[0].model;
-            var dynamicComponents = page.components[0].components;
+{#            var dynamicComponents = page.components[0].components;#}
             var name = descriptionModel.get('title');
             var startTime = descriptionModel.get('start_time')+":00";
             var endTime = descriptionModel.get('end_time')+":00";
@@ -177,33 +169,33 @@
             var share_description =  descriptionModel.get('share_description');
 
 
-            var default_group_type = descriptionModel.get('group_type');
-            var default_group_days = descriptionModel.get('group_days');
-            var default_group_price =  descriptionModel.get('group_price');
-            var group_dict = {'0':{
-              'group_type':default_group_type,
-              'group_days':default_group_days,
-              'group_price':default_group_price
-            }};
-
-            for(var i=0;i<dynamicComponents.length;i++){
-              var index = i+1;
-              var g_type = dynamicComponents[i].model.get('group_type');
-              var g_days = dynamicComponents[i].model.get('group_days');
-              var g_price = dynamicComponents[i].model.get('group_price');
-              group_dict[String(index)] = {
-                'group_type':g_type,
-                'group_days':g_days,
-                'group_price':g_price
-              }
-            }
+{#            var default_group_type = descriptionModel.get('group_type');#}
+{#            var default_group_days = descriptionModel.get('group_days');#}
+{#            var default_group_price =  descriptionModel.get('group_price');#}
+{#            var group_dict = {'0':{#}
+{#              'group_type':default_group_type,#}
+{#              'group_days':default_group_days,#}
+{#              'group_price':default_group_price#}
+{#            }};#}
+{##}
+{#            for(var i=0;i<dynamicComponents.length;i++){#}
+{#              var index = i+1;#}
+{#              var g_type = dynamicComponents[i].model.get('group_type');#}
+{#              var g_days = dynamicComponents[i].model.get('group_days');#}
+{#              var g_price = dynamicComponents[i].model.get('group_price');#}
+{#              group_dict[String(index)] = {#}
+{#                'group_type':g_type,#}
+{#                'group_days':g_days,#}
+{#                'group_price':g_price#}
+{#              }#}
+{#            }#}
 
             var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
             'product':select_product,
-            'group_dict':JSON.stringify(group_dict),
+{#            'group_dict':JSON.stringify(group_dict),#}
             'rules':rules,
             'material_image':material_image,
             'share_description':share_description
