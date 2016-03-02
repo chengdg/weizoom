@@ -66,7 +66,7 @@ class MGroup(resource.Resource):
 					'id': str(group.id),
 					'name': group.name,
 					'product_img': group.product,
-					# 'group_dict': group_dict,
+					'group_dict': group_dict,
 					'end_time': group.end_time.strftime('%y-%m-%d'),
 					'url': '/m/apps/group/m_group_detail/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
 				})
