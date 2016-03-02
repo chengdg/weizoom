@@ -22,7 +22,7 @@ from core.alipay.alipay_notify import AlipayNotify
 from core.tenpay.tenpay_submit import TenpaySubmit
 # from core import upyun_util
 from core.wxpay.wxpay_notify import WxpayNotify
-from account.models import UserAlipayOrderConfig
+from account.models import UserAlipayOrderConfig,UserProfile
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import *
 from tools.express import util as express_util
@@ -1671,15 +1671,30 @@ class Order(models.Model):
 		return Order.objects.filter(webapp_user_id__in=webapp_user_ids)
 
 
-def belong_to(webapp_id, user_id=None, mall_type=None):
+def belong_to(webapp_id):
 	"""
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	if user_id and not mall_type:
-		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id))
-	else:
+	# if user_id and not mall_type:
+	# 	return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id))
+	# else:
+	# 	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	sync_able_status_list = [ORDER_STATUS_PAYED_SUCCESSED,
+	                         ORDER_STATUS_PAYED_NOT_SHIP,
+	                         ORDER_STATUS_PAYED_SHIPED,
+	                         ORDER_STATUS_SUCCESSED]
+
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
+	user_id = profile.user_id
+	webapp_type = profile.webapp_type
+	if webapp_type:
 		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	else:
+		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,stauts__in=sync_able_status_list))
+
+
+
 	# 微众商城代码
 	# if webapp_id == '3394':
 	# 	return Order.objects.filter(webapp_id=webapp_id)
