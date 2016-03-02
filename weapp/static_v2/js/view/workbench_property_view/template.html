@@ -707,7 +707,7 @@
 								<div class="propertyGroup_property_selectField {{if field.typeClassName}}${field.typeClassName}{{/if}}">
 									<div class="propertyGroup_property_label ">${field.typeLabel}</div>
 									<select data-field="${field.typeName}" name="${field.typeName}" class="input-medium">
-									{{each(n, nav) W.component.getSelectSource(field.type_source, component)}}
+									{{each(n, nav) W.component.getSelectSource(field.typeSource, component)}}
 										<option value="${nav.typeValue}" {{if model.get(field.typeName) == nav.typeValue}}selected="selected"{{/if}}>
 											{{if nav.typeName }}
 												${nav.typeName}
@@ -728,7 +728,7 @@
 											style="width:${field.days_size};"
 											class="input-small xui-propertyGroup-input"
 											data-field="${field.days_name}"
-											value="{{if field.days_placeholder != model.get(field.days_name)}}${model.get(field.days_name)}{{/if}}"
+											value=""
 											placeholder="${field.days_placeholder}"
 											{{if field.days_maxLength}}maxlength="${field.days_maxLength}"{{/if}}
 											{{if field.days_validate}}{{html field.days_validate}}{{/if}} />
@@ -749,7 +749,7 @@
 											style="width:${field.price_size};"
 											class="input-small xui-propertyGroup-input"
 											data-field="${field.price_name}"
-											value="{{if field.price_placeholder != model.get(field.price_name)}}${model.get(field.price_name)}{{/if}}"
+											value=""
 											placeholder="${field.price_placeholder}"
 											{{if field.price_maxLength}}maxlength="${field.price_maxLength}"{{/if}}
 											{{if field.price_validate}}{{html field.price_validate}}{{/if}} />
