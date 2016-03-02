@@ -177,11 +177,21 @@ def _add_award_to_member(user_profile, member, member_qrcode):
 		if member_qrcode_setting:
 			#如果扫码用户数量超过限制的奖励次数，则不再奖励
 			limit_log = MemberQrcodeLimitLog.objects.filter(belong_settings_id=member_qrcode_setting.id, owner_member_id=member_qrcode.member.id, created_at=datetime.now().date())
-			if limit_log.count() > 0 and limit_log.first().count > member_qrcode_setting.limit_chance:
-				return
+			if limit_log.count() > 0:
+				limit_log = limit_log.first()
+				if limit_log.count > member_qrcode_setting.limit_chance:
+					return
+			else:
+				limit_log = MemberQrcodeLimitLog.objects.create(
+					belong_settings_id=member_qrcode_setting.id,
+					owner_member_id=member_qrcode.member.id,
+					created_at=datetime.now().date(),
+					count = 0
+				)
 			#确认本次奖励，更新次数(本次优惠券或积分奖励失败也会扣掉次数)
-			tmp_count = limit_log.first().count + 1
-			limit_log.update(count=tmp_count)
+			tmp_count = limit_log.count + 1
+			limit_log.count=tmp_count
+			limit_log.save()
 
 			if member_qrcode_setting.award_member_type == AWARD_MEMBER_TYPE_ALL:
 				award_contents = MemberQrcodeAwardContent.objects.filter(member_qrcode_settings=member_qrcode_setting)
