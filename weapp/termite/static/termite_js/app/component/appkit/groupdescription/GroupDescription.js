@@ -74,11 +74,11 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             className:'xui-app-Group-i-type',
             type:'apps_group_selector',
             isUserProperty:true,
-            
+
             typeClassName:'xui-i-groupType',
             typeLabel:'1.',
             typeName:'group_type',
-            source:[{
+            typeSource:[{
                 typeName:'5人团',
                 typeValue:'5'
             },{
@@ -89,20 +89,19 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             daysClassName:'xui-i-groupDays',
             daysLabel:'拼团时间:',
             days_name:'group_days',
-            days_size:'70px',
-            days_placeholder:'',
+            days_size:'50px',
+            days_placeholder:"",
             days_maxLength:5,
             days_annotation:'天',
             // days_validate:'',
 
-            priceClassName:'xui-i-price',
+            priceClassName:'xui-i-groupPrice',
             priceLabel:'团购价:',
-            price_size:'70px',
+            price_size:'50px',
             price_name:'group_price',
-            price_placeholder:'',
+            price_placeholder:"",
             price_maxLength:5,
             price_annotation:'元'
-
             // price_validate:''
 
 
