@@ -77,7 +77,7 @@ def export_orders_json(request):
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
     webapp_id = request.user_profile.webapp_id
     mall_type = request.user_profile.webapp_type
-    order_list = Order.objects.belong_to(webapp_id, request.manager.id, mall_type).order_by('-id')
+    order_list = Order.objects.belong_to(webapp_id).order_by('-id')
     status_type = request.GET.get('status', None)
 
     supplier_users = None
@@ -784,14 +784,12 @@ def get_detail_response(request):
 
 def is_has_order(request, is_refund=False):
     webapp_id = request.user_profile.webapp_id
-    user_id = request.user_profile.user.id
-    mall_type = request.user_profile.webapp_type
     # weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
     if is_refund:
         orders = belong_to(webapp_id)
         has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]).count() > 0
     else:
-        has_order = (belong_to(webapp_id, user_id, mall_type).count() > 0)
+        has_order = (belong_to(webapp_id).count() > 0)
     MallCounter.clear_unread_order(webapp_owner_id=request.manager.id)  # 清空未读订单数量
     return has_order
 
@@ -838,9 +836,9 @@ def get_orders_response(request, is_refund=False):
                                                                                is_refund=is_refund)
     # 获取该用户下的所有支付方式
     existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
-    supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
 
-    #
+    # 构造供货商的信息，supplier（手动添加的供货商）；supplier_users（系统用户的供货商）
+    supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
     all_user_ids = get_all_active_mp_user_ids()
     all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
@@ -891,13 +889,13 @@ def get_unship_order_count(request):
 
 
 # get_orders_response调用
-def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
+def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_string, count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
     user_profile = user.get_profile()
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
 
-    orders = belong_to(webapp_id, user.id, mall_type)
+    orders = belong_to(webapp_id)
 
     # orders = belong_to(webapp_id)
 
@@ -910,12 +908,13 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
 
     # 除掉同步过来的订单中未支付的
     if not mall_type:
+        pass
         # order_has_promotion_ids = [r.order_id for r in OrderHasPromotion.objects.filter(promotion_type="premium_sale")]
         # child_order_ids = [order.id for order in Order.objects.filter(origin_order_id__in=order_has_promotion_ids)]
-        orders = orders.exclude(
-                supplier_user_id__gt=0,
-                status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
-            )
+        # orders = orders.exclude(
+        #         supplier_user_id__gt=0,
+        #         status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+        #     )
 
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 

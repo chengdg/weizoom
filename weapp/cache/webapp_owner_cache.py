@@ -109,8 +109,8 @@ def get_webapp_owner_info_from_db(webapp_owner_id):
             default_member_tag = member_models.MemberTag.get_default_tag(webapp_id)
         except:
             default_member_tag = member_models.MemberTag()
-            
-    
+
+
         return {
             'value': {
                 'weixin_mp_user_access_token': weixin_mp_user_access_token.to_dict(),
@@ -139,7 +139,7 @@ def __get_unship_order_count_from_db(key, webapp_id, user_id, mall_type):
     from mall.models import belong_to, ORDER_STATUS_PAYED_NOT_SHIP
 
     def inner_func():
-        count = belong_to(webapp_id, user_id, mall_type).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+        count = belong_to(webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
         return {
             'keys': [key],
             'value': count
@@ -209,7 +209,7 @@ def get_webapp_owner_info(webapp_owner_id):
     else:
         obj.qrcode_img = ''
 
-    obj.default_member_tag = member_models.MemberTag.from_dict(data['default_member_tag'])  
+    obj.default_member_tag = member_models.MemberTag.from_dict(data['default_member_tag'])
     return obj
 
 
