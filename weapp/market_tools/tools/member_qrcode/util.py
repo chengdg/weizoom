@@ -179,7 +179,7 @@ def _add_award_to_member(user_profile, member, member_qrcode):
 			limit_log = MemberQrcodeLimitLog.objects.filter(belong_settings_id=member_qrcode_setting.id, owner_member_id=member_qrcode.member.id, created_at=datetime.now().date())
 			if limit_log.count() > 0:
 				limit_log = limit_log.first()
-				if limit_log.count > member_qrcode_setting.limit_chance:
+				if limit_log.count >= member_qrcode_setting.limit_chance:
 					return
 			else:
 				limit_log = MemberQrcodeLimitLog.objects.create(
