@@ -43,7 +43,7 @@ class WeizoomCardRule(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True) #添加时间
 	card_type = models.IntegerField(default=WEIZOOM_CARD_EXTERNAL_USER) #微众卡类型
 	card_attr = models.IntegerField(default=0) #微众卡属性
-	belong_to_owner = models.CharField(max_length=64, default='-1') #专属商家
+	belong_to_owner = models.IntegerField(default=0) #专属商家
 	is_new_member_special = models.BooleanField(default=False) #是否为新会员专属卡
 
 	@staticmethod
