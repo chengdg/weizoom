@@ -706,13 +706,13 @@
 
 								<div class="propertyGroup_property_selectField {{if field.typeClassName}}${field.typeClassName}{{/if}}">
 									<div class="propertyGroup_property_label ">${field.typeLabel}</div>
-									<select data-field="${field.selectInfo}" name="${field.selectInfo}" class="input-medium">
+									<select data-field="${field.typeName}" name="${field.typeName}" class="input-medium">
 									{{each(n, nav) W.component.getSelectSource(field.type_source, component)}}
-										<option value="${nav.value}" {{if model.get(field.type_name) == nav.value}}selected="selected"{{/if}}>
-											{{if nav.name }}
-												${nav.name}
+										<option value="${nav.typeValue}" {{if model.get(field.typeName) == nav.typeValue}}selected="selected"{{/if}}>
+											{{if nav.typeName }}
+												${nav.typeName}
 											{{else}}
-												${nav.value}
+												${nav.typeValue}
 											{{/if}}
 										</option>
 									{{/each}}
@@ -721,7 +721,7 @@
 
 
 								<div class="propertyGroup_property_textField {{if field.daysClassName}}${field.daysClassName}{{/if}}">
-									<div class="propertyGroup_property_label">${field.daysTitle}</div>
+									<div class="propertyGroup_property_label">${field.daysLabel}</div>
 									<div class="propertyGroup_property_input">
 										<input
 											type="text"
@@ -742,20 +742,20 @@
 
 
 								<div class="propertyGroup_property_textField {{if field.priceClassName}}${field.priceClassName}{{/if}}">
-									<div class="propertyGroup_property_label">${field.priceTitle}</div>
+									<div class="propertyGroup_property_label">${field.priceLabel}</div>
 									<div class="propertyGroup_property_input">
 										<input
 											type="text"
-											style="width:${field.size};"
+											style="width:${field.price_size};"
 											class="input-small xui-propertyGroup-input"
-											data-field="${field.name}"
-											value="{{if field.placeholder != model.get(field.name)}}${model.get(field.name)}{{/if}}"
-											placeholder="${field.placeholder}"
-											{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}
-											{{if field.validate}}{{html field.validate}}{{/if}} />
-										{{if field.annotation}}
+											data-field="${field.price_name}"
+											value="{{if field.price_placeholder != model.get(field.price_name)}}${model.get(field.price_name)}{{/if}}"
+											placeholder="${field.price_placeholder}"
+											{{if field.price_maxLength}}maxlength="${field.price_maxLength}"{{/if}}
+											{{if field.price_validate}}{{html field.price_validate}}{{/if}} />
+										{{if field.price_annotation}}
 										<span>
-											{{html field.annotation}}
+											{{html field.price_annotation}}
 										</span>
 										{{/if}}
 									</div>
