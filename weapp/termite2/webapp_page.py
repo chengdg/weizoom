@@ -35,15 +35,18 @@ class WebappPage(resource.Resource):
 
 
 		# 如果是空页面，跳转到404页面
-		projects = webapp_models.Project.objects.filter(id=project_id)
-		if projects.count() == 0:
-			c = RequestContext(request, {
-				# "is_deleted_data": True
-			})
-			return render_to_response('mobile_error_info.html', c);
+		if pagecreater.is_home_page(request):
+			pass
+		else:
+			projects = webapp_models.Project.objects.filter(id=project_id)
+			if projects.count() == 0:
+				c = RequestContext(request, {
+					# "is_deleted_data": True
+				})
+				return render_to_response('mobile_error_info.html', c);
 
-			# from account.views import show_error_page
-			# return show_error_page(request)
+				# from account.views import show_error_page
+				# return show_error_page(request)
 
 
 		#获取project

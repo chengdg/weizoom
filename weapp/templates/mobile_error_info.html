@@ -4,7 +4,7 @@
 <div data-role="page" data-theme="x" class="{{ extra_class }} xui-error-page" data-title="未找到页面">
     <div data-role="content">
         <div class="xui-error-box"></div>
-        <a class="xui-error-goback-button" href='{% if homepage_workspace_info %}/workbench/jqm/preview/?{{homepage_workspace_info|safe}}{% else %}javascript:window.history.go(-1);{% endif %}' data-ajax="false" data-role="button" data-theme="x">返回首页</a>
+        <a class="xui-error-goback-button" href='{% if homepage_workspace_info %}/termite2/webapp_page/?{{homepage_workspace_info|safe}}{% else %}javascript:window.history.go(-1);{% endif %}' data-ajax="false" data-role="button" data-theme="x">返回首页</a>
     </div>
 </div>
 {% endblock %}
