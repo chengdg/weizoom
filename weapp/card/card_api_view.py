@@ -548,7 +548,7 @@ def __create_weizoom_card(rule, count, request):
     生成微众卡
     """
     count = int(count)
-    weizoom_cards = WeizoomCard.objects.all().order_by('-weizoom_card_id')
+    weizoom_cards = WeizoomCard.objects.filter(weizoom_card_id__startswith='0').order_by('-weizoom_card_id')
     if weizoom_cards:
         weizoom_card_id = int(weizoom_cards[0].weizoom_card_id)
     else:
