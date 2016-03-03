@@ -4001,6 +4001,18 @@ Scenario:15 "查看失效商品"功能
 			}]
 			"""
 
+		When jobs设置失效商品列表查询条件
+			"""
+			{
+				"start_date":"1天前",
+				"end_date":"1天前"
+			}
+			"""
+		Then jobs获得失效商品列表
+			"""
+			[]
+			"""
+
 	#查看失效商品列表分页
 		When jobs设置分页查询参数
 			"""
@@ -4399,45 +4411,6 @@ Scenario:16 商品池的搜索功能
 			"""
 
 Scenario:17 商品池的分页功能
-	#jobs自营平台同步商品池中的商品
-		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
-
 	#商品池列表分页
 		Given jobs登录系统
 		When jobs设置分页查询参数
@@ -4450,51 +4423,27 @@ Scenario:17 商品池的分页功能
 		Then jobs获得商品池商品列表
 			"""
 			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
+				"name": "tom无规格商品3"
 			}]
 			"""
 		When jobs浏览下一页
 		Then jobs获得商品池商品列表
 			"""
 			[{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
+				"name": "bill无规格商品3"
 			}]
 			"""
 		When jobs浏览商品池列表第'3'页
 		Then jobs获得商品池商品列表
 			"""
 			[{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
+				"name": "tom无规格商品1"
 			}]
 			"""
 		When jobs浏览上一页
 		Then jobs获得商品池商品列表
 			"""
 			[{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
+				"name": "bill无规格商品3"
 			}]
 			"""
