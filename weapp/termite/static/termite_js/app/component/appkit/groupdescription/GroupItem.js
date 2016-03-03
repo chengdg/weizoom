@@ -24,6 +24,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 				name:'10人团',
 				value:'10'
 			}],
+            default:'5',
 			isUserProperty:true
 
         },{
