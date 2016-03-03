@@ -21,7 +21,7 @@ def process_shared_url(request, args):
 
 	fmt = request.GET.get(member_settings.FOLLOWED_MEMBER_TOKEN_URL_QUERY_FIELD, None)
 
-	if fmt.find(',') > -1:
+	if fmt and fmt.find(',') > -1:
 		fmt = fmt.split(',')[0]
 
 	member = request.member
