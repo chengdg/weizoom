@@ -16,7 +16,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
     properties: [{
 		group: '',//团购配置
         groupClass: 'xui-propertyView-app-GroupSetting',
-        fields: [{
+        fields: [
+        {
             name: 'title',
             type: 'text_with_annotation',
             displayName: '团购名称',
@@ -57,99 +58,54 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             //validateIgnoreDefaultValue: true,
             default: ''
         }]},{
-        group: '',//团购列表
-        groupClass: 'xui-propertyView-app-GroupDynamicGroup',
+        group: '',//团购标题
+        groupClass: 'xui-propertyView-app-GroupTitle',
         fields: [{
-            name: 'group_frame_title',
+            name: 'group_title',
             type: 'title_with_nothing',
 			//validate:'data-validate="require-notempty::选项不能为空',
             displayName: '拼团人数',
 			annotation:'1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
 
-        },
+        }]},
 
-        {
-            name:'default_group',
-            className:'xui-app-Group-i-type',
-            type:'apps_group_selector',
-            isUserProperty:true,
+		{
+		group:'',//列表
+		groupClass: 'xui-propertyView-app-GroupList',
+        fields: [
 
-            typeClassName:'xui-i-groupType',
-            typeLabel:'1.',
-            typeName:'group_type',
-            typeSource:[{
-                typeName:'5人团',
-                typeValue:'5'
-            },{
-               typeName:'10人团',
-                typeValue:'10'
-            }],
+			{
+            name: 'group_type',
+            type: 'select',
+			//validate:'data-validate="require-notempty::选项不能为空',
+            displayName: '类型',
+			//annotation:'1个团购可创建多种拼团人数供顾客选择',
+			source:[{
+				name:'5人团',
+				value:'5'
+			},{
+				name:'10人团',
+				value:'10'
+			}],
+			default:'5',
+			isUserProperty:true
 
-            daysClassName:'xui-i-groupDays',
-            daysLabel:'拼团时间:',
-            days_name:'group_days',
-            days_size:'50px',
-            days_placeholder:"",
-            days_maxLength:5,
-            days_annotation:'天',
-            // days_validate:'',
-
-            priceClassName:'xui-i-groupPrice',
-            priceLabel:'团购价:',
-            price_size:'50px',
-            price_name:'group_price',
-            price_placeholder:"",
-            price_maxLength:5,
-            price_annotation:'元'
-            // price_validate:''
-
-
-        }
-
-
-   //      ,{
-   //          name: 'group_type',
-   //          className:'xui-app-Group-i-type',
-   //          type: 'selector_v1',
-   //          displayName: '1.',
-   //          isUserProperty: true,
-   //          source:[{
-   //              name:'5人团',
-   //              value:'5'
-   //          },{
-   //              name:'10人团',
-   //              value:'10'
-   //          }],
-			// //validate: 'data-validate="require-notempty::选项不能为空',
-   //          default: '5'
-   //      },{
-   //          name: 'group_days',
-   //          className:'xui-app-Group-i-days',
-   //          type: 'text_with_annotation',
-   //          displayName: '拼团时间',
-   //          isUserProperty: true,
-   //          maxLength: 5,
-   //          size: '70px',
-   //          annotation: '天',
-   //          //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-   //          //validateIgnoreDefaultValue: true,
-   //          default: ''
-   //      },{
-   //          name: 'group_price',
-   //          className:'xui-app-Group-i-price',
-   //          type: 'text_with_annotation',
-   //          displayName: '团购价',
-   //          isUserProperty: true,
-   //          maxLength: 5,
-   //          size: '70px',
-   //          annotation: '元',
-   //          //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-   //          //validateIgnoreDefaultValue: true,
-   //          default: ''
-   //      }
-
-        ,{
+        },{
+			name:'group_days',
+			type:'text_with_annotation',
+			displayName:'团拼时间',
+			annotation:'天',
+			size:'70px',
+			isUserProperty:true
+		},{
+			name:'group_price',
+			type:'text_with_annotation',
+			displayName:'团购价',
+			annotation:'元',
+			size:'70px',
+			isUserProperty:true
+		},{
             name: 'group_items',//动态组件
             displayName: '',
             type: 'dynamic-generated-control',
@@ -158,9 +114,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             maxItemLength: 1,
             isUserProperty: true,
             default: []
-        }
-
-        ]},{
+        }]
+		},{
         group: '',//团购信息
         groupClass: 'xui-propertyView-app-GroupInfo',
         fields: [{
