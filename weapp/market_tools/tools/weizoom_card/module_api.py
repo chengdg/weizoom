@@ -141,6 +141,11 @@ def check_weizoom_card(name, password,webapp_user=None,member=None,owner_id=None
 						msg = u'该卡不能在此商家使用'
 				else:
 					msg = u'该专属卡不能在此商家使用'
+		elif owner_id and not weizoom_card_rule.card_attr:
+			#不是专属卡，但有黑名单
+			shop_black_list = str(weizoom_card_rule.shop_black_list).split(',')
+			if str(owner_id) in shop_black_list:
+				msg = u'该卡不能在此商家使用'
 		elif owner_id and rule_id in [23, 36] and owner_id != 157:
 			WeizoomCardRule.objects.get(id=rule_id)
 			if '吉祥大药房' in weizoom_card.weizoom_card_rule.name:
