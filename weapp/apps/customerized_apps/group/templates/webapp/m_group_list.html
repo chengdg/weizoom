@@ -6,10 +6,8 @@
 
     .xui-listItem{
         background: #fff;
-        border-bottom:1px solid #dfdfdf;
     }
     .xui-listInner{
-        border-bottom:1px solid #dfdfdf!important;
         text-align: left;
     }
     .xui-listInner .ui-btn-inner{
@@ -20,16 +18,19 @@
     a:link,a:hover,a:visited{
         color:#333;
     }
-    .xui-i-title .disTc {
-      font-size: 18px;
-      line-height: 30px;
+    .wui-content-slide {
+        margin: 5px 10px 5px 10px;
+        border-radius: 15px;
     }
-    .xui-i-title {
-      border-bottom: 1px solid #dfdfdf;
+    .wui-swiper .wui-swiper-container {
+        background: none;
     }
-    .xui-i-time {
-        padding-top: 15px;
-        color: #a1a1a1;
+    .xui-i-content-img {
+        min-height: 100px;
+        display: inline-block;
+    }
+    button.wui-i-btn-using{
+        padding: 10px 10px 10px 10px;
     }
 </style>
 {% endblock %}
@@ -49,11 +50,17 @@
                             {% for group_item in all_groups_can_open %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl15 pr15">
-                                    <div class="xui-i-title">
-                                      <i class="wui-group_item"></i><span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                    <div class="xui-i-content">
+                                        <img src="" class="xui-i-content-img">
+                                        <div class="xui-i-content-group">
+                                            <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}</div>
+                                            <a href="{{ group_item.url }}"><button class="wui-i-btn-using wa-using">点击开团</button></a>
+                                            <div class="xui-i-content-type">
+                                                <p>{{ group_item.group_dict }}人团  ￥ </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="xui-i-time">活动截止{{ group_item.end_time }}</div>
-                                    <div><a href="{{ group_item.url }}">点击开团</a></div>
+                                    <div class="xui-i-title">{{ group_item.name }}</div>
                                 </li>
                                 </ul>
                                 {% endfor %}
@@ -61,21 +68,30 @@
                     </div>
                 </div>
                 <div class="wui-swiper-slide">
-                    <div class="wui-content-slide xa-content-slide">
+                    <div class="wui-content-slide">
+                        <div class="xui-all_groups_can_join-slide">
                         {% if all_groups_can_open %}
                             {% for group_item in all_groups_can_open %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl10 pr15">
                                     <div class="xui-i-title">
                                         <span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                        <button class="wui-i-btn-using wa-using xa-find_group" data-id="{{group_item.id}}">进入找团</button>
                                     </div>
-                                    <div class="xa-find_group" data-id="{{group_item.id}}">进入找团</div>
                                 </li>
                                 </ul>
                             {% endfor %}
                         {% endif %}
+                        </div>
+                        <div class="xui-all_groups_can_join-list xa-all_groups_can_join-list none">
+                            11111
+                        </div>
                     </div>
                 </div>
+                <script id="tpl" type="text/plain">
+                    <p>Today: { date }</p>
+                    <a href="/{ user.id|safe }">{ user.company }</a>
+                </script>
             </div>
         </div>
     </div>
@@ -109,9 +125,9 @@ $(document).ready(function($) {
         getDynamicData(recordId);
     });
     $('.xa-all_groups_can_join').on('touchstart', function(){
-        $('.xa-content-slide').removeClass('none');
+        $('.xui-all_groups_can_join-slide').removeClass('none');
+        $('.xui-all_groups_can_join-list').addClass('none');
     });
-
 });
 
 function getDynamicData(recordId){
@@ -124,8 +140,20 @@ function getDynamicData(recordId){
             id: recordId
         },
         success: function(data) {
-            $('.xa-content-slide').addClass('none');
             console.log(data);
+            $('.xui-all_groups_can_join-slide').addClass('none');
+            $('.xui-all_groups_can_join-list').removeClass('none');
+            var tpl = new Template($('#tpl').html());
+            var s = tpl.render({
+                date: 20150101,
+                user: {
+                    id: 'A-000&001',
+                    company: 'AT&T'
+                }
+            });
+            console.log(s);
+            $('.xa-all_groups_can_join-list').html(s);
+
         },
         error: function(data) {
             if(data.errMsg == 'is_deleted'){
@@ -140,5 +168,36 @@ function getDynamicData(recordId){
         }
     });
 }
+
+//模板引擎
+function Template(tpl) {
+    var
+        fn,
+        match,
+        code = ['var r=[];\nvar _html = function (str) { return str.replace(/&/g, \'&amp;\').replace(/"/g, \'&quot;\').replace(/\'/g, \'&#39;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\'); };'],
+        re = /\{\s*([a-zA-Z\.\_0-9()]+)(\s*\|\s*safe)?\s*\}/m,
+        addLine = function (text) {
+            code.push('r.push(\'' + text.replace(/\'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r') + '\');');
+        };
+    while (match = re.exec(tpl)) {
+        if (match.index > 0) {
+            addLine(tpl.slice(0, match.index));
+        }
+        if (match[2]) {
+            code.push('r.push(String(this.' + match[1] + '));');
+        }
+        else {
+            code.push('r.push(_html(String(this.' + match[1] + ')));');
+        }
+        tpl = tpl.substring(match.index + match[0].length);
+    }
+    addLine(tpl);
+    code.push('return r.join(\'\');');
+    fn = new Function(code.join('\n'));
+    this.render = function (model) {
+        return fn.apply(model);
+    };
+}
+
 </script>
 {% endblock %}
