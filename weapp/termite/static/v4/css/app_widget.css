@@ -1807,6 +1807,7 @@ li.wui-selectBox-display-table {
     float: left;
     margin-top: 15px;
     margin-left: 10px;
+	margin-bottom: 5px;
 }
 
 .wui-group-container .wui-i-help_group .wui-i-shop_circle img{
@@ -1844,16 +1845,13 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-btngroup button{
     text-align: center;
-    font-weight: bold;
-    font-size: 0.8rem;
-    color:#CD0E06;
-    background:#FFC600;
+    font-size: 1rem;
+    color: #fff;
+    background: #ff2742;
     border: 0;
-    border-radius: 1px;
-    width: 78%;
     height: 2.5rem;
-    padding-left: 0px;
-    padding-right: 0px;
+    border-radius: 5px;
+    font-family: "黑体";
 }
 .wui-group-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
@@ -1871,4 +1869,13 @@ li.wui-selectBox-display-table {
     margin: 5px 10px 10px 10px;
     padding: 10px;
     border-radius: 6px;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.wui-group-container .wui-i-choose_group_box span.wui-i-end_time {
+    font-size: 0.8rem;
+    float: right;
+    line-height: 1.4rem;
 }

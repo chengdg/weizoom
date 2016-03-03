@@ -5,6 +5,7 @@
 	h1 {
 		color: #00F;
 	}
+    /*iphone4 横屏*/
 
 </style>
 {% endblock %}
@@ -147,14 +148,25 @@
     }
     //我要开团
 	function openGruop(){
-        mask('show');
+        var data_href = "./?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
         console.log('openGuideMask');
+        window.open(data_href, '_tab');
     }
     //直接参团
     function openJoinGruop(){
         link = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId;
         window.open(link, '_tab');
     }
+
+    // 活动规则
+    $('.xa-i-closebtn').click(function(){
+        $('.xa-i-rules-contentbox').addClass('none');
+        mask('hide');
+    });
+    $('.xa-i-rules-title-content p').click(function(){
+        $('.xa-i-rules-contentbox').removeClass('none');
+        mask('show');
+    });
 </script>
 {% endblock %}
 

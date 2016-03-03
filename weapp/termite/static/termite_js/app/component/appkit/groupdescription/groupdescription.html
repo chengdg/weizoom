@@ -32,8 +32,13 @@
             </div>
             <div class="wui-i-description xa-description cl">
                 <div class="wui-i-description-content">
-                    <div class="wui-i-title">{{ component.model.title }}</div>
-                    <div class="wui-i-end_time">开团截止日期：{{component.model.end_time}}</div>
+                    <div class="wui-i-product-title">{{ component.model.title }}</div>
+                    <div class="wui-i-product-img">{{ component.model.product_img }}</div>
+                    <div class="wui-i-choose_group_box">
+                        <span>选择团购</span>
+                        <span class="wui-i-end_time">开团截止日期：{{component.model.end_time}}</span>
+
+                    </div>
                     <div class="wui-i-btngroup">
                         <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
                         <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
@@ -41,7 +46,7 @@
                         <button class="wui-i-btn-using wa-using wui-hide">我要开团</button>
                         <button class="wui-i-btn-using wa-using-join wui-hide">直接参团</button>
                     </div>
-                    <div class="wui-i-states">
+                    <div class="wui-i-states none">
                         <div class="wui-i-title">
                             <span class="wui-i-helper-title-content">
                                 <i class="wui-i-star"></i><i class="wui-i-star"></i>
