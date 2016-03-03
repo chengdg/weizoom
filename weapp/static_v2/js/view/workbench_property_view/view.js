@@ -48,6 +48,8 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage',
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
+        'click .xa-deleteProductButton': 'onClickDeleteProduct',
+        'mouseover .xa-productImgBox>img': 'onMouseoverProduct',
         'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
 
         //拼红包选择类型
@@ -1026,11 +1028,28 @@ W.workbench.PropertyView = Backbone.View.extend({
          W.Broadcaster.trigger("qrcode:deleteQrcode", {});
     },
 
+        onClickDeleteProduct: function(event){
+        var $el = $(event.currentTarget);
+        $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
+        $el.siblings('input[data-field="product_selector"]').val('');
+        $el.siblings('.productName').addClass('xui-hide').html('');
+        $el.siblings('.xui-i-triggerButton').text('请选择商品');
+        $el.parent().next().css({
+            'height': '17px',
+            'line-height': '17px'
+        });
+        $el.hide();
+         W.Broadcaster.trigger("product_selector:deleteProduct", {});
+    },
+
     onMouseoverQrcode: function(event){
         var $el = $(event.currentTarget);
         $el.parent().siblings('.deleteQrcode').css('display','block');
     },
-
+    onMouseoverProduct: function(event){
+        var $el = $(event.currentTarget);
+        $el.parent().siblings('.deleteProduct').css('display','block');
+    },
     initMoneyRange: function($el){
         W.createWidgets($el);
         var $moneyRangeInput = $el.find('.xa-moneyRangeInput');

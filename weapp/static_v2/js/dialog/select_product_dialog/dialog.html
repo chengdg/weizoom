@@ -1,0 +1,69 @@
+<script id="select-product-dialog-tmpl-src" type="text/x-jquery-tmpl">
+    <div class="modal fade xui-selectProductDialog" id="commonSelectProductDialog">
+        <div class="modal-dialog modal-lg" style="width: 820px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">选择活动商品</h3>
+                </div>
+
+                <div class="modal-body" style="min-height: 300px; overflow: auto;">
+                    <div
+                            data-ui-role="advanced-table"
+                            data-app="mall2"
+                            data-resource="product_list"
+                            data-args=''
+                            data-template-id="#add-select-dialog-products-tmpl"
+                            data-enable-paginator="true"
+                            data-enable-sort="false"
+                            data-item-count-per-page="5"
+                            data-auto-load="false"
+                            class="mt10 mb20"
+                        ></div>
+                </div>
+
+                <div class="modal-footer modal-footerBg">
+                    <button class="btn btn-success xui-btnStyle" style="width:110px;height:36px;background:#207cbe; color:#ffffff;">完成选择</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="add-select-dialog-products-tmpl" type="text/x-jquery-tmpl">
+<table class="table table-bordered xb-stripedTable xa-productTable">
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th width ="165">商品信息</th>
+            <th width ="105">价格</th>
+            <th width ="70">库存</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{if items.length}}
+        {{each(i, product) items}}
+            <tr data-id="${product.id}">
+                <td class="text_nowrap" style="max-width:165px;">
+                <img style="width:60px;height:60px;" src="${product.thumbnails_url}"></img>
+                ${product.name}
+                </td>
+                <td>${ product.display_price }
+                </td>
+                <td>${product.stocks}</td>
+                <td>${product.created_at}</td>
+                <td>
+                    <label class="btn  lh20  btn-primary" style="border-radius:3px;">
+                        <input type="checkbox" autocomplete="off" class="xa-selectProduct" ><span>选取</span>
+                    </label>
+                </td>
+            </tr>
+        {{/each}}
+    {{else}}
+        <tr ><td colspan='7' class="h130" style="color:#666">暂无数据</td></tr>
+    {{/if}}
+
+    </tbody>
+</table>
+</script>

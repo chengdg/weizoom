@@ -484,6 +484,37 @@
                     </div>
                     {{/if}}
 
+                    {{if (field.type == 'product_dialog_select')}}
+                    <div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+                        <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
+                        <div class="propertyGroup_property_input" style="position:relative;width:20%">
+                            {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
+                            <input data-field="${field.name}" name="${field.name}" type="hidden" />
+                                <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}">
+                                    {{if component.model.get(field.name).produceName}}
+                                        ${field.triggerButton.hasdata}
+                                    {{else}}
+                                        ${field.triggerButton.nodata}
+                                    {{/if}}
+                                </button>
+                            {{if component.model.get(field.name)}}
+                               <div style="width:60px;height:60px;background:red;">
+                                  {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
+                               </div>
+                            {{/if}}
+                            {{if field.isShowCloseButton}}
+                                <button type="button" class="deleteProduct xa-deleteProductButton xui-deleteProductButton" style="display:none;"><span>&times;</span></button>
+                            {{/if}}
+                        </div>
+                        {{if field.help}}
+                        <div class="product_help" style="float:right;color: #666;width: 55%;{{if component.model.get(field.name).productName }} height:100px;line-height:100px{{/if}}">
+                            {{html field.help.replace(/\n/g, "<br/>")}}
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+
+
 					{{if (field.type == 'rich_text')}}
 					<div class="propertyGroup_property_richTextField propertyGroup_property_horizontalField">
 						{{if (field.displayName)}}

@@ -48,16 +48,18 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             //validateIgnoreDefaultValue: true,
             default: ''
         },{
-            name: 'select_product',
-            type: 'text_with_annotation',
-            displayName: '选择商品',
-            maxLength: 30,
-            isUserProperty: true,
-            annotation: '',
-            //validate: 'data-validate="require-notempty::选项不能为空,,require-natural::只能填入数字"',
-            //validateIgnoreDefaultValue: true,
-            default: ''
-        }]},{
+			name: 'product_selector',
+			type: 'product_dialog_select',
+			displayName: '选择商品',
+			isUserProperty: true,
+			isShowCloseButton: true,
+			triggerButton: {nodata:'请选择商品', hasdata:'修改商品'},
+			selectedButton: '选择商品',
+			dialog: 'W.dialog.termite.SelectProductDialog',
+			dialogParameter: '{"multiSelection": false}',
+			help: '此处若空缺，则使用公众号二维码代替',
+			default: {productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:''}
+		}]},{
         group: '',//团购标题
         groupClass: 'xui-propertyView-app-GroupTitle',
         fields: [{

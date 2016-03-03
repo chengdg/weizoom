@@ -161,10 +161,17 @@ W.data.getDynamicComponentDataForDialogSelectControl = function(dynamicComponent
 		} else {
 			html = '<div class="xui-dynamicComponentControlImgBox xa-dynamicComponentControlImgBox xa-qrcodeImgBox xui-hide"><img src=""/></div><div class="qrcodeName"></div>';
 		}
-	}
+	}else if (dynamicComponentField.dialog === 'W.dialog.termite.SelectProductDialog') {
+        var product = dynamicComponent.model.get(dynamicComponentField.name);
+		if (product['productName'] != '') {
+			html = '<table class="table table-bordered xb-stripedTable xa-productTable"><thead style="background:#c8d2e5;"><tr><th width="165">商品信息</th><th width="105">商品价格(元)</th><th width="70">总销量</th></tr></thead><tr data-id="'+product.id+'"><td class="text_nowrap" style="max-width:165px;"><img style="width:60px;height:60px;" src="'+product.productImg+'">'+死数据product.productName+'</td><td>'+四价格product.productPrice+'</td><td>'+要改的product.productSocks+'</td></tr></tbody></table>';
+        } else {
+			html = "";
+        }
+    }
 
 	return html;
-}
+};
 
 W.data.TextInputType = [
 	{name: 'Text', value: 'text'},
