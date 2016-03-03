@@ -111,8 +111,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '',
             type: 'dynamic-generated-control',
             isShowCloseButton: true,
-            minItemLength: 1,
-            maxItemLength: 2,
+            minItemLength: 0,
+            maxItemLength: 1,
             isUserProperty: true,
             default: []
         }]},{
