@@ -97,7 +97,7 @@ class MGroupDetail(resource.Resource):
 					is_helped = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), grouped_member_id=fid).count()>0
 
 				# 获取该主页帮助者列表
-				helpers = app_models.GroupedDetail.objects(belong_to=record_id, owner_id=fid,has_helped=True,is_valid=True).order_by('-created_at')
+				helpers = app_models.GroupedDetail.objects(belong_to=record_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
 				member_ids = [h.helper_member_id for h in helpers]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 				for h in helpers:

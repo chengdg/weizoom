@@ -20,6 +20,7 @@ class Group(models.Document):
 	rules = models.StringField()#团购说明
 	material_image = models.StringField()#分享图片
 	share_description = models.StringField()#分享描述
+	visit_number = models.IntField(default=0) #浏览人数
 
 	meta = {
 		'collection': 'group_group'

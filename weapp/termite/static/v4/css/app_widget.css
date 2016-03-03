@@ -1794,3 +1794,81 @@ li.wui-selectBox-display-table {
 
 
 /*百宝箱 拼红包 red packet CSS-- end*/
+
+/*百宝箱 团购CSS*/
+.wui-group-container .wui-i-help_group{
+    width: 100%;
+    top:0;
+}
+
+.wui-group-container .wui-i-help_group .wui-i-shop_circle{
+    width: 70px;
+    height: 70px;
+    float: left;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.wui-group-container .wui-i-help_group .wui-i-shop_circle img{
+    border-radius: 10px;
+    width: 70px;
+    height: 70px;
+}
+.wui-group-container .wui-i-help_group .wui-i-title-pic{
+    background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_title.png");
+    height: 36px;
+    background-size: 100%;
+    background-color: #fff;
+    width: 59%;
+    padding: 0px;
+    margin-left: 110px;
+    margin-top: 45px;
+    position: absolute;
+    border-radius: 6px;
+    background-position: 2px 7px;
+}
+.wui-group-container .wui-i-help_group .wui-i-rules{
+    margin-top: 10px;
+    float: right;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    text-align: right;
+    background-color: #ff2742;
+    color: #fff;
+    border-radius: 15px 0px 0px 15px;
+}
+.wui-group-container .wui-i-btngroup{
+    text-align: center;
+    margin-top: 20px;
+}
+.wui-group-container .wui-i-btngroup button{
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color:#CD0E06;
+    background:#FFC600;
+    border: 0;
+    border-radius: 1px;
+    width: 78%;
+    height: 2.5rem;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.wui-group-container .wui-i-btngroup .wui-i-btn-closed{
+    color:#EAEAEA;
+    background: #999999;
+}
+.wui-group-container .wui-i-btngroup .wui-i-btn-notready{
+    color:#EAEAEA;
+    background: #999999;
+}
+.wui-group-container .wui-i-btngroup .wui-i-btn-using{
+    width: 40%;
+}
+.wui-group-container .wui-i-description-content {
+    background: #fff;
+    margin: 5px 10px 10px 10px;
+    padding: 10px;
+    border-radius: 6px;
+}

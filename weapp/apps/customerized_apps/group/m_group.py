@@ -20,7 +20,6 @@ class MGroup(resource.Resource):
 
 	def api_get(request):
 		record_id = request.GET.get('id', None)
-		#获取webapp_owner_id
 		owner_id = request.webapp_owner_id
 		if not record_id:
 			response = create_response(500)
@@ -38,7 +37,7 @@ class MGroup(resource.Resource):
 				'product_img': group.product,
 				# 'group_dict': group_dict,
 				'participant_count': group.participant_count,
-				'end_time': group.end_time.strftime('%y-%m-%d'),
+				'end_time': group.end_time.strftime('%Y-%m-%d'),
 				'url': '/m/apps/group/m_group_detail/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
 			})
 		response = create_response(200)
@@ -52,7 +51,6 @@ class MGroup(resource.Resource):
 		响应GET
 		"""
 		all_groups_can_open = []
-		#获取webapp_owner_id
 		owner_id = request.webapp_owner_id
 		#我要开团
 		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-created_at')
@@ -64,7 +62,7 @@ class MGroup(resource.Resource):
 					'name': group.name,
 					'product_img': group.product,
 					'group_dict': group_dict,
-					'end_time': group.end_time.strftime('%y-%m-%d'),
+					'end_time': group.end_time.strftime('%Y-%m-%d'),
 					'url': '/m/apps/group/m_group_detail/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
 				})
 			except:
@@ -73,6 +71,11 @@ class MGroup(resource.Resource):
 		c = RequestContext(request, {
 			'page_title': u'团购列表',
 			'all_groups_can_open': all_groups_can_open,
-			'is_hide_weixin_option_menu':True
+			'is_hide_weixin_option_menu':True,
+			'app_name': "group",
+			'resource': "group",
+			'hide_non_member_cover': True, #非会员也可使用该页面
+			'isPC': False if request.member else True,
+			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		return render_to_response('group/templates/webapp/m_group_list.html', c)
