@@ -4,11 +4,13 @@
 
 {% block css %}
     <style>
-        .xui-chance span{
-            font-weight: 700;
+        label{
+            font-weight: normal;
         }
         #is_limited{
-            margin-left: 47px;
+            margin-left: 52px;
+            margin-bottom: 10px;
+            vertical-align: -2px;
         }
         #limit_chance{
             width: 100px;
@@ -72,7 +74,7 @@
                 </fieldset>
 				<fieldset class="xui-info">
 					<label for="" class="star_show">页面描述：</label>
-					<div style="padding-left:125px;">
+					<div style="padding-left:125px;margin-top: -23px;">
 						<textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="372" data-width="652">{{ member_qrcode_settings.detail|safe }}</textarea>
 					</div>
 				</fieldset>
