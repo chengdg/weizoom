@@ -14,6 +14,141 @@
 
 {% block js %}
 <script type="text/javascript">
+	var is_helped = true;
+    var is_self_page = true;
+    var page_owner_name = '';
+    var page_owner_member_id = '';
+	$(function(){
+        //隐藏参与活动按钮
+        $('.xa-submitButtonContainer').hide();
+        if(W.isPC){
+            return false;
+        }
+        $('.wui-appParticipantResult-Cover').hide();
+        //展示参与统计
+        getDynamicData();
+    });
+
+	function GetQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null) return unescape(r[2]);
+        return null;
+    }
+    //发送请求，单独获取排名数据，优化首页时间
+    function getDynamicData(){
+        loadingStatus(true);
+        var fid = GetQueryString("fid");
+        W.getApi().call({
+            app: 'm/apps/group',
+            resource: 'm_group_detail',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: fid
+            },
+            success: function(data) {
+                console.log(data);
+                //渲染按钮状态
+                updateActivityStatus(data);
+                //隐藏loading动画元素
+                loadingStatus(false);
+            },
+            error: function(data) {
+                if(data.errMsg == 'is_deleted'){
+                    deletedRecord();
+                }else{
+                    wuiAlert(data.errMsg)
+                }
+            }
+        });
+    }
+
+	function updateActivityStatus(data){
+        member_info = data.member_info;
+        is_self_page = member_info.self_page;
+
+        //检查活动状态,更新参与按钮并绑定事件
+        W.activityStatus = member_info.activity_status;
+        W.isAlreadyParticipanted = member_info.is_already_participanted;
+        W.member_id = member_info.member_id;
+        W.isMember = member_info.isMember;
+
+        is_helped = member_info.is_helped;
+        page_owner_member_id = member_info.page_owner_member_id;
+        updateBtnStatus();
+    }
+
+    function updateBtnStatus(){
+        if('进行中' != W.activityStatus){
+            $('.wa-timing').hide();
+            if('未开始' == W.activityStatus){
+                $('.wa-notready').show();
+            }else{
+                $('.wa-closed').show();
+            }
+            return false;
+        }
+        //如果是自己的主页
+        if(is_self_page){
+            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
+        }else{
+            var using_msg;
+            var $attention = $('.xa-attention-guest');
+            var $powerBtn = $('.wa-power');
+            $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
+            if(W.isMember){
+                if(is_powered){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        openGuideMask();
+                    }).show();
+                }else{
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                   $powerBtn.on('click', function(){
+                       if(is_powered){
+                           openGuideMask();
+                       }else{
+                           powerYou();
+                       }
+                   }).show();
+                }
+            }else{
+                if(is_powered){
+                    $powerBtn.find('.wa-power-btn-action').html('已帮');
+                    $powerBtn.on('click', function(){
+                        openGuideMask();
+                    }).show();
+                }else{
+                    $powerBtn.find('.wa-power-btn-action').html('帮');
+                    $powerBtn.on('click', function(){
+                        powerYou();
+                    }).show();
+                }
+            }
+
+            if(W.isAlreadyParticipanted){
+                using_msg = '您已参加该活动';
+                $('.wa-using').text(using_msg).on('click', function(){
+                    openMemberMask();
+                }).show();
+            }else{
+                using_msg = '我也要参加';
+                $('.wa-using').text(using_msg).on('click', function(){
+                    $attention.find('img').attr('src', qrcode_url);
+                    $attention.find('.xa-attention-tip').hide();
+                    $attention.find('.xa-attention-reply').children().first().html("2.回复：");
+                    openGuestMask();
+                }).show();
+            }
+        }
+    }
+
+	function openGuideMask(){
+        mask('show');
+        console.log('openGuideMask');
+    }
 </script>
 {% endblock %}
 

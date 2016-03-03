@@ -19,20 +19,13 @@
             {% endif %}
         </div>
         <div class="wui-i-body">
-            <div style="display: none" class="wui-i-start_time">{{component.model.start_time}}</div>
-            <div style="display: none" class="wui-i-end_time">{{component.model.end_time}}</div>
-            <div class="wui-i-timing wa-timing {% if component.model.timing.timing %}{% if not component.model.timing.timing.select %}hide{% endif %}{% endif %}">
-                <i></i>:
-                <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
-                <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
-                <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分
-                <b class="xa-second">{% if component.model.timing_value.second %}{{component.model.timing_value.second}}{% else %}59{% endif %}</b>秒
-            </div>
+            <div class="wui-i-end_time">开团截止日期：{{component.model.end_time}}</div>
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-closed wa-closed wui-hide">活动已结束</button>
                 <button class="wui-i-btn-notready wa-notready wui-hide">活动尚未开启,敬请期待</button>
-                <button class="wui-i-btn-power wa-power wui-hide"><span class="wa-power-btn-action">帮</span><span class="wa-mobile_solution">asdasda</span><span>助力</span></button>
-                <button class="wui-i-btn-using wa-using wui-hide">我也要参加</button>
+                <button class="wui-i-btn-power wa-power wui-hide"><span class="wa-power-btn-action">我要参团</span></button>
+                <button class="wui-i-btn-using wa-using wui-hide">我要开团</button>
+                <button class="wui-i-btn-using wa-using-join wui-hide">直接参团</button>
             </div>
             <div class="wui-i-description xa-description cl">
                 <div class="wui-i-description-content">
@@ -52,14 +45,12 @@
             <div class="wui-i-states">
                 <div class="wui-i-title">
                     <span class="wui-i-helper-title-content">
-                        <i class="wui-i-star"></i><b>助力值TOP100</b><i class="wui-i-star"></i>
+                        <i class="wui-i-star"></i><i class="wui-i-star"></i>
                     </span>
                 </div>
                 <ul class="wa-top100">
                     <li class="wui-i-top100-title" style="padding: 16px 10px 0;">
-                        <span style="margin-left: 5px">排名</span>
-                        <span style="margin-left: 18px">会员</span>
-                        <span class="fr">助力值</span>
+                        <span style="margin-left: 18px">团员</span>
                     </li>
                 </ul>
             </div>
