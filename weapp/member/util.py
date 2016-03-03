@@ -55,10 +55,10 @@ def send_mass_text_message_with_openid_list(user_profile, openid_list, content, 
 				sent_log.message_type = MESSAGE_TYPE_TEXT
 				sent_log.message_content = content
 				if result['errcode'] != 0:
+					sent_log.status = 'send fail code: %d' % result['errcode']
 					if result['errcode'] == -1: #微信系统繁忙，则稍后重试
+						sent_log.save()
 						return False
-					else:
-						sent_log.status = 'send fail code: %d' % result['errcode']
 				sent_log.save()
 				return True
 			except:
@@ -170,10 +170,10 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				sent_log.message_type = MESSAGE_TYPE_NEWS
 				sent_log.message_content = material_id
 				if result['errcode'] != 0:
+					sent_log.status = 'send fail code: %d' % result['errcode']
 					if result['errcode'] == -1: #微信系统繁忙，则稍后重试
+						sent_log.save()
 						return False
-					else:
-						sent_log.status = 'send fail code: %d' % result['errcode']
 				sent_log.save()
 				return True
 			except:
