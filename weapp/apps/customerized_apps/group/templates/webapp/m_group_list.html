@@ -29,6 +29,9 @@
         min-height: 100px;
         display: inline-block;
     }
+    button.wui-i-btn-using{
+        padding: 10px 10px 10px 10px;
+    }
 </style>
 {% endblock %}
 
@@ -65,23 +68,25 @@
                     </div>
                 </div>
                 <div class="wui-swiper-slide">
-                    <div class="wui-content-slide xa-content-slide">
+                    <div class="wui-content-slide">
+                        <div class="xui-all_groups_can_join-slide">
                         {% if all_groups_can_open %}
                             {% for group_item in all_groups_can_open %}
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl10 pr15">
                                     <div class="xui-i-title">
                                         <span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                        <button class="wui-i-btn-using wa-using xa-find_group" data-id="{{group_item.id}}">进入找团</button>
                                     </div>
-                                    <button class="wui-i-btn-using wa-using xa-find_group" data-id="{{group_item.id}}">进入找团</button>
                                 </li>
                                 </ul>
                             {% endfor %}
                         {% endif %}
+                        </div>
+                        <div class="xui-all_groups_can_join-list xa-all_groups_can_join-list none">
+                            11111
+                        </div>
                     </div>
-                </div>
-                <div class="wui-swiper-slide" id="other">
-11111
                 </div>
                 <script id="tpl" type="text/plain">
                     <p>Today: { date }</p>
@@ -120,7 +125,8 @@ $(document).ready(function($) {
         getDynamicData(recordId);
     });
     $('.xa-all_groups_can_join').on('touchstart', function(){
-        $('.xa-content-slide').removeClass('none');
+        $('.xui-all_groups_can_join-slide').removeClass('none');
+        $('.xui-all_groups_can_join-list').addClass('none');
     });
 });
 
@@ -134,7 +140,9 @@ function getDynamicData(recordId){
             id: recordId
         },
         success: function(data) {
-            $('.xa-content-slide').addClass('none');
+            console.log(data);
+            $('.xui-all_groups_can_join-slide').addClass('none');
+            $('.xui-all_groups_can_join-list').removeClass('none');
             var tpl = new Template($('#tpl').html());
             var s = tpl.render({
                 date: 20150101,
@@ -143,8 +151,9 @@ function getDynamicData(recordId){
                     company: 'AT&T'
                 }
             });
-            $('#other').html(s);
-            console.log(data);
+            console.log(s);
+            $('.xa-all_groups_can_join-list').html(s);
+
         },
         error: function(data) {
             if(data.errMsg == 'is_deleted'){
