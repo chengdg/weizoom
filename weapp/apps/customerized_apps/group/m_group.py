@@ -37,7 +37,7 @@ class MGroup(resource.Resource):
 				'product_img': group.product,
 				# 'group_dict': group_dict,
 				'participant_count': group.participant_count,
-				'end_time': group.end_time.strftime('%y-%m-%d'),
+				'end_time': group.end_time.strftime('%Y-%m-%d'),
 				'url': '/m/apps/group/m_group_detail/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
 			})
 		response = create_response(200)
@@ -62,7 +62,7 @@ class MGroup(resource.Resource):
 					'name': group.name,
 					'product_img': group.product,
 					'group_dict': group_dict,
-					'end_time': group.end_time.strftime('%y-%m-%d'),
+					'end_time': group.end_time.strftime('%Y-%m-%d'),
 					'url': '/m/apps/group/m_group_detail/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
 				})
 			except:

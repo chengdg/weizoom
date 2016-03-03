@@ -5,6 +5,7 @@
 	h1 {
 		color: #00F;
 	}
+
 </style>
 {% endblock %}
 
@@ -92,14 +93,14 @@
         }
         //如果是自己的主页
         if(is_self_page){
-            $('.wa-using').text('立即分享召唤小伙伴').on('click', openGuideMask).show();
+            $('.wa-using').text('我要开团').on('click', openGruop).show();
+			$('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
         }else{
             var using_msg;
             var $attention = $('.xa-attention-guest');
             var $powerBtn = $('.wa-power');
-            $powerBtn.find('.wa-mobile_solution').html(page_owner_name);
             if(W.isMember){
-                if(is_powered){
+                if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
                         openGuideMask();
@@ -107,7 +108,7 @@
                 }else{
                     $powerBtn.find('.wa-power-btn-action').html('帮');
                    $powerBtn.on('click', function(){
-                       if(is_powered){
+                       if(is_helped){
                            openGuideMask();
                        }else{
                            powerYou();
@@ -115,7 +116,7 @@
                    }).show();
                 }
             }else{
-                if(is_powered){
+                if(is_helped){
                     $powerBtn.find('.wa-power-btn-action').html('已帮');
                     $powerBtn.on('click', function(){
                         openGuideMask();
@@ -129,9 +130,9 @@
             }
 
             if(W.isAlreadyParticipanted){
-                using_msg = '您已参加该活动';
-                $('.wa-using').text(using_msg).on('click', function(){
-                    openMemberMask();
+                using_msg = '看看还有什么团';
+                $('.wa-using-join').text(using_msg).on('click', function(){
+                    openJoinGruop();
                 }).show();
             }else{
                 using_msg = '我也要参加';
@@ -139,15 +140,20 @@
                     $attention.find('img').attr('src', qrcode_url);
                     $attention.find('.xa-attention-tip').hide();
                     $attention.find('.xa-attention-reply').children().first().html("2.回复：");
-                    openGuestMask();
+                    openGruop();
                 }).show();
             }
         }
     }
-
-	function openGuideMask(){
+    //我要开团
+	function openGruop(){
         mask('show');
         console.log('openGuideMask');
+    }
+    //直接参团
+    function openJoinGruop(){
+        link = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId;
+        window.open(link, '_tab');
     }
 </script>
 {% endblock %}
