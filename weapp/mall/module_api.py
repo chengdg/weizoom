@@ -182,16 +182,16 @@ def group_product_by_promotion(request, products):
 		# 如果促销对此会员等级的用户不开放
 		if not has_promotion(member_grade_id, promotion.get('member_grade_id')):
 			product_groups.append({
-			                      "id": group_id,
-			                      "uid": group_unified_id,
-			                      'products': products,
-			                      'promotion': {},
-			                      "promotion_type": '',
-			                      'promotion_result': '',
-			                      'integral_sale_rule': integral_sale_rule,
-			                      'can_use_promotion': False,
-			                      'member_grade_id': member_grade_id
-			                      })
+								  "id": group_id,
+								  "uid": group_unified_id,
+								  'products': products,
+								  'promotion': {},
+								  "promotion_type": '',
+								  'promotion_result': '',
+								  'integral_sale_rule': integral_sale_rule,
+								  'can_use_promotion': False,
+								  'member_grade_id': member_grade_id
+								  })
 			continue
 		promotion_type = promotion.get('type', 0)
 		if promotion_type == 0:
@@ -299,8 +299,8 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	# 		# 非微众商城
 	# 		product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
 	# 		products.exclude(id__in=product_ids_in_weizoom_mall)
-    #
-    #
+	#
+	#
 	# else:
 	# 	# try:
 	# 	if not is_access_weizoom_mall:
@@ -310,14 +310,14 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	# 	else:
 	# 		product_ids_in_weizoom_mall = []
 	# 		_, other_mall_product_ids_not_checked = get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id)
-    #
-    #
+	#
+	#
 	# 	for category_has_product in category_has_products:
 	# 		#微众商城要过滤掉自己的非在售 duhao 20151120
 	# 		if is_access_weizoom_mall:
 	# 			if category_has_product.product.weshop_status != PRODUCT_SHELVE_TYPE_ON:
 	# 				continue
-    #
+	#
 	# 		if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
 	# 			product = category_has_product.product
 	# 			#过滤已删除商品和套餐商品
@@ -1480,7 +1480,8 @@ def ship_order(order_id, express_company_name,
 
 		if order.origin_order_id > 0:
 			# 修改子订单状态，上面只修改物流信息
-			set_origin_order_status(order, operator_name, 'ship')
+			user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+			set_origin_order_status(order, user, 'ship')
 
 	record_operation_log(order.order_id, operator_name, action, order)
 
@@ -2179,14 +2180,16 @@ def get_product_ids_in_weizoom_mall(webapp_id):
 
 
 def set_origin_order_status(child_order, user, action, request=None):
-    children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
-    origin_order = Order.objects.get(id=child_order.origin_order_id)
-    if origin_order.status != min(children_order_status):
-    	if action == 'ship':
-    		origin_order.status = min(children_order_status)
-    		origin_order.save()
-    	else:
-	        update_order_status(user, action, origin_order, request)
+	children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
+	origin_order = Order.objects.get(id=child_order.origin_order_id)
+	if origin_order.status != min(children_order_status):
+		if action == 'ship':
+			origin_order.status = min(children_order_status)
+			origin_order.save()
+			if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED:
+				update_order_status(user, action, origin_order, request)
+		else:
+			update_order_status(user, action, origin_order, request)
 
 
 def update_order_status(user, action, order, request=None):
@@ -2347,7 +2350,7 @@ def update_order_status(user, action, order, request=None):
 	# 	notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 	# 	watchdog_alert(notify_message)
 
-	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_SUCCESSED]:
+	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED]:
 		# 如果更新子订单，更新父订单状态
 		set_origin_order_status(order, user, action, request)
 	else:
