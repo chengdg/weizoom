@@ -4,8 +4,21 @@
 {% load apps_filter %}
 {% block css %}
     <style>
-        .xui-propertyView-app-GroupDynamicGroup .xui-i-groupType, .xui-propertyView-app-GroupDynamicGroup .xui-i-groupDays,.xui-propertyView-app-GroupDynamicGroup .xui-i-groupPrice{
-          display: inline-block;
+        .xui-propertyView-app-GroupList{
+            border: 1px #DDDDDD solid;
+            background: #FFFFFF;
+            margin: 3px 77px 3px 75px;
+            padding-top: 5px;
+{#            width: 225px;#}
+            /* text-align: center; */
+            margin-left: 75px;
+            /* padding-right: 32px; */
+            padding-left: 14px;
+
+        }
+        .xui-addDynamicComponent{
+            border: 0;
+            width:auto;
         }
 
     </style>
@@ -190,6 +203,9 @@
               }
             }
 
+            console.log('!!!!!!!!!!###########SSSSSSSSSSS>>>>>>>>>>>>>>');
+            console.log('====');
+            console.log(group_dict);
             var args = {
             "name": name,
             "start_time": startTime,
