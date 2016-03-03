@@ -87,27 +87,12 @@ Background:
 		And bill已添加商品规格
 			"""
 			[{
-				"name": "颜色",
-				"type": "图片",
-				"values": [{
-					"name": "红色",
-					"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
-				}, {
-					"name": "黄色",
-					"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
-				}, {
-					"name": "蓝色",
-					"image": "/standard_static/test_resource_img/icon_color/icon_9.png"
-				}]
-			},{
 				"name": "尺寸",
 				"type": "文字",
 				"values": [{
 					"name": "M"
 				}, {
 					"name": "S"
-				}, {
-					"name": "L"
 				}]
 			}]
 			"""
@@ -258,14 +243,14 @@ Background:
 				"is_enable_model": "启用规格",
 				"model": {
 					"models": {
-						"红色 M": {
+						"M": {
 							"price": 44.12,
 							"user_code":"4412",
 							"weight":1.0,
 							"stock_type": "有限",
 							"stocks":100
 						},
-						"黄色 L": {
+						"S": {
 							"price": 44.13,
 							"user_code":"4413",
 							"weight":1.0,
@@ -322,27 +307,12 @@ Background:
 		And tom已添加商品规格
 			"""
 			[{
-				"name": "颜色",
-				"type": "图片",
-				"values": [{
-					"name": "红色",
-					"image": "/standard_static/test_resource_img/icon_color/icon_1.png"
-				}, {
-					"name": "黄色",
-					"image": "/standard_static/test_resource_img/icon_color/icon_5.png"
-				}, {
-					"name": "蓝色",
-					"image": "/standard_static/test_resource_img/icon_color/icon_9.png"
-				}]
-			},{
 				"name": "尺寸",
 				"type": "文字",
 				"values": [{
 					"name": "M"
 				}, {
 					"name": "S"
-				}, {
-					"name": "L"
 				}]
 			}]
 			"""
@@ -493,14 +463,14 @@ Background:
 				"is_enable_model": "启用规格",
 				"model": {
 					"models": {
-						"红色 M": {
+						"M": {
 							"price": 44.12,
 							"user_code":"4412",
 							"weight":1.0,
 							"stock_type": "有限",
 							"stocks":100
 						},
-						"黄色 L": {
+						"S": {
 							"price": 44.13,
 							"user_code":"4413",
 							"weight":1.0,
@@ -677,8 +647,8 @@ Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中
 			}]
 			"""
 
-Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池中展示的商品变化
-	#商家bill修改在售商品的库存
+Scenario:3 有效商家修改未同步商品的【库存】【商品名称】【商品编码】,商品池中展示的商品变化
+	#商家bill修改在售商品的【库存】【商品名称】【商品编码】，商品池中展示的商品对应字段对应更新变化
 		Given bill登录系统
 		When bill更新商品'bill无规格商品1'
 			"""
@@ -694,7 +664,7 @@ Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池�
 					"models": {
 						"standard": {
 							"price": 11.12,
-							"user_code":"1112",
+							"user_code":"1112000",
 							"weight": 5.0,
 							"stock_type": "有限",
 							"stocks":200
@@ -727,7 +697,7 @@ Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池�
 				"status": "在售"
 			}
 			"""
-	#自营平台商品池,只可以浏览到商家在售商品列表中无规格的商品
+
 		Given jobs登录系统
 		Then jobs获得商品池商品列表
 			"""
@@ -757,6 +727,7 @@ Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池�
 				"actions": ["放入待售"]
 			},{
 				"name": "bill无规格商品1-修改",
+				"user_code":"1112000",
 				"supplier":"bill商家",
 				"stocks":200,
 				"status":"未选择",
@@ -766,48 +737,12 @@ Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池�
 			"""
 
 Scenario:4 自营平台同步商品池中的商品
-	#1 不同的自营平台同步商家商品,对商品池中的商品的"商品信息","供货商","库存"没有影响
+	#1 不同的自营平台同步商家商品,对商品池中的商品的"商品信息","供货商","库存"没有影响，同步的商品放入待售列表
 	#2 同步商品的如下字段：除了【店内分组】,【会员折扣】,【运费设置】,【支付方式】,【商品发票】,【配送时间】,【总销量】,【采购价】其他字段都同步
 	#3 自营平台同步商品后,商品池中的对应商品【状态】字段变为"已选择",商品的【操作】字段变为"无更新",同步时间变为当前时间
 
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
@@ -932,42 +867,6 @@ Scenario:4 自营平台同步商品池中的商品
 
 	#nokia自营平台同步商品池中的商品
 		Given nokia登录系统
-		Then nokia获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When nokia将商品'bill无规格商品1'放入待售于'2015-08-04 10:30'
 		When nokia将商品'tom无规格商品1'放入待售于'2015-08-05 10:30'
@@ -1089,85 +988,15 @@ Scenario:4 自营平台同步商品池中的商品
 			}]
 			"""
 
-Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销标题】,自营平台商品在待售列表
+Scenario:5 自营平台同步的商品在"待售列表",商家更新被自营平台同步商品的【商品名称】【促销标题】
+	#1 商家修改被自营平台同步的商品，自营平台商品池对应商品【状态】字段变为"待更新",商品的【操作】字段变为"更新"
+	#2 更新商品除部分字段（【店内分组】【会员折扣】【运费设置】【支付方式】【总销量】【库存】）保留自营平台更改值，其他的都更新成与商家同步
+
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
 
 		Then jobs能获得'待售'商品列表
 			"""
@@ -1254,6 +1083,7 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}]
 			"""
 	#更新【商品名称】或【促销标题】触发更新
+		#bill更新商品"bill无规格商品1"的【商品名称】字段
 		Given bill登录系统
 		When bill更新商品'bill无规格商品1'
 			"""
@@ -1302,6 +1132,7 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}
 			"""
 
+		#tom更新商品"bill无规格商品1"的【促销标题】字段
 		Given tom登录系统 
 		When tom更新商品'tom无规格商品1'
 			"""
@@ -1350,6 +1181,7 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}
 			"""
 
+	#jobs在商品池中获得同步商品在更新后，变成待更新状态
 		Given jobs登录系统
 		Then jobs获得商品池商品列表
 			"""
@@ -1388,6 +1220,7 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}]
 			"""
 
+		#jobs更新同步商品"tom无规格商品1"的所有明细字段，填写采购价
 		When jobs更新商品'tom无规格商品1'
 			"""
 			{
@@ -1429,87 +1262,7 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}
 			"""
 
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "jobs修改-tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "jobs修改-促销的东坡肘子",
-				"categories": "jobs分类2",
-				"bar_code":"77112233",
-				"min_limit":4,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 110.12,
-							"user_code":"11012",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":5.00,
-				"pay_interfaces":[{
-						"type": "货到付款"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-05 10:30",
-				"sync_time":"2015-08-05 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
-
+		#jobs在商品池更新商品
 		When jobs更新商品池商品'修改名称-bill无规格商品1'于'2015-08-05 10:30'
 		When jobs更新商品池商品'tom无规格商品1'于'2015-08-06 10:30'
 
@@ -1550,6 +1303,8 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}]
 			"""
 
+		#jobs更新商品后，jobs修改过或者未修改过的同步商品，
+		#除部分字段（【店内分组】【会员折扣】【运费设置】【支付方式】【总销量】【库存】）保留jobs更改值，其他的都更新成与商家同步
 		Then jobs能获得'待售'商品列表
 			"""
 			[{
@@ -1632,173 +1387,14 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}]
 			"""
 
-Scenario:6 商家更新被自营平台同步商品的【商品条码】【起购数量】,自营平台商品在在售列表
-	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表
-	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
+Scenario:6 自营平台同步商品在"在售列表",商家更新被自营平台同步商品的【商品条码】【起购数量】
+	#同步到自营平台上架的在"在售列表"商品,商品池中更新,自动下架到待售列表
 
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": "",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
 
 		#更新商品,填写同步商品的采购价
 		When jobs更新商品'bill无规格商品1'
@@ -1971,6 +1567,7 @@ Scenario:6 商家更新被自营平台同步商品的【商品条码】【起购
 			"""
 
 	#更新【商品条码】【起购数量】触发更新
+		#bill更新更新商品"bill无规格商品1"的【商品条码】
 		Given bill登录系统
 		When bill更新商品'bill无规格商品1'
 			"""
@@ -2019,6 +1616,7 @@ Scenario:6 商家更新被自营平台同步商品的【商品条码】【起购
 			}
 			"""
 
+		#tom更新更新商品"tom无规格商品1"的【起购】
 		Given tom登录系统 
 		When tom更新商品'tom无规格商品1'
 			"""
@@ -2108,43 +1706,10 @@ Scenario:6 商家更新被自营平台同步商品的【商品条码】【起购
 		When jobs更新商品池商品'bill无规格商品1'于'2015-08-05 10:30'
 		When jobs更新商品池商品'tom无规格商品1'于'2015-08-06 10:30'
 
-		Then jobs获得商品池商品列表
+		Then jobs能获得'在售'商品列表
 			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-06 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-05 10:30",
-				"actions": ["无更新"]
-			}]
+			[]
 			"""
-
 		Then jobs能获得'待售'商品列表
 			"""
 			[{
@@ -2230,173 +1795,15 @@ Scenario:6 商家更新被自营平台同步商品的【商品条码】【起购
 			}]
 			"""
 
-Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品编码】,自营平台商品参与限时抢购或买赠活动
+Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更新被自营平台同步商品的【商品单价】【商品编码】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
 
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": "",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
 
 		#更新商品,填写同步商品的采购价
 		When jobs更新商品'bill无规格商品1'
@@ -2487,87 +1894,6 @@ Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品
 		When jobs'上架'商品'bill无规格商品1'
 		When jobs'上架'商品'jobs修改-tom无规格商品1'
 
-		Then jobs能获得'在售'商品列表
-			"""
-			[{
-				"name": "jobs修改-tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "jobs修改-促销的东坡肘子",
-				"categories": "jobs分类2",
-				"bar_code":"77112233",
-				"min_limit":4,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 110.12,
-							"user_code":"11012",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":5.00,
-				"pay_interfaces":[{
-						"type": "货到付款"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":0,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
-
 		#商品'bill无规格商品1'参与限时抢购活动
 		When jobs创建限时抢购活动
 			"""
@@ -2629,6 +1955,7 @@ Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品
 			"""
 
 	#更新【商品单价】【商品编码】触发更新
+		#bill更新商品'bill无规格商品1'的【商品单价】
 		Given bill登录系统
 		When bill更新商品'bill无规格商品1'
 			"""
@@ -2677,6 +2004,7 @@ Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品
 			}
 			"""
 
+		#tom更新商品'tom无规格商品1'的【商品编码】
 		Given tom登录系统 
 		When tom更新商品'tom无规格商品1'
 			"""
@@ -2766,41 +2094,9 @@ Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品
 		When jobs更新商品池商品'bill无规格商品1'于'2015-08-05 10:30'
 		When jobs更新商品池商品'tom无规格商品1'于'2015-08-06 10:30'
 
-		Then jobs获得商品池商品列表
+		Then jobs能获得'在售'商品列表
 			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-06 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-05 10:30",
-				"actions": ["无更新"]
-			}]
+			[]
 			"""
 		Then jobs能获得'待售'商品列表
 			"""
@@ -2913,14 +2209,12 @@ Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品
 			}]
 			"""
 
-Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品图片】,自营平台商品参与积分应用或优惠券活动
+Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家更新被自营平台同步商品的【商品重量】【商品图片】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表,参与的活动自动结束
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
 
 	#jobs自营平台同步商品池中的商品
-		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
+		Given jobs登录系统			"""
 			[{
 				"name": "tom无规格商品3",
 				"user_code":"3312",
@@ -2958,128 +2252,6 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": "",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
 
 		#更新商品,填写同步商品的采购价
 		When jobs更新商品'bill无规格商品1'
@@ -3170,87 +2342,6 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 		When jobs'上架'商品'bill无规格商品1'
 		When jobs'上架'商品'jobs修改-tom无规格商品1'
 
-		Then jobs能获得'在售'商品列表
-			"""
-			[{
-				"name": "jobs修改-tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "jobs修改-促销的东坡肘子",
-				"categories": "jobs分类2",
-				"bar_code":"77112233",
-				"min_limit":4,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 110.12,
-							"user_code":"11012",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":5.00,
-				"pay_interfaces":[{
-						"type": "货到付款"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
-
 		#商品'bill无规格商品1'参与单品积分活动
 		When jobs创建积分应用活动
 			"""
@@ -3307,6 +2398,7 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 			"""
 
 	#更新【商品重量】【商品图片】触发更新
+		#bill更新商品'bill无规格商品1'的【商品重量】
 		Given bill登录系统
 		When bill更新商品'bill无规格商品1'
 			"""
@@ -3355,6 +2447,7 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 			}
 			"""
 
+		#bill更新商品'tom无规格商品1'的【商品图片】
 		Given tom登录系统 
 		When tom更新商品'tom无规格商品1'
 			"""
@@ -3440,41 +2533,9 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 		When jobs更新商品池商品'bill无规格商品1'于'2015-08-05 10:30'
 		When jobs更新商品池商品'tom无规格商品1'于'2015-08-06 10:30'
 
-		Then jobs获得商品池商品列表
+		Then jobs能获得'在售'商品列表
 			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-06 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-05 10:30",
-				"actions": ["无更新"]
-			}]
+			[]
 			"""
 		Then jobs能获得'待售'商品列表
 			"""
@@ -3584,132 +2645,14 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 			}]
 			"""
 
-Scenario:9 商家更新被自营平台同步商品的【商品描述】,自营平台商品参与积分应用或优惠券活动
+Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的【商品描述】
 	#同步到自营平台上的商品,上架之后再更新,自动下架到待售列表
 	#更新同步商品时,不同更新的字段保留自营平台修改后的值不变
 
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
 
 		#更新商品,填写同步商品的采购价
 		When jobs更新商品'bill无规格商品1'
@@ -3755,53 +2698,6 @@ Scenario:9 商家更新被自营平台同步商品的【商品描述】,自营�
 					}],
 				"detail": "jobs修改-商品描述信息"
 			}
-			"""
-
-		When jobs'上架'商品'bill无规格商品1'
-
-		Then jobs能获得'在售'商品列表
-			"""
-			[{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			}]
 			"""
 
 	#更新【商品描述】触发更新
@@ -3854,81 +2750,7 @@ Scenario:9 商家更新被自营平台同步商品的【商品描述】,自营�
 			"""
 
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"待更新",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["更新"]
-			},{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
-
 		When jobs更新商品池商品'bill无规格商品1'于'2015-08-05 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-05 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
 		Then jobs能获得'待售'商品列表
 			"""
 			[{
@@ -3977,81 +2799,7 @@ Scenario:9 商家更新被自营平台同步商品的【商品描述】,自营�
 Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会员折扣】【运费设置】【支付方式】【商品发票】【配送时间】【库存】,不触发自营平台商品的更新
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
-
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
 
 	#商家更新被同步商品的【店铺分组】【会员折扣】【运费设置】【支付方式】【商品发票】【配送时间】【库存】字段
 		Given bill登录系统
@@ -4142,80 +2890,7 @@ Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会�
 Scenario:11 商家更新被自营平台同步商品的规格为多规格，自营平台的对应商品被删除
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
-
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
 		Then jobs能获得'待售'商品列表
 			"""
 			[{
@@ -4353,167 +3028,9 @@ Scenario:11 商家更新被自营平台同步商品的规格为多规格，自�
 Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对应商品被删除,商品参加的活动结束
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": "",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
 
 		#更新商品,填写同步商品的采购价
 		When jobs更新商品'bill无规格商品1'
@@ -4975,176 +3492,6 @@ Scenario:13 自营平台删除同步的商品，商品池中的对应商品变�
 			}]
 			"""
 
-		#更新商品,填写同步商品的采购价
-		When jobs更新商品'bill无规格商品1'
-			"""
-			{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}
-			"""
-		When jobs更新商品'tom无规格商品1'
-			"""
-			{
-				"name": "jobs修改-tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "jobs修改-促销的东坡肘子",
-				"categories": "jobs分类2",
-				"bar_code":"77112233",
-				"min_limit":4,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 110.12,
-							"user_code":"11012",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":5.00,
-				"pay_interfaces":[{
-						"type": "货到付款"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			}
-			"""
-
-		When jobs'上架'商品'bill无规格商品1'
-		When jobs'上架'商品'jobs修改-tom无规格商品1'
-
-		Then jobs能获得'在售'商品列表
-			"""
-			[{
-				"name": "jobs修改-tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "jobs修改-促销的东坡肘子",
-				"categories": "jobs分类2",
-				"bar_code":"77112233",
-				"min_limit":4,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 110.12,
-							"user_code":"11012",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":5.00,
-				"pay_interfaces":[{
-						"type": "货到付款"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
-
 		When jobs'永久删除'商品'jobs修改-tom无规格商品1'
 
 		Then jobs获得商品池商品列表
@@ -5310,42 +3657,6 @@ Scenario:13 自营平台删除同步的商品，商品池中的对应商品变�
 
 Scenario:14 自营平台对商家商品"批量放入待售"
 	Given jobs登录系统
-	Then jobs获得商品池商品列表
-		"""
-		[{
-			"name": "tom无规格商品3",
-			"user_code":"3312",
-			"supplier":"tom商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品3",
-			"user_code":"3312",
-			"supplier":"bill商家",
-			"stocks":100,
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "tom无规格商品1",
-			"user_code":"1112",
-			"supplier":"tom商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		},{
-			"name": "bill无规格商品1",
-			"user_code":"1112",
-			"supplier":"bill商家",
-			"stock_type": "无限",
-			"status":"未选择",
-			"sync_time":"",
-			"actions": ["放入待售"]
-		}]
-		"""
 
 	#批量放入一个商品到待售
 		When jobs将商品池商品批量放入待售于'2015-08-02 10:30'
@@ -5440,205 +3751,10 @@ Scenario:14 自营平台对商家商品"批量放入待售"
 Scenario:15 "查看下架商品"功能
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
 		When jobs将商品'tom无规格商品3'放入待售于'2015-08-04 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"已选择",
-				"sync_time":"2015-08-04 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		Then jobs能获得'待售'商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"supplier": "tom商家",
-				"purchase_price": "",
-				"created_at": "2015-08-04 10:30",
-				"sync_time":"2015-08-04 10:30",
-				"promotion_title": "促销的蜜桔",
-				"categories": "",
-				"bar_code":"3123456",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 33.12,
-							"user_code":"3312",
-							"weight":1.0,
-							"stock_type": "有限",
-							"stocks":100
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "规格大小",
-						"description": "规格大小描述"
-					}, {
-						"name": "产地",
-						"description": "产地描述"
-					}],
-				"detail": "商品描述信息"
-			},{
-				"name": "tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": "",
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": "",
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
 
 		#更新商品,填写同步商品的采购价
 		When jobs更新商品'bill无规格商品1'
@@ -5729,93 +3845,13 @@ Scenario:15 "查看下架商品"功能
 		When jobs'上架'商品'bill无规格商品1'
 		When jobs'上架'商品'tom无规格商品1'
 
-		Then jobs能获得'在售'商品列表
-			"""
-			[{
-				"name": "jobs修改-tom无规格商品1",
-				"supplier": "tom商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-03 10:30",
-				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "jobs修改-促销的东坡肘子",
-				"categories": "jobs分类2",
-				"bar_code":"77112233",
-				"min_limit":4,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 110.12,
-							"user_code":"11012",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":5.00,
-				"pay_interfaces":[{
-						"type": "货到付款"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "jobs修改-商品描述信息"
-			},{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":0,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}]
-			"""
-
 	#商家对自营平台同步商品下架或删除,修改商品为多规格
 		Given bill登录系统
 		When bill'下架'商品'bill无规格商品1'
 
 		Given tom登录系统 
 		When tom'永久删除'商品'tom无规格商品1'
+		#tom更新商品'tom无规格商品3'为多规格
 		When tom更新商品'tom无规格商品3'
 			"""
 			{
@@ -5968,128 +4004,9 @@ Scenario:15 "查看下架商品"功能
 Scenario:16 商品池的搜索功能
 	#jobs自营平台同步商品池中的商品
 		Given jobs登录系统
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			}]
-			"""
 
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		#更新商品,填写同步商品的采购价
-		When jobs更新商品'bill无规格商品1'
-			"""
-			{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}
-			"""
 
 	#更新【商品重量】触发更新
 		Given bill登录系统
@@ -6141,6 +4058,16 @@ Scenario:16 商品池的搜索功能
 			"""
 
 		Given jobs登录系统
+	#商品池列表搜索
+		#默认条件搜索
+		When jobs设置商品池列表查询条件
+			"""
+			{
+				"name":"",
+				"supplier":"",
+				"status":"全部"
+			}
+			"""
 		Then jobs获得商品池商品列表
 			"""
 			[{
@@ -6177,7 +4104,6 @@ Scenario:16 商品池的搜索功能
 				"actions": ["无更新"]
 			}]
 			"""
-	#商品池列表搜索
 		#按照【商品名称】搜索
 		When jobs设置商品池列表查询条件
 			"""
@@ -6473,141 +4399,6 @@ Scenario:17 商品池的分页功能
 			}]
 			"""
 
-		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
-		When jobs将商品'tom无规格商品1'放入待售于'2015-08-03 10:30'
-
-		Then jobs获得商品池商品列表
-			"""
-			[{
-				"name": "tom无规格商品3",
-				"user_code":"3312",
-				"supplier":"tom商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "bill无规格商品3",
-				"user_code":"3312",
-				"supplier":"bill商家",
-				"stocks":100,
-				"status":"未选择",
-				"sync_time":"",
-				"actions": ["放入待售"]
-			},{
-				"name": "tom无规格商品1",
-				"user_code":"1112",
-				"supplier":"tom商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-03 10:30",
-				"actions": ["无更新"]
-			},{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"已选择",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["无更新"]
-			}]
-			"""
-
-		#更新商品,填写同步商品的采购价
-		When jobs更新商品'bill无规格商品1'
-			"""
-			{
-				"name": "bill无规格商品1",
-				"supplier": "bill商家",
-				"purchase_price": 10.00,
-				"created_at": "2015-08-02 10:30",
-				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"off",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 5.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
-			}
-			"""
-
-	#更新【商品重量】触发更新
-		Given bill登录系统
-		When bill更新商品'bill无规格商品1'
-			"""
-			{
-				"name": "bill无规格商品1",
-				"created_at": "2015-07-02 10:20",
-				"promotion_title": "促销的东坡肘子",
-				"categories": "分类1,分类2,分类3",
-				"bar_code":"112233",
-				"min_limit":2,
-				"is_member_product":"on",
-				"model": {
-					"models": {
-						"standard": {
-							"price": 11.12,
-							"user_code":"1112",
-							"weight": 1.0,
-							"stock_type": "无限"
-						}
-					}
-				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":10.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					},{
-						"type": "货到付款"
-					}],
-				"invoice":true,
-				"distribution_time":"on",
-				"properties": [{
-						"name": "CPU",
-						"description": "CPU描述"
-					}, {
-						"name": "内存",
-						"description": "内存描述"
-					}],
-				"detail": "商品描述信息",
-				"status": "在售"
-			}
-			"""
-
 	#商品池列表分页
 		Given jobs登录系统
 		When jobs设置分页查询参数
@@ -6620,19 +4411,6 @@ Scenario:17 商品池的分页功能
 		Then jobs获得商品池商品列表
 			"""
 			[{
-				"name": "bill无规格商品1",
-				"user_code":"1112",
-				"supplier":"bill商家",
-				"stock_type": "无限",
-				"status":"待更新",
-				"sync_time":"2015-08-02 10:30",
-				"actions": ["更新"]
-			}]
-			"""
-		When jobs浏览下一页
-		Then jobs获得商品池商品列表
-			"""
-			[{
 				"name": "tom无规格商品3",
 				"user_code":"3312",
 				"supplier":"tom商家",
@@ -6642,7 +4420,7 @@ Scenario:17 商品池的分页功能
 				"actions": ["放入待售"]
 			}]
 			"""
-		When jobs浏览商品池列表第'3'页
+		When jobs浏览下一页
 		Then jobs获得商品池商品列表
 			"""
 			[{
@@ -6655,13 +4433,26 @@ Scenario:17 商品池的分页功能
 				"actions": ["放入待售"]
 			}]
 			"""
+		When jobs浏览商品池列表第'3'页
+		Then jobs获得商品池商品列表
+			"""
+			[{
+				"name": "tom无规格商品1",
+				"user_code":"1112",
+				"supplier":"tom商家",
+				"stock_type": "无限",
+				"status":"未选择",
+				"sync_time":"",
+				"actions": ["放入待售"]
+			}]
+			"""
 		When jobs浏览上一页
 		Then jobs获得商品池商品列表
 			"""
 			[{
-				"name": "tom无规格商品3",
+				"name": "bill无规格商品3",
 				"user_code":"3312",
-				"supplier":"tom商家",
+				"supplier":"bill商家",
 				"stocks":100,
 				"status":"未选择",
 				"sync_time":"",
