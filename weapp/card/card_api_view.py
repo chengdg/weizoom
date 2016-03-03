@@ -118,8 +118,10 @@ def get_cards(request):
     user_ids = []
     for r in weizoom_card_rules:
         card_rule_ids.append(int(r.id))
-        if r.shop_limit_list != -1:
-            user_ids.append(r.shop_limit_list)
+        belong_to_owner_list = str(r.shop_limit_list).split(',')
+        for a in belong_to_owner_list:
+            if a != '-1':
+                user_ids.append(a)
     user_id2store_name = {}
     user_profiles = UserProfile.objects.filter(user_id__in=user_ids)
     for user_profile in user_profiles:
