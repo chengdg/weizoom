@@ -44,13 +44,13 @@ def send_mass_text_message_with_openid_list(user_profile, openid_list, content, 
 		if mpuser_access_token:
 			mesage = TextMessage(openid_list, content)
 			weixin_api = get_weixin_api(mpuser_access_token)
+			if log_id:
+				sent_log = UserSentMassMsgLog.objects.filter(id=log_id).first()
+			else:
+				sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_TEXT, content)
 			try:
 				result = weixin_api.send_mass_message(mesage, True)
 				#增加群发任务失败处理
-				if log_id:
-					sent_log = UserSentMassMsgLog.objects.filter(id=log_id).first()
-				else:
-					sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_TEXT, content)
 				sent_log.msg_id = result['msg_id']
 				sent_log.message_type = MESSAGE_TYPE_TEXT
 				sent_log.message_content = content
@@ -63,8 +63,9 @@ def send_mass_text_message_with_openid_list(user_profile, openid_list, content, 
 				return True
 			except:
 				notify_message = u"群发文本消息异常send_mass_message, cause:\n{}".format(unicode_full_stack())
-				print notify_message
 				watchdog_warning(notify_message)
+				sent_log.status = 'send failed'
+				sent_log.save()
 				return False
 		else:
 			return False
@@ -118,7 +119,10 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				pic_pre = matched.group("img_pre")
 				pic_result_url = pic_pre + pic_result_url
 				return pic_result_url
-			
+			if log_id:
+				sent_log = UserSentMassMsgLog.objects.filter(id=log_id).first()
+			else:
+				sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_NEWS, material_id)
 			try:
 				article = Articles()
 				for new in news:
@@ -162,15 +166,11 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				message = NewsMessage(openid_list, result['media_id'])
 				result = weixin_api.send_mass_message(message, True)
 				#增加群发任务失败处理
-				if log_id:
-					sent_log = UserSentMassMsgLog.objects.filter(id=log_id).first()
-				else:
-					sent_log = UserSentMassMsgLog.create(user_profile.webapp_id, '', MESSAGE_TYPE_NEWS, material_id)
 				sent_log.msg_id = result['msg_id']
 				sent_log.message_type = MESSAGE_TYPE_NEWS
 				sent_log.message_content = material_id
 				if result['errcode'] != 0:
-					sent_log.status = 'send fail code: %d' % result['errcode']
+					sent_log.status = 'send failed code: %d' % result['errcode']
 					if result['errcode'] == -1: #微信系统繁忙，则稍后重试
 						sent_log.save()
 						return False
@@ -179,6 +179,8 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 			except:
 				notify_message = u"群发图文消息异常send_mass_message, cause:\n{}".format(unicode_full_stack())
 				watchdog_warning(notify_message)
+				sent_log.status = 'send failed'
+				sent_log.save()
 				return False
 		else:
 			return False
