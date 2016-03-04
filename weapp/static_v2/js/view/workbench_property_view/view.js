@@ -48,9 +48,9 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .xa-dynamicComponentControlImgBox>img': 'onMouseoverImage',
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
+        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
         'click .xa-deleteProductButton': 'onClickDeleteProduct',
         'mouseover .xa-productImgBox>img': 'onMouseoverProduct',
-        'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
 
         //拼红包选择类型
         'click .xa-red-packet-selector': 'onClickRedPacketSelector'
@@ -616,17 +616,22 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         var options = {
             success: _.bind(function(data) {
+                        console.log('KKKKKK!!!!!!!!!@@@@@@@@@@@@@@@');
+                        console.log(data);
                         if ($button.hasClass('xa-addDynamicComponentTrigger')) {
+                            console.log('AAAAAAAAAAAAAAAAAA');
                             var event = {currentTarget: $button.get(0)};
                             var datas = data;
                             _.each(datas, function(data) {
                                 this.onClickAddDynamicComponentButton(event, data);
                             }, this);
                         } else {
+
                             var $input = $button.parent().find('input[type="hidden"]');
                             var data = data;
                             if (typeof(data) == 'object') {
                                 data = JSON.stringify(data)
+                                 console.log('FFFFFFFFFFFFFFFFFF');
                             }
                             $input.val(data).trigger('input');
                         }

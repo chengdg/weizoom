@@ -48,7 +48,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             //validateIgnoreDefaultValue: true,
             default: ''
         },{
-			name: 'product_selector',
+			name: 'product',
 			type: 'product_dialog_select',
 			displayName: '选择商品',
 			isUserProperty: true,
@@ -58,8 +58,9 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectProductDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '此处若空缺，则使用公众号二维码代替',
-			default: {productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:''}
+			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:'',productBarcode:''}
 		}]},{
+
         group: '',//团购标题
         groupClass: 'xui-propertyView-app-GroupTitle',
         fields: [{
@@ -224,7 +225,40 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             this.refresh($node, {resize:true, refreshPropertyView:true});
 		 	var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
 			view && view.render(W.weixinKeywordObj);
-        }
+        },
+		product:function($node, model, value, $propertyViewNode){
+			var data;
+			if (value !== '') {
+				data = $.parseJSON(value);
+				product = data[0];
+			}
+
+			console.log('>>>>KKKKKKKKKKKK^^~~~!!!!!!!');
+			console.log(product);
+
+			model.set({
+				product:{
+					productId:product.id,
+					productImg: product.thumbnails_url,
+					productName:product.name,
+					productPrice:product.display_price,
+					productSocks:product.stocks,
+					productBarcode:product.bar_code
+				}
+			}, {silent: true});
+
+			if (value[0]) {
+				//更新propertyView中的图片
+				console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvKEKEKEKEK');
+				console.log(value[0]);
+				
+				var $target = $propertyViewNode.find($('.xa-productList'));
+				$target.find('.xa-productList').removeClass('xui-hide');
+				$target.find('.propertyGroup_property_dialogSelectField .productImg').find('img').attr('src',product.thumbnails_url);
+				//$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').removeClass('xui-hide').html(product.name);
+
+			}
+		}
 	},
 
 	initialize: function(obj) {
