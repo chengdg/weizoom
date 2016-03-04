@@ -145,7 +145,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 							if new.text.find('<img') :
 								#content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
 								#if new.text.find('.jpg') :
-								new.text = re.sub(r'(?P<img_pre><img\s+[^>]*?\s*?src=[\"\'])(?P<img_url>[^>]*?\.(png|jpg))(?=[\"\'])',
+								new.text = re.sub(r'(?P<img_pre><img\s+[^>]*?\s*?src=[\"\'])(?P<img_url>[^>\s]*?\.(png|jpg))(?=[\"\'])',
 									pic_re,new.text)
 							if new.text.find('background-image:') :
 								new.text = re.sub(r'(?P<img_pre>background-image:\s*?url\((\"|\'|&quot;)?)(?P<img_url>[^\)]+?\.(png|jpg))(?=(\"|\'|&quot;)?\))',
