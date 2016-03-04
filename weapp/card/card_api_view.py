@@ -126,7 +126,7 @@ def get_cards(request):
     user_profiles = UserProfile.objects.filter(user_id__in=user_ids)
     for user_profile in user_profiles:
         if user_profile.store_name:
-            user_id2store_name[user_profile.user_id] = user_profile.store_name
+            user_id2store_name[str(user_profile.user_id)] = user_profile.store_name
 
     all_cards = WeizoomCard.objects.filter(weizoom_card_rule_id__in=card_rule_ids)
     
