@@ -43,7 +43,7 @@
         var fid = GetQueryString("fid");
         W.getApi().call({
             app: 'm/apps/group',
-            resource: 'm_group_detail',
+            resource: 'm_group',
             method: 'get',
             args: {
                 webapp_owner_id: W.webappOwnerId,
@@ -148,13 +148,13 @@
     }
     //我要开团
 	function openGruop(){
-        var data_href = "./?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
-        console.log('openGuideMask');
+        //TODO 传is_group_order,group_record_id过去
+        var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
         window.open(data_href, '_tab');
     }
     //直接参团
     function openJoinGruop(){
-        link = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId;
+        var link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id='+W.webappOwnerId;
         window.open(link, '_tab');
     }
 
