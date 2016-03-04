@@ -25,7 +25,7 @@ class MGroupList(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
-		group_participances = app_models.GroupParticipance.objects(belong_to=record_id,group_status=False,is_group_leader=True,is_valid=True)
+		group_participances = app_models.GroupRelations.objects(belong_to=record_id,group_status=False)
 		group_ids = [str(p.belong_to) for p in group_participances]
 		groups = app_models.Group.objects(id__in=group_ids,status=app_models.STATUS_RUNNING)
 		all_groups_can_join = []

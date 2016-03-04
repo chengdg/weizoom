@@ -18,7 +18,6 @@
 <script type="text/javascript">
 	var is_helped = true;
     var is_self_page = true;
-    var page_owner_name = '';
     var page_owner_member_id = '';
 	$(function(){
         //隐藏参与活动按钮
@@ -73,7 +72,7 @@
 
         //检查活动状态,更新参与按钮并绑定事件
         W.activityStatus = member_info.activity_status;
-        W.isAlreadyParticipanted = member_info.is_already_participanted;
+//        W.isAlreadyParticipanted = member_info.is_already_participanted;
         W.member_id = member_info.member_id;
         W.isMember = member_info.isMember;
 
@@ -148,9 +147,26 @@
     }
     //我要开团
 	function openGruop(){
-        //TODO 传is_group_order,group_record_id过去
-        var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
-        window.open(data_href, '_tab');
+        W.getApi().call({
+            app: 'm/apps/group',
+            resource: 'group_participance',
+            method: 'post',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                id: W.appRecordId,
+                fid: page_owner_member_id
+            },
+            success: function(data) {
+                console.log('openGruop()');
+                //TODO 传is_group_order,group_record_id过去
+                var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
+                window.open(data_href, '_tab');
+            },
+            error: function(data) {
+                console.error(data.errMsg);
+            }
+        });
+
     }
     //直接参团
     function openJoinGruop(){

@@ -49,30 +49,32 @@ class Group(models.Document):
 		else:
 			return False
 
-class GroupParticipance(models.Document):
-	member_id= models.LongField(default=0) #参与者id
-	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	is_group_leader = models.BooleanField(default=False) #是否是团购的团长
-	group_status = models.BooleanField(default=False) #团购状态
-	is_already_paid = models.BooleanField(default=False) #是否已经支付成功
-	is_valid = models.BooleanField(default=True) #该条记录是否有效(针对取关后再次关注的情况)
-	created_at = models.DateTimeField() #创建时间
-	success_time = models.DateTimeField() #团购成功时间
-
-	meta = {
-		'collection': 'group_group_participance'
-	}
+# class GroupParticipance(models.Document):
+# 	member_id= models.LongField(default=0) #参与者id
+# 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+# 	is_group_leader = models.BooleanField(default=False) #是否是团购的团长
+# 	is_valid = models.BooleanField(default=True) #该条记录是否有效(针对取关后再次关注的情况)
+# 	created_at = models.DateTimeField() #创建时间
+#
+# 	meta = {
+# 		'collection': 'group_group_participance'
+# 	}
 
 class GroupRelations(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-	member_id= models.StringField(default="", max_length=20) #团购发起者id
-	grouped_member_id = models.StringField(default="", max_length=20, unique_with=['belong_to', 'member_id']) #团购参与者id
+	member_id = models.StringField(default="", max_length=20, unique_with=['belong_to']) #团购发起者，团长的id
+	group_type = models.StringField()  #小团购类型
+	group_status = models.BooleanField(default=False) #团购状态
+	grouped_number = models.IntField(default=0) #团购人数
+	grouped_member_ids = models.ListField() #团员的id List
+	success_time = models.DateTimeField() #团购成功时间
+	created_at = models.DateTimeField() #创建时间
 
 	meta = {
 		'collection': 'group_group_relations'
 	}
 
-class GroupedDetail(models.Document):
+class GroupDetail(models.Document):
 	"""
 	团购详情记录表
 	"""
@@ -84,5 +86,5 @@ class GroupedDetail(models.Document):
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {
-		'collection': 'group_grouped_detail'
+		'collection': 'group_group_detail'
 	}

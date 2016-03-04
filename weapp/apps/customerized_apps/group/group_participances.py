@@ -26,7 +26,7 @@ class GroupParticipances(resource.Resource):
 		"""
 		响应GET
 		"""
-		has_data = app_models.GroupParticipance.objects(belong_to=request.GET['id']).count()
+		has_data = app_models.GroupRelations.objects(belong_to=request.GET['id']).count()
 
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
@@ -58,7 +58,7 @@ class GroupParticipances(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.GroupParticipance.objects(**params).order_by('-id')
+		datas = app_models.GroupRelations.objects(**params).order_by('-id')
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))

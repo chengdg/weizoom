@@ -1449,7 +1449,7 @@ class Order(models.Model):
 	delivery_time = models.CharField(max_length=50, default='')  # 配送时间字符串
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
 	is_group_order = models.BooleanField(default=False) # 是否是团购订单
-	group_record_id = models.CharField(max_length=100, default='') # 团购订单id
+	group_relation_id = models.CharField(max_length=100, default='') # 团购小团relation_id
 
 	class Meta(object):
 		db_table = 'mall_order'

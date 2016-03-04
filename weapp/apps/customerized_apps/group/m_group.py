@@ -23,7 +23,19 @@ class MGroup(resource.Resource):
 
 	def api_get(request):
 		record_id = request.GET.get('id', None)
+		group_relation_id = request.GET.get('group_relation_id', None)
 		member = request.member
+		isMember = False
+		timing = 0
+		is_already_participanted = False
+		is_helped = False
+		self_page = False
+		group_status = False
+		page_owner_name = ''
+		page_owner_icon = ''
+		page_owner_member_id = 0
+		grouped_member_info_list = []
+
 		response = create_response(500)
 		if not record_id:
 			response.errMsg = u'活动信息出错'
@@ -47,42 +59,26 @@ class MGroup(resource.Resource):
 			record.update(set__status=app_models.STATUS_STOPED)
 			activity_status = u'已结束'
 
-		isMember = False
-		timing = 0
-		is_already_participanted = False
-		is_helped = False
-		self_page = False
-		group_status = False
-		page_owner_name = ''
-		page_owner_icon = ''
-		page_owner_member_id = 0
-		grouped_member_info_list = []
-
 		if member:
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
 			if u"进行中" == activity_status:
 				timing = (record.end_time - datetime.today()).total_seconds()
-				curr_member_group_info = app_models.GroupParticipance.objects(belong_to=record_id, member_id=member_id)
-				if curr_member_group_info.count()> 0:
-					curr_member_group_info = curr_member_group_info.first()
-				else:
-					curr_member_group_info = app_models.GroupParticipance(
-						belong_to = record_id,
-						member_id = member_id,
-						created_at = datetime.now()
-					)
-					curr_member_group_info.save()
-				curr_member_order = Order.objects.filter(webapp_user_id=member_id,is_group_order=True,group_record_id=record_id)
-				print('curr_member_order!!!!!!!!!')
-				print(curr_member_order)
-				if curr_member_order.count()> 0:
-					curr_member_group_info.update(set__is_already_paid=True,set__is_group_leader=True)
-				if curr_member_group_info.is_valid:
-					is_already_participanted = curr_member_group_info.is_already_paid
-				else:
-					is_already_participanted = False
+
+				if group_relation_id:
+					group_relation_info = app_models.GroupRelations.objects(id=group_relation_id)
+					group_status = group_relation_info.group_status
+					#判断分享页是否自己的主页
+					if fid is None or str(fid) == str(member_id):
+						curr_member_payed_orders = Order.objects.filter(
+							webapp_user_id=member_id,
+							is_group_order=True,
+							group_relation_id=group_relation_id,
+							status=ORDER_STATUS_PAYED_NOT_SHIP
+						)
+					else:
+						is_helped = group_relation_info.filter(grouped_member_id=fid).count()>0
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
@@ -90,18 +86,21 @@ class MGroup(resource.Resource):
 					page_owner_icon = member.user_icon
 					page_owner_member_id = member_id
 					self_page = True
-					group_status = curr_member_group_info.group_status
 				else:
 					page_owner = Member.objects.get(id=fid)
 					page_owner_name = page_owner.username_size_ten
 					page_owner_icon = page_owner.user_icon
 					page_owner_member_id = fid
-					page_owner_member_info = app_models.GroupParticipance.objects.get(belong_to=record_id, member_id=page_owner_member_id)
-					group_status = page_owner_member_info.group_status
-					is_helped = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), grouped_member_id=fid).count()>0
+
+
+				# curr_member_group_info.reload()
+				# if curr_member_group_info.is_valid:
+				# 	is_already_participanted = True
+				# else:
+				# 	is_already_participanted = False
 
 				# 获取该主页帮助者列表
-				helpers = app_models.GroupedDetail.objects(belong_to=record_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
+				helpers = app_models.GroupDetail.objects(belong_to=record_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
 				member_ids = [h.helper_member_id for h in helpers]
 				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 				for h in helpers:
@@ -115,7 +114,7 @@ class MGroup(resource.Resource):
 		member_info = {
 			'isMember': isMember,
 			'timing': timing,
-			'is_already_participanted': is_already_participanted,
+			# 'is_already_participanted': is_already_participanted,
 			'is_helped': is_helped,
 			'self_page': self_page,
 			'page_owner_name': page_owner_name,
@@ -217,15 +216,6 @@ class MGroup(resource.Resource):
 		request.GET._mutable = False
 		html = pagecreater.create_page(request, return_html_snippet=True)
 
-		params_qrcode_url = False
-		params_qrcode_name = False
-
-		try:
-			params_qrcode_url = record.qrcode['ticket']
-			params_qrcode_name = record.qrcode['name']
-		except:
-			pass
-
 		c = RequestContext(request, {
 			'record_id': record_id,
 			'activity_status': activity_status,
@@ -238,8 +228,6 @@ class MGroup(resource.Resource):
 			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"团购",
-			'params_qrcode_url': params_qrcode_url,
-			'params_qrcode_name': params_qrcode_name,
 			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
 		})
 		response = render_to_string('group/templates/webapp/m_group.html', c)
