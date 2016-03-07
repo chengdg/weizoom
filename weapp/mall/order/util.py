@@ -751,7 +751,7 @@ def get_detail_response(request):
             supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids, store_name__contains=name).order_by('-id'))
 
         #add by duhao 把订单操作人信息放到操作日志中，方便精选的拆单子订单能正常显示操作员信息
-        order_operation_logs = mall_api.get_order_operation_logs(order.order_id)
+        order_operation_logs = mall_api.get_order_operation_logs(order.order_id, len(child_orders))
         for log in order_operation_logs:
             log.leader_name = order.leader_name
             for child_order in child_orders:
