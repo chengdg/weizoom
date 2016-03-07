@@ -32,6 +32,7 @@ class MGroup(resource.Resource):
 		self_page = False
 		group_status = False
 		group_type = ''
+		grouped_number = 0
 		page_owner_name = ''
 		page_owner_icon = ''
 		page_owner_member_id = 0
@@ -70,20 +71,15 @@ class MGroup(resource.Resource):
 					group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
 					group_status = group_relation_info.group_status
 					group_type = group_relation_info.group_type
+					grouped_number = group_relation_info.grouped_number
 					#判断分享页是否自己的主页
 					if fid is None or str(fid) == str(member_id):
-						curr_member_payed_orders = Order.objects.filter(
-							webapp_user_id=member_id,
-							is_group_order=True,
-							group_relation_id=group_relation_id,
-							status=ORDER_STATUS_PAYED_NOT_SHIP
-						)
 						is_group_leader = True if group_relation_info.member_id == str(member_id) else False
 					else:
 						is_helped = True if str(member_id) in group_relation_info.grouped_member_ids else False
 
 					# 获取该主页帮助者列表
-					helpers = app_models.GroupDetail.objects(belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
+					helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
 					member_ids = [h.helper_member_id for h in helpers]
 					member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 					for h in helpers:
@@ -116,8 +112,9 @@ class MGroup(resource.Resource):
 			'page_owner_icon': page_owner_icon,
 			'page_owner_member_id': page_owner_member_id,
 			'activity_status': activity_status,
-			'group_status': group_status,
-			'group_type': group_type
+			'group_status': group_status, #小团购状态
+			'group_type': int(group_type),
+			'grouped_number': int(grouped_number)
 		}
 
 		response = create_response(200)
@@ -136,6 +133,7 @@ class MGroup(resource.Resource):
 		activity_status = u"未开始"
 		member = request.member
 		fid = 0
+		group_relation_id = 0
 
 		if 'new_app:' in record_id:
 			project_id = record_id
@@ -144,11 +142,24 @@ class MGroup(resource.Resource):
 		elif member:
 			member_id = member.id
 			fid = request.GET.get('fid', None)
+			group_relation_id = request.GET.get('group_relation_id', None)
+
+			#判断分享页是否自己的主页
 			if not fid:
 				new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
 				response = HttpResponseRedirect(new_url)
 				response.set_cookie('fid', member_id, max_age=60*60*24*365)
 				return response
+
+			if not group_relation_id:
+				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), is_valid=True)
+				if group_relation.count() > 0:
+					group_relation = group_relation.first()
+					group_relation_id = group_relation.id
+					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', group_relation_id)
+					response = HttpResponseRedirect(new_url)
+					response.set_cookie('group_relation_id', group_relation_id, max_age=60*60*24*365)
+					return response
 
 			# cache_key = 'apps_group_%s_html' % record_id
 			# # 从redis缓存获取静态页面
@@ -214,6 +225,7 @@ class MGroup(resource.Resource):
 
 		c = RequestContext(request, {
 			'record_id': record_id,
+			'group_relation_id': group_relation_id, #小团购id，如不存在则为None
 			'activity_status': activity_status,
 			'page_title': record.name if record else u"团购",
 			'page_html_content': html,

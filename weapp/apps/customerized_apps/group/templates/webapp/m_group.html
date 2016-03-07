@@ -5,13 +5,34 @@
 	h1 {
 		color: #00F;
 	}
-    /*iphone4 横屏*/
-
+    .xui-share {
+        background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll 82% 10px / 53% auto rgba(0, 0, 0, 0);
+        height: 75%;
+        position: fixed;
+        text-align: center;
+        top: 5%;
+        width: 100%;
+        z-index: 10001;
+    }
+    .xui-share.xa-share > div p {
+        color: #fff;
+        text-align: center;
+        width: 100%;
+    }
 </style>
 {% endblock %}
 
 {% block content-panel %}
     {{ page_html_content|safe }}
+    <div class="xui-share xa-share none">
+        <div style="margin-top: 49%">
+            <p>请点击右上角</p><p>选择发送给指定好友</p><p>或者分享到朋友圈</p>
+            <div style="display: inline">
+                <p style="display: inline">来帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">点赞</p>
+            </div>
+        </div>
+        <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -20,6 +41,7 @@
     var is_self_page = true;
     var page_owner_member_id = '';
     var group_type = '';
+    var group_relation_id = {% if group_relation_id %}'{{group_relation_id}}'{% else %}''{% endif %};
 	$(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -58,6 +80,7 @@
             args: {
                 webapp_owner_id: W.webappOwnerId,
                 id: W.appRecordId,
+                group_relation_id: group_relation_id,
                 fid: fid
             },
             success: function(data) {
@@ -66,6 +89,10 @@
                 updateActivityStatus(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
+                if(group_relation_id != ''){
+                    //进度bar动画
+                    runProcessBar(data.member_info.grouped_number,data.member_info.group_type);
+                }
             },
             error: function(data) {
                 if(data.errMsg == 'is_deleted'){
@@ -78,17 +105,17 @@
     }
 
 	function updateActivityStatus(data){
-        member_info = data.member_info;
-        is_self_page = member_info.self_page;
-
         //检查活动状态,更新参与按钮并绑定事件
+        member_info = data.member_info;
         W.activityStatus = member_info.activity_status;
-//        W.isAlreadyParticipanted = member_info.is_already_participanted;
         W.member_id = member_info.member_id;
         W.isMember = member_info.isMember;
-
+        is_self_page = member_info.self_page;
+        is_group_leader = member_info.is_group_leader;
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
+        group_status = member_info.group_status;
+        group_type = member_info.group_type;
         updateBtnStatus();
     }
 
@@ -104,8 +131,14 @@
         }
         //如果是自己的主页
         if(is_self_page){
-            $('.wa-using').text('我要开团').on('click', openGruop).show();
-			$('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+            if(is_group_leader){
+                $('.wa-using').text('邀请好友参团').on('click', function(){
+                        openGuideMask();
+                    }).show();
+            }else{
+                $('.wa-using').text('我要开团').on('click', openGruop).show();
+			    $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+            }
         }else{
             var using_msg;
             var $attention = $('.xa-attention-guest');
@@ -139,21 +172,6 @@
                     }).show();
                 }
             }
-
-            if(W.isAlreadyParticipanted){
-                using_msg = '看看还有什么团';
-                $('.wa-using-join').text(using_msg).on('click', function(){
-                    openJoinGruop();
-                }).show();
-            }else{
-                using_msg = '我也要参加';
-                $('.wa-using').text(using_msg).on('click', function(){
-                    $attention.find('img').attr('src', qrcode_url);
-                    $attention.find('.xa-attention-tip').hide();
-                    $attention.find('.xa-attention-reply').children().first().html("2.回复：");
-                    openGruop();
-                }).show();
-            }
         }
     }
     //我要开团
@@ -177,7 +195,7 @@
                     window.open(data_href, '_tab');
                 },
                 error: function(data) {
-                    console.error(data.errMsg);
+                    wuiAlert(data.errMsg);
                 }
             });
         }else{
@@ -185,7 +203,7 @@
         }
     }
 
-    //直接参团
+    // 直接参团
     function openJoinGruop(){
         var link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id='+W.webappOwnerId;
         window.open(link, '_tab');
@@ -200,6 +218,34 @@
         $('.xa-i-rules-contentbox').removeClass('none');
         mask('show');
     });
+
+    // 邀请好友参团
+    function openGuideMask(){
+        mask('show');
+        $('.xa-share').removeClass('none');
+    }
+
+    // 进度条
+    function runProcessBar(current,total){
+        $('.wui-i-choose_group_box').addClass('none');
+        $('.wui-i-group_box_progress').removeClass('none');
+        var current_number = current;
+        var total_number = total;
+        var process = "0%";
+        process = parseFloat(current_number/total_number*100).toFixed(1)+"%";
+        if(process=="100.0%"){
+            process="100%";
+        }else if(process=="0.0%"){
+            process="0%";
+        }
+        $('.xa-i-percentbox').text(current_number+'人');
+        $('.wa-i-total_number').text(total_number+'人');
+        $(".xa-i-percentbox").css("left",process);
+        $(".xa-i-bar_process").width(process);
+        percentBox_process_tmp = process;
+//        percentBoxTimer();
+    }
+
 </script>
 {% endblock %}
 
