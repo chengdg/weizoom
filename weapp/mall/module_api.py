@@ -2350,7 +2350,7 @@ def update_order_status(user, action, order, request=None):
 	# 	notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 	# 	watchdog_alert(notify_message)
 
-	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED]:
+	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
 		# 如果更新子订单，更新父订单状态
 		set_origin_order_status(order, user, action, request)
 	else:

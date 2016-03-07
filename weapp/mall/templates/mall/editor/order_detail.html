@@ -140,7 +140,7 @@
                     <p class="xui-title">商家备注</p>
                     <div class="xui-innerwrap">
                     	<img  data-order-id="{{order.id}}" data-order-value="{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
-                        <p>{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}</p>
+                        <p>{{order.remark}}</p>
                     </div>
                 </div>
             </div>
@@ -161,7 +161,7 @@
           </li>
       {% endfor %}
   {% else %}
-      <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息</a></li>
+      <li class="xa-count active" {% if child_orders|length %}data-total-status-value="{{ child_orders.0.supplier_user_id }}" data-supplier-type="u"{% else %}{% endif %}><a href="javascript:void(0);">物流信息</a></li>
   {% endif %}
       <li class="xa-count" data-total-status-value="0"><a href="javascript:void(0);">订单操作日志</a></li>
   </ul>
