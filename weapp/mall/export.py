@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from weapp.settings import MONEY_HOST
+
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
 PRODUCT_FIRST_NAV = 'product'
@@ -223,6 +225,7 @@ ORDER_REFUND = 'refundOrder'
 ORDER_AUDIT = 'financialCheck'
 ORDER_EXPIRED_TIME = 'orderExpiration'
 ORDER_BATCH_DELIVERY = 'orderBatchDelivery'
+ORDER_MONEY = 'orderMoney'
 
 MALL_ORDER_SECOND_NAV = {
     'section': u'',
@@ -251,6 +254,12 @@ MALL_ORDER_SECOND_NAV = {
             'title': u'批量发货',
             'url': 'javascript:void(0);',
             'permission': 'manage_order_batch_delivery'
+        # },{
+        #     'name': ORDER_MONEY,
+        #     'title': u'结算管理',
+        #     'url': MONEY_HOST + '/weapp/orders_to_money/',
+        #     'permission': 'manage_order_batch_delivery',
+        #     'need_token': True
         }
     ]
 }

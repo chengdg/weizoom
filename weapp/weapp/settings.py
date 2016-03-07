@@ -605,6 +605,7 @@ if 'develop' == MODE:
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://dev.weapp.com'
+    MONEY_HOST = 'http://dev.money.com'
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
@@ -623,6 +624,7 @@ elif 'test' == MODE:
     #WAPI_SECRET_ACCESS_TOKEN = 'simple_wapi_key'
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://dev.weapp.com'
+    MONEY_HOST = 'http://money.weizoom.com'
 else:
     DEBUG = False
     BATMAN_API_IMPL = 'memory'
@@ -644,6 +646,7 @@ else:
 
     WAPI_SECRET_ACCESS_TOKEN = 'akoANSpqVzuNBAeVscHB1lQnjNosByMcdV8sqpKOv2nlQssB0V'
     WAPI_HOST = 'http://api.weizoom.com'
+    MONEY_HOST = 'http://money.weizom.com'
 
 
 IN_DEVELOP_MODE = (MODE == 'develop')
