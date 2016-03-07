@@ -6,9 +6,10 @@ from wapi.decorators import param_required
 from django.db.models import Q
 
 from modules.member import models as member_models
+
 from mall import models as mall_models
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeSettings,ChannelQrcodeHasMember
-
+from mall.models import *
 SKEP_ACCOUNT2WEBAPP_ID = {
 	'jingxuan': '3621',
 	'xuesheng': '3807',
@@ -41,30 +42,52 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		print 'count_per_page:', count_per_page
 		print 'cur_page:', cur_page
 
+
 		if setting_ids and setting_ids != '':
 			relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
+			setting_id2member_id = {}
+
 			setting_id2count = {}
 			for r in relations:
-
-				print setting_id2count,r.member_id
 				if r.is_new:
+
 					member = member_models.Member.objects.get(id=r.member_id)
+
 					if r.channel_qrcode_id in setting_id2count:
-						print "zl-------------1",setting_id2count
 						setting_id2count[r.channel_qrcode_id]['count'] += 1
 						setting_id2count[r.channel_qrcode_id]['pay_money'] += member.pay_money
 					else:
-						print "zl-------------2",setting_id2count
 						setting_id2count[r.channel_qrcode_id] = {}
 						setting_id2count[r.channel_qrcode_id]['count'] = 1
 						setting_id2count[r.channel_qrcode_id]['pay_money'] = member.pay_money
+
+					if r.channel_qrcode_id in setting_id2member_id:
+						setting_id2member_id[r.channel_qrcode_id].append(member.id)
+					else:
+						setting_id2member_id[r.channel_qrcode_id] =[]
+						setting_id2member_id[r.channel_qrcode_id].append(member.id)
+			for sx,sy in setting_id2member_id.items():
+				webapp_users = member_models.WebAppUser.objects.filter(member_id__in=sy)
+				webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
+				webapp_user_ids = set(webapp_user_id2member_id.keys())
+
+				orders = Order.by_webapp_user_id(webapp_user_ids).filter(status__in=(ORDER_STATUS_PAYED_SUCCESSED,
+																					 ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
+				setting_id2count[sx]['cash'] =0
+				setting_id2count[sx]['card'] =0
+				for order in orders:
+					setting_id2count[sx]['cash'] += order.final_price
+					setting_id2count[sx]['card'] += order.weizoom_card_money
+
 
 		items = []
 		for x,y in setting_id2count.items():
 			items.append({
 				'setting_id': x,
 				'pay_money': '%.2f' % y['pay_money'],
-				'count': y['count']
+				'count': y['count'],
+				'cash': '%.2f' % y['cash'],
+				'card': '%.2f' % y['card'],
 			})
 		pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
 		return {
