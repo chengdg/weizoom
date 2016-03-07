@@ -53,9 +53,9 @@ W.workbench.PropertyView = Backbone.View.extend({
         'click .xa-red-packet-selector': 'onClickRedPacketSelector',
 
         //团购
-        'click .propertyGroup_property_productDialogSelectField .btn': 'initProductDialogButton'
+        'click .propertyGroup_property_productDialogSelectField .btn': 'initProductDialogButton',
         'click .xa-deleteProductButton': 'onClickDeleteProduct',
-        'mouseover .xa-productImgBox>img': 'onMouseoverProduct',
+        'mouseover .xa-productImgBox>img': 'onMouseoverProduct'
     },
 
     getTemplate: function() {
