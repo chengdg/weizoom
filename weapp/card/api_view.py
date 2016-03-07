@@ -6,6 +6,11 @@ from core.jsonresponse import create_response
 from core.restful_url_route import api
 from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
 
+from weapp.market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+
+from weapp.cache.webapp_owner_cache import update_webapp_owner_info_cache_with_login
+
+
 @api(app='card', resource='auth', action='get')
 def get_user(request):
     username = request.GET.get('username',[])
@@ -40,4 +45,5 @@ def get_update_cache(request):
     for owner_id in owner_ids:
         update_webapp_owner_info_cache_with_login(owner_id2permissions[owner_id])
     response = create_response(200)
+    response.data = u'success'
     return response.get_response()
