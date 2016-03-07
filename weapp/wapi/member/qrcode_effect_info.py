@@ -38,11 +38,9 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		setting_ids = args['setting_ids'].split(',')
 		count_per_page = int(args['count_per_page'])
 		cur_page = int(args['cur_page'])
-		if setting_ids and setting_ids != '':
-			print "zl-------------------2222:",setting_ids
+		if setting_ids and len(setting_ids) > 0:
 			relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
 			setting_id2member_id = {}
-			print "zl----------------------------",relations
 			setting_id2count = {}
 			for r in relations:
 				# if r.is_new:
@@ -69,8 +67,10 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				#status__in=(ORDER_STATUS_PAYED_SUCCESSED,
 																					 # ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
 				orders = Order.by_webapp_user_id(webapp_user_ids).filter()
-				setting_id2count[sx]['cash'] =0
-				setting_id2count[sx]['card'] =0
+				setting_id2count[sx]['cash'] = 0
+				setting_id2count[sx]['card'] = 0
+
+				setting_id2count[sx]['order_num'] =	len(list(orders))
 				for order in orders:
 					setting_id2count[sx]['cash'] += order.final_price
 					setting_id2count[sx]['card'] += order.weizoom_card_money
@@ -84,6 +84,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				'count': y['count'],
 				'cash': '%.2f' % y['cash'],
 				'card': '%.2f' % y['card'],
+				'order_num': y['order_num']
 			})
 		pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
 		return {
