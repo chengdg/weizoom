@@ -485,16 +485,14 @@
                     {{/if}}
 
                     {{if (field.type == 'product_dialog_select')}}
-                    <div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
+                    <div class="propertyGroup_property_productDialogSelectField propertyGroup_property_horizontalField">
                         <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
                         <div class="propertyGroup_property_input" style="position:relative;width:20%">
-                            <input data-field="${field.name}" name="${field.name}" type="hidden" />
+                            <input class="propertyGroup_property_input" data-field="${field.name}" name="${field.name}" data-type="product" type="hidden"/>
+                            <input class="propertyGroup_property_input product_search"  name="product_name" data-type="product_name" value="{{if component.model.get(field.name)}}${component.model.get(field.name).productName}{{else}}{{/if}}"/>
+
                                 <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}">
-                                    {{if component.model.get(field.name).produceName}}
-                                        ${field.triggerButton.hasdata}
-                                    {{else}}
-                                        ${field.triggerButton.nodata}
-                                    {{/if}}
+                                   搜索
                                 </button>
                             {{if component.model.get(field.name)}}
                                <div>

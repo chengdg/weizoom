@@ -53,11 +53,9 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			displayName: '选择商品',
 			isUserProperty: true,
 			isShowCloseButton: true,
-			triggerButton: {nodata:'请选择商品', hasdata:'修改商品'},
 			selectedButton: '选择商品',
 			dialog: 'W.dialog.termite.SelectProductDialog',
 			dialogParameter: '{"multiSelection": false}',
-			help: '此处若空缺，则使用公众号二维码代替',
 			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:'',productBarcode:''}
 		}]},{
 
@@ -248,7 +246,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			}, {silent: true});
 
 			console.log('6666666666666666666666666666K');
-			console.log(product);
+			console.log($propertyViewNode);
 			console.log('77777777777777777777777777777K');
 
 			if (value[0]) {
@@ -256,12 +254,12 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvKEKEKEKEK');
 				console.log(value[0]);
 				
-				//var $target = $propertyViewNode.find($('.xa-productList'));
-				//$target.find('.xa-productList').removeClass('xui-hide');
-				//$target.find('.propertyGroup_property_dialogSelectField .productImg').find('img').attr('src',product.thumbnails_url);
-				//$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').removeClass('xui-hide').html(product.name);
-
-				//$target.find('.propertyGroup_property_dialogSelectField .productImg').find('img').attr('src',product.thumbnails_url);
+				var $target = $propertyViewNode.find($('table.xa-productList')).removeClass('xui-hide');
+				$target.find('.productImg').attr('src',product.thumbnails_url);
+				$target.find('.productName').html(product.name);
+				$target.find('.productBarCode').html('商品编码:'+product.bar_code);
+				$target.find('.productPrice').html(product.display_price);
+				$target.find('.productSocks').html(product.stocks);
 
 			}
 		}

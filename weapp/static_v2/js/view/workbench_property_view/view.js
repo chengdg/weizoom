@@ -53,7 +53,9 @@ W.workbench.PropertyView = Backbone.View.extend({
         'mouseover .xa-productImgBox>img': 'onMouseoverProduct',
 
         //拼红包选择类型
-        'click .xa-red-packet-selector': 'onClickRedPacketSelector'
+        'click .xa-red-packet-selector': 'onClickRedPacketSelector',
+        //团购
+        'click .propertyGroup_property_productDialogSelectField .btn': 'initProductDialogButton'
 	},
 
     getTemplate: function() {
@@ -869,6 +871,47 @@ W.workbench.PropertyView = Backbone.View.extend({
             var attr = $el.attr('data-field');
             _this.getTargetComponent($el).model.set(attr, prize);
         });
+    },
+
+    initProductDialogButton: function(event) {
+        var $button = $(event.currentTarget);
+        var dialog = $button.attr('data-target-dialog');
+
+        var parameter = null;
+        var parameterStr = $button.attr('data-dialog-parameter');
+
+        if (parameterStr) {
+            parameter = W.data.getData(parameterStr, this.component, $button);
+        }
+
+        var options = {
+            success: _.bind(function(data) {
+                        console.log('KKKKKK!!!!!!!!!@@@@@@@@@@@@@@@');
+                        console.log(data);
+
+                    var $input_name = $button.parent().find('input[data-type="product_name"]');
+                    var product_name = data[0].name;
+                    console.log(product_name);
+                    $input_name.val(product_name).trigger('input');
+
+                    var $input = $button.parent().find('input[data-type="product"]');
+                    var data = data;
+                    if (typeof(data) == 'object') {
+                                data = JSON.stringify(data);
+                                console.log('FFFFFFFFFFFFFFFFFF');
+                        }
+                    $input.val(data).trigger('input');
+
+                    }, this),
+            component: this.component,
+            $button: $button
+        };
+
+        if (parameter) {
+            _.extend(options, parameter);
+        }
+
+        W.dialog.showDialog(dialog, options);
     },
     initPrizeKeywordPane: function($el){
         W.createWidgets($el);

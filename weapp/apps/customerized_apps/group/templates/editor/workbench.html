@@ -181,6 +181,8 @@
             var material_image = descriptionModel.get('material_image');
             var share_description =  descriptionModel.get('share_description');
 
+            var product_dict = descriptionModel.get('product');
+
 
             var default_group_type = descriptionModel.get('group_type');
             var default_group_days = descriptionModel.get('group_days');
@@ -203,15 +205,17 @@
               }
             }
 
+
             console.log('!!!!!!!!!!###########SSSSSSSSSSS>>>>>>>>>>>>>>');
             console.log('====');
-            console.log(group_dict);
+            console.log(product_dict);
             var args = {
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
             'product':select_product,
             'group_dict':JSON.stringify(group_dict),
+            'product_dict':JSON.stringify(product_dict),
             'rules':rules,
             'material_image':material_image,
             'share_description':share_description
