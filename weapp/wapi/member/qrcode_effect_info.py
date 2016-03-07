@@ -38,34 +38,30 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		setting_ids = args['setting_ids'].split(',')
 		count_per_page = int(args['count_per_page'])
 		cur_page = int(args['cur_page'])
-		print 'setting_ids:', setting_ids
-		print 'count_per_page:', count_per_page
-		print 'cur_page:', cur_page
-
-
 		if setting_ids and setting_ids != '':
+			print "zl-------------------2222:",setting_ids
 			relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
 			setting_id2member_id = {}
-
+			print "zl----------------------------",relations
 			setting_id2count = {}
 			for r in relations:
-				if r.is_new:
+				# if r.is_new:
 
-					member = member_models.Member.objects.get(id=r.member_id)
+				member = member_models.Member.objects.get(id=r.member_id)
 
-					if r.channel_qrcode_id in setting_id2count:
-						setting_id2count[r.channel_qrcode_id]['count'] += 1
-						setting_id2count[r.channel_qrcode_id]['pay_money'] += member.pay_money
-					else:
-						setting_id2count[r.channel_qrcode_id] = {}
-						setting_id2count[r.channel_qrcode_id]['count'] = 1
-						setting_id2count[r.channel_qrcode_id]['pay_money'] = member.pay_money
+				if r.channel_qrcode_id in setting_id2count:
+					setting_id2count[r.channel_qrcode_id]['count'] += 1
+					setting_id2count[r.channel_qrcode_id]['pay_money'] += member.pay_money
+				else:
+					setting_id2count[r.channel_qrcode_id] = {}
+					setting_id2count[r.channel_qrcode_id]['count'] = 1
+					setting_id2count[r.channel_qrcode_id]['pay_money'] = member.pay_money
 
-					if r.channel_qrcode_id in setting_id2member_id:
-						setting_id2member_id[r.channel_qrcode_id].append(member.id)
-					else:
-						setting_id2member_id[r.channel_qrcode_id] =[]
-						setting_id2member_id[r.channel_qrcode_id].append(member.id)
+				if r.channel_qrcode_id in setting_id2member_id:
+					setting_id2member_id[r.channel_qrcode_id].append(member.id)
+				else:
+					setting_id2member_id[r.channel_qrcode_id] =[]
+					setting_id2member_id[r.channel_qrcode_id].append(member.id)
 			for sx,sy in setting_id2member_id.items():
 				webapp_users = member_models.WebAppUser.objects.filter(member_id__in=sy)
 				webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
