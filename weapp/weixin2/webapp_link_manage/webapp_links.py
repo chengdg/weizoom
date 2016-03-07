@@ -45,7 +45,6 @@ class WebappLinkMenus(resource.Resource):
 		for title in titles:
 			if title['type'] == 'exsurvey' and not request.manager.username in title['users']:
 				memus['marketPage']['title'].remove(title)
-		#
 
 		response = create_response(200)
 		response.data = memus

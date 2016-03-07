@@ -287,6 +287,7 @@ MALL_PROMOTION_COUPON_NAV = 'Coupon'
 MALL_PROMOTION_INTEGRAL_SALE_NAV = 'integralYingyon'
 MALL_PROMOTION_ISSUING_COUPONS_NAV = 'issuingCoupon'
 MALL_PROMOTION_FORBIDDEN_COUPON_PRODUCT_NAV = 'forbiddenCouponProduct'
+MALL_PROMOTION_CARD_EXCHANGE_NAV = 'cardExchange'
 
 MALL_APPS_LOTTERY_NAV = 'lotteries'
 MALL_APPS_FEEDBACK_NAV = 'exsurveies'
@@ -369,6 +370,13 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'title': u'禁用优惠券商品',
                     'url': '/mall2/forbidden_coupon_product/',
                     'permission': 'forbidden_coupon_product'
+                },
+                {
+                    'name': MALL_PROMOTION_CARD_EXCHANGE_NAV,
+                    'title': u'微众卡兑换',
+                    'url': '/mall2/card_exchange/',
+                    'users': ['jobs', 'njtest', 'ceshi01', 'fulilaile'],
+                    'permission': ''
                 }
             ]
         },
