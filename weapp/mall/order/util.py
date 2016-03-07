@@ -689,7 +689,6 @@ def get_detail_response(request):
             for product in order.products:
                 if coupon.product_id == product['id']:
                     product['has_coupon'] = True
-                    print(product['id'], product['has_coupon'])
                     break
 
         order.area = regional_util.get_str_value_by_string_ids(order.area)
@@ -699,7 +698,6 @@ def get_detail_response(request):
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
         order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
-
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -717,7 +715,7 @@ def get_detail_response(request):
             order.weizoom_cards = [card.weizoom_card_id for card in cards]
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
-        if not child_orders and order.supplier_user_id:
+        if (not child_orders and order.supplier_user_id):
             child_orders = [order]
         supplier_ids = []
         supplier_user_ids = []
@@ -1030,6 +1028,17 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             "fackorder": group_order,
                             "products": filter(lambda p: p['supplier_user_id'] == fackorder.supplier_user_id , products)
                         }
+                    if len(order2fackorders.get(order.id)) == 1:
+                        group_order = {
+                            "id": order.id,
+                            "status": order.get_status_text(),
+                            "order_status": order.status,
+                            'express_company_name': order.express_company_name,
+                            'express_number': order.express_number,
+                            'leader_name': order.leader_name,
+                            'actions': get_order_actions(order, is_refund=is_refund,mall_type=mall_type)
+                        }
+                        group['fackorder'] = group_order
                     groups.append(group)
             else:
                 group_order = {
@@ -1387,7 +1396,7 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False,mall_type=0):
+def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0):
 
     """
     :param order:
@@ -1449,8 +1458,8 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
     able_actions_for_sub_order = [ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
 
     # 订单详情页有子订单
-    able_actions_for_detail_order_has_sub = [ORDER_PAY_ACTION, ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION,
-                                             ORDER_UPDATE_PRICE_ACTION]
+    able_actions_for_detail_order_has_sub = [ORDER_PAY_ACTION, ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION,
+                                             ORDER_FINISH_ACTION]
 
     # 订单列表页有子订单的父母订单
     able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
@@ -1467,7 +1476,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
     #     if order.is_sub_order:
     #         result = filter(lambda x: x in able_actions_for_sub_order, result)
 
-    if order.has_sub_order and is_detail_page:
+    if (order.supplier or order.supplier_user_id) and is_detail_page:
         result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
 
     if is_list_parent:
