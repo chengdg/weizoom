@@ -697,7 +697,6 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
-        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -717,6 +716,8 @@ def get_detail_response(request):
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
         if (not child_orders and order.supplier_user_id):
             child_orders = [order]
+        if len(child_orders):
+            order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True, mall_type=request.user_profile.webapp_type)
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
