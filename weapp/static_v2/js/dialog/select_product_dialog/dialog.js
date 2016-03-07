@@ -2,7 +2,10 @@ ensureNS('W.dialog.termite');
 
 W.dialog.termite.SelectProductDialog = W.dialog.Dialog.extend({
     events: _.extend({
-        'click .xa-selectProduct': 'onSelectProduct'
+        'click .xa-selectProduct': 'onSelectProduct',
+        'click .xa-search': 'onSearch',
+        'keypress .xa-query': 'onPressKey'
+
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
@@ -26,9 +29,21 @@ W.dialog.termite.SelectProductDialog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
-        this.table.reload();
+        this.onSearch();
     },
-
+    onSearch: function(event) {
+        var query = $.trim(this.$el.find('.xa-query').val());
+        this.table.reload({
+            type: 'name',
+            query: query
+        })
+    },
+    onPressKey: function(event) {
+        var keyCode = event.keyCode;
+        if (keyCode == 13) {
+            this.onSearch(event);
+        }
+    },
     onSelectProduct: function(event) {
         var $checkbox = $(event.currentTarget);
         if (!this.enableMultiSelection) {
@@ -57,13 +72,11 @@ W.dialog.termite.SelectProductDialog = W.dialog.Dialog.extend({
         this.$('tbody tr').each(function() {
             var $tr = $(this);
             if ($tr.find('.xa-selectProduct').is(':checked')) {
-                console.log('MMMMDMDMMD&&&&&&&*****************??');
-                console.log('=========');
                 console.log($tr);
                 var productId = $tr.data('id');
                 data.push(_this.table.getDataItem(productId).toJSON());
             }
-        })
+        });
         return data;
     }
 })
