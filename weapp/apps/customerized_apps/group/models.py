@@ -67,6 +67,7 @@ class GroupRelations(models.Document):
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	member_id = models.StringField(default="", max_length=20, unique_with=['belong_to']) #团购发起者，团长的id
 	group_type = models.StringField()  #小团购类型
+	is_valid = models.BooleanField(default=False) #是否开团成功
 	group_status = models.BooleanField(default=False) #团购状态
 	grouped_number = models.IntField(default=0) #团购人数
 	grouped_member_ids = models.ListField() #团员的id List
@@ -81,11 +82,12 @@ class GroupDetail(models.Document):
 	"""
 	团购详情记录表
 	"""
-	belong_to = models.StringField(default="", max_length=100) #对应的小团购id
+	relation_belong_to = models.StringField(default="", max_length=100) #对应的小团购id
 	owner_id = models.LongField() #团购发起者id
 	grouped_member_id = models.LongField() #团购参与者id
 	grouped_member_name = models.StringField(default='', max_length=1024) #团购参与者昵称
 	is_already_paid = models.BooleanField(default=False) #是否已经支付成功
+	order_id = models.StringField(default="", max_length=100) #对应的订单号
 	created_at = models.DateTimeField() #创建时间
 
 	meta = {

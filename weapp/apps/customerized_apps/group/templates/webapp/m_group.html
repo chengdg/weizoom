@@ -19,9 +19,21 @@
 	var is_helped = true;
     var is_self_page = true;
     var page_owner_member_id = '';
+    var group_type = '';
 	$(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
+        //选择团购按钮点击
+        $('.wui-i-choose_group_box').delegate('li', 'click', function(){
+            var $this = $(this).find('span').first();
+            var type = $this.attr('data-type');
+            var className = 'radio' === type ? 'radio-select' : 'checkbox-select';
+            if('radio' === type){
+                $(this).siblings().find('span').removeClass(className);
+                if($this.hasClass(className)) return;
+            }
+            $this.toggleClass(className);
+        });
         if(W.isPC){
             return false;
         }
@@ -29,7 +41,6 @@
         //展示参与统计
         getDynamicData();
     });
-
 	function GetQueryString(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
@@ -147,27 +158,33 @@
     }
     //我要开团
 	function openGruop(){
-        W.getApi().call({
-            app: 'm/apps/group',
-            resource: 'group_participance',
-            method: 'post',
-            args: {
-                webapp_owner_id: W.webappOwnerId,
-                group_record_id: W.appRecordId,
-                fid: page_owner_member_id
-            },
-            success: function(data) {
-                console.log('openGruop()');
-                //TODO 传is_group_order,group_record_id过去
-                var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
-                window.open(data_href, '_tab');
-            },
-            error: function(data) {
-                console.error(data.errMsg);
-            }
-        });
-
+        group_type = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-name');
+        if (group_type){
+            W.getApi().call({
+                app: 'm/apps/group',
+                resource: 'group_participance',
+                method: 'post',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    group_record_id: W.appRecordId,
+                    fid: page_owner_member_id,
+                    group_type: group_type
+                },
+                success: function(data) {
+                    console.log('openGruop()');
+                    //TODO 传is_group_order,group_record_id过去
+                    var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
+                    window.open(data_href, '_tab');
+                },
+                error: function(data) {
+                    console.error(data.errMsg);
+                }
+            });
+        }else{
+            wuiAlert('请选择团购类型！');
+        }
     }
+
     //直接参团
     function openJoinGruop(){
         var link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id='+W.webappOwnerId;
