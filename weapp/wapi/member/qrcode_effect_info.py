@@ -66,9 +66,9 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				webapp_users = member_models.WebAppUser.objects.filter(member_id__in=sy)
 				webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 				webapp_user_ids = set(webapp_user_id2member_id.keys())
-
-				orders = Order.by_webapp_user_id(webapp_user_ids).filter(status__in=(ORDER_STATUS_PAYED_SUCCESSED,
-																					 ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
+				#status__in=(ORDER_STATUS_PAYED_SUCCESSED,
+																					 # ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED)
+				orders = Order.by_webapp_user_id(webapp_user_ids).filter()
 				setting_id2count[sx]['cash'] =0
 				setting_id2count[sx]['card'] =0
 				for order in orders:
