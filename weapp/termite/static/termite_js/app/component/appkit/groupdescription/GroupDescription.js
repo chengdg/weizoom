@@ -247,15 +247,21 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				}
 			}, {silent: true});
 
+			console.log('6666666666666666666666666666K');
+			console.log(product);
+			console.log('77777777777777777777777777777K');
+
 			if (value[0]) {
 				//更新propertyView中的图片
 				console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvKEKEKEKEK');
 				console.log(value[0]);
 				
-				var $target = $propertyViewNode.find($('.xa-productList'));
-				$target.find('.xa-productList').removeClass('xui-hide');
-				$target.find('.propertyGroup_property_dialogSelectField .productImg').find('img').attr('src',product.thumbnails_url);
+				//var $target = $propertyViewNode.find($('.xa-productList'));
+				//$target.find('.xa-productList').removeClass('xui-hide');
+				//$target.find('.propertyGroup_property_dialogSelectField .productImg').find('img').attr('src',product.thumbnails_url);
 				//$target.find('.propertyGroup_property_dialogSelectField').find('.qrcodeName').removeClass('xui-hide').html(product.name);
+
+				//$target.find('.propertyGroup_property_dialogSelectField .productImg').find('img').attr('src',product.thumbnails_url);
 
 			}
 		}

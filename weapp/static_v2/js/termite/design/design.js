@@ -164,14 +164,13 @@ W.data.getDynamicComponentDataForDialogSelectControl = function(dynamicComponent
 	}else if (dynamicComponentField.dialog === 'W.dialog.termite.SelectProductDialog') {
         var product = dynamicComponent.model.get(dynamicComponentField.name);
 		console.log('GGGGGGGGGGGGGGG@@@@@@@@@@@@@@!!!!!!!!!!>>>>>>>>>>>>>');
-		console.log(product);
-			html = 'AAAA<table class="table table-bordered xb-stripedTable xa-productTable propertyGroup_property_dialogSelectField  xa-productList"><thead style="background:#c8d2e5;"><tr><th width="165">商品信息</th><th width="105">商品价格(元)</th><th width="70">总销量</th></tr></thead><tbody><tr data-id="${product.id}"><td class="text_nowrap" style="max-width:165px;"><img class="productImg" style="width:60px;height:60px;" src="'+product.productImg+'">'+product.productName+'<br>'+product.productBarcode+'</td><td>'+product.productPrice+'</td><td>'+product.productSocks+'</td></tr></tbody></table>';
+		console.log(product.productId);
 
-        //if (product.productName != '') {
-			//html = 'AAAA<table class="table table-bordered xb-stripedTable xa-productTable propertyGroup_property_dialogSelectField  xa-productList"><thead style="background:#c8d2e5;"><tr><th width="165">商品信息</th><th width="105">商品价格(元)</th><th width="70">总销量</th></tr></thead><tbody><tr data-id="${product.id}"><td class="text_nowrap" style="max-width:165px;"><img class="productImg" style="width:60px;height:60px;" src="'+product.productImg+'">'+product.productName+'<br>'+product.productBarcode+'</td><td>'+product.productPrice+'</td><td>'+product.productSocks+'</td></tr></tbody></table>';
-        //} else {
-			//html = 'LLLL<table class="table table-bordered xb-stripedTable xa-productTable propertyGroup_property_dialogSelectField  xa-productList xui-hide"><thead style="background:#c8d2e5;"><tr><th width="165">商品信息</th><th width="105">商品价格(元)</th><th width="70">总销量</th></tr></thead><tbody><tr data-id="${product.id}"><td class="text_nowrap" style="max-width:165px;"><img class="productImg" style="width:60px;height:60px;" src="'+product.productImg+'">'+product.productName+'<br>'+product.productBarcode+'</td><td>'+product.productPrice+'</td><td>'+product.productSocks+'</td></tr></tbody></table>';
-        //}
+        if (product.productId != "") {
+			html = 'AAAA<table class="table table-bordered xb-stripedTable xa-productTable propertyGroup_property_dialogSelectField  xa-productList"><thead style="background:#c8d2e5;"><tr><th width="165">商品信息</th><th width="105">商品价格(元)</th><th width="70">总销量</th></tr></thead><tbody><tr data-id="${product.id}"><td class="text_nowrap" style="max-width:165px;"><img class="productImg" id="xxtest" style="width:60px;height:60px;" src="'+product.productImg+'">'+product.productName+'<br>'+product.productBarcode+'</td><td>'+product.productPrice+'</td><td>'+product.productSocks+'</td></tr></tbody></table>';
+        } else {
+			html = 'LLLL<table class="table table-bordered xb-stripedTable xa-productTable propertyGroup_property_dialogSelectField  xa-productList xui-hide"><thead style="background:#c8d2e5;"><tr><th width="165">商品信息</th><th width="105">商品价格(元)</th><th width="70">总销量</th></tr></thead><tbody><tr data-id="${product.id}"><td class="text_nowrap" style="max-width:165px;"><img class="productImg" style="width:60px;height:60px;" src="'+product.productImg+'">'+product.productName+'<br>'+product.productBarcode+'</td><td>'+product.productPrice+'</td><td>'+product.productSocks+'</td></tr></tbody></table>';
+        }
     }
 
 	return html;

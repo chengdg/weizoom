@@ -488,7 +488,6 @@
                     <div class="propertyGroup_property_dialogSelectField propertyGroup_property_horizontalField">
                         <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
                         <div class="propertyGroup_property_input" style="position:relative;width:20%">
-                            {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
                             <input data-field="${field.name}" name="${field.name}" type="hidden" />
                                 <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}">
                                     {{if component.model.get(field.name).produceName}}
@@ -498,7 +497,7 @@
                                     {{/if}}
                                 </button>
                             {{if component.model.get(field.name)}}
-                               <div style="width:60px;height:60px;background:red;">
+                               <div>
                                   {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
                                </div>
                             {{/if}}
