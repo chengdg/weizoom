@@ -27,10 +27,11 @@ class MGroup(resource.Resource):
 		member = request.member
 		isMember = False
 		timing = 0
-		is_already_participanted = False
+		is_group_leader = False
 		is_helped = False
 		self_page = False
 		group_status = False
+		group_type = ''
 		page_owner_name = ''
 		page_owner_icon = ''
 		page_owner_member_id = 0
@@ -45,10 +46,8 @@ class MGroup(resource.Resource):
 			response.errMsg = 'is_deleted'
 			return response.get_response()
 		record = record.first()
-
 		#获取活动状态
 		activity_status = record.status_text
-
 		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 		data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
 		data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
@@ -67,8 +66,10 @@ class MGroup(resource.Resource):
 				timing = (record.end_time - datetime.today()).total_seconds()
 
 				if group_relation_id:
-					group_relation_info = app_models.GroupRelations.objects(id=group_relation_id)
+					# 已经开过团
+					group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
 					group_status = group_relation_info.group_status
+					group_type = group_relation_info.group_type
 					#判断分享页是否自己的主页
 					if fid is None or str(fid) == str(member_id):
 						curr_member_payed_orders = Order.objects.filter(
@@ -77,8 +78,21 @@ class MGroup(resource.Resource):
 							group_relation_id=group_relation_id,
 							status=ORDER_STATUS_PAYED_NOT_SHIP
 						)
+						is_group_leader = True if group_relation_info.member_id == str(member_id) else False
 					else:
-						is_helped = group_relation_info.filter(grouped_member_id=fid).count()>0
+						is_helped = True if str(member_id) in group_relation_info.grouped_member_ids else False
+
+					# 获取该主页帮助者列表
+					helpers = app_models.GroupDetail.objects(belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
+					member_ids = [h.helper_member_id for h in helpers]
+					member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+					for h in helpers:
+						temp_dict = {
+							'member_id': h.helper_member_id,
+							'user_icon': member_id2member[h.helper_member_id].user_icon,
+							'username': member_id2member[h.helper_member_id].username_size_ten
+						}
+						grouped_member_info_list.append(temp_dict)
 
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
@@ -92,36 +106,18 @@ class MGroup(resource.Resource):
 					page_owner_icon = page_owner.user_icon
 					page_owner_member_id = fid
 
-
-				# curr_member_group_info.reload()
-				# if curr_member_group_info.is_valid:
-				# 	is_already_participanted = True
-				# else:
-				# 	is_already_participanted = False
-
-				# 获取该主页帮助者列表
-				helpers = app_models.GroupDetail.objects(belong_to=record_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
-				member_ids = [h.helper_member_id for h in helpers]
-				member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-				for h in helpers:
-					temp_dict = {
-						'member_id': h.helper_member_id,
-						'user_icon': member_id2member[h.helper_member_id].user_icon,
-						'username': member_id2member[h.helper_member_id].username_size_ten
-					}
-					grouped_member_info_list.append(temp_dict)
-
 		member_info = {
 			'isMember': isMember,
 			'timing': timing,
-			# 'is_already_participanted': is_already_participanted,
-			'is_helped': is_helped,
 			'self_page': self_page,
+			'is_helped': is_helped,
+			'is_group_leader': is_group_leader,
 			'page_owner_name': page_owner_name,
 			'page_owner_icon': page_owner_icon,
 			'page_owner_member_id': page_owner_member_id,
 			'activity_status': activity_status,
-			'group_status': group_status
+			'group_status': group_status,
+			'group_type': group_type
 		}
 
 		response = create_response(200)

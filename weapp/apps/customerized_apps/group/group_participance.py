@@ -102,7 +102,7 @@ class GroupParticipance(resource.Resource):
 		"""
 		我要开团
 		"""
-		group_record_id = request.POST['id']
+		group_record_id = request.POST['group_record_id']
 		member_id = request.POST['fid']
 		group_type = request.POST['group_type']
 		try:

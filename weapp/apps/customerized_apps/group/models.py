@@ -61,6 +61,9 @@ class Group(models.Document):
 # 	}
 
 class GroupRelations(models.Document):
+	"""
+	用户自己发起的小团购记录表
+	"""
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	member_id = models.StringField(default="", max_length=20, unique_with=['belong_to']) #团购发起者，团长的id
 	group_type = models.StringField()  #小团购类型
@@ -78,7 +81,7 @@ class GroupDetail(models.Document):
 	"""
 	团购详情记录表
 	"""
-	belong_to = models.StringField(default="", max_length=100) #对应的活动id
+	belong_to = models.StringField(default="", max_length=100) #对应的小团购id
 	owner_id = models.LongField() #团购发起者id
 	grouped_member_id = models.LongField() #团购参与者id
 	grouped_member_name = models.StringField(default='', max_length=1024) #团购参与者昵称
