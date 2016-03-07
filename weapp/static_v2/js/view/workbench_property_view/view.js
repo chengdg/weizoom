@@ -38,7 +38,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         'click .xa-removeImageButton': 'onClickRemoveDynamicComponentButton',
         'click .xa-protocol-deleteData':'onClickDeleteData',
         'mouseover .propertyGroup_property_dynamicControlField_control': 'onMouseoverField',
-        'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
+        'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',
 
         'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger',
         'click .xa-outerFunctionTrigger': 'onClickOuterFunctionTrigger',
@@ -49,14 +49,14 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
         'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
-        'click .xa-deleteProductButton': 'onClickDeleteProduct',
-        'mouseover .xa-productImgBox>img': 'onMouseoverProduct',
-
         //拼红包选择类型
         'click .xa-red-packet-selector': 'onClickRedPacketSelector',
+
         //团购
         'click .propertyGroup_property_productDialogSelectField .btn': 'initProductDialogButton'
-	},
+        'click .xa-deleteProductButton': 'onClickDeleteProduct',
+        'mouseover .xa-productImgBox>img': 'onMouseoverProduct',
+    },
 
     getTemplate: function() {
         $('#workbench-property-view-tmpl-src').template('workbench-property-view-tmpl');
