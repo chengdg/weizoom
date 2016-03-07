@@ -71,7 +71,7 @@ def export_orders_json(request):
          u'现金支付金额', u'微众卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
-         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注']
+         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'订单类型']
     ]
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
@@ -402,8 +402,8 @@ def export_orders_json(request):
                 payment_time = ''
 
             # 优惠券和金额
-            coupon_name = ''
-            coupon_money = ''
+            coupon_name = '无'
+            coupon_money = '0'
             if order.coupon_id:
                 role_id = coupon2role.get(order.coupon_id, None)
                 if role_id:
@@ -499,13 +499,13 @@ def export_orders_json(request):
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
-                    final_price + weizoom_card_money,
-                    final_price,
-                    u'' if order.status == 0 else weizoom_card_money,
+                    order.total_purchase_price if not mall_type and(order.supplier or order.supplier_user_id) else final_price + weizoom_card_money,
+                    u'0' if not mall_type and(order.supplier or order.supplier_user_id) else final_price,
+                    u'0' if order.status == 0 else weizoom_card_money,
                     order.postage,
-                    u'' if order.status == 0 else order.integral_money,
-                    u'' if order.status == 1 else coupon_money,
-                    u'' if order.status == 1 else coupon_name,
+                    u'0' if order.status == 0 else order.integral_money,
+                    u'0' if order.status == 1 else coupon_money,
+                    u'无' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8'),
                     order.ship_name.encode('utf8'),
@@ -522,7 +522,8 @@ def export_orders_json(request):
                     u'' if order.customer_message == '' else order.customer_message.encode('utf-8'),
                     member_source_name,
                     father_name_or_qrcode_name,
-                    before_scanner_qrcode_is_member
+                    before_scanner_qrcode_is_member,
+                    u'首单' if order.is_first_order else u'非首单'
 
                 ]
                 if has_supplier:
@@ -543,13 +544,13 @@ def export_orders_json(request):
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
-                    u'',
-                    u'',
-                    u'',
-                    u'',
-                    u'',
-                    u'' if order.status == 1 else coupon_money,
-                    u'' if order.status == 1 else coupon_name,
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-' if order.status == 1 else coupon_money,
+                    u'-' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8'),
                     order.ship_name.encode('utf8'),
@@ -562,11 +563,12 @@ def export_orders_json(request):
                     express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
                     (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
                     postage_time,
-                    u'',
-                    u'',
+                    u'-',
+                    u'-',
                     member_source_name,
                     father_name_or_qrcode_name,
-                    before_scanner_qrcode_is_member
+                    before_scanner_qrcode_is_member,
+                    u'首单' if order.is_first_order else u'非首单'
 
                 ]
                 if has_supplier:
@@ -586,19 +588,19 @@ def export_orders_json(request):
                         order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                         payment_time,
                         u'(赠品)' + premium_product['name'],
-                        u'',
+                        u'-',
                         premium_product['price'],
                         premium_product['count'],
                         0.0,
                         premium_product_id2weight[premium_product['id']] * 2 * relation.number,
                         payment_type[str(int(order.pay_interface_type))],
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
                         order_status,
                         order.buyer_name.encode('utf8'),
                         order.ship_name.encode('utf8'),
@@ -611,8 +613,8 @@ def export_orders_json(request):
                         express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
                         (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
                         postage_time,
-                        u'',
-                        u'',
+                        u'-',
+                        u'-',
                         member_source_name,
                         father_name_or_qrcode_name,
                         before_scanner_qrcode_is_member
