@@ -26,6 +26,7 @@ import re
 from mall.templatetags.mall_filter import *
 from weixin.user.module_api import get_all_active_mp_user_ids
 from account.models import UserProfile
+from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
 
 COUNT_PER_PAGE = 20
 
@@ -68,7 +69,7 @@ def export_orders_json(request):
     orders = [
         [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
          u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
-         u'现金支付金额', u'微众卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
+         u'现金支付金额', u'微众卡+惠惠卡使用的所有金额', u'惠惠卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'是否老用户']
@@ -115,9 +116,15 @@ def export_orders_json(request):
             if order.type != PRODUCT_INTEGRAL_TYPE and order.status == ORDER_STATUS_SUCCESSED:
                 finished_order_count += 1
     else:
-        order_count = order_list.count()
-        finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
-        order_list = list(order_list.all())
+        try:
+            order_count = order_list.count()
+        except:
+            order_count = len(order_list)
+        try:
+            finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
+        except:
+            finished_order_count = len(filter(__filter_order_status, order_list))
+        # order_list = list(order_list.all())
     # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
     # 商品总额：
     total_product_money = 0.0
@@ -287,6 +294,7 @@ def export_orders_json(request):
     temp_premium_id = None
     temp_premium_products = []
     for order in order_list:
+        order= __filter_order(order)
         # 获取order对应的member的显示名
         if webappuser2member:
             member = webappuser2member.get(order.webapp_user_id, None)
@@ -502,6 +510,7 @@ def export_orders_json(request):
                     final_price + weizoom_card_money,
                     final_price,
                     u'' if order.status == 0 else weizoom_card_money,
+                    order.weizoom_card_money_huihui,
                     order.postage,
                     u'' if order.status == 0 else order.integral_money,
                     u'' if order.status == 1 else coupon_money,
@@ -543,6 +552,7 @@ def export_orders_json(request):
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
+                    u'',
                     u'',
                     u'',
                     u'',
@@ -599,6 +609,7 @@ def export_orders_json(request):
                         u'',
                         u'',
                         u'',
+                        u'',
                         order_status,
                         order.buyer_name.encode('utf8'),
                         order.ship_name.encode('utf8'),
@@ -627,6 +638,11 @@ def export_orders_json(request):
     if temp_premium_id:
         # 处理赠品信息
         orders.extend(temp_premium_products)
+
+    if mall_type:
+        for order in orders:
+            del order[13]
+        orders[0][12] = u"微众卡支付金额"
     orders.append([
         u'总计',
         u'订单量:' + str(order_count).encode('utf8'),
@@ -634,7 +650,7 @@ def export_orders_json(request):
         u'商品金额:' + str(total_product_money).encode('utf8'),
         u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
         u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
-        u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
+        (u'微众卡+惠惠卡使用的所有金额:' if not mall_type else u'微众卡支付金额') + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
         u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
@@ -918,7 +934,13 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 
     # 返回订单的数目
-    order_return_count = orders.count()
+    try:
+        try:
+            order_return_count = orders.count()
+        except:
+            order_return_count = len(orders)
+    except:
+        order_return_count = 0
     ###################################################
     if count_per_page > 0:
         # 进行分页
@@ -964,6 +986,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     # 构造返回的order数据
     for order in orders:
         # 获取order对应的member的显示名
+        order = __filter_order(order)
         member = webappuser2member.get(order.webapp_user_id, None)
         if member:
             order.buyer_name = member.username_for_html
@@ -1106,6 +1129,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
+            'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
+            'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),
             'pay_money': ('%.2f' % (order.total_purchase_price)) if (not mall_type and order.supplier_user_id > 0) else '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
@@ -1132,7 +1157,8 @@ def __get_select_params(request):
     order_status = request.GET.get('order_status', '').strip()
     isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
     date_interval_type = request.GET.get('date_interval_type', '')
-    is_first_order = request.GET.get('order_type', '').strip()
+    is_first_order = request.GET.get('is_first_order', '').strip()
+    order_type = request.GET.get('order_type', '').strip()
 
     # 填充query
     query_dict = dict()
@@ -1156,6 +1182,8 @@ def __get_select_params(request):
         query_dict['isUseWeizoomCard'] = isUseWeizoomCard
     if len(is_first_order) and is_first_order != '-1':
         query_dict['is_first_order'] = int(is_first_order)
+    if len(order_type) and order_type != '-1':
+        query_dict['order_type'] = int(order_type)
 
      # 时间区间
     try:
@@ -1223,7 +1251,12 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
             s_order_id =  "%s^%su" % (order_id, user_profile.user_id)
             orders = orders.filter(Q(order_id=order_id) | Q(order_id=s_order_id))
             query_dict.pop("order_id")
-
+    #添加惠惠卡order_type
+    order_type = None
+    if query_dict.get('order_type'):
+        order_type = query_dict.get('order_type')
+        query_dict.pop("order_type")
+    #添加惠惠卡order_type
     if len(query_dict):
         orders = orders.filter(**query_dict)
 
@@ -1238,11 +1271,41 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
             orders = orders.filter(payment_time__gte=start_time, payment_time__lt=end_time)
         elif '3' == date_interval_type:
             order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
-            order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
-            orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
+            orders = orders.filter(order_id__in=order_order_ids)
+
+    #惠惠卡需求
+    order_order_ids= []
+    if order_type and int(order_type) == 1:
+        card_ids = []
+        adict = {}
+        tmp = 0
+        for c in WeizoomCardHasOrder.objects.filter(owner_id=user_profile.user_id):
+            adict["{}_{}".format(c.order_id,tmp)] = c.card_id
+            tmp += 1
+            if tmp > 10:
+                tmp = 0
+        card_ids = [c.id for c in WeizoomCard.objects.filter(id__in=adict.values(),weizoom_card_id__startswith="9")]
+        for key, value in adict.items():
+            if value in card_ids:
+                order_order_ids.append(int(key.split('_')[0]))
+        orders = orders.filter(order_id__in=order_order_ids)
     return orders
 
+def __filter_order(order):
+    order.weizoom_card_money_huihui = float(0)
+    order.weizoom_card_money_rest = float(0)
+    if order.weizoom_card_money >0:
+        card_orders = WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
+        for card_order in card_orders:
+            if card_order.card:
+                if card_order.card.weizoom_card_id.startswith("9"):
+                    order.weizoom_card_money_huihui += float(card_order.money)
+        order.weizoom_card_money_rest = order.weizoom_card_money - order.weizoom_card_money_huihui
+    return order
 
+def __filter_order_status(order):
+    if order.status == ORDER_STATUS_SUCCESSED:
+        return order
 
 # 渠道扫描相关
 @api(app='mall', resource='channel_qrcode_payed_orders', action='get')
