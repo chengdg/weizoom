@@ -72,7 +72,7 @@ def export_orders_json(request):
          u'现金支付金额', u'微众卡+惠惠卡使用的所有金额', u'惠惠卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
-         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'是否老用户']
+         u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'扫描带参数二维码之前是否已关注', u'是否首单']
     ]
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
@@ -371,7 +371,7 @@ def export_orders_json(request):
             province = area.split(' ')[0]
             address = '%s %s' % (area, order.ship_address)
         else:
-            province = u''
+            province = u'-'
             address = '%s' % (order.ship_address)
 
         if order.order_source:
@@ -407,11 +407,11 @@ def export_orders_json(request):
             if order.payment_time and DEFAULT_CREATE_TIME != order.payment_time.__str__():
                 payment_time = order.payment_time.strftime('%Y-%m-%d %H:%M').encode('utf8')
             else:
-                payment_time = ''
+                payment_time = '-'
 
             # 优惠券和金额
-            coupon_name = ''
-            coupon_money = ''
+            coupon_name = '无'
+            coupon_money = '0'
             if order.coupon_id:
                 role_id = coupon2role.get(order.coupon_id, None)
                 if role_id:
@@ -495,6 +495,8 @@ def export_orders_json(request):
                     leader_remark += temp_leader_names[j]
                     j += 1
 
+                order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
+                express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                 tmp_order = [
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -507,39 +509,42 @@ def export_orders_json(request):
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
-                    final_price + weizoom_card_money,
-                    final_price,
-                    u'' if order.status == 0 else weizoom_card_money,
+                    order.total_purchase_price if not mall_type and(order.supplier or order.supplier_user_id) else final_price + weizoom_card_money,
+                    u'0' if not mall_type and(order.supplier or order.supplier_user_id) else final_price,
+                    u'0' if order.status == 0 else weizoom_card_money,
                     order.weizoom_card_money_huihui,
                     order.postage,
-                    u'' if order.status == 0 else order.integral_money,
-                    u'' if order.status == 1 else coupon_money,
-                    u'' if order.status == 1 else coupon_name,
+                    u'0' if order.status == 0 else order.integral_money,
+                    u'0' if order.status == 1 else coupon_money,
+                    u'无' if order.status == 1 else coupon_name,
                     order_status,
-                    order.buyer_name.encode('utf8'),
-                    order.ship_name.encode('utf8'),
-                    order.ship_tel.encode('utf8'),
-                    province.encode('utf8'),
-                    address.encode('utf8'),
+                    order.buyer_name.encode('utf8') if order.buyer_name else '-',
+                    order.ship_name.encode('utf8') if order.ship_name else '-',
+                    order.ship_tel.encode('utf8') if order.ship_tel else '-',
+                    province.encode('utf8') if province else '-',
+                    address.encode('utf8') if address else '-',
                     temp_leader_names[0].encode('utf8'),
                     leader_remark.encode('utf8'),
                     source.encode('utf8'),
-                    express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
-                    (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                    postage_time,
+                    express_name if express_name else '-',
+                    order_express_number if order_express_number else '-',
+                    postage_time if postage_time else '-',
                     order.remark.encode('utf8'),
-                    u'' if order.customer_message == '' else order.customer_message.encode('utf-8'),
-                    member_source_name,
-                    father_name_or_qrcode_name,
-                    before_scanner_qrcode_is_member
+                    u'-' if order.customer_message == '' else order.customer_message.encode('utf-8'),
+                    member_source_name if member_source_name else '-',
+                    father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
+                    before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
+                    u'首单' if order.is_first_order else u'非首单'
 
                 ]
                 if has_supplier:
-                    tmp_order.append( u'' if 0.0 == product.purchase_price else product.purchase_price)
-                    tmp_order.append(u''  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
+                    tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
+                    tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
             else:
+                order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
+                express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                 tmp_order=[
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -552,31 +557,32 @@ def export_orders_json(request):
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
-                    u'',
-                    u'',
-                    u'',
-                    u'',
-                    u'',
-                    u'',
-                    u'' if order.status == 1 else coupon_money,
-                    u'' if order.status == 1 else coupon_name,
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-',
+                    u'-' if order.status == 1 else coupon_money,
+                    u'-' if order.status == 1 else coupon_name,
                     order_status,
-                    order.buyer_name.encode('utf8'),
-                    order.ship_name.encode('utf8'),
-                    order.ship_tel.encode('utf8'),
-                    province.encode('utf8'),
-                    address.encode('utf8'),
+                    order.buyer_name.encode('utf8') if order.buyer_name else '-',
+                    order.ship_name.encode('utf8') if order.ship_name else '-',
+                    order.ship_tel.encode('utf8') if order.ship_tel else '-',
+                    province.encode('utf8') if province else '-',
+                    address.encode('utf8') if address else '-',
                     temp_leader_names[0].encode('utf8'),
                     leader_remark.encode('utf8'),
                     source.encode('utf8'),
-                    express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
-                    (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                    postage_time,
-                    u'',
-                    u'',
-                    member_source_name,
-                    father_name_or_qrcode_name,
-                    before_scanner_qrcode_is_member
+                    express_name if express_name else '-',
+                    order_express_number if order_express_number else '-',
+                    postage_time if postage_time else '-',
+                    u'-',
+                    u'-',
+                    member_source_name if member_source_name else '-',
+                    father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
+                    before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
+                    u'首单' if order.is_first_order else u'非首单'
 
                 ]
                 if has_supplier:
@@ -591,42 +597,44 @@ def export_orders_json(request):
                 if order_status != STATUS2TEXT[1] and order_status != STATUS2TEXT[7]:
                     total_premium_product += len(premium_products)
                 for premium_product in premium_products:
+                    order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
+                    express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                     tmp_order = [
                         order_id,
                         order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
                         payment_time,
                         u'(赠品)' + premium_product['name'],
-                        u'',
+                        u'-',
                         premium_product['price'],
                         premium_product['count'],
                         0.0,
                         premium_product_id2weight[premium_product['id']] * 2 * relation.number,
                         payment_type[str(int(order.pay_interface_type))],
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
-                        u'',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
+                        u'-',
                         order_status,
-                        order.buyer_name.encode('utf8'),
-                        order.ship_name.encode('utf8'),
-                        order.ship_tel.encode('utf8'),
-                        province.encode('utf8'),
-                        address.encode('utf8'),
+                        order.buyer_name.encode('utf8') if order.buyer_name else '-',
+                        order.ship_name.encode('utf8') if order.ship_name else '-',
+                        order.ship_tel.encode('utf8') if order.ship_tel else '-',
+                        province.encode('utf8') if province else '-',
+                        address.encode('utf8') if address else '-',
                         temp_leader_names[0].encode('utf8'),
                         leader_remark.encode('utf8'),
                         source.encode('utf8'),
-                        express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
-                        (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                        postage_time,
-                        u'',
-                        u'',
-                        member_source_name,
-                        father_name_or_qrcode_name,
-                        before_scanner_qrcode_is_member
+                        express_name if express_name else '-',
+                        order_express_number if order_express_number else '-',
+                        postage_time if postage_time else '-',
+                        u'-',
+                        u'-',
+                        member_source_name if member_source_name else '-',
+                        father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
+                        before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
                     ]
                     if has_supplier:
                         tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
