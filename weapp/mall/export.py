@@ -252,12 +252,12 @@ MALL_ORDER_SECOND_NAV = {
             'title': u'批量发货',
             'url': 'javascript:void(0);',
             'permission': 'manage_order_batch_delivery'
-        },{
-            'name': ORDER_MONEY,
-            'title': u'结算管理',
-            'url': 'http://dev.money.com/weapp/orders_to_money/',
-            'permission': 'manage_order_batch_delivery',
-            'need_token': True
+        # },{
+        #     'name': ORDER_MONEY,
+        #     'title': u'结算管理',
+        #     'url': 'http://dev.money.com/weapp/orders_to_money/',
+        #     'permission': 'manage_order_batch_delivery',
+        #     'need_token': True
         }
     ]
 }
