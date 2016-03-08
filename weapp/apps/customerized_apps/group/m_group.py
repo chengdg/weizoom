@@ -33,6 +33,8 @@ class MGroup(resource.Resource):
 		group_status = False
 		group_type = ''
 		grouped_number = 0
+		# product_original_price = 0
+		# product_group_price = 0
 		page_owner_name = ''
 		page_owner_icon = ''
 		page_owner_member_id = 0
@@ -114,7 +116,9 @@ class MGroup(resource.Resource):
 			'activity_status': activity_status,
 			'group_status': group_status, #小团购状态
 			'group_type': int(group_type),
-			'grouped_number': int(grouped_number)
+			'grouped_number': int(grouped_number),
+			# 'product_original_price': product_original_price,
+			# 'product_group_price': product_group_price
 		}
 
 		response = create_response(200)

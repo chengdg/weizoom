@@ -1946,11 +1946,10 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-bar{
     width: auto;
-    height: 4px;
-    background:#500001;
-    margin-left: 60px;
+    height: 15px;
+    background:#E6E6E6;
     margin-right: 60px;
-    border-radius: 2px;
+    border-radius: 10px;
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-box{
     width: auto;
@@ -1968,20 +1967,17 @@ li.wui-selectBox-display-table {
 
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-bar_process{
-    background: #FF6E02;
+    background: #30D8B4;
     width: 0%;
     height: 100%;
-    border-radius: 2px;
+    border-radius: 10px;
     transition: width 3s ease-in-out;
     -moz-transition: width 3s ease-in-out; /* Firefox 4 */
     -webkit-transition: width 3s ease-in-out; /* Safari 和 Chrome */
     -o-transition: width 3s ease-in-out; /* Opera */
+	display: inline-block;
 }
 
-.wui-group-container .wui-i-powerbar_group .wui-i-power_money{
-    width: 70%;
-    margin: 5px auto 5px auto;
-    font-size:smaller;
+.wui-group-container .wui-i-powerbar_group .wui-i-total_number{
     color:#ff2742;
-    text-align: right;
 }

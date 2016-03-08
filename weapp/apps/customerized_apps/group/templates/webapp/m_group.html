@@ -7,7 +7,6 @@
 	}
     .xui-share {
         background: url("/termite_static/img/component/powerme/share.png") no-repeat scroll 82% 10px / 53% auto rgba(0, 0, 0, 0);
-        height: 75%;
         position: fixed;
         text-align: center;
         top: 5%;
@@ -19,6 +18,35 @@
         text-align: center;
         width: 100%;
     }
+    /* 分享的closeButton */
+    .xui-colseButton {
+        margin-top: 18%;
+        color: #fff;
+    }
+
+    .xui-attention{
+        position: fixed;
+        top: 12%;
+        width: 100%;
+        text-align: center;
+        z-index: 10001;
+    }
+    .xui-attention .xui-twoDimensionBox {
+        background: #fff;
+        border-radius: 8px;
+        padding: 5px 20px 20px 20px;
+        width: 260px;
+        display: inline-block;
+    }
+    .xui-attention .xui-twoDimension{
+        display: block;
+        height: 180px;
+        position: relative;
+        width: 180px;
+        margin-left: 40px;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
 </style>
 {% endblock %}
 
@@ -26,12 +54,20 @@
     {{ page_html_content|safe }}
     <div class="xui-share xa-share none">
         <div style="margin-top: 49%">
-            <p>请点击右上角</p><p>选择发送给指定好友</p><p>或者分享到朋友圈</p>
-            <div style="display: inline">
-                <p style="display: inline">来帮<p style="color: yellow;display: inline" class="wa-pageownername"></p><p style="display: inline">点赞</p>
-            </div>
+            <p>邀请你的小伙伴，帮你一起拼团</p>
         </div>
-        <div class="xui-colseButton xui-spritebg xa-colseButton"></div>
+        <div class="xui-colseButton xui-spritebg xa-colseButton">知道了</div>
+    </div>
+
+    <!-- 非会员引导 -->
+    <div class="xui-attention xa-attention-guest none">
+        <div class="xui-twoDimensionBox">
+            <div class="xa-attention-tip-one" style="margin-top: 32px;">
+                <p style="font-size: 1.1rem;">长按二维码，关注后即可开团</p>
+            </div>
+            <p style="color:#9E9E9E;">方便您查看团购情况</p>
+            <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
+        </div>
     </div>
 {% endblock %}
 
@@ -90,7 +126,11 @@
                 updateActivityStatus(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
+
+                //已开团
                 if(group_relation_id != ''){
+                    //启动倒计时
+                    renderTime(data.member_info.timing);
                     //进度bar动画
                     runProcessBar(data.member_info.grouped_number,data.member_info.group_type);
                 }
@@ -143,10 +183,16 @@
             if(is_group_leader){
                 $('.wa-using').text('邀请好友参团').on('click', function(){
                         openGuideMask();
+//                        openGuestMask();
                     }).show();
             }else{
-                $('.wa-using').text('我要开团').on('click', openGruop).show();
-			    $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                if(W.isMember){
+                    $('.wa-using').text('我要开团').on('click', openGruop).show();
+                }else{
+                    $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                }
+
             }
         }else{
             var using_msg;
@@ -218,6 +264,20 @@
         window.open(link, '_tab');
     }
 
+    //隐藏所有
+    $('.mask').click(function(){
+        mask('hide');
+//        $('.xui-powerSucceed').addClass('none');
+        $('.xui-attention').addClass('none');
+        $('.xa-share').addClass('none');
+//        $('.xui-errMsg').addClass('none');
+//        $('.xa-i-rules-contentbox').addClass('none');
+//        $('.xa-loadingFrame').addClass('none');
+    });
+    $('.xa-colseButton').click(function(){
+        $('.xa-share').addClass('none');
+        mask('hide');
+    });
     // 活动规则
     $('.xa-i-closebtn').click(function(){
         $('.xa-i-rules-contentbox').addClass('none');
@@ -232,6 +292,41 @@
     function openGuideMask(){
         mask('show');
         $('.xa-share').removeClass('none');
+    }
+    //未关注引导
+    function openGuestMask(){
+        mask('show');
+        $('.xa-attention-guest').removeClass('none');
+    }
+
+    function renderTime(seconds){
+        seconds = parseInt(seconds);
+        var formatTime = function(data){
+            data = parseInt(data);
+            if(data<10){
+                return '0'+data;
+            }
+            return data;
+        };
+        var $s = $('.xa-second');
+        var $m = $('.xa-minute');
+        var $h = $('.xa-hour');
+        var $d = $('.xa-day');
+        var timer = window.setInterval(function(){
+            if(seconds <= 0){
+                window.clearInterval(timer);
+                return false;
+            }
+            var left_seconds = formatTime(seconds%60);
+            var left_minites = formatTime(seconds/60%60);
+            var left_hours = formatTime(seconds/60/60%24);
+            var left_days = formatTime(seconds/60/60/24);
+            $s.text(left_seconds);
+            $m.text(left_minites);
+            $h.text(left_hours);
+            $d.text(left_days);
+            seconds--;
+        },990);
     }
 
     // 进度条
