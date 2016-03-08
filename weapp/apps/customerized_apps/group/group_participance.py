@@ -57,7 +57,6 @@ class GroupParticipance(resource.Resource):
 							created_at = datetime.now()
 						)
 						group_detail.save()
-						group_relation.update()
 					except:
 						response = create_response(500)
 						response.errMsg = u'只能参与一次'
