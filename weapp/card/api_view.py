@@ -44,8 +44,9 @@ def get_update_cache(request):
     owner_ids = owner_ids.split(',')
     owner_id2permissions = {str(ahwp.owner_id): ahwp for ahwp in AccountHasWeizoomCardPermissions.objects.filter(owner_id__in=owner_ids)}
     for owner_id in owner_ids:
-        cache_util.delete_cache(owner_id)
-        get_webapp_owner_info(owner_id)
+        key = 'webapp_owner_info_{wo:%s}' % owner_id
+        cache_util.delete_cache(key)
+        # get_webapp_owner_info(owner_id)
         # update_webapp_owner_info_cache_with_login(owner_id2permissions[owner_id])
     response = create_response(200)
     response.data = u'success'
