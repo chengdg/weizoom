@@ -6,9 +6,9 @@ from core.jsonresponse import create_response
 from core.restful_url_route import api
 from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
 
-from weapp.market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
+from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 
-from weapp.cache.webapp_owner_cache import update_webapp_owner_info_cache_with_login
+from cache.webapp_owner_cache import update_webapp_owner_info_cache_with_login
 
 
 @api(app='card', resource='auth', action='get')
