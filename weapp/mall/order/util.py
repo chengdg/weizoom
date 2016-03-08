@@ -363,7 +363,7 @@ def export_orders_json(request):
             province = area.split(' ')[0]
             address = '%s %s' % (area, order.ship_address)
         else:
-            province = u''
+            province = u'-'
             address = '%s' % (order.ship_address)
 
         if order.order_source:
@@ -399,7 +399,7 @@ def export_orders_json(request):
             if order.payment_time and DEFAULT_CREATE_TIME != order.payment_time.__str__():
                 payment_time = order.payment_time.strftime('%Y-%m-%d %H:%M').encode('utf8')
             else:
-                payment_time = ''
+                payment_time = '-'
 
             # 优惠券和金额
             coupon_name = '无'
@@ -487,6 +487,8 @@ def export_orders_json(request):
                     leader_remark += temp_leader_names[j]
                     j += 1
 
+                order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
+                express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                 tmp_order = [
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -507,31 +509,33 @@ def export_orders_json(request):
                     u'0' if order.status == 1 else coupon_money,
                     u'无' if order.status == 1 else coupon_name,
                     order_status,
-                    order.buyer_name.encode('utf8'),
-                    order.ship_name.encode('utf8'),
-                    order.ship_tel.encode('utf8'),
-                    province.encode('utf8'),
-                    address.encode('utf8'),
+                    order.buyer_name.encode('utf8') if order.buyer_name else '-',
+                    order.ship_name.encode('utf8') if order.ship_name else '-',
+                    order.ship_tel.encode('utf8') if order.ship_tel else '-',
+                    province.encode('utf8') if province else '-',
+                    address.encode('utf8') if address else '-',
                     temp_leader_names[0].encode('utf8'),
                     leader_remark.encode('utf8'),
                     source.encode('utf8'),
-                    express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
-                    (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                    postage_time,
+                    express_name if express_name else '-',
+                    order_express_number if order_express_number else '-',
+                    postage_time if postage_time else '-',
                     order.remark.encode('utf8'),
-                    u'' if order.customer_message == '' else order.customer_message.encode('utf-8'),
-                    member_source_name,
-                    father_name_or_qrcode_name,
-                    before_scanner_qrcode_is_member,
+                    u'-' if order.customer_message == '' else order.customer_message.encode('utf-8'),
+                    member_source_name if member_source_name else '-',
+                    father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
+                    before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
                     u'首单' if order.is_first_order else u'非首单'
 
                 ]
                 if has_supplier:
-                    tmp_order.append( u'' if 0.0 == product.purchase_price else product.purchase_price)
-                    tmp_order.append(u''  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
+                    tmp_order.append( u'-' if 0.0 == product.purchase_price else product.purchase_price)
+                    tmp_order.append(u'-'  if 0.0 ==product.purchase_price else product.purchase_price*relation.number)
                 orders.append(tmp_order)
                 total_product_money += relation.price * relation.number
             else:
+                order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
+                express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                 tmp_order=[
                     order_id,
                     order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -552,22 +556,22 @@ def export_orders_json(request):
                     u'-' if order.status == 1 else coupon_money,
                     u'-' if order.status == 1 else coupon_name,
                     order_status,
-                    order.buyer_name.encode('utf8'),
-                    order.ship_name.encode('utf8'),
-                    order.ship_tel.encode('utf8'),
-                    province.encode('utf8'),
-                    address.encode('utf8'),
+                    order.buyer_name.encode('utf8') if order.buyer_name else '-',
+                    order.ship_name.encode('utf8') if order.ship_name else '-',
+                    order.ship_tel.encode('utf8') if order.ship_tel else '-',
+                    province.encode('utf8') if province else '-',
+                    address.encode('utf8') if address else '-',
                     temp_leader_names[0].encode('utf8'),
                     leader_remark.encode('utf8'),
                     source.encode('utf8'),
-                    express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
-                    (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                    postage_time,
+                    express_name if express_name else '-',
+                    order_express_number if order_express_number else '-',
+                    postage_time if postage_time else '-',
                     u'-',
                     u'-',
-                    member_source_name,
-                    father_name_or_qrcode_name,
-                    before_scanner_qrcode_is_member,
+                    member_source_name if member_source_name else '-',
+                    father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
+                    before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
                     u'首单' if order.is_first_order else u'非首单'
 
                 ]
@@ -583,6 +587,8 @@ def export_orders_json(request):
                 if order_status != STATUS2TEXT[1] and order_status != STATUS2TEXT[7]:
                     total_premium_product += len(premium_products)
                 for premium_product in premium_products:
+                    order_express_number = (order.express_number if not fackorder else fackorder.express_number).encode('utf8')
+                    express_name = express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8')
                     tmp_order = [
                         order_id,
                         order.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8'),
@@ -602,22 +608,22 @@ def export_orders_json(request):
                         u'-',
                         u'-',
                         order_status,
-                        order.buyer_name.encode('utf8'),
-                        order.ship_name.encode('utf8'),
-                        order.ship_tel.encode('utf8'),
-                        province.encode('utf8'),
-                        address.encode('utf8'),
+                        order.buyer_name.encode('utf8') if order.buyer_name else '-',
+                        order.ship_name.encode('utf8') if order.ship_name else '-',
+                        order.ship_tel.encode('utf8') if order.ship_tel else '-',
+                        province.encode('utf8') if province else '-',
+                        address.encode('utf8') if address else '-',
                         temp_leader_names[0].encode('utf8'),
                         leader_remark.encode('utf8'),
                         source.encode('utf8'),
-                        express_util.get_name_by_value(order.express_company_name if not fackorder else fackorder.express_company_name).encode('utf8'),
-                        (order.express_number if not fackorder else fackorder.express_number).encode('utf8'),
-                        postage_time,
+                        express_name if express_name else '-',
+                        order_express_number if order_express_number else '-',
+                        postage_time if postage_time else '-',
                         u'-',
                         u'-',
-                        member_source_name,
-                        father_name_or_qrcode_name,
-                        before_scanner_qrcode_is_member
+                        member_source_name if member_source_name else '-',
+                        father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
+                        before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
                     ]
                     if has_supplier:
                         tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
