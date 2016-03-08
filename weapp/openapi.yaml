@@ -89,5 +89,5 @@ paths:
 definitions:
   group_id:
     name: group_id
-    description: 团购活动id
+    description: 团购活动id，来字团购活动页点击参团跳转到编辑订单页提供
     type: int32
