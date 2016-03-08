@@ -66,7 +66,7 @@ class ConsumptionStatistics(api_resource.ApiResource):
 			webapp_user_ids2order[order.webapp_user_id]['last_pay_time'] =\
 				webapp_user_ids2order[order.webapp_user_id]['last_pay_time'].strftime('%Y-%m-%d %H:%M:%S')
 
-		for member_id,webapp_user_id in member_id2webapp_user_id:
+		for member_id,webapp_user_id in member_id2webapp_user_id.items():
 			if not member_id in member_ids2info:
 				member_ids2info[member_id] = {}
 			if webapp_user_id in webapp_user_ids2order:
@@ -88,4 +88,4 @@ class ConsumptionStatistics(api_resource.ApiResource):
 				member_ids2info[member_id]['last_pay_time'] = None
 		return {
 				'member_ids2info':member_ids2info
-				}
+			}
