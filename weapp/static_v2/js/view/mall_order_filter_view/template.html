@@ -77,17 +77,9 @@
 			<label>订单类型：</label>
 			<select id="orderType" name="orderType" class="w120 m0">
 				<option value="-1">全部</option>
-				{{if mallType == 0}}
-				<option value="1">惠惠卡支付订单</option>
-				{{/if}}
+				<option value="1">首单</option>
+				<option value="0">非首单</option>
 			</select>
-			{{if mallType == 0}}
-			<i class="xui-tip xa-tip">?
-				<div class="xui-i-info xa-info">
-					惠惠卡是惠惠来啦平台奖励优质粉丝的一种特殊微众卡，用户可持惠惠专属卡到合作商家进行消费，具体详情请咨询 微信或qq：2575261826
-				</div>
-			</i>
-			{{/if}}
 		</div>
 
 	</div>
@@ -120,15 +112,10 @@
 				{{/each}}
 			</select>
 		</div>
-		<div class="xui-i-item-last">
-      <input id="firstOrder" class="vm" type="checkBox" value="1" />
-			<span class="ml5 mr30">首单</span>
-      <input id="notfirstOrder" class="vm" type="checkBox" value="0" />
-			<span class="ml5">非首单</span>
-		</div>
-		<div class="xui-i-item-last mt5">
-      <input id="isonlyweizoomcardpay" class="fl" type="checkBox"/>
+			<div class="xui-i-item-last">
+            <input id="isonlyweizoomcardpay" class="fl" type="checkBox"/>
 			<span class="ml5">仅显示微众卡抵扣订单</span>
+
 		</div>
 	</div>
 </div>

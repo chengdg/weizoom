@@ -94,44 +94,7 @@
     background-position: right;
     background-color: #f2f2f2;
 }
-.xui-allOrders .xui-filterPanel .xui-i-item-last input[type="checkbox"]{
-    margin:2px 0 0 0;
-}
-.xui-filterPanel .xui-tip{
-    color:#fff;
-    font-size: 12px;
-    font-style: normal;
-    display: inline-block;
-    vertical-align: middle;
-    content: "？";
-    width: 16px;
-    height: 16px;
-    background: #d4d4d4;
-    line-height: 16px;
-    text-align: center;
-    border-radius: 50%;
-    margin-left: 5px;
-    cursor: pointer;
-    margin-bottom: 2px;
-    position: relative;
-}
-.xui-filterPanel .xui-tip:hover .xui-i-info{
-    display: inline-block;
-}
-.xui-filterPanel .xui-tip .xui-i-info{
-    position: absolute;
-    width: 206px;
-    height: 75px;
-    border:1px solid #56b2ec;
-    padding:4px 3px 3px 6px;
-    background-color: #fff;
-    color:#333;
-    text-align: left;
-    box-sizing: border-box;
-    top: 20px;
-    left: -45px;
-    display: none;
-}
+
 /*
 *订单表格样式
 */
@@ -336,6 +299,9 @@
 .xui-allOrders .xui-colorGray{
     color:#999;
 }
+.xui-allOrders .xui-weizoomCard{
+    /*display: inline-block;*/
+}
 .xui-allOrders .xui-weizoomCard i{
     display: inline-block;
     width: 24px;
@@ -343,9 +309,6 @@
     background: url(/static_v2/img/editor/weizoomCard.jpg);
     -webkit-background-size: 100%;
     background-size: 100%;
-}
-.xui-allOrders .xui-weizoomCard.xui-huihuiCard i{
-    background: url(/static_v2/img/editor/huihuiCard.jpg);
 }
 .xui-allOrders .xui-buyerHint i{
     display: inline-block;

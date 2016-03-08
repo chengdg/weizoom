@@ -285,24 +285,16 @@
 								<span class="xui-colorGray">(含运费：${order.postage})</span>
 							{{/if}}
 						{{/if}}
-						<div class="tc">
-						{{if order.weizoom_card_money_huihui > 0 }}
+						{{if order.weizoom_card_money > 0 }}
 							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
-								<span class="xui-weizoomCard xui-huihuiCard pr">
-									<i class="xa-huihuiCardImg"></i>
-									<span class="pa" style="display:none;">惠惠卡支付&nbsp${order.weizoom_card_money_huihui}元</span>
-								</span> 
-							{{/if}}
-						{{/if}}
-						{{if order.weizoom_card_money_rest > 0 }}
-							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
+								</br>
 								<span class="xui-weizoomCard pr">
 									<i class="xa-weizoomCardImg"></i>
-									<span class="pa" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money_rest}元</span>
-								</span> 
+									</br>
+									<span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
+								</span>
 							{{/if}}
 						{{/if}}
-						</div>
 					</td>
 					{{/if}}
 					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7}}border-top:0;{{/if}}"{{/if}}>
@@ -407,7 +399,7 @@ $(document).ready(function() {
 		dataView: $('[data-ui-role="advanced-table"]').data('view'),
 		userWebappId: {{user.get_profile.webapp_id}},
 		status:status,
-		orderStatus:{{order_status}},
+		orderStatus:{{order_status}}
 	});
 	filterBox.$el.bind('end_click', function(){
 		// $('#start_date').val('');
@@ -517,23 +509,30 @@ $(document).ready(function() {
 		mallOrderCostomerMessageView.hide();
 	})
 
-	$('body').delegate('.xa-huihuiCardImg', 'mouseover', function(event) {
-		var $el = $(event.currentTarget);
-		$el.siblings('span').show();
-	});
-	$('body').delegate('.xa-huihuiCardImg', 'mouseout', function(event) {
-		var $el = $(event.currentTarget);
-		$el.siblings('span').hide();
-	});
+
+
+
+
+
+
+
+
+
 
 	// 微众卡价钱提示
-	$('body').delegate('.xa-weizoomCardImg','mouseover',function(event){
-		var $el = $(event.currentTarget);
-		$el.siblings('span').show();
+	$('body').delegate('.xa-weizoomCardImg','mouseenter',function(){
+		$('.xa-weizoomCardImg').each(function(){
+			$(this).mouseenter(function() {
+				$(this).siblings('.xa-weizoomCardHint').css('display','inline-block');
+			});
+		});
 	});
-	$('body').delegate('.xa-weizoomCardImg','mouseout',function(event){
-		var $el = $(event.currentTarget);
-		$el.siblings('span').hide();
+	$('body').delegate('.xa-weizoomCardImg','mouseleave',function(){
+		$('.xa-weizoomCardImg').each(function(){
+			$(this).mouseleave(function() {
+				$(this).siblings('.xa-weizoomCardHint').css('display','none');
+			});
+		});
 	});
 
 

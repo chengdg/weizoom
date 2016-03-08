@@ -282,7 +282,6 @@ class OrderFilterParams(resource.Resource):
         # 	type.append({'name': u'贺卡订单', 'value': THANKS_CARD_ORDER})
         response.data = {
             'type': type,
-            'mall_type': mall_type,
             'status': status,
             'pay_interface_type': pay_interface_type,
             'source': source

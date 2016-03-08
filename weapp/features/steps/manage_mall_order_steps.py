@@ -404,14 +404,14 @@ def step_look_for_order(context, user):
         "order_source":      # 订单来源            e.g.:
         "order_status":      # 订单状态            e.g.:
         "isUseWeizoomCard":  # 仅显示微众卡抵扣订单  e.g.:
-        "is_first_order":        # 订单是不是首单
+        "order_type":        # 订单是不是首单
     }
     """
     query_params = {
         'pay_type': u'全部',
         'order_source': u'全部',
         'order_status': u'全部',
-        'is_first_order': u'全部',
+        'order_type': u'全部',
         'belong': 'all',
         "date_interval": "",
         "date_interval_type": 1,
@@ -439,22 +439,10 @@ def step_look_for_order(context, user):
     if query_params['order_status'] == -1:
         query_params.pop('order_status')
 
-    #惠惠卡处理首单非首单
-    # if query_params.get('is_first_order'):
-    #     query_params['is_first_order'] = IS_FIRST_ORDER[query_params['is_first_order']]
-    #     if query_params['is_first_order'] == -1:
-    #         query_params.pop('is_first_order')
-    is_first_order =  True if (query_params.get('is_first_order', True) in ('true', 'yes', 'True', 'Yes', True)) else False
-    is_not_first_order =  True if (query_params.get('is_not_first_order', True) in ('true', 'yes', 'True', 'Yes', True)) else False
-    if query_params.get('is_not_first_order'):
-        query_params.pop('is_first_order')
-    if (is_first_order and is_not_first_order) or (not is_first_order and  not is_not_first_order):
-        query_params.pop('is_first_order')
-    if is_first_order and not is_not_first_order:
-        query_params['is_first_order'] = '1'
-    if not is_first_order and is_not_first_order:
-        query_params['is_first_order'] = '0'
-    #惠惠卡处理首单非首单
+    query_params['order_type'] = ORDER_TYPE[query_params['order_type']]
+    if query_params['order_type'] == -1:
+        query_params.pop('order_type')
+
     if query_params.get('date'):
         query_params['date_interval_type'] = 1
         query_params['date_interval'] = bdd_util.get_date_to_time_interval(query_params.get('date'))

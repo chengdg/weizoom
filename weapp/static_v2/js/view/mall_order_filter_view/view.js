@@ -41,6 +41,7 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         this.$el.trigger('end_click');
         this.setStatusActive();
     },
+
     // 获取条件数据
     getFilterValue: function(){
         var dataValue = [];
@@ -57,23 +58,14 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         var endDate = $("input[name='end_date']").val().trim();
         var date_type = $("#date_type_select").val();
         var expressNumber = $('#express_number').val().trim();
-        var isfirstOrder;
 
         if ($('#isonlyweizoomcardpay').is(':checked')) {
             var isUseWeizoomCard = 1;
         }else {
             var isUseWeizoomCard = 0;
         }
-        if ($('#firstOrder').is(':checked')) {
-            isfirstOrder = 1;
-        }else if($('#notfirstOrder').is(':checked')){
-            isfirstOrder = 0;
-        };
         var args = [];
-        //首单、非首单筛选条件,都勾选相当于全部订单，不传参数
-        if(!($('#firstOrder').is(':checked') && $('#notfirstOrder').is(':checked')) && isfirstOrder !== undefined){
-            args.push('"is_first_order":"'+isfirstOrder+'"');
-        }
+
         // query
         if (orderId.length > 0) {
             args.push('"query":"'+orderId+'"')
@@ -124,7 +116,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
         if (orderType != '-1') {
             args.push('"order_type":"'+orderType+'"')
         }
-
         return args
     },
 
@@ -167,7 +158,6 @@ W.view.mall.order.orderFilter = Backbone.View.extend({
                 var html = $.tmpl(this.getTemplate(), {
                 	filters: _this.filterData,
 	            	types: data.type || [],
-                    mallType: data.mall_type || 0,
 		        	statuses: data.status || [],
                     orderStatus: this.options.orderStatus || '',
 		        	payTypes: data.pay_interface_type || [],
