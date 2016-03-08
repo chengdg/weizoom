@@ -258,26 +258,15 @@
                 fid: page_owner_member_id
             },
             success: function(data) {
-                console.log('successsuccess');
-//                if (W.isMember) {
-//                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
-//                    openSuccessWin();
-//                }else{
-//                    $attention.find('.xa-attention-tip').show();
-//                    $attention.find('img').attr('src', new_qrcode_url);
-//                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
-//                    openGuestMask();
-//                }
+                console.log('JoinGroup success!!!!!!!!!!!');
+                //TODO 传is_group_order,group_relation_id过去
+                var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
+                window.open(data_href, '_tab');
             },
             error: function(data) {
                 if(data.errMsg){
-                    if(data.errMsg != '只能参与一次'){
-                        wuiAlert(data.errMsg);
-                        is_helped = false;
-                    }else{
-                         wuiAlert(data.errMsg);
-                    }
-
+                    is_helped = false;
+                    wuiAlert(data.errMsg);
                 }
 
             }

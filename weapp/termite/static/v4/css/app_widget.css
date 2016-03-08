@@ -1985,10 +1985,9 @@ li.wui-selectBox-display-table {
     background: #fff;
     border-radius: 3px;
     left: 5%;
-    padding: 10px 10px 16px 9px;
+    padding: 10px 10px 55px 10px;
     position: fixed;
     width: 85%;
-    height: 75%;
     z-index: 11111;
     text-align: center;
     background-position: -2px -9px;
@@ -2032,8 +2031,8 @@ li.wui-selectBox-display-table {
     text-align: center;
     border-radius: 5px;
     position: relative;
-    top: 4%;
     line-height: 30px;
 	margin-left: auto;
     margin-right: auto;
+	margin-top: 15px;
 }
