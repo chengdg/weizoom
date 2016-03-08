@@ -1,0 +1,93 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.1"
+  title: 团购服务面向apiserver接口
+  description: apiserver需要的接口,由团购服务提供
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /group_buy_product:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        获取团购商品信息
+      # This is array of GET operation parameters:
+      parameters:
+        # An example parameter that is in query and is required
+        -
+          name: pid
+          in: query
+          description: 商品id
+          required: true
+          type: number
+          format: int32
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: Person
+            type: object
+            properties:
+              pid:
+                type: int32
+                description: 商品id
+              group_buy_price:
+                description: 团购价
+                type: double
+              group_id:
+                type: int32
+                description: 团购活动id
+              url:
+                type: string
+                description: 活动url
+  /check_group_buy:
+    get:
+      description: 下单中的检测
+      parameters:
+        - name: member_id
+          description: 会员id
+          type: number
+          format: int32
+        - $ref: '#/definitions/group_id'
+        - name: pid
+          description: 商品id
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: 检测下单的结果
+            type: object
+            properties:
+              is_success:
+                type: boolen
+                description: 可否下单
+              reason:
+                type: string
+                description: 失败原因
+  /order_action:
+    put:
+      description: apiserver通知订单支付成功
+      parameters:
+        - name: order_id
+          type: string
+        - name: action
+          type: string
+          description: 参数为'pay'(表示支付成功)或者'cancel'(订单已取消)
+        - $ref: '#/definitions/group_id'
+
+definitions:
+  group_id:
+    name: group_id
+    description: 团购活动id
+    type: int32
