@@ -718,6 +718,8 @@ def get_detail_response(request):
             child_orders = [order]
         if len(child_orders) > 1:
             order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True, mall_type=request.user_profile.webapp_type)
+        else:
+            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
