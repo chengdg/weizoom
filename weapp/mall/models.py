@@ -1448,8 +1448,6 @@ class Order(models.Model):
 	is_100 = models.BooleanField(default=True) # 是否是快递100能够查询的快递
 	delivery_time = models.CharField(max_length=50, default='')  # 配送时间字符串
 	is_first_order = models.BooleanField(default=False) # 是否是用户的首单
-	is_group_order = models.BooleanField(default=False) # 是否是团购订单
-	group_relation_id = models.CharField(max_length=100, default='') # 团购小团relation_id
 
 	class Meta(object):
 		db_table = 'mall_order'
