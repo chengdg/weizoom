@@ -4,11 +4,12 @@ from django.contrib.auth.models import User
 
 from core.jsonresponse import create_response
 from core.restful_url_route import api
+from utils import cache_util
 from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
 
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 
-from cache.webapp_owner_cache import update_webapp_owner_info_cache_with_login
+from cache.webapp_owner_cache import get_webapp_owner_info
 
 
 @api(app='card', resource='auth', action='get')
@@ -43,7 +44,9 @@ def get_update_cache(request):
     owner_ids = owner_ids.split(',')
     owner_id2permissions = {str(ahwp.owner_id): ahwp for ahwp in AccountHasWeizoomCardPermissions.objects.filter(owner_id__in=owner_ids)}
     for owner_id in owner_ids:
-        update_webapp_owner_info_cache_with_login(owner_id2permissions[owner_id])
+        cache_util.delete_cache(owner_id)
+        get_webapp_owner_info(owner_id)
+        # update_webapp_owner_info_cache_with_login(owner_id2permissions[owner_id])
     response = create_response(200)
     response.data = u'success'
     return response.get_response()
