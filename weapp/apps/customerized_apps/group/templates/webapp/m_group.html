@@ -40,6 +40,7 @@
 	var is_helped = true;
     var is_self_page = true;
     var page_owner_member_id = '';
+    var page_owner_icon = '';//用户头像
     var group_type = '';
     var group_relation_id = {% if group_relation_id %}'{{group_relation_id}}'{% else %}''{% endif %};
 	$(function(){
@@ -116,6 +117,14 @@
         page_owner_member_id = member_info.page_owner_member_id;
         group_status = member_info.group_status;
         group_type = member_info.group_type;
+        //更新页面小团的数据
+        page_owner_icon = member_info.page_owner_icon;
+        if(page_owner_icon != ""){
+            $('.wui-i-shop_circle').find('img').attr('src', page_owner_icon);
+        }
+        if(group_type != ""){
+            $('.wui-i-title-pic').addClass('wui-i-title-pic-'+group_type);
+        }
         updateBtnStatus();
     }
 
@@ -176,8 +185,8 @@
     }
     //我要开团
 	function openGruop(){
-        group_type = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-name');
-        if (group_type){
+        var choosen_group_type = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-name');
+        if (choosen_group_type){
             W.getApi().call({
                 app: 'm/apps/group',
                 resource: 'group_participance',
@@ -186,11 +195,11 @@
                     webapp_owner_id: W.webappOwnerId,
                     group_record_id: W.appRecordId,
                     fid: page_owner_member_id,
-                    group_type: group_type
+                    group_type: choosen_group_type
                 },
                 success: function(data) {
-                    console.log('openGruop()');
-                    //TODO 传is_group_order,group_record_id过去
+                    //TODO 传is_group_order,relation_belong_to过去
+                    var relation_belong_to = data.relation_belong_to;
                     var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
                     window.open(data_href, '_tab');
                 },

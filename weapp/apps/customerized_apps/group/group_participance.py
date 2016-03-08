@@ -94,7 +94,6 @@ class GroupParticipance(resource.Resource):
 		member_id = request.POST['fid']
 		group_type = request.POST['group_type']
 		try:
-			response = create_response(200)
 			group_member_info = app_models.GroupRelations(
 				belong_to = group_record_id,
 				member_id = member_id,
@@ -114,6 +113,11 @@ class GroupParticipance(resource.Resource):
 				created_at = datetime.now()
 			)
 			group_detail.save()
+			response = create_response(200)
+			response.data = {
+				'relation_belong_to': relation_belong_to
+			}
+			return response.get_response()
 		except:
 			response = create_response(500)
 			response.errMsg = u'只能开团一次'

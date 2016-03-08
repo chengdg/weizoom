@@ -1821,12 +1821,17 @@ li.wui-selectBox-display-table {
     background-size: 100%;
     background-color: #fff;
     width: 59%;
-    padding: 0px;
     margin-left: 110px;
     margin-top: 45px;
     position: absolute;
     border-radius: 6px;
     background-position: 2px 7px;
+}
+.wui-group-container .wui-i-help_group .wui-i-title-pic-5{
+	background-position: 2px -36px;
+}
+.wui-group-container .wui-i-help_group .wui-i-title-pic-10{
+	background-position: 2px -84px;
 }
 .wui-group-container .wui-i-help_group .wui-i-rules{
     margin-top: 10px;
@@ -1873,11 +1878,48 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-description-content .wui-i-product-title {
     font-weight: bold;
     font-size: 1.2rem;
+	margin-left: 15px;
+    margin-bottom: 10px;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group {
+    margin-bottom: 10px;
+    margin-left: 15px;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group-title{
+	background: #ff2742;
+    color: #fff;
+    padding: 3px;
+    border-radius: 4px;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group-original-price {
+    font-size: 0.8rem;
+    color: gray;
+    text-decoration: line-through;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group-group-price {
+    color: #ff2742;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-img img{
+	border-radius: 8px;
 }
 .wui-group-container .wui-i-choose_group_box span.wui-i-end_time {
     font-size: 0.8rem;
     float: right;
     line-height: 1.4rem;
+}
+.wui-group-container .wui-i-group_box_progress {
+    margin-top: 10px;
+}
+.wui-group-container .wui-i-group_box_progress .wui-i-timing {
+    display: inline-block;
+	float: right;
+}
+.wui-group-container .wui-i-group_box_progress .wui-i-timing b{
+    background: #E6E6E6;
+    border-radius: 3px;
+    padding: 3px;
 }
 .wui-group-container .wui-i-powerbar_group{
     position: relative;
