@@ -5,21 +5,41 @@
 {% block css %}
     <style>
         .xui-propertyView-app-GroupList{
-            border: 1px #DDDDDD solid;
-            background: #FFFFFF;
-            margin: 3px 77px 3px 75px;
-            padding-top: 5px;
-{#            width: 225px;#}
-            /* text-align: center; */
-            margin-left: 75px;
-            /* padding-right: 32px; */
-            padding-left: 14px;
+            width:495px;
+            height: 30px;
+            margin-left: 5px;
+        }
 
+        .xui-propertyView-app-GroupList div,.xui-propertyView-app-DynamicGroupList div{
+            display: inline-block;
+            margin-left: 2px;
         }
         .xui-addDynamicComponent{
-            border: 0;
-            width:auto;
+            width: 80px;
+            height: 30px;
+            line-height: 30px;
         }
+        .btn.xui-i-triggerButton.xui-i-searchBtn{
+            position: relative;
+            left: 150px;
+            top: -23px;
+            height: 23px;
+            text-align: center;
+            line-height: 23px;
+            padding: 0px;
+        }
+        .xui-propertyView-app-GroupInfo textarea{
+            height: 100px;
+            width: 80% !important;
+            margin-left: 50px;
+        }
+{#        .xui-propertyView-app-GroupInfo .xui-i-triggerButton{#}
+{#            background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;#}
+{#            width: 100px;#}
+{#            height: 100px;#}
+{#            border: none;#}
+{#        }#}
+
 
     </style>
 {% endblock %}
@@ -176,7 +196,6 @@
             var name = descriptionModel.get('title');
             var startTime = descriptionModel.get('start_time')+":00";
             var endTime = descriptionModel.get('end_time')+":00";
-            var select_product = descriptionModel.get('select_product');
             var rules = descriptionModel.get('rules');
             var material_image = descriptionModel.get('material_image');
             var share_description =  descriptionModel.get('share_description');
@@ -213,7 +232,6 @@
             "name": name,
             "start_time": startTime,
             "end_time": endTime,
-            'product':select_product,
             'group_dict':JSON.stringify(group_dict),
             'product_dict':JSON.stringify(product_dict),
             'rules':rules,

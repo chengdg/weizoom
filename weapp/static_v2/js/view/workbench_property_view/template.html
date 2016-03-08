@@ -491,7 +491,7 @@
                             <input class="propertyGroup_property_input" data-field="${field.name}" name="${field.name}" data-type="product" type="hidden"/>
                             <input class="propertyGroup_property_input product_search"  name="product_name" data-type="product_name" value="{{if component.model.get(field.name)}}${component.model.get(field.name).productName}{{else}}{{/if}}"/>
 
-                                <button class="btn btn-small xui-i-triggerButton" data-target-dialog="${field.dialog}">
+                                <button class="btn xui-i-searchBtn xui-i-triggerButton" data-target-dialog="${field.dialog}">
                                    搜索
                                 </button>
                             {{if component.model.get(field.name)}}
