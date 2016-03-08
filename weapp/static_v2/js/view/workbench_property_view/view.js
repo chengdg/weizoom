@@ -618,10 +618,7 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         var options = {
             success: _.bind(function(data) {
-                        console.log('KKKKKK!!!!!!!!!@@@@@@@@@@@@@@@');
-                        console.log(data);
                         if ($button.hasClass('xa-addDynamicComponentTrigger')) {
-                            console.log('AAAAAAAAAAAAAAAAAA');
                             var event = {currentTarget: $button.get(0)};
                             var datas = data;
                             _.each(datas, function(data) {
@@ -633,7 +630,6 @@ W.workbench.PropertyView = Backbone.View.extend({
                             var data = data;
                             if (typeof(data) == 'object') {
                                 data = JSON.stringify(data)
-                                 console.log('FFFFFFFFFFFFFFFFFF');
                             }
                             $input.val(data).trigger('input');
                         }

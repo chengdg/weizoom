@@ -166,6 +166,12 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 	propertyChangeHandlers: {
 		title: function($node, model, value) {
 			//parent.W.Broadcaster.trigger('powerme:change:title', value);
+			console.log('6666666666666666666666666666K');
+			console.log($node);
+			console.log('77777777777777777777777777777K');
+
+
+
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
 			var end_time_text = $node.find('.wui-i-end_time').text();
@@ -219,10 +225,12 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			//model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
 			//$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
 		},
-		group_items: function($node, model, value) {
+        group_items: function($node, model, value,$propertyViewNode) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
-		 	var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
-			view && view.render(W.weixinKeywordObj);
+			console.log('DDDDDDFFFFFFFFFFFFFFFFF');
+			console.log($propertyViewNode);
+		 	//var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
+			//view && view.render(W.weixinKeywordObj);
         },
 		product:function($node, model, value, $propertyViewNode){
 			var data;
@@ -245,9 +253,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				}
 			}, {silent: true});
 
-			console.log('6666666666666666666666666666K');
-			console.log($propertyViewNode);
-			console.log('77777777777777777777777777777K');
 
 			if (value[0]) {
 				//更新propertyView中的图片
@@ -262,6 +267,12 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				$target.find('.productSocks').html(product.stocks);
 
 			}
+			console.log('LLLLLLLLLLLLLLLLLLLLLL');
+			console.log($node);
+
+
+			var $leftTarget = $node.find($('.wui-i-description'));
+			$leftTarget.find('.wui-i-product-img img').attr('src',product.thumbnails_url);
 		}
 	},
 
