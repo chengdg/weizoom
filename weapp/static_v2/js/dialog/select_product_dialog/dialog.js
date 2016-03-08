@@ -1,13 +1,16 @@
 ensureNS('W.dialog.termite');
 
-W.dialog.termite.SelectQrcodeDialog = W.dialog.Dialog.extend({
+W.dialog.termite.SelectProductDialog = W.dialog.Dialog.extend({
     events: _.extend({
-        'click .xa-selectQrcode': 'onSelectCoupon'
+        'click .xa-selectProduct': 'onSelectProduct',
+        'click .xa-search': 'onSearch',
+        'keypress .xa-query': 'onPressKey'
+
     }, W.dialog.Dialog.prototype.events),
 
     getTemplate: function() {
-        $('#select-qrcode-dialog-tmpl-src').template('select-qrcode-dialog-tmpl');
-        return "select-qrcode-dialog-tmpl";
+        $('#select-product-dialog-tmpl-src').template('select-product-dialog-tmpl');
+        return "select-product-dialog-tmpl";
     },
 
     onInitialize: function(options) {
@@ -26,10 +29,22 @@ W.dialog.termite.SelectQrcodeDialog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
-        this.table.reload();
+        this.onSearch();
     },
-
-    onSelectCoupon: function(event) {
+    onSearch: function(event) {
+        var query = $.trim(this.$el.find('.xa-query').val());
+        this.table.reload({
+            type: 'name',
+            query: query
+        })
+    },
+    onPressKey: function(event) {
+        var keyCode = event.keyCode;
+        if (keyCode == 13) {
+            this.onSearch(event);
+        }
+    },
+    onSelectProduct: function(event) {
         var $checkbox = $(event.currentTarget);
         if (!this.enableMultiSelection) {
             var $label = this.$('label.checked');
@@ -56,12 +71,12 @@ W.dialog.termite.SelectQrcodeDialog = W.dialog.Dialog.extend({
 
         this.$('tbody tr').each(function() {
             var $tr = $(this);
+            if ($tr.find('.xa-selectProduct').is(':checked')) {
                 console.log($tr);
-            if ($tr.find('.xa-selectQrcode').is(':checked')) {
-                var qrcodeId = $tr.data('id');
-                data.push(_this.table.getDataItem(qrcodeId).toJSON());
+                var productId = $tr.data('id');
+                data.push(_this.table.getDataItem(productId).toJSON());
             }
-        })
+        });
         return data;
     }
 })
