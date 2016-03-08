@@ -719,7 +719,7 @@ def get_detail_response(request):
         if len(child_orders) > 1:
             order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True, mall_type=request.user_profile.webapp_type)
         else:
-            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+            order.actions = get_order_actions(child_orders[0], is_detail_page=True, mall_type=request.user_profile.webapp_type)
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
@@ -1460,7 +1460,6 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     elif is_refund:
         if order.status == ORDER_STATUS_REFUNDING:
             result = [ORDER_REFUND_SUCCESS_ACTION]
-
     # 订单列表页子订单
     able_actions_for_sub_order = [ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
 
@@ -1473,7 +1472,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     # 同步订单操作
     sync_order_actions = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
-
+    print result, "1111111"
     # print(order.order_id, order.is_sub_order, order.origin_order_id)
     # print(result)
     # 订单被同步后查看
@@ -1483,8 +1482,9 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     #     if order.is_sub_order:
     #         result = filter(lambda x: x in able_actions_for_sub_order, result)
 
-    if (order.supplier or order.supplier_user_id) and is_detail_page:
-        result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
+    if not mall_type:
+        if (order.supplier or order.supplier_user_id) and is_detail_page:
+            result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
 
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
