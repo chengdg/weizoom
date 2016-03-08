@@ -63,9 +63,7 @@ class ConsumptionStatistics(api_resource.ApiResource):
 			webapp_user_ids2order[order.webapp_user_id]['order_count'] += 1
 			if order.payment_time > webapp_user_ids2order[order.webapp_user_id]['last_pay_time']:
 				webapp_user_ids2order[order.webapp_user_id]['last_pay_time'] = order.payment_time
-			webapp_user_ids2order[order.webapp_user_id]['last_pay_time'] =\
-				webapp_user_ids2order[order.webapp_user_id]['last_pay_time'].strftime('%Y-%m-%d %H:%M:%S')
-
+	
 		for member_id,webapp_user_id in member_id2webapp_user_id.items():
 			if not member_id in member_ids2info:
 				member_ids2info[member_id] = {}
@@ -78,7 +76,7 @@ class ConsumptionStatistics(api_resource.ApiResource):
 					member_ids2info[member_id]['unit_price'] = member_ids2info[member_id]['pay_money']/webapp_user_ids2order[webapp_user_id]['order_count']
 				else:
 					member_ids2info[member_id]['unit_price'] = 0
-				member_ids2info[member_id]['last_pay_time'] = webapp_user_ids2order[webapp_user_id]['last_pay_time']
+				member_ids2info[member_id]['last_pay_time'] = webapp_user_ids2order[webapp_user_id]['last_pay_time'].strftime('%Y-%m-%d %H:%M:%S')
 			else:
 				member_ids2info[member_id]['cash'] = 0
 				member_ids2info[member_id]['card'] = 0
