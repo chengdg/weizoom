@@ -716,7 +716,7 @@ def get_detail_response(request):
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
         if (not child_orders and order.supplier_user_id):
             child_orders = [order]
-        if len(child_orders):
+        if len(child_orders) > 1:
             order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True, mall_type=request.user_profile.webapp_type)
         supplier_ids = []
         supplier_user_ids = []
@@ -1029,6 +1029,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             "fackorder": group_order,
                             "products": filter(lambda p: p['supplier_user_id'] == fackorder.supplier_user_id , products)
                         }
+                    # 如果只有一个供货商就显示母订单的状态
                     if len(order2fackorders.get(order.id)) == 1:
                         group_order = {
                             "id": order.id,
