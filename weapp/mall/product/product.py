@@ -255,7 +255,66 @@ class ProductList(resource.Resource):
         response = create_response(200)
         return response.get_response()
 
+class GroupProductList(resource.Resource):
+    app = 'mall2'
+    resource = 'group_product_list'
 
+    @login_required
+    def api_get(request):
+        COUNT_PER_PAGE = 10
+        product_name = request.GET.get('name', '')
+
+        # 筛选出单规格的商品id
+        standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=request.manager, name='standard', is_deleted=False)]
+        promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=request.manager, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
+        has_promotion_product_ids = [relation.product_id for relation in promotion_model.objects.filter(promotion_id__in=promotion_ids)]
+
+        group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
+
+        products = models.Product.objects.filter(
+                owner=request.manager,
+                id__in=group_product_ids,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                is_deleted=False)
+
+        if product_name:
+            products.filter(name__contains=product_name)
+
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
+
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products,
+            cur_page,
+            count_per_page,
+            query_string=request.META['QUERY_STRING'])
+
+        #构造返回数据
+        items = []
+        for product in products:
+            product_dict = product.format_to_dict()
+            product_dict['is_self'] = (request.manager.id == product.owner_id)
+            items.append(product_dict)
+
+        data = dict()
+        data['owner_id'] = request.manager.id
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'sortAttr': sort_attr,
+            'data': data
+        }
+        return response.get_response()
 
 
 class Product(resource.Resource):
@@ -341,7 +400,7 @@ class Product(resource.Resource):
 
         _type = request.GET.get('type', 'object')
         supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
-        
+
         is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
