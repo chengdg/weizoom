@@ -14,18 +14,16 @@
                             <i class="wui-i-star"></i><p>团购说明</p><i class="wui-i-star"></i>
                         </span>
                     </div>
-                    <div class="wui-i-rules-contentbox xa-i-rules-contentbox none">
-                        <div class="wui-i-closebtn xa-i-closebtn">
-                            ×
+                </div>
+                <div class="wui-i-rules-contentbox xa-i-rules-contentbox none">
+                    <div class="wui-i-rules-content xa-i-rules-content">
+                        <div class="wui-i-title-box xa-i-title-box">
+                            <p class="wui-i-title">团购说明</p>
                         </div>
-                        <div class="wui-i-rules-content xa-i-rules-content">
-                            <div class="wui-i-title-box xa-i-title-box">
-                                <p class="wui-i-title">团购说明</p>
-                            </div>
-                            <div class="wui-i-content-box xa-i-content-box">
-                                {{ component.model.rules|safe }}
-                            </div>
+                        <div class="wui-i-content-box xa-i-content-box">
+                            {{ component.model.rules|safe }}
                         </div>
+                        <div class="wui-i-closebtn xa-i-closebtn">我知道了</div>
                     </div>
                 </div>
             </div>
@@ -90,15 +88,8 @@
                         <button class="wui-i-btn-using wa-using-join wui-hide">直接参团</button>
                     </div>
                     <div class="wui-i-states none">
-                        <div class="wui-i-title">
-                            <span class="wui-i-helper-title-content">
-                                <i class="wui-i-star"></i><i class="wui-i-star"></i>
-                            </span>
-                        </div>
-                        <ul class="wa-top100">
-                            <li class="wui-i-top100-title" style="padding: 16px 10px 0;">
-                                <span style="margin-left: 18px">团员</span>
-                            </li>
+                        <ul class="wa-grouped-members">
+                            <span style="margin-left: 18px">团员</span>
                         </ul>
                     </div>
                 </div>

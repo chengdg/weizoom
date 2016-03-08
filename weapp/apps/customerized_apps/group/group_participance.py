@@ -18,29 +18,14 @@ COUNT_PER_PAGE = 20
 class GroupParticipance(resource.Resource):
 	app = 'apps/group'
 	resource = 'group_participance'
-	
-	# @login_required
-	# def api_get(request):
-	# 	"""
-	# 	响应GET api
-	# 	"""
-	# 	if 'id' in request.GET:
-	# 		group_participance = app_models.GroupParticipance.objects.get(id=request.GET['id'])
-	# 		data = group_participance.to_json()
-	# 	else:
-	# 		data = {}
-	# 	response = create_response(200)
-	# 	response.data = data
-	# 	return response.get_response()
-	
+
 	def api_put(request):
 		"""
 		响应PUT
 		"""
 		try:
-
 			member_id = request.member.id
-			relation_belong_to = request.POST['id']
+			group_relation_id = request.POST['group_relation_id']
 			fid = request.POST['fid']
 			try:
 				fid_member = Member.objects.get(id=fid)
@@ -52,36 +37,40 @@ class GroupParticipance(resource.Resource):
 				response = create_response(500)
 				response.errMsg = u'不存在该会员'
 				return response.get_response()
-			#更新当前member的参与信息
-			try:
-				app_models.GroupRelations(
-					belong_to= relation_belong_to,
-					member_id= str(member_id),
-					powered_member_id= fid
-				).save()
-			except:
-				response = create_response(500)
-				response.errMsg = u'只能参与一次'
-				return response.get_response()
-
-			#更新被参与者信息
-			powered_member_info = app_models.GroupRelations.objects(belong_to=relation_belong_to, member_id=int(fid)).first()
-			#调整参与数量(首先检测是否已参与)
-			if not powered_member_info.has_join:
-				powered_member_info.update(set__has_join=True)
-
-			group_detail = app_models.GroupDetail(
-				relation_belong_to = relation_belong_to,
-				owner_id = int(fid),
-				grouped_member_id = member_id,
-				grouped_member_name = request.member.username_for_html,
-				created_at = datetime.now()
-			)
-			group_detail.save()
+			#更新小团购信息
+			group_relation = app_models.GroupRelations.objects(id=group_relation_id, member_id=fid).first()
+			if group_relation.is_valid and (not group_relation.group_status):
+				#更新当前member的参与信息
+				total_number = int(group_relation.group_type)
+				sync_result = group_relation.modify(
+					query={'grouped_number__lt': total_number},
+					inc__grouped_number=1,
+					push__grouped_member_ids=str(member_id)
+				)
+				if sync_result:
+					try:
+						group_detail = app_models.GroupDetail(
+							relation_belong_to = group_relation_id,
+							owner_id = str(fid),
+							grouped_member_id = str(member_id),
+							grouped_member_name = request.member.username_for_html,
+							created_at = datetime.now()
+						)
+						group_detail.save()
+						group_relation.update()
+					except:
+						response = create_response(500)
+						response.errMsg = u'只能参与一次'
+						return response.get_response()
+				else:
+					response = create_response(500)
+					response.errMsg = u'团购名额已满'
+					return response.get_response()
 		except:
 			response = create_response(500)
 			response.errMsg = u'参与失败'
 			response.inner_errMsg = unicode_full_stack()
+			print(response.inner_errMsg)
 			return response.get_response()
 		response = create_response(200)
 		return response.get_response()

@@ -1857,6 +1857,8 @@ li.wui-selectBox-display-table {
     height: 2.5rem;
     border-radius: 5px;
     font-family: "黑体";
+	width: 50%;
+	margin-bottom: 5px;
 }
 .wui-group-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
@@ -1865,9 +1867,6 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-btngroup .wui-i-btn-notready{
     color:#EAEAEA;
     background: #999999;
-}
-.wui-group-container .wui-i-btngroup .wui-i-btn-using{
-    width: 40%;
 }
 .wui-group-container .wui-i-description-content {
     background: #fff;
@@ -1977,7 +1976,64 @@ li.wui-selectBox-display-table {
     -o-transition: width 3s ease-in-out; /* Opera */
 	display: inline-block;
 }
-
 .wui-group-container .wui-i-powerbar_group .wui-i-total_number{
     color:#ff2742;
+}
+
+/*活动规则CSS*/
+.wui-group-container .wui-i-rules-contentbox{
+    background: #fff;
+    border-radius: 3px;
+    left: 5%;
+    padding: 10px 10px 16px 9px;
+    position: fixed;
+    width: 85%;
+    height: 75%;
+    z-index: 11111;
+    text-align: center;
+    background-position: -2px -9px;
+    background-size: 99%;
+}
+
+.wui-group-container .wui-i-rules-contentbox{
+    margin-top: 5%;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-rules-content{
+    margin-top: 2rem;
+    color: #3D3C35;
+    text-align: center;
+    position: relative;
+    height: 100%;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-title-box{
+    color:#3A1614;
+    font-weight: bold;
+    font-size: large;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-title-box .wui-i-title{
+    margin-bottom: 4px;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-content-box{
+    color: #3D3C35;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    max-height: 69%;
+    overflow-y: auto;
+    position: relative;
+    left: 2px;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-closebtn{
+    color: #fff;
+    width: 110px;
+    height: 30px;
+    background: #FF422D;
+    text-align: center;
+    border-radius: 5px;
+    position: relative;
+    top: 4%;
+    line-height: 30px;
+	margin-left: auto;
+    margin-right: auto;
 }

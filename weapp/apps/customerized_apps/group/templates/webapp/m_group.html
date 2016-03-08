@@ -133,6 +133,8 @@
                     renderTime(data.member_info.timing);
                     //进度bar动画
                     runProcessBar(data.member_info.grouped_number,data.member_info.group_type);
+                    //渲染团员名单
+                    showHelperInfo(data);
                 }
             },
             error: function(data) {
@@ -195,37 +197,16 @@
 
             }
         }else{
-            var using_msg;
-            var $attention = $('.xa-attention-guest');
             var $powerBtn = $('.wa-power');
-            if(W.isMember){
-                if(is_helped){
-                    $powerBtn.find('.wa-power-btn-action').html('已帮');
-                    $powerBtn.on('click', function(){
-                        openGuideMask();
+            if(!is_helped){
+                $powerBtn.find('.wa-power-btn-action').html('我要参团');
+                $powerBtn.on('click', function(){
+                        JoinGroup();
                     }).show();
-                }else{
-                    $powerBtn.find('.wa-power-btn-action').html('帮');
-                   $powerBtn.on('click', function(){
-                       if(is_helped){
-                           openGuideMask();
-                       }else{
-                           powerYou();
-                       }
-                   }).show();
-                }
+                $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
             }else{
-                if(is_helped){
-                    $powerBtn.find('.wa-power-btn-action').html('已帮');
-                    $powerBtn.on('click', function(){
-                        openGuideMask();
-                    }).show();
-                }else{
-                    $powerBtn.find('.wa-power-btn-action').html('帮');
-                    $powerBtn.on('click', function(){
-                        powerYou();
-                    }).show();
-                }
+                $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
+                $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
             }
         }
     }
@@ -264,6 +245,44 @@
         window.open(link, '_tab');
     }
 
+    // 我要参团
+    function JoinGroup(){
+        is_helped = true;
+        W.getApi().call({
+            app: 'm/apps/group',
+            resource: 'group_participance',
+            method: 'put',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                group_relation_id: group_relation_id,
+                fid: page_owner_member_id
+            },
+            success: function(data) {
+                console.log('successsuccess');
+//                if (W.isMember) {
+//                    $('.wa-power').find('.wa-power-btn-action').html('已帮');
+//                    openSuccessWin();
+//                }else{
+//                    $attention.find('.xa-attention-tip').show();
+//                    $attention.find('img').attr('src', new_qrcode_url);
+//                    $attention.find('.xa-attention-reply').children().first().html("3.回复：");
+//                    openGuestMask();
+//                }
+            },
+            error: function(data) {
+                if(data.errMsg){
+                    if(data.errMsg != '只能参与一次'){
+                        wuiAlert(data.errMsg);
+                        is_helped = false;
+                    }else{
+                         wuiAlert(data.errMsg);
+                    }
+
+                }
+
+            }
+        });
+    }
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
@@ -271,8 +290,8 @@
         $('.xui-attention').addClass('none');
         $('.xa-share').addClass('none');
 //        $('.xui-errMsg').addClass('none');
-//        $('.xa-i-rules-contentbox').addClass('none');
-//        $('.xa-loadingFrame').addClass('none');
+        $('.xa-i-rules-contentbox').addClass('none');
+        $('.xa-loadingFrame').addClass('none');
     });
     $('.xa-colseButton').click(function(){
         $('.xa-share').addClass('none');
@@ -348,6 +367,25 @@
         $(".xa-i-bar_process").width(process);
         percentBox_process_tmp = process;
 //        percentBoxTimer();
+    }
+
+    //已参团的列表
+    function showHelperInfo(data){
+        var helpers_info = data.helpers_info;
+        console.log(helpers_info);
+        if ($.isEmptyObject(helpers_info)){
+            $('.wui-i-states').addClass('none');
+        }else{
+            if(helpers_info || $.isEmptyObject(helpers_info)){
+                $('.wui-i-states').removeClass('none');
+                var li_content = '';
+                for(var i in helpers_info){
+                    var p = helpers_info[i];
+                    li_content += "<span class='wui-i-friend'><span class='wui-i-avatarbox'><span class='wui-i-avatar'><img src='"+ p.user_icon+"'></span></span></span>";
+                }
+                $('.wa-grouped-members').append($(li_content));
+            }
+        }
     }
 
 </script>
