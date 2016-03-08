@@ -1003,8 +1003,13 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         groups = []
         if mall_type:
             # 自营平台所有的订单都会拆单
-            if order2fackorders.get(order.id) and (order.status > ORDER_STATUS_CANCEL or len(order2fackorders[order.id]) == 1):
-                for fackorder in sorted(order2fackorders.get(order.id),key = lambda obj:obj.supplier):
+            if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
+                for fackorder in sorted(order2fackorders.get(order.id), key = lambda obj:obj.supplier):
+                    if order.status > ORDER_STATUS_CANCEL:
+                        if fackorder.status == ORDER_STATUS_NOT:
+                            # 处理子订单未支付的问题
+                            fackorder.status = ORDER_STATUS_PAYED_NOT_SHIP
+                            fackorder.save()
                     group_order = {
                         "id": fackorder.id,
                         "status": fackorder.get_status_text(),
@@ -1012,13 +1017,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'express_company_name': fackorder.express_company_name,
                         'express_number': fackorder.express_number,
                         'leader_name': fackorder.leader_name,
-                        'actions': get_order_actions(fackorder, is_refund=is_refund,mall_type=mall_type)
+                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type)
                     }
-                    if order.status > ORDER_STATUS_CANCEL:
-                        if fackorder.status == ORDER_STATUS_NOT:
-                            # 处理子订单未支付的问题
-                            fackorder.status = ORDER_STATUS_PAYED_NOT_SHIP
-                            fackorder.save()
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                         group = {
                             "id": fackorder.supplier,
@@ -1031,18 +1031,6 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                             "fackorder": group_order,
                             "products": filter(lambda p: p['supplier_user_id'] == fackorder.supplier_user_id , products)
                         }
-                    # 如果只有一个供货商就显示母订单的状态
-                    if len(order2fackorders.get(order.id)) == 1:
-                        group_order = {
-                            "id": order.id,
-                            "status": order.get_status_text(),
-                            "order_status": order.status,
-                            'express_company_name': order.express_company_name,
-                            'express_number': order.express_number,
-                            'leader_name': order.leader_name,
-                            'actions': get_order_actions(order, is_refund=is_refund,mall_type=mall_type)
-                        }
-                        group['fackorder'] = group_order
                     groups.append(group)
             else:
                 group_order = {
@@ -1054,12 +1042,27 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'leader_name': order.leader_name,
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
                 }
-                group_id = order.supplier
-                group = {
-                    "id": group_id,
-                    "fackorder": group_order,
-                    "products": products
-                }
+                if len(order2fackorders.get(order.id)) == 1:
+                    fackorder = order2fackorders[order.id][0]
+                    if fackorder.supplier:
+                        group = {
+                            "id": fackorder.supplier,
+                            "fackorder": group_order,
+                            "products": filter(lambda p: p['supplier'] == fackorder.supplier , products)
+                        }
+                    if fackorder.supplier_user_id:
+                        group = {
+                            "supplier_user_id": fackorder.supplier_user_id,
+                            "fackorder": group_order,
+                            "products": filter(lambda p: p['supplier_user_id'] == fackorder.supplier_user_id , products)
+                        }
+                else:
+                    group_id = order.supplier
+                    group = {
+                        "id": group_id,
+                        "fackorder": group_order,
+                        "products": products
+                    }
                 groups.append(group)
         else:
             group_order = {
@@ -1096,7 +1099,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                 }
             groups.append(group)
         if len(groups) > 1:
-            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True,mall_type=mall_type)
+            parent_action = get_order_actions(order, is_refund=is_refund, is_list_parent=True, mall_type=mall_type)
         else:
             parent_action = None
 
