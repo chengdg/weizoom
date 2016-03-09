@@ -40,7 +40,7 @@ class CardExchange(resource.Resource):
             'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
             'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
         })
-        return render_to_response('mall/editor/promotion/issuing_coupons_record.html', c)
+        return render_to_response('mall/editor/promotion/card_exchange.html', c)
 
     @login_required
     def api_get(request):
