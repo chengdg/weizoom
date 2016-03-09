@@ -15,7 +15,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             name: 'group_type',
             type: 'select',
 			//validate:'data-validate="require-notempty::选项不能为空',
-            displayName: '2',
+            displayName: '类型',
 			//annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			source:[{
 				name:'5人团',
@@ -46,12 +46,30 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 	}],
 
 	propertyChangeHandlers: {
-		serial_count_points: function($node, model, value, $propertyViewNode){
+		group_type:function($node, model, value, $propertyViewNode){
+			console.log('DDDDD/////');
 			console.log(value);
-			if(value == ''){
-				model.set('serial_count_points', 0);
-				$propertyViewNode.find('input[data-field="serial_count_points"]').val('0');
+			// data-dynamic-cid="5"
+			var that = this;
+			var GroupArray = $propertyViewNode.parent().children('.propertyGroup_property_dynamicControlField_control');
+			var cidArray = [];
+			for(var i=0;i<GroupArray.length;i++){
+				var cid =$(GroupArray[i]).attr('data-dynamic-cid');
+				cidArray.push(cid);
 			}
+			var localCid = that.cid;
+			var maxCid = Math.max.apply(this,cidArray);
+
+
+
+			if(localCid<maxCid){
+				var $cur_target = $node.find('.wui-i-group1');
+				$cur_target.find('.group_type').html(''+value+'人团');
+			}else{
+				var $cur_target = $node.find('.wui-i-group2');
+				$cur_target.find('.group_type').html(''+value+'人团');
+			}
+
 		}
 	}
 });

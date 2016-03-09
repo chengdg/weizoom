@@ -4,13 +4,9 @@
 {% load apps_filter %}
 {% block css %}
     <style>
-        .xui-propertyView-app-GroupList{
-            width:495px;
-            height: 30px;
-            margin-left: 5px;
-        }
 
-        .xui-propertyView-app-GroupList div,.xui-propertyView-app-DynamicGroupList div{
+
+        .xui-propertyView-app-DynamicGroupList div{
             display: inline-block;
             margin-left: 2px;
         }
@@ -206,19 +202,21 @@
             var share_description =  descriptionModel.get('share_description');
 
             var product_dict = descriptionModel.get('product');
+            var product_id = product_dict.productId;
 
 
-            var default_group_type = descriptionModel.get('group_type');
-            var default_group_days = descriptionModel.get('group_days');
-            var default_group_price =  descriptionModel.get('group_price');
-            var group_dict = {'0':{
-              'group_type':default_group_type,
-              'group_days':default_group_days,
-              'group_price':default_group_price
-            }};
+            // var default_group_type = descriptionModel.get('group_type');
+            // var default_group_days = descriptionModel.get('group_days');
+            // var default_group_price =  descriptionModel.get('group_price');
+            // var group_dict = {'0':{
+            //   'group_type':default_group_type,
+            //   'group_days':default_group_days,
+            //   'group_price':default_group_price
+            // }};
 
+            var group_dict = {};
             for(var i=0;i<dynamicComponents.length;i++){
-              var index = i+1;
+              var index = i;
               var g_type = dynamicComponents[i].model.get('group_type');
               var g_days = dynamicComponents[i].model.get('group_days');
               var g_price = dynamicComponents[i].model.get('group_price');
@@ -239,6 +237,7 @@
             "end_time": endTime,
             'group_dict':JSON.stringify(group_dict),
             'product_dict':JSON.stringify(product_dict),
+            'product_id':product_id,
             'rules':rules,
             'material_image':material_image,
             'share_description':share_description
