@@ -10,7 +10,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
     dynamicComponentTypes: [{
 		type:'appkit.groupitem',
-		model:2
+		model: 1
 	}],
 
     properties: [{
@@ -69,41 +69,43 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
 
-        }]},{
-		group:'',//列表
-		groupClass:'xui-propertyView-app-GroupList',
-		fields:[{
-		name: 'group_type',
-		type: 'select',
-		//validate:'data-validate="require-notempty::选项不能为空',
-		displayName: '1：',
-		//annotation:'注：1个团购可创建多种拼团人数供顾客选择',
-		source:[{
-			name:'5人团',
-			value:'5'
-		},{
-			name:'10人团',
-			value:'10'
-		}],
-		default:'5',
-		isUserProperty:true
-
-		},{
-			name:'group_days',
-			type:'text_with_annotation',
-			displayName:'团拼时间：',
-			annotation:'天',
-			size:'35px',
-			isUserProperty:true
-		},{
-			name:'group_price',
-			type:'text_with_annotation',
-			displayName:'团购价：',
-			annotation:'元',
-			size:'35px',
-			isUserProperty:true
-		}]
-		},{
+        }]},
+		//{
+		//group:'',//列表
+		//groupClass:'xui-propertyView-app-GroupList',
+		//fields:[{
+		//name: 'group_type',
+		//type: 'select',
+		////validate:'data-validate="require-notempty::选项不能为空',
+		//displayName: '1：',
+		////annotation:'注：1个团购可创建多种拼团人数供顾客选择',
+		//source:[{
+		//	name:'5人团',
+		//	value:'5'
+		//},{
+		//	name:'10人团',
+		//	value:'10'
+		//}],
+		//default:'5',
+		//isUserProperty:true
+        //
+		//},{
+		//	name:'group_days',
+		//	type:'text_with_annotation',
+		//	displayName:'团拼时间：',
+		//	annotation:'天',
+		//	size:'35px',
+		//	isUserProperty:true
+		//},{
+		//	name:'group_price',
+		//	type:'text_with_annotation',
+		//	displayName:'团购价：',
+		//	annotation:'元',
+		//	size:'35px',
+		//	isUserProperty:true
+		//}]
+		//},
+		{
 		group:'',//列表
 		groupClass: 'xui-propertyView-app-DynamicGroupList',
         fields: [
@@ -112,8 +114,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '',
             type: 'dynamic-generated-control',
             isShowCloseButton: true,
-            minItemLength: 0,
-            maxItemLength: 1,
+            minItemLength: 1,
+            maxItemLength: 2,
             isUserProperty: true,
             default: []
         }]},{
@@ -166,8 +168,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 	propertyChangeHandlers: {
 		title: function($node, model, value) {
 			//parent.W.Broadcaster.trigger('powerme:change:title', value);
-			console.log('88888888888888888888888888888888');
-			console.log($node);
+
 
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
@@ -224,10 +225,20 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 		},
         group_items: function($node, model, value,$propertyViewNode) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
-			console.log('DDDDDDFFFFFFFFFFFFFFFFF');
-			console.log($propertyViewNode);
-		 	//var view = $('[data-ui-role="apps-prize-keyword-pane"]').data('view');
-			//view && view.render(W.weixinKeywordObj);
+			$ul = $node.find('.wui-i-description ul');
+
+			var n4li = $ul.children('li').length;
+			var n4li_hide = $ul.children('.xui-hide').length;
+			var n4li_show = n4li-n4li_hide;
+
+			if(n4li_show==0){
+				$ul.find('.wui-i-group1').removeClass('xui-hide');
+			}else if(n4li_show==1){
+				$ul.find('.wui-i-group2').removeClass('xui-hide');
+			}else if(n4li_show==2){
+				$ul.find('.wui-i-group2').addClass('xui-hide');
+			}
+
         },
 		product:function($node, model, value, $propertyViewNode){
 			var data;
@@ -235,9 +246,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				data = $.parseJSON(value);
 				product = data[0];
 			}
-
-			console.log('>>>>KKKKKKKKKKKK^^~~~!!!!!!!');
-			console.log($node);
 
 			model.set({
 				product:{
@@ -253,9 +261,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
 			if (value[0]) {
 				//更新propertyView中的图片
-				console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvKEKEKEKEK');
 				console.log(value[0]);
-				
+
 				var $target = $propertyViewNode.find($('table.xa-productList')).removeClass('xui-hide');
 				$target.find('.productImg').attr('src',product.thumbnails_url);
 				$target.find('.productName').html(product.name);
@@ -304,3 +311,4 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 		second: text_second
 	});
 };
+

@@ -47,14 +47,25 @@
                                 data-validate='require-select-span::请选择团购类型'
                                 data-check-className='radio-select checkbox-select'
                             >
-                                <li class="wui-i-item xa-inputControl" data-input-name="{{component.model.title}}">
+                                <li class="wui-i-item xa-inputControl wui-i-group1 xui-hide" data-input-name="{{component.model.title}}">
                                     <div style="padding: 3px 0;">
-                                        <span id="radio_item_{{component.cid}}" name="radio_{{component.parent_component.cid}}"
+                                        <span id="radio_item_" name="radio_"
                                       data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.group_type }}">
                                         </span>
-                                        <span class="ml5 xa-itemTitle" style="margin-left: 30px!important;line-height: 22px;">{{ component.model.group_type }}人团</span>
-                                        <span class="ml5 xa-itemTitle" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{ component.model.group_days }}天</span>
-                                        <span class="ml5 xa-itemTitle" style="margin-left: 20px!important;line-height: 22px;">团购价：{{ component.model.group_price }}元</span>
+                                        <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{{component.model.group_type}}人团</span>
+                                        <span class="ml5 xa-itemTitle group_days" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.model.group_days}}天</span>
+                                        <span class="ml5 xa-itemTitle group_price" style="margin-left: 20px!important;line-height: 22px;">团购价：{{component.model.group_price}}元</span>
+                                    </div>
+                                </li>
+
+                                <li class="wui-i-item xa-inputControl wui-i-group2 xui-hide" data-input-name="{{component.model.title}}">
+                                    <div style="padding: 3px 0;">
+                                        <span id="radio_item_" name="radio_"
+                                      data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.group_type }}">
+                                        </span>
+                                        <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{{component.model.group_type}}人团</span>
+                                        <span class="ml5 xa-itemTitle group_days" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.model.group_days}}天</span>
+                                        <span class="ml5 xa-itemTitle group_price" style="margin-left: 20px!important;line-height: 22px;">团购价：{{component.model.group_price}}元</span>
                                     </div>
                                 </li>
                             </ul>
