@@ -47,9 +47,6 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 
 	propertyChangeHandlers: {
 		group_type:function($node, model, value, $propertyViewNode){
-			console.log('DDDDD/////');
-			console.log(value);
-			// data-dynamic-cid="5"
 			var that = this;
 			var GroupArray = $propertyViewNode.parent().children('.propertyGroup_property_dynamicControlField_control');
 			var cidArray = [];
@@ -60,16 +57,21 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 			var localCid = that.cid;
 			var maxCid = Math.max.apply(this,cidArray);
 
-
-
-			if(localCid<maxCid){
+			console.log('localCid:'+localCid);
+			console.log('cidArray:'+cidArray);
+			console.log('maxCid:'+maxCid);
+			if(cidArray.length==1){
 				var $cur_target = $node.find('.wui-i-group1');
 				$cur_target.find('.group_type').html(''+value+'人团');
 			}else{
-				var $cur_target = $node.find('.wui-i-group2');
-				$cur_target.find('.group_type').html(''+value+'人团');
+				if(localCid<maxCid){
+					var $cur_target = $node.find('.wui-i-group1');
+					$cur_target.find('.group_type').html(''+value+'人团');
+				}else{
+					var $cur_target = $node.find('.wui-i-group2');
+					$cur_target.find('.group_type').html(''+value+'人团');
+				}
 			}
-
 		}
 	}
 });
