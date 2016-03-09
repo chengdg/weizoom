@@ -76,7 +76,7 @@ class GroupParticipance(resource.Resource):
 		"""
 		group_record_id = request.POST['group_record_id']
 		member_id = request.POST['fid']
-		product_id = app_models.Group.objects.get(id=group_record_id).product_id
+		product_id =  request.POST['product_id']
 		group_type = request.POST['group_type']
 		group_days = request.POST['group_days']
 		group_price = request.POST['group_price']

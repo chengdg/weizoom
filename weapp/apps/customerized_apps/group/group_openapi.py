@@ -96,3 +96,35 @@ class CheckGroupBuy(resource.Resource):
 			'group_id': group_id,
 		}
 		return response.get_response()
+
+class OrderAction(resource.Resource):
+	app = 'apps/group'
+	resource = 'order_action'
+
+	def api_put(request):
+		"""
+		下单中的检测
+		"""
+		member_id = request.GET.get('member_id')
+		group_id = request.GET.get('group_id')
+		pid = request.GET.get('pid')
+		is_success = False
+		reason = 'check_group_buy_fail'
+		group_buy_price = 0
+
+		group_record = app_models.GroupRelations.objects(id=group_id)
+		if group_record.count() > 0:
+			group_record = group_record.first()
+			group_buy_price = group_record.group_price
+			if member_id in group_record.grouped_member_ids and group_record.is_valid:
+				is_success = True
+				reason = 'check_group_buy_success'
+		response = create_response(200)
+		response.data = {
+			'is_success': is_success,
+			'reason': reason,
+			'pid': pid,
+			'group_buy_price': group_buy_price,
+			'group_id': group_id,
+		}
+		return response.get_response()

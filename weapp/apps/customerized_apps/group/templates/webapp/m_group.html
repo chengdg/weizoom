@@ -267,6 +267,7 @@
         var choosen_group_type = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_type');
         var choosen_group_days = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_days');
         var choosen_group_price = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_price');
+        var product_id = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-product_id');
         if (choosen_group_type){
             W.getApi().call({
                 app: 'm/apps/group',
@@ -278,12 +279,13 @@
                     fid: page_owner_member_id,
                     group_type: choosen_group_type,
                     group_days: choosen_group_days,
-                    group_price: choosen_group_price
+                    group_price: choosen_group_price,
+                    product_id: product_id
                 },
                 success: function(data) {
                     //TODO 传is_group_order,relation_belong_to过去
                     var relation_belong_to = data.relation_belong_to;
-                    var data_href = "/workbench/jqm/preview/?woid=6&module=mall&model=order&action=edit&product_id=5&product_count=1&product_model_name=standard";
+                    var data_href = "http://h5.weapp.com/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
                     window.open(data_href, '_tab');
                 },
                 error: function(data) {
