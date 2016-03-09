@@ -65,7 +65,6 @@ class GroupParticipance(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'参与失败'
 			response.inner_errMsg = unicode_full_stack()
-			print(response.inner_errMsg)
 			return response.get_response()
 		response = create_response(200)
 		return response.get_response()

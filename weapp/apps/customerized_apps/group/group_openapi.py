@@ -80,11 +80,11 @@ class CheckGroupBuy(resource.Resource):
 		reason = 'check_group_buy_fail'
 		group_buy_price = 0
 
-		group_record = app_models.GroupRelations.objects(id=group_id)
+		group_record = app_models.GroupRelations.objects(id=group_id,is_valid=True)
 		if group_record.count() > 0:
 			group_record = group_record.first()
 			group_buy_price = group_record.group_price
-			if member_id in group_record.grouped_member_ids and group_record.is_valid:
+			if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
 				is_success = True
 				reason = 'check_group_buy_success'
 		response = create_response(200)
@@ -103,28 +103,33 @@ class OrderAction(resource.Resource):
 
 	def api_put(request):
 		"""
-		下单中的检测
+		apiserver通知订单支付成功
 		"""
-		member_id = request.GET.get('member_id')
-		group_id = request.GET.get('group_id')
-		pid = request.GET.get('pid')
-		is_success = False
-		reason = 'check_group_buy_fail'
-		group_buy_price = 0
+		order_id = request.POST['order_id']
+		action = request.POST['action']
+		group_id = request.POST['group_id']
+		member_id = request.POST['member_id']
+		group_record = app_models.GroupRelations.objects.get(id=group_id)
+		group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_id,grouped_member_id=member_id)
 
-		group_record = app_models.GroupRelations.objects(id=group_id)
-		if group_record.count() > 0:
-			group_record = group_record.first()
-			group_buy_price = group_record.group_price
-			if member_id in group_record.grouped_member_ids and group_record.is_valid:
-				is_success = True
-				reason = 'check_group_buy_success'
+		if action == 'pay': #参数为'pay'表示支付成功
+			if group_record.member_id == member_id:#如果团长支付成功，算开团成功
+				group_record.update(set__is_valid=True)
+			group_detail.update(set__is_already_paid=True,set__order_id=order_id)
+		elif action == 'cancel': #'cancel'(订单已取消)
+			if group_record.member_id == member_id:#如果团长订单已取消
+				group_record.delete()
+			else:
+				group_record.update(dec__grouped_number=1,pop__grouped_member_ids=member_id)
+			group_detail.delete()
+
+		#如果团购人满，并且全部支付成功，则团购成功
+		if int(group_record.group_type) == group_record.grouped_number:
+			group_details = app_models.GroupDetail.objects(relation_belong_to=group_id)
+			is_already_paid_list = []
+			for g in group_details:
+				is_already_paid_list.append(g.is_already_paid)
+			if 'False' not in is_already_paid_list:
+				group_record.update(set__group_status=True,set__success_time=datetime.now())
 		response = create_response(200)
-		response.data = {
-			'is_success': is_success,
-			'reason': reason,
-			'pid': pid,
-			'group_buy_price': group_buy_price,
-			'group_id': group_id,
-		}
 		return response.get_response()
