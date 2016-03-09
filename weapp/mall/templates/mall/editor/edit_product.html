@@ -75,7 +75,9 @@
 			<div class="form-group ">
 				<label class="control-label fl" for="promotion_title">促销标题：</label>
 				<div class="fl">
-					<input type="text" class="xa-promotion-name form-control w490 mr20 ml5" id="promotion_title" name="promotion_title" placeholder="" value="{% if product %}{{ product.promotion_title }}{% endif %}" maxlength="20"/>
+					<input type="text" class="xa-promotion-name form-control w490 mr20 ml5" id="promotion_title" name="promotion_title" placeholder="" value="{% if product %}{{ product.promotion_title }}{% endif %}" maxlength="20"
+					{% if product.is_group_buying %}readonly{% endif %}
+					/>
 					<div class="errorHint"></div>
 				</div>
 				<p>
@@ -106,21 +108,23 @@
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="bar_code">商品条码：</label>
 				<div class="col-sm-2 fl pl5">
-					<input type="text" class="form-control w106" id="bar_code" name="bar_code" placeholder="" value="{% if product %}{{ product.bar_code }}{% endif %}" maxlength="15" data-validate="require-custom-function" data-validate-function="validateBarCode"/>
+					<input type="text" class="form-control w106" id="bar_code" name="bar_code" placeholder="" value="{% if product %}{{ product.bar_code }}{% endif %}" maxlength="15" data-validate="require-custom-function" data-validate-function="validateBarCode"
+					{% if product.is_group_buying %}readonly{% endif %}/>
 					<div class="errorHint"></div>
 				</div>
 			</div>
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="min_limit">起购数量：</label>
 				<div class="fl w700 pl5 pr">
-	        {% if product.is_in_flash_sale%}
-	          <input type="hidden" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
-	          <input type="text"  disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
-	        {% else %}
-						<input type="text" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
-	        {% endif %}
-	        <span class="xui-fontGary pa" style="top:2px;left:115px">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
-          <div class="errorHint"></div>
+				{% if product.is_in_flash_sale%}
+					<input type="hidden" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{{ product.min_limit }}" maxlength="5" data-validate="norequire,,require-int"/>
+					<input type="text" disabled class="form-control w106 fl" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"/>
+				{% else %}
+					<input type="text" class="form-control w106" id="min_limit" name="min_limit" placeholder="" value="{% if product %}{{ product.min_limit }}{% endif %}" maxlength="5" data-validate="norequire,,require-int"
+					{% if product.is_group_buying %}readonly{% endif %}/>
+				{% endif %}
+					<span class="xui-fontGary pa" style="top:2px;left:115px">（设置起购数量大于1的商品，将不能参加限时抢购活动）</span>
+					<div class="errorHint"></div>
 				</div>
 			</div>
 {#           微众商城代码#}
@@ -139,9 +143,16 @@
 			<div class="form-group nostar ">
 				<label class="control-label fl" for="member_count">会员折扣：</label>
 				<div class="col-sm-2 fl pl5">
-					<label for="" class="xui-category checkbox-inline"><input name="is_member_product" type="checkbox" {% if product.is_member_product %}checked{% endif %} id="member_count">
-					参与会员折扣
+					<label for="" class="xui-category checkbox-inline">
+						<input name="is_member_product" type="checkbox" id="member_count"
+							{% if product.is_member_product %}checked{% endif %} 
+							{% if product.is_group_buying %}disabled{% endif %}
+						/>
+						参与会员折扣
 					</label>
+					{% if product.is_group_buying %}
+					<input type="hidden" name="is_member_product" value="{% if product.is_member_product %}on{% endif %}" />
+					{% endif %}					
 				</div>
 			</div>
 		</fieldset>
@@ -157,6 +168,7 @@
 				data-validate="require-custom-function"
 				data-validate-function="checkProductModel"
 				data-product-type="object"
+				data-is-group-buying="{% if product.is_group_buying %}true{% else %}false{% endif %}"
 			></div>
 			<div class="errorHint pr" style="left:24px;top:-10px;"></div>
 		</fieldset>
@@ -166,17 +178,17 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show" for="swipe_images">商品图片：</label>
 				<div id="imgSelect" class="col-sm-9">
-          <input id="swipe_images" name="swipe_images" type='hidden'
-                 data-force-validate="true"
-                 data-validate="require-string::请至少添加一张图片"
-                 data-minlength="3"
-          />
+			        <input id="swipe_images" name="swipe_images" type='hidden'
+						data-force-validate="true"
+						data-validate="require-string::请至少添加一张图片"
+						data-minlength="3"
+			        />
 					<ul class="xui-i-images clearfix">
 						{% for image in product.swipe_images %}
 						<li class="pr xui-i-image xa-image"
-                data-image-id="{{image.id}}"
-                data-width="{{image.width}}"
-                data-height="{{image.height}}">
+			                data-image-id="{{image.id}}"
+			                data-width="{{image.width}}"
+			                data-height="{{image.height}}">
 							<img class="imgexist" src="{{image.url}}" />
 							<button class="xui-close xa-deleteImage" type="button">
 								<span>&times;</span>
@@ -199,30 +211,38 @@
 				<label class="control-label col-sm-2 col-sm-offset-1 star_show">运费设置：</label>
 				<div id="freight"  class="col-sm-9">
 				{% if request.manager.id == product.owner.id or not product %}
+					{% if product.is_group_buying %}
+					<input type="hidden" name="postage_type"
+						value="{% if postage_config_info.is_use_system_postage_config %}custom_postage_type{% else %}unified_postage_type{% endif %}"/>
+					{% endif %}
 					<div id="unified_freight" class="radio" >
-         		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
-         			   {% if not postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
-         			   value="unified_postage_type"
-         		/>
-            <span class="xui-bold">统一运费：￥</span>
-            <input type='text' name="unified_postage_money"
-                   value='{% if product %}{{product.unified_postage_money}}{% endif %}'
-                   style="width: 80px;" class="form-control xui-inlineblock xa-unifiedPostageInput mb5"
-                   placeholder="0.0"
-            />
-            <span>元</span>
-            <div id="unified_postage_error" class="errorHint pt0" data-error-hint="请输正确的价格" style="padding-left:80px"></div>
-       		</div>
+         				<input type='radio'	class="xui-inlineblock xa-freight" name='postage_type'
+         			   		{% if not postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
+         			   		value="unified_postage_type"
+							{% if product.is_group_buying %}disabled{% endif %}
+         				/>
+            			<span class="xui-bold">统一运费：￥</span>
+			            <input type='text' name="unified_postage_money"
+							value='{% if product %}{{product.unified_postage_money}}{% endif %}'
+							style="width: 80px;" 
+							class="form-control xui-inlineblock xa-unifiedPostageInput mb5"
+							placeholder="0.0"
+							{% if product.is_group_buying %}readonly{% endif %}
+			            />
+			            <span>元</span>
+			            <div id="unified_postage_error" class="errorHint pt0" data-error-hint="请输正确的价格" style="padding-left:80px"></div>
+			       	</div>
 
 					<div id="custom_freight" class="radio xa-customPostageSelectorLabel">
-         		<input type='radio'	class="xui-inlineblock xa-freight"	name='postage_type'
-             			   {% if postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
-                         value="custom_postage_type"
-         	    />
-            <span class="xui-bold">使用系统运费模板：</span>
-            {{postage_config_info.system_postage_config.name}}
-            <a class="ml5" href="/mall2/postage_list/" target="_blank">新建运费模板</a>
-       		</div>
+		         		<input type='radio'	class="xui-inlineblock xa-freight" name='postage_type'
+		             		{% if postage_config_info.is_use_system_postage_config %}checked="checked"{% endif %}
+		                    value="custom_postage_type"
+							{% if product.is_group_buying %}disabled{% endif %}
+		         	    />
+            			<span class="xui-bold">使用系统运费模板：</span>
+            			{{postage_config_info.system_postage_config.name}}
+            			<a class="ml5" href="/mall2/postage_list/" target="_blank">新建运费模板</a>
+       				</div>
 				{%else%}
 					<label id="unified_freight" class="radio" >包邮</label>
 				{%endif%}
@@ -236,32 +256,37 @@
 					<label class="checkbox xa-pay-method" >
                     {% if pay_interface_config.online_pay_interfaces %}
 	             		<input type='checkbox' id='is_enable_online_pay_interface'
-                               name='is_enable_online_pay_interface'
-                               checked="checked"
-                               class="xa-pay-selected"
-                               disabled
-	             			   value="1"
-                         />
-                         <p class="xui-bold">在线支付</p>
+                            name='is_enable_online_pay_interface'
+                            checked="checked"
+                            class="xa-pay-selected"
+                            disabled
+	             			value="1"
+                        />
+                        <p class="xui-bold">在线支付</p>
                         {% for pay_interface in pay_interface_config.online_pay_interfaces %}
                         <p class="tx-pay-interface-item-p">{{ pay_interface.name }}</p>
                         {% endfor %}
                     {% else %}
 	             		<input type='checkbox' id='is_enable_online_pay_interface'
-                               name='is_enable_online_pay_interface'
-                               class="xa-pay-selected"
-                               {% if is_weizoom_mall %}
-                               checked="checked"
-                               {% endif %}
-                               disabled
-	             			   value="1"
-                         />
+							name='is_enable_online_pay_interface'
+							class="xa-pay-selected"
+							{% if is_weizoom_mall %}
+							checked="checked"
+							{% endif %}
+							disabled
+							value="1"
+						/>
                         <p class="xui-bold">在线支付</p>
                         <p class="tx-pay-interface-item-p">当前没有启用在线支付接口，请前往<a href="/mall2/pay_interface_list/" target="_blank">启用在线支付接口</a></p>
                     {% endif %}
 	         		</label>
 
-					<label class="checkbox inline tx-checkbox-item xa-pay-method" >
+					<label class="checkbox inline tx-checkbox-item xa-pay-method" >					
+						{% if product.is_group_buying and product.is_use_cod_pay_interface %}
+						<input type="hidden" name="is_enable_cod_pay_interface"
+							value="{% if product.is_use_cod_pay_interface %}1{% else %}{% endif %}"
+						/>
+						{% endif %}
 	             		<input
 	             			type='checkbox'
 	             			id='is_enable_cod_pay_interface'
@@ -269,8 +294,10 @@
                             class="xa-pay-selected"
 	             			value="1"
 	             			{% if product.is_use_cod_pay_interface %}checked="checked"{% endif %}
-	             			{% if not pay_interface_config.is_enable_cod_pay_interface %}disabled{% endif %}/> <p class="xui-bold">
-	             			货到付款</p>
+	             			{% if not pay_interface_config.is_enable_cod_pay_interface %}disabled{% endif %}
+	             			{% if product.is_group_buying %}disabled{% endif %}
+	             		/>
+	             		<p class="xui-bold">货到付款</p>
 
 	             		{% if pay_interface_config.is_enable_cod_pay_interface %}
 	             		<p class="tx-pay-interface-item-p">启用后买家可选择货到付款下单，您需自行通过合作快速安排配送。买家开箱验货无误后，快递公司向买家收款并与您结算费用。</p>
@@ -284,11 +311,17 @@
 	         	{%endif%}
 				</div>
 			</div>
+
 			{% if is_bill %}
             <div class="form-group">
                 <label class="control-label col-sm-2 col-sm-offset-1">商品发票：</label>
                 <div class="col-sm-9" style="margin-top: -6px;margin-left:-20px;">
                     <label class="checkbox checkbox-inline tx-checkbox-item" >
+                    	{% if product.is_group_buying %}
+						<input type="hidden" name="is_enable_bill"
+							value="{% if product.is_enable_bill or not product %}1{% else %}0{% endif %}"
+						/>
+						{% endif %}
                         <input
                             type='checkbox'
                             id='is_enable_bill'
@@ -296,6 +329,7 @@
                             class="product_bill"
                             value="1"
                             {% if product.is_enable_bill or not product %}checked="checked"{% endif %}
+                            {% if product.is_group_buying %}disabled{% endif %}
                         />
                         <p class="xui-bold">支持开票</p>
                     </label>
@@ -322,7 +356,9 @@
 			{% if not property_templates %}
 				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property_list/" target="_blank">配置属性模板</a></span>
 			{% else %}
-			<select class="ml20 xa-propertyTemplateSelector">
+			<select class="ml20 xa-propertyTemplateSelector" 
+				{% if product.is_group_buying %}disabled{% endif %}
+			>
 				<option value="-1">选择属性模板</option>
 				{% for property_template in property_templates %}
 				<option value="{{property_template.id}}">{{property_template.name}}</option>
@@ -338,15 +374,21 @@
                     {% for property in product.properties %}
                     <li class="xui-i-templateProperty xa-property" data-property-id="{{property.id}}">
                         <input class="xui-i-propertyName xui-propertyNameBtn xa-name" readonly=true value='{{property.name}}' maxlength="15">
-                        <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255">
+                        <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255"
+                        {% if product.is_group_buying %}readonly=true{% endif %}>
+
+                        {% if not product.is_group_buying %}
                         <a class="xa-deleteProperty xui-deleteProperty">删除</a>
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
               </div>
               <div class="xa-instantProperties">
+              	{% if not product.is_group_buying %}
                 <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>
 	    		<div class="errorHint pt0 ml10 fl" date-error-Hint="不能为空"></div>
+	    		{% endif %}
               </div>
 	      </div>
 		</div>

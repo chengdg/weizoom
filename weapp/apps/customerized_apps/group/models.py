@@ -17,7 +17,7 @@ class Group(models.Document):
 	created_at = models.DateTimeField() #创建时间
 	group_dict = models.DynamicField() #团购活动字典{'0':{'group_type':'5','group_days':'10','group_price':'100.00'},...}
 	# product_dict = models.DynamicField() #活动商品
-	product_id = models.StringField()#商品id
+	product_id = models.IntField()#商品id
 	product_img = models.StringField()#商品图片
 	product_name = models.StringField()#商品名称
 	product_price = models.StringField()#商品价格
@@ -62,7 +62,10 @@ class GroupRelations(models.Document):
 	"""
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	member_id = models.StringField(default="", max_length=20, unique_with=['belong_to']) #团购发起者，团长的id
+	product_id = models.IntField() #商品id
 	group_type = models.StringField()  #小团购类型
+	group_days = models.StringField() #团购时间
+	group_price = models.FloatField() #团购价格
 	is_valid = models.BooleanField(default=False) #是否开团成功
 	group_status = models.BooleanField(default=False) #团购状态
 	grouped_number = models.IntField(default=0) #团购人数

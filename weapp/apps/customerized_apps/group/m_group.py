@@ -144,6 +144,7 @@ class MGroup(resource.Resource):
 		member = request.member
 		fid = 0
 		group_relation_id = 0
+		product_id = None
 
 		if 'new_app:' in record_id:
 			project_id = record_id
@@ -185,6 +186,7 @@ class MGroup(resource.Resource):
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				#获取活动状态
 				activity_status = record.status_text
+				product_id = record.product_id
 
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
@@ -236,6 +238,7 @@ class MGroup(resource.Resource):
 		c = RequestContext(request, {
 			'record_id': record_id,
 			'group_relation_id': group_relation_id, #小团购id，如不存在则为None
+			'product_id': product_id, #产品id，如不存在则为None
 			'activity_status': activity_status,
 			'page_title': record.name if record else u"团购",
 			'page_html_content': html,
