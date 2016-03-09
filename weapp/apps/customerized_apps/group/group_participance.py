@@ -76,12 +76,18 @@ class GroupParticipance(resource.Resource):
 		"""
 		group_record_id = request.POST['group_record_id']
 		member_id = request.POST['fid']
+		product_id = app_models.Group.objects.get(id=group_record_id).product_id
 		group_type = request.POST['group_type']
+		group_days = request.POST['group_days']
+		group_price = request.POST['group_price']
 		try:
 			group_member_info = app_models.GroupRelations(
 				belong_to = group_record_id,
 				member_id = member_id,
+				product_id = product_id,
 				group_type = group_type,
+				group_days = group_days,
+				group_price = group_price,
 				grouped_number = 1,
 				grouped_member_ids = list(member_id),
 				created_at = datetime.now()

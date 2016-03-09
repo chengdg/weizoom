@@ -264,7 +264,9 @@
     }
     //我要开团
 	function openGruop(){
-        var choosen_group_type = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-name');
+        var choosen_group_type = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_type');
+        var choosen_group_days = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_days');
+        var choosen_group_price = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_price');
         if (choosen_group_type){
             W.getApi().call({
                 app: 'm/apps/group',
@@ -274,7 +276,9 @@
                     webapp_owner_id: W.webappOwnerId,
                     group_record_id: W.appRecordId,
                     fid: page_owner_member_id,
-                    group_type: choosen_group_type
+                    group_type: choosen_group_type,
+                    group_days: choosen_group_days,
+                    group_price: choosen_group_price
                 },
                 success: function(data) {
                     //TODO 传is_group_order,relation_belong_to过去

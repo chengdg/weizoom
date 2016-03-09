@@ -50,8 +50,7 @@
                             >
                                 <li class="wui-i-item xa-inputControl wui-i-group1 {% if component.components.0.model.group_type %}{% else %}xui-hide{% endif %}" data-input-name="{{component.model.title}}">
                                     <div style="padding: 3px 0;">
-                                        <span id="radio_item_" name="radio_"
-                                      data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{component.components.0.model.group_type}}">
+                                        <span name="radio" data-type="radio" span-type="selection" class="selection-radio" data-input-group_type="{{component.components.0.model.group_type}}" data-input-group_days="{{ component.components.0.model.group_days }}" data-input-group_price="{{ component.components.0.model.group_price }}">
                                         </span>
                                         <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{% if component.components.0.model.group_type %}{{component.components.0.model.group_type}}{% else %}5{% endif %}人团</span>
                                         <span class="ml5 xa-itemTitle group_days" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.components.0.model.group_days}}天</span>
@@ -61,8 +60,7 @@
 
                                 <li class="wui-i-item xa-inputControl wui-i-group2 {% if component.components.1.model.group_type %}{% else %}xui-hide{% endif %}" data-input-name="{{component.model.title}}">
                                     <div style="padding: 3px 0;">
-                                        <span id="radio_item_" name="radio_"
-                                      data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.group_type }}">
+                                        <span name="radio" data-type="radio" span-type="selection" class="selection-radio" data-input-group_type="{{component.components.1.model.group_type}}" data-input-group_days="{{ component.components.1.model.group_days }}" data-input-group_price="{{ component.components.1.model.group_price }}">
                                         </span>
                                         <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{% if component.components.1.model.group_type %}{{component.components.1.model.group_type}}{% else %}5{% endif %}人团</span>
                                         <span class="ml5 xa-itemTitle group_days" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.components.1.model.group_days}}天</span>
