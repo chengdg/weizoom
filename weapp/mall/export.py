@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from weapp.settings import MONEY_HOST
+
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
 PRODUCT_FIRST_NAV = 'product'
@@ -255,7 +257,7 @@ MALL_ORDER_SECOND_NAV = {
         # },{
         #     'name': ORDER_MONEY,
         #     'title': u'结算管理',
-        #     'url': 'http://dev.money.com/weapp/orders_to_money/',
+        #     'url': MONEY_HOST + '/weapp/orders_to_money/',
         #     'permission': 'manage_order_batch_delivery',
         #     'need_token': True
         }
