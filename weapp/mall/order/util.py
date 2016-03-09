@@ -639,6 +639,8 @@ def export_orders_json(request):
         # 处理赠品信息
         orders.extend(temp_premium_products)
 
+    if request.GET.get("bdd",None):
+        mall_type = True
     if mall_type:
         for order in orders:
             del order[13]
@@ -650,7 +652,7 @@ def export_orders_json(request):
         u'商品金额:' + str(total_product_money).encode('utf8'),
         u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
         u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
-        (u'微众卡+惠惠卡使用的所有金额:' if not mall_type else u'微众卡支付金额') + str(weizoom_card_total_order_money).encode('utf8'),
+        (u'微众卡+惠惠卡使用的所有金额:' if not mall_type else u'微众卡支付金额:') + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
         u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
@@ -1271,8 +1273,8 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
             orders = orders.filter(payment_time__gte=start_time, payment_time__lt=end_time)
         elif '3' == date_interval_type:
             order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
-            orders = orders.filter(order_id__in=order_order_ids)
-
+            order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
+            orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
     #惠惠卡需求
     order_order_ids= []
     if order_type and int(order_type) == 1:
