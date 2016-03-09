@@ -1484,8 +1484,9 @@ def ship_order(order_id, express_company_name,
 				user = UserProfile.objects.get(user_id=order.supplier_user_id).user
 			except:
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+			if operator_name != user.username:
+				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			set_origin_order_status(order, user, 'ship')
-
 	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_send_request_to_kuaidi signal
@@ -1709,7 +1710,7 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	if child_order_length and child_order_length == 1:
 		return OrderOperationLog.objects.filter(order_id=order_id)
 	else:
-		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付'])
+		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付']).exclude(order_id=order_id, action=u'完成')
 
 
 ########################################################################

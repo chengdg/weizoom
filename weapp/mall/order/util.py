@@ -719,7 +719,7 @@ def get_detail_response(request):
         if len(child_orders) > 1 and order.status > ORDER_STATUS_CANCEL:
             order.actions = get_order_actions(order, is_detail_page=True, is_list_parent=True, mall_type=request.user_profile.webapp_type)
         else:
-            order.actions = get_order_actions(child_orders[0], is_detail_page=True, mall_type=request.user_profile.webapp_type)
+            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
@@ -1020,7 +1020,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'express_company_name': fackorder.express_company_name,
                         'express_number': fackorder.express_number,
                         'leader_name': fackorder.leader_name,
-                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type, multi_child_orders=multi_child_orders)
+                        'actions': get_order_actions(order if len(order2fackorders[order.id]) == 1 else fackorder, is_refund=is_refund, mall_type=mall_type, multi_child_orders=multi_child_orders)
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                         group = {
@@ -1429,10 +1429,11 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
         if order.status == ORDER_STATUS_NOT:
             result = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_NOT_SHIP:
+            print order.pay_interface_type, order.order_id
             if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
-                    result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
+                result = [ORDER_SHIP_ACTION, ORDER_REFUNDIND_ACTION]
             else:
-                    result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
+                result = [ORDER_SHIP_ACTION, ORDER_CANCEL_ACTION]
         elif order.status == ORDER_STATUS_PAYED_SHIPED:
             actions = []
             if order.pay_interface_type in [PAY_INTERFACE_ALIPAY, PAY_INTERFACE_TENPAY, PAY_INTERFACE_WEIXIN_PAY]:
@@ -1483,7 +1484,6 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     # else:
     #     if order.is_sub_order:
     #         result = filter(lambda x: x in able_actions_for_sub_order, result)
-
     if not mall_type:
         if (order.supplier or order.supplier_user_id) and is_detail_page:
             result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)
