@@ -15,9 +15,15 @@ class Group(models.Document):
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
 	created_at = models.DateTimeField() #创建时间
-	product_dict = models.DynamicField() #活动商品
-	product_id = models.StringField()#商品id
 	group_dict = models.DynamicField() #团购活动字典{'0':{'group_type':'5','group_days':'10','group_price':'100.00'},...}
+	# product_dict = models.DynamicField() #活动商品
+	product_id = models.StringField()#商品id
+	product_img = models.StringField()#商品图片
+	product_name = models.StringField()#商品名称
+	product_price = models.StringField()#商品价格
+	product_socks = models.StringField()#商品库存
+	product_barcode = models.StringField()#商品编码
+	product_create_at = models.StringField()#商品创建时间
 	rules = models.StringField()#团购说明
 	material_image = models.StringField()#分享图片
 	share_description = models.StringField()#分享描述
