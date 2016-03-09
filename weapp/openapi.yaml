@@ -75,7 +75,7 @@ paths:
               reason:
                 type: string
                 description: 失败原因
-                             pid:
+              pid:
                 type: int32
                 description: 商品id
               group_buy_price:
