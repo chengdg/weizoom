@@ -46,7 +46,7 @@ paths:
                 description: 团购价
                 type: double
               group_id:
-                type: int32
+                type: string
                 description: 团购活动id
               url:
                 type: string
@@ -75,14 +75,14 @@ paths:
               reason:
                 type: string
                 description: 失败原因
-                             pid:
+              pid:
                 type: int32
                 description: 商品id
               group_buy_price:
                 description: 团购价
                 type: double
               group_id:
-                type: int32
+                type: string
                 description: 团购活动id
   /order_action:
     put:
@@ -98,5 +98,5 @@ paths:
 definitions:
   group_id:
     name: group_id
-    description: 团购活动id，来字团购活动页点击参团跳转到编辑订单页提供
-    type: int32
+    description: 团购活动id，来自团购活动页点击参团跳转到编辑订单页提供
+    type: string

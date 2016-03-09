@@ -47,6 +47,42 @@
         margin-top: 20px;
         margin-bottom: 15px;
     }
+    .xui-successHint {
+        background: #fff;
+        border-radius: 5px;
+        position: fixed;
+        top: 30%;
+        height: 15%;
+        z-index: 10001;
+        text-align: center;
+        width: 68%;
+        margin-left: 17%;
+        padding-top: 25px;
+    }
+    .xui-successHint .xui-i-msg{
+        color:#3E1917;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    button.wui-i-btn-groupMsg-yes,button.wui-i-btn-groupMsg-no{
+        width: 40%;
+        text-align: center;
+        font-size: 1rem;
+        height: 1.5rem;
+        border-radius: 2px;
+        font-family: "黑体";
+        margin-top: 15%;
+    }
+    button.wui-i-btn-groupMsg-yes{
+        background: #ff2742;
+        color: #fff;
+        border: 0;
+    }
+    button.wui-i-btn-groupMsg-no{
+        background: #fff;
+        color: #414141;
+        border: 1px solid #EEEEEE;
+    }
 </style>
 {% endblock %}
 
@@ -58,7 +94,16 @@
         </div>
         <div class="xui-colseButton xui-spritebg xa-colseButton">知道了</div>
     </div>
-
+    <!-- 支付未完成弹窗页面 -->
+    <div class="xui-groupMsg xa-groupMsg none">
+        <div class="f15 xui-successHint xui-spritebg">
+           <p class="xui-i-msg xa-i-msg"></p>
+            <div class="wui-i-btngroup">
+                <button class="wui-i-btn-groupMsg-yes wa-i-btn-groupMsg-yes">是</button>
+                <button class="wui-i-btn-groupMsg-no wa-i-btn-groupMsg-no">否</button>
+           </div>
+        </div>
+    </div>
     <!-- 非会员引导 -->
     <div class="xui-attention xa-attention-guest none">
         <div class="xui-twoDimensionBox">
@@ -75,6 +120,8 @@
 <script type="text/javascript">
 	var is_helped = true;
     var is_self_page = true;
+    var is_group_leader = false;
+    var is_group_unpaid = false;
     var page_owner_member_id = '';
     var page_owner_icon = '';//用户头像
     var group_type = '';
@@ -122,10 +169,10 @@
             },
             success: function(data) {
                 console.log(data);
-                //渲染按钮状态
-                updateActivityStatus(data);
                 //隐藏loading动画元素
                 loadingStatus(false);
+                //渲染按钮状态
+                updateActivityStatus(data);
 
                 //已开团
                 if(group_relation_id != ''){
@@ -155,6 +202,7 @@
         W.isMember = member_info.isMember;
         is_self_page = member_info.self_page;
         is_group_leader = member_info.is_group_leader;
+        is_group_unpaid = member_info.is_group_unpaid;
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
         group_status = member_info.group_status;
@@ -165,6 +213,7 @@
             $('.wui-i-shop_circle').find('img').attr('src', page_owner_icon);
         }
         if(group_type != ""){
+            $('.wui-i-product-price-group').show();
             $('.wui-i-title-pic').addClass('wui-i-title-pic-'+group_type);
         }
         updateBtnStatus();
@@ -182,6 +231,9 @@
         }
         //如果是自己的主页
         if(is_self_page){
+            if(is_group_unpaid){
+                openUnpaidWin();
+            }
             if(is_group_leader){
                 $('.wa-using').text('邀请好友参团').on('click', function(){
                         openGuideMask();
@@ -272,6 +324,7 @@
             }
         });
     }
+
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
@@ -295,18 +348,27 @@
         $('.xa-i-rules-contentbox').removeClass('none');
         mask('show');
     });
-
+    //未支付完成
+    $('.wa-i-btn-groupMsg-no').click(function(){
+        mask('hide');
+        $('.xui-groupMsg').addClass('none');
+    });
     // 邀请好友参团
     function openGuideMask(){
         mask('show');
         $('.xa-share').removeClass('none');
     }
-    //未关注引导
+    // 未关注引导
     function openGuestMask(){
         mask('show');
         $('.xa-attention-guest').removeClass('none');
     }
-
+    // 支付未完成
+    function openUnpaidWin(){
+        mask('show');
+        $('.xui-groupMsg').removeClass('none');
+        $('.xa-groupMsg').find('.xa-i-msg').html('开团支付未完成，是否继续？');
+    }
     function renderTime(seconds){
         seconds = parseInt(seconds);
         var formatTime = function(data){
