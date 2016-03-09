@@ -60,6 +60,8 @@ class OrderInfo(resource.Resource):
         order = Order.objects.get(id=order_id)
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
+            if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+                order = Order.objects.get(id=order.origin_order_id)
             flag = util.check_order_status_filter(order,action,mall_type=request.user_profile.webapp_type)
             if not flag:
                 response = create_response(500)

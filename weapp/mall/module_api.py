@@ -1487,6 +1487,12 @@ def ship_order(order_id, express_company_name,
 			if operator_name != user.username:
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			set_origin_order_status(order, user, 'ship')
+		else:
+			if Order.objects.filter(origin_order_id=order.id).count() == 1:
+				child_order = Order.objects.get(origin_order_id=order.id)
+				from mall.order.util import set_children_order_status
+				set_children_order_status(order, target_status)
+				record_operation_log(child_order.order_id, operator_name, action, child_order)
 	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_send_request_to_kuaidi signal
@@ -2193,8 +2199,8 @@ def set_origin_order_status(child_order, user, action, request=None):
 		if action == 'ship':
 			origin_order.status = min(children_order_status)
 			origin_order.save()
-			if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED:
-				update_order_status(user, action, origin_order, request)
+			# if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED:
+			# 	update_order_status(user, action, origin_order, request)
 		else:
 			update_order_status(user, action, origin_order, request)
 
