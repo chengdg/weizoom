@@ -444,8 +444,8 @@ def step_look_for_order(context, user):
     #     query_params['is_first_order'] = IS_FIRST_ORDER[query_params['is_first_order']]
     #     if query_params['is_first_order'] == -1:
     #         query_params.pop('is_first_order')
-    is_first_order =  True if (query_params.get('is_first_order', True) in ('true', 'yes', 'True', 'Yes', True)) else False
-    is_not_first_order =  True if (query_params.get('is_not_first_order', True) in ('true', 'yes', 'True', 'Yes', True)) else False
+    is_first_order =  True if (query_params.get('is_first_order') in ('true', 'yes', 'True', 'Yes', True)) else False
+    is_not_first_order =  True if (query_params.get('is_not_first_order') in ('true', 'yes', 'True', 'Yes', True)) else False
     if query_params.get('is_not_first_order'):
         query_params.pop('is_first_order')
     if (is_first_order and is_not_first_order) or (not is_first_order and  not is_not_first_order):
@@ -478,12 +478,13 @@ def step_get_all_info_of_order(context, user):
     filter_value = dict()
     if hasattr(context, 'export_query_params'):
         filter_value = context.export_query_params
+        filter_value["bdd"]=1
         #print "filter_value---------------",filter_value
         delattr(context, 'export_query_params')
     from cStringIO import StringIO
     import csv
 
-    url = '/mall2/order_export/'
+    url = '/mall2/order_export/?bdd=1'
     response = context.client.get(url, filter_value)
     reader = csv.reader(StringIO(response.content))
     # 去掉表头信息
@@ -508,10 +509,11 @@ def step_get_specify_order(context, user):
     filter_value = dict()
     if hasattr(context, 'query_params'):
         filter_value = context.query_params
+        filter_value["bdd"]=1
     from cStringIO import StringIO
     import csv
 
-    url = '/mall2/order_export/'
+    url = '/mall2/order_export/?bdd=1'
     response = context.client.get(url, filter_value)
     reader = csv.reader(StringIO(response.content))
     csv_items = [row for row in reader]
