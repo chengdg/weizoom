@@ -2509,3 +2509,22 @@ class Supplier(models.Model):
 		verbose_name = "供货商"
 		verbose_name_plural = "供货商操作"
 		db_table = "mall_supplier"
+
+
+# 订单与团购活动的关联
+GROUP_STATUS_ON = 0  # 团购进行中
+GROUP_STATUS_OK = 1  # 团购成功
+GROUP_STATUS_failure = 2  # 团购失败
+
+
+class OrderHasGroup(models.Model):
+	"""
+	<order, group>关联
+	"""
+	order_id = models.CharField(max_length=100)  # 订单号(order中的order_id
+	group_id = models.CharField(max_length=100)
+	activity_id = models.CharField(max_length=100)
+	group_status = models.IntegerField(default=GROUP_STATUS_ON)
+
+	class Meta(object):
+		db_table = 'mall_order_has_group'

@@ -201,8 +201,15 @@
             var material_image = descriptionModel.get('material_image');
             var share_description =  descriptionModel.get('share_description');
 
+
             var product_dict = descriptionModel.get('product');
             var product_id = product_dict.productId;
+            var product_img = product_dict.productImg;
+            var product_name = product_dict.productName;
+            var product_price = product_dict.productPrice;
+            var product_socks = product_dict.productSocks;
+            var product_barcode = product_dict.productBarcode;
+            var product_create_at = product_dict.productCreate_at;
 
 
             // var default_group_type = descriptionModel.get('group_type');
@@ -233,8 +240,14 @@
             "start_time": startTime,
             "end_time": endTime,
             'group_dict':JSON.stringify(group_dict),
-            'product_dict':JSON.stringify(product_dict),
+            // 'product_dict':JSON.stringify(product_dict),
             'product_id':product_id,
+            'product_img':product_img,
+            'product_name':product_name,
+            'product_price':product_price,
+            'product_socks':product_socks,
+            'product_barcode':product_barcode,
+            'product_create_at':product_create_at,
             'rules':rules,
             'material_image':material_image,
             'share_description':share_description
