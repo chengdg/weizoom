@@ -28,6 +28,7 @@ class MGroup(resource.Resource):
 		isMember = False
 		timing = 0
 		is_group_leader = False
+		is_group_unpaid = False #开团成功但未支付成功
 		is_helped = False
 		self_page = False
 		group_status = False
@@ -67,7 +68,11 @@ class MGroup(resource.Resource):
 			isMember =member.is_subscribed
 			if u"进行中" == activity_status:
 				timing = (record.end_time - datetime.today()).total_seconds()
-
+				current_member_group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=str(member_id))
+				if current_member_group_relation.count() > 0:
+					current_member_group_relation = current_member_group_relation.first()
+					if not current_member_group_relation.is_valid: #开团成功但未支付成功
+						is_group_unpaid = True
 				if group_relation_id:
 					# 已经开过团
 					group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
@@ -110,12 +115,13 @@ class MGroup(resource.Resource):
 			'self_page': self_page,
 			'is_helped': is_helped,
 			'is_group_leader': is_group_leader,
+			'is_group_unpaid': is_group_unpaid,
 			'page_owner_name': page_owner_name,
 			'page_owner_icon': page_owner_icon,
 			'page_owner_member_id': page_owner_member_id,
 			'activity_status': activity_status,
 			'group_status': group_status, #小团购状态
-			'group_type': int(group_type),
+			'group_type': int(group_type) if group_type !='' else '',
 			'grouped_number': int(grouped_number),
 			# 'product_original_price': product_original_price,
 			# 'product_group_price': product_group_price
