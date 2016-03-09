@@ -96,7 +96,7 @@ paths:
                 description: 团购价
                 type: double
               group_id:
-                type: int32
+                type: string
                 description: 团购活动id
   /order_action:
     put:

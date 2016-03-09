@@ -1791,8 +1791,6 @@ li.wui-selectBox-display-table {
     line-height: 30px;
 }
 
-
-
 /*百宝箱 拼红包 red packet CSS-- end*/
 
 /*百宝箱 团购CSS*/
@@ -1800,7 +1798,6 @@ li.wui-selectBox-display-table {
     width: 100%;
     top:0;
 }
-
 .wui-group-container .wui-i-help_group .wui-i-shop_circle{
     width: 70px;
     height: 70px;
@@ -1809,11 +1806,22 @@ li.wui-selectBox-display-table {
     margin-left: 10px;
 	margin-bottom: 5px;
 }
-
 .wui-group-container .wui-i-help_group .wui-i-shop_circle img{
     border-radius: 10px;
     width: 70px;
     height: 70px;
+}
+.wui-group-container .wui-i-help_group .wui-i-title-pic-icon{
+	text-align: center;
+    width: 0px;
+    height: 0px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #F2F2F2 #ffffff #F2F2F2 #F2F2F2;
+    text-indent: 2em;
+    position: absolute;
+    margin-top: 52px;
+    margin-left: 10px;
 }
 .wui-group-container .wui-i-help_group .wui-i-title-pic{
     background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_title.png");
@@ -1931,7 +1939,6 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-powerbar_group .wui-i-box{
     height: 43px;
 }
-
 .wui-group-container .wui-i-powerbar_group .wui-i-percentbox{
     font-size:10px;
     color:white;
@@ -1952,7 +1959,6 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-box{
     width: auto;
-    /*background-color:green;*/
     margin-left: 40px;
     margin-right: 80px;
 }
@@ -1993,7 +1999,6 @@ li.wui-selectBox-display-table {
     background-position: -2px -9px;
     background-size: 99%;
 }
-
 .wui-group-container .wui-i-rules-contentbox{
     margin-top: 30%;
 }
