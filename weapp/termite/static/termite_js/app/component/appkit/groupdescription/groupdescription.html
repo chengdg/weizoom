@@ -53,7 +53,7 @@
                                         <span id="radio_item_" name="radio_"
                                       data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.group_type }}">
                                         </span>
-                                        <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{{component.model.group_type}}人团</span>
+                                        <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{% if component.model.group_type %}{{component.model.group_type}}{% else %}5{% endif %}人团</span>
                                         <span class="ml5 xa-itemTitle group_days" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.model.group_days}}天</span>
                                         <span class="ml5 xa-itemTitle group_price" style="margin-left: 20px!important;line-height: 22px;">团购价：{{component.model.group_price}}元</span>
                                     </div>
@@ -64,7 +64,7 @@
                                         <span id="radio_item_" name="radio_"
                                       data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.group_type }}">
                                         </span>
-                                        <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{{component.model.group_type}}人团</span>
+                                        <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{% if component.model.group_type %}{{component.model.group_type}}{% else %}5{% endif %}人团</span>
                                         <span class="ml5 xa-itemTitle group_days" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.model.group_days}}天</span>
                                         <span class="ml5 xa-itemTitle group_price" style="margin-left: 20px!important;line-height: 22px;">团购价：{{component.model.group_price}}元</span>
                                     </div>
