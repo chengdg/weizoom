@@ -1,0 +1,250 @@
+{% extends "content_base_v2.html" %}
+
+{% block content-panel %}
+<div class="xui-promotion-createFlashSalePage">
+
+<div class="relative">
+	<ul class="breadcrumb">
+		<li>您当前所在位置</li>
+		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+		<li class="active">微众卡兑换</li>
+	</ul>
+</div>
+
+<div class="xa-productSelector">
+	<div class="xa-productSelectConditionPanel">
+	</div>
+
+	<div class="panel panel-default mt20 xb-panelBg xa-errorHintContainer">
+		<div class="panel-body xa-selectedProductList mb0 pb0" style="margin-bottom:15px!important; margin-left:22px;" data-validate="require-element-exist" data-selector="tbody tr">
+			请通过查询选择参与活动的商品
+		</div>
+		<div class="errorHint pb0" style="padding-left:38px;" data-error-hint="请先选择商品"></div>
+	</div>
+</div>
+
+
+<div class="panel panel-default mt20  xb-panelBg">
+	<div class="panel-heading xui-createSaleHead">
+		促销规则
+	</div>
+	<form class="panel-body xui-formPanel xa-form xui-borderCancel mt30" style="height:230px;">
+		<div class="xui-i-table">
+			<div class="xui-i-col pr">
+				<div class="xui-i-item">
+					<label class="star_show">活动名称：</label>
+					<input type="text" class="form-control" id="name" name="name" value="{% if promotion %}{{promotion.name}}{% endif %}" data-validate="require-string" maxLength="20" minLength="0" />
+					<div class="errorHint ml110" data-error-hint="活动名称必须在1-20个字内"></div>
+				</div>
+				<div class="xui-i-item pa" style="top:50px;">
+					<label class="">会员等级：</label>
+					<select name="member_grade"class="">
+						<option value="0">全部会员</option>
+						{% for member_grade in member_grades %}
+							<option value="{{member_grade.id}}">{{member_grade.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<div class="xui-i-item pa" style="top:100px; width:285px;">
+					<label class="" for="limit_period">限购周期：</label>
+					<input type="text"  class="form-control w70" id="limit_period" name="limit_period" value="{% if promotion and promotion.detail.limit_period != 0 %}{{promotion.detail.limit_period}}{% endif %}" data-validate="norequire,,require-positive-int" style="width: 80px"/>
+					天<span class="xui-i-help ml5">注：空为不限制</span>
+					<div class="errorHint ml110 mt5" data-error-hint="请输入正整数"></div>
+				</div>
+			</div>
+
+			<div class="xui-i-col pr">
+				<div class="xui-i-item">
+					<label class="">限购广告语：</label>
+					<input type="text" class="form-control" id="promotion_title" name="promotion_title" value="{% if promotion %}{{promotion.promotion_title}}{% endif %}" data-validate="norequire,,require-string" maxLength="20" minLength="4" />
+					<div class="errorHint ml110 mt5"  data-error-hint='广告语允许4-20个汉字、字母或数字'></div>
+				</div>
+
+				<div class="xui-i-item pa" style="top:50px;" >
+					  <label class="star_show">限购价格：</label>
+					  <input type="text" class="form-control w70 xa-promotion-price" id="promotion_price" name="promotion_price" value="{% if promotion %}{{promotion.detail.promotion_price}}{% endif %}" data-validate="require-notempty,,require-price::请输入数字,,require-custom-function" data-validate-function="validatePromotionPrice"/>
+
+					  <div class="errorHint ml110"></div>
+				</div>
+			</div>
+
+			<div class="xui-i-col pr">
+				<div class="xui-i-item">
+					<label class="star_show">活动时间
+					：</label>
+					<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+					<input
+						style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker"
+						id="start_date"
+						name="start_date"
+						style=""
+					    value=""
+					    readonly="readonly"
+						data-validate="require-notempty"
+						data-enable-select-time="true"
+						data-ui-role="date-picker"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min="now"
+					    data-max-el="#end_date"
+					    width="132"/>
+					    <div class="errorHint" data-error-hint="必须选择一个开始时间" style=""></div>
+					    </div>
+					至
+					<div style="display:inline-block; vertical-align:text-top;margin-top:-6px;">
+					<input
+						style="width:132px!important;"
+						type="text"
+						class="form-control xui-datePicker"
+						id="end_date"
+						name="end_date"
+					    value=""
+					    readonly="readonly"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+						data-enable-select-time="true"
+					    data-format="yy-mm-dd HH:MM"
+					    data-min="now"
+					    data-min-el="#start_date"/>
+					    <div class="errorHint" data-error-hint="必须选择一个过期时间" style=""></div>
+					    </div>
+				</div>
+
+
+				<div class="xui-i-item pa" style="top:50px;">
+					<label>单人单次限购：</label>
+					<input type="text" class="form-control w70" id="count_per_purchase" name="count_per_purchase" value="{% if promotion and promotion.detail.count_per_purchase != 9999999 %}{{promotion.detail.count_per_purchase}}{% endif %}" />
+					<span class="xui-i-help ml5">注：空为不限制</span>
+					<div class="errorHint ml110 mt" data-error-hint="请输入正整数"></div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="tc" style="margin-top:115px;">
+			<a class="btn btn-primary mr40 xa-submit xui-fontBold" href="javascript:void(0);">完成设置</a>
+			<a class="btn btn-default xa-cancel xui-fontBold" href="/mall2/flash_sale_list/">取消创建</a>
+		</div>
+	</form>
+</div>
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+{% verbatim %}
+<script id="selected-promotion-products-view-tmpl-src" type="text/x-jquery-tmpl">
+	<table id="productListTable" class="table table-bordered mb0 table-condensed xb-stripedTable xb-noTdBorder">
+		<thead class="xui-theadHeight">
+			<tr>
+				<th>商品信息</th>
+				<th width="120">商品价格（元）</th>
+				<th width="80">总销量</th>
+				<th width="80">操作</th>
+			</tr>
+		</thead>
+		<tbody id='product_list'>
+            {{each(i, product) products}}
+			<tr
+				data-id="${product.id}"
+				{{if (product.is_use_custom_model)}}
+				data-model-id="${product.current_used_model.id}"
+				{{else}}
+				data-model-id="${product.standard_model.id}"
+				{{/if}}
+			>
+				<td style="text-align: left;" class="pl50 pt10">
+					<div class="imgBox fl" style="width: auto;border:solid 1px #ccc;">
+						<a href="${product.detail_link}" target="_blank">
+                             {{if product.thumbnails_url.search('http://weappimg') != -1}}
+                               <img src="${product.thumbnails_url + '!60'}" width="60" height="60"/>
+                             {{else}}
+                               <img src="${product.thumbnails_url}" width="60" height="60"/>
+                             {{/if}}
+						</a>
+					</div>
+					<div class="ml10 fl">
+						<div class="mb25">
+							<a href="${product.detail_link}" target="_blank">${product.name}</a>
+						</div>
+						{{if product.is_use_custom_model}}
+						<span class="label label-info xa-showAllModels cursor-pointer" style="font-size: 1.0em;">查看${product.models.length}个规格详情</span>
+						{{else}}
+						<p style="color:#666;">商品条码：${product.bar_code}</p>
+						{{/if}}
+					</div>
+				</td>
+				<td class="xa-product-price">
+					${product.display_price_range}
+				</td>
+				<td>
+					${product.sales}
+				</td>
+				<td>
+					<a href="javascript:void(0);" class="xa-delete">删除</a>
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
+
+<script type="text/javascript">
+var promotionId = {% if promotion %}{{promotion.id}}{% else %}0{% endif %};
+$(document).ready(function() {
+	var productSelector = new W.view.mall.PromotionSelectProductView({
+		el: '.xa-productSelector',
+		promotionId: promotionId,
+		tableTemplate: 'selected-promotion-products-view-tmpl-src',
+		filter_type: 'flash_sale'
+	});
+	productSelector.render();
+
+	$('.xa-submit').click(function(event) {
+		$(this).attr("disabled",true);
+		if(!W.validate()) {
+			$(this).attr("disabled",false);
+			return false;
+		}
+		var args = $('.xa-form').serializeObject();
+		args.products = productSelector.getData();
+		W.getApi().call({
+			method: 'put',
+			app: 'mall2',
+			resource: 'flash_sale',
+			args: W.toFormData(args),
+			scope: this,
+			success: function(data) {
+				W.showHint('success', '创建限时抢购成功');
+				_.delay(function() {
+					window.location.href = '/mall2/flash_sale_list/';
+				}, 500)
+			},
+			error: function(resp) {
+				W.showHint('error', '创建限时抢购失败!');
+				$(this).attr("disabled",false);
+			}
+		})
+	});
+});
+</script>
+
+<!--	限购价格验证	-->
+<script type="text/javascript">
+function validatePromotionPrice($el){
+  // 获取价格
+  var productPrice = $.trim($('.xa-product-price').text()).split('~')[0];
+  var promotionPrice = $.trim($('.xa-promotion-price').val());
+  var isValidate = parseFloat(promotionPrice) < parseFloat(productPrice);
+  return {
+	isValidate: isValidate,
+	errorHint: '限购价格应小于商品原价'
+  }
+}
+</script>
+<!--	/限购价格验证	-->
+{% endblock %}
