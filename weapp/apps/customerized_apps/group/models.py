@@ -49,17 +49,6 @@ class Group(models.Document):
 		else:
 			return False
 
-# class GroupParticipance(models.Document):
-# 	member_id= models.LongField(default=0) #参与者id
-# 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
-# 	is_group_leader = models.BooleanField(default=False) #是否是团购的团长
-# 	is_valid = models.BooleanField(default=True) #该条记录是否有效(针对取关后再次关注的情况)
-# 	created_at = models.DateTimeField() #创建时间
-#
-# 	meta = {
-# 		'collection': 'group_group_participance'
-# 	}
-
 class GroupRelations(models.Document):
 	"""
 	用户自己发起的小团购记录表
@@ -84,7 +73,7 @@ class GroupDetail(models.Document):
 	"""
 	relation_belong_to = models.StringField(default="", max_length=100) #对应的小团购id
 	owner_id = models.LongField() #团购发起者id
-	grouped_member_id = models.LongField() #团购参与者id
+	grouped_member_id = models.LongField(unique_with=['relation_belong_to']) #团购参与者id
 	grouped_member_name = models.StringField(default='', max_length=1024) #团购参与者昵称
 	is_already_paid = models.BooleanField(default=False) #是否已经支付成功
 	order_id = models.StringField(default="", max_length=100) #对应的订单号

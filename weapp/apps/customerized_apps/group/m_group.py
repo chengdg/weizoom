@@ -82,13 +82,13 @@ class MGroup(resource.Resource):
 
 					# 获取该主页帮助者列表
 					helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
-					member_ids = [h.helper_member_id for h in helpers]
+					member_ids = [h.grouped_member_id for h in helpers]
 					member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 					for h in helpers:
 						temp_dict = {
-							'member_id': h.helper_member_id,
-							'user_icon': member_id2member[h.helper_member_id].user_icon,
-							'username': member_id2member[h.helper_member_id].username_size_ten
+							'member_id': h.grouped_member_id,
+							'user_icon': member_id2member[h.grouped_member_id].user_icon,
+							'username': member_id2member[h.grouped_member_id].username_size_ten
 						}
 						grouped_member_info_list.append(temp_dict)
 

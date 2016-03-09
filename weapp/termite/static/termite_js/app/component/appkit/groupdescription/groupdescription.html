@@ -14,31 +14,29 @@
                             <i class="wui-i-star"></i><p>团购说明</p><i class="wui-i-star"></i>
                         </span>
                     </div>
-                    <div class="wui-i-rules-contentbox xa-i-rules-contentbox none">
-                        <div class="wui-i-closebtn xa-i-closebtn">
-                            ×
+                </div>
+                <div class="wui-i-rules-contentbox xa-i-rules-contentbox none">
+                    <div class="wui-i-rules-content xa-i-rules-content">
+                        <div class="wui-i-title-box xa-i-title-box">
+                            <p class="wui-i-title">团购说明</p>
                         </div>
-                        <div class="wui-i-rules-content xa-i-rules-content">
-                            <div class="wui-i-title-box xa-i-title-box">
-                                <p class="wui-i-title">团购说明</p>
-                            </div>
-                            <div class="wui-i-content-box xa-i-content-box">
-                                {{component.model.rules|safe}}
-                            </div>
+                        <div class="wui-i-content-box xa-i-content-box">
+                            {{ component.model.rules|safe }}
                         </div>
+                        <div class="wui-i-closebtn xa-i-closebtn">我知道了</div>
                     </div>
                 </div>
             </div>
             <div class="wui-i-description xa-description cl">
                 <div class="wui-i-description-content">
-                    <div class="wui-i-product-title">{{component.model.title}}</div>
+                    <div class="wui-i-product-title">{{ component.model.title }}</div>
                     <div class="wui-i-product-price-group">
                         <span class="wui-i-product-price-group-title">团购价</span>
                         <span class="wui-i-product-price-group-original-price">240元</span>
                         <span class="wui-i-product-price-group-group-price">140元</span>
                     </div>
                     <div class="wui-i-product-img">
-                        <img src="/standard_static/test_resource_img/hangzhou1.jpg">{{component.model.product_img}}
+                        <img src="/standard_static/test_resource_img/hangzhou1.jpg">{{ component.model.product_img }}
                     </div>
                     <div class="wui-i-choose_group_box">
                         <span>选择团购</span>
@@ -49,14 +47,16 @@
                                 data-validate='require-select-span::请选择团购类型'
                                 data-check-className='radio-select checkbox-select'
                             >
-                                <li class="wui-i-item xa-inputControl"  data-input-name="{{component.model.title}}">
+                                <li class="wui-i-item xa-inputControl" data-component-cid="{{component.cid}}"
+                                    data-input-name="{{component.model.title}}"
+                                >
                                     <div style="padding: 3px 0;">
                                         <span id="radio_item_{{component.cid}}" name="radio_{{component.parent_component.cid}}"
-                                      data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{component.model.group_type}}">
+                                      data-type="radio" span-type="selection"  class="selection-radio" data-input-name="{{ component.model.group_type }}">
                                         </span>
-                                        <span class="ml5 xa-itemTitle" style="margin-left: 30px!important;line-height: 22px;">{{component.model.group_type}}人团</span>
-                                        <span class="ml5 xa-itemTitle" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{component.model.group_days}}天</span>
-                                        <span class="ml5 xa-itemTitle" style="margin-left: 20px!important;line-height: 22px;">团购价：{{component.model.group_price}}元</span>
+                                        <span class="ml5 xa-itemTitle" style="margin-left: 30px!important;line-height: 22px;">{{ component.model.group_type }}人团</span>
+                                        <span class="ml5 xa-itemTitle" style="margin-left: 20px!important;line-height: 22px;">拼团时间{{ component.model.group_days }}天</span>
+                                        <span class="ml5 xa-itemTitle" style="margin-left: 20px!important;line-height: 22px;">团购价：{{ component.model.group_price }}元</span>
                                     </div>
                                 </li>
                             </ul>
@@ -88,15 +88,8 @@
                         <button class="wui-i-btn-using wa-using-join wui-hide">直接参团</button>
                     </div>
                     <div class="wui-i-states none">
-                        <div class="wui-i-title">
-                            <span class="wui-i-helper-title-content">
-                                <i class="wui-i-star"></i><i class="wui-i-star"></i>
-                            </span>
-                        </div>
-                        <ul class="wa-top100">
-                            <li class="wui-i-top100-title" style="padding: 16px 10px 0;">
-                                <span style="margin-left: 18px">团员</span>
-                            </li>
+                        <ul class="wa-grouped-members">
+                            <span style="margin-left: 18px">团员</span>
                         </ul>
                     </div>
                 </div>
