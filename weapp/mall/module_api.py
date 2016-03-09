@@ -1710,7 +1710,7 @@ def get_order_operation_logs(order_id, child_order_length=None):
 	if child_order_length and child_order_length == 1:
 		return OrderOperationLog.objects.filter(order_id=order_id)
 	else:
-		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付']).exclude(order_id=order_id, action=u'完成')
+		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付']).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
 
 
 ########################################################################
