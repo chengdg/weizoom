@@ -166,11 +166,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 	propertyChangeHandlers: {
 		title: function($node, model, value) {
 			//parent.W.Broadcaster.trigger('powerme:change:title', value);
-			console.log('6666666666666666666666666666K');
+			console.log('88888888888888888888888888888888');
 			console.log($node);
-			console.log('77777777777777777777777777777K');
-
-
 
 		},
 		start_time: function($node, model, value, $propertyViewNode) {
@@ -240,7 +237,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			}
 
 			console.log('>>>>KKKKKKKKKKKK^^~~~!!!!!!!');
-			console.log(product);
+			console.log($node);
 
 			model.set({
 				product:{
@@ -266,13 +263,9 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				$target.find('.productPrice').html(product.display_price);
 				$target.find('.productSocks').html(product.stocks);
 
+				$node.find('.wui-i-product-img > img').attr('src',product.thumbnails_url);
 			}
-			console.log('LLLLLLLLLLLLLLLLLLLLLL');
-			console.log($node);
 
-
-			var $leftTarget = $node.find($('.wui-i-description'));
-			$leftTarget.find('.wui-i-product-img img').attr('src',product.thumbnails_url);
 		}
 	},
 

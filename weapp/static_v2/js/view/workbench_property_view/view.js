@@ -882,9 +882,6 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         var options = {
             success: _.bind(function(data) {
-                        console.log('KKKKKK!!!!!!!!!@@@@@@@@@@@@@@@');
-                        console.log(data);
-
                     var $input_name = $button.parent().find('input[data-type="product_name"]');
                     var product_name = data[0].name;
                     console.log(product_name);
@@ -894,7 +891,6 @@ W.workbench.PropertyView = Backbone.View.extend({
                     var data = data;
                     if (typeof(data) == 'object') {
                                 data = JSON.stringify(data);
-                                console.log('FFFFFFFFFFFFFFFFFF');
                         }
                     $input.val(data).trigger('input');
 
