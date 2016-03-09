@@ -1004,6 +1004,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
         if mall_type:
             # 自营平台所有的订单都会拆单
             if order2fackorders.get(order.id) and order.status > ORDER_STATUS_CANCEL:
+                multi_child_orders = True
+                if len(order2fackorders[order.id]) == 1:
+                    multi_child_orders = False
                 for fackorder in sorted(order2fackorders.get(order.id), key = lambda obj:obj.supplier):
                     if order.status > ORDER_STATUS_CANCEL:
                         if fackorder.status == ORDER_STATUS_NOT:
@@ -1017,7 +1020,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                         'express_company_name': fackorder.express_company_name,
                         'express_number': fackorder.express_number,
                         'leader_name': fackorder.leader_name,
-                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type)
+                        'actions': get_order_actions(fackorder, is_refund=is_refund, mall_type=mall_type, multi_child_orders=multi_child_orders)
                     }
                     if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
                         group = {
@@ -1403,7 +1406,7 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0):
+def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0, multi_child_orders=False):
 
     """
     :param order:
@@ -1472,7 +1475,6 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     # 同步订单操作
     sync_order_actions = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
-    print result, "1111111"
     # print(order.order_id, order.is_sub_order, order.origin_order_id)
     # print(result)
     # 订单被同步后查看
@@ -1488,4 +1490,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
+
+    if multi_child_orders:
+        result = filter(lambda x: x not in able_actions_for_list_parent, result)
     return result
