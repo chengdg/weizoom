@@ -1480,7 +1480,10 @@ def ship_order(order_id, express_company_name,
 
 		if order.origin_order_id > 0:
 			# 修改子订单状态，上面只修改物流信息
-			user = UserProfile.objects.get(user_id=order.supplier_user_id).user
+			try:
+				user = UserProfile.objects.get(user_id=order.supplier_user_id).user
+			except:
+				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			set_origin_order_status(order, user, 'ship')
 
 	record_operation_log(order.order_id, operator_name, action, order)
