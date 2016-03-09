@@ -1493,6 +1493,7 @@ def ship_order(order_id, express_company_name,
 				from mall.order.util import set_children_order_status
 				set_children_order_status(order, target_status)
 				record_operation_log(child_order.order_id, operator_name, action, child_order)
+				record_status_log(child_order.order_id, operator_name, child_order.status, target_status)
 	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_send_request_to_kuaidi signal
