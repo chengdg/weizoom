@@ -1703,13 +1703,13 @@ def create_shopping_cart_order(webapp_owner_id, webapp_user, products):
 ########################################################################
 # get_order_operation_logs: 获得订单的操作日志
 ########################################################################
-def get_order_operation_logs(order_id, child_order_length):
+def get_order_operation_logs(order_id, child_order_length=None):
 	# return OrderOperationLog.objects.filter(order_id=order_id)
 	#为了把子订单的操作日志也筛选出来
-	if child_order_length == 1:
+	if child_order_length and child_order_length == 1:
 		return OrderOperationLog.objects.filter(order_id=order_id)
 	else:
-		return OrderOperationLog.objects.filter(order_id__contains=order_id)
+		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付'])
 
 
 ########################################################################
