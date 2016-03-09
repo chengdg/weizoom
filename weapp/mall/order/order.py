@@ -45,6 +45,7 @@ class OrderInfo(resource.Resource):
         """
         更新订单状态 取消订单
         """
+        mall_type = request.user_profile.webapp_type
         order_id = request.POST['order_id']
         action = request.POST.get('action', None)
         order_status = request.POST.get('order_status', None)
@@ -56,11 +57,10 @@ class OrderInfo(resource.Resource):
         remark = request.POST.get('remark', None)
         # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
-
         order = Order.objects.get(id=order_id)
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
-            if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+            if mall_type and Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
                 order = Order.objects.get(id=order.origin_order_id)
             flag = util.check_order_status_filter(order,action,mall_type=request.user_profile.webapp_type)
             if not flag:

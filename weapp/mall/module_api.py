@@ -1477,7 +1477,7 @@ def ship_order(order_id, express_company_name,
 	else:
 		action = u'订单发货'
 		record_status_log(order.order_id, operator_name, order.status, target_status)
-
+		# 自营平台的订单无论是子订单或者是母订单更新发货信息，都要对应的更新子订单或者母订单（订单只有只一个供货商的情况）
 		if order.origin_order_id > 0:
 			# 修改子订单状态，上面只修改物流信息
 			try:
@@ -1486,10 +1486,16 @@ def ship_order(order_id, express_company_name,
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
 			if operator_name != user.username:
 				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+				origin_order = Order.objects.get(id=order.origin_order_id)
+				Order.objects.filter(id=origin_order.id).update(**order_params)
+				record_operation_log(origin_order.order_id, operator_name, action, origin_order)
+				record_status_log(origin_order.order_id, operator_name, origin_order.status, target_status)
 			set_origin_order_status(order, user, 'ship')
 		else:
 			if Order.objects.filter(origin_order_id=order.id).count() == 1:
 				child_order = Order.objects.get(origin_order_id=order.id)
+				Order.objects.filter(id=child_order.id).update(**order_params)
 				from mall.order.util import set_children_order_status
 				set_children_order_status(order, target_status)
 				record_operation_log(child_order.order_id, operator_name, action, child_order)
