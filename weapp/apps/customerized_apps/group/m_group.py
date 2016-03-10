@@ -31,7 +31,7 @@ class MGroup(resource.Resource):
 		is_group_unpaid = False #开团成功但未支付成功
 		is_helped = False
 		self_page = False
-		group_status = False
+		group_status = 0
 		group_type = ''
 		grouped_number = 0
 		# product_original_price = 0
@@ -67,11 +67,10 @@ class MGroup(resource.Resource):
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
 			if u"进行中" == activity_status:
-				timing = (record.end_time - datetime.today()).total_seconds()
 				current_member_group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=str(member_id))
 				if current_member_group_relation.count() > 0:
 					current_member_group_relation = current_member_group_relation.first()
-					if not current_member_group_relation.is_valid: #开团成功但未支付成功
+					if current_member_group_relation.group_status == app_models.GROUP_NOT_START: #开团成功但未支付成功
 						is_group_unpaid = True
 				if group_relation_id:
 					# 已经开过团
@@ -79,6 +78,9 @@ class MGroup(resource.Resource):
 					group_status = group_relation_info.group_status
 					group_type = group_relation_info.group_type
 					grouped_number = group_relation_info.grouped_number
+					timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
+					if timing <= 0 and group_relation_info.group_status==app_models.GROUP_RUNNING:
+						group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
 					#判断分享页是否自己的主页
 					if fid is None or str(fid) == str(member_id):
 						is_group_leader = True if group_relation_info.member_id == str(member_id) else False
@@ -164,7 +166,7 @@ class MGroup(resource.Resource):
 				return response
 
 			if not group_relation_id:
-				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), is_valid=True)
+				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), group_status=app_models.GROUP_RUNNING)
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
 					group_relation_id = group_relation.id

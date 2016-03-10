@@ -106,16 +106,16 @@ class CheckGroupBuy(resource.Resource):
 		group_id = request.GET.get('group_id')
 		pid = request.GET.get('pid')
 		is_success = False
-		reason = 'check_group_buy_fail'
+		reason = u'不可进行团购下单操作'
 		group_buy_price = 0
 
-		group_record = app_models.GroupRelations.objects(id=group_id,is_valid=True)
+		group_record = app_models.GroupRelations.objects(id=group_id,group_status=app_models.GROUP_RUNNING)
 		if group_record.count() > 0:
 			group_record = group_record.first()
 			group_buy_price = group_record.group_price
 			if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
 				is_success = True
-				reason = 'check_group_buy_success'
+				reason = u'可以进行团购下单操作'
 		response = create_response(200)
 		response.data = {
 			'is_success': is_success,
@@ -143,7 +143,7 @@ class OrderAction(resource.Resource):
 
 		if action == 'pay': #参数为'pay'表示支付成功
 			if group_record.member_id == member_id:#如果团长支付成功，算开团成功
-				group_record.update(set__is_valid=True)
+				group_record.update(set__group_status=app_models.GROUP_RUNNING)
 			group_detail.update(set__is_already_paid=True,set__order_id=order_id)
 		elif action == 'cancel': #'cancel'(订单已取消)
 			if group_record.member_id == member_id:#如果团长订单已取消
@@ -159,6 +159,6 @@ class OrderAction(resource.Resource):
 			for g in group_details:
 				is_already_paid_list.append(g.is_already_paid)
 			if 'False' not in is_already_paid_list:
-				group_record.update(set__group_status=True,set__success_time=datetime.now())
+				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 		response = create_response(200)
 		return response.get_response()

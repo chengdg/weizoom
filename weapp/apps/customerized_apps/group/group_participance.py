@@ -35,7 +35,7 @@ class GroupParticipance(resource.Resource):
 				return response.get_response()
 			#更新小团购信息
 			group_relation = app_models.GroupRelations.objects(id=group_relation_id, member_id=fid).first()
-			if group_relation.is_valid and (not group_relation.group_status):
+			if group_relation.group_status == app_models.GROUP_RUNNING:
 				#更新当前member的参与信息
 				total_number = int(group_relation.group_type)
 				sync_result = group_relation.modify(

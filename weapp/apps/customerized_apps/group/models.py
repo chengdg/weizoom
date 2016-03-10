@@ -56,6 +56,10 @@ class Group(models.Document):
 		else:
 			return False
 
+GROUP_NOT_START = 0
+GROUP_RUNNING = 1
+GROUP_SUCCESS = 2
+GROUP_FAILURE = 2
 class GroupRelations(models.Document):
 	"""
 	用户自己发起的小团购记录表
@@ -67,8 +71,7 @@ class GroupRelations(models.Document):
 	group_type = models.StringField()  #小团购类型
 	group_days = models.StringField() #团购时间
 	group_price = models.FloatField() #团购价格
-	is_valid = models.BooleanField(default=False) #是否开团成功
-	group_status = models.BooleanField(default=False) #团购状态
+	group_status = models.IntField(default=0) #团购状态
 	grouped_number = models.IntField(default=0) #团购人数
 	grouped_member_ids = models.ListField() #团员的id List
 	success_time = models.DateTimeField() #团购成功时间
