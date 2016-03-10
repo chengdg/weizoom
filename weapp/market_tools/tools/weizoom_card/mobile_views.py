@@ -48,7 +48,7 @@ def get_weizoom_card_change_money(request):
 			product_name_str = ''
 			for a in weizoom_card_orders_has_product:
 				product_name = a.product.name
-				product_name_str = product_name_list + str(product_name)+ ','
+				product_name_str = product_name_str + str(product_name)+ ','
 			weizoom_card_orders_list.append({
 				'created_at': order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
 				'money': '%.2f' % order.money,
