@@ -14,7 +14,7 @@ from datetime import datetime
 from mall import export as mall_export
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
-COUNT_PER_PAGE = 20
+COUNT_PER_PAGE = 10
 
 class Groups(resource.Resource):
 	app = 'apps/group'
@@ -38,7 +38,8 @@ class Groups(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('name', '')
+		product_name = request.GET.get('product_name', '')
+		group_name = request.GET.get('group_name', '')
 		status = int(request.GET.get('status', -1))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
@@ -53,8 +54,11 @@ class Groups(resource.Resource):
 				data_data.update(set__status=app_models.STATUS_RUNNING)
 			elif now_time >= data_end_time:
 				data_data.update(set__status=app_models.STATUS_STOPED)
-		if name:
-			params['name__icontains'] = name
+
+		if group_name:
+			params['name__icontains'] = group_name
+		if product_name:
+			params['product_name__icontains'] = product_name
 		if status != -1:
 			params['status'] = status
 		if start_time:
@@ -77,35 +81,78 @@ class Groups(resource.Resource):
 		"""
 		pageinfo, datas = Groups.get_datas(request)
 
-		print '1111111111111111111111111'
-		print datas
+		#goup 一个大团活动
+		#relation 一个用户开启的团，belong_to 一个group
+		#details描述一个团圆的信息，有很多个 belong_to 一个 relation
 		group_ids = [str(p.id) for p in datas]
-		# all_participances = app_models.GroupParticipance.objects(belong_to__in=group_ids,has_join=True)
 
-		# group_id2info = {}
-		# for p in all_participances:
-		# 	if not p.belong_to in group_id2info:
-		# 		group_id2info[p.belong_to]={
-		# 		''
-		# 		}
+		id2relation = {}
+		all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
+		if all_relations:
+			for relation in all_relations:
+				group_id = relation.belong_to
+				if group_id in id2relation:
+					id2relation[group_id].append(relation)
+				else:
+					id2relation[group_id] = [relation]
+		r_id2details = {}
+		relation_ids = [str(r.id) for r in all_relations]
+		all_details =  app_models.GroupDetail.objects(relation_belong_to__in=relation_ids)
+		if all_details:
+			for detail in all_details:
+				r_id = str(detail.relation_belong_to)
+				if r_id in r_id2details:
+					r_id2details[r_id].append(detail)
+				else:
+					r_id2details[r_id]=[detail]
+		#缺乏一个浏览人数的数组
+		g_id2static_info = {}
+		if id2relation:
+			for g_id in id2relation:
+				group_relation_list = id2relation[g_id]
+				open_group_num = len(group_relation_list)
+
+				group_customer_num = 0
+				for one_relation in group_relation_list:
+					r_id = one_relation.id
+					detail_list = r_id2details[r_id]
+					for one_detail in detail_list:
+						if one_detail.is_already_paid:
+							group_customer_num += 1
+
+				if g_id in g_id2static_info:
+					g_id2static_info[g_id]={'open_group_num':open_group_num,
+											'group_customer_num':group_customer_num,
+											'group_visitor_num':0
+											}
+				else:
+					g_id2static_info[g_id]={'open_group_num':open_group_num,
+											'group_customer_num':group_customer_num,
+											'group_visitor_num':0
+											}
+
+		if g_id2static_info:
+			for data in datas:
+				g_id = str(data.id)
+				data.static_info = g_id2static_info[str(g_id)]
+
+
 		items = []
 		for data in datas:
-			print 11111111111111112222222222222
-			print data.product_img
 			items.append({
 				'id': str(data.id),
 				'name': data.name,
-				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
-				'productImg':data.product_img,
-				'productName':data.product_name,
-				# 'start_time_date': data.start_time.strftime('%Y-%m-%d'),
-				# 'start_time_time': data.start_time.strftime('%H:%M'),
-				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				# 'end_time_date': data.end_time.strftime('%Y-%m-%d'),
-				# 'end_time_time': data.end_time.strftime('%H:%M'),
-				'group_item_count':0,
-				'group_customer_count':0,
-				'group_participator_count':0,
+				'product_img':data.product_img,
+				'product_name':data.product_name,
+				# 'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
+				'start_time_date': data.start_time.strftime('%Y-%m-%d'),
+				'start_time_time': data.start_time.strftime('%H:%M'),
+				# 'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
+				'end_time_date': data.end_time.strftime('%Y-%m-%d'),
+				'end_time_time': data.end_time.strftime('%H:%M'),
+				'group_item_count':data.static_info.open_group_num if hasattr(data, 'static_info') else 0,
+				'group_customer_count':data.static_info.group_customer_num if hasattr(data, 'static_info') else 0,
+				'group_visitor_count':data.static_info.group_visitor_num if hasattr(data, 'static_info') else 0,
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
