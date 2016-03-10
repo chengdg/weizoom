@@ -51,7 +51,6 @@ class CardExchange(resource.Resource):
             card_exchange_dic['prize'] = prize_list
         except Exception,e:
             print e,'-----------------------------'
-
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
@@ -64,8 +63,13 @@ class CardExchange(resource.Resource):
     @login_required
     def api_get(request):
         """
-        卡兑换
+        卡兑换查看微众卡使用详情
         """
+        print '======================'
+        start_num = request.GET.get('start_num',None)
+        end_num = request.GET.get('end_num',None)
+        exchange_cards = WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = endnum)
+
         response = create_response(200)
         return response.get_response()
 
@@ -99,3 +103,21 @@ class CardExchange(resource.Resource):
 
         response = create_response(200)
         return response.get_response()
+
+class MobileCardExchange(resource.Resource):
+    app = "mall2"
+    resource = "m_card_exchange"
+
+    def get(request):
+        """
+        卡兑换页
+        """
+        print '+++++++++++++++++++++22222'
+       
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV_NAME,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
+        })
+        return render_to_response('mall/webapp/promotion/m_card_exchange.html', c)
