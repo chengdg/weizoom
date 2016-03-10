@@ -479,12 +479,6 @@ CONFIG_NAV = {
             'url': '/mall2/pay_interface_list/',
             'permission': 'manage_pay_interface'
         },
-         {
-            'name': MAIL_CONFIG_WEIXIN_NAV,
-            'title': u'配置微信证书',
-            'url': '/mall2/weixin_certificate/',
-            'permission': 'manage_weixin_certificate'
-        },
         {
             'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
             'title': u'运营邮件通知',
