@@ -69,7 +69,7 @@ class WXCertificate(resource.Resource):
                     cert_setting.save()
             else:
                 cert_setting = WxCertSettings.objects.create(
-                    owner_id = request.user
+                    owner = request.user
                 )
                 if 'cert_file' == file_cat:
                     cert_setting.cert_path = file_path
