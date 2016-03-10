@@ -722,6 +722,7 @@ def get_detail_response(request):
             child_orders[0].pay_interface_type = order.pay_interface_type
             order.actions = get_order_actions(child_orders[0], is_detail_page=True, mall_type=request.user_profile.webapp_type)
         else:
+            child_orders = [order]
             order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
         supplier_ids = []
         supplier_user_ids = []
