@@ -31,7 +31,7 @@ class MGroup(resource.Resource):
 		is_group_unpaid = False #开团成功但未支付成功
 		is_helped = False
 		self_page = False
-		group_status = False
+		group_status = 0
 		group_type = ''
 		grouped_number = 0
 		# product_original_price = 0
@@ -67,36 +67,42 @@ class MGroup(resource.Resource):
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
 			if u"进行中" == activity_status:
-				timing = (record.end_time - datetime.today()).total_seconds()
 				current_member_group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=str(member_id))
 				if current_member_group_relation.count() > 0:
 					current_member_group_relation = current_member_group_relation.first()
-					if not current_member_group_relation.is_valid: #开团成功但未支付成功
+					if current_member_group_relation.group_status == app_models.GROUP_NOT_START: #开团成功但未支付成功
 						is_group_unpaid = True
 				if group_relation_id:
 					# 已经开过团
-					group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
-					group_status = group_relation_info.group_status
-					group_type = group_relation_info.group_type
-					grouped_number = group_relation_info.grouped_number
-					#判断分享页是否自己的主页
-					if fid is None or str(fid) == str(member_id):
-						is_group_leader = True if group_relation_info.member_id == str(member_id) else False
-					else:
-						is_helped = True if str(member_id) in group_relation_info.grouped_member_ids else False
+					try:
+						group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
+						group_status = group_relation_info.group_status
+						group_type = group_relation_info.group_type
+						grouped_number = group_relation_info.grouped_number
+						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
+						if timing <= 0 and group_relation_info.group_status==app_models.GROUP_RUNNING:
+							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
+						#判断分享页是否自己的主页
+						if fid is None or str(fid) == str(member_id):
+							is_group_leader = True if group_relation_info.member_id == str(member_id) else False
+						else:
+							is_helped = True if str(member_id) in group_relation_info.grouped_member_ids else False
 
-					# 获取该主页帮助者列表
-					helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
-					member_ids = [h.grouped_member_id for h in helpers]
-					member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
-					for h in helpers:
-						temp_dict = {
-							'member_id': h.grouped_member_id,
-							'user_icon': member_id2member[h.grouped_member_id].user_icon,
-							'username': member_id2member[h.grouped_member_id].username_size_ten
-						}
-						grouped_member_info_list.append(temp_dict)
-
+						# 获取该主页帮助者列表
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
+						member_ids = [h.grouped_member_id for h in helpers]
+						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
+						for h in helpers:
+							temp_dict = {
+								'member_id': h.grouped_member_id,
+								'user_icon': member_id2member[h.grouped_member_id].user_icon,
+								'username': member_id2member[h.grouped_member_id].username_size_ten
+							}
+							grouped_member_info_list.append(temp_dict)
+					except:
+						response = create_response(500)
+						response.errMsg = u'该团购已不存在！'
+						return response.get_response()
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = member.username_size_ten
@@ -164,7 +170,7 @@ class MGroup(resource.Resource):
 				return response
 
 			if not group_relation_id:
-				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), is_valid=True)
+				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), group_status=app_models.GROUP_RUNNING)
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
 					group_relation_id = group_relation.id
