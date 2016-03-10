@@ -2,9 +2,10 @@
 # __author__: zwidny 整理
 import random
 from datetime import datetime
-from django.db.models import F
+from django.db.models import F, Q
 
 from . import models as promotion_models
+from mall import models
 from core import search_util
 
 
@@ -194,3 +195,42 @@ def filter_promotions(request, promotions):
         if products:
             filtered_promotions.append(promotion)
     return filtered_promotions
+
+
+def stop_promotion(request, product_ids):
+    """
+    结束促销活动
+    """
+    promotionIds =[relation.promotion_id for relation in promotion_models.ProductHasPromotion.objects.filter(
+        product_id__in=product_ids)]
+    promotions = promotion_models.Promotion.objects.filter(id__in=promotionIds).filter(~Q(status = promotion_models.PROMOTION_STATUS_DELETED))
+    if not promotions.count():
+        return
+    for promotion in promotions:
+        promotion.status=promotion_models.PROMOTION_STATUS_FINISHED
+        promotion.save()
+        if promotion.type == promotion_models.PROMOTION_TYPE_COUPON:
+            # 处理优惠券相关状态
+            ruleIds = [i.detail_id for i in promotion_models.Promotion.objects.filter(
+                owner=request.manager,
+                id=promotion.id)
+            ]
+            promotion_models.CouponRule.objects.filter(
+                owner=request.manager,
+                id__in=ruleIds
+            ).update(is_active=False, remained_count=0)
+
+            promotion_models.Coupon.objects.filter(
+                owner=request.manager,
+                coupon_rule_id__in=ruleIds,
+                status=promotion_models.COUPON_STATUS_UNGOT
+            ).update(status=promotion_models.COUPON_STATUS_Expired)
+
+
+        #发送finish_promotion event
+        from webapp.handlers import event_handler_util
+        event_data = {
+           "id": ','.join([str(promotion.id)]),
+           "type": promotion.type
+        }
+        event_handler_util.handle(event_data, 'finish_promotion')

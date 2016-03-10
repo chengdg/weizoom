@@ -559,8 +559,9 @@ def user_token(request):
 	user_token = account_util.get_token_for_logined_user(request.user)
 	return {'token' : user_token}
 
+
 def request_host(request):
-	return {'request_host' : request.get_host()}
+	return {'request_host' : settings.DOMAIN}
 
 from mall.models import WeizoomMall
 def is_weizoom_mall(request):

@@ -124,6 +124,7 @@ input[type="text"]{
 	display: block;
 	border-right:1px solid #D7D7D7;
 	border-top: 0px;
+	border-bottom: 0px;
 	background: url(/static_v2/img/editor/tabGrayBk.png);
 	background-repeat: no-repeat;
 	width: 103px;
@@ -147,7 +148,9 @@ input[type="text"]{
     background-color: #fff;
 
 }
-
+.nav-tabs>li a:focus{
+    background-color: #fff;
+}
 .nav-tabs>li:last-child > a{
 		border-right:1px solid #D7D7D7;
 }

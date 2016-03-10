@@ -1507,6 +1507,13 @@ def __get_supplier_name(supplier_id):
 		error_msg = u"获取供应商({})名称失败, cause:\n{}".format(supplier_id, unicode_full_stack())
 		watchdog_error(error_msg)
 
+def __get_store_name(supplier_user_id):
+	try:
+		return UserProfile.objects.get(user_id=supplier_user_id).store_name
+	except:
+		error_msg = u"获取供应商({})名称失败, cause:\n{}".format(supplier_user_id, unicode_full_stack())
+		watchdog_error(error_msg)
+
 
 ########################################################################
 # add_product_to_shopping_cart: 向购物车中添加商品
@@ -1703,8 +1710,11 @@ def get_order_operation_logs(order_id):
 ########################################################################
 def record_operation_log(order_id, operator_name, action, order=None):
 	try:
-		if order and order.origin_order_id > 0 and order.supplier > 0:  #add by duhao 如果是子订单，则加入供应商信息
-			action = '%s - %s' % (action, __get_supplier_name(order.supplier))
+		if order and order.origin_order_id > 0:
+			if order.supplier > 0:  #add by duhao 如果是子订单，则加入供应商信息
+				action = '%s - %s' % (action, __get_supplier_name(order.supplier))
+			if order.supplier_user_id > 0:
+				action = '%s - %s' % (action, __get_store_name(order.supplier_user_id))
 		OrderOperationLog.objects.create(order_id=order_id, action=action, operator=operator_name)
 	except:
 		error_msg = u"增加订单({})发货操作记录失败, cause:\n{}".format(order_id, unicode_full_stack())
@@ -1998,6 +2008,7 @@ def get_order_products(order):
 	temp_premium_products = []
 	# processed_promotion_set = set()
 	suppliers = []
+	supplier_user_ids = []
 	for relation in relations:
 		product = copy.copy(id2product[relation.product_id])
 		product.fill_specific_model(relation.product_model_name)
@@ -2014,9 +2025,21 @@ def get_order_products(order):
 			'is_deleted': product.is_deleted,
 			'grade_discounted_money': relation.grade_discounted_money,
 			'supplier': product.supplier,
-			'user_code':product.user_code
+			'supplier_user_id': product.supplier_user_id,
+			'user_code':product.user_code,
+			'purchase_price': relation.purchase_price
 		}
 
+		# 更换商品名称为供货商的商品名称
+		if UserProfile.objects.get(user_id=product.owner_id).webapp_type == 0 and WeizoomHasMallProductRelation.objects.filter(
+							owner_id=product.owner_id,
+							weizoom_product_id=relation.product_id
+							).count() > 0:
+			mall_product_id = WeizoomHasMallProductRelation.objects.get(
+										owner=product.owner,
+										weizoom_product_id=relation.product_id
+									).mall_product_id
+			product_info['name'] = Product.objects.get(id=mall_product_id).name
 
 		try:
 			integral_product_info = str(product.id) + '-' + product.model_name
@@ -2027,11 +2050,16 @@ def get_order_products(order):
 			product_info['integral_count'] = 0
 
 		suppliers.append(product.supplier)
+		supplier_user_ids.append(product.supplier_user_id)
 
 		try:
 			product_info['supplier_name'] = Supplier.objects.get(id=product.supplier).name
 		except:
-			pass
+			product_info['supplier_name'] = ""
+		try:
+			product_info['supplier_store_name'] = UserProfile.objects.get(user_id=product.supplier_user_id).store_name
+		except:
+			product_info['supplier_store_name'] = ""
 
 		promotion_relation = id2promotion.get(relation.promotion_id, None)
 		if promotion_relation:
@@ -2066,16 +2094,20 @@ def get_order_products(order):
 								"thumbnails_url": premium_product['thumbnails_url'],
 								"count": premium_product['count'],
 								"price": '%.2f' % premium_product['price'],
+								"total_price": '0.0',
 								'product_model_name': "standard",
 								"promotion": {
 									"type": "premium_sale:premium_product"
 								},
 								'noline': 1,
 								'supplier': product.supplier,
+								'supplier_user_id': product.supplier_user_id,
 								'supplier_name': product_info.get('supplier_name', ''),
+								'supplier_store_name': product_info.get('supplier_store_name', ''),
 								'user_code':product.user_code
 							})
 							suppliers.append(product.supplier)
+							supplier_user_ids.append(product.supplier_user_id)
 			else:
 				# 当前促销中其余商品 不显示上边框,给主商品跨行+1
 				product_info['noline'] = 1
@@ -2095,9 +2127,10 @@ def get_order_products(order):
 
 	for product in products:
 		product['supplier_length'] = suppliers.count(product['supplier'])
+		product['supplier_user_length'] = supplier_user_ids.count(product['supplier_user_id'])
 
 	def __sorted_by_supplier(s):
-		return s['supplier']
+		return (s['supplier'], s['supplier_user_length'])
 	sorted(products, key=__sorted_by_supplier)  # 相同supplier排到一起
 
 	return products

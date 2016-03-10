@@ -27,6 +27,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         if(high_stocks < 0) {
             high_stocks = '';
         }
+        mall_type = this.options.mall_type || 0;
         W.getApi().call({
             method: 'get',
             app: 'mall2',
@@ -34,9 +35,10 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             args:{},
             success: function(data) {
                 var html = $.tmpl(this.getTemplate(), {
-                    categories: data.categories, 
+                    categories: data.categories,
                     low_stocks: low_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-                    high_stocks: high_stocks  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                    high_stocks: high_stocks,  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+                    mall_type: mall_type // 支持微众自营平台，按照供货商筛选
                 });
                 this.$el.append(html);
                 _this.addDatepicker();
@@ -81,6 +83,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         $('#start_date').val('');
         $('#end_date').val('');
         $('#category').val('-1');
+        $('#supplier').val('');
     },
 
     // 获取条件数据
@@ -175,6 +178,7 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
         //商品编码
         var barCode = $.trim(this.$('#bar_code').val());
 
+
         var data = {
             name: name,
             startDate: startDate,
@@ -188,6 +192,12 @@ W.view.mall.ProductFilterView = Backbone.View.extend({
             lowSales: lowSales,
             highSales: highSales
         }
+        //微众系列 筛选‘供货商’
+        if(this.$('#supplier').val()){
+            var supplier = $.trim(this.$('#supplier').val());
+            data['supplier'] = supplier;
+        }
+
         this.trigger('search', data);
     },
 

@@ -193,7 +193,7 @@ class question(resource.Resource):
 					if value['type'] == 'appkit.dropdownbox':
 						if value['value']:
 							result_list.append({
-								'content': value['value']['product_name'],
+								'content': value['value'].get('product_name', ''),
 								'created_at':participance['created_at'].strftime('%Y-%m-%d')
 							})
 
@@ -330,7 +330,7 @@ class exsurveyStatistics_Export(resource.Resource):
 								is_top_tilte = True
 							dropdownbox_row += 1
 							ws_dropdownbox.write(dropdownbox_row,dropdownbox_col,data_value['created_at'])
-							ws_dropdownbox.write(dropdownbox_row,dropdownbox_col+1,data_value['value']['product_name'])
+							ws_dropdownbox.write(dropdownbox_row,dropdownbox_col+1,data_value['value'].get('product_name', ''))
 						dropdownbox_row += 1
 						ws_dropdownbox.write(dropdownbox_row,dropdownbox_col,u'')
 						ws_dropdownbox.write(dropdownbox_row,dropdownbox_col+1,u'')

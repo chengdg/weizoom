@@ -1,21 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# ###
-# import sys
-# reload(sys)
-# sys.setdefaultencoding( "utf-8" )
-# import os
-
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "weapp.settings")
-
-# from django.core.management import execute_from_command_line
-
-# execute_from_command_line(sys.argv)
-# from mall import models as mall_models
-
-# ###
-
-#from tools.express.express_config import *
 from tools.express.express_request_params import *
 from watchdog.utils import watchdog_error, watchdog_info
 from core.exceptionutil import unicode_full_stack
@@ -26,13 +10,9 @@ from hashlib import md5
 import base64
 from tools.express.models import *
 from tools.express.kdniao_express_config import *
-# Business_id = 1256042 #商户id
-# api_key = "6642ea21-2d79-4ebc-a451-de4922dcf412"
-req_url="http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx"
+
 def post(url, data): 
     req = urllib2.Request(url) 
-    #data = urllib.urlencode(data) 
-    #enable cookie 
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor()) 
     response = opener.open(req, data) 
     return response.read() 
@@ -59,6 +39,8 @@ class KdniaoExpressPoll(object):
 		No	String	R	快递物流单号
 		Bk	String	O	用户标识
 		O代表必须，R代表非必须
+	注意：'Bk': str(self.express.id)，通过bk标记ExpressHasOrderPushStatus中的id,
+		订阅后在快递鸟服务器向weapp推送中变成了CallBack。
 
 	测试url:"http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx"
 	data格式：RequestData=xxx&DataType=xxx
@@ -116,28 +98,20 @@ class KdniaoExpressPoll(object):
 		}
 
 		#将数据处理为RequestData=xxx&DataType=xxx这种格式的
-		param_str = ''
-		for key,value in params.items():
-			param_str = param_str + key + "=" + str(value) + "&"
-		param_str = param_str[:-1]
+		param_str = urllib.urlencode(params)
 		
-
-
 		verified_result = ''
-		print u"快递鸟订阅时发送的字符串",param_str
 		try:
 			verified_result = post(KdniaoExpressConfig.req_url, param_str)
-			# watchdog_info(u"发送快递鸟 订阅请求 url: {},/n param_data: {}, /n response: {}".format(
-			# 	self.express_config.get_api_url(), 
-			# 	param_str,
-			# 	verified_result.decode('utf-8')), type=self.express_config.watchdog_type)
+			watchdog_info(u"发送快递鸟 订阅请求 url: {},/n param_data: {}, /n response: {}".format(
+				KdniaoExpressConfig.req_url, 
+				param_str,
+				verified_result.decode('utf-8')), type=self.express_config.watchdog_type)
 		except:
-			pass
-			# watchdog_error(u'发送快递鸟 订阅请求 失败，url:{},data:{},原因:{}'.format(self.express_config.get_api_url(),
-			# 	param_str,
-			# 	unicode_full_stack()), type=self.express_config.watchdog_type)
+			watchdog_error(u'发送快递鸟 订阅请求 失败，url:{},data:{},原因:{}'.format(KdniaoExpressConfig.req_url,
+				param_str,
+				unicode_full_stack()), type=self.express_config.watchdog_type)
 
-		print "result:",verified_result
 		return verified_result
 
 	def _is_poll_by_order(self):
@@ -172,7 +146,6 @@ class KdniaoExpressPoll(object):
 			return False
 
 	def _save_poll_order_id(self):
-		# ExpressDetail.objects.filter(order_id=self.order_id).delete()
 		pushs = ExpressHasOrderPushStatus.objects.filter(
 			express_company_name = self.order.express_company_name,
 			express_number = self.order.express_number
@@ -206,7 +179,6 @@ class KdniaoExpressPoll(object):
 		# 发送订阅请求
 		data = self._poll_response()
 		data = json.loads(data)
-		print data["Success"]
 		result = True if data.get('Success') == "true" or data.get('Success') is True else False
 
 		if result:
@@ -222,15 +194,7 @@ class KdniaoExpressPoll(object):
 				self.express.status = 0
 				self.express.abort_receive_message = data.get('Reason')
 				self.express.save()
-				# watchdog_error(u'发送快递鸟 订阅请求存在问题，url:{},data:{},原因:{}'.format(self.express_config.get_api_url(),
-				# 	param_str,
-				# 	data.get('Reason')), type=self.express_config.watchdog_type)
-			# else:
-				# watchdog_error(u'发送快递鸟 订阅请求结果错误，url:{},data:{},原因:{}'.format(self.express_config.get_api_url(),
-				# 	param_str,
-				# 	data), type=self.express_config.watchdog_type)
+				watchdog_error(u'发送快递鸟 订阅请求存在问题，url:{},订单id:{},原因:{}'.format(KdniaoExpressConfig.req_url,
+					self.order_id,
+					data.get('Reason')), type=self.express_config.watchdog_type)
 			return False
-# if __name__ == '__main__':
-# 	order = mall_models.Order.objects.get(id=5)
-# 	is_success = KdniaoExpressPoll(order).get_express_poll()
-# 	print u'----------- send_request_to_kuaidi: {}'.format(is_success)

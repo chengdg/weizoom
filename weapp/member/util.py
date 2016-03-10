@@ -79,7 +79,7 @@ def send_mass_new_message(user_profile, group_id, material_id):
 # send_mass_news_message_with_openid_list: 直接使用已给的openid_list发送图文消息
 ####################################################################################
 def send_mass_news_message_with_openid_list(user_profile, openid_list, material_id, log_id=None):
-	
+
 
 	user = user_profile.user
 	if len(openid_list) > 0 and material_id != None and material_id != '' and user:
@@ -100,7 +100,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				pic_result_url = ''
 				if pic_result.has_key('url'):
 					pic_result_url = pic_result['url']
-				
+
 				try:
 					if not pic_result_url:
 						watchdog_error(u'上传多媒体文件失败 url:{}, pic_result:{}'.format(pic_url, pic_result_url))
@@ -109,7 +109,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 				pic_pre = matched.group("img_pre")
 				pic_result_url = pic_pre + pic_result_url
 				return pic_result_url
-			
+
 			try:
 				article = Articles()
 				for new in news:
@@ -131,12 +131,12 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 								new.url = '%s%s' % (user_profile.host, new.url)
 							else:
 								new.url = '%s/%s' % (user_profile.host, new.url)
-								
+
 						if len(new.text.strip()) != 0:
 							if new.text.find('<img') :
 								#content = new.text.replace('/static/',('http://%s/static/' % user_profile.host))
 								#if new.text.find('.jpg') :
-								new.text = re.sub(r'(?P<img_pre><img\s+[^>]*?\s*?src=[\"\'])(?P<img_url>[^>]*?\.(png|jpg))(?=[\"\'])',
+								new.text = re.sub(r'(?P<img_pre><img\s+[^>]*?\s*?src=[\"\'])(?P<img_url>[^>\s]*?\.(png|jpg))(?=[\"\'])',
 									pic_re,new.text)
 							if new.text.find('background-image:') :
 								new.text = re.sub(r'(?P<img_pre>background-image:\s*?url\((\"|\'|&quot;)?)(?P<img_url>[^\)]+?\.(png|jpg))(?=(\"|\'|&quot;)?\))',
@@ -146,7 +146,7 @@ def send_mass_news_message_with_openid_list(user_profile, openid_list, material_
 							else:
 								content = new.text
 						else:
-							content = new.text						
+							content = new.text
 
 						article.add_article(result_info['media_id'], new.title, content, new.url, None, new.summary)
 				result = weixin_api.upload_media_news(article)

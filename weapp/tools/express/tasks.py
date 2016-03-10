@@ -9,10 +9,10 @@ from kdniao_express_callback import KdniaoCallbackHandle
 
     
 @task(bind=True, max_retries=5)
-def task_kdniao_callback(self, request):
+def task_kdniao_callback(self, datas):
     #try:
     """
     接受从快递鸟推送的express消息
     """
-    KdniaoCallbackHandle(request).handle()
+    KdniaoCallbackHandle(datas).handle()
 

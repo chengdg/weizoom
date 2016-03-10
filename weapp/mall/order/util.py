@@ -24,6 +24,9 @@ from core.restful_url_route import api
 from watchdog.utils import watchdog_info
 import re
 from mall.templatetags.mall_filter import *
+from weixin.user.module_api import get_all_active_mp_user_ids
+from account.models import UserProfile
+from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
 
 COUNT_PER_PAGE = 20
 
@@ -66,7 +69,7 @@ def export_orders_json(request):
     orders = [
         [u'订单号', u'下单时间', u'付款时间', u'商品名称', u'规格',
          u'商品单价', u'商品数量', u'销售额', u'商品总重量（斤）', u'支付方式', u'支付金额',
-         u'现金支付金额', u'微众卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
+         u'现金支付金额', u'微众卡+惠惠卡使用的所有金额', u'惠惠卡支付金额', u'运费', u'积分抵扣金额', u'优惠券金额',
          u'优惠券名称', u'订单状态', u'购买人', u'收货人', u'联系电话', u'收货地址省份',
          u'收货地址', u'发货人', u'发货人备注', u'来源' ,u'物流公司', u'快递单号',
          u'发货时间',u'商家备注',u'用户备注', u'买家来源', u'买家推荐人', u'是否老用户']
@@ -74,13 +77,28 @@ def export_orders_json(request):
 
     # -----------------------获取查询条件字典和时间筛选条件-----------构造oreder_list-------------开始
     webapp_id = request.user_profile.webapp_id
-    order_list = Order.objects.belong_to(webapp_id).order_by('-id')
+    mall_type = request.user_profile.webapp_type
+    order_list = Order.objects.belong_to(webapp_id, request.manager.id, mall_type).order_by('-id')
     status_type = request.GET.get('status', None)
+
+    supplier_users = None
+    suplier_not_sub_order_ids = []
     if status_type:
         if status_type == 'refund':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
         elif status_type == 'audit':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+    if not mall_type:
+        order_list = order_list.exclude(
+                supplier_user_id__gt=0,
+                status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+            )
+    # else:
+    #     all_mall_userprofiles = UserProfile.objects.filter(webapp_type=0)
+    #     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
+
+    #     suplier_not_sub_order_ids = [order.id for order in  Order.objects.filter(webapp_id=webapp_id, supplier_user_id__gt=0, origin_order_id=0)]
+
 
     #####################################
     query_dict, date_interval,date_interval_type = __get_select_params(request)
@@ -88,7 +106,7 @@ def export_orders_json(request):
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
-    order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list)
+    order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, request.user_profile)
 
     if product_name:
         # 订单总量
@@ -98,9 +116,15 @@ def export_orders_json(request):
             if order.type != PRODUCT_INTEGRAL_TYPE and order.status == ORDER_STATUS_SUCCESSED:
                 finished_order_count += 1
     else:
-        order_count = order_list.count()
-        finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
-        order_list = list(order_list.all())
+        try:
+            order_count = order_list.count()
+        except:
+            order_count = len(order_list)
+        try:
+            finished_order_count = order_list.filter(status=ORDER_STATUS_SUCCESSED).count()
+        except:
+            finished_order_count = len(filter(__filter_order_status, order_list))
+        # order_list = list(order_list.all())
     # -----------------------获取查询条件字典和时间筛选条件--------------构造oreder_list----------结束
     # 商品总额：
     total_product_money = 0.0
@@ -144,8 +168,8 @@ def export_orders_json(request):
     # product_ids =
     for relation in OrderHasProduct.objects.filter(order__id__in=order_ids):
         # if test_index % pre_page == pre_page - 1:
-        # 	print str(test_index) + 's-' +str(time.time() - begin_time)
-        # 	print relation.order_id
+        #   print str(test_index) + 's-' +str(time.time() - begin_time)
+        #   print relation.order_id
         # test_index+=1
         key = relation.order_id
         promotion_ids.append(relation.promotion_id)
@@ -234,25 +258,33 @@ def export_orders_json(request):
     # 获取order对应的供货商
 
     order2supplier2fackorders = {}
+    order2store2fackorders = {}
     # 取出所有的子订单
-
     for order in fackorders:
         origin_order_id = order.origin_order_id
         order2supplier2fackorders.setdefault(origin_order_id, {})
-        order2supplier2fackorders[origin_order_id][order.supplier] = order
+        order2store2fackorders.setdefault(origin_order_id, {})
+        if order.supplier:
+            order2supplier2fackorders[origin_order_id][order.supplier] = order
+        if order.supplier_user_id:
+            order2store2fackorders[origin_order_id][order.supplier_user_id] = order
         # 在order_order_ids中添加子订单
         order_order_ids.append(order.order_id)
+
     # 获取order对应的发货时间
     order2postage_time = dict([(log.order_id, log.created_at.strftime('%Y-%m-%d %H:%M').encode('utf8')) for log in
                         OrderOperationLog.objects.filter(order_id__in=order_order_ids, action__startswith="订单发货")])
 
-    order2supplier = dict([(supplier.id,supplier) for supplier in Supplier.objects.filter(owner=request.manager)])
+    order2supplier = dict([(supplier.id, supplier) for supplier in Supplier.objects.filter(owner=request.manager)])
+    id2store = dict([(profile.user_id, profile) for profile in UserProfile.objects.filter(webapp_type=0)])
     # 判断是否有供货商，如果有则显示该字段
     has_supplier = False
-    for order in order_list:
-        if 0 != order.supplier:
-            has_supplier = True
-            break
+    if mall_type:
+        has_supplier = True
+    # for order in order_list:
+    #     if 0 != order.supplier or order.supplier_user_id != 0:
+    #         has_supplier = True
+    #         break
 
     if has_supplier:
         orders[0].append(u'采购价')
@@ -262,6 +294,7 @@ def export_orders_json(request):
     temp_premium_id = None
     temp_premium_products = []
     for order in order_list:
+        order= __filter_order(order)
         # 获取order对应的member的显示名
         if webappuser2member:
             member = webappuser2member.get(order.webapp_user_id, None)
@@ -347,11 +380,11 @@ def export_orders_json(request):
             order.come = 'mine_mall'
 
         source = source_list.get(order.come, u'本店')
-        if webapp_id != order.webapp_id:
-            if request.manager.is_weizoom_mall:
-                source = request.manager.username
-            else:
-                source = u'微众商城'
+        # if webapp_id != order.webapp_id:
+        #     if request.manager.is_weizoom_mall:
+        #         source = request.manager.username
+        #     else:
+        #         source = u'微众商城'
 
         i = 0 # 判断是否订单第一件商品
         orderRelations = relations.get(order.id, [])
@@ -390,22 +423,68 @@ def export_orders_json(request):
                 if not role_id or coupon_name and order.coupon_money > 0:
                     coupon_money = order.coupon_money
 
-            fackorder_sons = order2supplier2fackorders.get(order.id, None)
+            # if mall_type and product.supplier_user_id > 0:
+            #     source = supplier_users[product.supplier_user_id].encode("utf-8")
+            #     order_id = order.order_id
+            #     if order.id in suplier_not_sub_order_ids:
+            #         order_id = order.order_id
+            #     else:
+            #         order_id = "%s^%su" % (order.order_id, product.supplier_user_id)
+            #         order = suborderid2order[order_id]
+
+            #     fackorder = None
+            #     save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+
+            #     #order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+            #     order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
+            #     # 订单发货时间
+            #     postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
+
+            # else:
             fackorder = None
+            fackorder_sons = None
+            if relation.product.supplier:
+                fackorder_sons = order2supplier2fackorders.get(order.id, None)
+            if relation.product.supplier_user_id:
+                fackorder_sons = order2store2fackorders.get(order.id, None)
+
             if fackorder_sons:
-                fackorder = fackorder_sons.get(product.supplier, None)
+                if product.supplier:
+                    fackorder = fackorder_sons.get(product.supplier, None)
+                if product.supplier_user_id:
+                    fackorder = fackorder_sons.get(product.supplier_user_id, None)
 
             save_money = str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False
+            if fackorder:
+                if not '^' in fackorder.order_id:
+                    order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
+                else:
+                    order_id = fackorder.order_id
+            else:
+                order_id = order.order_id
 
-            order_id = '%s%s'.encode('utf8') % (order.order_id if not fackorder else fackorder.order_id, '-%s' % save_money if save_money else '')
             order_status = status[str(order.status if not fackorder else fackorder.status)].encode('utf8')
             # 订单发货时间
             postage_time = order2postage_time.get(order.order_id if not fackorder else fackorder.order_id, '')
-            if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
-                source = order2supplier[fackorder.supplier].name.encode("utf-8")
-            elif fackorder == None and 0 != order.supplier:
-                if order2supplier.has_key(order.supplier):
+            if fackorder:
+                if fackorder.supplier and order2supplier.has_key(fackorder.supplier):
+                    source = order2supplier[fackorder.supplier].name.encode("utf-8")
+                if fackorder.supplier_user_id and id2store.has_key(fackorder.supplier_user_id):
+                    source = id2store[fackorder.supplier_user_id].store_name.encode("utf-8")
+            else:
+                if order.supplier and order2supplier.has_key(order.supplier):
                     source = order2supplier[order.supplier].name.encode("utf-8")
+                if order.supplier_user_id and id2store.has_key(order.supplier_user_id):
+                    source = id2store[order.supplier_user_id].store_name.encode("utf-8")
+
+            if not mall_type and source != u"本店":
+                source = u"商城"
+
+            # if fackorder and 0 != fackorder.supplier and order2supplier.has_key(fackorder.supplier):
+            #     source = order2supplier[fackorder.supplier].name.encode("utf-8")
+            # elif fackorder == None and 0 != order.supplier:
+            #     if order2supplier.has_key(order.supplier):
+            #         source = order2supplier[order.supplier].name.encode("utf-8")
 
             if i == 0:
                 # 发货人处填写的备注
@@ -431,6 +510,7 @@ def export_orders_json(request):
                     final_price + weizoom_card_money,
                     final_price,
                     u'' if order.status == 0 else weizoom_card_money,
+                    order.weizoom_card_money_huihui,
                     order.postage,
                     u'' if order.status == 0 else order.integral_money,
                     u'' if order.status == 1 else coupon_money,
@@ -472,6 +552,7 @@ def export_orders_json(request):
                     product_idandmodel_value2weigth[
                         (relation.product_id, relation.product_model_name)] * 2 * relation.number,
                     payment_type[str(int(order.pay_interface_type))],
+                    u'',
                     u'',
                     u'',
                     u'',
@@ -528,6 +609,7 @@ def export_orders_json(request):
                         u'',
                         u'',
                         u'',
+                        u'',
                         order_status,
                         order.buyer_name.encode('utf8'),
                         order.ship_name.encode('utf8'),
@@ -552,10 +634,15 @@ def export_orders_json(request):
                     temp_premium_products.append(tmp_order)
                     temp_premium_id = '%s_%s' % (order.id, relation.promotion_id)
                 # if test_index % pre_page == pre_page-1:
-                # 	print str(test_index)+' - '+str(time.time() - test_begin_time)+'-'+str(time.time() - begin_time)
+                #   print str(test_index)+' - '+str(time.time() - test_begin_time)+'-'+str(time.time() - begin_time)
     if temp_premium_id:
         # 处理赠品信息
         orders.extend(temp_premium_products)
+
+    if mall_type:
+        for order in orders:
+            del order[13]
+        orders[0][12] = u"微众卡支付金额"
     orders.append([
         u'总计',
         u'订单量:' + str(order_count).encode('utf8'),
@@ -563,7 +650,7 @@ def export_orders_json(request):
         u'商品金额:' + str(total_product_money).encode('utf8'),
         u'支付总额:' + str(final_total_order_money + weizoom_card_total_order_money).encode('utf8'),
         u'现金支付金额:' + str(final_total_order_money).encode('utf8'),
-        u'微众卡支付金额:' + str(weizoom_card_total_order_money).encode('utf8'),
+        (u'微众卡+惠惠卡使用的所有金额:' if not mall_type else u'微众卡支付金额') + str(weizoom_card_total_order_money).encode('utf8'),
         u'赠品总数:' + str(total_premium_product).encode('utf8'),
         u'积分抵扣总金额:' + str(use_integral_money).encode('utf8'),
         u'优惠劵价值总额:' + str(coupon_money_count).encode('utf8'),
@@ -590,6 +677,7 @@ def get_detail_response(request):
         order = mall.models.Order.objects.get(id=request.GET['order_id'])
 
     if request.method == 'GET':
+        mall_type = request.user_profile.webapp_type
         order_has_products = OrderHasProduct.objects.filter(order=order)
 
         number = 0
@@ -626,14 +714,7 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
-        order.actions = get_order_actions(order, is_detail_page=True)
-
-        if order.order_source:
-            order.source = u'商城'
-            order.come = 'weizoom_mall'
-        else:
-            order.source = u'本店'
-            order.come = 'mine_mall'
+        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
@@ -652,10 +733,17 @@ def get_detail_response(request):
             order.weizoom_cards = [card.weizoom_card_id for card in cards]
         # 获得子订单
         child_orders = list(Order.objects.filter(origin_order_id=order.id).all())
+        if not child_orders and order.supplier_user_id:
+            child_orders = [order]
         supplier_ids = []
+        supplier_user_ids = []
         for child_order in child_orders:
-            supplier_ids.append(child_order.supplier)
+            if child_order.supplier:
+                supplier_ids.append(child_order.supplier)
+            if child_order.supplier_user_id:
+                supplier_user_ids.append(child_order.supplier_user_id)
 
+        # 商城自己添加的供货商
         if supplier_ids:
             # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
             supplier2status = dict([(tmp_order.supplier, tmp_order.get_status_text()) for tmp_order in child_orders])
@@ -663,11 +751,20 @@ def get_detail_response(request):
             for product in order.products:
                 product['order_status'] = supplier2status.get(product['supplier'], '')
 
-        name = request.GET.get('name',None)
+        if supplier_user_ids:
+            # 获取<供货商，订单状态文字显示>，因为子订单的状态是跟随供货商走的 在这个场景下
+            supplier_user_id2status = dict([(tmp_order.supplier_user_id, tmp_order.get_status_text()) for tmp_order in child_orders])
+            order.products.sort(lambda x, y: cmp(x['supplier_user_id'], y['supplier_user_id']))
+            for product in order.products:
+                product['order_status'] = supplier_user_id2status.get(product['supplier_user_id'], '')
+
+        name = request.GET.get('name', None)
         if not name:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids).order_by('-id'))
+            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids).order_by('-id'))
         else:
             suppliers = list(Supplier.objects.filter(id__in=supplier_ids,name__contains=name).filter(is_delete=False).order_by('-id'))
+            supplier_stores = list(UserProfile.objects.filter(user_id__in=supplier_user_ids, store_name__contains=name).order_by('-id'))
 
         #add by duhao 把订单操作人信息放到操作日志中，方便精选的拆单子订单能正常显示操作员信息
         order_operation_logs = mall_api.get_order_operation_logs(order.order_id)
@@ -681,16 +778,20 @@ def get_detail_response(request):
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
             'second_nav_name': export.ORDER_ALL,
+            'mall_type': mall_type,
             'order': order,
             'child_orders': child_orders,
             'suppliers': suppliers,
+            'supplier_stores': supplier_stores,
             'is_order_not_payed': (order.status == ORDER_STATUS_NOT),
             'coupon': coupon,
             'order_operation_logs': order_operation_logs,
             'order_status_logs': order_status_logs,
             'log_count': log_count,
-            'show_first': show_first
-        })
+            'show_first': show_first,
+            'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
+            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False
+            })
 
         return render_to_response('mall/editor/order_detail.html', c)
     else:
@@ -699,12 +800,14 @@ def get_detail_response(request):
 
 def is_has_order(request, is_refund=False):
     webapp_id = request.user_profile.webapp_id
+    user_id = request.user_profile.user.id
+    mall_type = request.user_profile.webapp_type
     # weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
     if is_refund:
         orders = belong_to(webapp_id)
         has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]).count() > 0
     else:
-        has_order = (belong_to(webapp_id).count() > 0)
+        has_order = (belong_to(webapp_id, user_id, mall_type).count() > 0)
     MallCounter.clear_unread_order(webapp_owner_id=request.manager.id)  # 清空未读订单数量
     return has_order
 
@@ -720,6 +823,9 @@ def get_orders_response(request, is_refund=False):
     is_weizoom_mall_partner = AccountHasWeizoomCardPermissions.is_can_use_weizoom_card_by_owner_id(request.manager.id)
     if request.manager.is_weizoom_mall:
         is_weizoom_mall_partner = False
+
+    # 商城的类型
+    mall_type = request.user_profile.webapp_type
 
     # 获取查询条件字典和时间筛选条件
     query_dict, date_interval, date_interval_type = __get_select_params(request)
@@ -748,29 +854,25 @@ def get_orders_response(request, is_refund=False):
                                                                                is_refund=is_refund)
     # 获取该用户下的所有支付方式
     existed_pay_interfaces = mall_api.get_pay_interfaces_by_user(user)
-    # 是否是合作伙伴，是的话 和微众精选类似都显示来源
-    if is_weizoom_mall_partner or request.manager.is_weizoom_mall:
-        is_show_source = True
-    else:
-        is_show_source = False
-
     supplier = dict((supplier.id, supplier.name) for supplier in Supplier.objects.filter(owner=request.manager))
-    if len(supplier.keys()) > 0:
-        is_show_source = True
 
-    show_supplier = Supplier.objects.filter(owner=request.manager, is_delete=False).count() > 0
+    #
+    all_user_ids = get_all_active_mp_user_ids()
+    all_mall_userprofiles = UserProfile.objects.filter(user_id__in=all_user_ids, webapp_type=0)
+    supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
+
     response = create_response(200)
     response.data = {
         'items': items,
         'pageinfo': paginator.to_dict(pageinfo),
         'supplier': supplier,
+        'supplier_users': supplier_users,
         'sortAttr': sort_attr,
-        'is_show_source': is_show_source,
         'existed_pay_interfaces': existed_pay_interfaces,
         'order_return_count': order_return_count,
         'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
         'is_refund': is_refund,
-        'show_supplier': show_supplier
+        'mall_type': mall_type
     }
 
     if query_dict or date_interval:
@@ -779,13 +881,13 @@ def get_orders_response(request, is_refund=False):
     return response.get_response()
 
 
-def check_order_status_filter(order,action):
+def check_order_status_filter(order,action,mall_type=0):
         """
             检查订单的状态是否允许跳转
         """
         flag = False
         is_refund = True if action == 'return_success' else False
-        actions = get_order_actions(order, is_refund=is_refund)
+        actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
         for ac in actions:
             if action == ac['action']:
                 flag = True
@@ -801,14 +903,17 @@ def set_children_order_status(origin_order, status):
 # 页脚未读订单数统计
 def get_unship_order_count(request):
     from cache.webapp_owner_cache import get_unship_order_count_from_cache
-    return get_unship_order_count_from_cache(request.manager.get_profile().webapp_id)
+    return get_unship_order_count_from_cache(request)
 
 
 # get_orders_response调用
 def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_string,  count_per_page=15, cur_page=1, date_interval=None,
                       is_refund=False):
-    webapp_id = user.get_profile().webapp_id
-    orders = belong_to(webapp_id)
+    user_profile = user.get_profile()
+    webapp_id = user_profile.webapp_id
+    mall_type = user_profile.webapp_type
+
+    orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
@@ -817,10 +922,25 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
 
-    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders)
+    # 除掉同步过来的订单中未支付的
+    if not mall_type:
+        # order_has_promotion_ids = [r.order_id for r in OrderHasPromotion.objects.filter(promotion_type="premium_sale")]
+        # child_order_ids = [order.id for order in Order.objects.filter(origin_order_id__in=order_has_promotion_ids)]
+        orders = orders.exclude(
+                supplier_user_id__gt=0,
+                status__in=[ORDER_STATUS_NOT, ORDER_STATUS_CANCEL, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]
+            )
+
+    orders = __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile)
 
     # 返回订单的数目
-    order_return_count = orders.count()
+    try:
+        try:
+            order_return_count = orders.count()
+        except:
+            order_return_count = len(orders)
+    except:
+        order_return_count = 0
     ###################################################
     if count_per_page > 0:
         # 进行分页
@@ -845,7 +965,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
         else:
             order2productcount[order_id] = 1
 
-    # 微众精选子订单
+    # 微众系列子订单
     order2fackorders = {}
     fackorders = Order.objects.filter(origin_order_id__in=order_ids)
     for order in fackorders:
@@ -855,9 +975,18 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
         # order2fackorders[origin_order_id].setdefault(order_supplier, {})
         order2fackorders[origin_order_id].append(order)
 
+    # 供货商同步的订单
+    sync_orders = Order.objects.filter(supplier_user_id=user.id)
+    sync_order_ids = [order.id for order in sync_orders]
+    sync_order_id2sync_product_id = dict([(relation.order_id, relation.product_id)for relation in OrderHasProduct.objects.filter(order_id__in=sync_order_ids)])
+    sync_product_ids = sync_order_id2sync_product_id.values()
+    weizoom_product_id2mall_product_id = dict([(relation.weizoom_product_id, relation.mall_product_id) for relation in WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=sync_product_ids)])
+    id2mall_product = dict([(product.id, product)for product in Product.objects.filter(id__in=weizoom_product_id2mall_product_id.values())])
+
     # 构造返回的order数据
     for order in orders:
         # 获取order对应的member的显示名
+        order = __filter_order(order)
         member = webappuser2member.get(order.webapp_user_id, None)
         if member:
             order.buyer_name = member.username_for_html
@@ -912,13 +1041,20 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                     'express_company_name': fackorder.express_company_name,
                     'express_number': fackorder.express_number,
                     'leader_name': fackorder.leader_name,
-                    'actions': get_order_actions(fackorder, is_refund=is_refund)
+                    'actions': get_order_actions(fackorder, is_refund=is_refund,mall_type=mall_type)
                 }
-                group = {
-                    "id": fackorder.supplier,
-                    "fackorder": group_order,
-                    "products": filter(lambda p: p['supplier'] == fackorder.supplier , products)
-                }
+                if fackorder.supplier or (not fackorder.supplier and not fackorder.supplier_user_id):
+                    group = {
+                        "id": fackorder.supplier,
+                        "fackorder": group_order,
+                        "products": filter(lambda p: p['supplier'] == fackorder.supplier , products)
+                    }
+                if fackorder.supplier_user_id:
+                    group = {
+                        "supplier_user_id": fackorder.supplier_user_id,
+                        "fackorder": group_order,
+                        "products": filter(lambda p: p['supplier_user_id'] == fackorder.supplier_user_id , products)
+                    }
                 groups.append(group)
         else:
             group_order = {
@@ -928,20 +1064,36 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
-                'actions': get_order_actions(order, is_refund=is_refund)
+                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
             }
 
-            group_id = order.supplier
-            group = {
-                "id": group_id,
-                "fackorder": group_order,
-                "products": products
-            }
+            if order.supplier_user_id > 0:
+                group_id = order.supplier_user_id
+                pay_money = 0
+                for product in products:
+                    try:
+                        product['name'] = id2mall_product[weizoom_product_id2mall_product_id[product['id']]].name
+                    except:
+                        pass
+                    pay_money += float(product['total_price'])
+                group = {
+                    "supplier_user_id": group_id,
+                    "fackorder": group_order,
+                    "products": products
+                }
+            else:
+                group_id = order.supplier
+                group = {
+                    "id": group_id,
+                    "fackorder": group_order,
+                    "products": products
+                }
             groups.append(group)
         if len(groups) > 1:
-            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True)
+            parent_action = get_order_actions(order, is_refund=is_refund,is_list_parent=True,mall_type=mall_type)
         else:
             parent_action = None
+
         items.append({
             'id': order.id,
             'order_id': order.order_id,
@@ -954,9 +1106,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'ship_tel': order.ship_tel,
             'bill_type': order.bill_type,
             'bill': order.bill,
-            'customer_message': order.customer_message,
+            'customer_message': '' if (not mall_type and order.supplier_user_id > 0) else order.customer_message,
             'buyer_name': order.buyer_name,
-            'pay_interface_name': order.pay_interface_type_text,
+            'pay_interface_name': u'微信支付' if (not mall_type and order.supplier_user_id > 0) else  order.pay_interface_type_text,
             'created_at': datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
             'product_count': order.product_count,
             'payment_time': order.payment_time,
@@ -971,17 +1123,21 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'express_company_name': order.express_company_name,
             'express_number': order.express_number,
             'leader_name': order.leader_name,
-            'remark': order.remark,
+            'remark': order.supplier_remark if (not mall_type and order.supplier_user_id > 0) else order.remark,
             'postage': '%.2f' % order.postage,
             'delivery_time': order.delivery_time,
             'save_money': float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
                 order.final_price) - float(order.weizoom_card_money),
             'weizoom_card_money': float('%.2f' % order.weizoom_card_money),
-            'pay_money': '%.2f' % (order.final_price + order.weizoom_card_money),
+            'weizoom_card_money_huihui': float('%.2f' % order.weizoom_card_money_huihui),
+            'weizoom_card_money_rest': float('%.2f' % order.weizoom_card_money_rest),
+            'pay_money': ('%.2f' % (order.total_purchase_price)) if (not mall_type and order.supplier_user_id > 0) else '%.2f' % (order.final_price + order.weizoom_card_money),
             'edit_money': str(order.edit_money).replace('.', '').replace('-', '') if order.edit_money else False,
             'groups': groups,
             'parent_action': parent_action,
-            'is_first_order': order.is_first_order
+            'is_first_order': order.is_first_order,
+            'supplier_user_id': order.supplier_user_id,
+            'total_purchase_price': '%.2f' % order.total_purchase_price
         })
 
     return items, pageinfo, order_return_count
@@ -1001,7 +1157,8 @@ def __get_select_params(request):
     order_status = request.GET.get('order_status', '').strip()
     isUseWeizoomCard = int(request.GET.get('isUseWeizoomCard', '0').strip())
     date_interval_type = request.GET.get('date_interval_type', '')
-    is_first_order = request.GET.get('order_type', '').strip()
+    is_first_order = request.GET.get('is_first_order', '').strip()
+    order_type = request.GET.get('order_type', '').strip()
 
     # 填充query
     query_dict = dict()
@@ -1025,6 +1182,8 @@ def __get_select_params(request):
         query_dict['isUseWeizoomCard'] = isUseWeizoomCard
     if len(is_first_order) and is_first_order != '-1':
         query_dict['is_first_order'] = int(is_first_order)
+    if len(order_type) and order_type != '-1':
+        query_dict['order_type'] = int(order_type)
 
      # 时间区间
     try:
@@ -1047,11 +1206,12 @@ def __get_select_params(request):
 
     return query_dict, date_interval, date_interval_type
 
-def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders):
+def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders, user_profile):
     """
     按照查询条件筛选符合条件的订单
     """
     # 商品名称
+    mall_type = user_profile.webapp_type
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
         query_dict.pop("product_name")
@@ -1076,6 +1236,27 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
     if query_dict.get("isUseWeizoomCard"):
         query_dict.pop("isUseWeizoomCard")
         orders = orders.exclude(weizoom_card_money=0)
+    # 供货商筛选本店和商城的订单
+    if query_dict.has_key('order_source'):
+        order_status = query_dict.get('order_source')
+        if order_status:
+            orders = orders.filter(supplier_user_id__gt=0)
+        else:
+            orders = orders.filter(supplier_user_id=0)
+        query_dict.pop("order_source")
+
+    if query_dict.get('order_id') and not mall_type:
+        order_id = query_dict.get('order_id')
+        if order_id.find('^') == -1:
+            s_order_id =  "%s^%su" % (order_id, user_profile.user_id)
+            orders = orders.filter(Q(order_id=order_id) | Q(order_id=s_order_id))
+            query_dict.pop("order_id")
+    #添加惠惠卡order_type
+    order_type = None
+    if query_dict.get('order_type'):
+        order_type = query_dict.get('order_type')
+        query_dict.pop("order_type")
+    #添加惠惠卡order_type
     if len(query_dict):
         orders = orders.filter(**query_dict)
 
@@ -1090,11 +1271,42 @@ def __get_orders_by_params(query_dict, date_interval, date_interval_type, orders
             orders = orders.filter(payment_time__gte=start_time, payment_time__lt=end_time)
         elif '3' == date_interval_type:
             order_ids_in_delivery_intervale = [operationlog.order_id for operationlog in list(OrderOperationLog.objects.filter(created_at__gte=start_time,created_at__lt=end_time,action__startswith="订单发货"))]
-            order_ids_in_delivery_intervale = [de.split("^")[0] for de in order_ids_in_delivery_intervale]
-            orders = orders.filter(order_id__in=order_ids_in_delivery_intervale)
+            orders = orders.filter(order_id__in=order_order_ids)
+
+    #惠惠卡需求
+    order_order_ids= []
+    if order_type and int(order_type) == 1:
+        card_ids = []
+        adict = {}
+        tmp = 0
+        for c in WeizoomCardHasOrder.objects.filter(owner_id=user_profile.user_id):
+            adict["{}_{}".format(c.order_id,tmp)] = c.card_id
+            tmp += 1
+            if tmp > 10:
+                tmp = 0
+        card_ids = [c.id for c in WeizoomCard.objects.filter(id__in=adict.values(),weizoom_card_id__startswith="9")]
+        for key, value in adict.items():
+            if value in card_ids:
+                order_order_ids.append(int(key.split('_')[0]))
+        orders = orders.filter(order_id__in=order_order_ids)
     return orders
 
+def __filter_order(order):
+    order.weizoom_card_money_huihui = float(0)
+    order.weizoom_card_money_rest = float(0)
+    if order.weizoom_card_money >0:
+        card_orders = WeizoomCardHasOrder.objects.filter(order_id=order.order_id)
+        for card_order in card_orders:
+            if card_order.card:
+                if card_order.card.weizoom_card_id.startswith("9"):
+                    if float(card_order.money)>0:
+                        order.weizoom_card_money_huihui += float(card_order.money)
+        order.weizoom_card_money_rest = order.weizoom_card_money - order.weizoom_card_money_huihui
+    return order
 
+def __filter_order_status(order):
+    if order.status == ORDER_STATUS_SUCCESSED:
+        return order
 
 # 渠道扫描相关
 @api(app='mall', resource='channel_qrcode_payed_orders', action='get')
@@ -1223,7 +1435,7 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False):
+def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False,mall_type=0):
 
     """
     :param order:
@@ -1291,10 +1503,17 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
     # 订单列表页有子订单的父母订单
     able_actions_for_list_parent = [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION, ORDER_REFUND_SUCCESS_ACTION]
 
+    # 同步订单操作
+    sync_order_actions = [ORDER_PAY_ACTION, ORDER_UPDATE_PRICE_ACTION, ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
+
     # print(order.order_id, order.is_sub_order, order.origin_order_id)
     # print(result)
-    if order.is_sub_order:
-        result = filter(lambda x: x in able_actions_for_sub_order, result)
+    # 订单被同步后查看
+    if not mall_type and order.supplier_user_id:
+        result = filter(lambda x: x in sync_order_actions, result)
+    else:
+        if order.is_sub_order:
+            result = filter(lambda x: x in able_actions_for_sub_order, result)
 
     if order.has_sub_order and is_detail_page:
         result = filter(lambda x: x in able_actions_for_detail_order_has_sub, result)

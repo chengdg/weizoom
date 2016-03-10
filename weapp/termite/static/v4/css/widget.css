@@ -1362,7 +1362,11 @@ ul.wui-relatelink li h3{
     padding-left: 14px;
 }
 .wui-richtext p{
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
+    line-height: 1.2rem;
+}
+.wui-richtext p>img {
+    display: block;
 }
 /*===============================页头==========================*/
 /*.wui-pageheader {

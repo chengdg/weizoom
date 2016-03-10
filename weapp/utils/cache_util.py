@@ -2,6 +2,7 @@
 
 __author__ = 'bert'
 
+import logging
 from time import time
 import traceback
 import redis
@@ -48,6 +49,7 @@ def delete_cache(key):
 def delete_pattern(key):
 	cache.delete_pattern(key)
 	cache.delete_pattern("api"+key)
+
 
 def clear_db():
 	cache.clear()
