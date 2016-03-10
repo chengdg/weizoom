@@ -33,6 +33,9 @@
     	width: 85px;
     	display: inline-block;
     }
+    table tr td .xui-group_action .xui-i-action{
+		display: inline-block;
+    }
 
 
 </style>
@@ -52,16 +55,17 @@
 		<div class="xui-form disT">
 			<div class="xui-col disTc">
 				<div class="xui-i-item">
-					<label class="">活动名称：</label>
-					<input type="text" class="form-control" id="name" name="name" value="" />
+					<label class="">商品名称：</label>
+					<input type="text" class="form-control" id="product_name" name="product_name" value="" />
 				</div>
 			</div>
+
 			<div class="xui-col disTc">
 				<div class="xui-i-item ml20">
 					<label>状态：</label>
 					<select class="" id="status" name="status">
 						<option value="-1">全部</option>
-						<option value="0">未开始</option>
+						<option value="0">未开启</option>
 						<option value="1">进行中</option>
 						<option value="2">已结束</option>
 					</select>
@@ -69,7 +73,7 @@
 			</div>
 			<div class="xui-col disTc">
 				<div class="xui-i-item">
-					<label>活动时间
+					<label>起止时间
 					：</label>
 					<input
 						type="text"
@@ -96,6 +100,12 @@
 						data-ui-role="date-picker"
 					    data-format="yy-mm-dd HH:MM"
 					    data-min-el="#start_time"/>
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">团购名称：</label>
+					<input type="text" class="form-control" id="group_name" name="group_name" value="" />
 				</div>
 			</div>
 		</div>
@@ -181,7 +191,7 @@
 					${item.group_customer_count}
 				</td>
 				<td>
-					${item.group_participator_count}
+					${item.group_visitor_count}
 				</td>
 				<td>
 					${item.status}
@@ -198,14 +208,33 @@
 
 				</td>
 				<td>
-					<a href="/apps/group/group_participances/?id=${item.id}" class="ml5">参团详情</a>
-					{{if (item.status === '未开始' || item.status === '已结束')}}
-					<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
-					{{/if}}
-					{{if (item.status === '进行中')}}
-					<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>关闭</a>
-					{{/if}}
-					<a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a>
+					<div class="xui-group_detail">
+						<a href="/apps/group/group_participances/?id=${item.id}" class="ml5">参团详情</a>
+					</div>
+					<div class="xui-group_action">
+						<div class="xui-i-action">
+							{{if (item.status === '进行中')}}
+							<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+							{{/if}}
+						</div>
+						<div class="xui-i-action">
+							{{if (item.status === '未开启')}}
+							<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}" class="xa-edit" data-id=${item.id}>编辑</a>
+							{{/if}}
+						</div>
+						<div class="xui-i-action">
+							{{if (item.status === '未开启')}}
+							<a href="javascript:void(0)" class="xa-start" data-id=${item.id}>开启</a>
+							{{/if}}
+						</div>
+
+						<div class="xui-i-action">
+							{{if (item.status === '已结束')}}
+							<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+							{{/if}}
+						</div>
+					</div>
+					<!-- <a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a> -->
 				</td>
 			</tr>
 			{{/each}}
@@ -285,12 +314,14 @@ $(document).ready(function() {
 	});
 
 	$('.xa-search').click(function(event) {
-		var name = $.trim($('[name="name"]').val());
+		var group_name = $.trim($('[name="group_name"]').val());
+		var product_name = $.trim($('[name="product_name"]').val());
 		var status = $.trim($('[name="status"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
 		table.reload({
-			name: name,
+			group_name:group_name,
+			product_name: product_name,
 			status: status,
 			start_time: startTime,
 			end_time: endTime
@@ -300,8 +331,9 @@ $(document).ready(function() {
 	});
 
 	$('.xa-reset').click(function(event) {
-		$('[name="name"]').val('');
-		$('[name="status"]').val('0');
+		$('[name="group_name"]').val('');
+		$('[name="product_name"]').val('');
+		$('[name="status"]').val('-1');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
 	});

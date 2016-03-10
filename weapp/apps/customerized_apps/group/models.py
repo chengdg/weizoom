@@ -36,7 +36,7 @@ class Group(models.Document):
 	@property
 	def status_text(self):
 		if self.status == STATUS_NOT_START:
-			return u'未开始'
+			return u'未开启'
 		elif self.status == STATUS_RUNNING:
 			now = datetime.today()
 			if now >= self.end_time:

@@ -75,7 +75,7 @@
                 <button class="xa-save btn btn-primary">保存</button>
                 <button class="xa-preview btn btn-default ml20">预览</button>
             {% else %}
-                {% if group.status_text == "未开始" %}
+                {% if group.status_text == "未开启" %}
                     <button class="xa-save btn btn-primary">保存</button>
                     <button class="xa-preview btn btn-default ml20">预览</button>
                 {% endif %}
@@ -95,6 +95,7 @@
 {% endblock %}
 
 {% block base_js %}
+
   <!-- *start_prunt_task* -->
     <!-- [prunt_task]
       {
