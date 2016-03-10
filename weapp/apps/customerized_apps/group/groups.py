@@ -65,7 +65,7 @@ class Groups(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		datas = app_models.Group.objects(**params).order_by('-id')
+		datas = app_models.Group.objects(**params).order_by('-created_at')
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -86,55 +86,55 @@ class Groups(resource.Resource):
 		#details描述一个团圆的信息，有很多个 belong_to 一个 relation
 		group_ids = [str(p.id) for p in datas]
 
-		# id2relation = {}
-		# all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
-		# if all_relations:
-		# 	for relation in all_relations:
-		# 		group_id = relation.belong_to
-		# 		if group_id in id2relation:
-		# 			id2relation[group_id].append(relation)
-		# 		else:
-		# 			id2relation[group_id] = [relation]
-		# r_id2details = {}
-		# relation_ids = [str(r.id) for r in all_relations]
-		# all_details =  app_models.GroupDetail.objects(relation_belong_to__in=relation_ids)
-		# if all_details:
-		# 	for detail in all_details:
-		# 		r_id = str(detail.relation_belong_to)
-		# 		if r_id in r_id2details:
-		# 			r_id2details[r_id].append(detail)
-		# 		else:
-		# 			r_id2details[r_id]=[detail]
-		# #缺乏一个浏览人数的数组
-		# g_id2static_info = {}
-		# if id2relation:
-		# 	for g_id in id2relation:
-		# 		group_relation_list = id2relation[g_id]
-		# 		open_group_num = len(group_relation_list)
+		id2relation = {}
+		all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
+		if all_relations:
+			for relation in all_relations:
+				group_id = relation.belong_to
+				if group_id in id2relation:
+					id2relation[group_id].append(relation)
+				else:
+					id2relation[group_id] = [relation]
+		r_id2details = {}
+		relation_ids = [str(r.id) for r in all_relations]
+		all_details =  app_models.GroupDetail.objects(relation_belong_to__in=relation_ids)
+		if all_details:
+			for detail in all_details:
+				r_id = str(detail.relation_belong_to)
+				if r_id in r_id2details:
+					r_id2details[r_id].append(detail)
+				else:
+					r_id2details[r_id]=[detail]
+		#缺乏一个浏览人数的数组
+		g_id2static_info = {}
+		if id2relation:
+			for g_id in id2relation:
+				group_relation_list = id2relation[g_id]
+				open_group_num = len(group_relation_list)
 
-		# 		group_customer_num = 0
-		# 		for one_relation in group_relation_list:
-		# 			r_id = one_relation.id
-		# 			detail_list = r_id2details[r_id]
-		# 			for one_detail in detail_list:
-		# 				if one_detail.is_already_paid:
-		# 					group_customer_num += 1
+				group_customer_num = 0
+				for one_relation in group_relation_list:
+					r_id = one_relation.id
+					detail_list = r_id2details[r_id]
+					for one_detail in detail_list:
+						if one_detail.is_already_paid:
+							group_customer_num += 1
 
-		# 		if g_id in g_id2static_info:
-		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
-		# 									'group_customer_num':group_customer_num,
-		# 									'group_visitor_num':0
-		# 									}
-		# 		else:
-		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
-		# 									'group_customer_num':group_customer_num,
-		# 									'group_visitor_num':0
-		# 									}
+				if g_id in g_id2static_info:
+					g_id2static_info[g_id]={'open_group_num':open_group_num,
+											'group_customer_num':group_customer_num,
+											'group_visitor_num':0
+											}
+				else:
+					g_id2static_info[g_id]={'open_group_num':open_group_num,
+											'group_customer_num':group_customer_num,
+											'group_visitor_num':0
+											}
 
-		# if g_id2static_info:
-		# 	for data in datas:
-		# 		g_id = str(data.id)
-		# 		data.static_info = g_id2static_info[str(g_id)]
+		if g_id2static_info:
+			for data in datas:
+				g_id = str(data.id)
+				data.static_info = g_id2static_info[str(g_id)]
 
 
 		items = []
@@ -150,20 +150,36 @@ class Groups(resource.Resource):
 				# 'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time_date': data.end_time.strftime('%Y-%m-%d'),
 				'end_time_time': data.end_time.strftime('%H:%M'),
-				# 'group_item_count':data.static_info.open_group_num if hasattr(data, 'static_info') else 0,
-				# 'group_customer_count':data.static_info.group_customer_num if hasattr(data, 'static_info') else 0,
-				# 'group_visitor_count':data.static_info.group_visitor_num if hasattr(data, 'static_info') else 0,
-				'group_item_count': 0,
-				'group_customer_count': 0,
-				'group_visitor_count': 0,
+				'group_item_count':data.static_info.open_group_num if hasattr(data, 'static_info') else 0,
+				'group_customer_count':data.static_info.group_customer_num if hasattr(data, 'static_info') else 0,
+				'group_visitor_count':data.static_info.group_visitor_num if hasattr(data, 'static_info') else 0,
+				# 'group_item_count': 0,
+				# 'group_customer_count': 0,
+				# 'group_visitor_count':0,
 				'related_page_id': data.related_page_id,
+				'status_tag':data.status,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
+
+		#排序
+		status_0 = []
+		status_1 = []
+		status_2 = []
+		for item in items:
+			print item
+			if item['status_tag'] == 0:
+				status_0.append(item)
+			elif item['status_tag'] == 1:
+				status_1.append(item)
+			elif item['status_tag'] ==2:
+				status_2.append(item)
+		items = status_1+status_0+status_2
+
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': 'id',
+			'sortAttr': '',
 			'data': {}
 		}
 		response = create_response(200)
