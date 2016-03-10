@@ -2394,7 +2394,7 @@ def update_order_status(user, action, order, request=None):
 		# set_children_order_status(order, target_status)
 
 		child_orders = Order.objects.filter(origin_order_id=order.id)
-		if child_orders.count() == 1 and (child_orders.count() > 1 and [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]):
+		if child_orders.count() == 1 or (child_orders.count() > 1 and [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]):
 			child_orders.update(status=target_status)
 		if request and request.user_profile.webapp_type and child_orders.count() == 1:
 			for child in child_orders:
