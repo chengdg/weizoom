@@ -2216,8 +2216,8 @@ def set_origin_order_status(child_order, user, action, request=None):
 		if action == 'ship':
 			origin_order.status = min(children_order_status)
 			origin_order.save()
-			# if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED:
-			# 	update_order_status(user, action, origin_order, request)
+			if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED and len(children_order_status) > 1:
+				update_order_status(user, action, origin_order, request)
 		else:
 			update_order_status(user, action, origin_order, request)
 
@@ -2390,8 +2390,14 @@ def update_order_status(user, action, order, request=None):
 			update_user_paymoney(order.webapp_user_id)
 		except:
 			pass
-		from mall.order.util import set_children_order_status
-		set_children_order_status(order, target_status)
+		# from mall.order.util import set_children_order_status
+		# set_children_order_status(order, target_status)
+		child_orders = Order.objects.filter(origin_order_id=order.id)
+		child_orders.update(status=target_status)
+		if request.user_profile.webapp_type:
+			for child in child_orders:
+				record_status_log(child.order_id, operation_name, child.status, target_status)
+				record_operation_log(child.order_id, operation_name, action_msg, child)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
 
