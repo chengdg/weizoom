@@ -29,6 +29,11 @@
     	border-top: 1px solid #ccc;
 		border-bottom: 1px solid #ccc;
     }
+    table tr td .xui-time_start,table tr td .xui-time_end{
+    	width: 85px;
+    	display: inline-block;
+    }
+
 
 </style>
 {% endblock %}
@@ -181,8 +186,16 @@
 				<td>
 					${item.status}
 				</td>
-				<td>
-					${item.start_time} - ${item.end_time}
+				<td >
+				 <div class="xui-time_start">
+				 	<div class="xui-i-time_date">${item.start_time_date}</div>
+				 	<div class="xui-i-time_time">${item.start_time_time}</div>
+				 </div>
+				 <div class="xui-time_end">
+				 	<div class="xui-i-time_date">${item.end_time_date}</div>
+				 	<div class="xui-i-time_time">${item.end_time_time}</div>
+				 </div>
+
 				</td>
 				<td>
 					<a href="/apps/group/group_participances/?id=${item.id}" class="ml5">参团详情</a>
