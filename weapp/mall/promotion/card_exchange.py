@@ -43,10 +43,13 @@ class CardExchange(resource.Resource):
             card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
             prize_list = []
             for rule in card_exchange_rules:
+                card_number = rule.card_number
+                card_number_split = card_number.split('-')
                 prize_list.append({
                     'integral': rule.integral,
                     'money': rule.money,
-                    'card_number': rule.card_number                 
+                    's_num': card_number_split[0],
+                    'end_num': card_number_split[1]                 
                 })
             card_exchange_dic['prize'] = prize_list
         except Exception,e:
@@ -68,9 +71,22 @@ class CardExchange(resource.Resource):
         print '======================'
         start_num = request.GET.get('start_num',None)
         end_num = request.GET.get('end_num',None)
+        exchange_card_list = []
         exchange_cards = WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = endnum)
+        weizoom_card_rules = WeizoomCardRule.objects.all()
+        for card in exchange_cards:
+            card_rule_id = card.weizoom_card_rule_id
+            cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
+            userd_money = cur_weizoom_card_rule.money - card.money
+            exchange_card_list.append({
+                'card_number': card.weizoom_card_id,
+                'money': '%.2f' % cur_weizoom_card_rule.money,
+                'used_money': '%.2f' % userd_money,
+                'user': 'vito'  
+            })
 
         response = create_response(200)
+        response.data = exchange_card_list
         return response.get_response()
 
     def api_post(request):
@@ -110,7 +126,7 @@ class MobileCardExchange(resource.Resource):
 
     def get(request):
         """
-        卡兑换页
+        手机端卡兑换页
         """
         print '+++++++++++++++++++++22222'
        
