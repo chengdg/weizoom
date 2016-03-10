@@ -123,12 +123,10 @@ class Groups(resource.Resource):
 		# 		if g_id in g_id2static_info:
 		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
 		# 									'group_customer_num':group_customer_num,
-		# 									'group_visitor_num':0
 		# 									}
 		# 		else:
 		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
 		# 									'group_customer_num':group_customer_num,
-		# 									'group_visitor_num':0
 		# 									}
 
 		# if g_id2static_info:
@@ -152,12 +150,10 @@ class Groups(resource.Resource):
 				'end_time_time': data.end_time.strftime('%H:%M'),
 				# 'group_item_count':data.static_info.open_group_num if hasattr(data, 'static_info') else 0,
 				# 'group_customer_count':data.static_info.group_customer_num if hasattr(data, 'static_info') else 0,
-				# 'group_visitor_count':data.static_info.group_visitor_num if hasattr(data, 'static_info') else 0,
 				'group_item_count': 0,
 				'group_customer_count': 0,
-				'group_visitor_count':0,
+				'group_visitor_count':data.visit_number,
 				'related_page_id': data.related_page_id,
-				'status_tag':data.status,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
@@ -168,11 +164,11 @@ class Groups(resource.Resource):
 		status_2 = []
 		for item in items:
 			print item
-			if item['status_tag'] == 0:
+			if item['status'] == u'未开启':
 				status_0.append(item)
-			elif item['status_tag'] == 1:
+			elif item['status'] == u'进行中':
 				status_1.append(item)
-			elif item['status_tag'] ==2:
+			elif item['status'] == u'已结束':
 				status_2.append(item)
 		items = status_1+status_0+status_2
 

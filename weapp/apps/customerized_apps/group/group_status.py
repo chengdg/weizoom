@@ -21,13 +21,14 @@ from termite import pagestore as pagestore_manager
 class GroupStatus(resource.Resource):
 	app = 'apps/group'
 	resource = 'group_status'
-	
+
 	@login_required
 	def api_post(request):
 		"""
 		响应POST
 		"""
 		target_status = request.POST['target']
+
 		if target_status == 'stoped':
 			target_status = app_models.STATUS_STOPED
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
@@ -43,7 +44,8 @@ class GroupStatus(resource.Resource):
 			target_status = app_models.STATUS_RUNNING
 		elif target_status == 'not_start':
 			target_status = app_models.STATUS_NOT_START
+
 		app_models.Group.objects(id=request.POST['id']).update(set__status=target_status)
-		
+
 		response = create_response(200)
 		return response.get_response()
