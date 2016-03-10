@@ -71,6 +71,14 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
         var ids = this.table.getAllSelectedDataIds();
         var _this = this;
+
+        /* 参加团购的商品不可被删除,不可下架 */
+        var isGroupBuying = $link.parents('tr').data('is-group-buying');
+        if ((shelveType == 'delete' || shelveType == 'offshelf') && isGroupBuying == true) {
+            W.showHint('error', '该商品正在进行团购活动!');
+            return false;
+        }
+
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
