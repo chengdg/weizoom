@@ -1076,7 +1076,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     'leader_name': order.leader_name,
                     'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
                 }
-                if len(order2fackorders.get(order.id)) == 1:
+                if order2fackorders.get(order.id) and len(order2fackorders.get(order.id)) == 1:
                     fackorder = order2fackorders[order.id][0]
                     if fackorder.supplier:
                         group = {
