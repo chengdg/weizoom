@@ -131,5 +131,5 @@ def get_card_exchange_link(request):
     from .models import CardExchange
     webapp_id = request.user_profile.webapp_id
     if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
-        return 'mall2/m_card_exchange/?webapp_id=%s' % webapp_id
+        return '/mall2/m_card_exchange/?webapp_id=%s' % webapp_id
     return None
