@@ -1,5 +1,38 @@
 {% extends "content_base_v2.html" %}
 
+{% block css %}
+<style>
+    table td .xui-group_name{
+	    text-align: left;
+	    margin-left: 22px;
+	    color:#333333;
+    }
+    table td .xui-productImgBox{
+    	width: 70px;
+    	height: 70px;
+    	display: inline-block;
+    }
+    table td .xui-productImgBox img{
+    	width: 60px;
+    	height: 60px;
+    	margin: 5px;
+    }
+    table td .xui-productNameBox{
+    	width: 140px;
+    	display: inline-block;
+    }
+    table tr.xui-product_itle{
+    	background:#F2F0F1 !important;
+    }
+    table tr.xui-product_record{
+    	background:#FFFFFF !important;
+    	border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+    }
+
+</style>
+{% endblock %}
+
 {% block content-panel %}
 <div class="xui-GroupsAppPage xui-appPage-commonStyle">
 	<div class="relative">
@@ -102,7 +135,7 @@
 				<th>商品信息</th>
 				<th>开团人数</th>
 				<th>购买人数</th>
-				<th>参与人数</th>
+				<th>浏览人数</th>
 				<th>状态</th>
 				<th>起止时间</th>
 				<th>操作</th>
@@ -110,33 +143,31 @@
 		</thead>
 		<tbody>
 		  {{each(i, item) items}}
-<!--             <tr class="xui-product_itle" data-id="${item.id}">
-                <td>
+            <tr class="xui-product_itle" data-id="${item.id}">
+                <td colspan="7">
                     <div title="${item.name}" class="xui-group_name">
-                        团购名称:<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">${item.name}</a>
+                        团购名称：<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">${item.name}</a>
                     </div>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr> -->
-			<tr data-id="${item.id}">
+            </tr>
+			<tr data-id="${item.id}" class="xui-product_record">
 				<td
 					class="tl pl25"
 					style="width:250px; height:60px;"
 					title="${item.name}"
 				>
-				   <a
-					class="xui-ellipsisFox"
-					limit="15"
-					href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}"
-					style="text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;"
-					>
-						${item.name}
-					</a>
+					<div class="xui-productImgBox">
+						<img class="xui-productImg" src="${item.product_img}">
+					</div>
+					<div class="xui-productNameBox">
+					   <a
+						class="xui-ellipsisFox"
+						limit="15"
+						href="#"
+						>
+							${item.product_name}
+						</a>
+					</div>
 				</td>
 				<td>
 					${item.group_item_count}
