@@ -83,6 +83,7 @@ class GroupParticipance(resource.Resource):
 			group_member_info = app_models.GroupRelations(
 				belong_to = group_record_id,
 				member_id = member_id,
+				group_leader_name = request.member.username_for_html,
 				product_id = product_id,
 				group_type = group_type,
 				group_days = group_days,

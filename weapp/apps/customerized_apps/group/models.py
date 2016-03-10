@@ -62,6 +62,7 @@ class GroupRelations(models.Document):
 	"""
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	member_id = models.StringField(default="", max_length=20, unique_with=['belong_to']) #团购发起者，团长的id
+	group_leader_name = models.StringField(default='', max_length=1024) #团长的昵称
 	product_id = models.IntField() #商品id
 	group_type = models.StringField()  #小团购类型
 	group_days = models.StringField() #团购时间

@@ -19,27 +19,34 @@ class MGroupList(resource.Resource):
 	resource = 'm_group_list'
 
 	def api_get(request):
-		record_id = request.GET.get('id', None)
+		belong_to = request.GET.get('belong_to', None)
 		owner_id = request.webapp_owner_id
-		if not record_id:
+		if not belong_to:
 			response = create_response(500)
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
-		group_participances = app_models.GroupRelations.objects(belong_to=record_id,group_status=False)
-		group_ids = [str(p.belong_to) for p in group_participances]
-		groups = app_models.Group.objects(id__in=group_ids,status=app_models.STATUS_RUNNING)
+		group_relations = app_models.GroupRelations.objects(belong_to=belong_to,is_valid=True,group_status=False)
+		group_ids = [str(p.belong_to) for p in group_relations]
+		all_groups = app_models.Group.objects(id__in=group_ids)
 		all_groups_can_join = []
-		for group in groups:
-			group_dict = json.loads(group.group_dict),
+		for group_relation in group_relations:
+			current_group = all_groups.get(id=group_relation.belong_to)
 			all_groups_can_join.append({
-				'id': str(group.id),
-				'name': group.name,
-				'product_img': group.product,
-				# 'group_dict': group_dict,
-				'participant_count': group.participant_count,
-				'end_time': group.end_time.strftime('%Y-%m-%d'),
-				'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
+				'id': str(group_relation.belong_to),
+				'group_relation_id': str(group_relation.id),
+				'group_owner_name': group_relation.group_leader_name,
+				'group_name': current_group.name,
+				'product_img': current_group.product_img,
+				'product_name': current_group.product_name,
+				'participant_count': str(group_relation.grouped_number)+'/'+group_relation.group_type,
+				'end_time': group_relation.created_at.strftime('%Y-%m-%d'),
+				'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s&group_relation_id=%s&fid=%s' % (owner_id, str(group_relation.belong_to),str(group_relation.id),str(group_relation.member_id))
 			})
+
+		if all_groups_can_join == []:
+			response = create_response(500)
+			response.errMsg = u'暂无已开团购'
+			return response.get_response()
 		response = create_response(200)
 		response.data = {
 			'all_groups_can_join': all_groups_can_join
@@ -56,18 +63,24 @@ class MGroupList(resource.Resource):
 		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-created_at')
 		for group in groups:
 			try:
-				group_dict = json.loads(group.group_dict),
+				all_group_dict = []
+				group_dict_tuple = json.loads(group.group_dict),
+				for group_dict in group_dict_tuple:
+					for g in group_dict:
+						all_group_dict.append({
+							'group_price': '%.2f' % float(group_dict[str(g)]['group_price']),
+							'group_type': group_dict[str(g)]['group_type']
+						})
 				all_groups_can_open.append({
 					'id': str(group.id),
 					'name': group.name,
-					'product_img': group.product,
-					'group_dict': group_dict,
+					'product_img': group.product_img,
+					'all_group_dict': all_group_dict,
 					'end_time': group.end_time.strftime('%Y-%m-%d'),
 					'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s' % (owner_id, str(group.id))
 				})
 			except:
 				pass
-
 		c = RequestContext(request, {
 			'page_title': u'团购列表',
 			'all_groups_can_open': all_groups_can_open,

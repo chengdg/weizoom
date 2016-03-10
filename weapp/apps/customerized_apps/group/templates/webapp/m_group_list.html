@@ -27,12 +27,23 @@
         background: none;
     }
     .xui-i-content-group {
-        padding: 10px 0 10px 0;
+        padding: 10px 0 15px 0;
+        position: static;
+        margin-left: 146px;
+        margin-top: -120px;
+        text-align: right;
     }
-    .xui-i-content-img {
-        height: 120px;
+    .xui-all_groups_can_open-slide .xui-i-content-img {
+        height: 30%;
+        width: 30%;
         display: inline-block;
-        width: 120px;
+        margin-top: 10px;
+    }
+    .xui-all_groups_can_join-slide .xui-i-content-img,.xui-all_groups_can_join-list .xui-i-content-img{
+        height: 20%;
+        width: 20%;
+        display: inline-block;
+        margin-top: 10px;
     }
     .xui-i-content-time {
         border: 1px solid #ff2742;
@@ -69,17 +80,20 @@
             <div class="wui-swiper-wrapper">
                 <div class="wui-swiper-slide" id="xa-wrapper">
                     <div class="wui-content-slide">
+                        <div class="xui-all_groups_can_open-slide">
                         {% if all_groups_can_open %}
                             {% for group_item in all_groups_can_open %}
                                 <ul class="xui-listItem">
-                                <li data-icon="true" class="xui-listInner pl15 pr15">
+                                <li data-icon="true" class="xui-listInner pl15 pr15 pb10">
                                     <div class="xui-i-content">
-                                        <img src="" class="xui-i-content-img">
+                                        <img src="{{ group_item.product_img }}" class="xui-i-content-img">
                                         <div class="xui-i-content-group">
                                             <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}</div>
                                             <a href="{{ group_item.url }}"><button class="wui-i-btn-using wa-using">点击开团</button></a>
                                             <div class="xui-i-content-type">
-                                                <p>{{ group_item.group_dict }}人团  ￥ </p>
+                                                {% for group_dict in group_item.all_group_dict %}
+                                                    <p>{{ group_dict.group_type }}人团  ￥{{ group_dict.group_price }}</p>
+                                                {% endfor %}
                                             </div>
                                         </div>
                                     </div>
@@ -88,6 +102,7 @@
                                 </ul>
                                 {% endfor %}
                         {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="wui-swiper-slide">
@@ -98,7 +113,8 @@
                                 <ul class="xui-listItem">
                                 <li data-icon="true" class="xui-listInner pl10 pr15">
                                     <div class="xui-i-title">
-                                        <span class="disTc pl15 em1">{{ group_item.name }}</span>
+                                        <img src="{{ group_item.product_img }}" class="xui-i-content-img">
+                                        <p style="display: inline;">{{ group_item.name }}</p>
                                         <button class="wui-i-btn-using wa-using xa-find_group" data-id="{{group_item.id}}">进入找团</button>
                                     </div>
                                 </li>
@@ -107,13 +123,30 @@
                         {% endif %}
                         </div>
                         <div class="xui-all_groups_can_join-list xa-all_groups_can_join-list none">
-                            11111
                         </div>
                     </div>
                 </div>
                 <script id="tpl" type="text/plain">
-                    <p>Today: { date }</p>
-                    <a href="/{ user.id|safe }">{ user.company }</a>
+                    <ul class="xui-listItem">
+                        <li data-icon="true" class="xui-listInner pl10">
+                            <div class="xui-i-title">
+                                <img src="{ product_img }" class="xui-i-content-img">
+                                <div style="display: inline-block;width: 70%;">
+                                    <div style="text-align: right;color: #FF2742;">剩余{end_time}小时</div>
+                                    <p style="display: inline;">{ group_owner_name }</p>
+                                    <div style="display: inline;">{ group_name }</div>
+                                    <a href="{ url }"><button class="wui-i-btn-using wa-using">我要参团</button></a>
+                                </div>
+                                <div style="width: 50px;display: inline-block;">
+                                    <p>团员</p>
+                                    <span style="background: #4A4A4A;color: #fff;padding: 5px;border-radius: 5px;top: 5px;">{participant_count}</span>
+                                </div>
+                                <div style="border: 1px solid #CECECE;padding: 10px;margin-bottom: 10px;border-radius: 4px;margin-left: 15px;">
+                                    <p>【商品】{ product_name }</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </script>
             </div>
         </div>
@@ -154,26 +187,34 @@ $(document).ready(function($) {
 });
 
 function getDynamicData(recordId){
+    console.log(recordId);
     W.getApi().call({
         app: 'm/apps/group',
-        resource: 'm_group',
+        resource: 'm_group_list',
         method: 'get',
         args: {
             webapp_owner_id: W.webappOwnerId,
-            id: recordId
+            belong_to: recordId
         },
         success: function(data) {
             console.log(data);
             $('.xui-all_groups_can_join-slide').addClass('none');
             $('.xui-all_groups_can_join-list').removeClass('none');
             var tpl = new Template($('#tpl').html());
-            var s = tpl.render({
-                date: 20150101,
-                user: {
-                    id: 'A-000&001',
-                    company: 'AT&T'
-                }
+            var all_groups_can_join = data.all_groups_can_join;
+            for(var i in all_groups_can_join){
+                var p = all_groups_can_join[i];
+                var s = tpl.render({
+                    group_owner_name: p.group_owner_name,
+                    group_name: p.group_name,
+                    product_img: p.product_img,
+                    product_name: p.product_name,
+                    participant_count: p.participant_count,
+                    end_time: p.end_time,
+                    url: p.url
             });
+            }
+
             console.log(s);
             $('.xa-all_groups_can_join-list').html(s);
 
