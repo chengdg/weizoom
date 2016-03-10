@@ -29,6 +29,20 @@ paths:
               activity_url:
                 required: true
                 type: string
+  /m/apps/group/api/group_buy_products:
+    get:
+      description: 批量获得商品是否在团购活动中
+      parameters:
+        - name: pids
+          type: list
+      responses:
+        200:
+          schema:
+            title: 商品是否在团购活动中
+            properties:
+              pid2is_in_group_buy:
+                required: true
+                type: list
   /m/apps/group/api/group_buy_info:
     # This is a HTTP operation
     get:
