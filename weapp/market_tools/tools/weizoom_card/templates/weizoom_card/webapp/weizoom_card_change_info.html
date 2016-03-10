@@ -96,20 +96,38 @@
 		vertical-align: middle;
 		color: #333;
 		width: 100%;
-		font-size: 0.8rem;
+		font-size: 0.9rem;
+		border-collapse: collapse;
 	}
-	.xui-use-detail table tr{
-		border-bottom:1px solid #ebebeb;
+	.xui-use-detail table tr {
+		width: 100%;
 	}
 	.xui-use-detail table>thead{
 		line-height: 40px;
 	}
-	.xui-use-detail table>thead>tr>td{
+	.xui-use-detail table tr>td{
 		text-align: center;
+		border-bottom: 1px solid #ebebeb;
+		padding: 8px 0px;
+	}
+	.xui-use-detail table tr>td.xui-order-time,.xui-use-detail table tr>td.xui-order-money{
+		width:25%;
 	}
 	/*.xui-use-detail table tr>td:not(last){*/
-		/*width: 25%;*/
+		/*width: 20%;*/
 	/*}*/
+	.xui-wzcoinConfirm-page .ui-content {
+		border-bottom: none;
+	}
+	.xui-use-detail table tr>td.xui-order-info-time{
+		padding-left: 10px;
+		font-size: 0.8rem;
+		color: #999;
+	}
+	.xui-use-detail table tr>td.xui-order-info-name{
+		text-align: left;
+		padding-left: 15px;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -134,17 +152,17 @@
 				<table>
 					<thead>
 					<tr>
-						<td>时间</td>
-						<td>明细</td>
-						<td>去处/来源</td>
+						<td class="xui-order-time">时间</td>
+						<td class="xui-order-money">明细</td>
+						<td class="xui-order-destination">去处/来源</td>
 					</tr>
 					</thead>
 					<tbody>
 					{% for order in card_orders %}
 					<tr>
-						<td>{{order.created_at}}</td>
-						<td>{{order.money}}</td>
-						<td>{{order.product_name}}</td>
+						<td class="xui-order-info-time">{{order.created_at}}</td>
+						<td class="xui-order-info-money">{{order.money}}</td>
+						<td class="xui-order-info-name">{{order.product_name}}</td>
 					</tr>
 					{% endfor%}
 					</tbody>
@@ -247,7 +265,7 @@
 		$(".xa-hidden").click(function(){
 			if($(".xa-hidden")[0].innerHTML=='隐藏'){
 			var reg=/\d/g;
-				$(".xa-hidden")[0].innerHTML='显示';
+				$(".xa-hidden")[0].innerHTML='查看';
 			$('.xa-password')[0].innerHTML=$('.xa-password')[0].innerHTML.replace(reg,'*')
 			}else{
 				$(".xa-hidden")[0].innerHTML='隐藏';

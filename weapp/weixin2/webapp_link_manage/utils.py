@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from mall.promotion.card_exchange import get_card_exchange_link
+
 __author__ = 'liupeiyu'
 
 import json
@@ -180,6 +182,11 @@ def get_webapp_link_menu_objectes(request):
 			'name': '签到',
 			'link': get_sign_webapp_link(request)
 		},
+		'cardExchange': {
+			'id': 13,
+			'name': '微众卡兑换',
+			'link': get_card_exchange_link(request)
+		}
 		# 'feedback': {
 		# 	'id': 12,
 		# 	'name': '用户反馈',
