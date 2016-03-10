@@ -77,7 +77,9 @@ class Groups(resource.Resource):
 		"""
 		pageinfo, datas = Groups.get_datas(request)
 
-		# group_ids = [str(p.id) for p in datas]
+		print '1111111111111111111111111'
+		print datas
+		group_ids = [str(p.id) for p in datas]
 		# all_participances = app_models.GroupParticipance.objects(belong_to__in=group_ids,has_join=True)
 
 		# group_id2info = {}
@@ -88,10 +90,14 @@ class Groups(resource.Resource):
 		# 		}
 		items = []
 		for data in datas:
+			print 11111111111111112222222222222
+			print data.product_img
 			items.append({
 				'id': str(data.id),
 				'name': data.name,
 				'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
+				'productImg':data.product_img,
+				'productName':data.product_name,
 				# 'start_time_date': data.start_time.strftime('%Y-%m-%d'),
 				# 'start_time_time': data.start_time.strftime('%H:%M'),
 				'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
