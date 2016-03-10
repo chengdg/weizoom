@@ -29,6 +29,7 @@ class MGroup(resource.Resource):
 		timing = 0
 		is_group_leader = False
 		is_group_unpaid = False #开团成功但未支付成功
+		only_remain_one_day = False #开团时间剩余1天
 		is_helped = False
 		self_page = False
 		group_status = 0
@@ -61,6 +62,9 @@ class MGroup(resource.Resource):
 		elif now_time >= data_end_time:
 			record.update(set__status=app_models.STATUS_STOPED)
 			activity_status = u'已结束'
+		#开团时间不足一天
+		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
+			only_remain_one_day = True
 
 		if member:
 			member_id = member.id
@@ -76,12 +80,13 @@ class MGroup(resource.Resource):
 					# 已经开过团
 					try:
 						group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
-						group_status = group_relation_info.group_status
+						group_status = group_relation_info.status_text
 						group_type = group_relation_info.group_type
 						grouped_number = group_relation_info.grouped_number
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
-						if timing <= 0 and group_relation_info.group_status==app_models.GROUP_RUNNING:
+						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
+
 						#判断分享页是否自己的主页
 						if fid is None or str(fid) == str(member_id):
 							is_group_leader = True if group_relation_info.member_id == str(member_id) else False
@@ -129,7 +134,8 @@ class MGroup(resource.Resource):
 			'group_status': group_status, #小团购状态
 			'group_type': int(group_type) if group_type !='' else '',
 			'grouped_number': int(grouped_number),
-			'member_id': member_id if member else ''
+			'member_id': member_id if member else '',
+			'only_remain_one_day': only_remain_one_day
 			# 'product_original_price': product_original_price,
 			# 'product_group_price': product_group_price
 		}

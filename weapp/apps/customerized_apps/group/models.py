@@ -81,6 +81,19 @@ class GroupRelations(models.Document):
 		'collection': 'group_group_relations'
 	}
 
+	@property
+	def status_text(self):
+		if self.group_status == GROUP_NOT_START:
+			return u'团购未生效'
+		elif self.group_status == GROUP_RUNNING:
+			return u'团购进行中'
+		elif self.group_status == GROUP_SUCCESS:
+			return u'团购成功'
+		elif self.group_status == GROUP_FAILURE:
+			return u'团购失败'
+		else:
+			return u'未知'
+
 class GroupDetail(models.Document):
 	"""
 	团购详情记录表

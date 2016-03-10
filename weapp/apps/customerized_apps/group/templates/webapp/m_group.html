@@ -63,6 +63,8 @@
         color:#3E1917;
         margin-left: auto;
         margin-right: auto;
+        padding-left: 10px;
+        padding-right: 10px;
     }
     button.wui-i-btn-groupMsg-yes,button.wui-i-btn-groupMsg-no{
         width: 40%;
@@ -71,7 +73,7 @@
         height: 1.5rem;
         border-radius: 2px;
         font-family: "黑体";
-        margin-top: 15%;
+        margin-top: 4%;
     }
     button.wui-i-btn-groupMsg-yes{
         background: #ff2742;
@@ -96,11 +98,21 @@
     </div>
     <!-- 支付未完成弹窗页面 -->
     <div class="xui-groupMsg xa-groupMsg none">
-        <div class="f15 xui-successHint xui-spritebg">
+        <div class="f15 xui-successHint">
            <p class="xui-i-msg xa-i-msg"></p>
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-groupMsg-yes wa-i-btn-groupMsg-yes">是</button>
                 <button class="wui-i-btn-groupMsg-no wa-i-btn-groupMsg-no">否</button>
+           </div>
+        </div>
+    </div>
+    <!-- 成功、失败弹窗页面 -->
+    <div class="xui-groupMsg-Hint xa-groupMsg-Hint none">
+        <div class="f15 xui-successHint">
+            <p class="xui-i-msg-title xa-i-msg-title"></p>
+            <p class="xui-i-msg xa-i-msg"></p>
+            <div class="wui-i-btngroup">
+                <button class="wui-i-btn-groupMsg-yes wa-i-btn-groupMsg-yes">确定</button>
            </div>
         </div>
     </div>
@@ -122,6 +134,7 @@
     var is_self_page = true;
     var is_group_leader = false;
     var is_group_unpaid = false;
+    var only_remain_one_day = false;
     var page_owner_member_id = '';
     var page_owner_icon = '';//用户头像
     var group_type = '';
@@ -204,9 +217,10 @@
         is_self_page = member_info.self_page;
         is_group_leader = member_info.is_group_leader;
         is_group_unpaid = member_info.is_group_unpaid;
+        only_remain_one_day = member_info.only_remain_one_day;
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
-        group_status = member_info.group_status;
+        W.group_status = member_info.group_status;
         group_type = member_info.group_type;
         //更新页面小团的数据
         page_owner_icon = member_info.page_owner_icon;
@@ -230,6 +244,13 @@
             }
             return false;
         }
+        //团购成功、团购失败状态
+        if (W.group_status == '团购成功'){
+            showGroupSuccess();
+        }
+        if(W.group_status == '团购失败'){
+            showGroupFailure();
+        }
         //如果是自己的主页
         if(is_self_page){
             if(is_group_unpaid){
@@ -238,9 +259,11 @@
             if(is_group_leader){
                 $('.wa-using').text('邀请好友参团').on('click', function(){
                         openGuideMask();
-//                        openGuestMask();
                     }).show();
             }else{
+                if(only_remain_one_day){
+                    openRemainOneDayWin();
+                }
                 $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
                 if(W.isMember){
                     $('.wa-using').text('我要开团').on('click', openGruop).show();
@@ -345,6 +368,8 @@
         mask('hide');
 //        $('.xui-powerSucceed').addClass('none');
         $('.xui-attention').addClass('none');
+        $('.xui-groupMsg').addClass('none');
+        $('.xui-groupMsg-Hint').addClass('none');
         $('.xa-share').addClass('none');
 //        $('.xui-errMsg').addClass('none');
         $('.xa-i-rules-contentbox').addClass('none');
@@ -370,6 +395,16 @@
         mask('show');
         $('.xa-share').removeClass('none');
     }
+    //开团时间不足提示
+    function openRemainOneDayWin(){
+        mask('show');
+        $('.xui-groupMsg').removeClass('none');
+        $('.xa-groupMsg').find('.xa-i-msg').html('本次团购剩余时间不足1天，是否继续开团？');
+        $('.wa-i-btn-groupMsg-yes,.wa-i-btn-groupMsg-no').click(function(){
+            mask('hide');
+            $('.xui-groupMsg').addClass('none');
+        });
+    }
     // 未关注引导
     function openGuestMask(){
         mask('show');
@@ -389,6 +424,28 @@
             mask('hide');
             $('.xui-groupMsg').addClass('none');
             //todo cancel_group_buy
+        });
+    }
+    //团购成功
+    function showGroupSuccess(){
+        mask('show');
+        $('.xui-groupMsg-Hint').removeClass('none');
+        $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在该商品团购结束20天内进行发货');
+        $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('恭喜您 团购成功');
+        $('.wa-i-btn-groupMsg-yes').click(function(){
+            mask('hide');
+            $('.xui-groupMsg-Hint').addClass('none');
+        });
+    }
+    //失败
+    function showGroupFailure(){
+        mask('show');
+        $('.xui-groupMsg-Hint').removeClass('none');
+        $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在5~7个工作日内完成退款');
+        $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('很遗憾 团购失败');
+        $('.wa-i-btn-groupMsg-yes').click(function(){
+            mask('hide');
+            $('.xui-groupMsg-Hint').addClass('none');
         });
     }
     function renderTime(seconds){
