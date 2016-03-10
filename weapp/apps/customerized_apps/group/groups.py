@@ -65,7 +65,7 @@ class Groups(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
-		datas = app_models.Group.objects(**params).order_by('-id')
+		datas = app_models.Group.objects(**params).order_by('-created_at')
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -155,15 +155,31 @@ class Groups(resource.Resource):
 				# 'group_visitor_count':data.static_info.group_visitor_num if hasattr(data, 'static_info') else 0,
 				'group_item_count': 0,
 				'group_customer_count': 0,
-				'group_visitor_count': 0,
+				'group_visitor_count':0,
 				'related_page_id': data.related_page_id,
+				'status_tag':data.status,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
+
+		#排序
+		status_0 = []
+		status_1 = []
+		status_2 = []
+		for item in items:
+			print item
+			if item['status_tag'] == 0:
+				status_0.append(item)
+			elif item['status_tag'] == 1:
+				status_1.append(item)
+			elif item['status_tag'] ==2:
+				status_2.append(item)
+		items = status_1+status_0+status_2
+
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': 'id',
+			'sortAttr': '',
 			'data': {}
 		}
 		response = create_response(200)
