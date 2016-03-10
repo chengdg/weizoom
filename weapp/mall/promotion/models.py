@@ -795,3 +795,39 @@ class RedEnvelopeParticipences(models.Model):
 		db_table = 'mall_red_envelope_participences'
 		verbose_name = '红包领用分析'
 		verbose_name_plural = '红包领用分析'
+
+#########################################################################
+# CardExchange: 商家设置的卡兑换
+#########################################################################
+
+NO_REQUIRE = 0          #无条件
+TELEPHONE_REQUIRE = 1    #绑定手机号
+EXCHANGE_REQUIRE = {
+	NO_REQUIRE: u'无条件',
+	TELEPHONE_REQUIRE: u'绑定手机号'
+}
+
+WEIZOOM_CARD = 0     #微众卡
+EXCHANGE_REWARD = {
+	WEIZOOM_CARD: u'微众卡'
+}
+
+class CardExchange(models.Model):
+	webapp_id = models.CharField(max_length=20)  # webapp,商家id
+	require = models.IntegerField(default=NO_REQUIRE)   #兑换需求
+	reward_type = models.IntegerField(default=WEIZOOM_CARD)   #兑换奖励类型
+
+	class Meta(object):
+		db_table = 'mallpromotion_card_exchange'
+
+#########################################################################
+# WeizoomCardExchangeRule: 商家设置的卡兑换规则
+#########################################################################
+class CardExchangeRule(models.Model):
+	exchange = models.ForeignKey(CardExchange)
+	integral = models.IntegerField(default=0)  # 积分
+	money = models.FloatField(default=0.0)  # 积分对应兑换金额
+	card_number = models.CharField(max_length=256)  #微众卡号段
+
+	class Meta(object):
+		db_table = 'mallpromotion_card_exchange_rule'
