@@ -56,10 +56,10 @@ class Group(models.Document):
 		else:
 			return False
 
-GROUP_NOT_START = 0
-GROUP_RUNNING = 1
-GROUP_SUCCESS = 2
-GROUP_FAILURE = 2
+GROUP_NOT_START = 0 #团购未生效
+GROUP_RUNNING = 1 #团购进行中
+GROUP_SUCCESS = 2 #团购成功
+GROUP_FAILURE = 3 #团购失败
 class GroupRelations(models.Document):
 	"""
 	用户自己发起的小团购记录表
