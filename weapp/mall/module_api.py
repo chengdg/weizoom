@@ -1474,6 +1474,16 @@ def ship_order(order_id, express_company_name,
 	# 记录log信息
 	if is_update_express:
 		action = u'修改发货信息'
+		if order.origin_order_id > 0:
+			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+				origin_order = Order.objects.get(id=order.origin_order_id)
+				Order.objects.filter(id=origin_order.id).update(**order_params)
+				record_operation_log(origin_order.order_id, operator_name, action, origin_order)
+		else:
+			if Order.objects.filter(origin_order_id=order.id).count() == 1:
+				child_order = Order.objects.get(origin_order_id=order.id)
+				Order.objects.filter(id=child_order.id).update(**order_params)
+				record_operation_log(child_order.order_id, operator_name, action, child_order)
 	else:
 		action = u'订单发货'
 		record_status_log(order.order_id, operator_name, order.status, target_status)
