@@ -26,11 +26,40 @@ class GroupBuyProduct(resource.Resource):
 		record = app_models.Group.objects(product_id=pid,status=app_models.STATUS_RUNNING)
 		if record.count() > 0:
 			is_in_group_buy = True
-			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+webapp_owner_id+'&id='+record.first().id
+			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+webapp_owner_id+'&id='+str(record.first().id)
 		response = create_response(200)
 		response.data = {
 			'is_in_group_buy': is_in_group_buy,
 			'activity_url': activity_url
+		}
+		return response.get_response()
+
+class GroupBuyProducts(resource.Resource):
+	app = 'apps/group'
+	resource = 'group_buy_products'
+
+	def api_get(request):
+		"""
+		批量获得商品是否在团购活动中
+		"""
+		pid2is_in_group_buy = []
+		pids = request.GET.get('pids')
+		records = app_models.Group.objects(product_id__in=pids,status=app_models.STATUS_RUNNING)
+		pid_in_group_buy = [record.product_id for record in records]
+		for pid in pids:
+			if pid in pid_in_group_buy:
+				pid2is_in_group_buy.append({
+					'pid': pid,
+					'is_in_group_buy': True
+				})
+			else:
+				pid2is_in_group_buy.append({
+					'pid': pid,
+					'is_in_group_buy': False
+				})
+		response = create_response(200)
+		response.data = {
+			'pid2is_in_group_buy': pid2is_in_group_buy
 		}
 		return response.get_response()
 
@@ -54,7 +83,7 @@ class GroupBuyInfo(resource.Resource):
 			pid = group_record.product_id
 			group_buy_price = group_record.group_price
 			activity_id = group_record.belong_to
-			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+webapp_owner_id+'&id='+activity_id
+			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+webapp_owner_id+'&id='+str(activity_id)
 		response = create_response(200)
 		response.data = {
 			'pid': pid,

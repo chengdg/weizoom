@@ -12,7 +12,7 @@ info:
 # Describe your paths here
 paths:
   # This is a path endpoint. Change it.
-  /m/apps/group/group_buy_product:
+  /m/apps/group/api/group_buy_product:
     get:
       description: 获得商品是否在团购活动中
       parameters:
@@ -29,7 +29,7 @@ paths:
               activity_url:
                 required: true
                 type: string
-  /m/apps/group/group_buy_info:
+  /m/apps/group/api/group_buy_info:
     # This is a HTTP operation
     get:
       # Describe this verb here. Note: you can use markdown
@@ -65,7 +65,7 @@ paths:
               activity_url:
                 required: true
                 type: string
-  /m/apps/group/check_group_buy:
+  /m/apps/group/api/check_group_buy:
     get:
       description: 下单中的检测
       parameters:
@@ -98,7 +98,7 @@ paths:
               group_id:
                 type: string
                 description: 团购活动id
-  /m/apps/group/order_action:
+  /m/apps/group/api/order_action:
     put:
       description: apiserver通知订单支付成功
       parameters:
