@@ -59,7 +59,7 @@
     width: 150px;
     line-height: 24px;
     border:1px solid #b1dbf1;
-    background: #f2f2f2;
+    background-color: #f2f2f2;
     padding: 0 5px;
     color: #656565;
     white-space: nowrap;
@@ -87,13 +87,51 @@
     line-height: 34px;
 }*/
 
-.xui-filterPanel .xui-datePicker {
+.xui-filterPanel .xui-datePicker,.modal .xui-datePicker{
     width: 132px !important;
-    background: url(/static_v2/img/editor/calendar.jpg) no-repeat !important;
-    background-position: right !important;
-    background-color: #f2f2f2 !important;
+    background-image: url(/static_v2/img/editor/calendar.jpg);
+    background-repeat: no-repeat; 
+    background-position: right;
+    background-color: #f2f2f2;
 }
-
+.xui-allOrders .xui-filterPanel .xui-i-item-last input[type="checkbox"]{
+    margin:2px 0 0 0;
+}
+.xui-filterPanel .xui-tip{
+    color:#fff;
+    font-size: 12px;
+    font-style: normal;
+    display: inline-block;
+    vertical-align: middle;
+    content: "？";
+    width: 16px;
+    height: 16px;
+    background: #d4d4d4;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    margin-left: 5px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    position: relative;
+}
+.xui-filterPanel .xui-tip:hover .xui-i-info{
+    display: inline-block;
+}
+.xui-filterPanel .xui-tip .xui-i-info{
+    position: absolute;
+    width: 206px;
+    height: 75px;
+    border:1px solid #56b2ec;
+    padding:4px 3px 3px 6px;
+    background-color: #fff;
+    color:#333;
+    text-align: left;
+    box-sizing: border-box;
+    top: 20px;
+    left: -45px;
+    display: none;
+}
 /*
 *订单表格样式
 */
@@ -298,9 +336,6 @@
 .xui-allOrders .xui-colorGray{
     color:#999;
 }
-.xui-allOrders .xui-weizoomCard{
-    /*display: inline-block;*/
-}
 .xui-allOrders .xui-weizoomCard i{
     display: inline-block;
     width: 24px;
@@ -308,6 +343,9 @@
     background: url(/static_v2/img/editor/weizoomCard.jpg);
     -webkit-background-size: 100%;
     background-size: 100%;
+}
+.xui-allOrders .xui-weizoomCard.xui-huihuiCard i{
+    background: url(/static_v2/img/editor/huihuiCard.jpg);
 }
 .xui-allOrders .xui-buyerHint i{
     display: inline-block;
@@ -889,7 +927,14 @@
 .xui-orderDetialPage .xui-bk {
     background-color: #eaeef6;
 }
-
+.xui-orderDetialPage div[class^="xui-wSync-"]{
+    line-height:30px;
+    padding-left:150px;
+    width:280px;
+}
+.xui-orderDetialPage .xui-wSync-count{
+    border-bottom:1px solid #ccc;
+}
 .xui-orderDetialPage .xui-notify {
     width: 14px;
     height: 14px;
@@ -1027,6 +1072,12 @@
 }
 .xui-orderDetialPage .xui-producttab .xui-td-third {
     border-right: #ccc solid 1px;
+    min-width: 75px;
+}
+.xui-orderDetialPage .xui-producttab th.xui-td-third,
+.xui-orderDetialPage .xui-producttab th.xui-td-fourth,
+.xui-orderDetialPage .xui-producttab th.xui-td-fifth{
+    border-right: none;
 }
 .xui-orderDetialPage .xui-producttab .xui-td-fourth {
     width: 16%;

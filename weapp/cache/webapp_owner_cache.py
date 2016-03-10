@@ -135,11 +135,11 @@ class Object(object):
         pass
 
 
-def __get_unship_order_count_from_db(key, webapp_id):
+def __get_unship_order_count_from_db(key, webapp_id, user_id, mall_type):
     from mall.models import belong_to, ORDER_STATUS_PAYED_NOT_SHIP
 
     def inner_func():
-        count = belong_to(webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
+        count = belong_to(webapp_id, user_id, mall_type).filter(status=ORDER_STATUS_PAYED_NOT_SHIP).count()
         return {
             'keys': [key],
             'value': count
@@ -160,9 +160,10 @@ def update_unship_order_count(instance, **kwargs):
         cache_util.delete_cache(key)
 
 
-def get_unship_order_count_from_cache(webapp_id):
+def get_unship_order_count_from_cache(request):
+    webapp_id = request.manager.get_profile().webapp_id
     key = 'webapp_unread_order_count_{wa:%s}' % webapp_id
-    count = cache_util.get_from_cache(key, __get_unship_order_count_from_db(key, webapp_id))
+    count = cache_util.get_from_cache(key, __get_unship_order_count_from_db(key, webapp_id, request.manager.id, request.user_profile.webapp_type))
     return count
 
 

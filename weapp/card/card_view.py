@@ -45,19 +45,13 @@ def get_card_create(request):
     """
     user_ids = [user.id for user in User.objects.filter(username__in=WEIZOOM_CARD_BELONG_TO_OWNER)]
     user_id2mpuser_name = []
-
-    authed_appid = ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id__in=user_ids)
-    authed_appids = []
-    for a in authed_appid:
-        authed_appids.append(a.auth_appid_id)
-    auth_appid2auth = {c.id:c for c in ComponentAuthedAppid.objects.filter(id__in=authed_appids)}
-    for appid in authed_appid:
-        if appid.nick_name:
-            if auth_appid2auth.has_key(appid.auth_appid_id):
-                user_id2mpuser_name.append({
-                    'user_id':auth_appid2auth[appid.auth_appid_id].user_id,
-                    'mpuser_name':appid.nick_name
-                })
+    userprofiles = UserProfile.objects.filter(user_id__in=user_ids)
+    for profile in userprofiles:
+        if profile.store_name:
+            user_id2mpuser_name.append({
+                'user_id': profile.user_id,
+                'mpuser_name': profile.store_name
+            })
 
     c = RequestContext(request, {
         'first_nav_name': export.MALL_CARD_FIRST_NAV,

@@ -37,7 +37,7 @@ class SignControl(models.Document):
 
 class SignParticipance(models.Document):
 	webapp_user_id= models.LongField(default=0) #参与者id
-	member_id= models.LongField(default=0, unique_with="belong_to") #参与者id
+	member_id= models.LongField(default=0) #参与者id
 	belong_to = models.StringField(default="", max_length=100) #对应的活动id
 	tel = models.StringField(default="", max_length=100)
 	prize = models.DynamicField(default="") #活动奖励

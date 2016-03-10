@@ -3,6 +3,20 @@
 {% load account_filter %}
 
 {% block css %}
+    <style>
+        label{
+            font-weight: normal;
+        }
+        #is_limited{
+            margin-left: 52px;
+            margin-bottom: 10px;
+            vertical-align: -2px;
+        }
+        #limit_chance{
+            width: 100px;
+            height: 24px;
+        }
+    </style>
 {% endblock %}
 
 {% block content-panel %}
@@ -54,9 +68,13 @@
 					{% endif %} placeholder="请输入积分数值">
 					<span class="errorHint"></span>
 				</fieldset>
+                <fieldset class="xui-chance">
+                    <input type="checkbox" name="is_limited" id="is_limited" {% if member_qrcode_settings.is_limited %}checked{% endif %}>
+                    <span>每日限制奖励次数：<span class="xa-need_hide {% if not member_qrcode_settings.is_limited %}hidden{% endif %}"><input type="number" name="limit_chance" id="limit_chance" min="0" value="{% if member_qrcode_settings.is_limited %}{{ member_qrcode_settings.limit_chance }}{% endif %}">&nbsp;&nbsp;次</span></span>
+                </fieldset>
 				<fieldset class="xui-info">
 					<label for="" class="star_show">页面描述：</label>
-					<div style="padding-left:125px;">
+					<div style="padding-left:125px;margin-top: -23px;">
 						<textarea class="xui-hide" id="detail" name="detail" data-ui-role="richtext-editor" data-type="full" data-height="372" data-width="652">{{ member_qrcode_settings.detail|safe }}</textarea>
 					</div>
 				</fieldset>
@@ -81,6 +99,14 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function() {
+    $('#is_limited').on('click', function(){
+        var $this = $(this);
+        if ($this.attr('checked')){
+            $('.xa-need_hide').removeClass('hidden');
+        }else{
+            $('.xa-need_hide').addClass('hidden');
+        }
+    });
     $('body').delegate('[name="prize_source|0"]', 'change', function(){
         var count = $(':selected', this).data('count');
         if(count || count == 0){

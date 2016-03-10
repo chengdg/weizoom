@@ -178,11 +178,16 @@ def kuaidi_callback(request):
 
 def kdniao_callback(request):
 	print '=================='
-	#print request
 	print '=================='
-	response = JsonResponse()
-	#KdniaoCallbackHandle(request).handle()
-	task_kdniao_callback.delay(request)
+	try:
+		param_json = request.POST.get("RequestData","")
+		param_json = json.loads(param_json)
+		datas = param_json.get("Data",[])
+		print "RequestData>>>>>>>>>datas",type(datas),datas
+		#datas = json.dumps(datas)
+		task_kdniao_callback.delay(datas)
+	except:
+		pass
 	updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 	success_json =  {
@@ -191,14 +196,12 @@ def kdniao_callback(request):
 		"Success": True,
 		"Reason":""
 	}
-	response.data = success_json
-	return response.get_response()
-
-
+	return HttpResponse(json.dumps(success_json), 'application/json; charset=utf-8')
 
 def test_kdniao_push_data(request):	
 	#例子www.xxxx.aspx?RequestData=xxxxxx(
-	api_url = "http://{}/tools/api/express/kdniao/callback/?RequestData={}".format(settings.DOMAIN, '')
+	api_url = "http://{}/tools/api/express/kdniao/callback/".format(settings.DOMAIN)
+	express_ids = request.GET.get("express_ids","").split(",")
 	# 快递信息
 	param_json = {
 	"EBusinessID": "1256042",
@@ -212,12 +215,12 @@ def test_kdniao_push_data(request):
 			"LogisticCode": "5042260908504",
 			"Success": True,
 			"Reason": "",
-			"State": "2",
-			"CallBack": "5",
+			"State": "3",
+			"CallBack": express_ids[0],
 			"Traces": [
 				{
 					"AcceptTime": "2015-03-06 21:16:58",
-					"AcceptStation": "123123深圳市横岗速递营销部已收件，（揽投员姓名：钟定基;联系电话：）",
+					"AcceptStation": "<nihao123>深圳市横岗速递营销部已收件，（揽投员姓名：钟定基;联系电话：）",
 					"Remark": ""
 				},
 				{
@@ -264,12 +267,12 @@ def test_kdniao_push_data(request):
 			"LogisticCode": "5042260943004",
 			"Success": True,
 			"Reason": "",
-			"State": "2",
-			"CallBack": "4",
+			"State": "3",
+			"CallBack": express_ids[1],
 			"Traces": [
 				{
 					"AcceptTime": "2015-03-07 15:26:09",
-					"AcceptStation": "深圳市横岗速递营销部已收件，（揽投员姓名：阿凡达周宏彪;联系电话：13689537568）",
+					"AcceptStation": "<nihao123>深圳市横岗速递营销部已收件，（揽投员姓名：阿凡达周宏彪;联系电话：13689537568）",
 					"Remark": ""
 				},
 				{
@@ -312,49 +315,6 @@ def test_kdniao_push_data(request):
 	]
 }
 
-
-
-	# 将PARAMETERS的json转换为字符串
-	
-	#request = urllib2.Request(url = api_url, data = urllib.urlencode(param_json))
-	#
-	#
-	#
-	# request = urllib2.Request(url = api_url, data = json.dumps(param_json))
-	# print "data>>>>>",json.dumps(param_json)
-	# cookie = cookielib.CookieJar()  
-	# opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie)) 
-	# response = opener.open(request) 
-	# print "2222222"
-	# # request = urllib2.Request(api_url, param_data)
-	# print "22222223"
-	# #response = urllib2.urlopen(request)
-	# print "22222224"
-	# print "verified_result",response
-	# verified_result = response.read()
-	
-	#方法1
 	json_data ={"RequestData":json.dumps(param_json)}
-	#json_data = json.dumps(param_json)
-	# verified_result = post(api_url,json.dumps(json_data))
 	r = requests.post(api_url, json_data)
-
-	print "verified_result",r.text
-	print "22222225"
 	return HttpResponse(r.text, 'application/json; charset=utf-8')
-	#方法1
-	"""
-	#方法2
-	verified_result = post(api_url,json.dumps(param_json))
-	# print "verified_result",response
-	# verified_result = response.read()
-	return HttpResponse(verified_result, 'application/json; charset=utf-8') 
-	#方法2
-	"""
-def post(url, data): 
-    req = urllib2.Request(url) 
-    #data = urllib.urlencode(data) 
-    #enable cookie 
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor()) 
-    response = opener.open(req, data) 
-    return response.read() 

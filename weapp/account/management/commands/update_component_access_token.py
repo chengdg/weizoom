@@ -3,6 +3,7 @@
 import os
 import subprocess
 import datetime
+import logging
 
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand, CommandError
@@ -39,10 +40,11 @@ class Command(BaseCommand):
 					success = True
 			except:
 				result, success = self.__get_component_token_retry(weixin_api, component)
-			if result != None:
-				record_call_weixin_api.delay('get_component_token', success)
-			else:
-				continue
+			logging.info(result)
+			# if result != None:
+			# 	record_call_weixin_api.delay('get_component_token', success)
+			# else:
+			# 	continue
 
 			component_access_token = result['component_access_token']
 			component.component_access_token = component_access_token

@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 from core.jsonresponse import create_response
 from core.restful_url_route import api
+from utils import cache_util
 from weixin.user.models import ComponentAuthedAppidInfo, ComponentAuthedAppid
+
 
 @api(app='card', resource='auth', action='get')
 def get_user(request):
@@ -32,3 +34,15 @@ def get_user(request):
     response.data = auth
     return response.get_response()
 
+@api(app='card', resource='update_cache', action='get')
+def get_update_cache(request):
+    owner_ids = request.GET.get('owner_ids', '')
+    owner_ids = owner_ids.split(',')
+    # owner_id2permissions = {str(ahwp.owner_id): ahwp for ahwp in AccountHasWeizoomCardPermissions.objects.filter(owner_id__in=owner_ids)}
+    for owner_id in owner_ids:
+        key = 'webapp_owner_info_{wo:%s}' % owner_id
+        if cache_util.get_cache(key):
+            cache_util.delete_cache(key)
+    response = create_response(200)
+    response.data = u'success'
+    return response.get_response()

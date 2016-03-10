@@ -6,14 +6,23 @@
 
 {% block content-panel %}
 <div class="xui-editProductPage">
-	<ul class="breadcrumb" style="margin-bottom:-12px;">
+	<ul class="breadcrumb">
 		<li>您当前所在位置</li>
 		<li>
 			<a href="/mall2/product_list/?shelve_type=1">商品管理</a>
 		</li>
 		<li class="active">{% if product %}更新{% else %}添加新{% endif %}商品</li>
 	</ul>
-
+  {% if mall_type and not product %}
+	<ul class="nav nav-tabs" style="border:none;">
+		<li class="active">
+			<a href="/mall2/product/">添加新商品</a>
+		</li>
+		<li>
+			<a href="/mall2/product_pool/">商品池</a>
+		</li>
+	</ul>
+    {% endif %}
 	<form class="form-horizontal xui-mall-addProductForm xa-addProductForm" method="POST"
         action={% if product %}"/mall2/product/?id={{product.id}}&shelve_type={{product.shelve_type}}"{% else %}"/mall2/product/?_method=put"{%endif%}
         id="editForm" data-id="{% if product %}{{ product.id }}{% else %}0{% endif %}"
@@ -45,33 +54,52 @@
 				</p>
 			</div>
 			<!-- 微众精选开始 -->
-			{%if supplier|length %}
+			{% if mall_type and has_store_name %}
+			<!-- 微众系列的供货商 -->
 			<div class="form-group">
 				<label class="control-label fl star_show" for="supplier">供货商：</label>
 				<div class="fl">
-                {% if product.supplier %}
-                        <input type="hidden" name="supplier" value="{{ product.supplier }}"/>
-                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}">
-                {% else %}
-                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty">
-                {% endif %}
-						<option value="">请选择</option>
-						{% for id, name in supplier %}
-						<option value="{{id}}">{{name}}</option>
-						{% endfor %}
+            <select disabled="disabled" class="w106 ml5" id="supplier">
+						<option value="{{ store_name }}">{{ store_name }}</option>
 					</select>
-					<div class="errorHint" data-error-hint="请选择供货商"></div>
 				</div>
 			</div>
 			<div class="form-group ">
 				<label class="control-label fl" for="purchase_price">采购价：</label>
 				<div class="fl">
-					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price" value="{% if product %}{{ product.purchase_price }}{% endif %}"/>
+					<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price,,require-notZero" value="{% if product.purchase_price %}{{ product.purchase_price }}{% endif %}"/>
 					<div class="errorHint"></div>
 				</div>
 			</div>
-			{% endif %}
+			{% else %}
 			<!-- 微众精选结束 -->
+				{% if supplier|length %}
+				<div class="form-group">
+					<label class="control-label fl star_show" for="supplier">供货商：</label>
+					<div class="fl">
+	                {% if product.supplier %}
+	                        <input type="hidden" name="supplier" value="{{ product.supplier }}"/>
+	                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}">
+	                {% else %}
+	                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty">
+	                {% endif %}
+							<option value="">请选择</option>
+							{% for id, name in supplier %}
+							<option value="{{id}}">{{name}}</option>
+							{% endfor %}
+						</select>
+						<div class="errorHint" data-error-hint="请选择供货商"></div>
+					</div>
+				</div>
+				<div class="form-group ">
+					<label class="control-label fl" for="purchase_price">采购价：</label>
+					<div class="fl">
+						<input type="text" class="form-control w106 ml5" id="purchase_price" name="purchase_price" placeholder="" data-validate="norequire,,require-price" value="{% if product and product.purchase_price%}{{ product.purchase_price }}{% endif %}"/>
+						<div class="errorHint"></div>
+					</div>
+				</div>
+				{% endif %}
+			{% endif %}
 			<div class="form-group ">
 				<label class="control-label fl" for="promotion_title">促销标题：</label>
 				<div class="fl">
@@ -335,7 +363,7 @@
                     </label>
                 </div>
             </div>
-            
+
 			<div class="form-group">
 					<label class="control-label col-sm-2 col-sm-offset-1" for="is_delivery">配送时间：</label>
 					<div id='delivery_time' class="col-sm-9 " style="height:60px;margin-left:-20px;">
@@ -352,8 +380,8 @@
 
 	<section>
 		<header>
-			<span  class="xui-fontBold">商品属性</span>
-			{% if not property_templates %}
+			<span class="xui-fontBold">商品属性</span>
+			{% if not property_templates%}
 				<span style="padding-left:18px;">您还没有配置属性模板，可以前往<a href="/mall2/property_list/" target="_blank">配置属性模板</a></span>
 			{% else %}
 			<select class="ml20 xa-propertyTemplateSelector" 
@@ -373,23 +401,27 @@
                 <ul class="xui-clearListStyle clearfix">
                     {% for property in product.properties %}
                     <li class="xui-i-templateProperty xa-property" data-property-id="{{property.id}}">
-                        <input class="xui-i-propertyName xui-propertyNameBtn xa-name" readonly=true value='{{property.name}}' maxlength="15">
-                        <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255"
+
+                        <input class="xui-i-propertyName xui-propertyNameBtn xa-name{% if has_store_name %} c9{% endif %}" readonly=true value='{{property.name}}' maxlength="15">
+                        <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255" {% if has_store_name %}readonly=true{% endif %}>
                         {% if product.is_group_buying %}readonly=true{% endif %}>
 
-                        {% if not product.is_group_buying %}
-                        <a class="xa-deleteProperty xui-deleteProperty">删除</a>
+                        {% if product.is_group_buying or has_store_name %}
+                        {% else %}
+                            <a class="xa-deleteProperty xui-deleteProperty">删除</a>
                         {% endif %}
+
                     </li>
                     {% endfor %}
                 </ul>
               </div>
+              {% if has_store_name or product.is_group_buying%}
+              {% else %}
               <div class="xa-instantProperties">
-              	{% if not product.is_group_buying %}
                 <a href="javascript:void(0);" class="xa-addProperty xui-i-propertyName xui-propertyNameBtn pb15" style="display:block;margin-left:10px;width:55px;">+添加</a>
 	    		<div class="errorHint pt0 ml10 fl" date-error-Hint="不能为空"></div>
-	    		{% endif %}
               </div>
+              {% endif %}
 	      </div>
 		</div>
 	</section>
@@ -531,7 +563,7 @@ $('.xa-selectImage').click(function(){return false;})
 			}
 			$div.hide();
 		}
-		
+
 
 		$('.xa-tips').popover({
 			template:"<div class='popover'><div class='popover-content p0'></div></div>",

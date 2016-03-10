@@ -118,13 +118,15 @@ def get_cards(request):
     user_ids = []
     for r in weizoom_card_rules:
         card_rule_ids.append(int(r.id))
-        if r.belong_to_owner != -1:
-            user_ids.append(r.belong_to_owner)
-    user_id2mpuser_name = {}
-    authed_appid = ComponentAuthedAppidInfo.objects.filter(auth_appid__user_id__in=user_ids)
-    for appid in authed_appid:
-        if appid.nick_name:
-            user_id2mpuser_name[appid.auth_appid.user_id] = appid.nick_name
+        belong_to_owner_list = str(r.shop_limit_list).split(',')
+        for a in belong_to_owner_list:
+            if a != '-1':
+                user_ids.append(a)
+    user_id2store_name = {}
+    user_profiles = UserProfile.objects.filter(user_id__in=user_ids)
+    for user_profile in user_profiles:
+        if user_profile.store_name:
+            user_id2store_name[str(user_profile.user_id)] = user_profile.store_name
 
     all_cards = WeizoomCard.objects.filter(weizoom_card_rule_id__in=card_rule_ids)
     
@@ -155,7 +157,7 @@ def get_cards(request):
         cur_weizoom_card_rule.card_type = rule.card_type
         cur_weizoom_card_rule.is_new_member_special = rule.is_new_member_special
         cur_weizoom_card_rule.card_attr = rule.card_attr
-        cur_weizoom_card_rule.belong_to_owner = user_id2mpuser_name.get(rule.belong_to_owner,None)
+        cur_weizoom_card_rule.belong_to_owner = user_id2store_name.get(rule.shop_limit_list,None)
         cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
@@ -530,7 +532,7 @@ def create_weizoom_cards(request):
             valid_time_from = valid_time_from,
             expired_time = valid_time_to,
             card_attr = card_attr,
-            belong_to_owner = belong_to_owner,
+            shop_limit_list = belong_to_owner,
             is_new_member_special = is_new_member_special
             )
         #生成微众卡
@@ -548,7 +550,7 @@ def __create_weizoom_card(rule, count, request):
     生成微众卡
     """
     count = int(count)
-    weizoom_cards = WeizoomCard.objects.all().order_by('-weizoom_card_id')
+    weizoom_cards = WeizoomCard.objects.filter(weizoom_card_id__startswith='0').order_by('-weizoom_card_id')
     if weizoom_cards:
         weizoom_card_id = int(weizoom_cards[0].weizoom_card_id)
     else:
