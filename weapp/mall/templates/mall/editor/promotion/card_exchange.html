@@ -22,7 +22,9 @@
 			padding-bottom: 10px;
 			padding-top: 10px;
 		}
- 
+        .xui-i-put div{
+        	padding: 5px 0;
+        }
 		.xui-i-money{
 			width: 125px;
 		}
@@ -81,11 +83,11 @@
         	    <form>
         		<div class="xui-i-exchange xa-i-exchange">
         		    <div class="xui-i-put">
-	        		    <p>
+	        		    <div>
 	        		    	<span>1.</span>
 	        		    	使用积分：<input type="text" class="xa-i-integral" name="integral">
-	        		    </p>
-	                    <p class="ml10">
+	        		    </div>
+	                    <div class="ml10">
 	                    	兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">
 	                    	<span class="ml10 mr30">元</span>
 			                号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">
@@ -93,7 +95,7 @@
 			                <input type="text" class="xui-i-num xa-i-endnum" name="endnum">		                
 	                        <a class="xui-i-detail xa-i-detail" data-toggle="modal" 
    data-target="#myModal">使用详情</a>
-	                    </p>
+	                    </div>
 	                </div>
         		</div>
         		</form>
@@ -118,11 +120,11 @@
 {% verbatim %}
 <script type="text/x-jquery-tmpl" id="exchange-input">
 	<div class="xui-i-put">
-    	<p>
-	        <span>1.</span>
+    	<div>
+	        <span>${num}.</span>
 	        使用积分：<input type="text" class="xa-i-integral" name="integral">
-	    </p>
-	    <p class="ml10">
+	    </div>
+	    <div class="ml10">
 	        兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">
 	        <span class="ml10 mr30">元</span>
 			号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">
@@ -130,7 +132,7 @@
 			<input type="text" class="xui-i-num xa-i-endnum" name="endnum">		                
 	        <a class="xui-i-detail xa-i-detail" data-toggle="modal" 
    data-target="#myModal">使用详情</a>
-	    </p>
+	    </div>
 	</div>
 </script>
 {% endverbatim %}
@@ -156,7 +158,6 @@ $(document).ready(function() {
             var snum = $(".xa-i-snum");
 			var endnum = $(".xa-i-endnum");
 			var isBind = $("option:selected").val();
-		
 			for(i=0;i<money.length;i++){
 				var moneyData = money[i].value;
 				var integralData = integral[i].value;
@@ -169,7 +170,8 @@ $(document).ready(function() {
                     endnum:endnumData
 				}
 				prize.push(item);
-			}   
+			} 
+			prize = JSON.stringify(prize);
 			W.getApi().call({
 			    method: 'post',
 			    app: 'mall2',
@@ -210,12 +212,36 @@ $(document).ready(function() {
             </h4>
         </div>
         <div class="modal-body">
-        <div>
-        	<a class="btn btn-primary"><span>&lt;</span>返回设置兑换平台</a>
+        <div class="clearfix">
+        	<a class="btn btn-primary fl" style="margin: 0"><span>&lt;</span>返回设置兑换平台</a>
+        	<a class="btn btn-default fr">导出订单</a>
         </div>
-        <div></div>	
+        <div class="mt10">
+        	<table class="table table-bordered">
+        		<thead>
+        		<tr>
+                	<th>11111111</th>
+                    <th>11111111</th>
+                    <th>11111111</th>
+                    <th>11111111</th>
+        		</tr>
+        		</thead>
+        		<tr>
+                	<td>11111111</td>
+                    <td>11111111</td>
+                    <td>11111111</td>
+                    <td>11111111</td>
+        		</tr>
+        		<tr>
+                	<td>11111111</td>
+                    <td>11111111</td>
+                    <td>11111111</td>
+                    <td>11111111</td>
+        		</tr>	
+        	</table>
+        </div>	
         </div>
-    </div><!-- /.modal-content -->
-</div><!-- /.modal -->
+    </div>
+</div>
 </div>
 {% endblock %}
