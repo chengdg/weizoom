@@ -90,7 +90,12 @@
 		<tbody id='product_list'>
             {{if items.length}}
 	            {{each(i, product) items}}
-				<tr data-id="${product.id}" class="xa-selectTr" data-purchase-price="${product.purchase_price}" data-mall-type="${mall_type}" data-is-sync=${product.is_sync}>
+				<tr data-id="${product.id}"
+					data-purchase-price="${product.purchase_price}" 
+					data-mall-type="${mall_type}" 
+					data-is-sync=${product.is_sync}
+					{{if !product.is_group_buying }}class="xa-selectTr"{{/if}}
+					data-is-group-buying="${product.is_group_buying}">
 					<td class="wui-advanced-table-sort-handler tl_important">
 						<div class="disT w">
 							<div class="imgBox disTc pr xui-imgBox">

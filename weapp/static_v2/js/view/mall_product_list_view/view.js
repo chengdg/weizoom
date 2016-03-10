@@ -71,6 +71,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
 
         var ids = this.table.getAllSelectedDataIds();
         var _this = this;
+
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
@@ -126,7 +127,14 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var $trs = $link.parents('table').find('tr');
         var productId = $tr.data('id');
         var _this = this;
-        console.log(_this);
+
+        /* 参加团购的商品不可被删除,不可下架 */
+        var isGroupBuying = $tr.data('is-group-buying');
+        if ((shelveType == 'delete' || shelveType == 'offshelf') && isGroupBuying == true) {
+            W.showHint('error', '该商品正在进行团购活动!');
+            return false;
+        }
+
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
@@ -501,6 +509,9 @@ W.registerUIRole('div[data-ui-role="products-advanced-table"]', function() {
     var enableSelect = $div.data('selectable');
     var disableHeaderSelect = $div.data('disable-header-select');
     var outerSelecter = $div.data('outer-selecter');
+
+    var selectableTrSelector = $div.data('selecttableTr');
+    
     var advancedTable = new W.view.mall.offshelfProductsTable({
         el: $div[0],
         template: template,
@@ -513,6 +524,7 @@ W.registerUIRole('div[data-ui-role="products-advanced-table"]', function() {
         enableSelect: enableSelect,
         outerSelecter:outerSelecter,
         disableHeaderSelect: disableHeaderSelect,
+        selectableTrSelector: selectableTrSelector,
         autoLoad: true
     });
     advancedTable.render();
