@@ -587,6 +587,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=loggi
 
 if 'develop' == MODE:
     DOMAIN = 'dev.weapp.com'
+    MARKETTOOLS_HOST = 'dev.weapp.com'
     BATMAN_API_IMPL = 'memory'
     BATMAN_API_HOST = 'dev.batman.com:8080'
     MOM_HOST = '192.168.1.11'
@@ -609,6 +610,7 @@ if 'develop' == MODE:
 
 elif 'test' == MODE:
     DOMAIN = 'testweapp.weizoom.com'
+    MARKETTOOLS_HOST = 'testweapp.weizoom.com'
     BATMAN_API_IMPL = 'server'
     BATMAN_API_HOST = 'batman.weizoom.com'
     MOM_HOST = 'amq.wintim.com'
@@ -632,6 +634,7 @@ else:
     MOM_HOST = 'amq.wintim.com'
     MOM_PORT = 61613
     DOMAIN = 'weapp.weizoom.com'
+    MARKETTOOLS_HOST = 'weapp.weizoom.com'
     DUMP_DEBUG_MSG = False
     WATCHDOG_WEIXIN_MESSAGE = True
     IS_IN_TESTING = False

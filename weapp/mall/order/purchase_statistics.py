@@ -65,3 +65,34 @@ class PurchaseStatistics(resource.Resource):
         response.data = {'items': result}
         #return response.get_response()
         return response.get_jsonp_response(request)
+
+
+class PurchaseStatistics(resource.Resource):
+    app = "mall2"
+    resource = "test"
+
+    def api_get(request):
+        import random
+        pids = request.GET.get('pids')
+        pids = pids.split("_")
+        #pids =json.loads(pids)
+        pid2is_in_group_buy = []
+        if len(pids)>1:
+            for pid in pids:
+                pid2is_in_group_buy.append({
+                      'pid': int(pid),
+                      #'is_in_group_buy': random.choice([True,False]),
+                      'is_in_group_buy': False,
+                      })
+        else:
+            for pid in pids:
+                pid2is_in_group_buy.append({
+                      'pid': int(pid),
+                      'is_in_group_buy': False,
+                      })
+        response = create_response(200)
+        response.data = {
+            'pid2is_in_group_buy': pid2is_in_group_buy
+        }
+        return response.get_response()
+
