@@ -463,8 +463,6 @@ MALL_CONFIG_POSTAGE_NAV = 'postageManagement'
 MALL_CONFIG_EXPRESS_COMOANY_NAV = 'expressManagement'
 MALL_CONFIG_MAIL_NOTIFY_NAV = 'emailNotify'
 MAIL_CONFIG_SUPPLIER_NAV = 'supplier'
-MAIL_CONFIG_WEIXIN_NAV = 'wxCertificate'
-
 
 
 CONFIG_NAV = {
@@ -487,12 +485,6 @@ CONFIG_NAV = {
             'title': u'支付方式',
             'url': '/mall2/pay_interface_list/',
             'permission': 'manage_pay_interface'
-        },
-         {
-            'name': MAIL_CONFIG_WEIXIN_NAV,
-            'title': u'配置微信证书',
-            'url': '/mall2/weixin_certificate/',
-            'permission': 'manage_weixin_certificate'
         },
         {
             'name': MALL_CONFIG_MAIL_NOTIFY_NAV,
