@@ -416,7 +416,7 @@ def upload_picture(request):
 	webp_path, webp_file_name = None, None
 	is_valid_image, width, height = __check_image(file_path)
 	if is_valid_image:
-		if settings.MODE == 'deploy':
+		if settings.MODE in ['deploy','test']:
 			try:
 				if webp_path and webp_file_name:
 					image_path = upload_image_to_upyun(webp_path,'/upload/%s/%s' % (dir_path_suffix, webp_file_name))	

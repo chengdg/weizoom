@@ -20,6 +20,15 @@ paths:
           type: list
           description: 成功的团购活动下的所有订单的id_list
         - $ref: '#/definitions/group_id'
+  /cancel_group_buy:
+    put:
+      description: 用户取消团购，取消之前生成的待支付订单
+      parameters:
+        - name: member_id
+          description: 会员id
+          type: number
+          format: int32
+        - $ref: '#/definitions/group_id'
 
 definitions:
   group_id:

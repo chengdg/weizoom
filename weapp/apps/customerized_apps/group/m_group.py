@@ -123,6 +123,7 @@ class MGroup(resource.Resource):
 			'group_status': group_status, #小团购状态
 			'group_type': int(group_type) if group_type !='' else '',
 			'grouped_number': int(grouped_number),
+			'member_id': member_id if member else ''
 			# 'product_original_price': product_original_price,
 			# 'product_group_price': product_group_price
 		}

@@ -35,7 +35,16 @@ def get_settings(request):
 
 	try:
 		member_qrcode_settings = MemberQrcodeSettings.objects.get(id=settings_id)
+		limit_chance_used = 0
+		limit_chance_left = member_qrcode_settings.limit_chance
 		if member and member.is_subscribed:
+			#检查奖励限制
+			limit_log = MemberQrcodeLimitLog.objects.filter(belong_settings_id=member_qrcode_settings.id, owner_member_id=member.id, created_at=datetime.now().date())
+			if limit_log.count() > 0:
+				limit_log = limit_log.first()
+				limit_chance_used = limit_log.count
+				limit_chance_left = limit_chance_left - limit_chance_used
+				limit_chance_left = limit_chance_left if limit_chance_left >= 0 else 0
 			try:
 				ticket, expired_second = get_member_qrcode(request.project.owner_id, member.id)
 				if ticket:
@@ -61,7 +70,9 @@ def get_settings(request):
 		'default_img': default_img,
 		'expired_second': expired_second,
 		'qrcode_url': qrcode_url,
-		'is_hide_weixin_option_menu': True
+		'is_hide_weixin_option_menu': True,
+		'limit_chance_used': limit_chance_used,
+		'limit_chance_left': limit_chance_left
 	})
 
 	return render_to_response('%s/member_qrcode/webapp/member_qrcode.html' % TEMPLATE_DIR, c)

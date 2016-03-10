@@ -87,13 +87,11 @@
 	<table class="table table-condensed mb0 xui-tableHead">
 		<thead>
 			<tr>
-				{{if data.is_show_source }}
-				    {{if data.show_supplier}}
-				        <th width="75">供货商</th>
-				    {{else}}
-				        <th width="75">来源</th>
-				    {{/if}}
-				{{/if}}
+			    {{if data.mall_type}}
+			        <th width="75">供货商</th>
+			    {{else}}
+			        <th width="75">来源</th>
+			    {{/if}}
 				<th width="310">
 					商品
 				</th>
@@ -160,19 +158,22 @@
 				</tr>
 				{{each(j, group) order.groups}}
 				<tr data-order-id="${group.fackorder.id}">
-					{{if data.is_show_source}}
 					<td class="nowrap" width="75">
-						{{if data.show_supplier}}
+						{{if data.mall_type}}
+							{{if group.id > 0}}
 							    ${data.supplier[group.id]}
+							{{/if}}
+							{{if group.supplier_user_id > 0 }}
+								${data.supplier_users[group.supplier_user_id]}
+							{{/if}}
                         {{else}}
-                            {{if order.come == 'weizoom_mall'}}
-                                商户
+                            {{if order.supplier_user_id > 0}}
+                                商城
                             {{else}}
                                 本店
                             {{/if}}
 						{{/if}}
 					</td>
-					{{/if}}
 					<td class="" width="390px"{{if order.groups.length > 1}} style="border-right:1px solid #ddd;"{{/if}}>
 					<ul class="">
 					{{each(i, product) group.products}}
@@ -187,11 +188,13 @@
 							<div style="width:235px;display:table-cell">
 								<p class="tl">
 								<span class="xa-productName" name="xa-productName">
+								{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
 									{{if product.promotion }}
 										{{if product.promotion.type == "flash_sale"}}【限时抢购】{{/if}}
 										{{if product.promotion.type == "premium_sale:premium_product"}}【赠品】 {{/if}}
 									{{/if}}
 									{{if product.grade_discounted_money}}【会员优惠】{{/if}}
+								{{/if}}
 									${product.name}{{if order.fackorders && order.fackorders[product.supplier]}}-${order.fackorders[product.supplier].order_id}{{/if}}
 								</span></p>
 								<p class="tl pt10">
@@ -204,9 +207,15 @@
 								{{/each}}
 								</p>
 							</div>
-							<div style="width:80px;display:table-cell">
-								<p class="tc">${product.price}</p>
-								<p class="tc">(${product.count}&nbsp;件)</p>
+							<div style="width:80px;display:table-cell;vertical-align: middle;">
+							{{if order.supplier_user_id > 0 && data.mall_type == 0}}
+							<p class="tc">${product.count}&nbsp;件</p>
+							{{else}}
+							<p class="tc">
+								${product.price}
+							</p>
+							<p class="tc">(${product.count}&nbsp;件)</p>
+							{{/if}}
 							</div>
 						</li>
 					{{/each}}
@@ -215,14 +224,24 @@
 					{{if j == 0 }}
 					<td width="140px" rowspan="${order.groups.length}">
 						{{if order.save_money != 0 }}
-							${ order.save_money.toFixed(2)}
+							{{if !(order.supplier_user_id > 0 && data.mall_type == 0)}}
+								${ order.save_money.toFixed(2)}
+							{{/if}}
 						{{/if}}
 					</td>
 					<td width="100" rowspan="${order.groups.length}">
 						{{if order.is_first_order }}<i class="xui-firstTag">首</i>{{/if}}
 						{{if order.member_id > 0}}
 							{{if order.member_is_subscribed > 0}}
-								<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{if data.mall_type}}
+									<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+								{{else}}
+									{{if order.supplier_user_id > 0}}
+										{{html order.buyer_name}}
+									{{else}}
+										<a target="_blank" href="/member/detail/?id=${ order.member_id }">{{html order.buyer_name}}</a>
+									{{/if}}
+								{{/if}}
 							{{else}}
 								非会员
 							{{/if}}
@@ -255,19 +274,35 @@
 						{{/if}}
 					</td>
 					<td width="110" rowspan="${order.groups.length}">
-						${ order.pay_money }
+						{{if (data.mall_type == 0 && order.supplier_user_id > 0) }}
+							${ order.total_purchase_price }
+						{{else}}
+							${ order.pay_money }
+						{{/if}}
 						{{if order.postage > 0 }}
-						</br>
-							<span class="xui-colorGray">(含运费：${order.postage})</span>
+							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
+							</br>
+								<span class="xui-colorGray">(含运费：${order.postage})</span>
+							{{/if}}
 						{{/if}}
-						{{if order.weizoom_card_money > 0}}
-						</br>
-							<span class="xui-weizoomCard pr">
-								<i class="xa-weizoomCardImg"></i>
-								</br>
-								<span class="pa xa-weizoomCardHint" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money}元</span>
-							</span>
+						<div class="tc">
+						{{if order.weizoom_card_money_huihui > 0 }}
+							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
+								<span class="xui-weizoomCard xui-huihuiCard pr">
+									<i class="xa-huihuiCardImg"></i>
+									<span class="pa" style="display:none;">惠惠卡支付&nbsp${order.weizoom_card_money_huihui}元</span>
+								</span> 
+							{{/if}}
 						{{/if}}
+						{{if order.weizoom_card_money_rest > 0 }}
+							{{if !(data.mall_type == 0 && order.supplier_user_id) }}
+								<span class="xui-weizoomCard pr">
+									<i class="xa-weizoomCardImg"></i>
+									<span class="pa" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money_rest}元</span>
+								</span> 
+							{{/if}}
+						{{/if}}
+						</div>
 					</td>
 					{{/if}}
 					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7}}border-top:0;{{/if}}"{{/if}}>
@@ -372,7 +407,7 @@ $(document).ready(function() {
 		dataView: $('[data-ui-role="advanced-table"]').data('view'),
 		userWebappId: {{user.get_profile.webapp_id}},
 		status:status,
-		orderStatus:{{order_status}}
+		orderStatus:{{order_status}},
 	});
 	filterBox.$el.bind('end_click', function(){
 		// $('#start_date').val('');
@@ -482,30 +517,23 @@ $(document).ready(function() {
 		mallOrderCostomerMessageView.hide();
 	})
 
-
-
-
-
-
-
-
-
-
+	$('body').delegate('.xa-huihuiCardImg', 'mouseover', function(event) {
+		var $el = $(event.currentTarget);
+		$el.siblings('span').show();
+	});
+	$('body').delegate('.xa-huihuiCardImg', 'mouseout', function(event) {
+		var $el = $(event.currentTarget);
+		$el.siblings('span').hide();
+	});
 
 	// 微众卡价钱提示
-	$('body').delegate('.xa-weizoomCardImg','mouseenter',function(){
-		$('.xa-weizoomCardImg').each(function(){
-			$(this).mouseenter(function() {
-				$(this).siblings('.xa-weizoomCardHint').css('display','inline-block');
-			});
-		});
+	$('body').delegate('.xa-weizoomCardImg','mouseover',function(event){
+		var $el = $(event.currentTarget);
+		$el.siblings('span').show();
 	});
-	$('body').delegate('.xa-weizoomCardImg','mouseleave',function(){
-		$('.xa-weizoomCardImg').each(function(){
-			$(this).mouseleave(function() {
-				$(this).siblings('.xa-weizoomCardHint').css('display','none');
-			});
-		});
+	$('body').delegate('.xa-weizoomCardImg','mouseout',function(event){
+		var $el = $(event.currentTarget);
+		$el.siblings('span').hide();
 	});
 
 

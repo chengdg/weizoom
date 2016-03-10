@@ -16,7 +16,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
     initialize: function(options) {
         this.$el = $(this.el);
         this.options = options || {};
-        this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+        this.table = this.$('[data-ui-role="products-advanced-table"]').data('view');
         this.modelInfoTemplate = this.getModelInfoTemplate();
         this.type = options.type || 'onshelf';
     },
@@ -47,7 +47,8 @@ W.view.mall.ProductListView = Backbone.View.extend({
         this.filterView = new W.view.mall.ProductFilterView({
             el: '.xa-productFilterView',
             low_stocks: this.options.low_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
-            high_stocks: this.options.high_stocks || ''  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+            high_stocks: this.options.high_stocks || '',  //支持从首页店铺提醒“库存不足商品”过来的请求 duhao 20150925
+            mall_type: this.options.mall_type || 0
         });
         this.filterView.on('search', _.bind(this.onSearch, this));
         this.filterView.render();
@@ -125,6 +126,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var $trs = $link.parents('table').find('tr');
         var productId = $tr.data('id');
         var _this = this;
+        console.log(_this);
         var updateAction = function() {
             W.getApi().call({
                 method: 'post',
@@ -136,6 +138,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                 },
                 scope: this,
                 success: function(data) {
+                        console.log(_this.table);
                         _this.table.reload(this.extraArgs);
 
                 }
@@ -352,7 +355,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
         var keyCode = event.keyCode;
         if(keyCode === 13) {
             this.onConfirmRankInput(event);
-        }     
+        }
     },
     onBlurRank:function(event){
         var oldConfirmView = W.registry['common-popup-confirm-view'];
@@ -409,7 +412,7 @@ W.view.mall.ProductListView = Backbone.View.extend({
                     $(event.currentTarget).val(oldPos);
                 }
                 var has_index = false
-                
+
                 W.getApi().call({
                     method: 'get',
                     app: 'mall2',
@@ -476,4 +479,44 @@ W.view.mall.ProductListView = Backbone.View.extend({
         this.$('table').empty();
         this.frozenArgs = {};
     },
+});
+W.view.mall.offshelfProductsTable = W.view.common.AdvancedTable.extend({
+    afterload:function(){
+        $('.xa-selectTr').each(function(index, el) {
+            if($(this).data('purchase-price') == "0" && $(this).data('mall-type') == 1 && $(this).data('is-sync')){
+                $(this).find('.xa-select').attr('disabled', 'disabled').removeClass('xa-select');
+            }
+        });
+    }
+});
+W.registerUIRole('div[data-ui-role="products-advanced-table"]', function() {
+    var $div = $(this);
+    var template = $div.data('template-id');
+    var app = $div.data('app')
+    var api = $div.attr('data-api');
+    var args = $div.attr('data-args');
+    var itemCountPerPage = $div.data('item-count-per-page');
+    var enablePaginator = $div.data('enable-paginator');
+    var enableSort = $div.data('enable-sort');
+    var enableSelect = $div.data('selectable');
+    var disableHeaderSelect = $div.data('disable-header-select');
+    var outerSelecter = $div.data('outer-selecter');
+    var advancedTable = new W.view.mall.offshelfProductsTable({
+        el: $div[0],
+        template: template,
+        app: app,
+        api: api,
+        args: args,
+        itemCountPerPage: itemCountPerPage,
+        enablePaginator: enablePaginator,
+        enableSort: enableSort,
+        enableSelect: enableSelect,
+        outerSelecter:outerSelecter,
+        disableHeaderSelect: disableHeaderSelect,
+        autoLoad: true
+    });
+    advancedTable.render();
+    advancedTable.afterload();
+
+    $div.data('view', advancedTable);
 });

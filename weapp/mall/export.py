@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from weapp.settings import MONEY_HOST
+
 MALL_HOME_FIRST_NAV = 'mall_outline'
 WEIXIN_HOME_FIRST_NAV = 'weixin_outline'
 PRODUCT_FIRST_NAV = 'product'
@@ -223,6 +225,7 @@ ORDER_REFUND = 'refundOrder'
 ORDER_AUDIT = 'financialCheck'
 ORDER_EXPIRED_TIME = 'orderExpiration'
 ORDER_BATCH_DELIVERY = 'orderBatchDelivery'
+ORDER_MONEY = 'orderMoney'
 
 MALL_ORDER_SECOND_NAV = {
     'section': u'',
@@ -251,6 +254,12 @@ MALL_ORDER_SECOND_NAV = {
             'title': u'批量发货',
             'url': 'javascript:void(0);',
             'permission': 'manage_order_batch_delivery'
+        # },{
+        #     'name': ORDER_MONEY,
+        #     'title': u'结算管理',
+        #     'url': MONEY_HOST + '/weapp/orders_to_money/',
+        #     'permission': 'manage_order_batch_delivery',
+        #     'need_token': True
         }
     ]
 }
@@ -368,7 +377,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             'name': MALL_APPS_SECOND_NAV,
             'title': u'百宝箱',
             'url': '/apps/lottery/lotteries/',
-            'permission': 'manage_apps', 
+            'permission': 'manage_apps',
             'third_navs': [
                 {
                     'name': MALL_APPS_LOTTERY_NAV,
@@ -439,7 +448,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
             ]
         }
     ]
-    
+
 }
 
 ########################################################################
@@ -505,7 +514,8 @@ def get_config_second_navs(request):
     if request.user.username == 'manager':
         pass
     else:
-        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm')
+        user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm',
+            'jobs', 'wz01', 'wz02', 'wz03', 'test003')
         if request.user.username not in user_list_for_supplier_list:
             nav = {"navs":CONFIG_NAV['navs'][:-1]}
             second_navs = [nav]

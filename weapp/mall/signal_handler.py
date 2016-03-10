@@ -1063,25 +1063,18 @@ def send_request_to_kuaidi(order, **kwargs):
     #     return
     
     print u'------------ send_request_to_kuaidi order.status:{}'.format(order.status)
-    print order,type(order)
-    express_configs = ExpressServiceConfig.objects.filter()
+    express_configs = ExpressServiceConfig.objects.filter(value=1)
     if express_configs.count() > 0:
-        express_config_value = express_configs[0].value
-        print "express_config_value>>>>>>>>>>",express_config_value,type(express_config_value)
-        if int(express_config_value) == 1:
-            print u"使用快递鸟进行订阅birdbirdbirdbirdbirdbird"
+        express_config = express_configs[0]
+        if express_config.name == u"快递鸟":
             from tools.express.kdniao_express_poll import KdniaoExpressPoll
             is_success = KdniaoExpressPoll(order).get_express_poll()
-        else:
-            print u"使用快递100进行订阅100100100100100100100100100，value存在"
+        elif express_config.name == u"快递100":
             from tools.express.express_poll import ExpressPoll
             is_success = ExpressPoll(order).get_express_poll()
     else:
-        print u"使用快递100进行订阅100100100100100100100100100，value空"
         from tools.express.express_poll import ExpressPoll
         is_success = ExpressPoll(order).get_express_poll()
-    # if order.status == ORDER_STATUS_PAYED_SHIPED:
-    #is_success = ExpressPoll(order).get_express_poll()
     print u'----------- send_request_to_kuaidi: {}'.format(is_success)
 
 
@@ -1107,7 +1100,6 @@ def products_not_online_handler_for_promotions(product_ids, request, **kwargs):
             promotion.status = promotion_models.PROMOTION_STATUS_DISABLE
             promotion.save()
             promotion_models.CouponRule.objects.filter(id=promotion.detail_id).update(is_active=False)
-
     if len(target_promotion_ids) > 0:
         event_data = {
             "id": ','.join(target_promotion_ids)
