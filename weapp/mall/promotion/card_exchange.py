@@ -45,8 +45,38 @@ class CardExchange(resource.Resource):
     @login_required
     def api_get(request):
         """
-
+        卡兑换
         """
+        response = create_response(200)
+        return response.get_response()
+
+    def api_post(request):
+        """
+        卡兑换
+        """
+        is_bind = request.POST.get('isBind',0)
+        prize = request.POST.get('prize','')
+        reward_type = request.POST.get('reward',0)
+
+        webapp_id = request.user_profile.webapp_id
+        
+        prize_list = json.loads(prize)
+        card_exchange_rule_list = []
+        
+        card_exchange = promotion_models.CardExchange.objects.create(
+            webapp_id = webapp_id,
+            require = is_bind,
+            reward_type = reward_type
+        )
+        for prize in prize_list:
+            card_number = prize['snum'] + '-' + prize['endnum']
+            card_exchange_rule_list.append(promotion_models.CardExchangeRule(
+                integral = prize['integral'],
+                money = prize['money'],
+                card_number = card_number,
+                exchange = card_exchange
+            ))
+        promotion_models.CardExchangeRule.objects.bulk_create(card_exchange_rule_list)    
 
         response = create_response(200)
         return response.get_response()
