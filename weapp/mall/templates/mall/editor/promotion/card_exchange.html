@@ -43,6 +43,9 @@
 			display: none;
 			cursor: pointer;
 		}
+		.ml35{
+			display: inline-block;
+		}
 	</style>
 {% endblock %}
 {% block content-panel %}
@@ -63,8 +66,8 @@
         	<td>
 	        	<span>绑定手机号</span>
 	        	<select>
-	        		<option value="bindNum">绑定手机号</option>
-	        		<option value="notBind">无条件</option>		
+	        		<option value="1">绑定手机号</option>
+	        		<option value="0">无条件</option>		
 	        	</select>
         	</td>
 		</tr>
@@ -79,12 +82,17 @@
         		<div class="xui-i-exchange xa-i-exchange">
         		    <div class="xui-i-put">
 	        		    <p>
-	        		    	<span>1.</span>使用积分：<input type="text" class="xa-i-integral" name="integral">
+	        		    	<span>1.</span>
+	        		    	使用积分：<input type="text" class="xa-i-integral" name="integral">
 	        		    </p>
 	                    <p class="ml10">
-	                    	兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">&nbsp;&nbsp;元
-	                        <span class="ml35">号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">&nbsp;&nbsp;-&nbsp;&nbsp;<input type="text" class="xui-i-num xa-i-endnum" name="endnum"></span>
-	                        <a class="xui-i-detail xa-i-detail">使用详情</a>
+	                    	兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">
+	                    	<span class="ml10 mr30">元</span>
+			                号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">
+			                <span class="ml10 mr10">-</span>
+			                <input type="text" class="xui-i-num xa-i-endnum" name="endnum">		                
+	                        <a class="xui-i-detail xa-i-detail" data-toggle="modal" 
+   data-target="#myModal">使用详情</a>
 	                    </p>
 	                </div>
         		</div>
@@ -100,6 +108,8 @@
     </div>
 </div>
 </div>
+
+
 {% endblock %}
 
 
@@ -108,14 +118,19 @@
 {% verbatim %}
 <script type="text/x-jquery-tmpl" id="exchange-input">
 	<div class="xui-i-put">
-	        <p>
-	        	<span>${num}.</span>使用积分：<input type="text" class="xa-i-integral" name="integral">
-	        </p>
-	        <p class="ml10">
-	            兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">&nbsp;&nbsp;元
-	            <span class="ml35">号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">&nbsp;&nbsp;-&nbsp;&nbsp;<input type="text" class="xui-i-num xa-i-endnum" name="endnum"></span>
-	            <a class="xui-i-detail xa-i-detail">使用详情</a>
-	        </p>
+    	<p>
+	        <span>1.</span>
+	        使用积分：<input type="text" class="xa-i-integral" name="integral">
+	    </p>
+	    <p class="ml10">
+	        兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">
+	        <span class="ml10 mr30">元</span>
+			号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">
+			<span class="ml10 mr10">-</span>
+			<input type="text" class="xui-i-num xa-i-endnum" name="endnum">		                
+	        <a class="xui-i-detail xa-i-detail" data-toggle="modal" 
+   data-target="#myModal">使用详情</a>
+	    </p>
 	</div>
 </script>
 {% endverbatim %}
@@ -127,8 +142,7 @@ $(document).ready(function() {
 	    i ++;
 	    var arg =[{num:i}];
 		$("#exchange-input").tmpl(arg).appendTo(".xa-i-exchange");
-	});
-   
+	});   
 	$(".xa-btnSubmit").click(function(){
 		if(!$("input").attr("readonly")){
 			$("input").attr("readonly",true)
@@ -136,13 +150,13 @@ $(document).ready(function() {
 			$(".xa-i-detail").show();
 			$(".xa-i-add").hide();
 			$(this).html("修改");
-			var data = [];
+			var prize = [];
 			var money = $(".xa-i-money");
 			var integral = $(".xa-i-integral");
             var snum = $(".xa-i-snum");
 			var endnum = $(".xa-i-endnum");
 			var isBind = $("option:selected").val();
-			data.push({isBind:isBind});
+		
 			for(i=0;i<money.length;i++){
 				var moneyData = money[i].value;
 				var integralData = integral[i].value;
@@ -154,19 +168,22 @@ $(document).ready(function() {
                     snum:snumData,
                     endnum:endnumData
 				}
-				data.push(item);
+				prize.push(item);
 			}   
 			W.getApi().call({
 			    method: 'post',
 			    app: 'mall2',
 			    api: 'card_exchange',
-			    args: W.toFormData(data),
+			    args: {
+			    	"isBind" : isBind,
+			    	"prize" : prize
+			    },
 			    scope: this,
 			    success: function(data) {
 			        W.showHint('success', '保存成功');
 			      },
 			    error: function(resp) {
-			        W.showHint('error', resp.data.msg)
+			        W.showHint('error', '操作失败')
 			    }
 			})          
 		}else{
@@ -179,5 +196,26 @@ $(document).ready(function() {
 	});
 });
 </script>
-
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+	            <button type="button" class="close" 
+	               data-dismiss="modal" aria-hidden="true">
+	                  &times;
+	            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               查看微众卡()使用详情
+            </h4>
+        </div>
+        <div class="modal-body">
+        <div>
+        	<a class="btn btn-primary"><span>&lt;</span>返回设置兑换平台</a>
+        </div>
+        <div></div>	
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
 {% endblock %}
