@@ -54,6 +54,7 @@ class GroupParticipance(resource.Resource):
 						)
 						group_detail.save()
 					except:
+						group_relation.update(dec__grouped_number=1,pop__grouped_member_ids=str(member_id))
 						response = create_response(500)
 						response.errMsg = u'只能参与一次'
 						return response.get_response()
