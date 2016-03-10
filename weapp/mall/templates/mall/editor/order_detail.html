@@ -140,7 +140,7 @@
                     <p class="xui-title">商家备注</p>
                     <div class="xui-innerwrap">
                     	<img  data-order-id="{{order.id}}" data-order-value="{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}" class="xui-notify xa-order-remark" src="/static_v2/img/editor/pencial.png" /
-                        <p>{% if not is_sync %}{{order.remark}}{% else %}{{ order.supplier_remark }}{% endif %}</p>
+                        <p>{{order.remark}}</p>
                     </div>
                 </div>
             </div>
@@ -161,14 +161,14 @@
           </li>
       {% endfor %}
   {% else %}
-      <li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">物流信息{{ child_order.supplier }}</a></li>
+      <li class="xa-count active" {% if child_orders|length %}data-total-status-value="{% if child_orders.0.supplier_user_id %}{{ child_orders.0.supplier_user_id }}{%else%}{{child_orders.0.id}}{%endif%}" data-supplier-type="u"{% else %}{% endif %}><a href="javascript:void(0);">物流信息</a></li>
   {% endif %}
       <li class="xa-count" data-total-status-value="0"><a href="javascript:void(0);">订单操作日志</a></li>
   </ul>
 
   {% if child_orders %}
       {% for child_order in child_orders %}
-          <div class="xa-infotab" id="tab-wuliuinfo-{% if child_order.supplier %}s-{{child_order.supplier}}{% elif child_order.supplier_user_id %}u-{{ child_order.supplier_user_id }}{% endif %}"style="{% if not forloop.first %}display:none;{% endif %}">
+          <div class="xa-infotab" id="tab-wuliuinfo-{% if child_order.supplier %}s-{{child_order.supplier}}{% elif child_order.supplier_user_id %}u-{{ child_order.supplier_user_id }}{% else %}u-{{ child_order.id }}{% endif %}"style="{% if not forloop.first %}display:none;{% endif %}">
             <div class="xui-wuliuinfo">
                 <p>
                   物流公司名称：{% if child_order.express_company_name %} {{ child_order.express_company_name|get_company_name_by_value }}   {% endif %}
@@ -448,7 +448,6 @@
           var $el = $(event.currentTarget);
           status = $el.data('total-status-value');
           type = $el.data('supplier-type');
-          console.log(type, "0000", status);
           $('.xa-count').removeClass('active');
           $el.addClass("active");
           if (status == 0) {
