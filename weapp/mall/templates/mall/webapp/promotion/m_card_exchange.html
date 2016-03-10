@@ -1,0 +1,46 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+<style>
+
+</style>
+{% endblock %}
+{% block content-panel %}
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+
+        $submitBtn.click(function() {
+        	var card_id = "{{weizoom_card.id}}";
+        	W.getApi().call({
+        		app: 'webapp',
+                api: 'project_api/call',
+                method: 'post',
+                args: _.extend({
+                    project_id: W.projectId,
+                    card_id: card_id,
+                    module:'mall',
+                    target_api: 'weizoom_card_to_integral/change',
+                }),
+		        success: function(data) {
+
+		        },
+		        error: function(data) {
+
+			        $('.ui-page').alert({
+			         	isShow: true,
+			         	info: msg,
+			         	isSlide: true,
+			         	speed: 2000
+			         });
+		        }
+        	});
+        });
+	});
+</script>
+{% endblock %}
