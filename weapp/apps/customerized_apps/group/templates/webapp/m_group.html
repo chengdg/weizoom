@@ -199,8 +199,8 @@
         //检查活动状态,更新参与按钮并绑定事件
         member_info = data.member_info;
         W.activityStatus = member_info.activity_status;
-        W.member_id = member_info.member_id;
         W.isMember = member_info.isMember;
+        W.member_id = member_info.member_id;
         is_self_page = member_info.self_page;
         is_group_leader = member_info.is_group_leader;
         is_group_unpaid = member_info.is_group_unpaid;
@@ -250,17 +250,27 @@
 
             }
         }else{
-            var $powerBtn = $('.wa-power');
-            if(!is_helped){
-                $powerBtn.find('.wa-power-btn-action').html('我要参团');
-                $powerBtn.on('click', function(){
-                        JoinGroup();
-                    }).show();
-                $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
+            if(group_relation_id){
+                var $powerBtn = $('.wa-power');
+                if(!is_helped){
+                    $powerBtn.find('.wa-power-btn-action').html('我要参团');
+                    $powerBtn.on('click', function(){
+                            JoinGroup();
+                        }).show();
+                    $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
+                }else{
+                    $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
+                    $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
+                }
             }else{
-                $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
-                $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
+                $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                if(W.isMember){
+                    $('.wa-using').text('我要开团').on('click', openGruop).show();
+                }else{
+                    $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                }
             }
+
         }
     }
     //我要开团
@@ -277,7 +287,7 @@
                 args: {
                     webapp_owner_id: W.webappOwnerId,
                     group_record_id: W.appRecordId,
-                    fid: page_owner_member_id,
+                    fid: W.member_id,
                     group_type: choosen_group_type,
                     group_days: choosen_group_days,
                     group_price: choosen_group_price,
