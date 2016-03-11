@@ -53,8 +53,7 @@
 	        	<a class="btn btn-default">导 出</a>
         	</form>
         </div>
-        <div class="xa-listView" data-ui-role="advanced-table" data-app="mall2" data-api="card_exchange_details" 
-data-template-id="#exchange-detail_list_view" data-enable-paginator="true"></div>
+        <div class="xa-listView" data-ui-role="advanced-table" data-app="mall2" data-api="card_exchange_details" data-template-id="#exchange-detail" data-enable-paginator="false" data-enable-load="true"></div>
         </div>
     </div>
 </div>
@@ -76,13 +75,13 @@ data-template-id="#exchange-detail_list_view" data-enable-paginator="true"></div
 			<th>使用者</th>
 		</thead> 
 			<tbody>
-				{{each(i, item) items}}
+				{{each(i,item) items}}
 				<tr>
-					<td>${item.card_number}</td>
-					<td>${item.card_value}</td>
-					<td>${item.card_money}</td>
-					<td>${item.card_uesd_money}</td>
-					<td>${item.card_user}</td>
+					<td>${item.card_id}</td>
+					<td>${item.money}</td>
+					<td>${item.remainder}</td>
+					<td>${item.used_money}</td>
+					<td>${item.user}</td>
 				</tr>
 				{{/each}}
 		</tbody>
@@ -93,19 +92,15 @@ data-template-id="#exchange-detail_list_view" data-enable-paginator="true"></div
 <script type="text/javascript">
 
 $(document).ready(function() {	
-	var tableView = $('.xa-listView').data('view')
+	var tableView = $('.xa-listView').data('view');
 	$('.xa-search').click(function(){
-		var cardNumber = $(".xa-cardNumber");
-		var cardUser = $(".xa-cardUser");
+		var cardNumber = $(".xa-cardNumber").val();
+		var cardUser = $(".xa-cardUser").val();
 		var args = {
 			"cardNumber" : cardNumber,
 			"cardUser" : cardUser
 		}
-		tableView.curPage = '1';
-		if (args){
-			tableView.options.args = JSON.stringify(args)
-		}
-		tableView.reload();
+		tableView.reload(args);
 	});
 });
 
