@@ -25,7 +25,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'qrcode_effect_info'
 
-	@param_required(['setting_ids', 'count_per_page', 'cur_page'])
+	@param_required(['setting_ids','count_per_page', 'cur_page','is_all'])
 	def get(args):
 		"""
 		获取商品和供应商信息
@@ -38,6 +38,9 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		setting_ids = args['setting_ids'].split(',')
 		count_per_page = int(args['count_per_page'])
 		cur_page = int(args['cur_page'])
+		is_all = int(args['is_all'])
+
+
 		if setting_ids and len(setting_ids) > 0:
 			relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
 			setting_id2member_id = {}
@@ -104,10 +107,18 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 					'card': '%.2f' % 0,
 					'order_num': 0
 				})
-		pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
-		return {
-			'code' : 200,
-			'items': datas,
-			'page_count': pageinfo.max_page,
-			'page_info':paginator.to_dict(pageinfo)
-		}
+
+		if is_all == 0 :
+			pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
+			return {
+				'code' : 200,
+				'items': datas,
+				'page_count': pageinfo.max_page,
+				'page_info':paginator.to_dict(pageinfo)
+			}
+		else:
+			return {
+				'code' : 200,
+				'items': items
+			}
+
