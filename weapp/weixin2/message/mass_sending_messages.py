@@ -222,6 +222,7 @@ class MassSendingMessages(resource.Resource):
         user_profile = request.user_profile
         group_id = None
         is_more_than_two = True
+        is_below_w = True #不能超过10000个
         is_from_fans_list = False
         id_array = []
         result = None
@@ -246,8 +247,11 @@ class MassSendingMessages(resource.Resource):
             except Exception, e:
                 print u'群发消息异常，mass_sending_messages:', e
 
+        target_members_count = 0
         if is_from_fans_list:
-            is_more_than_two = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array).count() >= 2
+            target_members_count = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array).count()
+            is_more_than_two = target_members_count >= 2
+            is_below_w = target_members_count <= 10000
             #members = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False, id__in = id_array)
             # for member in members:
             #     openid_list.append(member.member_open_id)
@@ -262,11 +266,13 @@ class MassSendingMessages(resource.Resource):
             if group_type == 'member':
                 #商城会员
                 if group_id == -1:
-                    is_more_than_two = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False).count() >= 2
+                    target_members_count = Member.objects.filter(webapp_id = webapp_id, is_subscribed = True, is_for_test = False).count()
                     #当group_id等于-1时发送给全部会员
                     #openid_list = get_openid_list_by_webapp_id(webapp_id)
                 else:
-                    is_more_than_two = MemberHasTag.get_tag_has_sub_member_count(group_id) >= 2
+                    target_members_count = MemberHasTag.get_tag_has_sub_member_count(group_id)
+                is_more_than_two = target_members_count >= 2
+                is_below_w = target_members_count <= 10000
                     #openid_list = get_openid_list(group_id)
             # else:
             #     #微信粉丝
@@ -282,6 +288,10 @@ class MassSendingMessages(resource.Resource):
         if is_more_than_two is False:
             response = create_response(405)
             response.errMsg = u'群发目标用户数量不能少于2个'
+            return response.get_response()
+        if is_below_w is False:
+            response = create_response(405)
+            response.errMsg = u'群发目标用户数量不能多于10000个'
             return response.get_response()
         if send_type != 'news':
             message_type = MESSAGE_TYPE_TEXT
