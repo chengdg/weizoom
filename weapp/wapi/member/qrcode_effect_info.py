@@ -83,15 +83,26 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				setting_id2count[sx]['pay_money'] = setting_id2count[sx]['card'] + setting_id2count[sx]['cash']
 
 		items = []
-		for x,y in setting_id2count.items():
-			items.append({
-				'setting_id': x,
-				'pay_money': '%.2f' % y['pay_money'],
-				'count': y['count'],
-				'cash': '%.2f' % y['cash'],
-				'card': '%.2f' % y['card'],
-				'order_num': y['order_num']
-			})
+		for setting_id in setting_ids:
+			if setting_id in setting_id2count:
+
+				items.append({
+					'setting_id': setting_id,
+					'pay_money': '%.2f' % setting_id2count[setting_id]['pay_money'],
+					'count': setting_id2count[setting_id]['count'],
+					'cash': '%.2f' % setting_id2count[setting_id]['cash'],
+					'card': '%.2f' % setting_id2count[setting_id]['card'],
+					'order_num': setting_id2count[setting_id]['order_num']
+				})
+			else:
+				items.append({
+					'setting_id': setting_id,
+					'pay_money': '%.2f' % 0,
+					'count': 0,
+					'cash': '%.2f' % 0,
+					'card': '%.2f' % 0,
+					'order_num': 0
+				})
 		pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
 		return {
 			'code' : 200,
