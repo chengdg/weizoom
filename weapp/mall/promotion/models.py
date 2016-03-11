@@ -831,3 +831,15 @@ class CardExchangeRule(models.Model):
 
 	class Meta(object):
 		db_table = 'mallpromotion_card_exchange_rule'
+
+#########################################################################
+# CardHasExchanged: 卡兑换记录
+#########################################################################
+class CardHasExchanged(models.Model):
+	webapp_id = models.CharField(max_length = 20)  # webapp,商家id
+	card_id = models.IntegerField()    #微众卡id
+	owner_id = models.IntegerField()    #卡拥有者
+	created_at = models.DateTimeField(auto_now_add=True)  #兑换时间
+
+	class Meta(object):
+		db_table = 'mallpromotion_card_has_exchanged'

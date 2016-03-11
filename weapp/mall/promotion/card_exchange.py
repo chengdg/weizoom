@@ -128,13 +128,34 @@ class MobileCardExchange(resource.Resource):
         """
         手机端卡兑换页
         """
-        print '+++++++++++++++++++++22222'
+        webapp_id = request.user_profile.webapp_id
+        card_exchange_dic = {}
+        try:
+            card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
+            require = card_exchange.require
+            card_exchange_dic['is_bind'] = require
+            card_exchange_id = card_exchange.id
+            card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
+            prize_list = []
+            for rule in card_exchange_rules:
+                card_number = rule.card_number
+                card_number_split = card_number.split('-')
+                prize_list.append({
+                    'integral': rule.integral,
+                    'money': rule.money,
+                    's_num': card_number_split[0],
+                    'end_num': card_number_split[1]                 
+                })
+            card_exchange_dic['prize'] = prize_list
+        except Exception,e:
+            print e,'+++++++++++++++++++'
        
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),
             'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
             'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
+            'card_exchange_rule': card_exchange_dic
         })
         return render_to_response('mall/webapp/promotion/m_card_exchange.html', c)
 
