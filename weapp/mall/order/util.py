@@ -516,7 +516,7 @@ def export_orders_json(request):
                     order.postage,
                     u'0' if order.status == 0 else order.integral_money,
                     u'0' if order.status == 1 and coupon_name else coupon_money,
-                    u'无' if order.status == 1 and coupon_name else coupon_name,
+                    u'无' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8') if order.buyer_name else '-',
                     order.ship_name.encode('utf8') if order.ship_name else '-',
