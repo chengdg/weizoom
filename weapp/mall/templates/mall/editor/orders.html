@@ -70,6 +70,7 @@
 	<ul class="nav nav-tabs mt14 ">
 	{{if data.is_refund}}
 		<li class="xa-count {{if data.current_status_value==-1}}active{{/if}}" data-total-status-value="-1"><a href="javascript:void(0);">全部</a></li>
+		<li class="xa-count {{if data.current_status_value==8}}active{{/if}}" data-total-status-value="8"><a href="javascript:void(0);">团购退款</a></li>
 		<li class="xa-count {{if data.current_status_value==6}}active{{/if}}" data-total-status-value="6"><a href="javascript:void(0);">退款中</a></li>
 		<li class="xa-count {{if data.current_status_value==7}}active{{/if}}" data-total-status-value="7"><a href="javascript:void(0);">退款完成</a></li>
 	{{else}}
@@ -322,7 +323,9 @@
 					<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 6 || order.order_status == 7)}}style="border-top:0;"{{/if}} >
 						<div class="xa-actions" data-order-id="${group.fackorder.id}">
 						{{each(i,a) group.fackorder.actions}}
-							{{if order.is_group_buying && (a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder') }}
+							<!-- 团购订单，不显示'申请退款'、'取消订单'、'退款成功'按钮 -->
+							{{if order.is_group_buying && 
+								(a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder' || a.class_name == 'xa-refundSuccess') }}
 							{{else}}
 							    <a href='javascript:void(0);' class="${a.class_name}"
 							    {{if a.action=="update_express"}}
