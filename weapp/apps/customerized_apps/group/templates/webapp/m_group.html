@@ -133,7 +133,6 @@
 	var is_helped = true;
     var is_self_page = true;
     var is_group_leader = false;
-    var is_group_unpaid = false;
     var only_remain_one_day = false;
     var page_owner_member_id = '';
     var page_owner_icon = '';//用户头像
@@ -190,12 +189,17 @@
 
                 //已开团
                 if(group_relation_id != ''){
-                    //启动倒计时
-                    renderTime(data.member_info.timing);
-                    //进度bar动画
-                    runProcessBar(data.member_info.grouped_number,data.member_info.group_type);
                     //渲染团员名单
                     showHelperInfo(data);
+                    if(W.group_status == '团购进行中'){
+                        //启动倒计时
+                        renderTime(data.member_info.timing);
+                    }else{
+                        $('.wa-timing').addClass('none');
+                    }
+                    //进度bar动画
+                    runProcessBar(data.member_info.grouped_number,data.member_info.group_type);
+
                 }
             },
             error: function(data) {
@@ -216,12 +220,14 @@
         W.member_id = member_info.member_id;
         is_self_page = member_info.self_page;
         is_group_leader = member_info.is_group_leader;
-        is_group_unpaid = member_info.is_group_unpaid;
         only_remain_one_day = member_info.only_remain_one_day;
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
         W.group_status = member_info.group_status;
         group_type = member_info.group_type;
+        product_original_price = member_info.product_original_price;
+        product_group_price = member_info.product_group_price;
+
         //更新页面小团的数据
         page_owner_icon = member_info.page_owner_icon;
         if(page_owner_icon != ""){
@@ -230,6 +236,8 @@
         if(group_type != ""){
             $('.wui-i-product-price-group').show();
             $('.wui-i-title-pic').addClass('wui-i-title-pic-'+group_type);
+            $('.wui-i-product-price-group-original-price').html(product_original_price+'元');
+            $('.wui-i-product-price-group-group-price').html(product_group_price+'元');
         }
         updateBtnStatus();
     }
@@ -253,7 +261,7 @@
         }
         //如果是自己的主页
         if(is_self_page){
-            if(is_group_unpaid){
+            if(W.group_status == '团购未生效'){
                 openUnpaidWin();
             }
             if(is_group_leader){
