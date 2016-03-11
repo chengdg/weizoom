@@ -107,24 +107,23 @@ class CardExchange(resource.Resource):
             cur_webapp_card_exchange_id = cur_webapp_card_exchange.id
             promotion_models.CardExchangeRule.objects.filter(exchange_id = cur_webapp_card_exchange_id).delete()
             cur_webapp_card_exchange.delete()
-
-            card_exchange = promotion_models.CardExchange.objects.create(
-                webapp_id = webapp_id,
-                require = is_bind,
-                reward_type = reward_type
-            )
-            for prize in prize_list:
-                card_number = prize['snum'] + '-' + prize['endnum']
-                card_exchange_rule_list.append(promotion_models.CardExchangeRule(
-                    integral = prize['integral'],
-                    money = prize['money'],
-                    card_number = card_number,
-                    exchange = card_exchange
-                ))
-            promotion_models.CardExchangeRule.objects.bulk_create(card_exchange_rule_list)
         except Exception,e:
             print e,'^^^^^^^^^^^^^^^^^^^^^'
-           
+        card_exchange = promotion_models.CardExchange.objects.create(
+            webapp_id = webapp_id,
+            require = is_bind,
+            reward_type = reward_type
+        )
+        for prize in prize_list:
+            card_number = prize['snum'] + '-' + prize['endnum']
+            card_exchange_rule_list.append(promotion_models.CardExchangeRule(
+                integral = prize['integral'],
+                money = prize['money'],
+                card_number = card_number,
+                exchange = card_exchange
+            ))
+        promotion_models.CardExchangeRule.objects.bulk_create(card_exchange_rule_list)    
+
         response = create_response(200)
         return response.get_response()
 
