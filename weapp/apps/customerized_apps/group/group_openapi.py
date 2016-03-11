@@ -108,16 +108,30 @@ class CheckGroupBuy(resource.Resource):
 		group_id = request.GET.get('group_id')
 		pid = request.GET.get('pid')
 		is_success = False
-		reason = u'不可进行团购下单操作'
+		reason = u''
 		group_buy_price = 0
 
-		group_record = app_models.GroupRelations.objects(id=group_id,group_status=app_models.GROUP_RUNNING)
+		group_record = app_models.GroupRelations.objects(id=group_id,product_id=int(pid))
 		if group_record.count() > 0:
 			group_record = group_record.first()
-			group_buy_price = group_record.group_price
-			if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
-				is_success = True
-				reason = u'可以进行团购下单操作'
+			if group_record.group_status == app_models.GROUP_NOT_START: #团购未生效（团长还未支付成功）
+				if member_id == group_record.member_id:
+					is_success = True
+					reason = u'团长可以进行开团下单操作'
+					group_buy_price = group_record.group_price
+				else:
+					reason = u'团购活动暂未生效，团长还未开团成功'
+			elif group_record.group_status == app_models.GROUP_RUNNING:
+				if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
+					is_success = True
+					reason = u'可以进行团购下单操作'
+					group_buy_price = group_record.group_price
+				else:
+					reason = u'不可进行团购下单操作'
+			else:
+				reason = u'该团购已结束'
+		else:
+			reason = u'该条团购信息不存在'
 		response = create_response(200)
 		response.data = {
 			'is_success': is_success,
