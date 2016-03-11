@@ -2,38 +2,38 @@
 
 {% block css %}
 <style>
-    table td .xui-group_name{
+    table.xui-groups td .xui-group_name{
 	    text-align: left;
 	    margin-left: 22px;
 	    color:#333333;
     }
-    table td .xui-productImgBox{
+    table.xui-groups td .xui-productImgBox{
     	width: 70px;
     	height: 70px;
     	display: inline-block;
     }
-    table td .xui-productImgBox img{
+    table.xui-groups td .xui-productImgBox img{
     	width: 60px;
     	height: 60px;
     	margin: 5px;
     }
-    table td .xui-productNameBox{
+    table.xui-groups td .xui-productNameBox{
     	width: 140px;
     	display: inline-block;
     }
-    table tr.xui-product_itle{
+    table.xui-groups tr.xui-product_itle{
     	background:#F2F0F1 !important;
     }
-    table tr.xui-product_record{
+    table.xui-groups tr.xui-product_record{
     	background:#FFFFFF !important;
     	border-top: 1px solid #ccc;
 		border-bottom: 1px solid #ccc;
     }
-    table tr td .xui-time_start,table tr td .xui-time_end{
+    table.xui-groups tr td .xui-time_start,table tr td .xui-time_end{
     	width: 85px;
     	display: inline-block;
     }
-    table tr td .xui-group_action .xui-i-action{
+    table.xui-groups tr td .xui-group_action .xui-i-action{
 		display: inline-block;
 		text-align: center;
     }
@@ -145,7 +145,7 @@
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
 	{{if items!='' }}
-	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 xui-groups">
 		<thead>
 			<tr>
 				<th>商品信息</th>

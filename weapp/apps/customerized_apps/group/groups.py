@@ -84,55 +84,70 @@ class Groups(resource.Resource):
 		#goup 一个大团活动
 		#relation 一个用户开启的团，belong_to 一个group
 		#details描述一个团圆的信息，有很多个 belong_to 一个 relation
-		group_ids = [str(p.id) for p in datas]
+		group_ids = [unicode(p.id) for p in datas]
+		print 111111111111111111
+		print group_ids
 
-		# id2relation = {}
-		# all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
-		# if all_relations:
-		# 	for relation in all_relations:
-		# 		group_id = relation.belong_to
-		# 		if group_id in id2relation:
-		# 			id2relation[group_id].append(relation)
-		# 		else:
-		# 			id2relation[group_id] = [relation]
-		# r_id2details = {}
-		# relation_ids = [str(r.id) for r in all_relations]
-		# all_details =  app_models.GroupDetail.objects(relation_belong_to__in=relation_ids)
-		# if all_details:
-		# 	for detail in all_details:
-		# 		r_id = str(detail.relation_belong_to)
-		# 		if r_id in r_id2details:
-		# 			r_id2details[r_id].append(detail)
-		# 		else:
-		# 			r_id2details[r_id]=[detail]
-		# #缺乏一个浏览人数的数组
-		# g_id2static_info = {}
-		# if id2relation:
-		# 	for g_id in id2relation:
-		# 		group_relation_list = id2relation[g_id]
-		# 		open_group_num = len(group_relation_list)
+		id2relation = {}
+		all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
+		if all_relations:
+			for relation in all_relations:
+				group_id = relation.belong_to
+				if group_id in id2relation:
+					id2relation[group_id].append(relation)
+				else:
+					id2relation[group_id] = [relation]
 
-		# 		group_customer_num = 0
-		# 		for one_relation in group_relation_list:
-		# 			r_id = one_relation.id
-		# 			detail_list = r_id2details[r_id]
-		# 			for one_detail in detail_list:
-		# 				if one_detail.is_already_paid:
-		# 					group_customer_num += 1
+		print 22222222222222222222
+		print id2relation
 
-		# 		if g_id in g_id2static_info:
-		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
-		# 									'group_customer_num':group_customer_num,
-		# 									}
-		# 		else:
-		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
-		# 									'group_customer_num':group_customer_num,
-		# 									}
+		r_id2details = {}
+		relation_ids = [unicode(r.id) for r in all_relations]
+		all_details =  app_models.GroupDetail.objects(relation_belong_to__in=relation_ids)
+		if all_details:
+			for detail in all_details:
+				r_id = unicode(detail.relation_belong_to)
+				if r_id in r_id2details:
+					r_id2details[r_id].append(detail)
+				else:
+					r_id2details[r_id]=[detail]
 
-		# if g_id2static_info:
-		# 	for data in datas:
-		# 		g_id = str(data.id)
-		# 		data.static_info = g_id2static_info[str(g_id)]
+		print 333333333333333333
+		print r_id2details
+
+		g_id2static_info = {}
+		if id2relation:
+			for g_id in id2relation:
+				group_relation_list = id2relation[g_id]
+				open_group_num = len(group_relation_list)
+
+				group_customer_num = 0
+				for one_relation in group_relation_list:
+					r_id = unicode(one_relation.id)
+					print '>>>>>>>>'
+					print r_id
+					print r_id2details
+					detail_list = r_id2details[r_id]
+					for one_detail in detail_list:
+						if one_detail.is_already_paid:
+							group_customer_num += 1
+
+				if g_id in g_id2static_info:
+					g_id2static_info[g_id]={'open_group_num':open_group_num,
+											'group_customer_num':group_customer_num,
+											}
+				else:
+					g_id2static_info[g_id]={'open_group_num':open_group_num,
+											'group_customer_num':group_customer_num,
+											}
+
+		print 44444444444444444
+		print g_id2static_info
+
+		if g_id2static_info:
+			for data in datas:
+				g_id = str(data.id)
+				data.static_info = g_id2static_info[str(g_id)]
 
 
 		items = []

@@ -15,7 +15,7 @@ from mall import export as mall_export
 from utils.string_util import byte_to_hex
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
-COUNT_PER_PAGE = 20
+COUNT_PER_PAGE = 12
 
 class GroupParticipances(resource.Resource):
 	app = 'apps/group'
@@ -73,6 +73,8 @@ class GroupParticipances(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = GroupParticipances.get_datas(request)
+		print 6666666666666666
+		print datas
 
 		tmp_member_ids = []
 		for data in datas:
@@ -84,10 +86,10 @@ class GroupParticipances(resource.Resource):
 		for data in datas:
 			items.append({
 				'id': str(data.id),
-				'group_leader':'还没写',
-				'group_days':'还没写',
-				'status':'个人状态，还没写',
-				'members_count':'还没写'
+				'group_leader':data.group_leader_name,
+				'group_days':data.group_days,
+				'status':data.status_text,
+				'members_count':'%d/%s'%(data.grouped_number,data.group_type)
 			})
 		response_data = {
 			'items': items,
