@@ -165,33 +165,32 @@ class CardExchangeDetail(resource.Resource):
         卡兑换查看微众卡使用详情
         """
         print '======================'
-        # start_num = request.GET.get('start_num',None)
-        # end_num = request.GET.get('end_num',None)
-        # exchange_card_list = []
-        # exchange_cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = end_num)
-        # weizoom_card_rules = card_models.WeizoomCardRule.objects.all()
-        # for card in exchange_cards:
-        #     card_rule_id = card.weizoom_card_rule_id
-        #     cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
-        #     userd_money = cur_weizoom_card_rule.money - card.money
-        #     exchange_card_list.append({
-        #         'card_number': card.weizoom_card_id,
-        #         'money': '%.2f' % cur_weizoom_card_rule.money,
-        #         'used_money': '%.2f' % userd_money,
-        #         'user': 'vito'  
-        #     })
         webapp_id = request.user_profile.webapp_id
-        try:
-            cur_webapp_card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
-            cur_webapp_card_exchange_id = cur_webapp_card_exchange.id
-            cur_webapp_card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = cur_webapp_card_exchange_id)
-            print cur_webapp_card_exchange_rules,'999999999999999999999'
-        except Exception,e:
-            print e,'$$$$$$$$$$$$$$$$$$$$$$$$$$$'
-
-
+        cards = card_models.WeizoomCard.objects.all()
+        card_rules = card_models.WeizoomCardRule.objects.all()
+        exchanged_cards_list = []
+        exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id).order_by('-created_at')
+        for card in exchanged_cards:
+            card_id = card.card_id
+            try:
+                cur_card = cards.get(id = card_id)
+                weizoom_card_id = cur_card.weizoom_card_id
+                weizoom_card_rule_id = cur_card.weizoom_card_rule_id
+                cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
+                money = cur_card_rule.money
+                remainder = cur_card.money
+                exchanged_cards_list.append({
+                    'card_id': weizoom_card_id,
+                    'money': '%.2f' % money,
+                    'remainder': '%.2f' % remainder,
+                    'used_money': '%.2f' % (money - remainder),
+                    'user': 'vito'  
+                })
+            except Exception,e:
+                print e,'/////////*********'
+        
         response = create_response(200)
-        # response.data = exchange_card_list
+        response.data = exchanged_cards_list
         return response.get_response()
 
 
