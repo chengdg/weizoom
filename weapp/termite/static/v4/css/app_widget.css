@@ -1616,8 +1616,6 @@ li.wui-selectBox-display-table {
 }
 .wui-red_packet-container .wui-i-system_msgbox{
     width: 80%;
-    /* text-align: center; */
-    /*height: 4rem;*/
     margin-left: auto;
     margin-right: auto;
 }
@@ -1920,7 +1918,6 @@ li.wui-selectBox-display-table {
     margin-top: 10px;
 }
 .wui-group-container .wui-i-group_box_progress .wui-i-timing {
-    display: inline-block;
 	float: right;
 }
 .wui-group-container .wui-i-group_box_progress .wui-i-timing b{
@@ -1981,6 +1978,9 @@ li.wui-selectBox-display-table {
     -webkit-transition: width 3s ease-in-out; /* Safari 和 Chrome */
     -o-transition: width 3s ease-in-out; /* Opera */
 	display: inline-block;
+}
+.wui-group-container .wui-i-powerbar_group .wui-i-bar_process-fail{
+	background: #999999;
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-total_number{
     color:#ff2742;

@@ -72,7 +72,9 @@
                     </div>
                     <div class="wui-i-group_box_progress none">
                         <span>团购进度</span>
-                        <div class="wui-i-timing wa-timing">
+                        <span class="wui-i-group_box_success none" style="color: #ff2742;margin-left: 60px;">团购成功！</span>
+                        <span class="wui-i-group_box_fail none" style="margin-left: 60px;">团购失败！</span>
+                        <div class="wui-i-timing wa-timing none">
                             <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
                             <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
                             <b class="xa-minute">{% if component.model.timing_value.minute %}{{component.model.timing_value.minute}}{% else %}59{% endif %}</b>分

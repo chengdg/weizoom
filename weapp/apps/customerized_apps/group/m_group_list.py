@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from datetime import datetime
+from datetime import *
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
@@ -31,6 +31,7 @@ class MGroupList(resource.Resource):
 		all_groups_can_join = []
 		for group_relation in group_relations:
 			current_group = all_groups.get(id=group_relation.belong_to)
+			remain_hours = (group_relation.created_at + timedelta(days=int(group_relation.group_days))-datetime.today()).total_seconds()/(60*60)
 			all_groups_can_join.append({
 				'id': str(group_relation.belong_to),
 				'group_relation_id': str(group_relation.id),
@@ -39,7 +40,7 @@ class MGroupList(resource.Resource):
 				'product_img': current_group.product_img,
 				'product_name': current_group.product_name,
 				'participant_count': str(group_relation.grouped_number)+'/'+group_relation.group_type,
-				'end_time': group_relation.created_at.strftime('%Y-%m-%d'),
+				'remain_hours': '%.0f' % remain_hours,
 				'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s&group_relation_id=%s&fid=%s' % (owner_id, str(group_relation.belong_to),str(group_relation.id),str(group_relation.member_id))
 			})
 

@@ -132,7 +132,7 @@
                             <div class="xui-i-title">
                                 <img src="{ product_img }" class="xui-i-content-img">
                                 <div style="display: inline-block;width: 70%;">
-                                    <div style="text-align: right;color: #FF2742;">剩余{end_time}小时</div>
+                                    <div style="text-align: right;color: #FF2742;">剩余{remain_hours}小时</div>
                                     <p style="display: inline;">{ group_owner_name }</p>
                                     <div style="display: inline;">{ group_name }</div>
                                     <a href="{ url }"><button class="wui-i-btn-using wa-using">我要参团</button></a>
@@ -200,24 +200,23 @@ function getDynamicData(recordId){
             console.log(data);
             $('.xui-all_groups_can_join-slide').addClass('none');
             $('.xui-all_groups_can_join-list').removeClass('none');
+            $('.xa-all_groups_can_join-list').html('');
             var tpl = new Template($('#tpl').html());
             var all_groups_can_join = data.all_groups_can_join;
             for(var i in all_groups_can_join){
                 var p = all_groups_can_join[i];
+                console.log(p);
                 var s = tpl.render({
                     group_owner_name: p.group_owner_name,
                     group_name: p.group_name,
                     product_img: p.product_img,
                     product_name: p.product_name,
                     participant_count: p.participant_count,
-                    end_time: p.end_time,
+                    remain_hours: p.remain_hours,
                     url: p.url
-            });
+                });
+                $('.xa-all_groups_can_join-list').append(s);
             }
-
-            console.log(s);
-            $('.xa-all_groups_can_join-list').html(s);
-
         },
         error: function(data) {
             if(data.errMsg == 'is_deleted'){

@@ -55,16 +55,21 @@
         height: 15%;
         z-index: 10001;
         text-align: center;
-        width: 68%;
-        margin-left: 17%;
+        width: 80%;
+        margin-left: 11%;
         padding-top: 25px;
+        padding-bottom: 20px;
     }
     .xui-successHint .xui-i-msg{
-        color:#3E1917;
+        color:#868686;
         margin-left: auto;
         margin-right: auto;
         padding-left: 10px;
         padding-right: 10px;
+    }
+    .xui-successHint p.xui-i-msg-title.xa-i-msg-title {
+        font-size: 1.2rem;
+        color: #4C4C4C;
     }
     button.wui-i-btn-groupMsg-yes,button.wui-i-btn-groupMsg-no{
         width: 40%;
@@ -193,13 +198,13 @@
                     showHelperInfo(data);
                     if(W.group_status == '团购进行中'){
                         //启动倒计时
+                        $('.wa-timing').removeClass('none');
                         renderTime(data.member_info.timing);
                     }else{
                         $('.wa-timing').addClass('none');
                     }
                     //进度bar动画
                     runProcessBar(data.member_info.grouped_number,data.member_info.group_type);
-
                 }
             },
             error: function(data) {
@@ -244,7 +249,6 @@
 
     function updateBtnStatus(){
         if('进行中' != W.activityStatus){
-            $('.wa-timing').hide();
             if('未开始' == W.activityStatus){
                 $('.wa-notready').show();
             }else{
@@ -253,56 +257,60 @@
             return false;
         }
         //团购成功、团购失败状态
-        if (W.group_status == '团购成功'){
-            showGroupSuccess();
-        }
-        if(W.group_status == '团购失败'){
-            showGroupFailure();
-        }
-        //如果是自己的主页
-        if(is_self_page){
-            if(W.group_status == '团购未生效'){
-                openUnpaidWin();
-            }
-            if(is_group_leader){
-                $('.wa-using').text('邀请好友参团').on('click', function(){
-                        openGuideMask();
-                    }).show();
-            }else{
-                if(only_remain_one_day){
-                    openRemainOneDayWin();
+        if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
+            //如果是自己的主页
+            if(is_self_page){
+                if(W.group_status == '团购未生效'){
+                    openUnpaidWin();
                 }
-                $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
-                if(W.isMember){
-                    $('.wa-using').text('我要开团').on('click', openGruop).show();
+                if(is_group_leader){
+                    $('.wa-using').text('邀请好友参团').on('click', function(){
+                            openGuideMask();
+                        }).show();
                 }else{
-                    $('.wa-using').text('我要开团').on('click', openGuestMask).show();
-                }
+                    if(only_remain_one_day){
+                        openRemainOneDayWin();
+                    }
+                    $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                    if(W.isMember){
+                        $('.wa-using').text('我要开团').on('click', openGruop).show();
+                    }else{
+                        $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                    }
 
+                }
+            }else{
+                if(group_relation_id){
+                    var $powerBtn = $('.wa-power');
+                    if(!is_helped){
+                        $powerBtn.find('.wa-power-btn-action').html('我要参团');
+                        $powerBtn.on('click', function(){
+                                JoinGroup();
+                            }).show();
+                        $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
+                    }else{
+                        $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
+                        $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
+                    }
+                }else{
+                    $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                    if(W.isMember){
+                        $('.wa-using').text('我要开团').on('click', openGruop).show();
+                    }else{
+                        $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                    }
+                }
             }
         }else{
-            if(group_relation_id){
-                var $powerBtn = $('.wa-power');
-                if(!is_helped){
-                    $powerBtn.find('.wa-power-btn-action').html('我要参团');
-                    $powerBtn.on('click', function(){
-                            JoinGroup();
-                        }).show();
-                    $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
-                }else{
-                    $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
-                    $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
-                }
-            }else{
-                $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
-                if(W.isMember){
-                    $('.wa-using').text('我要开团').on('click', openGruop).show();
-                }else{
-                    $('.wa-using').text('我要开团').on('click', openGuestMask).show();
-                }
+            $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
+            if (W.group_status == '团购成功'){
+                showGroupSuccess();
             }
-
+            if(W.group_status == '团购失败'){
+                showGroupFailure();
+            }
         }
+
     }
     //我要开团
 	function openGruop(){
@@ -357,7 +365,6 @@
                 fid: page_owner_member_id
             },
             success: function(data) {
-                console.log('JoinGroup success!!!!!!!!!!!');
                 var data_href = "http://h5.weapp.com/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+group_relation_id+"&activity_id="+W.appRecordId;
                 window.open(data_href, '_tab');
             },
@@ -366,7 +373,6 @@
                     is_helped = false;
                     wuiAlert(data.errMsg);
                 }
-
             }
         });
     }
@@ -437,6 +443,7 @@
     //团购成功
     function showGroupSuccess(){
         mask('show');
+        $('.wui-i-group_box_success').removeClass('none');
         $('.xui-groupMsg-Hint').removeClass('none');
         $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在该商品团购结束20天内进行发货');
         $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('恭喜您 团购成功');
@@ -445,9 +452,11 @@
             $('.xui-groupMsg-Hint').addClass('none');
         });
     }
-    //失败
+    //团购失败
     function showGroupFailure(){
         mask('show');
+        $('.wui-i-group_box_fail').removeClass('none');
+        $('.wui-i-bar_process').addClass('wui-i-bar_process-fail');
         $('.xui-groupMsg-Hint').removeClass('none');
         $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在5~7个工作日内完成退款');
         $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('很遗憾 团购失败');

@@ -31,7 +31,7 @@ class MGroup(resource.Resource):
 		only_remain_one_day = False #开团时间剩余1天
 		is_helped = False
 		self_page = False
-		group_status = 0
+		group_status = ''
 		group_type = ''
 		grouped_number = 0
 		product_original_price = 0
@@ -78,7 +78,7 @@ class MGroup(resource.Resource):
 						group_type = group_relation_info.group_type
 						grouped_number = group_relation_info.grouped_number
 						product_group_price = group_relation_info.group_price
-						product_original_price = Product.objects.get(id=group_relation_info.product_id).price
+						product_original_price = ProductModel.objects.get(product_id=group_relation_info.product_id).price
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
