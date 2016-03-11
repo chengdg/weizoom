@@ -25,19 +25,17 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'qrcode_effect_info'
 
-	@param_required(['setting_ids','count_per_page', 'cur_page','is_all'])
+	@param_required(['setting_ids','is_all'])
 	def get(args):
 		"""
 		获取商品和供应商信息
 
 		@param setting_id 渠道扫码二维码id
-		@param count_per_page 每页个数
-		@param cur_page 第几页
+
 		@param is_all 是否获取全部会员，如果否，则获取
 		"""
 		setting_ids = args['setting_ids'].split(',')
-		count_per_page = int(args['count_per_page'])
-		cur_page = int(args['cur_page'])
+
 		is_all = int(args['is_all'])
 
 
@@ -108,17 +106,10 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 					'order_num': 0
 				})
 
-		if is_all == 0 :
-			pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
-			return {
-				'code' : 200,
-				'items': datas,
-				'page_count': pageinfo.max_page,
-				'page_info':paginator.to_dict(pageinfo)
-			}
-		else:
-			return {
-				'code' : 200,
-				'items': items
-			}
+		# if is_all == 0 :
+		# pageinfo, datas = paginator.paginate(items, cur_page, count_per_page)
+		return {
+			'code' : 200,
+			'items': items
+		}
 
