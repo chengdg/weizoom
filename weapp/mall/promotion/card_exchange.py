@@ -43,10 +43,13 @@ class CardExchange(resource.Resource):
             card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
             prize_list = []
             for rule in card_exchange_rules:
+                card_number = rule.card_number
+                card_number_split = card_number.split('-')
                 prize_list.append({
                     'integral': rule.integral,
                     'money': rule.money,
-                    'card_number': rule.card_number                 
+                    's_num': card_number_split[0],
+                    'end_num': card_number_split[1]                 
                 })
             card_exchange_dic['prize'] = prize_list
         except Exception,e:
@@ -63,9 +66,27 @@ class CardExchange(resource.Resource):
     @login_required
     def api_get(request):
         """
-        卡兑换
+        卡兑换查看微众卡使用详情
         """
+        print '======================'
+        start_num = request.GET.get('start_num',None)
+        end_num = request.GET.get('end_num',None)
+        exchange_card_list = []
+        exchange_cards = WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = endnum)
+        weizoom_card_rules = WeizoomCardRule.objects.all()
+        for card in exchange_cards:
+            card_rule_id = card.weizoom_card_rule_id
+            cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
+            userd_money = cur_weizoom_card_rule.money - card.money
+            exchange_card_list.append({
+                'card_number': card.weizoom_card_id,
+                'money': '%.2f' % cur_weizoom_card_rule.money,
+                'used_money': '%.2f' % userd_money,
+                'user': 'vito'  
+            })
+
         response = create_response(200)
+        response.data = exchange_card_list
         return response.get_response()
 
     def api_post(request):
@@ -98,3 +119,55 @@ class CardExchange(resource.Resource):
 
         response = create_response(200)
         return response.get_response()
+
+class MobileCardExchange(resource.Resource):
+    app = "mall2"
+    resource = "m_card_exchange"
+
+    def get(request):
+        """
+        手机端卡兑换页
+        """
+        # webapp_id = request.user_profile.webapp_id
+        webapp_id = request.GET.get('webapp_id','')
+        card_exchange_dic = {}
+        try:
+            card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
+            require = card_exchange.require
+            card_exchange_dic['is_bind'] = require
+            card_exchange_id = card_exchange.id
+            card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
+            prize_list = []
+            for rule in card_exchange_rules:
+                card_number = rule.card_number
+                card_number_split = card_number.split('-')
+                prize_list.append({
+                    'integral': rule.integral,
+                    'money': rule.money,
+                    's_num': card_number_split[0],
+                    'end_num': card_number_split[1]                 
+                })
+            card_exchange_dic['prize'] = prize_list
+        except Exception,e:
+            print e,'+++++++++++++++++++'
+       
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV_NAME,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
+            'card_exchange_rule': card_exchange_dic
+        })
+        return render_to_response('mall/webapp/promotion/m_card_exchange.html', c)
+
+def get_card_exchange_link(request):
+    """
+    获取微众卡兑换手机页面链接
+    @param request:
+    @return:
+    """
+    from .models import CardExchange
+    webapp_id = request.user_profile.webapp_id
+    if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
+        return '/mall2/m_card_exchange/?webapp_id=%s' % webapp_id
+    return None

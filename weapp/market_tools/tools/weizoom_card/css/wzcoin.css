@@ -9,7 +9,7 @@ html,body{
 	.xui-wzcoinPay-page{background-color: #fff;}
 	.xui-wzcoinPay-page .ui-btn-inner{
 		text-overflow:inherit;
-	}	
+	}
 	.xui-wzcoinPay-page .xui-form-controls{
 		margin:20px 0;
 		border-bottom: 1px solid #DDDDDD;
@@ -64,21 +64,21 @@ html,body{
 	}
 	.xui-wzcoinPay-page .xui-pageTip{
 		color:#BBBBBB;
-		margin-top: 2%; 
+		margin-top: 2%;
 		font-size: 1.25rem;
 	}
 	.xui-wzcoinPay-page .xui-ffht{
 		font-family: "黑体";
 	}
 	.xui-wzcoinPay-page .xui-count{
-		background: url(/static_v2/img/webapp/usercenter/count.png) no-repeat;	
+		background: url(/static_v2/img/webapp/usercenter/count.png) no-repeat;
 		-webkit-background-size: 20px 22px;
-			background-size: 20px 22px;	
+			background-size: 20px 22px;
 	}
 	.xui-wzcoinPay-page .xui-pwd{
-		background: url(/static_v2/img/webapp/usercenter/pwd.png) no-repeat;	
+		background: url(/static_v2/img/webapp/usercenter/pwd.png) no-repeat;
 		-webkit-background-size: 20px 22px;
-			background-size: 20px 22px;	
+			background-size: 20px 22px;
 	}
 	/*充值确认页面*/
 	.xui-wzcoinConfirm-page{background-color: #f0f0f0!important;}

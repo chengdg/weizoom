@@ -39,7 +39,7 @@ def get_weizoom_card_change_money(request):
 	weizoom_card_orders_list = []
 	if WeizoomCard.objects.filter(id=card_id).count() > 0 and integral_each_yuan:
 		weizoom_card = WeizoomCard.objects.get(id=card_id)
-		weizoom_card_orders = WeizoomCardHasOrder.objects.filter(card_id = card_id).order_by('-created_at')
+		weizoom_card_orders = WeizoomCardHasOrder.objects.filter(card_id = card_id).exclude(order_id__in = [-1]).order_by('-created_at')
 		orders = Order.objects.all()
 		orders_has_product = OrderHasProduct.objects.all()
 		for order in weizoom_card_orders:
@@ -55,10 +55,12 @@ def get_weizoom_card_change_money(request):
 				'product_name': product_name_str
 			})
 	else:
+
 		c = RequestContext(request, {
 			'page_title': u'微众卡',
 			'is_hide_weixin_option_menu': True
 		})
+
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 
 	change_integral = weizoom_card.money * integral_each_yuan
