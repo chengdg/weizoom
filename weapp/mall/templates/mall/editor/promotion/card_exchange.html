@@ -254,20 +254,8 @@ $(document).ready(function() {
 	$(document).on("click",".xui-i-del",function(){
     	$(this).parents(".xui-i-put").remove();
 	})
-
+    //详情页面
 	$(".xa-detail").click(function(){
-		var card_num = [];
-		var snum = $(".xa-snum")
-	    var endnum = $(".xa-endnum");
-		for(i=0;i<snum.length;i++){
-                var snumData = snum[i].value;
-                var endnumData = endnum[i].value;
-				var item = {
-                    snum:snumData,
-                    endnum:endnumData
-				}
-				card_num.push(item);
-			} 
 		W.getApi().call({
 			    method: 'get',
 			    app: 'mall2',
@@ -281,9 +269,8 @@ $(document).ready(function() {
 			    	console.log("error");
 			    }
 			})           
-
-	})
-
+    })
+    //修改数据
 	$(".xa-btnSubmit").click(function(){
         var flag = checkNull()
         if(!flag){

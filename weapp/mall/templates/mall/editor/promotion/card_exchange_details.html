@@ -38,8 +38,8 @@
     <div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
-			<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
-			<li class="active">微众卡兑换</li>
+			<li><a href="/mall2/card_exchange/">兑换平台</a></li>
+			<li class="active">微众卡使用详情</li>
 		</ul>
 	</div>
 
@@ -48,12 +48,13 @@
         	<form>
 	        	<span class="mr30">卡号：<input type="text" name="cardNumber" class="xui-cardNumber xa-cardNumber"></span>
 	        	<span class="mr50">使用人：<input type="text" name="cardUser" class="xui-cardUser xa-cardUser"></span>
-	        	<a class="btn btn-primary mr10 xa-search">查 询</a>
-	        	<a class="btn btn-default mr10">重 置</a>
-	        	<a class="btn btn-default">导 出</a>
+	        	<a class="btn btn-primary mr20 xa-search">查 询</a>
+	        	<a class="btn btn-default mr20 xa-reset">重 置</a>
+	        	<a class="btn btn-default xa-export">导 出</a>
         	</form>
         </div>
-        <div class="xa-listView" data-ui-role="advanced-table" data-app="mall2" data-api="card_exchange_details" data-template-id="#exchange-detail" data-enable-paginator="false" data-enable-load="true"></div>
+        <div class="xa-listView" data-ui-role="advanced-table" data-app="mall2" data-api="card_exchange_details" data-template-id="#exchange-detail" data-enable-paginator="true" data-enable-load="true" data-item-count-per-page="15"
+></div>
         </div>
     </div>
 </div>
@@ -84,7 +85,7 @@
 					<td>${item.user}</td>
 				</tr>
 				{{/each}}
-		</tbody>
+		    </tbody>
     </table>
 </script>
 {% endverbatim %}
@@ -92,6 +93,11 @@
 <script type="text/javascript">
 
 $(document).ready(function() {	
+	$(".xa-reset").click(function(){
+		$(".xa-cardNumber").val("");
+		$(".xa-cardUser").val("");
+	})
+
 	var tableView = $('.xa-listView').data('view');
 	$('.xa-search').click(function(){
 		var cardNumber = $(".xa-cardNumber").val();
@@ -102,6 +108,22 @@ $(document).ready(function() {
 		}
 		tableView.reload(args);
 	});
+
+	$(".xa-export").click(function(){
+		W.getApi().call({
+		    method: 'get',
+			app: 'mall2',
+			api: 'card_exchange_details',
+			args: "",
+			scope: this,
+			success: function(data) {
+	 			console.log("success");
+			},
+			error: function(resp) {
+				console.log("error");
+			}
+		});
+    });
 });
 
 </script>
