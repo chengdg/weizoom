@@ -51,7 +51,6 @@ class CardExchange(resource.Resource):
             card_exchange_dic['prize'] = prize_list
         except Exception,e:
             print e,'-----------------------------'
-
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV_NAME,
             'second_navs': export.get_promotion_and_apps_second_navs(request),

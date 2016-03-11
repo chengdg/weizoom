@@ -25,8 +25,11 @@
         .xui-i-put div{
         	padding: 5px 0;
         }
+        .xui-i-integral{
+        	width: 100px;	
+        }
 		.xui-i-money{
-			width: 125px;
+			width: 70px;
 		}
 		.xui-i-add{
 			cursor: pointer;
@@ -34,81 +37,150 @@
 			margin-top: 7px;
 			font-weight: bold;
 		}
-		.xui-noborder{
-			border:none;
-		}
 		.xui-i-num{
 			width: 90px;
 		}
-		.xui-i-detail{
-			margin-left: 15px;
-			display: none;
-			cursor: pointer;
-		}
 		.ml35{
 			display: inline-block;
+		}
+		#xui-theadBg{
+			background: #C8D1E4;
+		}
+		.modal-body .btn{
+			font-weight: bold;
+		}
+		.xui-bindPhoneNumTd{
+			height: 45px;
+		}
+		.xui-bindNumTxt{
+			height: 24px;
+			display: inline-block;
+			line-height: 24px;
+			margin-right: 10px;
+		}
+		.xui-hide{
+			display: none;
 		}
 	</style>
 {% endblock %}
 {% block content-panel %}
 <div>
 
-<div class="relative">
-	<ul class="breadcrumb">
-		<li>您当前所在位置</li>
-		<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
-		<li class="active">微众卡兑换</li>
-	</ul>
-</div>
+    <div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/mall2/flash_sale_list/">促销管理</a></li>
+			<li class="active">微众卡兑换</li>
+		</ul>
+	</div>
+{% if card_exchange_dic %}
+		<div class="xui-exchangeTable">
+		<table class="table table-bordered">
+			<tr>
+	        	<th>兑换要求：</th>
+	        	<td class="xui-bindPhoneNumTd">
+		        	{% if card_exchange_dic.isBind %}
+		        	<span class="xui-bindNumTxt">无条件</span>
+                    {% else %}
+                    <span class="xui-bindNumTxt">绑定手机号</span>
+                    {% endif %}
+		        	<select class="xui-bindPhoneNum xui-hide">
+		        		<option value="1">绑定手机号</option>
+		        		<option value="0">无条件</option>		
+		        	</select>
+	        	</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖励：</th>
+	        	<td>微众卡</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖项：</th>
+	        	<td>
+	        	    <form>
+		        		{% for item in card_exchange_dic.prize%}
+		        		<div class="xui-i-exchange xa-i-exchange">
+		        		    <div class="xui-i-put">
+			        		    <div>
+			        		    	使用积分：<input type="text" class="xa-integral xui-i-integral xui-hide" name="integral" readonly=true value="{{item.integral}}">
+			        		    	<span class="xa-exchangeSpan">{{item.integral}}</span>
+			        		    </div>
+			                    <div>
+			                    	兑换微众卡：<input type="text" class="xui-i-money xa-money xui-hide" name="money" readonly=true value="{{item.money}}">
+			                    	<span class="xa-exchangeSpan">{{item.money}}</span>
+			                    	<span class=" mr30">元</span>
+					                号段：<input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.card_number}}">
+					                <span class="xa-exchangeSpan">{{item.card_number}}</span>
+					                <span class="ml5 mr5">-</span>
+					                <input type="text" class="xui-i-num xa-endnum xui-hide" name="endnum" readonly=true value="{{item.card_number}}">	
+					                <span class="xa-exchangeSpan">{{item.card_number}}</span>	                
+			                    </div>
+			                </div>
+		        		</div>
+                        {% endfor %}
+	        		</form>
+	        		<div class="xui">
+				    	<a class="xui-i-add xa-add xui-hide">+添加</a>
+				    </div>
+	        	</td>
+			</tr>
+	    </table>
+	    <div class="xui-exchangeBtn">
+	    	<a class="btn btn-primary xa-btnSubmit">修改</a>
+	    </div>
+	</div>
 
-<div class="xui-exchangeTable">
-	<table class="table table-bordered">
-		<tr>
-        	<th>兑换要求：</th>
-        	<td>
-	        	<span>绑定手机号</span>
-	        	<select>
-	        		<option value="1">绑定手机号</option>
-	        		<option value="0">无条件</option>		
-	        	</select>
-        	</td>
-		</tr>
-		<tr>
-        	<th>兑换奖励：</th>
-        	<td>微众卡</td>
-		</tr>
-		<tr>
-        	<th>兑换奖项：</th>
-        	<td>
-        	    <form>
-        		<div class="xui-i-exchange xa-i-exchange">
-        		    <div class="xui-i-put">
-	        		    <div>
-	        		    	<span>1.</span>
-	        		    	使用积分：<input type="text" class="xa-i-integral" name="integral">
-	        		    </div>
-	                    <div class="ml10">
-	                    	兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">
-	                    	<span class="ml10 mr30">元</span>
-			                号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">
-			                <span class="ml10 mr10">-</span>
-			                <input type="text" class="xui-i-num xa-i-endnum" name="endnum">		                
-	                        <a class="xui-i-detail xa-i-detail" data-toggle="modal" 
-   data-target="#myModal">使用详情</a>
-	                    </div>
-	                </div>
-        		</div>
-        		</form>
-        		<div class="xui">
-			    	<a class="xui-i-add xa-i-add">+添加</a>
-			    </div>
-        	</td>
-		</tr>
-    </table>
-    <div class="xui-exchangeBtn">
-    	<a class="btn btn-primary xa-btnSubmit">完成设置</a>
-    </div>
-</div>
+{% else %}
+	<div class="xui-exchangeTable">
+		<table class="table table-bordered">
+			<tr>
+	        	<th>兑换要求：</th>
+	        	<td class="xui-bindPhoneNumTd">
+		        	<span class="xui-bindNumTxt">绑定手机号</span>
+		        	<select class="xui-bindPhoneNum">
+		        		<option value="1">绑定手机号</option>
+		        		<option value="0">无条件</option>		
+		        	</select>
+	        	</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖励：</th>
+	        	<td>微众卡</td>
+			</tr>
+			<tr>
+	        	<th>兑换奖项：</th>
+	        	<td>
+	        	    <form>
+		        		<div class="xui-i-exchange xa-i-exchange">
+		        		    <div class="xui-i-put">
+			        		    <div>
+			        		    	使用积分：<input type="text" class="xa-integral xui-i-integral" name="integral">
+			        		    	<span class="xa-exchangeSpan"></span>
+			        		    </div>
+			                    <div>
+			                    	兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
+			                    	<span class="xa-exchangeSpan"></span>
+			                    	<span class="ml5 mr30">元</span>
+					                号段：<input type="text" class="xui-i-num xa-snum" name="snum">
+					                <span class="xa-exchangeSpan"></span>
+					                <span class="ml5 mr5">-</span>
+					                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
+					                <span class="xa-exchangeSpan"></span>                
+			                    </div>
+			                </div>
+		        		</div>
+	        		</form>
+	        		<div class="xui">
+				    	<a class="xui-i-add xa-add">+添加</a>
+				    </div>
+	        	</td>
+			</tr>
+	    </table>
+	    <div class="xui-exchangeBtn">
+	    	<a class="btn btn-primary xa-btnSubmit">完成设置</a>
+	    </div>
+	</div>
+{%endif%}
 </div>
 
 
@@ -119,44 +191,53 @@
 
 {% verbatim %}
 <script type="text/x-jquery-tmpl" id="exchange-input">
-	<div class="xui-i-put">
-    	<div>
-	        <span>${num}.</span>
-	        使用积分：<input type="text" class="xa-i-integral" name="integral">
-	    </div>
-	    <div class="ml10">
-	        兑换微众卡：<input type="text" class="xui-i-money xa-i-money" name="money">
-	        <span class="ml10 mr30">元</span>
-			号段：<input type="text" class="xui-i-num xa-i-snum" name="snum">
-			<span class="ml10 mr10">-</span>
-			<input type="text" class="xui-i-num xa-i-endnum" name="endnum">		                
-	        <a class="xui-i-detail xa-i-detail" data-toggle="modal" 
-   data-target="#myModal">使用详情</a>
-	    </div>
+<div class="xui-i-put">
+	<div>
+		使用积分：<input type="text" class="xa-integral xui-i-integral" name="integral">
+		<span class="xa-exchangeSpan"></span>
 	</div>
+	<div>
+		兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
+		<span class="xa-exchangeSpan"></span>
+		<span class="ml5 mr30">元</span>
+		号段：<input type="text" class="xui-i-num xa-snum" name="snum">
+		<span class="xa-exchangeSpan"></span>
+		<span class="ml5 mr5">-</span>
+		<input type="text" class="xui-i-num xa-endnum" name="endnum">	
+		<span class="xa-exchangeSpan"></span>              
+	</div>
+</div>
 </script>
 {% endverbatim %}
 
 <script type="text/javascript">
+
 $(document).ready(function() {
 	var i = 1;
-	$(".xa-i-add").click(function(){   
-	    i ++;
-	    var arg =[{num:i}];
-		$("#exchange-input").tmpl(arg).appendTo(".xa-i-exchange");
+	$(".xa-add").click(function(){   
+		$("#exchange-input").tmpl().appendTo(".xa-i-exchange");
 	});   
 	$(".xa-btnSubmit").click(function(){
 		if(!$("input").attr("readonly")){
-			$("input").attr("readonly",true)
-			          .addClass("xui-noborder");
-			$(".xa-i-detail").show();
-			$(".xa-i-add").hide();
+			$("input").attr("readonly",true).hide();
+
+            var exchange_input = $(".xa-exchangeSpan").prev();
+            for(var j=0;j<exchange_input.length;j++){
+            	$(".xa-exchangeSpan")[j].innerHTML = aexchange_input[j].value;
+            }
+            $(".xa-exchangeSpan").show();
+
+			$(".xa-add").hide();
 			$(this).html("修改");
+			$(".xui-bindPhoneNum").hide();
+			var bindMess =$(".xui-bindPhoneNum option:selected").html();
+			$(".xui-bindNumTxt").html(bindMess);
+			
 			var prize = [];
-			var money = $(".xa-i-money");
-			var integral = $(".xa-i-integral");
-            var snum = $(".xa-i-snum");
-			var endnum = $(".xa-i-endnum");
+			var money = $(".xa-money");
+			var integral = $(".xa-integral");
+            var snum = $(".xa-snum")
+			var endnum = $(".xa-endnum");
 			var isBind = $("option:selected").val();
 			for(i=0;i<money.length;i++){
 				var moneyData = money[i].value;
@@ -189,18 +270,18 @@ $(document).ready(function() {
 			    }
 			})          
 		}else{
-            $("input").attr("readonly",false)
-		          .removeClass("xui-noborder");
-		    $(".xa-i-detail").hide();
+            $("input").attr("readonly",false).show();
 			$(this).html("保存"); 
-			$(".xa-i-add").show();
+			$(".xa-add").show();
+			$(".xui-bindPhoneNum").show();
+			$(".xa-exchangeSpan").hide();
 		}     
 	});
 });
 </script>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
    aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog  modal-lg" style="width: 800px">
         <div class="modal-content">
             <div class="modal-header">
 	            <button type="button" class="close" 
@@ -208,38 +289,17 @@ $(document).ready(function() {
 	                  &times;
 	            </button>
             <h4 class="modal-title" id="myModalLabel">
-               查看微众卡()使用详情
+               查看微众卡使用详情
             </h4>
         </div>
         <div class="modal-body">
-        <div class="clearfix">
-        	<a class="btn btn-primary fl" style="margin: 0"><span>&lt;</span>返回设置兑换平台</a>
-        	<a class="btn btn-default fr">导出订单</a>
-        </div>
-        <div class="mt10">
-        	<table class="table table-bordered">
-        		<thead>
-        		<tr>
-                	<th>11111111</th>
-                    <th>11111111</th>
-                    <th>11111111</th>
-                    <th>11111111</th>
-        		</tr>
-        		</thead>
-        		<tr>
-                	<td>11111111</td>
-                    <td>11111111</td>
-                    <td>11111111</td>
-                    <td>11111111</td>
-        		</tr>
-        		<tr>
-                	<td>11111111</td>
-                    <td>11111111</td>
-                    <td>11111111</td>
-                    <td>11111111</td>
-        		</tr>	
-        	</table>
-        </div>	
+	        <div class="clearfix">
+	        	<a class="btn btn-primary fl m0"  data-dismiss="modal">返回设置兑换平台</a>
+	        	<a class="btn btn-default fr">导出订单</a>
+	        </div>
+	        <div class="mt10 xa-exchangeTableView">
+	        	
+	        </div>	
         </div>
     </div>
 </div>
