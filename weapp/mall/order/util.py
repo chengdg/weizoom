@@ -635,6 +635,7 @@ def export_orders_json(request):
                         member_source_name if member_source_name else '-',
                         father_name_or_qrcode_name if father_name_or_qrcode_name else '-',
                         before_scanner_qrcode_is_member if before_scanner_qrcode_is_member else '-',
+                        '-'
                     ]
                     if has_supplier:
                         tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
