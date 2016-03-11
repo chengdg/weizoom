@@ -78,32 +78,6 @@ class CardExchange(resource.Resource):
         })
         return render_to_response('mall/editor/promotion/card_exchange.html', c)
 
-    # @login_required
-    # def api_get(request):
-    #     """
-    #     卡兑换查看微众卡使用详情
-    #     """
-    #     print '======================'
-    #     start_num = request.GET.get('start_num',None)
-    #     end_num = request.GET.get('end_num',None)
-    #     exchange_card_list = []
-    #     exchange_cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = end_num)
-    #     weizoom_card_rules = card_models.WeizoomCardRule.objects.all()
-    #     for card in exchange_cards:
-    #         card_rule_id = card.weizoom_card_rule_id
-    #         cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
-    #         userd_money = cur_weizoom_card_rule.money - card.money
-    #         exchange_card_list.append({
-    #             'card_number': card.weizoom_card_id,
-    #             'money': '%.2f' % cur_weizoom_card_rule.money,
-    #             'used_money': '%.2f' % userd_money,
-    #             'user': 'vito'  
-    #         })
-
-    #     response = create_response(200)
-    #     response.data = exchange_card_list
-    #     return response.get_response()
-
     def api_post(request):
         """
         卡兑换
@@ -190,7 +164,7 @@ class CardExchangeDetail(resource.Resource):
                 print e,'/////////*********'
         
         response = create_response(200)
-        response.data = exchanged_cards_list
+        response.data.items = exchanged_cards_list
         return response.get_response()
 
 
