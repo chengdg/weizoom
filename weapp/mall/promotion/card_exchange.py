@@ -141,7 +141,7 @@ class CardExchangeDetail(resource.Resource):
         print '======================'
         card_number = request.GET.get('cardNumber',None)
         card_user = request.GET.get('cardUser',None)
-        cur_page = int(request.GET.get('cur_page',1))
+        cur_page = int(request.GET.get('page',1))
         count_per_page = int(request.GET.get('count_per_page',10))
 
         webapp_id = request.user_profile.webapp_id
