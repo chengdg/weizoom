@@ -1791,65 +1791,158 @@ li.wui-selectBox-display-table {
 
 /*百宝箱 拼红包 red packet CSS-- end*/
 
-/*百宝箱 团购CSS*/
-.wui-group-container .wui-i-help_group{
+/*百宝箱 团购CSS ---- start */
+.wui-group-container{
+    position: relative;
+    background-color:#DADADA;
+    height: auto;
+}
+
+.wui-group-container .wui-i-body{
     width: 100%;
-    top:0;
+    height: auto;
+}
+.wui-group-container .wui-i-help_group{
+    margin:0 10px;
 }
 .wui-group-container .wui-i-help_group .wui-i-shop_circle{
-    width: 70px;
     height: 70px;
+    width: 70px;
+    border:solid 3px #FFFFFF;
+    border-radius:4px;
+    text-align: center;
     float: left;
     margin-top: 15px;
-    margin-left: 10px;
-	margin-bottom: 5px;
 }
+
 .wui-group-container .wui-i-help_group .wui-i-shop_circle img{
-    border-radius: 10px;
-    width: 70px;
     height: 70px;
+    width: 70px;
+    border-radius:3px;
 }
-.wui-group-container .wui-i-help_group .wui-i-title-pic-icon{
-	text-align: center;
-    width: 0px;
-    height: 0px;
-    border-width: 10px;
-    border-style: solid;
-    border-color: #F2F2F2 #ffffff #F2F2F2 #F2F2F2;
-    text-indent: 2em;
-    position: absolute;
-    margin-top: 52px;
-    margin-left: 10px;
-}
-.wui-group-container .wui-i-help_group .wui-i-title-pic{
-    background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_title.png");
-    height: 36px;
-    background-size: 100%;
-    background-color: #fff;
-    width: 59%;
-    margin-left: 110px;
-    margin-top: 45px;
-    position: absolute;
-    border-radius: 6px;
-    background-position: 2px 7px;
-}
-.wui-group-container .wui-i-help_group .wui-i-title-pic-5{
-	background-position: 2px -36px;
-}
-.wui-group-container .wui-i-help_group .wui-i-title-pic-10{
-	background-position: 2px -84px;
+.wui-group-container .wui-i-help_group .wui-i-titleLabel{
 }
 .wui-group-container .wui-i-help_group .wui-i-rules{
-    margin-top: 10px;
-    float: right;
-    width: 80px;
-    height: 30px;
-    line-height: 30px;
+    background-color: #FF2742;
+    height: 34px;
+    width: 112px;
+    line-height: 34px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    color: #FFFFFF;
+    font-size: 1.2rem;
     text-align: right;
-    background-color: #ff2742;
-    color: #fff;
-    border-radius: 15px 0px 0px 15px;
+    float: right;
+    margin-top: 5px;
+    margin-right: -10px;
 }
+.wui-group-container .wui-i-help_group .wui-i-rules .wui-i-title{
+    margin-right: 5px;
+}
+
+.wui-group-container  .wui-i-help_group .wui-i-titleLabel{
+    height: 90px;
+    /*background-color: blue;*/
+    margin-right: 30px;
+    margin-left: 95px;
+}
+.wui-group-container .wui-i-titleLabel .wui-i-title-pic-icon{
+    position: relative;
+    top: 58px;
+    left: -19px;
+    text-align: center;
+    width: 0px;
+    height: 0px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #DADADA #FFFFFF #DADADA #DADADA;
+    text-indent: 2em;
+}
+.wui-group-container .wui-i-titleLabel .wui-i-title-pic{
+    height: 35px;
+    width: 212px;
+    border-radius: 6px;
+    position: relative;
+    top: 35px;
+    left: -3px;
+    background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_title.png");
+    background-position: 8px 7px;
+    background-size: 94%;
+    background-color: #fff;
+}
+
+
+.wui-group-container .wui-i-description{
+    background: #fff;
+    margin: 13px 13px 10px 13px;
+    padding: 13px;
+    border-radius: 6px;
+}
+.wui-group-container .wui-i-description .wui-i-description-content{
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.wui-group-container .wui-i-description-content .wui-i-product-title{
+    width: 90%;
+    height: 2rem;
+    padding-bottom: 5px;
+    margin: auto;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group{
+    border-top: 1px solid #E6E6E6;
+    padding: 10px 0;
+    width: 90%;
+    margin: auto;
+
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group-title{
+    background: #ff2742;
+    color: #fff;
+    padding: 3px;
+    border-radius: 4px;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-price-group-original-price{
+    font-size: 0.8rem;
+    color: #656565;
+    text-decoration: line-through; 
+}
+
+.wui-group-container .wui-i-description-content .wui-i-product-price-group-group-price{
+    color: #ff2742;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-img{
+    border-radius: 8px;
+}
+.wui-group-container .wui-i-description-content .wui-i-product-img img{
+    border-radius: 8px;
+}
+.wui-group-container .wui-i-choose_group_box{
+    color:#333333;
+
+}
+.wui-group-container .wui-i-choose_group_box .wui-i-choose_items_box{
+    margin-top: 5px;
+}
+
+.wui-group-container .wui-i-choose_group_box .wui-i-choose_title{
+    /*font-size: 0.9rem;*/
+    float: left;
+}
+.wui-group-container .wui-i-choose_group_box .wui-i-end_time {
+    font-size: 0.8rem;
+    float: right;
+    line-height: 1.4rem;
+}
+.wui-group-container .wui-i-choose_group_box .wui-i-items {
+    clear: both;
+    font-size: 1rem;
+}
+
+
 .wui-group-container .wui-i-btngroup{
     text-align: center;
     margin-top: 20px;
@@ -1862,9 +1955,9 @@ li.wui-selectBox-display-table {
     border: 0;
     height: 2.5rem;
     border-radius: 5px;
-    font-family: "黑体";
-	width: 50%;
-	margin-bottom: 5px;
+    font-family: "微软雅黑";
+    width: 50%;
+    margin-bottom: 5px;
 }
 .wui-group-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
@@ -1880,164 +1973,4 @@ li.wui-selectBox-display-table {
     padding: 10px;
     border-radius: 6px;
 }
-.wui-group-container .wui-i-description-content .wui-i-product-title {
-    font-weight: bold;
-    font-size: 1.2rem;
-	margin-left: 15px;
-    margin-bottom: 10px;
-}
-.wui-group-container .wui-i-description-content .wui-i-product-price-group {
-    margin-bottom: 10px;
-    margin-left: 15px;
-}
-.wui-group-container .wui-i-description-content .wui-i-product-price-group-title{
-	background: #ff2742;
-    color: #fff;
-    padding: 3px;
-    border-radius: 4px;
-}
-.wui-group-container .wui-i-description-content .wui-i-product-price-group-original-price {
-    font-size: 0.8rem;
-    color: gray;
-    text-decoration: line-through;
-}
-.wui-group-container .wui-i-description-content .wui-i-product-price-group-group-price {
-    color: #ff2742;
-    font-size: 1.1rem;
-    font-weight: bold;
-}
-.wui-group-container .wui-i-description-content .wui-i-product-img img{
-	border-radius: 8px;
-}
-.wui-group-container .wui-i-choose_group_box span.wui-i-end_time {
-    font-size: 0.8rem;
-    float: right;
-    line-height: 1.4rem;
-}
-.wui-group-container .wui-i-group_box_progress {
-    margin-top: 10px;
-}
-.wui-group-container .wui-i-group_box_progress .wui-i-timing {
-	float: right;
-}
-.wui-group-container .wui-i-group_box_progress .wui-i-timing b{
-    background: #E6E6E6;
-    border-radius: 3px;
-    padding: 3px;
-}
-.wui-group-container .wui-i-powerbar_group{
-    position: relative;
-    top:-2rem;
-    width: 100%;
-    height: 2rem;
-    margin-left: auto;
-    margin-right: auto;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-box{
-    height: 43px;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-percentbox{
-    font-size:10px;
-    color:white;
-    width: 40px;
-    height: 40px;
-    background: no-repeat url("/termite_static/img/component/redpacket/icon_sprite.png");
-    background-size: 291%;
-    background-position: 2px 0px;
-    text-align: center;
-    padding-top: 10px;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-bar{
-    width: auto;
-    height: 15px;
-    background:#E6E6E6;
-    margin-right: 60px;
-    border-radius: 10px;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-box{
-    width: auto;
-    margin-left: 40px;
-    margin-right: 80px;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-percentbox{
-    position: relative;
-    left: 0%;
-    transition: left 3s ease-in-out;
-    -moz-transition: left 3s ease-in-out; /* Firefox 4 */
-    -webkit-transition: left 3s ease-in-out; /* Safari 和 Chrome */
-    -o-transition: left 3s ease-in-out; /* Opera */
-
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-bar_process{
-    background: #30D8B4;
-    width: 0%;
-    height: 100%;
-    border-radius: 10px;
-    transition: width 3s ease-in-out;
-    -moz-transition: width 3s ease-in-out; /* Firefox 4 */
-    -webkit-transition: width 3s ease-in-out; /* Safari 和 Chrome */
-    -o-transition: width 3s ease-in-out; /* Opera */
-	display: inline-block;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-bar_process-fail{
-	background: #999999;
-}
-.wui-group-container .wui-i-powerbar_group .wui-i-total_number{
-    color:#ff2742;
-}
-
-/*活动规则CSS*/
-.wui-group-container .wui-i-rules-contentbox{
-    background: #fff;
-    border-radius: 3px;
-    left: 5%;
-    padding: 10px 10px 55px 10px;
-    position: fixed;
-    width: 85%;
-    z-index: 11111;
-    text-align: center;
-    background-position: -2px -9px;
-    background-size: 99%;
-}
-.wui-group-container .wui-i-rules-contentbox{
-    margin-top: 30%;
-}
-.wui-group-container .wui-i-rules-contentbox .wui-i-rules-content{
-    margin-top: 2rem;
-    color: #3D3C35;
-    text-align: center;
-    position: relative;
-    height: 100%;
-}
-.wui-group-container .wui-i-rules-contentbox .wui-i-title-box{
-    color:#3A1614;
-    font-weight: bold;
-    font-size: large;
-}
-.wui-group-container .wui-i-rules-contentbox .wui-i-title-box .wui-i-title{
-    margin-bottom: 4px;
-}
-.wui-group-container .wui-i-rules-contentbox .wui-i-content-box{
-    color: #3D3C35;
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    max-height: 69%;
-    overflow-y: auto;
-    position: relative;
-    left: 2px;
-}
-.wui-group-container .wui-i-rules-contentbox .wui-i-closebtn{
-    color: #fff;
-    width: 110px;
-    height: 30px;
-    background: #FF422D;
-    text-align: center;
-    border-radius: 5px;
-    position: relative;
-    line-height: 30px;
-	margin-left: auto;
-    margin-right: auto;
-	margin-top: 15px;
-}
+/*百宝箱 团购CSS ---- end */
