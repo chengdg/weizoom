@@ -66,7 +66,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				webapp_users = member_models.WebAppUser.objects.filter(member_id__in=sy)
 				webapp_user_id2member_id = dict([(u.id, u.member_id) for u in webapp_users])
 				webapp_user_ids = set(webapp_user_id2member_id.keys())
-				# setting_id_created_time = ChannelQrcodeHasMember.objects.get(channel_qrcode_id = sx).created_at
+
 				orders = Order.by_webapp_user_id(webapp_user_ids).filter(status__in=(ORDER_STATUS_PAYED_SUCCESSED,ORDER_STATUS_PAYED_NOT_SHIP,
 																					 ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED))
 				setting_id2count[sx]['cash'] = 0
@@ -76,7 +76,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 				for order in orders:
 					member_id = webapp_user_id2member_id[order.webapp_user_id]
 					if member_id2relation[member_id].is_new or  member_id2relation[member_id].created_at <= order.created_at:
-						# if order.created_at > setting_id_created_time:
+
 						setting_id2count[sx]['cash'] += order.final_price
 						setting_id2count[sx]['card'] += order.weizoom_card_money
 						setting_id2count[sx]['order_num'] += 1
@@ -84,6 +84,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 
 		items = []
 		for setting_id in setting_ids:
+			setting_id = int(setting_id)
 			if setting_id in setting_id2count:
 
 				items.append({
