@@ -410,7 +410,7 @@ def export_orders_json(request):
                 payment_time = '-'
 
             # 优惠券和金额
-            coupon_name = '无'
+            coupon_name = ''
             coupon_money = '0'
             if order.coupon_id:
                 role_id = coupon2role.get(order.coupon_id, None)
@@ -515,7 +515,7 @@ def export_orders_json(request):
                     order.weizoom_card_money_huihui,
                     order.postage,
                     u'0' if order.status == 0 else order.integral_money,
-                    u'0' if order.status == 1 else coupon_money,
+                    u'0' if order.status == 1 and coupon_name else coupon_money,
                     u'无' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8') if order.buyer_name else '-',
@@ -563,7 +563,7 @@ def export_orders_json(request):
                     u'-',
                     u'-',
                     u'-',
-                    u'-' if order.status == 1 else coupon_money,
+                    u'-' if order.status == 1 and coupon_name else coupon_money,
                     u'-' if order.status == 1 else coupon_name,
                     order_status,
                     order.buyer_name.encode('utf8') if order.buyer_name else '-',
@@ -638,8 +638,8 @@ def export_orders_json(request):
                         '-'
                     ]
                     if has_supplier:
-                        tmp_order.append( u'' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
-                        tmp_order.append(u'' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
+                        tmp_order.append( u'-' if 0.0 == premium_product['purchase_price'] else premium_product['purchase_price'])
+                        tmp_order.append(u'-' if 0.0 ==premium_product['purchase_price'] else premium_product['purchase_price']*premium_product['count'])
                     temp_premium_products.append(tmp_order)
                     temp_premium_id = '%s_%s' % (order.id, relation.promotion_id)
                 # if test_index % pre_page == pre_page-1:
