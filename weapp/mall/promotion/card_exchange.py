@@ -139,11 +139,28 @@ class CardExchangeDetail(resource.Resource):
         卡兑换查看微众卡使用详情
         """
         print '======================'
+        card_number = request.GET.get('cardNumber',None)
+        card_user = request.GET.get('cardUser',None)
+        cur_page = int(request.GET.get('cur_page',1))
+        count_per_page = int(request.GET.get('count_per_page',10))
+
         webapp_id = request.user_profile.webapp_id
         cards = card_models.WeizoomCard.objects.all()
         card_rules = card_models.WeizoomCardRule.objects.all()
         exchanged_cards_list = []
-        exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id).order_by('-created_at')
+        #查询
+        exchanged_cards = []
+        if card_number:
+            cur_cards = cards.filter(weizoom_card_id__contains = card_number)
+            card_id_list = []
+            for card in cur_cards:
+                card_id_list.append(card.id)
+            exchanged_cards = promotion_models.CardHasExchanged.objects.filter(card_id__in = card_id_list).order_by('-created_at')
+        else:
+            exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id).order_by('-created_at')
+
+        pageinfo, exchanged_cards = paginator.paginate(exchanged_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
         for card in exchanged_cards:
             card_id = card.card_id
             try:
@@ -165,6 +182,7 @@ class CardExchangeDetail(resource.Resource):
         
         response = create_response(200)
         response.data.items = exchanged_cards_list
+        response.pageinfo = paginator.to_dict(pageinfo)
         return response.get_response()
 
 
