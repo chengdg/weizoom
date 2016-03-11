@@ -43,14 +43,28 @@ class CardExchange(resource.Resource):
             card_exchange_id = card_exchange.id
             card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
             prize_list = []
+            cards = card_models.WeizoomCard.objects.all()
+            card_has_orders = card_models.WeizoomCardHasOrder.objects.all()
+            card_has_exchanged = promotion_models.CardHasExchanged.objects.all()
             for rule in card_exchange_rules:
                 card_number = rule.card_number
-                card_number_split = card_number.split('-')
+                s_num = card_number.split('-')[0]
+                end_num = card_number.split('-')[1]
+                exchange_cards = cards.filter(weizoom_card_id__gte = s_num,weizoom_card_id__lte = end_num)
+                has_not_order_card_id_list = []
+                if exchange_cards:
+                    for card in exchange_cards:
+                        cur_card_has_orders = card_has_orders.filter(card_id = card.id)
+                        if not cur_card_has_orders:
+                            has_not_order_card_id_list.append(card.id)
+                card_has_exchanged_count = card_has_exchanged.filter(card_id__in = has_not_order_card_id_list).count()
+                card_can_use_count = len(has_not_order_card_id_list) - card_has_exchanged_count
                 prize_list.append({
                     'integral': rule.integral,
                     'money': rule.money,
-                    's_num': card_number_split[0],
-                    'end_num': card_number_split[1]                 
+                    's_num': s_num,
+                    'end_num': end_num,
+                    'count': card_can_use_count                 
                 })
             card_exchange_dic['prize'] = prize_list
         except Exception,e:
