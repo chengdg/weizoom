@@ -4,9 +4,18 @@
     .xui-filterPanel{
     	padding-left: 50px;
     	padding-right: 50px;
+    	margin-bottom: 15px;
     }
     .xui-filterPanel .btn-primary{
     	margin: 0;
+    }
+    .xui-filterPanel .btn{
+    	width: 90px;
+    	height: 30px;
+    	font-weight: bold;
+    }
+    .xui-thead{
+    	background: #C8D1E4;
     }
     input{
     	    width: 150px;
@@ -16,6 +25,10 @@
 		    padding: 0 5px;
 		    color: #656565;
 		    white-space: nowrap;
+    }
+    .xb-stripedTable td{
+    	height: 40px;
+    	line-height: 40px;
     }
 	</style>
 {% endblock %}
@@ -33,18 +46,17 @@
     <div>
     	<div class="xui-filterPanel">
         	<form>
-	        	<span class="mr30">卡号：<input type="text" name="cardNumber" class="xui-cardNumber"></span>
-	        	<span class="mr50">使用人：<input type="text" name="cardUser" class="xui-cardNumber"></span>
-	        	<a class="btn btn-primary mr10">查询</a>
-	        	<a class="btn btn-default mr10">重置</a>
-	        	<a class="btn btn-default">导出</a>
+	        	<span class="mr30">卡号：<input type="text" name="cardNumber" class="xui-cardNumber xa-cardNumber"></span>
+	        	<span class="mr50">使用人：<input type="text" name="cardUser" class="xui-cardUser xa-cardUser"></span>
+	        	<a class="btn btn-primary mr10 xa-search">查 询</a>
+	        	<a class="btn btn-default mr10">重 置</a>
+	        	<a class="btn btn-default">导 出</a>
         	</form>
         </div>
-        <div>
-        	<div class="xa-listView" data-ui-role="advanced-table" data-app="market_tools/weizoom_card" data-api="adjust_accounts/get" data-template-id="#exchange-detail" data-enable-paginator="true"></div>
+        <div class="xa-listView" data-ui-role="advanced-table" data-app="mall2" data-api="card_exchange_details" 
+data-template-id="#exchange-detail_list_view" data-enable-paginator="true"></div>
         </div>
     </div>
-
 </div>
 
 
@@ -55,8 +67,8 @@
 
 {% verbatim %}
 <script type="text/x-jquery-tmpl" id="exchange-detail">
-    <table class="table table-bordered table-condensed">
-		<thead>
+    <table class="table table-bordered table-condensed xb-stripedTable">
+		<thead class="xui-thead">
 			<th>卡号</th>
 			<th>面值</th>
 			<th>卡内余额</th>
@@ -65,7 +77,7 @@
 		</thead> 
 			<tbody>
 				{{each(i, item) items}}
-				<tr tr_id='${item.id}'>
+				<tr>
 					<td>${item.card_number}</td>
 					<td>${item.card_value}</td>
 					<td>${item.card_money}</td>
@@ -82,13 +94,13 @@
 
 $(document).ready(function() {	
 	var tableView = $('.xa-listView').data('view')
-	$('.reload-adjust-accounts').click(function(event) {
-		tableView.options.enableLoad = true;
-		tableView.errorEvent = function() {
-			alert('加载数据失败!');
-			W.getLoadingView().hide();
-		};
-		var args = get_date();
+	$('.xa-search').click(function(){
+		var cardNumber = $(".xa-cardNumber");
+		var cardUser = $(".xa-cardUser");
+		var args = {
+			"cardNumber" : cardNumber,
+			"cardUser" : cardUser
+		}
 		tableView.curPage = '1';
 		if (args){
 			tableView.options.args = JSON.stringify(args)
