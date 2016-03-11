@@ -1942,6 +1942,11 @@ li.wui-selectBox-display-table {
     font-size: 1rem;
 }
 
+.wui-group-container .wui-i-group_box_progress{
+    
+}
+
+
 
 .wui-group-container .wui-i-btngroup{
     text-align: center;
@@ -1973,4 +1978,6 @@ li.wui-selectBox-display-table {
     padding: 10px;
     border-radius: 6px;
 }
+
+
 /*百宝箱 团购CSS ---- end */
