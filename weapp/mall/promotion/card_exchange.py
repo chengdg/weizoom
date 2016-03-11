@@ -128,7 +128,8 @@ class MobileCardExchange(resource.Resource):
         """
         手机端卡兑换页
         """
-        webapp_id = request.user_profile.webapp_id
+        # webapp_id = request.user_profile.webapp_id
+        webapp_id = request.GET.get('webapp_id','')
         card_exchange_dic = {}
         try:
             card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
