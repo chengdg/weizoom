@@ -160,7 +160,6 @@ class CardExchangeDetail(resource.Resource):
             exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id).order_by('-created_at')
 
         pageinfo, exchanged_cards = paginator.paginate(exchanged_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-
         for card in exchanged_cards:
             card_id = card.card_id
             try:
@@ -170,19 +169,20 @@ class CardExchangeDetail(resource.Resource):
                 cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
                 money = cur_card_rule.money
                 remainder = cur_card.money
+                user = card.owner_name
                 exchanged_cards_list.append({
                     'card_id': weizoom_card_id,
                     'money': '%.2f' % money,
                     'remainder': '%.2f' % remainder,
                     'used_money': '%.2f' % (money - remainder),
-                    'user': 'vito'  
+                    'user': user  
                 })
             except Exception,e:
                 print e,'/////////*********'
         
         response = create_response(200)
         response.data.items = exchanged_cards_list
-        response.pageinfo = paginator.to_dict(pageinfo)
+        response.data.pageinfo = paginator.to_dict(pageinfo)
         return response.get_response()
 
 
