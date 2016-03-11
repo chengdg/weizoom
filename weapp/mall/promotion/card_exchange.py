@@ -19,6 +19,7 @@ from modules.member.module_api import get_member_by_id_list
 from modules.member.models import (MemberGrade, MemberTag, WebAppUser)
 from core import search_util
 from market_tools.tools.coupon.tasks import send_message_to_member
+from market_tools.tools.weizoom_card import models as card_models
 
 
 FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
@@ -69,24 +70,24 @@ class CardExchange(resource.Resource):
         卡兑换查看微众卡使用详情
         """
         print '======================'
-        start_num = request.GET.get('start_num',None)
-        end_num = request.GET.get('end_num',None)
-        exchange_card_list = []
-        exchange_cards = WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = endnum)
-        weizoom_card_rules = WeizoomCardRule.objects.all()
-        for card in exchange_cards:
-            card_rule_id = card.weizoom_card_rule_id
-            cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
-            userd_money = cur_weizoom_card_rule.money - card.money
-            exchange_card_list.append({
-                'card_number': card.weizoom_card_id,
-                'money': '%.2f' % cur_weizoom_card_rule.money,
-                'used_money': '%.2f' % userd_money,
-                'user': 'vito'  
-            })
+        # start_num = request.GET.get('start_num',None)
+        # end_num = request.GET.get('end_num',None)
+        # exchange_card_list = []
+        # exchange_cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = end_num)
+        # weizoom_card_rules = card_models.WeizoomCardRule.objects.all()
+        # for card in exchange_cards:
+        #     card_rule_id = card.weizoom_card_rule_id
+        #     cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
+        #     userd_money = cur_weizoom_card_rule.money - card.money
+        #     exchange_card_list.append({
+        #         'card_number': card.weizoom_card_id,
+        #         'money': '%.2f' % cur_weizoom_card_rule.money,
+        #         'used_money': '%.2f' % userd_money,
+        #         'user': 'vito'  
+        #     })
 
         response = create_response(200)
-        response.data = exchange_card_list
+        # response.data = exchange_card_list
         return response.get_response()
 
     def api_post(request):
@@ -101,7 +102,8 @@ class CardExchange(resource.Resource):
         
         prize_list = json.loads(prize)
         card_exchange_rule_list = []
-        
+        promotion_models.CardExchange.objects.all().delete()
+        promotion_models.CardExchangeRule.objects.all().delete()
         card_exchange = promotion_models.CardExchange.objects.create(
             webapp_id = webapp_id,
             require = is_bind,
