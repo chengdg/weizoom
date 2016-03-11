@@ -25,7 +25,7 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 	app = 'qrcode'
 	resource = 'qrcode_effect_info'
 
-	@param_required(['setting_ids','is_all'])
+	@param_required(['setting_ids'])
 	def get(args):
 		"""
 		获取商品和供应商信息
@@ -35,9 +35,6 @@ class QrcodeEffectInfo(api_resource.ApiResource):
 		@param is_all 是否获取全部会员，如果否，则获取
 		"""
 		setting_ids = args['setting_ids'].split(',')
-
-		is_all = int(args['is_all'])
-
 
 		if setting_ids and len(setting_ids) > 0:
 			relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id__in=setting_ids)
