@@ -125,6 +125,13 @@
 						订单编号：
 						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
 						</p>
+						<p class="ml15 fl w20">
+						{{if order.is_group_buying}}
+							<img src="/static_v2/img/editor/orderGroupIcon.png"/>
+						{{else}}
+							&nbsp;
+						{{/if}}
+						</p>
 						<p class="ml10 fl w60">
 							${order.pay_interface_name}
 						</p>
@@ -315,14 +322,17 @@
 					<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 6 || order.order_status == 7)}}style="border-top:0;"{{/if}} >
 						<div class="xa-actions" data-order-id="${group.fackorder.id}">
 						{{each(i,a) group.fackorder.actions}}
-						    <a href='javascript:void(0);' class="${a.class_name}"
-						    {{if a.action=="update_express"}}
-						        data-is-update=true
-						        data-express-company-name="${group.fackorder.express_company_name}"
-						        data-express-number="${group.fackorder.express_number}"
-								data-leader-name="${group.fackorder.leader_name}"
+							{{if order.is_group_buying && (a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder') }}
+							{{else}}
+							    <a href='javascript:void(0);' class="${a.class_name}"
+							    {{if a.action=="update_express"}}
+							        data-is-update=true
+							        data-express-company-name="${group.fackorder.express_company_name}"
+							        data-express-number="${group.fackorder.express_number}"
+									data-leader-name="${group.fackorder.leader_name}"
+							    {{/if}}
+							    >${a.name}</a>
 						    {{/if}}
-						    >${a.name}</a>
 						{{/each}}
                         </div>
 					</td>
