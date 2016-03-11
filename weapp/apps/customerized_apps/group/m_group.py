@@ -190,6 +190,7 @@ class MGroup(resource.Resource):
 			record = app_models.Group.objects(id=record_id)
 			if record.count() > 0:
 				record = record.first()
+				record.update(add_to_set__visited_member=member_id)
 				#获取公众号昵称
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				#获取活动状态

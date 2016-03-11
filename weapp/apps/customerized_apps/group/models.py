@@ -27,7 +27,7 @@ class Group(models.Document):
 	rules = models.StringField()#团购说明
 	material_image = models.StringField()#分享图片
 	share_description = models.StringField()#分享描述
-	visit_number = models.IntField(default=0) #浏览人数
+	visited_member = models.ListField() #浏览过的member_list
 
 	meta = {
 		'collection': 'group_group'
@@ -105,6 +105,10 @@ class GroupDetail(models.Document):
 	is_already_paid = models.BooleanField(default=False) #是否已经支付成功
 	order_id = models.StringField(default="", max_length=100) #对应的订单号
 	created_at = models.DateTimeField() #创建时间
+
+	#存储api状态和结果
+	msg_api_status = models.BooleanField(default=False) #模板消息是否已成功发送
+	msg_api_failed_members_info = models.DynamicField() #模板消息发送失败的会员信息
 
 	meta = {
 		'collection': 'group_group_detail'
