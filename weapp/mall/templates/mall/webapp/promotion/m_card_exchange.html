@@ -4,49 +4,112 @@
 <link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
 <link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
 <style>
-
+	.xui-attentionAlert {
+		display: none;
+	}
+	.xui-wzcoinConfirm-page .ui-content {
+		background: none!important;
+	}
+	.xui-section-item{
+		background-color: #ee3715;
+		color: #fff;
+		background-image: url("/markettools_static/weizoom_card/img/CCbg_1.jpg");
+		background-position: left bottom;
+		background-size: 52%;
+		text-align: right;
+		background-repeat: no-repeat;
+	}
+	.xui-section-item h3{
+		font-size:1.8rem;
+		font-weight: 400;
+		margin-bottom: 0px;
+		margin-top: 20px;
+	}
+	.xui-section-item p{
+		line-height: 35px;
+		margin-bottom: 10px;
+		font-size: 0.9rem;
+	}
+	.xui-exchange-form{
+		padding: 10px;
+	}
+	.xui-exchange-form .xui-form-control label>b{
+		display: inline-block;
+		width: 4px;
+		height: 16px;
+		background-color: #1aa3f9;
+		margin-bottom: -2px;
+		margin-right: 5px;
+	}
+	.xui-exchange-form .xui-form-control .xui-bg{
+		background-color: #fff;
+		padding: 10px 10px 15px;
+		margin-top: 10px;
+		margin-bottom: 20px;
+	}
+	/*.xui-exchange-form .xui-form-control .xui-bg input{*/
+		/*width: 60%;*/
+		/*border: 1px solid #e5e5e5;*/
+		/*padding-left: 10px;*/
+	/*}*/
+	.xui-exchange-form .xui-form-control .xui-help-block{
+		color: #999;
+		font-size: 0.9rem;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose{
+		box-sizing: border-box;
+		display: inline-block;
+		width: 45%;
+		padding:15px 20px;
+		border: 1px solid #d2d2d2;
+		border-radius: 5px;
+		text-align: center;
+		margin-right: 10px;
+		margin-bottom: 10px;
+		font-size: 1.7rem;
+		color: #666666;
+		font-weight: 800;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose span{
+		font-size: 1rem;font-weight: 400;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose p{
+		font-size: 1rem;font-weight: 400;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
 <div data-role="page" data-theme="x" class="xui-wzcoinConfirm-page">
 	<div data-role="content" data-theme="x">
 		<div class="xui-section-item">
-
+			<h3>微众卡兑换平台</h3>
+			<p>现有积分：<span></span></p>
 		</div>
+		<form action="post" class="xui-exchange-form">
+			<div class="xui-form-control">
+				<label for="phone"><b></b>输入手机号：</label>
+				<div class="xui-bg">
+					<input type="tel" id="phone"/>
+					<span class="xui-help-block">绑定手机号才能把奖励发到你的帐户里哦～</span>
+				</div>
+			</div>
+			<div class="xui-form-control">
+				<label><b></b>选择兑换：</label>
+				<div class="xui-bg">
+					{% for prize in card_exchange_rule.prize %}
+					<div class="xui-exchange-choose">兑<span>¥</span>{{prize.money}}
+						<p>消耗{{prize.integral}}积分</p>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 {% endblock %}
 
 {% block js %}
 <script type="text/javascript">
-	$(document).ready(function() {
 
-        $submitBtn.click(function() {
-        	var card_id = "{{weizoom_card.id}}";
-        	W.getApi().call({
-        		app: 'webapp',
-                api: 'project_api/call',
-                method: 'post',
-                args: _.extend({
-                    project_id: W.projectId,
-                    card_id: card_id,
-                    module:'mall',
-                    target_api: 'weizoom_card_to_integral/change',
-                }),
-		        success: function(data) {
-
-		        },
-		        error: function(data) {
-
-			        $('.ui-page').alert({
-			         	isShow: true,
-			         	info: msg,
-			         	isSlide: true,
-			         	speed: 2000
-			         });
-		        }
-        	});
-        });
-	});
 </script>
 {% endblock %}
