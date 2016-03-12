@@ -1916,6 +1916,7 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-description-content .wui-i-product-img{
     border-radius: 8px;
+    text-align: center;
 }
 .wui-group-container .wui-i-description-content .wui-i-product-img img{
     border-radius: 8px;
@@ -1979,5 +1980,71 @@ li.wui-selectBox-display-table {
     border-radius: 6px;
 }
 
+.wui-group-container .wui-i-group_box_progress {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
 
+.wui-group-container .wui-i-group_box_progress .wui-i-timing{
+    float: right;
+}
+.wui-group-container .wui-i-group_box_progress .wui-i-timing b{
+    background: #E6E6E6;
+    border-radius: 3px;
+    /*padding: 3px;*/
+}
+
+
+/*团购进度条*/
+
+.wui-group-container .wui-i-powerbar_group{
+    /*background-color: blue;*/
+    height: 26px;
+    margin: 5px 0;
+}
+.wui-group-container .wui-i-powerbar_group .wui-i-box{
+    display: inline-block;
+    color: #ffffff;
+    background: #E5E7E6;
+    width: 85%;
+    height: 26px;
+    border-radius: 15px;
+    line-height: 26px;
+}
+
+.wui-group-container .wui-i-powerbar_group .wui-i-total_number{
+    display: inline-block;
+    color: #ff2742;
+    width: 10%;
+    float: right;
+    text-align: center;
+    line-height: 26px;
+}
+
+.wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar{
+/*    margin-left: 10px;
+    margin-right: 10px;*/
+    text-align: right;
+    background: #30D8B4;
+
+    color: #ffffff;
+    /*background: #E5E7E6;*/
+    width: 20%;
+    /*height: 26px;*/
+    border-radius: 15px;
+    line-height: 26px;   
+
+}
+
+.wui-group-container .wui-i-powerbar_group .wui-i-cur_number{
+	display: inline-block;
+}
+.wui-group-container .wui-i-powerbar_group .wui-i-circle{
+	display: inline-block;
+	height: 10px;
+	width: 10px;
+	border-radius: 10px;
+	background-color: #E5E7E6;
+	margin-right: 6px;
+}
 /*百宝箱 团购CSS ---- end */
