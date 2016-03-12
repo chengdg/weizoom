@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from mall.promotion.card_exchange import get_card_exchange_link
+from market_tools.tools.card_exchange.export import get_card_exchange_link
 
 __author__ = 'liupeiyu'
 
