@@ -110,11 +110,17 @@ $(document).ready(function() {
 	});
 
 	$(".xa-export").click(function(){
+		var cardNumber = $(".xa-cardNumber").val();
+		var cardUser = $(".xa-cardUser").val();
+		var args = {
+			"cardNumber" : cardNumber,
+			"cardUser" : cardUser
+		}
 		W.getApi().call({
 		    method: 'get',
 			app: 'mall2',
 			api: 'export_card_exchange_details',
-			args: "",
+			args: args,
 			scope: this,
 			success: function(data) {
 	 			console.log("success");
