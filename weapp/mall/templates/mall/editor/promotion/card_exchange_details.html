@@ -50,7 +50,7 @@
 	        	<span class="mr50">使用人：<input type="text" name="cardUser" class="xui-cardUser xa-cardUser"></span>
 	        	<a class="btn btn-primary mr10 xa-search">查 询</a>
 	        	<a class="btn btn-default mr10">重 置</a>
-	        	<a class="btn btn-default xa-i-exportBtn">导 出</a>
+	        	<a class="btn btn-default">导 出</a>
         	</form>
         </div>
         <div class="xa-listView" data-ui-role="advanced-table" data-app="mall2" data-api="card_exchange_details" data-template-id="#exchange-detail" data-enable-paginator="true" data-enable-load="true"></div>
@@ -102,31 +102,6 @@ $(document).ready(function() {
 		}
 		tableView.reload(args);
 	});
-	$('.xa-i-exportBtn').click(function(event){
-        W.getLoadingView();
-        var cardNumber = $(".xa-cardNumber").val();
-		var cardUser = $(".xa-cardUser").val();
-		var args = {
-			"cardNumber" : cardNumber,
-			"cardUser" : cardUser
-		}
-        W.getApi().call({
-            method: 'get',
-            app: 'mall2',
-            resource: 'export_card_exchange_details',
-            args: args,
-            success: function(resp){
-                if(resp.code == 200){
-
-                }
-                console.log("导出成功");
-            },
-            error: function(error){
-                console.log('导出失败');
-                console.log(error)
-            }
-        });
-    });
 });
 
 </script>
