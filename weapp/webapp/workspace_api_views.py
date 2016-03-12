@@ -26,6 +26,7 @@ from core.jsonresponse import create_response
 from core.exceptionutil import unicode_full_stack
 from core import apiview_util
 from termite import pagestore as pagestore_manager
+from weixin2.webapp_link_manage import utils as menu_utils
 
 import apps
 
@@ -60,13 +61,18 @@ def get_tools(request):
 		export_module_name = 'market_tools.tools.%s.export' % market_tool
 		export_module = __import__(export_module_name, {}, {}, ['*',])
 		
- 		if not hasattr(export_module, 'get_link_targets'):
- 			continue
+		if not hasattr(export_module, 'get_link_targets'):
+			continue
 
 		tools[market_tool] = 1
 
 	for app in apps.get_apps(request):
 		tools[app['value'].replace('app:', '')] = 1
+
+	#微众卡兑换
+	menus = menu_utils.get_webapp_link_menu_objectes(request)
+	if tools.get('card_exchange', None) and menus.get('cardExchange', None) and request.manager.username not in menus['cardExchange']['users']:
+		tools['card_exchange'] = 0
 
 	response = create_response(200)
 	response.data = tools

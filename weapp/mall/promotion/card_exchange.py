@@ -230,15 +230,3 @@ class MobileCardExchange(resource.Resource):
             'card_exchange_rule': card_exchange_dic
         })
         return render_to_response('mall/webapp/promotion/m_card_exchange.html', c)
-
-def get_card_exchange_link(request):
-    """
-    获取微众卡兑换手机页面链接
-    @param request:
-    @return:
-    """
-    from .models import CardExchange
-    webapp_id = request.user_profile.webapp_id
-    if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
-        return '/mall2/m_card_exchange/?webapp_id=%s' % webapp_id
-    return None
