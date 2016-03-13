@@ -20,6 +20,7 @@ from modules.member.models import (MemberGrade, MemberTag, WebAppUser)
 from core import search_util
 from market_tools.tools.coupon.tasks import send_message_to_member
 from market_tools.tools.weizoom_card import models as card_models
+from excel_response import ExcelResponse
 
 
 FIRST_NAV_NAME = export.MALL_PROMOTION_AND_APPS_FIRST_NAV
@@ -78,32 +79,6 @@ class CardExchange(resource.Resource):
         })
         return render_to_response('mall/editor/promotion/card_exchange.html', c)
 
-    @login_required
-    def api_get(request):
-        """
-        卡兑换查看微众卡使用详情
-        """
-        print '======================'
-        # start_num = request.GET.get('start_num',None)
-        # end_num = request.GET.get('end_num',None)
-        # exchange_card_list = []
-        # exchange_cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__gte = start_num,weizoom_card_id__lte = end_num)
-        # weizoom_card_rules = card_models.WeizoomCardRule.objects.all()
-        # for card in exchange_cards:
-        #     card_rule_id = card.weizoom_card_rule_id
-        #     cur_weizoom_card_rule = weizoom_card_rules.get(id = card_rule_id)
-        #     userd_money = cur_weizoom_card_rule.money - card.money
-        #     exchange_card_list.append({
-        #         'card_number': card.weizoom_card_id,
-        #         'money': '%.2f' % cur_weizoom_card_rule.money,
-        #         'used_money': '%.2f' % userd_money,
-        #         'user': 'vito'  
-        #     })
-
-        response = create_response(200)
-        # response.data = exchange_card_list
-        return response.get_response()
-
     def api_post(request):
         """
         卡兑换
@@ -141,6 +116,125 @@ class CardExchange(resource.Resource):
         response = create_response(200)
         return response.get_response()
 
+class CardExchangeDetail(resource.Resource):
+    app = "mall2"
+    resource = "card_exchange_details"
+
+    @login_required
+    def get(request):
+        """
+        卡兑换详情页
+        """
+        
+        c = RequestContext(request, {
+            'first_nav_name': FIRST_NAV_NAME,
+            'second_navs': export.get_promotion_and_apps_second_navs(request),
+            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
+            'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
+        })
+        return render_to_response('mall/editor/promotion/card_exchange_details.html', c)
+
+    @login_required
+    def api_get(request):
+        """
+        卡兑换查看微众卡使用详情
+        """
+        cur_page = int(request.GET.get('page',1))
+        count_per_page = int(request.GET.get('count_per_page',10))
+
+        cards = card_models.WeizoomCard.objects.all()
+        exchanged_cards = CardExchangeDetail.get_exchanged_cards(request,cards)
+        pageinfo, exchanged_cards = paginator.paginate(exchanged_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+        card_rules = card_models.WeizoomCardRule.objects.all()
+        exchanged_cards_list = []
+        for card in exchanged_cards:
+            card_id = card.card_id
+            try:
+                cur_card = cards.get(id = card_id)
+                weizoom_card_id = cur_card.weizoom_card_id
+                weizoom_card_rule_id = cur_card.weizoom_card_rule_id
+                cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
+                money = cur_card_rule.money
+                remainder = cur_card.money
+                user = card.owner_name
+                used_money = money - remainder
+                exchanged_cards_list.append({
+                    'card_id': weizoom_card_id,
+                    'money': '%.2f' % money,
+                    'remainder': '%.2f' % remainder,
+                    'used_money': '%.2f' % used_money,
+                    'user': user  
+                })
+            except Exception,e:
+                print e,'/////////*********'
+        
+        response = create_response(200)
+        response.data.items = exchanged_cards_list
+        response.data.pageinfo = paginator.to_dict(pageinfo)
+        return response.get_response()
+
+    @staticmethod
+    def get_exchanged_cards(request,cards):
+        card_number = request.GET.get('cardNumber',None)
+        card_user = request.GET.get('cardUser',None)
+
+        webapp_id = request.user_profile.webapp_id
+        #查询
+        exchanged_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id).order_by('-created_at')
+        if card_number:
+            cur_cards = cards.filter(weizoom_card_id__contains = card_number)
+            card_id_list = []
+            for card in cur_cards:
+                card_id_list.append(card.id)
+            exchanged_cards = exchanged_cards.filter(card_id__in = card_id_list)    
+        if card_user:
+            exchanged_cards = exchanged_cards.filter(owner_name__contains = card_user)
+
+        return exchanged_cards
+
+class CardExchangeDetailExport(resource.Resource):
+    app = 'mall2'
+    resource = 'export_card_exchange_details'
+
+    @login_required
+    def api_get(request):
+        """
+        微众卡兑换详情导出
+        """
+        cards = card_models.WeizoomCard.objects.all()
+        exchanged_cards = CardExchangeDetail.get_exchanged_cards(request,cards)
+        card_rules = card_models.WeizoomCardRule.objects.all()
+
+        members_info = [
+            [u'卡号', u'面值',u'卡内余额',u'使用金额',u'使用者']
+        ]
+
+        for card in exchanged_cards:
+            card_id = card.card_id
+            try:
+                cur_card = cards.get(id = card_id)
+                weizoom_card_id = cur_card.weizoom_card_id
+                weizoom_card_rule_id = cur_card.weizoom_card_rule_id
+                cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
+                money = cur_card_rule.money
+                remainder = cur_card.money
+                user = card.owner_name
+                used_money = money - remainder
+                info_list = [
+                    weizoom_card_id,
+                    '%.2f' % money,
+                    '%.2f' % remainder,
+                    '%.2f' % used_money,
+                    user
+                ]
+                members_info.append(info_list)
+            except Exception,e:
+                print e,'@@@@@@@@@@@@@@@@@@@@@'
+
+        filename = u'微众卡兑换详情'
+        return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
+
+
 class MobileCardExchange(resource.Resource):
     app = "mall2"
     resource = "m_card_exchange"
@@ -164,7 +258,7 @@ class MobileCardExchange(resource.Resource):
                 card_number_split = card_number.split('-')
                 prize_list.append({
                     'integral': rule.integral,
-                    'money': rule.money,
+                    'money': int(rule.money),
                     's_num': card_number_split[0],
                     'end_num': card_number_split[1]                 
                 })
@@ -173,22 +267,6 @@ class MobileCardExchange(resource.Resource):
             print e,'+++++++++++++++++++'
        
         c = RequestContext(request, {
-            'first_nav_name': FIRST_NAV_NAME,
-            'second_navs': export.get_promotion_and_apps_second_navs(request),
-            'second_nav_name': export.MALL_PROMOTION_SECOND_NAV,
-            'third_nav_name': export.MALL_PROMOTION_CARD_EXCHANGE_NAV,
             'card_exchange_rule': card_exchange_dic
         })
         return render_to_response('mall/webapp/promotion/m_card_exchange.html', c)
-
-def get_card_exchange_link(request):
-    """
-    获取微众卡兑换手机页面链接
-    @param request:
-    @return:
-    """
-    from .models import CardExchange
-    webapp_id = request.user_profile.webapp_id
-    if CardExchange.objects.filter(webapp_id=webapp_id).count() > 0 and webapp_id:
-        return '/mall2/m_card_exchange/?webapp_id=%s' % webapp_id
-    return None
