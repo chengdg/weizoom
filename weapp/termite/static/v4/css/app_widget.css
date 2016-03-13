@@ -1991,14 +1991,12 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-group_box_progress .wui-i-timing b{
     background: #E6E6E6;
     border-radius: 3px;
-    /*padding: 3px;*/
 }
 
 
 /*团购进度条*/
 
 .wui-group-container .wui-i-powerbar_group{
-    /*background-color: blue;*/
     height: 26px;
     margin: 5px 0;
 }
@@ -2022,15 +2020,10 @@ li.wui-selectBox-display-table {
 }
 
 .wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar{
-/*    margin-left: 10px;
-    margin-right: 10px;*/
     text-align: right;
     background: #30D8B4;
-
     color: #ffffff;
-    /*background: #E5E7E6;*/
-    width: 20%;
-    /*height: 26px;*/
+    width: 25%;
     border-radius: 15px;
     line-height: 26px;   
 
@@ -2047,4 +2040,49 @@ li.wui-selectBox-display-table {
 	background-color: #E5E7E6;
 	margin-right: 6px;
 }
+
+
+.wui-group-container .wui-i-states{
+	/*background-color: red;*/
+	border:1px solid #E6E6E6;
+	border-radius: 2px;
+	height: auto;
+	width: 100%;
+	/*line-height: 50px;*/
+	color:#666666;
+	margin: 5px 0;
+	position: relative;
+}
+
+
+
+.wui-group-container .wui-i-states .wui-i-displayName{
+	float: left;
+	width: 40px;
+    font-size: initial;
+    margin: 15px 10px 10px 10px;
+}
+
+.wui-group-container .wui-i-states .wui-i-membersBox{
+	margin-left: 60px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.wui-group-container .wui-i-states .wui-i-member{
+	width: 36px;
+	height: 36px;
+	/*background-color: green;*/
+	border-radius: 1px solid black;
+	display: inline-block;
+	margin: 2px;
+}
+
+.wui-group-container .wui-i-states .wui-i-member img{
+	width: 36px;
+	height: 36px;
+	background-color: red;
+	border-radius: 36px;
+	border: 0px;
+}
+
 /*百宝箱 团购CSS ---- end */
