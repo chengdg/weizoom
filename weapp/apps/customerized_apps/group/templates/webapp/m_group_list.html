@@ -17,8 +17,8 @@
         background: #fff;
         text-align: left;
         border-radius: 8px;
-        margin-bottom: 10px;
-        padding-bottom: 10px;
+        /*margin-bottom: 10px;*/
+        /*padding-bottom: 10px;*/
     }
     .wui-swiper-slide .xui-listInner .xui-i-content{
 
@@ -70,10 +70,47 @@
     .wui-swiper-slide .xui-listInner .xui-i-title{
         text-align: left;
         margin: 5px 10px;
+        padding-bottom: 10px;
     }
 
     .xui-listInner .ui-btn-inner{
         white-space:normal;
+    }
+
+    .xui-all_groups_can_join-slide .xui-listInner{
+        text-align: center;
+        height: 100px;
+        padding: 0px;
+        position: relative;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner div{
+        display: inline-block;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-imgBox{
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+        position: absolute;
+        top: 20px;
+        left: 10px;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-imgBox img{
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-nameBox{
+        display: inline-block;
+        height: 100px;
+        width: auto;
+        margin-left: 75px;
+        line-height: 100px;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-BtnBox{
+        position: absolute;
+        top: 25px;
+        right: 10px;
+        width: 95px;
     }
  /*   .xui-listInner p{width:100%;}
     .xui-listInner p span:first-child{width:80%;}
@@ -175,17 +212,19 @@
                     <div class="wui-content-slide">
                         <div class="xui-all_groups_can_join-slide">
                         {% if all_groups_can_open %}
+                            <ul class="xui-listItem">
                             {% for group_item in all_groups_can_open %}
-                                <ul class="xui-listItem">
-                                <li data-icon="true" class="xui-listInner pl10 pr15">
-                                    <div class="xui-i-title">
+                                <li data-icon="true" class="xui-listInner">
+                                    <div class="wui-i-imgBox">
                                         <img src="{{ group_item.product_img }}" class="xui-i-content-img">
-                                        <p style="display: inline;">{{ group_item.name }}</p>
+                                    </div>
+                                    <div class="wui-i-nameBox">{{ group_item.name }}</div>
+                                    <div class="wui-i-BtnBox">
                                         <button class="wui-i-btn-using wa-using xa-find_group" data-id="{{group_item.id}}">进入找团</button>
                                     </div>
                                 </li>
-                                </ul>
                             {% endfor %}
+                            </ul>
                         {% endif %}
                         </div>
                         <div class="xui-all_groups_can_join-list xa-all_groups_can_join-list none">
