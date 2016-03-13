@@ -49,10 +49,12 @@ def get_weizoom_card_change_money(request):
 			for a in weizoom_card_orders_has_product:
 				product_name = a.product.name
 				product_name_str = product_name_str + str(product_name)+ ','
+			event_type = order.event_type
 			weizoom_card_orders_list.append({
-				'created_at': order.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+				'created_at': order.created_at,
 				'money': '%.2f' % order.money,
-				'product_name': product_name_str
+				'product_name': product_name_str,
+				'event_type': event_type
 			})
 	else:
 
