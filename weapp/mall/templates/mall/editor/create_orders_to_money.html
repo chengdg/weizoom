@@ -1,0 +1,28 @@
+{% extends "content_base_v2.html" %}
+{% load common_tag %}
+{% load account_filter %}
+
+{% block css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content-panel %}
+	<div id="orderPage"></div>
+{% endblock %}
+
+{% block js %}
+<script>
+	W.getApi().call({
+		app: 'mall2',
+		resource: 'cost_order_list',
+		method: 'get',
+		args: {},
+		success: function(resp) {
+			$('#orderPage').html(resp.data.html);
+		},
+		error: function(resp) {
+		}
+	});
+	</script>
+{% endblock %}
