@@ -13,7 +13,22 @@
 
 {% block js %}
 <script>
-	W.getApi().call({
+	var cost_id = "{{ cost_id }}";
+	console.log(cost_id,"dddddddd");
+	if (cost_id !==""){
+		W.getApi().call({
+		app: 'mall2',
+		resource: 're_submit_list',
+		method: 'get',
+		args: {cost_id: cost_id},
+		success: function(resp) {
+			$('#orderPage').html(resp.data.html);
+		},
+		error: function(resp) {
+		}
+	});
+	}else{
+		W.getApi().call({
 		app: 'mall2',
 		resource: 'cost_order_list',
 		method: 'get',
@@ -24,5 +39,7 @@
 		error: function(resp) {
 		}
 	});
+	}
+
 	</script>
 {% endblock %}

@@ -91,7 +91,7 @@ class OrderMoneyList(resource.Resource):
     @login_required
     def api_get(request):
         import requests
-        cost_id = request.POST.get('cost_id', '')
+        cost_id = request.GET.get('cost_id', '')
         r = requests.get('http://dev.money.com/weapp/re_submit_list/', params={"user_id": request.user.id, "cost_id": cost_id})
         response = create_response(200)
         response.data = json.loads(r.text)
