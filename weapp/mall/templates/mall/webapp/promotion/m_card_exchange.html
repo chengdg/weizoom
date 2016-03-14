@@ -49,10 +49,12 @@
 	}
 	.xui-exchange-form .xui-form-control .xui-bg{
 		background-color: #fff;
-		padding: 10px 10px 0px;
+		padding: 10px 10px 5px;
 		margin-top: 10px;
+		margin-bottom: 30px;
 		position: relative;
 		overflow: hidden;
+		border-bottom: 1px solid rgba(0,0,0,0.2);
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
 		margin-left: 0;
@@ -91,8 +93,8 @@
 		padding-left: 15px;
 		background-color: #fff;
 		color: #999;
+		margin-left: -15px;
 		font-size: 0.9rem;
-		margin-bottom: 20px;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose{
 		position: relative;
@@ -136,7 +138,7 @@
 		font-size: 1rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-exchange-confirm,.xui-exchange-form .xui-exchange-abolish{
-		margin-top: 40px;
+		margin-top: 20px;
 		display: inline-block;
 		width: 46%;
 		height: 50px;
@@ -285,8 +287,8 @@
 					<!--{% endif%}-->
 					<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>
 					<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>
+					<p class="xui-help-block">绑定手机号才能把奖励发到你的帐户里哦～</p>
 				</div>
-				<p class="xui-help-block">绑定手机号才能把奖励发到你的帐户里哦～</p>
 			</div>
 			<div class="xui-form-control">
 				<label><b></b>选择兑换：</label>
@@ -294,6 +296,7 @@
 					{% for prize in card_exchange_rule.prize %}
 					<div class="xui-exchange-choose xa-exchange-choose">兑<span>¥</span>{{prize.money}}
 						<p>消耗{{prize.integral}}积分</p>
+						{% if prize.count ==0 %}
 						<div class="xui-exchange-mask">
 							<p class="xui-exchange-runout">已抢光</p>
 						</div>
@@ -302,7 +305,7 @@
 				</div>
 			</div>
 			<div class="xui-form-control xui-submit-btn">
-				<a class="xui-exchange-confirm xa-exchange-confirm">兑换</a>
+				<a class="xui-exchange-confirm xa-exchange-submit">兑换</a>
 				<a class="xui-exchange-abolish">取消</a>
 			</div>
 		</form>
@@ -321,7 +324,7 @@
 				<div class="xui-alert-reminder">
 					<p class="xui-reminder-title">兑换成功</p>
 					<p>微众卡将存到个人中心——微众卡余额查询中，请注意查收 ！</p>
-					<button class="xa-exchange-submit">知道了</button>
+					<button class="xa-exchanged">知道了</button>
 					<a href="javascript:void(0)" class="xui-alert-close xa-alert-close">x</a>
 				</div>
 			</div>
@@ -434,11 +437,8 @@
 		$(".xa-btn-abolish").click(function(){
 			$('.xa-alert-getCode').addClass('hidden');
 		});
-		$(".xa-exchange-confirm").click(function(){
-			$('.xa-alert-exchange').removeClass('hidden');
-		});
 		$(".xa-exchange-submit").click(function(){
-
+			if($('.xa-exchange-choose').hasClass('active')){
 				W.getApi().call({
 					app: 'webapp',
 					api: 'project_api/call',
@@ -459,8 +459,7 @@
 							isSlide: true,
 							speed: 3000
 						})
-						$('.xa-alert-exchange').addClass('hidden');
-						window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=user_info&action=get&workspace_id=user_center";
+						$('.xa-alert-exchange').removeClass('hidden');
 					},
 					error: function(data){
 						$('.xui-page').alert({
@@ -471,6 +470,11 @@
 						})
 					}
 				});
+			}
+		});
+		$(".xa-exchanged").click(function(){
+			$('.xa-alert-exchange').addClass('hidden');
+			window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=user_info&action=get&workspace_id=user_center";
 		});
 		$(".xa-alert-close").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');

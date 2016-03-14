@@ -84,13 +84,15 @@
 		font-size: 1.3rem;
 	}
 	.xui-use-detail{
-		margin-top: 10px;
+		margin-top: 20px;
 		background-color: #fff;
 		padding: 10px;
 	}
 	.xui-use-detail .xui-use{
 		line-height:40px;
 		border-bottom: 1px solid #ebebeb;
+		font-size: 1.1rem;
+		color: #333;
 	}
 	.xui-use-detail table{
 		vertical-align: middle;
@@ -160,9 +162,25 @@
 					<tbody>
 					{% for order in card_orders %}
 					<tr>
-						<td class="xui-order-info-time">{{order.created_at}}</td>
-						<td class="xui-order-info-money">{{order.money}}</td>
-						<td class="xui-order-info-name">{{order.product_name}}</td>
+						<td class="xui-order-info-time">
+							{{order.created_at | date:"Y-m-d" }}
+							<br/>{{order.created_at |date:"H:i:s"}}
+						</td>
+						<td class="xui-order-info-money">
+							{% if order.event_type=='积分兑换' %}
+							<span style="color: #0fb202">
+							+{{order.money}}
+							</span>
+							{% else %}
+							<span style="color: #cf0404">
+							-{{order.money}}
+							</span>
+							{% endif %}
+						</td>
+						<td class="xui-order-info-name">
+							<span>[商品]</span>
+							{{order.product_name}}
+						</td>
 					</tr>
 					{% endfor%}
 					</tbody>
@@ -170,58 +188,6 @@
 			</div>
 	</div>
 </div>
-
-<!--<div data-role="page" data-theme="x" class="xui-wzcoinConfirm-page">-->
-    <!--<div data-role="content" data-theme="x">-->
-    	<!--<form class="xui-form" method="post" action="" id="editForm">-->
-				<!--<div class="xui-section-item xui-submitBox">-->
-					<!--<div class="xui-form-controls xui-main-info">-->
-						<!--<div>-->
-							<!--<div>微众卡号：<span class="xui-numTips">{{weizoom_card.weizoom_card_id}}</span></div>-->
-							<!--<div>密码：<span class="xui-numTips">{{weizoom_card.password}}</span></div>-->
-						<!--</div>-->
-					<!--</div>-->
-					<!--<div class="xui-form-controls">-->
-						<!--<span class="xui-textTips">您的微众卡余额：<span class="xui-numTips">{{weizoom_card.money}}</span>元</span>-->
-					<!--</div>-->
-					<!--<div class="xui-form-controls mt">-->
-						<!--<span class="xui-textTips">现有积分：<span class="xui-numTips">{{change_integral}}</span>积分</span>-->
-					<!--</div>-->
-					<!-- -->
-
-					<!--{% if is_can_pay %}-->
-						<!--<div class="mt30 clearfix tc">-->
-							<!--<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable" id="back">返回</a>-->
-						<!--</div>-->
-						<!--&lt;!&ndash; {% if request.user.is_weizoom_mall %}-->
-						<!--<div class="mt30 clearfix">-->
-							<!--<a href="#" data-role="button" class="xui-btn xui-btnSubmit fl ua-apply" id="payBtn">兑换积分</a>-->
-							<!--<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">返回</a>-->
-						<!--</div>-->
-						<!--{% else %} &ndash;&gt;-->
-						<!--&lt;!&ndash; {% endif %} &ndash;&gt;-->
-					<!--{% else %}-->
-					<!--<p style="color:#ae0001" class="mt20">您的微众卡余额不足！</p>-->
-					<!--<div class="mt30 clearfix">-->
-						<!--<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btnSubmit fl" id="submitBtn">确认</a>-->
-						<!--<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">取消</a>-->
-					<!--</div>-->
-					<!--{% endif %}-->
-					<!-- -->
-				<!--</div>-->
-		<!--</form>-->
-	<!--</div>-->
-	<!--<div class="ui-cover hidden ua-cover">-->
-		<!--<div class="ui-applyBox ua-applyBox pr tc">-->
-			<!--<div class="p20">-->
-				<!--<span class="xui-textTips">恭喜您成功兑换<span class="xui-numTips">{{change_integral}}</span>积分！</span>-->
-				<!--<div class="tc mt30">-->
-				<!--<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-danger" id="submitBtn">确认</a>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-<!--</div>-->
 {% endblock %}
 
 {% block js %}
