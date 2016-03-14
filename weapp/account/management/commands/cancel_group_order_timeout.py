@@ -35,13 +35,14 @@ class Command(BaseCommand):
         orders = mall_models.Order.objects.filter(
                 order_id__in=[r.order_id for r in relations],
                 status=mall_models.ORDER_STATUS_NOT,
-                created_at_gte=datetime.now() - timedelta(minutes=15)
+                created_at__gte=datetime.now() - timedelta(minutes=15)
             )
         for order in orders:
             try:
                 update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
+                relations.filter(order_id=order.order_id).delete()
             except:
                 watchdog_info(u"团购未支付订单%s，取消失败" % order.order_id, type="mall")
-                    continue
+                continue
 
         print "success"

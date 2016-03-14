@@ -720,7 +720,15 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
-        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+        if OrderHasGroup.objects.filter(order_id=order.order_id).count() > 0:
+            order.actions = get_order_actions(
+                order,
+                is_detail_page=True,
+                mall_type=request.user_profile.webapp_type,
+                is_group_buying=True
+                )
+        else:
+            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
@@ -928,7 +936,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
         orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
-        orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+        orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDING])
 
     if not mall_type and group_order_relations.count() > 0:
         not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
@@ -936,8 +944,11 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             status=ORDER_STATUS_NOT)
         ]
         not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
-            order_id__in=[r.order_id for r in group_order_relations.filter(group_status=GROUP_STATUS_ON)],
-            status=ORDER_STATUS_PAYED_NOT_SHIP
+            order_id__in=[
+                r.order_id for r in group_order_relations.filter(
+                group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+                ],
+                status=ORDER_STATUS_PAYED_NOT_SHIP
             )]
         orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
 
@@ -1081,6 +1092,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                     }
                 groups.append(group)
         else:
+            if order.order_id in group_order_ids:
+                actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
+            else:
+                actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
             group_order = {
                 "id": order.id,
                 "status": order.get_status_text(),
@@ -1088,7 +1103,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
-                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
+                'actions': actions
             }
 
             if order.supplier_user_id > 0:
@@ -1517,6 +1532,8 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     elif is_refund:
         if order.status == ORDER_STATUS_REFUNDING:
             result = [ORDER_REFUND_SUCCESS_ACTION]
+        elif order.status == ORDER_STATUS_GROUP_REFUNDING:
+            result = []
 
     # 订单列表页子订单
     able_actions_for_sub_order = [ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
@@ -1546,6 +1563,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
 
+    # 团购订单去除订单取消，订单退款
     if is_group_buying:
         result = filter(lambda x: x not in [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION], result)
 
@@ -1573,3 +1591,5 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             update_order_status(user, 'return_pay', order)
+            order.status = ORDER_STATUS_GROUP_REFUNDING
+            order.save()
