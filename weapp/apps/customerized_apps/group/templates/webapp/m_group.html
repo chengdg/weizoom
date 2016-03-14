@@ -336,7 +336,7 @@
                 success: function(data) {
                     var relation_belong_to = data.relation_belong_to;
                     var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
-                    window.open(data_href, '_tab');
+                    window.location.href = data_href;
                 },
                 error: function(data) {
                     wuiAlert(data.errMsg);
@@ -350,7 +350,7 @@
     // 直接参团
     function openJoinGruop(){
         var link = window.location.origin + '/m/apps/group/m_group_list/?webapp_owner_id='+W.webappOwnerId;
-        window.open(link, '_tab');
+        window.open(link);
     }
 
     // 我要参团
@@ -367,7 +367,7 @@
             },
             success: function(data) {
                 var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+group_relation_id+"&activity_id="+W.appRecordId;
-                window.open(data_href, '_tab');
+                window.location.href = data_href;
             },
             error: function(data) {
                 if(data.errMsg){
