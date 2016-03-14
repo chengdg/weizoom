@@ -920,10 +920,27 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
 
-    orders = belong_to(webapp_id, user.id, mall_type)
+    group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+    group_order_ids = [r.order_id for r in group_order_relations]
+    if query_dict.get('order_type') and query_dict['order_type'] == '2' and not mall_type:
+        orders = Order.objects.filter(order_id__in=group_order_ids)
+    else:
+        orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+
+    if not mall_type and group_order_relations.count() > 0:
+        not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+            order_id__in=group_order_ids,
+            status=ORDER_STATUS_NOT)
+        ]
+        not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+            order_id__in=[r.order_id for r in group_order_relations.filter(group_status=GROUP_STATUS_ON)],
+            status=ORDER_STATUS_PAYED_NOT_SHIP
+            )]
+        orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
+
 
     # 处理排序
     if sort_attr != 'created_at':
@@ -1144,7 +1161,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'parent_action': parent_action,
             'is_first_order': order.is_first_order,
             'supplier_user_id': order.supplier_user_id,
-            'total_purchase_price': '%.2f' % order.total_purchase_price
+            'total_purchase_price': '%.2f' % order.total_purchase_price,
+            'is_group_buying': True if order.order_id in group_order_ids else False
         })
 
     return items, pageinfo, order_return_count
