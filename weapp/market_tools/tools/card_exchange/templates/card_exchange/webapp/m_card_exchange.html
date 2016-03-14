@@ -49,16 +49,18 @@
 	}
 	.xui-exchange-form .xui-form-control .xui-bg{
 		background-color: #fff;
-		padding: 10px 10px 0px;
+		padding: 10px 10px 5px;
 		margin-top: 10px;
+		margin-bottom: 30px;
 		position: relative;
 		overflow: hidden;
+		border-bottom: 1px solid rgba(0,0,0,0.2);
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
 		margin-left: 0;
 	}
 	.ui-btn.ui-btn-up-x, .ui-btn.ui-btn-down-x, .ui-btn.ui-btn-hover-x, .ui-btn.ui-btn-active, .ui-btn .ui-btn-inner, .ui-btn .ui-btn-text {
-	color: transparent;
+		color: transparent;
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
 		display: block;
@@ -69,7 +71,6 @@
 		border-radius: 2px;
 		padding-left: 10px;
 		color: #333;
-
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-btnCode{
 		position: absolute;
@@ -91,8 +92,8 @@
 		padding-left: 15px;
 		background-color: #fff;
 		color: #999;
+		margin-left: -15px;
 		font-size: 0.9rem;
-		margin-bottom: 20px;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose{
 		position: relative;
@@ -129,14 +130,14 @@
 		color: #00a5ed;
 		border-color: #00a5ed;
 	}
-	.xui-exchange-form .xui-form-control .xui-exchange-choose span{
+	.xui-exchange-form .xui-form-control .xui-exchange-choose span:first-child{
 		font-size: 1rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose p{
 		font-size: 1rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-exchange-confirm,.xui-exchange-form .xui-exchange-abolish{
-		margin-top: 40px;
+		margin-top: 20px;
 		display: inline-block;
 		width: 46%;
 		height: 50px;
@@ -271,10 +272,10 @@
 	<div data-role="content" data-theme="x">
 		<div class="xui-section-item">
 			<h3>微众卡兑换平台</h3>
-			<p>现有积分：<span></span></p>
+			<p>现有积分：<span class="xa-current-integral">1000</span></p>
 		</div>
 		<form action="post" class="xui-exchange-form">
-			<div class="xui-form-control">
+			<div class="xui-form-control xui-page">
 				<label for="phone"><b></b>输入手机号：</label>
 				<div class="xui-bg">
 					<!--{% if card_exchange_rule.is_bind %}-->
@@ -285,24 +286,27 @@
 					<!--{% endif%}-->
 					<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>
 					<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>
+					<p class="xui-help-block">绑定手机号才能把奖励发到你的帐户里哦～</p>
 				</div>
-				<p class="xui-help-block">绑定手机号才能把奖励发到你的帐户里哦～</p>
 			</div>
 			<div class="xui-form-control">
 				<label><b></b>选择兑换：</label>
 				<div class="xui-bg">
 					{% for prize in card_exchange_rule.prize %}
-					<div class="xui-exchange-choose xa-exchange-choose">兑<span>¥</span>{{prize.money}}
+					<div class="xui-exchange-choose xa-exchange-choose">
+						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
 						<p>消耗{{prize.integral}}积分</p>
-						<div class="xui-exchange-mask">
+						{% if prize.count == 0 %}
+						<div class="xui-exchange-mask xa-exchange-mask">
 							<p class="xui-exchange-runout">已抢光</p>
 						</div>
+						{% endif %}
 					</div>
 					{% endfor %}
 				</div>
 			</div>
 			<div class="xui-form-control xui-submit-btn">
-				<a class="xui-exchange-confirm xa-exchange-confirm">兑换</a>
+				<a class="xui-exchange-confirm xa-exchange-submit">兑换</a>
 				<a class="xui-exchange-abolish">取消</a>
 			</div>
 		</form>
@@ -312,7 +316,7 @@
 					<label for="xui-test-code">输入短信验证码</label>
 					<input type="text" id="xui-test-code" class="xa-phoneCode" />
 					<button data-inline="true" class="xui-btn-abolish xa-btn-abolish" type="button">取消</button>
-					<button data-inline="true" class="xui-btnsubmit xa-submit" type="button">确认</button>
+					<button data-inline="true" class="xui-btnsubmit xa-phoneCode-submit" type="button">确认</button>
 				</div>
 			</div>
 		</div>
@@ -321,7 +325,7 @@
 				<div class="xui-alert-reminder">
 					<p class="xui-reminder-title">兑换成功</p>
 					<p>微众卡将存到个人中心——微众卡余额查询中，请注意查收 ！</p>
-					<button class="xa-exchange-submit">知道了</button>
+					<button class="xa-exchanged">知道了</button>
 					<a href="javascript:void(0)" class="xui-alert-close xa-alert-close">x</a>
 				</div>
 			</div>
@@ -337,15 +341,8 @@
 			$('button').removeClass('ui-btn-hidden')}
 		$('input').parent().removeClass();
 		$('button').siblings().hide().parent().removeClass();
-		$('.xa-exchange-choose').click(function(){
-			if(!$('.xa-exchange-choose').hasClass('active')){
-				$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
-			}else{
-				$('.xa-exchange-choose').removeClass('active')
-			}
-		});
 		function validate_phone(phone_number){
-			var reg = /^1[3|4|5|8][0-9]\d{4,8}$/;
+			var reg = /^1[3|4|5|8]\d{9}$/;
 			if(!reg.test(phone_number) || phone_number.length != 11){
 				$('.xui-page').alert({
 					isShow: true,
@@ -366,14 +363,13 @@
 					api: 'project_api/call',
 					method: 'post',
 					args: _.extend({
-						woid: W.webappOwnerId,
+						webapp_owner_id: W.webappOwnerId,
 						project_id: W.projectId,
-						module: 'user_center',
-						target_api: 'captcha/send',
+						module: 'card_exchange',
+						target_api: 'captcha/get',
 						phone_number: phone_number
 					}),
 					success: function(data) {
-						time($(event.target));
 						$('.xa-alert-getCode').removeClass('hidden');
 					},
 					error: function(data){
@@ -393,7 +389,7 @@
 				$('.xa-getCode').removeAttr('disabled').css('background-color', '#067de2');
 			}
 		});
-		$(".xa-submit").click(function(){
+		$(".xa-phoneCode-submit").click(function(){
 			var phone_number = $('.xa-phoneNum').val();
 			var code = $('.xa-phoneCode').val();
 			if (validate_phone(phone_number)){
@@ -411,14 +407,7 @@
 						code:code
 					}),
 					success: function(data) {
-						$('.xui-page').alert({
-							isShow: true,
-							info: '绑定成功',
-							isSlide: true,
-							speed: 3000
-						})
 						$('.xa-alert-getCode').addClass('hidden');
-						window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=user_info&action=get&workspace_id=user_center";
 					},
 					error: function(data){
 						$('.xui-page').alert({
@@ -434,33 +423,36 @@
 		$(".xa-btn-abolish").click(function(){
 			$('.xa-alert-getCode').addClass('hidden');
 		});
-		$(".xa-exchange-confirm").click(function(){
-			$('.xa-alert-exchange').removeClass('hidden');
+		$('.xa-exchange-choose').click(function(){
+			if($('.xa-exchange-mask').is(':hidden')){
+				if(!$('.xa-exchange-choose').hasClass('active')){
+					$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
+				}else{
+					$('.xa-exchange-choose').removeClass('active')
+				}
+			}else{
+				$('.xa-exchange-choose').removeClass('active')
+			}
 		});
 		$(".xa-exchange-submit").click(function(){
-
+			if($('.xa-exchange-choose').hasClass('active')){
+				var prize_money=$('.xa-exchange-choose.active>.xa-exchange-money').text();
+				var current_integral=$('.xa-current-integral').text();
 				W.getApi().call({
-					app: 'webapp',
-					api: 'project_api/call',
+					app: 'mall2',
+					api: 'm_card_exchange',
 					method: 'post',
 					args: _.extend({
-						woid: W.webappOwnerId,
+						webapp_owner_id: W.webappOwnerId,
 						project_id: W.projectId,
 						module: 'user_center',
 
-						target_api: 'phone/binding',
-						phone_number: phone_number,
-						code:code
+						target_api: 'card/exchange',
+						money: prize_money,
+						integral: current_integral
 					}),
 					success: function(data) {
-						$('.xui-page').alert({
-							isShow: true,
-							info: '绑定成功',
-							isSlide: true,
-							speed: 3000
-						})
-						$('.xa-alert-exchange').addClass('hidden');
-						window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=user_info&action=get&workspace_id=user_center";
+						$('.xa-alert-exchange').removeClass('hidden');
 					},
 					error: function(data){
 						$('.xui-page').alert({
@@ -471,6 +463,10 @@
 						})
 					}
 				});
+			}
+		});
+		$(".xa-exchanged").click(function(){
+			$('.xa-alert-exchange').addClass('hidden');
 		});
 		$(".xa-alert-close").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');

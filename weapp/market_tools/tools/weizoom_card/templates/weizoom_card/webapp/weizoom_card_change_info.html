@@ -145,7 +145,7 @@
 						<span class="xui-numTips xui-password xa-password">{{weizoom_card.password}}</span>
 						<a href="javascript:void(0)" class="xui-hidden xa-hidden">隐藏</a>
 					</div>
-					<a href="javascript:void(0);" class="xui-exit" >退出登陆</a>
+					<a href="" class="xui-exit" >退出登陆</a>
 				</div>
 				<div class="xui-fr">
 					<span class="xui-textTips">余额</span>
@@ -202,41 +202,6 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
-		var bodyHeight = window.document.body.clientHeight;
-		var height = bodyHeight * 0.3
-	
-		var $submitBtn = $('#payBtn');
-        $submitBtn.click(function() {
-        	var card_id = "{{weizoom_card.id}}";
-        	W.getApi().call({
-        		app: 'webapp',
-                api: 'project_api/call',
-                method: 'post',
-                args: _.extend({
-                    project_id: W.projectId,
-                    card_id: card_id,
-                    module:'mall',
-                    target_api: 'weizoom_card_to_integral/change',
-                }),
-		        success: function(data) {
-		        	$('.ua-cover').removeClass('hidden');
-					$('.ui-applyBox').css('top',height);
-		        },
-		        error: function(data) {
-		        	var code = parseInt(data['code']);
-			        var msg = '支付失败';
-			        if (code == 500){
-				       	msg = data['data']['msg']
-			        }
-			        $('.ui-page').alert({
-			         	isShow: true,
-			         	info: msg,
-			         	isSlide: true,
-			         	speed: 2000
-			         });
-		        }
-        	})
-        })
 		$(".xa-hidden").click(function(){
 			if($(".xa-hidden")[0].innerHTML=='隐藏'){
 			var reg=/\d/g;
