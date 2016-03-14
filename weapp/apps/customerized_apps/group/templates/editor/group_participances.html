@@ -96,7 +96,7 @@
 {% verbatim %}
 <script id="table" type="text/x-jquery-tmpl">
 	{{if items!='' }}
-	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10">
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 xui-group_participances">
 		<thead>
 			<tr>
 				<th>团长</th>
@@ -115,10 +115,12 @@
 					${item.group_days}
 				</td>
 				<td>
+					<div class="xui-i-status">
 					${item.status}
+					</div>
 				</td>
 				<td>
-					<a href="javascript:void(0);" class="ml5 xa-viewData"> 9/10 ${item.members_count}</a>
+					${item.members_count}<a href="javascript:void(0);" class="ml5 xa-viewData">查看成员</a>
 				</td>
 			</tr>
 			{{/each}}
