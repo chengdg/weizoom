@@ -99,6 +99,9 @@
 			display: inline-block;
 			width: 60px;
 		}
+		.xui-cardTd{
+			height: 45px;
+		}
 	</style>
 {% endblock %}
 {% block content-panel %}
@@ -129,11 +132,11 @@
 			</tr>
 			<tr>
 	        	<th>兑换奖励：</th>
-	        	<td>微众卡</td>
+	        	<td class="xui-cardTd">微众卡</td>
 			</tr>
 			<tr>
 	        	<th>兑换奖项：
-	        		<a class="xui-detail xa-detail" title="使用详情">使用详情</a>
+	        		<a href="mall2/card_exchange_details" class="xui-detail xa-detail" title="使用详情">使用详情</a>
 	        	</th>
 	        	<td>
 	        	    <form>
@@ -190,11 +193,11 @@
 			</tr>
 			<tr>
 	        	<th>兑换奖励：</th>
-	        	<td>微众卡</td>
+	        	<td class="xui-cardTd">微众卡</td>
 			</tr>
 			<tr>
 	        	<th>兑换奖项：
-	        		<a class="xui-detail xa-detail" title="使用详情">使用详情</a>
+	        		<a href="mall2/card_exchange_details" class="xui-detail xa-detail" title="使用详情">使用详情</a>
 	        	</th>
 	        	<td>
 	        	    <form>
@@ -217,7 +220,7 @@
 						                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
 						                <span class="xa-exchangeSpan"></span>
 						            </div>
-					                <span class="xa-exchangeStock xui-exchangeStock">库存：</span>
+					                <span class="xa-exchangeStock xui-exchangeStock"></span>
 					                <a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>              
 			                    </div>
 			                </div>
@@ -262,7 +265,7 @@
 			<input type="text" class="xui-i-num xa-endnum" name="endnum">	
 			<span class="xa-exchangeSpan"></span> 
 		</div>  
-		<span class="xa-exchangeStock xui-exchangeStock">库存：</span>
+		<span class="xa-exchangeStock xui-exchangeStock"></span>
 		<a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>            
 	</div>
 </div>
@@ -289,22 +292,22 @@ $(document).ready(function() {
 	$(document).on("click",".xui-i-del",function(){
     	$(this).parents(".xui-i-put").remove();
 	})
-    //详情页面
-	$(".xa-detail").click(function(){
-		W.getApi().call({
-			    method: 'get',
-			    app: 'mall2',
-			    api: 'card_exchange_details',
-			    args: "",
-			    scope: this,
-			    success: function(data) {
- 					window.location.href = "/mall2/card_exchange_details/"
-			    },
-			    error: function(resp) {
-			    	console.log("error");
-			    }
-			})           
-    })
+ //    //详情页面
+	// $(".xa-detail").click(function(){
+	// 	W.getApi().call({
+	// 		    method: 'get',
+	// 		    app: 'mall2',
+	// 		    api: 'card_exchange_details',
+	// 		    args: "",
+	// 		    scope: this,
+	// 		    success: function(data) {
+ // 					window.location.href = "/mall2/card_exchange_details/"
+	// 		    },
+	// 		    error: function(resp) {
+	// 		    	console.log("error");
+	// 		    }
+	// 		})           
+ //    })
     //修改数据
 	$(".xa-btnSubmit").click(function(){        
 		if(!$("input").attr("readonly")){
