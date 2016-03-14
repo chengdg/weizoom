@@ -62,6 +62,7 @@ def step_impl(context):
 			print(u'重置bdd环境')
 			environment.after_scenario(context, context.scenario)
 			environment.before_scenario(context, context.scenario)
+			return base64.b64encode('success')
 		else:
 			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context'])
 			print('*********************** run step **********************')
@@ -69,6 +70,13 @@ def step_impl(context):
 
 			try:
 				context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
+
+				raw_context_kvs = context._stack[0]
+				context_kvs = {}
+				for k,v in raw_context_kvs.items():
+					if isinstance(v, (basestring, int, float, list, dict, bool)):
+						context_kvs[k] = v
+				context_kvs['__is_success'] = True
 			except:
 				from core.exceptionutil import full_stack
 				print('*********************** exception **********************')
@@ -76,7 +84,9 @@ def step_impl(context):
 				print(stacktrace.decode('utf-8'))
 				return base64.b64encode(stacktrace)
 
-		return base64.b64encode('success')
+		# return base64.b64encode('success')
+
+			return base64.b64encode(json.dumps(context_kvs))
 
 	httpd = make_server('', 8170, simple_app, handler_class=BDDRequestHandler)
 	print("[bdd server] Serving on port 8170...")
