@@ -120,7 +120,7 @@
 					</div>
 				</td>
 				<td>
-					${item.members_count}<a href="javascript:void(0);" class="ml5 xa-viewData">查看成员</a>
+					${item.members_count}<a href="javascript:void(0);" class="ml5 xa-viewData">查看成员${item.id}</a>
 				</td>
 			</tr>
 			{{/each}}
@@ -141,10 +141,13 @@
 $(document).ready(function() {
 	$('body').delegate('.xa-viewData', 'click', function(event) {
 		var activityId = $(event.currentTarget).parents('tr').data('id');
+		console.log('fronted:.xa-viewData, click 000000000000002');
+		console.log(activityId);
 		W.dialog.showDialog('W.dialog.app.group.ViewParticipanceDataDialog', {
 			activityId: activityId,
 			success: function(data) {
-				alert(data);
+				console.log('fronted:.xa-viewData, click 回调 222222222222222');
+				console.log(data);
 			}
 		});
 	});

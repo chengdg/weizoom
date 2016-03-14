@@ -114,4 +114,88 @@ class GroupParticipance(resource.Resource):
 			response.errMsg = u'只能开团一次'
 		return response.get_response()
 
+	# @staticmethod
+	# def get_datas(request):
+	# 	product_name = request.GET.get('product_name', '')
+	# 	group_name = request.GET.get('group_name', '')
+	# 	status = int(request.GET.get('status', -1))
+	# 	start_time = request.GET.get('start_time', '')
+	# 	end_time = request.GET.get('end_time', '')
 
+	# 	now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+	# 	params = {'owner_id':request.manager.id}
+	# 	datas_datas = app_models.Group.objects(**params)
+	# 	for data_data in datas_datas:
+	# 		data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
+	# 		data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
+	# 		if data_start_time <= now_time and now_time < data_end_time:
+	# 			data_data.update(set__status=app_models.STATUS_RUNNING)
+	# 		elif now_time >= data_end_time:
+	# 			data_data.update(set__status=app_models.STATUS_STOPED)
+
+	# 	if group_name:
+	# 		params['name__icontains'] = group_name
+	# 	if product_name:
+	# 		params['product_name__icontains'] = product_name
+	# 	if status != -1:
+	# 		params['status'] = status
+	# 	if start_time:
+	# 		params['start_time__gte'] = start_time
+	# 	if end_time:
+	# 		params['end_time__lte'] = end_time
+	# 	datas = app_models.Group.objects(**params).order_by('-created_at')
+
+	# 	#进行分页
+	# 	count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+	# 	cur_page = int(request.GET.get('page', '1'))
+	# 	pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+	# 	return pageinfo, datas
+
+	@login_required
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+		relation_id = request.GET['id']
+		print 'backend:',77777777777771111111111111110000000000000
+		print relation_id
+
+		members = app_models.GroupDetail.objects(relation_belong_to = relation_id)
+		# pageinfo, members = paginator.paginate(members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		print 'GGGGGGGGGGGGG'
+		print type(members)
+		print members
+		items = []
+		for member in members:
+			items.append({
+				'id':unicode(member.id),
+				'name':member.grouped_member_name,
+				'created_at':member.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				})
+
+		# tmp_member_ids = []
+		# for data in datas:
+		# 	tmp_member_ids.append(data.member_id)
+		# members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		# member_id2member = {member.id: member for member in members}
+
+		# items = []
+		# for data in datas:
+		# 	items.append({
+		# 		'id': str(data.id),
+		# 		'group_leader':data.group_leader_name,
+		# 		'group_days':data.group_days,
+		# 		'status':data.status_text,
+		# 		'members_count':'%d/%s'%(data.grouped_number,data.group_type)
+		# 	})
+		response_data = {
+			'items': items,
+			# 'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': 'id',
+			'data': {}
+		}
+		response = create_response(200)
+		response.data = response_data
+		return response.get_response()
