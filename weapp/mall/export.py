@@ -366,6 +366,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                     'name': MALL_PROMOTION_CARD_EXCHANGE_NAV,
                     'title': u'微众卡兑换',
                     'url': '/mall2/card_exchange/',
+                    'users': ['jobs', 'njtest', 'ceshi01'],
                     'permission': ''
                 }
             ]
