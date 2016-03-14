@@ -72,17 +72,21 @@
     </div>
      <div class="xui-btngroup xa-actions" data-order-id="{{order.id}}">
         {% for action in order.actions %}
-          <button class="btn xui-btn  {{action.button_class}}
-          {{ action.class_name }}
-          "
-          href="javascript:void(0);"
-          {% if action.action == 'update_express' %}
-                  data-is-update="true"
-                  data-express-company-name="{{order.express_company_name}}"
-                  data-express-number="{{order.express_number}}"
-                  data-leader-name="{{order.fackorder.leader_name}}"
-          {%endif%}
-          >{{action.name}}</a></button>
+          {% if is_group_buying and action.action|is_show_button_by_group %}
+          <!-- 团购商品不显示 ‘取消订单’、‘申请退款’、‘退款成功’ -->
+          {% else %}
+            <button class="btn xui-btn  {{action.button_class}}
+            {{ action.class_name }}
+            "
+            href="javascript:void(0);"
+            {% if action.action == 'update_express' %}
+                    data-is-update="true"
+                    data-express-company-name="{{order.express_company_name}}"
+                    data-express-number="{{order.express_number}}"
+                    data-leader-name="{{order.fackorder.leader_name}}"
+            {%endif%}
+            >{{action.name}}</button>
+          {% endif %}
         {% endfor %}
      </div>
 </div>
