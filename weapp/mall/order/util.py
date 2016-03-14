@@ -686,6 +686,12 @@ def get_detail_response(request):
         order.number = number
         order.products = mall_api.get_order_products(order)
 
+        # 是否是团购的订单
+        if mall.models.OrderHasGroup.objects.filter(order_id=order.order_id).count() > 0:
+            is_group_buying = True
+        else:
+            is_group_buying = False
+
         # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
         for product in order.products:
             if 'integral_count' in product and product['integral_count'] > 0:
@@ -790,7 +796,8 @@ def get_detail_response(request):
             'log_count': log_count,
             'show_first': show_first,
             'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
-            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False
+            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
+            'is_group_buying': is_group_buying
             })
 
         return render_to_response('mall/editor/order_detail.html', c)
