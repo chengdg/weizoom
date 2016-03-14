@@ -449,14 +449,13 @@
 				var start_num=$('.xa-exchange-choose.active').attr('data-start');
 				var end_num=$('.xa-exchange-choose.active').attr('data-end');
 				W.getApi().call({
-					app: 'mall2',
+					app: 'webapp',
 					api: 'project_api/call',
 					method: 'post',
 					args: _.extend({
-						webapp_owner_id: W.webappOwnerId,
+						woid: W.webappOwnerId,
 						project_id: W.projectId,
 						module: 'card_exchange',
-
 						target_api: 'card/exchange',
 						money: prize_money,
 						integral: current_integral,
@@ -469,7 +468,7 @@
 					error: function(data){
 						$('body').alert({
 							isShow: true,
-//							info: data.data.msg,
+							info: '兑换失败',
 							isSlide: true,
 							speed: 2000
 						})
