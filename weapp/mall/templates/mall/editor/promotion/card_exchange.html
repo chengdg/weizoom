@@ -90,7 +90,6 @@
 {% endblock %}
 {% block content-panel %}
 <div>
-
     <div class="relative">
 		<ul class="breadcrumb">
 			<li>您当前所在位置</li>
@@ -247,6 +246,12 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	$(document).on("blur","input",function(){
+        var num = $(this).val();
+        if(isNaN(num)){
+		W.showHint('error', '请输入纯数字');
+	    }
+	})
 	var i = 1;
 	$(".xa-add").click(function(){   
 		$("#exchange-input").tmpl().appendTo(".xa-i-exchange");
@@ -408,6 +413,5 @@ function checkNull(){
         return true;
     }
 }
-
 </script>
 {% endblock %}
