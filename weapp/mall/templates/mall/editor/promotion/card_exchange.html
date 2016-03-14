@@ -272,30 +272,6 @@ $(document).ready(function() {
 			    }
 			})           
     })
-
-    $(document).on("blur",".xa-endnum",function(){
-    	var _this = $(this);
-    	var snumData = $(this).siblings(".xa-snum").val();
-	    var endnumData = $(this).val();
-		var stockData = {
-	        snum:snumData,
-	        endnum:endnumData
-		}
-		W.getApi().call({
-			    method: 'get',
-			    app: 'mall2',
-			    api: 'card_exchange',
-			    args: stockData,
-			    scope: this,
-			    success: function(data) {
-                	console.log('success');
-                	_this.siblings(".xa-exchangeStock").html("库存：123")
-			    },
-			    error: function(resp) {
-			    	console.log('error');   
-			    }
-			})
-    });
     //修改数据
 	$(".xa-btnSubmit").click(function(){
         var flag = checkNull()
@@ -348,11 +324,7 @@ $(document).ready(function() {
 			    scope: this,
 			    success: function(data) {
 			        W.showHint('success', '保存成功');
-			        for(var i = 0;i < data.prize.length;i ++){
-                        var stock = $(".xa-exchangeStock");
-			        	stock[i].innerHTML = "库存："+ data.prize[i].count;	
-			        }
-			      },
+			    },
 			    error: function(resp) {
 			        W.showHint('error', '操作失败');
 			    }
@@ -366,6 +338,59 @@ $(document).ready(function() {
 			$(".xa-exchangeSpan").hide();
 		}     
 	});
+	//更新库存
+    $(document).on("blur",".xa-endnum",function(){
+    	var _this = $(this);
+    	var snumData = $(this).siblings(".xa-snum").val();
+	    var endnumData = $(this).val();
+	    if(snumData&&endnumData) {
+	    if(snumData > endnumData) return
+		var stockData = {
+	        snum:snumData,
+	        endnum:endnumData
+		}
+		W.getApi().call({
+			    method: 'get',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: stockData,
+			    scope: this,
+			    success: function(data) {
+                	console.log('success');
+                	_this.siblings(".xa-exchangeStock").html("库存：" + data)
+			    },
+			    error: function(resp) {
+			    	console.log('error');   
+			    }
+			})
+		}
+    });
+    $(document).on("blur",".xa-snum",function(){
+    	var _this = $(this);
+    	var endnumData = $(this).siblings(".xa-endnum").val();
+	    var snumData = $(this).val();
+	    if(snumData&&endnumData) {
+	    if(snumData > endnumData) return
+		var stockData = {
+	        snum:snumData,
+	        endnum:endnumData
+		}
+		W.getApi().call({
+			    method: 'get',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: stockData,
+			    scope: this,
+			    success: function(data) {
+                	console.log('success');
+                	_this.siblings(".xa-exchangeStock").html("库存：" + data)
+			    },
+			    error: function(resp) {
+			    	console.log('error');   
+			    }
+			})
+		}
+    });
 });
 
 
