@@ -4,24 +4,20 @@ W.dialog.app.group.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
     }, W.dialog.Dialog.prototype.events),
 
     templates: {
-        dialogTmpl: '#app-group-viewParticipanceDataDialog-dialog-tmpl'
+        dialogTmpl: '#app-group-viewParticipanceDataDialog-dialog-tmpl',
+        resultTmpl: 'app-group-viewMembers-tmpl'
     },
-    getTemplate: function() {
-        $('#app-group-viewParticipanceDataDialog-dialog-tmpl').template('app-group-viewMembers-tmpl');
-        return "app-group-viewParticipanceDataDialog-dialog-tmpl";
-    },
-
     onInitialize: function(options) {
     	//s.activityId = options.activityId;
-        this.table = this.$('[date-ui-role="advanced-table"]').data('view');
+        // this.table = this.$('[date-ui-role="advanced-table"]').data('view');
 
     },
 
     beforeShow: function(options) {
-    	console.log('fronted-->Dialog +66666666666666666666666');
-    	console.log(this.activityId);
-        console.log(this.table);
-        this.table.reset();
+    	// console.log('fronted-->Dialog +66666666666666666666666');
+    	// console.log(this.activityId);
+        // console.log(this.table);
+        // this.table.reset();
         // if (this.activityId) {
         //     W.getApi().call({
         //         app: 'apps/group',
@@ -40,11 +36,32 @@ W.dialog.app.group.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
     },
 
     onShow: function(options) {
-        // this.activityId = options.activityId;
+        this.activityId = options.activityId;
     },
 
     afterShow: function(options) {
-        this.table.reload({});
+        var that = this;
+        if(this.activityId){
+            W.getApi().call({
+                app:'apps/group',
+                resource: 'group_participance',
+                scope: this,
+                args: {
+                    id: this.activityId
+                },
+                success: function(data) {
+                    console.log('GGGGGGGGGGGGGGGGGGSSSSSSSSSSSSSS');
+                    console.log(data);//数据是对的
+                    this.$dialog.find('.modal-body').text(data);
+                    var template = Handlebars.compile($(that.templates['resultTmpl']).html());
+                    $('.xui-app_group-Dialog .modal-body').html(template(data));
+                    // $('table img[data-toggle="tooltip"]').tooltip();
+                },
+                error: function(resp) {
+                }
+            })
+        }
+        // this.table.reload({});
         // if (this.activityId) {
         //     W.getApi().call({
         //         app: 'apps/group',
