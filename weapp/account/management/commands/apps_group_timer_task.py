@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from apps.customerized_apps.group import models as app_models
 from modules.member.models import Member
-
+from mall.order.util import update_order_status_by_group_status
 
 class Command(BaseCommand):
 	help = 'start group stats task'
@@ -27,6 +27,7 @@ class Command(BaseCommand):
 			timing = (group_relation.created_at + timedelta(days=int(group_relation.group_days)) - datetime.today()).total_seconds()
 			if timing <= 0:
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
+				update_order_status_by_group_status(group_relation.id,'failure')
 
 		"""
 		所有已到15分钟还未开团成功的团购，删除团购记录

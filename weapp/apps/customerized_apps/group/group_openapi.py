@@ -10,6 +10,7 @@ from core.jsonresponse import create_response
 import models as app_models
 from apps import request_util
 from termite import pagestore as pagestore_manager
+from mall.order.util import update_order_status_by_group_status
 
 class GroupBuyProduct(resource.Resource):
 	app = 'apps/group'
@@ -176,5 +177,6 @@ class OrderAction(resource.Resource):
 				is_already_paid_list.append(g.is_already_paid)
 			if 'False' not in is_already_paid_list:
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
+				update_order_status_by_group_status(group_id,'success')
 		response = create_response(200)
 		return response.get_response()
