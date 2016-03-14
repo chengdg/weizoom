@@ -1551,16 +1551,21 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
 def update_order_status_by_group_status(group_id, status, order_ids=None):
     if status == 'success':
         group_status = GROUP_STATUS_OK
-        order_status = None
+        order_status = ORDER_STATUS_NOT
     elif status == 'failure':
         group_status = GROUP_STATUS_failure
-        order_status = ORDER_STATUS_REFUNDING
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
     relations = OrderHasGroup.objects.filter(group_id=group_id)
+    user = UserProfile.objects.filter(webapp_id=relations[0].webapp_id).user
     relations.update(group_status=group_status)
-
-    if order_status is not None:
-        Order.objects.filter(
+    orders = Order.objects.filter(
             order_id__in=[r.order_id for r in relations],
-            status=ORDER_STATUS_PAYED_NOT_SHIP
-            ).update(status=order_status)
+            status=order_status
+            )
+    from mall.module_api import update_order_status
+    for order in orders:
+        if order_status == ORDER_STATUS_NOT:
+            update_order_status(user, 'cancel', order)
+        elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+            update_order_status(user, 'return_pay', order)
