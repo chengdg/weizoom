@@ -277,6 +277,7 @@ $(document).ready(function() {
 	$(document).on("blur","input",function(){
         var num = $(this).val();
         var reg = new RegExp("^\\d+(\\.\\d+)?$");
+        if(num == "") return
         if(!reg.test(num)){
 		W.showHint('error', '请输入纯数字');
 	    }
