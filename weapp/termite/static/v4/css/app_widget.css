@@ -1883,17 +1883,14 @@ li.wui-selectBox-display-table {
     padding: 13px;
     border-radius: 6px;
 }
-.wui-group-container .wui-i-description .wui-i-description-content{
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-}
-
 .wui-group-container .wui-i-description-content .wui-i-product-title{
     width: 90%;
     height: 2rem;
     padding-bottom: 5px;
     margin: auto;
+	font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
 }
 .wui-group-container .wui-i-description-content .wui-i-product-price-group{
     border-top: 1px solid #E6E6E6;
@@ -1933,9 +1930,11 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_items_box{
     margin-top: 5px;
 }
-
+.wui-group-container .wui-i-choose_group_box .wui-i-choose_items_box span{
+    font-weight: normal;
+	font-size: 0.9rem;
+}
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_title{
-    /*font-size: 0.9rem;*/
     float: left;
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-end_time {
@@ -2046,9 +2045,7 @@ li.wui-selectBox-display-table {
     border-radius: 3px;
 }
 
-
 /*团购进度条*/
-
 .wui-group-container .wui-i-powerbar_group{
     height: 26px;
     margin: 5px 0;
@@ -2066,7 +2063,7 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-powerbar_group .wui-i-total_number{
     display: inline-block;
     color: #ff2742;
-    width: 10%;
+    width: 15%;
     float: right;
     text-align: center;
     line-height: 26px;
@@ -2131,5 +2128,4 @@ li.wui-selectBox-display-table {
 	border-radius: 36px;
 	border: 0px;
 }
-
 /*百宝箱 团购CSS ---- end */

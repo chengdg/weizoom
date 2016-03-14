@@ -16,6 +16,7 @@ from utils import url_helper
 from utils.cache_util import GET_CACHE, SET_CACHE
 from modules.member.models import Member
 from mall.models import *
+from weapp import settings
 
 class MGroup(resource.Resource):
 	app = 'apps/group'
@@ -258,7 +259,8 @@ class MGroup(resource.Resource):
 			'share_page_title': mpUserPreviewName,
 			'share_img_url': record.material_image if record else '',
 			'share_page_desc': record.name if record else u"团购",
-			'share_to_timeline_use_desc': True  #分享到朋友圈的时候信息变成分享给朋友的描述
+			'share_to_timeline_use_desc': True,  #分享到朋友圈的时候信息变成分享给朋友的描述
+			'settings_domain': settings.APPS_H5_DOMAIN
 		})
 		response = render_to_string('group/templates/webapp/m_group.html', c)
 		# if request.member:

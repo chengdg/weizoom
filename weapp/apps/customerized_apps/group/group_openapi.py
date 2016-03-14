@@ -23,7 +23,7 @@ class GroupBuyProduct(resource.Resource):
 		activity_url = ''
 		is_in_group_buy = False
 		pid = request.GET.get('pid')
-		webapp_owner_id = request.webapp_owner_info.auth_appid_info.appid
+		webapp_owner_id = request.manager.id
 		record = app_models.Group.objects(product_id=pid,status=app_models.STATUS_RUNNING)
 		if record.count() > 0:
 			is_in_group_buy = True
@@ -79,7 +79,7 @@ class GroupBuyInfo(resource.Resource):
 		activity_id = ''
 		activity_url = ''
 		group_id = request.GET.get('group_id')
-		webapp_owner_id = request.webapp_owner_info.auth_appid_info.appid
+		webapp_owner_id = request.manager.id
 		group_record = app_models.GroupRelations.objects(id=group_id)
 		if group_record.count() > 0:
 			group_record = group_record.first()
