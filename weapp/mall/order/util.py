@@ -1088,7 +1088,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
-                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
+                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
             }
 
             if order.supplier_user_id > 0:
@@ -1460,7 +1460,7 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False,mall_type=0):
+def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0, is_group_buying=False):
 
     """
     :param order:
@@ -1545,6 +1545,10 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
 
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
+
+    if is_group_buying:
+        result = filter(lambda x: x not in [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION], result)
+
     return result
 
 
