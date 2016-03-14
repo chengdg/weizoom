@@ -686,6 +686,12 @@ def get_detail_response(request):
         order.number = number
         order.products = mall_api.get_order_products(order)
 
+        # 是否是团购的订单
+        if mall.models.OrderHasGroup.objects.filter(order_id=order.order_id).count() > 0:
+            is_group_buying = True
+        else:
+            is_group_buying = False
+
         # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
         for product in order.products:
             if 'integral_count' in product and product['integral_count'] > 0:
@@ -790,7 +796,8 @@ def get_detail_response(request):
             'log_count': log_count,
             'show_first': show_first,
             'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
-            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False
+            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
+            'is_group_buying': is_group_buying
             })
 
         return render_to_response('mall/editor/order_detail.html', c)
@@ -913,10 +920,27 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
 
-    orders = belong_to(webapp_id, user.id, mall_type)
+    group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+    group_order_ids = [r.order_id for r in group_order_relations]
+    if query_dict.get('order_type') and query_dict['order_type'] == '2' and not mall_type:
+        orders = Order.objects.filter(order_id__in=group_order_ids)
+    else:
+        orders = belong_to(webapp_id, user.id, mall_type)
 
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+
+    if not mall_type and group_order_relations.count() > 0:
+        not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+            order_id__in=group_order_ids,
+            status=ORDER_STATUS_NOT)
+        ]
+        not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+            order_id__in=[r.order_id for r in group_order_relations.filter(group_status=GROUP_STATUS_ON)],
+            status=ORDER_STATUS_PAYED_NOT_SHIP
+            )]
+        orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
+
 
     # 处理排序
     if sort_attr != 'created_at':
@@ -1064,7 +1088,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
-                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
+                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
             }
 
             if order.supplier_user_id > 0:
@@ -1137,7 +1161,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
             'parent_action': parent_action,
             'is_first_order': order.is_first_order,
             'supplier_user_id': order.supplier_user_id,
-            'total_purchase_price': '%.2f' % order.total_purchase_price
+            'total_purchase_price': '%.2f' % order.total_purchase_price,
+            'is_group_buying': True if order.order_id in group_order_ids else False
         })
 
     return items, pageinfo, order_return_count
@@ -1435,7 +1460,7 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_parent=False,mall_type=0):
+def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0, is_group_buying=False):
 
     """
     :param order:
@@ -1520,4 +1545,31 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
 
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
+
+    if is_group_buying:
+        result = filter(lambda x: x not in [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION], result)
+
     return result
+
+
+def update_order_status_by_group_status(group_id, status, order_ids=None):
+    if status == 'success':
+        group_status = GROUP_STATUS_OK
+        order_status = ORDER_STATUS_NOT
+    elif status == 'failure':
+        group_status = GROUP_STATUS_failure
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
+
+    relations = OrderHasGroup.objects.filter(group_id=group_id)
+    user = UserProfile.objects.filter(webapp_id=relations[0].webapp_id).user
+    relations.update(group_status=group_status)
+    orders = Order.objects.filter(
+            order_id__in=[r.order_id for r in relations],
+            status=order_status
+            )
+    from mall.module_api import update_order_status
+    for order in orders:
+        if order_status == ORDER_STATUS_NOT:
+            update_order_status(user, 'cancel', order)
+        elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+            update_order_status(user, 'return_pay', order)

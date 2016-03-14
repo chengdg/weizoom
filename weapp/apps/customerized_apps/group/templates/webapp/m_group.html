@@ -144,6 +144,7 @@
     var group_type = '';
     var group_relation_id = {% if group_relation_id %}'{{group_relation_id}}'{% else %}''{% endif %};
     var product_id = {% if product_id %}'{{product_id}}'{% else %}''{% endif %};
+    var settings_domain = '{{settings_domain}}';
 	$(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -334,7 +335,7 @@
                 },
                 success: function(data) {
                     var relation_belong_to = data.relation_belong_to;
-                    var data_href = "http://h5.weapp.com/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
+                    var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
                     window.open(data_href, '_tab');
                 },
                 error: function(data) {
@@ -365,7 +366,7 @@
                 fid: page_owner_member_id
             },
             success: function(data) {
-                var data_href = "http://h5.weapp.com/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+group_relation_id+"&activity_id="+W.appRecordId;
+                var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+group_relation_id+"&activity_id="+W.appRecordId;
                 window.open(data_href, '_tab');
             },
             error: function(data) {
@@ -508,9 +509,8 @@
         }else if(process=="0.0%"){
             process="0%";
         }
-        $('.xa-i-percentbox').text(current_number+'人');
+        $('.wui-i-cur_number').text(current_number+'人');
         $('.wa-i-total_number').text(total_number+'人');
-        $(".xa-i-percentbox").css("left",process);
         $(".xa-i-bar_process").width(process);
         percentBox_process_tmp = process;
 //        percentBoxTimer();
@@ -528,7 +528,10 @@
                 var li_content = '';
                 for(var i in helpers_info){
                     var p = helpers_info[i];
-                    li_content += "<span class='wui-i-friend'><span class='wui-i-avatarbox'><span class='wui-i-avatar'><img src='"+ p.user_icon+"'></span></span></span>";
+                    li_content += "<li class='wui-i-member'><img src='"+ p.user_icon+"'></li>";
+                }
+                for(var i=0; i < (parseInt(group_type)-helpers_info.length);i++){
+                    li_content += "<li class='wui-i-member'><img src='/termite_static/img/component/group/user_icon.png'></li>";
                 }
                 $('.wa-grouped-members').append($(li_content));
             }
