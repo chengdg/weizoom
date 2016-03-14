@@ -16,7 +16,10 @@ from mall.promotion.utils import stop_promotion
 
 from watchdog.utils import watchdog_fatal, watchdog_error
 from core.exceptionutil import unicode_full_stack
-
+from django.conf import settings
+import logging
+import urllib
+from django.db.models import F
 DING_GROUP_ID = '93756731'
 
 def process_custom_model(custom_model_str):
@@ -333,43 +336,106 @@ def weizoom_filter_products(request, products):
             new_filtered_products.append(product)
     return new_filtered_products
 
-#
-# def update_one_product(request):
-#     try:
-#         name = request.POST.get('name')
-#         product = models.Product.objects.get(name=name)
-#     except models.Product.DoesNotExist:
-#         print("Product with id does not exist")
+
+def handle_group_product(request, product_id, swipe_images, thumbnails_url):
+    #添加团购活动商品的操作
+
+    # 处理轮播图
+    models.ProductSwipeImage.objects.filter(
+        product_id=product_id
+    ).delete()
+    for swipe_image in swipe_images:
+        models.ProductSwipeImage.objects.create(
+            product_id=product_id,
+            url=swipe_image['url'],
+            width=swipe_image['width'],
+            height=swipe_image['height']
+        )
+    # 处理商品规格
+    standard_model, custom_models = extract_product_model(request)
+
+    # 处理standard商品规格
+    models.ProductModel.objects.filter(
+        product_id=product_id, name='standard'
+    ).update(
+        price=standard_model['price'],
+        stock_type=standard_model['stock_type'],
+        stocks=standard_model['stocks'],
+        is_deleted=False
+    )
+
+    # 减少原category的product_count
+    user_category_ids = [
+        category.id for category in models.ProductCategory.objects.filter(
+            owner=request.manager)]
+    old_category_ids = set([relation.category_id for relation in models.CategoryHasProduct.objects.filter(
+        category_id__in=user_category_ids, product_id=product_id)])
+    catetories_ids = request.POST.get('product_category', -1).split(',')
+
+    for category_id in catetories_ids:
+        if not category_id.isdigit():
+            continue
+        category_id = int(category_id)
+        if category_id in old_category_ids:
+            old_category_ids.remove(category_id)
+        else:
+            models.CategoryHasProduct.objects.create(
+                category_id=category_id, product_id=product_id)
+            models.ProductCategory.objects.filter(
+                id=category_id
+            ).update(product_count=F('product_count') + 1)
+    if len(old_category_ids) > 0:
+        # 存在被删除的ctegory关系，删除该关系
+        models.CategoryHasProduct.objects.filter(
+            category_id__in=old_category_ids, product_id=product_id
+        ).delete()
+        models.ProductCategory.objects.filter(
+            id__in=old_category_ids
+        ).update(product_count=F('product_count') - 1)
 
 
-# def validate_product_necessary_arguments(request):
-#     """验证商品必要的参数是否已提供
+    is_delivery = request.POST.get('is_delivery', False)
+    param = {
+        'name': request.POST.get('name', '').strip(),
+        'thumbnails_url': thumbnails_url,
+        'detail': request.POST.get('detail', '').strip(),
+        'is_delivery': is_delivery,
+    }
+    # 微众商城代码
+    # if request.POST.get('weshop_sync', None):
+    #     param['weshop_sync'] = request.POST['weshop_sync'][0]
+    models.Product.objects.record_cache_args(
+        ids=[product_id]
+    ).filter(
+        owner=request.manager,
+        id=product_id
+    ).update(**param)
 
-#     Return:
 
-#     """
-#     try:
-#         # 商品名称验证
-#         name_pattern = r'\A\w{1,20}\Z'  # 1 到 20 个字符
-#         name = request.POST['name']
-#         result = re.match(name_pattern, name, re.UNICODE)
-#         name = True if result else False
+def get_product2group(pids, woid='3'):
+    #例子
+    #pids为list,里面的每一项都是商品id的str
+    pids_url = "http://{}/m/apps/group/api/group_buy_products/".format(settings.MARKETTOOLS_HOST)
+    # pids_url = "http://{}/mall2/api/test/".format(settings.MARKETTOOLS_HOST)
 
-#         # 商品图片验证
-#         swipe_images = json.loads(request.POST['swipe_images'])
-#         swipe_images = True if swipe_images else False
+    params = "pids={}".format(("_").join(pids))
+    response = urllib.urlopen("{}?{}&woid={}".format(pids_url, params, woid))
+    if response.code != 200:
+        response = urllib.urlopen("{}?{}&woid={}".format(pids_url, params, woid))
+        if response.code != 200:
+            error_msg = u"api请求失败,获取商品是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
+            return {}
 
-#         # 无规格商品必要参数验证
-#         if not request.POST.get('is_use_custom_model'):
-#             price = request.POST['price']
-#             weight = request.POST['weight']
-#         # 有规格商品必要参数验证
-#         else:
-#             is_custom_model_validation = True
-#             custom_model = json.loads(request.POST['customModels'])
-#             for i in customModels:
-#                 price = i['price']
-#                 weight = i['weight']
-#     except KeyError:
-#         return False
-
+    data =  response.read()
+    data = json.loads(data)
+    if data["data"]["pid2is_in_group_buy"]:
+        product_groups = data["data"]["pid2is_in_group_buy"]
+        product2group = {}
+        for product_group in product_groups:
+            product2group[product_group["pid"]] = product_group["is_in_group_buy"]
+        logging.info(u"请求活动返回数据>>>>>>>>>>>>>>>{}".format(product2group))
+    else:
+        error_msg = u"api请求获取的数据存在问题, cause:\n{}".format(data)
+        watchdog_error(error_msg)
+    return product2group
