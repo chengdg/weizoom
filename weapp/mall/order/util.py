@@ -358,7 +358,10 @@ def export_orders_json(request):
         if order.status in [2, 3, 4, 5, 6]:
             final_price = order.final_price
             weizoom_card_money = order.weizoom_card_money
-            final_total_order_money += order.final_price
+            if not mall_type and(order.supplier or order.supplier_user_id):
+                final_total_order_money += order.total_purchase_price
+            else:
+                final_total_order_money += order.final_price
             try:
                 coupon_money_count += order.coupon_money
                 weizoom_card_total_order_money += order.weizoom_card_money
