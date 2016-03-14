@@ -34,7 +34,6 @@
 		.xui-i-add{
 			cursor: pointer;
 			display: inline-block;
-			margin-top: 7px;
 			font-weight: bold;
 		}
 		.xui-i-num{
@@ -136,7 +135,7 @@
 			</tr>
 			<tr>
 	        	<th>兑换奖项：
-	        		<a href="mall2/card_exchange_details" class="xui-detail xa-detail" title="使用详情">使用详情</a>
+	        		<a href="/mall2/card_exchange_details/" class="xui-detail xa-detail" title="使用详情">使用详情</a>
 	        	</th>
 	        	<td>
 	        	    <form>
@@ -197,7 +196,7 @@
 			</tr>
 			<tr>
 	        	<th>兑换奖项：
-	        		<a href="mall2/card_exchange_details" class="xui-detail xa-detail" title="使用详情">使用详情</a>
+	        		<a href="/mall2/card_exchange_details/" class="xui-detail xa-detail" title="使用详情">使用详情</a>
 	        	</th>
 	        	<td>
 	        	    <form>
@@ -281,8 +280,7 @@ $(document).ready(function() {
         if(!reg.test(num)){
 		W.showHint('error', '请输入纯数字');
 	    }
-	})
-    
+	})  
     //添加新卡
 	$(".xa-add").click(function(){   
 		$("#exchange-input").tmpl().appendTo(".xa-exchange");
@@ -292,22 +290,6 @@ $(document).ready(function() {
 	$(document).on("click",".xui-i-del",function(){
     	$(this).parents(".xui-i-put").remove();
 	})
- //    //详情页面
-	// $(".xa-detail").click(function(){
-	// 	W.getApi().call({
-	// 		    method: 'get',
-	// 		    app: 'mall2',
-	// 		    api: 'card_exchange_details',
-	// 		    args: "",
-	// 		    scope: this,
-	// 		    success: function(data) {
- // 					window.location.href = "/mall2/card_exchange_details/"
-	// 		    },
-	// 		    error: function(resp) {
-	// 		    	console.log("error");
-	// 		    }
-	// 		})           
- //    })
     //修改数据
 	$(".xa-btnSubmit").click(function(){        
 		if(!$("input").attr("readonly")){
@@ -327,8 +309,7 @@ $(document).ready(function() {
                 var snumData = snum[i].value;
                 var endnumData = endnum[i].value;
                 if(parseInt(snumData) > parseInt(endnumData)) return
-            }
-            
+            }            
 			$("input").attr("readonly",true).hide();
             $(".xui-i-del").hide();
             var exchange_input = $(".xa-exchangeSpan").prev();
@@ -341,7 +322,6 @@ $(document).ready(function() {
 			$(".xui-bindPhoneNum").hide();
 			var bindMess =$(".xui-bindPhoneNum option:selected").html();
 			$(".xui-bindNumTxt").html(bindMess); 
-
 		    //提交数据
 			var prize = [];
 			var money = $(".xa-money");
@@ -386,13 +366,12 @@ $(document).ready(function() {
 			$(".xa-exchangeSpan").hide();
 		}     
 	});
-
 	//更新库存
     $(document).on("blur",".xa-endnum",function(){
     	var _this = $(this);
     	var snumData = $(this).siblings(".xa-snum").val();
 	    var endnumData = $(this).val();
-	    if(snumData&&endnumData) {
+	    if(snumData&&endnumData){
 	    var reg = new RegExp("^[0-9]*$");
 		if(!reg.test(endnumData)){
 			W.showHint('error','请输入纯数字')
