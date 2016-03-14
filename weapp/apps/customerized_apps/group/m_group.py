@@ -77,18 +77,11 @@ class MGroup(resource.Resource):
 						group_relation_info = app_models.GroupRelations.objects.get(id=group_relation_id)
 						group_status = group_relation_info.status_text
 						group_type = group_relation_info.group_type
-						grouped_number = group_relation_info.grouped_number
 						product_group_price = group_relation_info.group_price
 						product_original_price = ProductModel.objects.get(product_id=group_relation_info.product_id).price
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
-
-						#判断分享页是否自己的主页
-						if fid is None or str(fid) == str(member_id):
-							is_group_leader = True if group_relation_info.member_id == str(member_id) else False
-						else:
-							is_helped = True if str(member_id) in group_relation_info.grouped_member_ids else False
 
 						# 获取该主页帮助者列表
 						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
@@ -101,10 +94,20 @@ class MGroup(resource.Resource):
 								'username': member_id2member[h.grouped_member_id].username_size_ten
 							}
 							grouped_member_info_list.append(temp_dict)
+
+						#判断分享页是否自己的主页
+						if fid is None or str(fid) == str(member_id):
+							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
+						else:
+							if (str(member_id) in group_relation_info.grouped_member_ids) and (str(member_id) in member_ids):
+								is_helped = True
+							else :
+								is_helped = False
 					except:
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
+
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = member.username_size_ten
@@ -129,7 +132,7 @@ class MGroup(resource.Resource):
 			'activity_status': activity_status,
 			'group_status': group_status, #小团购状态
 			'group_type': int(group_type) if group_type !='' else '',
-			'grouped_number': int(grouped_number),
+			'grouped_number': len(grouped_member_info_list),
 			'member_id': member_id if member else '',
 			'only_remain_one_day': only_remain_one_day,
 			'product_original_price': product_original_price,
@@ -172,7 +175,7 @@ class MGroup(resource.Resource):
 				return response
 
 			if not group_relation_id:
-				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), group_status=app_models.GROUP_RUNNING)
+				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id))
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
 					group_relation_id = group_relation.id

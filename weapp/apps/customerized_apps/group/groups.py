@@ -114,44 +114,78 @@ class Groups(resource.Resource):
 
 		print 333333333333333333
 		print r_id2details
+		############
+		# g_id2static_info = {}
+		# if id2relation:
+		# 	for g_id in id2relation:
+		# 		group_relation_list = id2relation[g_id]
+		# 		open_group_num = len(group_relation_list)
 
-		g_id2static_info = {}
-		if id2relation:
-			for g_id in id2relation:
-				group_relation_list = id2relation[g_id]
-				open_group_num = len(group_relation_list)
+		# 		group_customer_num = 0
+		# 		for one_relation in group_relation_list:
+		# 			r_id = unicode(one_relation.id)
+		# 			print '>>>>>>>>'
+		# 			print r_id
+		# 			print r_id2details
+		# 			detail_list = r_id2details[r_id]
+		# 			for one_detail in detail_list:
+		# 				if one_detail.is_already_paid:
+		# 					group_customer_num += 1
 
-				group_customer_num = 0
-				for one_relation in group_relation_list:
-					r_id = unicode(one_relation.id)
-					print '>>>>>>>>'
-					print r_id
-					print r_id2details
-					detail_list = r_id2details[r_id]
-					for one_detail in detail_list:
-						if one_detail.is_already_paid:
-							group_customer_num += 1
+		# 		if g_id in g_id2static_info:
+		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
+		# 									'group_customer_num':group_customer_num,
+		# 									}
+		# 		else:
+		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
+		# 									'group_customer_num':group_customer_num,
+		# 									}
 
-				if g_id in g_id2static_info:
-					g_id2static_info[g_id]={'open_group_num':open_group_num,
-											'group_customer_num':group_customer_num,
-											}
-				else:
-					g_id2static_info[g_id]={'open_group_num':open_group_num,
-											'group_customer_num':group_customer_num,
-											}
+		# g_id2static_info = {}
 
-		print 44444444444444444
-		print g_id2static_info
+		for data in datas:
+			g_id = unicode(data.id)
+			open_group_num = 0
+			group_customer_num = 0
+			if g_id in id2relation:
+				relation_list = id2relation[g_id]
+				open_group_num = len(relation_list)
+				for relation in relation_list:
+					r_id = unicode(relation.id)
+					if r_id in r_id2details:
+						detail_list = r_id2details[r_id]
+						for one_detail in detail_list:
+							if one_detail.is_already_paid:
+								group_customer_num += 1
 
-		if g_id2static_info:
-			for data in datas:
-				g_id = str(data.id)
-				data.static_info = g_id2static_info[str(g_id)]
+				data.static_info = {'open_group_num':open_group_num,
+										'group_customer_num':group_customer_num,
+										}
+			else:
+				data.static_info = {'open_group_num':open_group_num,
+										'group_customer_num':group_customer_num,
+										}
+
+		# print 44444444444444444
+		# print g_id2static_info
+
+		# if g_id2static_info:
+		# 	for data in datas:
+		# 		g_id = str(data.id)
+		# 		if g_id in g_id2static_info:
+		# 			data.static_info = g_id2static_info[str(g_id)]
+		# 		else:
+		# 			data.static_info = {'open_group_num':0,
+		# 									'group_customer_num':0,
+		# 									}
+
 
 
 		items = []
 		for data in datas:
+			print 'FFFFFFFFFFFFFFFFFF1111111111111111111111'
+			print data.static_info
+
 			items.append({
 				'id': str(data.id),
 				'name': data.name,
@@ -163,10 +197,8 @@ class Groups(resource.Resource):
 				# 'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
 				'end_time_date': data.end_time.strftime('%Y-%m-%d'),
 				'end_time_time': data.end_time.strftime('%H:%M'),
-				# 'group_item_count':data.static_info.open_group_num if hasattr(data, 'static_info') else 0,
-				# 'group_customer_count':data.static_info.group_customer_num if hasattr(data, 'static_info') else 0,
-				'group_item_count': 0,
-				'group_customer_count': 0,
+				'group_item_count':data.static_info['open_group_num'], #if hasattr(data, 'static_info') else 0,
+				'group_customer_count':data.static_info['group_customer_num'], #if hasattr(data, 'static_info') else 0,
 				'group_visitor_count':len(data.visited_member),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
