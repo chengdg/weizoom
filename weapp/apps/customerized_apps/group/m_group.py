@@ -97,7 +97,7 @@ class MGroup(resource.Resource):
 
 						#判断分享页是否自己的主页
 						if fid is None or str(fid) == str(member_id):
-							is_group_leader = True if group_relation_info.member_id == str(member_id) else False
+							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
 						else:
 							if (str(member_id) in group_relation_info.grouped_member_ids) and (str(member_id) in member_ids):
 								is_helped = True
@@ -107,6 +107,7 @@ class MGroup(resource.Resource):
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
+
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = member.username_size_ten
@@ -174,7 +175,7 @@ class MGroup(resource.Resource):
 				return response
 
 			if not group_relation_id:
-				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id), group_status=app_models.GROUP_RUNNING)
+				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id))
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
 					group_relation_id = group_relation.id
