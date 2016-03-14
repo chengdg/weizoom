@@ -86,6 +86,15 @@
 		.xui-hide{
 			display: none;
 		}
+		.xui-money,.xui-num{
+			display: inline-block;
+		}
+		.xui-money{
+			width: 171px;
+		}
+		.xui-num{
+			width: 255px;
+		}
 	</style>
 {% endblock %}
 {% block content-panel %}
@@ -132,16 +141,20 @@
 			        		    	<span class="xa-exchangeSpan">{{item.integral}}</span>
 			        		    </div>
 			                    <div class="pr">
-			                    	兑换微众卡：<input type="text" class="xui-i-money xa-money xui-hide" name="money" readonly=true value="{{item.money}}">
-			                    	<span class="xa-exchangeSpan">{{item.money}}</span>
-			                    	<span class=" mr50">元</span>
-					                号段：<input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.s_num}}">
-					                <span class="xa-exchangeSpan">{{item.s_num}}</span>
-					                <span class="ml5 mr5">-</span>
-					                <input type="text" class="xui-i-num xa-endnum xui-hide" name="endnum" readonly=true value="{{item.end_num}}">	
-					                <span class="xa-exchangeSpan">{{item.end_num}}</span>	
-					                <span class="ml30 xa-exchangeStock">库存：{{item.count}}</span>
-                                    <a href="###" class="xui-i-del xui-hide" title="删除">&times;</a>
+			                    	<div class="xui-money">
+				                    	兑换微众卡：<input type="text" class="xui-i-money xa-money xui-hide" name="money" readonly=true value="{{item.money}}">
+				                    	<span class="xa-exchangeSpan">{{item.money}}</span>
+				                    	<span>元</span>
+				                    </div>
+				                    <div class="xui-num xa-num">
+						                号段：<input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.s_num}}">
+						                <span class="xa-exchangeSpan">{{item.s_num}}</span>
+						                <span class="ml5 mr5">-</span>
+						                <input type="text" class="xui-i-num xa-endnum xui-hide" name="endnum" readonly=true value="{{item.end_num}}">	
+					                	<span class="xa-exchangeSpan">{{item.end_num}}</span>
+					                </div>	
+					                <span class="xa-exchangeStock">库存：{{item.count}}</span>
+                                    <a href="javascript:void(0);" class="xui-i-del xui-hide" title="删除">&times;</a>
 			                    </div>
 			                </div>
 			                {% endfor %}
@@ -188,16 +201,20 @@
 			        		    	<span class="xa-exchangeSpan"></span>
 			        		    </div>
 			                    <div class="pr">
-			                    	兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
-			                    	<span class="xa-exchangeSpan"></span>
-			                    	<span class="mr50">元</span>
-					                号段：<input type="text" class="xui-i-num xa-snum" name="snum">
-					                <span class="xa-exchangeSpan"></span>
-					                <span class="ml5 mr5">-</span>
-					                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
-					                <span class="xa-exchangeSpan"></span>
-					                <span class="ml30 xa-exchangeStock">库存：</span>
-					                <a href="###" class="xui-i-del" title="删除">&times;</a>              
+			                        <div class="xui-money">
+				                    	兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
+				                    	<span class="xa-exchangeSpan"></span>
+				                    	<span>元</span>
+				                    </div>
+				                    <div class="xui-num xa-num">
+						                号段：<input type="text" class="xui-i-num xa-snum" name="snum">
+						                <span class="xa-exchangeSpan"></span>
+						                <span class="ml5 mr5">-</span>
+						                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
+						                <span class="xa-exchangeSpan"></span>
+						            </div>
+					                <span class="xa-exchangeStock">库存：</span>
+					                <a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>              
 			                    </div>
 			                </div>
 		        		</div>
@@ -229,16 +246,20 @@
 		<span class="xa-exchangeSpan"></span>
 	</div>
 	<div>
-		兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
-		<span class="xa-exchangeSpan"></span>
-		<span class="mr50">元</span>
-		号段：<input type="text" class="xui-i-num xa-snum" name="snum">
-		<span class="xa-exchangeSpan"></span>
-		<span class="ml5 mr5">-</span>
-		<input type="text" class="xui-i-num xa-endnum" name="endnum">	
-		<span class="xa-exchangeSpan"></span>   
-		<span class="ml30 xa-exchangeStock">库存：</span>
-		<a href="###" class="xui-i-del" title="删除">&times;</a>            
+		<div class="xui-money">
+			兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
+			<span class="xa-exchangeSpan"></span>
+			<span class=>元</span>
+		</div>
+		<div class="xui-num xa-num">
+			号段：<input type="text" class="xui-i-num xa-snum" name="snum">
+			<span class="xa-exchangeSpan"></span>
+			<span class="ml5 mr5">-</span>
+			<input type="text" class="xui-i-num xa-endnum" name="endnum">	
+			<span class="xa-exchangeSpan"></span> 
+		</div>  
+		<span class="xa-exchangeStock">库存：</span>
+		<a href="javascript:void(0);" class="xui-i-del" title="删除">&times;</a>            
 	</div>
 </div>
 </script>
@@ -246,17 +267,20 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	//检验是否为数字
 	$(document).on("blur","input",function(){
         var num = $(this).val();
-        if(isNaN(num)){
+        var reg = new RegExp("^\\d+(\\.\\d+)?$");
+        if(!reg.test(num)){
 		W.showHint('error', '请输入纯数字');
 	    }
 	})
-	var i = 1;
+    
+    //添加新卡
 	$(".xa-add").click(function(){   
 		$("#exchange-input").tmpl().appendTo(".xa-i-exchange");
 	});  
-    
+    //控制删除按钮
 	$(".xui-i-del").eq(0).hide();
 	$(document).on("click",".xui-i-del",function(){
     	$(this).parents(".xui-i-put").remove();
@@ -278,13 +302,26 @@ $(document).ready(function() {
 			})           
     })
     //修改数据
-	$(".xa-btnSubmit").click(function(){
-        var flag = checkNull()
-        if(!flag){
-        	W.showHint('error', '请输入完整数据')
-        	return
-        }
+	$(".xa-btnSubmit").click(function(){        
 		if(!$("input").attr("readonly")){
+			//校验
+			var reg = new RegExp("^\\d+(\\.\\d+)?$");
+	        var all = $("input");
+	        for(var i=0;i<all.length;i++){
+	 			var arg = all[i].value;
+		    	if(!reg.test(arg)){
+		    		W.showHint('error','请输入纯数字')
+		    		return 
+		    	}
+	        }         
+	        var snum = $(".xa-snum")
+			var endnum = $(".xa-endnum");
+			for(var i=0;i<snum.length;i++){
+                var snumData = snum[i].value;
+                var endnumData = endnum[i].value;
+                if(parseInt(snumData) > parseInt(endnumData)) return
+            }
+            
 			$("input").attr("readonly",true).hide();
             $(".xui-i-del").hide();
             var exchange_input = $(".xa-exchangeSpan").prev();
@@ -296,15 +333,14 @@ $(document).ready(function() {
 			$(this).html("修改");
 			$(".xui-bindPhoneNum").hide();
 			var bindMess =$(".xui-bindPhoneNum option:selected").html();
-			$(".xui-bindNumTxt").html(bindMess);
+			$(".xui-bindNumTxt").html(bindMess); 
+
 		    //提交数据
 			var prize = [];
 			var money = $(".xa-money");
 			var integral = $(".xa-integral");
-            var snum = $(".xa-snum")
-			var endnum = $(".xa-endnum");
-			var isBind = $("option:selected").val();
-			for(i=0;i<money.length;i++){
+       		var isBind = $("option:selected").val();
+			for(var i=0;i<money.length;i++){
 				var moneyData = money[i].value;
 				var integralData = integral[i].value;
                 var snumData = snum[i].value;
@@ -343,13 +379,22 @@ $(document).ready(function() {
 			$(".xa-exchangeSpan").hide();
 		}     
 	});
+
 	//更新库存
     $(document).on("blur",".xa-endnum",function(){
     	var _this = $(this);
     	var snumData = $(this).siblings(".xa-snum").val();
 	    var endnumData = $(this).val();
 	    if(snumData&&endnumData) {
-	    if(snumData > endnumData) return
+	    var reg = new RegExp("^[0-9]*$");
+		if(!reg.test(endnumData)){
+			W.showHint('error','请输入纯数字')
+			return 
+		}
+	    if(parseInt(snumData) > parseInt(endnumData)){
+			W.showHint('error','号段不合法')
+			return 
+		}
 		var stockData = {
 	        snum:snumData,
 	        endnum:endnumData
@@ -362,7 +407,7 @@ $(document).ready(function() {
 			    scope: this,
 			    success: function(data) {
                 	console.log('success');
-                	_this.siblings(".xa-exchangeStock").html("库存：" + data)
+                	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
 			    },
 			    error: function(resp) {
 			    	console.log('error');   
@@ -371,11 +416,19 @@ $(document).ready(function() {
 		}
     });
     $(document).on("blur",".xa-snum",function(){
-    	var _this = $(this);
+       	var _this = $(this);
     	var endnumData = $(this).siblings(".xa-endnum").val();
 	    var snumData = $(this).val();
 	    if(snumData&&endnumData) {
-	    if(snumData > endnumData) return
+	    var reg = new RegExp("^[0-9]*$");
+		if(!reg.test(snumData)){
+		    W.showHint('error','请输入纯数字')
+		    return 
+		}
+	    if(parseInt(snumData) > parseInt(endnumData)){
+			W.showHint('error','号段不合法')
+			return 
+		}
 		var stockData = {
 	        snum:snumData,
 	        endnum:endnumData
@@ -388,7 +441,7 @@ $(document).ready(function() {
 			    scope: this,
 			    success: function(data) {
                 	console.log('success');
-                	_this.siblings(".xa-exchangeStock").html("库存：" + data)
+                	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
 			    },
 			    error: function(resp) {
 			    	console.log('error');   
@@ -397,21 +450,5 @@ $(document).ready(function() {
 		}
     });
 });
-
-
-
-function checkNull(){
-    var num=0;
-    $("input").each(function(){
-        if($(this).val()==""){
-            num++;
-        }
-    });
-    if(num>0){
-    	return false;
-    }else{
-        return true;
-    }
-}
 </script>
 {% endblock %}
