@@ -56,7 +56,7 @@ class CardExchange(resource.Resource):
             cards = card_models.WeizoomCard.objects.all().order_by('-id')
             max_card_id = cards[0].id
             weizoom_card_id2card_id = {card.weizoom_card_id:card.id for card in cards} 
-            s_num_id = weizoom_card_id2card_id.get(s_num,None)
+            s_num_id = weizoom_card_id2card_id.get(s_num,max_card_id+1)
             end_num_id = weizoom_card_id2card_id.get(end_num,max_card_id)
             card_has_orders = card_models.WeizoomCardHasOrder.objects.all()
             card_has_exchanged = promotion_models.CardHasExchanged.objects.all()
@@ -139,7 +139,7 @@ class CardExchange(resource.Resource):
                 card_number = rule.card_number
                 s_num = card_number.split('-')[0]
                 end_num = card_number.split('-')[1]
-                s_num_id = weizoom_card_id2card_id.get(s_num,None)
+                s_num_id = weizoom_card_id2card_id.get(s_num,max_card_id+1)
                 end_num_id = weizoom_card_id2card_id.get(end_num,max_card_id)
                 exchange_cards = cards.filter(id__gte = s_num_id,id__lte = end_num_id)
                 has_not_order_card_id_list = []
