@@ -930,6 +930,18 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
+    if not mall_type and group_order_relations.count() > 0:
+        not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+            order_id__in=group_order_ids,
+            status=ORDER_STATUS_NOT)
+        ]
+        not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+            order_id__in=[r.order_id for r in group_order_relations.filter(group_status=GROUP_STATUS_ON)],
+            status=ORDER_STATUS_PAYED_NOT_SHIP
+            )]
+        orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
+
+
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
