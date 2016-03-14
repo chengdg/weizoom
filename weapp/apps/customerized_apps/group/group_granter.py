@@ -27,20 +27,21 @@ class GroupGranter(resource.Resource):
 
 	@login_required
 	def api_get(request):
-		group_id = request.GET.get('group_id', None)
+		record_id = request.GET.get('record_id', None)
+		group_relation_id = request.GET.get('group_relation_id', None)
 		member_id = request.GET.get('member_id', None)
 		response = create_response(500)
-		if not group_id or not member_id:
+		if not record_id or not member_id or not group_relation_id:
 			response.errMsg = u'活动信息出错,请重试~'
 			return response.get_response()
-		group_relation = app_models.GroupRelations.objects(id=group_id)
-		if group_relation.count() <=0:
-			response.errMsg = u'不存在该团购'
+		record = app_models.Group.objects(id=record_id)
+		if record.count() <=0:
+			response.errMsg = u'不存在该活动'
 			return response.get_response()
 		else:
-			group_relation = group_relation.first()
-		owner_id = group_relation.owner_id
-		member_info = app_models.GroupDetail.objects(relation_belong_to=group_id, member_id=member_id, msg_api_status=False)
+			record = record.first()
+		owner_id = record.owner_id
+		member_info = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, member_id=member_id, msg_api_status=False)
 		if member_info.count() <= 0:
 			response.errMsg = u'没有必要给该会员发送模板消息'
 			return response.get_response()
@@ -53,3 +54,26 @@ class GroupGranter(resource.Resource):
 		else:
 			response = create_response(200)
 			return response.get_response()
+
+	@login_required
+	def api_put(request):
+		"""
+		发送团购模板消息
+		"""
+		record_id = request.GET.get('record_id', None)
+		group_relation_id = request.GET.get('group_relation_id', None)
+		member_ids = request.POST.get('member_ids', None)
+		response = create_response(500)
+		if not record_id or not member_ids or not group_relation_id:
+			response.errMsg = u'活动信息出错,请重试~'
+			return response.get_response()
+		member_ids = member_ids.split(',')
+		record = app_models.Group.objects(id=record_id)
+		if record.count() <=0:
+			response.errMsg = u'不存在该活动'
+			return response.get_response()
+		else:
+			record = record.first()
+		owner_id = record.owner_id
+
+

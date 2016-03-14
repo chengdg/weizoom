@@ -1870,7 +1870,12 @@ li.wui-selectBox-display-table {
     background-size: 94%;
     background-color: #fff;
 }
-
+.wui-group-container .wui-i-titleLabel .wui-i-title-pic-5{
+    background-position: 8px -31px;
+}
+.wui-group-container .wui-i-titleLabel .wui-i-title-pic-10{
+    background-position: 8px -73px;
+}
 
 .wui-group-container .wui-i-description{
     background: #fff;
@@ -1943,11 +1948,59 @@ li.wui-selectBox-display-table {
     font-size: 1rem;
 }
 
-.wui-group-container .wui-i-group_box_progress{
-    
+/*活动规则CSS*/
+.wui-group-container .wui-i-rules-contentbox{
+    background: #fff;
+    border-radius: 3px;
+    left: 5%;
+    padding: 10px 10px 55px 10px;
+    position: fixed;
+    width: 85%;
+    z-index: 11111;
+    text-align: center;
+    background-position: -2px -9px;
+    background-size: 99%;
+	margin-top: 5%;
 }
-
-
+.wui-group-container .wui-i-rules-contentbox .wui-i-rules-content{
+    margin-top: 2rem;
+    color: #3D3C35;
+    text-align: center;
+    position: relative;
+    height: 100%;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-title-box{
+    color:#3A1614;
+    font-weight: bold;
+    font-size: large;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-title-box .wui-i-title{
+    margin-bottom: 4px;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-content-box{
+    color: #3D3C35;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    max-height: 69%;
+    overflow-y: auto;
+    position: relative;
+    left: 2px;
+}
+.wui-group-container .wui-i-rules-contentbox .wui-i-closebtn{
+    color: #fff;
+    width: 110px;
+    height: 30px;
+    background: #FF422D;
+    text-align: center;
+    border-radius: 5px;
+    position: relative;
+    line-height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+}
 
 .wui-group-container .wui-i-btngroup{
     text-align: center;
@@ -2041,7 +2094,6 @@ li.wui-selectBox-display-table {
 	margin-right: 6px;
 }
 
-
 .wui-group-container .wui-i-states{
 	/*background-color: red;*/
 	border:1px solid #E6E6E6;
@@ -2053,8 +2105,6 @@ li.wui-selectBox-display-table {
 	margin: 5px 0;
 	position: relative;
 }
-
-
 
 .wui-group-container .wui-i-states .wui-i-displayName{
 	float: left;
@@ -2071,8 +2121,6 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-states .wui-i-member{
 	width: 36px;
 	height: 36px;
-	/*background-color: green;*/
-	border-radius: 1px solid black;
 	display: inline-block;
 	margin: 2px;
 }
@@ -2080,7 +2128,6 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-states .wui-i-member img{
 	width: 36px;
 	height: 36px;
-	background-color: red;
 	border-radius: 36px;
 	border: 0px;
 }
