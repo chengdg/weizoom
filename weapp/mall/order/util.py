@@ -1528,3 +1528,21 @@ def get_order_actions(order, is_refund=False, is_detail_page=False,is_list_paren
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
     return result
+
+
+def update_order_status_by_group_status(group_id, status, order_ids=None):
+    if status == 'success':
+        group_status = GROUP_STATUS_OK
+        order_status = None
+    elif status == 'failure':
+        group_status = GROUP_STATUS_failure
+        order_status = ORDER_STATUS_REFUNDING
+
+    relations = OrderHasGroup.objects.filter(group_id=group_id)
+    relations.update(group_status=group_status)
+
+    if order_status is not None:
+        Order.objects.filter(
+            order_id__in=[r.order_id for r in relations],
+            status=ORDER_STATUS_PAYED_NOT_SHIP
+            ).update(status=order_status)
