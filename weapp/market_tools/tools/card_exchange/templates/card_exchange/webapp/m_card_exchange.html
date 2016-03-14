@@ -432,13 +432,13 @@
 			$('.xa-alert-getCode').addClass('hidden');
 		});
 		$('.xa-exchange-choose').click(function(){
-			if($('.xa-exchange-choose').find('.xa-exchange-mask').length>0){
-				$('.xa-exchange-choose').removeClass('active')
+			if($(this).find('.xa-exchange-mask').length>0){
+				$(this).removeClass('active')
 			}else{
-				if(!$('.xa-exchange-choose').hasClass('active')){
-					$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
+				if(!$(this).hasClass('active')){
+					$(this).addClass('active').siblings().removeClass('active')
 				}else{
-					$('.xa-exchange-choose').removeClass('active')
+					$(this).removeClass('active')
 				}
 			}
 		});
