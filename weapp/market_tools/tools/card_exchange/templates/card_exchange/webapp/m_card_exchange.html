@@ -60,7 +60,7 @@
 		margin-left: 0;
 	}
 	.ui-btn.ui-btn-up-x, .ui-btn.ui-btn-down-x, .ui-btn.ui-btn-hover-x, .ui-btn.ui-btn-active, .ui-btn .ui-btn-inner, .ui-btn .ui-btn-text {
-	color: transparent;
+		color: transparent;
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
 		display: block;
@@ -71,7 +71,6 @@
 		border-radius: 2px;
 		padding-left: 10px;
 		color: #333;
-
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-btnCode{
 		position: absolute;
@@ -273,10 +272,10 @@
 	<div data-role="content" data-theme="x">
 		<div class="xui-section-item">
 			<h3>微众卡兑换平台</h3>
-			<p>现有积分：<span></span></p>
+			<p>现有积分：<span class="xa-current-integral">1000</span></p>
 		</div>
 		<form action="post" class="xui-exchange-form">
-			<div class="xui-form-control">
+			<div class="xui-form-control xui-page">
 				<label for="phone"><b></b>输入手机号：</label>
 				<div class="xui-bg">
 					<!--{% if card_exchange_rule.is_bind %}-->
@@ -298,7 +297,7 @@
 						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
 						<p>消耗{{prize.integral}}积分</p>
 						{% if prize.count == 0 %}
-						<div class="xui-exchange-mask xa-exchange-mask" style="display:none;">
+						<div class="xui-exchange-mask xa-exchange-mask">
 							<p class="xui-exchange-runout">已抢光</p>
 						</div>
 						{% endif %}
@@ -342,19 +341,8 @@
 			$('button').removeClass('ui-btn-hidden')}
 		$('input').parent().removeClass();
 		$('button').siblings().hide().parent().removeClass();
-		$('.xa-exchange-choose').click(function(){
-			if($('.xa-exchange-mask').is(':hidden')){
-				if(!$('.xa-exchange-choose').hasClass('active')){
-					$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
-				}else{
-					$('.xa-exchange-choose').removeClass('active')
-				}
-			}else{
-				$('.xa-exchange-choose').removeClass('active')
-			}
-		});
 		function validate_phone(phone_number){
-			var reg = /^1[3|4|5|8][0-9]\d{4,8}$/;
+			var reg = /^1[3|4|5|8]\d{9}$/;
 			if(!reg.test(phone_number) || phone_number.length != 11){
 				$('.xui-page').alert({
 					isShow: true,
@@ -375,14 +363,13 @@
 					api: 'project_api/call',
 					method: 'post',
 					args: _.extend({
-						woid: W.webappOwnerId,
+						webapp_owner_id: W.webappOwnerId,
 						project_id: W.projectId,
-						module: 'user_center',
-						target_api: 'captcha/send',
+						module: 'card_exchange',
+						target_api: 'captcha/get',
 						phone_number: phone_number
 					}),
 					success: function(data) {
-						time($(event.target));
 						$('.xa-alert-getCode').removeClass('hidden');
 					},
 					error: function(data){
@@ -420,14 +407,7 @@
 						code:code
 					}),
 					success: function(data) {
-						$('.xui-page').alert({
-							isShow: true,
-							info: '绑定成功',
-							isSlide: true,
-							speed: 3000
-						})
 						$('.xa-alert-getCode').addClass('hidden');
-						window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=user_info&action=get&workspace_id=user_center";
 					},
 					error: function(data){
 						$('.xui-page').alert({
@@ -443,28 +423,35 @@
 		$(".xa-btn-abolish").click(function(){
 			$('.xa-alert-getCode').addClass('hidden');
 		});
+		$('.xa-exchange-choose').click(function(){
+			if($('.xa-exchange-mask').is(':hidden')){
+				if(!$('.xa-exchange-choose').hasClass('active')){
+					$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
+				}else{
+					$('.xa-exchange-choose').removeClass('active')
+				}
+			}else{
+				$('.xa-exchange-choose').removeClass('active')
+			}
+		});
 		$(".xa-exchange-submit").click(function(){
 			if($('.xa-exchange-choose').hasClass('active')){
 				var prize_money=$('.xa-exchange-choose.active>.xa-exchange-money').text();
+				var current_integral=$('.xa-current-integral').text();
 				W.getApi().call({
-					app: 'webapp',
-					api: 'project_api/call',
+					app: 'mall2',
+					api: 'm_card_exchange',
 					method: 'post',
 					args: _.extend({
-						woid: W.webappOwnerId,
+						webapp_owner_id: W.webappOwnerId,
 						project_id: W.projectId,
 						module: 'user_center',
 
-						target_api: 'phone/binding',
-						prize_money: prize_money
+						target_api: 'card/exchange',
+						money: prize_money,
+						integral: current_integral
 					}),
 					success: function(data) {
-						$('.xui-page').alert({
-							isShow: true,
-							info: '绑定成功',
-							isSlide: true,
-							speed: 3000
-						})
 						$('.xa-alert-exchange').removeClass('hidden');
 					},
 					error: function(data){
@@ -480,7 +467,6 @@
 		});
 		$(".xa-exchanged").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');
-			window.location.href = "./?webapp_owner_id={{request.webapp_owner_id}}&module=user_center&model=user_info&action=get&workspace_id=user_center";
 		});
 		$(".xa-alert-close").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');
