@@ -48,6 +48,33 @@ class CardExchange(resource.Resource):
         return render_to_response('mall/editor/promotion/card_exchange.html', c)
 
     @login_required
+    def api_get(request):
+        try:
+            s_num = request.GET.get('snum','')
+            end_num = request.GET.get('endnum','')
+            webapp_id = request.user_profile.webapp_id  
+            card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
+            card_exchange_id = card_exchange.id
+            card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
+            card_has_orders = card_models.WeizoomCardHasOrder.objects.all()
+            card_has_exchanged = promotion_models.CardHasExchanged.objects.all()
+            exchange_cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__gte = s_num,weizoom_card_id__lte = end_num)
+            has_not_order_card_id_list = []
+            if exchange_cards:
+                for card in exchange_cards:
+                    cur_card_has_orders = card_has_orders.filter(card_id = card.id)
+                    if not cur_card_has_orders:
+                        has_not_order_card_id_list.append(card.id)
+            card_has_exchanged_count = card_has_exchanged.filter(card_id__in = has_not_order_card_id_list).count()
+            card_can_use_count = len(has_not_order_card_id_list) - card_has_exchanged_count   
+        except:
+            card_can_use_count = 0        
+
+        response = create_response(200)
+        response.data = card_can_use_count
+        return response.get_response()
+
+    @login_required
     def api_post(request):
         """
         卡兑换

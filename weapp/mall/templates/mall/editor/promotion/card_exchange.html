@@ -197,6 +197,7 @@
 					                <span class="ml5 mr5">-</span>
 					                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
 					                <span class="xa-exchangeSpan"></span>
+					                <span class="ml30 xa-exchangeStock">库存：</span>
 					                <a href="###" class="xui-i-del" title="删除">&times;</a>              
 			                    </div>
 			                </div>
@@ -237,6 +238,7 @@
 		<span class="ml5 mr5">-</span>
 		<input type="text" class="xui-i-num xa-endnum" name="endnum">	
 		<span class="xa-exchangeSpan"></span>   
+		<span class="ml30 xa-exchangeStock">库存：</span>
 		<a href="###" class="xui-i-del" title="删除">&times;</a>            
 	</div>
 </div>
@@ -280,7 +282,6 @@ $(document).ready(function() {
 		if(!$("input").attr("readonly")){
 			$("input").attr("readonly",true).hide();
             $(".xui-i-del").hide();
-            $(".xa-exchangeStock").show();
             var exchange_input = $(".xa-exchangeSpan").prev();
             for(var j=0;j<exchange_input.length;j++){
             	$(".xa-exchangeSpan")[j].innerHTML = exchange_input[j].value;
@@ -323,14 +324,13 @@ $(document).ready(function() {
 			    scope: this,
 			    success: function(data) {
 			        W.showHint('success', '保存成功');
-			      },
+			    },
 			    error: function(resp) {
 			        W.showHint('error', '操作失败');
 			    }
 			})           
 		}else{
             $("input").attr("readonly",false).show();
-            $(".xa-exchangeStock").hide();
 			$(this).html("保存"); 
 			$(".xa-add").show();
 			$(".xui-i-del").css("display","inline-block").eq(0).hide();
@@ -338,7 +338,62 @@ $(document).ready(function() {
 			$(".xa-exchangeSpan").hide();
 		}     
 	});
+	//更新库存
+    $(document).on("blur",".xa-endnum",function(){
+    	var _this = $(this);
+    	var snumData = $(this).siblings(".xa-snum").val();
+	    var endnumData = $(this).val();
+	    if(snumData&&endnumData) {
+	    if(snumData > endnumData) return
+		var stockData = {
+	        snum:snumData,
+	        endnum:endnumData
+		}
+		W.getApi().call({
+			    method: 'get',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: stockData,
+			    scope: this,
+			    success: function(data) {
+                	console.log('success');
+                	_this.siblings(".xa-exchangeStock").html("库存：" + data)
+			    },
+			    error: function(resp) {
+			    	console.log('error');   
+			    }
+			})
+		}
+    });
+    $(document).on("blur",".xa-snum",function(){
+    	var _this = $(this);
+    	var endnumData = $(this).siblings(".xa-endnum").val();
+	    var snumData = $(this).val();
+	    if(snumData&&endnumData) {
+	    if(snumData > endnumData) return
+		var stockData = {
+	        snum:snumData,
+	        endnum:endnumData
+		}
+		W.getApi().call({
+			    method: 'get',
+			    app: 'mall2',
+			    api: 'card_exchange',
+			    args: stockData,
+			    scope: this,
+			    success: function(data) {
+                	console.log('success');
+                	_this.siblings(".xa-exchangeStock").html("库存：" + data)
+			    },
+			    error: function(resp) {
+			    	console.log('error');   
+			    }
+			})
+		}
+    });
 });
+
+
 
 function checkNull(){
     var num=0;
