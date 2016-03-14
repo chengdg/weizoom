@@ -23,11 +23,11 @@ class GroupBuyProduct(resource.Resource):
 		activity_url = ''
 		is_in_group_buy = False
 		pid = request.GET.get('pid')
-		webapp_owner_id = request.webapp_owner_info.auth_appid_info.appid
+		webapp_owner_id = request.webapp_owner_id
 		record = app_models.Group.objects(product_id=pid,status=app_models.STATUS_RUNNING)
 		if record.count() > 0:
 			is_in_group_buy = True
-			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+webapp_owner_id+'&id='+str(record.first().id)
+			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+str(webapp_owner_id)+'&id='+str(record.first().id)
 		response = create_response(200)
 		response.data = {
 			'is_in_group_buy': is_in_group_buy,
@@ -79,14 +79,14 @@ class GroupBuyInfo(resource.Resource):
 		activity_id = ''
 		activity_url = ''
 		group_id = request.GET.get('group_id')
-		webapp_owner_id = request.webapp_owner_info.auth_appid_info.appid
+		webapp_owner_id = request.webapp_owner_id
 		group_record = app_models.GroupRelations.objects(id=group_id)
 		if group_record.count() > 0:
 			group_record = group_record.first()
 			pid = group_record.product_id
 			group_buy_price = group_record.group_price
 			activity_id = group_record.belong_to
-			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+webapp_owner_id+'&id='+str(activity_id)
+			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+str(webapp_owner_id)+'&id='+str(activity_id)
 		response = create_response(200)
 		response.data = {
 			'pid': pid,
