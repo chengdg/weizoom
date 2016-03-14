@@ -52,6 +52,7 @@ class CardExchange(resource.Resource):
         """
         卡兑换
         """
+        print '--------------------'
         is_bind = request.POST.get('isBind',0)
         prize = request.POST.get('prize','')
         reward_type = request.POST.get('reward',0)
@@ -80,9 +81,11 @@ class CardExchange(resource.Resource):
                 card_number = card_number,
                 exchange = card_exchange
             ))
-        promotion_models.CardExchangeRule.objects.bulk_create(card_exchange_rule_list)    
+        promotion_models.CardExchangeRule.objects.bulk_create(card_exchange_rule_list)   
+        card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id) 
 
         response = create_response(200)
+        response.data = card_exchange_dic
         return response.get_response()
 
     @staticmethod
@@ -270,3 +273,42 @@ class MobileCardExchange(resource.Resource):
             # 'member_integral': member_integral
         })
         return render_to_response('mall/webapp/promotion/m_card_exchange.html', c)
+
+    def api_post(request):
+        print '###############'
+        webapp_id = request.user_profile.webapp_id
+
+        # import random
+
+        # s = range(1,7)
+        # b = random.sample(s,1)
+        # print b
+
+        # integral = request.POST.get('integral',0)
+        # money = request.POST.get('money',0)
+
+        # try:
+        #     exchanged_card = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
+        #     exchange_id = exchanged_card.id
+        #     exchanged_rule = promotion_models.CardExchangeRule.objects.filter(exchange_id = exchange_id)
+        cards = card_models.WeizoomCard.objects.all()
+        weizoom_card_id2id = {card.weizoom_card_id:card.id for card in cards}
+        start_num = request.POST.get('start_num','')
+        end_num = request.POST.get('end_num','')
+        start_id = weizoom_card_id2id.get('start_num',None)
+        end_id = weizoom_card_id2id.get('end_num',None)
+
+        card_random = range(start_id,end_id + 1)
+
+        member = request.member
+        member_id = member.id
+
+        promotion_models.CardHasExchanged.objects.create(
+            webapp_id = webapp_id,
+            # card_id = card_id,
+            owner_id = member_id,
+            # owner_name = owner_name  
+        )
+
+        response = create_response(200)
+        return response.get_response()
