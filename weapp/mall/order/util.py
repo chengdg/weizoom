@@ -486,6 +486,9 @@ def export_orders_json(request):
             #     if order2supplier.has_key(order.supplier):
             #         source = order2supplier[order.supplier].name.encode("utf-8")
 
+            if not mall_type and (order.supplier_user_id > 0 or order.supplier >0):
+                coupon_name = '无'
+
             if i == 0:
                 # 发货人处填写的备注
                 temp_leader_names = (order.leader_name if not fackorder else fackorder.leader_name).split('|')
