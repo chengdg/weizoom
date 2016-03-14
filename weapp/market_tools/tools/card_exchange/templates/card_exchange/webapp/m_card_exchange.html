@@ -271,17 +271,19 @@
 	<div data-role="content" data-theme="x">
 		<div class="xui-section-item">
 			<h3>微众卡兑换平台</h3>
-			<p>现有积分：<span class="xa-current-integral">1000</span></p>
+			<p>现有积分：<span class="xa-current-integral">{{member_integral}}</span></p>
 		</div>
 		<form action="post" class="xui-exchange-form">
 			<div class="xui-form-control">
 				<label for="phone"><b></b>输入手机号：</label>
 				<div class="xui-bg">
 					{% if card_exchange_rule.is_bind %}
-					<input type="tel" value="1354567678" disabled/>
-					{% else %}
-					<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>
-					<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>
+						{% if member_is_bind %}
+						<input type="tel" value="{{phone_number}}" disabled/>
+						{% else %}
+						<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>
+						<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>
+						{% endif %}
 					{% endif%}
 					<!--<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>-->
 					<!--<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>-->
@@ -292,7 +294,7 @@
 				<label><b></b>选择兑换：</label>
 				<div class="xui-bg">
 					{% for prize in card_exchange_rule.prize %}
-					<div class="xui-exchange-choose xa-exchange-choose">
+					<div class="xui-exchange-choose xa-exchange-choose" data-start="{{prize.s_num}}" data-end="{{prize.end_num}}">
 						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
 						<p>消耗{{prize.integral}}积分</p>
 						{% if prize.count == 0 %}
@@ -364,7 +366,7 @@
 					args: _.extend({
 						woid: W.webappOwnerId,
 						project_id: W.projectId,
-						module: 'user_center',
+						module: 'card_exchange',
 
 						target_api: 'captcha/send',
 						phone_number: phone_number
@@ -400,7 +402,7 @@
 					args: _.extend({
 						woid: W.webappOwnerId,
 						project_id: W.projectId,
-						module: 'user_center',
+						module: 'card_exchange',
 
 						target_api: 'phone/binding',
 						phone_number: phone_number,
@@ -430,13 +432,13 @@
 			$('.xa-alert-getCode').addClass('hidden');
 		});
 		$('.xa-exchange-choose').click(function(){
-			if($('.xa-exchange-choose').find('.xa-exchange-mask').length>0){
-				$('.xa-exchange-choose').removeClass('active')
+			if($(this).find('.xa-exchange-mask').length>0){
+				$(this).removeClass('active')
 			}else{
-				if(!$('.xa-exchange-choose').hasClass('active')){
-					$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
+				if(!$(this).hasClass('active')){
+					$(this).addClass('active').siblings().removeClass('active')
 				}else{
-					$('.xa-exchange-choose').removeClass('active')
+					$(this).removeClass('active')
 				}
 			}
 		});
@@ -444,6 +446,8 @@
 			if($('.xa-exchange-choose').hasClass('active')){
 				var prize_money=$('.xa-exchange-choose.active>.xa-exchange-money').text();
 				var current_integral=$('.xa-current-integral').text();
+				var start_num=$('.xa-exchange-choose.active').attr('data-start');
+				var end_num=$('.xa-exchange-choose.active').attr('data-end');
 				W.getApi().call({
 					app: 'mall2',
 					api: 'project_api/call',
@@ -451,10 +455,13 @@
 					args: _.extend({
 						webapp_owner_id: W.webappOwnerId,
 						project_id: W.projectId,
+						module: 'card_exchange',
 
 						target_api: 'card/exchange',
 						money: prize_money,
-						integral: current_integral
+						integral: current_integral,
+						s_num:start_num,
+						end_num:end_num
 					}),
 					success: function(data) {
 						$('.xa-alert-exchange').removeClass('hidden');
@@ -462,7 +469,7 @@
 					error: function(data){
 						$('body').alert({
 							isShow: true,
-							info: data.data.msg,
+//							info: data.data.msg,
 							isSlide: true,
 							speed: 2000
 						})
