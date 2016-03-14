@@ -32,7 +32,7 @@ class OrderList(resource.Resource):
     @login_required
     def api_get(request):
         import requests
-        r = requests.get('http://dev.money.com/weapp/api/orders_to_money/', data={})
+        r = requests.get('http://dev.money.com/weapp/api/orders_to_money/', data={"user_id": request.user.id})
         response = create_response(200)
         response.data = json.loads(r.text)
         return response.get_jsonp_response(request)
@@ -60,7 +60,7 @@ class OrderMoneyList(resource.Resource):
     @login_required
     def api_get(request):
         import requests
-        r = requests.get('http://dev.money.com/weapp/cost_order_list/', data={})
+        r = requests.get('http://dev.money.com/weapp/cost_order_list/', data={"user_id": request.user.id})
         response = create_response(200)
         response.data = json.loads(r.text)
         return response.get_jsonp_response(request)
