@@ -363,10 +363,11 @@
 					api: 'project_api/call',
 					method: 'post',
 					args: _.extend({
-						webapp_owner_id: W.webappOwnerId,
+						woid: W.webappOwnerId,
 						project_id: W.projectId,
-						module: 'card_exchange',
-						target_api: 'captcha/get',
+						module: 'user_center',
+
+						target_api: 'captcha/send',
 						phone_number: phone_number
 					}),
 					success: function(data) {
@@ -407,7 +408,13 @@
 						code:code
 					}),
 					success: function(data) {
-						$('.xa-alert-getCode').addClass('hidden');
+						$('.xui-page').alert({
+							isShow: true,
+							info: '绑定成功',
+							isSlide: true,
+							speed: 3000
+						})
+//						$('.xa-alert-getCode').addClass('hidden');
 					},
 					error: function(data){
 						$('.xui-page').alert({
@@ -440,12 +447,11 @@
 				var current_integral=$('.xa-current-integral').text();
 				W.getApi().call({
 					app: 'mall2',
-					api: 'm_card_exchange',
+					api: 'project_api/call',
 					method: 'post',
 					args: _.extend({
 						webapp_owner_id: W.webappOwnerId,
 						project_id: W.projectId,
-						module: 'user_center',
 
 						target_api: 'card/exchange',
 						money: prize_money,
