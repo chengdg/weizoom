@@ -131,7 +131,7 @@
 		color: #00a5ed;
 		border-color: #00a5ed;
 	}
-	.xui-exchange-form .xui-form-control .xui-exchange-choose span{
+	.xui-exchange-form .xui-form-control .xui-exchange-choose span:first-child{
 		font-size: 1rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose p{
@@ -294,12 +294,14 @@
 				<label><b></b>选择兑换：</label>
 				<div class="xui-bg">
 					{% for prize in card_exchange_rule.prize %}
-					<div class="xui-exchange-choose xa-exchange-choose">兑<span>¥</span>{{prize.money}}
+					<div class="xui-exchange-choose xa-exchange-choose">
+						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
 						<p>消耗{{prize.integral}}积分</p>
-						{% if prize.count ==0 %}
-						<div class="xui-exchange-mask">
+						{% if prize.count == 0 %}
+						<div class="xui-exchange-mask xa-exchange-mask" style="display:none;">
 							<p class="xui-exchange-runout">已抢光</p>
 						</div>
+						{% endif %}
 					</div>
 					{% endfor %}
 				</div>
@@ -315,7 +317,7 @@
 					<label for="xui-test-code">输入短信验证码</label>
 					<input type="text" id="xui-test-code" class="xa-phoneCode" />
 					<button data-inline="true" class="xui-btn-abolish xa-btn-abolish" type="button">取消</button>
-					<button data-inline="true" class="xui-btnsubmit xa-submit" type="button">确认</button>
+					<button data-inline="true" class="xui-btnsubmit xa-phoneCode-submit" type="button">确认</button>
 				</div>
 			</div>
 		</div>
@@ -341,8 +343,12 @@
 		$('input').parent().removeClass();
 		$('button').siblings().hide().parent().removeClass();
 		$('.xa-exchange-choose').click(function(){
-			if(!$('.xa-exchange-choose').hasClass('active')){
-				$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
+			if($('.xa-exchange-mask').is(':hidden')){
+				if(!$('.xa-exchange-choose').hasClass('active')){
+					$('.xa-exchange-choose').addClass('active').siblings().removeClass('active')
+				}else{
+					$('.xa-exchange-choose').removeClass('active')
+				}
 			}else{
 				$('.xa-exchange-choose').removeClass('active')
 			}
@@ -396,7 +402,7 @@
 				$('.xa-getCode').removeAttr('disabled').css('background-color', '#067de2');
 			}
 		});
-		$(".xa-submit").click(function(){
+		$(".xa-phoneCode-submit").click(function(){
 			var phone_number = $('.xa-phoneNum').val();
 			var code = $('.xa-phoneCode').val();
 			if (validate_phone(phone_number)){
@@ -439,6 +445,7 @@
 		});
 		$(".xa-exchange-submit").click(function(){
 			if($('.xa-exchange-choose').hasClass('active')){
+				var prize_money=$('.xa-exchange-choose.active>.xa-exchange-money').text();
 				W.getApi().call({
 					app: 'webapp',
 					api: 'project_api/call',
@@ -449,8 +456,7 @@
 						module: 'user_center',
 
 						target_api: 'phone/binding',
-						phone_number: phone_number,
-						code:code
+						prize_money: prize_money
 					}),
 					success: function(data) {
 						$('.xui-page').alert({

@@ -130,6 +130,9 @@
 		text-align: left;
 		padding-left: 15px;
 	}
+	.xui-order-info-money{
+		font-weight: 500;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -164,10 +167,10 @@
 					<tr>
 						<td class="xui-order-info-time">
 							{{order.created_at | date:"Y-m-d" }}
-							<br/>{{order.created_at |date:"H:i:s"}}
+							<br/>{{order.created_at | date:"H:i:s"}}
 						</td>
 						<td class="xui-order-info-money">
-							{% if order.event_type=='积分兑换' %}
+							{% if order.event_type == '积分兑换' %}
 							<span style="color: #0fb202">
 							+{{order.money}}
 							</span>
@@ -178,8 +181,14 @@
 							{% endif %}
 						</td>
 						<td class="xui-order-info-name">
+							{% if order.event_type == '积分兑换' %}
+							<span>
+							兑换平台
+							</span>
+							{% else %}
 							<span>[商品]</span>
 							{{order.product_name}}
+							{% endif %}
 						</td>
 					</tr>
 					{% endfor%}
