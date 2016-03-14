@@ -167,7 +167,7 @@ class Groups(resource.Resource):
 				# 'group_customer_count':data.static_info.group_customer_num if hasattr(data, 'static_info') else 0,
 				'group_item_count': 0,
 				'group_customer_count': 0,
-				'group_visitor_count':data.visit_number,
+				'group_visitor_count':len(data.visited_member),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
