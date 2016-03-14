@@ -19,6 +19,10 @@ paths:
         - name: order_ids
           type: list
           description: 成功的团购活动下的所有订单的id_list
+        - name: status
+          type: str
+          description: 
+            团购活动的状态('success','failure')
         - $ref: '#/definitions/group_id'
   /cancel_group_buy:
     put:
