@@ -56,16 +56,14 @@
 		overflow: hidden;
 		border-bottom: 1px solid rgba(0,0,0,0.2);
 	}
-	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
-		margin-left: 0;
-	}
 	.ui-btn.ui-btn-up-x, .ui-btn.ui-btn-down-x, .ui-btn.ui-btn-hover-x, .ui-btn.ui-btn-active, .ui-btn .ui-btn-inner, .ui-btn .ui-btn-text {
 		color: transparent;
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
 		display: block;
 		height: 100%;
-		width: 90%;
+		width: 100%;
+		margin-left: 0;
 		line-height: 30px;
 		border: 1px solid #e5e5e5;
 		border-radius: 2px;
@@ -74,8 +72,8 @@
 	}
 	.xui-exchange-form .xui-form-control .xui-bg .xui-btnCode{
 		position: absolute;
-		right: 45px;
-		top: 20px;
+		right: 4%;
+		top: 20%;
 		width: 100px;
 		height: 40px;
 		border-radius: 4px;
@@ -139,7 +137,7 @@
 	.xui-exchange-form .xui-exchange-confirm,.xui-exchange-form .xui-exchange-abolish{
 		margin-top: 20px;
 		display: inline-block;
-		width: 46%;
+		width: 60%;
 		height: 50px;
 		line-height: 50px;
 		text-align: center;
@@ -172,7 +170,7 @@
 		text-align: center;
 	}
 	input.ui-input-text, textarea.ui-input-text {
-		width: 90%;
+		width: 100%;
 		font-size: 1rem;
 		display: block;
 		outline: none;
@@ -221,6 +219,9 @@
 		z-index: 9999;
 		font-size: 2.3rem;
 	}
+	.xui-submit-btn{
+		text-align: center;
+	}
 	.xui-alert-mask .xui-alert-reminder button{
 		text-align: center;
 		display: inline-block;
@@ -250,7 +251,7 @@
 		display: inline-block;
 		float: left;
 		margin-right: 10px;
-		width: 44%;
+		width: 43%;
 		margin-top: 10px;
 		text-align: center;
 		border: none;
@@ -294,6 +295,12 @@
 				<label><b></b>选择兑换：</label>
 				<div class="xui-bg">
 					{% for prize in card_exchange_rule.prize %}
+					{% if user_has_exchange_card %}
+					<div class="xui-exchange-choose xa-exchange-choose active" data-start="{{prize.s_num}}" data-end="{{prize.end_num}}">
+						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
+						<p>消耗<span class='xa-integral'>{{prize.integral}}</span>积分</p>
+					</div>
+					{% else %}
 					<div class="xui-exchange-choose xa-exchange-choose" data-start="{{prize.s_num}}" data-end="{{prize.end_num}}">
 						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
 						<p>消耗<span class='xa-integral'>{{prize.integral}}</span>积分</p>
@@ -303,12 +310,13 @@
 						</div>
 						{% endif %}
 					</div>
+					{% endif %}
 					{% endfor %}
 				</div>
 			</div>
 			<div class="xui-form-control xui-submit-btn">
 				<a class="xui-exchange-confirm xa-exchange-submit">{% if user_has_exchange_card %}已兑换{% else %}兑换{% endif %}</a>
-				<a class="xui-exchange-abolish">取消</a>
+				<!--<a class="xui-exchange-abolish">取消</a>-->
 			</div>
 		</form>
 		<div class="xui-alert-getCode xa-alert-getCode hidden">
@@ -496,7 +504,7 @@
 		});
 		$(".xa-alert-close").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');
-		})
+		});
 	});
 </script>
 {% endblock %}
