@@ -101,6 +101,8 @@ def search_card_money(request,card_id,integral_each_yuan):
 			for a in weizoom_card_orders_has_product:
 				product_name = a.product.name
 				product_name_str = product_name_str + str(product_name)+ ','
+			if product_name_str:
+				product_name_str = product_name_str[:-1]
 			event_type = order.event_type
 			weizoom_card_orders_list.append({
 				'created_at': order.created_at,
