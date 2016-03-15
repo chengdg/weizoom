@@ -1,0 +1,525 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+<style>
+	.xui-attentionAlert {
+		display: none;
+	}
+	.xui-wzcoinConfirm-page .ui-content {
+		background: none!important;
+	}
+	.xui-wzcoinConfirm-page .ui-content{
+		border:none;
+	}
+	.xui-section-item{
+		background-color: #ee3715;
+		color: #fff;
+		background-image: url("/markettools_static/weizoom_card/img/CCbg_1.jpg");
+		background-position: left bottom;
+		background-size: 52%;
+		text-align: right;
+		background-repeat: no-repeat;
+	}
+	.xui-section-item h3{
+		font-size:1.8rem;
+		font-weight: 400;
+		margin-bottom: 0px;
+		margin-top: 20px;
+	}
+	.xui-section-item p{
+		line-height: 35px;
+		margin-bottom: 10px;
+		font-size: 0.9rem;
+	}
+	.xui-exchange-form{
+		padding: 10px;
+	}
+	.xui-exchange-form .xui-form-control{
+		box-sizing: border-box;
+	}
+	.xui-exchange-form .xui-form-control label>b{
+		display: inline-block;
+		width: 4px;
+		height: 16px;
+		background-color: #1aa3f9;
+		margin-bottom: -2px;
+		margin-right: 5px;
+	}
+	.xui-exchange-form .xui-form-control .xui-bg{
+		background-color: #fff;
+		padding: 10px 10px 5px;
+		margin-top: 10px;
+		margin-bottom: 30px;
+		position: relative;
+		overflow: hidden;
+		border-bottom: 1px solid rgba(0,0,0,0.2);
+	}
+	.ui-btn.ui-btn-up-x, .ui-btn.ui-btn-down-x, .ui-btn.ui-btn-hover-x, .ui-btn.ui-btn-active, .ui-btn .ui-btn-inner, .ui-btn .ui-btn-text {
+		color: transparent;
+	}
+	.xui-exchange-form .xui-form-control .xui-bg .xui-exchange-tel{
+		display: block;
+		height: 100%;
+		width: 100%;
+		margin-left: 0;
+		line-height: 30px;
+		border: 1px solid #e5e5e5;
+		border-radius: 2px;
+		padding-left: 10px;
+		color: #333;
+	}
+	.xui-exchange-form .xui-form-control .xui-bg .xui-btnCode{
+		position: absolute;
+		right: 4%;
+		top: 20%;
+		width: 100px;
+		height: 40px;
+		border-radius: 4px;
+		border: none;
+		border-shadow: none;
+		color: #fff;
+		font-size: 0.9rem;
+		background-color: #ee3715;
+		opacity: 1;
+		text-indent: 1px;
+	}
+	.xui-exchange-form .xui-form-control .xui-help-block{
+		line-height: 30px;
+		padding-left: 15px;
+		background-color: #fff;
+		color: #999;
+		margin-left: -15px;
+		font-size: 0.9rem;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose{
+		position: relative;
+		box-sizing: border-box;
+		display: inline-block;
+		width: 45%;
+		padding:15px 20px;
+		border: 1px solid #d2d2d2;
+		border-radius: 5px;
+		text-align: center;
+		margin-right: 10px;
+		margin-bottom: 10px;
+		font-size: 1.8rem;
+		color: #666666;
+		font-weight: 800;
+	}
+	.xui-exchange-choose .xui-exchange-mask{
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		background-color: rgba(0,0,0,0.5);
+		width: 100%;
+		height: 100%;
+		color: #fff;
+		text-align: center;
+	}
+	.xui-exchange-choose .xui-exchange-mask .xui-exchange-runout{
+		font-size: 1.8rem !important;
+		margin-top: 0.8em;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose.active{
+		color: #00a5ed;
+		border-color: #00a5ed;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose span:first-child{
+		font-size: 1rem;font-weight: 400;
+	}
+	.xui-exchange-form .xui-form-control .xui-exchange-choose p{
+		font-size: 1.2rem;font-weight: 400;
+	}
+	.xui-exchange-form .xui-exchange-confirm,.xui-exchange-form .xui-exchange-abolish{
+		margin-top: 20px;
+		display: inline-block;
+		width: 90%;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		font-size: 1.1rem;
+		color: #fff;
+	}
+	.xui-exchange-form .xui-exchange-confirm{
+		background: #cf0404;
+		margin-right: 5px;
+	}
+	.xui-exchange-form .xui-exchange-abolish{
+		background-color: #0480cf;
+	}
+	.xui-alert-getCode,.xui-alert-exchange{
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 80;
+	}
+	.xui-alert-getCode.hidden,.xui-alert-exchange.hidden{
+		display: none;
+	}
+	.xui-alert-mask{
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0.5);
+		display: table;
+		vertical-align: middle;
+		text-align: center;
+	}
+	input.ui-input-text, textarea.ui-input-text {
+		width: 100%;
+		font-size: 1rem;
+		display: block;
+		outline: none;
+		padding-left: 10px;
+		border: 1px solid #e5e5e5;
+	}
+	input.ui-input-text:focus,.ui-focus{
+		border-color:#00a5ed !important;
+	}
+	.xui-alert-getCode .xui-alert-mask .xui-alert-code,  .xui-alert-mask .xui-alert-reminder{
+		position: relative;
+		font-family: inherit;
+		text-align: left;
+		width: 65%;
+		background-color: #fff;
+		padding:30px;
+		margin-top: 50%;
+		margin-left: 10%;
+		border-radius: 8px;
+	}
+	.xui-alert-getCode .xui-alert-mask .xui-alert-code{
+		overflow: hidden;
+	}
+	.xui-alert-mask .xui-alert-reminder p{
+		text-align: center;
+		line-height: 25px;
+		font-weight: 500;
+	}
+	.xui-reminder-title{
+		font-size: 1.3rem;
+		color: #00a5ed;
+		margin-bottom: 20px;
+	}
+	.xui-alert-close{
+		position: absolute;
+		top: -12px;
+		right: -12px;
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		text-align: center;
+		line-height: 40px;
+		background-color: #fff;
+		color: #6b6b6b;
+		z-index: 9999;
+		font-size: 2rem;
+	}
+	.xui-submit-btn{
+		text-align: center;
+	}
+	.xui-alert-mask .xui-alert-reminder button{
+		text-align: center;
+		display: inline-block;
+		width: 60%;
+		margin-top: 35px;
+		margin-left: 20%;
+		background-color: #0091d5;
+		border: none;
+		border-radius: 10px;
+		color: #fff;
+		font-size: 1rem;
+		line-height: 30px;
+	}
+	.xui-alert-code label.ui-input-text {
+		color: #00a5ed;
+		font-size: 1.1rem;
+		font-weight: 500 !important;
+		line-height: 1.4;
+		display: block;
+		font-weight: 400;
+		margin: 0 0 .5em;
+	}
+	.ui-focus{
+		box-shadow: none;
+	}
+	.xui-alert-getCode .xui-alert-mask .xui-alert-code .xui-btn-abolish,.xui-alert-getCode .xui-alert-mask .xui-alert-code .xui-btnsubmit{
+		display: inline-block;
+		float: left;
+		margin-right: 4%;
+		width: 43%;
+		margin-top: 10px;
+		text-align: center;
+		border: none;
+		border-radius: 2px;
+		height: 2.5em;
+		font-size: 0.9rem;
+	}
+	.xui-alert-getCode .xui-alert-mask .xui-alert-code .xui-btn-abolish{
+		margin-left: 4%;
+		background-color: #e5e5e5;
+	}
+	.xui-alert-getCode .xui-alert-mask .xui-alert-code .xui-btnsubmit{
+		background-color: #ee3715;
+		color: #fff;
+	}
+	.error{
+		color: #ee3715;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-wzcoinConfirm-page">
+	<div data-role="content" data-theme="x">
+		<div class="xui-section-item">
+			<h3>微众卡兑换平台</h3>
+			<p>现有积分：<span class="xa-current-integral">{{member_integral}}</span></p>
+		</div>
+		<form action="post" class="xui-exchange-form">
+			{% if card_exchange_rule.is_bind %}
+			<div class="xui-form-control">
+				<label for="phone"><b></b>输入手机号：</label>
+				<div class="xui-bg">
+						{% if member_is_bind %}
+						<input type="tel" value="{{phone_number}}" disabled/>
+						{% else %}
+						<input class="xui-exchange-tel xa-phoneNum" maxlength="11" type="tel" id="phone"/>
+						<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>
+					    <p class="xui-help-block">绑定手机号才能把奖励发到你的帐户里哦～</p>
+					{% endif %}
+					<!--<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>-->
+					<!--<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>-->
+
+				</div>
+			</div>
+			{% endif%}
+			<div class="xui-form-control">
+				<label><b></b>选择兑换：</label>
+				<div class="xui-bg">
+					{% for prize in card_exchange_rule.prize %}
+					<div class="xui-exchange-choose xa-exchange-choose {% if prize.is_selected %} active {% endif %}" data-start="{{prize.s_num}}" data-end="{{prize.end_num}}">
+						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
+						<p>消耗<span class='xa-integral'>{{prize.integral}}</span>积分</p>
+						{% if prize.count == 0 %}
+						<div class="xui-exchange-mask xa-exchange-mask">
+							<p class="xui-exchange-runout">已抢光</p>
+						</div>
+						{% endif %}
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			<div class="xui-form-control xui-submit-btn">
+				<a class="xui-exchange-confirm xa-exchange-submit" data-bind="{{member_is_bind}}">{% if user_has_exchange_card %}已兑换{% else %}兑换{% endif %}</a>
+				<!--<a class="xui-exchange-abolish">取消</a>-->
+			</div>
+		</form>
+		<div class="xui-alert-getCode xa-alert-getCode hidden">
+			<div class="xui-alert-mask">
+				<div class="xui-alert-code">
+					<label for="xui-test-code">输入短信验证码</label>
+					<input type="text" id="xui-test-code" class="xa-phoneCode" />
+					<button data-inline="true" class="xui-btn-abolish xa-btn-abolish" type="button">取消</button>
+					<button data-inline="true" class="xui-btnsubmit xa-phoneCode-submit" type="button">确认</button>
+				</div>
+			</div>
+		</div>
+		<div class="xui-alert-exchange xa-alert-exchange hidden">
+			<div class="xui-alert-mask">
+				<div class="xui-alert-reminder">
+					<p class="xui-reminder-title xa-reminder-title">
+						兑换成功
+					</p>
+					<p class="xa-reminder-detail">
+						微众卡将存到个人中心--微众卡余额查询中，请注意查收！
+					</p>
+					<button class="xa-exchanged">知道了</button>
+					<a href="javascript:void(0)" class="xui-alert-close xa-alert-close">&times;</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	$(document).ready(function() {
+		if($('button').hasClass('ui-btn-hidden')){
+			$('button').removeClass('ui-btn-hidden')}
+		$('input').parent().removeClass();
+		$('button').siblings().hide().parent().removeClass();
+		function validate_phone(phone_number){
+			var reg = /^1[3|4|5|8]\d{9}$/;
+			if(!reg.test(phone_number) || phone_number.length != 11){
+				$('body').alert({
+					isShow: true,
+					info: "请填写有效的手机号",
+					isSlide: true,
+					speed: 2000
+				});
+				return false;
+			}
+			return true;
+		}
+		$(".xa-getCode").click(function(event){
+			$('.xa-getCode').attr('disabled', 'true').css('background-color', '#63b7ff');
+			var phone_number = $('.xa-phoneNum').val();
+			if (validate_phone(phone_number)){
+				W.getApi().call({
+					app: 'webapp',
+					api: 'project_api/call',
+					method: 'post',
+					args: _.extend({
+						woid: W.webappOwnerId,
+						project_id: W.projectId,
+						module: 'card_exchange',
+
+						target_api: 'captcha/send',
+						phone_number: phone_number
+					}),
+					success: function(data) {
+						$('.xa-alert-getCode').removeClass('hidden');
+					},
+					error: function(data){
+						console.log(data);
+						if (data.data && data.data.msg){
+							$('body').alert({
+								isShow: true,
+								info: data.data.msg,
+								isSlide: true,
+								speed: 2000
+							});
+						}
+						$('.xa-getCode').removeAttr('disabled').css('background-color', '#ee3715');
+					}
+				});
+			} else {
+				$('.xa-getCode').removeAttr('disabled').css('background-color', '#ee3715');
+			}
+		});
+		$(".xa-phoneCode-submit").click(function(){
+			var phone_number = $('.xa-phoneNum').val();
+			var code = $('.xa-phoneCode').val();
+			if (validate_phone(phone_number)){
+				W.getApi().call({
+					app: 'webapp',
+					api: 'project_api/call',
+					method: 'post',
+					args: _.extend({
+						woid: W.webappOwnerId,
+						project_id: W.projectId,
+						module: 'card_exchange',
+
+						target_api: 'phone/binding',
+						phone_number: phone_number,
+						code:code
+					}),
+					success: function(data) {
+						$('body').alert({
+							isShow: true,
+							info: '绑定成功',
+							isSlide: true,
+							speed: 3000
+						});
+						$('.xa-exchange-submit').attr('data-bind', 'True');
+						$('.xa-alert-getCode').addClass('hidden');
+						$('.xa-getCode').addClass('hidden');
+						$('.xa-phoneNum').attr('disabled', 'true');
+					},
+					error: function(data){
+						$('body').alert({
+							isShow: true,
+							info: data.data.msg,
+							isSlide: true,
+							speed: 2000
+						})
+					}
+				});
+			}
+		});
+		$(".xa-btn-abolish").click(function(){
+			$('.xa-alert-getCode').addClass('hidden');
+			$('.xa-getCode').removeAttr('disabled').css('background-color', '#ee3715');
+		});
+		$('.xa-exchange-choose').click(function(){
+			if($(this).find('.xa-exchange-mask').length>0){
+				$(this).removeClass('active')
+			}else{
+				if(!$(this).hasClass('active')){
+					$(this).addClass('active').siblings().removeClass('active')
+				}else{
+					$(this).removeClass('active')
+				}
+			}
+		});
+		$(".xa-exchange-submit").click(function(){
+			var text = $(this).text();
+			var isBind=$('.xa-exchange-submit').attr('data-bind') == "False"? false : true;
+			if(!isBind){
+				$('body').alert({
+					isShow: true,
+					info: '请绑定手机号',
+					isSlide: true,
+					speed: 2000
+				});
+				return false;
+			}
+
+			if($('.xa-exchange-choose').hasClass('active') && text != '已兑换'){
+				var current_integral=$('.xa-current-integral').text();
+				var need_integral=$('.xa-exchange-choose.active .xa-integral').text();
+				var start_num=$('.xa-exchange-choose.active').attr('data-start');
+				var end_num=$('.xa-exchange-choose.active').attr('data-end');
+				if(parseInt(current_integral) > parseInt(need_integral) || parseInt(current_integral) == parseInt(need_integral)){
+					W.getApi().call({
+						app: 'webapp',
+						api: 'project_api/call',
+						method: 'post',
+						args: _.extend({
+							woid: W.webappOwnerId,
+							project_id: W.projectId,
+							module: 'card_exchange',
+							target_api: 'card/exchange',
+							has_integral: current_integral,
+							need_integral: need_integral,
+							s_num:start_num,
+							end_num:end_num
+						}),
+						success: function(data) {
+							$('.xa-reminder-title').html('兑换成功').removeClass('error');
+							$('.xa-reminder-detail').html('微众卡将存到个人中心--微众卡余额查询中，请注意查收！');
+							$('.xa-exchanged').css('background-color', '#0091d5');
+							$('.xa-alert-exchange').removeClass('hidden');
+							$('.xa-exchange-submit').text('已兑换');
+							$('.xa-current-integral').text(data);
+						},
+						error: function(data){
+							$('.xa-reminder-title').html('兑换失败').addClass('error');
+							$('.xa-exchanged').css('background-color', '#ee3715');
+							$('.xa-reminder-detail').html(data.errMsg || '兑换失败');
+							$('.xa-alert-exchange').removeClass('hidden');
+						}
+					});
+				}else{
+					$('.xa-reminder-title').html('兑换失败').addClass('error');
+					$('.xa-reminder-detail').html('没有足够的积分');
+					$('.xa-exchanged').css('background-color', '#ee3715');
+					$('.xa-alert-exchange').removeClass('hidden');
+				}
+			}
+
+		});
+		$(".xa-exchanged").click(function(){
+			$('.xa-alert-exchange').addClass('hidden');
+		});
+		$(".xa-alert-close").click(function(){
+			$('.xa-alert-exchange').addClass('hidden');
+		});
+	});
+</script>
+{% endblock %}
