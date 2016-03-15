@@ -16,8 +16,8 @@ from core.exceptionutil import unicode_full_stack
 from core.jsonresponse import create_response
 from mall.models import PayInterface
 from market_tools.tools.template_message.module_api import send_apps_template_message
-from modules.member import models as member_models
 import models as app_models
+from modules.member.models import Member, MemberHasSocialAccount
 
 PAY_INTERFACE_WEIXIN_PAY = 2 #支付方式为微信支付
 
@@ -36,7 +36,7 @@ class GroupGranter(resource.Resource):
 			return response.get_response()
 		record = app_models.Group.objects(id=record_id)
 		if record.count() <=0:
-			response.errMsg = u'不存在该活动'
+			response.errMsg = u'不存在该团购活动'
 			return response.get_response()
 		else:
 			record = record.first()
@@ -75,5 +75,33 @@ class GroupGranter(resource.Resource):
 		else:
 			record = record.first()
 		owner_id = record.owner_id
+		record_name = record.name
+		member_info_list = app_models.GroupDetail.objects(
+			relation_belong_to=group_relation_id,
+			grouped_member_id__in=member_ids,
+			is_already_paid=True
+		)
+		member_id2status = {m.id: m.is_subscribed for m in Member.objects.filter(id__in=member_ids)}
+		member_id2openid = {m.member.id: m.account.openid for m in MemberHasSocialAccount.objects.filter(member_id__in=member_ids)}
 
+		if len(member_info_list) <= 0:
+			response.errMsg = u'没有符合条件的会员'
+			return response.get_response()
+		result_data = {}
+		member_sets = app_models.GroupDetail.objects(relation_belong_to=group_relation_id)
+		for member_info in member_info_list:
+			member_id = member_info.member_id
+			#非会员不发放
+			if not member_id2status[member_id]:
+				result_data[member_id] = u'非会员无法发送消息'
+				continue
+			#获取该member_id的固定openid
+			openid = member_id2openid[member_id]
+			curr_member_set = member_sets.filter(member_id=member_id)
 
+			#生产环境
+			# red = RedPackMessage(weixin_pay_config.partner_id, weixin_pay_config.app_id, nick_name,
+			# 	nick_name,openid,price,price,price,1, wishing, ip,
+			# 	u"点赞拼大奖红包",
+			# 	remark,
+			# 	weixin_pay_config.partner_key)
