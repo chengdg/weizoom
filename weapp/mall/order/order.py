@@ -372,3 +372,26 @@ class ChannelQrcodePayedOrder(resource.Resource):
         }
         return response.get_response()
 
+class GroupOrderRefunded(resource.Resource):
+    app = "mall2"
+    resource = "group_order_refunded"
+
+    KEY = ""
+
+    @login_required
+    def post(request):
+        order_ids = request.POST.get('order_ids', [])
+        key = request.POST.get('key', '')
+        response = create_response(200)
+        if key == KEY:
+            try:
+                Order.objects.filtr(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_GROUP_REFUNDING
+                ).update(status=ORDER_STATUS_REFUNDED)
+                response.success = True
+            except:
+                response.success = False
+        else:
+            response.success = False
+        return response.get_response()
