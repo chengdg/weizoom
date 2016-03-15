@@ -117,7 +117,7 @@
         position: absolute;
         top: 25px;
         right: 10px;
-        width: 95px;
+        width: 100px;
     }
  /*   .xui-listInner p{width:100%;}
     .xui-listInner p span:first-child{width:80%;}
@@ -217,7 +217,7 @@
                 </div>
                 <div class="wui-swiper-slide">
                     <div class="wui-content-slide">
-                        <div class="xui-all_groups_can_join-slide">
+                        <div class="xui-all_groups_can_join-slide none">
                         {% if all_groups_can_open %}
                             <ul class="xui-listItem">
                             {% for group_item in all_groups_can_open %}
@@ -268,37 +268,26 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function($) {
-    var bodyWidth = window.document.body.clientWidth;
-    var bodyHeight = window.document.body.clientHeight;
-    var containerHeight = bodyHeight - 47;
-    $(".wui-swiper-container").css({'height':containerHeight,'width': '100%' });
-    $(".wui-swiper-slide").css('height', containerHeight );
-    $("body").css('overflow-y', 'hidden');
-    var myscroll = new iScroll('xa-wrapper',{hScrollbar:false});
-    var tabsSwiper = new Swiper('.wui-swiper-container',{
-        speed:500,
-        onSlideChangeStart: function() {
-            $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
-            $(".wui-swiper-tabs a").eq(tabsSwiper.activeIndex).addClass('wui-inner-active');
-            myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
-        }
-    });
-    $(".wui-swiper-tabs a").on('touchstart mousedown',function(e){
-        e.preventDefault();
-        $(".wui-swiper-tabs .wui-inner-active").removeClass('wui-inner-active');
-        $(this).addClass('wui-inner-active');
-        tabsSwiper.swipeTo($(this).index());
-        myscroll=new iScroll(tabsSwiper.activeSlide(),{hScrollbar:false});
-    });
-
     $('.xa-find_group').on('touchstart', function(e){
         var $el = $(e.target);
 		var recordId = $el.data('id');
         getDynamicData(recordId);
     });
+    //我要开团tab
     $('.xa-all_groups_can_join').on('touchstart', function(){
         $('.xui-all_groups_can_join-slide').removeClass('none');
         $('.xui-all_groups_can_join-list').addClass('none');
+        $('.xui-all_groups_can_open-slide').addClass('none');
+        $('.xa-all_groups_can_join').addClass('wui-inner-active');
+        $('.xa-all_groups_can_open').removeClass('wui-inner-active');
+    });
+    //我要参团tab
+    $('.xa-all_groups_can_open').on('touchstart', function(){
+        $('.xui-all_groups_can_join-slide').addClass('none');
+        $('.xui-all_groups_can_join-list').addClass('none');
+        $('.xui-all_groups_can_open-slide').removeClass('none');
+        $('.xa-all_groups_can_join').removeClass('wui-inner-active');
+        $('.xa-all_groups_can_open').addClass('wui-inner-active');
     });
 });
 
