@@ -101,3 +101,57 @@ class GroupParticipances(resource.Resource):
 		response.data = response_data
 		return response.get_response()
 
+
+
+
+class GroupParticipancesDialog(resource.Resource):
+	app = 'apps/group'
+	resource = 'group_participances_dialog'
+
+	@login_required
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+		relation_id = request.GET['id']
+		print 'backend:',77777777777771111111111111110000000000000
+		print relation_id
+
+		members = app_models.GroupDetail.objects(relation_belong_to = relation_id)
+		# pageinfo, members = paginator.paginate(members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		print 'GGGGGGGGGGGGG'
+		print type(members)
+		print members
+		items = []
+		for member in members:
+			items.append({
+				'id':unicode(member.id),
+				'name':member.grouped_member_name,
+				'created_at':member.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				})
+
+		# tmp_member_ids = []
+		# for data in datas:
+		# 	tmp_member_ids.append(data.member_id)
+		# members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		# member_id2member = {member.id: member for member in members}
+
+		# items = []
+		# for data in datas:
+		# 	items.append({
+		# 		'id': str(data.id),
+		# 		'group_leader':data.group_leader_name,
+		# 		'group_days':data.group_days,
+		# 		'status':data.status_text,
+		# 		'members_count':'%d/%s'%(data.grouped_number,data.group_type)
+		# 	})
+		response_data = {
+			'items': items,
+			# 'pageinfo': paginator.to_dict(pageinfo),
+			'sortAttr': 'id',
+			'data': {}
+		}
+		response = create_response(200)
+		response.data = response_data
+		return response.get_response()

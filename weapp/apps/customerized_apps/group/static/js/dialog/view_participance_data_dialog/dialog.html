@@ -7,11 +7,12 @@
             <h3 class="modal-title" >查看结果</h3>
         </div>
         <div class="modal-body" style="min-height: 300px; overflow: auto;">
+        66666 {{ activityId }}
             <div
                     data-ui-role="advanced-table"
                     data-app="apps/group"
-                    data-resource="group_participance"
-                    data-args='{"id": "{{activity_id}}"}'
+                    data-resource="group_participances_dialog"
+                    data-args='{"id": "{{ activityId }}"}'
                     data-template-id="#app-group-viewMembers-tmpl"
                     data-enable-paginator="true"
                     data-enable-sort="false"
@@ -33,15 +34,33 @@
 <table class="table table-bordered xb-stripedTable xa-productTable">
     <thead style="background:#c8d2e5;">
         <tr>
-            <th width ="165">商品信息</th>
-            <th width ="105">价格</th>
-            <th width ="70">库存</th>
-            <th>创建时间</th>
-            <th>操作</th>
+            <th width ="165">会员</th>
+            <th width ="105">消费金额</th>
+            <th width ="70">积分</th>
+            <th>来源</th>
+            <th>入团时间</th>
         </tr>
     </thead>
     <tbody>
-        sssss
+      {{each(i, item) items}}
+        <tr data-id="${item.id}">
+            <td>
+                ${item.name}
+            </td>
+            <td>
+                ${item.created_at}
+            </td>
+            <td>
+                ${item.created_at}
+            </td>
+            <td>
+                 ${item.created_at}
+            </td>
+            <td>
+                 ${item.created_at}
+            </td>
+        </tr>
+        {{/each}}
     </tbody>
 </table>
 </script>
