@@ -23,17 +23,20 @@ def exchange_card(request):
 	response = create_response(500)
 	if member:
 		member_id = member.id
-		owner_name = member.username_for_html
+		owner_name = member.username_hexstr
 		webapp_id = request.user_profile.webapp_id
 		owner_id = request.webapp_owner_id
 
 		try:
 			card_ids_list = card_exchange.get_can_exchange_cards_list(s_num,end_num,owner_id)
+			if len(card_ids_list) <= 0:
+				response.errMsg = u'该种卡库存不足'
+				return response.get_response()
 			promotion_models.CardHasExchanged.objects.create(
 		 		webapp_id = webapp_id,
 		 		card_id = card_ids_list[0],
 		 		owner_id = member_id,
-		 		owner_name = owner_name 
+		 		owner_name = owner_name
 		 	)
 			member.integral = int(has_integral) - int(need_integral)
 			member.save()

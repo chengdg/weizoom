@@ -11,6 +11,7 @@ from core import resource
 from mall import export
 from core.jsonresponse import JsonResponse, create_response
 from core import paginator
+from mall.promotion.string_util import byte_to_hex, hex_to_byte
 from models import (CouponRule, Coupon, CouponRecord, COUPON_STATUS_USED,
 					COUPONSTATUS, COUPON_STATUS_EXPIRED)
 from . import models as promotion_models
@@ -175,7 +176,7 @@ class CardExchangeDetail(resource.Resource):
 				cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
 				money = cur_card_rule.money
 				remainder = cur_card.money
-				user = card.owner_name
+				user = hex_to_byte(card.owner_name)
 				used_money = money - remainder
 				exchanged_cards_list.append({
 					'card_id': weizoom_card_id,
@@ -207,7 +208,7 @@ class CardExchangeDetail(resource.Resource):
 				card_id_list.append(card.id)
 			exchanged_cards = exchanged_cards.filter(card_id__in = card_id_list)	
 		if card_user:
-			exchanged_cards = exchanged_cards.filter(owner_name__contains = card_user)
+			exchanged_cards = exchanged_cards.filter(owner_name__contains=byte_to_hex(card_user))
 
 		return exchanged_cards
 
@@ -237,7 +238,7 @@ class CardExchangeDetailExport(resource.Resource):
 				cur_card_rule = card_rules.get(id = weizoom_card_rule_id)
 				money = cur_card_rule.money
 				remainder = cur_card.money
-				user = card.owner_name
+				user = hex_to_byte(card.owner_name)
 				used_money = money - remainder
 				info_list = [
 					weizoom_card_id,
