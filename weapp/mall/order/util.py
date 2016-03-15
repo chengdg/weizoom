@@ -928,30 +928,15 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type,query_stri
     webapp_id = user_profile.webapp_id
     mall_type = user_profile.webapp_type
 
+    orders = belong_to(webapp_id, user.id, mall_type)
+
     group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
     group_order_ids = [r.order_id for r in group_order_relations]
     if query_dict.get('order_type') and query_dict['order_type'] == '2' and not mall_type:
-        orders = Order.objects.filter(order_id__in=group_order_ids)
-    else:
-        orders = belong_to(webapp_id, user.id, mall_type)
+        orders = orders.filter(order_id__in=group_order_ids)
 
     if is_refund:
         orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDING])
-
-    if not mall_type and group_order_relations.count() > 0:
-        not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
-            order_id__in=group_order_ids,
-            status=ORDER_STATUS_NOT)
-        ]
-        not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
-            order_id__in=[
-                r.order_id for r in group_order_relations.filter(
-                group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
-                ],
-                status=ORDER_STATUS_PAYED_NOT_SHIP
-            )]
-        orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
-
 
     # 处理排序
     if sort_attr != 'created_at':
