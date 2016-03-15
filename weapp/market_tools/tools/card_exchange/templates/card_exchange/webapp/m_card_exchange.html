@@ -348,6 +348,7 @@
 
 {% block js %}
 <script type="text/javascript">
+    var submit_control = false;
 	$(document).ready(function() {
 		if($('button').hasClass('ui-btn-hidden')){
 			$('button').removeClass('ui-btn-hidden')}
@@ -469,7 +470,8 @@
 				});
 				return false;
 			}
-
+            if(submit_control) return false;
+            submit_control = true;
 			if($('.xa-exchange-choose').hasClass('active') && text != '已兑换'){
 				var current_integral=$('.xa-current-integral').text();
 				var need_integral=$('.xa-exchange-choose.active .xa-integral').text();
@@ -503,6 +505,7 @@
 							$('.xa-exchanged').css('background-color', '#ee3715');
 							$('.xa-reminder-detail').html(data.errMsg || '兑换失败');
 							$('.xa-alert-exchange').removeClass('hidden');
+                            submit_control = false;
 						}
 					});
 				}else{
@@ -510,6 +513,7 @@
 					$('.xa-reminder-detail').html('没有足够的积分');
 					$('.xa-exchanged').css('background-color', '#ee3715');
 					$('.xa-alert-exchange').removeClass('hidden');
+                    submit_control = false;
 				}
 			}
 
