@@ -13,14 +13,11 @@ W.dialog.app.group.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 
     onInitialize: function(options) {
     	//s.activityId = options.activityId;
-        this.table = this.$('[date-ui-role="advanced-table"]').data('view');
+        this.table = this.$('[data-ui-role="advanced-table"]').data('view');
 
     },
 
     beforeShow: function(options) {
-    	console.log('fronted-->Dialog +66666666666666666666666');
-    	console.log(this.activityId);
-        console.log(this.table);
         this.table.reset();
         // if (this.activityId) {
         //     W.getApi().call({
