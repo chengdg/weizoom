@@ -65,7 +65,6 @@ class CardExchange(resource.Resource):
 		"""
 		卡兑换配置
 		"""
-		print '--------------------'
 		is_bind = request.POST.get('isBind',0)
 		prize = request.POST.get('prize','')
 		reward_type = request.POST.get('reward',0)
@@ -79,8 +78,8 @@ class CardExchange(resource.Resource):
 			cur_webapp_card_exchange_id = cur_webapp_card_exchange.id
 			promotion_models.CardExchangeRule.objects.filter(exchange_id = cur_webapp_card_exchange_id).delete()
 			cur_webapp_card_exchange.delete()
-		except Exception,e:
-			print e,'^^^^^^^^^^^^^^^^^^^^^'
+		except:
+			pass
 		card_exchange = promotion_models.CardExchange.objects.create(
 			webapp_id = webapp_id,
 			require = is_bind,
@@ -104,7 +103,6 @@ class CardExchange(resource.Resource):
 	@staticmethod
 	def get_can_exchange_cards(request,webapp_id):
 		try:
-			print webapp_id,'+++++++++++++++++++'
 			card_exchange_dic = {}
 			card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
 			require = card_exchange.require
@@ -131,8 +129,7 @@ class CardExchange(resource.Resource):
 					'count': len(count)				 
 				})
 			card_exchange_dic['prize'] = prize_list
-		except Exception,e:
-			print e,'-----------------------------'
+		except:
 			card_exchange_dic = {}
 
 		return card_exchange_dic 
@@ -185,9 +182,8 @@ class CardExchangeDetail(resource.Resource):
 					'used_money': '%.2f' % used_money,
 					'user': user  
 				})
-			except Exception,e:
-				print e,'/////////*********'
-		
+			except:
+				pass
 		response = create_response(200)
 		response.data.items = exchanged_cards_list
 		response.data.pageinfo = paginator.to_dict(pageinfo)
@@ -248,8 +244,8 @@ class CardExchangeDetailExport(resource.Resource):
 					user
 				]
 				members_info.append(info_list)
-			except Exception,e:
-				print e,'@@@@@@@@@@@@@@@@@@@@@'
+			except:
+				pass
 
 		filename = u'微众卡兑换详情'
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
