@@ -29,6 +29,9 @@ def exchange_card(request):
 
 		try:
 			card_ids_list = card_exchange.get_can_exchange_cards_list(s_num,end_num,owner_id)
+			if len(card_ids_list) <= 0:
+				response.errMsg = u'该种卡库存不足'
+				return response.get_response()
 			promotion_models.CardHasExchanged.objects.create(
 		 		webapp_id = webapp_id,
 		 		card_id = card_ids_list[0],
