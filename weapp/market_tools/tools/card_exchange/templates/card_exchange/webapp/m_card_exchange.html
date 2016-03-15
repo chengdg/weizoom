@@ -282,7 +282,7 @@
 						{% if member_is_bind %}
 						<input type="tel" value="{{phone_number}}" disabled/>
 						{% else %}
-						<input class="xui-exchange-tel xa-phoneNum" type="tel" id="phone"/>
+						<input class="xui-exchange-tel xa-phoneNum" maxlength="11" type="tel" id="phone"/>
 						<button class="xui-btnCode xa-getCode" type="button">获取验证码</button>
 						{% endif %}
 					{% endif%}
