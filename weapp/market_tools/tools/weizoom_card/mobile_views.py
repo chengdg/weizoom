@@ -53,13 +53,13 @@ def get_weizoom_card_change_money(request):
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
 
-	if len(weizoom_card_orders_list) <= 0:
-		c = RequestContext(request, {
-			'page_title': u'微众卡',
-			'is_hide_weixin_option_menu': True
-		})
-
-		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
+	# if len(weizoom_card_orders_list) <= 0:
+	# 	c = RequestContext(request, {
+	# 		'page_title': u'微众卡',
+	# 		'is_hide_weixin_option_menu': True
+	# 	})
+    #
+	# 	return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 	weizoom_card = WeizoomCard.objects.get(id=card_id)
 	change_integral = weizoom_card.money * integral_each_yuan
 	if change_integral > int(change_integral):
