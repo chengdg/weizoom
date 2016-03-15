@@ -270,7 +270,7 @@ class ProductList(resource.Resource):
                 product2group={}
             if product2group:
                 for id_tmp in ids:
-                    if product2group.has_key(id_tmp):
+                    if product2group.has_key(id_tmp) and product2group[id_tmp] == True:
                         ids.remove(id_tmp)
 
         #团购

@@ -417,7 +417,8 @@ def get_product2group(pids, woid='3'):
     #pids为list,里面的每一项都是商品id的str
     pids_url = "http://{}/m/apps/group/api/group_buy_products/".format(settings.MARKETTOOLS_HOST)
     # pids_url = "http://{}/mall2/api/test/".format(settings.MARKETTOOLS_HOST)
-
+    if not pids:
+        return {}
     params = "pids={}".format(("_").join(pids))
     response = urllib.urlopen("{}?{}&woid={}".format(pids_url, params, woid))
     if response.code != 200:
