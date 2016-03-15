@@ -439,4 +439,25 @@ def get_product2group(pids, woid='3'):
     else:
         error_msg = u"api请求获取的数据存在问题, cause:\n{}".format(data)
         watchdog_error(error_msg)
+        product2group = {}
     return product2group
+
+def get_pids(woid):
+    get_pids_url = "http://{}/m/apps/group/api/get_pids_by_woid/".format(settings.MARKETTOOLS_HOST)
+    response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
+    if response.code != 200:
+        response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
+        if response.code != 200:
+            error_msg = u"api请求参加活动的pids网络存在问题, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
+            return []
+
+    data =  response.read()
+    data = json.loads(data)
+    if data["data"]["pids_list"]:
+        pids = data["data"]["pids_list"]
+    else:
+        error_msg = u"api请求参加活动的pids存在问题, cause:\n{}".format(data)
+        watchdog_error(error_msg)
+        pids = []
+    return pids
