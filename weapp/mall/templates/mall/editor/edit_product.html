@@ -403,8 +403,12 @@
                     <li class="xui-i-templateProperty xa-property" data-property-id="{{property.id}}">
 
                         <input class="xui-i-propertyName xui-propertyNameBtn xa-name{% if has_store_name %} c9{% endif %}" readonly=true value='{{property.name}}' maxlength="15">
-                        <input class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" value='{{property.value}}' maxlength="255" {% if has_store_name %}readonly=true{% endif %}>
-                        {% if product.is_group_buying %}readonly=true{% endif %}>
+                        <input 
+                        	class="xui-i-propertyValue xui-propertyValueInput xa-contenteditable xa-value" 
+	                        value='{{property.value}}33' 
+	                        maxlength="255"
+                        	{% if has_store_name %}readonly=true{% endif %} 
+                        	{% if product.is_group_buying %}readonly=true{% endif %}/>
 
                         {% if product.is_group_buying or has_store_name %}
                         {% else %}
