@@ -23,7 +23,7 @@ def exchange_card(request):
 	response = create_response(500)
 	if member:
 		member_id = member.id
-		owner_name = member.username_for_html
+		owner_name = member.username_hexstr
 		webapp_id = request.user_profile.webapp_id
 		owner_id = request.webapp_owner_id
 
@@ -33,7 +33,7 @@ def exchange_card(request):
 		 		webapp_id = webapp_id,
 		 		card_id = card_ids_list[0],
 		 		owner_id = member_id,
-		 		owner_name = owner_name 
+		 		owner_name = owner_name
 		 	)
 			member.integral = int(has_integral) - int(need_integral)
 			member.save()
