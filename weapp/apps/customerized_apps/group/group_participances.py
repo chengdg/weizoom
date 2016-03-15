@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import datetime
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -58,7 +59,7 @@ class GroupParticipances(resource.Resource):
 			params['created_at__gte'] = start_time
 		if end_time:
 			params['created_at__lte'] = end_time
-		datas = app_models.GroupRelations.objects(**params).order_by('-id')
+		datas = app_models.GroupRelations.objects(**params).order_by('group_days')
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -73,8 +74,6 @@ class GroupParticipances(resource.Resource):
 		响应API GET
 		"""
 		pageinfo, datas = GroupParticipances.get_datas(request)
-		print 6666666666666666
-		print datas
 
 		tmp_member_ids = []
 		for data in datas:
@@ -84,17 +83,62 @@ class GroupParticipances(resource.Resource):
 
 		items = []
 		for data in datas:
+			success_time = data.success_time
+			created_at = data.created_at
+			group_days = data.group_days
+			rest_days = 0
+
+
+			if data.status_text == u'团购成功' and data.success_time:
+				start_time_date = data.created_at.strftime('%Y/%m/%d')
+				start_time_time = data.created_at.strftime('%H:%M')
+				end_time_date = data.success_time.strftime('%Y/%m/%d')
+				end_time_time = data.success_time.strftime('%H:%M')
+				rest_days = (success_time - created_at).days
+
+			else:
+				start_time_date = data.created_at.strftime('%Y/%m/%d')
+				start_time_time = data.created_at.strftime('%H:%M')
+
+				group_end_time = data.created_at+datetime.timedelta(days=int(group_days))
+				end_time_date = group_end_time.strftime('%Y/%m/%d')
+				end_time_time = group_end_time.strftime('%H:%M')
+
+				rest_days = int(group_days)
+
 			items.append({
 				'id': str(data.id),
 				'group_leader':data.group_leader_name,
-				'group_days':data.group_days,
+				'rest_days':rest_days,
+				'start_time_date': start_time_date,
+				'start_time_time': start_time_time,
+				'end_time_date': end_time_date,
+				'end_time_time': end_time_time,
 				'status':data.status_text,
 				'members_count':'%d/%s'%(data.grouped_number,data.group_type)
 			})
+
+
+		#排序
+		items.sort(key=lambda item:item['rest_days'])
+		status_ing = []
+		status_fail = []
+		status_success = []
+
+		for item in items:
+			if item['status'] == u'团购未生效' or u'团购进行中':
+				status_ing.append(item)
+			elif item['status'] == u'团购成功':
+				status_success.append(item)
+			else:
+				status_fail.append(item)
+		items = status_ing+status_fail+status_success
+
+
 		response_data = {
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
-			'sortAttr': 'id',
+			'sortAttr': '',
 			'data': {}
 		}
 		response = create_response(200)
@@ -114,41 +158,31 @@ class GroupParticipancesDialog(resource.Resource):
 		响应API GET
 		"""
 		relation_id = request.GET['id']
-		print 'backend:',77777777777771111111111111110000000000000
-		print relation_id
+		# relation_name = app_models.GroupRelations.objects(id=relation_id)
 
 		members = app_models.GroupDetail.objects(relation_belong_to = relation_id)
-		# pageinfo, members = paginator.paginate(members, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+		member_ids = [unicode(member.id) for member in members]
+		# member_id2member = {unicode(member.id):member for member in members}
 
-		print 'GGGGGGGGGGGGG'
-		print type(members)
-		print members
 		items = []
 		for member in members:
 			items.append({
 				'id':unicode(member.id),
 				'name':member.grouped_member_name,
+				'money':0.00,
+				'points':'未写',
+				'from':'未写',
 				'created_at':member.created_at.strftime("%Y-%m-%d %H:%M:%S")
 				})
 
-		# tmp_member_ids = []
-		# for data in datas:
-		# 	tmp_member_ids.append(data.member_id)
-		# members = member_models.Member.objects.filter(id__in=tmp_member_ids)
-		# member_id2member = {member.id: member for member in members}
+		#进行分页
+		count_per_page = int(request.GET.get('count_per_page', 1))
+		cur_page = int(request.GET.get('page', '1'))
+		pageinfo, items = paginator.paginate(items, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
-		# items = []
-		# for data in datas:
-		# 	items.append({
-		# 		'id': str(data.id),
-		# 		'group_leader':data.group_leader_name,
-		# 		'group_days':data.group_days,
-		# 		'status':data.status_text,
-		# 		'members_count':'%d/%s'%(data.grouped_number,data.group_type)
-		# 	})
 		response_data = {
 			'items': items,
-			# 'pageinfo': paginator.to_dict(pageinfo),
+			'pageinfo': paginator.to_dict(pageinfo),
 			'sortAttr': 'id',
 			'data': {}
 		}

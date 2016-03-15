@@ -85,8 +85,6 @@ class Groups(resource.Resource):
 		#relation 一个用户开启的团，belong_to 一个group
 		#details描述一个团圆的信息，有很多个 belong_to 一个 relation
 		group_ids = [unicode(p.id) for p in datas]
-		print 111111111111111111
-		print group_ids
 
 		id2relation = {}
 		all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
@@ -98,9 +96,6 @@ class Groups(resource.Resource):
 				else:
 					id2relation[group_id] = [relation]
 
-		print 22222222222222222222
-		print id2relation
-
 		r_id2details = {}
 		relation_ids = [unicode(r.id) for r in all_relations]
 		all_details =  app_models.GroupDetail.objects(relation_belong_to__in=relation_ids)
@@ -111,37 +106,6 @@ class Groups(resource.Resource):
 					r_id2details[r_id].append(detail)
 				else:
 					r_id2details[r_id]=[detail]
-
-		print 333333333333333333
-		print r_id2details
-		############
-		# g_id2static_info = {}
-		# if id2relation:
-		# 	for g_id in id2relation:
-		# 		group_relation_list = id2relation[g_id]
-		# 		open_group_num = len(group_relation_list)
-
-		# 		group_customer_num = 0
-		# 		for one_relation in group_relation_list:
-		# 			r_id = unicode(one_relation.id)
-		# 			print '>>>>>>>>'
-		# 			print r_id
-		# 			print r_id2details
-		# 			detail_list = r_id2details[r_id]
-		# 			for one_detail in detail_list:
-		# 				if one_detail.is_already_paid:
-		# 					group_customer_num += 1
-
-		# 		if g_id in g_id2static_info:
-		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
-		# 									'group_customer_num':group_customer_num,
-		# 									}
-		# 		else:
-		# 			g_id2static_info[g_id]={'open_group_num':open_group_num,
-		# 									'group_customer_num':group_customer_num,
-		# 									}
-
-		# g_id2static_info = {}
 
 		for data in datas:
 			g_id = unicode(data.id)
@@ -166,39 +130,22 @@ class Groups(resource.Resource):
 										'group_customer_num':group_customer_num,
 										}
 
-		# print 44444444444444444
-		# print g_id2static_info
-
-		# if g_id2static_info:
-		# 	for data in datas:
-		# 		g_id = str(data.id)
-		# 		if g_id in g_id2static_info:
-		# 			data.static_info = g_id2static_info[str(g_id)]
-		# 		else:
-		# 			data.static_info = {'open_group_num':0,
-		# 									'group_customer_num':0,
-		# 									}
-
-
 
 		items = []
 		for data in datas:
-			print 'FFFFFFFFFFFFFFFFFF1111111111111111111111'
-			print data.static_info
-
 			items.append({
 				'id': str(data.id),
 				'name': data.name,
 				'product_img':data.product_img,
 				'product_name':data.product_name,
 				# 'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),
-				'start_time_date': data.start_time.strftime('%Y-%m-%d'),
+				'start_time_date': data.start_time.strftime('%Y/%m/%d'),
 				'start_time_time': data.start_time.strftime('%H:%M'),
 				# 'end_time': data.end_time.strftime('%Y-%m-%d %H:%M'),
-				'end_time_date': data.end_time.strftime('%Y-%m-%d'),
+				'end_time_date': data.end_time.strftime('%Y/%m/%d'),
 				'end_time_time': data.end_time.strftime('%H:%M'),
-				'group_item_count':data.static_info['open_group_num'], #if hasattr(data, 'static_info') else 0,
-				'group_customer_count':data.static_info['group_customer_num'], #if hasattr(data, 'static_info') else 0,
+				'group_item_count':data.static_info['open_group_num'],
+				'group_customer_count':data.static_info['group_customer_num'],
 				'group_visitor_count':len(data.visited_member),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
@@ -210,7 +157,6 @@ class Groups(resource.Resource):
 		status_1 = []
 		status_2 = []
 		for item in items:
-			print item
 			if item['status'] == u'未开启':
 				status_0.append(item)
 			elif item['status'] == u'进行中':
