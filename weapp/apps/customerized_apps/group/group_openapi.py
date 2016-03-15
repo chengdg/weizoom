@@ -180,3 +180,20 @@ class OrderAction(resource.Resource):
 				update_order_status_by_group_status(group_id,'success')
 		response = create_response(200)
 		return response.get_response()
+
+class GetPidsByWoid(resource.Resource):
+	app = 'apps/group'
+	resource = 'get_pids_by_woid'
+
+	def api_get(request):
+		"""
+		获得当前woid处在团购中的Pid_list
+		"""
+		woid = request.GET.get('woid')
+		records = app_models.Group.objects(owner_id=woid,status=app_models.STATUS_RUNNING)
+		pids_list = [record.product_id for record in records]
+		response = create_response(200)
+		response.data = {
+			'pids_list': pids_list
+		}
+		return response.get_response()
