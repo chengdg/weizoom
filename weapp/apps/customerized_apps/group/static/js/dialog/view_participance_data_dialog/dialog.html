@@ -1,67 +1,66 @@
 <script id="app-group-viewParticipanceDataDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
     <div class="xui-app_group-Dialog modal fade">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
-                    	<span class="xui-closeColor" aria-hidden="true">&times;</span>
-                    </button>
-                    <h3 class="modal-title">查看结果</h3>
-                </div>
-                <div class="modal-body" style="min-height: 300px; overflow: auto;">
-                    <div data-ui-role="advanced-table"
-                		 data-app="mall2"
-                		 data-resource="product_list"
-                		 data-args=''
-                		 data-template-id="#groupParticipanceData-dialog-tmpl"
-                		 data-enable-paginator="true"
-                		 data-enable-sort="false"
-                		 data-item-count-per-page="5"
-                		 data-auto-load="false"
-                		 class="mt10 mb20">
-            		</div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary xa-submit-dialog">确认</button>
-                </div>
-            </div>
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title" >查看结果</h3>
         </div>
+        <div class="modal-body" style="min-height: 300px; overflow: auto;">
+        66666 {{ activityId }}
+            <div
+                    data-ui-role="advanced-table"
+                    data-app="apps/group"
+                    data-resource="group_participances_dialog"
+                    data-args='{"id": "{{ activityId }}"}'
+                    data-template-id="#app-group-viewMembers-tmpl"
+                    data-enable-paginator="true"
+                    data-enable-sort="false"
+                    data-item-count-per-page="5"
+                    data-auto-load="false"
+                    class="mt10 mb20"
+                ></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary xa-submit-dialog">确认</button>
+        </div>
+    </div>
+    </div>
     </div>
 </script>
 
-<script id="groupMember-tmpl" type="text/x-jquery-tmpl">
-    <table class="table table-bordered xb-stripedTable xa-productTable">
-        <thead style="background:#c8d2e5;">
-            <tr>
-                <th width="165">商品信息</th>
-                <th width="105">价格</th>
-                <th width="70">库存</th>
-                <th>创建时间</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{if items.length}} {{each(i, product) items}}
-            <tr data-id="${product.id}">
-                <td class="text_nowrap" style="max-width:165px;">
-                    <img style="width:60px;height:60px;" src="${product.thumbnails_url}"></img>
-                    ${product.name}
-                </td>
-                <td>${ product.display_price }
-                </td>
-                <td>${product.stocks}</td>
-                <td>${product.created_at}</td>
-                <td>
-                    <label class="btn  lh20  btn-primary" style="border-radius:3px;">
-                        <input type="checkbox" autocomplete="off" class="xa-selectProduct" style="display:none;"><span>选取</span>
-                    </label>
-                </td>
-            </tr>
-            {{/each}} {{else}}
-            <tr>
-                <td colspan='7' class="h130" style="color:#666">暂无数据</td>
-            </tr>
-            {{/if}}
-        </tbody>
-    </table>
+
+<script id="app-group-viewMembers-tmpl" type="text/x-handlebar-tmpl">
+<table class="table table-bordered xb-stripedTable xa-productTable">
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th width ="165">会员</th>
+            <th width ="105">消费金额</th>
+            <th width ="70">积分</th>
+            <th>来源</th>
+            <th>入团时间</th>
+        </tr>
+    </thead>
+    <tbody>
+      {{each(i, item) items}}
+        <tr data-id="${item.id}">
+            <td>
+                ${item.name}
+            </td>
+            <td>
+                ${item.created_at}
+            </td>
+            <td>
+                ${item.created_at}
+            </td>
+            <td>
+                 ${item.created_at}
+            </td>
+            <td>
+                 ${item.created_at}
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 </script>

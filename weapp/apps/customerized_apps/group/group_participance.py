@@ -133,3 +133,4 @@ class CancelUnpaidGroup(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'取消操作失败'
 		return response.get_response()
+

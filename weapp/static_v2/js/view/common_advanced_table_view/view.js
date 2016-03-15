@@ -198,13 +198,18 @@ W.view.common.AdvancedTable = Backbone.View.extend({
         console.log("options.app", this.options.app);
         console.log("options.api", this.options.api);
         //W.getLoadingView().show();
+
         W.getApi().call({
             app: this.options.app,
             api: this.options.api,
             args: args,
             method: this.options.apiMethod,
             scope: this,
+
+
             success: function(data) {
+                console.log('########99999999999999999999999999');
+                console.log(data);
                 _this.rawData = data;
                 if (data.items.length == 0) {
                     if (options && options.emptyDataHint) {
@@ -228,7 +233,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     if (this.selectableTrSelector) {
                         $node.find('tbody tr').each(function() {
                             var $tr = $(this);
-                            
+
                             if ($tr.hasClass(_this.selectableTrSelector)) {
                                 $tr.prepend('<td width="30"><input type="checkbox" class="xa-select" /></td>');
                             } else {
@@ -245,7 +250,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
 
                 //table不存在
                 this.$content.html($node);
-				
+
                 var multilineClass = this.$content.find('#multiline').attr('name');
                 if (multilineClass) {
                 	this.$content.find(multilineClass).dotdotdot();
@@ -346,7 +351,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                     */
                 }
                 // 扩展advanced_table.load方法
-                this.afterload();               
+                this.afterload();
             },
             error: function(resp) {
                 // W.getLoadingView().show();
@@ -643,7 +648,7 @@ W.registerUIRole('div[data-ui-role="advanced-table"]', function() {
     var $div = $(this);
     var app = $div.attr('data-app');
     var api = $div.attr('data-api');
-    var resource = $div.attr('data-resource');    
+    var resource = $div.attr('data-resource');
     if (resource) {
         api = resource;
     }
