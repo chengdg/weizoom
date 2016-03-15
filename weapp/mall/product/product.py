@@ -274,69 +274,70 @@ class ProductList(resource.Resource):
                         ids.remove(id_tmp)
 
         #团购
-        prev_shelve_type = models.Product.objects.get(
-            id=ids[0]).shelve_type
-        shelve_type = request.POST['shelve_type']
+        if ids:
+            prev_shelve_type = models.Product.objects.get(
+                id=ids[0]).shelve_type
+            shelve_type = request.POST['shelve_type']
 
-        is_deleted = False
-        if shelve_type == 'onshelf':
-            shelve_type = models.PRODUCT_SHELVE_TYPE_ON
-        elif shelve_type == 'offshelf':
-            shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
-            reason = utils.MALL_PRODUCT_OFF_SHELVE
-        elif shelve_type == 'recycled':
-            shelve_type = models.PRODUCT_SHELVE_TYPE_RECYCLED
-        elif shelve_type == 'delete':
-            is_deleted = True
-            reason = utils.MALL_PRODUCT_DELETED
+            is_deleted = False
+            if shelve_type == 'onshelf':
+                shelve_type = models.PRODUCT_SHELVE_TYPE_ON
+            elif shelve_type == 'offshelf':
+                shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
+                reason = utils.MALL_PRODUCT_OFF_SHELVE
+            elif shelve_type == 'recycled':
+                shelve_type = models.PRODUCT_SHELVE_TYPE_RECYCLED
+            elif shelve_type == 'delete':
+                is_deleted = True
+                reason = utils.MALL_PRODUCT_DELETED
 
-        products = models.Product.objects.filter(id__in=ids)
-        product_id2product = {}
-        for product in products:
-            product_id2product[product.id] = product
+            products = models.Product.objects.filter(id__in=ids)
+            product_id2product = {}
+            for product in products:
+                product_id2product[product.id] = product
 
 
 
-        if is_deleted:
-            products.update(is_deleted=True, display_index=0)
-        else:
-            # 更新商品上架状态以及商品排序
-            # 微众商城代码
-            # if request.manager.id == products[0].owner_id:
-            #     now = datetime.now()
-            #     if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-            #         products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
-            #     else:
-            #         #上架
-            #         products.update(shelve_type=shelve_type, display_index=0, update_time=now)
-            # else:
-            #     # 微众商城更新商户商品状态
-            #     products.update(weshop_status=shelve_type)
-
-            now = datetime.now()
-            if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+            if is_deleted:
+                products.update(is_deleted=True, display_index=0)
             else:
-                #上架
-                products.update(shelve_type=shelve_type, display_index=0, update_time=now)
-        is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
-        is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
+                # 更新商品上架状态以及商品排序
+                # 微众商城代码
+                # if request.manager.id == products[0].owner_id:
+                #     now = datetime.now()
+                #     if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+                #         products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
+                #     else:
+                #         #上架
+                #         products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                # else:
+                #     # 微众商城更新商户商品状态
+                #     products.update(weshop_status=shelve_type)
 
-        if (is_prev_shelve and is_not_sale) or is_deleted:
-            # 商品不再处于上架状态，发出product_not_offline signal
-            product_ids = [int(id) for id in ids]
-            mall_signals.products_not_online.send(
-                sender=models.Product,
-                product_ids=product_ids,
-                request=request
-            )
+                now = datetime.now()
+                if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                else:
+                    #上架
+                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+            is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
+            is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
-        # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
-            for id in ids:
-                utils.delete_weizoom_mall_sync_product(request, product_id2product[int(id)], reason)
-        if mall_type and is_deleted:
-            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
+            if (is_prev_shelve and is_not_sale) or is_deleted:
+                # 商品不再处于上架状态，发出product_not_offline signal
+                product_ids = [int(id) for id in ids]
+                mall_signals.products_not_online.send(
+                    sender=models.Product,
+                    product_ids=product_ids,
+                    request=request
+                )
+
+            # 供货商商品下架或者删除对应删除weizoom系列上架的商品
+            if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
+                for id in ids:
+                    utils.delete_weizoom_mall_sync_product(request, product_id2product[int(id)], reason)
+            if mall_type and is_deleted:
+                models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
 
         response = create_response(200)
         return response.get_response()
