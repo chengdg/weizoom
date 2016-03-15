@@ -12,6 +12,7 @@ from core.exceptionutil import unicode_full_stack
 from utils import url_helper
 import models as app_models
 from modules.member.models import Member
+from mall.order.util import cancel_group_buying
 
 COUNT_PER_PAGE = 20
 
@@ -125,9 +126,11 @@ class CancelUnpaidGroup(resource.Resource):
 		"""
 		group_relation_id = request.POST['group_relation_id']
 		member_id = request.POST['member_id']
+		order_id = request.POST['order_id']
 		try:
 			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,member_id=member_id,group_status=app_models.GROUP_NOT_START)
 			group_relation.delete()
+			cancel_group_buying(order_id)
 			response = create_response(200)
 		except:
 			response = create_response(500)

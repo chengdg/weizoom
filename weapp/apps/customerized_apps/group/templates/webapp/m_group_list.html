@@ -110,8 +110,11 @@
         display: inline-block;
         height: 100px;
         width: auto;
-        margin-left: 75px;
-        line-height: 100px;
+        margin-left: 80px;
+        line-height: 20px;
+        vertical-align: middle;
+        margin-top: 25px;
+        margin-right: 120px;
     }
     .xui-all_groups_can_join-slide .xui-listInner .wui-i-BtnBox{
         position: absolute;
@@ -324,11 +327,7 @@ function getDynamicData(recordId){
             if(data.errMsg == 'is_deleted'){
                 deletedRecord();
             }else{
-                if(data.errMsg == 'is_run_out'){
-                    openRunoutWin();
-                }else{
-                    wuiAlert(data.errMsg)
-                }
+                wuiAlert(data.errMsg)
             }
         }
     });
