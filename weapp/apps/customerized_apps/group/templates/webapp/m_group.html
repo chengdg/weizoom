@@ -437,7 +437,8 @@
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');
-            //todo 跳转到订单编辑页面
+            var data_href = "http://"+settings_domain+"/mall/order_detail/?woid="+W.webappOwnerId+"&order_id="+order_id;
+            window.location.href = data_href;
         });
         $('.wa-i-btn-groupMsg-no').click(function(){
             W.getApi().call({
