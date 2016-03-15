@@ -1456,10 +1456,13 @@ class GroupProductList(resource.Resource):
         # 筛选出单规格的商品id
         standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=request.manager, name='standard', is_deleted=False)]
         promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=request.manager, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
-        has_promotion_product_ids = [relation.product_id for relation in promotion_model.objects.filter(promotion_id__in=promotion_ids)]
+        has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
+        woid = request.webapp_owner_id
+        pids = utils.get_pids(woid)
+        if pids:
+            has_promotion_product_ids.extend(pids)
 
         group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
-
         products = models.Product.objects.filter(
                 owner=request.manager,
                 id__in=group_product_ids,
@@ -1468,9 +1471,24 @@ class GroupProductList(resource.Resource):
                 is_member_product=False,
                 stocks=0
                 )
-
+        print "products",products
         if product_name:
-            products.filter(name__contains=product_name)
+            products = products.filter(name__contains=product_name)
+
+        #处理排序
+        sort_attr = request.GET.get('sort_attr', None)
+        if not sort_attr:
+            sort_attr = '-display_index'
+
+
+        if '-' in sort_attr:
+            sort_attr = sort_attr.replace('-', '')
+            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
+            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
+            sort_attr = '-' + sort_attr
+        else:
+            products = sorted(products, key=operator.attrgetter('id'))
+            products = sorted(products, key=operator.attrgetter(sort_attr))
 
         models.Product.fill_details(request.manager, products, {
             "with_product_model": True,
@@ -1488,7 +1506,8 @@ class GroupProductList(resource.Resource):
             products,
             cur_page,
             count_per_page,
-            query_string=request.META['QUERY_STRING'])
+            # query_string=request.META['QUERY_STRING'],
+            )
 
         #构造返回数据
         items = []
