@@ -6,6 +6,24 @@
             height: 60px;
             width: 60px;
         }
+
+        td .xui-i-status{
+        	font-weight: bold !important;
+        }
+        .xui-i-gbtn_normal{
+        	color:#343434;
+        }
+        .xui-i-gbtn_success{
+        	color:#018000;
+        }
+        .xui-i-gbtn_warnning{
+        	color:#D00405;
+        }
+
+	    table.xui-groups tr td .xui-time_start,table tr td .xui-time_end{
+	    	width: 85px;
+	    	display: inline-block ;
+	    }
     </style>
 {% block content-panel %}
 <div class="xui-GroupParticipancesAppPage xui-appPage-commonStyle">
@@ -111,16 +129,50 @@
 				<td>
 					${item.group_leader}
 				</td>
-				<td>
-					${item.group_days}
+				<td >
+					{{if (item.rest_days <= 3)}}
+						剩余：${item.rest_days} 天
+					{{else}}
+					 <div class="xui-time_start" style="display: inline-block ;">
+					 	<div class="xui-i-time_date">${item.start_time_date}</div>
+					 	<div class="xui-i-time_time">${item.start_time_time}</div>
+					 </div>
+					 -
+					 <div class="xui-time_end" style="display: inline-block ;">
+					 	<div class="xui-i-time_date">${item.end_time_date}</div>
+					 	<div class="xui-i-time_time">${item.end_time_time}</div>
+					 </div>
+					 {{/if}}
 				</td>
-				<td>
-					<div class="xui-i-status">
-					${item.status}
-					</div>
+				<td style="font-weight: bold;">
+					{{if (item.status === '团购未生效')}}
+						<div class="xui-i-status xui-i-gbtn_normal" style="color:#343434;">
+						未生效
+						</div>
+					{{/if}}
+					{{if (item.status === '团购进行中')}}
+						<div class="xui-i-status xui-i-gbtn_normal" style="color:#343434;">
+						进行中
+						</div>
+					{{/if}}
+					{{if (item.status === '团购成功')}}
+						<div class="xui-i-status xui-i-gbtn_success" style="color:#018000;">
+						成功
+						</div>
+					{{/if}}
+					{{if (item.status === '团购失败')}}
+						<div class="xui-i-status xui-i-gbtn_warnning" style="color:#D00405;">
+						退款中
+						</div>
+					{{/if}}
+					{{if (item.status === '未知')}}
+						<div class="xui-i-status xui-i-gbtn_warnning" style="color:#D00405;">
+						未知
+						</div>
+					{{/if}}
 				</td>
-				<td>
-					${item.members_count}<a href="javascript:void(0);" class="ml5 xa-viewData">查看成员${item.id}</a>
+				<td style="font-weight: bold;">
+					${item.members_count}&nbsp&nbsp&nbsp<a href="javascript:void(0);" class="ml5 xa-viewData">查看成员</a>
 				</td>
 			</tr>
 			{{/each}}

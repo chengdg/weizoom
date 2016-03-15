@@ -824,7 +824,7 @@ else:
 from weapp import hack_django
 hack_django.hack(DJANGO_HACK_PARAMS)
 
-if MODE == 'develop' or MODE == 'test':
-    APPS_H5_DOMAIN = 'h5.red.weapp.weizzz.com'
-else:
-    APPS_H5_DOMAIN = 'h5.weapp.com'
+# if MODE == 'develop' or MODE == 'test':
+#     APPS_H5_DOMAIN = 'h5.red.weapp.weizzz.com'
+# else:
+APPS_H5_DOMAIN = 'h5.weapp.com'
