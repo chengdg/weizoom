@@ -168,6 +168,8 @@ class OrderAction(resource.Resource):
 			else:
 				group_record.update(dec__grouped_number=1,pop__grouped_member_ids=member_id)
 			group_detail.delete()
+		elif action == 'buy': #'buy'(下单)
+			group_detail.update(set__order_id=order_id)
 
 		#如果团购人满，并且全部支付成功，则团购成功
 		if int(group_record.group_type) == group_record.grouped_number:
