@@ -8,7 +8,7 @@ Feature:在售商品列表-团购活动
 	3、团购成功的订单，在订单完成后计算商品的销量
 	"""
 Background:
-	Given 重置weapp的bdd环境
+	
 	Given jobs登录系统
 	When jobs开通使用微众卡权限
 	And jobs已添加支付方式
@@ -23,19 +23,20 @@ Background:
 		"""
 	Given jobs已创建微众卡
 		"""
-		[{
+		{
 			"cards": [{
 				"id": "0000001",
 				"password": "1234567",
 				"status": "未激活",
-				"price": 50
+				"price": 50.00
 			},{
-			"cards": [{
+
 				"id": "0000002",
 				"password": "2234567",
 				"status": "未激活",
-				"price": 200
-		}]
+				"price": 200.00
+			}]
+		}
 		"""
 	Given jobs已添加商品
 		"""
