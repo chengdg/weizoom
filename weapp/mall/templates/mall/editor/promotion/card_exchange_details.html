@@ -17,6 +17,9 @@
     .xui-thead{
     	background: #C8D1E4;
     }
+    label{
+    	font-weight: normal;
+    }
     input{
     	    width: 150px;
 		    line-height: 24px;
@@ -46,8 +49,14 @@
     <div>
     	<div class="xui-filterPanel">
         	<form>
-	        	<span class="mr30">卡号：<input type="text" name="cardNumber" class="xui-cardNumber xa-cardNumber"></span>
-	        	<span class="mr50">使用人：<input type="text" name="cardUser" class="xui-cardUser xa-cardUser"></span>
+	        	<span class="mr30">
+		        	<label>卡号：</label>
+		        	<input type="text" name="cardNumber" class="xui-cardNumber xa-cardNumber">
+	        	</span>
+	        	<span class="mr50">
+		        	<label>使用人：</label>
+		        	<input type="text" name="cardUser" class="xui-cardUser xa-cardUser">
+	        	</span>
 	        	<a class="btn btn-primary mr20 xa-search">查 询</a>
 	        	<a class="btn btn-default mr20 xa-reset">重 置</a>
 	        	<a class="btn btn-default xa-export">导 出</a>
