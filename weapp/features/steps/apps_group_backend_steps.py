@@ -625,6 +625,67 @@ def __Search_Powerme(context,search_dic):
 #   return search_response
 
 
+@when(u'{user}新建团购活动时设置参与活动的商品查询条件')
+def step_impl(context,user):
+    text_list = json.loads(context.text)
+    search_name = text_list['name']
+    rec_product_url ="/mall2/api/group_product_list/?design_mode=0&project_id=new_app:group:0&version=1&name=&count_per_page=5&page=1&enable_paginate=1"
+    rec_product_response = context.client.get(rec_product_url)
+    rec_product_list = json.loads(rec_product_response.content)['data']['items']#[::-1]
+    context.rec_product_list = rec_product_list
+
+@then(u'{user}获得团购活动可以访问的已上架商品列表')
+def step_impl(context,user):
+    expected = []
+    if context.table:
+        for row in context.table:
+            cur_p = row.as_dict()
+            expected.append(cur_p)
+
+    actual = []
+    if context.rec_product_list:
+        for product in context.rec_product_list:
+            tmp_product = OrderedDict()
+            tmp_product['name'] = product['name']
+            tmp_product['price'] = product['display_price']
+            tmp_product['stocks'] = product['stocks']
+            tmp_product['have_promotion'] = ""
+            tmp_product['actions'] = u"选取"
+            actual.append(tmp_product)
+
+    print("expected: {}".format(expected))
+    print("actual_data: {}".format(actual))
+    bdd_util.assert_list(expected, actual)
+
+  # if context.table:
+  #     for row in context.table:
+  #         cur_p = row.as_dict()
+  #         if cur_p[u'parti_time']:
+  #             cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
+  #         expected.append(cur_p)
+#   actual = []
+#   print(participances)
+#   for p in participances:
+#       p_dict = OrderedDict()
+#       p_dict[u"rank"] = p['ranking']
+#       p_dict[u"member_name"] = p['username']
+#       p_dict[u"group_value"] = p['power']
+#       p_dict[u"parti_time"] = bdd_util.get_date_str(p['created_at'])
+#       actual.append((p_dict))
+#   print("actual_data: {}".format(actual))
+#   expected = []
+#   if context.table:
+#       for row in context.table:
+#           cur_p = row.as_dict()
+#           if cur_p[u'parti_time']:
+#               cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
+#           expected.append(cur_p)
+#   else:
+#       expected = json.loads(context.text)
+#   print("expected: {}".format(expected))
+
+#   bdd_util.assert_list(expected, actual)
+
 
 # @when(u'{user}新建团购活动')
 # def create_RedPacket(context,user):

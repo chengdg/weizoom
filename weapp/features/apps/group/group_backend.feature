@@ -106,7 +106,7 @@ Background:
 			"swipe_images":[{
 				"url":"/standard_static/test_resource_img/hangzhou2.jpg"
 			}],
-			"model":"models": {
+			"model":{"models": {
 					"standard": {
 						"price": 12.0,
 						"weight": 2.5,
@@ -229,7 +229,7 @@ Background:
 		#设置酥烧饼为买赠商品
 		"""
 		[{
-			"name": "酥烧饼买一赠一活动
+			"name": "酥烧饼买一赠一活动",
 			"start_date": "今天",
 			"end_date": "1天后",
 			"product_name": "酥烧饼",
@@ -252,10 +252,10 @@ Scenario:1 新建团购活动页面,查询商品列表
 			"name":""
 		}
 		"""
-	Then jobs新建团购活动时能获得已上架商品列表
+	Then job获得团购活动可以访问的已上架商品列表
 		|  name   | price | stocks | have_promotion | actions |
-		| 酱牛肉  | 50    |  无限  |                |  选取   |
 		| 花生酱  | 12.5  |  200   |                |  选取   |
+		| 酱牛肉  | 50    |  无限  |                |  选取   |
 
 
 @mall2 @apps_group @apps_group_backend
