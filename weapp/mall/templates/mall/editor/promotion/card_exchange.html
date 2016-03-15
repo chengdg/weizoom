@@ -393,7 +393,6 @@ $(document).ready(function() {
 			    args: stockData,
 			    scope: this,
 			    success: function(data) {
-                	console.log('success');
                 	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
 			    },
 			    error: function(resp) {
@@ -427,7 +426,6 @@ $(document).ready(function() {
 			    args: stockData,
 			    scope: this,
 			    success: function(data) {
-                	console.log('success');
                 	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
 			    },
 			    error: function(resp) {
