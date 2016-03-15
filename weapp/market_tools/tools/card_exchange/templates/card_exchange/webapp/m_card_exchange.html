@@ -104,7 +104,7 @@
 		text-align: center;
 		margin-right: 10px;
 		margin-bottom: 10px;
-		font-size: 1.7rem;
+		font-size: 1.8rem;
 		color: #666666;
 		font-weight: 800;
 	}
@@ -132,7 +132,7 @@
 		font-size: 1rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose p{
-		font-size: 1rem;font-weight: 400;
+		font-size: 1.2rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-exchange-confirm,.xui-exchange-form .xui-exchange-abolish{
 		margin-top: 20px;
@@ -230,7 +230,7 @@
 		margin-left: 20%;
 		background-color: #0091d5;
 		border: none;
-		border-radius: 8px;
+		border-radius: 10px;
 		color: #fff;
 		font-size: 1rem;
 		line-height: 30px;
@@ -265,6 +265,9 @@
 	.xui-alert-getCode .xui-alert-mask .xui-alert-code .xui-btnsubmit{
 		background-color: #ee3715;
 		color: #fff;
+	}
+	.error{
+		color: #ee3715;
 	}
 </style>
 {% endblock %}
@@ -327,8 +330,12 @@
 		<div class="xui-alert-exchange xa-alert-exchange hidden">
 			<div class="xui-alert-mask">
 				<div class="xui-alert-reminder">
-					<p class="xui-reminder-title">兑换成功</p>
-					<p>微众卡将存到个人中心——微众卡余额查询中，请注意查收 ！</p>
+					<p class="xui-reminder-title xa-reminder-title">
+						兑换成功
+					</p>
+					<p class="xa-reminder-detail">
+						微众卡将存到个人中心--微众卡余额查询中，请注意查收！
+					</p>
 					<button class="xa-exchanged">知道了</button>
 					<a href="javascript:void(0)" class="xui-alert-close xa-alert-close">x</a>
 				</div>
@@ -378,7 +385,7 @@
 						$('.xa-alert-getCode').removeClass('hidden');
 					},
 					error: function(data){
-						console.log(data)
+						console.log(data);
 						if (data.data && data.data.msg){
 							$('body').alert({
 								isShow: true,
@@ -387,11 +394,11 @@
 								speed: 2000
 							});
 						}
-						$('.xa-getCode').removeAttr('disabled').css('background-color', '#067de2');
+						$('.xa-getCode').removeAttr('disabled').css('background-color', '#ee3715');
 					}
 				});
 			} else {
-				$('.xa-getCode').removeAttr('disabled').css('background-color', '#067de2');
+				$('.xa-getCode').removeAttr('disabled').css('background-color', '#ee3715');
 			}
 		});
 		$(".xa-phoneCode-submit").click(function(){
@@ -417,7 +424,8 @@
 							info: '绑定成功',
 							isSlide: true,
 							speed: 3000
-						})
+						});
+						$('.xa-exchange-submit').attr('data-bind', 'True');
 						$('.xa-alert-getCode').addClass('hidden');
 						$('.xa-getCode').addClass('hidden');
 						$('.xa-phoneNum').attr('disabled', 'true');
@@ -435,6 +443,7 @@
 		});
 		$(".xa-btn-abolish").click(function(){
 			$('.xa-alert-getCode').addClass('hidden');
+			$('.xa-getCode').removeAttr('disabled').css('background-color', '#ee3715');
 		});
 		$('.xa-exchange-choose').click(function(){
 			if($(this).find('.xa-exchange-mask').length>0){
@@ -449,9 +458,18 @@
 		});
 		$(".xa-exchange-submit").click(function(){
 			var text = $(this).text();
-			var isBind=$('xa-exchange-submit').attr('data-bind');
-//			if(isBind){
-				if($('.xa-exchange-choose').hasClass('active') && text != '已兑换'){
+			var isBind=$('.xa-exchange-submit').attr('data-bind') == "False"? false : true;
+			if(!isBind){
+				$('body').alert({
+					isShow: true,
+					info: '请绑定手机号',
+					isSlide: true,
+					speed: 2000
+				});
+				return false;
+			}
+
+			if($('.xa-exchange-choose').hasClass('active') && text != '已兑换'){
 				var current_integral=$('.xa-current-integral').text();
 				var need_integral=$('.xa-exchange-choose.active .xa-integral').text();
 				var start_num=$('.xa-exchange-choose.active').attr('data-start');
@@ -472,37 +490,28 @@
 							end_num:end_num
 						}),
 						success: function(data) {
+							$('.xa-reminder-title').html('兑换成功').removeClass('error');
+							$('.xa-reminder-detail').html('微众卡将存到个人中心--微众卡余额查询中，请注意查收！');
+							$('.xa-exchanged').css('background-color', '#0091d5');
 							$('.xa-alert-exchange').removeClass('hidden');
 							$('.xa-exchange-submit').text('已兑换');
 							$('.xa-current-integral').text(data);
 						},
 						error: function(data){
-							$('body').alert({
-								isShow: true,
-								info: data.errMsg || '兑换失败',
-								isSlide: true,
-								speed: 2000
-							})
+							$('.xa-reminder-title').html('兑换失败').addClass('error');
+							$('.xa-exchanged').css('background-color', '#ee3715');
+							$('.xa-reminder-detail').html(data.errMsg || '兑换失败');
+							$('.xa-alert-exchange').removeClass('hidden');
 						}
 					});
-//				}else{
-//					$('body').alert({
-//						isShow: true,
-//						info: '没有足够的积分',
-//						isSlide: true,
-//						speed: 2000
-//					})
-//				}
-				
+				}else{
+					$('.xa-reminder-title').html('兑换失败').addClass('error');
+					$('.xa-reminder-detail').html('没有足够的积分');
+					$('.xa-exchanged').css('background-color', '#ee3715');
+					$('.xa-alert-exchange').removeClass('hidden');
+				}
 			}
-			}else{
-				$('body').alert({
-					isShow: true,
-					info: '请绑定手机号',
-					isSlide: true,
-					speed: 2000
-				})
-			}
+
 		});
 		$(".xa-exchanged").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');
