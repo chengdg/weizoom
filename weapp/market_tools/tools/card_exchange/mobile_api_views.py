@@ -7,6 +7,7 @@ from webapp.modules.user_center import request_api_util
 from market_tools.tools.weizoom_card import models as card_models
 from mall.promotion import models as promotion_models
 from mall.promotion import card_exchange
+from modules.member.models import MemberInfo,Member
 
 def exchange_card(request):
 	"""
@@ -14,9 +15,13 @@ def exchange_card(request):
 	@param request:
 	@return:
 	"""
-	print '222###############111111111111'
 	s_num = request.POST.get('s_num','')
 	end_num = request.POST.get('end_num','')
+	has_integral = request.POST.get('has_integral','')
+	need_integral = request.POST.get('need_integral','')
+
+	request.member.integral = int(has_integral) - int(need_integral)
+	request.member.save()
 	owner_id = request.webapp_owner_id
 
 	card_ids_list = card_exchange.get_can_exchange_cards_list(s_num,end_num,owner_id)
@@ -33,6 +38,7 @@ def exchange_card(request):
  	)
 
 	response = create_response(200)
+	response.data = request.member.integral
 	return response.get_response()
 
 def send_captcha(request):

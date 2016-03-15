@@ -9,6 +9,7 @@ from django.shortcuts import render_to_response
 
 from mall.promotion.card_exchange import CardExchange
 from modules.member.models import MemberInfo
+from mall.promotion import models as promotion_models
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
@@ -35,11 +36,16 @@ def get_page(request):
 
 	card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
 
+	cur_user_has_exchange_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
+	user_has_exchange_card = False
+	if cur_user_has_exchange_card.count() > 0 :
+		user_has_exchange_card = True
 	c = RequestContext(request, {
 		'card_exchange_rule': card_exchange_dic,
 		'member_is_bind': member_is_bind,
 		'member_integral': member_integral,
-		'phone_number': phone_number
+		'phone_number': phone_number,
+		'user_has_exchange_card': user_has_exchange_card
 	})
 
 	return render_to_response('%s/card_exchange/webapp/m_card_exchange.html' % TEMPLATE_DIR, c)

@@ -296,7 +296,7 @@
 					{% for prize in card_exchange_rule.prize %}
 					<div class="xui-exchange-choose xa-exchange-choose" data-start="{{prize.s_num}}" data-end="{{prize.end_num}}">
 						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
-						<p>消耗{{prize.integral}}积分</p>
+						<p>消耗<span class='xa-integral'>{{prize.integral}}</span>积分</p>
 						{% if prize.count == 0 %}
 						<div class="xui-exchange-mask xa-exchange-mask">
 							<p class="xui-exchange-runout">已抢光</p>
@@ -307,7 +307,7 @@
 				</div>
 			</div>
 			<div class="xui-form-control xui-submit-btn">
-				<a class="xui-exchange-confirm xa-exchange-submit">兑换</a>
+				<a class="xui-exchange-confirm xa-exchange-submit">{% if user_has_exchange_card %}已兑换{% else %}兑换{% endif %}</a>
 				<a class="xui-exchange-abolish">取消</a>
 			</div>
 		</form>
@@ -415,7 +415,9 @@
 							isSlide: true,
 							speed: 3000
 						})
-//						$('.xa-alert-getCode').addClass('hidden');
+						$('.xa-alert-getCode').addClass('hidden');
+						$('.xa-getCode').addClass('hidden');
+						$('.xa-phoneNum').attr('disabled', 'true');
 					},
 					error: function(data){
 						$('body').alert({
@@ -443,37 +445,50 @@
 			}
 		});
 		$(".xa-exchange-submit").click(function(){
-			if($('.xa-exchange-choose').hasClass('active')){
-				var prize_money=$('.xa-exchange-choose.active>.xa-exchange-money').text();
+			var text = $(this).text();
+			if($('.xa-exchange-choose').hasClass('active') && text != '已兑换'){
 				var current_integral=$('.xa-current-integral').text();
+				var need_integral=$('.xa-exchange-choose.active .xa-integral').text();
 				var start_num=$('.xa-exchange-choose.active').attr('data-start');
 				var end_num=$('.xa-exchange-choose.active').attr('data-end');
-				W.getApi().call({
-					app: 'webapp',
-					api: 'project_api/call',
-					method: 'post',
-					args: _.extend({
-						woid: W.webappOwnerId,
-						project_id: W.projectId,
-						module: 'card_exchange',
-						target_api: 'card/exchange',
-						money: prize_money,
-						integral: current_integral,
-						s_num:start_num,
-						end_num:end_num
-					}),
-					success: function(data) {
-						$('.xa-alert-exchange').removeClass('hidden');
-					},
-					error: function(data){
-						$('body').alert({
-							isShow: true,
-							info: '兑换失败',
-							isSlide: true,
-							speed: 2000
-						})
-					}
-				});
+				if(parseInt(current_integral) > parseInt(need_integral) || parseInt(current_integral) == parseInt(need_integral)){
+					W.getApi().call({
+						app: 'webapp',
+						api: 'project_api/call',
+						method: 'post',
+						args: _.extend({
+							woid: W.webappOwnerId,
+							project_id: W.projectId,
+							module: 'card_exchange',
+							target_api: 'card/exchange',
+							has_integral: current_integral,
+							need_integral: need_integral,
+							s_num:start_num,
+							end_num:end_num
+						}),
+						success: function(data) {
+							$('.xa-alert-exchange').removeClass('hidden');
+							$('.xa-exchange-submit').text('已兑换');
+							$('.xa-current-integral').text(data);
+						},
+						error: function(data){
+							$('body').alert({
+								isShow: true,
+								info: '兑换失败',
+								isSlide: true,
+								speed: 2000
+							})
+						}
+					});
+				}else{
+					$('body').alert({
+						isShow: true,
+						info: '没有足够的积分',
+						isSlide: true,
+						speed: 2000
+					})
+				}
+				
 			}
 		});
 		$(".xa-exchanged").click(function(){
