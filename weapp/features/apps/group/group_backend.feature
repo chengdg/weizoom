@@ -120,7 +120,7 @@ Background:
 				"type": "货到付款"
 			}],
 			"postage": "免运费",
-			"distribution_time":"off"	
+			"distribution_time":"off"
 		},{
 			"name": "包子",
 			"is_member_product": "on",
@@ -256,7 +256,7 @@ Scenario:1 新建团购活动页面,查询商品列表
 		|  name   | price | stocks | have_promotion | actions |
 		| 酱牛肉  | 50    |  无限  |                |  选取   |
 		| 花生酱  | 12.5  |  200   |                |  选取   |
-	
+
 
 @mall2 @apps_group @apps_group_backend
 Scenario:2 新建未开启,已结束团购活动
@@ -317,7 +317,7 @@ Scenario:2 新建未开启,已结束团购活动
 			"status":"已结束",
 			"start_date":"3天前",
 			"end_date":"昨天",
-			"actions": ["参团详情","删除"]		
+			"actions": ["参团详情","删除"]
 		}]
 		"""
 
