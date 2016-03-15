@@ -1,6 +1,9 @@
 {% extends "content_base_v2.html" %}
 {% block css %}
 	<style type="text/css">
+		label{
+			font-weight: normal;
+		}
 		.xui-exchangeTable table tr td{
 			text-align: left;
 			padding-left: 20px;
@@ -146,17 +149,20 @@
 		        		    {% for item in card_exchange_dic.prize%}
 		        		    <div class="xui-i-put">
 			        		    <div>
-			        		    	使用积分：<input type="text" class="xa-integral xui-i-integral xui-hide" name="integral" readonly=true value="{{item.integral}}">
+			        		    	<label>使用积分：</label>
+			        		    	<input type="text" class="xa-integral xui-i-integral xui-hide" name="integral" readonly=true value="{{item.integral}}">
 			        		    	<span class="xa-exchangeSpan">{{item.integral}}</span>
 			        		    </div>
 			                    <div>
 			                    	<div class="xui-money">
-				                    	兑换微众卡：<input type="text" class="xui-i-money xa-money xui-hide" name="money" readonly=true value="{{item.money}}">
+				                    	<label>兑换微众卡：</label>
+				                    	<input type="text" class="xui-i-money xa-money xui-hide" name="money" readonly=true value="{{item.money}}">
 				                    	<span class="xa-exchangeSpan">{{item.money}}</span>
 				                    	<span>元</span>
 				                    </div>
 				                    <div class="xui-num xa-num">
-						                号段：<input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.s_num}}">
+						                <label>号段：</label>
+						                <input type="text" class="xui-i-num xa-snum xui-hide" name="snum" readonly=true value="{{item.s_num}}">
 						                <span class="xa-exchangeSpan">{{item.s_num}}</span>
 						                <span class="ml5 mr5">-</span>
 						                <input type="text" class="xui-i-num xa-endnum xui-hide" name="endnum" readonly=true value="{{item.end_num}}">	
@@ -206,17 +212,20 @@
 		        		<div class="xui-i-exchange xa-exchange">
 		        		    <div class="xui-i-put">
 			        		    <div>
-			        		    	使用积分：<input type="text" class="xa-integral xui-i-integral" name="integral">
+			        		    	<label>使用积分：</label>
+			        		    	<input type="text" class="xa-integral xui-i-integral" name="integral">
 			        		    	<span class="xa-exchangeSpan"></span>
 			        		    </div>
 			                    <div>
 			                        <div class="xui-money">
-				                    	兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
+				                    	<label>兑换微众卡：</label>
+				                    	<input type="text" class="xui-i-money xa-money" name="money">
 				                    	<span class="xa-exchangeSpan"></span>
 				                    	<span>元</span>
 				                    </div>
 				                    <div class="xui-num xa-num">
-						                号段：<input type="text" class="xui-i-num xa-snum" name="snum">
+						                <label>号段：</label>
+						                <input type="text" class="xui-i-num xa-snum" name="snum">
 						                <span class="xa-exchangeSpan"></span>
 						                <span class="ml5 mr5">-</span>
 						                <input type="text" class="xui-i-num xa-endnum" name="endnum">	
@@ -251,17 +260,20 @@
 <script type="text/x-jquery-tmpl" id="exchange-input">
 <div class="xui-i-put">
 	<div>
-		使用积分：<input type="text" class="xa-integral xui-i-integral" name="integral">
+		<label>使用积分：</label>
+		<input type="text" class="xa-integral xui-i-integral" name="integral">
 		<span class="xa-exchangeSpan"></span>
 	</div>
 	<div>
 		<div class="xui-money">
-			兑换微众卡：<input type="text" class="xui-i-money xa-money" name="money">
+			<label>兑换微众卡：</label>
+			<input type="text" class="xui-i-money xa-money" name="money">
 			<span class="xa-exchangeSpan"></span>
 			<span class=>元</span>
 		</div>
 		<div class="xui-num xa-num">
-			号段：<input type="text" class="xui-i-num xa-snum" name="snum">
+			<label>号段：</label>
+			<input type="text" class="xui-i-num xa-snum" name="snum">
 			<span class="xa-exchangeSpan"></span>
 			<span class="ml5 mr5">-</span>
 			<input type="text" class="xui-i-num xa-endnum" name="endnum">	
