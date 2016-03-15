@@ -145,6 +145,7 @@
     var group_relation_id = {% if group_relation_id %}'{{group_relation_id}}'{% else %}''{% endif %};
     var product_id = {% if product_id %}'{{product_id}}'{% else %}''{% endif %};
     var settings_domain = '{{settings_domain}}';
+    console.log('settings_domain is:',settings_domain);
     var product_original_price = 0;
     var product_group_price = 0;
 	$(function(){
