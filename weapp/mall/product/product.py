@@ -783,7 +783,7 @@ class Product(resource.Resource):
         #增加团购判断接口
         if product:
             woid = request.webapp_owner_id
-            product.is_group_buyinproductg = product_is_group(product.id, woid)
+            product.is_group_buying = product_is_group(product.id, woid)
 
 
         c = RequestContext(request, {
