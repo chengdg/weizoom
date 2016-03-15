@@ -899,6 +899,13 @@ def get_orders_response(request, is_refund=False):
     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
 
     response = create_response(200)
+    if query_dict.has_key('status'):
+        current_status_value = query_dict['status']
+    elif query_dict.has_key('status__in'):
+        current_status_value = ORDER_STATUS_REFUNDING
+    else:
+        current_status_value = -1
+
     response.data = {
         'items': items,
         'pageinfo': paginator.to_dict(pageinfo),
@@ -907,7 +914,7 @@ def get_orders_response(request, is_refund=False):
         'sortAttr': sort_attr,
         'existed_pay_interfaces': existed_pay_interfaces,
         'order_return_count': order_return_count,
-        'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
+        'current_status_value': current_status_value,
         'is_refund': is_refund,
         'mall_type': mall_type
     }
@@ -1269,6 +1276,9 @@ def __get_select_params(request):
     if len(order_type) and order_type != '-1':
         query_dict['order_type'] = int(order_type)
 
+    if query_dict.has_key('status') and query_dict['status'] == 6:
+        query_dict['status__in'] = [ORDER_STATUS_REFUNDING, ORDER_STATUS_GROUP_REFUNDING]
+        query_dict.pop('status')
      # 时间区间
     try:
         date_interval = request.GET.get('date_interval', '')
@@ -1616,6 +1626,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
 
 def update_order_status_by_group_status(group_id, status, order_ids=None):
+    # TODO 退款
     if status == 'success':
         group_status = GROUP_STATUS_OK
         order_status = ORDER_STATUS_NOT
@@ -1638,3 +1649,9 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'return_pay', order)
             order.status = ORDER_STATUS_GROUP_REFUNDING
             order.save()
+
+def cancel_group_buying(order_id):
+    order = Order.objects.get(order_id=order_id)
+    user = UserProfile.objects.filter(Order.webapp_id).user
+    from mall.module_api import update_order_status
+    update_order_status(user, 'cancel', order)
