@@ -781,8 +781,9 @@ class Product(resource.Resource):
         is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
 
         #增加团购判断接口
-        woid = request.webapp_owner_id
-        product.is_group_buying = product_is_group(product.id, woid)
+        if product:
+            woid = request.webapp_owner_id
+            product.is_group_buyinproductg = product_is_group(product.id, woid)
 
 
         c = RequestContext(request, {
@@ -1462,7 +1463,10 @@ class GroupProductList(resource.Resource):
                 owner=request.manager,
                 id__in=group_product_ids,
                 shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
-                is_deleted=False)
+                is_deleted=False,
+                is_member_product=False,
+                stocks=0
+                )
 
         if product_name:
             products.filter(name__contains=product_name)
