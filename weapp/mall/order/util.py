@@ -953,10 +953,9 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     orders = belong_to(webapp_id)
 
     # orders = belong_to(webapp_id)
-
     group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
     group_order_ids = [r.order_id for r in group_order_relations]
-    if query_dict.get('order_type') and query_dict['order_type'] == '2' and not mall_type:
+    if query_dict.get('order_type') and query_dict['order_type'] == 2 and not mall_type:
         orders = orders.filter(order_id__in=group_order_ids)
 
     if is_refund:
