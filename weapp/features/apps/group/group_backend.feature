@@ -490,38 +490,26 @@ Scenario:5 删除已结束团购活动
 			"start_date":"今天",
 			"end_date":"明天",
 			"actions": ["参团详情","编辑","开启"]
-		}]
-		"""
-	When jobs编辑"团购活动4"
-		"""
-		[{
-			"group_name":"团购活动5",
-			"start_time":"今天",
-			"end_time":"明天",
-			"product_name":"花生酱",
-			"group_dict":[{
-					"group_type":5,
-					"group_day":1,
-					"group_price":10
-			},{
-					"group_type":10,
-					"group_day":2,
-					"group_price":8
-			}]
-			"ship_date":20,
-			"product_counts":200,
-			"material_image":"5.jpg",
-			"share_description":"团购分享描述"
-		}]
-		"""
-	Then jobs获得团购活动列表
-		"""
-		[{
+		},{
 			"name":"团购活动5",
 			"opengroup_num":"",
 			"consumer_num":"",
 			"visitor_num":"",
-			"status":"未开始",
+			"status":"已结束",
+			"start_date":"2天前",
+			"end_date":"昨天",
+			"actions": ["参团详情","删除"]
+		}]
+		"""
+	When jobs删除"团购活动5"
+	Then jobs获得团购活动列表
+		"""
+		[{
+			"name":"团购活动6",
+			"opengroup_num":"",
+			"consumer_num":"",
+			"visitor_num":"",
+			"status":"未开启",
 			"start_date":"今天",
 			"end_date":"明天",
 			"actions": ["参团详情","编辑","开启"]
