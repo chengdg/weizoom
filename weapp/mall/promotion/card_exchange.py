@@ -279,7 +279,7 @@ def get_can_exchange_cards_list(s_num,end_num,owner_id):
 	if s_card_id > end_card_id:
 		return []
 	card_range_list = [i for i in range(s_card_id,end_card_id+1)]
-	card_id2ruleid = {c.id: c.weizoom_card_rule_id for c in card_models.WeizoomCard.objects.filter(id__in=card_range_list)}
+	card_id2ruleid = {c.id: c.weizoom_card_rule_id for c in cards.filter(id__in=card_range_list)}
 	card_rule_ids = card_id2ruleid.values()
 	
 	belong_card_rules = card_models.WeizoomCardRule.objects.filter(card_attr = card_models.WEIZOOM_CARD_SPECIAL,id__in=card_rule_ids)

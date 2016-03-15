@@ -50,12 +50,23 @@ def get_weizoom_card_login(request):
 
 def get_weizoom_card_change_money(request):
 	card_id = request.GET.get('card_id', -1)
-
+	weizoom_card_orders_list = []
+	member_id = request.member.id
+	member_has_card = promotion_models.CardHasExchanged.objects.filter(card_id = card_id,owner_id = member_id)
+	if member_has_card.count() > 0 :
+		member_has_card = member_has_card[0]
+		weizoom_card_orders_list.append({
+			'created_at': member_has_card.created_at,
+			'money': '%.2f' % WeizoomCard.objects.get(id=card_id).money,
+			'product_name': u'兑换平台',
+			'event_type': u'积分兑换'
+		})
+		
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	# jz 2015-10-20
 	# auth_key = request.COOKIES[core_setting.WEIZOOM_CARD_AUTH_KEY]
-	# if WeizoomCard.objects.filter(id=card_id).count() > 0 and WeizoomCardUsedAuthKey.is_can_pay(auth_key, card_id) and integral_each_yuan:
-	weizoom_card_orders_list = []
+	# if WeizoomCard.objects.filter(id=card_id).count() > 0 and WeizoomCardUsedAuthKey.is_can_pay(auth_key, card_id) and integral_each_yuan:	
+
 	if WeizoomCard.objects.filter(id=card_id).count() > 0 and integral_each_yuan:
 		weizoom_card = WeizoomCard.objects.get(id=card_id)
 		weizoom_card_orders = WeizoomCardHasOrder.objects.filter(card_id = card_id).exclude(order_id__in = [-1]).order_by('-created_at')
@@ -75,7 +86,8 @@ def get_weizoom_card_change_money(request):
 				'product_name': product_name_str,
 				'event_type': event_type
 			})
-	else:
+
+	if len(weizoom_card_orders_list) <= 0:
 		c = RequestContext(request, {
 			'page_title': u'微众卡',
 			'is_hide_weixin_option_menu': True
