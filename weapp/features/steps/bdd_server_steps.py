@@ -10,6 +10,8 @@ from wsgiref.util import setup_testing_defaults
 from cgi import parse_qs, escape
 
 from behave import *
+
+from features.steps.behave_utils import set_context_attrs
 from test import bdd_util
 
 from features import environment
@@ -64,12 +66,14 @@ def step_impl(context):
 			environment.before_scenario(context, context.scenario)
 			return base64.b64encode('success')
 		else:
-			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context'])
+			set_context_attrs(context, json.loads(step_data['context_kvs']))
+
+			step = u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context_text'])
 			print('*********************** run step **********************')
 			print(step)
 
 			try:
-				context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context']))
+				context.execute_steps(u'%s\n"""\n%s\n"""' % (step_data['step'], step_data['context_text']))
 
 				raw_context_kvs = context._stack[0]
 				context_kvs = {}
