@@ -131,6 +131,25 @@
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
         </div>
     </div>
+    <div class="wui-i-description wui-i-product-description none">
+        {% if product_detail %}
+            <div class="xui-section xui-production-panel pt0 xa-production" style="border:0;">
+                <div class="xui-section-title xui-section-item zoom">
+                    <label>商品介绍</label>
+                    <div class="xui-productDetail-content rawHtml c3 pt10 xa-productDetail-content">
+                    {{ product_detail|safe }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="xui-section xui-production-panel pt0" style="border:0;">
+                <div class="xui-section-title xui-section-item zoom">
+                    <label>商品介绍</label>
+                    <div class="xui-productDetail-content rawHtml c3 pt10" style="text-align: center;">暂无商品介绍</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -148,6 +167,7 @@
     var product_original_price = 0;
     var product_group_price = 0;
     var order_id = '';
+    var product_detail = {% if product_detail %}'{{product_detail}}'{% else %}''{% endif %};
 
 	$(function(){
         //隐藏参与活动按钮
@@ -167,6 +187,9 @@
             return false;
         }
         $('.wui-appParticipantResult-Cover').hide();
+        if (product_detail!=''){
+            showProductDetails();
+        }
         //展示参与统计
         getDynamicData();
     });
@@ -478,7 +501,7 @@
     function showGroupFailure(){
         mask('show');
         $('.wui-i-group_box_fail').removeClass('none');
-        $('.wui-i-bar_process').addClass('wui-i-bar_process-fail');
+        $('.wui-i-inner_bar').addClass('wui-i-inner_bar_fail');
         $('.xui-groupMsg-Hint').removeClass('none');
         $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在5~7个工作日内完成退款');
         $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('很遗憾 团购失败');
@@ -557,6 +580,12 @@
                 $('.wa-grouped-members').append($(li_content));
             }
         }
+    }
+
+    function showProductDetails(){
+        var detail_content = $('.wui-i-product-description');
+        detail_content.removeClass('none');
+        $('.wui-i-body').append($(detail_content));
     }
 
 </script>

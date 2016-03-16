@@ -204,6 +204,7 @@ class MGroup(resource.Resource):
 				#获取活动状态
 				activity_status = record.status_text
 				product_id = record.product_id
+				product_detail = Product.objects.get(id=product_id).detail
 
 				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
@@ -256,6 +257,7 @@ class MGroup(resource.Resource):
 			'record_id': record_id,
 			'group_relation_id': group_relation_id, #小团购id，如不存在则为None
 			'product_id': product_id, #产品id，如不存在则为None
+			'product_detail': product_detail,
 			'activity_status': activity_status,
 			'page_title': record.name if record else u"团购",
 			'page_html_content': html,
