@@ -212,27 +212,55 @@
 						<a href="/apps/group/group_participances/?id=${item.id}" class="ml5">参团详情</a>
 					</div>
 					<div class="xui-group_action">
-						{{if (item.status === '进行中')}}
-						<div class="xui-i-action">
-							<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
-						</div>
-						{{/if}}
-						{{if (item.status === '未开启')}}
-						<div class="xui-i-action">
-							<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}" class="xa-edit" data-id=${item.id}>编辑</a>
-						</div>
-						{{/if}}
-						{{if (item.status === '未开启')}}
-						<div class="xui-i-action">
-							<a href="javascript:void(0)" class="xa-start" data-id=${item.id}>开启</a>
-						</div>
+						{{if (item.handle_status === 0)}}
+							{{if (item.status === '进行中')}}
+							<div class="xui-i-action">
+								<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+							</div>
+							{{/if}}
+							{{if (item.status === '未开启')}}
+							<div class="xui-i-action">
+								<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}" class="xa-edit" data-id=${item.id}>编辑</a>
+							</div>
+							{{/if}}
+							{{if (item.status === '未开启')}}
+							<div class="xui-i-action">
+								<a href="javascript:void(0)" class="xa-start" data-id=${item.id}>开启</a>
+							</div>
+							{{/if}}
+
+							{{if (item.status === '已结束')}}
+							<div class="xui-i-action">
+								<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+							</div>
+							{{/if}}
+						{{else}}
+							{{if (item.status === '进行中')}}
+								<div class="xui-i-action">
+									<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+								</div>
+								{{/if}}
+								{{if (item.status === '未开启')}}
+								<div class="xui-i-action">
+									<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}" class="xa-edit" data-id=${item.id}>编辑</a>
+								</div>
+								{{/if}}
+								{{if (item.status === '未开启')}}
+								<div class="xui-i-action">
+									<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+								</div>
+								{{/if}}
+
+								{{if (item.status === '已结束')}}
+								<div class="xui-i-action">
+									<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+								</div>
+								{{/if}}
 						{{/if}}
 
-						{{if (item.status === '已结束')}}
-						<div class="xui-i-action">
-							<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
-						</div>
-						{{/if}}
+
+
+
 					</div>
 					<!-- <a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a> -->
 				</td>

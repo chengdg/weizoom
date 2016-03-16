@@ -122,38 +122,6 @@
         right: 10px;
         width: 100px;
     }
- /*   .xui-listInner p{width:100%;}
-    .xui-listInner p span:first-child{width:80%;}
-    a:link,a:hover,a:visited{
-        color:#333;
-    }*/
-/*    .wui-content-slide {
-        margin: 5px 10px 5px 10px;
-        border-radius: 15px;
-    }
-    .wui-swiper .wui-swiper-container {
-        background: none;
-    }
-    .xui-i-content-group {
-        padding: 10px 0 15px 0;
-        position: static;
-        margin-left: 146px;
-        margin-top: -120px;
-        text-align: right;
-    }
-    .xui-all_groups_can_open-slide .xui-i-content-img {
-        height: 30%;
-        width: 30%;
-        display: inline-block;
-        margin-top: 10px;
-    }
-    .xui-all_groups_can_join-slide .xui-i-content-img,.xui-all_groups_can_join-list .xui-i-content-img{
-        height: 20%;
-        width: 20%;
-        display: inline-block;
-        margin-top: 10px;
-    }
-    */
     button.wui-i-btn-using {
         padding: 15px 15px 15px 15px;
         color: #fff;
@@ -171,6 +139,20 @@
     }
     .wui-swiper .wui-swiper-container {
         background: none;
+    }
+    .xui-i-content-remain_hours{
+        color: #FF2742;
+        position: absolute;
+        top: 28px;
+        right: 125px;
+    }
+    .xui-i-content-title_box {
+        border: 1px solid #CECECE;
+        padding: 10px;
+        border-radius: 4px;
+        position: static;
+        margin-left: 60px;
+        margin-top: -37px;
     }
 </style>
 {% endblock %}
@@ -240,21 +222,23 @@
                 </div>
                 <script id="tpl" type="text/plain">
                     <ul class="xui-listItem">
-                        <li data-icon="true" class="xui-listInner pl10">
+                        <li data-icon="true" class="xui-listInner">
                             <div class="xui-i-title">
-                                <img src="{ product_img }" class="xui-i-content-img">
-                                <div style="display: inline-block;width: 70%;">
-                                    <div style="text-align: right;color: #FF2742;">剩余{remain_hours}小时</div>
-                                    <p style="display: inline;">{ group_owner_name }</p>
-                                    <div style="display: inline;">{ group_name }</div>
+                                <img src="{ product_img }" class="xui-i-content-img mt10">
+                                <div style="display: inline-block;">
+                                    <div class="xui-i-content-remain_hours">剩余{remain_hours}小时</div>
+                                    <p style="color: #5E5E5E;">{ group_owner_name }</p>
+                                    <div>的{ group_name }</div>
                                     <div class="wui-i-BtnBox"><a href="{ url }"><button class="wui-i-btn-using wa-using">我要参团</button></a></div>
                                 </div>
-                                <div style="width: 50px;display: inline-block;">
-                                    <p>团员</p>
-                                    <span style="background: #4A4A4A;color: #fff;padding: 5px;border-radius: 5px;top: 5px;">{participant_count}</span>
-                                </div>
-                                <div style="border: 1px solid #CECECE;padding: 10px;margin-bottom: 10px;border-radius: 4px;margin-left: 15px;">
-                                    <p>【商品】{ product_name }</p>
+                                <div>
+                                    <div style="display: inline-block;margin-top: 10px;margin-left: 10px;">
+                                        <p style="margin-bottom: 5px;text-align: center;width: 40px;">团员</p>
+                                        <span style="background: #4A4A4A;color: #fff;padding: 5px;border-radius: 5px;top: 5px;">{participant_count}</span>
+                                    </div>
+                                    <div class="xui-i-content-title_box">
+                                        <p>【商品】{ product_name }</p>
+                                    </div>
                                 </div>
                             </div>
                         </li>
