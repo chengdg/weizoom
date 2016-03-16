@@ -83,7 +83,7 @@ class GroupParticipance(resource.Resource):
 			group_member_info = app_models.GroupRelations(
 				belong_to = group_record_id,
 				member_id = member_id,
-				group_leader_name = request.member.username_for_html,
+				group_leader_name = request.member.username_size_ten,
 				product_id = product_id,
 				group_type = group_type,
 				group_days = group_days,
@@ -99,7 +99,7 @@ class GroupParticipance(resource.Resource):
 				relation_belong_to = relation_belong_to,
 				owner_id = member_id,
 				grouped_member_id = member_id,
-				grouped_member_name = request.member.username_for_html,
+				grouped_member_name = request.member.username_size_ten,
 				created_at = datetime.now()
 			)
 			group_detail.save()

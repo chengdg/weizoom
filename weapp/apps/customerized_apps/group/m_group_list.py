@@ -25,7 +25,7 @@ class MGroupList(resource.Resource):
 			response = create_response(500)
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
-		group_relations = app_models.GroupRelations.objects(belong_to=belong_to,group_status=app_models.GROUP_RUNNING)
+		group_relations = app_models.GroupRelations.objects(belong_to=belong_to,group_status=app_models.GROUP_RUNNING).order_by('-created_at')
 		group_ids = [str(p.belong_to) for p in group_relations]
 		all_groups = app_models.Group.objects(id__in=group_ids)
 		all_groups_can_join = []
@@ -46,7 +46,7 @@ class MGroupList(resource.Resource):
 
 		if all_groups_can_join == []:
 			response = create_response(500)
-			response.errMsg = u'暂无已开团购'
+			response.errMsg = u'暂无可参与的团购'
 			return response.get_response()
 		response = create_response(200)
 		response.data = {
@@ -61,7 +61,7 @@ class MGroupList(resource.Resource):
 		all_groups_can_open = []
 		owner_id = request.webapp_owner_id
 		#我要开团
-		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-created_at')
+		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-end_time')
 		for group in groups:
 			try:
 				all_group_dict = []
