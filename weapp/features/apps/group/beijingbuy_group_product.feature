@@ -151,36 +151,37 @@ Scenario: 1 会员访问团购活动首页能进行开团
 			"price": 100.00
 		}]
 		"""
-#
-#	#bill是已关注的会员可以直接开团
-#	Then bill能获得开团活动列表
-#		"""
-#		{
-#			"group_name": "团购2"
-#			"group_dict":
-#				[{
-#					"group_type":5,
-#					"group_days":1,
-#					"group_price":21.00
-#				},{
-#					"group_type":10,
-#					"group_days":2,
-#					"group_price":11.00
-#				}]
-#		}, {
-#			"group_name": "团购1"
-#			"group_dict":
-#				[{
-#					"group_type":5,
-#					"group_days":1,
-#					"group_price":20.00
-#				},{
-#					"group_type":10,
-#					"group_days":2,
-#					"group_price":10.00
-#				}]
-#		}]
-#		"""
+	When jobs开启团购活动'团购1'
+#  	When jobs开启团购活动'团购2'
+	#bill是已关注的会员可以直接开团
+	Then bill能获得jobs的团购活动列表
+		"""
+		{
+			"group_name": "团购2"
+			"group_dict":
+				[{
+					"group_type":5,
+					"group_days":1,
+					"group_price":21.00
+				},{
+					"group_type":10,
+					"group_days":2,
+					"group_price":11.00
+				}]
+		}, {
+			"group_name": "团购1"
+			"group_dict":
+				[{
+					"group_type":5,
+					"group_days":1,
+					"group_price":20.00
+				},{
+					"group_type":10,
+					"group_days":2,
+					"group_price":10.00
+				}]
+		}]
+		"""
 #
 #	#bill开“团购5人团”，团购活动只能使用微信支付，有配送时间，运费0元
 #	#支付完成后跳转到活动详情页-显示邀请好友参团

@@ -13,8 +13,6 @@ from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
 from apps.customerized_apps.group.models import Group, GroupRelations, GroupDetail
-from weixin.message.material import models as material_models
-from modules.member.models import Member, SOURCE_MEMBER_QRCODE
 from utils.string_util import byte_to_hex
 import json
 import re
@@ -24,17 +22,35 @@ from django.core.management.base import BaseCommand, CommandError
 from utils.cache_util import SET_CACHE
 from modules.member.models import Member
 
-def __get_group_rule_name(title):
-	material_url = material_models.News.objects.get(title=title).url
-	group_rule_name = material_url.split('-')[1]
-	return group_rule_name
 
 def __get_group_rule_id(group_rule_name):
 	return Group.objects.get(name=group_rule_name).id
 
 def __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid):
-	#进入微助力活动页面
-	url = '/m/apps/powerme/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, group_rule_id, context.member.token, openid)
+	#进入团购活动页面
+	url = '/m/apps/group/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, group_rule_id, context.member.token, openid)
+	url = bdd_util.nginx(url)
+	context.link_url = url
+	response = context.client.get(url)
+	if response.status_code == 302:
+		print('[info] redirect by change fmt in shared_url')
+		redirect_url = bdd_util.nginx(response['Location'])
+		context.last_url = redirect_url
+		response = context.client.get(bdd_util.nginx(redirect_url))
+		if response.status_code == 302:
+			print('[info] redirect by change fmt in shared_url')
+			redirect_url = bdd_util.nginx(response['Location'])
+			context.last_url = redirect_url
+			response = context.client.get(bdd_util.nginx(redirect_url))
+		else:
+			print('[info] not redirect')
+	else:
+		print('[info] not redirect')
+	return response
+
+def __get_into_group_list_pages(context,webapp_owner_id,openid):
+	#进入团购活动页面
+	url = '/m/apps/group/m_group_list/?webapp_owner_id=%s&fmt=%s&opid=%s' % (webapp_owner_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
 	response = context.client.get(url)
@@ -55,7 +71,7 @@ def __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid):
 	return response
 
 def __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid):
-	url = '/m/apps/powerme/api/m_powerme/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, group_rule_id, context.member.token, openid)
+	url = '/m/apps/group/api/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, group_rule_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	while response.status_code == 302:
@@ -69,50 +85,32 @@ def __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid):
 		print('[info] redirect error,response.status_code :')
 		print(response.status_code)
 
-@When(u'{webapp_user_name}点击图文"{title}"进入团购活动页面')
-def step_impl(context, webapp_user_name, title):
-	webapp_owner_id = context.webapp_owner_id
+
+@then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
+def step_tmpl(context, webapp_user_name, webapp_owner_name):
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	group_rule_name = __get_group_rule_name(title)
-	group_rule_id = __get_group_rule_id(group_rule_name)
-	response = __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid)
-	context.group_rule_id = group_rule_id
-	context.rank_response = __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid).content
+	webapp_owner_id = context.webapp_owner_id
+	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
+	print('!response!!!!!!!!!!!!!!!!!!!')
+	print(response.context['all_groups_can_open'])
+	# 构造实际数据
+	# actual = []
+	# actual.append({
+	# 	"group_name": group.name,
+	# 	"is_show_countdown": page_component['timing']['timing']['select'],
+	# 	"desc": page_component['description'],
+	# 	"background_pic": page_component['background_image'],
+	# 	"rules": page_component['rules'],
+	# 	"my_rank": rank_information['current_member_rank_info']['rank'] if rank_information['current_member_rank_info'] else u'无',
+	# 	"my_power_score": rank_information['current_member_rank_info']['power'] if rank_information['current_member_rank_info'] else '0',
+	# 	"total_participant_count": rank_information['total_participant_count']
+	# })
+	# print("actual_data: {}".format(actual))
+	# expected = json.loads(context.text)
+	# print("expected: {}".format(expected))
+	# bdd_util.assert_list(expected, actual)
 
-# @then(u"{webapp_user_name}获得{webapp_owner_name}的'{group_rule_name}'的内容")
-# def step_tmpl(context, webapp_user_name, webapp_owner_name, group_rule_name):
-# 	group_rule_id = __get_group_rule_id(group_rule_name)
-# 	rank_information = json.loads(context.rank_response)['data']
-# 	group_info = PowerMe.objects.get(id=group_rule_id)
-# 	related_page_id = group_info.related_page_id
-# 	pagestore = pagestore_manager.get_pagestore('mongo')
-# 	page = pagestore.get_page(related_page_id, 1)
-# 	page_component = page['component']['components'][0]['model']
-#
-# 	color2name = {
-# 		'yellow': u'冬日暖阳',
-# 		'red': u'玫瑰茜红',
-# 		'orange': u'热带橙色'
-# 	}
-# 	# 构造实际数据
-# 	actual = []
-# 	actual.append({
-# 		"name": group_info.name,
-# 		"is_show_countdown": page_component['timing']['timing']['select'],
-# 		"desc": page_component['description'],
-# 		"background_pic": page_component['background_image'],
-# 		"background_color": color2name[page_component['color']],
-# 		"rules": page_component['rules'],
-# 		"my_rank": rank_information['current_member_rank_info']['rank'] if rank_information['current_member_rank_info'] else u'无',
-# 		"my_power_score": rank_information['current_member_rank_info']['power'] if rank_information['current_member_rank_info'] else '0',
-# 		"total_participant_count": rank_information['total_participant_count']
-# 	})
-# 	print("actual_data: {}".format(actual))
-# 	expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
-# 	bdd_util.assert_list(expected, actual)
-#
 # @then(u'{webapp_user_name}获得"{group_rule_name}"的助力值排名')
 # def step_tmpl(context, webapp_user_name, group_rule_name):
 # 	rank_information = json.loads(context.rank_response)['data']
