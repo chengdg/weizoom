@@ -247,7 +247,8 @@ class CardExchangeDetailExport(resource.Resource):
 def get_can_exchange_cards_list(s_num,end_num,owner_id):
 	s_card_id = 0
 	end_card_id = 0
-	cards = card_models.WeizoomCard.objects.exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE).order_by('id')
+	all_cards = card_models.WeizoomCard.objects.all().order_by('id')
+	cards = all_cards.exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE)
 	card_id_min = int(cards.first().weizoom_card_id)
 	card_id_max = int(cards.last().weizoom_card_id)
 	weizoom_card_id2id = {card.weizoom_card_id:card.id for card in cards}
@@ -256,12 +257,12 @@ def get_can_exchange_cards_list(s_num,end_num,owner_id):
 		return []
 	flag_count = 0
 	try:
-		s_card_id = cards.get(weizoom_card_id = s_num).id
+		s_card_id = all_cards.get(weizoom_card_id = s_num).id
 	except:
 		flag_count += 1
 		s_card_id = card_id_list[0]
 	try:
-		end_card_id = cards.get(weizoom_card_id = end_num).id
+		end_card_id = all_cards.get(weizoom_card_id = end_num).id
 	except:
 		flag_count += 1
 		end_card_id = card_id_list[-1]
@@ -303,7 +304,8 @@ def get_can_exchange_cards_list(s_num,end_num,owner_id):
 #卡号区间对应的可兑换卡数量
 ###########################
 def get_useful_card_count(owner_id,card_exchange_rules):
-	cards = card_models.WeizoomCard.objects.exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE).order_by('id')
+	all_cards = card_models.WeizoomCard.objects.all().order_by('id')
+	cards = all_cards.exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE)
 	belong_card_rules = card_models.WeizoomCardRule.objects.filter(card_attr = card_models.WEIZOOM_CARD_SPECIAL)
 	card_has_orders = card_models.WeizoomCardHasOrder.objects.exclude(order_id__in = [-1])
 	card_id2order = {order.card_id: order for order in card_has_orders}
@@ -322,12 +324,12 @@ def get_useful_card_count(owner_id,card_exchange_rules):
 		end_num = num.split('-')[1]
 		flag_count = 0
 		try:
-			s_card_id = cards.get(weizoom_card_id = s_num).id
+			s_card_id = all_cards.get(weizoom_card_id = s_num).id
 		except:
 			flag_count += 1
 			s_card_id = card_id_list[0]
 		try:
-			end_card_id = cards.get(weizoom_card_id = end_num).id
+			end_card_id = all_cards.get(weizoom_card_id = end_num).id
 		except:
 			flag_count += 1
 			end_card_id = card_id_list[-1]
