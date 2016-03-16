@@ -1625,14 +1625,14 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     return result
 
 
-# def update_order_status_by_group_status(group_id, status, order_ids=None):
-#     # TODO 退款
-#     if status == 'success':
-#         group_status = GROUP_STATUS_OK
-#         order_status = ORDER_STATUS_NOT
-#     elif status == 'failure':
-#         group_status = GROUP_STATUS_failure
-#         order_status = ORDER_STATUS_PAYED_NOT_SHIP
+def update_order_status_by_group_status(group_id, status, order_ids=None):
+    # TODO 退款
+    if status == 'success':
+        group_status = GROUP_STATUS_OK
+        order_status = ORDER_STATUS_NOT
+    elif status == 'failure':
+        group_status = GROUP_STATUS_failure
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
 #     relations = OrderHasGroup.objects.filter(group_id=group_id)
 #     user = UserProfile.objects.filter(webapp_id=relations[0].webapp_id).user
