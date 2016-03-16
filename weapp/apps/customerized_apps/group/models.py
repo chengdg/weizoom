@@ -14,6 +14,7 @@ class Group(models.Document):
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
+	handle_status =  models.IntField(default=0) #手动状态 0关闭,1开启
 	created_at = models.DateTimeField() #创建时间
 	group_dict = models.DynamicField() #团购活动字典{'0':{'group_type':'5','group_days':'10','group_price':'100.00'},...}
 	# product_dict = models.DynamicField() #活动商品
