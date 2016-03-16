@@ -125,8 +125,6 @@ class CancelUnpaidGroup(resource.Resource):
 		group_relation_id = request.POST['group_relation_id']
 		member_id = request.POST['member_id']
 		order_id = request.POST['order_id']
-		print('order_id!!!!!!!!!!!!')
-		print(order_id)
 		try:
 			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,member_id=member_id,group_status=app_models.GROUP_NOT_START)
 			group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,grouped_member_id=member_id,is_already_paid=False)
