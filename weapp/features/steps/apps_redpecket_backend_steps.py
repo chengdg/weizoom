@@ -17,7 +17,7 @@ from weixin.message.material import models as material_models
 from apps.customerized_apps.red_packet import models as redpacket_models
 import termite.pagestore as pagestore_manager
 import json
-
+import copy
 def __debug_print(content,type_tag=True):
 	"""
 	debug工具函数

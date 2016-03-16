@@ -33,9 +33,9 @@ W.dialog.termite.SelectProductDialog = W.dialog.Dialog.extend({
     },
     onSearch: function(event) {
         var query = $.trim(this.$el.find('.xa-query').val());
+
         this.table.reload({
-            type: 'name',
-            query: query
+            name: query
         })
     },
     onPressKey: function(event) {
