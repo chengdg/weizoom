@@ -51,6 +51,7 @@ Background:
 			"member": "tom",
 			"status": "待发货",
 			"order_time": "2014-10-03 12:00:00",
+			"payment_time":"2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
 			"sources": "商城",
 			"products": [{
@@ -65,6 +66,7 @@ Background:
 			"member": "bill",
 			"status": "已取消",
 			"order_time": "2014-10-04 12:00:00",
+			"payment_time":"2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"products": [{
@@ -79,6 +81,7 @@ Background:
 			"member": "tom",
 			"status": "已完成",
 			"order_time": "2014-10-05 12:00:00",
+			"payment_time":"2014-10-05 13:00:00",
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
 			"products": [{
@@ -96,6 +99,7 @@ Background:
 			"member": "tom",
 			"status": "已发货",
 			"order_time": "2014-10-06 12:00:00",
+			"payment_time":"2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"products": [{
@@ -113,6 +117,7 @@ Background:
 			"member": "bill",
 			"status": "待发货",
 			"order_time": "2014-10-07 12:00:00",
+			"payment_time":"2014-10-07 13:00:00",
 			"methods_of_payment": "支付宝",
 			"sources": "商城",
 			"products": [{
@@ -127,6 +132,7 @@ Background:
 			"member": "bill",
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00:00",
+			"payment_time":"",
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
 			"products": [{
@@ -448,7 +454,7 @@ Scenario:1 选择订单筛选条件
 		"""
 
 # __editor__ : "王丽" 2016-03-08
-@order @allOrder @eugene
+@mall2 @order @allOrder @eugene
 Scenario:2 按照【订单类型】进行筛选
 	#筛选“订单类型”内容为“全部、首单、非首单”
 	#"全部":筛选出所有订单；"首单"：筛选出带有首单标记的订单；"非首单":筛选出没有首单标记的订单
@@ -706,7 +712,7 @@ Scenario:2 按照【订单类型】进行筛选
 		"""
 
 # __editor__ : "王丽" 2016-03-08
-@order @allOrder @eugene
+@mall2 @order @allOrder @eugene
 Scenario:3 混合条件进行筛选
 	Given jobs登录系统
 	When jobs根据给定条件查询订单
