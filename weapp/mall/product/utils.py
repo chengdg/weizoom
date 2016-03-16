@@ -454,7 +454,7 @@ def get_pids(woid):
 
     data =  response.read()
     data = json.loads(data)
-    if data["data"]["pids_list"]:
+    if data["data"].has_key("pids_list"):
         pids = data["data"]["pids_list"]
     else:
         error_msg = u"api请求参加活动的pids存在问题, cause:\n{}".format(data)

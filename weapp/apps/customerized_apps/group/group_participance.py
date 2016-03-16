@@ -12,8 +12,7 @@ from core.exceptionutil import unicode_full_stack
 from utils import url_helper
 import models as app_models
 from modules.member.models import Member
-
-COUNT_PER_PAGE = 20
+from mall.order.util import cancel_group_buying
 
 class GroupParticipance(resource.Resource):
 	app = 'apps/group'
@@ -125,11 +124,18 @@ class CancelUnpaidGroup(resource.Resource):
 		"""
 		group_relation_id = request.POST['group_relation_id']
 		member_id = request.POST['member_id']
+		order_id = request.POST['order_id']
+		print('order_id!!!!!!!!!!!!')
+		print(order_id)
 		try:
 			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,member_id=member_id,group_status=app_models.GROUP_NOT_START)
+			group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,grouped_member_id=member_id,is_already_paid=False)
 			group_relation.delete()
+			group_detail.delete()
+			cancel_group_buying(order_id)
 			response = create_response(200)
-		except:
+		except Exception,e:
+			print unicode_full_stack(),e
 			response = create_response(500)
 			response.errMsg = u'取消操作失败'
 		return response.get_response()

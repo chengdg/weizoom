@@ -131,6 +131,25 @@
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
         </div>
     </div>
+    <div class="wui-i-description wui-i-product-description none">
+        {% if product_detail %}
+            <div class="xui-section xui-production-panel pt0 xa-production" style="border:0;">
+                <div class="xui-section-title xui-section-item zoom">
+                    <label>商品介绍</label>
+                    <div class="xui-productDetail-content rawHtml c3 pt10 xa-productDetail-content">
+                    {{ product_detail|safe }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="xui-section xui-production-panel pt0" style="border:0;">
+                <div class="xui-section-title xui-section-item zoom">
+                    <label>商品介绍</label>
+                    <div class="xui-productDetail-content rawHtml c3 pt10" style="text-align: center;">暂无商品介绍</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -145,10 +164,11 @@
     var group_relation_id = {% if group_relation_id %}'{{group_relation_id}}'{% else %}''{% endif %};
     var product_id = {% if product_id %}'{{product_id}}'{% else %}''{% endif %};
     var settings_domain = '{{settings_domain}}';
-    console.log('settings_domain is:');
-    console.log(settings_domain);
     var product_original_price = 0;
     var product_group_price = 0;
+    var order_id = '';
+    var product_detail = {% if product_detail %}'{{product_detail}}'{% else %}''{% endif %};
+
 	$(function(){
         //隐藏参与活动按钮
         $('.xa-submitButtonContainer').hide();
@@ -167,6 +187,9 @@
             return false;
         }
         $('.wui-appParticipantResult-Cover').hide();
+        if (product_detail!=''){
+            showProductDetails();
+        }
         //展示参与统计
         getDynamicData();
     });
@@ -244,6 +267,8 @@
         product_original_price = member_info.product_original_price;
         product_group_price = member_info.product_group_price;
         page_owner_icon = member_info.page_owner_icon;
+        order_id = member_info.order_id;
+        console.log(order_id);
         if(page_owner_icon != ""){
             $('.wui-i-shop_circle').find('img').attr('src', page_owner_icon);
         }
@@ -436,7 +461,8 @@
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');
-            //todo 跳转到订单编辑页面
+            var data_href = "http://"+settings_domain+"/mall/order_detail/?woid="+W.webappOwnerId+"&order_id="+order_id;
+            window.location.href = data_href;
         });
         $('.wa-i-btn-groupMsg-no').click(function(){
             W.getApi().call({
@@ -446,7 +472,8 @@
                 args: {
                     webapp_owner_id: W.webappOwnerId,
                     group_relation_id: group_relation_id,
-                    member_id: W.member_id
+                    member_id: W.member_id,
+                    order_id: order_id
                 },
                 success: function(data){
                     mask('hide');
@@ -475,7 +502,7 @@
     function showGroupFailure(){
         mask('show');
         $('.wui-i-group_box_fail').removeClass('none');
-        $('.wui-i-bar_process').addClass('wui-i-bar_process-fail');
+        $('.wui-i-inner_bar').addClass('wui-i-inner_bar_fail');
         $('.xui-groupMsg-Hint').removeClass('none');
         $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在5~7个工作日内完成退款');
         $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('很遗憾 团购失败');
@@ -554,6 +581,12 @@
                 $('.wa-grouped-members').append($(li_content));
             }
         }
+    }
+
+    function showProductDetails(){
+        var detail_content = $('.wui-i-product-description');
+        detail_content.removeClass('none');
+        $('.wui-i-body').append($(detail_content));
     }
 
 </script>

@@ -2075,10 +2075,11 @@ li.wui-selectBox-display-table {
     color: #ffffff;
     width: 25%;
     border-radius: 15px;
-    line-height: 26px;   
-
+    line-height: 26px;
 }
-
+.wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar_fail{
+    background: #999999;
+}
 .wui-group-container .wui-i-powerbar_group .wui-i-cur_number{
 	display: inline-block;
 }

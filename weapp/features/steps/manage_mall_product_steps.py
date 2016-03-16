@@ -290,6 +290,19 @@ def step_impl(context,user):
     context.query_param = query_param
 
 
+@then(u"{user}获得提示信息{product_info}")
+def step_impl(context, product_info, user):
+    product_name = context.product_name
+    expected__is_group_buying = True
+    actual_is_group_buying = False
+    if product_info == u"\'该商品正在进行团购活动\'":
+        products = context.products
+        for product in products:
+            if product["name"] == product_name:
+                actual_is_group_buying = product["is_group_buying"]
+    delattr(context, "product_name")
+    context.tc.assertEquals(actual_is_group_buying, expected__is_group_buying)
+
 def __update_prducts_by_name(context, product_name, action):
     ACTION2TYPE = {
         u'上架': 'onshelf',
@@ -310,6 +323,7 @@ def __update_prducts_by_name(context, product_name, action):
             data['ids'].append(ProductFactory(name=product_name).id)
     else:
         data['ids'] = ProductFactory(name=product_name).id
+        context.product_name = product_name
 
     response = context.client.post('/mall2/api/product_list/?_method=post', data)
     bdd_util.assert_api_call_success(response)

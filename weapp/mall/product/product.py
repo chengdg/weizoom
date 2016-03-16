@@ -1471,7 +1471,6 @@ class GroupProductList(resource.Resource):
                 is_member_product=False,
                 stocks=0
                 )
-        print "products",products
         if product_name:
             products = products.filter(name__contains=product_name)
 
@@ -1489,6 +1488,10 @@ class GroupProductList(resource.Resource):
         else:
             products = sorted(products, key=operator.attrgetter('id'))
             products = sorted(products, key=operator.attrgetter(sort_attr))
+        products_is_0 = filter(lambda p: p.display_index == 0, products)
+        products_not_0 = filter(lambda p: p.display_index != 0, products)
+        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
+        products = utils.filter_products(request, products_not_0 + products_is_0)
 
         models.Product.fill_details(request.manager, products, {
             "with_product_model": True,
