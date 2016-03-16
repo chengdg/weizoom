@@ -121,11 +121,8 @@ class Groups(resource.Resource):
 				open_group_num = len(relation_list)
 				for relation in relation_list:
 					r_id = unicode(relation.id)
-					if r_id in r_id2details:
-						detail_list = r_id2details[r_id]
-						for one_detail in detail_list:
-							if one_detail.is_already_paid:
-								group_customer_num += 1
+					if relation.status_text == '团购成功':
+						group_customer_num += int(relation.group_type)
 
 				data.static_info = {'open_group_num':open_group_num,
 										'group_customer_num':group_customer_num,
