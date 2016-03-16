@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import re
+import json
 
 from datetime import date, datetime
 
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.conf import settings
+import requests
 
 from mall import export
 from tools.regional import views as regional_util
@@ -21,12 +25,12 @@ from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
 import mall.module_api as mall_api
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 from core.restful_url_route import api
-from watchdog.utils import watchdog_info
-import re
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from mall.templatetags.mall_filter import *
 from weixin.user.module_api import get_all_active_mp_user_ids
 from account.models import UserProfile
 from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
+from core.exceptionutil import unicode_full_stack
 
 COUNT_PER_PAGE = 20
 
@@ -1627,6 +1631,12 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
 
 def update_order_status_by_group_status(group_id, status, order_ids=None):
     # TODO 退款
+    KEY = 'MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg='
+    if settings.MODE in ['develop', 'test']:
+        URL = 'http://pay/refund/weixin/api/order/refund/'
+    else:
+        URL = 'http://paytest/refund/weixin/api/order/refund/'
+
     if status == 'success':
         group_status = GROUP_STATUS_OK
         order_status = ORDER_STATUS_NOT
@@ -1647,36 +1657,36 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             update_order_status(user, 'return_pay', order)
-            # import requests
-            # args = {
-            #     'order':
-            #     'access_token':
-            # }
-            # r = requests.get(url, params=args)
-            # response = json.loads(r.json())
-            # if response['is_success']:
-            #     order.status = ORDER_STATUS_GROUP_REFUNDING
-            #     order.save()
-            # else:
-            #     args = {
-            #         'order':
-            #         'access_token':
-            #     }
-            #     r = requests.get(url, params=args)
-            #     response = json.loads(r.json())
-            #     if response['is_success']:
-            #         order.status = ORDER_STATUS_GROUP_REFUNDING
-            #         order.save()
-            #     else:
-            #         args = {
-            #             'order':
-            #             'access_token':
-            #         }
-            #         r = requests.get(url, params=args)
-            #         response = json.loads(r.json())
-            #         if response['is_success']:
-            order.status = ORDER_STATUS_GROUP_REFUNDING
-            order.save()
+            args = {
+                'order_id': order.order_id,
+                'authkey': KEY,
+                'from': 'weapp'
+            }
+            response = dict()
+            try:
+                r = requests.get(URL, params=args)
+                response = json.loads(r.json())
+                if not response.get('is_success', ''):
+                    r = requests.get(url, params=args)
+                    response = json.loads(r.json())
+                    if not response.get('is_success', ''):
+                        r = requests.get(url, params=args)
+                        response = json.loads(r.json())
+            except:
+                try:
+                    r = requests.get(URL, params=args)
+                    response = json.loads(r.json())
+                    if not response.get('is_success', ''):
+                        r = requests.get(url, params=args)
+                        response = json.loads(r.json())
+                except:
+                    r = requests.get(URL, params=args)
+                    response = json.loads(r.json())
+            if response.get('is_success', ''):
+                order.status = ORDER_STATUS_GROUP_REFUNDING
+                order.save()
+            else:
+                watchdog_error(u"订单%s通知退款失败" % order.order_id)
 
 def cancel_group_buying(order_id):
     order = Order.objects.get(order_id=order_id)

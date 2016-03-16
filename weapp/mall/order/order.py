@@ -16,7 +16,7 @@ from core import paginator
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
 import mall.module_api as mall_api
-from watchdog.utils import watchdog_error
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from core.exceptionutil import unicode_full_stack
 from modules.member.models import WebAppUser
 
@@ -376,22 +376,35 @@ class GroupOrderRefunded(resource.Resource):
     app = "mall2"
     resource = "group_order_refunded"
 
-    KEY = ""
+    KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
 
     @login_required
     def post(request):
         order_ids = request.POST.get('order_ids', [])
-        key = request.POST.get('key', '')
+        key = request.POST.get('authkey', '')
         response = create_response(200)
         if key == KEY:
+            if not order_ids:
+                response.updated_order_ids = []
+                response.not_update_orders_ids = []
+                return response.get_response()
             try:
-                Order.objects.filtr(
+                orders = Order.objects.filtr(
                     order_id__in=order_ids,
                     status=ORDER_STATUS_GROUP_REFUNDING
-                ).update(status=ORDER_STATUS_REFUNDED)
-                response.success = True
+                )
+                refunding_order_ids = [order.order_id for order in orders]
+                orders.update(status=ORDER_STATUS_REFUNDED)
+                response.updated_order_ids = refunding_order_ids
+                response.not_update_orders_ids = [id for id in order_ids if id not in refunding_order_ids]
             except:
-                response.success = False
+                updated_order_ids = [order.order_id for order in Order.objects.filtr(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_REFUNDED
+                )]
+                response.updated_order_ids = updated_order_ids
+                response.not_update_orders_ids = [id for id in order_ids if id not in updated_order_ids]
         else:
-            response.success = False
+            response.updated_order_ids = []
+            response.not_update_orders_ids = order_ids
         return response.get_response()
