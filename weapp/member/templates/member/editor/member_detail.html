@@ -494,7 +494,11 @@
                 	window.location.reload();
                 },
                 error: function(resp) {
-	              	W.showHint('error', '保存失败，请稍后重试！');
+                    if (resp.code === 400) {
+                        W.showHint('error', resp.errMsg);
+                    } else {
+                    W.showHint('error', '保存失败，请稍后重试！');
+                    }
                 },
                 scope: this
 			});
