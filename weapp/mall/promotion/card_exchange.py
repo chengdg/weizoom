@@ -101,29 +101,28 @@ class CardExchange(resource.Resource):
 	@staticmethod
 	def get_can_exchange_cards(request,webapp_id):
 		try:
-			print webapp_id,'+++++++++++++++++++'
+			owner_id = request.webapp_owner_id
 			card_exchange_dic = {}
 			card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
 			require = card_exchange.require
 			card_exchange_dic['is_bind'] = require
 			card_exchange_id = card_exchange.id
 			card_exchange_rules = promotion_models.CardExchangeRule.objects.filter(exchange_id = card_exchange_id)
+			card_number2count = get_useful_card_count(owner_id,card_exchange_rules)
 			prize_list = []
-			owner_id = request.webapp_owner_id
 			for rule in card_exchange_rules:
 				card_number = rule.card_number
 				s_num = card_number.split('-')[0]
 				end_num = card_number.split('-')[1]
-				count = get_can_exchange_cards_list(s_num,end_num,owner_id)
+				count = card_number2count.get(card_number,0)
 				prize_list.append({
 					'integral': rule.integral,
 					'money': int(rule.money),
 					's_num': s_num,
 					'end_num': end_num,
-					'count': len(count)				 
+					'count': count				 
 				})
 			card_exchange_dic['prize'] = prize_list
-
 			return card_exchange_dic
 		except:
 			return {}
@@ -176,8 +175,8 @@ class CardExchangeDetail(resource.Resource):
 					'used_money': '%.2f' % used_money,
 					'user': user  
 				})
-			except Exception,e:
-				print e,'/////////*********'
+			except:
+				pass
 		
 		response = create_response(200)
 		response.data.items = exchanged_cards_list
@@ -239,18 +238,18 @@ class CardExchangeDetailExport(resource.Resource):
 					user
 				]
 				members_info.append(info_list)
-			except Exception,e:
-				print e,'@@@@@@@@@@@@@@@@@@@@@'
+			except:
+				pass
 
 		filename = u'微众卡兑换详情'
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
-
-
 
 def get_can_exchange_cards_list(s_num,end_num,owner_id):
 	s_card_id = 0
 	end_card_id = 0
 	cards = card_models.WeizoomCard.objects.exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE).order_by('id')
+	card_id_min = int(cards.first().weizoom_card_id)
+	card_id_max = int(cards.last().weizoom_card_id)
 	weizoom_card_id2id = {card.weizoom_card_id:card.id for card in cards}
 	card_id_list = sorted(weizoom_card_id2id.values())
 	if len(card_id_list) <= 0:
@@ -266,7 +265,9 @@ def get_can_exchange_cards_list(s_num,end_num,owner_id):
 	except:
 		flag_count += 1
 		end_card_id = card_id_list[-1]
-	if flag_count == 2:
+	if flag_count == 2 and int(s_num) > card_id_min and int(end_num) > card_id_max:
+		return []
+	if flag_count == 2 and int(s_num) < card_id_min and int(end_num) < card_id_max:
 		return []
 	if s_card_id > end_card_id:
 		return []
@@ -298,4 +299,64 @@ def get_can_exchange_cards_list(s_num,end_num,owner_id):
 
 	return card_ids_tmp
 
-	
+###########################
+#卡号区间对应的可兑换卡数量
+###########################
+def get_useful_card_count(owner_id,card_exchange_rules):
+	cards = card_models.WeizoomCard.objects.exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE).order_by('id')
+	belong_card_rules = card_models.WeizoomCardRule.objects.filter(card_attr = card_models.WEIZOOM_CARD_SPECIAL)
+	card_has_orders = card_models.WeizoomCardHasOrder.objects.exclude(order_id__in = [-1])
+	card_id2order = {order.card_id: order for order in card_has_orders}
+	card_has_exchanged = promotion_models.CardHasExchanged.objects.all()
+	card_id2exchange = {exchange.card_id: exchange for exchange in card_has_exchanged}
+	card_id_min = int(cards.first().weizoom_card_id)
+	card_id_max = int(cards.last().weizoom_card_id)
+	weizoom_card_id2id = {card.weizoom_card_id:card.id for card in cards}
+	card_id_list = sorted(weizoom_card_id2id.values())
+	if len(card_id_list) <= 0:
+		return [] 
+	card_num_list = [rule.card_number for rule in card_exchange_rules]
+	card_number2count = {}
+	for num in card_num_list:
+		s_num = num.split('-')[0]
+		end_num = num.split('-')[1]
+		flag_count = 0
+		try:
+			s_card_id = cards.get(weizoom_card_id = s_num).id
+		except:
+			flag_count += 1
+			s_card_id = card_id_list[0]
+		try:
+			end_card_id = cards.get(weizoom_card_id = end_num).id
+		except:
+			flag_count += 1
+			end_card_id = card_id_list[-1]
+		if flag_count == 2 and int(s_num) > card_id_min and int(end_num) > card_id_max:
+			return []
+		if flag_count == 2 and int(s_num) < card_id_min and int(end_num) < card_id_max:
+			return []
+		if s_card_id > end_card_id:
+			return []
+		card_range_list = [i for i in range(s_card_id,end_card_id+1)]
+		card_id2ruleid = {c.id: c.weizoom_card_rule_id for c in cards.filter(id__in=card_range_list)}
+		card_rule_ids = card_id2ruleid.values()
+		cur_belong_card_rules = belong_card_rules.filter(id__in=card_rule_ids)
+		for rule in belong_card_rules:
+			if str(owner_id) not in rule.shop_limit_list.split(','):
+				card_rule_ids.remove(rule.id)
+		card_ids = []
+		for k,v in card_id2ruleid.items():
+			if v in card_rule_ids:
+				card_ids.append(k)
+		card_ids_tmp = []
+		for card_id in card_ids:
+			if not card_id2order.get(card_id,None):
+				card_ids_tmp.append(card_id)
+		card_ids = card_ids_tmp
+		card_ids_tmp = []
+		for card_id in card_ids:
+			if not card_id2exchange.get(card_id,None):
+				card_ids_tmp.append(card_id)
+		card_number2count[num] = len(card_ids_tmp)
+
+	return card_number2count

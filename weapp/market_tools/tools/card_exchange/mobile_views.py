@@ -20,7 +20,6 @@ def get_page(request):
 	"""
 	手机端卡兑换页
 	"""
-	print '-----========----------'
 	webapp_id = request.user_profile.webapp_id
 	#判断用户是否绑定手机号
 	member_id = request.member.id
