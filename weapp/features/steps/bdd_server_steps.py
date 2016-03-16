@@ -82,6 +82,7 @@ def step_impl(context):
 						context_kvs[k] = v
 				context_kvs['__is_success'] = True
 			except:
+				print('----------------false')
 				from core.exceptionutil import full_stack
 				print('*********************** exception **********************')
 				stacktrace = full_stack()
