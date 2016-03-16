@@ -104,7 +104,7 @@ def __debug_print(content,type_tag=True):
 #                 "random_packets_number": args.get("group_random_packets_number"),
 #                 "regular_packets_number": args.get("group_regular_packets_number"),
 #                 "regular_per_money": args.get("group_regular_per_money"),
-#                 "red_packet_type":args.get("group_type"),
+#                 "group_type":args.get("group_type"),
 #                 "start_money": args.get("start_money"),
 #                 "end_money": args.get("end_money"),
 #                 "money_range": args.get("money_range"),
@@ -210,7 +210,7 @@ def __bool2Bool(bo):
 #     给团购项目的名字，返回id元祖
 #     返回（related_page_id,group_group中id）
 #     """
-#     obj = group_models.RedPacket.objects.get(name=name)
+#     obj = group_models.Group.objects.get(name=name)
 #     return (obj.related_page_id,obj.id)
 
 # def __status2name(status_num):
@@ -278,7 +278,7 @@ def __get_actions(status):
     #   actions_list.append(u"关闭")
     return actions_list
 
-def __Create_RedPacket(context,text,user):
+def __Create_Group(context,text,user):
     """
     模拟用户登录页面
     创建团购项目
@@ -306,8 +306,8 @@ def __Create_RedPacket(context,text,user):
     timing_status = text.get("is_show_countdown","")
     timing_value_day = __date_delta(start_date,end_date)
 
-    group_arr = text.get("red_packet","")#红包类型
-    group_type = group_arr.get('red_packet_type',""),
+    group_arr = text.get("group","")#红包类型
+    group_type = group_arr.get('group_type',""),
     group_random_total_money = group_arr.get('random_total_money',""),
     group_random_packets_number = group_arr.get("random_packets_number",""),
     group_regular_packets_number = group_arr.get("regular_packets_number",""),
@@ -319,16 +319,6 @@ def __Create_RedPacket(context,text,user):
 
     reply_content = text.get("reply","")
 
-    qrcode_name = text.get("qr_code","")
-    if qrcode_name:
-        qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
-        qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
-        qrcode_response = context.client.get(qrcode_i_url)
-        qrcode_info = qrcode_response.context['qrcode']
-        qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
-        qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
-    else:
-        qrcode = {"ticket":"","name":""}
 
     wishing = text.get("open_packet_reply","")
     rules = text.get("rules","")
@@ -361,7 +351,7 @@ def __Create_RedPacket(context,text,user):
     }
 
     #step1：登录页面，获得分配的project_id
-    get_pw_response = context.client.get("/apps/red_packet/red_packet/")
+    get_pw_response = context.client.get("/apps/group/group/")
     pw_args_response = get_pw_response.context
     project_id = pw_args_response['project_id']#(str){new_app:group:0}
 
@@ -389,7 +379,7 @@ def __Create_RedPacket(context,text,user):
         "start_time":start_time,
         "end_time":end_time,
         "timing":timing_status,
-        "red_packet_type":group_type,
+        "group_type":group_type,
         "random_total_money":group_random_total_money,
         "random_packets_number":group_random_packets_number,
         "regular_packets_number":group_regular_packets_number,
@@ -401,150 +391,150 @@ def __Create_RedPacket(context,text,user):
         "wishing":wishing,
         "related_page_id":related_page_id
     }
-    group_url ="/apps/red_packet/api/red_packet/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
+    group_url ="/apps/group/api/group/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
     post_group_response = context.client.post(group_url,post_group_args)
 
-def __Update_RedPacket(context,text,page_id,group_id):
-    """
-    模拟用户登录页面
-    编辑团购项目
-    写入mongo表：
-        1.group_group表
-        2.page表
-    """
+# def __Update_Group(context,text,page_id,group_id):
+#     """
+#     模拟用户登录页面
+#     编辑团购项目
+#     写入mongo表：
+#         1.group_group表
+#         2.page表
+#     """
 
-    design_mode=0
-    version=1
-    project_id = "new_app:group:"+page_id
+#     design_mode=0
+#     version=1
+#     project_id = "new_app:group:"+page_id
 
-    title = text.get("name","")
+#     title = text.get("name","")
 
-    cr_start_date = text.get('start_date', u'今天')
-    start_date = bdd_util.get_date_str(cr_start_date)
-    start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+#     cr_start_date = text.get('start_date', u'今天')
+#     start_date = bdd_util.get_date_str(cr_start_date)
+#     start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-    cr_end_date = text.get('end_date', u'1天后')
-    end_date = bdd_util.get_date_str(cr_end_date)
-    end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+#     cr_end_date = text.get('end_date', u'1天后')
+#     end_date = bdd_util.get_date_str(cr_end_date)
+#     end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-    valid_time = "%s~%s"%(start_time,end_time)
+#     valid_time = "%s~%s"%(start_time,end_time)
 
-    timing_status = text.get("is_show_countdown","")
-    timing_value_day = __date_delta(start_date,end_date)
+#     timing_status = text.get("is_show_countdown","")
+#     timing_value_day = __date_delta(start_date,end_date)
 
-    group_arr = text.get("red_packet","")#红包类型
-    group_type = group_arr.get('red_packet_type',""),
-    group_random_total_money = group_arr.get('random_total_money',""),
-    group_random_packets_number = group_arr.get("random_packets_number",""),
-    group_regular_packets_number = group_arr.get("regular_packets_number",""),
-    group_regular_per_money = group_arr.get("regular_per_money",""),
+#     group_arr = text.get("group","")#红包类型
+#     group_type = group_arr.get('group_type',""),
+#     group_random_total_money = group_arr.get('random_total_money',""),
+#     group_random_packets_number = group_arr.get("random_packets_number",""),
+#     group_regular_packets_number = group_arr.get("regular_packets_number",""),
+#     group_regular_per_money = group_arr.get("regular_per_money",""),
 
-    contribution_start_range = text.get("contribution_start_range",0)
-    contribution_end_range = text.get("contribution_end_range",0)
-    money_range = "{}-{}".format(contribution_start_range,contribution_end_range)
+#     contribution_start_range = text.get("contribution_start_range",0)
+#     contribution_end_range = text.get("contribution_end_range",0)
+#     money_range = "{}-{}".format(contribution_start_range,contribution_end_range)
 
-    reply_content = text.get("reply","")
+#     reply_content = text.get("reply","")
 
-    qrcode_name = text.get("qr_code","")
-    if qrcode_name:
-        qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
-        qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
-        qrcode_response = context.client.get(qrcode_i_url)
-        qrcode_info = qrcode_response.context['qrcode']
-        qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
-        qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
-    else:
-        qrcode = {"ticket":"","name":""}
+#     qrcode_name = text.get("qr_code","")
+#     if qrcode_name:
+#         qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
+#         qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
+#         qrcode_response = context.client.get(qrcode_i_url)
+#         qrcode_info = qrcode_response.context['qrcode']
+#         qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
+#         qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
+#     else:
+#         qrcode = {"ticket":"","name":""}
 
-    wishing = text.get("open_packet_reply","")
-    rules = text.get("rules","")
-    material_image = text.get("share_pic","")
-    share_description = text.get("share_desc","")
+#     wishing = text.get("open_packet_reply","")
+#     rules = text.get("rules","")
+#     material_image = text.get("share_pic","")
+#     share_description = text.get("share_desc","")
 
-    page_args = {
-        "title":title,
-        "start_time":start_time,
-        "end_time":end_time,
-        "valid_time":valid_time,
-        "timing_status":timing_status,
-        "timing_value_day":timing_value_day,
-        "group_type":group_type,
-        "group_random_total_money":group_random_total_money,
-        "group_random_packets_number":group_random_packets_number,
-        "group_regular_packets_number":group_regular_packets_number,
-        "group_regular_per_money":group_regular_per_money,
-        "start_money":contribution_start_range,
-        "end_money":contribution_end_range,
-        "money_range":money_range,
-        "reply_content":reply_content,
-        "qrcode":qrcode,
-        "wishing":wishing,
-        "rules":rules,
-        "material_image":material_image,
-        "share_description":share_description,
-    }
+#     page_args = {
+#         "title":title,
+#         "start_time":start_time,
+#         "end_time":end_time,
+#         "valid_time":valid_time,
+#         "timing_status":timing_status,
+#         "timing_value_day":timing_value_day,
+#         "group_type":group_type,
+#         "group_random_total_money":group_random_total_money,
+#         "group_random_packets_number":group_random_packets_number,
+#         "group_regular_packets_number":group_regular_packets_number,
+#         "group_regular_per_money":group_regular_per_money,
+#         "start_money":contribution_start_range,
+#         "end_money":contribution_end_range,
+#         "money_range":money_range,
+#         "reply_content":reply_content,
+#         "qrcode":qrcode,
+#         "wishing":wishing,
+#         "rules":rules,
+#         "material_image":material_image,
+#         "share_description":share_description,
+#     }
 
-    page_json = __get_groupPageJson(page_args)
+#     page_json = __get_groupPageJson(page_args)
 
-    update_page_args = {
-        "field":"page_content",
-        "id":project_id,
-        "page_id":"1",
-        "page_json": page_json
-    }
+#     update_page_args = {
+#         "field":"page_content",
+#         "id":project_id,
+#         "page_id":"1",
+#         "page_json": page_json
+#     }
 
-    update_group_args = {
-        "name":title,
-        "start_time":start_time,
-        "end_time":end_time,
-        "timing":timing_status,
-        "red_packet_type":group_type,
-        "random_total_money":group_random_total_money,
-        "random_packets_number":group_random_packets_number,
-        "regular_packets_number":group_regular_packets_number,
-        "regular_per_money":group_regular_per_money,
-        "money_range":money_range,
-        "reply_content":reply_content,
-        "material_image":material_image,
-        "qrcode":json.dumps(qrcode),
-        "wishing":wishing,
-        "id":group_id#updated的差别
-    }
+#     update_group_args = {
+#         "name":title,
+#         "start_time":start_time,
+#         "end_time":end_time,
+#         "timing":timing_status,
+#         "group_type":group_type,
+#         "random_total_money":group_random_total_money,
+#         "random_packets_number":group_random_packets_number,
+#         "regular_packets_number":group_regular_packets_number,
+#         "regular_per_money":group_regular_per_money,
+#         "money_range":money_range,
+#         "reply_content":reply_content,
+#         "material_image":material_image,
+#         "qrcode":json.dumps(qrcode),
+#         "wishing":wishing,
+#         "id":group_id#updated的差别
+#     }
 
 
-    #page 更新Page
-    update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-    update_page_response = context.client.post(update_page_url,update_page_args)
+#     #page 更新Page
+#     update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+#     update_page_response = context.client.post(update_page_url,update_page_args)
 
-    #step4:更新RedPacket
-    update_group_url ="/apps/red_packet/api/red_packet/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-    update_group_response = context.client.post(update_group_url,update_group_args)
+#     #step4:更新Group
+#     update_group_url ="/apps/group/api/group/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+#     update_group_response = context.client.post(update_group_url,update_group_args)
 
-def __Delete_RedPacket(context,group_id):
-    """
-    删除团购活动
-    写入mongo表：
-        1.group_group表
+# def __Delete_Group(context,group_id):
+#     """
+#     删除团购活动
+#     写入mongo表：
+#         1.group_group表
 
-    注释：page表在原后台，没有被删除
-    """
-    design_mode = 0
-    version = 1
-    del_group_url = "/apps/red_packet/api/red_packet/?design_mode={}&version={}&_method=delete".format(design_mode,version)
-    del_args ={
-        "id":group_id
-    }
-    del_group_response = context.client.post(del_group_url,del_args)
-    return del_group_response
+#     注释：page表在原后台，没有被删除
+#     """
+#     design_mode = 0
+#     version = 1
+#     del_group_url = "/apps/group/api/group/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+#     del_args ={
+#         "id":group_id
+#     }
+#     del_group_response = context.client.post(del_group_url,del_args)
+#     return del_group_response
 
-# def __Stop_RedPacket(context,group_id):
+# def __Stop_Group(context,group_id):
 #   """
 #   关闭团购活动
 #   """
 
 #   design_mode = 0
 #   version = 1
-#   stop_group_url = "/apps/red_packet/api/group_status/?design_mode={}&version={}".format(design_mode,version)
+#   stop_group_url = "/apps/group/api/group_status/?design_mode={}&version={}".format(design_mode,version)
 #   stop_args ={
 #       "id":group_id,
 #       "target":'stoped'
@@ -552,41 +542,41 @@ def __Delete_RedPacket(context,group_id):
 #   stop_group_response = context.client.post(stop_group_url,stop_args)
 #   return stop_group_response
 
-def __Search_Powerme(context,search_dic):
-    """
-    搜索团购活动
+# def __Search_Powerme(context,search_dic):
+#     """
+#     搜索团购活动
 
-    输入搜索字典
-    返回数据列表
-    """
+#     输入搜索字典
+#     返回数据列表
+#     """
 
-    design_mode = 0
-    version = 1
-    page = 1
-    enable_paginate = 1
-    count_per_page = 10
+#     design_mode = 0
+#     version = 1
+#     page = 1
+#     enable_paginate = 1
+#     count_per_page = 10
 
-    name = search_dic["name"]
-    start_time = search_dic["start_time"]
-    end_time = search_dic["end_time"]
-    status = __name2status(search_dic["status"])
+#     name = search_dic["name"]
+#     start_time = search_dic["start_time"]
+#     end_time = search_dic["end_time"]
+#     status = __name2status(search_dic["status"])
 
 
 
-    search_url = "/apps/red_packet/api/red_packets/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
-            design_mode,
-            version,
-            name,
-            status,
-            start_time,
-            end_time,
-            count_per_page,
-            page,
-            enable_paginate)
+#     search_url = "/apps/group/api/groups/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+#             design_mode,
+#             version,
+#             name,
+#             status,
+#             start_time,
+#             end_time,
+#             count_per_page,
+#             page,
+#             enable_paginate)
 
-    search_response = context.client.get(search_url)
-    bdd_util.assert_api_call_success(search_response)
-    return search_response
+#     search_response = context.client.get(search_url)
+#     bdd_util.assert_api_call_success(search_response)
+#     return search_response
 
 # def __Search_Powerme_Result(context,search_dic):
 #   """
@@ -609,7 +599,7 @@ def __Search_Powerme(context,search_dic):
 
 
 
-#   search_url = "/apps/red_packet/api/group_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+#   search_url = "/apps/group/api/group_participances/?design_mode={}&version={}&id={}&participant_name={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
 #           design_mode,
 #           version,
 #           id,
@@ -657,45 +647,16 @@ def step_impl(context,user):
     print("actual_data: {}".format(actual))
     bdd_util.assert_list(expected, actual)
 
-  # if context.table:
-  #     for row in context.table:
-  #         cur_p = row.as_dict()
-  #         if cur_p[u'parti_time']:
-  #             cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
-  #         expected.append(cur_p)
-#   actual = []
-#   print(participances)
-#   for p in participances:
-#       p_dict = OrderedDict()
-#       p_dict[u"rank"] = p['ranking']
-#       p_dict[u"member_name"] = p['username']
-#       p_dict[u"group_value"] = p['power']
-#       p_dict[u"parti_time"] = bdd_util.get_date_str(p['created_at'])
-#       actual.append((p_dict))
-#   print("actual_data: {}".format(actual))
-#   expected = []
-#   if context.table:
-#       for row in context.table:
-#           cur_p = row.as_dict()
-#           if cur_p[u'parti_time']:
-#               cur_p[u'parti_time'] = bdd_util.get_date_str(cur_p[u'parti_time'])
-#           expected.append(cur_p)
-#   else:
-#       expected = json.loads(context.text)
-#   print("expected: {}".format(expected))
 
-#   bdd_util.assert_list(expected, actual)
-
-
-# @when(u'{user}新建团购活动')
-# def create_RedPacket(context,user):
-#     text_list = json.loads(context.text)
-#     for text in text_list:
-#         __Create_RedPacket(context,text,user)
+@when(u'{user}新建团购活动')
+def create_Group(context,user):
+    text_list = json.loads(context.text)
+    for text in text_list:
+        __Create_Group(context,text,user)
 
 # @when(u'{user}新建普通红包活动')
 # def step_impl(context,user):
-#     create_RedPacket(context,user)
+#     create_Group(context,user)
 
 # @then(u'{user}获得团购活动列表')
 # def step_impl(context,user):
@@ -715,7 +676,7 @@ def step_impl(context,user):
 #             tmp = {
 #                 "name":item['name'],
 #                 "participant_count":item['participant_count'],
-#                 "red_packet_type":item['red_packet_type'],
+#                 "group_type":item['group_type'],
 #                 "status":item['status'],
 #                 "total_money":item['total_money'],
 #                 "already_paid_money":item['already_paid_money'],
@@ -754,7 +715,7 @@ def step_impl(context,user):
 
 #         print("expected: {}".format(expected))
 
-#         rec_group_url ="/apps/red_packet/api/red_packets/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+#         rec_group_url ="/apps/group/api/groups/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
 #         rec_group_response = context.client.get(rec_group_url)
 #         rec_group_list = json.loads(rec_group_response.content)['data']['items']#[::-1]
 
@@ -762,7 +723,7 @@ def step_impl(context,user):
 #             tmp = {
 #                 "name":item['name'],
 #                 "participant_count":item['participant_count'],
-#                 "red_packet_type":item['red_packet_type'],
+#                 "group_type":item['group_type'],
 #                 "status":item['status'],
 #                 "total_money":item['total_money'],
 #                 "already_paid_money":item['already_paid_money'],
@@ -779,28 +740,28 @@ def step_impl(context,user):
 # def step_impl(context,user,group_name):
 #     expect = json.loads(context.text)[0]
 #     group_page_id,group_id = __group_name2id(group_name)#纯数字
-#     __Update_RedPacket(context,expect,group_page_id,group_id)
+#     __Update_Group(context,expect,group_page_id,group_id)
 
 
 
 # @when(u"{user}删除团购活动'{group_name}'")
 # def step_impl(context,user,group_name):
 #     group_page_id,group_id = __group_name2id(group_name)#纯数字
-#     del_response = __Delete_RedPacket(context,group_id)
+#     del_response = __Delete_Group(context,group_id)
 #     bdd_util.assert_api_call_success(del_response)
 
 
 # @when(u"{user}关闭团购活动'{group_name}'")
 # def step_impl(context,user,group_name):
 #   group_page_id,group_id = __group_name2id(group_name)#纯数字
-#   stop_response = __Stop_RedPacket(context,group_id)
+#   stop_response = __Stop_Group(context,group_id)
 #   bdd_util.assert_api_call_success(stop_response)
 
 
 # @when(u"{user}查看团购活动'{group_name}'")
 # def step_impl(context,user,group_name):
 #   group_page_id,group_id = __group_name2id(group_name)#纯数字
-#   url ='/apps/red_packet/api/group_participances/?_method=get&id=%s' % (group_id)
+#   url ='/apps/group/api/group_participances/?_method=get&id=%s' % (group_id)
 #   url = bdd_util.nginx(url)
 #   response = context.client.get(url)
 #   context.participances = json.loads(response.content)
@@ -905,7 +866,7 @@ def step_impl(context,user):
 # @then(u"{user}能批量导出团购活动'{group_name}'")
 # def step_impl(context,user,group_name):
 #   group_page_id,group_id = __group_name2id(group_name)#纯数字
-#   url ='/apps/red_packet/api/group_participances_export/?_method=get&export_id=%s' % (group_id)
+#   url ='/apps/group/api/group_participances_export/?_method=get&export_id=%s' % (group_id)
 #   url = bdd_util.nginx(url)
 #   response = context.client.get(url)
 #   bdd_util.assert_api_call_success(response)

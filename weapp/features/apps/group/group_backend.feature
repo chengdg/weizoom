@@ -258,7 +258,7 @@ Scenario:1 新建团购活动页面,查询商品列表
 		| 酱牛肉  | 50    |  无限  |                |  选取   |
 
 
-@mall2 @apps_group @apps_group_backend
+@mall2 @apps_group @apps_group_backend @yang
 Scenario:2 新建未开启,已结束团购活动
 	Given jobs登录系统
 	When jobs新建团购活动
