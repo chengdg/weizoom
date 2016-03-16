@@ -1474,6 +1474,15 @@ class GroupProductList(resource.Resource):
         if product_name:
             products = products.filter(name__contains=product_name)
 
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
+
         #处理排序
         sort_attr = request.GET.get('sort_attr', None)
         if not sort_attr:
@@ -1492,15 +1501,6 @@ class GroupProductList(resource.Resource):
         products_not_0 = filter(lambda p: p.display_index != 0, products)
         products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
         products = utils.filter_products(request, products_not_0 + products_is_0)
-
-        models.Product.fill_details(request.manager, products, {
-            "with_product_model": True,
-            "with_model_property_info": True,
-            "with_selected_category": True,
-            'with_image': False,
-            'with_property': True,
-            'with_sales': True
-        })
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
