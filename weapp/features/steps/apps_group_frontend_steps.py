@@ -86,30 +86,26 @@ def __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid):
 		print(response.status_code)
 
 
-@then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
-def step_tmpl(context, webapp_user_name, webapp_owner_name):
-	user = User.objects.get(id=context.webapp_owner_id)
-	openid = "%s_%s" % (webapp_user_name, user.username)
-	webapp_owner_id = context.webapp_owner_id
-	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
-	print('!response!!!!!!!!!!!!!!!!!!!')
-	print(response.context['all_groups_can_open'])
-	# 构造实际数据
-	# actual = []
-	# actual.append({
-	# 	"group_name": group.name,
-	# 	"is_show_countdown": page_component['timing']['timing']['select'],
-	# 	"desc": page_component['description'],
-	# 	"background_pic": page_component['background_image'],
-	# 	"rules": page_component['rules'],
-	# 	"my_rank": rank_information['current_member_rank_info']['rank'] if rank_information['current_member_rank_info'] else u'无',
-	# 	"my_power_score": rank_information['current_member_rank_info']['power'] if rank_information['current_member_rank_info'] else '0',
-	# 	"total_participant_count": rank_information['total_participant_count']
-	# })
-	# print("actual_data: {}".format(actual))
-	# expected = json.loads(context.text)
-	# print("expected: {}".format(expected))
-	# bdd_util.assert_list(expected, actual)
+# @then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
+# def step_tmpl(context, webapp_user_name, webapp_owner_name):
+# 	user = User.objects.get(id=context.webapp_owner_id)
+# 	openid = "%s_%s" % (webapp_user_name, user.username)
+# 	webapp_owner_id = context.webapp_owner_id
+# 	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
+# 	print('!response!!!!!!!!!!!!!!!!!!!')
+# 	print(response.context['all_groups_can_open'])
+# 	all_groups_can_open = response.context['all_groups_can_open']
+# 	# 构造实际数据
+# 	actual = []
+# 	for group in all_groups_can_open:
+# 		actual.append({
+# 			"group_name": group.name,
+# 			"group_dict": page_component['timing']['timing']['select'],
+# 		})
+# 	print("actual_data: {}".format(actual))
+# 	expected = json.loads(context.text)
+# 	print("expected: {}".format(expected))
+# 	bdd_util.assert_list(expected, actual)
 
 # @then(u'{webapp_user_name}获得"{group_rule_name}"的助力值排名')
 # def step_tmpl(context, webapp_user_name, group_rule_name):
