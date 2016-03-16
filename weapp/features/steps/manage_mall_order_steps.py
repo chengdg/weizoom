@@ -447,7 +447,7 @@ def step_look_for_order(context, user):
     is_first_order =  True if (query_params.get('is_first_order') in ('true', 'yes', 'True', 'Yes', True)) else False
     is_not_first_order =  True if (query_params.get('is_not_first_order') in ('true', 'yes', 'True', 'Yes', True)) else False
     if query_params.get('is_not_first_order'):
-        query_params.pop('is_first_order')
+        query_params.pop('is_not_first_order')
     if (is_first_order and is_not_first_order) or (not is_first_order and  not is_not_first_order):
         query_params.pop('is_first_order')
     if is_first_order and not is_not_first_order:

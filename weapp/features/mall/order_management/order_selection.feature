@@ -51,6 +51,7 @@ Background:
 			"member": "tom",
 			"status": "待发货",
 			"order_time": "2014-10-03 12:00:00",
+			"payment_time":"2014-10-03 12:00:00",
 			"methods_of_payment": "货到付款",
 			"sources": "商城",
 			"products": [{
@@ -65,6 +66,7 @@ Background:
 			"member": "bill",
 			"status": "已取消",
 			"order_time": "2014-10-04 12:00:00",
+			"payment_time":"2014-10-04 12:00:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"products": [{
@@ -79,6 +81,7 @@ Background:
 			"member": "tom",
 			"status": "已完成",
 			"order_time": "2014-10-05 12:00:00",
+			"payment_time":"2014-10-05 13:00:00",
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
 			"products": [{
@@ -96,6 +99,7 @@ Background:
 			"member": "tom",
 			"status": "已发货",
 			"order_time": "2014-10-06 12:00:00",
+			"payment_time":"2014-10-06 12:00:00",
 			"methods_of_payment": "优惠抵扣",
 			"sources": "商城",
 			"products": [{
@@ -113,6 +117,7 @@ Background:
 			"member": "bill",
 			"status": "待发货",
 			"order_time": "2014-10-07 12:00:00",
+			"payment_time":"2014-10-07 13:00:00",
 			"methods_of_payment": "支付宝",
 			"sources": "商城",
 			"products": [{
@@ -127,6 +132,7 @@ Background:
 			"member": "bill",
 			"status": "待支付",
 			"order_time": "2014-10-08 12:00:00",
+			"payment_time":"",
 			"methods_of_payment": "微信支付",
 			"sources": "商城",
 			"products": [{
