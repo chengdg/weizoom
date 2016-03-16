@@ -97,7 +97,7 @@ Background:
 		}]
 		"""
 
-@mall2 @apps @apps_redpacket @apps_redpacket_update @kuki
+@mall2 @apps @apps_redpacket @apps_redpacket_update
 Scenario:1 编辑"未开始"的拼红包活动
 	Given jobs登录系统
 	When jobs编辑拼红包活动'活动1'
