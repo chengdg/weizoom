@@ -1625,58 +1625,58 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     return result
 
 
-# def update_order_status_by_group_status(group_id, status, order_ids=None):
-#     # TODO 退款
-#     if status == 'success':
-#         group_status = GROUP_STATUS_OK
-#         order_status = ORDER_STATUS_NOT
-#     elif status == 'failure':
-#         group_status = GROUP_STATUS_failure
-#         order_status = ORDER_STATUS_PAYED_NOT_SHIP
+def update_order_status_by_group_status(group_id, status, order_ids=None):
+    # TODO 退款
+    if status == 'success':
+        group_status = GROUP_STATUS_OK
+        order_status = ORDER_STATUS_NOT
+    elif status == 'failure':
+        group_status = GROUP_STATUS_failure
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
-#     relations = OrderHasGroup.objects.filter(group_id=group_id)
-#     user = UserProfile.objects.filter(webapp_id=relations[0].webapp_id).user
-#     relations.update(group_status=group_status)
-#     orders = Order.objects.filter(
-#             order_id__in=[r.order_id for r in relations],
-#             status=order_status
-#             )
-#     from mall.module_api import update_order_status
-#     for order in orders:
-#         if order_status == ORDER_STATUS_NOT:
-#             update_order_status(user, 'cancel', order)
-#         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
-#             update_order_status(user, 'return_pay', order)
-#             import requests
-#             args = {
-#                 'order':
-#                 'access_token':
-#             }
-#             r = requests.get(url, params=args)
-#             response = json.loads(r.json())
-#             if response['is_success']:
-#                 order.status = ORDER_STATUS_GROUP_REFUNDING
-#                 order.save()
-#             else:
-#                 args = {
-#                     'order':
-#                     'access_token':
-#                 }
-#                 r = requests.get(url, params=args)
-#                 response = json.loads(r.json())
-#                 if response['is_success']:
-#                     order.status = ORDER_STATUS_GROUP_REFUNDING
-#                     order.save()
-#                 else:
-#                     args = {
-#                         'order':
-#                         'access_token':
-#                     }
-#                     r = requests.get(url, params=args)
-#                     response = json.loads(r.json())
-#                     if response['is_success']:
-#                         order.status = ORDER_STATUS_GROUP_REFUNDING
-#                         order.save()
+    relations = OrderHasGroup.objects.filter(group_id=group_id)
+    user = UserProfile.objects.filter(webapp_id=relations[0].webapp_id).user
+    relations.update(group_status=group_status)
+    orders = Order.objects.filter(
+            order_id__in=[r.order_id for r in relations],
+            status=order_status
+            )
+    from mall.module_api import update_order_status
+    for order in orders:
+        if order_status == ORDER_STATUS_NOT:
+            update_order_status(user, 'cancel', order)
+        elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+            update_order_status(user, 'return_pay', order)
+            # import requests
+            # args = {
+            #     'order':
+            #     'access_token':
+            # }
+            # r = requests.get(url, params=args)
+            # response = json.loads(r.json())
+            # if response['is_success']:
+            #     order.status = ORDER_STATUS_GROUP_REFUNDING
+            #     order.save()
+            # else:
+            #     args = {
+            #         'order':
+            #         'access_token':
+            #     }
+            #     r = requests.get(url, params=args)
+            #     response = json.loads(r.json())
+            #     if response['is_success']:
+            #         order.status = ORDER_STATUS_GROUP_REFUNDING
+            #         order.save()
+            #     else:
+            #         args = {
+            #             'order':
+            #             'access_token':
+            #         }
+            #         r = requests.get(url, params=args)
+            #         response = json.loads(r.json())
+            #         if response['is_success']:
+            order.status = ORDER_STATUS_GROUP_REFUNDING
+            order.save()
 
 def cancel_group_buying(order_id):
     order = Order.objects.get(order_id=order_id)
