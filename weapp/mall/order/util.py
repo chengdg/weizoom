@@ -1647,11 +1647,39 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             update_order_status(user, 'return_pay', order)
-            order.status = ORDER_STATUS_GROUP_REFUNDING
-            order.save()
+            import requests
+            args = {
+                'order':
+                'access_token':
+            }
+            r = requests.get(url, params=args)
+            response = json.loads(r.json())
+            if response['is_success']:
+                order.status = ORDER_STATUS_GROUP_REFUNDING
+                order.save()
+            else:
+                args = {
+                    'order':
+                    'access_token':
+                }
+                r = requests.get(url, params=args)
+                response = json.loads(r.json())
+                if response['is_success']:
+                    order.status = ORDER_STATUS_GROUP_REFUNDING
+                    order.save()
+                else:
+                    args = {
+                        'order':
+                        'access_token':
+                    }
+                    r = requests.get(url, params=args)
+                    response = json.loads(r.json())
+                    if response['is_success']:
+                        order.status = ORDER_STATUS_GROUP_REFUNDING
+                        order.save()
 
 def cancel_group_buying(order_id):
     order = Order.objects.get(order_id=order_id)
-    user = UserProfile.objects.filter(Order.webapp_id).user
+    user = UserProfile.objects.filter(webapp_id=order.webapp_id).user
     from mall.module_api import update_order_status
     update_order_status(user, 'cancel', order)
