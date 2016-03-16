@@ -17,6 +17,7 @@ from weixin.message.material import models as material_models
 from apps.customerized_apps.group import models as group_models
 import termite.pagestore as pagestore_manager
 import json
+import copy
 
 def __debug_print(content,type_tag=True):
     """
@@ -34,136 +35,195 @@ def __debug_print(content,type_tag=True):
         pass
 
 
-# def __get_groupPageJson(args):
-#     """
-#     传入参数，获取模板
-#     """
-#     __page_temple = {
-#         "type": "appkit.page",
-#         "cid": 1,
-#         "pid": None,
-#         "auto_select": False,
-#         "selectable": "yes",
-#         "force_display_in_property_view": "no",
-#         "has_global_content": "no",
-#         "need_server_process_component_data": "no",
-#         "is_new_created": True,
-#         "property_view_title": "背景",
-#         "model": {
-#             "id": "",
-#             "class": "",
-#             "name": "",
-#             "index": 1,
-#             "datasource": {
-#                 "type": "api",
-#                 "api_name": ""
-#             },
-#             "content_padding": "15px",
-#             "title": "index",
-#             "event:onload": "",
-#             "uploadHeight": "568",
-#             "uploadWidth": "320",
-#             "site_title": "团购",
-#             "background": ""
-#         },
-#         "components": [{
-#             "type": "appkit.groupdescription",
-#             "cid": 2,
-#             "pid": 1,
-#             "auto_select": False,
-#             "selectable": "yes",
-#             "force_display_in_property_view": "no",
-#             "has_global_content": "no",
-#             "need_server_process_component_data": "no",
-#             "property_view_title": "拼手气",
-#             "model": {
-#                 "id": "",
-#                 "class": "",
-#                 "name": "",
-#                 "index": 2,
-#                 "datasource": {
-#                     "type": "api",
-#                     "api_name": ""
-#                 },
-#                 "title": args.get("title"),
-#                 "start_time": args.get("start_time"),
-#                 "end_time": args.get("end_time"),
-#                 "valid_time": args.get("valid_time"),
-#                 "timing": {
-#                     "timing": {
-#                         "select": args.get("timing_status")
-#                     }
-#                 },
-#                 "timing_value": {
-#                     "day": args.get("timing_value_day",0),
-#                     "hour": "00",
-#                     "minute": "00",
-#                     "second": "00"
-#                 },
-#                 "random_total_money": args.get("group_random_total_money"),
-#                 "random_packets_number": args.get("group_random_packets_number"),
-#                 "regular_packets_number": args.get("group_regular_packets_number"),
-#                 "regular_per_money": args.get("group_regular_per_money"),
-#                 "group_type":args.get("group_type"),
-#                 "start_money": args.get("start_money"),
-#                 "end_money": args.get("end_money"),
-#                 "money_range": args.get("money_range"),
-#                 "reply_content": args.get("reply_content"),
-#                 "qrcode": args.get("qrcode"),
-#                 "wishing": args.get("wishing"),
-#                 "rules": args.get("rules"),
-#                 "material_image": args.get("material_image"),
-#                 "share_description": args.get("share_description")
-#             },
-#             "components": []
-#         }, {
-#             "type": "appkit.submitbutton",
-#             "cid": 3,
-#             "pid": 1,
-#             "auto_select": False,
-#             "selectable": "no",
-#             "force_display_in_property_view": "no",
-#             "has_global_content": "no",
-#             "need_server_process_component_data": "no",
-#             "property_view_title": "",
-#             "model": {
-#                 "id": "",
-#                 "class": "",
-#                 "name": "",
-#                 "index": 99999,
-#                 "datasource": {
-#                     "type": "api",
-#                     "api_name": ""
-#                 },
-#                 "text": "提交"
-#             },
-#             "components": []
-#         }, {
-#             "type": "appkit.componentadder",
-#             "cid": 4,
-#             "pid": 1,
-#             "auto_select": False,
-#             "selectable": "yes",
-#             "force_display_in_property_view": "no",
-#             "has_global_content": "no",
-#             "need_server_process_component_data": "no",
-#             "property_view_title": "添加模块",
-#             "model": {
-#                 "id": "",
-#                 "class": "",
-#                 "name": "",
-#                 "index": 3,
-#                 "datasource": {
-#                     "type": "api",
-#                     "api_name": ""
-#                 },
-#                 "components": ""
-#             },
-#             "components": []
-#         }]
-#     }
+def __get_groupPageJson(args):
+    """
+    传入参数，获取模板
+    """
+    __page_temple = {}
+    __group_temple = {}
 
-#     return json.dumps(__page_temple)
+
+    __page_temple = {
+    "type": "appkit.page",
+    "cid": 1,
+    "pid": "null",
+    "auto_select": False,
+    "selectable": "yes",
+    "force_display_in_property_view": "no",
+    "has_global_content": "no",
+    "need_server_process_component_data": "no",
+    "is_new_created": True,
+    "property_view_title": "背景",
+    "model": {
+        "id": "",
+        "class": "",
+        "name": "",
+        "index": 1,
+        "datasource": {
+            "type": "api",
+            "api_name": ""
+        },
+        "content_padding": "15px",
+        "title": "index",
+        "event:onload": "",
+        "uploadHeight": "568",
+        "uploadWidth": "320",
+        "site_title": "团购活动",
+        "background": ""
+    },
+    "components": [
+        {
+            "type": "appkit.groupdescription",
+            "cid": 2,
+            "pid": 1,
+            "auto_select": False,
+            "selectable": "yes",
+            "force_display_in_property_view": "no",
+            "has_global_content": "no",
+            "need_server_process_component_data": "no",
+            "property_view_title": "团购活动",
+            "model": {
+                "id": "",
+                "class": "",
+                "name": "",
+                "index": 2,
+                "datasource": {
+                    "type": "api",
+                    "api_name": ""
+                },
+                "title": args.get('name'),
+                "start_time":  args.get("start_time"),
+                "end_time": args.get("end_time"),
+                "valid_time": args.get("valid_time"),
+                "product": {
+                    "productId": args.get('product_id'),
+                    "productImg": args.get('product_img'),
+                    "productName": args.get('product_name'),
+                    "productPrice": float(args.get('product_price')),
+                    "productSocks": args.get('product_socks'),
+                    "productBarcode": args.get('product_barcode')
+                },
+                "group_title": "",
+                "group_items": [],
+                "rule_title": "",
+                "rules": args.get('rules'),
+                "material_image": args.get('material_image'),
+                "share_description": args.get('share_description'),
+                "timing_value": {
+                    "day": "null",
+                    "hour": "null",
+                    "minute": "null",
+                    "second": "null"
+                }
+            },
+            "components": []
+        },
+        {
+            "type": "appkit.submitbutton",
+            "cid": 3,
+            "pid": 1,
+            "auto_select": False,
+            "selectable": "no",
+            "force_display_in_property_view": "no",
+            "has_global_content": "no",
+            "need_server_process_component_data": "no",
+            "property_view_title": "",
+            "model": {
+                "id": "",
+                "class": "",
+                "name": "",
+                "index": 99999,
+                "datasource": {
+                    "type": "api",
+                    "api_name": ""
+                },
+                "text": "提交"
+            },
+            "components": []
+        },
+        {
+            "type": "appkit.componentadder",
+            "cid": 4,
+            "pid": 1,
+            "auto_select": False,
+            "selectable": "yes",
+            "force_display_in_property_view": "no",
+            "has_global_content": "no",
+            "need_server_process_component_data": "no",
+            "property_view_title": "添加模块",
+            "model": {
+                "id": "",
+                "class": "",
+                "name": "",
+                "index": 3,
+                "datasource": {
+                    "type": "api",
+                    "api_name": ""
+                },
+                "components": ""
+            },
+            "components": []
+        }
+    ]
+    }
+
+    __group_temple =  {
+                    "type": "appkit.groupitem",
+                    "cid": '',
+                    "pid": 2,
+                    "auto_select": False,
+                    "selectable": "no",
+                    "force_display_in_property_view": "no",
+                    "has_global_content": "no",
+                    "need_server_process_component_data": "no",
+                    "is_new_created": True,
+                    "property_view_title": "",
+                    "model": {
+                        "id": "",
+                        "class": "",
+                        "name": "",
+                        "index": 5,
+                        "datasource": {
+                            "type": "api",
+                            "api_name": ""
+                        },
+                        "group_type": "",
+                        "group_days": "",
+                        "group_price": ""
+                    },
+                    "components": []
+                }
+
+
+    group_dict = args.get("group_dict",{})
+    group_components = []
+    group_items = []
+    if group_dict:
+        if '0' in group_dict:
+            group_d = group_dict["0"]
+            group_tmp = copy.deepcopy(__group_temple)
+            group_tmp["model"]["group_type"] = group_d["group_type"]
+            group_tmp["model"]["group_days"] = group_d["group_days"]
+            group_tmp["model"]["group_price"] = group_d["group_price"]
+            group_tmp['cid'] = 5
+            group_tmp['model']["index"] = 5
+            group_components.append(group_tmp)
+            group_items.append(5)
+        if '1' in group_dict:
+            group_d = group_dict["1"]
+            group_tmp2 = copy.deepcopy(__group_temple)
+            group_tmp2["model"]["group_type"] = group_d["group_type"]
+            group_tmp2["model"]["group_days"] = group_d["group_days"]
+            group_tmp2["model"]["group_price"] = group_d["group_price"]
+            group_tmp2['cid'] = 6
+            group_tmp2['model']["index"] = 6
+            group_components.append(group_tmp2)
+            group_items.append(6)
+
+    __page_temple['components'][0]["model"]["group_items"] = group_items
+    __page_temple['components'][0]["components"]= group_components
+
+    return json.dumps(__page_temple)
 
 def __bool2Bool(bo):
     """
@@ -176,42 +236,42 @@ def __bool2Bool(bo):
         result = None
     return result
 
-# def __date_delta(start,end):
-#     """
-#     获得日期，相差天数，返回int
-#     格式：
-#         start:(str){2015-11-23}
-#         end :(str){2015-11-30}
-#     """
-#     start = dt.datetime.strptime(start, "%Y-%m-%d").date()
-#     end = dt.datetime.strptime(end, "%Y-%m-%d").date()
-#     return (end-start).days
+def __date_delta(start,end):
+    """
+    获得日期，相差天数，返回int
+    格式：
+        start:(str){2015-11-23}
+        end :(str){2015-11-30}
+    """
+    start = dt.datetime.strptime(start, "%Y-%m-%d").date()
+    end = dt.datetime.strptime(end, "%Y-%m-%d").date()
+    return (end-start).days
 
-# def __date2time(date_str):
-#     """
-#     字符串 今天/明天……
-#     转化为字符串 "%Y-%m-%d %H:%M"
-#     """
-#     cr_date = date_str
-#     p_date = bdd_util.get_date_str(cr_date)
-#     p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
-#     return p_time
+def __date2time(date_str):
+    """
+    字符串 今天/明天……
+    转化为字符串 "%Y-%m-%d %H:%M"
+    """
+    cr_date = date_str
+    p_date = bdd_util.get_date_str(cr_date)
+    p_time = "{} 00:00".format(bdd_util.get_date_str(cr_date))
+    return p_time
 
-# def __datetime2str(dt_time):
-#     """
-#     datetime型数据，转为字符串型，日期
-#     转化为字符串 "%Y-%m-%d %H:%M"
-#     """
-#     dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
-#     return dt_time
+def __datetime2str(dt_time):
+    """
+    datetime型数据，转为字符串型，日期
+    转化为字符串 "%Y-%m-%d %H:%M"
+    """
+    dt_time = dt.datetime.strftime(dt_time, "%Y-%m-%d %H:%M")
+    return dt_time
 
-# def __group_name2id(name):
-#     """
-#     给团购项目的名字，返回id元祖
-#     返回（related_page_id,group_group中id）
-#     """
-#     obj = group_models.Group.objects.get(name=name)
-#     return (obj.related_page_id,obj.id)
+def __group_name2id(name):
+    """
+    给团购项目的名字，返回id元祖
+    返回（related_page_id,group_group中id）
+    """
+    obj = group_models.Group.objects.get(name=name)
+    return (obj.related_page_id,obj.id)
 
 # def __status2name(status_num):
 #     """
@@ -271,11 +331,14 @@ def __get_actions(status):
     根据输入团购状态
     返回对于操作列表
     """
-    actions_list = [u"查看",u"预览",u"复制链接"]
+    actions_list = [u"参团详情"]
     if status == u"已结束":
         actions_list.append(u"删除")
-    # elif status=="进行中" or "未开始":
-    #   actions_list.append(u"关闭")
+    elif status == "未开启":
+        actions_list.append(u"编辑")
+        actions_list.append(u"开启")
+    elif status=="进行中":
+        actions_list.append(u"结束")
     return actions_list
 
 def __Create_Group(context,text,user):
@@ -291,7 +354,7 @@ def __Create_Group(context,text,user):
     version = 1
     text = text
 
-    title = text.get("name","")
+    name = text.get("group_name","")
 
     cr_start_date = text.get('start_date', u'今天')
     start_date = bdd_util.get_date_str(cr_start_date)
@@ -303,51 +366,45 @@ def __Create_Group(context,text,user):
 
     valid_time = "%s~%s"%(start_time,end_time)
 
-    timing_status = text.get("is_show_countdown","")
-    timing_value_day = __date_delta(start_date,end_date)
+    group_dict = text.get('group_dict','')
 
-    group_arr = text.get("group","")#红包类型
-    group_type = group_arr.get('group_type',""),
-    group_random_total_money = group_arr.get('random_total_money',""),
-    group_random_packets_number = group_arr.get("random_packets_number",""),
-    group_regular_packets_number = group_arr.get("regular_packets_number",""),
-    group_regular_per_money = group_arr.get("regular_per_money",""),
+    product_name = text.get('product_name',"")
+    product_dict = get_product_list(context,product_name)[0]
+    product_id = ""
+    product_img = ""
+    product_name = ""
+    product_price = ""
+    product_socks = ""
+    product_barcode = ""
+    if product_dict:
+        product_id = product_dict['id']
+        product_img = product_dict['thumbnails_url']
+        product_name = product_dict['name']
+        product_price = product_dict['display_price']
+        product_socks = product_dict['stocks']
+        product_barcode = product_dict['bar_code']
 
-    contribution_start_range = text.get("contribution_start_range",0)
-    contribution_end_range = text.get("contribution_end_range",0)
-    money_range = "{}-{}".format(contribution_start_range,contribution_end_range)
-
-    reply_content = text.get("reply","")
-
-
-    wishing = text.get("open_packet_reply","")
     rules = text.get("rules","")
-    material_image = text.get("share_pic","")
-    share_description = text.get("share_desc","")
+    material_image = text.get("material_image","")
+    share_description = text.get("share_description","")
 
 
 
     page_args = {
-        "title":title,
+        "name":name,
         "start_time":start_time,
         "end_time":end_time,
         "valid_time":valid_time,
-        "timing_status":timing_status,
-        "timing_value_day":timing_value_day,
-        "group_type":group_type,
-        "group_random_total_money":group_random_total_money,
-        "group_random_packets_number":group_random_packets_number,
-        "group_regular_packets_number":group_regular_packets_number,
-        "group_regular_per_money":group_regular_per_money,
-        "start_money":contribution_start_range,
-        "end_money":contribution_end_range,
-        "money_range":money_range,
-        "reply_content":reply_content,
-        "qrcode":qrcode,
-        "wishing":wishing,
+        "group_dict":group_dict,
+        "product_id":product_id,
+        "product_img":product_img,
+        "product_name":product_name,
+        "product_price":product_price,
+        "product_socks":product_socks,
+        "product_barcode":product_barcode,
         "rules":rules,
         "material_image":material_image,
-        "share_description":share_description,
+        "share_description":share_description
     }
 
     #step1：登录页面，获得分配的project_id
@@ -373,159 +430,168 @@ def __Create_Group(context,text,user):
     post_termite_response = context.client.post(termite_url,termite_post_args)
     related_page_id = json.loads(post_termite_response.content).get("data",{})['project_id']
 
-    #step4:发送group_args
+    # #step4:发送group_args
+
     post_group_args = {
-        "name":title,
+        "name":name,
         "start_time":start_time,
         "end_time":end_time,
-        "timing":timing_status,
-        "group_type":group_type,
-        "random_total_money":group_random_total_money,
-        "random_packets_number":group_random_packets_number,
-        "regular_packets_number":group_regular_packets_number,
-        "regular_per_money":group_regular_per_money,
-        "money_range":money_range,
-        "reply_content":reply_content,
+        "valid_time":valid_time,
+        "group_dict":json.dumps(group_dict),
+        "product_id":product_id,
+        "product_img":product_img,
+        "product_name":product_name,
+        "product_price":product_price,
+        "product_socks":product_socks,
+        "product_barcode":product_barcode,
+        "rules":rules,
         "material_image":material_image,
-        "qrcode":json.dumps(qrcode),
-        "wishing":wishing,
+        "share_description":share_description,
         "related_page_id":related_page_id
     }
     group_url ="/apps/group/api/group/?design_mode={}&project_id={}&version={}&_method=put".format(design_mode,project_id,version)
     post_group_response = context.client.post(group_url,post_group_args)
 
-# def __Update_Group(context,text,page_id,group_id):
-#     """
-#     模拟用户登录页面
-#     编辑团购项目
-#     写入mongo表：
-#         1.group_group表
-#         2.page表
-#     """
+def __Update_Group(context,text,page_id,group_id):
+    """
+    模拟用户登录页面
+    编辑团购项目
+    写入mongo表：
+        1.group_group表
+        2.page表
+    """
 
-#     design_mode=0
-#     version=1
-#     project_id = "new_app:group:"+page_id
+    design_mode=0
+    version=1
+    project_id = "new_app:group:"+page_id
 
-#     title = text.get("name","")
+    text = text
 
-#     cr_start_date = text.get('start_date', u'今天')
-#     start_date = bdd_util.get_date_str(cr_start_date)
-#     start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
+    name = text.get("group_name","")
 
-#     cr_end_date = text.get('end_date', u'1天后')
-#     end_date = bdd_util.get_date_str(cr_end_date)
-#     end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
+    cr_start_date = text.get('start_date', u'今天')
+    start_date = bdd_util.get_date_str(cr_start_date)
+    start_time = "{} 00:00".format(bdd_util.get_date_str(cr_start_date))
 
-#     valid_time = "%s~%s"%(start_time,end_time)
+    cr_end_date = text.get('end_date', u'1天后')
+    end_date = bdd_util.get_date_str(cr_end_date)
+    end_time = "{} 00:00".format(bdd_util.get_date_str(cr_end_date))
 
-#     timing_status = text.get("is_show_countdown","")
-#     timing_value_day = __date_delta(start_date,end_date)
+    valid_time = "%s~%s"%(start_time,end_time)
 
-#     group_arr = text.get("group","")#红包类型
-#     group_type = group_arr.get('group_type',""),
-#     group_random_total_money = group_arr.get('random_total_money',""),
-#     group_random_packets_number = group_arr.get("random_packets_number",""),
-#     group_regular_packets_number = group_arr.get("regular_packets_number",""),
-#     group_regular_per_money = group_arr.get("regular_per_money",""),
+    group_dict = text.get('group_dict','')
 
-#     contribution_start_range = text.get("contribution_start_range",0)
-#     contribution_end_range = text.get("contribution_end_range",0)
-#     money_range = "{}-{}".format(contribution_start_range,contribution_end_range)
+    product_name = text.get('product_name',"")
+    product_dict = get_product_list(context,product_name)[0]
+    product_id = ""
+    product_img = ""
+    product_name = ""
+    product_price = ""
+    product_socks = ""
+    product_barcode = ""
+    if product_dict:
+        product_id = product_dict['id']
+        product_img = product_dict['thumbnails_url']
+        product_name = product_dict['name']
+        product_price = product_dict['display_price']
+        product_socks = product_dict['stocks']
+        product_barcode = product_dict['bar_code']
 
-#     reply_content = text.get("reply","")
+    rules = text.get("rules","")
+    material_image = text.get("material_image","")
+    share_description = text.get("share_description","")
 
-#     qrcode_name = text.get("qr_code","")
-#     if qrcode_name:
-#         qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
-#         qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
-#         qrcode_response = context.client.get(qrcode_i_url)
-#         qrcode_info = qrcode_response.context['qrcode']
-#         qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
-#         qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
-#     else:
-#         qrcode = {"ticket":"","name":""}
+    page_args = {
+        "name":name,
+        "start_time":start_time,
+        "end_time":end_time,
+        "valid_time":valid_time,
+        "group_dict":group_dict,
+        "product_id":product_id,
+        "product_img":product_img,
+        "product_name":product_name,
+        "product_price":product_price,
+        "product_socks":product_socks,
+        "product_barcode":product_barcode,
+        "rules":rules,
+        "material_image":material_image,
+        "share_description":share_description
+    }
 
-#     wishing = text.get("open_packet_reply","")
-#     rules = text.get("rules","")
-#     material_image = text.get("share_pic","")
-#     share_description = text.get("share_desc","")
+    page_json = __get_groupPageJson(page_args)
 
-#     page_args = {
-#         "title":title,
-#         "start_time":start_time,
-#         "end_time":end_time,
-#         "valid_time":valid_time,
-#         "timing_status":timing_status,
-#         "timing_value_day":timing_value_day,
-#         "group_type":group_type,
-#         "group_random_total_money":group_random_total_money,
-#         "group_random_packets_number":group_random_packets_number,
-#         "group_regular_packets_number":group_regular_packets_number,
-#         "group_regular_per_money":group_regular_per_money,
-#         "start_money":contribution_start_range,
-#         "end_money":contribution_end_range,
-#         "money_range":money_range,
-#         "reply_content":reply_content,
-#         "qrcode":qrcode,
-#         "wishing":wishing,
-#         "rules":rules,
-#         "material_image":material_image,
-#         "share_description":share_description,
-#     }
+    update_page_args = {
+        "field":"page_content",
+        "id":project_id,
+        "page_id":"1",
+        "page_json": page_json
+    }
 
-#     page_json = __get_groupPageJson(page_args)
-
-#     update_page_args = {
-#         "field":"page_content",
-#         "id":project_id,
-#         "page_id":"1",
-#         "page_json": page_json
-#     }
-
-#     update_group_args = {
-#         "name":title,
-#         "start_time":start_time,
-#         "end_time":end_time,
-#         "timing":timing_status,
-#         "group_type":group_type,
-#         "random_total_money":group_random_total_money,
-#         "random_packets_number":group_random_packets_number,
-#         "regular_packets_number":group_regular_packets_number,
-#         "regular_per_money":group_regular_per_money,
-#         "money_range":money_range,
-#         "reply_content":reply_content,
-#         "material_image":material_image,
-#         "qrcode":json.dumps(qrcode),
-#         "wishing":wishing,
-#         "id":group_id#updated的差别
-#     }
+    update_group_args = {
+        "name":name,
+        "start_time":start_time,
+        "end_time":end_time,
+        "valid_time":valid_time,
+        "group_dict":json.dumps(group_dict),
+        "product_id":product_id,
+        "product_img":product_img,
+        "product_name":product_name,
+        "product_price":product_price,
+        "product_socks":product_socks,
+        "product_barcode":product_barcode,
+        "rules":rules,
+        "material_image":material_image,
+        "share_description":share_description,
+        "id":group_id#updated的差别
+    }
 
 
-#     #page 更新Page
-#     update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-#     update_page_response = context.client.post(update_page_url,update_page_args)
+    #page 更新Page
+    update_page_url = "/termite2/api/project/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    update_page_response = context.client.post(update_page_url,update_page_args)
 
-#     #step4:更新Group
-#     update_group_url ="/apps/group/api/group/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
-#     update_group_response = context.client.post(update_group_url,update_group_args)
+    #step4:更新Group
+    update_group_url ="/apps/group/api/group/?design_mode={}&project_id={}&version={}".format(design_mode,project_id,version)
+    update_group_response = context.client.post(update_group_url,update_group_args)
 
-# def __Delete_Group(context,group_id):
-#     """
-#     删除团购活动
-#     写入mongo表：
-#         1.group_group表
 
-#     注释：page表在原后台，没有被删除
-#     """
-#     design_mode = 0
-#     version = 1
-#     del_group_url = "/apps/group/api/group/?design_mode={}&version={}&_method=delete".format(design_mode,version)
-#     del_args ={
-#         "id":group_id
-#     }
-#     del_group_response = context.client.post(del_group_url,del_args)
-#     return del_group_response
+
+def __Open_Group(context,group_id):
+    """
+    开启团购活动
+    写入mongo表：
+        1.group_group表
+
+    注释：page表在原后台，没有被删除
+    """
+    design_mode = 0
+    version = 1
+    open_group_url = "/apps/group/api/group_status/?design_mode={}&version={}".format(design_mode,version)
+    open_args ={
+        "id":group_id,
+        "target":"running"
+
+    }
+    open_group_response = context.client.post(open_group_url,open_args)
+    return open_group_response
+
+
+def __Delete_Group(context,group_id):
+    """
+    删除团购活动
+    写入mongo表：
+        1.group_group表
+
+    注释：page表在原后台，没有被删除
+    """
+    design_mode = 0
+    version = 1
+    del_group_url = "/apps/group/api/group/?design_mode={}&version={}&_method=delete".format(design_mode,version)
+    del_args ={
+        "id":group_id
+    }
+    del_group_response = context.client.post(del_group_url,del_args)
+    return del_group_response
 
 # def __Stop_Group(context,group_id):
 #   """
@@ -615,13 +681,24 @@ def __Create_Group(context,text,user):
 #   return search_response
 
 
+def get_product_list(context,name=""):
+    '''
+    获取商品信息
+    '''
+    name_tag = "&name="
+    if name:
+        name_tag = "&name={}".format(name)
+    rec_product_url ="/mall2/api/group_product_list/?project_id=new_app:group:0{}&count_per_page=5&page=1&enable_paginate=1".format(name_tag)
+    rec_product_response = context.client.get(rec_product_url)
+    rec_product_list = json.loads(rec_product_response.content)['data']['items']#[::-1]
+    return rec_product_list
+
+
 @when(u'{user}新建团购活动时设置参与活动的商品查询条件')
 def step_impl(context,user):
     text_list = json.loads(context.text)
     search_name = text_list['name']
-    rec_product_url ="/mall2/api/group_product_list/?design_mode=0&project_id=new_app:group:0&version=1&name=&count_per_page=5&page=1&enable_paginate=1"
-    rec_product_response = context.client.get(rec_product_url)
-    rec_product_list = json.loads(rec_product_response.content)['data']['items']#[::-1]
+    rec_product_list = get_product_list(context,search_name)
     context.rec_product_list = rec_product_list
 
 @then(u'{user}获得团购活动可以访问的已上架商品列表')
@@ -658,19 +735,20 @@ def create_Group(context,user):
 # def step_impl(context,user):
 #     create_Group(context,user)
 
-# @then(u'{user}获得团购活动列表')
-# def step_impl(context,user):
-#     design_mode = 0
-#     count_per_page = 10
-#     version = 1
-#     page = 1
-#     enable_paginate = 1
+@then(u'{user}获得团购活动列表')#########
+def step_impl(context,user):
+    design_mode = 0
+    count_per_page = 10
+    version = 1
+    page = 1
+    enable_paginate = 1
 
-#     actual_list = []
-#     expected = json.loads(context.text)
+    actual_list = []
+    expected = json.loads(context.text)
 
 #     #搜索查看结果
-#     if hasattr(context,"search_group"):
+    if hasattr(context,"search_group"):
+        pass
 #         rec_search_list = context.search_group
 #         for item in rec_search_list:
 #             tmp = {
@@ -696,59 +774,71 @@ def create_Group(context,user):
 #         print("expected: {}".format(expected))
 
 #         bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
-#     #其他查看结果
-#     else:
-#         #分页情况，更新分页参数
-#         if hasattr(context,"paging"):
+    #其他查看结果
+    else:
+        #分页情况，更新分页参数
+        if hasattr(context,"paging"):
+            pass
 #             paging_dic = context.paging
 #             count_per_page = paging_dic['count_per_page']
 #             page = paging_dic['page_num']
 
-#         for expect in expected:
-#             if 'start_date' in expect:
-#                 expect['start_time'] = __date2time(expect['start_date'])
-#                 del expect['start_date']
-#             if 'end_date' in expect:
-#                 expect['end_time'] = __date2time(expect['end_date'])
-#                 del expect['end_date']
+        for expect in expected:
+            if 'start_date' in expect:
+                expect['start_time'] = __date2time(expect['start_date'])
+                del expect['start_date']
+            if 'end_date' in expect:
+                expect['end_time'] = __date2time(expect['end_date'])
+                del expect['end_date']
 
 
-#         print("expected: {}".format(expected))
+        print("expected: {}".format(expected))
 
-#         rec_group_url ="/apps/group/api/groups/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
-#         rec_group_response = context.client.get(rec_group_url)
-#         rec_group_list = json.loads(rec_group_response.content)['data']['items']#[::-1]
+        rec_group_url ="/apps/group/api/groups/?design_mode={}&version={}&count_per_page={}&page={}&enable_paginate={}".format(design_mode,version,count_per_page,page,enable_paginate)
+        rec_group_response = context.client.get(rec_group_url)
+        rec_group_list = json.loads(rec_group_response.content)['data']['items']#[::-1]
 
-#         for item in rec_group_list:
-#             tmp = {
-#                 "name":item['name'],
-#                 "participant_count":item['participant_count'],
-#                 "group_type":item['group_type'],
-#                 "status":item['status'],
-#                 "total_money":item['total_money'],
-#                 "already_paid_money":item['already_paid_money'],
-#                 "start_time":__date2time(item['start_time']),
-#                 "end_time":__date2time(item['end_time']),
-#             }
-#             tmp["actions"] = __get_actions(item['status'])
-#             actual_list.append(tmp)
-#         print("actual_data: {}".format(actual_list))
-#         bdd_util.assert_list(expected,actual_list)
-
-
-# @when(u"{user}编辑团购活动'{group_name}'")
-# def step_impl(context,user,group_name):
-#     expect = json.loads(context.text)[0]
-#     group_page_id,group_id = __group_name2id(group_name)#纯数字
-#     __Update_Group(context,expect,group_page_id,group_id)
+        for item in rec_group_list:
+            tmp = {
+                "name":item['name'],
+                "opengroup_num":item['group_item_count'],
+                "consumer_num":item['group_customer_count'],
+                "visitor_num":item['group_visitor_count'],
+                "status":item['status'],
+                "start_time":"%s %s"%(item['start_time_date'].replace('/','-'),item['start_time_time']),
+                "end_time":"%s %s"%(item['end_time_date'].replace('/','-'),item['end_time_time']),
+            }
+            actions_array = __get_actions(item['status'])
+            tmp["actions"] = actions_array
+            actual_list.append(tmp)
+        print("actual_data: {}".format(actual_list))
+        bdd_util.assert_list(expected,actual_list)
 
 
 
-# @when(u"{user}删除团购活动'{group_name}'")
-# def step_impl(context,user,group_name):
-#     group_page_id,group_id = __group_name2id(group_name)#纯数字
-#     del_response = __Delete_Group(context,group_id)
-#     bdd_util.assert_api_call_success(del_response)
+
+
+
+@when(u"{user}编辑团购活动'{group_name}'")
+def step_impl(context,user,group_name):
+    expect = json.loads(context.text)[0]
+    group_page_id,group_id = __group_name2id(group_name)#纯数字
+    __Update_Group(context,expect,group_page_id,group_id)
+
+
+
+@when(u"{user}删除团购活动'{group_name}'")
+def step_impl(context,user,group_name):
+    group_page_id,group_id = __group_name2id(group_name)#纯数字
+    del_response = __Delete_Group(context,group_id)
+    bdd_util.assert_api_call_success(del_response)
+
+
+@when(u"{user}开启团购活动'{group_name}'")
+def step_impl(context,user,group_name):
+    group_page_id,group_id = __group_name2id(group_name)#纯数字
+    open_response = __Open_Group(context,group_id)
+    bdd_util.assert_api_call_success(open_response)
 
 
 # @when(u"{user}关闭团购活动'{group_name}'")

@@ -258,42 +258,46 @@ Scenario:1 新建团购活动页面,查询商品列表
 		| 酱牛肉  | 50    |  无限  |                |  选取   |
 
 
-@mall2 @apps_group @apps_group_backend @yang
+@mall2 @apps_group @apps_group_backend
 Scenario:2 新建未开启,已结束团购活动
 	Given jobs登录系统
 	When jobs新建团购活动
 	"""
 		[{
 			"group_name":"团购活动1",
-			"start_time":"明天",
-			"end_time":"2天后",
+			"start_date":"明天",
+			"end_date":"2天后",
 			"product_name":"酱牛肉",
 			"group_dict":{
-					"group_type":5,
-					"group_day":1,
-					"group_price":45
+				"0":{
+					"group_type":"5",
+					"group_days":"1",
+					"group_price":"45"
+					}
 			},
-			"ship_date":20,
-			"product_counts":100,
+			"ship_date":"20",
+			"product_counts":"100",
 			"material_image":"1.jpg",
 			"share_description":"团购分享描述"
 
 		},{
 			"group_name":"团购活动2",
-			"start_time":"3天前",
-			"end_time":"昨天",
+			"start_date":"3天前",
+			"end_date":"昨天",
 			"product_name":"花生酱",
-			"group_dict":[{
-					"group_type":5,
-					"group_day":1,
-					"group_price":11
-			},{
-					"group_type":10,
-					"group_day":2,
+			"group_dict":{
+				"0":{
+					"group_type":"5",
+					"group_days":"1",
+					"group_price":"11"
+					},
+				"1":{
+					"group_type":"10",
+					"group_days":"2",
 					"group_price":9.5
-			}],
-			"ship_date":15,
-			"product_counts":200,
+			}},
+			"ship_date":"15",
+			"product_counts":"200",
 			"material_image":"2.jpg",
 			"share_description":"团购分享描述"
 		}]
@@ -302,18 +306,18 @@ Scenario:2 新建未开启,已结束团购活动
 		"""
 		[{
 			"name":"团购活动1",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
 			"status":"未开启",
 			"start_date":"明天",
 			"end_date":"2天后",
 			"actions": ["参团详情","编辑","开启"]
 		},{
 			"name":"团购活动2",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
 			"status":"已结束",
 			"start_date":"3天前",
 			"end_date":"昨天",
@@ -328,20 +332,22 @@ Scenario:3 开启团购活动
 	"""
 		[{
 			"group_name":"团购活动3",
-			"start_time":"今天",
-			"end_time":"2天后",
+			"start_date":"明天",
+			"end_date":"2天后",
 			"product_name":"酱牛肉",
-			"group_dict":[{
-					"group_type":5,
-					"group_day":1,
-					"group_price":45
-			},{
-					"group_type":10,
-					"group_day":2,
-					"group_price":40
-			}],
-			"ship_date":10,
-			"product_counts":200,
+			"group_dict":{
+				"0":{
+					"group_type":"5",
+					"group_days":"1",
+					"group_price":"45"
+				},
+				"1":{
+					"group_type":"10",
+					"group_days":"2",
+					"group_price":"40"
+				}},
+			"ship_date":"10",
+			"product_counts":"200",
 			"material_image":"3.jpg",
 			"share_description":"团购分享描述"
 		}]
@@ -350,25 +356,25 @@ Scenario:3 开启团购活动
 		"""
 		[{
 			"name":"团购活动3",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
 			"status":"未开启",
-			"start_date":"今天",
+			"start_date":"明天",
 			"end_date":"2天后",
 			"actions": ["参团详情","编辑","开启"]
 		}]
 		"""
-	When jobs对"团购活动3"进行"开启"操作
+	When jobs开启团购活动'团购活动3'
 	Then jobs获得团购活动列表
 		"""
 		[{
 			"name":"团购活动3",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
 			"status":"进行中",
-			"start_date":"今天",
+			"start_date":"明天",
 			"end_date":"2天后",
 			"actions": ["参团详情","结束"]
 		}]
@@ -381,16 +387,18 @@ Scenario:4 编辑未开启团购活动
 		"""
 		[{
 			"group_name":"团购活动4",
-			"start_time":"明天",
-			"end_time":"2天后",
+			"start_date":"明天",
+			"end_date":"2天后",
 			"product_name":"酱牛肉",
 			"group_dict":{
-					"group_type":10,
-					"group_day":3,
-					"group_price":45
+				"0":{
+						"group_type":10,
+						"group_days":3,
+						"group_price":45
+					}
 			},
-			"ship_date":15,
-			"product_counts":150,
+			"ship_date":"15",
+			"product_counts":"150",
 			"material_image":"4.jpg",
 			"share_description":"团购分享描述"
 		}]
@@ -399,33 +407,35 @@ Scenario:4 编辑未开启团购活动
 		"""
 		[{
 			"name":"团购活动4",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
 			"status":"未开启",
 			"start_date":"明天",
 			"end_date":"2天后",
 			"actions": ["参团详情","编辑","开启"]
 		}]
 		"""
-	When jobs编辑"团购活动4"
+	When jobs编辑团购活动'团购活动4'
 		"""
 		[{
 			"group_name":"团购活动5",
-			"start_time":"今天",
-			"end_time":"明天",
+			"start_date":"今天",
+			"end_date":"明天",
 			"product_name":"花生酱",
-			"group_dict":[{
-					"group_type":5,
-					"group_day":1,
-					"group_price":10
-			},{
-					"group_type":10,
-					"group_day":2,
-					"group_price":8
-			}]
-			"ship_date":20,
-			"product_counts":200,
+			"group_dict":{
+				"0":{
+						"group_type":"5",
+						"group_days":"1",
+						"group_price":"10"
+				},
+				"1":{
+						"group_type":"10",
+						"group_days":"2",
+						"group_price":"8"
+			}},
+			"ship_date":"20",
+			"product_counts":"200",
 			"material_image":"5.jpg",
 			"share_description":"团购分享描述"
 		}]
@@ -434,13 +444,13 @@ Scenario:4 编辑未开启团购活动
 		"""
 		[{
 			"name":"团购活动5",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
-			"status":"未开启",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
+			"status":"进行中",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["参团详情","编辑","开启"]
+			"actions": ["参团详情","结束"]
 		}]
 		"""
 
@@ -451,30 +461,34 @@ Scenario:5 删除已结束团购活动
 		"""
 		[{
 			"group_name":"团购活动5",
-			"start_time":"2天前",
-			"end_time":"昨天",
+			"start_date":"2天前",
+			"end_date":"昨天",
 			"product_name":"酱牛肉",
 			"group_dict":{
-					"group_type":5,
-					"group_day":1,
-					"group_price":42
+				"0":{
+					"group_type":"5",
+					"group_days":"1",
+					"group_price":"42"
+				}
 			},
-			"ship_date":20,
-			"product_counts":100,
+			"ship_date":"20",
+			"product_counts":"100",
 			"material_image":"5.jpg",
 			"share_description":"团购分享描述"
 		},{
 			"group_name":"团购活动6",
-			"start_time":"今天",
-			"end_time":"明天",
+			"start_date":"今天",
+			"end_date":"明天",
 			"product_name":"花生酱",
 			"group_dict":{
-					"group_type":10,
-					"group_day":2,
-					"group_price":10
+				"0":{
+					"group_type":"10",
+					"group_days":"2",
+					"group_price":"10"
+					}
 			},
-			"ship_date":20,
-			"product_counts":200,
+			"ship_date":"20",
+			"product_counts":"200",
 			"material_image":"6.jpg",
 			"share_description":"团购分享描述"
 		}]
@@ -483,35 +497,35 @@ Scenario:5 删除已结束团购活动
 		"""
 		[{
 			"name":"团购活动6",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
-			"status":"未开启",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
+			"status":"进行中",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["参团详情","编辑","开启"]
+			"actions": ["参团详情","结束"]
 		},{
 			"name":"团购活动5",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
 			"status":"已结束",
 			"start_date":"2天前",
 			"end_date":"昨天",
 			"actions": ["参团详情","删除"]
 		}]
 		"""
-	When jobs删除"团购活动5"
+	When jobs删除团购活动'团购活动5'
 	Then jobs获得团购活动列表
 		"""
 		[{
 			"name":"团购活动6",
-			"opengroup_num":"",
-			"consumer_num":"",
-			"visitor_num":"",
-			"status":"未开启",
+			"opengroup_num":"0",
+			"consumer_num":"0",
+			"visitor_num":"0",
+			"status":"进行中",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["参团详情","编辑","开启"]
+			"actions": ["参团详情","结束"]
 		}]
 		"""

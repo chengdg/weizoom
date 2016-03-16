@@ -345,9 +345,9 @@ def __clear_all_app_data():
 	redpacket_models.RedPacketDetail.objects.all().delete()
 
 	#apps团购
-	# group_models.Group.objects.all().delete()
-	# group_models.GroupRelations.objects.all().delete()
-	# group_models.GroupDetail.objects.all().delete()
+	group_models.Group.objects.all().delete()
+	group_models.GroupRelations.objects.all().delete()
+	group_models.GroupDetail.objects.all().delete()
 
 	#会员积分策略全部清零
 	member_models.IntegralStrategySttings.objects.all().update(be_member_increase_count=0)
