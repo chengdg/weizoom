@@ -41,7 +41,20 @@ class GroupStatus(resource.Resource):
 			page['component']['components'][0]['model']['end_time'] = now_time
 			pagestore.save_page(related_page_id, 1, page['component'])
 		elif target_status == 'running':
-			target_status = app_models.STATUS_RUNNING
+			#说明手动点击开启了
+			groups = app_models.Group.objects(id=request.POST['id'])
+			groups.update(set__handle_status=1)
+			group = groups[0]
+			start_time = group.start_time.strftime('%Y-%m-%d %H:%M')
+			end_time = group.end_time.strftime('%Y-%m-%d %H:%M')
+			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+			if start_time <= now_time and now_time < end_time:
+				target_status = app_models.STATUS_RUNNING
+			elif now_time >= end_time:
+				target_status = app_models.STATUS_STOPED
+			else:
+				target_status = app_models.STATUS_NOT_START
+
 		elif target_status == 'not_start':
 			target_status = app_models.STATUS_NOT_START
 

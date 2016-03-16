@@ -326,19 +326,28 @@ def __group_name2id(name):
 #   qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
 #   return qrcode
 
-def __get_actions(status):
+def __get_actions(status,handle_status):
     """
     根据输入团购状态
     返回对于操作列表
     """
     actions_list = [u"参团详情"]
-    if status == u"已结束":
-        actions_list.append(u"删除")
-    elif status == "未开启":
-        actions_list.append(u"编辑")
-        actions_list.append(u"开启")
-    elif status=="进行中":
-        actions_list.append(u"结束")
+    if handle_status==0:
+        if status == u"已结束":
+            actions_list.append(u"删除")
+        elif status == "未开启":
+            actions_list.append(u"编辑")
+            actions_list.append(u"开启")
+        elif status=="进行中":
+            actions_list.append(u"结束")
+    else:
+        if status == u"已结束":
+            actions_list.append(u"删除")
+        elif status == "未开启":
+            actions_list.append(u"编辑")
+            actions_list.append(u"结束")
+        elif status=="进行中":
+            actions_list.append(u"结束")
     return actions_list
 
 def __Create_Group(context,text,user):
@@ -761,7 +770,7 @@ def step_impl(context,user):
 #                 "start_time":__date2time(item['start_time']),
 #                 "end_time":__date2time(item['end_time']),
 #             }
-#             tmp["actions"] = __get_actions(item['status'])
+#             tmp["actions"] = __get_actions(item['status'],item['handle_status'])
 #             actual_list.append(tmp)
 
 #         for expect in expected:
@@ -808,7 +817,7 @@ def step_impl(context,user):
                 "start_time":"%s %s"%(item['start_time_date'].replace('/','-'),item['start_time_time']),
                 "end_time":"%s %s"%(item['end_time_date'].replace('/','-'),item['end_time_time']),
             }
-            actions_array = __get_actions(item['status'])
+            actions_array = __get_actions(item['status'],item['handle_status'])
             tmp["actions"] = actions_array
             actual_list.append(tmp)
         print("actual_data: {}".format(actual_list))

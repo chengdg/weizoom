@@ -373,10 +373,10 @@ Scenario:3 开启团购活动
 			"opengroup_num":"0",
 			"consumer_num":"0",
 			"visitor_num":"0",
-			"status":"进行中",
+			"status":"未开启",
 			"start_date":"明天",
 			"end_date":"2天后",
-			"actions": ["参团详情","结束"]
+			"actions": ["参团详情","编辑","结束"]
 		}]
 		"""
 
@@ -447,10 +447,10 @@ Scenario:4 编辑未开启团购活动
 			"opengroup_num":"0",
 			"consumer_num":"0",
 			"visitor_num":"0",
-			"status":"进行中",
+			"status":"未开启",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["参团详情","结束"]
+			"actions": ["参团详情","编辑","开启"]
 		}]
 		"""
 
@@ -500,10 +500,10 @@ Scenario:5 删除已结束团购活动
 			"opengroup_num":"0",
 			"consumer_num":"0",
 			"visitor_num":"0",
-			"status":"进行中",
+			"status":"未开启",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["参团详情","结束"]
+			"actions": ["参团详情","编辑","开启"]
 		},{
 			"name":"团购活动5",
 			"opengroup_num":"0",
@@ -523,9 +523,9 @@ Scenario:5 删除已结束团购活动
 			"opengroup_num":"0",
 			"consumer_num":"0",
 			"visitor_num":"0",
-			"status":"进行中",
+			"status":"未开启",
 			"start_date":"今天",
 			"end_date":"明天",
-			"actions": ["参团详情","结束"]
+			"actions": ["参团详情","编辑","开启"]
 		}]
 		"""
