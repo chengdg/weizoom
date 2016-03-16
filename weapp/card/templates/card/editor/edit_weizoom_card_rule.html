@@ -85,6 +85,18 @@
                     </label>
                 </div>
             </div>
+			<div class="form-group ">
+				<label class="control-label fl" for="full_use">使用限制：</label>
+				<div class="col-sm-7 fl pl5">
+					<label>
+						<input type="radio" name="full_use" checked value="0" /><span class="pr15">不限制</span>
+						<input type="radio" name="full_use" id="full_use" value="1"  />
+						<span class="pr10">满</span>
+						<input type="text" class="w60" id="full_use_value" name="full_use_value" disabled /><span class="pl10">元可以使用</span>
+						<div class="errorHint" id="full_use_hint" style="margin-left: 100px"></div>
+					</label>
+				</div>
+			</div>
             
             <div class="form-group ">
                 <label class="control-label fl" for="parents_name">面&nbsp;&nbsp;&nbsp;&nbsp;值：</label>
@@ -234,6 +246,17 @@ $(document).ready(function() {
             $('#owner_special').css('display','none');
         }
     });
+	$('[name="full_use"]').change(function(){
+		if ($(this).val() == 1){
+			$('#full_use_value').removeAttr('disabled');
+            $('#full_use_value').attr('data-validate','require-int::金额必须为数字');
+		}else{
+			$('#full_use_value').attr('disabled',true).val('');
+            $('#full_use_value').removeAttr('data-validate');
+			$('#full_use_hint').html('');
+		}
+	});
+
     $('form').submit(function() {
         var startDate = $('#valid_time_from').val();
         var endDate = $('#valid_time_to').val();
@@ -285,6 +308,7 @@ $(document).ready(function() {
         var card_attr = $('[name="card_attr"]').val();
         var belong_to_owner = $('[name="belong_to_owner"]').val();
         var is_new_member_special = $('[name="is_new_member_special"]').attr('checked');
+		var full_use_value = $('[name="full_use_value"]').val();
 
         W.getApi().call({
             app: 'card',
@@ -299,7 +323,8 @@ $(document).ready(function() {
                 card_type: card_type,
                 card_attr: card_attr,
                 belong_to_owner: belong_to_owner,
-                is_new_member_special: is_new_member_special
+                is_new_member_special: is_new_member_special,
+				full_use_value: full_use_value
             },
             method: 'post',
             success: function(data) {

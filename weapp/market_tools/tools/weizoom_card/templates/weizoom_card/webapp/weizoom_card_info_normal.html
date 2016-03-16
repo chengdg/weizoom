@@ -1,0 +1,141 @@
+{% extends "new_jqm_content_base.html" %}
+{% load common_tag %}
+{% block css %}
+<link rel="stylesheet" href="/webapp_static/backend_default/css/default.css">
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+<style>
+	html,body{
+		background: #f0f0f0!important;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+
+<div data-role="page" data-theme="x" class="xui-wzResult-page xa-page">
+	<div class="xui-submitWz">
+		<div class="xui-successHint">
+			<img src="/standard_static/img/webapp/success.png">
+			<span class="xui-fonts">查询成功</span>
+		</div>
+		<div class="xui-cuttingLineThick"></div>
+		<div class="xui-wcInfo">
+			<p>
+				<span>查询卡号：</span>
+				<span>{{ weizoom_card.weizoom_card_id }}</span>
+			</p>
+			<p>
+				<span>卡内余额：</span>
+				<span style="color:#D20001;">&yen;<span style="color:#D20001;" class="xt-price">{{ weizoom_card.money }}</span></span>
+			</p>
+			<p>
+				<span>使用条件：</span>
+				<span style="color:#D20001;">
+					{% if weizoom_card.valid_restrictions %}
+						满{{ weizoom_card.valid_restrictions }}可用
+					{% else %}
+						不限制
+					{% endif %}
+				</span>
+			</p>
+			<p class="xui-valid-time" style="padding-bottom:3%;">截至时间：{{ weizoom_card.valid_time_from }}至{{ weizoom_card.valid_time_to }}</p>
+		</div>
+	</div>
+	<div class="xui-submitWzOther">
+		<a class="xui-wcInfoOther" id="shop_list">
+			<span>专属商家</span>
+			{% if weizoom_card.shop_list %}
+				<img src="/static_v2/img/webapp/mall/right_arrow.png">
+				<span class="shop_list_split">{{ weizoom_card.shop_list }}&nbsp;&nbsp;</span>
+			{% else %}
+				<div class="xui-shop-normal">通用</div>
+			{% endif %}
+		</a>
+		{% if weizoom_card.shop_list %}
+			<div class="shop_list_name">
+				{% for shop_name  in weizoom_card.shop_list_name %}
+					<div style="float: left">{{ shop_name }}{% if forloop.revcounter != 1 %}、{% endif %}</div>
+				{% endfor %}
+				<div style="clear: both"></div>
+			</div>
+		{% endif %}
+		<a class="xui-searchOther" href="./?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{ request.webapp_owner_id }}&project_id=0">
+			<span>查询另一张微众卡余额</span>
+			<img alt="" src="/static_v2/img/webapp/mall/right_arrow.png">
+		</a>
+		<a class="xui-wcInfoOtherDetail" id="detail_list">
+			<span>使用详情</span>
+			<img alt="" src="/static_v2/img/webapp/mall/right_arrow.png">
+		</a>
+		<div class="detail_list">
+			{% if card_orders %}
+				<table border="0" cellspacing="0">
+					<thead>
+						<tr>
+							<td width="25%">时间</td>
+							<td width="25%">明细</td>
+							<td>去处/来源</td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for order in card_orders %}
+						<tr>
+							<td class="xui-order-info-time">
+								{{order.created_at | date:"Y/m/d"}}<br/>
+								{{order.created_at | date:"H:i:s"}}
+							</td>
+							<td class="xui-order-info-money">
+								{% if order.is_product %}
+									{% if order.money < '0' %}
+										<span style="color: #0fb202">
+											+{{order.money| slice:"1:"}}
+										</span>
+									{% else %}
+										<span style="color: #cf0404">
+											-{{order.money}}
+										</span>
+									{% endif %}
+								{% else %}
+									<span style="color: #0fb202">
+										+{{order.money}}
+									</span>
+								{% endif %}
+							</td>
+							<td class="xui-order-info-name">
+								{{order.product_name}}
+							</td>
+						</tr>
+						{% endfor%}
+						
+					</tbody>
+				</table>
+			{% else %}
+			<div style="text-align: center;">您还没有相关的数据！</div>
+			{% endif%}
+		</div>
+	</div>
+	<div style="height: 20px;"></div>
+	<div class="xui-go-btn" style="background-color: #f0f0f0">
+		<a class="xui-btn xui-goUserInfo-btn" href="/termite/workbench/jqm/preview/?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{ request.webapp_owner_id }}" >返回个人中心</a>
+		<a class="xui-btn xui-goShopping-btn" href="/termite/workbench/jqm/preview/?woid={{request.webapp_owner_id}}&module=mall&model=products&action=list" >去购物</a>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var show_shop_list = {% if weizoom_card.shop_list %}true{% else %}false{%endif%}
+	$(document).ready(function() {
+		$('#shop_list').click(function(){
+			if (show_shop_list){
+				$('.shop_list_name').toggle()
+				$(this).find('img').toggleClass('xui-down-arrow')
+			}
+		});
+		$('#detail_list').click(function(){
+			$('.detail_list').toggle()
+			$(this).find('img').toggleClass('xui-down-arrow')
+		})
+	});
+</script>
+{% endblock %}

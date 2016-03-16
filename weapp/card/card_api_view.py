@@ -519,6 +519,7 @@ def create_weizoom_cards(request):
     card_attr = request.POST.get('card_attr','')
     belong_to_owner = request.POST.get('belong_to_owner','')
     is_new_member_special = request.POST.get('is_new_member_special', 0)
+    valid_restrictions = request.POST.get('full_use_value', -1)
 
     if name not in [card_rule.name for card_rule in WeizoomCardRule.objects.all()]:
         rule = WeizoomCardRule.objects.create(
@@ -533,7 +534,8 @@ def create_weizoom_cards(request):
             expired_time = valid_time_to,
             card_attr = card_attr,
             shop_limit_list = belong_to_owner,
-            is_new_member_special = is_new_member_special
+            is_new_member_special = is_new_member_special,
+            valid_restrictions= valid_restrictions if valid_restrictions else -1
             )
         #生成微众卡
         __create_weizoom_card(rule, count, request)
