@@ -454,7 +454,7 @@ Scenario:1 选择订单筛选条件
 		"""
 
 # __editor__ : "王丽" 2016-03-08
-@order @allOrder @eugene
+@mall2 @order @allOrder @eugene
 Scenario:2 按照【订单类型】进行筛选
 	#筛选“订单类型”内容为“全部、首单、非首单”
 	#"全部":筛选出所有订单；"首单"：筛选出带有首单标记的订单；"非首单":筛选出没有首单标记的订单
@@ -712,7 +712,7 @@ Scenario:2 按照【订单类型】进行筛选
 		"""
 
 # __editor__ : "王丽" 2016-03-08
-@order @allOrder @eugene
+@mall2 @order @allOrder @eugene
 Scenario:3 混合条件进行筛选
 	Given jobs登录系统
 	When jobs根据给定条件查询订单
