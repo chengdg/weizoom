@@ -1691,6 +1691,7 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             order.save()
 
 def cancel_group_buying(order_id):
+    print "eugene--------order_id-test:", order_id
     order = Order.objects.get(order_id=order_id)
     user = UserProfile.objects.get(webapp_id=order.webapp_id).user
     from mall.module_api import update_order_status
