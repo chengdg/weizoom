@@ -341,6 +341,7 @@ def get_template_message_list(request):
 	"""
 	print 'in get_template_message_list-----------------------'
 	action = request.GET.get('action', None) #全量更新
+	apps_type = request.GET.get('apps_type', "") #全量更新
 	#首先从数据库中获取
 	template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
 	if action or len(template_ids) <= 0:
@@ -349,6 +350,12 @@ def get_template_message_list(request):
 		template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
 
 	items = TemplateMessageDetails.objects(template_id__in=template_ids)
+	#获取历史数据
+	um = UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type=apps_type)
+	control_data = 0
+	if um.count() > 0:
+		um = um.first()
+		control_data = um.data_control
 	templates = []
 	for t in items:
 		templates.append({
@@ -357,7 +364,7 @@ def get_template_message_list(request):
 		})
 
 	response = create_response(200)
-	response.data = {"hasData": False, "templates": templates}
+	response.data = {"hasData": 0 if len(templates) <= 0 else 1, "templates": templates, "control_data": control_data}
 	return response.get_response()
 
 @login_required
