@@ -34,7 +34,6 @@ class MGroup(resource.Resource):
 		self_page = False
 		group_status = ''
 		group_type = ''
-		grouped_number = 0
 		product_original_price = 0
 		product_group_price = 0
 		page_owner_name = ''
@@ -107,17 +106,17 @@ class MGroup(resource.Resource):
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
 
-				#判断分享页是否自己的主页
-				if fid is None or str(fid) == str(member_id):
-					page_owner_name = member.username_size_ten
-					page_owner_icon = member.user_icon
-					page_owner_member_id = member_id
-					self_page = True
-				else:
-					page_owner = Member.objects.get(id=fid)
-					page_owner_name = page_owner.username_size_ten
-					page_owner_icon = page_owner.user_icon
-					page_owner_member_id = fid
+			#判断分享页是否自己的主页
+			if fid is None or str(fid) == str(member_id):
+				page_owner_name = member.username_size_ten
+				page_owner_icon = member.user_icon
+				page_owner_member_id = member_id
+				self_page = True
+			else:
+				page_owner = Member.objects.get(id=fid)
+				page_owner_name = page_owner.username_size_ten
+				page_owner_icon = page_owner.user_icon
+				page_owner_member_id = fid
 
 		member_info = {
 			'isMember': isMember,
