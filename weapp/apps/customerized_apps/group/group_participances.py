@@ -42,23 +42,23 @@ class GroupParticipances(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('participant_name', '')
-		webapp_id = request.user_profile.webapp_id
-		member_ids = []
-		if name:
-			hexstr = byte_to_hex(name)
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			member_ids = [member.id for member in members]
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
+		group_leader_name = request.GET.get('group_leader_name', '')
+		# group_status = int(request.GET.get('status', -1))
+		# start_time = request.GET.get('start_time', '')
+		# end_time = request.GET.get('end_time', '')
+		# now_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M')
 
 		params = {'belong_to':request.GET['id']}
-		if name:
-			params['webapp_user_id__in'] = member_ids
-		if start_time:
-			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
+		datas_datas = app_models.GroupRelations.objects(**params)
+
+		if group_leader_name:
+			params['group_leader_name__icontains'] = group_leader_name
+		# if group_status != -1:
+		# 	params['group_status'] = group_status
+		# if start_time:
+		# 	params['created_at__gte'] = start_time
+		# if end_time:
+		# 	params['created_at__lte'] = end_time
 		datas = app_models.GroupRelations.objects(**params).order_by('group_days')
 
 		#进行分页
