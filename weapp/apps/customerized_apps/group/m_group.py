@@ -158,7 +158,6 @@ class MGroup(resource.Resource):
 		fid = 0
 		group_relation_id = 0
 		product_id = None
-		product_detail = ''
 
 		if 'new_app:' in record_id:
 			project_id = record_id
@@ -202,7 +201,7 @@ class MGroup(resource.Resource):
 				#获取活动状态
 				activity_status = record.status_text
 				product_id = record.product_id
-				product_detail = Product.objects.get(id=product_id).detail
+
 
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
@@ -234,7 +233,6 @@ class MGroup(resource.Resource):
 			'record_id': record_id,
 			'group_relation_id': group_relation_id, #小团购id，如不存在则为None
 			'product_id': product_id, #产品id，如不存在则为None
-			'product_detail': product_detail,
 			'activity_status': activity_status,
 			'page_title': record.name if record else u"团购",
 			'page_html_content': html,
@@ -252,3 +250,20 @@ class MGroup(resource.Resource):
 		# if request.member:
 		# 	SET_CACHE(cache_key, response)
 		return HttpResponse(response)
+
+class GetProductDetail(resource.Resource):
+	app = 'apps/group'
+	resource = 'get_product_detail'
+
+	def api_get(request):
+		product_detail = ''
+		product_id = request.GET.get('product_id')
+		try:
+			product_detail = Product.objects.get(id=product_id).detail
+		except:
+			pass
+		response = create_response(200)
+		response.data = {
+			'product_detail': product_detail
+		}
+		return response.get_response()

@@ -106,6 +106,14 @@
         color: #414141;
         border: 1px solid #EEEEEE;
     }
+    .wui-i-product-description-title{
+        text-align: center;
+        color: #E6E6E6;
+        height: 50px;
+        background: url("/termite_static/img/component/group/detail_bg.png") no-repeat;
+        background-position-y: 100%;
+        background-position-x: 50%;
+    }
 </style>
 {% endblock %}
 
@@ -156,24 +164,15 @@
             <img src="{{ request.webapp_owner_info.qrcode_img }}" alt="" class="xui-twoDimension">
         </div>
     </div>
-    <div class="wui-i-description wui-i-product-description none">
-        {% if product_detail %}
-            <div class="xui-section xui-production-panel pt0 xa-production" style="border:0;">
-                <div class="xui-section-title xui-section-item zoom">
-                    <label>商品介绍</label>
-                    <div class="xui-productDetail-content rawHtml c3 pt10 xa-productDetail-content">
-                    {{ product_detail|safe }}
-                    </div>
+    <div class="wui-i-description wui-i-product-description">
+        <div class="xui-section xui-production-panel pt0 xa-production" style="border:0;">
+            <div class="xui-section-title xui-section-item zoom">
+                <div class="wui-i-product-description-title" style="text-align: center;color: #E6E6E6">滑动查看详情</div>
+                <div class="xui-productDetail-content rawHtml c3 pt10 xa-productDetail-content">
+                {{ product_detail|safe }}
                 </div>
             </div>
-        {% else %}
-            <div class="xui-section xui-production-panel pt0" style="border:0;">
-                <div class="xui-section-title xui-section-item zoom">
-                    <label>商品介绍</label>
-                    <div class="xui-productDetail-content rawHtml c3 pt10" style="text-align: center;">暂无商品介绍</div>
-                </div>
-            </div>
-        {% endif %}
+        </div>
     </div>
 {% endblock %}
 
@@ -192,7 +191,6 @@
     var product_original_price = 0;
     var product_group_price = 0;
     var order_id = '';
-    var product_detail = {% if product_detail %}'{{product_detail}}'{% else %}''{% endif %};
     var is_from_pay_result = false;
 
 	$(function(){
@@ -213,11 +211,74 @@
             return false;
         }
         $('.wui-appParticipantResult-Cover').hide();
-        if (product_detail!=''){
-            showProductDetails();
-        }
+
         //展示参与统计
         getDynamicData();
+
+        //展示商品详情
+        var detail_content = $('.wui-i-product-description');
+        $('.wui-i-body').append($(detail_content));
+        //返回角度
+        function GetSlideAngle(dx, dy) {
+          return Math.atan2(dy, dx) * 180 / Math.PI;
+        }
+
+        //根据起点和终点返回方向 1：向上，2：向下，3：向左，4：向右,0：未滑动
+        function GetSlideDirection(startX, startY, endX, endY) {
+          var dy = startY - endY;
+          var dx = endX - startX;
+          var result = 0;
+
+          //如果滑动距离太短
+          if(Math.abs(dx) < 2 && Math.abs(dy) < 2) {
+              return result;
+          }
+
+          var angle = GetSlideAngle(dx, dy);
+          if(angle >= -45 && angle < 45) {
+              result = 4;
+          }else if (angle >= 45 && angle < 135) {
+              result = 1;
+          }else if (angle >= -135 && angle < -45) {
+              result = 2;
+          }
+          else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
+              result = 3;
+          }
+
+          return result;
+        }
+
+        //滑动处理
+        var startX, startY;
+        document.addEventListener('touchstart',function (ev) {
+          startX = ev.touches[0].pageX;
+          startY = ev.touches[0].pageY;
+        }, false);
+        document.addEventListener('touchend',function (ev) {
+          var endX, endY;
+          endX = ev.changedTouches[0].pageX;
+          endY = ev.changedTouches[0].pageY;
+          var direction = GetSlideDirection(startX, startY, endX, endY);
+          switch(direction) {
+              case 0:
+                  break;
+              case 1:
+                  console.log("向下");
+                  if (product_id!=''){
+                      showProductDetails();
+                    }
+                  break;
+              case 2:
+                  break;
+              case 3:
+                  break;
+              case 4:
+                  break;
+              default:
+          }
+        }, false);
+
     });
 	function GetQueryString(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -225,12 +286,13 @@
         if(r!=null) return unescape(r[2]);
         return null;
     }
-    function DelQueryString(name){
-        var url = window.location.search.substr(1);
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-        console.log(url.replace(reg,""));
-        return url.replace(reg,"");
-    }
+//    function DelQueryString(name){
+//        var url = window.location.search.substr(1);
+//        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+//        console.log(url.replace(reg,""));
+//        return url.replace(reg,"");
+//    }
+
     //发送请求，单独获取动态数据，优化首页时间
     function getDynamicData(){
         loadingStatus(true);
@@ -456,7 +518,9 @@
         $('.xa-loadingFrame').addClass('none');
         if(is_from_pay_result){
             //删除掉from=pay_result
-            window.location.href = "?"+DelQueryString("from");
+            var link = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&fid='+page_owner_member_id+'&group_relation_id='+group_relation_id;
+            window.location.href = link;
+//            window.location.href = "?"+DelQueryString("from");
         }
     });
     $('.xa-colseButton').click(function(){
@@ -641,11 +705,30 @@
     }
 
     function showProductDetails(){
-        var detail_content = $('.wui-i-product-description');
-        detail_content.removeClass('none');
-        $('.wui-i-body').append($(detail_content));
-    }
+        W.getApi().call({
+            app: 'm/apps/group',
+            resource: 'get_product_detail',
+            method: 'get',
+            args: {
+                webapp_owner_id: W.webappOwnerId,
+                product_id: product_id
+            },
+            success: function(data){
+                $('.wui-i-product-description-title').addClass('none');
+                var product_detail = data.product_detail;
+                if(product_detail !=''){
+                    $('.xa-productDetail-content').html(product_detail);
+                }else{
+                    $('.xa-productDetail-content').html("暂无商品介绍");
+                }
 
+            },
+            error: function(data) {
+                wuiAlert(data.errMsg);
+            }
+        });
+
+    }
 </script>
 {% endblock %}
 
