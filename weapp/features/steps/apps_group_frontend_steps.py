@@ -26,9 +26,9 @@ from modules.member.models import Member
 def __get_group_rule_id(group_rule_name):
 	return Group.objects.get(name=group_rule_name).id
 
-def __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid):
+def __get_into_group_pages(context,webapp_owner_id,activity_id,openid):
 	#进入团购活动页面
-	url = '/m/apps/group/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, group_rule_id, context.member.token, openid)
+	url = '/m/apps/group/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, activity_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
 	response = context.client.get(url)
@@ -49,7 +49,7 @@ def __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid):
 	return response
 
 def __get_into_group_list_pages(context,webapp_owner_id,openid):
-	#进入团购活动页面
+	#进入全部团购活动列表页面
 	url = '/m/apps/group/m_group_list/?webapp_owner_id=%s&fmt=%s&opid=%s' % (webapp_owner_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
@@ -70,8 +70,8 @@ def __get_into_group_list_pages(context,webapp_owner_id,openid):
 		print('[info] not redirect')
 	return response
 
-def __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid):
-	url = '/m/apps/group/api/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, group_rule_id, context.member.token, openid)
+def __get_group_informations(context,webapp_owner_id,activity_id,openid):
+	url = '/m/apps/group/api/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, activity_id, context.member.token, openid)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	while response.status_code == 302:
@@ -85,6 +85,17 @@ def __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid):
 		print('[info] redirect error,response.status_code :')
 		print(response.status_code)
 
+def __open_group(context,activity_id,openid):
+
+	params = {
+		'webapp_owner_id': context.webapp_owner_id,
+		'group_record_id': activity_id,
+		'fid': context.page_owner_member_id,
+		'group_type': context.page_owner_member_id,
+		'group_days': context.page_owner_member_id,
+		'group_price': context.page_owner_member_id,
+		'product_id': context.page_owner_member_id
+	}
 
 @then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
 def step_tmpl(context, webapp_user_name, webapp_owner_name):
@@ -92,51 +103,24 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name):
 	openid = "%s_%s" % (webapp_user_name, user.username)
 	webapp_owner_id = context.webapp_owner_id
 	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
-	print('!response!!!!!!!!!!!!!!!!!!!')
-	print(response.context['all_groups_can_open'])
+	all_groups_can_open = response.context['all_groups_can_open']
 	# 构造实际数据
-	# actual = []
-	# actual.append({
-	# 	"group_name": group.name,
-	# 	"is_show_countdown": page_component['timing']['timing']['select'],
-	# 	"desc": page_component['description'],
-	# 	"background_pic": page_component['background_image'],
-	# 	"rules": page_component['rules'],
-	# 	"my_rank": rank_information['current_member_rank_info']['rank'] if rank_information['current_member_rank_info'] else u'无',
-	# 	"my_power_score": rank_information['current_member_rank_info']['power'] if rank_information['current_member_rank_info'] else '0',
-	# 	"total_participant_count": rank_information['total_participant_count']
-	# })
-	# print("actual_data: {}".format(actual))
-	# expected = json.loads(context.text)
-	# print("expected: {}".format(expected))
-	# bdd_util.assert_list(expected, actual)
+	actual = []
+	for group in all_groups_can_open:
+		actual.append({
+			"group_name": group['name'],
+			"group_dict": group['all_group_dict']
+		})
+	print("actual_data: {}".format(actual))
+	expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+	bdd_util.assert_list(expected, actual)
 
-# @then(u'{webapp_user_name}获得"{group_rule_name}"的助力值排名')
-# def step_tmpl(context, webapp_user_name, group_rule_name):
-# 	rank_information = json.loads(context.rank_response)['data']
-# 	participances = rank_information['participances']
-# 	actual = []
-# 	if participances != []:
-# 		rank = 0
-# 		for p in participances:
-# 			rank += 1
-# 			p_dict = OrderedDict()
-# 			p_dict[u"rank"] = rank
-# 			p_dict[u"name"] = p['username']
-# 			p_dict[u"value"] = p['power']
-# 			actual.append((p_dict))
-# 	print("actual_data: {}".format(actual))
-# 	expected = []
-# 	if context.table:
-# 		for row in context.table:
-# 			cur_p = row.as_dict()
-# 			expected.append(cur_p)
-# 	else:
-# 		expected = json.loads(context.text)
-# 	print("expected: {}".format(expected))
-#
-# 	bdd_util.assert_list(expected, actual)
-#
+@When(u'{webapp_user_name}参加{webapp_owner_name}的团购活动"{group_record_name}"')
+def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
+	activity_id = __get_group_rule_id(group_record_name)
+
+
 # @When(u'{webapp_user_name}把{powerme_owner_name}的微助力活动链接分享到朋友圈')
 # def step_impl(context, webapp_user_name, powerme_owner_name):
 # 	context.shared_url = context.link_url

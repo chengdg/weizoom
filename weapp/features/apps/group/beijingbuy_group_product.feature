@@ -106,7 +106,7 @@ Background:
 		}, {
 			"group_name":"团购2",
 			"start_date":"今天",
-			"end_date":"2天后",
+			"end_date":"3天后",
 			"product_name":"商品2",
 			"group_dict":{
 				"0":{
@@ -126,7 +126,10 @@ Background:
 			"share_description":"团购分享描述"
 		}]
 		"""
-	Given bill关注jobs的公众号
+	When jobs开启团购活动'团购1'
+  	When jobs开启团购活动'团购2'
+
+  	Given bill关注jobs的公众号
 	And tom关注jobs的公众号
 @mall2 @apps_group @apps_group_frontend @kuki
 Scenario: 1 会员访问团购活动首页能进行开团
@@ -151,62 +154,57 @@ Scenario: 1 会员访问团购活动首页能进行开团
 			"price": 100.00
 		}]
 		"""
-	When jobs开启团购活动'团购1'
-#  	When jobs开启团购活动'团购2'
+
 	#bill是已关注的会员可以直接开团
 	Then bill能获得jobs的团购活动列表
 		"""
-		{
-			"group_name": "团购2"
+		[{
+			"group_name": "团购2",
 			"group_dict":
 				[{
-					"group_type":5,
-					"group_days":1,
-					"group_price":21.00
+					"group_type":"10",
+					"group_price":"11.00"
 				},{
-					"group_type":10,
-					"group_days":2,
-					"group_price":11.00
+					"group_type":"5",
+					"group_price":"21.00"
 				}]
 		}, {
-			"group_name": "团购1"
+			"group_name": "团购1",
+			"group_dict":
+				[{
+					"group_type":"10",
+					"group_price":"10.00"
+				},{
+					"group_type":"5",
+					"group_price":"20.00"
+				}]
+		}]
+		"""
+
+	#bill开“团购5人团”，团购活动只能使用微信支付，有配送时间，运费0元
+	#支付完成后跳转到活动详情页-显示邀请好友参团
+	When bill参加jobs的团购活动"团购1"
+		"""
+		{
+			"group_name": "团购1",
+			"group_leader": "bill",
 			"group_dict":
 				[{
 					"group_type":5,
 					"group_days":1,
 					"group_price":20.00
-				},{
-					"group_type":10,
-					"group_days":2,
-					"group_price":10.00
-				}]
-		}]
+				}],
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"ship_area": "北京市 北京市 海淀区",
+			"ship_address": "泰兴大厦",
+			"distribution_time":"5天后 10:00-12:30",
+			"pay_type":"微信支付",
+			"products": [{
+				"name": "商品1"
+			}]
+		}
 		"""
-#
-#	#bill开“团购5人团”，团购活动只能使用微信支付，有配送时间，运费0元
-#	#支付完成后跳转到活动详情页-显示邀请好友参团
-#	When bill参加jobs的团购活动
-#		"""
-#		{
-#			"group_name": "团购1",
-#			"group_leader": "bill",
-#			"group_dict":
-#				[{
-#					"group_type":5,
-#					"group_days":1,
-#					"group_price":20.00
-#				}],
-#			"ship_name": "bill",
-#			"ship_tel": "13811223344",
-#			"ship_area": "北京市 北京市 海淀区",
-#			"ship_address": "泰兴大厦",
-#			"distribution_time":"5天后 10:00-12:30",
-#			"pay_type":"微信支付",
-#			"products": [{
-#				"name": "商品1"
-#			}]
-#		}
-#		"""
 #	When bill使用支付方式'微信支付'进行支付
 #	Then bill成功创建订单
 #		"""
