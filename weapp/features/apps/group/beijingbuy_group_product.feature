@@ -184,7 +184,7 @@ Scenario: 1 会员访问团购活动首页能进行开团
 
 	#bill开“团购5人团”，团购活动只能使用微信支付，有配送时间，运费0元
 	#支付完成后跳转到活动详情页-显示邀请好友参团
-	When bill参加jobs的团购活动"团购1"
+	When bill参加jobs的团购活动"团购1"进行开团
 		"""
 		{
 			"group_name": "团购1",
@@ -228,7 +228,7 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 	2.非会员nokia通过分享链接能直接参团，不能开团购买
 
 	When bill访问jobs的webapp
-	When bill参加jobs的团购活动"团购2"
+	When bill参加jobs的团购活动"团购2"进行开团
 		"""
 		{
 			"group_name": "团购2",
@@ -276,7 +276,7 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 		"""
 
 	#支付完成后跳转到活动详情页显示-邀请好友参团,我要开团
-	When tom参加jobs的团购活动"团购2"
+	When tom参加bill的团购活动"团购2"
 		"""
 		{
 			"group_name": "团购2",
@@ -293,114 +293,114 @@ Scenario: 2 会员可以通过分享链接直接参加团购活动
 			}
 		}
 		"""
-	When tom使用支付方式'微信支付'进行支付
-	Then tom成功创建订单
-		"""
-		{
-			"is_group_buying": "true",
-			"status": "待发货",
-			"final_price": 21.00,
-			"postage": 0.00,
-			"products": [{
-				"name": "商品2",
-				"price": 21.00,
-				"count": 1
-			}]
-		}
-		"""
-	Then tom能获得jobs的团购活动列表
-		"""
-		[{
-			"group_name": "团购2",
-			"group_dict":
-				[{
-					"group_type":"10",
-					"group_price":"11.00"
-				},{
-					"group_type":"5",
-					"group_price":"21.00"
-				}]
-		}, {
-			"group_name": "团购1",
-			"group_dict":
-				[{
-					"group_type":"10",
-					"group_price":"10.00"
-				},{
-					"group_type":"5",
-					"group_price":"20.00"
-				}]
-		}]
-		"""
-	Then tom能获得"团购1"的已开团活动列表
-		"""
-		[]
-		"""
-	Then tom能获得"团购2"的已开团活动列表
-		"""
-		[]
-		"""
-
-	When 清空浏览器
-	When nokia点击bill分享链接
-	When nokia访问jobs的webapp
-	Then nokia能获得参团活动列表
-		"""
-		[{
-			"group_name": "团购2",
-			"group_leader": "bill",
-			"group_dict":
-				[{
-					"group_type":5,
-					"group_days":1,
-					"group_price":21.00,
-					"offered":[{
-						"number":2,
-						"member":["bill", "tom"]
-						}]
-				}]
-		}]
-		"""
-
-	#非会员支付完成后跳转二维码引导关注
-	When nokia参加jobs的团购活动"团购2"
-		"""
-		{
-			"group_name": "团购2",
-			"group_leader": "bill",
-			"group_dict":
-				{
-					"group_type":5,
-					"group_days":1,
-					"group_price":21.00
-				},
-			"pay_type":"微信支付",
-			"products": {
-				"name": "商品2"
-			}
-		}
-		"""
-	When nokia使用支付方式'微信支付'进行支付
-	Then nokia成功创建订单
-		"""
-		{
-			"is_group_buying": "true",
-			"status": "待发货",
-			"final_price": 21.00,
-			"postage": 0.00,
-			"products": [{
-				"name": "商品2",
-				"price": 21.00,
-				"count": 1
-			}]
-		}
-		"""
-
-	#非会员不能开团,点击“我要开团”弹出二维码
-	Then nokia能获得开团活动列表
-		"""
-		[]
-		"""
+#	When tom使用支付方式'微信支付'进行支付
+#	Then tom成功创建订单
+#		"""
+#		{
+#			"is_group_buying": "true",
+#			"status": "待发货",
+#			"final_price": 21.00,
+#			"postage": 0.00,
+#			"products": [{
+#				"name": "商品2",
+#				"price": 21.00,
+#				"count": 1
+#			}]
+#		}
+#		"""
+#	Then tom能获得jobs的团购活动列表
+#		"""
+#		[{
+#			"group_name": "团购2",
+#			"group_dict":
+#				[{
+#					"group_type":"10",
+#					"group_price":"11.00"
+#				},{
+#					"group_type":"5",
+#					"group_price":"21.00"
+#				}]
+#		}, {
+#			"group_name": "团购1",
+#			"group_dict":
+#				[{
+#					"group_type":"10",
+#					"group_price":"10.00"
+#				},{
+#					"group_type":"5",
+#					"group_price":"20.00"
+#				}]
+#		}]
+#		"""
+#	Then tom能获得"团购1"的已开团活动列表
+#		"""
+#		[]
+#		"""
+#	Then tom能获得"团购2"的已开团活动列表
+#		"""
+#		[]
+#		"""
+#
+#	When 清空浏览器
+#	When nokia点击bill分享链接
+#	When nokia访问jobs的webapp
+#	Then nokia能获得参团活动列表
+#		"""
+#		[{
+#			"group_name": "团购2",
+#			"group_leader": "bill",
+#			"group_dict":
+#				[{
+#					"group_type":5,
+#					"group_days":1,
+#					"group_price":21.00,
+#					"offered":[{
+#						"number":2,
+#						"member":["bill", "tom"]
+#						}]
+#				}]
+#		}]
+#		"""
+#
+#	#非会员支付完成后跳转二维码引导关注
+#	When nokia参加jobs的团购活动"团购2"
+#		"""
+#		{
+#			"group_name": "团购2",
+#			"group_leader": "bill",
+#			"group_dict":
+#				{
+#					"group_type":5,
+#					"group_days":1,
+#					"group_price":21.00
+#				},
+#			"pay_type":"微信支付",
+#			"products": {
+#				"name": "商品2"
+#			}
+#		}
+#		"""
+#	When nokia使用支付方式'微信支付'进行支付
+#	Then nokia成功创建订单
+#		"""
+#		{
+#			"is_group_buying": "true",
+#			"status": "待发货",
+#			"final_price": 21.00,
+#			"postage": 0.00,
+#			"products": [{
+#				"name": "商品2",
+#				"price": 21.00,
+#				"count": 1
+#			}]
+#		}
+#		"""
+#
+#	#非会员不能开团,点击“我要开团”弹出二维码
+#	Then nokia能获得开团活动列表
+#		"""
+#		[]
+#		"""
 
 Scenario: 3 会员开团后团购活动成功
 	会员开团后

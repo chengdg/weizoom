@@ -30,6 +30,9 @@ def __get_group_rule_id(group_rule_name):
 def __get_product_idByname(product_name):
 	return Product.objects.get(name=product_name).id
 
+def __get_group_relation_id(activity_id,page_owner_member_id):
+	return str(GroupRelations.objects.get(belong_to=str(activity_id), member_id=str(page_owner_member_id)).id)
+
 """
 m_group.html页面的请求
 """
@@ -96,6 +99,22 @@ def __open_group(context,activity_id,fid,group_type,group_days,group_price,produ
 		print('[info] redirect error,response.status_code :')
 		print(response.status_code)
 
+def __join_group(context,group_relation_id,fid):
+	# 参团操作
+	webapp_owner_id = context.webapp_owner_id
+	params = {
+		'webapp_owner_id': webapp_owner_id,
+		'group_relation_id': group_relation_id,
+		'fid': fid
+	}
+	response = context.client.post('/m/apps/group/api/group_participance/?_method=put', params)
+	if json.loads(response.content)['code'] == 500:
+		context.err_msg = json.loads(response.content)['errMsg']
+	if response.status_code == 200:
+		print('response!!!!!!!!!!!!!!!!!!')
+		print(response)
+		return response
+
 """
 m_group_list.html页面的请求
 """
@@ -159,7 +178,7 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name):
 	print("expected: {}".format(expected))
 	bdd_util.assert_list(expected, actual)
 
-@When(u'{webapp_user_name}参加{webapp_owner_name}的团购活动"{group_record_name}"')
+@When(u'{webapp_user_name}参加{webapp_owner_name}的团购活动"{group_record_name}"进行开团')
 def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
 	webapp_owner_id = context.webapp_owner_id
 	activity_id = __get_group_rule_id(group_record_name)
@@ -175,6 +194,21 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
 	group_price= data['group_dict']['group_price']
 	product_id = __get_product_idByname(data['products']['name'])
 	__open_group(context,activity_id,fid,group_type,group_days,group_price,product_id,openid)
+
+@When(u'{webapp_user_name}参加{group_owner_name}的团购活动"{group_record_name}"')
+def step_tmpl(context, webapp_user_name,group_owner_name, group_record_name):
+	webapp_owner_id = context.webapp_owner_id
+	user = User.objects.get(id=webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	activity_id = __get_group_rule_id(group_record_name)
+	context.api_response = __get_group_informations(context,webapp_owner_id,activity_id,openid).content
+	print('context.api_response')
+	print(context.api_response)
+
+	fid = context.page_owner_member_id
+	page_owner_member_id = context.page_owner_member_id
+	group_relation_id = __get_group_relation_id(activity_id,page_owner_member_id)
+	__join_group(context,group_relation_id,fid)
 
 @When(u'{webapp_user_name}把{webapp_owner_name}的团购活动"{group_record_name}"的链接分享到朋友圈')
 def step_impl(context, webapp_user_name, webapp_owner_name,group_record_name):
