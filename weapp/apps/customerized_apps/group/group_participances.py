@@ -190,23 +190,70 @@ class GroupParticipancesDialog(resource.Resource):
 		"""
 		响应API GET
 		"""
+		#会员来源
+		SOURCE_SELF_SUB = 0  # 直接关注
+		SOURCE_MEMBER_QRCODE = 1  # 推广扫码
+		SOURCE_BY_URL = 2  # 会员分享
+		source2name = {
+			'-1':"未知",
+			'0':u'直接关注',
+			'1':u'推广扫码',
+			'2':u'会员分享'
+		}
+		#会员关注状态
+		CANCEL_SUBSCRIBED = 0
+		SUBSCRIBED = 1
+		NOT_SUBSCRIBED = 2
+		member_status2name = {
+			"0":u"已取消",
+			"1":u"关注",
+			"2":u"未关注",
+			"-1":u"未知"
+
+		}
+
 		relation_id = request.GET['id']
 
-		# relation_name = app_models.GroupRelations.objects(id=relation_id)
+		relation = app_models.GroupRelations.objects(id=relation_id)[0]
+		group_price = relation.group_price
 
-		members = app_models.GroupDetail.objects(relation_belong_to = relation_id)
-		member_ids = [unicode(member.id) for member in members]
-		# member_id2member = {unicode(member.id):member for member in members}
+		group_details = app_models.GroupDetail.objects(relation_belong_to = relation_id)
+		tmp_member_ids = [unicode(group_detail.grouped_member_id) for group_detail in group_details]
+		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
+		member_id2member = {unicode(member.id): member for member in members}
+
+		id2info = {}
+		for member_id in tmp_member_ids:
+			member = member_id2member[unicode(member_id)]
+			integral = member.integral
+			source = source2name[str(member.source)]
+			member_status = member_status2name[str(member.status)]
+			member_grade = member.grade.name
+			member_icon = member.user_icon
+			id2info[unicode(member_id)]={'integral':integral,
+										 'source':source,
+										 'member_status':member_status,
+										 'member_grade':member_grade,
+										 'member_icon':member_icon}
 
 		items = []
-		for member in members:
+		for group_detail in group_details:
+			member_id = unicode(group_detail.grouped_member_id)
+			money = 0
+			if group_detail.is_already_paid:
+				money = group_price
+			info = id2info[member_id]
+
 			items.append({
 				'id':unicode(member.id),
-				'name':member.grouped_member_name,
-				'money':0.00,
-				'points':'未写',
-				'from':'未写',
-				'created_at':member.created_at.strftime("%Y-%m-%d %H:%M:%S")
+				'name':group_detail.grouped_member_name,
+				'money':"%.2f"%float(money),
+				'integral':info['integral'],
+				'source':info['source'],
+				'created_at':group_detail.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				'member_status':info['member_status'],
+				'member_grade':info['member_grade'],
+				'member_icon':info['member_icon']
 				})
 
 		#进行分页
