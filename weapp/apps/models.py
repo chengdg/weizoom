@@ -3,6 +3,7 @@
 __author__ = 'chuter'
 
 from django.db import models
+import mongoengine as mongo_models
 from django.contrib.auth.models import User
 
 from core.exceptionutil import unicode_full_stack
@@ -189,3 +190,44 @@ class CustomizedAppOpLog(models.Model):
 		db_table = 'customized_app_op_log'
 		verbose_name = '对用户定制APP进行的操作日志'
 		verbose_name_plural = '对用户定制APP进行的操作日志'
+
+
+class TemplateMessageDetails(mongo_models.Document):
+	"""
+	模板消息详情
+	"""
+	template_id = mongo_models.StringField(max_length=256, default='') #用于weixin api的模板id
+	title = mongo_models.StringField(max_length=256) #模板标题
+	primary_industry = mongo_models.StringField(max_length=64) #一级行业
+	deputy_industry = mongo_models.StringField(max_length=64) #二级行业
+	content = mongo_models.StringField(max_length=1024) #模板内容
+
+	meta = {
+		'collection': 'apps_template_message_details'
+	}
+
+class UserHasTemplateMessages(mongo_models.Document):
+	"""
+	商家在公众平台上配置的模板消息
+	"""
+	owner_id = mongo_models.IntField(max_length=10) #所属商家
+	template_id = mongo_models.StringField(max_length=32) #模板详情记录的id
+
+	meta = {
+		'collection': 'apps_user_has_template'
+	}
+
+class UserappHasTemplateMessages(mongo_models.Document):
+	"""
+	各百宝箱活动所配置的模板消息
+	"""
+	owner_id = mongo_models.IntField(max_length=10) #所属商家
+	apps_type = mongo_models.StringField(max_length=64) #活动类型
+	data_control = mongo_models.DynamicField() #模板选择选择控制 e.g {"success": "template_id1", "fail": "template_id2"}
+
+	meta = {
+		'collection': 'apps_Userapp_has_template'
+	}
+
+
+
