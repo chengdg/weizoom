@@ -906,7 +906,7 @@ def get_orders_response(request, is_refund=False):
     if query_dict.has_key('status'):
         current_status_value = query_dict['status']
     elif query_dict.has_key('status__in'):
-        current_status_value = ORDER_STATUS_REFUNDING
+        current_status_value = ORDER_STATUS_GROUP_REFUNDING
     else:
         current_status_value = -1
 
