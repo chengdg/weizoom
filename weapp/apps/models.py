@@ -210,7 +210,7 @@ class UserHasTemplateMessages(mongo_models.Document):
 	"""
 	商家在公众平台上配置的模板消息
 	"""
-	owner_id = mongo_models.IntField(max_length=10) #所属商家
+	owner_id = mongo_models.LongField() #所属商家
 	template_id = mongo_models.StringField(max_length=32) #模板详情记录的id
 
 	meta = {
@@ -221,7 +221,7 @@ class UserappHasTemplateMessages(mongo_models.Document):
 	"""
 	各百宝箱活动所配置的模板消息
 	"""
-	owner_id = mongo_models.IntField(max_length=10) #所属商家
+	owner_id = mongo_models.LongField() #所属商家
 	apps_type = mongo_models.StringField(max_length=64) #活动类型
 	data_control = mongo_models.DynamicField() #模板选择选择控制 e.g {"success": "template_id1", "fail": "template_id2"}
 

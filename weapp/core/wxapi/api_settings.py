@@ -27,7 +27,7 @@ API_CLASSES = {
 	'create_deliverynotify': 'core.wxapi.api_pay_delivernotify.WeixinPayDeliverNotifyApi',
 	'send_template_message': 'core.wxapi.api_send_template_message.WeixinTemplateMessageSendApi',
 	'get_all_template_messages': 'core.wxapi.api_get_all_template_messages.WeixinTemplateMessagesGetApi', #获取商家拥有的所有模板消息
-	'get_template_id_by_short': 'core.wxapi.api_get_template_id_by_short.WeixinTemplateIdGetApi', #通过模板消息的编号获取模板id
+	# 'get_template_id_by_short': 'core.wxapi.api_get_template_id_by_short.WeixinTemplateIdGetApi', #通过模板消息的编号获取模板id
 	'delete_mass_message': 'core.wxapi.api_delete_mass_message.WeixinDeleteMassMessageApi',
 	'get_component_token': 'core.wxapi.api_component_token.WeixinComponentToken',
 	'api_create_preauthcode': 'core.wxapi.api_create_preauthcode.WeixinCreatePreauthcode',
