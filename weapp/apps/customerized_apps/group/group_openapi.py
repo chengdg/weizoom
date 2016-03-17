@@ -123,7 +123,7 @@ class CheckGroupBuy(resource.Resource):
 				else:
 					reason = u'团购活动暂未生效，团长还未开团成功'
 			elif group_record.group_status == app_models.GROUP_RUNNING:
-				if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
+				if member_id in group_record.grouped_member_ids and (group_record.grouped_number <= int(group_record.group_type)):
 					is_success = True
 					reason = u'可以进行团购下单操作'
 					group_buy_price = group_record.group_price
@@ -177,7 +177,7 @@ class OrderAction(resource.Resource):
 			is_already_paid_list = []
 			for g in group_details:
 				is_already_paid_list.append(g.is_already_paid)
-			if 'False' not in is_already_paid_list:
+			if False not in is_already_paid_list:
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 				update_order_status_by_group_status(group_id,'success')
 		response = create_response(200)
@@ -197,5 +197,25 @@ class GetPidsByWoid(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'pids_list': pids_list
+		}
+		return response.get_response()
+
+class GetGroupUrl(resource.Resource):
+	app = 'apps/group'
+	resource = 'get_group_url'
+
+	def api_get(request):
+		"""
+		获得团购跳转的url
+		"""
+		woid = request.GET.get('woid')
+		group_id = request.GET.get('group_id')
+		relation_record = app_models.GroupRelations.objects.get(id=group_id)
+		activity_id = relation_record.belong_to
+		fid = relation_record.member_id
+		group_url = '/m/apps/group/m_group/?webapp_owner_id='+str(woid)+'&id='+str(activity_id)+'&fid='+str(fid)+'&group_relation_id='+group_id
+		response = create_response(200)
+		response.data = {
+			'group_url': group_url
 		}
 		return response.get_response()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-import datetime
+import os
+from datetime import datetime,timedelta,date
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -14,6 +15,7 @@ import models as app_models
 import export
 from mall import export as mall_export
 from utils.string_util import byte_to_hex
+from weapp import settings
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 12
@@ -35,6 +37,7 @@ class GroupParticipances(resource.Resource):
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "groups",
 			'has_data': has_data,
+
 			'activity_id': request.GET['id']
 		});
 
@@ -42,52 +45,42 @@ class GroupParticipances(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
-		name = request.GET.get('participant_name', '')
-		webapp_id = request.user_profile.webapp_id
-		member_ids = []
-		if name:
-			hexstr = byte_to_hex(name)
-			members = member_models.Member.objects.filter(webapp_id=webapp_id,username_hexstr__contains=hexstr)
-			member_ids = [member.id for member in members]
-		start_time = request.GET.get('start_time', '')
-		end_time = request.GET.get('end_time', '')
+		webapp_id = request.user_profile.webapp_id#user_id
+		id = request.GET.get('id',0)#relation id
 
-		params = {'belong_to':request.GET['id']}
-		if name:
-			params['webapp_user_id__in'] = member_ids
-		if start_time:
-			params['created_at__gte'] = start_time
-		if end_time:
-			params['created_at__lte'] = end_time
-		datas = app_models.GroupRelations.objects(**params).order_by('group_days')
+		#导出
+		export_id = request.GET.get('export_id',0)#export relation id
+		if id:
+			belong_to = id
+		else:
+			belong_to = export_id
+
+		filter_group_leader_name = request.GET.get('group_leader_name', '')
+		filter_status = request.GET.get('status', -1)
+		filter_start_time = request.GET.get('start_time', '')
+		filter_end_time = request.GET.get('end_time', '')
+
+
+		params = {'belong_to':belong_to}
+		datas_datas = app_models.GroupRelations.objects(**params)
+
+		if filter_group_leader_name:
+			params['group_leader_name__icontains'] = filter_group_leader_name
+		if int(filter_status) != -1:
+			params['group_status'] = filter_status
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
-		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
-
-		return pageinfo, datas
-
-	@login_required
-	def api_get(request):
-		"""
-		响应API GET
-		"""
-		pageinfo, datas = GroupParticipances.get_datas(request)
-
-		tmp_member_ids = []
-		for data in datas:
-			tmp_member_ids.append(data.member_id)
-		members = member_models.Member.objects.filter(id__in=tmp_member_ids)
-		member_id2member = {member.id: member for member in members}
+		datas = app_models.GroupRelations.objects(**params)#.order_by('group_days')
 
 		items = []
 		for data in datas:
+			pass_tag = True
 			success_time = data.success_time
 			created_at = data.created_at
 			group_days = data.group_days
 			rest_days = 0
-
 
 			if data.status_text == u'团购成功' and data.success_time:
 				start_time_date = data.created_at.strftime('%Y/%m/%d')
@@ -96,28 +89,40 @@ class GroupParticipances(resource.Resource):
 				end_time_time = data.success_time.strftime('%H:%M')
 				rest_days = (success_time - created_at).days
 
+				start_time = data.created_at.strftime('%Y-%m-%d %H:%M')
+				end_time = data.success_time.strftime('%Y-%m-%d %H:%M')
+
 			else:
 				start_time_date = data.created_at.strftime('%Y/%m/%d')
 				start_time_time = data.created_at.strftime('%H:%M')
 
-				group_end_time = data.created_at+datetime.timedelta(days=int(group_days))
+				group_end_time = data.created_at+timedelta(days=int(group_days))
 				end_time_date = group_end_time.strftime('%Y/%m/%d')
 				end_time_time = group_end_time.strftime('%H:%M')
 
 				rest_days = int(group_days)
 
-			items.append({
-				'id': str(data.id),
-				'group_leader':data.group_leader_name,
-				'rest_days':rest_days,
-				'start_time_date': start_time_date,
-				'start_time_time': start_time_time,
-				'end_time_date': end_time_date,
-				'end_time_time': end_time_time,
-				'status':data.status_text,
-				'members_count':'%d/%s'%(data.grouped_number,data.group_type)
-			})
+				start_time = data.created_at.strftime('%Y-%m-%d %H:%M')
+				end_time = group_end_time.strftime('%Y-%m-%d %H:%M')
 
+			if filter_start_time and (filter_start_time>start_time):
+				pass_tag = False
+			if filter_end_time and (filter_end_time<end_time):
+				pass_tag = False
+			if pass_tag:
+				items.append({
+					'id': str(data.id),
+					'group_leader_name':data.group_leader_name,
+					'rest_days':rest_days,
+					'start_time_date': start_time_date,
+					'start_time_time': start_time_time,
+					'start_time':start_time,
+					'end_time_date': end_time_date,
+					'end_time_time': end_time_time,
+					'end_time':end_time,
+					'status':data.status_text,
+					'members_count':'%d/%s'%(int(len(data.grouped_member_ids))+1,data.group_type)
+				})
 
 		#排序
 		items.sort(key=lambda item:item['rest_days'])
@@ -134,6 +139,34 @@ class GroupParticipances(resource.Resource):
 				status_fail.append(item)
 		items = status_ing+status_fail+status_success
 
+		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+		if export_id:
+			return items
+		else:
+			return pageinfo, items
+
+	@login_required
+	def api_get(request):
+		"""
+		响应API GET
+		"""
+
+		pageinfo, datas = GroupParticipances.get_datas(request)
+
+		items = []
+		for data in datas:
+			items.append({
+				'id': data['id'],
+				'group_leader_name':data['group_leader_name'],
+				'rest_days':data['rest_days'],
+				'start_time_date': data['start_time_date'],
+				'start_time_time': data['start_time_time'],
+				'end_time_date': data['end_time_date'],
+				'end_time_time': data['end_time_time'],
+				'status':data['status'],
+				'members_count':data['members_count']
+			})
 
 		response_data = {
 			'items': items,
@@ -158,6 +191,7 @@ class GroupParticipancesDialog(resource.Resource):
 		响应API GET
 		"""
 		relation_id = request.GET['id']
+
 		# relation_name = app_models.GroupRelations.objects(id=relation_id)
 
 		members = app_models.GroupDetail.objects(relation_belong_to = relation_id)
@@ -189,3 +223,122 @@ class GroupParticipancesDialog(resource.Resource):
 		response = create_response(200)
 		response.data = response_data
 		return response.get_response()
+
+
+class GroupParticipances_Export(resource.Resource):
+    '''
+    批量导出
+    '''
+    app = 'apps/group'
+    resource = 'group_participances_export'
+
+    @login_required
+    def api_get(request):
+        """
+        分析导出
+        """
+        export_id = request.GET.get('export_id',0)
+        datas = GroupParticipances.get_datas(request)
+        download_excel_file_name = u'团购详情.xls'
+        excel_file_name = 'group_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+        dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+        dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+        export_file_path = os.path.join(dir_path,excel_file_name)
+        #Excel Process Part
+        try:
+            import xlwt
+            datas = GroupParticipances.get_datas(request)
+            fields_pure = []
+            export_data = []
+
+            #from sample to get fields4excel_file
+            fields_pure.append(u'id')
+            fields_pure.append(u'团长')
+            fields_pure.append(u'团购时间')
+            fields_pure.append(u'团购开始时间')
+            fields_pure.append(u'团购结束时间')
+            fields_pure.append(u'团购状态')
+            fields_pure.append(u'团购人数')
+
+            #processing data
+            num = 0
+            for data in datas:
+                export_record = []
+                num = num+1
+                g_id = data["id"]
+                group_leader_name = data["group_leader_name"]
+                rest_days = data["rest_days"]
+                start_time = data["start_time"]
+                end_time = data["end_time"]
+                status = data['status']
+                members_count = data['members_count']
+
+                export_record.append(g_id)
+                export_record.append(group_leader_name)
+                export_record.append(rest_days)
+                export_record.append(start_time)
+                export_record.append(end_time)
+                export_record.append(status)
+                export_record.append(members_count)
+                export_data.append(export_record)
+            #workbook/sheet
+            wb = xlwt.Workbook(encoding='utf-8')
+            ws = wb.add_sheet('id%s'%export_id)
+            header_style = xlwt.XFStyle()
+
+            ##write fields
+            row = col = 0
+            for h in fields_pure:
+                ws.write(row,col,h)
+                col += 1
+
+            ##write data
+            if export_data:
+                row = 1
+                lens = len(export_data[0])
+                for record in export_data:
+                    row_l = []
+                    for col in range(lens):
+                        record_col= record[col]
+                        if type(record_col)==list:
+                            row_l.append(len(record_col))
+                            for n in range(len(record_col)):
+                                data = record_col[n]
+                                try:
+                                    ws.write(row+n,col,data)
+                                except:
+                                    #'编码问题，不予导出'
+                                    print record
+                                    pass
+                        else:
+                            try:
+                                ws.write(row,col,record[col])
+                            except:
+                                #'编码问题，不予导出'
+                                print record
+                                pass
+                    if row_l:
+                        row = row + max(row_l)
+                    else:
+                        row += 1
+                try:
+                    wb.save(export_file_path)
+                except Exception, e:
+                    print 'EXPORT EXCEL FILE SAVE ERROR'
+                    print e
+                    print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
+            else:
+                ws.write(1,0,'')
+                wb.save(export_file_path)
+            response = create_response(200)
+            response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
+        except Exception, e:
+            error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+            watchdog_error(error_msg)
+            response = create_response(500)
+            response.innerErrMsg = unicode_full_stack()
+
+        return response.get_response()

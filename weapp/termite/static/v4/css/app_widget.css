@@ -1879,7 +1879,7 @@ li.wui-selectBox-display-table {
 
 .wui-group-container .wui-i-description{
     background: #fff;
-    margin: 13px 13px 10px 13px;
+    margin: 13px 13px 0px 13px;
     padding: 13px;
     border-radius: 6px;
 }
@@ -2014,7 +2014,7 @@ li.wui-selectBox-display-table {
     height: 2.5rem;
     border-radius: 5px;
     font-family: "微软雅黑";
-    width: 50%;
+    width: 70%;
     margin-bottom: 5px;
 }
 .wui-group-container .wui-i-btngroup .wui-i-btn-closed{

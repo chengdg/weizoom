@@ -18,7 +18,7 @@
                     <div
                             data-ui-role="advanced-table"
                             data-app="mall2"
-                            data-resource="product_list"
+                            data-resource="group_product_list"
                             data-args=''
                             data-template-id="#add-select-dialog-products-tmpl"
                             data-enable-paginator="true"
@@ -53,8 +53,12 @@
         {{each(i, product) items}}
             <tr data-id="${product.id}">
                 <td class="text_nowrap" style="max-width:165px;">
-                <img style="width:60px;height:60px;" src="${product.thumbnails_url}"></img>
-                ${product.name}
+                    <div class="wui-i-imgBox" style="display:inline-block;float:left;margin-left: 10px;">
+                        <img style="width:60px;height:60px;" src="${product.thumbnails_url}"></img>
+                    </div>
+                    <div class="wui-nameBox" style="display:inline-block;line-height: 60px;">
+                        ${product.name}
+                    </div>
                 </td>
                 <td>${ product.display_price }
                 </td>

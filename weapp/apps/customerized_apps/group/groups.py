@@ -41,6 +41,7 @@ class Groups(resource.Resource):
 		product_name = request.GET.get('product_name', '')
 		group_name = request.GET.get('group_name', '')
 		status = int(request.GET.get('status', -1))
+		handle_status = int(request.GET.get('handle_status', 0))
 		start_time = request.GET.get('start_time', '')
 		end_time = request.GET.get('end_time', '')
 
@@ -50,9 +51,13 @@ class Groups(resource.Resource):
 		for data_data in datas_datas:
 			data_start_time = data_data.start_time.strftime('%Y-%m-%d %H:%M')
 			data_end_time = data_data.end_time.strftime('%Y-%m-%d %H:%M')
-			if data_start_time <= now_time and now_time < data_end_time:
-				data_data.update(set__status=app_models.STATUS_RUNNING)
-			elif now_time >= data_end_time:
+			handle_status = int(data_data.handle_status)#手动开启状态
+			if handle_status == 0:#手动关闭(默认)
+				pass
+			elif handle_status == 1:#手动开启
+				if data_start_time <= now_time and now_time < data_end_time:
+					data_data.update(set__status=app_models.STATUS_RUNNING)
+			if now_time >= data_end_time:
 				data_data.update(set__status=app_models.STATUS_STOPED)
 
 		if group_name:
@@ -116,11 +121,8 @@ class Groups(resource.Resource):
 				open_group_num = len(relation_list)
 				for relation in relation_list:
 					r_id = unicode(relation.id)
-					if r_id in r_id2details:
-						detail_list = r_id2details[r_id]
-						for one_detail in detail_list:
-							if one_detail.is_already_paid:
-								group_customer_num += 1
+					if relation.status_text == '团购成功':
+						group_customer_num += int(relation.group_type)
 
 				data.static_info = {'open_group_num':open_group_num,
 										'group_customer_num':group_customer_num,
@@ -149,6 +151,7 @@ class Groups(resource.Resource):
 				'group_visitor_count':len(data.visited_member),
 				'related_page_id': data.related_page_id,
 				'status': data.status_text,
+				'handle_status':data.handle_status,
 				'created_at': data.created_at.strftime("%Y-%m-%d %H:%M:%S")
 			})
 

@@ -106,7 +106,7 @@ class Group(resource.Resource):
 		响应POST
 		"""
 		data = request_util.get_fields_to_be_save(request)
-		request = request.POST['target']
+		# request = request.POST['target']
 		update_data = {}
 		update_fields = set(['name',
 							'start_time',

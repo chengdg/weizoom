@@ -244,6 +244,8 @@ def step_impl(context, user):
         actual_order['postage'] = order_item['postage']
         actual_order['save_money'] = order_item['save_money']
         actual_order['is_first_order'] = 'true' if order_item['is_first_order'] else 'false'
+        actual_order['is_group_buying'] = 'true' if order_item['is_group_buying'] else 'false'
+
         if 'edit_money' in order_item and order_item['edit_money']:
             actual_order["order_no"] = actual_order["order_no"] + "-" + str(order_item['edit_money']).replace('.',
                                                                                                               '').replace(
@@ -384,7 +386,8 @@ ORDER_STATUS2ID = {
 ORDER_TYPE = {
     u'全部': -1,
     u'首单': 1,
-    u'非首单': 0
+    u'非首单': 0,
+    u'团购订单': 2
 }
 
 
@@ -434,6 +437,10 @@ def step_look_for_order(context, user):
     query_params['order_source'] = ORDER_SOURCE2ID[query_params['order_source']]
     if query_params['order_source'] == -1:
         query_params.pop('order_source')
+
+    query_params['order_type'] = ORDER_SOURCE2ID[query_params['order_type']]
+    if query_params['order_type'] == -1:
+        query_params.pop('order_type')
 
     query_params['order_status'] = ORDER_STATUS2ID[query_params['order_status']]
     if query_params['order_status'] == -1:
@@ -754,3 +761,13 @@ def step_impl(context, user):
     }
 
     bdd_util.assert_dict(expected, actual)
+
+@then(u"{user}获得财务审核'团购退款'订单列表")
+def step_impl(context, user):
+    # query_params = {
+    #     'order_status': 8,
+    #     'belong': 'audit'
+    # }
+    # context.query_params = query_params
+    # context.execute_steps(u"Then %s可以看到订单列表" % user)
+    pass

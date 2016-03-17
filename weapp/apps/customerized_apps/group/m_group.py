@@ -42,8 +42,13 @@ class MGroup(resource.Resource):
 		page_owner_member_id = 0
 		grouped_member_info_list = []
 		order_id = ''
-
+		is_from_pay_result = request.GET.get('from', None)
+		if is_from_pay_result == 'pay_result':
+			is_from_pay_result = True
+		else:
+			is_from_pay_result = False
 		response = create_response(500)
+
 		if not record_id:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
@@ -140,7 +145,8 @@ class MGroup(resource.Resource):
 			'only_remain_one_day': only_remain_one_day,
 			'product_original_price': product_original_price,
 			'product_group_price': product_group_price,
-			'order_id':order_id
+			'order_id': order_id,
+			'is_from_pay_result': is_from_pay_result
 		}
 
 		response = create_response(200)
@@ -161,6 +167,7 @@ class MGroup(resource.Resource):
 		fid = 0
 		group_relation_id = 0
 		product_id = None
+		product_detail = ''
 
 		if 'new_app:' in record_id:
 			project_id = record_id
