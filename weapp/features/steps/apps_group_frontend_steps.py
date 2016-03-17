@@ -13,6 +13,7 @@ from utils import url_helper
 import datetime as dt
 import termite.pagestore as pagestore_manager
 from apps.customerized_apps.group.models import Group, GroupRelations, GroupDetail
+from mall.models import *
 from utils.string_util import byte_to_hex
 import json
 import re
@@ -25,6 +26,9 @@ from modules.member.models import Member
 
 def __get_group_rule_id(group_rule_name):
 	return Group.objects.get(name=group_rule_name).id
+
+def __get_product_idByname(product_name):
+	return Product.objects.get(name=product_name).id
 
 def __get_into_group_pages(context,webapp_owner_id,activity_id,openid):
 	#进入团购活动页面
@@ -85,17 +89,30 @@ def __get_group_informations(context,webapp_owner_id,activity_id,openid):
 		print('[info] redirect error,response.status_code :')
 		print(response.status_code)
 
-def __open_group(context,activity_id,openid):
-
+def __open_group(context,activity_id,fid,group_type,group_days,group_price,product_id,openid):
+	webapp_owner_id = context.webapp_owner_id
 	params = {
-		'webapp_owner_id': context.webapp_owner_id,
+		'webapp_owner_id': webapp_owner_id,
 		'group_record_id': activity_id,
-		'fid': context.page_owner_member_id,
-		'group_type': context.page_owner_member_id,
-		'group_days': context.page_owner_member_id,
-		'group_price': context.page_owner_member_id,
-		'product_id': context.page_owner_member_id
+		'fid': fid,
+		'group_type': group_type,
+		'group_days': group_days,
+		'group_price': group_price,
+		'product_id': product_id
 	}
+	response = context.client.post('/m/apps/group/api/group_participance/?_method=post', params)
+	while response.status_code == 302:
+		print('[info] redirect by change fmt in shared_url')
+		redirect_url = bdd_util.nginx(response['Location'])
+		context.last_url = redirect_url
+		response = context.client.get(bdd_util.nginx(redirect_url))
+	if response.status_code == 200:
+		print('response!!!!!!!!!!!!!!!!!!')
+		print(response)
+		return response
+	else:
+		print('[info] redirect error,response.status_code :')
+		print(response.status_code)
 
 @then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
 def step_tmpl(context, webapp_user_name, webapp_owner_name):
@@ -118,131 +135,16 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name):
 
 @When(u'{webapp_user_name}参加{webapp_owner_name}的团购活动"{group_record_name}"')
 def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
+	webapp_owner_id = context.webapp_owner_id
 	activity_id = __get_group_rule_id(group_record_name)
-
-
-# @When(u'{webapp_user_name}把{powerme_owner_name}的微助力活动链接分享到朋友圈')
-# def step_impl(context, webapp_user_name, powerme_owner_name):
-# 	context.shared_url = context.link_url
-# 	print('context.shared_url:',context.shared_url)
-# 	webapp_owner_id = context.webapp_owner_id
-# 	webapp_owner_name = User.objects.get(id=webapp_owner_id).username
-# 	if powerme_owner_name == webapp_owner_name: #如果是分享自己的助力活动
-# 		context.page_owner_member_id = json.loads(context.rank_response)['data']['member_info']['page_owner_member_id']
-# 	params = {
-# 		'webapp_owner_id': context.webapp_owner_id,
-# 		'id': context.group_rule_id,
-# 		'fid': context.page_owner_member_id
-# 	}
-# 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=post', params)
-#
-# @When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接进行参与')
-# def step_impl(context, webapp_user_name, shared_webapp_user_name):
-# 	webapp_owner_id = context.webapp_owner_id
-# 	user = User.objects.get(id=webapp_owner_id)
-# 	openid = "%s_%s" % (webapp_user_name, user.username)
-# 	member = member_api.get_member_by_openid(openid, context.webapp_id)
-# 	followed_member = Member.objects.get(username_hexstr=byte_to_hex(shared_webapp_user_name))
-# 	if member:
-# 		new_url = url_helper.remove_querystr_filed_from_request_path(context.shared_url, 'fmt')
-# 		new_url = url_helper.remove_querystr_filed_from_request_path(new_url, 'opid')
-# 		context.shared_url = "%s&fmt=%s" % (new_url, followed_member.token)
-# 	response = context.client.get(context.shared_url)
-# 	if response.status_code == 302:
-# 		print('[info] redirect by change fmt in shared_url')
-# 		redirect_url = bdd_util.nginx(response['Location'])
-# 		context.last_url = redirect_url
-# 		response = context.client.get(bdd_util.nginx(redirect_url))
-# 	else:
-# 		print('[info] not redirect')
-# 		context.last_url = context.shared_url
-#
-# @When(u'{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接进行助力')
-# def step_impl(context, webapp_user_name, shared_webapp_user_name):
-# 	# 要先进入微助力活动页面创建participance记录
-# 	webapp_owner_id = context.webapp_owner_id
-# 	user = User.objects.get(id=webapp_owner_id)
-# 	openid = "%s_%s" % (webapp_user_name, user.username)
-# 	group_rule_id = context.group_rule_id
-# 	response = __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid)
-# 	context.rank_response = __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid).content
-# 	params = {
-# 		'webapp_owner_id': webapp_owner_id,
-# 		'id': group_rule_id,
-# 		'fid': context.page_owner_member_id
-# 	}
-# 	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=put', params)
-# 	if json.loads(response.content)['code'] == 500:
-# 		context.err_msg = json.loads(response.content)['errMsg']
-#
-#
-# @when(u"{webapp_user_name}通过识别弹层中的公众号二维码关注{mp_user_name}的公众号")
-# def step_tmpl(context, webapp_user_name, mp_user_name):
-# 	context.execute_steps(u"when %s关注%s的公众号" % (webapp_user_name, mp_user_name))
-# 	webapp_owner_id = context.webapp_owner_id
-# 	user = User.objects.get(id=webapp_owner_id)
-# 	openid = "%s_%s" % (webapp_user_name, user.username)
-# 	member = member_api.get_member_by_openid(openid, context.webapp_id)
-# 	# 因没有可用的API处理Member相关的source字段, 暂时直接操作Member对象
-# 	Member.objects.filter(id=member.id).update(source=SOURCE_MEMBER_QRCODE)
-#
-# @when(u"{webapp_user_name}通过识别弹层中的带参数二维码关注{mp_user_name}的公众号")
-# def step_tmpl(context, webapp_user_name, mp_user_name):
-# 	group_rule_id = context.group_rule_id
-# 	channel_qrcode_name = __get_channel_qrcode_name(group_rule_id)
-# 	context.execute_steps(u'when %s扫描带参数二维码"%s"' % (webapp_user_name, channel_qrcode_name))
-#
-# @when(u"{webapp_user_name}点击{shared_webapp_user_name}分享的微助力活动链接")
-# def step_tmpl(context, webapp_user_name, shared_webapp_user_name):
-# 	webapp_owner_id = context.webapp_owner_id
-# 	user = User.objects.get(id=webapp_owner_id)
-# 	openid = "%s_%s" % (webapp_user_name, user.username)
-# 	group_rule_id = context.group_rule_id
-# 	response = __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid)
-# 	# context.powerme_result = response.context
-# 	context.rank_response = __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid).content
-#
-# @when(u"微信用户批量参加{webapp_owner_name}的微助力活动")
-# def step_impl(context, webapp_owner_name):
-# 	for row in context.table:
-# 		webapp_user_name = row['member_name']
-# 		if webapp_user_name[0] == u'-':
-# 			webapp_user_name = webapp_user_name[1:]
-# 			#clear last member's info in cookie and context
-# 			context.execute_steps(u"When 清空浏览器")
-# 		else:
-# 			context.execute_steps(u"When 清空浏览器")
-# 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_user_name, webapp_owner_name))
-# 		data = {
-# 			'webapp_user_name': webapp_user_name,
-# 			'powerme_value': row['powerme_value'],
-# 			'parti_time': bdd_util.get_datetime_str(row['parti_time']),
-# 			'name': row['name']
-# 		}
-# 		webapp_owner_id = context.webapp_owner_id
-# 		user = User.objects.get(id=webapp_owner_id)
-# 		openid = "%s_%s" % (webapp_user_name, user.username)
-# 		group_rule_id = str(__get_group_rule_id(data['name']))
-# 		member = member_api.get_member_by_openid(openid, context.webapp_id)
-# 		#先进入微助力页面
-# 		response = __get_into_group_pages(context,webapp_owner_id,group_rule_id,openid)
-# 		context.group_rule_id = group_rule_id
-# 		context.rank_response = __get_group_rank_informations(context,webapp_owner_id,group_rule_id,openid).content
-# 		context.execute_steps(u"when %s把%s的微助力活动链接分享到朋友圈" % (webapp_user_name, webapp_owner_name))
-# 		powered_member_info = PowerMeParticipance.objects.get(member_id=member.id, belong_to=group_rule_id)
-# 		powered_member_info.update(set__created_at=data['parti_time'])
-# 		i = 0
-# 		webapp_test_user_name = 'test_user_'
-# 		while i < int(data['powerme_value']):
-# 			i += 1
-# 			context.execute_steps(u"When 清空浏览器")
-# 			context.execute_steps(u"When %s关注%s的公众号" % (webapp_test_user_name+str(i), webapp_owner_name))
-# 			context.execute_steps(u"When %s访问%s的webapp" % (webapp_test_user_name+str(i), webapp_owner_name))
-# 			context.execute_steps(u"When %s点击%s分享的微助力活动链接进行助力" % (webapp_test_user_name+str(i), webapp_user_name))
-# 	context.execute_steps(u"When 更新助力排名")
-#
-# @then(u'{webapp_user_name}获得微助力活动提示"{err_msg}"')
-# def step_tmpl(context, webapp_user_name, err_msg):
-# 	expected = err_msg
-# 	actual = context.err_msg
-# 	context.tc.assertEquals(expected, actual)
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	context.data_response = __get_group_informations(context,webapp_owner_id,activity_id,openid).content
+	context.page_owner_member_id = json.loads(context.data_response)['data']['member_info']['page_owner_member_id']
+	fid = context.page_owner_member_id
+	data = json.loads(context.text)
+	group_type= data['group_dict']['group_type']
+	group_days= data['group_dict']['group_days']
+	group_price= data['group_dict']['group_price']
+	product_id = __get_product_idByname(data['products']['name'])
+	__open_group(context,activity_id,fid,group_type,group_days,group_price,product_id,openid)

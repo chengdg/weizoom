@@ -189,20 +189,20 @@ Scenario: 1 会员访问团购活动首页能进行开团
 			"group_name": "团购1",
 			"group_leader": "bill",
 			"group_dict":
-				[{
+				{
 					"group_type":5,
 					"group_days":1,
 					"group_price":20.00
-				}],
+				},
 			"ship_name": "bill",
 			"ship_tel": "13811223344",
 			"ship_area": "北京市 北京市 海淀区",
 			"ship_address": "泰兴大厦",
 			"distribution_time":"5天后 10:00-12:30",
 			"pay_type":"微信支付",
-			"products": [{
+			"products": {
 				"name": "商品1"
-			}]
+			}
 		}
 		"""
 #	When bill使用支付方式'微信支付'进行支付
@@ -221,22 +221,28 @@ Scenario: 1 会员访问团购活动首页能进行开团
 #		}
 #		"""
 #
-#	#bill开团后，就不能重复开一个团购活动
-#	Then bill能获得开团活动列表
+	#bill开团后，就不能重复开一个团购活动
+#	When bill参加jobs的团购活动"团购1"
 #		"""
-#		[{
-#			"group_name": "团购2"
+#		{
+#			"group_name": "团购1",
+#			"group_leader": "bill",
 #			"group_dict":
-#				[{
+#				{
 #					"group_type":5,
 #					"group_days":1,
-#					"group_price":21.00
-#				},{
-#					"group_type":10,
-#					"group_days":2,
-#					"group_price":11.00
-#				}]
-#		}]
+#					"group_price":20.00
+#				},
+#			"ship_name": "bill",
+#			"ship_tel": "13811223344",
+#			"ship_area": "北京市 北京市 海淀区",
+#			"ship_address": "泰兴大厦",
+#			"distribution_time":"5天后 10:00-12:30",
+#			"pay_type":"微信支付",
+#			"products": {
+#				"name": "商品1"
+#			}
+#		}
 #		"""
 
 Scenario: 2 会员可以通过分享链接直接参加团购活动
