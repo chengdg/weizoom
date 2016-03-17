@@ -394,13 +394,20 @@ class GroupOrderRefunded(resource.Resource):
                     status=ORDER_STATUS_GROUP_REFUNDING
                 )
                 refunding_order_ids = [order.order_id for order in orders]
-                orders.update(status=ORDER_STATUS_REFUNDED)
+                order_id2order = dict([(order.order_id, order) for order in orders])
+                orders.update(status=ORDER_STATUS_GROUP_REFUNDED)
                 response.updated_order_ids = refunding_order_ids
                 response.not_update_orders_ids = [id for id in order_ids if id not in refunding_order_ids]
+
+                for order_id in refunding_order_ids:
+                    order = order_id2order[order_id]
+                    record_status_log(order_id, u'系统', order.status, ORDER_STATUS_GROUP_REFUNDED)
+                    record_operation_log(order_id, u'系统', "退款完成", order)
+
             except:
                 updated_order_ids = [order.order_id for order in Order.objects.filtr(
                     order_id__in=order_ids,
-                    status=ORDER_STATUS_REFUNDED
+                    status=ORDER_STATUS_GROUP_REFUNDED
                 )]
                 response.updated_order_ids = updated_order_ids
                 response.not_update_orders_ids = [id for id in order_ids if id not in updated_order_ids]
