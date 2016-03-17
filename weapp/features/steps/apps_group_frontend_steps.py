@@ -148,3 +148,18 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
 	group_price= data['group_dict']['group_price']
 	product_id = __get_product_idByname(data['products']['name'])
 	__open_group(context,activity_id,fid,group_type,group_days,group_price,product_id,openid)
+
+@When(u'{webapp_user_name}把{webapp_owner_name}的团购活动"{group_record_name}"的链接分享到朋友圈')
+def step_impl(context, webapp_user_name, webapp_owner_name):
+	context.shared_url = context.link_url
+	print('context.shared_url:',context.shared_url)
+	webapp_owner_id = context.webapp_owner_id
+	webapp_owner_name = User.objects.get(id=webapp_owner_id).username
+	if powerme_owner_name == webapp_owner_name: #如果是分享自己的助力活动
+		context.page_owner_member_id = json.loads(context.rank_response)['data']['member_info']['page_owner_member_id']
+	params = {
+		'webapp_owner_id': context.webapp_owner_id,
+		'id': context.power_me_rule_id,
+		'fid': context.page_owner_member_id
+	}
+	response = context.client.post('/m/apps/powerme/api/powerme_participance/?_method=post', params)
