@@ -279,7 +279,8 @@ def get_can_exchange_cards_list(s_num,end_num,owner_id):
 	belong_card_rules = card_models.WeizoomCardRule.objects.filter(card_attr = card_models.WEIZOOM_CARD_SPECIAL,id__in=card_rule_ids)
 	for rule in belong_card_rules:
 		if str(owner_id) not in rule.shop_limit_list.split(','):
-			card_rule_ids.remove(rule.id)
+			pass
+			#card_rule_ids.remove(rule.id)
 	card_ids = []
 	for k,v in card_id2ruleid.items():
 		if v in card_rule_ids:
@@ -345,7 +346,8 @@ def get_useful_card_count(owner_id,card_exchange_rules):
 		cur_belong_card_rules = belong_card_rules.filter(id__in=card_rule_ids)
 		for rule in cur_belong_card_rules:
 			if str(owner_id) not in rule.shop_limit_list.split(','):
-				card_rule_ids.remove(rule.id)
+				pass
+				#card_rule_ids.remove(rule.id)
 		card_ids = []
 		for k,v in card_id2ruleid.items():
 			if v in card_rule_ids:
