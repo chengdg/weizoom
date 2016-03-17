@@ -194,7 +194,12 @@
             <tr class="xui-product_itle" data-id="${item.id}">
                 <td colspan="7">
                     <div title="${item.name}" class="xui-group_name">
-                        团购名称：${item.name}
+                        团购名称：<a
+                            class="xui-ellipsisFox"
+                            limit="15"
+                            href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">
+                                ${item.name}
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -211,7 +216,7 @@
 					   <a
 						class="xui-ellipsisFox"
 						limit="15"
-						href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">
+						href="/mall2/product/?id=${item.product_id}&source=onshelf">
 							${item.product_name}
 						</a>
 					</div>
