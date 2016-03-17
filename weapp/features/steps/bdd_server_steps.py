@@ -78,11 +78,15 @@ def step_impl(context):
 				raw_context_kvs = context._stack[0]
 				context_kvs = {}
 				for k,v in raw_context_kvs.items():
-					if isinstance(v, (basestring, int, float, list, dict, bool)):
-						context_kvs[k] = v
-				context_kvs['__is_success'] = True
+					if isinstance(v, (basestring, int, float, list, dict, bool)) and k!='text':
+						try:
+							tmp = {'a': v}
+							json.dumps(tmp)
+							context_kvs[k] = v
+						except:
+							print('%s,%s .can not json.loads' % (k,type(v)))
+							pass
 			except:
-				print('----------------false')
 				from core.exceptionutil import full_stack
 				print('*********************** exception **********************')
 				stacktrace = full_stack()
