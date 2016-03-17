@@ -411,8 +411,8 @@ def get_templates(user):
 					template_id = t['template_id']
 				))
 			UserHasTemplateMessages.objects(owner_id=user.id).delete()
-			UserHasTemplateMessages.objects.bulk_create(user_update_list)
-			TemplateMessageDetails.objects.bulk_create(need_save_list)
+			UserHasTemplateMessages.objects.insert(user_update_list)
+			TemplateMessageDetails.objects.insert(need_save_list)
 			print result,'asdfsgsf'
 		except Exception, e:
 			print e

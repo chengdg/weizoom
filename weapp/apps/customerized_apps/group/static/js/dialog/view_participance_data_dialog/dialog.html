@@ -30,7 +30,7 @@
 
 
 <script id="app-group-viewMembers-tmpl" type="text/x-handlebar-tmpl">
-<table class="table table-bordered xb-stripedTable xa-productTable">
+<table class="table table-bordered xb-stripedTable xa-productTable xui-i-group_members">
     <thead style="background:#c8d2e5;">
         <tr>
             <th >会员</th>
@@ -43,19 +43,32 @@
     <tbody>
       {{each(i, item) items}}
         <tr data-id="${item.id}">
-            <td>
-                ${item.name}
+            <td style="width: 235px;">
+                <div class="xui-memberImgBox" >
+                    <img class="xui-memberImg" src="${item.member_icon}">
+                    {{if (item.member_status === '已取消')}}
+                    <div class="xui-i-m_status">已取消</div>
+                    {{/if}}
+                </div>
+                <div class="xui-i-memberInfo">
+                    <div class="xui-memberNameBox">
+                        ${item.name}
+                    </div>
+                    <div class="xui-memberGradeBox">
+                        ${item.member_grade}
+                    </div>
+                </div>
             </td>
             <td>
                 ${item.money}
             </td>
             <td>
-                ${item.points}
+                ${item.integral}
             </td>
             <td>
-                ${item.from}
+                ${item.source}
             </td>
-            <td>
+            <td style="width: 200px;">
                 ${item.created_at}
             </td>
         </tr>
