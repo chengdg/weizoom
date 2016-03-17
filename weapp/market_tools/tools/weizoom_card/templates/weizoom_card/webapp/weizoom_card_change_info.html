@@ -175,9 +175,15 @@
 							+{{order.money}}
 							</span>
 							{% else %}
+							{% if order.money < '0' %}
+							<span style="color: #0fb202">
+							+{{order.money| slice:"1:"}}
+							</span>
+							{% else %}
 							<span style="color: #cf0404">
 							-{{order.money}}
 							</span>
+							{% endif %}
 							{% endif %}
 						</td>
 						<td class="xui-order-info-name">
@@ -186,8 +192,15 @@
 							兑换平台
 							</span>
 							{% else %}
-							<span>[商品]</span>
-							{{order.product_name}}
+							{% if order.money < '0' %}
+							<span>
+							[退款]{{order.product_name}}
+							</span>
+							{% else %}
+							<span>
+							[商品]{{order.product_name}}
+							</span>
+							{% endif %}
 							{% endif %}
 						</td>
 					</tr>
