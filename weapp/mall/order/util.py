@@ -1645,7 +1645,7 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
         order_status = ORDER_STATUS_PAYED_NOT_SHIP
 
     relations = OrderHasGroup.objects.filter(group_id=group_id)
-    user = UserProfile.objects.filter(webapp_id=relations[0].webapp_id).user
+    user = UserProfile.objects.get(webapp_id=relations[0].webapp_id).user
     relations.update(group_status=group_status)
     orders = Order.objects.filter(
             order_id__in=[r.order_id for r in relations],
@@ -1657,36 +1657,38 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             update_order_status(user, 'return_pay', order)
-            args = {
-                'order_id': order.order_id,
-                'authkey': KEY,
-                'from': 'weapp'
-            }
-            response = dict()
-            try:
-                r = requests.get(URL, params=args)
-                response = json.loads(r.json())
-                if not response.get('is_success', ''):
-                    r = requests.get(url, params=args)
-                    response = json.loads(r.json())
-                    if not response.get('is_success', ''):
-                        r = requests.get(url, params=args)
-                        response = json.loads(r.json())
-            except:
-                try:
-                    r = requests.get(URL, params=args)
-                    response = json.loads(r.json())
-                    if not response.get('is_success', ''):
-                        r = requests.get(url, params=args)
-                        response = json.loads(r.json())
-                except:
-                    r = requests.get(URL, params=args)
-                    response = json.loads(r.json())
-            if response.get('is_success', ''):
-                order.status = ORDER_STATUS_GROUP_REFUNDING
-                order.save()
-            else:
-                watchdog_error(u"订单%s通知退款失败" % order.order_id)
+            # args = {
+            #     'order_id': order.order_id,
+            #     'authkey': KEY,
+            #     'from': 'weapp'
+            # }
+            # response = dict()
+            # try:
+            #     r = requests.get(URL, params=args)
+            #     response = json.loads(r.json())
+            #     if not response.get('is_success', ''):
+            #         r = requests.get(url, params=args)
+            #         response = json.loads(r.json())
+            #         if not response.get('is_success', ''):
+            #             r = requests.get(url, params=args)
+            #             response = json.loads(r.json())
+            # except:
+            #     try:
+            #         r = requests.get(URL, params=args)
+            #         response = json.loads(r.json())
+            #         if not response.get('is_success', ''):
+            #             r = requests.get(url, params=args)
+            #             response = json.loads(r.json())
+            #     except:
+            #         r = requests.get(URL, params=args)
+            #         response = json.loads(r.json())
+            # if response.get('is_success', ''):
+            #     order.status = ORDER_STATUS_GROUP_REFUNDING
+            #     order.save()
+            # else:
+            #     watchdog_error(u"订单%s通知退款失败" % order.order_id)
+            order.status = ORDER_STATUS_GROUP_REFUNDING
+            order.save()
 
 def cancel_group_buying(order_id):
     order = Order.objects.get(order_id=order_id)
