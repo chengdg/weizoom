@@ -238,11 +238,7 @@ class GroupParticipances_Export(resource.Resource):
         分析导出
         """
         export_id = request.GET.get('export_id',0)
-        print 99999999999999999999
-        print export_id
-        print 111111111111111111
         datas = GroupParticipances.get_datas(request)
-        print datas[0]
         download_excel_file_name = u'团购详情.xls'
         excel_file_name = 'group_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
         dir_path_suffix = '%d_%s' % (request.user.id, date.today())
