@@ -59,17 +59,33 @@
         margin-left: 11%;
         padding-top: 25px;
         padding-bottom: 20px;
+        line-height: 25px;
     }
-    .xui-successHint .xui-i-msg{
+    .xui-groupMsg-payHint .xui-successHint {
+        height: auto;
+    }
+    ..xui-successHint .xui-i-msg{
         color:#868686;
         margin-left: auto;
         margin-right: auto;
         padding-left: 10px;
         padding-right: 10px;
     }
+    .xui-groupMsg-payHint .xui-successHint .xui-i-msg{
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .xui-groupMsg-payHint .xui-successHint .xa-i-msg-not-meber{
+        color:#868686;
+    }
     .xui-successHint p.xui-i-msg-title.xa-i-msg-title {
         font-size: 1.2rem;
         color: #4C4C4C;
+    }
+    .xui-groupMsg-payHint .xa-i-msg-title {
+        color: #ff2742!important;
     }
     button.wui-i-btn-groupMsg-yes,button.wui-i-btn-groupMsg-no{
         width: 40%;
@@ -109,6 +125,15 @@
                 <button class="wui-i-btn-groupMsg-yes wa-i-btn-groupMsg-yes">是</button>
                 <button class="wui-i-btn-groupMsg-no wa-i-btn-groupMsg-no">否</button>
            </div>
+        </div>
+    </div>
+    <!-- 支付成功弹窗页面 -->
+    <div class="xui-groupMsg-payHint xa-groupMsg-payHint none">
+        <div class="f15 xui-successHint">
+            <p class="xui-i-msg-title xa-i-msg-title"></p>
+            <p class="xui-i-msg xa-i-msg"></p>
+            <p class="xui-i-msg xa-i-msg-not-meber"></p>
+
         </div>
     </div>
     <!-- 成功、失败弹窗页面 -->
@@ -168,6 +193,7 @@
     var product_group_price = 0;
     var order_id = '';
     var product_detail = {% if product_detail %}'{{product_detail}}'{% else %}''{% endif %};
+    var is_from_pay_result = false;
 
 	$(function(){
         //隐藏参与活动按钮
@@ -199,10 +225,17 @@
         if(r!=null) return unescape(r[2]);
         return null;
     }
+    function DelQueryString(name){
+        var url = window.location.search.substr(1);
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        console.log(url.replace(reg,""));
+        return url.replace(reg,"");
+    }
     //发送请求，单独获取动态数据，优化首页时间
     function getDynamicData(){
         loadingStatus(true);
         var fid = GetQueryString("fid");
+        var from = GetQueryString("from");
         W.getApi().call({
             app: 'm/apps/group',
             resource: 'm_group',
@@ -211,7 +244,8 @@
                 webapp_owner_id: W.webappOwnerId,
                 id: W.appRecordId,
                 group_relation_id: group_relation_id,
-                fid: fid
+                fid: fid,
+                from: from
             },
             success: function(data) {
                 console.log(data);
@@ -269,6 +303,10 @@
         page_owner_icon = member_info.page_owner_icon;
         order_id = member_info.order_id;
         console.log(order_id);
+        is_from_pay_result = member_info.is_from_pay_result;
+        if (W.group_status == '团购进行中' && is_from_pay_result == true){
+            showSuccessPaidWin()
+        }
         if(page_owner_icon != ""){
             $('.wui-i-shop_circle').find('img').attr('src', page_owner_icon);
         }
@@ -409,14 +447,17 @@
     //隐藏所有
     $('.mask').click(function(){
         mask('hide');
-//        $('.xui-powerSucceed').addClass('none');
+        $('.xui-groupMsg-payHint').addClass('none');
         $('.xui-attention').addClass('none');
         $('.xui-groupMsg').addClass('none');
         $('.xui-groupMsg-Hint').addClass('none');
         $('.xa-share').addClass('none');
-//        $('.xui-errMsg').addClass('none');
         $('.xa-i-rules-contentbox').addClass('none');
         $('.xa-loadingFrame').addClass('none');
+        if(is_from_pay_result){
+            //删除掉from=pay_result
+            window.location.href = "?"+DelQueryString("from");
+        }
     });
     $('.xa-colseButton').click(function(){
         $('.xa-share').addClass('none');
@@ -485,6 +526,23 @@
                 }
             });
         });
+    }
+    //成功支付
+    function showSuccessPaidWin(){
+        mask('show');
+        $('.xui-groupMsg-payHint').removeClass('none');
+        if(is_group_leader){
+            $('.xa-groupMsg-payHint').find('.xa-i-msg-title').html('恭喜您 开团成功');
+            $('.xa-groupMsg-payHint').find('.xa-i-msg').html('赶紧邀请好友参团吧!');
+        }else{
+            $('.xa-groupMsg-payHint').find('.xa-i-msg-title').html('恭喜您参团成功');
+            if(W.isMember){
+                $('.xa-groupMsg-payHint').find('.xa-i-msg').html('赶快去邀请好友吧!');
+            }else{
+                $('.xa-groupMsg-payHint').find('.xa-i-msg').html('赶快去邀请好友吧!');
+                $('.xa-groupMsg-payHint').find('.xa-i-msg-not-meber').html('关注后，请在个人中心查看购买商品的发货信息!');
+            }
+        }
     }
     //团购成功
     function showGroupSuccess(){
