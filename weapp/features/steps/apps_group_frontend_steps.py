@@ -97,7 +97,7 @@ def __open_group(context,activity_id,fid,group_type,group_days,group_price,produ
 			'woid': webapp_owner_id,
 			'group_id': group_id,
 			'product_ids': product_id,
-			'activity_id': activity_id
+			'activity_id': str(activity_id)
 		}
 		return response
 	else:

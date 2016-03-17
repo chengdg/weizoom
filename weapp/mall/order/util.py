@@ -1656,39 +1656,47 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
         if order_status == ORDER_STATUS_NOT:
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
-            update_order_status(user, 'return_pay', order)
-            # args = {
-            #     'order_id': order.order_id,
-            #     'authkey': KEY,
-            #     'from': 'weapp'
-            # }
-            # response = dict()
-            # try:
-            #     r = requests.get(URL, params=args)
-            #     response = json.loads(r.json())
-            #     if not response.get('is_success', ''):
-            #         r = requests.get(url, params=args)
-            #         response = json.loads(r.json())
-            #         if not response.get('is_success', ''):
-            #             r = requests.get(url, params=args)
-            #             response = json.loads(r.json())
-            # except:
-            #     try:
-            #         r = requests.get(URL, params=args)
-            #         response = json.loads(r.json())
-            #         if not response.get('is_success', ''):
-            #             r = requests.get(url, params=args)
-            #             response = json.loads(r.json())
-            #     except:
-            #         r = requests.get(URL, params=args)
-            #         response = json.loads(r.json())
-            # if response.get('is_success', ''):
-            #     order.status = ORDER_STATUS_GROUP_REFUNDING
-            #     order.save()
-            # else:
-            #     watchdog_error(u"订单%s通知退款失败" % order.order_id)
-            order.status = ORDER_STATUS_GROUP_REFUNDING
-            order.save()
+            if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY:
+                update_order_status(user, 'return_pay', order)
+                order.status = ORDER_STATUS_GROUP_REFUNDING
+                order.save()
+                # args = {
+                #     'order_id': order.order_id,
+                #     'authkey': KEY,
+                #     'from': 'weapp'
+                # }
+                # response = dict()
+                # try:
+                #     r = requests.get(URL, params=args)
+                #     response = json.loads(r.json())
+                #     if not response.get('is_success', ''):
+                #         r = requests.get(url, params=args)
+                #         response = json.loads(r.json())
+                #         if not response.get('is_success', ''):
+                #             r = requests.get(url, params=args)
+                #             response = json.loads(r.json())
+                # except:
+                #     try:
+                #         r = requests.get(URL, params=args)
+                #         response = json.loads(r.json())
+                #         if not response.get('is_success', ''):
+                #             r = requests.get(url, params=args)
+                #             response = json.loads(r.json())
+                #     except:
+                #         r = requests.get(URL, params=args)
+                #         response = json.loads(r.json())
+                # if response.get('is_success', ''):
+                #     order.status = ORDER_STATUS_GROUP_REFUNDING
+                #     order.save()
+                # else:
+                #     watchdog_error(u"订单%s通知退款失败" % order.order_id)
+                #     order.status = ORDER_STATUS_GROUP_REFUNDING
+                #     order.save()
+            else:
+                try:
+                    update_order_status(user, 'cancel', order)
+                except:
+                    watchdog_error(u"团购失败，订单%s取消失败" % order.order_id)
 
 def cancel_group_buying(order_id):
     print "eugene--------order_id-test:", order_id
