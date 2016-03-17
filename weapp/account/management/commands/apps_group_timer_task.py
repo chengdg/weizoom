@@ -40,12 +40,9 @@ class Command(BaseCommand):
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
 			all_activities_with_running_groups = app_models.Group.objects(id__in=all_running_group_ids)
 			for group in all_activities_with_running_groups:
-				print(group.id)
 				data_end_time = group.end_time.strftime('%Y-%m-%d %H:%M')
 				if now_time >= data_end_time:
 					all_end_group_ids.append(str(group.id))
-			print('all_end_group_ids')
-			print(all_end_group_ids)
 			all_running_group_relations.filter(belong_to__in=all_end_group_ids).update(group_status=app_models.GROUP_FAILURE)
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
