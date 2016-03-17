@@ -51,11 +51,11 @@ DATABASES = {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'ENGINE': 'django.db.backends.mysql',
         # Or path to database file if using sqlite3.
-        'NAME': 'nanjing_weapp',
+        'NAME': 'weapp',
         'USER': 'weapp',                      # Not used with sqlite3.
         'PASSWORD': 'weizoom',                  # Not used with sqlite3.
         # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': 'nj.weapp.weizzz.com',
+        'HOST': 'db.weapp.com',
         # Set to empty string for default. Not used with sqlite3.
         'PORT': '',
         'CONN_MAX_AGE': 100
@@ -136,7 +136,7 @@ else:
 DJANGO_REDIS_IGNORE_EXCEPTIONS = True
 
 APP_MONGO = {
-    "HOST": 'nj.weapp.weizzz.com:27017',
+    "HOST": 'mongo.weapp.com',
     "DB": 'app_data'
 }
 
