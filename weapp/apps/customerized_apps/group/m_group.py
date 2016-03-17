@@ -161,6 +161,7 @@ class MGroup(resource.Resource):
 		fid = 0
 		group_relation_id = 0
 		product_id = None
+		product_detail = ''
 
 		if 'new_app:' in record_id:
 			project_id = record_id

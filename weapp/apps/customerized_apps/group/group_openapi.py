@@ -123,7 +123,7 @@ class CheckGroupBuy(resource.Resource):
 				else:
 					reason = u'团购活动暂未生效，团长还未开团成功'
 			elif group_record.group_status == app_models.GROUP_RUNNING:
-				if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
+				if member_id in group_record.grouped_member_ids and (group_record.grouped_number <= int(group_record.group_type)):
 					is_success = True
 					reason = u'可以进行团购下单操作'
 					group_buy_price = group_record.group_price
