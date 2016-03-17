@@ -315,7 +315,7 @@
 
     function updateBtnStatus(){
         if('进行中' != W.activityStatus){
-            if('未开始' == W.activityStatus){
+            if('未开启' == W.activityStatus){
                 $('.wa-notready').show();
             }else{
                 $('.wa-closed').show();
@@ -622,7 +622,6 @@
     //已参团的列表
     function showHelperInfo(data){
         var helpers_info = data.helpers_info;
-        console.log(helpers_info);
         if ($.isEmptyObject(helpers_info)){
             $('.wui-i-states').addClass('none');
         }else{
