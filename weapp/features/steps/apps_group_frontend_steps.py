@@ -92,8 +92,13 @@ def __open_group(context,activity_id,fid,group_type,group_days,group_price,produ
 		context.last_url = redirect_url
 		response = context.client.get(bdd_util.nginx(redirect_url))
 	if response.status_code == 200:
-		print('response!!!!!!!!!!!!!!!!!!')
-		print(response)
+		group_id = json.loads(response.content)['data']['relation_belong_to']
+		context.put_order_info = {
+			'woid': webapp_owner_id,
+			'group_id': group_id,
+			'product_ids': product_id,
+			'activity_id': activity_id
+		}
 		return response
 	else:
 		print('[info] redirect error,response.status_code :')
@@ -113,6 +118,12 @@ def __join_group(context,group_relation_id,fid):
 	if response.status_code == 200:
 		print('response!!!!!!!!!!!!!!!!!!')
 		print(response)
+		# context.put_order_info = {
+		# 	'woid': webapp_owner_id,
+		# 	'group_id': group_id,
+		# 	'product_ids': product_id,
+		# 	'activity_id': activity_id
+		# }
 		return response
 
 """
