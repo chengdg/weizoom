@@ -59,15 +59,6 @@ class MGroup(resource.Resource):
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
-		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-		data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-		if data_start_time <= now_time and now_time < data_end_time:
-			record.update(set__status=app_models.STATUS_RUNNING)
-			activity_status = u'进行中'
-		elif now_time >= data_end_time:
-			record.update(set__status=app_models.STATUS_STOPED)
-			activity_status = u'已结束'
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
@@ -213,16 +204,6 @@ class MGroup(resource.Resource):
 				product_id = record.product_id
 				product_detail = Product.objects.get(id=product_id).detail
 
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
@@ -237,17 +218,6 @@ class MGroup(resource.Resource):
 
 				#获取活动状态
 				activity_status = record.status_text
-
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
