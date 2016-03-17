@@ -315,9 +315,9 @@
     {{#if hasData }}
         <div class="xui-i-setting xui-i-success-setting xa-success-setting">
             <label>选择团购成功的消息模板：
-                <select class="form-control xa-template-selector">
+                <select class="form-control xa-template-selector" style="width: 50%">
                     {{#each templates}}
-                        <option value="{{ template_id }}">{{ template_title }}({{ template_id }})</option>
+                        <option value="{{ template_id }}" {{#ifCond ../success_selected_id "==" template_id}}selected{{/ifCond}}>{{ template_title }}</option>
                     {{/each}}
                 </select>
             </label>
@@ -326,9 +326,9 @@
         </div>
         <div class="xui-i-setting xui-i-fail-setting xa-fail-setting">
             <label>选择团购失败的消息模板：
-                <select class="form-control xa-template-selector">
+                <select class="form-control xa-template-selector" style="width: 50%">
                     {{#each templates}}
-                        <option value="{{ template_id }}">{{ template_title }}({{ template_id }})</option>
+                        <option value="{{ template_id }}" {{#ifCond ../fail_selected_id "==" template_id}}selected{{/ifCond}}>{{ template_title }}</option>
                     {{/each}}
                 </select>
             </label>
@@ -453,6 +453,7 @@ $(document).ready(function() {
 
     //初始化模板消息配置dialog
     var initData = "{{ template_data }}";
+    var APPS_TYPE = "group";
     ensureNS('W.dialog.group');
     W.dialog.group.templateDialog = W.dialog.Dialog.extend({
         getTemplate: function(data) {
@@ -483,29 +484,22 @@ $(document).ready(function() {
         },
         render: function(){
             var data = $.extend({
-                "hasData": false
+                "hasData": 0
             }, this.data);
+            console.log(data);
+            console.log('asjhdkajshfklashfladhfkl');
+            if(data.control_data){
+                var control = data.control_data;
+                var success_data = control.success;
+                var fail_data = control.fail;
+                data['success_selected_id'] = !$.isEmptyObject(success_data) && success_data.template_id;
+                data['fail_selected_id'] = !$.isEmptyObject(fail_data) && fail_data.template_id;
+            }
             var $node = $(this.getTemplate(data));
             this.$el.html($node);
         },
         onClickUpdate: function(){
-            console.log('update');
-            var that = this;
-            W.getApi().call({
-                app: 'apps',
-                api: 'template_message_list/get',
-                method: 'get',
-                args: {},
-                success: function(data) {
-                    console.log(data, 'reeee');
-                    that.data = data;
-                    that.render();
-                },
-                error: function(resp) {
-                    that.data = {};
-                    console.log(resp.errMsg);
-                }
-            });
+            this.getData({"action": 1});
         },
         _getFormData: function(){
             var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
@@ -521,7 +515,7 @@ $(document).ready(function() {
             if(fail_template_id != '') serials_arr.push(fail_template_id);
 
             return {
-                "apps_type": "group",
+                "apps_type": APPS_TYPE,
                 "template_ids": serials_arr.toString(),
                 "template_settings": JSON.stringify({
                     "success": {
@@ -555,16 +549,17 @@ $(document).ready(function() {
                 }
             });
         },
-        getData: function(){
+        getData: function(args){
             var that = this;
-            if(this.data){
+            if(this.data && !args){
                 this.render();
             }else{
+                args = args || {};
                 W.getApi().call({
                     app: 'apps',
                     api: 'template_message_list/get',
                     method: 'get',
-                    args: {},
+                    args: $.extend(args, {"apps_type": APPS_TYPE}),
                     success: function(data) {
                         console.log(data, 'reeee');
                         that.data = data;

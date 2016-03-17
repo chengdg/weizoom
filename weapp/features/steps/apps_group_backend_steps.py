@@ -602,20 +602,20 @@ def __Delete_Group(context,group_id):
     del_group_response = context.client.post(del_group_url,del_args)
     return del_group_response
 
-# def __Stop_Group(context,group_id):
-#   """
-#   关闭团购活动
-#   """
+def __Stop_Group(context,group_id):
+  """
+  关闭团购活动
+  """
 
-#   design_mode = 0
-#   version = 1
-#   stop_group_url = "/apps/group/api/group_status/?design_mode={}&version={}".format(design_mode,version)
-#   stop_args ={
-#       "id":group_id,
-#       "target":'stoped'
-#   }
-#   stop_group_response = context.client.post(stop_group_url,stop_args)
-#   return stop_group_response
+  design_mode = 0
+  version = 1
+  stop_group_url = "/apps/group/api/group_status/?design_mode={}&version={}".format(design_mode,version)
+  stop_args ={
+      "id":group_id,
+      "target":'stoped'
+  }
+  stop_group_response = context.client.post(stop_group_url,stop_args)
+  return stop_group_response
 
 # def __Search_Powerme(context,search_dic):
 #     """
@@ -850,11 +850,11 @@ def step_impl(context,user,group_name):
     bdd_util.assert_api_call_success(open_response)
 
 
-# @when(u"{user}关闭团购活动'{group_name}'")
-# def step_impl(context,user,group_name):
-#   group_page_id,group_id = __group_name2id(group_name)#纯数字
-#   stop_response = __Stop_Group(context,group_id)
-#   bdd_util.assert_api_call_success(stop_response)
+@when(u"{user}关闭团购活动'{group_name}'")
+def step_impl(context,user,group_name):
+  group_page_id,group_id = __group_name2id(group_name)#纯数字
+  stop_response = __Stop_Group(context,group_id)
+  bdd_util.assert_api_call_success(stop_response)
 
 
 # @when(u"{user}查看团购活动'{group_name}'")

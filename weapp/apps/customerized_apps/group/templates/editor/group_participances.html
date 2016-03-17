@@ -1,30 +1,56 @@
 {% extends "content_base_v2.html" %}
 {% load apps_filter %}
 
+{% block css %}
     <style>
-        .tl.pl25 img{
-            height: 60px;
-            width: 60px;
-        }
 
-        td .xui-i-status{
-        	font-weight: bold !important;
-        }
-        .xui-i-gbtn_normal{
-        	color:#343434;
-        }
-        .xui-i-gbtn_success{
-        	color:#018000;
-        }
-        .xui-i-gbtn_warnning{
-        	color:#D00405;
-        }
+/*    table.xui-i-group_members td .xui-group_name{
+        text-align: left;
+        margin-left: 22px;
+        color:#333333;
+    }*/
+    table.xui-i-group_members td .xui-memberImgBox{
+        width: 70px;
+        height: 70px;
+        display: inline-block;
+        float: left;
+    }
+    table.xui-i-group_members td .xui-memberImgBox img{
+        width: 60px;
+        height: 60px;
+        margin: 5px;
+    }
+    table.xui-i-group_members td .xui-memberImgBox .xui-i-m_status{
+        width: 58px;
+        background: black;
+        color: white;
+        position: relative;
+        margin: auto;
+        height: 30px;
+        top: -35px;
+        line-height: 30px;
+        opacity: 0.5;
+    }
+    table.xui-i-group_members td .xui-i-memberInfo{
+        width: 140px;
+        height: 70px;
+        display: inline-block;
+        float: right;
+    }
+    table.xui-i-group_members td .xui-memberNameBox{
+        width: 140px;
+        height: 35px;
+        line-height: 35px;
+        color:#2B93DC;
+    }
 
-	    table.xui-groups tr td .xui-time_start,table tr td .xui-time_end{
-	    	width: 85px;
-	    	display: inline-block ;
-	    }
+    table.xui-i-group_members td .xui-memberGradeBox{
+        width: 140px;
+        height: 35px;
+        line-height: 35px;
+    }
     </style>
+{% endblock %}
 {% block content-panel %}
 <div class="xui-GroupParticipancesAppPage xui-appPage-commonStyle">
 	<div class="relative">

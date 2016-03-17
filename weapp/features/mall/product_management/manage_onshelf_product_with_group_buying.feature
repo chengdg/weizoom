@@ -69,7 +69,7 @@ Background:
 			}
 		}]
 		"""
-	When jobs创建团购活动
+	When jobs新建团购活动
 		"""
 		[{
 			"group_name":"团购活动1",
@@ -107,6 +107,8 @@ Background:
 				"share_description":"团购活动2分享描述"
 		}]
 		"""
+	When jobs开启团购活动'团购活动1'
+	When jobs开启团购活动'团购活动2'
 
 Scenario:1 对团购活动中的商品进行下架或删除操作
 	Given jobs登录系统
@@ -126,7 +128,7 @@ Scenario:1 对团购活动中的商品进行下架或删除操作
 	Then jobs获得提示信息'该商品正在进行团购活动'
 
 	#团购活动结束后,可以对商品进行下架和删除操作
-	When jobs'结束'团购活动'团购活动2'
+	When jobs关闭团购活动'团购活动2'
 	When jobs'下架'商品'商品2'
 	Then jobs能获得'在售'商品列表
 		"""
@@ -140,7 +142,7 @@ Scenario:1 对团购活动中的商品进行下架或删除操作
 			"name": "商品2"
 		}]
 		"""
-	When jobs'结束'团购活动'团购活动1'
+	When jobs关闭团购活动'团购活动1'
 	When jobs'永久删除'商品'商品1'
 	Then jobs能获得'在售'商品列表
 		"""

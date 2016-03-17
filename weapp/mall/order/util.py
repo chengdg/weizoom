@@ -846,7 +846,7 @@ def is_has_order(request, is_refund=False):
     # weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
     if is_refund:
         orders = belong_to(webapp_id)
-        has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]).count() > 0
+        has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED]).count() > 0
     else:
         has_order = (belong_to(webapp_id).count() > 0)
     MallCounter.clear_unread_order(webapp_owner_id=request.manager.id)  # 清空未读订单数量
@@ -906,7 +906,7 @@ def get_orders_response(request, is_refund=False):
     if query_dict.has_key('status'):
         current_status_value = query_dict['status']
     elif query_dict.has_key('status__in'):
-        current_status_value = ORDER_STATUS_REFUNDING
+        current_status_value = ORDER_STATUS_GROUP_REFUNDING
     else:
         current_status_value = -1
 
@@ -969,8 +969,12 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     if query_dict.get('order_type') and query_dict['order_type'] == 2 and not mall_type:
         orders = orders.filter(order_id__in=group_order_ids)
 
+
     if is_refund:
-        orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDING])
+        if query_dict.get('status__in'):
+            orders = orders.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED])
+        else:
+            orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
 
     # 处理排序
     if sort_attr != 'created_at':
@@ -1269,7 +1273,7 @@ def __get_select_params(request):
         query_dict['product_name'] = product_name
     if len(pay_type):
         query_dict['pay_interface_type'] = int(pay_type)
-    if len(order_source):
+    if len(order_source) and order_source != '-1':
         query_dict['order_source'] = int(order_source)
     if len(order_status) and order_status != '-1':
         query_dict['status'] = int(order_status)
@@ -1280,8 +1284,9 @@ def __get_select_params(request):
     if len(order_type) and order_type != '-1':
         query_dict['order_type'] = int(order_type)
 
-    if query_dict.has_key('status') and query_dict['status'] == 6:
-        query_dict['status__in'] = [ORDER_STATUS_REFUNDING, ORDER_STATUS_GROUP_REFUNDING]
+    # 团购退款
+    if query_dict.has_key('status') and query_dict['status'] == 8:
+        query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]
         query_dict.pop('status')
      # 时间区间
     try:
@@ -1657,8 +1662,10 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY:
+                print "cancel_group_not_ship_order"
                 update_order_status(user, 'return_pay', order)
                 order.status = ORDER_STATUS_GROUP_REFUNDING
+                print "order.status", order.status
                 order.save()
                 # args = {
                 #     'order_id': order.order_id,
