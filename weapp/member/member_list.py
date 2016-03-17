@@ -590,7 +590,7 @@ class MemberDetail(resource.Resource):
 					member_count = Member.objects.filter(webapp_id=webapp_id,id__in=member_ids).count()
 					if member_count > 0:
 						response = create_response(400)
-						response.errMsg = u'手机已经被绑定过'
+						response.errMsg = u'该号码已绑定其他微信号'
 						return response.get_response()
 					else:
 						member_info_update['phone_number'] = phone_number.strip()
