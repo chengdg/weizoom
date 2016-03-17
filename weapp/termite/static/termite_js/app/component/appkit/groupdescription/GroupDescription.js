@@ -166,9 +166,9 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
         }],
 	propertyChangeHandlers: {
-		title: function($node, model, value) {
-            $node.find('.wui-i-product-title').html(value);
-		},
+		//title: function($node, model, value) {
+         //   $node.find('.wui-i-product-title').html(value);
+		//},
 		start_time: function($node, model, value, $propertyViewNode) {
 			var end_time_text = $node.find('.wui-i-end_time').text();
 			$node.find('.wui-i-start_time').text(value);
