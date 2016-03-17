@@ -31,7 +31,6 @@ def get_weizoom_card_login(request):
 	member_has_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	if member_has_card.count() > 0 and is_quit == 0:
-		print 11111111111111111111111111
 		card_id = member_has_card[0].card_id
 		weizoom_card = WeizoomCard.objects.get(id=card_id)
 		weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
