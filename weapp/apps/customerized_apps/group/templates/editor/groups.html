@@ -37,7 +37,16 @@
 		display: inline-block;
 		text-align: center;
     }
-
+    .xui-template-modal-body label{
+        display: block;
+    }
+    .xui-template-modal-body .xui-i-setting{
+        border: 1px solid #EAEEF7;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        margin-left: -15px;
+    }
 
 </style>
 {% endblock %}
@@ -121,6 +130,7 @@
 			<a href="/apps/group/group/" class="btn btn-success fr">
 				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建团购
 			</a>
+            <button type="button" class="btn btn-success fr mr10 xa-template-setting">配置模板消息</button>
 		</div>
 
 		<div
@@ -138,8 +148,30 @@
 		</div>
 	</div>
 </div>
-{% endblock %}
 
+<!-- 模板消息配置弹窗 -->
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">模板消息配置</h3>
+            </div>
+
+            <div class="modal-body ml15 xa-template-modal-body xui-template-modal-body">
+                <p>正在获取模板消息...</p>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-primary xa-update-btn" aria-hidden="true" style="margin-right: 0;">更新模板</button>
+                <button class="btn btn-success xa-submit-btn" aria-hidden="true">确&nbsp;&nbsp;定</button>
+                <button class="btn btn-default" aria-hidden="true" data-dismiss="modal" >关&nbsp;&nbsp;闭</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block js %}
 {% verbatim %}
@@ -277,6 +309,39 @@
 	{{/if}}
 	<br>
 </script>
+
+<!-- 团购模板消息弹窗 -->
+<script id="group-template-setting-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+    {{#if hasData }}
+        <div class="xui-i-setting xui-i-success-setting xa-success-setting">
+            <label>选择团购成功的消息模板：
+                <select class="form-control xa-template-selector">
+                    {{#each templates}}
+                        <option value="{{ template_id }}">{{ template_title }}({{ template_id }})</option>
+                    {{/each}}
+                </select>
+            </label>
+            <label>开头描述：<input type="text" class="form-control xa-template-first"></label>
+            <label>结尾描述：<input type="text" class="form-control xa-template-remark"></label>
+        </div>
+        <div class="xui-i-setting xui-i-fail-setting xa-fail-setting">
+            <label>选择团购失败的消息模板：
+                <select class="form-control xa-template-selector">
+                    {{#each templates}}
+                        <option value="{{ template_id }}">{{ template_title }}({{ template_id }})</option>
+                    {{/each}}
+                </select>
+            </label>
+            <label>开头描述：<input type="text" class="form-control xa-template-first"></label>
+            <label>结尾描述：<input type="text" class="form-control xa-template-remark"></label>
+        </div>
+        <div class="xui-i-preview">
+
+        </div>
+    {{else}}
+        <p>获取模板信息失败</p>
+    {{/if}}
+</script>
 {% endverbatim %}
 
 <script type="text/javascript">
@@ -385,6 +450,141 @@ $(document).ready(function() {
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
 	});
+
+    //初始化模板消息配置dialog
+    var initData = "{{ template_data }}";
+    ensureNS('W.dialog.group');
+    W.dialog.group.templateDialog = W.dialog.Dialog.extend({
+        getTemplate: function(data) {
+            var template = Handlebars.compile($('#group-template-setting-dialog-tmpl-src').html());
+            return template(data);
+        },
+        initialize: function(options) {
+            this.$el = options.el;
+            this.$dialog = this.$el.parents('.modal').eq(0);
+            W.createWidgets(this.$dialog);
+            this.bindListeners();
+            if(options.initData){
+                this.data = options.initData;
+                this.render();
+            }else{
+                this.getData();
+            }
+        },
+        bindListeners: function(){
+            this.$dialog.delegate('.xa-submit-btn', 'click', this.onClickSubmit.bind(this));
+            this.$dialog.delegate('.xa-update-btn', 'click', this.onClickUpdate.bind(this));
+        },
+        show: function(){
+            this.$dialog.modal('show');
+        },
+        close: function(){
+            this.$dialog.modal('hide');
+        },
+        render: function(){
+            var data = $.extend({
+                "hasData": false
+            }, this.data);
+            var $node = $(this.getTemplate(data));
+            this.$el.html($node);
+        },
+        onClickUpdate: function(){
+            console.log('update');
+            var that = this;
+            W.getApi().call({
+                app: 'apps',
+                api: 'template_message_list/get',
+                method: 'get',
+                args: {},
+                success: function(data) {
+                    console.log(data, 'reeee');
+                    that.data = data;
+                    that.render();
+                },
+                error: function(resp) {
+                    that.data = {};
+                    console.log(resp.errMsg);
+                }
+            });
+        },
+        _getFormData: function(){
+            var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
+            var success_first = this.$el.find('.xa-success-setting .xa-template-first').val();
+            var success_remark = this.$el.find('.xa-success-setting .xa-template-remark').val();
+
+            var fail_template_id = this.$el.find('.xa-fail-setting .xa-template-selector').val();
+            var fail_first = this.$el.find('.xa-fail-setting .xa-template-first').val();
+            var fail_remark = this.$el.find('.xa-fail-setting .xa-template-remark').val();
+
+            var serials_arr = [];
+            if(success_template_id != '') serials_arr.push(success_template_id);
+            if(fail_template_id != '') serials_arr.push(fail_template_id);
+
+            return {
+                "apps_type": "group",
+                "template_ids": serials_arr.toString(),
+                "template_settings": JSON.stringify({
+                    "success": {
+                        "template_id": success_template_id,
+                        "first": success_first,
+                        "remark": success_remark
+                    },
+                    "fail": {
+                        "template_id": fail_template_id,
+                        "first": fail_first,
+                        "remark": fail_remark
+                    }
+                })
+            }
+
+        },
+        onClickSubmit: function(){
+            console.log('submit');
+            var that = this;
+            W.getApi().call({
+                app: 'apps',
+                api: 'apps_use_template/save',
+                method: 'post',
+                args: that._getFormData(),
+                success: function(data) {
+                    W.showHint('success', "配置成功");
+                    that.close();
+                },
+                error: function(resp) {
+                    W.showHint('error', resp.errMsg);
+                }
+            });
+        },
+        getData: function(){
+            var that = this;
+            if(this.data){
+                this.render();
+            }else{
+                W.getApi().call({
+                    app: 'apps',
+                    api: 'template_message_list/get',
+                    method: 'get',
+                    args: {},
+                    success: function(data) {
+                        console.log(data, 'reeee');
+                        that.data = data;
+                        that.render();
+                    },
+                    error: function(resp) {
+                        that.data = {};
+                        console.log(resp.errMsg);
+                    }
+                });
+            }
+        }
+    });
+    //模板消息弹窗
+    $('.xa-template-setting').on('click', function(){
+        W.dialog.showDialog('W.dialog.group.templateDialog',{
+            initData: initData=="" ? false: JSON.parse(initData),
+            el: $('.xa-template-modal-body')
+        });
+    });
 
 });
 </script>
