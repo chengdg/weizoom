@@ -177,7 +177,7 @@ class OrderAction(resource.Resource):
 			is_already_paid_list = []
 			for g in group_details:
 				is_already_paid_list.append(g.is_already_paid)
-			if 'False' not in is_already_paid_list:
+			if False not in is_already_paid_list:
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 				update_order_status_by_group_status(group_id,'success')
 		response = create_response(200)

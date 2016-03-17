@@ -180,6 +180,7 @@ def call_api(weixin_api, api_instance_class):
 		try:
 			# get 
 			if request_method == api_settings.API_GET:
+				print '999999999999999', api_response
 				api_response = weixin_api.weixin_http_client.get(request_url)
 			# post	
 			if request_method == api_settings.API_POST:

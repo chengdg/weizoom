@@ -26,12 +26,27 @@ class Command(BaseCommand):
 			所有已到时间还未完成的团购，置为团购失败
 			"""
 			all_running_group_relations = app_models.GroupRelations.objects(group_status=app_models.GROUP_RUNNING)
+			all_running_group_ids = []
 			for group_relation in all_running_group_relations:
+				all_running_group_ids.append(group_relation.belong_to)
 				timing = (group_relation.created_at + timedelta(days=int(group_relation.group_days)) - datetime.today()).total_seconds()
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
 					update_order_status_by_group_status(group_relation.id,'failure')
-
+			"""
+			所有团购活动已结束的团购活动，置为团购失败
+			"""
+			all_end_group_ids = []
+			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
+			all_activities_with_running_groups = app_models.Group.objects(id__in=all_running_group_ids)
+			for group in all_activities_with_running_groups:
+				print(group.id)
+				data_end_time = group.end_time.strftime('%Y-%m-%d %H:%M')
+				if now_time >= data_end_time:
+					all_end_group_ids.append(str(group.id))
+			print('all_end_group_ids')
+			print(all_end_group_ids)
+			all_running_group_relations.filter(belong_to__in=all_end_group_ids).update(group_status=app_models.GROUP_FAILURE)
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
 			"""

@@ -42,8 +42,13 @@ class MGroup(resource.Resource):
 		page_owner_member_id = 0
 		grouped_member_info_list = []
 		order_id = ''
-
+		is_from_pay_result = request.GET.get('from', None)
+		if is_from_pay_result == 'pay_result':
+			is_from_pay_result = True
+		else:
+			is_from_pay_result = False
 		response = create_response(500)
+
 		if not record_id:
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
@@ -54,15 +59,6 @@ class MGroup(resource.Resource):
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
-		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-		data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-		if data_start_time <= now_time and now_time < data_end_time:
-			record.update(set__status=app_models.STATUS_RUNNING)
-			activity_status = u'进行中'
-		elif now_time >= data_end_time:
-			record.update(set__status=app_models.STATUS_STOPED)
-			activity_status = u'已结束'
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
@@ -85,7 +81,7 @@ class MGroup(resource.Resource):
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -140,7 +136,8 @@ class MGroup(resource.Resource):
 			'only_remain_one_day': only_remain_one_day,
 			'product_original_price': product_original_price,
 			'product_group_price': product_group_price,
-			'order_id':order_id
+			'order_id': order_id,
+			'is_from_pay_result': is_from_pay_result
 		}
 
 		response = create_response(200)
@@ -207,16 +204,6 @@ class MGroup(resource.Resource):
 				product_id = record.product_id
 				product_detail = Product.objects.get(id=product_id).detail
 
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
@@ -231,17 +218,6 @@ class MGroup(resource.Resource):
 
 				#获取活动状态
 				activity_status = record.status_text
-
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
-					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {

@@ -1469,7 +1469,7 @@ class GroupProductList(resource.Resource):
                 shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
                 is_deleted=False,
                 is_member_product=False,
-                stocks=0
+                stocks__lte=1
                 )
         if product_name:
             products = products.filter(name__contains=product_name)
