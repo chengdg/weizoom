@@ -18,13 +18,13 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             displayName: '类型',
 			//annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			source:[{
-				name:'5人团',
-				value:'5'
+				name:'2人团',
+				value:'2'
 			},{
-				name:'10人团',
-				value:'10'
+				name:'3人团',
+				value:'3'
 			}],
-            default:'5',
+            default:'2',
 			isUserProperty:true
 
         },{

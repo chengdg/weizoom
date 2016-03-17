@@ -39,47 +39,18 @@
 	<div class="xui-formPanel pb10 mb15">
 		<div class="xui-i-col">
 			<div class="xui-i-item">
-				<label class="">用户名：</label>
-				<input type="text" class="form-control" id="participant_name" name="participant_name" value="" />
+				<label class="">团长名称：</label>
+				<input type="text" class="form-control" id="group_leader_name" name="group_leader_name" value="" />
 			</div>
 		</div>
-		<div class="xui-i-col">
-			<div class="xui-i-item ml10">
-				<label>活动时间
-				：</label>
-				<input
-					type="text"
-					class="form-control xui-datePicker"
-					id="start_time"
-					name="start_time"
-					style=""
-					value=""
-					readonly="readonly"
-					data-enable-select-time="true"
-					data-validate="require-notempty"
-					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM" />
-				至
-				<input
-					type="text"
-					class="form-control xui-datePicker"
-					id="end_time"
-					name="end_time"
-					value=""
-					readonly="readonly"
-					data-enable-select-time="true"
-					data-validate="require-notempty"
-					data-ui-role="date-picker"
-					data-format="yy-mm-dd HH:MM"
-					data-min-el="#start_time"/>
-			</div>
-		</div>
+
 		<div class="xui-i-col">
 			<div class="ml80">
 				<a class="btn btn-primary mr30 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
 				<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">批量导出</a>
 			</div>
 		</div>
+
 	</div>
 
 	<div class="panel panel-default xui-tableBox">
@@ -193,30 +164,37 @@
 $(document).ready(function() {
 	$('body').delegate('.xa-viewData', 'click', function(event) {
 		var activityId = $(event.currentTarget).parents('tr').data('id');
-		console.log('fronted:.xa-viewData, click 000000000000002');
-		console.log(activityId);
 		W.dialog.showDialog('W.dialog.app.group.ViewParticipanceDataDialog', {
 			activityId: activityId,
 			success: function(data) {
-				console.log('fronted:.xa-viewData, click 回调 222222222222222');
-				console.log(data);
 			}
 		});
 	});
 
 	$('.xa-search').click(function(event) {
-		var participant_name = $.trim($('[name="participant_name"]').val());
+		var group_leader_name = $.trim($('[name="group_leader_name"]').val());
+		var status = $.trim($('[name="status"]').val());
 		var startTime = $.trim($('[name="start_time"]').val());
 		var endTime = $.trim($('[name="end_time"]').val());
 		var table = $('[data-ui-role="advanced-table"]').data('view');
 		table.reload({
-			participant_name: participant_name,
+			group_leader_name: group_leader_name,
+			status: status,
 			start_time: startTime,
 			end_time: endTime
 		}, {
 			emptyDataHint: '没有符合条件的数据'
 		});
 	});
+
+
+	$('.xa-reset').click(function(event) {
+		$('[name="group_leader_name"]').val('');
+		$('[name="status"]').val('-1');
+		$('[name="start_time"]').val('');
+		$('[name="end_time"]').val('');
+	});
+
 });
 </script>
 {% endblock %}
