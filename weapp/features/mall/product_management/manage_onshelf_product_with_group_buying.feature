@@ -73,8 +73,8 @@ Background:
 		"""
 		[{
 			"group_name":"团购活动1",
-			"start_time":"今天",
-			"end_time":"2天后",
+			"start_date":"今天",
+			"end_date":"2天后",
 			"product_name":"商品1",
 			"group_dict":
 				[{
@@ -88,8 +88,8 @@ Background:
 				"share_description":"团购活动1分享描述"
 		},{
 			"group_name":"团购活动2",
-			"start_time":"今天",
-			"end_time":"2天后",
+			"start_date":"今天",
+			"end_date":"2天后",
 			"product_name":"商品2",
 			"group_dict":
 				[{
