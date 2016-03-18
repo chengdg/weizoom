@@ -587,7 +587,8 @@ class MemberDetail(resource.Resource):
 				member_infos = MemberInfo.objects.filter(phone_number=phone_number.strip(), is_binded=True)
 				if member_infos:
 					member_ids = [member_info.member_id for member_info in member_infos]
-					member_count = Member.objects.filter(webapp_id=webapp_id,id__in=member_ids).count()
+					members = Member.objects.filter(webapp_id=webapp_id,id__in=member_ids)
+					member_count = members.exclude(id=member_id).count()
 					if member_count > 0:
 						response = create_response(400)
 						response.errMsg = u'该号码已绑定其他微信号'
