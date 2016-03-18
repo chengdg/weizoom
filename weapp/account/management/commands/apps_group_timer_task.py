@@ -60,11 +60,15 @@ class Command(BaseCommand):
 			for group_detail in all_unpaid_group_details:
 				timing_minutes = (datetime.today() - group_detail.created_at).total_seconds() / 60
 				if timing_minutes >= 15 :
-					all_running_group_relations.get(id=group_detail.relation_belong_to).update(
-						dec__grouped_number=1,
-						pop__grouped_member_ids=group_detail.grouped_member_id
-					)
-					group_detail.delete()
+					try:
+						all_running_group_relations.get(id=group_detail.relation_belong_to).update(
+							dec__grouped_number=1,
+							pop__grouped_member_ids=group_detail.grouped_member_id
+						)
+						group_detail.delete()
+					except:
+						#该团已被删除掉了
+						pass
 
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
