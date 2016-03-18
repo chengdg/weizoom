@@ -159,3 +159,171 @@ html,body{
         font-size: 1.3em;
         margin-top: 43px;
     }
+
+/*
+微众卡查询结果的样式
+*/
+
+.xui-wzResult-page {
+    background-color: #f0f0f0;
+    height: 100%;
+    width: 100%;
+	font-size: 1.2rem;
+}
+
+.xui-wzResult-page .xui-submitWz {
+    background: #fff none repeat scroll 0 0;
+	text-align: center;
+    margin: 10px;
+	padding-top: 20px;
+}
+.xui-wzResult-page .xui-submitWz .xui-successHint {
+    margin-bottom: 25px;
+    position: relative;
+    width: 100%;
+}
+
+.xui-wzResult-page .xui-submitWz .xui-successHint img {
+    height: 1.67rem;
+    position: relative;
+    top: 7px;
+    width: 1.67rem;
+}
+.xui-wzResult-page .xui-submitWz .xui-wcInfo{
+	margin-top: 10px;
+	text-align: left;
+	padding-left: 10px;
+}
+.xui-wzResult-page .xui-submitWz .xui-wcInfo p{
+	padding-bottom: 10px;
+}
+.xui-wzResult-page .xui-submitWz .xui-wcInfo .xui-valid-time{
+	font-size: 0.9rem;
+	color: #B5B5B5;
+}
+.xui-wzResult-page .xui-submitWzOther{
+	background: #fff none repeat scroll 0 0;
+    width: 100%;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-cuttingLineThick {
+    margin: 0;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-wcInfoOther{
+	border-top: 1px solid #dbdbdb;
+	display: block;
+	height: 100%;
+	padding: 20px 15px;
+	color: #000;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-wcInfoOther .shop_list_split{
+	display: inline-block;
+	color: #999999;
+	margin-left: 20%;
+	max-width: 50%;
+	white-space: nowrap;
+	overflow : hidden;
+	text-overflow: ellipsis;
+}
+.xui-wzResult-page .xui-submitWzOther .shop_list_name{
+	display: none;
+	border-top: 1px solid #dbdbdb;
+	background-color: #F9F9F9;
+	padding: 8px 23px;
+	color: #999999;
+	line-height: 2rem;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-wcInfoOther .xui-down-arrow{
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+}
+.xui-wzResult-page .xui-submitWzOther .xui-wcInfoOther .xui-shop-normal{
+	float: right;
+	color: #C5C5C5;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-searchOther{
+	border-top: 1px solid #dbdbdb;
+	display: block;
+	height: 100%;
+	padding: 20px 15px;
+	color: #000;
+}
+.xui-wzResult-page .xui-submitWzOther img{
+	float: right;
+	width: 3%;
+}
+.xui-wzResult-page .xui-wcInfoOther{
+	padding: 20px 15px;
+	height: 100%;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-wcInfoOtherDetail{
+	border-top: 1px solid #dbdbdb;
+	display: block;
+	height: 100%;
+	padding: 20px 15px;
+	color: #000;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-wcInfoOtherDetail .xui-down-arrow{
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+}
+
+.xui-wzResult-page .xui-submitWzOther .detail_list{
+	display: none;
+	border-top: 1px solid #dbdbdb;
+	background-color: #F9F9F9;
+	padding: 8px 23px;
+	color: #999999;
+	line-height: 2rem;
+}
+.xui-wzResult-page .xui-submitWzOther table{
+	width: 100%;
+}
+.xui-wzResult-page .xui-submitWzOther table tr{
+	text-align: center;
+}
+.xui-wzResult-page .xui-submitWzOther table thead{
+	color: #000000;
+	font-size: 1rem;
+}
+.xui-wzResult-page .xui-submitWzOther table tbody tr td {
+	border-top: 1px solid #dbdbdb;
+
+}
+.xui-wzResult-page .xui-submitWzOther table tbody tr>td.xui-order-info-time{
+		font-size: 0.9rem;
+		color: #999;
+}
+.xui-wzResult-page .xui-submitWzOther table tbody tr>td.xui-order-info-name{
+	color: #000000;
+	font-size: 1rem;
+	text-align: center;
+}
+.xui-wzResult-page .xui-submitWzOther .xui-order-info-money{
+	font-weight: 500;
+}
+.xui-wzResult-page .xui-goUserInfo-btn {
+    background: #0580CE none repeat scroll 0 0;
+    border-radius: 0;
+    bottom: 8px;
+    color: #fff;
+    font-size: 1em;
+    height: 45px;
+    left: 3%;
+    line-height: 45px;
+    position: fixed;
+    width: 45%;
+    z-index: 12;
+}
+.xui-wzResult-page .xui-goShopping-btn {
+    background: #d10000 none repeat scroll 0 0;
+    border-radius: 0;
+    bottom: 8px;
+    color: #fff;
+    font-size: 1em;
+    height: 45px;
+    right: 3%;
+    line-height: 45px;
+    position: fixed;
+    width: 45%;
+    z-index: 12;
+}
