@@ -59,9 +59,15 @@
                		已完成
                {% endifequal %}
                {% ifequal order.status 6 %}
-               		退款中
+                  退款中
                {% endifequal %}
                {% ifequal order.status 7 %}
+                  退款成功
+               {% endifequal %}
+               {% ifequal order.status 8 %}
+               		退款中
+               {% endifequal %}
+               {% ifequal order.status 9 %}
                		退款成功
                {% endifequal %}
             </p>
