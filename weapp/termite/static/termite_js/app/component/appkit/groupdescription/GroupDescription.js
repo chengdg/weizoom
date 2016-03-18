@@ -44,8 +44,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             type: 'date_range_selector',
             displayName: '起止时间：',
             isUserProperty: true,
-            validate: 'data-validate="require-notempty::有效时间不能为空"',
-            validateIgnoreDefaultValue: true,
+            validate:'data-validate=""',
             default: ''
         },{
 			name: 'product',
@@ -56,6 +55,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			selectedButton: '选择商品',
 			dialog: 'W.dialog.termite.SelectProductDialog',
 			dialogParameter: '{"multiSelection": false}',
+            validate:'data-validate=""',
 			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:'',productBarcode:''}
 		}]},{
 
@@ -64,7 +64,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         fields: [{
             name: 'group_title',
             type: 'title_with_nothing',
-			validate:'data-validate="require-notempty::选项不能为空',
+			validate:'data-validate=""',
             displayName: '拼团人数：',
 			annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
@@ -89,7 +89,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         fields: [{
             name: 'rule_title',
             type: 'title_with_nothing',
-			validate:'data-validate="require-notempty::选项不能为空',
+			validate:'data-validate=""',
             displayName: '团购说明：',
 			annotation:'注：请修改【发货时间】、【开团截止日期】、【商品数量】顾客会查看团购说明，请谨慎填写。',
 			isUserProperty:true
@@ -116,8 +116,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			dialogParameter: '{"multiSelection": false}',
 			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
 			default: '',
-            validate: 'data-validate="require-notempty::请插入分享图片,,require-word"',
-            validateIgnoreDefaultValue: true
+            validate: 'data-validate="require-notempty::请插入分享图片"',
+            // validateIgnoreDefaultValue: true
 
 		},{
             name: 'share_description',
@@ -125,8 +125,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '分享描述：',
             isUserProperty: true,
             maxLength: 26,
-            validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
-            validateIgnoreDefaultValue: true,
+            validate: 'data-validate="require-notempty::活动名称不能为空"',
             annotation: '',
             placeholder:'最多可输入26个字',
             default: ''
@@ -224,6 +223,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 					productBarcode:product.bar_code
 				}
 			}, {silent: true});
+
 
 
 			if (value[0]) {

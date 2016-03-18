@@ -37,6 +37,9 @@
             width: 80% !important;
             margin-left: 60px;
         }
+        .xui-propertyView-app-GroupInfo .propertyGroup_property_textareaField .errorHint{
+            margin-left:60px;
+        }
         .xui-propertyView-app-GroupInfo .propertyGroup_property[data-field-anchor="share_description"]{
           margin-top: 15px;
           margin-left: 4px;
@@ -345,13 +348,13 @@
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
 
-{#        // 验证#}
-{#        if (!W.isSystemManager) {#}
-{#            if(!page.validate()) {#}
-{#                return;#}
-{#            }#}
-{#        }#}
-{#        #}
+        // 验证
+        if (!W.isSystemManager) {
+            if(!page.validate()) {
+                return;
+            }
+        }
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];
