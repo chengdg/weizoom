@@ -26,13 +26,15 @@ class Groups(resource.Resource):
 		响应GET
 		"""
 		has_data = app_models.Group.objects.count()
+		#从数据库中获取模板配置
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "groups",
 			'has_data': has_data
-		});
+		})
 
 		return render_to_response('group/templates/editor/groups.html', c)
 

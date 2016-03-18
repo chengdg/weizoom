@@ -192,26 +192,16 @@ class CustomizedAppOpLog(models.Model):
 		verbose_name_plural = '对用户定制APP进行的操作日志'
 
 
-class TemplateMessageDetails(mongo_models.Document):
-	"""
-	模板消息详情
-	"""
-	template_id = mongo_models.StringField(max_length=256, default='') #用于weixin api的模板id
-	title = mongo_models.StringField(max_length=256) #模板标题
-	primary_industry = mongo_models.StringField(max_length=64) #一级行业
-	deputy_industry = mongo_models.StringField(max_length=64) #二级行业
-	content = mongo_models.StringField(max_length=1024) #模板内容
-
-	meta = {
-		'collection': 'apps_template_message_details'
-	}
-
 class UserHasTemplateMessages(mongo_models.Document):
 	"""
 	商家在公众平台上配置的模板消息
 	"""
 	owner_id = mongo_models.LongField() #所属商家
 	template_id = mongo_models.StringField(max_length=32) #模板详情记录的id
+	title = mongo_models.StringField(max_length=256) #模板标题
+	primary_industry = mongo_models.StringField(max_length=64) #一级行业
+	deputy_industry = mongo_models.StringField(max_length=64) #二级行业
+	content = mongo_models.StringField(max_length=1024) #模板内容
 
 	meta = {
 		'collection': 'apps_user_has_template'

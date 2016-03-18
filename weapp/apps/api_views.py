@@ -349,7 +349,7 @@ def get_template_message_list(request):
 		get_templates(request.manager)
 		template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
 
-	items = TemplateMessageDetails.objects(template_id__in=template_ids)
+	items = UserHasTemplateMessages.objects(owner_id=request.manager.id, template_id__in=template_ids)
 	#获取历史数据
 	um = UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type=apps_type)
 	control_data = 0
@@ -402,24 +402,18 @@ def get_templates(user):
 			print '22123123'
 			result = weixin_api.get_all_template_messages(True)
 			template_list = result['template_list']
-			need_save_list = []
 			user_update_list = []
 			for t in template_list:
-				if TemplateMessageDetails.objects(template_id=t['template_id']).count()<=0:
-					need_save_list.append(TemplateMessageDetails(
-						template_id = t['template_id'],
-						title = t['title'],
-						primary_industry = t['primary_industry'],
-						deputy_industry = t['deputy_industry'],
-						content = t['content']
-					))
 				user_update_list.append(UserHasTemplateMessages(
 					owner_id = user.id,
-					template_id = t['template_id']
+					template_id = t['template_id'],
+					title = t['title'],
+					primary_industry = t['primary_industry'],
+					deputy_industry = t['deputy_industry'],
+					content = t['content']
 				))
 			UserHasTemplateMessages.objects(owner_id=user.id).delete()
 			UserHasTemplateMessages.objects.insert(user_update_list)
-			TemplateMessageDetails.objects.insert(need_save_list)
 			print result,'asdfsgsf'
 		except Exception, e:
 			print e
@@ -434,7 +428,7 @@ def get_single_template_info(template_id):
 	@return:
 	"""
 	try:
-		return TemplateMessageDetails.objects.get(template_id=template_id)
+		pass
 	except Exception, e:
 		print e
 		return None
