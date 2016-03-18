@@ -37,15 +37,16 @@ def get_page(request):
 
 	weizoom_card_id = 0
 	cur_user_has_exchange_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
-	cards = card_models.WeizoomCard.objects.all()
-	card_id2weizoom_card_id = {card.id: card.weizoom_card_id for card in cards}
 	user_has_exchange_card = False
 	if cur_user_has_exchange_card.count() > 0 :
 		user_has_exchange_card = True
 		card_id = cur_user_has_exchange_card[0].card_id
-		weizoom_card_id = card_id2weizoom_card_id.get(card_id,None)
-	prize_list = card_exchange_dic['prize']
+		try:
+			weizoom_card_id = card_models.WeizoomCard.objects.get(id = card_id).weizoom_card_id
+		except:
+			weizoom_card_id = None
 
+	prize_list = card_exchange_dic['prize']
 	if weizoom_card_id:
 		for p in prize_list:
 			s_w_id = int(p['s_num'])
