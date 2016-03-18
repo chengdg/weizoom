@@ -202,7 +202,7 @@ class Command(BaseCommand):
 		self.get_export_card_data()
 		self.get_export_pruduct_data()
 		today = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-		receivers = ['likunlun@weizoom.com', 'youdongdong@weizoom.com', 'liunan@weizoom.com', 'chenlei@weizoom.com']
+		receivers = ['likunlun@weizoom.com', 'youdongdong@weizoom.com', 'liunan@weizoom.com', 'linan@weizoom.com', 'chenlei@weizoom.com']
 		self.send_mail(receivers, u"微众卡%s" % today, u"微众卡")
 
 		print '... end'
