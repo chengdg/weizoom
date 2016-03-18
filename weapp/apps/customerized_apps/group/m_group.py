@@ -34,7 +34,6 @@ class MGroup(resource.Resource):
 		self_page = False
 		group_status = ''
 		group_type = ''
-		grouped_number = 0
 		product_original_price = 0
 		product_group_price = 0
 		page_owner_name = ''
@@ -107,17 +106,17 @@ class MGroup(resource.Resource):
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
 
-				#判断分享页是否自己的主页
-				if fid is None or str(fid) == str(member_id):
-					page_owner_name = member.username_size_ten
-					page_owner_icon = member.user_icon
-					page_owner_member_id = member_id
-					self_page = True
-				else:
-					page_owner = Member.objects.get(id=fid)
-					page_owner_name = page_owner.username_size_ten
-					page_owner_icon = page_owner.user_icon
-					page_owner_member_id = fid
+			#判断分享页是否自己的主页
+			if fid is None or str(fid) == str(member_id):
+				page_owner_name = member.username_size_ten
+				page_owner_icon = member.user_icon
+				page_owner_member_id = member_id
+				self_page = True
+			else:
+				page_owner = Member.objects.get(id=fid)
+				page_owner_name = page_owner.username_size_ten
+				page_owner_icon = page_owner.user_icon
+				page_owner_member_id = fid
 
 		member_info = {
 			'isMember': isMember,
@@ -201,8 +200,6 @@ class MGroup(resource.Resource):
 				#获取活动状态
 				activity_status = record.status_text
 				product_id = record.product_id
-
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
@@ -214,7 +211,6 @@ class MGroup(resource.Resource):
 			record = app_models.Group.objects(id=record_id)
 			if record.count() >0:
 				record = record.first()
-
 				#获取活动状态
 				activity_status = record.status_text
 				project_id = 'new_app:group:%s' % record.related_page_id
@@ -223,6 +219,10 @@ class MGroup(resource.Resource):
 					'is_deleted_data': True
 				})
 				return render_to_response('group/templates/webapp/m_group.html', c)
+		if activity_status == u'已结束':
+			#活动已结束，所有进行中的小团置为失败
+			all_running_group_relations = app_models.GroupRelations.objects(belong_to=str(record.id),group_status=app_models.GROUP_RUNNING)
+			all_running_group_relations.update(group_status=app_models.GROUP_FAILURE)
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
