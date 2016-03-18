@@ -1,0 +1,227 @@
+{% extends "webapp_content_base.html" %}
+{% load common_tag %}
+
+{% block css %}
+<link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
+<link rel="stylesheet" href="/webapp_static/backend_default_v3/css/default_v3.css">
+<style type="text/css">
+	.xui-detail-wrapper{
+		background: #f5f5f5;
+		font-size: 0.9rem;
+		font-family: "华文细黑";
+	}
+	.xui-header{
+		background: #ee3715;
+		overflow: hidden;
+		padding: 15px 10px 15px 35px;
+		color: #fff;
+	}
+	.xui-header-left{
+		float: left;
+		width: 45%;
+		border-right: 1px dotted #f3735c;
+	}
+	.xui-header-right{
+		float: right;
+		width: 44%;
+	}
+	.xui-large{
+		font-size: 1.7rem;
+		font-family: "Arial";
+	}
+	.xui-phone-num{
+		margin-bottom: 15px;
+		font-size: 1rem;
+		font-family: "Arial";
+	}
+	.xui-phone-num img{
+		margin-right: 2px;
+	}
+	.xui-remain{
+		margin-bottom: 10px;
+	}
+	.xui-content{
+		background: #f5f5f5;
+	}
+	.xui-card-details{
+		border:1px solid #dedede;
+		border-bottom: none;
+		border-top-left-radius:10px;
+		border-top-right-radius:10px;
+		width: 94%;
+		margin: 0 auto;
+		background: #fff;
+		margin-top: 10px;
+	}
+	.xui-detail-top{
+		overflow: hidden;
+		padding:10px 10px 0;
+	}
+	.xui-detail-left{
+		float: left;
+	}
+	.xui-detail-right{
+		float: right;
+	}
+	.xui-detail-bottom{
+		background: #41a3e1;
+		padding: 5px;
+		color: #fff;	
+		padding-right: 10px;
+		padding-left: 10px;
+	}
+	.xui-remain-money{
+		padding-left: 15px;
+		margin-bottom: 10px;
+		color: #ee3715;
+	}
+	.xui-check-detail{
+		display: block;
+		text-align: right;
+		padding: 5px;
+		margin-bottom: 10px;
+		font-size: 1rem;
+		color: #52a9e3;
+	}
+	.xui-invalid-card{
+		margin-top: 15px;
+	}
+	.xui-phone-num{
+		font-size: 1rem;
+	}
+	.xui-invalid-title{
+		width: 90%;
+		margin:0 auto;
+	}
+	.xui-invalid-title span{
+		font-family: "黑体";
+		font-size: 1rem;
+	}
+	b{
+		display: inline-block;
+		width: 4px;
+		height: 16px;
+		background-color: #1aa3f9;
+		margin-bottom: -2px;
+		margin-right: 2px;
+	}
+	.xui-invalid-card .xui-detail-bottom{
+		background: #c1c2c2;
+	}
+	.xui-invalid-card .xui-detail-left{
+		color:#c1c2c2;
+		font-size: 1.5rem;
+		margin-left: 28px;
+		margin-top: 10px;
+	}
+	.xui-invalid-card .xui-card-num{
+		color: #c1c2c2;
+	}
+    .xui-wrap{
+    	background: url("/markettools_static/weizoom_card/img/bg.png") repeat-x bottom;
+    }
+    .xui-numfont{
+    	font-family: "Arial";
+    }
+    .xui-yuan{
+    	font-size: 1.1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div data-role="page" data-theme="x" class="xui-detail-wrapper">
+	<div data-role="content" data-theme="x">
+		<div class="xui-header">
+			<div class="xui-header-left">
+				<div class="xui-text xui-remain">账户余额</div>
+					<div>
+						<span class="xui-yuan">&yen;</span>
+						<span class="xui-large">{{2000.00}}</span>
+					</div>				
+			</div>
+			<div class="xui-header-right">
+				<div class="xui-phone-num">
+					<img src="/markettools_static/weizoom_card/img/user.png" width="14px" height="16px" />
+					<span class="xui-phone-num">{{18510168569}}</span>
+				</div>
+				<div class="xui-text">可用数量：{{5}}张</div>
+			</div>
+		</div>
+		<div class="xui-content">
+			<div class="xui-valid-card">
+				<div class="xui-wrap">
+					<div class="xui-card-details">
+						<div class="xui-detail-top">
+							<div class="xui-detail-left">
+								<div>余额</div>
+								<div class="xui-remain-money">
+									<span class="xui-yuan">&yen;</span>
+									<span class="xui-num">{{168.00}}</span>
+								</div>
+							</div>
+							<div class="xui-detail-right">
+								<a href="javascript:void(0);" class="xui-check-detail">查看详情</a>
+								<div>
+									<span>卡号:</span> 
+									<span class="xui-numfont">{{9000012}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="xui-detail-bottom">
+							<span>
+								<span class="xui-numfont">{{2016-03-16}}</span>
+								<span class="xui-text">{{兑换平台}}</span>
+								<span class="fr">
+									面值:&yen;
+									<span class="xui-numfont">200.00</span>
+								</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="xui-invalid-card">
+				<div class="xui-invalid-title">
+					<b></b>
+					<span>失效卡：</span>
+				</div>
+				<div class="xui-wrap">
+					<div class="xui-card-details">
+						<div class="xui-detail-top">
+							<div class="xui-detail-left">
+								{{未激活}}
+							</div>
+							<div class="xui-detail-right">
+								<a href="javascript:void(0);" class="xui-check-detail">查看详情</a>
+								<div class="xui-card-num">
+									<span>卡号:</span> 
+									<span class="xui-numfont">{{9000012}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="xui-detail-bottom">
+							<span>
+								<span class="xui-numfont">{{2016-03-16}}</span>
+								<span class="xui-text">兑换平台</span>
+								<span class="fr">
+									面值: &yen; 
+									<span class="xui-numfont">{{200.00}}</span>
+								</span>
+							</span>
+						</div>
+					</div>
+				</div>
+		    </div>
+	    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	
+			     
+		
+</script>
+{% endblock %}
