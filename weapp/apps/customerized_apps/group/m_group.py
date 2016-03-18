@@ -68,7 +68,7 @@ class MGroup(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
-			if u"进行中" == activity_status:
+			if u"进行中" or u'已结束' == activity_status:
 				if group_relation_id:
 					# 已经开过团
 					try:
@@ -96,14 +96,18 @@ class MGroup(resource.Resource):
 						#判断分享页是否自己的主页
 						if fid is None or str(fid) == str(member_id):
 							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
-							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
-							order_id = group_detail.order_id
 						else:
 							if (str(member_id) in group_relation_info.grouped_member_ids) and (str(member_id) in member_ids):
 								is_helped = True
 							else :
 								is_helped = False
-					except:
+						try:
+							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+							order_id = group_detail.order_id
+						except:
+							pass
+					except Exception,e:
+						print(e)
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()

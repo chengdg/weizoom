@@ -385,10 +385,10 @@
         if('进行中' != W.activityStatus){
             if('未开启' == W.activityStatus){
                 $('.wa-notready').show();
+                return false;
             }else{
                 $('.wa-closed').show();
             }
-            return false;
         }
         //团购成功、团购失败状态
         if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
