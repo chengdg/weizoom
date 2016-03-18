@@ -145,15 +145,13 @@ def get_weizoom_card_change_money(request):
 
 def search_card_money(request,card_id,integral_each_yuan):
 	weizoom_card_orders_list = []
-
-
 	member_id = request.member.id
 	member_has_card = promotion_models.CardHasExchanged.objects.filter(card_id = card_id,owner_id = member_id)
 	if member_has_card.count() > 0 :
 		member_has_card = member_has_card[0]
 		weizoom_card_orders_list.append({
 			'created_at': member_has_card.created_at,
-			'money': '%.2f' % WeizoomCard.objects.get(id=card_id).money,
+			'money': '%.2f' % WeizoomCard.objects.get(id=card_id).weizoom_card_rule.money,
 			'product_name': u'兑换平台',
 			'event_type': u'积分兑换'
 		})

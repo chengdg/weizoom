@@ -20,7 +20,6 @@ def get_page(request):
 	"""
 	手机端卡兑换页
 	"""
-	print '-----========----------'
 	webapp_id = request.user_profile.webapp_id
 	#判断用户是否绑定手机号
 	member_id = request.member.id
@@ -31,8 +30,7 @@ def get_page(request):
 		member_is_bind = member_info.is_binded
 		if member_is_bind:
 			phone_number = member_info.phone_number
-	except Exception,e:
-		print e,'+++++++------++++++++'
+	except:
 		member_is_bind = False
 
 	card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
@@ -46,7 +44,6 @@ def get_page(request):
 		user_has_exchange_card = True
 		card_id = cur_user_has_exchange_card[0].card_id
 		weizoom_card_id = card_id2weizoom_card_id.get(card_id,None)
-		print weizoom_card_id,55555
 	prize_list = card_exchange_dic['prize']
 
 	if weizoom_card_id:

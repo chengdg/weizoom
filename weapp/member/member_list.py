@@ -584,7 +584,19 @@ class MemberDetail(resource.Resource):
 			if name:
 				member_info_update['name'] = name
 			if phone_number:
-				member_info_update['phone_number'] = phone_number.strip()
+				member_infos = MemberInfo.objects.filter(phone_number=phone_number.strip(), is_binded=True)
+				if member_infos:
+					member_ids = [member_info.member_id for member_info in member_infos]
+					member_count = Member.objects.filter(webapp_id=webapp_id,id__in=member_ids).count()
+					if member_count > 0:
+						response = create_response(400)
+						response.errMsg = u'该号码已绑定其他微信号'
+						return response.get_response()
+					else:
+						member_info_update['phone_number'] = phone_number.strip()
+
+				else:
+					member_info_update['phone_number'] = phone_number.strip()
 
 			if sex != None:
 				member_info_update['sex'] = sex
