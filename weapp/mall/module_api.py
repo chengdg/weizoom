@@ -1815,7 +1815,7 @@ def get_order_status_logs(order):
 		log['is_current'] = is_current[2]
 		logs.append(log)
 
-	elif order.status == ORDER_STATUS_REFUNDING:
+	elif order.status in [ORDER_STATUS_REFUNDING, ORDER_STATUS_GROUP_REFUNDING]:
 		log = {}
 		log['status'] = u'已下单'
 		log['created_at'] = order.created_at
@@ -1853,7 +1853,7 @@ def get_order_status_logs(order):
 		log['is_current'] = 2
 		logs.append(log)
 
-	elif order.status == ORDER_STATUS_REFUNDED:
+	elif order.status in [ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDED]:
 		log = {}
 		log['status'] = u'已下单'
 		log['created_at'] = order.created_at
