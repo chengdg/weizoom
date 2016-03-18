@@ -53,33 +53,12 @@ class CardExchange(resource.Resource):
 		s_num = request.GET.get('snum','')
 		end_num = request.GET.get('endnum','')
 
-		try:
-			cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__in = [s_num,end_num])
-			weizoom_card_id2id = dict([(c.weizoom_card_id,c.id) for c in cards])
-			start_card_id = weizoom_card_id2id[s_num]
-			end_card_id = weizoom_card_id2id[end_num]
-			useful_cards = card_models.WeizoomCard.objects.filter(id__range = (start_card_id,end_card_id)).exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE)
-			card_ids = [card.id for card in useful_cards]
-			card_has_orders = card_models.WeizoomCardHasOrder.objects.exclude(order_id__in = [-1]).filter(card_id__in = card_ids)
-			for order in card_has_orders:
-				try:
-					card_ids.remove(order.card_id)
-				except:
-					pass
-			card_has_exchanged = promotion_models.CardHasExchanged.objects.filter(card_id__in = card_ids)
-			for exchange in card_has_exchanged:
-				try:
-					card_ids.remove(exchange.card_id)
-				except:
-					pass
-
-			useful_cards_count = len(card_ids)
+		useful_cards = get_can_exchange_cards_list(s_num,end_num)
+		if useful_cards != None:
 			response = create_response(200)
-			response.data = useful_cards_count
+			response.data = len(useful_cards)
 			return response.get_response()
-
-		except:
-
+		else:
 			response = create_response(500)
 			response.errMsg = u'不存在该卡,请重新输入卡号区间'
 			return response.get_response()
@@ -266,6 +245,32 @@ class CardExchangeDetailExport(resource.Resource):
 
 		filename = u'微众卡兑换详情'
 		return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
+
+def get_can_exchange_cards_list(s_num,end_num):
+	try:
+		cards = card_models.WeizoomCard.objects.filter(weizoom_card_id__in = [s_num,end_num])
+		weizoom_card_id2id = dict([(c.weizoom_card_id,c.id) for c in cards])
+		start_card_id = weizoom_card_id2id[s_num]
+		end_card_id = weizoom_card_id2id[end_num]
+		useful_cards = card_models.WeizoomCard.objects.filter(id__range = (start_card_id,end_card_id)).exclude(status = card_models.WEIZOOM_CARD_STATUS_INACTIVE)
+		card_ids = [card.id for card in useful_cards]
+		card_has_orders = card_models.WeizoomCardHasOrder.objects.exclude(order_id__in = [-1]).filter(card_id__in = card_ids)
+		for order in card_has_orders:
+			try:
+				card_ids.remove(order.card_id)
+			except:
+				pass
+		card_has_exchanged = promotion_models.CardHasExchanged.objects.filter(card_id__in = card_ids)
+		for exchange in card_has_exchanged:
+			try:
+				card_ids.remove(exchange.card_id)
+			except:
+				pass
+
+		return card_ids
+	except:
+		return None
+
 
 ###########################
 #卡号区间对应的可兑换卡数量
