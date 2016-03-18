@@ -73,18 +73,23 @@ Background:
 		"""
 	And jobs已添加商品
 	#添加商品：
-			#酥烧饼，无分类，上架，无限库存；（促销商品）
-			#白斩鸡，待售，无限库存；
-			#包子，上架，有限库存50；
-			#烤鸭，带规格商品，有限数量3；
+			#促销商品，无分类，上架，无限库存；（促销商品）
+			#待售商品，待售，无限库存；
+			#会员折扣商品，上架，有限库存50；
+			#启用规格商品，有限数量3；
 			#酱牛肉，上架，无限库存；
 			#花生酱，上架，有限数量200；
+			#限时抢购商品，上架，无限库存
+			#买赠商品，上架，有限数量20；
+			#单品券商品，上架，无限库存；
+			#积分抵扣商品；
+
 		"""
 		[{
-			"name": "酥烧饼",
-			"promotion_title": "促销的酥烧饼",
+			"name": "促销商品",
+			"promotion_title": "促销商品",
 			"categories": "",
-			"detail": "酥烧饼的详情",
+			"detail": "促销商品的详情",
 			"status": "上架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
@@ -99,9 +104,9 @@ Background:
 				}
 			}
 		},{
-			"name":"白斩鸡",
+			"name":"待售商品",
 			"category":"",
-			"detail":"白斩鸡的详情",
+			"detail":"待售商品的详情",
 			"status":"待售",
 			"swipe_images":[{
 				"url":"/standard_static/test_resource_img/hangzhou2.jpg"
@@ -122,10 +127,10 @@ Background:
 			"postage": "免运费",
 			"distribution_time":"off"
 		},{
-			"name": "包子",
+			"name": "会员折扣商品",
 			"is_member_product": "on",
 			"category": "",
-			"detail": "包子的详情",
+			"detail": "会员折扣商品的详情",
 			"status": "上架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
@@ -148,9 +153,9 @@ Background:
 			"postage": "免运费",
 			"distribution_time":"off"
 		},{
-			"name": "烤鸭",
+			"name": "启用规格商品",
 			"category": "",
-			"detail": "烤鸭的详情",
+			"detail": "启用规格商品"的详情",
 			"status": "上架",
 			"is_enable_model": "启用规格",
 			"swipe_images": [{
@@ -223,22 +228,88 @@ Background:
 			}],
 			"postage": "10",
 			"distribution_time":"on"
+		},{
+			"name":"限时抢购商品",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架"
+		},{
+			"name":"买赠商品",
+			"price":100.00,
+			"stock_type": "有限",
+			"stocks": 20,
+			"status":"上架"
+		},{
+			"name":"单品券商品",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架"
+		},{
+			"name":"积分抵扣商品",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架",
+			"purchase_count":2
+		},{
+			"name": "起购数量商品",
+			"price": 15.00,
+			"stock_type": "有限",
+			"stocks": 200,
+			"status": "在售",
+			"purchase_count": 3			
+		}]
+		"""
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "限时抢购活动",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "限时抢购商品",
+			"member_grade": "全部会员",
+			"count_per_purchase": 2,
+			"promotion_price": 90.00
 		}]
 		"""
 	And jobs创建买赠活动
-		#设置酥烧饼为买赠商品
 		"""
 		[{
-			"name": "酥烧饼买一赠一活动",
+			"name": "买赠活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": "酥烧饼",
+			"product_name": "买赠商品",
 			"premium_products": [{
-				"name": "酥烧饼",
+				"name": "买赠商品",
 				"count": 1
 			}],
 			"count": 2,
 			"is_enable_cycle_mode": false
+		}]
+		"""
+	And jobs创建积分应用活动
+		"""
+		[{
+			"name": "积分应用活动",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "积分抵扣商品",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	And jobs添加优惠券规则
+		"""
+		[{
+			"name": "单品券",
+			"money": 1,
+			"start_date": "2天前",
+			"end_date": "2天后",
+			"coupon_id_prefix": "coupon1_id_",
+			"coupon_product": "单品券商品"
 		}]
 		"""
 
