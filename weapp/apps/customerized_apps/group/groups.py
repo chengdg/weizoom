@@ -140,6 +140,7 @@ class Groups(resource.Resource):
 			items.append({
 				'id': str(data.id),
 				'name': data.name,
+				'product_id':data.product_id,
 				'product_img':data.product_img,
 				'product_name':data.product_name,
 				# 'start_time': data.start_time.strftime('%Y-%m-%d %H:%M'),

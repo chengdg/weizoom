@@ -164,7 +164,7 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
 				<td>
-					${item.group_leader_name}
+					${item.group_leader_name|html}
 				</td>
 				<td >
 					{{if (item.rest_days <= 3)}}

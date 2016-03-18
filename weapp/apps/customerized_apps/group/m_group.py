@@ -34,7 +34,6 @@ class MGroup(resource.Resource):
 		self_page = False
 		group_status = ''
 		group_type = ''
-		grouped_number = 0
 		product_original_price = 0
 		product_group_price = 0
 		page_owner_name = ''
@@ -59,6 +58,8 @@ class MGroup(resource.Resource):
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
+		if activity_status == u'已结束':
+			record.update(set__status=app_models.STATUS_STOPED)
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
@@ -107,17 +108,17 @@ class MGroup(resource.Resource):
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
 
-				#判断分享页是否自己的主页
-				if fid is None or str(fid) == str(member_id):
-					page_owner_name = member.username_size_ten
-					page_owner_icon = member.user_icon
-					page_owner_member_id = member_id
-					self_page = True
-				else:
-					page_owner = Member.objects.get(id=fid)
-					page_owner_name = page_owner.username_size_ten
-					page_owner_icon = page_owner.user_icon
-					page_owner_member_id = fid
+			#判断分享页是否自己的主页
+			if fid is None or str(fid) == str(member_id):
+				page_owner_name = member.username_size_ten
+				page_owner_icon = member.user_icon
+				page_owner_member_id = member_id
+				self_page = True
+			else:
+				page_owner = Member.objects.get(id=fid)
+				page_owner_name = page_owner.username_size_ten
+				page_owner_icon = page_owner.user_icon
+				page_owner_member_id = fid
 
 		member_info = {
 			'isMember': isMember,
@@ -158,7 +159,6 @@ class MGroup(resource.Resource):
 		fid = 0
 		group_relation_id = 0
 		product_id = None
-		product_detail = ''
 
 		if 'new_app:' in record_id:
 			project_id = record_id
@@ -201,9 +201,9 @@ class MGroup(resource.Resource):
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				#获取活动状态
 				activity_status = record.status_text
+				if activity_status == u'已结束':
+					record.update(set__status=app_models.STATUS_STOPED)
 				product_id = record.product_id
-				product_detail = Product.objects.get(id=product_id).detail
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
@@ -215,15 +215,20 @@ class MGroup(resource.Resource):
 			record = app_models.Group.objects(id=record_id)
 			if record.count() >0:
 				record = record.first()
-
 				#获取活动状态
 				activity_status = record.status_text
+				if activity_status == u'已结束':
+					record.update(set__status=app_models.STATUS_STOPED)
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
 					'is_deleted_data': True
 				})
 				return render_to_response('group/templates/webapp/m_group.html', c)
+		if activity_status == u'已结束':
+			#活动已结束，所有进行中的小团置为失败
+			all_running_group_relations = app_models.GroupRelations.objects(belong_to=str(record.id),group_status=app_models.GROUP_RUNNING)
+			all_running_group_relations.update(group_status=app_models.GROUP_FAILURE)
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
@@ -234,7 +239,6 @@ class MGroup(resource.Resource):
 			'record_id': record_id,
 			'group_relation_id': group_relation_id, #小团购id，如不存在则为None
 			'product_id': product_id, #产品id，如不存在则为None
-			'product_detail': product_detail,
 			'activity_status': activity_status,
 			'page_title': record.name if record else u"团购",
 			'page_html_content': html,
@@ -252,3 +256,20 @@ class MGroup(resource.Resource):
 		# if request.member:
 		# 	SET_CACHE(cache_key, response)
 		return HttpResponse(response)
+
+class GetProductDetail(resource.Resource):
+	app = 'apps/group'
+	resource = 'get_product_detail'
+
+	def api_get(request):
+		product_detail = ''
+		product_id = request.GET.get('product_id')
+		try:
+			product_detail = Product.objects.get(id=product_id).detail
+		except:
+			pass
+		response = create_response(200)
+		response.data = {
+			'product_detail': product_detail
+		}
+		return response.get_response()

@@ -70,41 +70,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			isUserProperty:true
 
         }]},
-		//{
-		//group:'',//列表
-		//groupClass:'xui-propertyView-app-GroupList',
-		//fields:[{
-		//name: 'group_type',
-		//type: 'select',
-		////validate:'data-validate="require-notempty::选项不能为空',
-		//displayName: '1：',
-		////annotation:'注：1个团购可创建多种拼团人数供顾客选择',
-		//source:[{
-		//	name:'5人团',
-		//	value:'5'
-		//},{
-		//	name:'10人团',
-		//	value:'10'
-		//}],
-		//default:'5',
-		//isUserProperty:true
-        //
-		//},{
-		//	name:'group_days',
-		//	type:'text_with_annotation',
-		//	displayName:'团拼时间：',
-		//	annotation:'天',
-		//	size:'35px',
-		//	isUserProperty:true
-		//},{
-		//	name:'group_price',
-		//	type:'text_with_annotation',
-		//	displayName:'团购价：',
-		//	annotation:'元',
-		//	size:'35px',
-		//	isUserProperty:true
-		//}]
-		//},
 		{
 		group:'',//列表
 		groupClass: 'xui-propertyView-app-DynamicGroupList',
@@ -171,17 +136,17 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 		//},
 		start_time: function($node, model, value, $propertyViewNode) {
 			var end_time_text = $node.find('.wui-i-end_time').text();
-			$node.find('.wui-i-start_time').text(value);
-			if (end_time_text != ""){
-				getDateTime($node,value,end_time_text,model);
-			}
-		},
-		end_time: function($node, model, value, $propertyViewNode) {
-			var start_time_text = $node.find('.wui-i-start_time').text();
-			$node.find('.wui-i-end_time').text(value);
-			if (start_time_text != ""){
-				getDateTime($node,start_time_text,value,model);
-			}
+            $node.find('.wui-i-start_time').text(value);
+            if (end_time_text != ""){
+                getDateTime($node,value,end_time_text,model);
+            }
+        },
+        end_time: function($node, model, value, $propertyViewNode) {
+            var start_time_text = $node.find('.wui-i-start_time').text();
+            $node.find('.wui-i-end_time').text(value.split(' ')[0]);
+            if (start_time_text != ""){
+                getDateTime($node,start_time_text,value,model);
+            }
 
 		},
 		// description: function($node, model, value, $propertyViewNode) {

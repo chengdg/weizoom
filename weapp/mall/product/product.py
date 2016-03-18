@@ -252,6 +252,7 @@ class ProductList(resource.Resource):
         ids = request.POST.getlist('ids', [])
         _ids = request.POST.getlist('ids[]', [])
         ids = ids if ids else _ids
+        ids = [int(tmp_id) for tmp_id in ids] #兼容bdd
         p_id = request.POST.get('id')
         if p_id:
             ids.append(int(p_id))
