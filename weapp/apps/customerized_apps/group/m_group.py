@@ -58,6 +58,8 @@ class MGroup(resource.Resource):
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
+		if activity_status == u'已结束':
+			record.update(set__status=app_models.STATUS_STOPED)
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
@@ -66,7 +68,7 @@ class MGroup(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
-			if u"进行中" == activity_status:
+			if u"进行中" or u'已结束' == activity_status:
 				if group_relation_id:
 					# 已经开过团
 					try:
@@ -80,7 +82,7 @@ class MGroup(resource.Resource):
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid).order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -94,14 +96,18 @@ class MGroup(resource.Resource):
 						#判断分享页是否自己的主页
 						if fid is None or str(fid) == str(member_id):
 							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
-							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
-							order_id = group_detail.order_id
 						else:
 							if (str(member_id) in group_relation_info.grouped_member_ids) and (str(member_id) in member_ids):
 								is_helped = True
 							else :
 								is_helped = False
-					except:
+						try:
+							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+							order_id = group_detail.order_id
+						except:
+							pass
+					except Exception,e:
+						print(e)
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
@@ -199,6 +205,8 @@ class MGroup(resource.Resource):
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				#获取活动状态
 				activity_status = record.status_text
+				if activity_status == u'已结束':
+					record.update(set__status=app_models.STATUS_STOPED)
 				product_id = record.product_id
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
@@ -213,6 +221,8 @@ class MGroup(resource.Resource):
 				record = record.first()
 				#获取活动状态
 				activity_status = record.status_text
+				if activity_status == u'已结束':
+					record.update(set__status=app_models.STATUS_STOPED)
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {

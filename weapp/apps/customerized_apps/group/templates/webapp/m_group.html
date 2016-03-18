@@ -385,10 +385,10 @@
         if('进行中' != W.activityStatus){
             if('未开启' == W.activityStatus){
                 $('.wa-notready').show();
+                return false;
             }else{
                 $('.wa-closed').show();
             }
-            return false;
         }
         //团购成功、团购失败状态
         if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
@@ -572,8 +572,14 @@
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');
-            var data_href = "http://"+settings_domain+"/mall/order_detail/?woid="+W.webappOwnerId+"&order_id="+order_id;
-            window.location.href = data_href;
+            if(order_id != ''){
+                var data_href = "http://"+settings_domain+"/mall/order_detail/?woid="+W.webappOwnerId+"&order_id="+order_id;
+                window.location.href = data_href;
+            }else{
+                var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+group_relation_id+"&activity_id="+W.appRecordId;
+                window.location.href = data_href;
+            }
+
         });
         $('.wa-i-btn-groupMsg-no').click(function(){
             W.getApi().call({
