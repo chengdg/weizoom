@@ -457,7 +457,7 @@ $(document).ready(function() {
 	});
 
     //初始化模板消息配置dialog
-    var initData = "{{ template_data }}";
+    var initData = '{{ template_data|safe }}';
     var APPS_TYPE = "group";
     ensureNS('W.dialog.group');
     W.dialog.group.templateDialog = W.dialog.Dialog.extend({
@@ -602,6 +602,10 @@ $(document).ready(function() {
         }
     });
     //模板消息弹窗
+    console.log('------------');
+    console.log(initData);
+    console.log('------------');
+    console.log(JSON.parse(initData));
     $('.xa-template-setting').on('click', function(){
         W.dialog.showDialog('W.dialog.group.templateDialog',{
             initData: initData=="" ? false: JSON.parse(initData),

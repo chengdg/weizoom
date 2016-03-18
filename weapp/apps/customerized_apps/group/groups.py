@@ -5,6 +5,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import F
 from django.contrib.auth.decorators import login_required
+
+from apps.models import UserHasTemplateMessages, UserappHasTemplateMessages
 from core import resource
 from core import paginator
 from core.jsonresponse import create_response
@@ -27,13 +29,25 @@ class Groups(resource.Resource):
 		"""
 		has_data = app_models.Group.objects.count()
 		#从数据库中获取模板配置
-
+		templates = UserHasTemplateMessages.objects(owner_id=request.manager.id)
+		um = UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type="group")
+		control_data = 0
+		tem_list = []
+		if um.count() > 0:
+			um = um.first()
+			control_data = um.data_control
+		for t in templates:
+			tem_list.append({
+				"template_id": t.template_id,
+				"template_title": t.title
+			})
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'second_navs': mall_export.get_promotion_and_apps_second_navs(request),
 			'second_nav_name': mall_export.MALL_APPS_SECOND_NAV,
 			'third_nav_name': "groups",
-			'has_data': has_data
+			'has_data': has_data,
+			'template_data': json.dumps({"hasData": 0 if len(tem_list) <= 0 else 1, "templates": tem_list, "control_data": control_data})
 		})
 
 		return render_to_response('group/templates/editor/groups.html', c)
