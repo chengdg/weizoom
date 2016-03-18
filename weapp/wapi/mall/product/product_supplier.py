@@ -25,7 +25,8 @@ class ProductSupplier(api_resource.ApiResource):
 				product = mall_models.Product.objects.get(id=product_id)
 				return {
 					'product_name': product.name,
-					'supplier_user_id': product.supplier_user_id
+					'supplier_user_id': product.supplier_user_id,
+					'supplier_id': product.supplier_id
 				}
 			except Exception, e:
 				print u'根据商品id获取商品名失败：', product_id, e
