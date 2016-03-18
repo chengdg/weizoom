@@ -247,6 +247,8 @@ class OrderFilterParams(resource.Resource):
         else:
             current_status_dict = copy.copy(STATUS2TEXT)
             # del current_status_dict[ORDER_STATUS_REFUNDED]
+            del current_status_dict[ORDER_STATUS_GROUP_REFUNDING]
+            del current_status_dict[ORDER_STATUS_GROUP_REFUNDED]
             status_dict = current_status_dict
 
         for key, value in status_dict.items():
