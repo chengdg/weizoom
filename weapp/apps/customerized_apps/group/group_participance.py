@@ -160,9 +160,8 @@ class CancelUnpaidGroup(resource.Resource):
 		try:
 			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,member_id=member_id,group_status=app_models.GROUP_NOT_START)
 			group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,grouped_member_id=member_id,is_already_paid=False)
-			print('order_id!!!!!!!!!')
-			print(order_id)
-			cancel_group_buying(order_id)
+			if order_id:
+				cancel_group_buying(order_id)
 			group_relation.delete()
 			group_detail.delete()
 			response = create_response(200)

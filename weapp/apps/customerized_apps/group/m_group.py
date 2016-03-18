@@ -58,6 +58,8 @@ class MGroup(resource.Resource):
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
+		if activity_status == u'已结束':
+			record.update(set__status=app_models.STATUS_STOPED)
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
@@ -199,6 +201,8 @@ class MGroup(resource.Resource):
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				#获取活动状态
 				activity_status = record.status_text
+				if activity_status == u'已结束':
+					record.update(set__status=app_models.STATUS_STOPED)
 				product_id = record.product_id
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
@@ -213,6 +217,8 @@ class MGroup(resource.Resource):
 				record = record.first()
 				#获取活动状态
 				activity_status = record.status_text
+				if activity_status == u'已结束':
+					record.update(set__status=app_models.STATUS_STOPED)
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
