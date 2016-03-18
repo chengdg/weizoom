@@ -20,7 +20,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         {
             name: 'title',
             type: 'text_with_annotation',
-            displayName: '团购名称',
+            displayName: '团购名称：',
             isUserProperty: true,
             maxLength: 30,
             //validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
@@ -42,7 +42,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         },{
             name: 'valid_time',
             type: 'date_range_selector',
-            displayName: '起止时间',
+            displayName: '起止时间：',
             isUserProperty: true,
             //validate: 'data-validate="require-notempty::有效时间不能为空"',
             //validateIgnoreDefaultValue: true,
@@ -50,7 +50,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         },{
 			name: 'product',
 			type: 'product_dialog_select',
-			displayName: '选择商品',
+			displayName: '选择商品：',
 			isUserProperty: true,
 			isShowCloseButton: true,
 			selectedButton: '选择商品',
@@ -65,7 +65,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             name: 'group_title',
             type: 'title_with_nothing',
 			//validate:'data-validate="require-notempty::选项不能为空',
-            displayName: '拼团人数',
+            displayName: '拼团人数：',
 			annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
 
@@ -90,7 +90,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             name: 'rule_title',
             type: 'title_with_nothing',
 			//validate:'data-validate="require-notempty::选项不能为空',
-            displayName: '团购说明',
+            displayName: '团购说明：',
 			annotation:'注：请修改【发货时间】、【开团截止日期】、【商品数量】顾客会查看团购说明，请谨慎填写。',
 			isUserProperty:true
 
@@ -107,7 +107,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         },{
 			name: 'material_image',
 			type: 'image_dialog_select_v2',
-			displayName: '分享图片',
+			displayName: '分享图片：',
 			isUserProperty: true,
 			isShowCloseButton: true,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
@@ -119,7 +119,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 		},{
             name: 'share_description',
             type: 'text_with_annotation',
-            displayName: '分享描述',
+            displayName: '分享描述：',
             isUserProperty: true,
             maxLength: 26,
             //validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
