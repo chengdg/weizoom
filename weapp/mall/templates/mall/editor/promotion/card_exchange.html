@@ -288,6 +288,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var is_err = false; 
 	//检验是否为数字
 	$(document).on("blur","input",function(){
         var num = $(this).val();
@@ -307,7 +308,11 @@ $(document).ready(function() {
     	$(this).parents(".xui-i-put").remove();
 	})
     //修改数据
-	$(".xa-btnSubmit").click(function(){        
+	$(".xa-btnSubmit").click(function(){  
+		if (is_err){
+			W.showHint('error','不存在该卡,请重新输入卡号区间'); 
+			return;
+		}      
 		if(!$("input").attr("readonly")){
 			//校验
 			var reg = new RegExp("^\\d+(\\.\\d+)?$");
@@ -408,10 +413,13 @@ $(document).ready(function() {
 			    args: stockData,
 			    scope: this,
 			    success: function(data) {
+			    	is_err = false;
                 	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
 			    },
 			    error: function(resp) {
-			    	console.log('error');   
+			    	is_err = true;
+			    	W.showHint('error',resp.errMsg); 
+			    	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + 0);
 			    }
 			})
 		}
@@ -441,10 +449,13 @@ $(document).ready(function() {
 			    args: stockData,
 			    scope: this,
 			    success: function(data) {
+			    	is_err = false;
                 	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + data);
 			    },
 			    error: function(resp) {
-			    	console.log('error');   
+			    	is_err = true;
+			    	W.showHint('error',resp.errMsg); 
+			    	_this.parent(".xa-num").siblings(".xa-exchangeStock").html("库存：" + 0);  
 			    }
 			})
 		}
