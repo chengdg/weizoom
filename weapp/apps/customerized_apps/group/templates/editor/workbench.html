@@ -166,6 +166,14 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
+    // /* 页面数据联合验证 */
+    // var validate_group_flag = "";
+    // if(isCreateNewData){
+    //   validate_group_flag = false;
+    // }else{
+    //   validate_group_flag = true;
+    // }
+    // var validate_group_type = "";
 
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -239,6 +247,22 @@
 
       $('.xa-save').click(function() {
           var that = this;
+
+      // /*提交前校验数据状态*/
+      // if(!validate_group_flag){
+      //   if(validate_group_type=='product'){
+      //       W.showHint('error', '请选择团购商品！');
+      //   }else if(validate_group_type=='img'){
+      //       W.showHint('error', '请选择团购分享图片！');
+      //   }else if(validate_group_type=='group_blank'){
+      //       W.showHint('error', '团购设置不能为空！');
+      //   }else if(validate_group_type=='group_same'){
+      //       W.showHint('error', '团购类型不能相同！');
+      //   }
+      //   return false;
+      // }
+
+
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;

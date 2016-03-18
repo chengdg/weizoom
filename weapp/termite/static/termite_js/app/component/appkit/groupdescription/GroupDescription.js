@@ -133,9 +133,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
         }],
 	propertyChangeHandlers: {
-		//title: function($node, model, value) {
-         //   $node.find('.wui-i-product-title').html(value);
-		//},
+		// title: function($node, model, value,$propertyViewNode) {
+		// },
 		start_time: function($node, model, value, $propertyViewNode) {
 			var end_time_text = $node.find('.wui-i-end_time').text();
             $node.find('.wui-i-start_time').text(value);
@@ -182,6 +181,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				// $target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
 				// $target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
              }
+            // validate_group($node, model, value, $propertyViewNode);
             this.refresh($node, {refreshPropertyView: true});
 		},
 
@@ -240,6 +240,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				$node.find('.wui-i-product-img > img').attr('src',product.thumbnails_url);
 			}
 
+            // validate_group($node, model, value, $propertyViewNode);
+
 		}
 	},
 
@@ -279,3 +281,22 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 	});
 };
 
+// function validate_group($node, model, value, $propertyViewNode){
+//     var validate_group_flag = true;
+//     var validate_group_type = "";
+//     /*每次扫描所有的区域，优先级传递type*/
+//     var product_name = $propertyViewNode.find('input[data-field="product_name"]').val();
+//     var img = $propertyViewNode.find('input[data-field="material_image"]').val();
+//     if(!product_name){
+//         validate_group_type = 'product';
+//     }
+//     if(!img){
+//         validate_group_type='img';
+//     }
+
+//     if(parent){
+//         parent.validate_group_flag = validate_group_flag;
+//         parent.validate_group_type = validate_group_type;
+//     }
+
+// }
