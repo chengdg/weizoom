@@ -115,7 +115,10 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
-			default: ''
+			default: '',
+            validate: 'data-validate="require-notempty::请插入分享图片,,require-word"',
+            validateIgnoreDefaultValue: true
+
 		},{
             name: 'share_description',
             type: 'text_with_annotation',
