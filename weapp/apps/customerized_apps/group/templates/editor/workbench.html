@@ -5,16 +5,18 @@
 {% block css %}
     <style>
 
-
+        .propertyGroup_property_horizontalField .propertyGroup_property_label{
+              width: 90px;
+        }
         .xui-propertyView-app-DynamicGroupList div{
             display: inline-block;
-            margin-left: 2px;
+            margin-left: 5px;
         }
         div.xui-addDynamicComponent{
             width: 80px;
             height: 30px;
             line-height: 30px;
-            margin-left: 47px !important;
+            margin-left: 85px !important;
             color:#888 !important;
         }
         div.xui-addDynamicComponent span{
@@ -22,25 +24,73 @@
         }
         .btn.xui-i-triggerButton.xui-i-searchBtn{
             position: relative;
-            left: 150px;
-            top: -23px;
+            left: 3.5px;
+            top: 0px;
             height: 23px;
             text-align: center;
             line-height: 23px;
             padding: 0px;
+            margin-bottom: 10px;
         }
         .xui-propertyView-app-GroupInfo textarea{
             height: 100px;
             width: 80% !important;
-            margin-left: 50px;
+            margin-left: 80px;
         }
-{#        .xui-propertyView-app-GroupInfo .xui-i-triggerButton{#}
-{#            background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;#}
-{#            width: 100px;#}
-{#            height: 100px;#}
-{#            border: none;#}
-{#        }#}
+        .xui-propertyView-app-GroupInfo .propertyGroup_property_textareaField .errorHint{
+            margin-left:80px;
+        }
+        .xui-propertyView-app-GroupInfo .propertyGroup_property[data-field-anchor="share_description"]{
+          margin-top: 15px;
+          margin-left: 4px;
 
+        }
+        .xui-image-dialog-trigger{
+          background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;
+          width: 100px;
+          height: 100px;
+          border: none;
+          margin-left: 4px;
+        }
+        .xui-triggerButton-hasdata{
+          margin-top: -25px !important;
+          text-align: center !important;
+          width: 100px;
+          background: rgba(0,0,0, 0.5);
+          color: white;
+          height: 25px;
+          font-weight: bold;
+          position: absolute;
+        }
+
+        .propertyGroup_property_dialogSelectField .xui-i-triggerButton {
+          text-align: left;
+          margin: 0px;
+          padding: 0px;
+        }
+
+        /*appkit.lotterydescription 组件图片移除按钮*/
+        button.xui-deleteImageButton{
+          position: absolute;
+          top:-11px;
+          margin-left: 85px;
+          font-size: 14px;
+          z-index: 1;
+          background: none;
+          border: none;
+        }
+        .xui-deleteImageButton span{
+          color: #fff;
+          display: block;
+          width: 20px;
+          height: 20px;
+          background: rgba(0,0,0,0.45);
+          border-radius: 50%;
+        }
+
+        .xui-dynamicComponentControlImgBox .xui-removeImageButton{
+          display: none;
+        }
 
     </style>
 {% endblock %}
@@ -298,13 +348,13 @@
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
 
-{#        // 验证#}
-{#        if (!W.isSystemManager) {#}
-{#            if(!page.validate()) {#}
-{#                return;#}
-{#            }#}
-{#        }#}
-{#        #}
+        // 验证
+        if (!W.isSystemManager) {
+            if(!page.validate()) {
+                return;
+            }
+        }
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];
