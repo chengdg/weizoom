@@ -82,7 +82,7 @@ class MGroup(resource.Resource):
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid).order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
