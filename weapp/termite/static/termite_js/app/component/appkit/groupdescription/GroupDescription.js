@@ -106,8 +106,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             default: ""
         },{
 			name: 'material_image',
-			type: 'image_dialog_select',
-			displayName: '上传图片',
+			type: 'image_dialog_select_v2',
+			displayName: '分享图片',
 			isUserProperty: true,
 			isShowCloseButton: true,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
@@ -176,10 +176,11 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			}
 			if (value) {
 				//更新propertyView中的图片
-				var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
-				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
-			}
+				// var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
+				// $target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+				// $target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+             }
+            this.refresh($node, {refreshPropertyView: true});
 		},
 
 		// rules: function($node, model, value, $propertyViewNode) {
