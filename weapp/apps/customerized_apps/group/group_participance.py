@@ -176,6 +176,11 @@ class CancelUnpaidGroup(resource.Resource):
 			response.errMsg = u'取消操作失败'
 		return response.get_response()
 
+class TestGroupTemplate(resource.Resource):
+	app = 'apps/group'
+	resource = 'test_group_template'
+
+
 	def api_post(request):
 		"""
 		测试发送模板消息
@@ -193,7 +198,7 @@ class CancelUnpaidGroup(resource.Resource):
 			"group_id": app_models.GroupRelations.objects(belong_to=str(group.id)).first().id,
 			"fid": request.manager.id,
 			"price": "321.2",
-			"product_name": "测试商品",
+			"product_name": u"测试商品",
 			"status" : status,
 			"miss": 3
 		}, [{"member_id": m, "order_id": 'asdfakljg;l124124'} for m in member_ids])
@@ -251,8 +256,8 @@ def send_group_template_message(activity_info, member_info_list):
 		else:
 			template_id = success_data['template_id']
 			detail_data = {
-				"first": "您参团的商品[%s]已组团成功,预计将在团购结束20天内发货" % activity_info['product_name'],
-				"remark": "点击查看团购活动详情"
+				"first": u"您参团的商品[%s]已组团成功,预计将在团购结束20天内发货" % activity_info['product_name'],
+				"remark": u"点击查看团购活动详情"
 			}
 
 	if status == 'fail':
@@ -264,7 +269,7 @@ def send_group_template_message(activity_info, member_info_list):
 			template_id = fail_data['template_id']
 			detail_data = {
 				"first": fail_data['first'],
-				"remark": "点击查看团购活动详情"
+				"remark": u"点击查看团购活动详情"
 			}
 
 	failed_member_ids = []
@@ -272,16 +277,19 @@ def send_group_template_message(activity_info, member_info_list):
 		member_id = int(member_info['member_id'])
 		if status == 'success':
 			detail_data['keywords'] = {
-				"keyword1": activity_info['price'],
+				"keyword1": u"￥ %s" % str(activity_info['price']),
 				"keyword2": member_info['order_id']
 			}
 		elif status == 'fail':
 			detail_data['keywords'] = {
 				"keyword1": member_info['order_id'],
 				"keyword2":	activity_info['product_name'],
-				"keyword3": "[差%d人] 成团" % activity_info['miss'],
-				"keyword4": "[%s] 将在5~7个工作日内完成退款" % activity_info['price']
+				"keyword3": u"[差%d人] 成团" % int(activity_info['miss']),
+				"keyword4": u"[￥ %s] 将在5~7个工作日内完成退款" % str(activity_info['price'])
 			}
+		if template_id == "" or not template_id:
+			#没有配置模板
+			continue
 		temp_dict = {
 			"openid": member_id2openid[member_id],
 			"app_url": app_url,

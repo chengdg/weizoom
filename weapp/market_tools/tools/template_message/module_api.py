@@ -92,13 +92,9 @@ def send_apps_template_message(owner_id, member_info):
 		weixin_api = get_weixin_api(mpuser_access_token)
 		try:
 			message = _get_fixed_apps_send_message_dict(member_info)
-			ss = weixin_api.send_template_message(message, True)
-			print ss
-			print 'ss------------------'
+			weixin_api.send_template_message(message, True)
 			result = True
-		except Exception, e:
-			print '========================'
-			print e
+		except:
 			notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
 			watchdog_warning(notify_message)
 
@@ -163,7 +159,6 @@ def _get_fixed_apps_send_message_dict(member_info):
 	@return:
 	"""
 	detail = member_info['detail_data']
-	TEMPLATE_KEYWORDS = detail['keywords']
 
 	template_data = dict()
 	template_data['touser'] = member_info['openid']
@@ -175,12 +170,10 @@ def _get_fixed_apps_send_message_dict(member_info):
 	detail_data["first"] = {"value" : detail['first'], "color" : "#000000"}
 	detail_data["remark"] = {"value" : detail['remark'], "color" : "#000000"}
 
-	for key, value in TEMPLATE_KEYWORDS.items():
+	for key, value in detail['keywords'].items():
 		detail_data[key] = {"value": value, "color" : "#173177"}
 
 	template_data['data'] = detail_data
-	print '8888888888888888888888'
-	print template_data
 	return template_data
 
 def _get_order_send_message_dict(user_profile, template_message, order, send_point):
