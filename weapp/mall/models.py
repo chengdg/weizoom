@@ -1360,8 +1360,8 @@ STATUS2TEXT = {
 	ORDER_STATUS_SUCCESSED: u'已完成',
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
-	ORDER_STATUS_GROUP_REFUNDING: u'团购退款中',
-	ORDER_STATUS_GROUP_REFUNDED: u'团购退款完成',
+	ORDER_STATUS_GROUP_REFUNDING: u'退款中',
+	ORDER_STATUS_GROUP_REFUNDED: u'退款完成',
 }
 
 AUDIT_STATUS2TEXT = {
@@ -1702,8 +1702,7 @@ def belong_to(webapp_id):
             group_order_ids = [r.order_id for r in group_order_relations]
             not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
                 order_id__in=group_order_ids,
-                status=ORDER_STATUS_NOT,
-                pay_interface_type=-1
+                status=ORDER_STATUS_NOT
                 )
             ]
             not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(

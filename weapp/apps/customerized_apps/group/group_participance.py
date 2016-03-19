@@ -105,7 +105,7 @@ class GroupParticipance(resource.Resource):
 		if group_relation.count() > 0 :
 			group_relation_id = group_relation.first().id
 			group_detail = app_models.GroupDetail.objects.get(
-				relation_belong_to=group_relation_id,
+				relation_belong_to=str(group_relation_id),
 				owner_id=str(member_id),
 				grouped_member_id = str(member_id))
 			if group_detail.order_id != '':

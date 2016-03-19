@@ -313,7 +313,7 @@
 						</div>
 					</td>
 					{{/if}}
-					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7}}border-top:0;{{/if}}"{{/if}}>
+					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7 || order.order_status == 8 || order.order_status == 9}}border-top:0;{{/if}}"{{/if}}>
 						{{if order.groups.length == 1 || order.order_status != 6 && order.order_status != 7}}
 							<div>
 								{{html formatOrderStatus(group.fackorder.status)}}

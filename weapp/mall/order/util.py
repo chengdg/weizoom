@@ -906,7 +906,12 @@ def get_orders_response(request, is_refund=False):
     if query_dict.has_key('status'):
         current_status_value = query_dict['status']
     elif query_dict.has_key('status__in'):
-        current_status_value = ORDER_STATUS_GROUP_REFUNDING
+        if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+            current_status_value = ORDER_STATUS_GROUP_REFUNDING
+        elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+            current_status_value = ORDER_STATUS_REFUNDING
+        elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+            current_status_value = ORDER_STATUS_REFUNDED
     else:
         current_status_value = -1
 
@@ -975,7 +980,13 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             orders = orders.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED])
         else:
             orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
-
+    else:
+        if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
+            query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]
+            query_dict.pop('status')
+        elif query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDED:
+            query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDED]
+            query_dict.pop('status')
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)

@@ -14,7 +14,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 		fields: [{
             name: 'group_type',
             type: 'select',
-			//validate:'data-validate="require-notempty::选项不能为空',
+			// validate:'data-validate="require-notempty::选项不能为空',
             displayName: '类型',
 			//annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			source:[{
