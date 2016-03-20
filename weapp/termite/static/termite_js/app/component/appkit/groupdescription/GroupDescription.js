@@ -134,10 +134,9 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         }],
 	propertyChangeHandlers: {
 		title: function($node, model, value,$propertyViewNode) {
-            validate_group($node, model, value, $propertyViewNode);
-		},
-		start_time: function($node, model, value, $propertyViewNode) {
-			var end_time_text = $node.find('.wui-i-end_time').text();
+        },
+        start_time: function($node, model, value, $propertyViewNode) {
+            var end_time_text = $node.find('.wui-i-end_time').text();
             $node.find('.wui-i-start_time').text(value);
             if (end_time_text != ""){
                 getDateTime($node,value,end_time_text,model);
@@ -150,61 +149,63 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
                 getDateTime($node,start_time_text,value,model);
             }
 
-		},
-		// description: function($node, model, value, $propertyViewNode) {
-		// 	//model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-		// 	//$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
-		// },
+        },
+        // description: function($node, model, value, $propertyViewNode) {
+        //  //model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
+        //  //$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
+        // },
 
-		material_image: function($node, model, value, $propertyViewNode) {
-			var image = {url:''};
-			var data = {type:null};
-			if (value !== '') {
-				data = $.parseJSON(value);
-				image = data.images[0];
-			}
-			model.set({
-				material_image: image.url
-			}, {silent: true});
+        material_image: function($node, model, value, $propertyViewNode) {
+            var image = {url:''};
+            var data = {type:null};
+            if (value !== '') {
+                data = $.parseJSON(value);
+                image = data.images[0];
+            }
+            model.set({
+                material_image: image.url
+            }, {silent: true});
 
-			if (data.type === 'newImage') {
-				W.resource.termite2.Image.put({
-					data: image,
-					success: function(data) {
-					},
-					error: function(resp) {
-					}
-				})
-			}
-			if (value) {
-				//更新propertyView中的图片
-				// var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
-				// $target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-				// $target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+            if (data.type === 'newImage') {
+                W.resource.termite2.Image.put({
+                    data: image,
+                    success: function(data) {
+                    },
+                    error: function(resp) {
+                    }
+                })
+            }
+            if (value) {
+                //更新propertyView中的图片
+                // var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
+                // $target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+                // $target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
              }
             this.refresh($node, {refreshPropertyView: true});
             validate_group($node, model, value, $propertyViewNode);
-		},
+        },
 
-		// rules: function($node, model, value, $propertyViewNode) {
-		// 	//model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
-		// 	//$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
-		// },
+        // rules: function($node, model, value, $propertyViewNode) {
+        //  //model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
+        //  //$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
+        // },
         group_items: function($node, model, value,$propertyViewNode) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
-			$ul = $node.find('.wui-i-description ul');
+            $ul = $node.find('.wui-i-description ul');
 
-			var n4li = $ul.children('li').length;
-			var n4li_hide = $ul.children('.xui-hide').length;
-			var n4li_show = n4li-n4li_hide;
+            var n4li = $ul.children('li').length;
+            var n4li_hide = $ul.children('.xui-hide').length;
+            var n4li_show = n4li-n4li_hide;
 
-			if(n4li_show==0){
-				$ul.find('.wui-i-group1').removeClass('xui-hide');
-			}else if(n4li_show==1){
-				$ul.find('.wui-i-group2').removeClass('xui-hide');
+            if(n4li_show==0){
+                $ul.find('.wui-i-group1').removeClass('xui-hide');
+            }else if(n4li_show==1){
+                $ul.find('.wui-i-group2').removeClass('xui-hide');
 			}else if(n4li_show==2){
 				$ul.find('.wui-i-group2').addClass('xui-hide');
 			}
+            validate_group($node, model, value, $propertyViewNode);
+
 
         },
         share_description:function($node, model, value, $propertyViewNode){
@@ -246,7 +247,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
 				$node.find('.wui-i-product-img > img').attr('src',product.thumbnails_url);
 			}
-
             validate_group($node, model, value, $propertyViewNode);
 		}
 	},
@@ -288,60 +288,13 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 };
 
 function validate_group($node, model, value, $propertyViewNode){
-    console.log('!!!!@@@--AAAAAAAAAAAA@@@@@@@@@@!!!!!!!!######################');
-    console.log($propertyViewNode);
-    console.log('!!!!@@@@@AAAAAAA@@@@@!!!!!!!!######################');
-    console.log('!!!!@@@@@@@@BBBBBBBBBBBBB@@@@@!!!!!!!!######################');
-    console.log(model);
-    console.log('!!!!@@@@@VBBBBBBBBBB@@@@@!!!!!!!!######################');
-    console.log('=========== connect validate group data --start ==============');
     var validate_group_flag = true;
     var validate_group_type = "";
     /*每次扫描所有的区域，优先级传递type*/
-    // var product = $propertyViewNode.find('input[data-field="product"]').val();
     var product = model.get('product');
-    // var img = $propertyViewNode.find('input[data-field="material_image"]').val();
     var img = model.get('material_image');
-    // var img = model.get('material_image');
-    console.log('!!!!!! IIIIMMMMMAAAAGGGGGGGGEEEEEEEEEEEE');
-    console.log(img);
-    console.log(product);
 
-    // var group_data=[];
-    // var group_list = $propertyViewNode.find('.xa-propertyView-app-DynamicGroupList .propertyGroup_property_dynamicControlField_content');
-    // for(var i=0;i<group_list.length;i++){
-    //     var $group_div =$(group_list[i]);
-    //     var group_type = $group_div.find('select[data-field="group_type"]').val();
-    //     var group_days = $group_div.find('select[data-field="group_days"]').val();
-    //     var group_price = $group_div.find('select[data-field="group_price"]').val();
-    //     var group_item_data = {
-    //         "group_type":group_type,
-    //         "group_days":group_days,
-    //         "group_price":group_price
-    //     }
-    //     group_data.push(group_item_data);
-    // }
 
-    // var group_type_array = [];
-    // var group_error_type = [];
-    // if(group_data.length<=0){
-    //     group_error_type.push('group_blank');
-    // }else{
-    //     for(var i=0;i<group_data.length;i++){
-    //         group_one = group_data[i];
-    //         for(var index in group_one){
-    //             if(group_one[index]===undefined){
-    //                 group_error_type.push('group_blank');
-    //             }
-    //             group_type_array.push(group_one['group_type']);
-    //         }
-    //     }
-    //     if(group_type_array.length>1){
-    //         if(group_type_array[0]==group_type_array[1]){
-    //             group_error_type.push('group_same');
-    //         }
-    //     }
-    // }
     var product_attr_tag = true;
     for(var product_attr_index in product){
         product_attr = product[product_attr_index];
@@ -357,14 +310,7 @@ function validate_group($node, model, value, $propertyViewNode){
         console.log('validate-data:'+product);
         console.log('====== validate group end <<<<<<<<');
     }
-    // if(group_error_type.length>=1){
-    //     console.log('====== validate group start >>>>>>>');
-    //     validate_group_type = group_error_type[0];
-    //     validate_group_flag = false;
-    //     console.log('validate-type:'+validate_group_type);
-    //     console.log('validate-data:'+group_error_type);
-    //     console.log('====== validate group end <<<<<<<');
-    // }
+
     if(!img){
         console.log('====== validate img start >>>>>>');
         validate_group_type='img';
@@ -385,4 +331,72 @@ function validate_group($node, model, value, $propertyViewNode){
 
     console.log('=========== connect validate group data -- end ==============');
 }
+
+
+
+function validate_dynamic_group($node, model, value, $propertyViewNode){
+    console.log('=========== connect validate dynamic group data --start ==============');
+    var validate_group_flag = true;
+    var validate_group_type = "";
+    /*每次扫描所有的区域，优先级传递type*/
+
+
+    var group_data=[];
+    var group_list = $propertyViewNode.parent().children('.propertyGroup_property_dynamicControlField_control');
+    for(var i=0;i<group_list.length;i++){
+        var $group_div =$(group_list[i]);
+        var group_type = $group_div.find('select[data-field="group_type"]').val();
+        var group_days = $group_div.find('input[data-field="group_days"]').val();
+        var group_price = $group_div.find('input[data-field="group_price"]').val();
+        var group_item_data = {
+            "group_type":group_type,
+            "group_days":group_days,
+            "group_price":group_price
+        }
+        group_data.push(group_item_data);
+    }
+
+    var group_type_array = [];
+    var group_error_type = [];
+    if(group_data.length<=0){
+        group_error_type.push('group_blank');
+    }else{
+        for(var i=0;i<group_data.length;i++){
+            group_one = group_data[i];
+            for(var index in group_one){
+                if(group_one[index]===undefined | group_one[index]==""){
+                    group_error_type.push('group_blank');
+                }
+            }
+            group_type_array.push(group_one['group_type']);
+        }
+        if(group_type_array.length>1){
+            if(group_type_array[0]==group_type_array[1]){
+                group_error_type.push('group_same');
+            }
+        }
+    }
+
+    if(group_error_type.length>=1){
+        console.log('====== validate group start >>>>>>>');
+        validate_group_type = group_error_type[0];
+        validate_group_flag = false;
+        console.log('validate-type:'+validate_group_type);
+        console.log('validate-data:'+group_error_type);
+        console.log('====== validate group end <<<<<<<');
+    }
+
+
+
+    if(parent){
+        console.log('======= Parent ======');
+        console.log('validate-type:'+validate_group_type);
+        parent.validate_group_flag = validate_group_flag;
+        parent.validate_group_type = validate_group_type;
+    }
+
+
+    console.log('=========== connect validate group data -- end ==============');
+}
+
 

@@ -73,7 +73,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 				}
 			}
 
-			validate_group($node, model, value, $propertyViewNode);
+			validate_dynamic_group($node, model, value, $propertyViewNode);
 		},
 		group_days:function($node, model, value, $propertyViewNode){
 			var that = this;
@@ -101,7 +101,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 					$cur_target.find('.group_days').html('拼团时间'+value+'天');
 				}
 			}
-			validate_group($node, model, value, $propertyViewNode);
+			validate_dynamic_group($node, model, value, $propertyViewNode);
 		},
 		group_price:function($node, model, value, $propertyViewNode){
 			var that = this;
@@ -130,7 +130,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 				}
 			}
 
-			validate_group($node, model, value, $propertyViewNode);
+			validate_dynamic_group($node, model, value, $propertyViewNode);
 		}
 
 
