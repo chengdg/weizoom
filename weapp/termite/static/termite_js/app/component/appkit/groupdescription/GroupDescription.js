@@ -298,48 +298,58 @@ function validate_group($node, model, value, $propertyViewNode){
     var validate_group_flag = true;
     var validate_group_type = "";
     /*每次扫描所有的区域，优先级传递type*/
-    var product = $propertyViewNode.find('input[data-field="product"]').val();
-    var img = $propertyViewNode.find('input[data-field="material_image"]').val();
+    // var product = $propertyViewNode.find('input[data-field="product"]').val();
+    var product = model.get('product');
+    // var img = $propertyViewNode.find('input[data-field="material_image"]').val();
+    var img = model.get('material_image');
     // var img = model.get('material_image');
     console.log('!!!!!! IIIIMMMMMAAAAGGGGGGGGEEEEEEEEEEEE');
     console.log(img);
-    var group_data=[];
-    var group_list = $propertyViewNode.find('.xa-propertyView-app-DynamicGroupList .propertyGroup_property_dynamicControlField_content');
-    for(var i=0;i<group_list.length;i++){
-        var $group_div =$(group_list[i]);
-        var group_type = $group_div.find('select[data-field="group_type"]').val();
-        var group_days = $group_div.find('select[data-field="group_days"]').val();
-        var group_price = $group_div.find('select[data-field="group_price"]').val();
-        var group_item_data = {
-            "group_type":group_type,
-            "group_days":group_days,
-            "group_price":group_price
-        }
-        group_data.push(group_item_data);
-    }
+    console.log(product);
 
-    var group_type_array = [];
-    var group_error_type = [];
-    if(group_data.length<=0){
-        group_error_type.push('group_blank');
-    }else{
-        for(var i=0;i<group_data.length;i++){
-            group_one = group_data[i];
-            for(var index in group_one){
-                if(group_one[index]===undefined){
-                    group_error_type.push('group_blank');
-                }
-                group_type_array.push(group_one['group_type']);
-            }
-        }
-        if(group_type_array.length>1){
-            if(group_type_array[0]==group_type_array[1]){
-                group_error_type.push('group_same');
-            }
+    // var group_data=[];
+    // var group_list = $propertyViewNode.find('.xa-propertyView-app-DynamicGroupList .propertyGroup_property_dynamicControlField_content');
+    // for(var i=0;i<group_list.length;i++){
+    //     var $group_div =$(group_list[i]);
+    //     var group_type = $group_div.find('select[data-field="group_type"]').val();
+    //     var group_days = $group_div.find('select[data-field="group_days"]').val();
+    //     var group_price = $group_div.find('select[data-field="group_price"]').val();
+    //     var group_item_data = {
+    //         "group_type":group_type,
+    //         "group_days":group_days,
+    //         "group_price":group_price
+    //     }
+    //     group_data.push(group_item_data);
+    // }
+
+    // var group_type_array = [];
+    // var group_error_type = [];
+    // if(group_data.length<=0){
+    //     group_error_type.push('group_blank');
+    // }else{
+    //     for(var i=0;i<group_data.length;i++){
+    //         group_one = group_data[i];
+    //         for(var index in group_one){
+    //             if(group_one[index]===undefined){
+    //                 group_error_type.push('group_blank');
+    //             }
+    //             group_type_array.push(group_one['group_type']);
+    //         }
+    //     }
+    //     if(group_type_array.length>1){
+    //         if(group_type_array[0]==group_type_array[1]){
+    //             group_error_type.push('group_same');
+    //         }
+    //     }
+    // }
+    var product_attr_tag = true;
+    for(var product_attr_index in product){
+        product_attr = product[product_attr_index];
+        if(!product_attr){
+            product_attr_tag = false;
         }
     }
-
-    if(!product){
+    if(!product_attr_tag){
         console.log('====== validate group start >>>>>>>');
         validate_group_type = 'product';
         validate_group_flag = false;
@@ -347,14 +357,14 @@ function validate_group($node, model, value, $propertyViewNode){
         console.log('validate-data:'+product);
         console.log('====== validate group end <<<<<<<<');
     }
-    if(group_error_type.length>=1){
-        console.log('====== validate group start >>>>>>>');
-        validate_group_type = group_error_type[0];
-        validate_group_flag = false;
-        console.log('validate-type:'+validate_group_type);
-        console.log('validate-data:'+group_error_type);
-        console.log('====== validate group end <<<<<<<');
-    }
+    // if(group_error_type.length>=1){
+    //     console.log('====== validate group start >>>>>>>');
+    //     validate_group_type = group_error_type[0];
+    //     validate_group_flag = false;
+    //     console.log('validate-type:'+validate_group_type);
+    //     console.log('validate-data:'+group_error_type);
+    //     console.log('====== validate group end <<<<<<<');
+    // }
     if(!img){
         console.log('====== validate img start >>>>>>');
         validate_group_type='img';
