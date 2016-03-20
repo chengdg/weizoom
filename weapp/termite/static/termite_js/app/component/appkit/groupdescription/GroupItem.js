@@ -10,7 +10,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 
 	properties: [{
 		group: '',
-		groupClass: 'xui-propertyView-app-DynamicGroupItems',
+		groupClass: 'xui-propertyView-app-DynamicGroupItems ',
 		fields: [{
             name: 'group_type',
             type: 'select',
@@ -72,6 +72,8 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 					$cur_target.find('.group_type').html(''+value+'人团');
 				}
 			}
+
+			validate_group($node, model, value, $propertyViewNode);
 		},
 		group_days:function($node, model, value, $propertyViewNode){
 			var that = this;
@@ -99,6 +101,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 					$cur_target.find('.group_days').html('拼团时间'+value+'天');
 				}
 			}
+			validate_group($node, model, value, $propertyViewNode);
 		},
 		group_price:function($node, model, value, $propertyViewNode){
 			var that = this;
@@ -126,6 +129,8 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 					$cur_target.find('.group_price').html('团购价：'+value+'元');
 				}
 			}
+
+			validate_group($node, model, value, $propertyViewNode);
 		}
 
 
