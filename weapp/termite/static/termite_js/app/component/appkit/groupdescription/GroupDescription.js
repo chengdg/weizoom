@@ -367,6 +367,14 @@ function validate_dynamic_group($node, model, value, $propertyViewNode){
                 if(group_one[index]===undefined | group_one[index]==""){
                     group_error_type.push('group_blank');
                 }
+                var group_days_tmp = group_one['group_days'];
+                if(!isInteger(group_days_tmp)){
+                    group_error_type.push('group_notInt');
+                }
+                var group_price_tmp = group_one['group_price'];
+                if(!isFloat(group_price_tmp)){
+                    group_error_type.push('group_notFloat');
+                }
             }
             group_type_array.push(group_one['group_type']);
         }
@@ -399,4 +407,15 @@ function validate_dynamic_group($node, model, value, $propertyViewNode){
     console.log('=========== connect validate group data -- end ==============');
 }
 
+
+
+function isInteger( str ){
+    var regu = /^[-]{0,1}[0-9]{1,}$/;
+    return regu.test(str);
+}
+
+function isFloat( str ){
+    var regu = /^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/;
+    return regu.test(str);
+}
 

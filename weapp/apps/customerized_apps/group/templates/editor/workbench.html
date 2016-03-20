@@ -256,6 +256,10 @@
             W.showHint('error', '团购设置和数据不能为空！');
         }else if(validate_group_type=='group_same'){
             W.showHint('error', '团购类型不能相同！');
+        }else if(validate_group_type=='group_notInt'){
+            W.showHint('error', '团购天数应为整数！');
+        }else if(validate_group_type=='group_notFloat'){
+            W.showHint('error', '团购价格应为两位小数或整数！');
         }else if(validate_group_type=='img'){
             W.showHint('error', '请选择团购分享图片！');
         }
