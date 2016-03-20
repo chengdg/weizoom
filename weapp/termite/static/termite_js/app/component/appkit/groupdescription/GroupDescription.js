@@ -288,6 +288,12 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 };
 
 function validate_group($node, model, value, $propertyViewNode){
+    console.log('!!!!@@@--AAAAAAAAAAAA@@@@@@@@@@!!!!!!!!######################');
+    console.log($propertyViewNode);
+    console.log('!!!!@@@@@AAAAAAA@@@@@!!!!!!!!######################');
+    console.log('!!!!@@@@@@@@BBBBBBBBBBBBB@@@@@!!!!!!!!######################');
+    console.log(model);
+    console.log('!!!!@@@@@VBBBBBBBBBB@@@@@!!!!!!!!######################');
     console.log('=========== connect validate group data --start ==============');
     var validate_group_flag = true;
     var validate_group_type = "";
@@ -338,6 +344,7 @@ function validate_group($node, model, value, $propertyViewNode){
         validate_group_type = 'product';
         validate_group_flag = false;
         console.log('validate-type:'+validate_group_type);
+        console.log('validate-data:'+product);
         console.log('====== validate group end <<<<<<<<');
     }
     if(group_error_type.length>=1){
@@ -345,6 +352,7 @@ function validate_group($node, model, value, $propertyViewNode){
         validate_group_type = group_error_type[0];
         validate_group_flag = false;
         console.log('validate-type:'+validate_group_type);
+        console.log('validate-data:'+group_error_type);
         console.log('====== validate group end <<<<<<<');
     }
     if(!img){
@@ -352,6 +360,7 @@ function validate_group($node, model, value, $propertyViewNode){
         validate_group_type='img';
         validate_group_flag = false;
         console.log('validate-type:'+validate_group_type);
+        console.log('validate-data:'+img);
         console.log('====== validate img end <<<<<<');
     }
 
