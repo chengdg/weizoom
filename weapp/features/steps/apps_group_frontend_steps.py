@@ -31,14 +31,16 @@ def __get_product_idByname(product_name):
 	return Product.objects.get(name=product_name).id
 
 def __get_group_relation_id(activity_id,page_owner_member_id):
-	return str(GroupRelations.objects.get(belong_to=str(activity_id), member_id=str(page_owner_member_id)).id)
-
+	try:
+		return str(GroupRelations.objects.get(belong_to=str(activity_id), member_id=str(page_owner_member_id)).id)
+	except:
+		return None
 """
 m_group.html页面的请求
 """
-def __get_into_group_pages(context,webapp_owner_id,activity_id,openid):
+def __get_into_group_pages(context,webapp_owner_id,activity_id,openid,fid):
 	#进入团购活动页面
-	url = '/m/apps/group/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, activity_id, context.member.token, openid)
+	url = '/m/apps/group/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s&fid=%s' % (webapp_owner_id, activity_id, context.member.token, openid,fid)
 	url = bdd_util.nginx(url)
 	context.link_url = url
 	response = context.client.get(url)
@@ -49,8 +51,12 @@ def __get_into_group_pages(context,webapp_owner_id,activity_id,openid):
 		response = context.client.get(bdd_util.nginx(redirect_url))
 	return response
 
-def __get_group_informations(context,webapp_owner_id,activity_id,openid):
-	url = '/m/apps/group/api/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s' % (webapp_owner_id, activity_id, context.member.token, openid)
+def __get_group_informations(context,webapp_owner_id,activity_id,openid,fid):
+	group_relation_id = __get_group_relation_id(activity_id,fid)
+	if group_relation_id:
+		url = '/m/apps/group/api/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s&fid=%s&group_relation_id=%s' % (webapp_owner_id, activity_id, context.member.token, openid, fid,group_relation_id)
+	else:
+		url = '/m/apps/group/api/m_group/?webapp_owner_id=%s&id=%s&fmt=%s&opid=%s&fid=%s' % (webapp_owner_id, activity_id, context.member.token, openid, fid)
 	url = bdd_util.nginx(url)
 	response = context.client.get(url)
 	while response.status_code == 302:
@@ -149,20 +155,32 @@ def __api_get_group_list(context,webapp_owner_id,belong_to):
 		response = context.client.get(bdd_util.nginx(redirect_url))
 	return response.content
 
-@then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
-def step_tmpl(context, webapp_user_name, webapp_owner_name):
+@then(u'{webapp_user_name}能获得{webapp_owner_name}在"{group_record_name}"下的团购活动页面')
+def step_tmpl(context, webapp_user_name, webapp_owner_name, group_record_name):
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
+	activity_id = __get_group_rule_id(group_record_name)
 	webapp_owner_id = context.webapp_owner_id
-	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
-	all_groups_can_open = response.context['all_groups_can_open']
-	# 构造实际数据
+	fid = context.page_owner_member_id
+	response = __get_into_group_pages(context,webapp_owner_id,activity_id,openid,fid)
+	group_name = response.context['page_title']
+	context.data_response = __get_group_informations(context,webapp_owner_id,activity_id,openid,fid).content
+	member_info = json.loads(context.data_response)['data']['member_info']
+	helpers_info = json.loads(context.data_response)['data']['helpers_info']
+	#构造实际数据
 	actual = []
-	for group in all_groups_can_open:
-		actual.append({
-			"group_name": group['name'],
-			"group_dict": group['all_group_dict']
-		})
+	actual.append({
+		"group_name": group_name,
+		"group_leader": member_info['page_owner_name'],
+		"group_dict":[{
+			"group_type": member_info['group_type'],
+			"group_price": member_info['product_group_price'],
+			"offered":[{
+				"number": member_info['grouped_number'],
+				"member":[h['username'] for h in helpers_info]
+				}]
+		}]
+	})
 	print("actual_data: {}".format(actual))
 	expected = json.loads(context.text)
 	print("expected: {}".format(expected))
@@ -174,8 +192,9 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name,group_record_name):
 	activity_id = __get_group_rule_id(group_record_name)
 	user = User.objects.get(id=context.webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	response = __get_into_group_pages(context,webapp_owner_id,activity_id,openid)
-	context.data_response = __get_group_informations(context,webapp_owner_id,activity_id,openid).content
+	fid = Member.objects.get(username_hexstr=byte_to_hex(webapp_user_name)).id
+	response = __get_into_group_pages(context,webapp_owner_id,activity_id,openid,fid)
+	context.data_response = __get_group_informations(context,webapp_owner_id,activity_id,openid,fid).content
 	context.page_owner_member_id = json.loads(context.data_response)['data']['member_info']['page_owner_member_id']
 	fid = context.page_owner_member_id
 	data = json.loads(context.text)
@@ -191,9 +210,9 @@ def step_tmpl(context, webapp_user_name,group_owner_name, group_record_name):
 	activity_id = __get_group_rule_id(group_record_name)
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	response = __get_into_group_pages(context,webapp_owner_id,activity_id,openid)
-	product_id = response.context['product_id']
 	fid = context.page_owner_member_id
+	response = __get_into_group_pages(context,webapp_owner_id,activity_id,openid,fid)
+	product_id = response.context['product_id']
 	page_owner_member_id = context.page_owner_member_id
 	group_relation_id = __get_group_relation_id(activity_id,page_owner_member_id)
 	__join_group(context,activity_id,fid,product_id,group_relation_id,openid)
@@ -202,6 +221,27 @@ def step_tmpl(context, webapp_user_name,group_owner_name, group_record_name):
 def step_impl(context, webapp_user_name, webapp_owner_name,group_record_name):
 	context.shared_url = context.link_url
 	print('context.shared_url:',context.shared_url)
+
+@then(u"{webapp_user_name}能获得{webapp_owner_name}的团购活动列表")
+def step_tmpl(context, webapp_user_name, webapp_owner_name):
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	webapp_owner_id = context.webapp_owner_id
+	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
+	all_groups_can_open = response.context['all_groups_can_open']
+	print('all_groups_can_open')
+	print(all_groups_can_open)
+	# 构造实际数据
+	actual = []
+	for group in all_groups_can_open:
+		actual.append({
+			"group_name": group['name'],
+			"group_dict": group['all_group_dict']
+		})
+	print("actual_data: {}".format(actual))
+	expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+	bdd_util.assert_list(expected, actual)
 
 @then(u'{webapp_user_name}能获得"{group_record_name}"的已开团活动列表')
 def step_tmpl(context, webapp_user_name,group_record_name):

@@ -192,7 +192,7 @@ class GetPidsByWoid(resource.Resource):
 		获得当前woid处在团购中的Pid_list
 		"""
 		woid = request.GET.get('woid')
-		records = app_models.Group.objects(owner_id=woid,status=app_models.STATUS_RUNNING)
+		records = app_models.Group.objects(owner_id=woid,status__lte=1)
 		pids_list = [record.product_id for record in records]
 		response = create_response(200)
 		response.data = {
