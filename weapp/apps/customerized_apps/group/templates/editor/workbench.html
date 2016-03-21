@@ -166,15 +166,7 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
-    /* 页面数据联合验证 */
-    var validate_group_flag = "";
-    if(isCreateNewData){
-      validate_group_flag = false;
-    }else{
-      validate_group_flag = true;
-    }
 
-    var validate_group_type = "";
     var loadPages = function(pageManagerView) {
       W.getApi().call({
         app: 'apps',
@@ -252,9 +244,9 @@
           var that = this;
 
       //校验字典初始化
-      if(!initValidateDict(W.projectId)){
-        W.showHint('error', '请选择团购商品！');
-        return false;
+      var validate_tag = initValidateDict(W.projectId);
+      if(!validate_tag){
+        return validate_tag;
       }
 
 
@@ -405,10 +397,6 @@
     function initValidateDict(WprojectId){
       var validate_group_flag = true;
       var validate_group_type = undefined;
-      // var projectId = "apps_group_"+WprojectId.split('new_app:group:')[1];
-      // var localStorage = window.localStorage;
-      // var validateDict = {}
-      // validateDict['pageID'] = projectId;
       var product = $('#propertyEditor').find('input[data-field="product"]').val();
       var material_image = $('#propertyEditor').find('input[data-field="material_image"]').val();
 
@@ -429,18 +417,11 @@
         group_items.push(group_item_data);
       }
 
-      console.log('66666666666666');
-      console.log('group_items:'+group_items);
-      console.log('group_product'+product);
-      console.log('m_imgae'+material_image);
-      console.log('66666666666666');
       if(!product){
         validate_group_type = 'product';
-        console.log('FFF,product');
       }
       if(!material_image){
         validate_group_type='img';
-        console.log('FFF,img');
       }
 
 
@@ -448,24 +429,20 @@
       var group_error_type = [];
       if(group_items.length<=0){
           group_error_type.push('group_blank');
-          console.log('FFF,group_blank1');
       }else{
           for(var i=0;i<group_items.length;i++){
               group_one = group_items[i];
               for(var index in group_one){
                   if(group_one[index]===undefined | group_one[index]==""){
                       group_error_type.push('group_blank');
-                      console.log('FFF,group_blank2');
                   }
                   var group_days_tmp = group_one['group_days'];
                   if(!isInteger(group_days_tmp)){
                       group_error_type.push('group_notInt');
-                      console.log('FFF,group_notInt');
                   }
                   var group_price_tmp = group_one['group_price'];
                   if(!isFloat(group_price_tmp)){
                       group_error_type.push('group_notFloat');
-                      console.log('FFF,group_notFloat');
                   }
               }
               group_type_array.push(group_one['group_type']);
@@ -473,7 +450,6 @@
           if(group_type_array.length>1){
               if(group_type_array[0]==group_type_array[1]){
                   group_error_type.push('group_same');
-                      console.log('FFF,group_Sanme');
               }
           }
       }
@@ -488,8 +464,6 @@
 
 
       /*提交前校验数据状态*/
-      console.log('777777777777777777777');
-      console.log('validate_group_type:'+validate_group_type);
       if(validate_group_type){
         if(validate_group_type=='product'){
             W.showHint('error', '请选择团购商品！');
@@ -508,20 +482,7 @@
         }
         return false;
       }
-
-
-      // validateDict['title'] = title;
-      // validateDict['product'] = product;
-      // validateDict['material_image'] = material_image;
-      // validateDict['group_items'] = [];
-      // var validateJSON = JSON.stringify(validateDict);
-      // localStorage[projectId] = validateJSON;
-
-      // var title = $('#propertyEditor').find('input[data-field="title"]').val();
-      // console.log('MMMMMm!!!!!!!!!!!!!!!!!!!!!');
-      // console.log(validateDict);
-      // console.log('MMMMMm!!!!!!!!!!!!!!!!!!!!!');
-      // return false;
+      return true;
     }
 
     function isInteger( str ){

@@ -208,8 +208,6 @@ W.view.common.AdvancedTable = Backbone.View.extend({
 
 
             success: function(data) {
-                console.log('########99999999999999999999999999');
-                console.log(data);
                 _this.rawData = data;
                 if (data.items.length == 0) {
                     if (options && options.emptyDataHint) {
