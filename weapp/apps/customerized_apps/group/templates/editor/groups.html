@@ -351,7 +351,7 @@
                 </select>
             </label>
             <label>发货提醒：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../success.first }}"></label>
-            <div class="xui-i-setting xui-i-preview xa-success-preview">
+            <div class="xui-i-setting xui-i-preview xa-success-preview {{#ifequal ../success.selected_id ""}}hidden{{/ifequal}}">
                 <label>预览</label>
                 <p>您参团的商品[xxx]已组团成功,<span class="xa-success-need-change-first">{{ ../success.first }}</span></p>
                 <p>商品价格: ￥158</p>
@@ -371,7 +371,7 @@
                 </select>
             </label>
             <label>问候语：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
-            <div class="xui-i-setting xui-i-preview xa-success-preview">
+            <div class="xui-i-setting xui-i-preview xa-success-preview {{#ifequal ../fail.selected_id ""}}hidden{{/ifequal}}">
                 <label>预览</label>
                 <p class="xa-fail-need-change-first">{{ ../fail.first }}</p>
                 <p>单号: tn12345902314</p>
@@ -572,9 +572,9 @@ $(document).ready(function() {
             var v = $this.val();
             var $pre = $this.parents('.xui-i-setting').eq(0).find('.xui-i-preview');
             if(v == ""){
-                $pre.hide();
+                $pre.addClass('hidden');
             }else{
-                $pre.show();
+                $pre.removeClass('hidden');
             }
         },
         onChangeSuccessFirst: function(){
