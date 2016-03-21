@@ -92,7 +92,7 @@
 						<input type="radio" name="full_use" checked value="0" /><span class="pr15">不限制</span>
 						<input type="radio" name="full_use" id="full_use" value="1"  />
 						<span class="pr10">满</span>
-						<input type="text" class="w60" id="full_use_value" name="full_use_value" disabled data-validate="require-int::金额必须为数字"/><span class="pl10">元可以使用</span>
+						<input type="text" class="w60" id="full_use_value" name="full_use_value" disabled /><span class="pl10">元可以使用</span>
 						<div class="errorHint" id="full_use_hint" style="margin-left: 100px"></div>
 					</label>
 				</div>
@@ -248,9 +248,11 @@ $(document).ready(function() {
     });
 	$('[name="full_use"]').change(function(){
 		if ($(this).val() == 1){
-			$('#full_use_value').removeAttr('disabled')
+			$('#full_use_value').removeAttr('disabled');
+            $('#full_use_value').attr('data-validate','require-int::金额必须为数字');
 		}else{
 			$('#full_use_value').attr('disabled',true).val('');
+            $('#full_use_value').removeAttr('data-validate');
 			$('#full_use_hint').html('');
 		}
 	});
