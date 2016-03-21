@@ -134,6 +134,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         }],
 	propertyChangeHandlers: {
 		title: function($node, model, value,$propertyViewNode) {
+            // writeValidateDict(W.projectId,"title",value);
         },
         start_time: function($node, model, value, $propertyViewNode) {
             var end_time_text = $node.find('.wui-i-end_time').text();
@@ -177,7 +178,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
                 // $target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
              }
             this.refresh($node, {refreshPropertyView: true});
-            validate_group($node, model, value, $propertyViewNode);
+            // writeValidateDict(W.projectId,"material_image",value);
+            // validate_group($node, model, value, $propertyViewNode);
         },
         group_items: function($node, model, value,$propertyViewNode) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
@@ -194,17 +196,18 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			}else if(n4li_show==2){
 				$ul.find('.wui-i-group2').addClass('xui-hide');
 			}
-            validate_group($node, model, value, $propertyViewNode);
-
-
+            // validate_group($node, model, value, $propertyViewNode);
         },
         share_description:function($node, model, value, $propertyViewNode){
             model.set({share_description:value.replace(/\n/g,'<br>')},{silent: true});
-            validate_group($node, model, value, $propertyViewNode);
+            // writeValidateDict(W.projectId,"share_description",value);
+            // validate_group($node, model, value, $propertyViewNode);
         },
         rules:function($node, model, value, $propertyViewNode){
             model.set({rules:value.replace(/\n/g,'<br>').replace(/"\n"/,'<br>')},{silent: true});
-            validate_group($node, model, value, $propertyViewNode);
+            // validate_group($node, model, value, $propertyViewNode);
+            // writeValidateDict(W.projectId,"rules",value);
+
         },
 		product:function($node, model, value, $propertyViewNode){
 			var data;
@@ -239,7 +242,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
 				$node.find('.wui-i-product-img > img').attr('src',product.thumbnails_url);
 			}
-            validate_group($node, model, value, $propertyViewNode);
+            // writeValidateDict(W.projectId,"product",value);
+            // validate_group($node, model, value, $propertyViewNode);
 		}
 	},
 
@@ -279,52 +283,64 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 	});
 };
 
-function validate_group($node, model, value, $propertyViewNode){
-    // var validate_group_flag = true;
-    // var validate_group_type = "";
-    // /*每次扫描所有的区域，优先级传递type*/
-    // var product = model.get('product');
-    // var img = model.get('material_image');
+// function validate_group($node, model, value, $propertyViewNode){
+//     var validate_group_flag = true;
+//     var validate_group_type = "";
+//     /*每次扫描所有的区域，优先级传递type*/
+//     var product = model.get('product');
+//     var img = model.get('material_image');
 
 
-    // var product_attr_tag = true;
-    // for(var product_attr_index in product){
-    //     product_attr = product[product_attr_index];
-    //     if(!product_attr){
-    //         product_attr_tag = false;
-    //     }
-    // }
-    // if(!product_attr_tag){
-    //     console.log('====== validate group start >>>>>>>');
-    //     validate_group_type = 'product';
-    //     validate_group_flag = false;
-    //     console.log('validate-type:'+validate_group_type);
-    //     console.log('validate-data:'+product);
-    //     console.log('====== validate group end <<<<<<<<');
-    // }
+//     var product_attr_tag = true;
+//     for(var product_attr_index in product){
+//         product_attr = product[product_attr_index];
+//         if(!product_attr){
+//             product_attr_tag = false;
+//         }
+//     }
+//     if(!product_attr_tag){
+//         console.log('====== validate group start >>>>>>>');
+//         validate_group_type = 'product';
+//         validate_group_flag = false;
+//         console.log('validate-type:'+validate_group_type);
+//         console.log('validate-data:'+product);
+//         console.log('====== validate group end <<<<<<<<');
+//     }
 
-    // if(!img){
-    //     console.log('====== validate img start >>>>>>');
-    //     validate_group_type='img';
-    //     validate_group_flag = false;
-    //     console.log('validate-type:'+validate_group_type);
-    //     console.log('validate-data:'+img);
-    //     console.log('====== validate img end <<<<<<');
-    // }
-
-
-    // if(parent){
-    //     console.log('======= Parent ======');
-    //     console.log('validate-type:'+validate_group_type);
-    //     parent.validate_group_flag = validate_group_flag;
-    //     parent.validate_group_type = validate_group_type;
-    // }
+//     if(!img){
+//         console.log('====== validate img start >>>>>>');
+//         validate_group_type='img';
+//         validate_group_flag = false;
+//         console.log('validate-type:'+validate_group_type);
+//         console.log('validate-data:'+img);
+//         console.log('====== validate img end <<<<<<');
+//     }
 
 
-    // console.log('=========== connect validate group data -- end ==============');
-}
+//     if(parent){
+//         console.log('======= Parent ======');
+//         console.log('validate-type:'+validate_group_type);
+//         parent.validate_group_flag = validate_group_flag;
+//         parent.validate_group_type = validate_group_type;
+//     }
 
 
+//     console.log('=========== connect validate group data -- end ==============');
+// }
+
+
+// function writeValidateDict(WprojectId,keyname,value){
+//     var projectId = "apps_group_"+WprojectId.split('new_app:group:')[1];
+//     var localStorage = window.localStorage;
+//     validateDict = JSON.parse(localStorage[projectId]);
+//     if(keyname=="group_items"){
+//         validateDict["group_items"].push(value);
+//     }else{
+//         validateDict[keyname] = value;
+//     }
+//     var validateJSON = JSON.stringify(validateDict);
+//     localStorage[projectId] = validateJSON;
+// }
 
 function validate_dynamic_group($node, model, value, $propertyViewNode){
     // console.log('=========== connect validate dynamic group data --start ==============');
@@ -401,13 +417,4 @@ function validate_dynamic_group($node, model, value, $propertyViewNode){
 
 
 
-function isInteger( str ){
-    var regu = /^[-]{0,1}[0-9]{1,}$/;
-    return regu.test(str);
-}
-
-function isFloat( str ){
-    var regu = /^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/;
-    return regu.test(str);
-}
 
