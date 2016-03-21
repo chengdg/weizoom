@@ -37,7 +37,10 @@ ORDER_ACTION_NAME2ACTION = {
 @when(u"{user}'{action}'最新订单")
 def step_impl(context, user, action):
     if hasattr(context, 'latest_order_id'):
-        latest_order_no = Order.objects.get(id=context.latest_order_id).order_id
+        try:
+            latest_order_no = Order.objects.get(id=context.latest_order_id).order_id
+        except:
+            latest_order_no = Order.objects.get(order_id=context.latest_order_id).order_id
     else:
         latest_order_no = steps_db_util.get_latest_order().order_id
 

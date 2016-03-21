@@ -55,24 +55,36 @@ class GroupParticipances(resource.Resource):
 		else:
 			belong_to = export_id
 
+
+		#Relation表		  需求状态
+		# 0未生效，1进行中	 进行中
+		# 2成功				成功
+		# 3失败				退款中
+		#  未知
+		# -1 全部			   全部
+		filter_status = request.GET.get('status', 'all')
 		filter_group_leader_name = request.GET.get('group_leader_name', '')
-		filter_status = request.GET.get('status', -1)
 		filter_start_time = request.GET.get('start_time', '')
 		filter_end_time = request.GET.get('end_time', '')
 
 
 		params = {'belong_to':belong_to}
-		datas_datas = app_models.GroupRelations.objects(**params)
-
+		datas_datas = app_models.GroupRelations.objects(**params).order_by('-created_at')
 		if filter_group_leader_name:
 			params['group_leader_name__icontains'] = filter_group_leader_name
-		if int(filter_status) != -1:
-			params['group_status'] = filter_status
+		if filter_status == "all":
+			pass
+		elif filter_status == 'ing':
+			params['group_status__in'] = [0,1]
+		elif filter_status == 'success':
+			params['group_status'] = 2
+		elif filter_status == 'fail':
+			params['group_status'] = 3
 
 		#进行分页
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		cur_page = int(request.GET.get('page', '1'))
-		datas = app_models.GroupRelations.objects(**params)#.order_by('group_days')
+		datas = app_models.GroupRelations.objects(**params).order_by('-created_at')#.order_by('group_days')
 
 		items = []
 		for data in datas:
@@ -125,19 +137,19 @@ class GroupParticipances(resource.Resource):
 				})
 
 		#排序
-		items.sort(key=lambda item:item['rest_days'])
 		status_ing = []
 		status_fail = []
 		status_success = []
-
+		status_others = []
 		for item in items:
-			if item['status'] == u'团购未生效' or u'团购进行中':
+			if item['status'] == u'团购未生效':
 				status_ing.append(item)
-			elif item['status'] == u'团购成功':
-				status_success.append(item)
+			elif item['status']==u'团购进行中':
+				status_ing.append(item)
 			else:
-				status_fail.append(item)
-		items = status_ing+status_fail+status_success
+				status_others.append(item)
+		status_ing.sort(key=lambda item:item['rest_days'])
+		items = status_ing+status_others #+status_fail+status_success
 
 		pageinfo, datas = paginator.paginate(datas, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
@@ -273,119 +285,119 @@ class GroupParticipancesDialog(resource.Resource):
 
 
 class GroupParticipances_Export(resource.Resource):
-    '''
-    批量导出
-    '''
-    app = 'apps/group'
-    resource = 'group_participances_export'
+	'''
+	批量导出
+	'''
+	app = 'apps/group'
+	resource = 'group_participances_export'
 
-    @login_required
-    def api_get(request):
-        """
-        分析导出
-        """
-        export_id = request.GET.get('export_id',0)
-        datas = GroupParticipances.get_datas(request)
-        download_excel_file_name = u'团购详情.xls'
-        excel_file_name = 'group_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
-        dir_path_suffix = '%d_%s' % (request.user.id, date.today())
-        dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
+	@login_required
+	def api_get(request):
+		"""
+		分析导出
+		"""
+		export_id = request.GET.get('export_id',0)
+		datas = GroupParticipances.get_datas(request)
+		download_excel_file_name = u'团购详情.xls'
+		excel_file_name = 'group_details_'+datetime.now().strftime('%H_%M_%S')+'.xls'
+		dir_path_suffix = '%d_%s' % (request.user.id, date.today())
+		dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_suffix)
 
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-        export_file_path = os.path.join(dir_path,excel_file_name)
-        #Excel Process Part
-        try:
-            import xlwt
-            datas = GroupParticipances.get_datas(request)
-            fields_pure = []
-            export_data = []
+		if not os.path.exists(dir_path):
+			os.makedirs(dir_path)
+		export_file_path = os.path.join(dir_path,excel_file_name)
+		#Excel Process Part
+		try:
+			import xlwt
+			datas = GroupParticipances.get_datas(request)
+			fields_pure = []
+			export_data = []
 
-            #from sample to get fields4excel_file
-            fields_pure.append(u'id')
-            fields_pure.append(u'团长')
-            fields_pure.append(u'团购时间')
-            fields_pure.append(u'团购开始时间')
-            fields_pure.append(u'团购结束时间')
-            fields_pure.append(u'团购状态')
-            fields_pure.append(u'团购人数')
+			#from sample to get fields4excel_file
+			fields_pure.append(u'id')
+			fields_pure.append(u'团长')
+			fields_pure.append(u'团购时间')
+			fields_pure.append(u'团购开始时间')
+			fields_pure.append(u'团购结束时间')
+			fields_pure.append(u'团购状态')
+			fields_pure.append(u'团购人数')
 
-            #processing data
-            num = 0
-            for data in datas:
-                export_record = []
-                num = num+1
-                g_id = data["id"]
-                group_leader_name = data["group_leader_name"]
-                rest_days = data["rest_days"]
-                start_time = data["start_time"]
-                end_time = data["end_time"]
-                status = data['status']
-                members_count = data['members_count']
+			#processing data
+			num = 0
+			for data in datas:
+				export_record = []
+				num = num+1
+				g_id = data["id"]
+				group_leader_name = data["group_leader_name"]
+				rest_days = data["rest_days"]
+				start_time = data["start_time"]
+				end_time = data["end_time"]
+				status = data['status']
+				members_count = data['members_count']
 
-                export_record.append(g_id)
-                export_record.append(group_leader_name)
-                export_record.append(rest_days)
-                export_record.append(start_time)
-                export_record.append(end_time)
-                export_record.append(status)
-                export_record.append(members_count)
-                export_data.append(export_record)
-            #workbook/sheet
-            wb = xlwt.Workbook(encoding='utf-8')
-            ws = wb.add_sheet('id%s'%export_id)
-            header_style = xlwt.XFStyle()
+				export_record.append(g_id)
+				export_record.append(group_leader_name)
+				export_record.append(rest_days)
+				export_record.append(start_time)
+				export_record.append(end_time)
+				export_record.append(status)
+				export_record.append(members_count)
+				export_data.append(export_record)
+			#workbook/sheet
+			wb = xlwt.Workbook(encoding='utf-8')
+			ws = wb.add_sheet('id%s'%export_id)
+			header_style = xlwt.XFStyle()
 
-            ##write fields
-            row = col = 0
-            for h in fields_pure:
-                ws.write(row,col,h)
-                col += 1
+			##write fields
+			row = col = 0
+			for h in fields_pure:
+				ws.write(row,col,h)
+				col += 1
 
-            ##write data
-            if export_data:
-                row = 1
-                lens = len(export_data[0])
-                for record in export_data:
-                    row_l = []
-                    for col in range(lens):
-                        record_col= record[col]
-                        if type(record_col)==list:
-                            row_l.append(len(record_col))
-                            for n in range(len(record_col)):
-                                data = record_col[n]
-                                try:
-                                    ws.write(row+n,col,data)
-                                except:
-                                    #'编码问题，不予导出'
-                                    print record
-                                    pass
-                        else:
-                            try:
-                                ws.write(row,col,record[col])
-                            except:
-                                #'编码问题，不予导出'
-                                print record
-                                pass
-                    if row_l:
-                        row = row + max(row_l)
-                    else:
-                        row += 1
-                try:
-                    wb.save(export_file_path)
-                except Exception, e:
-                    print 'EXPORT EXCEL FILE SAVE ERROR'
-                    print e
-                    print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
-            else:
-                ws.write(1,0,'')
-                wb.save(export_file_path)
-            response = create_response(200)
-            response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
-        except Exception, e:
-            error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
-            watchdog_error(error_msg)
-            response = create_response(500)
-            response.innerErrMsg = unicode_full_stack()
+			##write data
+			if export_data:
+				row = 1
+				lens = len(export_data[0])
+				for record in export_data:
+					row_l = []
+					for col in range(lens):
+						record_col= record[col]
+						if type(record_col)==list:
+							row_l.append(len(record_col))
+							for n in range(len(record_col)):
+								data = record_col[n]
+								try:
+									ws.write(row+n,col,data)
+								except:
+									#'编码问题，不予导出'
+									print record
+									pass
+						else:
+							try:
+								ws.write(row,col,record[col])
+							except:
+								#'编码问题，不予导出'
+								print record
+								pass
+					if row_l:
+						row = row + max(row_l)
+					else:
+						row += 1
+				try:
+					wb.save(export_file_path)
+				except Exception, e:
+					print 'EXPORT EXCEL FILE SAVE ERROR'
+					print e
+					print '/static/upload/%s/%s'%(dir_path_suffix,excel_file_name)
+			else:
+				ws.write(1,0,'')
+				wb.save(export_file_path)
+			response = create_response(200)
+			response.data = {'download_path':'/static/upload/%s/%s'%(dir_path_suffix,excel_file_name),'filename':download_excel_file_name,'code':200}
+		except Exception, e:
+			error_msg = u"导出文件失败, cause:\n{}".format(unicode_full_stack())
+			watchdog_error(error_msg)
+			response = create_response(500)
+			response.innerErrMsg = unicode_full_stack()
 
-        return response.get_response()
+		return response.get_response()
