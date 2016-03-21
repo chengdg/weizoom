@@ -71,10 +71,10 @@
 			<div class="xui-i-item">
 				<label>拼团状态：</label>
 				<select class="" id="status" name="status">
-					<option value="-1">全部</option>
-					<option value="0">未开启</option>
-					<option value="1">进行中</option>
-					<option value="2">已结束</option>
+					<option value="all">全部</option>
+					<option value="ing">进行中</option>
+					<option value="success">成功</option>
+					<option value="fail">退款中</option>
 				</select>
 			</div>
 		</div>
@@ -167,24 +167,28 @@
 					{{html item.group_leader_name}}
 				</td>
 				<td >
-					{{if (item.rest_days <= 3)}}
+					{{if (item.status === '团购进行中')}}
 						剩余：${item.rest_days} 天
 					{{else}}
-					 <div class="xui-time_start" style="display: inline-block ;">
-					 	<div class="xui-i-time_date">${item.start_time_date}</div>
-					 	<div class="xui-i-time_time">${item.start_time_time}</div>
-					 </div>
-					 -
-					 <div class="xui-time_end" style="display: inline-block ;">
-					 	<div class="xui-i-time_date">${item.end_time_date}</div>
-					 	<div class="xui-i-time_time">${item.end_time_time}</div>
-					 </div>
+						{{if (item.status === '团购未生效')}}
+							剩余：${item.rest_days} 天
+						{{else}}
+						 <div class="xui-time_start" style="display: inline-block ;">
+						 	<div class="xui-i-time_date">${item.start_time_date}</div>
+						 	<div class="xui-i-time_time">${item.start_time_time}</div>
+						 </div>
+						 -
+						 <div class="xui-time_end" style="display: inline-block ;">
+						 	<div class="xui-i-time_date">${item.end_time_date}</div>
+						 	<div class="xui-i-time_time">${item.end_time_time}</div>
+						 </div>
+						 {{/if}}
 					 {{/if}}
 				</td>
 				<td style="font-weight: bold;">
 					{{if (item.status === '团购未生效')}}
 						<div class="xui-i-status xui-i-gbtn_normal" style="color:#343434;">
-						未生效
+						进行中
 						</div>
 					{{/if}}
 					{{if (item.status === '团购进行中')}}
@@ -257,7 +261,7 @@ $(document).ready(function() {
 
 	$('.xa-reset').click(function(event) {
 		$('[name="group_leader_name"]').val('');
-		$('[name="status"]').val('-1');
+		$('[name="status"]').val('all');
 		$('[name="start_time"]').val('');
 		$('[name="end_time"]').val('');
 	});
