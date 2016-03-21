@@ -47,7 +47,7 @@ def get_weizoom_card_login(request):
 				'weizoom_card': weizoom_card,
 				'card_orders': weizoom_card_orders_list
 			})
-			return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
+			return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 		else:
 			c = RequestContext(request, {
 				'page_title': u'微众卡',
