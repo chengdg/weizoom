@@ -1475,17 +1475,6 @@ class GroupProductList(resource.Resource):
         if product_name:
             products = products.filter(name__contains=product_name)
 
-        models.Product.fill_details(request.manager, products, {
-            "with_product_model": True,
-            "with_model_property_info": True,
-            "with_selected_category": True,
-            'with_image': False,
-            'with_property': True,
-            'with_sales': True
-        })
-
-        products = utils.filter_products(request, products)
-
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
@@ -1495,6 +1484,14 @@ class GroupProductList(resource.Resource):
             count_per_page,
             # query_string=request.META['QUERY_STRING'],
             )
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
 
         #构造返回数据
         items = []
