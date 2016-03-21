@@ -55,7 +55,6 @@
         border-radius: 5px;
         position: fixed;
         top: 30%;
-        height: 15%;
         z-index: 10001;
         text-align: center;
         width: 80%;
@@ -86,6 +85,12 @@
     .xui-successHint p.xui-i-msg-title.xa-i-msg-title {
         font-size: 1.2rem;
         color: #4C4C4C;
+        display: inline-block;
+    }
+    p.xui-i-msg-title-status.xa-i-msg-title-status {
+        font-size: 1.2rem;
+        color: #ff2742;
+        display: inline-block;
     }
     .xui-groupMsg-payHint .xa-i-msg-title {
         color: #ff2742!important;
@@ -94,7 +99,7 @@
         width: 40%;
         text-align: center;
         font-size: 1rem;
-        height: 1.5rem;
+        height: 2rem;
         border-radius: 2px;
         font-family: "黑体";
         margin-top: 4%;
@@ -117,8 +122,13 @@
         background-position-y: 100%;
         background-position-x: 50%;
     }
-    .wui-i-btngroup {
-        margin-bottom: 10px;
+    .xui-groupMsg-xui-i-msg-title {
+        font-size: 1.2rem;
+        color: #ff2742;
+    }
+    p.xui-i-msg.xa-i-msg {
+        color: #868686;
+        padding: 0 15px 0 15px;
     }
 </style>
 {% endblock %}
@@ -134,7 +144,8 @@
     <!-- 支付未完成弹窗页面 -->
     <div class="xui-groupMsg xa-groupMsg none">
         <div class="f15 xui-successHint">
-           <p class="xui-i-msg xa-i-msg"></p>
+            <p class="xui-groupMsg-xui-i-msg-title xa-groupMsg-xui-i-msg-title"></p>
+            <p class="xui-i-msg xa-i-msg"></p>
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-groupMsg-yes wa-i-btn-groupMsg-yes">是</button>
                 <button class="wui-i-btn-groupMsg-no wa-i-btn-groupMsg-no">否</button>
@@ -147,13 +158,13 @@
             <p class="xui-i-msg-title xa-i-msg-title"></p>
             <p class="xui-i-msg xa-i-msg"></p>
             <p class="xui-i-msg xa-i-msg-not-meber"></p>
-
         </div>
     </div>
     <!-- 成功、失败弹窗页面 -->
     <div class="xui-groupMsg-Hint xa-groupMsg-Hint none">
         <div class="f15 xui-successHint">
             <p class="xui-i-msg-title xa-i-msg-title"></p>
+            <p class="xui-i-msg-title-status xa-i-msg-title-status"></p>
             <p class="xui-i-msg xa-i-msg"></p>
             <div class="wui-i-btngroup">
                 <button class="wui-i-btn-groupMsg-yes wa-i-btn-groupMsg-yes">确定</button>
@@ -562,6 +573,7 @@
     function openRemainOneDayWin(){
         mask('show');
         $('.xui-groupMsg').removeClass('none');
+        $('.xa-groupMsg').find('.xa-groupMsg-xui-i-msg-title').html('开团提示');
         $('.xa-groupMsg').find('.xa-i-msg').html('本次团购剩余时间不足1天，是否继续开团？');
         $('.wa-i-btn-groupMsg-yes,.wa-i-btn-groupMsg-no').click(function(){
             mask('hide');
@@ -577,7 +589,7 @@
     function openUnpaidWin(){
         mask('show');
         $('.xui-groupMsg').removeClass('none');
-        if(is_group_leader){
+        if(is_self_page){
             $('.xa-groupMsg').find('.xa-i-msg').html('开团支付未完成，是否继续？');
         }else{
             $('.xa-groupMsg').find('.xa-i-msg').html('参团支付未完成，是否继续？');
@@ -639,7 +651,8 @@
         $('.wui-i-group_box_success').removeClass('none');
         $('.xui-groupMsg-Hint').removeClass('none');
         $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在该商品团购结束20天内进行发货');
-        $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('恭喜您 团购成功');
+        $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('恭喜您 ');
+        $('.xa-groupMsg-Hint').find('.xa-i-msg-title-status').html('团购成功');
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg-Hint').addClass('none');
