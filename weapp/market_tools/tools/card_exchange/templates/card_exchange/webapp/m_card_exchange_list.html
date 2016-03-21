@@ -163,7 +163,7 @@
 		<div class="xui-content">
 			<div class="xui-valid-card">
 				{% for item in cards.card %}
-				{% if item.is_expired == 0 %}
+				{% if item.is_expired == 0 and item.status != 3 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
@@ -204,12 +204,16 @@
 					<span>失效卡：</span>
 				</div>
 				{% for item in cards.card %}
-				{% if item.is_expired == 1 %}
+				{% if item.is_expired == 1 or item.status == 3 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
+								{% if item.is_expired == 1 %}
+								已过期
+								{% else %}
 								未激活
+								{% endif %}	
 							</div>
 							<div class="xui-detail-right">
 								<a href="javascript:void(0);" class="xui-check-detail">查看详情</a>
