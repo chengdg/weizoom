@@ -5,8 +5,10 @@
 <link rel="stylesheet" href="/markettools_static/weizoom_card/css/wzcoin.css">
 <link rel="stylesheet" href="/webapp_static/backend_default_v3/css/default_v3.css">
 <style type="text/css">
+	body{
+		background: #f5f5f5!important;
+	}
 	.xui-detail-wrapper{
-		background: #f5f5f5;
 		font-size: 0.9rem;
 		font-family: "华文细黑";
 	}
@@ -72,7 +74,7 @@
 	}
 	.xui-remain-money{
 		padding-left: 15px;
-		margin-bottom: 10px;
+		margin-top: 5px;
 		color: #ee3715;
 	}
 	.xui-check-detail{
@@ -126,6 +128,12 @@
     .xui-yuan{
     	font-size: 1.1rem;
     }
+    .xui-text{
+    	font-size: 1rem;
+    }
+    .xui-num{
+    	font-size: 1.5rem;
+    }
 </style>
 {% endblock %}
 
@@ -137,19 +145,25 @@
 				<div class="xui-text xui-remain">账户余额</div>
 					<div>
 						<span class="xui-yuan">&yen;</span>
-						<span class="xui-large">2000.00</span>
+						<span class="xui-large">{{cards.total_money}}</span>
 					</div>				
 			</div>
 			<div class="xui-header-right">
 				<div class="xui-phone-num">
 					<img src="/markettools_static/weizoom_card/img/user.png" width="14px" height="16px" />
-					<span class="xui-phone-num">{{18510168569}}</span>
+					<span class="xui-phone-num">{{cards.phone_number}}</span>
 				</div>
-				<div class="xui-text">可用数量：5张</div>
+				<div class="xui-text">
+					可用数量:
+					<span class="xui-numfont">{{cards.count}}</span> 
+					张
+				</div>
 			</div>
 		</div>
 		<div class="xui-content">
 			<div class="xui-valid-card">
+				{% for item in cards.card %}
+				{% if item.is_expired == 0 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
@@ -157,61 +171,68 @@
 								<div>余额</div>
 								<div class="xui-remain-money">
 									<span class="xui-yuan">&yen;</span>
-									<span class="xui-num">168.00</span>
+									<span class="xui-num xui-numfont">{{item.remainder}}</span>
 								</div>
 							</div>
 							<div class="xui-detail-right">
 								<a href="javascript:void(0);" class="xui-check-detail">查看详情</a>
 								<div>
 									<span>卡号:</span> 
-									<span class="xui-numfont">9000012</span>
+									<span class="xui-numfont">{{item.card_id}}</span>
 								</div>
 							</div>
 						</div>
 						<div class="xui-detail-bottom">
 							<span>
-								<span class="xui-numfont">2016-03-16</span>
-								<span class="xui-text">兑换平台</span>
+								<span class="xui-numfont">{{item.time}}</span>
+								<span>{{item.type}}</span>
 								<span class="fr">
-									面值:&yen;
-									<span class="xui-numfont">200.00</span>
+									面值: &yen;
+									<span class="xui-numfont">{{item.money}}</span>
 								</span>
 							</span>
 						</div>
 					</div>
 				</div>
+				{% endif %}
+				{% endfor %}
 			</div>
+
 			<div class="xui-invalid-card">
 				<div class="xui-invalid-title">
 					<b></b>
 					<span>失效卡：</span>
 				</div>
+				{% for item in cards.card %}
+				{% if item.is_expired == 1 %}
 				<div class="xui-wrap">
 					<div class="xui-card-details">
 						<div class="xui-detail-top">
 							<div class="xui-detail-left">
-								{{未激活}}
+								未激活
 							</div>
 							<div class="xui-detail-right">
 								<a href="javascript:void(0);" class="xui-check-detail">查看详情</a>
 								<div class="xui-card-num">
 									<span>卡号:</span> 
-									<span class="xui-numfont">{{9000012}}</span>
+									<span class="xui-numfont">{{item.card_id}}</span>
 								</div>
 							</div>
 						</div>
 						<div class="xui-detail-bottom">
 							<span>
-								<span class="xui-numfont">2016-03-16</span>
-								<span class="xui-text">兑换平台</span>
+								<span class="xui-numfont">{{item.time}}</span>
+								<span>兑换平台</span>
 								<span class="fr">
 									面值: &yen; 
-									<span class="xui-numfont">{{200.00}}</span>
+									<span class="xui-numfont">{{item.money}}</span>
 								</span>
 							</span>
 						</div>
 					</div>
 				</div>
+				{% endif %}
+				{% endfor %}
 		    </div>
 	    </div>
     </div>
