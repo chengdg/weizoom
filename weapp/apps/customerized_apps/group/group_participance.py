@@ -163,11 +163,12 @@ class CancelUnpaidGroup(resource.Resource):
 		member_id = request.POST['member_id']
 		order_id = request.POST['order_id']
 		try:
-			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,member_id=member_id,group_status=app_models.GROUP_NOT_START)
+			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,group_status=app_models.GROUP_NOT_START)
 			group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,grouped_member_id=member_id,is_already_paid=False)
 			if order_id:
 				cancel_group_buying(order_id)
-			group_relation.delete()
+			if group_relation.member_id == member_id :#如果是团长取消了开团
+				group_relation.delete()
 			group_detail.delete()
 			response = create_response(200)
 		except Exception,e:
