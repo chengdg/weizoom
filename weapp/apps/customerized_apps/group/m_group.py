@@ -50,12 +50,12 @@ class MGroup(resource.Resource):
 			is_from_pay_result = False
 		response = create_response(500)
 
-		if not record_id:
-			response.errMsg = u'活动信息出错'
-			return response.get_response()
 		record = app_models.Group.objects(id=record_id)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
+			return response.get_response()
+		elif not record_id:
+			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		record = record.first()
 		#获取活动状态
@@ -85,7 +85,7 @@ class MGroup(resource.Resource):
 							update_order_status_by_group_status(group_relation_info.id,'failure')
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid).order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
