@@ -343,6 +343,8 @@
                 }
             },
             error: function(data) {
+                //隐藏loading动画元素
+                loadingStatus(false);
                 if(data.errMsg == 'is_deleted'){
                     deletedRecord();
                 }else{
