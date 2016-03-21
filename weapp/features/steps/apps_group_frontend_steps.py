@@ -125,7 +125,7 @@ def __join_group(context,activity_id,fid,product_id,group_relation_id,openid):
 			'woid': webapp_owner_id,
 			'group_id': group_relation_id,
 			'product_ids': product_id,
-			'activity_id': activity_id
+			'activity_id': str(activity_id)
 		}
 		return response
 
@@ -237,6 +237,26 @@ def step_tmpl(context, webapp_user_name, webapp_owner_name):
 		actual.append({
 			"group_name": group['name'],
 			"group_dict": group['all_group_dict']
+		})
+	print("actual_data: {}".format(actual))
+	expected = json.loads(context.text)
+	print("expected: {}".format(expected))
+	bdd_util.assert_list(expected, actual)
+
+@then(u"{webapp_user_name}能获得{webapp_owner_name}的参团商品列表")
+def step_tmpl(context, webapp_user_name, webapp_owner_name):
+	user = User.objects.get(id=context.webapp_owner_id)
+	openid = "%s_%s" % (webapp_user_name, user.username)
+	webapp_owner_id = context.webapp_owner_id
+	response = __get_into_group_list_pages(context,webapp_owner_id,openid)
+	all_groups = response.context['all_groups']
+	print('all_groups')
+	print(all_groups)
+	# 构造实际数据
+	actual = []
+	for group in all_groups:
+		actual.append({
+			"group_name": group['name'],
 		})
 	print("actual_data: {}".format(actual))
 	expected = json.loads(context.text)
