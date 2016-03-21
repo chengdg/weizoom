@@ -163,11 +163,12 @@ class CancelUnpaidGroup(resource.Resource):
 		member_id = request.POST['member_id']
 		order_id = request.POST['order_id']
 		try:
-			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,member_id=member_id,group_status=app_models.GROUP_NOT_START)
+			group_relation = app_models.GroupRelations.objects.get(id=group_relation_id,group_status=app_models.GROUP_NOT_START)
 			group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,grouped_member_id=member_id,is_already_paid=False)
 			if order_id:
 				cancel_group_buying(order_id)
-			group_relation.delete()
+			if group_relation.member_id == member_id :#如果是团长取消了开团
+				group_relation.delete()
 			group_detail.delete()
 			response = create_response(200)
 		except Exception,e:
@@ -256,7 +257,7 @@ def send_group_template_message(activity_info, member_info_list):
 		else:
 			template_id = success_data['template_id']
 			detail_data = {
-				"first": u"您参团的商品[%s]已组团成功,预计将在团购结束20天内发货" % activity_info['product_name'],
+				"first": u"您参团的商品[%s]已组团成功,%s" % (activity_info['product_name'], success_data['first']),
 				"remark": u"点击查看团购活动详情"
 			}
 
@@ -277,7 +278,7 @@ def send_group_template_message(activity_info, member_info_list):
 		member_id = int(member_info['member_id'])
 		if status == 'success':
 			detail_data['keywords'] = {
-				"keyword1": u"￥ %s" % str(activity_info['price']),
+				"keyword1": u"￥%s" % str(activity_info['price']),
 				"keyword2": member_info['order_id']
 			}
 		elif status == 'fail':
@@ -285,7 +286,7 @@ def send_group_template_message(activity_info, member_info_list):
 				"keyword1": member_info['order_id'],
 				"keyword2":	activity_info['product_name'],
 				"keyword3": u"[差%d人] 成团" % int(activity_info['miss']),
-				"keyword4": u"[￥ %s] 将在5~7个工作日内完成退款" % str(activity_info['price'])
+				"keyword4": u"[￥%s] 将在5~7个工作日内完成退款" % str(activity_info['price'])
 			}
 		if template_id == "" or not template_id:
 			#没有配置模板

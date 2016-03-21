@@ -198,6 +198,7 @@
     var product_group_price = 0;
     var order_id = '';
     var is_from_pay_result = false;
+    var is_helper_unpaid = false;
 
 	$(function(){
         //隐藏参与活动按钮
@@ -343,6 +344,8 @@
                 }
             },
             error: function(data) {
+                //隐藏loading动画元素
+                loadingStatus(false);
                 if(data.errMsg == 'is_deleted'){
                     deletedRecord();
                 }else{
@@ -371,6 +374,7 @@
         order_id = member_info.order_id;
         console.log(order_id);
         is_from_pay_result = member_info.is_from_pay_result;
+        is_helper_unpaid = member_info.is_helper_unpaid;
         if (W.group_status == '团购进行中' && is_from_pay_result == true){
             showSuccessPaidWin()
         }
@@ -415,6 +419,9 @@
                 if(W.group_status == '团购进行中'){
                     var $powerBtn = $('.wa-power');
                     if(!is_helped){
+                        if(is_helper_unpaid){
+                            openUnpaidWin();
+                        }
                         $powerBtn.find('.wa-power-btn-action').html('我要参团');
                         $powerBtn.on('click', function(){
                                 JoinGroup();
@@ -567,7 +574,11 @@
     function openUnpaidWin(){
         mask('show');
         $('.xui-groupMsg').removeClass('none');
-        $('.xa-groupMsg').find('.xa-i-msg').html('开团支付未完成，是否继续？');
+        if(is_group_leader){
+            $('.xa-groupMsg').find('.xa-i-msg').html('开团支付未完成，是否继续？');
+        }else{
+            $('.xa-groupMsg').find('.xa-i-msg').html('参团支付未完成，是否继续？');
+        }
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');

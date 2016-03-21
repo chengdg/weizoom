@@ -62,6 +62,10 @@
         margin-left: -15px;
     }
 
+    .xui-template-modal-body .xui-i-preview{
+        margin: 0;
+    }
+
 </style>
 {% endblock %}
 
@@ -346,6 +350,14 @@
                     {{/each}}
                 </select>
             </label>
+            <label>发货提醒：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../success.first }}"></label>
+            <div class="xui-i-setting xui-i-preview xa-success-preview">
+                <label>预览</label>
+                <p>您参团的商品[xxx]已组团成功,<span class="xa-success-need-change-first">{{ ../success.first }}</span></p>
+                <p>商品价格: ￥158</p>
+                <p>订单号: tn12345902314</p>
+                <p>点击查看团购活动详情</p>
+            </div>
         </div>
         <div class="xui-i-setting xui-i-fail-setting xa-fail-setting">
             <label>选择团购失败的消息模板:
@@ -358,8 +370,17 @@
                     {{/each}}
                 </select>
             </label>
-            <label>问候语：<input type="text" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
+            <label>问候语：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
+            <div class="xui-i-setting xui-i-preview xa-success-preview">
+                <label>预览</label>
+                <p class="xa-fail-need-change-first">{{ ../fail.first }}</p>
+                <p>单号: tn12345902314</p>
+                <p>商品: xxx</p>
+                <p>退款: [￥158] 将在5~7个工作日内完成退款</p>
+                <p>点击查看团购活动详情</p>
+            </div>
         </div>
+
     {{else}}
         <p>获取模板信息失败</p>
     {{/if}}
@@ -497,6 +518,10 @@ $(document).ready(function() {
         bindListeners: function(){
             this.$dialog.delegate('.xa-submit-btn', 'click', this.onClickSubmit.bind(this));
             this.$dialog.delegate('.xa-update-btn', 'click', this.onClickUpdate.bind(this));
+
+            this.$dialog.delegate('.xa-template-selector', 'click', this.onSelectTemplate);
+            this.$dialog.delegate('.xa-success-setting .xa-template-first', 'keyup', this.onChangeSuccessFirst);
+            this.$dialog.delegate('.xa-fail-setting .xa-template-first', 'keyup', this.onChangeFailFirst);
         },
         show: function(){
             this.$dialog.modal('show');
@@ -519,7 +544,8 @@ $(document).ready(function() {
                 };
                 if(!$.isEmptyObject(success_data)){
                     data['success'] = {
-                        "selected_id": success_data.template_id
+                        "selected_id": success_data.template_id,
+                        "first": success_data.first
                     };
                 }else{
                     data['success'] = noop_data;
@@ -541,8 +567,25 @@ $(document).ready(function() {
         onClickUpdate: function(){
             this.getData({"action": 1});
         },
+        onSelectTemplate: function(){
+            var $this = $(this);
+            var v = $this.val();
+            var $pre = $this.parents('.xui-i-setting').eq(0).find('.xui-i-preview');
+            if(v == ""){
+                $pre.hide();
+            }else{
+                $pre.show();
+            }
+        },
+        onChangeSuccessFirst: function(){
+            $('.xa-success-need-change-first').html($(this).val());
+        },
+        onChangeFailFirst: function(){
+            $('.xa-fail-need-change-first').html($(this).val());
+        },
         _getFormData: function(){
             var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
+            var success_first = this.$el.find('.xa-success-setting .xa-template-first').val();
 
             var fail_template_id = this.$el.find('.xa-fail-setting .xa-template-selector').val();
             var fail_first = this.$el.find('.xa-fail-setting .xa-template-first').val();
@@ -556,7 +599,8 @@ $(document).ready(function() {
                 "template_ids": serials_arr.toString(),
                 "template_settings": JSON.stringify({
                     "success": {
-                        "template_id": success_template_id
+                        "template_id": success_template_id,
+                        "first": success_first
                     },
                     "fail": {
                         "template_id": fail_template_id,

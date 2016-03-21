@@ -77,15 +77,33 @@ class MGroupList(resource.Resource):
 		"""
 		响应GET
 		"""
+		all_groups = []
 		all_groups_can_open = []
 		owner_id = request.webapp_owner_id
 		#我要开团
+		member = request.member
 		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-end_time')
+		if member:
+			member_id = member.id
+			current_user_opened_group = app_models.GroupRelations.objects(member_id=str(member_id))
+			current_user_opened_group_ids = [relation.belong_to for relation in current_user_opened_group]
+			groups_can_open = groups.filter(id__nin=current_user_opened_group_ids)
+		else:
+			groups_can_open = groups
 		for group in groups:
 			#获取活动状态
 			activity_status = group.status_text
 			if activity_status == u'已结束':
 				group.update(set__status=app_models.STATUS_STOPED)
+			try:
+				all_groups.append({
+					'id': str(group.id),
+					'name': group.name,
+					'product_img': group.product_img
+				})
+			except:
+				pass
+		for group in groups_can_open:
 			try:
 				all_group_dict = []
 				group_dict_tuple = json.loads(group.group_dict),
@@ -107,7 +125,8 @@ class MGroupList(resource.Resource):
 				pass
 		c = RequestContext(request, {
 			'page_title': u'团购列表',
-			'all_groups_can_open': all_groups_can_open,
+			'all_groups_can_open': all_groups_can_open,#我要开团
+			'all_groups': all_groups,#直接参团
 			'is_hide_weixin_option_menu':True,
 			'app_name': "group",
 			'resource': "group",
