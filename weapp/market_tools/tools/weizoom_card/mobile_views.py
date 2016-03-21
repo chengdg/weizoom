@@ -19,6 +19,10 @@ from models import *
 from modules.member.models import IntegralStrategySttings
 from mall.models import Product,OrderHasProduct,Order
 from mall.promotion import models as promotion_models
+from market_tools.tools.card_exchange import mobile_views
+from mall.promotion.card_exchange import CardExchange
+from modules.member.models import MemberInfo
+from market_tools.tools.weizoom_card import models as card_models
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
@@ -37,7 +41,7 @@ def get_weizoom_card_login(request):
 		is_quit = request.GET.get('is_quit',0)
 		member_has_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
 		integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
-		if member_has_card.count() > 0 and is_quit == 0:
+		if member_has_card.count() > 0 and is_quit == 1:
 			card_id = member_has_card[0].card_id
 			weizoom_card = WeizoomCard.objects.get(id=card_id)
 			weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
@@ -47,13 +51,51 @@ def get_weizoom_card_login(request):
 				'weizoom_card': weizoom_card,
 				'card_orders': weizoom_card_orders_list
 			})
-			return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
+			return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 		else:
+			#判断用户是否绑定手机号
+			member_integral = request.member.integral
+			phone_number = ''
+			try:
+				member_info = MemberInfo.objects.get(member_id = member_id)
+				member_is_bind = member_info.is_binded
+				if member_is_bind:
+					phone_number = member_info.phone_number
+			except:
+				member_is_bind = False
+			card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
+
+			weizoom_card_id = 0
+			cur_user_has_exchange_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
+			# user_has_exchange_card = False
+			if cur_user_has_exchange_card.count() > 0 :
+				# user_has_exchange_card = True
+				card_id = cur_user_has_exchange_card[0].card_id
+				try:
+					weizoom_card_id = card_models.WeizoomCard.objects.get(id = card_id).weizoom_card_id
+				except:
+					weizoom_card_id = None
+
+			prize_list = card_exchange_dic['prize']
+			if weizoom_card_id:
+				for p in prize_list:
+					card_number = p['card_number']
+					s_w_id = int(card_number.split('-')[0])
+					e_w_id = int(card_number.split('-')[1])
+					if int(weizoom_card_id) >= s_w_id and int(weizoom_card_id) <= e_w_id:
+						p['is_selected'] = True
+					else:
+						p['is_selected'] = False
+
 			c = RequestContext(request, {
-				'page_title': u'微众卡',
-				'is_hide_weixin_option_menu': True
+				'card_exchange_rule': card_exchange_dic,
+				'member_is_bind': member_is_bind,
+				'member_integral': member_integral,
+				'phone_number': phone_number,
+				# 'user_has_exchange_card': user_has_exchange_card
 			})
-			return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
+
+			return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange.html', c)
 	else:
 		c = RequestContext(request, {
 				'page_title': u'微众卡',
