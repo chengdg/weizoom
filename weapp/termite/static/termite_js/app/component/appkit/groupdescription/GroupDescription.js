@@ -150,11 +150,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             }
 
         },
-        // description: function($node, model, value, $propertyViewNode) {
-        //  //model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-        //  //$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
-        // },
-
         material_image: function($node, model, value, $propertyViewNode) {
             var image = {url:''};
             var data = {type:null};
@@ -184,10 +179,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             this.refresh($node, {refreshPropertyView: true});
             validate_group($node, model, value, $propertyViewNode);
         },
-
-        rules: function($node, model, value, $propertyViewNode) {
-         model.set({rules:value.replace(/\n/g,'<br>').replace(/"\n"/,'<br>')},{silent: true});
-        },
         group_items: function($node, model, value,$propertyViewNode) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
             $ul = $node.find('.wui-i-description ul');
@@ -208,9 +199,11 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
         },
         share_description:function($node, model, value, $propertyViewNode){
+            model.set({share_description:value.replace(/\n/g,'<br>')},{silent: true});
             validate_group($node, model, value, $propertyViewNode);
         },
         rules:function($node, model, value, $propertyViewNode){
+            model.set({rules:value.replace(/\n/g,'<br>').replace(/"\n"/,'<br>')},{silent: true});
             validate_group($node, model, value, $propertyViewNode);
         },
 		product:function($node, model, value, $propertyViewNode){
