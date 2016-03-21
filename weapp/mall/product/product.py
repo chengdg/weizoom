@@ -1475,34 +1475,6 @@ class GroupProductList(resource.Resource):
         if product_name:
             products = products.filter(name__contains=product_name)
 
-        models.Product.fill_details(request.manager, products, {
-            "with_product_model": True,
-            "with_model_property_info": True,
-            "with_selected_category": True,
-            'with_image': False,
-            'with_property': True,
-            'with_sales': True
-        })
-
-        #处理排序
-        sort_attr = request.GET.get('sort_attr', None)
-        if not sort_attr:
-            sort_attr = '-display_index'
-
-
-        if '-' in sort_attr:
-            sort_attr = sort_attr.replace('-', '')
-            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
-            sort_attr = '-' + sort_attr
-        else:
-            products = sorted(products, key=operator.attrgetter('id'))
-            products = sorted(products, key=operator.attrgetter(sort_attr))
-        products_is_0 = filter(lambda p: p.display_index == 0, products)
-        products_not_0 = filter(lambda p: p.display_index != 0, products)
-        products_not_0 = sorted(products_not_0, key=operator.attrgetter('display_index'))
-        products = utils.filter_products(request, products_not_0 + products_is_0)
-
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
         cur_page = int(request.GET.get('page', '1'))
@@ -1512,6 +1484,14 @@ class GroupProductList(resource.Resource):
             count_per_page,
             # query_string=request.META['QUERY_STRING'],
             )
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
 
         #构造返回数据
         items = []
@@ -1526,7 +1506,6 @@ class GroupProductList(resource.Resource):
         response.data = {
             'items': items,
             'pageinfo': paginator.to_dict(pageinfo),
-            'sortAttr': sort_attr,
             'data': data
         }
         return response.get_response()

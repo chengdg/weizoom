@@ -50,12 +50,12 @@ class MGroup(resource.Resource):
 			is_from_pay_result = False
 		response = create_response(500)
 
-		if not record_id:
-			response.errMsg = u'活动信息出错'
-			return response.get_response()
 		record = app_models.Group.objects(id=record_id)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
+			return response.get_response()
+		elif not record_id:
+			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		record = record.first()
 		#获取活动状态
@@ -85,7 +85,7 @@ class MGroup(resource.Resource):
 							update_order_status_by_group_status(group_relation_info.id,'failure')
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid).order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -117,18 +117,23 @@ class MGroup(resource.Resource):
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
-
-			#判断分享页是否自己的主页
-			if fid is None or str(fid) == str(member_id):
+			if group_relation_id:#已开过团
+				#判断分享页是否自己的主页
+				if fid is None or str(fid) == str(member_id):
+					page_owner_name = member.username_size_ten
+					page_owner_icon = member.user_icon
+					page_owner_member_id = member_id
+					self_page = True
+				else:
+					page_owner = Member.objects.get(id=fid)
+					page_owner_name = page_owner.username_size_ten
+					page_owner_icon = page_owner.user_icon
+					page_owner_member_id = fid
+			else:#没开过团
 				page_owner_name = member.username_size_ten
 				page_owner_icon = member.user_icon
 				page_owner_member_id = member_id
 				self_page = True
-			else:
-				page_owner = Member.objects.get(id=fid)
-				page_owner_name = page_owner.username_size_ten
-				page_owner_icon = page_owner.user_icon
-				page_owner_member_id = fid
 
 		member_info = {
 			'isMember': isMember,
