@@ -277,7 +277,7 @@ def send_group_template_message(activity_info, member_info_list):
 		member_id = int(member_info['member_id'])
 		if status == 'success':
 			detail_data['keywords'] = {
-				"keyword1": u"￥ %s" % str(activity_info['price']),
+				"keyword1": u"￥%s" % str(activity_info['price']),
 				"keyword2": member_info['order_id']
 			}
 		elif status == 'fail':
@@ -285,7 +285,7 @@ def send_group_template_message(activity_info, member_info_list):
 				"keyword1": member_info['order_id'],
 				"keyword2":	activity_info['product_name'],
 				"keyword3": u"[差%d人] 成团" % int(activity_info['miss']),
-				"keyword4": u"[￥ %s] 将在5~7个工作日内完成退款" % str(activity_info['price'])
+				"keyword4": u"[￥%s] 将在5~7个工作日内完成退款" % str(activity_info['price'])
 			}
 		if template_id == "" or not template_id:
 			#没有配置模板
