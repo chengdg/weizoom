@@ -5,6 +5,7 @@
 """
 from datetime import datetime, timedelta
 import time
+import logging
 
 from django.conf import settings
 from core.exceptionutil import unicode_full_stack
@@ -50,9 +51,11 @@ def cancel_not_pay_order_timeout(request, args):
             try:
                 user = UserProfile.objects.get(webapp_id=order.webapp_id).user
             except:
+                logging.info(u"订单所属用户已不存在！")
                 watchdog_info(u"订单所属用户已不存在！", type="mall")
                 continue
             update_order_status(user, 'cancel', order)
+            logging.info(u"订单所属用户已失效！并将其订单自动取消。(order_id=%s, webapp_id=%s)" % (order.order_id, order.webapp_id))
             watchdog_info(u"订单所属用户已失效！并将其订单自动取消。(order_id=%s, webapp_id=%s)" \
                 % (order.order_id, order.webapp_id), type="mall")
         elif webapp_id2expired_time[order.webapp_id] and order.created_at < webapp_id2expired_time[order.webapp_id]:
@@ -62,5 +65,7 @@ def cancel_not_pay_order_timeout(request, args):
             break
     for order in need_cancel_orders:
         update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
+        logging.info(u"user webapp_id:%s order %s cancel success" % (order.webapp_id, order.order_id))
 
+    logging.info(u"cancel order total count %d" % len(need_cancel_orders))
     return "OK cancel order length is %s" % len(need_cancel_orders)
