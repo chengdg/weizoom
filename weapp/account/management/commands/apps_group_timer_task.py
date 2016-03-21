@@ -10,6 +10,7 @@ from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from apps.customerized_apps.group import models as app_models
 from modules.member.models import Member
 from mall.order.util import update_order_status_by_group_status
+from apps.customerized_apps.group.group_participance import send_group_template_message
 
 class Command(BaseCommand):
 	help = 'start group stats task'
