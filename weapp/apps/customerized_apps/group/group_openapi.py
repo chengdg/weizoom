@@ -159,6 +159,7 @@ class OrderAction(resource.Resource):
 		group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_id,grouped_member_id=member_id)
 
 		if action == 'pay': #参数为'pay'表示支付成功
+			print('order_action!!!!!!!!!!!!!!!!!,action=="pay"')
 			if group_record.member_id == member_id:#如果团长支付成功，算开团成功
 				group_record.update(set__group_status=app_models.GROUP_RUNNING)
 			group_detail.update(set__is_already_paid=True,set__order_id=order_id)
@@ -169,6 +170,7 @@ class OrderAction(resource.Resource):
 				group_record.update(dec__grouped_number=1,pop__grouped_member_ids=member_id)
 			group_detail.delete()
 		elif action == 'buy': #'buy'(下单)
+			print('order_action!!!!!!!!!!!!!!!!!,action=="buy"')
 			group_detail.update(set__order_id=order_id)
 
 		#如果团购人满，并且全部支付成功，则团购成功
