@@ -41,7 +41,7 @@
 <table class="table table-bordered xb-stripedTable xa-productTable">
     <thead style="background:#c8d2e5;">
         <tr>
-            <th width ="165">商品信息</th>
+            <th width ="240">商品信息</th>
             <th width ="105">价格</th>
             <th width ="70">库存</th>
             <th>创建时间</th>
@@ -56,8 +56,10 @@
                     <div class="wui-i-imgBox" style="display:inline-block;float:left;margin-left: 10px;">
                         <img style="width:60px;height:60px;" src="${product.thumbnails_url}"></img>
                     </div>
-                    <div class="wui-nameBox" style="display:inline-block;line-height: 60px;">
-                        ${product.name}
+                    <div class="wui-nameBox" style="width:130px;display:inline-block;text-align: left;">
+                        <div style="width:100%;word-wrap: break-word;word-break: break-all;white-space: normal;">
+                            ${product.name}
+                        </div>
                     </div>
                 </td>
                 <td>${ product.display_price }
