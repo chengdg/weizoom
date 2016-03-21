@@ -17,6 +17,7 @@ from utils.cache_util import GET_CACHE, SET_CACHE
 from modules.member.models import Member
 from mall.models import *
 from weapp import settings
+from mall.order.util import update_order_status_by_group_status
 
 class MGroup(resource.Resource):
 	app = 'apps/group'
@@ -42,6 +43,7 @@ class MGroup(resource.Resource):
 		grouped_member_info_list = []
 		order_id = ''
 		is_from_pay_result = request.GET.get('from', None)
+		is_helper_unpaid = False
 		if is_from_pay_result == 'pay_result':
 			is_from_pay_result = True
 		else:
@@ -80,6 +82,7 @@ class MGroup(resource.Resource):
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
+							update_order_status_by_group_status(group_relation_info.id,'failure')
 
 						# 获取该主页帮助者列表
 						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid).order_by('created_at')
@@ -104,6 +107,9 @@ class MGroup(resource.Resource):
 						try:
 							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
 							order_id = group_detail.order_id
+							if not group_detail.is_already_paid:
+								if order_id!='':
+									is_helper_unpaid = True
 						except:
 							pass
 					except Exception,e:
@@ -142,7 +148,8 @@ class MGroup(resource.Resource):
 			'product_original_price': product_original_price,
 			'product_group_price': product_group_price,
 			'order_id': order_id,
-			'is_from_pay_result': is_from_pay_result
+			'is_from_pay_result': is_from_pay_result,
+			'is_helper_unpaid': is_helper_unpaid
 		}
 
 		response = create_response(200)
@@ -232,7 +239,9 @@ class MGroup(resource.Resource):
 		if activity_status == u'已结束':
 			#活动已结束，所有进行中的小团置为失败
 			all_running_group_relations = app_models.GroupRelations.objects(belong_to=str(record.id),group_status=app_models.GROUP_RUNNING)
-			all_running_group_relations.update(group_status=app_models.GROUP_FAILURE)
+			for group_relation in all_running_group_relations:
+				group_relation.update(group_status=app_models.GROUP_FAILURE)
+				update_order_status_by_group_status(group_relation.id,'failure')
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})

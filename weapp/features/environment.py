@@ -211,6 +211,7 @@ def __clear_all_app_data():
 	mall_models.Order.objects.all().delete()
 	mall_models.OrderHasProduct.objects.all().delete()
 	mall_models.OrderHasPromotion.objects.all().delete()
+	mall_models.OrderHasGroup.objects.all().delete()
 	mall_models.OrderOperationLog.objects.all().delete()
 	mall_models.WeizoomMall.objects.all().delete()
 	mall_models.ShoppingCart.objects.all().delete()

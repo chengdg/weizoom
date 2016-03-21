@@ -198,6 +198,7 @@
     var product_group_price = 0;
     var order_id = '';
     var is_from_pay_result = false;
+    var is_helper_unpaid = false;
 
 	$(function(){
         //隐藏参与活动按钮
@@ -373,6 +374,7 @@
         order_id = member_info.order_id;
         console.log(order_id);
         is_from_pay_result = member_info.is_from_pay_result;
+        is_helper_unpaid = member_info.is_helper_unpaid;
         if (W.group_status == '团购进行中' && is_from_pay_result == true){
             showSuccessPaidWin()
         }
@@ -391,60 +393,66 @@
                 $('.wa-closed').show();
             }
         }
-        //团购成功、团购失败状态
-        if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
-            //如果是自己的主页
-            if(is_self_page){
-                if(W.group_status == '团购未生效'){
-                    openUnpaidWin();
-                }
-                if(is_group_leader){
-                    $('.wa-using').text('邀请好友参团').on('click', function(){
-                            openGuideMask();
-                        }).show();
-                }else{
-                    if(only_remain_one_day){
-                        openRemainOneDayWin();
+        if('进行中' == W.activityStatus){
+            //团购成功、团购失败状态
+            if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
+                //如果是自己的主页
+                if(is_self_page){
+                    if(W.group_status == '团购未生效'){
+                        openUnpaidWin();
                     }
-                    $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
-                    if(W.isMember){
-                        $('.wa-using').text('我要开团').on('click', openGruop).show();
+                    if(is_group_leader){
+                        $('.wa-using').text('邀请好友参团').on('click', function(){
+                                openGuideMask();
+                            }).show();
                     }else{
-                        $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                        if(only_remain_one_day){
+                            openRemainOneDayWin();
+                        }
+                        $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                        if(W.isMember){
+                            $('.wa-using').text('我要开团').on('click', openGruop).show();
+                        }else{
+                            $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                        }
+                    }
+                }else{
+                    if(W.group_status == '团购进行中'){
+                        var $powerBtn = $('.wa-power');
+                        if(!is_helped){
+                            if(is_helper_unpaid){
+                                openUnpaidWin();
+                            }
+                            $powerBtn.find('.wa-power-btn-action').html('我要参团');
+                            $powerBtn.on('click', function(){
+                                    JoinGroup();
+                                }).show();
+                            $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
+                        }else{
+                            $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
+                            $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
+                        }
+                    }else{
+                        $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
+                        if(W.isMember){
+                            $('.wa-using').text('我要开团').on('click', openGruop).show();
+                        }else{
+                            $('.wa-using').text('我要开团').on('click', openGuestMask).show();
+                        }
                     }
                 }
             }else{
-                if(W.group_status == '团购进行中'){
-                    var $powerBtn = $('.wa-power');
-                    if(!is_helped){
-                        $powerBtn.find('.wa-power-btn-action').html('我要参团');
-                        $powerBtn.on('click', function(){
-                                JoinGroup();
-                            }).show();
-                        $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
-                    }else{
-                        $('.wa-using').text('邀请好友参团').on('click', openGuideMask).show();
-                        $('.wa-using-join').text('我要开团').on('click', openJoinGruop).show();
-                    }
-                }else{
-                    $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
-                    if(W.isMember){
-                        $('.wa-using').text('我要开团').on('click', openGruop).show();
-                    }else{
-                        $('.wa-using').text('我要开团').on('click', openGuestMask).show();
-                    }
+                $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
+                if (W.group_status == '团购成功'){
+                    showGroupSuccess();
+                }
+                if(W.group_status == '团购失败'){
+                    showGroupFailure();
                 }
             }
         }else{
             $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
-            if (W.group_status == '团购成功'){
-                showGroupSuccess();
-            }
-            if(W.group_status == '团购失败'){
-                showGroupFailure();
-            }
         }
-
     }
     //我要开团
 	function openGruop(){
@@ -569,7 +577,11 @@
     function openUnpaidWin(){
         mask('show');
         $('.xui-groupMsg').removeClass('none');
-        $('.xa-groupMsg').find('.xa-i-msg').html('开团支付未完成，是否继续？');
+        if(is_group_leader){
+            $('.xa-groupMsg').find('.xa-i-msg').html('开团支付未完成，是否继续？');
+        }else{
+            $('.xa-groupMsg').find('.xa-i-msg').html('参团支付未完成，是否继续？');
+        }
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');
