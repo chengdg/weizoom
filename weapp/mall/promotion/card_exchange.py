@@ -120,8 +120,7 @@ class CardExchange(resource.Resource):
 				prize_list.append({
 					'integral': rule.integral,
 					'money': int(rule.money),
-					's_num': s_num,
-					'end_num': end_num,
+					'card_number': card_number,
 					'count': count				 
 				})
 			card_exchange_dic['prize'] = prize_list

@@ -1,67 +1,67 @@
-# -*- coding: utf-8 -*-
+# # -*- coding: utf-8 -*-
 
-__author__ = 'aix'
+# __author__ = 'aix'
 
-import os
+# import os
 
-from django.template import Context, RequestContext
-from django.shortcuts import render_to_response
+# from django.template import Context, RequestContext
+# from django.shortcuts import render_to_response
 
-from mall.promotion.card_exchange import CardExchange
-from modules.member.models import MemberInfo
-from mall.promotion import models as promotion_models
-from market_tools.tools.weizoom_card import models as card_models
+# from mall.promotion.card_exchange import CardExchange
+# from modules.member.models import MemberInfo
+# from mall.promotion import models as promotion_models
+# from market_tools.tools.weizoom_card import models as card_models
 
-template_path_items = os.path.dirname(__file__).split(os.sep)
-TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
+# template_path_items = os.path.dirname(__file__).split(os.sep)
+# TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
 
-COUNT_PER_PAGE = 15
-def get_page(request):
-	"""
-	手机端卡兑换页
-	"""
-	webapp_id = request.user_profile.webapp_id
-	#判断用户是否绑定手机号
-	member_id = request.member.id
-	member_integral = request.member.integral
-	phone_number = ''
-	try:
-		member_info = MemberInfo.objects.get(member_id = member_id)
-		member_is_bind = member_info.is_binded
-		if member_is_bind:
-			phone_number = member_info.phone_number
-	except:
-		member_is_bind = False
+# COUNT_PER_PAGE = 15
+# def get_page(request):
+# 	"""
+# 	手机端卡兑换页
+# 	"""
+# 	webapp_id = request.user_profile.webapp_id
+# 	#判断用户是否绑定手机号
+# 	member_id = request.member.id
+# 	member_integral = request.member.integral
+# 	phone_number = ''
+# 	try:
+# 		member_info = MemberInfo.objects.get(member_id = member_id)
+# 		member_is_bind = member_info.is_binded
+# 		if member_is_bind:
+# 			phone_number = member_info.phone_number
+# 	except:
+# 		member_is_bind = False
 
-	card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
+# 	card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
 
-	weizoom_card_id = 0
-	cur_user_has_exchange_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
-	user_has_exchange_card = False
-	if cur_user_has_exchange_card.count() > 0 :
-		user_has_exchange_card = True
-		card_id = cur_user_has_exchange_card[0].card_id
-		try:
-			weizoom_card_id = card_models.WeizoomCard.objects.get(id = card_id).weizoom_card_id
-		except:
-			weizoom_card_id = None
+# 	weizoom_card_id = 0
+# 	cur_user_has_exchange_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
+# 	user_has_exchange_card = False
+# 	if cur_user_has_exchange_card.count() > 0 :
+# 		user_has_exchange_card = True
+# 		card_id = cur_user_has_exchange_card[0].card_id
+# 		try:
+# 			weizoom_card_id = card_models.WeizoomCard.objects.get(id = card_id).weizoom_card_id
+# 		except:
+# 			weizoom_card_id = None
 
-	prize_list = card_exchange_dic['prize']
-	if weizoom_card_id:
-		for p in prize_list:
-			s_w_id = int(p['s_num'])
-			e_w_id = int(p['end_num'])
-			if int(weizoom_card_id) >= s_w_id and int(weizoom_card_id) <= e_w_id:
-				p['is_selected'] = True
-			else:
-				p['is_selected'] = False
+# 	prize_list = card_exchange_dic['prize']
+# 	if weizoom_card_id:
+# 		for p in prize_list:
+# 			s_w_id = int(p['s_num'])
+# 			e_w_id = int(p['end_num'])
+# 			if int(weizoom_card_id) >= s_w_id and int(weizoom_card_id) <= e_w_id:
+# 				p['is_selected'] = True
+# 			else:
+# 				p['is_selected'] = False
 
-	c = RequestContext(request, {
-		'card_exchange_rule': card_exchange_dic,
-		'member_is_bind': member_is_bind,
-		'member_integral': member_integral,
-		'phone_number': phone_number,
-		'user_has_exchange_card': user_has_exchange_card
-	})
+# 	c = RequestContext(request, {
+# 		'card_exchange_rule': card_exchange_dic,
+# 		'member_is_bind': member_is_bind,
+# 		'member_integral': member_integral,
+# 		'phone_number': phone_number,
+# 		'user_has_exchange_card': user_has_exchange_card
+# 	})
 
-	return render_to_response('%s/card_exchange/webapp/m_card_exchange.html' % TEMPLATE_DIR, c)
+# 	return render_to_response('%s/card_exchange/webapp/m_card_exchange.html' % TEMPLATE_DIR, c)
