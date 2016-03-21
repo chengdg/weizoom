@@ -1672,7 +1672,7 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
         if order_status == ORDER_STATUS_NOT:
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
-            if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY:
+            if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY and order.status >= ORDER_STATUS_PAYED_NOT_SHIP:
                 print "cancel_group_not_ship_order"
                 update_order_status(user, 'return_pay', order)
                 order.status = ORDER_STATUS_GROUP_REFUNDING
