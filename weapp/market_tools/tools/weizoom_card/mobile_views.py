@@ -97,7 +97,9 @@ def get_weizoom_card_login(request):
 		return render_to_response('%s/weizoom_card/webapp/weizoom_card_login.html' % TEMPLATE_DIR, c)
 
 def get_weizoom_card_exchange_list(request):
-	print '---------22222222222------------'
+	"""
+	兑换卡列表
+	"""
 	member_id = request.member.id
 	webapp_id = request.user_profile.webapp_id
 	card_details_dic = {}
@@ -130,14 +132,31 @@ def get_weizoom_card_exchange_list(request):
 	card_details_dic['total_money'] = '%.2f' % total_money
 	card_details_dic['count'] = count
 	card_details_dic['card'] = card_details_list
-	# integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
-	# weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
+	
 	c = RequestContext(request, {
 		'page_title': u'微众卡',
 		'cards': card_details_dic,
 		# 'card_orders': weizoom_card_orders_list
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
+
+
+def get_card_exchange_detail(request):
+	"""
+	兑换卡详情
+	"""
+	card_id = request.GET.get('card_id',None)
+	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
+	weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
+	card = WeizoomCard.objects.get(id=card_id)
+	valid_restrictions = card.weizoom_card_rule.valid_restrictions
+	c = RequestContext(request, {
+		'card_orders': weizoom_card_orders_list,
+		'weizoom_card': card,
+		'valid_restrictions': '%.2f' % valid_restrictions
+	})
+
+	return render_to_response('%s/weizoom_card/webapp/weizoom_card_change_info.html' % TEMPLATE_DIR, c)
 
 def get_weizoom_card_change_money(request):
 	card_id = request.GET.get('card_id', -1)

@@ -155,10 +155,10 @@
 				<div class="xui-fr">
 					<span class="xui-textTips">余额</span>
 					<div>¥<b class="xui-numTips">{{weizoom_card.money}}</b></div>
-					<span class="xui-validDate">有效期至：</span>
+					<span class="xui-validDate">有效期至：{{weizoom_card.expired_time | date:"Y-m-d"}}</span>
 				</div>
 			</div>
-			<div>使用条件：满40.00元可用/不限制</div>
+			<div>使用条件：满{{valid_restrictions}}元可用/不限制</div>
 			<div class="xui-use-detail">
 				<div class="xui-use"><b>使用详情</b></div>
 				<table>
