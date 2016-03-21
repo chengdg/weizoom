@@ -27,10 +27,13 @@ def _handle_fahuo_data(orders):
 def step_impl(context, user):
     # TODO 废弃这个方法，改用 @when(u'{user}对订单进行发货')
     if hasattr(context, 'latest_order_id'):
-        latest_order_no = Order.objects.get(id=context.latest_order_id).id
+        try:
+            latest_order_no = Order.objects.get(id=context.latest_order_id).id
+        except:
+            latest_order_no = Order.objects.get(order_id=context.latest_order_id).id
     else:
         latest_order_no = steps_db_util.get_latest_order().id
-    print("last----------------------------",latest_order_no)
+
     url = '/mall2/api/delivery/'
     data = {
         'order_id': latest_order_no,
