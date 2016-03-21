@@ -80,7 +80,13 @@ class MGroupList(resource.Resource):
 		all_groups_can_open = []
 		owner_id = request.webapp_owner_id
 		#我要开团
+		member = request.member
 		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-end_time')
+		if member:
+			member_id = member.id
+			current_user_opened_group = app_models.GroupRelations.objects(member_id=str(member_id))
+			current_user_opened_group_ids = [relation.belong_to for relation in current_user_opened_group]
+			groups = groups.filter(id__nin=current_user_opened_group_ids)
 		for group in groups:
 			#获取活动状态
 			activity_status = group.status_text
