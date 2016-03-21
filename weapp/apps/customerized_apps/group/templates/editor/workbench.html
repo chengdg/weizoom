@@ -166,14 +166,14 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
-    // /* 页面数据联合验证 */
-    // var validate_group_flag = "";
-    // if(isCreateNewData){
-    //   validate_group_flag = false;
-    // }else{
-    //   validate_group_flag = true;
-    // }
-    // var validate_group_type = "";
+    /* 页面数据联合验证 */
+    var validate_group_flag = "";
+    if(isCreateNewData){
+      validate_group_flag = false;
+    }else{
+      validate_group_flag = true;
+    }
+    var validate_group_type = "";
 
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -236,7 +236,7 @@
         el: '#rightPanel',
         left: propertyViewLeft,
         onlyShowUserProperty: true//!W.isSystemManager
-      });
+      })
       propertyView.render();
 
       var synchronizer = new W.workbench.PageSynchronizer();
@@ -248,16 +248,20 @@
       $('.xa-save').click(function() {
           var that = this;
 
-      // /*提交前校验数据状态*/
+      /*提交前校验数据状态*/
       // if(!validate_group_flag){
       //   if(validate_group_type=='product'){
       //       W.showHint('error', '请选择团购商品！');
-      //   }else if(validate_group_type=='img'){
-      //       W.showHint('error', '请选择团购分享图片！');
       //   }else if(validate_group_type=='group_blank'){
-      //       W.showHint('error', '团购设置不能为空！');
+      //       W.showHint('error', '团购设置和数据不能为空！');
       //   }else if(validate_group_type=='group_same'){
       //       W.showHint('error', '团购类型不能相同！');
+      //   }else if(validate_group_type=='group_notInt'){
+      //       W.showHint('error', '团购天数应为整数！');
+      //   }else if(validate_group_type=='group_notFloat'){
+      //       W.showHint('error', '团购价格应为两位小数或整数！');
+      //   }else if(validate_group_type=='img'){
+      //       W.showHint('error', '请选择团购分享图片！');
       //   }
       //   return false;
       // }
@@ -285,16 +289,6 @@
             var product_socks = product_dict.productSocks;
             var product_barcode = product_dict.productBarcode;
             var product_create_at = product_dict.productCreate_at;
-
-
-            // var default_group_type = descriptionModel.get('group_type');
-            // var default_group_days = descriptionModel.get('group_days');
-            // var default_group_price =  descriptionModel.get('group_price');
-            // var group_dict = {'0':{
-            //   'group_type':default_group_type,
-            //   'group_days':default_group_days,
-            //   'group_price':default_group_price
-            // }};
 
             var group_dict = {};
             for(var i=0;i<dynamicComponents.length;i++){

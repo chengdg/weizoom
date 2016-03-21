@@ -90,18 +90,15 @@ def send_apps_template_message(owner_id, member_info):
 	result = False
 	if mpuser_access_token:
 		weixin_api = get_weixin_api(mpuser_access_token)
-		openid = member_info['openid']
-		app_url = member_info['app_url']
-		detail_data = member_info['detail_data']
 		try:
-			message = _get_fixed_apps_send_message_dict(openid, app_url, detail_data)
+			message = _get_fixed_apps_send_message_dict(member_info)
 			weixin_api.send_template_message(message, True)
 			result = True
 		except:
 			notify_message = u"发送模板消息异常, cause:\n{}".format(unicode_full_stack())
 			watchdog_warning(notify_message)
 
-	return result
+	return result, member_info['member_id']
 
 def _get_mpuser_access_token(user):
 	mp_user = get_binding_weixin_mpuser(user)
@@ -153,7 +150,7 @@ def _get_apps_send_message_dict(openid, app_url, template_message, detail):
 	template_data['data'] = detail_data
 	return template_data
 
-def _get_fixed_apps_send_message_dict(openid, app_url, detail):
+def _get_fixed_apps_send_message_dict(member_info):
 	"""
 	固定内容的模板消息
 	@param openid:
@@ -161,30 +158,20 @@ def _get_fixed_apps_send_message_dict(openid, app_url, detail):
 	@param detail:
 	@return:
 	"""
-	TEMPLATE_ID = "Gp3QGAKUw3F_qmMtHzLuTWZw5W0fvhjKEtQN_h4Nc8k"
-	TEMPLATE_FIRST = u"恭喜您参与的拼红包活动成功！"
-	TEMPLATE_REMARK = u"请关注更多活动。"
-	TEMPLATE_KEYWORDS = ['keyword1:task_name', 'keyword2:prize', 'keyword3:finish_time']
+	detail = member_info['detail_data']
 
 	template_data = dict()
-	template_data['touser'] = openid
-	template_data['template_id'] = TEMPLATE_ID
-	template_data['url'] = app_url
+	template_data['touser'] = member_info['openid']
+	template_data['template_id'] = member_info['template_id']
+	template_data['url'] = member_info['app_url']
 	template_data['topcolor'] = "#FF0000"
 
 	detail_data = {}
-	detail_data["first"] = {"value" : TEMPLATE_FIRST, "color" : "#000000"}
-	detail_data["remark"] = {"value" : TEMPLATE_REMARK, "color" : "#000000"}
+	detail_data["first"] = {"value" : detail['first'], "color" : "#000000"}
+	detail_data["remark"] = {"value" : detail['remark'], "color" : "#000000"}
 
-	attribute_dict = {}
-	for one_data in TEMPLATE_KEYWORDS:
-		one_data_arr = one_data.split(':')
-		attribute_dict[one_data_arr[1]] = one_data_arr[0]
-	attribute_keys = attribute_dict.keys()
-	for key, value in detail.items():
-		if key not in attribute_keys:
-			continue
-		detail_data[attribute_dict[key]] = {"value": value, "color" : "#173177"}
+	for key, value in detail['keywords'].items():
+		detail_data[key] = {"value": value, "color" : "#173177"}
 
 	template_data['data'] = detail_data
 	return template_data

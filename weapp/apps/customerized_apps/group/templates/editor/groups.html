@@ -39,12 +39,26 @@
     }
     .xui-template-modal-body label{
         display: block;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .xui-template-modal-body label select{
+        width: 50%;
+        font-weight: 100;
+        height: 35px;
+        border: 1px solid rgba(128, 128, 128, 0.31);
+        border-radius: 5px;
+    }
+    .xui-template-modal-body input{
+        height: 35px;
+        border: 1px solid rgba(128, 128, 128, 0.31);
+        border-radius: 5px;
     }
     .xui-template-modal-body .xui-i-setting{
         border: 1px solid #EAEEF7;
         border-radius: 5px;
         padding: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
         margin-left: -15px;
     }
 
@@ -166,7 +180,10 @@
                 <button class="btn btn-primary xa-update-btn" aria-hidden="true" style="margin-right: 0;">更新模板</button>
                 <button class="btn btn-success xa-submit-btn" aria-hidden="true">确&nbsp;&nbsp;定</button>
                 <button class="btn btn-default" aria-hidden="true" data-dismiss="modal" >关&nbsp;&nbsp;闭</button>
-
+                <div style="display: none">
+                    <button class="btn btn-default xa-test" aria-hidden="true" >测&nbsp;&nbsp;试</button>
+                    <input type="text" id="test_input" style="line-height: 0; height: 30px;">
+                </div>
             </div>
         </div>
     </div>
@@ -319,29 +336,29 @@
 <script id="group-template-setting-dialog-tmpl-src" type="text/x-handlebar-tmpl">
     {{#if hasData }}
         <div class="xui-i-setting xui-i-success-setting xa-success-setting">
-            <label>选择团购成功的消息模板：
+            <label>选择团购成功的消息模板:
                 <select class="form-control xa-template-selector" style="width: 50%">
+                    <option value="" {{#ifequal success.selected_id ""}}selected{{/ifequal}}>不发送模板消息</option>
                     {{#each templates}}
-                        <option value="{{ template_id }}" {{#ifCond ../success.selected_id "==" template_id}}selected{{/ifCond}}>{{ template_title }}</option>
+                    {{#ifCond template_title "==" "拼团成功通知"}}
+                        <option value="{{ template_id }}" {{#ifequal ../../success.selected_id template_id}}selected{{/ifequal}}>{{ template_title }}</option>
+                    {{/ifCond}}
                     {{/each}}
                 </select>
             </label>
-            <label>开头描述：<input type="text" class="form-control xa-template-first" value="{{ ../success.first }}"></label>
-            <label>结尾描述：<input type="text" class="form-control xa-template-remark" value="{{ ../success.remark }}"></label>
         </div>
         <div class="xui-i-setting xui-i-fail-setting xa-fail-setting">
-            <label>选择团购失败的消息模板：
+            <label>选择团购失败的消息模板:
                 <select class="form-control xa-template-selector" style="width: 50%">
+                    <option value="" {{#ifequal fail.selected_id ""}}selected{{/ifequal}}>不发送模板消息</option>
                     {{#each templates}}
-                        <option value="{{ template_id }}" {{#ifCond ../fail.selected_id "==" template_id}}selected{{/ifCond}}>{{ template_title }}</option>
+                    {{#ifCond template_title "==" "拼团退款提醒"}}
+                        <option value="{{ template_id }}" {{#ifequal ../../fail.selected_id template_id}}selected{{/ifequal}}>{{ template_title }}</option>
+                    {{/ifCond}}
                     {{/each}}
                 </select>
             </label>
-            <label>开头描述：<input type="text" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
-            <label>结尾描述：<input type="text" class="form-control xa-template-remark" value="{{ ../fail.remark }}"></label>
-        </div>
-        <div class="xui-i-preview">
-
+            <label>问候语：<input type="text" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
         </div>
     {{else}}
         <p>获取模板信息失败</p>
@@ -491,8 +508,6 @@ $(document).ready(function() {
             var data = $.extend({
                 "hasData": 0
             }, this.data);
-            console.log(data);
-            console.log('asjhdkajshfklashfladhfkl');
             if(data.control_data){
                 var control = data.control_data;
                 var success_data = control.success;
@@ -504,9 +519,7 @@ $(document).ready(function() {
                 };
                 if(!$.isEmptyObject(success_data)){
                     data['success'] = {
-                        "selected_id": success_data.template_id,
-                        "first": success_data.first,
-                        "remark": success_data.remark
+                        "selected_id": success_data.template_id
                     };
                 }else{
                     data['success'] = noop_data;
@@ -515,8 +528,7 @@ $(document).ready(function() {
                 if(!$.isEmptyObject(fail_data)){
                     data['fail'] = {
                         "selected_id": fail_data.template_id,
-                        "first": fail_data.first,
-                        "remark": fail_data.remark
+                        "first": fail_data.first
                     };
                 }else{
                     data['fail'] = noop_data;
@@ -531,12 +543,9 @@ $(document).ready(function() {
         },
         _getFormData: function(){
             var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
-            var success_first = this.$el.find('.xa-success-setting .xa-template-first').val();
-            var success_remark = this.$el.find('.xa-success-setting .xa-template-remark').val();
 
             var fail_template_id = this.$el.find('.xa-fail-setting .xa-template-selector').val();
             var fail_first = this.$el.find('.xa-fail-setting .xa-template-first').val();
-            var fail_remark = this.$el.find('.xa-fail-setting .xa-template-remark').val();
 
             var serials_arr = [];
             if(success_template_id != '') serials_arr.push(success_template_id);
@@ -547,21 +556,17 @@ $(document).ready(function() {
                 "template_ids": serials_arr.toString(),
                 "template_settings": JSON.stringify({
                     "success": {
-                        "template_id": success_template_id,
-                        "first": success_first,
-                        "remark": success_remark
+                        "template_id": success_template_id
                     },
                     "fail": {
                         "template_id": fail_template_id,
-                        "first": fail_first,
-                        "remark": fail_remark
+                        "first": fail_first
                     }
                 })
             }
 
         },
         onClickSubmit: function(){
-            console.log('submit');
             var that = this;
             W.getApi().call({
                 app: 'apps',
@@ -589,7 +594,6 @@ $(document).ready(function() {
                     method: 'get',
                     args: $.extend(args, {"apps_type": APPS_TYPE}),
                     success: function(data) {
-                        console.log(data, 'reeee');
                         that.data = data;
                         that.render();
                     },
@@ -602,10 +606,6 @@ $(document).ready(function() {
         }
     });
     //模板消息弹窗
-    console.log('------------');
-    console.log(initData);
-    console.log('------------');
-    console.log(JSON.parse(initData));
     $('.xa-template-setting').on('click', function(){
         W.dialog.showDialog('W.dialog.group.templateDialog',{
             initData: initData=="" ? false: JSON.parse(initData),
@@ -613,6 +613,23 @@ $(document).ready(function() {
         });
     });
 
+});
+//测试发送模板，输入框内格式   71,72,73-success
+$('.xa-test').on('click', function(){
+    W.getApi().call({
+        app: 'apps/group',
+        resource: 'test_group_template',
+        method: 'post',
+        args: {
+            "args": $('#test_input').val()
+        },
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(resp) {
+            console.log(resp);
+        }
+    });
 });
 </script>
 {% endblock %}
