@@ -100,11 +100,19 @@ def get_weizoom_card_exchange_list(request):
 	print '---------22222222222------------'
 	member_id = request.member.id
 	webapp_id = request.user_profile.webapp_id
+	card_details_dic = {}
 	card_details_list = []
 	member_has_cards = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
+	total_money = 0
+	count = member_has_cards.count()
+	phone_number = MemberInfo.objects.get(member_id = member_id).phone_number
+	card_details_dic['total_money'] = total_money
+	card_details_dic['count'] = count
+	card_details_dic['phone_number'] = phone_number
 	for card in member_has_cards:
 		card_id = card.card_id
 		cur_card = card_models.WeizoomCard.objects.get(id = card_id)
+		total_money += cur_card.money
 		card_details_list.append({
 			'card_id': cur_card.weizoom_card_id,
 			'remainder': '%.2f' % cur_card.money,
@@ -113,13 +121,12 @@ def get_weizoom_card_exchange_list(request):
 			'type': u'兑换平台',
 			'is_expired': cur_card.is_expired 
 		})
+	card_details_dic['card'] = card_details_list
 	# integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	# weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
-
 	c = RequestContext(request, {
 		'page_title': u'微众卡',
-		'is_hide_weixin_option_menu': True,
-		'cards': card_details_list,
+		'cards': card_details_dic,
 		# 'card_orders': weizoom_card_orders_list
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
