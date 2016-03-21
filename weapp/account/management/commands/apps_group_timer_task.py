@@ -43,7 +43,11 @@ class Command(BaseCommand):
 				data_end_time = group.end_time.strftime('%Y-%m-%d %H:%M')
 				if now_time >= data_end_time:
 					all_end_group_ids.append(str(group.id))
-			all_running_group_relations.filter(belong_to__in=all_end_group_ids).update(group_status=app_models.GROUP_FAILURE)
+			all_end_group_relations = all_running_group_relations.filter(belong_to__in=all_end_group_ids)
+			for group_relation in all_end_group_relations:
+				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
+				update_order_status_by_group_status(group_relation.id,'failure')
+
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
 			"""
