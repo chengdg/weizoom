@@ -121,7 +121,7 @@ class GroupParticipances(resource.Resource):
 					'end_time_time': end_time_time,
 					'end_time':end_time,
 					'status':data.status_text,
-					'members_count':'%d/%s'%(int(len(data.grouped_member_ids))+1,data.group_type)
+					'members_count':'%d/%s'%(int(len(data.grouped_member_ids)),data.group_type)
 				})
 
 		#排序
