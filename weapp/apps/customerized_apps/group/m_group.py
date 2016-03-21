@@ -42,6 +42,7 @@ class MGroup(resource.Resource):
 		grouped_member_info_list = []
 		order_id = ''
 		is_from_pay_result = request.GET.get('from', None)
+		is_helper_unpaid = False
 		if is_from_pay_result == 'pay_result':
 			is_from_pay_result = True
 		else:
@@ -104,6 +105,9 @@ class MGroup(resource.Resource):
 						try:
 							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
 							order_id = group_detail.order_id
+							if not group_detail.is_already_paid:
+								if order_id!='':
+									is_helper_unpaid = True
 						except:
 							pass
 					except Exception,e:
@@ -142,7 +146,8 @@ class MGroup(resource.Resource):
 			'product_original_price': product_original_price,
 			'product_group_price': product_group_price,
 			'order_id': order_id,
-			'is_from_pay_result': is_from_pay_result
+			'is_from_pay_result': is_from_pay_result,
+			'is_helper_unpaid': is_helper_unpaid
 		}
 
 		response = create_response(200)
