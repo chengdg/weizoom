@@ -256,7 +256,7 @@ def send_group_template_message(activity_info, member_info_list):
 		else:
 			template_id = success_data['template_id']
 			detail_data = {
-				"first": u"您参团的商品[%s]已组团成功,预计将在团购结束20天内发货" % activity_info['product_name'],
+				"first": u"您参团的商品[%s]已组团成功,%s" % (activity_info['product_name'], success_data['first']),
 				"remark": u"点击查看团购活动详情"
 			}
 

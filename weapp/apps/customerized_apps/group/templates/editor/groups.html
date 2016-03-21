@@ -350,9 +350,10 @@
                     {{/each}}
                 </select>
             </label>
+            <label>发货提醒：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../success.first }}"></label>
             <div class="xui-i-setting xui-i-preview xa-success-preview">
                 <label>预览</label>
-                <p>您参团的商品[xxx]已组团成功,预计将在团购结束20天内发货</p>
+                <p>您参团的商品[xxx]已组团成功,<span class="xa-success-need-change-first">{{ ../success.first }}</span></p>
                 <p>商品价格: ￥158</p>
                 <p>订单号: tn12345902314</p>
                 <p>点击查看团购活动详情</p>
@@ -519,6 +520,7 @@ $(document).ready(function() {
             this.$dialog.delegate('.xa-update-btn', 'click', this.onClickUpdate.bind(this));
 
             this.$dialog.delegate('.xa-template-selector', 'click', this.onSelectTemplate);
+            this.$dialog.delegate('.xa-success-setting .xa-template-first', 'keyup', this.onChangeSuccessFirst);
             this.$dialog.delegate('.xa-fail-setting .xa-template-first', 'keyup', this.onChangeFailFirst);
         },
         show: function(){
@@ -542,7 +544,8 @@ $(document).ready(function() {
                 };
                 if(!$.isEmptyObject(success_data)){
                     data['success'] = {
-                        "selected_id": success_data.template_id
+                        "selected_id": success_data.template_id,
+                        "first": success_data.first
                     };
                 }else{
                     data['success'] = noop_data;
@@ -574,11 +577,15 @@ $(document).ready(function() {
                 $pre.show();
             }
         },
+        onChangeSuccessFirst: function(){
+            $('.xa-success-need-change-first').html($(this).val());
+        },
         onChangeFailFirst: function(){
             $('.xa-fail-need-change-first').html($(this).val());
         },
         _getFormData: function(){
             var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
+            var success_first = this.$el.find('.xa-success-setting .xa-template-first').val();
 
             var fail_template_id = this.$el.find('.xa-fail-setting .xa-template-selector').val();
             var fail_first = this.$el.find('.xa-fail-setting .xa-template-first').val();
@@ -592,7 +599,8 @@ $(document).ready(function() {
                 "template_ids": serials_arr.toString(),
                 "template_settings": JSON.stringify({
                     "success": {
-                        "template_id": success_template_id
+                        "template_id": success_template_id,
+                        "first": success_first
                     },
                     "fail": {
                         "template_id": fail_template_id,
