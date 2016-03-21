@@ -143,7 +143,8 @@ class GroupParticipances(resource.Resource):
 		status_others = []
 		for item in items:
 			if item['status'] == u'团购未生效':
-				status_ing.append(item)
+				# status_ing.append(item)
+				pass
 			elif item['status']==u'团购进行中':
 				status_ing.append(item)
 			else:

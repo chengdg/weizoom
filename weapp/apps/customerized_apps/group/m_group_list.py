@@ -21,11 +21,18 @@ class MGroupList(resource.Resource):
 	def api_get(request):
 		belong_to = request.GET.get('belong_to', None)
 		owner_id = request.webapp_owner_id
+		member = request.member
 		if not belong_to:
 			response = create_response(500)
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		group_relations = app_models.GroupRelations.objects(belong_to=belong_to,group_status=app_models.GROUP_RUNNING)
+		group_relation_ids = [str(group_relation.id) for group_relation in group_relations]
+		if member:
+			member_id = member.id
+			current_member_join_group_details = app_models.GroupDetail.objects(relation_belong_to__in=group_relation_ids,grouped_member_id=str(member_id))
+			relation_belong_to_ids = [group_detail.relation_belong_to for group_detail in current_member_join_group_details]
+			group_relations = group_relations.filter(id__nin=relation_belong_to_ids)
 		group_ids = [str(p.belong_to) for p in group_relations]
 		all_groups = app_models.Group.objects(id__in=group_ids)
 		all_groups_can_join = []
