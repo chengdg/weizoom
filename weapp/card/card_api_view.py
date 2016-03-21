@@ -535,7 +535,7 @@ def create_weizoom_cards(request):
             card_attr = card_attr,
             shop_limit_list = belong_to_owner,
             is_new_member_special = is_new_member_special,
-            valid_restrictions=valid_restrictions
+            valid_restrictions= valid_restrictions if valid_restrictions else -1
             )
         #生成微众卡
         __create_weizoom_card(rule, count, request)
