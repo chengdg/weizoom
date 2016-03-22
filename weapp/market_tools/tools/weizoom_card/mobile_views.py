@@ -73,7 +73,6 @@ def get_weizoom_card_exchange_list(request):
 	for card in member_has_cards:
 		card_id = card.card_id
 		cur_card = card_models.WeizoomCard.objects.get(id = card_id)
-		total_money += cur_card.money
 		is_expired = cur_card.is_expired
 		status = cur_card.status
 		if cur_card.expired_time < today:
@@ -81,6 +80,8 @@ def get_weizoom_card_exchange_list(request):
 		if is_expired or status == card_models.WEIZOOM_CARD_STATUS_INACTIVE:
 			count -= 1
 			has_expired_cards = True
+		if not is_expired and status != card_models.WEIZOOM_CARD_STATUS_INACTIVE:
+			total_money += cur_card.money
 		card_details_list.append({
 			'card_id': cur_card.weizoom_card_id,
 			'remainder': '%.2f' % cur_card.money,
