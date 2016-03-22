@@ -424,7 +424,7 @@ def get_product2group(pids, woid='3'):
     if response.code != 200:
         response = urllib.urlopen("{}?{}&woid={}".format(pids_url, params, woid))
         if response.code != 200:
-            error_msg = u"api请求失败,获取商品是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+            error_msg = u"api请求失败,获取商品是否在团购中失败, cause:\n{}".format(response.code)
             watchdog_error(error_msg)
             return {}
 
@@ -448,7 +448,7 @@ def get_pids(woid):
     if response.code != 200:
         response = urllib.urlopen("{}?woid={}".format(get_pids_url, woid))
         if response.code != 200:
-            error_msg = u"api请求参加活动的pids网络存在问题, cause:\n{}".format(unicode_full_stack())
+            error_msg = u"api请求参加活动的pids网络存在问题, cause:\n{}".format(response.code)
             watchdog_error(error_msg)
             return []
 
