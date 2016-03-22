@@ -1522,3 +1522,70 @@ def product_is_group(product_id, woid):
         error_msg = u"获取商品是否在团购中失败, cause:\n{}".format(unicode_full_stack())
         watchdog_error(error_msg)
     return is_group_buying
+
+class GroupProductListWoid(resource.Resource):
+    app = 'mall2'
+    resource = 'group_product_list_woid'
+
+    def api_get(request):
+        COUNT_PER_PAGE = 10
+        product_name = request.GET.get('name', '')
+        woid = request.GET.get('woid', '')
+        if not woid:
+            response = create_response(200)
+            response.data = {
+            'error': "less woid",
+        }
+            return response.get_jsonp_response(request)
+        # 筛选出单规格的商品id
+        standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=woid, name='standard', is_deleted=False)]
+        promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=woid, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
+        has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
+        pids = utils.get_pids(woid)
+        if pids:
+            has_promotion_product_ids.extend(pids)
+
+        group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
+        products = models.Product.objects.filter(
+                owner=woid,
+                id__in=group_product_ids,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                is_deleted=False,
+                is_member_product=False,
+                stocks__lte=1
+                )
+        if product_name:
+            products = products.filter(name__contains=product_name)
+
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products,
+            cur_page,
+            count_per_page,
+            )
+        models.Product.fill_details(woid, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
+
+        #构造返回数据
+        items = []
+        for product in products:
+            product_dict = product.format_to_dict()
+            product_dict['is_self'] = (int(woid) == product.owner_id)
+            items.append(product_dict)
+        data = dict()
+        data['owner_id'] = woid
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'data': data
+        }
+        return response.get_jsonp_response(request)

@@ -12,12 +12,12 @@ W.dialog.app.group.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
     },
 
     onInitialize: function(options) {
-    	//s.activityId = options.activityId;
-        this.table = this.$('[data-ui-role="advanced-table"]').data('view');
+         this.table = this.$('[data-ui-role="advanced-table"]').data('view');
 
     },
 
     beforeShow: function(options) {
+        this.activityId = options.activityId;
         this.table.reset();
 
     },
@@ -26,7 +26,7 @@ W.dialog.app.group.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
     },
 
     afterShow: function(options) {
-        this.table.reload({});
+        this.table.reload({"id": this.activityId});
 
     },
 

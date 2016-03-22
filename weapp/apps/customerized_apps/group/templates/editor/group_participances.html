@@ -40,8 +40,12 @@
     table.xui-i-group_members td .xui-memberNameBox{
         width: 140px;
         height: 35px;
-        line-height: 35px;
+        /*line-height: 35px;*/
         color:#2B93DC;
+        margin-top: 5px;
+        word-wrap: break-word;
+        word-break: break-all;
+        white-space: normal;
     }
 
     table.xui-i-group_members td .xui-memberGradeBox{
@@ -49,6 +53,8 @@
         height: 35px;
         line-height: 35px;
     }
+
+
     </style>
 {% endblock %}
 {% block content-panel %}
@@ -234,7 +240,7 @@
 $(document).ready(function() {
 	$('body').delegate('.xa-viewData', 'click', function(event) {
 		var activityId = $(event.currentTarget).parents('tr').data('id');
-		W.dialog.showDialog('W.dialog.app.group.ViewParticipanceDataDialog', {
+        W.dialog.showDialog('W.dialog.app.group.ViewParticipanceDataDialog', {
 			activityId: activityId,
 			success: function(data) {
 			}
