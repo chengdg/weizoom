@@ -166,14 +166,6 @@
     var bottomDistance = 110;
     /* 自动选中cid，当页面进来的时候 */
     W.autoSelectCid = 2;
-    /* 页面数据联合验证 */
-    var validate_group_flag = "";
-    if(isCreateNewData){
-      validate_group_flag = false;
-    }else{
-      validate_group_flag = true;
-    }
-    var validate_group_type = "";
 
     var loadPages = function(pageManagerView) {
       W.getApi().call({
@@ -200,6 +192,7 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
+
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');
@@ -208,6 +201,8 @@
     }
 
     $(document).ready(function() {
+
+
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
 
@@ -248,23 +243,11 @@
       $('.xa-save').click(function() {
           var that = this;
 
-      /*提交前校验数据状态*/
-      // if(!validate_group_flag){
-      //   if(validate_group_type=='product'){
-      //       W.showHint('error', '请选择团购商品！');
-      //   }else if(validate_group_type=='group_blank'){
-      //       W.showHint('error', '团购设置和数据不能为空！');
-      //   }else if(validate_group_type=='group_same'){
-      //       W.showHint('error', '团购类型不能相同！');
-      //   }else if(validate_group_type=='group_notInt'){
-      //       W.showHint('error', '团购天数应为整数！');
-      //   }else if(validate_group_type=='group_notFloat'){
-      //       W.showHint('error', '团购价格应为两位小数或整数！');
-      //   }else if(validate_group_type=='img'){
-      //       W.showHint('error', '请选择团购分享图片！');
-      //   }
-      //   return false;
-      // }
+      //校验字典初始化
+      var validate_tag = initValidateDict(W.projectId);
+      if(!validate_tag){
+        return validate_tag;
+      }
 
 
         // 保存model
@@ -411,6 +394,107 @@
               stickyMenu();
           }));
     });
+    function initValidateDict(WprojectId){
+      var validate_group_flag = true;
+      var validate_group_type = undefined;
+      var product = $('#propertyEditor').find('input[data-field="product"]').val();
+      var material_image = $('#propertyEditor').find('input[data-field="material_image"]').val();
+
+      var GroupArray = $('#propertyEditor').find('.propertyGroup_property_dynamicControlField_control');
+
+      var group_items = [];
+      for(var i=0;i<GroupArray.length;i++){
+        var $group_div =$(GroupArray[i]);
+        var cid =$group_div.attr('data-dynamic-cid');
+        var group_type = $group_div.find('select[data-field="group_type"]').val();
+        var group_days = $group_div.find('input[data-field="group_days"]').val();
+        var group_price = $group_div.find('input[data-field="group_price"]').val();
+        var group_item_data = {
+            "group_type":group_type,
+            "group_days":group_days,
+            "group_price":group_price
+        }
+        group_items.push(group_item_data);
+      }
+
+      if(!product){
+        validate_group_type = 'product';
+      }
+      if(!material_image){
+        validate_group_type='img';
+      }
+
+
+      var group_type_array = [];
+      var group_error_type = [];
+      if(group_items.length<=0){
+          group_error_type.push('group_blank');
+      }else{
+          for(var i=0;i<group_items.length;i++){
+              group_one = group_items[i];
+              for(var index in group_one){
+                  if(group_one[index]===undefined | group_one[index]==""){
+                      group_error_type.push('group_blank');
+                  }
+                  var group_days_tmp = group_one['group_days'];
+                  if(!isInteger(group_days_tmp)){
+                      group_error_type.push('group_notInt');
+                  }
+                  var group_price_tmp = group_one['group_price'];
+                  if(!isFloat(group_price_tmp)){
+                      group_error_type.push('group_notFloat');
+                  }
+              }
+              group_type_array.push(group_one['group_type']);
+          }
+          if(group_type_array.length>1){
+              if(group_type_array[0]==group_type_array[1]){
+                  group_error_type.push('group_same');
+              }
+          }
+      }
+
+      if(group_error_type.length>=1){
+          console.log('====== validate group start >>>>>>>');
+          validate_group_type = group_error_type[0];
+          console.log('validate-type:'+validate_group_type);
+          console.log('validate-data:'+group_error_type);
+          console.log('====== validate group end <<<<<<<');
+      }
+
+
+      /*提交前校验数据状态*/
+      if(validate_group_type){
+        if(validate_group_type=='product'){
+            W.showHint('error', '请选择团购商品！');
+        }else if(validate_group_type=='group_blank'){
+            W.showHint('error', '团购设置和数据不能为空！');
+        }else if(validate_group_type=='group_same'){
+            W.showHint('error', '团购类型不能相同！');
+        }else if(validate_group_type=='group_notInt'){
+            W.showHint('error', '团购天数应为整数！');
+        }else if(validate_group_type=='group_notFloat'){
+            W.showHint('error', '团购价格应为两位小数或整数！');
+        }else if(validate_group_type=='img'){
+            W.showHint('error', '请选择团购分享图片！');
+        }else{
+          return true;
+        }
+        return false;
+      }
+      return true;
+    }
+
+    function isInteger( str ){
+        var regu = /^[-]{0,1}[0-9]{1,}$/;
+        return regu.test(str);
+    }
+
+    function isFloat( str ){
+        var regu = /^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/;
+        return regu.test(str);
+    }
+
   </script>
 {% block js %}{% endblock %}
 {% endblock %}
