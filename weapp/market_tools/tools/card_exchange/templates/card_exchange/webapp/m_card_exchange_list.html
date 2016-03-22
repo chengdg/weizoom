@@ -198,6 +198,7 @@
 				{% endfor %}
 			</div>
 
+			{% if has_expired_cards %}
 			<div class="xui-invalid-card">
 				<div class="xui-invalid-title">
 					<b></b>
@@ -238,6 +239,7 @@
 				{% endif %}
 				{% endfor %}
 		    </div>
+		    {% endif %}
 	    </div>
     </div>
 </div>
