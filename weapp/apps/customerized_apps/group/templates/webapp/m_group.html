@@ -119,7 +119,7 @@
         color: #E6E6E6;
         height: 50px;
         background: url("/termite_static/img/component/group/detail_bg.png") no-repeat;
-        background-position-y: 100%;
+        background-position-y: 90%;
         background-position-x: 50%;
     }
     .xui-groupMsg-xui-i-msg-title {
@@ -184,8 +184,8 @@
     <div class="wui-i-description wui-i-product-description">
         <div class="xui-section xui-production-panel pt0 xa-production" style="border:0;">
             <div class="xui-section-title xui-section-item zoom">
-                <div class="wui-i-product-description-title pt10" style="text-align: center;color: #E6E6E6">滑动查看详情</div>
-                <div class="xui-productDetail-content rawHtml pt10 pl10 pb10 xa-productDetail-content">
+                <div class="wui-i-product-description-title pt10">滑动查看详情</div>
+                <div class="xui-productDetail-content rawHtml pt10 pl10 pb10 xa-productDetail-content none">
                 {{ product_detail|safe }}
                 </div>
             </div>
@@ -332,6 +332,7 @@
                 loadingStatus(false);
                 //渲染按钮状态
                 updateActivityStatus(data);
+                getProductDetails();
                 if(W.group_status != ''){
                     if(W.group_status != '团购未生效'){
                         if(group_type != ""){
@@ -742,7 +743,7 @@
         }
     }
 
-    function showProductDetails(){
+    function getProductDetails(){
         W.getApi().call({
             app: 'm/apps/group',
             resource: 'get_product_detail',
@@ -752,7 +753,6 @@
                 product_id: product_id
             },
             success: function(data){
-                $('.wui-i-product-description-title').addClass('none');
                 var product_detail = data.product_detail;
                 if(product_detail !=''){
                     $('.xa-productDetail-content').html(product_detail);
@@ -762,10 +762,14 @@
 
             },
             error: function(data) {
-                wuiAlert(data.errMsg);
+                $('.xa-productDetail-content').html("暂无商品介绍");
             }
         });
 
+    }
+    function showProductDetails(){
+        $('.wui-i-product-description-title').addClass('none');
+        $('.xui-productDetail-content').removeClass('none');
     }
 </script>
 {% endblock %}
