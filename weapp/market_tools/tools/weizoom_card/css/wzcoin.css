@@ -169,7 +169,7 @@ html,body{
     height: 100%;
     width: 100%;
 	font-size: 1.2rem;
-	position: relative;
+	padding-bottom: 8px
 }
 
 .xui-wzResult-page .xui-submitWz {
@@ -308,6 +308,7 @@ html,body{
 	position: relative;
 	text-align: center;
 	top: 20px;
+	padding-bottom: 8px
 }
 .xui-wzResult-page .xui-goUserInfo-btn {
     background: #0580CE none repeat scroll 0 0;
