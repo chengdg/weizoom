@@ -69,16 +69,21 @@
 			padding: 2.25rem 0 1.25rem 0;
 		}
     }
+
+    .xui-general-content>div{
+    	display: inline-block;
+    	width: 48%;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
 <div class="xui-RecommendedDetailPage">
 	<div class="xui-general">
-		<div class=" xa-general">
-			<p>扫码人数：<span class="xui-red">{{channel_qrcode_members_count}}</span></p>
-			<p>下单人数：<span class="xui-red">{{payed_count}}</span></p>
-			<p>绑定手机人数<span class="xui-red">{{bind_phone_members_count}}</span></p>
-			<p>成交金额：<span class="xui-red">￥{{pay_money}}</span></p>
+		<div class="xui-general-content xa-general">
+			<div>扫码人数：<span class="xui-red">{{channel_qrcode_members_count}}</span></div>
+			<div>下单人数：<span class="xui-red">{{payed_count}}</span></div>
+			<div>绑定手机人数<span class="xui-red">{{bind_phone_members_count}}</span></div>
+			<duv>成交金额：<span class="xui-red">￥{{pay_money}}</span></div>
 		</div>
 	</div>
 	<div class="xui-tableview">
