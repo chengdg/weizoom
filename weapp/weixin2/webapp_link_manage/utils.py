@@ -184,7 +184,7 @@ def get_webapp_link_menu_objectes(request):
 		},
 		'cardExchange': {
 			'id': 13,
-			'name': '微众卡兑换',
+			'name': '微众卡兑换平台',
 			'link': get_card_exchange_link(request),
 			'users': ['jobs', 'njtest', 'ceshi01', 'fulilaile']
 		}

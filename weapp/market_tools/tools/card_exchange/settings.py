@@ -2,5 +2,5 @@
 
 __author__ = 'aix'
 
-TOOL_NAME = u'微众卡兑换'
+TOOL_NAME = u'微众卡兑换平台'
 TOOL_ICON_URL = u'/static/img/markettools/vote/vote.jpg'
