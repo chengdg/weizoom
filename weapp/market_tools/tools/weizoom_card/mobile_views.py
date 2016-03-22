@@ -23,6 +23,7 @@ from market_tools.tools.card_exchange import mobile_views
 from mall.promotion.card_exchange import CardExchange
 from modules.member.models import MemberInfo
 from market_tools.tools.weizoom_card import models as card_models
+from datetime import datetime
 
 template_path_items = os.path.dirname(__file__).split(os.sep)
 TEMPLATE_DIR = '%s/templates' % template_path_items[-1]
@@ -68,12 +69,15 @@ def get_weizoom_card_exchange_list(request):
 	card_details_dic['phone_number'] = phone_number
 	count = member_has_cards.count()
 	has_expired_cards = False
+	today = datetime.today()
 	for card in member_has_cards:
 		card_id = card.card_id
 		cur_card = card_models.WeizoomCard.objects.get(id = card_id)
 		total_money += cur_card.money
 		is_expired = cur_card.is_expired
 		status = cur_card.status
+		if cur_card.expired_time < today:
+			is_expired = True
 		if is_expired or status == card_models.WEIZOOM_CARD_STATUS_INACTIVE:
 			count -= 1
 			has_expired_cards = True
