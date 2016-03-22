@@ -73,18 +73,24 @@ Background:
 		"""
 	And jobs已添加商品
 	#添加商品：
-			#酥烧饼，无分类，上架，无限库存；（促销商品）
-			#白斩鸡，待售，无限库存；
-			#包子，上架，有限库存50；
-			#烤鸭，带规格商品，有限数量3；
+			#促销商品，无分类，上架，无限库存；（促销商品）
+			#待售商品，待售，无限库存；
+			#会员折扣商品，上架，有限库存50；
+			#启用规格商品，有限数量3；
 			#酱牛肉，上架，无限库存；
 			#花生酱，上架，有限数量200；
+			#番茄酱，商家，有限数量100；
+			#限时抢购商品，上架，无限库存
+			#买赠商品，上架，有限数量20；
+			#单品券商品，上架，无限库存；
+			#积分抵扣商品；
+
 		"""
 		[{
-			"name": "酥烧饼",
-			"promotion_title": "促销的酥烧饼",
+			"name": "促销商品",
+			"promotion_title": "促销商品",
 			"categories": "",
-			"detail": "酥烧饼的详情",
+			"detail": "促销商品的详情",
 			"status": "上架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou1.jpg"
@@ -99,9 +105,9 @@ Background:
 				}
 			}
 		},{
-			"name":"白斩鸡",
+			"name":"待售商品",
 			"category":"",
-			"detail":"白斩鸡的详情",
+			"detail":"待售商品的详情",
 			"status":"待售",
 			"swipe_images":[{
 				"url":"/standard_static/test_resource_img/hangzhou2.jpg"
@@ -122,10 +128,10 @@ Background:
 			"postage": "免运费",
 			"distribution_time":"off"
 		},{
-			"name": "包子",
+			"name": "会员折扣商品",
 			"is_member_product": "on",
 			"category": "",
-			"detail": "包子的详情",
+			"detail": "会员折扣商品的详情",
 			"status": "上架",
 			"swipe_images": [{
 				"url": "/standard_static/test_resource_img/hangzhou3.jpg"
@@ -148,9 +154,9 @@ Background:
 			"postage": "免运费",
 			"distribution_time":"off"
 		},{
-			"name": "烤鸭",
+			"name": "启用规格商品",
 			"category": "",
-			"detail": "烤鸭的详情",
+			"detail": "启用规格商品的详情",
 			"status": "上架",
 			"is_enable_model": "启用规格",
 			"swipe_images": [{
@@ -223,26 +229,117 @@ Background:
 			}],
 			"postage": "10",
 			"distribution_time":"on"
+		},{
+			"name":"番茄酱",
+			"category": "",
+			"detail": "番茄酱的详情",
+			"status": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou6.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 20,
+						"weight": 5,
+						"stock_type": "有限",
+						"stocks": 100
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			},{
+				"type": "货到付款"
+			}],
+			"postage": "10"
+		},{
+			"name":"限时抢购商品",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架"
+		},{
+			"name":"买赠商品",
+			"price":100.00,
+			"stock_type": "有限",
+			"stocks": 20,
+			"status":"上架"
+		},{
+			"name":"单品券商品",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架"
+		},{
+			"name":"积分抵扣商品",
+			"price":100.00,
+			"stock_type": "无限",
+			"status":"上架",
+			"purchase_count":2
+		},{
+			"name": "起购数量商品",
+			"price": 15.00,
+			"stock_type": "有限",
+			"stocks": 200,
+			"status": "在售",
+			"purchase_count": 3
+		}
+		]
+		"""
+	When jobs创建限时抢购活动
+		"""
+		[{
+			"name": "限时抢购活动",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "限时抢购商品",
+			"member_grade": "全部会员",
+			"count_per_purchase": 2,
+			"promotion_price": 90.00
 		}]
 		"""
 	And jobs创建买赠活动
-		#设置酥烧饼为买赠商品
 		"""
 		[{
-			"name": "酥烧饼买一赠一活动",
+			"name": "买赠活动",
 			"start_date": "今天",
 			"end_date": "1天后",
-			"product_name": "酥烧饼",
+			"product_name": "买赠商品",
 			"premium_products": [{
-				"name": "酥烧饼",
+				"name": "买赠商品",
 				"count": 1
 			}],
 			"count": 2,
 			"is_enable_cycle_mode": false
 		}]
 		"""
+	And jobs创建积分应用活动
+		"""
+		[{
+			"name": "积分应用活动",
+			"start_date": "今天",
+			"end_date": "1天后",
+			"product_name": "积分抵扣商品",
+			"is_permanant_active": false,
+			"rules": [{
+				"member_grade": "全部会员",
+				"discount": 50,
+				"discount_money": 50.0
+			}]
+		}]
+		"""
+	And jobs添加优惠券规则
+		"""
+		[{
+			"name": "单品券",
+			"money": 1,
+			"start_date": "2天前",
+			"end_date": "2天后",
+			"coupon_id_prefix": "coupon1_id_",
+			"coupon_product": "单品券商品"
+		}]
+		"""
 
-@mall2 @apps_group @apps_group_backend
+@mall2 @apps_group @apps_group_backend @apps_group_backend_base
 Scenario:1 新建团购活动页面,查询商品列表
 	Given jobs登录系统
 	#促销商品、会员折扣商品、带规格商品、待售商品不在商品列表中
@@ -253,12 +350,15 @@ Scenario:1 新建团购活动页面,查询商品列表
 		}
 		"""
 	Then job获得团购活动可以访问的已上架商品列表
-		|  name   | price | stocks | have_promotion | actions |
-		| 酱牛肉  | 50    |  无限  |                |  选取   |
-		| 花生酱  | 12.5  |  200   |                |  选取   |
+		|  name         | price | stocks | have_promotion | actions |
+		| 促销商品      | 5    |  无限   |                |  选取   |
+		| 酱牛肉        | 50    |  无限  |                |  选取   |
+		| 花生酱        | 12.5  |  200   |                |  选取   |
+		| 番茄酱        | 20    |  100   |                |  选取   |
+		| 起购数量商品  | 15    |  200   |                |  选取   |
 
 
-@mall2 @apps_group @apps_group_backend
+@mall2 @apps_group @apps_group_backend @apps_group_backend_base
 Scenario:2 新建未开启,已结束团购活动
 	Given jobs登录系统
 	When jobs新建团购活动
@@ -325,7 +425,7 @@ Scenario:2 新建未开启,已结束团购活动
 		}]
 		"""
 
-@mall2 @apps_group @apps_group_backend
+@mall2 @apps_group @apps_group_backend @apps_group_backend_base
 Scenario:3 开启团购活动
 	Given jobs登录系统
 	When jobs新建团购活动
@@ -380,7 +480,7 @@ Scenario:3 开启团购活动
 		}]
 		"""
 
-@mall2 @apps_group @apps_group_backend
+@mall2 @apps_group @apps_group_backend @apps_group_backend_base
 Scenario:4 编辑未开启团购活动
 	Given jobs登录系统
 	When jobs新建团购活动
@@ -454,7 +554,7 @@ Scenario:4 编辑未开启团购活动
 		}]
 		"""
 
-@mall2 @apps_group @apps_group_backend
+@mall2 @apps_group @apps_group_backend @apps_group_backend_base
 Scenario:5 删除已结束团购活动
 	Given jobs登录系统
 	When jobs新建团购活动

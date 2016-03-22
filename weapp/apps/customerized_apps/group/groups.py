@@ -54,8 +54,8 @@ class Groups(resource.Resource):
 
 	@staticmethod
 	def get_datas(request):
-		product_name = request.GET.get('product_name', '')
 		group_name = request.GET.get('group_name', '')
+		product_name = request.GET.get('product_name', '')
 		status = int(request.GET.get('status', -1))
 		handle_status = int(request.GET.get('handle_status', 0))
 		start_time = request.GET.get('start_time', '')
