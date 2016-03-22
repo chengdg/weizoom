@@ -277,6 +277,7 @@
 	.xui-loading>span{
 		display: inline-block;
 		color: #cf0404;
+		vertical-align: super;
 	}
 	.xui-loading-img{
 		animation: loading 1s infinite;
@@ -330,6 +331,9 @@
 		95%   {transform: rotate(342deg);}
 		100%  {transform: rotate(360deg);}
 	}
+	.xui-loading-wrap{
+		height: 31px;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -359,7 +363,7 @@
 			{% endif%}
 			<div class="xui-form-control">
 				<label><b></b>选择兑换：</label>
-				<div class="xui-bg">
+				<div class="xui-bg mb10">
 					{% for prize in card_exchange_rule.prize %}
 					<div class="xui-exchange-choose xa-exchange-choose" data-card="{{prize.card_number}}">
 						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
@@ -373,12 +377,14 @@
 					{% endfor %}
 				</div>
 			</div>
-			<div class="xui-loading xa-loading">
-				<img src="/markettools_static/weizoom_card/img/loading.png" class="xui-loading-img">
-				<span>兑换中，请稍后！</span>
+			<div class="xui-loading-wrap">
+				<div class="xui-loading xa-loading">
+					<img src="/markettools_static/weizoom_card/img/loading.png" class="xui-loading-img">
+					<span>兑换中，请稍后！</span>
+				</div>
 			</div>
 			<div class="xui-form-control xui-submit-btn">
-				<a class="xui-exchange-confirm xa-exchange-submit" data-bind="{{member_is_bind}}">兑换</a>
+				<a class="xui-exchange-confirm mt10 xa-exchange-submit" data-bind="{{member_is_bind}}">兑换</a>
 				<!--<a class="xui-exchange-abolish">取消</a>-->
 			</div>
 		</form>
