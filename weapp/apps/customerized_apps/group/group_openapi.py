@@ -24,11 +24,18 @@ class GroupBuyProduct(resource.Resource):
 		activity_url = ''
 		is_in_group_buy = False
 		pid = request.GET.get('pid')
+		member_id = request.GET.get('member_id')
 		webapp_owner_id = request.webapp_owner_id
 		record = app_models.Group.objects(product_id=pid,status=app_models.STATUS_RUNNING)
 		if record.count() > 0:
 			is_in_group_buy = True
-			activity_url = '/m/apps/group/m_group/?webapp_owner_id='+str(webapp_owner_id)+'&id='+str(record.first().id)
+			record_id = str(record.first().id)
+			group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=member_id)
+			if group_relation.count() > 0 :#已经开过团
+				group_relation_id = str(group_relation.first().id)
+				activity_url = '/m/apps/group/m_group/?webapp_owner_id='+str(webapp_owner_id)+'&id='+record_id+'&group_relation_id='+group_relation_id+'&fid='+member_id
+			else:
+				activity_url = '/m/apps/group/m_group/?webapp_owner_id='+str(webapp_owner_id)+'&id='+record_id
 		response = create_response(200)
 		response.data = {
 			'is_in_group_buy': is_in_group_buy,
