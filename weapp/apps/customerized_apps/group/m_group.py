@@ -18,6 +18,7 @@ from modules.member.models import Member
 from mall.models import *
 from weapp import settings
 from mall.order.util import update_order_status_by_group_status
+from apps.customerized_apps.group.group_participance import send_group_template_message
 
 class MGroup(resource.Resource):
 	app = 'apps/group'
@@ -50,12 +51,12 @@ class MGroup(resource.Resource):
 			is_from_pay_result = False
 		response = create_response(500)
 
-		if not record_id:
-			response.errMsg = u'活动信息出错'
-			return response.get_response()
 		record = app_models.Group.objects(id=record_id)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
+			return response.get_response()
+		elif not record_id:
+			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		record = record.first()
 		#获取活动状态
@@ -83,9 +84,29 @@ class MGroup(resource.Resource):
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
 							update_order_status_by_group_status(group_relation_info.id,'failure')
+							#发送拼团失败模板消息
+							try:
+								owner_id = record.owner_id
+								product_name = record.product_name
+								miss = int(group_relation_info.group_type)-group_relation_info.grouped_number
+								activity_info = {
+									"owner_id": str(owner_id),
+									"record_id": str(record_id),
+									"group_id": str(group_relation_id),
+									"fid": str(group_relation_info.member_id),
+									"price": '0.2f' % group_relation_info.group_price,
+									"product_name": product_name,
+									"status" : 'fail',
+									"miss": str(miss)
+								}
+								group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+								member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+								send_group_template_message(activity_info, member_info_list)
+							except:
+								print(u'发送拼团成功模板消息失败')
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid).order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -247,6 +268,26 @@ class MGroup(resource.Resource):
 			for group_relation in all_running_group_relations:
 				group_relation.update(group_status=app_models.GROUP_FAILURE)
 				update_order_status_by_group_status(group_relation.id,'failure')
+				#发送拼团失败模板消息
+				try:
+					owner_id = record.owner_id
+					product_name = record.product_name
+					miss = int(group_relation.group_type)-group_relation.grouped_number
+					activity_info = {
+						"owner_id": str(owner_id),
+						"record_id": str(record_id),
+						"group_id": str(group_relation_id),
+						"fid": str(group_relation.member_id),
+						"price": '0.2f' % group_relation.group_price,
+						"product_name": product_name,
+						"status" : 'fail',
+						"miss": str(miss)
+					}
+					group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})

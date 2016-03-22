@@ -7,6 +7,9 @@ import mongoengine as models
 STATUS_NOT_START = 0
 STATUS_RUNNING = 1
 STATUS_STOPED = 2
+
+IS_USE_NO = 0
+IS_USE_YES = 1
 class Group(models.Document):
 	owner_id = models.LongField() #创建人id
 	related_page_id = models.StringField(default="", max_length=100) #termite page的id
@@ -14,6 +17,7 @@ class Group(models.Document):
 	start_time = models.DateTimeField() #开始时间
 	end_time = models.DateTimeField() #结束时间
 	status = models.IntField(default=0) #状态
+	is_use = models.IntField(default=1) #删除状态 1未删除，0删除
 	handle_status =  models.IntField(default=0) #手动状态 0关闭,1开启
 	created_at = models.DateTimeField() #创建时间
 	group_dict = models.DynamicField() #团购活动字典{'0':{'group_type':'5','group_days':'10','group_price':'100.00'},...}

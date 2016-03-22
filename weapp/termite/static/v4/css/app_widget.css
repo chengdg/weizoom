@@ -1880,7 +1880,6 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-description{
     background: #fff;
     margin: 13px 13px 0px 13px;
-    padding: 13px;
     border-radius: 6px;
 }
 .wui-group-container .wui-i-description-content .wui-i-product-title{
@@ -1935,6 +1934,7 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_title{
     float: left;
+	font-weight: bold;
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-end_time {
     font-size: 0.8rem;
@@ -1952,7 +1952,7 @@ li.wui-selectBox-display-table {
     border-radius: 3px;
     left: 5%;
     padding: 10px 10px 55px 10px;
-    position: fixed;
+    position: absolute;
     width: 85%;
     z-index: 11111;
     text-align: center;
@@ -2060,12 +2060,14 @@ li.wui-selectBox-display-table {
 }
 
 .wui-group-container .wui-i-powerbar_group .wui-i-total_number{
-    display: inline-block;
+	display: inline-block;
     color: #ff2742;
     width: 15%;
     float: right;
     text-align: center;
     line-height: 26px;
+    font-weight: bold;
+    font-size: 1rem;
 }
 
 .wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar{
@@ -2103,14 +2105,16 @@ li.wui-selectBox-display-table {
 }
 
 .wui-group-container .wui-i-states .wui-i-displayName{
-	float: left;
-	width: 40px;
-    font-size: initial;
-    margin: 15px 10px 10px 10px;
+    float: left;
+    width: 35px;
+    font-size: 0.9rem;
+    margin: 15px 0 10px 10px;
+    font-weight: bold;
+    line-height: 1.9rem;
 }
 
 .wui-group-container .wui-i-states .wui-i-membersBox{
-	margin-left: 60px;
+	margin-left: 35px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
@@ -2126,5 +2130,15 @@ li.wui-selectBox-display-table {
 	height: 36px;
 	border-radius: 36px;
 	border: 0px;
+}
+.wui-group-container .selection-radio{
+	background: url("/termite_static/img/component/group/radio.png") no-repeat;
+	background-size: 70%;
+    width: 30px;
+    height: 22px;
+    position: absolute;
+}
+.wui-group-container .radio-select{
+	background-position: 0 -48px;
 }
 /*百宝箱 团购CSS ---- end */

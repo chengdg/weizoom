@@ -11,6 +11,7 @@ import models as app_models
 from apps import request_util
 from termite import pagestore as pagestore_manager
 from mall.order.util import update_order_status_by_group_status
+from group_participance import send_group_template_message
 
 class GroupBuyProduct(resource.Resource):
 	app = 'apps/group'
@@ -159,7 +160,6 @@ class OrderAction(resource.Resource):
 		group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_id,grouped_member_id=member_id)
 
 		if action == 'pay': #参数为'pay'表示支付成功
-			print('order_action!!!!!!!!!!!!!!!!!,action=="pay"')
 			if group_record.member_id == member_id:#如果团长支付成功，算开团成功
 				group_record.update(set__group_status=app_models.GROUP_RUNNING)
 			group_detail.update(set__is_already_paid=True,set__order_id=order_id)
@@ -170,7 +170,6 @@ class OrderAction(resource.Resource):
 				group_record.update(dec__grouped_number=1,pop__grouped_member_ids=member_id)
 			group_detail.delete()
 		elif action == 'buy': #'buy'(下单)
-			print('order_action!!!!!!!!!!!!!!!!!,action=="buy"')
 			group_detail.update(set__order_id=order_id)
 
 		#如果团购人满，并且全部支付成功，则团购成功
@@ -182,6 +181,27 @@ class OrderAction(resource.Resource):
 			if False not in is_already_paid_list:
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 				update_order_status_by_group_status(group_id,'success')
+
+				# 发送拼团成功模板消息
+				try:
+					group_info = app_models.Group.objects.get(id=group_record.belong_to)
+					owner_id = str(group_info.owner_id)
+					product_name = group_info.product_name
+					activity_info = {
+						"owner_id": owner_id,
+						"record_id": group_record.belong_to,
+						"group_id": str(group_id),
+						"fid": str(group_record.member_id),
+						"price": '0.2f' % group_record.group_price,
+						"product_name": product_name,
+						"status" : 'success',
+						"miss": ''
+					}
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
+
 		response = create_response(200)
 		return response.get_response()
 
