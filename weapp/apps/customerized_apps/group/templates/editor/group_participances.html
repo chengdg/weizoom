@@ -234,7 +234,7 @@
 $(document).ready(function() {
 	$('body').delegate('.xa-viewData', 'click', function(event) {
 		var activityId = $(event.currentTarget).parents('tr').data('id');
-		W.dialog.showDialog('W.dialog.app.group.ViewParticipanceDataDialog', {
+        W.dialog.showDialog('W.dialog.app.group.ViewParticipanceDataDialog', {
 			activityId: activityId,
 			success: function(data) {
 			}
