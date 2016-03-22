@@ -261,7 +261,7 @@ def get_card_detail_normal(request,card_id):
 	card = promotion_models.CardHasExchanged.objects.filter(card_id=card_id)
 	if card.count() > 0 :
 		card = card[0]
-		weizoom_card_orders_list.append({
+		card_info_list.append({
 			'created_at': card.created_at,
 			'money': '%.2f' % WeizoomCard.objects.get(id=card_id).weizoom_card_rule.money,
 			'product_name': u'兑换平台',

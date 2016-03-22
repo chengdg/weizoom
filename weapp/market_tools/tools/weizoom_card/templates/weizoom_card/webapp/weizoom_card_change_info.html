@@ -202,19 +202,19 @@
 						</td>
 						<td class="xui-order-info-money xui-fontArial">
 							{% if order.event_type == '积分兑换' %}
-							<span style="color: #0fb202">
-							+{{order.money}}
-							</span>
+								<span style="color: #0fb202">
+								+{{order.money}}
+								</span>
 							{% else %}
-							{% if order.money < '0' %}
-							<span style="color: #0fb202">
-							+{{order.money| slice:"1:"}}
-							</span>
-							{% else %}
-							<span style="color: #cf0404">
-							-{{order.money}}
-							</span>
-							{% endif %}
+								{% if order.money < '0' %}
+									<span style="color: #0fb202">
+										+{{order.money| slice:"1:"}}
+									</span>
+								{% else %}
+									<span style="color: #cf0404">
+										-{{order.money}}
+									</span>
+								{% endif %}
 							{% endif %}
 						</td>
 						<td class="xui-order-info-name">

@@ -45,7 +45,7 @@
 			<span>专属商家</span>
 			{% if weizoom_card.shop_list %}
 				<img src="/static_v2/img/webapp/mall/right_arrow.png">
-				<span class="shop_list_split">{{ weizoom_card.shop_list }}&nbsp;</span>
+				<span class="shop_list_split">{{ weizoom_card.shop_list }}&nbsp;&nbsp;</span>
 			{% else %}
 				<div class="xui-shop-normal">通用</div>
 			{% endif %}
@@ -85,12 +85,18 @@
 							</td>
 							<td class="xui-order-info-money">
 								{% if order.is_product %}
-									<span style="color: #cf0404">
-										-{{order.money}}
-									</span>
+									{% if order.money < '0' %}
+										<span style="color: #0fb202">
+											+{{order.money| slice:"1:"}}
+										</span>
+									{% else %}
+										<span style="color: #cf0404">
+											-{{order.money}}
+										</span>
+									{% endif %}
 								{% else %}
 									<span style="color: #0fb202">
-										+{{order.money| slice:"1:"}}
+										+{{order.money}}
 									</span>
 								{% endif %}
 							</td>
