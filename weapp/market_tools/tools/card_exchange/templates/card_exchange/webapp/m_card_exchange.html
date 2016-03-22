@@ -270,6 +270,41 @@
 	.error{
 		color: #ee3715;
 	}
+	.xui-loading{
+		text-align: center;
+		display: none;
+	}
+	.xui-loading>span{
+		display: inline-block;
+		color: #cf0404;
+	}
+	.xui-loading-img{
+		animation: loading 1s infinite;
+	}
+	@keyframes loading
+		{
+		0%    {transform: rotate(0deg);}
+		5%	  {transform: rotate(18deg);}
+		10%   {transform: rotate(36deg);}
+		15%   {transform: rotate(54deg);}
+		20%	  {transform: rotate(72deg);}
+		25%	  {transform: rotate(90deg);}
+		30%   {transform: rotate(108deg);}
+		35%	  {transform: rotate(126deg);}
+		40%   {transform: rotate(144deg);}
+		45%   {transform: rotate(162deg);}
+		50%   {transform: rotate(180deg);}
+		55%	  {transform: rotate(196deg);}
+		60%   {transform: rotate(216deg);}
+		65%   {transform: rotate(234deg);}
+		70%   {transform: rotate(252deg);}
+		75%	  {transform: rotate(270deg);}
+		80%   {transform: rotate(288deg);}
+		85%   {transform: rotate(306deg);}
+		90%   {transform: rotate(324deg);}
+		95%   {transform: rotate(342deg);}
+		100%  {transform: rotate(360deg);}
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -312,6 +347,10 @@
 					</div>
 					{% endfor %}
 				</div>
+			</div>
+			<div class="xui-loading xa-loading">
+				<img src="/markettools_static/weizoom_card/img/loading.png" class="xui-loading-img">
+				<span>兑换中，请稍后！</span>
 			</div>
 			<div class="xui-form-control xui-submit-btn">
 				<a class="xui-exchange-confirm xa-exchange-submit" data-bind="{{member_is_bind}}">兑换</a>
@@ -473,6 +512,7 @@
             // if(submit_control) return false;
             // submit_control = true;
 			if($('.xa-exchange-choose').hasClass('active')){
+				$(".xa-loading").show();
 				var need_integral = 0;
 				var card_arr = [];
 				$('.xa-exchange-choose.active').each(function(index, el) {
@@ -500,6 +540,7 @@
 						$('.xa-exchanged-a').attr('href','/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_exchange_list&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0')
 						$('.xa-alert-exchange').removeClass('hidden');
 						$('.xa-current-integral').text(data);
+						$(".xa-loading").hide();
 					},
 					error: function(data){
 						$('.xa-reminder-title').html('兑换失败').addClass('error');
@@ -507,6 +548,7 @@
 						$('.xa-exchanged-a').attr('href','')
 						$('.xa-reminder-detail').html(data.errMsg || '兑换失败');
 						$('.xa-alert-exchange').removeClass('hidden');
+						$(".xa-loading").hide();
                         // submit_control = false;
 					}
 				});
