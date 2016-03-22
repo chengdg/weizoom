@@ -306,26 +306,26 @@ html,body{
 .xui-wzResult-page .xui-goUserInfo-btn {
     background: #0580CE none repeat scroll 0 0;
     border-radius: 0;
-    bottom: 8px;
+    bottom: 0;
     color: #fff;
     font-size: 1em;
     height: 45px;
     left: 3%;
     line-height: 45px;
-    position: fixed;
+    position: relative;
     width: 45%;
     z-index: 12;
 }
 .xui-wzResult-page .xui-goShopping-btn {
     background: #d10000 none repeat scroll 0 0;
     border-radius: 0;
-    bottom: 8px;
+    bottom: 0;
     color: #fff;
     font-size: 1em;
     height: 45px;
-    right: 3%;
+    left: 3%;
     line-height: 45px;
-    position: fixed;
+    position: relative;
     width: 45%;
     z-index: 12;
 }
