@@ -274,12 +274,12 @@ html,body{
 	display: none;
 	border-top: 1px solid #dbdbdb;
 	background-color: #F9F9F9;
-	padding: 8px 23px;
+	padding: 8px 15px;
 	color: #999999;
 	line-height: 2rem;
 }
 .xui-wzResult-page .xui-submitWzOther table{
-	width: 100%;
+	width: 98%;
 }
 .xui-wzResult-page .xui-submitWzOther table tr{
 	text-align: center;
