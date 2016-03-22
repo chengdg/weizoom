@@ -106,7 +106,7 @@ def get_card_exchange_detail(request):
 	card_id = request.GET.get('card_id',None)
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
-	card = WeizoomCard.objects.get(id=card_id)
+	card = WeizoomCard.objects.get(weizoom_card_id=card_id)
 	valid_restrictions = card.weizoom_card_rule.valid_restrictions
 	c = RequestContext(request, {
 		'card_orders': weizoom_card_orders_list,
