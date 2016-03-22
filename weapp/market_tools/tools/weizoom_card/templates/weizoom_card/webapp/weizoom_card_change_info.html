@@ -175,7 +175,14 @@
 					<span class="xui-validDate">有效期至:<span class="xui-fontArial">{{weizoom_card.expired_time | date:"Y-m-d"}}</span></span>
 				</div>
 			</div>
-			<div class="xui-restrictions">使用条件：满<span class="xui-fontArial">{{valid_restrictions}}</span>元可用/不限制</div>
+			<div class="xui-restrictions">
+				使用条件：
+				{% if valid_restrictions == '-1.00' %}
+				不限制
+				{% else %}
+				满{{valid_restrictions}}元可用
+				{% endif %}
+			</div>
 			<div class="xui-use-detail">
 				<div class="xui-use"><b>使用详情</b></div>
 				<table>

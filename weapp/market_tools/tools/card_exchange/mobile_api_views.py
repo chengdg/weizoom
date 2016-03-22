@@ -16,7 +16,6 @@ def exchange_card(request):
 	@param request:
 	@return:
 	"""
-	print '-------------22222'
 	card_number = json.loads(request.POST.get('card_number',''))
 	need_integral = request.POST.get('need_integral','')
 	member = request.member
@@ -40,13 +39,15 @@ def exchange_card(request):
 					return response.get_response()
 				promotion_models.CardHasExchanged.objects.create(
 			 		webapp_id = webapp_id,
-			 		card_id = card_ids_list[0],
+			 		card_id = sorted(card_ids_list)[0],
 			 		owner_id = member_id,
 			 		owner_name = owner_name
 			 	)
 
 			member.integral = int(member.integral) - int(need_integral)
 			member.save()
+			member_detail = Member.objects.get(id = member_id)
+			member_detail.consume_integral(int(need_integral), u'兑换微众卡,消耗积分')
 			response = create_response(200)
 			response.data = request.member.integral
 			return response.get_response()
