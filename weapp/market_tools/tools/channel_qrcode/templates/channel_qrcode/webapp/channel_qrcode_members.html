@@ -88,8 +88,8 @@
 	</div>
 	<div class="xui-tableview">
 		{% for channel_qrcode_member in channel_qrcode_members %}
-		<div class="xui-tableCell xa-tableCell">
-			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" />
+		<div class="xui-tableCell xa-tableCell" style="	float: left;width: 55px;height: 75px;margin-left: 10px;margin-top: 15px;position: relative;">
+			<img class="xui-img" src="{{channel_qrcode_member.member.user_icon}}" style="width:55px;height:55px;border-radius:5px;" />
 			<p class="xui-p xui-ellipsis-1">{{channel_qrcode_member.member.username_for_html|safe}}</p>
 			{% if not channel_qrcode_member.member.is_subscribed %}
 			<div class="xui-yellowBar">已跑路</div>
