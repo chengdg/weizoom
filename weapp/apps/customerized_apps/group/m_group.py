@@ -137,11 +137,12 @@ class MGroup(resource.Resource):
 						if fid is None or str(fid) == str(member_id):
 							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
 						else:
-							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
-							if ( group_detail.is_already_paid and (member_id in member_ids)):
-								is_helped = True
-							else :
-								is_helped = False
+							try:
+								group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+								if ( group_detail.is_already_paid and (member_id in member_ids)):
+									is_helped = True
+							except:
+								pass
 						try:
 							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
 							order_id = group_detail.order_id
