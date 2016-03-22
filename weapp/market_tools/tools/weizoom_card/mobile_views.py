@@ -133,8 +133,8 @@ def get_weizoom_card_change_money(request):
 			if rule.count() > 0:
 				rule = rule[0]
 				weizoom_card_info['valid_restrictions'] = rule.valid_restrictions if rule.valid_restrictions != -1 else ''
-				weizoom_card_info['valid_time_from'] = rule.valid_time_from.strftime('%Y/%m/%d %H:%M')
-				weizoom_card_info['valid_time_to'] = rule.valid_time_to.strftime('%Y/%m/%d %H:%M')
+				weizoom_card_info['valid_time_from'] = rule.valid_time_from.strftime('%Y/%m/%d ')
+				weizoom_card_info['valid_time_to'] = rule.valid_time_to.strftime(' %Y/%m/%d')
 				shop_limit_list = rule.shop_limit_list.split(',') if rule.shop_limit_list != -1 else ''
 				shop_black_list = rule.shop_black_list.split(',') if rule.shop_black_list != -1 else ''
 				shop_list_name = u''
