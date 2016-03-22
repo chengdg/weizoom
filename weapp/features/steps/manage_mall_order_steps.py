@@ -441,7 +441,7 @@ def step_look_for_order(context, user):
     if query_params['order_source'] == -1:
         query_params.pop('order_source')
 
-    query_params['order_type'] = ORDER_SOURCE2ID[query_params['order_type']]
+    query_params['order_type'] = ORDER_TYPE[query_params['order_type']]
     if query_params['order_type'] == -1:
         query_params.pop('order_type')
 

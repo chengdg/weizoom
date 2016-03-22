@@ -747,15 +747,7 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
-        if OrderHasGroup.objects.filter(order_id=order.order_id).count() > 0:
-            order.actions = get_order_actions(
-                order,
-                is_detail_page=True,
-                mall_type=request.user_profile.webapp_type,
-                is_group_buying=True
-                )
-        else:
-            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
 
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
@@ -783,7 +775,19 @@ def get_detail_response(request):
             order.actions = get_order_actions(child_orders[0], is_detail_page=True, mall_type=request.user_profile.webapp_type)
         else:
             child_orders = [order]
-            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+            if is_group_buying:
+                order.actions = get_order_actions(
+                    order,
+                    is_detail_page=True,
+                    mall_type=request.user_profile.webapp_type,
+                    is_group_buying=is_group_buying
+                    )
+            else:
+                order.actions = get_order_actions(
+                    order,
+                    is_detail_page=True,
+                    mall_type=request.user_profile.webapp_type
+                    )
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
@@ -822,6 +826,7 @@ def get_detail_response(request):
             for child_order in child_orders:
                 if child_order.order_id == log.order_id:
                     log.leader_name = child_order.leader_name
+
 
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
