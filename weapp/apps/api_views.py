@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from account.util import get_binding_weixin_mpuser, get_mpuser_accesstoken
 from apps.customerized_apps.red_packet.models import RedPacketCertSettings
 
 __author__ = 'liupeiyu, chuter'
@@ -12,8 +13,9 @@ from django.contrib.auth.models import User
 from models import *
 from core.jsonresponse import create_response, JsonResponse
 from core.exceptionutil import unicode_full_stack
+from core.wxapi import get_weixin_api
 
-from watchdog.utils import watchdog_alert
+from watchdog.utils import watchdog_alert, watchdog_warning
 
 from apps_manager import manager
 import termite.pagestore as pagestore_manager
@@ -329,3 +331,119 @@ def __save_cert_file(res, file, owner_id):
 	print >> dst_file, ''.join(content)
 	dst_file.close()
 	return file_path
+
+@login_required
+def get_template_message_list(request):
+	"""
+	获取商家的模板消息
+	@param request:
+	@return:
+	"""
+	print 'in get_template_message_list-----------------------'
+	action = request.GET.get('action', None) #全量更新
+	apps_type = request.GET.get('apps_type', "") #全量更新
+	#首先从数据库中获取
+	template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
+	if action or len(template_ids) <= 0:
+		#发起api请求，从微信获取
+		get_templates(request.manager)
+		template_ids = [t.template_id for t in UserHasTemplateMessages.objects(owner_id=request.manager.id)]
+
+	items = UserHasTemplateMessages.objects(owner_id=request.manager.id, template_id__in=template_ids)
+	#获取历史数据
+	um = UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type=apps_type)
+	control_data = 0
+	if um.count() > 0:
+		um = um.first()
+		control_data = um.data_control
+	templates = []
+	for t in items:
+		templates.append({
+			"template_id": t.template_id,
+			"template_title": t.title
+		})
+
+	response = create_response(200)
+	response.data = {"hasData": 0 if len(templates) <= 0 else 1, "templates": templates, "control_data": control_data}
+	return response.get_response()
+
+@login_required
+def save_apps_use_template(request):
+	"""
+	各百宝箱活动所使用的模板消息
+	@param request:
+	@return:
+	"""
+	response = create_response(500)
+	try:
+		fields = request.POST
+
+		template_settings = json.loads(fields.get('template_settings', "{}"))
+		apps_type = fields.get('apps_type', "")
+		selected_template_ids = fields.get('template_ids','')
+		UserappHasTemplateMessages.objects(owner_id=request.manager.id, apps_type=apps_type).delete()
+		UserappHasTemplateMessages(owner_id=request.manager.id, apps_type=apps_type, data_control=template_settings).save()
+		response = create_response(200)
+	except Exception, e:
+		print e
+		response.errMsg =  u"配置模板出错"
+	return response.get_response()
+
+def get_templates(user):
+	"""
+	从微信获取商家在公众号中配置的所有模板消息
+	@param owner_id:
+	@return:
+	"""
+	mpuser_access_token = _get_mpuser_access_token(user)
+	if mpuser_access_token:
+		weixin_api = get_weixin_api(mpuser_access_token)
+		try:
+			print '22123123'
+			result = weixin_api.get_all_template_messages(True)
+			template_list = result['template_list']
+			user_update_list = []
+			for t in template_list:
+				user_update_list.append(UserHasTemplateMessages(
+					owner_id = user.id,
+					template_id = t['template_id'],
+					title = t['title'],
+					primary_industry = t['primary_industry'],
+					deputy_industry = t['deputy_industry'],
+					content = t['content']
+				))
+			UserHasTemplateMessages.objects(owner_id=user.id).delete()
+			UserHasTemplateMessages.objects.insert(user_update_list)
+			print result,'asdfsgsf'
+		except Exception, e:
+			print e
+			notify_message = u"获取模板列表异常, cause:\n{}".format(unicode_full_stack())
+			watchdog_warning(notify_message)
+	print 'get_all_template_messages api return =================='
+
+def get_single_template_info(template_id):
+	"""
+	获取制定模板的详细信息
+	@param t_id:
+	@return:
+	"""
+	try:
+		pass
+	except Exception, e:
+		print e
+		return None
+
+def _get_mpuser_access_token(user):
+	mp_user = get_binding_weixin_mpuser(user)
+	if mp_user:
+		mpuser_access_token = get_mpuser_accesstoken(mp_user)
+	else:
+		return False
+
+	if mpuser_access_token is None:
+		return False
+
+	if mpuser_access_token.is_active:
+		return mpuser_access_token
+	else:
+		return None

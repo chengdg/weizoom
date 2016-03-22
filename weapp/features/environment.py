@@ -211,6 +211,7 @@ def __clear_all_app_data():
 	mall_models.Order.objects.all().delete()
 	mall_models.OrderHasProduct.objects.all().delete()
 	mall_models.OrderHasPromotion.objects.all().delete()
+	mall_models.OrderHasGroup.objects.all().delete()
 	mall_models.OrderOperationLog.objects.all().delete()
 	mall_models.WeizoomMall.objects.all().delete()
 	mall_models.ShoppingCart.objects.all().delete()
@@ -304,6 +305,11 @@ def __clear_all_app_data():
 	member_qrcode_models.MemberQrcodeLog.objects.all().delete()
 	member_qrcode_models.MemberQrcodeSettings.objects.all().delete()
 	modules_member_models.MemberMarketUrl.objects.all().delete()
+
+	#微众卡兑换
+	promotion_models.CardExchange.objects.all().delete()
+	promotion_models.CardExchangeRule.objects.all().delete()
+	promotion_models.CardHasExchanged.objects.all().delete()
 
 	# 店铺装修
 	termite2_models.TemplateCustomModule.objects.all().delete()
@@ -482,7 +488,7 @@ def __create_weapp_product():
 
 	manager = User.objects.get(username='manager')
 	workspace_ids = ','.join([str(workspace.id) for workspace in webapp_models.Workspace.objects.filter(owner=manager)])
-	market_tool_names = 'vote,member_qrcode,research,activity,coupon,lottery,complain,test_game,red_envelope,delivery_plan,point_card,channel_qrcode,thanks_card,weizoom_card,store,template_message'
+	market_tool_names = 'vote,member_qrcode,research,activity,coupon,lottery,complain,test_game,red_envelope,delivery_plan,point_card,channel_qrcode,thanks_card,weizoom_card,store,template_message,card_exchange'
 
 	weapp_product_models.Product.objects.create(
 		name = u'完整版',

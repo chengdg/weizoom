@@ -20,11 +20,11 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         {
             name: 'title',
             type: 'text_with_annotation',
-            displayName: '团购名称',
+            displayName: '团购名称：',
             isUserProperty: true,
             maxLength: 30,
-            //validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
-            //validateIgnoreDefaultValue: true,
+            validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
+            validateIgnoreDefaultValue: true,
             annotation: '请简要输入团购名称',
             default: ''
         },{
@@ -42,20 +42,20 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         },{
             name: 'valid_time',
             type: 'date_range_selector',
-            displayName: '起止时间',
+            displayName: '起止时间：',
             isUserProperty: true,
-            //validate: 'data-validate="require-notempty::有效时间不能为空"',
-            //validateIgnoreDefaultValue: true,
+            validate:'data-validate=""',
             default: ''
         },{
 			name: 'product',
 			type: 'product_dialog_select',
-			displayName: '选择商品',
+			displayName: '选择商品：',
 			isUserProperty: true,
 			isShowCloseButton: true,
 			selectedButton: '选择商品',
 			dialog: 'W.dialog.termite.SelectProductDialog',
 			dialogParameter: '{"multiSelection": false}',
+            validate:'data-validate=""',
 			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:'',productBarcode:''}
 		}]},{
 
@@ -64,50 +64,15 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         fields: [{
             name: 'group_title',
             type: 'title_with_nothing',
-			//validate:'data-validate="require-notempty::选项不能为空',
-            displayName: '拼团人数',
+			validate:'data-validate=""',
+            displayName: '拼团人数：',
 			annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			isUserProperty:true
 
         }]},
-		//{
-		//group:'',//列表
-		//groupClass:'xui-propertyView-app-GroupList',
-		//fields:[{
-		//name: 'group_type',
-		//type: 'select',
-		////validate:'data-validate="require-notempty::选项不能为空',
-		//displayName: '1：',
-		////annotation:'注：1个团购可创建多种拼团人数供顾客选择',
-		//source:[{
-		//	name:'5人团',
-		//	value:'5'
-		//},{
-		//	name:'10人团',
-		//	value:'10'
-		//}],
-		//default:'5',
-		//isUserProperty:true
-        //
-		//},{
-		//	name:'group_days',
-		//	type:'text_with_annotation',
-		//	displayName:'团拼时间：',
-		//	annotation:'天',
-		//	size:'35px',
-		//	isUserProperty:true
-		//},{
-		//	name:'group_price',
-		//	type:'text_with_annotation',
-		//	displayName:'团购价：',
-		//	annotation:'元',
-		//	size:'35px',
-		//	isUserProperty:true
-		//}]
-		//},
 		{
 		group:'',//列表
-		groupClass: 'xui-propertyView-app-DynamicGroupList',
+		groupClass: 'xui-propertyView-app-DynamicGroupList xa-propertyView-app-DynamicGroupList',
         fields: [
 			{
             name: 'group_items',//动态组件
@@ -124,8 +89,8 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
         fields: [{
             name: 'rule_title',
             type: 'title_with_nothing',
-			//validate:'data-validate="require-notempty::选项不能为空',
-            displayName: '团购说明',
+			validate:'data-validate=""',
+            displayName: '团购说明：',
 			annotation:'注：请修改【发货时间】、【开团截止日期】、【商品数量】顾客会查看团购说明，请谨慎填写。',
 			isUserProperty:true
 
@@ -135,14 +100,14 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             displayName: '',
             maxLength: 800,
             isUserProperty: true,
-            //validate: 'data-validate="require-notempty::选项不能为空"',
+            validate: 'data-validate="require-notempty::选项不能为空"',
             annotation: '注：请修改【发货时间】、【开团截止日期】、【商品数量】顾客会查看团购说明，请谨慎填写。',
             placeholder: '请简略描述活动具体规则，以及活动起止时间，客服联系电话等。',
-            default: ""
+            default: "1.开团和拼团的顾客需要先已团购价支付商品\n2.到达团购人数上限或到达团购指定时间后，团购结束。到达团购人数上限 - 团购成功。成功后,在该商品团购结束【20】天内进行发货。在指定时间未到达团购人数上线 - 团购失败。失败后, 【5~7】个工作日完成退款\n3.本次活动商品数量为【100】份，售完活动结束。开团截止日期【201x-0x-xx】\n4.已关注的用户可在 个人中心 - 全部订单 中找到支付的团购订单和进入团购活动的入口。\n"
         },{
 			name: 'material_image',
-			type: 'image_dialog_select',
-			displayName: '上传图片',
+			type: 'image_dialog_select_v2',
+			displayName: '分享图片：',
 			isUserProperty: true,
 			isShowCloseButton: true,
 			triggerButton: {nodata:'选择图片', hasdata:'修改'},
@@ -150,15 +115,17 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectImagesDialog',
 			dialogParameter: '{"multiSelection": false}',
 			help: '格式：建议jpg.png 尺寸：50*50 不超过1M',
-			default: ''
+			default: '',
+            validate: 'data-validate="require-notempty::请插入分享图片"',
+            // validateIgnoreDefaultValue: true
+
 		},{
             name: 'share_description',
             type: 'text_with_annotation',
-            displayName: '分享描述',
+            displayName: '分享描述：',
             isUserProperty: true,
             maxLength: 26,
-            //validate: 'data-validate="require-notempty::活动名称不能为空,,require-word"',
-            //validateIgnoreDefaultValue: true,
+            validate: 'data-validate="require-notempty::活动名称不能为空"',
             annotation: '',
             placeholder:'最多可输入26个字',
             default: ''
@@ -166,76 +133,72 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
         }],
 	propertyChangeHandlers: {
-		title: function($node, model, value) {
-            $node.find('.wui-i-product-title').html(value);
-		},
-		start_time: function($node, model, value, $propertyViewNode) {
-			var end_time_text = $node.find('.wui-i-end_time').text();
-			$node.find('.wui-i-start_time').text(value);
-			if (end_time_text != ""){
-				getDateTime($node,value,end_time_text,model);
-			}
-		},
-		end_time: function($node, model, value, $propertyViewNode) {
-			var start_time_text = $node.find('.wui-i-start_time').text();
-			$node.find('.wui-i-end_time').text(value);
-			if (start_time_text != ""){
-				getDateTime($node,start_time_text,value,model);
-			}
+		// title: function($node, model, value,$propertyViewNode) {
+  //       },
+        start_time: function($node, model, value, $propertyViewNode) {
+            var end_time_text = $node.find('.wui-i-end_time').text();
+            $node.find('.wui-i-start_time').text(value);
+            if (end_time_text != ""){
+                getDateTime($node,value,end_time_text,model);
+            }
+        },
+        end_time: function($node, model, value, $propertyViewNode) {
+            var start_time_text = $node.find('.wui-i-start_time').text();
+            $node.find('.wui-i-end_time').text(value.split(' ')[0]);
+            if (start_time_text != ""){
+                getDateTime($node,start_time_text,value,model);
+            }
 
-		},
-		// description: function($node, model, value, $propertyViewNode) {
-		// 	//model.set({description:value.replace(/\n/g,'<br>')},{silent: true});
-		// 	//$node.find('.xa-description .wui-i-description-content').html(value.replace(/\n/g,'<br>'));
-		// },
+        },
+        material_image: function($node, model, value, $propertyViewNode) {
+            var image = {url:''};
+            var data = {type:null};
+            if (value !== '') {
+                data = $.parseJSON(value);
+                image = data.images[0];
+            }
+            model.set({
+                material_image: image.url
+            }, {silent: true});
 
-		material_image: function($node, model, value, $propertyViewNode) {
-			var image = {url:''};
-			var data = {type:null};
-			if (value !== '') {
-				data = $.parseJSON(value);
-				image = data.images[0];
-			}
-			model.set({
-				material_image: image.url
-			}, {silent: true});
-
-			if (data.type === 'newImage') {
-				W.resource.termite2.Image.put({
-					data: image,
-					success: function(data) {
-					},
-					error: function(resp) {
-					}
-				})
-			}
-			if (value) {
-				//更新propertyView中的图片
-				var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
-				$target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
-				$target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
-			}
-		},
-
-		// rules: function($node, model, value, $propertyViewNode) {
-		// 	//model.set({rules:value.replace(/\n/g,'<br>')},{silent: true});
-		// 	//$node.find('.xa-rules .wui-i-rules-content').html(value.replace(/\n/g,'<br>'));
-		// },
+            if (data.type === 'newImage') {
+                W.resource.termite2.Image.put({
+                    data: image,
+                    success: function(data) {
+                    },
+                    error: function(resp) {
+                    }
+                })
+            }
+            if (value) {
+                //更新propertyView中的图片
+                // var $target = $propertyViewNode.find($('[data-field-anchor="material_image"]'));
+                // $target.find('.propertyGroup_property_dialogSelectField .xa-dynamicComponentControlImgBox').removeClass('xui-hide').find('img').attr('src',image.url);
+                // $target.find('.propertyGroup_property_dialogSelectField .propertyGroup_property_input').find('.xui-i-triggerButton').text('修改');
+             }
+            this.refresh($node, {refreshPropertyView: true});
+        },
         group_items: function($node, model, value,$propertyViewNode) {
             this.refresh($node, {resize:true, refreshPropertyView:true});
-			$ul = $node.find('.wui-i-description ul');
+            $ul = $node.find('.wui-i-description ul');
 
-			var n4li = $ul.children('li').length;
-			var n4li_hide = $ul.children('.xui-hide').length;
-			var n4li_show = n4li-n4li_hide;
+            var n4li = $ul.children('li').length;
+            var n4li_hide = $ul.children('.xui-hide').length;
+            var n4li_show = n4li-n4li_hide;
 
-			if(n4li_show==0){
-				$ul.find('.wui-i-group1').removeClass('xui-hide');
-			}else if(n4li_show==1){
-				$ul.find('.wui-i-group2').removeClass('xui-hide');
+            if(n4li_show==0){
+                $ul.find('.wui-i-group1').removeClass('xui-hide');
+            }else if(n4li_show==1){
+                $ul.find('.wui-i-group2').removeClass('xui-hide');
 			}else if(n4li_show==2){
 				$ul.find('.wui-i-group2').addClass('xui-hide');
 			}
+        },
+        share_description:function($node, model, value, $propertyViewNode){
+            model.set({share_description:value.replace(/\n/g,'<br>')},{silent: true});
+        },
+        rules:function($node, model, value, $propertyViewNode){
+            model.set({rules:value.replace(/\n/g,'<br>').replace(/"\n"/,'<br>')},{silent: true});
 
         },
 		product:function($node, model, value, $propertyViewNode){
@@ -257,6 +220,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			}, {silent: true});
 
 
+
 			if (value[0]) {
 				//更新propertyView中的图片
 				console.log(value[0]);
@@ -270,7 +234,6 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 
 				$node.find('.wui-i-product-img > img').attr('src',product.thumbnails_url);
 			}
-
 		}
 	},
 
@@ -309,4 +272,6 @@ var getDateTime = function($node,start_time_text,end_time_text,model){
 		second: text_second
 	});
 };
+
+
 

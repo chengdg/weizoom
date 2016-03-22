@@ -10,21 +10,19 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 
 	properties: [{
 		group: '',
-		groupClass: 'xui-propertyView-app-DynamicGroupItems',
+		groupClass: 'xui-propertyView-app-DynamicGroupItems ',
 		fields: [{
             name: 'group_type',
             type: 'select',
-			//validate:'data-validate="require-notempty::选项不能为空',
             displayName: '类型',
-			//annotation:'注：1个团购可创建多种拼团人数供顾客选择',
 			source:[{
-				name:'5人团',
-				value:'5'
+				name:'2人团',
+				value:'2'
 			},{
-				name:'10人团',
-				value:'10'
+				name:'3人团',
+				value:'3'
 			}],
-            default:'5',
+            default:'2',
 			isUserProperty:true
 
         },{
@@ -33,6 +31,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 			displayName:'团拼时间：',
 			annotation:'天',
 			size:'35px',
+			// validate:'data-validate="require-notempty::选项不能为空',
 			isUserProperty:true
 		},{
 			name:'group_price',
@@ -40,6 +39,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 			displayName:'团购价：',
 			annotation:'元',
 			size:'35px',
+			// validate:'data-validate="require-notempty::选项不能为空',
 			isUserProperty:true
 		}]
 
@@ -126,6 +126,7 @@ W.component.appkit.GroupItem = W.component.Component.extend({
 					$cur_target.find('.group_price').html('团购价：'+value+'元');
 				}
 			}
+
 		}
 
 

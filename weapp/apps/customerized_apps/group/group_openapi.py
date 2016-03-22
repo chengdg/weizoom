@@ -11,6 +11,7 @@ import models as app_models
 from apps import request_util
 from termite import pagestore as pagestore_manager
 from mall.order.util import update_order_status_by_group_status
+from group_participance import send_group_template_message
 
 class GroupBuyProduct(resource.Resource):
 	app = 'apps/group'
@@ -123,7 +124,7 @@ class CheckGroupBuy(resource.Resource):
 				else:
 					reason = u'团购活动暂未生效，团长还未开团成功'
 			elif group_record.group_status == app_models.GROUP_RUNNING:
-				if member_id in group_record.grouped_member_ids and (group_record.grouped_number < int(group_record.group_type)):
+				if member_id in group_record.grouped_member_ids and (group_record.grouped_number <= int(group_record.group_type)):
 					is_success = True
 					reason = u'可以进行团购下单操作'
 					group_buy_price = group_record.group_price
@@ -168,6 +169,8 @@ class OrderAction(resource.Resource):
 			else:
 				group_record.update(dec__grouped_number=1,pop__grouped_member_ids=member_id)
 			group_detail.delete()
+		elif action == 'buy': #'buy'(下单)
+			group_detail.update(set__order_id=order_id)
 
 		#如果团购人满，并且全部支付成功，则团购成功
 		if int(group_record.group_type) == group_record.grouped_number:
@@ -175,9 +178,30 @@ class OrderAction(resource.Resource):
 			is_already_paid_list = []
 			for g in group_details:
 				is_already_paid_list.append(g.is_already_paid)
-			if 'False' not in is_already_paid_list:
+			if False not in is_already_paid_list:
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 				update_order_status_by_group_status(group_id,'success')
+
+				# 发送拼团成功模板消息
+				try:
+					group_info = app_models.Group.objects.get(id=group_record.belong_to)
+					owner_id = str(group_info.owner_id)
+					product_name = group_info.product_name
+					activity_info = {
+						"owner_id": owner_id,
+						"record_id": group_record.belong_to,
+						"group_id": str(group_id),
+						"fid": str(group_record.member_id),
+						"price": '0.2f' % group_record.group_price,
+						"product_name": product_name,
+						"status" : 'success',
+						"miss": ''
+					}
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
+
 		response = create_response(200)
 		return response.get_response()
 
@@ -190,10 +214,30 @@ class GetPidsByWoid(resource.Resource):
 		获得当前woid处在团购中的Pid_list
 		"""
 		woid = request.GET.get('woid')
-		records = app_models.Group.objects(owner_id=woid,status=app_models.STATUS_RUNNING)
+		records = app_models.Group.objects(owner_id=woid,status__lte=1)
 		pids_list = [record.product_id for record in records]
 		response = create_response(200)
 		response.data = {
 			'pids_list': pids_list
+		}
+		return response.get_response()
+
+class GetGroupUrl(resource.Resource):
+	app = 'apps/group'
+	resource = 'get_group_url'
+
+	def api_get(request):
+		"""
+		获得团购跳转的url
+		"""
+		woid = request.GET.get('woid')
+		group_id = request.GET.get('group_id')
+		relation_record = app_models.GroupRelations.objects.get(id=group_id)
+		activity_id = relation_record.belong_to
+		fid = relation_record.member_id
+		group_url = '/m/apps/group/m_group/?webapp_owner_id='+str(woid)+'&id='+str(activity_id)+'&fid='+str(fid)+'&group_relation_id='+group_id
+		response = create_response(200)
+		response.data = {
+			'group_url': group_url
 		}
 		return response.get_response()

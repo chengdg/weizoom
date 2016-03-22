@@ -22,7 +22,7 @@ from core.alipay.alipay_notify import AlipayNotify
 from core.tenpay.tenpay_submit import TenpaySubmit
 # from core import upyun_util
 from core.wxpay.wxpay_notify import WxpayNotify
-from account.models import UserAlipayOrderConfig
+from account.models import UserAlipayOrderConfig,UserProfile
 from core.exceptionutil import unicode_full_stack
 from watchdog.utils import *
 from tools.express import util as express_util
@@ -1346,6 +1346,7 @@ ORDER_STATUS_SUCCESSED = 5  # 已完成：自下单10日后自动置为已完成
 ORDER_STATUS_REFUNDING = 6  # 退款中
 ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
 ORDER_STATUS_GROUP_REFUNDING = 8 #团购退款（没有退款完成按钮）
+ORDER_STATUS_GROUP_REFUNDED = 9 #团购退款完成
 
 ORDER_BILL_TYPE_NONE = 0  # 无发票
 ORDER_BILL_TYPE_PERSONAL = 1  # 个人发票
@@ -1359,16 +1360,19 @@ STATUS2TEXT = {
 	ORDER_STATUS_SUCCESSED: u'已完成',
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_GROUP_REFUNDING: u'退款中',
+	ORDER_STATUS_GROUP_REFUNDED: u'退款完成',
 }
 
 AUDIT_STATUS2TEXT = {
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_GROUP_REFUNDING: u'团购退款',
 }
 
 REFUND_STATUS2TEXT = {
 	ORDER_STATUS_REFUNDING: u'退款中',
-	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_REFUNDED: u'退款成功'
 }
 
 ORDERSTATUS2TEXT = STATUS2TEXT
@@ -1672,15 +1676,46 @@ class Order(models.Model):
 		return Order.objects.filter(webapp_user_id__in=webapp_user_ids)
 
 
-def belong_to(webapp_id, user_id=None, mall_type=None):
+def belong_to(webapp_id):
 	"""
 	webapp_id为request中的商铺id
 	返回输入该id的所有Order的QuerySet
 	"""
-	if user_id and not mall_type:
-		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id))
-	else:
+	# if user_id and not mall_type:
+	# 	return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id))
+	# else:
+	# 	return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	sync_able_status_list = [ORDER_STATUS_PAYED_SUCCESSED,
+	                         ORDER_STATUS_PAYED_NOT_SHIP,
+	                         ORDER_STATUS_PAYED_SHIPED,
+	                         ORDER_STATUS_SUCCESSED]
+
+	profile = UserProfile.objects.get(webapp_id=webapp_id)
+	user_id = profile.user_id
+	webapp_type = profile.webapp_type
+	if webapp_type:
 		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
+	else:
+		orders = Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list)).exclude(order_id__contains='s')
+        group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+        if group_order_relations.count() > 0:
+            group_order_ids = [r.order_id for r in group_order_relations]
+            not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=group_order_ids,
+                status=ORDER_STATUS_NOT
+                )
+            ]
+            not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=[
+                    r.order_id for r in group_order_relations.filter(
+                    group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+                    ],
+                    status=ORDER_STATUS_PAYED_NOT_SHIP
+                )]
+            orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
+        return orders
+
+
 	# 微众商城代码
 	# if webapp_id == '3394':
 	# 	return Order.objects.filter(webapp_id=webapp_id)

@@ -5,16 +5,18 @@
 {% block css %}
     <style>
 
-
+        .propertyGroup_property_horizontalField .propertyGroup_property_label{
+              width: 90px;
+        }
         .xui-propertyView-app-DynamicGroupList div{
             display: inline-block;
-            margin-left: 2px;
+            margin-left: 5px;
         }
         div.xui-addDynamicComponent{
             width: 80px;
             height: 30px;
             line-height: 30px;
-            margin-left: 47px !important;
+            margin-left: 85px !important;
             color:#888 !important;
         }
         div.xui-addDynamicComponent span{
@@ -22,25 +24,73 @@
         }
         .btn.xui-i-triggerButton.xui-i-searchBtn{
             position: relative;
-            left: 150px;
-            top: -23px;
+            left: 3.5px;
+            top: 0px;
             height: 23px;
             text-align: center;
             line-height: 23px;
             padding: 0px;
+            margin-bottom: 10px;
         }
         .xui-propertyView-app-GroupInfo textarea{
             height: 100px;
             width: 80% !important;
-            margin-left: 50px;
+            margin-left: 80px;
         }
-{#        .xui-propertyView-app-GroupInfo .xui-i-triggerButton{#}
-{#            background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;#}
-{#            width: 100px;#}
-{#            height: 100px;#}
-{#            border: none;#}
-{#        }#}
+        .xui-propertyView-app-GroupInfo .propertyGroup_property_textareaField .errorHint{
+            margin-left:80px;
+        }
+        .xui-propertyView-app-GroupInfo .propertyGroup_property[data-field-anchor="share_description"]{
+          margin-top: 15px;
+          margin-left: 4px;
 
+        }
+        .xui-image-dialog-trigger{
+          background: url('/static_v2/img/termite2/addImgBtn.png') no-repeat;
+          width: 100px;
+          height: 100px;
+          border: none;
+          margin-left: 4px;
+        }
+        .xui-triggerButton-hasdata{
+          margin-top: -25px !important;
+          text-align: center !important;
+          width: 100px;
+          background: rgba(0,0,0, 0.5);
+          color: white;
+          height: 25px;
+          font-weight: bold;
+          position: absolute;
+        }
+
+        .propertyGroup_property_dialogSelectField .xui-i-triggerButton {
+          text-align: left;
+          margin: 0px;
+          padding: 0px;
+        }
+
+        /*appkit.lotterydescription 组件图片移除按钮*/
+        button.xui-deleteImageButton{
+          position: absolute;
+          top:-11px;
+          margin-left: 85px;
+          font-size: 14px;
+          z-index: 1;
+          background: none;
+          border: none;
+        }
+        .xui-deleteImageButton span{
+          color: #fff;
+          display: block;
+          width: 20px;
+          height: 20px;
+          background: rgba(0,0,0,0.45);
+          border-radius: 50%;
+        }
+
+        .xui-dynamicComponentControlImgBox .xui-removeImageButton{
+          display: none;
+        }
 
     </style>
 {% endblock %}
@@ -142,6 +192,7 @@
           if (firstPage) {
             pageManagerView.activePage(page);
           }
+
         },
         error: function(resp) {
           alert('Failed to load pages in JSON. Please check it.');
@@ -150,6 +201,8 @@
     }
 
     $(document).ready(function() {
+
+
       var windowHeight = $(window).height();
       var height = windowHeight - 350;
 
@@ -178,7 +231,7 @@
         el: '#rightPanel',
         left: propertyViewLeft,
         onlyShowUserProperty: true//!W.isSystemManager
-      });
+      })
       propertyView.render();
 
       var synchronizer = new W.workbench.PageSynchronizer();
@@ -189,6 +242,14 @@
 
       $('.xa-save').click(function() {
           var that = this;
+
+      //校验字典初始化
+      var validate_tag = initValidateDict(W.projectId);
+      if(!validate_tag){
+        return validate_tag;
+      }
+
+
         // 保存model
         W.Synchronizer.manualSync(function(page, data) {
             that.disabled = true;
@@ -211,16 +272,6 @@
             var product_socks = product_dict.productSocks;
             var product_barcode = product_dict.productBarcode;
             var product_create_at = product_dict.productCreate_at;
-
-
-            // var default_group_type = descriptionModel.get('group_type');
-            // var default_group_days = descriptionModel.get('group_days');
-            // var default_group_price =  descriptionModel.get('group_price');
-            // var group_dict = {'0':{
-            //   'group_type':default_group_type,
-            //   'group_days':default_group_days,
-            //   'group_price':default_group_price
-            // }};
 
             var group_dict = {};
             for(var i=0;i<dynamicComponents.length;i++){
@@ -298,13 +349,13 @@
       $('.xa-preview').click(function(event){
         var page = pageManagerView.getCurrentActivePage();
 
-{#        // 验证#}
-{#        if (!W.isSystemManager) {#}
-{#            if(!page.validate()) {#}
-{#                return;#}
-{#            }#}
-{#        }#}
-{#        #}
+        // 验证
+        if (!W.isSystemManager) {
+            if(!page.validate()) {
+                return;
+            }
+        }
+
         // 预览
         var pageJson = JSON.stringify(page.toJSON());
         projectId = W.projectId.split(':')[2];
@@ -343,6 +394,107 @@
               stickyMenu();
           }));
     });
+    function initValidateDict(WprojectId){
+      var validate_group_flag = true;
+      var validate_group_type = undefined;
+      var product = $('#propertyEditor').find('input[data-field="product"]').val();
+      var material_image = $('#propertyEditor').find('input[data-field="material_image"]').val();
+
+      var GroupArray = $('#propertyEditor').find('.propertyGroup_property_dynamicControlField_control');
+
+      var group_items = [];
+      for(var i=0;i<GroupArray.length;i++){
+        var $group_div =$(GroupArray[i]);
+        var cid =$group_div.attr('data-dynamic-cid');
+        var group_type = $group_div.find('select[data-field="group_type"]').val();
+        var group_days = $group_div.find('input[data-field="group_days"]').val();
+        var group_price = $group_div.find('input[data-field="group_price"]').val();
+        var group_item_data = {
+            "group_type":group_type,
+            "group_days":group_days,
+            "group_price":group_price
+        }
+        group_items.push(group_item_data);
+      }
+
+      if(!product){
+        validate_group_type = 'product';
+      }
+      if(!material_image){
+        validate_group_type='img';
+      }
+
+
+      var group_type_array = [];
+      var group_error_type = [];
+      if(group_items.length<=0){
+          group_error_type.push('group_blank');
+      }else{
+          for(var i=0;i<group_items.length;i++){
+              group_one = group_items[i];
+              for(var index in group_one){
+                  if(group_one[index]===undefined | group_one[index]==""){
+                      group_error_type.push('group_blank');
+                  }
+                  var group_days_tmp = group_one['group_days'];
+                  if(!isInteger(group_days_tmp)){
+                      group_error_type.push('group_notInt');
+                  }
+                  var group_price_tmp = group_one['group_price'];
+                  if(!isFloat(group_price_tmp)){
+                      group_error_type.push('group_notFloat');
+                  }
+              }
+              group_type_array.push(group_one['group_type']);
+          }
+          if(group_type_array.length>1){
+              if(group_type_array[0]==group_type_array[1]){
+                  group_error_type.push('group_same');
+              }
+          }
+      }
+
+      if(group_error_type.length>=1){
+          console.log('====== validate group start >>>>>>>');
+          validate_group_type = group_error_type[0];
+          console.log('validate-type:'+validate_group_type);
+          console.log('validate-data:'+group_error_type);
+          console.log('====== validate group end <<<<<<<');
+      }
+
+
+      /*提交前校验数据状态*/
+      if(validate_group_type){
+        if(validate_group_type=='product'){
+            W.showHint('error', '请选择团购商品！');
+        }else if(validate_group_type=='group_blank'){
+            W.showHint('error', '团购设置和数据不能为空！');
+        }else if(validate_group_type=='group_same'){
+            W.showHint('error', '团购类型不能相同！');
+        }else if(validate_group_type=='group_notInt'){
+            W.showHint('error', '团购天数应为整数！');
+        }else if(validate_group_type=='group_notFloat'){
+            W.showHint('error', '团购价格应为两位小数或整数！');
+        }else if(validate_group_type=='img'){
+            W.showHint('error', '请选择团购分享图片！');
+        }else{
+          return true;
+        }
+        return false;
+      }
+      return true;
+    }
+
+    function isInteger( str ){
+        var regu = /^[-]{0,1}[0-9]{1,}$/;
+        return regu.test(str);
+    }
+
+    function isFloat( str ){
+        var regu = /^(([1-9][0-9]*)|([0-9]+\.[0-9]{1,2}))$/;
+        return regu.test(str);
+    }
+
   </script>
 {% block js %}{% endblock %}
 {% endblock %}

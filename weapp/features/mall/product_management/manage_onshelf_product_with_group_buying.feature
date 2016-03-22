@@ -8,7 +8,7 @@ Feature:在售商品列表-团购活动
 	3、团购成功的订单，在订单完成后计算商品的销量
 	"""
 Background:
-	Given 重置weapp的bdd环境
+	
 	Given jobs登录系统
 	When jobs开通使用微众卡权限
 	And jobs已添加支付方式
@@ -23,19 +23,20 @@ Background:
 		"""
 	Given jobs已创建微众卡
 		"""
-		[{
+		{
 			"cards": [{
 				"id": "0000001",
 				"password": "1234567",
 				"status": "未激活",
-				"price": 50
+				"price": 50.00
 			},{
-			"cards": [{
+
 				"id": "0000002",
 				"password": "2234567",
 				"status": "未激活",
-				"price": 200
-		}]
+				"price": 200.00
+			}]
+		}
 		"""
 	Given jobs已添加商品
 		"""
@@ -68,12 +69,12 @@ Background:
 			}
 		}]
 		"""
-	When jobs创建团购活动
+	When jobs新建团购活动
 		"""
 		[{
 			"group_name":"团购活动1",
-			"start_time":"今天",
-			"end_time":"2天后",
+			"start_date":"今天",
+			"end_date":"2天后",
 			"product_name":"商品1",
 			"group_dict":
 				[{
@@ -87,8 +88,8 @@ Background:
 				"share_description":"团购活动1分享描述"
 		},{
 			"group_name":"团购活动2",
-			"start_time":"今天",
-			"end_time":"2天后",
+			"start_date":"今天",
+			"end_date":"2天后",
 			"product_name":"商品2",
 			"group_dict":
 				[{
@@ -106,7 +107,10 @@ Background:
 				"share_description":"团购活动2分享描述"
 		}]
 		"""
+	When jobs开启团购活动'团购活动1'
+	When jobs开启团购活动'团购活动2'
 
+@mall2 @product @saleingProduct @group
 Scenario:1 对团购活动中的商品进行下架或删除操作
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
@@ -125,7 +129,7 @@ Scenario:1 对团购活动中的商品进行下架或删除操作
 	Then jobs获得提示信息'该商品正在进行团购活动'
 
 	#团购活动结束后,可以对商品进行下架和删除操作
-	When jobs'结束'团购活动'团购活动2'
+	When jobs关闭团购活动'团购活动2'
 	When jobs'下架'商品'商品2'
 	Then jobs能获得'在售'商品列表
 		"""
@@ -139,7 +143,7 @@ Scenario:1 对团购活动中的商品进行下架或删除操作
 			"name": "商品2"
 		}]
 		"""
-	When jobs'结束'团购活动'团购活动1'
+	When jobs关闭团购活动'团购活动1'
 	When jobs'永久删除'商品'商品1'
 	Then jobs能获得'在售'商品列表
 		"""

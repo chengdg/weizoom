@@ -17,6 +17,8 @@ from utils.cache_util import GET_CACHE, SET_CACHE
 from modules.member.models import Member
 from mall.models import *
 from weapp import settings
+from mall.order.util import update_order_status_by_group_status
+from apps.customerized_apps.group.group_participance import send_group_template_message
 
 class MGroup(resource.Resource):
 	app = 'apps/group'
@@ -34,34 +36,33 @@ class MGroup(resource.Resource):
 		self_page = False
 		group_status = ''
 		group_type = ''
-		grouped_number = 0
 		product_original_price = 0
 		product_group_price = 0
 		page_owner_name = ''
 		page_owner_icon = ''
 		page_owner_member_id = 0
 		grouped_member_info_list = []
-
+		order_id = ''
+		is_from_pay_result = request.GET.get('from', None)
+		is_helper_unpaid = False
+		if is_from_pay_result == 'pay_result':
+			is_from_pay_result = True
+		else:
+			is_from_pay_result = False
 		response = create_response(500)
-		if not record_id:
-			response.errMsg = u'活动信息出错'
-			return response.get_response()
+
 		record = app_models.Group.objects(id=record_id)
 		if record.count() <= 0:
 			response.errMsg = 'is_deleted'
 			return response.get_response()
+		elif not record_id:
+			response.errMsg = u'活动信息出错'
+			return response.get_response()
 		record = record.first()
 		#获取活动状态
 		activity_status = record.status_text
-		now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-		data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-		data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-		if data_start_time <= now_time and now_time < data_end_time:
-			record.update(set__status=app_models.STATUS_RUNNING)
-			activity_status = u'进行中'
-		elif now_time >= data_end_time:
+		if activity_status == u'已结束':
 			record.update(set__status=app_models.STATUS_STOPED)
-			activity_status = u'已结束'
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
@@ -70,7 +71,7 @@ class MGroup(resource.Resource):
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
-			if u"进行中" == activity_status:
+			if u"进行中" or u'已结束' == activity_status:
 				if group_relation_id:
 					# 已经开过团
 					try:
@@ -82,9 +83,30 @@ class MGroup(resource.Resource):
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
+							update_order_status_by_group_status(group_relation_info.id,'failure')
+							#发送拼团失败模板消息
+							try:
+								owner_id = record.owner_id
+								product_name = record.product_name
+								miss = int(group_relation_info.group_type)-group_relation_info.grouped_number
+								activity_info = {
+									"owner_id": str(owner_id),
+									"record_id": str(record_id),
+									"group_id": str(group_relation_id),
+									"fid": str(group_relation_info.member_id),
+									"price": '0.2f' % group_relation_info.group_price,
+									"product_name": product_name,
+									"status" : 'fail',
+									"miss": str(miss)
+								}
+								group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+								member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+								send_group_template_message(activity_info, member_info_list)
+							except:
+								print(u'发送拼团成功模板消息失败')
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid,is_already_paid=True).order_by('-created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -103,11 +125,20 @@ class MGroup(resource.Resource):
 								is_helped = True
 							else :
 								is_helped = False
-					except:
+						try:
+							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+							order_id = group_detail.order_id
+							if not group_detail.is_already_paid:
+								if order_id!='':
+									is_helper_unpaid = True
+						except:
+							pass
+					except Exception,e:
+						print(e)
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
 						return response.get_response()
-
+			if group_relation_id:#已开过团
 				#判断分享页是否自己的主页
 				if fid is None or str(fid) == str(member_id):
 					page_owner_name = member.username_size_ten
@@ -119,6 +150,11 @@ class MGroup(resource.Resource):
 					page_owner_name = page_owner.username_size_ten
 					page_owner_icon = page_owner.user_icon
 					page_owner_member_id = fid
+			else:#没开过团
+				page_owner_name = member.username_size_ten
+				page_owner_icon = member.user_icon
+				page_owner_member_id = member_id
+				self_page = True
 
 		member_info = {
 			'isMember': isMember,
@@ -136,7 +172,10 @@ class MGroup(resource.Resource):
 			'member_id': member_id if member else '',
 			'only_remain_one_day': only_remain_one_day,
 			'product_original_price': product_original_price,
-			'product_group_price': product_group_price
+			'product_group_price': product_group_price,
+			'order_id': order_id,
+			'is_from_pay_result': is_from_pay_result,
+			'is_helper_unpaid': is_helper_unpaid
 		}
 
 		response = create_response(200)
@@ -199,18 +238,9 @@ class MGroup(resource.Resource):
 				mpUserPreviewName = request.webapp_owner_info.auth_appid_info.nick_name
 				#获取活动状态
 				activity_status = record.status_text
-				product_id = record.product_id
-
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
+				if activity_status == u'已结束':
 					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
+				product_id = record.product_id
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
@@ -222,26 +252,42 @@ class MGroup(resource.Resource):
 			record = app_models.Group.objects(id=record_id)
 			if record.count() >0:
 				record = record.first()
-
 				#获取活动状态
 				activity_status = record.status_text
-
-				now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-				data_start_time = record.start_time.strftime('%Y-%m-%d %H:%M')
-				data_end_time = record.end_time.strftime('%Y-%m-%d %H:%M')
-				if data_start_time <= now_time and now_time < data_end_time:
-					record.update(set__status=app_models.STATUS_RUNNING)
-					activity_status = u'进行中'
-				elif now_time >= data_end_time:
+				if activity_status == u'已结束':
 					record.update(set__status=app_models.STATUS_STOPED)
-					activity_status = u'已结束'
-
 				project_id = 'new_app:group:%s' % record.related_page_id
 			else:
 				c = RequestContext(request, {
 					'is_deleted_data': True
 				})
 				return render_to_response('group/templates/webapp/m_group.html', c)
+		if activity_status == u'已结束':
+			#活动已结束，所有进行中的小团置为失败
+			all_running_group_relations = app_models.GroupRelations.objects(belong_to=str(record.id),group_status=app_models.GROUP_RUNNING)
+			for group_relation in all_running_group_relations:
+				group_relation.update(group_status=app_models.GROUP_FAILURE)
+				update_order_status_by_group_status(group_relation.id,'failure')
+				#发送拼团失败模板消息
+				try:
+					owner_id = record.owner_id
+					product_name = record.product_name
+					miss = int(group_relation.group_type)-group_relation.grouped_number
+					activity_info = {
+						"owner_id": str(owner_id),
+						"record_id": str(record_id),
+						"group_id": str(group_relation_id),
+						"fid": str(group_relation.member_id),
+						"price": '0.2f' % group_relation.group_price,
+						"product_name": product_name,
+						"status" : 'fail',
+						"miss": str(miss)
+					}
+					group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})
@@ -269,3 +315,20 @@ class MGroup(resource.Resource):
 		# if request.member:
 		# 	SET_CACHE(cache_key, response)
 		return HttpResponse(response)
+
+class GetProductDetail(resource.Resource):
+	app = 'apps/group'
+	resource = 'get_product_detail'
+
+	def api_get(request):
+		product_detail = ''
+		product_id = request.GET.get('product_id')
+		try:
+			product_detail = Product.objects.get(id=product_id).detail
+		except:
+			pass
+		response = create_response(200)
+		response.data = {
+			'product_detail': product_detail
+		}
+		return response.get_response()

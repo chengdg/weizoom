@@ -19,44 +19,15 @@ W.dialog.app.group.ViewParticipanceDataDialog = W.dialog.Dialog.extend({
 
     beforeShow: function(options) {
         this.table.reset();
-        // if (this.activityId) {
-        //     W.getApi().call({
-        //         app: 'apps/group',
-        //         resource: 'group_participance',
-        //         scope: this,
-        //         args: {
-        //             id: this.activityId
-        //         },
-        //         success: function(data) {
-        //             this.$dialog.find('.modal-body').text(this.table);
-        //         },
-        //         error: function(resp) {
-        //         }
-        //     })
-        // }
+
     },
 
     onShow: function(options) {
-        // this.activityId = options.activityId;
     },
 
     afterShow: function(options) {
         this.table.reload({});
-        // if (this.activityId) {
-        //     W.getApi().call({
-        //         app: 'apps/group',
-        //         resource: 'group_participance',
-        //         scope: this,
-        //         args: {
-        //             id: this.activityId
-        //         },
-        //         success: function(data) {
-        //             this.$dialog.find('.modal-body').text(data);
-        //         },
-        //         error: function(resp) {
-        //         }
-        //     })
-        // }
+
     },
 
     /**

@@ -37,7 +37,34 @@
 		display: inline-block;
 		text-align: center;
     }
+    .xui-template-modal-body label{
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .xui-template-modal-body label select{
+        width: 50%;
+        font-weight: 100;
+        height: 35px;
+        border: 1px solid rgba(128, 128, 128, 0.31);
+        border-radius: 5px;
+    }
+    .xui-template-modal-body input{
+        height: 35px;
+        border: 1px solid rgba(128, 128, 128, 0.31);
+        border-radius: 5px;
+    }
+    .xui-template-modal-body .xui-i-setting{
+        border: 1px solid #EAEEF7;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 15px;
+        margin-left: -15px;
+    }
 
+    .xui-template-modal-body .xui-i-preview{
+        margin: 0;
+    }
 
 </style>
 {% endblock %}
@@ -121,6 +148,7 @@
 			<a href="/apps/group/group/" class="btn btn-success fr">
 				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建团购
 			</a>
+            <button type="button" class="btn btn-success fr mr10 xa-template-setting">配置模板消息</button>
 		</div>
 
 		<div
@@ -138,8 +166,33 @@
 		</div>
 	</div>
 </div>
-{% endblock %}
 
+<!-- 模板消息配置弹窗 -->
+<div class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">模板消息配置</h3>
+            </div>
+
+            <div class="modal-body ml15 xa-template-modal-body xui-template-modal-body">
+                <p>正在获取模板消息...</p>
+            </div>
+
+            <div class="modal-footer modal-footerBg">
+                <button class="btn btn-primary xa-update-btn" aria-hidden="true" style="margin-right: 0;">更新模板</button>
+                <button class="btn btn-success xa-submit-btn" aria-hidden="true">确&nbsp;&nbsp;定</button>
+                <button class="btn btn-default" aria-hidden="true" data-dismiss="modal" >关&nbsp;&nbsp;闭</button>
+                <div style="display: none">
+                    <button class="btn btn-default xa-test" aria-hidden="true" >测&nbsp;&nbsp;试</button>
+                    <input type="text" id="test_input" style="line-height: 0; height: 30px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block js %}
 {% verbatim %}
@@ -162,7 +215,12 @@
             <tr class="xui-product_itle" data-id="${item.id}">
                 <td colspan="7">
                     <div title="${item.name}" class="xui-group_name">
-                        团购名称：${item.name}
+                        团购名称：<a
+                            class="xui-ellipsisFox"
+                            limit="15"
+                            href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">
+                                {{html item.name}}
+                        </a>
                     </div>
                 </td>
             </tr>
@@ -179,7 +237,7 @@
 					   <a
 						class="xui-ellipsisFox"
 						limit="15"
-						href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">
+						href="/mall2/product/?id=${item.product_id}">
 							${item.product_name}
 						</a>
 					</div>
@@ -276,6 +334,56 @@
 		</div>
 	{{/if}}
 	<br>
+</script>
+
+<!-- 团购模板消息弹窗 -->
+<script id="group-template-setting-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+    {{#if hasData }}
+        <div class="xui-i-setting xui-i-success-setting xa-success-setting">
+            <label>选择团购成功的消息模板:
+                <select class="form-control xa-template-selector" style="width: 50%">
+                    <option value="" {{#ifequal success.selected_id ""}}selected{{/ifequal}}>不发送模板消息</option>
+                    {{#each templates}}
+                    {{#ifCond template_title "==" "拼团成功通知"}}
+                        <option value="{{ template_id }}" {{#ifequal ../../success.selected_id template_id}}selected{{/ifequal}}>{{ template_title }}</option>
+                    {{/ifCond}}
+                    {{/each}}
+                </select>
+            </label>
+            <label>发货提醒：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../success.first }}"></label>
+            <div class="xui-i-setting xui-i-preview xa-success-preview {{#ifequal ../success.selected_id ""}}hidden{{/ifequal}}">
+                <label>预览</label>
+                <p>您参团的商品[xxx]已组团成功,<span class="xa-success-need-change-first">{{ ../success.first }}</span></p>
+                <p>商品价格: ￥158</p>
+                <p>订单号: tn12345902314</p>
+                <p>点击查看团购活动详情</p>
+            </div>
+        </div>
+        <div class="xui-i-setting xui-i-fail-setting xa-fail-setting">
+            <label>选择团购失败的消息模板:
+                <select class="form-control xa-template-selector" style="width: 50%">
+                    <option value="" {{#ifequal fail.selected_id ""}}selected{{/ifequal}}>不发送模板消息</option>
+                    {{#each templates}}
+                    {{#ifCond template_title "==" "拼团退款提醒"}}
+                        <option value="{{ template_id }}" {{#ifequal ../../fail.selected_id template_id}}selected{{/ifequal}}>{{ template_title }}</option>
+                    {{/ifCond}}
+                    {{/each}}
+                </select>
+            </label>
+            <label>问候语：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
+            <div class="xui-i-setting xui-i-preview xa-success-preview {{#ifequal ../fail.selected_id ""}}hidden{{/ifequal}}">
+                <label>预览</label>
+                <p class="xa-fail-need-change-first">{{ ../fail.first }}</p>
+                <p>单号: tn12345902314</p>
+                <p>商品: xxx</p>
+                <p>退款: [￥158] 将在5~7个工作日内完成退款</p>
+                <p>点击查看团购活动详情</p>
+            </div>
+        </div>
+
+    {{else}}
+        <p>获取模板信息失败</p>
+    {{/if}}
 </script>
 {% endverbatim %}
 
@@ -386,6 +494,186 @@ $(document).ready(function() {
 		$('[name="end_time"]').val('');
 	});
 
+    //初始化模板消息配置dialog
+    var initData = '{{ template_data|safe }}';
+    var APPS_TYPE = "group";
+    ensureNS('W.dialog.group');
+    W.dialog.group.templateDialog = W.dialog.Dialog.extend({
+        getTemplate: function(data) {
+            var template = Handlebars.compile($('#group-template-setting-dialog-tmpl-src').html());
+            return template(data);
+        },
+        initialize: function(options) {
+            this.$el = options.el;
+            this.$dialog = this.$el.parents('.modal').eq(0);
+            W.createWidgets(this.$dialog);
+            this.bindListeners();
+            if(options.initData){
+                this.data = options.initData;
+                this.render();
+            }else{
+                this.getData();
+            }
+        },
+        bindListeners: function(){
+            this.$dialog.delegate('.xa-submit-btn', 'click', this.onClickSubmit.bind(this));
+            this.$dialog.delegate('.xa-update-btn', 'click', this.onClickUpdate.bind(this));
+
+            this.$dialog.delegate('.xa-template-selector', 'click', this.onSelectTemplate);
+            this.$dialog.delegate('.xa-success-setting .xa-template-first', 'keyup', this.onChangeSuccessFirst);
+            this.$dialog.delegate('.xa-fail-setting .xa-template-first', 'keyup', this.onChangeFailFirst);
+        },
+        show: function(){
+            this.$dialog.modal('show');
+        },
+        close: function(){
+            this.$dialog.modal('hide');
+        },
+        render: function(){
+            var data = $.extend({
+                "hasData": 0
+            }, this.data);
+            if(data.control_data){
+                var control = data.control_data;
+                var success_data = control.success;
+                var fail_data = control.fail;
+                var noop_data = {
+                    "selected_id": "",
+                    "first": "",
+                    "remark": ""
+                };
+                if(!$.isEmptyObject(success_data)){
+                    data['success'] = {
+                        "selected_id": success_data.template_id,
+                        "first": success_data.first
+                    };
+                }else{
+                    data['success'] = noop_data;
+                }
+
+                if(!$.isEmptyObject(fail_data)){
+                    data['fail'] = {
+                        "selected_id": fail_data.template_id,
+                        "first": fail_data.first
+                    };
+                }else{
+                    data['fail'] = noop_data;
+                }
+
+            }
+            var $node = $(this.getTemplate(data));
+            this.$el.html($node);
+        },
+        onClickUpdate: function(){
+            this.getData({"action": 1});
+        },
+        onSelectTemplate: function(){
+            var $this = $(this);
+            var v = $this.val();
+            var $pre = $this.parents('.xui-i-setting').eq(0).find('.xui-i-preview');
+            if(v == ""){
+                $pre.addClass('hidden');
+            }else{
+                $pre.removeClass('hidden');
+            }
+        },
+        onChangeSuccessFirst: function(){
+            $('.xa-success-need-change-first').html($(this).val());
+        },
+        onChangeFailFirst: function(){
+            $('.xa-fail-need-change-first').html($(this).val());
+        },
+        _getFormData: function(){
+            var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
+            var success_first = this.$el.find('.xa-success-setting .xa-template-first').val();
+
+            var fail_template_id = this.$el.find('.xa-fail-setting .xa-template-selector').val();
+            var fail_first = this.$el.find('.xa-fail-setting .xa-template-first').val();
+
+            var serials_arr = [];
+            if(success_template_id != '') serials_arr.push(success_template_id);
+            if(fail_template_id != '') serials_arr.push(fail_template_id);
+
+            return {
+                "apps_type": APPS_TYPE,
+                "template_ids": serials_arr.toString(),
+                "template_settings": JSON.stringify({
+                    "success": {
+                        "template_id": success_template_id,
+                        "first": success_first
+                    },
+                    "fail": {
+                        "template_id": fail_template_id,
+                        "first": fail_first
+                    }
+                })
+            }
+
+        },
+        onClickSubmit: function(){
+            var that = this;
+            W.getApi().call({
+                app: 'apps',
+                api: 'apps_use_template/save',
+                method: 'post',
+                args: that._getFormData(),
+                success: function(data) {
+                    W.showHint('success', "配置成功");
+                    that.close();
+                },
+                error: function(resp) {
+                    W.showHint('error', resp.errMsg);
+                }
+            });
+        },
+        getData: function(args){
+            var that = this;
+            if(this.data && !args){
+                this.render();
+            }else{
+                args = args || {};
+                W.getApi().call({
+                    app: 'apps',
+                    api: 'template_message_list/get',
+                    method: 'get',
+                    args: $.extend(args, {"apps_type": APPS_TYPE}),
+                    success: function(data) {
+                        that.data = data;
+                        that.render();
+                    },
+                    error: function(resp) {
+                        that.data = {};
+                        console.log(resp.errMsg);
+                    }
+                });
+            }
+        }
+    });
+    //模板消息弹窗
+    $('.xa-template-setting').on('click', function(){
+        W.dialog.showDialog('W.dialog.group.templateDialog',{
+            initData: initData=="" ? false: JSON.parse(initData),
+            el: $('.xa-template-modal-body')
+        });
+    });
+
+});
+//测试发送模板，输入框内格式   71,72,73-success
+$('.xa-test').on('click', function(){
+    W.getApi().call({
+        app: 'apps/group',
+        resource: 'test_group_template',
+        method: 'post',
+        args: {
+            "args": $('#test_input').val()
+        },
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(resp) {
+            console.log(resp);
+        }
+    });
 });
 </script>
 {% endblock %}

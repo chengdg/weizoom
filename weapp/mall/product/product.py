@@ -252,6 +252,7 @@ class ProductList(resource.Resource):
         ids = request.POST.getlist('ids', [])
         _ids = request.POST.getlist('ids[]', [])
         ids = ids if ids else _ids
+        ids = [int(tmp_id) for tmp_id in ids] #兼容bdd
         p_id = request.POST.get('id')
         if p_id:
             ids.append(int(p_id))
@@ -1469,35 +1470,10 @@ class GroupProductList(resource.Resource):
                 shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
                 is_deleted=False,
                 is_member_product=False,
-                stocks=0
+                stocks__lte=1
                 )
-        print "products",products
         if product_name:
             products = products.filter(name__contains=product_name)
-
-        #处理排序
-        sort_attr = request.GET.get('sort_attr', None)
-        if not sort_attr:
-            sort_attr = '-display_index'
-
-
-        if '-' in sort_attr:
-            sort_attr = sort_attr.replace('-', '')
-            products = sorted(products, key=operator.attrgetter('id'), reverse=True)
-            products = sorted(products, key=operator.attrgetter(sort_attr), reverse=True)
-            sort_attr = '-' + sort_attr
-        else:
-            products = sorted(products, key=operator.attrgetter('id'))
-            products = sorted(products, key=operator.attrgetter(sort_attr))
-
-        models.Product.fill_details(request.manager, products, {
-            "with_product_model": True,
-            "with_model_property_info": True,
-            "with_selected_category": True,
-            'with_image': False,
-            'with_property': True,
-            'with_sales': True
-        })
 
         #进行分页
         count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
@@ -1508,6 +1484,14 @@ class GroupProductList(resource.Resource):
             count_per_page,
             # query_string=request.META['QUERY_STRING'],
             )
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
 
         #构造返回数据
         items = []
@@ -1522,7 +1506,6 @@ class GroupProductList(resource.Resource):
         response.data = {
             'items': items,
             'pageinfo': paginator.to_dict(pageinfo),
-            'sortAttr': sort_attr,
             'data': data
         }
         return response.get_response()

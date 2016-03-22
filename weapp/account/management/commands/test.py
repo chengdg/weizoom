@@ -24,4 +24,4 @@ class Command(BaseCommand):
 		)
 		a.save()
 
-		print 'test end...'
+		print 'test end...1'

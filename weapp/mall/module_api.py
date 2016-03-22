@@ -182,16 +182,16 @@ def group_product_by_promotion(request, products):
 		# 如果促销对此会员等级的用户不开放
 		if not has_promotion(member_grade_id, promotion.get('member_grade_id')):
 			product_groups.append({
-			                      "id": group_id,
-			                      "uid": group_unified_id,
-			                      'products': products,
-			                      'promotion': {},
-			                      "promotion_type": '',
-			                      'promotion_result': '',
-			                      'integral_sale_rule': integral_sale_rule,
-			                      'can_use_promotion': False,
-			                      'member_grade_id': member_grade_id
-			                      })
+								  "id": group_id,
+								  "uid": group_unified_id,
+								  'products': products,
+								  'promotion': {},
+								  "promotion_type": '',
+								  'promotion_result': '',
+								  'integral_sale_rule': integral_sale_rule,
+								  'can_use_promotion': False,
+								  'member_grade_id': member_grade_id
+								  })
 			continue
 		promotion_type = promotion.get('type', 0)
 		if promotion_type == 0:
@@ -299,8 +299,8 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	# 		# 非微众商城
 	# 		product_ids_in_weizoom_mall = get_product_ids_in_weizoom_mall(webapp_id)
 	# 		products.exclude(id__in=product_ids_in_weizoom_mall)
-    #
-    #
+	#
+	#
 	# else:
 	# 	# try:
 	# 	if not is_access_weizoom_mall:
@@ -310,14 +310,14 @@ def get_products_in_webapp(webapp_id, is_access_weizoom_mall, webapp_owner_id, c
 	# 	else:
 	# 		product_ids_in_weizoom_mall = []
 	# 		_, other_mall_product_ids_not_checked = get_not_verified_weizoom_mall_partner_products_and_ids(webapp_id)
-    #
-    #
+	#
+	#
 	# 	for category_has_product in category_has_products:
 	# 		#微众商城要过滤掉自己的非在售 duhao 20151120
 	# 		if is_access_weizoom_mall:
 	# 			if category_has_product.product.weshop_status != PRODUCT_SHELVE_TYPE_ON:
 	# 				continue
-    #
+	#
 	# 		if category_has_product.product.shelve_type == PRODUCT_SHELVE_TYPE_ON:
 	# 			product = category_has_product.product
 	# 			#过滤已删除商品和套餐商品
@@ -1474,14 +1474,42 @@ def ship_order(order_id, express_company_name,
 	# 记录log信息
 	if is_update_express:
 		action = u'修改发货信息'
+		if order.origin_order_id > 0:
+			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+				origin_order = Order.objects.get(id=order.origin_order_id)
+				Order.objects.filter(id=origin_order.id).update(**order_params)
+				record_operation_log(origin_order.order_id, operator_name, action, origin_order)
+		else:
+			if Order.objects.filter(origin_order_id=order.id).count() == 1:
+				child_order = Order.objects.get(origin_order_id=order.id)
+				Order.objects.filter(id=child_order.id).update(**order_params)
+				record_operation_log(child_order.order_id, operator_name, action, child_order)
 	else:
 		action = u'订单发货'
 		record_status_log(order.order_id, operator_name, order.status, target_status)
-
+		# 自营平台的订单无论是子订单或者是母订单更新发货信息，都要对应的更新子订单或者母订单（订单只有只一个供货商的情况）
 		if order.origin_order_id > 0:
 			# 修改子订单状态，上面只修改物流信息
-			set_origin_order_status(order, operator_name, 'ship')
-
+			try:
+				user = UserProfile.objects.get(user_id=order.supplier_user_id).user
+			except:
+				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+			if operator_name != user.username:
+				user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+			if Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+				origin_order = Order.objects.get(id=order.origin_order_id)
+				Order.objects.filter(id=origin_order.id).update(**order_params)
+				record_operation_log(origin_order.order_id, operator_name, action, origin_order)
+				record_status_log(origin_order.order_id, operator_name, origin_order.status, target_status)
+			set_origin_order_status(order, user, 'ship')
+		else:
+			if Order.objects.filter(origin_order_id=order.id).count() == 1:
+				child_order = Order.objects.get(origin_order_id=order.id)
+				Order.objects.filter(id=child_order.id).update(**order_params)
+				from mall.order.util import set_children_order_status
+				set_children_order_status(order, target_status)
+				record_operation_log(child_order.order_id, operator_name, action, child_order)
+				record_status_log(child_order.order_id, operator_name, child_order.status, target_status)
 	record_operation_log(order.order_id, operator_name, action, order)
 
 	#send post_ship_send_request_to_kuaidi signal
@@ -1699,10 +1727,13 @@ def create_shopping_cart_order(webapp_owner_id, webapp_user, products):
 ########################################################################
 # get_order_operation_logs: 获得订单的操作日志
 ########################################################################
-def get_order_operation_logs(order_id):
+def get_order_operation_logs(order_id, child_order_length=None):
 	# return OrderOperationLog.objects.filter(order_id=order_id)
 	#为了把子订单的操作日志也筛选出来
-	return OrderOperationLog.objects.filter(order_id__contains=order_id)
+	if child_order_length and child_order_length == 1:
+		return OrderOperationLog.objects.filter(order_id=order_id)
+	else:
+		return OrderOperationLog.objects.filter(order_id__contains=order_id).exclude(~Q(order_id=order_id), action__in=[u'下单', u'支付']).exclude(order_id=order_id, action__in=[u'发货', u'完成'])
 
 
 ########################################################################
@@ -1784,7 +1815,7 @@ def get_order_status_logs(order):
 		log['is_current'] = is_current[2]
 		logs.append(log)
 
-	elif order.status == ORDER_STATUS_REFUNDING:
+	elif order.status in [ORDER_STATUS_REFUNDING, ORDER_STATUS_GROUP_REFUNDING]:
 		log = {}
 		log['status'] = u'已下单'
 		log['created_at'] = order.created_at
@@ -1822,7 +1853,7 @@ def get_order_status_logs(order):
 		log['is_current'] = 2
 		logs.append(log)
 
-	elif order.status == ORDER_STATUS_REFUNDED:
+	elif order.status in [ORDER_STATUS_REFUNDED, ORDER_STATUS_GROUP_REFUNDED]:
 		log = {}
 		log['status'] = u'已下单'
 		log['created_at'] = order.created_at
@@ -2179,14 +2210,16 @@ def get_product_ids_in_weizoom_mall(webapp_id):
 
 
 def set_origin_order_status(child_order, user, action, request=None):
-    children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
-    origin_order = Order.objects.get(id=child_order.origin_order_id)
-    if origin_order.status != min(children_order_status):
-    	if action == 'ship':
-    		origin_order.status = min(children_order_status)
-    		origin_order.save()
-    	else:
-	        update_order_status(user, action, origin_order, request)
+	children_order_status = [order.status for order in Order.objects.filter(origin_order_id=child_order.origin_order_id)]
+	origin_order = Order.objects.get(id=child_order.origin_order_id)
+	if origin_order.status != min(children_order_status):
+		if action == 'ship':
+			origin_order.status = min(children_order_status)
+			origin_order.save()
+			if min(children_order_status) == ORDER_STATUS_PAYED_SHIPED and len(children_order_status) > 1:
+				update_order_status(user, action, origin_order, request)
+		else:
+			update_order_status(user, action, origin_order, request)
 
 
 def update_order_status(user, action, order, request=None):
@@ -2347,7 +2380,7 @@ def update_order_status(user, action, order, request=None):
 	# 	notify_message = u"订单状态改变时发邮件失败，cause:\n{}".format(unicode_full_stack())
 	# 	watchdog_alert(notify_message)
 
-	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_SUCCESSED]:
+	if order.origin_order_id > 0 and target_status in [ORDER_STATUS_PAYED_SHIPED, ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED]:
 		# 如果更新子订单，更新父订单状态
 		set_origin_order_status(order, user, action, request)
 	else:
@@ -2357,8 +2390,16 @@ def update_order_status(user, action, order, request=None):
 			update_user_paymoney(order.webapp_user_id)
 		except:
 			pass
-		from mall.order.util import set_children_order_status
-		set_children_order_status(order, target_status)
+		# from mall.order.util import set_children_order_status
+		# set_children_order_status(order, target_status)
+
+		child_orders = Order.objects.filter(origin_order_id=order.id)
+		if child_orders.count() == 1 or (child_orders.count() > 1 and target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]):
+			child_orders.update(status=target_status)
+		if request and request.user_profile.webapp_type and child_orders.count() == 1:
+			for child in child_orders:
+				record_status_log(child.order_id, operation_name, child.status, target_status)
+				record_operation_log(child.order_id, operation_name, action_msg, child)
 		if target_status in [ORDER_STATUS_SUCCESSED, ORDER_STATUS_REFUNDING, ORDER_STATUS_CANCEL]:
 			auto_update_grade(webapp_user_id=order.webapp_user_id)
 

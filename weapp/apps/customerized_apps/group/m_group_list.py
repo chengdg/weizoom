@@ -21,32 +21,58 @@ class MGroupList(resource.Resource):
 	def api_get(request):
 		belong_to = request.GET.get('belong_to', None)
 		owner_id = request.webapp_owner_id
+		member = request.member
 		if not belong_to:
 			response = create_response(500)
 			response.errMsg = u'活动信息出错'
 			return response.get_response()
 		group_relations = app_models.GroupRelations.objects(belong_to=belong_to,group_status=app_models.GROUP_RUNNING)
+		group_relation_ids = [str(group_relation.id) for group_relation in group_relations]
+		if member:
+			member_id = member.id
+			current_member_join_group_details = app_models.GroupDetail.objects(relation_belong_to__in=group_relation_ids,grouped_member_id=str(member_id))
+			relation_belong_to_ids = [group_detail.relation_belong_to for group_detail in current_member_join_group_details]
+			group_relations = group_relations.filter(id__nin=relation_belong_to_ids)
 		group_ids = [str(p.belong_to) for p in group_relations]
 		all_groups = app_models.Group.objects(id__in=group_ids)
 		all_groups_can_join = []
+		all_groups_can_join_part1 = [] #第一段，拼团人数差1的团。所有拼团人数差1的团以剩余时间正序排列
+		all_groups_can_join_part2 = [] #第二段，拼团人数差大于1的团，以时间倒序排列。
 		for group_relation in group_relations:
-			current_group = all_groups.get(id=group_relation.belong_to)
-			remain_hours = (group_relation.created_at + timedelta(days=int(group_relation.group_days))-datetime.today()).total_seconds()/(60*60)
-			all_groups_can_join.append({
-				'id': str(group_relation.belong_to),
-				'group_relation_id': str(group_relation.id),
-				'group_owner_name': group_relation.group_leader_name,
-				'group_name': current_group.name,
-				'product_img': current_group.product_img,
-				'product_name': current_group.product_name,
-				'participant_count': str(group_relation.grouped_number)+'/'+group_relation.group_type,
-				'remain_hours': '%.0f' % remain_hours,
-				'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s&group_relation_id=%s&fid=%s' % (owner_id, str(group_relation.belong_to),str(group_relation.id),str(group_relation.member_id))
-			})
-
+			if group_relation.grouped_number < int(group_relation.group_type): #只显示拼团人数未满的团
+				current_group = all_groups.get(id=group_relation.belong_to)
+				remain_hours = (group_relation.created_at + timedelta(days=int(group_relation.group_days))-datetime.today()).total_seconds()/(60*60)
+				if int(group_relation.group_type)-group_relation.grouped_number == 1:
+					all_groups_can_join_part1.append({
+						'id': str(group_relation.belong_to),
+						'group_relation_id': str(group_relation.id),
+						'group_owner_name': group_relation.group_leader_name,
+						'group_name': current_group.name,
+						'product_img': current_group.product_img,
+						'product_name': current_group.product_name,
+						'participant_count': str(group_relation.grouped_number)+'/'+group_relation.group_type,
+						'remain_hours': '%.0f' % remain_hours,
+						'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s&group_relation_id=%s&fid=%s' % (owner_id, str(group_relation.belong_to),str(group_relation.id),str(group_relation.member_id))
+					})
+				else:
+					all_groups_can_join_part2.append({
+						'id': str(group_relation.belong_to),
+						'group_relation_id': str(group_relation.id),
+						'group_owner_name': group_relation.group_leader_name,
+						'group_name': current_group.name,
+						'product_img': current_group.product_img,
+						'product_name': current_group.product_name,
+						'participant_count': str(group_relation.grouped_number)+'/'+group_relation.group_type,
+						'remain_hours': '%.0f' % remain_hours,
+						'url': '/m/apps/group/m_group/?webapp_owner_id=%d&id=%s&group_relation_id=%s&fid=%s' % (owner_id, str(group_relation.belong_to),str(group_relation.id),str(group_relation.member_id))
+					})
+		all_groups_can_join_part1.sort(key=lambda item:int(item['remain_hours']))
+		all_groups_can_join_part2.sort(key=lambda item:int(item['remain_hours']),reverse=True)
+		all_groups_can_join_part1.extend(all_groups_can_join_part2)
+		all_groups_can_join = all_groups_can_join_part1
 		if all_groups_can_join == []:
 			response = create_response(500)
-			response.errMsg = u'暂无已开团购'
+			response.errMsg = u'暂无可参与的团购'
 			return response.get_response()
 		response = create_response(200)
 		response.data = {
@@ -58,11 +84,33 @@ class MGroupList(resource.Resource):
 		"""
 		响应GET
 		"""
+		all_groups = []
 		all_groups_can_open = []
 		owner_id = request.webapp_owner_id
 		#我要开团
-		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-created_at')
+		member = request.member
+		groups = app_models.Group.objects(owner_id=owner_id,status=app_models.STATUS_RUNNING).order_by('-end_time')
+		if member:
+			member_id = member.id
+			current_user_opened_group = app_models.GroupRelations.objects(member_id=str(member_id))
+			current_user_opened_group_ids = [relation.belong_to for relation in current_user_opened_group]
+			groups_can_open = groups.filter(id__nin=current_user_opened_group_ids)
+		else:
+			groups_can_open = groups
 		for group in groups:
+			#获取活动状态
+			activity_status = group.status_text
+			if activity_status == u'已结束':
+				group.update(set__status=app_models.STATUS_STOPED)
+			try:
+				all_groups.append({
+					'id': str(group.id),
+					'name': group.name,
+					'product_img': group.product_img
+				})
+			except:
+				pass
+		for group in groups_can_open:
 			try:
 				all_group_dict = []
 				group_dict_tuple = json.loads(group.group_dict),
@@ -84,7 +132,8 @@ class MGroupList(resource.Resource):
 				pass
 		c = RequestContext(request, {
 			'page_title': u'团购列表',
-			'all_groups_can_open': all_groups_can_open,
+			'all_groups_can_open': all_groups_can_open,#我要开团
+			'all_groups': all_groups,#直接参团
 			'is_hide_weixin_option_menu':True,
 			'app_name': "group",
 			'resource': "group",

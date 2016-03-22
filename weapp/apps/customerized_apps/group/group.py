@@ -137,8 +137,8 @@ class Group(resource.Resource):
 		"""
 		响应DELETE
 		"""
-		app_models.Group.objects(id=request.POST['id']).delete()
-
+		# app_models.Group.objects(id=request.POST['id']).delete()
+		app_models.Group.objects(id=request.POST['id']).update(set__is_use=0)
 		response = create_response(200)
 		return response.get_response()
 

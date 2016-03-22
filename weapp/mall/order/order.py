@@ -16,7 +16,7 @@ from core import paginator
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
 import mall.module_api as mall_api
-from watchdog.utils import watchdog_error
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from core.exceptionutil import unicode_full_stack
 from modules.member.models import WebAppUser
 
@@ -45,6 +45,7 @@ class OrderInfo(resource.Resource):
         """
         更新订单状态 取消订单
         """
+        mall_type = request.user_profile.webapp_type
         order_id = request.POST['order_id']
         action = request.POST.get('action', None)
         order_status = request.POST.get('order_status', None)
@@ -56,10 +57,11 @@ class OrderInfo(resource.Resource):
         remark = request.POST.get('remark', None)
         # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
-
         order = Order.objects.get(id=order_id)
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
+            if mall_type and Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+                order = Order.objects.get(id=order.origin_order_id)
             flag = util.check_order_status_filter(order,action,mall_type=request.user_profile.webapp_type)
             if not flag:
                 response = create_response(500)
@@ -115,16 +117,9 @@ class OrderInfo(resource.Resource):
 
             if 'remark' in request.POST:
                 remark = remark.strip()
-
-                webapp_id = request.user_profile.webapp_id
-                if webapp_id == order.webapp_id:
-                    if order.remark != remark:
-                        operate_log = operate_log + u' 修改订单备注'
-                        order.remark = remark
-                else:
-                    if order.supplier_remark != remark:
-                        operate_log = operate_log + u' 修改订单备注'
-                        order.supplier_remark = remark
+                if order.remark != remark:
+                    operate_log = operate_log + u' 修改订单备注'
+                    order.remark = remark
 
             if final_price:
                 # 只有价格不相等 以及待支付的时候 才可以进行订单价格的修改
@@ -252,6 +247,8 @@ class OrderFilterParams(resource.Resource):
         else:
             current_status_dict = copy.copy(STATUS2TEXT)
             # del current_status_dict[ORDER_STATUS_REFUNDED]
+            del current_status_dict[ORDER_STATUS_GROUP_REFUNDING]
+            del current_status_dict[ORDER_STATUS_GROUP_REFUNDED]
             status_dict = current_status_dict
 
         for key, value in status_dict.items():
@@ -377,3 +374,46 @@ class ChannelQrcodePayedOrder(resource.Resource):
         }
         return response.get_response()
 
+class GroupOrderRefunded(resource.Resource):
+    app = "mall2"
+    resource = "group_order_refunded"
+
+    KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
+
+    @login_required
+    def post(request):
+        order_ids = request.POST.get('order_ids', [])
+        key = request.POST.get('authkey', '')
+        response = create_response(200)
+        if key == KEY:
+            if not order_ids:
+                response.updated_order_ids = []
+                response.not_update_orders_ids = []
+                return response.get_response()
+            try:
+                orders = Order.objects.filtr(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_GROUP_REFUNDING
+                )
+                refunding_order_ids = [order.order_id for order in orders]
+                order_id2order = dict([(order.order_id, order) for order in orders])
+                orders.update(status=ORDER_STATUS_GROUP_REFUNDED)
+                response.updated_order_ids = refunding_order_ids
+                response.not_update_orders_ids = [id for id in order_ids if id not in refunding_order_ids]
+
+                for order_id in refunding_order_ids:
+                    order = order_id2order[order_id]
+                    record_status_log(order_id, u'系统', order.status, ORDER_STATUS_GROUP_REFUNDED)
+                    record_operation_log(order_id, u'系统', "退款完成", order)
+
+            except:
+                updated_order_ids = [order.order_id for order in Order.objects.filtr(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_GROUP_REFUNDED
+                )]
+                response.updated_order_ids = updated_order_ids
+                response.not_update_orders_ids = [id for id in order_ids if id not in updated_order_ids]
+        else:
+            response.updated_order_ids = []
+            response.not_update_orders_ids = order_ids
+        return response.get_response()

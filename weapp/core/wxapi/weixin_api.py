@@ -184,7 +184,6 @@ def call_api(weixin_api, api_instance_class):
 			# post	
 			if request_method == api_settings.API_POST:
 				post_param_json_str = api_instance_class.parese_post_param_json_str(agrs)
-				
 				if hasattr(api_instance_class, 'is_for_form') and api_instance_class.is_for_form:
 					is_for_form = True
 				else:

@@ -33,7 +33,7 @@
 
             <div class="wui-i-description xa-description cl">
                 <div class="wui-i-description-content">
-                    <div class="wui-i-product-title">{{component.model.title}}</div>
+                    <div class="wui-i-product-title">{{component.model.product.productName}}</div>
                     <div class="wui-i-product-price-group none">
                         <span class="wui-i-product-price-group-title">团购价</span>
                         <span class="wui-i-product-price-group-original-price">240元</span>
@@ -45,7 +45,7 @@
                     <div class="wui-i-choose_group_box">
                         <div class="wui-i-choose_title_box">
                             <span class="wui-i-choose_title">选择团购</span>
-                            <span class="wui-i-end_time">开团截止日期：{{component.model.end_time}}</span>
+                            <span class="wui-i-end_time">开团截止日期：{{ component.model.end_time|space_split_0 }}</span>
                         </div>
                         <div class="wui-i-choose_items_box">
                             <ul
@@ -59,8 +59,8 @@
                                         <span name="radio" data-type="radio" span-type="selection" class="selection-radio" data-input-product_id="{{component.model.product.productId}}" data-input-group_type="{{component.components.0.model.group_type}}" data-input-group_days="{{ component.components.0.model.group_days }}" data-input-group_price="{{ component.components.0.model.group_price }}">
                                         </span>
                                         <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{% if component.components.0.model.group_type %}{{component.components.0.model.group_type}}{% else %}5{% endif %}人团</span>
-                                        <span class="ml5 xa-itemTitle group_days" style="margin-left: 10px!important;line-height: 22px;">拼团时间：{{component.components.0.model.group_days}}天</span>
-                                        <span class="ml5 xa-itemTitle group_price" style="margin-left: 10px!important;line-height: 22px;">团购价：{{component.components.0.model.group_price}}元</span>
+                                        <span class="ml5 xa-itemTitle group_days" style="margin-left: 10px!important;line-height: 22px;">拼团时间:{{component.components.0.model.group_days}}天</span>
+                                        <span class="ml5 xa-itemTitle group_price" style="margin-left: 10px!important;line-height: 22px;">团购价:{{component.components.0.model.group_price}}元</span>
                                     </div>
                                 </li>
 
@@ -69,8 +69,8 @@
                                         <span name="radio" data-type="radio" span-type="selection" class="selection-radio" data-input-product_id="{{component.model.product.productId}}" data-input-group_type="{{component.components.1.model.group_type}}" data-input-group_days="{{ component.components.1.model.group_days }}" data-input-group_price="{{ component.components.1.model.group_price }}">
                                         </span>
                                         <span class="ml5 xa-itemTitle group_type" style="margin-left: 30px!important;line-height: 22px;">{% if component.components.1.model.group_type %}{{component.components.1.model.group_type}}{% else %}5{% endif %}人团</span>
-                                        <span class="ml5 xa-itemTitle group_days" style="margin-left: 10px!important;line-height: 22px;">拼团时间：{{component.components.1.model.group_days}}天</span>
-                                        <span class="ml5 xa-itemTitle group_price" style="margin-left: 10px!important;line-height: 22px;">团购价：{{component.components.1.model.group_price}}元</span>
+                                        <span class="ml5 xa-itemTitle group_days" style="margin-left: 10px!important;line-height: 22px;">拼团时间:{{component.components.1.model.group_days}}天</span>
+                                        <span class="ml5 xa-itemTitle group_price" style="margin-left: 10px!important;line-height: 22px;">团购价:{{component.components.1.model.group_price}}元</span>
                                     </div>
                                 </li>
                             </ul>
@@ -80,9 +80,9 @@
 
                     </div>
                     <div class="wui-i-group_box_progress none">
-                        <span>团购进度</span>
-                        <span class="wui-i-group_box_success none" style="color: #ff2742;margin-left: 60px;">团购成功！</span>
-                        <span class="wui-i-group_box_fail none" style="margin-left: 60px;">团购失败！</span>
+                        <span style="font-weight:bold;">团购进度</span>
+                        <span class="wui-i-group_box_success none" style="color: #ff2742;margin-left: 40px;font-weight:bold;">团购成功！</span>
+                        <span class="wui-i-group_box_fail none" style="margin-left: 40px;font-weight:bold;">团购失败！</span>
                         <div class="wui-i-timing wa-timing none">
                             <b class="xa-day">{% if component.model.timing_value.day %}{{component.model.timing_value.day}}{% else %}99{% endif %}</b>天
                             <b class="xa-hour">{% if component.model.timing_value.hour %}{{component.model.timing_value.hour}}{% else %}23{% endif %}</b>时
@@ -92,7 +92,7 @@
                        <div class="wui-i-powerbar_group">
                             <div class="wui-i-box">
                                 <div class="wui-i-bar">
-                                    <div class="wui-i-inner_bar">
+                                    <div class="wui-i-inner_bar xa-i-bar_process">
                                         <div class="wui-i-cur_number">0人</div>
                                         <div class="wui-i-circle"></div>
                                     </div>
