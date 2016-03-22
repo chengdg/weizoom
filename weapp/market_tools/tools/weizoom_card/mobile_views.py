@@ -67,6 +67,7 @@ def get_weizoom_card_exchange_list(request):
 	
 	card_details_dic['phone_number'] = phone_number
 	count = member_has_cards.count()
+	has_expired_cards = False
 	for card in member_has_cards:
 		card_id = card.card_id
 		cur_card = card_models.WeizoomCard.objects.get(id = card_id)
@@ -75,6 +76,7 @@ def get_weizoom_card_exchange_list(request):
 		status = cur_card.status
 		if is_expired or status == card_models.WEIZOOM_CARD_STATUS_INACTIVE:
 			count -= 1
+			has_expired_cards = True
 		card_details_list.append({
 			'card_id': cur_card.weizoom_card_id,
 			'remainder': '%.2f' % cur_card.money,
@@ -92,6 +94,7 @@ def get_weizoom_card_exchange_list(request):
 	c = RequestContext(request, {
 		'page_title': u'微众卡',
 		'cards': card_details_dic,
+		'has_expired_cards': has_expired_cards
 	})
 	return render_to_response('card_exchange/templates/card_exchange/webapp/m_card_exchange_list.html', c)
 
