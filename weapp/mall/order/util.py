@@ -1685,17 +1685,17 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
                     logging.info("args:%s" % str(args))
                     r = requests.get(URL, params=args)
                     response = json.loads(r.text)
-                    if response['data'].get('is_success', ''):
+                    if not response['data'].get('is_success', ''):
                         r = requests.get(URL, params=args)
                         response = json.loads(r.text)
-                        if response['data'].get('is_success', ''):
+                        if not response['data'].get('is_success', ''):
                             r = requests.get(URL, params=args)
                             response = json.loads(r.text)
                 except:
                     try:
                         r = requests.get(URL, params=args)
                         response = json.loads(r.text)
-                        if response['data'].get('is_success', ''):
+                        if not response['data'].get('is_success', ''):
                             r = requests.get(URL, params=args)
                             response = json.loads(r.text)
                     except:
