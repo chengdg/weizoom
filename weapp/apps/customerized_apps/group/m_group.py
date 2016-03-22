@@ -110,7 +110,7 @@ class MGroup(resource.Resource):
 									"record_id": str(record_id),
 									"group_id": str(group_relation_id),
 									"fid": str(group_relation_info.member_id),
-									"price": '0.2f' % group_relation_info.group_price,
+									"price": '%.2f' % group_relation_info.group_price,
 									"product_name": product_name,
 									"status" : 'fail',
 									"miss": str(miss)
@@ -296,7 +296,7 @@ class MGroup(resource.Resource):
 						"record_id": str(record_id),
 						"group_id": str(group_relation_id),
 						"fid": str(group_relation.member_id),
-						"price": '0.2f' % group_relation.group_price,
+						"price": '%.2f' % group_relation.group_price,
 						"product_name": product_name,
 						"status" : 'fail',
 						"miss": str(miss)

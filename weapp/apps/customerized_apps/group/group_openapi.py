@@ -192,7 +192,7 @@ class OrderAction(resource.Resource):
 						"record_id": group_record.belong_to,
 						"group_id": str(group_id),
 						"fid": str(group_record.member_id),
-						"price": '0.2f' % group_record.group_price,
+						"price": '%.2f' % group_record.group_price,
 						"product_name": product_name,
 						"status" : 'success',
 						"miss": ''

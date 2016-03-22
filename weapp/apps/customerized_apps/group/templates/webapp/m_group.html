@@ -751,7 +751,11 @@
                 var li_content = '';
                 for(var i in helpers_info){
                     var p = helpers_info[i];
-                    li_content += "<li class='wui-i-member'><img src='"+ p.user_icon+"'></li>";
+                    if(p.user_icon!=''){
+                        li_content += "<li class='wui-i-member'><img src='"+ p.user_icon+"'></li>";
+                    }else{
+                       li_content += "<li class='wui-i-member'><img src='/termite_static/img/component/group/defalut_icon.jpg'></li>";
+                    }
                 }
                 for(var i=0; i < (parseInt(group_type)-helpers_info.length);i++){
                     li_content += "<li class='wui-i-member'><img src='/termite_static/img/component/group/user_icon.png'></li>";
