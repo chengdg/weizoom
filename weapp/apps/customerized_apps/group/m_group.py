@@ -110,7 +110,7 @@ class MGroup(resource.Resource):
 									"record_id": str(record_id),
 									"group_id": str(group_relation_id),
 									"fid": str(group_relation_info.member_id),
-									"price": '0.2f' % group_relation_info.group_price,
+									"price": '%.2f' % group_relation_info.group_price,
 									"product_name": product_name,
 									"status" : 'fail',
 									"miss": str(miss)
@@ -137,7 +137,8 @@ class MGroup(resource.Resource):
 						if fid is None or str(fid) == str(member_id):
 							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
 						else:
-							if (str(member_id) in group_relation_info.grouped_member_ids) and (str(member_id) in member_ids):
+							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+							if ( group_detail.is_already_paid and (member_id in member_ids)):
 								is_helped = True
 							else :
 								is_helped = False
@@ -296,7 +297,7 @@ class MGroup(resource.Resource):
 						"record_id": str(record_id),
 						"group_id": str(group_relation_id),
 						"fid": str(group_relation.member_id),
-						"price": '0.2f' % group_relation.group_price,
+						"price": '%.2f' % group_relation.group_price,
 						"product_name": product_name,
 						"status" : 'fail',
 						"miss": str(miss)

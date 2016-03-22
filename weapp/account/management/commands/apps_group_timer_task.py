@@ -48,7 +48,7 @@ class Command(BaseCommand):
 							"record_id": str(group_relation.belong_to),
 							"group_id": str(group_id),
 							"fid": str(group_relation.member_id),
-							"price": '0.2f' % group_relation.group_price,
+							"price": '%.2f' % group_relation.group_price,
 							"product_name": product_name,
 							"status" : 'fail',
 							"miss": str(miss)
@@ -85,7 +85,7 @@ class Command(BaseCommand):
 						"record_id": str(group_relation.belong_to),
 						"group_id": str(group_id),
 						"fid": str(group_relation.member_id),
-						"price": '0.2f' % group_relation.group_price,
+						"price": '%.2f' % group_relation.group_price,
 						"product_name": product_name,
 						"status" : 'fail',
 						"miss": str(miss)
