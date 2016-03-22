@@ -378,9 +378,8 @@ class GroupOrderRefunded(resource.Resource):
     app = "mall2"
     resource = "group_order_refunded"
 
-    KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
-
     def post(request):
+        KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
         order_ids = request.POST.get('order_ids', [])
         key = request.POST.get('authkey', '')
         response = create_response(200)
