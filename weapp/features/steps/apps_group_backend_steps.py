@@ -280,15 +280,15 @@ def __group_name2id(name):
 #     status2name_dic = {-1:u"全部",0:u"未开始",1:u"进行中",2:u"已结束"}
 #     return status2name_dic[status_num]
 
-# def __name2status(name):
-#     """
-#     团购： 文字 转 状态值
-#     """
-#     if name:
-#         name2status_dic = {u"全部":-1,u"未开始":0,u"进行中":1,u"已结束":2}
-#         return name2status_dic[name]
-#     else:
-#         return -1
+def __name2status(name):
+    """
+    团购： 文字 转 状态值
+    """
+    if name:
+        name2status_dic = {u"全部":-1,u"未开启":0,u"进行中":1,u"已结束":2}
+        return name2status_dic[name]
+    else:
+        return -1
 
 # def __name2color(name):
 #   """
@@ -379,6 +379,7 @@ def __Create_Group(context,text,user):
 
     product_name = text.get('product_name',"")
     product_dict = get_product_list(context,product_name)[0]
+
     product_id = ""
     product_img = ""
     product_name = ""
@@ -617,43 +618,47 @@ def __Stop_Group(context,group_id):
   stop_group_response = context.client.post(stop_group_url,stop_args)
   return stop_group_response
 
-# def __Search_Powerme(context,search_dic):
-#     """
-#     搜索团购活动
+def __Search_Group(context,search_dic):
+    """
+    搜索团购活动
 
-#     输入搜索字典
-#     返回数据列表
-#     """
+    输入搜索字典
+    返回数据列表
+    """
 
-#     design_mode = 0
-#     version = 1
-#     page = 1
-#     enable_paginate = 1
-#     count_per_page = 10
+    design_mode = 0
+    version = 1
+    page = 1
+    enable_paginate = 1
+    count_per_page = 10
 
-#     name = search_dic["name"]
-#     start_time = search_dic["start_time"]
-#     end_time = search_dic["end_time"]
-#     status = __name2status(search_dic["status"])
+    group_name = unicode(search_dic["group_name"])
+    product_name = unicode(search_dic["product_name"])
+    start_time = search_dic["start_time"]
+    end_time = search_dic["end_time"]
+    status = __name2status(search_dic["status"])
 
 
 
-#     search_url = "/apps/group/api/groups/?design_mode={}&version={}&name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
-#             design_mode,
-#             version,
-#             name,
-#             status,
-#             start_time,
-#             end_time,
-#             count_per_page,
-#             page,
-#             enable_paginate)
+    search_url = "/apps/group/api/groups/?design_mode={}&version={}&group_name={}&product_name={}&status={}&start_time={}&end_time={}&count_per_page={}&page={}&enable_paginate={}".format(
+            design_mode,
+            version,
+            group_name,
+            product_name,
+            status,
+            start_time,
+            end_time,
+            count_per_page,
+            page,
+            enable_paginate)
 
-#     search_response = context.client.get(search_url)
-#     bdd_util.assert_api_call_success(search_response)
-#     return search_response
+    print 111111111111111111111
+    print search_url
+    search_response = context.client.get(search_url)
+    bdd_util.assert_api_call_success(search_response)
+    return search_response
 
-# def __Search_Powerme_Result(context,search_dic):
+# def __Search_Group_Result(context,search_dic):
 #   """
 #   搜索,团购参与结果
 
@@ -758,39 +763,45 @@ def step_impl(context,user):
 #     #搜索查看结果
     if hasattr(context,"search_group"):
         pass
-#         rec_search_list = context.search_group
-#         for item in rec_search_list:
-#             tmp = {
-#                 "name":item['name'],
-#                 "participant_count":item['participant_count'],
-#                 "group_type":item['group_type'],
-#                 "status":item['status'],
-#                 "total_money":item['total_money'],
-#                 "already_paid_money":item['already_paid_money'],
-#                 "start_time":__date2time(item['start_time']),
-#                 "end_time":__date2time(item['end_time']),
-#             }
-#             tmp["actions"] = __get_actions(item['status'],item['handle_status'])
-#             actual_list.append(tmp)
+        rec_search_list = context.search_group
+        for item in rec_search_list:
+            tmp = {
+                "id":item['id'],
+                "name":item['name'],
+                "product_name":item["product_name"],
+                "product_img":item["product_img"],
+                "product_id":item["product_id"],
+                "status":item['status'],
+                "group_item_count":item['group_item_count'],
+                "group_visitor_count":item['group_visitor_count'],
+                "group_customer_count":item['group_customer_count'],
+                "handle_status":item['handle_status'],
+                "related_page_id":item['related_page_id'],
+                "start_time":"%s %s"%(item['start_time_date'].replace('/','-'),item["start_time_time"]),
+                "end_time":"%s %s"%(item['end_time_date'].replace('/','-'),item["end_time_time"]),
+                "created_at":item["created_at"]
+            }
+            tmp["actions"] = __get_actions(item['status'],item['handle_status'])
+            actual_list.append(tmp)
 
-#         for expect in expected:
-#             if 'start_date' in expect:
-#                 expect['start_time'] = __date2time(expect['start_date'])
-#                 del expect['start_date']
-#             if 'end_date' in expect:
-#                 expect['end_time'] = __date2time(expect['end_date'])
-#                 del expect['end_date']
-#         print("expected: {}".format(expected))
+        for expect in expected:
+            if 'start_date' in expect:
+                expect['start_time'] = __date2time(expect['start_date'])
+                del expect['start_date']
+            if 'end_date' in expect:
+                expect['end_time'] = __date2time(expect['end_date'])
+                del expect['end_date']
+        print("expected: {}".format(expected))
 
-#         bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
+        bdd_util.assert_list(expected,actual_list)#assert_list(小集合，大集合)
     #其他查看结果
     else:
         #分页情况，更新分页参数
         if hasattr(context,"paging"):
             pass
-#             paging_dic = context.paging
-#             count_per_page = paging_dic['count_per_page']
-#             page = paging_dic['page_num']
+            paging_dic = context.paging
+            count_per_page = paging_dic['count_per_page']
+            page = paging_dic['page_num']
 
         for expect in expected:
             if 'start_date' in expect:
@@ -895,45 +906,46 @@ def step_impl(context,user,group_name):
 
 #   bdd_util.assert_list(expected, actual)
 
-# @when(u"{user}设置团购活动列表查询条件")
-# def step_impl(context,user):
-#     expect = json.loads(context.text)
-#     if 'start_date' in expect:
-#         expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
-#         del expect['start_date']
+@when(u"{user}设置团购活动列表查询条件")
+def step_impl(context,user):
+    expect = json.loads(context.text)
+    if 'start_date' in expect:
+        expect['start_time'] = __date2time(expect['start_date']) if expect['start_date'] else ""
+        del expect['start_date']
 
-#     if 'end_date' in expect:
-#         expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
-#         del expect['end_date']
+    if 'end_date' in expect:
+        expect['end_time'] = __date2time(expect['end_date']) if expect['end_date'] else ""
+        del expect['end_date']
 
-#     search_dic = {
-#         "name": expect.get("name",""),
-#         "start_time": expect.get("start_time",""),
-#         "end_time": expect.get("end_time",""),
-#         "status": expect.get("status",u"全部")
-#     }
-#     search_response = __Search_Powerme(context,search_dic)
-#     group_array = json.loads(search_response.content)['data']['items']
-#     context.search_group = group_array
+    search_dic = {
+        "group_name": expect.get("name",""),
+        "product_name": expect.get("product_name",""),
+        "start_time": expect.get("start_time",""),
+        "end_time": expect.get("end_time",""),
+        "status": expect.get("status",u"全部")
+    }
+    search_response = __Search_Group(context,search_dic)
+    group_array = json.loads(search_response.content)['data']['items']
+    context.search_group = group_array
 
-# @when(u"{user}访问团购活动列表第'{page_num}'页")
-# def step_impl(context,user,page_num):
-#     count_per_page = context.count_per_page
-#     context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问团购活动列表第'{page_num}'页")
+def step_impl(context,user,page_num):
+    count_per_page = context.count_per_page
+    context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问团购活动列表下一页")
-# def step_impl(context,user):
-#     paging_dic = context.paging
-#     count_per_page = paging_dic['count_per_page']
-#     page_num = int(paging_dic['page_num'])+1
-#     context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问团购活动列表下一页")
+def step_impl(context,user):
+    paging_dic = context.paging
+    count_per_page = paging_dic['count_per_page']
+    page_num = int(paging_dic['page_num'])+1
+    context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
-# @when(u"{user}访问团购活动列表上一页")
-# def step_impl(context,user):
-#     paging_dic = context.paging
-#     count_per_page = paging_dic['count_per_page']
-#     page_num = int(paging_dic['page_num'])-1
-#     context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+@when(u"{user}访问团购活动列表上一页")
+def step_impl(context,user):
+    paging_dic = context.paging
+    count_per_page = paging_dic['count_per_page']
+    page_num = int(paging_dic['page_num'])-1
+    context.paging = {'count_per_page':count_per_page,"page_num":page_num}
 
 # @when(u"{user}设置团购活动结果列表查询条件")
 # def step_impl(context,user):
@@ -958,7 +970,7 @@ def step_impl(context,user,group_name):
 #       "start_time":start_time,
 #       "end_time":end_time
 #   }
-#   search_response = __Search_Powerme_Result(context,search_dic)
+#   search_response = __Search_Group_Result(context,search_dic)
 #   group_result_array = json.loads(search_response.content)['data']['items']
 #   context.search_group_result = group_result_array
 
