@@ -55,6 +55,8 @@ def export_orders_json(request):
         '5': u'已完成',
         '6': u'退款中',
         '7': u'退款完成',
+        '8': u'退款中',
+        '9': u'退款完成',
     }
 
     payment_type = {
