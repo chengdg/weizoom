@@ -92,9 +92,6 @@
         color: #ff2742;
         display: inline-block;
     }
-    .xui-groupMsg-payHint .xa-i-msg-title {
-        color: #ff2742!important;
-    }
     button.wui-i-btn-groupMsg-yes,button.wui-i-btn-groupMsg-no{
         width: 40%;
         text-align: center;
@@ -156,6 +153,7 @@
     <div class="xui-groupMsg-payHint xa-groupMsg-payHint none">
         <div class="f15 xui-successHint">
             <p class="xui-i-msg-title xa-i-msg-title"></p>
+            <p class="xui-i-msg-title-status xa-i-msg-title-status"></p>
             <p class="xui-i-msg xa-i-msg"></p>
             <p class="xui-i-msg xa-i-msg-not-meber"></p>
         </div>
@@ -206,6 +204,8 @@
     var product_id = {% if product_id %}'{{product_id}}'{% else %}''{% endif %};
     var settings_domain = '{{settings_domain}}';
     var product_original_price = 0;
+    var product_mysql_name = '';
+    var pic_url = '';
     var product_group_price = 0;
     var order_id = '';
     var is_from_pay_result = false;
@@ -381,6 +381,8 @@
         W.group_status = member_info.group_status;
         group_type = member_info.group_type;
         product_original_price = member_info.product_original_price;
+        product_mysql_name = member_info.product_mysql_name;
+        pic_url = member_info.pic_url;
         product_group_price = member_info.product_group_price;
         page_owner_icon = member_info.page_owner_icon;
         order_id = member_info.order_id;
@@ -392,6 +394,12 @@
         }
         if(page_owner_icon != ""){
             $('.wui-i-shop_circle').find('img').attr('src', page_owner_icon);
+        }
+        if(product_mysql_name !=""){
+            $('.wui-i-product-title').html(product_mysql_name);
+        }
+        if(pic_url !=""){
+            $('.wui-i-product-img').find('img').attr('src', pic_url);
         }
         updateBtnStatus();
     }
@@ -410,16 +418,18 @@
             if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
                 //如果是自己的主页
                 if(is_self_page){
-                    if(W.group_status == '团购未生效'){
-                        openUnpaidWin();
-                    }
+
                     if(is_group_leader){
                         $('.wa-using').text('邀请好友参团').on('click', function(){
                                 openGuideMask();
                             }).show();
                     }else{
-                        if(only_remain_one_day){
-                            openRemainOneDayWin();
+                        if(W.group_status == '团购未生效'){
+                            openUnpaidWin();
+                        }else{
+                            if(only_remain_one_day){
+                                openRemainOneDayWin();
+                            }
                         }
                         $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
                         if(W.isMember){
@@ -640,10 +650,12 @@
         mask('show');
         $('.xui-groupMsg-payHint').removeClass('none');
         if(is_group_leader){
-            $('.xa-groupMsg-payHint').find('.xa-i-msg-title').html('恭喜您 开团成功');
+            $('.xa-groupMsg-payHint').find('.xa-i-msg-title').html('恭喜您 ');
+            $('.xa-groupMsg-payHint').find('.xa-i-msg-title-status').html('开团成功');
             $('.xa-groupMsg-payHint').find('.xa-i-msg').html('赶紧邀请好友参团吧!');
         }else{
-            $('.xa-groupMsg-payHint').find('.xa-i-msg-title').html('恭喜您参团成功');
+            $('.xa-groupMsg-payHint').find('.xa-i-msg-title').html('恭喜您 ');
+            $('.xa-groupMsg-payHint').find('.xa-i-msg-title-status').html('参团成功');
             if(W.isMember){
                 $('.xa-groupMsg-payHint').find('.xa-i-msg').html('赶快去邀请好友吧!');
             }else{
@@ -739,7 +751,11 @@
                 var li_content = '';
                 for(var i in helpers_info){
                     var p = helpers_info[i];
-                    li_content += "<li class='wui-i-member'><img src='"+ p.user_icon+"'></li>";
+                    if(p.user_icon!=''){
+                        li_content += "<li class='wui-i-member'><img src='"+ p.user_icon+"'></li>";
+                    }else{
+                       li_content += "<li class='wui-i-member'><img src='/termite_static/img/component/group/defalut_icon.jpg'></li>";
+                    }
                 }
                 for(var i=0; i < (parseInt(group_type)-helpers_info.length);i++){
                     li_content += "<li class='wui-i-member'><img src='/termite_static/img/component/group/user_icon.png'></li>";

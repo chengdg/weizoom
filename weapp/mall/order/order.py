@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import logging
 
 from excel_response import ExcelResponse
 from django.template import RequestContext
@@ -380,7 +381,7 @@ class GroupOrderRefunded(resource.Resource):
 
     def post(request):
         KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
-        order_ids = request.POST.get('order_ids', [])
+        order_ids = request.POST.getlist('order_ids', [])
         key = request.POST.get('authkey', '')
         response = create_response(200)
         if key == KEY:
@@ -389,7 +390,7 @@ class GroupOrderRefunded(resource.Resource):
                 response.not_update_orders_ids = []
                 return response.get_response()
             try:
-                orders = Order.objects.filtr(
+                orders = Order.objects.filter(
                     order_id__in=order_ids,
                     status=ORDER_STATUS_GROUP_REFUNDING
                 )
@@ -401,11 +402,12 @@ class GroupOrderRefunded(resource.Resource):
 
                 for order_id in refunding_order_ids:
                     order = order_id2order[order_id]
-                    record_status_log(order_id, u'系统', order.status, ORDER_STATUS_GROUP_REFUNDED)
-                    record_operation_log(order_id, u'系统', "退款完成", order)
+                    record_status_log(order_id, u'系统', ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED)
+                    record_operation_log(order_id, u'系统', u"退款完成", order)
 
             except:
-                updated_order_ids = [order.order_id for order in Order.objects.filtr(
+                logging.info(unicode_full_stack())
+                updated_order_ids = [order.order_id for order in Order.objects.filter(
                     order_id__in=order_ids,
                     status=ORDER_STATUS_GROUP_REFUNDED
                 )]

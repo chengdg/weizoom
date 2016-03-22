@@ -1685,17 +1685,17 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
                     logging.info("args:%s" % str(args))
                     r = requests.get(URL, params=args)
                     response = json.loads(r.text)
-                    if response.get('is_success', '') != 'true':
+                    if not response['data'].get('is_success', ''):
                         r = requests.get(URL, params=args)
                         response = json.loads(r.text)
-                        if response.get('is_success', '') != 'true':
+                        if not response['data'].get('is_success', ''):
                             r = requests.get(URL, params=args)
                             response = json.loads(r.text)
                 except:
                     try:
                         r = requests.get(URL, params=args)
                         response = json.loads(r.text)
-                        if response.get('is_success', '') != 'true':
+                        if not response['data'].get('is_success', ''):
                             r = requests.get(URL, params=args)
                             response = json.loads(r.text)
                     except:
@@ -1705,7 +1705,7 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
                         except:
                             logging.info(u"订单退款异常%s" % unicode_full_stack())
                             watchdog_error(u"订单退款异常%s" % unicode_full_stack())
-                if response.get('is_success', '') == 'true':
+                if response['data'].get('is_success', ''):
                     update_order_status(user, 'return_pay', order)
                     order.status = ORDER_STATUS_GROUP_REFUNDING
                     order.save()
