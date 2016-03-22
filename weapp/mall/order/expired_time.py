@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import logging
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -45,6 +46,8 @@ class ExpiredTime(resource.Resource):
             MallConfig.objects.filter(owner=request.manager).update(order_expired_day=order_expired_day)
         else:
             MallConfig.objects.create(owner=request.user, order_expired_day=24)
+
+        logging.info(u"user_id:%s, expired_time:%d" % (request.manager.id, order_expired_day))
 
         mall_config = MallConfig.objects.filter(owner=request.manager)[0]
         c = RequestContext(request, {

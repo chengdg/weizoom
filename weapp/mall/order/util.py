@@ -1687,23 +1687,27 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
                 response = dict()
                 try:
                     r = requests.get(URL, params=args)
-                    response = json.loads(r.json())
+                    response = json.loads(r.text)
                     if not response.get('is_success', ''):
                         r = requests.get(url, params=args)
-                        response = json.loads(r.json())
+                        response = json.loads(r.text)
                         if not response.get('is_success', ''):
                             r = requests.get(url, params=args)
-                            response = json.loads(r.json())
+                            response = json.loads(r.text)
                 except:
                     try:
                         r = requests.get(URL, params=args)
-                        response = json.loads(r.json())
+                        response = json.loads(r.text)
                         if not response.get('is_success', ''):
                             r = requests.get(url, params=args)
-                            response = json.loads(r.json())
+                            response = json.loads(r.text)
                     except:
-                        r = requests.get(URL, params=args)
-                        response = json.loads(r.json())
+                        try:
+                            r = requests.get(URL, params=args)
+                            response = json.loads(r.text)
+                        except:
+                            logging.info(u"订单退款异常%s" % unicode_full_stack())
+                            watchdog_error(u"订单退款异常%s" % unicode_full_stack())
                 if response.get('is_success', ''):
                     order.status = ORDER_STATUS_GROUP_REFUNDING
                     order.save()

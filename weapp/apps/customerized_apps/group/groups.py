@@ -86,6 +86,7 @@ class Groups(resource.Resource):
 			params['start_time__gte'] = start_time
 		if end_time:
 			params['end_time__lte'] = end_time
+		params['is_use'] = app_models.IS_USE_YES
 		datas = app_models.Group.objects(**params).order_by('-created_at')
 
 		#goup 一个大团活动
