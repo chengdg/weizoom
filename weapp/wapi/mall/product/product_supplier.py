@@ -4,6 +4,7 @@ from core import api_resource
 from wapi.decorators import param_required
 
 from mall import models as mall_models
+from account.models import UserProfile
 
 class ProductSupplier(api_resource.ApiResource):
 	"""
@@ -18,6 +19,7 @@ class ProductSupplier(api_resource.ApiResource):
 
 		@param product_id 商品ID
 		@param supplier_id 供应商ID
+		@param supplier_user_id 同步商品的所属商家ID
 		"""
 		product_id = args.get('product_id', None)
 		if product_id:
@@ -47,5 +49,21 @@ class ProductSupplier(api_resource.ApiResource):
 				return {
 					'supplier_name': u'未知供应商名：' + supplier_id
 				}
+
+		supplier_user_id = args.get('supplier_user_id', None)
+		if supplier_user_id:
+			try:
+				profile = UserProfile.objects.get(user_id=int(supplier_user_id))
+				name = profile.store_name
+				if name:
+					return {
+						'supplier_name': name
+					}
+			except Exception, e:
+				print u'根据商家id获取供应商名失败：', supplier_user_id, e
+				
+			return {
+				'supplier_name': u'未知供应商名：' + supplier_user_id
+			}
 
 		return {}
