@@ -20,12 +20,14 @@ class Command(BaseCommand):
 		"""
 		"""
 		try:
-			print 'group timer task start...'
+			print ('group timer task start...')
 			start_time = time.time()
 
 			"""
 			所有已到时间还未完成的团购，置为团购失败
 			"""
+			all_groups = app_models.Group.objects.all()
+			all_group_details_has_paid = app_models.GroupDetail.objects(is_already_paid=True)
 			all_running_group_relations = app_models.GroupRelations.objects(group_status=app_models.GROUP_RUNNING)
 			all_running_group_ids = []
 			for group_relation in all_running_group_relations:
@@ -34,6 +36,29 @@ class Command(BaseCommand):
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
 					update_order_status_by_group_status(group_relation.id,'failure')
+					#发送拼团失败模板消息
+					try:
+						group_info = all_groups.get(id=group_relation.belong_to)
+						owner_id = group_info.owner_id
+						product_name = group_info.product_name
+						group_id = group_relation.id
+						miss = int(group_relation.group_type)-group_relation.grouped_number
+						activity_info = {
+							"owner_id": str(owner_id),
+							"record_id": str(group_relation.belong_to),
+							"group_id": str(group_id),
+							"fid": str(group_relation.member_id),
+							"price": '0.2f' % group_relation.group_price,
+							"product_name": product_name,
+							"status" : 'fail',
+							"miss": str(miss)
+						}
+						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
+						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+						send_group_template_message(activity_info, member_info_list)
+					except:
+						print(u'发送拼团成功模板消息失败')
+
 			"""
 			所有团购活动已结束的团购活动，置为团购失败
 			"""
@@ -48,6 +73,28 @@ class Command(BaseCommand):
 			for group_relation in all_end_group_relations:
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
 				update_order_status_by_group_status(group_relation.id,'failure')
+				#发送拼团失败模板消息
+				try:
+					group_info = all_groups.get(id=group_relation.belong_to)
+					owner_id = group_info.owner_id
+					product_name = group_info.product_name
+					group_id = group_relation.id
+					miss = int(group_relation.group_type)-group_relation.grouped_number
+					activity_info = {
+						"owner_id": str(owner_id),
+						"record_id": str(group_relation.belong_to),
+						"group_id": str(group_id),
+						"fid": str(group_relation.member_id),
+						"price": '0.2f' % group_relation.group_price,
+						"product_name": product_name,
+						"status" : 'fail',
+						"miss": str(miss)
+					}
+					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
 
 			"""
 			所有已到15分钟还未开团成功的团购，删除团购记录
@@ -77,7 +124,7 @@ class Command(BaseCommand):
 
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
-			print 'group timer task end...expend %s' % diff
+			print ('group timer task end...expend %s' % diff)
 		except:
 			notify_msg = u"处理失败团购错误，cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_msg)
