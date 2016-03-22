@@ -182,22 +182,25 @@ class OrderAction(resource.Resource):
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 				update_order_status_by_group_status(group_id,'success')
 
-				#发送拼团成功模板消息
-				# group_info = app_models.Group.objects.get(id=group_record.belong_to)
-				# owner_id = str(group_info.owner_id)
-				# product_name = group_info.product_name
-				# activity_info = {
-				# 	"owner_id": owner_id,
-				# 	"record_id": group_record.belong_to,
-				# 	"group_id": str(group_id),
-				# 	"fid": str(group_record.member_id),
-				# 	"price": group_record.group_price,
-				# 	"product_name": product_name,
-				# 	"status" : 'success',
-				# 	"miss": ''
-				# }
-				# member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-				# send_group_template_message(activity_info, member_info_list)
+				# 发送拼团成功模板消息
+				try:
+					group_info = app_models.Group.objects.get(id=group_record.belong_to)
+					owner_id = str(group_info.owner_id)
+					product_name = group_info.product_name
+					activity_info = {
+						"owner_id": owner_id,
+						"record_id": group_record.belong_to,
+						"group_id": str(group_id),
+						"fid": str(group_record.member_id),
+						"price": '0.2f' % group_record.group_price,
+						"product_name": product_name,
+						"status" : 'success',
+						"miss": ''
+					}
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
 
 		response = create_response(200)
 		return response.get_response()
