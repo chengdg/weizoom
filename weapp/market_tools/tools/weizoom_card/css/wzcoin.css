@@ -169,6 +169,7 @@ html,body{
     height: 100%;
     width: 100%;
 	font-size: 1.2rem;
+	position: relative;
 }
 
 .xui-wzResult-page .xui-submitWz {
@@ -303,29 +304,26 @@ html,body{
 .xui-wzResult-page .xui-submitWzOther .xui-order-info-money{
 	font-weight: 500;
 }
+.xui-wzResult-page .xui-go-btn{
+	position: relative;
+	text-align: center;
+	top: 20px;
+}
 .xui-wzResult-page .xui-goUserInfo-btn {
     background: #0580CE none repeat scroll 0 0;
     border-radius: 0;
-    bottom: 8px;
     color: #fff;
     font-size: 1em;
     height: 45px;
-    left: 3%;
     line-height: 45px;
-    position: absolute;
     width: 45%;
-    z-index: 12;
 }
 .xui-wzResult-page .xui-goShopping-btn {
     background: #d10000 none repeat scroll 0 0;
     border-radius: 0;
-    bottom: 8px;
     color: #fff;
     font-size: 1em;
     height: 45px;
-    right: 3%;
     line-height: 45px;
-    position: absolute;
     width: 45%;
-    z-index: 12;
 }
