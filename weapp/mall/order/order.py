@@ -380,7 +380,6 @@ class GroupOrderRefunded(resource.Resource):
 
     KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
 
-    @login_required
     def post(request):
         order_ids = request.POST.get('order_ids', [])
         key = request.POST.get('authkey', '')
@@ -399,7 +398,7 @@ class GroupOrderRefunded(resource.Resource):
                 order_id2order = dict([(order.order_id, order) for order in orders])
                 orders.update(status=ORDER_STATUS_GROUP_REFUNDED)
                 response.updated_order_ids = refunding_order_ids
-                response.not_update_orders_ids = [id for id in order_ids if id not in refunding_order_ids]
+                response.not_update_order_ids = [id for id in order_ids if id not in refunding_order_ids]
 
                 for order_id in refunding_order_ids:
                     order = order_id2order[order_id]
@@ -412,8 +411,8 @@ class GroupOrderRefunded(resource.Resource):
                     status=ORDER_STATUS_GROUP_REFUNDED
                 )]
                 response.updated_order_ids = updated_order_ids
-                response.not_update_orders_ids = [id for id in order_ids if id not in updated_order_ids]
+                response.not_update_order_ids = [id for id in order_ids if id not in updated_order_ids]
         else:
             response.updated_order_ids = []
-            response.not_update_orders_ids = order_ids
+            response.not_update_order_ids = order_ids
         return response.get_response()
