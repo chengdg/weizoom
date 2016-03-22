@@ -33,7 +33,7 @@ def get_page(request):
 	except:
 		member_is_bind = False
 
-	card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
+	card_exchange_dic = CardExchange.get_can_exchange_cards(webapp_id)
 
 	# weizoom_card_id = 0
 	# cur_user_has_exchange_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)

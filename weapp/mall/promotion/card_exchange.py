@@ -37,7 +37,7 @@ class CardExchange(resource.Resource):
 		卡兑换配置页
 		"""
 		webapp_id = request.user_profile.webapp_id  
-		card_exchange_dic = CardExchange.get_can_exchange_cards(request,webapp_id)
+		card_exchange_dic = CardExchange.get_can_exchange_cards(webapp_id)
 		prize_list = card_exchange_dic['prize']
 		for prize in prize_list:
 			card_number = prize['card_number']
@@ -109,7 +109,7 @@ class CardExchange(resource.Resource):
 		return response.get_response()
 
 	@staticmethod
-	def get_can_exchange_cards(request,webapp_id):
+	def get_can_exchange_cards(webapp_id):
 		try:
 			card_exchange_dic = {}
 			card_exchange = promotion_models.CardExchange.objects.get(webapp_id = webapp_id)
