@@ -50,11 +50,11 @@ Background:
 			"group_name":"团购活动3",
 			"start_time":"3天前",
 			"end_time":"昨天",
-			"product_name":"酱牛肉",
+			"product_name":"番茄酱",
 			"group_dict":[{
 					"group_type":5,
 					"group_day":1,
-					"group_price":40.5
+					"group_price":15
 			}],
 			"ship_date":5,
 			"product_counts":100,

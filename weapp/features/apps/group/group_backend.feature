@@ -79,6 +79,7 @@ Background:
 			#启用规格商品，有限数量3；
 			#酱牛肉，上架，无限库存；
 			#花生酱，上架，有限数量200；
+			#番茄酱，商家，有限数量100；
 			#限时抢购商品，上架，无限库存
 			#买赠商品，上架，有限数量20；
 			#单品券商品，上架，无限库存；
@@ -229,6 +230,31 @@ Background:
 			"postage": "10",
 			"distribution_time":"on"
 		},{
+			{
+			"name":"番茄酱",
+			"category": "",
+			"detail": "番茄酱的详情",
+			"status": "上架",
+			"swipe_images": [{
+				"url": "/standard_static/test_resource_img/hangzhou6.jpg"
+			}],
+			"model": {
+				"models": {
+					"standard": {
+						"price": 20,
+						"weight": 5,
+						"stock_type": "有限",
+						"stocks": 100
+					}
+				}
+			},
+			"pay_interfaces":[{
+				"type": "在线支付"
+			},{
+				"type": "货到付款"
+			}],
+			"postage": "10"
+		},{
 			"name":"限时抢购商品",
 			"price":100.00,
 			"stock_type": "无限",
@@ -325,6 +351,7 @@ Scenario:1 新建团购活动页面,查询商品列表
 		"""
 	Then job获得团购活动可以访问的已上架商品列表
 		|  name   | price | stocks | have_promotion | actions |
+		| 番茄酱  | 20    |  100   |                |  选取   |
 		| 花生酱  | 12.5  |  200   |                |  选取   |
 		| 酱牛肉  | 50    |  无限  |                |  选取   |
 
