@@ -255,7 +255,7 @@ def get_card_detail_normal(request,card_id):
 		card_info_list.append({
 			'created_at': order.created_at,
 			'money': '%.2f' % order.money,
-			'product_name': u'[%s-商品] %s' % (store_name,','.join(product_name_list)),
+			'product_name': u'[%s-商品] %s' % (store_name,','.join(product_name_list)) if order.money > 0 else u'[退款] %s' % (','.join(product_name_list)),
 			'is_product': True
 		})
 	card = promotion_models.CardHasExchanged.objects.filter(card_id=card_id)
