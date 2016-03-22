@@ -380,7 +380,7 @@ class GroupOrderRefunded(resource.Resource):
 
     def post(request):
         KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
-        order_ids = request.POST.get('order_ids', [])
+        order_ids = request.POST.getlist('order_ids', [])
         key = request.POST.get('authkey', '')
         response = create_response(200)
         if key == KEY:
@@ -389,7 +389,7 @@ class GroupOrderRefunded(resource.Resource):
                 response.not_update_orders_ids = []
                 return response.get_response()
             try:
-                orders = Order.objects.filtr(
+                orders = Order.objects.filter(
                     order_id__in=order_ids,
                     status=ORDER_STATUS_GROUP_REFUNDING
                 )
