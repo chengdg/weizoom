@@ -420,16 +420,18 @@
             if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
                 //如果是自己的主页
                 if(is_self_page){
-                    if(W.group_status == '团购未生效'){
-                        openUnpaidWin();
-                    }
+
                     if(is_group_leader){
                         $('.wa-using').text('邀请好友参团').on('click', function(){
                                 openGuideMask();
                             }).show();
                     }else{
-                        if(only_remain_one_day){
-                            openRemainOneDayWin();
+                        if(W.group_status == '团购未生效'){
+                            openUnpaidWin();
+                        }else{
+                            if(only_remain_one_day){
+                                openRemainOneDayWin();
+                            }
                         }
                         $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
                         if(W.isMember){
