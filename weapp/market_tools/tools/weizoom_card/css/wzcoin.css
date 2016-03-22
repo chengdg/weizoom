@@ -174,7 +174,7 @@ html,body{
 .xui-wzResult-page .xui-submitWz {
     background: #fff none repeat scroll 0 0;
 	text-align: center;
-    margin: 10px;
+    margin: 7px;
 	padding-top: 20px;
 }
 .xui-wzResult-page .xui-submitWz .xui-successHint {
@@ -216,6 +216,7 @@ html,body{
 	color: #000;
 }
 .xui-wzResult-page .xui-submitWzOther .xui-wcInfoOther .shop_list_split{
+	float: right;
 	display: inline-block;
 	color: #999999;
 	margin-left: 20%;
@@ -250,6 +251,7 @@ html,body{
 .xui-wzResult-page .xui-submitWzOther img{
 	float: right;
 	width: 3%;
+	margin-top: 4px;
 }
 .xui-wzResult-page .xui-wcInfoOther{
 	padding: 20px 15px;
