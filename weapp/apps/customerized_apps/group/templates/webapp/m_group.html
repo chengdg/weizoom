@@ -206,6 +206,8 @@
     var product_id = {% if product_id %}'{{product_id}}'{% else %}''{% endif %};
     var settings_domain = '{{settings_domain}}';
     var product_original_price = 0;
+    var product_mysql_name = '';
+    var pic_url = '';
     var product_group_price = 0;
     var order_id = '';
     var is_from_pay_result = false;
@@ -381,6 +383,8 @@
         W.group_status = member_info.group_status;
         group_type = member_info.group_type;
         product_original_price = member_info.product_original_price;
+        product_mysql_name = member_info.product_mysql_name;
+        pic_url = member_info.pic_url;
         product_group_price = member_info.product_group_price;
         page_owner_icon = member_info.page_owner_icon;
         order_id = member_info.order_id;
@@ -392,6 +396,12 @@
         }
         if(page_owner_icon != ""){
             $('.wui-i-shop_circle').find('img').attr('src', page_owner_icon);
+        }
+        if(product_mysql_name !=""){
+            $('.wui-i-product-title').html(product_mysql_name);
+        }
+        if(pic_url !=""){
+            $('.wui-i-product-img').find('img').attr('src', pic_url);
         }
         updateBtnStatus();
     }

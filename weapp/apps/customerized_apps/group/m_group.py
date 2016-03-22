@@ -38,6 +38,8 @@ class MGroup(resource.Resource):
 		group_type = ''
 		product_original_price = 0
 		product_group_price = 0
+		product_mysql_name = ''
+		pic_url = ''
 		page_owner_name = ''
 		page_owner_icon = ''
 		page_owner_member_id = 0
@@ -66,7 +68,22 @@ class MGroup(resource.Resource):
 		#开团时间不足一天
 		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
 			only_remain_one_day = True
-
+		try:
+			product_id = record.product_id
+			product_original_price = ProductModel.objects.get(product_id=product_id).price
+			product = Product.objects.get(id=product_id)
+			product_mysql_name = product.name
+			pic_url = product.thumbnails_url
+			if product_mysql_name != record.product_name:#如果商品被改名了
+				record.update(set__product_name=product_mysql_name)
+				record.reload()
+			if pic_url != record.product_img:
+				record.update(set__product_img=pic_url)
+				record.reload()
+		except:
+			response = create_response(500)
+			response.errMsg = u'团购商品已不存在！'
+			return response.get_response()
 		if member:
 			member_id = member.id
 			fid = request.GET.get('fid', member_id)
@@ -79,7 +96,6 @@ class MGroup(resource.Resource):
 						group_status = group_relation_info.status_text
 						group_type = group_relation_info.group_type
 						product_group_price = group_relation_info.group_price
-						product_original_price = ProductModel.objects.get(product_id=group_relation_info.product_id).price
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
@@ -172,6 +188,8 @@ class MGroup(resource.Resource):
 			'member_id': member_id if member else '',
 			'only_remain_one_day': only_remain_one_day,
 			'product_original_price': product_original_price,
+			'product_mysql_name': product_mysql_name,
+			'pic_url': pic_url,
 			'product_group_price': product_group_price,
 			'order_id': order_id,
 			'is_from_pay_result': is_from_pay_result,
