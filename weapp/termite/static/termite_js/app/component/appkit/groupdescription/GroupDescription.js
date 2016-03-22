@@ -56,7 +56,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			dialog: 'W.dialog.termite.SelectProductDialog',
 			dialogParameter: '{"multiSelection": false}',
             validate:'data-validate=""',
-			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productCreate_at:'',productBarcode:''}
+			default: {productId:'',productImg:'',productName:'',productPrice:'',productSocks:'',productSales:'',productCreate_at:'',productBarcode:''}
 		}]},{
 
         group: '',//团购标题
