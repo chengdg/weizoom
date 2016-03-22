@@ -274,12 +274,12 @@ html,body{
 	display: none;
 	border-top: 1px solid #dbdbdb;
 	background-color: #F9F9F9;
-	padding: 8px 15px;
+	padding: 8px 8px;
 	color: #999999;
 	line-height: 2rem;
 }
 .xui-wzResult-page .xui-submitWzOther table{
-	width: 98%;
+	width: 100%;
 }
 .xui-wzResult-page .xui-submitWzOther table tr{
 	text-align: center;
@@ -293,8 +293,8 @@ html,body{
 
 }
 .xui-wzResult-page .xui-submitWzOther table tbody tr>td.xui-order-info-time{
-		font-size: 0.9rem;
-		color: #999;
+	font-size: 0.9rem;
+	color: #999;
 }
 .xui-wzResult-page .xui-submitWzOther table tbody tr>td.xui-order-info-name{
 	color: #000000;
