@@ -197,6 +197,7 @@ def get_settings_detail(request):
                 else:
                     old_member_id2_create_at[r.member_id] = r.created_at
 
+            bind_phone_members = MemberInfo.objects.filter(member_id__in = member_ids,is_binded = 1)
 
             new_webapp_users = WebAppUser.objects.filter(member_id__in=new_member_id2_create_at.keys())
             new_webapp_user_ids = [u.id for u in new_webapp_users]
@@ -234,7 +235,8 @@ def get_settings_detail(request):
                     'channel_qrcode_members':relations,
                     'channel_qrcode_members_count':relations.count(),
                     'pay_money': '%.2f' %  pay_money,
-                    'payed_count': len(set(payed_member))
+                    'payed_count': len(set(payed_member)),
+                    'bind_phone_members_count': len(bind_phone_members)
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
 

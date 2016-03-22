@@ -34,7 +34,7 @@ def get_weizoom_card_login(request):
 	username = None
 	if user.count() > 0:
 		username = user[0].username
-	if username and username == 'fulilaile':
+	if username and username == 'njtest':
 		member_id = request.member.id
 		webapp_id = request.user_profile.webapp_id
 		member_has_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
@@ -106,7 +106,7 @@ def get_card_exchange_detail(request):
 	card_id = request.GET.get('card_id',None)
 	integral_each_yuan = IntegralStrategySttings.get_integral_each_yuan(request.user_profile.webapp_id)
 	weizoom_card_orders_list = search_card_money(request,card_id,integral_each_yuan)
-	card = WeizoomCard.objects.get(id=card_id)
+	card = WeizoomCard.objects.get(weizoom_card_id=card_id)
 	valid_restrictions = card.weizoom_card_rule.valid_restrictions
 	c = RequestContext(request, {
 		'card_orders': weizoom_card_orders_list,
