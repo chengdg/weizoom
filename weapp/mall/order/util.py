@@ -94,9 +94,11 @@ def export_orders_json(request):
         if status_type == 'refund':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
         elif status_type == 'audit':
-            order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
-        elif status_type == '8':
-            order_list = order_list.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED])
+            if request.GET.get('order_status', None) == '8':
+                order_list = order_list.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED])
+            else:
+                order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+
     if not mall_type:
         order_list = order_list.exclude(
                 supplier_user_id__gt=0,
