@@ -254,8 +254,8 @@ Scenario:1 新建团购活动页面,查询商品列表
 		"""
 	Then job获得团购活动可以访问的已上架商品列表
 		|  name   | price | stocks | have_promotion | actions |
-		| 花生酱  | 12.5  |  200   |                |  选取   |
 		| 酱牛肉  | 50    |  无限  |                |  选取   |
+		| 花生酱  | 12.5  |  200   |                |  选取   |
 
 
 @mall2 @apps_group @apps_group_backend
