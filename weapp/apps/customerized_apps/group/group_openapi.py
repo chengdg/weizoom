@@ -12,6 +12,7 @@ from apps import request_util
 from termite import pagestore as pagestore_manager
 from mall.order.util import update_order_status_by_group_status
 from group_participance import send_group_template_message
+from modules.member.models import Member
 
 class GroupBuyProduct(resource.Resource):
 	app = 'apps/group'
@@ -119,7 +120,9 @@ class CheckGroupBuy(resource.Resource):
 		is_success = False
 		reason = u''
 		group_buy_price = 0
-
+		member_info = Member.objects.filter(id=member_id)
+		print('member_info')
+		print(member_info)
 		group_record = app_models.GroupRelations.objects(id=group_id,product_id=int(pid))
 		if group_record.count() > 0:
 			group_record = group_record.first()
@@ -131,10 +134,36 @@ class CheckGroupBuy(resource.Resource):
 				else:
 					reason = u'团购活动暂未生效，团长还未开团成功'
 			elif group_record.group_status == app_models.GROUP_RUNNING:
-				if member_id in group_record.grouped_member_ids and (group_record.grouped_number <= int(group_record.group_type)):
-					is_success = True
-					reason = u'可以进行团购下单操作'
-					group_buy_price = group_record.group_price
+				if (group_record.grouped_number <= int(group_record.group_type)):
+					#更新当前member的参与信息
+					total_number = int(group_record.group_type)
+					sync_result = group_record.modify(
+						query={'grouped_number__lt': total_number},
+						inc__grouped_number=1,
+						push__grouped_member_ids=str(member_id)
+					)
+					if sync_result:
+						try:
+							if member_info.count() > 0:
+								grouped_member_name = member_info.first().username_for_html
+							else:
+								grouped_member_name = u'非会员'
+							group_detail = app_models.GroupDetail(
+								relation_belong_to = group_id,
+								owner_id = group_record.member_id,
+								grouped_member_id = str(member_id),
+								grouped_member_name = grouped_member_name,
+								created_at = datetime.now()
+							)
+							group_detail.save()
+							is_success = True
+							reason = u'可以进行团购下单操作'
+							group_buy_price = group_record.group_price
+						except:
+							group_record.update(dec__grouped_number=1,pop__grouped_member_ids=str(member_id))
+							reason = u'只能参与一次'
+					else:
+						reason = u'团购名额已满'
 				else:
 					reason = u'不可进行团购下单操作'
 			else:
