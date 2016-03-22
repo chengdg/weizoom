@@ -18,11 +18,14 @@ def exchange_card(request):
 	"""
 	print '-------------22222'
 	card_number = json.loads(request.POST.get('card_number',''))
-	has_integral = request.POST.get('has_integral','')
 	need_integral = request.POST.get('need_integral','')
 	member = request.member
 	response = create_response(500)
 	if member:
+		integral = member.integral
+		if int(integral) < int(need_integral):
+			response.errMsg = u'现在积分不足,快去获取更多积分吧！'
+			return response.get_response()
 		member_id = member.id
 		owner_name = member.username_hexstr
 		webapp_id = request.user_profile.webapp_id
@@ -42,7 +45,7 @@ def exchange_card(request):
 			 		owner_name = owner_name
 			 	)
 
-			member.integral = int(has_integral) - int(need_integral)
+			member.integral = int(member.integral) - int(need_integral)
 			member.save()
 			response = create_response(200)
 			response.data = request.member.integral
