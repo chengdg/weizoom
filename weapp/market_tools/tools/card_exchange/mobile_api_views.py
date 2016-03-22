@@ -44,8 +44,6 @@ def exchange_card(request):
 			 		owner_name = owner_name
 			 	)
 
-			member.integral = int(member.integral) - int(need_integral)
-			member.save()
 			member_detail = Member.objects.get(id = member_id)
 			member_detail.consume_integral(int(need_integral), u'兑换微众卡,消耗积分')
 			response = create_response(200)
