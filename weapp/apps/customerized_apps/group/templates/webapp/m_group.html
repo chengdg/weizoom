@@ -463,6 +463,12 @@
                 }
             }
         }else{
+            if (W.group_status == '团购成功'){
+                showGroupSuccess();
+            }
+            if(W.group_status == '团购失败'){
+                showGroupFailure();
+            }
             $('.wa-using-join').text('看看还有什么团').on('click', openJoinGruop).show();
         }
     }
