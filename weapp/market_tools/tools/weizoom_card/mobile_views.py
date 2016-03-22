@@ -34,7 +34,7 @@ def get_weizoom_card_login(request):
 	username = None
 	if user.count() > 0:
 		username = user[0].username
-	if username and username == 'njtest':
+	if username and username == 'fulilaile':
 		member_id = request.member.id
 		webapp_id = request.user_profile.webapp_id
 		member_has_card = promotion_models.CardHasExchanged.objects.filter(webapp_id = webapp_id,owner_id = member_id)
