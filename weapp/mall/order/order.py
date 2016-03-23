@@ -397,6 +397,11 @@ class GroupOrderRefunded(resource.Resource):
                     order_id__in=order_ids,
                     status=ORDER_STATUS_GROUP_REFUNDING
                 )
+                refund_orders = Order.objects.filter(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_GROUP_REFUNDED
+                )
+                refund_order_ids = [order.order_id for order in refund_orders]
                 webapp_ids = [order.webapp_id for order in orders]
                 webapp_id2user = dict([(profile.webapp_id, profile.user) for profile in UserProfile.objects.filter(webapp_id__in=webapp_ids)])
                 refunding_order_ids = [order.order_id for order in orders]
@@ -405,8 +410,8 @@ class GroupOrderRefunded(resource.Resource):
                     update_order_status(webapp_id2user[order.webapp_id], 'return_success', order)
                     order.status = ORDER_STATUS_GROUP_REFUNDED
                     order.save()
-                response.updated_order_ids = refunding_order_ids
-                response.not_update_order_ids = [id for id in order_ids if id not in refunding_order_ids]
+                response.updated_order_ids = refunding_order_ids + refund_order_ids
+                response.not_update_order_ids = [id for id in order_ids if id not in (refunding_order_ids + refund_order_ids)]
             except:
                 logging.info(unicode_full_stack())
                 updated_order_ids = [order.order_id for order in Order.objects.filter(
