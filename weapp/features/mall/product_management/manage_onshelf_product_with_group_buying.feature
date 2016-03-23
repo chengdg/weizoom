@@ -10,6 +10,7 @@ Feature:在售商品列表-团购活动
 Background:
 	
 	Given jobs登录系统
+	When jobs添加微信证书
 	When jobs开通使用微众卡权限
 	And jobs已添加支付方式
 		"""
@@ -110,7 +111,7 @@ Background:
 	When jobs开启团购活动'团购活动1'
 	When jobs开启团购活动'团购活动2'
 
-@mall2 @product @saleingProduct @group
+@mall2 @product @saleingProduct @group @123
 Scenario:1 对团购活动中的商品进行下架或删除操作
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
