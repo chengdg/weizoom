@@ -1679,9 +1679,14 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
             order_id__in=[r.order_id for r in relations],
             status=order_status
             )
+    if order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+        orders = Order.objects.filter(
+            order_id__in=[r.order_id for r in relations],
+            status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_NOT]
+            )
     from mall.module_api import update_order_status
     for order in orders:
-        if order_status == ORDER_STATUS_NOT:
+        if order_status == ORDER_STATUS_NOT or order.status == ORDER_STATUS_NOT:
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY and order.status >= ORDER_STATUS_PAYED_NOT_SHIP:
