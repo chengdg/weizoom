@@ -171,7 +171,7 @@ def _get_fixed_apps_send_message_dict(member_info):
 	detail_data["remark"] = {"value" : detail['remark'], "color" : "#000000"}
 
 	for key, value in detail['keywords'].items():
-		detail_data[key] = {"value": value, "color" : "#173177"}
+		detail_data[key] = {"value": value, "color" : "#000000"}
 
 	template_data['data'] = detail_data
 	return template_data

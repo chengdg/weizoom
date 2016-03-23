@@ -210,11 +210,10 @@ def step_tmpl(context, webapp_user_name,group_owner_name, group_record_name):
 	activity_id = __get_group_rule_id(group_record_name)
 	user = User.objects.get(id=webapp_owner_id)
 	openid = "%s_%s" % (webapp_user_name, user.username)
-	fid = context.page_owner_member_id
+	fid = Member.objects.get(username_hexstr=byte_to_hex(group_owner_name)).id
 	response = __get_into_group_pages(context,webapp_owner_id,activity_id,openid,fid)
 	product_id = response.context['product_id']
-	page_owner_member_id = context.page_owner_member_id
-	group_relation_id = __get_group_relation_id(activity_id,page_owner_member_id)
+	group_relation_id = __get_group_relation_id(activity_id,fid)
 	__join_group(context,activity_id,fid,product_id,group_relation_id,openid)
 
 @When(u'{webapp_user_name}把{webapp_owner_name}的团购活动"{group_record_name}"的链接分享到朋友圈')

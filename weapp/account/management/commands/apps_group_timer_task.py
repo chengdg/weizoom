@@ -38,11 +38,12 @@ class Command(BaseCommand):
 					update_order_status_by_group_status(group_relation.id,'failure')
 					#发送拼团失败模板消息
 					try:
+						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 						group_info = all_groups.get(id=group_relation.belong_to)
 						owner_id = group_info.owner_id
 						product_name = group_info.product_name
 						group_id = group_relation.id
-						miss = int(group_relation.group_type)-group_relation.grouped_number
+						miss = int(group_relation.group_type)-group_details.count()
 						activity_info = {
 							"owner_id": str(owner_id),
 							"record_id": str(group_relation.belong_to),
@@ -53,7 +54,7 @@ class Command(BaseCommand):
 							"status" : 'fail',
 							"miss": str(miss)
 						}
-						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
+
 						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 						send_group_template_message(activity_info, member_info_list)
 					except:
@@ -75,11 +76,12 @@ class Command(BaseCommand):
 				update_order_status_by_group_status(group_relation.id,'failure')
 				#发送拼团失败模板消息
 				try:
+					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 					group_info = all_groups.get(id=group_relation.belong_to)
 					owner_id = group_info.owner_id
 					product_name = group_info.product_name
 					group_id = group_relation.id
-					miss = int(group_relation.group_type)-group_relation.grouped_number
+					miss = int(group_relation.group_type)-group_details.count()
 					activity_info = {
 						"owner_id": str(owner_id),
 						"record_id": str(group_relation.belong_to),
@@ -90,7 +92,6 @@ class Command(BaseCommand):
 						"status" : 'fail',
 						"miss": str(miss)
 					}
-					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 					send_group_template_message(activity_info, member_info_list)
 				except:
