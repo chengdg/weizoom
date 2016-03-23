@@ -398,7 +398,7 @@ class GroupOrderRefunded(resource.Resource):
                     status=ORDER_STATUS_GROUP_REFUNDING
                 )
                 webapp_ids = [order.webapp_id for order in orders]
-                webapp_id2user = dict([(profile.webapp_id, profile.user)] for profile in UserProfile.objects.filter(webapp_id__in=webapp_ids))
+                webapp_id2user = dict([(profile.webapp_id, profile.user) for profile in UserProfile.objects.filter(webapp_id__in=webapp_ids)])
                 refunding_order_ids = [order.order_id for order in orders]
                 order_id2order = dict([(order.order_id, order) for order in orders])
                 for order in orders:
