@@ -37,6 +37,16 @@ echo "--------------------------------------------------------" >> $LOG
 echo ">> calling 'cancel_not_pay_order'" >> $LOG
 echo "--------------------------------------------------------" >> $LOG
 python services/send_task.py "services.cancel_not_pay_order_service.tasks.cancel_not_pay_order_timeout" {} "{\"id\": 0}" >> $LOG 2>&1
+
+echo ">> calling 'cancel_group_order_timeout'" >> $LOG
+echo "--------------------------------------------------------" >> $LOG
+python manage.py cancel_group_order_timeout >> $LOG 2>&1
+
+echo ">> calling 'apps_group_timer_task'" >> $LOG
+echo "--------------------------------------------------------" >> $LOG
+python manage.py apps_group_timer_task >> $LOG 2>&1
+
 echo "========================================================" >> $LOG
+
 date >> $LOG
 echo "done!" >> $LOG

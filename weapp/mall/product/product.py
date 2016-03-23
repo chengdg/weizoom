@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from mall.promotion import models as promotion_model
-from watchdog.utils import watchdog_warning
+from watchdog.utils import watchdog_warning, watchdog_error
 from account.models import UserProfile
 
 from core import paginator
@@ -24,6 +24,8 @@ from . import utils
 from mall import export
 from weixin.user.module_api import get_all_active_mp_user_ids
 from mall.promotion.utils import stop_promotion
+
+import logging
 
 class ProductList(resource.Resource):
     app = 'mall2'
@@ -175,6 +177,17 @@ class ProductList(resource.Resource):
         # 手动添加供货商的信息
         supplier_ids2name = dict([(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)])
         #构造返回数据
+        if mall_type == 0 :
+            woid = request.webapp_owner_id
+            try:
+                pids = [str(product.id) for product in products]
+                product2group = utils.get_product2group(pids, woid)
+            except:
+                error_msg = u"获取商品列表是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+                watchdog_error(error_msg)
+                product2group={}
+        else:
+            product2group = {}
         items = []
         items1 = []
         items2 = []
@@ -184,6 +197,13 @@ class ProductList(resource.Resource):
             product_dict['store_name'] = supplier_ids2name[product.supplier] if product.supplier and supplier_ids2name.has_key(product.supplier) else product_id2store_name.get(product.id, "")
             product_dict['sync_time'] = product_id2sync_time.get(product.id, product.created_at.strftime('%Y-%m-%d %H:%M'))
             product_dict['is_sync'] = product_id2store_name.has_key(product.id)
+            #增加团购属性
+            if product2group.has_key(product.id):
+                product_dict["is_group_buying"] = product2group[product.id]
+                logging.info("product.is_group_buying:{},{}".format(product_dict["is_group_buying"],product.id))
+            else:
+                product_dict["is_group_buying"] = False
+            #增加团购属性
             if product_dict['sync_time'] and not product_dict['purchase_price']:
                 items1.append(product_dict)
             else:
@@ -232,76 +252,93 @@ class ProductList(resource.Resource):
         ids = request.POST.getlist('ids', [])
         _ids = request.POST.getlist('ids[]', [])
         ids = ids if ids else _ids
+        ids = [int(tmp_id) for tmp_id in ids] #兼容bdd
         p_id = request.POST.get('id')
         if p_id:
             ids.append(int(p_id))
         if not ids:
             return create_response(200).get_response()
 
-        #
-        prev_shelve_type = models.Product.objects.get(
-            id=ids[0]).shelve_type
-        shelve_type = request.POST['shelve_type']
+        #团购
+        if mall_type == 0:
+            woid = request.webapp_owner_id
+            try:
+                pids = [str(product_id) for product_id in ids]
+                product2group = utils.get_product2group(pids, woid)
+            except:
+                error_msg = u"获取商品列表是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+                watchdog_error(error_msg)
+                product2group={}
+            if product2group:
+                for id_tmp in ids:
+                    if product2group.has_key(id_tmp) and product2group[id_tmp] == True:
+                        ids.remove(id_tmp)
 
-        is_deleted = False
-        if shelve_type == 'onshelf':
-            shelve_type = models.PRODUCT_SHELVE_TYPE_ON
-        elif shelve_type == 'offshelf':
-            shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
-            reason = utils.MALL_PRODUCT_OFF_SHELVE
-        elif shelve_type == 'recycled':
-            shelve_type = models.PRODUCT_SHELVE_TYPE_RECYCLED
-        elif shelve_type == 'delete':
-            is_deleted = True
-            reason = utils.MALL_PRODUCT_DELETED
+        #团购
+        if ids:
+            prev_shelve_type = models.Product.objects.get(
+                id=ids[0]).shelve_type
+            shelve_type = request.POST['shelve_type']
 
-        products = models.Product.objects.filter(id__in=ids)
-        product_id2product = {}
-        for product in products:
-            product_id2product[product.id] = product
+            is_deleted = False
+            if shelve_type == 'onshelf':
+                shelve_type = models.PRODUCT_SHELVE_TYPE_ON
+            elif shelve_type == 'offshelf':
+                shelve_type = models.PRODUCT_SHELVE_TYPE_OFF
+                reason = utils.MALL_PRODUCT_OFF_SHELVE
+            elif shelve_type == 'recycled':
+                shelve_type = models.PRODUCT_SHELVE_TYPE_RECYCLED
+            elif shelve_type == 'delete':
+                is_deleted = True
+                reason = utils.MALL_PRODUCT_DELETED
+
+            products = models.Product.objects.filter(id__in=ids)
+            product_id2product = {}
+            for product in products:
+                product_id2product[product.id] = product
 
 
 
-        if is_deleted:
-            products.update(is_deleted=True, display_index=0)
-        else:
-            # 更新商品上架状态以及商品排序
-            # 微众商城代码
-            # if request.manager.id == products[0].owner_id:
-            #     now = datetime.now()
-            #     if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-            #         products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
-            #     else:
-            #         #上架
-            #         products.update(shelve_type=shelve_type, display_index=0, update_time=now)
-            # else:
-            #     # 微众商城更新商户商品状态
-            #     products.update(weshop_status=shelve_type)
-
-            now = datetime.now()
-            if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
-                products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+            if is_deleted:
+                products.update(is_deleted=True, display_index=0)
             else:
-                #上架
-                products.update(shelve_type=shelve_type, display_index=0, update_time=now)
-        is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
-        is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
+                # 更新商品上架状态以及商品排序
+                # 微众商城代码
+                # if request.manager.id == products[0].owner_id:
+                #     now = datetime.now()
+                #     if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+                #         products.update(shelve_type=shelve_type, weshop_status=shelve_type, display_index=0, update_time=now)
+                #     else:
+                #         #上架
+                #         products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                # else:
+                #     # 微众商城更新商户商品状态
+                #     products.update(weshop_status=shelve_type)
 
-        if (is_prev_shelve and is_not_sale) or is_deleted:
-            # 商品不再处于上架状态，发出product_not_offline signal
-            product_ids = [int(id) for id in ids]
-            mall_signals.products_not_online.send(
-                sender=models.Product,
-                product_ids=product_ids,
-                request=request
-            )
+                now = datetime.now()
+                if shelve_type != models.PRODUCT_SHELVE_TYPE_ON:
+                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+                else:
+                    #上架
+                    products.update(shelve_type=shelve_type, display_index=0, update_time=now)
+            is_prev_shelve = prev_shelve_type == models.PRODUCT_SHELVE_TYPE_ON
+            is_not_sale = shelve_type != models.PRODUCT_SHELVE_TYPE_ON
 
-        # 供货商商品下架或者删除对应删除weizoom系列上架的商品
-        if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
-            for id in ids:
-                utils.delete_weizoom_mall_sync_product(request, product_id2product[int(id)], reason)
-        if mall_type and is_deleted:
-            models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
+            if (is_prev_shelve and is_not_sale) or is_deleted:
+                # 商品不再处于上架状态，发出product_not_offline signal
+                product_ids = [int(id) for id in ids]
+                mall_signals.products_not_online.send(
+                    sender=models.Product,
+                    product_ids=product_ids,
+                    request=request
+                )
+
+            # 供货商商品下架或者删除对应删除weizoom系列上架的商品
+            if not mall_type and (shelve_type == models.PRODUCT_SHELVE_TYPE_OFF or is_deleted):
+                for id in ids:
+                    utils.delete_weizoom_mall_sync_product(request, product_id2product[int(id)], reason)
+            if mall_type and is_deleted:
+                models.WeizoomHasMallProductRelation.objects.filter(weizoom_product_id__in=ids).update(is_deleted=True, delete_type=True)
 
         response = create_response(200)
         return response.get_response()
@@ -619,6 +656,7 @@ class DeletedProductList(resource.Resource):
                     delete_type=False,
                 )
 
+
         relations = models.WeizoomHasMallProductRelation.objects.filter(**params).order_by('-delete_time')
 
         COUNT_PER_PAGE = 8
@@ -743,6 +781,13 @@ class Product(resource.Resource):
         supplier = [(s.id, s.name) for s in models.Supplier.objects.filter(owner=request.manager, is_delete=False)]
 
         is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
+
+        #增加团购判断接口
+        if product:
+            woid = request.webapp_owner_id
+            product.is_group_buying = product_is_group(product.id, woid)
+
+
         c = RequestContext(request, {
             'first_nav_name': export.PRODUCT_FIRST_NAV,
             'second_navs': export.get_mall_product_second_navs(request),
@@ -964,263 +1009,280 @@ class Product(resource.Resource):
 
         product_id = request.GET.get('id')
 
-        # 更新对应同步的商品状态
-        if not request.user_profile.webapp_type:
-            from .tasks import update_sync_product_status
-            products = models.Product.objects.filter(id=product_id)
-            models.Product.fill_details(request.manager, products, {
-                'with_product_model': True,
-                'with_image': True,
-                'with_property': True,
-                'with_model_property_info': True,
-                'with_all_category': True,
-                'with_sales': True
-            })
-            update_sync_product_status(products[0], request)
-
-        # 处理商品排序
-        display_index = int(request.POST.get('display_index', '0'))
-        if display_index > 0:
-            models.Product.objects.get(id=product_id).move_to_position(display_index)
-
-        # 处理商品规格
-        standard_model, custom_models = utils.extract_product_model(request)
-
-        # 处理standard商品规格
-        has_product_model = models.ProductModel.objects.filter(
-            product_id=product_id,
-            name='standard').exists()
-        if not has_product_model:
-            models.ProductModel.objects.create(
-                owner=request.manager,
-                product_id=product_id,
-                name='standard',
-                is_standard=True,
-                price=standard_model['price'],
-                weight=standard_model['weight'],
-                stock_type=standard_model['stock_type'],
-                stocks=standard_model['stocks'],
-                user_code=standard_model['user_code']
-            )
-        elif standard_model.get('is_deleted', None):
-            # 多规格的情况
-            db_standard_model = models.ProductModel.objects.filter(
-                product_id=product_id,
-                name='standard'
-            )
-            if not db_standard_model[0].is_deleted:
-                from mall.promotion import models as promotion_models
-                # 单规格改多规格商品
-                db_standard_model.update(is_deleted=True)
-
-                # 结束对应买赠活动 jz
-                premiumSaleIds = set(promotion_models.PremiumSaleProduct.objects.filter(
-                    product_id=db_standard_model[0].product_id).values_list('premium_sale_id', flat=True))
-                if len(premiumSaleIds) > 0:
-                    from webapp.handlers import event_handler_util
-                    promotionIds = set(promotion_models.Promotion.objects.filter(
-                        detail_id__in=premiumSaleIds, type=promotion_models.PROMOTION_TYPE_PREMIUM_SALE).values_list('id', flat=True))
-                    event_data = {
-                        "id": ','.join([str(id) for id in promotionIds])
-                    }
-                    event_handler_util.handle(event_data, 'finish_promotion')
+        #添加团购活动判断:非自营\团购\标准规格
+        mall_type = request.user_profile.webapp_type
+        woid = request.webapp_owner_id
+        if mall_type == 0:
+            is_group_buying = product_is_group(product_id, woid)
         else:
-            models.ProductModel.objects.filter(
-                product_id=product_id, name='standard'
-            ).update(
-                price=standard_model['price'],
-                weight=standard_model['weight'],
-                stock_type=standard_model['stock_type'],
-                stocks=standard_model['stocks'],
-                user_code=standard_model['user_code'],
-                is_deleted=False
-            )
+            is_group_buying = False
+        has_product_model = models.ProductModel.objects.filter(
+                product_id=product_id,
+                name='standard').exists()
 
-        # 清除旧的custom product model
-        existed_models = [product_model for product_model in models.ProductModel.objects.filter(
-                owner=request.manager,
-                product_id=product_id
-        ) if product_model.name != 'standard']
-        existed_model_names = set([model.name for model in existed_models])
+        if is_group_buying and has_product_model:
+            #团购流程
+            utils.handle_group_product(request, product_id, swipe_images, thumbnails_url)
+        else:
+            #标准流程
+        # 更新对应同步的商品状态
 
-        # 处理custom商品规格
-        updated_model_names = set()
-        for custom_model in custom_models:
-            custom_model_name = custom_model['name']
-            if custom_model_name in existed_model_names:
-                # model已经存在，更新之
-                # # 记录被更新的model name
-                updated_model_names.add(custom_model_name)
+            if not request.user_profile.webapp_type:
+                from .tasks import update_sync_product_status
+                products = models.Product.objects.filter(id=product_id)
+                models.Product.fill_details(request.manager, products, {
+                    'with_product_model': True,
+                    'with_image': True,
+                    'with_property': True,
+                    'with_model_property_info': True,
+                    'with_all_category': True,
+                    'with_sales': True
+                })
+                update_sync_product_status(products[0], request)
+
+            # 处理商品排序
+            display_index = int(request.POST.get('display_index', '0'))
+            if display_index > 0:
+                models.Product.objects.get(id=product_id).move_to_position(display_index)
+
+            # 处理商品规格
+            standard_model, custom_models = utils.extract_product_model(request)
+
+            # 处理standard商品规格
+            has_product_model = models.ProductModel.objects.filter(
+                product_id=product_id,
+                name='standard').exists()
+            if not has_product_model:
+                models.ProductModel.objects.create(
+                    owner=request.manager,
+                    product_id=product_id,
+                    name='standard',
+                    is_standard=True,
+                    price=standard_model['price'],
+                    weight=standard_model['weight'],
+                    stock_type=standard_model['stock_type'],
+                    stocks=standard_model['stocks'],
+                    user_code=standard_model['user_code']
+                )
+            elif standard_model.get('is_deleted', None):
+                # 多规格的情况
+                db_standard_model = models.ProductModel.objects.filter(
+                    product_id=product_id,
+                    name='standard'
+                )
+                if not db_standard_model[0].is_deleted:
+                    from mall.promotion import models as promotion_models
+                    # 单规格改多规格商品
+                    db_standard_model.update(is_deleted=True)
+
+                    # 结束对应买赠活动 jz
+                    premiumSaleIds = set(promotion_models.PremiumSaleProduct.objects.filter(
+                        product_id=db_standard_model[0].product_id).values_list('premium_sale_id', flat=True))
+                    if len(premiumSaleIds) > 0:
+                        from webapp.handlers import event_handler_util
+                        promotionIds = set(promotion_models.Promotion.objects.filter(
+                            detail_id__in=premiumSaleIds, type=promotion_models.PROMOTION_TYPE_PREMIUM_SALE).values_list('id', flat=True))
+                        event_data = {
+                            "id": ','.join([str(id) for id in promotionIds])
+                        }
+                        event_handler_util.handle(event_data, 'finish_promotion')
+            else:
                 models.ProductModel.objects.filter(
-                    product_id=product_id, name=custom_model_name
+                    product_id=product_id, name='standard'
                 ).update(
-                    price=custom_model['price'],
-                    weight=custom_model['weight'],
-                    stock_type=custom_model['stock_type'],
-                    stocks=custom_model['stocks'],
-                    user_code=custom_model['user_code'],
+                    price=standard_model['price'],
+                    weight=standard_model['weight'],
+                    stock_type=standard_model['stock_type'],
+                    stocks=standard_model['stocks'],
+                    user_code=standard_model['user_code'],
                     is_deleted=False
                 )
 
-                product_model = models.ProductModel.objects.get(
-                    product_id=product_id, name=custom_model_name)
-                models.ProductModelHasPropertyValue.objects.filter(
-                    model=product_model).delete()
-            else:
-                # model不存在，创建之
-                product_model = models.ProductModel.objects.create(
+            # 清除旧的custom product model
+            existed_models = [product_model for product_model in models.ProductModel.objects.filter(
                     owner=request.manager,
-                    product_id=product_id,
-                    name=custom_model['name'],
-                    is_standard=False,
-                    price=custom_model['price'],
-                    weight=custom_model['weight'],
-                    stock_type=custom_model['stock_type'],
-                    stocks=custom_model['stocks'],
-                    user_code=custom_model['user_code']
-                )
+                    product_id=product_id
+            ) if product_model.name != 'standard']
+            existed_model_names = set([model.name for model in existed_models])
 
-            for property in custom_model['properties']:
-                models.ProductModelHasPropertyValue.objects.create(
-                    model=product_model,
-                    property_id=property['property_id'],
-                    property_value_id=property['property_value_id']
-                )
+            # 处理custom商品规格
+            updated_model_names = set()
+            for custom_model in custom_models:
+                custom_model_name = custom_model['name']
+                if custom_model_name in existed_model_names:
+                    # model已经存在，更新之
+                    # # 记录被更新的model name
+                    updated_model_names.add(custom_model_name)
+                    models.ProductModel.objects.filter(
+                        product_id=product_id, name=custom_model_name
+                    ).update(
+                        price=custom_model['price'],
+                        weight=custom_model['weight'],
+                        stock_type=custom_model['stock_type'],
+                        stocks=custom_model['stocks'],
+                        user_code=custom_model['user_code'],
+                        is_deleted=False
+                    )
 
-        # 删除不用的models
-        existed_model_names_not_delete = set([model.name for model in existed_models if not model.is_deleted])
-        to_be_deleted_model_names = existed_model_names_not_delete - updated_model_names
-        if len(to_be_deleted_model_names):
-            models.ProductModel.objects.filter(
-                product_id=product_id, name__in=to_be_deleted_model_names
-            ).update(is_deleted=True)
+                    product_model = models.ProductModel.objects.get(
+                        product_id=product_id, name=custom_model_name)
+                    models.ProductModelHasPropertyValue.objects.filter(
+                        model=product_model).delete()
+                else:
+                    # model不存在，创建之
+                    product_model = models.ProductModel.objects.create(
+                        owner=request.manager,
+                        product_id=product_id,
+                        name=custom_model['name'],
+                        is_standard=False,
+                        price=custom_model['price'],
+                        weight=custom_model['weight'],
+                        stock_type=custom_model['stock_type'],
+                        stocks=custom_model['stocks'],
+                        user_code=custom_model['user_code']
+                    )
 
-        # 处理轮播图
-        models.ProductSwipeImage.objects.filter(
-            product_id=product_id
-        ).delete()
-        for swipe_image in swipe_images:
-            models.ProductSwipeImage.objects.create(
-                product_id=product_id,
-                url=swipe_image['url'],
-                width=swipe_image['width'],
-                height=swipe_image['height']
-            )
+                for property in custom_model['properties']:
+                    models.ProductModelHasPropertyValue.objects.create(
+                        model=product_model,
+                        property_id=property['property_id'],
+                        property_value_id=property['property_value_id']
+                    )
 
-        # 处理property
-        properties = request.POST.get('properties')
-        properties = json.loads(properties) if properties else []
-        property_ids = set([property['id'] for property in properties])
-        existed_property_ids = set([
-            property.id for property in models.ProductProperty.objects.filter(
-                product_id=product_id)
-            ])
-        for property in properties:
-            if property['id'] < 0:
-                models.ProductProperty.objects.create(
-                    owner=request.manager,
-                    product_id=product_id,
-                    name=property['name'],
-                    value=property['value']
-                )
-            else:
-                models.ProductProperty.objects.filter(
-                    id=property['id']
-                ).update(name=property['name'], value=property['value'])
-        property_ids_to_be_delete = existed_property_ids - property_ids
-        models.ProductProperty.objects.filter(
-            id__in=property_ids_to_be_delete).delete()
+            # 删除不用的models
+            existed_model_names_not_delete = set([model.name for model in existed_models if not model.is_deleted])
+            to_be_deleted_model_names = existed_model_names_not_delete - updated_model_names
+            if len(to_be_deleted_model_names):
+                models.ProductModel.objects.filter(
+                    product_id=product_id, name__in=to_be_deleted_model_names
+                ).update(is_deleted=True)
 
-        # 减少原category的product_count
-        user_category_ids = [
-            category.id for category in models.ProductCategory.objects.filter(
-                owner=request.manager)]
-        old_category_ids = set([relation.category_id for relation in models.CategoryHasProduct.objects.filter(
-            category_id__in=user_category_ids, product_id=product_id)])
-        catetories_ids = request.POST.get('product_category', -1).split(',')
-
-        for category_id in catetories_ids:
-            if not category_id.isdigit():
-                continue
-            category_id = int(category_id)
-            if category_id in old_category_ids:
-                old_category_ids.remove(category_id)
-            else:
-                models.CategoryHasProduct.objects.create(
-                    category_id=category_id, product_id=product_id)
-                models.ProductCategory.objects.filter(
-                    id=category_id
-                ).update(product_count=F('product_count') + 1)
-        if len(old_category_ids) > 0:
-            # 存在被删除的ctegory关系，删除该关系
-            models.CategoryHasProduct.objects.filter(
-                category_id__in=old_category_ids, product_id=product_id
+            # 处理轮播图
+            models.ProductSwipeImage.objects.filter(
+                product_id=product_id
             ).delete()
-            models.ProductCategory.objects.filter(
-                id__in=old_category_ids
-            ).update(product_count=F('product_count') - 1)
+            for swipe_image in swipe_images:
+                models.ProductSwipeImage.objects.create(
+                    product_id=product_id,
+                    url=swipe_image['url'],
+                    width=swipe_image['width'],
+                    height=swipe_image['height']
+                )
 
-        # 更新product
-        postage_type = request.POST['postage_type']
-        if postage_type == models.POSTAGE_TYPE_UNIFIED:
-            postage_id = -1
-            unified_postage_money = request.POST.get(
-                'unified_postage_money', '')
-            if unified_postage_money == '':
+            # 处理property
+            properties = request.POST.get('properties')
+            properties = json.loads(properties) if properties else []
+            property_ids = set([property['id'] for property in properties])
+            existed_property_ids = set([
+                property.id for property in models.ProductProperty.objects.filter(
+                    product_id=product_id)
+                ])
+            for property in properties:
+                if property['id'] < 0:
+                    models.ProductProperty.objects.create(
+                        owner=request.manager,
+                        product_id=product_id,
+                        name=property['name'],
+                        value=property['value']
+                    )
+                else:
+                    models.ProductProperty.objects.filter(
+                        id=property['id']
+                    ).update(name=property['name'], value=property['value'])
+            property_ids_to_be_delete = existed_property_ids - property_ids
+            models.ProductProperty.objects.filter(
+                id__in=property_ids_to_be_delete).delete()
+
+            # 减少原category的product_count
+            user_category_ids = [
+                category.id for category in models.ProductCategory.objects.filter(
+                    owner=request.manager)]
+            old_category_ids = set([relation.category_id for relation in models.CategoryHasProduct.objects.filter(
+                category_id__in=user_category_ids, product_id=product_id)])
+            catetories_ids = request.POST.get('product_category', -1).split(',')
+
+            for category_id in catetories_ids:
+                if not category_id.isdigit():
+                    continue
+                category_id = int(category_id)
+                if category_id in old_category_ids:
+                    old_category_ids.remove(category_id)
+                else:
+                    models.CategoryHasProduct.objects.create(
+                        category_id=category_id, product_id=product_id)
+                    models.ProductCategory.objects.filter(
+                        id=category_id
+                    ).update(product_count=F('product_count') + 1)
+            if len(old_category_ids) > 0:
+                # 存在被删除的ctegory关系，删除该关系
+                models.CategoryHasProduct.objects.filter(
+                    category_id__in=old_category_ids, product_id=product_id
+                ).delete()
+                models.ProductCategory.objects.filter(
+                    id__in=old_category_ids
+                ).update(product_count=F('product_count') - 1)
+
+            # 更新product
+            postage_type = request.POST['postage_type']
+            if postage_type == models.POSTAGE_TYPE_UNIFIED:
+                postage_id = -1
+                unified_postage_money = request.POST.get(
+                    'unified_postage_money', '')
+                if unified_postage_money == '':
+                    unified_postage_money = 0.0
+            else:
+                postage_id = 999  # request.POST['postage_config_id']
                 unified_postage_money = 0.0
-        else:
-            postage_id = 999  # request.POST['postage_config_id']
-            unified_postage_money = 0.0
 
-        min_limit = request.POST.get('min_limit', '0')
-        if not min_limit.isdigit():
-            min_limit = 0
-        else:
-            min_limit = float(min_limit)
-        purchase_price = request.POST.get("purchase_price", '')
-        if purchase_price == '':
-            purchase_price = 0
-        is_enable_bill = request.POST.get('is_enable_bill', False)
-        if is_enable_bill in [True, '1', 'True']:
-            is_enable_bill=True
-        else:
-            is_enable_bill=False
+            min_limit = request.POST.get('min_limit', '0')
+            if not min_limit.isdigit():
+                min_limit = 0
+            else:
+                min_limit = float(min_limit)
+            purchase_price = request.POST.get("purchase_price", '')
+            if purchase_price == '':
+                purchase_price = 0
+            is_enable_bill = request.POST.get('is_enable_bill', False)
+            if is_enable_bill in [True, '1', 'True']:
+                is_enable_bill=True
+            else:
+                is_enable_bill=False
 
-        is_delivery = request.POST.get('is_delivery', False)
+            is_delivery = request.POST.get('is_delivery', False)
 
-        is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
-        if is_bill is False:
-            is_enable_bill = False
-            is_delivery = False
+            is_bill = True if request.manager.username not in settings.WEIZOOM_ACCOUNTS else  False
+            if is_bill is False:
+                is_enable_bill = False
+                is_delivery = False
 
-        param = {
-            'name': request.POST.get('name', '').strip(),
-            'promotion_title': request.POST.get('promotion_title', '').strip(),
-            'user_code': request.POST.get('user_code', '').strip(),
-            'bar_code': request.POST.get('bar_code', '').strip(),
-            'thumbnails_url': thumbnails_url,
-            'detail': request.POST.get('detail', '').strip(),
-            'is_use_online_pay_interface': 'is_enable_online_pay_interface' in request.POST,
-            'is_use_cod_pay_interface': 'is_enable_cod_pay_interface' in request.POST,
-            'postage_id': postage_id,
-            'unified_postage_money': unified_postage_money,
-            'postage_type': postage_type,
-            'stocks': min_limit,
-            'is_member_product': request.POST.get("is_member_product", False) == 'on',
-            'supplier': request.POST.get("supplier", 0),
-            'purchase_price': purchase_price,
-            'is_enable_bill': is_enable_bill,
-            'is_delivery': is_delivery,
-        }
-        # 微众商城代码
-        # if request.POST.get('weshop_sync', None):
-        #     param['weshop_sync'] = request.POST['weshop_sync'][0]
-        models.Product.objects.record_cache_args(
-            ids=[product_id]
-        ).filter(
-            owner=request.manager,
-            id=product_id
-        ).update(**param)
+            param = {
+                'name': request.POST.get('name', '').strip(),
+                'promotion_title': request.POST.get('promotion_title', '').strip(),
+                'user_code': request.POST.get('user_code', '').strip(),
+                'bar_code': request.POST.get('bar_code', '').strip(),
+                'thumbnails_url': thumbnails_url,
+                'detail': request.POST.get('detail', '').strip(),
+                'is_use_online_pay_interface': 'is_enable_online_pay_interface' in request.POST,
+                'is_use_cod_pay_interface': 'is_enable_cod_pay_interface' in request.POST,
+                'postage_id': postage_id,
+                'unified_postage_money': unified_postage_money,
+                'postage_type': postage_type,
+                'stocks': min_limit,
+                'is_member_product': request.POST.get("is_member_product", False) == 'on',
+                'supplier': request.POST.get("supplier", 0),
+                'purchase_price': purchase_price,
+                'is_enable_bill': is_enable_bill,
+                'is_delivery': is_delivery,
+            }
+            # 微众商城代码
+            # if request.POST.get('weshop_sync', None):
+            #     param['weshop_sync'] = request.POST['weshop_sync'][0]
+            models.Product.objects.record_cache_args(
+                ids=[product_id]
+            ).filter(
+                owner=request.manager,
+                id=product_id
+            ).update(**param)
 
         # 更新product结束
 
@@ -1381,3 +1443,149 @@ class ProductModel(resource.Resource):
 
         response = create_response(200)
         return response.get_response()
+
+
+class GroupProductList(resource.Resource):
+    app = 'mall2'
+    resource = 'group_product_list'
+
+    @login_required
+    def api_get(request):
+        COUNT_PER_PAGE = 10
+        product_name = request.GET.get('name', '')
+
+        # 筛选出单规格的商品id
+        standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=request.manager, name='standard', is_deleted=False)]
+        promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=request.manager, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
+        has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
+        woid = request.webapp_owner_id
+        pids = utils.get_pids(woid)
+        if pids:
+            has_promotion_product_ids.extend(pids)
+
+        group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
+        products = models.Product.objects.filter(
+                owner=request.manager,
+                id__in=group_product_ids,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                is_deleted=False,
+                is_member_product=False,
+                stocks__lte=1
+                )
+        if product_name:
+            products = products.filter(name__contains=product_name)
+
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products,
+            cur_page,
+            count_per_page,
+            # query_string=request.META['QUERY_STRING'],
+            )
+        models.Product.fill_details(request.manager, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
+
+        #构造返回数据
+        items = []
+        for product in products:
+            product_dict = product.format_to_dict()
+            product_dict['is_self'] = (request.manager.id == product.owner_id)
+            items.append(product_dict)
+
+        data = dict()
+        data['owner_id'] = request.manager.id
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'data': data
+        }
+        return response.get_response()
+
+def product_is_group(product_id, woid):
+    is_group_buying = False
+    try:
+        pids = []
+        pids.append(str(product_id))
+        product2group = utils.get_product2group(pids, woid)
+        if product2group.has_key(int(product_id)):
+            is_group_buying = product2group[int(product_id)]
+    except:
+        error_msg = u"获取商品是否在团购中失败, cause:\n{}".format(unicode_full_stack())
+        watchdog_error(error_msg)
+    return is_group_buying
+
+class GroupProductListWoid(resource.Resource):
+    app = 'mall2'
+    resource = 'group_product_list_woid'
+
+    def api_get(request):
+        COUNT_PER_PAGE = 10
+        product_name = request.GET.get('name', '')
+        woid = request.GET.get('woid', '')
+        if not woid:
+            response = create_response(200)
+            response.data = {
+            'error': "less woid",
+        }
+            return response.get_jsonp_response(request)
+        # 筛选出单规格的商品id
+        standard_model_product_ids = [model.product_id for model in models.ProductModel.objects.filter(owner=woid, name='standard', is_deleted=False)]
+        promotion_ids = [promotion.id for promotion in promotion_model.Promotion.objects.filter(owner=woid, status__in=[promotion_model.PROMOTION_STATUS_NOT_START, promotion_model.PROMOTION_STATUS_STARTED])]
+        has_promotion_product_ids = [relation.product_id for relation in promotion_model.ProductHasPromotion.objects.filter(promotion_id__in=promotion_ids)]
+        pids = utils.get_pids(woid)
+        if pids:
+            has_promotion_product_ids.extend(pids)
+
+        group_product_ids = [id for id in standard_model_product_ids if id not in has_promotion_product_ids]
+        products = models.Product.objects.filter(
+                owner=woid,
+                id__in=group_product_ids,
+                shelve_type=models.PRODUCT_SHELVE_TYPE_ON,
+                is_deleted=False,
+                is_member_product=False,
+                stocks__lte=1
+                )
+        if product_name:
+            products = products.filter(name__contains=product_name)
+
+        #进行分页
+        count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+        cur_page = int(request.GET.get('page', '1'))
+        pageinfo, products = paginator.paginate(
+            products,
+            cur_page,
+            count_per_page,
+            )
+        models.Product.fill_details(woid, products, {
+            "with_product_model": True,
+            "with_model_property_info": True,
+            "with_selected_category": True,
+            'with_image': False,
+            'with_property': True,
+            'with_sales': True
+        })
+
+        #构造返回数据
+        items = []
+        for product in products:
+            product_dict = product.format_to_dict()
+            product_dict['is_self'] = (int(woid) == product.owner_id)
+            items.append(product_dict)
+        data = dict()
+        data['owner_id'] = woid
+        response = create_response(200)
+        response.data = {
+            'items': items,
+            'pageinfo': paginator.to_dict(pageinfo),
+            'data': data
+        }
+        return response.get_jsonp_response(request)

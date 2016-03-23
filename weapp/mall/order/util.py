@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import re
+import json
+import logging
 
 from datetime import date, datetime
 
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.conf import settings
+import requests
 
 from mall import export
 from tools.regional import views as regional_util
@@ -21,12 +26,12 @@ from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
 import mall.module_api as mall_api
 from market_tools.tools.weizoom_card.models import AccountHasWeizoomCardPermissions
 from core.restful_url_route import api
-from watchdog.utils import watchdog_info
-import re
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from mall.templatetags.mall_filter import *
 from weixin.user.module_api import get_all_active_mp_user_ids
 from account.models import UserProfile
 from market_tools.tools.weizoom_card.models import WeizoomCardHasOrder,WeizoomCard
+from core.exceptionutil import unicode_full_stack
 
 COUNT_PER_PAGE = 20
 
@@ -50,6 +55,8 @@ def export_orders_json(request):
         '5': u'已完成',
         '6': u'退款中',
         '7': u'退款完成',
+        '8': u'退款中',
+        '9': u'退款完成',
     }
 
     payment_type = {
@@ -87,7 +94,11 @@ def export_orders_json(request):
         if status_type == 'refund':
             order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
         elif status_type == 'audit':
-            order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+            if request.GET.get('order_status', None) == '8':
+                order_list = order_list.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED])
+            else:
+                order_list = order_list.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+
     if not mall_type:
         order_list = order_list.exclude(
                 supplier_user_id__gt=0,
@@ -703,6 +714,12 @@ def get_detail_response(request):
         order.number = number
         order.products = mall_api.get_order_products(order)
 
+        # 是否是团购的订单
+        if mall.models.OrderHasGroup.objects.filter(order_id=order.order_id).count() > 0:
+            is_group_buying = True
+        else:
+            is_group_buying = False
+
         # 如果有单品积分抵扣，则不显示整单的积分抵扣数额
         for product in order.products:
             if 'integral_count' in product and product['integral_count'] > 0:
@@ -730,6 +747,8 @@ def get_detail_response(request):
         order.save_money = float(Order.get_order_has_price_number(order)) + float(order.postage) - float(
             order.final_price) - float(order.weizoom_card_money)
         order.pay_money = order.final_price + order.weizoom_card_money
+        order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+
         show_first = True if OrderStatusLog.objects.filter(order_id=order.order_id,
                                                            to_status=ORDER_STATUS_PAYED_NOT_SHIP,
                                                            operator=u'客户').count() > 0 else False
@@ -756,7 +775,19 @@ def get_detail_response(request):
             order.actions = get_order_actions(child_orders[0], is_detail_page=True, mall_type=request.user_profile.webapp_type)
         else:
             child_orders = [order]
-            order.actions = get_order_actions(order, is_detail_page=True, mall_type=request.user_profile.webapp_type)
+            if is_group_buying:
+                order.actions = get_order_actions(
+                    order,
+                    is_detail_page=True,
+                    mall_type=request.user_profile.webapp_type,
+                    is_group_buying=is_group_buying
+                    )
+            else:
+                order.actions = get_order_actions(
+                    order,
+                    is_detail_page=True,
+                    mall_type=request.user_profile.webapp_type
+                    )
         supplier_ids = []
         supplier_user_ids = []
         for child_order in child_orders:
@@ -796,6 +827,7 @@ def get_detail_response(request):
                 if child_order.order_id == log.order_id:
                     log.leader_name = child_order.leader_name
 
+
         c = RequestContext(request, {
             'first_nav_name': FIRST_NAV,
             'second_navs': export.get_mall_order_second_navs(request),
@@ -812,7 +844,8 @@ def get_detail_response(request):
             'log_count': log_count,
             'show_first': show_first,
             'is_sync': True if (not request.user_profile.webapp_type and order.supplier_user_id > 0) else False,
-            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False
+            'is_show_order_status': True if len(supplier_ids) + len(supplier_user_ids) > 1 else False,
+            'is_group_buying': is_group_buying
             })
 
         return render_to_response('mall/editor/order_detail.html', c)
@@ -825,7 +858,7 @@ def is_has_order(request, is_refund=False):
     # weizoom_mall_order_ids = WeizoomMallHasOtherMallProductOrder.get_order_ids_for(webapp_id)
     if is_refund:
         orders = belong_to(webapp_id)
-        has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED]).count() > 0
+        has_order = orders.filter(status__in=[ORDER_STATUS_REFUNDING,ORDER_STATUS_REFUNDED,ORDER_STATUS_GROUP_REFUNDING,ORDER_STATUS_GROUP_REFUNDED]).count() > 0
     else:
         has_order = (belong_to(webapp_id).count() > 0)
     MallCounter.clear_unread_order(webapp_owner_id=request.manager.id)  # 清空未读订单数量
@@ -882,6 +915,18 @@ def get_orders_response(request, is_refund=False):
     supplier_users = dict([(profile.user_id, profile.store_name) for profile in all_mall_userprofiles])
 
     response = create_response(200)
+    if query_dict.has_key('status'):
+        current_status_value = query_dict['status']
+    elif query_dict.has_key('status__in'):
+        if query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]:
+            current_status_value = ORDER_STATUS_GROUP_REFUNDING
+        elif query_dict['status__in'] == [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]:
+            current_status_value = ORDER_STATUS_REFUNDING
+        elif query_dict['status__in'] == [ORDER_STATUS_REFUNDED, ORDER_STATUS_REFUNDED]:
+            current_status_value = ORDER_STATUS_REFUNDED
+    else:
+        current_status_value = -1
+
     response.data = {
         'items': items,
         'pageinfo': paginator.to_dict(pageinfo),
@@ -890,7 +935,7 @@ def get_orders_response(request, is_refund=False):
         'sortAttr': sort_attr,
         'existed_pay_interfaces': existed_pay_interfaces,
         'order_return_count': order_return_count,
-        'current_status_value': query_dict['status'] if query_dict.has_key('status') else '-1',
+        'current_status_value': current_status_value,
         'is_refund': is_refund,
         'mall_type': mall_type
     }
@@ -936,10 +981,24 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
     orders = belong_to(webapp_id)
 
     # orders = belong_to(webapp_id)
+    group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+    group_order_ids = [r.order_id for r in group_order_relations]
+    if query_dict.get('order_type') and query_dict['order_type'] == 2 and not mall_type:
+        orders = orders.filter(order_id__in=group_order_ids)
+
 
     if is_refund:
-        orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
-
+        if query_dict.get('status__in'):
+            orders = orders.filter(status__in=[ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED])
+        else:
+            orders = orders.filter(status__in=[ORDER_STATUS_REFUNDING, ORDER_STATUS_REFUNDED])
+    else:
+        if query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDING:
+            query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_REFUNDING]
+            query_dict.pop('status')
+        elif query_dict.get('status') and query_dict.get('status') == ORDER_STATUS_REFUNDED:
+            query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_REFUNDED]
+            query_dict.pop('status')
     # 处理排序
     if sort_attr != 'created_at':
         orders = orders.order_by(sort_attr)
@@ -1114,6 +1173,10 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                     }
                 groups.append(group)
         else:
+            if order.order_id in group_order_ids:
+                actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type, is_group_buying=True)
+            else:
+                actions = get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
             group_order = {
                 "id": order.id,
                 "status": order.get_status_text(),
@@ -1121,7 +1184,7 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
                 'express_company_name': order.express_company_name,
                 'express_number': order.express_number,
                 'leader_name': order.leader_name,
-                'actions': get_order_actions(order, is_refund=is_refund, mall_type=mall_type)
+                'actions': actions
             }
 
             if order.supplier_user_id > 0:
@@ -1195,7 +1258,8 @@ def __get_order_items(user, query_dict, sort_attr, date_interval_type, query_str
             'parent_action': parent_action,
             'is_first_order': order.is_first_order,
             'supplier_user_id': order.supplier_user_id,
-            'total_purchase_price': '%.2f' % order.total_purchase_price
+            'total_purchase_price': '%.2f' % order.total_purchase_price,
+            'is_group_buying': True if order.order_id in group_order_ids else False
         })
 
     return items, pageinfo, order_return_count
@@ -1232,7 +1296,7 @@ def __get_select_params(request):
         query_dict['product_name'] = product_name
     if len(pay_type):
         query_dict['pay_interface_type'] = int(pay_type)
-    if len(order_source):
+    if len(order_source) and order_source != '-1':
         query_dict['order_source'] = int(order_source)
     if len(order_status) and order_status != '-1':
         query_dict['status'] = int(order_status)
@@ -1243,6 +1307,10 @@ def __get_select_params(request):
     if len(order_type) and order_type != '-1':
         query_dict['order_type'] = int(order_type)
 
+    # 团购退款
+    if query_dict.has_key('status') and query_dict['status'] == 8:
+        query_dict['status__in'] = [ORDER_STATUS_GROUP_REFUNDED, ORDER_STATUS_GROUP_REFUNDING]
+        query_dict.pop('status')
      # 时间区间
     try:
         date_interval = request.GET.get('date_interval', '')
@@ -1493,8 +1561,8 @@ ORDER_REFUND_SUCCESS_ACTION = {
 
 
 
-def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0, multi_child_orders=False):
 
+def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_parent=False, mall_type=0, multi_child_orders=False, is_group_buying=False):
     """
     :param order:
     :param is_refund:
@@ -1550,6 +1618,9 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     elif is_refund:
         if order.status == ORDER_STATUS_REFUNDING:
             result = [ORDER_REFUND_SUCCESS_ACTION]
+        elif order.status == ORDER_STATUS_GROUP_REFUNDING:
+            result = []
+
     # 订单列表页子订单
     able_actions_for_sub_order = [ORDER_SHIP_ACTION, ORDER_UPDATE_EXPREDSS_ACTION, ORDER_FINISH_ACTION]
 
@@ -1577,6 +1648,100 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     if is_list_parent:
         result = filter(lambda x: x in able_actions_for_list_parent, result)
 
+    # 团购订单去除订单取消，订单退款
+    if is_group_buying:
+        result = filter(lambda x: x not in [ORDER_CANCEL_ACTION, ORDER_REFUNDIND_ACTION], result)
+
     if multi_child_orders:
         result = filter(lambda x: x not in able_actions_for_list_parent, result)
     return result
+
+
+def update_order_status_by_group_status(group_id, status, order_ids=None, is_test=False):
+    # TODO 退款
+    KEY = 'MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg='
+    if settings.MODE in ['develop', 'test']:
+        URL = 'http://paytest/refund/weixin/api/order/refund/'
+    else:
+        URL = 'http://pay/refund/weixin/api/order/refund/'
+
+    if status == 'success':
+        group_status = GROUP_STATUS_OK
+        order_status = ORDER_STATUS_NOT
+    elif status == 'failure':
+        group_status = GROUP_STATUS_failure
+        order_status = ORDER_STATUS_PAYED_NOT_SHIP
+
+    relations = OrderHasGroup.objects.filter(group_id=group_id)
+    user = UserProfile.objects.get(webapp_id=relations[0].webapp_id).user
+    relations.update(group_status=group_status)
+    orders = Order.objects.filter(
+            order_id__in=[r.order_id for r in relations],
+            status=order_status
+            )
+    if order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+        orders = Order.objects.filter(
+            order_id__in=[r.order_id for r in relations],
+            status__in=[ORDER_STATUS_PAYED_NOT_SHIP, ORDER_STATUS_NOT]
+            )
+    from mall.module_api import update_order_status
+    for order in orders:
+        if order_status == ORDER_STATUS_NOT or order.status == ORDER_STATUS_NOT:
+            update_order_status(user, 'cancel', order)
+        elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
+            if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY and order.status >= ORDER_STATUS_PAYED_NOT_SHIP:
+                if is_test:
+                    update_order_status(user, 'return_pay', order)
+                    order.status = ORDER_STATUS_GROUP_REFUNDING
+                    order.save()
+                else:
+                    args = {
+                        'order_id': order.order_id,
+                        'auth_key': KEY,
+                        'from_where': 'weapp'
+                    }
+                    response = dict()
+                    try:
+                        logging.info("url:%s" % URL)
+                        logging.info("args:%s" % str(args))
+                        r = requests.get(URL, params=args)
+                        response = json.loads(r.text)
+                        if not response['data'].get('is_success', ''):
+                            r = requests.get(URL, params=args)
+                            response = json.loads(r.text)
+                            if not response['data'].get('is_success', ''):
+                                r = requests.get(URL, params=args)
+                                response = json.loads(r.text)
+                    except:
+                        try:
+                            r = requests.get(URL, params=args)
+                            response = json.loads(r.text)
+                            if not response['data'].get('is_success', ''):
+                                r = requests.get(URL, params=args)
+                                response = json.loads(r.text)
+                        except:
+                            try:
+                                r = requests.get(URL, params=args)
+                                response = json.loads(r.text)
+                            except:
+                                logging.info(u"订单退款异常%s" % unicode_full_stack())
+                                watchdog_error(u"订单退款异常%s" % unicode_full_stack())
+                    if response['data'].get('is_success', ''):
+                        update_order_status(user, 'return_pay', order)
+                        order.status = ORDER_STATUS_GROUP_REFUNDING
+                        order.save()
+                    else:
+                        logging.info(u"订单%s通知退款失败" % order.order_id)
+                        watchdog_error(u"订单%s通知退款失败" % order.order_id)
+            else:
+                try:
+                    update_order_status(user, 'cancel', order)
+                except:
+                    logging.info(u"团购失败，订单%s取消失败" % order.order_id)
+                    watchdog_error(u"团购失败，订单%s取消失败" % order.order_id)
+
+def cancel_group_buying(order_id):
+    order = Order.objects.get(order_id=order_id)
+    user = UserProfile.objects.get(webapp_id=order.webapp_id).user
+    from mall.module_api import update_order_status
+    update_order_status(user, 'cancel', order)

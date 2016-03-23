@@ -1,0 +1,33 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.1"
+  title: weapp面向团购服务接口
+  description: 团购需要的接口,由weapp提供
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /mall2/api/group_product_list_woid:
+    get:
+      description: 获取能够参加团购的商品集合
+      parameters:
+        - name: name
+          type: str
+          description: 过滤商品名
+        - name: woid
+          type: int32
+          description: 
+            woid(必须,通过它来获取woid下的商品)
+        - $ref: '#/definitions/group_id'
+
+
+definitions:
+  group_id:
+    name: group_id
+    description: 团购活动id，来自团购活动页点击参团跳转到编辑订单页提供
+    type: string

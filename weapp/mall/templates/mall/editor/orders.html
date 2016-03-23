@@ -70,6 +70,7 @@
 	<ul class="nav nav-tabs mt14 ">
 	{{if data.is_refund}}
 		<li class="xa-count {{if data.current_status_value==-1}}active{{/if}}" data-total-status-value="-1"><a href="javascript:void(0);">全部</a></li>
+		<li class="xa-count {{if data.current_status_value==8}}active{{/if}}" data-total-status-value="8"><a href="javascript:void(0);">团购退款</a></li>
 		<li class="xa-count {{if data.current_status_value==6}}active{{/if}}" data-total-status-value="6"><a href="javascript:void(0);">退款中</a></li>
 		<li class="xa-count {{if data.current_status_value==7}}active{{/if}}" data-total-status-value="7"><a href="javascript:void(0);">退款完成</a></li>
 	{{else}}
@@ -124,6 +125,13 @@
 						<p class="ml15 fl">
 						订单编号：
 						<a title="查看" class="xt-orderLink" href="/mall2/order/?order_id=${order.id}" target="_blank">${order.order_id}{{if order.edit_money}}-${order.edit_money}{{/if}}</a>
+						</p>
+						<p class="ml15 fl w20">
+						{{if order.is_group_buying}}
+							<img src="/static_v2/img/editor/orderGroupIcon.png"/>
+						{{else}}
+							&nbsp;
+						{{/if}}
 						</p>
 						<p class="ml10 fl w60">
 							${order.pay_interface_name}
@@ -291,7 +299,7 @@
 								<span class="xui-weizoomCard xui-huihuiCard pr">
 									<i class="xa-huihuiCardImg"></i>
 									<span class="pa" style="display:none;">惠惠卡支付&nbsp${order.weizoom_card_money_huihui}元</span>
-								</span> 
+								</span>
 							{{/if}}
 						{{/if}}
 						{{if order.weizoom_card_money_rest > 0 }}
@@ -299,13 +307,13 @@
 								<span class="xui-weizoomCard pr">
 									<i class="xa-weizoomCardImg"></i>
 									<span class="pa" style="display:none;">微众卡支付&nbsp${order.weizoom_card_money_rest}元</span>
-								</span> 
+								</span>
 							{{/if}}
 						{{/if}}
 						</div>
 					</td>
 					{{/if}}
-					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7}}border-top:0;{{/if}}"{{/if}}>
+					<td class="nowrap" width="90"{{if order.groups.length > 1 }}style="{{if order.order_status != 6 && order.order_status != 7}}border-left:1px solid #ddd;{{/if}}{{if order.order_status == 6 || order.order_status == 7 || order.order_status == 8 || order.order_status == 9}}border-top:0;{{/if}}"{{/if}}>
 						{{if order.groups.length == 1 || order.order_status != 6 && order.order_status != 7}}
 							<div>
 								{{html formatOrderStatus(group.fackorder.status)}}
@@ -315,14 +323,19 @@
 					<td class="nowrap xui-operation" width="90"{{if order.groups.length > 1 && (order.order_status == 6 || order.order_status == 7)}}style="border-top:0;"{{/if}} >
 						<div class="xa-actions" data-order-id="${group.fackorder.id}">
 						{{each(i,a) group.fackorder.actions}}
-						    <a href='javascript:void(0);' class="${a.class_name}"
-						    {{if a.action=="update_express"}}
-						        data-is-update=true
-						        data-express-company-name="${group.fackorder.express_company_name}"
-						        data-express-number="${group.fackorder.express_number}"
-								data-leader-name="${group.fackorder.leader_name}"
+							<!-- 团购订单，不显示'申请退款'、'取消订单'、'退款成功'按钮 -->
+							{{if order.is_group_buying &&
+								(a.class_name == 'xa-refund' || a.class_name == 'xa-cancelOrder' || a.class_name == 'xa-refundSuccess') }}
+							{{else}}
+							    <a href='javascript:void(0);' class="${a.class_name}"
+							    {{if a.action=="update_express"}}
+							        data-is-update=true
+							        data-express-company-name="${group.fackorder.express_company_name}"
+							        data-express-number="${group.fackorder.express_number}"
+									data-leader-name="${group.fackorder.leader_name}"
+							    {{/if}}
+							    >${a.name}</a>
 						    {{/if}}
-						    >${a.name}</a>
 						{{/each}}
                         </div>
 					</td>

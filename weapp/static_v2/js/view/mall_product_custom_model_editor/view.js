@@ -42,6 +42,7 @@ W.view.mall.ProductCustomModelEditor = Backbone.View.extend({
 		this.template = this.getTemplate();
 		this.modelTableTemplate = this.getModelTableTemplate();
 		this.isUseCustomModel = options.isUseCustomModel;
+		this.isGroupBuying = options.isGroupBuying;
 		this.customProperties = [];
 		this.productType = options.productType || "object";
 		this.title = options.title;
@@ -85,7 +86,8 @@ W.view.mall.ProductCustomModelEditor = Backbone.View.extend({
 		this.$el.html($.tmpl(this.template, {
 			title: this.title,
 			isUseCustomModel: this.isUseCustomModel,
-			standardModel: this.standardModel
+			standardModel: this.standardModel,
+			isGroupBuying: this.isGroupBuying
 		}));
 
 		if (this.isUseCustomModel && this.customModels.length > 0) {
@@ -364,6 +366,7 @@ W.registerUIRole('[data-ui-role="mall-product-custom-model-editor"]', function()
     var title = $container.data('title');
     //var customProperties = $.parseJSON($container.attr('data-custom-properties'));
     var isUseCustomModel = ($container.attr('data-use-custom-model') === 'true');
+    var isGroupBuying = ($container.attr('data-is-group-buying') === 'true');
     var productType = $container.attr('data-product-type');
     var view = new W.view.mall.ProductCustomModelEditor({
         el: this,
@@ -371,6 +374,7 @@ W.registerUIRole('[data-ui-role="mall-product-custom-model-editor"]', function()
         models: models,
         //customProperties: customProperties,
         isUseCustomModel: isUseCustomModel,
+        isGroupBuying: isGroupBuying,
         productType: productType
     });
     view.render();

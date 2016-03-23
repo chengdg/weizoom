@@ -1,0 +1,353 @@
+{% extends "apps_base.html" %}
+
+{% block css %}
+<style type="text/css">
+    .wui-swiper-slide{
+        overflow-y: auto;
+    }
+    .wui-swiper-wrapper{
+        background-color: #DADADA;
+    }
+
+    .wui-swiper-slide .wui-content-slide .xui-listItem{
+        padding: 5px 10px 10px 10px;
+
+    }
+    .wui-swiper-slide .wui-content-slide .xui-listInner{
+        background: #fff;
+        text-align: left;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    .wui-swiper-slide .xui-listInner .xui-i-content{
+
+    }
+    .wui-swiper-slide .xui-listInner .xui-i-content .xui-i-imgBox{
+        width: 145px;
+        height: 145px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 10px;
+    }
+
+    .wui-swiper-slide .xui-listInner .xui-i-content .xui-i-imgBox img{
+        width: 145px;
+        height: 145px;
+        border-radius: 5px;
+    }
+    .wui-swiper-slide .xui-listInner .xui-i-content .xui-i-content-group{
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 10px;
+        position: relative;
+    }
+    .wui-swiper-slide .xui-listInner .xui-i-content .xui-i-content-group div{
+        display: block;
+    }
+    .wui-swiper-slide .xui-i-content-group .xui-i-content-time{
+        border: 1px solid #ff2742;
+        color: #ff2742;
+        font-size: 0.8rem;
+        position: absolute;
+        top: -155px;
+        right: 0px;
+        padding: 3px;
+    }
+    .wui-swiper-slide .xui-i-content-group .wui-i-btn-using{
+        position: absolute;
+        top: -115px;
+        right: 15px;
+    }
+    .wui-swiper-slide .xui-i-content-group .xui-i-content-type{
+        position: absolute;
+        top: -40px;
+        right: 15px;
+        color: #484848;
+        font-size: 0.9rem;
+    }
+    .wui-swiper-slide .xui-i-content-group .xui-i-content-type p{
+        border-bottom: #484848 solid 1px;
+        margin-bottom: 5px;
+        text-align: right;
+        background: no-repeat scroll 0 0 url("/termite_static/img/component/group/group_price_icon.png");
+        background-position: 2px 0px;
+        padding-left: 20px;
+        background-size: 15%;
+    }
+    .wui-swiper-slide .xui-listInner .xui-i-title{
+        text-align: left;
+        margin: 0px 10px;
+        padding-bottom: 10px;
+    }
+
+    .xui-listInner .ui-btn-inner{
+        white-space:normal;
+    }
+
+    .xui-all_groups_can_join-slide .xui-listInner{
+        text-align: center;
+        height: 100px;
+        padding: 0px;
+        position: relative;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner div{
+        display: inline-block;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-imgBox{
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-imgBox img,.xui-all_groups_can_join-list .xui-listInner .xui-i-title img{
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-nameBox{
+        display: inline-block;
+        height: 100px;
+        width: auto;
+        margin-left: 80px;
+        line-height: 20px;
+        vertical-align: middle;
+        margin-top: 25px;
+        margin-right: 120px;
+    }
+    .xui-all_groups_can_join-slide .xui-listInner .wui-i-BtnBox,.xui-all_groups_can_join-list .wui-i-BtnBox{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 100px;
+    }
+    button.wui-i-btn-using {
+        padding: 15px 15px 15px 15px;
+        color: #fff;
+        background-color: #ff2742;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-family: "黑体";
+    }
+    .wui-inner-active span.wui-inner-tabTitle {
+        color: #ff2742;
+    }
+    .wui-swiper .wui-swiper-tabs a.wui-inner-active {
+        border-bottom: 4px solid #ff2742;
+    }
+    .wui-swiper .wui-swiper-container {
+        background: none;
+    }
+    .xui-i-content-remain_hours{
+        color: #FF2742;
+        position: absolute;
+        top: 10px;
+        right: 118px;
+    }
+    .xui-i-content-title_box {
+        border: 1px solid #CECECE;
+        padding: 10px;
+        border-radius: 4px;
+        position: static;
+        margin-left: 60px;
+        margin-top: -37px;
+    }
+</style>
+{% endblock %}
+
+{% block content-panel %}
+    {{ page_html_content|safe }}
+    <div class="xui-page {% if not user.is_from_weixin %}notweixin{% endif %} xui-myActivityPage wui-swiper">
+        <div class="wui-swiper-tabs" style="margin-top:-47px;">
+            <a href="javascript:void(0)" class="wui-inner-active xa-all_groups_can_open"><span class="wui-inner-tabTitle mt5 em85 c65">我要开团</span><i></i></a>
+            <a href="javascript:void(0)" class="xa-all_groups_can_join"><span class="wui-inner-tabTitle mt5 em85 c65">直接参团</span><i></i></a>
+        </div>
+        <div class="wui-swiper-container" style="margin-top:47px;">
+            <div class="wui-swiper-wrapper">
+                <div class="wui-swiper-slide" id="xa-wrapper">
+                    <div class="wui-content-slide">
+                        <div class="xui-all_groups_can_open-slide">
+                        {% if all_groups_can_open %}
+                            <ul class="xui-listItem">
+                            {% for group_item in all_groups_can_open %}
+                                <li data-icon="true" class="xui-listInner">
+                                    <div class="xui-i-content">
+                                        <div class="xui-i-imgBox">
+                                            <img src="{{ group_item.product_img }}" class="xui-i-content-img">
+                                        </div>
+                                        <div class="xui-i-content-group">
+                                            <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}</div>
+                                            <a href="{{ group_item.url }}">
+                                                <button class="wui-i-btn-using wa-using">点击开团</button>
+                                            </a>
+                                            <div class="xui-i-content-type">
+                                                {% for group_dict in group_item.all_group_dict %}
+                                                    <p>{{ group_dict.group_type }}人团  ￥{{ group_dict.group_price }}</p>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="xui-i-title">{{ group_item.name }}</div>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="wui-swiper-slide">
+                    <div class="wui-content-slide">
+                        <div class="xui-all_groups_can_join-slide none">
+                        {% if all_groups_can_open %}
+                            <ul class="xui-listItem">
+                            {% for group_item in all_groups %}
+                                <li data-icon="true" class="xui-listInner">
+                                    <div class="wui-i-imgBox">
+                                        <img src="{{ group_item.product_img }}" class="xui-i-content-img">
+                                    </div>
+                                    <div class="wui-i-nameBox">{{ group_item.name }}</div>
+                                    <div class="wui-i-BtnBox">
+                                        <button class="wui-i-btn-using wa-using xa-find_group" data-id="{{group_item.id}}">进入找团</button>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </div>
+                        <div class="xui-all_groups_can_join-list xa-all_groups_can_join-list none">
+                        </div>
+                    </div>
+                </div>
+                <script id="tpl" type="text/plain">
+                    <ul class="xui-listItem">
+                        <li data-icon="true" class="xui-listInner">
+                            <div class="xui-i-title">
+                                <img src="{ product_img }" class="xui-i-content-img mt10">
+                                <div style="display: inline-block;">
+                                    <div class="xui-i-content-remain_hours">剩余{remain_hours}小时</div>
+                                    <p style="color: #5E5E5E;">{ group_owner_name }</p>
+                                    <div>的{ group_name }</div>
+                                    <div class="wui-i-BtnBox"><a href="{ url }"><button class="wui-i-btn-using wa-using">我要参团</button></a></div>
+                                </div>
+                                <div>
+                                    <div style="display: inline-block;margin-top: 10px;margin-left: 10px;">
+                                        <p style="margin-bottom: 5px;text-align: center;width: 40px;">团员</p>
+                                        <span style="background: #4A4A4A;color: #fff;padding: 5px;border-radius: 5px;top: 5px;">{participant_count}</span>
+                                    </div>
+                                    <div class="xui-i-content-title_box">
+                                        <p>【商品】{ product_name }</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function($) {
+    $('.xa-find_group').on('touchstart', function(e){
+        var $el = $(e.target);
+		var recordId = $el.data('id');
+        getDynamicData(recordId);
+    });
+    //我要开团tab
+    $('.xa-all_groups_can_join').on('touchstart', function(){
+        $('.xui-all_groups_can_join-slide').removeClass('none');
+        $('.xui-all_groups_can_join-list').addClass('none');
+        $('.xui-all_groups_can_open-slide').addClass('none');
+        $('.xa-all_groups_can_join').addClass('wui-inner-active');
+        $('.xa-all_groups_can_open').removeClass('wui-inner-active');
+    });
+    //我要参团tab
+    $('.xa-all_groups_can_open').on('touchstart', function(){
+        $('.xui-all_groups_can_join-slide').addClass('none');
+        $('.xui-all_groups_can_join-list').addClass('none');
+        $('.xui-all_groups_can_open-slide').removeClass('none');
+        $('.xa-all_groups_can_join').removeClass('wui-inner-active');
+        $('.xa-all_groups_can_open').addClass('wui-inner-active');
+    });
+});
+
+function getDynamicData(recordId){
+    console.log(recordId);
+    W.getApi().call({
+        app: 'm/apps/group',
+        resource: 'm_group_list',
+        method: 'get',
+        args: {
+            webapp_owner_id: W.webappOwnerId,
+            belong_to: recordId
+        },
+        success: function(data) {
+            console.log(data);
+            $('.xui-all_groups_can_join-slide').addClass('none');
+            $('.xui-all_groups_can_join-list').removeClass('none');
+            $('.xa-all_groups_can_join-list').html('');
+            var tpl = new Template($('#tpl').html());
+            var all_groups_can_join = data.all_groups_can_join;
+            for(var i in all_groups_can_join){
+                var p = all_groups_can_join[i];
+                console.log(p);
+                p.group_owner_name = p.group_owner_name.replace(/<[^>]+>/g,"");
+                var s = tpl.render({
+                    group_owner_name: p.group_owner_name,
+                    group_name: p.group_name,
+                    product_img: p.product_img,
+                    product_name: p.product_name,
+                    participant_count: p.participant_count,
+                    remain_hours: p.remain_hours,
+                    url: p.url
+                });
+                $('.xa-all_groups_can_join-list').append(s);
+            }
+        },
+        error: function(data) {
+            if(data.errMsg == 'is_deleted'){
+                deletedRecord();
+            }else{
+                wuiAlert(data.errMsg)
+            }
+        }
+    });
+}
+
+//模板引擎
+function Template(tpl) {
+    var
+        fn,
+        match,
+        code = ['var r=[];\nvar _html = function (str) { return str.replace(/&/g, \'&amp;\').replace(/"/g, \'&quot;\').replace(/\'/g, \'&#39;\').replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\'); };'],
+        re = /\{\s*([a-zA-Z\.\_0-9()]+)(\s*\|\s*safe)?\s*\}/m,
+        addLine = function (text) {
+            code.push('r.push(\'' + text.replace(/\'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r') + '\');');
+        };
+    while (match = re.exec(tpl)) {
+        if (match.index > 0) {
+            addLine(tpl.slice(0, match.index));
+        }
+        if (match[2]) {
+            code.push('r.push(String(this.' + match[1] + '));');
+        }
+        else {
+            code.push('r.push(_html(String(this.' + match[1] + ')));');
+        }
+        tpl = tpl.substring(match.index + match[0].length);
+    }
+    addLine(tpl);
+    code.push('return r.join(\'\');');
+    fn = new Function(code.join('\n'));
+    this.render = function (model) {
+        return fn.apply(model);
+    };
+}
+
+</script>
+{% endblock %}

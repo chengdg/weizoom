@@ -3,7 +3,7 @@
 	${title}
 	<div style="position: absolute; bottom: 5px; right: 10px; line-height: 20px;" class="checkbox">
 		<label style="width:100px;">
-			<input type="checkbox" name="is_use_custom_model" class="xa-useCustomModel" value="true" {{if isUseCustomModel}}checked="checked"{{/if}}/> 使用定制规格
+			<input type="checkbox" name="is_use_custom_model" class="xa-useCustomModel" value="true" {{if isUseCustomModel}}checked="checked"{{/if}}{{if isGroupBuying}} disabled{{/if}}/> 使用定制规格
 		</label>
 	</div>
 </legend>
@@ -24,7 +24,9 @@
 	<div class="form-group nostar">
 		<label class="control-label fl" for="user_code">商品编码：</label>
 		<div class="fl">
-			<input type="text" class="form-control w106" id="user_code" maxlength=15 name="user_code" placeholder="" value="${standardModel.user_code}" data-validate="require-custom-function" data-validate-function="validateUserCode" {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}/>
+			<input type="text" class="form-control w106" id="user_code" maxlength=15 name="user_code" placeholder="" value="${standardModel.user_code}" data-validate="require-custom-function" data-validate-function="validateUserCode" {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}
+				{{if isGroupBuying }}readonly{{/if}}
+			/>
 			<div class="errorHint"></div>
 		</div>
 	</div>
@@ -35,7 +37,8 @@
 			<input type="text" class="form-control w106" id="weight" name="weight"
                    placeholder="" value="${standardModel.weight}"
                    data-validate="require-float-three"
-                   {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}/>
+                   {{if isUseCustomModel}}data-ignore-validate="true"{{/if}}
+                   {{if isGroupBuying }}readonly{{/if}}/>
 			<div class="errorHint" data-error-hint="请输入正确的重量"></div>
 		</div>
 		<span style="font-size:12px;line-height:24px;font-family:Arial;position:relative; left:10px;">kg</span>

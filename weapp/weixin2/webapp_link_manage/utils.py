@@ -127,6 +127,11 @@ def get_webapp_link_menu_objectes(request):
 				'add_link': '/apps/exsurvey/exsurvey/',
 				'users': ['njtest','ceshi01', 'wzjx001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop'] #这些帐号可以显示用户反馈
 
+			},{
+				'name': '团购',
+				'type': 'group',
+				'add_btn_title': '新建团购',
+				'add_link': '/apps/group/group/'
 			},
 			# {
 			# 	'name': '拼红包',

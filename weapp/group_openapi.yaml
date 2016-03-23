@@ -1,0 +1,39 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.1"
+  title: apiserver面向团购服务接口
+  description: 团购需要的接口,由apiserver提供
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /group_success_action:
+    put:
+      description: 通知apiserver团购成功
+      parameters:
+        - name: order_ids
+          type: list
+          description: 成功的团购活动下的所有订单的id_list
+        - name: status
+          type: str
+          description: 
+            团购活动的状态('success','failure')
+        - $ref: '#/definitions/group_id'
+  /cancel_group_buy:
+    put:
+      description: 用户取消团购，取消之前生成的待支付订单
+      parameters:
+        - name: order_id
+          description: 订单id
+          type: str
+
+definitions:
+  group_id:
+    name: group_id
+    description: 团购活动id，来自团购活动页点击参团跳转到编辑订单页提供
+    type: string

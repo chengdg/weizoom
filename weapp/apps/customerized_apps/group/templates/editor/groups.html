@@ -1,0 +1,785 @@
+{% extends "content_base_v2.html" %}
+
+{% block css %}
+<style>
+	table.xui-groups td .xui-group_name{
+		text-align: left;
+		margin-left: 22px;
+		color:#333333;
+	}
+	table.xui-groups td .xui-productImgBox{
+		width: 70px;
+		height: 70px;
+		display: inline-block;
+	}
+	table.xui-groups td .xui-productImgBox img{
+		width: 60px;
+		height: 60px;
+		margin: 5px;
+	}
+	table.xui-groups td .xui-productNameBox{
+		width: 140px;
+		display: inline-block;
+	}
+	table.xui-groups tr.xui-product_itle{
+		background:#F2F0F1 !important;
+	}
+	table.xui-groups tr.xui-product_record{
+		background:#FFFFFF !important;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+	}
+	table.xui-groups tr td .xui-time_start,table tr td .xui-time_end{
+		width: 85px;
+		display: inline-block;
+	}
+	table.xui-groups tr td .xui-group_action .xui-i-action{
+		display: inline-block;
+		text-align: center;
+	}
+	.xui-template-modal-body label{
+		display: block;
+		font-size: 18px;
+		font-weight: bold;
+	}
+	.xui-template-modal-body label select{
+		width: 50%;
+		font-weight: 100;
+		height: 35px;
+		border: 1px solid rgba(128, 128, 128, 0.31);
+		border-radius: 5px;
+	}
+	.xui-template-modal-body input{
+		height: 35px;
+		border: 1px solid rgba(128, 128, 128, 0.31);
+		border-radius: 5px;
+	}
+	.xui-template-modal-body .xui-i-setting{
+		border: 1px solid #EAEEF7;
+		border-radius: 5px;
+		padding: 10px;
+		margin-bottom: 15px;
+		margin-left: -15px;
+	}
+
+	.xui-template-modal-body .xui-i-preview{
+		margin: 0;
+	}
+
+</style>
+{% endblock %}
+
+{% block content-panel %}
+<div class="xui-GroupsAppPage xui-appPage-commonStyle">
+	<div class="relative">
+		<ul class="breadcrumb">
+			<li>您当前所在位置</li>
+			<li><a href="/apps/">百宝箱</a></li>
+			<li class="active">团购</li>
+		</ul>
+	</div>
+
+	<div class="xui-filterPanel mb15">
+		<div class="xui-form disT">
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">商品名称：</label>
+					<input type="text" class="form-control" id="product_name" name="product_name" value="" />
+				</div>
+			</div>
+
+			<div class="xui-col disTc">
+				<div class="xui-i-item ml20">
+					<label>状态：</label>
+					<select class="" id="status" name="status">
+						<option value="-1">全部</option>
+						<option value="0">未开启</option>
+						<option value="1">进行中</option>
+						<option value="2">已结束</option>
+					</select>
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label>起止时间
+					：</label>
+					<input
+						type="text"
+						class="form-control xui-datePicker"
+						id="start_time"
+						name="start_time"
+						style=""
+						value=""
+						readonly="readonly"
+						data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+						data-format="yy-mm-dd HH:MM" />
+					至
+					<input
+						type="text"
+						class="form-control xui-datePicker"
+						id="end_time"
+						name="end_time"
+						value=""
+						readonly="readonly"
+						data-enable-select-time="true"
+						data-validate="require-notempty"
+						data-ui-role="date-picker"
+						data-format="yy-mm-dd HH:MM"
+						data-min-el="#start_time"/>
+				</div>
+			</div>
+			<div class="xui-col disTc">
+				<div class="xui-i-item">
+					<label class="">团购名称：</label>
+					<input type="text" class="form-control" id="group_name" name="group_name" value="" />
+				</div>
+			</div>
+		</div>
+		<div class="xui-btn-group">
+			<a class="btn btn-primary mr40 xa-search xui-fontBold" href="javascript:void(0);">查&nbsp;&nbsp;&nbsp;询</a>
+			<a class="btn btn-default xa-reset xui-fontBold" href="javascript:void(0);">重&nbsp;&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+
+	<div class="panel panel-default xui-tableBox">
+		<div class="panel-header clearfix">
+            <a href="javascript:void(0)" class="btn btn-success fr xa-begin">
+				<span class="xui-plusBoldermr5 xui-plus-sign pr" style="">+</span> 新建团购
+			</a>
+			<button type="button" class="btn btn-success fr mr10 xa-template-setting">配置模板消息</button>
+		</div>
+
+		<div
+			class="panel-body panel-table p0"
+			data-ui-role="advanced-table"
+			data-app="apps/group"
+			data-resource="groups"
+			data-template-id="#table"
+			data-enable-paginator="true"
+			data-enable-sort="false"
+			data-selectable="false"
+			data-disable-header-select="true"
+			data-item-count-per-page="10"
+		>
+		</div>
+	</div>
+</div>
+
+<!-- 模板消息配置弹窗 -->
+<div class="modal fade">
+	<div class="modal-dialog modal-lg" style="width: 600px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+				<h3 class="modal-title">模板消息配置</h3>
+			</div>
+
+			<div class="modal-body ml15 xa-template-modal-body xui-template-modal-body">
+				<p>正在获取模板消息...</p>
+			</div>
+
+			<div class="modal-footer modal-footerBg">
+				<button class="btn btn-primary xa-update-btn" aria-hidden="true" style="margin-right: 0;">更新模板</button>
+				<button class="btn btn-success xa-submit-btn" aria-hidden="true">确&nbsp;&nbsp;定</button>
+				<button class="btn btn-default" aria-hidden="true" data-dismiss="modal" >关&nbsp;&nbsp;闭</button>
+				<div style="display: none">
+					<button class="btn btn-default xa-test" aria-hidden="true" >测&nbsp;&nbsp;试</button>
+					<input type="text" id="test_input" style="line-height: 0; height: 30px;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 微信证书提示 -->
+<div class="modal fade" id="wx-validate-cert-dialog">
+	<div class="modal-dialog modal-lg" style="width: 300px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+				<h3 class="modal-title">团购提示</h3>
+			</div>
+
+			<div class="modal-body ml15 xa-validateCert-modal-body xui-template-modal-body">
+				 <p>你还没有录入证书，请先录入自动退款证书，再使用团购功能。</p>
+			</div>
+
+			<div class="modal-footer">
+				<a href="/mall2/weixin_certificate">
+				<button class="btn btn-primary " aria-hidden="true" >去录入</button>
+				</a>
+				<button class="btn btn-default" aria-hidden="true" data-dismiss="modal" style="border: 1px solid #b3b3b3;">取&nbsp;&nbsp;消</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% verbatim %}
+<script id="table" type="text/x-jquery-tmpl">
+	{{if items!='' }}
+	<table class="table table-bordered xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg mb10 xui-groups">
+		<thead>
+			<tr>
+				<th>商品信息</th>
+				<th>开团人数</th>
+				<th>购买人数</th>
+				<th>浏览人数</th>
+				<th>状态</th>
+				<th>起止时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		  {{each(i, item) items}}
+			<tr class="xui-product_itle" data-id="${item.id}">
+				<td colspan="7">
+					<div title="${item.name}" class="xui-group_name">
+						团购名称：<a
+							class="xui-ellipsisFox"
+							limit="15"
+							href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}">
+								{{html item.name}}
+						</a>
+					</div>
+				</td>
+			</tr>
+			<tr data-id="${item.id}" class="xui-product_record">
+				<td
+					class="tl pl25"
+					style="width:250px; height:60px;"
+					title="${item.name}"
+				>
+					<div class="xui-productImgBox">
+						<img class="xui-productImg" src="${item.product_img}">
+					</div>
+					<div class="xui-productNameBox">
+					   <a
+						class="xui-ellipsisFox"
+						limit="15"
+						href="/mall2/product/?id=${item.product_id}">
+							${item.product_name}
+						</a>
+					</div>
+				</td>
+				<td>
+					${item.group_item_count}
+				</td>
+				<td>
+					${item.group_customer_count}
+				</td>
+				<td>
+					${item.group_visitor_count}
+				</td>
+				<td>
+					${item.status}
+				</td>
+				<td >
+				 <div class="xui-time_start">
+				 	<div class="xui-i-time_date">${item.start_time_date}</div>
+				 	<div class="xui-i-time_time">${item.start_time_time}</div>
+				 </div>
+				 <div class="xui-time_end">
+				 	<div class="xui-i-time_date">${item.end_time_date}</div>
+				 	<div class="xui-i-time_time">${item.end_time_time}</div>
+				 </div>
+
+				</td>
+				<td>
+					<div class="xui-group_detail">
+						<a href="/apps/group/group_participances/?id=${item.id}" class="ml5">参团详情</a>
+					</div>
+					<div class="xui-group_action">
+						{{if (item.handle_status === 0)}}
+							{{if (item.status === '进行中')}}
+							<div class="xui-i-action">
+								<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+							</div>
+							{{/if}}
+							{{if (item.status === '未开启')}}
+							<div class="xui-i-action">
+								<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}" class="xa-edit" data-id=${item.id}>编辑</a>
+							</div>
+							{{/if}}
+							{{if (item.status === '未开启')}}
+							<div class="xui-i-action">
+								<a href="javascript:void(0)" class="xa-start" data-id=${item.id}>开启</a>
+							</div>
+							{{/if}}
+
+							{{if (item.status === '已结束')}}
+							<div class="xui-i-action">
+								<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+							</div>
+							{{/if}}
+						{{else}}
+							{{if (item.status === '进行中')}}
+								<div class="xui-i-action">
+									<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+								</div>
+								{{/if}}
+								{{if (item.status === '未开启')}}
+								<div class="xui-i-action">
+									<a href="/apps/group/group/?id=${item.id}&related_page_id=${item.related_page_id}" class="xa-edit" data-id=${item.id}>编辑</a>
+								</div>
+								{{/if}}
+								{{if (item.status === '未开启')}}
+								<div class="xui-i-action">
+									<a href="javascript:void(0)" class="xa-close" data-id=${item.id}>结束</a>
+								</div>
+								{{/if}}
+
+								{{if (item.status === '已结束')}}
+								<div class="xui-i-action">
+									<a href="javascript:void(0)" class="xa-delete" data-id=${item.id}>删除</a>
+								</div>
+								{{/if}}
+						{{/if}}
+
+
+
+
+					</div>
+					<!-- <a href="javascript:void(0);" class="ml5 xa-preview" data-id=${item.id}>预览</a> -->
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+		<div class="cb"></div>
+	</table>
+	{{else}}
+		<div class="xui-emptyBox m10">
+			<img src="/static_v2/img/editor/empty.png">
+			<span class="ml20">您还没有相关数据！</span>
+		</div>
+	{{/if}}
+	<br>
+</script>
+
+<!-- 团购模板消息弹窗 -->
+<script id="group-template-setting-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+	{{#if hasData }}
+		<div class="xui-i-setting xui-i-success-setting xa-success-setting">
+			<label>选择团购成功的消息模板:
+				<select class="form-control xa-template-selector" style="width: 50%">
+					<option value="" {{#ifequal success.selected_id ""}}selected{{/ifequal}}>不发送模板消息</option>
+					{{#each templates}}
+					{{#ifCond template_title "==" "拼团成功通知"}}
+						<option value="{{ template_id }}" {{#ifequal ../../success.selected_id template_id}}selected{{/ifequal}}>{{ template_title }}</option>
+					{{/ifCond}}
+					{{/each}}
+				</select>
+			</label>
+			<label>发货提醒：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../success.first }}"></label>
+			<div class="xui-i-setting xui-i-preview xa-success-preview {{#ifequal ../success.selected_id ""}}hidden{{/ifequal}}">
+				<label>预览</label>
+				<p>您参团的商品[xxx]已组团成功,<span class="xa-success-need-change-first">{{ ../success.first }}</span></p>
+				<p>商品价格: ￥158</p>
+				<p>订单号: tn12345902314</p>
+				<p>点击查看团购活动详情</p>
+			</div>
+		</div>
+		<div class="xui-i-setting xui-i-fail-setting xa-fail-setting">
+			<label>选择团购失败的消息模板:
+				<select class="form-control xa-template-selector" style="width: 50%">
+					<option value="" {{#ifequal fail.selected_id ""}}selected{{/ifequal}}>不发送模板消息</option>
+					{{#each templates}}
+					{{#ifCond template_title "==" "拼团退款提醒"}}
+						<option value="{{ template_id }}" {{#ifequal ../../fail.selected_id template_id}}selected{{/ifequal}}>{{ template_title }}</option>
+					{{/ifCond}}
+					{{/each}}
+				</select>
+			</label>
+			<label>问候语：<input type="text" placeholder="25字以内" maxlength="50" class="form-control xa-template-first" value="{{ ../fail.first }}"></label>
+			<div class="xui-i-setting xui-i-preview xa-success-preview {{#ifequal ../fail.selected_id ""}}hidden{{/ifequal}}">
+				<label>预览</label>
+				<p class="xa-fail-need-change-first">{{ ../fail.first }}</p>
+				<p>单号: tn12345902314</p>
+				<p>商品: xxx</p>
+				<p>退款: [￥158] 将在5~7个工作日内完成退款</p>
+				<p>点击查看团购活动详情</p>
+			</div>
+		</div>
+
+	{{else}}
+		<p>获取模板信息失败</p>
+	{{/if}}
+</script>
+
+
+<!-- 微信证书提示模板 -->
+<script id="group-validateCert-setting-dialog-tmpl-src" type="text/x-handlebar-tmpl">
+</script>
+
+
+
+
+{% endverbatim %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
+
+	$('body').delegate('.xa-delete', 'click', function(event) {
+		var $el = $(event.target);
+		var id = $el.data('id');
+		W.requireConfirm({
+			$el: $el,
+			width: 420,
+			height: 55,
+			position: 'right-middle',
+			isTitle: false,
+			msg: '确定删除？',
+			confirm: function() {
+				W.getApi().call({
+					app: 'apps/group',
+					resource: 'group',
+					method: 'delete',
+					args: {
+						id: id
+					},
+					success: function(data) {
+						W.showHint('success', '删除数据成功！');
+						table.reload();
+					},
+					error: function(response) {
+						W.showHint('error', '删除数据失败，请稍后再试！');
+					}
+				});
+			}
+		});
+	});
+
+	$('body').delegate('.xa-start', 'click', function(event) {
+		var $el = $(event.target);
+		var id = $el.data('id');
+		W.getApi().call({
+			app: 'apps/group',
+			resource: 'group_status',
+			method: 'post',
+			args: {
+				id: id,
+				target: 'running' //进行中
+			},
+			success: function(data) {
+				W.showHint('success', '开启活动成功！');
+				table.reload();
+			},
+			error: function(response) {
+				W.showHint('error', '更新状态失败，请稍后再试！');
+			}
+		});
+	});
+
+
+	//初始化微信证书验证dialog
+	ensureNS('W.dialog.group');
+	W.dialog.group.validateCertDialog = W.dialog.Dialog.extend({
+		getTemplate: function(data) {
+			var validateCert = Handlebars.compile($('#group-validateCert-setting-dialog-tmpl-src').html());
+			return validateCert(data);
+		},
+		initialize: function(options) {
+			this.$el = options.el;
+			this.$dialog = this.$el.parents('.modal').eq(0);
+			W.createWidgets(this.$dialog);
+		},
+		show: function(){
+			this.$dialog.modal('show');
+		},
+		close: function(){
+			this.$dialog.modal('hide');
+		},
+		render: function(){
+			var $node = $(this.getTemplate(data));
+			this.$el.html($node);
+		},
+		onSelectTemplate: function(){
+			var $this = $(this);
+			var v = $this.val();
+			var $pre = $this.parents('.xui-i-setting').eq(0).find('.xui-i-preview');
+			if(v == ""){
+				$pre.addClass('hidden');
+			}else{
+				$pre.removeClass('hidden');
+			}
+		},
+		onClickSubmit: function(){
+
+		},
+		getData: function(args){
+			var that = this;
+		}
+	});
+	//模板消息弹窗
+	$('.xa-validateCert-setting').on('click', function(){
+
+	});
+
+	$('.xa-validateCert-Cancel').click(function(event) {
+		$('#wx-validate-cert-dialog').addClass('xui-hide');
+	});
+
+	$('body').delegate('.xa-begin', 'click', function(event) {
+		var $el = $(event.target);
+		W.getApi().call({
+			app: 'apps/group',
+			resource: 'group',
+			method: 'get',
+			success: function(data) {
+				if(data['flag'] == true){
+
+					window.location.href="/apps/group/group/"
+				}else{
+					W.dialog.showDialog('W.dialog.group.validateCertDialog',{
+						el: $('.xa-validateCert-modal-body')
+					});
+				}
+			},
+			error: function(response) {
+				W.showHint('error', '新建团购失败！');
+			}
+		});
+	});
+
+	$('body').delegate('.xa-close', 'click', function(event) {
+		var $el = $(event.target);
+		var id = $el.data('id');
+		W.getApi().call({
+			app: 'apps/group',
+			resource: 'group_status',
+			method: 'post',
+			args: {
+				id: id,
+				target: 'stoped' //结束
+			},
+			success: function(data) {
+				W.showHint('success', '关闭活动成功！');
+				table.reload();
+			},
+			error: function(response) {
+				W.showHint('error', '更新状态失败，请稍后再试！');
+			}
+		});
+	});
+
+	$('body').delegate('.xa-preview', 'click', function(event) {
+		var $el = $(event.target);
+		var id = $el.data('id');
+		var previewUrl = '/m/apps/group/m_group/?woid='+W.uid+'&id='+id;
+		window.open('/termite2/app_preview/?preview_url='+encodeURIComponent(previewUrl), '_tab');
+	});
+
+	$('.xa-search').click(function(event) {
+		var group_name = $.trim($('[name="group_name"]').val());
+		var product_name = $.trim($('[name="product_name"]').val());
+		var status = $.trim($('[name="status"]').val());
+		var startTime = $.trim($('[name="start_time"]').val());
+		var endTime = $.trim($('[name="end_time"]').val());
+		table.reload({
+			group_name:group_name,
+			product_name: product_name,
+			status: status,
+			start_time: startTime,
+			end_time: endTime
+		}, {
+			emptyDataHint: '没有符合条件的数据'
+		});
+	});
+
+	$('.xa-reset').click(function(event) {
+		$('[name="group_name"]').val('');
+		$('[name="product_name"]').val('');
+		$('[name="status"]').val('-1');
+		$('[name="start_time"]').val('');
+		$('[name="end_time"]').val('');
+	});
+
+	//初始化模板消息配置dialog
+	var initData = '{{ template_data|safe }}';
+	var APPS_TYPE = "group";
+	ensureNS('W.dialog.group');
+	W.dialog.group.templateDialog = W.dialog.Dialog.extend({
+		getTemplate: function(data) {
+			var template = Handlebars.compile($('#group-template-setting-dialog-tmpl-src').html());
+			return template(data);
+		},
+		initialize: function(options) {
+			this.$el = options.el;
+			this.$dialog = this.$el.parents('.modal').eq(0);
+			W.createWidgets(this.$dialog);
+			this.bindListeners();
+			if(options.initData){
+				this.data = options.initData;
+				this.render();
+			}else{
+				this.getData();
+			}
+		},
+		bindListeners: function(){
+			this.$dialog.delegate('.xa-submit-btn', 'click', this.onClickSubmit.bind(this));
+			this.$dialog.delegate('.xa-update-btn', 'click', this.onClickUpdate.bind(this));
+
+			this.$dialog.delegate('.xa-template-selector', 'click', this.onSelectTemplate);
+			this.$dialog.delegate('.xa-success-setting .xa-template-first', 'keyup', this.onChangeSuccessFirst);
+			this.$dialog.delegate('.xa-fail-setting .xa-template-first', 'keyup', this.onChangeFailFirst);
+		},
+		show: function(){
+			this.$dialog.modal('show');
+		},
+		close: function(){
+			this.$dialog.modal('hide');
+		},
+		render: function(){
+			var data = $.extend({
+				"hasData": 0
+			}, this.data);
+			if(data.control_data){
+				var control = data.control_data;
+				var success_data = control.success;
+				var fail_data = control.fail;
+				var noop_data = {
+					"selected_id": "",
+					"first": "",
+					"remark": ""
+				};
+				if(!$.isEmptyObject(success_data)){
+					data['success'] = {
+						"selected_id": success_data.template_id,
+						"first": success_data.first
+					};
+				}else{
+					data['success'] = noop_data;
+				}
+
+				if(!$.isEmptyObject(fail_data)){
+					data['fail'] = {
+						"selected_id": fail_data.template_id,
+						"first": fail_data.first
+					};
+				}else{
+					data['fail'] = noop_data;
+				}
+
+			}
+			var $node = $(this.getTemplate(data));
+			this.$el.html($node);
+		},
+		onClickUpdate: function(){
+			this.getData({"action": 1});
+		},
+		onSelectTemplate: function(){
+			var $this = $(this);
+			var v = $this.val();
+			var $pre = $this.parents('.xui-i-setting').eq(0).find('.xui-i-preview');
+			if(v == ""){
+				$pre.addClass('hidden');
+			}else{
+				$pre.removeClass('hidden');
+			}
+		},
+		onChangeSuccessFirst: function(){
+			$('.xa-success-need-change-first').html($(this).val());
+		},
+		onChangeFailFirst: function(){
+			$('.xa-fail-need-change-first').html($(this).val());
+		},
+		_getFormData: function(){
+			var success_template_id = this.$el.find('.xa-success-setting .xa-template-selector').val();
+			var success_first = this.$el.find('.xa-success-setting .xa-template-first').val();
+
+			var fail_template_id = this.$el.find('.xa-fail-setting .xa-template-selector').val();
+			var fail_first = this.$el.find('.xa-fail-setting .xa-template-first').val();
+
+			var serials_arr = [];
+			if(success_template_id != '') serials_arr.push(success_template_id);
+			if(fail_template_id != '') serials_arr.push(fail_template_id);
+
+			return {
+				"apps_type": APPS_TYPE,
+				"template_ids": serials_arr.toString(),
+				"template_settings": JSON.stringify({
+					"success": {
+						"template_id": success_template_id,
+						"first": success_first
+					},
+					"fail": {
+						"template_id": fail_template_id,
+						"first": fail_first
+					}
+				})
+			}
+
+		},
+		onClickSubmit: function(){
+			var that = this;
+			W.getApi().call({
+				app: 'apps',
+				api: 'apps_use_template/save',
+				method: 'post',
+				args: that._getFormData(),
+				success: function(data) {
+					W.showHint('success', "配置成功");
+					that.close();
+				},
+				error: function(resp) {
+					W.showHint('error', resp.errMsg);
+				}
+			});
+		},
+		getData: function(args){
+			var that = this;
+			if(this.data && !args){
+				this.render();
+			}else{
+				args = args || {};
+				W.getApi().call({
+					app: 'apps',
+					api: 'template_message_list/get',
+					method: 'get',
+					args: $.extend(args, {"apps_type": APPS_TYPE}),
+					success: function(data) {
+						that.data = data;
+						that.render();
+					},
+					error: function(resp) {
+						that.data = {};
+						console.log(resp.errMsg);
+					}
+				});
+			}
+		}
+	});
+	//模板消息弹窗
+	$('.xa-template-setting').on('click', function(){
+		W.dialog.showDialog('W.dialog.group.templateDialog',{
+			initData: initData=="" ? false: JSON.parse(initData),
+			el: $('.xa-template-modal-body')
+		});
+	});
+
+});
+//测试发送模板，输入框内格式   71,72,73-success
+$('.xa-test').on('click', function(){
+	W.getApi().call({
+		app: 'apps/group',
+		resource: 'test_group_template',
+		method: 'post',
+		args: {
+			"args": $('#test_input').val()
+		},
+		success: function(data) {
+			console.log(data);
+		},
+		error: function(resp) {
+			console.log(resp);
+		}
+	});
+});
+</script>
+{% endblock %}
+

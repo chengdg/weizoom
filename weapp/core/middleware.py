@@ -20,7 +20,7 @@ from django.template import RequestContext, Context
 #from django.conf import settings
 
 #from utils.url_helper import remove_querystr_filed_from_request_url
-from account.url_util import is_wapi_request
+from account.url_util import is_wapi_request, is_request_for_apiserver
 from account.url_util import get_webappid_from_request, is_request_for_api, is_request_for_webapp, is_request_for_webapp_api, is_request_for_editor, is_pay_request, is_request_for_weixin, is_paynotify_request, is_request_for_pcmall, is_request_for_oauth, is_request_for_temporary_qrcode_image, is_request_for_cloud_housekeeper, is_product_stocks_request, is_varnish_url
 
 from account.models import WEBAPP_TYPE_WEIZOOM_MALL
@@ -683,6 +683,9 @@ class DisablePostInPcBrowserUnderDeployMiddleware(object):
 			return None
 
 		if not is_request_for_webapp(request):
+			return None
+
+		if is_request_for_apiserver(request):
 			return None
 
 		if request.user.is_from_weixin:

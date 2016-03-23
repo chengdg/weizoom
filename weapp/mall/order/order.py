@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import logging
 
 from excel_response import ExcelResponse
 from django.template import RequestContext
@@ -16,9 +17,11 @@ from core import paginator
 from mall.models import *
 from market_tools.tools.channel_qrcode.models import ChannelQrcodeHasMember
 import mall.module_api as mall_api
-from watchdog.utils import watchdog_error
+from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from core.exceptionutil import unicode_full_stack
 from modules.member.models import WebAppUser
+from account.models import UserProfile
+from mall.module_api import update_order_status
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.ORDER_FIRST_NAV
@@ -247,6 +250,8 @@ class OrderFilterParams(resource.Resource):
         else:
             current_status_dict = copy.copy(STATUS2TEXT)
             # del current_status_dict[ORDER_STATUS_REFUNDED]
+            del current_status_dict[ORDER_STATUS_GROUP_REFUNDING]
+            del current_status_dict[ORDER_STATUS_GROUP_REFUNDED]
             status_dict = current_status_dict
 
         for key, value in status_dict.items():
@@ -372,3 +377,51 @@ class ChannelQrcodePayedOrder(resource.Resource):
         }
         return response.get_response()
 
+class GroupOrderRefunded(resource.Resource):
+    app = "mall2"
+    resource = "group_order_refunded"
+
+    def post(request):
+        KEY = "MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg="
+        order_ids = request.POST.getlist('order_ids', [])
+        key = request.POST.get('authkey', '')
+        response = create_response(200)
+        if key == KEY:
+            if not order_ids:
+                response.updated_order_ids = []
+                response.not_update_orders_ids = []
+                return response.get_response()
+
+            try:
+                orders = Order.objects.filter(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_GROUP_REFUNDING
+                )
+                webapp_ids = [order.webapp_id for order in orders]
+                webapp_id2user = dict([(profile.webapp_id, profile.user)] for profile in UserProfile.objects.filter(webapp_id__in=webapp_ids))
+                refunding_order_ids = [order.order_id for order in orders]
+                order_id2order = dict([(order.order_id, order) for order in orders])
+                for order in orders:
+                    update_order_status(webapp_id2user[order.webapp_id], 'return_success', order)
+                    order.status = ORDER_STATUS_GROUP_REFUNDED
+                    order.save()
+                response.updated_order_ids = refunding_order_ids
+                response.not_update_order_ids = [id for id in order_ids if id not in refunding_order_ids]
+
+                for order_id in refunding_order_ids:
+                    order = order_id2order[order_id]
+                    mall_api.record_status_log(order_id, u'系统', ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED)
+                    mall_api.record_operation_log(order_id, u'系统', u"退款完成", order)
+
+            except:
+                logging.info(unicode_full_stack())
+                updated_order_ids = [order.order_id for order in Order.objects.filter(
+                    order_id__in=order_ids,
+                    status=ORDER_STATUS_GROUP_REFUNDED
+                )]
+                response.updated_order_ids = updated_order_ids
+                response.not_update_order_ids = [id for id in order_ids if id not in updated_order_ids]
+        else:
+            response.updated_order_ids = []
+            response.not_update_order_ids = order_ids
+        return response.get_response()

@@ -1,0 +1,78 @@
+<script id="app-group-viewParticipanceDataDialog-dialog-tmpl" type="text/x-handlebar-tmpl">
+    <div class="xui-app_group-Dialog modal fade">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><span class="xui-closeColor" aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title" >成员详情</h3>
+        </div>
+        <div class="modal-body" style="min-height: 300px; overflow: auto;">
+            <div
+                    data-ui-role="advanced-table"
+                    data-app="apps/group"
+                    data-resource="group_participances_dialog"
+                    data-args=''
+                    data-template-id="#app-group-viewMembers-tmpl"
+                    data-enable-paginator="true"
+                    data-enable-sort="false"
+                    data-item-count-per-page="5"
+                    data-auto-load="false"
+                    class="mt10 mb20"
+                ></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary xa-submit-dialog">确认</button>
+        </div>
+    </div>
+    </div>
+    </div>
+</script>
+
+
+<script id="app-group-viewMembers-tmpl" type="text/x-handlebar-tmpl">
+<table class="table table-bordered xb-stripedTable xa-productTable xui-i-group_members">
+    <thead style="background:#c8d2e5;">
+        <tr>
+            <th >会员</th>
+            <th >消费金额</th>
+            <th >积分</th>
+            <th>来源</th>
+            <th>入团时间</th>
+        </tr>
+    </thead>
+    <tbody>
+      {{each(i, item) items}}
+        <tr data-id="${item.id}">
+            <td style="width: 235px;">
+                <div class="xui-memberImgBox" >
+                    <img class="xui-memberImg" src="${item.member_icon}">
+                    {{if (item.member_status === '已取消')}}
+                    <div class="xui-i-m_status">已取消</div>
+                    {{/if}}
+                </div>
+                <div class="xui-i-memberInfo">
+                    <div class="xui-memberNameBox">
+                        {{html item.name}}
+                    </div>
+                    <div class="xui-memberGradeBox">
+                        ${item.member_grade}
+                    </div>
+                </div>
+            </td>
+            <td>
+                ${item.money}
+            </td>
+            <td>
+                ${item.integral}
+            </td>
+            <td>
+                ${item.source}
+            </td>
+            <td style="width: 200px;">
+                ${item.created_at}
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+</script>

@@ -49,7 +49,7 @@ def parse_json_str(json_str):
 @register.filter(name='to_json')
 def to_json(obj):
 	return json.dumps(obj)
-	
+
 @register.filter(name='get_design_page')
 def get_design_page(request, project):
 	if 'viper' == project.type:
@@ -72,7 +72,7 @@ def get_workbench_actions(request, project):
 		return ['refresh', 'preview']
 	elif 'weapp' == project.type:
 		return ['refresh', 'preview', 'screenshot']
-		
+
 
 @register.filter(name='format_target')
 def format_target(value, project_id=None):
@@ -375,7 +375,7 @@ def get_related_radio_items(component, request):
 		item = {'model':model, 'parent_component':component}
 		items.append(item)
 	return items
-	
+
 
 @register.filter(name='is_radio_checked')
 def is_radio_checked(record, radio_component):
@@ -418,7 +418,7 @@ def format_input_in_radio_text(text, component):
 				items[i] = new_item
 			else:
 				pass
-	
+
 		return ''.join(items)
 	else:
 		return text
@@ -443,7 +443,7 @@ def format_input_from_text(text, component):
 			items[i] = new_item
 		else:
 			pass
-	
+
 	return ''.join(items)
 
 
@@ -464,7 +464,7 @@ def render_html(component, request):
 	print request.in_design_mode
 	html = component['model']['html']
 	data = component.get('datasources', {})
-	
+
 	if '{{' in html or '{%' in html:
 		context = {
 			'in_design_mode': request.in_design_mode,
@@ -606,10 +606,10 @@ def get_specific_products_by_ids(component):
 		product_id = data['meta']['id']
 		sub_component['product_id'] = product_id
 		ids.append(product_id)
-	
+
 	id2product = dict([(p.id, p) for p in mall_api.get_products_by_ids(ids)])
 	return id2product
-	
+
 
 @register.filter(name='get_component_product')
 def get_component_product(component, owner_id):
@@ -624,7 +624,7 @@ def get_component_product(component, owner_id):
 		component['product_id'] = product_id
 
 	# product = mall_api.get_product_by_id(product_id)
-	
+
 		product = mall_api.get_product_detail(owner_id, product_id)
 		Product.fill_display_price([product])
 
@@ -661,7 +661,7 @@ def get_table_columns(table_component):
 @register.filter(name='dict2items')
 def dict2items(dict_obj):
 	return dict_obj.items()
-	
+
 
 @register.filter(name='format_user_input_controls_data')
 def format_user_input_controls_data(component):
@@ -724,7 +724,7 @@ def load_termite_components(components, wrap_with_verbatim=False):
 	from utils import component_template_util
 	components_dir = '%s/../termite/static/termite_js/app/component/%s' % (settings.PROJECT_HOME, component_category)
 	handlebar_template = component_template_util.generate_handlebar_template(components_dir)
-	
+
 	if wrap_with_verbatim:
 		items.append(u'\n\n{% verbatim %}')
 	items.append(u'<script type="text/x-handlebar-template" id="componentTemplates" data-component-template="true">')
@@ -734,3 +734,10 @@ def load_termite_components(components, wrap_with_verbatim=False):
 		items.append(u'{% endverbatim %}')
 
 	return u'\n'.join(items).encode('utf-8')
+
+
+@register.filter(name='space_split_0')
+def space_split_0(date_str):
+	if date_str:
+		return date_str.split(' ')[0]
+	return ""

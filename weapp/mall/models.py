@@ -1345,6 +1345,8 @@ ORDER_STATUS_PAYED_SHIPED = 4  # 已发货：已付款，已发货
 ORDER_STATUS_SUCCESSED = 5  # 已完成：自下单10日后自动置为已完成状态
 ORDER_STATUS_REFUNDING = 6  # 退款中
 ORDER_STATUS_REFUNDED = 7  # 退款完成(回退销量)
+ORDER_STATUS_GROUP_REFUNDING = 8 #团购退款（没有退款完成按钮）
+ORDER_STATUS_GROUP_REFUNDED = 9 #团购退款完成
 
 ORDER_BILL_TYPE_NONE = 0  # 无发票
 ORDER_BILL_TYPE_PERSONAL = 1  # 个人发票
@@ -1358,16 +1360,19 @@ STATUS2TEXT = {
 	ORDER_STATUS_SUCCESSED: u'已完成',
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_GROUP_REFUNDING: u'退款中',
+	ORDER_STATUS_GROUP_REFUNDED: u'退款成功',
 }
 
 AUDIT_STATUS2TEXT = {
 	ORDER_STATUS_REFUNDING: u'退款中',
 	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_GROUP_REFUNDING: u'团购退款',
 }
 
 REFUND_STATUS2TEXT = {
 	ORDER_STATUS_REFUNDING: u'退款中',
-	ORDER_STATUS_REFUNDED: u'退款成功',
+	ORDER_STATUS_REFUNDED: u'退款成功'
 }
 
 ORDERSTATUS2TEXT = STATUS2TEXT
@@ -1691,8 +1696,32 @@ def belong_to(webapp_id):
 	if webapp_type:
 		return Order.objects.filter(webapp_id=webapp_id, origin_order_id__lte=0)
 	else:
-		return Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list)).exclude(order_id__contains='s')
-
+		orders = Order.objects.filter(Q(webapp_id=webapp_id)|Q(supplier_user_id=user_id, origin_order_id__gt=0,status__in=sync_able_status_list)).exclude(order_id__contains='s')
+        group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+        if group_order_relations.count() > 0:
+            group_order_ids = [r.order_id for r in group_order_relations]
+            not_pay_group_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=group_order_ids,
+                status=ORDER_STATUS_NOT
+                )
+            ]
+            not_ship_group_on_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=[
+                    r.order_id for r in group_order_relations.filter(
+                    group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
+                    ],
+                    status=ORDER_STATUS_PAYED_NOT_SHIP
+                )]
+            cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=[
+                    r.order_id for r in group_order_relations.filter(
+                    group_status=GROUP_STATUS_failure)
+                    ],
+                    status=ORDER_STATUS_CANCEL,
+                    pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
+                )]
+            orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids+cancel_group_order_ids)
+        return orders
 
 
 	# 微众商城代码
@@ -2534,6 +2563,29 @@ class Supplier(models.Model):
 		verbose_name_plural = "供货商操作"
 		db_table = "mall_supplier"
 
+
+
+# 订单与团购活动的关联
+GROUP_STATUS_ON = 0  # 团购进行中
+GROUP_STATUS_OK = 1  # 团购成功
+GROUP_STATUS_failure = 2  # 团购失败
+
+
+class OrderHasGroup(models.Model):
+	"""
+	<order, group>关联
+	"""
+	order_id = models.CharField(max_length=100)  # 订单号(order中的order_id
+	group_id = models.CharField(max_length=100)
+	activity_id = models.CharField(max_length=100)
+	group_status = models.IntegerField(default=GROUP_STATUS_ON)
+	webapp_user_id = models.IntegerField(default=0)
+	created_at = models.DateTimeField(auto_now_add=True) #创建时间
+	webapp_id = models.CharField(max_length=20, verbose_name='店铺ID')  # webapp,订单成交的店铺id
+
+	class Meta(object):
+		db_table = 'mall_order_has_group'
+
 class WeizoomHasMallProductRelation(models.Model):
 	owner = models.ForeignKey(User) # 微众系列的商户
 	mall_id = models.IntegerField() # 供货商的owner_id
@@ -2550,3 +2602,18 @@ class WeizoomHasMallProductRelation(models.Model):
 		verbose_name = "微众系列同步其他商户商品的关系记录表"
 		verbose_name_plural = "微众系列同步其他商户商品的关系"
 		db_table = "mall_weizoom_has_mall_product_relation"
+
+
+class WxCertSettings(models.Model):
+	"""
+		存储微信每个帐号的证书文件地址
+	"""
+	owner = models.ForeignKey(User) #活动所有者
+	cert_path = models.CharField(default="", max_length=1024) #证书
+	key_path = models.CharField(default="", max_length=1024) #证书key
+
+	class Meta(object):
+		verbose_name = "微信证书文件地址"
+		verbose_name_plural = "微信证书文件地址"
+		db_table = "mall_weixin_cert"
+

@@ -56,6 +56,7 @@ W.dialog.termite.SelectQrcodeDialog = W.dialog.Dialog.extend({
 
         this.$('tbody tr').each(function() {
             var $tr = $(this);
+                console.log($tr);
             if ($tr.find('.xa-selectQrcode').is(':checked')) {
                 var qrcodeId = $tr.data('id');
                 data.push(_this.table.getDataItem(qrcodeId).toJSON());

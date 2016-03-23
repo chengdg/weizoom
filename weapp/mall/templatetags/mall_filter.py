@@ -100,3 +100,10 @@ def absolute(value):
 # def order_not_ship_count(count, request):
 # 	return len(belong_to(request.manager.get_profile().webapp_id).filter(status=ORDER_STATUS_PAYED_NOT_SHIP))
 
+@register.filter(name='is_show_button_by_group')
+def is_show_button_by_group(action_name):
+	not_show_actions = ['cancel', 'return_pay', 'return_success']
+	if action_name in not_show_actions:
+		return True
+	else:
+		return False

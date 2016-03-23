@@ -38,7 +38,7 @@ W.workbench.PropertyView = Backbone.View.extend({
         'click .xa-removeImageButton': 'onClickRemoveDynamicComponentButton',
         'click .xa-protocol-deleteData':'onClickDeleteData',
         'mouseover .propertyGroup_property_dynamicControlField_control': 'onMouseoverField',
-        'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',    
+        'mouseout .propertyGroup_property_dynamicControlField_control': 'onMouseoutField',
 
         'click .xa-colorPickerTrigger': 'onClickColorPickerTrigger',
         'click .xa-outerFunctionTrigger': 'onClickOuterFunctionTrigger',
@@ -49,10 +49,14 @@ W.workbench.PropertyView = Backbone.View.extend({
 
         'click .xa-deleteQrcodeButton': 'onClickDeleteQrcode',
         'mouseover .xa-qrcodeImgBox>img': 'onMouseoverQrcode',
-
         //拼红包选择类型
-        'click .xa-red-packet-selector': 'onClickRedPacketSelector'
-	},
+        'click .xa-red-packet-selector': 'onClickRedPacketSelector',
+
+        //团购
+        'click .propertyGroup_property_productDialogSelectField .btn': 'initProductDialogButton',
+        'click .xa-deleteProductButton': 'onClickDeleteProduct',
+        'mouseover .xa-productImgBox>img': 'onMouseoverProduct'
+    },
 
     getTemplate: function() {
         $('#workbench-property-view-tmpl-src').template('workbench-property-view-tmpl');
@@ -621,6 +625,7 @@ W.workbench.PropertyView = Backbone.View.extend({
                                 this.onClickAddDynamicComponentButton(event, data);
                             }, this);
                         } else {
+
                             var $input = $button.parent().find('input[type="hidden"]');
                             var data = data;
                             if (typeof(data) == 'object') {
@@ -863,6 +868,43 @@ W.workbench.PropertyView = Backbone.View.extend({
             _this.getTargetComponent($el).model.set(attr, prize);
         });
     },
+
+    initProductDialogButton: function(event) {
+        var $button = $(event.currentTarget);
+        var dialog = $button.attr('data-target-dialog');
+
+        var parameter = null;
+        var parameterStr = $button.attr('data-dialog-parameter');
+
+        if (parameterStr) {
+            parameter = W.data.getData(parameterStr, this.component, $button);
+        }
+
+        var options = {
+            success: _.bind(function(data) {
+                    var $input_name = $button.parent().find('input[data-type="product_name"]');
+                    var product_name = data[0].name;
+                    console.log(product_name);
+                    $input_name.val(product_name).trigger('input');
+
+                    var $input = $button.parent().find('input[data-type="product"]');
+                    var data = data;
+                    if (typeof(data) == 'object') {
+                                data = JSON.stringify(data);
+                        }
+                    $input.val(data).trigger('input');
+
+                    }, this),
+            component: this.component,
+            $button: $button
+        };
+
+        if (parameter) {
+            _.extend(options, parameter);
+        }
+
+        W.dialog.showDialog(dialog, options);
+    },
     initPrizeKeywordPane: function($el){
         W.createWidgets($el);
 
@@ -1026,11 +1068,28 @@ W.workbench.PropertyView = Backbone.View.extend({
          W.Broadcaster.trigger("qrcode:deleteQrcode", {});
     },
 
+        onClickDeleteProduct: function(event){
+        var $el = $(event.currentTarget);
+        $el.siblings('.xa-dynamicComponentControlImgBox').addClass('xui-hide').find('img').attr('src', '');
+        $el.siblings('input[data-field="product_selector"]').val('');
+        $el.siblings('.productName').addClass('xui-hide').html('');
+        $el.siblings('.xui-i-triggerButton').text('请选择商品');
+        $el.parent().next().css({
+            'height': '17px',
+            'line-height': '17px'
+        });
+        $el.hide();
+         W.Broadcaster.trigger("product_selector:deleteProduct", {});
+    },
+
     onMouseoverQrcode: function(event){
         var $el = $(event.currentTarget);
         $el.parent().siblings('.deleteQrcode').css('display','block');
     },
-
+    onMouseoverProduct: function(event){
+        var $el = $(event.currentTarget);
+        $el.parent().siblings('.deleteProduct').css('display','block');
+    },
     initMoneyRange: function($el){
         W.createWidgets($el);
         var $moneyRangeInput = $el.find('.xa-moneyRangeInput');
