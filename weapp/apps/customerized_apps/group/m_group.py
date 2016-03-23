@@ -102,9 +102,10 @@ class MGroup(resource.Resource):
 							update_order_status_by_group_status(group_relation_info.id,'failure')
 							#发送拼团失败模板消息
 							try:
+								group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
 								owner_id = record.owner_id
 								product_name = record.product_name
-								miss = int(group_relation_info.group_type)-group_relation_info.grouped_number
+								miss = int(group_relation_info.group_type)-group_details.count()
 								activity_info = {
 									"owner_id": str(owner_id),
 									"record_id": str(record_id),
@@ -115,7 +116,7 @@ class MGroup(resource.Resource):
 									"status" : 'fail',
 									"miss": str(miss)
 								}
-								group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+
 								member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 								send_group_template_message(activity_info, member_info_list)
 							except:
@@ -282,32 +283,6 @@ class MGroup(resource.Resource):
 					'is_deleted_data': True
 				})
 				return render_to_response('group/templates/webapp/m_group.html', c)
-		if activity_status == u'已结束':
-			#活动已结束，所有进行中的小团置为失败
-			all_running_group_relations = app_models.GroupRelations.objects(belong_to=str(record.id),group_status=app_models.GROUP_RUNNING)
-			for group_relation in all_running_group_relations:
-				group_relation.update(group_status=app_models.GROUP_FAILURE)
-				update_order_status_by_group_status(group_relation.id,'failure')
-				#发送拼团失败模板消息
-				try:
-					owner_id = record.owner_id
-					product_name = record.product_name
-					miss = int(group_relation.group_type)-group_relation.grouped_number
-					activity_info = {
-						"owner_id": str(owner_id),
-						"record_id": str(record_id),
-						"group_id": str(group_relation_id),
-						"fid": str(group_relation.member_id),
-						"price": '%.2f' % group_relation.group_price,
-						"product_name": product_name,
-						"status" : 'fail',
-						"miss": str(miss)
-					}
-					group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
-					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
-					send_group_template_message(activity_info, member_info_list)
-				except:
-					print(u'发送拼团成功模板消息失败')
 
 		request.GET._mutable = True
 		request.GET.update({"project_id": project_id})

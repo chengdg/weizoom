@@ -17,6 +17,8 @@ import models as app_models
 import export
 from apps import request_util
 from termite import pagestore as pagestore_manager
+from mall.order.util import update_order_status_by_group_status
+from apps.customerized_apps.group.group_participance import send_group_template_message
 
 class GroupStatus(resource.Resource):
 	app = 'apps/group'
@@ -32,7 +34,8 @@ class GroupStatus(resource.Resource):
 		if target_status == 'stoped':
 			target_status = app_models.STATUS_STOPED
 			now_time = datetime.today().strftime('%Y-%m-%d %H:%M')
-			app_models.Group.objects(id=request.POST['id']).update(set__end_time=now_time)
+			record = app_models.Group.objects(id=request.POST['id'])
+			record.update(set__end_time=now_time)
 			pagestore = pagestore_manager.get_pagestore('mongo')
 			datas = app_models.Group.objects(id=request.POST['id'])
 			for data in datas:
@@ -40,6 +43,35 @@ class GroupStatus(resource.Resource):
 			page = pagestore.get_page(related_page_id, 1)
 			page['component']['components'][0]['model']['end_time'] = now_time
 			pagestore.save_page(related_page_id, 1, page['component'])
+
+			#手动关闭活动之后对于小团的处理：
+			#活动已结束，所有进行中的小团置为失败
+			running_group_relations = app_models.GroupRelations.objects(belong_to=request.POST['id'],group_status=app_models.GROUP_RUNNING)
+			for group_relation in running_group_relations:
+				group_relation.update(group_status=app_models.GROUP_FAILURE)
+				group_relation_id = group_relation.id
+				update_order_status_by_group_status(group_relation_id,'failure')
+				#发送拼团失败模板消息
+				try:
+					group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+					owner_id = record.owner_id
+					product_name = record.product_name
+					miss = int(group_relation.group_type)-group_details.count()
+					activity_info = {
+						"owner_id": str(owner_id),
+						"record_id": str(request.POST['id']),
+						"group_id": str(group_relation_id),
+						"fid": str(group_relation.member_id),
+						"price": '%.2f' % group_relation.group_price,
+						"product_name": product_name,
+						"status" : 'fail',
+						"miss": str(miss)
+					}
+					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+					send_group_template_message(activity_info, member_info_list)
+				except:
+					print(u'发送拼团成功模板消息失败')
+
 		elif target_status == 'running':
 			#说明手动点击开启了
 			groups = app_models.Group.objects(id=request.POST['id'])
