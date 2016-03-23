@@ -88,7 +88,7 @@
 				{% for second_nav in second_navs %}
 					{% for nav in second_nav.navs %}
 						<li class="{% ifequal second_nav_name nav.name %}active{% endifequal %}">
-							<a href="{{nav.url}}" title="{{nav.title}}" name="{{nav.name}}">
+							<a href="{{nav.url}}{% if nav.name == 'orderMoney' %}?token={{token}}{% endif %}" {% if nav.need_token %}target="_blank"{% endif %} title="{{nav.title}}" name="{{nav.name}}">
 								<i class="xui-icon-sideBar xui-sideBar-{{nav.name}}"></i> {{nav.title|safe}}
 								<i class="xui-icon-arrow"></i>
 							</a>
@@ -96,7 +96,7 @@
 						<!-- 三级导航 -->
 						{% if nav.third_navs %}
 							{% for third_nav in nav.third_navs %}
-                                {% if third_nav.name == 'exsurveies'%}
+                                {% if third_nav.name == 'exsurveies' or third_nav.name == 'cardExchange' %}
                                     {% if request.manager.username in third_nav.users %}
                                     <li class="xui-sideBar-third {% ifequal third_nav_name third_nav.name %}active_third{% endifequal %}">
                                         <a href="{{third_nav.url}}" title="{{third_nav.title}}" name="{{third_nav.name}}">

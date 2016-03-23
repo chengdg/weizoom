@@ -25,55 +25,220 @@
 		margin-left: 5%;
 		padding: 20px 0;
 	}
+	.xui-wzcoinConfirm-page .ui-content {
+		/* background: #fff!important; */
+		background-color: #f5f5f5 !important;
+	}
 	.ui-applyBox .xui-btn .ui-btn-text{
 		font-size: 1em;
+	}
+	.xui-main-info{
+		box-sizing: border-box;
+		background-color: #ee3715;
+		overflow: hidden;
+		color: #fff;
+		padding: 10px;
+		padding-top: 20px;
+		font-size: 0.9rem;
+		padding-right: 0 ;
+	}
+	.xui-wzcoinConfirm-page .xui-numTips {
+		 color: #fff;
+		 padding: 0 2px;
+		 border-bottom:none;
+	}
+	.xui-main-info .xui-fl{
+		float: left;
+		width: 48%;
+		border-right: 1px dotted #f3735c;
+		padding-right: 10px;
+	}
+	.xui-main-info .xui-fl div{
+		padding-bottom: 5px;
+		text-align: center;
+	}
+	.xui-main-info .xui-fr{
+		float: right;
+		width: 48%;
+		text-align: center;
+	}
+	.xui-main-info .xui-fl div>a{
+		color: #fff;
+	}
+	.xui-main-info .xui-exit{
+		float:right;
+		color: #f8a899;
+		border:1px solid rgba(255,255,255,.6);
+		margin-top: 10px;
+		padding:0px 5px;
+		border-radius: 5px;
+	}
+	.xui-main-info .xui-fr .xui-textTips{
+		display: block;
+		text-align: center;
+		color: #fff;
+		font-size: 0.9rem;
+	}
+	.xui-main-info .xui-fr>div{
+		text-align: center;
+		color: #fff303;
+		margin: 5px;
+	}
+	.xui-main-info .xui-fr .xui-numTips{
+		font-size: 1.3rem;
+	}
+	.xui-use-detail{
+		margin-top: 15px;
+		background-color: #fff;
+		padding: 10px;
+	}
+	.xui-use-detail .xui-use{
+		line-height:40px;
+		border-bottom: 1px solid #ebebeb;
+		font-size: 1.1rem;
+		color: #333;
+	}
+	.xui-use-detail table{
+		vertical-align: middle;
+		color: #333;
+		width: 100%;
+		font-size: 0.9rem;
+		border-collapse: collapse;
+	}
+	.xui-use-detail table tr {
+		width: 100%;
+	}
+	.xui-use-detail table>thead{
+		line-height: 40px;
+	}
+	.xui-use-detail table tr>td{
+		text-align: center;
+		border-bottom: 1px solid #ebebeb;
+		padding: 8px 0px;
+	}
+	.xui-use-detail table tr>td.xui-order-time,.xui-use-detail table tr>td.xui-order-money{
+		width:25%;
+	}
+	/*.xui-use-detail table tr>td:not(last){*/
+		/*width: 20%;*/
+	/*}*/
+	.xui-wzcoinConfirm-page .ui-content {
+		border-bottom: none;
+	}
+	.xui-use-detail table tr>td.xui-order-info-time{
+		padding-left: 10px;
+		font-size: 0.8rem;
+		color: #999;
+	}
+	.xui-use-detail table tr>td.xui-order-info-name{
+		text-align: center;
+	}
+	.xui-order-info-money{
+		font-weight: 500;
+	}
+	.xui-validDate{
+		display: block;
+		text-align: center;
+		margin-top: 3px;
+	}
+	.xui-cardNum{
+		font-size: 2.0rem;
+	}
+	.xui-money{
+		font-size: 2.0rem!important;
+		color: #fff303!important;
+	}
+	.xui-restrictions{
+		line-height: 40px;
+		background: #e7e7e7;
+		padding-left: 10px;
+	}
+	.xui-fontArial{
+		font-family: "Arial";
 	}
 </style>
 {% endblock %}
 {% block content-panel %}
 <div data-role="page" data-theme="x" class="xui-wzcoinConfirm-page">
-    <div data-role="content" data-theme="x">
-    	<form class="xui-form" method="post" action="" id="editForm">
-				<div class="xui-section-item xui-submitBox">
-					<div class="xui-form-controls">
-						<span class="xui-textTips">您的微众卡余额：<span class="xui-numTips">{{weizoom_card.money}}</span>元</span>
+	<div data-role="content" data-theme="x">
+			<div class="xui-section-item xui-main-info">
+				<div class="xui-fl">
+					<div>微众卡号</div>
+					<div class="xui-numTips xui-cardNum">{{weizoom_card.weizoom_card_id}}</div>	
+					<div>密码:<span class="xui-numTips xui-password xa-password" xui-fontArial>*******</span>&#91;<a href="javascript:void(0)" class="xui-hidden xa-hidden">查看</a>&#93;
 					</div>
-					<div class="xui-form-controls mt">
-						<span class="xui-textTips">您可以兑换：<span class="xui-numTips">{{change_integral}}</span>积分</span>
-					</div>
-					
-
-					{% if is_can_pay %}
-						<div class="mt30 clearfix tc">
-							<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable" id="back">返回</a>
-						</div>
-						<!-- {% if request.user.is_weizoom_mall %}
-						<div class="mt30 clearfix">
-							<a href="#" data-role="button" class="xui-btn xui-btnSubmit fl ua-apply" id="payBtn">兑换积分</a>
-							<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">返回</a>
-						</div>
-						{% else %} -->
-						<!-- {% endif %} -->
-					{% else %}
-					<p style="color:#ae0001" class="mt20">您的微众卡余额不足！</p>
-					<div class="mt30 clearfix">
-						<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btnSubmit fl" id="submitBtn">确认</a>
-						<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-disable fr" id="back">取消</a>
-					</div>
-					{% endif %}
-					
+					<!-- <a href="/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&is_quit=1" class="xui-exit" >退出登陆</a> -->
 				</div>
-		</form>
-	</div>
-	<div class="ui-cover hidden ua-cover">
-		<div class="ui-applyBox ua-applyBox pr tc">
-			<div class="p20">
-				<span class="xui-textTips">恭喜您成功兑换<span class="xui-numTips">{{change_integral}}</span>积分！</span>
-				<div class="tc mt30">
-				<a href="./?module=user_center&model=user_info&action=get&workspace_id=mall&webapp_owner_id={{request.webapp_owner_id}}" data-role="button" class="xui-btn xui-btn-danger" id="submitBtn">确认</a>
+				<div class="xui-fr">
+					<span class="xui-textTips">余额</span>
+					<div>¥<b class="xui-numTips xui-money">{{weizoom_card.money}}</b></div>
+					<span class="xui-validDate">有效期至:<span class="xui-fontArial">{{weizoom_card.expired_time | date:"Y-m-d"}}</span></span>
 				</div>
 			</div>
-		</div>
+			<div class="xui-restrictions">
+				使用条件：
+				{% if valid_restrictions == '-1.00' %}
+				不限制
+				{% else %}
+				满{{valid_restrictions}}元可用
+				{% endif %}
+			</div>
+			<div class="xui-use-detail">
+				<div class="xui-use"><b>使用详情</b></div>
+				<table>
+					<thead>
+					<tr>
+						<td class="xui-order-time">时间</td>
+						<td class="xui-order-money">明细</td>
+						<td class="xui-order-destination">去处/来源</td>
+					</tr>
+					</thead>
+					<tbody>
+					{% for order in card_orders %}
+					<tr>
+						<td class="xui-order-info-time xui-fontArial">
+							{{order.created_at | date:"Y-m-d" }}
+							<br/>{{order.created_at | date:"H:i:s"}}
+						</td>
+						<td class="xui-order-info-money xui-fontArial">
+							{% if order.event_type == '积分兑换' %}
+								<span style="color: #0fb202">
+								+{{order.money}}
+								</span>
+							{% else %}
+								{% if order.money < '0' %}
+									<span style="color: #0fb202">
+										+{{order.money| slice:"1:"}}
+									</span>
+								{% else %}
+									<span style="color: #cf0404">
+										-{{order.money}}
+									</span>
+								{% endif %}
+							{% endif %}
+						</td>
+						<td class="xui-order-info-name">
+							{% if order.event_type == '积分兑换' %}
+							<span>
+							兑换平台
+							</span>
+							{% else %}
+							{% if order.money < '0' %}
+							<span>
+							[退款]{{order.product_name}}
+							</span>
+							{% else %}
+							<span>
+							[商品]{{order.product_name}}
+							</span>
+							{% endif %}
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor%}
+					</tbody>
+				</table>
+			</div>
 	</div>
 </div>
 {% endblock %}
@@ -81,41 +246,17 @@
 {% block js %}
 <script type="text/javascript">
 	$(document).ready(function() {
-		var bodyHeight = window.document.body.clientHeight;
-		var height = bodyHeight * 0.3
-	
-		var $submitBtn = $('#payBtn');
-        $submitBtn.click(function() {
-        	var card_id = "{{weizoom_card.id}}";
-        	W.getApi().call({
-        		app: 'webapp',
-                api: 'project_api/call',
-                method: 'post',
-                args: _.extend({
-                    project_id: W.projectId,
-                    card_id: card_id,
-                    module:'mall',
-                    target_api: 'weizoom_card_to_integral/change',
-                }),
-		        success: function(data) {
-		        	$('.ua-cover').removeClass('hidden');
-					$('.ui-applyBox').css('top',height);
-		        },
-		        error: function(data) {
-		        	var code = parseInt(data['code']);
-			        var msg = '支付失败';
-			        if (code == 500){
-				       	msg = data['data']['msg']
-			        }
-			        $('.ui-page').alert({
-			         	isShow: true,
-			         	info: msg,
-			         	isSlide: true,
-			         	speed: 2000
-			         });
-		        }
-        	})
-        })
+		$(".xa-hidden").click(function(){
+			if($(".xa-hidden")[0].innerHTML=='隐藏'){
+			var reg=/\d/g;
+				$(".xa-hidden")[0].innerHTML='查看';
+			$('.xa-password')[0].innerHTML=$('.xa-password')[0].innerHTML.replace(reg,'*')
+			}else{
+				$(".xa-hidden")[0].innerHTML='隐藏';
+				$('.xa-password')[0].innerHTML='{{weizoom_card.password}}';
+			}
+		})
+
 	});
 </script>
 {% endblock %}

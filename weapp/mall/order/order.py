@@ -45,6 +45,7 @@ class OrderInfo(resource.Resource):
         """
         更新订单状态 取消订单
         """
+        mall_type = request.user_profile.webapp_type
         order_id = request.POST['order_id']
         action = request.POST.get('action', None)
         order_status = request.POST.get('order_status', None)
@@ -56,10 +57,11 @@ class OrderInfo(resource.Resource):
         remark = request.POST.get('remark', None)
         # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
-
         order = Order.objects.get(id=order_id)
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
+            if mall_type and Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:
+                order = Order.objects.get(id=order.origin_order_id)
             flag = util.check_order_status_filter(order,action,mall_type=request.user_profile.webapp_type)
             if not flag:
                 response = create_response(500)
@@ -115,16 +117,9 @@ class OrderInfo(resource.Resource):
 
             if 'remark' in request.POST:
                 remark = remark.strip()
-
-                webapp_id = request.user_profile.webapp_id
-                if webapp_id == order.webapp_id:
-                    if order.remark != remark:
-                        operate_log = operate_log + u' 修改订单备注'
-                        order.remark = remark
-                else:
-                    if order.supplier_remark != remark:
-                        operate_log = operate_log + u' 修改订单备注'
-                        order.supplier_remark = remark
+                if order.remark != remark:
+                    operate_log = operate_log + u' 修改订单备注'
+                    order.remark = remark
 
             if final_price:
                 # 只有价格不相等 以及待支付的时候 才可以进行订单价格的修改
@@ -282,6 +277,7 @@ class OrderFilterParams(resource.Resource):
         # 	type.append({'name': u'贺卡订单', 'value': THANKS_CARD_ORDER})
         response.data = {
             'type': type,
+            'mall_type': mall_type,
             'status': status,
             'pay_interface_type': pay_interface_type,
             'source': source

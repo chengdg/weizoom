@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from market_tools.tools.card_exchange.export import get_card_exchange_link
+
 __author__ = 'liupeiyu'
 
 import json
@@ -180,6 +182,12 @@ def get_webapp_link_menu_objectes(request):
 			'name': '签到',
 			'link': get_sign_webapp_link(request)
 		},
+		'cardExchange': {
+			'id': 13,
+			'name': '微众卡兑换平台',
+			'link': get_card_exchange_link(request),
+			'users': ['jobs', 'njtest', 'ceshi01', 'fulilaile']
+		}
 		# 'feedback': {
 		# 	'id': 12,
 		# 	'name': '用户反馈',

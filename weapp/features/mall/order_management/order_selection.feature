@@ -1,8 +1,11 @@
 # __author__ : "冯雪静"
+# __editor__ : "王丽" 2016-03-08
 Feature:订单筛选
 """
 
 	Jobs能通过管理系统为管理用户订单
+	1 增加“首单”和“非首单”的过滤
+		全部勾选和全部不勾选都是查询的全部订单
 """
 
 Background:
@@ -447,5 +450,300 @@ Scenario:1 选择订单筛选条件
 			"count": 1,
 			"ship_name": "bill",
 			"ship_tel": "13811223344"
+		}]
+		"""
+
+# __editor__ : "王丽" 2016-03-08
+@mall2 @order @allOrder @eugene
+Scenario:2 按照【订单类型】进行筛选
+	#筛选“订单类型”内容为“全部、首单、非首单”
+	#"全部":筛选出所有订单；"首单"：筛选出带有首单标记的订单；"非首单":筛选出没有首单标记的订单
+
+	Given jobs登录系统
+	#全部
+	#全部勾选查询全部订单
+	When jobs根据给定条件查询订单
+		"""
+		{
+			"is_first_order": "true",
+			"is_not_first_order": "true"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no": "00008",
+			"member": "bill",
+			"status": "待支付",
+			"order_time": "2014-10-08 12:00:00",
+			"payment_time":"",
+			"methods_of_payment": "微信支付",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00007",
+			"member": "bill",
+			"status": "待发货",
+			"order_time": "2014-10-07 12:00:00",
+			"payment_time":"2014-10-07 13:00:00",
+			"methods_of_payment": "支付宝",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00006",
+			"member": "tom",
+			"status": "已发货",
+			"order_time": "2014-10-06 12:00:00",
+			"payment_time":"2014-10-06 12:00:00",
+			"methods_of_payment": "优惠抵扣",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00005",
+			"member": "tom",
+			"status": "已完成",
+			"order_time": "2014-10-05 12:00:00",
+			"payment_time":"2014-10-05 13:00:00",
+			"methods_of_payment": "微信支付",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00004",
+			"member": "bill",
+			"status": "已取消",
+			"order_time": "2014-10-04 12:00:00",
+			"payment_time":"2014-10-04 12:00:00",
+			"methods_of_payment": "优惠抵扣",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"true"
+		},{
+			"order_no": "00003",
+			"member": "tom",
+			"status": "待发货",
+			"order_time": "2014-10-03 12:00:00",
+			"payment_time":"2014-10-03 12:00:00",
+			"methods_of_payment": "货到付款",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"true"
+		}]
+		"""
+
+	#全部不勾选查询全部订单
+	When jobs根据给定条件查询订单
+		"""
+		{
+			"is_first_order": "false",
+			"is_not_first_order": "false"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no": "00008",
+			"member": "bill",
+			"status": "待支付",
+			"order_time": "2014-10-08 12:00:00",
+			"payment_time":"",
+			"methods_of_payment": "微信支付",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00007",
+			"member": "bill",
+			"status": "待发货",
+			"order_time": "2014-10-07 12:00:00",
+			"payment_time":"2014-10-07 13:00:00",
+			"methods_of_payment": "支付宝",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00006",
+			"member": "tom",
+			"status": "已发货",
+			"order_time": "2014-10-06 12:00:00",
+			"payment_time":"2014-10-06 12:00:00",
+			"methods_of_payment": "优惠抵扣",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00005",
+			"member": "tom",
+			"status": "已完成",
+			"order_time": "2014-10-05 12:00:00",
+			"payment_time":"2014-10-05 13:00:00",
+			"methods_of_payment": "微信支付",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00004",
+			"member": "bill",
+			"status": "已取消",
+			"order_time": "2014-10-04 12:00:00",
+			"payment_time":"2014-10-04 12:00:00",
+			"methods_of_payment": "优惠抵扣",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"true"
+		},{
+			"order_no": "00003",
+			"member": "tom",
+			"status": "待发货",
+			"order_time": "2014-10-03 12:00:00",
+			"payment_time":"2014-10-03 12:00:00",
+			"methods_of_payment": "货到付款",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"true"
+		}]
+		"""
+
+	#首单
+	When jobs根据给定条件查询订单
+		"""
+		{
+			"is_first_order": "true",
+			"is_not_first_order": "false"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no": "00004",
+			"member": "bill",
+			"status": "已取消",
+			"order_time": "2014-10-04 12:00:00",
+			"payment_time":"2014-10-04 12:00:00",
+			"methods_of_payment": "优惠抵扣",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"true"
+		},{
+			"order_no": "00003",
+			"member": "tom",
+			"status": "待发货",
+			"order_time": "2014-10-03 12:00:00",
+			"payment_time":"2014-10-03 12:00:00",
+			"methods_of_payment": "货到付款",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"true"
+		}]
+		"""
+
+	#非首单
+	When jobs根据给定条件查询订单
+		"""
+		{
+			"is_first_order": "false",
+			"is_not_first_order": "true"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no": "00008",
+			"member": "bill",
+			"status": "待支付",
+			"order_time": "2014-10-08 12:00:00",
+			"payment_time":"",
+			"methods_of_payment": "微信支付",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00007",
+			"member": "bill",
+			"status": "待发货",
+			"order_time": "2014-10-07 12:00:00",
+			"payment_time":"2014-10-07 13:00:00",
+			"methods_of_payment": "支付宝",
+			"sources": "商城",
+			"ship_name": "bill",
+			"ship_tel": "13811223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00006",
+			"member": "tom",
+			"status": "已发货",
+			"order_time": "2014-10-06 12:00:00",
+			"payment_time":"2014-10-06 12:00:00",
+			"methods_of_payment": "优惠抵扣",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"false"
+		},{
+			"order_no": "00005",
+			"member": "tom",
+			"status": "已完成",
+			"order_time": "2014-10-05 12:00:00",
+			"payment_time":"2014-10-05 13:00:00",
+			"methods_of_payment": "微信支付",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"false"
+		}]
+		"""
+
+# __editor__ : "王丽" 2016-03-08
+@mall2 @order @allOrder @eugene
+Scenario:3 混合条件进行筛选
+	Given jobs登录系统
+	When jobs根据给定条件查询订单
+		"""
+		{
+			"order_no": "00003",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"product_name": "商品",
+			"date_interval": "2014-10-03|2014-10-04",
+			"date_interval_type": "付款时间",
+			"pay_type": "货到付款",
+			"express_number": "",
+			"order_source": "全部",
+			"order_status": "待发货",
+			"isUseWeizoomCard": "false",
+			"is_first_order": "true",
+			"is_not_first_order": "false"
+		}
+		"""
+	Then jobs可以看到订单列表
+		"""
+		[{
+			"order_no": "00003",
+			"member": "tom",
+			"status": "待发货",
+			"order_time": "2014-10-03 12:00:00",
+			"methods_of_payment": "货到付款",
+			"sources": "商城",
+			"ship_name": "tom",
+			"ship_tel": "13711223344",
+			"is_first_order":"true"
 		}]
 		"""
