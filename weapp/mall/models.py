@@ -1712,7 +1712,15 @@ def belong_to(webapp_id):
                     ],
                     status=ORDER_STATUS_PAYED_NOT_SHIP
                 )]
-            orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids)
+            cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
+                order_id__in=[
+                    r.order_id for r in group_order_relations.filter(
+                    group_status=GROUP_STATUS_failure)
+                    ],
+                    status=ORDER_STATUS_CANCEL,
+                    pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
+                )]
+            orders = orders.exclude(order_id__in=not_pay_group_order_ids+not_ship_group_on_order_ids+cancel_group_order_ids)
         return orders
 
 

@@ -104,6 +104,7 @@ def step_impl(context, user):
         expired_time="3000-12-12 00:00:00",
         valid_time_from="2000-1-1 00:00:00",
         valid_time_to="3000-12-12 00:00:00",
+        valid_restrictions=-1
         )
 
     weizoom_cards = json.loads(context.text)

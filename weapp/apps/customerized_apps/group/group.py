@@ -54,7 +54,7 @@ class Group(resource.Resource):
 		cert_setting = WxCertSettings.objects.filter(owner_id=request.manager.id)
 
 		if not cert_setting.count() > 0:
-			return HttpResponseRedirect("/mall2/pay_interface_list/")
+			return HttpResponseRedirect("/mall2/weixin_certificate/")
 
 		if 'id' in request.GET:
 			project_id = 'new_app:group:%s' % request.GET.get('related_page_id', 0)

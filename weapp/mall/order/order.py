@@ -20,6 +20,8 @@ import mall.module_api as mall_api
 from watchdog.utils import watchdog_error, watchdog_info, watchdog_warning
 from core.exceptionutil import unicode_full_stack
 from modules.member.models import WebAppUser
+from account.models import UserProfile
+from mall.module_api import update_order_status
 
 COUNT_PER_PAGE = 20
 FIRST_NAV = export.ORDER_FIRST_NAV
@@ -395,9 +397,14 @@ class GroupOrderRefunded(resource.Resource):
                     order_id__in=order_ids,
                     status=ORDER_STATUS_GROUP_REFUNDING
                 )
+                webapp_ids = [order.webapp_id for order in orders]
+                webapp_id2user = dict([(profile.webapp_id, profile.user)] for profile in UserProfile.objects.filter(webapp_id__in=webapp_ids))
                 refunding_order_ids = [order.order_id for order in orders]
                 order_id2order = dict([(order.order_id, order) for order in orders])
-                orders.update(status=ORDER_STATUS_GROUP_REFUNDED)
+                for order in orders:
+                    update_order_status(webapp_id2user[order.webapp_id], 'return_success', order)
+                    order.status = ORDER_STATUS_GROUP_REFUNDED
+                    order.save()
                 response.updated_order_ids = refunding_order_ids
                 response.not_update_order_ids = [id for id in order_ids if id not in refunding_order_ids]
 

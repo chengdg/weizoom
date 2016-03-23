@@ -30,6 +30,7 @@ class GroupStatus(resource.Resource):
 		响应POST
 		"""
 		target_status = request.POST['target']
+		is_test = request.POST.get('is_test', False)
 
 		if target_status == 'stoped':
 			target_status = app_models.STATUS_STOPED
@@ -50,7 +51,7 @@ class GroupStatus(resource.Resource):
 			for group_relation in running_group_relations:
 				group_relation.update(group_status=app_models.GROUP_FAILURE)
 				group_relation_id = group_relation.id
-				update_order_status_by_group_status(group_relation_id,'failure')
+				update_order_status_by_group_status(group_relation_id,'failure', is_test=is_test)
 				#发送拼团失败模板消息
 				try:
 					group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
