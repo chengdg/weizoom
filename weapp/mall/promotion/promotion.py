@@ -12,6 +12,7 @@ from mall.promotion import models  # 注意：不要覆盖此module
 from mall.models import PRODUCT_SHELVE_TYPE_ON
 from .utils import filter_promotions
 from cache import webapp_cache
+from apps.customerized_apps.group import models as group_models
 
 
 class Promotion(resource.Resource):
@@ -71,8 +72,8 @@ class Promotion(resource.Resource):
 
             #获得已经与promotion关联的product
             status_set = [
-                models.PROMOTION_STATUS_NOT_START, 
-                models.PROMOTION_STATUS_STARTED, 
+                models.PROMOTION_STATUS_NOT_START,
+                models.PROMOTION_STATUS_STARTED,
                 models.PROMOTION_STATUS_DISABLE, #手动失效的单品优惠券要等到过期后才能创建买赠或限时抢购 duhao 2015-08-18
             ]
 
@@ -118,6 +119,17 @@ class Promotion(resource.Resource):
                 #避免禁用优惠券商品列表里面收到促销活动的影响 duhao 20150908
                 if not filter_type == 'forbidden_coupon':
                     product_data['can_select'] = False
+            # 过滤参团的商品
+            group_records = group_models.Group.objects(owner_id=request.manager.id,status__lte=1)
+            product_id2record = dict([(record.product_id, record)for record in group_records])
+            group_product_ids = [record.product_id for record in group_records]
+            for product_id in group_product_ids:
+                product_data = id2product.get(product_id, None)
+                if not product_data:
+                    continue
+                record = product_id2record.get(product_id, None)
+                if record:
+                    product_data['promotion_name'] = record.name
 
             # 将已选择的商品id改为 can_select 改为 False
             for product_id in selectedProductIds:
@@ -191,7 +203,7 @@ class Promotion(resource.Resource):
             id__in=ids
         ).update(status=status)
         if promotion_type == models.PROMOTION_TYPE_COUPON:
-            # 处理优惠券相关状态 
+            # 处理优惠券相关状态
             ruleIds = [i.detail_id for i in models.Promotion.objects.filter(
                 owner=request.manager,
                 id__in=ids)
