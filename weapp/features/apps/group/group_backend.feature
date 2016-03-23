@@ -14,6 +14,7 @@ Feature:新建团购活动
 
 Background:
 	Given jobs登录系统
+	When jobs添加微信证书
 	When jobs添加会员等级
 		"""
 		[{
