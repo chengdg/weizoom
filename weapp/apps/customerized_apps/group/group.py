@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 
 from core import resource
 from core import paginator
-from core.jsonresponse import create_response
+from core.jsonresponse import create_response,JsonResponse
 
 import models as app_models
 import export
@@ -20,6 +20,7 @@ from modules.member import integral as integral_api
 from mall.promotion import utils as mall_api
 from mall import export as mall_export
 import termite.pagestore as pagestore_manager
+from mall.models import WxCertSettings
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 20
@@ -28,11 +29,33 @@ class Group(resource.Resource):
 	app = 'apps/group'
 	resource = 'group'
 
+
+
+	@login_required
+	def api_get(request):
+		"""
+		响应GET
+		"""
+		cert_setting = WxCertSettings.objects.filter(owner_id=request.manager.id)
+		response = create_response(200)
+		if cert_setting.count() > 0:
+			response.data = {'flag':True}
+		else:
+
+			response.data = {'flag':False}
+		return response.get_response()
+
+
 	@login_required
 	def get(request):
 		"""
 		响应GET
 		"""
+		cert_setting = WxCertSettings.objects.filter(owner_id=request.manager.id)
+
+		if not cert_setting.count() > 0:
+			return HttpResponseRedirect("/mall2/pay_interface_list/")
+
 		if 'id' in request.GET:
 			project_id = 'new_app:group:%s' % request.GET.get('related_page_id', 0)
 			#处理删除异常
