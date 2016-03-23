@@ -14,6 +14,8 @@ import models as app_models
 import export
 from datetime import datetime
 from mall import export as mall_export
+from mall.order.util import update_order_status_by_group_status
+from apps.customerized_apps.group.group_participance import send_group_template_message
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 10
@@ -75,6 +77,32 @@ class Groups(resource.Resource):
 					data_data.update(set__status=app_models.STATUS_RUNNING)
 			if now_time >= data_end_time:
 				data_data.update(set__status=app_models.STATUS_STOPED)
+				#活动已结束，所有进行中的小团置为失败
+				running_group_relations = app_models.GroupRelations.objects(belong_to=data_data.id,group_status=app_models.GROUP_RUNNING)
+				for group_relation in running_group_relations:
+					group_relation.update(group_status=app_models.GROUP_FAILURE)
+					group_relation_id = group_relation.id
+					update_order_status_by_group_status(group_relation_id,'failure')
+					#发送拼团失败模板消息
+					try:
+						group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
+						owner_id = data_data.owner_id
+						product_name = data_data.product_name
+						miss = int(group_relation.group_type)-group_details.count()
+						activity_info = {
+							"owner_id": str(owner_id),
+							"record_id": str(request.POST['id']),
+							"group_id": str(group_relation_id),
+							"fid": str(group_relation.member_id),
+							"price": '%.2f' % group_relation.group_price,
+							"product_name": product_name,
+							"status" : 'fail',
+							"miss": str(miss)
+						}
+						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
+						send_group_template_message(activity_info, member_info_list)
+					except:
+						print(u'发送拼团成功模板消息失败')
 
 		if group_name:
 			params['name__icontains'] = group_name
