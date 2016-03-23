@@ -111,7 +111,7 @@ Background:
 	When jobs开启团购活动'团购活动1'
 	When jobs开启团购活动'团购活动2'
 
-@mall2 @product @saleingProduct @group @123
+@mall2 @product @saleingProduct @group 
 Scenario:1 对团购活动中的商品进行下架或删除操作
 	Given jobs登录系统
 	Then jobs能获得'在售'商品列表
