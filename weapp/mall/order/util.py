@@ -1745,3 +1745,4 @@ def cancel_group_buying(order_id):
     user = UserProfile.objects.get(webapp_id=order.webapp_id).user
     from mall.module_api import update_order_status
     update_order_status(user, 'cancel', order)
+    OrderHasGroup.objects.filter(order_id=order.order_id).update(group_status=GROUP_STATUS_failure)

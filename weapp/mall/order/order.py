@@ -407,12 +407,6 @@ class GroupOrderRefunded(resource.Resource):
                     order.save()
                 response.updated_order_ids = refunding_order_ids
                 response.not_update_order_ids = [id for id in order_ids if id not in refunding_order_ids]
-
-                for order_id in refunding_order_ids:
-                    order = order_id2order[order_id]
-                    mall_api.record_status_log(order_id, u'系统', ORDER_STATUS_GROUP_REFUNDING, ORDER_STATUS_GROUP_REFUNDED)
-                    mall_api.record_operation_log(order_id, u'系统', u"退款完成", order)
-
             except:
                 logging.info(unicode_full_stack())
                 updated_order_ids = [order.order_id for order in Order.objects.filter(
