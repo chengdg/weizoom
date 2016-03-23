@@ -2595,3 +2595,17 @@ class WeizoomHasMallProductRelation(models.Model):
 		verbose_name_plural = "微众系列同步其他商户商品的关系"
 		db_table = "mall_weizoom_has_mall_product_relation"
 
+
+class WxCertSettings(models.Model):
+	"""
+		存储微信每个帐号的证书文件地址
+	"""
+	owner = models.ForeignKey(User) #活动所有者
+	cert_path = models.CharField(default="", max_length=1024) #证书
+	key_path = models.CharField(default="", max_length=1024) #证书key
+
+	class Meta(object):
+		verbose_name = "微信证书文件地址"
+		verbose_name_plural = "微信证书文件地址"
+		db_table = "mall_weixin_cert"
+

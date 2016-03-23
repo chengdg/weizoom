@@ -279,7 +279,12 @@ class CouponList(resource.Resource):
         删除优惠券
         """
         ids = request.POST.getlist('ids[]')
-        Coupon.objects.filter(owner=request.manager, id__in=ids).delete()
+        ids_count = len(ids)
+        coupons = Coupon.objects.filter(owner=request.manager, id__in=ids)
+        coupon_rule = coupons[0].coupon_rule
+        coupon_rule.remained_count = coupon_rule.remained_count - ids_count
+        coupon_rule.save()
+        coupons.delete()
 
         response = create_response(200)
         return response.get_response()

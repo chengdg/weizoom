@@ -27,7 +27,7 @@
 	}
 	.xui-wzcoinConfirm-page .ui-content {
 		/* background: #fff!important; */
-		background-color: #efeff4 !important;
+		background-color: #f5f5f5 !important;
 	}
 	.ui-applyBox .xui-btn .ui-btn-text{
 		font-size: 1em;
@@ -40,6 +40,7 @@
 		padding: 10px;
 		padding-top: 20px;
 		font-size: 0.9rem;
+		padding-right: 0 ;
 	}
 	.xui-wzcoinConfirm-page .xui-numTips {
 		 color: #fff;
@@ -53,11 +54,13 @@
 		padding-right: 10px;
 	}
 	.xui-main-info .xui-fl div{
-		padding-bottom: 10px;
+		padding-bottom: 5px;
+		text-align: center;
 	}
 	.xui-main-info .xui-fr{
 		float: right;
-		width: 42%;
+		width: 48%;
+		text-align: center;
 	}
 	.xui-main-info .xui-fl div>a{
 		color: #fff;
@@ -74,17 +77,18 @@
 		display: block;
 		text-align: center;
 		color: #fff;
-		font-size: 1.2rem;
+		font-size: 0.9rem;
 	}
 	.xui-main-info .xui-fr>div{
 		text-align: center;
-		padding-top: 10px;
+		color: #fff303;
+		margin: 5px;
 	}
 	.xui-main-info .xui-fr .xui-numTips{
 		font-size: 1.3rem;
 	}
 	.xui-use-detail{
-		margin-top: 20px;
+		margin-top: 15px;
 		background-color: #fff;
 		padding: 10px;
 	}
@@ -128,10 +132,29 @@
 	}
 	.xui-use-detail table tr>td.xui-order-info-name{
 		text-align: center;
-		padding-left: 15px;
 	}
 	.xui-order-info-money{
 		font-weight: 500;
+	}
+	.xui-validDate{
+		display: block;
+		text-align: center;
+		margin-top: 3px;
+	}
+	.xui-cardNum{
+		font-size: 2.0rem;
+	}
+	.xui-money{
+		font-size: 2.0rem!important;
+		color: #fff303!important;
+	}
+	.xui-restrictions{
+		line-height: 40px;
+		background: #e7e7e7;
+		padding-left: 10px;
+	}
+	.xui-fontArial{
+		font-family: "Arial";
 	}
 </style>
 {% endblock %}
@@ -140,17 +163,25 @@
 	<div data-role="content" data-theme="x">
 			<div class="xui-section-item xui-main-info">
 				<div class="xui-fl">
-					<div>微众卡号：<span class="xui-numTips">{{weizoom_card.weizoom_card_id}}</span></div>
-					<div>密码：
-						<span class="xui-numTips xui-password xa-password">{{weizoom_card.password}}</span>
-						<a href="javascript:void(0)" class="xui-hidden xa-hidden">隐藏</a>
+					<div>微众卡号</div>
+					<div class="xui-numTips xui-cardNum">{{weizoom_card.weizoom_card_id}}</div>	
+					<div>密码:<span class="xui-numTips xui-password xa-password" xui-fontArial>*******</span>&#91;<a href="javascript:void(0)" class="xui-hidden xa-hidden">查看</a>&#93;
 					</div>
-					<a href="/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&is_quit=1" class="xui-exit" >退出登陆</a>
+					<!-- <a href="/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_login&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&is_quit=1" class="xui-exit" >退出登陆</a> -->
 				</div>
 				<div class="xui-fr">
 					<span class="xui-textTips">余额</span>
-					<div>¥<b class="xui-numTips">{{weizoom_card.money}}</b></div>
+					<div>¥<b class="xui-numTips xui-money">{{weizoom_card.money}}</b></div>
+					<span class="xui-validDate">有效期至:<span class="xui-fontArial">{{weizoom_card.expired_time | date:"Y-m-d"}}</span></span>
 				</div>
+			</div>
+			<div class="xui-restrictions">
+				使用条件：
+				{% if valid_restrictions == '-1.00' %}
+				不限制
+				{% else %}
+				满{{valid_restrictions}}元可用
+				{% endif %}
 			</div>
 			<div class="xui-use-detail">
 				<div class="xui-use"><b>使用详情</b></div>
@@ -165,19 +196,25 @@
 					<tbody>
 					{% for order in card_orders %}
 					<tr>
-						<td class="xui-order-info-time">
+						<td class="xui-order-info-time xui-fontArial">
 							{{order.created_at | date:"Y-m-d" }}
 							<br/>{{order.created_at | date:"H:i:s"}}
 						</td>
-						<td class="xui-order-info-money">
+						<td class="xui-order-info-money xui-fontArial">
 							{% if order.event_type == '积分兑换' %}
-							<span style="color: #0fb202">
-							+{{order.money}}
-							</span>
+								<span style="color: #0fb202">
+								+{{order.money}}
+								</span>
 							{% else %}
-							<span style="color: #cf0404">
-							-{{order.money}}
-							</span>
+								{% if order.money < '0' %}
+									<span style="color: #0fb202">
+										+{{order.money| slice:"1:"}}
+									</span>
+								{% else %}
+									<span style="color: #cf0404">
+										-{{order.money}}
+									</span>
+								{% endif %}
 							{% endif %}
 						</td>
 						<td class="xui-order-info-name">
@@ -186,8 +223,15 @@
 							兑换平台
 							</span>
 							{% else %}
-							<span>[商品]</span>
-							{{order.product_name}}
+							{% if order.money < '0' %}
+							<span>
+							[退款]{{order.product_name}}
+							</span>
+							{% else %}
+							<span>
+							[商品]{{order.product_name}}
+							</span>
+							{% endif %}
 							{% endif %}
 						</td>
 					</tr>

@@ -374,7 +374,7 @@ MALL_PROMOTION_AND_APPS_SECOND_NAV = {
                 },
                 {
                     'name': MALL_PROMOTION_CARD_EXCHANGE_NAV,
-                    'title': u'微众卡兑换',
+                    'title': u'微众卡兑换平台',
                     'url': '/mall2/card_exchange/',
                     'users': ['jobs', 'njtest', 'ceshi01', 'fulilaile'],
                     'permission': ''
@@ -477,6 +477,8 @@ MALL_CONFIG_POSTAGE_NAV = 'postageManagement'
 MALL_CONFIG_EXPRESS_COMOANY_NAV = 'expressManagement'
 MALL_CONFIG_MAIL_NOTIFY_NAV = 'emailNotify'
 MAIL_CONFIG_SUPPLIER_NAV = 'supplier'
+MAIL_CONFIG_WEIXIN_NAV = 'wxCertificate'
+
 
 
 CONFIG_NAV = {
@@ -523,7 +525,7 @@ def get_config_second_navs(request):
         pass
     else:
         user_list_for_supplier_list = ('devceshi', 'wzjx001', 'ceshi001', 'weizoomxs', 'weizoommm', 'weshop', 'weizoomclub', 'weizoomshop', 'weizoombfm',
-            'jobs', 'wz01', 'wz02', 'wz03', 'test003')
+            'jobs', 'wz01', 'wz02', 'wz03', 'test003', 'fulilaile')
         if request.user.username not in user_list_for_supplier_list:
             nav = {"navs":CONFIG_NAV['navs'][:-1]}
             second_navs = [nav]

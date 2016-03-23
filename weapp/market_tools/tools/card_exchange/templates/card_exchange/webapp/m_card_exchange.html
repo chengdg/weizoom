@@ -104,7 +104,7 @@
 		text-align: center;
 		margin-right: 10px;
 		margin-bottom: 10px;
-		font-size: 1.8rem;
+		font-size: 1.5rem;
 		color: #666666;
 		font-weight: 800;
 	}
@@ -129,10 +129,10 @@
 		border-color: #00a5ed;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose span:first-child{
-		font-size: 1rem;font-weight: 400;
+		font-size: 0.7rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-form-control .xui-exchange-choose p{
-		font-size: 1.2rem;font-weight: 400;
+		font-size: 0.7rem;font-weight: 400;
 	}
 	.xui-exchange-form .xui-exchange-confirm,.xui-exchange-form .xui-exchange-abolish{
 		margin-top: 20px;
@@ -270,6 +270,70 @@
 	.error{
 		color: #ee3715;
 	}
+	.xui-loading{
+		text-align: center;
+		display: none;
+	}
+	.xui-loading>span{
+		display: inline-block;
+		color: #cf0404;
+		vertical-align: super;
+	}
+	.xui-loading-img{
+		animation: loading 1s infinite;
+		-webkit-animation: loading 1s infinite;
+	}
+	@keyframes loading
+		{
+		0%    {transform: rotate(0deg);}
+		5%	  {transform: rotate(18deg);}
+		10%   {transform: rotate(36deg);}
+		15%   {transform: rotate(54deg);}
+		20%	  {transform: rotate(72deg);}
+		25%	  {transform: rotate(90deg);}
+		30%   {transform: rotate(108deg);}
+		35%	  {transform: rotate(126deg);}
+		40%   {transform: rotate(144deg);}
+		45%   {transform: rotate(162deg);}
+		50%   {transform: rotate(180deg);}
+		55%	  {transform: rotate(196deg);}
+		60%   {transform: rotate(216deg);}
+		65%   {transform: rotate(234deg);}
+		70%   {transform: rotate(252deg);}
+		75%	  {transform: rotate(270deg);}
+		80%   {transform: rotate(288deg);}
+		85%   {transform: rotate(306deg);}
+		90%   {transform: rotate(324deg);}
+		95%   {transform: rotate(342deg);}
+		100%  {transform: rotate(360deg);}
+	}
+	@-webkit-keyframes loading
+		{
+		0%    {transform: rotate(0deg);}
+		5%	  {transform: rotate(18deg);}
+		10%   {transform: rotate(36deg);}
+		15%   {transform: rotate(54deg);}
+		20%	  {transform: rotate(72deg);}
+		25%	  {transform: rotate(90deg);}
+		30%   {transform: rotate(108deg);}
+		35%	  {transform: rotate(126deg);}
+		40%   {transform: rotate(144deg);}
+		45%   {transform: rotate(162deg);}
+		50%   {transform: rotate(180deg);}
+		55%	  {transform: rotate(196deg);}
+		60%   {transform: rotate(216deg);}
+		65%   {transform: rotate(234deg);}
+		70%   {transform: rotate(252deg);}
+		75%	  {transform: rotate(270deg);}
+		80%   {transform: rotate(288deg);}
+		85%   {transform: rotate(306deg);}
+		90%   {transform: rotate(324deg);}
+		95%   {transform: rotate(342deg);}
+		100%  {transform: rotate(360deg);}
+	}
+	.xui-loading-wrap{
+		height: 31px;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -299,9 +363,9 @@
 			{% endif%}
 			<div class="xui-form-control">
 				<label><b></b>选择兑换：</label>
-				<div class="xui-bg">
+				<div class="xui-bg mb10">
 					{% for prize in card_exchange_rule.prize %}
-					<div class="xui-exchange-choose xa-exchange-choose {% if prize.is_selected %} active {% endif %}" data-start="{{prize.s_num}}" data-end="{{prize.end_num}}">
+					<div class="xui-exchange-choose xa-exchange-choose" data-card="{{prize.card_number}}">
 						兑<span>¥</span><span class="xui-exchange-money xa-exchange-money">{{prize.money}}</span>
 						<p>消耗<span class='xa-integral'>{{prize.integral}}</span>积分</p>
 						{% if prize.count == 0 %}
@@ -313,8 +377,14 @@
 					{% endfor %}
 				</div>
 			</div>
+			<div class="xui-loading-wrap">
+				<div class="xui-loading xa-loading">
+					<img src="/markettools_static/weizoom_card/img/loading.png" class="xui-loading-img">
+					<span>兑换中，请稍后！</span>
+				</div>
+			</div>
 			<div class="xui-form-control xui-submit-btn">
-				<a class="xui-exchange-confirm xa-exchange-submit" data-bind="{{member_is_bind}}">{% if user_has_exchange_card %}已兑换{% else %}兑换{% endif %}</a>
+				<a class="xui-exchange-confirm mt10 xa-exchange-submit" data-bind="{{member_is_bind}}">兑换</a>
 				<!--<a class="xui-exchange-abolish">取消</a>-->
 			</div>
 		</form>
@@ -337,7 +407,7 @@
 					<p class="xa-reminder-detail">
 						微众卡将存到个人中心--微众卡余额查询中，请注意查收！
 					</p>
-					<button class="xa-exchanged">知道了</button>
+					<a href="" class="xa-exchanged-a"><button class="xa-exchanged">知道了</button></a>
 					<a href="javascript:void(0)" class="xui-alert-close xa-alert-close">&times;</a>
 				</div>
 			</div>
@@ -348,7 +418,9 @@
 
 {% block js %}
 <script type="text/javascript">
+    var submit_control = false;
 	$(document).ready(function() {
+		W.projectId = W.projectId.replace('weizoom_card','card_exchange');
 		if($('button').hasClass('ui-btn-hidden')){
 			$('button').removeClass('ui-btn-hidden')}
 		$('input').parent().removeClass();
@@ -451,14 +523,13 @@
 				$(this).removeClass('active')
 			}else{
 				if(!$(this).hasClass('active')){
-					$(this).addClass('active').siblings().removeClass('active')
+					$(this).addClass('active');
 				}else{
 					$(this).removeClass('active')
 				}
 			}
 		});
 		$(".xa-exchange-submit").click(function(){
-			var text = $(this).text();
 			var isBind=$('.xa-exchange-submit').attr('data-bind') == "False"? false : true;
 			if(!isBind){
 				$('body').alert({
@@ -469,56 +540,59 @@
 				});
 				return false;
 			}
-
-			if($('.xa-exchange-choose').hasClass('active') && text != '已兑换'){
-				var current_integral=$('.xa-current-integral').text();
-				var need_integral=$('.xa-exchange-choose.active .xa-integral').text();
-				var start_num=$('.xa-exchange-choose.active').attr('data-start');
-				var end_num=$('.xa-exchange-choose.active').attr('data-end');
-				if(parseInt(current_integral) > parseInt(need_integral) || parseInt(current_integral) == parseInt(need_integral)){
-					W.getApi().call({
-						app: 'webapp',
-						api: 'project_api/call',
-						method: 'post',
-						args: _.extend({
-							woid: W.webappOwnerId,
-							project_id: W.projectId,
-							module: 'card_exchange',
-							target_api: 'card/exchange',
-							has_integral: current_integral,
-							need_integral: need_integral,
-							s_num:start_num,
-							end_num:end_num
-						}),
-						success: function(data) {
-							$('.xa-reminder-title').html('兑换成功').removeClass('error');
-							$('.xa-reminder-detail').html('微众卡将存到个人中心--微众卡余额查询中，请注意查收！');
-							$('.xa-exchanged').css('background-color', '#0091d5');
-							$('.xa-alert-exchange').removeClass('hidden');
-							$('.xa-exchange-submit').text('已兑换');
-							$('.xa-current-integral').text(data);
-						},
-						error: function(data){
-							$('.xa-reminder-title').html('兑换失败').addClass('error');
-							$('.xa-exchanged').css('background-color', '#ee3715');
-							$('.xa-reminder-detail').html(data.errMsg || '兑换失败');
-							$('.xa-alert-exchange').removeClass('hidden');
-						}
-					});
-				}else{
-					$('.xa-reminder-title').html('兑换失败').addClass('error');
-					$('.xa-reminder-detail').html('没有足够的积分');
-					$('.xa-exchanged').css('background-color', '#ee3715');
-					$('.xa-alert-exchange').removeClass('hidden');
-				}
+            // if(submit_control) return false;
+            // submit_control = true;
+			if($('.xa-exchange-choose').hasClass('active')){
+				$(".xa-loading").show();
+				var need_integral = 0;
+				var card_arr = [];
+				$('.xa-exchange-choose.active').each(function(index, el) {
+					var integral_text = $(this).find('.xa-integral').text()
+					need_integral += parseInt(integral_text);
+					var card_number = $(this).attr('data-card');
+					card_arr.push(card_number);
+				});
+				W.getApi().call({
+					app: 'webapp',
+					api: 'project_api/call',
+					method: 'post',
+					args: _.extend({
+						woid: W.webappOwnerId,
+						project_id: W.projectId,
+						module: 'card_exchange',
+						target_api: 'card/exchange',
+						need_integral: need_integral,
+						card_number: JSON.stringify(card_arr),
+					}),
+					success: function(data) {
+						$('.xa-reminder-title').html('兑换成功').removeClass('error');
+						$('.xa-reminder-detail').html('微众卡将存到个人中心--微众卡余额查询中，请注意查收！');
+						$('.xa-exchanged').css('background-color', '#0091d5').text('立即查收');
+						$('.xa-exchanged-a').attr('href','/workbench/jqm/preview/?module=market_tool:weizoom_card&model=weizoom_card_exchange_list&action=get&workspace_id=market_tool:weizoom_card&webapp_owner_id={{request.webapp_owner_id}}&project_id=0')
+						$('.xa-alert-exchange').removeClass('hidden');
+						$('.xa-current-integral').text(data);
+						$(".xa-loading").hide();
+					},
+					error: function(data){
+						$('.xa-reminder-title').html('兑换失败').addClass('error');
+						$('.xa-exchanged').css('background-color', '#ee3715');
+						$('.xa-exchanged-a').attr('href','')
+						$('.xa-reminder-detail').html(data.errMsg || '兑换失败');
+						$('.xa-alert-exchange').removeClass('hidden');
+						$(".xa-loading").hide();
+                        // submit_control = false;
+					}
+				});
 			}
 
 		});
 		$(".xa-exchanged").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');
+			window.location.reload()
 		});
 		$(".xa-alert-close").click(function(){
 			$('.xa-alert-exchange').addClass('hidden');
+			window.location.reload()
 		});
 	});
 </script>
