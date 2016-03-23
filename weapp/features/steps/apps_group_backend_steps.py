@@ -6,9 +6,11 @@ from behave import *
 from test import bdd_util
 from collections import OrderedDict
 
+from django.contrib.auth.models import User
 from features.testenv.model_factory import *
 import steps_db_util
 from mall.promotion import models as  promotion_models
+from mall.models import WxCertSettings
 from modules.member import module_api as member_api
 from utils import url_helper
 import datetime as dt
@@ -290,42 +292,6 @@ def __name2status(name):
     else:
         return -1
 
-# def __name2color(name):
-#   """
-#   团购背景色：文字 转 状态值
-#   """
-#   name2color_dic = {
-#       u"冬日暖阳":"yellow",
-#       u"玫瑰茜红":"red",
-#       u"热带橙色":"orange"
-#   }
-#   return name2color_dic[name]
-
-# def __color2name(color):
-#   """
-#   团购背景色：状态值 转 文字
-#   """
-#   color2name_dic = {
-#       'yellow': u'冬日暖阳',
-#       'red': u'玫瑰茜红',
-#       'orange': u'热带橙色'
-#   }
-#   return color2name_dic[color]
-
-
-# def __get_qrcode(context,qrcode_name):
-#   """
-#   传入二维码名字，获得二维码，信息字典
-#   """
-
-#   qrcode_id = ChannelQrcodeSettings.objects.get(owner_id=context.webapp_owner_id, name=qrcode_name).id
-#   qrcode_i_url = '/new_weixin/qrcode/?setting_id=%s' % str(qrcode_id)
-#   qrcode_response = context.client.get(qrcode_i_url)
-#   qrcode_info = qrcode_response.context['qrcode']
-#   qrcode_ticket_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={}".format(qrcode_info.ticket)
-#   qrcode = {"ticket":qrcode_ticket_url,"name":qrcode_info.name}
-#   return qrcode
-
 def __get_actions(status,handle_status):
     """
     根据输入团购状态
@@ -418,6 +384,7 @@ def __Create_Group(context,text,user):
     }
 
     #step1：登录页面，获得分配的project_id
+    print context
     get_pw_response = context.client.get("/apps/group/group/")
     pw_args_response = get_pw_response.context
     project_id = pw_args_response['project_id']#(str){new_app:group:0}
@@ -946,6 +913,19 @@ def step_impl(context,user):
     count_per_page = paging_dic['count_per_page']
     page_num = int(paging_dic['page_num'])-1
     context.paging = {'count_per_page':count_per_page,"page_num":page_num}
+
+def __name2user(username):
+    user = User.objects.get(username=username)
+    return user
+@when(u"{username}添加微信证书")
+def step_impl(context,username):
+    user = __name2user(username)
+    WxCertSettings.objects.create(
+        owner = user,
+        cert_path ="path/to/cert",
+        key_path = "path/to/key"
+        )
+
 
 # @when(u"{user}设置团购活动结果列表查询条件")
 # def step_impl(context,user):
