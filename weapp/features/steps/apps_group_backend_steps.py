@@ -613,7 +613,8 @@ def __Stop_Group(context,group_id):
   stop_group_url = "/apps/group/api/group_status/?design_mode={}&version={}".format(design_mode,version)
   stop_args ={
       "id":group_id,
-      "target":'stoped'
+      "target":'stoped',
+      "is_test": True
   }
   stop_group_response = context.client.post(stop_group_url,stop_args)
   return stop_group_response

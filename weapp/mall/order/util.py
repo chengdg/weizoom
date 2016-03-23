@@ -1657,7 +1657,7 @@ def get_order_actions(order, is_refund=False, is_detail_page=False, is_list_pare
     return result
 
 
-def update_order_status_by_group_status(group_id, status, order_ids=None):
+def update_order_status_by_group_status(group_id, status, order_ids=None, is_test=False):
     # TODO 退款
     KEY = 'MjExOWYwMzM5M2E4NmYwNWU4ZjI5OTI1YWFmM2RiMTg='
     if settings.MODE in ['develop', 'test']:
@@ -1685,44 +1685,49 @@ def update_order_status_by_group_status(group_id, status, order_ids=None):
             update_order_status(user, 'cancel', order)
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY and order.status >= ORDER_STATUS_PAYED_NOT_SHIP:
-                args = {
-                    'order_id': order.order_id,
-                    'auth_key': KEY,
-                    'from_where': 'weapp'
-                }
-                response = dict()
-                try:
-                    logging.info("url:%s" % URL)
-                    logging.info("args:%s" % str(args))
-                    r = requests.get(URL, params=args)
-                    response = json.loads(r.text)
-                    if not response['data'].get('is_success', ''):
-                        r = requests.get(URL, params=args)
-                        response = json.loads(r.text)
-                        if not response['data'].get('is_success', ''):
-                            r = requests.get(URL, params=args)
-                            response = json.loads(r.text)
-                except:
-                    try:
-                        r = requests.get(URL, params=args)
-                        response = json.loads(r.text)
-                        if not response['data'].get('is_success', ''):
-                            r = requests.get(URL, params=args)
-                            response = json.loads(r.text)
-                    except:
-                        try:
-                            r = requests.get(URL, params=args)
-                            response = json.loads(r.text)
-                        except:
-                            logging.info(u"订单退款异常%s" % unicode_full_stack())
-                            watchdog_error(u"订单退款异常%s" % unicode_full_stack())
-                if response['data'].get('is_success', ''):
+                if is_test:
                     update_order_status(user, 'return_pay', order)
                     order.status = ORDER_STATUS_GROUP_REFUNDING
                     order.save()
                 else:
-                    logging.info(u"订单%s通知退款失败" % order.order_id)
-                    watchdog_error(u"订单%s通知退款失败" % order.order_id)
+                    args = {
+                        'order_id': order.order_id,
+                        'auth_key': KEY,
+                        'from_where': 'weapp'
+                    }
+                    response = dict()
+                    try:
+                        logging.info("url:%s" % URL)
+                        logging.info("args:%s" % str(args))
+                        r = requests.get(URL, params=args)
+                        response = json.loads(r.text)
+                        if not response['data'].get('is_success', ''):
+                            r = requests.get(URL, params=args)
+                            response = json.loads(r.text)
+                            if not response['data'].get('is_success', ''):
+                                r = requests.get(URL, params=args)
+                                response = json.loads(r.text)
+                    except:
+                        try:
+                            r = requests.get(URL, params=args)
+                            response = json.loads(r.text)
+                            if not response['data'].get('is_success', ''):
+                                r = requests.get(URL, params=args)
+                                response = json.loads(r.text)
+                        except:
+                            try:
+                                r = requests.get(URL, params=args)
+                                response = json.loads(r.text)
+                            except:
+                                logging.info(u"订单退款异常%s" % unicode_full_stack())
+                                watchdog_error(u"订单退款异常%s" % unicode_full_stack())
+                    if response['data'].get('is_success', ''):
+                        update_order_status(user, 'return_pay', order)
+                        order.status = ORDER_STATUS_GROUP_REFUNDING
+                        order.save()
+                    else:
+                        logging.info(u"订单%s通知退款失败" % order.order_id)
+                        watchdog_error(u"订单%s通知退款失败" % order.order_id)
             else:
                 try:
                     update_order_status(user, 'cancel', order)
