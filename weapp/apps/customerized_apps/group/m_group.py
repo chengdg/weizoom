@@ -70,7 +70,7 @@ class MGroup(resource.Resource):
 			only_remain_one_day = True
 		try:
 			product_id = record.product_id
-			product_original_price = ProductModel.objects.get(product_id=product_id).price
+			product_original_price = ProductModel.objects.get(product_id=product_id,is_standard=True).price
 			product = Product.objects.get(id=product_id)
 			product_mysql_name = product.name
 			pic_url = product.thumbnails_url
