@@ -424,7 +424,7 @@
                                 openGuideMask();
                             }).show();
                     }else{
-                        if(W.group_status == '团购未生效'){
+                        if(W.group_status == '团购未生效' && order_id !=''){
                             openUnpaidWin();
                         }else{
                             if(only_remain_one_day){
@@ -637,7 +637,11 @@
                 success: function(data){
                     mask('hide');
                     $('.xui-groupMsg').addClass('none');
-                    window.location.href = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId;
+                    if(data.group_relation_id != ""){
+                        window.location.href = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&fid='+data.fid+'&group_relation_id='+data.group_relation_id;
+                    }else{
+                        window.location.href = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&fid='+data.fid
+                    }
                 },
                 error: function(data) {
                     wuiAlert(data.errMsg);

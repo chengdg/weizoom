@@ -171,8 +171,17 @@ class CancelUnpaidGroup(resource.Resource):
 				cancel_group_buying(order_id)
 			if group_relation.member_id == member_id :#如果是团长取消了开团
 				group_relation.delete()
+				fid = member_id
+				group_relation_id = ''
+			else:
+				group_relation.update(dec__grouped_number=1,pop__grouped_member_ids=str(member_id))
+				fid = group_relation.member_id
 			group_detail.delete()
 			response = create_response(200)
+			response.data = {
+				'group_relation_id': group_relation_id,
+				'fid': fid
+			}
 		except Exception,e:
 			print unicode_full_stack(),e
 			response = create_response(500)
