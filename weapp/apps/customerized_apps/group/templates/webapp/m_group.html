@@ -418,7 +418,6 @@
             if (W.group_status == '团购进行中' || W.group_status == '团购未生效' || W.group_status == ''){
                 //如果是自己的主页
                 if(is_self_page){
-
                     if(is_group_leader){
                         $('.wa-using').text('邀请好友参团').on('click', function(){
                                 openGuideMask();
@@ -669,29 +668,33 @@
     }
     //团购成功
     function showGroupSuccess(){
-        mask('show');
         $('.wui-i-group_box_success').removeClass('none');
-        $('.xui-groupMsg-Hint').removeClass('none');
-        $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在该商品团购结束20天内进行发货');
-        $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('恭喜您 ');
-        $('.xa-groupMsg-Hint').find('.xa-i-msg-title-status').html('团购成功');
-        $('.wa-i-btn-groupMsg-yes').click(function(){
-            mask('hide');
-            $('.xui-groupMsg-Hint').addClass('none');
-        });
+        if(is_group_leader || is_helped){
+            mask('show');
+            $('.xui-groupMsg-Hint').removeClass('none');
+            $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在该商品团购结束20天内进行发货');
+            $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('恭喜您 ');
+            $('.xa-groupMsg-Hint').find('.xa-i-msg-title-status').html('团购成功');
+            $('.wa-i-btn-groupMsg-yes').click(function(){
+                mask('hide');
+                $('.xui-groupMsg-Hint').addClass('none');
+            });
+        }
     }
     //团购失败
     function showGroupFailure(){
-        mask('show');
         $('.wui-i-group_box_fail').removeClass('none');
         $('.wui-i-inner_bar').addClass('wui-i-inner_bar_fail');
-        $('.xui-groupMsg-Hint').removeClass('none');
-        $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在5~7个工作日内完成退款');
-        $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('很遗憾 团购失败');
-        $('.wa-i-btn-groupMsg-yes').click(function(){
-            mask('hide');
-            $('.xui-groupMsg-Hint').addClass('none');
-        });
+        if(is_group_leader || is_helped){
+            mask('show');
+            $('.xui-groupMsg-Hint').removeClass('none');
+            $('.xa-groupMsg-Hint').find('.xa-i-msg').html('商家将在5~7个工作日内完成退款');
+            $('.xa-groupMsg-Hint').find('.xa-i-msg-title').html('很遗憾 团购失败');
+            $('.wa-i-btn-groupMsg-yes').click(function(){
+                mask('hide');
+                $('.xui-groupMsg-Hint').addClass('none');
+            });
+        }
     }
     function renderTime(seconds){
         seconds = parseInt(seconds);
