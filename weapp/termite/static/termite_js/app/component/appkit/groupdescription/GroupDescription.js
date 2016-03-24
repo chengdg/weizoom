@@ -67,12 +67,13 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 			validate:'data-validate=""',
             displayName: '拼团人数：',
 			annotation:'注：1个团购可创建多种拼团人数供顾客选择',
+            style: "margin-bottom: -20px;",
 			isUserProperty:true
 
         }]},
 		{
 		group:'',//列表
-		groupClass: 'xui-propertyView-app-DynamicGroupList xa-propertyView-app-DynamicGroupList',
+		groupClass: 'xui-propertyView-app-DynamicGroupList xa-propertyView-app-DynamicGroupList mmg30',
         fields: [
 			{
             name: 'group_items',//动态组件
@@ -120,14 +121,22 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
             // validateIgnoreDefaultValue: true
 
 		},{
-            name: 'share_description',
-            type: 'text_with_annotation',
+            name: 'share_description_title',
+            type: 'title_with_nothing',
             displayName: '分享描述：',
+            validate:'data-validate=""',
+            isUserProperty: true,
+            annotation: ''
+        },{
+            name: 'share_description',
+            type: 'textarea',
+            displayName: '',
             isUserProperty: true,
             maxLength: 26,
             validate: 'data-validate="require-notempty::活动名称不能为空"',
             annotation: '',
             placeholder:'最多可输入26个字',
+            style: 'margin-top:-50px;',
             default: ''
         }]
 
