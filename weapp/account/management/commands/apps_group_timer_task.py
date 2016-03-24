@@ -33,16 +33,16 @@ class Command(BaseCommand):
 			for group_relation in all_running_group_relations:
 				all_running_group_ids.append(group_relation.belong_to)
 				timing = (group_relation.created_at + timedelta(days=int(group_relation.group_days)) - datetime.today()).total_seconds()
+				group_id = group_relation.id
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-					update_order_status_by_group_status(group_relation.id,'failure')
+					update_order_status_by_group_status(group_id,'failure')
 					#收集拼团失败模板消息数据
 					try:
 						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 						group_info = all_groups.get(id=group_relation.belong_to)
 						owner_id = group_info.owner_id
 						product_name = group_info.product_name
-						group_id = group_relation.id
 						miss = int(group_relation.group_type)-group_details.count()
 						activity_info = {
 							"owner_id": str(owner_id),
@@ -56,7 +56,10 @@ class Command(BaseCommand):
 						}
 						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 						template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
-					except:
+					except Exception, e:
+						print '------template--------------------------------'
+						print e
+						print '------template--------------------------------'
 						print(u'读取拼团模板消息数据失败')
 
 			"""
@@ -71,15 +74,15 @@ class Command(BaseCommand):
 					all_end_group_ids.append(str(group.id))
 			all_end_group_relations = all_running_group_relations.filter(belong_to__in=all_end_group_ids)
 			for group_relation in all_end_group_relations:
+				group_id = group_relation.id
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-				update_order_status_by_group_status(group_relation.id,'failure')
+				update_order_status_by_group_status(group_id,'failure')
 				#收集拼团失败模板消息数据
 				try:
 					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 					group_info = all_groups.get(id=group_relation.belong_to)
 					owner_id = group_info.owner_id
 					product_name = group_info.product_name
-					group_id = group_relation.id
 					miss = int(group_relation.group_type)-group_details.count()
 					activity_info = {
 						"owner_id": str(owner_id),
@@ -93,7 +96,10 @@ class Command(BaseCommand):
 					}
 					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 					template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
-				except:
+				except Exception, e:
+					print '------template--------------------------------'
+					print e
+					print '------template--------------------------------'
 					print(u'读取拼团模板消息数据失败')
 
 			"""
@@ -127,13 +133,17 @@ class Command(BaseCommand):
 			for template_message in template_message_list:
 				try:
 					send_group_template_message(template_message['activity_info'], template_message['member_info_list'])
-				except:
+				except Exception, e:
+					print '------template--------------------------------'
 					print(u'发送模板消息失败!!!!')
 					print(template_message)
+					print '------template--------------------------------'
 
 			end_time = time.time()
 			diff = (end_time-start_time)*1000
 			print ('group timer task end...expend %s' % diff)
-		except:
+		except Exception, e:
+			print u'------处理失败团购--------------------------------'
 			notify_msg = u"处理失败团购错误，cause:\n{}".format(unicode_full_stack())
 			watchdog_error(notify_msg)
+			print u'------处理失败团购--------------------------------'
