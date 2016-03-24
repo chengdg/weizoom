@@ -101,8 +101,11 @@ class Groups(resource.Resource):
 						}
 						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 						send_group_template_message(activity_info, member_info_list)
-					except:
+					except Exception, e:
 						print(u'发送拼团失败模板消息失败')
+						print 'template----------------------------------'
+						print e
+						print 'template----------------------------------'
 
 		if group_name:
 			params['name__icontains'] = group_name
