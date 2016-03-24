@@ -241,6 +241,10 @@ class OrderAction(resource.Resource):
 					print 'template----------------------------------'
 
 		response = create_response(200)
+		response.data = {
+			'order_id': order_id,
+			'is_susscess': True
+		}
 		return response.get_response()
 
 class GetPidsByWoid(resource.Resource):
