@@ -170,7 +170,7 @@
 		  {{each(i, item) items}}
 			<tr data-id="${item.id}">
 				<td>
-					{{html item.group_leader_name}}
+					<a href="/member/detail/?id=${item.member_id}">{{html item.group_leader_name}}</a>
 				</td>
 				<td >
 					{{if (item.status === '团购进行中')}}
