@@ -103,7 +103,7 @@ def __get_groupPageJson(args):
                     "productName": args.get('product_name'),
                     "productPrice": float(args.get('product_price')),
                     "productSocks": args.get('product_socks'),
-                    "productBarcode": args.get('product_barcode')
+                    "productUsercode": args.get('product_usercode')
                 },
                 "group_title": "",
                 "group_items": [],
@@ -351,14 +351,14 @@ def __Create_Group(context,text,user):
     product_name = ""
     product_price = ""
     product_socks = ""
-    product_barcode = ""
+    product_usercode = ""
     if product_dict:
         product_id = product_dict['id']
         product_img = product_dict['thumbnails_url']
         product_name = product_dict['name']
         product_price = product_dict['display_price']
         product_socks = product_dict['stocks']
-        product_barcode = product_dict['bar_code']
+        product_usercode = product_dict['user_code']
 
     rules = text.get("rules","")
     material_image = text.get("material_image","")
@@ -377,7 +377,7 @@ def __Create_Group(context,text,user):
         "product_name":product_name,
         "product_price":product_price,
         "product_socks":product_socks,
-        "product_barcode":product_barcode,
+        "product_usercode":product_usercode,
         "rules":rules,
         "material_image":material_image,
         "share_description":share_description
@@ -420,7 +420,7 @@ def __Create_Group(context,text,user):
         "product_name":product_name,
         "product_price":product_price,
         "product_socks":product_socks,
-        "product_barcode":product_barcode,
+        "product_usercode":product_usercode,
         "rules":rules,
         "material_image":material_image,
         "share_description":share_description,
@@ -465,14 +465,14 @@ def __Update_Group(context,text,page_id,group_id):
     product_name = ""
     product_price = ""
     product_socks = ""
-    product_barcode = ""
+    product_usercode = ""
     if product_dict:
         product_id = product_dict['id']
         product_img = product_dict['thumbnails_url']
         product_name = product_dict['name']
         product_price = product_dict['display_price']
         product_socks = product_dict['stocks']
-        product_barcode = product_dict['bar_code']
+        product_usercode = product_dict['user_code']
 
     rules = text.get("rules","")
     material_image = text.get("material_image","")
@@ -489,7 +489,7 @@ def __Update_Group(context,text,page_id,group_id):
         "product_name":product_name,
         "product_price":product_price,
         "product_socks":product_socks,
-        "product_barcode":product_barcode,
+        "product_usercode":product_usercode,
         "rules":rules,
         "material_image":material_image,
         "share_description":share_description
@@ -515,7 +515,7 @@ def __Update_Group(context,text,page_id,group_id):
         "product_name":product_name,
         "product_price":product_price,
         "product_socks":product_socks,
-        "product_barcode":product_barcode,
+        "product_usercode":product_usercode,
         "rules":rules,
         "material_image":material_image,
         "share_description":share_description,

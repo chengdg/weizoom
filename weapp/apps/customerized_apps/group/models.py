@@ -28,7 +28,7 @@ class Group(models.Document):
 	product_price = models.StringField()#商品价格
 	product_socks = models.StringField()#商品库存
 	product_sales = models.StringField()#商品销量
-	product_barcode = models.StringField()#商品编码
+	product_usercode = models.StringField()#商品编码
 	product_create_at = models.StringField()#商品创建时间
 	rules = models.StringField()#团购说明
 	material_image = models.StringField()#分享图片
