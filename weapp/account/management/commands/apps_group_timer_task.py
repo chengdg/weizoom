@@ -97,9 +97,9 @@ class Command(BaseCommand):
 					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 					template_message_list.append({'activity_info':activity_info,'member_info_list':member_info_list})
 				except Exception, e:
-						print '------template--------------------------------'
-						print e
-						print '------template--------------------------------'
+					print '------template--------------------------------'
+					print e
+					print '------template--------------------------------'
 					print(u'读取拼团模板消息数据失败')
 
 			"""
