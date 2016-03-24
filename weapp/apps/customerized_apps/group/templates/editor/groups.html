@@ -19,6 +19,7 @@
 	}
 	table.xui-groups td .xui-productNameBox{
 		width: 140px;
+		vertical-align: middle;
 		display: inline-block;
 	}
 	table.xui-groups tr.xui-product_itle{
@@ -291,7 +292,7 @@
 				</td>
 				<td>
 					<div class="xui-group_detail">
-						<a href="/apps/group/group_participances/?id=${item.id}" class="ml5">参团详情</a>
+						<a href="/apps/group/group_participances/?id=${item.id}" class="ml5" style="margin-left: 0px !important;">参团详情</a>
 					</div>
 					<div class="xui-group_action">
 						{{if (item.handle_status === 0)}}
