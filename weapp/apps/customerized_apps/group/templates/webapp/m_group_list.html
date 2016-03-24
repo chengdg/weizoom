@@ -270,7 +270,7 @@
 {% block js %}
 <script type="text/javascript">
 $(document).ready(function($) {
-    $('.xa-find_group').on('touchstart', function(e){
+    $('.xa-find_group').on('click', function(e){
         var $el = $(e.target);
 		var recordId = $el.data('id');
         getDynamicData(recordId);

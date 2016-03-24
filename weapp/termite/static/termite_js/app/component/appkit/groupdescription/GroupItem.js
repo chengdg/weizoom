@@ -16,13 +16,13 @@ W.component.appkit.GroupItem = W.component.Component.extend({
             type: 'select',
             displayName: '类型',
 			source:[{
-				name:'2人团',
-				value:'2'
+				name:'5人团',
+				value:'5'
 			},{
-				name:'3人团',
-				value:'3'
+				name:'10人团',
+				value:'10'
 			}],
-            default:'2',
+            default:'5',
 			isUserProperty:true
 
         },{
