@@ -102,7 +102,7 @@ class Groups(resource.Resource):
 						member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 						send_group_template_message(activity_info, member_info_list)
 					except:
-						print(u'发送拼团成功模板消息失败')
+						print(u'发送拼团失败模板消息失败')
 
 		if group_name:
 			params['name__icontains'] = group_name
@@ -121,6 +121,7 @@ class Groups(resource.Resource):
 		#relation 一个用户开启的团，belong_to 一个group
 		#details描述一个团圆的信息，有很多个 belong_to 一个 relation
 		group_ids = [unicode(p.id) for p in datas]
+
 
 		id2relation = {}
 		all_relations = app_models.GroupRelations.objects(belong_to__in=group_ids)
@@ -142,6 +143,35 @@ class Groups(resource.Resource):
 					r_id2details[r_id].append(detail)
 				else:
 					r_id2details[r_id]=[detail]
+		##### 开团支付个数 start ################
+		g_id2details = {}
+		for g_id in group_ids:
+			detail_list = []
+			if g_id in id2relation:
+				relations = id2relation[g_id]
+				r_ids = [str(r.id) for r in relations]
+				for r_id in r_ids:
+					if r_id in r_id2details:
+						details = r_id2details[r_id]
+						detail_list = detail_list+details
+			if g_id in g_id2details:
+				g_id2details[g_id] = g_id2details[g_id]+detail_list
+			else:
+				g_id2details[g_id] = []+detail_list
+
+		g_id2pay = {}
+		for g_id in group_ids:
+			pay_num = 0
+			if g_id in g_id2details:
+				details = g_id2details[g_id]
+				for detail in details:
+					if detail.is_already_paid and (detail.owner_id==detail.grouped_member_id):
+						pay_num += 1
+			if g_id in g_id2pay:
+				g_id2pay[g_id] = pay_num
+			else:
+				g_id2pay[g_id] = pay_num
+		###### 开团支付个数 end #################
 
 		for data in datas:
 			g_id = unicode(data.id)
@@ -149,7 +179,8 @@ class Groups(resource.Resource):
 			group_customer_num = 0
 			if g_id in id2relation:
 				relation_list = id2relation[g_id]
-				open_group_num = len(relation_list)
+				if g_id in g_id2pay:
+					open_group_num = g_id2pay[g_id]
 				for relation in relation_list:
 					r_id = unicode(relation.id)
 					if relation.status_text == '团购成功':

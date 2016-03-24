@@ -37,7 +37,7 @@ class Command(BaseCommand):
             orders = mall_models.Order.objects.filter(
                     order_id__in=[r.order_id for r in relations],
                     status=mall_models.ORDER_STATUS_NOT,
-                    created_at__lte=datetime.now() - timedelta(minutes=5)
+                    created_at__lte=datetime.now() - timedelta(minutes=1)
                 )
             for order in orders:
                 try:

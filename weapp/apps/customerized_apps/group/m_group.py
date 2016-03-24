@@ -120,7 +120,7 @@ class MGroup(resource.Resource):
 								member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 								send_group_template_message(activity_info, member_info_list)
 							except:
-								print(u'发送拼团成功模板消息失败')
+								print(u'发送拼团失败模板消息失败')
 
 						# 获取该主页帮助者列表
 						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
