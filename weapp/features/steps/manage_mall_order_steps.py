@@ -417,6 +417,7 @@ def step_look_for_order(context, user):
         'pay_type': u'全部',
         'order_source': u'全部',
         'order_status': u'全部',
+        'order_type': u'全部',
         'is_first_order': u'全部',
         'belong': 'all',
         "date_interval": "",
