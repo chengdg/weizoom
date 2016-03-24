@@ -31,6 +31,7 @@ def get_cards(request):
         'first_nav_name': export.MALL_CARD_FIRST_NAV,
         'second_navs': export.get_card_second_navs(request),
         'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'third_nav_name': export.MONEY_CARD_MANAGER_CREATE_NAV,
         'can_create_card': can_create_card,
     })
 
@@ -90,6 +91,35 @@ def get_card_detail(request):
         })
         return render_to_response('card/editor/list_weizoom_card_detail.html', c)
 
+@view(app='card', resource='recharge', action='get')
+@login_required 
+def get_cards(request):
+    """
+    显示卡充值表
+    """
+    c = RequestContext(request, {
+        'first_nav_name': export.MALL_CARD_FIRST_NAV,
+        'second_navs': export.get_card_second_navs(request),
+        'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'third_nav_name': export.MONEY_CARD_MANAGER_RECHARGE_NAV,
+    })
+
+    return render_to_response('card/editor/card_recharge.html', c)
+
+@view(app='card', resource='recharge_detail', action='get')
+@login_required 
+def get_cards(request):
+    """
+    显示卡充值明细表
+    """
+    c = RequestContext(request, {
+        'first_nav_name': export.MALL_CARD_FIRST_NAV,
+        'second_navs': export.get_card_second_navs(request),
+        'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'third_nav_name': export.MONEY_CARD_MANAGER_RECHARGE_NAV,
+    })
+
+    return render_to_response('card/editor/card_recharge_detail.html', c)
 
 @view(app='card', resource='weizoom_cards', action='export')
 @login_required
@@ -118,7 +148,13 @@ def export_weizoom_cards(request):
     titles = [u'卡号', u'密码', u'状态', u'面值/余额', u'已使用金额', u'激活时间', u'有效期', u'备注', u'领用人', u'申请部门']
     weizoom_cards_table = []
     weizoom_cards_table.append(titles)
-    
+    card_recharge = WeizoomCardRecharge.objects.all()
+    id2recharge_money = {}
+    for card in card_recharge:
+        if card.card_id not in id2recharge_money:
+            id2recharge_money[card.card_id] = card.recharge_money
+        else:
+            id2recharge_money[card.card_id] += card.recharge_money
     for  c in weizoom_cards:
         status_str = u''
         if c.status==WEIZOOM_CARD_STATUS_EMPTY:
@@ -139,8 +175,13 @@ def export_weizoom_cards(request):
         else:
             activated_at = ''
 
-        total_money ='%.2f' % weizoom_card_rule.money
-        c.used_money = '%.2f' % (float(total_money) - float(c.money))
+        money = '%.2f' % c.money # 余额
+        recharge_money = 0 if c.id not in id2recharge_money else id2recharge_money[c.id]
+        total_money ='%.2f' % (float(weizoom_card_rule.money) + recharge_money) #总额
+        used_money = '%.2f' % (float(total_money) - float(money)) #已使用金额
+
+        # total_money ='%.2f' % weizoom_card_rule.money
+        c.used_money = used_money #已使用金额
 
         c.total_and_balance_money = '%s/%s' % (total_money,c.money)
 

@@ -1,0 +1,126 @@
+{% extends "card_base.html" %}
+{% load common_tag %}
+{% load account_filter %}
+{% block css %}
+<style type="text/css">
+	.xui-filterPanel .xui-btn-group{
+		text-align: right;
+	}
+</style>
+{% endblock %}
+{% block content-panel %}
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li>
+                <a href="/card/cards/get/">微众卡管理</a>
+            </li>
+            <li class="active">制卡管理</li>
+        </ul>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="xa-cardFilterView xui-filterPanel"></div>
+
+    <div class="panel-heading" style="position: absolute;left: 720px;;margin-top:24px;z-index:10;" id="u62"> 
+        <div className="pa" style="top:-50px;right:15px;">
+			<a href="/card/recharge_detail/get/" class="btn btn-primary ml20" style="position: absolute; left: 140px;top:0px;">
+            卡充值
+        </a>
+		</div>
+    </div>
+
+<div class="panel panel-default mt20 pr card_rule_list" style="background-color:#EAEEF6">
+    <div class="panel-heading" style="height:40px">
+    </div>
+    <div 
+        data-ui-role="advanced-table" 
+        data-enable-paginator="true" 
+        data-app="card" 
+        data-api="recharge_card_list/get" 
+        data-template-id="#card_rule_record_list_view" 
+        data-init-sort="-created_at" 
+        data-item-count-per-page="15"
+        data-auto-load="true"
+        class="panel-body">
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+    {% verbatim %}
+        <script id="card_rule_record_list_view" type="text/x-jquery-tmpl">
+            <table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" style="margin-bottom: 10px;clear:both;">
+                <thead>
+                    <tr>
+						<th>卡号</th>
+						<th>余额</th>
+						<th>已使用金额</th>
+						<th>充值额度</th>
+						<th>
+							<div>卡属性</div>
+							<div>卡类型</div>
+						</th>
+						<th>专属商家</th>
+						<th>充值日期</th>
+						<th>备注</th>
+					</tr>
+                </thead>
+
+                <tbody>
+                    {{each(i, recharge) items}}
+                    <tr>
+						<td>${recharge.card_number}</td>
+						<td>${recharge.remainder}</td>
+						<td>${recharge.used_money}</td>
+						<td>
+							{{if recharge.recharge_money>0 }}
+								<span style="color:red">${recharge.recharge_money}</span>
+							{{else}}
+								<span style="color:green">${recharge.recharge_money}</span>
+							{{/if}}
+						</td>
+						<td>
+							{{if recharge.is_new_member_special }}
+								新会员
+							{{/if}}
+							{{if recharge.card_attr }}
+								专属卡
+							{{else}}
+								通用卡
+							{{/if}}
+							<div>${recharge.card_type}</div>
+						</td>
+						<td>
+							<button class="btn btn-primary" >查看专属商家</button>
+						</td>
+						<td>${recharge.created_at}</td>
+						<td>${recharge.remark}</td>
+					</tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </script>
+    {% endverbatim %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var filterBox = new W.view.card.cards.cardChargeFilter({
+                el: ".xa-cardFilterView",
+                dataView: $('[data-ui-role="advanced-table"]').data('view'),
+                userWebappId: {{user.get_profile.webapp_id}},
+                status:''
+            });
+        });
+        console.log($('#exportBtn'));
+        $('#exportBtn').click(function(event) {
+	        var url = '/card/recharge_card_export/get/?is_export='+1;
+	        console.log(filterBox.filter_value);
+	        if (filterBox.filter_value) {
+	        	
+	            url = url + '&filter_value='+filterBox.filter_value;
+	        }
+	        window.open(url);
+	    });
+    </script>
+{% endblock %}
