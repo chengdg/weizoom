@@ -8,7 +8,7 @@
  *
  */
 (function ($) {
-    console.log(333333333);
+
     function Scroller(elem, settings) {
         var m,
             hi,

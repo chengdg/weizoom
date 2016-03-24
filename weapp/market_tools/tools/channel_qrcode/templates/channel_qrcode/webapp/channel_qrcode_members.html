@@ -178,7 +178,7 @@
 {% endblock %}
 
 {% block js %}
-
+<script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
 <script>
 	$(document).ready(function(){
 		console.log(6666666);
@@ -214,7 +214,6 @@
 			$(".xa-timeChoose").hide();
 		})
 
-		console.log(11111112222222);
 		var currYear = (new Date()).getFullYear();	
 		var opt={};
 		opt.date = {preset : 'date'};
@@ -234,6 +233,7 @@
 
 		$("#startDate").mobiscroll($.extend(opt['date'], opt['default']));
 		$("#endDate").mobiscroll($.extend(opt['date'], opt['default']));
+		console.log(22222);
 	});
 </script>
 {% endblock %}
