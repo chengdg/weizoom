@@ -284,7 +284,8 @@ class GetGroupUrl(resource.Resource):
 				'group_url': group_url
 			}
 			return response.get_response()
-		except:
+		except Exception,e:
 			group_id = group_id
 			print('get_group_url_error:!!!!!!!!!!!!!!')
 			print("group_id:"+str(group_id))
+			print(e)
