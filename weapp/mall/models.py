@@ -2610,7 +2610,10 @@ class WxCertSettings(models.Model):
 	"""
 	owner = models.ForeignKey(User) #活动所有者
 	cert_path = models.CharField(default="", max_length=1024) #证书
+	up_cert_path = models.CharField(default="", max_length=2048) #证书
+
 	key_path = models.CharField(default="", max_length=1024) #证书key
+	up_key_path = models.CharField(default="", max_length=2048) #证书key
 
 	class Meta(object):
 		verbose_name = "微信证书文件地址"
