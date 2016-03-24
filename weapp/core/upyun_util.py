@@ -15,6 +15,17 @@ USERNAME = 'weizoom'
 PASSWORD = 'weizoom_weapp'
 file_list = dict()
 # -----------------------------------------------
+# if __name__ == '__main__':
+# 	up = upyun.UpYun('weappstatic', USERNAME, PASSWORD, timeout=300,
+# 			endpoint=upyun.ED_AUTO)
+# 	file_path = "D:\\weapp\\workspace\\web\\weapp\\mall\\config\\upload\\weixin_cert\\owner_id3\\apiclient_key.pem"
+# 	with open(file_path, 'rb') as f:
+# 		try:
+# 			res = up.put("/cert/a.pem", f)
+#
+# 		except:
+# 			res = up.put("/cert/a.text", f)
+
 image_path = "http://%s.b0.upaiyun.com%s"
 def upload_image_to_upyun(file_path, upyun_path):
 	if settings.MODE == 'develop':
@@ -58,9 +69,10 @@ def upload_static_file(file_path, upyun_path, check_exist=False):
 	with open(file_path, 'rb') as f:
 		try:
 			res = up.put(upyun_path, f)
+
 		except:
 			res = up.put(upyun_path, f)
-		
+
 		return "http://weappstatic.b0.upaiyun.com%s" % upyun_path
 
 
