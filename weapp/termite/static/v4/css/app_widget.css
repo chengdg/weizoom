@@ -2062,7 +2062,6 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-powerbar_group .wui-i-total_number{
 	display: inline-block;
     color: #ff2742;
-    width: 15%;
     float: right;
     text-align: right;
     line-height: 26px;
