@@ -51,8 +51,9 @@
         font-size: 0.8rem;
         position: absolute;
         top: -155px;
-        right: 0px;
-        padding: 3px;
+        right: -8px;
+        padding: 5px 5px 5px 5px;
+        background: #ffffff;
     }
     .wui-swiper-slide .xui-i-content-group .wui-i-btn-using{
         position: absolute;
@@ -179,7 +180,8 @@
                                             <img src="{{ group_item.product_img }}" class="xui-i-content-img">
                                         </div>
                                         <div class="xui-i-content-group">
-                                            <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}</div>
+                                            <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}
+                                                <span style="background: url('/termite_static/img/component/group/icon-1.png');position: absolute;height: 5px;width: 10px;background-repeat: no-repeat;position: absolute;right: -2px;bottom: -6px;"></span></div>
                                             <a href="{{ group_item.url }}">
                                                 <button class="wui-i-btn-using wa-using">点击开团</button>
                                             </a>
