@@ -169,15 +169,24 @@ $(document).ready(function() {
         el: ".xa-cardListFilterView",
         dataView: $('[data-ui-role="advanced-table"]').data('view'),
         userWebappId: {{user.get_profile.webapp_id}},
-        status:''
+        status:'',
     });
-
      $('#exportBtn').click(function(event) {
+        var card_num_min = $('#card_num_min').val().trim();
+        console.log(card_num_min,'ffffffffffff')
+        var card_num_max = $('#card_num_max').val().trim();
+        console.log(card_num_min,'ffffffffffff')
         var url = '/card/weizoom_cards/export/?card_id='+{{weizoom_card_rule.id}};
         if (filterBox.filter_value) {
             url = url + '&filter_value='+filterBox.filter_value;
         }
-
+        if(card_num_min){
+            url=url+'&card_num_min='+card_num_min;
+        }
+        if(card_num_max){
+            url=url+'&card_num_max='+card_num_max;
+        }
+        console.log(url,22222222)
         window.open(url);
     });
 });
