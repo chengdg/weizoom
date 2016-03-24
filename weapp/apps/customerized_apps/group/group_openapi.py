@@ -13,6 +13,8 @@ from termite import pagestore as pagestore_manager
 from mall.order.util import update_order_status_by_group_status
 from group_participance import send_group_template_message
 from modules.member.models import Member
+from watchdog.utils import watchdog_error
+from core.exceptionutil import unicode_full_stack
 
 class GroupBuyProduct(resource.Resource):
 	app = 'apps/group'
@@ -270,12 +272,18 @@ class GetGroupUrl(resource.Resource):
 		"""
 		woid = request.GET.get('woid')
 		group_id = request.GET.get('group_id')
-		relation_record = app_models.GroupRelations.objects.get(id=group_id)
-		activity_id = relation_record.belong_to
-		fid = relation_record.member_id
-		group_url = '/m/apps/group/m_group/?webapp_owner_id='+str(woid)+'&id='+str(activity_id)+'&fid='+str(fid)+'&group_relation_id='+group_id
-		response = create_response(200)
-		response.data = {
-			'group_url': group_url
-		}
-		return response.get_response()
+		try:
+			relation_record = app_models.GroupRelations.objects.get(id=group_id)
+			activity_id = relation_record.belong_to
+			fid = relation_record.member_id
+			group_url = '/m/apps/group/m_group/?webapp_owner_id='+str(woid)+'&id='+str(activity_id)+'&fid='+str(fid)+'&group_relation_id='+group_id
+			response = create_response(200)
+			response.data = {
+				'group_url': group_url
+			}
+			return response.get_response()
+		except:
+			group_id = group_id
+			watchdog_error(u"group_id:"+str(group_id))
+			notify_msg = u"处理团购跳转的get_group_url错误，cause:\n{}".format(unicode_full_stack())
+			watchdog_error(notify_msg)
