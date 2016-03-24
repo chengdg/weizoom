@@ -243,7 +243,7 @@ class OrderAction(resource.Resource):
 		response = create_response(200)
 		response.data = {
 			'order_id': order_id,
-			'is_susscess': True
+			'is_success': True
 		}
 		return response.get_response()
 
