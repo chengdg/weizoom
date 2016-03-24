@@ -543,8 +543,8 @@ def create_weizoom_cards(request):
     cur_belong_to_owner = request.POST.get('belong_to_owner','[-1]')
     is_new_member_special = request.POST.get('is_new_member_special', 0)
     valid_restrictions = request.POST.get('full_use_value', -1)
-    left_belong_to_owner=cur_belong_to_owner.split('[')[1]
-    belong_to_owner=left_belong_to_owner.split(']')[0]
+    belong_to_owner = json.loads(cur_belong_to_owner)
+
     if name not in [card_rule.name for card_rule in WeizoomCardRule.objects.all()]:
         rule = WeizoomCardRule.objects.create(
             owner = request.user,
@@ -557,7 +557,7 @@ def create_weizoom_cards(request):
             valid_time_from = valid_time_from,
             expired_time = valid_time_to,
             card_attr = card_attr,
-            shop_limit_list = belong_to_owner,
+            shop_limit_list = ','.join(belong_to_owner),
             is_new_member_special = is_new_member_special,
             valid_restrictions= valid_restrictions if valid_restrictions else -1
             )
