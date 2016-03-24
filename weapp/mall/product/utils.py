@@ -430,7 +430,7 @@ def get_product2group(pids, woid='3'):
 
     data =  response.read()
     data = json.loads(data)
-    if data["data"]["pid2is_in_group_buy"]:
+    if data["data"].has_key("pid2is_in_group_buy"):
         product_groups = data["data"]["pid2is_in_group_buy"]
         product2group = {}
         for product_group in product_groups:
