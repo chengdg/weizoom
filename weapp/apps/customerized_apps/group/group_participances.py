@@ -122,6 +122,11 @@ class GroupParticipances(resource.Resource):
 			if filter_end_time and (filter_end_time<end_time):
 				pass_tag = False
 			if pass_tag:
+				members_count = "0"
+				if r_id2pay_memebers:
+					members_count = '%d/%s'%(len(r_id2pay_memebers[str(data.id)]),data.group_type)
+
+
 				items.append({
 					'id': str(data.id),
 					'group_leader_name':data.group_leader_name,
@@ -133,7 +138,8 @@ class GroupParticipances(resource.Resource):
 					'end_time_time': end_time_time,
 					'end_time':end_time,
 					'status':data.status_text,
-					'members_count':'%d/%s'%(int(len(data.grouped_member_ids)),data.group_type)
+					'members_count':members_count,
+					'member_id':str(data.member_id)
 				})
 
 		#排序
@@ -178,7 +184,8 @@ class GroupParticipances(resource.Resource):
 				'end_time_date': data['end_time_date'],
 				'end_time_time': data['end_time_time'],
 				'status':data['status'],
-				'members_count':data['members_count']
+				'members_count':data['members_count'],
+				'member_id':data['member_id']
 			})
 
 		response_data = {
