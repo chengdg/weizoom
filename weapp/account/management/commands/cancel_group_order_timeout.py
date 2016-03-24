@@ -4,6 +4,7 @@
 """
 from datetime import datetime, timedelta
 import time
+import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -42,6 +43,7 @@ class Command(BaseCommand):
                 try:
                     update_order_status(webapp_id2user[order.webapp_id], 'cancel', order)
                     relations.filter(order_id=order.order_id).update(group_status=mall_models.GROUP_STATUS_failure)
+                    logging.info(u"团购15分钟未支付订单order_id:%s取消成功" % order.order_id)
                 except:
                     notify_msg = u"团购未支付订单{}，取消失败, cause:\n{}".format(order.order_id, unicode_full_stack())
                     watchdog_error(notify_msg)
