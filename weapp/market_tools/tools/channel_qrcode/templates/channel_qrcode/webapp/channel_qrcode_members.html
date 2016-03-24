@@ -186,6 +186,7 @@
 <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
 <script>
 	$(document).ready(function(){
+		console.log(6666666);
 		var width=document.body.clientWidth;
 		if(width<420)
 		{
@@ -217,9 +218,7 @@
 			$(".xa-RecommendedDetailPage").show();
 			$(".xa-timeChoose").hide();
 		})
-	});
 
-	$(function () {
 		console.log(11111112222222);
 		var currYear = (new Date()).getFullYear();	
 		var opt={};
@@ -240,7 +239,6 @@
 
 		$("#startDate").mobiscroll($.extend(opt['date'], opt['default']));
 		$("#endDate").mobiscroll($.extend(opt['date'], opt['default']));
-
 	});
 </script>
 {% endblock %}
