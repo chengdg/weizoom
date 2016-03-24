@@ -14,9 +14,12 @@ from excel_response import ExcelResponse
 
 from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo, ComponentAuthedAppid
 
-WEIZOOM_CARD_BELONG_TO_OWNER = [
-    "njtest", "ceshi01", "xingke", "liangfeng", "wzjx001","weizoommm", "weizoomxs", "weizoombfm","weizoomclub", "weizoomshop", "ainicoffee","yunhanchundai","dongfangwodeming"
-]
+WEIZOOM_CARD_BELONG_TO_OWNER = ["guo","bill","yunhanchundai","weizoomshop", "jobs","njtest","ceshi01","dftj","ainicoffee","hongfan","changjiufangzhi","tianreyifang","fengzhenkeji","dongfangwodeming","weizoombfm","liangfeng","fuwa",
+                                "gangshanxigu","boniya","danhonghu","yingguan","wubao","wzjx001","heshibaineng","tianmashengwu","judou","zhonghaitou","wugutang",
+                                "bohaotong","chalushui","tide","huajitang","heruntiancheng","chexiaomi","dgposy","weizoommm","weizoomxs","huachilemei",
+                                "miaochaojiaonang","baoyangong","mkmj","suqinweizhen","leyun","guangyou","ertongshazi","yangxinkeji","haoainiguopin","weizoomclub",
+                                "zhongbida","xingke","bailingda","shenzhoumuye","beimiaomei","sanqitang","daxuan","saihanshiye","maibeier","wancheng","yulei","aiyue",
+                                "zhongtulvan","liangfeng","yanqiang","zhongjie","guangruishipin","depingshangmao","mileke"]
 @view(app='card', resource='cards', action='get')
 @login_required 
 def get_cards(request):

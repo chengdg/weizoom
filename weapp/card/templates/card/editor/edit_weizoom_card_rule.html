@@ -12,6 +12,45 @@
     .ui-timepicker-div td { font-size: 90%; } 
     .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
     .errorHint{width: 260px;}
+    .xui-owner_list{
+        float: left;
+        margin-right: 20px;
+    }
+    .xui_all_select{
+    float: right;
+    padding-right: 10px;
+    }
+    .show_bussiness_div{
+        background-attachment: scroll;
+        background-clip: border-box;
+        background-color: #799fce;
+        background-image: none;
+        background-origin: padding-box;
+        background-position: 0 0;
+        background-repeat: repeat;
+        background-size: auto auto;
+        color: #fff;
+        float: left;
+        height: 26px;
+        line-height: 12px;
+        margin-left: 10px;
+        margin-top: 5px;
+        min-width: 75px;
+        padding-top: 7px;
+        text-align: center;    
+    }
+    .x_deleteTempPattern {
+    cursor: pointer;
+    float: left;
+    font-size: 26px;
+    margin-top: -12px;
+    text-align: center;
+    transform: rotate(45deg);
+    vertical-align: middle;
+    width: 20px;
+    margin-left: -12px;
+    margin-top: -13px;
+}
 </style>
 
 <div class="xui-editProductPage">
@@ -70,19 +109,18 @@
 
             <div id="owner_special" class="form-group" style="display: none">
                 <label class="control-label fl" for="parents_name">专属商家：</label>
-                <div class="col-sm-2 fl pl5" style="width: auto;">
-                    <select type="text" class="input-xlarge" name="belong_to_owner" data-validate="require-select">
-                        <option value="-1">请选择</option>
-                        {% for owner in belong_to_owner %}
-                            <option value="{{ owner.user_id }}">{{ owner.mpuser_name }}</option>
-                        {% endfor %}
-                    </select>
-                    <div class="errorHint" style="width: auto"></div>
+                <div class="col-sm-2 fl pl5" style="width: auto;margin-top: 4px;color: #0099ff;cursor: pointer;">
+                     <span class="add_bussiness_span" data-toggle="modal" data-target="#ownerSpecial">添加商家</span>
                 </div>
-                <div class="checkbox" style="float: left;width: 10%;">
+                <div class="checkbox" style="float: left;width: 10%;padding-top:4px">
                     <label>
                         <input type="checkbox" name="is_new_member_special" style="margin-top: 2px"> 新会员专属
                     </label>
+                </div>
+            </div>
+            <div class="form-group ">
+                <div class="add_bussiness_div" style="margin-left: 130px;width: 800px;">
+                    
                 </div>
             </div>
 			<div class="form-group ">
@@ -138,13 +176,13 @@
                 </div>
 
                 <div class="col-sm-2 fl pl5">
-                    <span style="width:10px;z-index:9999;position:absolute;top:0px;left:10px;">至</span>
+                    <span style="width:10px;position:absolute;top:0px;left:10px;">至</span>
                     <input 
                         type="text" 
                         class="input-xlarge form-control" 
                         id="valid_time_to" 
                         name="valid_time_to" 
-                        style="width:160px;z-index:9999;position:absolute;top:0px;left:40px;"
+                        style="width:160px;position:absolute;top:0px;left:40px;"
                         placeholder="" 
                         value="{% if weizoom_card_rule %}{{weizoom_card_rule.valid_time_to|date:"Y-m-d"}}{% endif %}"
                         readonly="readonly" 
@@ -177,11 +215,46 @@
         </fieldset>
     </form>
 </div>
+<div id="ownerSpecial" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" style="top:200px">
+            <div class="modal-header" style="color:#fff;line-height:38px;font-size:14px">
+                <span class="xui_all_select">
+                    <input type="checkbox" id="all_select_checked" name="all_select_checked"/>
+                    <span>全选</span>
+                </span>
+                <span>请选择商家</span>
+            </div>
+            <div class="modal-body">
+              <div style="max-height:450px;overflow-y:scroll">
+                  {% for owner in belong_to_owner %}
+                        <div  class="xui-owner_list">
+                             <input type="checkbox" name="select_checked" id="{{ owner.user_id }}"/>
+                            <span id="{{ owner.user_id }}">{{ owner.mpuser_name }}</span>
+                        </div>
+                        {% endfor %}
+              <div style="clear: both"></div></div>
+            </div>
+            <div class="modal-footer tc">
+                <button type="button" class="btn btn-success" onClick=save_checked_owner()>确定</button>
+                <button class="btn btn-cancel" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
 <script>
 $(document).ready(function() {
+    $("#all_select_checked").click(function(){
+            console.log('11111111')
+            $('[name=select_checked]:checkbox').attr('checked',this.checked);
+        })
+    $('[name=select_checked]:checkbox').click(function(){
+        $(this).attr('checked',this.checked);
+    })
+
     $('input[data-ui-role="date_time_picker"]').each(function() {
             var $datetimepicker = $(this);
             var format = $datetimepicker.attr('data-format');
@@ -306,10 +379,15 @@ $(document).ready(function() {
         var expired_minute = $('[name="expired_minute"]').val();
         var card_type = $('[name="type"]').val();
         var card_attr = $('[name="card_attr"]').val();
-        var belong_to_owner = $('[name="belong_to_owner"]').val();
         var is_new_member_special = $('[name="is_new_member_special"]').attr('checked');
 		var full_use_value = $('[name="full_use_value"]').val();
-
+        var belong_to_owner_ids=[]
+        var $checked_owner=$('div.show_bussiness_div');
+        if($checked_owner){
+            $checked_owner.each(function(){
+                belong_to_owner_ids.push(parseInt($(this).attr('id')))
+            })
+        }
         W.getApi().call({
             app: 'card',
             api: 'weizoom_cards/create',
@@ -322,7 +400,7 @@ $(document).ready(function() {
                 valid_time_to: valid_time_to,
                 card_type: card_type,
                 card_attr: card_attr,
-                belong_to_owner: belong_to_owner,
+                belong_to_owner:  JSON.stringify(belong_to_owner_ids),
                 is_new_member_special: is_new_member_special,
 				full_use_value: full_use_value
             },
@@ -338,5 +416,37 @@ $(document).ready(function() {
             }
         });
     }
+function save_checked_owner(){
+    $(".add_bussiness_div").html('')
+    suripers={}
+    var $checked_owner=$('div .xui-owner_list');
+    $checked_owner.each(function(){
+        if($(this).children('input').attr("checked")=='checked'){
+            suripers[$(this).children('span').attr("id")]=$(this).children('span').html()
+        }
+    })
+    
+    for (i in suripers){
+        $(".add_bussiness_div").append('<div><div class="fl show_bussiness_div" id="'+i+'">'+suripers[i]+'</div><div class="x_deleteTempPattern" onClick=display_detele('+i+')>+</div></div>')
+    }
+    $('#ownerSpecial').modal('hide');
+}
+function display_detele(i){
+    var $show_bussiness_div=$('div.show_bussiness_div');
+        if($show_bussiness_div){
+            $show_bussiness_div.each(function(){
+                if($(this).attr('id')==i){                    
+                    $(this).parent().remove()
+                }
+            })
+        }
+        var $checked_owner_input=$('div.xui-owner_list input');
+        $checked_owner_input.each(function(){
+                if($(this).attr('id')==i){
+                    console.log($(this))                    
+                    $(this).removeAttr('checked')
+                }
+        }) 
+}
 </script>
 {% endblock %}
