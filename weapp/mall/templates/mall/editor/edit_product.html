@@ -59,7 +59,7 @@
 			<div class="form-group">
 				<label class="control-label fl star_show" for="supplier">供货商：</label>
 				<div class="fl">
-            <select disabled="disabled" class="w106 ml5" id="supplier">
+            <select disabled="disabled" class="w106 ml5" id="supplier" style="white-space: nowrap;">
 						<option value="{{ store_name }}">{{ store_name }}</option>
 					</select>
 				</div>
@@ -79,9 +79,9 @@
 					<div class="fl">
 	                {% if product.supplier %}
 	                        <input type="hidden" name="supplier" value="{{ product.supplier }}"/>
-	                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}">
+	                        <select disabled="disabled" class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" style="white-space: nowrap;">
 	                {% else %}
-	                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty">
+	                        <select class="w106 ml5" id="supplier" name="supplier" data-origin="{% if product %}{{ product.supplier }}{% endif %}" data-validate="require-notempty" style="white-space: nowrap;">
 	                {% endif %}
 							<option value="">请选择</option>
 							{% for id, name in supplier %}
@@ -471,8 +471,24 @@
 
 <!--    运费验证实现    -->
 <script type="text/javascript">
+
+//为了给供应商加title
+$('#supplier').on('change',function(){
+		var text = $(this).find("option:selected").text();
+		$('#supplier').attr('title', text);
+})
 var origin_supplier = $('#supplier').data('origin');
-if(origin_supplier>0)$('#supplier').val(origin_supplier);
+if(origin_supplier>0){
+	var text="";
+	$($('#supplier').find("option")).each(function(index, el) {
+		if($(el).val() == origin_supplier){
+			text = $(el).text();
+			return;
+		}
+	});
+	$('#supplier').val(origin_supplier).attr('title', text);
+}
+
 $('.xa-freight').on('click', function(e){
     var $el = $(e.target);
     var $_parent = $el.parents("#freight");
