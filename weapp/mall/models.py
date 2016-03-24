@@ -1715,7 +1715,7 @@ def belong_to(webapp_id):
             cancel_group_order_ids = [order.order_id for order in Order.objects.filter(
                 order_id__in=[
                     r.order_id for r in group_order_relations.filter(
-                    group_status=GROUP_STATUS_failure)
+                    group_status__in=[GROUP_STATUS_ON, GROUP_STATUS_failure])
                     ],
                     status=ORDER_STATUS_CANCEL,
                     pay_interface_type=PAY_INTERFACE_WEIXIN_PAY
