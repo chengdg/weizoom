@@ -32,6 +32,9 @@
         <!-- *end_prunt_task* -->
 
         <link type="text/css" rel="stylesheet" href="/webapp_static/backend_{{request.template_name}}/css/{{request.template_name}}.css">
+        <!--日期选择器样式-->
+        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll.css">
+        <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll_date.css">
         
         {% block css %}{% endblock %}
 
@@ -94,6 +97,8 @@
 
 
         <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll_date.js"></script>
+        <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
         <meta name="x5-orientation" content="portrait">
         <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
         <meta content="telephone=no" name="format-detection">

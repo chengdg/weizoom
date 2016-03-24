@@ -1,11 +1,7 @@
 {% extends "webapp_content_base.html" %}
 {% load common_tag %}
 {% block css%}
-<!--日期选择器样式--><!-- 
-<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/normalize3.0.2.min.css">
-<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/style.css"> -->
-<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll.css">
-<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll_date.css">
+
 <style>
 	html,body{
 		background: #ececec;
@@ -171,8 +167,8 @@
 </div>
 
 <div class="xui-timeChoose xa-timeChoose">
-	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" class="input"/></div>
-	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" class="input"/></div>
+	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="input"/></div>
+	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="input"/></div>
 	<div class="xui-btn-wrap">
 		<a href="javascript:void(0);" class="xui-reset xa-reset">清除时间</a>
 		<a href="javascript:void(0);" class="xui-submit xa-submit">确定</a>
@@ -182,8 +178,7 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll_date.js"></script>
-<script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
+
 <script>
 	$(document).ready(function(){
 		console.log(6666666);
