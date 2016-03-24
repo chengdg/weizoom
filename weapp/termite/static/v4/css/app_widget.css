@@ -1911,7 +1911,7 @@ li.wui-selectBox-display-table {
 
 .wui-group-container .wui-i-description-content .wui-i-product-price-group-group-price{
     color: #ff2742;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: bold;
 }
 .wui-group-container .wui-i-description-content .wui-i-product-img{
@@ -2013,8 +2013,8 @@ li.wui-selectBox-display-table {
     height: 2.5rem;
     border-radius: 5px;
     font-family: "微软雅黑";
-    width: 70%;
-    margin-bottom: 5px;
+    width: 64%;
+    margin-bottom: 10px;
 }
 .wui-group-container .wui-i-btngroup .wui-i-btn-closed{
     color:#EAEAEA;
@@ -2053,10 +2053,10 @@ li.wui-selectBox-display-table {
     display: inline-block;
     color: #ffffff;
     background: #E5E7E6;
-    width: 85%;
-    height: 26px;
+    width: 86%;
+    height: 20px;
     border-radius: 15px;
-    line-height: 26px;
+    line-height: 20px;
 }
 
 .wui-group-container .wui-i-powerbar_group .wui-i-total_number{
@@ -2064,7 +2064,7 @@ li.wui-selectBox-display-table {
     color: #ff2742;
     float: right;
     text-align: right;
-    line-height: 26px;
+    line-height: 20px;
     font-weight: bold;
     font-size: 1rem;
 }
@@ -2074,7 +2074,8 @@ li.wui-selectBox-display-table {
     background: #30D8B4;
     color: #ffffff;
     border-radius: 15px;
-    line-height: 26px;
+    line-height: 20px;
+	min-width: 20%;
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar_fail{
     background: #999999;
@@ -2113,9 +2114,12 @@ li.wui-selectBox-display-table {
 }
 
 .wui-group-container .wui-i-states .wui-i-membersBox{
-	margin-left: 35px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    margin-left: 20%;
+    margin-right: 20%;
+    min-width: 200px;
 }
 .wui-group-container .wui-i-states .wui-i-member{
 	width: 36px;

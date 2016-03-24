@@ -28,7 +28,7 @@
         height: 145px;
         border-radius: 5px;
         display: inline-block;
-        margin: 10px;
+        margin: 10px 10px 10px 5%;
     }
 
     .wui-swiper-slide .xui-listInner .xui-i-content .xui-i-imgBox img{
@@ -51,8 +51,9 @@
         font-size: 0.8rem;
         position: absolute;
         top: -155px;
-        right: 0px;
-        padding: 3px;
+        right: -8px;
+        padding: 5px 5px 5px 5px;
+        background: #ffffff;
     }
     .wui-swiper-slide .xui-i-content-group .wui-i-btn-using{
         position: absolute;
@@ -77,8 +78,8 @@
     }
     .wui-swiper-slide .xui-listInner .xui-i-title{
         text-align: left;
-        margin: 0px 10px;
-        padding-bottom: 10px;
+        margin: -10px 0px 10px 5%;
+        padding-bottom: 15px;
     }
 
     .xui-listInner .ui-btn-inner{
@@ -87,7 +88,7 @@
 
     .xui-all_groups_can_join-slide .xui-listInner{
         text-align: center;
-        height: 100px;
+        height: 82px;
         padding: 0px;
         position: relative;
     }
@@ -155,6 +156,21 @@
         margin-left: 60px;
         margin-top: -37px;
     }
+    @media only screen
+    and (min-device-width: 320px)
+    and (max-device-width: 480px) {
+        .xui-i-content-group-css{
+            display: inline-block;
+            margin-top: 35px;
+            width: 40% !important;
+        }
+    }
+    .xui-i-content-group-css{
+        display: inline-block;
+        margin-top: 35px;
+        width: 50%;
+    }
+
 </style>
 {% endblock %}
 
@@ -179,7 +195,8 @@
                                             <img src="{{ group_item.product_img }}" class="xui-i-content-img">
                                         </div>
                                         <div class="xui-i-content-group">
-                                            <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}</div>
+                                            <div class="xui-i-content-time">活动截止：{{ group_item.end_time }}
+                                                <span style="background: url('/termite_static/img/component/group/icon-1.png');position: absolute;height: 5px;width: 10px;background-repeat: no-repeat;position: absolute;right: -2px;bottom: -6px;"></span></div>
                                             <a href="{{ group_item.url }}">
                                                 <button class="wui-i-btn-using wa-using">点击开团</button>
                                             </a>
@@ -226,7 +243,7 @@
                         <li data-icon="true" class="xui-listInner">
                             <div class="xui-i-title">
                                 <img src="{ product_img }" class="xui-i-content-img mt10">
-                                <div style="display: inline-block;">
+                                <div class="xui-i-content-group-css" style="display: inline-block;margin-top: 35px;width: 45%;">
                                     <div class="xui-i-content-remain_hours">剩余{remain_hours}小时</div>
                                     <p style="color: #5E5E5E;">{ group_owner_name }</p>
                                     <div>的{ group_name }</div>
@@ -234,7 +251,7 @@
                                 </div>
                                 <div>
                                     <div style="display: inline-block;margin-top: 10px;margin-left: 10px;">
-                                        <p style="margin-bottom: 5px;text-align: center;width: 40px;">团员</p>
+                                        <p style="margin-bottom: 5px;text-align: center;width: 33px;">团员</p>
                                         <span style="background: #4A4A4A;color: #fff;padding: 5px;border-radius: 5px;top: 5px;">{participant_count}</span>
                                     </div>
                                     <div class="xui-i-content-title_box">

@@ -53,7 +53,7 @@
 					{{/if}}
 
 					{{if (field.type == 'title_with_nothing')}}
-					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField">
+					<div class="propertyGroup_property_textField propertyGroup_property_horizontalField" style="${field.style}">
 					    <div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}
 					    </div>
 
@@ -227,7 +227,7 @@
 						<div class="propertyGroup_property_label {{if field.validate}}star_show{{/if}}">${field.displayName}</div>
 						{{/if}}
 						<div class="propertyGroup_property_input pl5" style="width: 90%; margin: 5px auto;">
-							<textarea class="" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}}
+							<textarea class="" style="${field.style}" {{if field.placeholder}}placeholder="${field.placeholder}"{{/if}}
 							style="height: 100px; width: 95%;" data-field="${field.name}"
 							{{if field.validate}}{{html field.validate}}{{/if}}
 							{{if field.maxLength}}maxlength="${field.maxLength}"{{/if}}>${model.get(field.name)}</textarea>
@@ -472,7 +472,7 @@
 					        {{/if}}
 
 					        {{if field.help}}
-					        <div style="color: #666;">
+					        <div style="color: #666;margin: 10px 0;">
 					            {{html field.help.replace(/\n/g, "<br/>")}}
 					        </div>
 					        {{/if}}
@@ -521,7 +521,7 @@
                             </button>
                             <div class="errorHint"></div>
                             {{if component.model.get(field.name)}}
-                               <div>
+                               <div style="margin-left: -75px;">
                                   {{html W.data.getDynamicComponentDataForDialogSelectControl(component, field)}}
                                </div>
                             {{/if}}
