@@ -33,16 +33,16 @@ class Command(BaseCommand):
 			for group_relation in all_running_group_relations:
 				all_running_group_ids.append(group_relation.belong_to)
 				timing = (group_relation.created_at + timedelta(days=int(group_relation.group_days)) - datetime.today()).total_seconds()
+				group_id = group_relation.id
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-					update_order_status_by_group_status(group_relation.id,'failure')
+					update_order_status_by_group_status(group_id,'failure')
 					#收集拼团失败模板消息数据
 					try:
 						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 						group_info = all_groups.get(id=group_relation.belong_to)
 						owner_id = group_info.owner_id
 						product_name = group_info.product_name
-						group_id = group_relation.id
 						miss = int(group_relation.group_type)-group_details.count()
 						activity_info = {
 							"owner_id": str(owner_id),
@@ -74,15 +74,15 @@ class Command(BaseCommand):
 					all_end_group_ids.append(str(group.id))
 			all_end_group_relations = all_running_group_relations.filter(belong_to__in=all_end_group_ids)
 			for group_relation in all_end_group_relations:
+				group_id = group_relation.id
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-				update_order_status_by_group_status(group_relation.id,'failure')
+				update_order_status_by_group_status(group_id,'failure')
 				#收集拼团失败模板消息数据
 				try:
 					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
 					group_info = all_groups.get(id=group_relation.belong_to)
 					owner_id = group_info.owner_id
 					product_name = group_info.product_name
-					group_id = group_relation.id
 					miss = int(group_relation.group_type)-group_details.count()
 					activity_info = {
 						"owner_id": str(owner_id),
