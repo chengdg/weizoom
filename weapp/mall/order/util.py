@@ -117,6 +117,12 @@ def export_orders_json(request):
     if query_dict.get("product_name"):
         product_name = query_dict["product_name"]
 
+    # 处理团购筛选
+    group_order_relations = OrderHasGroup.objects.filter(webapp_id=webapp_id)
+    group_order_ids = [r.order_id for r in group_order_relations]
+    if query_dict.get('order_type') and query_dict['order_type'] == 2 and not mall_type:
+        order_list = order_list.filter(order_id__in=group_order_ids)
+
     order_list = __get_orders_by_params(query_dict, date_interval, date_interval_type, order_list, request.user_profile)
 
     if product_name:
