@@ -102,7 +102,7 @@ class Command(BaseCommand):
 			all_not_start_group_relations = app_models.GroupRelations.objects(group_status=app_models.GROUP_NOT_START)
 			for group_relation in all_not_start_group_relations:
 				timing_minutes = (datetime.today() - group_relation.created_at).total_seconds() / 60
-				if timing_minutes >= 1 :
+				if timing_minutes >= 15 :
 					group_relation.delete()
 
 			"""
@@ -111,7 +111,7 @@ class Command(BaseCommand):
 			all_unpaid_group_details = app_models.GroupDetail.objects(is_already_paid=False)
 			for group_detail in all_unpaid_group_details:
 				timing_minutes = (datetime.today() - group_detail.created_at).total_seconds() / 60
-				if timing_minutes >= 1 :
+				if timing_minutes >= 15 :
 					try:
 						all_running_group_relations.get(id=group_detail.relation_belong_to).update(
 							dec__grouped_number=1,
