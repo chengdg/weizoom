@@ -2075,6 +2075,7 @@ li.wui-selectBox-display-table {
     color: #ffffff;
     border-radius: 15px;
     line-height: 20px;
+	min-width: 20%;
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar_fail{
     background: #999999;
@@ -2113,9 +2114,12 @@ li.wui-selectBox-display-table {
 }
 
 .wui-group-container .wui-i-states .wui-i-membersBox{
-	margin-left: 35px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    margin-left: 20%;
+    margin-right: 20%;
+    min-width: 200px;
 }
 .wui-group-container .wui-i-states .wui-i-member{
 	width: 36px;
