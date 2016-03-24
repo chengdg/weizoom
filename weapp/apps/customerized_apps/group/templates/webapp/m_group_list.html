@@ -156,6 +156,23 @@
         margin-left: 60px;
         margin-top: -37px;
     }
+    @media only screen
+    and (min-device-width: 320px)
+    and (max-device-width: 480px)
+    and (-webkit-device-pixel-ratio: 2)
+    and (device-aspect-ratio: 2/3) {
+        .xui-i-content-group-css{
+            display: inline-block;
+            margin-top: 35px;
+            width: 40% !important;
+        }
+    }
+    .xui-i-content-group-css{
+        display: inline-block;
+        margin-top: 35px;
+        width: 50%;
+    }
+
 </style>
 {% endblock %}
 
@@ -228,7 +245,7 @@
                         <li data-icon="true" class="xui-listInner">
                             <div class="xui-i-title">
                                 <img src="{ product_img }" class="xui-i-content-img mt10">
-                                <div style="display: inline-block;margin-top: 22px;width: 47%;">
+                                <div class="xui-i-content-group-css" style="display: inline-block;margin-top: 35px;width: 45%;">
                                     <div class="xui-i-content-remain_hours">剩余{remain_hours}小时</div>
                                     <p style="color: #5E5E5E;">{ group_owner_name }</p>
                                     <div>的{ group_name }</div>
