@@ -146,7 +146,15 @@
 	<div class="xui-time xa-time">
 		<span>筛选时间</span>
 		<span class="xui-time-wrap">
-		 	<span class="xui-time-content">{% if startDate and endDate %}<span>startDate</span>&nbsp;-&nbsp;<span>endDate</span>{% else %}全部{% endif %}</span>
+		 	<span class="xui-time-content">
+		 		{% if startDate and endDate %}
+		 			<span>{{startDate}}</span>
+		 			&nbsp;-&nbsp;
+		 			<span>{{endDate}}</span>
+	 			{% else %}
+		 			全部
+	 			{% endif %}
+ 			</span>
 			<a href="javascript:void(0);" class="xa-choose xui-choose">&gt;</a>
 		</span>
 	</div>
