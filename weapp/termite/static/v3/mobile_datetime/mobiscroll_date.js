@@ -1133,20 +1133,20 @@
             dateOrder: 'yymmdd',
             dayNames: ['ÖÜÈÕ', 'ÖÜÒ»;', 'ÖÜ¶þ;', 'ÖÜÈý', 'ÖÜËÄ', 'ÖÜÎå', 'ÖÜÁù'],
             dayNamesShort: ['ÈÕ', 'Ò»', '¶þ', 'Èý', 'ËÄ', 'Îå', 'Áù'],
-            dayText: 'ÈÕ',
-            hourText: 'Ê±',
-            minuteText: '·Ö',
+            dayText: '日',
+            hourText: '时',
+            minuteText: '分',
             monthNames: ['Ò»ÔÂ', '¶þÔÂ', 'ÈýÔÂ', 'ËÄÔÂ', 'ÎåÔÂ', 'ÁùÔÂ', 'ÆßÔÂ', '°ËÔÂ', '¾ÅÔÂ', 'Ê®ÔÂ', 'Ê®Ò»ÔÂ', 'Ê®¶þÔÂ'],
             monthNamesShort: ['1ÔÂ', '2ÔÂ', '3ÔÂ', '4ÔÂ', '5ÔÂ', '6ÔÂ', '7ÔÂ', '8ÔÂ', '9ÔÂ', '10ÔÂ', '11ÔÂ', '12ÔÂ'],
-            monthText: 'ÔÂ',
-            secText: 'Ãë',
+            monthText: '月',
+            secText: '秒',
             timeFormat: 'HH:ii',
             timeWheels: 'HHii',
-            yearText: 'Äê'
+            yearText: '年'
         });
         $.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
-            setText: 'È·¶¨',
-            cancelText: 'È¡Ïû'
+            setText: '确定',
+            cancelText: '取消'
         });
         var theme = {
             defaults: {

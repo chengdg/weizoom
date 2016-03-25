@@ -185,7 +185,6 @@
 <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
 <script>
 	$(document).ready(function(){
-		console.log(6666666);
 		var width=document.body.clientWidth;
 		if(width<420)
 		{
@@ -216,6 +215,9 @@
 		$(".xa-submit").click(function(){
 			$(".xa-RecommendedDetailPage").show();
 			$(".xa-timeChoose").hide();
+			var startDate = $('#startDate').val();
+			var endDate = $('#endDate').val();
+			$('.xui-time-content').text(startDate +' - '+ endDate);
 		})
 
 		var currYear = (new Date()).getFullYear();	
@@ -231,13 +233,11 @@
 			lang: 'zh',
 			showNow: true,
 			nowText: "今天",
-			startYear: currYear - 50, //开始年份
-			endYear: currYear + 10 //结束年份
+			startYear: currYear - 100, //开始年份
+			endYear: currYear + 100 //结束年份
 		};
-		console.log(111111);
 		$("#startDate").mobiscroll($.extend(opt['datetime'], opt['default']));
 		$("#endDate").mobiscroll($.extend(opt['datetime'], opt['default']));
-		console.log(22222);
 	});
 </script>
 {% endblock %}
