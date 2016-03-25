@@ -242,10 +242,12 @@ class MGroup(resource.Resource):
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
 					group_relation_id = group_relation.id
-					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', group_relation_id)
-					response = HttpResponseRedirect(new_url)
-					response.set_cookie('group_relation_id', group_relation_id, max_age=60*60*24*365)
-					return response
+					group_detail = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=str(member_id))
+					if group_detail.count() > 0: #开团并且下过订单
+						new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', group_relation_id)
+						response = HttpResponseRedirect(new_url)
+						response.set_cookie('group_relation_id', group_relation_id, max_age=60*60*24*365)
+						return response
 
 			# cache_key = 'apps_group_%s_html' % record_id
 			# # 从redis缓存获取静态页面
