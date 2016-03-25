@@ -110,7 +110,7 @@
             <div id="owner_special" class="form-group" style="display: none">
                 <label class="control-label fl" for="parents_name">专属商家：</label>
                 <div class="col-sm-2 fl pl5" style="width: auto;margin-top: 4px;color: #0099ff;cursor: pointer;">
-                     <span class="add_bussiness_span" data-toggle="modal" data-target="#ownerSpecial">添加商家</span>
+                     <span class="add_bussiness_span" data-toggle="modal" data-target="#ownerSpecial" onClick =show_checked_buss()>添加商家</span>
                 </div>
                 <div class="checkbox" style="float: left;width: 10%;padding-top:4px">
                     <label>
@@ -237,7 +237,7 @@
             </div>
             <div class="modal-footer tc">
                 <button type="button" class="btn btn-success" onClick=save_checked_owner()>确定</button>
-                <button class="btn btn-cancel" data-dismiss="modal">取消</button>
+                <button class="btn btn-cancel" data-dismiss="modal" onClick=cancle_checked_owner()>取消</button>
             </div>
         </div>
     </div>
@@ -246,15 +246,28 @@
 
 {% block js %}
 <script>
+var c=0
 $(document).ready(function() {
+    
     $("#all_select_checked").click(function(){
-            console.log('11111111')
             $('[name=select_checked]:checkbox').attr('checked',this.checked);
-        })
+            if(!this.checked){
+                c=0
+            }
+            else{
+                c=$('[name=select_checked]:checkbox').length
+            }
+        })    
     $('[name=select_checked]:checkbox').click(function(){
         $(this).attr('checked',this.checked);
+        if(!$(this).attr('checked')){
+            c--
+        }
+        else{
+            c++
+        }
+        is_checked_all(c)
     })
-
     $('input[data-ui-role="date_time_picker"]').each(function() {
             var $datetimepicker = $(this);
             var format = $datetimepicker.attr('data-format');
@@ -315,8 +328,10 @@ $(document).ready(function() {
     $('[name="card_attr"]').change(function(){
         if ($(this).val() == 1){
             $('#owner_special').css('display','block');
+            $('.add_bussiness_div').css('display','block');
         }else{
             $('#owner_special').css('display','none');
+            $('.add_bussiness_div').css('display','none');
         }
     });
 	$('[name="full_use"]').change(function(){
@@ -425,9 +440,10 @@ function save_checked_owner(){
             suripers[$(this).children('span').attr("id")]=$(this).children('span').html()
         }
     })
-    
-    for (i in suripers){
-        $(".add_bussiness_div").append('<div><div class="fl show_bussiness_div" id="'+i+'">'+suripers[i]+'</div><div class="x_deleteTempPattern" onClick=display_detele('+i+')>+</div></div>')
+    if(suripers){
+        for (i in suripers){
+            $(".add_bussiness_div").append('<div><div class="fl show_bussiness_div" id="'+i+'">'+suripers[i]+'</div><div class="x_deleteTempPattern" onClick=display_detele('+i+')>+</div></div>')
+        }
     }
     $('#ownerSpecial').modal('hide');
 }
@@ -442,11 +458,41 @@ function display_detele(i){
         }
         var $checked_owner_input=$('div.xui-owner_list input');
         $checked_owner_input.each(function(){
-                if($(this).attr('id')==i){
-                    console.log($(this))                    
+                if($(this).attr('id')==i){                   
                     $(this).removeAttr('checked')
                 }
-        }) 
+        })
+        $("#all_select_checked").removeAttr('checked')
+}
+function cancle_checked_owner(){
+        c=0
+        $("#all_select_checked").removeAttr('checked')
+        $('[name=select_checked]:checkbox').removeAttr('checked')
+}
+function show_checked_buss(){
+    c=0
+    $show_bussiness_div=$('div.show_bussiness_div');
+    if($show_bussiness_div.length>0){
+        $show_bussiness_div.each(function(){
+            var show_bussiness_div_id=$(this).attr('id')
+            $('[name=select_checked]:checkbox').each(function(){
+                if($(this).attr('id')==show_bussiness_div_id){                   
+                    $(this).attr('checked','checked')
+                    c++
+                }
+            })
+        })
+    }
+    is_checked_all(c)
+}
+
+function is_checked_all(c){
+    if(c==$('[name=select_checked]:checkbox').length){
+        $("#all_select_checked").attr('checked','checked');
+    }
+    else{
+        $("#all_select_checked").removeAttr('checked')
+    }
 }
 </script>
 {% endblock %}
