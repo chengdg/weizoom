@@ -206,7 +206,8 @@ class MGroup(resource.Resource):
 			'product_group_price': product_group_price,
 			'order_id': order_id,
 			'is_from_pay_result': is_from_pay_result,
-			'is_helper_unpaid': is_helper_unpaid
+			'is_helper_unpaid': is_helper_unpaid,
+			'group_relation_id': str(group_relation_id) if group_relation_id else ''
 		}
 
 		response = create_response(200)
