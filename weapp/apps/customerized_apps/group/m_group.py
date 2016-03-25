@@ -247,9 +247,8 @@ class MGroup(resource.Resource):
 						owner_id = str(member_id),
 						grouped_member_id = str(member_id),
 					)
-					if group_detail.count() > 0: #开团并且下过订单
-						group_detail_order_id = group_detail.first().order_id
-						if group_detail_order_id != '':
+					if group_detail.count() > 0: #已成功开团
+						if group_relation.group_status != app_models.GROUP_NOT_START:
 							new_url_1 = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', str(group_relation.id))
 							new_url = url_helper.add_query_part_to_request_url(new_url_1, 'fid', member_id)
 							response = HttpResponseRedirect(new_url)
