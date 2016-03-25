@@ -638,7 +638,7 @@ def save_card_recharge(request):
     card_choose = request.GET.get('card_choose', None)  
     card_choose = json.loads(card_choose)
     create_list = []
-    add_log_fields_list = []
+    # add_log_fields_list = []
     for card in card_choose:
         cardId = card['cardId']
         rechargeMoney = card['rechargeMoney']

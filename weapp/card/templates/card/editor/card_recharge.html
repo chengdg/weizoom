@@ -143,8 +143,6 @@
         	var attr = $(that).children('.belong_to_dialog').attr('style');
         	
         	owner = owner.split(",");
-        	console.log(owner);
-        	console.log(typeof(owner));
         	$('.belong_to_owner div').html('');
         	for(i in owner){
         		$('.belong_to_owner div').append('<span class="belong_to_owner_name" style="display:inline-block;width:96px;float:left;marginBottom:5px;textAlign:center;color: #333;">'+ owner[i] +'</span>');
