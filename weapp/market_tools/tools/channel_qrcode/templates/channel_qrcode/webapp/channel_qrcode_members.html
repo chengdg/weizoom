@@ -222,11 +222,15 @@
 			$(".xa-RecommendedDetailPage").hide();
 			$(".xa-timeChoose").show();
 			var startDate = '{{startDate}}'.replaceAll('/','-');
+			console.log(startDate,1111);
 			var last_index_s = startDate.lastIndexOf('-');
 			startDate = startDate.substring(0,last_index_s) + ' ' + startDate.substring(last_index_s + 1,16);
 			var endDate = '{{endDate}}'.replaceAll('/','-');
+			console.log(endDate,2222);
 			var last_index_e = endDate.lastIndexOf('-');
 			endDate = endDate.substring(0,last_index_e) + ' ' + startDate.substring(last_index_e + 1,16);
+			console.log(startDate,33333);
+			console.log(endDate,44444);
 			$('#startDate').val(startDate);
 			$('#endDate').val(endDate);
 		})
