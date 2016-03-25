@@ -295,6 +295,15 @@
               default:
           }
         }, false);
+        //解决安卓下拉到底无法显示的问题
+        document.addEventListener('touchend',function (ev) {
+            var scrollT = document.body.scrollTop || document.documentElement.scrollTop;//兼容处理
+            var offsetHeight = document.documentElement.offsetHeight;
+            var clientHeight = document.documentElement.clientHeight;
+            if(scrollT+clientHeight >= offsetHeight){
+                showProductDetails();
+            }
+        });
 
     });
 	function GetQueryString(name){
