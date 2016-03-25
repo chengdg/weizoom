@@ -15,7 +15,7 @@ from excel_response import ExcelResponse
 from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo, ComponentAuthedAppid
 
 WEIZOOM_CARD_BELONG_TO_OWNER = [
-    "njtest", "ceshi01", "xingke", "liangfeng", "wzjx001","weizoommm", "weizoomxs", "weizoombfm","weizoomclub", "weizoomshop", "ainicoffee","yunhanchundai","dongfangwodeming"
+    "njtest", "ceshi01", "tianyunzhen", "xingke", "liangfeng", "wzjx001","weizoommm", "weizoomxs", "weizoombfm","weizoomclub", "weizoomshop", "ainicoffee","yunhanchundai","dongfangwodeming"
 ]
 @view(app='card', resource='cards', action='get')
 @login_required 
