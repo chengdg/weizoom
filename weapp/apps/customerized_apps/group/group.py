@@ -146,8 +146,8 @@ class Group(resource.Resource):
 							'material_image',
 							'share_description'])
 		for key, value in data.items():
-			print 'key:',key
-			print 'value:',value
+			# print 'key:',key
+			# print 'value:',value
 			if key in update_fields:
 				update_data['set__'+key] = value
 		app_models.Group.objects(id=request.POST['id']).update(**update_data)

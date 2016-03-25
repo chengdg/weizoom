@@ -1825,7 +1825,7 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-help_group .wui-i-rules{
     background-color: #FF2742;
     height: 34px;
-    width: 112px;
+    width: 100px;
     line-height: 34px;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
@@ -1879,7 +1879,7 @@ li.wui-selectBox-display-table {
 
 .wui-group-container .wui-i-description{
     background: #fff;
-    margin: 13px 13px 0px 13px;
+    margin: 13px 10px 0px 10px;
     border-radius: 6px;
 }
 .wui-group-container .wui-i-description-content .wui-i-product-title{
@@ -1906,7 +1906,7 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-description-content .wui-i-product-price-group-original-price{
     font-size: 0.8rem;
     color: #656565;
-    text-decoration: line-through; 
+    text-decoration: line-through;
 }
 
 .wui-group-container .wui-i-description-content .wui-i-product-price-group-group-price{
@@ -1923,7 +1923,11 @@ li.wui-selectBox-display-table {
 }
 .wui-group-container .wui-i-choose_group_box{
     color:#333333;
+    margin-top:10px;
 
+}
+.wui-group-container .wui-i-choose_group_box .wui-i-choose_title_box{
+	padding-bottom: 22px;
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_items_box{
     margin-top: 5px;
@@ -1935,9 +1939,11 @@ li.wui-selectBox-display-table {
 .wui-group-container .wui-i-choose_group_box .wui-i-choose_title{
     float: left;
 	font-weight: bold;
+	line-height: 1.4rem;
 }
 .wui-group-container .wui-i-choose_group_box .wui-i-end_time {
     font-size: 0.8rem;
+	font-weight: bold;
     float: right;
     line-height: 1.4rem;
 }
@@ -2002,7 +2008,7 @@ li.wui-selectBox-display-table {
 
 .wui-group-container .wui-i-btngroup{
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .wui-group-container .wui-i-btngroup button{
     text-align: center;
@@ -2038,6 +2044,8 @@ li.wui-selectBox-display-table {
 
 .wui-group-container .wui-i-group_box_progress .wui-i-timing{
     float: right;
+    line-height: 20px;
+
 }
 .wui-group-container .wui-i-group_box_progress .wui-i-timing b{
     background: #E6E6E6;
@@ -2047,7 +2055,7 @@ li.wui-selectBox-display-table {
 /*团购进度条*/
 .wui-group-container .wui-i-powerbar_group{
     height: 26px;
-    margin: 5px 0;
+    margin: 10px 6px 0 0;
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-box{
     display: inline-block;
@@ -2075,7 +2083,7 @@ li.wui-selectBox-display-table {
     color: #ffffff;
     border-radius: 15px;
     line-height: 20px;
-	min-width: 20%;
+	min-width: 22%;
 }
 .wui-group-container .wui-i-powerbar_group .wui-i-box .wui-i-bar .wui-i-inner_bar_fail{
     background: #999999;

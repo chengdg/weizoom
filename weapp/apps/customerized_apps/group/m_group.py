@@ -31,7 +31,7 @@ class MGroup(resource.Resource):
 		isMember = False
 		timing = 0
 		is_group_leader = False
-		only_remain_one_day = False #开团时间剩余1天
+		remain_days = 0 #开团时间剩余天数
 		is_helped = False
 		self_page = False
 		group_status = ''
@@ -66,8 +66,8 @@ class MGroup(resource.Resource):
 		if activity_status == u'已结束':
 			record.update(set__status=app_models.STATUS_STOPED)
 		#开团时间不足一天
-		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
-			only_remain_one_day = True
+		remain_days = (record.end_time-datetime.today()).total_seconds() / (60*60*24)
+
 		try:
 			product_id = record.product_id
 			product_original_price = ProductModel.objects.get(product_id=product_id,is_standard=True).price
@@ -86,9 +86,15 @@ class MGroup(resource.Resource):
 			return response.get_response()
 		if member:
 			member_id = member.id
-			fid = request.GET.get('fid', member_id)
+			fid = request.GET.get('fid')
+			if fid == 'null':
+				fid = member_id
 			isMember =member.is_subscribed
 			if u"进行中" or u'已结束' == activity_status:
+				if not group_relation_id:
+					group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=str(member_id))
+					if group_relation.count() > 0:
+						group_relation_id = group_relation.first().id
 				if group_relation_id:
 					# 已经开过团
 					try:
@@ -126,7 +132,7 @@ class MGroup(resource.Resource):
 								print 'template----------------------------------'
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=fid, order_id__ne='').order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -142,13 +148,13 @@ class MGroup(resource.Resource):
 							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
 						else:
 							try:
-								group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+								group_detail = app_models.GroupDetail.objects.get(relation_belong_to=str(group_relation_id),owner_id=fid,grouped_member_id=member_id)
 								if ( group_detail.is_already_paid and (member_id in member_ids)):
 									is_helped = True
 							except:
 								pass
 						try:
-							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=str(group_relation_id),owner_id=fid,grouped_member_id=member_id)
 							order_id = group_detail.order_id
 							if not group_detail.is_already_paid:
 								if order_id!='':
@@ -156,6 +162,7 @@ class MGroup(resource.Resource):
 						except:
 							pass
 					except Exception,e:
+						print(u'该团购已不存在!!!!!!!!!!!!!!!!!')
 						print(e)
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
@@ -192,14 +199,15 @@ class MGroup(resource.Resource):
 			'group_type': int(group_type) if group_type !='' else '',
 			'grouped_number': len(grouped_member_info_list),
 			'member_id': member_id if member else '',
-			'only_remain_one_day': only_remain_one_day,
+			'remain_days': remain_days,
 			'product_original_price': product_original_price,
 			'product_mysql_name': product_mysql_name,
 			'pic_url': pic_url,
 			'product_group_price': product_group_price,
 			'order_id': order_id,
 			'is_from_pay_result': is_from_pay_result,
-			'is_helper_unpaid': is_helper_unpaid
+			'is_helper_unpaid': is_helper_unpaid,
+			'group_relation_id': str(group_relation_id) if group_relation_id else ''
 		}
 
 		response = create_response(200)
@@ -218,7 +226,7 @@ class MGroup(resource.Resource):
 		activity_status = u"未开始"
 		member = request.member
 		fid = 0
-		group_relation_id = 0
+		group_relation_id = None
 		product_id = None
 
 		if 'new_app:' in record_id:
@@ -231,21 +239,28 @@ class MGroup(resource.Resource):
 			group_relation_id = request.GET.get('group_relation_id', None)
 
 			#判断分享页是否自己的主页
-			if not fid:
-				new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
-				response = HttpResponseRedirect(new_url)
-				response.set_cookie('fid', member_id, max_age=60*60*24*365)
-				return response
+			# if not fid:
+			# 	new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
+			# 	response = HttpResponseRedirect(new_url)
+			# 	response.set_cookie('fid', member_id, max_age=60*60*24*365)
+			# 	return response
 
 			if not group_relation_id:
 				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id))
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
-					group_relation_id = group_relation.id
-					new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', group_relation_id)
-					response = HttpResponseRedirect(new_url)
-					response.set_cookie('group_relation_id', group_relation_id, max_age=60*60*24*365)
-					return response
+					group_detail = app_models.GroupDetail.objects(
+						relation_belong_to = str(group_relation.id),
+						owner_id = str(member_id),
+						grouped_member_id = str(member_id),
+					)
+					if group_detail.count() > 0: #已成功开团
+						if group_relation.group_status != app_models.GROUP_NOT_START:
+							new_url_1 = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', str(group_relation.id))
+							new_url = url_helper.add_query_part_to_request_url(new_url_1, 'fid', member_id)
+							response = HttpResponseRedirect(new_url)
+							response.set_cookie('group_relation_id', str(group_relation.id), max_age=60*60*24*365)
+							return response
 
 			# cache_key = 'apps_group_%s_html' % record_id
 			# # 从redis缓存获取静态页面

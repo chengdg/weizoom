@@ -121,8 +121,6 @@ class CheckGroupBuy(resource.Resource):
 		reason = u''
 		group_buy_price = 0
 		member_info = Member.objects.filter(id=member_id)
-		print('member_info')
-		print(member_info)
 		group_record = app_models.GroupRelations.objects(id=group_id,product_id=int(pid))
 		if group_record.count() > 0:
 			group_record = group_record.first()
@@ -217,7 +215,6 @@ class OrderAction(resource.Resource):
 			if False not in is_already_paid_list:
 				group_record.update(set__group_status=app_models.GROUP_SUCCESS,set__success_time=datetime.now())
 				update_order_status_by_group_status(group_id,'success')
-
 				# 发送拼团成功模板消息
 				try:
 					group_info = app_models.Group.objects.get(id=group_record.belong_to)
@@ -285,7 +282,4 @@ class GetGroupUrl(resource.Resource):
 			}
 			return response.get_response()
 		except Exception,e:
-			group_id = group_id
-			print('get_group_url_error:!!!!!!!!!!!!!!')
-			print("group_id:"+str(group_id))
-			print(e)
+			pass
