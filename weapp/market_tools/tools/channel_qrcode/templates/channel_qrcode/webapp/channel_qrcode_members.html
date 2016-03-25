@@ -1,7 +1,9 @@
 {% extends "webapp_content_base.html" %}
 {% load common_tag %}
 {% block css%}
-
+<!--日期选择器样式-->
+<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll.css">
+<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll_date.css">
 <style>
 	html,body{
 		background: #ececec;
@@ -178,7 +180,7 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
+<!-- <script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script> -->
 <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll_date.js"></script>
 <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
 <script>
