@@ -175,6 +175,8 @@ def get_settings_detail(request):
         if setting.bing_member_id == request.member.id:
             relations = ChannelQrcodeHasMember.objects.filter(channel_qrcode_id=setting.id)
             if startDate and endDate:
+                startDate = startDate + ':00'
+                endDate = endDate + ':59'
                 relations = relations.filter(created_at__gte = startDate,created_at__lte = endDate)
             payed_count = 0
             pay_money = 0
