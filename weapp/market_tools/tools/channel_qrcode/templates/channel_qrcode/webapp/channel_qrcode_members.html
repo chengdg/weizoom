@@ -131,10 +131,13 @@
     	text-decoration: none;
     	color: #9e9e9e;
     	font-family: "黑体";
-    	margin-left: 10px;
+    	margin-right: 10px;
     	font-size: 18px;
     	vertical-align: bottom;
     	font-weight: 700;
+    }
+    .xui-time-input{
+    	border: none;
     }
 </style>
 {% endblock %}
@@ -143,7 +146,7 @@
 	<div class="xui-time xa-time">
 		<span>筛选时间</span>
 		<span class="xui-time-wrap">
-		 	<span class="xui-time-content">全部</span>
+		 	<span class="xui-time-content">{% if startDate and endDate %}<span>startDate</span>&nbsp;-&nbsp;<span>endDate</span>{% else %}全部{% endif %}</span>
 			<a href="javascript:void(0);" class="xa-choose xui-choose">&gt;</a>
 		</span>
 	</div>
@@ -169,8 +172,8 @@
 </div>
 
 <div class="xui-timeChoose xa-timeChoose">
-	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="input"/></div>
-	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="input"/></div>
+	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input"/></div>
+	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input"/></div>
 	<div class="xui-btn-wrap">
 		<a href="javascript:void(0);" class="xui-reset xa-reset">清除时间</a>
 		<a href="javascript:void(0);" class="xui-submit xa-submit">确定</a>
@@ -215,11 +218,12 @@
 		$(".xa-submit").click(function(){
 			$(".xa-RecommendedDetailPage").show();
 			$(".xa-timeChoose").hide();
-			var startDate = $('#startDate').val();
-			var endDate = $('#endDate').val();
 			window.location.href = './?module=market_tool:channel_qrcode&model=settings_detail&action=get&webapp_owner_id={{request.webapp_owner_id}}&project_id=0&workspace_id=market_tool:channel_qrcode&sid={{setting.id}}&fmt={{member.token}}&startDate='+startDate+'&endDate='+endDate
-			$('.xui-time-content').text(startDate +' - '+ endDate);
 		})
+		$('.xa-reset').click(function() {
+			$('#startDate').val('');
+			$('#endDate').val('');
+		});
 
 		var currYear = (new Date()).getFullYear();	
 		var opt={};

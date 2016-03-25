@@ -240,7 +240,9 @@ def get_settings_detail(request):
                     'channel_qrcode_members_count':relations.count(),
                     'pay_money': '%.2f' %  pay_money,
                     'payed_count': len(set(payed_member)),
-                    'bind_phone_members_count': len(bind_phone_members)
+                    'bind_phone_members_count': len(bind_phone_members),
+                    'startDate': startDate,
+                    'endDate': endDate
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
 
