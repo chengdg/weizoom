@@ -223,7 +223,7 @@
 			$(".xa-timeChoose").show();
 			console.log('{{startDate}}',77777);
 			console.log('{{endDate}}',6666666);
-			if ('{{startDate}}' && '{{endDate}}'){
+			if ('{{startDate}}'.length() && '{{endDate}}'.length()){
 				var startDate = '{{startDate}}'.replaceAll('/','-');
 				console.log(startDate,1111);
 				var last_index_s = startDate.lastIndexOf('-');
