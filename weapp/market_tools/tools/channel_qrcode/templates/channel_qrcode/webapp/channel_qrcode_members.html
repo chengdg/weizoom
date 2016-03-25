@@ -77,14 +77,14 @@
     }
     .xui-RecommendedDetailPage .xui-time{
     	border-bottom: 1px solid #CCC;
-    	height: 35px;
-    	line-height: 30px;
+    	height: 50px;
+    	line-height: 25px;
     	/*padding-right: 30px;*/
     	overflow: hidden;
     }
     .xui-RecommendedDetailPage .xui-time .xui-time-wrap{
     	color: #9e9e9e;
-    	font-size: 13px;
+    	font-size: 1rem;
     	float: right;
     }
     .xui-timeChoose{
@@ -94,11 +94,13 @@
     	margin: 10px 0;
     	padding: 15px 20px;
     	background: #fff;
+    	font-size: 1.5rem;
     }
     .xui-end-time{
     	margin-bottom: 15px;
     	padding: 15px 20px;
-    	background: #fff;   
+    	background: #fff;  
+    	font-size: 1.5rem; 
     }
     .xui-btn-wrap{
     	padding: 0 15px;
@@ -138,19 +140,23 @@
     }
     .xui-time-input{
     	border: none;
+		width: 50%;
+    }
+    .xui-filter-time{
+    	font-weight: bold;
     }
 </style>
 {% endblock %}
 {% block content-panel %}
 <div class="xui-RecommendedDetailPage xa-RecommendedDetailPage">
 	<div class="xui-time xa-time">
-		<span>筛选时间</span>
+		<span class="xui-filter-time">筛选时间</span>
 		<span class="xui-time-wrap">
 		 	<span class="xui-time-content">
 		 		{% if startDate and endDate %}
 		 			<span>{{startDate}}</span>
 		 			&nbsp;-&nbsp;
-		 			<span>{{endDate}}</span>
+		 			<span style="margin-right:7%">{{endDate}}</span>
 	 			{% else %}
 		 			全部
 	 			{% endif %}
