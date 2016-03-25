@@ -120,6 +120,7 @@ class MGroupList(resource.Resource):
 							'group_price': '%.2f' % float(group_dict[str(g)]['group_price']),
 							'group_type': group_dict[str(g)]['group_type']
 						})
+				all_group_dict.sort(key=lambda item:int(item['group_type']))
 				all_groups_can_open.append({
 					'id': str(group.id),
 					'name': group.name,
