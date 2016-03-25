@@ -132,7 +132,7 @@ class MGroup(resource.Resource):
 								print 'template----------------------------------'
 
 						# 获取该主页帮助者列表
-						helpers = app_models.GroupDetail.objects(relation_belong_to=group_relation_id, owner_id=fid, order_id__ne='').order_by('created_at')
+						helpers = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=fid, order_id__ne='').order_by('created_at')
 						member_ids = [h.grouped_member_id for h in helpers]
 						member_id2member = {m.id: m for m in Member.objects.filter(id__in=member_ids)}
 						for h in helpers:
@@ -148,13 +148,13 @@ class MGroup(resource.Resource):
 							is_group_leader = True if (group_relation_info.member_id == str(member_id) and group_relation_info.group_status != app_models.GROUP_NOT_START) else False
 						else:
 							try:
-								group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+								group_detail = app_models.GroupDetail.objects.get(relation_belong_to=str(group_relation_id),owner_id=fid,grouped_member_id=member_id)
 								if ( group_detail.is_already_paid and (member_id in member_ids)):
 									is_helped = True
 							except:
 								pass
 						try:
-							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=group_relation_id,owner_id=fid,grouped_member_id=member_id)
+							group_detail = app_models.GroupDetail.objects.get(relation_belong_to=str(group_relation_id),owner_id=fid,grouped_member_id=member_id)
 							order_id = group_detail.order_id
 							if not group_detail.is_already_paid:
 								if order_id!='':
