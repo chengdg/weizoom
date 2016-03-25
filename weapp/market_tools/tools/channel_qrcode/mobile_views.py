@@ -243,8 +243,8 @@ def get_settings_detail(request):
                     'pay_money': '%.2f' %  pay_money,
                     'payed_count': len(set(payed_member)),
                     'bind_phone_members_count': len(bind_phone_members),
-                    'startDate': startDate,
-                    'endDate': endDate
+                    'startDate': startDate[0:10] if startDate else '',
+                    'endDate': endDate[0:10] if endDate else ''
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
 
