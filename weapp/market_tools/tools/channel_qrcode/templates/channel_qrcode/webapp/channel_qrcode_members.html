@@ -152,19 +152,15 @@
 {% block content-panel %}
 <div class="xui-RecommendedDetailPage xa-RecommendedDetailPage">
 	<div class="xui-time xa-time">
-		<span class="xui-filter-time">筛选时间</span>
-		<span class="xui-time-wrap xa-time-wrap">
-		 	<span class="xui-time-content">
-		 		{% if startDate and endDate %}
-		 			<span>{{startDate}}</span>
-		 			&nbsp;-&nbsp;
-		 			<span style="margin-right:7%">{{endDate}}</span>
-	 			{% else %}
-		 			全部
-	 			{% endif %}
-	 			<span class="xa-choose xui-choose">&gt;</span>
- 			</span>
-		</span>
+		<div class="xui-filter-time">筛选时间</div>
+		<div class="xui-time-wrap xa-time-wrap">
+	 		{% if startDate and endDate %}
+	 			<span>{{startDate}}&nbsp;-&nbsp;{{endDate}}</span>
+ 			{% else %}
+	 			<span>全部</span>
+ 			{% endif %}
+ 			<span class="xa-choose xui-choose">&gt;</span>
+		</div>
 	</div>
 	<div class="xui-general">
 		<div class="xui-general-content xa-general">
