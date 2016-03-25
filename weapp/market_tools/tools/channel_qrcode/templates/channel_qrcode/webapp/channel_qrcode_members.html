@@ -179,6 +179,8 @@
 
 {% block js %}
 <script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll_date.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
 <script>
 	$(document).ready(function(){
 		console.log(6666666);
@@ -230,7 +232,7 @@
 			startYear: currYear - 50, //开始年份
 			endYear: currYear + 10 //结束年份
 		};
-
+		console.log(111111);
 		$("#startDate").mobiscroll($.extend(opt['datetime'], opt['default']));
 		$("#endDate").mobiscroll($.extend(opt['datetime'], opt['default']));
 		console.log(22222);
