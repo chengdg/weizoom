@@ -238,19 +238,25 @@
         $('.wui-i-body').append($(detail_content));
 
         //下拉到底显示商品详情
-//        window.onscroll = function(){
-//            var $win = $(window);
-//            var $top = $('.wui-i-product-description');
-//            var rect = $top[0].getBoundingClientRect();
-//            var djage = function(){
-//                return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top>=0);
-//            };
+
+//        var $win = $(window);
+//        var $top = $('.wui-i-product-description');
+//        var rect;
+//        var djage = function(){
+//            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top-75>=0);
+//        };
+//        var toggle_show = function(){
+//            rect = $top[0].getBoundingClientRect();
 //            if(rect && djage()){
 //                showProductDetails();
 //            }
 //        };
-        
-        document.addEventListener('touchend',function () {
+//        toggle_show();
+//        window.onscroll = function(){
+//            toggle_show();
+//        };
+
+        document.addEventListener('touchstart',function () {
             var $win = $(window);
             var $top = $('.wui-i-product-description');
             var rect = $top[0].getBoundingClientRect();
@@ -261,7 +267,6 @@
                 showProductDetails();
             }
         });
-
     });
 	function GetQueryString(name){
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -522,7 +527,6 @@
             //删除掉from=pay_result
             var link = window.location.origin + '/m/apps/group/m_group/?webapp_owner_id='+W.webappOwnerId+'&id='+W.appRecordId+'&fid='+page_owner_member_id+'&group_relation_id='+group_relation_id;
             window.location.href = link;
-//            window.location.href = "?"+DelQueryString("from");
         }
     });
     $('.xa-colseButton').click(function(){
