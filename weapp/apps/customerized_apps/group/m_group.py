@@ -89,6 +89,10 @@ class MGroup(resource.Resource):
 			fid = request.GET.get('fid', member_id)
 			isMember =member.is_subscribed
 			if u"进行中" or u'已结束' == activity_status:
+				if not group_relation_id:
+					group_relation = app_models.GroupRelations.objects(belong_to=record_id,member_id=str(member_id))
+					if group_relation.count() > 0:
+						group_relation_id = group_relation.first().id
 				if group_relation_id:
 					# 已经开过团
 					try:
