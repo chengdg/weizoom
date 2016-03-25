@@ -655,4 +655,4 @@
         return date;
     };
 
-})(Zepto);
+})(jQuery);
