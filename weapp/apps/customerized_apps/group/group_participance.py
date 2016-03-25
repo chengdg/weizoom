@@ -115,6 +115,13 @@ class GroupParticipance(resource.Resource):
 				response.errMsg = u'只能开团一次'
 				return response.get_response()
 			else:
+				group_relation = group_relation.first()
+				if group_relation.group_type != group_type:
+					group_relation.update(
+						group_type = group_type,
+						group_days = group_days,
+						group_price = group_price
+					)
 				relation_belong_to = str(group_relation_id)
 				response = create_response(200)
 				response.data = {
