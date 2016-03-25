@@ -86,7 +86,9 @@ class MGroup(resource.Resource):
 			return response.get_response()
 		if member:
 			member_id = member.id
-			fid = request.GET.get('fid', member_id)
+			fid = request.GET.get('fid')
+			if fid == 'null':
+				fid = member_id
 			isMember =member.is_subscribed
 			if u"进行中" or u'已结束' == activity_status:
 				if not group_relation_id:
