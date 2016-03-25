@@ -6,6 +6,24 @@
 	.xui-filterPanel .xui-btn-group{
 		text-align: right;
 	}
+	.belong_to_owner_name{
+		display:inline-block;
+		width:96px;
+		float:left;
+		marginBottom:5px;
+		textAlign:center;
+		color: #333;
+	}
+	.belong_to_owner_div{
+		border: 1px solid gray;
+		width: 300px;
+		/*height: 50px;*/
+		position: absolute;
+		background-color: #FFF;
+		padding: 5px 0px;
+		z-index: 9999;
+		left: -100px;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -44,6 +62,11 @@
         data-auto-load="true"
         class="panel-body">
     </div>
+</div>
+<div class="belong_to_owner" style="display:none;">
+	<div class="belong_to_owner_div" style="">
+		<span class="belong_to_owner_name" style=""></span>
+	</div>
 </div>
 {% endblock %}
 
@@ -93,7 +116,9 @@
 							<div>${recharge.card_type}</div>
 						</td>
 						<td>
-							<button class="btn btn-primary" >查看专属商家</button>
+							<button class="btn btn-primary" style="position: relative;" onBlur="hide_belong_to_owner(this);" onClick="show_belong_to_owner(this,'${recharge.belong_to_owner}');">查看专属商家
+								<div class="belong_to_dialog" style="display:none"></div>
+							</button>
 						</td>
 						<td>${recharge.created_at}</td>
 						<td>${recharge.remark}</td>
@@ -104,23 +129,37 @@
         </script>
     {% endverbatim %}
     <script type="text/javascript">
-        $(document).ready(function() {
+    	$(document).ready(function() {
             var filterBox = new W.view.card.cards.cardChargeFilter({
                 el: ".xa-cardFilterView",
                 dataView: $('[data-ui-role="advanced-table"]').data('view'),
                 userWebappId: {{user.get_profile.webapp_id}},
-                status:''
             });
         });
-        console.log($('#exportBtn'));
-        $('#exportBtn').click(function(event) {
-	        var url = '/card/recharge_card_export/get/?is_export='+1;
-	        console.log(filterBox.filter_value);
-	        if (filterBox.filter_value) {
-	        	
-	            url = url + '&filter_value='+filterBox.filter_value;
-	        }
-	        window.open(url);
-	    });
+        function show_belong_to_owner(that,owner){
+        	if(!owner){
+        		owner = '暂无商家';
+        	}
+        	var attr = $(that).children('.belong_to_dialog').attr('style');
+        	
+        	owner = owner.split(",");
+        	console.log(owner);
+        	console.log(typeof(owner));
+        	$('.belong_to_owner div').html('');
+        	for(i in owner){
+        		$('.belong_to_owner div').append('<span class="belong_to_owner_name" style="display:inline-block;width:96px;float:left;marginBottom:5px;textAlign:center;color: #333;">'+ owner[i] +'</span>');
+        	}
+        	$('.belong_to_owner div').append();
+        	if(attr && attr.indexOf('none')!=-1){
+        		var belong_to_owner_html = $('.belong_to_owner').show();
+	        	// belong_to_owner_html.find('.belong_to_owner_name').html(owner);
+	        	$(that).children('.belong_to_dialog').html(belong_to_owner_html).show();
+        	}else{
+	        	$(that).children().hide();
+        	}
+        }
+        function hide_belong_to_owner(that){
+        	$(that).children().hide();
+        }
     </script>
 {% endblock %}
