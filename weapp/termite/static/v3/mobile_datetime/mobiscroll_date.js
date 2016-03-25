@@ -1128,39 +1128,39 @@
 
     $.scroller = $.scroller || $.mobiscroll;
     $.fn.scroller = $.fn.scroller || $.fn.mobiscroll;
-	$.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
-			dateFormat: 'yyyy-mm-dd',
-			dateOrder: 'yymmdd',
-			dayNames: ['周日', '周一;', '周二;', '周三', '周四', '周五', '周六'],
-			dayNamesShort: ['日', '一', '二', '三', '四', '五', '六'],
-			dayText: '日',
-			hourText: '时',
-			minuteText: '分',
-			monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-			monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-			monthText: '月',
-			secText: '秒',
-			timeFormat: 'HH:ii',
-			timeWheels: 'HHii',
-			yearText: '年'
-		});
-		$.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
-			setText: '确定',
-			cancelText: '取消'
-		});
-		var theme = {
-			defaults: {
-				dateOrder: 'Mddyy',
-				mode: 'mixed',
-				rows: 5,
-				width: 70,
-				height: 36,
-				showLabel: true,
-				useShortLabels: true
-			}
-		}
-	
-		$.mobiscroll.themes['android-ics'] = theme;
-		$.mobiscroll.themes['android-ics light'] = theme;      
+    $.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
+            dateFormat: 'yyyy-mm-dd',
+            dateOrder: 'yymmdd',
+            dayNames: ['脰脺脠脮', '脰脺脪禄;', '脰脺露镁;', '脰脺脠媒', '脰脺脣脛', '脰脺脦氓', '脰脺脕霉'],
+            dayNamesShort: ['脠脮', '脪禄', '露镁', '脠媒', '脣脛', '脦氓', '脕霉'],
+            dayText: '脠脮',
+            hourText: '脢卤',
+            minuteText: '路脰',
+            monthNames: ['脪禄脭脗', '露镁脭脗', '脠媒脭脗', '脣脛脭脗', '脦氓脭脗', '脕霉脭脗', '脝脽脭脗', '掳脣脭脗', '戮脜脭脗', '脢庐脭脗', '脢庐脪禄脭脗', '脢庐露镁脭脗'],
+            monthNamesShort: ['1脭脗', '2脭脗', '3脭脗', '4脭脗', '5脭脗', '6脭脗', '7脭脗', '8脭脗', '9脭脗', '10脭脗', '11脭脗', '12脭脗'],
+            monthText: '脭脗',
+            secText: '脙毛',
+            timeFormat: 'HH:ii',
+            timeWheels: 'HHii',
+            yearText: '脛锚'
+        });
+        $.mobiscroll.i18n.zh = $.extend($.mobiscroll.i18n.zh, {
+            setText: '脠路露篓',
+            cancelText: '脠隆脧没'
+        });
+        var theme = {
+            defaults: {
+                dateOrder: 'Mddyy',
+                mode: 'mixed',
+                rows: 5,
+                width: 70,
+                height: 36,
+                showLabel: true,
+                useShortLabels: true
+            }
+        }
+    
+        $.mobiscroll.themes['android-ics'] = theme;
+        $.mobiscroll.themes['android-ics light'] = theme;      
 
-})(jQuery);
+})($);
