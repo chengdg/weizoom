@@ -156,6 +156,7 @@ class MGroup(resource.Resource):
 						except:
 							pass
 					except Exception,e:
+						print(u'该团购已不存在!!!!!!!!!!!!!!!!!')
 						print(e)
 						response = create_response(500)
 						response.errMsg = u'该团购已不存在！'
@@ -218,7 +219,7 @@ class MGroup(resource.Resource):
 		activity_status = u"未开始"
 		member = request.member
 		fid = 0
-		group_relation_id = 0
+		group_relation_id = None
 		product_id = None
 
 		if 'new_app:' in record_id:
@@ -231,23 +232,29 @@ class MGroup(resource.Resource):
 			group_relation_id = request.GET.get('group_relation_id', None)
 
 			#判断分享页是否自己的主页
-			if not fid:
-				new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
-				response = HttpResponseRedirect(new_url)
-				response.set_cookie('fid', member_id, max_age=60*60*24*365)
-				return response
+			# if not fid:
+			# 	new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'fid', member_id)
+			# 	response = HttpResponseRedirect(new_url)
+			# 	response.set_cookie('fid', member_id, max_age=60*60*24*365)
+			# 	return response
 
 			if not group_relation_id:
 				group_relation = app_models.GroupRelations.objects(belong_to=record_id, member_id=str(member_id))
 				if group_relation.count() > 0:
 					group_relation = group_relation.first()
-					group_relation_id = group_relation.id
-					group_detail = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id), owner_id=str(member_id))
+					group_detail = app_models.GroupDetail.objects(
+						relation_belong_to = str(group_relation.id),
+						owner_id = str(member_id),
+						grouped_member_id = str(member_id),
+					)
 					if group_detail.count() > 0: #开团并且下过订单
-						new_url = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', group_relation_id)
-						response = HttpResponseRedirect(new_url)
-						response.set_cookie('group_relation_id', group_relation_id, max_age=60*60*24*365)
-						return response
+						group_detail_order_id = group_detail.first().order_id
+						if group_detail_order_id != '':
+							new_url_1 = url_helper.add_query_part_to_request_url(request.get_full_path(), 'group_relation_id', str(group_relation.id))
+							new_url = url_helper.add_query_part_to_request_url(new_url_1, 'fid', member_id)
+							response = HttpResponseRedirect(new_url)
+							response.set_cookie('group_relation_id', str(group_relation.id), max_age=60*60*24*365)
+							return response
 
 			# cache_key = 'apps_group_%s_html' % record_id
 			# # 从redis缓存获取静态页面

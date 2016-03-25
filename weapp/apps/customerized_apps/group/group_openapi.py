@@ -121,8 +121,6 @@ class CheckGroupBuy(resource.Resource):
 		reason = u''
 		group_buy_price = 0
 		member_info = Member.objects.filter(id=member_id)
-		print('member_info')
-		print(member_info)
 		group_record = app_models.GroupRelations.objects(id=group_id,product_id=int(pid))
 		if group_record.count() > 0:
 			group_record = group_record.first()
