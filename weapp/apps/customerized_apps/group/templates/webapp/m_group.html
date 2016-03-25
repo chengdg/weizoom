@@ -315,12 +315,6 @@
         if(r!=null) return unescape(r[2]);
         return null;
     }
-//    function DelQueryString(name){
-//        var url = window.location.search.substr(1);
-//        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-//        console.log(url.replace(reg,""));
-//        return url.replace(reg,"");
-//    }
 
     //发送请求，单独获取动态数据，优化首页时间
     function getDynamicData(){
@@ -398,7 +392,6 @@
         product_group_price = member_info.product_group_price;
         page_owner_icon = member_info.page_owner_icon;
         order_id = member_info.order_id;
-        console.log(order_id);
         is_from_pay_result = member_info.is_from_pay_result;
         is_helper_unpaid = member_info.is_helper_unpaid;
         if (W.group_status == '团购进行中' && is_from_pay_result == true){
@@ -517,8 +510,6 @@
                     var relation_belong_to = data.relation_belong_to;
                     var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
                     window.location.href = data_href;
-                    console.log('data_href is:');
-                    console.log(data_href);
                 },
                 error: function(data) {
                     wuiAlert(data.errMsg);

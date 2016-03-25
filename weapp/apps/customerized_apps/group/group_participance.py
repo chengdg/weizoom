@@ -57,32 +57,6 @@ class GroupParticipance(resource.Resource):
 				else:
 					response = create_response(200)
 					return response.get_response()
-					#更新当前member的参与信息
-					# total_number = int(group_relation.group_type)
-					# sync_result = group_relation.modify(
-					# 	query={'grouped_number__lt': total_number},
-					# 	inc__grouped_number=1,
-					# 	push__grouped_member_ids=str(member_id)
-					# )
-					# if sync_result:
-					# 	try:
-					# 		group_detail = app_models.GroupDetail(
-					# 			relation_belong_to = group_relation_id,
-					# 			owner_id = str(fid),
-					# 			grouped_member_id = str(member_id),
-					# 			grouped_member_name = request.member.username_for_html,
-					# 			created_at = datetime.now()
-					# 		)
-					# 		group_detail.save()
-					# 	except:
-					# 		group_relation.update(dec__grouped_number=1,pop__grouped_member_ids=str(member_id))
-					# 		response = create_response(500)
-					# 		response.errMsg = u'只能参与一次'
-					# 		return response.get_response()
-					# else:
-					# 	response = create_response(500)
-					# 	response.errMsg = u'团购名额已满'
-					# 	return response.get_response()
 		except:
 			response = create_response(500)
 			response.errMsg = u'参与失败'
@@ -194,7 +168,6 @@ class CancelUnpaidGroup(resource.Resource):
 				'fid': fid
 			}
 		except Exception,e:
-			print unicode_full_stack(),e
 			response = create_response(500)
 			response.errMsg = u'取消操作失败'
 		return response.get_response()
