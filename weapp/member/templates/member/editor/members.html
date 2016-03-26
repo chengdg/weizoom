@@ -8,6 +8,41 @@
 	  width: 152px;
 	  display: inline-block;
 }
+/*导出*/
+#exportProgress{border:1px solid #D3D4D6;background:#F5F5F5; -webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:4px; overflow:hidden;display: none;}
+#export_data_file {
+    background-image: url(/static_v2/img/export_img.gif);
+	padding-left:22px;
+	background-position:10px center;
+	background-repeat:no-repeat;
+}
+
+#exportProgress_bar {
+	width: 100px;
+	height: 15px;
+	float: right;
+	border: solid 1px #66B758;
+}
+
+.exportProgress_progress {
+	/*background-color: #0080FF;*/
+	background-image: -moz-linear-gradient(left , rgb(0,0,255) 16%, rgb(155,197,117) 100%);
+	background-image: -webkit-linear-gradient(left , rgb(0,0,255) 16%, rgb(155,197,117) 100%);
+    height: 100%;
+	width: 0;
+}
+
+.exportProgress_msg {
+	float: right;
+	margin-top: -1px;
+	margin-left: 5px;
+}
+
+.icon-arrow-down {
+	background-position: -312px -96px;
+}
+/**/
+
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -142,6 +177,7 @@
 			data-args='{"status":"{{status}}"}'
 			data-disable-header-select="true"
 			data-user-webapp-id={{user.get_profile.webapp_id}}
+			data-download-excel-app="member"
 		></div>
 
 		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
@@ -266,11 +302,11 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
-	<div class="w500 pa pr30 " style="top:10px;left:500px;line-height:30px;">
+	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
 		<label class="fr">筛选结果：${data.total_count}人</label>
 
-		<a href="javascript:void(0);" class="btn fr  btn-default xa-export mr20 ">导出结果</a>
-
+		<a href="javascript:void(0);" class="btn fr  btn-default xa-export mr20 " id="export_data_file">导出结果</a>
+		
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
 		<thead>
@@ -434,8 +470,12 @@ $(document).ready(function() {
 	view.$el.bind('end_click', function(){
 		DATA_INTERVAL = '';
 	});
-	//console.log('----------a:::',view.getFilterValue(),'--aaaaaa')
 
+	// view.$el.bind('to_download', function(){
+		
+	// });
+	//console.log('----------a:::',view.getFilterValue(),'--aaaaaa')
+	
 	// 修改等级
 	$('body').delegate('.xa-update-grade', 'click', function(event){
 		var $el = $(event.currentTarget);
@@ -732,18 +772,79 @@ $(document).ready(function() {
         }
 	});
 
-	// 导出
-	$('.panel-body').delegate('.xa-export', 'click', function(event){
-		var url = '/member/export/';
-		if (view.filter_value) {
-			url = url + '?filter_value='+view.filter_value;
-		}
-		console.log(url, view.filter_value)
-		W.getErrorHintView().show("'玩命导出中...'");
-		var $frame=$('<iframe>').hide().attr('src',url);
-		$('body').append($frame);
-		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
-	});
+	
+	function clickXaExport(event){
+		$('.panel-body').delegate('.xa-export', 'click', function(event){
+			console.log("222222222>>>>>>>>")
+			var url = '/member/export/file_param/';
+			if (view.filter_value) {
+				url = url + '?filter_value='+view.filter_value;
+			}
+			var options = {
+				el: '.panel-body',
+				topic_id: '',
+				type: '',
+				url: url,
+				jobId:0,
+
+				isAlreadyExport : true,
+				timelinesOptions: {
+					
+				}
+			}
+			var customersView = new W.CustomersView(options);
+		});
+	};
+	var table = $('div[data-ui-role="advanced-table"]').data('view');
+	
+
+	var export2data = {{export2data|safe}}
+
+
+	console.log("123123123>>>>>",export2data["status"],export2data["is_download"]);
+	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
+		console.log("export2data>>>>>",export2data["status"],export2data["is_download"] );
+		table.afterload = function(){
+			var options = {
+				el: '.div_export',
+				topic_id: '',
+				type: '',
+				url: "",
+				jobId:export2data["id"],
+				isAlreadyExport : true,
+				timelinesOptions: {
+				}
+			}
+			var memberExportFileView = new W.dialog.member.ExportFileView(options);
+			memberExportFileView.finish();
+		};
+	}
+	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
+		console.log("进度条进行中............");
+		table.afterload = function(){
+
+			var jobId = export2data["id"];
+			var options = {
+				el: '.div_export',
+				topic_id: '',
+				type: '',
+				url: "",
+				jobId:export2data["id"],
+				isAlreadyExport : true,
+				timelinesOptions: {
+				}
+			}
+			var memberExportFileView = new W.dialog.member.ExportFileView(options);
+			memberExportFileView.doExportAfterApi();
+		};
+	}
+	else{
+		console.log("export2data>>>>>",export2data["status"],export2data["is_download"] );
+		table.afterload = function(){
+			clickXaExport(event);
+		};
+	}
+
 
 	$('.panel').delegate('.relation-text', 'click', function(event) {
 					var _this = this;
@@ -763,17 +864,16 @@ $(document).ready(function() {
 						isReload:true,
 						onlyFans:true
 					});
-			});
+	});
+	
 
 	var status = '{{status}}';
 	if(status === '1') {
 		_.delay(function(){
 			console.log(status)
-			//$('.xa-more-filter').trigger('click');
 			$("#status").val("1");
 		}, 700);
-
-	}
+	};
 });
 </script>
 {% endblock %}

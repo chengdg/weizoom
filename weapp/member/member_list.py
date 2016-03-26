@@ -25,6 +25,10 @@ from weixin2.models import get_opid_from_session
 from core import resource
 
 import export
+from models import *
+from datetime import datetime
+#from modules.member.models import *
+
 
 COUNT_PER_PAGE = 20
 
@@ -278,6 +282,26 @@ class MemberList(resource.Resource):
 			else:
 				tags.append(tag)
 		member_tags = tags
+		#获取未完成的任务
+		woid = request.webapp_owner_id
+		export_jobs = ExportJob.objects.filter(woid=woid,type=0,is_download=0).order_by("-id")
+		if export_jobs:
+			export2data = {
+				"woid":int(export_jobs[0].woid) ,#
+				"status":1 if export_jobs[0].status else 0,
+				"is_download":1 if export_jobs[0].is_download else 0,
+				"id":int(export_jobs[0].id),
+				# "file_path": export_jobs[0].file_path,
+				}
+		else:
+			export2data = {
+				"woid":0,
+				"status":1,
+				"is_download":1,
+				"id":0,
+				"file_path":0,
+				}
+			
 		c = RequestContext(request, {
 			'first_nav_name': export.MEMBER_FIRST_NAV,
 			'second_navs': export.get_second_navs(request),
@@ -286,7 +310,8 @@ class MemberList(resource.Resource):
 			'user_tags': member_tags,
 			'grades': MemberGrade.get_all_grades_list(webapp_id),
 			'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(),
-			'status': status
+			'status': status,
+			'export2data': export2data,
 		})
 
 		return render_to_response('member/editor/members.html', c)
@@ -308,6 +333,19 @@ class MemberList(resource.Resource):
 
 		tags_json = get_tags_json(request)
 
+		#获取未完成的任务
+		woid = request.GET.get('woid', 0)
+		export_jobs = ExportJob.objects.filter(woid=woid,type=0,is_download=0).order_by("-id")
+		if export_jobs:
+			export2data = {
+				"woid":export_jobs[0].woid,
+				"status":export_jobs[0].status,
+				"is_download":export_jobs[0].is_download,
+				"id":export_jobs[0].id,
+				"file_path":export_jobs[0].file_path,
+				}
+		else:
+			export2data = {}
 		response = create_response(200)
 		if request.user.username == 'shengjing360':
 			is_shengjing = True
@@ -320,7 +358,8 @@ class MemberList(resource.Resource):
 			'pageinfo': paginator.to_dict(pageinfo),
 			'tags': tags_json,
 			'selected_count': len(request_members),
-			'total_count': total_count
+			'total_count': total_count,
+			'export2data': export2data
 		}
 		return response.get_response()
 
@@ -946,3 +985,220 @@ class MemberExport(resource.Resource):
 				members_info.append(info_list)
 
 		return ExcelResponse(members_info,output_name=u'会员列表'.encode('utf8'),force_csv=False)
+
+
+
+
+
+
+
+
+class MemberGetFile(resource.Resource):
+	"""
+	获取参数，构建成文件，上传到u盘运
+	"""
+	app = "member"
+	resource ="export_file_param"
+	
+	def api_get(request):
+		woid = request.webapp_owner_id
+		type = int(request.GET.get('type', 0))
+		#todo:导出的文件内容相同的情况
+		
+		now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		#判断用户是否存在导出数据任务
+		filename = "{}_{}".format("member",now)
+		#记录导出数据任务的用户和文件名
+
+		param ,sort_attr = get_request_members_args(request)
+		exportjob = ExportJob.objects.create(
+									woid = woid,
+									type = type,
+									status = 0,
+									param = param,
+									create_time = now,
+									processed_count =0,
+									count =0,
+									)
+		from member.tasks import send_export_job_task
+		send_export_job_task.delay(exportjob.id, param, sort_attr, type, filename)
+
+		# return HttpResponse("SUCCESS_STR", 'application/json')
+		# 如何响应
+		response = create_response(200)
+		response.data = {
+			'ok':'ok',
+			"exportjob_id":exportjob.id,
+		}
+		return response.get_response()
+
+def get_request_members_args(request):
+	"""
+	获取会员列表参数
+	"""
+	# #获取当前页数
+	# cur_page = int(request.GET.get('page', '1'))
+	# #获取每页个数
+	# count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+	#处理排序
+	sort_attr = request.GET.get('sort_attr', '-id')
+	#会员过滤
+	filter_value = request.GET.get('filter_value', None)
+
+	filter_data_args = {}
+	filter_data_args['webapp_id'] = request.user_profile.webapp_id
+	filter_data_args['is_for_test'] = False
+	filter_data_args['status__in'] = [SUBSCRIBED, CANCEL_SUBSCRIBED]
+
+
+	#处理来自“数据罗盘-会员分析-关注会员链接”过来的查看关注会员的请求
+	#add by duhao 2015-07-13
+	status = request.GET.get('status', '-1')
+	if not filter_value:
+		if status == '1':
+			filter_data_args['is_subscribed'] = True
+		elif status == '0':
+			filter_data_args['is_subscribed'] = False
+	if filter_value:
+		filter_data_dict = {}
+		#session_member_ids:通过最后对话时间而获取到会员id的list，先默认为false
+		session_member_ids = False
+
+		for filter_data_item in filter_value.split('|'):
+			try:
+				key, value = filter_data_item.split(":")
+			except:
+				key = filter_data_item[:filter_data_item.find(':')]
+				value = filter_data_item[filter_data_item.find(':')+1:]
+
+			filter_data_dict[key] = value
+			if key == 'name':
+				query_hex = byte_to_hex(value)
+				filter_data_args["username_hexstr__contains"] = query_hex
+			if key == 'grade_id':
+				filter_data_args["grade_id"] = value
+
+			if key == 'tag_id':
+				member_ids = [member.id for member in  MemberHasTag.get_member_list_by_tag_id(value)]
+				filter_data_args["id__in"] = member_ids
+
+			if key == 'status':
+				#无论如何这地方都要带有status参数，不然从“数据罗盘-会员分析-关注会员链接”过来的查询结果会有问题
+				if value == '1':
+					filter_data_args["is_subscribed"] = True
+				elif value == '0':
+					filter_data_args["is_subscribed"] = False
+
+			if key == 'source':
+				if value in ['-1']:
+					filter_data_args['source__in'] = [0,-1,1,2]
+				elif value in ['0']:
+					filter_data_args['source__in'] = [0,-1]
+				else:
+					filter_data_args["source"] = value
+
+			if key in ['pay_times', 'pay_money', 'friend_count', 'unit_price', 'integral']:
+				if value.find('-') > -1:
+					val1,val2 = value.split('--')
+					if float(val1) > float(val2):
+						filter_data_args['%s__gte' % key] = float(val2)
+						filter_data_args['%s__lte' % key] = float(val1)
+					else:
+						filter_data_args['%s__gte' % key] = float(val1)
+						filter_data_args['%s__lte' % key] = float(val2)
+				else:
+					filter_data_args['%s__gte' % key] = value
+
+			if key in ['first_pay', 'sub_date'] :
+				if value.find('-') > -1:
+					val1,val2 = value.split('--')
+					if key == 'first_pay':
+						filter_data_args['last_pay_time__gte'] = val1
+						filter_data_args['last_pay_time__lte'] =  val2
+					elif key == 'sub_date':
+
+						filter_data_args['created_at__gte'] = val1
+						filter_data_args['created_at__lte'] = val2
+					else:
+						filter_data_args['integral__gte'] = val1
+						filter_data_args['integral__lte'] = val2
+
+			if key  == 'last_message_time':
+				val1,val2 = value.split('--')
+				session_filter = {}
+				session_filter['mpuser__owner_id'] = request.manager.id
+				session_filter['member_latest_created_at__gte'] = time.mktime(time.strptime(val1,'%Y-%m-%d %H:%M'))
+				session_filter['member_latest_created_at__lte'] = time.mktime(time.strptime(val2,'%Y-%m-%d %H:%M'))
+
+				opids = get_opid_from_session(session_filter)
+				session_member_ids = module_api.get_member_ids_by_opid(opids)
+		#最后对话时间和分组的处理：1、都存在，做交集运算2、最后对话时间存在，将它赋值给filter_data_args['id__in']，
+		#3、最后对话时间存在，上面做了处理，不处理了。4、都不存在，pass
+		if filter_data_args.has_key('id__in') and session_member_ids:
+			member_ids = filter_data_args['id__in']
+			member_ids = list(set(member_ids).intersection(set(session_member_ids)))
+			filter_data_args['id__in'] = member_ids
+		elif session_member_ids:
+			filter_data_args['id__in'] = session_member_ids
+		#最后对话时间和分组的处理
+	return filter_data_args,sort_attr
+
+class MemberGetProcess(resource.Resource):
+	"""
+	获取导出进度
+	"""
+	app = "member"
+	resource ="export_process"
+	
+	@login_required
+	def api_get(request):
+		# woid = request.webapp_owner_id
+		exportjob_id = int(request.GET.get('id', 0))
+		
+		exportjob = ExportJob.objects.get(id=exportjob_id)
+		if exportjob.status == 1:
+			response = create_response(200)
+			response.data = {
+				'process':100,
+				'status':1,
+				'download_url': exportjob.file_path,
+			}
+			return response.get_response()
+		elif exportjob.status == 0:
+			if exportjob.processed_count > 0:
+				process = exportjob.processed_count*100/exportjob.count 
+			else:
+				process = 0 
+		# return HttpResponse("SUCCESS_STR", 'application/json')
+		# 如何响应
+		else:
+			notify_message = u"获取会员导出进度失败，exportjob_id:{},status:{}".format(exportjob_id, exportjob.status)
+			watchdog_error(notify_message)
+		response = create_response(200)
+		response.data = {
+			'process':process,
+			'status':0
+		}
+		return response.get_response()
+
+
+class MemberGetDownloadOver(resource.Resource):
+	"""
+	下载完后通知后台，存储到数据库
+	"""
+	app = "member"
+	resource ="export_download_over"
+	
+	@login_required
+	def api_get(request):
+		# woid = request.webapp_owner_id
+		exportjob_id = int(request.GET.get('id', 0))
+		if exportjob_id > 0:
+			try:
+				ExportJob.objects.filter(id=exportjob_id).update(is_download=True)
+			except:
+				pass
+		response = create_response(200)
+		response.data={"over":exportjob_id}
+		return response.get_response()
+
