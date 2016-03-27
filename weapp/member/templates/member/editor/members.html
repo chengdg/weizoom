@@ -773,37 +773,52 @@ $(document).ready(function() {
 	});
 
 	
-	function clickXaExport(event){
+	function clickXaExport(event,woid){
 		$('.panel-body').delegate('.xa-export', 'click', function(event){
-			console.log("222222222>>>>>>>>")
-			var url = '/member/export/file_param/';
-			if (view.filter_value) {
-				url = url + '?filter_value='+view.filter_value;
-			}
-			var options = {
-				el: '.panel-body',
-				topic_id: '',
-				type: '',
-				url: url,
-				jobId:0,
+			W.getApi().call({
+				app: 'member',
+				resource: 'export_is_download',
+				method: 'get',
+				args: {
+					woid: woid
+				},
+				success: function(data) {
+					if (data["status"] === 1 && data["is_download"] === 0){
+						W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
+					}
+					else if(data["status"] === 0 && data["is_download"] === 0){
+						W.showHint('error', '文件正在导出，请刷新页面进行查看！');
+					}
+					else{
+						var url ='';
+						var options = {
+							el: '.panel-body',
+							topic_id: '',
+							type: '',
+							url: url,
+							jobId:0,
 
-				isAlreadyExport : true,
-				timelinesOptions: {
-					
+							isAlreadyExport : true,
+							timelinesOptions: {
+								
+							}
+						}
+						var customersView = new W.CustomersView(options);
+					}
+				},
+				error: function(response) {
 				}
-			}
-			var customersView = new W.CustomersView(options);
+			});
+			
 		});
 	};
 	var table = $('div[data-ui-role="advanced-table"]').data('view');
 	
 
-	var export2data = {{export2data|safe}}
+	var export2data = {{export2data|safe}};
+	var woid = "{{ request.manager.id }}";
 
-
-	console.log("123123123>>>>>",export2data["status"],export2data["is_download"]);
 	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
-		console.log("export2data>>>>>",export2data["status"],export2data["is_download"] );
 		table.afterload = function(){
 			var options = {
 				el: '.div_export',
@@ -820,7 +835,6 @@ $(document).ready(function() {
 		};
 	}
 	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
-		console.log("进度条进行中............");
 		table.afterload = function(){
 
 			var jobId = export2data["id"];
@@ -839,9 +853,8 @@ $(document).ready(function() {
 		};
 	}
 	else{
-		console.log("export2data>>>>>",export2data["status"],export2data["is_download"] );
 		table.afterload = function(){
-			clickXaExport(event);
+			clickXaExport(event,woid);
 		};
 	}
 

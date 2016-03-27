@@ -1202,3 +1202,30 @@ class MemberGetDownloadOver(resource.Resource):
 		response.data={"over":exportjob_id}
 		return response.get_response()
 
+class MemberListIsDownload(resource.Resource):
+	"""
+	判断会员列表是否有未完成的下载
+	"""
+	app = "member"
+	resource ="export_is_download"
+
+	def api_get(request):
+		woid = request.GET.get('woid', 0)
+		type = 0
+		
+		try:
+			export_jobs = ExportJob.objects.filter(woid=woid,type=type,is_download=0).order_by("-id")
+			response = create_response(200)
+			response.data={
+			"woid":export_jobs[0].woid,
+			"status":1 if export_jobs[0].status else 0,
+			"is_download":1 if export_jobs[0].is_download else 0,
+			"id":export_jobs[0].id,
+			"file_path":export_jobs[0].file_path,
+			}
+			return response.get_response()
+		except:
+			pass 
+		response = create_response(200)
+		response.data={"is_download":True}
+		return response.get_response()
