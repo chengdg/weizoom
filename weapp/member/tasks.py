@@ -31,190 +31,190 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 			export_jobs.update(count=member_count)
 			tmp_count = 0
 			for member in members:
-				time.sleep(3)
-				count_list = []
-				id = member.id
-				nike_name = member.username
 				try:
-					nike_name = nike_name.decode('utf8')
-				except:
-					nike_name = member.username_hexstr
-				remarks_name = member.remarks_name
-				integral = member.integral
-				experience = member.experience
-				grade = member.grade.name
+					count_list = []
+					id = member.id
+					nike_name = member.username
+					try:
+						nike_name = nike_name.decode('utf8')
+					except:
+						nike_name = member.username_hexstr
+					remarks_name = member.remarks_name
+					integral = member.integral
+					experience = member.experience
+					grade = member.grade.name
 
 
-				friend_members = MemberFollowRelation.get_follow_members_for(member.id)
-				friend_count = len(friend_members)
-				count_list.append(friend_count)
+					friend_members = MemberFollowRelation.get_follow_members_for(member.id)
+					friend_count = len(friend_members)
+					count_list.append(friend_count)
 
-				fans_members  = MemberFollowRelation.get_follow_members_for(member.id, '1')
-				fans_count = len(fans_members)
-				count_list.append(fans_count)
+					fans_members  = MemberFollowRelation.get_follow_members_for(member.id, '1')
+					fans_count = len(fans_members)
+					count_list.append(fans_count)
 
-				factor = member.factor
-				source = member.source
-				created_at = member.created_at
+					factor = member.factor
+					source = member.source
+					created_at = member.created_at
 
-				if source == 0:
-					source = u'直接关注'
+					if source == 0:
+						source = u'直接关注'
 
-				if source == 1:
-					source = u'推广扫描'
+					if source == 1:
+						source = u'推广扫描'
 
-				if source == 2:
-					source = u'会员分享'
+					if source == 2:
+						source = u'会员分享'
 
-				if source == -1:
-					source = u'直接关注'
+					if source == -1:
+						source = u'直接关注'
 
-				shared_url_infos = MemberSharedUrlInfo.get_member_share_url_info(member.id)
-				share_urls_count = len(shared_url_infos)
-				count_list.append(share_urls_count)
+					shared_url_infos = MemberSharedUrlInfo.get_member_share_url_info(member.id)
+					share_urls_count = len(shared_url_infos)
+					count_list.append(share_urls_count)
 
-				member_orders = get_member_orders(member)
+					member_orders = get_member_orders(member)
 
-				if member_orders != None:
-					member_orders_count = len(member_orders)
-				else:
-					member_orders_count = 0
-					member_orders = []
-				count_list.append(member_orders_count)
+					if member_orders != None:
+						member_orders_count = len(member_orders)
+					else:
+						member_orders_count = 0
+						member_orders = []
+					count_list.append(member_orders_count)
 
-				member_info =  MemberInfo.get_member_info(member.id)
-				name = u''
-				sex = u''
-				phone_number = u''
-				qq_number = u''
-				weibo_nickname = u''
-				member_remarks = u''
-				if member_info:
-					name = member_info.name
-					sex = member_info.sex
-					if sex != -1:
-						if sex == 1:
-							sex = u'男'
-						elif sex == 2:
-							sex = u'女'
+					member_info =  MemberInfo.get_member_info(member.id)
+					name = u''
+					sex = u''
+					phone_number = u''
+					qq_number = u''
+					weibo_nickname = u''
+					member_remarks = u''
+					if member_info:
+						name = member_info.name
+						sex = member_info.sex
+						if sex != -1:
+							if sex == 1:
+								sex = u'男'
+							elif sex == 2:
+								sex = u'女'
+							else:
+								sex = u'未知'
 						else:
 							sex = u'未知'
-					else:
-						sex = u'未知'
-					phone_number = member_info.phone_number
-					qq_number = member_info.qq_number
-					weibo_nickname = member_info.weibo_nickname
-					member_remarks = member_info.member_remarks
+						phone_number = member_info.phone_number
+						qq_number = member_info.qq_number
+						weibo_nickname = member_info.weibo_nickname
+						member_remarks = member_info.member_remarks
 
-				max_count = max(count_list)
-				if max_count == 0:
-					max_count = 1
-				for index in range(max_count):
-					share_url = shared_url_infos[index] if share_urls_count > index else None
-					if share_url:
-						share_url_title = share_url.title
-						pv = share_url.pv
-					else:
-						share_url_title = ''
-						pv = ''
+					max_count = max(count_list)
+					if max_count == 0:
+						max_count = 1
+					for index in range(max_count):
+						share_url = shared_url_infos[index] if share_urls_count > index else None
+						if share_url:
+							share_url_title = share_url.title
+							pv = share_url.pv
+						else:
+							share_url_title = ''
+							pv = ''
 
-					member_order = member_orders[index] if member_orders_count > index else None
-					if member_order:
-						order_id = member_order.order_id
-						status = STATUS2TEXT[member_order.status]
-						final_price = member_order.final_price
-					else:
-						order_id = ''
-						status = ''
-						final_price = ''
+						member_order = member_orders[index] if member_orders_count > index else None
+						if member_order:
+							order_id = member_order.order_id
+							status = STATUS2TEXT[member_order.status]
+							final_price = member_order.final_price
+						else:
+							order_id = ''
+							status = ''
+							final_price = ''
 
-					friend_member = friend_members[index] if friend_count > index else None
-					if friend_member:
-						friend_name = friend_member.username
-						try:
-							friend_name = friend_name.decode('utf8')
-						except:
-							friend_name = friend_member.username_hexstr
-					else:
-						friend_name = ''
+						friend_member = friend_members[index] if friend_count > index else None
+						if friend_member:
+							friend_name = friend_member.username
+							try:
+								friend_name = friend_name.decode('utf8')
+							except:
+								friend_name = friend_member.username_hexstr
+						else:
+							friend_name = ''
 
-					fans_member = fans_members[index] if fans_count > index else None
-					if fans_member:
-						fans_name = fans_member.username
-						try:
-							fans_name = fans_name.decode('utf8')
-						except:
-							fans_name = fans_member.username_hexstr
-					else:
-						fans_name = ''
+						fans_member = fans_members[index] if fans_count > index else None
+						if fans_member:
+							fans_name = fans_member.username
+							try:
+								fans_name = fans_name.decode('utf8')
+							except:
+								fans_name = fans_member.username_hexstr
+						else:
+							fans_name = ''
 
-					if index == 0:
-						info_list = [ id,
-								nike_name,
-								sex,
-								remarks_name,
-								name,
-								phone_number,
-								qq_number,
-								weibo_nickname,
-								member_remarks,
-								integral,
-								experience,
-								grade,
-								friend_count,
-								friend_name,
-								fans_count,
-								fans_name,
-								source,
-								created_at,
-								share_urls_count,
-								share_url_title,
-								pv,
-								member_orders_count,
-								order_id,
-								final_price,
-								status,
-								factor
-							]
-					else:
-						info_list = ['',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								'',
-								friend_name,
-								'',
-								fans_name,
-								'',
-								'',
-								'',
-								share_url_title,
-								pv,
-								'',
-								order_id,
-								final_price,
-								status,
-								''
-							]
-					tmp_count += 1
-					export_jobs.update(processed_count=tmp_count)
-					for i in range(len(info_list)):
-						table.write(tmp_count, i, info_list[i])
-					
+						if index == 0:
+							info_list = [ id,
+									nike_name,
+									sex,
+									remarks_name,
+									name,
+									phone_number,
+									qq_number,
+									weibo_nickname,
+									member_remarks,
+									integral,
+									experience,
+									grade,
+									friend_count,
+									friend_name,
+									fans_count,
+									fans_name,
+									source,
+									created_at,
+									share_urls_count,
+									share_url_title,
+									pv,
+									member_orders_count,
+									order_id,
+									final_price,
+									status,
+									factor
+								]
+						else:
+							info_list = ['',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									'',
+									friend_name,
+									'',
+									fans_name,
+									'',
+									'',
+									'',
+									share_url_title,
+									pv,
+									'',
+									order_id,
+									final_price,
+									status,
+									''
+								]
+						tmp_count += 1
+						export_jobs.update(processed_count=tmp_count)
+						for i in range(len(info_list)):
+							table.write(tmp_count, i, info_list[i])
+				except:
+					watchdog_error("导出会员任务中会员id为{}的存在问题".format(member.id))					
 			filename = "member_{}.xls".format(exportjob_id)
 			file.save(filename)
 			export_jobs.update(status=1)
 			upyun_path = '/upload/excel/{}'.format(filename)
 			yun_url = upyun_util.upload_audio_file(filename, upyun_path)
-			print "yun_url>>>>>",yun_url
 			export_jobs.update(file_path=yun_url)
 			os.remove(filename)
 			 
