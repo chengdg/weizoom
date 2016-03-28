@@ -238,24 +238,6 @@
         $('.wui-i-body').append($(detail_content));
 
         //下拉到底显示商品详情
-
-//        var $win = $(window);
-//        var $top = $('.wui-i-product-description');
-//        var rect;
-//        var djage = function(){
-//            return rect.top<0 || rect.top >= 0 && ($win.height()-rect.top-75>=0);
-//        };
-//        var toggle_show = function(){
-//            rect = $top[0].getBoundingClientRect();
-//            if(rect && djage()){
-//                showProductDetails();
-//            }
-//        };
-//        toggle_show();
-//        window.onscroll = function(){
-//            toggle_show();
-//        };
-
         document.addEventListener('touchstart',function () {
             var $win = $(window);
             var $top = $('.wui-i-product-description');
@@ -392,10 +374,6 @@
                     }else{
                         if(W.group_status == '团购未生效' && order_id !=''){
                             openUnpaidWin();
-                        }else{
-                            if(only_remain_one_day){
-                                openRemainOneDayWin();
-                            }
                         }
                         $('.wa-using-join').text('直接参团').on('click', openJoinGruop).show();
                         if(W.isMember){
@@ -455,28 +433,33 @@
         var choosen_group_price = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_price');
         var product_id = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-product_id');
         if (choosen_group_type){
-            W.getApi().call({
-                app: 'm/apps/group',
-                resource: 'group_participance',
-                method: 'post',
-                args: {
-                    webapp_owner_id: W.webappOwnerId,
-                    group_record_id: W.appRecordId,
-                    fid: W.member_id,
-                    group_type: choosen_group_type,
-                    group_days: choosen_group_days,
-                    group_price: choosen_group_price,
-                    product_id: product_id
-                },
-                success: function(data) {
-                    var relation_belong_to = data.relation_belong_to;
-                    var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
-                    window.location.href = data_href;
-                },
-                error: function(data) {
-                    wuiAlert(data.errMsg);
-                }
-            });
+            if(only_remain_one_day){
+                openRemainOneDayWin(choosen_group_type,choosen_group_days,choosen_group_price,product_id);
+            }else{
+                W.getApi().call({
+                    app: 'm/apps/group',
+                    resource: 'group_participance',
+                    method: 'post',
+                    args: {
+                        webapp_owner_id: W.webappOwnerId,
+                        group_record_id: W.appRecordId,
+                        fid: W.member_id,
+                        group_type: choosen_group_type,
+                        group_days: choosen_group_days,
+                        group_price: choosen_group_price,
+                        product_id: product_id
+                    },
+                    success: function(data) {
+                        var relation_belong_to = data.relation_belong_to;
+                        var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
+                        window.location.href = data_href;
+                    },
+                    error: function(data) {
+                        wuiAlert(data.errMsg);
+                    }
+                });
+            }
+
         }else{
             wuiAlert('请选择团购类型！');
         }
@@ -550,12 +533,38 @@
         $('.xa-share').removeClass('none');
     }
     //开团时间不足提示
-    function openRemainOneDayWin(){
+    function openRemainOneDayWin(choosen_group_type,choosen_group_days,choosen_group_price,product_id){
         mask('show');
         $('.xui-groupMsg').removeClass('none');
         $('.xa-groupMsg').find('.xa-groupMsg-xui-i-msg-title').html('开团提示');
         $('.xa-groupMsg').find('.xa-i-msg').html('本次团购剩余时间不足1天，是否继续开团？');
-        $('.wa-i-btn-groupMsg-yes,.wa-i-btn-groupMsg-no').click(function(){
+        $('.wa-i-btn-groupMsg-yes').click(function(){
+            mask('hide');
+            $('.xui-groupMsg').addClass('none');
+            W.getApi().call({
+                app: 'm/apps/group',
+                resource: 'group_participance',
+                method: 'post',
+                args: {
+                    webapp_owner_id: W.webappOwnerId,
+                    group_record_id: W.appRecordId,
+                    fid: W.member_id,
+                    group_type: choosen_group_type,
+                    group_days: choosen_group_days,
+                    group_price: choosen_group_price,
+                    product_id: product_id
+                },
+                success: function(data) {
+                    var relation_belong_to = data.relation_belong_to;
+                    var data_href = "http://"+settings_domain+"/mall/purchasing/?woid="+W.webappOwnerId+"&product_ids="+product_id+"&product_counts=1&product_model_names=standard&group_id="+relation_belong_to+"&activity_id="+W.appRecordId;
+                    window.location.href = data_href;
+                },
+                error: function(data) {
+                    wuiAlert(data.errMsg);
+                }
+            });
+        });
+        $('.wa-i-btn-groupMsg-no').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');
         });
