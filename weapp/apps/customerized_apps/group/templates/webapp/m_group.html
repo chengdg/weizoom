@@ -196,7 +196,7 @@
 	var is_helped = true;
     var is_self_page = true;
     var is_group_leader = false;
-    var only_remain_one_day = false;
+    var remain_days = 0;
     var page_owner_member_id = '';
     var page_owner_icon = '';//用户头像
     var group_type = '';
@@ -322,7 +322,7 @@
         W.member_id = member_info.member_id;
         is_self_page = member_info.self_page;
         is_group_leader = member_info.is_group_leader;
-        only_remain_one_day = member_info.only_remain_one_day;
+        remain_days = member_info.remain_days;
         is_helped = member_info.is_helped;
         page_owner_member_id = member_info.page_owner_member_id;
         W.group_status = member_info.group_status;
@@ -433,7 +433,7 @@
         var choosen_group_price = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-group_price');
         var product_id = $('.wui-i-choose_group_box').find('.radio-select').attr('data-input-product_id');
         if (choosen_group_type){
-            if(only_remain_one_day){
+            if(remain_days < parseInt(choosen_group_days)){
                 openRemainOneDayWin(choosen_group_type,choosen_group_days,choosen_group_price,product_id);
             }else{
                 W.getApi().call({
@@ -459,7 +459,6 @@
                     }
                 });
             }
-
         }else{
             wuiAlert('请选择团购类型！');
         }
@@ -537,7 +536,7 @@
         mask('show');
         $('.xui-groupMsg').removeClass('none');
         $('.xa-groupMsg').find('.xa-groupMsg-xui-i-msg-title').html('开团提示');
-        $('.xa-groupMsg').find('.xa-i-msg').html('本次团购剩余时间不足1天，是否继续开团？');
+        $('.xa-groupMsg').find('.xa-i-msg').html('剩余开团时间不足，是否继续开团?');
         $('.wa-i-btn-groupMsg-yes').click(function(){
             mask('hide');
             $('.xui-groupMsg').addClass('none');

@@ -31,7 +31,7 @@ class MGroup(resource.Resource):
 		isMember = False
 		timing = 0
 		is_group_leader = False
-		only_remain_one_day = False #开团时间剩余1天
+		remain_days = 0 #开团时间剩余天数
 		is_helped = False
 		self_page = False
 		group_status = ''
@@ -66,8 +66,8 @@ class MGroup(resource.Resource):
 		if activity_status == u'已结束':
 			record.update(set__status=app_models.STATUS_STOPED)
 		#开团时间不足一天
-		if 0 < (record.end_time-datetime.today()).total_seconds() < timedelta(days=1).total_seconds():
-			only_remain_one_day = True
+		remain_days = (record.end_time-datetime.today()).total_seconds() / (60*60*24)
+
 		try:
 			product_id = record.product_id
 			product_original_price = ProductModel.objects.get(product_id=product_id,is_standard=True).price
@@ -199,7 +199,7 @@ class MGroup(resource.Resource):
 			'group_type': int(group_type) if group_type !='' else '',
 			'grouped_number': len(grouped_member_info_list),
 			'member_id': member_id if member else '',
-			'only_remain_one_day': only_remain_one_day,
+			'remain_days': remain_days,
 			'product_original_price': product_original_price,
 			'product_mysql_name': product_mysql_name,
 			'pic_url': pic_url,
