@@ -25,6 +25,10 @@ from weixin2.models import get_opid_from_session
 from core import resource
 
 import export
+from account.models import ExportJob
+from datetime import datetime
+#from modules.member.models import *
+
 
 COUNT_PER_PAGE = 20
 
@@ -148,7 +152,8 @@ def get_request_members_list(request, export=False):
 	members = Member.objects.filter(**filter_data_args).order_by(sort_attr)
 
 	if export:
-		return members
+		# return members
+		return filter_data_args,sort_attr
 
 	total_count = members.count()
 	pageinfo, members = paginator.paginate(members, cur_page, count, query_string=request.GET.get('query', None))
@@ -278,6 +283,26 @@ class MemberList(resource.Resource):
 			else:
 				tags.append(tag)
 		member_tags = tags
+		#获取未完成的任务
+		woid = request.webapp_owner_id
+		export_jobs = ExportJob.objects.filter(woid=woid,type=0,is_download=0).order_by("-id")
+		if export_jobs:
+			export2data = {
+				"woid":int(export_jobs[0].woid) ,#
+				"status":1 if export_jobs[0].status else 0,
+				"is_download":1 if export_jobs[0].is_download else 0,
+				"id":int(export_jobs[0].id),
+				# "file_path": export_jobs[0].file_path,
+				}
+		else:
+			export2data = {
+				"woid":0,
+				"status":1,
+				"is_download":1,
+				"id":0,
+				"file_path":0,
+				}
+			
 		c = RequestContext(request, {
 			'first_nav_name': export.MEMBER_FIRST_NAV,
 			'second_navs': export.get_second_navs(request),
@@ -286,7 +311,8 @@ class MemberList(resource.Resource):
 			'user_tags': member_tags,
 			'grades': MemberGrade.get_all_grades_list(webapp_id),
 			'counts': Member.objects.filter(webapp_id=webapp_id,is_for_test=0, status__in= [SUBSCRIBED, CANCEL_SUBSCRIBED]).count(),
-			'status': status
+			'status': status,
+			'export2data': export2data,
 		})
 
 		return render_to_response('member/editor/members.html', c)
@@ -946,3 +972,138 @@ class MemberExport(resource.Resource):
 				members_info.append(info_list)
 
 		return ExcelResponse(members_info,output_name=u'会员列表'.encode('utf8'),force_csv=False)
+
+
+
+
+
+
+
+
+class MemberGetFile(resource.Resource):
+	"""
+	获取参数，构建成文件，上传到u盘运
+	"""
+	app = "member"
+	resource ="export_file_param"
+	
+	def api_get(request):
+		woid = request.webapp_owner_id
+		type = int(request.GET.get('type', 0))
+
+		now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		#判断用户是否存在导出数据任务
+		filename = "{}_{}".format("member",now)
+		param ,sort_attr = get_request_members_list(request, True)
+		exportjob = ExportJob.objects.create(
+									woid = woid,
+									type = type,
+									status = 0,
+									param = param,
+									create_at = now,
+									processed_count =0,
+									count =0,
+									)
+		from member.tasks import send_export_job_task
+		send_export_job_task.delay(exportjob.id, param, sort_attr, type, filename)
+
+		response = create_response(200)
+		response.data = {
+			'ok':'ok',
+			"exportjob_id":exportjob.id,
+		}
+		return response.get_response()
+
+
+class MemberGetProcess(resource.Resource):
+	"""
+	获取导出进度
+	"""
+	app = "member"
+	resource ="export_process"
+	
+	@login_required
+	def api_get(request):
+		exportjob_id = int(request.GET.get('id', 0))
+		
+		exportjob = ExportJob.objects.get(id=exportjob_id)
+		if exportjob.status == 1:
+			response = create_response(200)
+			response.data = {
+				'process':100,
+				'status':1,
+				'download_url': exportjob.file_path,
+			}
+			return response.get_response()
+		elif exportjob.status == 0:
+			if exportjob.processed_count > 0 and exportjob.count >0:
+				process = exportjob.processed_count*100/exportjob.count
+			else:
+				process = 0 
+			if exportjob.query_processed_count == exportjob.processed_count:
+				exportjob.wait_count += 1
+			if exportjob.wait_count == 60:
+				exportjob.status = 2
+			exportjob.query_processed_count = exportjob.processed_count
+			exportjob.save()
+		else:
+			notify_message = u"获取会员导出进度失败，exportjob_id:{},status:{}".format(exportjob_id, exportjob.status)
+			watchdog_error(notify_message)
+		response = create_response(200)
+		response.data = {
+			'process':process,
+			'status':0
+		}
+		return response.get_response()
+
+
+class MemberGetDownloadOver(resource.Resource):
+	"""
+	下载完后通知后台，存储到数据库
+	"""
+	app = "member"
+	resource ="export_download_over"
+	
+	@login_required
+	def api_get(request):
+		exportjob_id = int(request.GET.get('id', 0))
+		if exportjob_id > 0:
+			try:
+				ExportJob.objects.filter(id=exportjob_id).update(is_download=True)
+			except:
+				pass
+		response = create_response(200)
+		response.data={"over":exportjob_id}
+		return response.get_response()
+
+class MemberListIsDownload(resource.Resource):
+	"""
+	判断会员列表是否有未完成的下载
+	"""
+	app = "member"
+	resource ="export_is_download"
+
+	def api_get(request):
+		woid = request.GET.get('woid', 0)
+		type = 0
+		
+		try:
+			export_jobs = ExportJob.objects.filter(woid=woid,type=type,is_download=0).order_by("-id")
+			response = create_response(200)
+			if export_jobs:
+				response.data={
+					"woid":export_jobs[0].woid,
+					"status":1 if export_jobs[0].status else 0,
+					"is_download":1 if export_jobs[0].is_download else 0,
+					"id":export_jobs[0].id,
+					"file_path":export_jobs[0].file_path,
+				}
+				return response.get_response()
+		except:
+			pass 
+		response = create_response(200)
+		response.data={
+			"is_download":1,
+			"status":1,
+			}
+		return response.get_response()
