@@ -19,6 +19,7 @@ from mall.models import *
 from weapp import settings
 from mall.order.util import update_order_status_by_group_status
 from apps.customerized_apps.group.group_participance import send_group_template_message
+import logging
 
 class MGroup(resource.Resource):
 	app = 'apps/group'
@@ -105,7 +106,9 @@ class MGroup(resource.Resource):
 						timing = (group_relation_info.created_at + timedelta(days=int(group_relation_info.group_days)) - datetime.today()).total_seconds()
 						if timing <= 0 and group_relation_info.group_status == app_models.GROUP_RUNNING:
 							group_relation_info.update(set__group_status=app_models.GROUP_FAILURE)
-							update_order_status_by_group_status(group_relation_info.id,'failure')
+							update_order_result = update_order_status_by_group_status(group_relation_info.id,'failure')
+							if not update_order_result:
+								logging.error("Failed to update_order_status_by_group_status, group_id:{}, status:{}".format(group_relation_info.id, 'failure'))
 							#发送拼团失败模板消息
 							try:
 								group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))

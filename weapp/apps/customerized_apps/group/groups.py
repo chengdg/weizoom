@@ -16,6 +16,7 @@ from datetime import datetime
 from mall import export as mall_export
 from mall.order.util import update_order_status_by_group_status
 from apps.customerized_apps.group.group_participance import send_group_template_message
+import logging
 
 FIRST_NAV = mall_export.MALL_PROMOTION_AND_APPS_FIRST_NAV
 COUNT_PER_PAGE = 10
@@ -82,7 +83,10 @@ class Groups(resource.Resource):
 				for group_relation in running_group_relations:
 					group_relation.update(group_status=app_models.GROUP_FAILURE)
 					group_relation_id = group_relation.id
-					update_order_status_by_group_status(group_relation_id,'failure')
+					update_order_result = update_order_status_by_group_status(group_relation_id,'failure')
+					if not update_order_result:
+						logging.error("Failed to update_order_status_by_group_status, group_id:{}, status:{}".format(group_relation_id, 'failure'))
+						continue
 					#发送拼团失败模板消息
 					try:
 						group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
