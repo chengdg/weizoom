@@ -1694,12 +1694,14 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
     for order in orders:
         if order_status == ORDER_STATUS_NOT or order.status == ORDER_STATUS_NOT:
             update_order_status(user, 'cancel', order)
+            return True
         elif order_status == ORDER_STATUS_PAYED_NOT_SHIP:
             if order.pay_interface_type == PAY_INTERFACE_WEIXIN_PAY and order.status >= ORDER_STATUS_PAYED_NOT_SHIP:
                 if is_test:
                     update_order_status(user, 'return_pay', order)
                     order.status = ORDER_STATUS_GROUP_REFUNDING
                     order.save()
+                    return True
                 else:
                     args = {
                         'order_id': order.order_id,
@@ -1736,15 +1738,19 @@ def update_order_status_by_group_status(group_id, status, order_ids=None, is_tes
                         update_order_status(user, 'return_pay', order)
                         order.status = ORDER_STATUS_GROUP_REFUNDING
                         order.save()
+                        return True
                     else:
                         logging.info(u"订单%s通知退款失败" % order.order_id)
                         watchdog_error(u"订单%s通知退款失败" % order.order_id)
+                        return False
             else:
                 try:
                     update_order_status(user, 'cancel', order)
+                    return True
                 except:
                     logging.info(u"团购失败，订单%s取消失败" % order.order_id)
                     watchdog_error(u"团购失败，订单%s取消失败" % order.order_id)
+                    return False
 
 def cancel_group_buying(order_id):
     order = Order.objects.get(order_id=order_id)
