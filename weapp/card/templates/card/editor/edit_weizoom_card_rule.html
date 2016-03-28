@@ -396,7 +396,7 @@ $(document).ready(function() {
         var card_attr = $('[name="card_attr"]').val();
         var is_new_member_special = $('[name="is_new_member_special"]').attr('checked');
 		var full_use_value = $('[name="full_use_value"]').val();
-        var belong_to_owner_ids=[]
+        var belong_to_owner_ids=[-1]
         var $checked_owner=$('div.show_bussiness_div');
         if($checked_owner){
             $checked_owner.each(function(){
