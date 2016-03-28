@@ -44,5 +44,9 @@ import api_views
 
 import member_grade
 
+import member_shipinfo
+import member_browse_record
+import member_coupon
+
 urlpatterns = patterns('',
 )
