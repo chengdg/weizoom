@@ -186,8 +186,8 @@
 </div>
 
 <div class="xui-timeChoose xa-timeChoose">
-	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" value="{{startDate}}"/></div>
-	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" value="{{endDate}}"/></div>
+	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" /></div>
+	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" /></div>
 	<div class="xui-btn-wrap">
 		<span class="xui-reset xa-reset">清除时间</span>
 		<span class="xui-submit xa-submit">确定</span>
@@ -258,8 +258,8 @@
 			lang: 'zh',
 			showNow: true,
 			nowText: "今天",
-			startYear: currYear - 100, //开始年份
-			endYear: currYear + 100 //结束年份
+			startYear: currYear - 10, //开始年份
+			endYear: currYear + 10 //结束年份
 		};
 		$("#startDate").mobiscroll($.extend(opt['date'], opt['default']));
 		$("#endDate").mobiscroll($.extend(opt['date'], opt['default']));

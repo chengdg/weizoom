@@ -245,8 +245,6 @@ def get_settings_detail(request):
                     'bind_phone_members_count': len(bind_phone_members),
                     'startDateTitle': startDate[0:10].replace('-','/') if startDate else '',
                     'endDateTitle': endDate[0:10].replace('-','/') if endDate else '',
-                    'startDate': startDate[0:10] if startDate else '',
-                    'endDate': endDate[0:10] if endDate else '',
 
                 })
             return render_to_response('%s/channel_qrcode/webapp/channel_qrcode_members.html' % TEMPLATE_DIR, c)
