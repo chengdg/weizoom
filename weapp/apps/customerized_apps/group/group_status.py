@@ -63,7 +63,7 @@ class GroupStatus(resource.Resource):
 					group_details = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id))
 					owner_id = group.owner_id
 					product_name = group.product_name
-					miss = int(group_relation.group_type)-group_details.count()
+					miss = int(group_relation.group_type)-group_details.filter(is_already_paid=False).count()
 					activity_info = {
 						"owner_id": str(owner_id),
 						"record_id": group_id,
