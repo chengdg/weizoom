@@ -33,7 +33,7 @@
         {% endif %}
     </section>
     {% endif %}
-	<section>
+	<section style="{% if not show_head %}margin-top:10%{% endif %}">
 		<div class="pr tc">
         	<img width="250" height="250" src="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={{setting.ticket}}" class="xui-qrcode">
         	<img src="{% if head_img %}{{ head_img }}{% else %}/static/img/user-1.jpg{% endif %}" onerror="this.src='/static/img/user-1.jpg'" class="pa xui-memberHead" data-allow-autoplay=false/>
