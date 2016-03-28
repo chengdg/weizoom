@@ -76,10 +76,7 @@ class GroupStatus(resource.Resource):
 					}
 					member_info_list = [{"member_id": group_detail.grouped_member_id, "order_id": group_detail.order_id} for group_detail in group_details]
 					send_group_template_message(activity_info, member_info_list)
-				except Exception, e:
-					print(u'发送拼团失败模板消息失败')
-					print 'template----------------------------------'
-					print e
+				except:
 					print 'template----------------------------------'
 
 		elif target_status == 'running':
