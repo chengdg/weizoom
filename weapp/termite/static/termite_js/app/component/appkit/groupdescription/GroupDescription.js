@@ -240,7 +240,7 @@ W.component.appkit.GroupDescription = W.component.Component.extend({
 				$target.find('.productName').html(product.name);
 				$target.find('.productUserCode').html('商品编码:'+product.user_code);
 				$target.find('.productPrice').html(product.display_price);
-				$target.find('.productSocks').html(product.sales);
+                $target.find('.productSales').html(product.sales);
 
 				$node.find('.wui-i-product-img > img').attr('src',product.thumbnails_url);
 			}
