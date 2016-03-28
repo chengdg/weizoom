@@ -8,41 +8,6 @@
 	  width: 152px;
 	  display: inline-block;
 }
-/*导出*/
-#exportProgress{border:1px solid #D3D4D6;background:#F5F5F5; -webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:4px; overflow:hidden;display: none;}
-#export_data_file {
-    background-image: url(/static_v2/img/export_img.gif);
-	padding-left:22px;
-	background-position:10px center;
-	background-repeat:no-repeat;
-}
-
-#exportProgress_bar {
-	width: 100px;
-	height: 15px;
-	float: right;
-	border: solid 1px #66B758;
-}
-
-.exportProgress_progress {
-	/*background-color: #0080FF;*/
-	background-image: -moz-linear-gradient(left , rgb(0,0,255) 16%, rgb(155,197,117) 100%);
-	background-image: -webkit-linear-gradient(left , rgb(0,0,255) 16%, rgb(155,197,117) 100%);
-    height: 100%;
-	width: 0;
-}
-
-.exportProgress_msg {
-	float: right;
-	margin-top: -1px;
-	margin-left: 5px;
-}
-
-.icon-arrow-down {
-	background-position: -312px -96px;
-}
-/**/
-
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -305,7 +270,7 @@
 	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
 		<label class="fr">筛选结果：${data.total_count}人</label>
 
-		<a href="javascript:void(0);" class="btn fr  btn-default xa-export mr20 " id="export_data_file">导出结果</a>
+		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
 		
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >

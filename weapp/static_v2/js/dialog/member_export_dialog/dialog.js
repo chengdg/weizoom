@@ -62,10 +62,10 @@ W.dialog.member.ExportFileJobView = Backbone.Model.extend({
 });
 
 EXPORT_PGOGRESS_TMPL = "<div id='exportProgress'>" +
-		"<div class='exportProgress_msg'></div>" +
+		"<div class='exportProgress_msg'>0%</div>" +
 		"<div id='exportProgress_bar'><div class='exportProgress_progress'></div></div>" +
 		"</div>" +
-		"<a id='downloadLink' class='btn fr' href='#'><i class='icon-arrow-down'></i>下载导出文件</a>";
+		"<a id='downloadLink' class='btn fr btn-default mr20' href='#'>下载导出文件</a>";
 
 ensureNS('W.dialog.member.ExportFileView');
 W.dialog.member.ExportFileView = Backbone.View.extend({
