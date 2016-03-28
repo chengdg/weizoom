@@ -21,109 +21,94 @@
 		</li>
 		<li class="active">会员详情</li>
 	</ul>
-        <div class="xui-member-info-panel">
-        	<div class="xui-infowrap">
-        		<div class="xui-img-wrap">
-        			 <div  class="xui-img" style="background-image: url({{show_member.user_icon}}
-); background-size:100%;" ></div>
-        			  <p class=" xui-membername">{{ show_member.username_for_html|safe }}</p>
-        		</div>
-
-        	</div>
-        	<div class="xui-infowrap">
-
-
-	        	<div class="xui-fieldwrap">
-	        		<div class="xui-name">关注时间：</div>
-	        		<div class="xui-value ">{{ show_member.created_at|date:"Y-m-j" }}</div>
-	        	</div>
-	        	<div class="xui-fieldwrap">
-        		<div class="xui-name">会员等级：</div>
-        		<div class="xui-value ">
-        			<select   type="text" class="w120 m0 form-control" id="grade_id">
-        				<option  value="-1" >请选择等级</option>
-	        			{% for grade in grades%}
+  <div class="xui-member-info-panel">
+    	<div class="xui-infowrap">
+    		<div class="xui-img-wrap">
+    			 <div  class="xui-img" style="background-image: url({{show_member.user_icon}}); background-size:100%;" ></div>
+    			  <p class=" xui-membername">{{ show_member.username_for_html|safe }}</p>
+    		</div>
+    	</div>
+    	<div class="xui-infowrap">
+      	<div class="xui-fieldwrap">
+      		<div class="xui-name">关注时间：</div>
+      		<div class="xui-value ">{{ show_member.created_at|date:"Y-m-j" }}</div>
+      	</div>
+      	<div class="xui-fieldwrap">
+      		<div class="xui-name">会员等级：</div>
+      		<div class="xui-value ">
+      			<select   type="text" class="w120 m0 form-control" id="grade_id">
+      				<option  value="-1" >请选择等级</option>
+        			{% for grade in grades%}
 							<option value="{{ grade.id }}"  {% ifequal grade.id show_member.grade.id %}selected="selected"{% endifequal %}>{{ grade.name }}</option>
-						{% endfor %}
-					</select>
-				 </div>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 				<div class="xui-fieldwrap">
-				    <div class="xui-name ">姓名：</div>
-	        			<div class="xui-value">
-	        			<input class="form-control fl" type="text" id="name" name="name" placeholder="不超过8个字符" maxlength="8" value="{% if show_member_info %}{{ show_member_info.name }}{% endif %}" />
-						</div>
-
+		    	<div class="xui-name ">姓名：</div>
+    			<div class="xui-value">
+    				<input class="form-control fl" type="text" id="name" name="name" placeholder="不超过8个字符" maxlength="8" value="{% if show_member_info %}{{ show_member_info.name }}{% endif %}" />
+					</div>
 				</div>
 				<div class="xui-fieldwrap">
-        		<div class="xui-name">性别：</div>
-        		<div class="xui-value">
-        			<input name="sex_type" type="radio" value="1" {% ifequal show_member_info.sex 1 %}checked {% endifequal %}/><span class="ml5">男</span>
-					<span class="ml20"><input name="sex_type" type="radio" value="2" {% ifequal show_member_info.sex 2 %}checked {% endifequal %}/>	<span class="ml5">女</span></span>
-					<span class="ml20"><input name="sex_type" type="radio" value="0" {% ifequal show_member_info.sex 0 %}checked {% endifequal %}/><span class="ml5">未知</span></span>
+      		<div class="xui-name">性别：</div>
+      		<div class="xui-value">
+      			<input name="sex_type" type="radio" value="1" {% ifequal show_member_info.sex 1 %}checked {% endifequal %}/><span class="ml5">男</span>
+						<span class="ml20"><input name="sex_type" type="radio" value="2" {% ifequal show_member_info.sex 2 %}checked {% endifequal %}/>	<span class="ml5">女</span></span>
+						<span class="ml20"><input name="sex_type" type="radio" value="0" {% ifequal show_member_info.sex 0 %}checked {% endifequal %}/><span class="ml5">未知</span></span>
+					</div>
 				</div>
-				</div>
-
 				<div class="xui-fieldwrap">
-	        		<div class="xui-name">绑定手机：</div>
-	        		<div class="xui-value "><input  class="form-control" id="phone_number" value="{% ifequal show_member_info.is_binded 1 %}{{show_member_info.phone_number}}{% endifequal %}"  type="text" data-validate="norequire,,require-mobile-phone::请输入正确的手机号" placeholder="11位手机号">
-	        		<div class="errorHint"></div>
-	        		</div>
-	        		<div class="xui-name">上次交易时间：</div>
-	        		<div class="xui-value">{{ show_member.last_pay_time|unify_datetime }}</div>
+      		<div class="xui-name">绑定手机：</div>
+      		<div class="xui-value ">
+      			<input  class="form-control" id="phone_number" value="{% ifequal show_member_info.is_binded 1 %}{{show_member_info.phone_number}}{% endifequal %}"  type="text" data-validate="norequire,,require-mobile-phone::请输入正确的手机号" placeholder="11位手机号">
+      			<div class="errorHint"></div>
+      		</div>
+      		<div class="xui-name">上次交易时间：</div>
+      		<div class="xui-value">{{ show_member.last_pay_time|unify_datetime }}</div>
 				</div>
+      </div>
 
-        	</div>
+    	<div class="xui-infowrap pt50">
+    		<a href="/new_weixin/realtime_messages_detail/?session_id={{show_member.session_id}}" {% if show_member.session_id == -1 %}title="暂无对话" onclick="return false"{% endif %}>查看聊天记录</a>
+    		<div class="xui-name">备注：</div>
+    		<div class="xui-value">
+    			<textarea class="xui-textarea-mark" id="member_remarks" name="member_remarks" placeholder="" rows=4 value="{{ show_member_info.member_remarks }}">{{ show_member_info.member_remarks }}</textarea>
+    		</div>
+    	</div>
+			<div class="xui-fieldwrap tags">
+			    <div class="xui-name w268 ">所在分组：</div>
+        			<div class="w700 fl">
+        			<div class="tag-group xui-group fl" >
+        			{% for tag in member_has_tags %}
+	                 <span class="mr30">{{ tag.member_tag.name }}</span>
+	                 <input name = "tag_id" class="tag_id" id = "tag_id" hidden = "hidden" value="{{ tag.member_tag.id }}">
+	                {% endfor %}
+					</div>
+					 <a class="xa-update-tag xui-notify ml10">修改</a>
+					</div>
+			</div>
+			<div class="xui-fieldwrap tags">
+			    <div class="xui-name w268 ">本店积分：</div>
+        			<div class="w700 fl" style="padding-top:6px;">
+	        			<div class="fl ml10" >
+	        				{{show_member.integral}}
 
-        	<div class="xui-infowrap pt50">
-
-
-        			<a href="/new_weixin/realtime_messages_detail/?session_id={{show_member.session_id}}" {% if show_member.session_id == -1 %}title="暂无对话" onclick="return false"{% endif %}>查看聊天记录</a>
-
-
-        		<div class="xui-name">备注：</div>
-        		<div class="xui-value">
-        			<textarea class="xui-textarea-mark" id="member_remarks" name="member_remarks" placeholder="" rows=4 value="{{ show_member_info.member_remarks }}">{{ show_member_info.member_remarks }}</textarea>
-        		</div>
-        	</div>
-
-
-				<div class="xui-fieldwrap tags">
-				    <div class="xui-name w268 ">所在分组：</div>
-	        			<div class="w700 fl">
-	        			<div class="tag-group xui-group fl" >
-	        			{% for tag in member_has_tags %}
-		                 <span class="mr30">{{ tag.member_tag.name }}</span>
-		                 <input name = "tag_id" class="tag_id" id = "tag_id" hidden = "hidden" value="{{ tag.member_tag.id }}">
-		                {% endfor %}
 						</div>
-						 <a class="xa-update-tag xui-notify ml10">修改</a>
-						</div>
+						 <a href="javascript:void(0);" class="xa-update-integral ml15" data-id="${member.id}">调积分</a>
+						 <a href="javascript:void(0);" class="xa-show-integral ml15">积分明细</a>
+					</div>
+			</div>
+			<div class="xui-fieldwrap tags">
+		    <div class="xui-name w268 ">好友数：</div>
+  			<div class="w700 fl" style="padding-top:6px;">
+    			<div class="fl ml10 relation-text" >
+    				<a class="relation-text" href="javascript:void(0);" style="" friend_count='{{show_member.friend_count}}'>{{show_member.friend_count}}</a>
+					</div>
 				</div>
-
-				<div class="xui-fieldwrap tags">
-				    <div class="xui-name w268 ">本店积分：</div>
-	        			<div class="w700 fl" style="padding-top:6px;">
-		        			<div class="fl ml10" >
-		        				{{show_member.integral}}
-
-							</div>
-							 <a href="javascript:void(0);" class="xa-update-integral ml15" data-id="${member.id}">调积分</a>
-							 <a href="javascript:void(0);" class="xa-show-integral ml15">积分明细</a>
-						</div>
-				</div>
-				<div class="xui-fieldwrap tags">
-				    <div class="xui-name w268 ">好友数：</div>
-	        			<div class="w700 fl" style="padding-top:6px;">
-		        			<div class="fl ml10 relation-text" >
-
-		        				<a class="relation-text" href="javascript:void(0);" style="" friend_count='{{show_member.friend_count}}'>{{show_member.friend_count}}</a>
-							</div>
-						</div>
-				</div>
-
-        	<div class="xui-clear"></div>
-        	<div class="xui-btn-group tc mb20">
+			</div>
+    	<div class="xui-clear"></div>
+      <div class="xui-btn-group tc mb20">
 				<input type="submit" class="btn btn-primary xui-btn-save" id="submitBtn" value="保&nbsp;存" />
 			</div>
         </div>
