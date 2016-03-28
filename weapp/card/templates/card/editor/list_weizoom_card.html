@@ -1,7 +1,28 @@
 {% extends "card_base.html" %}
 {% load common_tag %}
 {% load account_filter %}
-
+{% block css %}
+<style type="text/css">
+    .belong_to_owner_name{
+        display:inline-block;
+        width:96px;
+        float:left;
+        marginBottom:5px;
+        textAlign:center;
+        color: #333;
+    }
+    .belong_to_owner_div{
+        border: 1px solid gray;
+        width: 300px;
+        /*height: 50px;*/
+        position: absolute;
+        background-color: #FFF;
+        padding: 5px 0px;
+        z-index: 9999;
+        left: -100px;
+    }
+</style>
+{% endblock %}
 {% block content-panel %}
     <div class="relative">
         <ul class="breadcrumb">
@@ -59,6 +80,10 @@
         </div>
     </div>
 </div>
+<div class="belong_to_owner" style="display:none;">
+    <div class="belong_to_owner_div" style="">
+    </div>
+</div>
 {% endblock %}
 
 
@@ -98,7 +123,9 @@
                                 <div>通用卡</div>
                             {{/if}}
                             <div>${card_rule.card_type}</div></td>
-                        <td>{{if card_rule.belong_to_owner.length>0}}<span class="show_belong_bussiness" data-toggle="modal" data-target="#ownerSpecial" onClick=show_belong_bussiness('${card_rule.belong_to_owner}')>查看专属商家${card_rule.belong_to_owner.length}</span>{{/if}}</td>
+                        <td>{{if card_rule.belong_to_owner.length>0}}<button class="btn btn-primary" style="position: relative;" onClick="show_belong_to_owner(this,'${card_rule.belong_to_owner}');">查看专属商家
+                                <div class="belong_to_dialog" style="display:none"></div>
+                            </button>{{/if}}</td>
                         <td>${card_rule.card_range}</td>
                         <td>${card_rule.valid_time_from}</br>${card_rule.valid_time_to}</td>
                         <td style="max-width:150px;">${card_rule.remark}</td>
@@ -349,16 +376,21 @@
 
             $div.data('view', advancedTable);
         });
-    function show_belong_bussiness(items){
-        console.log(items,'111111111')
-        belong_bussiness=items.split(',')
-        console.log(belong_bussiness,33333)
-        for(var i=0;i<belong_bussiness.length;i++){
-            console.log(i,'2222222222')
-            console.log($(".show_ownerSpecial"),444444)
-            $(".show_ownerSpecial").append('<div class="fl show_belong_bussiness_div">'+belong_bussiness[i]+'</div>')
+    function show_belong_to_owner(that,owner){
+            var attr = $(that).children('.belong_to_dialog').attr('style');
+            owner = owner.split(",");
+            $('.belong_to_owner div').html('');
+            for(i in owner){
+                $('.belong_to_owner div').append('<span class="belong_to_owner_name" style="display:inline-block;width:96px;float:left;marginBottom:5px;textAlign:center;color: #333;">'+ owner[i] +'</span>');
+            }
+            $('.belong_to_owner div').append();
+            if(attr && attr.indexOf('none')!=-1){
+                var belong_to_owner_html = $('.belong_to_owner').show();
+                $(that).children('.belong_to_dialog').html(belong_to_owner_html).show();
+            }else{
+                $(that).children().hide();
+            }
         }
-    }
 
     </script>
 {% endblock %}
