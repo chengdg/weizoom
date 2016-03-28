@@ -533,7 +533,7 @@ def create_weizoom_cards(request):
     valid_time_from = request.POST.get('valid_time_from', '')
     valid_time_to = request.POST.get('valid_time_to', '')
     card_attr = request.POST.get('card_attr','')
-    cur_belong_to_owner = request.POST.get('belong_to_owner','')
+    cur_belong_to_owner = request.POST.get('belong_to_owner','[-1]')
     is_new_member_special = request.POST.get('is_new_member_special', 0)
     valid_restrictions = request.POST.get('full_use_value', -1)
     left_belong_to_owner=cur_belong_to_owner.split('[')[1]
