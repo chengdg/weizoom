@@ -5,7 +5,7 @@ import logging
 # This will cause your tasks to be called immediately at the point you say "task.delay(...)", so you can test the whole path (without any asynchronous behavior).
 if settings.MODE == 'develop':
 	# 如果需要在开发环境用同步模式，将CELERY_ALWAYS_EAGER置为True
-	CELERY_ALWAYS_EAGER = True
+	CELERY_ALWAYS_EAGER = False
 	BROKER_URL = 'redis://redis.weapp.com//'
 	# 置为True之后，会看到worker的异常，适合调试模式
 	CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
