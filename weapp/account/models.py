@@ -507,9 +507,8 @@ class ExportJob(models.Model):
 	is_download = models.BooleanField(default=False, verbose_name='是否下载')
 	param = models.CharField(max_length=256)
 	file_path = models.CharField(max_length=256)
-	query_processed_count = models.IntegerField(max_length=256,default=0)
-	wait_count = models.IntegerField(max_length=256,default=0)
-	create_at = models.DateTimeField(verbose_name='创建时间')
+	update_at = models.DateTimeField(verbose_name='更新时间', auto_now=True)
+	created_at = models.DateTimeField(verbose_name='创建时间')
 
 	class Meta(object):
 		db_table = 'export_job'

@@ -12,7 +12,8 @@ import xlwt
 import os
 import time
 
-@task(bind=True, max_retries=2)
+@task(bind=True, time_limit=7200, max_retries=2)
+
 def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, filename):
 
 	export_jobs = ExportJob.objects.filter(id=exportjob_id)
@@ -213,7 +214,7 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 					for i in range(len(info_list)):
 						table.write(tmp_count, i, info_list[i])
 				member_count_write += 1
-				export_jobs.update(processed_count=member_count_write)
+				export_jobs.update(processed_count=member_count_write,update_at=datetime.now())
 			filename = "member_{}.xls".format(exportjob_id)
 			dir_path_excel = "excel"
 			dir_path = os.path.join(settings.UPLOAD_DIR, dir_path_excel)
@@ -223,7 +224,7 @@ def send_export_job_task(self, exportjob_id, filter_data_args, sort_attr, type, 
 			
 			upyun_path = '/upload/excel/{}'.format(filename)
 			yun_url = upyun_util.upload_image_to_upyun(file_path, upyun_path)
-			export_jobs.update(status=1,file_path=yun_url)
+			export_jobs.update(status=1,file_path=yun_url,update_at=datetime.now())
 
 			 
 		except:
