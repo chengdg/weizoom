@@ -22,7 +22,7 @@
 
 {% block js %}
 <script type="text/javascript">
-var storageTimer;
+var storageTimer, submitControl = false;
 $(document).ready(function() {
     //清空当前活动的本地数据
     $('.wa-del-storage').on('click', function(){
@@ -96,6 +96,8 @@ $(document).ready(function() {
             if (!W.validate()) {
                 return;
             }
+            if(submitControl) return;
+            submitControl = true;
             var data = {};
             var $controls = $('.xa-inputControl');
             for (var i = 0; i < $controls.length; ++i) {
@@ -274,6 +276,7 @@ $(document).ready(function() {
                         speed: 3000
                     });
                     slag = true;
+                    submitControl = false;
                 }
             });
         }
