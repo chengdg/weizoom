@@ -43,6 +43,22 @@
         class="panel-body">
     </div>
 </div>
+<div id="ownerSpecial" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" style="top:200px">
+            <div class="modal-header" style="color:#fff;line-height:38px;font-size:14px">
+                <span>已有专属商家</span>
+            </div>
+            <div class="modal-body">
+              <div style="max-height:450px;overflow-y:scroll" class="show_ownerSpecial">
+              <div style="clear: both"></div></div>
+            </div>
+            <div class="modal-footer tc">
+                <button class="btn btn-cancel" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 
@@ -82,7 +98,7 @@
                                 <div>通用卡</div>
                             {{/if}}
                             <div>${card_rule.card_type}</div></td>
-                        <td>${card_rule.belong_to_owner}</td>
+                        <td>{{if card_rule.belong_to_owner.length>0}}<span class="show_belong_bussiness" data-toggle="modal" data-target="#ownerSpecial" onClick=show_belong_bussiness('${card_rule.belong_to_owner}')>查看专属商家${card_rule.belong_to_owner.length}</span>{{/if}}</td>
                         <td>${card_rule.card_range}</td>
                         <td>${card_rule.valid_time_from}</br>${card_rule.valid_time_to}</td>
                         <td style="max-width:150px;">${card_rule.remark}</td>
@@ -333,5 +349,16 @@
 
             $div.data('view', advancedTable);
         });
+    function show_belong_bussiness(items){
+        console.log(items,'111111111')
+        belong_bussiness=items.split(',')
+        console.log(belong_bussiness,33333)
+        for(var i=0;i<belong_bussiness.length;i++){
+            console.log(i,'2222222222')
+            console.log($(".show_ownerSpecial"),444444)
+            $(".show_ownerSpecial").append('<div class="fl show_belong_bussiness_div">'+belong_bussiness[i]+'</div>')
+        }
+    }
+
     </script>
 {% endblock %}

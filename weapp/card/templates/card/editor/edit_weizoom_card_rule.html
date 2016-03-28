@@ -396,13 +396,18 @@ $(document).ready(function() {
         var card_attr = $('[name="card_attr"]').val();
         var is_new_member_special = $('[name="is_new_member_special"]').attr('checked');
 		var full_use_value = $('[name="full_use_value"]').val();
-        var belong_to_owner_ids=[-1]
+        var belong_to_owner_ids=[]
         var $checked_owner=$('div.show_bussiness_div');
-        if($checked_owner){
+        if($checked_owner.length>0 &&card_attr==1){
             $checked_owner.each(function(){
                 belong_to_owner_ids.push(parseInt($(this).attr('id')))
             })
         }
+        else{
+            console.log('---------------')
+            belong_to_owner_ids.push(-1)
+        }
+        console
         W.getApi().call({
             app: 'card',
             api: 'weizoom_cards/create',

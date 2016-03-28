@@ -151,7 +151,14 @@ def get_cards(request):
             rule_id2card_ids[r_id] = weizoom_card_ids
 
     cur_weizoom_card_rules = []
+
     for rule in weizoom_card_rules:
+        belong_to_owner_list2store_names=[]
+        belong_to_owner_list = str(rule.shop_limit_list).split(',')
+        for a in belong_to_owner_list:
+            if a != '-1':
+                belong_to_owner_list2store_name=user_id2store_name.get(a,None)
+                belong_to_owner_list2store_names.append(belong_to_owner_list2store_name)
         cur_weizoom_card_rule = JsonResponse()
         cur_weizoom_card_rule.id = rule.id
         cur_weizoom_card_rule.name = rule.name
@@ -161,7 +168,7 @@ def get_cards(request):
         cur_weizoom_card_rule.card_type = rule.card_type
         cur_weizoom_card_rule.is_new_member_special = rule.is_new_member_special
         cur_weizoom_card_rule.card_attr = rule.card_attr
-        cur_weizoom_card_rule.belong_to_owner = user_id2store_name.get(rule.shop_limit_list,None)
+        cur_weizoom_card_rule.belong_to_owner = belong_to_owner_list2store_names
         cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
