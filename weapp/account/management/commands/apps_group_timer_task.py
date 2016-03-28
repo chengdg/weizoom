@@ -11,6 +11,7 @@ from apps.customerized_apps.group import models as app_models
 from modules.member.models import Member
 from mall.order.util import update_order_status_by_group_status
 from apps.customerized_apps.group.group_participance import send_group_template_message
+import logging
 
 class Command(BaseCommand):
 	help = 'start group stats task'
@@ -36,7 +37,10 @@ class Command(BaseCommand):
 				group_id = group_relation.id
 				if timing <= 0:
 					group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-					update_order_status_by_group_status(group_id,'failure')
+					update_order_result = update_order_status_by_group_status(group_id,'failure')
+					if not update_order_result:
+						logging.error("Failed to update_order_status_by_group_status, group_id:{}, status:{}".format(group_id, 'failure'))
+						continue
 					#收集拼团失败模板消息数据
 					try:
 						group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
@@ -76,7 +80,10 @@ class Command(BaseCommand):
 			for group_relation in all_end_group_relations:
 				group_id = group_relation.id
 				group_relation.update(set__group_status=app_models.GROUP_FAILURE)
-				update_order_status_by_group_status(group_id,'failure')
+				update_order_result = update_order_status_by_group_status(group_id,'failure')
+				if not update_order_result:
+					logging.error("Failed to update_order_status_by_group_status, group_id:{}, status:{}".format(group_id, 'failure'))
+					continue
 				#收集拼团失败模板消息数据
 				try:
 					group_details = all_group_details_has_paid.filter(relation_belong_to=str(group_id))
