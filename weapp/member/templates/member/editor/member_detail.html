@@ -168,12 +168,12 @@
 	   	</div>
 	   	<div class="tab-pane fade" id="transmission">
 	      <p>
-		      二维码引流会员数量：<a href="javascript:void(0);" class="xui-color-blue">2</a>人
+		      二维码引流会员数量：<a href="javascript:void(0);" class="xui-color-blue friends" data-value="qrcode">{{qrcode_friends}}</a>人
 		      <span class="ml50">
-		      分享链接引流会员数量：<a href="javascript:void(0);" class="xui-color-blue">2</a>人
+		      分享链接引流会员数量：<a href="javascript:void(0);" class="xui-color-blue friends" data-value="shared">{{shared_url_lead_number}}</a>人
 		      </span>
 		      <span class="ml50">
-		      购买转化会员数量：<a href="javascript:void(0);" class="xui-color-blue">2</a>人
+		      购买转化会员数量：<a href="javascript:void(0);" class="xui-color-blue friends" data-value="purchase">00</a>人
 		      </span>
 		      <span class="ml50">
 		      转化率：70.1%
@@ -193,7 +193,18 @@
 	      <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
 	   	</div>
 	   	<div class="tab-pane fade" id="prints">
-	      <p>Enterprise Java Beans（EJB）是一个创建高度可扩展性和强大企业级应用程序的开发架构，部署在兼容应用程序服务器（比如 JBOSS、Web Logic 等）的 J2EE 上。
+	      <p>
+	      	<div
+	          data-ui-role="advanced-table"
+	          data-app="member"
+	          data-resource="member_browse_record"
+	          data-enable-paginator="true"
+	          data-template-id="#mall-member-browse-record-view"
+	          data-selectable = "false"
+			  data-item-count-per-page="6"
+			  data-args='{"id": {{show_member.id}}}'
+	        >
+        	</div>
 	      </p>
 	   	</div>
 		</div>
@@ -596,6 +607,27 @@
 				<td>20</td>
 				<td>0</td>
 			</tr>
+		</tbody>
+	</table>
+</script>
+
+<script id="mall-member-browse-record-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered xb-noTdLRBorder xb-theadBg">
+		<thead>
+			<th width="220">时间</th>
+			<th class="tl pl40">页面名称</th>
+		</thead>
+		<tbody>
+		{{if items.length}}
+			{{each(i, item) items}}		
+			<tr>
+				<td>${create_at}</td>
+			    <td class="tl">${tittle}</td>
+			</tr>
+			{{/each}}
+		{{else}}
+			<tr rowspan='6' ><td colspan='2' class="h130 xui-fontGary" >暂无数据</td></tr>
+		{{/if }}
 		</tbody>
 	</table>
 </script>
