@@ -268,18 +268,3 @@ class WeiZoomCardPermission(models.Model):
 
 	class Meta(object):
 		db_table = 'market_tool_weizoom_card_permission'
-
-
-#########################################################################
-# WeizoomCardRecharge : 微众卡充值
-#########################################################################
-class WeizoomCardRecharge(models.Model):
-	user = models.ForeignKey(User)
-	card_id = models.IntegerField(default=0) #微众卡的id
-	recharge_money = models.FloatField(default=0.0) #充值金额
-	created_at = models.DateTimeField(auto_now_add=True)
-	remainder = models.FloatField(default=0.0) #余额
-	class Meta(object):
-		db_table = 'money_recharge'
-		verbose_name = '微众卡充值'
-		verbose_name_plural = '微众卡充值'
