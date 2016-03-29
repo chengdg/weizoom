@@ -55,8 +55,6 @@ W.member.dialog.UserCenterRelationsDialog = W.dialog.Dialog.extend({
         this.relations.bind('add', this.onAdd, this);
         this.relations.fetch();
         this.$dialog.find('.modal-body').html($.tmpl(this.tmplName, options));
-
-
     },
 
     //bert add
@@ -183,6 +181,16 @@ W.member.dialog.MemberDetailRelationsDialog = W.dialog.Dialog.extend({
         // this.relations.bind('add', this.onAdd, this);
         // this.relations.fetch();
         // this.$dialog.find('.modal-body').html($.tmpl(this.tmplName, options));
+        var title = "";
+        if(options.dataValue === 'qrcode') {
+            title = "二维码引流会员列表";
+        } else if (options.dataValue === 'shared') {
+            title = "分享链接引流会员列表";
+        } else if (options.dataValue === 'purchase') {
+            title = "购买转换会员列表";
+        };
+        this.$dialog.find('.modal-title').html(title);
+        
         var _this = this;
         if (!_this.table) {
             _this.table = this.$dialog.find('[data-ui-role="advanced-table"]').data('view');
@@ -191,7 +199,7 @@ W.member.dialog.MemberDetailRelationsDialog = W.dialog.Dialog.extend({
             _this.table.curPage = 1;
         }
         $('#member-detail-relations-dialog-tmpl-src').html('');
-        _this.table.reload({data_value:_this.dataValue,member_id:this.memberId});
+        _this.table.reload({data_value:_this.dataValue, member_id:this.memberId});
     },
 
     //bert add
