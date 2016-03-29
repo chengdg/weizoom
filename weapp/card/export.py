@@ -9,6 +9,9 @@ MALL_CARD_TOTAL_CENSUS_NAV = 'total_cencus'
 MALL_CARD_BY_CARD_NAV = 'by_card_cencus'
 MALL_CARD_BY_CHANNEL_NAV = 'by_channel_cencus'
 
+MONEY_CARD_MANAGER_CREATE_NAV = 'cards'
+MONEY_CARD_MANAGER_RECHARGE_NAV = 'recharge'
+
 CARD_NAV = {
     'section': u'微众卡',
     'navs': [
@@ -16,6 +19,15 @@ CARD_NAV = {
             'name': MALL_CARD_MANAGER_NAV,
             'title': u'制卡管理',
             'url': '/card/cards/get/',
+            'third_navs':[{
+                'name': MONEY_CARD_MANAGER_CREATE_NAV,
+                'title': u'制卡',
+                'url': '/card/cards/get/',
+            }, {
+                'name': MONEY_CARD_MANAGER_RECHARGE_NAV,
+                'title': u'卡充值',
+                'url': '/card/recharge/get/',
+            }]
         },
         {
             'name': MALL_CARD_CENSUS_NAV,
