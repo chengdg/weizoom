@@ -1,6 +1,6 @@
 #author: 王丽
 #editor: 张三香 2015.10.16
-
+#editor: 冯雪静 2016.3.28
 Feature: 会员管理-好友关系列表
 """
 	会员管理下的会员列表，【好友数】不为零，即当前会员有好友，点击好友数，弹出好友列表窗体
@@ -236,7 +236,7 @@ Background:
 		|   0004   | 今天 | bill01   | 商品1,1 | 支付    | 货到付款 | 10      |  100   | 110         | 0      | 0      | 110  | jobs,取消    | 已取消       |
 		|   0005   | 今天 | bill13   | 商品1,1 |         | 微信支付 | 10      |  100   | 110         | 0      | 0      | 0    |              | 待支付       |
 		|   0006   | 今天 | bill13   | 商品1,1 | 支付    | 微信支付 | 10      |  100   | 110         | 0      | 110    | 0    | jobs,发货    | 已发货       |
-		|   0007   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,退款    | 退款中       |
+		|   0007   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成    | 已完成       |
 		|   0008   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成退款| 退款成功     |
 
 @mall2 @member @memberList
@@ -244,30 +244,32 @@ Scenario:1 会员的好友列表和推荐关注列表
 
 	Given jobs登录系统
 	#会员的推荐关注列表数据
+	#购买次数和金额按照订单“已完成”状态计算（金额包括：微众卡金额+现金）
 	Then jobs获得'bill'推荐关注统计
 		"""
 		{
 			"new_members":6,
 			"ordered_members":1,
-			"pay_money":330.00
+			"pay_money":110.00
 		}
 		"""
 	Then jobs获得'bill'推荐关注列表
 		|  member  | pay_money |  integral  |  Source  | attention_time |
 		|  bill0013|    0      |     0      | 会员分享 |      今天      |
 		|  bill0011|    0      |     0      | 会员分享 |      今天      |
-		|  bill13  |    330    |     0      | 会员分享 |      今天      |
+		|  bill13  |    110    |     0      | 会员分享 |      今天      |
 		|  bill11  |    0      |     70     | 会员分享 |      今天      |
 		|  bill3   |    0      |     0      | 会员分享 |      今天      |
 		|  bill1   |    0      |     50     | 会员分享 |      今天      |
 
 	#会员的好友列表数据
+	#购买次数和金额按照订单“已完成”状态计算（金额包括：微众卡金额+现金）
 	Then jobs获得'bill'好友列表统计
 		"""
 		{
 			"friend_count":13,
 			"ordered_members":2,
-			"pay_money":660.00
+			"pay_money":220.00
 		}
 		"""
 	Then jobs获得'bill'好友列表
@@ -277,10 +279,10 @@ Scenario:1 会员的好友列表和推荐关注列表
 		|  bill0011|    0      |     0      | 会员分享 |    bill     |      今天      |
 		|  bill001 |    0      |     80     | 会员分享 |    marry2   |      今天      |
 		|  marry2  |    0      |     0      | 直接关注 |             |      今天      |
-		|  bill13  |    330    |     0      | 会员分享 |    bill     |      今天      |
+		|  bill13  |    110    |     0      | 会员分享 |    bill     |      今天      |
 		|  bill12  |    0      |     0      | 直接关注 |             |      今天      |
 		|  bill11  |    0      |     70     | 会员分享 |    bill     |      今天      |
-		|  bill01  |    330    |     60     | 会员分享 |    marry    |      今天      |
+		|  bill01  |    110    |     60     | 会员分享 |    marry    |      今天      |
 		|  marry   |    0      |     0      | 直接关注 |             |      今天      |
 		|  bill3   |    0      |     0      | 会员分享 |    bill     |      今天      |
 		|  bill2   |    0      |     0      | 直接关注 |             |      今天      |
@@ -307,7 +309,7 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 		When jobs浏览推荐关注列表第2页
 		Then jobs获得'bill'推荐关注列表
 			|  member  | pay_money |  integral  |  Source  | attention_time |
-			|  bill13  |    330    |     0      | 会员分享 |      今天      |
+			|  bill13  |    110    |     0      | 会员分享 |      今天      |
 			|  bill11  |    0      |     70     | 会员分享 |      今天      |
 		When jobs浏览推荐关注列表第3页
 		Then jobs获得'bill'推荐关注列表
@@ -335,13 +337,35 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 		Then jobs获得'bill'好友列表
 			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
 			|  marry2  |    0      |     0      | 直接关注 |             |      今天      |
-			|  bill13  |    330    |     0      | 会员分享 |    bill     |      今天      |
+			|  bill13  |    110    |     0      | 会员分享 |    bill     |      今天      |
 			|  bill12  |    0      |     0      | 直接关注 |             |      今天      |
 			|  bill11  |    0      |     70     | 会员分享 |    bill     |      今天      |
 		When jobs浏览好友列表第3页
 		Then jobs获得'bill'好友列表
 			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  bill01  |    330    |     60     | 会员分享 |    marry    |      今天      |
+			|  bill01  |    110    |     60     | 会员分享 |    marry    |      今天      |
 			|  marry   |    0      |     0      | 直接关注 |             |      今天      |
 			|  bill3   |    0      |     0      | 会员分享 |    bill     |      今天      |
 			|  bill2   |    0      |     0      | 直接关注 |             |      今天      |
+
+
+Scenario:3 (传播能力)会员的分享链接引流会员列表
+
+	Given jobs登录系统
+	#购买次数和金额按照订单“已完成”状态计算（金额包括：微众卡金额+现金）
+	Then jobs获得'bill'分享链接引流会员统计
+		"""
+		{
+			"new_members":6,
+			"ordered_members":1,
+			"pay_money":110.00
+		}
+		"""
+	Then jobs获得'bill'分享链接引流会员列表
+		|  member  | pay_times | pay_money |  integral  |  Source  | attention_time |
+		|  bill0013|           |    0      |     0      | 会员分享 |      今天      |
+		|  bill0011|           |    0      |     0      | 会员分享 |      今天      |
+		|  bill13  |     1     |    110    |     0      | 会员分享 |      今天      |
+		|  bill11  |           |    0      |     70     | 会员分享 |      今天      |
+		|  bill3   |           |    0      |     0      | 会员分享 |      今天      |
+		|  bill1   |           |    0      |     50     | 会员分享 |      今天      |
