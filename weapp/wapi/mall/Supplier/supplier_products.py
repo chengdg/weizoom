@@ -17,17 +17,18 @@ class SupplierProducts(api_resource.ApiResource):
 	app = 'mall'
 	resource = 'supplier_products'
 
-	@param_required(['supplier_ids'])
+	@param_required(['category_ids'])
 	def get(args):
 		"""
 		获取商品详情
 
 		@param id 商品ID
 		"""
-		supplier_ids = args['supplier_ids'].split(',') # list
+		category_ids = args['category_ids'].split(',') # list
 
-
-		products = mall_models.Product.objects.filter(supplier__in = supplier_ids)
+		categoryhascategorys  = mall_models.CategoryHasProduct.ojects.filter(category_id__in=category_ids)
+		product_ids = [chg.product_id for chg in categoryhascategorys]
+		products = mall_models.Product.objects.filter(id__in=product_ids)
 		product_ids = [p.id for p in products]
 		product_supplier = dict([(p.id,p.supplier)for p in products])
 		product_id_product = dict([(p.id,p)for p in products])
