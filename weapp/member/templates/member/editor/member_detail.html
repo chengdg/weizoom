@@ -10,6 +10,13 @@
 	  width: 152px;
 	  display: inline-block;
 }
+.dropdown-menu>li>a {
+	border-radius: 5px;
+}
+.coupon_name_in_dialog {
+	display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+	width:135px!important;
+}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -124,7 +131,7 @@
       		<label>优惠券：</label>
       		<div class="xui-value f14">
       			<span style="min-width: 35px;display: inline-block;"><span class="xui-bold">3</span>&nbsp;个</span>
-      			<a href="javascript:void(0);" class="xui-borderBtn">查看</a>
+      			<a href="javascript:void(0);" class="xui-borderBtn xa-coupon">查看</a>
 					</div>
 				</div>
 				<div class="xui-fieldwrap">
@@ -412,6 +419,15 @@
 			        	</p>
 		        	</div>
 
+		        	<div style="width: 332px;  width: initial;">
+			        	<p class="xui-p-infowrap-left fl" style="  width: 140px;">
+			        		购买转化会员数量：
+			        	</p>
+			        	<p class="xui-p-infowrap-right fr" style="  width: 150px;">
+			        		<span class="xui-color-blue"><a href="javascript:void(0);" data-value="purchase" class="friends">{{shared_url_lead_number}}</a></span>人
+			        	</p>
+		        	</div>
+		        	<a class="xa-coupon">5656</a>
 		        </div>
 		        <table class="xui-tab-memberifo ">
 		        	<thead>
@@ -541,6 +557,14 @@
 	});
 		var memberId = '{{ show_member.id }}';
 
+		// 优惠劵
+		$('.xa-coupon').click(function(event) {
+			W.dialog.showDialog('W.member.dialog.MemberDetailCouponsDialog', {
+				memberId: memberId
+	      	});
+		});
+
+		// 传播能力
 		$('.friends').click(function(event){
 			var $el = $(event.currentTarget);
 			var data_value = $el.attr('data-value');

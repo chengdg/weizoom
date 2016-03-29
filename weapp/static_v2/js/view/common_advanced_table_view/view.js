@@ -283,7 +283,7 @@ W.view.common.AdvancedTable = Backbone.View.extend({
 
                 //初始化filterable header
                 var $filterables = this.$content.find('.tx_filterable');
-                $filterables.css('cursor', 'pointer').find('.dropdown-toggle').append(' <i class="icon-chevron-down"></i>');
+                $filterables.css('cursor', 'pointer').find('.dropdown-toggle').append(' <i class="icon-chevron-down caret"></i>');
                 //添加搜索框
                 var onInputKeyUpHandler = function(event) {
                     var $input = $(event.target);
@@ -305,12 +305,14 @@ W.view.common.AdvancedTable = Backbone.View.extend({
                 }
                 $filterables.each(function() {
                     var $filterable = $(this);
-                    var $li = $('<li><input /><i class="icon-search"></i></li>');
-                    $li.on('click.dropdown.data-api', function(event) {
-                        return false;
-                    });
-                    var $input = $li.find('input');
-                    $li.keyup(onInputKeyUpHandler);
+                    if ($(this).data('is-select') === 'true') {
+                        var $li = $('<li><input /><i class="icon-search"></i></li>');
+                        $li.on('click.dropdown.data-api', function(event) {
+                            return false;
+                        });
+                        var $input = $li.find('input');
+                        $li.keyup(onInputKeyUpHandler);
+                    }
                     $filterable.find('.dropdown-menu').css('margin-top', '8px').find('li:first').before($li);
                 });
 

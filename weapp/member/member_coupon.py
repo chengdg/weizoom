@@ -16,6 +16,7 @@ class MemberCouponInfo(resource.Resource):
 	resource = "member_coupon"
 
 	def api_get(request):
+		status = -1
 		member_id = request.GET.get('id')
 
 		if member_id is None:
@@ -35,7 +36,7 @@ class MemberCouponInfo(resource.Resource):
 			coupon_rule = coupon.coupon_rule
 
 			item = dict()
-			item['provided_time'] = coupon.provided_time.strftime("%Y-%m-%d %H:%M")
+			item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
 			item['coupon_name'] = coupon_rule.name
 			if coupon_rule.limit_product:
 				item['coupon_detail'] = '￥'+str(coupon.money)+' 单品券'
@@ -56,6 +57,7 @@ class MemberCouponInfo(resource.Resource):
 			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
 			'sortAttr': '',
+			'status': status,
 			'data': {}
 		}
 
