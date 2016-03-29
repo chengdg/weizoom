@@ -162,6 +162,7 @@
           data-resource="order_list"
           data-enable-paginator="true"
           data-template-id="#mall-member-orders-view"
+          data-item-count-per-page="6"
           data-selectable = "false"
         >
         </div>
@@ -185,12 +186,23 @@
           data-resource="order_list"
           data-enable-paginator="true"
           data-template-id="#mall-member-transmission-view"
+          data-item-count-per-page="6"
           data-selectable = "false"
         >
         </div>
 	   	</div>
 	   	<div class="tab-pane fade" id="shipInfos">
-	      <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
+	      <div
+          data-ui-role="advanced-table"
+          data-app="member"
+          data-resource="member_shipinfo"
+          data-enable-paginator="true"
+          data-template-id="#mall-member-shipInfos-view"
+          data-item-count-per-page="6"
+          data-selectable = "false"
+			  	data-args='{"id": {{show_member.id}}}'
+        >
+        </div>
 	   	</div>
 	   	<div class="tab-pane fade" id="prints">
 	      <p>
@@ -201,8 +213,8 @@
 	          data-enable-paginator="true"
 	          data-template-id="#mall-member-browse-record-view"
 	          data-selectable = "false"
-			  data-item-count-per-page="6"
-			  data-args='{"id": {{show_member.id}}}'
+			  		data-item-count-per-page="6"
+			  		data-args='{"id": {{show_member.id}}}'
 	        >
         	</div>
 	      </p>
@@ -590,19 +602,19 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td>blah~blah~~</td>
+				<td class="tl pl50">blah~blah~~</td>
 				<td>10</td>
 				<td>20</td>
 				<td>0</td>
 			</tr>
 			<tr>
-				<td>blah~blah~~</td>
+				<td class="tl pl50">blah~blah~~</td>
 				<td>10</td>
 				<td>20</td>
 				<td>0</td>
 			</tr>
 			<tr>
-				<td>blah~blah~~</td>
+				<td class="tl pl50">blah~blah~~</td>
 				<td>10</td>
 				<td>20</td>
 				<td>0</td>
@@ -611,18 +623,44 @@
 	</table>
 </script>
 
-<script id="mall-member-browse-record-view" type="text/x-jquery-tmpl">
+<script id="mall-member-shipInfos-view" type="text/x-jquery-tmpl">
 	<table class="table table-bordered xb-noTdLRBorder xb-theadBg">
 		<thead>
+			<th width="220">收货人</th>
+			<th class="tl pl40">收货地址</th>
+			<th width="245" class="tl pl40">电话/手机号</th>
+		</thead>
+		<tbody>
+		{{if items.length}}
+			{{each(i, item) items}}
+			<tr>
+				<td>${ship_name}</td>
+			  <td class="tl pl20">${area}${ship_address}</td>
+			  <td class="tl pl30">${ship_tel}
+			  	{{if is_selected}}
+			  		<span class="xui-default-shipInfo">默认地址</span>
+			  	{{/if}}
+			  </td>
+			</tr>
+			{{/each}}
+		{{else}}
+			<tr rowspan='6' ><td colspan='2' class="h130 xui-fontGary" >暂无数据</td></tr>
+		{{/if }}
+		</tbody>
+	</table>
+</script>
+<script id="mall-member-browse-record-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered xb-noTdLRBorder xb-theadBg xui-browseRecord">
+		<thead>
 			<th width="220">时间</th>
-			<th class="tl pl40">页面名称</th>
+			<th class="tl pl100">页面名称</th>
 		</thead>
 		<tbody>
 		{{if items.length}}
 			{{each(i, item) items}}		
 			<tr>
 				<td>${create_at}</td>
-			    <td class="tl">${tittle}</td>
+			  <td class="tl pl80">${tittle}</td>
 			</tr>
 			{{/each}}
 		{{else}}

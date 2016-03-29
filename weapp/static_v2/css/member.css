@@ -692,10 +692,19 @@
 	padding-left: 90px;
 	text-align: left;
 }
-.xui-page-memberDetail .xui-transmission tbody tr td:first-child{
+.xui-page-memberDetail .xui-browseRecord tbody tr td:nth-child(2){
+	padding-left: 80px;	
+}
+.xui-page-memberDetail .xui-default-shipInfo{
+	color: #f00;
+	border:2px solid #f00;
+	padding: 4px 8px;
+	margin-left: 18px;	
+}
+/*.xui-page-memberDetail .xui-transmission tbody tr td:first-child{
 	padding-left: 50px;
 	text-align: left;
-}
+}*/
 /*.xui-page-memberDetail .xui-btn-group .btn{
  margin-top: 0px;
  margin-bottom:0px;
