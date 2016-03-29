@@ -26,7 +26,7 @@ class SupplierProducts(api_resource.ApiResource):
 		"""
 		category_ids = args['category_ids'].split(',') # list
 
-		categoryhascategorys  = mall_models.CategoryHasProduct.ojects.filter(category_id__in=category_ids)
+		categoryhascategorys  = mall_models.CategoryHasProduct.objects.filter(category_id__in=category_ids)
 		product_ids = [chg.product_id for chg in categoryhascategorys]
 		products = mall_models.Product.objects.filter(id__in=product_ids)
 		product_ids = [p.id for p in products]
