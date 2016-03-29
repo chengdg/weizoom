@@ -54,6 +54,12 @@ class GroupStatus(resource.Resource):
 			#手动关闭活动之后对于小团的处理：
 			#活动已结束，所有进行中的小团置为失败
 			running_group_relations = app_models.GroupRelations.objects(belong_to=group_id,group_status=app_models.GROUP_RUNNING)
+			not_start_group_relations = app_models.GroupRelations.objects(belong_to=group_id,group_status=app_models.GROUP_NOT_START)
+			for group_relation in not_start_group_relations:
+				group_relation_id = group_relation.id
+				has_placed_order = app_models.GroupDetail.objects(relation_belong_to=str(group_relation_id),order_id__not='')
+				if has_placed_order.count() > 0:
+					update_order_status_by_group_status(group_id,'failure')
 			for group_relation in running_group_relations:
 				group_relation.update(group_status=app_models.GROUP_FAILURE)
 				group_relation_id = group_relation.id
