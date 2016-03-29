@@ -1,13 +1,15 @@
 #author: 崔帅帅
 #author: 王丽
 #editor: 张三香 2015.10.16
-
+#editor: 冯雪静 2016.03.29
 Feature: 微信用户关注公众号成为系统会员
 """
 	# __author__ : "王丽"
 	2015-9新增需求
 	1、会员分组默认有个分组："未分组"，不能修改（没有修改框）、不能删除（没有删除按钮）
 	2、新增会员和调整没有分组的会员，默认进入"未分组"
+	2016-3新增需求
+	1、会员列表新增字段“30天内购买频次”
 """
 
 Background:
@@ -51,6 +53,18 @@ Background:
 		[{
 			"type": "货到付款",
 			"description": "我的货到付款",
+			"is_active": "启用"
+		},{
+			"type": "微信支付",
+			"description": "我的微信支付",
+			"is_active": "启用",
+			"weixin_appid": "12345",
+			"weixin_partner_id": "22345",
+			"weixin_partner_key": "32345",
+			"weixin_sign": "42345"
+		},{
+			"type": "支付宝",
+			"description": "我的支付宝支付",
 			"is_active": "启用"
 		}]
 		"""
@@ -429,3 +443,56 @@ Scenario:1 微信用户关注公众号成为会员
 			"status": "已关注"
 		}]
 		"""
+
+
+Scenario:2 会员列表
+	1.会员列表新增"30天内购买频次"
+
+	When bill关注jobs的公众号于'2015-5-1'
+	When nokia关注jobs的公众号于'2015-5-1'
+	When tom关注jobs的公众号于'2015-5-1'
+	When tom1关注jobs的公众号于'2015-5-1'
+	When tom2关注jobs的公众号于'2015-5-1'
+	When tom3关注jobs的公众号于'2015-5-1'
+	When tom2取消关注jobs的公众号
+
+
+	When 微信用户批量消费jobs的商品
+		| order_id |  date  | consumer | product | payment | pay_type | postage*| price* | paid_amount*| alipay*| wechat*| cash*|    action    | order_status*|
+		|   0001   | 30天前 | bill     | 商品1,1 | 支付    | 支付宝   |  0      |  100   | 100         | 100    | 0      | 0    | jobs,完成    | 已完成       |
+		|   0002   | 30天前 | tom      | 商品1,1 | 支付    | 货到付款 |  0      |  100   | 100         | 0      | 0      | 100  | jobs,完成    | 已完成       |
+		|   0003   | 30天前 | nokia    | 商品1,1 | 支付    | 支付宝   |  0      |  100   | 100         | 100    | 0      | 0    | jobs,取消    | 已取消       |
+		|   0004   | 30天前 | tom1     | 商品1,1 | 支付    | 微信支付 |  0      |  100   | 100         | 0      | 100    | 0    | jobs,完成    | 已完成       |
+		|   0005   | 29天前 | bill     | 商品1,1 | 支付    | 微信支付 |  0      |  100   | 100         | 0      | 100    | 0    | jobs,完成    | 已完成       |
+		|   0006   | 29天前 | tom      | 商品1,1 |         | 微信支付 |  0      |  100   | 100         | 0      | 0      | 0    |              | 待支付       |
+		|   0007   | 29天前 | nokia    | 商品1,1 | 支付    | 支付宝   |  0      |  100   | 100         | 100    | 0      | 0    | jobs,完成退款| 退款成功     |
+		|   0008   | 29天前 | tom1     | 商品1,1 | 支付    | 支付宝   |  0      |  100   | 100         | 100    | 0      | 0    | jobs,发货    | 已发货       |
+		|   0009   | 今天   | bill     | 商品1,1 | 支付    | 货到付款 |  0      |  100   | 100         | 0      | 0      | 100  | jobs,完成    | 已完成       |
+		|   0010   | 今天   | tom      | 商品1,1 | 支付    | 微信支付 |  0      |  100   | 100         | 0      | 100    | 0    |              | 待发货       |
+		|   0011   | 今天   | nokia    | 商品1,1 | 支付    | 微信支付 |  0      |  100   | 100         | 0      | 100    | 0    | jobs,退款    | 退款中       |
+		|   0012   | 今天   | tom1     | 商品1,1 | 支付    | 支付宝   |  0      |  100   | 100         | 100    | 0      | 0    | jobs,完成    | 已完成       |
+
+	Given jobs登录系统
+	Then jobs可以获得会员列表
+		|  member  | member_rank | friend_count |  integral  | pay_money | unit_price | pay_times | 30days_pay_times |  Source  | attention_time |  tags  | status |
+		|  tom3    | 普通会员    |    0         |     20     |    0      |     0      |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
+		|  tom2    | 普通会员    |    0         |     20     |    0      |     0      |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
+		|  tom1    | 普通会员    |    0         |     20     |   200     |    100     |    2      |         1        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
+		|  tom     | 普通会员    |    0         |     20     |   100     |    100     |    1      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
+		|  nokia   | 普通会员    |    0         |     20     |    0      |     0      |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
+		|  bill    | 普通会员    |    0         |     20     |   300     |    100     |    3      |         2        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
+
+	Given jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":2
+		}
+		"""
+	When jobs访问会员列表页
+	Then jobs获得会员列表显示共3页
+	When jobs浏览会员列表第1页
+	Then jobs可以获得会员列表
+		|  member  | member_rank | friend_count |  integral  | pay_money | unit_price | pay_times | 30days_pay_times |  Source  | attention_time |  tags  | status |
+		|  tom3    | 普通会员    |    0         |     20     |    0      |     0      |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已关注 |
+		|  tom2    | 普通会员    |    0         |     20     |    0      |     0      |    0      |         0        | 直接关注 |    2015-5-1    | 未分组 | 已取消 |
+
