@@ -160,8 +160,27 @@
         </div>
 	   	</div>
 	   	<div class="tab-pane fade" id="transmission">
-	      <p>iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple 
-	      TV。iOS 派生自 OS X，它们共享 Darwin 基础。OS X 操作系统是用在苹果电脑上，iOS 是苹果的移动版本。</p>
+	      <p>
+		      二维码引流会员数量：<a href="javascript:void(0);" class="xui-color-blue">2</a>人
+		      <span class="ml50">
+		      分享链接引流会员数量：<a href="javascript:void(0);" class="xui-color-blue">2</a>人
+		      </span>
+		      <span class="ml50">
+		      购买转化会员数量：<a href="javascript:void(0);" class="xui-color-blue">2</a>人
+		      </span>
+		      <span class="ml50">
+		      转化率：70.1%
+		      </span>
+	      </p>
+	      <div
+          data-ui-role="advanced-table"
+          data-app="mall2"
+          data-resource="order_list"
+          data-enable-paginator="true"
+          data-template-id="#mall-member-transmission-view"
+          data-selectable = "false"
+        >
+        </div>
 	   	</div>
 	   	<div class="tab-pane fade" id="shipInfos">
 	      <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
@@ -514,7 +533,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td>20160328200845803</td>
+				<td><span class="xui-color-blue xui-bold"><a href="/mall2/order/?order_id={{order.id}}" target="_blank">{{order.order_id}}</a><span></td>
 				<td>0.50</td>
 				<td>2016/03/28 20:08</td>
 				<td>已取消</td>
@@ -530,6 +549,24 @@
 				<td>0.50</td>
 				<td>2016/03/28 20:08</td>
 				<td>已取消</td>
+			</tr>
+		</tbody>
+	</table>
+</script>
+<script id="mall-member-transmission-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered xb-noTdLRBorder xb-theadBg">
+		<thead>
+			<th width="220">分享链接</th>
+			<th width="280">点击</th>
+			<th width="230">关注转化</th>
+			<th>购买转化</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>blah~blah~~</td>
+				<td>10</td>
+				<td>20</td>
+				<td>0</td>
 			</tr>
 		</tbody>
 	</table>
