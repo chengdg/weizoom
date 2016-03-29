@@ -111,7 +111,7 @@
                 <label class="control-label fl" for="parents_name">专属商家：</label>
                 <div class="col-sm-2 fl pl5" style="width: auto;margin-top: 4px;color: #0099ff;cursor: pointer;">
                      <span class="add_bussiness_span" data-toggle="modal" data-target="#ownerSpecial" onClick =show_checked_buss()>添加商家</span>
-                     <div class="errorHint" style="display:none">请选择一个选项</div>
+                     <div class="errorHint" style="display:none;position: absolute;">请选择一个选项</div>
                 </div>
                 <div class="checkbox" style="float: left;width: 10%;padding-top:4px">
                     <label>
@@ -383,6 +383,9 @@ $(document).ready(function() {
             $('.add_bussiness_span +div').show()
             return false;
         }
+        else{
+            $('.add_bussiness_span +div').hide()
+        }
         $('#submitBtn').attr('disabled', true);
         if (!W.validate()) {
             $('#submitBtn').prop('disabled', false);
@@ -411,8 +414,6 @@ $(document).ready(function() {
         var belong_to_owner_ids=[]
         var $checked_owner=$('div.show_bussiness_div');
         if($checked_owner.length>0 &&card_attr==1){
-
-            console.log($('.add_bussiness_span +div'),111111111111)
             $('.add_bussiness_span +div').hide()
             $checked_owner.each(function(){
                 belong_to_owner_ids.push(parseInt($(this).attr('id')))
@@ -452,6 +453,7 @@ $(document).ready(function() {
     }
 function save_checked_owner(){
     $(".add_bussiness_div").html('')
+    $('.add_bussiness_span +div').hide()
     suripers={}
     var $checked_owner=$('div .xui-owner_list');
     $checked_owner.each(function(){
