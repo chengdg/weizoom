@@ -45,7 +45,9 @@ class MemberCouponInfo(resource.Resource):
 
 			if coupon.status == COUPON_STATUS_USED:
 				order = Order.objects.get(coupon_id=coupon.id)
-				item['coupon_whereabouts'] = order.order_id
+				item['coupon_whereabouts'] = str(order.order_id)
+			else:
+				item['coupon_whereabouts'] = ''
 
 			items.append(item)
 
