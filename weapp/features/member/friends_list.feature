@@ -1,6 +1,6 @@
 #author: 王丽
 #editor: 张三香 2015.10.16
-#editor: 冯雪静 2016.3.28
+#editor: 冯雪静 2016.3.29
 Feature: 会员管理-好友关系列表
 """
 	会员管理下的会员列表，【好友数】不为零，即当前会员有好友，点击好友数，弹出好友列表窗体
@@ -19,13 +19,16 @@ Feature: 会员管理-好友关系列表
 		当前会员的好友的列表（包含推荐关注的好友），按照[关注时间]倒序排列
 		（1）好友列表展示字段
 			【会员】：此好友的头像和昵称、会员等级，昵称有外链接，点击重新打开新页面此会员的"会员详情"
-			【消费金额】：此会员在本店铺提交并成功支付的订单的"实付金额"的总和
+			【会员等级】：此会员在本店铺的会员等级
+			【消费金额】：计算此会员“已完成”的订单总金额包含（微众卡+现金）
 			【积分】：此会员现在拥有的本店铺的积分数
 			【来源】：此会员的来源（推广扫码、会员分享、直接关注）
 			【推荐人】：此好友的推荐人的昵称（本店铺的会员），直接关注的此项为"无"；昵称有外链接，点击重新打开新页面此会员的"会员详情"
 			【时间】：两者直接创建好友关系的时间
 		（2）分页展示，每页8条数据
 		（3）左下角显示"共XX条记录"
+	3、传播能力
+		包括二维码引流、会员分享引流、购买转化、转化率
 """
 Background:
 	Given jobs登录系统
@@ -227,6 +230,44 @@ Background:
 		When bill001获得jobs的80会员积分
 		Then bill001在jobs的webapp中拥有80会员积分
 
+		Given jobs登录系统
+		When jobs创建推广扫码
+			"""
+			{
+				"prize_type":"无",
+				"page_description":"无奖励，页面描述文本"
+			}
+			"""
+		Then jobs获得推广扫码
+			"""
+			{
+				"prize_type":"无",
+				"page_description":"无奖励，页面描述文本"
+			}
+			"""
+
+		#bill带来的传播能力数据创建
+		When 清空浏览器
+		When bill访问jobs的webapp
+		When bill进入推广扫描链接
+
+		When 清空浏览器
+		When tom1扫描bill的推广二维码关注jobs公众号
+		When 休眠1秒
+
+		When 清空浏览器
+		When tom2扫描bill的推广二维码关注jobs公众号
+		When 休眠1秒
+
+		When 清空浏览器
+		When tom3扫描bill的推广二维码关注jobs公众号
+		When 休眠1秒
+
+		When 清空浏览器
+		When tom4扫描bill的推广二维码关注jobs公众号
+		When 休眠1秒
+
+
 
 	When 微信用户批量消费jobs的商品
 		| order_id | date | consumer | product | payment | pay_type | postage*| price* | paid_amount*| alipay*| wechat*| cash*|    action    | order_status*|
@@ -238,6 +279,9 @@ Background:
 		|   0006   | 今天 | bill13   | 商品1,1 | 支付    | 微信支付 | 10      |  100   | 110         | 0      | 110    | 0    | jobs,发货    | 已发货       |
 		|   0007   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成    | 已完成       |
 		|   0008   | 今天 | bill13   | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成退款| 退款成功     |
+		|   0009   | 今天 | tom1     | 商品1,1 | 支付    | 微信支付 | 10      |  100   | 110         | 0      | 110    | 0    | jobs,发货    | 已发货       |
+		|   0010   | 今天 | tom2     | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成    | 已完成       |
+		|   0011   | 今天 | tom3     | 商品1,1 | 支付    | 支付宝   | 10      |  100   | 110         | 110    | 0      | 0    | jobs,完成退款| 退款成功     |
 
 @mall2 @member @memberList
 Scenario:1 会员的好友列表和推荐关注列表
@@ -248,45 +292,53 @@ Scenario:1 会员的好友列表和推荐关注列表
 	Then jobs获得'bill'推荐关注统计
 		"""
 		{
-			"new_members":6,
-			"ordered_members":1,
-			"pay_money":110.00
+			"new_members":10,
+			"ordered_members":2,
+			"pay_money":220.00
 		}
 		"""
 	Then jobs获得'bill'推荐关注列表
-		|  member  | pay_money |  integral  |  Source  | attention_time |
-		|  bill0013|    0      |     0      | 会员分享 |      今天      |
-		|  bill0011|    0      |     0      | 会员分享 |      今天      |
-		|  bill13  |    110    |     0      | 会员分享 |      今天      |
-		|  bill11  |    0      |     70     | 会员分享 |      今天      |
-		|  bill3   |    0      |     0      | 会员分享 |      今天      |
-		|  bill1   |    0      |     50     | 会员分享 |      今天      |
+		|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
+		|  tom4    | 普通会员    |    0      |     0      | 推广扫码 |      今天      |
+		|  tom3    | 普通会员    |    0      |     0      | 推广扫码 |      今天      |
+		|  tom2    | 普通会员    |    110    |     0      | 推广扫码 |      今天      |
+		|  tom1    | 普通会员    |    0      |     0      | 推广扫码 |      今天      |
+		|  bill0013| 普通会员    |    0      |     0      | 会员分享 |      今天      |
+		|  bill0011| 普通会员    |    0      |     0      | 会员分享 |      今天      |
+		|  bill13  | 普通会员    |    110    |     0      | 会员分享 |      今天      |
+		|  bill11  | 普通会员    |    0      |     70     | 会员分享 |      今天      |
+		|  bill3   | 普通会员    |    0      |     0      | 会员分享 |      今天      |
+		|  bill1   | 普通会员    |    0      |     50     | 会员分享 |      今天      |
 
 	#会员的好友列表数据
 	#购买次数和金额按照订单“已完成”状态计算（金额包括：微众卡金额+现金）
 	Then jobs获得'bill'好友列表统计
 		"""
 		{
-			"friend_count":13,
-			"ordered_members":2,
-			"pay_money":220.00
+			"friend_count":17,
+			"ordered_members":3,
+			"pay_money":330.00
 		}
 		"""
 	Then jobs获得'bill'好友列表
-		|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
-		|  bill0013|    0      |     0      | 会员分享 |    bill     |      今天      |
-		|  bill0012|    0      |     0      | 直接关注 |             |      今天      |
-		|  bill0011|    0      |     0      | 会员分享 |    bill     |      今天      |
-		|  bill001 |    0      |     80     | 会员分享 |    marry2   |      今天      |
-		|  marry2  |    0      |     0      | 直接关注 |             |      今天      |
-		|  bill13  |    110    |     0      | 会员分享 |    bill     |      今天      |
-		|  bill12  |    0      |     0      | 直接关注 |             |      今天      |
-		|  bill11  |    0      |     70     | 会员分享 |    bill     |      今天      |
-		|  bill01  |    110    |     60     | 会员分享 |    marry    |      今天      |
-		|  marry   |    0      |     0      | 直接关注 |             |      今天      |
-		|  bill3   |    0      |     0      | 会员分享 |    bill     |      今天      |
-		|  bill2   |    0      |     0      | 直接关注 |             |      今天      |
-		|  bill1   |    0      |     50     | 会员分享 |    bill     |      今天      |
+		|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
+		|  tom4    | 普通会员    |    0      |     0      | 推广扫码 |    bill     |      今天      |
+		|  tom3    | 普通会员    |    0      |     0      | 推广扫码 |    bill     |      今天      |
+		|  tom2    | 普通会员    |    110    |     0      | 推广扫码 |    bill     |      今天      |
+		|  tom1    | 普通会员    |    0      |     0      | 推广扫码 |    bill     |      今天      |
+		|  bill0013| 普通会员    |    0      |     0      | 会员分享 |    bill     |      今天      |
+		|  bill0012| 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+		|  bill0011| 普通会员    |    0      |     0      | 会员分享 |    bill     |      今天      |
+		|  bill001 | 普通会员    |    0      |     80     | 会员分享 |    marry2   |      今天      |
+		|  marry2  | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+		|  bill13  | 普通会员    |    110    |     0      | 会员分享 |    bill     |      今天      |
+		|  bill12  | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+		|  bill11  | 普通会员    |    0      |     70     | 会员分享 |    bill     |      今天      |
+		|  bill01  | 普通会员    |    110    |     60     | 会员分享 |    marry    |      今天      |
+		|  marry   | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+		|  bill3   | 普通会员    |    0      |     0      | 会员分享 |    bill     |      今天      |
+		|  bill2   | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+		|  bill1   | 普通会员    |    0      |     50     | 会员分享 |    bill     |      今天      |
 
 @mall2 @member @memberList
 Scenario:2 会员的好友列表和推荐关注列表分页
@@ -303,19 +355,19 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 		Then jobs获得'bill'推荐关注列表显示共3页
 		When jobs浏览推荐关注列表第1页
 		Then jobs获得'bill'推荐关注列表
-			|  member  | pay_money |  integral  |  Source  | attention_time |
-			|  bill0013|    0      |     0      | 会员分享 |      今天      |
-			|  bill0011|    0      |     0      | 会员分享 |      今天      |
+			|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
+			|  bill0013| 普通会员    |    0      |     0      | 会员分享 |      今天      |
+			|  bill0011| 普通会员    |    0      |     0      | 会员分享 |      今天      |
 		When jobs浏览推荐关注列表第2页
 		Then jobs获得'bill'推荐关注列表
-			|  member  | pay_money |  integral  |  Source  | attention_time |
-			|  bill13  |    110    |     0      | 会员分享 |      今天      |
-			|  bill11  |    0      |     70     | 会员分享 |      今天      |
+			|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
+			|  bill13  | 普通会员    |    110    |     0      | 会员分享 |      今天      |
+			|  bill11  | 普通会员    |    0      |     70     | 会员分享 |      今天      |
 		When jobs浏览推荐关注列表第3页
 		Then jobs获得'bill'推荐关注列表
-			|  member  | pay_money |  integral  |  Source  | attention_time |
-			|  bill3   |    0      |     0      | 会员分享 |      今天      |
-			|  bill1   |    0      |     50     | 会员分享 |      今天      |
+			|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
+			|  bill3   | 普通会员    |    0      |     0      | 会员分享 |      今天      |
+			|  bill1   | 普通会员    |    0      |     50     | 会员分享 |      今天      |
 
 	#好友列表分页
 		Given jobs设置分页查询参数
@@ -328,28 +380,46 @@ Scenario:2 会员的好友列表和推荐关注列表分页
 		Then jobs获得'bill'好友列表显示共4页
 		When jobs浏览好友列表第1页
 		Then jobs获得'bill'好友列表
-			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  bill0013|    0      |     0      | 会员分享 |    bill     |      今天      |
-			|  bill0012|    0      |     0      | 直接关注 |             |      今天      |
-			|  bill0011|    0      |     0      | 会员分享 |    bill     |      今天      |
-			|  bill001 |    0      |     80     | 会员分享 |    marry2   |      今天      |
+			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
+			|  bill0013| 普通会员    |    0      |     0      | 会员分享 |    bill     |      今天      |
+			|  bill0012| 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+			|  bill0011| 普通会员    |    0      |     0      | 会员分享 |    bill     |      今天      |
+			|  bill001 | 普通会员    |    0      |     80     | 会员分享 |    marry2   |      今天      |
 		When jobs浏览好友列表第2页
 		Then jobs获得'bill'好友列表
-			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  marry2  |    0      |     0      | 直接关注 |             |      今天      |
-			|  bill13  |    110    |     0      | 会员分享 |    bill     |      今天      |
-			|  bill12  |    0      |     0      | 直接关注 |             |      今天      |
-			|  bill11  |    0      |     70     | 会员分享 |    bill     |      今天      |
+			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
+			|  marry2  | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+			|  bill13  | 普通会员    |    110    |     0      | 会员分享 |    bill     |      今天      |
+			|  bill12  | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+			|  bill11  | 普通会员    |    0      |     70     | 会员分享 |    bill     |      今天      |
 		When jobs浏览好友列表第3页
 		Then jobs获得'bill'好友列表
-			|  member  | pay_money |  integral  |  Source  | recommended | attention_time |
-			|  bill01  |    110    |     60     | 会员分享 |    marry    |      今天      |
-			|  marry   |    0      |     0      | 直接关注 |             |      今天      |
-			|  bill3   |    0      |     0      | 会员分享 |    bill     |      今天      |
-			|  bill2   |    0      |     0      | 直接关注 |             |      今天      |
+			|  member  | member_rank | pay_money |  integral  |  Source  | recommended | attention_time |
+			|  bill01  | 普通会员    |    110    |     60     | 会员分享 |    marry    |      今天      |
+			|  marry   | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
+			|  bill3   | 普通会员    |    0      |     0      | 会员分享 |    bill     |      今天      |
+			|  bill2   | 普通会员    |    0      |     0      | 直接关注 |             |      今天      |
 
 
-Scenario:3 (传播能力)会员的分享链接引流会员列表
+Scenario:3 (传播能力)会员统计
+	1.二维码引流会员数量
+	2.分享链接引流会员数量
+	3.购买转化会员数量
+	4.转化率（购买转化数量/引流会员数量）百分比保留两位小数如：1/3等于33.33%
+
+	Given jobs登录系统
+	Then jobs获得'bill'的传播能力
+		"""
+		{
+			"scan_qrcode_new_member": 4,
+			"share_link_new_member": 6,
+			"buy_transform_new_member": 2,
+			"transform_rate": "20%"
+		}
+		"""
+
+
+Scenario:4 (传播能力)会员的分享链接引流会员列表
 
 	Given jobs登录系统
 	#购买次数和金额按照订单“已完成”状态计算（金额包括：微众卡金额+现金）
@@ -362,10 +432,87 @@ Scenario:3 (传播能力)会员的分享链接引流会员列表
 		}
 		"""
 	Then jobs获得'bill'分享链接引流会员列表
-		|  member  | pay_times | pay_money |  integral  |  Source  | attention_time |
-		|  bill0013|           |    0      |     0      | 会员分享 |      今天      |
-		|  bill0011|           |    0      |     0      | 会员分享 |      今天      |
-		|  bill13  |     1     |    110    |     0      | 会员分享 |      今天      |
-		|  bill11  |           |    0      |     70     | 会员分享 |      今天      |
-		|  bill3   |           |    0      |     0      | 会员分享 |      今天      |
-		|  bill1   |           |    0      |     50     | 会员分享 |      今天      |
+		|  member  | member_rank | pay_times | pay_money |  integral  |  Source  | attention_time |
+		|  bill0013| 普通会员    |           |    0      |     0      | 会员分享 |      今天      |
+		|  bill0011| 普通会员    |           |    0      |     0      | 会员分享 |      今天      |
+		|  bill13  | 普通会员    |     1     |    110    |     0      | 会员分享 |      今天      |
+		|  bill11  | 普通会员    |           |    0      |     70     | 会员分享 |      今天      |
+		|  bill3   | 普通会员    |           |    0      |     0      | 会员分享 |      今天      |
+		|  bill1   | 普通会员    |           |    0      |     50     | 会员分享 |      今天      |
+	Given jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":2
+		}
+		"""
+	When jobs访问'bill'分享链接引流会员页
+	Then jobs获得'bill'分享链接引流会员列表显示共3页
+	When jobs浏览分享链接引流会员列表第1页
+	Then jobs获得'bill'分享链接引流会员列表
+		|  member  | member_rank | pay_money |  integral  |  Source  | attention_time |
+		|  bill0013| 普通会员    |    0      |     0      | 会员分享 |      今天      |
+		|  bill0011| 普通会员    |    0      |     0      | 会员分享 |      今天      |
+
+
+Scenario:5 (传播能力)会员的二维码引流会员列表
+
+	Given jobs登录系统
+	Then jobs获得'bill'二维码引流会员统计
+		"""
+		{
+			"new_members":4,
+			"ordered_members":1,
+			"pay_money":110.00
+		}
+		"""
+	Then jobs获得'bill'二维码引流会员列表
+		|  member  | member_rank | pay_times | pay_money |  integral  |  Source  | attention_time |
+		|  tom4    | 普通会员    |           |    0      |     0      | 推广扫码 |      今天      |
+		|  tom3    | 普通会员    |           |    0      |     0      | 推广扫码 |      今天      |
+		|  tom2    | 普通会员    |     1     |    110    |     0      | 推广扫码 |      今天      |
+		|  tom1    | 普通会员    |           |    0      |     0      | 推广扫码 |      今天      |
+
+	Given jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":2
+		}
+		"""
+	When jobs访问'bill'二维码引流会员页
+	Then jobs获得'bill'二维码引流会员列表显示共2页
+	When jobs浏览二维码引流会员列表第1页
+	Then jobs获得'bill'二维码引流会员列表
+		|  member  | member_rank | pay_times | pay_money |  integral  |  Source  | attention_time |
+		|  tom4    | 普通会员    |           |    0      |     0      | 推广扫码 |      今天      |
+		|  tom3    | 普通会员    |           |    0      |     0      | 推广扫码 |      今天      |
+
+
+
+Scenario:6 (传播能力)会员的购买转化会员列表
+
+	Given jobs登录系统
+	Then jobs获得'bill'购买转化会员统计
+		"""
+		{
+			"ordered_members":2,
+			"pay_money":220.00
+		}
+		"""
+	Then jobs获得'bill'购买转化会员列表
+		|  member  | member_rank | pay_times | pay_money |  integral  |  Source  | attention_time |
+		|  tom2    | 普通会员    |     1     |    110    |     0      | 推广扫码 |      今天      |
+		|  bill13  | 普通会员    |     1     |    110    |     0      | 会员分享 |      今天      |
+
+	Given jobs设置分页查询参数
+		"""
+		{
+			"count_per_page":2
+		}
+		"""
+	When jobs访问'bill'购买转化会员页
+	Then jobs获得'bill'购买转化会员列表显示共1页
+	When jobs浏览购买转化会员列表第1页
+	Then jobs获得'bill'购买转化会员列表
+		|  member  | member_rank | pay_times | pay_money |  integral  |  Source  | attention_time |
+		|  tom2    | 普通会员    |     1     |    110    |     0      | 推广扫码 |      今天      |
+		|  bill13  | 普通会员    |     1     |    110    |     0      | 会员分享 |      今天      |

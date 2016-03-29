@@ -119,6 +119,7 @@ Scenario:1 当前会员的"会员详情"的"购买信息"数据
 
 	#购买金额、购买次数，计算的全部是“已完成”的订单总和
 	#购买金额包括（微众卡金额+现金）
+	#微众卡金额
 	Given jobs登录系统
 	When jobs访问'bill'会员详情
 	Then jobs获得'bill'的购买信息
@@ -126,7 +127,8 @@ Scenario:1 当前会员的"会员详情"的"购买信息"数据
 		{
 			"purchase_amount":270.00,
 			"purchase_number":3,
-			"customer_price":90.00
+			"customer_price":90.00,
+			"money_wcard":110.00
 		}
 		"""
 	Then jobs获得'bill'的订单列表
