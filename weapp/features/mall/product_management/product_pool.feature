@@ -555,6 +555,7 @@ Background:
 			}]
 			"""
 
+@product @product_pool @eugene @eugeneTMP
 Scenario:1 有效商家的"无规格"的上架的"待售商品管理"中的商品展示到商品池
 	#自营平台商品池,只可以浏览到商家在售商品列表中无规格的商品
 		Given jobs登录系统
@@ -1302,7 +1303,7 @@ Scenario:5 商家更新被自营平台同步商品的【商品名称】【促销
 			}
 			"""
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -2019,7 +2020,7 @@ Scenario:6 商家更新被自营平台同步商品的【商品条码】【起购
 			}
 			"""
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -2677,7 +2678,7 @@ Scenario:7 商家更新被自营平台同步商品的【商品单价】【商品
 			}
 			"""
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -3355,7 +3356,7 @@ Scenario:8 商家更新被自营平台同步商品的【商品重量】【商品
 			}
 			"""
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom更新商品'tom无规格商品1'
 			"""
 			{
@@ -4749,7 +4750,7 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 		Given bill登录系统
 		When bill'下架'商品'bill无规格商品1'
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom'永久删除'商品'tom无规格商品1'
 
 		Given jobs登录系统
@@ -5814,7 +5815,7 @@ Scenario:15 "查看下架商品"功能
 		Given bill登录系统
 		When bill'下架'商品'bill无规格商品1'
 
-		Given tom登录系统 
+		Given tom登录系统
 		When tom'永久删除'商品'tom无规格商品1'
 		When tom更新商品'tom无规格商品3'
 			"""
@@ -6204,7 +6205,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -6223,7 +6224,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -6234,7 +6235,7 @@ Scenario:16 商品池的搜索功能
 		Then jobs获得商品池商品列表
 			"""
 			[]
-			""" 
+			"""
 
 		#按照【供应商】查询
 		When jobs设置商品池列表查询条件
@@ -6262,7 +6263,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -6289,7 +6290,7 @@ Scenario:16 商品池的搜索功能
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
-			""" 
+			"""
 
 		When jobs设置商品池列表查询条件
 			"""
@@ -6300,7 +6301,7 @@ Scenario:16 商品池的搜索功能
 		Then jobs获得商品池商品列表
 			"""
 			[]
-			""" 	
+			"""
 
 		#按照【状态】查询
 		When jobs设置商品池列表查询条件
