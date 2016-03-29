@@ -140,12 +140,37 @@
 		</div>
 	</div>
 	<div>
-		<ul class="nav nav-tabs mt14">
-			<li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">购买订单</a></li>
-  		<li class="xa-count" data-total-status-value="0"><a href="javascript:void(0);">传播能力</a></li>
-  		<li class="xa-count" data-total-status-value="3"><a href="javascript:void(0);">收货信息</a></li>
-  		<li class="xa-count" data-total-status-value="4"><a href="javascript:void(0);">浏览轨迹</a></li>
+		<ul class="nav nav-tabs mt14" id="tab">
+			<li class="xa-count active" data-total-status-value="-1"><a href="#purchasingOrders">购买订单</a></li>
+  		<li class="xa-count" data-total-status-value="0"><a href="#transmission">传播能力</a></li>
+  		<li class="xa-count" data-total-status-value="3"><a href="#shipInfos">收货信息</a></li>
+  		<li class="xa-count" data-total-status-value="4"><a href="#prints">浏览轨迹</a></li>
 		</ul>
+		<div id="myTabContent" class="tab-content">
+	  	<div class="tab-pane fade in active" id="purchasingOrders">
+	      <p>订单总额：￥23951.00</p>
+	      <div
+          data-ui-role="advanced-table"
+          data-app="mall2"
+          data-resource="order_list"
+          data-enable-paginator="true"
+          data-template-id="#mall-member-orders-view"
+          data-selectable = "false"
+        >
+        </div>
+	   	</div>
+	   	<div class="tab-pane fade" id="transmission">
+	      <p>iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple 
+	      TV。iOS 派生自 OS X，它们共享 Darwin 基础。OS X 操作系统是用在苹果电脑上，iOS 是苹果的移动版本。</p>
+	   	</div>
+	   	<div class="tab-pane fade" id="shipInfos">
+	      <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
+	   	</div>
+	   	<div class="tab-pane fade" id="prints">
+	      <p>Enterprise Java Beans（EJB）是一个创建高度可扩展性和强大企业级应用程序的开发架构，部署在兼容应用程序服务器（比如 JBOSS、Web Logic 等）的 J2EE 上。
+	      </p>
+	   	</div>
+		</div>
 	</div>
    <!--	<div class="xui-member-info-panel">
     	<div class="xui-infowrap">
@@ -478,7 +503,42 @@
 {% endblock %}
 
 {% block js %}
+{% verbatim %}
+<script id="mall-member-orders-view" type="text/x-jquery-tmpl">
+	<table class="table table-bordered xb-noTdLRBorder xb-theadBg">
+		<thead>
+			<th width="220">订单号</th>
+			<th width="280">实付金额</th>
+			<th width="230">下单时间</th>
+			<th>订单状态</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>20160328200845803</td>
+				<td>0.50</td>
+				<td>2016/03/28 20:08</td>
+				<td>已取消</td>
+			</tr>
+			<tr>
+				<td>20160328200845803</td>
+				<td>0.50</td>
+				<td>2016/03/28 20:08</td>
+				<td>已取消</td>
+			</tr>
+			<tr>
+				<td>20160328200845803</td>
+				<td>0.50</td>
+				<td>2016/03/28 20:08</td>
+				<td>已取消</td>
+			</tr>
+		</tbody>
+	</table>
+</script>
+{% endverbatim %}
 	<script type="text/javascript">
+	$('#tab a').click(function(event) {
+    $(this).tab('show');
+	});
 		var memberId = '{{ show_member.id }}';
 
 		$('.friends').click(function(event){
