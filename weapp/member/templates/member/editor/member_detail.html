@@ -21,14 +21,140 @@
 		</li>
 		<li class="active">会员详情</li>
 	</ul>
-  <div class="xui-member-info-panel">
+	<div class="xui-member-info-panel">
+		<div class="xui-infoTop clearfix">
+    	<div class="xui-img" style="background-image: url({{show_member.user_icon}}); background-size:100%;" ></div>
+
+			<p class="">
+				<span class="xui-membername">{{ show_member.username_for_html|safe }}</span>
+				<a class="xui-borderBtn" href="/new_weixin/realtime_messages_detail/?session_id={{show_member.session_id}}" {% if show_member.session_id == -1 %}title="暂无对话" onclick="return false"{% endif %}>聊天记录</a>
+			</p>
+			<dl class="xui-accounting clearfix fl">
+				<dd>
+					<p>{{show_member.pay_times}}</p>
+					<p>购买次数</p>
+				</dd>
+				<dd>
+					<p>{{show_member.pay_money}}</p>
+					<p>实付总额</p>
+				</dd>
+				<dd>
+					<p>{{show_member.unit_price}}</p>
+					<p>平均客单价</p>
+				</dd>
+				<dd>
+					<p>￥730</p>
+					<p>微众卡使用金额</p>
+				</dd>
+				<dd>
+					<p><a href="javascript:void(0);" class="relation-text">{{show_member.friend_count}}</a></p>
+					<p>好友数</p>
+				</dd>
+			</dl>
+			<div class="fr" style="margin-top:-15px;">
+				<p class="mb5 tr">关注时间：{{ show_member.created_at|date:"Y-m-j" }} 直接关注</p>
+				<p class="mb0">最近交易时间：{{ show_member.last_pay_time|unify_datetime }}</p>
+			</div>
+		</div>
+		<div class="xui-infoEdit clearfix">
+			<div class="xui-left">
+				<div class="xui-fieldwrap">
+      		<label>会员等级：</label>
+      		<div class="xui-value">
+      			<select type="text" class="w120 m0 form-control xa-isEdited hidden" id="grade_id">
+      				<option  value="-1" >请选择等级</option>
+        			{% for grade in grades%}
+							<option value="{{ grade.id }}" {% ifequal grade.id show_member.grade.id %}selected="selected"{% endifequal %}>{{ grade.name }}</option>
+							{% endfor %}
+						</select>
+						<span class="xa-display">普通会员</span>
+					</div>
+				</div>
+				<div class="xui-fieldwrap">
+      		<label>性别：</label>
+      		<div class="xui-value">
+	      		<span class="xa-isEdited hidden">
+	      			<input name="sex_type" type="radio" value="1" {% ifequal show_member_info.sex 1 %}checked {% endifequal %}/><span class="ml5">男</span>
+							<input name="sex_type" type="radio" value="2" {% ifequal show_member_info.sex 2 %}checked {% endifequal %} class="ml10"/>	<span class="ml5">女</span>
+							<input class="ml10" name="sex_type" type="radio" value="0" {% ifequal show_member_info.sex 0 %}checked {% endifequal %}/><span class="ml5">未知</span>
+						</span>
+						<span class="xa-display">{% if show_member_info.sex == 1 %}男{% elif show_member_info.sex == 2 %}女{% else %}未知{% endif %}</span>
+					</div>
+				</div>
+				<div class="xui-fieldwrap">
+      		<label>绑定手机：</label>
+      		<div class="xui-value">
+	      		<span class="xa-isEdited hidden">
+	      			<input  class="form-control" id="phone_number" value="{% ifequal show_member_info.is_binded 1 %}{{show_member_info.phone_number}}{% endifequal %}"  type="text" data-validate="norequire,,require-mobile-phone::请输入正确的手机号" placeholder="11位手机号">
+	      			<div class="errorHint"></div>
+	      		</span>
+	      		<span class="xa-display">{% if show_member_info.is_binded == 1 %}{{show_member_info.phone_number}}{% else %}-{% endif %}</span>
+					</div>
+				</div>
+				<div class="xui-fieldwrap">
+      		<label>备注姓名：</label>
+      		<div class="xui-value">
+      			<input class="form-control xa-isEdited hidden" type="text" id="name" name="name" placeholder="不超过8个字符" maxlength="8" value="{% if show_member_info %}{{ show_member_info.name }}{% endif %}" />
+      			<span class="xa-display">{% if show_member_info.name %}{{ show_member_info.name }}{% else %}-{% endif %}</span>
+					</div>
+				</div>
+				<div class="xui-fieldwrap">
+      		<label>所在分组：</label>
+      		<div class="xui-value">
+      			<div class="tag-group xui-tagGroup" title="{% for tag in member_has_tags %}{{ tag.member_tag.name }}  {% endfor %}">
+      			{% for tag in member_has_tags %}
+            <span class="mr10">{{ tag.member_tag.name }}</span>
+            <input name = "tag_id" class="tag_id" id = "tag_id" hidden="hidden" value="{{ tag.member_tag.id }}">
+            {% endfor %}
+            </div>
+            <a href="javascript:void(0);" class="xa-update-tag xui-borderBtn xa-isEdited hidden">修改</a>
+					</div>
+				</div>
+			</div>
+			<div class="xui-right">
+				<div class="xui-fieldwrap">
+      		<label>积分：</label>
+      		<div class="xui-value f14">
+      			<span style="min-width: 35px;display: inline-block;">{{show_member.integral}}</span>
+            <a href="javascript:void(0);" class="xa-update-integral xui-borderBtn xa-isEdited hidden" data-id="${member.id}">调积分</a>
+            <a href="javascript:void(0);" class="xa-show-integral xui-borderBtn">查看</a>
+					</div>
+				</div>
+				<div class="xui-fieldwrap">
+      		<label>优惠券：</label>
+      		<div class="xui-value f14">
+      			<span style="min-width: 35px;display: inline-block;"><span class="xui-bold">3</span>&nbsp;个</span>
+      			<a href="javascript:void(0);" class="xui-borderBtn">查看</a>
+					</div>
+				</div>
+				<div class="xui-fieldwrap">
+      		<label class="vt">备注信息：</label>
+      		<div class="xui-value f14">
+      			<textarea class="xui-textarea-mark xa-isEdited hidden" id="member_remarks" name="member_remarks" placeholder="" rows=4 value="{{ show_member_info.member_remarks }}">{{ show_member_info.member_remarks }}</textarea>
+						<span class="xa-display f12">{% if show_member_info.member_remarks %}{{show_member_info.member_remarks}}{% else %}-{% endif %}</span>
+					</div>
+				</div>
+			</div>
+			<input type="submit" class="btn btn-success xui-btn-save hidden xa-isEdited" id="submitBtn" value="保存" />
+			<input type="submit" class="btn btn-success xui-btn-save xa-display" id="edit" value="编辑" />
+		</div>
+	</div>
+	<div>
+		<ul class="nav nav-tabs mt14">
+			<li class="xa-count active" data-total-status-value="-1"><a href="javascript:void(0);">购买订单</a></li>
+  		<li class="xa-count" data-total-status-value="0"><a href="javascript:void(0);">传播能力</a></li>
+  		<li class="xa-count" data-total-status-value="3"><a href="javascript:void(0);">收货信息</a></li>
+  		<li class="xa-count" data-total-status-value="4"><a href="javascript:void(0);">浏览轨迹</a></li>
+		</ul>
+	</div>
+   <!--	<div class="xui-member-info-panel">
     	<div class="xui-infowrap">
     		<div class="xui-img-wrap">
-    			 <div  class="xui-img" style="background-image: url({{show_member.user_icon}}); background-size:100%;" ></div>
+    			 <div class="xui-img" style="background-image: url({{show_member.user_icon}}); background-size:100%;" ></div>
     			  <p class=" xui-membername">{{ show_member.username_for_html|safe }}</p>
     		</div>
     	</div>
-    	<div class="xui-infowrap">
+    <div class="xui-infowrap">
       	<div class="xui-fieldwrap">
       		<div class="xui-name">关注时间：</div>
       		<div class="xui-value ">{{ show_member.created_at|date:"Y-m-j" }}</div>
@@ -344,7 +470,7 @@
 		    </div>
 	   </div>
 
-	</div>
+	</div> -->
 
 {% endblock %}
 
@@ -371,7 +497,7 @@
 		})
 
 		// 修改分组
-		$('.tags').delegate('.xa-update-tag', 'click', function(event){
+		$('body').delegate('.xa-update-tag', 'click', function(event){
 			var $el = $(event.currentTarget);
 			var member_id = memberId;
 
@@ -401,8 +527,12 @@
 			    }
 			});
 		});
-
-
+		var isEdited=false;
+		$('#edit').click(function(event) {
+			$('.xa-isEdited').removeClass('hidden');
+			$('.xa-display').addClass('hidden');
+			isEdited=true;
+		})
 	// 修改积分
 	$('.xa-update-integral').click(function(event){
 		var $el = $(event.currentTarget);
@@ -476,16 +606,18 @@
 				},
 				success: function(data) {
 					W.showHint('success','保存成功！');
-                	window.location.reload();
-                },
-                error: function(resp) {
-                    if (resp.code === 400) {
-                        W.showHint('error', resp.errMsg);
-                    } else {
-                    W.showHint('error', '保存失败，请稍后重试！');
-                    }
-                },
-                scope: this
+          window.location.reload();
+          $('.xa-isEdited').addClass('hidden');
+					$('.xa-display').removeClass('hidden');
+        },
+        error: function(resp) {
+            if (resp.code === 400) {
+                W.showHint('error', resp.errMsg);
+            } else {
+            W.showHint('error', '保存失败，请稍后重试！');
+            }
+        },
+        scope: this
 			});
 
 

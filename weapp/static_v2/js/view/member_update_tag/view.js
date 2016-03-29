@@ -49,6 +49,7 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
         }
         var check_value = [];
         var tag_values = [];
+        var valueString ="";
         $("input[name='tag_id']:checked").each(function () {
             check_value.push(this.value)
             dict = {}
@@ -73,9 +74,11 @@ W.view.member.MemberTagsUpdateView = W.view.common.DropBox.extend({
             $(".tag-group").text('');
             tag_values = tag_values.reverse();
             $.each(tag_values, function(index, value) {
-                $(".tag-group").prepend('<span class="mr30">'+value["value"]+'</span>' );
+                $(".tag-group").prepend('<span class="mr10">'+value["value"]+'</span>' );
                 $(".tag-group").prepend('<input name = "tag_id" class="tag_id" id = "tag_id" hidden = "hidden" value="'+value["id"]+'">  ');
+                valueString = value["value"] + "  " + valueString;
             });
+            $(".tag-group").attr('title', valueString);
         }
     },
 
