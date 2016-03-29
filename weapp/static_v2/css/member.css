@@ -676,6 +676,7 @@
 	color:#333;
 	font-weight: bold;
 	padding-left: 35px;
+	margin-bottom: 15px;
 }
 
 .xui-page-memberDetail .xb-theadBg thead{
@@ -686,6 +687,14 @@
 }
 .xui-page-memberDetail .table tbody td{
 	height: 40px;
+}
+.xui-page-memberDetail .xui-transmission thead th:first-child{
+	padding-left: 90px;
+	text-align: left;
+}
+.xui-page-memberDetail .xui-transmission tbody tr td:first-child{
+	padding-left: 50px;
+	text-align: left;
 }
 /*.xui-page-memberDetail .xui-btn-group .btn{
  margin-top: 0px;
