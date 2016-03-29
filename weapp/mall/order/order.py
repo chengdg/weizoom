@@ -60,7 +60,12 @@ class OrderInfo(resource.Resource):
         remark = request.POST.get('remark', None)
         # 待支付状态下 修改价格  最终价格
         final_price = request.POST.get('final_price', None)
-        order = Order.objects.get(id=order_id)
+        # order = Order.objects.get(id=order_id)
+        order = Order.objects.belong_to(request.user_profile.webapp_id).filter(id=order_id).first()
+        if not order:
+            response = create_response(500)
+            response.data = {'msg': "非法操作，订单状态不允许进行该操作"}
+            return response.get_response()
         if action:
             # 检查order的状态是否可以跳转，如果是非法跳转则报错
             if mall_type and Order.objects.filter(origin_order_id=order.origin_order_id).count() == 1:

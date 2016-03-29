@@ -2842,11 +2842,15 @@ def batch_handle_order(json_data, user):
 				order_id = order_id.strip()
 				if '-' in order_id:
 					new_order_id = order_id.split('-')[0]
-					order = Order.objects.get(order_id=new_order_id)
+					# order = Order.objects.get(order_id=new_order_id)
+					order = order.objects.belong_to(user.get_profile().webapp_id).filter(order_id=new_order_id)
 					if str(order.edit_money).replace('.', '').replace('-', '') != order_id.split('-')[1]:
 						raise
 				else:
-					order = Order.objects.get(order_id=order_id)
+					# order = Order.objects.get(order_id=order_id)
+					order = order.objects.belong_to(user.get_profile().webapp_id).filter(order_id=order_id)
+				if not order:
+					raise BaseException()
 			except:
 				item["error_info"] = "订单号错误"
 				error_data.append(item)

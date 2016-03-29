@@ -97,7 +97,11 @@ class Delivery(resource.Resource):
         is_100 = True if is_100 == 'true' else False
         is_update_express = True if is_update_express == 'true' else False
 
-        order = Order.objects.get(id=order_id)
+        # order = Order.objects.get(id=order_id)
+        order = Order.objects.belong_to(request.user_profile.webapp_id).filter(id=order_id).first()
+        if not order:
+            response = create_response(500)
+            return response.get_response()
         err_msg = None
         # 修改物流信息且信息未变不发送消息
         if is_update_express and order.express_company_name == express_company_name and order.express_number == express_number:
