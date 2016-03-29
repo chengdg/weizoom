@@ -137,14 +137,37 @@ def export_weizoom_cards(request):
     try:
         filter_value = request.GET.get('filter_value', '')
         card_number = _get_cardNumber_value(filter_value)
-
         cardStatus = _get_status_value(filter_value)
-
+        card_num_min = request.GET.get('card_num_min', '')
+        card_num_max = request.GET.get('card_num_max', '')
         if card_number != -1:
             card_number = str(card_number)
             weizoom_cards = weizoom_cards.filter(weizoom_card_id__contains=card_number)
         if cardStatus != -1:
             weizoom_cards = weizoom_cards.filter(status=cardStatus)
+        if card_num_min or card_num_max:
+            weizoom_card_id_set = set([int(c.weizoom_card_id) for c in weizoom_cards])
+        print
+        if card_num_min and card_num_max:
+            min_num = int(card_num_min)
+            max_num = int(card_num_max)
+            search_set = set(range(min_num,max_num+1))
+        elif card_num_max:
+            search_set = set([int(card_num_max)])
+        elif card_num_min:
+            search_set = set([int(card_num_min)])
+        else:
+            search_set = set([])
+        result_set = search_set & weizoom_card_id_set
+        result_list = list(result_set)
+
+        if len(result_list)>0:
+            filter_cards_id_list=[]
+            for card_num in result_list:
+                filter_cards_id_list.append(u'%07d'%card_num)
+            weizoom_cards = weizoom_cards.filter(weizoom_card_id__in=filter_cards_id_list)
+        if len(result_list)==0:
+            weizoom_cards =[]
     except:
         filter_value = -1
 
