@@ -235,7 +235,7 @@ def delete_weizoom_mall_sync_product(request, product, reason):
             text = u'商品删除提示：\n'
             text += u'商品位置：\n'
             for product in products:
-                text += use_id2store_name[weizoom_product_id2user_id[product.id]] + '-' + (u'在售' if product.shelve_type else u'待售') + '-' + product.name + '\n'
+                text += (use_id2store_name[weizoom_product_id2user_id[product.id]] if use_id2store_name[weizoom_product_id2user_id[product.id]] else '') + '-' + (u'在售' if product.shelve_type else u'待售') + '-' + product.name + '\n'
             text += u'供货商：%s\n' % request.user_profile.store_name
             text += u'删除原因：%s\n' % DELETED_WEIZOOM_PRODUCT_REASON[reason]
             text += u'请及时处理！'
@@ -264,7 +264,7 @@ def update_weizoom_mall_sync_product_status(request, product, update_data):
             text = u'商品更新提示：\n'
             text += u'商品位置：\n'
             for product in products:
-                text += use_id2store_name[weizoom_product_id2user_id[product.id]] + '-' + (u'在售' if product.shelve_type else u'待售') + '-' + product.name + '\n'
+                text += (use_id2store_name[weizoom_product_id2user_id[product.id]] if use_id2store_name[weizoom_product_id2user_id[product.id]] else '') + '-' + (u'在售' if product.shelve_type else u'待售') + '-' + product.name + '\n'
             text += u'供货商：%s\n' % request.user_profile.store_name
             text += u'更新内容：%s\n' % u'，'.join(update_data)
             text += u'请及时处理！'
