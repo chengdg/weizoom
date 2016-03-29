@@ -17,21 +17,20 @@ class Supplier(api_resource.ApiResource):
 	app = 'mall'
 	resource = 'supplier'
 
-	@param_required(['weapp_owner_ids', 'is_delete'])
+	@param_required(['supplier_ids', 'is_delete'])
 	def get(args):
 		"""
 		获取商品详情
 
 		@param id 商品ID
 		"""
-		weapp_owner_ids = args['weapp_owner_ids'].split(',') # list
+		supplier_ids = args['supplier_ids'].split(',') # list
 		is_delete = args['is_delete']
-		print "zl------------------",type(is_delete)
 		if is_delete == 'False':
 			is_delete=False
 		else:
 			is_delete=True
-		suppliers = mall_models.Supplier.objects.filter(owner_id__in=weapp_owner_ids,is_delete=is_delete)
+		suppliers = mall_models.Supplier.objects.filter(id__in=supplier_ids,is_delete=is_delete)
 		items = []
 		for supplier in suppliers:
 			items.append({
