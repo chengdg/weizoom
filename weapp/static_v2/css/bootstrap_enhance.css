@@ -228,6 +228,16 @@ table.xui-tableBorderRight thead tr th{
 .xb-noTdBorder > thead > tr > th, .xb-noTdBorder > tbody > tr > th, .xb-noTdBorder > tfoot > tr > th, .xb-noTdBorder > thead > tr > td, .xb-noTdBorder > tbody > tr > td, .xb-noTdBorder > tfoot > tr > td{
 	border:none;
 }
+/*表格内td无左右边框*/
+.xb-noTdLRBorder > thead > tr > th,
+.xb-noTdLRBorder > tbody > tr > th,
+.xb-noTdLRBorder > tfoot > tr > th,
+.xb-noTdLRBorder > thead > tr > td,
+.xb-noTdLRBorder > tbody > tr > td,
+.xb-noTdLRBorder > tfoot > tr > td{
+	border-left: none;
+	border-right:none;
+}
 .xb-noBottom{
 	margin-bottom: 0;
 }
