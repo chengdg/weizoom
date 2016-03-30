@@ -18,14 +18,22 @@ class MemberCouponInfo(resource.Resource):
 	def api_get(request):
 		status = -1
 		member_id = request.GET.get('id')
+		filter_attr = request.GET.get('filter_attr', None)
+		filter_value = request.GET.get('filter_value', -1)
 
 		if member_id is None:
 			response = create_response(500)
 			response.errMsg = 'Member id is required'
 			return response.get_response()
 
+		if filter_attr == 'status':
+			status = filter_value
+
 		items = []
-		member_coupon_list = Coupon.objects.filter(member_id=member_id)
+		if status == -1:
+			member_coupon_list = Coupon.objects.filter(member_id=member_id).order_by('-provided_time')
+		else:
+			member_coupon_list = Coupon.objects.filter(member_id=member_id).filter(status=status).order_by('-provided_time')
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		current_page = int(request.GET.get('page', '1'))
 		pageinfo, member_coupon_list = paginator.paginate(member_coupon_list, current_page, count_per_page,
