@@ -27,7 +27,6 @@ from core import resource
 import export
 from account.models import ExportJob
 from datetime import datetime
-import time
 #from modules.member.models import *
 
 
@@ -1001,7 +1000,7 @@ class MemberGetFile(resource.Resource):
 									type = type,
 									status = 0,
 									param = param,
-									created_at = now,
+									create_at = now,
 									processed_count =0,
 									count =0,
 									)
@@ -1041,13 +1040,12 @@ class MemberGetProcess(resource.Resource):
 				process = exportjob.processed_count*100/exportjob.count
 			else:
 				process = 0 
-			timeArray = time.strptime(str(exportjob.update_at),"%Y-%m-%d %H:%M:%S",)
-			timeStamp = float(time.mktime(timeArray))
-			time2 = time.time()
-			if time2 - timeStamp > 60:
+			if exportjob.query_processed_count == exportjob.processed_count:
+				exportjob.wait_count += 1
+			if exportjob.wait_count == 60:
 				exportjob.status = 2
-				exportjob.is_download = 1
-				exportjob.save()
+			exportjob.query_processed_count = exportjob.processed_count
+			exportjob.save()
 		else:
 			notify_message = u"获取会员导出进度失败，exportjob_id:{},status:{}".format(exportjob_id, exportjob.status)
 			watchdog_error(notify_message)
