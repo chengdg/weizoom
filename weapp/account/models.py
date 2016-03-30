@@ -490,3 +490,26 @@ class AccessToken(models.Model):
 		db_table = 'access_token'
 		verbose_name = 'ACCESS_TOKEN'
 		verbose_name_plural = 'ACCESS_TOKEN'
+
+
+#status:0,1 0未完成，1完成,2失败
+#type:0,1 0会员，1订单
+#当query_processed_count和processed_count相等,wait+1
+#########################################################################
+# ExportJob: 导出任务
+#########################################################################
+class ExportJob(models.Model):
+	woid = models.IntegerField(max_length=256)
+	type = models.IntegerField(default=0)
+	status = models.BooleanField(default=False)
+	processed_count = models.IntegerField(max_length=256)
+	count = models.IntegerField(max_length=256)
+	is_download = models.BooleanField(default=False, verbose_name='是否下载')
+	param = models.CharField(max_length=256)
+	file_path = models.CharField(max_length=256)
+	query_processed_count = models.IntegerField(max_length=256,default=0)
+	wait_count = models.IntegerField(max_length=256,default=0)
+	create_at = models.DateTimeField(verbose_name='创建时间')
+
+	class Meta(object):
+		db_table = 'export_job'
