@@ -638,6 +638,7 @@ Scenario:1 有效商家的"无规格"的上架的"待售商品管理"中的商�
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中展示的商品变化
 	#商家bill上下架无规格的没有同步的商品
 		Given bill登录系统
@@ -667,7 +668,7 @@ Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中
 				"name": "bill无规格商品2",
 				"user_code":"2212",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -675,13 +676,14 @@ Scenario:2 有效商家上下架"无规格"的没有同步的商品,商品池中
 				"name": "tom无规格商品1",
 				"user_code":"1112",
 				"supplier":"tom商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
 			}]
 			"""
 
+@product @product_pool @eugene
 Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池中展示的商品变化
 	#商家bill修改在售商品的库存
 		Given bill登录系统
@@ -756,7 +758,7 @@ Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池�
 				"name": "tom无规格商品1",
 				"user_code":"1112",
 				"supplier":"tom商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -769,7 +771,7 @@ Scenario:3 有效商家修改未同步商品的库存和商品名称,商品池�
 				"actions": ["放入待售"]
 			}]
 			"""
-
+@product @product_pool @eugene @eugeneTMP
 Scenario:4 自营平台同步商品池中的商品
 	#1 不同的自营平台同步商家商品,对商品池中的商品的"商品信息","供货商","库存"没有影响
 	#2 同步商品的如下字段：除了【店内分组】,【会员折扣】,【运费设置】,【支付方式】,【商品发票】,【配送时间】,【总销量】,【采购价】其他字段都同步
@@ -799,7 +801,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "tom无规格商品1",
 				"user_code":"1112",
 				"supplier":"tom商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -807,7 +809,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "bill无规格商品1",
 				"user_code":"1112",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -847,7 +849,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "bill无规格商品1",
 				"user_code":"1112",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"已选择",
 				"sync_time":"2015-08-02 10:30",
 				"actions": ["无更新"]
@@ -860,7 +862,6 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "tom无规格商品1",
 				"created_at": "2015-08-03 10:30",
 				"sync_time":"2015-08-03 10:30",
-				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
 				"min_limit":2,
@@ -875,30 +876,17 @@ Scenario:4 自营平台同步商品池中的商品
 						}
 					}
 				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
 				"properties": [{
 						"name": "CPU",
 						"description": "CPU描述"
 					}, {
 						"name": "内存",
 						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
+					}]
 			},{
 				"name": "bill无规格商品1",
 				"created_at": "2015-08-02 10:30",
 				"sync_time":"2015-08-02 10:30",
-				"promotion_title": "促销的东坡肘子",
 				"categories": "",
 				"bar_code":"112233",
 				"min_limit":2,
@@ -913,25 +901,13 @@ Scenario:4 自营平台同步商品池中的商品
 						}
 					}
 				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
 				"properties": [{
 						"name": "CPU",
 						"description": "CPU描述"
 					}, {
 						"name": "内存",
 						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
+					}]
 			}]
 			"""
 
@@ -959,7 +935,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "tom无规格商品1",
 				"user_code":"1112",
 				"supplier":"tom商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -967,7 +943,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "bill无规格商品1",
 				"user_code":"1112",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"未选择",
 				"sync_time":"",
 				"actions": ["放入待售"]
@@ -999,7 +975,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "tom无规格商品1",
 				"user_code":"1112",
 				"supplier":"tom商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"已选择",
 				"sync_time":"2015-08-05 10:30",
 				"actions": ["无更新"]
@@ -1007,7 +983,7 @@ Scenario:4 自营平台同步商品池中的商品
 				"name": "bill无规格商品1",
 				"user_code":"1112",
 				"supplier":"bill商家",
-				"stock_type": "无限",
+				"stocks": "无限",
 				"status":"已选择",
 				"sync_time":"2015-08-04 10:30",
 				"actions": ["无更新"]
@@ -1034,25 +1010,13 @@ Scenario:4 自营平台同步商品池中的商品
 						}
 					}
 				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
 				"properties": [{
 						"name": "CPU",
 						"description": "CPU描述"
 					}, {
 						"name": "内存",
 						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
+					}]
 			},{
 				"name": "bill无规格商品1",
 				"created_at": "2015-08-04 10:30",
@@ -1072,25 +1036,13 @@ Scenario:4 自营平台同步商品池中的商品
 						}
 					}
 				},
-				"swipe_images": [{
-					"url": "/standard_static/test_resource_img/hangzhou1.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou2.jpg"
-				}, {
-					"url": "/standard_static/test_resource_img/hangzhou3.jpg"
-				}],
-				"postage":0.00,
-				"pay_interfaces":[{
-						"type": "在线支付"
-					}],
 				"properties": [{
 						"name": "CPU",
 						"description": "CPU描述"
 					}, {
 						"name": "内存",
 						"description": "内存描述"
-					}],
-				"detail": "商品描述信息"
+					}]
 			}]
 			"""
 

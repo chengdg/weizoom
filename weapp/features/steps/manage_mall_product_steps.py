@@ -129,8 +129,20 @@ def step_update_product(context, user, product_name):
         product = json.loads(context.text)
     if 'name' not in product:
         product['name'] = existed_product.name
+
+    existed_product_properties = mall_models.ProductProperty.objects.filter(product_id=existed_product.id)
+    tmp_property = {}
+    tmp_properties = []
+    for index, property in enumerate(product.get('properties', [])):
+        # if index > existed_product_properties.count():
+        #     tmp_property['id'] = existed_product_properties[index].id
+        tmp_property['id'] = existed_product_properties[index].id
+        tmp_property['name'] = property['name']
+        tmp_property['value'] = property['description']
+        tmp_properties.append(tmp_property)
+    product['properties'] = json.dumps(tmp_properties)
     product['supplier'] = existed_product.supplier
-    __process_product_data(product)
+    __process_product_data(product, user=user)
     product = __supplement_product(context.webapp_owner_id, product)
     print("POST DATA: {}".format(product))
 
