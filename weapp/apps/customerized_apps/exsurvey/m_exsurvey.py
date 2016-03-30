@@ -137,9 +137,9 @@ class Msurvey(resource.Resource):
 				last_month_days = calendar.monthrange(last_month_year,last_month_month)[1]
 				last_last_month_time = last_month_time-timedelta(days=last_month_days)
 				#两个月前的那天
-				start_date = last_last_month_time + ' 00:00:00'
+				start_date = last_last_month_time.strftime("%Y-%m-%d %H:%M:%S")
 				#现在的时间
-				end_date = cur_time + ' 23:59:59'
+				end_date = cur_time.strftime("%Y-%m-%d 23:59:59")
 
 				#获取当前会员2个月内所下单已发货和已完成的id
 				orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids,created_at__gte=start_date, created_at__lte=end_date,status__in=[ORDER_STATUS_PAYED_SHIPED,ORDER_STATUS_SUCCESSED,ORDER_STATUS_PAYED_NOT_SHIP])
