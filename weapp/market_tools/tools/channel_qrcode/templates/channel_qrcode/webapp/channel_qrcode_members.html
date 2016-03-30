@@ -2,8 +2,12 @@
 {% load common_tag %}
 {% block css%}
 <!--日期选择器样式-->
-<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll.css">
-<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll_date.css">
+<!-- <link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll.css">
+<link type="text/css" rel="stylesheet" href="/termite_static/v3/css/mobiscroll_date.css"> -->
+<link href="/termite_static/v3/mobiscroll/css/mobiscroll.frame.css" rel="stylesheet" type="text/css" />
+<link href="/termite_static/v3/mobiscroll/css/mobiscroll.frame.ios.css" rel="stylesheet" type="text/css" />
+<link href="/termite_static/v3/mobiscroll/css/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
+<link href="/termite_static/v3/mobiscroll/css/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
 <style>
 	html,body{
 		background: #ececec;
@@ -88,7 +92,7 @@
     	float: right;
     	display: inline-block;
     	line-height: 50px;
-    	width: 70%;
+    	width: 74%;
     	text-align: right;
     	padding-right: 4%;
     }
@@ -133,11 +137,8 @@
     	float: right;
     }
     .xui-choose{
-    	display: inline-block;
-    	color: #9e9e9e;
-    	font-family: "黑体";
-    	font-size: 1rem;
-    	font-weight: 700;
+    	width: 5%;
+    	vertical-align: middle;
     }
     .xui-time-input{
     	border: none;
@@ -149,6 +150,27 @@
     	display: inline-block;
     	line-height: 50px;
     }
+    .wui-attentionAlert {
+        display: none;
+    }
+    .mbsc-ios .dwb{
+    	color: #797878;
+    }
+    .mbsc-ios .dwwc {
+        padding: 2.5em .833333em .833333em 3.833333em;
+    }
+    .xui-all-span{
+    	display: inline-block;
+		font-size: 1rem;
+		vertical-align: sub;
+    }
+    .mbsc-ios .dwo {
+	    background: #FFF !important;
+	    opacity: 0;
+	}
+	.xui-time-span{
+		vertical-align: middle;
+	}
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -156,12 +178,12 @@
 	<div class="xui-time xa-time">
 		<div class="xui-filter-time">筛选时间</div>
 		<div class="xui-time-wrap xa-time-wrap">
-	 		{% if startDateTitle and endDateTitle %}
-	 			<span>{{startDateTitle}}&nbsp;-&nbsp;{{endDateTitle}}</span>
+	 		{% if startDate and endDate %}
+	 			<span class="xui-time-span">{{startDate}}&nbsp;-&nbsp;{{endDate}}</span>
  			{% else %}
-	 			<span>全部</span>
+	 			<span class="xui-all-span">全部</span>
  			{% endif %}
- 			<span class="xa-choose xui-choose">&gt;</span>
+ 			<img class="xui-choose" src="/termite_static/img/qrcode_arrow.png"/>
 		</div>
 	</div>
 	<div class="xui-general">
@@ -186,8 +208,8 @@
 </div>
 
 <div class="xui-timeChoose xa-timeChoose">
-	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" /></div>
-	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" /></div>
+	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" value="{{startDate}}"/></div>
+	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" value="{{endDate}}"/></div>
 	<div class="xui-btn-wrap">
 		<span class="xui-reset xa-reset">清除时间</span>
 		<span class="xui-submit xa-submit">确定</span>
@@ -197,9 +219,16 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
+<!-- <script type="text/javascript" src="/termite_static/jquery/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll_date.js"></script>
-<script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobile_datetime/mobiscroll.js"></script> -->
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.zepto.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.core.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.frame.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.scroller.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.util.datetime.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.datetimebase.js"></script>
+<script type="text/javascript" src="/termite_static/v3/mobiscroll/js/mobiscroll.datetime.js"></script>
 <script>
 	$(document).ready(function(){
 		var width=document.body.clientWidth;
@@ -245,24 +274,42 @@
 			$('#endDate').val('');
 		});
 
-		var currYear = (new Date()).getFullYear();	
-		var opt={};
-		opt.date = {preset : 'date'};
-		opt.datetime = {preset : 'datetime'};
-		opt.time = {preset : 'time'};
-		opt.default = {
-			theme: 'android-ics light', //皮肤样式
-			display: 'modal', //显示方式 
-			mode: 'scroller', //日期选择模式
-			dateFormat: 'yyyy-mm-dd',
-			lang: 'zh',
-			showNow: true,
-			nowText: "今天",
-			startYear: currYear - 10, //开始年份
-			endYear: currYear + 10 //结束年份
-		};
-		$("#startDate").mobiscroll($.extend(opt['date'], opt['default']));
-		$("#endDate").mobiscroll($.extend(opt['date'], opt['default']));
+		// var currYear = (new Date()).getFullYear();	
+		// var opt={};
+		// opt.date = {preset : 'date'};
+		// opt.datetime = {preset : 'datetime'};
+		// opt.time = {preset : 'time'};
+		// opt.default = {
+		// 	theme: 'android-ics light', //皮肤样式
+		// 	display: 'modal', //显示方式 
+		// 	mode: 'scroller', //日期选择模式
+		// 	dateFormat: 'yyyy-mm-dd',
+		// 	lang: 'zh',
+		// 	showNow: true,
+		// 	nowText: "今天",
+		// 	startYear: currYear - 10, //开始年份
+		// 	endYear: currYear + 10 //结束年份
+		// };
+		// $("#startDate").mobiscroll($.extend(opt['date'], opt['default']));
+		// $("#endDate").mobiscroll($.extend(opt['date'], opt['default']));
+		$('#startDate').mobiscroll().date({
+            theme: 'ios',
+            mode: 'scroller',
+            display: 'bottom',
+            lang: 'zh',
+            minDate: new Date(2006,3,10),
+            maxDate: new Date(2026,7,30),
+            stepMinute: 5
+        });
+        $('#endDate').mobiscroll().date({
+            theme: 'ios',
+            mode: 'scroller',
+            display: 'bottom',
+            lang: 'zh',
+            minDate: new Date(2006,3,10),
+            maxDate: new Date(2026,7,30),
+            stepMinute: 5
+        });
 	});
 </script>
 {% endblock %}

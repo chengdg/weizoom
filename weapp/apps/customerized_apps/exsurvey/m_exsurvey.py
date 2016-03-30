@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-from datetime import datetime, timedelta
-
+from datetime import datetime, timedelta,date
+import calendar
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
@@ -127,12 +127,19 @@ class Msurvey(resource.Resource):
 				webappusers =  WebAppUser.objects.filter(member_id=member_id)
 				webapp_user_ids = [wau.id for wau in webappusers]
 				#获取上2个月的时间
-				curr_time = datetime.now()
-				for m in range(1, 3):
-					curr_time = (curr_time.replace(day=1) - timedelta(1)).replace(day=curr_time.day)
-				start_date = curr_time.strftime('%Y-%m-%d 00:00:00')
+				cur_time = date.today()
+				cur_year = cur_time.year
+				cur_month = cur_time.month
+				cur_month_days = calendar.monthrange(cur_year,cur_month)[1]
+				last_month_time = cur_time-timedelta(days=cur_month_days)
+				last_month_year = last_month_time.year
+				last_month_month = last_month_time.month
+				last_month_days = calendar.monthrange(last_month_year,last_month_month)[1]
+				last_last_month_time = last_month_time-timedelta(days=last_month_days)
+				#两个月前的那天
+				start_date = last_last_month_time.strftime("%Y-%m-%d %H:%M:%S")
 				#现在的时间
-				end_date = datetime.now().strftime('%Y-%m-%d 23:59:59')
+				end_date = cur_time.strftime("%Y-%m-%d 23:59:59")
 
 				#获取当前会员2个月内所下单已发货和已完成的id
 				orders = Order.objects.filter(webapp_user_id__in=webapp_user_ids,created_at__gte=start_date, created_at__lte=end_date,status__in=[ORDER_STATUS_PAYED_SHIPED,ORDER_STATUS_SUCCESSED,ORDER_STATUS_PAYED_NOT_SHIP])
