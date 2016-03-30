@@ -80,7 +80,7 @@ Background:
 		}
 		"""
 
-@mall2 @order @allOrder
+@order @allOrder
 Scenario:1 购买商品后，可以获得订单列表
 	bill购买了商品1(只下单, 未支付)和商品2(已支付)
 
@@ -132,7 +132,7 @@ Scenario:1 购买商品后，可以获得订单列表
 		}]
 		"""
 
-@mall2 @order @allOrder
+@order @allOrder
 Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单详情
 	bill购买商品后
 	1. 能看到订单详情
@@ -207,7 +207,7 @@ Scenario:2 购买商品后，管理员通过后台管理系统可以查看订单
 		}
 		"""
 
-@mall2 @order @allOrder
+@order @allOrder
 #验证待发货状态的订单可以取消
 Scenario:3 购买商品后并支付,管理员通过后台管理系统点击'取消'取消订单
 	bill购买商品后
