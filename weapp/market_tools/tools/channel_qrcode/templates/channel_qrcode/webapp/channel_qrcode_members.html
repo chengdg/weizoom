@@ -156,6 +156,12 @@
     .wui-attentionAlert {
         display: none;
     }
+    .mbsc-ios .dwb{
+    	color: #000;
+    }
+    .mbsc-ios .dwwc {
+        padding: 2.5em 0em .833333em 0.833333em;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -193,8 +199,8 @@
 </div>
 
 <div class="xui-timeChoose xa-timeChoose">
-	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" value="{startDate}"/></div>
-	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" value="{endDate}"/></div>
+	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" value="{{startDate}}"/></div>
+	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" value="{{endDate}}"/></div>
 	<div class="xui-btn-wrap">
 		<span class="xui-reset xa-reset">清除时间</span>
 		<span class="xui-submit xa-submit">确定</span>
