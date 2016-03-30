@@ -379,19 +379,19 @@ $(document).ready(function() {
         }
         var $checked_owner=$('div.show_bussiness_div');
         var card_attr = $('[name="card_attr"]').val();
-        if(card_attr==1 && $checked_owner.length==0 ){
+       
+        // $('#submitBtn').attr('disabled', true);
+        if (!W.validate()) {
+            // $('#submitBtn').prop('disabled', false);
+            return false;
+        }
+         if(card_attr==1 && $checked_owner.length==0 ){
             $('.add_bussiness_span +div').show()
             return false;
         }
         else{
             $('.add_bussiness_span +div').hide()
         }
-        $('#submitBtn').attr('disabled', true);
-        if (!W.validate()) {
-            $('#submitBtn').prop('disabled', false);
-            return false;
-        }
-
         createCards();
         return false;
     });
