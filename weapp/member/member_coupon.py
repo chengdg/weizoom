@@ -55,12 +55,13 @@ class MemberCouponInfo(resource.Resource):
 				item['coupon_detail'] = '￥'+str(coupon.money)+' 全店通用券'
 			item['coupon_state'] = COUPONSTATUS[coupon.status]['name']
 
-			whereabouts['type'] = item['coupon_state']
 			if coupon.status == COUPON_STATUS_USED:
 				order = Order.objects.get(coupon_id=coupon.id)
+				whereabouts['type'] = COUPON_STATUS_USED  # 去处 1
 				whereabouts['content'] = order.order_id
 				whereabouts['orderid'] = order.id
 			else:
+				whereabouts['type'] = COUPON_STATUS_UNUSED  # 来源 0
 				whereabouts['content'] = ''
 				whereabouts['orderid'] = None
 
