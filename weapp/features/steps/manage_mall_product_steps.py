@@ -5,6 +5,7 @@ import json, time
 from behave import when, then, given
 from mall.models import ProductCategory
 from webapp.models import WebApp
+from django.contrib.auth.models import User
 
 from mall import models as mall_models  # 注意不要覆盖此module
 from test import bdd_util
@@ -61,9 +62,16 @@ def step_product_add(context, user):
             else:
                 product['stock_type'] = 0
         product['type'] = mall_models.PRODUCT_DEFAULT_TYPE
-        __process_product_data(product)
+        __process_product_data(product, user=user)
         product = __supplement_product(context.webapp_owner_id, product)
         product['is_enable_bill'] = product.get('invoice', False)
+        tmp_property = {}
+        tmp_properties = []
+        for property in product.get('properties', []):
+            tmp_property['name'] = property['name']
+            tmp_property['value'] = property['description']
+            tmp_properties.append(tmp_property)
+        product['properties'] = json.dumps(tmp_properties)
         # 转换供货商
         if 'supplier' in product:
             response = context.client.get('/mall2/api/supplier_list/',data={"name":product['supplier']})
@@ -660,10 +668,12 @@ def __supplement_product(webapp_owner_id, product):
     return product_prototype
 
 
-def __process_product_data(product):
+def __process_product_data(product, user=None):
     """
     """
     # 商品上架状态
+    if user:
+        user_id = User.objects.get(username=user).id
     if product.get('shelve_type', '') == u'下架':
         product['shelve_type'] = mall_models.PRODUCT_SHELVE_TYPE_OFF
     else:
@@ -674,7 +684,10 @@ def __process_product_data(product):
     if product.get('categories', ''):
         product_category = ''
         for category_name in product['categories'].split(','):
-            category = ProductCategoryFactory(name=category_name)
+            if user:
+                category = ProductCategoryFactory(name=category_name, owner_id=user_id)
+            else:
+                category = ProductCategoryFactory(name=category_name)
             product_category += "%s," % str(category.id)
         product['product_category'] = product_category
         del product['categories']

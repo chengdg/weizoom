@@ -962,9 +962,8 @@ class Product(resource.Resource):
                     category_id=cid,
                     product_id=product.id)
         # 创建property
-        properties = request.POST.getlist('properties', [])
+        properties = json.loads(request.POST.get('properties', '[]'))
         for property in properties:
-            property = json.loads(property)
             models.ProductProperty.objects.create(
                 owner=request.manager,
                 product=product,
