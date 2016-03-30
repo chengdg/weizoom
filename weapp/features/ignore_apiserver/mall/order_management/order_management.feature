@@ -136,7 +136,7 @@ Background:
 		}
 		"""
 
-@mall2 @order @editMoney
+@order @editMoney
 Scenario: 1 修改待支付订单的价格，减少订单金额
 	bill创建订单后
 	1.jobs修改订单'001'的价格
@@ -284,7 +284,7 @@ Scenario: 1 修改待支付订单的价格，减少订单金额
 		}
 		"""
 
-@mall2 @order @editMoney
+@order @editMoney
 Scenario: 2 修改待支付订单的价格，增加订单金额
 	bill创建订单后
 	1.jobs修改订单'002'的价格
@@ -438,7 +438,7 @@ Scenario: 2 修改待支付订单的价格，增加订单金额
 		}
 		"""
 
-@mall2 @order @finance @returnOrder
+@order @finance @returnOrder
 Scenario: 3 使用微信支付的订单，支付后可以申请退款
 	bill创建订单后
 	1.bill使用微信支付方式支付
@@ -635,7 +635,7 @@ Scenario: 3 使用微信支付的订单，支付后可以申请退款
 		"""
 	And bill在jobs的webapp中拥有150会员积分
 
-@mall2 @order @finance @returnOrder
+@order @finance @returnOrder
 Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退款
 	bill创建订单后
 	1.bill使用货到付款方式支付
@@ -930,7 +930,7 @@ Scenario: 4 使用货到付款的订单，支付后完成订单可以申请退�
 		}]
 		"""
 
-@mall2 @order @setOrder
+@order @setOrder
 Scenario: 5 设置未付款订单过期时间
 	jobs设置未付款订单过期时间后
 	1.bill创建订单后，未支付订单的时间超过了过期时间
