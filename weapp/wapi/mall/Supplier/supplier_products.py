@@ -40,7 +40,7 @@ class SupplierProducts(api_resource.ApiResource):
 			if order_has_product.product_id in products_orders:
 				products_orders[order_has_product.product_id].append(order_has_product.order_id)
 			else:
-				products_orders[order_has_product.product_id] = []
+				products_orders[order_has_product.product_id] = [order_has_product.order_id]
 		order_has_product_orderids = [order_has_product.order_id for order_has_product in order_has_products]
 		orders = mall_models.Order.objects.filter(id__in=order_has_product_orderids)
 		order_id_order = dict([(order.id,order) for order in orders ])
