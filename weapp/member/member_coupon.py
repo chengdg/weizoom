@@ -48,6 +48,7 @@ class MemberCouponInfo(resource.Resource):
 			whereabouts = dict()
 
 			item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
+			item['coupon_id'] = coupon.coupon_id
 			item['coupon_name'] = coupon_rule.name
 			if coupon_rule.limit_product:
 				item['coupon_detail'] = '￥'+str(coupon.money)+' 单品券'

@@ -18,9 +18,8 @@ Feature: 会员列表-会员详情-优惠券明细列表
 
 Background:
 
-	Given bill关注jobs的公众号
+    Given jobs登录系统
 	#添加优惠券规则
-	Given jobs登录系统
 	Given jobs已添加商品
 		"""
 		[{
@@ -112,7 +111,7 @@ Background:
 	    }]
 	    """
 
-
+@hnyan
 Scenario:1 会员(未使用,已使用,已过期)优惠券明细
 	jobs查看日期为当前日期
 
