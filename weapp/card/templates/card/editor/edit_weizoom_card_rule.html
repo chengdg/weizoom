@@ -103,7 +103,7 @@
                         <option value="0">通用卡</option>
                         <option value="1">专属卡</option>
                     </select>
-                    <div class="errorHint"></div>
+                    <div class="errorHint" style="display:none">请选择一个选项</div>
                 </div>
             </div>
 
@@ -111,6 +111,7 @@
                 <label class="control-label fl" for="parents_name">专属商家：</label>
                 <div class="col-sm-2 fl pl5" style="width: auto;margin-top: 4px;color: #0099ff;cursor: pointer;">
                      <span class="add_bussiness_span" data-toggle="modal" data-target="#ownerSpecial" onClick =show_checked_buss()>添加商家</span>
+                     <div class="errorHint" style="display:none;position: absolute;">请选择一个选项</div>
                 </div>
                 <div class="checkbox" style="float: left;width: 10%;padding-top:4px">
                     <label>
@@ -119,8 +120,7 @@
                 </div>
             </div>
             <div class="form-group ">
-                <div class="add_bussiness_div" style="margin-left: 130px;width: 800px;">
-                    
+                <div class="add_bussiness_div" style="margin-left: 130px;width: 800px;">                    
                 </div>
             </div>
 			<div class="form-group ">
@@ -148,7 +148,7 @@
             <div class="form-group ">
                 <label class="control-label fl" for="parents_name">数&nbsp;&nbsp;&nbsp;&nbsp;量：</label>
                 <div class="col-sm-2 fl pl5">
-                    <input type="text" class="form-control w106" name="number" placeholder=" " data-validate="require-int"/>
+                    <input type="text" class="form-control w106" name="number" placeholder=" " data-validate="require-positive-int"/>
                     <div class="errorHint"></div>
                 </div>
                 <span style="position: absolute;left: 320px;">张</span>
@@ -372,11 +372,26 @@ $(document).ready(function() {
             W.showHint('error','备注最多输入20个字符！');
             return false;
         }
+        var money = $('[name="money"]').val();
+        if (money> 999999999){
+            W.showHint('error','价格不正确，请输入0-999999999之间的价格');
+            return false;
+        }
+        var $checked_owner=$('div.show_bussiness_div');
+        var card_attr = $('[name="card_attr"]').val();
+        if(card_attr==1 && $checked_owner.length==0 ){
+            $('.add_bussiness_span +div').show()
+            return false;
+        }
+        else{
+            $('.add_bussiness_span +div').hide()
+        }
         $('#submitBtn').attr('disabled', true);
         if (!W.validate()) {
             $('#submitBtn').prop('disabled', false);
             return false;
         }
+
         createCards();
         return false;
     });
@@ -399,12 +414,12 @@ $(document).ready(function() {
         var belong_to_owner_ids=[]
         var $checked_owner=$('div.show_bussiness_div');
         if($checked_owner.length>0 &&card_attr==1){
+            $('.add_bussiness_span +div').hide()
             $checked_owner.each(function(){
                 belong_to_owner_ids.push(parseInt($(this).attr('id')))
             })
         }
         else{
-            console.log('---------------')
             belong_to_owner_ids.push(-1)
         }
         console
@@ -438,6 +453,7 @@ $(document).ready(function() {
     }
 function save_checked_owner(){
     $(".add_bussiness_div").html('')
+    $('.add_bussiness_span +div').hide()
     suripers={}
     var $checked_owner=$('div .xui-owner_list');
     $checked_owner.each(function(){
