@@ -1,0 +1,49 @@
+{% extends "content_base_v2.html" %}
+{% load project_filter %}
+{% load account_filter %}
+
+{% block content-panel %}
+<div class="xui-wepage-orderSummaryPage">
+    <div class="relative">
+        <ul class="breadcrumb">
+            <li>您当前所在位置</li>
+            <li><a href="/stats/order_summary/">会员分析</a></li>
+            <li class="active">复购分析</li>
+        </ul>
+    </div>
+    
+    <div class="xb-rightPanel pl10 pr10 pb30">
+        <div class="xui-filter xui-filterPanel ">
+            会员状态：
+        </div>
+        <div class="xui-charWrap" style="height:400px;">
+            <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">会员购买占比</span></div>
+            <div 
+                class="xui-ChartBody" 
+                id="memberIncreasement" 
+                data-ui-role="statsMemberIncreasementEchart" 
+                data-app="stats" 
+                data-resource="member_increasement" 
+                data-wrap-el=".xa-message-tips-wrap"
+            ></div>
+        </div>
+
+        <div class="xui-charWrap" style="height:400px;">
+            <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">复购会员分析</span></div>
+            <div 
+                class="xui-ChartBody" 
+                id="memberIncreasement" 
+                data-ui-role="statsMemberIncreasementEchart" 
+                data-app="stats" 
+                data-resource="member_increasement" 
+                data-wrap-el=".xa-message-tips-wrap"
+            ></div>
+        </div>
+    </div>
+     <div class="cb"></div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

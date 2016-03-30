@@ -42,6 +42,7 @@ class MemberSummary(resource.Resource):
 			'first_nav_name': FIRST_NAV,
 			'second_navs': export.get_stats_second_navs(request),
 			'second_nav_name': export.STATS_MEMBER_SECOND_NAV,
+			'third_nav_name': export.MEMBER_SUMMARY_NAV,
 			'start_date': start_date,
 			'end_date': end_date,
 
