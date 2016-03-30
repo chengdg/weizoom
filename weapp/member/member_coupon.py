@@ -45,6 +45,8 @@ class MemberCouponInfo(resource.Resource):
 			coupon_rule = coupon.coupon_rule
 
 			item = dict()
+			whereabouts = dict()
+
 			item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
 			item['coupon_name'] = coupon_rule.name
 			if coupon_rule.limit_product:
@@ -53,11 +55,16 @@ class MemberCouponInfo(resource.Resource):
 				item['coupon_detail'] = '￥'+str(coupon.money)+' 全店通用券'
 			item['coupon_state'] = COUPONSTATUS[coupon.status]['name']
 
+			whereabouts['type'] = item['coupon_state']
 			if coupon.status == COUPON_STATUS_USED:
 				order = Order.objects.get(coupon_id=coupon.id)
-				item['coupon_whereabouts'] = str(order.order_id)
+				whereabouts['content'] = order.order_id
+				whereabouts['orderid'] = order.id
 			else:
-				item['coupon_whereabouts'] = ''
+				whereabouts['content'] = ''
+				whereabouts['orderid'] = None
+
+			item['coupon_whereabouts'] = whereabouts
 
 			items.append(item)
 
