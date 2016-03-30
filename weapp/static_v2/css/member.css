@@ -421,31 +421,6 @@
     text-align: center;
     width: 16px;
 }
-/*会员导出 by庭飞*/
-#export_data_file {
-	background-position:10px center;
-	background-repeat:no-repeat;
-}
-
-#exportProgress_bar {
-	width: 90px;
-    height: 30px;
-    float: right;
-    border: solid 1px #ccc;
-    background-color: #fff;
-}
-
-.exportProgress_progress {
-	background-color: #009ED8;
-  height: 100%;
-	width: 0;
-}
-
-.exportProgress_msg {
-	float: right;
-	margin-left: 5px;
-	margin-right: 20px;
-}
 /*
 *会员详情页面
 */

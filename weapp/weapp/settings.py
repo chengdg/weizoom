@@ -502,7 +502,6 @@ INSTALLED_TASKS = [
     'weixin2',
     'tools.express',
 
-    'member',
     # for services
     'services.example_service',
     'services.send_order_email_service',

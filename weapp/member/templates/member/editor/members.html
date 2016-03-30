@@ -142,7 +142,6 @@
 			data-args='{"status":"{{status}}"}'
 			data-disable-header-select="true"
 			data-user-webapp-id={{user.get_profile.webapp_id}}
-			data-download-excel-app="member"
 		></div>
 
 		<div class="dropdown xui-operation update_dropdown pa"  style="bottom:0px;">
@@ -267,11 +266,11 @@
 {% block js %}
 {% verbatim %}
 <script id="members-view" type="text/x-jquery-tmpl">
-	<div class="w500 pa pr30 div_export" style="top:10px;left:500px;line-height:30px;">
+	<div class="w500 pa pr30 " style="top:10px;left:500px;line-height:30px;">
 		<label class="fr">筛选结果：${data.total_count}人</label>
 
-		<a href="javascript:void(0);" class="btn fr btn-default xa-export mr20 " id="export_data_file">导出结果</a>
-		
+		<a href="javascript:void(0);" class="btn fr  btn-default xa-export mr20 ">导出结果</a>
+
 	</div>
 	<table class="table table-bordered xui-productList xb-stripedTable xb-noTdBorder xb-noBottom xb-noBorder xb-theadBg" >
 		<thead>
@@ -436,7 +435,7 @@ $(document).ready(function() {
 		DATA_INTERVAL = '';
 	});
 	//console.log('----------a:::',view.getFilterValue(),'--aaaaaa')
-	
+
 	// 修改等级
 	$('body').delegate('.xa-update-grade', 'click', function(event){
 		var $el = $(event.currentTarget);
@@ -733,91 +732,18 @@ $(document).ready(function() {
         }
 	});
 
-	
-	
+	// 导出
 	$('.panel-body').delegate('.xa-export', 'click', function(event){
-		W.getApi().call({
-			app: 'member',
-			resource: 'export_is_download',
-			method: 'get',
-			args: {
-				woid: woid
-			},
-			success: function(data) {
-				if (data["status"] === 1 && data["is_download"] === 0){
-					W.showHint('error', '导出的文件尚未下载，请刷新页面进行下载！');
-				}
-				else if(data["status"] === 0 && data["is_download"] === 0){
-					W.showHint('success', '文件正在导出，请刷新页面进行查看！');
-					
-				}
-				else{
-					var url ='';
-					var filter_value = '';
-					if (view.filter_value) {
-						filter_value = view.filter_value;
-					};
-					var options = {
-						el: '.panel-body',
-						topic_id: '',
-						type: '',
-						url: url,
-						jobId:0,
-						filter_value:filter_value,
-						isAlreadyExport : true,
-						timelinesOptions: {
-							
-						}
-					}
-					var customersView = new W.CustomersView(options);
-				}
-			},
-			error: function(response) {
-				W.showHint('error', '网络超时，导出中断，请重试！');
-			}
-		});
-		
+		var url = '/member/export/';
+		if (view.filter_value) {
+			url = url + '?filter_value='+view.filter_value;
+		}
+		console.log(url, view.filter_value)
+		W.getErrorHintView().show("'玩命导出中...'");
+		var $frame=$('<iframe>').hide().attr('src',url);
+		$('body').append($frame);
+		setTimeout(function(){W.getErrorHintView().hide()}, 5000);
 	});
-	
-	var table = $('div[data-ui-role="advanced-table"]').data('view');
-	
-
-	var export2data = {{export2data|safe}};
-	var woid = "{{ request.manager.id }}";
-	if(export2data["status"] ===1 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				timelinesOptions: {
-				}
-			}
-			var memberExportFileView = new W.dialog.member.ExportFileView(options);
-			memberExportFileView.finish();
-		};
-	}
-	else if(export2data["status"] ===0 && export2data["is_download"] ===0 ){
-		table.afterload = function(){
-
-			var jobId = export2data["id"];
-			var options = {
-				el: '.div_export',
-				topic_id: '',
-				type: '',
-				url: "",
-				jobId:export2data["id"],
-				isAlreadyExport : true,
-				timelinesOptions: {
-				}
-			}
-			var memberExportFileView = new W.dialog.member.ExportFileView(options);
-			memberExportFileView.doExportAfterApi();
-		};
-	}
 
 	$('.panel').delegate('.relation-text', 'click', function(event) {
 					var _this = this;
@@ -837,16 +763,17 @@ $(document).ready(function() {
 						isReload:true,
 						onlyFans:true
 					});
-	});
-	
+			});
 
 	var status = '{{status}}';
 	if(status === '1') {
 		_.delay(function(){
 			console.log(status)
+			//$('.xa-more-filter').trigger('click');
 			$("#status").val("1");
 		}, 700);
-	};
+
+	}
 });
 </script>
 {% endblock %}
