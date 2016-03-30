@@ -11,7 +11,8 @@ from modules.member.models import *
 @then(u'{user}能获得weapp系统{member}拥有优惠券')
 def step_impl(context, user, member):
 	member_id = bdd_util.get_member_by_username(member, context.webapp_id).id
-	if context.coupon_status is None:
+	# print('>>>>>>>>>>>>>>>>>>memid:   '+str(member_id))
+	if not hasattr(context, 'coupon_status'):
 		url = '/member/api/member_coupon/?id='+str(member_id)
 	elif context.coupon_status == '全部':
 		url = '/member/api/member_coupon/?id='+str(member_id)+'&filter_attr=status&filter_value=-1'

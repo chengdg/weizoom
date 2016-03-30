@@ -19,7 +19,13 @@ Feature: 会员列表-会员详情-优惠券明细列表
 Background:
 
     Given jobs登录系统
+    And 开启手动清除cookie模式
 	#添加优惠券规则
+	When 清空浏览器
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+
+	Given jobs登录系统
 	Given jobs已添加商品
 		"""
 		[{
@@ -94,6 +100,8 @@ Background:
 			"get_time": "2016-01-05"
 		}
 		"""
+
+	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
 	When bill领取jobs的优惠券
@@ -113,7 +121,7 @@ Background:
 	    }]
 	    """
 
-@hnyan
+@hnyan @we
 Scenario:1 会员(未使用,已使用,已过期)优惠券明细
 	jobs查看日期为当前日期
 
