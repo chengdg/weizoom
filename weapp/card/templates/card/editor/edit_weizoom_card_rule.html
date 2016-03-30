@@ -416,13 +416,12 @@ $(document).ready(function() {
         if($checked_owner.length>0 &&card_attr==1){
             $('.add_bussiness_span +div').hide()
             $checked_owner.each(function(){
-                belong_to_owner_ids.push(parseInt($(this).attr('id')))
+                belong_to_owner_ids.push($(this).attr('id'))
             })
         }
         else{
-            belong_to_owner_ids.push(-1)
+            belong_to_owner_ids.push("-1")
         }
-        console
         W.getApi().call({
             app: 'card',
             api: 'weizoom_cards/create',
