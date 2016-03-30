@@ -10,7 +10,7 @@ import module_api
 from datetime import datetime, timedelta
 from card_datetime import *
 import random
-
+from excel_response import ExcelResponse
 #微众卡类型
 from weixin.user.models import MpuserPreviewInfo, ComponentAuthedAppidInfo
 
@@ -23,7 +23,11 @@ TYPE2NAME = {
     'WEIZOOM_CARD_INTERNAL': u'内部卡',
     'WEIZOOM_CARD_GIFT': u'赠品卡'
 }
-
+CARDTYPE2NAME = {
+    WEIZOOM_CARD_EXTERNAL: u'外部卡',
+    WEIZOOM_CARD_INTERNAL: u'内部卡',
+    WEIZOOM_CARD_GIFT: u'赠品卡'
+}
 
 @api(app='card', resource='cards', action='get')
 @login_required 
@@ -147,7 +151,14 @@ def get_cards(request):
             rule_id2card_ids[r_id] = weizoom_card_ids
 
     cur_weizoom_card_rules = []
+
     for rule in weizoom_card_rules:
+        belong_to_owner_list2store_names=[]
+        belong_to_owner_list = str(rule.shop_limit_list).split(',')
+        for a in belong_to_owner_list:
+            if a != '-1':
+                belong_to_owner_list2store_name=user_id2store_name.get(a,None)
+                belong_to_owner_list2store_names.append(belong_to_owner_list2store_name)
         cur_weizoom_card_rule = JsonResponse()
         cur_weizoom_card_rule.id = rule.id
         cur_weizoom_card_rule.name = rule.name
@@ -157,7 +168,7 @@ def get_cards(request):
         cur_weizoom_card_rule.card_type = rule.card_type
         cur_weizoom_card_rule.is_new_member_special = rule.is_new_member_special
         cur_weizoom_card_rule.card_attr = rule.card_attr
-        cur_weizoom_card_rule.belong_to_owner = user_id2store_name.get(rule.shop_limit_list,None)
+        cur_weizoom_card_rule.belong_to_owner = belong_to_owner_list2store_names
         cur_weizoom_card_rule.valid_time_from = rule.valid_time_from.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.valid_time_to = rule.valid_time_to.strftime('%Y-%m-%d %H:%M')
         cur_weizoom_card_rule.created_at = rule.created_at.strftime('%Y-%m-%d %H:%M')
@@ -464,6 +475,13 @@ def get_weizoom_cards(request):
     pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
 
     weizoom_card_rule = WeizoomCardRule.objects.get(id=weizoom_card_rule_id)
+    card_recharge = WeizoomCardRecharge.objects.all()
+    id2recharge_money = {}
+    for card in card_recharge:
+        if card.card_id not in id2recharge_money:
+            id2recharge_money[card.card_id] = card.recharge_money
+        else:
+            id2recharge_money[card.card_id] += card.recharge_money
     cur_weizoom_cards = []
     for c in weizoom_cards:
         cur_weizoom_card = JsonResponse()
@@ -475,13 +493,18 @@ def get_weizoom_cards(request):
         cur_weizoom_card.user_id = request.user.id #当前用户的id
         cur_weizoom_card.money = '%.2f' % c.money # 余额
 
+        money = '%.2f' % c.money # 余额
+        recharge_money = 0 if c.id not in id2recharge_money else id2recharge_money[c.id]
+        total_money ='%.2f' % (float(weizoom_card_rule.money) + recharge_money) #总额
+        used_money = '%.2f' % (float(total_money) - float(money)) #已使用金额
+
         if c.activated_at:
             cur_weizoom_card.activated_at = c.activated_at.strftime('%Y-%m-%d %H:%M:%S')
         else:
             cur_weizoom_card.activated_at = ''
 
-        cur_weizoom_card.total_money ='%.2f' % weizoom_card_rule.money #总额
-        cur_weizoom_card.used_money = '%.2f' % (float(cur_weizoom_card.total_money) - float(cur_weizoom_card.money)) #已使用金额
+        cur_weizoom_card.total_money = total_money#总额
+        cur_weizoom_card.used_money = used_money #已使用金额
         cur_weizoom_card.remark = c.remark
         cur_weizoom_card.activated_to = c.activated_to
         cur_weizoom_card.department = c.department
@@ -517,9 +540,10 @@ def create_weizoom_cards(request):
     valid_time_from = request.POST.get('valid_time_from', '')
     valid_time_to = request.POST.get('valid_time_to', '')
     card_attr = request.POST.get('card_attr','')
-    belong_to_owner = request.POST.get('belong_to_owner','')
+    cur_belong_to_owner = request.POST.get('belong_to_owner','[-1]')
     is_new_member_special = request.POST.get('is_new_member_special', 0)
     valid_restrictions = request.POST.get('full_use_value', -1)
+    belong_to_owner = json.loads(cur_belong_to_owner)
 
     if name not in [card_rule.name for card_rule in WeizoomCardRule.objects.all()]:
         rule = WeizoomCardRule.objects.create(
@@ -533,7 +557,7 @@ def create_weizoom_cards(request):
             valid_time_from = valid_time_from,
             expired_time = valid_time_to,
             card_attr = card_attr,
-            shop_limit_list = belong_to_owner,
+            shop_limit_list = ','.join(belong_to_owner),
             is_new_member_special = is_new_member_special,
             valid_restrictions= valid_restrictions if valid_restrictions else -1
             )
@@ -546,6 +570,233 @@ def create_weizoom_cards(request):
         response.errMsg = u'您填写的名称已存在，请修改后再提交!'
     return response.get_response()
 
+@api(app='card', resource='all_cards', action='get')
+@login_required
+def get_all_cards(request):
+    count_per_page = int(15)
+    cur_page = int(request.GET.get('page', '1'))
+    search_query = request.GET.get('query','')
+    orgin_card_list = request.GET.get('orginCardList', '')
+    weizoom_cards = WeizoomCard.objects.all()
+    if search_query:
+        search_query_dict=json.loads(search_query)
+        card_filter_id = search_query_dict['cardIds']
+        if card_filter_id:
+            weizoom_cards = weizoom_cards.filter(weizoom_card_id__contains=card_filter_id)
+    can_active_card = 0
+    can_stop_card = 0
+    can_view_card_details = 0
+
+    #获得已经过期的微众卡id
+    today = datetime.today()
+    card_ids_need_expire = []
+    for card in weizoom_cards:
+        #记录过期并且是未使用的微众卡id
+        if card.expired_time < today:
+            card_ids_need_expire.append(card.id)
+    if len(card_ids_need_expire) > 0:
+        WeizoomCard.objects.filter(id__in=card_ids_need_expire).update(is_expired=True)
+    pageinfo, weizoom_cards = paginator.paginate(weizoom_cards, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+    weizoom_card_rule = WeizoomCardRule.objects.all()
+    card_recharge = WeizoomCardRecharge.objects.all()
+    id2recharge_money = {}
+    for card in card_recharge:
+        if card.card_id not in id2recharge_money:
+            id2recharge_money[card.card_id] = card.recharge_money
+        else:
+            id2recharge_money[card.card_id] += card.recharge_money
+    id2total_money = {card_rule.id:card_rule.money for card_rule in weizoom_card_rule}
+    cur_weizoom_cards = []
+    for c in weizoom_cards:
+        cur_weizoom_card = JsonResponse()
+        cur_weizoom_card.id = c.id
+        cur_weizoom_card.status = c.status
+        cur_weizoom_card.weizoom_card_id = c.weizoom_card_id
+        cur_weizoom_card.user_id = request.user.id #当前用户的id
+        cur_weizoom_card.money = '%.2f' % c.money # 余额
+
+        if c.activated_at:
+            cur_weizoom_card.activated_at = c.activated_at.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            cur_weizoom_card.activated_at = ''
+        recharge_money = 0 if c.id not in id2recharge_money else id2recharge_money[c.id]
+        cur_weizoom_card.total_money ='%.2f' % (0 if c.weizoom_card_rule_id not in id2total_money else id2total_money[c.weizoom_card_rule_id]) #总额
+        cur_weizoom_card.used_money = '%.2f' % (float(cur_weizoom_card.total_money) - float(cur_weizoom_card.money) + recharge_money)#已使用金额
+        cur_weizoom_card.is_expired = c.is_expired
+        cur_weizoom_card.recharge_money = '%.2f' % recharge_money
+        if (c.is_expired) or not c.is_expired:
+            cur_weizoom_cards.append(cur_weizoom_card)
+        else:
+            pageinfo.object_count -= 1
+    response = create_response(200)
+    response.data.items = cur_weizoom_cards
+    response.data.sortAttr = request.GET.get('sort_attr', '-created_at')
+    response.data.pageinfo = paginator.to_dict(pageinfo)
+    response.data.can_active_card = can_active_card
+    response.data.can_stop_card = can_stop_card
+    response.data.can_view_card_details = can_view_card_details
+    response.data.orgin_card_list = orgin_card_list
+    return response.get_response()
+
+@api(app='card', resource='card_recharge', action='save')
+@login_required
+def save_card_recharge(request):
+    card_choose = request.GET.get('card_choose', None)  
+    card_choose = json.loads(card_choose)
+    create_list = []
+    # add_log_fields_list = []
+    for card in card_choose:
+        cardId = card['cardId']
+        rechargeMoney = card['rechargeMoney']
+        cardNum = card['cardNum']
+        weizoom_card = WeizoomCard.objects.get(id=cardId)
+        remainder = float(weizoom_card.money) + float(rechargeMoney)
+        weizoom_card.money = remainder
+        weizoom_card.save()
+        create_list.append(WeizoomCardRecharge(
+            user_id = request.user.id,
+            card_id = cardId,
+            recharge_money = rechargeMoney,
+            remainder = remainder
+        ))
+        #记录卡充值
+        # add_log_fields_list.append({
+        #     'operater': request.user,
+        #     'operater_name': request.user,
+        #     'operate_log': u'给微众卡 %s 充值 %s 元' % (cardNum,rechargeMoney)
+        # })
+    # moneyLog.create_money_log(add_log_fields_list)
+    WeizoomCardRecharge.objects.bulk_create(create_list)
+    response = create_response(200)
+    return response.get_response()
+
+@api(app='card', resource='recharge_card_list', action='get')
+@login_required
+def get_recharge_card_list(request):
+    card_recharge_list, pageinfo = get_recharge_datas(request)
+    response = create_response(200)
+    response.data.items = card_recharge_list
+    response.data.pageinfo = paginator.to_dict(pageinfo)
+    return response.get_response()
+
+@view(app='card', resource='recharge_card_export', action='get')
+@login_required
+def get_recharge_card_export(request):
+    """
+    微众卡充值导出
+    """
+    card_recharge_list = get_recharge_datas(request)
+
+    members_info = [
+        [u'卡号', u'余额',u'已使用金额',u'充值额度',u'卡属性',u'卡类型',u'专属商家',u'充值日期',u'备注']
+    ]
+    for card_recharge in card_recharge_list:
+        belong_to_owner = card_recharge['belong_to_owner'] if card_recharge['belong_to_owner'] else ''
+        info_list = [
+            card_recharge['card_number'],
+            card_recharge['remainder'],
+            card_recharge['used_money'],
+            card_recharge['recharge_money'],
+            card_recharge['card_attr'],
+            card_recharge['card_type'],
+            belong_to_owner,
+            card_recharge['created_at'],
+            card_recharge['remark']
+        ]
+        members_info.append(info_list)
+    filename = u'微众卡充值列表'#TODO 上线 加.encode('utf8')
+    return ExcelResponse(members_info, output_name=filename.encode('utf8'), force_csv=False)
+
+def get_recharge_datas(request):
+    card_number = request.GET.get('card_number', None)
+    card_type = request.GET.get('cardType', None)
+    card_attr = request.GET.get('cardAttr', None)
+    date_interval = request.GET.get('date_interval', None)
+    count_per_page = int(request.GET.get('count_per_page', 15))
+    cur_page = int(request.GET.get('page', 1))
+    is_export = request.GET.get('is_export', 0)
+
+    cards = WeizoomCard.objects.all().order_by('-created_at')
+    weizoom_card_rules = WeizoomCardRule.objects.all().order_by('-created_at')
+    card_recharges = WeizoomCardRecharge.objects.all().order_by('-created_at')
+    card_orders = WeizoomCardHasOrder.objects.exclude(order_id__in=['-1','-2']).order_by('-created_at')
+
+    #查询
+    if card_number:
+        cards = cards.filter(weizoom_card_id__contains = card_number)
+        card_id_list = [card.id for card in cards]
+        card_recharges = card_recharges.filter(card_id__in = card_id_list)
+    if card_type and int(card_type) != -1:
+        weizoom_card_rules = weizoom_card_rules.filter(card_type = card_type)
+        rule_id_list = [rule.id for rule in weizoom_card_rules]
+        cards = cards.filter(weizoom_card_rule_id__in = rule_id_list)
+        card_id_list = [card.id for card in cards]
+        card_recharges = card_recharges.filter(card_id__in = card_id_list)
+    if card_attr and int(card_attr) != -1:
+        weizoom_card_rules = weizoom_card_rules.filter(card_attr = card_attr)
+        rule_id_list = [rule.id for rule in weizoom_card_rules]
+        cards = cards.filter(weizoom_card_rule_id__in = rule_id_list)
+        card_id_list = [card.id for card in cards]
+        card_recharges = card_recharges.filter(card_id__in = card_id_list)
+    if date_interval:
+        date_interval = get_datetime_from_date_interval(date_interval)
+        # weizoom_card_rules = weizoom_card_rules.filter(valid_time_from__gte=date_interval[0],valid_time_to__lte=date_interval[1])
+        # start_date = start_date.replace(' ','') + " 00:00:00"
+        # end_date = end_date.replace(' ','') + " 23:59:59"
+        card_recharges = card_recharges.filter(created_at__gte = date_interval[0],created_at__lte = date_interval[1])
+    if not is_export:
+        #分页的数据
+        pageinfo, card_recharges = paginator.paginate(card_recharges, cur_page, count_per_page, query_string=request.META['QUERY_STRING'])
+
+    user_ids = []
+    for r in weizoom_card_rules:
+        belong_to_owner_list = str(r.shop_limit_list).split(',')
+        for a in belong_to_owner_list:
+            if a != '-1':
+                user_ids.append(a)
+
+    user_id2store_name = {}
+    user_profiles = UserProfile.objects.filter(user_id__in=user_ids)
+    for user_profile in user_profiles:
+        if user_profile.store_name:
+            user_id2store_name[user_profile.user_id] =user_profile.store_name
+    card_recharge_list = []
+    if card_recharges:
+        for recharge in card_recharges:
+            card_id = recharge.card_id
+            orders = card_orders.filter(card_id = card_id)
+            used_money = 0
+            for order in orders:
+                used_money = order.money = used_money +order.money
+            card_detail = cards.get(id = card_id)
+            weizoom_card_rule_id = card_detail.weizoom_card_rule_id
+            rule_detail = weizoom_card_rules.get(id = weizoom_card_rule_id)
+            is_new_member_special = rule_detail.is_new_member_special
+            belong_to_owner_list = str(rule_detail.shop_limit_list).split(',')
+            belong_to_owner = [user_id2store_name.get(int(i), '') for i in belong_to_owner_list]
+            recharge_money = recharge.recharge_money
+            if recharge_money > 0:
+                recharge_money = '+'+str('%.2f' % recharge_money)
+            else:
+                recharge_money = '%.2f' % recharge_money
+
+            card_recharge_list.append({
+                "recharge_money": recharge_money,
+                'created_at': recharge.created_at.strftime('%Y-%m-%d %H:%M'),
+                'remainder': '%.2f' % recharge.remainder,
+                'card_number': card_detail.weizoom_card_id,
+                'remark': card_detail.remark,
+                'card_type': CARDTYPE2NAME[rule_detail.card_type],
+                'card_attr': rule_detail.card_attr,
+                'is_new_member_special': is_new_member_special,
+                'belong_to_owner': belong_to_owner,
+                'used_money': '%.2f' % used_money
+            })
+    if not is_export:
+        return card_recharge_list,pageinfo
+    else:
+        return card_recharge_list
 
 def __create_weizoom_card(rule, count, request):
     """

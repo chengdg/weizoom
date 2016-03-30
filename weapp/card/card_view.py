@@ -14,9 +14,12 @@ from excel_response import ExcelResponse
 
 from weixin.user.models import WeixinMpUser, MpuserPreviewInfo, ComponentAuthedAppidInfo, ComponentAuthedAppid
 
-WEIZOOM_CARD_BELONG_TO_OWNER = [
-    "njtest", "ceshi01", "tianyunzhen", "xingke", "liangfeng", "wzjx001","weizoommm", "weizoomxs", "weizoombfm","weizoomclub", "weizoomshop", "ainicoffee","yunhanchundai","dongfangwodeming"
-]
+WEIZOOM_CARD_BELONG_TO_OWNER = ["guo","bill","yunhanchundai","weizoomshop", "jobs","njtest","ceshi01","dftj","ainicoffee","hongfan","changjiufangzhi","tianreyifang","fengzhenkeji","dongfangwodeming","weizoombfm","liangfeng","fuwa",
+                                "gangshanxigu","boniya","danhonghu","yingguan","wubao","wzjx001","heshibaineng","tianmashengwu","judou","zhonghaitou","wugutang",
+                                "bohaotong","chalushui","tide","huajitang","heruntiancheng","chexiaomi","dgposy","weizoommm","weizoomxs","huachilemei",
+                                "miaochaojiaonang","baoyangong","mkmj","suqinweizhen","leyun","guangyou","ertongshazi","yangxinkeji","haoainiguopin","weizoomclub",
+                                "zhongbida","xingke","bailingda","shenzhoumuye","beimiaomei","sanqitang","daxuan","saihanshiye","maibeier","wancheng","yulei","aiyue",
+                                "zhongtulvan","liangfeng","yanqiang","zhongjie","guangruishipin","depingshangmao","mileke","tianyunzhen","zhenwutang"]
 @view(app='card', resource='cards', action='get')
 @login_required 
 def get_cards(request):
@@ -31,6 +34,7 @@ def get_cards(request):
         'first_nav_name': export.MALL_CARD_FIRST_NAV,
         'second_navs': export.get_card_second_navs(request),
         'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'third_nav_name': export.MONEY_CARD_MANAGER_CREATE_NAV,
         'can_create_card': can_create_card,
     })
 
@@ -90,6 +94,35 @@ def get_card_detail(request):
         })
         return render_to_response('card/editor/list_weizoom_card_detail.html', c)
 
+@view(app='card', resource='recharge', action='get')
+@login_required 
+def get_cards(request):
+    """
+    显示卡充值表
+    """
+    c = RequestContext(request, {
+        'first_nav_name': export.MALL_CARD_FIRST_NAV,
+        'second_navs': export.get_card_second_navs(request),
+        'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'third_nav_name': export.MONEY_CARD_MANAGER_RECHARGE_NAV,
+    })
+
+    return render_to_response('card/editor/card_recharge.html', c)
+
+@view(app='card', resource='recharge_detail', action='get')
+@login_required 
+def get_cards(request):
+    """
+    显示卡充值明细表
+    """
+    c = RequestContext(request, {
+        'first_nav_name': export.MALL_CARD_FIRST_NAV,
+        'second_navs': export.get_card_second_navs(request),
+        'second_nav_name': export.MALL_CARD_MANAGER_NAV,
+        'third_nav_name': export.MONEY_CARD_MANAGER_RECHARGE_NAV,
+    })
+
+    return render_to_response('card/editor/card_recharge_detail.html', c)
 
 @view(app='card', resource='weizoom_cards', action='export')
 @login_required
@@ -104,21 +137,50 @@ def export_weizoom_cards(request):
     try:
         filter_value = request.GET.get('filter_value', '')
         card_number = _get_cardNumber_value(filter_value)
-
         cardStatus = _get_status_value(filter_value)
-
+        card_num_min = request.GET.get('card_num_min', '')
+        card_num_max = request.GET.get('card_num_max', '')
         if card_number != -1:
             card_number = str(card_number)
             weizoom_cards = weizoom_cards.filter(weizoom_card_id__contains=card_number)
         if cardStatus != -1:
             weizoom_cards = weizoom_cards.filter(status=cardStatus)
+        if card_num_min or card_num_max:
+            weizoom_card_id_set = set([int(c.weizoom_card_id) for c in weizoom_cards])
+        print
+        if card_num_min and card_num_max:
+            min_num = int(card_num_min)
+            max_num = int(card_num_max)
+            search_set = set(range(min_num,max_num+1))
+        elif card_num_max:
+            search_set = set([int(card_num_max)])
+        elif card_num_min:
+            search_set = set([int(card_num_min)])
+        else:
+            search_set = set([])
+        result_set = search_set & weizoom_card_id_set
+        result_list = list(result_set)
+
+        if len(result_list)>0:
+            filter_cards_id_list=[]
+            for card_num in result_list:
+                filter_cards_id_list.append(u'%07d'%card_num)
+            weizoom_cards = weizoom_cards.filter(weizoom_card_id__in=filter_cards_id_list)
+        if len(result_list)==0:
+            weizoom_cards =[]
     except:
         filter_value = -1
 
     titles = [u'卡号', u'密码', u'状态', u'面值/余额', u'已使用金额', u'激活时间', u'有效期', u'备注', u'领用人', u'申请部门']
     weizoom_cards_table = []
     weizoom_cards_table.append(titles)
-    
+    card_recharge = WeizoomCardRecharge.objects.all()
+    id2recharge_money = {}
+    for card in card_recharge:
+        if card.card_id not in id2recharge_money:
+            id2recharge_money[card.card_id] = card.recharge_money
+        else:
+            id2recharge_money[card.card_id] += card.recharge_money
     for  c in weizoom_cards:
         status_str = u''
         if c.status==WEIZOOM_CARD_STATUS_EMPTY:
@@ -139,8 +201,13 @@ def export_weizoom_cards(request):
         else:
             activated_at = ''
 
-        total_money ='%.2f' % weizoom_card_rule.money
-        c.used_money = '%.2f' % (float(total_money) - float(c.money))
+        money = '%.2f' % c.money # 余额
+        recharge_money = 0 if c.id not in id2recharge_money else id2recharge_money[c.id]
+        total_money ='%.2f' % (float(weizoom_card_rule.money) + recharge_money) #总额
+        used_money = '%.2f' % (float(total_money) - float(money)) #已使用金额
+
+        # total_money ='%.2f' % weizoom_card_rule.money
+        c.used_money = used_money #已使用金额
 
         c.total_and_balance_money = '%s/%s' % (total_money,c.money)
 
