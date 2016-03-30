@@ -164,7 +164,7 @@ Scenario:1 会员(未使用,已使用,已过期)优惠券明细
 			"money": 10.00,
 			"status": "已使用"
 		},{
-			"coupon_id": "coupon2_id_1",
+			"coupon_id": "coupon3_id_1",
 			"name": "过期券3",
 			"type": "全店通用券",
 			"get_time": "2015-05-01",
@@ -223,7 +223,7 @@ Scenario:2 会员使用优惠码
 			"money": 10.00,
 			"status": "未使用"
 		},{
-			"coupon_id": "coupon2_id_1",
+			"coupon_id": "coupon3_id_1",
 			"name": "过期券3",
 			"type": "全店通用券",
 			"get_time": "2015-05-01",
@@ -280,7 +280,7 @@ Scenario:3 按优惠券状态进行筛选
 			"money": 10.00,
 			"status": "已使用"
 		},{
-			"coupon_id": "coupon2_id_1",
+			"coupon_id": "coupon3_id_1",
 			"name": "过期券3",
 			"type": "全店通用券",
 			"get_time": "2015-05-01",
@@ -341,7 +341,7 @@ Scenario:3 按优惠券状态进行筛选
 	Then jobs能获得weapp系统bill拥有优惠券
 		"""
 		[{
-			"coupon_id": "coupon2_id_1",
+			"coupon_id": "coupon3_id_1",
 			"name": "过期券3",
 			"type": "全店通用券",
 			"get_time": "2015-05-01",
