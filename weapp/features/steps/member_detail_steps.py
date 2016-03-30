@@ -196,7 +196,8 @@ def step_impl(context, user, member):
 
 @then(u"{user}获得'{member}'的浏览轨迹")
 def step_impl(context, user, member):
-    url = '/member/api/member_browse_record/?id='+member.id
+    member_id = bdd_util.get_member_by_username(member, context.webapp_id).id
+    url = '/member/api/member_browse_record/?id='+str(member_id)
     response = context.client.get(bdd_util.nginx(url))
     items = json.loads(response.content)['data']['items']
     expected = json.loads(context.text)
@@ -204,7 +205,7 @@ def step_impl(context, user, member):
     actual = []
     for record in items:
         actual.append(dict(
-            date_time = record['create_at'].strftime("%Y-%m-%d"),
+            date_time = record['create_at'].split()[0],
             link = record['tittle']
         ))
 
