@@ -46,24 +46,24 @@ Background:
             "name": "单品券1",
             "money": 10.00,
             "each_limit": "不限",
-            "start_date": "2015-05-20",
-            "end_date": "2020-05-20",
+            "start_date": "1天前",
+            "end_date": "2天后",
             "coupon_id_prefix": "coupon1_id_",
             "coupon_product": "商品1"
         }, {
             "name": "全店券2",
             "money": 20.00,
             "limit_counts": "无限",
-            "start_date": "2015-06-20",
-            "end_date": "2020-06-20",
+            "start_date": "1天前",
+            "end_date": "2天后",
             "coupon_id_prefix": "coupon2_id_"
             
         }, {
             "name": "过期券3",
             "money": 50.00,
             "limit_counts": "无限",
-            "start_date": "2015-01-01",
-            "end_date": "2015-12-20",
+            "start_date": "2天前",
+            "end_date": "1天前",
             "coupon_id_prefix": "coupon3_id_"
             
         }]
