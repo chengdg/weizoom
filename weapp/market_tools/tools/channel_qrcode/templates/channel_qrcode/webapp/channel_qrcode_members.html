@@ -153,6 +153,9 @@
     	display: inline-block;
     	line-height: 50px;
     }
+    .wui-attentionAlert {
+        display: none;
+    }
 </style>
 {% endblock %}
 {% block content-panel %}
@@ -160,8 +163,8 @@
 	<div class="xui-time xa-time">
 		<div class="xui-filter-time">筛选时间</div>
 		<div class="xui-time-wrap xa-time-wrap">
-	 		{% if startDateTitle and endDateTitle %}
-	 			<span>{{startDateTitle}}&nbsp;-&nbsp;{{endDateTitle}}</span>
+	 		{% if startDate and endDate %}
+	 			<span>{{startDate}}&nbsp;-&nbsp;{{endDate}}</span>
  			{% else %}
 	 			<span>全部</span>
  			{% endif %}
@@ -190,8 +193,8 @@
 </div>
 
 <div class="xui-timeChoose xa-timeChoose">
-	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" /></div>
-	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" /></div>
+	<div class="xui-start-time">开始时间：<input type="text" name="startDate" id="startDate" readonly class="xui-time-input" value="{startDate}"/></div>
+	<div class="xui-end-time">结束时间：<input type="text" name="endDate" id="endDate" readonly class="xui-time-input" value="{endDate}"/></div>
 	<div class="xui-btn-wrap">
 		<span class="xui-reset xa-reset">清除时间</span>
 		<span class="xui-submit xa-submit">确定</span>
