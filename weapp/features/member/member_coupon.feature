@@ -63,33 +63,35 @@ Background:
         }]
         """
 
-	When jobs为会员发放优惠券于'2015-05-01'
+	When jobs为会员发放优惠券
 		"""
 		{
 			"name": "过期券3",
 			"count": 1,
 			"members": ["bill"],
-			"coupon_ids": ["coupon3_id_1"]
-
+			"coupon_ids": ["coupon3_id_1"],
+			"get_time": "2015-05-01"
 		}
 		"""
 
-	When jobs为会员发放优惠券于'2016-01-01'
+	When jobs为会员发放优惠券
 		"""
 		{
 			"name": "单品券1",
 			"count": 1,
 			"members": ["bill"],
-			"coupon_ids": ["coupon1_id_1"]
+			"coupon_ids": ["coupon1_id_1"],
+			"get_time": "2016-01-01"
 		}
 		"""
-	When jobs为会员发放优惠券于'2016-01-05'
+	When jobs为会员发放优惠券
 		"""
 		{
 			"name": "全店券2",
 			"count": 2,
 			"members": ["bill"],
-			"coupon_ids": ["coupon2_id_2","coupon2_id_1"]
+			"coupon_ids": ["coupon2_id_2","coupon2_id_1"],
+			"get_time": "2016-01-05"
 		}
 		"""
 	When bill关注jobs的公众号
