@@ -31,8 +31,7 @@ Background:
 		"""
 	And bill关注jobs的公众号
 
-
-@mall2 @logistics @order
+@logistics @order
 Scenario: 1 签收快件促使订单完成获得购物返利积分
 	jobs发货后，快件被签收，促使订单完成
 
