@@ -280,6 +280,6 @@ class WeizoomCardRecharge(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	remainder = models.FloatField(default=0.0) #余额
 	class Meta(object):
-		db_table = 'money_recharge'
+		db_table = 'market_tool_weizoom_card_money_recharge'
 		verbose_name = '微众卡充值'
 		verbose_name_plural = '微众卡充值'
