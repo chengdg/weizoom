@@ -16,10 +16,10 @@ class MemberCouponInfo(resource.Resource):
 	resource = "member_coupon"
 
 	def api_get(request):
-		status = -1
 		member_id = request.GET.get('id')
-		filter_attr = request.GET.get('filter_attr', None)
+		filter_attr = request.GET.get('filter_attr')
 		filter_value = request.GET.get('filter_value', -1)
+		filter_value = int(filter_value)
 
 		if member_id is None:
 			response = create_response(500)
