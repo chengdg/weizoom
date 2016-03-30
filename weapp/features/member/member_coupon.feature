@@ -37,35 +37,34 @@ Background:
 		"""
 	And jobs已添加了优惠券规则
 		"""
-		[{
-			"name": "单品券1",
-			"money": 10.00,
-			"limit_counts": 1,
-			"count": 3,
-			"start_date": "2015-05-20",
-			"end_date": "2020-05-20",
-			"coupon_id_prefix": "coupon1_id_",
-			"coupon_product": "商品1"
-		},{
-			"name": "全店券2",
-			"money": 20.00,
-			"limit_counts": "无限",
-			"count": 5,
-			"start_date": "2015-06-20",
-			"end_date": "2020-06-20",
-			"coupon_id_prefix": "coupon2_id_"
-		},{
-			"name": "过期券3",
-			"money": 50.00,
-			"limit_counts": "无限",
-			"count": 2,
-			"start_date": "2015-01-01",
-			"end_date": "2015-12-20",
-			"coupon_id_prefix": "coupon3_id_"
-		}]
-		"""
+        [{
+            "name": "单品券1",
+            "money": 10.00,
+            "each_limit": "不限",
+            "start_date": "2015-05-20",
+            "end_date": "2020-05-20",
+            "coupon_id_prefix": "coupon1_id_",
+            "coupon_product": "商品1"
+        }, {
+            "name": "全店券2",
+            "money": 20.00,
+            "limit_counts": "无限",
+            "start_date": "2015-06-20",
+            "end_date": "2020-06-20",
+            "coupon_id_prefix": "coupon2_id_"
+            
+        }, {
+            "name": "过期券3",
+            "money": 50.00,
+            "limit_counts": "无限",
+            "start_date": "2015-01-01",
+            "end_date": "2015-12-20",
+            "coupon_id_prefix": "coupon3_id_"
+            
+        }]
+        """
 
-	When jobs创建优惠券发放规则发放优惠券于'2015-05-01'
+	When jobs为会员发放优惠券于'2015-05-01'
 		"""
 		{
 			"name": "过期券3",
@@ -76,7 +75,7 @@ Background:
 		}
 		"""
 
-	When jobs创建优惠券发放规则发放优惠券于'2016-01-01'
+	When jobs为会员发放优惠券于'2016-01-01'
 		"""
 		{
 			"name": "单品券1",
@@ -85,7 +84,7 @@ Background:
 			"coupon_ids": ["coupon1_id_1"]
 		}
 		"""
-	When jobs创建优惠券发放规则发放优惠券于'2016-01-05'
+	When jobs为会员发放优惠券于'2016-01-05'
 		"""
 		{
 			"name": "全店券2",
@@ -94,7 +93,24 @@ Background:
 			"coupon_ids": ["coupon2_id_2","coupon2_id_1"]
 		}
 		"""
-
+	When bill关注jobs的公众号
+	When bill访问jobs的webapp
+	When bill领取jobs的优惠券
+	    """
+	    [{
+	        "name": "全店券2",
+	        "coupon_ids": ["coupon2_id_2","coupon2_id_1"],
+	        "get_time": "2016-01-05"
+	    }, {
+	        "name": "单品券1",
+	        "coupon_ids": ["coupon1_id_1"],
+	        "get_time": "2016-01-01"
+	    }, {
+	        "name": "过期券3",
+	        "coupon_ids": ["coupon3_id_1"],
+	        "get_time": "2015-05-01"
+	    }]
+	    """
 
 
 Scenario:1 会员(未使用,已使用,已过期)优惠券明细
@@ -116,11 +132,37 @@ Scenario:1 会员(未使用,已使用,已过期)优惠券明细
 
 	Given jobs登录系统
 	Then jobs能获得weapp系统bill拥有优惠券
-		| 领取时间   | 优惠券名称 |       明细     | 全部 |
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用| 
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用|
-		| 2016-01-01 | 单品券2    | 10.00单品券    |已使用| 
-		| 2015-05-01 | 过期券3    | 50.00全店通用券|已过期|
+		"""
+		[{
+			"coupon_id": "coupon2_id_2",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon1_id_1",
+			"name": "单品券1",
+			"type": "单品券",
+			"get_time": "2016-01-01",
+			"money": 10.00,
+			"status": "已使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "过期券3",
+			"type": "全店通用券",
+			"get_time": "2015-05-01",
+			"money": 50.00,
+			"status": "已过期"
+		}]
+		"""
 
 
 Scenario:2 会员使用优惠码
@@ -142,13 +184,44 @@ Scenario:2 会员使用优惠码
 
 	Given jobs登录系统
 	Then jobs能获得weapp系统bill拥有优惠券
-		| 领取时间   | 优惠券名称 |       明细     | 全部 |
-		| 今天       | 单品券2    | 10.00单品券    |已使用|
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用| 
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用|
-		| 2016-01-01 | 单品券2    | 10.00单品券    |未使用| 
-		| 2015-05-01 | 过期券3    | 50.00全店通用券|已过期|
-
+		"""
+		[{
+			"coupon_id": "coupon1_id_2",
+			"name": "单品券1",
+			"type": "单品券",
+			"get_time": "2016-02-01",
+			"money": 10.00,
+			"status": "已使用"
+		},{
+			"coupon_id": "coupon2_id_2",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon1_id_1",
+			"name": "单品券1",
+			"type": "单品券",
+			"get_time": "2016-01-01",
+			"money": 10.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "过期券3",
+			"type": "全店通用券",
+			"get_time": "2015-05-01",
+			"money": 50.00,
+			"status": "已过期"
+		}]
+		"""
 
 Scenario:3 按优惠券状态进行筛选
 
@@ -175,11 +248,37 @@ Scenario:3 按优惠券状态进行筛选
 		}]
 		"""
 	Then jobs能获得weapp系统bill拥有优惠券
-		| 领取时间   | 优惠券名称 |       明细     | 全部 |
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用|
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用|
-		| 2016-01-01 | 单品券2    | 10.00单品券    |已使用|
-		| 2015-05-01 | 过期券3    | 50.00全店通用券|已过期|
+		"""
+		[{
+			"coupon_id": "coupon2_id_2",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon1_id_1",
+			"name": "单品券1",
+			"type": "单品券",
+			"get_time": "2016-01-01",
+			"money": 10.00,
+			"status": "已使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "过期券3",
+			"type": "全店通用券",
+			"get_time": "2015-05-01",
+			"money": 50.00,
+			"status": "已过期"
+		}]
+		"""
 
 	When jobs设置优惠券状态查询条件
 		"""
@@ -188,9 +287,23 @@ Scenario:3 按优惠券状态进行筛选
 		}]
 		"""
 	Then jobs能获得weapp系统bill拥有优惠券
-		| 领取时间   | 优惠券名称 |       明细     | 全部 |
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用|
-		| 2016-01-05 | 全店券2    | 20.00全店通用券|未使用|
+		"""
+		[{
+			"coupon_id": "coupon2_id_2",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		},{
+			"coupon_id": "coupon2_id_1",
+			"name": "全店券2",
+			"type": "全店通用券",
+			"get_time": "2016-01-05",
+			"money": 20.00,
+			"status": "未使用"
+		}]
+		"""
 
 	When jobs设置优惠券状态查询条件
 		"""
@@ -199,8 +312,16 @@ Scenario:3 按优惠券状态进行筛选
 		}]
 		"""
 	Then jobs能获得weapp系统bill拥有优惠券
-		| 领取时间   | 优惠券名称 |       明细     | 全部 |
-		| 2016-01-01 | 单品券2    | 10.00单品券    |已使用|
+		"""
+		[{
+			"coupon_id": "coupon1_id_1",
+			"name": "单品券1",
+			"type": "单品券",
+			"get_time": "2016-01-01",
+			"money": 10.00,
+			"status": "已使用"
+		}]
+		"""
 
 	When jobs设置优惠券状态查询条件
 		"""
@@ -209,6 +330,14 @@ Scenario:3 按优惠券状态进行筛选
 		}]
 		"""
 	Then jobs能获得weapp系统bill拥有优惠券
-		| 领取时间   | 优惠券名称 |       明细     | 全部 |
-		| 2015-05-01 | 过期券3    | 50.00全店通用券|已过期|
+		"""
+		[{
+			"coupon_id": "coupon2_id_1",
+			"name": "过期券3",
+			"type": "全店通用券",
+			"get_time": "2015-05-01",
+			"money": 50.00,
+			"status": "已过期"
+		}]
+		"""
 
