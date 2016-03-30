@@ -17,7 +17,7 @@ class MemberCouponInfo(resource.Resource):
 
 	def api_get(request):
 		member_id = request.GET.get('id')
-		filter_attr = request.GET.get('filter_attr')
+		filter_attr = request.GET.get('filter_attr', '')
 		filter_value = request.GET.get('filter_value', -1)
 		filter_value = int(filter_value)
 
@@ -26,6 +26,7 @@ class MemberCouponInfo(resource.Resource):
 			response.errMsg = 'Member id is required'
 			return response.get_response()
 
+		status = -1
 		if filter_attr == 'status':
 			status = filter_value
 
