@@ -54,19 +54,22 @@ class SupplierProducts(api_resource.ApiResource):
 			card = 0
 			coupon_money = 0
 			integral_money = 0
+			order_num = 0
 			for order_id in order_ids:
 				order = order_id_order[order_id]
-				cash +=order.final_price
-				card +=order.weizoom_card_money
-				coupon_money+=order.coupon_money
-				integral_money+=order.integral_money
+				if order.status in [3,4,5]:
+					cash +=order.final_price
+					card +=order.weizoom_card_money
+					coupon_money+=order.coupon_money
+					integral_money+=order.integral_money
+					order_num += 1
 			supplier_product[product_id]['cash'] = cash
 			supplier_product[product_id]['card'] = card
 			supplier_product[product_id]['coupon_money'] = coupon_money
 			supplier_product[product_id]['integral_money'] = integral_money
 			supplier_product[product_id]['name'] = product_id_product[product_id].name
 			supplier_product[product_id]['on_sale_time'] = product_id_product[product_id].created_at.strftime('%Y-%m-%d %H:%M:%S')
-			supplier_product[product_id]['order_count'] = len(order_ids)
+			supplier_product[product_id]['order_count'] = order_num
 			supplier_product[product_id]['supplier_id'] = product_supplier[product_id]
 			supplier_product[product_id]['owner_id'] = product_id_product[product_id].owner_id
 
