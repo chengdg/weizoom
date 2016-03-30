@@ -104,22 +104,22 @@ Background:
 	When 清空浏览器
 	When bill关注jobs的公众号
 	When bill访问jobs的webapp
-	When bill领取jobs的优惠券
-	    """
-	    [{
-	        "name": "全店券2",
-	        "coupon_ids": ["coupon2_id_2","coupon2_id_1"],
-	        "get_time": "2016-01-05"
-	    }, {
-	        "name": "单品券1",
-	        "coupon_ids": ["coupon1_id_1"],
-	        "get_time": "2016-01-01"
-	    }, {
-	        "name": "过期券3",
-	        "coupon_ids": ["coupon3_id_1"],
-	        "get_time": "2015-05-01"
-	    }]
-	    """
+#	When bill领取jobs的优惠券
+#	    """
+#	    [{
+#	        "name": "全店券2",
+#	        "coupon_ids": ["coupon2_id_2","coupon2_id_1"],
+#	        "get_time": "2016-01-05"
+#	    }, {
+#	        "name": "单品券1",
+#	        "coupon_ids": ["coupon1_id_1"],
+#	        "get_time": "2016-01-01"
+#	    }, {
+#	        "name": "过期券3",
+#	        "coupon_ids": ["coupon3_id_1"],
+#	        "get_time": "2015-05-01"
+#	    }]
+#	    """
 
 @hnyan @we
 Scenario:1 会员(未使用,已使用,已过期)优惠券明细
