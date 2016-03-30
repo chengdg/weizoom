@@ -207,7 +207,8 @@ def build_return_member_json(member):
 		'unit_price': '%.2f' % member.unit_price,
 		'is_selected': member.is_selected,
 		'is_current_select': member.is_current_select,
-		'experience': member.experience
+		'experience': member.experience,
+		'purchase_frequency':member.purchase_frequency,
 	}
 
 def build_member_has_tags_json(member):
