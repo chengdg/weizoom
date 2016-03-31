@@ -674,6 +674,7 @@
 {% endverbatim %}
 	<script type="text/javascript">
 	$('#tab a').click(function(event) {
+		event.preventDefault();
     $(this).tab('show');
 	});
 		var memberId = '{{ show_member.id }}';
