@@ -660,10 +660,13 @@
 	font-weight: bold;
 	width: 134px;
 }
-.xui-page-memberDetail .nav-tabs>li.active>a:hover{
+.xui-page-memberDetail .nav-tabs>li.active>a:hover,
+.xui-page-memberDetail .nav-tabs>li.active>a:focus{
 	border-bottom: 2px solid #1183ca;
 	background: inherit;
 	border-right: none;
+	border-left: none;
+	border-top: none;
 }
 .xui-page-memberDetail .nav-tabs>li.active>a{
 	color:#1183ca;

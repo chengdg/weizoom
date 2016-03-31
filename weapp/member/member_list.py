@@ -251,6 +251,7 @@ def build_follow_member_basic_json(follow_member, member_id):
 		'is_fans': MemberFollowRelation.is_fan(member_id, follow_member.id),
 		'is_father': MemberFollowRelation.is_father(member_id, follow_member.id),
 		'pay_money': '%.2f' % follow_member.pay_money,
+		'pay_times': follow_member.pay_times,
 		'father_name': father_name,
 		'father_id': father_id
 	}
@@ -395,6 +396,14 @@ def get_member_info(member):
 		return MemberInfo.objects.get(member_id=member.id)
 	except:
 		return None
+
+def get_purchased_fans(follow_members):
+	count = 0
+	for follow_member in follow_members:
+		user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
+		if user_orders and user_orders.filter(status=5).count() > 0:
+			count += 1
+	return count
 
 import logging
 class MemberDetail(resource.Resource):
@@ -544,15 +553,15 @@ class MemberDetail(resource.Resource):
 		purchased_fans = 0
 		if fans_count:
 			qrcode_friends = fans_count.filter(source=SOURCE_MEMBER_QRCODE).count()
-
-			for follow_member in fans_count:
-				if Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids).filter(status=2).count() >0:
-					purchased_fans += 1
+			purchased_fans = get_purchased_fans(fans_count)
+			# for follow_member in fans_count:
+			# 	if Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids).filter(status=5).count() >0:
+			# 		purchased_fans += 1
 
 		shared_url_lead_number = fans_count.count() - qrcode_friends
 
 		if purchased_fans:
-			conversion_rate = "%.2f" % (float(buy_count) / float(fans_count.count()) * 100)
+			conversion_rate = "%.2f" % (float(purchased_fans) / float(fans_count.count()) * 100)
 		else:
 			conversion_rate = 0
 		#微众卡使用金额
@@ -730,12 +739,12 @@ class MemberFriends(resource.Resource):
 
 		#增加计算follow_members的人数、下单人数、成交金额
 		population = len(follow_members)
-		population_order = 0
-		for follow_member in follow_members:
-			user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
-			if user_orders:
-				population_order += 1
-		#成交金额
+		population_order  = get_purchased_fans(follow_members)
+		# for follow_member in follow_members:
+		# 	user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
+		# 	if user_orders and user_orders.filter(status=5).count() > 0:
+		# 		population_order += 1
+		# #成交金额
 		amount = 0
 		for follow_member in follow_members:
 			amount += follow_member.pay_money
