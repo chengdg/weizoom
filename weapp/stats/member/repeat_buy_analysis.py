@@ -16,6 +16,7 @@ from modules.member.models import Member, WebAppUser, SOURCE_SELF_SUB, SOURCE_ME
 from core.jsonresponse import create_response
 from django.db.models import Max
 import pandas as pd
+from decimal import *
 
 FIRST_NAV = export.STATS_HOME_FIRST_NAV
 
@@ -84,12 +85,13 @@ class RepeatBuyAnalysis(resource.Resource):
 			rebuy_fans_2 = rebuy_fans.filter(pay_money__gte=search_pay_list[2],pay_money__lt=search_pay_list[3]).count()
 			rebuy_fans_3 = rebuy_fans.filter(pay_money__gte=search_pay_list[4],pay_money__lt=search_pay_list[5]).count()
 			rebuy_fans = rebuy_fans.count()-rebuy_fans_1-rebuy_fans_2-rebuy_fans_3
+			all_rebuy_fans = rebuy_fans.count()
 			return create_pie_chart_response('',
 				{
-					u"消费金额：{}-{}".format(search_pay_list[0],search_pay_list[1]): rebuy_fans_1,
-					u"消费金额：{}-{}".format(search_pay_list[2],search_pay_list[3]): rebuy_fans_2,
-					u"消费金额：{}-{}".format(search_pay_list[4],search_pay_list[5]): rebuy_fans_3,
-					u"其他": rebuy_fans
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%')): 0,
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%')): 0,
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%')): 0,
+					u"其他 \n人数:{}\n占比:{}".format(rebuy_fans,format( float(Decimal(rebuy_fans)/Decimal(all_rebuy_fans)),'.2%')): 0
 				},tooltip
 			)
 		else:
@@ -98,7 +100,7 @@ class RepeatBuyAnalysis(resource.Resource):
 			count = rebuy_fans.count()
 			return create_pie_chart_response('',
 				{
-					u"消费金额：0-{}".format(max_pay_money): count,
+					u"消费金额：0-{} \n人数:{}\n占比:100%".format(max_pay_money['pay_money__max'],count): count,
 				},tooltip
 			)
 
@@ -123,7 +125,8 @@ class BuyPercent(resource.Resource):
 	app = 'stats'
 	resource = 'buy_percent'
 
-	def api_get(request):
+	@login_required
+	def get(request):
 		"""
 		会员购买占比数据
 		默认会员分为1、2、3-5、5以上 几个阶段 显示人数、占比
@@ -145,7 +148,7 @@ class BuyPercent(resource.Resource):
 		bought_fans_2 = buy_fans.filter(pay_times=2).count()
 		bought_fans_3_5 = buy_fans.filter(pay_times__gte=3,pay_times__lte=5).count()
 		bought_fans_5_after = buy_fans.filter(pay_times__gt=5).count()
-
+		all_buy_fnas = bought_fans_1+bought_fans_2+bought_fans_3_5+bought_fans_5_after
 		tooltip = {
 					'trigger': 'item',
 					'formatter': '{b}</br>人数：{c}</br>占比：{d}%',
@@ -157,10 +160,10 @@ class BuyPercent(resource.Resource):
 
 		return create_pie_chart_response('',
 				{
-					u"购买1次的会员": bought_fans_1,
-					u"购买2次的会员": bought_fans_2,
-					u"购买3-5次的会员": bought_fans_3_5,
-					u"购买5次以上的会员": bought_fans_5_after
+					u"购买1次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format( float(Decimal(bought_fans_1)/Decimal(all_buy_fnas)),'.2%')):0,
+					u"购买2次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format(float(Decimal(bought_fans_2)/Decimal(all_buy_fnas)),'.2%')):0,
+					u"购买3-5次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format(float(Decimal(bought_fans_3_5)/Decimal(all_buy_fnas)),'.2%')):0,
+					u"购买5次以上的会员\n人数:{}\n占比:{}".format(bought_fans_1,format(float(Decimal(bought_fans_5_after)/Decimal(all_buy_fnas)),'.2%')):0
 				}, 
 				tooltip
 			)

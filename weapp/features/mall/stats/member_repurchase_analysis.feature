@@ -217,7 +217,7 @@ Background:
 		|  bill3   |     0      |    295    |    3      | 已关注 |
 		|  bill2   |     0      |    190    |    2      | 已关注 |
 		|  bill    |     200    |    110    |    1      | 已关注 |
-
+@zhaolei
 Scenario:1 复购分析,查看会员购买占比数据
 	Given jobs登录系统
 	#会员状态-全部
