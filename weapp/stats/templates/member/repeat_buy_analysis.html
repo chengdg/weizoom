@@ -34,7 +34,7 @@
                 </span>
                 <span class="fr f12 xui-setConsumption pr">
                     <span class="xui-setConsumptionBtn xa-setConsumptionBtn mr10 pr">设置消费总额</span>
-                    <div class="pa xui-consumptionBox xa-consumptionBox">
+                    <div class="pa xui-consumptionBox xa-consumptionBox xui-hide">
                         <div class="">
                             <span>消费额区间1（元）：</span>
                             <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum0">&nbsp;-&nbsp;
@@ -71,7 +71,7 @@
     $(document).ready(function(){
         // title提示框
         $('#consumption_help').popover({
-            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A,但不包含B</div><div>例如：消费额区间1（元）：<span>10</span>-<span>100</span>则取值包含10，但不包含100</div>",
+            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A,但不包含B</div><div>例如：消费额区间1（元）：<span class='xui-rangeBox'>10</span>-<span class='xui-rangeBox'>100</span>则取值包含10，但不包含100</div>",
             trigger : "hover",
             html : true,
             placement : "bottom"
@@ -179,7 +179,7 @@
         var $comsumptionNum = $('.xui-comsumptionNum');
         var $crossHint = $('.xa-crossHint');
         $setConsumptionBtn.click(function() {
-            $consumptionBox.show();
+            // $consumptionBox.show();
             $consumptionBox.toggleClass('xui-hide');
         });
     
@@ -234,10 +234,7 @@
                     $('.xui-comsumptionNum'+idx).css('border','1px solid #DB4343'); 
                     $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #DB4343'); 
                     is_error = false;
-                }else {
-                    // $('.xui-comsumptionNum'+idx).css('border','1px solid #ccc'); 
-                    // $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #ccc'); 
-                }         
+                }       
             });
             if(is_checked){
                 $consumptionBox.hide();
