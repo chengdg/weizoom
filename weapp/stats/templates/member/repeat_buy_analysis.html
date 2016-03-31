@@ -13,7 +13,7 @@
     </div>
     
     <div class="xb-rightPanel pl10 pr10 pb30">
-        <div class="xui-filter xui-filterPanel pl35">
+        <div class="xui-filter xui-filterPanel pl40" style="padding-top:22px;">
             会员状态：
             <select name="" id="" class="xa-memberStateSelect">
                 <option value="all">全部</option>
@@ -23,42 +23,43 @@
         </div>
         <div class="xui-charWrap fl" style="height:400px;">
             <div class="xui-i-title"> <div class="xui-i-block"></div><span class="ml5">会员购买占比</span></div>
-            <div id="memberPurchaseScale" style="height:400px;"></div>
+            <div id="memberPurchaseScale" class="pr" style="height:400px;top:-60px;"></div>
         </div>
         <div class="xui-charWrap fr" style="height:400px;">
             <div class="xui-i-title"> 
                 <div class="xui-i-block"></div>
                 <span class="ml5">
                     复购会员分析
-                    <img class="xui-i-img" id="consumption_help" src="/static_v2/img/editor/help.png"/>
+                    <img class="xui-i-img xui-consumptionHelp pr" id="consumption_help" src="/static_v2/img/editor/help.png"/>
                 </span>
                 <span class="fr f12 xui-setConsumption pr">
-                    <span class="xui-setConsumptionBtn">设置消费总额</span>
-                    <div class="pa xui-consumptionBox">
-                        <div class="mb10">
+                    <span class="xui-setConsumptionBtn xa-setConsumptionBtn mr10 pr">设置消费总额</span>
+                    <div class="pa xui-consumptionBox xa-consumptionBox">
+                        <div class="">
                             <span>消费额区间1（元）：</span>
-                            <input type="text" placeholder="请输入整数" data-validate="require-int" class="xui-comsumptionNum xui-comsumptionNum1">&nbsp;-&nbsp;
-                            <input type="text" placeholder="请输入整数" data-validate="require-int" class="xui-comsumptionNum xui-comsumptionNum2">
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum0">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum1">
                             <div class="errorHint"></div>
                         </div>
-                        <div class="mb10">
+                        <div class="">
                             <span>消费额区间2（元）：</span>
-                            <input type="text" placeholder="请输入整数" data-validate="require-int" class="xui-comsumptionNum xui-comsumptionNum3">&nbsp;-&nbsp;
-                            <input type="text" placeholder="请输入整数" data-validate="require-int" class="xui-comsumptionNum xui-comsumptionNum4">
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum2">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum3">
                             <div class="errorHint"></div>
                         </div>
                         <div class="">
                             <span>消费额区间3（元）：</span>
-                            <input type="text" placeholder="请输入整数" data-validate="require-int" class="xui-comsumptionNum xui-comsumptionNum5">&nbsp;-&nbsp;
-                            <input type="text" placeholder="请输入整数" data-validate="require-int" class="xui-comsumptionNum xui-comsumptionNum6">
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum4">&nbsp;-&nbsp;
+                            <input type="text" placeholder="请输入整数" class="xui-comsumptionNum xui-comsumptionNum5">
                             <div class="errorHint"></div>
                         </div>
                         <div class="fr btn btn-primary m0 xui-confirm xa-confirmBtn">确认</div>
-                        <div class="cRed fr mr5">消费额区间需逐渐递增，不能交叉</div>
+                        <div class="cRed fr mr5 xui-hide xa-crossHint">格式不正确，请输入整数</div>
+                        <!-- <div class="cRed fr mr5 xui-hide xa-crossHint">消费额区间需逐渐递增，不能交叉</div> -->
                     </div>
                 </span>
             </div>
-            <div id="rePurchaseAnalysis" style="height:400px;"></div>
+            <div id="rePurchaseAnalysis" class="pr" style="height:400px;top:-60px;"></div>
         </div>
     </div>
      <div class="cb"></div>
@@ -68,22 +69,37 @@
 {% block js %}
 <script type="text/javascript">
     $(document).ready(function(){
-        var is_subscribed = 'all';
-        var search_pay_list = [];
+        // title提示框
         $('#consumption_help').popover({
-            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A，但不包含B</div><div>例如：消费额区间1（元）：<span>10</span>-<span>100</span>则取值包含10，但不包含100</div>",
+            content : "<div class='xui-i-alert'>若区间设为（A，B），则取值包含A,但不包含B</div><div>例如：消费额区间1（元）：<span>10</span>-<span>100</span>则取值包含10，但不包含100</div>",
             trigger : "hover",
             html : true,
             placement : "bottom"
         });
 
+        var is_subscribed = 'all';
+        var search_pay_list = [];
+        //  本地存储
+        var local_search_pay_list = localStorage.getItem('k');
+        if(local_search_pay_list){
+            search_pay_list = local_search_pay_list.split(',');
+            console.log('search_pay_list111111111',search_pay_list)
+            search_pay_list.map(function(val,i){
+                console.log("^^^^^^^^^",i,val)
+                $('.xui-comsumptionNum'+i).val(val);
+            });
+            rePurchaseAnalysis();
+        }
+
+        // 改变会员状态
         $('.xa-memberStateSelect').change(function(){
             var memberState = $(this).children('option:selected').val();
-            alert(memberState)
+            // alert(memberState)
             is_subscribed = memberState;
             memberBuyPercent();
             rePurchaseAnalysis();
-        })
+        });
+
         // 会员购买占比
         function memberBuyPercent(){
             W.getApi().call({
@@ -156,19 +172,79 @@
             });
         }
         rePurchaseAnalysis();
-        
+
+        var $setConsumptionBtn = $('.xui-setConsumptionBtn');
         var $confirmBtn = $('.xa-confirmBtn');
+        var $consumptionBox = $('.xa-consumptionBox');
         var $comsumptionNum = $('.xui-comsumptionNum');
+        var $crossHint = $('.xa-crossHint');
+        $setConsumptionBtn.click(function() {
+            $consumptionBox.show();
+            $consumptionBox.toggleClass('xui-hide');
+        });
+    
         console.log('$comsumptionNum',$comsumptionNum);
         $confirmBtn.click(function(){
+            var is_checked = true;
             search_pay_list = [];
             $comsumptionNum.map(function(i,val){
                 console.log(i,val.value)
-                var val = parseInt(val.value);
-                search_pay_list.push(val)
+                $('.xui-comsumptionNum'+i).css('border','1px solid #ccc');
+                var value = Number(val.value);
+                // console.log('value',value);
+                var re =  /^[1-9]+[0-9]*]*$/;
+                console.log('re.test(value)',re.test(value))
+                if(re.test(value) === false){
+                    console.log("false~~~~~~~~~~~")
+                    $crossHint.text('格式不正确，请输入整数').show();
+                    $('.xui-comsumptionNum'+i).css('border','1px solid #DB4343');
+                    is_checked = false;
+                }
+                search_pay_list.push(value);
             });
-            console.log('search_pay_list',search_pay_list)
-            rePurchaseAnalysis();
+            console.log('search_pay_list>>>>',search_pay_list)
+    
+            var minusArr = [];
+            for(var i=5; i>=0; i--){
+                console.log('>>>>>>>>>>',i,search_pay_list[i]);
+                if(i > 0){
+                    var minus = search_pay_list[i] - search_pay_list[i-1];
+                    console.log('minus',minus);
+                    minusArr[i-1] = minus;
+                }
+            }
+            var is_error = false;
+            minusArr.map(function(item, idx){
+                if (idx % 2 == 0) {
+                  if (item <= 0) {
+                      is_error = true;
+                      is_checked = false;
+                      $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
+                  }
+                } else {
+                  if (item < 0) {
+                      is_error = true;
+                      is_checked = false;
+                      $crossHint.text('消费额区间需逐渐递增，不能交叉').show();
+                  }
+                }
+                var nextIndex = idx + 1;
+                if(is_error){
+                    console.log('idx')
+                    $('.xui-comsumptionNum'+idx).css('border','1px solid #DB4343'); 
+                    $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #DB4343'); 
+                    is_error = false;
+                }else {
+                    // $('.xui-comsumptionNum'+idx).css('border','1px solid #ccc'); 
+                    // $('.xui-comsumptionNum'+nextIndex).css('border','1px solid #ccc'); 
+                }         
+            });
+            if(is_checked){
+                $consumptionBox.hide();
+                // console.log('search_pay_list',search_pay_list)
+                localStorage.setItem('k',search_pay_list)
+                rePurchaseAnalysis();
+            }
         });
 
     });

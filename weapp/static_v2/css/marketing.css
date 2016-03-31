@@ -795,23 +795,29 @@
 }
 .xui-rePurchaseAnalyzePage .xui-setConsumptionBtn{
 	color: #1261B7;
+	cursor: pointer;
+	z-index: 9999;
 }
 .xui-rePurchaseAnalyzePage .xui-consumptionBox{
 	background: #fff;
 	border: 1px solid #DDDDDD;
-	padding: 15px 10px 0;
+	padding: 15px 10px 5px;
 	font-size: 12px;
 	color: #333;
 	width: 334px;
 	z-index: 1000;
     right: 12px;
     top: 30px;
+    display: none;
 }
 .xui-rePurchaseAnalyzePage .xui-consumptionBox  input{
 	height: 22px;
 	line-height: 22px;
 	width: 90px;
 }
-.xui-rePurchaseAnalyzePage .errorHint{
+/*.xui-rePurchaseAnalyzePage .errorHint{
 	line-height: 0px;
+}*/
+.xui-consumptionHelp{
+	z-index: 9999;
 }
