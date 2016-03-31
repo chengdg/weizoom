@@ -70,6 +70,7 @@ class RepeatBuyAnalysis(resource.Resource):
 		elif is_subscribed == '0':
 			is_subscribed = [0]
 
+
 		if len(search_pay_list)>0:
 			if not RepeatBuyAnalysis._check_pay_money(search_pay_list):
 				response = create_response(201)
@@ -120,7 +121,7 @@ class BuyPercent(resource.Resource):
 	会员购买占比
 	"""
 	app = 'stats'
-	resource = 'repeat_buy_percent'
+	resource = 'buy_percent'
 
 	def api_get(request):
 		"""
@@ -145,7 +146,6 @@ class BuyPercent(resource.Resource):
 		bought_fans_3_5 = buy_fans.filter(pay_times__gte=3,pay_times__lte=5).count()
 		bought_fans_5_after = buy_fans.filter(pay_times__gt=5).count()
 
-		print "zl------------",bought_fans_1,bought_fans_2,bought_fans_3_5,bought_fans_5_after
 		tooltip = {
 					'trigger': 'item',
 					'formatter': '{b}</br>人数：{c}</br>占比：{d}%',
