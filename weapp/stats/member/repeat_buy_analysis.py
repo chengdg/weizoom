@@ -7,14 +7,14 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 import time
-
+from core.charts_apis import *
 from stats import export
 from core import resource
 from mall.models import Order, belong_to
 from mall import models
 from modules.member.models import Member, WebAppUser, SOURCE_SELF_SUB, SOURCE_MEMBER_QRCODE, SOURCE_BY_URL
 from core.jsonresponse import create_response
-
+from django.db.models import Max
 import pandas as pd
 
 FIRST_NAV = export.STATS_HOME_FIRST_NAV
@@ -32,7 +32,7 @@ class RepeatBuyAnalysis(resource.Resource):
 		"""
 		显示复购分析页面
 		"""
-		
+
 		c = RequestContext(request, {
 			'first_nav_name': FIRST_NAV,
 			'app_name': 'stats',
@@ -40,7 +40,7 @@ class RepeatBuyAnalysis(resource.Resource):
 			'second_nav_name': export.STATS_MEMBER_SECOND_NAV,
 			'third_nav_name': export.REPEAT_BUY_ANALISIS_NAV
 		})
-		
+
 		return render_to_response('member/repeat_buy_analysis.html', c)
 
 
@@ -49,6 +49,10 @@ class RepeatBuyAnalysis(resource.Resource):
 		"""
 		复购会员分析数据	
 		"""
+		webapp_id = request.user_profile.webapp_id
+		# all 全部， 1 关注 0 取消关注
+		is_subscribed = request.GET.get('is_subscribed','all') # 会员是否关注
+		search_pay_list = request.GET.getlist('search_pay_list',[]) # 会员是否关注
 
 		tooltip = {
 					'trigger': 'item',
@@ -58,15 +62,57 @@ class RepeatBuyAnalysis(resource.Resource):
 					'borderWidth': 1,
 					'borderColor': '#363636'
 				}
+		# 校验数据是否正确 [1,2,3,4,5,6]
+		if is_subscribed == 'all':
+			is_subscribed = [0,1]
+		elif is_subscribed == '1':
+			is_subscribed = [1]
+		elif is_subscribed == '0':
+			is_subscribed = [0]
 
-		return create_pie_chart_response('',
-				{
-					u"消费金额：0-100": 213,
-					u"消费金额：100-200": 76, 
-					u"消费金额：200-500": 34, 
-					u"其他": 21
+		if len(search_pay_list)>0:
+			if not RepeatBuyAnalysis._check_pay_money(search_pay_list):
+				response = create_response(201)
+
+				response.data = {
+					"error":True
 				}
+				return response.get_response()
+			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed)
+			rebuy_fans_1 = rebuy_fans.filter(pay_money__gte=search_pay_list[0],pay_money__lt=search_pay_list[1]).count()
+			rebuy_fans_2 = rebuy_fans.filter(pay_money__gte=search_pay_list[2],pay_money__lt=search_pay_list[3]).count()
+			rebuy_fans_3 = rebuy_fans.filter(pay_money__gte=search_pay_list[4],pay_money__lt=search_pay_list[5]).count()
+			rebuy_fans = rebuy_fans.count()-rebuy_fans_1-rebuy_fans_2-rebuy_fans_3
+			return create_pie_chart_response('',
+				{
+					u"消费金额：{}-{}".format(search_pay_list[0],search_pay_list[1]): rebuy_fans_1,
+					u"消费金额：{}-{}".format(search_pay_list[2],search_pay_list[3]): rebuy_fans_2,
+					u"消费金额：{}-{}".format(search_pay_list[4],search_pay_list[5]): rebuy_fans_3,
+					u"其他": rebuy_fans
+				},tooltip
 			)
+		else:
+			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed)
+			max_pay_money = rebuy_fans.aggregate(Max('pay_money'))
+			count = rebuy_fans.count()
+			return create_pie_chart_response('',
+				{
+					u"消费金额：0-{}".format(max_pay_money): count,
+				},tooltip
+			)
+
+
+
+
+	@staticmethod
+	def _check_pay_money(pay_money_list):
+		_len = len(pay_money_list)
+		if _len !=6:
+			return False
+		for i in range(0, _len - 2):
+			if int(pay_money_list[i+1]) - int(pay_money_list[i]) <0:
+				return False
+		return True
 
 
 class BuyPercent(resource.Resource):
@@ -76,12 +122,30 @@ class BuyPercent(resource.Resource):
 	app = 'stats'
 	resource = 'repeat_buy_percent'
 
-	@login_required
 	def api_get(request):
 		"""
-		会员购买占比数据	
+		会员购买占比数据
+		默认会员分为1、2、3-5、5以上 几个阶段 显示人数、占比
+		, pay_times__gte=2
 		"""
 
+		webapp_id = request.user_profile.webapp_id
+		# all 全部， 1 关注 0 取消关注
+		is_subscribed = request.GET.get('is_subscribed','all') # 会员是否关注
+
+		if is_subscribed == 'all':
+			is_subscribed = [0,1]
+		elif is_subscribed == '1':
+			is_subscribed = [1]
+		elif is_subscribed == '0':
+			is_subscribed = [0]
+		buy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed)
+		bought_fans_1 = buy_fans.filter(pay_times=1).count()
+		bought_fans_2 = buy_fans.filter(pay_times=2).count()
+		bought_fans_3_5 = buy_fans.filter(pay_times__gte=3,pay_times__lte=5).count()
+		bought_fans_5_after = buy_fans.filter(pay_times__gt=5).count()
+
+		print "zl------------",bought_fans_1,bought_fans_2,bought_fans_3_5,bought_fans_5_after
 		tooltip = {
 					'trigger': 'item',
 					'formatter': '{b}</br>人数：{c}</br>占比：{d}%',
@@ -93,10 +157,10 @@ class BuyPercent(resource.Resource):
 
 		return create_pie_chart_response('',
 				{
-					u"购买1次的会员": 13,
-					u"购买2次的会员": 6, 
-					u"购买3-5次的会员": 4, 
-					u"购买5次以上的会员": 1
+					u"购买1次的会员": bought_fans_1,
+					u"购买2次的会员": bought_fans_2,
+					u"购买3-5次的会员": bought_fans_3_5,
+					u"购买5次以上的会员": bought_fans_5_after
 				}, 
 				tooltip
 			)
