@@ -756,10 +756,15 @@ class AuthorizedUserMiddleware(object):
 			return None
 
 		auth.login(request, authorized_user)
-		if request.path_info.endswith('GET'):
-			path_info = request.path_info[:request.path_info.find('GET')]
+		#用于money系统登录
+		is_money = int(request.GET.get('is_money',0))
+		if is_money:
+			path_info = '?' + request.META['QUERY_STRING'].split('&')[0]
 		else:
-			path_info = request.path_info
+			if request.path_info.endswith('GET'):
+				path_info = request.path_info[:request.path_info.find('GET')]
+			else:
+				path_info = request.path_info
 
 		return HttpResponseRedirect(path_info)
 
