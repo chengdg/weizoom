@@ -207,7 +207,8 @@ def build_return_member_json(member):
 		'unit_price': '%.2f' % member.unit_price,
 		'is_selected': member.is_selected,
 		'is_current_select': member.is_current_select,
-		'experience': member.experience
+		'experience': member.experience,
+		'purchase_frequency':member.purchase_frequency,
 	}
 
 def build_member_has_tags_json(member):
@@ -395,7 +396,7 @@ def get_member_info(member):
 	except:
 		return None
 
-
+import logging
 class MemberDetail(resource.Resource):
 	app = "member"
 	resource = "detail"
@@ -406,17 +407,24 @@ class MemberDetail(resource.Resource):
 		member_id = request.GET.get('id', None)
 		ship_infos = None
 		orders = []
+		weizoom_card_total_money = 0
 		#try:
 		if member_id:
 			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
 			orders = get_member_orders(member)
 			pay_money = 0
 			pay_times = 0
+			logging.info(orders.filter(status__gte=2).count())
+			if orders.filter(status__gte=2).count() > 0:
+				payment_time = orders.order_by('-payment_time')[0].payment_time
+				member.last_pay_time = payment_time
+				logging.info(member.last_pay_time)
 			for order in orders:
 				order.final_price = order.final_price + order.weizoom_card_money
-				if order.status > 2:
+				if order.status == 2:
 					pay_money += order.final_price
 					pay_times += 1
+					weizoom_card_total_money += order.weizoom_card_money
 
 			member.pay_times = pay_times
 			member.pay_money = pay_money
@@ -538,6 +546,10 @@ class MemberDetail(resource.Resource):
 
 		shared_url_lead_number = fans_count.count() - qrcode_friends
 
+		#微众卡使用金额
+		if member:
+			member.weizoom_card_total_money = weizoom_card_total_money
+
 
 		c = RequestContext(request, {
 			'is_shengjing': is_shengjing,
@@ -573,7 +585,7 @@ class MemberDetail(resource.Resource):
 		is_for_buy_test = request.POST.get('is_for_buy_test', 0)
 		member = Member.objects.get(id=member_id)
 		tag_ids = request.POST.get('tag_ids', None)
-
+		print phone_number,">>>>>>DSSSSSSSSSSphone_number"
 		if member.webapp_id == webapp_id:
 			if grade_id:
 				member.grade = MemberGrade.objects.get(id=grade_id)
@@ -748,7 +760,8 @@ class MemberFriends(resource.Resource):
 			'sortAttr': request.GET.get('sort_attr', '-created_at'),
 			'population': population,
 			'population_order': population_order,
-			'amount': '%.2f' % amount
+			'amount': '%.2f' % amount,
+			'data_value': data_value
 		}
 		return response.get_response()
 

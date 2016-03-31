@@ -380,6 +380,7 @@ class Member(models.Model):
 	country = models.CharField(default='', max_length=50)
 	sex = models.IntegerField(default=0, verbose_name='性别')
 	status = models.IntegerField(default=1, db_index=True)
+	purchase_frequency =  models.IntegerField(default=0) #30天购买次数
 
 	class Meta(object):
 		db_table = 'member_member'
