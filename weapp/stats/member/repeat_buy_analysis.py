@@ -79,7 +79,7 @@ class RepeatBuyAnalysis(resource.Resource):
 					"error":True
 				}
 				return response.get_response()
-			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed)
+			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed,status__in=[0,1])
 			rebuy_fans_1 = rebuy_fans.filter(pay_money__gte=search_pay_list[0],pay_money__lt=search_pay_list[1]).count()
 			rebuy_fans_2 = rebuy_fans.filter(pay_money__gte=search_pay_list[2],pay_money__lt=search_pay_list[3]).count()
 			rebuy_fans_3 = rebuy_fans.filter(pay_money__gte=search_pay_list[4],pay_money__lt=search_pay_list[5]).count()
@@ -93,7 +93,7 @@ class RepeatBuyAnalysis(resource.Resource):
 				},tooltip
 			)
 		else:
-			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed)
+			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed,status__in=[0,1])
 			max_pay_money = rebuy_fans.aggregate(Max('pay_money'))
 			count = rebuy_fans.count()
 			return create_pie_chart_response('',
@@ -140,7 +140,7 @@ class BuyPercent(resource.Resource):
 			is_subscribed = [1]
 		elif is_subscribed == '0':
 			is_subscribed = [0]
-		buy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed)
+		buy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,is_subscribed__in=is_subscribed,status__in=[0,1])
 		bought_fans_1 = buy_fans.filter(pay_times=1).count()
 		bought_fans_2 = buy_fans.filter(pay_times=2).count()
 		bought_fans_3_5 = buy_fans.filter(pay_times__gte=3,pay_times__lte=5).count()
