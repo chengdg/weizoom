@@ -1008,10 +1008,18 @@ class MemberOrders(resource.Resource):
 				pay_money += order_final_price
 			total_count = orders.count()
 			pageinfo, orders = paginator.paginate(orders, cur_page, count)
-
+		
+		items = []
+		for order in orders:
+			items.append({
+				"order_id": order.id,
+				"final_price": order.final_price,
+				"created_at": datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
+				"order_status": order.status,
+				})
 		response = create_response(200)
 		response.data = {
-			'items': orders,
+			'items': items,
 			'pageinfo': paginator.to_dict(pageinfo),
 			'pay_money': '%.2f' % pay_money,
 		}
