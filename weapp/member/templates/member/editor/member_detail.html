@@ -59,8 +59,8 @@
 				</dd>
 			</dl>
 			<div class="fr" style="margin-top:-15px;">
-				<p class="mb5 tr">关注时间：{{ show_member.created_at|date:"Y-m-j" }} 直接关注</p>
-				<p class="mb0">最近交易时间：{{ show_member.last_pay_time|unify_datetime }}</p>
+				<p class="mb5 tr">关注时间：{{ show_member.created_at|date:"Y-m-j" }}<span class="ml10">直接关注</span></p>
+				<p class="mb0">最近交易时间：{{ show_member.last_pay_time|date:"Y-m-j H:i" }}</p>
 			</div>
 		</div>
 		<div class="xui-infoEdit clearfix">
@@ -74,7 +74,7 @@
 							<option value="{{ grade.id }}" {% ifequal grade.id show_member.grade.id %}selected="selected"{% endifequal %}>{{ grade.name }}</option>
 							{% endfor %}
 						</select>
-						<span class="xa-display">普通会员</span>
+						<span class="xa-display">{{show_member.grade.name}}</span>
 					</div>
 				</div>
 				<div class="xui-fieldwrap">
@@ -130,7 +130,7 @@
 				<div class="xui-fieldwrap">
       		<label>优惠券：</label>
       		<div class="xui-value f14">
-      			<span style="min-width: 35px;display: inline-block;"><span class="xui-bold">3</span>&nbsp;个</span>
+      			<span style="min-width: 35px;display: inline-block;"><span class="xui-bold">{{coupons|length}}</span>&nbsp;个</span>
       			<a href="javascript:void(0);" class="xui-borderBtn xa-coupon">查看</a>
 					</div>
 				</div>
@@ -155,15 +155,16 @@
 		</ul>
 		<div id="myTabContent" class="tab-content">
 	  	<div class="tab-pane fade in active" id="purchasingOrders">
-	      <p>订单总额：￥23951.00</p>
+	      <p>订单总额：￥{{show_member.pay_money}}</p>
 	      <div
           data-ui-role="advanced-table"
-          data-app="mall2"
+          data-app="member"
           data-resource="order_list"
           data-enable-paginator="true"
           data-template-id="#mall-member-orders-view"
           data-item-count-per-page="6"
           data-selectable = "false"
+          data-args='{"id": {{show_member.id}}}'
         >
         </div>
 	   	</div>
@@ -182,13 +183,13 @@
 	      </p>
 	      <div
           data-ui-role="advanced-table"
-          data-app="mall2"
-          data-resource="order_list"
+          data-app="member"
+          data-resource="spread"
           data-enable-paginator="true"
           data-template-id="#mall-member-transmission-view"
           data-item-count-per-page="6"
           data-selectable = "false"
-          data-args='{"id": {{show_member.id}}}'
+          data-args='{"member_id": {{show_member.id}}}'
         >
         </div>
 	   	</div>
@@ -572,25 +573,43 @@
 			<th>订单状态</th>
 		</thead>
 		<tbody>
+		{{if items.length}}
+			{{each(i, item) items}}
 			<tr>
-				<td><span class="xui-color-blue xui-bold"><a href="/mall2/order/?order_id=${order_id}" target="_blank">${order_id}</a><span></td>
-				<td>0.50</td>
-				<td>2016/03/28 20:08</td>
-				<td>已取消</td>
+				<td><span class="xui-color-blue xui-bold"><a href="/mall2/order/?order_id=${id}" target="_blank">${order_id}</a><span></td>
+				<td>${final_price}</td>
+				<td>${created_at}</td>
+				<td>
+				{{if order_status == 0}}
+					待支付
+				{{/if}}
+				{{if order_status == 1}}
+					已取消
+				{{/if}}
+				{{if order_status == 2}}
+					已付款
+				{{/if}}
+				{{if order_status == 3}}
+					待发货
+				{{/if}}
+				{{if order_status == 4}}
+					已发货
+				{{/if}}
+				{{if order_status == 5}}
+					已完成
+				{{/if}}
+				{{if order_status == 6}}
+					退款中
+				{{/if}}
+				{{if order_status == 7}}
+					退款成功
+				{{/if}}
+				</td>
 			</tr>
-			<tr>
-				<td>20160328200845803</td>
-				<td>0.50</td>
-				<td>2016/03/28 20:08</td>
-				<td>已取消</td>
-			</tr>
-			<tr>
-				<td>20160328200845803</td>
-				<td>0.50</td>
-				<td>2016/03/28 20:08</td>
-				<td>已取消</td>
-			</tr>
-			<!-- <tr rowspan='6' ><td colspan='4' class="h130 xui-fontGary" >暂无数据</td></tr> -->
+			{{/each}}
+		{{else}}
+			<tr rowspan='6' ><td colspan='4' class="h130 xui-fontGary" >暂无数据</td></tr>
+		{{/if }}
 		</tbody>
 	</table>
 </script>
@@ -603,25 +622,18 @@
 			<th width="250">购买转化</th>
 		</thead>
 		<tbody>
+		{{if items.length}}
+			{{each(i, item) items}}
 			<tr>
-				<td class="tl pl50">blah~blah~~</td>
-				<td>10</td>
-				<td>20</td>
-				<td>0</td>
+				<td class="tl pl50">${title}</td>
+				<td>${pv}</td>
+				<td>${followers}</td>
+				<td>${leadto_buy_count}</td>
 			</tr>
-			<tr>
-				<td class="tl pl50">blah~blah~~</td>
-				<td>10</td>
-				<td>20</td>
-				<td>0</td>
-			</tr>
-			<tr>
-				<td class="tl pl50">blah~blah~~</td>
-				<td>10</td>
-				<td>20</td>
-				<td>0</td>
-			</tr>
-			<!-- <tr rowspan='6' ><td colspan='4' class="h130 xui-fontGary" >暂无数据</td></tr> -->
+			{{/each}}
+		{{else}}
+			<tr rowspan='6' ><td colspan='4' class="h130 xui-fontGary" >暂无数据</td></tr>
+		{{/if }}
 		</tbody>
 	</table>
 </script>

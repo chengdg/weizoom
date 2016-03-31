@@ -12,7 +12,7 @@ from core.jsonresponse import JsonResponse, create_response
 from core.exceptionutil import unicode_full_stack
 from core import paginator
 #import sys
-from mall.models import Order, STATUS2TEXT
+from mall.models import Order, STATUS2TEXT, ORDER_STATUS_SUCCESSED
 
 from modules.member.models import *
 from watchdog.utils import watchdog_error
@@ -712,6 +712,7 @@ class Integral(resource.Resource):
 		response = create_response(200)
 		return response.get_response()
 
+
 class MemberFriends(resource.Resource):
 	app='member'
 	resource='follow_relations'
@@ -726,20 +727,25 @@ class MemberFriends(resource.Resource):
 			only_fans = '1'
 		else:
 			only_fans = '0'
-
 		if data_value:
 			if data_value == 'shared':
 				follow_members = MemberFollowRelation.get_follow_members_for_shred_url(member_id)
-			elif  data_value == 'qrcode' or data_value == 'purchase':
+			elif  data_value == 'qrcode':
 				follow_members=  MemberFollowRelation.get_follow_members_for(member_id, '1', True)
+			elif data_value == 'purchase':
+				follow_members=  MemberFollowRelation.get_follow_members_purchase_for(member_id)
 			else:
 				follow_members = []
 		else:
 			follow_members = MemberFollowRelation.get_follow_members_for(member_id, only_fans)
 
 		#增加计算follow_members的人数、下单人数、成交金额
-		population = len(follow_members)
-		population_order  = get_purchased_fans(follow_members)
+		if follow_members:
+			population = follow_members.count()
+			population_order  = get_purchased_fans(follow_members)
+		else:
+			population = 0
+			population_order = 0
 		# for follow_member in follow_members:
 		# 	user_orders = Order.get_orders_from_webapp_user_ids(follow_member.get_webapp_user_ids)
 		# 	if user_orders and user_orders.filter(status=5).count() > 0:
@@ -981,3 +987,78 @@ class MemberExport(resource.Resource):
 				members_info.append(info_list)
 
 		return ExcelResponse(members_info,output_name=u'会员列表'.encode('utf8'),force_csv=False)
+
+
+class MemberOrders(resource.Resource):
+	app='member'
+	resource='order_list'
+
+	@login_required
+	def api_get(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.GET.get('id', None)
+		cur_page = int(request.GET.get('page', '1'))
+		count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		orders = []
+		#try:
+		if member_id:
+			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			orders = get_member_orders(member)
+			pay_money = 0
+			orders_valid = orders.filter(status=ORDER_STATUS_SUCCESSED)
+			for order in orders_valid:
+				order_final_price = order.final_price + order.weizoom_card_money
+				pay_money += order_final_price
+			total_count = orders.count()
+			pageinfo, orders = paginator.paginate(orders, cur_page, count)
+		
+		items = []
+		for order in orders:
+			items.append({
+				"id": order.id,
+				"order_id": order.order_id,
+				"final_price": float('%.2f' % order.final_price),
+				"created_at": datetime.strftime(order.created_at, '%Y-%m-%d %H:%M:%S'),
+				"order_status": order.status,
+				})
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo),
+			'pay_money': '%.2f' % pay_money,
+		}
+		return response.get_response()
+
+
+
+#by bert
+class MemberSpread(resource.Resource):
+	app='member'
+	resource='spread'
+
+	@login_required
+	def api_get(request):
+		webapp_id = request.user_profile.webapp_id
+		member_id = request.GET.get('member_id', None)
+		cur_page = int(request.GET.get('page', '1'))
+		count = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
+		shared_url_infos = []
+		if member_id:
+			member = Member.objects.get(id=member_id, webapp_id=webapp_id)
+			shared_url_infos = get_member_shared_urls(member)
+		pageinfo, shared_url_infos = paginator.paginate(shared_url_infos, cur_page, count)
+		items = []
+		for shared_url_info in shared_url_infos:
+			items.append({
+				"id": shared_url_info.id,
+				"title": shared_url_info.title,
+				"pv": shared_url_info.pv,
+				"followers": shared_url_info.followers,
+				"leadto_buy_count": shared_url_info.leadto_buy_count,
+				})
+		response = create_response(200)
+		response.data = {
+			'items': items,
+			'pageinfo': paginator.to_dict(pageinfo)
+		}
+		return response.get_response()
