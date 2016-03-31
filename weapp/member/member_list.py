@@ -24,6 +24,8 @@ from apps.customerized_apps.shengjing.models import *
 from weixin2.models import get_opid_from_session
 from core import resource
 
+from market_tools.tools.coupon.util import get_member_coupons
+
 import export
 
 COUNT_PER_PAGE = 20
@@ -478,7 +480,7 @@ class MemberDetail(resource.Resource):
 		fans_count = MemberFollowRelation.get_follow_members_for(member.id, '1')
 
 		#我的优惠券
-		coupons = get_my_coupons(member.id)
+		coupons = get_member_coupons(member)
 
 		# 组织盛景定制信息
 		shengjing_register_info = dict()
