@@ -10,8 +10,7 @@ from mall.models import Order
 COUNT_PER_PAGE = 10
 
 
-def get_coupons_of_member(member_id, status):
-		items = []
+def get_coupons_of_member(member_id, status, coupon_ids, items):
 		if status != 0:
 			member = Member.objects.get(id=member_id)
 			# coupon_rec_list = Coupon.objects.filter(member_id=member_id).order_by('-provided_time', '-coupon_record_id', '-id')
@@ -20,8 +19,14 @@ def get_coupons_of_member(member_id, status):
 				if status == -1:
 					code_coupon = Coupon.objects.get(id=code_order.coupon_id)
 				else:
-					code_coupon = Coupon.objects.get(id=code_order.coupon_id).filter(status=status)
-				if code_coupon.member_id == 0:
+					try:
+						code_coupon = Coupon.objects.get(id=code_order.coupon_id, status=status)
+					except:
+						code_coupon = None
+				if code_coupon is not None and code_coupon.member_id == 0:
+					if code_coupon.id in coupon_ids:
+						continue
+
 					coupon_rule = code_coupon.coupon_rule
 					item = dict()
 					whereabouts = dict()
@@ -47,6 +52,8 @@ def get_coupons_of_member(member_id, status):
 
 					items.append(item)
 
+			for vat in items:
+				print('>>>>'+vat['coupon_id'])
 			return items
 
 
@@ -77,16 +84,15 @@ class MemberCouponInfo(resource.Resource):
 			member_coupon_list = Coupon.objects.filter(member_id=member_id).filter(status=status).order_by('-provided_time', '-coupon_record_id', '-id')
 		count_per_page = int(request.GET.get('count_per_page', COUNT_PER_PAGE))
 		current_page = int(request.GET.get('page', '1'))
-		pageinfo, member_coupon_list = paginator.paginate(member_coupon_list, current_page, count_per_page,
-														query_string=request.META['QUERY_STRING'])
 
+		coupon_ids = []
 		for coupon in member_coupon_list:
 			# rule = CouponRule.objects.get(id=coupon.coupon_rule)
 			coupon_rule = coupon.coupon_rule
 
 			item = dict()
 			whereabouts = dict()
-
+			coupon_ids.append(coupon.id)
 			item['provided_time'] = coupon.provided_time.strftime("%Y/%m/%d %H:%M")
 			item['coupon_id'] = coupon.coupon_id
 			item['coupon_name'] = coupon_rule.name
@@ -111,8 +117,11 @@ class MemberCouponInfo(resource.Resource):
 			items.append(item)
 
 		if status != 0:
-			items.extend(get_coupons_of_member(member_id, status))
+			items = get_coupons_of_member(member_id, status, coupon_ids, items)
 			items.sort(lambda x,y: cmp(y['provided_time'], x['provided_time']))
+
+		pageinfo, items = paginator.paginate(items, current_page, count_per_page,
+														query_string=request.META['QUERY_STRING'])
 
 		response = create_response(200)
 		response.data = {
