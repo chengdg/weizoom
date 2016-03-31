@@ -53,16 +53,11 @@ class RepeatBuyAnalysis(resource.Resource):
 		webapp_id = request.user_profile.webapp_id
 		# all 全部， 1 关注 0 取消关注
 		is_subscribed = request.GET.get('is_subscribed','all') # 会员是否关注
-		search_pay_list = request.GET.getlist('search_pay_list',[]) # 会员是否关注
+		search_pay_list = request.GET.get('search_pay_list',[])
+		if search_pay_list!='':
+			search_pay_list = search_pay_list.split(',')
 
-		tooltip = {
-					'trigger': 'item',
-					'formatter': '{b}</br>人数：{c}</br>占比：{d}%',
-					'backgroundColor': '#FFFFFF',
-					'textStyle': {'color': '#363636'},
-					'borderWidth': 1,
-					'borderColor': '#363636'
-				}
+
 		# 校验数据是否正确 [1,2,3,4,5,6]
 		if is_subscribed == 'all':
 			is_subscribed = [0,1]
@@ -84,15 +79,15 @@ class RepeatBuyAnalysis(resource.Resource):
 			rebuy_fans_1 = rebuy_fans.filter(pay_money__gte=search_pay_list[0],pay_money__lt=search_pay_list[1]).count()
 			rebuy_fans_2 = rebuy_fans.filter(pay_money__gte=search_pay_list[2],pay_money__lt=search_pay_list[3]).count()
 			rebuy_fans_3 = rebuy_fans.filter(pay_money__gte=search_pay_list[4],pay_money__lt=search_pay_list[5]).count()
-			rebuy_fans = rebuy_fans.count()-rebuy_fans_1-rebuy_fans_2-rebuy_fans_3
+			other_rebug_fans = rebuy_fans.count()-rebuy_fans_1-rebuy_fans_2-rebuy_fans_3
 			all_rebuy_fans = rebuy_fans.count()
 			return create_pie_chart_response('',
 				{
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%')): 0,
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%')): 0,
-					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%')): 0,
-					u"其他 \n人数:{}\n占比:{}".format(rebuy_fans,format( float(Decimal(rebuy_fans)/Decimal(all_rebuy_fans)),'.2%')): 0
-				},tooltip
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[0],search_pay_list[1],rebuy_fans_1,format( float(Decimal(rebuy_fans_1)/Decimal(all_rebuy_fans)),'.2%')): rebuy_fans_1,
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[2],search_pay_list[3],rebuy_fans_2,format( float(Decimal(rebuy_fans_2)/Decimal(all_rebuy_fans)),'.2%')): rebuy_fans_2,
+					u"消费金额：{}-{} \n人数:{}\n占比:{}".format(search_pay_list[4],search_pay_list[5],rebuy_fans_3,format( float(Decimal(rebuy_fans_3)/Decimal(all_rebuy_fans)),'.2%')): rebuy_fans_3,
+					u"其他 \n人数:{}\n占比:{}".format(other_rebug_fans,format( float(Decimal(other_rebug_fans)/Decimal(all_rebuy_fans)),'.2%')): other_rebug_fans
+				}
 			)
 		else:
 			rebuy_fans = Member.objects.filter(webapp_id=webapp_id, is_for_test=False,pay_times__gte=2,is_subscribed__in=is_subscribed,status__in=[0,1])
@@ -101,7 +96,7 @@ class RepeatBuyAnalysis(resource.Resource):
 			return create_pie_chart_response('',
 				{
 					u"消费金额：0-{} \n人数:{}\n占比:100%".format(max_pay_money['pay_money__max'],count): count,
-				},tooltip
+				}
 			)
 
 
@@ -126,7 +121,7 @@ class BuyPercent(resource.Resource):
 	resource = 'buy_percent'
 
 	@login_required
-	def get(request):
+	def api_get(request):
 		"""
 		会员购买占比数据
 		默认会员分为1、2、3-5、5以上 几个阶段 显示人数、占比
@@ -149,21 +144,11 @@ class BuyPercent(resource.Resource):
 		bought_fans_3_5 = buy_fans.filter(pay_times__gte=3,pay_times__lte=5).count()
 		bought_fans_5_after = buy_fans.filter(pay_times__gt=5).count()
 		all_buy_fnas = bought_fans_1+bought_fans_2+bought_fans_3_5+bought_fans_5_after
-		tooltip = {
-					'trigger': 'item',
-					'formatter': '{b}</br>人数：{c}</br>占比：{d}%',
-					'backgroundColor': '#FFFFFF',
-					'textStyle': {'color': '#363636'},
-					'borderWidth': 1,
-					'borderColor': '#363636'
-				}
-
 		return create_pie_chart_response('',
 				{
-					u"购买1次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format( float(Decimal(bought_fans_1)/Decimal(all_buy_fnas)),'.2%')):0,
-					u"购买2次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format(float(Decimal(bought_fans_2)/Decimal(all_buy_fnas)),'.2%')):0,
-					u"购买3-5次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format(float(Decimal(bought_fans_3_5)/Decimal(all_buy_fnas)),'.2%')):0,
-					u"购买5次以上的会员\n人数:{}\n占比:{}".format(bought_fans_1,format(float(Decimal(bought_fans_5_after)/Decimal(all_buy_fnas)),'.2%')):0
-				}, 
-				tooltip
+					u"购买1次的会员\n人数:{}\n占比:{}".format(bought_fans_1,format( float(Decimal(bought_fans_1)/Decimal(all_buy_fnas)),'.2%')):bought_fans_1,
+					u"购买2次的会员\n人数:{}\n占比:{}".format(bought_fans_2,format(float(Decimal(bought_fans_2)/Decimal(all_buy_fnas)),'.2%')):bought_fans_2,
+					u"购买3-5次的会员\n人数:{}\n占比:{}".format(bought_fans_3_5,format(float(Decimal(bought_fans_3_5)/Decimal(all_buy_fnas)),'.2%')):bought_fans_3_5,
+					u"购买5次以上的会员\n人数:{}\n占比:{}".format(bought_fans_5_after,format(float(Decimal(bought_fans_5_after)/Decimal(all_buy_fnas)),'.2%')):bought_fans_5_after
+				}
 			)

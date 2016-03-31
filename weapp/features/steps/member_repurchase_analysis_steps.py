@@ -28,8 +28,7 @@ def step_impl(context, user):
 @then(u'{user}获得会员购买占比统计数据')
 def step_impl(context, user):
 	client = context.client
-	user = UserFactory(username=user)
-	url = 'stats/repeat_buy_percent/?is_subscribed='+context.is_subscribed
+	url = 'stats/buy_percent/?is_subscribed='+context.is_subscribed
 
 	response = client.get(url)
 	print response.read()

@@ -223,7 +223,7 @@ Background:
 	#	|  bill2   |     0      |   190.00  |    2      | 已关注 |
 	#	|  bill    |     200    |   110.00  |    1      | 已关注 |
 	
-@stats @stats.member
+@stats @stats.member @zhaolei
 Scenario:1 复购分析,查看会员购买占比数据
 	Given jobs登录系统
 	#会员状态-全部(默认条件-全部)
