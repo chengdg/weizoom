@@ -2166,7 +2166,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 			"""
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
@@ -2204,11 +2204,11 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": 10.00,
@@ -2246,7 +2246,7 @@ Scenario:7 自营平台同步商品参与限时抢购或买赠活动,商家更�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 		#被更新商品参与的活动自动结束
 		Then jobs获取限时抢购活动列表
@@ -2571,7 +2571,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 			"""
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
@@ -2605,11 +2605,11 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": 10.00,
@@ -2647,7 +2647,7 @@ Scenario:8 自营平台同步商品参与积分应用或优惠券活动,商家�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 		#被更新商品参与的活动自动结束
 		Then jobs获取积分应用活动列表
@@ -2785,7 +2785,7 @@ Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的�
 		When jobs更新商品池商品'bill无规格商品1'于'2015-08-05 10:30'
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": 10.00,
@@ -2823,7 +2823,7 @@ Scenario:9 自营平台同步商品,商家更新被自营平台同步商品的�
 						"description": "内存描述"
 					}],
 				"detail": "bill修改-商品描述信息"
-			}]
+			}
 			"""
 
 Scenario:10 商家更新被自营平台同步商品的【店铺分组】【会员折扣】【运费设置】【支付方式】【商品发票】【配送时间】【库存】,不触发自营平台商品的更新
@@ -2923,7 +2923,7 @@ Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营�
 		When jobs将商品'bill无规格商品1'放入待售于'2015-08-02 10:30'
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": "",
@@ -2961,7 +2961,7 @@ Scenario:11 商家更新被自营平台同步商品的规格为多规格,自营�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 
 	#商家更新被自营平台同步商品的规格为多规格,自营平台的对应商品被删除,商品池无此商品
@@ -3151,7 +3151,7 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 
 		Then jobs能获取商品'jobs修改-tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "jobs修改-tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": 10.00,
@@ -3185,11 +3185,11 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 						"description": "内存描述"
 					}],
 				"detail": "jobs修改-商品描述信息"
-			}]
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": 10.00,
@@ -3228,7 +3228,7 @@ Scenario:12 商家下架或删除被自营平台同步商品,自营平台的对�
 					}],
 				"detail": "商品描述信息"
 
-			}]
+			}
 			"""
 
 		#商品'bill无规格商品1'参与限时抢购活动
@@ -3442,7 +3442,7 @@ Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为�
 			"""
 		Then jobs能获取商品'tom无规格商品1'
 			"""
-			[{
+			{
 				"name": "tom无规格商品1",
 				"supplier": "tom商家",
 				"purchase_price": "",
@@ -3480,11 +3480,11 @@ Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 		Then jobs能获取商品'bill无规格商品1'
 			"""
-			[{
+			{
 				"name": "bill无规格商品1",
 				"supplier": "bill商家",
 				"purchase_price": "",
@@ -3522,7 +3522,7 @@ Scenario:13 自营平台删除同步的商品,商品池中的对应商品变为�
 						"description": "内存描述"
 					}],
 				"detail": "商品描述信息"
-			}]
+			}
 			"""
 
 Scenario:14 自营平台对商家商品"批量放入待售"
