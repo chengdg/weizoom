@@ -396,7 +396,7 @@ def get_member_info(member):
 	except:
 		return None
 
-
+import logging
 class MemberDetail(resource.Resource):
 	app = "member"
 	resource = "detail"
@@ -414,7 +414,11 @@ class MemberDetail(resource.Resource):
 			orders = get_member_orders(member)
 			pay_money = 0
 			pay_times = 0
-			
+			logging.info(orders.filter(status__gte=2).count())
+			if orders.filter(status__gte=2).count() > 0:
+				payment_time = orders.order_by('-payment_time')[0].payment_time
+				member.last_pay_time = payment_time
+				logging.info(member.last_pay_time)
 			for order in orders:
 				order.final_price = order.final_price + order.weizoom_card_money
 				if order.status == 2:
