@@ -66,6 +66,9 @@
         nowText: '当前',
         pmText: '下午',
         amText: '上午',
+        yearSuffix: '年',
+        monthSuffix: '月',
+        daySuffix: '日',
         // Calendar component
         dateText: '日',
         timeText: '时间',
