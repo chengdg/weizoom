@@ -833,7 +833,7 @@ class MemberFollowRelation(models.Model):
 		try:
 			follow_relations = MemberFollowRelation.objects.filter(member_id=member_id, is_fans=True).order_by('-id')
 			follow_member_ids = [relation.follower_member_id for relation in follow_relations]
-			return Member.objects.filter(id__in=x, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED], pay_times__gt=0)
+			return Member.objects.filter(id__in=follow_member_ids, status__in=[SUBSCRIBED, CANCEL_SUBSCRIBED], pay_times__gt=0)
 		except:
 			return []
 
