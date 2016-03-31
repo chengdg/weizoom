@@ -74,7 +74,7 @@
 							<option value="{{ grade.id }}" {% ifequal grade.id show_member.grade.id %}selected="selected"{% endifequal %}>{{ grade.name }}</option>
 							{% endfor %}
 						</select>
-						<span class="xa-display">普通会员</span>
+						<span class="xa-display">{{show_member.grade.name}}</span>
 					</div>
 				</div>
 				<div class="xui-fieldwrap">
